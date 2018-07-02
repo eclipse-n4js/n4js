@@ -88,6 +88,10 @@ public class SEMVERAdapterFactory extends AdapterFactoryImpl {
 				return createHyphenVersionRangeAdapter();
 			}
 			@Override
+			public Adapter caseVersionRangeConstraint(VersionRangeConstraint object) {
+				return createVersionRangeConstraintAdapter();
+			}
+			@Override
 			public Adapter caseSimpleVersion(SimpleVersion object) {
 				return createSimpleVersionAdapter();
 			}
@@ -158,6 +162,20 @@ public class SEMVERAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createHyphenVersionRangeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.semver.SEMVER.VersionRangeConstraint <em>Version Range Constraint</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.semver.SEMVER.VersionRangeConstraint
+	 * @generated
+	 */
+	public Adapter createVersionRangeConstraintAdapter() {
 		return null;
 	}
 

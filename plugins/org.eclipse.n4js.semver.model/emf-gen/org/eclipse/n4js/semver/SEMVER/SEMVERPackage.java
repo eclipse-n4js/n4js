@@ -188,6 +188,43 @@ public interface SEMVERPackage extends EPackage {
 	int HYPHEN_VERSION_RANGE_OPERATION_COUNT = VERSION_RANGE_OPERATION_COUNT + 0;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.semver.SEMVER.impl.VersionRangeConstraintImpl <em>Version Range Constraint</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.semver.SEMVER.impl.VersionRangeConstraintImpl
+	 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERPackageImpl#getVersionRangeConstraint()
+	 * @generated
+	 */
+	int VERSION_RANGE_CONSTRAINT = 3;
+
+	/**
+	 * The feature id for the '<em><b>Version Constraints</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSION_RANGE_CONSTRAINT__VERSION_CONSTRAINTS = VERSION_RANGE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Version Range Constraint</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSION_RANGE_CONSTRAINT_FEATURE_COUNT = VERSION_RANGE_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of operations of the '<em>Version Range Constraint</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSION_RANGE_CONSTRAINT_OPERATION_COUNT = VERSION_RANGE_OPERATION_COUNT + 0;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.semver.SEMVER.impl.SimpleVersionImpl <em>Simple Version</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -195,7 +232,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERPackageImpl#getSimpleVersion()
 	 * @generated
 	 */
-	int SIMPLE_VERSION = 3;
+	int SIMPLE_VERSION = 4;
 
 	/**
 	 * The feature id for the '<em><b>Number</b></em>' containment reference.
@@ -241,7 +278,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERPackageImpl#getVersionNumber()
 	 * @generated
 	 */
-	int VERSION_NUMBER = 4;
+	int VERSION_NUMBER = 5;
 
 	/**
 	 * The feature id for the '<em><b>Qualifier</b></em>' containment reference.
@@ -314,7 +351,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERPackageImpl#getQualifier()
 	 * @generated
 	 */
-	int QUALIFIER = 5;
+	int QUALIFIER = 6;
 
 	/**
 	 * The feature id for the '<em><b>Pre Release</b></em>' attribute.
@@ -360,7 +397,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERPackageImpl#getVersionComparator()
 	 * @generated
 	 */
-	int VERSION_COMPARATOR = 6;
+	int VERSION_COMPARATOR = 7;
 
 
 	/**
@@ -425,6 +462,27 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getHyphenVersionRange_To();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.n4js.semver.SEMVER.VersionRangeConstraint <em>Version Range Constraint</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Version Range Constraint</em>'.
+	 * @see org.eclipse.n4js.semver.SEMVER.VersionRangeConstraint
+	 * @generated
+	 */
+	EClass getVersionRangeConstraint();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.semver.SEMVER.VersionRangeConstraint#getVersionConstraints <em>Version Constraints</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Version Constraints</em>'.
+	 * @see org.eclipse.n4js.semver.SEMVER.VersionRangeConstraint#getVersionConstraints()
+	 * @see #getVersionRangeConstraint()
+	 * @generated
+	 */
+	EReference getVersionRangeConstraint_VersionConstraints();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.semver.SEMVER.SimpleVersion <em>Simple Version</em>}'.
@@ -641,6 +699,24 @@ public interface SEMVERPackage extends EPackage {
 		 * @generated
 		 */
 		EReference HYPHEN_VERSION_RANGE__TO = eINSTANCE.getHyphenVersionRange_To();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.n4js.semver.SEMVER.impl.VersionRangeConstraintImpl <em>Version Range Constraint</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.n4js.semver.SEMVER.impl.VersionRangeConstraintImpl
+		 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERPackageImpl#getVersionRangeConstraint()
+		 * @generated
+		 */
+		EClass VERSION_RANGE_CONSTRAINT = eINSTANCE.getVersionRangeConstraint();
+
+		/**
+		 * The meta object literal for the '<em><b>Version Constraints</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference VERSION_RANGE_CONSTRAINT__VERSION_CONSTRAINTS = eINSTANCE.getVersionRangeConstraint_VersionConstraints();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.semver.SEMVER.impl.SimpleVersionImpl <em>Simple Version</em>}' class.

@@ -9,6 +9,7 @@ import org.eclipse.n4js.semver.SEMVER.Qualifier;
 import org.eclipse.n4js.semver.SEMVER.SimpleVersion;
 import org.eclipse.n4js.semver.SEMVER.VersionComparator;
 import org.eclipse.n4js.semver.SEMVER.VersionNumber;
+import org.eclipse.n4js.semver.SEMVER.VersionRangeConstraint;
 import org.eclipse.n4js.semver.SEMVER.VersionRangeSet;
 import org.eclipse.xtext.resource.SaveOptions;
 import org.eclipse.xtext.serializer.ISerializer;
@@ -29,6 +30,17 @@ public class SEMVERSerializer implements ISerializer {
 
 	public String serialize(HyphenVersionRange hvr) {
 		String str = serialize(hvr.getFrom()) + " - " + serialize(hvr.getTo());
+		return str;
+	}
+
+	public String serialize(VersionRangeConstraint vrc) {
+		String str = "";
+		for (int i = 0; i < vrc.getVersionConstraints().size(); i++) {
+			if (i > 0) {
+				str += " ";
+			}
+			str += serialize(vrc.getVersionConstraints().get(i));
+		}
 		return str;
 	}
 
@@ -93,6 +105,9 @@ public class SEMVERSerializer implements ISerializer {
 		}
 		if (obj instanceof HyphenVersionRange) {
 			return serialize((HyphenVersionRange) obj);
+		}
+		if (obj instanceof VersionRangeConstraint) {
+			return serialize((VersionRangeConstraint) obj);
 		}
 		if (obj instanceof SimpleVersion) {
 			return serialize((SimpleVersion) obj);

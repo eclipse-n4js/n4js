@@ -37,75 +37,78 @@ public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.SEMVER.VersionRangeSet");
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Action cVersionRangeSetAction_0 = (Action)cGroup.eContents().get(0);
-		private final Assignment cRangesAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cRangesVersionRangeParserRuleCall_1_0 = (RuleCall)cRangesAssignment_1.eContents().get(0);
+		private final RuleCall cWSTerminalRuleCall_1 = (RuleCall)cGroup.eContents().get(1);
 		private final Group cGroup_2 = (Group)cGroup.eContents().get(2);
-		private final Keyword cVerticalLineVerticalLineKeyword_2_0 = (Keyword)cGroup_2.eContents().get(0);
-		private final Assignment cRangesAssignment_2_1 = (Assignment)cGroup_2.eContents().get(1);
-		private final RuleCall cRangesVersionRangeParserRuleCall_2_1_0 = (RuleCall)cRangesAssignment_2_1.eContents().get(0);
+		private final Assignment cRangesAssignment_2_0 = (Assignment)cGroup_2.eContents().get(0);
+		private final RuleCall cRangesVersionRangeParserRuleCall_2_0_0 = (RuleCall)cRangesAssignment_2_0.eContents().get(0);
+		private final Group cGroup_2_1 = (Group)cGroup_2.eContents().get(1);
+		private final RuleCall cWSTerminalRuleCall_2_1_0 = (RuleCall)cGroup_2_1.eContents().get(0);
+		private final Keyword cVerticalLineVerticalLineKeyword_2_1_1 = (Keyword)cGroup_2_1.eContents().get(1);
+		private final RuleCall cWSTerminalRuleCall_2_1_2 = (RuleCall)cGroup_2_1.eContents().get(2);
+		private final Assignment cRangesAssignment_2_1_3 = (Assignment)cGroup_2_1.eContents().get(3);
+		private final RuleCall cRangesVersionRangeParserRuleCall_2_1_3_0 = (RuleCall)cRangesAssignment_2_1_3.eContents().get(0);
+		private final RuleCall cWSTerminalRuleCall_2_2 = (RuleCall)cGroup_2.eContents().get(2);
 		
 		//// This grammar is an adapted version of the BNF found at:
 		////  https://docs.npmjs.com/misc/semver
-		////
-		////	range-set  ::= range ( logical-or range ) *
-		////	logical-or ::= ( ' ' ) * '||' ( ' ' ) *
-		////	range      ::= hyphen | simple ( ' ' simple ) * | ''
-		////	hyphen     ::= partial ' - ' partial
-		////	simple     ::= primitive | partial | tilde | caret
-		////	primitive  ::= ( '<' | '>' | '>=' | '<=' | '=' | ) partial
-		////	partial    ::= xr ( '.' xr ( '.' xr qualifier ? )? )?
-		////	xr         ::= 'x' | 'X' | '*' | nr
-		////	nr         ::= '0' | ['1'-'9'] ( ['0'-'9'] ) *
-		////	tilde      ::= '~' partial
-		////	caret      ::= '^' partial
-		////	qualifier  ::= ( '-' pre )? ( '+' build )?
-		////	pre        ::= parts
-		////	build      ::= parts
-		////	parts      ::= part ( '.' part ) *
-		////	part       ::= nr | [-0-9A-Za-z]+
 		//VersionRangeSet:
-		//	{VersionRangeSet} ranges+=VersionRange? ('||' ranges+=VersionRange)*;
+		//	{VersionRangeSet} WS* (ranges+=VersionRange (WS* '||' WS* ranges+=VersionRange)* WS*)?;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//{VersionRangeSet} ranges+=VersionRange? ('||' ranges+=VersionRange)*
+		//{VersionRangeSet} WS* (ranges+=VersionRange (WS* '||' WS* ranges+=VersionRange)* WS*)?
 		public Group getGroup() { return cGroup; }
 		
 		//{VersionRangeSet}
 		public Action getVersionRangeSetAction_0() { return cVersionRangeSetAction_0; }
 		
-		//ranges+=VersionRange?
-		public Assignment getRangesAssignment_1() { return cRangesAssignment_1; }
+		//WS*
+		public RuleCall getWSTerminalRuleCall_1() { return cWSTerminalRuleCall_1; }
 		
-		//VersionRange
-		public RuleCall getRangesVersionRangeParserRuleCall_1_0() { return cRangesVersionRangeParserRuleCall_1_0; }
-		
-		//('||' ranges+=VersionRange)*
+		//(ranges+=VersionRange (WS* '||' WS* ranges+=VersionRange)* WS*)?
 		public Group getGroup_2() { return cGroup_2; }
 		
-		//'||'
-		public Keyword getVerticalLineVerticalLineKeyword_2_0() { return cVerticalLineVerticalLineKeyword_2_0; }
-		
 		//ranges+=VersionRange
-		public Assignment getRangesAssignment_2_1() { return cRangesAssignment_2_1; }
+		public Assignment getRangesAssignment_2_0() { return cRangesAssignment_2_0; }
 		
 		//VersionRange
-		public RuleCall getRangesVersionRangeParserRuleCall_2_1_0() { return cRangesVersionRangeParserRuleCall_2_1_0; }
+		public RuleCall getRangesVersionRangeParserRuleCall_2_0_0() { return cRangesVersionRangeParserRuleCall_2_0_0; }
+		
+		//(WS* '||' WS* ranges+=VersionRange)*
+		public Group getGroup_2_1() { return cGroup_2_1; }
+		
+		//WS*
+		public RuleCall getWSTerminalRuleCall_2_1_0() { return cWSTerminalRuleCall_2_1_0; }
+		
+		//'||'
+		public Keyword getVerticalLineVerticalLineKeyword_2_1_1() { return cVerticalLineVerticalLineKeyword_2_1_1; }
+		
+		//WS*
+		public RuleCall getWSTerminalRuleCall_2_1_2() { return cWSTerminalRuleCall_2_1_2; }
+		
+		//ranges+=VersionRange
+		public Assignment getRangesAssignment_2_1_3() { return cRangesAssignment_2_1_3; }
+		
+		//VersionRange
+		public RuleCall getRangesVersionRangeParserRuleCall_2_1_3_0() { return cRangesVersionRangeParserRuleCall_2_1_3_0; }
+		
+		//WS*
+		public RuleCall getWSTerminalRuleCall_2_2() { return cWSTerminalRuleCall_2_2; }
 	}
 	public class VersionRangeElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.SEMVER.VersionRange");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
-		private final RuleCall cSimpleVersionParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
+		private final RuleCall cVersionRangeContraintParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
 		private final RuleCall cHyphenVersionRangeParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
 		
 		//VersionRange:
-		//	SimpleVersion | HyphenVersionRange;
+		//	VersionRangeContraint | HyphenVersionRange;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//SimpleVersion | HyphenVersionRange
+		//VersionRangeContraint | HyphenVersionRange
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
-		//SimpleVersion
-		public RuleCall getSimpleVersionParserRuleCall_0() { return cSimpleVersionParserRuleCall_0; }
+		//VersionRangeContraint
+		public RuleCall getVersionRangeContraintParserRuleCall_0() { return cVersionRangeContraintParserRuleCall_0; }
 		
 		//HyphenVersionRange
 		public RuleCall getHyphenVersionRangeParserRuleCall_1() { return cHyphenVersionRangeParserRuleCall_1; }
@@ -116,15 +119,17 @@ public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 		private final Action cHyphenVersionRangeAction_0 = (Action)cGroup.eContents().get(0);
 		private final Assignment cFromAssignment_1 = (Assignment)cGroup.eContents().get(1);
 		private final RuleCall cFromVersionNumberParserRuleCall_1_0 = (RuleCall)cFromAssignment_1.eContents().get(0);
-		private final Keyword cHyphenMinusKeyword_2 = (Keyword)cGroup.eContents().get(2);
-		private final Assignment cToAssignment_3 = (Assignment)cGroup.eContents().get(3);
-		private final RuleCall cToVersionNumberParserRuleCall_3_0 = (RuleCall)cToAssignment_3.eContents().get(0);
+		private final RuleCall cWSTerminalRuleCall_2 = (RuleCall)cGroup.eContents().get(2);
+		private final Keyword cHyphenMinusKeyword_3 = (Keyword)cGroup.eContents().get(3);
+		private final RuleCall cWSTerminalRuleCall_4 = (RuleCall)cGroup.eContents().get(4);
+		private final Assignment cToAssignment_5 = (Assignment)cGroup.eContents().get(5);
+		private final RuleCall cToVersionNumberParserRuleCall_5_0 = (RuleCall)cToAssignment_5.eContents().get(0);
 		
 		//HyphenVersionRange VersionRange:
-		//	{HyphenVersionRange} from=VersionNumber '-' to=VersionNumber;
+		//	{HyphenVersionRange} from=VersionNumber WS+ '-' WS+ to=VersionNumber;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//{HyphenVersionRange} from=VersionNumber '-' to=VersionNumber
+		//{HyphenVersionRange} from=VersionNumber WS+ '-' WS+ to=VersionNumber
 		public Group getGroup() { return cGroup; }
 		
 		//{HyphenVersionRange}
@@ -136,14 +141,59 @@ public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 		//VersionNumber
 		public RuleCall getFromVersionNumberParserRuleCall_1_0() { return cFromVersionNumberParserRuleCall_1_0; }
 		
+		//WS+
+		public RuleCall getWSTerminalRuleCall_2() { return cWSTerminalRuleCall_2; }
+		
 		//'-'
-		public Keyword getHyphenMinusKeyword_2() { return cHyphenMinusKeyword_2; }
+		public Keyword getHyphenMinusKeyword_3() { return cHyphenMinusKeyword_3; }
+		
+		//WS+
+		public RuleCall getWSTerminalRuleCall_4() { return cWSTerminalRuleCall_4; }
 		
 		//to=VersionNumber
-		public Assignment getToAssignment_3() { return cToAssignment_3; }
+		public Assignment getToAssignment_5() { return cToAssignment_5; }
 		
 		//VersionNumber
-		public RuleCall getToVersionNumberParserRuleCall_3_0() { return cToVersionNumberParserRuleCall_3_0; }
+		public RuleCall getToVersionNumberParserRuleCall_5_0() { return cToVersionNumberParserRuleCall_5_0; }
+	}
+	public class VersionRangeContraintElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.SEMVER.VersionRangeContraint");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Action cVersionRangeConstraintAction_0 = (Action)cGroup.eContents().get(0);
+		private final Assignment cVersionConstraintsAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cVersionConstraintsSimpleVersionParserRuleCall_1_0 = (RuleCall)cVersionConstraintsAssignment_1.eContents().get(0);
+		private final Group cGroup_2 = (Group)cGroup.eContents().get(2);
+		private final RuleCall cWSTerminalRuleCall_2_0 = (RuleCall)cGroup_2.eContents().get(0);
+		private final Assignment cVersionConstraintsAssignment_2_1 = (Assignment)cGroup_2.eContents().get(1);
+		private final RuleCall cVersionConstraintsSimpleVersionParserRuleCall_2_1_0 = (RuleCall)cVersionConstraintsAssignment_2_1.eContents().get(0);
+		
+		//VersionRangeContraint VersionRange:
+		//	{VersionRangeConstraint} versionConstraints+=SimpleVersion (WS+ versionConstraints+=SimpleVersion)*;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//{VersionRangeConstraint} versionConstraints+=SimpleVersion (WS+ versionConstraints+=SimpleVersion)*
+		public Group getGroup() { return cGroup; }
+		
+		//{VersionRangeConstraint}
+		public Action getVersionRangeConstraintAction_0() { return cVersionRangeConstraintAction_0; }
+		
+		//versionConstraints+=SimpleVersion
+		public Assignment getVersionConstraintsAssignment_1() { return cVersionConstraintsAssignment_1; }
+		
+		//SimpleVersion
+		public RuleCall getVersionConstraintsSimpleVersionParserRuleCall_1_0() { return cVersionConstraintsSimpleVersionParserRuleCall_1_0; }
+		
+		//(WS+ versionConstraints+=SimpleVersion)*
+		public Group getGroup_2() { return cGroup_2; }
+		
+		//WS+
+		public RuleCall getWSTerminalRuleCall_2_0() { return cWSTerminalRuleCall_2_0; }
+		
+		//versionConstraints+=SimpleVersion
+		public Assignment getVersionConstraintsAssignment_2_1() { return cVersionConstraintsAssignment_2_1; }
+		
+		//SimpleVersion
+		public RuleCall getVersionConstraintsSimpleVersionParserRuleCall_2_1_0() { return cVersionConstraintsSimpleVersionParserRuleCall_2_1_0; }
 	}
 	public class SimpleVersionElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.SEMVER.SimpleVersion");
@@ -154,7 +204,7 @@ public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cNumberAssignment_2 = (Assignment)cGroup.eContents().get(2);
 		private final RuleCall cNumberVersionNumberParserRuleCall_2_0 = (RuleCall)cNumberAssignment_2.eContents().get(0);
 		
-		//SimpleVersion VersionRange:
+		//SimpleVersion:
 		//	{SimpleVersion} comparators+=VersionComparator* number=VersionNumber;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -180,19 +230,19 @@ public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.SEMVER.VersionNumber");
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Assignment cMajorAssignment_0 = (Assignment)cGroup.eContents().get(0);
-		private final RuleCall cMajorVERSION_PARTTerminalRuleCall_0_0 = (RuleCall)cMajorAssignment_0.eContents().get(0);
+		private final RuleCall cMajorVERSION_PARTParserRuleCall_0_0 = (RuleCall)cMajorAssignment_0.eContents().get(0);
 		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
 		private final Keyword cFullStopKeyword_1_0 = (Keyword)cGroup_1.eContents().get(0);
 		private final Assignment cMinorAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
-		private final RuleCall cMinorVERSION_PARTTerminalRuleCall_1_1_0 = (RuleCall)cMinorAssignment_1_1.eContents().get(0);
+		private final RuleCall cMinorVERSION_PARTParserRuleCall_1_1_0 = (RuleCall)cMinorAssignment_1_1.eContents().get(0);
 		private final Group cGroup_1_2 = (Group)cGroup_1.eContents().get(2);
 		private final Keyword cFullStopKeyword_1_2_0 = (Keyword)cGroup_1_2.eContents().get(0);
 		private final Assignment cPatchAssignment_1_2_1 = (Assignment)cGroup_1_2.eContents().get(1);
-		private final RuleCall cPatchVERSION_PARTTerminalRuleCall_1_2_1_0 = (RuleCall)cPatchAssignment_1_2_1.eContents().get(0);
+		private final RuleCall cPatchVERSION_PARTParserRuleCall_1_2_1_0 = (RuleCall)cPatchAssignment_1_2_1.eContents().get(0);
 		private final Group cGroup_1_2_2 = (Group)cGroup_1_2.eContents().get(2);
 		private final Keyword cFullStopKeyword_1_2_2_0 = (Keyword)cGroup_1_2_2.eContents().get(0);
 		private final Assignment cExtendedAssignment_1_2_2_1 = (Assignment)cGroup_1_2_2.eContents().get(1);
-		private final RuleCall cExtendedVERSION_PARTTerminalRuleCall_1_2_2_1_0 = (RuleCall)cExtendedAssignment_1_2_2_1.eContents().get(0);
+		private final RuleCall cExtendedVERSION_PARTParserRuleCall_1_2_2_1_0 = (RuleCall)cExtendedAssignment_1_2_2_1.eContents().get(0);
 		private final Assignment cQualifierAssignment_2 = (Assignment)cGroup.eContents().get(2);
 		private final RuleCall cQualifierQualifierParserRuleCall_2_0 = (RuleCall)cQualifierAssignment_2.eContents().get(0);
 		
@@ -209,7 +259,7 @@ public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 		public Assignment getMajorAssignment_0() { return cMajorAssignment_0; }
 		
 		//VERSION_PART
-		public RuleCall getMajorVERSION_PARTTerminalRuleCall_0_0() { return cMajorVERSION_PARTTerminalRuleCall_0_0; }
+		public RuleCall getMajorVERSION_PARTParserRuleCall_0_0() { return cMajorVERSION_PARTParserRuleCall_0_0; }
 		
 		//('.' minor=VERSION_PART ('.' patch=VERSION_PART ('.' extended+=VERSION_PART)*)?)?
 		public Group getGroup_1() { return cGroup_1; }
@@ -221,7 +271,7 @@ public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 		public Assignment getMinorAssignment_1_1() { return cMinorAssignment_1_1; }
 		
 		//VERSION_PART
-		public RuleCall getMinorVERSION_PARTTerminalRuleCall_1_1_0() { return cMinorVERSION_PARTTerminalRuleCall_1_1_0; }
+		public RuleCall getMinorVERSION_PARTParserRuleCall_1_1_0() { return cMinorVERSION_PARTParserRuleCall_1_1_0; }
 		
 		//('.' patch=VERSION_PART ('.' extended+=VERSION_PART)*)?
 		public Group getGroup_1_2() { return cGroup_1_2; }
@@ -233,7 +283,7 @@ public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 		public Assignment getPatchAssignment_1_2_1() { return cPatchAssignment_1_2_1; }
 		
 		//VERSION_PART
-		public RuleCall getPatchVERSION_PARTTerminalRuleCall_1_2_1_0() { return cPatchVERSION_PARTTerminalRuleCall_1_2_1_0; }
+		public RuleCall getPatchVERSION_PARTParserRuleCall_1_2_1_0() { return cPatchVERSION_PARTParserRuleCall_1_2_1_0; }
 		
 		//('.' extended+=VERSION_PART)*
 		public Group getGroup_1_2_2() { return cGroup_1_2_2; }
@@ -245,7 +295,7 @@ public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 		public Assignment getExtendedAssignment_1_2_2_1() { return cExtendedAssignment_1_2_2_1; }
 		
 		//VERSION_PART
-		public RuleCall getExtendedVERSION_PARTTerminalRuleCall_1_2_2_1_0() { return cExtendedVERSION_PARTTerminalRuleCall_1_2_2_1_0; }
+		public RuleCall getExtendedVERSION_PARTParserRuleCall_1_2_2_1_0() { return cExtendedVERSION_PARTParserRuleCall_1_2_2_1_0; }
 		
 		//qualifier=Qualifier?
 		public Assignment getQualifierAssignment_2() { return cQualifierAssignment_2; }
@@ -259,18 +309,18 @@ public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 		private final Group cGroup_0 = (Group)cAlternatives.eContents().get(0);
 		private final Keyword cHyphenMinusKeyword_0_0 = (Keyword)cGroup_0.eContents().get(0);
 		private final Assignment cPreReleaseAssignment_0_1 = (Assignment)cGroup_0.eContents().get(1);
-		private final RuleCall cPreReleaseALPHA_NUMERIC_CHARSTerminalRuleCall_0_1_0 = (RuleCall)cPreReleaseAssignment_0_1.eContents().get(0);
+		private final RuleCall cPreReleaseALPHA_NUMERIC_CHARSParserRuleCall_0_1_0 = (RuleCall)cPreReleaseAssignment_0_1.eContents().get(0);
 		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
 		private final Keyword cPlusSignKeyword_1_0 = (Keyword)cGroup_1.eContents().get(0);
 		private final Assignment cBuildMetadataAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
-		private final RuleCall cBuildMetadataALPHA_NUMERIC_CHARSTerminalRuleCall_1_1_0 = (RuleCall)cBuildMetadataAssignment_1_1.eContents().get(0);
+		private final RuleCall cBuildMetadataALPHA_NUMERIC_CHARSParserRuleCall_1_1_0 = (RuleCall)cBuildMetadataAssignment_1_1.eContents().get(0);
 		private final Group cGroup_2 = (Group)cAlternatives.eContents().get(2);
 		private final Keyword cHyphenMinusKeyword_2_0 = (Keyword)cGroup_2.eContents().get(0);
 		private final Assignment cPreReleaseAssignment_2_1 = (Assignment)cGroup_2.eContents().get(1);
-		private final RuleCall cPreReleaseALPHA_NUMERIC_CHARSTerminalRuleCall_2_1_0 = (RuleCall)cPreReleaseAssignment_2_1.eContents().get(0);
+		private final RuleCall cPreReleaseALPHA_NUMERIC_CHARSParserRuleCall_2_1_0 = (RuleCall)cPreReleaseAssignment_2_1.eContents().get(0);
 		private final Keyword cPlusSignKeyword_2_2 = (Keyword)cGroup_2.eContents().get(2);
 		private final Assignment cBuildMetadataAssignment_2_3 = (Assignment)cGroup_2.eContents().get(3);
-		private final RuleCall cBuildMetadataALPHA_NUMERIC_CHARSTerminalRuleCall_2_3_0 = (RuleCall)cBuildMetadataAssignment_2_3.eContents().get(0);
+		private final RuleCall cBuildMetadataALPHA_NUMERIC_CHARSParserRuleCall_2_3_0 = (RuleCall)cBuildMetadataAssignment_2_3.eContents().get(0);
 		
 		//Qualifier:
 		//	'-' preRelease=ALPHA_NUMERIC_CHARS | '+' buildMetadata=ALPHA_NUMERIC_CHARS | '-' preRelease=ALPHA_NUMERIC_CHARS '+'
@@ -291,7 +341,7 @@ public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 		public Assignment getPreReleaseAssignment_0_1() { return cPreReleaseAssignment_0_1; }
 		
 		//ALPHA_NUMERIC_CHARS
-		public RuleCall getPreReleaseALPHA_NUMERIC_CHARSTerminalRuleCall_0_1_0() { return cPreReleaseALPHA_NUMERIC_CHARSTerminalRuleCall_0_1_0; }
+		public RuleCall getPreReleaseALPHA_NUMERIC_CHARSParserRuleCall_0_1_0() { return cPreReleaseALPHA_NUMERIC_CHARSParserRuleCall_0_1_0; }
 		
 		//'+' buildMetadata=ALPHA_NUMERIC_CHARS
 		public Group getGroup_1() { return cGroup_1; }
@@ -303,7 +353,7 @@ public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 		public Assignment getBuildMetadataAssignment_1_1() { return cBuildMetadataAssignment_1_1; }
 		
 		//ALPHA_NUMERIC_CHARS
-		public RuleCall getBuildMetadataALPHA_NUMERIC_CHARSTerminalRuleCall_1_1_0() { return cBuildMetadataALPHA_NUMERIC_CHARSTerminalRuleCall_1_1_0; }
+		public RuleCall getBuildMetadataALPHA_NUMERIC_CHARSParserRuleCall_1_1_0() { return cBuildMetadataALPHA_NUMERIC_CHARSParserRuleCall_1_1_0; }
 		
 		//'-' preRelease=ALPHA_NUMERIC_CHARS '+' buildMetadata=ALPHA_NUMERIC_CHARS
 		public Group getGroup_2() { return cGroup_2; }
@@ -315,7 +365,7 @@ public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 		public Assignment getPreReleaseAssignment_2_1() { return cPreReleaseAssignment_2_1; }
 		
 		//ALPHA_NUMERIC_CHARS
-		public RuleCall getPreReleaseALPHA_NUMERIC_CHARSTerminalRuleCall_2_1_0() { return cPreReleaseALPHA_NUMERIC_CHARSTerminalRuleCall_2_1_0; }
+		public RuleCall getPreReleaseALPHA_NUMERIC_CHARSParserRuleCall_2_1_0() { return cPreReleaseALPHA_NUMERIC_CHARSParserRuleCall_2_1_0; }
 		
 		//'+'
 		public Keyword getPlusSignKeyword_2_2() { return cPlusSignKeyword_2_2; }
@@ -324,7 +374,76 @@ public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 		public Assignment getBuildMetadataAssignment_2_3() { return cBuildMetadataAssignment_2_3; }
 		
 		//ALPHA_NUMERIC_CHARS
-		public RuleCall getBuildMetadataALPHA_NUMERIC_CHARSTerminalRuleCall_2_3_0() { return cBuildMetadataALPHA_NUMERIC_CHARSTerminalRuleCall_2_3_0; }
+		public RuleCall getBuildMetadataALPHA_NUMERIC_CHARSParserRuleCall_2_3_0() { return cBuildMetadataALPHA_NUMERIC_CHARSParserRuleCall_2_3_0; }
+	}
+	public class ALPHA_NUMERIC_CHARSElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.SEMVER.ALPHA_NUMERIC_CHARS");
+		private final RuleCall cALPHA_NUMERIC_CHARParserRuleCall = (RuleCall)rule.eContents().get(1);
+		
+		//ALPHA_NUMERIC_CHARS:
+		//	ALPHA_NUMERIC_CHAR+;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//ALPHA_NUMERIC_CHAR+
+		public RuleCall getALPHA_NUMERIC_CHARParserRuleCall() { return cALPHA_NUMERIC_CHARParserRuleCall; }
+	}
+	public class VERSION_PARTElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.SEMVER.VERSION_PART");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final Keyword cXKeyword_0 = (Keyword)cAlternatives.eContents().get(0);
+		private final Keyword cXKeyword_1 = (Keyword)cAlternatives.eContents().get(1);
+		private final Keyword cAsteriskKeyword_2 = (Keyword)cAlternatives.eContents().get(2);
+		private final RuleCall cDIGITSTerminalRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
+		
+		//VERSION_PART:
+		//	'x' | 'X' | '*' | DIGITS;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//'x' | 'X' | '*' | DIGITS
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//'x'
+		public Keyword getXKeyword_0() { return cXKeyword_0; }
+		
+		//'X'
+		public Keyword getXKeyword_1() { return cXKeyword_1; }
+		
+		//'*'
+		public Keyword getAsteriskKeyword_2() { return cAsteriskKeyword_2; }
+		
+		//DIGITS
+		public RuleCall getDIGITSTerminalRuleCall_3() { return cDIGITSTerminalRuleCall_3; }
+	}
+	public class ALPHA_NUMERIC_CHARElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.SEMVER.ALPHA_NUMERIC_CHAR");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Keyword cHyphenMinusKeyword_0 = (Keyword)cGroup.eContents().get(0);
+		private final Keyword cFullStopKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		private final Alternatives cAlternatives_2 = (Alternatives)cGroup.eContents().get(2);
+		private final RuleCall cDIGITSTerminalRuleCall_2_0 = (RuleCall)cAlternatives_2.eContents().get(0);
+		private final RuleCall cLETTERSTerminalRuleCall_2_1 = (RuleCall)cAlternatives_2.eContents().get(1);
+		
+		//fragment ALPHA_NUMERIC_CHAR:
+		//	"-"? "."? (DIGITS | LETTERS);
+		@Override public ParserRule getRule() { return rule; }
+		
+		//"-"? "."? (DIGITS | LETTERS)
+		public Group getGroup() { return cGroup; }
+		
+		//"-"?
+		public Keyword getHyphenMinusKeyword_0() { return cHyphenMinusKeyword_0; }
+		
+		//"."?
+		public Keyword getFullStopKeyword_1() { return cFullStopKeyword_1; }
+		
+		//DIGITS | LETTERS
+		public Alternatives getAlternatives_2() { return cAlternatives_2; }
+		
+		//DIGITS
+		public RuleCall getDIGITSTerminalRuleCall_2_0() { return cDIGITSTerminalRuleCall_2_0; }
+		
+		//LETTERS
+		public RuleCall getLETTERSTerminalRuleCall_2_1() { return cLETTERSTerminalRuleCall_2_1; }
 	}
 	
 	public class VersionComparatorElements extends AbstractEnumRuleElementFinder {
@@ -413,16 +532,16 @@ public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 	private final VersionRangeSetElements pVersionRangeSet;
 	private final VersionRangeElements pVersionRange;
 	private final HyphenVersionRangeElements pHyphenVersionRange;
+	private final VersionRangeContraintElements pVersionRangeContraint;
 	private final SimpleVersionElements pSimpleVersion;
 	private final VersionNumberElements pVersionNumber;
 	private final QualifierElements pQualifier;
-	private final TerminalRule tVERSION_PART;
-	private final TerminalRule tALPHA_NUMERIC_CHARS;
-	private final TerminalRule tALPHA_NUMERIC_CHAR;
-	private final TerminalRule tNON_DIGIT;
-	private final TerminalRule tNUMERIC_ID;
+	private final ALPHA_NUMERIC_CHARSElements pALPHA_NUMERIC_CHARS;
+	private final VERSION_PARTElements pVERSION_PART;
+	private final ALPHA_NUMERIC_CHARElements pALPHA_NUMERIC_CHAR;
+	private final TerminalRule tLETTERS;
+	private final TerminalRule tDIGITS;
 	private final TerminalRule tDIGIT;
-	private final TerminalRule tPOSITIVE_DIGIT;
 	private final TerminalRule tLETTER;
 	private final TerminalRule tWS;
 	private final TerminalRule tEOL;
@@ -440,16 +559,16 @@ public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 		this.pVersionRangeSet = new VersionRangeSetElements();
 		this.pVersionRange = new VersionRangeElements();
 		this.pHyphenVersionRange = new HyphenVersionRangeElements();
+		this.pVersionRangeContraint = new VersionRangeContraintElements();
 		this.pSimpleVersion = new SimpleVersionElements();
 		this.pVersionNumber = new VersionNumberElements();
 		this.pQualifier = new QualifierElements();
-		this.tVERSION_PART = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.SEMVER.VERSION_PART");
-		this.tALPHA_NUMERIC_CHARS = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.SEMVER.ALPHA_NUMERIC_CHARS");
-		this.tALPHA_NUMERIC_CHAR = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.SEMVER.ALPHA_NUMERIC_CHAR");
-		this.tNON_DIGIT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.SEMVER.NON_DIGIT");
-		this.tNUMERIC_ID = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.SEMVER.NUMERIC_ID");
+		this.pALPHA_NUMERIC_CHARS = new ALPHA_NUMERIC_CHARSElements();
+		this.pVERSION_PART = new VERSION_PARTElements();
+		this.pALPHA_NUMERIC_CHAR = new ALPHA_NUMERIC_CHARElements();
+		this.tLETTERS = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.SEMVER.LETTERS");
+		this.tDIGITS = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.SEMVER.DIGITS");
 		this.tDIGIT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.SEMVER.DIGIT");
-		this.tPOSITIVE_DIGIT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.SEMVER.POSITIVE_DIGIT");
 		this.tLETTER = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.SEMVER.LETTER");
 		this.tWS = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.SEMVER.WS");
 		this.tEOL = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.SEMVER.EOL");
@@ -485,25 +604,8 @@ public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//// This grammar is an adapted version of the BNF found at:
 	////  https://docs.npmjs.com/misc/semver
-	////
-	////	range-set  ::= range ( logical-or range ) *
-	////	logical-or ::= ( ' ' ) * '||' ( ' ' ) *
-	////	range      ::= hyphen | simple ( ' ' simple ) * | ''
-	////	hyphen     ::= partial ' - ' partial
-	////	simple     ::= primitive | partial | tilde | caret
-	////	primitive  ::= ( '<' | '>' | '>=' | '<=' | '=' | ) partial
-	////	partial    ::= xr ( '.' xr ( '.' xr qualifier ? )? )?
-	////	xr         ::= 'x' | 'X' | '*' | nr
-	////	nr         ::= '0' | ['1'-'9'] ( ['0'-'9'] ) *
-	////	tilde      ::= '~' partial
-	////	caret      ::= '^' partial
-	////	qualifier  ::= ( '-' pre )? ( '+' build )?
-	////	pre        ::= parts
-	////	build      ::= parts
-	////	parts      ::= part ( '.' part ) *
-	////	part       ::= nr | [-0-9A-Za-z]+
 	//VersionRangeSet:
-	//	{VersionRangeSet} ranges+=VersionRange? ('||' ranges+=VersionRange)*;
+	//	{VersionRangeSet} WS* (ranges+=VersionRange (WS* '||' WS* ranges+=VersionRange)* WS*)?;
 	public VersionRangeSetElements getVersionRangeSetAccess() {
 		return pVersionRangeSet;
 	}
@@ -513,7 +615,7 @@ public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//VersionRange:
-	//	SimpleVersion | HyphenVersionRange;
+	//	VersionRangeContraint | HyphenVersionRange;
 	public VersionRangeElements getVersionRangeAccess() {
 		return pVersionRange;
 	}
@@ -523,7 +625,7 @@ public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//HyphenVersionRange VersionRange:
-	//	{HyphenVersionRange} from=VersionNumber '-' to=VersionNumber;
+	//	{HyphenVersionRange} from=VersionNumber WS+ '-' WS+ to=VersionNumber;
 	public HyphenVersionRangeElements getHyphenVersionRangeAccess() {
 		return pHyphenVersionRange;
 	}
@@ -532,7 +634,17 @@ public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 		return getHyphenVersionRangeAccess().getRule();
 	}
 	
-	//SimpleVersion VersionRange:
+	//VersionRangeContraint VersionRange:
+	//	{VersionRangeConstraint} versionConstraints+=SimpleVersion (WS+ versionConstraints+=SimpleVersion)*;
+	public VersionRangeContraintElements getVersionRangeContraintAccess() {
+		return pVersionRangeContraint;
+	}
+	
+	public ParserRule getVersionRangeContraintRule() {
+		return getVersionRangeContraintAccess().getRule();
+	}
+	
+	//SimpleVersion:
 	//	{SimpleVersion} comparators+=VersionComparator* number=VersionNumber;
 	public SimpleVersionElements getSimpleVersionAccess() {
 		return pSimpleVersion;
@@ -564,46 +676,52 @@ public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 		return getQualifierAccess().getRule();
 	}
 	
-	//terminal VERSION_PART:
-	//	'x' | 'X' | '*' | NUMERIC_ID;
-	public TerminalRule getVERSION_PARTRule() {
-		return tVERSION_PART;
-	}
-	
-	//terminal ALPHA_NUMERIC_CHARS:
+	//ALPHA_NUMERIC_CHARS:
 	//	ALPHA_NUMERIC_CHAR+;
-	public TerminalRule getALPHA_NUMERIC_CHARSRule() {
-		return tALPHA_NUMERIC_CHARS;
+	public ALPHA_NUMERIC_CHARSElements getALPHA_NUMERIC_CHARSAccess() {
+		return pALPHA_NUMERIC_CHARS;
 	}
 	
-	//terminal ALPHA_NUMERIC_CHAR:
-	//	DIGIT | NON_DIGIT;
-	public TerminalRule getALPHA_NUMERIC_CHARRule() {
-		return tALPHA_NUMERIC_CHAR;
+	public ParserRule getALPHA_NUMERIC_CHARSRule() {
+		return getALPHA_NUMERIC_CHARSAccess().getRule();
 	}
 	
-	//terminal fragment NON_DIGIT:
-	//	"-" | LETTER;
-	public TerminalRule getNON_DIGITRule() {
-		return tNON_DIGIT;
+	//VERSION_PART:
+	//	'x' | 'X' | '*' | DIGITS;
+	public VERSION_PARTElements getVERSION_PARTAccess() {
+		return pVERSION_PART;
 	}
 	
-	//terminal fragment NUMERIC_ID:
-	//	"0" | POSITIVE_DIGIT DIGIT*;
-	public TerminalRule getNUMERIC_IDRule() {
-		return tNUMERIC_ID;
+	public ParserRule getVERSION_PARTRule() {
+		return getVERSION_PARTAccess().getRule();
+	}
+	
+	//fragment ALPHA_NUMERIC_CHAR:
+	//	"-"? "."? (DIGITS | LETTERS);
+	public ALPHA_NUMERIC_CHARElements getALPHA_NUMERIC_CHARAccess() {
+		return pALPHA_NUMERIC_CHAR;
+	}
+	
+	public ParserRule getALPHA_NUMERIC_CHARRule() {
+		return getALPHA_NUMERIC_CHARAccess().getRule();
+	}
+	
+	//terminal LETTERS:
+	//	LETTER+;
+	public TerminalRule getLETTERSRule() {
+		return tLETTERS;
+	}
+	
+	//terminal DIGITS:
+	//	DIGIT+;
+	public TerminalRule getDIGITSRule() {
+		return tDIGITS;
 	}
 	
 	//terminal fragment DIGIT:
-	//	"0" | POSITIVE_DIGIT;
+	//	"0".."9";
 	public TerminalRule getDIGITRule() {
 		return tDIGIT;
-	}
-	
-	//terminal fragment POSITIVE_DIGIT:
-	//	"1".."9";
-	public TerminalRule getPOSITIVE_DIGITRule() {
-		return tPOSITIVE_DIGIT;
 	}
 	
 	//terminal fragment LETTER:

@@ -11,7 +11,7 @@
 
 grammar org.eclipse.n4js.semver.SEMVER
 	with org.eclipse.n4js.common.unicode.Unicode
-	hidden (WS, EOL)
+	hidden (EOL)
 
 import "http://www.eclipse.org/n4js/SEMVER"
 import "http://www.eclipse.org/emf/2002/Ecore" as ecore
@@ -20,39 +20,26 @@ import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 
 // This grammar is an adapted version of the BNF found at:
 //  https://docs.npmjs.com/misc/semver
-//
-//	range-set  ::= range ( logical-or range ) *
-//	logical-or ::= ( ' ' ) * '||' ( ' ' ) *
-//	range      ::= hyphen | simple ( ' ' simple ) * | ''
-//	hyphen     ::= partial ' - ' partial
-//	simple     ::= primitive | partial | tilde | caret
-//	primitive  ::= ( '<' | '>' | '>=' | '<=' | '=' | ) partial
-//	partial    ::= xr ( '.' xr ( '.' xr qualifier ? )? )?
-//	xr         ::= 'x' | 'X' | '*' | nr
-//	nr         ::= '0' | ['1'-'9'] ( ['0'-'9'] ) *
-//	tilde      ::= '~' partial
-//	caret      ::= '^' partial
-//	qualifier  ::= ( '-' pre )? ( '+' build )?
-//	pre        ::= parts
-//	build      ::= parts
-//	parts      ::= part ( '.' part ) *
-//	part       ::= nr | [-0-9A-Za-z]+
 
 
 
 VersionRangeSet:
-	{VersionRangeSet} ranges+=VersionRange? ('||' ranges+=VersionRange)*
+	{VersionRangeSet} WS* (ranges+=VersionRange (WS* '||' WS* ranges+=VersionRange)* WS* )?
 ;
 
 VersionRange:
-	SimpleVersion | HyphenVersionRange
+	VersionRangeContraint | HyphenVersionRange
 ;
 
 HyphenVersionRange returns VersionRange:
-	{HyphenVersionRange} from=VersionNumber '-' to=VersionNumber
+	{HyphenVersionRange} from=VersionNumber WS+ '-' WS+  to=VersionNumber
 ;
 
-SimpleVersion returns VersionRange:
+VersionRangeContraint returns VersionRange:
+	{VersionRangeConstraint} versionConstraints+=SimpleVersion (WS+ versionConstraints+=SimpleVersion)*
+;
+
+SimpleVersion:
 	{SimpleVersion} (comparators+=VersionComparator)* number=VersionNumber
 ;
 
@@ -73,43 +60,38 @@ Qualifier:
 ;
 
 
-
-
-terminal VERSION_PART:
-	'x' | 'X' | '*' | NUMERIC_ID
-;
-
-
-terminal ALPHA_NUMERIC_CHARS:
+ALPHA_NUMERIC_CHARS:
 	ALPHA_NUMERIC_CHAR+
 ;
 
-terminal ALPHA_NUMERIC_CHAR:
-	DIGIT | NON_DIGIT
+VERSION_PART:
+	'x' | 'X' | '*' | DIGITS
 ;
 
 
 
-
-terminal fragment NON_DIGIT:
-	"-" | LETTER
+fragment ALPHA_NUMERIC_CHAR:
+	"-"? "."? (DIGITS | LETTERS)
 ;
 
-terminal fragment NUMERIC_ID:
-	"0" | (POSITIVE_DIGIT DIGIT*)
+terminal LETTERS:
+	LETTER+
 ;
+
+terminal DIGITS:
+	DIGIT+
+;
+
 
 terminal fragment DIGIT:
-	"0" | POSITIVE_DIGIT
-;
-
-terminal fragment POSITIVE_DIGIT:
-	"1".."9"
+	"0".."9"
 ;
 
 terminal fragment LETTER :
 	"a".."z" | "A".."Z"
 ;
+
+
 
 terminal WS:
 	WHITESPACE_FRAGMENT+;

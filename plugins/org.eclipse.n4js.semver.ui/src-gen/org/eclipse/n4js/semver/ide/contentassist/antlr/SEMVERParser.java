@@ -40,10 +40,15 @@ public class SEMVERParser extends AbstractContentAssistParser {
 				{
 					put(grammarAccess.getVersionRangeAccess().getAlternatives(), "rule__VersionRange__Alternatives");
 					put(grammarAccess.getQualifierAccess().getAlternatives(), "rule__Qualifier__Alternatives");
+					put(grammarAccess.getVERSION_PARTAccess().getAlternatives(), "rule__VERSION_PART__Alternatives");
+					put(grammarAccess.getALPHA_NUMERIC_CHARAccess().getAlternatives_2(), "rule__ALPHA_NUMERIC_CHAR__Alternatives_2");
 					put(grammarAccess.getVersionComparatorAccess().getAlternatives(), "rule__VersionComparator__Alternatives");
 					put(grammarAccess.getVersionRangeSetAccess().getGroup(), "rule__VersionRangeSet__Group__0");
 					put(grammarAccess.getVersionRangeSetAccess().getGroup_2(), "rule__VersionRangeSet__Group_2__0");
+					put(grammarAccess.getVersionRangeSetAccess().getGroup_2_1(), "rule__VersionRangeSet__Group_2_1__0");
 					put(grammarAccess.getHyphenVersionRangeAccess().getGroup(), "rule__HyphenVersionRange__Group__0");
+					put(grammarAccess.getVersionRangeContraintAccess().getGroup(), "rule__VersionRangeContraint__Group__0");
+					put(grammarAccess.getVersionRangeContraintAccess().getGroup_2(), "rule__VersionRangeContraint__Group_2__0");
 					put(grammarAccess.getSimpleVersionAccess().getGroup(), "rule__SimpleVersion__Group__0");
 					put(grammarAccess.getVersionNumberAccess().getGroup(), "rule__VersionNumber__Group__0");
 					put(grammarAccess.getVersionNumberAccess().getGroup_1(), "rule__VersionNumber__Group_1__0");
@@ -52,10 +57,13 @@ public class SEMVERParser extends AbstractContentAssistParser {
 					put(grammarAccess.getQualifierAccess().getGroup_0(), "rule__Qualifier__Group_0__0");
 					put(grammarAccess.getQualifierAccess().getGroup_1(), "rule__Qualifier__Group_1__0");
 					put(grammarAccess.getQualifierAccess().getGroup_2(), "rule__Qualifier__Group_2__0");
-					put(grammarAccess.getVersionRangeSetAccess().getRangesAssignment_1(), "rule__VersionRangeSet__RangesAssignment_1");
-					put(grammarAccess.getVersionRangeSetAccess().getRangesAssignment_2_1(), "rule__VersionRangeSet__RangesAssignment_2_1");
+					put(grammarAccess.getALPHA_NUMERIC_CHARAccess().getGroup(), "rule__ALPHA_NUMERIC_CHAR__Group__0");
+					put(grammarAccess.getVersionRangeSetAccess().getRangesAssignment_2_0(), "rule__VersionRangeSet__RangesAssignment_2_0");
+					put(grammarAccess.getVersionRangeSetAccess().getRangesAssignment_2_1_3(), "rule__VersionRangeSet__RangesAssignment_2_1_3");
 					put(grammarAccess.getHyphenVersionRangeAccess().getFromAssignment_1(), "rule__HyphenVersionRange__FromAssignment_1");
-					put(grammarAccess.getHyphenVersionRangeAccess().getToAssignment_3(), "rule__HyphenVersionRange__ToAssignment_3");
+					put(grammarAccess.getHyphenVersionRangeAccess().getToAssignment_5(), "rule__HyphenVersionRange__ToAssignment_5");
+					put(grammarAccess.getVersionRangeContraintAccess().getVersionConstraintsAssignment_1(), "rule__VersionRangeContraint__VersionConstraintsAssignment_1");
+					put(grammarAccess.getVersionRangeContraintAccess().getVersionConstraintsAssignment_2_1(), "rule__VersionRangeContraint__VersionConstraintsAssignment_2_1");
 					put(grammarAccess.getSimpleVersionAccess().getComparatorsAssignment_1(), "rule__SimpleVersion__ComparatorsAssignment_1");
 					put(grammarAccess.getSimpleVersionAccess().getNumberAssignment_2(), "rule__SimpleVersion__NumberAssignment_2");
 					put(grammarAccess.getVersionNumberAccess().getMajorAssignment_0(), "rule__VersionNumber__MajorAssignment_0");
@@ -75,7 +83,7 @@ public class SEMVERParser extends AbstractContentAssistParser {
 			
 	@Override
 	protected String[] getInitialHiddenTokens() {
-		return new String[] { "RULE_WS", "RULE_EOL" };
+		return new String[] { "RULE_EOL" };
 	}
 
 	public SEMVERGrammarAccess getGrammarAccess() {

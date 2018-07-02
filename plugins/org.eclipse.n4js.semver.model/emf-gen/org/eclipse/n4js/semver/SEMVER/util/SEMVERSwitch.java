@@ -93,6 +93,13 @@ public class SEMVERSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case SEMVERPackage.VERSION_RANGE_CONSTRAINT: {
+				VersionRangeConstraint versionRangeConstraint = (VersionRangeConstraint)theEObject;
+				T result = caseVersionRangeConstraint(versionRangeConstraint);
+				if (result == null) result = caseVersionRange(versionRangeConstraint);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case SEMVERPackage.SIMPLE_VERSION: {
 				SimpleVersion simpleVersion = (SimpleVersion)theEObject;
 				T result = caseSimpleVersion(simpleVersion);
@@ -158,6 +165,21 @@ public class SEMVERSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseHyphenVersionRange(HyphenVersionRange object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Version Range Constraint</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Version Range Constraint</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseVersionRangeConstraint(VersionRangeConstraint object) {
 		return null;
 	}
 

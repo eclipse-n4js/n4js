@@ -23,7 +23,7 @@ public class SEMVERParser extends AbstractAntlrParser {
 
 	@Override
 	protected void setInitialHiddenTokens(XtextTokenStream tokenStream) {
-		tokenStream.setInitialHiddenTokens("RULE_WS", "RULE_EOL");
+		tokenStream.setInitialHiddenTokens("RULE_EOL");
 	}
 	
 

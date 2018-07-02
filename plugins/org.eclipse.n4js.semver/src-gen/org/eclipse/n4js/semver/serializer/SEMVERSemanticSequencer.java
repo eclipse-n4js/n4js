@@ -19,6 +19,7 @@ import org.eclipse.n4js.semver.SEMVER.Qualifier;
 import org.eclipse.n4js.semver.SEMVER.SEMVERPackage;
 import org.eclipse.n4js.semver.SEMVER.SimpleVersion;
 import org.eclipse.n4js.semver.SEMVER.VersionNumber;
+import org.eclipse.n4js.semver.SEMVER.VersionRangeConstraint;
 import org.eclipse.n4js.semver.SEMVER.VersionRangeSet;
 import org.eclipse.n4js.semver.services.SEMVERGrammarAccess;
 import org.eclipse.xtext.Action;
@@ -55,6 +56,9 @@ public class SEMVERSemanticSequencer extends AbstractDelegatingSemanticSequencer
 			case SEMVERPackage.VERSION_NUMBER:
 				sequence_VersionNumber(context, (VersionNumber) semanticObject); 
 				return; 
+			case SEMVERPackage.VERSION_RANGE_CONSTRAINT:
+				sequence_VersionRangeContraint(context, (VersionRangeConstraint) semanticObject); 
+				return; 
 			case SEMVERPackage.VERSION_RANGE_SET:
 				sequence_VersionRangeSet(context, (VersionRangeSet) semanticObject); 
 				return; 
@@ -80,7 +84,7 @@ public class SEMVERSemanticSequencer extends AbstractDelegatingSemanticSequencer
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getHyphenVersionRangeAccess().getFromVersionNumberParserRuleCall_1_0(), semanticObject.getFrom());
-		feeder.accept(grammarAccess.getHyphenVersionRangeAccess().getToVersionNumberParserRuleCall_3_0(), semanticObject.getTo());
+		feeder.accept(grammarAccess.getHyphenVersionRangeAccess().getToVersionNumberParserRuleCall_5_0(), semanticObject.getTo());
 		feeder.finish();
 	}
 	
@@ -99,7 +103,6 @@ public class SEMVERSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	
 	/**
 	 * Contexts:
-	 *     VersionRange returns SimpleVersion
 	 *     SimpleVersion returns SimpleVersion
 	 *
 	 * Constraint:
@@ -124,10 +127,23 @@ public class SEMVERSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	
 	/**
 	 * Contexts:
+	 *     VersionRange returns VersionRangeConstraint
+	 *     VersionRangeContraint returns VersionRangeConstraint
+	 *
+	 * Constraint:
+	 *     (versionConstraints+=SimpleVersion versionConstraints+=SimpleVersion*)
+	 */
+	protected void sequence_VersionRangeContraint(ISerializationContext context, VersionRangeConstraint semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
 	 *     VersionRangeSet returns VersionRangeSet
 	 *
 	 * Constraint:
-	 *     (ranges+=VersionRange? ranges+=VersionRange*)
+	 *     (ranges+=VersionRange ranges+=VersionRange*)?
 	 */
 	protected void sequence_VersionRangeSet(ISerializationContext context, VersionRangeSet semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

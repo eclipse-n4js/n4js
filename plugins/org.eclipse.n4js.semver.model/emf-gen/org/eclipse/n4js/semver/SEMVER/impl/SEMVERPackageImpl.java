@@ -27,6 +27,7 @@ import org.eclipse.n4js.semver.SEMVER.SimpleVersion;
 import org.eclipse.n4js.semver.SEMVER.VersionComparator;
 import org.eclipse.n4js.semver.SEMVER.VersionNumber;
 import org.eclipse.n4js.semver.SEMVER.VersionRange;
+import org.eclipse.n4js.semver.SEMVER.VersionRangeConstraint;
 import org.eclipse.n4js.semver.SEMVER.VersionRangeSet;
 
 /**
@@ -56,6 +57,13 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * @generated
 	 */
 	private EClass hyphenVersionRangeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass versionRangeConstraintEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -201,6 +209,24 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 */
 	public EReference getHyphenVersionRange_To() {
 		return (EReference)hyphenVersionRangeEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getVersionRangeConstraint() {
+		return versionRangeConstraintEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getVersionRangeConstraint_VersionConstraints() {
+		return (EReference)versionRangeConstraintEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -357,6 +383,9 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 		createEReference(hyphenVersionRangeEClass, HYPHEN_VERSION_RANGE__FROM);
 		createEReference(hyphenVersionRangeEClass, HYPHEN_VERSION_RANGE__TO);
 
+		versionRangeConstraintEClass = createEClass(VERSION_RANGE_CONSTRAINT);
+		createEReference(versionRangeConstraintEClass, VERSION_RANGE_CONSTRAINT__VERSION_CONSTRAINTS);
+
 		simpleVersionEClass = createEClass(SIMPLE_VERSION);
 		createEReference(simpleVersionEClass, SIMPLE_VERSION__NUMBER);
 		createEAttribute(simpleVersionEClass, SIMPLE_VERSION__COMPARATORS);
@@ -408,6 +437,7 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 
 		// Add supertypes to classes
 		hyphenVersionRangeEClass.getESuperTypes().add(this.getVersionRange());
+		versionRangeConstraintEClass.getESuperTypes().add(this.getVersionRange());
 		simpleVersionEClass.getESuperTypes().add(this.getVersionRange());
 
 		// Initialize classes, features, and operations; add parameters
@@ -419,6 +449,9 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 		initEClass(hyphenVersionRangeEClass, HyphenVersionRange.class, "HyphenVersionRange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getHyphenVersionRange_From(), this.getVersionNumber(), null, "from", null, 0, 1, HyphenVersionRange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getHyphenVersionRange_To(), this.getVersionNumber(), null, "to", null, 0, 1, HyphenVersionRange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(versionRangeConstraintEClass, VersionRangeConstraint.class, "VersionRangeConstraint", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getVersionRangeConstraint_VersionConstraints(), this.getSimpleVersion(), null, "versionConstraints", null, 0, -1, VersionRangeConstraint.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(simpleVersionEClass, SimpleVersion.class, "SimpleVersion", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getSimpleVersion_Number(), this.getVersionNumber(), null, "number", null, 0, 1, SimpleVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

@@ -33,12 +33,14 @@ class SEMVERParserTest {
 
 	String[] data = #[
 		"",
-		"1",
-		"1.2",
+		" 1",
+		" 1 ",
+		"1 ",
+		"v1.2",
 		"1.2.3",
 		"2.3.4",
 		"0.2.3",
-		"v2.0.0",
+		"<2.0.0",
 		">=1.2.7",
 		"1.2.7",
 		"1.2.8",
@@ -48,8 +50,8 @@ class SEMVERParserTest {
 		"1.1.0",
 		">=1.2.7 <1.3.0",
 		"1.2.7 || >=1.2.9 <2.0.0",
-		"1.2.3-alpha.3",
-		">1.2.3-alpha.3",
+		"~1.2.3-alpha.4",
+		">1.2.3-alpha.4",
 		"1.2.3-alpha.7",
 		"3.4.5-alpha.9",
 		"1.2.4-beta.0",
@@ -86,7 +88,7 @@ class SEMVERParserTest {
 		"~1.2",
 		">=1.2.0 <1.3.0",
 		"~1",
-		">=1.0.0 <(1+1).0.0",
+		">=1.0.0 <1.0.0",
 		">=1.0.0 <2.0.0",
 		"~0.2.3",
 		">=0.2.3 <0.3.0",
@@ -143,7 +145,7 @@ class SEMVERParserTest {
 			val versionRangeSet = entry.parseSuccessfully // empty document
 			assertTrue(versionRangeSet !== null);
 			val serialized = serializer.serialize(versionRangeSet);
-			assertEquals(entry, serialized);
+			assertEquals(entry.trim, serialized);
 		}
 	}
 

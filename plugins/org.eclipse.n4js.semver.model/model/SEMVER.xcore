@@ -37,6 +37,10 @@ class HyphenVersionRange extends VersionRange {
 	contains VersionNumber to
 }
 
+class VersionRangeConstraint extends VersionRange {
+	contains SimpleVersion[] versionConstraints
+}
+
 class SimpleVersion extends VersionRange {
 	contains VersionNumber number
 	VersionComparator[] comparators

@@ -48,6 +48,15 @@ public interface SEMVERFactory extends EFactory {
 	HyphenVersionRange createHyphenVersionRange();
 
 	/**
+	 * Returns a new object of class '<em>Version Range Constraint</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Version Range Constraint</em>'.
+	 * @generated
+	 */
+	VersionRangeConstraint createVersionRangeConstraint();
+
+	/**
 	 * Returns a new object of class '<em>Simple Version</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
