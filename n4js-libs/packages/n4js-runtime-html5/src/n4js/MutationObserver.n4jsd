@@ -50,5 +50,3 @@ export external public interface ~MutationRecord {
   public attributeNamespace?: string;
   public oldValue?: string;
 };
-
-/* -*- mode: typescript;-*- */

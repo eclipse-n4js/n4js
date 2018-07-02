@@ -19,5 +19,3 @@ export external public class DataTransfer {
 export external public class ~ClipBoardEvent extends Event {
     @Final public clipboardData: DataTransfer;
 }
-
-/* -*- mode: typescript;-*- */

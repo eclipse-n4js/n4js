@@ -15,5 +15,3 @@
 //@Polyfill export external public class ~RequestInit extends RequestInit {
 //    @Override public union{Blob, /*BufferSource, */FormData, URLSearchParams, string}? body;
 //}
-
-/* -*- mode: typescript;-*- */

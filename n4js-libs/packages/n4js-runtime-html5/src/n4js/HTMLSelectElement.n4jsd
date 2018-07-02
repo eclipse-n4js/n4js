@@ -32,5 +32,3 @@ export external public abstract class HTMLSelectElement extends HTMLElement {
     public value: string;
     public add(option: Node): void;
 }
-
-/* -*- mode: typescript;-*- */

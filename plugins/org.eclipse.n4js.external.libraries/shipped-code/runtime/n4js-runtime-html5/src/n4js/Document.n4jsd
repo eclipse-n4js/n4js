@@ -35,5 +35,3 @@ export external public abstract class Document extends HTMLElement {
 }
 
 export external public const document: Document+;
-
-/* -*- mode: typescript;-*- */

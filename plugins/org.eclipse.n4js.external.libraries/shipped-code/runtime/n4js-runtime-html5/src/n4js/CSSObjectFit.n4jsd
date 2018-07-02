@@ -29,5 +29,3 @@ export external public enum CSSObjectFit {
      */
     scaleDown: "scale-down"
 }
-
-/* -*- mode: typescript;-*- */

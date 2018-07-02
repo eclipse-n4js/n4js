@@ -8,5 +8,3 @@ export external public enum CSSTextAlign {
     right,
     justify
 }
-
-/* -*- mode: typescript;-*- */

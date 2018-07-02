@@ -23,5 +23,3 @@ export external public class ~KeyboardEvent extends Event {
     @Final public key: string;
     @Final public code: string;
 }
-
-/* -*- mode: typescript;-*- */

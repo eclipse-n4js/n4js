@@ -16,5 +16,3 @@ export external public class ~NamedNodeMap {
     public getNamedItem(name: string, node: Node): Node;
     public removeNamedItem(name: string): Node;
 }
-
-/* -*- mode: typescript;-*- */

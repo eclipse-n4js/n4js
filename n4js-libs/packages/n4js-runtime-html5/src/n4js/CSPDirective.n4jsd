@@ -38,5 +38,3 @@ export external public enum CSPSourceKeyword {
     unsafeInline: "'unsafe-inline'",
     unsafeEval: "'unsafe-eval'"
 }
-
-/* -*- mode: typescript;-*- */

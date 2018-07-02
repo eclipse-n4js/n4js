@@ -18,5 +18,3 @@ export public interface ~URLSearchParams {
     public delete(param: string): void;
     //public string toString();
 }
-
-/* -*- mode: typescript;-*- */

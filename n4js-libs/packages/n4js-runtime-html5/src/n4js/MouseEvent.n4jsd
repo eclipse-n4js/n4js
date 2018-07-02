@@ -18,5 +18,3 @@ export external public class MouseEvent extends Event {
     @Final public screenX: int;
     @Final public screenY: int;
 }
-
-/* -*- mode: typescript;-*- */

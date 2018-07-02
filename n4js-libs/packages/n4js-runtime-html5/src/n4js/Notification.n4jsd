@@ -112,5 +112,4 @@ export external public interface ~NotificationAction {
     public title: string;
     public icon?: string;
 }
-
-/* -*- mode: typescript;-*- */ 
+ 

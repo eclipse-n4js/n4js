@@ -21,5 +21,3 @@ export external public class ~FileReader {
     public readAsDataURL(blob: Blob): void;
     public readAsText(blob: Blob): void;
 }
-
-/* -*- mode: typescript;-*- */

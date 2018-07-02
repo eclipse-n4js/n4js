@@ -14,5 +14,3 @@ export external public class NodeList<NodeT extends Node> {
     public get length(): int;
     public item(index: int): NodeT;
 }
-
-/* -*- mode: typescript;-*- */

@@ -20,5 +20,3 @@ export external public abstract class Navigator extends Element {
 }
 
 export external public const navigator: Navigator;
-
-/* -*- mode: typescript;-*- */

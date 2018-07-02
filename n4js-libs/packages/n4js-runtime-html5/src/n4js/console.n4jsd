@@ -22,5 +22,3 @@
     public static timelineEnd(): void;
     public static timeStamp(label: string=): void;
 }
-
-/* -*- mode: typescript;-*- */

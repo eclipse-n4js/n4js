@@ -25,5 +25,3 @@ export public interface ~URLUtilsReadOnly {
 
     //public string toString();
 }
-
-/* -*- mode: typescript;-*- */

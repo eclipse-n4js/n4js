@@ -26,5 +26,3 @@ export external public class ~ValidityState {
     public get valid(): boolean;
     public get valueMissing(): boolean;
 }
-
-/* -*- mode: typescript;-*- */

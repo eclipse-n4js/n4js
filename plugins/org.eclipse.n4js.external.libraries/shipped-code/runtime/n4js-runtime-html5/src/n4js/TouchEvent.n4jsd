@@ -42,5 +42,3 @@ export external public class ~TouchEvent extends Event {
     @Final public targetTouches: TouchList;
     @Final public touches: TouchList;
 }
-
-/* -*- mode: typescript;-*- */

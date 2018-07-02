@@ -21,7 +21,8 @@ function echo_exec {
 echo "We are in $PWD"
 
 if [ "${N4_N4JSC_JAR}" == "" ]; then
-    N4_N4JSC_JAR="http://n4ide-storage.service.cd-dev.consul/releases/N4JS-Extended-Nightly/LATEST/n4jsc.jar"
+    echo "The environment variable N4_N4JSC_JAR must be set and refer to a path to n4jsc.jar. However it is not set!"
+	exit 1
 fi
 
 if [[ ! ${N4_N4JSC_JAR} =~ ^https?:// ]]; then

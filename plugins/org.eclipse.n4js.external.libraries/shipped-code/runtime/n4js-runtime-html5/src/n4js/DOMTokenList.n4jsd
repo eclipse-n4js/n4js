@@ -18,5 +18,3 @@ export external public class ~DOMTokenList {
     public remove(... token: string): void;
     public toggle(token: string): void;
 }
-
-/* -*- mode: typescript;-*- */

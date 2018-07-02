@@ -37,5 +37,3 @@ export external public abstract class HTMLElement extends Element {
 
     @Override public closest(selector: string): HTMLElement;
 }
-
-/* -*- mode: typescript;-*- */

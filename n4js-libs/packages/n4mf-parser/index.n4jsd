@@ -23,5 +23,3 @@ export external public async function readManifest(path: string): Object;
  * Synchronously reads the given manifest path and parses its content.
  */
 export external public function readManifestSync(path: string): Object;
-
-/* -*- mode: typescript;-*- */

@@ -40,5 +40,3 @@ export external public abstract class TextMetrics{
     public alphabeticBaseline: number;
     public ideographicBaseline: number;
 }
-
-/* -*- mode: typescript;-*- */

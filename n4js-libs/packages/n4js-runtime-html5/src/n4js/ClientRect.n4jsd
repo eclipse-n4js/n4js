@@ -21,5 +21,3 @@ export external public class ~ClientRect {
     @Final public top: number;
     @Final public width: number;
 }
-
-/* -*- mode: typescript;-*- */

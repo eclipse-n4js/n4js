@@ -32,5 +32,3 @@ export external public class Node {
     public removeChild(child: Node): Node;
     public replaceChild(newChild: Node, oldChild: Node): Node;
 }
-
-/* -*- mode: typescript;-*- */

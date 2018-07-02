@@ -13,5 +13,3 @@
 export external public class ~CSSStyleDeclaration {
     public removeProperty(name: string): any;
 };
-
-/* -*- mode: typescript;-*- */

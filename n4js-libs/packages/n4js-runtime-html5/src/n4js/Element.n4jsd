@@ -41,5 +41,3 @@ export external public abstract class Element extends Node implements EventTarge
     public getElementsByTagName(name: string): NodeList<? extends Element>;
     public querySelectorAll(selector: string): NodeList<? extends Element>;
 }
-
-/* -*- mode: typescript;-*- */

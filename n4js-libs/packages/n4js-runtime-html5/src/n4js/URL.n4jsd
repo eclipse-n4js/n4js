@@ -18,5 +18,3 @@
 
     public origin?: string;
 }
-
-/* -*- mode: typescript;-*- */

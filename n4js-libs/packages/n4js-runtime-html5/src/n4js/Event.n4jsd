@@ -19,5 +19,3 @@ export external public class ~Event {
     @Final public currentTarget: EventTarget;
     @Final public type: string;
 }
-
-/* -*- mode: typescript;-*- */

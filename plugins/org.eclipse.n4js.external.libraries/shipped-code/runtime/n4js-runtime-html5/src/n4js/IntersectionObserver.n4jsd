@@ -47,5 +47,3 @@ export external public interface ~IntersectionObserverInit {
     public rootMargin?: string; //default value is "0px"
     public threshold?: number | Iterable<number>; //default value is 0
 };
-
-/* -*- mode: typescript;-*- */

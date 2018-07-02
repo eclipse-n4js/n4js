@@ -15,5 +15,3 @@
 //    @Async public Blob blob();
 //    @Async public FormData formData();
 //}
-
-/* -*- mode: typescript;-*- */

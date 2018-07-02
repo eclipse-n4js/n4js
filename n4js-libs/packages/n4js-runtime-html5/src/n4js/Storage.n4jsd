@@ -21,5 +21,3 @@ export external public class ~Storage {
 
 export external public const localStorage: Storage;
 export external public const sessionStorage: Storage;
-
-/* -*- mode: typescript;-*- */

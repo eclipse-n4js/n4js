@@ -28,5 +28,3 @@ export public interface ~URLUtils {
 
     //public string toString();
 }
-
-/* -*- mode: typescript;-*- */

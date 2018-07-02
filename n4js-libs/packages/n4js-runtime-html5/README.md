@@ -1,6 +1,6 @@
 N4JS Runtime Library for HTML5.
 
-For more information about N4JS, please refer to the official [project home](https://numberfour.github.io/n4js).
+For more information about N4JS, please refer to the official [project home](https://www.eclipse.org/n4js/).
 
 ## License
 

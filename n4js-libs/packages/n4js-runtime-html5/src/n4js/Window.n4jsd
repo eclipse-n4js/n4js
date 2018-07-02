@@ -36,5 +36,3 @@ export external public abstract class Window extends Element implements GlobalFe
 }
 
 export external public const window: Window+;
-
-/* -*- mode: typescript;-*- */

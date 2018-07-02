@@ -12,5 +12,3 @@
 
 export external public abstract class CharacterData extends Node {}
 export external public abstract class Text extends CharacterData {}
-
-/* -*- mode: typescript;-*- */
