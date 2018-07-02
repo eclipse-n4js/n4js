@@ -44,6 +44,7 @@ Contributors:
 						<executions>
 							<!-- Publish n4js-libs to staging area if the env variable STAGING_NPM_REGISTRY is set.
 							The staging area is the place where we publish n4js-libs to, Other builds can retrieve n4js-lib npms from the staging area.
+							This is done here because first the publishing should only happen once and second it only makes sense to publish when we can build the product.
 							 -->
 							<execution>
 								<id>publish-n4js-libs</id>
