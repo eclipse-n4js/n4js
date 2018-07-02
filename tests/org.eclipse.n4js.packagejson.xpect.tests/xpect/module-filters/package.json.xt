@@ -49,14 +49,19 @@
 				["src2", "filter"]
 			],
 			"noModuleWrap": [
-				// first occurences has no issue XPECT noerrors --> "Duplicate module filter specifier." at ""a-filter""
+				// first occurences has no issue XPECT noerrors
 				"a-filter",
 				["src1", "b-filter"],
+				// XPECT noerrors
 				{
 					"sourceContainer": "src2",
 					"module": "b-filter"
 				},
-				// XPECT errors --> "The given source container "src-not-declared" has not been declared as source container." at "["src-not-declared", "b-filter"]"
+				/* XPECT issues --- 
+				   "Module filter "b-filter" does not match any modules." at "["src-not-declared", "b-filter"]"
+				   "The given source container "src-not-declared" has not been declared as source container." at "["src-not-declared", "b-filter"]"
+				  ---
+				*/
 				["src-not-declared", "b-filter"],
 				// XPECT errors --> "Duplicate module filter specifier." at "["src2", "a-filter"]"
 				["src2", "a-filter"],

@@ -100,11 +100,11 @@ import static extension com.google.common.base.Strings.nullToEmpty
 public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidatorExtension {
 	
 	static val API_TYPE = anyOf(API);
-	static val LIBRARY_TYPE = anyOf(LIBRARY);
 	static val RE_TYPE = anyOf(RUNTIME_ENVIRONMENT);
 	static val RL_TYPE = anyOf(RUNTIME_LIBRARY);
 	static val TEST_TYPE = anyOf(TEST);
 	static val RE_OR_RL_TYPE = anyOf(RUNTIME_ENVIRONMENT, RUNTIME_LIBRARY);
+	static val LIB_OR_VALIDATION = anyOf(LIBRARY, VALIDATION);
 
 	/**
 	 * Key to store a converted ProjectDescription instance in the validation context for re-use across different check-methods
@@ -664,7 +664,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			.filter(JSONArray)
 			.flatMap[elements]
 			.filterNull
-			.map[ProjectDescriptionUtils.getModuleFilterSpecifier(it)->it];
+			.map[ProjectDescriptionUtils.getModuleFilterSpecifier(it)->it]
 
 		holdsValidModuleSpecifiers(filterSpecifierPairs, project);
 	}
@@ -688,6 +688,11 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		
 		val ModuleFilterSpecifier filterSpecifier = filterSpecifierPair?.key;
 		
+		// check for specifier to be non-null
+		if (filterSpecifier === null) {
+			return false;
+		}
+		
 		// check for invalid character sequences within wildcard patterns
 		if (filterSpecifier?.moduleSpecifierWithWildcard !== null) {
 			if (filterSpecifierPair.key.moduleSpecifierWithWildcard.contains(wrongWildcardPattern)) {
@@ -710,7 +715,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		}
 		
 		// check for empty filter or source container values
-		if (filterSpecifier?.moduleSpecifierWithWildcard.empty || 
+		if ((filterSpecifier?.moduleSpecifierWithWildcard !== null && filterSpecifier?.moduleSpecifierWithWildcard.empty) || 
 			(filterSpecifier?.sourcePath !== null && filterSpecifier?.sourcePath.empty)) {
 			addIssue(IssueCodes.getMessageForPKGJ_INVALID_MODULE_FILTER_SPECIFIER_EMPTY(),
 					filterSpecifierPair.value, IssueCodes.PKGJ_INVALID_MODULE_FILTER_SPECIFIER_EMPTY);
@@ -748,10 +753,14 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		override visitFile(Path path, BasicFileAttributes attrs) throws IOException {
 			for (val iter = filterSpecifierPairs.iterator(); iter.hasNext();) {
 				val filterSpecifierPair = iter.next();
-				val specifier = filterSpecifierPair.key.moduleSpecifierWithWildcard;
+				val specifier = filterSpecifierPair.key?.moduleSpecifierWithWildcard;
 
-				val checkForMatches = isModuleSpecifier(specifier) && path.toFile.isFile || !isModuleSpecifier(specifier);
+				// only check for valid filter specifiers for matches
+				val checkForMatches = specifier !== null && 
+					isModuleSpecifier(specifier) && path.toFile.isFile || !isModuleSpecifier(specifier);
+				// compute the source container path the filter applies to
 				val location = getFileInSources(project, filterSpecifierPair.key, path);
+				
 				if (checkForMatches && location !== null) {
 					val hasFile = setupValidator.wildcardHelper.isPathContainedByFilter(location, filterSpecifierPair.key);
 					if (hasFile) {
@@ -842,8 +851,10 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	 * </ul>
 	 * Otherwise the predicate provides {@code false} value.
 	 */
-	private def Predicate<IN4JSProject> createProjectPredicateForAPIs() {
-		return Predicates.or(API_TYPE.forN4jsProjects, [LIBRARY_TYPE.apply(projectType) && !implementationId.present]);
+	private def Predicate<IN4JSProject> createAPIDependenciesPredicate() {
+		return Predicates.or(API_TYPE.forN4jsProjects, 
+			[LIB_OR_VALIDATION.apply(projectType) && !implementationId.present]
+		);
 	}
 	
 	/**
@@ -852,10 +863,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	 */
 	private def Predicate<IN4JSProject> createDependenciesPredicate() {
 		return switch(projectDescription.projectType) {
-			// TODO consider re-enabling this constraint (REs or RLs may appear under testedProjects,
-			// thus they may also appear in "dependencies"?
-			//case TEST: not(RE_OR_RL_TYPE).forN4jsProjects
-			case API: createProjectPredicateForAPIs
+			case API: createAPIDependenciesPredicate
 			// runtime libraries may only depend on other runtime libraries
 			case RUNTIME_LIBRARY: RL_TYPE.forN4jsProjects
 			// otherwise, any project may be declared as dependency
