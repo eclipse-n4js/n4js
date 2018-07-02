@@ -103,7 +103,7 @@ public class N4jscliTest extends AbstractN4jscJarTest {
 	}
 
 	/**
-	 * Create & start a process from {@value #PROJECT_NAME}-folder.
+	 * Create and start a process from {@value #PROJECT_NAME}-folder.
 	 *
 	 * @param args
 	 *            arguments to pass after n4js-cli call
