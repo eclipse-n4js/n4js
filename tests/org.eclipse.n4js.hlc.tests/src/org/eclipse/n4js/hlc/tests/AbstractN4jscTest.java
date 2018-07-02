@@ -61,7 +61,9 @@ public abstract class AbstractN4jscTest {
 	protected static final String TEST_DATA_SET__BASIC = "basic";
 	/** name of test data set for launching testers from the command line */
 	protected static final String TEST_DATA_SET__TESTERS = "testers";
-	/** npms in n4js-libs that should not be copied during test */
+	/**
+	 * npms in n4js-libs that should not be copied during test because they are only in the n4js-libs to be published
+	 */
 	protected static final Set<String> blackList = new HashSet<>(
 			Arrays.asList("org.eclipse.n4js.mangelhaft.reporter.xunit", "n4js-cli", "n4js-mangelhaft-cli"));
 
