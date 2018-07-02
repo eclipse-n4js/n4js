@@ -56,10 +56,8 @@ public class DependenciesCollectingUtil {
 			Stream.of(
 					pd.getProjectDependencies().stream().map(DependencyInfo::create),
 					// TODO GH-613, user projects can be misconfigured
-					pd.getRequiredRuntimeLibraries().stream().map(DependencyInfo::create),
 					pd.getProvidedRuntimeLibraries().stream().map(DependencyInfo::create),
 					getVersionedExtendedRuntimeEnvironment(pd),
-					pd.getTestedProjects().stream().map(DependencyInfo::create),
 					pd.getImplementedProjects().stream().map(DependencyInfo::create))
 					.reduce(Stream::concat)
 					.orElseGet(Stream::empty)

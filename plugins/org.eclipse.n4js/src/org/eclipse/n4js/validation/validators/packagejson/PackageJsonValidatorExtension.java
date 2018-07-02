@@ -795,19 +795,6 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 			return new ValidationModuleFilterSpecifier(((JSONStringLiteral) value).getValue(), null, type, value);
 		}
 		// 2nd variant:
-		if (value instanceof JSONArray) {
-			final List<JSONValue> elements = ((JSONArray) value).getElements();
-			if (elements.size() == 2) {
-				final JSONValue sourceContainer = elements.get(0);
-				final JSONValue moduleFilter = elements.get(1);
-				if (sourceContainer instanceof JSONStringLiteral && moduleFilter instanceof JSONStringLiteral) {
-					return new ValidationModuleFilterSpecifier(
-							((JSONStringLiteral) moduleFilter).getValue(),
-							((JSONStringLiteral) sourceContainer).getValue(), type, value);
-				}
-			}
-		}
-		// 3rd variant:
 		if (value instanceof JSONObject) {
 			final List<NameValuePair> pairs = ((JSONObject) value).getNameValuePairs();
 
