@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ui.changes
+package org.eclipse.n4js.packagejson.model.edit
 
 import java.util.Arrays
 import java.util.Collection
@@ -22,10 +22,10 @@ import org.eclipse.n4js.utils.ProjectDescriptionHelper
 import static org.eclipse.n4js.utils.ProjectDescriptionHelper.PROP__N4JS
 
 /**
- * This class provides basic change functionality for N4JS package.json files
+ * This class provides basic edit operations for N4JS package.json files 
  * in terms of {@link IJSONDocumentModification}s.
  */
-class PackageJsonChangeProvider {
+class PackageJsonModificationProvider {
 
 	/**
 	 * Returns a semantic modification that appends the given list of new project dependencies to the "dependencies"

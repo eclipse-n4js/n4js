@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.tests.packagejson;
+package org.eclipse.n4js.tests.wizard.generator;
 
 import java.util.Arrays;
 import java.util.Scanner;
@@ -19,10 +19,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.N4JSUiInjectorProvider;
+import org.eclipse.n4js.packagejson.model.edit.IJSONDocumentModification;
+import org.eclipse.n4js.packagejson.model.edit.PackageJsonModificationProvider;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
-import org.eclipse.n4js.ui.changes.IJSONDocumentModification;
-import org.eclipse.n4js.ui.changes.PackageJsonChangeProvider;
 import org.eclipse.n4js.ui.wizard.generator.WizardGeneratorHelper;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.testing.InjectWith;
@@ -35,12 +35,12 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 /**
- * Applies {@link IJSONDocumentModification}s as produced by {@link PackageJsonChangeProvider} to package.json files and
+ * Applies {@link IJSONDocumentModification}s as produced by {@link PackageJsonModificationProvider} to package.json files and
  * checks the contents of the resulting serialized and formatted contents of the edited files.
  */
 @RunWith(XtextRunner.class)
 @InjectWith(N4JSUiInjectorProvider.class)
-public class PackageJsonChangeProviderTest {
+public class WizardGeneratorHelperTest {
 
 	private static final String TEST_PROJECT_NAME = "Test";
 
@@ -66,19 +66,19 @@ public class PackageJsonChangeProviderTest {
 		// insert a first project dependency
 		generatorHelper.applyJSONModifications(packageJson,
 				Arrays.asList(
-						PackageJsonChangeProvider.insertProjectDependencies(Arrays.asList("dep1"))));
+						PackageJsonModificationProvider.insertProjectDependencies(Arrays.asList("dep1"))));
 
 		Assert.assertEquals("Formatted document matches expectations after inserting a single project dependency.",
-				PackageJsonChangeProviderExpectations.ONE_DEPENDENCY,
+				WizardGeneratorHelperTestExpectations.ONE_DEPENDENCY,
 				getPackageJsonContents(testProject));
 
 		// insert another project dependency
 		generatorHelper.applyJSONModifications(packageJson,
 				Arrays.asList(
-						PackageJsonChangeProvider.insertProjectDependencies(Arrays.asList("dep2"))));
+						PackageJsonModificationProvider.insertProjectDependencies(Arrays.asList("dep2"))));
 
 		Assert.assertEquals("Formatted document matches expectations after inserting another project dependency.",
-				PackageJsonChangeProviderExpectations.TWO_DEPENDENCIES,
+				WizardGeneratorHelperTestExpectations.TWO_DEPENDENCIES,
 				getPackageJsonContents(testProject));
 	}
 
@@ -98,19 +98,19 @@ public class PackageJsonChangeProviderTest {
 		// add required runtime library
 		generatorHelper.applyJSONModifications(packageJson,
 				Arrays.asList(
-						PackageJsonChangeProvider.insertRequiredRuntimeLibraries(Arrays.asList("req-lib"))));
+						PackageJsonModificationProvider.insertRequiredRuntimeLibraries(Arrays.asList("req-lib"))));
 
 		Assert.assertEquals("Formatted document matches expectations after inserting another project dependency.",
-				PackageJsonChangeProviderExpectations.ONE_REQUIRED_RUNTIME_LIBRARIES,
+				WizardGeneratorHelperTestExpectations.ONE_REQUIRED_RUNTIME_LIBRARIES,
 				getPackageJsonContents(testProject));
 
 		// add another required runtime library
 		generatorHelper.applyJSONModifications(packageJson,
 				Arrays.asList(
-						PackageJsonChangeProvider.insertRequiredRuntimeLibraries(Arrays.asList("req-lib-2"))));
+						PackageJsonModificationProvider.insertRequiredRuntimeLibraries(Arrays.asList("req-lib-2"))));
 
 		Assert.assertEquals("Formatted document matches expectations after inserting another project dependency.",
-				PackageJsonChangeProviderExpectations.TWO_REQUIRED_RUNTIME_LIBRARIES,
+				WizardGeneratorHelperTestExpectations.TWO_REQUIRED_RUNTIME_LIBRARIES,
 				getPackageJsonContents(testProject));
 	}
 

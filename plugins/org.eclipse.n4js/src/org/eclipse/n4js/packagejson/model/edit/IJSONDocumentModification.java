@@ -8,14 +8,14 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ui.changes;
+package org.eclipse.n4js.packagejson.model.edit;
 
 import org.eclipse.n4js.json.JSON.JSONDocument;
 
 /**
  * Represents a modification of a {@link JSONDocument} instance.
  *
- * @See {@link PackageJsonChangeProvider}
+ * @See {@link PackageJsonModificationProvider}
  */
 public interface IJSONDocumentModification {
 	/**

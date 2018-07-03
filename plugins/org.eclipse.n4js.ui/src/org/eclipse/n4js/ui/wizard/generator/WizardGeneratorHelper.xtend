@@ -30,12 +30,11 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.jface.text.BadLocationException
 import org.eclipse.n4js.json.model.utils.JSONModelUtils
 import org.eclipse.n4js.n4mf.ProjectType
+import org.eclipse.n4js.packagejson.model.edit.IJSONDocumentModification
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.ui.changes.ChangeManager
 import org.eclipse.n4js.ui.changes.IAtomicChange
-import org.eclipse.n4js.ui.changes.IJSONDocumentModification
-import org.eclipse.n4js.ui.changes.PackageJsonChangeProvider
 import org.eclipse.n4js.ui.organize.imports.Interaction
 import org.eclipse.n4js.ui.organize.imports.OrganizeImportsService
 import org.eclipse.n4js.ui.wizard.model.AccessModifier
@@ -49,6 +48,7 @@ import org.eclipse.xtext.ui.editor.model.IXtextDocument
 import org.eclipse.xtext.ui.editor.model.XtextDocumentProvider
 import org.eclipse.xtext.util.Files
 import org.eclipse.xtext.util.concurrent.IUnitOfWork
+import org.eclipse.n4js.packagejson.model.edit.PackageJsonModificationProvider
 
 /**
  * This class contains commonly used methods when writing wizard generators.
@@ -304,11 +304,11 @@ class WizardGeneratorHelper {
 		referencedProjectsSet.addAll(referencedProjectsExceptContainer);
 
 		// add project dependency changes (includes added runtime libraries)
-		modifications.add(PackageJsonChangeProvider.insertProjectDependencies(referencedProjectsSet
+		modifications.add(PackageJsonModificationProvider.insertProjectDependencies(referencedProjectsSet
 			.map[projectId].toList));
 				
 		// add required runtime library changes
-		modifications.add(PackageJsonChangeProvider.insertRequiredRuntimeLibraries(referencedProjectsSet.filter [
+		modifications.add(PackageJsonModificationProvider.insertRequiredRuntimeLibraries(referencedProjectsSet.filter [
 			projectType == ProjectType.RUNTIME_LIBRARY
 		].map[projectId].toList));
 	
