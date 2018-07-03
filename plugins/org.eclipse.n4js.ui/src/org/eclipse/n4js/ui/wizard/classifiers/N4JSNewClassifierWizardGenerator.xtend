@@ -181,7 +181,7 @@ abstract class N4JSNewClassifierWizardGenerator<M extends N4JSClassifierWizardMo
 
 		// Only execute non-empty list of modifications (to prevent useless history entries)
 		if (projectDescriptionModifications.length > 0) {
-			if (!projectDescriptionResource.applyModifications(projectDescriptionModifications)) {
+			if (!projectDescriptionResource.applyJSONModifications(projectDescriptionModifications)) {
 				throw new WorkspaceWizardGeneratorException("Couldn't apply package.json changes.");
 			}
 		}

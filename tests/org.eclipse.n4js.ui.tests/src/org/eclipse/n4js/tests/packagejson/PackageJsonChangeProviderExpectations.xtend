@@ -11,9 +11,9 @@
 package org.eclipse.n4js.tests.packagejson
 
 /**
- * Package.json file contents expectation of {@link PackageJsonPartialSerializationTest}.
+ * Package.json file contents expectation of {@link PackageJsonChangeProviderTest}.
  */
-class PackageJsonPartialSerializationExpectations {
+class PackageJsonChangeProviderExpectations {
 	public static val String ONE_DEPENDENCY = 
 		'''
 		{
@@ -29,8 +29,7 @@ class PackageJsonPartialSerializationExpectations {
 					]
 				},
 				"output": "src-gen"
-			}
-		,
+			},
 			"dependencies": {
 				"dep1": "*"
 			}
@@ -51,8 +50,7 @@ class PackageJsonPartialSerializationExpectations {
 					]
 				},
 				"output": "src-gen"
-			}
-		,
+			},
 			"dependencies": {
 				"dep1": "*",
 				"dep2": "*"

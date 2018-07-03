@@ -28,11 +28,13 @@ import org.eclipse.core.runtime.Path
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.jface.text.BadLocationException
+import org.eclipse.n4js.json.model.utils.JSONModelUtils
 import org.eclipse.n4js.n4mf.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.ui.changes.ChangeManager
 import org.eclipse.n4js.ui.changes.IAtomicChange
+import org.eclipse.n4js.ui.changes.IJSONDocumentModification
 import org.eclipse.n4js.ui.changes.PackageJsonChangeProvider
 import org.eclipse.n4js.ui.organize.imports.Interaction
 import org.eclipse.n4js.ui.organize.imports.OrganizeImportsService
@@ -40,16 +42,13 @@ import org.eclipse.n4js.ui.wizard.model.AccessModifier
 import org.eclipse.n4js.ui.wizard.model.ClassifierReference
 import org.eclipse.n4js.ui.wizard.workspace.WorkspaceWizardModel
 import org.eclipse.n4js.utils.Log
-import org.eclipse.n4js.utils.languages.N4LanguageUtils
 import org.eclipse.ui.part.FileEditorInput
+import org.eclipse.xtext.resource.SaveOptions
 import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.ui.editor.model.IXtextDocument
 import org.eclipse.xtext.ui.editor.model.XtextDocumentProvider
-import org.eclipse.xtext.ui.editor.model.edit.IModificationContext
-import org.eclipse.xtext.ui.editor.model.edit.ISemanticModification
 import org.eclipse.xtext.util.Files
 import org.eclipse.xtext.util.concurrent.IUnitOfWork
-import org.eclipse.n4js.json.model.utils.JSONModelUtils
 
 /**
  * This class contains commonly used methods when writing wizard generators.
@@ -209,57 +208,31 @@ class WizardGeneratorHelper {
 	}
 
 	/**
-	 * Retrieve the XtextDocument for the given resource and apply the given list of {@link ISemanticModification}s.
+	 * Applies the given list of {@link IJSONDocumentModification}s to the given JSON resource.
+	 * 
+	 * Runs the JSON formatter on the whole file after applying the modification.
 	 * 
 	 * @param resource 
 	 * 			The XtextResource to modify.
 	 * @param changes 
-	 * 			The semantic modifications to apply.
+	 * 			The JSON document modifications to apply.
 	 * */
-	public def boolean applyModifications(XtextResource resource, Collection<? extends ISemanticModification> modifications){
+	public def boolean applyJSONModifications(XtextResource resource, Collection<? extends IJSONDocumentModification> modifications){
 		val IPath resourcePath = new Path(resource.getURI.toString).makeRelativeTo(new Path("platform:/resource/"));
 		val IFile resourceFile = ResourcesPlugin.workspace.root.getFile(resourcePath);
+		val jsonDocument = JSONModelUtils.getDocument(resource);
 		
 		if (resourceFile.exists) {
 			try {
-				// setup new IXtextDocument for package.json file
-				val jsonDocumentProvider = N4LanguageUtils.getServiceForContext(resource.URI, XtextDocumentProvider).get();
-				val FileEditorInput fileInput = new FileEditorInput(resourceFile);
-				jsonDocumentProvider.connect(fileInput);
-				val IXtextDocument document = jsonDocumentProvider.getDocument(fileInput) as IXtextDocument;
-
-				jsonDocumentProvider.aboutToChange(fileInput);
-
-				// modification context to perform the modifications in
-				val context = new IModificationContext() {
-					override getXtextDocument() {
-						return document;
-					}
-					override getXtextDocument(URI uri) {
-						return document;
-					}
+				// apply all given modifications
+				for (modification : modifications) {
+					// TODO implement proper support for ISemanticModification based on an XtextDocument and use those instead.
+					// For this to work, partial serialization and replacement needs to be enabled for the JSON language.
+					modification.apply(jsonDocument);
 				}
-
-				// perform modification on document content
-				document.modify(new IUnitOfWork.Void<XtextResource>() {
-					public override void process(XtextResource state) throws Exception {
-						val jsonDocument = JSONModelUtils.getDocument(state);
-
-						for (modification : modifications) {
-							try {
-								modification.apply(jsonDocument, context)
-							} catch (Exception e) {
-								logger.error("Failed to perform semantic modification " + modification + " on resource " +
-									resource.URI, e);
-							}
-						}
-					}
-				});
-
-				// after modifications, make sure changes are persisted
-				jsonDocumentProvider.saveDocument(null, fileInput, document, true);
-				jsonDocumentProvider.changed(fileInput);
-				jsonDocumentProvider.disconnect(fileInput);
+				
+				// save updated resource and run formatter
+				resource.save(SaveOptions.newBuilder.format.options.toOptionsMap);
 			} catch (Exception all) {
 				return false;
 			}
@@ -320,8 +293,8 @@ class WizardGeneratorHelper {
 	 *
 	 * @returns A list of {@link IAtomicChange}s for the manifest resource.
 	 */
-	public def Collection<ISemanticModification> projectDescriptionModifications(Resource packageJson, WorkspaceWizardModel model, Collection<IN4JSProject> referencedProjects, URI moduleURI) {
-		val modifications = new ArrayList<ISemanticModification>();
+	public def Collection<IJSONDocumentModification> projectDescriptionModifications(Resource packageJson, WorkspaceWizardModel model, Collection<IN4JSProject> referencedProjects, URI moduleURI) {
+		val modifications = new ArrayList<IJSONDocumentModification>();
 		
 		// remove the containing project from the dependencies
 		val referencedProjectsExceptContainer = referencedProjects.filter[ !it.projectId.equals(model.project.lastSegment) ];

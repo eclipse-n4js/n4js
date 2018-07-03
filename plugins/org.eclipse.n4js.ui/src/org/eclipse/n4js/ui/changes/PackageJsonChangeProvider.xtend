@@ -12,21 +12,18 @@ package org.eclipse.n4js.ui.changes
 
 import java.util.Arrays
 import java.util.Collection
-import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.json.JSON.JSONArray
 import org.eclipse.n4js.json.JSON.JSONDocument
 import org.eclipse.n4js.json.JSON.JSONFactory
 import org.eclipse.n4js.json.JSON.JSONObject
 import org.eclipse.n4js.json.model.utils.JSONModelUtils
 import org.eclipse.n4js.utils.ProjectDescriptionHelper
-import org.eclipse.xtext.ui.editor.model.edit.IModificationContext
-import org.eclipse.xtext.ui.editor.model.edit.ISemanticModification
 
 import static org.eclipse.n4js.utils.ProjectDescriptionHelper.PROP__N4JS
 
 /**
  * This class provides basic change functionality for N4JS package.json files
- * in terms of {@link ISemanticModification}s.
+ * in terms of {@link IJSONDocumentModification}s.
  */
 class PackageJsonChangeProvider {
 
@@ -37,8 +34,8 @@ class PackageJsonChangeProvider {
 	 * @param dependencies 
 	 * 			The list of project dependencies to insert.
 	 */
-	public static def ISemanticModification insertProjectDependencies(Collection<String> dependencies) {
-		return new JSONDocumentModification() {
+	public static def IJSONDocumentModification insertProjectDependencies(Collection<String> dependencies) {
+		return new IJSONDocumentModification() {
 			override apply(JSONDocument document) {
 				if (dependencies.empty) {
 					return; // nothing to add
@@ -61,8 +58,8 @@ class PackageJsonChangeProvider {
 	 * @param runtimeLibraries 
 	 * 			The list of newly required runtime libraries.
 	 */
-	public static def ISemanticModification insertRequiredRuntimeLibraries(Collection<String> runtimeLibraries) {
-		return new JSONDocumentModification() {
+	public static def IJSONDocumentModification insertRequiredRuntimeLibraries(Collection<String> runtimeLibraries) {
+		return new IJSONDocumentModification() {
 			override apply(JSONDocument document) {
 				if (runtimeLibraries.empty) {
 					return; // nothing to add
@@ -85,8 +82,8 @@ class PackageJsonChangeProvider {
 	 * @param runtimeEnvironment
 	 * 			The new extended runtime environment.
 	 */
-	public static def ISemanticModification setExtendedRuntimeEnvironment(String runtimeEnvironment) {
-		return new JSONDocumentModification() {
+	public static def IJSONDocumentModification setExtendedRuntimeEnvironment(String runtimeEnvironment) {
+		return new IJSONDocumentModification() {
 			override apply(JSONDocument document) {
 				val root = getDocumentRoot(document);
 				val n4jsSection = getOrCreateN4JSSection(root);
@@ -103,8 +100,8 @@ class PackageJsonChangeProvider {
 	 * @param runtimeEnvironment The runtime environment to set
 	 * @param projectDescription The project description object of the manifest
 	 */
-	public static def ISemanticModification setProjectType(String projectType) {
-		return new JSONDocumentModification() {
+	public static def IJSONDocumentModification setProjectType(String projectType) {
+		return new IJSONDocumentModification() {
 			override apply(JSONDocument document) {
 				val root = getDocumentRoot(document);
 				val n4jsSection = getOrCreateN4JSSection(root);
@@ -140,22 +137,5 @@ class PackageJsonChangeProvider {
 
 	private static def JSONObject getOrCreateN4JSSection(JSONObject root) {
 		return getOrCreateObject(root, PROP__N4JS);
-	}
-	
-	/** 
-	 * Specialized {@link ISemanticModification} for {@link JSONDocument} instances. 
-	 */
-	private static abstract class JSONDocumentModification implements ISemanticModification {
-		
-		override apply(EObject element, IModificationContext context) throws Exception {
-			if (!(element instanceof JSONDocument)) {
-				System.err.println("Cannot perform JSONDocumentModification on non-JSONDocument object " + element);
-				return;
-			}
-			this.apply(element as JSONDocument);
-		}
-		
-		
-		abstract def void apply(JSONDocument document);
 	}
 }

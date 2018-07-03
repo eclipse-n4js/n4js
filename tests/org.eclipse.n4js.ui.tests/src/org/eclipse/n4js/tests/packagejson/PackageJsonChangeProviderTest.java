@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.N4JSUiInjectorProvider;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
+import org.eclipse.n4js.ui.changes.IJSONDocumentModification;
 import org.eclipse.n4js.ui.changes.PackageJsonChangeProvider;
 import org.eclipse.n4js.ui.wizard.generator.WizardGeneratorHelper;
 import org.eclipse.xtext.resource.XtextResource;
@@ -34,14 +35,12 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 /**
- * Tests the serialization and formatting abilities of the JSON language with regard to package.json files.
- *
- * Applies semantic modifications from {@link PackageJsonChangeProvider} to package.json files and asserts the resulting
- * serialized and formatted contents of the edited files.
+ * Applies {@link IJSONDocumentModification}s as produced by {@link PackageJsonChangeProvider} to package.json files and
+ * checks the contents of the resulting serialized and formatted contents of the edited files.
  */
 @RunWith(XtextRunner.class)
 @InjectWith(N4JSUiInjectorProvider.class)
-public class PackageJsonPartialSerializationTest {
+public class PackageJsonChangeProviderTest {
 
 	private static final String TEST_PROJECT_NAME = "Test";
 
@@ -65,21 +64,21 @@ public class PackageJsonPartialSerializationTest {
 				true);
 
 		// insert a first project dependency
-		generatorHelper.applyModifications(packageJson,
+		generatorHelper.applyJSONModifications(packageJson,
 				Arrays.asList(
 						PackageJsonChangeProvider.insertProjectDependencies(Arrays.asList("dep1"))));
 
 		Assert.assertEquals("Formatted document matches expectations after inserting a single project dependency.",
-				PackageJsonPartialSerializationExpectations.ONE_DEPENDENCY,
+				PackageJsonChangeProviderExpectations.ONE_DEPENDENCY,
 				getPackageJsonContents(testProject));
 
 		// insert another project dependency
-		generatorHelper.applyModifications(packageJson,
+		generatorHelper.applyJSONModifications(packageJson,
 				Arrays.asList(
 						PackageJsonChangeProvider.insertProjectDependencies(Arrays.asList("dep2"))));
 
 		Assert.assertEquals("Formatted document matches expectations after inserting another project dependency.",
-				PackageJsonPartialSerializationExpectations.TWO_DEPENDENCIES,
+				PackageJsonChangeProviderExpectations.TWO_DEPENDENCIES,
 				getPackageJsonContents(testProject));
 	}
 
@@ -97,21 +96,21 @@ public class PackageJsonPartialSerializationTest {
 				true);
 
 		// add required runtime library
-		generatorHelper.applyModifications(packageJson,
+		generatorHelper.applyJSONModifications(packageJson,
 				Arrays.asList(
 						PackageJsonChangeProvider.insertRequiredRuntimeLibraries(Arrays.asList("req-lib"))));
 
 		Assert.assertEquals("Formatted document matches expectations after inserting another project dependency.",
-				PackageJsonPartialSerializationExpectations.ONE_REQUIRED_RUNTIME_LIBRARIES,
+				PackageJsonChangeProviderExpectations.ONE_REQUIRED_RUNTIME_LIBRARIES,
 				getPackageJsonContents(testProject));
 
 		// add another required runtime library
-		generatorHelper.applyModifications(packageJson,
+		generatorHelper.applyJSONModifications(packageJson,
 				Arrays.asList(
 						PackageJsonChangeProvider.insertRequiredRuntimeLibraries(Arrays.asList("req-lib-2"))));
 
 		Assert.assertEquals("Formatted document matches expectations after inserting another project dependency.",
-				PackageJsonPartialSerializationExpectations.TWO_REQUIRED_RUNTIME_LIBRARIES,
+				PackageJsonChangeProviderExpectations.TWO_REQUIRED_RUNTIME_LIBRARIES,
 				getPackageJsonContents(testProject));
 	}
 

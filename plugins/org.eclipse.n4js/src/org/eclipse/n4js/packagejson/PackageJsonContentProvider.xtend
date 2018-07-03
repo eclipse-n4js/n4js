@@ -115,8 +115,10 @@ package class PackageJsonContentProvider {
 
 		// add sources sub-sections
 		sourceContainers.entrySet
+			// sort by container type
+			.sortBy[ e | e.key.literal ]
 			// group by source container type
-			.groupBy[e | e.key ] 
+			.groupBy[ e | e.key ]
 			// add source container sub-section for each specified source container type 
 			.forEach[containerType, paths| 
 				val JSONArray typeSectionArray = JSONModelUtils.addProperty(sourcesSection,
