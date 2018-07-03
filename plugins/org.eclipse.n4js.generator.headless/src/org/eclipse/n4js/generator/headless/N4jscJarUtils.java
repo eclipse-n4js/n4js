@@ -179,8 +179,9 @@ public class N4jscJarUtils {
 		Objects.requireNonNull(n4jscOpts);
 
 		// Install n4js-cli from npm registry -> node_modules folder
+		final File parentFolder = workspaceRoot.getParentFile();
 		final ProcessResult result = commandFactory
-				.createInstallPackageCommand(workspaceRoot, "n4js-cli@test", false)
+				.createInstallPackageCommand(parentFolder, "n4js-cli@test", false)
 				.execute();
 		if (result.getExitCode() != 0) {
 			final String msg = "Cannot install n4js-cli@test";
@@ -192,7 +193,7 @@ public class N4jscJarUtils {
 		final List<String> cmdline = new ArrayList<>();
 		cmdline.add(nodeJsBinary.getBinaryAbsolutePath());
 		Path n4jscliAbsolutePath = FileSystems.getDefault()
-				.getPath(workspaceRoot.getPath() + File.separatorChar + "node_modules/n4js-cli/bin/n4jsc.js")
+				.getPath(parentFolder.getPath() + File.separatorChar + "node_modules/n4js-cli/bin/n4jsc.js")
 				.normalize().toAbsolutePath();
 		cmdline.add(n4jscliAbsolutePath.toString());
 
