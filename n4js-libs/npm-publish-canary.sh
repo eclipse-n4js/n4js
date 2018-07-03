@@ -40,5 +40,5 @@ cleanup() {
 cleanup
 export NPM_CONFIG_GLOBALCONFIG="DIR_ROOT"
 echo "Publishing using .npmrc configuration to ${NPM_REGISTRY}";
-lerna publish --loglevel silly --skip-git --registry="${NPM_REGISTRY}" --exact --canary --yes --sort --npm-tag="${NPM_TAG}"
+lerna publish --loglevel silly --skip-git --registry="${NPM_REGISTRY}" --force --exact --canary --yes --sort --npm-tag="${NPM_TAG}"
 cleanup
