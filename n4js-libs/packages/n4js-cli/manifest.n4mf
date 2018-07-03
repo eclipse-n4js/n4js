@@ -27,4 +27,8 @@ RequiredRuntimeLibraries {
     n4js-runtime-node
 }
 
+ProjectDependencies {
+    npmlog 4.1.2
+}
+
 ModuleLoader: commonjs
