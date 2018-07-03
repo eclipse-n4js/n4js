@@ -17,9 +17,9 @@ auth:
     #max_users: 1000
 
 # a list of other known repositories we can talk to
-#uplinks:
-#  npmjs:
-#    url: https://registry.npmjs.org/
+uplinks:
+  npmjs:
+    url: https://registry.npmjs.org/
 
 packages:
 
@@ -36,7 +36,7 @@ packages:
     publish: $all
 
     # if package is not available locally, proxy requests to 'npmjs' registry
-    #proxy: npmjs
+    proxy: npmjs
 
 # log settings
 logs:
