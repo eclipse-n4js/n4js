@@ -14,7 +14,9 @@ import com.google.common.base.Optional
 import com.google.inject.Inject
 import java.io.IOException
 import java.io.UnsupportedEncodingException
+import java.util.ArrayList
 import java.util.Collection
+import java.util.HashSet
 import java.util.List
 import java.util.Map
 import org.eclipse.core.resources.IFile
@@ -26,27 +28,34 @@ import org.eclipse.core.runtime.Path
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.jface.text.BadLocationException
+import org.eclipse.n4js.n4mf.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.ui.changes.ChangeManager
 import org.eclipse.n4js.ui.changes.IAtomicChange
+import org.eclipse.n4js.ui.changes.PackageJsonChangeProvider
 import org.eclipse.n4js.ui.organize.imports.Interaction
 import org.eclipse.n4js.ui.organize.imports.OrganizeImportsService
 import org.eclipse.n4js.ui.wizard.model.AccessModifier
 import org.eclipse.n4js.ui.wizard.model.ClassifierReference
 import org.eclipse.n4js.ui.wizard.workspace.WorkspaceWizardModel
+import org.eclipse.n4js.utils.Log
+import org.eclipse.n4js.utils.languages.N4LanguageUtils
 import org.eclipse.ui.part.FileEditorInput
 import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.ui.editor.model.IXtextDocument
 import org.eclipse.xtext.ui.editor.model.XtextDocumentProvider
+import org.eclipse.xtext.ui.editor.model.edit.IModificationContext
+import org.eclipse.xtext.ui.editor.model.edit.ISemanticModification
 import org.eclipse.xtext.util.Files
 import org.eclipse.xtext.util.concurrent.IUnitOfWork
+import org.eclipse.n4js.json.model.utils.JSONModelUtils
 
 /**
  * This class contains commonly used methods when writing wizard generators.
  */
+@Log
 class WizardGeneratorHelper {
-
 	@Inject
 	private IN4JSCore n4jsCore;
 
@@ -129,7 +138,6 @@ class WizardGeneratorHelper {
 	}
 
 
-
 	/**
 	 * Returns true if the given path exists in the workspace.
 	 *
@@ -157,7 +165,7 @@ class WizardGeneratorHelper {
 		}
 		null
 	}
-
+	
 	/**
 	 * Retrieve the XtextDocument for the given resource and apply the changes
 	 *
@@ -190,6 +198,68 @@ class WizardGeneratorHelper {
 				docProvider.changed(fileInput);
 				docProvider.disconnect(fileInput);
 
+			} catch (Exception all) {
+				return false;
+			}
+		} else {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Retrieve the XtextDocument for the given resource and apply the given list of {@link ISemanticModification}s.
+	 * 
+	 * @param resource 
+	 * 			The XtextResource to modify.
+	 * @param changes 
+	 * 			The semantic modifications to apply.
+	 * */
+	public def boolean applyModifications(XtextResource resource, Collection<? extends ISemanticModification> modifications){
+		val IPath resourcePath = new Path(resource.getURI.toString).makeRelativeTo(new Path("platform:/resource/"));
+		val IFile resourceFile = ResourcesPlugin.workspace.root.getFile(resourcePath);
+		
+		if (resourceFile.exists) {
+			try {
+				// setup new IXtextDocument for package.json file
+				val jsonDocumentProvider = N4LanguageUtils.getServiceForContext(resource.URI, XtextDocumentProvider).get();
+				val FileEditorInput fileInput = new FileEditorInput(resourceFile);
+				jsonDocumentProvider.connect(fileInput);
+				val IXtextDocument document = jsonDocumentProvider.getDocument(fileInput) as IXtextDocument;
+
+				jsonDocumentProvider.aboutToChange(fileInput);
+
+				// modification context to perform the modifications in
+				val context = new IModificationContext() {
+					override getXtextDocument() {
+						return document;
+					}
+					override getXtextDocument(URI uri) {
+						return document;
+					}
+				}
+
+				// perform modification on document content
+				document.modify(new IUnitOfWork.Void<XtextResource>() {
+					public override void process(XtextResource state) throws Exception {
+						val jsonDocument = JSONModelUtils.getDocument(state);
+
+						for (modification : modifications) {
+							try {
+								modification.apply(jsonDocument, context)
+							} catch (Exception e) {
+								logger.error("Failed to perform semantic modification " + modification + " on resource " +
+									resource.URI, e);
+							}
+						}
+					}
+				});
+
+				// after modifications, make sure changes are persisted
+				jsonDocumentProvider.saveDocument(null, fileInput, document, true);
+				jsonDocumentProvider.changed(fileInput);
+				jsonDocumentProvider.disconnect(fileInput);
 			} catch (Exception all) {
 				return false;
 			}
@@ -236,46 +306,39 @@ class WizardGeneratorHelper {
 	}
 
 	/**
-	 * Return the manifest changes which need to be applied in order to allow referencing of the given projects/runtime libraries.
-	 * Also add a new source folder if the module happens to be in a non-source-folder location.
+	 * Return the package.json modifications which need to be applied in order to allow referencing of 
+	 * the given projects/runtime libraries.
 	 *
-	 * @param manifest The manifest resource
-	 * @param model The workspace wizard model
-	 * @param referencedProjects A list of the projects to be referenced
-	 * @param moduleURI The platform uri of the target module
+	 * @param packageJson 
+	 * 			The package.json resource
+	 * @param model 
+	 * 			The workspace wizard model
+	 * @param referencedProjects 
+	 * 			A list of the projects to be referenced
+	 * @param moduleURI 
+	 * 			The platform uri of the target module
 	 *
 	 * @returns A list of {@link IAtomicChange}s for the manifest resource.
 	 */
-	public def Collection<IAtomicChange> manifestChanges(Resource manifest, WorkspaceWizardModel model, Collection<IN4JSProject> referencedProjects, URI moduleURI) {
-		// TODO FIXME implement this function for package.json files
-		return emptyList;
+	public def Collection<ISemanticModification> projectDescriptionModifications(Resource packageJson, WorkspaceWizardModel model, Collection<IN4JSProject> referencedProjects, URI moduleURI) {
+		val modifications = new ArrayList<ISemanticModification>();
 		
-//		// Remove the containing project from the dependencies
-//		val referencedProjectsExceptContainer = referencedProjects.filter[ !it.projectId.equals(model.project.lastSegment) ];
-//
-//		//Remove duplicates
-//		val referencedProjectsSet = new HashSet<IN4JSProject>();
-//		referencedProjectsSet.addAll(referencedProjectsExceptContainer);
-//
-//		var List<IAtomicChange> manifestChanges = new ArrayList<IAtomicChange>();
-//
-//		val projectDescription = manifest.allContents.filter(ProjectDescription).head;
-//
-//		//Add project dependency changes
-//		val dependencyChange = ManifestChangeProvider.insertProjectDependencies(manifest,
-//																				referencedProjectsSet.filter[projectType != ProjectType.RUNTIME_LIBRARY].map[projectId].toList,
-//																				projectDescription)
-//		//Add required runtime library changes
-//		val runtimeLibraryChange = ManifestChangeProvider.insertRequiredRuntimeLibraries(manifest,
-//																				referencedProjectsSet.filter[projectType == ProjectType.RUNTIME_LIBRARY].map[projectId].toList,
-//																				projectDescription)
-//		if (dependencyChange !== null) {
-//			manifestChanges.add(dependencyChange);
-//		}
-//		if (runtimeLibraryChange !== null) {
-//			manifestChanges.add(runtimeLibraryChange);
-//		}
-//
-//		return manifestChanges;
+		// remove the containing project from the dependencies
+		val referencedProjectsExceptContainer = referencedProjects.filter[ !it.projectId.equals(model.project.lastSegment) ];
+
+		// remove duplicates
+		val referencedProjectsSet = new HashSet<IN4JSProject>();
+		referencedProjectsSet.addAll(referencedProjectsExceptContainer);
+
+		// add project dependency changes (includes added runtime libraries)
+		modifications.add(PackageJsonChangeProvider.insertProjectDependencies(referencedProjectsSet
+			.map[projectId].toList));
+				
+		// add required runtime library changes
+		modifications.add(PackageJsonChangeProvider.insertRequiredRuntimeLibraries(referencedProjectsSet.filter [
+			projectType == ProjectType.RUNTIME_LIBRARY
+		].map[projectId].toList));
+	
+		return modifications;
 	}
 }

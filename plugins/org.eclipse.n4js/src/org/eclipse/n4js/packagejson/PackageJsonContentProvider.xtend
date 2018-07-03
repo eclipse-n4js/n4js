@@ -83,15 +83,18 @@ package class PackageJsonContentProvider {
 		if (version.present)
 			JSONModelUtils.addProperty(root, PROP__VERSION, version.get());
 
-		// add dependencies section
-		val JSONObject dependenciesSection = JSONFactory.eINSTANCE.createJSONObject();
-		dependenciesSection.nameValuePairs.addAll(dependencies.map [ d |
-			val pair = JSONFactory.eINSTANCE.createNameValuePair();
-			pair.name = d;
-			pair.value = JSONModelUtils.createStringLiteral("*");
-			return pair;
-		]);
-		JSONModelUtils.addProperty(root, ProjectDescriptionHelper.PROP__DEPENDENCIES, dependenciesSection);
+		// add "dependencies" section
+		if (!dependencies.empty) {
+			// add dependencies section
+			val JSONObject dependenciesSection = JSONFactory.eINSTANCE.createJSONObject();
+			dependenciesSection.nameValuePairs.addAll(dependencies.map [ d |
+				val pair = JSONFactory.eINSTANCE.createNameValuePair();
+				pair.name = d;
+				pair.value = JSONModelUtils.createStringLiteral("*");
+				return pair;
+			]);
+			JSONModelUtils.addProperty(root, ProjectDescriptionHelper.PROP__DEPENDENCIES, dependenciesSection);
+		}
 		
 		// add "n4js" section
 		val JSONObject n4jsRoot = JSONModelUtils.addProperty(root, PROP__N4JS,

@@ -19,6 +19,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.json.JSON.JSONArray;
 import org.eclipse.n4js.json.JSON.JSONDocument;
@@ -33,6 +35,28 @@ import org.eclipse.n4js.json.JSON.NameValuePair;
  * Utility methods for more convenient access to elements of the {@link JSONPackage} model.
  */
 public class JSONModelUtils {
+
+	/**
+	 * Returns the {@link JSONDocument} instance that is contained in the given {@link Resource}.
+	 *
+	 * @throws IllegalArgumentException
+	 *             if the given resource is not a valid JSON resource.
+	 */
+	public static JSONDocument getDocument(Resource resource) {
+		if (resource.getContents().isEmpty()) {
+			throw new IllegalArgumentException(
+					"The given empty resource is not a valid JSON resource (URI=" + resource.getURI() + ").");
+		}
+
+		final EObject firstSlot = resource.getContents().get(0);
+
+		if (!(firstSlot instanceof JSONDocument)) {
+			throw new IllegalArgumentException(
+					"The given resource is not a valid JSON resource (URI=" + resource.getURI() + ").");
+		}
+
+		return (JSONDocument) firstSlot;
+	}
 
 	/**
 	 * Same as {@link #getPath(JSONObject, List)}, but accepts a {@link JSONDocument} with a {@link JSONObject} as
