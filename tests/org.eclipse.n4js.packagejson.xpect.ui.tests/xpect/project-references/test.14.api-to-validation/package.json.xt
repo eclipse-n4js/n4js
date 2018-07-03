@@ -35,7 +35,7 @@
 	"dependencies": {
 		// library projects w/o implementationId may be listed here XPECT noerrors
 		"test.data.system.project.one": "*",
-		// implementation project with id cannot be listed here XPECT warnings --> "Project test.data.lib.project.one of type library cannot be declared among the dependencies or devDependencies." at ""test.data.lib.project.one": "*""
+		// implementation project with implementation ID cannot be listed here XPECT warnings --> "Library project test.data.lib.project.one with an implementation ID cannot be declared among the dependencies of an API project." at ""test.data.lib.project.one": "*""
 		"test.data.lib.project.one": "*",
 		// validation projects w/o implementationId may be listed here XPECT noerrors
 		"test.data.validation.project.one": "*"

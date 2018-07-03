@@ -532,6 +532,29 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		if (!references.empty) {
 			checkReferencedProjects(references, createDependenciesPredicate(), "dependencies or devDependencies", false, false); 
 		}
+		
+		// special validation for API projects
+		if (projectDescription.projectType == API) {
+			internalValidateAPIProjectReferences(references);
+		}
+	}
+	
+	/**
+	 * Checks that an API project does not declare any dependencies on implementation
+	 * projects (library projects with implementation ID).
+	 */
+	def internalValidateAPIProjectReferences(List<ValidationProjectReference> references) {
+		val libraryDependenciesWithImplId = references
+			.map[ref | Pair.of(ref, allExistingProjectIds.get(ref.referencedProjectId))]
+			.filterNull
+			.filter[pair | pair.value.projectType == LIBRARY && pair.value.implementationId.present];
+		
+		for (projectPair : libraryDependenciesWithImplId) {
+			val reference = projectPair.key;
+			addIssue(IssueCodes.getMessageForINVALID_API_PROJECT_DEPENDENCY(reference.referencedProjectId), reference.astRepresentation, 
+				IssueCodes.INVALID_API_PROJECT_DEPENDENCY);
+		}
+		
 	}
 
 	/** Checks the 'n4js.extendedRuntimeEnvironment' section. */
@@ -849,16 +872,17 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	}
 
 	/**
-	 * Returns with a new predicate instance that provides {@code true} only and if only the followings are true:
+	 * Returns with a new predicate instance that provides {@code true} only and if only one of the followings are true:
 	 * <ul>
 	 * <li>The project type is API or</li>
-	 * <li>The project type is library and no implementation ID is specified for the library.</li>
+	 * <li>The project type is library.</li>
+	 * <li>The project type is validation.</li>
 	 * </ul>
 	 * Otherwise the predicate provides {@code false} value.
 	 */
 	private def Predicate<IN4JSProject> createAPIDependenciesPredicate() {
 		return Predicates.or(API_TYPE.forN4jsProjects, 
-			[LIB_OR_VALIDATION.apply(projectType) && !implementationId.present]
+			[LIB_OR_VALIDATION.apply(projectType)]
 		);
 	}
 	

@@ -49,8 +49,6 @@
 				"p/q/*",
 				// XPECT warnings --> "Module filter "p/doesntexist/" does not match any modules." at ""p/doesntexist/""
 				"p/doesntexist/",
-				// XPECT warnings --> "Module filter "**/External" does not match any modules." at "["src", "**/External"]"
-				["src", "**/External"],
 				// External is available in src-external but not in src XPECT errors --> "Module filters of type noValidate must not match N4JS modules/files." at "{"sourceContainer": "src-external", "module": "p/External"}"
 				{
 					"sourceContainer": "src-external",
@@ -66,7 +64,10 @@
 					"sourceContainer": "src2",
 					"module": "**/*"
 				},
-				["src3", "**/*"]
+				{
+					"sourceContainer": "src3",
+					"module": "**/*"
+				}
 			],
 			// XPECT warnings --> "Property noValidate duplicates property noValidate (line 43)." at "\"noValidate\""
 			"noValidate": [
