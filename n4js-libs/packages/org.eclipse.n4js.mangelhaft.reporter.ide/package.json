@@ -1,4 +1,6 @@
 {
+  "name": "org.eclipse.n4js.mangelhaft.reporter.ide",
+  "version": "0.1.0",
   "author": {
     "name": "NumberFour AG",
     "email": "npm@numberfour.eu"
@@ -32,13 +34,11 @@
     ],
     "moduleLoader": "n4js"
   },
-  "name": "org.eclipse.n4js.mangelhaft.reporter.ide",
-  "version": "0.1.0",
   "dependencies": {
-    "org.eclipse.n4js.mangelhaft": "latest",
-    "n4js-node": "latest"
+    "org.eclipse.n4js.mangelhaft": "^0.1.0",
+    "n4js-node": "^0.1.0"
   },
   "devDependencies": {
-    "n4js-runtime-fetch": "latest"
+    "n4js-runtime-fetch": "^0.1.0"
   }
 }

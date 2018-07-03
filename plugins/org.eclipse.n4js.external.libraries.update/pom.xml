@@ -24,11 +24,52 @@ Contributors:
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
+	<properties>
+		<skip.mwe2>false</skip.mwe2>
+		<mwe2-file-location>/src/org/eclipse/n4js/external/libraries/update/UpdateShippedCode.mwe2</mwe2-file-location>
+		<!-- fornax: -->
+		<mwe2descriptor>org.eclipse.n4js.UpdateShippedCode</mwe2descriptor>
+	</properties>
+
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-clean-plugin</artifactId>
+			</plugin>
+			<!-- Execute UpdateShippedCode MWE workflow -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>${codehaus-exec-maven-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>mwe2-launcher</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>java</goal>
+						</goals>
+						<configuration>
+							<includeProjectDependencies>true</includeProjectDependencies>
+							<includePluginDependencies>true</includePluginDependencies>
+							<mainClass>org.eclipse.emf.mwe2.launch.runtime.Mwe2Launcher</mainClass>
+							<arguments>
+								<argument>file://${project.basedir}${mwe2-file-location}</argument>
+								<argument>
+									-p
+								</argument>
+								<argument>
+									rootPath=/${project.basedir}/../
+								</argument>
+							</arguments>
+							<classpathScope>compile</classpathScope>
+							<!-- Following switch:
+								 do not try to kill the daemons of MWE, default timed out after 15s and gave Exceptions to build
+								 -->
+							<cleanupDaemonThreads>false</cleanupDaemonThreads>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

@@ -128,7 +128,8 @@ public class UpdateShippedCode implements IWorkflowComponent {
 				+ "\" to target folder");
 		println("    FROM: " + n4jsLibsRoot);
 		println("    TO  : " + actualTargetPath);
-		final File[] n4jsLibsSubfolders = n4jsLibsRoot.listFiles(file -> file.isDirectory());
+		final File[] n4jsLibsSubfolders = n4jsLibsRoot
+				.listFiles(file -> file.isDirectory());
 		copyN4jsLibsToShippedCodeFolder(n4jsLibsSubfolders, actualTargetPath);
 		// step 4: run "npm install" in project "n4js-node"
 		// TODO let HLC resolve missing dependencies
@@ -162,6 +163,12 @@ public class UpdateShippedCode implements IWorkflowComponent {
 			final String projectName = subfolder.getName();
 			if (projectName.contains("test")) {
 				println("NOT copying project " + projectName + " (because project name contains substring \"test\")");
+			} else if (projectName.contains("n4js-cli") || projectName.contains("n4js-mangelhaft-cli")
+					|| projectName.contains("org.eclipse.n4js.mangelhaft.reporter.console")
+					|| projectName.contains("org.eclipse.n4js.mangelhaft.reporter.xunit")
+					|| projectName.contains("n4mf-parser")) {
+				println("NOT copying project " + projectName
+						+ " (because this project will be published to npm registry only)");
 			} else {
 				println("    copying project " + projectName);
 				final String category = getCategoryForN4jsLibsProject(projectName);
@@ -199,8 +206,10 @@ public class UpdateShippedCode implements IWorkflowComponent {
 		// Then compile the projects
 		final String[] args = {
 				"--buildType", "allprojects",
-				"--projectlocations", foldersContainingProjectsStr,
+				"--installMissingDependencies",
+				"--projectlocations", foldersContainingProjectsStr
 		};
+
 		try {
 			new N4jscBase().doMain(args);
 		} catch (ExitCodeException e) {

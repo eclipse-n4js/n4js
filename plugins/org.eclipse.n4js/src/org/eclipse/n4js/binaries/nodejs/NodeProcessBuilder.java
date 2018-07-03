@@ -132,7 +132,8 @@ public class NodeProcessBuilder {
 	 * @param invokationPath
 	 *            location on which npm command should be invoked
 	 * @param packageName
-	 *            package passed as parameter to the command (might be space separated list of names)
+	 *            package passed as parameter to the command (might be space separated list of names). If packageName is
+	 *            null, it is assume to be the empty string.
 	 * @param save
 	 *            instructs npm to save command result to packages in package.json (if available)
 	 * @param simpleCommand
@@ -143,14 +144,17 @@ public class NodeProcessBuilder {
 		Builder<String> builder = ImmutableList.<String> builder();
 		NpmBinary npmBinary = npmBinaryProvider.get();
 		String saveCommand = save ? NPM_OPTION_SAVE : "";
+		String resolvedPackageName = (packageName == null) ? "" : packageName;
 
 		if (isWindows()) {
 			builder.add(WIN_SHELL_COMAMNDS);
-			builder.add(escapeBinaryPath(npmBinary.getBinaryAbsolutePath()), simpleCommand, packageName, saveCommand);
+			builder.add(escapeBinaryPath(npmBinary.getBinaryAbsolutePath()), simpleCommand, resolvedPackageName,
+					saveCommand);
 		} else {
 			builder.add(NIX_SHELL_COMAMNDS);
 			builder.add(
-					escapeBinaryPath(npmBinary.getBinaryAbsolutePath()) + " " + simpleCommand + " " + packageName + " "
+					escapeBinaryPath(npmBinary.getBinaryAbsolutePath()) + " " + simpleCommand + " "
+							+ resolvedPackageName + " "
 							+ saveCommand);
 		}
 
