@@ -525,13 +525,14 @@ public class N4jscBase implements IApplication {
 							throw new ExitCodeException(EXITCODE_DEPENDENCY_NOT_FOUND,
 									"Cannot install dependencies.");
 
-					final BuildSet targetPlatformBuildSet = computeTargetPlatformBuildSet();
-					// make sure all newly installed dependencies are registered with the workspace
-					registerProjects(targetPlatformBuildSet);
-
-					// add newly installed external libraries to the discoveredProjects of the buildSet
-					buildSet = BuildSet.combineDiscovered(buildSet, targetPlatformBuildSet);
 				}
+
+				final BuildSet targetPlatformBuildSet = computeTargetPlatformBuildSet();
+				// make sure all newly installed dependencies are registered with the workspace
+				registerProjects(targetPlatformBuildSet);
+
+				// add newly installed external libraries to the discoveredProjects of the buildSet
+				buildSet = BuildSet.combineDiscovered(buildSet, targetPlatformBuildSet);
 
 				// run and dispatch.
 				doCompileAndTestAndRun(buildSet);
@@ -874,8 +875,16 @@ public class N4jscBase implements IApplication {
 	}
 
 	/**
-	 * Dispatches the computation of the {@link BuildSet} for compilation and dependency discovery based on
-	 * {@link #buildtype}.
+	 * Dispatches the computation of the {@link BuildSet} for dependency discovery and compilation based on
+	 * {@link #buildtype}. Does NOT include projects in target platform install location. Those should be added after(!)
+	 * install missing dependencies via
+	 *
+	 * <pre>
+	 * buildSet = computeBuildSet(); // this method
+	 * // ... install missing dependencies ...
+	 * final BuildSet targetPlatformBuildSet = computeTargetPlatformBuildSet();
+	 * buildSet = BuildSet.combineDiscovered(buildSet, targetPlatformBuildSet);
+	 * </pre>
 	 */
 	private BuildSet computeBuildSet() throws ExitCodeException {
 		try {
@@ -900,7 +909,6 @@ public class N4jscBase implements IApplication {
 	/** Collects projects in 'singlefile' build mode and returns corresponding BuildSet. */
 	private BuildSet computeSingleFilesBuildSet() throws N4JSCompileException {
 		List<File> toBuild = new ArrayList<>();
-		toBuild.addAll(ProjectLocationsUtil.getTargetPlatformWritableDir(installLocationProvider));
 
 		if (projectLocations != null)
 			toBuild.addAll(ProjectLocationsUtil.convertToFiles(projectLocations));
@@ -911,7 +919,6 @@ public class N4jscBase implements IApplication {
 	/** Collects projects in 'projects' build mode and returns corresponding BuildSet. */
 	private BuildSet computeProjectsBuildSet() throws N4JSCompileException {
 		List<File> toBuild = new ArrayList<>();
-		toBuild.addAll(ProjectLocationsUtil.getTargetPlatformWritableDir(installLocationProvider));
 
 		if (projectLocations != null)
 			toBuild.addAll(ProjectLocationsUtil.convertToFiles(projectLocations));
@@ -931,7 +938,6 @@ public class N4jscBase implements IApplication {
 		}
 
 		List<File> toBuild = new ArrayList<>();
-		toBuild.addAll(ProjectLocationsUtil.getTargetPlatformWritableDir(installLocationProvider));
 		toBuild.addAll(ProjectLocationsUtil.convertToFiles(projectLocations));
 		return buildSetComputer.createAllProjectsBuildSet(toBuild);
 	}
