@@ -40,5 +40,12 @@ cleanup() {
 cleanup
 export NPM_CONFIG_GLOBALCONFIG="DIR_ROOT"
 echo "Publishing using .npmrc configuration to ${NPM_REGISTRY}";
-lerna publish --loglevel silly --skip-git --registry="${NPM_REGISTRY}" --force --exact --canary --yes --sort --npm-tag="${NPM_TAG}"
+
+if [ "${NPM_TAG}" = "latest" ]; then
+	lerna publish --loglevel silly --skip-git --registry="${NPM_REGISTRY}" --exact --canary --yes --sort --npm-tag="${NPM_TAG}"
+else
+	# Use a version that we are sure can not exist on public npm registry for 
+	lerna publish --loglevel silly --skip-git --registry="${NPM_REGISTRY}" --repo-version="9999.0.0" --exact --canary --yes --sort --npm-tag="${NPM_TAG}"
+fi
+
 cleanup
