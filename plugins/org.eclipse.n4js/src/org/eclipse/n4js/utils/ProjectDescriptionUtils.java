@@ -114,8 +114,6 @@ public class ProjectDescriptionUtils {
 	 * <pre>
 	 * "abc*"
 	 *
-	 * ["src", "abc*"]
-	 *
 	 * {
 	 *     "sourceContainer": "src"
 	 *     "module": "abc*",
@@ -129,15 +127,6 @@ public class ProjectDescriptionUtils {
 			return createModuleFilterSpecifier(null, singleString);
 		}
 		// 2nd variant:
-		List<JSONValue> elements = asArrayElementsOrEmpty(jsonValue);
-		if (elements.size() == 2) {
-			String elem0 = asStringOrNull(elements.get(0));
-			String elem1 = asStringOrNull(elements.get(1));
-			if (elem0 != null && elem1 != null) {
-				return createModuleFilterSpecifier(elem0, elem1);
-			}
-		}
-		// 3rd variant:
 		List<NameValuePair> pairs = asNameValuePairsOrEmpty(jsonValue);
 		NameValuePair pathNVP = pairs.stream()
 				.filter(p -> ProjectDescriptionHelper.PROP__SOURCE_CONTAINER.equals(p.getName())).findFirst()

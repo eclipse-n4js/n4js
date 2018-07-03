@@ -672,14 +672,14 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	
 	private def holdsValidModuleSpecifiers(Iterable<Pair<ModuleFilterSpecifier, JSONValue>> moduleFilterSpecifiers, IN4JSProject project) {
 		val validFilterSpecifier = new ArrayList<Pair<ModuleFilterSpecifier, JSONValue>>();
-		
+
 		for (Pair<ModuleFilterSpecifier, JSONValue> filterSpecifierPair : moduleFilterSpecifiers) {
 			val valid = holdsValidWildcardModuleSpecifier(filterSpecifierPair);
 			if (valid) {
 				validFilterSpecifier.add(filterSpecifierPair);
 			}
 		}
-		
+
 		internalCheckModuleSpecifierHasFile(project, validFilterSpecifier);
 	}
 
@@ -715,8 +715,13 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		}
 		
 		// check for empty filter or source container values
-		if ((filterSpecifier?.moduleSpecifierWithWildcard !== null && filterSpecifier?.moduleSpecifierWithWildcard.empty) || 
-			(filterSpecifier?.sourcePath !== null && filterSpecifier?.sourcePath.empty)) {
+		val moduleSpecifier = filterSpecifier?.moduleSpecifierWithWildcard;
+		if (moduleSpecifier === null) {
+			// in this case, error message is created elsewhere
+			return false;
+		}
+		if (moduleSpecifier.empty
+			|| (filterSpecifier?.sourcePath !== null && filterSpecifier?.sourcePath.empty)) {
 			addIssue(IssueCodes.getMessageForPKGJ_INVALID_MODULE_FILTER_SPECIFIER_EMPTY(),
 					filterSpecifierPair.value, IssueCodes.PKGJ_INVALID_MODULE_FILTER_SPECIFIER_EMPTY);
 			return false;
