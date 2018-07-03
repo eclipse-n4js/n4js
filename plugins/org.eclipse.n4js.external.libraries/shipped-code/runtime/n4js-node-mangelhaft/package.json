@@ -8,7 +8,7 @@
   "license": "EPL-1.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/NumberFour/n4js-libs"
+    "url": "https://github.com/eclipse/n4js"
   },
   "description": "N4JS node.js mangelhaft runtime environment.",
   "keywords": [
@@ -19,8 +19,8 @@
     "node": ">= 5.0.0"
   },
   "dependencies": {
-    "org.eclipse.n4js.mangelhaft.runner.ide": "latest",
-    "n4js-node": "latest"
+    "org.eclipse.n4js.mangelhaft.runner.ide": "^0.1.0",
+    "n4js-node": "^0.1.0"
   },
   "files": [
     "manifest.n4mf",
