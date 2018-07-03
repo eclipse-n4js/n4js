@@ -104,7 +104,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	static val RL_TYPE = anyOf(RUNTIME_LIBRARY);
 	static val TEST_TYPE = anyOf(TEST);
 	static val RE_OR_RL_TYPE = anyOf(RUNTIME_ENVIRONMENT, RUNTIME_LIBRARY);
-	static val LIB_OR_VALIDATION = anyOf(LIBRARY, VALIDATION);
+	static val LIB_OR_VALIDATION_OR_RL = anyOf(LIBRARY, VALIDATION, RUNTIME_LIBRARY);
 
 	/**
 	 * Key to store a converted ProjectDescription instance in the validation context for re-use across different check-methods
@@ -882,7 +882,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	 */
 	private def Predicate<IN4JSProject> createAPIDependenciesPredicate() {
 		return Predicates.or(API_TYPE.forN4jsProjects, 
-			[LIB_OR_VALIDATION.apply(projectType)]
+			[LIB_OR_VALIDATION_OR_RL.apply(projectType)]
 		);
 	}
 	
