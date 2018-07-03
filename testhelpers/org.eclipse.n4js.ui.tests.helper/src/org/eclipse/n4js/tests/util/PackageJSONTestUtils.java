@@ -257,7 +257,7 @@ public class PackageJSONTestUtils extends JSONModelUtils {
 	private static String getStringRepresentation(ModuleFilterType type) {
 		switch (type) {
 		case NO_MODULE_WRAPPING:
-			return "noModuleWrapping";
+			return "noModuleWrap";
 		case NO_VALIDATE:
 			return "noValidate";
 		default:
