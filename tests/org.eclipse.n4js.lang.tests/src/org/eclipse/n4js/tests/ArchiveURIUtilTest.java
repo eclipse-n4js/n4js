@@ -13,11 +13,10 @@ package org.eclipse.n4js.tests;
 import java.util.zip.ZipEntry;
 
 import org.eclipse.emf.common.util.URI;
-import org.junit.Assert;
-import org.junit.Test;
-
 import org.eclipse.n4js.ArchiveURIUtil;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  */
@@ -27,8 +26,8 @@ public class ArchiveURIUtilTest {
 	@Test
 	public void testArchiveURIForSingleSegment() {
 		URI base = URI.createURI("file:/a/b/c.nfar");
-		URI manifestURI = ArchiveURIUtil.createURI(base, IN4JSProject.N4MF_MANIFEST);
-		Assert.assertEquals("archive:file:/a/b/c.nfar!/manifest.n4mf", manifestURI.toString());
+		URI manifestURI = ArchiveURIUtil.createURI(base, IN4JSProject.PACKAGE_JSON);
+		Assert.assertEquals("archive:file:/a/b/c.nfar!/package.json", manifestURI.toString());
 	}
 
 	@SuppressWarnings("javadoc")

@@ -165,7 +165,7 @@ class MarkedProject {
 
 	private void unloadManifestResource(ResourceSet resourceSet, ResourceDescriptionsData index,
 			N4ProgressStateRecorder recorder) {
-		Optional<URI> manifestLocation = project.getManifestLocation();
+		Optional<URI> manifestLocation = project.getProjectDescriptionLocation();
 		if (manifestLocation.isPresent()) {
 			Resource resource = resourceSet.getResource(manifestLocation.get(), false);
 			if (resource != null)

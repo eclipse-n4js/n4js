@@ -21,7 +21,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.n4mf.ProjectDescription;
-import org.eclipse.n4js.n4mf.utils.parsing.ManifestValuesParsingUtil;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.dependencies.DependenciesCollectingUtil;
@@ -30,8 +29,7 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 /**
  * Allows to access data in the manifests of the provided {@link IN4JSProject}s. Unlike {@link N4JSModel} will return
- * data that describes unknown or missing projects. Unlike {@link ManifestValuesParsingUtil} it allows to read manifest
- * of known projects, and not arbitrary {@code .n4mf} file.
+ * data that describes unknown or missing projects. of known projects, and not arbitrary {@code .n4mf} file.
  */
 public class ProjectDependenciesHelper {
 	private static final Logger LOGGER = Logger.getLogger(ProjectDependenciesHelper.class);
@@ -57,7 +55,7 @@ public class ProjectDependenciesHelper {
 	 */
 	public Map<String, String> calculateDependenciesToInstall() {
 		Map<String, String> versionedPackages = new HashMap<>();
-		DependenciesCollectingUtil.updateMissingDependneciesMap(versionedPackages, getAvailableProjectsDescriptions());
+		DependenciesCollectingUtil.updateMissingDependenciesMap(versionedPackages, getAvailableProjectsDescriptions());
 		if (LOGGER.isDebugEnabled()) {
 			StringJoiner messages = new StringJoiner(System.lineSeparator());
 			messages.add("dependencies to install: ");

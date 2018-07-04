@@ -17,10 +17,9 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 
 import org.eclipse.emf.common.util.URI;
-import org.junit.Test;
-
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.junit.Test;
 
 /**
  */
@@ -84,5 +83,23 @@ public abstract class AbstractN4JSCoreTest extends AbstractProjectModelTest {
 		IN4JSProject project = getN4JSCore().create(myProjectURI);
 		assertNotNull(project);
 		assertEquals(myProjectId, project.getProjectId());
+	}
+
+	@SuppressWarnings("javadoc")
+	@Test
+	public void testGetDepthOfLocation() {
+		String[] emptySegments = { "", "", "" };
+		URI uri0 = myProjectURI;
+		URI uri1 = myProjectURI.appendSegment("someFile.txt");
+		URI uri2 = myProjectURI.appendSegment("someFolder").appendSegment("someFile.txt");
+		URI uriBad = myProjectURI.trimSegments(1).appendSegment("DoesNotExist").appendSegment("someFile.txt");
+		assertEquals(0, getN4JSCore().getDepthOfLocation(uri0));
+		assertEquals(0, getN4JSCore().getDepthOfLocation(uri0.appendSegments(emptySegments)));
+		assertEquals(1, getN4JSCore().getDepthOfLocation(uri1));
+		assertEquals(1, getN4JSCore().getDepthOfLocation(uri1.appendSegments(emptySegments)));
+		assertEquals(2, getN4JSCore().getDepthOfLocation(uri2));
+		assertEquals(2, getN4JSCore().getDepthOfLocation(uri2.appendSegments(emptySegments)));
+		assertEquals(-1, getN4JSCore().getDepthOfLocation(uriBad));
+		assertEquals(-1, getN4JSCore().getDepthOfLocation(uriBad.appendSegments(emptySegments)));
 	}
 }

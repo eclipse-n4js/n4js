@@ -22,6 +22,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.common.base.Predicates;
+
 /**
  * Downloads, installs, compiles and runs 'express' where target platform file specifies version range.
  */
@@ -31,7 +33,7 @@ public class TargetPlatformRangeConfigurationsTest extends AbstractN4jscTest {
 	/** Prepare workspace. */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace("external");
+		workspace = setupWorkspace("external", Predicates.alwaysTrue());
 	}
 
 	/** Delete workspace. */

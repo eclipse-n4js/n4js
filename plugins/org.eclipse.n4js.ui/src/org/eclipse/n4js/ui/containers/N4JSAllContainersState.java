@@ -11,7 +11,6 @@
 package org.eclipse.n4js.ui.containers;
 
 import static com.google.common.collect.FluentIterable.from;
-import static org.eclipse.n4js.projectModel.IN4JSProject.N4MF_MANIFEST;
 import static org.eclipse.ui.PlatformUI.getWorkbench;
 import static org.eclipse.ui.PlatformUI.isWorkbenchRunning;
 
@@ -31,6 +30,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.fileextensions.FileExtensionTypeHelper;
 import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSCore;
@@ -108,23 +108,23 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 			if (null != fileExtension && fileExtensionTypeHelper.isTypable(fileExtension)) {
 				return true;
 			}
-			if (IN4JSProject.N4MF_MANIFEST.equals(delta.getFullPath().lastSegment())) {
-				clearManifestCache();
+			if (IN4JSProject.PACKAGE_JSON.equals(delta.getFullPath().lastSegment())) {
+				clearProjectCache();
 				return true;
 			}
 			if (IN4JSArchive.NFAR_FILE_EXTENSION.equals(fileExtension)) {
-				clearManifestCache(delta);
+				clearProjectCache(delta);
 				return true;
 			}
 			if (delta.getResource() instanceof IProject) {
-				clearManifestCache();
+				clearProjectCache();
 				return true;
 			}
 			if (delta.getResource() instanceof IFolder) {
 				if (isSourceContainerModification(delta)) {
-					tryValidateManifest(delta);
-					tryValidateManifestInEditor(delta);
-					clearManifestCache(delta);
+					tryValidateProjectDescriptionFile(delta);
+					tryValidateProjectDescriptionInEditor(delta);
+					clearProjectCache(delta);
 					return true;
 				}
 			}
@@ -134,36 +134,34 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 				return true;
 			}
 			if ((delta.getFlags() & IResourceDelta.OPEN) != 0) {
-				clearManifestCache();
+				clearProjectCache();
 				return true;
 			}
 			return false;
 		}
-		if (n4mfFileHasBeenChanged(delta) || nfarHasBeenChanged(delta)) {
-			clearManifestCache(delta);
+		if (nfarHasBeenChanged(delta) || packageJSONFileHasBeenChanged(delta)) {
+			clearProjectCache(delta);
 			return true;
 		}
 		return false;
 
 	}
 
-	static int i = 0;
-
-	private void tryValidateManifest(final IResourceDelta delta) {
+	private void tryValidateProjectDescriptionFile(final IResourceDelta delta) {
 		final String fullPath = delta.getFullPath().toString();
 		final URI folderUri = URI.createPlatformResourceURI(fullPath, true);
 		final IN4JSProject project = core.findProject(folderUri).orNull();
 		if (null != project && project.exists()) {
-			final URI manifestLocation = project.getManifestLocation().orNull();
-			if (null != manifestLocation) {
-				final IFile manifest = delta.getResource().getProject().getFile(N4MF_MANIFEST);
+			final URI projectDescriptionLocation = project.getProjectDescriptionLocation().orNull();
+			if (null != projectDescriptionLocation) {
+				final IFile packageJSON = delta.getResource().getProject().getFile(N4JSGlobals.PACKAGE_JSON);
 				final ResourceSet resourceSet = core.createResourceSet(Optional.of(project));
-				final Resource resource = resourceSet.getResource(manifestLocation, true);
+				final Resource resource = resourceSet.getResource(projectDescriptionLocation, true);
 				final Job job = Job.create("Update validation markers for " + resource.getURI(), monitor -> {
 					ISchedulingRule rule = builder.getRule();
 					try {
 						Job.getJobManager().beginRule(rule, monitor);
-						validatorExtension.updateValidationMarkers(manifest, resource, CheckMode.ALL,
+						validatorExtension.updateValidationMarkers(packageJSON, resource, CheckMode.ALL,
 								new NullProgressMonitor());
 					} finally {
 						Job.getJobManager().endRule(rule);
@@ -176,14 +174,14 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 		}
 	}
 
-	private void tryValidateManifestInEditor(final IResourceDelta delta) {
+	private void tryValidateProjectDescriptionInEditor(final IResourceDelta delta) {
 		if (isWorkbenchRunning()) {
 			Runnable validateInEditorRunnable = () -> {
 				final IWorkbenchWindow window = getWorkbench().getActiveWorkbenchWindow();
 				if (null != window) {
 					final IWorkbenchPage page = window.getActivePage();
 					for (final IEditorReference editorRef : page.getEditorReferences()) {
-						if (isEditorForResource(editorRef, delta.getResource())) {
+						if (isEditorForProjectDescriptionResource(editorRef, delta.getResource())) {
 							final IWorkbenchPart part = editorRef.getPart(true);
 							if (part instanceof XtextEditor) {
 								editorCallback.afterSave((XtextEditor) part);
@@ -198,15 +196,15 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 		}
 	}
 
-	private boolean isEditorForResource(IEditorReference editorRef, IResource resource) {
-		final IFile manifest = resource.getProject().getFile(N4MF_MANIFEST);
-		if (!manifest.exists()) {
+	private boolean isEditorForProjectDescriptionResource(IEditorReference editorRef, IResource resource) {
+		final IFile packageJSON = resource.getProject().getFile(N4JSGlobals.PACKAGE_JSON);
+		if (!packageJSON.exists()) {
 			return false;
 		}
 		try {
 			final IEditorInput input = editorRef.getEditorInput();
 			if (input instanceof IFileEditorInput) {
-				return ((IFileEditorInput) input).getFile().equals(manifest);
+				return ((IFileEditorInput) input).getFile().equals(packageJSON);
 			}
 		} catch (final PartInitException e) {
 			LOGGER.warn("Error while trying to get editor input for editor reference: " + editorRef, e);
@@ -230,23 +228,23 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 		return false;
 	}
 
-	private void clearManifestCache() {
-		projectsHelper.clearProjectCache();
-	}
-
 	private boolean nfarHasBeenChanged(IResourceDelta delta) {
 		return delta.getKind() == IResourceDelta.CHANGED
 				&& delta.getResource().getType() == IResource.FILE
 				&& IN4JSArchive.NFAR_FILE_EXTENSION.equalsIgnoreCase(delta.getFullPath().getFileExtension());
 	}
 
-	private boolean n4mfFileHasBeenChanged(IResourceDelta delta) {
+	private boolean packageJSONFileHasBeenChanged(IResourceDelta delta) {
 		return delta.getKind() == IResourceDelta.CHANGED
 				&& delta.getResource().getType() == IResource.FILE
-				&& IN4JSProject.N4MF_MANIFEST.equalsIgnoreCase(delta.getFullPath().lastSegment());
+				&& IN4JSProject.PACKAGE_JSON.equalsIgnoreCase(delta.getFullPath().lastSegment());
 	}
 
-	private void clearManifestCache(IResourceDelta delta) {
+	private void clearProjectCache() {
+		projectsHelper.clearProjectCache();
+	}
+
+	private void clearProjectCache(IResourceDelta delta) {
 		IProject project = delta.getResource().getProject();
 		projectsHelper.clearProjectCache(project);
 	}

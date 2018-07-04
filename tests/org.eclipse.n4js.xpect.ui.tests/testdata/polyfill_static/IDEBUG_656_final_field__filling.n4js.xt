@@ -21,7 +21,7 @@
 	   	 		File "Poly.n4js" { from="IDEBUG_656_final_field__filled.n4js"}
 	   	 	}
 	   	}
-   	 	File "manifest.n4mf" { from="manifest_uses_b00.n4mf" }
+   	 	File "package.json" { from="package_uses_b00.json" }
    	 }
    }
 

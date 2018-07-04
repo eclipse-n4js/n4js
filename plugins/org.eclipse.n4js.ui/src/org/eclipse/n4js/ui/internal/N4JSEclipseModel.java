@@ -279,12 +279,18 @@ public class N4JSEclipseModel extends N4JSModel {
 		N4JSEclipseProject project = getN4JSProject(resource.getProject());
 		ImmutableList<? extends IN4JSEclipseSourceContainer> containers = project.getSourceContainers();
 		IPath fullPath = resource.getFullPath();
+		IN4JSEclipseSourceContainer matchingContainer = null;
+		int matchingSegmentCount = -1;
 		for (IN4JSEclipseSourceContainer container : containers) {
 			if (matchPaths(fullPath, container)) {
-				return Optional.of(container);
+				int segmentCount = container.getContainer().getFullPath().segmentCount();
+				if (segmentCount > matchingSegmentCount) {
+					matchingContainer = container;
+					matchingSegmentCount = segmentCount;
+				}
 			}
 		}
-		return Optional.absent();
+		return Optional.fromNullable(matchingContainer);
 	}
 
 	private boolean matchPaths(IPath fullPath, IN4JSEclipseSourceContainer sourceContainer) {

@@ -23,19 +23,25 @@ import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSLanguageConstants;
+import org.eclipse.n4js.external.libraries.ShippedCodeAccess;
 import org.eclipse.n4js.hlc.base.ErrorExitCode;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.hlc.base.N4jscBase;
-import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.eclipse.n4js.utils.io.FileUtils;
+import org.eclipse.xtext.testing.GlobalRegistries;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TestRule;
 import org.junit.rules.TestWatcher;
@@ -57,6 +63,17 @@ public abstract class AbstractN4jscTest {
 	protected static final String TEST_DATA_SET__BASIC = "basic";
 	/** name of test data set for launching testers from the command line */
 	protected static final String TEST_DATA_SET__TESTERS = "testers";
+
+	/**
+	 * Clear global registers to avoid injection-issues (validators, resource factories, etc.)
+	 *
+	 * As a consequence, each test method is responsible for its own injection setup (e.g. directly invoking
+	 * {@link N4jscBase#doMain(String...)}.
+	 */
+	@Before
+	public void saveGlobalRegistries() {
+		GlobalRegistries.clearGlobalRegistries();
+	}
 
 	/**
 	 * Copy a fresh fixture to the workspace area. Deleting old leftovers from former tests.
@@ -109,11 +126,13 @@ public abstract class AbstractN4jscTest {
 		// copy fixtures to workspace
 		FileCopier.copy(fixture.toPath(), wsp.toPath(), true);
 
-		final File gitRoot = new File(new File("").getAbsolutePath()).getParentFile().getParentFile();
-		final File n4jsLibraryRoot = new File(gitRoot, N4JSGlobals.SHIPPED_CODE_SOURCES_FOLDER_NAME);
-		final File[] n4jsLibraries = n4jsLibraryRoot.listFiles();
+		// obtain paths of all shipped code projects
+		final List<File> n4jsLibraries = StreamSupport
+				.stream(ShippedCodeAccess.getAllShippedPaths().spliterator(), false)
+				.flatMap(path -> Arrays.asList(new File(path).listFiles()).stream()).collect(Collectors.toList());
+
 		// copy N4JS libraries on demand
-		if (!Arrays2.isEmpty(n4jsLibraries)) {
+		if (!n4jsLibraries.isEmpty()) {
 			for (final File n4jsLibrary : n4jsLibraries) {
 				if (n4jsLibrariesPredicate.apply(n4jsLibrary.getName())) {
 					System.out.println("Including N4JS library in workspace: '" + n4jsLibrary.getName() + "'.");

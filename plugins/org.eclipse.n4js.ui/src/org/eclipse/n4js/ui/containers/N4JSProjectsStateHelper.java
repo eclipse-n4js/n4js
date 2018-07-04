@@ -18,19 +18,18 @@ import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.xtext.ui.containers.AbstractStorage2UriMapperClient;
-
-import com.google.common.base.Optional;
-import com.google.common.collect.Lists;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
 import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.ui.internal.WorkspaceCacheAccess;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
+import org.eclipse.xtext.ui.containers.AbstractStorage2UriMapperClient;
+
+import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * Helper for {@link N4JSAllContainersState} to calculate the visible handles. It also takes project dependencies in

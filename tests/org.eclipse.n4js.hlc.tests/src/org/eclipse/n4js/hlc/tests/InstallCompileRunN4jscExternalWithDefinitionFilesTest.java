@@ -23,6 +23,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.common.base.Predicates;
+
 /**
  * Downloads, installs, compiles and runs 'express' with N4JS definition file support.
  */
@@ -37,7 +39,7 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends Abstr
 	/** Prepare workspace. */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace("external_with_n4jsd");
+		workspace = setupWorkspace("external_with_n4jsd", Predicates.alwaysTrue());
 	}
 
 	/** Delete workspace. */
@@ -62,7 +64,8 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends Abstr
 				"--run", fileToRun,
 				"--projectlocations", wsRoot,
 				"--buildType", BuildType.projects.toString(),
-				wsRoot + "/" + PROJECT_NAME_N4JS
+				wsRoot + "/" + PROJECT_NAME_N4JS,
+				wsRoot + "/n4js-runtime-node"
 		};
 		final String out = runAndCaptureOutput(args);
 		N4CliHelper.assertExpectedOutput(EXPECTED, out);
@@ -84,7 +87,8 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends Abstr
 				"--run", fileToRun,
 				"--projectlocations", wsRoot,
 				"--buildType", BuildType.projects.toString(),
-				wsRoot + "/" + PROJECT_NAME_N4JSX
+				wsRoot + "/" + PROJECT_NAME_N4JSX,
+				wsRoot + "/n4js-runtime-node"
 		};
 
 		final String out = runAndCaptureOutput(args);

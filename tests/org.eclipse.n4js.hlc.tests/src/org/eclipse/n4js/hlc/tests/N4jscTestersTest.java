@@ -17,10 +17,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.Collection;
 import java.util.Scanner;
 
-import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.hlc.base.ErrorExitCode;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.hlc.base.N4jscBase;
@@ -30,7 +28,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.google.common.base.Predicates;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Files;
 
 /**
@@ -52,21 +49,12 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 			",{\"origin\":\"TestProjectB\",\"fqn\":\"src-gen/CSub1/CSub1\",\"testMethods\":[\"c1\",\"c2\"]}" +
 			",{\"origin\":\"TestProjectB\",\"fqn\":\"src-gen/CSub2/CSub2\",\"testMethods\":[\"c1\",\"c2\",\"c3\"]}]";
 
-	private static Collection<String> REQUIRED_LIBS = ImmutableSet.<String> builder()
-			.add(N4JSGlobals.MANGELHAFT)
-			.add(N4JSGlobals.MANGELHAFT_ASSERT)
-			.add("n4js-runtime-n4")
-			.add("n4js-runtime-v8")
-			.add("n4js-runtime-es2015")
-			.add("n4js.lang")
-			.build();
-
 	/**
 	 * Prepare tests.
 	 */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace(TEST_DATA_SET__TESTERS, Predicates.in(REQUIRED_LIBS));
+		workspace = setupWorkspace(TEST_DATA_SET__TESTERS, Predicates.alwaysTrue());
 	}
 
 	/** Delete workspace. */

@@ -16,25 +16,25 @@
             File "manifest.n4mf" {from="../../version/client/special_manifest.n4mf.xt"}
         }
         JavaProject "one" {
-            File "manifest.n4mf" {from="../../version/one/manifest.n4mf"}
+            File "package.json" {from="../../version/one/package.json"}
         }
         JavaProject "two" {
-            File "manifest.n4mf" {from="../../version/two/manifest.n4mf"}
+            File "package.json" {from="../../version/two/package.json"}
         }
         JavaProject "three" {
-            File "manifest.n4mf" {from="../../version/three/manifest.n4mf"}
+            File "package.json" {from="../../version/three/package.json"}
         }
         JavaProject "four" {
-            File "manifest.n4mf" {from="../../version/four/manifest.n4mf"}
+            File "package.json" {from="../../version/four/package.json"}
         }
         JavaProject "five" {
-            File "manifest.n4mf" {from="../../version/five/manifest.n4mf"}
+            File "package.json" {from="../../version/five/package.json"}
         }
         JavaProject "six" {
-            File "manifest.n4mf" {from="../../version/six/manifest.n4mf"}
+            File "package.json" {from="../../version/six/package.json"}
         }
         JavaProject "seven" {
-            File "manifest.n4mf" {from="../../version/seven/manifest.n4mf"}
+            File "package.json" {from="../../version/seven/package.json"}
         }
     }
 

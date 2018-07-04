@@ -11,7 +11,6 @@
 package org.eclipse.n4js.tests.externalPackages;
 
 import static org.eclipse.n4js.N4JSGlobals.N4JS_FILE_EXTENSION;
-import static org.eclipse.n4js.projectModel.IN4JSProject.N4MF_MANIFEST;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -25,6 +24,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
@@ -109,8 +109,8 @@ public class IDEBUG_855_PluginTest extends AbstractBuilderParticipantTest {
 		final IFile clientModule = project.getFile(getResourceName(SRC_FOLDER, MODULE + "." + N4JS_FILE_EXTENSION));
 		assertTrue(clientModule + " client module is not accessible.", clientModule.isAccessible());
 
-		final IFile manifest = project.getFile(getResourceName(N4MF_MANIFEST));
-		assertTrue(manifest + " client module is not accessible.", manifest.isAccessible());
+		final IFile projectDescriptionFile = project.getFile(getResourceName(N4JSGlobals.PACKAGE_JSON));
+		assertTrue(projectDescriptionFile + " client module is not accessible.", projectDescriptionFile.isAccessible());
 
 		final Resource resource = persister.createResource();
 		assertNotNull("Test resource was null.", resource);
@@ -119,7 +119,8 @@ public class IDEBUG_855_PluginTest extends AbstractBuilderParticipantTest {
 		persister.saveToResource(resource, builderState.getAllResourceDescriptions());
 		final int persistedBeforeReloadSize = resource.getContents().size();
 
-		assertMarkers("Expected exactly zero errors in manifest.", manifest, 0);
+		assertMarkers("Expected exactly zero errors in the project description file (package.json).",
+				projectDescriptionFile, 0);
 		assertMarkers("Expected exactly zero errors in client module.", clientModule, 0);
 
 		resource.getContents().clear();
@@ -129,7 +130,8 @@ public class IDEBUG_855_PluginTest extends AbstractBuilderParticipantTest {
 		persister.saveToResource(resource, builderState.getAllResourceDescriptions());
 		final int persistedAfterReloadSize = resource.getContents().size();
 
-		assertMarkers("Expected exactly zero errors in manifest.", manifest, 0);
+		assertMarkers("Expected exactly zero errors in project description file (package.json).",
+				projectDescriptionFile, 0);
 		assertMarkers("Expected exactly zero errors in client module.", clientModule, 0);
 
 		assertTrue("Expected same number of persisted and available resource description before and after refresh. Was:"

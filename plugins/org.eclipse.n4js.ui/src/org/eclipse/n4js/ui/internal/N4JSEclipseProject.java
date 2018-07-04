@@ -19,6 +19,7 @@ import java.nio.file.Path;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.N4JSProject;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseSourceContainer;
 import org.eclipse.n4js.utils.resources.ExternalProject;
@@ -41,7 +42,7 @@ public class N4JSEclipseProject extends N4JSProject implements IN4JSEclipseProje
 	@Override
 	protected boolean checkExists() {
 		if (XtextProjectHelper.hasNature(project)) {
-			return project.getFile(N4MF_MANIFEST).exists();
+			return project.getFile(IN4JSProject.PACKAGE_JSON).exists();
 		}
 		return false;
 	}
@@ -62,13 +63,13 @@ public class N4JSEclipseProject extends N4JSProject implements IN4JSEclipseProje
 	}
 
 	@Override
-	public Optional<URI> getManifestLocation() {
+	public Optional<URI> getProjectDescriptionLocation() {
 		if (checkExists() // Existing project AND
 				&& ((getLocation().isPlatformResource()
 						// Platform resource URI
 						&& DIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT == getLocation().segmentCount())
 						|| isExternal())) { // OR external
-			return fromNullable(getLocation().appendSegment(N4MF_MANIFEST));
+			return fromNullable(getLocation().appendSegment(IN4JSProject.PACKAGE_JSON));
 		} else {
 			return absent();
 		}

@@ -61,9 +61,9 @@ Contributors:
 		<module>org.eclipse.n4js.transpiler.es.tests</module>
 		<module>org.eclipse.n4js.generator.headless.tests</module>
 
-		<!-- Manifest tests -->
-		<module>org.eclipse.n4js.n4mf.tests</module>
-		<module>org.eclipse.n4js.n4mf.xpect.tests</module>
+		<!-- Package.json tests -->
+		<module>org.eclipse.n4js.packagejson.xpect.tests</module>
+		<module>org.eclipse.n4js.packagejson.xpect.ui.tests</module>
 		
 		<!-- access control tests -->
 		<module>org.eclipse.n4js.accesscontrol.tests</module>
@@ -71,6 +71,7 @@ Contributors:
 		<!-- JSON tests -->
 		<module>org.eclipse.n4js.json.tests</module>
 		<module>org.eclipse.n4js.json.xpect.tests</module>
+		<module>org.eclipse.n4js.json.xpect.ui.tests</module>
 
 		<!-- ************************************** JUnit Plugin Tests -->
 
@@ -86,11 +87,7 @@ Contributors:
 		<module>org.eclipse.n4js.xpect.ui.tests</module>
 		<module>org.eclipse.n4js.n4ide.spec.tests</module> 
 
-		<!-- Manifest tests -->
-		<module>org.eclipse.n4js.n4mf.xpect.ui.tests</module>
-		<!-- JSON tests -->
-		<module>org.eclipse.n4js.json.xpect.ui.tests</module>
-		<!-- Runner tests -->
+				<!-- Runner tests -->
 		<module>org.eclipse.n4js.runner.ui.tests</module>
 
 		<!--  **************************************Other tests -->
@@ -145,7 +142,6 @@ Contributors:
 		<junit-version>4.12</junit-version>
 		<ts-version>[0.0.1,0.1.0)</ts-version>
 		<n4js-version>[0.0.1,0.1.0)</n4js-version>
-		<n4mf-version>[0.0.1,0.1.0)</n4mf-version>
 
 		<!--
 		Property defines behaviour of <tycho-surefire-plugin> plugin

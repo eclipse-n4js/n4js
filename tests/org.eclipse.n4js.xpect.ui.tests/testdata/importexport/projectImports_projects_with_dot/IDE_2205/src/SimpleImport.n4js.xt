@@ -16,7 +16,7 @@
 			Folder "src" {
 				ThisFile {}
 			}
-			File "manifest.n4mf" { from="../manifest.n4mf"}
+			File "package.json" { from="../package.json"}
 		}
 		Project "foo.bar" {
 			Folder "src" {
@@ -28,7 +28,7 @@
 					}
 				}
 			}
-			File "manifest.n4mf" { from="../../foo.bar/manifest.n4mf"}
+			File "package.json" { from="../../foo.bar/package.json"}
 		}
 	}
 
