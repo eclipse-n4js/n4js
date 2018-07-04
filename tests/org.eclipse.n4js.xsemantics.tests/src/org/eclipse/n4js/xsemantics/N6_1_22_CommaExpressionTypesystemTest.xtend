@@ -26,6 +26,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 import static org.junit.Assert.*
+import org.eclipse.n4js.n4JS.N4JSPackage
+import org.eclipse.n4js.validation.IssueCodes
 
 /**
  * Test class for comma expression
@@ -92,15 +94,16 @@ class N6_1_22_CommaExpressionTypesystemTest extends AbstractTypesystemTest {
 			}
 			'''
 		)
-		assertNoErrors(script)
+		script.assertNoErrors(N4JSPackage.Literals.N4_MEMBER_DECLARATION, IssueCodes.CLF_DUP_MEMBER);
 	}
 
 	@Test
 	def void testValidatePlusPlus() {
-		val script = createScript(JavaScriptVariant.unrestricted, '''
+		val script = createScript(JavaScriptVariant.unrestricted,
+		'''
 			var i;
 			i++
 		''')
-		assertNoErrors(script)
+		script.assertNoErrors(N4JSPackage.Literals.N4_MEMBER_DECLARATION, IssueCodes.CLF_DUP_MEMBER);
 	}
 }

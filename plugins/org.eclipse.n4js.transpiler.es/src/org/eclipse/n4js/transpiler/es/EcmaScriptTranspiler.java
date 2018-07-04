@@ -153,7 +153,7 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 	@Override
 	public void transpile(N4JSResource resource, GeneratorOption[] options, Writer outCode,
 			Optional<SourceMapInfo> optSourceMapInfo) {
-		if (noTranspile(resource)) {
+		if (onlyWrapping(resource)) {
 			doWrapAndWrite(resource, outCode);
 		} else {
 			super.transpile(resource, options, outCode, optSourceMapInfo);
@@ -197,9 +197,9 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 	 *            N4JS-Resource to check.
 	 * @return true if the code should only be wrapped.
 	 */
-	private boolean noTranspile(N4JSResource eResource) {
+	private boolean onlyWrapping(N4JSResource eResource) {
 		ResourceType resourceType = ResourceType.getResourceType(eResource);
-		return resourceType.equals(ResourceType.JS);
+		return resourceType.equals(ResourceType.JS) || resourceType.equals(ResourceType.JSX);
 	}
 
 }

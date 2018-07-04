@@ -19,16 +19,16 @@ class ES_07_08_4_StringLiteralErrorTest extends AbstractParserTest {
 
 	@Test
 	def void testEmpty_01() {
-		'""'.parseSuccessfully
+		'""'.parseESSuccessfully
 	}
 	@Test
 	def void testEmpty_02() {
-		"''".parseSuccessfully
+		"''".parseESSuccessfully
 	}
 
 	@Test
 	def void testBogusEscape_01() {
-		val script = "'\\123'".parseWithWarning
+		val script = "'\\123'".parseESWithWarning
 		val statement = script.scriptElements.head as ExpressionStatement
 		val stringLiteral = statement.expression as StringLiteral
 		assertEquals("S", stringLiteral.value)
@@ -36,19 +36,19 @@ class ES_07_08_4_StringLiteralErrorTest extends AbstractParserTest {
 
 	@Test
 	def void testBogusEscape_02() {
-		val script = "'\\0123'".parseSuccessfully
+		val script = "'\\0123'".parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val stringLiteral = statement.expression as StringLiteral
 		assertEquals("\n3", stringLiteral.value)
 	}
 
-	override parseSuccessfully(CharSequence js) {
-		val script = super.parseSuccessfully(js)
+	override parseESSuccessfully(CharSequence js) {
+		val script = super.parseESSuccessfully(js)
 		assertTrue(script.eResource.warnings.toString, script.eResource.warnings.empty)
 		return script
 	}
 
-	def parseWithWarning(CharSequence js) {
+	def parseESWithWarning(CharSequence js) {
 		val script = js.parseUnrestricted
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertFalse(script.eResource.warnings.toString, script.eResource.warnings.empty)
@@ -57,7 +57,7 @@ class ES_07_08_4_StringLiteralErrorTest extends AbstractParserTest {
 
 	@Test
 	def void testUnclosed_01() {
-		val script = "'".parseWithError
+		val script = "'".parseESWithError
 		val statement = script.scriptElements.head as ExpressionStatement
 		val stringLiteral = statement.expression as StringLiteral
 		assertEquals("", stringLiteral.value)
@@ -66,7 +66,7 @@ class ES_07_08_4_StringLiteralErrorTest extends AbstractParserTest {
 
 	@Test
 	def void testUnclosed_02() {
-		val script = '"'.parseWithError
+		val script = '"'.parseESWithError
 		val statement = script.scriptElements.head as ExpressionStatement
 		val stringLiteral = statement.expression as StringLiteral
 		assertEquals("", stringLiteral.value)
@@ -74,7 +74,7 @@ class ES_07_08_4_StringLiteralErrorTest extends AbstractParserTest {
 
 	@Test
 	def void testUnclosed_03() {
-		val script = "'\\'".parseWithError
+		val script = "'\\'".parseESWithError
 		val statement = script.scriptElements.head as ExpressionStatement
 		val stringLiteral = statement.expression as StringLiteral
 		assertEquals("'", stringLiteral.value)
@@ -82,7 +82,7 @@ class ES_07_08_4_StringLiteralErrorTest extends AbstractParserTest {
 
 	@Test
 	def void testUnclosed_04() {
-		val script = '"\\"'.parseWithError
+		val script = '"\\"'.parseESWithError
 		val statement = script.scriptElements.head as ExpressionStatement
 		val stringLiteral = statement.expression as StringLiteral
 		assertEquals('"', stringLiteral.value)
@@ -92,7 +92,7 @@ class ES_07_08_4_StringLiteralErrorTest extends AbstractParserTest {
 	def void testUnclosedWithASI() {
 		val script = '''
 			"abc
-			1+1'''.parseWithError
+			1+1'''.parseESWithError
 		val first = script.scriptElements.head as ExpressionStatement
 		val stringLiteral = first.expression as StringLiteral
 		assertEquals('abc', stringLiteral.value)
@@ -103,7 +103,7 @@ class ES_07_08_4_StringLiteralErrorTest extends AbstractParserTest {
 
 	@Test
 	def void testProperlyClosed_01() {
-		val script = "'\\\\'".parseSuccessfully
+		val script = "'\\\\'".parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val stringLiteral = statement.expression as StringLiteral
 		assertEquals("\\", stringLiteral.value)
@@ -111,7 +111,7 @@ class ES_07_08_4_StringLiteralErrorTest extends AbstractParserTest {
 
 	@Test
 	def void testProperlyClosed_02() {
-		val script = '"\\\\"'.parseSuccessfully
+		val script = '"\\\\"'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val stringLiteral = statement.expression as StringLiteral
 		assertEquals('\\', stringLiteral.value)
@@ -119,37 +119,37 @@ class ES_07_08_4_StringLiteralErrorTest extends AbstractParserTest {
 
 	@Test
 	def void testBadEscapement_01() {
-		'''"Hello\112World"'''.parseWithWarning
+		'''"Hello\112World"'''.parseESWithWarning
 	}
 
 	@Test
 	def void testBadEscapement_02() {
-		'''"Hello\212World"'''.parseWithWarning
+		'''"Hello\212World"'''.parseESWithWarning
 	}
 
 	@Test
 	def void testBadEscapement_03() {
-		'''"Hello\312World"'''.parseWithWarning
+		'''"Hello\312World"'''.parseESWithWarning
 	}
 
 	@Test
 	def void testBadEscapement_04() {
-		'''"Hello\412World"'''.parseWithWarning
+		'''"Hello\412World"'''.parseESWithWarning
 	}
 
 	@Test
 	def void testBadEscapement_05() {
-		'''"Hello\512World"'''.parseWithWarning
+		'''"Hello\512World"'''.parseESWithWarning
 	}
 
 	@Test
 	def void testBadEscapement_06() {
-		'''"Hello\612World"'''.parseWithWarning
+		'''"Hello\612World"'''.parseESWithWarning
 	}
 
 	@Test
 	def void testBadEscapement_07() {
-		'''"Hello\712World"'''.parseWithWarning
+		'''"Hello\712World"'''.parseESWithWarning
 	}
 
 }

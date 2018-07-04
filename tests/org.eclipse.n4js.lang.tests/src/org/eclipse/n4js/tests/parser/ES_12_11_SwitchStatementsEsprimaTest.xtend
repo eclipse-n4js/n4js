@@ -22,7 +22,7 @@ class ES_12_11_SwitchStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testSwitch_Min() {
-		val script = 'switch (x) {}'.parseSuccessfully
+		val script = 'switch (x) {}'.parseESSuccessfully
 		assertEquals(1, script.scriptElements.size)
 		val switchStmt = script.scriptElements.head as SwitchStatement
 		val identifier = switchStmt.expression as IdentifierRef
@@ -35,7 +35,7 @@ class ES_12_11_SwitchStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testSwitch_Simple() {
-		val script = 'switch (answer) { case 42: hi(); break; }'.parseSuccessfully
+		val script = 'switch (answer) { case 42: hi(); break; }'.parseESSuccessfully
 		assertEquals(1, script.scriptElements.size)
 		val switchStmt = script.scriptElements.head as SwitchStatement
 		val identifier = switchStmt.expression as IdentifierRef
@@ -57,7 +57,7 @@ class ES_12_11_SwitchStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testSwitch_SimpleWithDefault() {
-		val script = 'switch (answer) { case 42: hi(); break; default: break }'.parseSuccessfully
+		val script = 'switch (answer) { case 42: hi(); break; default: break }'.parseESSuccessfully
 		assertEquals(1, script.scriptElements.size)
 		val switchStmt = script.scriptElements.head as SwitchStatement
 		val identifier = switchStmt.expression as IdentifierRef

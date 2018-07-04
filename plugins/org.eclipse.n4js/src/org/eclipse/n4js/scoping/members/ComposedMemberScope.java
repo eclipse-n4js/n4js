@@ -100,7 +100,7 @@ public abstract class ComposedMemberScope extends AbstractScope {
 	}
 
 	/**
-	 * Returns all elements of union. No erroneous descriptions (instances of IEObjectDescriptionWithError) will be
+	 * Returns all elements of union. No erroneous descriptions (see {@link IEObjectDescriptionWithError}) will be
 	 * considered here, as we assume this method to be called from content assist and we do not want to show wrong
 	 * elements. These descriptions will be returned by {@link #getSingleElement(QualifiedName)} though to show errors
 	 * in case of explicit references to these members.
@@ -114,7 +114,7 @@ public abstract class ComposedMemberScope extends AbstractScope {
 			try {
 				for (IEObjectDescription currDesc : currSubScope.getAllElements()) {
 					// omit erroneous bindings (they will be provided in getSingleLocalElement... though)
-					if (!(currDesc instanceof IEObjectDescriptionWithError)) {
+					if (!(IEObjectDescriptionWithError.isErrorDescription(currDesc))) {
 						String name = currDesc.getName().getLastSegment();
 						names.add(name);
 					}
@@ -128,7 +128,7 @@ public abstract class ComposedMemberScope extends AbstractScope {
 		List<IEObjectDescription> descriptions = new ArrayList<>(names.size());
 		for (String name : names) {
 			IEObjectDescription description = getSingleLocalElementByName(QualifiedName.create(name));
-			if (description != null && !(description instanceof IEObjectDescriptionWithError)) {
+			if (description != null && !IEObjectDescriptionWithError.isErrorDescription(description)) {
 				descriptions.add(description);
 			}
 		}

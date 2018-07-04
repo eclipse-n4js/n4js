@@ -70,7 +70,9 @@ class UndefinedHandlingTest {
 		function f() {
 			this.undefined;
 		}
-		'''.parse(JavaScriptVariant.unrestricted).assertNoErrors
+		'''.parse(JavaScriptVariant.unrestricted)
+			.assertNoErrors(N4JSPackage.Literals.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION,
+				Diagnostic.LINKING_DIAGNOSTIC);
 	}
 
 	@Test

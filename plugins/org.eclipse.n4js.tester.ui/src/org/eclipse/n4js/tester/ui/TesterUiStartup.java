@@ -10,9 +10,8 @@
  */
 package org.eclipse.n4js.tester.ui;
 
+import org.eclipse.n4js.tester.internal.TesterActivator;
 import org.eclipse.ui.IStartup;
-
-import org.eclipse.n4js.tester.TesterModule;
 
 /**
  * Hack to activate {@code tester.core} module which will trigger automatic embedded HTTP server instance activation.
@@ -21,9 +20,8 @@ public class TesterUiStartup implements IStartup {
 
 	@Override
 	public void earlyStartup() {
-		if (null != TesterModule.N4_TESTER_MODULE_ID) {
-			// this is just a hack to ensure embedded HTTP server is running when starting application.
-		}
+		// this is just a hack to ensure embedded HTTP server is running when starting application.
+		TesterActivator.getInstance().startupWithInjector(TesterUiActivator.getInjector());
 	}
 
 }

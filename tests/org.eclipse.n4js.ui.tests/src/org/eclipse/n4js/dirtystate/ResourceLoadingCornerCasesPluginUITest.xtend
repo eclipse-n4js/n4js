@@ -16,6 +16,9 @@ import org.eclipse.n4js.tests.resource.ModuleToModuleProxyPluginTest
 import org.eclipse.n4js.utils.emf.ProxyResolvingResource
 import org.junit.Test
 
+import static org.junit.Assert.*
+import org.eclipse.n4js.tests.util.EclipseUIUtils
+
 /**
  * Tests a corner case of dependencies between resources. See also {@link ModuleToModuleProxyPluginTest}.
  */
@@ -76,7 +79,7 @@ class ResourceLoadingCornerCasesPluginUITest extends AbstractBuilderParticipantT
 		assertMarkers("file B should have no errors", fileB, 0)
 		assertMarkers("file C should have no errors", fileC, 0)
 
-		val page = getActivePage()
+		val page = EclipseUIUtils.getActivePage()
 		val editorA = openAndGetXtextEditor(fileA, page)
 		val errorsA = getEditorValidationErrors(editorA)
 		// bug fix, part 1:

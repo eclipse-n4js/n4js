@@ -10,9 +10,9 @@
  */
 package org.eclipse.n4js.tester;
 
-import static com.google.common.cache.CacheBuilder.newBuilder;
-import static com.google.inject.Guice.createInjector;
-import static com.google.inject.name.Names.bindProperties;
+import static java.io.File.separator;
+import static java.lang.String.valueOf;
+import static org.apache.log4j.Logger.getLogger;
 import static org.eclipse.n4js.tester.TesterModuleDefaults.DEFAULT_FSM_TIMEOUT_KEY;
 import static org.eclipse.n4js.tester.TesterModuleDefaults.DEFAULT_FSM_TIMEOUT_VALUE;
 import static org.eclipse.n4js.tester.TesterModuleDefaults.DUMP_SERVER_ON_STOP_KEY;
@@ -29,14 +29,12 @@ import static org.eclipse.n4js.tester.TesterModuleDefaults.TEST_TREE_TIMEOUT_KEY
 import static org.eclipse.n4js.tester.TesterModuleDefaults.TEST_TREE_TIMEOUT_VALUE;
 import static org.eclipse.n4js.tester.TesterModuleDefaults.THREAD_POOL_BLOCKING_CAPACITY_KEY;
 import static org.eclipse.n4js.tester.TesterModuleDefaults.THREAD_POOL_BLOCKING_CAPACITY_VALUE;
-import static java.io.File.separator;
-import static java.lang.String.valueOf;
-import static org.apache.log4j.Logger.getLogger;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -45,12 +43,12 @@ import java.security.ProtectionDomain;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
-
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
-import com.google.inject.AbstractModule;
-import com.google.inject.Injector;
-
+import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
+import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.runner.RunnerFrontEnd;
+import org.eclipse.n4js.runner.RunnerHelper;
+import org.eclipse.n4js.runner.extension.RunnerRegistry;
+import org.eclipse.n4js.tester.extension.TesterRegistry;
 import org.eclipse.n4js.tester.fsm.TestFsm;
 import org.eclipse.n4js.tester.fsm.TestFsmImpl;
 import org.eclipse.n4js.tester.fsm.TestFsmRegistry;
@@ -62,52 +60,138 @@ import org.eclipse.n4js.tester.internal.TesterFacadeImpl;
 import org.eclipse.n4js.tester.internal.Utf8UrlDecoderService;
 import org.eclipse.n4js.tester.server.HttpServerManager;
 import org.eclipse.n4js.tester.server.JettyManager;
+import org.eclipse.n4js.tester.server.resources.ResourceProvider;
+import org.eclipse.n4js.tester.server.resources.ServletHolderBuilder;
+import org.eclipse.n4js.utils.ContainerTypesHelper;
+import org.eclipse.n4js.utils.N4ExecutableExtensionFactory;
+import org.eclipse.n4js.utils.ResourceNameComputer;
+import org.eclipse.n4js.utils.StatusHelper;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.inject.Binder;
+import com.google.inject.Injector;
+import com.google.inject.Module;
+import com.google.inject.Singleton;
+import com.google.inject.TypeLiteral;
+import com.google.inject.matcher.AbstractMatcher;
+import com.google.inject.matcher.Matcher;
+import com.google.inject.name.Names;
+import com.google.inject.spi.TypeEncounter;
+import com.google.inject.spi.TypeListener;
 
 /**
- * Module for the N4 tester core component.
+ * Defines bindings. In case this module is used in the ui case, bindings are defined to N4JS instances. In case of the
+ * headless case, these bindings are not necessary since the headless injector is comprised of the N4JSModules, as well.
  */
-public class TesterModule extends AbstractModule {
-
+public class TesterModule implements Module {
 	private static final Logger LOGGER = getLogger(TesterModule.class);
 
-	/**
-	 * The ID for the N4 tester core module.
-	 */
-	public static final String N4_TESTER_MODULE_ID = TesterModule.class.getName();
+	final private Injector n4jsInjector;
 
-	private static final LoadingCache<String, Injector> INJECTORS = newBuilder().build(
-			new CacheLoader<String, Injector>() {
-				@Override
-				public Injector load(final String moduleId) throws Exception {
-					if (N4_TESTER_MODULE_ID.equals(moduleId)) {
-						return createInjector(new TesterModule());
-					}
-					throw new IllegalArgumentException("Unknown module ID: " + moduleId);
-				}
-			});
+	/** Called in the ui case */
+	public TesterModule(Injector n4jsInjector) {
+		this.n4jsInjector = n4jsInjector;
+	}
 
-	/**
-	 * Returns with the injector instance for a particular module given as the module ID argument.
-	 *
-	 * @param moduleId
-	 *            the unique ID of the module.
-	 * @return the injector instance. Never {@code null}.
-	 */
-	public static Injector getInjector(final String moduleId) {
-		return INJECTORS.getUnchecked(moduleId);
+	/** Called in the headless case */
+	public TesterModule() {
+		this.n4jsInjector = null;
 	}
 
 	@Override
-	protected void configure() {
-		bind(TestFsm.class).to(TestFsmImpl.class);
-		bind(HttpServerManager.class).to(JettyManager.class);
-		bind(TestFsmRegistry.class).to(TestFsmRegistryImpl.class);
-		bind(TesterFacade.class).to(TesterFacadeImpl.class);
-		bind(TestTreeRegistry.class).to(InternalTestTreeRegistry.class);
-		bind(InternalTestTreeRegistry.class).to(TestTreeRegistryImpl.class);
-		bind(TestTreeTransformer.class).to(DefaultTestTreeTransformer.class);
-		bind(UrlDecoderService.class).to(Utf8UrlDecoderService.class);
-		bindProperties(binder(), getProperties());
+	public void configure(Binder binder) {
+		if (n4jsInjector != null) {
+			bindListenerForN4jsSingletons(binder);
+
+			// define all bindings to N4JS here (non-ui packages)
+			binder.bind(ObjectMapper.class)
+					.toProvider(() -> n4jsInjector.getInstance(ObjectMapper.class));
+			binder.bind(RunnerFrontEnd.class)
+					.toProvider(() -> n4jsInjector.getInstance(RunnerFrontEnd.class));
+			binder.bind(FileExtensionsRegistry.class)
+					.toProvider(() -> n4jsInjector.getInstance(FileExtensionsRegistry.class));
+			binder.bind(IN4JSCore.class)
+					.toProvider(() -> n4jsInjector.getInstance(IN4JSCore.class));
+			binder.bind(ResourceNameComputer.class)
+					.toProvider(() -> n4jsInjector.getInstance(ResourceNameComputer.class));
+			binder.bind(ContainerTypesHelper.class)
+					.toProvider(() -> n4jsInjector.getInstance(ContainerTypesHelper.class));
+			binder.bind(N4ExecutableExtensionFactory.class)
+					.toProvider(() -> n4jsInjector.getInstance(N4ExecutableExtensionFactory.class));
+			binder.bind(RunnerHelper.class)
+					.toProvider(() -> n4jsInjector.getInstance(RunnerHelper.class));
+			binder.bind(RunnerRegistry.class)
+					.toProvider(() -> n4jsInjector.getInstance(RunnerRegistry.class));
+			binder.bind(StatusHelper.class)
+					.toProvider(() -> n4jsInjector.getInstance(StatusHelper.class));
+		}
+
+		binder.bind(TesterRegistry.class);
+		binder.bind(TesterEventBus.class);
+		binder.bind(TesterFrontEnd.class);
+		binder.bind(ResourceProvider.class);
+		binder.bind(TestDiscoveryHelper.class);
+		binder.bind(TestCatalogSupplier.class);
+		binder.bind(ServletHolderBuilder.class);
+		binder.bind(DefaultTestTreeTransformer.class);
+		binder.bind(TesterFileBasedShippedCodeConfigurationHelper.class);
+
+		binder.bind(TestFsm.class).to(TestFsmImpl.class);
+		binder.bind(HttpServerManager.class).to(JettyManager.class);
+		binder.bind(TestFsmRegistry.class).to(TestFsmRegistryImpl.class);
+		binder.bind(TesterFacade.class).to(TesterFacadeImpl.class);
+		binder.bind(TestTreeRegistry.class).to(InternalTestTreeRegistry.class);
+		binder.bind(InternalTestTreeRegistry.class).to(TestTreeRegistryImpl.class);
+		binder.bind(TestTreeTransformer.class).to(DefaultTestTreeTransformer.class);
+		binder.bind(UrlDecoderService.class).to(Utf8UrlDecoderService.class);
+
+		Names.bindProperties(binder, getProperties());
+	}
+
+	/**
+	 * This listener detects whether @Singletons from the non-tester context are bound by the Tester-Injector which
+	 * would be a problem.
+	 */
+	private void bindListenerForN4jsSingletons(Binder binder) {
+		Matcher<TypeLiteral<?>> m = new AbstractMatcher<TypeLiteral<?>>() {
+			@Override
+			public boolean matches(TypeLiteral<?> t) {
+				checkAndThrowMissingBindingException(t);
+				return false;
+			}
+
+			private void checkAndThrowMissingBindingException(TypeLiteral<?> t) {
+				Type type = t.getType();
+				if (type instanceof Class) {
+					String name = t.toString();
+					Singleton singleton = null;
+					try {
+						singleton = ((Class<?>) type).getAnnotation(Singleton.class);
+					} catch (Exception e) {
+						LOGGER.warn("Could not check whether injected type is @Singleton", e);
+					}
+
+					if (singleton != null) {
+						boolean allowedPrefix = false;
+						allowedPrefix |= name.startsWith("org.eclipse.n4js.tester.");
+						allowedPrefix |= name.startsWith("org.eclipse.n4js.runner.");
+						allowedPrefix |= name.startsWith("org.eclipse.n4js.utils.");
+						if (!allowedPrefix) {
+							String msg = "All dependencies to @Singleton classes must be bound explicitly.";
+							throw new RuntimeException(msg);
+						}
+					}
+				}
+			}
+		};
+
+		TypeListener tl = new TypeListener() {
+			@Override
+			public <I> void hear(TypeLiteral<I> type, TypeEncounter<I> encounter) {
+				return;
+			}
+		};
+		binder.bindListener(m, tl);
 	}
 
 	private Properties getProperties() {

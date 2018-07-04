@@ -49,6 +49,7 @@ import org.eclipse.n4js.n4mf.ProjectReference;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
+import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.resources.ExternalProject;
 import org.eclipse.n4js.utils.resources.IExternalResource;
@@ -89,7 +90,12 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	 */
 	@Inject
 	void init() {
-		projectProvider.ensureInitialized();
+		try {
+			projectProvider.ensureInitialized();
+		} catch (Throwable t) {
+			logger.error("Failed to initialize external library workspace.", t);
+			UIUtils.showError(t);
+		}
 		projectProvider.addExternalLocationsUpdatedListener(indexUpdater);
 	}
 
@@ -300,7 +306,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 			logger.warn("Built-in libraries and NPM support are disabled.");
 		}
 
-		SubMonitor subMonitor = convert(monitor, 2);
+		SubMonitor subMonitor = convert(monitor, 1);
 
 		// Rebuild whole external workspace. Filter out projects that are present in the Eclipse workspace.
 		Collection<N4JSExternalProject> projectsToBuild = getExternalProjects(toBeUpdated);
@@ -311,7 +317,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 		// Build recently added projects that do not exist in workspace.
 		// Also includes projects that exist already in the index, but are shadowed.
 		if (!Iterables.isEmpty(allProjectsToBuild)) {
-			extPrjBuilt.addAll(builder.build(allProjectsToBuild, subMonitor.newChild(1)));
+			extPrjBuilt.addAll(builder.build(allProjectsToBuild, subMonitor));
 		}
 		subMonitor.worked(1);
 
@@ -369,12 +375,12 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	}
 
 	@Override
-	public ExternalProject getProject(String projectName) {
+	public N4JSExternalProject getProject(String projectName) {
 		return projectProvider.getProject(projectName);
 	}
 
 	@Override
-	public ExternalProject getProject(URI projectLocation) {
+	public N4JSExternalProject getProject(URI projectLocation) {
 		return projectProvider.getProject(projectLocation);
 	}
 

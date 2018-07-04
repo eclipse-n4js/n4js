@@ -11,6 +11,10 @@
 
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
 
+
+
+
+
 var someglobal;
 // XPECT noerrors --> "in plain JS, variables are inferred to any+"
 someglobal.name;

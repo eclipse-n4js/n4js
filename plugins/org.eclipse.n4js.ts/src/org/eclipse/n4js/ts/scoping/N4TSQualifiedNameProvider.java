@@ -14,15 +14,14 @@ import java.util.Optional;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.n4js.ts.types.TClassifier;
+import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.util.SimpleAttributeResolver;
 
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.ts.types.TClassifier;
-import org.eclipse.n4js.ts.types.TModule;
 
 /**
  */
@@ -51,7 +50,7 @@ public class N4TSQualifiedNameProvider extends IQualifiedNameProvider.AbstractIm
 	@Override
 	public QualifiedName getFullyQualifiedName(EObject obj) {
 		String name = SimpleAttributeResolver.NAME_RESOLVER.apply(obj);
-		if (name == null || name.length() == 0)
+		if (name == null || name.isEmpty())
 			return null;
 		return converter.toQualifiedName(name);
 	}
@@ -151,9 +150,9 @@ public class N4TSQualifiedNameProvider extends IQualifiedNameProvider.AbstractIm
 	 * @return <code>true</code> if the first segment of name is {@link #MODULE_POLYFILL_SEGMENT}
 	 */
 	public static boolean isModulePolyfill(QualifiedName name) {
-		if (name == null || name.getSegmentCount() < 1)
+		if (name == null || name.isEmpty())
 			return false;
-		return MODULE_POLYFILL_SEGMENT.equals(name.getSegment(0));
+		return MODULE_POLYFILL_SEGMENT.equals(name.getFirstSegment());
 	}
 
 	/**
@@ -165,8 +164,8 @@ public class N4TSQualifiedNameProvider extends IQualifiedNameProvider.AbstractIm
 	 */
 	public static Optional<QualifiedName> toStaticPolyfillFQN(QualifiedName name) {
 		if (name != null
-				&& name.getSegmentCount() > 0
-				&& !MODULE_POLYFILL_SEGMENT.equals(name.getSegment(0))) {
+				&& !name.isEmpty()
+				&& !MODULE_POLYFILL_SEGMENT.equals(name.getFirstSegment())) {
 			return Optional.of(prepend(MODULE_POLYFILL_SEGMENT, name));
 		} else
 			return Optional.empty();

@@ -148,8 +148,9 @@ public abstract class ComposedMemberDescriptionWithError extends AbstractDescrip
 							.getTypingStrategy() == TypingStrategy.STRUCTURAL_FIELD_INITIALIZER;
 					String type = getMemberTypeName(eobj, structFieldInitMode);
 					indexesPerMemberType.add(type, i);
-					if (description instanceof IEObjectDescriptionWithError) {
-						String subCode = ((IEObjectDescriptionWithError) description).getIssueCode();
+					if (IEObjectDescriptionWithError.isErrorDescription(description)) {
+						String subCode = IEObjectDescriptionWithError.getDescriptionWithError(description)
+								.getIssueCode();
 						indexesPerCode.add(subCode, i);
 					}
 					if ("field".equals(type)) {

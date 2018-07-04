@@ -97,7 +97,7 @@ public abstract class ExternalIndexSynchronizer {
 
 		java.net.URI nodeModulesLocation = locationProvider.getTargetPlatformNodeModulesLocation();
 		File nodeModulesFolder = new File(nodeModulesLocation.getPath());
-		if (nodeModulesFolder.exists() && nodeModulesFolder.isDirectory()) {
+		if (nodeModulesFolder.isDirectory()) {
 			for (File npmLibrary : nodeModulesFolder.listFiles()) {
 				if (npmLibrary.isDirectory()) {
 					String npmName = npmLibrary.getName();
@@ -117,7 +117,7 @@ public abstract class ExternalIndexSynchronizer {
 
 	private String getVersionFromManifest(File manifest) {
 		ProjectDescription pDescr = getProjectDescription(manifest);
-		if (pDescr != null) {
+		if (pDescr != null && pDescr.eResource().getErrors().isEmpty()) {
 			DeclaredVersion pV = pDescr.getProjectVersion();
 			String version = pV.getMajor() + "." + pV.getMinor() + "." + pV.getMicro();
 			if (pV.getQualifier() != null) {

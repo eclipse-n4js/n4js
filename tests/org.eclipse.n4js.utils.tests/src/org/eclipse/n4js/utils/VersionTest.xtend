@@ -10,13 +10,14 @@
  */
 package org.eclipse.n4js.utils
 
-import org.junit.Assert
 import org.junit.Test
+
+import static org.junit.Assert.*
 
 /**
  * Basic version tests.
  */
-class VersionTest extends Assert {
+class VersionTest {
 
 	@Test
 	def void testParseNullExpectMissing() {

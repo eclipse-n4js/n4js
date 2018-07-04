@@ -45,97 +45,97 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 
 	@Test
 	def void testSimpleExpression() {
-		"1+2".parseSuccessfully
+		"1+2".parseESSuccessfully
 	}
 	@Test
 	def void testPostfixExpression_01() {
-		parseSuccessfully("1++");
+		parseESSuccessfully("1++");
 	}
 	@Test
 	def void testPostfixExpression_02() {
-		val parseResult = parseSuccessfully("1++\n" +
+		val parseResult = parseESSuccessfully("1++\n" +
 				"1");
 		parseResult.hasChildren(2)
 	}
 	@Test
 	def void testPrefixExpression_01() {
-		"++1".parseSuccessfully
+		"++1".parseESSuccessfully
 	}
 	@Test
 	def void testPrefixExpression_02() {
 		val parseResult = '''
 			1
 			++1
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 		parseResult.hasChildren(2)
 	}
 	@Test
 	def void testInvalidBinaryExpression() {
-		parseWithError("1+");
+		parseESWithError("1+");
 	}
 	@Test
 	def void testInvalidBinaryExpressionWithLineBreak() {
-		parseWithError("1+\n");
+		parseESWithError("1+\n");
 	}
 	@Test
 	def void testInvalidBinaryExpressionInBlock() {
-		parseWithError("{1+}");
+		parseESWithError("{1+}");
 	}
 
 	@Test
 	def void testSpecExample_01() {
-		parseWithError("{ 1 2 } 3");
+		parseESWithError("{ 1 2 } 3");
 	}
 	@Test
 	def void testSpecExample_02() {
 		val parseResult = '''
 			{ 1
 			2 } 3
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 		parseResult.hasChildren(2)
 	}
 	@Test
 	def void testSpecExample_03() {
-		parseWithError("for (a; b\n" +
+		parseESWithError("for (a; b\n" +
 				")");
 	}
 	@Test
 	def void testSpecExample_04() {
-		val parseResult = parseSuccessfully("return\n" +
+		val parseResult = parseESSuccessfully("return\n" +
 				"a+b");
 		parseResult.hasChildren(2)
 	}
 	@Test
 	def void testSpecExample_05() {
-		val parseResult = parseSuccessfully("a=b\n" +
+		val parseResult = parseESSuccessfully("a=b\n" +
 				"++c");
 		parseResult.hasChildren(2)
 	}
 	@Test
 	def void testSpecExample_06() {
-		parseWithError("if (a > b)\n" +
+		parseESWithError("if (a > b)\n" +
 				"else c = d");
 	}
 	@Test
 	def void testSpecExample_07() {
-		val parseResult = parseSuccessfully("a=b+c\n" +
+		val parseResult = parseESSuccessfully("a=b+c\n" +
 				"(d + e).print()");
 		parseResult.hasChildren(1)
 	}
 	@Test
 	def void testSpecExample_08() {
-		parseWithError("if (true) if (a > b)\n" +
+		parseESWithError("if (true) if (a > b)\n" +
 				"else c = d");
 	}
 	@Test
 	def void testSpecExample_09() {
-		val parseResult = parseSuccessfully("a=b++\n" +
+		val parseResult = parseESSuccessfully("a=b++\n" +
 				"c");
 		parseResult.hasChildren(2)
 	}
 	@Test
 	def void testSpecExample_10() {
-		parseSuccessfully("{ 1 }");
+		parseESSuccessfully("{ 1 }");
 	}
 
 	/*
@@ -149,7 +149,7 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 		val parseResult = '''
 			let x = 1
 			[0];
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 		parseResult.hasChildren(1)
 	}
 	@Test
@@ -157,7 +157,7 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 		val parseResult = '''
 			let x = 1;
 			[0];
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 		parseResult.hasChildren(2)
 	}
 	@Test
@@ -165,7 +165,7 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 		val parseResult = '''
 			let f = function (){}
 			(1)		
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 		parseResult.hasChildren(1)
 	}
 	@Test
@@ -173,7 +173,7 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 		val parseResult = '''
 			let f = function (){};
 			(1)
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 		parseResult.hasChildren(2)
 	}
 	@Test
@@ -181,7 +181,7 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 		val parseResult = '''
 			1
 			(1)
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 		parseResult.hasChildren(1)
 	}
 	@Test
@@ -189,7 +189,7 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 		val parseResult = '''
 			1;
 			(1)
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 		parseResult.hasChildren(2)
 	}
 
@@ -198,7 +198,7 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 		val parseResult = '''
 			return
 			1
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 		parseResult.hasChildren(2)
 	}
 
@@ -207,7 +207,7 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 		val parseResult = '''
 			return /*
 			*/ 1
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 		parseResult.hasChildren(2)
 	}
 
@@ -216,7 +216,7 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 		'''
 			throw
 			a
-		'''.parseWithError
+		'''.parseESWithError
 	}
 
 	@Test
@@ -224,21 +224,21 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 		'''
 			throw /*
 			*/ a
-		'''.parseWithError
+		'''.parseESWithError
 	}
 
 	@Test
 	def void testThrow_03() {
 		'''
 			throw a
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 	}
 
 	@Test
 	def void testThrow_04() {
 		'''
 			throw /* */ a
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 	}
 
 	@Test
@@ -246,7 +246,7 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 		val parseResult = '''
 			break
 			a
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 		parseResult.hasChildren(2)
 	}
 
@@ -255,7 +255,7 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 		val parseResult = '''
 			break /*
 			*/ a
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 		parseResult.hasChildren(2)
 	}
 
@@ -265,7 +265,7 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 		val parseResult = '''
 			continue
 			a
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 		parseResult.hasChildren(2)
 	}
 
@@ -274,7 +274,7 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 		val parseResult = '''
 			continue /*
 			*/ a
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 		parseResult.hasChildren(2)
 	}
 
@@ -283,7 +283,7 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 		val script = '''
 			{ throw error/* Multiline
 			Comment */ error; }
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 		val block = script.scriptElements.head as Block
 		assertEquals(2, block.statements.size)
 	}
@@ -295,7 +295,7 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 			++
 			++
 			2
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 		assertEquals(2, script.scriptElements.size)
 		val first = script.scriptElements.head as ExpressionStatement
 		val second = script.scriptElements.last as ExpressionStatement
@@ -313,7 +313,7 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 			var x
 
 			x
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 		val varStatement = script.scriptElements.head as VariableStatement
 		val varDecl = varStatement.varDecl.head
 		assertEquals('x', varDecl.name)
@@ -324,7 +324,7 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 
 	@Test
 	def void testIssue_518_01_N_01() {
-		val script = "var x\n\nx\n".parseSuccessfully
+		val script = "var x\n\nx\n".parseESSuccessfully
 		val varStatement = script.scriptElements.head as VariableStatement
 		val varDecl = varStatement.varDecl.head
 		assertEquals('x', varDecl.name)
@@ -335,8 +335,8 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 
 	@Test
 	def void testIssue_518_01_N_02() {
-		val firstScript = "var x\n\nx\n".parseSuccessfully;
-		val secondScript = "var x;\nx\n".parseSuccessfully;
+		val firstScript = "var x\n\nx\n".parseESSuccessfully;
+		val secondScript = "var x;\nx\n".parseESSuccessfully;
 
 		val firstRootNode = (firstScript.eResource as XtextResource).parseResult.rootNode
 		val secondRootNode = (secondScript.eResource as XtextResource).parseResult.rootNode
@@ -346,8 +346,8 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 
 	@Test
 	def void testIssue_518_01_N_03() {
-		val firstScript =  "export var x: any\n\nx\n".parseSuccessfully;
-		val secondScript = "export var x: any;\nx\n".parseSuccessfully;
+		val firstScript =  "export var x: any\n\nx\n".parseESSuccessfully;
+		val secondScript = "export var x: any;\nx\n".parseESSuccessfully;
 
 		val firstRootNode = (firstScript.eResource as XtextResource).parseResult.rootNode
 		val secondRootNode = (secondScript.eResource as XtextResource).parseResult.rootNode
@@ -357,8 +357,8 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 
 	@Test
 	def void testIssue_518_01_N_04() {
-		val firstScript =  "export var x: any\n\nx\n".parseSuccessfully;
-		val secondScript = "export var x: any;\nx\n".parseSuccessfully;
+		val firstScript =  "export var x: any\n\nx\n".parseESSuccessfully;
+		val secondScript = "export var x: any;\nx\n".parseESSuccessfully;
 
 		val firstRootNode = (firstScript.eResource as XtextResource).parseResult.rootNode
 		val secondRootNode = (secondScript.eResource as XtextResource).parseResult.rootNode
@@ -368,8 +368,8 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 
 	@Test
 	def void testIssue_518_01_N_05() {
-		val firstScript = "export var x\n\nx\n".parseSuccessfully;
-		val secondScript = "export var x;\nx\n".parseSuccessfully;
+		val firstScript = "export var x\n\nx\n".parseESSuccessfully;
+		val secondScript = "export var x;\nx\n".parseESSuccessfully;
 
 		val firstRootNode = (firstScript.eResource as XtextResource).parseResult.rootNode
 		val secondRootNode = (secondScript.eResource as XtextResource).parseResult.rootNode
@@ -380,8 +380,8 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 
 	@Test
 	def void testIssue_518_01_N_06() {
-		val firstScript = "function f() { var x: any\n\nx\n }".parseSuccessfully;
-		val secondScript = "function f() { var x: any;\nx\n }".parseSuccessfully;
+		val firstScript = "function f() { var x: any\n\nx\n }".parseESSuccessfully;
+		val secondScript = "function f() { var x: any;\nx\n }".parseESSuccessfully;
 
 		val firstRootNode = (firstScript.eResource as XtextResource).parseResult.rootNode
 		val secondRootNode = (secondScript.eResource as XtextResource).parseResult.rootNode
@@ -391,8 +391,8 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 
 	@Test
 	def void testIssue_518_01_N_07() {
-		val firstScript = "function f() { var x\n\nx\n }".parseSuccessfully;
-		val secondScript = "function f() { var x;\nx\n }".parseSuccessfully;
+		val firstScript = "function f() { var x\n\nx\n }".parseESSuccessfully;
+		val secondScript = "function f() { var x;\nx\n }".parseESSuccessfully;
 
 		val firstRootNode = (firstScript.eResource as XtextResource).parseResult.rootNode
 		val secondRootNode = (secondScript.eResource as XtextResource).parseResult.rootNode
@@ -402,8 +402,8 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 
 	@Test
 	def void testIssue_518_01_N_08() {
-		val firstScript = "function * f() { var x: any\n\nx\n }".parseSuccessfully;
-		val secondScript = "function * f() { var x: any;\nx\n }".parseSuccessfully;
+		val firstScript = "function * f() { var x: any\n\nx\n }".parseESSuccessfully;
+		val secondScript = "function * f() { var x: any;\nx\n }".parseESSuccessfully;
 
 		val firstRootNode = (firstScript.eResource as XtextResource).parseResult.rootNode
 		val secondRootNode = (secondScript.eResource as XtextResource).parseResult.rootNode
@@ -413,8 +413,8 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 
 	@Test
 	def void testIssue_518_01_N_09() {
-		val firstScript = "function * f() { var x\n\nx\n }".parseSuccessfully;
-		val secondScript = "function * f() { var x;\nx\n }".parseSuccessfully;
+		val firstScript = "function * f() { var x\n\nx\n }".parseESSuccessfully;
+		val secondScript = "function * f() { var x;\nx\n }".parseESSuccessfully;
 
 		val firstRootNode = (firstScript.eResource as XtextResource).parseResult.rootNode
 		val secondRootNode = (secondScript.eResource as XtextResource).parseResult.rootNode
@@ -424,7 +424,7 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 
 	@Test
 	def void testIssue_518_01_R_01() {
-		val script = "var x\r\rx\r".parseSuccessfully
+		val script = "var x\r\rx\r".parseESSuccessfully
 		val varStatement = script.scriptElements.head as VariableStatement
 		val varDecl = varStatement.varDecl.head
 		assertEquals('x', varDecl.name)
@@ -435,8 +435,8 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 
 	@Test
 	def void testIssue_518_01_R_02() {
-		val firstScript = "var x\r\rx\r".parseSuccessfully;
-		val secondScript = "var x;\rx\r".parseSuccessfully;
+		val firstScript = "var x\r\rx\r".parseESSuccessfully;
+		val secondScript = "var x;\rx\r".parseESSuccessfully;
 
 		val firstRootNode = (firstScript.eResource as XtextResource).parseResult.rootNode
 		val secondRootNode = (secondScript.eResource as XtextResource).parseResult.rootNode
@@ -446,8 +446,8 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 
 	@Test
 	def void testIssue_518_01_RN_02() {
-		val firstScript = "var x\r\n\r\nx\r\n".parseSuccessfully;
-		val secondScript = "var x;\r\nx\r\n".parseSuccessfully;
+		val firstScript = "var x\r\n\r\nx\r\n".parseESSuccessfully;
+		val secondScript = "var x;\r\nx\r\n".parseESSuccessfully;
 
 		val firstRootNode = (firstScript.eResource as XtextResource).parseResult.rootNode
 		val secondRootNode = (secondScript.eResource as XtextResource).parseResult.rootNode
@@ -475,7 +475,7 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 
 	@Test
 	def void testIssue_518_01_RN_01() {
-		val script = "var x\r\n\r\nx\r\n".parseSuccessfully
+		val script = "var x\r\n\r\nx\r\n".parseESSuccessfully
 		val varStatement = script.scriptElements.head as VariableStatement
 		val varDecl = varStatement.varDecl.head
 		assertEquals('x', varDecl.name)
@@ -486,9 +486,9 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 
 	@Test
 	def void testIssue_518_01_dynamicNewLine() {
-		val sX = "var a;".parseSuccessfully
+		val sX = "var a;".parseESSuccessfully
 		val newLine = wp.getLineSeparatorInformation(sX.eResource.URI).lineSeparator
-		val script = '''var x«newLine»«newLine»x«newLine»'''.parseSuccessfully
+		val script = '''var x«newLine»«newLine»x«newLine»'''.parseESSuccessfully
 		val varStatement = script.scriptElements.head as VariableStatement
 		val varDecl = varStatement.varDecl.head
 		assertEquals('x', varDecl.name)
@@ -503,7 +503,7 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 			var x;
 
 			x
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 		val varStatement = script.scriptElements.head as VariableStatement
 		val varDecl = varStatement.varDecl.head
 		assertEquals('x', varDecl.name)
@@ -520,7 +520,7 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 			"use strict"/**
 			docu of C */
 			class C {}
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 		assertEquals(2,script.scriptElements.size);
 		val docu = documenationProvider.getDocumentation(script.scriptElements.get(1))
 		assertEquals("docu of C",docu)
@@ -535,7 +535,7 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 			/**
 			docu of C */
 			class C {}
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 		assertEquals(2,script.scriptElements.size);
 		val docu = documenationProvider.getDocumentation(script.scriptElements.get(1))
 		assertEquals("docu of C",docu)
@@ -550,7 +550,7 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 			"use strict"
 			//**docu of C */
 			class C {}
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 		assertEquals(2,script.scriptElements.size);
 		val docu = documenationProvider.getDocumentation(script.scriptElements.get(1))
 		assertNull(docu)
@@ -564,7 +564,7 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 		var script ='''
 			"use strict"//**docu of C */
 			class C {}
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 		assertEquals(2,script.scriptElements.size);
 		val docu = documenationProvider.getDocumentation(script.scriptElements.get(1))
 		assertNull(docu)
@@ -586,7 +586,7 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 			"use strict"/**
 			docu of C */
 			class C {}
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 
 		assertEquals(2,script.scriptElements.size);
 
@@ -612,7 +612,7 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 			"use strict";/**
 			docu of C */
 			class C {}
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 
 		assertEquals(2,script.scriptElements.size);
 

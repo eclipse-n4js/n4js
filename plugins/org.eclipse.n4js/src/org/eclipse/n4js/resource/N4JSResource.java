@@ -14,11 +14,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.internal.resources.ResourceException;
 import org.eclipse.core.resources.IResourceStatus;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -63,12 +67,15 @@ import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.EcoreUtilN4;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
 import org.eclipse.n4js.utils.emf.ProxyResolvingResource;
 import org.eclipse.xtext.diagnostics.DiagnosticMessage;
 import org.eclipse.xtext.diagnostics.ExceptionDiagnostic;
+import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.SyntaxErrorMessage;
+import org.eclipse.xtext.nodemodel.impl.RootNode;
 import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.resource.IDerivedStateComputer;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -95,6 +102,7 @@ import com.google.inject.Inject;
  * information), and thus it must be able to resolve this first element. This is transparently done in the custom
  * contents class {@link ModuleAwareContentsList}.
  */
+@SuppressWarnings("restriction")
 public class N4JSResource extends PostProcessingAwareResource implements ProxyResolvingResource {
 	private final static Logger LOGGER = Logger.getLogger(N4JSResource.class);
 
@@ -523,7 +531,6 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		}
 	}
 
-	@SuppressWarnings("restriction")
 	private void superLoad(Map<?, ?> options) throws IOException {
 		super.load(options);
 	}
@@ -617,7 +624,84 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		if (contents != null && !contents.isEmpty()) {
 			discardStateFromDescription(true);
 		}
-		super.doLoad(inputStream, options);
+		if (N4JSLanguageUtils.isOpaqueModule(this.uri)) {
+			IParseResult result = new JSParseResult(inputStream);
+			updateInternalState(this.getParseResult(), result);
+		} else {
+			super.doLoad(inputStream, options);
+		}
+	}
+
+	static class JSParseResult implements IParseResult {
+		final EObject scriptNode;
+		final RootNode rootNode;
+
+		JSParseResult(InputStream inputStream) {
+			this(getCompleteString(inputStream));
+		}
+
+		JSParseResult(String text) {
+			scriptNode = N4JSFactory.eINSTANCE.createScript();
+			rootNode = new RootNode();
+			setText(text);
+			scriptNode.eAdapters().add(rootNode);
+		}
+
+		private static String getCompleteString(InputStream inputStream) {
+			String completeString = "";
+			try (Scanner s = new Scanner(inputStream); Scanner ss = s.useDelimiter("\\A");) {
+				completeString = ss.hasNext() ? ss.next() : "";
+			} catch (Exception e) {
+				LOGGER.error("Error when reading contents of JS file", e);
+			}
+			return completeString;
+		}
+
+		@Override
+		public EObject getRootASTElement() {
+			return scriptNode;
+		}
+
+		@Override
+		public ICompositeNode getRootNode() {
+			return rootNode;
+		}
+
+		@Override
+		public Iterable<INode> getSyntaxErrors() {
+			return Collections.emptyList();
+		}
+
+		@Override
+		public boolean hasSyntaxErrors() {
+			return false;
+		}
+
+		void setText(String text) {
+			try {
+				String methodName = "basicSetCompleteContent";
+				Method basicSetCompleteContent = RootNode.class.getDeclaredMethod(methodName, String.class);
+				basicSetCompleteContent.setAccessible(true);
+				basicSetCompleteContent.invoke(rootNode, text);
+
+			} catch (Exception e) {
+				LOGGER.error("Error when setting contents of JS file", e);
+			}
+		}
+
+	}
+
+	@Override
+	public void update(int offset, int replacedTextLength, String newText) {
+		if (N4JSLanguageUtils.isOpaqueModule(this.uri)) {
+			String oldText = this.getParseResult().getRootNode().getText();
+			String newCompleteString = oldText.substring(0, offset) + newText
+					+ oldText.substring(offset + replacedTextLength);
+			JSParseResult jsParseResult = (JSParseResult) this.getParseResult();
+			jsParseResult.setText(newCompleteString);
+		} else {
+			super.update(offset, replacedTextLength, newText);
+		}
 	}
 
 	@Override
@@ -827,7 +911,6 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	 * Specialized to allow reconciliation of the TModule. We need to handle invocations of
 	 * {@link #installDerivedState(boolean)} where the contents list does already contain two elements.
 	 */
-	@SuppressWarnings("restriction")
 	@Override
 	public void installDerivedState(boolean preIndexingPhase) {
 		if (!isLoaded)
@@ -963,14 +1046,20 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 					// obtain target EObject from targetResource in the usual way
 					// (might load targetResource from disk if it wasn't loaded from index above)
 					targetObject = resSet.getEObject(targetUri, true);
-				} catch (Exception fnf) {
-					if (fnf.getCause() instanceof FileNotFoundException) {
-						// This happens for instance when an external library was removed,
+				} catch (Exception exc) {
+					if (exc.getCause() instanceof FileNotFoundException) {
+						// This happens when an external library was removed,
 						// but another external library depends on the removed one.
-						LOGGER.warn("File not found during proxy resolution", fnf);
+						LOGGER.warn("File not found during proxy resolution", exc);
 						return proxy;
 					}
-					throw fnf;
+					if (exc.getCause() instanceof ResourceException) {
+						// This happens when a workspace project was removed,
+						// but another project depends on the removed one.
+						LOGGER.warn("Resource not found during proxy resolution", exc);
+						return proxy;
+					}
+					throw exc;
 				}
 				// special handling #2:
 				// if targetResource exists, make sure it is post-processed *iff* this resource is post-processed

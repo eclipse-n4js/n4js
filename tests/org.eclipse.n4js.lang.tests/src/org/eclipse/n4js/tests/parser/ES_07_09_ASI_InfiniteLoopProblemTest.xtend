@@ -30,7 +30,7 @@ class ES_07_09_ASI_InfiniteLoopProblemTest extends AbstractParserTest {
 		var a,b
 		a = 1
 		b = a
-		console.log(a+b)'''.parseSuccessfully
+		console.log(a+b)'''.parseESSuccessfully
 	}
 
 	/**
@@ -58,7 +58,7 @@ class ES_07_09_ASI_InfiniteLoopProblemTest extends AbstractParserTest {
 			}
 		};
 		static field1: any;
-		static foo(): any { return null; }'''.parseWithError
+		static foo(): any { return null; }'''.parseESWithError
 	}
 
 }

@@ -90,8 +90,7 @@ public final class EObjectDescriptionHelper {
 	 * whether it represents a main module.
 	 */
 	private boolean isMainModuleFromUserData(IEObjectDescription eoDescription) {
-		String mainModuleUserData = eoDescription.getUserData(N4JSResourceDescriptionStrategy.MAIN_MODULE_KEY);
-		return mainModuleUserData != null && Boolean.valueOf(mainModuleUserData);
+		return N4JSResourceDescriptionStrategy.getMainModule(eoDescription);
 	}
 
 }

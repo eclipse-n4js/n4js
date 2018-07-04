@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
@@ -17,10 +17,11 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 import static org.eclipse.n4js.validation.JavaScriptVariant.*
+import org.eclipse.n4js.validation.JavaScriptVariant
 
 /**
  * Test class for operator test (6.1.10- 6.1.18)
- *
+ * 
  */
 @RunWith(XtextRunner)
 @InjectWith(N4JSInjectorProvider)
@@ -31,7 +32,7 @@ class N6_1_13_AdditiveExpressionTypesystemTest extends AbstractOperatorExpressio
 	 */
 	@Test
 	def void testType_Add() {
-		for (mode : values()) {
+		for (mode : JavaScriptVariant.nonDepricatedValues()) {
 			assertOperatorType(mode, "number", '''3+4''')
 			assertOperatorType(mode, "string", '''"hello"+"world"''')
 
@@ -68,7 +69,7 @@ class N6_1_13_AdditiveExpressionTypesystemTest extends AbstractOperatorExpressio
 	 */
 	@Test
 	def void testType_Sub() {
-		for (mode : values()) {
+		for (mode : JavaScriptVariant.nonDepricatedValues()) {
 			assertOperatorType(mode, "number", '''3-4''')
 			assertOperatorType(mode, "number", '''"a"-"b"''')
 			assertOperatorType(mode, "number", '''n1-n2''')
@@ -78,8 +79,7 @@ class N6_1_13_AdditiveExpressionTypesystemTest extends AbstractOperatorExpressio
 		}
 	}
 
-
-@Test
+	@Test
 	def void testExpectedType_Sub() {
 		assertBinaryOperatorExpectedType(unrestricted, "any", "any", "n1-n2");
 		assertBinaryOperatorExpectedType(strict, "any", "any", "n1-n2");

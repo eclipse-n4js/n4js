@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
@@ -17,10 +17,11 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 import static org.eclipse.n4js.validation.JavaScriptVariant.*
+import org.eclipse.n4js.validation.JavaScriptVariant
 
 /**
  * Test class for operator test (6.1.10- 6.1.18)
- *
+ * 
  */
 @RunWith(XtextRunner)
 @InjectWith(N4JSInjectorProvider)
@@ -28,7 +29,7 @@ class N6_1_15_RelationalExpressionTypesystemTest extends AbstractOperatorExpress
 
 	@Test
 	def void testType() {
-		for (mode : values()) {
+		for (mode : JavaScriptVariant.nonDepricatedValues()) {
 			for (op : #["<", "<=", ">", ">=", "instanceof", "in"]) {
 				assertOperatorType(mode, "boolean", '''n1 «op» n2''')
 				assertOperatorType(mode, "boolean", '''s1 «op» s2''')
@@ -45,21 +46,21 @@ class N6_1_15_RelationalExpressionTypesystemTest extends AbstractOperatorExpress
 			assertBinaryOperatorExpectedType(n4js, "number", "number", '''n1 «op» n2''');
 			assertBinaryOperatorExpectedType(n4js, "string", "string", '''s1 «op» s2''');
 			assertBinaryOperatorExpectedType(n4js, "boolean", "boolean", '''f1 «op» f2''');
-			assertBinaryOperatorExpectedType(n4js, "boolean", "union{number,string,boolean}",
-				'''undefined «op» f2''');
-			assertBinaryOperatorExpectedType(n4js, "boolean", "union{number,string,boolean}",
-				'''null «op» f2''');
-			assertBinaryOperatorExpectedType(n4js, "boolean", "union{number,string,boolean}",
-				'''a «op» f2''');
+			assertBinaryOperatorExpectedType(n4js, "boolean", "union{number,string,boolean}", '''undefined «op» f2''');
+			assertBinaryOperatorExpectedType(n4js, "boolean", "union{number,string,boolean}", '''null «op» f2''');
+			assertBinaryOperatorExpectedType(n4js, "boolean", "union{number,string,boolean}", '''a «op» f2''');
 
 		}
 	}
 
 	@Test
 	def void testExpectedType_InstanceOf() {
-		assertBinaryOperatorExpectedType(unrestricted, "any", "union{Function,type{Object},type{N4Enum}}", '''n1 instanceof n2''');
-		assertBinaryOperatorExpectedType(strict, "any", "union{Function,type{Object},type{N4Enum}}", '''n1 instanceof n2''');
-		assertBinaryOperatorExpectedType(n4js, "any", "union{Function,type{Object},type{N4Enum}}", '''n1 instanceof n2''');
+		assertBinaryOperatorExpectedType(unrestricted, "any",
+			"union{Function,type{Object},type{N4Enum}}", '''n1 instanceof n2''');
+		assertBinaryOperatorExpectedType(strict, "any",
+			"union{Function,type{Object},type{N4Enum}}", '''n1 instanceof n2''');
+		assertBinaryOperatorExpectedType(n4js, "any",
+			"union{Function,type{Object},type{N4Enum}}", '''n1 instanceof n2''');
 	}
 
 	@Test

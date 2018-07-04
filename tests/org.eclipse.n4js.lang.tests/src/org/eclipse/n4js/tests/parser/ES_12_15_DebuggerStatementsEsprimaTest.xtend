@@ -17,7 +17,7 @@ class ES_12_15_DebuggerStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testDebugger_Simple() {
-		val script = 'debugger;'.parseSuccessfully
+		val script = 'debugger;'.parseESSuccessfully
 		assertEquals("Expected on element, was: " + script.scriptElements, 1, script.scriptElements.size)
 		val dbgStmt = script.scriptElements.head as DebuggerStatement
 		assertNotNull(dbgStmt)
@@ -25,7 +25,7 @@ class ES_12_15_DebuggerStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testDebugger_SimpleASI() {
-		val script = 'debugger'.parseSuccessfully
+		val script = 'debugger'.parseESSuccessfully
 		assertEquals(1, script.scriptElements.size)
 		val dbgStmt = script.scriptElements.head as DebuggerStatement
 		assertNotNull(dbgStmt)

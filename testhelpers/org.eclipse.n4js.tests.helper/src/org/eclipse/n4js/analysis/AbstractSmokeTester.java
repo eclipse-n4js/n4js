@@ -18,6 +18,9 @@ import org.antlr.runtime.Lexer;
 import org.antlr.runtime.Token;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.SmokeTestWriter;
+import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.parser.antlr.lexer.InternalN4JSLexer;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.impl.SyntheticCompositeNode;
@@ -29,10 +32,6 @@ import org.eclipse.xtext.util.StringInputStream;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-
-import org.eclipse.n4js.SmokeTestWriter;
-import org.eclipse.n4js.n4JS.Script;
-import org.eclipse.n4js.parser.antlr.lexer.InternalN4JSLexer;
 
 /**
  */

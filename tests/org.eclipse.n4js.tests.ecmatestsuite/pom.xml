@@ -45,7 +45,7 @@ Contributors:
 								<include>**/*ECMAHighlightingTest*.java</include>
 							</includes>
 							<systemPropertyVariables>
-								<log4j.configuration>file:${project.build.outputDirectory}/NODEBUGlog4j.xml</log4j.configuration>
+								<log4j.configuration>${loggingArgs}</log4j.configuration>
 							</systemPropertyVariables>
 						</configuration>
 					</plugin>

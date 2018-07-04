@@ -312,7 +312,7 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 		// Check if field is visible
 		val scope = expr.getScope(N4JSPackage.eINSTANCE.parameterizedPropertyAccessExpression_Property);
 		// We already have some validation issue for the field (for instance not visible), do not produce a new one.
-		return !(scope.getSingleElement(field) instanceof IEObjectDescriptionWithError);
+		return !IEObjectDescriptionWithError.isErrorDescription(scope.getSingleElement(field));
 	}
 
 	/**

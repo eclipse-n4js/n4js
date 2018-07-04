@@ -21,7 +21,7 @@ var runtimeProjectName = "org.eclipse.n4js.common.unicode"
  * by the components of child grammars.
  *
  * The unicode terminal grammar is used by other grammars. Their code will
- * try to find the parse tree constuctor of the super grammar thus we need
+ * try to find the parse tree constructor of the super grammar thus we need
  * both the grammar access and the parse tree constructor for the unicode grammar.
  */
 Workflow {

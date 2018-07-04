@@ -11,7 +11,6 @@
 package org.eclipse.n4js.scoping.accessModifiers;
 
 import org.eclipse.emf.ecore.resource.Resource;
-
 import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
 
@@ -28,4 +27,5 @@ public class VariableVisibilityChecker extends AbstractTypeVisibilityChecker<TVa
 		TypeAccessModifier typeAccessModifier = t.getTypeAccessModifier();
 		return isVisible(contextResource, typeAccessModifier, t);
 	}
+
 }

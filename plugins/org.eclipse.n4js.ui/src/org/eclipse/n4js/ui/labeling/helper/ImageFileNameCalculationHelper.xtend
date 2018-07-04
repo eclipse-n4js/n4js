@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.ui.labeling.helper
 
-import com.google.common.base.Strings
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
 import org.eclipse.n4js.n4JS.ExportedVariableStatement
 import org.eclipse.n4js.n4JS.FunctionDeclaration
@@ -22,6 +21,7 @@ import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy
 import org.eclipse.n4js.ts.types.FieldAccessor
 import org.eclipse.n4js.ts.types.MemberAccessModifier
 import org.eclipse.n4js.ts.types.TClass
@@ -35,10 +35,8 @@ import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.TypeAccessModifier
 import org.eclipse.n4js.ts.types.TypesPackage
-import org.eclipse.xtext.resource.IEObjectDescription
-
-import static org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy.*
 import org.eclipse.n4js.ui.labeling.EObjectWithContext
+import org.eclipse.xtext.resource.IEObjectDescription
 
 /**
  * This helper class dispatches the selection of the main image file to use for
@@ -211,12 +209,7 @@ class ImageFileNameCalculationHelper {
 	}
 
 	def private TypeAccessModifier tryGetAccessModifier(IEObjectDescription description) {
-		try {
-			val ordinal = Integer.parseInt(Strings.nullToEmpty(description.getUserData(ACCESS_MODIFIERY_KEY)))
-			return TypeAccessModifier.values.findFirst[it.ordinal === ordinal];
-		} catch (NumberFormatException e) {
-			return TypeAccessModifier.PUBLIC;
-		}
+		return N4JSResourceDescriptionStrategy.getTypeAccessModifier(description);
 	}
 
 	// fallback

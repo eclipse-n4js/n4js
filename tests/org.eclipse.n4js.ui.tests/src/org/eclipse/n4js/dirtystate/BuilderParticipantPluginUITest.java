@@ -11,6 +11,9 @@
 package org.eclipse.n4js.dirtystate;
 
 import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.monitor;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -29,6 +32,7 @@ import org.eclipse.n4js.dirtystate.testdata.StaticTestFiles;
 import org.eclipse.n4js.dirtystate.testdata.TestFiles;
 import org.eclipse.n4js.dirtystate.testdata.TransitiveInheritMemberTestFiles;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
+import org.eclipse.n4js.tests.util.EclipseUIUtils;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.junit.Test;
@@ -66,7 +70,7 @@ public class BuilderParticipantPluginUITest extends AbstractBuilderParticipantTe
 		assertMarkers("File1 should have no errors", file1, 0);
 
 		// open editors of test files
-		IWorkbenchPage page = getActivePage();
+		IWorkbenchPage page = EclipseUIUtils.getActivePage();
 		XtextEditor file1XtextEditor = openAndGetXtextEditor(file1, page);
 		List<?> errors = getEditorErrors(file1XtextEditor);
 		assertEquals("Editor of Class0 should have no errors", 0, errors.size());
@@ -128,7 +132,7 @@ public class BuilderParticipantPluginUITest extends AbstractBuilderParticipantTe
 		assertMarkers("File1 should have no errors", file1, 0);
 
 		// open editors of test files
-		IWorkbenchPage page = getActivePage();
+		IWorkbenchPage page = EclipseUIUtils.getActivePage();
 		XtextEditor file1XtextEditor = openAndGetXtextEditor(file1, page);
 		List<?> errors = getEditorErrors(file1XtextEditor);
 		assertEquals("Editor of Class0 should have no errors", 0, errors.size());
@@ -186,7 +190,7 @@ public class BuilderParticipantPluginUITest extends AbstractBuilderParticipantTe
 		assertMarkers("Child file should have no errors", childFile, 0);
 
 		// open editors of test files
-		IWorkbenchPage page = getActivePage();
+		IWorkbenchPage page = EclipseUIUtils.getActivePage();
 		XtextEditor parentFileXtextEditor = openAndGetXtextEditor(parentFile, page);
 		List<?> errors = getEditorErrors(parentFileXtextEditor);
 		assertEquals("Editor of parent should have no errors", 0, errors.size());
@@ -244,7 +248,7 @@ public class BuilderParticipantPluginUITest extends AbstractBuilderParticipantTe
 		assertMarkers("Child file should have no errors", childFile, 0);
 
 		// open editors of test files
-		IWorkbenchPage page = getActivePage();
+		IWorkbenchPage page = EclipseUIUtils.getActivePage();
 		XtextEditor parentFileXtextEditor = openAndGetXtextEditor(parentFile, page);
 		List<?> errors = getEditorErrors(parentFileXtextEditor);
 		assertEquals("Editor of parent should have no errors", 0, errors.size());
@@ -299,7 +303,7 @@ public class BuilderParticipantPluginUITest extends AbstractBuilderParticipantTe
 		assertMarkers("File C should have no errors", fileCRole, 0);
 
 		// open editors of test files
-		IWorkbenchPage page = getActivePage();
+		IWorkbenchPage page = EclipseUIUtils.getActivePage();
 		XtextEditor roleAFileXtextEditor = openAndGetXtextEditor(fileARole, page);
 		List<?> errors = getEditorErrors(roleAFileXtextEditor);
 		assertEquals("Editor of role A should have no errors", 0, errors.size());
@@ -370,7 +374,7 @@ public class BuilderParticipantPluginUITest extends AbstractBuilderParticipantTe
 		assertMarkers("File MyClassOne should have no errors", fileMyClassOne, 0);
 
 		// open editors of test files
-		IWorkbenchPage page = getActivePage();
+		IWorkbenchPage page = EclipseUIUtils.getActivePage();
 		final XtextEditor fileMyInterfaceFourXtextEditor = openAndGetXtextEditor(fileMyInterfaceFour, page);
 		List<?> errors = getEditorErrors(fileMyInterfaceFourXtextEditor);
 		assertEquals("Editor of role A should have no errors", 0, errors.size());
@@ -426,7 +430,7 @@ public class BuilderParticipantPluginUITest extends AbstractBuilderParticipantTe
 		assertMarkers("File C should have no errors", fileC, 0);
 
 		// open editors of test files
-		IWorkbenchPage page = getActivePage();
+		IWorkbenchPage page = EclipseUIUtils.getActivePage();
 		XtextEditor fileAXtextEditor = openAndGetXtextEditor(fileA, page);
 		List<?> errors = getEditorErrors(fileAXtextEditor);
 		assertEquals("Editor of role A should have no errors", 0, errors.size());
@@ -479,7 +483,7 @@ public class BuilderParticipantPluginUITest extends AbstractBuilderParticipantTe
 		assertMarkers("File Callee should have no errors", fileCallee, 0);
 
 		// open editors of test files
-		IWorkbenchPage page = getActivePage();
+		IWorkbenchPage page = EclipseUIUtils.getActivePage();
 		XtextEditor fileCalleeXtextEditor = openAndGetXtextEditor(fileCallee, page);
 		List<?> errors = getEditorErrors(fileCalleeXtextEditor);
 		assertEquals("Editor of Callee should have no errors", 0, errors.size());
@@ -534,7 +538,7 @@ public class BuilderParticipantPluginUITest extends AbstractBuilderParticipantTe
 		assertMarkers("File D should have no errors", fileD, 0);
 
 		// open editors of test files
-		IWorkbenchPage page = getActivePage();
+		IWorkbenchPage page = EclipseUIUtils.getActivePage();
 		XtextEditor fileAXtextEditor = openAndGetXtextEditor(fileA, page);
 		List<?> errors = getEditorErrors(fileAXtextEditor);
 		assertEquals("Editor of A should have no errors", 0, errors.size());
@@ -590,7 +594,7 @@ public class BuilderParticipantPluginUITest extends AbstractBuilderParticipantTe
 		assertMarkers("File MyEnumUser should have no errors", fileMyEnumUser, 0);
 
 		// open editors of test files
-		IWorkbenchPage page = getActivePage();
+		IWorkbenchPage page = EclipseUIUtils.getActivePage();
 		XtextEditor fileMyEnumXtextEditor = openAndGetXtextEditor(fileMyEnum, page);
 		List<?> errors = getEditorErrors(fileMyEnumXtextEditor);
 		assertEquals("Editor of MyEnum should have no errors", 0, errors.size());

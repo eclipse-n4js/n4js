@@ -13,6 +13,8 @@ package org.eclipse.n4js.ui.utils;
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
 import static org.eclipse.ui.PlatformUI.isWorkbenchRunning;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.runtime.CoreException;
@@ -21,6 +23,8 @@ import org.eclipse.core.runtime.CoreException;
  * Utilities for workspace auto-build setting
  */
 public class AutobuildUtils {
+
+	private static final Logger LOG = LogManager.getLogger(AutobuildUtils.class);
 
 	/** @return current setting of workspace auto-build */
 	static public boolean get() {
@@ -46,13 +50,17 @@ public class AutobuildUtils {
 				if (workspaceDescription.isAutoBuilding() != enable) {
 					workspaceDescription.setAutoBuilding(enable);
 					try {
+						LOG.info("Turning auto-build " + (enable ? "on" : "off") + "...");
 						workspace.setDescription(workspaceDescription);
+						LOG.info("Auto-build was successfully turned " + (enable ? "on" : "off") + ".");
 					} catch (CoreException e) {
 						throw new IllegalStateException("Error while trying to turn workspace autobuild "
 								+ (enable ? "on" : "off") + ".", e);
 					}
 				}
 			}
+		} else {
+			LOG.info("Workbench is not running, cannot change autobuild settings.");
 		}
 	}
 

@@ -20,7 +20,7 @@ class ES_11_09_EqualityOperatorEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testEquals() {
-		val program = 'x == y'.parseSuccessfully
+		val program = 'x == y'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val equality = statement.expression as EqualityExpression
 		val op = equality.op
@@ -34,7 +34,7 @@ class ES_11_09_EqualityOperatorEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testEqualsNot() {
-		val program = 'x != y'.parseSuccessfully
+		val program = 'x != y'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val equality = statement.expression as EqualityExpression
 		val op = equality.op
@@ -48,7 +48,7 @@ class ES_11_09_EqualityOperatorEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testSame() {
-		val program = 'x === y'.parseSuccessfully
+		val program = 'x === y'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val equality = statement.expression as EqualityExpression
 		val op = equality.op
@@ -62,7 +62,7 @@ class ES_11_09_EqualityOperatorEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testNotSame() {
-		val program = 'x !== y'.parseSuccessfully
+		val program = 'x !== y'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val equality = statement.expression as EqualityExpression
 		val op = equality.op

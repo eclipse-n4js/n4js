@@ -152,7 +152,7 @@ public class N4JSProject implements IN4JSProject {
 		if (!exists()) {
 			return ImmutableList.of();
 		}
-		return model.getDependencies(this);
+		return model.getDependencies(this, false);
 	}
 
 	@Override
@@ -160,7 +160,7 @@ public class N4JSProject implements IN4JSProject {
 		if (!exists()) {
 			return ImmutableList.of();
 		}
-		return model.getDependenciesAndImplementedApis(this);
+		return model.getDependenciesAndImplementedApis(this, false);
 	}
 
 	@Override

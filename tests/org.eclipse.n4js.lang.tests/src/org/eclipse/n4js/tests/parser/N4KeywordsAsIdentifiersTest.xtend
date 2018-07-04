@@ -14,8 +14,6 @@ import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.Script
 import org.junit.Test
 
-/**
- */
 class N4KeywordsAsIdentifiersTest extends AbstractParserTest {
 
 	@Test
@@ -47,7 +45,7 @@ class N4KeywordsAsIdentifiersTest extends AbstractParserTest {
 			var undefined = "variable named undefined";
 			var union = "variable named union";
 			var This = "variable named This";
-		'''.parseSuccessfully;
+		'''.parseESSuccessfully;
 
 	}
 
@@ -62,7 +60,7 @@ class N4KeywordsAsIdentifiersTest extends AbstractParserTest {
 				true;
 				private;
 			}
-		'''.parseSuccessfully;
+		'''.parseESSuccessfully;
 		var members = (script.scriptElements.head as N4ClassDeclaration).ownedMembers
 		val expectedNames = #["var", "catch", "if", "class", "true", "private"];
 		for (var i=0; i<expectedNames.length; i=i+1) {
@@ -87,7 +85,7 @@ class N4KeywordsAsIdentifiersTest extends AbstractParserTest {
 			c.catch = c.if;
 			if (c.class == c.true) {}
 			c.private = 0;
-		'''.parseSuccessfully;
+		'''.parseESSuccessfully;
 	}
 
 }

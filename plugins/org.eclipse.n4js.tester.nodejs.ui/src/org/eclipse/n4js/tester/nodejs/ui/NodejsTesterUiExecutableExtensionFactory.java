@@ -10,12 +10,10 @@
  */
 package org.eclipse.n4js.tester.nodejs.ui;
 
-import static org.eclipse.n4js.tester.ui.N4TesterUiModule.N4_TESTER_UI_MODULE_ID;
+import org.eclipse.n4js.tester.ui.TesterUiActivator;
+import org.eclipse.n4js.utils.N4ExecutableExtensionFactory;
 
 import com.google.inject.Injector;
-
-import org.eclipse.n4js.tester.ui.N4TesterUiModule;
-import org.eclipse.n4js.utils.N4ExecutableExtensionFactory;
 
 /**
  * Executable extension factory for the Node.js tester UI.
@@ -29,7 +27,7 @@ public class NodejsTesterUiExecutableExtensionFactory extends N4ExecutableExtens
 
 	@Override
 	protected Injector getInjector() {
-		return N4TesterUiModule.getInjector(N4_TESTER_UI_MODULE_ID);
+		return TesterUiActivator.getInjector();
 	}
 
 	@Override

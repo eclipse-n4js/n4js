@@ -34,13 +34,13 @@ class ES_13_FunctionDefinitionTest extends AbstractParserTest {
 		        } catch (e) {
 		            return e instanceof SyntaxError;
 		        }
-		}'.parseSuccessfully
+		}'.parseESSuccessfully
 		assertTrue(script.scriptElements.head instanceof FunctionDeclaration)
 	}
 
 	@Test
 	def void testFunctionDeclarationInToplevelBlock() {
-		val script = '{ function testcase() {} }'.parseSuccessfully;
+		val script = '{ function testcase() {} }'.parseESSuccessfully;
 		assertTrue(script.eResource.errors.join('\n'), script.eResource.errors.isEmpty);
 
 		val seleHead = script.scriptElements.head;
@@ -54,27 +54,27 @@ class ES_13_FunctionDefinitionTest extends AbstractParserTest {
 
 	@Test
 	def void testFunctionDeclarationInToplevelBlockN4JS() {
-		val script = '{ function testcase() {} }'.parseN4js
+		val script = '{ function testcase() {} }'.parse
 		assertEquals(script.eResource.errors.join('\n'), 1, script.eResource.errors.size)
 		assertTrue(script.scriptElements.head instanceof Block)
 	}
 
 	@Test
 	def void testAnnotatedFunctionDeclaration() {
-		val script = '@Annotation function testcase() {}'.parseSuccessfully
+		val script = '@Annotation function testcase() {}'.parseESSuccessfully
 		assertTrue(script.scriptElements.head instanceof FunctionDeclaration)
 	}
 
 	@Test
 	def void testFunctionExpression() {
-		val script = '(function testcase() {})'.parseSuccessfully
+		val script = '(function testcase() {})'.parseESSuccessfully
 		val expression = (script.scriptElements.head as ExpressionStatement).expression as ParenExpression
 		assertTrue(expression.expression instanceof FunctionExpression)
 	}
 
 	@Test
 	def void testAnnotatedFunctionExpression() {
-		val script = '(@Dummy function testcase() {})'.parseSuccessfully
+		val script = '(@Dummy function testcase() {})'.parseESSuccessfully
 		val expression = (script.scriptElements.head as ExpressionStatement).expression as ParenExpression
 		assertTrue(expression.expression instanceof FunctionExpression)
 	}
@@ -86,7 +86,7 @@ class ES_13_FunctionDefinitionTest extends AbstractParserTest {
 			function innerFDecl () { return 7; }
 		})
 		'''
-		.parseN4js;
+		.parse;
 		val seleHead = script.scriptElements.head;
 		val fe = ((seleHead as ExpressionStatement).expression as ParenExpression).expression as FunctionExpression;
 		val fstmtsHead = fe.body.statements.head;

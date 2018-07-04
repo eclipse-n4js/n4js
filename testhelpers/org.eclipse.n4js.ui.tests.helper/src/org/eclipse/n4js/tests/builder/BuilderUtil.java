@@ -11,7 +11,6 @@ import static com.google.common.collect.FluentIterable.from;
 import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.printMarker;
 import static org.junit.Assert.assertEquals;
 
-import java.util.Collection;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
@@ -32,7 +31,7 @@ import org.eclipse.xtext.util.EmfFormatter;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 
 /**
@@ -91,19 +90,17 @@ public class BuilderUtil {
 
 	/***/
 	public static int countResourcesInIndex() {
-		Collection<IResourceDescription> forIterable = Lists.newArrayList(getAllResourceDescriptions());
-		return forIterable.size();
+		return Iterables.size(getAllResourceDescriptions());
 	}
 
 	/***/
 	public static Iterable<IResourceDescription> getAllResourceDescriptions() {
-		return getBuilderState()
-				.getAllResourceDescriptions();
+		return getBuilderState().getAllResourceDescriptions();
 	}
 
 	/***/
 	public static String getAllResourceDescriptionsAsString() {
-		return Joiner.on("\n,").join(from(getAllResourceDescriptions()).transform(d -> d.getURI()));
+		return Joiner.on(",\n").join(from(getAllResourceDescriptions()).transform(d -> d.getURI()));
 	}
 
 	/***/

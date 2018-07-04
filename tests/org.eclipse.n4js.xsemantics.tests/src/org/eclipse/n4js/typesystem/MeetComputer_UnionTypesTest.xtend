@@ -32,7 +32,6 @@ class MeetComputer_UnionTypesTest extends AbstractTypeSystemHelperTests {
 
 	@Test
 	def void testMeetWithUnion() {
-
 		assertMeet(#[IssueCodes.UNI_REDUNDANT_SUBTYPE], "B", "A", "union{A,B}");
 		assertMeet(#[IssueCodes.UNI_REDUNDANT_SUBTYPE], "B", "B", "union{A,B}");
 		assertMeet(#[IssueCodes.UNI_REDUNDANT_SUBTYPE], "C", "A", "union{B,C}");

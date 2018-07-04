@@ -642,7 +642,11 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		// success case; but perform some further checks
 		internalCheckTypeArguments(staticType.typeVars, newExpression.typeArgs, false, staticType, newExpression,
 			N4JSPackage.eINSTANCE.newExpression_Callee);
-		internalCheckNewParameters(newExpression, staticType as TClassifier);
+			
+		
+		if (staticType instanceof TClassifier) {
+			internalCheckNewParameters(newExpression, staticType);
+		}
 	}
 
 	private def Type changeToCovariantUpperBoundIfTypeVar(Type type) {
@@ -1123,8 +1127,8 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 	@Check
 	def checkBinaryLogicalExpression(BinaryLogicalExpression e) {
 
-		// wrong parsed
-		if (e.lhs === null) {
+		if (e === null || e.lhs === null || e.rhs === null) {
+		// wrong parsed, handled in org.eclipse.n4js.validation.ASTStructureValidator
 			return
 		}
 

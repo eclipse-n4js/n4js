@@ -17,27 +17,35 @@ import java.util.Collection;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xtext.util.Strings;
-
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.n4mf.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
+import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.util.Strings;
+
+import com.google.inject.Inject;
 
 /**
  * Abstract visibility checker that implements the logic how a type access modifier is evaluated in a given context.
  */
 public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElement>
-		extends AbstractVisibilityChecker<T> {
+		implements AbstractVisibilityChecker<T> {
 
 	/** The N4JS core. This service is used for resolving projects by its contained modules. */
 	@Inject
 	protected IN4JSCore core;
+
+	@Override
+	public TypeVisibility isVisible(
+			Resource contextResource, IEObjectDescription e) {
+		TypeAccessModifier typeAccessModifier = N4JSResourceDescriptionStrategy.getTypeAccessModifier(e);
+		return isVisible(contextResource, typeAccessModifier, e);
+	}
 
 	/**
 	 * Returns the TypeVisibility of the <i>element</i> in the given <i>context</i>(that is the given resource) if it
@@ -90,6 +98,56 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 		return new TypeVisibility(visibility, firstVisible);
 	}
 
+	/**
+	 * Returns the TypeVisibility of the <i>element</i> in the given <i>context</i>(that is the given resource) if it
+	 * had the give access modifier. That is, the actual access modifier of the element is not considered here, usually
+	 * this is done in the caller via {@code getTypeAccessModifier}. However, there is no common interface for
+	 * retrieving that information. Implementors should avoid calling {@link IEObjectDescription#getEObjectOrProxy()}.
+	 */
+	protected TypeVisibility isVisible(final Resource contextResource, final TypeAccessModifier accessModifier,
+			final IEObjectDescription element) {
+		int startIndex = accessModifier.getValue();
+		boolean visibility = false;
+		String firstVisible = "PUBLIC";
+
+		for (int i = startIndex; i < TypeAccessModifier.values().length; i++) {
+
+			boolean visibilityForModifier = false;
+			TypeAccessModifier modifier = TypeAccessModifier.get(i);
+
+			switch (modifier) {
+			case PRIVATE: {
+				visibilityForModifier = isPrivateVisible(contextResource, element);
+				break;
+			}
+			case PROJECT: {
+				visibilityForModifier = isProjectVisible(contextResource, element);
+				break;
+			}
+			case PUBLIC_INTERNAL: {
+				visibilityForModifier = isPublicInternalVisible(contextResource, element);
+				break;
+			}
+			case PUBLIC:
+				visibilityForModifier = true;
+				break;
+			default:
+				visibilityForModifier = false;
+				break;
+			}
+			// First modifier = element modifier
+			if (i - startIndex < 1) {
+				visibility = visibilityForModifier;
+			}
+			// First visible modifier = suggested element modifier
+			if (visibilityForModifier) {
+				firstVisible = modifier.getName().toUpperCase();
+				break;
+			}
+		}
+		return new TypeVisibility(visibility, firstVisible);
+	}
+
 	private boolean isPublicInternalVisible(Resource contextResource, final T element) {
 		if (contextResource != null) {
 			final TModule contextModule = N4JSResource.getModule(contextResource);
@@ -99,10 +157,27 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 		return false;
 	}
 
+	private boolean isPublicInternalVisible(Resource contextResource, final IEObjectDescription element) {
+		if (contextResource != null) {
+			final TModule contextModule = N4JSResource.getModule(contextResource);
+			if (contextModule != null) {
+				return this.core.findProject(element.getEObjectURI()).transform(project -> {
+					boolean result = Strings.equal(contextModule.getVendorID(), project.getVendorID());
+					return result;
+				}).or(true);
+			}
+		}
+		return false;
+	}
+
 	private boolean isPrivateVisible(Resource contextResource, final T element) {
 		return element.eResource() == contextResource;
 		// TModule typeModule = EcoreUtil2.getContainerOfType(element, TModule.class);
 		// return typeModule == null || typeModule == contextModule;
+	}
+
+	private boolean isPrivateVisible(Resource contextResource, final IEObjectDescription element) {
+		return contextResource == null || element.getEObjectURI().trimFragment().equals(contextResource.getURI());
 	}
 
 	private boolean isProjectVisible(Resource contextResource, final T element) {
@@ -118,6 +193,22 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 						)
 						|| isTestedProjectOf(contextModule, elementModule);
 			}
+		}
+		return false;
+	}
+
+	private boolean isProjectVisible(Resource contextResource, final IEObjectDescription element) {
+		if (contextResource != null) {
+			final TModule contextModule = N4JSResource.getModule(contextResource);
+			if (contextModule == null) {
+				return false;
+			}
+			return this.core.findProject(element.getEObjectURI()).transform(project -> {
+				boolean result = Strings.equal(contextModule.getProjectId(), project.getProjectId())
+						&& Strings.equal(contextModule.getVendorID(), project.getVendorID())
+						|| isTestedProjectOf(contextModule, project);
+				return result;
+			}).or(true);
 		}
 		return false;
 	}
@@ -156,6 +247,26 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 
 		}
 
+		return false;
+	}
+
+	/**
+	 * Returns with {@code true} if the context module argument belongs to a {@link ProjectType#TEST test} project and
+	 * any of its tested projects contains the element module argument.
+	 *
+	 * @param contextModule
+	 *            the content module.
+	 * @param elementProject
+	 *            the element's projects.
+	 * @return {@code true} if the element module's container project is the tested project of the context module.
+	 *         Otherwise returns with {@code false}.
+	 */
+	public boolean isTestedProjectOf(final TModule contextModule, final IN4JSProject elementProject) {
+		for (final IN4JSProject testedProject : getTestedProjects(contextModule.eResource().getURI())) {
+			if (emptyIfNull(elementProject.getProjectId()).equals(testedProject.getProjectId())) {
+				return true;
+			}
+		}
 		return false;
 	}
 
