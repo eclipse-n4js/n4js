@@ -100,8 +100,16 @@ public class SEMVERAdapterFactory extends AdapterFactoryImpl {
 				return createVersionNumberAdapter();
 			}
 			@Override
+			public Adapter caseVersionPart(VersionPart object) {
+				return createVersionPartAdapter();
+			}
+			@Override
 			public Adapter caseQualifier(Qualifier object) {
 				return createQualifierAdapter();
+			}
+			@Override
+			public Adapter caseQualifierTag(QualifierTag object) {
+				return createQualifierTagAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {
@@ -208,6 +216,20 @@ public class SEMVERAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.semver.SEMVER.VersionPart <em>Version Part</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.semver.SEMVER.VersionPart
+	 * @generated
+	 */
+	public Adapter createVersionPartAdapter() {
+		return null;
+	}
+
+	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.semver.SEMVER.Qualifier <em>Qualifier</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -218,6 +240,20 @@ public class SEMVERAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createQualifierAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.semver.SEMVER.QualifierTag <em>Qualifier Tag</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.semver.SEMVER.QualifierTag
+	 * @generated
+	 */
+	public Adapter createQualifierTagAdapter() {
 		return null;
 	}
 

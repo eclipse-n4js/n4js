@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.semver.SEMVER.impl;
 
+import java.lang.reflect.InvocationTargetException;
+
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -23,11 +25,13 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
-import org.eclipse.emf.ecore.util.EDataTypeEList;
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.n4js.semver.SEMVER.Qualifier;
 import org.eclipse.n4js.semver.SEMVER.SEMVERPackage;
 import org.eclipse.n4js.semver.SEMVER.VersionNumber;
+import org.eclipse.n4js.semver.SEMVER.VersionPart;
 
 /**
  * <!-- begin-user-doc -->
@@ -37,16 +41,56 @@ import org.eclipse.n4js.semver.SEMVER.VersionNumber;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.semver.SEMVER.impl.VersionNumberImpl#getQualifier <em>Qualifier</em>}</li>
  *   <li>{@link org.eclipse.n4js.semver.SEMVER.impl.VersionNumberImpl#getMajor <em>Major</em>}</li>
  *   <li>{@link org.eclipse.n4js.semver.SEMVER.impl.VersionNumberImpl#getMinor <em>Minor</em>}</li>
  *   <li>{@link org.eclipse.n4js.semver.SEMVER.impl.VersionNumberImpl#getPatch <em>Patch</em>}</li>
  *   <li>{@link org.eclipse.n4js.semver.SEMVER.impl.VersionNumberImpl#getExtended <em>Extended</em>}</li>
+ *   <li>{@link org.eclipse.n4js.semver.SEMVER.impl.VersionNumberImpl#getQualifier <em>Qualifier</em>}</li>
  * </ul>
  *
  * @generated
  */
 public class VersionNumberImpl extends MinimalEObjectImpl.Container implements VersionNumber {
+	/**
+	 * The cached value of the '{@link #getMajor() <em>Major</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getMajor()
+	 * @generated
+	 * @ordered
+	 */
+	protected VersionPart major;
+
+	/**
+	 * The cached value of the '{@link #getMinor() <em>Minor</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getMinor()
+	 * @generated
+	 * @ordered
+	 */
+	protected VersionPart minor;
+
+	/**
+	 * The cached value of the '{@link #getPatch() <em>Patch</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getPatch()
+	 * @generated
+	 * @ordered
+	 */
+	protected VersionPart patch;
+
+	/**
+	 * The cached value of the '{@link #getExtended() <em>Extended</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getExtended()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<VersionPart> extended;
+
 	/**
 	 * The cached value of the '{@link #getQualifier() <em>Qualifier</em>}' containment reference.
 	 * <!-- begin-user-doc -->
@@ -56,76 +100,6 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 	 * @ordered
 	 */
 	protected Qualifier qualifier;
-
-	/**
-	 * The default value of the '{@link #getMajor() <em>Major</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getMajor()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final String MAJOR_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getMajor() <em>Major</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getMajor()
-	 * @generated
-	 * @ordered
-	 */
-	protected String major = MAJOR_EDEFAULT;
-
-	/**
-	 * The default value of the '{@link #getMinor() <em>Minor</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getMinor()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final String MINOR_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getMinor() <em>Minor</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getMinor()
-	 * @generated
-	 * @ordered
-	 */
-	protected String minor = MINOR_EDEFAULT;
-
-	/**
-	 * The default value of the '{@link #getPatch() <em>Patch</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getPatch()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final String PATCH_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getPatch() <em>Patch</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getPatch()
-	 * @generated
-	 * @ordered
-	 */
-	protected String patch = PATCH_EDEFAULT;
-
-	/**
-	 * The cached value of the '{@link #getExtended() <em>Extended</em>}' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getExtended()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<String> extended;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -144,6 +118,147 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 	@Override
 	protected EClass eStaticClass() {
 		return SEMVERPackage.Literals.VERSION_NUMBER;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public VersionPart getMajor() {
+		return major;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetMajor(VersionPart newMajor, NotificationChain msgs) {
+		VersionPart oldMajor = major;
+		major = newMajor;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, SEMVERPackage.VERSION_NUMBER__MAJOR, oldMajor, newMajor);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setMajor(VersionPart newMajor) {
+		if (newMajor != major) {
+			NotificationChain msgs = null;
+			if (major != null)
+				msgs = ((InternalEObject)major).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - SEMVERPackage.VERSION_NUMBER__MAJOR, null, msgs);
+			if (newMajor != null)
+				msgs = ((InternalEObject)newMajor).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - SEMVERPackage.VERSION_NUMBER__MAJOR, null, msgs);
+			msgs = basicSetMajor(newMajor, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, SEMVERPackage.VERSION_NUMBER__MAJOR, newMajor, newMajor));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public VersionPart getMinor() {
+		return minor;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetMinor(VersionPart newMinor, NotificationChain msgs) {
+		VersionPart oldMinor = minor;
+		minor = newMinor;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, SEMVERPackage.VERSION_NUMBER__MINOR, oldMinor, newMinor);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setMinor(VersionPart newMinor) {
+		if (newMinor != minor) {
+			NotificationChain msgs = null;
+			if (minor != null)
+				msgs = ((InternalEObject)minor).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - SEMVERPackage.VERSION_NUMBER__MINOR, null, msgs);
+			if (newMinor != null)
+				msgs = ((InternalEObject)newMinor).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - SEMVERPackage.VERSION_NUMBER__MINOR, null, msgs);
+			msgs = basicSetMinor(newMinor, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, SEMVERPackage.VERSION_NUMBER__MINOR, newMinor, newMinor));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public VersionPart getPatch() {
+		return patch;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetPatch(VersionPart newPatch, NotificationChain msgs) {
+		VersionPart oldPatch = patch;
+		patch = newPatch;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, SEMVERPackage.VERSION_NUMBER__PATCH, oldPatch, newPatch);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setPatch(VersionPart newPatch) {
+		if (newPatch != patch) {
+			NotificationChain msgs = null;
+			if (patch != null)
+				msgs = ((InternalEObject)patch).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - SEMVERPackage.VERSION_NUMBER__PATCH, null, msgs);
+			if (newPatch != null)
+				msgs = ((InternalEObject)newPatch).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - SEMVERPackage.VERSION_NUMBER__PATCH, null, msgs);
+			msgs = basicSetPatch(newPatch, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, SEMVERPackage.VERSION_NUMBER__PATCH, newPatch, newPatch));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList<VersionPart> getExtended() {
+		if (extended == null) {
+			extended = new EObjectContainmentEList<VersionPart>(VersionPart.class, this, SEMVERPackage.VERSION_NUMBER__EXTENDED);
+		}
+		return extended;
 	}
 
 	/**
@@ -194,74 +309,45 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getMajor() {
-		return major;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setMajor(String newMajor) {
-		String oldMajor = major;
-		major = newMajor;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SEMVERPackage.VERSION_NUMBER__MAJOR, oldMajor, major));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String getMinor() {
-		return minor;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setMinor(String newMinor) {
-		String oldMinor = minor;
-		minor = newMinor;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SEMVERPackage.VERSION_NUMBER__MINOR, oldMinor, minor));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String getPatch() {
-		return patch;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setPatch(String newPatch) {
-		String oldPatch = patch;
-		patch = newPatch;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SEMVERPackage.VERSION_NUMBER__PATCH, oldPatch, patch));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EList<String> getExtended() {
-		if (extended == null) {
-			extended = new EDataTypeEList<String>(String.class, this, SEMVERPackage.VERSION_NUMBER__EXTENDED);
+	public int length() {
+		int length = 0;
+		VersionPart _major = this.getMajor();
+		boolean _tripleNotEquals = (_major != null);
+		if (_tripleNotEquals) {
+			length++;
 		}
-		return extended;
+		VersionPart _minor = this.getMinor();
+		boolean _tripleNotEquals_1 = (_minor != null);
+		if (_tripleNotEquals_1) {
+			length++;
+		}
+		VersionPart _patch = this.getPatch();
+		boolean _tripleNotEquals_2 = (_patch != null);
+		if (_tripleNotEquals_2) {
+			length++;
+			int _length = length;
+			int _length_1 = ((Object[])org.eclipse.xtext.xbase.lib.Conversions.unwrapArray(this.getExtended(), Object.class)).length;
+			length = (_length + _length_1);
+		}
+		return length;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public VersionPart getPart(final int idx) {
+		switch (idx) {
+			case 0:
+				return this.getMajor();
+			case 1:
+				return this.getMinor();
+			case 2:
+				return this.getPatch();
+			default:
+				return this.getExtended().get((idx - 3));
+		}
 	}
 
 	/**
@@ -272,6 +358,14 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
+			case SEMVERPackage.VERSION_NUMBER__MAJOR:
+				return basicSetMajor(null, msgs);
+			case SEMVERPackage.VERSION_NUMBER__MINOR:
+				return basicSetMinor(null, msgs);
+			case SEMVERPackage.VERSION_NUMBER__PATCH:
+				return basicSetPatch(null, msgs);
+			case SEMVERPackage.VERSION_NUMBER__EXTENDED:
+				return ((InternalEList<?>)getExtended()).basicRemove(otherEnd, msgs);
 			case SEMVERPackage.VERSION_NUMBER__QUALIFIER:
 				return basicSetQualifier(null, msgs);
 		}
@@ -286,8 +380,6 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case SEMVERPackage.VERSION_NUMBER__QUALIFIER:
-				return getQualifier();
 			case SEMVERPackage.VERSION_NUMBER__MAJOR:
 				return getMajor();
 			case SEMVERPackage.VERSION_NUMBER__MINOR:
@@ -296,6 +388,8 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 				return getPatch();
 			case SEMVERPackage.VERSION_NUMBER__EXTENDED:
 				return getExtended();
+			case SEMVERPackage.VERSION_NUMBER__QUALIFIER:
+				return getQualifier();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -309,21 +403,21 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case SEMVERPackage.VERSION_NUMBER__QUALIFIER:
-				setQualifier((Qualifier)newValue);
-				return;
 			case SEMVERPackage.VERSION_NUMBER__MAJOR:
-				setMajor((String)newValue);
+				setMajor((VersionPart)newValue);
 				return;
 			case SEMVERPackage.VERSION_NUMBER__MINOR:
-				setMinor((String)newValue);
+				setMinor((VersionPart)newValue);
 				return;
 			case SEMVERPackage.VERSION_NUMBER__PATCH:
-				setPatch((String)newValue);
+				setPatch((VersionPart)newValue);
 				return;
 			case SEMVERPackage.VERSION_NUMBER__EXTENDED:
 				getExtended().clear();
-				getExtended().addAll((Collection<? extends String>)newValue);
+				getExtended().addAll((Collection<? extends VersionPart>)newValue);
+				return;
+			case SEMVERPackage.VERSION_NUMBER__QUALIFIER:
+				setQualifier((Qualifier)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -337,20 +431,20 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case SEMVERPackage.VERSION_NUMBER__QUALIFIER:
-				setQualifier((Qualifier)null);
-				return;
 			case SEMVERPackage.VERSION_NUMBER__MAJOR:
-				setMajor(MAJOR_EDEFAULT);
+				setMajor((VersionPart)null);
 				return;
 			case SEMVERPackage.VERSION_NUMBER__MINOR:
-				setMinor(MINOR_EDEFAULT);
+				setMinor((VersionPart)null);
 				return;
 			case SEMVERPackage.VERSION_NUMBER__PATCH:
-				setPatch(PATCH_EDEFAULT);
+				setPatch((VersionPart)null);
 				return;
 			case SEMVERPackage.VERSION_NUMBER__EXTENDED:
 				getExtended().clear();
+				return;
+			case SEMVERPackage.VERSION_NUMBER__QUALIFIER:
+				setQualifier((Qualifier)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -364,16 +458,16 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case SEMVERPackage.VERSION_NUMBER__QUALIFIER:
-				return qualifier != null;
 			case SEMVERPackage.VERSION_NUMBER__MAJOR:
-				return MAJOR_EDEFAULT == null ? major != null : !MAJOR_EDEFAULT.equals(major);
+				return major != null;
 			case SEMVERPackage.VERSION_NUMBER__MINOR:
-				return MINOR_EDEFAULT == null ? minor != null : !MINOR_EDEFAULT.equals(minor);
+				return minor != null;
 			case SEMVERPackage.VERSION_NUMBER__PATCH:
-				return PATCH_EDEFAULT == null ? patch != null : !PATCH_EDEFAULT.equals(patch);
+				return patch != null;
 			case SEMVERPackage.VERSION_NUMBER__EXTENDED:
 				return extended != null && !extended.isEmpty();
+			case SEMVERPackage.VERSION_NUMBER__QUALIFIER:
+				return qualifier != null;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -384,20 +478,14 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 	 * @generated
 	 */
 	@Override
-	public String toString() {
-		if (eIsProxy()) return super.toString();
-
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (major: ");
-		result.append(major);
-		result.append(", minor: ");
-		result.append(minor);
-		result.append(", patch: ");
-		result.append(patch);
-		result.append(", extended: ");
-		result.append(extended);
-		result.append(')');
-		return result.toString();
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case SEMVERPackage.VERSION_NUMBER___LENGTH:
+				return length();
+			case SEMVERPackage.VERSION_NUMBER___GET_PART__INT:
+				return getPart((Integer)arguments.get(0));
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 } //VersionNumberImpl

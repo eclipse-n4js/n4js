@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.semver.SEMVER.impl;
 
+import java.lang.reflect.InvocationTargetException;
+
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -21,6 +23,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 import org.eclipse.emf.ecore.util.EDataTypeEList;
 
@@ -43,7 +46,7 @@ import org.eclipse.n4js.semver.SEMVER.VersionNumber;
  *
  * @generated
  */
-public class SimpleVersionImpl extends VersionRangeImpl implements SimpleVersion {
+public class SimpleVersionImpl extends MinimalEObjectImpl.Container implements SimpleVersion {
 	/**
 	 * The cached value of the '{@link #getNumber() <em>Number</em>}' containment reference.
 	 * <!-- begin-user-doc -->
@@ -143,6 +146,69 @@ public class SimpleVersionImpl extends VersionRangeImpl implements SimpleVersion
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean isSpecific() {
+		return ((this.getComparators().isEmpty() || this.getComparators().contains(VersionComparator.VERSION)) || this.getComparators().contains(VersionComparator.EQUALS));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean isCaret() {
+		return this.getComparators().contains(VersionComparator.CARET);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean isTilde() {
+		return this.getComparators().contains(VersionComparator.TILDE);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean isGreater() {
+		return this.getComparators().contains(VersionComparator.GREATER);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean isGreaterEquals() {
+		return this.getComparators().contains(VersionComparator.GREATER_EQUALS);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean isSmaller() {
+		return this.getComparators().contains(VersionComparator.SMALLER);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean isSmallerEquals() {
+		return this.getComparators().contains(VersionComparator.SMALLER_EQUALS);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -220,6 +286,32 @@ public class SimpleVersionImpl extends VersionRangeImpl implements SimpleVersion
 				return comparators != null && !comparators.isEmpty();
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case SEMVERPackage.SIMPLE_VERSION___IS_SPECIFIC:
+				return isSpecific();
+			case SEMVERPackage.SIMPLE_VERSION___IS_CARET:
+				return isCaret();
+			case SEMVERPackage.SIMPLE_VERSION___IS_TILDE:
+				return isTilde();
+			case SEMVERPackage.SIMPLE_VERSION___IS_GREATER:
+				return isGreater();
+			case SEMVERPackage.SIMPLE_VERSION___IS_GREATER_EQUALS:
+				return isGreaterEquals();
+			case SEMVERPackage.SIMPLE_VERSION___IS_SMALLER:
+				return isSmaller();
+			case SEMVERPackage.SIMPLE_VERSION___IS_SMALLER_EQUALS:
+				return isSmallerEquals();
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 	/**

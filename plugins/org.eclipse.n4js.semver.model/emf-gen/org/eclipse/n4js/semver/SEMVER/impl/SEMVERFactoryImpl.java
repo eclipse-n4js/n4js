@@ -70,7 +70,9 @@ public class SEMVERFactoryImpl extends EFactoryImpl implements SEMVERFactory {
 			case SEMVERPackage.VERSION_RANGE_CONSTRAINT: return createVersionRangeConstraint();
 			case SEMVERPackage.SIMPLE_VERSION: return createSimpleVersion();
 			case SEMVERPackage.VERSION_NUMBER: return createVersionNumber();
+			case SEMVERPackage.VERSION_PART: return createVersionPart();
 			case SEMVERPackage.QUALIFIER: return createQualifier();
+			case SEMVERPackage.QUALIFIER_TAG: return createQualifierTag();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -161,9 +163,29 @@ public class SEMVERFactoryImpl extends EFactoryImpl implements SEMVERFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public VersionPart createVersionPart() {
+		VersionPartImpl versionPart = new VersionPartImpl();
+		return versionPart;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public Qualifier createQualifier() {
 		QualifierImpl qualifier = new QualifierImpl();
 		return qualifier;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public QualifierTag createQualifierTag() {
+		QualifierTagImpl qualifierTag = new QualifierTagImpl();
+		return qualifierTag;
 	}
 
 	/**

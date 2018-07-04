@@ -12,6 +12,8 @@ package org.eclipse.n4js.semver.SEMVER;
 
 import org.eclipse.emf.common.util.EList;
 
+import org.eclipse.emf.ecore.EObject;
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Simple Version</b></em>'.
@@ -29,7 +31,7 @@ import org.eclipse.emf.common.util.EList;
  * @model
  * @generated
  */
-public interface SimpleVersion extends VersionRange {
+public interface SimpleVersion extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Number</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
@@ -73,5 +75,71 @@ public interface SimpleVersion extends VersionRange {
 	 * @generated
 	 */
 	EList<VersionComparator> getComparators();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * * @return true iff the comparators are either empty, or contain 'v' or '='
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return ((this.getComparators().isEmpty() || this.getComparators().contains(&lt;%org.eclipse.n4js.semver.SEMVER.VersionComparator%&gt;.VERSION)) || this.getComparators().contains(&lt;%org.eclipse.n4js.semver.SEMVER.VersionComparator%&gt;.EQUALS));'"
+	 * @generated
+	 */
+	boolean isSpecific();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getComparators().contains(&lt;%org.eclipse.n4js.semver.SEMVER.VersionComparator%&gt;.CARET);'"
+	 * @generated
+	 */
+	boolean isCaret();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getComparators().contains(&lt;%org.eclipse.n4js.semver.SEMVER.VersionComparator%&gt;.TILDE);'"
+	 * @generated
+	 */
+	boolean isTilde();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getComparators().contains(&lt;%org.eclipse.n4js.semver.SEMVER.VersionComparator%&gt;.GREATER);'"
+	 * @generated
+	 */
+	boolean isGreater();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getComparators().contains(&lt;%org.eclipse.n4js.semver.SEMVER.VersionComparator%&gt;.GREATER_EQUALS);'"
+	 * @generated
+	 */
+	boolean isGreaterEquals();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getComparators().contains(&lt;%org.eclipse.n4js.semver.SEMVER.VersionComparator%&gt;.SMALLER);'"
+	 * @generated
+	 */
+	boolean isSmaller();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getComparators().contains(&lt;%org.eclipse.n4js.semver.SEMVER.VersionComparator%&gt;.SMALLER_EQUALS);'"
+	 * @generated
+	 */
+	boolean isSmallerEquals();
 
 } // SimpleVersion

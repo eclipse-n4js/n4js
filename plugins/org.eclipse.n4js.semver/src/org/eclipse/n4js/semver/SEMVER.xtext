@@ -44,19 +44,28 @@ SimpleVersion:
 ;
 
 VersionNumber:
-	major=VERSION_PART
-	('.' minor=VERSION_PART
-		('.' patch=VERSION_PART
-			('.' extended+=VERSION_PART)*
+	major=VersionPart
+	('.' minor=VersionPart
+		('.' patch=VersionPart
+			('.' extended+=VersionPart)*
 		)?
 	)?
 	(qualifier=Qualifier)?
 ;
 
+VersionPart:
+	wildcard?=WILDCARD | number=DIGITS
+;
+
 Qualifier:
-		('-' preRelease=ALPHA_NUMERIC_CHARS)
-	|	('+' buildMetadata=ALPHA_NUMERIC_CHARS)
-	|	('-' preRelease=ALPHA_NUMERIC_CHARS '+' buildMetadata=ALPHA_NUMERIC_CHARS)
+		('-' preRelease=QualifierTag)
+	|	('+' buildMetadata=QualifierTag)
+	|	('-' preRelease=QualifierTag '+' buildMetadata=QualifierTag)
+;
+
+QualifierTag:
+	parts+=ALPHA_NUMERIC_CHARS
+	('.' parts+=ALPHA_NUMERIC_CHARS)*
 ;
 
 
@@ -64,21 +73,21 @@ ALPHA_NUMERIC_CHARS:
 	ALPHA_NUMERIC_CHAR+
 ;
 
-VERSION_PART:
-	'x' | 'X' | '*' | DIGITS
+WILDCARD:
+	'x' | 'X' | '*'
 ;
 
 
 
 fragment ALPHA_NUMERIC_CHAR:
-	"-"? "."? (DIGITS | LETTERS)
+	"-"? (DIGITS | LETTERS)
 ;
 
 terminal LETTERS:
 	LETTER+
 ;
 
-terminal DIGITS:
+terminal DIGITS returns ecore::EInt:
 	DIGIT+
 ;
 

@@ -13,6 +13,7 @@ package org.eclipse.n4js.semver.SEMVER.impl;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EEnum;
+import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcorePackage;
@@ -21,11 +22,13 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 import org.eclipse.n4js.semver.SEMVER.HyphenVersionRange;
 import org.eclipse.n4js.semver.SEMVER.Qualifier;
+import org.eclipse.n4js.semver.SEMVER.QualifierTag;
 import org.eclipse.n4js.semver.SEMVER.SEMVERFactory;
 import org.eclipse.n4js.semver.SEMVER.SEMVERPackage;
 import org.eclipse.n4js.semver.SEMVER.SimpleVersion;
 import org.eclipse.n4js.semver.SEMVER.VersionComparator;
 import org.eclipse.n4js.semver.SEMVER.VersionNumber;
+import org.eclipse.n4js.semver.SEMVER.VersionPart;
 import org.eclipse.n4js.semver.SEMVER.VersionRange;
 import org.eclipse.n4js.semver.SEMVER.VersionRangeConstraint;
 import org.eclipse.n4js.semver.SEMVER.VersionRangeSet;
@@ -84,7 +87,21 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EClass versionPartEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EClass qualifierEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass qualifierTagEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -261,6 +278,69 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EOperation getSimpleVersion__IsSpecific() {
+		return simpleVersionEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOperation getSimpleVersion__IsCaret() {
+		return simpleVersionEClass.getEOperations().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOperation getSimpleVersion__IsTilde() {
+		return simpleVersionEClass.getEOperations().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOperation getSimpleVersion__IsGreater() {
+		return simpleVersionEClass.getEOperations().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOperation getSimpleVersion__IsGreaterEquals() {
+		return simpleVersionEClass.getEOperations().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOperation getSimpleVersion__IsSmaller() {
+		return simpleVersionEClass.getEOperations().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOperation getSimpleVersion__IsSmallerEquals() {
+		return simpleVersionEClass.getEOperations().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getVersionNumber() {
 		return versionNumberEClass;
 	}
@@ -270,7 +350,7 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getVersionNumber_Qualifier() {
+	public EReference getVersionNumber_Major() {
 		return (EReference)versionNumberEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -279,8 +359,8 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getVersionNumber_Major() {
-		return (EAttribute)versionNumberEClass.getEStructuralFeatures().get(1);
+	public EReference getVersionNumber_Minor() {
+		return (EReference)versionNumberEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -288,8 +368,8 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getVersionNumber_Minor() {
-		return (EAttribute)versionNumberEClass.getEStructuralFeatures().get(2);
+	public EReference getVersionNumber_Patch() {
+		return (EReference)versionNumberEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -297,8 +377,8 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getVersionNumber_Patch() {
-		return (EAttribute)versionNumberEClass.getEStructuralFeatures().get(3);
+	public EReference getVersionNumber_Extended() {
+		return (EReference)versionNumberEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -306,8 +386,53 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getVersionNumber_Extended() {
-		return (EAttribute)versionNumberEClass.getEStructuralFeatures().get(4);
+	public EReference getVersionNumber_Qualifier() {
+		return (EReference)versionNumberEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOperation getVersionNumber__Length() {
+		return versionNumberEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOperation getVersionNumber__GetPart__int() {
+		return versionNumberEClass.getEOperations().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getVersionPart() {
+		return versionPartEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getVersionPart_Wildcard() {
+		return (EAttribute)versionPartEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getVersionPart_Number() {
+		return (EAttribute)versionPartEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -324,8 +449,8 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getQualifier_PreRelease() {
-		return (EAttribute)qualifierEClass.getEStructuralFeatures().get(0);
+	public EReference getQualifier_PreRelease() {
+		return (EReference)qualifierEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -333,8 +458,26 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getQualifier_BuildMetadata() {
-		return (EAttribute)qualifierEClass.getEStructuralFeatures().get(1);
+	public EReference getQualifier_BuildMetadata() {
+		return (EReference)qualifierEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getQualifierTag() {
+		return qualifierTagEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getQualifierTag_Parts() {
+		return (EAttribute)qualifierTagEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -389,17 +532,33 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 		simpleVersionEClass = createEClass(SIMPLE_VERSION);
 		createEReference(simpleVersionEClass, SIMPLE_VERSION__NUMBER);
 		createEAttribute(simpleVersionEClass, SIMPLE_VERSION__COMPARATORS);
+		createEOperation(simpleVersionEClass, SIMPLE_VERSION___IS_SPECIFIC);
+		createEOperation(simpleVersionEClass, SIMPLE_VERSION___IS_CARET);
+		createEOperation(simpleVersionEClass, SIMPLE_VERSION___IS_TILDE);
+		createEOperation(simpleVersionEClass, SIMPLE_VERSION___IS_GREATER);
+		createEOperation(simpleVersionEClass, SIMPLE_VERSION___IS_GREATER_EQUALS);
+		createEOperation(simpleVersionEClass, SIMPLE_VERSION___IS_SMALLER);
+		createEOperation(simpleVersionEClass, SIMPLE_VERSION___IS_SMALLER_EQUALS);
 
 		versionNumberEClass = createEClass(VERSION_NUMBER);
+		createEReference(versionNumberEClass, VERSION_NUMBER__MAJOR);
+		createEReference(versionNumberEClass, VERSION_NUMBER__MINOR);
+		createEReference(versionNumberEClass, VERSION_NUMBER__PATCH);
+		createEReference(versionNumberEClass, VERSION_NUMBER__EXTENDED);
 		createEReference(versionNumberEClass, VERSION_NUMBER__QUALIFIER);
-		createEAttribute(versionNumberEClass, VERSION_NUMBER__MAJOR);
-		createEAttribute(versionNumberEClass, VERSION_NUMBER__MINOR);
-		createEAttribute(versionNumberEClass, VERSION_NUMBER__PATCH);
-		createEAttribute(versionNumberEClass, VERSION_NUMBER__EXTENDED);
+		createEOperation(versionNumberEClass, VERSION_NUMBER___LENGTH);
+		createEOperation(versionNumberEClass, VERSION_NUMBER___GET_PART__INT);
+
+		versionPartEClass = createEClass(VERSION_PART);
+		createEAttribute(versionPartEClass, VERSION_PART__WILDCARD);
+		createEAttribute(versionPartEClass, VERSION_PART__NUMBER);
 
 		qualifierEClass = createEClass(QUALIFIER);
-		createEAttribute(qualifierEClass, QUALIFIER__PRE_RELEASE);
-		createEAttribute(qualifierEClass, QUALIFIER__BUILD_METADATA);
+		createEReference(qualifierEClass, QUALIFIER__PRE_RELEASE);
+		createEReference(qualifierEClass, QUALIFIER__BUILD_METADATA);
+
+		qualifierTagEClass = createEClass(QUALIFIER_TAG);
+		createEAttribute(qualifierTagEClass, QUALIFIER_TAG__PARTS);
 
 		// Create enums
 		versionComparatorEEnum = createEEnum(VERSION_COMPARATOR);
@@ -438,7 +597,6 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 		// Add supertypes to classes
 		hyphenVersionRangeEClass.getESuperTypes().add(this.getVersionRange());
 		versionRangeConstraintEClass.getESuperTypes().add(this.getVersionRange());
-		simpleVersionEClass.getESuperTypes().add(this.getVersionRange());
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(versionRangeSetEClass, VersionRangeSet.class, "VersionRangeSet", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -457,16 +615,42 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 		initEReference(getSimpleVersion_Number(), this.getVersionNumber(), null, "number", null, 0, 1, SimpleVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSimpleVersion_Comparators(), this.getVersionComparator(), "comparators", null, 0, -1, SimpleVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+		initEOperation(getSimpleVersion__IsSpecific(), theEcorePackage.getEBoolean(), "isSpecific", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getSimpleVersion__IsCaret(), theEcorePackage.getEBoolean(), "isCaret", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getSimpleVersion__IsTilde(), theEcorePackage.getEBoolean(), "isTilde", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getSimpleVersion__IsGreater(), theEcorePackage.getEBoolean(), "isGreater", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getSimpleVersion__IsGreaterEquals(), theEcorePackage.getEBoolean(), "isGreaterEquals", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getSimpleVersion__IsSmaller(), theEcorePackage.getEBoolean(), "isSmaller", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getSimpleVersion__IsSmallerEquals(), theEcorePackage.getEBoolean(), "isSmallerEquals", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
 		initEClass(versionNumberEClass, VersionNumber.class, "VersionNumber", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getVersionNumber_Major(), this.getVersionPart(), null, "major", null, 0, 1, VersionNumber.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getVersionNumber_Minor(), this.getVersionPart(), null, "minor", null, 0, 1, VersionNumber.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getVersionNumber_Patch(), this.getVersionPart(), null, "patch", null, 0, 1, VersionNumber.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getVersionNumber_Extended(), this.getVersionPart(), null, "extended", null, 0, -1, VersionNumber.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getVersionNumber_Qualifier(), this.getQualifier(), null, "qualifier", null, 0, 1, VersionNumber.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getVersionNumber_Major(), theEcorePackage.getEString(), "major", null, 0, 1, VersionNumber.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getVersionNumber_Minor(), theEcorePackage.getEString(), "minor", null, 0, 1, VersionNumber.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getVersionNumber_Patch(), theEcorePackage.getEString(), "patch", null, 0, 1, VersionNumber.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getVersionNumber_Extended(), theEcorePackage.getEString(), "extended", null, 0, -1, VersionNumber.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getVersionNumber__Length(), theEcorePackage.getEInt(), "length", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		EOperation op = initEOperation(getVersionNumber__GetPart__int(), this.getVersionPart(), "getPart", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, theEcorePackage.getEInt(), "idx", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEClass(versionPartEClass, VersionPart.class, "VersionPart", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getVersionPart_Wildcard(), theEcorePackage.getEBoolean(), "wildcard", null, 0, 1, VersionPart.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getVersionPart_Number(), theEcorePackage.getEInt(), "number", null, 0, 1, VersionPart.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(qualifierEClass, Qualifier.class, "Qualifier", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getQualifier_PreRelease(), theEcorePackage.getEString(), "preRelease", null, 0, 1, Qualifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getQualifier_BuildMetadata(), theEcorePackage.getEString(), "buildMetadata", null, 0, 1, Qualifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getQualifier_PreRelease(), this.getQualifierTag(), null, "preRelease", null, 0, 1, Qualifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getQualifier_BuildMetadata(), this.getQualifierTag(), null, "buildMetadata", null, 0, 1, Qualifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(qualifierTagEClass, QualifierTag.class, "QualifierTag", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getQualifierTag_Parts(), theEcorePackage.getEString(), "parts", null, 0, -1, QualifierTag.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize enums and add enum literals
 		initEEnum(versionComparatorEEnum, VersionComparator.class, "VersionComparator");

@@ -41,22 +41,80 @@ class VersionRangeConstraint extends VersionRange {
 	contains SimpleVersion[] versionConstraints
 }
 
-class SimpleVersion extends VersionRange {
+class SimpleVersion {
 	contains VersionNumber number
 	VersionComparator[] comparators
+
+	/** @return true iff the comparators are either empty, or contain 'v' or '=' */
+	op boolean isSpecific() {
+		return comparators.empty || comparators.contains(VersionComparator.VERSION) || comparators.contains(VersionComparator.EQUALS);
+	}
+
+	op boolean isCaret() {
+		return comparators.contains(VersionComparator.CARET);
+	}
+
+	op boolean isTilde() {
+		return comparators.contains(VersionComparator.TILDE);
+	}
+
+	op boolean isGreater() {
+		return comparators.contains(VersionComparator.GREATER);
+	}
+
+	op boolean isGreaterEquals() {
+		return comparators.contains(VersionComparator.GREATER_EQUALS);
+	}
+
+	op boolean isSmaller() {
+		return comparators.contains(VersionComparator.SMALLER);
+	}
+
+	op boolean isSmallerEquals() {
+		return comparators.contains(VersionComparator.SMALLER_EQUALS);
+	}
 }
 
 class VersionNumber {
+	contains VersionPart major
+	contains VersionPart minor
+	contains VersionPart patch
+	contains VersionPart[] extended
 	contains Qualifier qualifier
-	String major
-	String minor
-	String patch
-	String[] extended
+
+	op int length() {
+		var length = 0;
+		if (major !== null) length++;
+		if (minor !== null) length++;
+		if (patch !== null) {
+			length++;
+			length += extended.length;
+		}
+		return length;
+	}
+
+	op VersionPart getPart(int idx) {
+		switch (idx) {
+			case 0: return major
+			case 1: return minor
+			case 2: return patch
+			default: return extended.get(idx - 3)
+		};
+	}
+}
+
+class VersionPart {
+	boolean wildcard
+	int number
 }
 
 class Qualifier {
-	String preRelease
-	String buildMetadata
+	contains QualifierTag preRelease
+	contains QualifierTag buildMetadata
+}
+
+class QualifierTag {
+	String[] parts
 }
 
 enum VersionComparator {

@@ -16,9 +16,11 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.n4js.semver.SEMVER.HyphenVersionRange;
 import org.eclipse.n4js.semver.SEMVER.Qualifier;
+import org.eclipse.n4js.semver.SEMVER.QualifierTag;
 import org.eclipse.n4js.semver.SEMVER.SEMVERPackage;
 import org.eclipse.n4js.semver.SEMVER.SimpleVersion;
 import org.eclipse.n4js.semver.SEMVER.VersionNumber;
+import org.eclipse.n4js.semver.SEMVER.VersionPart;
 import org.eclipse.n4js.semver.SEMVER.VersionRangeConstraint;
 import org.eclipse.n4js.semver.SEMVER.VersionRangeSet;
 import org.eclipse.n4js.semver.services.SEMVERGrammarAccess;
@@ -50,11 +52,17 @@ public class SEMVERSemanticSequencer extends AbstractDelegatingSemanticSequencer
 			case SEMVERPackage.QUALIFIER:
 				sequence_Qualifier(context, (Qualifier) semanticObject); 
 				return; 
+			case SEMVERPackage.QUALIFIER_TAG:
+				sequence_QualifierTag(context, (QualifierTag) semanticObject); 
+				return; 
 			case SEMVERPackage.SIMPLE_VERSION:
 				sequence_SimpleVersion(context, (SimpleVersion) semanticObject); 
 				return; 
 			case SEMVERPackage.VERSION_NUMBER:
 				sequence_VersionNumber(context, (VersionNumber) semanticObject); 
+				return; 
+			case SEMVERPackage.VERSION_PART:
+				sequence_VersionPart(context, (VersionPart) semanticObject); 
 				return; 
 			case SEMVERPackage.VERSION_RANGE_CONSTRAINT:
 				sequence_VersionRangeContraint(context, (VersionRangeConstraint) semanticObject); 
@@ -91,10 +99,22 @@ public class SEMVERSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	
 	/**
 	 * Contexts:
+	 *     QualifierTag returns QualifierTag
+	 *
+	 * Constraint:
+	 *     (parts+=ALPHA_NUMERIC_CHARS parts+=ALPHA_NUMERIC_CHARS*)
+	 */
+	protected void sequence_QualifierTag(ISerializationContext context, QualifierTag semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
 	 *     Qualifier returns Qualifier
 	 *
 	 * Constraint:
-	 *     (preRelease=ALPHA_NUMERIC_CHARS | buildMetadata=ALPHA_NUMERIC_CHARS | (preRelease=ALPHA_NUMERIC_CHARS buildMetadata=ALPHA_NUMERIC_CHARS))
+	 *     (preRelease=QualifierTag | buildMetadata=QualifierTag | (preRelease=QualifierTag buildMetadata=QualifierTag))
 	 */
 	protected void sequence_Qualifier(ISerializationContext context, Qualifier semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -118,9 +138,21 @@ public class SEMVERSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 *     VersionNumber returns VersionNumber
 	 *
 	 * Constraint:
-	 *     (major=VERSION_PART (minor=VERSION_PART (patch=VERSION_PART extended+=VERSION_PART*)?)? qualifier=Qualifier?)
+	 *     (major=VersionPart (minor=VersionPart (patch=VersionPart extended+=VersionPart*)?)? qualifier=Qualifier?)
 	 */
 	protected void sequence_VersionNumber(ISerializationContext context, VersionNumber semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     VersionPart returns VersionPart
+	 *
+	 * Constraint:
+	 *     (wildcard?=WILDCARD | number=DIGITS)
+	 */
+	protected void sequence_VersionPart(ISerializationContext context, VersionPart semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

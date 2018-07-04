@@ -103,7 +103,6 @@ public class SEMVERSwitch<T> extends Switch<T> {
 			case SEMVERPackage.SIMPLE_VERSION: {
 				SimpleVersion simpleVersion = (SimpleVersion)theEObject;
 				T result = caseSimpleVersion(simpleVersion);
-				if (result == null) result = caseVersionRange(simpleVersion);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -113,9 +112,21 @@ public class SEMVERSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case SEMVERPackage.VERSION_PART: {
+				VersionPart versionPart = (VersionPart)theEObject;
+				T result = caseVersionPart(versionPart);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case SEMVERPackage.QUALIFIER: {
 				Qualifier qualifier = (Qualifier)theEObject;
 				T result = caseQualifier(qualifier);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case SEMVERPackage.QUALIFIER_TAG: {
+				QualifierTag qualifierTag = (QualifierTag)theEObject;
+				T result = caseQualifierTag(qualifierTag);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -214,6 +225,21 @@ public class SEMVERSwitch<T> extends Switch<T> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Version Part</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Version Part</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseVersionPart(VersionPart object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Qualifier</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -225,6 +251,21 @@ public class SEMVERSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseQualifier(Qualifier object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Qualifier Tag</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Qualifier Tag</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseQualifierTag(QualifierTag object) {
 		return null;
 	}
 

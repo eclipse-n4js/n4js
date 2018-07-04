@@ -75,6 +75,15 @@ public interface SEMVERFactory extends EFactory {
 	VersionNumber createVersionNumber();
 
 	/**
+	 * Returns a new object of class '<em>Version Part</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Version Part</em>'.
+	 * @generated
+	 */
+	VersionPart createVersionPart();
+
+	/**
 	 * Returns a new object of class '<em>Qualifier</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -82,6 +91,15 @@ public interface SEMVERFactory extends EFactory {
 	 * @generated
 	 */
 	Qualifier createQualifier();
+
+	/**
+	 * Returns a new object of class '<em>Qualifier Tag</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Qualifier Tag</em>'.
+	 * @generated
+	 */
+	QualifierTag createQualifierTag();
 
 	/**
 	 * Returns the package supported by this factory.

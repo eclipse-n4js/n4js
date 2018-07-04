@@ -51,9 +51,22 @@ public class SEMVERSyntacticSequencer extends AbstractSyntacticSequencer {
 	
 	@Override
 	protected String getUnassignedRuleCallToken(EObject semanticObject, RuleCall ruleCall, INode node) {
-		if (ruleCall.getRule() == grammarAccess.getWSRule())
+		if (ruleCall.getRule() == grammarAccess.getWILDCARDRule())
+			return getWILDCARDToken(semanticObject, ruleCall, node);
+		else if (ruleCall.getRule() == grammarAccess.getWSRule())
 			return getWSToken(semanticObject, ruleCall, node);
 		return "";
+	}
+	
+	/**
+	 * WILDCARD:
+	 * 	'x' | 'X' | '*'
+	 * ;
+	 */
+	protected String getWILDCARDToken(EObject semanticObject, RuleCall ruleCall, INode node) {
+		if (node != null)
+			return getTokenText(node);
+		return "x";
 	}
 	
 	/**

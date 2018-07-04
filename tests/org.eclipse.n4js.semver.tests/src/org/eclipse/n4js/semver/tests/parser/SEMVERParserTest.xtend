@@ -31,6 +31,7 @@ class SEMVERParserTest {
 	@Inject extension SEMVERParseHelper;
 	@Inject ISerializer serializer;
 
+	//@formatter:off
 	String[] data = #[
 		"",
 		" 1",
@@ -129,6 +130,7 @@ class SEMVERParserTest {
 		"^0.x",
 		">=0.0.0 <1.0.0"
 	];
+	//@formatter:on
 
 	/** Checks empty strings. */
 	@Test
@@ -145,7 +147,9 @@ class SEMVERParserTest {
 			val versionRangeSet = entry.parseSuccessfully // empty document
 			assertTrue(versionRangeSet !== null);
 			val serialized = serializer.serialize(versionRangeSet);
-			assertEquals(entry.trim, serialized);
+
+			val adjustedEntry = entry.trim.replace("x", "*").replace("X", "*");
+			assertEquals(adjustedEntry, serialized);
 		}
 	}
 

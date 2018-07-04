@@ -23,11 +23,11 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.semver.SEMVER.VersionNumber#getQualifier <em>Qualifier</em>}</li>
  *   <li>{@link org.eclipse.n4js.semver.SEMVER.VersionNumber#getMajor <em>Major</em>}</li>
  *   <li>{@link org.eclipse.n4js.semver.SEMVER.VersionNumber#getMinor <em>Minor</em>}</li>
  *   <li>{@link org.eclipse.n4js.semver.SEMVER.VersionNumber#getPatch <em>Patch</em>}</li>
  *   <li>{@link org.eclipse.n4js.semver.SEMVER.VersionNumber#getExtended <em>Extended</em>}</li>
+ *   <li>{@link org.eclipse.n4js.semver.SEMVER.VersionNumber#getQualifier <em>Qualifier</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getVersionNumber()
@@ -35,6 +35,100 @@ import org.eclipse.emf.ecore.EObject;
  * @generated
  */
 public interface VersionNumber extends EObject {
+	/**
+	 * Returns the value of the '<em><b>Major</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Major</em>' containment reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Major</em>' containment reference.
+	 * @see #setMajor(VersionPart)
+	 * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getVersionNumber_Major()
+	 * @model containment="true"
+	 * @generated
+	 */
+	VersionPart getMajor();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.semver.SEMVER.VersionNumber#getMajor <em>Major</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Major</em>' containment reference.
+	 * @see #getMajor()
+	 * @generated
+	 */
+	void setMajor(VersionPart value);
+
+	/**
+	 * Returns the value of the '<em><b>Minor</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Minor</em>' containment reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Minor</em>' containment reference.
+	 * @see #setMinor(VersionPart)
+	 * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getVersionNumber_Minor()
+	 * @model containment="true"
+	 * @generated
+	 */
+	VersionPart getMinor();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.semver.SEMVER.VersionNumber#getMinor <em>Minor</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Minor</em>' containment reference.
+	 * @see #getMinor()
+	 * @generated
+	 */
+	void setMinor(VersionPart value);
+
+	/**
+	 * Returns the value of the '<em><b>Patch</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Patch</em>' containment reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Patch</em>' containment reference.
+	 * @see #setPatch(VersionPart)
+	 * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getVersionNumber_Patch()
+	 * @model containment="true"
+	 * @generated
+	 */
+	VersionPart getPatch();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.semver.SEMVER.VersionNumber#getPatch <em>Patch</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Patch</em>' containment reference.
+	 * @see #getPatch()
+	 * @generated
+	 */
+	void setPatch(VersionPart value);
+
+	/**
+	 * Returns the value of the '<em><b>Extended</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.n4js.semver.SEMVER.VersionPart}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Extended</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Extended</em>' containment reference list.
+	 * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getVersionNumber_Extended()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<VersionPart> getExtended();
+
 	/**
 	 * Returns the value of the '<em><b>Qualifier</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
@@ -62,97 +156,21 @@ public interface VersionNumber extends EObject {
 	void setQualifier(Qualifier value);
 
 	/**
-	 * Returns the value of the '<em><b>Major</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Major</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Major</em>' attribute.
-	 * @see #setMajor(String)
-	 * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getVersionNumber_Major()
 	 * @model unique="false"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='int length = 0;\n&lt;%org.eclipse.n4js.semver.SEMVER.VersionPart%&gt; _major = this.getMajor();\nboolean _tripleNotEquals = (_major != null);\nif (_tripleNotEquals)\n{\n\tlength++;\n}\n&lt;%org.eclipse.n4js.semver.SEMVER.VersionPart%&gt; _minor = this.getMinor();\nboolean _tripleNotEquals_1 = (_minor != null);\nif (_tripleNotEquals_1)\n{\n\tlength++;\n}\n&lt;%org.eclipse.n4js.semver.SEMVER.VersionPart%&gt; _patch = this.getPatch();\nboolean _tripleNotEquals_2 = (_patch != null);\nif (_tripleNotEquals_2)\n{\n\tlength++;\n\tint _length = length;\n\tint _length_1 = ((&lt;%java.lang.Object%&gt;[])org.eclipse.xtext.xbase.lib.Conversions.unwrapArray(this.getExtended(), &lt;%java.lang.Object%&gt;.class)).length;\n\tlength = (_length + _length_1);\n}\nreturn length;'"
 	 * @generated
 	 */
-	String getMajor();
+	int length();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.semver.SEMVER.VersionNumber#getMajor <em>Major</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Major</em>' attribute.
-	 * @see #getMajor()
+	 * @model unique="false" idxUnique="false"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='switch (idx)\n{\n\tcase 0:\n\t\treturn this.getMajor();\n\tcase 1:\n\t\treturn this.getMinor();\n\tcase 2:\n\t\treturn this.getPatch();\n\tdefault:\n\t\treturn this.getExtended().get((idx - 3));\n}'"
 	 * @generated
 	 */
-	void setMajor(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Minor</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Minor</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Minor</em>' attribute.
-	 * @see #setMinor(String)
-	 * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getVersionNumber_Minor()
-	 * @model unique="false"
-	 * @generated
-	 */
-	String getMinor();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.semver.SEMVER.VersionNumber#getMinor <em>Minor</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Minor</em>' attribute.
-	 * @see #getMinor()
-	 * @generated
-	 */
-	void setMinor(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Patch</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Patch</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Patch</em>' attribute.
-	 * @see #setPatch(String)
-	 * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getVersionNumber_Patch()
-	 * @model unique="false"
-	 * @generated
-	 */
-	String getPatch();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.semver.SEMVER.VersionNumber#getPatch <em>Patch</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Patch</em>' attribute.
-	 * @see #getPatch()
-	 * @generated
-	 */
-	void setPatch(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Extended</b></em>' attribute list.
-	 * The list contents are of type {@link java.lang.String}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Extended</em>' attribute list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Extended</em>' attribute list.
-	 * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getVersionNumber_Extended()
-	 * @model unique="false"
-	 * @generated
-	 */
-	EList<String> getExtended();
+	VersionPart getPart(int idx);
 
 } // VersionNumber

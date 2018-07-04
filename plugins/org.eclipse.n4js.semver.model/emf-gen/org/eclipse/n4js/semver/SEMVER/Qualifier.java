@@ -31,55 +31,55 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface Qualifier extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Pre Release</b></em>' attribute.
+	 * Returns the value of the '<em><b>Pre Release</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Pre Release</em>' attribute isn't clear,
+	 * If the meaning of the '<em>Pre Release</em>' containment reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Pre Release</em>' attribute.
-	 * @see #setPreRelease(String)
+	 * @return the value of the '<em>Pre Release</em>' containment reference.
+	 * @see #setPreRelease(QualifierTag)
 	 * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getQualifier_PreRelease()
-	 * @model unique="false"
+	 * @model containment="true"
 	 * @generated
 	 */
-	String getPreRelease();
+	QualifierTag getPreRelease();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.semver.SEMVER.Qualifier#getPreRelease <em>Pre Release</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.n4js.semver.SEMVER.Qualifier#getPreRelease <em>Pre Release</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Pre Release</em>' attribute.
+	 * @param value the new value of the '<em>Pre Release</em>' containment reference.
 	 * @see #getPreRelease()
 	 * @generated
 	 */
-	void setPreRelease(String value);
+	void setPreRelease(QualifierTag value);
 
 	/**
-	 * Returns the value of the '<em><b>Build Metadata</b></em>' attribute.
+	 * Returns the value of the '<em><b>Build Metadata</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Build Metadata</em>' attribute isn't clear,
+	 * If the meaning of the '<em>Build Metadata</em>' containment reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Build Metadata</em>' attribute.
-	 * @see #setBuildMetadata(String)
+	 * @return the value of the '<em>Build Metadata</em>' containment reference.
+	 * @see #setBuildMetadata(QualifierTag)
 	 * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getQualifier_BuildMetadata()
-	 * @model unique="false"
+	 * @model containment="true"
 	 * @generated
 	 */
-	String getBuildMetadata();
+	QualifierTag getBuildMetadata();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.semver.SEMVER.Qualifier#getBuildMetadata <em>Build Metadata</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.n4js.semver.SEMVER.Qualifier#getBuildMetadata <em>Build Metadata</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Build Metadata</em>' attribute.
+	 * @param value the new value of the '<em>Build Metadata</em>' containment reference.
 	 * @see #getBuildMetadata()
 	 * @generated
 	 */
-	void setBuildMetadata(String value);
+	void setBuildMetadata(QualifierTag value);
 
 } // Qualifier

@@ -11,13 +11,16 @@
 package org.eclipse.n4js.semver.SEMVER.impl;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 import org.eclipse.n4js.semver.SEMVER.Qualifier;
+import org.eclipse.n4js.semver.SEMVER.QualifierTag;
 import org.eclipse.n4js.semver.SEMVER.SEMVERPackage;
 
 /**
@@ -36,44 +39,24 @@ import org.eclipse.n4js.semver.SEMVER.SEMVERPackage;
  */
 public class QualifierImpl extends MinimalEObjectImpl.Container implements Qualifier {
 	/**
-	 * The default value of the '{@link #getPreRelease() <em>Pre Release</em>}' attribute.
+	 * The cached value of the '{@link #getPreRelease() <em>Pre Release</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getPreRelease()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String PRE_RELEASE_EDEFAULT = null;
+	protected QualifierTag preRelease;
 
 	/**
-	 * The cached value of the '{@link #getPreRelease() <em>Pre Release</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getPreRelease()
-	 * @generated
-	 * @ordered
-	 */
-	protected String preRelease = PRE_RELEASE_EDEFAULT;
-
-	/**
-	 * The default value of the '{@link #getBuildMetadata() <em>Build Metadata</em>}' attribute.
+	 * The cached value of the '{@link #getBuildMetadata() <em>Build Metadata</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getBuildMetadata()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String BUILD_METADATA_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getBuildMetadata() <em>Build Metadata</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getBuildMetadata()
-	 * @generated
-	 * @ordered
-	 */
-	protected String buildMetadata = BUILD_METADATA_EDEFAULT;
+	protected QualifierTag buildMetadata;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -99,7 +82,7 @@ public class QualifierImpl extends MinimalEObjectImpl.Container implements Quali
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getPreRelease() {
+	public QualifierTag getPreRelease() {
 		return preRelease;
 	}
 
@@ -108,11 +91,14 @@ public class QualifierImpl extends MinimalEObjectImpl.Container implements Quali
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setPreRelease(String newPreRelease) {
-		String oldPreRelease = preRelease;
+	public NotificationChain basicSetPreRelease(QualifierTag newPreRelease, NotificationChain msgs) {
+		QualifierTag oldPreRelease = preRelease;
 		preRelease = newPreRelease;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SEMVERPackage.QUALIFIER__PRE_RELEASE, oldPreRelease, preRelease));
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, SEMVERPackage.QUALIFIER__PRE_RELEASE, oldPreRelease, newPreRelease);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
 	}
 
 	/**
@@ -120,7 +106,26 @@ public class QualifierImpl extends MinimalEObjectImpl.Container implements Quali
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getBuildMetadata() {
+	public void setPreRelease(QualifierTag newPreRelease) {
+		if (newPreRelease != preRelease) {
+			NotificationChain msgs = null;
+			if (preRelease != null)
+				msgs = ((InternalEObject)preRelease).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - SEMVERPackage.QUALIFIER__PRE_RELEASE, null, msgs);
+			if (newPreRelease != null)
+				msgs = ((InternalEObject)newPreRelease).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - SEMVERPackage.QUALIFIER__PRE_RELEASE, null, msgs);
+			msgs = basicSetPreRelease(newPreRelease, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, SEMVERPackage.QUALIFIER__PRE_RELEASE, newPreRelease, newPreRelease));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public QualifierTag getBuildMetadata() {
 		return buildMetadata;
 	}
 
@@ -129,11 +134,49 @@ public class QualifierImpl extends MinimalEObjectImpl.Container implements Quali
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setBuildMetadata(String newBuildMetadata) {
-		String oldBuildMetadata = buildMetadata;
+	public NotificationChain basicSetBuildMetadata(QualifierTag newBuildMetadata, NotificationChain msgs) {
+		QualifierTag oldBuildMetadata = buildMetadata;
 		buildMetadata = newBuildMetadata;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SEMVERPackage.QUALIFIER__BUILD_METADATA, oldBuildMetadata, buildMetadata));
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, SEMVERPackage.QUALIFIER__BUILD_METADATA, oldBuildMetadata, newBuildMetadata);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setBuildMetadata(QualifierTag newBuildMetadata) {
+		if (newBuildMetadata != buildMetadata) {
+			NotificationChain msgs = null;
+			if (buildMetadata != null)
+				msgs = ((InternalEObject)buildMetadata).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - SEMVERPackage.QUALIFIER__BUILD_METADATA, null, msgs);
+			if (newBuildMetadata != null)
+				msgs = ((InternalEObject)newBuildMetadata).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - SEMVERPackage.QUALIFIER__BUILD_METADATA, null, msgs);
+			msgs = basicSetBuildMetadata(newBuildMetadata, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, SEMVERPackage.QUALIFIER__BUILD_METADATA, newBuildMetadata, newBuildMetadata));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case SEMVERPackage.QUALIFIER__PRE_RELEASE:
+				return basicSetPreRelease(null, msgs);
+			case SEMVERPackage.QUALIFIER__BUILD_METADATA:
+				return basicSetBuildMetadata(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -161,10 +204,10 @@ public class QualifierImpl extends MinimalEObjectImpl.Container implements Quali
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case SEMVERPackage.QUALIFIER__PRE_RELEASE:
-				setPreRelease((String)newValue);
+				setPreRelease((QualifierTag)newValue);
 				return;
 			case SEMVERPackage.QUALIFIER__BUILD_METADATA:
-				setBuildMetadata((String)newValue);
+				setBuildMetadata((QualifierTag)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -179,10 +222,10 @@ public class QualifierImpl extends MinimalEObjectImpl.Container implements Quali
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case SEMVERPackage.QUALIFIER__PRE_RELEASE:
-				setPreRelease(PRE_RELEASE_EDEFAULT);
+				setPreRelease((QualifierTag)null);
 				return;
 			case SEMVERPackage.QUALIFIER__BUILD_METADATA:
-				setBuildMetadata(BUILD_METADATA_EDEFAULT);
+				setBuildMetadata((QualifierTag)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -197,29 +240,11 @@ public class QualifierImpl extends MinimalEObjectImpl.Container implements Quali
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case SEMVERPackage.QUALIFIER__PRE_RELEASE:
-				return PRE_RELEASE_EDEFAULT == null ? preRelease != null : !PRE_RELEASE_EDEFAULT.equals(preRelease);
+				return preRelease != null;
 			case SEMVERPackage.QUALIFIER__BUILD_METADATA:
-				return BUILD_METADATA_EDEFAULT == null ? buildMetadata != null : !BUILD_METADATA_EDEFAULT.equals(buildMetadata);
+				return buildMetadata != null;
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String toString() {
-		if (eIsProxy()) return super.toString();
-
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (preRelease: ");
-		result.append(preRelease);
-		result.append(", buildMetadata: ");
-		result.append(buildMetadata);
-		result.append(')');
-		return result.toString();
 	}
 
 } //QualifierImpl

@@ -443,9 +443,9 @@ ruleVersionNumber returns [EObject current=null]
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getVersionNumberAccess().getMajorVERSION_PARTParserRuleCall_0_0());
+					newCompositeNode(grammarAccess.getVersionNumberAccess().getMajorVersionPartParserRuleCall_0_0());
 				}
-				lv_major_0_0=ruleVERSION_PART
+				lv_major_0_0=ruleVersionPart
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getVersionNumberRule());
@@ -454,7 +454,7 @@ ruleVersionNumber returns [EObject current=null]
 						$current,
 						"major",
 						lv_major_0_0,
-						"org.eclipse.n4js.semver.SEMVER.VERSION_PART");
+						"org.eclipse.n4js.semver.SEMVER.VersionPart");
 					afterParserOrEnumRuleCall();
 				}
 			)
@@ -467,9 +467,9 @@ ruleVersionNumber returns [EObject current=null]
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getVersionNumberAccess().getMinorVERSION_PARTParserRuleCall_1_1_0());
+						newCompositeNode(grammarAccess.getVersionNumberAccess().getMinorVersionPartParserRuleCall_1_1_0());
 					}
-					lv_minor_2_0=ruleVERSION_PART
+					lv_minor_2_0=ruleVersionPart
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getVersionNumberRule());
@@ -478,7 +478,7 @@ ruleVersionNumber returns [EObject current=null]
 							$current,
 							"minor",
 							lv_minor_2_0,
-							"org.eclipse.n4js.semver.SEMVER.VERSION_PART");
+							"org.eclipse.n4js.semver.SEMVER.VersionPart");
 						afterParserOrEnumRuleCall();
 					}
 				)
@@ -491,9 +491,9 @@ ruleVersionNumber returns [EObject current=null]
 				(
 					(
 						{
-							newCompositeNode(grammarAccess.getVersionNumberAccess().getPatchVERSION_PARTParserRuleCall_1_2_1_0());
+							newCompositeNode(grammarAccess.getVersionNumberAccess().getPatchVersionPartParserRuleCall_1_2_1_0());
 						}
-						lv_patch_4_0=ruleVERSION_PART
+						lv_patch_4_0=ruleVersionPart
 						{
 							if ($current==null) {
 								$current = createModelElementForParent(grammarAccess.getVersionNumberRule());
@@ -502,7 +502,7 @@ ruleVersionNumber returns [EObject current=null]
 								$current,
 								"patch",
 								lv_patch_4_0,
-								"org.eclipse.n4js.semver.SEMVER.VERSION_PART");
+								"org.eclipse.n4js.semver.SEMVER.VersionPart");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -515,9 +515,9 @@ ruleVersionNumber returns [EObject current=null]
 					(
 						(
 							{
-								newCompositeNode(grammarAccess.getVersionNumberAccess().getExtendedVERSION_PARTParserRuleCall_1_2_2_1_0());
+								newCompositeNode(grammarAccess.getVersionNumberAccess().getExtendedVersionPartParserRuleCall_1_2_2_1_0());
 							}
-							lv_extended_6_0=ruleVERSION_PART
+							lv_extended_6_0=ruleVersionPart
 							{
 								if ($current==null) {
 									$current = createModelElementForParent(grammarAccess.getVersionNumberRule());
@@ -526,7 +526,7 @@ ruleVersionNumber returns [EObject current=null]
 									$current,
 									"extended",
 									lv_extended_6_0,
-									"org.eclipse.n4js.semver.SEMVER.VERSION_PART");
+									"org.eclipse.n4js.semver.SEMVER.VersionPart");
 								afterParserOrEnumRuleCall();
 							}
 						)
@@ -556,6 +556,63 @@ ruleVersionNumber returns [EObject current=null]
 	)
 ;
 
+// Entry rule entryRuleVersionPart
+entryRuleVersionPart returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getVersionPartRule()); }
+	iv_ruleVersionPart=ruleVersionPart
+	{ $current=$iv_ruleVersionPart.current; }
+	EOF;
+
+// Rule VersionPart
+ruleVersionPart returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getVersionPartAccess().getWildcardWILDCARDParserRuleCall_0_0());
+				}
+				lv_wildcard_0_0=ruleWILDCARD
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getVersionPartRule());
+					}
+					set(
+						$current,
+						"wildcard",
+						true,
+						"org.eclipse.n4js.semver.SEMVER.WILDCARD");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
+		    |
+		(
+			(
+				lv_number_1_0=RULE_DIGITS
+				{
+					newLeafNode(lv_number_1_0, grammarAccess.getVersionPartAccess().getNumberDIGITSTerminalRuleCall_1_0());
+				}
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getVersionPartRule());
+					}
+					setWithLastConsumed(
+						$current,
+						"number",
+						lv_number_1_0,
+						"org.eclipse.n4js.semver.SEMVER.DIGITS");
+				}
+			)
+		)
+	)
+;
+
 // Entry rule entryRuleQualifier
 entryRuleQualifier returns [EObject current=null]:
 	{ newCompositeNode(grammarAccess.getQualifierRule()); }
@@ -580,9 +637,9 @@ ruleQualifier returns [EObject current=null]
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getQualifierAccess().getPreReleaseALPHA_NUMERIC_CHARSParserRuleCall_0_1_0());
+						newCompositeNode(grammarAccess.getQualifierAccess().getPreReleaseQualifierTagParserRuleCall_0_1_0());
 					}
-					lv_preRelease_1_0=ruleALPHA_NUMERIC_CHARS
+					lv_preRelease_1_0=ruleQualifierTag
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getQualifierRule());
@@ -591,7 +648,7 @@ ruleQualifier returns [EObject current=null]
 							$current,
 							"preRelease",
 							lv_preRelease_1_0,
-							"org.eclipse.n4js.semver.SEMVER.ALPHA_NUMERIC_CHARS");
+							"org.eclipse.n4js.semver.SEMVER.QualifierTag");
 						afterParserOrEnumRuleCall();
 					}
 				)
@@ -606,9 +663,9 @@ ruleQualifier returns [EObject current=null]
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getQualifierAccess().getBuildMetadataALPHA_NUMERIC_CHARSParserRuleCall_1_1_0());
+						newCompositeNode(grammarAccess.getQualifierAccess().getBuildMetadataQualifierTagParserRuleCall_1_1_0());
 					}
-					lv_buildMetadata_3_0=ruleALPHA_NUMERIC_CHARS
+					lv_buildMetadata_3_0=ruleQualifierTag
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getQualifierRule());
@@ -617,7 +674,7 @@ ruleQualifier returns [EObject current=null]
 							$current,
 							"buildMetadata",
 							lv_buildMetadata_3_0,
-							"org.eclipse.n4js.semver.SEMVER.ALPHA_NUMERIC_CHARS");
+							"org.eclipse.n4js.semver.SEMVER.QualifierTag");
 						afterParserOrEnumRuleCall();
 					}
 				)
@@ -632,9 +689,9 @@ ruleQualifier returns [EObject current=null]
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getQualifierAccess().getPreReleaseALPHA_NUMERIC_CHARSParserRuleCall_2_1_0());
+						newCompositeNode(grammarAccess.getQualifierAccess().getPreReleaseQualifierTagParserRuleCall_2_1_0());
 					}
-					lv_preRelease_5_0=ruleALPHA_NUMERIC_CHARS
+					lv_preRelease_5_0=ruleQualifierTag
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getQualifierRule());
@@ -643,7 +700,7 @@ ruleQualifier returns [EObject current=null]
 							$current,
 							"preRelease",
 							lv_preRelease_5_0,
-							"org.eclipse.n4js.semver.SEMVER.ALPHA_NUMERIC_CHARS");
+							"org.eclipse.n4js.semver.SEMVER.QualifierTag");
 						afterParserOrEnumRuleCall();
 					}
 				)
@@ -655,9 +712,9 @@ ruleQualifier returns [EObject current=null]
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getQualifierAccess().getBuildMetadataALPHA_NUMERIC_CHARSParserRuleCall_2_3_0());
+						newCompositeNode(grammarAccess.getQualifierAccess().getBuildMetadataQualifierTagParserRuleCall_2_3_0());
 					}
-					lv_buildMetadata_7_0=ruleALPHA_NUMERIC_CHARS
+					lv_buildMetadata_7_0=ruleQualifierTag
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getQualifierRule());
@@ -666,12 +723,75 @@ ruleQualifier returns [EObject current=null]
 							$current,
 							"buildMetadata",
 							lv_buildMetadata_7_0,
-							"org.eclipse.n4js.semver.SEMVER.ALPHA_NUMERIC_CHARS");
+							"org.eclipse.n4js.semver.SEMVER.QualifierTag");
 						afterParserOrEnumRuleCall();
 					}
 				)
 			)
 		)
+	)
+;
+
+// Entry rule entryRuleQualifierTag
+entryRuleQualifierTag returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getQualifierTagRule()); }
+	iv_ruleQualifierTag=ruleQualifierTag
+	{ $current=$iv_ruleQualifierTag.current; }
+	EOF;
+
+// Rule QualifierTag
+ruleQualifierTag returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getQualifierTagAccess().getPartsALPHA_NUMERIC_CHARSParserRuleCall_0_0());
+				}
+				lv_parts_0_0=ruleALPHA_NUMERIC_CHARS
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getQualifierTagRule());
+					}
+					add(
+						$current,
+						"parts",
+						lv_parts_0_0,
+						"org.eclipse.n4js.semver.SEMVER.ALPHA_NUMERIC_CHARS");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
+		(
+			otherlv_1='.'
+			{
+				newLeafNode(otherlv_1, grammarAccess.getQualifierTagAccess().getFullStopKeyword_1_0());
+			}
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getQualifierTagAccess().getPartsALPHA_NUMERIC_CHARSParserRuleCall_1_1_0());
+					}
+					lv_parts_2_0=ruleALPHA_NUMERIC_CHARS
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getQualifierTagRule());
+						}
+						add(
+							$current,
+							"parts",
+							lv_parts_2_0,
+							"org.eclipse.n4js.semver.SEMVER.ALPHA_NUMERIC_CHARS");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
+		)*
 	)
 ;
 
@@ -704,15 +824,15 @@ ruleALPHA_NUMERIC_CHARS returns [AntlrDatatypeRuleToken current=new AntlrDatatyp
 	)+
 ;
 
-// Entry rule entryRuleVERSION_PART
-entryRuleVERSION_PART returns [String current=null]:
-	{ newCompositeNode(grammarAccess.getVERSION_PARTRule()); }
-	iv_ruleVERSION_PART=ruleVERSION_PART
-	{ $current=$iv_ruleVERSION_PART.current.getText(); }
+// Entry rule entryRuleWILDCARD
+entryRuleWILDCARD returns [String current=null]:
+	{ newCompositeNode(grammarAccess.getWILDCARDRule()); }
+	iv_ruleWILDCARD=ruleWILDCARD
+	{ $current=$iv_ruleWILDCARD.current.getText(); }
 	EOF;
 
-// Rule VERSION_PART
-ruleVERSION_PART returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
+// Rule WILDCARD
+ruleWILDCARD returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
 @init {
 	enterRule();
 }
@@ -723,27 +843,19 @@ ruleVERSION_PART returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleTo
 		kw='x'
 		{
 			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getVERSION_PARTAccess().getXKeyword_0());
+			newLeafNode(kw, grammarAccess.getWILDCARDAccess().getXKeyword_0());
 		}
 		    |
 		kw='X'
 		{
 			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getVERSION_PARTAccess().getXKeyword_1());
+			newLeafNode(kw, grammarAccess.getWILDCARDAccess().getXKeyword_1());
 		}
 		    |
 		kw='*'
 		{
 			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getVERSION_PARTAccess().getAsteriskKeyword_2());
-		}
-		    |
-		this_DIGITS_3=RULE_DIGITS
-		{
-			$current.merge(this_DIGITS_3);
-		}
-		{
-			newLeafNode(this_DIGITS_3, grammarAccess.getVERSION_PARTAccess().getDIGITSTerminalRuleCall_3());
+			newLeafNode(kw, grammarAccess.getWILDCARDAccess().getAsteriskKeyword_2());
 		}
 	)
 ;
@@ -766,27 +878,20 @@ ruleALPHA_NUMERIC_CHAR returns [AntlrDatatypeRuleToken current=new AntlrDatatype
 			}
 		)?
 		(
-			kw='.'
+			this_DIGITS_1=RULE_DIGITS
 			{
-				$current.merge(kw);
-				newLeafNode(kw, grammarAccess.getALPHA_NUMERIC_CHARAccess().getFullStopKeyword_1());
-			}
-		)?
-		(
-			this_DIGITS_2=RULE_DIGITS
-			{
-				$current.merge(this_DIGITS_2);
+				$current.merge(this_DIGITS_1);
 			}
 			{
-				newLeafNode(this_DIGITS_2, grammarAccess.getALPHA_NUMERIC_CHARAccess().getDIGITSTerminalRuleCall_2_0());
+				newLeafNode(this_DIGITS_1, grammarAccess.getALPHA_NUMERIC_CHARAccess().getDIGITSTerminalRuleCall_1_0());
 			}
 			    |
-			this_LETTERS_3=RULE_LETTERS
+			this_LETTERS_2=RULE_LETTERS
 			{
-				$current.merge(this_LETTERS_3);
+				$current.merge(this_LETTERS_2);
 			}
 			{
-				newLeafNode(this_LETTERS_3, grammarAccess.getALPHA_NUMERIC_CHARAccess().getLETTERSTerminalRuleCall_2_1());
+				newLeafNode(this_LETTERS_2, grammarAccess.getALPHA_NUMERIC_CHARAccess().getLETTERSTerminalRuleCall_1_1());
 			}
 		)
 	)
