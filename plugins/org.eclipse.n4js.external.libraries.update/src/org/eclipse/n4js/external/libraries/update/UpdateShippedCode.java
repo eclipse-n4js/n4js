@@ -137,7 +137,7 @@ public class UpdateShippedCode implements IWorkflowComponent {
 				+ N4JS_NODE_PROJECT_NAME + "\"");
 		final File n4jsNodeFolder = actualTargetPath.resolve(ExternalLibrariesActivator.RUNTIME_CATEGORY)
 				.resolve(N4JS_NODE_PROJECT_NAME).toFile();
-		runNpmInstall(n4jsNodeFolder);
+		// runNpmInstall(n4jsNodeFolder);
 		cleanJsonFiles(n4jsNodeFolder);
 	}
 
