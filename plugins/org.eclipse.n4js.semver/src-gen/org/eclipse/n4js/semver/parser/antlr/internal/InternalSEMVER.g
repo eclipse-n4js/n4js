@@ -594,9 +594,9 @@ ruleVersionPart returns [EObject current=null]
 		    |
 		(
 			(
-				lv_number_1_0=RULE_DIGITS
+				lv_numberRaw_1_0=RULE_DIGITS
 				{
-					newLeafNode(lv_number_1_0, grammarAccess.getVersionPartAccess().getNumberDIGITSTerminalRuleCall_1_0());
+					newLeafNode(lv_numberRaw_1_0, grammarAccess.getVersionPartAccess().getNumberRawDIGITSTerminalRuleCall_1_0());
 				}
 				{
 					if ($current==null) {
@@ -604,8 +604,8 @@ ruleVersionPart returns [EObject current=null]
 					}
 					setWithLastConsumed(
 						$current,
-						"number",
-						lv_number_1_0,
+						"numberRaw",
+						lv_numberRaw_1_0,
 						"org.eclipse.n4js.semver.SEMVER.DIGITS");
 				}
 			)

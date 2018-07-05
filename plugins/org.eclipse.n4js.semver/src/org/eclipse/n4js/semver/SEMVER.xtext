@@ -54,7 +54,7 @@ VersionNumber:
 ;
 
 VersionPart:
-	wildcard?=WILDCARD | number=DIGITS
+	wildcard?=WILDCARD | numberRaw=DIGITS
 ;
 
 Qualifier:

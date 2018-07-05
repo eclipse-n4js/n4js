@@ -1526,11 +1526,11 @@ public class InternalSEMVERParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleVersionPart"
-    // InternalSEMVER.g:567:1: ruleVersionPart returns [EObject current=null] : ( ( (lv_wildcard_0_0= ruleWILDCARD ) ) | ( (lv_number_1_0= RULE_DIGITS ) ) ) ;
+    // InternalSEMVER.g:567:1: ruleVersionPart returns [EObject current=null] : ( ( (lv_wildcard_0_0= ruleWILDCARD ) ) | ( (lv_numberRaw_1_0= RULE_DIGITS ) ) ) ;
     public final EObject ruleVersionPart() throws RecognitionException {
         EObject current = null;
 
-        Token lv_number_1_0=null;
+        Token lv_numberRaw_1_0=null;
         AntlrDatatypeRuleToken lv_wildcard_0_0 = null;
 
 
@@ -1538,10 +1538,10 @@ public class InternalSEMVERParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalSEMVER.g:573:2: ( ( ( (lv_wildcard_0_0= ruleWILDCARD ) ) | ( (lv_number_1_0= RULE_DIGITS ) ) ) )
-            // InternalSEMVER.g:574:2: ( ( (lv_wildcard_0_0= ruleWILDCARD ) ) | ( (lv_number_1_0= RULE_DIGITS ) ) )
+            // InternalSEMVER.g:573:2: ( ( ( (lv_wildcard_0_0= ruleWILDCARD ) ) | ( (lv_numberRaw_1_0= RULE_DIGITS ) ) ) )
+            // InternalSEMVER.g:574:2: ( ( (lv_wildcard_0_0= ruleWILDCARD ) ) | ( (lv_numberRaw_1_0= RULE_DIGITS ) ) )
             {
-            // InternalSEMVER.g:574:2: ( ( (lv_wildcard_0_0= ruleWILDCARD ) ) | ( (lv_number_1_0= RULE_DIGITS ) ) )
+            // InternalSEMVER.g:574:2: ( ( (lv_wildcard_0_0= ruleWILDCARD ) ) | ( (lv_numberRaw_1_0= RULE_DIGITS ) ) )
             int alt18=2;
             int LA18_0 = input.LA(1);
 
@@ -1596,17 +1596,17 @@ public class InternalSEMVERParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalSEMVER.g:595:3: ( (lv_number_1_0= RULE_DIGITS ) )
+                    // InternalSEMVER.g:595:3: ( (lv_numberRaw_1_0= RULE_DIGITS ) )
                     {
-                    // InternalSEMVER.g:595:3: ( (lv_number_1_0= RULE_DIGITS ) )
-                    // InternalSEMVER.g:596:4: (lv_number_1_0= RULE_DIGITS )
+                    // InternalSEMVER.g:595:3: ( (lv_numberRaw_1_0= RULE_DIGITS ) )
+                    // InternalSEMVER.g:596:4: (lv_numberRaw_1_0= RULE_DIGITS )
                     {
-                    // InternalSEMVER.g:596:4: (lv_number_1_0= RULE_DIGITS )
-                    // InternalSEMVER.g:597:5: lv_number_1_0= RULE_DIGITS
+                    // InternalSEMVER.g:596:4: (lv_numberRaw_1_0= RULE_DIGITS )
+                    // InternalSEMVER.g:597:5: lv_numberRaw_1_0= RULE_DIGITS
                     {
-                    lv_number_1_0=(Token)match(input,RULE_DIGITS,FOLLOW_2); 
+                    lv_numberRaw_1_0=(Token)match(input,RULE_DIGITS,FOLLOW_2); 
 
-                    					newLeafNode(lv_number_1_0, grammarAccess.getVersionPartAccess().getNumberDIGITSTerminalRuleCall_1_0());
+                    					newLeafNode(lv_numberRaw_1_0, grammarAccess.getVersionPartAccess().getNumberRawDIGITSTerminalRuleCall_1_0());
                     				
 
                     					if (current==null) {
@@ -1614,8 +1614,8 @@ public class InternalSEMVERParser extends AbstractInternalAntlrParser {
                     					}
                     					setWithLastConsumed(
                     						current,
-                    						"number",
-                    						lv_number_1_0,
+                    						"numberRaw",
+                    						lv_numberRaw_1_0,
                     						"org.eclipse.n4js.semver.SEMVER.DIGITS");
                     				
 

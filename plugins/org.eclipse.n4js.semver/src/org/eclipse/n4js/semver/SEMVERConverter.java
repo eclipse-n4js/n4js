@@ -224,16 +224,16 @@ class SEMVERConverter {
 	private static VersionNumber createVersionNumber(VersionNumberDescriptor descriptor) {
 		VersionNumber versNumber = SEMVERFactory.eINSTANCE.createVersionNumber();
 		VersionPart fromMajor = SEMVERFactory.eINSTANCE.createVersionPart();
-		fromMajor.setNumber(descriptor.major);
+		fromMajor.setNumberRaw(descriptor.major);
 		versNumber.setMajor(fromMajor);
 		if (descriptor.minor != null) {
 			VersionPart fromMinor = SEMVERFactory.eINSTANCE.createVersionPart();
-			fromMinor.setNumber(descriptor.minor);
+			fromMinor.setNumberRaw(descriptor.minor);
 			versNumber.setMinor(fromMinor);
 		}
 		if (descriptor.patch != null) {
 			VersionPart fromPatch = SEMVERFactory.eINSTANCE.createVersionPart();
-			fromPatch.setNumber(descriptor.patch);
+			fromPatch.setNumberRaw(descriptor.patch);
 			versNumber.setPatch(fromPatch);
 		}
 		if (descriptor.preReleaseParts != null || descriptor.buildMetadataParts != null) {

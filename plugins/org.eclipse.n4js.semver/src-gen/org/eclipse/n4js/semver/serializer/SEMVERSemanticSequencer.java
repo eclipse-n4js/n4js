@@ -150,7 +150,7 @@ public class SEMVERSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 *     VersionPart returns VersionPart
 	 *
 	 * Constraint:
-	 *     (wildcard?=WILDCARD | number=DIGITS)
+	 *     (wildcard?=WILDCARD | numberRaw=DIGITS)
 	 */
 	protected void sequence_VersionPart(ISerializationContext context, VersionPart semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

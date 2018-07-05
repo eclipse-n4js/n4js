@@ -1160,13 +1160,13 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionPart__Alternatives"
-    // InternalSEMVER.g:395:1: rule__VersionPart__Alternatives : ( ( ( rule__VersionPart__WildcardAssignment_0 ) ) | ( ( rule__VersionPart__NumberAssignment_1 ) ) );
+    // InternalSEMVER.g:395:1: rule__VersionPart__Alternatives : ( ( ( rule__VersionPart__WildcardAssignment_0 ) ) | ( ( rule__VersionPart__NumberRawAssignment_1 ) ) );
     public final void rule__VersionPart__Alternatives() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:399:1: ( ( ( rule__VersionPart__WildcardAssignment_0 ) ) | ( ( rule__VersionPart__NumberAssignment_1 ) ) )
+            // InternalSEMVER.g:399:1: ( ( ( rule__VersionPart__WildcardAssignment_0 ) ) | ( ( rule__VersionPart__NumberRawAssignment_1 ) ) )
             int alt3=2;
             int LA3_0 = input.LA(1);
 
@@ -1209,24 +1209,24 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
                     }
                     break;
                 case 2 :
-                    // InternalSEMVER.g:406:2: ( ( rule__VersionPart__NumberAssignment_1 ) )
+                    // InternalSEMVER.g:406:2: ( ( rule__VersionPart__NumberRawAssignment_1 ) )
                     {
-                    // InternalSEMVER.g:406:2: ( ( rule__VersionPart__NumberAssignment_1 ) )
-                    // InternalSEMVER.g:407:3: ( rule__VersionPart__NumberAssignment_1 )
+                    // InternalSEMVER.g:406:2: ( ( rule__VersionPart__NumberRawAssignment_1 ) )
+                    // InternalSEMVER.g:407:3: ( rule__VersionPart__NumberRawAssignment_1 )
                     {
-                     before(grammarAccess.getVersionPartAccess().getNumberAssignment_1()); 
-                    // InternalSEMVER.g:408:3: ( rule__VersionPart__NumberAssignment_1 )
-                    // InternalSEMVER.g:408:4: rule__VersionPart__NumberAssignment_1
+                     before(grammarAccess.getVersionPartAccess().getNumberRawAssignment_1()); 
+                    // InternalSEMVER.g:408:3: ( rule__VersionPart__NumberRawAssignment_1 )
+                    // InternalSEMVER.g:408:4: rule__VersionPart__NumberRawAssignment_1
                     {
                     pushFollow(FOLLOW_2);
-                    rule__VersionPart__NumberAssignment_1();
+                    rule__VersionPart__NumberRawAssignment_1();
 
                     state._fsp--;
 
 
                     }
 
-                     after(grammarAccess.getVersionPartAccess().getNumberAssignment_1()); 
+                     after(grammarAccess.getVersionPartAccess().getNumberRawAssignment_1()); 
 
                     }
 
@@ -6745,9 +6745,9 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__VersionPart__WildcardAssignment_0"
 
 
-    // $ANTLR start "rule__VersionPart__NumberAssignment_1"
-    // InternalSEMVER.g:2156:1: rule__VersionPart__NumberAssignment_1 : ( RULE_DIGITS ) ;
-    public final void rule__VersionPart__NumberAssignment_1() throws RecognitionException {
+    // $ANTLR start "rule__VersionPart__NumberRawAssignment_1"
+    // InternalSEMVER.g:2156:1: rule__VersionPart__NumberRawAssignment_1 : ( RULE_DIGITS ) ;
+    public final void rule__VersionPart__NumberRawAssignment_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
@@ -6758,9 +6758,9 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             // InternalSEMVER.g:2161:2: ( RULE_DIGITS )
             // InternalSEMVER.g:2162:3: RULE_DIGITS
             {
-             before(grammarAccess.getVersionPartAccess().getNumberDIGITSTerminalRuleCall_1_0()); 
+             before(grammarAccess.getVersionPartAccess().getNumberRawDIGITSTerminalRuleCall_1_0()); 
             match(input,RULE_DIGITS,FOLLOW_2); 
-             after(grammarAccess.getVersionPartAccess().getNumberDIGITSTerminalRuleCall_1_0()); 
+             after(grammarAccess.getVersionPartAccess().getNumberRawDIGITSTerminalRuleCall_1_0()); 
 
             }
 
@@ -6779,7 +6779,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__VersionPart__NumberAssignment_1"
+    // $ANTLR end "rule__VersionPart__NumberRawAssignment_1"
 
 
     // $ANTLR start "rule__Qualifier__PreReleaseAssignment_0_1"

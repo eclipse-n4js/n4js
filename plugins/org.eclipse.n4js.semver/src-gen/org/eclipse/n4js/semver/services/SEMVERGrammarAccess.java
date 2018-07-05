@@ -315,14 +315,14 @@ public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
 		private final Assignment cWildcardAssignment_0 = (Assignment)cAlternatives.eContents().get(0);
 		private final RuleCall cWildcardWILDCARDParserRuleCall_0_0 = (RuleCall)cWildcardAssignment_0.eContents().get(0);
-		private final Assignment cNumberAssignment_1 = (Assignment)cAlternatives.eContents().get(1);
-		private final RuleCall cNumberDIGITSTerminalRuleCall_1_0 = (RuleCall)cNumberAssignment_1.eContents().get(0);
+		private final Assignment cNumberRawAssignment_1 = (Assignment)cAlternatives.eContents().get(1);
+		private final RuleCall cNumberRawDIGITSTerminalRuleCall_1_0 = (RuleCall)cNumberRawAssignment_1.eContents().get(0);
 		
 		//VersionPart:
-		//	wildcard?=WILDCARD | number=DIGITS;
+		//	wildcard?=WILDCARD | numberRaw=DIGITS;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//wildcard?=WILDCARD | number=DIGITS
+		//wildcard?=WILDCARD | numberRaw=DIGITS
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//wildcard?=WILDCARD
@@ -331,11 +331,11 @@ public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 		//WILDCARD
 		public RuleCall getWildcardWILDCARDParserRuleCall_0_0() { return cWildcardWILDCARDParserRuleCall_0_0; }
 		
-		//number=DIGITS
-		public Assignment getNumberAssignment_1() { return cNumberAssignment_1; }
+		//numberRaw=DIGITS
+		public Assignment getNumberRawAssignment_1() { return cNumberRawAssignment_1; }
 		
 		//DIGITS
-		public RuleCall getNumberDIGITSTerminalRuleCall_1_0() { return cNumberDIGITSTerminalRuleCall_1_0; }
+		public RuleCall getNumberRawDIGITSTerminalRuleCall_1_0() { return cNumberRawDIGITSTerminalRuleCall_1_0; }
 	}
 	public class QualifierElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.SEMVER.Qualifier");
@@ -731,7 +731,7 @@ public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//VersionPart:
-	//	wildcard?=WILDCARD | number=DIGITS;
+	//	wildcard?=WILDCARD | numberRaw=DIGITS;
 	public VersionPartElements getVersionPartAccess() {
 		return pVersionPart;
 	}

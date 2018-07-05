@@ -404,9 +404,9 @@ rule__VersionPart__Alternatives
 	)
 	|
 	(
-		{ before(grammarAccess.getVersionPartAccess().getNumberAssignment_1()); }
-		(rule__VersionPart__NumberAssignment_1)
-		{ after(grammarAccess.getVersionPartAccess().getNumberAssignment_1()); }
+		{ before(grammarAccess.getVersionPartAccess().getNumberRawAssignment_1()); }
+		(rule__VersionPart__NumberRawAssignment_1)
+		{ after(grammarAccess.getVersionPartAccess().getNumberRawAssignment_1()); }
 	)
 ;
 finally {
@@ -2153,15 +2153,15 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__VersionPart__NumberAssignment_1
+rule__VersionPart__NumberRawAssignment_1
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getVersionPartAccess().getNumberDIGITSTerminalRuleCall_1_0()); }
+		{ before(grammarAccess.getVersionPartAccess().getNumberRawDIGITSTerminalRuleCall_1_0()); }
 		RULE_DIGITS
-		{ after(grammarAccess.getVersionPartAccess().getNumberDIGITSTerminalRuleCall_1_0()); }
+		{ after(grammarAccess.getVersionPartAccess().getNumberRawDIGITSTerminalRuleCall_1_0()); }
 	)
 ;
 finally {

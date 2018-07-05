@@ -10,7 +10,11 @@
  */
 package org.eclipse.n4js.semver.SEMVER.impl;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.emf.common.notify.Notification;
+
+import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 
@@ -29,7 +33,7 @@ import org.eclipse.n4js.semver.SEMVER.VersionPart;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.semver.SEMVER.impl.VersionPartImpl#isWildcard <em>Wildcard</em>}</li>
- *   <li>{@link org.eclipse.n4js.semver.SEMVER.impl.VersionPartImpl#getNumber <em>Number</em>}</li>
+ *   <li>{@link org.eclipse.n4js.semver.SEMVER.impl.VersionPartImpl#getNumberRaw <em>Number Raw</em>}</li>
  * </ul>
  *
  * @generated
@@ -56,24 +60,24 @@ public class VersionPartImpl extends MinimalEObjectImpl.Container implements Ver
 	protected boolean wildcard = WILDCARD_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getNumber() <em>Number</em>}' attribute.
+	 * The default value of the '{@link #getNumberRaw() <em>Number Raw</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getNumber()
+	 * @see #getNumberRaw()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final int NUMBER_EDEFAULT = 0;
+	protected static final Integer NUMBER_RAW_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getNumber() <em>Number</em>}' attribute.
+	 * The cached value of the '{@link #getNumberRaw() <em>Number Raw</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getNumber()
+	 * @see #getNumberRaw()
 	 * @generated
 	 * @ordered
 	 */
-	protected int number = NUMBER_EDEFAULT;
+	protected Integer numberRaw = NUMBER_RAW_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -120,8 +124,8 @@ public class VersionPartImpl extends MinimalEObjectImpl.Container implements Ver
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public int getNumber() {
-		return number;
+	public Integer getNumberRaw() {
+		return numberRaw;
 	}
 
 	/**
@@ -129,11 +133,24 @@ public class VersionPartImpl extends MinimalEObjectImpl.Container implements Ver
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setNumber(int newNumber) {
-		int oldNumber = number;
-		number = newNumber;
+	public void setNumberRaw(Integer newNumberRaw) {
+		Integer oldNumberRaw = numberRaw;
+		numberRaw = newNumberRaw;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SEMVERPackage.VERSION_PART__NUMBER, oldNumber, number));
+			eNotify(new ENotificationImpl(this, Notification.SET, SEMVERPackage.VERSION_PART__NUMBER_RAW, oldNumberRaw, numberRaw));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Integer getNumber() {
+		boolean _isWildcard = this.isWildcard();
+		if (_isWildcard) {
+			return null;
+		}
+		return this.getNumberRaw();
 	}
 
 	/**
@@ -146,8 +163,8 @@ public class VersionPartImpl extends MinimalEObjectImpl.Container implements Ver
 		switch (featureID) {
 			case SEMVERPackage.VERSION_PART__WILDCARD:
 				return isWildcard();
-			case SEMVERPackage.VERSION_PART__NUMBER:
-				return getNumber();
+			case SEMVERPackage.VERSION_PART__NUMBER_RAW:
+				return getNumberRaw();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -163,8 +180,8 @@ public class VersionPartImpl extends MinimalEObjectImpl.Container implements Ver
 			case SEMVERPackage.VERSION_PART__WILDCARD:
 				setWildcard((Boolean)newValue);
 				return;
-			case SEMVERPackage.VERSION_PART__NUMBER:
-				setNumber((Integer)newValue);
+			case SEMVERPackage.VERSION_PART__NUMBER_RAW:
+				setNumberRaw((Integer)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -181,8 +198,8 @@ public class VersionPartImpl extends MinimalEObjectImpl.Container implements Ver
 			case SEMVERPackage.VERSION_PART__WILDCARD:
 				setWildcard(WILDCARD_EDEFAULT);
 				return;
-			case SEMVERPackage.VERSION_PART__NUMBER:
-				setNumber(NUMBER_EDEFAULT);
+			case SEMVERPackage.VERSION_PART__NUMBER_RAW:
+				setNumberRaw(NUMBER_RAW_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -198,10 +215,24 @@ public class VersionPartImpl extends MinimalEObjectImpl.Container implements Ver
 		switch (featureID) {
 			case SEMVERPackage.VERSION_PART__WILDCARD:
 				return wildcard != WILDCARD_EDEFAULT;
-			case SEMVERPackage.VERSION_PART__NUMBER:
-				return number != NUMBER_EDEFAULT;
+			case SEMVERPackage.VERSION_PART__NUMBER_RAW:
+				return NUMBER_RAW_EDEFAULT == null ? numberRaw != null : !NUMBER_RAW_EDEFAULT.equals(numberRaw);
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case SEMVERPackage.VERSION_PART___GET_NUMBER:
+				return getNumber();
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 	/**
@@ -216,8 +247,8 @@ public class VersionPartImpl extends MinimalEObjectImpl.Container implements Ver
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (wildcard: ");
 		result.append(wildcard);
-		result.append(", number: ");
-		result.append(number);
+		result.append(", numberRaw: ");
+		result.append(numberRaw);
 		result.append(')');
 		return result.toString();
 	}

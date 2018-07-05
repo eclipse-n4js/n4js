@@ -60,7 +60,7 @@ public abstract class AbstractSEMVERProposalProvider extends AbstractJavaBasedCo
 	public void completeVersionPart_Wildcard(EObject model, Assignment assignment, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
 		completeRuleCall(((RuleCall)assignment.getTerminal()), context, acceptor);
 	}
-	public void completeVersionPart_Number(EObject model, Assignment assignment, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+	public void completeVersionPart_NumberRaw(EObject model, Assignment assignment, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
 		completeRuleCall(((RuleCall)assignment.getTerminal()), context, acceptor);
 	}
 	public void completeQualifier_PreRelease(EObject model, Assignment assignment, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {

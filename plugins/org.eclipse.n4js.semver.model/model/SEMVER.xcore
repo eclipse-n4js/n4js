@@ -113,7 +113,13 @@ class VersionNumber {
 
 class VersionPart {
 	boolean wildcard
-	int number
+	Integer numberRaw
+
+	op Integer getNumber() {
+		if (wildcard)
+			return null;
+		return numberRaw;
+	}
 }
 
 class Qualifier {

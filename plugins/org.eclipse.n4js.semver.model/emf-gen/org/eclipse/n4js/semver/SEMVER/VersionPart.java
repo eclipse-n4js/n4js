@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.semver.SEMVER.VersionPart#isWildcard <em>Wildcard</em>}</li>
- *   <li>{@link org.eclipse.n4js.semver.SEMVER.VersionPart#getNumber <em>Number</em>}</li>
+ *   <li>{@link org.eclipse.n4js.semver.SEMVER.VersionPart#getNumberRaw <em>Number Raw</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getVersionPart()
@@ -57,29 +57,38 @@ public interface VersionPart extends EObject {
 	void setWildcard(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Number</b></em>' attribute.
+	 * Returns the value of the '<em><b>Number Raw</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Number</em>' attribute isn't clear,
+	 * If the meaning of the '<em>Number Raw</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Number</em>' attribute.
-	 * @see #setNumber(int)
-	 * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getVersionPart_Number()
+	 * @return the value of the '<em>Number Raw</em>' attribute.
+	 * @see #setNumberRaw(Integer)
+	 * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getVersionPart_NumberRaw()
 	 * @model unique="false"
 	 * @generated
 	 */
-	int getNumber();
+	Integer getNumberRaw();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.semver.SEMVER.VersionPart#getNumber <em>Number</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.n4js.semver.SEMVER.VersionPart#getNumberRaw <em>Number Raw</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Number</em>' attribute.
-	 * @see #getNumber()
+	 * @param value the new value of the '<em>Number Raw</em>' attribute.
+	 * @see #getNumberRaw()
 	 * @generated
 	 */
-	void setNumber(int value);
+	void setNumberRaw(Integer value);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='boolean _isWildcard = this.isWildcard();\nif (_isWildcard)\n{\n\treturn null;\n}\nreturn this.getNumberRaw();'"
+	 * @generated
+	 */
+	Integer getNumber();
 
 } // VersionPart

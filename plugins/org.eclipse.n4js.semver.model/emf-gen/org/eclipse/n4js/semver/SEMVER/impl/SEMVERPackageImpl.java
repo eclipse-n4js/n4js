@@ -449,8 +449,17 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getVersionPart_Number() {
+	public EAttribute getVersionPart_NumberRaw() {
 		return (EAttribute)versionPartEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOperation getVersionPart__GetNumber() {
+		return versionPartEClass.getEOperations().get(0);
 	}
 
 	/**
@@ -571,7 +580,8 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 
 		versionPartEClass = createEClass(VERSION_PART);
 		createEAttribute(versionPartEClass, VERSION_PART__WILDCARD);
-		createEAttribute(versionPartEClass, VERSION_PART__NUMBER);
+		createEAttribute(versionPartEClass, VERSION_PART__NUMBER_RAW);
+		createEOperation(versionPartEClass, VERSION_PART___GET_NUMBER);
 
 		qualifierEClass = createEClass(QUALIFIER);
 		createEReference(qualifierEClass, QUALIFIER__PRE_RELEASE);
@@ -667,7 +677,9 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 
 		initEClass(versionPartEClass, VersionPart.class, "VersionPart", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getVersionPart_Wildcard(), theEcorePackage.getEBoolean(), "wildcard", null, 0, 1, VersionPart.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getVersionPart_Number(), theEcorePackage.getEInt(), "number", null, 0, 1, VersionPart.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getVersionPart_NumberRaw(), theEcorePackage.getEIntegerObject(), "numberRaw", null, 0, 1, VersionPart.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getVersionPart__GetNumber(), theEcorePackage.getEIntegerObject(), "getNumber", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(qualifierEClass, Qualifier.class, "Qualifier", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getQualifier_PreRelease(), this.getQualifierTag(), null, "preRelease", null, 0, 1, Qualifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

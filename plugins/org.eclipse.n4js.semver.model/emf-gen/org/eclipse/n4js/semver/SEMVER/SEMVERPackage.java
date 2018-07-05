@@ -463,13 +463,13 @@ public interface SEMVERPackage extends EPackage {
 	int VERSION_PART__WILDCARD = 0;
 
 	/**
-	 * The feature id for the '<em><b>Number</b></em>' attribute.
+	 * The feature id for the '<em><b>Number Raw</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_PART__NUMBER = 1;
+	int VERSION_PART__NUMBER_RAW = 1;
 
 	/**
 	 * The number of structural features of the '<em>Version Part</em>' class.
@@ -481,13 +481,22 @@ public interface SEMVERPackage extends EPackage {
 	int VERSION_PART_FEATURE_COUNT = 2;
 
 	/**
+	 * The operation id for the '<em>Get Number</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSION_PART___GET_NUMBER = 0;
+
+	/**
 	 * The number of operations of the '<em>Version Part</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_PART_OPERATION_COUNT = 0;
+	int VERSION_PART_OPERATION_COUNT = 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.semver.SEMVER.impl.QualifierImpl <em>Qualifier</em>}' class.
@@ -896,15 +905,25 @@ public interface SEMVERPackage extends EPackage {
 	EAttribute getVersionPart_Wildcard();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.semver.SEMVER.VersionPart#getNumber <em>Number</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.semver.SEMVER.VersionPart#getNumberRaw <em>Number Raw</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Number</em>'.
-	 * @see org.eclipse.n4js.semver.SEMVER.VersionPart#getNumber()
+	 * @return the meta object for the attribute '<em>Number Raw</em>'.
+	 * @see org.eclipse.n4js.semver.SEMVER.VersionPart#getNumberRaw()
 	 * @see #getVersionPart()
 	 * @generated
 	 */
-	EAttribute getVersionPart_Number();
+	EAttribute getVersionPart_NumberRaw();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.semver.SEMVER.VersionPart#getNumber() <em>Get Number</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Number</em>' operation.
+	 * @see org.eclipse.n4js.semver.SEMVER.VersionPart#getNumber()
+	 * @generated
+	 */
+	EOperation getVersionPart__GetNumber();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.semver.SEMVER.Qualifier <em>Qualifier</em>}'.
@@ -1247,12 +1266,20 @@ public interface SEMVERPackage extends EPackage {
 		EAttribute VERSION_PART__WILDCARD = eINSTANCE.getVersionPart_Wildcard();
 
 		/**
-		 * The meta object literal for the '<em><b>Number</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Number Raw</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute VERSION_PART__NUMBER = eINSTANCE.getVersionPart_Number();
+		EAttribute VERSION_PART__NUMBER_RAW = eINSTANCE.getVersionPart_NumberRaw();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Number</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation VERSION_PART___GET_NUMBER = eINSTANCE.getVersionPart__GetNumber();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.semver.SEMVER.impl.QualifierImpl <em>Qualifier</em>}' class.
