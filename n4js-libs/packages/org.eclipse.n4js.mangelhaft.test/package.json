@@ -41,14 +41,14 @@
     "moduleLoader": "n4js"
   },
   "dependencies": {
-    "n4js.lang": "latest",
-    "org.eclipse.n4js.mangelhaft": "latest",
-    "org.eclipse.n4js.mangelhaft.assert": "latest",
-    "n4js-node": "latest"
+    "n4js.lang": "^0.1.0",
+    "org.eclipse.n4js.mangelhaft": "^0.1.0",
+    "org.eclipse.n4js.mangelhaft.assert": "^0.1.0",
+    "n4js-node": "^0.1.0"
   },
   "devDependencies": {
-    "n4js-runtime-n4": "latest",
-    "n4js-runtime-es2015": "latest",
-    "n4js-runtime-mangelhaft": "latest"
+    "n4js-runtime-n4": "^0.1.0",
+    "n4js-runtime-es2015": "^0.1.0",
+    "n4js-runtime-mangelhaft": "^0.1.0"
   }
 }

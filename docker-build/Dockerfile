@@ -11,7 +11,6 @@ VOLUME /workspace
 WORKDIR /workspace
 
 ENTRYPOINT ["/usr/local/bin/mvn-entrypoint.sh"]
-CMD ["mvn"]
 
 #
 # Maven installation:
@@ -28,6 +27,8 @@ ARG MAVEN_CENTRAL_URL=https://repo.maven.apache.org/maven2/
 RUN groupadd --gid 1000 build && \
     useradd --uid 1000 --gid build --shell /bin/bash --create-home build
 
+# Add build user to the docker group
+RUN groupadd -g 994 docker && usermod -aG docker build
 
 RUN mkdir -p /usr/share/maven /usr/share/maven/ref && \
     curl -fsSL -o /tmp/apache-maven.tar.gz ${BASE_URL}/apache-maven-$MAVEN_VERSION-bin.tar.gz && \
@@ -117,9 +118,41 @@ RUN set -ex && \
     rm yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz
 
 #
+# lerna install
+#
+RUN npm install -g lerna
+
+#
 # xvfb install
 #
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         xauth \
         xvfb
+
+#
+# docker install
+# 
+RUN apt-get update && \ 
+  apt-get install -y --no-install-recommends \
+     apt-transport-https \
+     ca-certificates \
+     curl \
+     gnupg2 \
+     software-properties-common
+     
+
+RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
+
+RUN lsb_release -cs
+
+RUN add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/debian \
+   $(lsb_release -cs) \
+   stable"
+
+RUN apt-get update && \
+  apt-get install -y docker-ce
+
+EXPOSE 4873
+EXPOSE 4874
