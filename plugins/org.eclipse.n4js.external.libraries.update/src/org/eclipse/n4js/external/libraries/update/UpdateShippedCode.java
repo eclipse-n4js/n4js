@@ -137,7 +137,11 @@ public class UpdateShippedCode implements IWorkflowComponent {
 				+ N4JS_NODE_PROJECT_NAME + "\"");
 		final File n4jsNodeFolder = actualTargetPath.resolve(ExternalLibrariesActivator.RUNTIME_CATEGORY)
 				.resolve(N4JS_NODE_PROJECT_NAME).toFile();
-		// runNpmInstall(n4jsNodeFolder);
+
+		final File n4jsNodePkgJson = n4jsNodeFolder.toPath().resolve("package.json").toFile();
+
+		temporaryHackRemoveN4JSES5Dependency(n4jsNodePkgJson);
+		runNpmInstall(n4jsNodeFolder);
 		cleanJsonFiles(n4jsNodeFolder);
 	}
 
@@ -263,12 +267,59 @@ public class UpdateShippedCode implements IWorkflowComponent {
 		println("Cleaning of Json file started...");
 		FileVisitor<Path> fileVisitor = new PackageJsonVisitor();
 		try {
-			Files.walkFileTree(workingDirectory.toPath().resolve(ExternalLibrariesActivator.NPM_CATEGORY),
+			Files.walkFileTree(workingDirectory.toPath().resolve("n4js-node"),
 					fileVisitor);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		println("Cleaning of Json file finished.");
+	}
+
+	/** TODO: REMOVE THIS HACK when we can copy the n4js-libs with canary version to the shipped code */
+	private static void temporaryHackRemoveN4JSES5Dependency(File packJson) {
+		println("  Remove n4js-es5 from dependency: " + packJson);
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			ObjectNode root = (ObjectNode) mapper.readTree(packJson);
+			Iterator<Entry<String, JsonNode>> rootFieldIterator = root.fields();
+			List<String> removeFields = new LinkedList<>();
+			JsonNode dependenciesNode = null;
+			while (rootFieldIterator.hasNext()) {
+				Entry<String, JsonNode> fieldInRoot = rootFieldIterator.next();
+				String name = fieldInRoot.getKey();
+				if ("dependencies".equals(name)) {
+					dependenciesNode = fieldInRoot.getValue();
+					Iterator<Entry<String, JsonNode>> dependenciesIterator = dependenciesNode.fields();
+					while (dependenciesIterator.hasNext()) {
+						Entry<String, JsonNode> fieldInDependencies = dependenciesIterator.next();
+						String fieldInDependenciesName = fieldInDependencies.getKey();
+						if (fieldInDependenciesName.contains("n4js-es5")) {
+							removeFields.add(fieldInDependenciesName);
+						}
+					}
+				}
+			}
+
+			final StringBuilder sb = new StringBuilder();
+			sb.append("    removing fields: ");
+			for (String fieldName : removeFields) {
+				sb.append(fieldName + " ");
+				if (dependenciesNode != null) {
+					((ObjectNode) dependenciesNode).remove(fieldName);
+				}
+			}
+			println(sb.toString());
+
+			String cleanJson = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(root);
+			FileWriter f2 = new FileWriter(packJson, false);
+			f2.write(cleanJson);
+			f2.write('\n'); // note: by convention, N4JS repository uses \n as line separator (independent of OS)
+			f2.close();
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private static void cleanJsonFile(File packJson) {
