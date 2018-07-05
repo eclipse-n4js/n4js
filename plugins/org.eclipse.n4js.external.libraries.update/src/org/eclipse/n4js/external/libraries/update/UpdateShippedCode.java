@@ -119,7 +119,7 @@ public class UpdateShippedCode implements IWorkflowComponent {
 		// step 1: clean then compile projects under top-level folder "n4js-libs"
 		println("==== STEP 1/4: compiling code under top-level folder \"" + N4JSGlobals.N4JS_LIBS_FOLDER_NAME
 				+ "\" in n4js repository:");
-		cleanAndcompile(n4jsLibsRoot);
+		cleanAndCompile(n4jsLibsRoot);
 		// step 2: create/clean the "shipped-code" folder
 		println("==== STEP 2/4: cleaning folder " + actualTargetPath);
 		initFolder(actualTargetPath.toFile());
@@ -187,7 +187,7 @@ public class UpdateShippedCode implements IWorkflowComponent {
 		return !org.eclipse.xtext.util.Arrays.contains(IGNORED_FILES, path.getFileName().toString());
 	}
 
-	private static void cleanAndcompile(File... foldersContainingProjectFolders) {
+	private static void cleanAndCompile(File... foldersContainingProjectFolders) {
 		final String foldersContainingProjectsStr = Stream.of(foldersContainingProjectFolders)
 				.map(file -> file.getAbsolutePath())
 				.collect(Collectors.joining(File.pathSeparator));
