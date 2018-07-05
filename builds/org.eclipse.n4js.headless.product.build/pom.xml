@@ -38,6 +38,7 @@ Contributors:
 		<buildTime>${maven.build.timestamp}</buildTime>
 		<gitSha1>${buildNumber}</gitSha1>
 	</properties>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -85,8 +86,6 @@ Contributors:
 					</descriptors>
 				</configuration>
 			</plugin>
-
 		</plugins>
 	</build>
-
 </project>
