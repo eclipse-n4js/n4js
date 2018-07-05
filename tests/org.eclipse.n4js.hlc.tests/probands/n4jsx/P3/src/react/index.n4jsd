@@ -279,5 +279,3 @@ export external public class ~PropTypes {
     // An object taking on a particular shape
     public static shape(Object): PropConstraint;
 }
-
-/* -*- mode: typescript;-*- */

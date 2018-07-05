@@ -23,13 +23,10 @@ Contributors:
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<modules>
+		<modules>
 		<!-- ************************************** JUnit Tests -->
 
-       		<!-- Test to ensure that shipped code is up-to-date (see /plugins/org.eclipse.n4js.external.libraries/shipped-code). -->
-		<module>org.eclipse.n4js.external.libraries.update.tests</module>
-
- 	       <!-- Release Engineering Tools Tests -->
+		<!-- Release Engineering Tools Tests -->
 		<module>org.eclipse.n4js.releng.utils.tests</module>
 
 		<!-- JSDoc tests -->
@@ -42,7 +39,6 @@ Contributors:
 		
 		<!-- Tester tests -->
 		<module>org.eclipse.n4js.tester.tests</module>
-		<module>org.eclipse.n4js.tester.ui.tests</module>
 
 		<!-- Regex tests -->
 		<module>org.eclipse.n4js.regex.tests</module>
@@ -113,6 +109,7 @@ Contributors:
 
 		<!-- *************************************** Headless Tools Tests -->
 		<module>org.eclipse.n4js.hlc.tests</module>
+		<module>org.eclipse.n4js.hlc.integrationtests</module>
 
 		<!-- *************************************** n4jsx Tests -->
 		<module>org.eclipse.n4js.n4jsx.lang.tests</module>
@@ -130,10 +127,10 @@ Contributors:
 
 	</modules>
 
-
 	<properties>
 		<!-- jacoco (ECLEmma), code coverage -->
 		<jacoco-maven-plugin.version>0.8.1</jacoco-maven-plugin.version>
+
 		<ant-contrib.version>1.0b3</ant-contrib.version>
 		<ant-nodeps.version>1.8.1</ant-nodeps.version>
 
@@ -447,6 +444,7 @@ Contributors:
 							<exclude>**/*SmokeTest.java</exclude>
 							<exclude>**/*SwtBotTest.java</exclude>
 							<exclude>**/*SwtBotPerfTest.java</exclude>
+							<exclude>**/*JarTest.java</exclude>
 						</excludes>
 					</configuration>
 					<executions>

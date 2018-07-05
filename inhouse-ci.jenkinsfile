@@ -13,12 +13,12 @@ pipeline {
         dockerfile {
             dir 'docker-build/'
             // Reuse repository.volume container if one exists, to speed up subsequent builds.
-            args '-v n4js-m2-repository:/usr/share/maven/ref/repository/'
+            // Bind to host's docker sock to use host's docker daemon
+            args '--group-add 994 --network=host -v n4js-m2-repository:/usr/share/maven/ref/repository/ -v /var/run/docker.sock:/var/run/docker.sock'
             additionalBuildArgs '--build-arg MAVEN_CENTRAL_URL=' + env.MAVEN_CENTRAL_URL
             label 'm5xlarge'
         }
     }
-
     options {
         ansiColor('xterm')
         buildDiscarder(
@@ -65,7 +65,8 @@ pipeline {
                         def profiles = [
                             'buildProduct',
                             'execute-plugin-tests',
-                            'execute-plugin-ui-tests'
+                            'execute-plugin-ui-tests',
+                            'execute-hlc-integration-tests'
                         ].join(',')
 
                         sh "export SWT_GTK3=0; ${xvfb} mvn --batch-mode --quiet --update-snapshots clean verify -P${profiles} ${options}"
@@ -82,6 +83,7 @@ pipeline {
             archiveArtifacts allowEmptyArchive: true, artifacts: '**/logs/*.log'
             archiveArtifacts allowEmptyArchive: true, artifacts: '**/tests/**/target/**/*-output.txt'
             junit '**/surefire-reports/**/*.xml'
+            junit '**/failsafe-reports/**/*.xml'
             deleteDir()
         }
     }
