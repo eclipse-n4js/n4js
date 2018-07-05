@@ -11,7 +11,7 @@
 package org.eclipse.n4js.tests.wizard.generator
 
 /**
- * Package.json file contents expectation of {@link WizardGeneratorHelperTest}.
+ * Package.json file contents expectation of {@link WizardGeneratorHelperPluginTest}.
  */
 class WizardGeneratorHelperTestExpectations {
 	public static val String ONE_DEPENDENCY = 

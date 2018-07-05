@@ -40,7 +40,7 @@ import com.google.inject.Provider;
  */
 @RunWith(XtextRunner.class)
 @InjectWith(N4JSUiInjectorProvider.class)
-public class WizardGeneratorHelperTest {
+public class WizardGeneratorHelperPluginTest {
 
 	private static final String TEST_PROJECT_NAME = "Test";
 
