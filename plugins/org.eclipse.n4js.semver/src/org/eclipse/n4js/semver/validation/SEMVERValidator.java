@@ -10,23 +10,28 @@
  */
 package org.eclipse.n4js.semver.validation;
 
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.n4js.semver.SEMVER.SEMVERPackage;
+import org.eclipse.n4js.semver.SEMVER.VersionNumber;
+import org.eclipse.n4js.semver.SEMVER.VersionPart;
+import org.eclipse.xtext.validation.Check;
 
 /**
- * This class contains custom validation rules. 
+ * This class contains custom validation rules.
  *
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
+@SuppressWarnings("javadoc")
 public class SEMVERValidator extends AbstractSEMVERValidator {
-	
-//	public static final INVALID_NAME = 'invalidName'
-//
-//	@Check
-//	public void checkGreetingStartsWithCapital(Greeting greeting) {
-//		if (!Character.isUpperCase(greeting.getName().charAt(0))) {
-//			warning("Name should start with a capital",
-//					SEMVERPackage.Literals.GREETING__NAME,
-//					INVALID_NAME);
-//		}
-//	}
-	
+
+	@Check
+	public void checkNoAdditionalParts(VersionNumber versionNumber) {
+		EList<VersionPart> extended = versionNumber.getExtended();
+		if (extended != null && !extended.isEmpty()) {
+			String msg = SEMVERIssueCodes.getMessageForSEMVER_TOO_MANY_NUMBERS();
+			addIssue(msg, versionNumber, SEMVERPackage.Literals.VERSION_NUMBER__EXTENDED,
+					SEMVERIssueCodes.SEMVER_TOO_MANY_NUMBERS);
+		}
+	}
+
 }
