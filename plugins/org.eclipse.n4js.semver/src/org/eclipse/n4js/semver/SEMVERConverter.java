@@ -147,6 +147,9 @@ class SEMVERConverter {
 		final Integer major;
 		final Integer minor;
 		final Integer patch;
+		final boolean majorIsWildcard;
+		final boolean minorIsWildcard;
+		final boolean patchIsWildcard;
 		final String[] preReleaseParts;
 		final String[] buildMetadataParts;
 
@@ -156,8 +159,28 @@ class SEMVERConverter {
 			this.major = major;
 			this.minor = minor;
 			this.patch = patch;
+			this.majorIsWildcard = false;
+			this.minorIsWildcard = false;
+			this.patchIsWildcard = false;
 			this.preReleaseParts = preReleaseParts;
 			this.buildMetadataParts = buildMetadataParts;
+		}
+
+		VersionNumberDescriptor(VersionPart major, VersionPart minor, VersionPart patch,
+				String[] preReleaseParts, String[] buildMetadataParts) {
+
+			this.major = (major != null && !major.isWildcard()) ? major.getNumber() : null;
+			this.minor = (minor != null && !minor.isWildcard()) ? minor.getNumber() : null;
+			this.patch = (patch != null && !patch.isWildcard()) ? patch.getNumber() : null;
+			this.majorIsWildcard = (major == null) ? false : major.isWildcard();
+			this.minorIsWildcard = (minor == null) ? false : minor.isWildcard();
+			this.patchIsWildcard = (patch == null) ? false : patch.isWildcard();
+			this.preReleaseParts = hasWildcard() ? null : preReleaseParts;
+			this.buildMetadataParts = hasWildcard() ? null : buildMetadataParts;
+		}
+
+		boolean hasWildcard() {
+			return majorIsWildcard || minorIsWildcard || patchIsWildcard;
 		}
 
 		VersionNumberDescriptor getTildeUpperBound() {
@@ -168,10 +191,10 @@ class SEMVERConverter {
 		}
 
 		VersionNumberDescriptor getCaretUpperBound() {
-			if (major != 0 || minor == null) {
+			if (major != 0 || minorIsWildcard || minor == null) {
 				return new VersionNumberDescriptor(major + 1, null, null, null, null);
 			}
-			if ((minor != null && minor != 0) || patch == null) {
+			if (minor != 0 || patchIsWildcard || patch == null) {
 				return new VersionNumberDescriptor(major, minor + 1, null, null, null);
 			}
 			return new VersionNumberDescriptor(major, minor, patch + 1, null, null);
@@ -179,19 +202,9 @@ class SEMVERConverter {
 	}
 
 	private static VersionNumberDescriptor getVersionNumberDescriptor(VersionNumber vn) {
-		Integer major = null;
-		Integer minor = null;
-		Integer patch = null;
 		String[] preReleaseParts = null;
 		String[] buildMetadataParts = null;
 
-		major = vn.getMajor().getNumber();
-		if (vn.getMinor() != null) {
-			minor = vn.getMinor().getNumber();
-		}
-		if (vn.getPatch() != null) {
-			patch = vn.getPatch().getNumber();
-		}
 		Qualifier svQualifier = vn.getQualifier();
 		if (svQualifier != null && svQualifier.getPreRelease() != null) {
 			EList<String> prParts = svQualifier.getPreRelease().getParts();
@@ -202,6 +215,9 @@ class SEMVERConverter {
 			buildMetadataParts = bmParts.toArray(new String[bmParts.size()]);
 		}
 
+		VersionPart major = vn.getMajor();
+		VersionPart minor = vn.getMinor();
+		VersionPart patch = vn.getPatch();
 		return new VersionNumberDescriptor(major, minor, patch, preReleaseParts, buildMetadataParts);
 	}
 
