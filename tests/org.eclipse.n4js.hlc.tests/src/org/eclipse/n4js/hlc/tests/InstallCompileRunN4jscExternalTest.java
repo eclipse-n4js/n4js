@@ -20,6 +20,7 @@ import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.base.Predicates;
@@ -27,6 +28,7 @@ import com.google.common.base.Predicates;
 /**
  * Downloads, installs, compiles and runs 'express'.
  */
+@Ignore("See GH-940")
 public class InstallCompileRunN4jscExternalTest extends AbstractN4jscTest {
 	File workspace;
 
