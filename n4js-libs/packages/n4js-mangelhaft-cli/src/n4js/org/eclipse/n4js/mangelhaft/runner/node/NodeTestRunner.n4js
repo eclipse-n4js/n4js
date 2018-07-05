@@ -1,0 +1,135 @@
+/*
+ * Copyright (c) 2018 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+import {FIXME1} from "org/eclipse/n4js/mangelhaft/Test"
+import {FIXME2} from "org/eclipse/n4js/mangelhaft/Test"
+import {IFIXME} from "org/eclipse/n4js/mangelhaft/Test"
+import {IFIXME2} from "org/eclipse/n4js/mangelhaft/Test"
+import {TestController} from "org/eclipse/n4js/mangelhaft/TestController"
+import { ITestReporter } from "org/eclipse/n4js/mangelhaft/types/ITestReporter"
+import { TestDIComponent } from "org/eclipse/n4js/mangelhaft/types/TestDIComponent"
+import { TestInfo } from "org/eclipse/n4js/mangelhaft/types/TestInfo"
+import { TestInfos } from "org/eclipse/n4js/mangelhaft/types/TestInfos"
+import { ConsoleReporter } from "org/eclipse/n4js/mangelhaft/reporter/console/ConsoleReporter"
+import { XUnitReporter } from "org/eclipse/n4js/mangelhaft/reporter/xunit/XUnitReporter"
+import NodeTestCLI from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestCLI"
+import {N4Injector} from "n4js/lang/N4Injector"
+import * as lib_fs from "fs"
+import * as cli_color_+ from "cli-color"
+
+class NodeTestRunner  {
+    @Inject
+    protected controller: TestController;
+    @Inject
+    public consoleReporter: ConsoleReporter;
+    @Inject
+    public xunitReporter: XUnitReporter;
+
+    @Final public async run(): void {
+        let options = NodeTestCLI.parseCommandLine(),
+            testCatalog: TestInfos;
+
+        if (!options) {
+            return;
+        }
+ 
+        if (options.testCatalog.startsWith("http://")) { // running IDE
+            let req = await fetch(options.testCatalog, {
+                headers: {
+                    "Content-Type": "application/vnd.n4js.assemble_test_catalog_req.tm+json"
+                }
+            });
+            testCatalog = (await req.json()) as TestInfos;
+        } else {
+            testCatalog = {
+                testDescriptors: JSON.parse(await lib_fs.readFile(options.testCatalog, { encoding: "UTF-8" })) as Array<TestInfo>
+            } as TestInfos;
+        }
+
+        if (options.filter && options.filter.length) { // filter out tests
+            const filters = options.filter.slice(0).sort();
+            const descriptors: Array<TestInfo> = [];
+
+            for (let info of testCatalog.testDescriptors) {
+                let methods = new Set<string>();
+                for (let filter of filters) {
+                    const [fqnFilter, methodFilter] = filter.split("#");
+                    if (!fqnFilter || info.fqn.indexOf(fqnFilter) >= 0) {
+                        if (methodFilter) { // filter methods
+                            for (let method of info.testMethods) {
+                                if (method.indexOf(methodFilter) >= 0) {
+                                    methods.add(method);
+                                }
+                            }
+                        } else {
+                            methods = new Set<string>(info.testMethods); // take all
+                            break;
+                        }
+                    }
+                }
+                if (methods.size > 0) {
+                    info.testMethods = Array.from(methods);
+                    descriptors.push(info);
+                }
+            }
+            testCatalog.testDescriptors = descriptors;
+        }
+        
+        const log = console.log.bind(console);
+        const consoleObj: Object+ = console;
+        if (options.quiet) {
+            consoleObj.log = consoleObj.error = consoleObj.warn = function(){};
+        }
+        if (options.showOnlyErrors) {
+            this.consoleReporter.setErrorsOnly();
+        }
+
+        this.consoleReporter.cliColor = cli_color_.default;
+        this.consoleReporter.setLogger(log);
+        
+        let reporters: Array<ITestReporter> = [this.consoleReporter];
+        if (options.xunitReportFile) {
+            this.xunitReporter.spec = options;
+            reporters.push(this.xunitReporter);
+        }
+        this.controller.reporters = reporters;
+        let resGroups = await this.controller.runGroups(testCatalog, 420187, options.testScope);
+        const success = this.consoleReporter.cliColor.green.bind(this.consoleReporter.cliColor);
+        const fail = this.consoleReporter.cliColor.red.bind(this.consoleReporter.cliColor);
+        const skipped = this.consoleReporter.cliColor.cyan.bind(this.consoleReporter.cliColor);
+        log(`\nTesting completed: ${success("SUCCESSES")}: ${resGroups.successes}, ${fail("FAILURES")}: ${resGroups.failures}, ${fail("ERRORS")}: ${resGroups.errors}, ${skipped("SKIPPED")}: ${resGroups.skipped}`)
+
+        if ((resGroups.failures !== 0) || (resGroups.errors !== 0)) {
+            log(`${fail("Test run failed.")} To rerun just the failing tests use the command: \n yarn test ${this.consoleReporter.unsuccessfulTests.map(test => `\\\n    -f ${test}`).join(" ")}`)
+        }
+
+        // Don't wait for async promises to finish, e.g. stale auth prompts.
+        // In case of exceptions, the process is already exiting with code 1 (see n4js-cli):
+        process.exit(0);
+    }
+}
+
+@Bind(IFIXME, FIXME1)
+@Bind(IFIXME2, FIXME2)
+@Binder
+class TestBinder {}
+
+@GenerateInjector
+@WithParentInjector(TestDIComponent)
+@UseBinder(TestBinder)
+class Root {
+    @Inject
+    runner: NodeTestRunner;
+}
+
+const parentinj = N4Injector.of(TestDIComponent);
+const root = N4Injector.of(Root, parentinj).create(Root);
+
+export default public const main = root.runner;
