@@ -158,6 +158,24 @@ public interface VersionNumber extends EObject {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.emf.common.util.EList%&gt;&lt;&lt;%java.lang.String%&gt;&gt; _xifexpression = null;\nif (((this.getQualifier() != null) &amp;&amp; (this.getQualifier().getPreRelease() != null)))\n{\n\t_xifexpression = this.getQualifier().getPreRelease().getParts();\n}\nelse\n{\n\t_xifexpression = null;\n}\nreturn _xifexpression;'"
+	 * @generated
+	 */
+	EList<String> getPreReleaseTag();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model unique="false"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return ((this.getPreReleaseTag() != null) &amp;&amp; (!this.getPreReleaseTag().isEmpty()));'"
+	 * @generated
+	 */
+	boolean hasPreReleaseTag();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @model unique="false"
 	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='int length = 0;\n&lt;%org.eclipse.n4js.semver.SEMVER.VersionPart%&gt; _major = this.getMajor();\nboolean _tripleNotEquals = (_major != null);\nif (_tripleNotEquals)\n{\n\tlength++;\n}\n&lt;%org.eclipse.n4js.semver.SEMVER.VersionPart%&gt; _minor = this.getMinor();\nboolean _tripleNotEquals_1 = (_minor != null);\nif (_tripleNotEquals_1)\n{\n\tlength++;\n}\n&lt;%org.eclipse.n4js.semver.SEMVER.VersionPart%&gt; _patch = this.getPatch();\nboolean _tripleNotEquals_2 = (_patch != null);\nif (_tripleNotEquals_2)\n{\n\tlength++;\n\tint _length = length;\n\tint _length_1 = ((&lt;%java.lang.Object%&gt;[])org.eclipse.xtext.xbase.lib.Conversions.unwrapArray(this.getExtended(), &lt;%java.lang.Object%&gt;.class)).length;\n\tlength = (_length + _length_1);\n}\nreturn length;'"
 	 * @generated

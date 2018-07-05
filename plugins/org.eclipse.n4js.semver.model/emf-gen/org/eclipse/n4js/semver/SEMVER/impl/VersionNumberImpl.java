@@ -309,6 +309,31 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<String> getPreReleaseTag() {
+		EList<String> _xifexpression = null;
+		if (((this.getQualifier() != null) && (this.getQualifier().getPreRelease() != null))) {
+			_xifexpression = this.getQualifier().getPreRelease().getParts();
+		}
+		else {
+			_xifexpression = null;
+		}
+		return _xifexpression;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean hasPreReleaseTag() {
+		return ((this.getPreReleaseTag() != null) && (!this.getPreReleaseTag().isEmpty()));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public int length() {
 		int length = 0;
 		VersionPart _major = this.getMajor();
@@ -480,6 +505,10 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
+			case SEMVERPackage.VERSION_NUMBER___GET_PRE_RELEASE_TAG:
+				return getPreReleaseTag();
+			case SEMVERPackage.VERSION_NUMBER___HAS_PRE_RELEASE_TAG:
+				return hasPreReleaseTag();
 			case SEMVERPackage.VERSION_NUMBER___LENGTH:
 				return length();
 			case SEMVERPackage.VERSION_NUMBER___GET_PART__INT:

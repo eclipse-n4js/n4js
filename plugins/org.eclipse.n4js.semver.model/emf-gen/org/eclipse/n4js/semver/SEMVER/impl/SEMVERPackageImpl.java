@@ -395,7 +395,7 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getVersionNumber__Length() {
+	public EOperation getVersionNumber__GetPreReleaseTag() {
 		return versionNumberEClass.getEOperations().get(0);
 	}
 
@@ -404,8 +404,26 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getVersionNumber__GetPart__int() {
+	public EOperation getVersionNumber__HasPreReleaseTag() {
 		return versionNumberEClass.getEOperations().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOperation getVersionNumber__Length() {
+		return versionNumberEClass.getEOperations().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOperation getVersionNumber__GetPart__int() {
+		return versionNumberEClass.getEOperations().get(3);
 	}
 
 	/**
@@ -546,6 +564,8 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 		createEReference(versionNumberEClass, VERSION_NUMBER__PATCH);
 		createEReference(versionNumberEClass, VERSION_NUMBER__EXTENDED);
 		createEReference(versionNumberEClass, VERSION_NUMBER__QUALIFIER);
+		createEOperation(versionNumberEClass, VERSION_NUMBER___GET_PRE_RELEASE_TAG);
+		createEOperation(versionNumberEClass, VERSION_NUMBER___HAS_PRE_RELEASE_TAG);
 		createEOperation(versionNumberEClass, VERSION_NUMBER___LENGTH);
 		createEOperation(versionNumberEClass, VERSION_NUMBER___GET_PART__INT);
 
@@ -635,6 +655,10 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 		initEReference(getVersionNumber_Patch(), this.getVersionPart(), null, "patch", null, 0, 1, VersionNumber.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getVersionNumber_Extended(), this.getVersionPart(), null, "extended", null, 0, -1, VersionNumber.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getVersionNumber_Qualifier(), this.getQualifier(), null, "qualifier", null, 0, 1, VersionNumber.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getVersionNumber__GetPreReleaseTag(), theEcorePackage.getEString(), "getPreReleaseTag", 0, -1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getVersionNumber__HasPreReleaseTag(), theEcorePackage.getEBoolean(), "hasPreReleaseTag", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getVersionNumber__Length(), theEcorePackage.getEInt(), "length", 0, 1, !IS_UNIQUE, IS_ORDERED);
 

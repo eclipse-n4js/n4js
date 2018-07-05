@@ -82,6 +82,14 @@ class VersionNumber {
 	contains VersionPart[] extended
 	contains Qualifier qualifier
 
+	op String[] getPreReleaseTag() {
+		return if (qualifier !== null && qualifier.preRelease !== null) qualifier.preRelease.parts else null;
+	}
+
+	op boolean hasPreReleaseTag() {
+		return getPreReleaseTag() !== null && !getPreReleaseTag().empty;
+	}
+
 	op int length() {
 		var length = 0;
 		if (major !== null) length++;

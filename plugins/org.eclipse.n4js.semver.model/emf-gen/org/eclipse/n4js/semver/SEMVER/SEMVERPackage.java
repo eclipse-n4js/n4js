@@ -399,13 +399,31 @@ public interface SEMVERPackage extends EPackage {
 	int VERSION_NUMBER_FEATURE_COUNT = 5;
 
 	/**
+	 * The operation id for the '<em>Get Pre Release Tag</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSION_NUMBER___GET_PRE_RELEASE_TAG = 0;
+
+	/**
+	 * The operation id for the '<em>Has Pre Release Tag</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSION_NUMBER___HAS_PRE_RELEASE_TAG = 1;
+
+	/**
 	 * The operation id for the '<em>Length</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_NUMBER___LENGTH = 0;
+	int VERSION_NUMBER___LENGTH = 2;
 
 	/**
 	 * The operation id for the '<em>Get Part</em>' operation.
@@ -414,7 +432,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_NUMBER___GET_PART__INT = 1;
+	int VERSION_NUMBER___GET_PART__INT = 3;
 
 	/**
 	 * The number of operations of the '<em>Version Number</em>' class.
@@ -423,7 +441,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_NUMBER_OPERATION_COUNT = 2;
+	int VERSION_NUMBER_OPERATION_COUNT = 4;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.semver.SEMVER.impl.VersionPartImpl <em>Version Part</em>}' class.
@@ -817,6 +835,26 @@ public interface SEMVERPackage extends EPackage {
 	EReference getVersionNumber_Qualifier();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.semver.SEMVER.VersionNumber#getPreReleaseTag() <em>Get Pre Release Tag</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Pre Release Tag</em>' operation.
+	 * @see org.eclipse.n4js.semver.SEMVER.VersionNumber#getPreReleaseTag()
+	 * @generated
+	 */
+	EOperation getVersionNumber__GetPreReleaseTag();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.semver.SEMVER.VersionNumber#hasPreReleaseTag() <em>Has Pre Release Tag</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Has Pre Release Tag</em>' operation.
+	 * @see org.eclipse.n4js.semver.SEMVER.VersionNumber#hasPreReleaseTag()
+	 * @generated
+	 */
+	EOperation getVersionNumber__HasPreReleaseTag();
+
+	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.semver.SEMVER.VersionNumber#length() <em>Length</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1157,6 +1195,22 @@ public interface SEMVERPackage extends EPackage {
 		 * @generated
 		 */
 		EReference VERSION_NUMBER__QUALIFIER = eINSTANCE.getVersionNumber_Qualifier();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Pre Release Tag</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation VERSION_NUMBER___GET_PRE_RELEASE_TAG = eINSTANCE.getVersionNumber__GetPreReleaseTag();
+
+		/**
+		 * The meta object literal for the '<em><b>Has Pre Release Tag</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation VERSION_NUMBER___HAS_PRE_RELEASE_TAG = eINSTANCE.getVersionNumber__HasPreReleaseTag();
 
 		/**
 		 * The meta object literal for the '<em><b>Length</b></em>' operation.
