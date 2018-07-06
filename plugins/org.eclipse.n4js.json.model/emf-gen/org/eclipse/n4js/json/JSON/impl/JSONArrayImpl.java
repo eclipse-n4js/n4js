@@ -10,8 +10,8 @@
  */
 package org.eclipse.n4js.json.JSON.impl;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
-
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
@@ -22,9 +22,12 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.eclipse.emf.ecore.xcore.lib.XcoreEListExtensions;
 import org.eclipse.n4js.json.JSON.JSONArray;
 import org.eclipse.n4js.json.JSON.JSONPackage;
 import org.eclipse.n4js.json.JSON.JSONValue;
+import org.eclipse.xtext.xbase.lib.Functions.Function1;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 /**
  * <!-- begin-user-doc -->
@@ -79,6 +82,22 @@ public class JSONArrayImpl extends JSONValueImpl implements JSONArray {
 			elements = new EObjectContainmentEList<JSONValue>(JSONValue.class, this, JSONPackage.JSON_ARRAY__ELEMENTS);
 		}
 		return elements;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String toString() {
+		final Function1<JSONValue, String> _function = new Function1<JSONValue, String>() {
+			public String apply(final JSONValue e) {
+				return e.toString();
+			}
+		};
+		String _join = IterableExtensions.join(XcoreEListExtensions.<JSONValue, String>map(this.getElements(), _function), ",\n");
+		String _plus = ("[\n" + _join);
+		return (_plus + "\n]");
 	}
 
 	/**
@@ -153,6 +172,20 @@ public class JSONArrayImpl extends JSONValueImpl implements JSONArray {
 				return elements != null && !elements.isEmpty();
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case JSONPackage.JSON_ARRAY___TO_STRING:
+				return toString();
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 } //JSONArrayImpl

@@ -20,7 +20,7 @@
 			Folder "src_filler" {
 				ThisFile "X.n4js" { from="X.n4js.xt" }
 			}
-			File "manifest.n4mf" { from="../manifest.n4mf" }
+			File "package.json" { from="../package.json" }
 		}
 	}
 

@@ -29,7 +29,7 @@
       ]
     },
     "moduleFilters": {
-      "noModuleWrapping": [
+      "noModuleWrap": [
         "**"
       ]
     },

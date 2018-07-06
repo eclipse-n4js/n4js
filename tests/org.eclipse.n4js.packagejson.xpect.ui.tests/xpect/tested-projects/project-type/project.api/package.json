@@ -1,0 +1,6 @@
+{
+	"name": "project.api",
+	"n4js": {
+		"projectType": "api"
+	}
+}

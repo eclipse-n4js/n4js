@@ -37,9 +37,7 @@ class Version implements Comparable<Version> {
 	val int major;
 	val int minor;
 	val int micro;
-	// TODO build meta data not supported https://semver.org/#spec-item-10
-	// remove transient to include in equals hash code once versions are supported.
-	val transient String qualifier;
+	val String qualifier;
 
 	/**
 	 * Returns with {@code true} if the version argument is neither {@code null}, nor the {@link #MISSING} one.
@@ -183,7 +181,12 @@ class Version implements Comparable<Version> {
 			return result;
 		}
 
-		return 0; // TODO consider qualifier once we support versions, see Precedence :: https://semver.org/#spec-item-11
+		result = nullSafeCompare(qualifier, o.qualifier);
+		if (0 !== result) {
+			return result;
+		}
+
+		return 0;
 	}
 
 	override toString() {
@@ -193,4 +196,17 @@ class Version implements Comparable<Version> {
 		return '''«major».«minor».«micro»«IF !qualifier.nullOrEmpty»-«qualifier»«ENDIF»''';
 	}
 
+	def private int nullSafeCompare(String l, String r) {
+		val lHasQualifier = !Strings.isNullOrEmpty(l);
+		val rHasQualifier = !Strings.isNullOrEmpty(r);
+		return if (lHasQualifier && !rHasQualifier) {
+			-1
+		} else if (!lHasQualifier && rHasQualifier) {
+			1
+		} else if (lHasQualifier && rHasQualifier) {
+			l.compareTo(r) // TODO double-check if Java string compare complies to SemVer precedence, cf. https://semver.org/#spec-item-11
+		} else {
+			0
+		};		
+	}
 }

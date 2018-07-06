@@ -17,6 +17,7 @@ import java.io.File;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.runner.RunConfiguration;
@@ -74,7 +75,8 @@ public class HeadlessRunner {
 			if (targetPlatformInstallLocation != null) {
 				runConfiguration = runnerFrontEnd.createConfiguration(runnerDescriptor.getId(), implementationId,
 						systemLoader, locationToRun,
-						targetPlatformInstallLocation.toPath().resolve("node_modules").toAbsolutePath().toString());
+						targetPlatformInstallLocation.toPath().resolve(N4JSGlobals.NODE_MODULES).toAbsolutePath()
+								.toString());
 			} else {
 				runConfiguration = runnerFrontEnd.createConfiguration(runnerDescriptor.getId(), implementationId,
 						systemLoader, locationToRun);

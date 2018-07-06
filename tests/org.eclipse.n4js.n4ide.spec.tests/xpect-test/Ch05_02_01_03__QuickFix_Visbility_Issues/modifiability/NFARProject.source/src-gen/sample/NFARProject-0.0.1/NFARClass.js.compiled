@@ -1,6 +1,0 @@
-n4.$define("NFARClass", ["require","exports","module"], [], function(require,exports,module) {
-class NFARClass {
-	private privateMethod() {
-		
-	};
-}}

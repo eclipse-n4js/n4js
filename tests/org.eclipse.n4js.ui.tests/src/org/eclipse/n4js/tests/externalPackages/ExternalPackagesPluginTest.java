@@ -27,6 +27,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.builder.BuilderUtil;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
@@ -117,8 +118,8 @@ public class ExternalPackagesPluginTest extends AbstractBuilderParticipantTest {
 
 		IProject createJSProject = ProjectTestsUtils.createJSProject("LibFoo2");
 		IFolder src = configureProjectWithXtext(createJSProject);
-		IFile manifest = createJSProject.getProject().getFile("manifest.n4mf");
-		assertMarkers("manifest of first project should have no errors", manifest, 0);
+		IFile packageJson = createJSProject.getProject().getFile(IN4JSProject.PACKAGE_JSON);
+		assertMarkers("package.json of first project should have no errors", packageJson, 0);
 		createTestFile(src, "Foo", "console.log('hi')");
 
 		copyProjectsToLocation(externalLibrariesRoot);
@@ -146,8 +147,8 @@ public class ExternalPackagesPluginTest extends AbstractBuilderParticipantTest {
 
 		IProject createJSProject = ProjectTestsUtils.createJSProject("LibFoo");
 		IFolder src = configureProjectWithXtext(createJSProject);
-		IFile manifest = createJSProject.getProject().getFile("manifest.n4mf");
-		assertMarkers("manifest of first project should have no errors", manifest, 0);
+		IFile packageJson = createJSProject.getProject().getFile(IN4JSProject.PACKAGE_JSON);
+		assertMarkers("package.json of first project should have no errors", packageJson, 0);
 
 		createTestFile(src, "Foo", "console.log('hi')");
 		createTestFile(src, "AAAA", "console.log('hi')");
@@ -178,8 +179,8 @@ public class ExternalPackagesPluginTest extends AbstractBuilderParticipantTest {
 
 		IProject createJSProject = ProjectTestsUtils.createJSProject("LibFoo");
 		IFolder src = configureProjectWithXtext(createJSProject);
-		IFile manifest = createJSProject.getProject().getFile("manifest.n4mf");
-		assertMarkers("manifest of first project should have no errors", manifest, 0);
+		IFile packageJson = createJSProject.getProject().getFile(IN4JSProject.PACKAGE_JSON);
+		assertMarkers("package.json of first project should have no errors", packageJson, 0);
 
 		createTestFile(src, "Foo", "console.log('hi')");
 		createTestFile(src, "AAAA", "console.log('hi')");

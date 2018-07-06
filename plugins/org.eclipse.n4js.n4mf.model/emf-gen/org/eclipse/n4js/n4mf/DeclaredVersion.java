@@ -32,6 +32,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.n4js.n4mf.DeclaredVersion#getMinor <em>Minor</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.DeclaredVersion#getMicro <em>Micro</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.DeclaredVersion#getQualifier <em>Qualifier</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4mf.DeclaredVersion#getBuildMetaData <em>Build Meta Data</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.n4mf.N4mfPackage#getDeclaredVersion()
@@ -142,5 +143,31 @@ public interface DeclaredVersion extends EObject {
 	 * @generated
 	 */
 	void setQualifier(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Build Meta Data</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Build Meta Data</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Build Meta Data</em>' attribute.
+	 * @see #setBuildMetaData(String)
+	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getDeclaredVersion_BuildMetaData()
+	 * @model unique="false"
+	 * @generated
+	 */
+	String getBuildMetaData();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.n4mf.DeclaredVersion#getBuildMetaData <em>Build Meta Data</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Build Meta Data</em>' attribute.
+	 * @see #getBuildMetaData()
+	 * @generated
+	 */
+	void setBuildMetaData(String value);
 
 } // DeclaredVersion

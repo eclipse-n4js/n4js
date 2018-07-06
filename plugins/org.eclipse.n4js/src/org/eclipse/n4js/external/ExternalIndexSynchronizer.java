@@ -16,22 +16,20 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
+import org.eclipse.n4js.json.JSON.JSONPackage;
 import org.eclipse.n4js.n4mf.DeclaredVersion;
-import org.eclipse.n4js.n4mf.N4mfPackage;
 import org.eclipse.n4js.n4mf.ProjectDescription;
-import org.eclipse.n4js.n4mf.resource.N4MFResourceDescriptionStrategy;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.resource.packagejson.PackageJsonResourceDescriptionExtension;
+import org.eclipse.n4js.utils.ProjectDescriptionHelper;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
@@ -56,6 +54,9 @@ public abstract class ExternalIndexSynchronizer {
 
 	@Inject
 	private TargetPlatformInstallLocationProvider locationProvider;
+
+	@Inject
+	private ProjectDescriptionHelper projectDescriptionHelper;
 
 	/**
 	 * Call this method to synchronize the information in the Xtext index with all external projects in the external
@@ -99,10 +100,9 @@ public abstract class ExternalIndexSynchronizer {
 		File nodeModulesFolder = new File(nodeModulesLocation.getPath());
 		if (nodeModulesFolder.isDirectory()) {
 			for (File npmLibrary : nodeModulesFolder.listFiles()) {
-				if (npmLibrary.isDirectory()) {
+				if (ExternalLibraryUtils.isExternalProjectDirectory(npmLibrary)) {
 					String npmName = npmLibrary.getName();
-					File manifest = npmLibrary.toPath().resolve(IN4JSProject.N4MF_MANIFEST).toFile();
-					String version = getVersionFromManifest(manifest);
+					String version = getVersionFromPackageJSON(npmLibrary);
 					if (version != null) {
 						String path = npmLibrary.getAbsolutePath();
 						URI location = URI.createFileURI(path);
@@ -115,9 +115,10 @@ public abstract class ExternalIndexSynchronizer {
 		return npmsFolder;
 	}
 
-	private String getVersionFromManifest(File manifest) {
-		ProjectDescription pDescr = getProjectDescription(manifest);
-		if (pDescr != null && pDescr.eResource().getErrors().isEmpty()) {
+	private String getVersionFromPackageJSON(File packageJSON) {
+		URI uri = URI.createFileURI(packageJSON.getAbsolutePath());
+		ProjectDescription pDescr = projectDescriptionHelper.loadProjectDescriptionAtLocation(uri);
+		if (pDescr != null) {
 			DeclaredVersion pV = pDescr.getProjectVersion();
 			String version = pV.getMajor() + "." + pV.getMinor() + "." + pV.getMicro();
 			if (pV.getQualifier() != null) {
@@ -126,26 +127,6 @@ public abstract class ExternalIndexSynchronizer {
 			return version;
 		}
 
-		return null;
-	}
-
-	private ProjectDescription getProjectDescription(File manifest) {
-		if (!manifest.exists() || !manifest.isFile()) {
-			return null;
-		}
-
-		ResourceSet resourceSet = core.createResourceSet(Optional.absent());
-		String pathStr = manifest.getPath();
-		URI manifestURI = URI.createFileURI(pathStr);
-		Resource resource = resourceSet.getResource(manifestURI, true);
-		if (resource != null) {
-			List<EObject> contents = resource.getContents();
-			if (contents.isEmpty() || !(contents.get(0) instanceof ProjectDescription)) {
-				return null;
-			}
-			ProjectDescription pDescr = (ProjectDescription) contents.get(0);
-			return pDescr;
-		}
 		return null;
 	}
 
@@ -229,20 +210,25 @@ public abstract class ExternalIndexSynchronizer {
 		URI location = URI.createURI(locationString);
 		String name = locationString.substring(nodeModulesLocation.length());
 
-		boolean isManifest = true;
-		isManifest &= resLocation.endsWith(IN4JSProject.N4MF_MANIFEST);
-		isManifest &= resLocation.substring(resLocation.length()).split(File.separator).length == 1;
-		if (isManifest) {
-			Iterable<IEObjectDescription> pds = res.getExportedObjectsByType(N4mfPackage.Literals.PROJECT_DESCRIPTION);
+		boolean isProjectDescriptionFile = true;
+		isProjectDescriptionFile &= resLocation.endsWith(IN4JSProject.PACKAGE_JSON);
+		isProjectDescriptionFile &= resLocation.substring(nodeModulesLocation.length())
+				.split(File.separator).length == 2;
 
+		if (isProjectDescriptionFile) {
+			Iterable<IEObjectDescription> pds = res.getExportedObjectsByType(JSONPackage.eINSTANCE.getJSONDocument());
 			IEObjectDescription pDescription = pds.iterator().next();
-			String nameFromManifest = pDescription.getUserData(N4MFResourceDescriptionStrategy.PROJECT_ID_KEY);
-			Preconditions.checkState(name.equals(nameFromManifest));
+			String nameFromPackageJSON = pDescription
+					.getUserData(PackageJsonResourceDescriptionExtension.PROJECT_ID_KEY);
+			if (!name.equals(nameFromPackageJSON)) {
+				throw new IllegalStateException(
+						"name mismatch: name=" + name + "; nameFromPackageJSON=" + nameFromPackageJSON);
+			}
 
-			version = pDescription.getUserData(N4MFResourceDescriptionStrategy.PROJECT_VERSION_KEY);
+			version = pDescription.getUserData(PackageJsonResourceDescriptionExtension.PROJECT_VERSION_KEY);
 		}
 
-		if (!npmsIndex.containsKey(name) || isManifest) {
+		if (!npmsIndex.containsKey(name) || isProjectDescriptionFile) {
 			npmsIndex.put(name, Pair.of(location, version));
 		}
 	}

@@ -18,7 +18,7 @@
 				}
 				ThisFile { }
 			}
-			File "manifest.n4mf" { from = "../manifest.n4mf"}
+			File "package.json" { from = "../package.json"}
 		}
 		Project "IDE_1510.incomplete.api.impl.one.api" {
 			Folder "src" {
@@ -26,7 +26,7 @@
 					File "A.n4jsd" { from = "../../IDE_1510.incomplete.api.impl.one.api/src/p/A.n4jsd" }
 				}
 			}
-			File "manifest.n4mf" { from = "../../IDE_1510.incomplete.api.impl.one.api/manifest.n4mf"}
+			File "package.json" { from = "../../IDE_1510.incomplete.api.impl.one.api/package.json"}
 		}
    }
    END_SETUP

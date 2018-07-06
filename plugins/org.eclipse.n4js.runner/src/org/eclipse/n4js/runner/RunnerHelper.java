@@ -397,6 +397,8 @@ public class RunnerHelper {
 		if (reProject.isPresent()) {
 			IN4JSProject re = reProject.get();
 			recursiveExtendedREsCollector(re, deps);
+			// also add dependencies of the runtime environment
+			recursiveDependencyCollector(re, deps, new RecursionGuard<>());
 		} else {
 			// IDE-1359: don't throw exception to make runners work without user-defined runtime environment
 			// (will be changed later when library manager is available!)

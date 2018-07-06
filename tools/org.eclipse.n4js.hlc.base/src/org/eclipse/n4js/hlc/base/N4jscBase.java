@@ -40,9 +40,9 @@ import org.apache.log4j.varia.NullAppender;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.xml.type.XMLTypePackage;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSRuntimeModule;
 import org.eclipse.n4js.N4JSStandaloneSetup;
 import org.eclipse.n4js.binaries.BinariesPreferenceStore;
@@ -55,6 +55,8 @@ import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider;
 import org.eclipse.n4js.external.libraries.PackageJson;
 import org.eclipse.n4js.external.libraries.TargetPlatformFactory;
+import org.eclipse.n4js.generator.headless.BuildSet;
+import org.eclipse.n4js.generator.headless.BuildSetComputer;
 import org.eclipse.n4js.generator.headless.HeadlessHelper;
 import org.eclipse.n4js.generator.headless.N4HeadlessCompiler;
 import org.eclipse.n4js.generator.headless.N4JSCompileException;
@@ -64,21 +66,14 @@ import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.hlc.base.running.HeadlessRunner;
 import org.eclipse.n4js.hlc.base.testing.HeadlessTester;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
-import org.eclipse.n4js.n4JS.N4JSPackage;
-import org.eclipse.n4js.n4mf.N4MFStandaloneSetup;
-import org.eclipse.n4js.n4mf.N4mfPackage;
-import org.eclipse.n4js.regex.RegularExpressionStandaloneSetup;
 import org.eclipse.n4js.runner.SystemLoaderInfo;
 import org.eclipse.n4js.tester.CliTestTreeTransformer;
 import org.eclipse.n4js.tester.TestCatalogSupplier;
 import org.eclipse.n4js.tester.TestTreeTransformer;
 import org.eclipse.n4js.tester.TesterModule;
 import org.eclipse.n4js.tester.extension.TesterRegistry;
-import org.eclipse.n4js.ts.TypeExpressionsStandaloneSetup;
-import org.eclipse.n4js.ts.TypesStandaloneSetup;
-import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
-import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.io.FileDeleter;
+import org.eclipse.xtext.ISetup;
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
@@ -233,13 +228,13 @@ public class N4jscBase implements IApplication {
 	private N4HeadlessCompiler headless;
 
 	@Inject
+	private BuildSetComputer buildSetComputer;
+
+	@Inject
 	private HeadlessRunner headlessRunner;
 
 	@Inject
 	private HeadlessTester headlessTester;
-
-	@Inject
-	private FileBasedWorkspace n4jsFileBasedWorkspace;
 
 	@Inject
 	private TestCatalogSupplier testCatalogSupplier;
@@ -273,6 +268,12 @@ public class N4jscBase implements IApplication {
 
 	@Inject
 	private DependenciesHelper dependencyHelper;
+
+	@Inject
+	private HeadlessHelper headlessHelper;
+
+	@Inject
+	private FileBasedWorkspace workspace;
 
 	@Override
 	public Object start(IApplicationContext context) throws Exception {
@@ -497,13 +498,18 @@ public class N4jscBase implements IApplication {
 			validateBinaries();
 			cloneGitRepositoryAndInstallNpmPackages();
 
+			// compute build set based on user settings (e.g. #buildmode, #srcFiles, #projectlocations)
+			BuildSet buildSet = computeBuildSet();
+			// make sure all projects in the build set are registered with the workspace
+			registerProjects(buildSet);
+
 			if (clean) {
 				// clean without compiling anything.
 				clean();
 			} else {
 				if (installMissingDependencies) {
 					Map<String, String> dependencies = dependencyHelper
-							.discoverMissingDependencies(projectLocations, srcFiles);
+							.discoverMissingDependencies(buildSet.getAllProjects());
 					if (verbose) {
 						System.out.println("installing missing dependencies:");
 						dependencies.forEach((name, version) -> {
@@ -518,10 +524,18 @@ public class N4jscBase implements IApplication {
 						else
 							throw new ExitCodeException(EXITCODE_DEPENDENCY_NOT_FOUND,
 									"Cannot install dependencies.");
+
 				}
 
+				final BuildSet targetPlatformBuildSet = computeTargetPlatformBuildSet();
+				// make sure all newly installed dependencies are registered with the workspace
+				registerProjects(targetPlatformBuildSet);
+
+				// add newly installed external libraries to the discoveredProjects of the buildSet
+				buildSet = BuildSet.combineDiscovered(buildSet, targetPlatformBuildSet);
+
 				// run and dispatch.
-				doCompileAndTestAndRun();
+				doCompileAndTestAndRun(buildSet);
 			}
 		} catch (ExitCodeException e) {
 			dumpThrowable(e);
@@ -614,7 +628,7 @@ public class N4jscBase implements IApplication {
 		// generate n4tp file for libManager to use
 		PackageJson packageJson = TargetPlatformFactory.createN4Default();
 		java.net.URI platformLocation = locationProvider.getTargetPlatformInstallLocation();
-		File packageJsonFile = new File(new File(platformLocation), PackageJson.PACKAGE_JSON);
+		File packageJsonFile = new File(new File(platformLocation), N4JSGlobals.PACKAGE_JSON);
 		try {
 			if (!packageJsonFile.exists()) {
 				packageJsonFile.createNewFile();
@@ -685,7 +699,17 @@ public class N4jscBase implements IApplication {
 
 			}
 
-			locationProvider.setTargetPlatformInstallLocation(targetPlatformInstallLocation.toURI());
+			try {
+				// make sure the target platform location is resolved (follow symlinks)
+				java.net.URI resolvedLocation = targetPlatformInstallLocation.toPath().toRealPath().toUri();
+				locationProvider.setTargetPlatformInstallLocation(resolvedLocation);
+			} catch (IOException e) {
+				throw new ExitCodeException(EXITCODE_CONFIGURATION_ERROR,
+						"Failed to resolve the given target platform install location "
+								+ targetPlatformInstallLocation.toPath().toString(),
+						e);
+			}
+
 		} else {
 			if (verbose)
 				System.out.println("Setting up tmp location for dependencies.");
@@ -743,40 +767,47 @@ public class N4jscBase implements IApplication {
 		return string == null || string.trim().length() == 0;
 	}
 
-	/** Creates the injector for the test and injects all fields with the initialized injector. */
+	/**
+	 * Creates the injector for the headless compiler and injects all fields with the initialized injector.
+	 *
+	 * @See {@link HeadlessStandloneSetup}.
+	 */
 	private void initInjection(Properties properties) {
+		final ISetup setup = new HeadlessStandloneSetup(properties);
+		final Injector injector = setup.createInjectorAndDoEMFRegistration();
 
-		// STEP 1: set up language N4JS
-
-		// the following is doing roughly the same as N4JSStandaloneSetup.doSetup(), but is using a custom-built
-		// Guice module for injector creation:
-
-		TypesPackage.eINSTANCE.getNsURI();
-		TypeRefsPackage.eINSTANCE.getNsURI();
-		N4JSPackage.eINSTANCE.getNsURI();
-		N4mfPackage.eINSTANCE.getNsURI();
-		XMLTypePackage.eINSTANCE.getNsURI();
-
-		// combine all modules for N4JSC
-		final Module combinedModule = Modules.combine(new N4JSRuntimeModule(), new TesterModule(),
-				new N4JSHeadlessGeneratorModule(properties));
-
-		// override with customized bindings
-		final Module overridenModule = Modules.override(combinedModule).with(binder -> {
-			binder.bind(TestTreeTransformer.class)
-					.to(CliTestTreeTransformer.class);
-			binder.bind(IHeadlessLogger.class)
-					.toInstance(new ConfigurableHeadlessLogger(verbose, debug));
-		});
-
-		RegularExpressionStandaloneSetup.doSetup();
-		TypesStandaloneSetup.doSetup();
-		N4MFStandaloneSetup.doSetup();
-		TypeExpressionsStandaloneSetup.doSetup();
-
-		final Injector injector = Guice.createInjector(overridenModule);
-		new N4JSStandaloneSetup().register(injector);
 		injector.injectMembers(this);
+	}
+
+	/**
+	 * This standlone setup is the same as {@link N4JSStandaloneSetup} but uses a custom-built Guice module for injector
+	 * creation (cf. {@link #createInjector()}.
+	 */
+	private class HeadlessStandloneSetup extends N4JSStandaloneSetup {
+		private final Properties properties;
+
+		/** Initializes a new headless standlone setup using the given {@code properties}. */
+		public HeadlessStandloneSetup(Properties properties) {
+			super();
+			this.properties = properties;
+		}
+
+		@Override
+		public Injector createInjector() {
+			// combine all modules for N4JSC
+			final Module combinedModule = Modules.combine(new N4JSRuntimeModule(), new TesterModule(),
+					new N4JSHeadlessGeneratorModule(properties));
+
+			// override with customized bindings
+			final Module overridenModule = Modules.override(combinedModule).with(binder -> {
+				binder.bind(TestTreeTransformer.class)
+						.to(CliTestTreeTransformer.class);
+				binder.bind(IHeadlessLogger.class)
+						.toInstance(new ConfigurableHeadlessLogger(N4jscBase.this.verbose, N4jscBase.this.debug));
+			});
+
+			return Guice.createInjector(overridenModule);
+		}
 	}
 
 	/**
@@ -797,13 +828,13 @@ public class N4jscBase implements IApplication {
 	 * @throws ExitCodeException
 	 *             in error cases.
 	 */
-	private void doCompileAndTestAndRun() throws ExitCodeException {
+	private void doCompileAndTestAndRun(BuildSet buildSet) throws ExitCodeException {
 		if (debug) {
 			System.out.println("N4JS compiling...");
 		}
 
 		try {
-			compile();
+			compile(buildSet);
 			writeTestCatalog();
 			testAndRun();
 
@@ -816,27 +847,109 @@ public class N4jscBase implements IApplication {
 		}
 	}
 
-	/** dispatch to proper build method based on {@link #buildtype} */
-	private void compile() throws ExitCodeException {
+	/** trigger compilation using pre-computed buildSet */
+	private void compile(BuildSet buildSet) throws ExitCodeException {
+		try {
+			// early exit if dontcompile
+			if (buildtype == BuildType.dontcompile) {
+				return;
+			}
+
+			// trigger build using pre-computed buildSet (differs depending on #buildtype)
+			headless.compileProjects(buildSet);
+		} catch (N4JSCompileException e) {
+			// dump all information to error-stream.
+			e.userDump(System.err);
+			throw new ExitCodeException(EXITCODE_COMPILE_ERROR, e);
+		}
+	}
+
+	private void registerProjects(BuildSet buildSet) throws ExitCodeException {
+		try {
+			headlessHelper.registerProjects(buildSet, workspace);
+		} catch (N4JSCompileException e) {
+			// dump all information to error-stream.
+			e.userDump(System.err);
+			throw new ExitCodeException(EXITCODE_COMPILE_ERROR);
+		}
+	}
+
+	/**
+	 * Dispatches the computation of the {@link BuildSet} for dependency discovery and compilation based on
+	 * {@link #buildtype}. Does NOT include projects in target platform install location. Those should be added after(!)
+	 * install missing dependencies via
+	 *
+	 * <pre>
+	 * buildSet = computeBuildSet(); // this method
+	 * // ... install missing dependencies ...
+	 * final BuildSet targetPlatformBuildSet = computeTargetPlatformBuildSet();
+	 * buildSet = BuildSet.combineDiscovered(buildSet, targetPlatformBuildSet);
+	 * </pre>
+	 */
+	private BuildSet computeBuildSet() throws ExitCodeException {
 		try {
 			switch (buildtype) {
 			case singlefile:
-				compileArgumentsAsSingleFiles();
-				break;
+				return computeSingleFilesBuildSet();
 			case projects:
-				compileArgumentsAsProjects();
-				break;
+				return computeProjectsBuildSet();
 			case allprojects:
-				compileAllProjects();
-				break;
+				return computeAllProjectsBuildSet();
 			case dontcompile:
 			default:
-				registerProjects();
+				return computeAllProjectsBuildSet();
 			}
 		} catch (N4JSCompileException e) {
 			// dump all information to error-stream.
 			e.userDump(System.err);
 			throw new ExitCodeException(EXITCODE_COMPILE_ERROR);
+		}
+	}
+
+	/** Collects projects in 'singlefile' build mode and returns corresponding BuildSet. */
+	private BuildSet computeSingleFilesBuildSet() throws N4JSCompileException {
+		List<File> toBuild = new ArrayList<>();
+
+		if (projectLocations != null)
+			toBuild.addAll(ProjectLocationsUtil.convertToFiles(projectLocations));
+
+		return buildSetComputer.createSingleFilesBuildSet(toBuild, srcFiles);
+	}
+
+	/** Collects projects in 'projects' build mode and returns corresponding BuildSet. */
+	private BuildSet computeProjectsBuildSet() throws N4JSCompileException {
+		List<File> toBuild = new ArrayList<>();
+
+		if (projectLocations != null)
+			toBuild.addAll(ProjectLocationsUtil.convertToFiles(projectLocations));
+
+		return buildSetComputer.createProjectsBuildSet(toBuild, srcFiles);
+	}
+
+	/** Collects projects in 'allprojects' build mode and returns corresponding BuildSet. */
+	private BuildSet computeAllProjectsBuildSet() throws N4JSCompileException, ExitCodeException {
+		if (projectLocations == null)
+			throw new ExitCodeException(EXITCODE_WRONG_CMDLINE_OPTIONS,
+					"Require option for projectlocations to compile all projects.");
+
+		if (!srcFiles.isEmpty()) {
+			warn("The list of source files is obsolete for built all projects. The following will be ignored: "
+					+ Joiner.on(", ").join(srcFiles));
+		}
+
+		List<File> toBuild = new ArrayList<>();
+		toBuild.addAll(ProjectLocationsUtil.convertToFiles(projectLocations));
+		return buildSetComputer.createAllProjectsBuildSet(toBuild);
+	}
+
+	private BuildSet computeTargetPlatformBuildSet() throws ExitCodeException {
+		List<File> toBuild = new ArrayList<>();
+		toBuild.addAll(ProjectLocationsUtil.getTargetPlatformWritableDir(installLocationProvider));
+		try {
+			return buildSetComputer.createAllProjectsBuildSet(toBuild);
+		} catch (N4JSCompileException e) {
+			throw new ExitCodeException(EXITCODE_DEPENDENCY_NOT_FOUND,
+					"Cannot compute build set for target platform location.", e);
 		}
 	}
 
@@ -929,82 +1042,6 @@ public class N4jscBase implements IApplication {
 			throw new ExitCodeException(EXITCODE_MODULE_TO_RUN_NOT_FOUND);
 		}
 		return HlcFileUtils.fileToURI(testThisLocation);
-	}
-
-	/**
-	 * Compile type: single listed files.
-	 *
-	 * @throws ExitCodeException
-	 *             in cases of wrong configuration
-	 * @throws N4JSCompileException
-	 *             signaling compile-errors.
-	 */
-	private void compileArgumentsAsSingleFiles() throws ExitCodeException, N4JSCompileException {
-		srcFiles.stream().forEach(HlcFileUtils::isExistingReadibleFile);
-
-		List<File> toBuild = new ArrayList<>();
-		toBuild.addAll(ProjectLocationsUtil.getTargetPlatformWritableDir(installLocationProvider));
-
-		if (projectLocations != null)
-			toBuild.addAll(ProjectLocationsUtil.convertToFiles(projectLocations));
-
-		headless.compileSingleFiles(toBuild, srcFiles);
-	}
-
-	/**
-	 * Compile type: single projects
-	 *
-	 * @throws ExitCodeException
-	 *             in cases of wrong configuration
-	 * @throws N4JSCompileException
-	 *             in error cases
-	 */
-	private void compileArgumentsAsProjects() throws ExitCodeException, N4JSCompileException {
-		List<File> toBuild = new ArrayList<>();
-		toBuild.addAll(ProjectLocationsUtil.getTargetPlatformWritableDir(installLocationProvider));
-
-		if (projectLocations != null)
-			toBuild.addAll(ProjectLocationsUtil.convertToFiles(projectLocations));
-
-		headless.compileProjects(toBuild, srcFiles);
-	}
-
-	/**
-	 * Compile type: all projects.
-	 *
-	 * @throws N4JSCompileException
-	 *             in error cases
-	 * @throws ExitCodeException
-	 *             indicating cmdline parameters
-	 */
-	private void compileAllProjects() throws N4JSCompileException, ExitCodeException {
-		if (projectLocations == null)
-			throw new ExitCodeException(EXITCODE_WRONG_CMDLINE_OPTIONS,
-					"Require option for projectlocations to compile all projects.");
-
-		if (!srcFiles.isEmpty()) {
-			warn("The list of source files is obsolete for built all projects. The following will be ignored: "
-					+ Joiner.on(", ").join(srcFiles));
-		}
-
-		List<File> toBuild = new ArrayList<>();
-		toBuild.addAll(ProjectLocationsUtil.getTargetPlatformWritableDir(installLocationProvider));
-		toBuild.addAll(ProjectLocationsUtil.convertToFiles(projectLocations));
-		headless.compileAllProjects(toBuild);
-
-	}
-
-	/**
-	 * Configure the injected file based workspace in order to run (called if no compile precedes the run)
-	 */
-	private void registerProjects() throws ExitCodeException, N4JSCompileException {
-		if (projectLocations == null)
-			throw new ExitCodeException(EXITCODE_WRONG_CMDLINE_OPTIONS,
-					"Require option for projectlocations.");
-
-		HeadlessHelper.registerProjects(ProjectLocationsUtil.getTargetPlatformWritableDir(installLocationProvider),
-				n4jsFileBasedWorkspace);
-		HeadlessHelper.registerProjects(ProjectLocationsUtil.convertToFiles(projectLocations), n4jsFileBasedWorkspace);
 	}
 
 	/**

@@ -84,13 +84,13 @@ class ApiImplComparePluginTest extends AbstractApiImplCompareTest {
 	public def void testMultipleImplementationsWithSameId() {
 		val clashIdApi = "org.eclipse.clash.api";
 		val IProject pApi = createJSProject(clashIdApi)
-		val IProject pImpl1 = ProjectTestsUtils.createJSProject("org.eclipse.clash.n4js","src","src-gen",[pd|
-			pd.implementationId = "impl.n4js"
-			pd.implementedProjects += createProjectReference(clashIdApi)
+		val IProject pImpl1 = ProjectTestsUtils.createJSProject("org.eclipse.clash.n4js","src","src-gen", [ builder |
+			builder.withImplementationId("impl.n4js");
+			builder.withImplementedProject(clashIdApi);
 		])
-		val IProject pImpl2 = ProjectTestsUtils.createJSProject("org.eclipse.clash.ios","src","src-gen",[pd|
-			pd.implementationId = "impl.n4js" // n.b.: same implementation id!
-			pd.implementedProjects += createProjectReference(clashIdApi)
+		val IProject pImpl2 = ProjectTestsUtils.createJSProject("org.eclipse.clash.ios" ,"src","src-gen",[ builder |
+			builder.withImplementationId("impl.n4js");
+			builder.withImplementedProject(clashIdApi);
 		])
 		pApi.configureProjectWithXtext
 		pImpl1.configureProjectWithXtext

@@ -13,13 +13,13 @@
 
 	Workspace {
 		Project "calling.project" {
-			File "manifest.n4mf" { from="../../calling.project/manifest.n4mf" }
+			File "package.json" { from="../../calling.project/package.json" }
 			Folder "src" {
 				ThisFile { from="../../calling.project/src/VendorProject.n4js.xt" }
 			}
 		}
 		Project "other.project.same.vendor" {
-			File "manifest.n4mf" { from="../../other.project.same.vendor/manifest.n4mf" }
+			File "package.json" { from="../../other.project.same.vendor/package.json" }
 			Folder "src" {
 				File "DeclarationOtherProjectSameVendor.n4js" { from="../../other.project.same.vendor/src/DeclarationOtherProjectSameVendor.n4js" }
 			}

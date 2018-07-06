@@ -11,7 +11,6 @@
 package org.eclipse.n4js.n4jsx.ui.tests;
 
 import static org.eclipse.emf.common.util.URI.createPlatformResourceURI;
-import static org.eclipse.n4js.projectModel.IN4JSProject.N4MF_MANIFEST;
 import static org.eclipse.n4js.runner.nodejs.NodeRunner.ID;
 import static org.junit.Assert.assertTrue;
 
@@ -24,6 +23,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.LibraryManager;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.n4js.runner.RunnerFrontEnd;
 import org.eclipse.n4js.runner.ui.RunnerFrontEndUI;
@@ -99,17 +99,17 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 				.getFile(getResourceName(SRC_FOLDER, PA + "." + N4JSGlobals.N4JSX_FILE_EXTENSION));
 		assertTrue(clientModule + " client module is not accessible.", clientModule.isAccessible());
 
-		final IFile manifest = project.getFile(getResourceName(N4MF_MANIFEST));
-		assertTrue(manifest + " client module is not accessible.", manifest.isAccessible());
+		final IFile projectDescriptionFile = project.getFile(getResourceName(IN4JSProject.PACKAGE_JSON));
+		assertTrue(projectDescriptionFile + " client module is not accessible.", projectDescriptionFile.isAccessible());
 
 		assertMarkers("Expected exactly 5 errors in client module.", clientModule, 5);
-		assertMarkers("Expected exactly one error in manifest.", manifest, 1);
+		assertMarkers("Expected exactly one error in package.json.", projectDescriptionFile, 1);
 
 		libManager.installNPM(PACKAGE_REACT, new NullProgressMonitor());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 
-		assertMarkers("Expected exactly zero errors in manifest.", manifest, 0);
+		assertMarkers("Expected exactly zero errors in package.json.", projectDescriptionFile, 0);
 		assertMarkers("Expected exactly no errors in client module.", clientModule, 0);
 
 		final ProcessResult result = runClient();
@@ -132,14 +132,14 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 				.getFile(getResourceName(SRC_FOLDER, PB + "." + N4JSGlobals.N4JSX_FILE_EXTENSION));
 		assertTrue(clientModule + " client module B is not accessible.", clientModule.isAccessible());
 
-		final IFile manifest = project.getFile(getResourceName(N4MF_MANIFEST));
-		assertTrue(manifest + " B module is not accessible.", manifest.isAccessible());
+		final IFile projectDescriptionFile = project.getFile(getResourceName(IN4JSProject.PACKAGE_JSON));
+		assertTrue(projectDescriptionFile + " B module is not accessible.", projectDescriptionFile.isAccessible());
 
 		libManager.installNPM(PACKAGE_REACT, new NullProgressMonitor());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 
-		assertMarkers("Expected exactly zero errors in manifest.", manifest, 0);
+		assertMarkers("Expected exactly zero errors in package.json.", projectDescriptionFile, 0);
 		assertMarkers("Expected exactly 1 error in B module.", clientModule, 1);
 	}
 

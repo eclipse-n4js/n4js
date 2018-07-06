@@ -50,20 +50,6 @@ Contributors:
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.n4js.n4mf.tests.helper"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.n4js.n4mf.ui.tests.helper"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.n4js.regex.tests.helper"
          download-size="0"
          install-size="0"

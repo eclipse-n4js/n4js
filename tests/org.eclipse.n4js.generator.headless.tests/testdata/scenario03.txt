@@ -9,17 +9,20 @@ export public class A {
 //	} // broken syntax above ^^
 }
 
-# wsp1/A/manifest.n4mf
-ProjectId: A
-VendorId: org.eclipse.n4js
-VendorName: "Eclipse N4JS Project"
-ProjectType: library
-ProjectVersion: 0.0.1-SNAPSHOT
-ProjectDependencies {  }
-Output: "src-gen"
-Sources {
-	source { 
-		"src"
+# wsp1/A/package.json
+{
+	"name": "A",
+	"version": "0.0.1-SNAPSHOT",
+	"dependencies": {},
+	"n4js": {
+		"projectType": "library",
+		"vendorId": "org.eclipse.n4js",
+		"vendorName": "Eclipse N4JS Project",
+		"output": "src-gen",
+		"sources": {
+			"source": [
+				"src"
+			]
+		}
 	}
 }
-// Broken manifest !

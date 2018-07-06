@@ -1,0 +1,6 @@
+{
+	"name": "lib1",
+	"n4js": {
+		"projectType": "library"
+	}
+}

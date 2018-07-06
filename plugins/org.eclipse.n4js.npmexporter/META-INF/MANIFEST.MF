@@ -16,7 +16,6 @@ Require-Bundle: org.eclipse.emf.common,
  com.fasterxml.jackson.core.jackson-databind,
  org.apache.commons.compress;bundle-version="1.6.0";visibility:=reexport,
  org.eclipse.osgi;bundle-version="3.10.101",
- org.eclipse.n4js.n4mf,
  org.eclipse.n4js.n4mf.model,
  org.eclipse.n4js.transpiler.es
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8

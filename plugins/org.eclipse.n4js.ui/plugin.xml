@@ -41,10 +41,21 @@ Contributors:
 
     <extension
          point="org.eclipse.ui.newWizards">
-          <category
-        id="org.eclipse.wizards"
-        name="NumberFour">
-      </category>
+     <category
+       id="org.eclipse.wizards"
+       name="NumberFour">
+     </category>
+     <wizard
+           category="org.eclipse.wizards"
+           class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.wizard.project.N4JSNewProjectWizard"
+           icon="platform:/plugin/org.eclipse.n4js.ui/icons/newprj_wiz.png"
+           id="org.eclipse.n4js.ui.wizard.N4JSNewProjectWizard"
+           name="N4JS Project"
+           project="true">
+           <description>
+               Create a new N4JS Project.
+           </description>
+     </wizard>
      <wizard
            category="org.eclipse.wizards"
            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.wizard.classes.N4JSNewClassWizard"
@@ -1274,7 +1285,7 @@ Contributors:
        </commonWizard>
        <commonWizard
              type="new"
-             wizardId="org.eclipse.n4js.n4mf.ui.wizard.N4MFNewProjectWizard">
+             wizardId="org.eclipse.n4js.ui.wizard.N4JSNewProjectWizard">
           <enablement></enablement>
        </commonWizard>
         </extension>
@@ -1431,5 +1442,20 @@ Contributors:
                tooltip="If checked, references to named import specifier are not shown in the find references result.">
          </command>
       </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.n4js.json.validation">
+      <validator
+      	class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.validation.validators.packagejson.PackageJsonValidatorExtension"
+      />
+      <validator
+      	class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.validation.validators.packagejson.N4JSProjectSetupJsonValidatorExtension"
+      />
+   </extension>
+   <extension
+         point="org.eclipse.n4js.json.resourceDescription">
+      <resourceDescriptionStrategy
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.resource.packagejson.PackageJsonResourceDescriptionExtension">
+      </resourceDescriptionStrategy>
    </extension>
 </plugin>

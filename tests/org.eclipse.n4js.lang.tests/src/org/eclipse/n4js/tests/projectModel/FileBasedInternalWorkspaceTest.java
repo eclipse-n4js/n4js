@@ -10,18 +10,16 @@
  */
 package org.eclipse.n4js.tests.projectModel;
 
-import org.eclipse.xtext.testing.InjectWith;
-import org.eclipse.xtext.testing.XtextRunner;
-import org.eclipse.xtext.resource.XtextResourceSet;
-import org.junit.runner.RunWith;
-
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-
 import org.eclipse.n4js.N4JSInjectorProvider;
 import org.eclipse.n4js.internal.ClasspathPackageManager;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
+import org.eclipse.n4js.utils.ProjectDescriptionHelper;
+import org.eclipse.xtext.testing.InjectWith;
+import org.eclipse.xtext.testing.XtextRunner;
+import org.junit.runner.RunWith;
+
+import com.google.inject.Inject;
 
 /**
  */
@@ -30,10 +28,10 @@ import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 public class FileBasedInternalWorkspaceTest extends AbstractInternalWorkspaceTest {
 
 	@Inject
-	private Provider<XtextResourceSet> resourceSetProvider;
+	private ClasspathPackageManager classpathPackageManager;
 
 	@Inject
-	private ClasspathPackageManager classpathPackageManager;
+	private ProjectDescriptionHelper projectDescriptionHelper;
 
 	private FileBasedWorkspace testMe;
 
@@ -44,7 +42,7 @@ public class FileBasedInternalWorkspaceTest extends AbstractInternalWorkspaceTes
 
 	@Override
 	public void setUp() {
-		testMe = new FileBasedWorkspace(resourceSetProvider, classpathPackageManager);
+		testMe = new FileBasedWorkspace(classpathPackageManager, projectDescriptionHelper);
 		super.setUp();
 	}
 

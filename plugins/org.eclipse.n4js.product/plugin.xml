@@ -62,9 +62,9 @@ Contributors:
       <perspectiveExtension
             targetID="org.eclipse.n4js.product.N4JSPerspective">
 
+         <newWizardShortcut id="org.eclipse.n4js.ui.wizard.N4JSNewProjectWizard"/>
          <newWizardShortcut id="org.eclipse.n4js.ui.wizard.N4JSNewClassWizard"/>
          <newWizardShortcut id="org.eclipse.n4js.ui.wizard.N4JSNewInterfaceWizard"/>
-         <newWizardShortcut id="org.eclipse.n4js.n4mf.ui.wizard.N4MFNewProjectWizard"/>
 
          <view
                id="org.eclipse.ui.navigator.ProjectExplorer"
@@ -830,18 +830,6 @@ Contributors:
       <activityPatternBinding
             activityId="org.eclipse.n4js.product.activity"
             pattern=".*/org.eclipse.n4js.regex.RegularExpression">
-      </activityPatternBinding>
-      <activityPatternBinding
-            activityId="org.eclipse.n4js.product.activity"
-            pattern=".*/org.eclipse.n4js.n4mf.N4MF.coloring">
-      </activityPatternBinding>
-      <activityPatternBinding
-            activityId="org.eclipse.n4js.product.activity"
-            pattern=".*/org.eclipse.n4js.n4mf.N4MF.templates">
-      </activityPatternBinding>
-      <activityPatternBinding
-            activityId="org.eclipse.n4js.product.activity"
-            pattern=".*/org.eclipse.n4js.n4mf.N4MF.refactoring">
       </activityPatternBinding>
       <activityPatternBinding
             activityId="org.eclipse.n4js.product.activity"

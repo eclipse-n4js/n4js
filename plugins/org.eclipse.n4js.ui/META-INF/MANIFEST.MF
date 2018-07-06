@@ -21,7 +21,6 @@ Require-Bundle: org.eclipse.n4js;visibility:=reexport,
  org.eclipse.n4js.ts.ui,
  org.eclipse.n4js.n4mf.model,
  org.eclipse.n4js.utils,
- org.eclipse.n4js.n4mf,
  org.eclipse.n4js.environments,
  org.eclipse.xsemantics.runtime,
  org.eclipse.ui.ide,
@@ -49,7 +48,9 @@ Require-Bundle: org.eclipse.n4js;visibility:=reexport,
  org.eclipse.n4js.transpiler.es,
  org.eclipse.core.commands,
  org.eclipse.search;bundle-version="3.11.1",
- com.google.inject
+ com.google.inject,
+ org.eclipse.n4js.json.ui,
+ org.eclipse.n4js.json
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.eclipse.n4js.ui,
  org.eclipse.n4js.ui.building,
