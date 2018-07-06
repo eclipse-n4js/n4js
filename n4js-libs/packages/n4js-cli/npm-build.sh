@@ -31,5 +31,5 @@ elif [ "`which wget`" != "" ]; then
     echo_exec wget --no-check-certificate ${N4_N4JSC_JAR} -O ./bin/n4jsc.jar
 else
     echo_exec curl --insecure --location ${N4_N4JSC_JAR} -o ./bin/n4jsc.jar
-
+fi
 echo "End running npm-build"
