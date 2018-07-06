@@ -7,6 +7,7 @@
     "express": "*"
   },
   "devDependencies": {
+    "n4js-runtime-node": "*"
   },
   "n4js": {
     "projectType": "test",
