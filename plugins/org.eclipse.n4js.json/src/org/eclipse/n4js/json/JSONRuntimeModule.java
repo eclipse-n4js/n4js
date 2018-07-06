@@ -25,8 +25,8 @@ public class JSONRuntimeModule extends AbstractJSONRuntimeModule {
 	public Class<? extends IValueConverterService> bindIValueConverterService() {
 		return JSONValueConverterService.class;
 	}
-	
-	/** Bind custom JSOn issue severities provider that operates based on {@link JSONIssueCodes}. */
+
+	/** Bind custom JSON issue severities provider that operates based on {@link JSONIssueCodes}. */
 	public Class<? extends IssueSeveritiesProvider> bindIssueSeveritiesProvider() {
 		return JSONIssueSeveritiesProvider.class;
 	}
