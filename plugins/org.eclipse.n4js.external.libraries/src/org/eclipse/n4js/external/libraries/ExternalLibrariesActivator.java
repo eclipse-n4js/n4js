@@ -306,7 +306,7 @@ public class ExternalLibrariesActivator implements BundleActivator {
 	private static BiMap<URI, String> getExternalLibraries() {
 
 		final Bundle bundle = context.getBundle();
-		checkNotNull(bundle, "Bundle was null. Does the platform running?");
+		checkNotNull(bundle, "Bundle was null. Is the platform running?");
 
 		final Iterable<Pair<URI, String>> uriNamePairs = from(EXTERNAL_LIBRARY_FOLDER_NAMES)
 				.transform(name -> bundle.getResource(name))

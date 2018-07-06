@@ -149,7 +149,110 @@ These files are not to be added manually.
 
 
 [.language-n4js]
+== Package.json File
+
+A folder is a "component" if and only if it contains a `package.json` file. Being a component means
+that this folder is recognized by all N4JS-related tools but does not necessarily mean the component
+contains N4JS code (it could just contain plain Javascript). The main benefit of being a component
+in this sense is that this unit of code can be used from N4JS components as a dependency.
+
+For example, a plain npm project containing only plain Javascript can be a component and
+can therefore be used as a project dependency of a full-blown N4JS project.
+
+The following standard `package.json` properties are used by N4JS tooling. Unless otherwise
+noted, all these properties have the exact same format and meaning as usual in `package.json`
+files.
+
+name ::
+Used as the globally unique identifier of the component.
+version ::
+The component's version.
+dependencies ::
+List of components required at runtime and compile time.
+devDependencies ::
+List of components required at compile time only.
+main ::
+Path relative to the component's root folder, pointing to a `.js` file
+located in a source container (the `.js` file extension is optional,
+i.e. may be omitted). This file then serves as the component's
+default entry point, i.e. project imports pointing to this component from
+other components will import from the file denoted by this property. In
+addition, this property may denote a folder and is then assumed to point
+to a file `index.js` located in that folder. If this property denotes a file
+other than a `.js` file, it will be ignored. In particular, it cannot be
+used for `.n4js` files; in that case, property "mainModule" has to be used
+(see below).
+
+In addition to the standard properties above, there is a single N4JS-specific
+top-level property called "n4js". The value of this property must always be
+an object that may have any combination of the following properties:
+
+projectType::
+(string) Must be one of the following strings: "application", "processor", "library",
+"api", "runtimeEnvironment", "runtimeLibrary", "test", or "validation".
+vendorId::
+(string) Globally unique identifier for the component's vendor.
+Used for the `@Internal` accessibility modifier.
+vendorName::
+(string) Human-readable name of the component's vendor. Used only for informational
+purposes.
+output::
+(string) Path relative to the component's root folder, pointing to the location where
+all output files will be placed. In particular, this is where the N4JS transpiler
+will put the `.js` files created for each `.n4js` file.
+sources::
+(object) Defines various sub-folders where sources, etc. are located. All properties
+of the given object must have to following format: the name must be "source", "external",
+or "test"; the value must be an array of strings, with each string defining a
+path relative to the component's root folder, pointing to the location where
+source files of the corresponding type are located. For example, paths given via name
+"source" tell the N4JS transpiler where to look for `.n4js` source files to be compiled.
+moduleFilters::
+TODO
+mainModule::
+TODO
+testedProjects::
+TODO
+implementationId::
+TODO
+implementedProjects::
+TODO
+extendedRuntimeEnvironment::
+TODO
+providedRuntimeLibraries::
+TODO
+requiredRuntimeLibraries::
+TODO
+moduleLoader::
+TODO
+initModules::
+TODO
+execModule::
+TODO
+
+All properties described above are optional. The following default values apply:
+
+|===
+| Property    | Default Value
+| name        | name of the folder containing the `package.json` file
+| version     | "0.0.1"
+| projectType | "validation"
+| vendorId    | "vendor.default"
+| mainModule  | "index"
+| output      | "."
+| sources     | a single source-container of type "source" with path "."
+|===
+
+All other properties are undefined if not given in the `package.json` file.
+
+
+
+[.language-n4js]
 == Component Manifest
+
+N4JS Manifests are no longer used; they were replaced by `package.json` files.
+All related functionality will be removed, soon.
+
 
 
 === Syntax

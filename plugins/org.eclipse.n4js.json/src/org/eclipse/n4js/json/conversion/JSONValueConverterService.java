@@ -12,13 +12,13 @@ import com.google.inject.Inject;
  * A value converter service specific to JSON literals.
  */
 public class JSONValueConverterService extends AbstractDeclarativeValueConverterService {
-	
+
 	@Inject
 	private JSONSTRINGValueConverter stringValueConverter;
-	
+
 	@Inject
 	private JSONDoubleValueConverter doubleValueConverter;
-	
+
 	/**
 	 * @return the registered value converter for the rule {@code STRING}
 	 */
@@ -26,7 +26,7 @@ public class JSONValueConverterService extends AbstractDeclarativeValueConverter
 	public IValueConverter<String> STRING() {
 		return stringValueConverter;
 	}
-	
+
 	/**
 	 * @return the registered value converter for the rule {@code DOUBLE}
 	 */

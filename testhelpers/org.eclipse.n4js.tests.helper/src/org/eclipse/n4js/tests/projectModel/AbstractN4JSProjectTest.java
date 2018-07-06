@@ -13,14 +13,13 @@ package org.eclipse.n4js.tests.projectModel;
 import static org.junit.Assert.assertEquals;
 
 import org.eclipse.emf.common.util.URI;
-import org.junit.Test;
-
-import com.google.common.collect.ImmutableList;
-
 import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.junit.Test;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  */
@@ -96,15 +95,6 @@ public abstract class AbstractN4JSProjectTest extends AbstractProjectModelTest {
 		ImmutableList<? extends IN4JSProject> first = project.getDependencies();
 		ImmutableList<? extends IN4JSProject> second = project.getDependencies();
 		assertEquals(first, second);
-	}
-
-	@SuppressWarnings("javadoc")
-	@Test
-	public void testGetLibraries_01() {
-		IN4JSProject project = getN4JSCore().create(myProjectURI);
-		ImmutableList<? extends IN4JSArchive> libraries = project.getLibraries();
-		assertEquals(1, libraries.size());
-		assertEquals(archiveFileURI, libraries.get(0).getLocation());
 	}
 
 	@SuppressWarnings("javadoc")

@@ -121,10 +121,23 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 		assertTrue("Test project is not accessible.", project.isAccessible());
 
 		// Since we do not know whether the built-in initialization or the test project import happened earlier...
-		// Make sure both test module and manifest get into the index.
+		// Make sure both test module and project description file get into the index.
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
-		assertMarkers("Expected exactly 15 issues.", project, 15); // issues are in external libraries
+
+		// List of expected external library warnings originating from shipped code projects:
+		//
+		// line 0: External library warning: The use of the any type in a union type is discouraged.
+		// line 0: External library warning: The use of the any type in a union type is discouraged.
+		// line 0: External library warning: Neither constructor{? extends N4Object} is a subtype of type{T} nor type{T}
+		// is a subtype of constructor{? extends N4Object}. The expression will always evaluate to false.
+		// line 0: External library warning: Neither constructor{? extends N4Object} is a subtype of type{T} nor type{T}
+		// is a subtype of constructor{? extends N4Object}. The expression will always evaluate to false.
+		// line 0: External library warning: Neither constructor{? extends N4Object} is a subtype of type{T} nor type{T}
+		// is a subtype of constructor{? extends N4Object}. The expression will always evaluate to false.
+		// line 0: External library warning: Unnecessary cast from ~~ResultGroup to Object
+		// line 0: External library warning: Unnecessary cast from Array<ResultGroups>
+		assertMarkers("Expected exactly 7 issues.", project, 7); // issues are in external libraries
 
 		final Resource resource = persister.createResource();
 		assertNotNull("Test resource was null.", resource);
@@ -155,7 +168,7 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 		// Couldn't resolve reference to TExportableElement 'Assert'.
 		// Import of Assert cannot be resolved.
 
-		// Manifest issues:
+		// package.json issues:
 		// Project does not exist with project ID: org.eclipse.n4js.mangelhaft.
 		// Project does not exist with project ID: org.eclipse.n4js.mangelhaft.assert.
 		// Project with test fragment should depend on org.eclipse.n4js.mangelhaft.
@@ -166,7 +179,8 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 		waitForAutoBuild();
 		resource.getContents().clear();
 
-		assertMarkers("Expected exactly 15 issues.", project, 15); // issues are in external libraries
+		// see above for list of expected issues
+		assertMarkers("Expected exactly 7 issues.", project, 7); // issues are in external libraries
 
 		final Set<org.eclipse.emf.common.util.URI> afterCrashBuilderState = from(
 				builderState.getAllResourceDescriptions())

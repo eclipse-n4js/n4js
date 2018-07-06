@@ -1,0 +1,15 @@
+{
+	"name": "Project2",
+	"version": "0.0.1-SNAPSHOT",
+	"n4js": {
+		"projectType": "library",
+		"vendorId": "org.some.other.vendor",
+		"vendorName": "Some Other Vendor",
+		"output": "src-gen",
+		"sources": {
+			"source": [
+				"src"
+			]
+		}
+	}
+}

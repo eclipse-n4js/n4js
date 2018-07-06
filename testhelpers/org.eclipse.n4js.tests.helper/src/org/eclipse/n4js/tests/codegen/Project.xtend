@@ -10,51 +10,20 @@
  */
 package org.eclipse.n4js.tests.codegen
 
-import org.eclipse.n4js.utils.io.FileDeleter
 import java.io.File
 import java.io.FileWriter
 import java.io.IOException
 import java.nio.file.Path
 import java.util.List
 import java.util.Objects
+import org.eclipse.n4js.n4mf.ProjectType
+import org.eclipse.n4js.projectModel.IN4JSProject
+import org.eclipse.n4js.utils.io.FileDeleter
 
 /**
  * Generates the code for a project.
  */
 public class Project {
-	public static enum ProjectType {
-		APPLICATION,
-		PROCESSOR,
-		LIBRARY,
-		API,
-		RUNTIME_ENVIRONMENT,
-		RUNTIME_LIBRARY,
-		TEST
-	}
-
-	/**
-	 * Extension methods for enumeration {@link ProjectType}.
-	 */
-	public static class ProjectTypeExtensions {
-		/**
-		 * Returns the generated string for the given value.
-		 *
-		 * @param projectType the project type
-		 *
-		 * @return the generated string
-		 */
-		static def String generate(ProjectType projectType) {
-			switch projectType {
-				case APPLICATION: "application"
-				case PROCESSOR: "processor"
-				case LIBRARY: "library"
-				case API: "api"
-				case RUNTIME_ENVIRONMENT: "runtimeEnvironment"
-				case RUNTIME_LIBRARY: "runtimeLibrary"
-				case TEST: "test"
-			}
-		}
-	}
 
 	/**
 	 * Represents a source folder that has a name and contains modules.
@@ -209,34 +178,54 @@ public class Project {
 		projectDependencies.add(Objects.requireNonNull(projectDependency));
 		return this;
 	}
+	
 	/**
-	 * Generates the N4MF manifest for this project.
+	 * Generates the {@link IN4JSProject#PACKAGE_JSON} for this project.
 	 */
 	public def generate() '''
-		ProjectId: «projectId»
-		VendorId: «vendorId»
-		VendorName: "«vendorName»"
-		ProjectType: «ProjectTypeExtensions.generate(projectType)»
-		ProjectVersion: «projectVersion»
-		«IF !outputFolder.nullOrEmpty»Output: "«outputFolder»"«ENDIF»
-		«IF !sourceFolders.nullOrEmpty»
-			Sources {
-				source {
-					«FOR sourceFolder: sourceFolders SEPARATOR ','»
-						"«sourceFolder.name»"
+		{
+			"name": "«projectId»",
+			"version": "«projectVersion»",
+			"n4js": {
+				"vendorId": "«vendorId»",
+				"vendorName": "«vendorName»",
+				"projectType": "«projectType.projectTypeToString»",
+				«IF !outputFolder.nullOrEmpty
+					»"output": "«outputFolder»"
+				«ENDIF»
+				«IF !sourceFolders.nullOrEmpty
+				»,"sources": {
+						"source": [
+							«FOR sourceFolder : sourceFolders SEPARATOR ','»
+								"«sourceFolder.name»"
+							«ENDFOR»
+						]
+					}
+				«ENDIF»
+			}
+			«IF !projectDependencies.nullOrEmpty
+			»,"dependencies": {
+					«FOR dep : projectDependencies SEPARATOR ','»
+						"«dep.projectId»": "*"
 					«ENDFOR»
 				}
-			}
-		«ENDIF»
-		«IF !projectDependencies.nullOrEmpty»
-			ProjectDependencies {
-				«FOR projectDependency: projectDependencies SEPARATOR ','»
-					«projectDependency.projectId»
-				«ENDFOR»
-			}
-		«ENDIF»
+			«ENDIF»
+		}
 	'''
 
+	private static def projectTypeToString(ProjectType type) {
+		return switch (type) {
+			case API: "api"
+			case APPLICATION: "application"
+			case LIBRARY: "library"
+			case PROCESSOR: "processor"
+			case RUNTIME_ENVIRONMENT: "runtimeEnvironment"
+			case RUNTIME_LIBRARY: "runtimeLibrary"
+			case TEST: "test"
+			case VALIDATION: "validation"
+		};
+	}
+	
 	/**
 	 * Creates this project in the given parent directory, which must exist.
 	 *
@@ -263,14 +252,14 @@ public class Project {
 			FileDeleter.delete(projectDirectory);
 		projectDirectory.mkdir();
 
-		createManifest(projectDirectory);
+		createProjectDescriptionFile(projectDirectory);
 		createModules(projectDirectory);
 
 		return projectDirectory;
 	}
 
-	private def createManifest(File parentDirectory) {
-		val File filePath = new File(parentDirectory, "manifest.n4mf");
+	private def createProjectDescriptionFile(File parentDirectory) {
+		val File filePath = new File(parentDirectory, IN4JSProject.PACKAGE_JSON);
 		var FileWriter out = null;
 		try {
 			out = new FileWriter(filePath);

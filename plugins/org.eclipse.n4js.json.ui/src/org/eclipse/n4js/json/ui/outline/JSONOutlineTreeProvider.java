@@ -29,7 +29,7 @@ public class JSONOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	public void createChildren(IOutlineNode parent, EObject modelElement) {
 		if (modelElement instanceof JSONDocument) {
 			JSONValue content = ((JSONDocument) modelElement).getContent();
-			if(JSONUIModelUtils.isContainer(content)) {
+			if (JSONUIModelUtils.isContainer(content)) {
 				List<? extends EObject> children = JSONUIModelUtils.getChildren(content);
 				for (EObject child : children) {
 					createNode(parent, child);
@@ -58,20 +58,19 @@ public class JSONOutlineTreeProvider extends DefaultOutlineTreeProvider {
 		}
 		super.createChildren(parent, modelElement);
 	}
-	
+
 	@Override
 	protected void createNode(IOutlineNode parent, EObject modelElement) {
 		// make sure that non-container name-value-pairs are marked as leaf nodes
-		if (modelElement instanceof NameValuePair && 
-				!JSONUIModelUtils.isContainer(((NameValuePair) modelElement).getValue())) {
-			createEObjectNode(parent, modelElement, 
-					this.imageDispatcher.invoke(modelElement), 
+		if (modelElement instanceof NameValuePair
+				&& !JSONUIModelUtils.isContainer(((NameValuePair) modelElement).getValue())) {
+			createEObjectNode(parent, modelElement, this.imageDispatcher.invoke(modelElement),
 					this.textDispatcher.invoke(modelElement),
 					// mark as leaf node
 					true);
 			return;
 		}
-		
+
 		// otherwise delegate to default behavior
 		super.createNode(parent, modelElement);
 	}

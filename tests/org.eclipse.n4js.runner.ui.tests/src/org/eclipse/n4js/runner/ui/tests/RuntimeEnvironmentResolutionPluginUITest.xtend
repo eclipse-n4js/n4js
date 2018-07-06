@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.runner.ui.tests
 
-import org.eclipse.n4js.N4JSUiInjectorProvider
 import java.io.ByteArrayInputStream
 import java.io.IOException
 import java.io.InputStream
@@ -19,10 +18,12 @@ import org.eclipse.core.resources.IWorkspace
 import org.eclipse.core.runtime.CoreException
 import org.eclipse.core.runtime.OperationCanceledException
 import org.eclipse.core.runtime.Platform
+import org.eclipse.n4js.N4JSUiInjectorProvider
+import org.eclipse.n4js.projectModel.IN4JSProject
+import org.eclipse.n4js.runner.tests.RuntimeEnvironmentResolutionTest
 import org.junit.BeforeClass
 
 import static com.google.common.base.Throwables.propagate
-import static org.eclipse.n4js.projectModel.IN4JSProject.N4MF_MANIFEST
 import static org.apache.log4j.Logger.getLogger
 import static org.eclipse.core.resources.IContainer.INCLUDE_HIDDEN
 import static org.eclipse.core.resources.ResourcesPlugin.FAMILY_AUTO_BUILD
@@ -33,7 +34,6 @@ import static org.eclipse.emf.common.util.URI.createPlatformResourceURI
 import static org.junit.Assert.*
 
 import static extension org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.*
-import org.eclipse.n4js.runner.tests.RuntimeEnvironmentResolutionTest
 
 /**
  * Class for testing the the runtime environment resolution for the N4 runners in standalone JUnit mode.
@@ -61,7 +61,7 @@ class RuntimeEnvironmentResolutionPluginUITest extends RuntimeEnvironmentResolut
 		clearWorkspace()
 	}
 
-	override protected createProjectWithManifest(String projectId, String manifestContent) {
+	override protected createProjectWithPackageJson(String projectId, String packageJsonContent) {
 		val project = workspace.root.getProject(projectId)
 		assertFalse(project.exists)
 		try {
@@ -85,16 +85,16 @@ class RuntimeEnvironmentResolutionPluginUITest extends RuntimeEnvironmentResolut
 			LOGGER.error('Error while trying to adding Xtext nature to the project.', e)
 		}
 
-		val manifest = project.getFile(N4MF_MANIFEST)
-		assertFalse(manifest.exists)
+		val packageJsonFile = project.getFile(IN4JSProject.PACKAGE_JSON)
+		assertFalse(packageJsonFile.exists)
 
 		var is = null as InputStream
 		var exc = null as Exception
 		try {
-			is = new ByteArrayInputStream(manifestContent.bytes)
-			manifest.create(is, true, null)
+			is = new ByteArrayInputStream(packageJsonContent.bytes)
+			packageJsonFile.create(is, true, null)
 		} catch (Exception e) {
-			LOGGER.error('''Error while creating manifest file for project: '«projectId»'.''')
+			LOGGER.error('''Error while creating package.json file for project: '«projectId»'.''')
 			throw propagate(e)
 		} finally {
 			if (null !== is) {
@@ -112,10 +112,10 @@ class RuntimeEnvironmentResolutionPluginUITest extends RuntimeEnvironmentResolut
 			}
 		}
 		if (null !== exc) {
-			throw new RuntimeException('Error while closing the stream for the N4JS manifest file.', exc)
+			throw new RuntimeException('Error while closing the stream for the N4JS package.json file.', exc)
 		}
 
-		assertTrue(manifest.exists)
+		assertTrue(packageJsonFile.exists)
 		waitForAutoBuild
 		createPlatformResourceURI(project.fullPath.toString, true);
 	}

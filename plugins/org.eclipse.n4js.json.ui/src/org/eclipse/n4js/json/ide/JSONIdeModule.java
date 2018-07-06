@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.json.ide;
 
-
 /**
  * Use this class to register ide components.
  */

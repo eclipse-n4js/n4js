@@ -607,7 +607,8 @@ public class SelectAllProjectExplorer_PluginUITest extends AbstractPluginUITest 
 
 	@Override
 	protected IProject createN4JSProject(String projectName, ProjectType type) throws CoreException {
-		final IProject project = createJSProject(projectName, "src", "src-gen", t -> t.setProjectType(type));
+		final IProject project = createJSProject(projectName, "src", "src-gen",
+				b -> b.withType(type));
 		configureProjectWithXtext(project);
 		// Don't waitForBuild here as there is no code to build
 		return project;

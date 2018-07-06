@@ -39,6 +39,7 @@ import org.eclipse.xtext.validation.Issue
 
 import static org.eclipse.xtext.diagnostics.Severity.*
 import org.eclipse.n4js.internal.RaceDetectionHelper
+import org.eclipse.n4js.validation.helper.FolderContainmentHelper
 
 /**
  * All sub generators should extend this class. It provides basic blocks of the logic, and
@@ -49,7 +50,7 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 
 	@Accessors
 	private CompilerDescriptor compilerDescriptor = null
-
+	
 	@Inject protected StaticPolyfillHelper staticPolyfillHelper
 
 	@Inject protected IN4JSCore n4jsCore
@@ -67,6 +68,8 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 	@Inject protected GeneratorExceptionHandler exceptionHandler
 
 	@Inject protected N4JSPreferenceAccess preferenceAccess
+	
+	@Inject private FolderContainmentHelper containmentHelper;
 
 	override getCompilerDescriptor() {
 		if (compilerDescriptor === null) {
@@ -125,6 +128,7 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 		val boolean result = (autobuildEnabled
 			&& isGenerateProjectType(inputUri)
 			&& hasOutput(inputUri)
+			&& isOutputNotInSourceContainer(inputUri)
 			&& isOutsideOfOutputFolder(inputUri)
 			&& isSource(inputUri)
 			&& (isNoValidate(inputUri)
@@ -219,22 +223,19 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 
 	/** @return true iff the given resource does not lie within the output folder. */
 	def boolean isOutsideOfOutputFolder(URI n4jsSourceURI) {
-		val project = n4jsCore.findProject(n4jsSourceURI).orNull();
-		if (project !== null) {
-			val outputPathName = project.getOutputPath();
-			if (outputPathName !== null) {
-				val resourceLocation = n4jsSourceURI.toString();
-				val pl = project.getLocation();
-				val prjRelOutputLocation = Paths.get(pl.toString(), outputPathName).toString();
-				val resourceInOutput = resourceLocation.startsWith(prjRelOutputLocation);
-				if (resourceInOutput) {
-					return false;
-				}
-			}
-		}
-		return true;
+		return !containmentHelper.isContainedInOutputFolder(n4jsSourceURI);
 	}
-
+	
+	/** @return true iff the output folder of the given n4js resource is not contained by a source container. */
+	def boolean isOutputNotInSourceContainer(URI n4jsSourceURI) {
+		val project = n4jsCore.findProject(n4jsSourceURI);
+		if (project.isPresent()) {
+			return !containmentHelper.isOutputContainedInSourceContainer(project.get())
+		} else {
+			return false;
+		} 
+	}
+	
 	/**
 	 * Actual generation to be overridden by subclasses.
 	 */

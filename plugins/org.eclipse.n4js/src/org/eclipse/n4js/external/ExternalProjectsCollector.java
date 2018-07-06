@@ -280,5 +280,4 @@ public class ExternalProjectsCollector {
 				.filter(p -> p.isExternal())
 				.transform(p -> p.getProjectId());
 	}
-
 }

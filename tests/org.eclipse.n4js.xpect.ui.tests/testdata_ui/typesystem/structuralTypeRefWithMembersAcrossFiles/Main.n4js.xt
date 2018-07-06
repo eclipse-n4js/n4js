@@ -18,7 +18,7 @@
 					ThisFile {}
 				}
 			}
-			File "manifest.n4mf" { from="./manifestMain.n4mf" }
+			File "package.json" { from="./packageMain.json" }
 		}
 		JavaProject "ProjectImportee" {
 			SrcFolder {
@@ -27,7 +27,7 @@
 					File "NestedMultiLevel.n4js" {}
 				}
 			}
-			File "manifest.n4mf" { from="./manifestImportee.n4mf" }
+			File "package.json" { from="./packageImportee.json" }
 		}
 	}
 

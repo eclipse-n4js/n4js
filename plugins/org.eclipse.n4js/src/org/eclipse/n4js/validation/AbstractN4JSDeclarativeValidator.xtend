@@ -497,12 +497,12 @@ public class AbstractN4JSDeclarativeValidator extends AbstractMessageAdjustingN4
 				node.findChildNode(grammarAccess.tryStatementAccess.tryKeyword_0)
 			} else if (eo instanceof DebuggerStatement) {
 				node.findChildNode(grammarAccess.debuggerStatementAccess.debuggerKeyword_1)
-			}
+			};
 		val offsetAndLength = if (childNode !== null) {
 				childNode.offset -> childNode.length
 			} else {
 				node.offset -> node.length
-			}
+			};
 		offsetAndLength
 	}
 	

@@ -10,10 +10,12 @@
  */
 package org.eclipse.n4js.json.JSON.impl;
 
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -159,14 +161,24 @@ public class JSONNumericLiteralImpl extends JSONValueImpl implements JSONNumeric
 	 * @generated
 	 */
 	@Override
-	public String toString() {
-		if (eIsProxy()) return super.toString();
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case JSONPackage.JSON_NUMERIC_LITERAL___TO_STRING:
+				return toString();
+		}
+		return super.eInvoke(operationID, arguments);
+	}
 
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (value: ");
-		result.append(value);
-		result.append(')');
-		return result.toString();
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		String _string = this.getValue().toString();
+		String _plus = ("JSONNumericLiteral(" + _string);
+		return (_plus + ")");
 	}
 
 } //JSONNumericLiteralImpl

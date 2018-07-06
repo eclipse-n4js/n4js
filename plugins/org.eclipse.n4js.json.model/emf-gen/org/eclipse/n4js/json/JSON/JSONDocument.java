@@ -17,10 +17,6 @@ import org.eclipse.emf.ecore.EObject;
  * A representation of the model object '<em><b>Document</b></em>'.
  * <!-- end-user-doc -->
  *
- * <!-- begin-model-doc -->
- * * Represents the root of a JSON document.
- * <!-- end-model-doc -->
- *
  * <p>
  * The following features are supported:
  * </p>
@@ -58,5 +54,14 @@ public interface JSONDocument extends EObject {
 	 * @generated
 	 */
 	void setContent(JSONValue value);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model unique="false"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%java.lang.String%&gt; _string = this.getContent().toString();\nreturn (\"JSONDocument \" + _string);'"
+	 * @generated
+	 */
+	String toString();
 
 } // JSONDocument

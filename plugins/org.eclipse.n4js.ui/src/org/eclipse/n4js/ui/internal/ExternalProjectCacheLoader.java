@@ -50,7 +50,7 @@ public class ExternalProjectCacheLoader
 	@Override
 	public Optional<Pair<N4JSExternalProject, ProjectDescription>> load(final URI rootLocation) throws Exception {
 		try {
-			ProjectDescription projectDescription = packageManager.loadManifestFromProjectRoot(rootLocation);
+			ProjectDescription projectDescription = packageManager.loadProjectDescriptionFromProjectRoot(rootLocation);
 
 			if (null != projectDescription) {
 				File projectRoot = new File(rootLocation.toFileString());

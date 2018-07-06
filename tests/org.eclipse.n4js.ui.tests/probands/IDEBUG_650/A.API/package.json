@@ -1,0 +1,17 @@
+{
+  "name": "A.API",
+  "version": "0.0.1-SNAPSHOT",
+  "n4js": {
+    "projectType": "api",
+    "vendorId": "org.eclipse.n4js",
+    "vendorName": "Eclipse N4JS Project",
+    "output": "src-gen",
+    "sources": {
+      "source": [
+        "src/n4js",
+        "src/n4js-gen"
+      ]
+    },
+    "moduleLoader": "n4js"
+  }
+}

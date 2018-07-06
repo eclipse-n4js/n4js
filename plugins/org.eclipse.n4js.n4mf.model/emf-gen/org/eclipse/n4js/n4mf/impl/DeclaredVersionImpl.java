@@ -32,6 +32,7 @@ import org.eclipse.n4js.n4mf.N4mfPackage;
  *   <li>{@link org.eclipse.n4js.n4mf.impl.DeclaredVersionImpl#getMinor <em>Minor</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.impl.DeclaredVersionImpl#getMicro <em>Micro</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.impl.DeclaredVersionImpl#getQualifier <em>Qualifier</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4mf.impl.DeclaredVersionImpl#getBuildMetaData <em>Build Meta Data</em>}</li>
  * </ul>
  *
  * @generated
@@ -116,6 +117,26 @@ public class DeclaredVersionImpl extends MinimalEObjectImpl.Container implements
 	 * @ordered
 	 */
 	protected String qualifier = QUALIFIER_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getBuildMetaData() <em>Build Meta Data</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getBuildMetaData()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String BUILD_META_DATA_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getBuildMetaData() <em>Build Meta Data</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getBuildMetaData()
+	 * @generated
+	 * @ordered
+	 */
+	protected String buildMetaData = BUILD_META_DATA_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -225,6 +246,27 @@ public class DeclaredVersionImpl extends MinimalEObjectImpl.Container implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String getBuildMetaData() {
+		return buildMetaData;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setBuildMetaData(String newBuildMetaData) {
+		String oldBuildMetaData = buildMetaData;
+		buildMetaData = newBuildMetaData;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4mfPackage.DECLARED_VERSION__BUILD_META_DATA, oldBuildMetaData, buildMetaData));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -236,6 +278,8 @@ public class DeclaredVersionImpl extends MinimalEObjectImpl.Container implements
 				return getMicro();
 			case N4mfPackage.DECLARED_VERSION__QUALIFIER:
 				return getQualifier();
+			case N4mfPackage.DECLARED_VERSION__BUILD_META_DATA:
+				return getBuildMetaData();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -259,6 +303,9 @@ public class DeclaredVersionImpl extends MinimalEObjectImpl.Container implements
 				return;
 			case N4mfPackage.DECLARED_VERSION__QUALIFIER:
 				setQualifier((String)newValue);
+				return;
+			case N4mfPackage.DECLARED_VERSION__BUILD_META_DATA:
+				setBuildMetaData((String)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -284,6 +331,9 @@ public class DeclaredVersionImpl extends MinimalEObjectImpl.Container implements
 			case N4mfPackage.DECLARED_VERSION__QUALIFIER:
 				setQualifier(QUALIFIER_EDEFAULT);
 				return;
+			case N4mfPackage.DECLARED_VERSION__BUILD_META_DATA:
+				setBuildMetaData(BUILD_META_DATA_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -304,6 +354,8 @@ public class DeclaredVersionImpl extends MinimalEObjectImpl.Container implements
 				return micro != MICRO_EDEFAULT;
 			case N4mfPackage.DECLARED_VERSION__QUALIFIER:
 				return QUALIFIER_EDEFAULT == null ? qualifier != null : !QUALIFIER_EDEFAULT.equals(qualifier);
+			case N4mfPackage.DECLARED_VERSION__BUILD_META_DATA:
+				return BUILD_META_DATA_EDEFAULT == null ? buildMetaData != null : !BUILD_META_DATA_EDEFAULT.equals(buildMetaData);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -326,6 +378,8 @@ public class DeclaredVersionImpl extends MinimalEObjectImpl.Container implements
 		result.append(micro);
 		result.append(", qualifier: ");
 		result.append(qualifier);
+		result.append(", buildMetaData: ");
+		result.append(buildMetaData);
 		result.append(')');
 		return result.toString();
 	}

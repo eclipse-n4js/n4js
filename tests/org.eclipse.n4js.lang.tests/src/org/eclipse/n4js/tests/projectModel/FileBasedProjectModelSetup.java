@@ -13,14 +13,10 @@ package org.eclipse.n4js.tests.projectModel;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
-import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.common.base.Charsets;
@@ -77,35 +73,43 @@ public class FileBasedProjectModelSetup extends AbstractProjectModelSetup {
 	protected void createTempProjects() {
 		try {
 			workspaceRoot = Files.createTempDir();
-			URI myProjectURI = URIUtils.normalize(createTempProject(host.myProjectId));
+			final URI myProjectURI = URIUtils.normalize(createTempProject(host.myProjectId));
 			host.setMyProjectURI(myProjectURI);
-			createManifest(myProjectURI, "ProjectId: " + host.myProjectId + "\n" +
-					"ProjectType: library\n" +
-					"ProjectVersion: 0.0.1-SNAPSHOT\n" +
-					"VendorId: org.eclipse.n4js\n" +
-					"VendorName: \"Eclipse N4JS Project\"\n" +
-					"Libraries { \"" + LIB_FOLDER_NAME + "\"\n }\n" +
-					"Output: \"src-gen\"\n" +
-					"Sources {\n" +
-					"	source {" +
-					"		\"src\"\n" +
-					"	}\n" +
-					"}" +
-					"ProjectDependencies { " + host.libProjectId + ", " + host.archiveProjectId + " }\n");
-			createArchive(myProjectURI);
-			URI libProjectURI = URIUtils.normalize(createTempProject(host.libProjectId));
+			createProject(myProjectURI, "{\n" +
+					"  \"name\": \"" + host.myProjectId + "\",\n" +
+					"  \"version\": \"0.0.1-SNAPSHOT\",\n" +
+					"  \"dependencies\": {\n" +
+					"    \"" + host.libProjectId + "\": \"0.0.1-SNAPSHOT\"\n" +
+					"  },\n" +
+					"  \"n4js\": {\n" +
+					"    \"projectType\": \"library\",\n" +
+					"    \"vendorId\": \"org.eclipse.n4js\",\n" +
+					"    \"vendorName\": \"Eclipse N4JS Project\",\n" +
+					"    \"output\": \"src-gen\",\n" +
+					"    \"sources\": {\n" +
+					"      \"source\": [\n" +
+					"        \"src\"\n" +
+					"      ]\n" +
+					"    },\n" +
+					"    \"moduleLoader\": \"n4js\"\n" +
+					"  }\n" +
+					"}");
+			final URI libProjectURI = URIUtils.normalize(createTempProject(host.libProjectId));
 			host.setLibProjectURI(libProjectURI);
-			createManifest(libProjectURI, "ProjectId: " + host.libProjectId + "\n" +
-					"ProjectType: library\n" +
-					"ProjectVersion: 0.0.1-SNAPSHOT\n" +
-					"VendorId: org.eclipse.n4js\n" +
-					"VendorName: \"Eclipse N4JS Project\"\n" +
-					"Libraries { \"" + LIB_FOLDER_NAME + "\"\n }\n" +
-					"Output: \"src-gen\"\n" +
-					"Sources {\n" +
-					"	source {" +
-					"		\"src\"\n" +
-					"	}\n" +
+			createProject(libProjectURI, "{\n" +
+					"  \"name\": \"" + host.libProjectId + "\",\n" +
+					"  \"version\": \"0.0.1-SNAPSHOT\",\n" +
+					"  \"n4js\": {\n" +
+					"    \"projectType\": \"library\",\n" +
+					"    \"vendorId\": \"org.eclipse.n4js\",\n" +
+					"    \"vendorName\": \"Eclipse N4JS Project\",\n" +
+					"    \"output\": \"src-gen\",\n" +
+					"    \"sources\": {\n" +
+					"      \"source\": [\n" +
+					"        \"src\"\n" +
+					"      ]\n" +
+					"    }\n" +
+					"  }\n" +
 					"}");
 			workspace.registerProject(myProjectURI);
 			workspace.registerProject(libProjectURI);
@@ -114,38 +118,16 @@ public class FileBasedProjectModelSetup extends AbstractProjectModelSetup {
 		}
 	}
 
-	private void createArchive(URI baseDir) throws IOException {
-		File directory = new File(java.net.URI.create(baseDir.toString()));
-		File lib = new File(directory, "lib");
-		assertTrue(lib.mkdir());
-		File nfar = new File(lib, host.archiveProjectId + ".nfar");
-		final ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(nfar));
-		zipOutputStream.putNextEntry(new ZipEntry("src/A.js"));
-		zipOutputStream.putNextEntry(new ZipEntry("src/B.js"));
-		zipOutputStream.putNextEntry(new ZipEntry("src/sub/B.js"));
-		zipOutputStream.putNextEntry(new ZipEntry("src/sub/C.js"));
-		zipOutputStream.putNextEntry(new ZipEntry("src/sub/leaf/D.js"));
-
-		zipOutputStream.putNextEntry(new ZipEntry(IN4JSProject.N4MF_MANIFEST));
-		// this will close the stream
-		zipOutputStream.write(("ProjectId: " + host.archiveProjectId + "\n" +
-				"ProjectType: library\n" +
-				"ProjectVersion: 0.0.1-SNAPSHOT\n" +
-				"VendorId: org.eclipse.n4js\n" +
-				"VendorName: \"Eclipse N4JS Project\"\n" +
-				"Output: \"src-gen\"\n" +
-				"Sources {\n" +
-				"	source {" +
-				"		\"src\"\n" +
-				"	}\n" +
-				"}").getBytes(Charsets.UTF_8));
-		zipOutputStream.close();
-		host.setArchiveFileURI(URIUtils.normalize(URI.createURI(nfar.toURI().toString())));
-	}
-
-	private void createManifest(URI projectDir, String string) throws IOException {
+	/**
+	 * Creates a new temporary project with dummy modules in the 'src' folder and the given {@code package.json}
+	 * content.
+	 *
+	 * @throws IOException
+	 *             if the files cannot be created successfully.
+	 */
+	private void createProject(URI projectDir, String packageJSONContent) throws IOException {
 		File directory = new File(java.net.URI.create(projectDir.toString()));
-		Files.write(string, new File(directory, IN4JSProject.N4MF_MANIFEST), Charsets.UTF_8);
+		Files.write(packageJSONContent, new File(directory, PROJECT_DESCRIPTION_FILENAME), Charsets.UTF_8);
 		File src = new File(directory, "src");
 		assertTrue(src.mkdir());
 		File sub = new File(src, "sub");
