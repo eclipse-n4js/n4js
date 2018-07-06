@@ -1360,40 +1360,40 @@ public class N4HeadlessCompiler {
 	 *            the build order
 	 */
 	private void printBuildOrder(List<MarkedProject> buildOrder) {
-		// if (logger.isCreateDebugOutput()) {
-		System.out.println("Building " + buildOrder.size() + " projects in the following order");
+		if (logger.isCreateDebugOutput()) {
+			logger.debug("Building " + buildOrder.size() + " projects in the following order");
 
-		long generated = buildOrder.stream().filter(mp -> mp.hasMarkers()).count();
-		int decimals = Long.toString(generated).length();
+			long generated = buildOrder.stream().filter(mp -> mp.hasMarkers()).count();
+			int decimals = Long.toString(generated).length();
 
-		StringBuilder pattern = new StringBuilder();
-		StringBuilder placeHolderB = new StringBuilder();
-		for (long i = 0; i < decimals; i++) {
-			pattern.append("#");
-			placeHolderB.append("-");
-		}
-
-		DecimalFormat indexFormat = new DecimalFormat(pattern.toString());
-		String indexPlaceHolder = placeHolderB.toString();
-
-		int index = 1;
-		for (MarkedProject mp : buildOrder) {
-			boolean generate = mp.hasMarkers();
-
-			StringBuilder msg = new StringBuilder();
-			if (generate) {
-				msg.append(indexFormat.format(index)).append(".");
-				index++;
-			} else {
-				msg.append(indexPlaceHolder).append(" ");
+			StringBuilder pattern = new StringBuilder();
+			StringBuilder placeHolderB = new StringBuilder();
+			for (long i = 0; i < decimals; i++) {
+				pattern.append("#");
+				placeHolderB.append("-");
 			}
 
-			msg.append(" Project ").append(mp.project);
-			msg.append(" used by [").append(Joiner.on(", ").join(mp.markers)).append("]");
+			DecimalFormat indexFormat = new DecimalFormat(pattern.toString());
+			String indexPlaceHolder = placeHolderB.toString();
 
-			System.out.println(msg.toString());
+			int index = 1;
+			for (MarkedProject mp : buildOrder) {
+				boolean generate = mp.hasMarkers();
+
+				StringBuilder msg = new StringBuilder();
+				if (generate) {
+					msg.append(indexFormat.format(index)).append(".");
+					index++;
+				} else {
+					msg.append(indexPlaceHolder).append(" ");
+				}
+
+				msg.append(" Project ").append(mp.project);
+				msg.append(" used by [").append(Joiner.on(", ").join(mp.markers)).append("]");
+
+				logger.debug(msg.toString());
+			}
 		}
-		// }
 	}
 
 	/**
