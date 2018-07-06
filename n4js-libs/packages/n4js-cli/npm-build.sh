@@ -13,8 +13,6 @@ echo "Start running npm-build"
 set -e
 cd `dirname $0`
 
-CUR_DIR=`pwd`
-
 function echo_exec {
     echo "$@"
     $@
@@ -22,7 +20,16 @@ function echo_exec {
 
 echo "We are in $PWD"
 
-echo "Copy freshly built tools/org.eclipse.n4js.hlc/target/n4jsc.jar to ./bin folder"
-echo_exec cp ../../../tools/org.eclipse.n4js.hlc/target/n4jsc.jar ./bin/n4jsc.jar
+if [ "${N4_N4JSC_JAR}" == "" ]; then
+	echo "N4_N4JSC_JAR environment variable is not set. Can't know where to obtain n4jsc.jar"	
+	exit 1;
+fi
+
+if [[ ! ${N4_N4JSC_JAR} =~ ^https?:// ]]; then
+    echo_exec cp ${N4_N4JSC_JAR} ./bin/n4jsc.jar
+elif [ "`which wget`" != "" ]; then
+    echo_exec wget --no-check-certificate ${N4_N4JSC_JAR} -O ./bin/n4jsc.jar
+else
+    echo_exec curl --insecure --location ${N4_N4JSC_JAR} -o ./bin/n4jsc.jar
 
 echo "End running npm-build"
