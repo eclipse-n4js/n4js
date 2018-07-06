@@ -12,7 +12,7 @@
   },
   "description": "Node.js runner used to compile and launch the mangelhaft tests from command line.",
   "scripts": {
-    "test": "./tests/npm-test.sh"
+    "disabled-test": "./tests/npm-test.sh"
   },
   "bin": {
     "n4js-mangelhaft": "./bin/n4js-mangelhaft-cli.js"
@@ -45,14 +45,5 @@
     ],
     "moduleLoader": "n4js"
   },
-  "devDependencies": {
-    "n4js-runtime-fetch": "^0.1.0",
-    "n4js-runtime-es2015": "^0.1.0",
-    "n4js-runtime-node": "^0.1.0",
-    "n4js-runtime-ecma402": "^0.1.0",
-    "n4js-runtime-esnext": "^0.1.0",
-    "n4js-runtime-n4": "^0.1.0",
-    "n4js-runtime-v8": "^0.1.0",
-    "n4js-node": "^0.1.0"
-  }
+  "devDependencies": {}
 }
