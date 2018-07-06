@@ -1,8 +1,8 @@
 {
-	"name": "PSingleTestNpm",
+	"name": "org.eclipse.n4js.client",
 	"version": "0.0.1-SNAPSHOT",
 	"dependencies": {
-		"n4js-node": "test"
+		"org.eclipse.n4js.sample.api": "*"
 	},
 	"n4js": {
 		"projectType": "library",

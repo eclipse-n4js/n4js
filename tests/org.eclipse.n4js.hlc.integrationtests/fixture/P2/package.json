@@ -1,8 +1,8 @@
 {
-	"name": "PSingleTestNpm",
+	"name": "P2",
 	"version": "0.0.1-SNAPSHOT",
 	"dependencies": {
-		"n4js-node": "test"
+		"P1": "*"
 	},
 	"n4js": {
 		"projectType": "library",

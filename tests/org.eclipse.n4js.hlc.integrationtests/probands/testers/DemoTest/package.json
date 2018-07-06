@@ -1,17 +1,19 @@
 {
-	"name": "PSingleTestNpm",
+	"name": "DemoTest",
 	"version": "0.0.1-SNAPSHOT",
 	"dependencies": {
-		"n4js-node": "test"
+		"org.eclipse.n4js.mangelhaft": "*",
+		"org.eclipse.n4js.mangelhaft.assert": "*",
+		"Demo": "*"
 	},
 	"n4js": {
-		"projectType": "library",
+		"projectType": "test",
 		"vendorId": "org.eclipse.n4js",
 		"vendorName": "Eclipse N4JS Project",
 		"output": "src-gen",
 		"sources": {
-			"source": [
-				"src"
+			"test": [
+				"test"
 			]
 		}
 	}

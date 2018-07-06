@@ -1,8 +1,8 @@
 {
-	"name": "PSingleTestNpm",
+	"name": "org.eclipse.n4js.sample.nasty",
 	"version": "0.0.1-SNAPSHOT",
 	"dependencies": {
-		"n4js-node": "test"
+		"org.eclipse.n4js.sample.utils": "*"
 	},
 	"n4js": {
 		"projectType": "library",
@@ -13,6 +13,10 @@
 			"source": [
 				"src"
 			]
-		}
+		},
+		"implementationId": "impl.nasty",
+		"implementedProjects": [
+			"org.eclipse.n4js.sample.api"
+		]
 	}
 }

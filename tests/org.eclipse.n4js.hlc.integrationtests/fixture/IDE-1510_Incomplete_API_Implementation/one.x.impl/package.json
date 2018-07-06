@@ -1,9 +1,6 @@
 {
-	"name": "PSingleTestNpm",
+	"name": "one.x.impl",
 	"version": "0.0.1-SNAPSHOT",
-	"dependencies": {
-		"n4js-node": "test"
-	},
 	"n4js": {
 		"projectType": "library",
 		"vendorId": "org.eclipse.n4js",
@@ -13,6 +10,10 @@
 			"source": [
 				"src"
 			]
-		}
+		},
+		"implementationId": "one",
+		"implementedProjects": [
+			"one.api"
+		]
 	}
 }

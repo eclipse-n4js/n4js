@@ -1,9 +1,6 @@
 {
-	"name": "PSingleTestNpm",
+	"name": "PSingle",
 	"version": "0.0.1-SNAPSHOT",
-	"dependencies": {
-		"n4js-node": "test"
-	},
 	"n4js": {
 		"projectType": "library",
 		"vendorId": "org.eclipse.n4js",

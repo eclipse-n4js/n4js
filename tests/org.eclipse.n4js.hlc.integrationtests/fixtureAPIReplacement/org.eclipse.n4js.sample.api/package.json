@@ -1,11 +1,11 @@
 {
-	"name": "PSingleTestNpm",
+	"name": "org.eclipse.n4js.sample.api",
 	"version": "0.0.1-SNAPSHOT",
 	"dependencies": {
-		"n4js-node": "test"
+		"org.eclipse.n4js.sample.utils": "*"
 	},
 	"n4js": {
-		"projectType": "library",
+		"projectType": "api",
 		"vendorId": "org.eclipse.n4js",
 		"vendorName": "Eclipse N4JS Project",
 		"output": "src-gen",
