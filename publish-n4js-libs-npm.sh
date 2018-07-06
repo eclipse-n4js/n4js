@@ -13,6 +13,7 @@
 set -e
 echo "Start publishing n4js-libs and n4js-cli"
 
+cd `dirname $0`
 CUR_DIR=`pwd`
 
 yarn cache clean
