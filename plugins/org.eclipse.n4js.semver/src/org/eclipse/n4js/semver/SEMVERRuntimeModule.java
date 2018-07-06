@@ -10,7 +10,10 @@
  */
 package org.eclipse.n4js.semver;
 
+import org.eclipse.n4js.semver.validation.SEMVERIssueCodes;
+import org.eclipse.n4js.semver.validation.SEMVERIssueSeveritiesProvider;
 import org.eclipse.xtext.serializer.ISerializer;
+import org.eclipse.xtext.validation.IssueSeveritiesProvider;
 
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
@@ -25,4 +28,8 @@ public class SEMVERRuntimeModule extends AbstractSEMVERRuntimeModule {
 		return SEMVERSerializer.class;
 	}
 
+	/** Bind custom SEMVER issue severities provider that operates based on {@link SEMVERIssueCodes}. */
+	public Class<? extends IssueSeveritiesProvider> bindIssueSeveritiesProvider() {
+		return SEMVERIssueSeveritiesProvider.class;
+	}
 }
