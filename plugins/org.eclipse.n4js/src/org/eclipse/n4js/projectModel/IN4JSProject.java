@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.n4mf.BootstrapModule;
 import org.eclipse.n4js.n4mf.DeclaredVersion;
 import org.eclipse.n4js.n4mf.ModuleFilter;
@@ -207,4 +208,11 @@ public interface IN4JSProject extends IN4JSSourceContainerAware {
 	 * @return a collection of tested projects for the current test project.
 	 */
 	Collection<IN4JSProject> getTestedProjects();
+
+	/**
+	 * Returns {@code true} if this {@link N4JSProject} was explicitly configured to be of the N4JS nature.
+	 *
+	 * @See {@link ProjectDescription#isHasN4JSNature()}
+	 */
+	boolean hasN4JSNature();
 }

@@ -307,8 +307,8 @@ public class HeadlessHelper {
 	}
 
 	/**
-	 * Returns a stream of {@link File} handles for all N4JS project locations that can be found by scanning the given list
-	 * of {@code absProjectRoots}.
+	 * Returns a stream of {@link File} handles for all N4JS project locations that can be found by scanning the given
+	 * list of {@code absProjectRoots}.
 	 *
 	 * Never includes the target platform install location (cf.
 	 * {@link TargetPlatformInstallLocationProvider#getTargetPlatformFileLocation()}).

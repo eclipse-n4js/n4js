@@ -102,7 +102,7 @@ public class LibraryManager {
 	private ExternalIndexSynchronizer indexSynchronizer;
 
 	@Inject
-	private FileBasedExternalPackageManager filebasedPackageManger;
+	private FileBasedExternalPackageManager filebasedPackageManager;
 
 	@Inject
 	private IN4JSCore n4jsCore;
@@ -259,16 +259,22 @@ public class LibraryManager {
 
 				// 1. The package has a package-fragment.json: Make sure to only collect
 				// transitive dependencies declared in the fragment (type definition dependencies)
-				if (filebasedPackageManger.isExternalProjectWithFragment(npmLocation)) {
-					ProjectDescription description = filebasedPackageManger
+				if (filebasedPackageManager.isExternalProjectWithFragment(npmLocation)) {
+					ProjectDescription description = filebasedPackageManager
 							.loadFragmentProjectDescriptionFromProjectRoot(npmLocation);
 					collectDependencies(description, dependencies);
 					continue;
 				}
 
 				// obtain project description of the added project (package.json + fragment)
-				final ProjectDescription pd = filebasedPackageManger
+				final ProjectDescription pd = filebasedPackageManager
 						.loadProjectDescriptionFromProjectRoot(npmLocation);
+
+				if (pd == null) {
+					LOGGER.error("Cannot obtain project description of npm at " + npmLocation
+							+ ". Installation results may be inaccurate.");
+					continue;
+				}
 
 				// 2. The package represents an actual N4JS project (with .n4js resources), which
 				// needs to be built. In that case we must install all of its dependencies, as declared

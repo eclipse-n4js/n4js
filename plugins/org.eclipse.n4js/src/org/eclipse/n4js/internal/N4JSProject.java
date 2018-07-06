@@ -415,4 +415,15 @@ public class N4JSProject implements IN4JSProject {
 
 		return absent();
 	}
+
+	@Override
+	public boolean hasN4JSNature() {
+		if (!exists())
+			return false;
+		final ProjectDescription pd = model.getProjectDescription(getLocation());
+		if (pd == null) {
+			return false;
+		}
+		return pd.isHasN4JSNature();
+	}
 }

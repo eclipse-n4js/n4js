@@ -560,8 +560,9 @@ public class N4HeadlessCompiler {
 		projectToMark.markWith(marker);
 
 		// Recursively apply to all dependencies of the given markee
-		for (IN4JSProject dependency : dependencies.get(markee))
+		for (IN4JSProject dependency : dependencies.get(markee)) {
 			markDependencies(marker, dependency, markables, dependencies);
+		}
 	}
 
 	/**
@@ -615,10 +616,10 @@ public class N4HeadlessCompiler {
 		ImmutableList<? extends IN4JSProject> pendingProjects = project.getDependenciesAndImplementedApis();
 
 		// Do not process dependencies of projects that need not to be built (e.g. transitive non-N4JS npm
-		// dependencies).
+		// dependencies or projects without "n4js" nature).
 		// In the context of the headless compiler, we regard such projects as independent.
-		// TODO Revisit once GH-821 is started
-		if (!headlessHelper.isProjectToBeBuilt(project)) {
+		// TODO Revisit once GH-821 is being worked on
+		if (!headlessHelper.isProjectToBeBuilt(project) || !project.hasN4JSNature()) {
 			independent.add(project);
 			return;
 		}
@@ -1359,40 +1360,40 @@ public class N4HeadlessCompiler {
 	 *            the build order
 	 */
 	private void printBuildOrder(List<MarkedProject> buildOrder) {
-		if (logger.isCreateDebugOutput()) {
-			logger.debug("Building " + buildOrder.size() + " projects in the following order");
+		// if (logger.isCreateDebugOutput()) {
+		System.out.println("Building " + buildOrder.size() + " projects in the following order");
 
-			long generated = buildOrder.stream().filter(mp -> mp.hasMarkers()).count();
-			int decimals = Long.toString(generated).length();
+		long generated = buildOrder.stream().filter(mp -> mp.hasMarkers()).count();
+		int decimals = Long.toString(generated).length();
 
-			StringBuilder pattern = new StringBuilder();
-			StringBuilder placeHolderB = new StringBuilder();
-			for (long i = 0; i < decimals; i++) {
-				pattern.append("#");
-				placeHolderB.append("-");
-			}
-
-			DecimalFormat indexFormat = new DecimalFormat(pattern.toString());
-			String indexPlaceHolder = placeHolderB.toString();
-
-			int index = 1;
-			for (MarkedProject mp : buildOrder) {
-				boolean generate = mp.hasMarkers();
-
-				StringBuilder msg = new StringBuilder();
-				if (generate) {
-					msg.append(indexFormat.format(index)).append(".");
-					index++;
-				} else {
-					msg.append(indexPlaceHolder).append(" ");
-				}
-
-				msg.append(" Project ").append(mp.project);
-				msg.append(" used by [").append(Joiner.on(", ").join(mp.markers)).append("]");
-
-				logger.debug(msg.toString());
-			}
+		StringBuilder pattern = new StringBuilder();
+		StringBuilder placeHolderB = new StringBuilder();
+		for (long i = 0; i < decimals; i++) {
+			pattern.append("#");
+			placeHolderB.append("-");
 		}
+
+		DecimalFormat indexFormat = new DecimalFormat(pattern.toString());
+		String indexPlaceHolder = placeHolderB.toString();
+
+		int index = 1;
+		for (MarkedProject mp : buildOrder) {
+			boolean generate = mp.hasMarkers();
+
+			StringBuilder msg = new StringBuilder();
+			if (generate) {
+				msg.append(indexFormat.format(index)).append(".");
+				index++;
+			} else {
+				msg.append(indexPlaceHolder).append(" ");
+			}
+
+			msg.append(" Project ").append(mp.project);
+			msg.append(" used by [").append(Joiner.on(", ").join(mp.markers)).append("]");
+
+			System.out.println(msg.toString());
+		}
+		// }
 	}
 
 	/**
