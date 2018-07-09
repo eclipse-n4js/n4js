@@ -65,6 +65,8 @@ yarn install
 # Build n4js-cli lib
 echo "=== Run lerna run build/test on n4js libs"
 
+export PATH=`pwd`/node_modules/.bin:${PATH}
+
 # Set N4_N4JSC_JAR to the the freshly built n4jsc.jar in tools/hlc/target
 export N4_N4JSC_JAR="${CUR_DIR}/tools/org.eclipse.n4js.hlc/target/n4jsc.jar"
 

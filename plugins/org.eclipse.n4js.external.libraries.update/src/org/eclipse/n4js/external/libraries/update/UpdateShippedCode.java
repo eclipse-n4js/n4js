@@ -267,7 +267,7 @@ public class UpdateShippedCode implements IWorkflowComponent {
 		println("Cleaning of Json file started...");
 		FileVisitor<Path> fileVisitor = new PackageJsonVisitor();
 		try {
-			Files.walkFileTree(workingDirectory.toPath().resolve("n4js-node"),
+			Files.walkFileTree(workingDirectory.toPath(),
 					fileVisitor);
 		} catch (Exception e) {
 			e.printStackTrace();
