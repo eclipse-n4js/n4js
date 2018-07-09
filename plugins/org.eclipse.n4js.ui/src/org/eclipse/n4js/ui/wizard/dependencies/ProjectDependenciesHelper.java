@@ -54,6 +54,8 @@ public class ProjectDependenciesHelper {
 	 *   <li> platform files requests "express@2.0.0" but workspace project depends on "express@1.0.0"  then express is installed in version "2.0.0"</li>
 	 *  <ul>
 	 * </pre>
+	 *
+	 * Will take into account only projects in workspace, not external projects (neither NPM packages nor shipped code).
 	 */
 	public Map<String, String> calculateDependenciesToInstall() {
 		Map<String, String> versionedPackages = new HashMap<>();

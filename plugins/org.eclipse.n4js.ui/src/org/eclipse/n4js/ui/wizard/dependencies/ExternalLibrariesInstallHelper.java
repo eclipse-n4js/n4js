@@ -90,7 +90,7 @@ public class ExternalLibrariesInstallHelper {
 					.map(id -> dependenciesToInstall.get(id))
 					.collect(Collectors.toSet());
 			if (versionConstraintsOfShippedCodeToInstall.size() > 1) {
-				// TODO warn about conflicting version constraints for shipped code!
+				// FIXME GH-957 / GH-809 warn about conflicting version constraints for shipped code!
 			}
 			String versionConstraint = versionConstraintsOfShippedCodeToInstall.stream().findFirst()
 					.orElse(null);
