@@ -25,7 +25,6 @@
     "nomnom-patched": "~1.8.1",
     "glob": "~7.1.2",
     "n4js-cli": "^0.1.0",
-    "n4mf-parser": "^0.1.0",
     "cli-color": "~1.2.0"
   },
   "n4js": {
