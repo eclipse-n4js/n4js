@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-import {MANIFEST_N4MF} from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestAPI";
+import {PACKAGE_JSON} from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestAPI";
 import NodeTestAPI from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestAPI";
 import {fsSafeAccessSync} from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestAPI";
 import NodeTestOptions from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestOptions";
@@ -64,7 +64,7 @@ const resolvePath = (p: string): string => lib_path.resolve(cwd, p);
 
 const resolveProject = (p: string): string => {
     const dir = lib_path.resolve(cwd, p);
-    if (fsSafeAccessSync(lib_path.join(dir, MANIFEST_N4MF))) {
+    if (fsSafeAccessSync(lib_path.join(dir, PACKAGE_JSON))) {
         return dir;
     } else { // try to resolve NPM id
         try {
