@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -217,15 +218,19 @@ public abstract class ExternalIndexSynchronizer {
 
 		if (isProjectDescriptionFile) {
 			Iterable<IEObjectDescription> pds = res.getExportedObjectsByType(JSONPackage.eINSTANCE.getJSONDocument());
-			IEObjectDescription pDescription = pds.iterator().next();
-			String nameFromPackageJSON = pDescription
-					.getUserData(PackageJsonResourceDescriptionExtension.PROJECT_ID_KEY);
-			if (!name.equals(nameFromPackageJSON)) {
-				throw new IllegalStateException(
-						"name mismatch: name=" + name + "; nameFromPackageJSON=" + nameFromPackageJSON);
-			}
+			Iterator<IEObjectDescription> pdsIter = pds.iterator();
 
-			version = pDescription.getUserData(PackageJsonResourceDescriptionExtension.PROJECT_VERSION_KEY);
+			if (pdsIter.hasNext()) {
+				IEObjectDescription pDescription = pdsIter.next();
+				String projectIdKey = PackageJsonResourceDescriptionExtension.PROJECT_ID_KEY;
+				String nameFromPackageJSON = pDescription.getUserData(projectIdKey);
+				if (!name.equals(nameFromPackageJSON)) {
+					String msg = "name mismatch: name=" + name + "; nameFromPackageJSON=" + nameFromPackageJSON;
+					throw new IllegalStateException(msg);
+				}
+
+				version = pDescription.getUserData(PackageJsonResourceDescriptionExtension.PROJECT_VERSION_KEY);
+			}
 		}
 
 		if (!npmsIndex.containsKey(name) || isProjectDescriptionFile) {
