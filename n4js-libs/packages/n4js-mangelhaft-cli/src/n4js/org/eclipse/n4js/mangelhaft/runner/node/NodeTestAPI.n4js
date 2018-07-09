@@ -14,7 +14,6 @@ import {TestInfo} from "org/eclipse/n4js/mangelhaft/types/TestInfo";
 import * as child_process from "child_process";
 import * as lib_fs from "fs";
 import * as glob+ from "glob";
-import * as n4mf_parser from "n4mf-parser";
 import * as n4js_cli from "n4js-cli";
 import * as os from "os";
 import * as lib_path from "path";
@@ -22,7 +21,7 @@ import * as lib_path from "path";
 const isHTTP_re = /^https?:\/\//i;
 const n4jsFileExt_re = /\.n4js[xd]?$/;
 
-export public const MANIFEST_N4MF = "manifest.n4mf";
+export public const PACKAGE_JSON = "package.json";
 
 /**
  * TODO define as part of n4js-runtime-node
@@ -51,48 +50,42 @@ export public async function createTempDir(): string {
     return await lib_fs.mkdtemp(prefix);
 }
 
-function detectProjectDir(npm: string): string {
-    const p = System._nodeRequire.resolve(`${npm}/package.json`);
-    return p.substring(0, p.lastIndexOf(lib_path.sep));
-}
-
 export default public class NodeTestAPI {
     /**
      * Executes a test run (might include compilation) with the given set of test options.
      */
     public static async exec(options: NodeTestOptions): void {
-        const idToManifest = new Map<string, Object>();
-        const prjToManifest = new Map<string, Object>();
+        const pathToPackageJson = new Map<string, Object>();
 
-        async function addManifest(dir: string): void {
-            const manifest = await n4mf_parser.readManifest(lib_path.join(dir, MANIFEST_N4MF));
-            idToManifest.set(manifest["ProjectId"] as string, manifest);
-            prjToManifest.set(dir, manifest);
+        async function addProject(dir: string): void {
+            const content = String(await lib_fs.readFile(lib_path.join(dir, PACKAGE_JSON)));
+            const packageJson = JSON.parse(content);
+            pathToPackageJson.set(dir, packageJson);
         }
 
         for (const dir of (options.projects || [])) {
-            await addManifest(dir);
+            await addProject(dir);
         }
 
         for (const dir of (options.scan || [])) {
             for (const p of await lib_fs.readdir(dir)) {
                 const prj = lib_path.join(dir, p);
 
-                if (fsSafeAccessSync(lib_path.join(prj, MANIFEST_N4MF))) {
-                    await addManifest(prj);
+                if (fsSafeAccessSync(lib_path.join(prj, PACKAGE_JSON))) {
+                    await addProject(prj);
                 }
             }
         }
 
-        const projects = Array.from(prjToManifest.keys());
+        const projectDirs = Array.from(pathToPackageJson.keys());
 
         if (options.debug) {
-            console.log("projects:", projects);
+            console.log("projects:", projectDirs);
         }
 
         if (options.compile) { // call n4jsc
             const n4jscTempDir = await createTempDir();
-            
+
             if (isHTTP_re.test(options.testCatalog)) { // use temp file
                 options.testCatalog = lib_path.join(n4jscTempDir, "test-catalog.json");
             } else {
@@ -114,7 +107,7 @@ export default public class NodeTestAPI {
                 keepCompiling: options.keepCompiling,
                 verbose: options.debug,
                 debug: options.debug
-            }, projects);
+            }, projectDirs);
 
             if (options.debug) {
                 console.log("generated test catalog:", options.testCatalog);
@@ -122,7 +115,7 @@ export default public class NodeTestAPI {
 
             const testCatalog = options.emitProjectTestCatalogs ? JSON.parse(await lib_fs.readFile(options.testCatalog, { encoding: "UTF-8" })) as Array<TestInfo> : null;
 
-            for (const [dir, manifest] of prjToManifest) {
+            for (const [dir, packageJson] of pathToPackageJson) {
                 if (options.generatedModulesGlob) {
                     // walk all generated code modules:
                     const bundleGen = [];
@@ -144,7 +137,7 @@ export default public class NodeTestAPI {
                 }
 
                 if (options.emitProjectTestCatalogs) {
-                    const tests = testCatalog.filter(test => test.origin === manifest["ProjectId"] as string);
+                    const tests = testCatalog.filter(test => test.origin === packageJson["name"] as string);
                     if (tests.length) {
                         const file = lib_path.join(dir, options.emitProjectTestCatalogs);
                         if (options.debug) {
@@ -176,7 +169,7 @@ export default public class NodeTestAPI {
 
         // spawn test runner process, set parent of all projects on NODE_PATH:
         let nodePath: Array<string> = [];
-        for (const [dir] of prjToManifest) {
+        for (const dir of projectDirs) {
             nodePath.push(lib_path.dirname(dir));
         }
         
