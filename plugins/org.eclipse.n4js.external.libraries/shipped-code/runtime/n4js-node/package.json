@@ -34,7 +34,6 @@
     "systemjs": "~0.19.40"
   },
   "files": [
-    "manifest.n4mf",
     "src-gen"
   ],
   "n4js": {
