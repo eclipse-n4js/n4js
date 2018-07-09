@@ -20,10 +20,10 @@ import * as lib_fs from "fs"
 import * as os from "os"
 import * as xmlbuilder+ from "xmlbuilder"
 
-export public async function mkdirp(path: string, mode: int=): void {
+export public function mkdirp(path: string, mode: int=): void {
     if (!lib_fs.existsSync(path)) {
-        await mkdirp(path.substring(0, path.lastIndexOf(lib_path.sep)), mode);
-        await (lib_fs.mkdir(path, mode) as Promise<?,?>);
+        mkdirp(path.substring(0, path.lastIndexOf(lib_path.sep)), mode);
+        lib_fs.mkdirSync(path, mode);
     }
 }
 
@@ -128,8 +128,8 @@ export public class XUnitReporter implements ITestReporter {
         if (spec.xunitReportFile) {
             let dir = this.spec.xunitReportFile;
             dir = dir.substring(0, dir.lastIndexOf(lib_path.sep));
-            await mkdirp(dir);
-            await lib_fs.writeFile(this.spec.xunitReportFile, this.output, { encoding: "UTF-8" });
+            mkdirp(dir);
+            lib_fs.writeFileSync(this.spec.xunitReportFile, this.output, { encoding: "UTF-8" });
         }
     }
     
