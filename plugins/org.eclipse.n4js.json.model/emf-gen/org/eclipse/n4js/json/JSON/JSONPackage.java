@@ -12,6 +12,7 @@ package org.eclipse.n4js.json.JSON;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 
@@ -104,13 +105,22 @@ public interface JSONPackage extends EPackage {
 	int JSON_DOCUMENT_FEATURE_COUNT = 1;
 
 	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JSON_DOCUMENT___TO_STRING = 0;
+
+	/**
 	 * The number of operations of the '<em>Document</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int JSON_DOCUMENT_OPERATION_COUNT = 0;
+	int JSON_DOCUMENT_OPERATION_COUNT = 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.json.JSON.impl.JSONValueImpl <em>Value</em>}' class.
@@ -169,13 +179,22 @@ public interface JSONPackage extends EPackage {
 	int JSON_OBJECT_FEATURE_COUNT = JSON_VALUE_FEATURE_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JSON_OBJECT___TO_STRING = JSON_VALUE_OPERATION_COUNT + 0;
+
+	/**
 	 * The number of operations of the '<em>Object</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int JSON_OBJECT_OPERATION_COUNT = JSON_VALUE_OPERATION_COUNT + 0;
+	int JSON_OBJECT_OPERATION_COUNT = JSON_VALUE_OPERATION_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.json.JSON.impl.JSONArrayImpl <em>Array</em>}' class.
@@ -206,13 +225,22 @@ public interface JSONPackage extends EPackage {
 	int JSON_ARRAY_FEATURE_COUNT = JSON_VALUE_FEATURE_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JSON_ARRAY___TO_STRING = JSON_VALUE_OPERATION_COUNT + 0;
+
+	/**
 	 * The number of operations of the '<em>Array</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int JSON_ARRAY_OPERATION_COUNT = JSON_VALUE_OPERATION_COUNT + 0;
+	int JSON_ARRAY_OPERATION_COUNT = JSON_VALUE_OPERATION_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.json.JSON.impl.NameValuePairImpl <em>Name Value Pair</em>}' class.
@@ -252,13 +280,22 @@ public interface JSONPackage extends EPackage {
 	int NAME_VALUE_PAIR_FEATURE_COUNT = 2;
 
 	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NAME_VALUE_PAIR___TO_STRING = 0;
+
+	/**
 	 * The number of operations of the '<em>Name Value Pair</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int NAME_VALUE_PAIR_OPERATION_COUNT = 0;
+	int NAME_VALUE_PAIR_OPERATION_COUNT = 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.json.JSON.impl.JSONStringLiteralImpl <em>String Literal</em>}' class.
@@ -289,13 +326,22 @@ public interface JSONPackage extends EPackage {
 	int JSON_STRING_LITERAL_FEATURE_COUNT = JSON_VALUE_FEATURE_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JSON_STRING_LITERAL___TO_STRING = JSON_VALUE_OPERATION_COUNT + 0;
+
+	/**
 	 * The number of operations of the '<em>String Literal</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int JSON_STRING_LITERAL_OPERATION_COUNT = JSON_VALUE_OPERATION_COUNT + 0;
+	int JSON_STRING_LITERAL_OPERATION_COUNT = JSON_VALUE_OPERATION_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.json.JSON.impl.JSONNumericLiteralImpl <em>Numeric Literal</em>}' class.
@@ -326,13 +372,22 @@ public interface JSONPackage extends EPackage {
 	int JSON_NUMERIC_LITERAL_FEATURE_COUNT = JSON_VALUE_FEATURE_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JSON_NUMERIC_LITERAL___TO_STRING = JSON_VALUE_OPERATION_COUNT + 0;
+
+	/**
 	 * The number of operations of the '<em>Numeric Literal</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int JSON_NUMERIC_LITERAL_OPERATION_COUNT = JSON_VALUE_OPERATION_COUNT + 0;
+	int JSON_NUMERIC_LITERAL_OPERATION_COUNT = JSON_VALUE_OPERATION_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.json.JSON.impl.JSONBooleanLiteralImpl <em>Boolean Literal</em>}' class.
@@ -363,13 +418,22 @@ public interface JSONPackage extends EPackage {
 	int JSON_BOOLEAN_LITERAL_FEATURE_COUNT = JSON_VALUE_FEATURE_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JSON_BOOLEAN_LITERAL___TO_STRING = JSON_VALUE_OPERATION_COUNT + 0;
+
+	/**
 	 * The number of operations of the '<em>Boolean Literal</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int JSON_BOOLEAN_LITERAL_OPERATION_COUNT = JSON_VALUE_OPERATION_COUNT + 0;
+	int JSON_BOOLEAN_LITERAL_OPERATION_COUNT = JSON_VALUE_OPERATION_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.json.JSON.impl.JSONNullLiteralImpl <em>Null Literal</em>}' class.
@@ -422,6 +486,16 @@ public interface JSONPackage extends EPackage {
 	EReference getJSONDocument_Content();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.json.JSON.JSONDocument#toString() <em>To String</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>To String</em>' operation.
+	 * @see org.eclipse.n4js.json.JSON.JSONDocument#toString()
+	 * @generated
+	 */
+	EOperation getJSONDocument__ToString();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.json.JSON.JSONValue <em>Value</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -453,6 +527,16 @@ public interface JSONPackage extends EPackage {
 	EReference getJSONObject_NameValuePairs();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.json.JSON.JSONObject#toString() <em>To String</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>To String</em>' operation.
+	 * @see org.eclipse.n4js.json.JSON.JSONObject#toString()
+	 * @generated
+	 */
+	EOperation getJSONObject__ToString();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.json.JSON.JSONArray <em>Array</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -472,6 +556,16 @@ public interface JSONPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getJSONArray_Elements();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.json.JSON.JSONArray#toString() <em>To String</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>To String</em>' operation.
+	 * @see org.eclipse.n4js.json.JSON.JSONArray#toString()
+	 * @generated
+	 */
+	EOperation getJSONArray__ToString();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.json.JSON.NameValuePair <em>Name Value Pair</em>}'.
@@ -506,6 +600,16 @@ public interface JSONPackage extends EPackage {
 	EReference getNameValuePair_Value();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.json.JSON.NameValuePair#toString() <em>To String</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>To String</em>' operation.
+	 * @see org.eclipse.n4js.json.JSON.NameValuePair#toString()
+	 * @generated
+	 */
+	EOperation getNameValuePair__ToString();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.json.JSON.JSONStringLiteral <em>String Literal</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -525,6 +629,16 @@ public interface JSONPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getJSONStringLiteral_Value();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.json.JSON.JSONStringLiteral#toString() <em>To String</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>To String</em>' operation.
+	 * @see org.eclipse.n4js.json.JSON.JSONStringLiteral#toString()
+	 * @generated
+	 */
+	EOperation getJSONStringLiteral__ToString();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.json.JSON.JSONNumericLiteral <em>Numeric Literal</em>}'.
@@ -548,6 +662,16 @@ public interface JSONPackage extends EPackage {
 	EAttribute getJSONNumericLiteral_Value();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.json.JSON.JSONNumericLiteral#toString() <em>To String</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>To String</em>' operation.
+	 * @see org.eclipse.n4js.json.JSON.JSONNumericLiteral#toString()
+	 * @generated
+	 */
+	EOperation getJSONNumericLiteral__ToString();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.json.JSON.JSONBooleanLiteral <em>Boolean Literal</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -567,6 +691,16 @@ public interface JSONPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getJSONBooleanLiteral_BooleanValue();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.json.JSON.JSONBooleanLiteral#toString() <em>To String</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>To String</em>' operation.
+	 * @see org.eclipse.n4js.json.JSON.JSONBooleanLiteral#toString()
+	 * @generated
+	 */
+	EOperation getJSONBooleanLiteral__ToString();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.json.JSON.JSONNullLiteral <em>Null Literal</em>}'.
@@ -620,6 +754,14 @@ public interface JSONPackage extends EPackage {
 		EReference JSON_DOCUMENT__CONTENT = eINSTANCE.getJSONDocument_Content();
 
 		/**
+		 * The meta object literal for the '<em><b>To String</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation JSON_DOCUMENT___TO_STRING = eINSTANCE.getJSONDocument__ToString();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.json.JSON.impl.JSONValueImpl <em>Value</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -648,6 +790,14 @@ public interface JSONPackage extends EPackage {
 		EReference JSON_OBJECT__NAME_VALUE_PAIRS = eINSTANCE.getJSONObject_NameValuePairs();
 
 		/**
+		 * The meta object literal for the '<em><b>To String</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation JSON_OBJECT___TO_STRING = eINSTANCE.getJSONObject__ToString();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.json.JSON.impl.JSONArrayImpl <em>Array</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -664,6 +814,14 @@ public interface JSONPackage extends EPackage {
 		 * @generated
 		 */
 		EReference JSON_ARRAY__ELEMENTS = eINSTANCE.getJSONArray_Elements();
+
+		/**
+		 * The meta object literal for the '<em><b>To String</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation JSON_ARRAY___TO_STRING = eINSTANCE.getJSONArray__ToString();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.json.JSON.impl.NameValuePairImpl <em>Name Value Pair</em>}' class.
@@ -692,6 +850,14 @@ public interface JSONPackage extends EPackage {
 		EReference NAME_VALUE_PAIR__VALUE = eINSTANCE.getNameValuePair_Value();
 
 		/**
+		 * The meta object literal for the '<em><b>To String</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation NAME_VALUE_PAIR___TO_STRING = eINSTANCE.getNameValuePair__ToString();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.json.JSON.impl.JSONStringLiteralImpl <em>String Literal</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -708,6 +874,14 @@ public interface JSONPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute JSON_STRING_LITERAL__VALUE = eINSTANCE.getJSONStringLiteral_Value();
+
+		/**
+		 * The meta object literal for the '<em><b>To String</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation JSON_STRING_LITERAL___TO_STRING = eINSTANCE.getJSONStringLiteral__ToString();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.json.JSON.impl.JSONNumericLiteralImpl <em>Numeric Literal</em>}' class.
@@ -728,6 +902,14 @@ public interface JSONPackage extends EPackage {
 		EAttribute JSON_NUMERIC_LITERAL__VALUE = eINSTANCE.getJSONNumericLiteral_Value();
 
 		/**
+		 * The meta object literal for the '<em><b>To String</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation JSON_NUMERIC_LITERAL___TO_STRING = eINSTANCE.getJSONNumericLiteral__ToString();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.json.JSON.impl.JSONBooleanLiteralImpl <em>Boolean Literal</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -744,6 +926,14 @@ public interface JSONPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute JSON_BOOLEAN_LITERAL__BOOLEAN_VALUE = eINSTANCE.getJSONBooleanLiteral_BooleanValue();
+
+		/**
+		 * The meta object literal for the '<em><b>To String</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation JSON_BOOLEAN_LITERAL___TO_STRING = eINSTANCE.getJSONBooleanLiteral__ToString();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.json.JSON.impl.JSONNullLiteralImpl <em>Null Literal</em>}' class.

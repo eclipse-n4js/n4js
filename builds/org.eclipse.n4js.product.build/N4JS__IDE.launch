@@ -46,7 +46,6 @@
 <setEntry value="org.eclipse.help:default"/>
 <setEntry value="org.eclipse.jgit:default"/>
 <setEntry value="org.eclipse.n4js.jsdoc2spec.sdk:default"/>
-<setEntry value="org.eclipse.n4js.n4mf.sdk:default"/>
 <setEntry value="org.eclipse.n4js.regex.sdk:default"/>
 <setEntry value="org.eclipse.n4js.runner.sdk:default"/>
 <setEntry value="org.eclipse.n4js.sdk:default"/>

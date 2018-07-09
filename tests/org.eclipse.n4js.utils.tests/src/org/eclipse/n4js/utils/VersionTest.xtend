@@ -104,6 +104,12 @@ class VersionTest {
 	}
 
 	@Test
+	def void testFindClosestWithQualifier() {
+		val versions = #[new Version(2, 4, 0, "incomplete")];
+		Version.findClosestMatching(versions, new Version(2, 4, 0)).assertEquals(new Version(2, 4, 0, "incomplete"));
+	}
+
+	@Test
 	def void testParseWithLeadingNonDecimal() {
 		Version.createFromString('v5.0.0').assertEquals(new Version(5, 0, 0));
 	}
@@ -141,6 +147,22 @@ class VersionTest {
 	@Test
 	def void testIsValidExisting() {
 		assertTrue(Version.isValid(new Version(1, 2, 3)));
+	}
+
+	@Test
+	def void testCompareWithQualifier() {
+		val lower = new Version(1,2,3,"alpha");
+		val greater = new Version(1,2,3,"beta");
+		val greatest = new Version(1,2,3);
+		assertEquals( 0, lower.compareTo(lower));
+		assertEquals(-1, lower.compareTo(greater));
+		assertEquals(-1, lower.compareTo(greatest));
+		assertEquals( 1, greater.compareTo(lower));
+		assertEquals( 0, greater.compareTo(greater));
+		assertEquals(-1, greater.compareTo(greatest));
+		assertEquals( 1, greatest.compareTo(lower));
+		assertEquals( 1, greatest.compareTo(greater));
+		assertEquals( 0, greatest.compareTo(greatest));
 	}
 
 	private def assertMissing(Version actual) {

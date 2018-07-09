@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.utils.resources.IBuildSuppressingResourceDescriptionManager;
 import org.eclipse.xtext.builder.clustering.CopiedResourceDescription;
 import org.eclipse.xtext.builder.clustering.CurrentDescriptions;
 import org.eclipse.xtext.builder.debug.IBuildLogger;
@@ -142,8 +143,14 @@ class WriteNewResourceDescriptionsImplementation {
 	private void registerDelta(URI uri, Resource resource) {
 		final IResourceDescription.Manager manager = state.getResourceDescriptionManager(resource, uri);
 		if (manager != null) {
+			if (manager instanceof IBuildSuppressingResourceDescriptionManager) {
+				if (!((IBuildSuppressingResourceDescriptionManager) manager).isToBeBuilt(uri, resource)) {
+					return;
+				}
+			}
 			final IResourceDescription description = manager.getResourceDescription(resource);
 			final IResourceDescription copiedDescription = new CopiedResourceDescription(description);
+			// uncomment following two lines to avoid additions to index
 			newState.register(manager.createDelta(oldState.getResourceDescription(uri), copiedDescription));
 			buildData.queueURI(uri);
 		}

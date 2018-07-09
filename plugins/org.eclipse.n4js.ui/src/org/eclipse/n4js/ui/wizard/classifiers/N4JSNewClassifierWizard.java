@@ -184,7 +184,7 @@ public abstract class N4JSNewClassifierWizard<M extends N4JSClassifierWizardMode
 
 		WorkspaceWizardGenerator<M> generator = getGenerator();
 
-		generator.performManifestChanges(getModel(), monitor);
+		generator.performProjectDescriptionChanges(getModel(), monitor);
 		monitor.worked(1);
 
 		generator.writeToFile(getModel(), monitor);

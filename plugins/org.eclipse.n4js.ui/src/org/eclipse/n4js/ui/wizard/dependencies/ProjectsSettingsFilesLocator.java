@@ -23,6 +23,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.n4js.N4JSGlobals;
 
 import com.google.common.io.Files;
 
@@ -34,7 +35,7 @@ import com.google.common.io.Files;
 public final class ProjectsSettingsFilesLocator {
 	private static final String GIT = ".git";
 	private static final String NPMRC = "npmrc";
-	private static final String NODE_MODULES = "node_modules";
+	private static final String NODE_MODULES = N4JSGlobals.NODE_MODULES;
 	private static final Logger LOGGER = Logger.getLogger(ProjectsSettingsFilesLocator.class);
 
 	private final Set<File> foundNPMRC = new HashSet<>();

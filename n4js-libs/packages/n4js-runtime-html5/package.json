@@ -1,4 +1,5 @@
 {
+  "name": "n4js-runtime-html5",
   "version": "0.1.0",
   "author": {
     "name": "NumberFour AG",
@@ -24,7 +25,6 @@
     ],
     "moduleLoader": "n4js"
   },
-  "name": "n4js-runtime-html5",
   "dependencies": {},
   "devDependencies": {
     "n4js-runtime-fetch": "^0.1.0"

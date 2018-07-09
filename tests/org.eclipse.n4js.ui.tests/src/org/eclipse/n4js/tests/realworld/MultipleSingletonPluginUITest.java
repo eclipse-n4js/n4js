@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.n4js.n4mf.ui.internal.N4MFActivator;
+import org.eclipse.n4js.json.ui.internal.JsonActivator;
 import org.eclipse.n4js.regex.ui.internal.RegularExpressionActivator;
 import org.eclipse.n4js.tester.internal.TesterActivator;
 import org.eclipse.n4js.tester.ui.TesterUiActivator;
@@ -84,13 +84,13 @@ public class MultipleSingletonPluginUITest extends AbstractBuilderParticipantTes
 	 * Finally, for every such singleton class all injectors are checked whether they created an instance of the
 	 * singleton class and whether these instances are the same.
 	 */
-	@SuppressWarnings("unused")
 	@Test
 	public void identifyMultipleSingletons() throws Exception {
 		ProjectTestsUtils.importProject(new File("probands"), "ListBase");
 		IResourcesSetupUtil.waitForBuild();
 
-		new TesterUiActivator(); // force the TesterUI and Tester bundles to start
+		@SuppressWarnings("unused")
+		TesterUiActivator testerUiActivator = new TesterUiActivator(); // force the TesterUI and Tester bundles to start
 
 		Multimap<Class<?>, Injector> singletonInstances = HashMultimap.create();
 
@@ -113,8 +113,8 @@ public class MultipleSingletonPluginUITest extends AbstractBuilderParticipantTes
 		injectors.putAll(InjectorCollector.getSharedInjectors());
 		injectors.put(N4JSActivator.getInstance().getInjector(N4JSActivator.ORG_ECLIPSE_N4JS_N4JS),
 				"N4JS-Injector");
-		injectors.put(N4MFActivator.getInstance().getInjector(N4MFActivator.ORG_ECLIPSE_N4JS_N4MF_N4MF),
-				"N4MF-Injector");
+		injectors.put(JsonActivator.getInstance().getInjector(JsonActivator.ORG_ECLIPSE_N4JS_JSON_JSON),
+				"JSON-Injector");
 		injectors.put(RegularExpressionActivator.getInstance()
 				.getInjector(RegularExpressionActivator.ORG_ECLIPSE_N4JS_REGEX_REGULAREXPRESSION),
 				"Regex-Injector");

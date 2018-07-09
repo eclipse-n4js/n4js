@@ -1,0 +1,18 @@
+{
+	"name": "client",
+	"version": "0.0.1-SNAPSHOT",
+	"dependencies": {
+		"Supplier": "*"
+	},
+	"n4js": {
+		"projectType": "library",
+		"vendorId": "org.eclipse.n4js",
+		"vendorName": "Eclipse N4JS Project",
+		"output": "src-gen",
+		"sources": {
+			"source": [
+				"src"
+			]
+		}
+	}
+}

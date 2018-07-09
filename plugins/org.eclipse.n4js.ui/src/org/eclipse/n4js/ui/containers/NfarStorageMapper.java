@@ -30,6 +30,12 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.projectModel.IN4JSArchive;
+import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.n4js.ts.ui.navigation.URIBasedStorage;
+import org.eclipse.n4js.ui.projectModel.IN4JSEclipseArchive;
+import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
+import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
 import org.eclipse.xtext.ui.resource.IStorage2UriMapperContribution;
 import org.eclipse.xtext.ui.resource.UriValidator;
 import org.eclipse.xtext.util.Pair;
@@ -43,14 +49,7 @@ import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import org.eclipse.n4js.projectModel.IN4JSArchive;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
-import org.eclipse.n4js.ui.projectModel.IN4JSEclipseArchive;
-import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
-import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
-import org.eclipse.n4js.ts.ui.navigation.URIBasedStorage;
-
+// FIXME delete entire class
 /**
  * Put the URIs that are found in NFARs into the URI cache such that they become available as {@link IStorage storages}
  * within Eclipse. That is, resource from NFARs become navigable and the builder can resolve their contents on load.
@@ -60,6 +59,11 @@ import org.eclipse.n4js.ts.ui.navigation.URIBasedStorage;
 @Singleton
 @SuppressWarnings({ "javadoc" })
 public class NfarStorageMapper implements IStorage2UriMapperContribution {
+
+	/**
+	 * This constant is only kept to avoid breaking old .nfar tests. All nfar support will soon be removed, anyway.
+	 */
+	public final static String N4MF_MANIFEST = "manifest.n4mf";
 
 	private class Listener implements IResourceChangeListener {
 		@Override
@@ -82,10 +86,11 @@ public class NfarStorageMapper implements IStorage2UriMapperContribution {
 								affectedProjects.add(project);
 							}
 							// traverse if the delta contains a manifest change
-							if (delta.findMember(new Path(IN4JSProject.N4MF_MANIFEST)) != null)
+							// FIXME delete entire class
+							if (delta.findMember(new Path(N4MF_MANIFEST)) != null)
 								return true;
 							// or the project has a manifest
-							if (project.getFile(IN4JSProject.N4MF_MANIFEST).exists()) {
+							if (project.getFile(N4MF_MANIFEST).exists()) {
 								return true;
 							}
 						} else if (resource.getType() == IResource.FOLDER) {
@@ -94,7 +99,7 @@ public class NfarStorageMapper implements IStorage2UriMapperContribution {
 							return true;
 						} else if (IN4JSArchive.NFAR_FILE_EXTENSION.equals(resource.getFileExtension())) {
 							affectedProjects.add(resource.getProject());
-						} else if (IN4JSProject.N4MF_MANIFEST.equals(delta.getFullPath().lastSegment())) {
+						} else if (N4MF_MANIFEST.equals(delta.getFullPath().lastSegment())) {
 							affectedProjects.add(resource.getProject());
 						}
 						return false;

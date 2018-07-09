@@ -12,19 +12,22 @@ export public class A {
 	}
 }
 
-# wsp1/A/manifest.n4mf
-ProjectId: A
-VendorId: org.eclipse.n4js
-VendorName: "Eclipse N4JS Project"
-ProjectType: library
-ProjectVersion: 0.0.1-SNAPSHOT
-Output: "src-gen"
-Sources {
-	source { 
-		"src"
+# wsp1/A/package.json
+{
+	"name": "A",
+	"version": "0.0.1-SNAPSHOT",
+	"n4js": {
+		"projectType": "library",
+		"vendorId": "org.eclipse.n4js",
+		"vendorName": "Eclipse N4JS Project",
+		"output": "src-gen",
+		"sources": {
+			"source": [
+				"src"
+			]
+		}
 	}
 }
-
 # wsp1/B/src/packB/B.n4js
 import { A } from "packA/A"
 export public class B extends A {
@@ -33,21 +36,25 @@ export public class B extends A {
 	}
 }
 
-# wsp1/B/manifest.n4mf
-ProjectId: B
-VendorId: org.eclipse.n4js
-VendorName: "Eclipse N4JS Project"
-ProjectType: library
-ProjectVersion: 0.0.1-SNAPSHOT
-ProjectDependencies { A }
-Output: "src-gen"
-Sources {
-	source { 
-		"src"
+# wsp1/B/package.json
+{
+	"name": "B",
+	"version": "0.0.1-SNAPSHOT",
+	"dependencies": {
+		"A": "*"
+	},
+	"n4js": {
+		"projectType": "library",
+		"vendorId": "org.eclipse.n4js",
+		"vendorName": "Eclipse N4JS Project",
+		"output": "src-gen",
+		"sources": {
+			"source": [
+				"src"
+			]
+		}
 	}
 }
-
-
 # wsp1/C/src/packC/C.n4js
 import { A } from "packA/A"
 export public class C extends A {
@@ -56,21 +63,25 @@ export public class C extends A {
 	}
 }
 
-# wsp1/C/manifest.n4mf
-ProjectId: C
-VendorId: org.eclipse.n4js
-VendorName: "Eclipse N4JS Project"
-ProjectType: library
-ProjectVersion: 0.0.1-SNAPSHOT
-ProjectDependencies { A }
-Output: "src-gen"
-Sources {
-	source { 
-		"src"
+# wsp1/C/package.json
+{
+	"name": "C",
+	"version": "0.0.1-SNAPSHOT",
+	"dependencies": {
+		"A": "*"
+	},
+	"n4js": {
+		"projectType": "library",
+		"vendorId": "org.eclipse.n4js",
+		"vendorName": "Eclipse N4JS Project",
+		"output": "src-gen",
+		"sources": {
+			"source": [
+				"src"
+			]
+		}
 	}
 }
-
-
 # wsp1/D/src/packD/D.n4js
 import { B } from "packB/B" // <-- should fail here
 export public class D extends B {
@@ -79,16 +90,22 @@ export public class D extends B {
 	}
 }
 
-# wsp1/D/manifest.n4mf
-ProjectId: D
-VendorId: org.eclipse.n4js
-VendorName: "Eclipse N4JS Project"
-ProjectType: library
-ProjectVersion: 0.0.1-SNAPSHOT
-ProjectDependencies { C }
-Output: "src-gen"
-Sources {
-	source { 
-		"src"
+# wsp1/D/package.json
+{
+	"name": "D",
+	"version": "0.0.1-SNAPSHOT",
+	"dependencies": {
+		"C": "*"
+	},
+	"n4js": {
+		"projectType": "library",
+		"vendorId": "org.eclipse.n4js",
+		"vendorName": "Eclipse N4JS Project",
+		"output": "src-gen",
+		"sources": {
+			"source": [
+				"src"
+			]
+		}
 	}
 }

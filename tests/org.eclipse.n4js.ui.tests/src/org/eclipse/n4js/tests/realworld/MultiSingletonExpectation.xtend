@@ -17,7 +17,8 @@ class MultiSingletonExpectation {
 
 	static def String get() '''
 Found multiple instances for 2 singleton classes:
-Singleton 'org.eclipse.n4js.common.unicode.services.UnicodeGrammarAccess' has 3 instances that have the following injectors:
+Singleton 'org.eclipse.n4js.common.unicode.services.UnicodeGrammarAccess' has 4 instances that have the following injectors:
+	- JSON-Injector
 	- N4JS-Injector
 	- Regex-Injector
 	- Types-Injector

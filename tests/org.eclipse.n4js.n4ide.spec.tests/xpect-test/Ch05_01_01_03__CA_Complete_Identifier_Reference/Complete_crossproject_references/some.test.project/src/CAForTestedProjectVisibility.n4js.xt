@@ -13,19 +13,19 @@
 
 	Workspace {
 		Project "some.test.project" {
-			File "manifest.n4mf" { from="../../some.test.project/manifest.n4mf" }
+			File "package.json" { from="../../some.test.project/package.json" }
 			Folder "src" {
 				ThisFile { from="../../some.test.project/src/CAForTestedProjectVisibility.n4js.xt" }
 			}
 		}
 		Project "some.tested.system.project" {
-			File "manifest.n4mf" { from="../../some.tested.system.project/manifest.n4mf" }
+			File "package.json" { from="../../some.tested.system.project/package.json" }
 			Folder "src" {
 				File "VisibleModule.n4js" { from="../../some.tested.system.project/src/VisibleModule.n4js" }
 			}
 		}
 		Project "some.untested.system.project" {
-			File "manifest.n4mf" { from="../../some.untested.system.project/manifest.n4mf" }
+			File "package.json" { from="../../some.untested.system.project/package.json" }
 			Folder "src" {
 				File "NotVisibleModule.n4js" { from="../../some.untested.system.project/src/NotVisibleModule.n4js" }
 			}

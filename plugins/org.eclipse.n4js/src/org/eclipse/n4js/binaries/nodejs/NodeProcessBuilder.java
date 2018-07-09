@@ -37,37 +37,10 @@ public class NodeProcessBuilder {
 	private static final String[] NIX_SHELL_COMAMNDS = { "sh", "-c" };
 
 	@Inject
-	private Provider<NodeJsBinary> nodeBinaryProvider;
-
-	@Inject
 	private Provider<NpmBinary> npmBinaryProvider;
 
 	@Inject
 	private Provider<NpmrcBinary> npmrcBinaryProvider;
-
-	/**
-	 * Prepares process builder configured to invoke Node.js for main module resolution.
-	 *
-	 * @param packageRoot
-	 *            package name to resolve.
-	 * @return configured process builder
-	 */
-	public ProcessBuilder prepareMainModuleResolveProcessBuilder(File packageRoot) {
-		final Builder<String> builder = ImmutableList.<String> builder();
-		NodeJsBinary nodeBinary = nodeBinaryProvider.get();
-		if (isWindows()) {
-			builder.add(WIN_SHELL_COMAMNDS);
-			builder.add(escapeBinaryPath(nodeBinary.getBinaryAbsolutePath()));
-			builder.add("-e");
-			builder.add("console.log(require.resolve('" + packageRoot.getName() + "'));");
-		} else {
-			builder.add(NIX_SHELL_COMAMNDS);
-			builder.add(escapeBinaryPath(nodeBinary.getBinaryAbsolutePath())
-					+ " -e \"console.log(require.resolve('" + packageRoot.getName() + "'));\"");
-		}
-
-		return create(builder.build(), nodeBinary, packageRoot, false);
-	}
 
 	/**
 	 * Prepares process builder for "npm install" command.

@@ -1,11 +1,11 @@
 {
+  "name": "n4js-runtime-html5",
   "version": "0.1.0",
   "author": {
     "name": "NumberFour AG",
     "email": "npm@numberfour.eu"
   },
   "license": "EPL-1.0",
-  "private": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/eclipse/n4js"
@@ -25,7 +25,6 @@
     ],
     "moduleLoader": "n4js"
   },
-  "name": "n4js-runtime-html5",
   "dependencies": {},
   "devDependencies": {
     "n4js-runtime-fetch": "^0.1.0"

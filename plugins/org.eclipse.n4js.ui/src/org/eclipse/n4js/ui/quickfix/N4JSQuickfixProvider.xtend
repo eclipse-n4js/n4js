@@ -43,9 +43,7 @@ import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.PropertyNameOwner
 import org.eclipse.n4js.n4mf.ProjectDependency
-import org.eclipse.n4js.n4mf.ProjectDescription
 import org.eclipse.n4js.n4mf.ProjectReference
-import org.eclipse.n4js.n4mf.ProjectType
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
@@ -59,7 +57,6 @@ import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ui.binaries.IllegalBinaryStateDialog
 import org.eclipse.n4js.ui.changes.IChange
-import org.eclipse.n4js.ui.changes.ManifestChangeProvider
 import org.eclipse.n4js.ui.changes.SemanticChangeProvider
 import org.eclipse.n4js.ui.internal.N4JSActivator
 import org.eclipse.n4js.ui.labeling.helper.ImageNames
@@ -71,7 +68,6 @@ import org.eclipse.n4js.utils.StatusUtils
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.IssueUserDataKeys
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
-import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.diagnostics.Diagnostic
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.ui.editor.model.edit.IModificationContext
@@ -746,28 +742,6 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 				insertLineAbove(context.xtextDocument, offset, "@"+AnnotationDefinition.VERSION_AWARE.name, true)
 			];
 		]
-	}
-
-
-	@Fix(IssueCodes.OUTPUT_AND_SOURCES_FOLDER_NESTING)
-	def changeProjectTypeToValidation(Issue issue, IssueResolutionAcceptor acceptor) {
-		// <--- do pre-processing here (if required)
-		val validationPT = ProjectType.VALIDATION.getName.toLowerCase;
-		val title = 'Change project type to ' + validationPT + '';
-		val descr = 'The project type \'' + validationPT + '\' does not generate code. Hence, output and source folders can be nested.';
-		acceptor.accept(issue, title, descr, null, new N4Modification() {
-			override computeChanges(IModificationContext context, IMarker marker, int offset, int length, EObject element) throws Exception {
-				val resource = element.eResource;
-				val prjDescr = EcoreUtil2.getContainerOfType(element, ProjectDescription);
-				return #[ManifestChangeProvider.setProjectType(resource, validationPT, prjDescr)];
-			}
-			override supportsMultiApply() {
-				return false;
-			}
-			override isApplicableTo(IMarker marker) {
-				return true;
-			}
-		});
 	}
 
 	@Fix(IssueCodes.NODE_MODULES_OUT_OF_SYNC)

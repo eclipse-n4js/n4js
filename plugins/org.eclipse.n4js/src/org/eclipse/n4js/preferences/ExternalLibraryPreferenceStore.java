@@ -13,7 +13,6 @@ package org.eclipse.n4js.preferences;
 import static com.google.common.collect.FluentIterable.from;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static org.eclipse.n4js.projectModel.IN4JSProject.N4MF_MANIFEST;
 
 import java.io.File;
 import java.net.URI;
@@ -24,10 +23,10 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.n4js.external.ExternalLibraryUtils;
 import org.eclipse.n4js.utils.collections.Arrays2;
 
 import com.google.common.base.Function;
-import com.google.common.base.Predicate;
 
 /**
  * Representation of a preference store for external libraries.
@@ -165,52 +164,42 @@ public interface ExternalLibraryPreferenceStore extends Iterable<URI> {
 		public Iterable<URI> convertToProjectRootLocations(Iterable<URI> externalRootLocations) {
 			return from(externalRootLocations).transformAndConcat(new Function<URI, Iterable<URI>>() {
 
-				private final Predicate<File> existingFolders = file -> null != file && file.exists()
-						&& file.isDirectory();
-
-				private final Predicate<File> existingFiles = file -> null != file && file.exists() && file.isFile();
-
-				private final Function<File, Iterable<File>> toSubFiles = new Function<File, Iterable<File>>() {
-
-					@Override
-					public Iterable<File> apply(final File folder) {
-
-						if (null == folder || !folder.isDirectory()) {
-							if (LOGGER.isDebugEnabled()) {
-								LOGGER.debug("Not a directory: " + folder + ".");
-							}
-							return emptyList();
-						}
-
-						final File[] files = folder.listFiles();
-						if (Arrays2.isEmpty(files)) {
-							if (LOGGER.isDebugEnabled()) {
-								LOGGER.debug("No resources were found under: " + folder + ".");
-							}
-							return emptyList();
-						}
-
-						return asList(files);
-					}
-				};
-
 				@Override
 				public Iterable<URI> apply(final URI rootLocation) {
 					final File rootFolder = new File(rootLocation);
-					if (existingFolders.apply(rootFolder)) {
-						return from(toSubFiles.apply(rootFolder))
-								.filter(existingFolders)
-								.transformAndConcat(toSubFiles)
-								.filter(existingFiles)
-								.filter(file -> N4MF_MANIFEST.equals(file.getName()))
-								.transform(file -> file.getParentFile())
-								.filter(existingFolders)
+					if (isExistingFolder(rootFolder)) {
+						return from(getDirectoryContents(rootFolder))
+								.filter(f -> isExistingFolder(f))
+								.filter(f -> ExternalLibraryUtils.isExternalProjectDirectory(f))
 								.transform(file -> file.toURI());
 					}
 					return emptyList();
 				}
 
 			});
+		}
+
+		private final boolean isExistingFolder(File file) {
+			return null != file && file.exists() && file.isDirectory();
+		}
+
+		private final Iterable<File> getDirectoryContents(File folder) {
+			if (null == folder || !folder.isDirectory()) {
+				if (LOGGER.isDebugEnabled()) {
+					LOGGER.debug("Not a directory: " + folder + ".");
+				}
+				return emptyList();
+			}
+
+			final File[] files = folder.listFiles();
+			if (Arrays2.isEmpty(files)) {
+				if (LOGGER.isDebugEnabled()) {
+					LOGGER.debug("No resources were found under: " + folder + ".");
+				}
+				return emptyList();
+			}
+
+			return asList(files);
 		}
 
 	}

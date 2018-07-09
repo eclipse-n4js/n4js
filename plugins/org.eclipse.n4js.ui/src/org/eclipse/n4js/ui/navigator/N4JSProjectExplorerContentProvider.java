@@ -108,7 +108,7 @@ public class N4JSProjectExplorerContentProvider extends WorkbenchContentProvider
 				IResource resource = delta.getResource();
 				if (resource instanceof IFile) {
 					IFile file = (IFile) resource;
-					if (IN4JSProject.N4MF_MANIFEST.equals(file.getName())) {
+					if (IN4JSProject.PACKAGE_JSON.equals(file.getName())) {
 						if (delta.getKind() == IResourceDelta.REMOVED) {
 							if ((delta.getFlags() & IResourceDelta.MOVED_TO) != 0) {
 								// use case: rename of a project to/from the name of a shipped library

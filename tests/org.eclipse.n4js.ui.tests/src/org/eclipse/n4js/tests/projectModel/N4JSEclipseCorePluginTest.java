@@ -16,9 +16,9 @@ import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
 import org.eclipse.n4js.ui.internal.N4JSEclipseCore;
 import org.eclipse.n4js.ui.internal.N4JSEclipseModel;
+import org.eclipse.n4js.utils.ProjectDescriptionHelper;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.XtextRunner;
-import org.eclipse.xtext.ui.resource.IResourceSetProvider;
 import org.junit.runner.RunWith;
 
 import com.google.inject.Inject;
@@ -34,7 +34,7 @@ public class N4JSEclipseCorePluginTest extends AbstractN4JSCoreTest {
 	private IWorkspaceRoot workspace;
 
 	@Inject
-	private IResourceSetProvider resourceSetProvider;
+	private ProjectDescriptionHelper projectDescriptionHelper;
 
 	@Inject
 	private Injector injector;
@@ -50,7 +50,7 @@ public class N4JSEclipseCorePluginTest extends AbstractN4JSCoreTest {
 
 	@Override
 	public void setUp() {
-		internalWorkspace = new EclipseBasedN4JSWorkspace(workspace, resourceSetProvider);
+		internalWorkspace = new EclipseBasedN4JSWorkspace(workspace, projectDescriptionHelper);
 		N4JSEclipseModel model = new N4JSEclipseModel(internalWorkspace);
 		injector.injectMembers(model);
 		testMe = new N4JSEclipseCore(model);

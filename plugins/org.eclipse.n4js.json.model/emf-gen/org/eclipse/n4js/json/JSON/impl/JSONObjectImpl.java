@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.json.JSON.impl;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -22,9 +23,12 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.eclipse.emf.ecore.xcore.lib.XcoreEListExtensions;
 import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONPackage;
 import org.eclipse.n4js.json.JSON.NameValuePair;
+import org.eclipse.xtext.xbase.lib.Functions.Function1;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 /**
  * <!-- begin-user-doc -->
@@ -79,6 +83,22 @@ public class JSONObjectImpl extends JSONValueImpl implements JSONObject {
 			nameValuePairs = new EObjectContainmentEList<NameValuePair>(NameValuePair.class, this, JSONPackage.JSON_OBJECT__NAME_VALUE_PAIRS);
 		}
 		return nameValuePairs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String toString() {
+		final Function1<NameValuePair, String> _function = new Function1<NameValuePair, String>() {
+			public String apply(final NameValuePair e) {
+				return e.toString();
+			}
+		};
+		String _join = IterableExtensions.join(XcoreEListExtensions.<NameValuePair, String>map(this.getNameValuePairs(), _function), ",\n");
+		String _plus = ("{\n" + _join);
+		return (_plus + "\n}");
 	}
 
 	/**
@@ -153,6 +173,20 @@ public class JSONObjectImpl extends JSONValueImpl implements JSONObject {
 				return nameValuePairs != null && !nameValuePairs.isEmpty();
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case JSONPackage.JSON_OBJECT___TO_STRING:
+				return toString();
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 } //JSONObjectImpl

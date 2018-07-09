@@ -34,7 +34,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.StringJoiner;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -58,14 +57,13 @@ import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.external.version.VersionConstraintFormatUtil;
 import org.eclipse.n4js.n4mf.DeclaredVersion;
 import org.eclipse.n4js.n4mf.ProjectDescription;
-import org.eclipse.n4js.n4mf.utils.parsing.ManifestValuesParsingUtil;
-import org.eclipse.n4js.n4mf.utils.parsing.ParserResults;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ui.utils.InputComposedValidator;
 import org.eclipse.n4js.ui.utils.InputFunctionalValidator;
 import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.n4js.ui.viewer.TreeViewerBuilder;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.n4js.utils.io.FileDeleter;
@@ -316,18 +314,15 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	/** version validator based on N4MF parser (and its support for version syntax). */
 	private String parsingVersionValidator(final String data) {
 		String result = null;
-		ParserResults<DeclaredVersion> parseResult = ManifestValuesParsingUtil.parseDeclaredVersion(data);
-		if (!parseResult.getErrors().isEmpty()) {
-			// collect just parse errors
-			StringJoiner joinedMessage = new StringJoiner("\n");
-			parseResult.getErrors().forEach((String msg) -> joinedMessage.add(msg));
-			result = joinedMessage.toString();
-		} else {
-			// even if there are no parse errors check if version instance was create correctly
-			if (parseResult.getAST() == null) {
-				result = "Could not create version from string :" + data;
-			}
+
+		DeclaredVersion parsedVersion = ProjectDescriptionUtils.parseVersion(data);
+		if (parsedVersion == null) {
+			// return parse error
+			result = "Could not create version from string :" + data;
 		}
+
+		// otherwise, parsedVersion is valid and result remains 'null'
+		// to indicate validity (see {@link IInputValidator#isValid})
 
 		return result;
 	}

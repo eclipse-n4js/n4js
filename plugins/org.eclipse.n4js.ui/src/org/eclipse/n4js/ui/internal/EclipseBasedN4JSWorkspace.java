@@ -34,18 +34,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.common.util.WrappedException;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.n4js.ArchiveURIUtil;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.internal.N4JSSourceContainerType;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectReference;
 import org.eclipse.n4js.projectModel.IN4JSArchive;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.xtext.ui.resource.IResourceSetProvider;
+import org.eclipse.n4js.utils.ProjectDescriptionHelper;
 
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
@@ -61,7 +55,7 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 
 	private final IWorkspaceRoot workspace;
 
-	private final IResourceSetProvider resourceSetProvider;
+	private final ProjectDescriptionHelper projectDescriptionHelper;
 
 	private final Map<URI, ProjectDescription> cache = Maps.newHashMap();
 
@@ -73,9 +67,9 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 	@Inject
 	public EclipseBasedN4JSWorkspace(
 			IWorkspaceRoot workspace,
-			IResourceSetProvider resourceSetProvider) {
+			ProjectDescriptionHelper projectDescriptionHelper) {
 		this.workspace = workspace;
-		this.resourceSetProvider = resourceSetProvider;
+		this.projectDescriptionHelper = projectDescriptionHelper;
 	}
 
 	IWorkspaceRoot getWorkspace() {
@@ -98,11 +92,7 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 		}
 		ProjectDescription existing = cache.get(location);
 		if (existing == null) {
-			if (location.isPlatformResource() && location.segmentCount() == DIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT) {
-				existing = loadManifest(location.appendSegment(IN4JSProject.N4MF_MANIFEST));
-			} else {
-				existing = loadManifest(ArchiveURIUtil.createURI(location, IN4JSProject.N4MF_MANIFEST));
-			}
+			existing = projectDescriptionHelper.loadProjectDescriptionAtLocation(location);
 			if (existing != null) {
 				cache.put(location, existing);
 				if (listener != null) {
@@ -111,30 +101,6 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 			}
 		}
 		return existing;
-	}
-
-	ProjectDescription loadManifest(URI manifest) {
-		try {
-			ProjectDescription result = null;
-			ResourceSet resourceSet = resourceSetProvider.get(null /* we don't care about the project right now */);
-			String platformPath = manifest.toPlatformString(true);
-			if (manifest.isArchive() || platformPath != null) {
-				if (manifest.isArchive() || workspace.getFile(new Path(platformPath)).exists()) {
-					Resource resource = resourceSet.getResource(manifest, true);
-					if (resource != null) {
-						List<EObject> contents = resource.getContents();
-						if (contents.isEmpty() || !(contents.get(0) instanceof ProjectDescription)) {
-							return null;
-						}
-						result = (ProjectDescription) contents.get(0);
-						contents.clear();
-					}
-				}
-			}
-			return result;
-		} catch (WrappedException e) {
-			throw new IllegalStateException("Unexpected manifest URI: " + manifest, e);
-		}
 	}
 
 	@Override
