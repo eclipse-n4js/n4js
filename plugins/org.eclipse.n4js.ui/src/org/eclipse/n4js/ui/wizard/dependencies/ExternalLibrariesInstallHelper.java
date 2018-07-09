@@ -10,7 +10,12 @@
  */
 package org.eclipse.n4js.ui.wizard.dependencies;
 
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.SubMonitor;
@@ -48,15 +53,54 @@ public class ExternalLibrariesInstallHelper {
 		// remove npms
 		externals.maintenanceDeleteNpms(multistatus);
 
+		Set<String> projectIdsOfShippedCode = StreamSupport
+				.stream(dependenciesHelper.getAvailableProjectsDescriptions(true).spliterator(), false)
+				.map(pd -> pd.getProjectId())
+				.collect(Collectors.toCollection(LinkedHashSet::new));
+
 		// install npms from target platform
-		Map<String, String> versionedPackages = dependenciesHelper.calculateDependenciesToInstall();
+		Map<String, String> dependenciesToInstall = dependenciesHelper.calculateDependenciesToInstall();
+		addDependenciesForRemainingShippedCode(dependenciesToInstall, projectIdsOfShippedCode);
 		final SubMonitor subMonitor3 = monitor.split(45);
 
-		externals.installNoUpdate(versionedPackages, multistatus, subMonitor3);
+		externals.installNoUpdate(dependenciesToInstall, multistatus, subMonitor3);
 
 		// rebuild externals & schedule full rebuild
 		final SubMonitor subMonitor4 = monitor.split(35);
 		externals.maintenanceUpateState(multistatus, subMonitor4);
 	}
 
+	/**
+	 * If map 'dependenciesToInstall' contains at least one project that is among the shipped code projects, this method
+	 * will add new entries to map 'dependenciesToInstall' for all remaining shipped code projects, using the same
+	 * version constraint as for those already in the map.
+	 * <p>
+	 * Rationale is that when shadowing a shipped code project with a newly installed NPM in the library manager, then
+	 * *all* shipped code projects need to be shadowed, because shipped code is now published in clusters in which each
+	 * project depends on the others with a fixed version.
+	 */
+	private void addDependenciesForRemainingShippedCode(Map<String, String> dependenciesToInstall,
+			Set<String> projectIdsOfShippedCode) {
+		Set<String> projectIdsOfShippedCodeToInstall = new HashSet<>(dependenciesToInstall.keySet());
+		projectIdsOfShippedCodeToInstall.retainAll(projectIdsOfShippedCode);
+		if (!projectIdsOfShippedCodeToInstall.isEmpty()
+				&& projectIdsOfShippedCodeToInstall.size() < projectIdsOfShippedCode.size()) {
+			Set<String> versionConstraintsOfShippedCodeToInstall = projectIdsOfShippedCodeToInstall
+					.stream()
+					.map(id -> dependenciesToInstall.get(id))
+					.collect(Collectors.toSet());
+			if (versionConstraintsOfShippedCodeToInstall.size() > 1) {
+				// FIXME GH-957 / GH-809 warn about conflicting version constraints for shipped code!
+			}
+			String versionConstraint = versionConstraintsOfShippedCodeToInstall.stream().findFirst()
+					.orElse(null);
+			if (versionConstraint != null) {
+				for (String id : projectIdsOfShippedCode) {
+					if (!projectIdsOfShippedCodeToInstall.contains(id)) {
+						dependenciesToInstall.put(id, versionConstraint);
+					}
+				}
+			}
+		}
+	}
 }
