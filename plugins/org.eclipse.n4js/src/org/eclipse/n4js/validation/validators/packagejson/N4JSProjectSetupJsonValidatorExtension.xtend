@@ -952,7 +952,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 					 pair
 				);
 			]
-			.filter[ref | ProjectDescriptionUtils.isProjectNameWithScope(ref.referencedProjectId)]
+			.filter[ref | !ProjectDescriptionUtils.isProjectNameWithScope(ref.referencedProjectId)]
 			.toList
 	}
 	
