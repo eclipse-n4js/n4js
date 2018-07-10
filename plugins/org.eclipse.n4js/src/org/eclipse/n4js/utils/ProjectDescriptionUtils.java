@@ -298,6 +298,13 @@ public class ProjectDescriptionUtils {
 	}
 
 	/**
+	 * Tells if the given project name uses an npm scope, i.e. is of the form <code>@scopeName/projectName</code>.
+	 */
+	public static boolean isProjectNameWithScope(String projectName) {
+		return projectName != null && projectName.startsWith("@") && projectName.contains("/");
+	}
+
+	/**
 	 * Parses a SemVer version string according to the SemVer Specification at https://semver.org/
 	 *
 	 * Very simple, temporary implementation. For example, well-formedness of pre-release version and build meta-data

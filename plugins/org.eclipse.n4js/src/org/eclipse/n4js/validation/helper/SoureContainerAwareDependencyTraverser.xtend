@@ -11,7 +11,12 @@
 package org.eclipse.n4js.validation.helper
 
 import com.google.common.base.Equivalence
+import com.google.common.base.Function
 import com.google.common.base.Objects
+import com.google.common.collect.ImmutableList
+import java.util.Collection
+import org.eclipse.n4js.n4mf.ProjectType
+import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware
 import org.eclipse.n4js.utils.DependencyTraverser
 
@@ -21,11 +26,30 @@ import org.eclipse.n4js.utils.DependencyTraverser
  */
 class SoureContainerAwareDependencyTraverser extends DependencyTraverser<IN4JSSourceContainerAware> {
 
-	static val DEPENDENCIES_FUNC = [IN4JSSourceContainerAware it | allDirectDependencies];
+	static val DEPENDENCIES_FUNC = [IN4JSSourceContainerAware p |
+		p.allDirectDependencies
+	];
+	static val DEPENDENCIES_FUNC_IGNORE_EXTERNAL_VALIDATION = [IN4JSSourceContainerAware p |
+		ImmutableList.copyOf(p.allDirectDependencies.filter[dep | !isExternalValidation(dep)]);
+	] as Function<IN4JSSourceContainerAware, Collection<? extends IN4JSSourceContainerAware>>;
+
+	private boolean ignoreExternalValidationProjects;
 
 	/** Creates a new traverser instance with the given root node. */
 	new(IN4JSSourceContainerAware rootNode) {
-		super(rootNode, SourceContainerAwareEquivalence.INSTANCE, DEPENDENCIES_FUNC)
+		this(rootNode, false);
+	}
+
+	/** Creates a new traverser instance with the given root node. */
+	new(IN4JSSourceContainerAware rootNode, boolean ignoreExternalValidationProjects) {
+		super(rootNode, SourceContainerAwareEquivalence.INSTANCE, if (ignoreExternalValidationProjects) DEPENDENCIES_FUNC_IGNORE_EXTERNAL_VALIDATION else DEPENDENCIES_FUNC)
+		this.ignoreExternalValidationProjects = ignoreExternalValidationProjects;
+	}
+
+	def private static boolean isExternalValidation(IN4JSSourceContainerAware project) {
+		return project.external
+			&& project instanceof IN4JSProject
+			&& (project as IN4JSProject).projectType===ProjectType.VALIDATION;
 	}
 
 	/**

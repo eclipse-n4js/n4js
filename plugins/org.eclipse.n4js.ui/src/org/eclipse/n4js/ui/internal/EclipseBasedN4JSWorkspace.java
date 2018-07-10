@@ -40,6 +40,7 @@ import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectReference;
 import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.utils.ProjectDescriptionHelper;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
@@ -120,6 +121,10 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 		if (projectURI.segmentCount() >= DIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT) {
 			String expectedProjectName = projectReference.getProjectId();
 			if (expectedProjectName != null && expectedProjectName.length() > 0) {
+				if (ProjectDescriptionUtils.isProjectNameWithScope(expectedProjectName)) {
+					// cannot create projects using npm scopes in the name, e.g. "@scopeName/projectName"
+					return null;
+				}
 				IProject existingProject = workspace.getProject(expectedProjectName);
 				if (existingProject.isAccessible()) {
 					if (expectedN4JSSourceContainerType == N4JSSourceContainerType.ARCHIVE) {
