@@ -951,7 +951,9 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 					ProjectDescriptionUtils.parseVersionConstraint((pair.value as JSONStringLiteral).value),
 					 pair
 				);
-			].toList
+			]
+			.filter[ref | ProjectDescriptionUtils.isProjectNameWithScope(ref.referencedProjectId)]
+			.toList
 	}
 	
 	/**
