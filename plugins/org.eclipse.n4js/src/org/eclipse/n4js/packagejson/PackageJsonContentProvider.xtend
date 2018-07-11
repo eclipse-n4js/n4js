@@ -57,7 +57,7 @@ package class PackageJsonContentProvider {
 	 * @param vendorName The name of the vendor as string.
 	 * @param output The relative output folder location.
 	 * @param extendedRE The optional extended runtime environment.
-	 * @param dependencies An map of dependencies of the project (maps dependency names to their version constraints).
+	 * @param dependencies A map of dependencies of the project (maps dependencies to their version constraints).
 	 * @param providedRL An iterable of provided runtime libraries.
 	 * @param requiredRL An iterable of required runtime libraries.
 	 * @param implementationId The implementationId of the project.
