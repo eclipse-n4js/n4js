@@ -17,7 +17,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -160,12 +159,5 @@ public class InstallRuntimeFromNpmPluginTest extends AbstractBuilderParticipantT
 			}
 		}
 		return out.stream().collect(Collectors.joining("\n"));
-	}
-
-	static String convertStreamToString(java.io.InputStream is) {
-		try (Scanner s = new java.util.Scanner(is)) {
-			s.useDelimiter("\\A");
-			return s.hasNext() ? s.next() : "";
-		}
 	}
 }
