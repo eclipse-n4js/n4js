@@ -40,7 +40,7 @@ public class PackageJsonBuilder {
 	private ProjectType type;
 	private String version;
 
-	private Collection<String> dependencies;
+	private Map<String, String> dependencies;
 	
 	private String vendorId;
 	private String vendorName;
@@ -60,7 +60,7 @@ public class PackageJsonBuilder {
 		type = ProjectType.get(0) // use default project type (index 0)
 		providedRLs = newArrayList
 		requiredRLs = newArrayList
-		dependencies = newArrayList
+		dependencies = newHashMap
 		implementedProjects = newArrayList
 		testedProjects = newArrayList;
 		sourceContainers = newHashMap;
@@ -202,13 +202,33 @@ public class PackageJsonBuilder {
 
 	/**
 	 * Adds a new required runtime library to the current builder.
+	 * 
+	 * This method will add the required runtime library both to the "requiredRuntimeLibraries" section,
+	 * as well as the "dependencies" section.
+	 * 
 	 * @param requiredRL the required runtime library to add to the current builder. Cannot be {@code null}.
 	 * @return the builder.
 	 */
 	def PackageJsonBuilder withRequiredRL(String requiredRL) {
 		requiredRLs.add(checkNotNull(requiredRL))
 		// also add to dependencies
-		dependencies.add(requiredRL)
+		dependencies.put(requiredRL, "*")
+		return this;
+	}
+	
+	/**
+	 * Adds a new required runtime library with the given version constraint.
+	 * 
+	 * This method will add the required runtime library both to the "requiredRuntimeLibraries" section,
+	 * as well as the "dependencies" section.
+	 * 
+	 * @param requiredRL The project id of the required runtime library.
+	 * @param versionConstraint The version constraint to be used in the dependency section.
+	 */
+	def PackageJsonBuilder withRequiredRL(String requiredRL, String versionConstraint) {
+		requiredRLs.add(checkNotNull(requiredRL))
+		// also add to dependencies
+		dependencies.put(requiredRL, versionConstraint)
 		return this;
 	}
 
@@ -218,12 +238,42 @@ public class PackageJsonBuilder {
 	 * @return the builder.
 	 */
 	def PackageJsonBuilder withDependency(String projectDependency) {
-		dependencies.add(checkNotNull(projectDependency))
+		dependencies.put(checkNotNull(projectDependency), "*")
+		return this;
+	}
+	
+	/**
+	 * Adds a new project dependency to the current builder.
+	 * 
+	 * @param projectDependency The project dependency to add to the current builder. Cannot be {@code null}.
+	 * @param versionConstraint The version constraint of the added project dependency.
+	 * 
+	 * @return the builder.
+	 */
+	def PackageJsonBuilder withDependency(String projectDependency, String versionConstraint) {
+		dependencies.put(checkNotNull(projectDependency), checkNotNull(versionConstraint))
 		return this;
 	}
 
+	/**
+	 * Adds the given project id to the list of tested projects.
+	 * 
+	 * This method also adds the given tested project as project dependency.
+	 */
 	def PackageJsonBuilder withTestedProject(String testedProject) {
-		dependencies.add(checkNotNull(testedProject));
+		dependencies.put(checkNotNull(testedProject), "*");
+		testedProjects.add(checkNotNull(testedProject));
+		return this;
+	}
+	
+	/**
+	 * Adds the given project id to the list of tested projects and to the list
+	 * of dependencies with the given version constraint.
+	 * 
+	 * This method also adds the given tested project as project dependency.
+	 */
+	def PackageJsonBuilder withTestedProject(String testedProject, String version) {
+		dependencies.put(checkNotNull(testedProject), "*");
 		testedProjects.add(checkNotNull(testedProject));
 		return this;
 	}
