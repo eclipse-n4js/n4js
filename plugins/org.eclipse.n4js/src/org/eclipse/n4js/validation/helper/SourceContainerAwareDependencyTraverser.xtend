@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
@@ -24,16 +24,16 @@ import org.eclipse.n4js.utils.DependencyTraverser
  * Class for traversing {@link IN4JSSourceContainerAware source container aware} dependencies and
  * indicating cycles in the dependency graph.
  */
-class SoureContainerAwareDependencyTraverser extends DependencyTraverser<IN4JSSourceContainerAware> {
+class SourceContainerAwareDependencyTraverser extends DependencyTraverser<IN4JSSourceContainerAware> {
 
-	static val DEPENDENCIES_FUNC = [IN4JSSourceContainerAware p |
+	// this is used by default:
+	static val DEPENDENCIES_FUNC = [ IN4JSSourceContainerAware p |
 		p.allDirectDependencies
 	];
-	static val DEPENDENCIES_FUNC_IGNORE_EXTERNAL_VALIDATION = [IN4JSSourceContainerAware p |
-		ImmutableList.copyOf(p.allDirectDependencies.filter[dep | !isExternalValidation(dep)]);
+	// this is used if external projects of project type VALIDATION are requested to be ignored:
+	static val DEPENDENCIES_FUNC_IGNORE_EXTERNAL_VALIDATION = [ IN4JSSourceContainerAware p |
+		ImmutableList.copyOf(p.allDirectDependencies.filter[dep|!isExternalValidation(dep)]);
 	] as Function<IN4JSSourceContainerAware, Collection<? extends IN4JSSourceContainerAware>>;
-
-	private boolean ignoreExternalValidationProjects;
 
 	/** Creates a new traverser instance with the given root node. */
 	new(IN4JSSourceContainerAware rootNode) {
@@ -42,8 +42,14 @@ class SoureContainerAwareDependencyTraverser extends DependencyTraverser<IN4JSSo
 
 	/** Creates a new traverser instance with the given root node. */
 	new(IN4JSSourceContainerAware rootNode, boolean ignoreExternalValidationProjects) {
-		super(rootNode, SourceContainerAwareEquivalence.INSTANCE, if (ignoreExternalValidationProjects) DEPENDENCIES_FUNC_IGNORE_EXTERNAL_VALIDATION else DEPENDENCIES_FUNC)
-		this.ignoreExternalValidationProjects = ignoreExternalValidationProjects;
+		super(
+			rootNode,
+			SourceContainerAwareEquivalence.INSTANCE,
+			if (ignoreExternalValidationProjects)
+				DEPENDENCIES_FUNC_IGNORE_EXTERNAL_VALIDATION
+			else
+				DEPENDENCIES_FUNC
+		)
 	}
 
 	def private static boolean isExternalValidation(IN4JSSourceContainerAware project) {
