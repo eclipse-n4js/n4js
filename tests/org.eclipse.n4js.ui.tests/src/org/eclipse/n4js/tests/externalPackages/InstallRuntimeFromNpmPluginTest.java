@@ -78,7 +78,7 @@ public class InstallRuntimeFromNpmPluginTest extends AbstractBuilderParticipantT
 	@After
 	@Override
 	public void tearDown() throws Exception {
-		shippedCodeInitializeTestHelper.teardowneBuiltIns();
+		shippedCodeInitializeTestHelper.tearDownBuiltIns();
 		super.tearDown();
 	}
 
