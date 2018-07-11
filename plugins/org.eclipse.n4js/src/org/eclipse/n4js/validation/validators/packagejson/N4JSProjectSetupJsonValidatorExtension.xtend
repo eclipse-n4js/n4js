@@ -68,7 +68,6 @@ import org.eclipse.n4js.utils.Version
 import org.eclipse.n4js.utils.WildcardPathFilterHelper
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
-import org.eclipse.n4js.validation.helper.SoureContainerAwareDependencyTraverser
 import org.eclipse.xtend.lib.annotations.Data
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.resource.IContainer
@@ -84,6 +83,7 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 import static org.eclipse.n4js.validation.validators.packagejson.ProjectTypePredicate.*
 
 import static extension com.google.common.base.Strings.nullToEmpty
+import org.eclipse.n4js.validation.helper.SourceContainerAwareDependencyTraverser
 
 /**
  * A JSON validator extension that validates {@code package.json} resources in the context
@@ -337,7 +337,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	def checkCyclicDependencies(JSONDocument document) {
 		val project = findProject(document.eResource.URI).orNull;
 		if (null !== project) {
-			val result = new SoureContainerAwareDependencyTraverser(project, true).result;
+			val result = new SourceContainerAwareDependencyTraverser(project, true).result;
 			if (result.hasCycle) {
 				// add issue to 'name' property or alternatively to the whole document
 				val nameValue = getSingleDocumentValue(ProjectDescriptionHelper.PROP__NAME);
