@@ -38,6 +38,7 @@ import static org.eclipse.n4js.utils.ProjectDescriptionHelper.PROP__VENDOR_ID
 import static org.eclipse.n4js.utils.ProjectDescriptionHelper.PROP__VENDOR_NAME
 import static org.eclipse.n4js.utils.ProjectDescriptionHelper.PROP__VERSION
 import java.util.Map
+import java.util.SortedMap
 
 /**
  * Class for providing the content of N4JS-specific package.json files.
@@ -74,7 +75,7 @@ package class PackageJsonContentProvider {
 		Optional<String> vendorName,
 		Optional<String> output,
 		Optional<String> extendedRE,
-		Map<String, String> dependencies,
+		SortedMap<String, String> dependencies,
 		Iterable<String> providedRL,
 		Iterable<String> requiredRL,
 		Optional<String> implementationId,

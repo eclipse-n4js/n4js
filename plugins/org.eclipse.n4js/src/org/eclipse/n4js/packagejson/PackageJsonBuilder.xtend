@@ -19,6 +19,8 @@ import org.eclipse.n4js.utils.ProjectDescriptionHelper
 
 import static com.google.common.base.Optional.fromNullable
 import static com.google.common.base.Preconditions.checkNotNull
+import java.util.SortedMap
+import java.util.TreeMap
 
 /**
  * Convenient builder for creating the N4JS package.json compliant {@link JSONDocument} model 
@@ -40,7 +42,7 @@ public class PackageJsonBuilder {
 	private ProjectType type;
 	private String version;
 
-	private Map<String, String> dependencies;
+	private SortedMap<String, String> dependencies;
 	
 	private String vendorId;
 	private String vendorName;
@@ -60,7 +62,7 @@ public class PackageJsonBuilder {
 		type = ProjectType.get(0) // use default project type (index 0)
 		providedRLs = newArrayList
 		requiredRLs = newArrayList
-		dependencies = newHashMap
+		dependencies = new TreeMap();
 		implementedProjects = newArrayList
 		testedProjects = newArrayList;
 		sourceContainers = newHashMap;
