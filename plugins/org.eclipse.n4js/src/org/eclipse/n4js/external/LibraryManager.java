@@ -368,6 +368,7 @@ public class LibraryManager {
 					// call will throw an exception. As a consequence we only support exact version matches here.
 					// If the requested version is a constraint , this method will always trigger the reinstallation
 					// of the package, according to the requested version constraint.
+					// TODO Once GH-940 is merged, this logic can be revised to support version constraints.
 					final Version versionRequested = new Version(exactRequestedVersionString);
 					final Version versionInstalled = new Version(versionInstalledString);
 					if (versionRequested.compareTo(versionInstalled) == 0) {
