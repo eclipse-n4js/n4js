@@ -345,18 +345,43 @@ public class LibraryManager {
 		for (Map.Entry<String, String> reqestedNpm : installRequested.entrySet()) {
 			String name = reqestedNpm.getKey();
 			String versionRequestedString = reqestedNpm.getValue();
-			Version versionRequested = new Version(versionRequestedString);
+
 			if (installedNpms.containsKey(name)) {
-				org.eclipse.emf.common.util.URI location = installedNpms.get(name).getKey();
-				String versionInstalledString = Strings.emptyIfNull(installedNpms.get(name).getValue());
-				Version versionInstalled = new Version(versionInstalledString);
-				if (versionInstalledString.isEmpty() || versionRequested.compareTo(versionInstalled) == 0) {
-					// already installed
-				} else {
-					// wrong version installed -> update (uninstall, then install)
-					requestedChanges.add(new LibraryChange(Uninstall, location, name, versionInstalledString));
-					requestedChanges.add(new LibraryChange(Install, location, name, versionRequestedString));
+				// determine location of the installed package
+				final org.eclipse.emf.common.util.URI location = installedNpms.get(name).getKey();
+				final String versionInstalledString = Strings.emptyIfNull(installedNpms.get(name).getValue());
+				try {
+					if (versionRequestedString.isEmpty()) {
+						// empty constraint matches any installed version
+						continue;
+					}
+
+					// detect an exactly specified version
+					String exactRequestedVersionString = versionRequestedString;
+
+					// remove preceeding '@' from requested version, if present
+					if (exactRequestedVersionString.startsWith("@")) {
+						exactRequestedVersionString = exactRequestedVersionString.substring(1);
+					}
+
+					// If versionRequestedString is not an exact version (or uses ^ or ~) the following
+					// call will throw an exception. As a consequence we only support exact version matches here.
+					// If the requested version is a constraint , this method will always trigger the reinstallation
+					// of the package, according to the requested version constraint.
+					final Version versionRequested = new Version(exactRequestedVersionString);
+					final Version versionInstalled = new Version(versionInstalledString);
+					if (versionRequested.compareTo(versionInstalled) == 0) {
+						// already installed
+						continue;
+					}
+				} catch (NumberFormatException e) {
+					logger.logInfo("Checking whether the requested version constraint " + name + "@"
+							+ versionRequestedString
+							+ " matches the installed version of the package, is currently unsupported (use an exact version instead): Package will be re-installed.");
 				}
+				// wrong version installed -> update (uninstall, then install)
+				requestedChanges.add(new LibraryChange(Uninstall, location, name, versionInstalledString));
+				requestedChanges.add(new LibraryChange(Install, location, name, versionRequestedString));
 			} else {
 				requestedChanges.add(new LibraryChange(Install, null, name, versionRequestedString));
 			}
