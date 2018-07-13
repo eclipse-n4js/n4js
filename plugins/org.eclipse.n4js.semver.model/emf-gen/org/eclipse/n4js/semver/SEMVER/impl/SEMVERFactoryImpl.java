@@ -65,6 +65,12 @@ public class SEMVERFactoryImpl extends EFactoryImpl implements SEMVERFactory {
 	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
+			case SEMVERPackage.URL_VERSION: return createURLVersion();
+			case SEMVERPackage.URL_SEMVER: return createURLSemver();
+			case SEMVERPackage.URL_COMMIT_ISH: return createURLCommitISH();
+			case SEMVERPackage.GIT_HUB_VERSION: return createGitHubVersion();
+			case SEMVERPackage.LOCAL_PATH_VERSION: return createLocalPathVersion();
+			case SEMVERPackage.TAG_VERSION: return createTagVersion();
 			case SEMVERPackage.VERSION_RANGE_SET: return createVersionRangeSet();
 			case SEMVERPackage.HYPHEN_VERSION_RANGE: return createHyphenVersionRange();
 			case SEMVERPackage.VERSION_RANGE_CONSTRAINT: return createVersionRangeConstraint();
@@ -106,6 +112,66 @@ public class SEMVERFactoryImpl extends EFactoryImpl implements SEMVERFactory {
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public URLVersion createURLVersion() {
+		URLVersionImpl urlVersion = new URLVersionImpl();
+		return urlVersion;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public URLSemver createURLSemver() {
+		URLSemverImpl urlSemver = new URLSemverImpl();
+		return urlSemver;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public URLCommitISH createURLCommitISH() {
+		URLCommitISHImpl urlCommitISH = new URLCommitISHImpl();
+		return urlCommitISH;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public GitHubVersion createGitHubVersion() {
+		GitHubVersionImpl gitHubVersion = new GitHubVersionImpl();
+		return gitHubVersion;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public LocalPathVersion createLocalPathVersion() {
+		LocalPathVersionImpl localPathVersion = new LocalPathVersionImpl();
+		return localPathVersion;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public TagVersion createTagVersion() {
+		TagVersionImpl tagVersion = new TagVersionImpl();
+		return tagVersion;
 	}
 
 	/**

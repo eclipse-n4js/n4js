@@ -20,12 +20,20 @@ import org.eclipse.emf.ecore.EcorePackage;
 
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
+import org.eclipse.n4js.semver.SEMVER.GitHubVersion;
 import org.eclipse.n4js.semver.SEMVER.HyphenVersionRange;
+import org.eclipse.n4js.semver.SEMVER.LocalPathVersion;
+import org.eclipse.n4js.semver.SEMVER.NPMVersion;
 import org.eclipse.n4js.semver.SEMVER.Qualifier;
 import org.eclipse.n4js.semver.SEMVER.QualifierTag;
 import org.eclipse.n4js.semver.SEMVER.SEMVERFactory;
 import org.eclipse.n4js.semver.SEMVER.SEMVERPackage;
 import org.eclipse.n4js.semver.SEMVER.SimpleVersion;
+import org.eclipse.n4js.semver.SEMVER.TagVersion;
+import org.eclipse.n4js.semver.SEMVER.URLCommitISH;
+import org.eclipse.n4js.semver.SEMVER.URLSemver;
+import org.eclipse.n4js.semver.SEMVER.URLVersion;
+import org.eclipse.n4js.semver.SEMVER.URLVersionSpecifier;
 import org.eclipse.n4js.semver.SEMVER.VersionComparator;
 import org.eclipse.n4js.semver.SEMVER.VersionNumber;
 import org.eclipse.n4js.semver.SEMVER.VersionPart;
@@ -40,6 +48,62 @@ import org.eclipse.n4js.semver.SEMVER.VersionRangeSet;
  * @generated
  */
 public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass npmVersionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass urlVersionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass urlVersionSpecifierEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass urlSemverEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass urlCommitISHEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass gitHubVersionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass localPathVersionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass tagVersionEClass = null;
+
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -172,6 +236,159 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 		// Update the registry and return the package
 		EPackage.Registry.INSTANCE.put(SEMVERPackage.eNS_URI, theSEMVERPackage);
 		return theSEMVERPackage;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getNPMVersion() {
+		return npmVersionEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getURLVersion() {
+		return urlVersionEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getURLVersion_VersionSpecifier() {
+		return (EReference)urlVersionEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getURLVersion_Protocol() {
+		return (EAttribute)urlVersionEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getURLVersion_Url() {
+		return (EAttribute)urlVersionEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getURLVersionSpecifier() {
+		return urlVersionSpecifierEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getURLSemver() {
+		return urlSemverEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getURLSemver_SimpleVersion() {
+		return (EReference)urlSemverEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getURLCommitISH() {
+		return urlCommitISHEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getURLCommitISH_CommitISH() {
+		return (EAttribute)urlCommitISHEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getGitHubVersion() {
+		return gitHubVersionEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getGitHubVersion_GithubUrl() {
+		return (EAttribute)gitHubVersionEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getGitHubVersion_CommitISH() {
+		return (EAttribute)gitHubVersionEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getLocalPathVersion() {
+		return localPathVersionEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getLocalPathVersion_LocalPath() {
+		return (EAttribute)localPathVersionEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getTagVersion() {
+		return tagVersionEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getTagVersion_TagName() {
+		return (EAttribute)tagVersionEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -431,6 +648,15 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EOperation getVersionNumber__Equals__Object() {
+		return versionNumberEClass.getEOperations().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getVersionPart() {
 		return versionPartEClass;
 	}
@@ -467,6 +693,15 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EOperation getVersionPart__Equals__Object() {
+		return versionPartEClass.getEOperations().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getQualifier() {
 		return qualifierEClass;
 	}
@@ -494,6 +729,15 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EOperation getQualifier__Equals__Object() {
+		return qualifierEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getQualifierTag() {
 		return qualifierTagEClass;
 	}
@@ -505,6 +749,15 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 */
 	public EAttribute getQualifierTag_Parts() {
 		return (EAttribute)qualifierTagEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOperation getQualifierTag__Equals__Object() {
+		return qualifierTagEClass.getEOperations().get(0);
 	}
 
 	/**
@@ -544,6 +797,31 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 		isCreated = true;
 
 		// Create classes and their features
+		npmVersionEClass = createEClass(NPM_VERSION);
+
+		urlVersionEClass = createEClass(URL_VERSION);
+		createEReference(urlVersionEClass, URL_VERSION__VERSION_SPECIFIER);
+		createEAttribute(urlVersionEClass, URL_VERSION__PROTOCOL);
+		createEAttribute(urlVersionEClass, URL_VERSION__URL);
+
+		urlVersionSpecifierEClass = createEClass(URL_VERSION_SPECIFIER);
+
+		urlSemverEClass = createEClass(URL_SEMVER);
+		createEReference(urlSemverEClass, URL_SEMVER__SIMPLE_VERSION);
+
+		urlCommitISHEClass = createEClass(URL_COMMIT_ISH);
+		createEAttribute(urlCommitISHEClass, URL_COMMIT_ISH__COMMIT_ISH);
+
+		gitHubVersionEClass = createEClass(GIT_HUB_VERSION);
+		createEAttribute(gitHubVersionEClass, GIT_HUB_VERSION__GITHUB_URL);
+		createEAttribute(gitHubVersionEClass, GIT_HUB_VERSION__COMMIT_ISH);
+
+		localPathVersionEClass = createEClass(LOCAL_PATH_VERSION);
+		createEAttribute(localPathVersionEClass, LOCAL_PATH_VERSION__LOCAL_PATH);
+
+		tagVersionEClass = createEClass(TAG_VERSION);
+		createEAttribute(tagVersionEClass, TAG_VERSION__TAG_NAME);
+
 		versionRangeSetEClass = createEClass(VERSION_RANGE_SET);
 		createEReference(versionRangeSetEClass, VERSION_RANGE_SET__RANGES);
 
@@ -577,18 +855,22 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 		createEOperation(versionNumberEClass, VERSION_NUMBER___HAS_PRE_RELEASE_TAG);
 		createEOperation(versionNumberEClass, VERSION_NUMBER___LENGTH);
 		createEOperation(versionNumberEClass, VERSION_NUMBER___GET_PART__INT);
+		createEOperation(versionNumberEClass, VERSION_NUMBER___EQUALS__OBJECT);
 
 		versionPartEClass = createEClass(VERSION_PART);
 		createEAttribute(versionPartEClass, VERSION_PART__WILDCARD);
 		createEAttribute(versionPartEClass, VERSION_PART__NUMBER_RAW);
 		createEOperation(versionPartEClass, VERSION_PART___GET_NUMBER);
+		createEOperation(versionPartEClass, VERSION_PART___EQUALS__OBJECT);
 
 		qualifierEClass = createEClass(QUALIFIER);
 		createEReference(qualifierEClass, QUALIFIER__PRE_RELEASE);
 		createEReference(qualifierEClass, QUALIFIER__BUILD_METADATA);
+		createEOperation(qualifierEClass, QUALIFIER___EQUALS__OBJECT);
 
 		qualifierTagEClass = createEClass(QUALIFIER_TAG);
 		createEAttribute(qualifierTagEClass, QUALIFIER_TAG__PARTS);
+		createEOperation(qualifierTagEClass, QUALIFIER_TAG___EQUALS__OBJECT);
 
 		// Create enums
 		versionComparatorEEnum = createEEnum(VERSION_COMPARATOR);
@@ -625,10 +907,42 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 		// Set bounds for type parameters
 
 		// Add supertypes to classes
+		urlVersionEClass.getESuperTypes().add(this.getNPMVersion());
+		urlSemverEClass.getESuperTypes().add(this.getURLVersionSpecifier());
+		urlCommitISHEClass.getESuperTypes().add(this.getURLVersionSpecifier());
+		gitHubVersionEClass.getESuperTypes().add(this.getNPMVersion());
+		localPathVersionEClass.getESuperTypes().add(this.getNPMVersion());
+		tagVersionEClass.getESuperTypes().add(this.getNPMVersion());
+		versionRangeSetEClass.getESuperTypes().add(this.getNPMVersion());
 		hyphenVersionRangeEClass.getESuperTypes().add(this.getVersionRange());
 		versionRangeConstraintEClass.getESuperTypes().add(this.getVersionRange());
 
 		// Initialize classes, features, and operations; add parameters
+		initEClass(npmVersionEClass, NPMVersion.class, "NPMVersion", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(urlVersionEClass, URLVersion.class, "URLVersion", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getURLVersion_VersionSpecifier(), this.getURLVersionSpecifier(), null, "versionSpecifier", null, 0, 1, URLVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getURLVersion_Protocol(), theEcorePackage.getEString(), "protocol", null, 0, 1, URLVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getURLVersion_Url(), theEcorePackage.getEString(), "url", null, 0, 1, URLVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(urlVersionSpecifierEClass, URLVersionSpecifier.class, "URLVersionSpecifier", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(urlSemverEClass, URLSemver.class, "URLSemver", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getURLSemver_SimpleVersion(), this.getSimpleVersion(), null, "simpleVersion", null, 0, 1, URLSemver.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(urlCommitISHEClass, URLCommitISH.class, "URLCommitISH", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getURLCommitISH_CommitISH(), theEcorePackage.getEString(), "commitISH", null, 0, 1, URLCommitISH.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(gitHubVersionEClass, GitHubVersion.class, "GitHubVersion", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getGitHubVersion_GithubUrl(), theEcorePackage.getEString(), "githubUrl", null, 0, 1, GitHubVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getGitHubVersion_CommitISH(), theEcorePackage.getEString(), "commitISH", null, 0, 1, GitHubVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(localPathVersionEClass, LocalPathVersion.class, "LocalPathVersion", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getLocalPathVersion_LocalPath(), theEcorePackage.getEString(), "localPath", null, 0, 1, LocalPathVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(tagVersionEClass, TagVersion.class, "TagVersion", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getTagVersion_TagName(), theEcorePackage.getEString(), "tagName", null, 0, 1, TagVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
 		initEClass(versionRangeSetEClass, VersionRangeSet.class, "VersionRangeSet", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getVersionRangeSet_Ranges(), this.getVersionRange(), null, "ranges", null, 0, -1, VersionRangeSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -675,18 +989,30 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 		EOperation op = initEOperation(getVersionNumber__GetPart__int(), this.getVersionPart(), "getPart", 0, 1, !IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, theEcorePackage.getEInt(), "idx", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
+		op = initEOperation(getVersionNumber__Equals__Object(), theEcorePackage.getEBoolean(), "equals", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, theEcorePackage.getEJavaObject(), "obj", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
 		initEClass(versionPartEClass, VersionPart.class, "VersionPart", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getVersionPart_Wildcard(), theEcorePackage.getEBoolean(), "wildcard", null, 0, 1, VersionPart.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getVersionPart_NumberRaw(), theEcorePackage.getEIntegerObject(), "numberRaw", null, 0, 1, VersionPart.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getVersionPart__GetNumber(), theEcorePackage.getEIntegerObject(), "getNumber", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
+		op = initEOperation(getVersionPart__Equals__Object(), theEcorePackage.getEBoolean(), "equals", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, theEcorePackage.getEJavaObject(), "obj", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
 		initEClass(qualifierEClass, Qualifier.class, "Qualifier", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getQualifier_PreRelease(), this.getQualifierTag(), null, "preRelease", null, 0, 1, Qualifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getQualifier_BuildMetadata(), this.getQualifierTag(), null, "buildMetadata", null, 0, 1, Qualifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+		op = initEOperation(getQualifier__Equals__Object(), theEcorePackage.getEBoolean(), "equals", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, theEcorePackage.getEJavaObject(), "obj", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
 		initEClass(qualifierTagEClass, QualifierTag.class, "QualifierTag", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getQualifierTag_Parts(), theEcorePackage.getEString(), "parts", null, 0, -1, QualifierTag.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		op = initEOperation(getQualifierTag__Equals__Object(), theEcorePackage.getEBoolean(), "equals", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, theEcorePackage.getEJavaObject(), "obj", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		// Initialize enums and add enum literals
 		initEEnum(versionComparatorEEnum, VersionComparator.class, "VersionComparator");

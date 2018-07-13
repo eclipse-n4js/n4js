@@ -12,8 +12,6 @@ package org.eclipse.n4js.semver.SEMVER;
 
 import org.eclipse.emf.common.util.EList;
 
-import org.eclipse.emf.ecore.EObject;
-
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Version Range Set</b></em>'.
@@ -30,7 +28,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface VersionRangeSet extends EObject {
+public interface VersionRangeSet extends NPMVersion {
 	/**
 	 * Returns the value of the '<em><b>Ranges</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.semver.SEMVER.VersionRange}.

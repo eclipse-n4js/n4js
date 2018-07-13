@@ -63,7 +63,12 @@ Workflow {
 			fragment = grammarAccess.GrammarAccessFragment2 {}
 			fragment = ecore.EMFGeneratorFragment2 {}
 			fragment = resourceFactory.ResourceFactoryFragment2 {}
-			fragment = parser.antlr.XtextAntlrGeneratorFragment2 {}
+			fragment = parser.antlr.XtextAntlrGeneratorFragment2 {
+				// debugGrammar = true
+				options = {
+					backtrack = true
+				}
+			}
 			fragment = exporting.QualifiedNamesFragment2 {}
 			fragment = ui.labeling.LabelProviderFragment2 {}
 			fragment = ui.outline.OutlineTreeProviderFragment2 {}

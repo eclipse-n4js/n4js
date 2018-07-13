@@ -91,4 +91,13 @@ public interface VersionPart extends EObject {
 	 */
 	Integer getNumber();
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model unique="false" objUnique="false"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='if ((!(obj instanceof &lt;%org.eclipse.n4js.semver.SEMVER.VersionPart%&gt;)))\n{\n\treturn false;\n}\nfinal &lt;%org.eclipse.n4js.semver.SEMVER.VersionPart%&gt; vp = ((&lt;%org.eclipse.n4js.semver.SEMVER.VersionPart%&gt;) obj);\nboolean equals = ((this.isWildcard() == vp.isWildcard()) &amp;&amp; &lt;%com.google.common.base.Objects%&gt;.equal(this.getNumberRaw(), vp.getNumberRaw()));\nreturn equals;'"
+	 * @generated
+	 */
+	boolean equals(Object obj);
+
 } // VersionPart

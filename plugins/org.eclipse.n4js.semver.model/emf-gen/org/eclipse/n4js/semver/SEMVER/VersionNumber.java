@@ -191,4 +191,13 @@ public interface VersionNumber extends EObject {
 	 */
 	VersionPart getPart(int idx);
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model unique="false" objUnique="false"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='if ((!(obj instanceof &lt;%org.eclipse.n4js.semver.SEMVER.VersionNumber%&gt;)))\n{\n\treturn false;\n}\nfinal &lt;%org.eclipse.n4js.semver.SEMVER.VersionNumber%&gt; vn = ((&lt;%org.eclipse.n4js.semver.SEMVER.VersionNumber%&gt;) obj);\nboolean equals = true;\nint _length = this.length();\nint _length_1 = vn.length();\nboolean _equals = (_length == _length_1);\nequals = _equals;\nfor (int i = 0; (i &lt; this.length()); i++)\n{\n\tequals = (equals &amp;&amp; this.getPart(i).equals(vn.getPart(i)));\n}\nequals = (equals &amp;&amp; this.getQualifier().equals(vn.getQualifier()));\nreturn equals;'"
+	 * @generated
+	 */
+	boolean equals(Object obj);
+
 } // VersionNumber

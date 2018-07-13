@@ -32,13 +32,12 @@ class SEMVERParserTest {
 	@Inject ISerializer serializer;
 
 	//@formatter:off
-	String[] data = #[
-		"",
+	String[] semverData = #[
 		" 1",
 		" 1 ",
 		"1 ",
-		"v1.2",
 		"1.2.3",
+		"v1.2",
 		"2.3.4",
 		"0.2.3",
 		"<2.0.0",
@@ -49,7 +48,9 @@ class SEMVERParserTest {
 		"1.3.9",
 		"1.2.6",
 		"1.1.0",
+		"1.1.*",
 		">=1.2.7 <1.3.0",
+		"1.2.7 || >=1.2.9",
 		"1.2.7 || >=1.2.9 <2.0.0",
 		"~1.2.3-alpha.4",
 		">1.2.3-alpha.4",
@@ -69,6 +70,8 @@ class SEMVERParserTest {
 		"1.X",
 		"1.2.*",
 		"*",
+		"x",
+		"X",
 		">=0.0.0",
 		"1.x",
 		">=1.0.0 <2.0.0",
@@ -130,7 +133,26 @@ class SEMVERParserTest {
 		"^0.x",
 		">=0.0.0 <1.0.0"
 	];
+
+	String[] npmData = #[
+		"latest",
+		"001tag",
+		"xyztag",
+		"XYZtag",
+		"vtag",
+		"Vtag",
+		"http://asdf.com/asdf.tar.gz",
+		"git+ssh://git@github.com:npm/npm.git#v1.0.27",
+		"git+ssh://git@github.com:npm/npm#semver:^5.0",
+		"git+https://isaacs@github.com/npm/npm.git",
+		"git://github.com/npm/npm.git#v1.0.27",
+		"expressjs/express",
+		"mochajs/mocha#4727d357ea",
+		"file:../foo/bar",
+		"file:../dyl"
+	];
 	//@formatter:on
+
 
 	/** Checks empty strings. */
 	@Test
@@ -140,15 +162,25 @@ class SEMVERParserTest {
 		'''		'''.parseSuccessfully // whitespace document
 	}
 
-	/** Checks a range. */
+	/** Check SEMVER versions and ranges. */
 	@Test
-	def void testParseAndToString() {
+	def void testSEMVERParseAndToString() {
+		internalTestParseAndToString(semverData, [s | return s.replace("x", "*").replace("X", "*")]);
+	}
+
+	/** Checks other NPM supported versions. */
+	@Test
+	def void testNPMParseAndToString() {
+		internalTestParseAndToString(npmData, [s | return s.replace("semver:", "")]);
+	}
+
+	/** Checks a range. */
+	private def void internalTestParseAndToString(String[] data, (String)=>String adjust) {
 		for (String entry : data) {
 			val versionRangeSet = entry.parseSuccessfully // empty document
 			assertTrue(versionRangeSet !== null);
 			val serialized = serializer.serialize(versionRangeSet);
-
-			val adjustedEntry = entry.trim.replace("x", "*").replace("X", "*");
+			val adjustedEntry = adjust.apply(entry.trim);
 			assertEquals(adjustedEntry, serialized);
 		}
 	}

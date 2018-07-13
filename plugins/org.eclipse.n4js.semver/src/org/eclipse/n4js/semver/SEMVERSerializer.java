@@ -4,10 +4,16 @@ import java.io.IOException;
 import java.io.Writer;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.semver.SEMVER.GitHubVersion;
 import org.eclipse.n4js.semver.SEMVER.HyphenVersionRange;
+import org.eclipse.n4js.semver.SEMVER.LocalPathVersion;
 import org.eclipse.n4js.semver.SEMVER.Qualifier;
 import org.eclipse.n4js.semver.SEMVER.QualifierTag;
 import org.eclipse.n4js.semver.SEMVER.SimpleVersion;
+import org.eclipse.n4js.semver.SEMVER.TagVersion;
+import org.eclipse.n4js.semver.SEMVER.URLCommitISH;
+import org.eclipse.n4js.semver.SEMVER.URLSemver;
+import org.eclipse.n4js.semver.SEMVER.URLVersion;
 import org.eclipse.n4js.semver.SEMVER.VersionComparator;
 import org.eclipse.n4js.semver.SEMVER.VersionNumber;
 import org.eclipse.n4js.semver.SEMVER.VersionPart;
@@ -21,8 +27,73 @@ import org.eclipse.xtext.util.Strings;
 /** Serializes SEMVER elements */
 public class SEMVERSerializer implements ISerializer {
 
+	/** Serializes the given {@link EObject} */
+	static public String toString(EObject eobj) {
+		return new SEMVERSerializer().serialize(eobj);
+	}
+
+	/** @return string representation of {@link URLVersion} */
+	public String serialize(URLVersion urlv) {
+		if (urlv == null)
+			return "";
+
+		String str = "";
+		if (urlv.getProtocol() != null)
+			str += urlv.getProtocol() + "://";
+		str += urlv.getUrl();
+		if (urlv.getVersionSpecifier() != null)
+			str += "#" + serialize(urlv.getVersionSpecifier());
+		return str;
+	}
+
+	/** @return string representation of {@link URLSemver} */
+	public String serialize(URLSemver urls) {
+		if (urls == null)
+			return "";
+
+		return serialize(urls.getSimpleVersion());
+	}
+
+	/** @return string representation of {@link URLCommitISH} */
+	public String serialize(URLCommitISH urlc) {
+		if (urlc == null)
+			return "";
+
+		return urlc.getCommitISH();
+	}
+
+	/** @return string representation of {@link TagVersion} */
+	public String serialize(TagVersion tv) {
+		if (tv == null)
+			return "";
+
+		return tv.getTagName();
+	}
+
+	/** @return string representation of {@link GitHubVersion} */
+	public String serialize(GitHubVersion ghv) {
+		if (ghv == null)
+			return "";
+
+		String str = ghv.getGithubUrl();
+		if (ghv.getCommitISH() != null)
+			str += "#" + ghv.getCommitISH();
+		return str;
+	}
+
+	/** @return string representation of {@link LocalPathVersion} */
+	public String serialize(LocalPathVersion lpv) {
+		if (lpv == null)
+			return "";
+
+		return "file:" + lpv.getLocalPath();
+	}
+
 	/** @return string representation of {@link VersionRangeSet} */
 	public String serialize(VersionRangeSet vrs) {
+		if (vrs == null)
+			return "";
+
 		String str = "";
 		for (int i = 0; i < vrs.getRanges().size(); i++) {
 			if (i > 0) {
@@ -35,12 +106,18 @@ public class SEMVERSerializer implements ISerializer {
 
 	/** @return string representation of {@link HyphenVersionRange} */
 	public String serialize(HyphenVersionRange hvr) {
+		if (hvr == null)
+			return "";
+
 		String str = serialize(hvr.getFrom()) + " - " + serialize(hvr.getTo());
 		return str;
 	}
 
 	/** @return string representation of {@link VersionRangeConstraint} */
 	public String serialize(VersionRangeConstraint vrc) {
+		if (vrc == null)
+			return "";
+
 		String str = "";
 		for (int i = 0; i < vrc.getVersionConstraints().size(); i++) {
 			if (i > 0) {
@@ -53,6 +130,9 @@ public class SEMVERSerializer implements ISerializer {
 
 	/** @return string representation of {@link SimpleVersion} */
 	public String serialize(SimpleVersion sv) {
+		if (sv == null)
+			return "";
+
 		String str = "";
 		for (VersionComparator vc : sv.getComparators()) {
 			str += serialize(vc);
@@ -63,6 +143,9 @@ public class SEMVERSerializer implements ISerializer {
 
 	/** @return string representation of {@link VersionNumber} */
 	public String serialize(VersionNumber vn) {
+		if (vn == null)
+			return "";
+
 		String str = serialize(vn.getMajor());
 		if (vn.getMinor() != null)
 			str += "." + serialize(vn.getMinor());
@@ -78,6 +161,9 @@ public class SEMVERSerializer implements ISerializer {
 
 	/** @return string representation of {@link VersionPart} */
 	public String serialize(VersionPart vp) {
+		if (vp == null)
+			return "";
+
 		String str = null;
 		if (vp.isWildcard()) {
 			str = "*";
@@ -89,6 +175,9 @@ public class SEMVERSerializer implements ISerializer {
 
 	/** @return string representation of {@link Qualifier} */
 	public String serialize(Qualifier q) {
+		if (q == null)
+			return "";
+
 		String str = "";
 		if (q.getPreRelease() != null)
 			str += "-" + serialize(q.getPreRelease());
@@ -99,6 +188,9 @@ public class SEMVERSerializer implements ISerializer {
 
 	/** @return string representation of {@link QualifierTag} */
 	public String serialize(QualifierTag qt) {
+		if (qt == null)
+			return "";
+
 		String str = Strings.concat(".", qt.getParts());
 		return str;
 	}
@@ -128,6 +220,27 @@ public class SEMVERSerializer implements ISerializer {
 
 	@Override
 	public String serialize(EObject obj) {
+		if (obj == null)
+			return "";
+
+		if (obj instanceof URLVersion) {
+			return serialize((URLVersion) obj);
+		}
+		if (obj instanceof URLSemver) {
+			return serialize((URLSemver) obj);
+		}
+		if (obj instanceof URLCommitISH) {
+			return serialize((URLCommitISH) obj);
+		}
+		if (obj instanceof TagVersion) {
+			return serialize((TagVersion) obj);
+		}
+		if (obj instanceof GitHubVersion) {
+			return serialize((GitHubVersion) obj);
+		}
+		if (obj instanceof LocalPathVersion) {
+			return serialize((LocalPathVersion) obj);
+		}
 		if (obj instanceof VersionRangeSet) {
 			return serialize((VersionRangeSet) obj);
 		}
@@ -152,7 +265,7 @@ public class SEMVERSerializer implements ISerializer {
 		if (obj instanceof QualifierTag) {
 			return serialize((QualifierTag) obj);
 		}
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException("No serialize method found for type " + obj.getClass().getSimpleName());
 	}
 
 	@Override

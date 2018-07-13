@@ -11,6 +11,7 @@
 package org.eclipse.n4js.semver.tests.parser
 
 import com.google.inject.Inject
+import org.eclipse.n4js.semver.SEMVER.VersionRangeSet
 import org.eclipse.n4js.semver.SEMVERInjectorProvider
 import org.eclipse.n4js.semver.SEMVERMatcher
 import org.eclipse.n4js.semver.SEMVERParseHelper
@@ -20,7 +21,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 import static org.junit.Assert.*
-import org.eclipse.n4js.semver.SEMVER.VersionRangeConstraint
 
 /**
  * Tests for parsing SEMVER files.
@@ -98,30 +98,26 @@ class SEMVERRangeTest {
 	}
 
 	def private void internalTestVersion(String underTestStr, String[] shouldMatches, String[] shouldNotMatches) {
-		val underTestVRS = underTestStr.parseSuccessfully
+		val underTestVRS = underTestStr.parseVersionRangeSet
 		assertTrue(underTestVRS !== null);
 
 		for (String shouldMatchStr : shouldMatches) {
-			val shouldMatchVRS = shouldMatchStr.parseSuccessfully
-			val verRangeContraint = shouldMatchVRS.ranges.get(0) as VersionRangeConstraint;
-			val versionNumber = verRangeContraint.versionConstraints.get(0).number;
-			assertTrue(shouldMatchVRS !== null);
-			val matches = SEMVERMatcher.matches(versionNumber, underTestVRS);
-
-			val msg = "Version '" + shouldMatchStr + "' should match '" + underTestStr + "'"
-			assertTrue(msg, matches);
+			checkMatching(underTestStr, underTestVRS, shouldMatchStr, true);
 		}
 
 		for (String shouldNotMatchStr : shouldNotMatches) {
-			val shouldNotMatchVRS = shouldNotMatchStr.parseSuccessfully
-			val verRangeContraint = shouldNotMatchVRS.ranges.get(0) as VersionRangeConstraint;
-			val versionNumber = verRangeContraint.versionConstraints.get(0).number;
-			assertTrue(shouldNotMatchVRS !== null);
-
-			val matches = SEMVERMatcher.matches(versionNumber, underTestVRS);
-			val msg = "Version '" + shouldNotMatchStr + "' should not match '" + underTestStr + "'"
-			assertFalse(msg, matches);
+			checkMatching(underTestStr, underTestVRS, shouldNotMatchStr, false);
 		}
+	}
+
+	def private void checkMatching(String underTestStr, VersionRangeSet underTestVRS, String matchingString, boolean shouldMatch) {
+		val versionNumber = matchingString.parseVersionNumber
+		assertTrue(versionNumber !== null);
+
+		val matches = SEMVERMatcher.matches(versionNumber, underTestVRS);
+		val not = if (shouldMatch) "" else "not "
+		val msg = "Version '" + matchingString + "' should " + not + " match '" + underTestStr + "'"
+		assertTrue(msg, shouldMatch == matches);
 	}
 
 }

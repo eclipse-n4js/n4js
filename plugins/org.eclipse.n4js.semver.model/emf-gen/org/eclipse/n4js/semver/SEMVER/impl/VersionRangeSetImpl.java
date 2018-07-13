@@ -19,8 +19,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
-
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -41,7 +39,7 @@ import org.eclipse.n4js.semver.SEMVER.VersionRangeSet;
  *
  * @generated
  */
-public class VersionRangeSetImpl extends MinimalEObjectImpl.Container implements VersionRangeSet {
+public class VersionRangeSetImpl extends NPMVersionImpl implements VersionRangeSet {
 	/**
 	 * The cached value of the '{@link #getRanges() <em>Ranges</em>}' containment reference list.
 	 * <!-- begin-user-doc -->

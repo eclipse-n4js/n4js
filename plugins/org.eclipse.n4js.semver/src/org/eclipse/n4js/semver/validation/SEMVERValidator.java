@@ -12,6 +12,8 @@ package org.eclipse.n4js.semver.validation;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.n4js.semver.SEMVER.SEMVERPackage;
+import org.eclipse.n4js.semver.SEMVER.SimpleVersion;
+import org.eclipse.n4js.semver.SEMVER.VersionComparator;
 import org.eclipse.n4js.semver.SEMVER.VersionNumber;
 import org.eclipse.n4js.semver.SEMVER.VersionPart;
 import org.eclipse.xtext.validation.Check;
@@ -31,6 +33,16 @@ public class SEMVERValidator extends AbstractSEMVERValidator {
 			String msg = SEMVERIssueCodes.getMessageForSEMVER_TOO_MANY_NUMBERS();
 			addIssue(msg, versionNumber, SEMVERPackage.Literals.VERSION_NUMBER__EXTENDED,
 					SEMVERIssueCodes.SEMVER_TOO_MANY_NUMBERS);
+		}
+	}
+
+	@Check
+	public void checkNoMultipleComparators(SimpleVersion simpleVersion) {
+		EList<VersionComparator> comparators = simpleVersion.getComparators();
+		if (comparators.size() > 1) {
+			String msg = SEMVERIssueCodes.getMessageForSEMVER_TOO_MANY_COMPARATORS();
+			addIssue(msg, simpleVersion, SEMVERPackage.Literals.SIMPLE_VERSION__COMPARATORS,
+					SEMVERIssueCodes.SEMVER_TOO_MANY_COMPARATORS);
 		}
 	}
 

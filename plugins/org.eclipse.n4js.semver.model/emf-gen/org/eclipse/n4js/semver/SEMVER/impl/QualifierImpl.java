@@ -10,8 +10,12 @@
  */
 package org.eclipse.n4js.semver.SEMVER.impl;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+
+import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -168,6 +172,20 @@ public class QualifierImpl extends MinimalEObjectImpl.Container implements Quali
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean equals(final Object obj) {
+		if ((!(obj instanceof Qualifier))) {
+			return false;
+		}
+		final Qualifier q = ((Qualifier) obj);
+		boolean equals = (this.getPreRelease().equals(q.getPreRelease()) && this.getBuildMetadata().equals(q.getBuildMetadata()));
+		return equals;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -245,6 +263,20 @@ public class QualifierImpl extends MinimalEObjectImpl.Container implements Quali
 				return buildMetadata != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case SEMVERPackage.QUALIFIER___EQUALS__OBJECT:
+				return equals(arguments.get(0));
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 } //QualifierImpl

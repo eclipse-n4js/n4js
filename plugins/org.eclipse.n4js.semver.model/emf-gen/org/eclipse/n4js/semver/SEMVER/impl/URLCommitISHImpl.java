@@ -10,51 +10,55 @@
  */
 package org.eclipse.n4js.semver.SEMVER.impl;
 
-import java.lang.reflect.InvocationTargetException;
-
-import java.util.Collection;
-
-import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EClass;
 
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
-import org.eclipse.emf.ecore.util.EDataTypeEList;
-
-import org.eclipse.n4js.semver.SEMVER.QualifierTag;
 import org.eclipse.n4js.semver.SEMVER.SEMVERPackage;
+import org.eclipse.n4js.semver.SEMVER.URLCommitISH;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Qualifier Tag</b></em>'.
+ * An implementation of the model object '<em><b>URL Commit ISH</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.semver.SEMVER.impl.QualifierTagImpl#getParts <em>Parts</em>}</li>
+ *   <li>{@link org.eclipse.n4js.semver.SEMVER.impl.URLCommitISHImpl#getCommitISH <em>Commit ISH</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class QualifierTagImpl extends MinimalEObjectImpl.Container implements QualifierTag {
+public class URLCommitISHImpl extends URLVersionSpecifierImpl implements URLCommitISH {
 	/**
-	 * The cached value of the '{@link #getParts() <em>Parts</em>}' attribute list.
+	 * The default value of the '{@link #getCommitISH() <em>Commit ISH</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getParts()
+	 * @see #getCommitISH()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<String> parts;
+	protected static final String COMMIT_ISH_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getCommitISH() <em>Commit ISH</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getCommitISH()
+	 * @generated
+	 * @ordered
+	 */
+	protected String commitISH = COMMIT_ISH_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected QualifierTagImpl() {
+	protected URLCommitISHImpl() {
 		super();
 	}
 
@@ -65,7 +69,7 @@ public class QualifierTagImpl extends MinimalEObjectImpl.Container implements Qu
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return SEMVERPackage.Literals.QUALIFIER_TAG;
+		return SEMVERPackage.Literals.URL_COMMIT_ISH;
 	}
 
 	/**
@@ -73,11 +77,8 @@ public class QualifierTagImpl extends MinimalEObjectImpl.Container implements Qu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<String> getParts() {
-		if (parts == null) {
-			parts = new EDataTypeEList<String>(String.class, this, SEMVERPackage.QUALIFIER_TAG__PARTS);
-		}
-		return parts;
+	public String getCommitISH() {
+		return commitISH;
 	}
 
 	/**
@@ -85,13 +86,11 @@ public class QualifierTagImpl extends MinimalEObjectImpl.Container implements Qu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean equals(final Object obj) {
-		if ((!(obj instanceof QualifierTag))) {
-			return false;
-		}
-		final QualifierTag qt = ((QualifierTag) obj);
-		boolean equals = this.getParts().equals(qt.getParts());
-		return equals;
+	public void setCommitISH(String newCommitISH) {
+		String oldCommitISH = commitISH;
+		commitISH = newCommitISH;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, SEMVERPackage.URL_COMMIT_ISH__COMMIT_ISH, oldCommitISH, commitISH));
 	}
 
 	/**
@@ -102,8 +101,8 @@ public class QualifierTagImpl extends MinimalEObjectImpl.Container implements Qu
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case SEMVERPackage.QUALIFIER_TAG__PARTS:
-				return getParts();
+			case SEMVERPackage.URL_COMMIT_ISH__COMMIT_ISH:
+				return getCommitISH();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -113,13 +112,11 @@ public class QualifierTagImpl extends MinimalEObjectImpl.Container implements Qu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case SEMVERPackage.QUALIFIER_TAG__PARTS:
-				getParts().clear();
-				getParts().addAll((Collection<? extends String>)newValue);
+			case SEMVERPackage.URL_COMMIT_ISH__COMMIT_ISH:
+				setCommitISH((String)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -133,8 +130,8 @@ public class QualifierTagImpl extends MinimalEObjectImpl.Container implements Qu
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case SEMVERPackage.QUALIFIER_TAG__PARTS:
-				getParts().clear();
+			case SEMVERPackage.URL_COMMIT_ISH__COMMIT_ISH:
+				setCommitISH(COMMIT_ISH_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -148,24 +145,10 @@ public class QualifierTagImpl extends MinimalEObjectImpl.Container implements Qu
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case SEMVERPackage.QUALIFIER_TAG__PARTS:
-				return parts != null && !parts.isEmpty();
+			case SEMVERPackage.URL_COMMIT_ISH__COMMIT_ISH:
+				return COMMIT_ISH_EDEFAULT == null ? commitISH != null : !COMMIT_ISH_EDEFAULT.equals(commitISH);
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
-		switch (operationID) {
-			case SEMVERPackage.QUALIFIER_TAG___EQUALS__OBJECT:
-				return equals(arguments.get(0));
-		}
-		return super.eInvoke(operationID, arguments);
 	}
 
 	/**
@@ -178,10 +161,10 @@ public class QualifierTagImpl extends MinimalEObjectImpl.Container implements Qu
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (parts: ");
-		result.append(parts);
+		result.append(" (commitISH: ");
+		result.append(commitISH);
 		result.append(')');
 		return result.toString();
 	}
 
-} //QualifierTagImpl
+} //URLCommitISHImpl

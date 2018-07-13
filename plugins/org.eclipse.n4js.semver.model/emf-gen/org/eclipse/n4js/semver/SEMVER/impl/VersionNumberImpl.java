@@ -380,6 +380,28 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean equals(final Object obj) {
+		if ((!(obj instanceof VersionNumber))) {
+			return false;
+		}
+		final VersionNumber vn = ((VersionNumber) obj);
+		boolean equals = true;
+		int _length = this.length();
+		int _length_1 = vn.length();
+		boolean _equals = (_length == _length_1);
+		equals = _equals;
+		for (int i = 0; (i < this.length()); i++) {
+			equals = (equals && this.getPart(i).equals(vn.getPart(i)));
+		}
+		equals = (equals && this.getQualifier().equals(vn.getQualifier()));
+		return equals;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -513,6 +535,8 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 				return length();
 			case SEMVERPackage.VERSION_NUMBER___GET_PART__INT:
 				return getPart((Integer)arguments.get(0));
+			case SEMVERPackage.VERSION_NUMBER___EQUALS__OBJECT:
+				return equals(arguments.get(0));
 		}
 		return super.eInvoke(operationID, arguments);
 	}

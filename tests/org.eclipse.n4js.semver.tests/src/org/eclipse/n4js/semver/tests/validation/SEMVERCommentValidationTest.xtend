@@ -31,11 +31,64 @@ class SEMVERCommentValidationTest extends Assert {
 	@Inject extension SEMVERParseHelper
 	@Inject extension ValidationTestHelper
 
-	/**
-	 * Test error of too many numbers
-	 */
-	@Test def void testTooManyNumbers() {
-		'''1.2.3.4'''.assertIssues('''1 1 WARNING: «SEMVERIssueCodes.SEMVER_TOO_MANY_NUMBERS»''');
+	/** Test error of too many numbers */
+	@Test
+	def void testTooManyNumbers() {
+		'''1.2.3.4'''.assertIssues('''1 1 ERROR: «SEMVERIssueCodes.SEMVER_TOO_MANY_NUMBERS»''');
+	}
+
+	/** Test error of too many comparators */
+	@Test
+	def void testTooManyComparators1() {
+		'''< > 1.2.3'''.assertIssues('''1 1 ERROR: «SEMVERIssueCodes.SEMVER_TOO_MANY_COMPARATORS»''');
+	}
+
+	/** Test error of too many comparators */
+	@Test
+	def void testTooManyComparators2a() {
+		'''< = 1.2.3'''.assertIssues('''1 1 ERROR: «SEMVERIssueCodes.SEMVER_TOO_MANY_COMPARATORS»''');
+	}
+
+	/** Test error of too many comparators */
+	@Test
+	def void testTooManyComparators2b() {
+		'''<= 1.2.3'''.assertIssues("");
+	}
+
+	/** Test error of too many comparators */
+	@Test
+	def void testTooManyComparators2c() {
+		'''=< 1.2.3'''.assertIssues('''1 1 ERROR: «SEMVERIssueCodes.SEMVER_TOO_MANY_COMPARATORS»''');
+	}
+
+	/** Test error of too many comparators */
+	@Test
+	def void testTooManyComparators2d() {
+		'''= < 1.2.3'''.assertIssues('''1 1 ERROR: «SEMVERIssueCodes.SEMVER_TOO_MANY_COMPARATORS»''');
+	}
+
+	/** Test error of too many comparators */
+	@Test
+	def void testTooManyComparators3a() {
+		'''> = 1.2.3'''.assertIssues('''1 1 ERROR: «SEMVERIssueCodes.SEMVER_TOO_MANY_COMPARATORS»''');
+	}
+
+	/** Test error of too many comparators */
+	@Test
+	def void testTooManyComparators3b() {
+		'''>= 1.2.3'''.assertIssues("");
+	}
+
+	/** Test error of too many comparators */
+	@Test
+	def void testTooManyComparators3c() {
+		'''=> 1.2.3'''.assertIssues('''1 1 ERROR: «SEMVERIssueCodes.SEMVER_TOO_MANY_COMPARATORS»''');
+	}
+
+	/** Test error of too many comparators */
+	@Test
+	def void testTooManyComparators3d() {
+		'''= > 1.2.3'''.assertIssues('''1 1 ERROR: «SEMVERIssueCodes.SEMVER_TOO_MANY_COMPARATORS»''');
 	}
 
 	/**

@@ -1,0 +1,153 @@
+/**
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+package org.eclipse.n4js.semver.tests;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.eclipse.n4js.semver.SEMVERInjectorProvider;
+import org.eclipse.n4js.semver.SEMVERMatcher;
+import org.eclipse.n4js.semver.SEMVERMatcher.VersionNumberRelation;
+import org.eclipse.n4js.semver.SEMVERParseHelper;
+import org.eclipse.n4js.semver.SEMVERUtils;
+import org.eclipse.n4js.semver.SEMVER.VersionNumber;
+import org.eclipse.xtext.testing.InjectWith;
+import org.eclipse.xtext.testing.XtextRunner;
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import com.google.common.collect.Lists;
+import com.google.inject.Inject;
+
+/**
+ * Basic version tests.
+ */
+@SuppressWarnings("javadoc")
+@RunWith(XtextRunner.class)
+@InjectWith(SEMVERInjectorProvider.class)
+public class VersionTest {
+	@Inject
+	SEMVERParseHelper semverParseHelper;
+
+	VersionNumber version(int major, int minor, int patch) {
+		return version(major, minor, patch, null, null);
+	}
+
+	VersionNumber version(int major, int minor, int patch, String preRelease, String buildMetadata) {
+		return SEMVERUtils.createVersionNumber(major, minor, patch, preRelease, buildMetadata);
+	}
+
+	VersionNumber closestMatch(List<VersionNumber> versions, VersionNumber version) {
+		return SEMVERUtils.findClosestMatching(versions, version);
+
+	}
+
+	@Test
+	public void testParseNullExpectMissing() {
+		assertMissing(semverParseHelper.parseVersionNumber(null));
+	}
+
+	@Test
+	public void testParseEmptyStringExpectMissing() {
+		assertMissing(semverParseHelper.parseVersionNumber(""));
+	}
+
+	@Test
+	public void testParseTwoDotsString() {
+		assertEquals(semverParseHelper.parseVersionNumber("1.2.3"), version(1, 2, 3));
+	}
+
+	@Test
+	public void testFindClosestMatchNullVersionsExpectMissing() {
+		assertEquals(closestMatch(null, null), null);
+	}
+
+	@Test
+	public void testFindClosestMatchEmptyVersionsExpectMissing() {
+		assertEquals(closestMatch(Lists.newArrayList(), null), null);
+	}
+
+	@Test
+	public void testFindClosestMatchNullToFindExpectMissing() {
+		VersionNumber[] versionArr = { version(1, 2, 3) };
+		List<VersionNumber> versions = Arrays.asList(versionArr);
+		assertEquals(closestMatch(versions, null), null);
+	}
+
+	@Test
+	public void testFindClosestExactMatchWithSingleElement() {
+		VersionNumber[] versionArr = { version(1, 2, 3) };
+		List<VersionNumber> versions = Arrays.asList(versionArr);
+		assertEquals(closestMatch(versions, version(1, 2, 3)), version(1, 2, 3));
+	}
+
+	@Test
+	public void testFindClosestExactMatchWithMultipleElement() {
+		VersionNumber[] versionArr = { version(2, 3, 4), version(0, 1, 2), version(1, 2, 3) };
+		List<VersionNumber> versions = Arrays.asList(versionArr);
+		assertEquals(closestMatch(versions, version(1, 2, 3)), version(1, 2, 3));
+	}
+
+	@Test
+	public void testFindClosestLessThanAnyElementsExpectMissing() {
+		VersionNumber[] versionArr = { version(2, 3, 4), version(5, 1, 2), version(1, 2, 3) };
+		List<VersionNumber> versions = Arrays.asList(versionArr);
+		assertEquals(closestMatch(versions, version(0, 2, 3)), null);
+	}
+
+	@Test
+	public void testFindClosestGreaterThanAnyElementsExpectGreatest() {
+		VersionNumber[] versionArr = { version(2, 3, 4), version(5, 1, 2), version(1, 2, 3) };
+		List<VersionNumber> versions = Arrays.asList(versionArr);
+		assertEquals(closestMatch(versions, version(10, 2, 3)), version(5, 1, 2));
+	}
+
+	@Test
+	public void testFindClosest() {
+		VersionNumber[] versionArr = { version(2, 3, 4), version(5, 1, 2), version(1, 2, 3) };
+		List<VersionNumber> versions = Arrays.asList(versionArr);
+		assertEquals(closestMatch(versions, version(3, 3, 3)), version(2, 3, 4));
+	}
+
+	@Test
+	public void testFindClosestWithQualifier() {
+		VersionNumber[] versionArr = { version(2, 4, 0) };
+		List<VersionNumber> versions = Arrays.asList(versionArr);
+		assertEquals(closestMatch(versions, version(2, 4, 0)), version(2, 4, 0, "incomplete", ""));
+	}
+
+	@Test
+	public void testCompareWithQualifier() {
+		VersionNumber lower = version(1, 2, 3, "alpha", null);
+		VersionNumber greater = version(1, 2, 3, "beta", null);
+		VersionNumber greatest = version(1, 2, 3, "beta", null);
+		Assert.assertEquals(VersionNumberRelation.Equal, SEMVERMatcher.relation(lower, lower));
+		Assert.assertEquals(VersionNumberRelation.Smaller, SEMVERMatcher.relation(lower, greater));
+		Assert.assertEquals(VersionNumberRelation.Smaller, SEMVERMatcher.relation(lower, greatest));
+		Assert.assertEquals(VersionNumberRelation.Greater, SEMVERMatcher.relation(greater, lower));
+		Assert.assertEquals(VersionNumberRelation.Equal, SEMVERMatcher.relation(greater, greater));
+		Assert.assertEquals(VersionNumberRelation.Smaller, SEMVERMatcher.relation(greater, greatest));
+		Assert.assertEquals(VersionNumberRelation.Greater, SEMVERMatcher.relation(greatest, lower));
+		Assert.assertEquals(VersionNumberRelation.Greater, SEMVERMatcher.relation(greatest, greater));
+		Assert.assertEquals(VersionNumberRelation.Equal, SEMVERMatcher.relation(greatest, greatest));
+	}
+
+	private void assertMissing(VersionNumber actual) {
+		assertEquals(actual, null);
+	}
+
+	private void assertEquals(VersionNumber actual, VersionNumber expected) {
+		String msg = "Expected '" + expected + "'. Was: '" + actual + "' instead.";
+		Assert.assertEquals(msg, expected, actual);
+	}
+
+}

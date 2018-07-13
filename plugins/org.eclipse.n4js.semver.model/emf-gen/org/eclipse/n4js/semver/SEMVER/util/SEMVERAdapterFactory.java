@@ -76,6 +76,38 @@ public class SEMVERAdapterFactory extends AdapterFactoryImpl {
 	protected SEMVERSwitch<Adapter> modelSwitch =
 		new SEMVERSwitch<Adapter>() {
 			@Override
+			public Adapter caseNPMVersion(NPMVersion object) {
+				return createNPMVersionAdapter();
+			}
+			@Override
+			public Adapter caseURLVersion(URLVersion object) {
+				return createURLVersionAdapter();
+			}
+			@Override
+			public Adapter caseURLVersionSpecifier(URLVersionSpecifier object) {
+				return createURLVersionSpecifierAdapter();
+			}
+			@Override
+			public Adapter caseURLSemver(URLSemver object) {
+				return createURLSemverAdapter();
+			}
+			@Override
+			public Adapter caseURLCommitISH(URLCommitISH object) {
+				return createURLCommitISHAdapter();
+			}
+			@Override
+			public Adapter caseGitHubVersion(GitHubVersion object) {
+				return createGitHubVersionAdapter();
+			}
+			@Override
+			public Adapter caseLocalPathVersion(LocalPathVersion object) {
+				return createLocalPathVersionAdapter();
+			}
+			@Override
+			public Adapter caseTagVersion(TagVersion object) {
+				return createTagVersionAdapter();
+			}
+			@Override
 			public Adapter caseVersionRangeSet(VersionRangeSet object) {
 				return createVersionRangeSetAdapter();
 			}
@@ -130,6 +162,118 @@ public class SEMVERAdapterFactory extends AdapterFactoryImpl {
 		return modelSwitch.doSwitch((EObject)target);
 	}
 
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.semver.SEMVER.NPMVersion <em>NPM Version</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.semver.SEMVER.NPMVersion
+	 * @generated
+	 */
+	public Adapter createNPMVersionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.semver.SEMVER.URLVersion <em>URL Version</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.semver.SEMVER.URLVersion
+	 * @generated
+	 */
+	public Adapter createURLVersionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.semver.SEMVER.URLVersionSpecifier <em>URL Version Specifier</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.semver.SEMVER.URLVersionSpecifier
+	 * @generated
+	 */
+	public Adapter createURLVersionSpecifierAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.semver.SEMVER.URLSemver <em>URL Semver</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.semver.SEMVER.URLSemver
+	 * @generated
+	 */
+	public Adapter createURLSemverAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.semver.SEMVER.URLCommitISH <em>URL Commit ISH</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.semver.SEMVER.URLCommitISH
+	 * @generated
+	 */
+	public Adapter createURLCommitISHAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.semver.SEMVER.GitHubVersion <em>Git Hub Version</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.semver.SEMVER.GitHubVersion
+	 * @generated
+	 */
+	public Adapter createGitHubVersionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.semver.SEMVER.LocalPathVersion <em>Local Path Version</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.semver.SEMVER.LocalPathVersion
+	 * @generated
+	 */
+	public Adapter createLocalPathVersionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.semver.SEMVER.TagVersion <em>Tag Version</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.semver.SEMVER.TagVersion
+	 * @generated
+	 */
+	public Adapter createTagVersionAdapter() {
+		return null;
+	}
 
 	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.semver.SEMVER.VersionRangeSet <em>Version Range Set</em>}'.

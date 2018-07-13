@@ -12,6 +12,7 @@ grammar InternalSEMVER;
 
 options {
 	superClass=AbstractInternalAntlrParser;
+	backtrack=true;
 }
 
 @lexer::header {
@@ -41,6 +42,11 @@ import org.eclipse.n4js.semver.services.SEMVERGrammarAccess;
 
 @parser::members {
 
+/*
+  This grammar contains a lot of empty actions to work around a bug in ANTLR.
+  Otherwise the ANTLR tool will create synpreds that cannot be compiled in some rare cases.
+*/
+
  	private SEMVERGrammarAccess grammarAccess;
 
     public InternalSEMVERParser(TokenStream input, SEMVERGrammarAccess grammarAccess) {
@@ -51,7 +57,7 @@ import org.eclipse.n4js.semver.services.SEMVERGrammarAccess;
 
     @Override
     protected String getFirstRuleName() {
-    	return "VersionRangeSet";
+    	return "NPMVersion";
    	}
 
    	@Override
@@ -67,6 +73,454 @@ import org.eclipse.n4js.semver.services.SEMVERGrammarAccess;
         appendSkippedTokens();
     }
 }
+
+// Entry rule entryRuleNPMVersion
+entryRuleNPMVersion returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getNPMVersionRule()); }
+	iv_ruleNPMVersion=ruleNPMVersion
+	{ $current=$iv_ruleNPMVersion.current; }
+	EOF;
+
+// Rule NPMVersion
+ruleNPMVersion returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			(
+				this_WS_0=RULE_WS
+				{
+					newLeafNode(this_WS_0, grammarAccess.getNPMVersionAccess().getWSTerminalRuleCall_0_0());
+				}
+			)*
+			{
+				/* */
+			}
+			{
+				newCompositeNode(grammarAccess.getNPMVersionAccess().getVersionRangeSetParserRuleCall_0_1());
+			}
+			this_VersionRangeSet_1=ruleVersionRangeSet
+			{
+				$current = $this_VersionRangeSet_1.current;
+				afterParserOrEnumRuleCall();
+			}
+		)
+		    |
+		(
+			(
+				{
+					/* */
+				}
+				{
+					newCompositeNode(grammarAccess.getNPMVersionAccess().getTagVersionParserRuleCall_1_0_0());
+				}
+				this_TagVersion_2=ruleTagVersion
+				{
+					$current = $this_TagVersion_2.current;
+					afterParserOrEnumRuleCall();
+				}
+				    |
+				{
+					/* */
+				}
+				{
+					newCompositeNode(grammarAccess.getNPMVersionAccess().getURLVersionParserRuleCall_1_0_1());
+				}
+				this_URLVersion_3=ruleURLVersion
+				{
+					$current = $this_URLVersion_3.current;
+					afterParserOrEnumRuleCall();
+				}
+				    |
+				{
+					/* */
+				}
+				{
+					newCompositeNode(grammarAccess.getNPMVersionAccess().getGitHubVersionParserRuleCall_1_0_2());
+				}
+				this_GitHubVersion_4=ruleGitHubVersion
+				{
+					$current = $this_GitHubVersion_4.current;
+					afterParserOrEnumRuleCall();
+				}
+				    |
+				{
+					/* */
+				}
+				{
+					newCompositeNode(grammarAccess.getNPMVersionAccess().getLocalPathVersionParserRuleCall_1_0_3());
+				}
+				this_LocalPathVersion_5=ruleLocalPathVersion
+				{
+					$current = $this_LocalPathVersion_5.current;
+					afterParserOrEnumRuleCall();
+				}
+			)
+			(
+				this_WS_6=RULE_WS
+				{
+					newLeafNode(this_WS_6, grammarAccess.getNPMVersionAccess().getWSTerminalRuleCall_1_1());
+				}
+			)*
+		)
+	)
+;
+
+// Entry rule entryRuleURLVersion
+entryRuleURLVersion returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getURLVersionRule()); }
+	iv_ruleURLVersion=ruleURLVersion
+	{ $current=$iv_ruleURLVersion.current; }
+	EOF;
+
+// Rule URLVersion
+ruleURLVersion returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getURLVersionAccess().getProtocolURL_PROTOCOLParserRuleCall_0_0());
+				}
+				lv_protocol_0_0=ruleURL_PROTOCOL
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getURLVersionRule());
+					}
+					set(
+						$current,
+						"protocol",
+						lv_protocol_0_0,
+						"org.eclipse.n4js.semver.SEMVER.URL_PROTOCOL");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
+		otherlv_1='://'
+		{
+			newLeafNode(otherlv_1, grammarAccess.getURLVersionAccess().getColonSolidusSolidusKeyword_1());
+		}
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getURLVersionAccess().getUrlURLParserRuleCall_2_0());
+				}
+				lv_url_2_0=ruleURL
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getURLVersionRule());
+					}
+					set(
+						$current,
+						"url",
+						lv_url_2_0,
+						"org.eclipse.n4js.semver.SEMVER.URL");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
+		(
+			otherlv_3='#'
+			{
+				newLeafNode(otherlv_3, grammarAccess.getURLVersionAccess().getNumberSignKeyword_3_0());
+			}
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getURLVersionAccess().getVersionSpecifierURLVersionSpecifierParserRuleCall_3_1_0());
+					}
+					lv_versionSpecifier_4_0=ruleURLVersionSpecifier
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getURLVersionRule());
+						}
+						set(
+							$current,
+							"versionSpecifier",
+							lv_versionSpecifier_4_0,
+							"org.eclipse.n4js.semver.SEMVER.URLVersionSpecifier");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
+		)?
+	)
+;
+
+// Entry rule entryRuleURLVersionSpecifier
+entryRuleURLVersionSpecifier returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getURLVersionSpecifierRule()); }
+	iv_ruleURLVersionSpecifier=ruleURLVersionSpecifier
+	{ $current=$iv_ruleURLVersionSpecifier.current; }
+	EOF;
+
+// Rule URLVersionSpecifier
+ruleURLVersionSpecifier returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			(ruleURLSemver)=>
+			{
+				/* */
+			}
+			{
+				newCompositeNode(grammarAccess.getURLVersionSpecifierAccess().getURLSemverParserRuleCall_0());
+			}
+			this_URLSemver_0=ruleURLSemver
+			{
+				$current = $this_URLSemver_0.current;
+				afterParserOrEnumRuleCall();
+			}
+		)
+		    |
+		{
+			/* */
+		}
+		{
+			newCompositeNode(grammarAccess.getURLVersionSpecifierAccess().getURLCommitISHParserRuleCall_1());
+		}
+		this_URLCommitISH_1=ruleURLCommitISH
+		{
+			$current = $this_URLCommitISH_1.current;
+			afterParserOrEnumRuleCall();
+		}
+	)
+;
+
+// Entry rule entryRuleURLSemver
+entryRuleURLSemver returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getURLSemverRule()); }
+	iv_ruleURLSemver=ruleURLSemver
+	{ $current=$iv_ruleURLSemver.current; }
+	EOF;
+
+// Rule URLSemver
+ruleURLSemver returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			otherlv_0='semver:'
+			{
+				newLeafNode(otherlv_0, grammarAccess.getURLSemverAccess().getSemverKeyword_0());
+			}
+		)?
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getURLSemverAccess().getSimpleVersionSimpleVersionParserRuleCall_1_0());
+				}
+				lv_simpleVersion_1_0=ruleSimpleVersion
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getURLSemverRule());
+					}
+					set(
+						$current,
+						"simpleVersion",
+						lv_simpleVersion_1_0,
+						"org.eclipse.n4js.semver.SEMVER.SimpleVersion");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
+	)
+;
+
+// Entry rule entryRuleURLCommitISH
+entryRuleURLCommitISH returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getURLCommitISHRule()); }
+	iv_ruleURLCommitISH=ruleURLCommitISH
+	{ $current=$iv_ruleURLCommitISH.current; }
+	EOF;
+
+// Rule URLCommitISH
+ruleURLCommitISH returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			{
+				newCompositeNode(grammarAccess.getURLCommitISHAccess().getCommitISHALPHA_NUMERIC_CHARSParserRuleCall_0());
+			}
+			lv_commitISH_0_0=ruleALPHA_NUMERIC_CHARS
+			{
+				if ($current==null) {
+					$current = createModelElementForParent(grammarAccess.getURLCommitISHRule());
+				}
+				set(
+					$current,
+					"commitISH",
+					lv_commitISH_0_0,
+					"org.eclipse.n4js.semver.SEMVER.ALPHA_NUMERIC_CHARS");
+				afterParserOrEnumRuleCall();
+			}
+		)
+	)
+;
+
+// Entry rule entryRuleTagVersion
+entryRuleTagVersion returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getTagVersionRule()); }
+	iv_ruleTagVersion=ruleTagVersion
+	{ $current=$iv_ruleTagVersion.current; }
+	EOF;
+
+// Rule TagVersion
+ruleTagVersion returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			{
+				newCompositeNode(grammarAccess.getTagVersionAccess().getTagNameTAGParserRuleCall_0());
+			}
+			lv_tagName_0_0=ruleTAG
+			{
+				if ($current==null) {
+					$current = createModelElementForParent(grammarAccess.getTagVersionRule());
+				}
+				set(
+					$current,
+					"tagName",
+					lv_tagName_0_0,
+					"org.eclipse.n4js.semver.SEMVER.TAG");
+				afterParserOrEnumRuleCall();
+			}
+		)
+	)
+;
+
+// Entry rule entryRuleGitHubVersion
+entryRuleGitHubVersion returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getGitHubVersionRule()); }
+	iv_ruleGitHubVersion=ruleGitHubVersion
+	{ $current=$iv_ruleGitHubVersion.current; }
+	EOF;
+
+// Rule GitHubVersion
+ruleGitHubVersion returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getGitHubVersionAccess().getGithubUrlURLParserRuleCall_0_0());
+				}
+				lv_githubUrl_0_0=ruleURL
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getGitHubVersionRule());
+					}
+					set(
+						$current,
+						"githubUrl",
+						lv_githubUrl_0_0,
+						"org.eclipse.n4js.semver.SEMVER.URL");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
+		(
+			otherlv_1='#'
+			{
+				newLeafNode(otherlv_1, grammarAccess.getGitHubVersionAccess().getNumberSignKeyword_1_0());
+			}
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getGitHubVersionAccess().getCommitISHALPHA_NUMERIC_CHARSParserRuleCall_1_1_0());
+					}
+					lv_commitISH_2_0=ruleALPHA_NUMERIC_CHARS
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getGitHubVersionRule());
+						}
+						set(
+							$current,
+							"commitISH",
+							lv_commitISH_2_0,
+							"org.eclipse.n4js.semver.SEMVER.ALPHA_NUMERIC_CHARS");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
+		)?
+	)
+;
+
+// Entry rule entryRuleLocalPathVersion
+entryRuleLocalPathVersion returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getLocalPathVersionRule()); }
+	iv_ruleLocalPathVersion=ruleLocalPathVersion
+	{ $current=$iv_ruleLocalPathVersion.current; }
+	EOF;
+
+// Rule LocalPathVersion
+ruleLocalPathVersion returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		otherlv_0='file:'
+		{
+			newLeafNode(otherlv_0, grammarAccess.getLocalPathVersionAccess().getFileKeyword_0());
+		}
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getLocalPathVersionAccess().getLocalPathPATHParserRuleCall_1_0());
+				}
+				lv_localPath_1_0=rulePATH
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getLocalPathVersionRule());
+					}
+					set(
+						$current,
+						"localPath",
+						lv_localPath_1_0,
+						"org.eclipse.n4js.semver.SEMVER.PATH");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
+	)
+;
 
 // Entry rule entryRuleVersionRangeSet
 entryRuleVersionRangeSet returns [EObject current=null]:
@@ -86,24 +540,21 @@ ruleVersionRangeSet returns [EObject current=null]
 	(
 		(
 			{
+				/* */
+			}
+			{
 				$current = forceCreateModelElement(
 					grammarAccess.getVersionRangeSetAccess().getVersionRangeSetAction_0(),
 					$current);
 			}
 		)
 		(
-			this_WS_1=RULE_WS
-			{
-				newLeafNode(this_WS_1, grammarAccess.getVersionRangeSetAccess().getWSTerminalRuleCall_1());
-			}
-		)*
-		(
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getVersionRangeSetAccess().getRangesVersionRangeParserRuleCall_2_0_0());
+						newCompositeNode(grammarAccess.getVersionRangeSetAccess().getRangesVersionRangeParserRuleCall_1_0_0());
 					}
-					lv_ranges_2_0=ruleVersionRange
+					lv_ranges_1_0=ruleVersionRange
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getVersionRangeSetRule());
@@ -111,7 +562,7 @@ ruleVersionRangeSet returns [EObject current=null]
 						add(
 							$current,
 							"ranges",
-							lv_ranges_2_0,
+							lv_ranges_1_0,
 							"org.eclipse.n4js.semver.SEMVER.VersionRange");
 						afterParserOrEnumRuleCall();
 					}
@@ -119,27 +570,27 @@ ruleVersionRangeSet returns [EObject current=null]
 			)
 			(
 				(
-					this_WS_3=RULE_WS
+					this_WS_2=RULE_WS
 					{
-						newLeafNode(this_WS_3, grammarAccess.getVersionRangeSetAccess().getWSTerminalRuleCall_2_1_0());
+						newLeafNode(this_WS_2, grammarAccess.getVersionRangeSetAccess().getWSTerminalRuleCall_1_1_0());
 					}
 				)*
-				otherlv_4='||'
+				otherlv_3='||'
 				{
-					newLeafNode(otherlv_4, grammarAccess.getVersionRangeSetAccess().getVerticalLineVerticalLineKeyword_2_1_1());
+					newLeafNode(otherlv_3, grammarAccess.getVersionRangeSetAccess().getVerticalLineVerticalLineKeyword_1_1_1());
 				}
 				(
-					this_WS_5=RULE_WS
+					this_WS_4=RULE_WS
 					{
-						newLeafNode(this_WS_5, grammarAccess.getVersionRangeSetAccess().getWSTerminalRuleCall_2_1_2());
+						newLeafNode(this_WS_4, grammarAccess.getVersionRangeSetAccess().getWSTerminalRuleCall_1_1_2());
 					}
 				)*
 				(
 					(
 						{
-							newCompositeNode(grammarAccess.getVersionRangeSetAccess().getRangesVersionRangeParserRuleCall_2_1_3_0());
+							newCompositeNode(grammarAccess.getVersionRangeSetAccess().getRangesVersionRangeParserRuleCall_1_1_3_0());
 						}
-						lv_ranges_6_0=ruleVersionRange
+						lv_ranges_5_0=ruleVersionRange
 						{
 							if ($current==null) {
 								$current = createModelElementForParent(grammarAccess.getVersionRangeSetRule());
@@ -147,7 +598,7 @@ ruleVersionRangeSet returns [EObject current=null]
 							add(
 								$current,
 								"ranges",
-								lv_ranges_6_0,
+								lv_ranges_5_0,
 								"org.eclipse.n4js.semver.SEMVER.VersionRange");
 							afterParserOrEnumRuleCall();
 						}
@@ -155,9 +606,9 @@ ruleVersionRangeSet returns [EObject current=null]
 				)
 			)*
 			(
-				this_WS_7=RULE_WS
+				this_WS_6=RULE_WS
 				{
-					newLeafNode(this_WS_7, grammarAccess.getVersionRangeSetAccess().getWSTerminalRuleCall_2_2());
+					newLeafNode(this_WS_6, grammarAccess.getVersionRangeSetAccess().getWSTerminalRuleCall_1_2());
 				}
 			)*
 		)?
@@ -181,6 +632,9 @@ ruleVersionRange returns [EObject current=null]
 }:
 	(
 		{
+			/* */
+		}
+		{
 			newCompositeNode(grammarAccess.getVersionRangeAccess().getVersionRangeContraintParserRuleCall_0());
 		}
 		this_VersionRangeContraint_0=ruleVersionRangeContraint
@@ -189,6 +643,9 @@ ruleVersionRange returns [EObject current=null]
 			afterParserOrEnumRuleCall();
 		}
 		    |
+		{
+			/* */
+		}
 		{
 			newCompositeNode(grammarAccess.getVersionRangeAccess().getHyphenVersionRangeParserRuleCall_1());
 		}
@@ -217,6 +674,9 @@ ruleHyphenVersionRange returns [EObject current=null]
 }:
 	(
 		(
+			{
+				/* */
+			}
 			{
 				$current = forceCreateModelElement(
 					grammarAccess.getHyphenVersionRangeAccess().getHyphenVersionRangeAction_0(),
@@ -298,6 +758,9 @@ ruleVersionRangeContraint returns [EObject current=null]
 	(
 		(
 			{
+				/* */
+			}
+			{
 				$current = forceCreateModelElement(
 					grammarAccess.getVersionRangeContraintAccess().getVersionRangeConstraintAction_0(),
 					$current);
@@ -369,6 +832,9 @@ ruleSimpleVersion returns [EObject current=null]
 }:
 	(
 		(
+			{
+				/* */
+			}
 			{
 				$current = forceCreateModelElement(
 					grammarAccess.getSimpleVersionAccess().getSimpleVersionAction_0(),
@@ -795,35 +1261,6 @@ ruleQualifierTag returns [EObject current=null]
 	)
 ;
 
-// Entry rule entryRuleALPHA_NUMERIC_CHARS
-entryRuleALPHA_NUMERIC_CHARS returns [String current=null]:
-	{ newCompositeNode(grammarAccess.getALPHA_NUMERIC_CHARSRule()); }
-	iv_ruleALPHA_NUMERIC_CHARS=ruleALPHA_NUMERIC_CHARS
-	{ $current=$iv_ruleALPHA_NUMERIC_CHARS.current.getText(); }
-	EOF;
-
-// Rule ALPHA_NUMERIC_CHARS
-ruleALPHA_NUMERIC_CHARS returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
-@init {
-	enterRule();
-}
-@after {
-	leaveRule();
-}:
-	(
-		{
-			newCompositeNode(grammarAccess.getALPHA_NUMERIC_CHARSAccess().getALPHA_NUMERIC_CHARParserRuleCall());
-		}
-		this_ALPHA_NUMERIC_CHAR_0=ruleALPHA_NUMERIC_CHAR
-		{
-			$current.merge(this_ALPHA_NUMERIC_CHAR_0);
-		}
-		{
-			afterParserOrEnumRuleCall();
-		}
-	)+
-;
-
 // Entry rule entryRuleWILDCARD
 entryRuleWILDCARD returns [String current=null]:
 	{ newCompositeNode(grammarAccess.getWILDCARDRule()); }
@@ -860,6 +1297,237 @@ ruleWILDCARD returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken(
 	)
 ;
 
+// Entry rule entryRuleURL_PROTOCOL
+entryRuleURL_PROTOCOL returns [String current=null]:
+	{ newCompositeNode(grammarAccess.getURL_PROTOCOLRule()); }
+	iv_ruleURL_PROTOCOL=ruleURL_PROTOCOL
+	{ $current=$iv_ruleURL_PROTOCOL.current.getText(); }
+	EOF;
+
+// Rule URL_PROTOCOL
+ruleURL_PROTOCOL returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		this_LETTERS_0=RULE_LETTERS
+		{
+			$current.merge(this_LETTERS_0);
+		}
+		{
+			newLeafNode(this_LETTERS_0, grammarAccess.getURL_PROTOCOLAccess().getLETTERSTerminalRuleCall_0());
+		}
+		    |
+		kw='+'
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getURL_PROTOCOLAccess().getPlusSignKeyword_1());
+		}
+	)+
+;
+
+// Entry rule entryRuleTAG
+entryRuleTAG returns [String current=null]:
+	{ newCompositeNode(grammarAccess.getTAGRule()); }
+	iv_ruleTAG=ruleTAG
+	{ $current=$iv_ruleTAG.current.getText(); }
+	EOF;
+
+// Rule TAG
+ruleTAG returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	{
+		newCompositeNode(grammarAccess.getTAGAccess().getALPHA_NUMERIC_CHARSParserRuleCall());
+	}
+	this_ALPHA_NUMERIC_CHARS_0=ruleALPHA_NUMERIC_CHARS
+	{
+		$current.merge(this_ALPHA_NUMERIC_CHARS_0);
+	}
+	{
+		afterParserOrEnumRuleCall();
+	}
+;
+
+// Entry rule entryRulePATH
+entryRulePATH returns [String current=null]:
+	{ newCompositeNode(grammarAccess.getPATHRule()); }
+	iv_rulePATH=rulePATH
+	{ $current=$iv_rulePATH.current.getText(); }
+	EOF;
+
+// Rule PATH
+rulePATH returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			{
+				newCompositeNode(grammarAccess.getPATHAccess().getALPHA_NUMERIC_CHARSParserRuleCall_0());
+			}
+			this_ALPHA_NUMERIC_CHARS_0=ruleALPHA_NUMERIC_CHARS
+			{
+				$current.merge(this_ALPHA_NUMERIC_CHARS_0);
+			}
+			{
+				afterParserOrEnumRuleCall();
+			}
+		)*
+		(
+			(
+				kw='/'
+				{
+					$current.merge(kw);
+					newLeafNode(kw, grammarAccess.getPATHAccess().getSolidusKeyword_1_0_0());
+				}
+				    |
+				kw='.'
+				{
+					$current.merge(kw);
+					newLeafNode(kw, grammarAccess.getPATHAccess().getFullStopKeyword_1_0_1());
+				}
+			)+
+			{
+				newCompositeNode(grammarAccess.getPATHAccess().getALPHA_NUMERIC_CHARSParserRuleCall_1_1());
+			}
+			this_ALPHA_NUMERIC_CHARS_3=ruleALPHA_NUMERIC_CHARS
+			{
+				$current.merge(this_ALPHA_NUMERIC_CHARS_3);
+			}
+			{
+				afterParserOrEnumRuleCall();
+			}
+		)+
+		(
+			kw='/'
+			{
+				$current.merge(kw);
+				newLeafNode(kw, grammarAccess.getPATHAccess().getSolidusKeyword_2_0());
+			}
+			    |
+			kw='.'
+			{
+				$current.merge(kw);
+				newLeafNode(kw, grammarAccess.getPATHAccess().getFullStopKeyword_2_1());
+			}
+		)*
+	)
+;
+
+// Entry rule entryRuleURL
+entryRuleURL returns [String current=null]:
+	{ newCompositeNode(grammarAccess.getURLRule()); }
+	iv_ruleURL=ruleURL
+	{ $current=$iv_ruleURL.current.getText(); }
+	EOF;
+
+// Rule URL
+ruleURL returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			{
+				newCompositeNode(grammarAccess.getURLAccess().getALPHA_NUMERIC_CHARParserRuleCall_0());
+			}
+			this_ALPHA_NUMERIC_CHAR_0=ruleALPHA_NUMERIC_CHAR
+			{
+				$current.merge(this_ALPHA_NUMERIC_CHAR_0);
+			}
+			{
+				afterParserOrEnumRuleCall();
+			}
+		)*
+		(
+			(
+				kw='/'
+				{
+					$current.merge(kw);
+					newLeafNode(kw, grammarAccess.getURLAccess().getSolidusKeyword_1_0_0());
+				}
+				    |
+				kw='.'
+				{
+					$current.merge(kw);
+					newLeafNode(kw, grammarAccess.getURLAccess().getFullStopKeyword_1_0_1());
+				}
+				    |
+				kw=':'
+				{
+					$current.merge(kw);
+					newLeafNode(kw, grammarAccess.getURLAccess().getColonKeyword_1_0_2());
+				}
+				    |
+				kw='@'
+				{
+					$current.merge(kw);
+					newLeafNode(kw, grammarAccess.getURLAccess().getCommercialAtKeyword_1_0_3());
+				}
+			)+
+			{
+				newCompositeNode(grammarAccess.getURLAccess().getALPHA_NUMERIC_CHARSParserRuleCall_1_1());
+			}
+			this_ALPHA_NUMERIC_CHARS_5=ruleALPHA_NUMERIC_CHARS
+			{
+				$current.merge(this_ALPHA_NUMERIC_CHARS_5);
+			}
+			{
+				afterParserOrEnumRuleCall();
+			}
+		)+
+	)
+;
+
+// Entry rule entryRuleALPHA_NUMERIC_CHARS
+entryRuleALPHA_NUMERIC_CHARS returns [String current=null]:
+	{ newCompositeNode(grammarAccess.getALPHA_NUMERIC_CHARSRule()); }
+	iv_ruleALPHA_NUMERIC_CHARS=ruleALPHA_NUMERIC_CHARS
+	{ $current=$iv_ruleALPHA_NUMERIC_CHARS.current.getText(); }
+	EOF;
+
+// Rule ALPHA_NUMERIC_CHARS
+ruleALPHA_NUMERIC_CHARS returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		{
+			newCompositeNode(grammarAccess.getALPHA_NUMERIC_CHARSAccess().getALPHA_NUMERIC_CHARParserRuleCall());
+		}
+		this_ALPHA_NUMERIC_CHAR_0=ruleALPHA_NUMERIC_CHAR
+		{
+			$current.merge(this_ALPHA_NUMERIC_CHAR_0);
+		}
+		{
+			afterParserOrEnumRuleCall();
+		}
+	)+
+;
+
+// Entry rule entryRuleALPHA_NUMERIC_CHAR
+entryRuleALPHA_NUMERIC_CHAR returns [String current=null]:
+	{ newCompositeNode(grammarAccess.getALPHA_NUMERIC_CHARRule()); }
+	iv_ruleALPHA_NUMERIC_CHAR=ruleALPHA_NUMERIC_CHAR
+	{ $current=$iv_ruleALPHA_NUMERIC_CHAR.current.getText(); }
+	EOF;
 
 // Rule ALPHA_NUMERIC_CHAR
 ruleALPHA_NUMERIC_CHAR returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]

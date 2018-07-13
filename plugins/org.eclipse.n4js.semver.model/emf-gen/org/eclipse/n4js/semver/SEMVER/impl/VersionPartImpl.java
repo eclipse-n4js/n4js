@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.semver.SEMVER.impl;
 
+import com.google.common.base.Objects;
+
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -158,6 +160,20 @@ public class VersionPartImpl extends MinimalEObjectImpl.Container implements Ver
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean equals(final Object obj) {
+		if ((!(obj instanceof VersionPart))) {
+			return false;
+		}
+		final VersionPart vp = ((VersionPart) obj);
+		boolean equals = ((this.isWildcard() == vp.isWildcard()) && Objects.equal(this.getNumberRaw(), vp.getNumberRaw()));
+		return equals;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -231,6 +247,8 @@ public class VersionPartImpl extends MinimalEObjectImpl.Container implements Ver
 		switch (operationID) {
 			case SEMVERPackage.VERSION_PART___GET_NUMBER:
 				return getNumber();
+			case SEMVERPackage.VERSION_PART___EQUALS__OBJECT:
+				return equals(arguments.get(0));
 		}
 		return super.eInvoke(operationID, arguments);
 	}

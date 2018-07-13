@@ -25,7 +25,38 @@
 package org.eclipse.n4js.semver.SEMVER
 
 
-class VersionRangeSet {
+abstract class NPMVersion {}
+
+class URLVersion extends NPMVersion {
+	contains URLVersionSpecifier versionSpecifier
+	String protocol
+	String url
+}
+
+abstract class URLVersionSpecifier {}
+
+class URLSemver extends URLVersionSpecifier {
+	contains SimpleVersion simpleVersion
+}
+
+class URLCommitISH extends URLVersionSpecifier {
+	String commitISH
+}
+
+class GitHubVersion extends NPMVersion {
+	String githubUrl
+	String commitISH
+}
+
+class LocalPathVersion extends NPMVersion {
+	String localPath
+}
+
+class TagVersion extends NPMVersion {
+	String tagName
+}
+
+class VersionRangeSet extends NPMVersion {
 	contains VersionRange[] ranges
 }
 
@@ -109,6 +140,20 @@ class VersionNumber {
 			default: return extended.get(idx - 3)
 		};
 	}
+
+	op boolean equals(Object obj) {
+		if (!(obj instanceof VersionNumber)) {
+			return false;
+		}
+		val vn = obj as VersionNumber;
+		var equals = true;
+		equals = length == vn.length;
+		for (var i=0; i<length; i++) {
+			equals = equals && getPart(i).equals(vn.getPart(i));
+		}
+		equals = equals && qualifier.equals(vn.qualifier);
+		return equals;
+	}
 }
 
 class VersionPart {
@@ -120,16 +165,51 @@ class VersionPart {
 			return null;
 		return numberRaw;
 	}
+
+	op boolean equals(Object obj) {
+		if (!(obj instanceof VersionPart)) {
+			return false;
+		}
+		val vp = obj as VersionPart;
+		var equals = wildcard == vp.wildcard && numberRaw == vp.numberRaw;
+		return equals;
+	}
 }
 
 class Qualifier {
 	contains QualifierTag preRelease
 	contains QualifierTag buildMetadata
+
+	op boolean equals(Object obj) {
+		if (!(obj instanceof Qualifier)) {
+			return false;
+		}
+		val q = obj as Qualifier;
+		var equals = preRelease.equals(q.preRelease) && buildMetadata.equals(q.buildMetadata);
+		return equals;
+	}
 }
 
 class QualifierTag {
 	String[] parts
+
+	op boolean equals(Object obj) {
+		if (!(obj instanceof QualifierTag)) {
+			return false;
+		}
+		val qt = obj as QualifierTag;
+		var equals = parts.equals(qt.parts);
+		return equals;
+	}
 }
+
+//class Url {
+//	String[] parts
+//
+//	op String getString() {
+//		return String.join("", parts);
+//	}
+//}
 
 enum VersionComparator {
 	Version = 0,

@@ -14,6 +14,39 @@ import org.eclipse.n4js.semver.SEMVER.VersionRangeSet;
 /** Utility class to provide methods to check matching of versions. */
 public class SEMVERMatcher {
 
+	/** Relation between two {@link VersionNumber}s */
+	public enum VersionNumberRelation {
+		/** Version A is smaller than version B */
+		Smaller,
+		/** Version A is greater than version B */
+		Greater,
+		/** Version A and B are unrelated */
+		Equal,
+		/** Version A and B are unrelated */
+		Unrelated;
+
+		/** @return iff this is either {@link VersionNumberRelation#Smaller} or {@link VersionNumberRelation#Equal} */
+		public boolean isSmallerOrEqual() {
+			return this == Equal || this == Smaller;
+		}
+
+		/** @return iff this is either {@link VersionNumberRelation#Greater} or {@link VersionNumberRelation#Equal} */
+		public boolean isGreaterOrEqual() {
+			return this == Equal || this == Greater;
+		}
+	}
+
+	/**
+	 * @return true iff the given arguments will yield a useful result when passed to the method
+	 *         {@link #matches(VersionNumber, VersionRangeSet)}
+	 */
+	static public boolean validMatchesArguments(VersionNumber proband, VersionRangeSet constraint) {
+		boolean invalidMatchesParams = true;
+		invalidMatchesParams |= proband == null;
+		invalidMatchesParams |= constraint.getRanges().isEmpty();
+		return invalidMatchesParams;
+	}
+
 	/**
 	 * This method checks {@link VersionRangeSet}s whether they match or not. Its semantics is aligned to
 	 * <a href="https://semver.npmjs.com/">semver.npmjs.com<a>.
@@ -34,6 +67,44 @@ public class SEMVERMatcher {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Compares two SEMVER {@link VersionNumber}s A and B.
+	 * <p>
+	 * Note that this function cannot cover cases when one version is checked against multiple other versions. In these
+	 * cases the method {@link #matches(VersionNumber, VersionRangeSet)} should be used.
+	 *
+	 * @return relation between two given {@link VersionNumber}s
+	 */
+	static public VersionNumberRelation relation(VersionNumber a, VersionNumber b) {
+		return relation(a, b, false);
+	}
+
+	/**
+	 * Compares two SEMVER {@link VersionNumber}s A and B.
+	 * <ul>
+	 * <li/>Returns 0 iff A and B are equal.
+	 * <li/>Returns 1 iff A is greater than B.
+	 * <li/>Returns -1 iff A is smaller than B.
+	 * <li/>Returns -10 otherwise.
+	 * </ul>
+	 * Note that this function cannot cover cases when one version is checked against multiple other versions. In these
+	 * cases the method {@link #matches(VersionNumber, VersionRangeSet)} should be used.
+	 */
+	static public int compare(VersionNumber a, VersionNumber b) {
+		VersionNumberRelation versionRelation = relation(a, b, false);
+		switch (versionRelation) {
+		case Equal:
+			return 0;
+		case Greater:
+			return 1;
+		case Smaller:
+			return -1;
+		case Unrelated:
+			return -10;
+		}
+		return -10;
 	}
 
 	static private boolean matches(VersionNumber proband, VersionRange constraint) {
@@ -112,10 +183,6 @@ public class SEMVERMatcher {
 		}
 
 		throw new IllegalStateException("The Impossible State.");
-	}
-
-	private enum VersionNumberRelation {
-		Smaller, Greater, Equal, Unrelated
 	}
 
 	/**

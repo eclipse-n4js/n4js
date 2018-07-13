@@ -82,4 +82,13 @@ public interface Qualifier extends EObject {
 	 */
 	void setBuildMetadata(QualifierTag value);
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model unique="false" objUnique="false"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='if ((!(obj instanceof &lt;%org.eclipse.n4js.semver.SEMVER.Qualifier%&gt;)))\n{\n\treturn false;\n}\nfinal &lt;%org.eclipse.n4js.semver.SEMVER.Qualifier%&gt; q = ((&lt;%org.eclipse.n4js.semver.SEMVER.Qualifier%&gt;) obj);\nboolean equals = (this.getPreRelease().equals(q.getPreRelease()) &amp;&amp; this.getBuildMetadata().equals(q.getBuildMetadata()));\nreturn equals;'"
+	 * @generated
+	 */
+	boolean equals(Object obj);
+
 } // Qualifier

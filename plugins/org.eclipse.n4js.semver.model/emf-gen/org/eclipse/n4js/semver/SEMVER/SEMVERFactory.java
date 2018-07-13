@@ -30,6 +30,60 @@ public interface SEMVERFactory extends EFactory {
 	SEMVERFactory eINSTANCE = org.eclipse.n4js.semver.SEMVER.impl.SEMVERFactoryImpl.init();
 
 	/**
+	 * Returns a new object of class '<em>URL Version</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>URL Version</em>'.
+	 * @generated
+	 */
+	URLVersion createURLVersion();
+
+	/**
+	 * Returns a new object of class '<em>URL Semver</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>URL Semver</em>'.
+	 * @generated
+	 */
+	URLSemver createURLSemver();
+
+	/**
+	 * Returns a new object of class '<em>URL Commit ISH</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>URL Commit ISH</em>'.
+	 * @generated
+	 */
+	URLCommitISH createURLCommitISH();
+
+	/**
+	 * Returns a new object of class '<em>Git Hub Version</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Git Hub Version</em>'.
+	 * @generated
+	 */
+	GitHubVersion createGitHubVersion();
+
+	/**
+	 * Returns a new object of class '<em>Local Path Version</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Local Path Version</em>'.
+	 * @generated
+	 */
+	LocalPathVersion createLocalPathVersion();
+
+	/**
+	 * Returns a new object of class '<em>Tag Version</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Tag Version</em>'.
+	 * @generated
+	 */
+	TagVersion createTagVersion();
+
+	/**
 	 * Returns a new object of class '<em>Version Range Set</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
