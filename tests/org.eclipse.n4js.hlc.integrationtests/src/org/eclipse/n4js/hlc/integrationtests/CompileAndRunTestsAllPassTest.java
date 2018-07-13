@@ -14,26 +14,25 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 
-import org.eclipse.n4js.hlc.base.ErrorExitCode;
 import org.junit.Test;
 
 /**
  * Uses the {@code n4jsc.jar} to compile and run all tests in a given project.
+ *
+ * All tests in the project pass.
  */
-public class CompileAndRunTestsTest extends AbstractN4jscJarTest {
+public class CompileAndRunTestsAllPassTest extends AbstractN4jscJarTest {
 
 	/** */
-	public CompileAndRunTestsTest() {
-		super("probands/GH-975-tester-ws", true);
+	public CompileAndRunTestsAllPassTest() {
+		super("probands/GH-975-tester-allpass", true);
 	}
 
 	/**
 	 * Compiles and runs all tests in a simple N4JS test project.
-	 *
-	 * The test project is expected to contain
 	 */
 	@Test
-	public void testRunTests() throws IOException, InterruptedException {
+	public void testRunTestsAllPass() throws IOException, InterruptedException {
 		logFile();
 
 		final String wsRoot = WORKSPACE_FOLDER;
@@ -46,7 +45,7 @@ public class CompileAndRunTestsTest extends AbstractN4jscJarTest {
 
 		int exitCode = p.waitFor();
 
-		assertEquals(ErrorExitCode.EXITCODE_TESTER_STOPPED_WITH_ERROR.getExitCodeValue(), exitCode);
+		assertEquals("The process terminates successfully with exit code 0.", 0, exitCode);
 	}
 
 }
