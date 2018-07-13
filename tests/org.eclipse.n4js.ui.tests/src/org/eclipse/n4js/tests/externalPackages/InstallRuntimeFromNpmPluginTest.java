@@ -118,7 +118,8 @@ public class InstallRuntimeFromNpmPluginTest extends AbstractBuilderParticipantT
 		final Process process = runnerFrontEnd.run(config, createTestExecutor());
 		final String output = captureOutput(process);
 
-		Assert.assertEquals("The process output matches the expectation.", "Hello World", output);
+		Assert.assertEquals("The process output matches the expectation.",
+				"stdout:\n" + "Hello World\n" + "stderr:", output);
 	}
 
 	/**
@@ -147,14 +148,24 @@ public class InstallRuntimeFromNpmPluginTest extends AbstractBuilderParticipantT
 	/**
 	 * Captures the output of the given {@code process} and returns it as a string.
 	 *
-	 * Does not capture the error output of the given {@code process}.
+	 * Returns a concatenated version of stdout and stderr output.
 	 */
 	private static String captureOutput(Process process) throws IOException {
 		List<String> out = new ArrayList<>();
 		String line;
 
-		try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-			while ((line = reader.readLine()) != null) {
+		out.add("stdout:");
+
+		try (BufferedReader outputReader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+			while ((line = outputReader.readLine()) != null) {
+				out.add(line);
+			}
+		}
+
+		out.add("stderr:");
+
+		try (BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
+			while ((line = errorReader.readLine()) != null) {
 				out.add(line);
 			}
 		}
