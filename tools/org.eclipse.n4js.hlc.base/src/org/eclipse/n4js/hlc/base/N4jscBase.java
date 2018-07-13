@@ -72,6 +72,7 @@ import org.eclipse.n4js.tester.TestCatalogSupplier;
 import org.eclipse.n4js.tester.TestTreeTransformer;
 import org.eclipse.n4js.tester.TesterModule;
 import org.eclipse.n4js.tester.extension.TesterRegistry;
+import org.eclipse.n4js.tester.internal.TesterActivator;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.eclipse.xtext.ISetup;
 import org.kohsuke.args4j.Argument;
@@ -777,6 +778,11 @@ public class N4jscBase implements IApplication {
 		final Injector injector = setup.createInjectorAndDoEMFRegistration();
 
 		injector.injectMembers(this);
+
+		// if tester activator instance is present, initialize it with the injector instance
+		if (TesterActivator.getInstance() != null) {
+			TesterActivator.getInstance().startupWithInjector(injector);
+		}
 	}
 
 	/**
