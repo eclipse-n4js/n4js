@@ -61,7 +61,7 @@ pipeline {
                 sshagent(['github-com-ssh-key']) {
                     script {
                         def xvfb = 'xvfb-run -a --server-args="-screen 0 1024x768x24" '
-                        def options = '-Dmaven.test.redirectTestOutputToFile=true -Dmaven.test.failure.ignore -e -DWORKSPACE=' + env.WORKSPACE
+                        def options = '-DnoTests -Dmaven.test.redirectTestOutputToFile=true -Dmaven.test.failure.ignore -e -DWORKSPACE=' + env.WORKSPACE
                         def profiles = [
                             'buildProduct',
                             'execute-plugin-tests',
