@@ -779,7 +779,7 @@ public class N4jscBase implements IApplication {
 
 		injector.injectMembers(this);
 
-		// if tester activator instance is present, initialize it with the injector instance
+		// if tester activator instance is present, initialize it with created injector
 		if (TesterActivator.getInstance() != null) {
 			TesterActivator.getInstance().startupWithInjector(injector);
 		}

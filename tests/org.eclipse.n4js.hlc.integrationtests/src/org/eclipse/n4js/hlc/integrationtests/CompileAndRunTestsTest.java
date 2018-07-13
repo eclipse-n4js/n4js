@@ -15,7 +15,6 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 
 import org.eclipse.n4js.hlc.base.ErrorExitCode;
-import org.eclipse.n4js.test.helper.hlc.N4CliHelper;
 import org.junit.Test;
 
 /**
@@ -48,10 +47,6 @@ public class CompileAndRunTestsTest extends AbstractN4jscJarTest {
 		int exitCode = p.waitFor();
 
 		assertEquals(ErrorExitCode.EXITCODE_TESTER_STOPPED_WITH_ERROR.getExitCodeValue(), exitCode);
-
-		String out = N4CliHelper.readLogfile(outputLogFile);
-
-		System.out.println(out);
 	}
 
 }
