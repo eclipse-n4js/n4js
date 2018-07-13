@@ -23,7 +23,8 @@ Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.runner,
  org.eclipse.n4js.runner.nodejs,
  org.eclipse.n4js.generator.headless,
- org.eclipse.n4js.hlc.base
+ org.eclipse.n4js.hlc.base,
+ org.eclipse.n4js.external.libraries
 Export-Package: org.eclipse.n4js,
  org.eclipse.n4js.analysis,
  org.eclipse.n4js.csv,

@@ -1,0 +1,18 @@
+{
+	"name": "T",
+	"version": "0.0.1",
+	"dependencies": {
+		"org.eclipse.n4js.mangelhaft": "*",
+		"org.eclipse.n4js.mangelhaft.assert": "*"
+	},
+	"n4js": {
+		"projectType": "test",
+		"vendorId": "org.eclipse.n4js",
+		"sources": {
+			"test": [
+				"test"
+			]
+		},
+		"output": "src-gen"
+	}
+}

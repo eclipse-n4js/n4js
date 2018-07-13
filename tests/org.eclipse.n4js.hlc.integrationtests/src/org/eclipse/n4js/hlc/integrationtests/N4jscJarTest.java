@@ -49,11 +49,11 @@ public class N4jscJarTest extends AbstractN4jscJarTest {
 		logFile();
 
 		String projectDemoTest = "DemoTest";
-		String pathToDemoTest = WSP + "/" + projectDemoTest;
+		String pathToDemoTest = WORKSPACE_FOLDER + "/" + projectDemoTest;
 
 		Process p = createAndStartProcess(
 				"--systemLoader", COMMON_JS.getId(),
-				"--projectlocations", WSP,
+				"--projectlocations", WORKSPACE_FOLDER,
 				"--buildType", "allprojects",
 				"--testWith", "nodejs_mangelhaft",
 				"--test", pathToDemoTest);
@@ -89,12 +89,12 @@ public class N4jscJarTest extends AbstractN4jscJarTest {
 		logFile();
 
 		String projectDemoTest = "DemoTest";
-		String pathToDemoTest = WSP + "/" + projectDemoTest;
+		String pathToDemoTest = WORKSPACE_FOLDER + "/" + projectDemoTest;
 		String testReportRoot = pathToDemoTest + "/src-gen";
 
 		Process p = createAndStartProcess(
 				"--systemLoader", COMMON_JS.getId(),
-				"--projectlocations", WSP,
+				"--projectlocations", WORKSPACE_FOLDER,
 				"--buildType", "allprojects",
 				"--testWith", "nodejs_mangelhaft",
 				"--test", pathToDemoTest,
