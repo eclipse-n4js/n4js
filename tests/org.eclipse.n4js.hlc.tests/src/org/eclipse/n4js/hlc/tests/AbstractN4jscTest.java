@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.hlc.tests;
 
-import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.Sets.newHashSet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -23,18 +22,11 @@ import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSLanguageConstants;
-import org.eclipse.n4js.external.libraries.ShippedCodeAccess;
 import org.eclipse.n4js.hlc.base.ErrorExitCode;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.hlc.base.N4jscBase;
@@ -66,11 +58,6 @@ public abstract class AbstractN4jscTest {
 	protected static final String TEST_DATA_SET__BASIC = "basic";
 	/** name of test data set for launching testers from the command line */
 	protected static final String TEST_DATA_SET__TESTERS = "testers";
-	/**
-	 * npms in n4js-libs that should not be copied during test because they are only in the n4js-libs to be published
-	 */
-	protected static final Set<String> blackList = new HashSet<>(
-			Arrays.asList("org.eclipse.n4js.mangelhaft.reporter.xunit", "n4js-cli", "n4js-mangelhaft-cli"));
 
 	/**
 	 * Clear global registers to avoid injection-issues (validators, resource factories, etc.)
@@ -134,27 +121,8 @@ public abstract class AbstractN4jscTest {
 		// copy fixtures to workspace
 		FileCopier.copy(fixture.toPath(), wsp.toPath(), true);
 
-		// obtain paths of all shipped code projects
-		final List<File> n4jsLibraries = StreamSupport
-				.stream(ShippedCodeAccess.getAllShippedPaths().spliterator(), false)
-				.flatMap(path -> Arrays.asList(new File(path).listFiles()).stream()).collect(Collectors.toList());
-
-		// copy N4JS libraries on demand
-		if (!n4jsLibraries.isEmpty()) {
-			for (final File n4jsLibrary : n4jsLibraries) {
-				if (n4jsLibrariesPredicate.apply(n4jsLibrary.getName())) {
-					if (blackList.contains(n4jsLibrary.getName())) {
-						continue;
-					}
-					System.out.println("Including N4JS library in workspace: '" + n4jsLibrary.getName() + "'.");
-					final File libFolder = new File(wsp, n4jsLibrary.getName());
-					libFolder.mkdir();
-					checkState(libFolder.isDirectory(),
-							"Error while copying N4JS library '" + n4jsLibrary.getName() + "' to workspace.");
-					FileCopier.copy(n4jsLibrary.toPath(), libFolder.toPath(), true);
-				}
-			}
-		}
+		// copy required n4js libraries to workspace location
+		N4CliHelper.copyN4jsLibsToLocation(wsp, n4jsLibrariesPredicate);
 
 		return wsp;
 	}
