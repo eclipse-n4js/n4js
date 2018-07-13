@@ -19,7 +19,6 @@ import java.util.Scanner;
 
 import org.eclipse.n4js.hlc.base.ErrorExitCode;
 import org.eclipse.n4js.test.helper.hlc.N4CliHelper;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -30,11 +29,11 @@ import org.junit.Test;
  * This script executes Maven locally to create n4jsc.jar and copy the n4jsc.jar to the folder
  * git/n4js/tests/org.eclipse.n4js.hlc.tests/target required by these tests.
  */
-public class N4jscJarTest extends AbstractN4jscJarTest {
+public class N4jscJarTesterTest extends AbstractN4jscJarTest {
 
 	/***/
-	public N4jscJarTest() {
-		super("probands/testers");
+	public N4jscJarTesterTest() {
+		super("probands/testers", true);
 	}
 
 	/**
@@ -44,18 +43,18 @@ public class N4jscJarTest extends AbstractN4jscJarTest {
 	 *             in Error cases
 	 */
 	@Test
-	@Ignore("https://github.com/eclipse/n4js/issues/611")
 	public void testCompileAllAndRunWithNodeWithOutput() throws Exception {
 		logFile();
 
 		String projectDemoTest = "DemoTest";
-		String pathToDemoTest = WSP + "/" + projectDemoTest;
+		String pathToDemoTest = WORKSPACE_FOLDER + "/" + projectDemoTest;
 
 		Process p = createAndStartProcess(
 				"--systemLoader", COMMON_JS.getId(),
-				"--projectlocations", WSP,
+				"--projectlocations", WORKSPACE_FOLDER,
 				"--buildType", "allprojects",
 				"--testWith", "nodejs_mangelhaft",
+				"--verbose", // required, otherwise passed tests will not occur in output
 				"--test", pathToDemoTest);
 
 		int exitCode = p.waitFor();
@@ -65,16 +64,16 @@ public class N4jscJarTest extends AbstractN4jscJarTest {
 		String out = N4CliHelper.readLogfile(outputLogFile);
 
 		N4CliHelper.assertExpectedOutputContains(
-				"|TID:BarTest/OsInspectorTest2#testFail| => Failed", out);
+				"|TID:src-gen/BarTest/OsInspectorTest2#testFail| => Failed", out);
 		N4CliHelper.assertExpectedOutputContains(
-				"|TID:BazTest/OsInspectorTest3#testIgnored| => Ignored", out);
+				"|TID:src-gen/BazTest/OsInspectorTest3#testIgnored| => Ignored", out);
 
 		N4CliHelper.assertExpectedOutputContains(
-				"|TID:FooTest/OsInspectorTest#testPass|", out);
+				"|TID:src-gen/FooTest/OsInspectorTest#testPass|", out);
 		N4CliHelper.assertExpectedOutputNotContains(
-				"|TID:FooTest/OsInspectorTest#testPass| => Failed", out);
+				"|TID:src-gen/FooTest/OsInspectorTest#testPass| => Failed", out);
 		N4CliHelper.assertExpectedOutputNotContains(
-				"|TID:FooTest/OsInspectorTest#testPass| => Ignored", out);
+				"|TID:src-gen/FooTest/OsInspectorTest#testPass| => Ignored", out);
 	}
 
 	/**
@@ -84,45 +83,44 @@ public class N4jscJarTest extends AbstractN4jscJarTest {
 	 *             in Error cases
 	 */
 	@Test
-	@Ignore("https://github.com/NumberFour/n4js/issues/167")
 	public void testCompileAllAndRunWithNodeWithReport() throws Exception {
 		logFile();
 
 		String projectDemoTest = "DemoTest";
-		String pathToDemoTest = WSP + "/" + projectDemoTest;
+		String pathToDemoTest = WORKSPACE_FOLDER + "/" + projectDemoTest;
 		String testReportRoot = pathToDemoTest + "/src-gen";
 
-		Process p = createAndStartProcess(
+		final Process p = createAndStartProcess(
 				"--systemLoader", COMMON_JS.getId(),
-				"--projectlocations", WSP,
+				"--projectlocations", WORKSPACE_FOLDER,
 				"--buildType", "allprojects",
 				"--testWith", "nodejs_mangelhaft",
 				"--test", pathToDemoTest,
 				"--testReportRoot", testReportRoot);
 
-		int exitCode = p.waitFor();
+		final int exitCode = p.waitFor();
 
 		assertEquals(ErrorExitCode.EXITCODE_TESTER_STOPPED_WITH_ERROR.getExitCodeValue(), exitCode);
 
-		File report = new File(testReportRoot + "/test-report.xml");
+		File report = new File(HlcTestingConstants.TARGET + "/" + testReportRoot + "/test-report.xml");
 		assertTrue("Test report not found", report.exists());
 
 		@SuppressWarnings("resource")
-		String content = new Scanner(report).useDelimiter("\\Z").next();
+		final String content = new Scanner(report).useDelimiter("\\Z").next();
 		assertTrue(content.contains(
-				"<testsuite name=\"BarTest/OsInspectorTest2\" tests=\"1\" errors=\"0\" failures=\"1\" skipped=\"0\""));
+				"<testsuite name=\"src-gen/BarTest/OsInspectorTest2\" tests=\"1\" errors=\"0\" failures=\"1\" skipped=\"0\""));
 		assertTrue(content.contains(
 				"<error message=\"AssertionError: Invalid OS detected. (detected os :: fakeOsName not == fakeOsName )\">"));
 
 		assertTrue(content.contains(
-				"<testsuite name=\"BazTest/OsInspectorTest3\" tests=\"1\" errors=\"0\" failures=\"0\" skipped=\"1\""));
+				"<testsuite name=\"src-gen/BazTest/OsInspectorTest3\" tests=\"1\" errors=\"0\" failures=\"0\" skipped=\"1\""));
 
 		assertTrue(content.contains(
-				"<testsuite name=\"FooTest/OsInspectorTest\" tests=\"1\" errors=\"0\" failures=\"0\" skipped=\"0\""));
+				"<testsuite name=\"src-gen/FooTest/OsInspectorTest\" tests=\"1\" errors=\"0\" failures=\"0\" skipped=\"0\""));
 
 		assertTrue(content.contains(
-				"\"subfolder/SubFolderModule/SubFolderTest\" tests=\"1\" errors=\"0\" failures=\"0\" skipped=\"0\""));
+				"\"src-gen/subfolder/SubFolderModule/SubFolderTest\" tests=\"1\" errors=\"0\" failures=\"0\" skipped=\"0\""));
 		assertTrue(content.contains(
-				"<testcase name=\"testPass\" classname=\"subfolder/SubFolderModule/SubFolderTest\""));
+				"<testcase name=\"testPass\" classname=\"src-gen/subfolder/SubFolderModule/SubFolderTest\""));
 	}
 }

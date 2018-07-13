@@ -28,6 +28,8 @@ import org.junit.rules.TestRule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 
+import com.google.common.base.Predicates;
+
 /**
  * IMPORTANT: All the tests in the classes inherited by this class require that n4jsc.jar exist. Before executing this
  * test, in the console, change your current to the folder {@code git/n4js/tools/scripts/}. Then inside that folder,
@@ -42,10 +44,13 @@ public abstract class AbstractN4jscJarTest {
 	// Running directory will be ${TARGET}/${WSP}
 
 	/** Sub folder in target folder. */
-	protected static final String WSP = "wsp";
+	protected static final String WORKSPACE_FOLDER = "wsp";
 
 	/** source of test data, will be copied to TARGET/WSP */
 	protected final String fixture;
+
+	/** Specifies whether before testing, the n4js libraries are copied to the workspace location. */
+	protected final boolean includeN4jsLibraries;
 
 	/**
 	 * Output-log-file of external Process. The file will be assigned given on the current test-method by calling
@@ -55,9 +60,24 @@ public abstract class AbstractN4jscJarTest {
 
 	/**
 	 * Subclass must provide the fixture, i.e. name of folder containing test data.
+	 *
+	 * Per default, this will not include the n4js libraries (cf.
+	 * {@link N4CliHelper#copyN4jsLibsToLocation(File, com.google.common.base.Predicate)} in the fixture workspace.
 	 */
 	protected AbstractN4jscJarTest(String fixture) {
-		this.fixture = fixture;
+		this(fixture, false);
+	}
+
+	/**
+	 * @param fixturePath
+	 *            The bundle relative path of the folder that contains the test data.
+	 * @param includeN4jsLibraries
+	 *            Specified whether the n4js libraries (shipped code) should be copied to the temporary testing
+	 *            workspace location.
+	 */
+	protected AbstractN4jscJarTest(String fixturePath, boolean includeN4jsLibraries) {
+		this.fixture = fixturePath;
+		this.includeN4jsLibraries = includeN4jsLibraries;
 	}
 
 	/** Description object of the currently running test. */
@@ -91,7 +111,7 @@ public abstract class AbstractN4jscJarTest {
 			targetFolder.mkdirs();
 		}
 
-		File wsp = new File(TARGET, WSP);
+		File wsp = new File(TARGET, WORKSPACE_FOLDER);
 		File fixtureFile = new File(fixture);
 
 		System.out.println("BEFORE: 	current root " + new File(".").getAbsolutePath());
@@ -103,13 +123,18 @@ public abstract class AbstractN4jscJarTest {
 		// copy
 		FileCopier.copy(fixtureFile.toPath(), wsp.toPath());
 
+		// copy n4js libraries, if required
+		if (includeN4jsLibraries) {
+			// if specified, copy all of the n4js libraries (no filtering)
+			N4CliHelper.copyN4jsLibsToLocation(wsp, Predicates.alwaysTrue());
+		}
 	}
 
 	/**
 	 * Append external process output to the junit std-out content.
 	 */
 	@After
-	public void appendExternalOutpouToStdout() {
+	public void appendExternalOutputToStdout() {
 		N4CliHelper.appendExternalOutputToStdout(outputLogFile);
 	}
 
@@ -119,7 +144,7 @@ public abstract class AbstractN4jscJarTest {
 	 * test method.
 	 */
 	protected void deleteProject(String projectId) throws IOException {
-		File wsp = new File(TARGET, WSP);
+		File wsp = new File(TARGET, WORKSPACE_FOLDER);
 		File project = new File(wsp, projectId);
 		FileDeleter.delete(project.toPath());
 	}
@@ -145,7 +170,7 @@ public abstract class AbstractN4jscJarTest {
 	/**
 	 * Should be called as first line in test-mehtods.
 	 *
-	 * Creates an log-file in the {@link #TARGET}-folder based on the callers Class/Methodname. something like
+	 * Creates an log-file in the {@link #TARGET}-folder based on the callers class/method name. something like
 	 * "target/org.eclipse.n4js.hlc.test.N4jscSingleFileCompileIT.testHelp.log"
 	 */
 	protected void logFile() {
