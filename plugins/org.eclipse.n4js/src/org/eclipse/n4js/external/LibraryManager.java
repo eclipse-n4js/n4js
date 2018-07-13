@@ -350,36 +350,12 @@ public class LibraryManager {
 				// determine location of the installed package
 				final org.eclipse.emf.common.util.URI location = installedNpms.get(name).getKey();
 				final String versionInstalledString = Strings.emptyIfNull(installedNpms.get(name).getValue());
-				try {
-					if (versionRequestedString.isEmpty()) {
-						// empty constraint matches any installed version
-						continue;
-					}
 
-					// detect an exactly specified version
-					String exactRequestedVersionString = versionRequestedString;
-
-					// remove preceeding '@' from requested version, if present
-					if (exactRequestedVersionString.startsWith("@")) {
-						exactRequestedVersionString = exactRequestedVersionString.substring(1);
-					}
-
-					// If versionRequestedString is not an exact version (or uses ^ or ~) the following
-					// call will throw an exception. As a consequence we only support exact version matches here.
-					// If the requested version is a constraint , this method will always trigger the reinstallation
-					// of the package, according to the requested version constraint.
-					// TODO Once GH-940 is merged, this logic can be revised to support version constraints.
-					final Version versionRequested = new Version(exactRequestedVersionString);
-					final Version versionInstalled = new Version(versionInstalledString);
-					if (versionRequested.compareTo(versionInstalled) == 0) {
-						// already installed
-						continue;
-					}
-				} catch (NumberFormatException e) {
-					logger.logInfo("Checking whether the requested version constraint " + name + "@"
-							+ versionRequestedString
-							+ " matches the installed version of the package, is currently unsupported (use an exact version instead): Package will be re-installed.");
+				if (isAlreadyInstalled(installedNpms, name, versionRequestedString)) {
+					// if a matching version is installed, do not reinstall
+					continue;
 				}
+
 				// wrong version installed -> update (uninstall, then install)
 				requestedChanges.add(new LibraryChange(Uninstall, location, name, versionInstalledString));
 				requestedChanges.add(new LibraryChange(Install, location, name, versionRequestedString));
@@ -397,6 +373,54 @@ public class LibraryManager {
 		}
 
 		return requestedChanges;
+	}
+
+	/**
+	 * Returns {@code true} iff the given map of {@code installedNpms} contains the {@code requestedPackage} in a
+	 * version that fulfills the given {@code requestedVersion}.
+	 *
+	 * Returns {@code false} otherwise.
+	 *
+	 * @param installedNpms
+	 *            A map of all installed packages, mapped to a pair of their install location and installed version.
+	 * @param requestedPackage
+	 *            The name of the requested package.
+	 * @param requestedVersion
+	 *            The requested version constraint in npm format (cf. {@link VersionConstraintFormatUtil}.
+	 */
+	private boolean isAlreadyInstalled(Map<String, Pair<org.eclipse.emf.common.util.URI, String>> installedNpms,
+			String requestedPackage, String requestedVersion) {
+		final String versionInstalledString = Strings.emptyIfNull(installedNpms.get(requestedPackage).getValue());
+		try {
+			if (requestedVersion.isEmpty()) {
+				// empty constraint matches any installed version
+				return true;
+			}
+
+			// detect an exactly specified version
+			String exactRequestedVersionString = requestedVersion;
+
+			// remove preceding '@' from requested version, if present
+			if (exactRequestedVersionString.startsWith("@")) {
+				exactRequestedVersionString = exactRequestedVersionString.substring(1);
+			}
+
+			// If requestedVersion is not an exact version (or uses ^ or ~) the following
+			// call will throw an exception. As a consequence we only support exact version matches here.
+			// If the requested version is a constraint, this method will always trigger the re-installation
+			// of the package, according to the requested version constraint.
+			// TODO Once GH-940 is merged, this logic can be revised to support version constraints.
+			final Version versionRequested = new Version(exactRequestedVersionString);
+			final Version versionInstalled = new Version(versionInstalledString);
+			if (versionRequested.compareTo(versionInstalled) == 0) {
+				return true;
+			}
+		} catch (NumberFormatException e) {
+			logger.logInfo("Checking whether the requested version constraint " + requestedPackage + "@"
+					+ requestedVersion
+					+ " matches the installed version of the package, is currently unsupported (use an exact version instead): Package will be re-installed.");
+		}
+		return false;
 	}
 
 	private Collection<File> adaptNPMPackages(IProgressMonitor monitor, MultiStatus status,
