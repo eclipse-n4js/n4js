@@ -34,6 +34,7 @@ import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.eclipse.n4js.ui.wizard.dependencies.InstallOptions;
 import org.eclipse.n4js.ui.wizard.dependencies.RunnableInstallDependencies;
+import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -95,6 +96,8 @@ public class InstallRuntimeFromNpmPluginTest extends AbstractBuilderParticipantT
 						.withDependency("n4js-runtime-node", "0.10.0-alpha.7aa7bbc0"));
 
 		configureProjectWithXtext(project);
+
+		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 
 		// create hello world file
@@ -105,6 +108,7 @@ public class InstallRuntimeFromNpmPluginTest extends AbstractBuilderParticipantT
 		runnable.setInstallOptions(new InstallOptions());
 		runnable.run(new NullProgressMonitor());
 
+		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 
 		// create module run configuration
