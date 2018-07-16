@@ -38,6 +38,7 @@ import static org.eclipse.n4js.utils.ProjectDescriptionHelper.PROP__VENDOR_ID
 import static org.eclipse.n4js.utils.ProjectDescriptionHelper.PROP__VENDOR_NAME
 import static org.eclipse.n4js.utils.ProjectDescriptionHelper.PROP__VERSION
 import java.util.Map
+import java.util.SortedMap
 
 /**
  * Class for providing the content of N4JS-specific package.json files.
@@ -51,12 +52,18 @@ package class PackageJsonContentProvider {
 	 * based on the given arguments.
 	 * 
 	 * @param projectId the projectId of the project (cf. name).
-	 * @param type The type of the N4JS project.
 	 * @param version The declared version of the project.
+	 * @param type The type of the N4JS project.
+	 * @param vendorId The vendorId to use.
+	 * @param vendorName The name of the vendor as string.
+	 * @param output The relative output folder location.
 	 * @param extendedRE The optional extended runtime environment.
-	 * @param projectDependencies An iterable of direct project dependencies for the N4JS project.
+	 * @param dependencies A map of dependencies of the project (maps dependencies to their version constraints).
 	 * @param providedRL An iterable of provided runtime libraries.
 	 * @param requiredRL An iterable of required runtime libraries.
+	 * @param implementationId The implementationId of the project.
+	 * @param testedProject A list of all projects that are being tested.
+	 * @param sourceContainers A map of all source containers of the project.
 	 * 
 	 * @return the N4JS package.json content as a string.
 	 */
@@ -68,7 +75,7 @@ package class PackageJsonContentProvider {
 		Optional<String> vendorName,
 		Optional<String> output,
 		Optional<String> extendedRE,
-		Iterable<String> dependencies,
+		SortedMap<String, String> dependencies,
 		Iterable<String> providedRL,
 		Iterable<String> requiredRL,
 		Optional<String> implementationId,
@@ -87,10 +94,10 @@ package class PackageJsonContentProvider {
 		if (!dependencies.empty) {
 			// add dependencies section
 			val JSONObject dependenciesSection = JSONFactory.eINSTANCE.createJSONObject();
-			dependenciesSection.nameValuePairs.addAll(dependencies.map [ d |
+			dependenciesSection.nameValuePairs.addAll(dependencies.entrySet.map [ e |
 				val pair = JSONFactory.eINSTANCE.createNameValuePair();
-				pair.name = d;
-				pair.value = JSONModelUtils.createStringLiteral("*");
+				pair.name = e.key;
+				pair.value = JSONModelUtils.createStringLiteral(e.value);
 				return pair;
 			]);
 			JSONModelUtils.addProperty(root, ProjectDescriptionHelper.PROP__DEPENDENCIES, dependenciesSection);
