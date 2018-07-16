@@ -16,9 +16,15 @@ import java.io.File;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.n4js.semver.SEMVERHelper;
+import org.eclipse.n4js.semver.SEMVERMatcher;
+import org.eclipse.n4js.semver.SEMVERMatcher.VersionNumberRelation;
+import org.eclipse.n4js.semver.SEMVERSerializer;
+import org.eclipse.n4js.semver.SEMVER.VersionNumber;
 import org.eclipse.n4js.utils.StatusHelper;
-import org.eclipse.n4js.utils.Version;
 import org.eclipse.n4js.utils.process.ProcessResult;
+import org.eclipse.xtext.nodemodel.INode;
+import org.eclipse.xtext.parser.IParseResult;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -35,6 +41,9 @@ public class BinariesValidator {
 
 	@Inject
 	private BinaryCommandFactory commandFactory;
+
+	@Inject
+	private SEMVERHelper semverHelper;
 
 	/**
 	 * Validates the availability, accessibility and version of the given binary. Returns with a status representing the
@@ -68,21 +77,35 @@ public class BinariesValidator {
 		}
 
 		final String stdOutString = result.getStdOut();
-		final Version currentVersion = Version.createFromString(stdOutString.trim());
-		if (!Version.isValid(currentVersion)) {
-			return error(binary,
-					"Cannot find current version of '" + binary.getLabel() + "' binary. Output was: "
-							+ stdOutString);
-		} else {
-			final Version minimumVersion = binary.getMinimumVersion();
-			if (0 < minimumVersion.compareTo(currentVersion)) {
-				return error(binary,
-						"The required minimum version of '" + binary.getLabel() + "' is '" + minimumVersion
-								+ "'. Currently configured version is '" + currentVersion + "'.");
-			}
-			return OK_STATUS;
+		final IParseResult parseResult = semverHelper.getParseResult(stdOutString.trim());
+		if (parseResult.hasSyntaxErrors()) {
+			INode firstErrorText = parseResult.getSyntaxErrors().iterator().next();
+			String msg = "Error in binary '" + binary.getLabel() +
+					"' when parsing version '" + stdOutString + "': " + firstErrorText.getText();
+			return error(binary, msg);
 		}
 
+		VersionNumber versionNumber = semverHelper.parseVersionNumber(parseResult);
+		if (versionNumber == null) {
+			String msg = "Error in binary '" + binary.getLabel() +
+					"' when parsing version '" + stdOutString + "': No version number found.";
+			return error(binary, msg);
+		}
+
+		final VersionNumber minimumVersion = binary.getMinimumVersion();
+		VersionNumberRelation versionRelation = SEMVERMatcher.relation(versionNumber, minimumVersion);
+		boolean correctRange = false;
+		correctRange |= versionRelation == VersionNumberRelation.Equal;
+		correctRange |= versionRelation == VersionNumberRelation.Greater;
+		if (correctRange) {
+			String minimumVersionText = SEMVERSerializer.toString(minimumVersion);
+			String parsedVersionText = SEMVERSerializer.toString(versionNumber);
+			String msg = "The required minimum version of '" + binary.getLabel() + "' is '" + minimumVersionText
+					+ "'. Currently configured version is '" + parsedVersionText + "'.";
+			return error(binary, msg);
+		}
+
+		return OK_STATUS;
 	}
 
 	/**

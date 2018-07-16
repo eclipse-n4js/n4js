@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.n4js.binaries.BinariesPreferenceStore;
 import org.eclipse.n4js.binaries.BinariesValidator;
 import org.eclipse.n4js.binaries.Binary;
-import org.eclipse.n4js.utils.Version;
+import org.eclipse.n4js.semver.SEMVER.VersionNumber;
 
 import com.google.common.base.StandardSystemProperty;
 import com.google.inject.Inject;
@@ -70,8 +70,8 @@ public class NpmrcBinary implements Binary {
 	}
 
 	@Override
-	public Version getMinimumVersion() {
-		return Version.MISSING;
+	public VersionNumber getMinimumVersion() {
+		return null;
 	}
 
 	@Override

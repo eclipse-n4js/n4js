@@ -151,7 +151,8 @@ class VersionNumber {
 		for (var i=0; i<length; i++) {
 			equals = equals && getPart(i).equals(vn.getPart(i));
 		}
-		equals = equals && qualifier.equals(vn.qualifier);
+		equals = equals && (qualifier === null) === (vn.qualifier === null);
+		equals = equals && (qualifier === null || qualifier.equals(vn.qualifier));
 		return equals;
 	}
 }
@@ -185,7 +186,10 @@ class Qualifier {
 			return false;
 		}
 		val q = obj as Qualifier;
-		var equals = preRelease.equals(q.preRelease) && buildMetadata.equals(q.buildMetadata);
+		var equals = (preRelease === null) === (q.preRelease === null);
+		equals = equals && (preRelease === null) || (preRelease.equals(q.preRelease));
+		equals = equals && (buildMetadata === null) === (q.buildMetadata === null);
+		equals = equals && (buildMetadata === null) || (buildMetadata.equals(q.buildMetadata));
 		return equals;
 	}
 }

@@ -17,7 +17,10 @@ import org.eclipse.n4js.binaries.BinaryCommandFactory;
 import org.eclipse.n4js.binaries.nodejs.NodeBinariesConstants;
 import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
-import org.eclipse.n4js.utils.Version;
+import org.eclipse.n4js.semver.SEMVERHelper;
+import org.eclipse.n4js.semver.SEMVERMatcher;
+import org.eclipse.n4js.semver.SEMVERMatcher.VersionNumberRelation;
+import org.eclipse.n4js.semver.SEMVER.VersionNumber;
 import org.eclipse.n4js.utils.process.ProcessResult;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.XtextRunner;
@@ -35,26 +38,30 @@ import com.google.inject.Inject;
 public class NodeVersionTest {
 
 	@Inject
-	NodeJsBinary nodeJsBinary;
+	private NodeJsBinary nodeJsBinary;
 
 	@Inject
-	NpmBinary npmBinary;
+	private NpmBinary npmBinary;
 
 	@Inject
 	private BinaryCommandFactory commandFactory;
+
+	@Inject
+	private SEMVERHelper semverHelper;
 
 	/**
 	 * Simply checks if the npm version found by default matches the required version. Prints out path if this fails.
 	 */
 	@Test
 	public void testNPMVersion() {
-
 		final ProcessResult result = commandFactory.checkBinaryVersionCommand(npmBinary).execute();
-		final Version currentVersion = Version.createFromString(result.getStdOut().trim());
+		final VersionNumber currentVersion = semverHelper.parseVersionNumber(result.getStdOut().trim());
 
-		assertTrue("Version of node in " + npmBinary.getBinaryAbsolutePath() + ": " + currentVersion
-				+ ",  need at least " + NodeBinariesConstants.NPM_MIN_VERSION,
-				currentVersion.compareTo(NodeBinariesConstants.NPM_MIN_VERSION) >= 0);
+		String msg = "Version of npm in " + npmBinary.getBinaryAbsolutePath() + ": " + currentVersion
+				+ ",  need at least " + NodeBinariesConstants.NPM_MIN_VERSION;
+
+		VersionNumberRelation relation = SEMVERMatcher.relation(currentVersion, NodeBinariesConstants.NPM_MIN_VERSION);
+		assertTrue(msg, relation.isGreaterOrEqual());
 	}
 
 	/**
@@ -62,14 +69,14 @@ public class NodeVersionTest {
 	 */
 	@Test
 	public void testNodeJsVersion() {
-
 		final ProcessResult result = commandFactory.checkBinaryVersionCommand(nodeJsBinary).execute();
+		final VersionNumber currentVersion = semverHelper.parseVersionNumber(result.getStdOut().trim());
 
-		final Version currentVersion = Version.createFromString(result.getStdOut().trim());
+		String msg = "Version of node in " + nodeJsBinary.getBinaryAbsolutePath() + ": " + currentVersion
+				+ ",  need at least " + NodeBinariesConstants.NODE_MIN_VERSION;
 
-		assertTrue("Version of node in " + nodeJsBinary.getBinaryAbsolutePath() + ": " + currentVersion
-				+ ",  need at least " + NodeBinariesConstants.NODE_MIN_VERSION,
-				currentVersion.compareTo(NodeBinariesConstants.NODE_MIN_VERSION) >= 0);
+		VersionNumberRelation relation = SEMVERMatcher.relation(currentVersion, NodeBinariesConstants.NODE_MIN_VERSION);
+		assertTrue(msg, relation.isGreaterOrEqual());
 	}
 
 }

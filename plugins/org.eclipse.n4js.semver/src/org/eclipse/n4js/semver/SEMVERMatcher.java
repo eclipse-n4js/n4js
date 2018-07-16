@@ -4,7 +4,11 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.n4js.semver.SEMVER.NPMVersion;
 import org.eclipse.n4js.semver.SEMVER.SimpleVersion;
+import org.eclipse.n4js.semver.SEMVER.URLSemver;
+import org.eclipse.n4js.semver.SEMVER.URLVersion;
+import org.eclipse.n4js.semver.SEMVER.URLVersionSpecifier;
 import org.eclipse.n4js.semver.SEMVER.VersionComparator;
 import org.eclipse.n4js.semver.SEMVER.VersionNumber;
 import org.eclipse.n4js.semver.SEMVER.VersionPart;
@@ -48,25 +52,25 @@ public class SEMVERMatcher {
 	}
 
 	/**
-	 * This method checks {@link VersionRangeSet}s whether they match or not. Its semantics is aligned to
-	 * <a href="https://semver.npmjs.com/">semver.npmjs.com<a>.
+	 * This method checks {@link NPMVersion}s whether they match or not. In case the given npm constraint is a SEMVER
+	 * version (i.e. {@link VersionRangeSet} or other subtypes that contain {@link SimpleVersion}), the given proband is
+	 * checked against it and the result of this check is returned. Otherwise {@code true} is returned.
 	 *
 	 * @param proband
 	 *            version that is checked to match the constraint
 	 * @param constraint
-	 *            version that must be met by the proband
-	 * @return true iff the given {@code proband} version matches the given {@code constraint} version
+	 *            npm version that may contain a SEMVER version range set or simple version
+	 * @return true iff either the given {@code proband} version matches the given {@code constraint} version or iff the
+	 *         {@code constraint} does neither contain a SEMVER version range nor a simple version
 	 */
-	static public boolean matches(VersionNumber proband, VersionRangeSet constraint) {
-		EList<VersionRange> cRanges = constraint.getRanges();
-
-		for (VersionRange cRange : cRanges) {
-			boolean rangeMatches = matches(proband, cRange);
-			if (rangeMatches) {
-				return true;
-			}
+	static public boolean matches(VersionNumber proband, NPMVersion constraint) {
+		if (constraint instanceof VersionRangeSet) {
+			return matches(proband, (VersionRangeSet) constraint);
 		}
-		return false;
+		if (constraint instanceof URLVersion) {
+			return matches(proband, (URLVersion) constraint);
+		}
+		return true;
 	}
 
 	/**
@@ -107,9 +111,52 @@ public class SEMVERMatcher {
 		return -10;
 	}
 
-	static private boolean matches(VersionNumber proband, VersionRange constraint) {
-		// cluster constraints so that constraints that do have a pre-release tag come first
-		List<SimpleVersion> simpleConstraints = SEMVERConverter.simplify(constraint);
+	/**
+	 * This method checks {@link VersionRangeSet}s whether they match or not. Its semantics is aligned to
+	 * <a href="https://semver.npmjs.com/">semver.npmjs.com<a>.
+	 *
+	 * @param proband
+	 *            version that is checked to match the constraint
+	 * @param constraint
+	 *            version that must be met by the proband
+	 * @return true iff the given {@code proband} version matches the given {@code constraint} version
+	 */
+	static private boolean matches(VersionNumber proband, VersionRangeSet constraint) {
+		EList<VersionRange> cRanges = constraint.getRanges();
+
+		for (VersionRange cRange : cRanges) {
+			List<SimpleVersion> simpleConstraints = SEMVERConverter.simplify(cRange);
+			boolean rangeMatches = matches(proband, simpleConstraints);
+			if (rangeMatches) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * This method checks {@link VersionRangeSet}s whether they match or not. Its semantics is aligned to
+	 * <a href="https://semver.npmjs.com/">semver.npmjs.com<a>.
+	 *
+	 * @param proband
+	 *            version that is checked to match the constraint
+	 * @param constraint
+	 *            version that must be met by the proband
+	 * @return true iff the given {@code proband} version matches the given {@code constraint} version
+	 */
+	static private boolean matches(VersionNumber proband, URLVersion constraint) {
+		URLVersionSpecifier versionSpecifier = constraint.getVersionSpecifier();
+		if (versionSpecifier != null && versionSpecifier instanceof URLSemver) {
+			URLSemver urlSemver = (URLSemver) versionSpecifier;
+			SimpleVersion simpleVersion = urlSemver.getSimpleVersion();
+
+			List<SimpleVersion> simpleConstraints = SEMVERConverter.simplify(simpleVersion);
+			return matches(proband, simpleConstraints);
+		}
+		return true;
+	}
+
+	static private boolean matches(VersionNumber proband, List<SimpleVersion> simpleConstraints) {
 		Collections.sort(simpleConstraints, SEMVERMatcher::compareToClusterPrereleases);
 
 		// check constraints on the given proband

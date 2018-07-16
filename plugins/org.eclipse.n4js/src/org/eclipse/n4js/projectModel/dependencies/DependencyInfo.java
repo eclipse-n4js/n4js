@@ -10,18 +10,14 @@
  */
 package org.eclipse.n4js.projectModel.dependencies;
 
-import static org.eclipse.n4js.external.version.VersionConstraintFormatUtil.npmFormat;
+//import static org.eclipse.n4js.external.version.VersionConstraintFormatUtil.npmFormat;
 
 import org.eclipse.n4js.n4mf.ProjectDependency;
 import org.eclipse.n4js.n4mf.ProjectReference;
+import org.eclipse.n4js.semver.SEMVERSerializer;
 
 /** Custom type for {@code Pair<String, String>} that is used to describe dependency (i.e. npm package). */
 public class DependencyInfo {
-	/**
-	 * version representation for projects with no declared versions, mimics behavior of
-	 * {@link org.eclipse.n4js.external.version.VersionConstraintFormatUtil#npmFormat}
-	 */
-	private static String NO_VERSION = "";
 
 	/** name of the dependency */
 	final public String name;
@@ -34,11 +30,6 @@ public class DependencyInfo {
 		this.version = version;
 	}
 
-	/** Resolve conflict between two versions. Simple strategy - returns first if it is not empty. */
-	public static String resolve(String version1, String version2) {
-		return NO_VERSION.equals(version1) ? version2 : version1;
-	}
-
 	/** factory method to create instances form {@code ProjectReference} */
 	public static DependencyInfo create(ProjectReference projectReference) {
 		return new DependencyInfo(toName(projectReference), toVersion(projectReference));
@@ -49,9 +40,11 @@ public class DependencyInfo {
 	}
 
 	private static String toVersion(ProjectReference projectReference) {
-		String version = NO_VERSION;
-		if (projectReference instanceof ProjectDependency)
-			version = npmFormat(((ProjectDependency) projectReference).getVersionConstraint());
+		String version = "";
+		if (projectReference instanceof ProjectDependency) {
+			ProjectDependency prjDep = (ProjectDependency) projectReference;
+			version = SEMVERSerializer.toString(prjDep.getVersionConstraint());
+		}
 		return version;
 	}
 }

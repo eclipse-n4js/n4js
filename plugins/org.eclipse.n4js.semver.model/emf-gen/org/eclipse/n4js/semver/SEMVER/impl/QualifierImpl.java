@@ -177,7 +177,14 @@ public class QualifierImpl extends MinimalEObjectImpl.Container implements Quali
 			return false;
 		}
 		final Qualifier q = ((Qualifier) obj);
-		boolean equals = (this.getPreRelease().equals(q.getPreRelease()) && this.getBuildMetadata().equals(q.getBuildMetadata()));
+		QualifierTag _preRelease = this.getPreRelease();
+		boolean _tripleEquals = (_preRelease == null);
+		QualifierTag _preRelease_1 = q.getPreRelease();
+		boolean _tripleEquals_1 = (_preRelease_1 == null);
+		boolean equals = (Boolean.valueOf(_tripleEquals) == Boolean.valueOf(_tripleEquals_1));
+		equals = ((equals && (this.getPreRelease() == null)) || this.getPreRelease().equals(q.getPreRelease()));
+		equals = (equals && (Boolean.valueOf((this.getBuildMetadata() == null)) == Boolean.valueOf((q.getBuildMetadata() == null))));
+		equals = ((equals && (this.getBuildMetadata() == null)) || this.getBuildMetadata().equals(q.getBuildMetadata()));
 		return equals;
 	}
 

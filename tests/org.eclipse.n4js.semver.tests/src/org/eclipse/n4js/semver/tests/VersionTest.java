@@ -17,6 +17,7 @@ import org.eclipse.n4js.semver.SEMVERInjectorProvider;
 import org.eclipse.n4js.semver.SEMVERMatcher;
 import org.eclipse.n4js.semver.SEMVERMatcher.VersionNumberRelation;
 import org.eclipse.n4js.semver.SEMVERParseHelper;
+import org.eclipse.n4js.semver.SEMVERSerializer;
 import org.eclipse.n4js.semver.SEMVERUtils;
 import org.eclipse.n4js.semver.SEMVER.VersionNumber;
 import org.eclipse.xtext.testing.InjectWith;
@@ -49,6 +50,10 @@ public class VersionTest {
 	VersionNumber closestMatch(List<VersionNumber> versions, VersionNumber version) {
 		return SEMVERUtils.findClosestMatching(versions, version);
 
+	}
+
+	VersionNumber parse(String versionString) {
+		return semverParseHelper.parseVersionNumber(versionString);
 	}
 
 	@Test
@@ -126,6 +131,16 @@ public class VersionTest {
 	}
 
 	@Test
+	public void testVersions() {
+		assertEquals(version(1, 2, 3), parse("1.2.3"));
+		assertEquals(version(1, 2, 3, "alpha.1", ""), parse("1.2.3-alpha.1"));
+		assertEquals(version(1, 2, 3, "alpha.1", "c04d73a"), parse("1.2.3-alpha.1+c04d73a"));
+		assertEquals(version(1, 2, 3, "", "c04d73a"), parse("1.2.3+c04d73a"));
+		assertEquals(version(1, 2, 3, "beta-or-gamma.1-2-3", "abc-def.ghi"),
+				parse("1.2.3-beta-or-gamma.1-2-3+abc-def.ghi"));
+	}
+
+	@Test
 	public void testCompareWithQualifier() {
 		VersionNumber lower = version(1, 2, 3, "alpha", null);
 		VersionNumber greater = version(1, 2, 3, "beta", null);
@@ -146,7 +161,8 @@ public class VersionTest {
 	}
 
 	private void assertEquals(VersionNumber actual, VersionNumber expected) {
-		String msg = "Expected '" + expected + "'. Was: '" + actual + "' instead.";
+		String msg = "Expected '" + SEMVERSerializer.toString(expected);
+		msg += "'. Was: '" + SEMVERSerializer.toString(actual) + "' instead.";
 		Assert.assertEquals(msg, expected, actual);
 	}
 

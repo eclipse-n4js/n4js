@@ -39,6 +39,7 @@ import org.eclipse.xtext.resource.IResourceDescriptions
 import org.eclipse.xtext.util.IAcceptor
 
 import static extension com.google.common.base.Strings.nullToEmpty
+import org.eclipse.n4js.semver.SEMVERSerializer
 
 /**
  * {@link IJSONResourceDescriptionExtension} implementation that provides custom resource descriptions of
@@ -112,6 +113,7 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 
 	@Inject
 	private ProjectDescriptionHelper projectDescriptionHelper;
+
 
     private static final Logger LOGGER = Logger.getLogger(PackageJsonResourceDescriptionExtension);
 
@@ -202,11 +204,8 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 
 		val vers = projectVersion;
 		if (vers !== null) {
-			val versionStr = '''«vers.major».«vers.minor».«vers.micro»''';
-			val versionWithQualifierStr = if (vers.qualifier.nullOrEmpty)
-					versionStr else '''«versionStr»:«vers.qualifier.nullToEmpty»''';
-
-			builder.put(PROJECT_VERSION_KEY, versionWithQualifierStr);
+			val versionStr = SEMVERSerializer.toString(vers);
+			builder.put(PROJECT_VERSION_KEY, versionStr);
 		}
 
 		val testedProjects = it.testedProjects;

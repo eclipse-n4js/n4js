@@ -49,10 +49,11 @@ import org.eclipse.n4js.n4mf.ModuleFilterType;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectType;
 import org.eclipse.n4js.n4mf.SourceContainerType;
-import org.eclipse.n4js.n4mf.VersionConstraint;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
+import org.eclipse.n4js.semver.SEMVERHelper;
+import org.eclipse.n4js.semver.SEMVER.VersionRangeSet;
 import org.eclipse.n4js.utils.ProjectDescriptionHelper;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.io.FileUtils;
@@ -89,6 +90,8 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	private XpectAwareFileExtensionCalculator fileExtensionCalculator;
 	@Inject
 	private FolderContainmentHelper containmentHelper;
+	@Inject
+	private SEMVERHelper semverHelper;
 
 	@Override
 	protected boolean isResponsible(Map<Object, Object> context, EObject eObject) {
@@ -204,8 +207,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 			// check version
 			if (checkIsType(entry.getValue(), JSONPackage.Literals.JSON_STRING_LITERAL, "as version specifier")) {
 				final String constraintValue = ((JSONStringLiteral) entry.getValue()).getValue();
-				final VersionConstraint parsedConstraint = ProjectDescriptionUtils
-						.parseVersionConstraint(constraintValue);
+				final VersionRangeSet parsedConstraint = semverHelper.parseVersionRangeSet(constraintValue);
 				if (parsedConstraint == null) {
 					addIssue(IssueCodes.getMessageForPKGJ_INVALID_VERSION_CONSTRAINT(constraintValue),
 							entry.getValue(), IssueCodes.PKGJ_INVALID_VERSION_CONSTRAINT);

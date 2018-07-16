@@ -18,6 +18,8 @@ import org.eclipse.n4js.semver.SEMVER.VersionPart;
 import org.eclipse.n4js.semver.SEMVER.VersionRangeConstraint;
 import org.eclipse.n4js.semver.SEMVER.VersionRangeSet;
 
+import com.google.common.base.Strings;
+
 /** Utilities to create {@link VersionNumber}s */
 public class SEMVERUtils {
 
@@ -139,8 +141,8 @@ public class SEMVERUtils {
 	public static VersionNumber createVersionNumber(Integer major, Integer minor, Integer patch,
 			String preRelease, String buildMetadata) {
 
-		String[] preReleaseParts = (preRelease == null) ? null : preRelease.split(".");
-		String[] buildMetadataParts = (buildMetadata == null) ? null : buildMetadata.split(".");
+		String[] preReleaseParts = Strings.isNullOrEmpty(preRelease) ? null : preRelease.split("\\.");
+		String[] buildMetadataParts = Strings.isNullOrEmpty(buildMetadata) ? null : buildMetadata.split("\\.");
 
 		return createVersionNumber(major, minor, patch, preReleaseParts, buildMetadataParts);
 	}

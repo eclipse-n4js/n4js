@@ -21,7 +21,6 @@ import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 import org.eclipse.n4js.n4mf.BootstrapModule;
-import org.eclipse.n4js.n4mf.DeclaredVersion;
 import org.eclipse.n4js.n4mf.ModuleFilter;
 import org.eclipse.n4js.n4mf.ModuleFilterSpecifier;
 import org.eclipse.n4js.n4mf.ModuleFilterType;
@@ -35,7 +34,8 @@ import org.eclipse.n4js.n4mf.ProjectReference;
 import org.eclipse.n4js.n4mf.ProjectType;
 import org.eclipse.n4js.n4mf.SourceContainerDescription;
 import org.eclipse.n4js.n4mf.SourceContainerType;
-import org.eclipse.n4js.n4mf.VersionConstraint;
+
+import org.eclipse.n4js.semver.SEMVER.SEMVERPackage;
 
 /**
  * <!-- begin-user-doc -->
@@ -50,13 +50,6 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 * @generated
 	 */
 	private EClass projectDescriptionEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass declaredVersionEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -99,13 +92,6 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 * @generated
 	 */
 	private EClass projectDependencyEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass versionConstraintEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -190,6 +176,7 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 
 		// Initialize simple dependencies
 		EcorePackage.eINSTANCE.eClass();
+		SEMVERPackage.eINSTANCE.eClass();
 
 		// Create package meta-data objects
 		theN4mfPackage.createPackageContents();
@@ -463,60 +450,6 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getDeclaredVersion() {
-		return declaredVersionEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getDeclaredVersion_Major() {
-		return (EAttribute)declaredVersionEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getDeclaredVersion_Minor() {
-		return (EAttribute)declaredVersionEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getDeclaredVersion_Micro() {
-		return (EAttribute)declaredVersionEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getDeclaredVersion_Qualifier() {
-		return (EAttribute)declaredVersionEClass.getEStructuralFeatures().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getDeclaredVersion_BuildMetaData() {
-		return (EAttribute)declaredVersionEClass.getEStructuralFeatures().get(4);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EClass getSourceContainerDescription() {
 		return sourceContainerDescriptionEClass;
 	}
@@ -706,8 +639,17 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getProjectDependency_DeclaredScope() {
+	public EAttribute getProjectDependency_VersionConstraintString() {
 		return (EAttribute)projectDependencyEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getProjectDependency_DeclaredScope() {
+		return (EAttribute)projectDependencyEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -717,51 +659,6 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 */
 	public EOperation getProjectDependency__GetScope() {
 		return projectDependencyEClass.getEOperations().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getVersionConstraint() {
-		return versionConstraintEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getVersionConstraint_ExclLowerBound() {
-		return (EAttribute)versionConstraintEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getVersionConstraint_LowerVersion() {
-		return (EReference)versionConstraintEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getVersionConstraint_ExclUpperBound() {
-		return (EAttribute)versionConstraintEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getVersionConstraint_UpperVersion() {
-		return (EReference)versionConstraintEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -866,13 +763,6 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 		createEOperation(projectDescriptionEClass, PROJECT_DESCRIPTION___GET_LIBRARY_PATHS);
 		createEOperation(projectDescriptionEClass, PROJECT_DESCRIPTION___GET_RESOURCE_PATHS);
 
-		declaredVersionEClass = createEClass(DECLARED_VERSION);
-		createEAttribute(declaredVersionEClass, DECLARED_VERSION__MAJOR);
-		createEAttribute(declaredVersionEClass, DECLARED_VERSION__MINOR);
-		createEAttribute(declaredVersionEClass, DECLARED_VERSION__MICRO);
-		createEAttribute(declaredVersionEClass, DECLARED_VERSION__QUALIFIER);
-		createEAttribute(declaredVersionEClass, DECLARED_VERSION__BUILD_META_DATA);
-
 		sourceContainerDescriptionEClass = createEClass(SOURCE_CONTAINER_DESCRIPTION);
 		createEAttribute(sourceContainerDescriptionEClass, SOURCE_CONTAINER_DESCRIPTION__SOURCE_CONTAINER_TYPE);
 		createEAttribute(sourceContainerDescriptionEClass, SOURCE_CONTAINER_DESCRIPTION__PATHS_RAW);
@@ -899,14 +789,9 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 
 		projectDependencyEClass = createEClass(PROJECT_DEPENDENCY);
 		createEReference(projectDependencyEClass, PROJECT_DEPENDENCY__VERSION_CONSTRAINT);
+		createEAttribute(projectDependencyEClass, PROJECT_DEPENDENCY__VERSION_CONSTRAINT_STRING);
 		createEAttribute(projectDependencyEClass, PROJECT_DEPENDENCY__DECLARED_SCOPE);
 		createEOperation(projectDependencyEClass, PROJECT_DEPENDENCY___GET_SCOPE);
-
-		versionConstraintEClass = createEClass(VERSION_CONSTRAINT);
-		createEAttribute(versionConstraintEClass, VERSION_CONSTRAINT__EXCL_LOWER_BOUND);
-		createEReference(versionConstraintEClass, VERSION_CONSTRAINT__LOWER_VERSION);
-		createEAttribute(versionConstraintEClass, VERSION_CONSTRAINT__EXCL_UPPER_BOUND);
-		createEReference(versionConstraintEClass, VERSION_CONSTRAINT__UPPER_VERSION);
 
 		// Create enums
 		projectTypeEEnum = createEEnum(PROJECT_TYPE);
@@ -941,6 +826,7 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 
 		// Obtain other dependent packages
 		EcorePackage theEcorePackage = (EcorePackage)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
+		SEMVERPackage theSEMVERPackage = (SEMVERPackage)EPackage.Registry.INSTANCE.getEPackage(SEMVERPackage.eNS_URI);
 
 		// Create type parameters
 
@@ -954,7 +840,7 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 		initEAttribute(getProjectDescription_ProjectId(), theEcorePackage.getEString(), "projectId", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getProjectDescription_VendorId(), theEcorePackage.getEString(), "vendorId", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getProjectDescription_VendorName(), theEcorePackage.getEString(), "vendorName", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getProjectDescription_ProjectVersion(), this.getDeclaredVersion(), null, "projectVersion", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getProjectDescription_ProjectVersion(), theSEMVERPackage.getVersionNumber(), null, "projectVersion", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getProjectDescription_ProjectType(), this.getProjectType(), "projectType", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getProjectDescription_MainModule(), theEcorePackage.getEString(), "mainModule", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProjectDescription_ExtendedRuntimeEnvironment(), this.getProjectReference(), null, "extendedRuntimeEnvironment", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -983,13 +869,6 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 		initEOperation(getProjectDescription__GetLibraryPaths(), theEcorePackage.getEString(), "getLibraryPaths", 0, -1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getProjectDescription__GetResourcePaths(), theEcorePackage.getEString(), "getResourcePaths", 0, -1, !IS_UNIQUE, IS_ORDERED);
-
-		initEClass(declaredVersionEClass, DeclaredVersion.class, "DeclaredVersion", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getDeclaredVersion_Major(), theEcorePackage.getEInt(), "major", null, 0, 1, DeclaredVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getDeclaredVersion_Minor(), theEcorePackage.getEInt(), "minor", null, 0, 1, DeclaredVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getDeclaredVersion_Micro(), theEcorePackage.getEInt(), "micro", null, 0, 1, DeclaredVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getDeclaredVersion_Qualifier(), theEcorePackage.getEString(), "qualifier", null, 0, 1, DeclaredVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getDeclaredVersion_BuildMetaData(), theEcorePackage.getEString(), "buildMetaData", null, 0, 1, DeclaredVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(sourceContainerDescriptionEClass, SourceContainerDescription.class, "SourceContainerDescription", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getSourceContainerDescription_SourceContainerType(), this.getSourceContainerType(), "sourceContainerType", null, 0, 1, SourceContainerDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1021,16 +900,11 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 		initEAttribute(getModuleFilterSpecifier_SourcePath(), theEcorePackage.getEString(), "sourcePath", null, 0, 1, ModuleFilterSpecifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(projectDependencyEClass, ProjectDependency.class, "ProjectDependency", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getProjectDependency_VersionConstraint(), this.getVersionConstraint(), null, "versionConstraint", null, 0, 1, ProjectDependency.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getProjectDependency_VersionConstraint(), theSEMVERPackage.getVersionRangeSet(), null, "versionConstraint", null, 0, 1, ProjectDependency.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getProjectDependency_VersionConstraintString(), theEcorePackage.getEString(), "versionConstraintString", null, 0, 1, ProjectDependency.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getProjectDependency_DeclaredScope(), this.getProjectDependencyScope(), "declaredScope", null, 0, 1, ProjectDependency.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getProjectDependency__GetScope(), this.getProjectDependencyScope(), "getScope", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEClass(versionConstraintEClass, VersionConstraint.class, "VersionConstraint", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getVersionConstraint_ExclLowerBound(), theEcorePackage.getEBoolean(), "exclLowerBound", null, 0, 1, VersionConstraint.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getVersionConstraint_LowerVersion(), this.getDeclaredVersion(), null, "lowerVersion", null, 0, 1, VersionConstraint.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getVersionConstraint_ExclUpperBound(), theEcorePackage.getEBoolean(), "exclUpperBound", null, 0, 1, VersionConstraint.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getVersionConstraint_UpperVersion(), this.getDeclaredVersion(), null, "upperVersion", null, 0, 1, VersionConstraint.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize enums and add enum literals
 		initEEnum(projectTypeEEnum, ProjectType.class, "ProjectType");

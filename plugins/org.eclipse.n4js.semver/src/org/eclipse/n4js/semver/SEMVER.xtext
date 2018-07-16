@@ -27,10 +27,10 @@ NPMVersion:
 	VersionRangeSet
 	| (
 		(
-			TagVersion
-			| URLVersion
-			| GitHubVersion
+			URLVersion
 			| LocalPathVersion
+			| GitHubVersion
+			| TagVersion
 		)
 		WS*
 	)

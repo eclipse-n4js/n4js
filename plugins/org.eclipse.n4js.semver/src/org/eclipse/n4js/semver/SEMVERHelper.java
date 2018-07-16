@@ -3,6 +3,7 @@ package org.eclipse.n4js.semver;
 import java.io.StringReader;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.semver.SEMVER.NPMVersion;
 import org.eclipse.n4js.semver.SEMVER.SimpleVersion;
 import org.eclipse.n4js.semver.SEMVER.VersionNumber;
 import org.eclipse.n4js.semver.SEMVER.VersionRange;
@@ -41,14 +42,21 @@ public class SEMVERHelper {
 	}
 
 	/** @return {@link IParseResult} of the given input string */
-	public IParseResult parse(String semverString) {
+	public IParseResult getParseResult(String semverString) {
 		IParseResult parseResult = getSEMVERParser().parse(new StringReader(semverString));
 		return parseResult;
 	}
 
+	/** @return {@link NPMVersion} of the given input string */
+	public NPMVersion parse(String semverString) {
+		IParseResult parseResult = getParseResult(semverString);
+		NPMVersion npmVersion = (NPMVersion) parseResult.getRootASTElement();
+		return npmVersion;
+	}
+
 	/** @return {@link VersionRangeSet} of the given input string */
 	public VersionRangeSet parseVersionRangeSet(String semverString) {
-		IParseResult parseResult = parse(semverString);
+		IParseResult parseResult = getParseResult(semverString);
 		VersionRangeSet vrs = (VersionRangeSet) parseResult.getRootASTElement();
 		return vrs;
 	}
@@ -73,7 +81,7 @@ public class SEMVERHelper {
 
 	/** @return {@link VersionNumber} of the given input string */
 	public VersionNumber parseVersionNumber(String semverString) {
-		IParseResult semverParseResult = parse(semverString);
+		IParseResult semverParseResult = getParseResult(semverString);
 		return parseVersionNumber(semverParseResult);
 	}
 

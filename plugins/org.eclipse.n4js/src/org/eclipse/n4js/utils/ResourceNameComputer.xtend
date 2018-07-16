@@ -16,7 +16,6 @@ import com.google.inject.Singleton
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.n4js.n4mf.DeclaredVersion
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter
 import org.eclipse.n4js.naming.N4JSQualifiedNameProvider
 import org.eclipse.n4js.projectModel.IN4JSProject
@@ -28,6 +27,7 @@ import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.naming.QualifiedName
 
 import static org.eclipse.emf.ecore.util.EcoreUtil.getRootContainer
+import org.eclipse.n4js.semver.SEMVER.VersionNumber
 
 /**
  * Helper class for computing descriptors for compiled files. Descriptors are used for file names and paths of generated files,
@@ -276,9 +276,9 @@ public final class ResourceNameComputer {
 	}
 
 	/** Transforms the version into a string used for variable, parameter, and file names. */
-	def private static projectVersionToStringWithoutQualifier(DeclaredVersion declaredVersion, String separatorChar) {
+	def private static projectVersionToStringWithoutQualifier(VersionNumber declaredVersion, String separatorChar) {
 		return declaredVersion.getMajor + separatorChar + declaredVersion.getMinor + separatorChar +
-			declaredVersion.getMicro;
+			declaredVersion.getPatch;
 	}
 
 }

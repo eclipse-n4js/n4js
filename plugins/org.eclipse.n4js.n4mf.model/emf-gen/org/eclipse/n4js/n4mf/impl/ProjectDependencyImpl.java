@@ -26,7 +26,8 @@ import org.eclipse.n4js.n4mf.N4mfPackage;
 import org.eclipse.n4js.n4mf.ProjectDependency;
 import org.eclipse.n4js.n4mf.ProjectDependencyScope;
 import org.eclipse.n4js.n4mf.ProjectReference;
-import org.eclipse.n4js.n4mf.VersionConstraint;
+
+import org.eclipse.n4js.semver.SEMVER.VersionRangeSet;
 
 /**
  * <!-- begin-user-doc -->
@@ -37,6 +38,7 @@ import org.eclipse.n4js.n4mf.VersionConstraint;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDependencyImpl#getVersionConstraint <em>Version Constraint</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDependencyImpl#getVersionConstraintString <em>Version Constraint String</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDependencyImpl#getDeclaredScope <em>Declared Scope</em>}</li>
  * </ul>
  *
@@ -51,7 +53,27 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 	 * @generated
 	 * @ordered
 	 */
-	protected VersionConstraint versionConstraint;
+	protected VersionRangeSet versionConstraint;
+
+	/**
+	 * The default value of the '{@link #getVersionConstraintString() <em>Version Constraint String</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getVersionConstraintString()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String VERSION_CONSTRAINT_STRING_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getVersionConstraintString() <em>Version Constraint String</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getVersionConstraintString()
+	 * @generated
+	 * @ordered
+	 */
+	protected String versionConstraintString = VERSION_CONSTRAINT_STRING_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getDeclaredScope() <em>Declared Scope</em>}' attribute.
@@ -97,7 +119,7 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public VersionConstraint getVersionConstraint() {
+	public VersionRangeSet getVersionConstraint() {
 		return versionConstraint;
 	}
 
@@ -106,8 +128,8 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetVersionConstraint(VersionConstraint newVersionConstraint, NotificationChain msgs) {
-		VersionConstraint oldVersionConstraint = versionConstraint;
+	public NotificationChain basicSetVersionConstraint(VersionRangeSet newVersionConstraint, NotificationChain msgs) {
+		VersionRangeSet oldVersionConstraint = versionConstraint;
 		versionConstraint = newVersionConstraint;
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4mfPackage.PROJECT_DEPENDENCY__VERSION_CONSTRAINT, oldVersionConstraint, newVersionConstraint);
@@ -121,7 +143,7 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setVersionConstraint(VersionConstraint newVersionConstraint) {
+	public void setVersionConstraint(VersionRangeSet newVersionConstraint) {
 		if (newVersionConstraint != versionConstraint) {
 			NotificationChain msgs = null;
 			if (versionConstraint != null)
@@ -133,6 +155,27 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 		}
 		else if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, N4mfPackage.PROJECT_DEPENDENCY__VERSION_CONSTRAINT, newVersionConstraint, newVersionConstraint));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getVersionConstraintString() {
+		return versionConstraintString;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setVersionConstraintString(String newVersionConstraintString) {
+		String oldVersionConstraintString = versionConstraintString;
+		versionConstraintString = newVersionConstraintString;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4mfPackage.PROJECT_DEPENDENCY__VERSION_CONSTRAINT_STRING, oldVersionConstraintString, versionConstraintString));
 	}
 
 	/**
@@ -196,6 +239,8 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 		switch (featureID) {
 			case N4mfPackage.PROJECT_DEPENDENCY__VERSION_CONSTRAINT:
 				return getVersionConstraint();
+			case N4mfPackage.PROJECT_DEPENDENCY__VERSION_CONSTRAINT_STRING:
+				return getVersionConstraintString();
 			case N4mfPackage.PROJECT_DEPENDENCY__DECLARED_SCOPE:
 				return getDeclaredScope();
 		}
@@ -211,7 +256,10 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case N4mfPackage.PROJECT_DEPENDENCY__VERSION_CONSTRAINT:
-				setVersionConstraint((VersionConstraint)newValue);
+				setVersionConstraint((VersionRangeSet)newValue);
+				return;
+			case N4mfPackage.PROJECT_DEPENDENCY__VERSION_CONSTRAINT_STRING:
+				setVersionConstraintString((String)newValue);
 				return;
 			case N4mfPackage.PROJECT_DEPENDENCY__DECLARED_SCOPE:
 				setDeclaredScope((ProjectDependencyScope)newValue);
@@ -229,7 +277,10 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case N4mfPackage.PROJECT_DEPENDENCY__VERSION_CONSTRAINT:
-				setVersionConstraint((VersionConstraint)null);
+				setVersionConstraint((VersionRangeSet)null);
+				return;
+			case N4mfPackage.PROJECT_DEPENDENCY__VERSION_CONSTRAINT_STRING:
+				setVersionConstraintString(VERSION_CONSTRAINT_STRING_EDEFAULT);
 				return;
 			case N4mfPackage.PROJECT_DEPENDENCY__DECLARED_SCOPE:
 				setDeclaredScope(DECLARED_SCOPE_EDEFAULT);
@@ -248,6 +299,8 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 		switch (featureID) {
 			case N4mfPackage.PROJECT_DEPENDENCY__VERSION_CONSTRAINT:
 				return versionConstraint != null;
+			case N4mfPackage.PROJECT_DEPENDENCY__VERSION_CONSTRAINT_STRING:
+				return VERSION_CONSTRAINT_STRING_EDEFAULT == null ? versionConstraintString != null : !VERSION_CONSTRAINT_STRING_EDEFAULT.equals(versionConstraintString);
 			case N4mfPackage.PROJECT_DEPENDENCY__DECLARED_SCOPE:
 				return declaredScope != DECLARED_SCOPE_EDEFAULT;
 		}
@@ -294,7 +347,9 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (declaredScope: ");
+		result.append(" (versionConstraintString: ");
+		result.append(versionConstraintString);
+		result.append(", declaredScope: ");
 		result.append(declaredScope);
 		result.append(')');
 		return result.toString();

@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.n4mf;
 
+import org.eclipse.n4js.semver.SEMVER.VersionRangeSet;
 
 /**
  * <!-- begin-user-doc -->
@@ -31,6 +32,7 @@ package org.eclipse.n4js.n4mf;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDependency#getVersionConstraint <em>Version Constraint</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4mf.ProjectDependency#getVersionConstraintString <em>Version Constraint String</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDependency#getDeclaredScope <em>Declared Scope</em>}</li>
  * </ul>
  *
@@ -48,12 +50,12 @@ public interface ProjectDependency extends ProjectReference {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Version Constraint</em>' containment reference.
-	 * @see #setVersionConstraint(VersionConstraint)
+	 * @see #setVersionConstraint(VersionRangeSet)
 	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDependency_VersionConstraint()
 	 * @model containment="true"
 	 * @generated
 	 */
-	VersionConstraint getVersionConstraint();
+	VersionRangeSet getVersionConstraint();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.n4js.n4mf.ProjectDependency#getVersionConstraint <em>Version Constraint</em>}' containment reference.
@@ -63,7 +65,33 @@ public interface ProjectDependency extends ProjectReference {
 	 * @see #getVersionConstraint()
 	 * @generated
 	 */
-	void setVersionConstraint(VersionConstraint value);
+	void setVersionConstraint(VersionRangeSet value);
+
+	/**
+	 * Returns the value of the '<em><b>Version Constraint String</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Version Constraint String</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Version Constraint String</em>' attribute.
+	 * @see #setVersionConstraintString(String)
+	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDependency_VersionConstraintString()
+	 * @model unique="false"
+	 * @generated
+	 */
+	String getVersionConstraintString();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.n4mf.ProjectDependency#getVersionConstraintString <em>Version Constraint String</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Version Constraint String</em>' attribute.
+	 * @see #getVersionConstraintString()
+	 * @generated
+	 */
+	void setVersionConstraintString(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Declared Scope</b></em>' attribute.

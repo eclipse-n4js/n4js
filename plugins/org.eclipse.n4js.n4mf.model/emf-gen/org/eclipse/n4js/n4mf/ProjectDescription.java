@@ -14,6 +14,8 @@ import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EObject;
 
+import org.eclipse.n4js.semver.SEMVER.VersionNumber;
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Project Description</b></em>'.
@@ -140,12 +142,12 @@ public interface ProjectDescription extends EObject {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Project Version</em>' containment reference.
-	 * @see #setProjectVersion(DeclaredVersion)
+	 * @see #setProjectVersion(VersionNumber)
 	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDescription_ProjectVersion()
 	 * @model containment="true"
 	 * @generated
 	 */
-	DeclaredVersion getProjectVersion();
+	VersionNumber getProjectVersion();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.n4js.n4mf.ProjectDescription#getProjectVersion <em>Project Version</em>}' containment reference.
@@ -155,7 +157,7 @@ public interface ProjectDescription extends EObject {
 	 * @see #getProjectVersion()
 	 * @generated
 	 */
-	void setProjectVersion(DeclaredVersion value);
+	void setProjectVersion(VersionNumber value);
 
 	/**
 	 * Returns the value of the '<em><b>Project Type</b></em>' attribute.
