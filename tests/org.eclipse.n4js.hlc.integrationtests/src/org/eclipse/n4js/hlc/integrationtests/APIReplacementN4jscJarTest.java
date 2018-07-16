@@ -44,9 +44,9 @@ public class APIReplacementN4jscJarTest extends AbstractN4jscJarTest {
 
 		Process p = createAndStartProcess(
 				"--buildType", "allprojects",
-				"--projectlocations", WSP,
+				"--projectlocations", WORKSPACE_FOLDER,
 				"--runWith", "nodejs",
-				"--run", WSP + "/" + "org.eclipse.n4js.client/src/A.n4js",
+				"--run", WORKSPACE_FOLDER + "/" + "org.eclipse.n4js.client/src/A.n4js",
 				"--implementationId", "impl.polite");
 
 		int exitCode = p.waitFor();
@@ -66,9 +66,9 @@ public class APIReplacementN4jscJarTest extends AbstractN4jscJarTest {
 
 		Process p = createAndStartProcess(
 				"--buildType", "allprojects",
-				"--projectlocations", WSP,
+				"--projectlocations", WORKSPACE_FOLDER,
 				"--runWith", "nodejs",
-				"--run", WSP + "/" + "org.eclipse.n4js.client/src/A.n4js",
+				"--run", WORKSPACE_FOLDER + "/" + "org.eclipse.n4js.client/src/A.n4js",
 				"--implementationId", "impl.nasty");
 
 		int exitCode = p.waitFor();
@@ -88,9 +88,9 @@ public class APIReplacementN4jscJarTest extends AbstractN4jscJarTest {
 
 		Process p = createAndStartProcess(
 				"--buildType", "allprojects",
-				"--projectlocations", WSP,
+				"--projectlocations", WORKSPACE_FOLDER,
 				"--runWith", "nodejs",
-				"--run", WSP + "/" + "org.eclipse.n4js.client/src/A.n4js"); // note: not defining an implementation id!
+				"--run", WORKSPACE_FOLDER + "/" + "org.eclipse.n4js.client/src/A.n4js"); // note: not defining an implementation id!
 
 		int exitCode = p.waitFor();
 		assertEquals("runner throws exception", ErrorExitCode.EXITCODE_RUNNER_STOPPED_WITH_ERROR.getExitCodeValue(),
@@ -116,9 +116,9 @@ public class APIReplacementN4jscJarTest extends AbstractN4jscJarTest {
 
 		Process p = createAndStartProcess(
 				"--buildType", "allprojects",
-				"--projectlocations", WSP,
+				"--projectlocations", WORKSPACE_FOLDER,
 				"--runWith", "nodejs",
-				"--run", WSP + "/" + "org.eclipse.n4js.client/src/A.n4js"); // note: not defining an implementation id!
+				"--run", WORKSPACE_FOLDER + "/" + "org.eclipse.n4js.client/src/A.n4js"); // note: not defining an implementation id!
 
 		int exitCode = p.waitFor();
 
@@ -138,9 +138,9 @@ public class APIReplacementN4jscJarTest extends AbstractN4jscJarTest {
 
 		Process p = createAndStartProcess(
 				"--buildType", "allprojects",
-				"--projectlocations", WSP,
+				"--projectlocations", WORKSPACE_FOLDER,
 				"--runWith", "nodejs",
-				"--run", WSP + "/" + "org.eclipse.n4js.client/src/CornerCase.n4js",
+				"--run", WORKSPACE_FOLDER + "/" + "org.eclipse.n4js.client/src/CornerCase.n4js",
 				"--implementationId", "impl.polite");
 
 		int exitCode = p.waitFor();
@@ -163,9 +163,9 @@ public class APIReplacementN4jscJarTest extends AbstractN4jscJarTest {
 
 		Process p = createAndStartProcess(
 				"--buildType", "allprojects",
-				"--projectlocations", WSP,
+				"--projectlocations", WORKSPACE_FOLDER,
 				"--runWith", "nodejs",
-				"--run", WSP + "/" + "org.eclipse.n4js.client/src/MetaInfoForExternalSuperClass.n4js",
+				"--run", WORKSPACE_FOLDER + "/" + "org.eclipse.n4js.client/src/MetaInfoForExternalSuperClass.n4js",
 				"--implementationId", "impl.polite");
 
 		int exitCode = p.waitFor();

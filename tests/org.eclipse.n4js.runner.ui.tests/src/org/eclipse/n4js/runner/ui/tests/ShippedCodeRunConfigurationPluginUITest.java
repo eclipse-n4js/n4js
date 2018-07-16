@@ -99,7 +99,7 @@ public class ShippedCodeRunConfigurationPluginUITest extends AbstractBuilderPart
 	@After
 	@Override
 	public void tearDown() throws Exception {
-		shippedCodeInitializeTestHelper.teardowneBuiltIns();
+		shippedCodeInitializeTestHelper.tearDownBuiltIns();
 		waitForAutoBuild();
 		super.tearDown();
 	}

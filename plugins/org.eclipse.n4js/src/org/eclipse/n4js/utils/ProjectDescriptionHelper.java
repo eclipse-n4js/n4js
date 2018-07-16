@@ -49,10 +49,12 @@ import org.eclipse.n4js.n4mf.BootstrapModule;
 import org.eclipse.n4js.n4mf.ModuleFilter;
 import org.eclipse.n4js.n4mf.ModuleFilterSpecifier;
 import org.eclipse.n4js.n4mf.ModuleFilterType;
+import org.eclipse.n4js.n4mf.ModuleLoader;
 import org.eclipse.n4js.n4mf.N4mfFactory;
 import org.eclipse.n4js.n4mf.ProjectDependency;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectReference;
+import org.eclipse.n4js.n4mf.ProjectType;
 import org.eclipse.n4js.n4mf.SourceContainerDescription;
 import org.eclipse.n4js.n4mf.SourceContainerType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
@@ -316,6 +318,10 @@ public class ProjectDescriptionHelper {
 			} else if (scd.getPathsRaw().isEmpty()) {
 				scd.getPathsRaw().add(DEFAULT_VALUE_OUTPUT);
 			}
+		}
+		// module loader must be commonjs for VALIDATION projects
+		if (pd.getProjectType() == ProjectType.VALIDATION) {
+			pd.setModuleLoader(ModuleLoader.COMMONJS);
 		}
 	}
 

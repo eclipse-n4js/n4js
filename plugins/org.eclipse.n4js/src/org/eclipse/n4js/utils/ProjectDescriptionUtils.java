@@ -279,6 +279,13 @@ public class ProjectDescriptionUtils {
 		return Joiner.on('/').join(segmentsNew);
 	}
 
+	/**
+	 * Tells if the given project name uses an npm scope, i.e. is of the form <code>@scopeName/projectName</code>.
+	 */
+	public static boolean isProjectNameWithScope(String projectName) {
+		return projectName != null && projectName.startsWith("@") && projectName.contains("/");
+	}
+
 	private static ModuleFilterSpecifier createModuleFilterSpecifier(String sourcePath,
 			String moduleSpecifierWithWildcard) {
 		final ModuleFilterSpecifier result = N4mfFactory.eINSTANCE.createModuleFilterSpecifier();

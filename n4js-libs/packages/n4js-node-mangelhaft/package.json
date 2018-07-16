@@ -26,7 +26,7 @@
     "org.eclipse.n4js.mangelhaft.reporter.ide": "^0.1.0"
   },
   "files": [
-    "manifest.n4mf",
+    "src",
     "src-gen"
   ],
   "n4js": {

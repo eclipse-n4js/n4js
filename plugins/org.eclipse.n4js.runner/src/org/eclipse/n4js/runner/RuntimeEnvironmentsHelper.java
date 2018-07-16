@@ -34,7 +34,7 @@ import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware;
 import org.eclipse.n4js.runner.exceptions.DependencyCycleDetectedException;
 import org.eclipse.n4js.runner.exceptions.InsolvableRuntimeEnvironmentException;
 import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
-import org.eclipse.n4js.validation.helper.SoureContainerAwareDependencyTraverser;
+import org.eclipse.n4js.validation.helper.SourceContainerAwareDependencyTraverser;
 
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
@@ -145,7 +145,7 @@ public class RuntimeEnvironmentsHelper {
 	 * @return list of transitive dependencies of type runtime library, no duplicates
 	 */
 	private List<IN4JSProject> collectRequiredRuntimeLibraries(IN4JSProject project) {
-		if (new SoureContainerAwareDependencyTraverser(project).getResult().hasCycle()) {
+		if (new SourceContainerAwareDependencyTraverser(project).getResult().hasCycle()) {
 			throw new DependencyCycleDetectedException(project);
 		}
 		Set<IN4JSProject> depsRuntimeLibraries = new HashSet<>();

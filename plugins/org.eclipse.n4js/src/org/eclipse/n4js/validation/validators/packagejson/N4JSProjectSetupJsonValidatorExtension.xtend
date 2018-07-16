@@ -60,6 +60,7 @@ import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
 import org.eclipse.n4js.semver.SEMVER.NPMVersion
 import org.eclipse.n4js.semver.SEMVERHelper
 import org.eclipse.n4js.semver.SEMVERMatcher
+import org.eclipse.n4js.semver.SEMVERSerializer
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TypesPackage
@@ -68,7 +69,7 @@ import org.eclipse.n4js.utils.ProjectDescriptionUtils
 import org.eclipse.n4js.utils.WildcardPathFilterHelper
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
-import org.eclipse.n4js.validation.helper.SoureContainerAwareDependencyTraverser
+import org.eclipse.n4js.validation.helper.SourceContainerAwareDependencyTraverser
 import org.eclipse.xtend.lib.annotations.Data
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.resource.IContainer
@@ -84,7 +85,6 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 import static org.eclipse.n4js.validation.validators.packagejson.ProjectTypePredicate.*
 
 import static extension com.google.common.base.Strings.nullToEmpty
-import org.eclipse.n4js.semver.SEMVERSerializer
 
 /**
  * A JSON validator extension that validates {@code package.json} resources in the context
@@ -341,7 +341,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	def checkCyclicDependencies(JSONDocument document) {
 		val project = findProject(document.eResource.URI).orNull;
 		if (null !== project) {
-			val result = new SoureContainerAwareDependencyTraverser(project).result;
+			val result = new SourceContainerAwareDependencyTraverser(project, true).result;
 			if (result.hasCycle) {
 				// add issue to 'name' property or alternatively to the whole document
 				val nameValue = getSingleDocumentValue(ProjectDescriptionHelper.PROP__NAME);
@@ -953,9 +953,12 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		for (NameValuePair pair : jsonObj.nameValuePairs) {
 			if (pair.value instanceof JSONStringLiteral) {
 				val stringLit = pair.value as JSONStringLiteral;
-				val npmVersion = semverHelper.parse(stringLit.value);
-				val vpr = new ValidationProjectReference(pair.name, npmVersion, pair);
-				vprs.add(vpr);
+				val prjID = pair.name;
+				if (!ProjectDescriptionUtils.isProjectNameWithScope(prjID)) {
+					val npmVersion = semverHelper.parse(stringLit.value);
+					val vpr = new ValidationProjectReference(prjID, npmVersion, pair);
+					vprs.add(vpr);
+				}
 			}
 		}
 
