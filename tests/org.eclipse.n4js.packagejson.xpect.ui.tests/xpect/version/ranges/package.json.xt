@@ -43,7 +43,7 @@
  */
 {
 	"name": "ranges",
-	"version": "0.0.1-SNAPSHOT",
+	"version": "0.0.1",
 	"dependencies": {
 		// Fix as part of 940 XPECT FIXME noIssues --> "10.0.0 < 11.0.0"
 		"one": ">10.0.0 <100.0.0",

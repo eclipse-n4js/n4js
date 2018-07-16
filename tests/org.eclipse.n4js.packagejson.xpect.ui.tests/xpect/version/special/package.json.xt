@@ -43,7 +43,7 @@
  */
 {
 	"name": "special",
-	"version": "0.0.1-SNAPSHOT",
+	"version": "0.0.1",
 	"dependencies": {
 		// XPECT noerrors --> "11.0.0 = 11.0.0"
 		"one": "11.0.0",

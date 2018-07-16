@@ -28,7 +28,7 @@
  */
 {
 	"name": "test.09",
-	"version": "0.0.1-SNAPSHOT",
+	"version": "0.0.1",
 	"dependencies": {
 		"test.data.rl.project.one": "*",
 		"test.data.rl.project.two": "*"

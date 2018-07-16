@@ -32,7 +32,7 @@
 {
 	// XPECT noerrors --> "The project configuration contains a dependency cycle of projects [A] -> C -> B -> [A]." at ""A""
 	"name": "A",
-	"version": "0.0.1-SNAPSHOT",
+	"version": "0.0.1",
 	"dependencies": {
 		"C": "*"	
 	},
