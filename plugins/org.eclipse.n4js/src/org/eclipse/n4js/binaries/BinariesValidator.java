@@ -94,12 +94,12 @@ public class BinariesValidator {
 
 		final VersionNumber minimumVersion = binary.getMinimumVersion();
 		VersionNumberRelation versionRelation = SEMVERMatcher.relation(versionNumber, minimumVersion);
-		if (versionRelation.isGreaterOrEqual()) {
+		if (!versionRelation.isGreaterOrEqual()) {
 			String minimumVersionText = SEMVERSerializer.toString(minimumVersion);
 			String parsedVersionText = SEMVERSerializer.toString(versionNumber);
 			String msg = "The required minimum version of '" + binary.getLabel() + "' is '" + minimumVersionText
 					+ "'. Currently configured version is '" + parsedVersionText
-					+ "' which is '" + versionRelation + "' but must be greater or equal.";
+					+ "' which is '" + versionRelation + "' than the minimum version but it must be greater or equal.";
 			return error(binary, msg);
 		}
 
