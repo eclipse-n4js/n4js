@@ -125,7 +125,7 @@ public class VersionTest {
 
 	@Test
 	public void testFindClosestWithQualifier() {
-		VersionNumber[] versionArr = { version(2, 4, 0) };
+		VersionNumber[] versionArr = { version(2, 4, 0, "incomplete", "") };
 		List<VersionNumber> versions = Arrays.asList(versionArr);
 		assertEquals(closestMatch(versions, version(2, 4, 0)), version(2, 4, 0, "incomplete", ""));
 	}
@@ -144,16 +144,16 @@ public class VersionTest {
 	public void testCompareWithQualifier() {
 		VersionNumber lower = version(1, 2, 3, "alpha", null);
 		VersionNumber greater = version(1, 2, 3, "beta", null);
-		VersionNumber greatest = version(1, 2, 3, "beta", null);
-		Assert.assertEquals(VersionNumberRelation.Equal, SEMVERMatcher.relation(lower, lower));
-		Assert.assertEquals(VersionNumberRelation.Smaller, SEMVERMatcher.relation(lower, greater));
-		Assert.assertEquals(VersionNumberRelation.Smaller, SEMVERMatcher.relation(lower, greatest));
-		Assert.assertEquals(VersionNumberRelation.Greater, SEMVERMatcher.relation(greater, lower));
-		Assert.assertEquals(VersionNumberRelation.Equal, SEMVERMatcher.relation(greater, greater));
-		Assert.assertEquals(VersionNumberRelation.Smaller, SEMVERMatcher.relation(greater, greatest));
-		Assert.assertEquals(VersionNumberRelation.Greater, SEMVERMatcher.relation(greatest, lower));
-		Assert.assertEquals(VersionNumberRelation.Greater, SEMVERMatcher.relation(greatest, greater));
-		Assert.assertEquals(VersionNumberRelation.Equal, SEMVERMatcher.relation(greatest, greatest));
+		VersionNumber greatest = version(1, 2, 3);
+		Assert.assertEquals(VersionNumberRelation.Equal, SEMVERMatcher.relation(lower, lower, true));
+		Assert.assertEquals(VersionNumberRelation.Smaller, SEMVERMatcher.relation(lower, greater, true));
+		Assert.assertEquals(VersionNumberRelation.Smaller, SEMVERMatcher.relation(lower, greatest, true));
+		Assert.assertEquals(VersionNumberRelation.Greater, SEMVERMatcher.relation(greater, lower, true));
+		Assert.assertEquals(VersionNumberRelation.Equal, SEMVERMatcher.relation(greater, greater, true));
+		Assert.assertEquals(VersionNumberRelation.Smaller, SEMVERMatcher.relation(greater, greatest, true));
+		Assert.assertEquals(VersionNumberRelation.Greater, SEMVERMatcher.relation(greatest, lower, true));
+		Assert.assertEquals(VersionNumberRelation.Greater, SEMVERMatcher.relation(greatest, greater, true));
+		Assert.assertEquals(VersionNumberRelation.Equal, SEMVERMatcher.relation(greatest, greatest, true));
 	}
 
 	private void assertMissing(VersionNumber actual) {

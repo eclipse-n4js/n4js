@@ -76,13 +76,16 @@ public class SEMVERMatcher {
 	/**
 	 * Compares two SEMVER {@link VersionNumber}s A and B.
 	 * <p>
+	 * In case the argument {@code a} has a pre-release tag, this method returns true only if the given argument
+	 * {@code limit} also has a pre-release tag.
+	 * <p>
 	 * Note that this function cannot cover cases when one version is checked against multiple other versions. In these
 	 * cases the method {@link #matches(VersionNumber, VersionRangeSet)} should be used.
 	 *
 	 * @return relation between two given {@link VersionNumber}s
 	 */
-	static public VersionNumberRelation relation(VersionNumber a, VersionNumber b) {
-		return relation(a, b, false);
+	static public VersionNumberRelation relation(VersionNumber a, VersionNumber limit) {
+		return relation(a, limit, false);
 	}
 
 	/**
@@ -239,8 +242,14 @@ public class SEMVERMatcher {
 	 * in that order (Build metadata does not figure into precedence). Precedence is determined by the first difference
 	 * when comparing each of these identifiers from left to right as follows: Major, minor, and patch versions are
 	 * always compared numerically.</i>
+	 * <p>
+	 * When determining if a version {@code vn} lies within a version range, SEMVER takes the pre-release tag of the
+	 * {@code limit} as a context into account. Only if the context has a pre-release tag, both of the versions can have
+	 * a relation other than {@link VersionNumberRelation#Unrelated}.<br/>
+	 * However, SEMVER also specifies a relation between versions where one has a pre-release tag and the other does
+	 * not. To enable this relaxed mode, pass {@code true} as a value for the parameter {@code allowPreReleaseTag}.
 	 */
-	static private VersionNumberRelation relation(VersionNumber vn, VersionNumber limit, boolean allowPreReleaseTag) {
+	static public VersionNumberRelation relation(VersionNumber vn, VersionNumber limit, boolean allowPreReleaseTag) {
 		boolean qHasPR = vn.hasPreReleaseTag();
 		boolean lHasPR = limit.hasPreReleaseTag();
 		if (!allowPreReleaseTag && qHasPR && !lHasPR) {
@@ -344,7 +353,7 @@ public class SEMVERMatcher {
 			if (vnPR.size() < lmtPR.size()) {
 				return VersionNumberRelation.Smaller;
 			}
-			return VersionNumberRelation.Greater;
+			return VersionNumberRelation.Equal;
 		}
 		return null;
 	}

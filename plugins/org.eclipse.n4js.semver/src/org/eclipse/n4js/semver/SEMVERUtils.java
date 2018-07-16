@@ -217,7 +217,7 @@ public class SEMVERUtils {
 		VersionNumber current = null;
 		for (VersionNumber v : sortedVersions) {
 			VersionNumberRelation relation = SEMVERMatcher.relation(toFind, v);
-			if (relation.isSmallerOrEqual()) {
+			if (relation.isGreaterOrEqual()) {
 				current = v;
 			}
 		}
