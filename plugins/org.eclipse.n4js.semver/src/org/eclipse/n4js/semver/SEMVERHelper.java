@@ -20,7 +20,7 @@ public class SEMVERHelper {
 
 	private final IResourceServiceProvider.Registry serviceProviders;
 
-	private IParser regexParser;
+	private IParser semverParser;
 
 	/**
 	 * Creates a new literal converter that obtains an {@link IParser} for regular expressions from the given registry.
@@ -32,13 +32,13 @@ public class SEMVERHelper {
 
 	/** @return parser to parse SEMVER strings */
 	public IParser getSEMVERParser() {
-		if (regexParser == null) {
-			// no need for sync since we can also use a new regexParser if concurrent access happens by accident
+		if (semverParser == null) {
+			// no need for sync since we can also use a new semverParser if concurrent access happens by accident
 			IResourceServiceProvider serviceProvider = serviceProviders.getResourceServiceProvider(URI
-					.createURI("a.regex"));
-			regexParser = serviceProvider.get(IParser.class);
+					.createURI("a." + SEMVERGlobals.FILE_EXTENSION));
+			semverParser = serviceProvider.get(IParser.class);
 		}
-		return regexParser;
+		return semverParser;
 	}
 
 	/** @return {@link IParseResult} of the given input string */
