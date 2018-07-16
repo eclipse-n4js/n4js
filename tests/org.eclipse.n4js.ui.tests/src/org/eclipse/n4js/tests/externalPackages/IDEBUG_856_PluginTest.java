@@ -27,7 +27,6 @@ import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.inject.Inject;
@@ -37,7 +36,6 @@ import com.google.inject.Inject;
  * to unnecessary checkpoint creation in the workspace. Also ensures workspace project refresh jobs belong to the proper
  * job family.
  */
-@Ignore("IDE-3130") // randomly failing test
 @SuppressWarnings("restriction")
 public class IDEBUG_856_PluginTest extends AbstractBuilderParticipantTest {
 
