@@ -8,12 +8,13 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import {N4Injector} from "n4js/lang/N4Injector"
-import { DIAsserts } from "runtime/n4/di/DIAsserts"
 
 //=============================================================================
 // Set Up
 //=============================================================================
+
+import {N4Injector} from "n4js/lang/N4Injector";
+import {DIAsserts} from "runtime/n4/di/DIAsserts";
 
 class X {}
 class Y {}

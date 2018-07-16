@@ -8,8 +8,8 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert"
 
+import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert";
 export public class TestVerifyRuntimeSupportsN4 {
     private verifyMember(obj: any+, memberName: string) {
         Assert.isTrue(obj[memberName] !== undefined, memberName + " should be defined in runtime environment")

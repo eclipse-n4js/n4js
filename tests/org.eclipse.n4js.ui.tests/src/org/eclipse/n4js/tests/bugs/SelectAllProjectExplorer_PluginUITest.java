@@ -15,6 +15,12 @@ import static com.google.common.collect.FluentIterable.from;
 import static java.util.Arrays.asList;
 import static org.eclipse.n4js.n4mf.ProjectType.LIBRARY;
 import static org.eclipse.n4js.n4mf.ProjectType.TEST;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,6 +50,7 @@ import org.eclipse.jface.action.LegacyActionTools;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.n4js.n4mf.ProjectType;
+import org.eclipse.n4js.tests.util.EclipseUIUtils;
 import org.eclipse.n4js.ui.navigator.internal.SelectWorkingSetDropDownAction;
 import org.eclipse.n4js.ui.navigator.internal.ShowHiddenWorkingSetsDropDownAction;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
@@ -112,8 +119,8 @@ public class SelectAllProjectExplorer_PluginUITest extends AbstractPluginUITest 
 	public void setUp() throws Exception {
 		super.setUp();
 		waitForIdleState();
-		projectExplorer = (ProjectExplorer) showView(ProjectExplorer.VIEW_ID);
-		waitForUiThread();
+		projectExplorer = (ProjectExplorer) EclipseUIUtils.showView(ProjectExplorer.VIEW_ID);
+		UIUtils.waitForUiThread();
 		assertNotNull("Cannot show Project Explorer.", projectExplorer);
 		commonViewer = projectExplorer.getCommonViewer();
 		assertFalse("Expected projects as top level elements in navigator.", broker.isWorkingSetTopLevel());
@@ -147,6 +154,7 @@ public class SelectAllProjectExplorer_PluginUITest extends AbstractPluginUITest 
 	public void tearDown() throws Exception {
 		super.tearDown();
 		broker.resetState();
+		commonViewer.refresh();
 		waitForIdleState();
 
 		final TreeItem[] treeItems = commonViewer.getTree().getItems();
@@ -599,7 +607,8 @@ public class SelectAllProjectExplorer_PluginUITest extends AbstractPluginUITest 
 
 	@Override
 	protected IProject createN4JSProject(String projectName, ProjectType type) throws CoreException {
-		final IProject project = createJSProject(projectName, "src", "src-gen", t -> t.setProjectType(type));
+		final IProject project = createJSProject(projectName, "src", "src-gen",
+				b -> b.withType(type));
 		configureProjectWithXtext(project);
 		// Don't waitForBuild here as there is no code to build
 		return project;

@@ -19,6 +19,10 @@ import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.emf.common.util.URI
 import org.junit.Ignore
 import org.junit.Test
+import org.eclipse.n4js.N4JSGlobals
+
+import static org.junit.Assert.*
+import org.eclipse.n4js.tests.util.EclipseUIUtils
 
 /**
  * Test builder / editor behavior with multiple files and cyclic dependencies.
@@ -134,8 +138,8 @@ class CanLoadFromDescriptionCyclicPluginUITest extends AbstractCanLoadFromDescri
 		project = createJSProject(projectName)
 		val ICoreRunnable runnable = [
 			srcFolder = configureProjectWithXtext(project)
-			val manifest = project.getFile("manifest.n4mf")
-			assertMarkers("manifest should have no errors", manifest, 0)
+			val projectDescriptionFile = project.getFile(N4JSGlobals.PACKAGE_JSON);
+			assertMarkers("project description file (package.json) should have no errors", projectDescriptionFile, 0)
 	
 			srcFolderM = srcFolder.getFolder("m")
 			srcFolderM.create(true, true, null)
@@ -168,7 +172,7 @@ class CanLoadFromDescriptionCyclicPluginUITest extends AbstractCanLoadFromDescri
 	def void test_inEditor_simple() {
 		prepare("TestInEditorSimple")
 
-		val page = getActivePage()
+		val page = EclipseUIUtils.getActivePage()
 		val editorA = openAndGetXtextEditor(fileA, page)
 		val errorsA = getEditorValidationErrors(editorA)
 		assertEquals("editor for file A should not have any errors", #[], errorsA)
@@ -192,7 +196,7 @@ class CanLoadFromDescriptionCyclicPluginUITest extends AbstractCanLoadFromDescri
 	def void test_inEditor_throughXY() {
 		prepare("TestInEditorThroughXY");
 		
-		val page = getActivePage()
+		val page = EclipseUIUtils.getActivePage()
 		val editorA = openAndGetXtextEditor(fileA, page)
 		val errorsA = getEditorValidationErrors(editorA)
 		assertEquals("editor for file A should not have any errors", #[], errorsA)
@@ -317,7 +321,7 @@ class CanLoadFromDescriptionCyclicPluginUITest extends AbstractCanLoadFromDescri
 	def void test_inEditor_changeP() {
 		prepare("TestInEditorChangeP")
 
-		val page = getActivePage()
+		val page = EclipseUIUtils.getActivePage()
 		val editorP = openAndGetXtextEditor(fileP, page)
 		val errorsP = getEditorValidationErrors(editorP)
 		assertEquals("editor for file P should not have any errors", #[], errorsP)

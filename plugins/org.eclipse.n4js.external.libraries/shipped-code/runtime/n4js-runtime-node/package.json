@@ -1,5 +1,6 @@
 {
   "name": "n4js-runtime-node",
+  "version": "0.1.0",
   "author": {
     "name": "NumberFour AG",
     "email": "npm@numberfour.eu"
@@ -7,7 +8,7 @@
   "license": "EPL-1.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/NumberFour/n4js-libs"
+    "url": "https://github.com/eclipse/n4js"
   },
   "description": "N4JS Runtime Library for Node.js.",
   "keywords": [
@@ -16,5 +17,19 @@
   ],
   "engines": {
     "node": ">= 5.0.0"
-  }
+  },
+  "n4js": {
+    "projectType": "runtimeLibrary",
+    "vendorId": "org.eclipse.n4js",
+    "vendorName": "Eclipse N4JS Project",
+    "output": "src-gen",
+    "sources": {
+      "source": [
+        "src/n4js"
+      ]
+    },
+    "moduleLoader": "node_builtin"
+  },
+  "dependencies": {},
+  "devDependencies": {}
 }

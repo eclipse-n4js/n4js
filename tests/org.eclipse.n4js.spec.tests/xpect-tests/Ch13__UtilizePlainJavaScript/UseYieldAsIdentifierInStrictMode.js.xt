@@ -10,6 +10,8 @@
  */
 
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
 function nonStrict() {
 	// This should work
 	var yield = 3;

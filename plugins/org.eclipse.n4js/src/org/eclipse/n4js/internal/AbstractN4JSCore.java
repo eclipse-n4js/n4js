@@ -10,23 +10,19 @@
  */
 package org.eclipse.n4js.internal;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
-import org.eclipse.emf.common.CommonPlugin;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.n4js.external.ExternalLibraryUriHelper;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4mf.ModuleFilter;
-import org.eclipse.n4js.n4mf.ModuleFilterSpecifier;
-import org.eclipse.n4js.n4mf.validation.WildcardPathFilter;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.utils.WildcardPathFilterHelper;
 import org.eclipse.xtext.resource.IResourceDescription;
 
 import com.google.common.base.Optional;
@@ -37,7 +33,26 @@ import com.google.inject.Inject;
 public abstract class AbstractN4JSCore implements IN4JSCore {
 
 	@Inject
-	private ExternalLibraryUriHelper externalLibraryUriHelper;
+	private WildcardPathFilterHelper wildcardHelper;
+
+	@Override
+	public int getDepthOfLocation(URI nestedLocation) {
+		// make sure we are in the root folder of an IN4JSProject and obtain its location
+		IN4JSProject containingProject = findProject(nestedLocation).orNull();
+		if (containingProject == null || !containingProject.exists()) {
+			return -1;
+		}
+		URI containingProjectLocation = containingProject.getLocation();
+		// trim trailing empty segments in both location URIs (if any)
+		while (Objects.equals(nestedLocation.lastSegment(), "")) {
+			nestedLocation = nestedLocation.trimSegments(1);
+		}
+		while (Objects.equals(containingProjectLocation.lastSegment(), "")) {
+			containingProjectLocation = containingProjectLocation.trimSegments(1);
+		}
+		// compute and return depth
+		return nestedLocation.segmentCount() - containingProjectLocation.segmentCount();
+	}
 
 	@Override
 	public boolean isInSameProject(URI nestedLocation1, URI nestedLocation2) {
@@ -51,73 +66,19 @@ public abstract class AbstractN4JSCore implements IN4JSCore {
 
 	@Override
 	public boolean isNoValidate(URI nestedLocation) {
-
-		if (externalLibraryUriHelper.isExternalLocation(nestedLocation)) {
-			return true;
-		}
-
 		boolean noValidate = false;
+
 		ModuleFilter validationFilter = getModuleValidationFilter(nestedLocation);
 		if (validationFilter != null) {
-			noValidate = isPathContainedByFilter(nestedLocation, validationFilter);
+			noValidate |= wildcardHelper.isPathContainedByFilter(nestedLocation, validationFilter);
 		}
 
-		if (!noValidate) {
-			ModuleFilter noModuleWrappingFilter = getNoModuleWrappingFilter(nestedLocation);
-			if (noModuleWrappingFilter != null) {
-				noValidate = isPathContainedByFilter(nestedLocation, noModuleWrappingFilter);
-			}
+		ModuleFilter noModuleWrappingFilter = getNoModuleWrappingFilter(nestedLocation);
+		if (noModuleWrappingFilter != null) {
+			noValidate |= wildcardHelper.isPathContainedByFilter(nestedLocation, noModuleWrappingFilter);
 		}
 
 		return noValidate;
-	}
-
-	private boolean isPathContainedByFilter(URI nestedLocation, ModuleFilter filter) {
-		List<String> paths = getPaths(nestedLocation, filter);
-		for (String path : paths) {
-			if (getLocationPath(nestedLocation).equals(path)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private List<String> getPaths(URI location, ModuleFilter moduleFilter) {
-		Optional<? extends IN4JSSourceContainer> sourceContainerOpt = findN4JSSourceContainer(location);
-		if (sourceContainerOpt.isPresent()) {
-			IN4JSSourceContainer sourceContainer = sourceContainerOpt.get();
-			IN4JSProject project = sourceContainer.getProject();
-			String projectLocation = getLocationPath(project.getLocation());
-			return handleWildcardsAndRelativeNavigation(projectLocation, sourceContainer.getRelativeLocation(),
-					moduleFilter);
-		}
-		return new ArrayList<>();
-	}
-
-	private String getLocationPath(URI location) {
-		return CommonPlugin.asLocalURI(location).toFileString();
-	}
-
-	private List<String> handleWildcardsAndRelativeNavigation(String absoluteLocationPath,
-			String projectRelativeSourcePath, ModuleFilter moduleFilter) {
-
-		List<String> relativeResolvedPaths = new ArrayList<>();
-		for (ModuleFilterSpecifier spec : moduleFilter.getModuleSpecifiers()) {
-			String specPath = spec.getSourcePath();
-			if (specPath != null)
-				if (projectRelativeSourcePath.equals(specPath) == false)
-					// different source container, different filter path
-					// nothing will be found here
-					continue;
-
-			String basePathToCheck = absoluteLocationPath + "/"
-					+ (specPath != null ? specPath : projectRelativeSourcePath);
-			String pathsToFind = "/" + spec.getModuleSpecifierWithWildcard();
-			List<String> resolvedPaths = WildcardPathFilter.collectPathsByWildcardPath(basePathToCheck,
-					pathsToFind);
-			relativeResolvedPaths.addAll(resolvedPaths);
-		}
-		return relativeResolvedPaths;
 	}
 
 	@Override
@@ -125,7 +86,7 @@ public abstract class AbstractN4JSCore implements IN4JSCore {
 		boolean noModuleWrapping = false;
 		ModuleFilter filter = getNoModuleWrappingFilter(nestedLocation);
 		if (filter != null) {
-			noModuleWrapping = isPathContainedByFilter(nestedLocation, filter);
+			noModuleWrapping = wildcardHelper.isPathContainedByFilter(nestedLocation, filter);
 		}
 		return noModuleWrapping;
 	}

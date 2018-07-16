@@ -31,13 +31,14 @@ public class N4JSDerivedStateComputer implements IDerivedStateComputer {
 	override void installDerivedState(DerivedStateAwareResource resource, boolean preLinkingPhase) {
 		val contents = resource.contents;
 		if (contents.nullOrEmpty) {
-			throw new IllegalStateException("cannot install derived state in resource without AST")
+			val msg = "cannot install derived state in resource '"+ resource.URI.toString +"' without AST";
+			throw new IllegalStateException(msg)
 		} else if (contents.size == 1) {
 			typesBuilder.createTModuleFromSource(resource, preLinkingPhase);
 		} else if (contents.size == 2) {
 			typesBuilder.relinkTModuleToSource(resource, preLinkingPhase);
 		} else {
-			throw new IllegalStateException("resource with more than two roots");
+			throw new IllegalStateException("resource '"+ resource.URI.toString +"' with more than two roots");
 		}
 	}
 

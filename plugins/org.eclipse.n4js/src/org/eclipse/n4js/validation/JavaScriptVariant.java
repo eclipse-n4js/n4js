@@ -10,6 +10,12 @@
  */
 package org.eclipse.n4js.validation;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.Block;
@@ -34,9 +40,9 @@ import org.eclipse.xtext.EcoreUtil2;
  */
 public enum JavaScriptVariant {
 
-	/** Default non-strict JavaScript variant */
+	/** JavaScript (non-strict) mode */
 	unrestricted,
-	/** Strict mode */
+	/** JavaScript (strict) mode */
 	strict,
 	/** N4JS mode */
 	n4js,
@@ -45,10 +51,33 @@ public enum JavaScriptVariant {
 	/** N4IDL mode */
 	n4idl;
 
+	private final static Logger LOGGER = Logger.getLogger(JavaScriptVariant.class);
+
 	/**
 	 * Literal value to indicate strict mode: "use strict" (or 'use strict')
 	 */
 	public final static String STRICT_MODE_LITERAL_VALUE = "use strict";
+
+	/** @return all {@link JavaScriptVariant}s that are not annotated with {@code @Depricated} */
+	static public Set<JavaScriptVariant> nonDepricatedValues() {
+		Set<JavaScriptVariant> nonDepricated = new HashSet<>();
+		JavaScriptVariant[] enumConstants = JavaScriptVariant.class.getEnumConstants();
+		for (JavaScriptVariant enumConstant : enumConstants) {
+			try {
+				Field field = JavaScriptVariant.class.getDeclaredField(enumConstant.name());
+				Annotation[] annotations = field.getAnnotations();
+				for (Annotation annotation : annotations) {
+					Class<? extends Annotation> annotationType = annotation.annotationType();
+					if (!Deprecated.class.equals(annotationType)) {
+						nonDepricated.add(enumConstant);
+					}
+				}
+			} catch (Exception e) {
+				LOGGER.error("Error when collecting all non-@Deprecated JavaScriptVariants", e);
+			}
+		}
+		return nonDepricated;
+	}
 
 	/**
 	 * Returns the variant at the given code element.

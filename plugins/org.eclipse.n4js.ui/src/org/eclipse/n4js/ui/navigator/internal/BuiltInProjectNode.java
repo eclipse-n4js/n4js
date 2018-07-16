@@ -85,7 +85,7 @@ import org.eclipse.swt.graphics.Image;
 		ResourceNode manifestNode = null;
 		// Does nothing if the project root is a source container as well.
 		if (!from(project.getSourceContainers()).transform(src -> src.getRelativeLocation()).toSet().contains("")) {
-			final URI manifestLocation = project.getManifestLocation().orNull();
+			final URI manifestLocation = project.getProjectDescriptionLocation().orNull();
 			if (null != manifestLocation) {
 				final File manifest = new File(manifestLocation.toFileString());
 				if (manifest.exists() && manifest.isFile()) {

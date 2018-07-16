@@ -11,17 +11,18 @@
 package org.eclipse.n4js.runner.tests
 
 import com.google.inject.Inject
-import org.eclipse.n4js.N4JSStandaloneSetup
-import org.eclipse.n4js.projectModel.IN4JSCore
-import org.eclipse.n4js.projectModel.IN4JSProject
-import org.eclipse.n4js.runner.RuntimeEnvironmentsHelper
-import org.eclipse.n4js.runner.exceptions.DependencyCycleDetectedException
-import org.eclipse.n4js.runner.exceptions.InsolvableRuntimeEnvironmentException
-import org.eclipse.n4js.runner.^extension.RuntimeEnvironment
 import java.io.File
 import java.io.IOException
 import org.apache.log4j.Logger
 import org.eclipse.emf.common.util.URI
+import org.eclipse.n4js.N4JSStandaloneSetup
+import org.eclipse.n4js.projectModel.IN4JSCore
+import org.eclipse.n4js.projectModel.IN4JSProject
+import org.eclipse.n4js.runner.RunnerHelper
+import org.eclipse.n4js.runner.RuntimeEnvironmentsHelper
+import org.eclipse.n4js.runner.exceptions.DependencyCycleDetectedException
+import org.eclipse.n4js.runner.exceptions.InsolvableRuntimeEnvironmentException
+import org.eclipse.n4js.runner.^extension.RuntimeEnvironment
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -29,8 +30,6 @@ import org.junit.rules.TestName
 
 import static com.google.common.base.Preconditions.checkNotNull
 import static com.google.common.base.Throwables.propagate
-import static org.eclipse.n4js.projectModel.IN4JSProject.N4MF_MANIFEST
-import static org.eclipse.n4js.runner.^extension.RuntimeEnvironment.*
 import static java.nio.file.Files.createDirectory
 import static java.nio.file.Files.createFile
 import static java.nio.file.Files.createTempDirectory
@@ -40,10 +39,13 @@ import static org.apache.log4j.Level.*
 import static org.apache.log4j.Logger.getLogger
 import static org.apache.log4j.Logger.getRootLogger
 import static org.eclipse.emf.common.util.URI.createFileURI
-import static org.junit.Assert.*
-import static org.hamcrest.core.IsNot.not
+import static org.eclipse.n4js.runner.^extension.RuntimeEnvironment.*
 import static org.hamcrest.core.IsCollectionContaining.*
-import org.eclipse.n4js.runner.RunnerHelper
+import static org.hamcrest.core.IsNot.not
+import static org.junit.Assert.*
+import org.eclipse.n4js.packagejson.PackageJsonBuilder
+import org.eclipse.n4js.n4mf.ProjectType
+import org.eclipse.n4js.internal.FileBasedWorkspace
 
 /**
  * Class for testing the the runtime environment resolution for the N4 runners in standalone JUnit mode.
@@ -63,10 +65,10 @@ class RuntimeEnvironmentResolutionTest {
 	private extension RunnerHelper
 
 	@Inject
-	private extension ManifestBuilderProvider
-
-	@Inject
 	private IN4JSCore core
+	
+	@Inject
+	private FileBasedWorkspace workspace
 
 	private File workingDirectory
 
@@ -121,7 +123,7 @@ class RuntimeEnvironmentResolutionTest {
 	def void testCannotResolveExecutionEnvironmentForRuntimeEnviroenmtnProjectType() {
 		newBuilderForRE.createProject(V8).findCompatibleRuntimeEnvironments;
 	}
-
+	
 	/**
 	 * Resolving execution environment throws exception when called on project of type RL.
 	 */
@@ -131,11 +133,11 @@ class RuntimeEnvironmentResolutionTest {
 	}
 
 	/**
-	 * Resolving the RE should fail when the project depends itself causing invalid manifest.
+	 * Resolving the RE should fail when the project depends itself causing invalid package.json.
 	 */
 	@Test(expected = DependencyCycleDetectedException)
 	def void testCannotResolveExecutionEnvironmentForProjectWithDependencyToItself() {
-		newBuilder.withProjectDependency('cycle.lib.project').createProject('cycle.lib.project').findCompatibleRuntimeEnvironments;
+		newBuilder.withDependency('cycle.lib.project').createProject('cycle.lib.project').findCompatibleRuntimeEnvironments;
 	}
 
 	/**
@@ -143,9 +145,9 @@ class RuntimeEnvironmentResolutionTest {
 	 */
 	@Test(expected = DependencyCycleDetectedException)
 	def void testCannotResolveExecutionEnvironmentForProjectWithCycleDependency() {
-		newBuilder.withProjectDependency('cycle.lib.project.b').createProject('cycle.lib.project.a').findCompatibleRuntimeEnvironments;
-		newBuilder.withProjectDependency('cycle.lib.project.c').createProject('cycle.lib.project.b').findCompatibleRuntimeEnvironments;
-		newBuilder.withProjectDependency('cycle.lib.project.a').createProject('cycle.lib.project.c').findCompatibleRuntimeEnvironments;
+		newBuilder.withDependency('cycle.lib.project.b').createProject('cycle.lib.project.a').findCompatibleRuntimeEnvironments;
+		newBuilder.withDependency('cycle.lib.project.c').createProject('cycle.lib.project.b').findCompatibleRuntimeEnvironments;
+		newBuilder.withDependency('cycle.lib.project.a').createProject('cycle.lib.project.c').findCompatibleRuntimeEnvironments;
 	}
 
 	/**
@@ -255,7 +257,7 @@ class RuntimeEnvironmentResolutionTest {
 		newBuilderForRL.createProject('es5.re.lib')
 		newBuilderForRE.withProvidedRL('es5.re.lib').createProject(ES5)
 		newBuilderForRL.createProject('nodejs.re.lib')
-		newBuilderForRE.withExtendedRE(ES5).withProvidedRL('nodejs.re.lib').createProject(NODEJS)
+		newBuilderForRE.withExtendedRE(ES5.projectId).withProvidedRL('nodejs.re.lib').createProject(NODEJS)
 		val es5Project = newBuilder.withRequiredRL('es5.re.lib').createProject('es5.lib.project')
 		val nodeJsProject = newBuilder.withRequiredRL('nodejs.re.lib').createProject('nodejs.lib.project')
 
@@ -292,7 +294,7 @@ class RuntimeEnvironmentResolutionTest {
 		newBuilderForRL.createProject('v8.re.lib')
 		newBuilderForRE.withProvidedRL('v8.re.lib').createProject(V8)
 		val rootProject = newBuilder.withRequiredRL('v8.re.lib').createProject('v8.root.lib.project')
-		val subProject = newBuilder.withProjectDependency('v8.root.lib.project').createProject('v8.sub.lib.project')
+		val subProject = newBuilder.withDependency('v8.root.lib.project').createProject('v8.sub.lib.project')
 
 		assertEquals(1, rootProject.findCompatibleRuntimeEnvironments.size)
 		assertTrue(rootProject.findCompatibleRuntimeEnvironments.contains(V8))
@@ -308,7 +310,7 @@ class RuntimeEnvironmentResolutionTest {
 		newBuilderForRL.createProject('iojs.re.lib')
 		newBuilderForRE.withProvidedRL('iojs.re.lib').createProject(IOJS)
 		newBuilder.withRequiredRL('iojs.re.lib').createProject('some.other.project')
-		val subProject = newBuilder.withProjectDependency('some.other.project').createProject('v8.sub.lib.project')
+		val subProject = newBuilder.withDependency('some.other.project').createProject('v8.sub.lib.project')
 
 		assertEquals(1, rootProject.findCompatibleRuntimeEnvironments.size)
 		assertTrue(rootProject.findCompatibleRuntimeEnvironments.contains(V8))
@@ -322,7 +324,7 @@ class RuntimeEnvironmentResolutionTest {
 		newBuilderForRL.createProject('es5.re.lib')
 		newBuilderForRE.withProvidedRL('es5.re.lib').createProject(ES5)
 		newBuilderForRL.createProject('nodejs.re.lib')
-		newBuilderForRE.withExtendedRE(ES5).withProvidedRL('nodejs.re.lib').createProject(NODEJS)
+		newBuilderForRE.withExtendedRE(ES5.projectId).withProvidedRL('nodejs.re.lib').createProject(NODEJS)
 		val project = newBuilder.withRequiredRL('es5.re.lib').withRequiredRL('nodejs.re.lib').createProject('lib.project')
 
 		assertEquals('Expecting both NodeJS RE and ES5 RuntimeEnvironemnt.',
@@ -335,7 +337,7 @@ class RuntimeEnvironmentResolutionTest {
 	def void testNegativeSingleProjectFindsOnlyExtensionREWhenUsingLibsFromBaseREAndExtensionRE() {
 		newBuilderForRL.createProject('es5.re.lib')
 		newBuilderForRE.withProvidedRL('es5.re.lib').createProject(ES5)
-		newBuilderForRE.withExtendedRE(ES5).withProvidedRL('nodejs.re.lib').createProject(NODEJS)
+		newBuilderForRE.withExtendedRE(ES5.projectId).withProvidedRL('nodejs.re.lib').createProject(NODEJS)
 		newBuilderForRL.createProject('some.not.existing.lib')
 		newBuilderForRL.createProject('another.not.existing.lib')
 		val project = newBuilder.withRequiredRL('some.not.existing.lib').withRequiredRL('another.not.existing.lib').createProject('lib.project')
@@ -405,21 +407,19 @@ class RuntimeEnvironmentResolutionTest {
 		val z = newBuilder.createProject('z');
 
 		val bapi = newBuilder.createProject('Bapi');
-		val bimpl = newBuilder.withImplementationId("id1").withImplementedAPI('Bapi').withProjectDependency('y').createProject('Bimpl');
-		val bimpl2 = newBuilder.withImplementationId("id2").withImplementedAPI('Bapi').withProjectDependency('z').createProject('Bimpl2');
+		val bimpl = newBuilder.withImplementationId("id1").withImplementedProject('Bapi').withDependency('y').createProject('Bimpl');
+		val bimpl2 = newBuilder.withImplementationId("id2").withImplementedProject('Bapi').withDependency('z').createProject('Bimpl2');
 
-		val aapi = newBuilder.withProjectDependency('Bapi').createProject('Aapi');
-		val aimpl = newBuilder.withImplementationId("id1").withImplementedAPI('Aapi').withProjectDependency('x').createProject('Aimpl');
+		val aapi = newBuilder.withDependency('Bapi').createProject('Aapi');
+		val aimpl = newBuilder.withImplementationId("id1").withImplementedProject('Aapi').withDependency('x').createProject('Aimpl');
 
-		val client = newBuilder.withProjectDependency('Aapi').createProject('Client');
+		val client = newBuilder.withDependency('Aapi').createProject('Client');
 
 		val v8rl = newBuilderForRL.createProject('v8.re.lib')
 		val v8re = newBuilderForRE.withProvidedRL('v8.re.lib').createProject(V8)
 
 		// URI to a concrete Module to run
 		val URI clientModule = client.sourceContainers.get(0).location.appendSegment("ClientA.n4js");
-
-
 
 		val dep_map = V8.getProjectExtendedDepsAndApiImplMapping(clientModule,'id1',true)
 		val deps = dep_map.projects
@@ -467,13 +467,13 @@ class RuntimeEnvironmentResolutionTest {
 		newBuilder.createProject('z');
 
 		newBuilder.createProject('Bapi');
-		newBuilder.withImplementationId("id1")./*withImplementedAPI('Bapi').*/withProjectDependency('y').createProject('Bimpl');
-		newBuilder.withImplementationId("id2").withImplementedAPI('Bapi').withProjectDependency('z').createProject('Bimpl2');
+		newBuilder.withImplementationId("id1")./*withImplementedAPI('Bapi').*/withDependency('y').createProject('Bimpl');
+		newBuilder.withImplementationId("id2").withImplementedProject('Bapi').withDependency('z').createProject('Bimpl2');
 
-		newBuilder.withProjectDependency('Bapi').createProject('Aapi');
-		newBuilder.withImplementationId("id1").withImplementedAPI('Aapi').withProjectDependency('x').createProject('Aimpl');
+		newBuilder.withDependency('Bapi').createProject('Aapi');
+		newBuilder.withImplementationId("id1").withImplementedProject('Aapi').withDependency('x').createProject('Aimpl');
 
-		val client = newBuilder.withProjectDependency('Aapi').createProject('Client');
+		val client = newBuilder.withDependency('Aapi').createProject('Client');
 
 		newBuilderForRL.createProject('v8.re.lib')
 		newBuilderForRE.withProvidedRL('v8.re.lib').createProject(V8)
@@ -515,13 +515,13 @@ class RuntimeEnvironmentResolutionTest {
 		val z = newBuilder.createProject('z');
 
 		val bapi = newBuilder.createProject('Bapi');
-		val bimpl = newBuilder.withImplementationId("id1")./*withImplementedAPI('Bapi').*/withProjectDependency('y').createProject('Bimpl');
-		val bimpl2 = newBuilder.withImplementationId("id2").withImplementedAPI('Bapi').withProjectDependency('z').createProject('Bimpl2');
+		val bimpl = newBuilder.withImplementationId("id1")./*withImplementedAPI('Bapi').*/withDependency('y').createProject('Bimpl');
+		val bimpl2 = newBuilder.withImplementationId("id2").withImplementedProject('Bapi').withDependency('z').createProject('Bimpl2');
 
-		val aapi = newBuilder.withProjectDependency('Bapi').createProject('Aapi');
-		val aimpl = newBuilder.withImplementationId("id1").withImplementedAPI('Aapi').withProjectDependency('x').createProject('Aimpl');
+		val aapi = newBuilder.withDependency('Bapi').createProject('Aapi');
+		val aimpl = newBuilder.withImplementationId("id1").withImplementedProject('Aapi').withDependency('x').createProject('Aimpl');
 
-		val client = newBuilder.withProjectDependency('Aapi').createProject('Client');
+		val client = newBuilder.withDependency('Aapi').createProject('Client');
 
 		val v8rl = newBuilderForRL.createProject('v8.re.lib')
 		val v8re = newBuilderForRE.withProvidedRL('v8.re.lib').createProject(V8)
@@ -579,18 +579,18 @@ class RuntimeEnvironmentResolutionTest {
 		 *
 		 * Client should have Client,Aimpl,x,Bimpl,y on dependency path.
 		 */
-		val x = newBuilder.withProjectDependency('Bapi').createProject('x');
-		val y = newBuilder.withProjectDependency('Aapi').createProject('y');
+		val x = newBuilder.withDependency('Bapi').createProject('x');
+		val y = newBuilder.withDependency('Aapi').createProject('y');
 		val z = newBuilder.createProject('z');
 
 		val bapi = newBuilder.createProject('Bapi');
-		val bimpl = newBuilder.withImplementationId("id1").withImplementedAPI('Bapi').withProjectDependency('y').createProject('Bimpl');
-		val bimpl2 = newBuilder.withImplementationId("id2").withImplementedAPI('Bapi').withProjectDependency('z').createProject('Bimpl2');
+		val bimpl = newBuilder.withImplementationId("id1").withImplementedProject('Bapi').withDependency('y').createProject('Bimpl');
+		val bimpl2 = newBuilder.withImplementationId("id2").withImplementedProject('Bapi').withDependency('z').createProject('Bimpl2');
 
-		val aapi = newBuilder.withProjectDependency('Bapi').createProject('Aapi');
-		val aimpl = newBuilder.withImplementationId("id1").withImplementedAPI('Aapi').withProjectDependency('x').createProject('Aimpl');
+		val aapi = newBuilder.withDependency('Bapi').createProject('Aapi');
+		val aimpl = newBuilder.withImplementationId("id1").withImplementedProject('Aapi').withDependency('x').createProject('Aimpl');
 
-		val client = newBuilder.withProjectDependency('Aapi').createProject('Client');
+		val client = newBuilder.withDependency('Aapi').createProject('Client');
 
 		val v8rl = newBuilderForRL.createProject('v8.re.lib')
 		val v8re = newBuilderForRE.withProvidedRL('v8.re.lib').createProject(V8)
@@ -626,16 +626,16 @@ class RuntimeEnvironmentResolutionTest {
 	}
 
 	/**
-	 * This method creates a new project in the workspace then generates a N4JS manifest file in the brand new project's root
+	 * This method creates a new project in the workspace then generates a N4JS package.json file in the brand new project's root
 	 * with the given content.
 	 *
 	 * @param projectId the unique projectId of the new project.
-	 * @param manifestContent the content of the new manifest file.
+	 * @param packageJsonContent the content of the new package.json file.
 	 * @return returns with the URI referencing the brand new project.
 	 */
-	protected def createProjectWithManifest(String projectId, String manifestContent) {
+	protected def createProjectWithPackageJson(String projectId, String packageJsonContent) {
 		val projectFolder = createProjectFolder(projectId)
-		writeManifestContent(createManifestFile(projectFolder), manifestContent)
+		writePackageJsonContent(createPackageJsonFile(projectFolder), packageJsonContent)
 		toUri(projectFolder);
 	}
 
@@ -648,22 +648,22 @@ class RuntimeEnvironmentResolutionTest {
 		}
 	}
 
-	private def IN4JSProject createProject(ManifestBuilder builder, RuntimeEnvironment re) {
+	private def IN4JSProject createProject(PackageJsonBuilder builder, RuntimeEnvironment re) {
 		createProject(builder, '''«re.getProjectId»''')
 	}
 
-	private def IN4JSProject createProject(ManifestBuilder builder, String projectId) {
-		val content = builder.build(projectId)
+	private def IN4JSProject createProject(PackageJsonBuilder builder, String projectId) {
+		val content = builder.withName(projectId).build();
 		if (LOGGER.debugEnabled) {
 			LOGGER.debug('------------------------NEW PROJECT------------------------')
 			LOGGER.debug('''New project: «projectId»''')
-			LOGGER.debug('''Manifest:«'\n'»«content»''')
+			LOGGER.debug('''Package.json contents:«'\n'»«content»''')
 			LOGGER.debug('--------------------END OF NEW PROJECT---------------------')
 		}
-		val uri = createProjectWithManifest(projectId, content)
+		val uri = createProjectWithPackageJson(projectId, content)
 		val project = core.create(uri)
 		assertTrue(project.exists)
-		core.findProject(uri) // Registers the project.
+		workspace.registerProject(uri) // Registers the project.
 		assertTrue(core.findProject(project.getLocation).present)
 		return project
 	}
@@ -678,21 +678,21 @@ class RuntimeEnvironmentResolutionTest {
 		}
 	}
 
-	private def File createManifestFile(File projectFolder) {
+	private def File createPackageJsonFile(File projectFolder) {
 		try {
-			val path = get(projectFolder.toPath.toString, N4MF_MANIFEST)
+			val path = get(projectFolder.toPath.toString, IN4JSProject.PACKAGE_JSON)
 			assertAccessable(createFile(path).toFile.doDeleteOnExit)
 		} catch (IOException e) {
-			LOGGER.error('''Error while creating manifest file in folder '«projectFolder»'.''', e)
+			LOGGER.error('''Error while creating package.json file in folder '«projectFolder»'.''', e)
 			throw propagate(e)
 		}
 	}
 
-	private def File writeManifestContent(File manifest, String content) {
+	private def File writePackageJsonContent(File packageJsonFile, String content) {
 		try {
-			return write(assertFileAccessable(manifest).toPath, content.getBytes).toFile
+			return write(assertFileAccessable(packageJsonFile).toPath, content.getBytes).toFile
 		} catch (IOException e) {
-			LOGGER.error('Error while writing manifest file content.', e)
+			LOGGER.error('Error while writing package.json file content.', e)
 			throw propagate(e)
 		}
 	}
@@ -717,6 +717,27 @@ class RuntimeEnvironmentResolutionTest {
 	private def doDeleteOnExit(File file) {
 		file.deleteOnExit
 		file
+	}
+	
+	/** 
+	 * Convenience access to a pre-configured {@link PackageJsonBuilder} instances 
+	 * with project type {@link ProjectType#RUNTIME_ENVIRONMENT}.
+	 */
+	private def PackageJsonBuilder newBuilderForRE() {
+		return PackageJsonBuilder.newBuilder.withType(ProjectType.RUNTIME_ENVIRONMENT);
+	}
+	
+	/** 
+	 * Convenience access to a pre-configured {@link PackageJsonBuilder} instances 
+	 * with project type {@link ProjectType#RUNTIME_LIBRARY}.
+	 */
+	private def PackageJsonBuilder newBuilderForRL() {
+		return PackageJsonBuilder.newBuilder.withType(ProjectType.RUNTIME_LIBRARY);
+	}
+	
+	/** Convenience access to a plain {@link PackageJsonBuilder} instances. */
+	private def PackageJsonBuilder newBuilder() {
+		return PackageJsonBuilder.newBuilder;
 	}
 
 }

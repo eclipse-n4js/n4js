@@ -27,6 +27,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.generator.GeneratorOption;
 import org.eclipse.n4js.runner.SystemLoaderInfo;
+import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
 import org.eclipse.n4js.tests.util.EditorsUtil;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter;
@@ -39,18 +40,6 @@ import org.eclipse.n4js.xpect.ui.common.QuickFixTestHelper;
 import org.eclipse.n4js.xpect.ui.common.XpectN4JSES5TranspilerHelper;
 import org.eclipse.n4js.xpect.ui.methods.contentassist.RegionWithCursor;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.xtext.diagnostics.Severity;
-import org.eclipse.xtext.nodemodel.ICompositeNode;
-import org.eclipse.xtext.nodemodel.ILeafNode;
-import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
-import org.eclipse.xtext.resource.XtextResource;
-import org.eclipse.xtext.ui.editor.XtextEditor;
-import org.eclipse.xtext.ui.editor.quickfix.IssueResolution;
-import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionProvider;
-import org.eclipse.xtext.util.CancelIndicator;
-import org.eclipse.xtext.validation.CheckMode;
-import org.eclipse.xtext.validation.Issue;
-import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xpect.XpectImport;
 import org.eclipse.xpect.expectation.CommaSeparatedValuesExpectation;
 import org.eclipse.xpect.expectation.ICommaSeparatedValuesExpectation;
@@ -68,10 +57,21 @@ import org.eclipse.xpect.xtext.lib.tests.ValidationTestModuleSetup;
 import org.eclipse.xpect.xtext.lib.tests.ValidationTestModuleSetup.ConsumedIssues;
 import org.eclipse.xpect.xtext.lib.tests.ValidationTestModuleSetup.IssuesByLine;
 import org.eclipse.xpect.xtext.lib.tests.ValidationTestModuleSetup.TestingResourceValidator;
+import org.eclipse.xtext.diagnostics.Severity;
+import org.eclipse.xtext.nodemodel.ICompositeNode;
+import org.eclipse.xtext.nodemodel.ILeafNode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
+import org.eclipse.xtext.resource.XtextResource;
+import org.eclipse.xtext.ui.editor.XtextEditor;
+import org.eclipse.xtext.ui.editor.quickfix.IssueResolution;
+import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionProvider;
+import org.eclipse.xtext.util.CancelIndicator;
+import org.eclipse.xtext.validation.CheckMode;
+import org.eclipse.xtext.validation.Issue;
+import org.eclipse.xtext.xbase.lib.Exceptions;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
-import com.google.inject.Inject;
 
 /**
  * Provides XPEXT test methods for quick fixes
@@ -79,11 +79,10 @@ import com.google.inject.Inject;
 @XpectImport({ N4JSOffsetAdapter.class, XpEnvironmentData.class, VarDef.class, Config.class,
 		ValidationTestModuleSetup.class })
 public class QuickFixXpectMethod {
-	@Inject
-	private XpectN4JSES5TranspilerHelper xpectN4JSES5TranpilerHelper;
 
-	@Inject
-	private IssueResolutionProvider quickfixProvider;
+	static {
+		EclipseGracefulUIShutdownEnabler.enableOnce();
+	}
 
 	private static Logger logger = Logger.getLogger(QuickFixXpectMethod.class);
 
@@ -362,7 +361,13 @@ public class QuickFixXpectMethod {
 			FileSetupContext fileSetupContext, ResourceTweaker resourceTweaker) {
 
 		try {
-			return xpectN4JSES5TranpilerHelper.doCompileAndExecute(resource, init,
+			/**
+			 * Asking the injector is necessary, since the Xpect methods get also called from N4MF context. see test is
+			 * org.eclipse.n4js.xpect.ui/n4mf/quickfix/
+			 */
+			XpectN4JSES5TranspilerHelper transpilerHelper = resource.getResourceServiceProvider()
+					.get(XpectN4JSES5TranspilerHelper.class);
+			return transpilerHelper.doCompileAndExecute(resource, init,
 					fileSetupContext,
 					false,
 					resourceTweaker, GeneratorOption.DEFAULT_OPTIONS, SystemLoaderInfo.SYSTEM_JS);
@@ -437,6 +442,9 @@ public class QuickFixXpectMethod {
 		for (Issue issue : allIssues) {
 			if (issue.getLineNumber() == offsetNode.getStartLine()
 					&& issue.getLineNumber() <= offsetNode.getEndLine()) {
+
+				IssueResolutionProvider quickfixProvider = resource.getResourceServiceProvider()
+						.get(IssueResolutionProvider.class);
 				Display.getDefault().syncExec(() -> resolutions.addAll(quickfixProvider.getResolutions(issue)));
 			}
 		}

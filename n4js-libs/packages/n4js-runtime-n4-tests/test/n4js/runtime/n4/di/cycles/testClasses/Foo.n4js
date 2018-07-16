@@ -8,8 +8,8 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import {Bar} from "runtime/n4/di/cycles/testClasses/Bar"
 
+import {Bar} from "runtime/n4/di/cycles/testClasses/Bar";
 export class Foo{
     @Inject
     bar: Bar;

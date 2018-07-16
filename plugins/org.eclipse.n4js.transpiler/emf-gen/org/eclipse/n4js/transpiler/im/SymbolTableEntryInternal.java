@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.transpiler.im;
 
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Symbol Table Entry Internal</b></em>'.

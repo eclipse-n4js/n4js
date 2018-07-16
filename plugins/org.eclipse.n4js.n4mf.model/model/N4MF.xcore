@@ -18,173 +18,75 @@
 	updateClasspath="false",
 	complianceLevel="8.0",
 	copyrightFields="false",
+	// both copyrightText and documentation are required to align the output of the MWE2 and incremental builder (see GH-841)
 	copyrightText="Copyright (c) 2016 NumberFour AG.\nAll rights reserved. This program and the accompanying materials\nare made available under the terms of the Eclipse Public License v1.0\nwhich accompanies this distribution, and is available at\nhttp://www.eclipse.org/legal/epl-v10.html\n\nContributors:\n  NumberFour AG - Initial API and implementation",
+	documentation="*\nCopyright (c) 2016 NumberFour AG.\nAll rights reserved. This program and the accompanying materials\nare made available under the terms of the Eclipse Public License v1.0\nwhich accompanies this distribution, and is available at\nhttp://www.eclipse.org/legal/epl-v10.html\n * Contributors:\n  NumberFour AG - Initial API and implementation",
 	language="")
 package org.eclipse.n4js.n4mf
 
-/**
- * Describes a project by making it identifiable by projectId, vendorId and
- * declared version.
- *
- * The project type defines how a project should be bundled.
- *
- * Project paths decide about which resources should be bundled and be visible
- * to other projects that list this project as dependency. So e.g. the files
- * contained in a declared source folder will be in scope for a project that
- * has this project as a test scoped dependency.
- *
- * The listed dependencies lists all projects this project depends on. A dependency
- * is categorized to be only while testing or at runtime. This plays together with
- * projects paths (source or test).
- *
- * To be later validated
- * - validate if manifest is in project
- * - check if file is in root folder
- */
-class ProjectDescription extends SimpleProjectDescription {
+import org.eclipse.emf.common.util.BasicEList
+import org.eclipse.n4js.utils.io.FileUtils
+
+class ProjectDescription {
+	String projectId
+	String vendorId
 	String vendorName
 	contains DeclaredVersion projectVersion
 	ProjectType projectType
 	String mainModule
-	contains ExtendedRuntimeEnvironment extendedRuntimeEnvironment
-	contains ProvidedRuntimeLibraries providedRuntimeLibraries
-	contains RequiredRuntimeLibraries requiredRuntimeLibraries
-	contains ProjectDependencies projectDependencies
-	String implementationId
-	contains ImplementedProjects implementedProjects
-	contains InitModules initModules
-	contains ExecModule execModule
-	String outputPath
-	String[] libraryPaths
-	String[] resourcePaths
-	contains SourceFragment[] sourceFragment
-	contains ModuleFilter[] moduleFilters
-	contains TestedProjects testedProjects
-	ModuleLoader moduleLoader
-
-	/**
-	 * Convenient method for getting all tested projects defined for the current project description.
-	 * Returns with an empty list if no test projects are set for the current project, otherwise returns with them.
-	 */
-	op TestedProject[] getAllTestedProjects() {
-		if (null === testedProjects) emptyEList else testedProjects.testedProjects;
-	}
-
-	/**
-	 * Convenient method for getting all initializer bootstrap modules defined for the current project description.
-	 * Returns with an empty list if no initializer modules are set for the current project, otherwise returns with them.
-	 */
-	op BootstrapModule[] getAllInitModules() {
-		if (null === initModules) emptyEList else initModules.initModules;
-	}
-
-	/**
-	 * Convenient method for getting all implemented modules defined for the current project description.
-	 * Returns with an empty list if no modules are implemented by the current project, otherwise returns with them.
-	 */
-	op ProjectReference[] getAllImplementedProjects() {
-		if (null === implementedProjects) emptyEList else implementedProjects.implementedProjects;
-	}
-
-	/**
-	 * Convenient method for getting all project dependencies for the current project description.
-	 * Returns with an empty list if the current project does not depend on any other projects, otherwise returns with them.
-	 */
-	op ProjectDependency[] getAllProjectDependencies() {
-		if (null === projectDependencies) emptyEList else projectDependencies.projectDependencies;
-	}
-
-	/**
-	 * Convenient method for getting all provided runtime libraries defined for the current project description.
-	 * Returns with an empty list if no runtime libraries are provided by the current project, otherwise returns with them.
-	 */
-	op ProvidedRuntimeLibraryDependency[] getAllProvidedRuntimeLibraries() {
-		if (null === providedRuntimeLibraries) emptyEList else providedRuntimeLibraries.providedRuntimeLibraries;
-	}
-
-	/**
-	 * Convenient method for getting all required runtime libraries for the current project description.
-	 * Returns with an empty list if no required runtime libraries are specified by the current project, otherwise returns with them.
-	 */
-	op RequiredRuntimeLibraryDependency[] getAllRequiredRuntimeLibraries() {
-		if (null === requiredRuntimeLibraries) emptyEList else requiredRuntimeLibraries.requiredRuntimeLibraries;
-	}
-
-}
-
-/**
- * Class for wrapping the execution module.
- */
-class ExecModule {
-	contains BootstrapModule execModule
-}
-
-/**
- * Class for collecting a collection of projects tested by the current project.
- */
-class TestedProjects {
-	contains TestedProject[] testedProjects
-}
-
-/**
- * Class for encapsulating a collection of initializer bootstrap modules for the current project.
- */
-class InitModules {
-	contains BootstrapModule[] initModules
-}
-
-/**
- * Class for collecting a bunch of projects implemented by the current project.
- */
-class ImplementedProjects {
-	contains ProjectReference[] implementedProjects
-}
-
-/**
- * Class for wrapping a collection of dependencies for the particular project.
- */
-class ProjectDependencies {
+	contains ProjectReference extendedRuntimeEnvironment
+	contains ProjectReference[] providedRuntimeLibraries
+	contains ProjectReference[] requiredRuntimeLibraries
 	contains ProjectDependency[] projectDependencies
-}
-
-/**
- * Class for wrapping a collection of provided runtime environments.
- */
-class ProvidedRuntimeLibraries {
-	contains ProvidedRuntimeLibraryDependency[] providedRuntimeLibraries
-}
-
-/**
- * Class for wrapping the required runtime environments of the current project.
- */
-class RequiredRuntimeLibraries {
-	contains RequiredRuntimeLibraryDependency[] requiredRuntimeLibraries
-}
-
-/**
- * Properties that makes a project unique among other projects (without considering the version).
- * The vendorId identifies the vendor of this project. The projectId identifies the project.
- */
-class SimpleProjectDescription {
-	/**
-	 * the vendor ID
+	String implementationId
+	contains ProjectReference[] implementedProjects
+	contains BootstrapModule[] initModules
+	contains BootstrapModule execModule
+	String outputPathRaw
+	String[] libraryPathsRaw
+	String[] resourcePathsRaw
+	contains SourceContainerDescription[] sourceContainers
+	contains ModuleFilter[] moduleFilters
+	contains ProjectDependency[] testedProjects
+	ModuleLoader moduleLoader
+	/* 
+	 * Tells if the project represented by this project description has a nested
+	 * "node_modules" folder, i.e. a folder named "node_modules" located right next
+	 * to the package.json file.
 	 */
-	String declaredVendorId
+	boolean hasNestedNodeModulesFolder
+
 	/**
-	 * the project ID
+	 * Indicates whether the underlying project description explicitly configured
+	 * the project to be an N4JS project (e.g. includes n4js section). 
 	 */
-	String projectId
-	op String getVendorId() {
-		return if (declaredVendorId !== null) declaredVendorId else (eContainer?.eContainer?.eContainer as ProjectDescription)?.declaredVendorId;
+	boolean hasN4JSNature
+
+	op String getOutputPath() {
+		return FileUtils.normalizeDotWhenEmpty(outputPathRaw);
 	}
-}
 
-/**
- * Representation of a reference to a project that is declared as the tested project for a particular test project.
- */
-class TestedProject extends SimpleProjectDependency {
-	contains VersionConstraint versionConstraint
-	ProjectDependencyScope declaredScope
+	op void setOutputPath(String newOutputPath) {
+		this.outputPathRaw = newOutputPath;
+	}
+
+	op String[] getLibraryPaths() {
+		val paths = new BasicEList(libraryPathsRaw.length());
+		for (String pathRaw : libraryPathsRaw) {
+			val normalizedPath = FileUtils.normalizeDotWhenEmpty(pathRaw);
+			paths.add(normalizedPath);
+		}
+		return paths;
+	}
+
+	op String[] getResourcePaths() {
+		val paths = new BasicEList(resourcePathsRaw.length());
+		for (String pathRaw : resourcePathsRaw) {
+			val normalizedPath = FileUtils.normalizeDotWhenEmpty(pathRaw);
+			paths.add(normalizedPath);
+		}
+		return paths;
+	}
 }
 
 /**
@@ -198,6 +100,7 @@ class DeclaredVersion {
 	int minor
 	int micro
 	String qualifier
+	String buildMetaData
 }
 
 /**
@@ -212,21 +115,22 @@ class DeclaredVersion {
  * </description>
  */
 enum ProjectType {
-	APPLICATION,
-	PROCESSOR,
-	LIBRARY,
-	API,
-	RUNTIME_ENVIRONMENT,
-	RUNTIME_LIBRARY,
-	TEST
+	VALIDATION = 0,
+	APPLICATION = 1,
+	PROCESSOR = 2,
+	LIBRARY = 3,
+	API = 4,
+	RUNTIME_ENVIRONMENT = 5,
+	RUNTIME_LIBRARY = 6,
+	TEST = 7
 }
 
 /**
  * List the in the project contained generation aware source folders categorized by their later usage.
  */
-class SourceFragment {
-	SourceFragmentType sourceFragmentType
-	String[] paths
+class SourceContainerDescription {
+	SourceContainerType sourceContainerType
+	String[] pathsRaw
 
 	/**
 	 * Compares the current source fragment instance with the {@code other} one based on the
@@ -234,22 +138,32 @@ class SourceFragment {
 	 * return value of this compare method is identical to the specification of the {@link Comparable}
 	 * interface.
 	 */
-	op int compareByFragmentType(SourceFragment other) {
+	op int compareByFragmentType(SourceContainerDescription other) {
 		if (null === other) {
 			return -1;
 		}
-		if (null === sourceFragmentType) {
-			return if (null === other.sourceFragmentType) 0 else 1;
+		if (null === sourceContainerType) {
+			return if (null === other.sourceContainerType) 0 else 1;
 		}
-		return sourceFragmentType.compareTo(other.sourceFragmentType);
+		return sourceContainerType.compareTo(other.sourceContainerType);
 	}
+
+	op String[] getPaths() {
+		val paths = new BasicEList(pathsRaw.length());
+		for (String pathRaw : pathsRaw) {
+			val normalizedPath = FileUtils.normalizeDotWhenEmpty(pathRaw);
+			paths.add(normalizedPath);
+		}
+		return paths;
+	}
+
 }
 
 /**
  * Categorizes a source fragment to either contain sources files (SOURCE),
  * tests (TEST) or external classes (EXTERNAL).
  */
-enum SourceFragmentType {
+enum SourceContainerType {
 	SOURCE = 0,
 	TEST = 1,
 	EXTERNAL = 2
@@ -277,22 +191,25 @@ class BootstrapModule {
  * implementation provided by the runtime.
  */
 enum ModuleFilterType {
-	NO_VALIDATE
-	, NO_MODULE_WRAPPING
-}
-
-/**
- * Class for representing the extended runtime environment project of the current project.
- */
-class ExtendedRuntimeEnvironment {
-	contains ProjectReference extendedRuntimeEnvironment
+	NO_VALIDATE = 0,
+	NO_MODULE_WRAPPING = 1
 }
 
 class ProjectReference {
-	contains SimpleProjectDescription project
-}
 
-class SimpleProjectDependency extends ProjectReference {
+	/**
+	 * the project ID
+	 */
+	String projectId
+
+	// TODO is following property and operation really required?
+	/**
+	 * the vendor ID
+	 */
+	String declaredVendorId
+	op String getVendorId() {
+		return if (declaredVendorId !== null) declaredVendorId else (eContainer as ProjectDescription)?.vendorId;
+	}
 
 	/**
 	 * COMPILE by default
@@ -308,28 +225,6 @@ class ModuleFilterSpecifier {
 }
 
 /**
- * Abstract class representing the dependency to a runtime environment or runtime library.
- */
-abstract class RuntimeProjectDependency extends SimpleProjectDependency {
-
-}
-
-/**
- * Class for representing a required runtime library project dependency.
- */
-class RequiredRuntimeLibraryDependency extends RuntimeProjectDependency {
-
-}
-
-/**
- * Class for representing a provided runtime library project dependency.
- */
-class ProvidedRuntimeLibraryDependency extends RuntimeProjectDependency {
-
-}
-
-
-/**
  * Defines a unique project dependency by identifying a project by
  * projectId. The allowed version can be defined either in a range by
  * stating lower and upper version bound or by stating only one version.
@@ -337,7 +232,7 @@ class ProvidedRuntimeLibraryDependency extends RuntimeProjectDependency {
  * is and vice versa. The project dependency scope defines whether the
  * dependency affects runtime or is only required for testing.
  */
-class ProjectDependency extends SimpleProjectDependency {
+class ProjectDependency extends ProjectReference {
 	contains VersionConstraint versionConstraint
 
 	ProjectDependencyScope declaredScope
@@ -367,16 +262,15 @@ class VersionConstraint {
  * if it is a dependency at runtime (COMPILE).
  */
 enum ProjectDependencyScope {
-	COMPILE
-	,
-	TEST
+	COMPILE = 0,
+	TEST = 1
 }
 
 /*
  * One of the Javascript module loading techniques.
  */
 enum ModuleLoader {
-	N4JS,
-	COMMONJS,
-	NODE_BUILTIN
+	N4JS = 0,
+	COMMONJS = 1,
+	NODE_BUILTIN = 2
 }

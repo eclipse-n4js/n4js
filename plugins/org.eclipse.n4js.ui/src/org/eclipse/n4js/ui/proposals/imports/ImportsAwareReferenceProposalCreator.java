@@ -17,6 +17,7 @@ import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.scoping.IContentAssistScopeProvider;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
@@ -213,17 +214,16 @@ public class ImportsAwareReferenceProposalCreator {
 
 		// special handling for default imports:
 		if (inputQN.getLastSegment().equals(N4JSLanguageConstants.EXPORT_DEFAULT_NAME)) {
-			EObject element = candidate.getEObjectOrProxy();
-			if (element instanceof TExportableElement) {
-				TExportableElement exported = (TExportableElement) element;
-				if (N4JSLanguageConstants.EXPORT_DEFAULT_NAME.equals(exported.getExportedName())) {
+			if (TExportableElement.class.isAssignableFrom(candidate.getEClass().getInstanceClass())) {
+				if (N4JSResourceDescriptionStrategy.getExportDefault(candidate)) {
 					return new AliasedEObjectDescription(inputQN, candidate);
 				}
 			}
 			// not accessed via namespace
 			QualifiedName nameNoDefault = inputQN.skipLast(1);
 			QualifiedName moduleName = nameNoDefault.getSegmentCount() > 1
-					? QualifiedName.create(nameNoDefault.getLastSegment()) : nameNoDefault;
+					? QualifiedName.create(nameNoDefault.getLastSegment())
+					: nameNoDefault;
 			return new AliasedEObjectDescription(moduleName, candidate);
 		}
 		// no special handling, return original input

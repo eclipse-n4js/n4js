@@ -17,13 +17,12 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.eclipse.emf.common.util.URI;
-
-import com.google.common.collect.AbstractIterator;
-import com.google.common.collect.ImmutableList;
-
 import org.eclipse.n4js.ArchiveURIUtil;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectReference;
+
+import com.google.common.collect.AbstractIterator;
+import com.google.common.collect.ImmutableList;
 
 /**
  * Internal representation of the known projects. At runtime, it's implemented based on registered project locations, in

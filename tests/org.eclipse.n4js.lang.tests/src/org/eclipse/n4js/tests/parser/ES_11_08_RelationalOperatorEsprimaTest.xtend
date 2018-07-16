@@ -20,7 +20,7 @@ class ES_11_08_RelationalOperatorEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testLessThan() {
-		val program = 'x < y'.parseSuccessfully
+		val program = 'x < y'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val relational = statement.expression as RelationalExpression
 		val op = relational.op
@@ -34,7 +34,7 @@ class ES_11_08_RelationalOperatorEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testGreaterThan() {
-		val program = 'x > y'.parseSuccessfully
+		val program = 'x > y'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val relational = statement.expression as RelationalExpression
 		val op = relational.op
@@ -48,7 +48,7 @@ class ES_11_08_RelationalOperatorEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testLessThanOrEqual() {
-		val program = 'x <= y'.parseSuccessfully
+		val program = 'x <= y'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val relational = statement.expression as RelationalExpression
 		val op = relational.op
@@ -62,7 +62,7 @@ class ES_11_08_RelationalOperatorEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testGreaterThanOrEqual() {
-		val program = 'x >= y'.parseSuccessfully
+		val program = 'x >= y'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val relational = statement.expression as RelationalExpression
 		val op = relational.op
@@ -71,7 +71,7 @@ class ES_11_08_RelationalOperatorEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testIn() {
-		val program = 'x in y'.parseSuccessfully
+		val program = 'x in y'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val relational = statement.expression as RelationalExpression
 		val op = relational.op
@@ -85,7 +85,7 @@ class ES_11_08_RelationalOperatorEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testInstanceOf() {
-		val program = 'x instanceof y'.parseSuccessfully
+		val program = 'x instanceof y'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val relational = statement.expression as RelationalExpression
 		val op = relational.op
@@ -109,7 +109,7 @@ class ES_11_08_RelationalOperatorEsprimaTest extends AbstractParserTest {
 	 */
 	@Test
 	def void testLessThanLessThan() {
-		val program = 'x < y < z'.parseSuccessfully
+		val program = 'x < y < z'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val relational = statement.expression as RelationalExpression
 		val op = relational.op

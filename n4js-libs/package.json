@@ -1,0 +1,13 @@
+{
+	"private": true,
+	"devDependencies": {
+		"lerna": "^2.10.0"
+	},
+	"scripts": {
+		"publish-canary": "./npm-publish-canary.sh",
+		"build": "./npm-build-all.sh"
+	},
+	"workspaces": [
+		"packages/*"
+	]
+}

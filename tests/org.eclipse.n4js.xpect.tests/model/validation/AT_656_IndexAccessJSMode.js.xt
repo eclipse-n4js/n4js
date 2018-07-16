@@ -11,6 +11,9 @@
 
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
 
+
+
+
 var /* any+ */ o;
 // XPECT noerrors --> "Indexed access allowed in JS-mode" at 'o["name"]'
 o["name"]="Hello";

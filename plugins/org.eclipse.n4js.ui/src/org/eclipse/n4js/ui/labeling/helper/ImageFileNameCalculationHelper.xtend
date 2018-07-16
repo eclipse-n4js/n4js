@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.ui.labeling.helper
 
-import com.google.common.base.Strings
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
 import org.eclipse.n4js.n4JS.ExportedVariableStatement
 import org.eclipse.n4js.n4JS.FunctionDeclaration
@@ -22,6 +21,7 @@ import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy
 import org.eclipse.n4js.ts.types.FieldAccessor
 import org.eclipse.n4js.ts.types.MemberAccessModifier
 import org.eclipse.n4js.ts.types.TClass
@@ -35,10 +35,8 @@ import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.TypeAccessModifier
 import org.eclipse.n4js.ts.types.TypesPackage
-import org.eclipse.xtext.resource.IEObjectDescription
-
-import static org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy.*
 import org.eclipse.n4js.ui.labeling.EObjectWithContext
+import org.eclipse.xtext.resource.IEObjectDescription
 
 /**
  * This helper class dispatches the selection of the main image file to use for
@@ -104,7 +102,7 @@ class ImageFileNameCalculationHelper {
 	/* calculation of image file name for types model */
 
 	def dispatch String getImageFileName(TModule tClass) {
-		"submodule.gif"
+		"n4js_module_corr.png"
 	}
 
 	def dispatch String getImageFileName(TClass tClass) {
@@ -113,11 +111,11 @@ class ImageFileNameCalculationHelper {
 
 	def private String getClassFileName(TypeAccessModifier modifier) {
 		switch modifier {
-			case TypeAccessModifier.PUBLIC: "innerclass_public_obj.gif"
-			case TypeAccessModifier.PUBLIC_INTERNAL: "innerclass_protected_obj.gif"
-			case TypeAccessModifier.PROJECT: "innerclass_default_obj.gif"
-			case TypeAccessModifier.PRIVATE: "innerclass_private_obj.gif"
-			default: "innerclass_default_obj.gif"
+			case TypeAccessModifier.PUBLIC: "innerclass_public_obj.png"
+			case TypeAccessModifier.PUBLIC_INTERNAL: "innerclass_protected_obj.png"
+			case TypeAccessModifier.PROJECT: "innerclass_default_obj.png"
+			case TypeAccessModifier.PRIVATE: "innerclass_private_obj.png"
+			default: "innerclass_default_obj.png"
 		}
 	}
 
@@ -127,11 +125,11 @@ class ImageFileNameCalculationHelper {
 
 	def private String getInterfaceFileName(TypeAccessModifier modifier) {
 		switch modifier {
-			case TypeAccessModifier.PUBLIC: "innerinterface_public_obj.gif"
-			case TypeAccessModifier.PUBLIC_INTERNAL: "innerinterface_protected_obj.gif"
-			case TypeAccessModifier.PROJECT: "innerinterface_default_obj.gif"
-			case TypeAccessModifier.PRIVATE: "innerinterface_private_obj.gif"
-			default: "innerinterface_default_obj.gif"
+			case TypeAccessModifier.PUBLIC: "innerinterface_public_obj.png"
+			case TypeAccessModifier.PUBLIC_INTERNAL: "innerinterface_protected_obj.png"
+			case TypeAccessModifier.PROJECT: "innerinterface_default_obj.png"
+			case TypeAccessModifier.PRIVATE: "innerinterface_private_obj.png"
+			default: "innerinterface_default_obj.png"
 		}
 	}
 
@@ -141,21 +139,21 @@ class ImageFileNameCalculationHelper {
 
 	def private String getEnumFileName(TypeAccessModifier modifier) {
 		switch modifier {
-			case TypeAccessModifier.PUBLIC: "enum_obj.gif"
-			case TypeAccessModifier.PUBLIC_INTERNAL: "enum_protected_obj.gif"
-			case TypeAccessModifier.PROJECT: "enum_default_obj.gif"
-			case TypeAccessModifier.PRIVATE: "enum_private_obj.gif"
-			default: "enum_obj.gif"
+			case TypeAccessModifier.PUBLIC: "enum_obj.png"
+			case TypeAccessModifier.PUBLIC_INTERNAL: "enum_protected_obj.png"
+			case TypeAccessModifier.PROJECT: "enum_default_obj.png"
+			case TypeAccessModifier.PRIVATE: "enum_private_obj.png"
+			default: "enum_obj.png"
 		}
 	}
 
 	def dispatch String getImageFileName(TFunction tFunction) {
 		switch tFunction.typeAccessModifier {
-			case TypeAccessModifier.PUBLIC: "function.gif"
-			case TypeAccessModifier.PUBLIC_INTERNAL: "function.gif"
-			case TypeAccessModifier.PROJECT: "function.gif"
-			case TypeAccessModifier.PRIVATE: "function.gif"
-			default: "function.gif"
+			case TypeAccessModifier.PUBLIC: "n4js_function.png"
+			case TypeAccessModifier.PUBLIC_INTERNAL: "n4js_function.png"
+			case TypeAccessModifier.PROJECT: "n4js_function.png"
+			case TypeAccessModifier.PRIVATE: "n4js_function.png"
+			default: "n4js_function.png"
 		}
 	}
 
@@ -211,12 +209,7 @@ class ImageFileNameCalculationHelper {
 	}
 
 	def private TypeAccessModifier tryGetAccessModifier(IEObjectDescription description) {
-		try {
-			val ordinal = Integer.parseInt(Strings.nullToEmpty(description.getUserData(ACCESS_MODIFIERY_KEY)))
-			return TypeAccessModifier.values.findFirst[it.ordinal === ordinal];
-		} catch (NumberFormatException e) {
-			return TypeAccessModifier.PUBLIC;
-		}
+		return N4JSResourceDescriptionStrategy.getTypeAccessModifier(description);
 	}
 
 	// fallback

@@ -32,6 +32,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.common.base.Predicates;
+
 /**
  * Downloads, installs, compiles and runs 'express' for different target platform configurations.
  */
@@ -44,7 +46,7 @@ public class TargetPlatformConfigurationsTest extends AbstractN4jscTest {
 	@Before
 	public void setupWorkspace() throws IOException {
 		setupExternals(platformFiles, description.getMethodName());
-		workspace = setupWorkspace("external_with_n4jsd_tpt");
+		workspace = setupWorkspace("external_with_n4jsd_tpt", Predicates.alwaysTrue());
 	}
 
 	/** Delete workspace. */
@@ -87,7 +89,6 @@ public class TargetPlatformConfigurationsTest extends AbstractN4jscTest {
 		final String[] args = {
 				"--installMissingDependencies",
 				"--targetPlatformInstallLocation", platformFiles.targetPlatformInstallLocation.getAbsolutePath(),
-				"--verbose",
 				"--projectlocations", wsRoot,
 				"--buildType", BuildType.allprojects.toString()
 		};
@@ -114,7 +115,6 @@ public class TargetPlatformConfigurationsTest extends AbstractN4jscTest {
 		final String[] args = {
 				"--clean",
 				"--targetPlatformInstallLocation", platformFiles.targetPlatformInstallLocation.getAbsolutePath(),
-				"--verbose",
 				"--projectlocations", wsRoot,
 				"--buildType", BuildType.allprojects.toString()
 		};
@@ -132,9 +132,7 @@ public class TargetPlatformConfigurationsTest extends AbstractN4jscTest {
 		final String wsRoot = workspace.getAbsolutePath().toString();
 
 		final String[] args = {
-				// "--targetPlatformFile", getTargetPlatformFile().getAbsolutePath(),
 				"--targetPlatformInstallLocation", platformFiles.targetPlatformInstallLocation.getAbsolutePath(),
-				"--verbose",
 				"--projectlocations", wsRoot,
 				"--buildType", BuildType.allprojects.toString()
 		};
@@ -155,7 +153,6 @@ public class TargetPlatformConfigurationsTest extends AbstractN4jscTest {
 		final String[] argsInstall = {
 				"--installMissingDependencies",
 				"--targetPlatformInstallLocation", platformFiles.targetPlatformInstallLocation.getAbsolutePath(),
-				"--verbose",
 				"--projectlocations", wsRoot,
 				"--buildType", BuildType.allprojects.toString()
 		};
@@ -166,7 +163,6 @@ public class TargetPlatformConfigurationsTest extends AbstractN4jscTest {
 		final String[] argsSkipInstall = {
 				// "--installMissingDependencies",
 				"--targetPlatformInstallLocation", platformFiles.targetPlatformInstallLocation.getAbsolutePath(),
-				"--verbose",
 				"--projectlocations", wsRoot,
 				"--buildType", BuildType.allprojects.toString()
 		};

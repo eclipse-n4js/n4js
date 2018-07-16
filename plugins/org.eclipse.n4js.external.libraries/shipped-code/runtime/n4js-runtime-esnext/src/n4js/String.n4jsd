@@ -12,6 +12,7 @@
 
 @Polyfill export @Final external public class String extends String {
     public substr(begin: number, length: number=): string;
+    
+    public padStart(len: int, pad: string=): string;
+    public padEnd(len: int, pad: string=): string;
 }
-
-/* -*- mode: typescript;-*- */

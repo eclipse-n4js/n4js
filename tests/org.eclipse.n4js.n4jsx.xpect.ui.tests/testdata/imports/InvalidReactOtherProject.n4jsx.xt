@@ -18,12 +18,12 @@
 					ThisFile {}
 				}
 			}
-			File "manifest.n4mf" { from="../../manifest_other-project.n4mf" }
+			File "package.json" { from="../../package_other-project.json" }
 		}
 		Project "other-project" {
 			File "react.js" { from = "../../react-implementations/other-project/react.js" }
 			File "index.n4jsd" { from = "../../react-implementations/other-project/react.n4jsd" }
-			File "manifest.n4mf" { from = "../../react-implementations/other-project/manifest.n4mf" }
+			File "package.json" { from = "../../react-implementations/other-project/package.json" }
 		}
 	}
 

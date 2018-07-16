@@ -29,8 +29,10 @@ import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider;
 import org.eclipse.n4js.findReferences.ConcreteSyntaxAwareReferenceFinder;
 import org.eclipse.n4js.generator.ICompositeGenerator;
 import org.eclipse.n4js.generator.IGeneratorMarkerSupport;
+import org.eclipse.n4js.generator.IWorkspaceMarkerSupport;
 import org.eclipse.n4js.generator.N4JSCompositeGenerator;
 import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
+import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectModel.IN4JSCore;
@@ -72,16 +74,21 @@ import org.eclipse.n4js.ui.external.BuildOrderComputer;
 import org.eclipse.n4js.ui.external.EclipseExternalIndexSynchronizer;
 import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
 import org.eclipse.n4js.ui.external.ExternalIndexUpdater;
-import org.eclipse.n4js.ui.external.ExternalLibraryBuildJobProvider;
+import org.eclipse.n4js.ui.external.ExternalLibraryBuildQueue;
+import org.eclipse.n4js.ui.external.ExternalLibraryBuildScheduler;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuilder;
+import org.eclipse.n4js.ui.external.ExternalLibraryErrorMarkerManager;
 import org.eclipse.n4js.ui.external.ExternalProjectProvider;
 import org.eclipse.n4js.ui.external.ProjectStateChangeListener;
 import org.eclipse.n4js.ui.formatting2.FixedContentFormatter;
 import org.eclipse.n4js.ui.generator.GeneratorMarkerSupport;
 import org.eclipse.n4js.ui.internal.ConsoleOutputStreamProvider;
+import org.eclipse.n4js.ui.internal.ContributingModule;
+import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
 import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
 import org.eclipse.n4js.ui.internal.ExternalProjectCacheLoader;
 import org.eclipse.n4js.ui.internal.N4JSEclipseCore;
+import org.eclipse.n4js.ui.internal.ResourceUIValidatorExtension;
 import org.eclipse.n4js.ui.labeling.N4JSContentAssistLabelProvider;
 import org.eclipse.n4js.ui.labeling.N4JSHoverProvider;
 import org.eclipse.n4js.ui.labeling.N4JSHyperlinkLabelProvider;
@@ -105,9 +112,11 @@ import org.eclipse.n4js.ui.search.N4JSEditorResourceAccess;
 import org.eclipse.n4js.ui.search.N4JSReferenceQueryExecutor;
 import org.eclipse.n4js.ui.utils.CancelIndicatorUiExtractor;
 import org.eclipse.n4js.ui.validation.ManifestAwareResourceValidator;
+import org.eclipse.n4js.ui.wizard.project.N4JSProjectCreator;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBroker;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBrokerImpl;
 import org.eclipse.n4js.ui.workingsets.WorkspaceRepositoriesProvider;
+import org.eclipse.n4js.utils.ProjectDescriptionHelper;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.process.OutputStreamPrinterThreadProvider;
 import org.eclipse.n4js.utils.process.OutputStreamProvider;
@@ -160,6 +169,8 @@ import org.eclipse.xtext.ui.editor.validation.MarkerCreator;
 import org.eclipse.xtext.ui.resource.DefaultResourceUIServiceProvider;
 import org.eclipse.xtext.ui.shared.Access;
 import org.eclipse.xtext.ui.util.IssueUtil;
+import org.eclipse.xtext.ui.validation.IResourceUIValidatorExtension;
+import org.eclipse.xtext.ui.wizard.IProjectCreator;
 import org.eclipse.xtext.validation.IResourceValidator;
 
 import com.google.inject.Binder;
@@ -186,9 +197,21 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 		N4jsUiLoggingInitializer.init();
 	}
 
+	/** Delegate to shared injector and obtain an instance directly from the shared injector */
+	public Provider<ContributingResourceDescriptionPersister> providerContributingResourceDescriptionPersister() {
+		return Access.provider(ContributingResourceDescriptionPersister.class);
+	}
+
+	/**
+	 * Delegate to shared injector and obtain a contributed instance that is not a direct object in the shared injector
+	 */
+	public Provider<InternalN4JSWorkspace> provideInternalN4JSWorkspace() {
+		return Access.contributedProvider(InternalN4JSWorkspace.class);
+	}
+
 	/** Delegate to shared injector */
-	public Provider<MarkerCreator> provideMarkerCreator() {
-		return Access.contributedProvider(MarkerCreator.class);
+	public Provider<ExternalLibraryErrorMarkerManager> provideExternalLibraryErrorMarkerManager() {
+		return Access.contributedProvider(ExternalLibraryErrorMarkerManager.class);
 	}
 
 	/** Delegate to shared injector */
@@ -232,8 +255,13 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	}
 
 	/** Delegate to shared injector */
-	public Provider<ExternalLibraryBuildJobProvider> provideExternalLibraryBuildJobProvider() {
-		return Access.contributedProvider(ExternalLibraryBuildJobProvider.class);
+	public Provider<ExternalLibraryBuildScheduler> provideExternalLibraryBuildJobProvider() {
+		return Access.contributedProvider(ExternalLibraryBuildScheduler.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<ExternalLibraryBuildQueue> provideExternalLibraryBuildQueue() {
+		return Access.contributedProvider(ExternalLibraryBuildQueue.class);
 	}
 
 	/** Delegate to shared injector */
@@ -327,6 +355,11 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	}
 
 	/** Delegate to shared injector */
+	public Provider<ProjectDescriptionHelper> provideProjectDescriptionHelper() {
+		return Access.contributedProvider(ProjectDescriptionHelper.class);
+	}
+
+	/** Delegate to shared injector */
 	public Provider<? extends WorkspaceRepositoriesProvider> provideWorkspaceRepositoryProvider() {
 		return Access.contributedProvider(WorkspaceRepositoriesProvider.class);
 	}
@@ -381,12 +414,31 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 		return Access.contributedProvider(ProcessExecutor.class);
 	}
 
+	/** Delegate to shared injector */
+	public Provider<? extends IWorkspaceMarkerSupport> provideIWorkspaceMarkerSupport() {
+		return Access.contributedProvider(IWorkspaceMarkerSupport.class);
+	}
+
 	/**
 	 * Bind the {@link IXtextBuilderParticipant} being aware of generating the Javascript files in the output directory.
 	 */
 	@Override
 	public Class<? extends IXtextBuilderParticipant> bindIXtextBuilderParticipant() {
 		return N4JSBuilderParticipant.class;
+	}
+
+	/**
+	 * Bind the {@link IResourceUIValidatorExtension}.
+	 */
+	public Class<? extends IResourceUIValidatorExtension> bindIResourceUIValidatorExtension() {
+		return ResourceUIValidatorExtension.class;
+	}
+
+	/**
+	 * Bind the {@link MarkerCreator}. Do not delegate to {@link ContributingModule}, see GH-866.
+	 */
+	public Class<? extends MarkerCreator> bindMarkerCreator() {
+		return MarkerCreator.class;
 	}
 
 	@Override
@@ -762,7 +814,7 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 		return N4JSEditorResourceAccess.class;
 	}
 
-	/** Workaround for the problem: file is refreshed when opened */
+	/** A document provider that will not cancel a build when opening a file. */
 	public Class<? extends XtextDocumentProvider> bindXtextDocumentProvider() {
 		return AvoidRefreshDocumentProvider.class;
 	}
@@ -808,5 +860,10 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	/** Bind custom ReferenceSearchResultContentProvider. Workaround to fix GH-724. */
 	public Class<? extends ReferenceSearchResultContentProvider> bindReferenceSearchResultContentProvider() {
 		return MyReferenceSearchResultContentProvider.class;
+	}
+
+	/** Bind custom IProjectCreator for creating N4JS projects using the project wizard. */
+	public Class<? extends IProjectCreator> bindN4JSProjectCreator() {
+		return N4JSProjectCreator.class;
 	}
 }

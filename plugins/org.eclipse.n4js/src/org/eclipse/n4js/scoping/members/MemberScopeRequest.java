@@ -84,4 +84,16 @@ public class MemberScopeRequest {
 		return new MemberScopeRequest(originalReceiverTypeRef, context, provideContainedMembers, checkVisibility,
 				false, structFieldInitMode);
 	}
+
+	/**
+	 * Returns a request similar to the receiving one, but with the given {@link #structFieldInitMode structural field
+	 * init mode}.
+	 */
+	public MemberScopeRequest setStructFieldInitMode(boolean structFieldInitMode) {
+		if (this.structFieldInitMode == structFieldInitMode) {
+			return this;
+		}
+		return new MemberScopeRequest(originalReceiverTypeRef, context, provideContainedMembers, checkVisibility,
+				staticAccess, structFieldInitMode);
+	}
 }

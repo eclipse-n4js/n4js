@@ -19,7 +19,7 @@ class N4_09_03_1_ConstVariableDeclarationsWithConst extends AbstractParserTest {
 
 	@Test
 	def void testSimpleVar() {
-		val script = 'var x = 1'.parseSuccessfully
+		val script = 'var x = 1'.parseESSuccessfully
 		val statement = script.scriptElements.head as VariableStatement
 		val declaration = statement.varDecl.head
 		assertEquals('x', declaration.name)
@@ -28,7 +28,7 @@ class N4_09_03_1_ConstVariableDeclarationsWithConst extends AbstractParserTest {
 
 	@Test
 	def void testVarWithType() {
-		val script = 'var x: any = 1'.parseSuccessfully
+		val script = 'var x: any = 1'.parseESSuccessfully
 		val statement = script.scriptElements.head as VariableStatement
 		val declaration = statement.varDecl.head
 		assertEquals('x', declaration.name)
@@ -37,7 +37,7 @@ class N4_09_03_1_ConstVariableDeclarationsWithConst extends AbstractParserTest {
 
 	@Test
 	def void testSimpleConst() {
-		val script = 'const x = 1'.parseSuccessfully
+		val script = 'const x = 1'.parseESSuccessfully
 		val statement = script.scriptElements.head as VariableStatement
 		val declaration = statement.varDecl.head
 		assertEquals('x', declaration.name)
@@ -53,34 +53,34 @@ class N4_09_03_1_ConstVariableDeclarationsWithConst extends AbstractParserTest {
 	@Test
 	def void testVarWithClassExpr() {
 		'''var foo = 5,
-			class A { a = new A(); }'''.parseWithError
+			class A { a = new A(); }'''.parseESWithError
 	}
 
 	@Test
 	def void testVarWithClassExpr2() {
 		'''var foo = 5,/*
 			*/
-			class A { a = new A(); }'''.parseWithError
+			class A { a = new A(); }'''.parseESWithError
 	}
 	@Test
 	def void testVarWithClassExpr3() {
 		'''var foo = 5,
-			class A { a = new A(); }'''.parseWithError
+			class A { a = new A(); }'''.parseESWithError
 	}
 	@Test
 	def void testVarWithClassExpr4() {
 		'''var foo = 5, /* hello */
-			class A { a = new A(); }'''.parseWithError
+			class A { a = new A(); }'''.parseESWithError
 	}
 
 	@Test
 	def void testVarWithClassExpr5() {
 		'''var foo = 5;
-		   console.log(foo)'''.parseSuccessfully
+		   console.log(foo)'''.parseESSuccessfully
 		'''var foo = 5
-		   console.log(foo)'''.parseSuccessfully
+		   console.log(foo)'''.parseESSuccessfully
 		val script = '''var foo = 5,
-		   console.log(foo)'''.parseWithError
+		   console.log(foo)'''.parseESWithError
 		assertEquals(1, script.eResource.errors.size)
 		assertEquals("no viable alternative at input '.'", script.eResource.errors.head.message)
 	}
@@ -88,6 +88,6 @@ class N4_09_03_1_ConstVariableDeclarationsWithConst extends AbstractParserTest {
 	@Test
 	def void testVarWithClassExpr6() {
 		'''var foo = 5,
-		   x: qualified.Name = (foo)'''.parseSuccessfully
+		   x: qualified.Name = (foo)'''.parseESSuccessfully
 	}
 }

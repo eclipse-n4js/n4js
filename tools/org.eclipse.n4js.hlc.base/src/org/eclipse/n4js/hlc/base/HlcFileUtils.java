@@ -13,6 +13,7 @@ package org.eclipse.n4js.hlc.base;
 import java.io.File;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.utils.URIUtils;
 
 /**
  * Utilities for working with IO.
@@ -60,7 +61,7 @@ public class HlcFileUtils {
 
 	/** convert file to {@code URI} */
 	public static URI fileToURI(File file) {
-		return URI.createURI(file.toURI().toString());
+		return URIUtils.normalize(URI.createURI(file.toURI().toString()));
 	}
 
 }

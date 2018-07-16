@@ -1,5 +1,6 @@
 {
   "name": "org.eclipse.n4js.mangelhaft.reporter.ide.test",
+  "version": "0.1.0",
   "author": {
     "name": "NumberFour AG",
     "email": "npm@numberfour.eu"
@@ -18,5 +19,34 @@
   ],
   "engines": {
     "node": ">= 5.0.0"
+  },
+  "n4js": {
+    "projectType": "test",
+    "vendorId": "org.eclipse.n4js",
+    "vendorName": "Eclipse N4JS Project",
+    "output": "src-gen",
+    "sources": {
+      "test": [
+        "test/n4js"
+      ]
+    },
+    "requiredRuntimeLibraries": [
+      "n4js-runtime-fetch",
+      "n4js-runtime-mangelhaft"
+    ],
+    "testedProjects": [
+      "org.eclipse.n4js.mangelhaft.reporter.ide"
+    ],
+    "moduleLoader": "n4js"
+  },
+  "dependencies": {
+    "org.eclipse.n4js.mangelhaft.reporter.ide": "^0.1.0",
+    "org.eclipse.n4js.mangelhaft.assert": "^0.1.0",
+    "org.eclipse.n4js.mangelhaft": "^0.1.0",
+    "n4js-node": "^0.1.0"
+  },
+  "devDependencies": {
+    "n4js-runtime-fetch": "^0.1.0",
+    "n4js-runtime-mangelhaft": "^0.1.0"
   }
 }

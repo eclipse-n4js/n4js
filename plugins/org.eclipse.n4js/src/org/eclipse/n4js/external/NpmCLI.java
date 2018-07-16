@@ -13,7 +13,6 @@ package org.eclipse.n4js.external;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -21,12 +20,13 @@ import java.util.LinkedHashSet;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.binaries.BinaryCommandFactory;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
-import org.eclipse.n4js.external.libraries.PackageJson;
 import org.eclipse.n4js.utils.ProcessExecutionCommandStatus;
+import org.eclipse.n4js.utils.ProjectDescriptionHelper;
 import org.eclipse.n4js.utils.StatusHelper;
 
 import com.google.inject.Inject;
@@ -54,7 +54,7 @@ public class NpmCLI {
 	private NpmLogger logger;
 
 	@Inject
-	private NpmPackageToProjectAdapter packageAdapter;
+	private ProjectDescriptionHelper projectDescriptionHelper;
 
 	/** Simple validation if the package name is not null or empty */
 	public boolean invalidPackageName(String packageName) {
@@ -114,8 +114,13 @@ public class NpmCLI {
 		Collection<LibraryChange> actualChanges = new LinkedHashSet<>();
 		File installPath = new File(locationProvider.getTargetPlatformInstallLocation());
 
+		final String jobName = addressedType.name().toLowerCase();
+
 		int i = 0;
 		for (LibraryChange reqChg : requestedChanges) {
+			if (subMonitor.isCanceled())
+				throw new OperationCanceledException("Operation <" + jobName + "> was canceled.");
+
 			if (reqChg.type == addressedType) {
 				String msgTail = " [package " + i++ + " of " + pckCount + "]";
 				subMonitor.setTaskName(reqChg.toString() + msgTail);
@@ -124,11 +129,13 @@ public class NpmCLI {
 					actualChanges.add(actChg);
 				}
 				subMonitor.worked(1);
+				if (!batchStatus.isOK()) {
+					break; // fail fast and do not let the user wait for the problem
+				}
 			}
 		}
 
 		if (!batchStatus.isOK()) {
-			String jobName = addressedType.name().toLowerCase();
 			logger.logInfo("Some packages could not be " + jobName + "ed due to errors, see log for details.");
 			status.merge(batchStatus);
 		}
@@ -147,6 +154,11 @@ public class NpmCLI {
 		if (reqChg.type == LibraryChangeType.Install) {
 			packageProcessingStatus = install(reqChg.name, reqChg.version, installPath);
 
+			if (packageProcessingStatus == null || !packageProcessingStatus.isOK()) {
+				batchStatus.merge(packageProcessingStatus);
+				return null;
+			}
+
 			actualChangeType = LibraryChangeType.Added;
 			actualVersion = getActualVersion(batchStatus, reqChg, completePath);
 		}
@@ -154,34 +166,33 @@ public class NpmCLI {
 			actualVersion = getActualVersion(batchStatus, reqChg, completePath);
 
 			packageProcessingStatus = uninstall(reqChg.name, installPath);
+			if (packageProcessingStatus == null || !packageProcessingStatus.isOK()) {
+				batchStatus.merge(packageProcessingStatus);
+				return null;
+			}
+
 			actualChangeType = LibraryChangeType.Removed;
 		}
 
-		if (packageProcessingStatus != null) {
-			if (batchStatus.isOK() && !packageProcessingStatus.isOK()) {
-				logger.logError(packageProcessingStatus);
-				batchStatus.merge(packageProcessingStatus);
-			}
-			if (batchStatus.isOK()) {
-				URI actualLocation = URI.createFileURI(completePath.toString());
-				actualChange = new LibraryChange(actualChangeType, actualLocation, reqChg.name, actualVersion);
-			}
+		if (packageProcessingStatus != null && packageProcessingStatus.isOK()) {
+			URI actualLocation = URI.createFileURI(completePath.toString());
+			actualChange = new LibraryChange(actualChangeType, actualLocation, reqChg.name, actualVersion);
 		}
 
 		return actualChange;
 	}
 
 	private String getActualVersion(MultiStatus batchStatus, LibraryChange reqChg, Path completePath) {
-		try {
-			PackageJson packageJson = packageAdapter.getPackageJson(completePath.toFile());
-			return packageJson.version;
-		} catch (IOException e) {
+		URI location = URI.createFileURI(completePath.toString());
+		String versionStr = projectDescriptionHelper.loadVersionFromProjectDescriptionAtLocation(location);
+		if (versionStr == null) {
 			String msg = "Error reading package json when " + reqChg.toString();
-			IStatus packJsonError = statusHelper.createError(msg, e);
-			logger.logError(msg, e);
+			IStatus packJsonError = statusHelper.createError(msg);
+			logger.logError(msg, new IllegalStateException(msg));
 			batchStatus.merge(packJsonError);
+			return "";
 		}
-		return "";
+		return versionStr;
 	}
 
 	/**

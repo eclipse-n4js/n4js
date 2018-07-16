@@ -11,6 +11,10 @@
 
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
 
+
+
+
+
 "use strict"
 export public class Foo {
 // XPECT noerrors --> "members starting with $ are allowed in js files (although member containing constructs shouldn't be allowed in js files" at '$goo'

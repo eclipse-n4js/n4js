@@ -13,12 +13,12 @@
    Workspace {
    	 Project "IDEBUG-323" {
    	 	Folder "src" { File "IDEBUG_0261_Imported.n4js" {} }
-   	 	File "manifest.n4mf" { from="manifest_A.n4mf" }
+   	 	File "package.json" { from="package_A.json" }
    	 }
    	 Project "IDEBUG-323_B" {
    	 	Folder "src" { ThisFile {} }
 
-   	 	File "manifest.n4mf" { from="manifest_B.n4mf" }
+   	 	File "package.json" { from="package_B.json" }
    	 }
    }
    END_SETUP

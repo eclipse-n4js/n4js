@@ -14,12 +14,12 @@
    	Project "IDEBUG-314_A" {
    	 	Folder "src" { 	Folder "a" { File "TAM.n4js" {} }
    	 	}
-   	 	File "manifest.n4mf" { from="manifest_A.n4mf" }
+   	 	File "package.json" { from="package_A.json" }
    	}
    	Project "IDEBUG-314_B" {
    	 	Folder "src" { 	Folder "b" { ThisFile {} }
    	 	}
-   	 	File "manifest.n4mf" { from="manifest_B.n4mf" }
+   	 	File "package.json" { from="package_B.json" }
    	 }
    }
    END_SETUP

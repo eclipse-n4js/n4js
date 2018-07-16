@@ -1,6 +1,6 @@
-FROM openjdk:8u151-jdk
+FROM openjdk:8u171-jdk-stretch
 
-LABEL version="0.1.0" \
+LABEL version="0.1.3" \
       description="Build n4js with Maven. Includes xvfb, node." \
       maintainer="N4JS Team <n4js-dev@eclipse.org>"
 
@@ -11,7 +11,6 @@ VOLUME /workspace
 WORKDIR /workspace
 
 ENTRYPOINT ["/usr/local/bin/mvn-entrypoint.sh"]
-CMD ["mvn"]
 
 #
 # Maven installation:
@@ -19,17 +18,25 @@ CMD ["mvn"]
 # and https://hub.docker.com/_/maven/
 #
 ARG MAVEN_VERSION=3.5.2
-ARG USER_HOME_DIR="/root"
+ARG USER_HOME_DIR="/home/build"
 ARG SHA=707b1f6e390a65bde4af4cdaf2a24d45fc19a6ded00fff02e91626e3e42ceaff
 ARG BASE_URL=https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries
 ARG MAVEN_CENTRAL_URL=https://repo.maven.apache.org/maven2/
+
+# Assigning build-user to 1000
+RUN groupadd --gid 1000 build && \
+    useradd --uid 1000 --gid build --shell /bin/bash --create-home build
+
+# Add build user to the docker group
+RUN groupadd -g 994 docker && usermod -aG docker build
 
 RUN mkdir -p /usr/share/maven /usr/share/maven/ref && \
     curl -fsSL -o /tmp/apache-maven.tar.gz ${BASE_URL}/apache-maven-$MAVEN_VERSION-bin.tar.gz && \
     echo "${SHA}  /tmp/apache-maven.tar.gz" | sha256sum -c - && \
     tar -xzf /tmp/apache-maven.tar.gz -C /usr/share/maven --strip-components=1 && \
     rm -f /tmp/apache-maven.tar.gz && \
-    ln -s /usr/share/maven/bin/mvn /usr/bin/mvn
+    ln -s /usr/share/maven/bin/mvn /usr/bin/mvn && \
+    chown -R build:build /usr/share/maven
 
 ENV MAVEN_HOME   /usr/share/maven
 ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
@@ -39,15 +46,19 @@ COPY copy-reference-files.sh /usr/local/bin/
 COPY mvn-entrypoint.sh /usr/local/bin/
 COPY settings.xml /usr/share/maven/ref/
 RUN sed -i -e 's|MAVEN_CENTRAL_URL|'"$MAVEN_CENTRAL_URL"'|g' /usr/share/maven/ref/settings.xml && \
-    /usr/local/bin/copy-reference-files.sh
+    /usr/local/bin/copy-reference-files.sh && \
+    mkdir -p /usr/share/maven/ref/repository/ && \
+    chown -R build:build /usr/share/maven/ref
+
 
 #
 # The remaining part has been inspired by:
 # https://github.com/nodejs/docker-node/blob/master/8.9/wheezy/Dockerfile
 #
 
-RUN groupadd --gid 1000 node && \
-    useradd --uid 1000 --gid node --shell /bin/bash --create-home node
+# Assigning node-user to 1001
+RUN groupadd --gid 1001 node && \
+    useradd --uid 1001 --gid node --shell /bin/bash --create-home node
 
 RUN set -ex && \
     for key in \
@@ -68,7 +79,7 @@ RUN set -ex && \
 #
 # Node install
 #
-ENV NODE_VERSION 8.11.1
+ENV NODE_VERSION 8.11.2
 
 RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" && \
     case "${dpkgArch##*-}" in \
@@ -107,9 +118,41 @@ RUN set -ex && \
     rm yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz
 
 #
+# lerna install
+#
+RUN npm install -g lerna
+
+#
 # xvfb install
 #
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         xauth \
         xvfb
+
+#
+# docker install
+# 
+RUN apt-get update && \ 
+  apt-get install -y --no-install-recommends \
+     apt-transport-https \
+     ca-certificates \
+     curl \
+     gnupg2 \
+     software-properties-common
+     
+
+RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
+
+RUN lsb_release -cs
+
+RUN add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/debian \
+   $(lsb_release -cs) \
+   stable"
+
+RUN apt-get update && \
+  apt-get install -y docker-ce
+
+EXPOSE 4873
+EXPOSE 4874

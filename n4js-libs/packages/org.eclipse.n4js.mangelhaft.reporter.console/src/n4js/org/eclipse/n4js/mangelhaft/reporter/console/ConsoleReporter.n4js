@@ -1,0 +1,172 @@
+/*
+ * Copyright (c) 2018 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+import {IInstrumentedTest} from "org/eclipse/n4js/mangelhaft/types/IInstrumentedTest"
+import {ITestReporter} from "org/eclipse/n4js/mangelhaft/types/ITestReporter"
+import {ResultGroups} from "org/eclipse/n4js/mangelhaft/types/ResultGroups"
+import {TestMethodDescriptor} from "org/eclipse/n4js/mangelhaft/types/TestMethodDescriptor"
+import {TestResult} from "org/eclipse/n4js/mangelhaft/types/TestResult"
+import {TestSpy} from "org/eclipse/n4js/mangelhaft/types/TestSpy"
+import {TestStatus} from "org/eclipse/n4js/mangelhaft/types/TestStatus"
+
+export public class ~CliColor {
+    public red(str: string): string {
+        return str;
+    }
+    public green(str: string): string {
+        return str;
+    }
+    public cyan(str: string): string {
+        return str;
+    }
+    public yellow(str: string): string {
+        return str;
+    }
+    public bold(str: string): string {
+        return str;
+    }
+}
+//const this.cliColor = typeof System === "object" && typeof System._nodeRequire === "function" ? System._nodeRequire("cli-color") as this.cliColor_ : new FakeCliColor();
+
+
+// Odd export of cli-color via prototype
+
+export public class ConsoleReporter implements ITestReporter {
+    public timeoutBuffer: number = 1000 * 30;
+    private logger: {function(...any):void} = function(... messages: any) {console.log.apply(console, messages);};
+    private buffered = false;
+    public buffer: Array<Array<?>> = [];
+    public cliColor = new CliColor();
+    @Inject
+    @Override public spy: TestSpy;
+
+    public setLogger(logger: {function(...any):void}): this {
+        this.logger = logger;
+        return this;
+    }
+    
+    public setBuffered(shouldBuffer: boolean): this {
+        let that = this;
+        this.buffered = shouldBuffer;
+        if (shouldBuffer === true) {
+            this.logger = function(... messages: any){
+                that.buffer.push(messages);
+            }
+        }
+        return this;
+    }
+    private errorsOnly: boolean = false
+    public setErrorsOnly() {
+        this.errorsOnly = true;
+    } 
+    
+    public unsuccessfulTests:Array<string> = [];
+    
+    @Override public async register() {
+        let indent = 0;
+        this.spy.testingStarted.add((numAllGroups: number, sid: string, numAllTests: number) => {
+            this.logger.call(this, `${"   ".repeat(indent)}Begin tests`)
+        });
+        this.spy.parameterizedGroupsStarted.add(group =>{
+            ++indent;
+            this.logger.call(this, `${"   ".repeat(indent)} Parameterized Group ${group.name}:`);
+        });
+        this.spy.groupStarted.add(group => {
+            ++indent;
+            let name = group.parameterizedName ? group.parameterizedName : this.cliColor.bold("Group " +group.name);
+            this.logger.call(this, `${"   ".repeat(indent)} ${name}:`);
+        });
+
+        this.spy.testFinished.add((group: IInstrumentedTest, test: TestMethodDescriptor, testResult: TestResult): boolean? => {
+            let unsuccessString = "FAIL";
+            ++indent;
+            if (!testResult) {
+                let err = new Error("testResult is null in handleTestFinished");
+                console.error(this.constructor.n4type.fqn,test? test.name: "unknown test", err, err.stack);
+                return true;
+            }
+            switch(testResult.testStatus) {
+                case TestStatus.passed: {
+                    if (!this.errorsOnly) {
+                        this.logger.call(this, `${"   ".repeat(indent)} ${test.name} : ${this.cliColor.green("OK")}`);
+                    }
+                    break;
+                }
+                case TestStatus.error:
+                    unsuccessString = this.cliColor.red("ERROR");
+                //fallthrough
+                case TestStatus.failed: {
+                    let trace: string;
+                    try {
+                        trace = this.cliColor.red(testResult && testResult.trace && testResult.trace.length ?
+                        testResult.trace.join("\n"): "NO TRACE");
+                    } catch (er) {
+                        this.logger(er, this.cliColor.red(typeof (testResult.trace)));
+                        trace = testResult.trace.toString();
+                    }
+                    
+                    this.logger(`${"   ".repeat(indent)} ${test.name} :  ${unsuccessString}`);
+                    this.logger(`${"   ".repeat(indent + 1)} ${this.cliColor.red(testResult.message)}`);
+                    this.logger(`${"   ".repeat(indent + 1)} Stack: ${trace.split(/\n/).join("\n"+ "   ".repeat(indent + 1))}`);
+                    this.unsuccessfulTests.push(`${group.name}#${test.name}`);
+                    break;
+                }
+                case TestStatus.skipped_precondition: {
+                    if (!this.errorsOnly) {
+                        this.logger.call(this, `${"   ".repeat(indent)} ${test.name} : ${this.cliColor.cyan("SKIPPED_PRECONDITION")}`);
+                    }
+                    break;
+                }
+                case TestStatus.skipped_not_implemented: {
+                    if (!this.errorsOnly) {
+                        this.logger.call(this, `${"   ".repeat(indent)} ${test.name} : ${this.cliColor.cyan("SKIPPED_NOT_IMPLEMENTED")}`);
+                    }
+                    break;
+                }
+                case TestStatus.skipped_ignore: {
+                    if (!this.errorsOnly) {
+                        this.logger.call(this, `${"   ".repeat(indent)} ${test.name} : ${this.cliColor.yellow("SKIPPED_IGNORE")}`);
+                    }
+                    break;
+                }
+                case TestStatus.skipped_fixme: {
+                    if (!this.errorsOnly) {
+                        this.logger.call(this, `${"   ".repeat(indent)} ${test.name} : ${this.cliColor.yellow("SKIPPED_FIXME")}`);
+                    }
+                    break;
+                }
+                case TestStatus.skipped: {
+                    if (!this.errorsOnly) {
+                        this.logger.call(this, `${"   ".repeat(indent)} ${test.name} : ${this.cliColor.yellow("SKIPPED")}`);
+                    }
+                    break;
+                }
+                default: {
+                    this.logger.call(this, `${"   ".repeat(indent)} ${test.name} : ${this.cliColor.red("UNKNOWN_TEST_RESULT")}`);
+                    break;
+                }
+            }
+            --indent;
+        });
+        this.spy.groupFinished.add(group => {
+            --indent;
+        });
+
+        this.spy.parameterizedGroupsFinished.add(group => {
+            --indent;
+        });
+
+        this.spy.testingFinished.add(async (resultGroups: ResultGroups) => {
+            this.logger.call(this, "Tests done.")
+        });
+
+        return this;
+    }
+}

@@ -282,7 +282,9 @@ public class UtilN4 {
 		final Path rootPath = findN4jsRepoRootPathFailSafe();
 		if (rootPath == null || !rootPath.toFile().exists() || !rootPath.toFile().isDirectory()) {
 			throw new IllegalStateException(
-					"N4JS repository root path not found (does the current working directory lie inside an N4JS repository clone?)");
+					"N4JS repository root path not found (does the current working directory lie inside "
+							+ "an N4JS repository clone?) starting from working directory " +
+							new File("").getAbsolutePath() + ".");
 		}
 		return rootPath;
 	}

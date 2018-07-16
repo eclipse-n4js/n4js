@@ -30,14 +30,35 @@ public abstract class AbstractParserTest extends Assert {
 	@Inject
 	protected extension N4JSParseHelper
 
-	protected def Script parseSuccessfully(CharSequence js) {
+	protected def Script parseJSSuccessfully(CharSequence js) {
 		val script = js.parseUnrestricted
 		assertTrue(script.eResource.errors.join('\n') [ line + ': ' + message] , script.eResource.errors.empty)
 		return script
 	}
 
-	protected def parseWithError(CharSequence js) {
+	protected def parseJSWithError(CharSequence js) {
 		val script = js.parseUnrestricted
+		val errors = script.eResource.errors;
+		assertFalse(errors.toString, errors.empty)
+		return script
+	}
+
+	protected def Script parseESSuccessfully(CharSequence js) {
+		return parseJSSuccessfully(js);
+	}
+
+	protected def parseESWithError(CharSequence js) {
+		return parseJSWithError(js);
+	}
+
+	protected def Script parseN4jsSuccessfully(CharSequence js) {
+		val script = js.parseN4js
+		assertTrue(script.eResource.errors.join('\n') [ line + ': ' + message] , script.eResource.errors.empty)
+		return script
+	}
+
+	protected def parseN4jsWithError(CharSequence js) {
+		val script = js.parseN4js
 		val errors = script.eResource.errors;
 		assertFalse(errors.toString, errors.empty)
 		return script

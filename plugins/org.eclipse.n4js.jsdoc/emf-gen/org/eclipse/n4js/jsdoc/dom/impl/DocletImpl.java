@@ -11,6 +11,7 @@
 package org.eclipse.n4js.jsdoc.dom.impl;
 
 import com.google.common.base.Objects;
+
 import java.lang.reflect.InvocationTargetException;
 
 import java.util.Collection;
@@ -29,6 +30,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.n4js.jsdoc.dom.Doclet;
 import org.eclipse.n4js.jsdoc.dom.DomPackage;
 import org.eclipse.n4js.jsdoc.dom.LineTag;
+
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 
 import org.eclipse.xtext.xbase.lib.IterableExtensions;

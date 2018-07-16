@@ -20,7 +20,7 @@ class ES_07_04_CommentParserEcmaTest extends AbstractParserTest {
 
 	@Test
 	def void testDoubleClosedComment() {
-		val script = '/* var */ x*/'.parseWithError
+		val script = '/* var */ x*/'.parseESWithError
 		val statement = script.scriptElements.head as ExpressionStatement
 		val multi = statement.expression as MultiplicativeExpression
 		assertEquals('x', (multi.lhs as IdentifierRef).text)

@@ -23,6 +23,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.n4js.N4JSGlobals;
 
 import com.google.common.io.Files;
 
@@ -34,7 +35,7 @@ import com.google.common.io.Files;
 public final class ProjectsSettingsFilesLocator {
 	private static final String GIT = ".git";
 	private static final String NPMRC = "npmrc";
-	private static final String NODE_MODULES = "node_modules";
+	private static final String NODE_MODULES = N4JSGlobals.NODE_MODULES;
 	private static final Logger LOGGER = Logger.getLogger(ProjectsSettingsFilesLocator.class);
 
 	private final Set<File> foundNPMRC = new HashSet<>();
@@ -54,15 +55,21 @@ public final class ProjectsSettingsFilesLocator {
 	 * @return instance with all data found during scanning.
 	 */
 	public static ProjectsSettingsFilesLocator findFiles(IProgressMonitor monitor) {
+		ProjectsSettingsFilesLocator locator = new ProjectsSettingsFilesLocator();
+
+		if (monitor.isCanceled())
+			return locator;
 
 		Set<File> files = new HashSet<>();
 		final Set<File> roots = new HashSet<>();
 		IResource[] resources = getResources();
 		if (resources == null)
-			return null;
+			return locator;
 
 		// initial sets of files and folders
 		for (IResource resource : resources) {
+			if (monitor.isCanceled())
+				break;
 			File file = resource.getLocation().makeAbsolute().toFile();
 			if (file.isDirectory()) {
 				roots.add(file);
@@ -71,8 +78,8 @@ public final class ProjectsSettingsFilesLocator {
 			}
 		}
 
-		ProjectsSettingsFilesLocator locator = new ProjectsSettingsFilesLocator();
-		locator.scan(roots, files, monitor);
+		if (!monitor.isCanceled())
+			locator.scan(roots, files, monitor);
 		return locator;
 	}
 
@@ -93,6 +100,8 @@ public final class ProjectsSettingsFilesLocator {
 		shallowMonitor.beginTask("Scanning workspace roots for config files", 10);
 		shallowMonitor.beginTask("Shallow workspace scan...", files.size());
 		for (File file : files) {
+			if (monitor.isCanceled())
+				break;
 			processFile(file);
 			shallowMonitor.worked(1);
 		}
@@ -102,6 +111,8 @@ public final class ProjectsSettingsFilesLocator {
 		final SubMonitor deepMonitor = subMonitor.split(90);
 		deepMonitor.beginTask("Deep workspace scan...", roots.size());
 		for (Path path : actualRoots) {
+			if (monitor.isCanceled())
+				break;
 			File root = path.toFile();
 			deepMonitor.setTaskName("Scanning " + root.getName() + "...");
 			processContainer(root);

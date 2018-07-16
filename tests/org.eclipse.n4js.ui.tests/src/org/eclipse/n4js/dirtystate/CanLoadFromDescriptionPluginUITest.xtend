@@ -19,6 +19,10 @@ import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.emf.common.util.URI
 import org.junit.Ignore
 import org.junit.Test
+import org.eclipse.n4js.N4JSGlobals
+
+import static org.junit.Assert.*
+import org.eclipse.n4js.tests.util.EclipseUIUtils
 
 /**
  * 
@@ -127,8 +131,8 @@ class CanLoadFromDescriptionPluginUITest extends AbstractCanLoadFromDescriptionT
 		project = createJSProject(projectName)
 		val ICoreRunnable runnable = [
 			srcFolder = configureProjectWithXtext(project)
-			val manifest = project.getFile("manifest.n4mf")
-			assertMarkers("manifest should have no errors", manifest, 0)
+			val projectDescriptionFile = project.getFile(N4JSGlobals.PACKAGE_JSON);
+			assertMarkers("project description file (package.json) should have no errors", projectDescriptionFile, 0)
 	
 			srcFolderM = srcFolder.getFolder("m")
 			srcFolderM.create(true, true, null)
@@ -158,7 +162,7 @@ class CanLoadFromDescriptionPluginUITest extends AbstractCanLoadFromDescriptionT
 	def void test_inEditor_allFromIndex() {
 		prepare("TestInEditorSimple")
 
-		val page = getActivePage()
+		val page = EclipseUIUtils.getActivePage()
 		val editorA1 = openAndGetXtextEditor(fileA1, page)
 		val errorsA1 = getEditorValidationErrors(editorA1)
 		assertEquals("editor for file A should not have any errors", #[], errorsA1)
@@ -176,7 +180,7 @@ class CanLoadFromDescriptionPluginUITest extends AbstractCanLoadFromDescriptionT
 	def void test_inEditor_a1_c() {
 		prepare("TestInEditorA1_C")
 
-		val page = getActivePage()
+		val page = EclipseUIUtils.getActivePage()
 		val editorA1 = openAndGetXtextEditor(fileA1, page)
 		val editorC = openAndGetXtextEditor(fileC, page)
 		val errorsA1 = getEditorValidationErrors(editorA1)
@@ -204,7 +208,7 @@ class CanLoadFromDescriptionPluginUITest extends AbstractCanLoadFromDescriptionT
 	def void test_inEditor_a2_d() {
 		prepare("TestInEditorA2_D")
 
-		val page = getActivePage()
+		val page = EclipseUIUtils.getActivePage()
 		val editorA2 = openAndGetXtextEditor(fileA2, page)
 		val editorD = openAndGetXtextEditor(fileD, page)
 		val errorsA2 = getEditorValidationErrors(editorA2)
@@ -237,7 +241,7 @@ class CanLoadFromDescriptionPluginUITest extends AbstractCanLoadFromDescriptionT
 	def void test_inEditor_a1_b1() {
 		prepare("TestInEditorA1_B1")
 
-		val page = getActivePage()
+		val page = EclipseUIUtils.getActivePage()
 		val editorA1 = openAndGetXtextEditor(fileA1, page)
 		val editorB1 = openAndGetXtextEditor(fileB1, page)
 		val errorsA1 = getEditorValidationErrors(editorA1)
@@ -264,7 +268,7 @@ class CanLoadFromDescriptionPluginUITest extends AbstractCanLoadFromDescriptionT
 	def void test_inEditor_a2_p() {
 		prepare("TestInEditorA2_P")
 
-		val page = getActivePage()
+		val page = EclipseUIUtils.getActivePage()
 		val editorA2 = openAndGetXtextEditor(fileA2, page)
 		val editorP = openAndGetXtextEditor(fileP, page)
 		val errorsA2 = getEditorValidationErrors(editorA2)
@@ -292,7 +296,7 @@ class CanLoadFromDescriptionPluginUITest extends AbstractCanLoadFromDescriptionT
 	def void test_inEditor_a2_q() {
 		prepare("TestInEditorA2_Q")
 
-		val page = getActivePage()
+		val page = EclipseUIUtils.getActivePage()
 		val editorA2 = openAndGetXtextEditor(fileA2, page)
 		val editorQ = openAndGetXtextEditor(fileQ, page)
 		val errorsA2 = getEditorValidationErrors(editorA2)

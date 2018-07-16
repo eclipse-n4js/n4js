@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
@@ -34,13 +34,10 @@ class Version implements Comparable<Version> {
 	/** Singleton for representing a missing version. */
 	public val static MISSING = new Version(0, 0, 0, null);
 
-
 	val int major;
 	val int minor;
 	val int micro;
-	// TODO build meta data not supported https://semver.org/#spec-item-10
-	// remove transient to include in equals hash code once versions are supported.
-	val transient String qualifier;
+	val String qualifier;
 
 	/**
 	 * Returns with {@code true} if the version argument is neither {@code null}, nor the {@link #MISSING} one.
@@ -56,7 +53,7 @@ class Version implements Comparable<Version> {
 			return MISSING;
 		}
 
-		//Strip all leading non-numeric characters.
+		// Strip all leading non-numeric characters.
 		var finished = false;
 		var firstDigitIndex = 0;
 		while (!finished && firstDigitIndex < toRead.length) {
@@ -73,13 +70,12 @@ class Version implements Comparable<Version> {
 		}
 
 		val tailValues = values.get(2).split('-', 2);
-		if(tailValues.size == 2){
+		if (tailValues.size == 2) {
 			values.set(2, tailValues.get(0))
 			values.add(tailValues.get(1))
-		}else if(tailValues.size > 2){
+		} else if (tailValues.size > 2) {
 			LOGGER.warn('''Error while parsing version qualifier form string '«toRead»'. Ignoring qualifier.''');
 		}
-
 
 		val int[] numbers = newIntArrayOfSize(3);
 		try {
@@ -91,7 +87,8 @@ class Version implements Comparable<Version> {
 			return MISSING;
 		}
 
-		return new Version(numbers.get(0), numbers.get(1), numbers.get(2), if (4 === values.length) values.get(3) else null);
+		return new Version(numbers.get(0), numbers.get(1), numbers.get(2),
+			if (4 === values.length) values.get(3) else null);
 	}
 
 	static def Version findClosestMatching(Iterable<Version> versions, Version toFind) {
@@ -118,6 +115,36 @@ class Version implements Comparable<Version> {
 		}
 
 		return current;
+	}
+
+	static def int getVersionNumber(String versionString, int place) {
+		if (versionString !== null) {
+			val split = versionString.split(".");
+			if (split.length > place && split.get(place).length() > 0) {
+				val versionNumber = Integer.parseInt(split.get(place));
+				return versionNumber
+			}
+		}
+		return 0;
+	}
+
+	static def String getVersionQualifier(String versionString) {
+		if (versionString !== null) {
+			val split = versionString.split("-");
+			if (split.length > 1) {
+				return split.get(1)
+			}
+		}
+		return "";
+	}
+
+	new(String versionString) {
+		this(
+			getVersionNumber(versionString, 0),
+			getVersionNumber(versionString, 1),
+			getVersionNumber(versionString, 2),
+			getVersionQualifier(versionString)
+		);
 	}
 
 	new(int major, int minor, int micro) {
@@ -154,7 +181,12 @@ class Version implements Comparable<Version> {
 			return result;
 		}
 
-		return 0; // TODO consider qualifier once we support versions, see Precedence :: https://semver.org/#spec-item-11
+		result = nullSafeCompare(qualifier, o.qualifier);
+		if (0 !== result) {
+			return result;
+		}
+
+		return 0;
 	}
 
 	override toString() {
@@ -164,4 +196,17 @@ class Version implements Comparable<Version> {
 		return '''«major».«minor».«micro»«IF !qualifier.nullOrEmpty»-«qualifier»«ENDIF»''';
 	}
 
+	def private int nullSafeCompare(String l, String r) {
+		val lHasQualifier = !Strings.isNullOrEmpty(l);
+		val rHasQualifier = !Strings.isNullOrEmpty(r);
+		return if (lHasQualifier && !rHasQualifier) {
+			-1
+		} else if (!lHasQualifier && rHasQualifier) {
+			1
+		} else if (lHasQualifier && rHasQualifier) {
+			l.compareTo(r) // TODO double-check if Java string compare complies to SemVer precedence, cf. https://semver.org/#spec-item-11
+		} else {
+			0
+		};		
+	}
 }

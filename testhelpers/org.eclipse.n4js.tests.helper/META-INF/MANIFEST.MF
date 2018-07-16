@@ -23,16 +23,19 @@ Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.runner,
  org.eclipse.n4js.runner.nodejs,
  org.eclipse.n4js.generator.headless,
- org.eclipse.n4js.hlc.base
+ org.eclipse.n4js.hlc.base,
+ org.eclipse.n4js.external.libraries
 Export-Package: org.eclipse.n4js,
  org.eclipse.n4js.analysis,
  org.eclipse.n4js.csv,
  org.eclipse.n4js.n4idl.tests.helper,
  org.eclipse.n4js.n4jsx.tests.helper,
+ org.eclipse.n4js.test.helper.hlc,
  org.eclipse.n4js.tests.codegen,
  org.eclipse.n4js.tests.helper.documentprovider,
  org.eclipse.n4js.tests.issues,
  org.eclipse.n4js.tests.parser,
  org.eclipse.n4js.tests.projectModel,
+ org.eclipse.n4js.tests.repeat,
  org.eclipse.n4js.xpect.validation.suppression
 Automatic-Module-Name: org.eclipse.n4js.tests.helper

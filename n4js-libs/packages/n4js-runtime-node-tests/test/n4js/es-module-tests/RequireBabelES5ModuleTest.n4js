@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import { RequireModuleTest } from "es-module-tests/RequireModuleTest"
+import {RequireModuleTest} from "es-module-tests/RequireModuleTest";
 import {delimiter} from "path";
 import {resolve} from "path";
 import {sep} from "path";

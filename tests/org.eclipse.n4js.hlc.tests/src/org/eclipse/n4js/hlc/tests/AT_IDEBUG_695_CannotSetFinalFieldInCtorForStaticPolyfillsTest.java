@@ -15,6 +15,7 @@ import java.io.IOException;
 
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.hlc.base.N4jscBase;
+import org.eclipse.n4js.test.helper.hlc.N4CliHelper;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
@@ -50,16 +51,16 @@ public class AT_IDEBUG_695_CannotSetFinalFieldInCtorForStaticPolyfillsTest exten
 		// pre compile
 		final String wsRoot = workspace.getAbsolutePath().toString();
 		// Compile
-		final String[] args_precompile = { "--projectlocations", wsRoot, "--buildType", "allprojects", "--verbose" };
+		final String[] args_precompile = { "--projectlocations", wsRoot, "--buildType", "allprojects" };
 		new N4jscBase().doMain(args_precompile);
 
 		// run without compile
 		final String fileToRun = wsRoot + "/IDEBUG-695/src/Main.n4js";
-		final String[] args = { "--projectlocations", wsRoot,
+		final String[] args = {
+				"--projectlocations", wsRoot,
 				"--buildType", "dontcompile",
 				"--runWith", "nodejs",
-				"--run", fileToRun,
-				"--verbose"
+				"--run", fileToRun
 		};
 
 		// Run

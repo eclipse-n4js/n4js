@@ -1,0 +1,15 @@
+{
+	"name": "S",
+	"version": "0.0.1-SNAPSHOT",
+	"dependencies": {},
+	"n4js": {
+		"projectType": "runtimeLibrary",
+		"vendorId": "org.eclipse.n4js",
+		"sources": {
+			"source": [
+				"model"
+			]
+		},
+		"output": "src-gen"
+	}
+}

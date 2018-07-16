@@ -10,20 +10,16 @@
  */
 package org.eclipse.n4js.scoping.utils;
 
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.naming.QualifiedName;
-import org.eclipse.xtext.resource.AbstractEObjectDescription;
-import org.eclipse.xtext.resource.IEObjectDescription;
-
 import org.eclipse.n4js.resource.ErrorAwareLinkingService;
 import org.eclipse.n4js.ts.types.TEnumLiteral;
 import org.eclipse.n4js.ts.types.TField;
 import org.eclipse.n4js.ts.types.TGetter;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TSetter;
+import org.eclipse.n4js.xtext.scoping.ForwardingEObjectDescription;
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
+import org.eclipse.xtext.resource.IEObjectDescription;
 
 /**
  * A special {@link IEObjectDescription} that is recognized by the {@link ErrorAwareLinkingService} to produce a
@@ -32,7 +28,7 @@ import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
  * Do not check for instances of this class, instead use utility methods in {@link IEObjectDescriptionWithError}.
  * </p>
  */
-public abstract class AbstractDescriptionWithError extends AbstractEObjectDescription implements
+public abstract class AbstractDescriptionWithError extends ForwardingEObjectDescription implements
 		IEObjectDescriptionWithError {
 
 	/**
@@ -56,61 +52,17 @@ public abstract class AbstractDescriptionWithError extends AbstractEObjectDescri
 		return IEObjectDescriptionWithError.getDescriptionWithError(eObjectDescription);
 	}
 
-	private final IEObjectDescription delegate;
-
 	/**
 	 * Wraps the given delegate with an error description.
 	 */
 	protected AbstractDescriptionWithError(IEObjectDescription delegate) {
-		this.delegate = delegate;
-	}
-
-	@Override
-	public QualifiedName getName() {
-		return delegate.getName();
-	}
-
-	@Override
-	public QualifiedName getQualifiedName() {
-		return delegate.getQualifiedName();
-	}
-
-	@Override
-	public EObject getEObjectOrProxy() {
-		return delegate.getEObjectOrProxy();
-	}
-
-	@Override
-	public URI getEObjectURI() {
-		return delegate.getEObjectURI();
-	}
-
-	@Override
-	public String getUserData(String name) {
-		return delegate.getUserData(name);
-	}
-
-	@Override
-	public String[] getUserDataKeys() {
-		return delegate.getUserDataKeys();
-	}
-
-	@Override
-	public EClass getEClass() {
-		return delegate.getEClass();
-	}
-
-	/**
-	 * Returns the delegate, that is the original description.
-	 */
-	public IEObjectDescription getDelegate() {
-		return delegate;
+		super(delegate);
 	}
 
 	/**
 	 * Returns the name of the member type, e.g., method or field.
 	 */
-	protected static String getMemberTypeName(EObject eObject) {
+	protected static String getMemberTypeName(EObject eObject, boolean structFieldInitMode) {
 		if (eObject instanceof TMethod) {
 			return "method";
 		}
@@ -121,7 +73,7 @@ public abstract class AbstractDescriptionWithError extends AbstractEObjectDescri
 			return "getter";
 		}
 		if (eObject instanceof TSetter) {
-			return "setter";
+			return structFieldInitMode ? "getter" : "setter";
 		}
 		if (eObject instanceof TEnumLiteral) {
 			return "enum literal";

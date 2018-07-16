@@ -20,6 +20,7 @@ import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.generator.IGeneratorMarkerSupport.Severity
 import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.n4mf.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.resource.N4JSCache
@@ -37,6 +38,8 @@ import org.eclipse.xtext.validation.IResourceValidator
 import org.eclipse.xtext.validation.Issue
 
 import static org.eclipse.xtext.diagnostics.Severity.*
+import org.eclipse.n4js.internal.RaceDetectionHelper
+import org.eclipse.n4js.validation.helper.FolderContainmentHelper
 
 /**
  * All sub generators should extend this class. It provides basic blocks of the logic, and
@@ -47,7 +50,7 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 
 	@Accessors
 	private CompilerDescriptor compilerDescriptor = null
-
+	
 	@Inject protected StaticPolyfillHelper staticPolyfillHelper
 
 	@Inject protected IN4JSCore n4jsCore
@@ -65,6 +68,8 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 	@Inject protected GeneratorExceptionHandler exceptionHandler
 
 	@Inject protected N4JSPreferenceAccess preferenceAccess
+	
+	@Inject private FolderContainmentHelper containmentHelper;
 
 	override getCompilerDescriptor() {
 		if (compilerDescriptor === null) {
@@ -120,8 +125,11 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 		val isXPECTMode = N4JSGlobals.XT_FILE_EXTENSION == input.URI.fileExtension.toLowerCase
 		val inputUri = input.URI
 
-		return (autobuildEnabled
+		val boolean result = (autobuildEnabled
+			&& isGenerateProjectType(inputUri)
 			&& hasOutput(inputUri)
+			&& isOutputNotInSourceContainer(inputUri)
+			&& isOutsideOfOutputFolder(inputUri)
 			&& isSource(inputUri)
 			&& (isNoValidate(inputUri)
 				|| isExternal(inputUri)
@@ -131,6 +139,10 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 			))
 			&& (!input.isStaticPolyfillingModule) // compile driven by filled type
 			&& hasNoPolyfillErrors(input,monitor)
+		if (!result) {
+			RaceDetectionHelper.log("Skip generation of artifacts from %s", input.URI)
+		}
+		return result
 	}
 
 	private def hasOutput(URI n4jsSourceURI){
@@ -196,6 +208,34 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 		}
 	}
 
+	/** @return true iff the current project has a project type that is supposed to generate code. */
+	def boolean isGenerateProjectType(URI n4jsSourceURI) {
+		val project = n4jsCore.findProject(n4jsSourceURI).orNull();
+		if (project !== null) {
+			val projectType = project.getProjectType();
+			if (projectType == ProjectType.VALIDATION) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/** @return true iff the given resource does not lie within the output folder. */
+	def boolean isOutsideOfOutputFolder(URI n4jsSourceURI) {
+		return !containmentHelper.isContainedInOutputFolder(n4jsSourceURI);
+	}
+	
+	/** @return true iff the output folder of the given n4js resource is not contained by a source container. */
+	def boolean isOutputNotInSourceContainer(URI n4jsSourceURI) {
+		val project = n4jsCore.findProject(n4jsSourceURI);
+		if (project.isPresent()) {
+			return !containmentHelper.isOutputContainedInSourceContainer(project.get())
+		} else {
+			return false;
+		} 
+	}
+	
 	/**
 	 * Actual generation to be overridden by subclasses.
 	 */

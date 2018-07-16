@@ -422,9 +422,13 @@ class N4JSFormatter extends TypeExpressionsFormatter {
 //				.prepend[oneSpace;newLines=0].append[]
 			it.declaredTypeRef.format(document);
 			if( it.isVariadic )
-				it.regionFor.keyword("...").prepend[newLines=0;/*oneSpace;*/].append[newLines=0;noSpace]
-			it.initializer.format(document);
-
+				it.regionFor.keyword("...").prepend[newLines=0;/*oneSpace;*/].append[newLines=0;noSpace];
+			if( it.hasInitializerAssignment ) {
+				it.regionFor.keyword("=").prepend[newLines=0;noSpace;].append[newLines=0;noSpace];
+				if (it.initializer !== null) {
+					it.initializer.format(document);
+				}
+			}
 		];
 	}
 

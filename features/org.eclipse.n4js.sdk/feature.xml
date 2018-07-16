@@ -53,10 +53,6 @@ Contributors:
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.n4js.n4mf.sdk"
-         version="0.0.0"/>
-
-   <includes
          id="org.eclipse.n4js.regex.sdk"
          version="0.0.0"/>
 
@@ -86,6 +82,10 @@ Contributors:
 
    <includes
          id="org.eclipse.n4js.jsdoc2spec.sdk"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.n4js.json.sdk"
          version="0.0.0"/>
 
    <plugin

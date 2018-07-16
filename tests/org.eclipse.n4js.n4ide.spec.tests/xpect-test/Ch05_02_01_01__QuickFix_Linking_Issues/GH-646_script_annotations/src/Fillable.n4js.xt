@@ -24,7 +24,7 @@
    	 		File "B.n4js" { from="../src-fill/B.n4js" }
    	 		File "Fillable.n4js" { from="../src-fill/Fillable.n4js.xt" }
    	 	}
-   	 	File "manifest.n4mf" { from="../manifest_script_annotations.n4mf" }
+   	 	File "package.json" { from="../package_script_annotations.json" }
    	 }
    }
    END_SETUP

@@ -13,14 +13,28 @@ package org.eclipse.n4js.tests.projectModel;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.io.IOException;
+import java.util.Collections;
+
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.xtext.testing.validation.ValidationTestHelper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+
 /**
  */
 public abstract class AbstractProjectModelTest {
+
+	@Inject
+	private ValidationTestHelper validationTestHelper;
+	@Inject
+	private Provider<ResourceSet> resourceSetProvider;
 
 	/***/
 	protected abstract AbstractProjectModelSetup createSetup();
@@ -37,8 +51,6 @@ public abstract class AbstractProjectModelTest {
 
 	/***/
 	public final String archiveProjectId = "archive";
-	/***/
-	protected URI archiveFileURI;
 
 	private AbstractProjectModelSetup setup;
 
@@ -52,19 +64,43 @@ public abstract class AbstractProjectModelTest {
 		this.libProjectURI = libProjectURI;
 	}
 
-	/***/
-	public void setArchiveFileURI(URI archiveFileURI) {
-		this.archiveFileURI = archiveFileURI;
-	}
-
-	/***/
+	/** Setup test data using {@link #setup}. */
 	@Before
 	public void setUp() {
 		setup = createSetup();
 		createTempProjects();
 		assertNotNull(myProjectURI);
 		assertNotNull(libProjectURI);
-		assertNotNull(archiveFileURI);
+	}
+
+	/** Validates the project description of all temporarily created test projects. */
+	private void validateTempProjects() throws IOException {
+		validateProjectDescription(myProjectURI);
+		validateProjectDescription(libProjectURI);
+	}
+
+	/**
+	 * Validates the project description file of the project to be found at {@code projectLocation}.
+	 *
+	 * @throws IOException
+	 *             If loading the project description resource fails
+	 */
+	private void validateProjectDescription(URI projectLocation) throws IOException {
+		final ResourceSet resourceSet = resourceSetProvider.get();
+		final URI projectDescriptionURI = projectLocation
+				.appendSegment(AbstractProjectModelSetup.PROJECT_DESCRIPTION_FILENAME);
+		// obtain resource for file project description file
+		final Resource projectDescriptionResource = resourceSet
+				.createResource(projectDescriptionURI);
+		projectDescriptionResource.load(Collections.emptyMap());
+		try {
+			validationTestHelper.assertNoErrors(projectDescriptionResource);
+		} catch (AssertionError e) {
+			// re-throw assertion failure with more detailed message (include URI)
+			throw new AssertionError(
+					"Project description file " + projectDescriptionURI.toString() + " did not validate: " +
+							e.getMessage());
+		}
 	}
 
 	private void deleteTempProjects() {
@@ -82,15 +118,16 @@ public abstract class AbstractProjectModelTest {
 		setup = null;
 		myProjectURI = null;
 		libProjectURI = null;
-		archiveFileURI = null;
 	}
 
 	@SuppressWarnings("javadoc")
 	@Test
-	public void testSetup() {
+	public void testSetup() throws IOException {
 		assertEquals(myProjectId, myProjectURI.lastSegment());
 		assertEquals(libProjectId, libProjectURI.lastSegment());
-		assertEquals(archiveProjectId + ".nfar", archiveFileURI.lastSegment());
+
+		// make sure temporary projects have valid project descriptions
+		validateTempProjects();
 	}
 
 }

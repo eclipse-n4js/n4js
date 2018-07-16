@@ -1,0 +1,104 @@
+/**
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+@Ecore(nsURI="http://www.eclipse.org/n4js/JSON")
+@GenModel(fileExtensions="json",
+	modelDirectory="/org.eclipse.n4js.json.model/emf-gen",
+	forceOverwrite="true",
+	updateClasspath="false",
+	literalsInterface="true",
+	loadInitialization="false",
+	complianceLevel="8.0",
+	copyrightFields="false",
+	// both copyrightText and documentation are required to align the output of the MWE2 and incremental builder (see GH-841)
+	copyrightText="Copyright (c) 2016 NumberFour AG.\nAll rights reserved. This program and the accompanying materials\nare made available under the terms of the Eclipse Public License v1.0\nwhich accompanies this distribution, and is available at\nhttp://www.eclipse.org/legal/epl-v10.html\n\nContributors:\n  NumberFour AG - Initial API and implementation",
+	documentation="*\nCopyright (c) 2016 NumberFour AG.\nAll rights reserved. This program and the accompanying materials\nare made available under the terms of the Eclipse Public License v1.0\nwhich accompanies this distribution, and is available at\nhttp://www.eclipse.org/legal/epl-v10.html\n * Contributors:\n  NumberFour AG - Initial API and implementation",
+	language="")
+
+package org.eclipse.n4js.json.JSON
+
+class JSONDocument {
+	/**
+	 * The content of this JSON document.
+	 */
+	contains JSONValue content
+	
+	op String toString() {
+		return "JSONDocument " + this.content.toString;
+	}
+}
+
+/**
+ * Common supertype to all values that may exist in JSON. 
+ */
+abstract class JSONValue {}
+
+/**
+ * Represents a JSON object.
+ */
+class JSONObject extends JSONValue {
+	/**
+	 * The name-value associations stored in this object.
+	 */
+	contains NameValuePair[] nameValuePairs
+	
+	op String toString() {
+		return "{\n" + this.nameValuePairs.map[e | e.toString()].join(",\n") + "\n}";
+	}
+}
+
+/**
+ * Represents a JSON array.
+ */
+class JSONArray extends JSONValue {
+	contains JSONValue[] elements
+	
+	op String toString() {
+		return "[\n" + this.elements.map[e | e.toString()].join(",\n") + "\n]";
+	}
+}
+
+/**
+ * Represents a single name-value association.
+ */
+class NameValuePair {
+	String name
+	contains JSONValue value
+	
+	op String toString() {
+		return this.name + ": " + this.value.toString;
+	}
+}
+
+class JSONStringLiteral extends JSONValue {
+	String value
+	
+	op String toString() {
+		return "JSONStringLiteral(\"" + this.value.toString + "\")";
+	}
+}
+
+class JSONNumericLiteral extends JSONValue {
+	BigDecimal value
+	
+	op String toString() {
+		return "JSONNumericLiteral(" + this.value.toString + ")";
+	}
+}
+
+class JSONBooleanLiteral extends JSONValue {
+	boolean ^booleanValue
+	
+	op String toString() {
+		return "JSONBooleanLiteral(" + this.booleanValue + ")";
+	}
+}
+
+class JSONNullLiteral extends JSONValue {}

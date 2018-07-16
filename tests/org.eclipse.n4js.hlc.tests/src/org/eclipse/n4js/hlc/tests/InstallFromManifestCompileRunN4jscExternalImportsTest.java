@@ -17,6 +17,7 @@ import java.io.IOException;
 
 import org.eclipse.n4js.hlc.base.BuildType;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
+import org.eclipse.n4js.test.helper.hlc.N4CliHelper;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
@@ -58,8 +59,6 @@ public class InstallFromManifestCompileRunN4jscExternalImportsTest extends Abstr
 				"--installMissingDependencies",
 				"--runWith", "nodejs",
 				"--run", fileToRun,
-				// "--verbose",
-				// "--debug",
 				"--projectlocations", wsRoot,
 				"--buildType", BuildType.allprojects.toString()
 		};
@@ -89,8 +88,6 @@ public class InstallFromManifestCompileRunN4jscExternalImportsTest extends Abstr
 				"--installMissingDependencies",
 				"-rw", "nodejs",
 				"-r", fileToRun,
-				// "--verbose",
-				// "--debug",
 				"-bt", BuildType.projects.toString(), wsRoot + "/P1", wsRoot + "/P2", wsRoot + "/P3"
 		};
 		final String out = runAndCaptureOutput(args);

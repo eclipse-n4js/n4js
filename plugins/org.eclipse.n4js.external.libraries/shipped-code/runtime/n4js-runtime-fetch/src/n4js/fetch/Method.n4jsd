@@ -21,4 +21,3 @@ export @StringBased external public enum Method {
     CONNECT
 }
 
-/* -*- mode: typescript;-*- */
