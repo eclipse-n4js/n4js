@@ -30,14 +30,16 @@ import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.n4mf.utils.N4MFConstants;
 
 /**
  */
 public class IndexableFilesDiscoveryUtil {
 	private static final Logger LOGGER = Logger.getLogger(IndexableFilesDiscoveryUtil.class);
+
 	private static List<String> INDEXABLE_FILTERS = Arrays.asList(N4JSGlobals.N4JS_FILE_EXTENSION,
-			N4JSGlobals.N4JSD_FILE_EXTENSION, N4MFConstants.N4MF_FILE_EXTENSION);
+			N4JSGlobals.N4JSD_FILE_EXTENSION);
+
+	private static List<String> INDEXABLE_FILENAMES = Arrays.asList(N4JSGlobals.PACKAGE_JSON);
 
 	/**
 	 * Scans given location for files that may end up in XtextIndex when given location is processed by the builder.
@@ -94,12 +96,16 @@ public class IndexableFilesDiscoveryUtil {
 			}
 
 			private boolean filter(Path p) {
-				String abs = p.toAbsolutePath().toString();
+				if (INDEXABLE_FILENAMES.contains(p.getName(p.getNameCount() - 1).toString())) {
+					return true;
+				}
+
+				final String abs = p.toAbsolutePath().toString();
 				int index = abs.lastIndexOf(".");
 				if (index == -1)
 					return false;
 
-				String end = abs.substring(index + 1);
+				final String end = abs.substring(index + 1);
 				return INDEXABLE_FILTERS.contains(end.toLowerCase());
 			}
 		});
@@ -126,7 +132,11 @@ public class IndexableFilesDiscoveryUtil {
 			public boolean visit(IResource resource) throws CoreException {
 				if (resource.getType() == IResource.FILE) {
 					IFile file = (IFile) resource;
-					if (INDEXABLE_FILTERS.contains(file.getFileExtension().toLowerCase())) {
+					boolean isIndexableFileExtension = INDEXABLE_FILTERS
+							.contains(file.getFileExtension().toLowerCase());
+					boolean isIndexableFilename = INDEXABLE_FILENAMES.contains(file.getName());
+
+					if (isIndexableFileExtension || isIndexableFilename) {
 						result.add(file.getFullPath().toString());
 					}
 				}

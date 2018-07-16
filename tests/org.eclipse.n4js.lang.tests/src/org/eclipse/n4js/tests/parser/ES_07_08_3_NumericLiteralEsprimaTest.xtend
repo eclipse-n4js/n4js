@@ -200,7 +200,7 @@ class ES_07_08_3_NumericLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testLegacyOctal02() {
-		val script = '02;'.parseESWithError
+		val script = '02;'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val number = statement.expression as LegacyOctalIntLiteral
 		assertEquals(2, number.toInt)
@@ -208,7 +208,7 @@ class ES_07_08_3_NumericLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testLegacyOctal012() {
-		val script = '012;'.parseESWithError
+		val script = '012;'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val number = statement.expression as LegacyOctalIntLiteral
 		assertEquals(10, number.toInt)
@@ -216,7 +216,7 @@ class ES_07_08_3_NumericLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testLegacyOctal0012() {
-		val script = '0012;'.parseESWithError
+		val script = '0012;'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val number = statement.expression as LegacyOctalIntLiteral
 		assertEquals(10, number.toInt)
@@ -224,7 +224,7 @@ class ES_07_08_3_NumericLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testLegacyOctal0129() {
-		val script = '0129;'.parseESWithError
+		val script = '0129;'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val number = statement.expression as LegacyOctalIntLiteral
 		assertEquals(129, number.toInt)

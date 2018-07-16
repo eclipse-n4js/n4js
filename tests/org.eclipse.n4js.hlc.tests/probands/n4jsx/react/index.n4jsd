@@ -280,4 +280,3 @@ export external public class ~PropTypes {
     public static shape(Object): PropConstraint;
 }
 
-/* -*- mode: typescript;-*- */

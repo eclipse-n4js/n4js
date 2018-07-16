@@ -78,7 +78,7 @@ public class GHOLD_45_CheckIgnoreAnnotationAtClassLevel_PluginUITest extends Abs
 	@After
 	@Override
 	public void tearDown() throws Exception {
-		shippedCodeInitializeTestHelper.teardowneBuiltIns();
+		shippedCodeInitializeTestHelper.tearDownBuiltIns();
 		waitForAutoBuild();
 		super.tearDown();
 	}

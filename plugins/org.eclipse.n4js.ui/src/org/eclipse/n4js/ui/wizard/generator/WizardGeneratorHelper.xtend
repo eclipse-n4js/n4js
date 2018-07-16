@@ -12,17 +12,6 @@ package org.eclipse.n4js.ui.wizard.generator
 
 import com.google.common.base.Optional
 import com.google.inject.Inject
-import org.eclipse.n4js.n4mf.ProjectDescription
-import org.eclipse.n4js.n4mf.ProjectType
-import org.eclipse.n4js.projectModel.IN4JSCore
-import org.eclipse.n4js.projectModel.IN4JSProject
-import org.eclipse.n4js.ui.changes.ChangeManager
-import org.eclipse.n4js.ui.changes.IAtomicChange
-import org.eclipse.n4js.ui.changes.ManifestChangeProvider
-import org.eclipse.n4js.ui.organize.imports.Interaction
-import org.eclipse.n4js.ui.wizard.model.AccessModifier
-import org.eclipse.n4js.ui.wizard.model.ClassifierReference
-import org.eclipse.n4js.ui.wizard.workspace.WorkspaceWizardModel
 import java.io.IOException
 import java.io.UnsupportedEncodingException
 import java.util.ArrayList
@@ -39,19 +28,33 @@ import org.eclipse.core.runtime.Path
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.jface.text.BadLocationException
+import org.eclipse.n4js.json.model.utils.JSONModelUtils
+import org.eclipse.n4js.n4mf.ProjectType
+import org.eclipse.n4js.packagejson.model.edit.IJSONDocumentModification
+import org.eclipse.n4js.projectModel.IN4JSCore
+import org.eclipse.n4js.projectModel.IN4JSProject
+import org.eclipse.n4js.ui.changes.ChangeManager
+import org.eclipse.n4js.ui.changes.IAtomicChange
+import org.eclipse.n4js.ui.organize.imports.Interaction
+import org.eclipse.n4js.ui.organize.imports.OrganizeImportsService
+import org.eclipse.n4js.ui.wizard.model.AccessModifier
+import org.eclipse.n4js.ui.wizard.model.ClassifierReference
+import org.eclipse.n4js.ui.wizard.workspace.WorkspaceWizardModel
+import org.eclipse.n4js.utils.Log
 import org.eclipse.ui.part.FileEditorInput
+import org.eclipse.xtext.resource.SaveOptions
 import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.ui.editor.model.IXtextDocument
 import org.eclipse.xtext.ui.editor.model.XtextDocumentProvider
 import org.eclipse.xtext.util.Files
 import org.eclipse.xtext.util.concurrent.IUnitOfWork
-import org.eclipse.n4js.ui.organize.imports.OrganizeImportsService
+import org.eclipse.n4js.packagejson.model.edit.PackageJsonModificationProvider
 
 /**
  * This class contains commonly used methods when writing wizard generators.
  */
+@Log
 class WizardGeneratorHelper {
-
 	@Inject
 	private IN4JSCore n4jsCore;
 
@@ -134,7 +137,6 @@ class WizardGeneratorHelper {
 	}
 
 
-
 	/**
 	 * Returns true if the given path exists in the workspace.
 	 *
@@ -162,7 +164,7 @@ class WizardGeneratorHelper {
 		}
 		null
 	}
-
+	
 	/**
 	 * Retrieve the XtextDocument for the given resource and apply the changes
 	 *
@@ -195,6 +197,42 @@ class WizardGeneratorHelper {
 				docProvider.changed(fileInput);
 				docProvider.disconnect(fileInput);
 
+			} catch (Exception all) {
+				return false;
+			}
+		} else {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Applies the given list of {@link IJSONDocumentModification}s to the given JSON resource.
+	 * 
+	 * Runs the JSON formatter on the whole file after applying the modification.
+	 * 
+	 * @param resource 
+	 * 			The XtextResource to modify.
+	 * @param changes 
+	 * 			The JSON document modifications to apply.
+	 * */
+	public def boolean applyJSONModifications(XtextResource resource, Collection<? extends IJSONDocumentModification> modifications){
+		val IPath resourcePath = new Path(resource.getURI.toString).makeRelativeTo(new Path("platform:/resource/"));
+		val IFile resourceFile = ResourcesPlugin.workspace.root.getFile(resourcePath);
+		val jsonDocument = JSONModelUtils.getDocument(resource);
+		
+		if (resourceFile.exists) {
+			try {
+				// apply all given modifications
+				for (modification : modifications) {
+					// TODO implement proper support for ISemanticModification based on an XtextDocument and use those instead.
+					// For this to work, partial serialization and replacement needs to be enabled for the JSON language.
+					modification.apply(jsonDocument);
+				}
+				
+				// save updated resource and run formatter
+				resource.save(SaveOptions.newBuilder.format.options.toOptionsMap);
 			} catch (Exception all) {
 				return false;
 			}
@@ -241,43 +279,39 @@ class WizardGeneratorHelper {
 	}
 
 	/**
-	 * Return the manifest changes which need to be applied in order to allow referencing of the given projects/runtime libraries.
-	 * Also add a new source folder if the module happens to be in a non-source-folder location.
+	 * Return the package.json modifications which need to be applied in order to allow referencing of 
+	 * the given projects/runtime libraries.
 	 *
-	 * @param manifest The manifest resource
-	 * @param model The workspace wizard model
-	 * @param referencedProjects A list of the projects to be referenced
-	 * @param moduleURI The platform uri of the target module
+	 * @param packageJson 
+	 * 			The package.json resource
+	 * @param model 
+	 * 			The workspace wizard model
+	 * @param referencedProjects 
+	 * 			A list of the projects to be referenced
+	 * @param moduleURI 
+	 * 			The platform uri of the target module
 	 *
 	 * @returns A list of {@link IAtomicChange}s for the manifest resource.
 	 */
-	public def Collection<IAtomicChange> manifestChanges(Resource manifest, WorkspaceWizardModel model, Collection<IN4JSProject> referencedProjects, URI moduleURI) {
-		// Remove the containing project from the dependencies
+	public def Collection<IJSONDocumentModification> projectDescriptionModifications(Resource packageJson, WorkspaceWizardModel model, Collection<IN4JSProject> referencedProjects, URI moduleURI) {
+		val modifications = new ArrayList<IJSONDocumentModification>();
+		
+		// remove the containing project from the dependencies
 		val referencedProjectsExceptContainer = referencedProjects.filter[ !it.projectId.equals(model.project.lastSegment) ];
 
-		//Remove duplicates
+		// remove duplicates
 		val referencedProjectsSet = new HashSet<IN4JSProject>();
 		referencedProjectsSet.addAll(referencedProjectsExceptContainer);
 
-		var List<IAtomicChange> manifestChanges = new ArrayList<IAtomicChange>();
-
-		val projectDescription = manifest.allContents.filter(ProjectDescription).head;
-
-		//Add project dependency changes
-		val dependencyChange = ManifestChangeProvider.insertProjectDependencies(manifest,
-																				referencedProjectsSet.filter[projectType != ProjectType.RUNTIME_LIBRARY].map[projectId].toList,
-																				projectDescription)
-		//Add required runtime library changes
-		val runtimeLibraryChange = ManifestChangeProvider.insertRequiredRuntimeLibraries(manifest,
-																				referencedProjectsSet.filter[projectType == ProjectType.RUNTIME_LIBRARY].map[projectId].toList,
-																				projectDescription)
-		if (dependencyChange !== null) {
-			manifestChanges.add(dependencyChange);
-		}
-		if (runtimeLibraryChange !== null) {
-			manifestChanges.add(runtimeLibraryChange);
-		}
-
-		return manifestChanges;
+		// add project dependency changes (includes added runtime libraries)
+		modifications.add(PackageJsonModificationProvider.insertProjectDependencies(referencedProjectsSet
+			.map[projectId].toList));
+				
+		// add required runtime library changes
+		modifications.add(PackageJsonModificationProvider.insertRequiredRuntimeLibraries(referencedProjectsSet.filter [
+			projectType == ProjectType.RUNTIME_LIBRARY
+		].map[projectId].toList));
+	
+		return modifications;
 	}
 }

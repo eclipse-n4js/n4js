@@ -28,7 +28,8 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
 /**
- * Cache for {@link ImageDescriptor image descriptor}s in the context of the JSON bundle.
+ * Cache for {@link ImageDescriptor image descriptor}s in the context of the
+ * JSON bundle.
  */
 public enum JSONImageDescriptorCache {
 
@@ -39,17 +40,15 @@ public enum JSONImageDescriptorCache {
 	private static final String ICON_FOLDER = "icons";
 
 	/**
-	 * Enumeration of image references. Basically the enumeration holds a reference to the {@link Image} or
-	 * {@link ImageDescriptor}. If the image descriptor not cached by the {@link JSONImageDescriptorCache cache} then it
-	 * caches it.
+	 * Enumeration of image references. Basically the enumeration holds a reference
+	 * to the {@link Image} or {@link ImageDescriptor}. If the image descriptor not
+	 * cached by the {@link JSONImageDescriptorCache cache} then it caches it.
 	 */
 	public static enum ImageRef {
 
-		JSON_OBJECT("json_object.png"),
-		JSON_ARRAY("json_array.png"),
-		JSON_VALUE_PAIR("public_co.png"),
-		JSON_VALUE("json_value.png");
-		
+		JSON_OBJECT("json_object.png"), JSON_ARRAY("json_array.png"), JSON_VALUE_PAIR("public_co.png"), JSON_VALUE(
+				"json_value.png");
+
 		private static final Logger LOGGER = Logger.getLogger(ImageRef.class);
 
 		private final String fileName;
@@ -59,25 +58,30 @@ public enum JSONImageDescriptorCache {
 		}
 
 		/**
-		 * Returns with the cached image descriptor for the given reference. May return with {@link Optional#absent()
-		 * absent} if the resource does not exist in the plug-in's {@code icons} folder. Or the plug-in is not running.
+		 * Returns with the cached image descriptor for the given reference. May return
+		 * with {@link Optional#absent() absent} if the resource does not exist in the
+		 * plug-in's {@code icons} folder. Or the plug-in is not running.
 		 *
-		 * @return the image descriptor for the image reference. Could be absent but never {@code null}.
+		 * @return the image descriptor for the image reference. Could be absent but
+		 *         never {@code null}.
 		 */
 		public Optional<ImageDescriptor> asImageDescriptor() {
 			return JSONImageDescriptorCache.INSTANCE.getImageDescriptor(this);
 		}
 
 		/***
-		 * Returns with a new image instance created from the cached image descriptor. May return with
-		 * {@link Optional#absent() absent}, if the image descriptor cannot be created due to missing resource, or the
-		 * image cannot be created from the image descriptor instance.
+		 * Returns with a new image instance created from the cached image descriptor.
+		 * May return with {@link Optional#absent() absent}, if the image descriptor
+		 * cannot be created due to missing resource, or the image cannot be created
+		 * from the image descriptor instance.
 		 *
 		 * <p>
-		 * Do not dispose the returned image instance, as the resource is managed by the {@link JSONImageDescriptorCache}.
+		 * Do not dispose the returned image instance, as the resource is managed by the
+		 * {@link JSONImageDescriptorCache}.
 		 *
-		 * @return the new image instance wrapped into an {@link Optional}. Can be {@link Optional#absent() missing} if
-		 *         the image reference cannot be created.
+		 * @return the new image instance wrapped into an {@link Optional}. Can be
+		 *         {@link Optional#absent() missing} if the image reference cannot be
+		 *         created.
 		 */
 		public Optional<Image> asImage() {
 			try {

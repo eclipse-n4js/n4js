@@ -10,11 +10,16 @@
  */
 package org.eclipse.n4js.tests.projectModel;
 
+import org.eclipse.n4js.N4JSGlobals;
+
 /**
  */
 public abstract class AbstractProjectModelSetup {
 	/***/
 	public static final String LIB_FOLDER_NAME = "lib";
+
+	/** The name of the file that provides a project's description. */
+	public static final String PROJECT_DESCRIPTION_FILENAME = N4JSGlobals.PACKAGE_JSON;
 
 	/***/
 	protected final AbstractProjectModelTest host;

@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
@@ -21,7 +21,7 @@ import org.eclipse.n4js.validation.JavaScriptVariant
 
 /**
  * Test class for operator test (6.1.10- 6.1.18)
- *
+ * 
  */
 @RunWith(XtextRunner)
 @InjectWith(N4JSInjectorProvider)
@@ -59,9 +59,8 @@ class N6_1_13_AdditiveExpressionTypesystemTest extends AbstractOperatorExpressio
 
 	@Test
 	def void testExpectedType_Add() {
-		// GH-855: uncomment when solved
-		//	assertBinaryOperatorExpectedType(unrestricted, "any", "any", "n1+n2");
-		//	assertBinaryOperatorExpectedType(strict, "any", "any", "n1+n2");
+		assertBinaryOperatorExpectedType(unrestricted, "any", "any", "n1+n2");
+		assertBinaryOperatorExpectedType(strict, "any", "any", "n1+n2");
 		assertBinaryOperatorExpectedType(n4js, "any", "any", "n1+n2");
 	}
 
@@ -80,12 +79,10 @@ class N6_1_13_AdditiveExpressionTypesystemTest extends AbstractOperatorExpressio
 		}
 	}
 
-
-@Test
+	@Test
 	def void testExpectedType_Sub() {
-		// GH-855: uncomment when solved
-		//	assertBinaryOperatorExpectedType(unrestricted, "any", "any", "n1-n2");
-		//	assertBinaryOperatorExpectedType(strict, "any", "any", "n1-n2");
+		assertBinaryOperatorExpectedType(unrestricted, "any", "any", "n1-n2");
+		assertBinaryOperatorExpectedType(strict, "any", "any", "n1-n2");
 		assertBinaryOperatorExpectedType(n4js, "any", "any", "n1-n2");
 	}
 }

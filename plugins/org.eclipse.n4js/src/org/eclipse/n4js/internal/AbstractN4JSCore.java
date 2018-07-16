@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.internal;
 
+import java.util.Objects;
+
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -32,6 +34,25 @@ public abstract class AbstractN4JSCore implements IN4JSCore {
 
 	@Inject
 	private WildcardPathFilterHelper wildcardHelper;
+
+	@Override
+	public int getDepthOfLocation(URI nestedLocation) {
+		// make sure we are in the root folder of an IN4JSProject and obtain its location
+		IN4JSProject containingProject = findProject(nestedLocation).orNull();
+		if (containingProject == null || !containingProject.exists()) {
+			return -1;
+		}
+		URI containingProjectLocation = containingProject.getLocation();
+		// trim trailing empty segments in both location URIs (if any)
+		while (Objects.equals(nestedLocation.lastSegment(), "")) {
+			nestedLocation = nestedLocation.trimSegments(1);
+		}
+		while (Objects.equals(containingProjectLocation.lastSegment(), "")) {
+			containingProjectLocation = containingProjectLocation.trimSegments(1);
+		}
+		// compute and return depth
+		return nestedLocation.segmentCount() - containingProjectLocation.segmentCount();
+	}
 
 	@Override
 	public boolean isInSameProject(URI nestedLocation1, URI nestedLocation2) {

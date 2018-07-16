@@ -1,0 +1,14 @@
+{
+	"name": "libA",
+	"version": "0.0.1-SNAPSHOT",
+	"n4js": {
+		"projectType": "runtimeLibrary",
+		"vendorId": "MyVendorID",
+		"vendorName": "My Vendor Name",
+		"output": "src-gen",
+		"moduleLoader": "n4js",
+		"sources": {
+			
+		}
+	}
+}

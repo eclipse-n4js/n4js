@@ -39,7 +39,6 @@ Workflow {
 			name = "org.eclipse.n4js.json.JSON"
 			fileExtensions = "json"
 			referencedResource = "platform:/resource/org.eclipse.n4js.json.model/model/JSON.xcore"
-			
 			fragment = serializer.SerializerFragment2 {
 				generateStub = false
 			}
@@ -48,17 +47,17 @@ Workflow {
 			fragment = validation.ValidatorFragment2 {
 				inheritImplementation = false
 			}
-			
+
 			// include custom JSON formatter
 			fragment = formatting.Formatter2Fragment2 {
 				generateXtendStub = true
 			}
-			
+
 			// make sure content-assist does not inherit from the Unicode language
 			fragment = ui.contentAssist.ContentAssistFragment2 {
 				inheritImplementation = false
 			}
-			
+
 			fragment = grammarAccess.GrammarAccessFragment2 {}
 			fragment = ecore.EMFGeneratorFragment2 {}
 			fragment = resourceFactory.ResourceFactoryFragment2 {}

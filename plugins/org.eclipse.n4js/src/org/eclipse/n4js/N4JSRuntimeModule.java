@@ -476,14 +476,6 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 		return ScopeRegistrar.class;
 	}
 
-	/**
-	 * Binds a special language-independent validator checking project setups, mainly used for polyfill-clashes.
-	 */
-	@SingletonBinding(eager = true)
-	public Class<? extends org.eclipse.n4js.validation.validators.N4JSProjectSetupValidator> bindN4JSProjectSetupValidator() {
-		return org.eclipse.n4js.validation.validators.N4JSProjectSetupValidator.class;
-	}
-
 	/***/
 	public Class<? extends IReferenceFinder> bindReferenceFinder() {
 		return ConcreteSyntaxAwareReferenceFinder.class;

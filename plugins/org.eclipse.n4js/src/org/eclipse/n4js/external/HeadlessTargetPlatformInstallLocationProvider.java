@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Path;
 
-import org.eclipse.n4js.external.libraries.PackageJson;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.libraries.TargetPlatformFactory;
 import org.eclipse.n4js.internal.N4JSModel;
 
@@ -95,7 +95,7 @@ public class HeadlessTargetPlatformInstallLocationProvider implements TargetPlat
 		// create temp location
 		final Path root = createTempDirectory("hlcTmpDepsLocation_" + System.currentTimeMillis());
 		final Path n4npm = createDirectory(root, ".n4npm");
-		final File packageJson = new File(n4npm.toFile(), PackageJson.PACKAGE_JSON);
+		final File packageJson = new File(n4npm.toFile(), N4JSGlobals.PACKAGE_JSON);
 
 		packageJson.createNewFile();
 

@@ -120,7 +120,6 @@ class AbstractScriptAssembler {
 				fileExtension = oldFileExt;
 				script;
 			}
-			/* GH-855: uncomment when solved
 			case JavaScriptVariant.strict: {
 				val oldFileExt = fileExtension;
 				fileExtension = "js";
@@ -130,7 +129,6 @@ class AbstractScriptAssembler {
 				fileExtension = oldFileExt;
 				script;
 			}
-			*/
 			default: {
 				val oldFileExt = fileExtension;
 				fileExtension = "js";

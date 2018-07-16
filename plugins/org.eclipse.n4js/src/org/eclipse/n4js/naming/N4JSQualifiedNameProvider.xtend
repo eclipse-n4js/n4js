@@ -10,7 +10,13 @@
  */
 package org.eclipse.n4js.naming
 
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.AnnotationDefinition
+import org.eclipse.n4js.N4JSGlobals
+import org.eclipse.n4js.json.JSON.JSONDocument
+import org.eclipse.n4js.json.JSON.JSONObject
+import org.eclipse.n4js.json.JSON.JSONStringLiteral
+import org.eclipse.n4js.json.model.utils.JSONModelUtils
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.N4TypeDeclaration
@@ -22,13 +28,13 @@ import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TFunction
+import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TModule
-import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeVariable
-import org.eclipse.emf.ecore.EObject
+import org.eclipse.n4js.utils.ProjectDescriptionHelper
 import org.eclipse.xtext.naming.QualifiedName
 
 import static extension org.eclipse.emf.ecore.util.EcoreUtil.*
@@ -42,6 +48,8 @@ import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
  */
 class N4JSQualifiedNameProvider extends N4TSQualifiedNameProvider {
 
+	/** Last segment of fully qualified names for the root {@link JSONDocument} of package.json files. */
+	public static final String PACKAGE_JSON_SEGMENT = "!package_json";
 
 	/**
 	 * For the root element (Script) the resource qualified name is used.
@@ -86,6 +94,8 @@ class N4JSQualifiedNameProvider extends N4TSQualifiedNameProvider {
 				null // either null or a real qualified name, but not the simple name! since they cannot be accessed via FQN, we return null
 			IdentifiableElement: // including TFormalParameter, and Variable with CatchVariable, FormalParameter, LocalArgumentsVariable
 				null
+			JSONDocument:
+				fqnJSONDocument(it)
 			default:
 				null
 		}
@@ -123,5 +133,32 @@ class N4JSQualifiedNameProvider extends N4TSQualifiedNameProvider {
 		}
 		val fqn = append(prefix, tClassifier.exportedName ?: tClassifier.name);
 		return fqn;
+	}
+
+	private def QualifiedName fqnJSONDocument(JSONDocument document) {
+		val res = document.eResource;
+		val uri = res?.URI;
+		if (uri === null || uri.lastSegment != N4JSGlobals.PACKAGE_JSON) {
+			return null; // not a package.json file -> no qualified name
+		}
+		// (1) try to get projectId from the given document
+		var String projectId = null;
+		val content = document.content;
+		if (content instanceof JSONObject) {
+			val value = JSONModelUtils.getProperty(content, ProjectDescriptionHelper.PROP__NAME).orElse(null);
+			projectId = if (value instanceof JSONStringLiteral) value.value else null;
+		}
+		// (2) if unsuccessful, take projectId from the URI
+		if (projectId === null && uri.segmentCount > 1) {
+			projectId = uri.trimSegments(1).lastSegment;
+		}
+		// create qualified name from projectId
+		if (projectId !== null && !projectId.isEmpty) {
+			val fqnBase = converter.toQualifiedName(projectId);
+			if (fqnBase !== null) {
+				return fqnBase.append(PACKAGE_JSON_SEGMENT)
+			}
+		}
+		return null; // failed
 	}
 }

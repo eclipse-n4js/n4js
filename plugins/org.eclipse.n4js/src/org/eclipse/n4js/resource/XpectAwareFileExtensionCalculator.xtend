@@ -40,6 +40,18 @@ public class XpectAwareFileExtensionCalculator {
 		}
 		return uri.getXpectAwareFileExtensionOrEmpty
 	}
+	
+	/**
+	 * Returns the name of the file that is referenced by {@code uri}
+	 * without the potential additional X!PECT file extension.
+	 */
+	def public String getFilenameWithoutXpectExtension(URI uri) {
+		if (uri.fileExtension != getXpectAwareFileExtension(uri)) {
+			return uri.trimFileExtension.lastSegment;
+		} else {
+			return uri.lastSegment;
+		}
+	}
 
 	def private String getXpectAwareFileExtensionOrEmpty(URI uri){
 		var ext = uri.fileExtension;

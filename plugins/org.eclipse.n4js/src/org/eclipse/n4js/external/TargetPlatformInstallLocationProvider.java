@@ -18,7 +18,6 @@ import java.net.URI;
 
 import org.apache.log4j.Logger;
 import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
-import org.eclipse.n4js.external.libraries.PackageJson;
 
 /**
  * Provides information about the target platform install location and about the location of the actual target platform
@@ -116,14 +115,4 @@ public interface TargetPlatformInstallLocationProvider {
 				"Cannot locate local git repository folder in target platform install location.");
 		return gitRoot.toURI();
 	}
-
-	/**
-	 * Returns with the model instance representing the target platform file content.
-	 *
-	 * @return the model instance representing the target platform file content.
-	 */
-	default PackageJson getTargetPlatformContent() {
-		return PackageJson.readValue(getTargetPlatformFileLocation());
-	}
-
 }

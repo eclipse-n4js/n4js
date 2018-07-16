@@ -12,14 +12,13 @@ package org.eclipse.n4js.scoping.utils;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.ISelectable;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.impl.SelectableBasedScope;
 
 import com.google.common.base.Predicate;
-
-import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 
 /**
  * MainModule aware scope adjusting shadowing of main modules.
@@ -52,14 +51,9 @@ public class MainModuleAwareSelectableBasedScope extends SelectableBasedScope {
 	 */
 	@Override
 	protected boolean isShadowed(IEObjectDescription fromParent) {
-		if (fromParent != null) {
-			String userData = fromParent.getUserData(N4JSResourceDescriptionStrategy.MAIN_MODULE_KEY);
-			if (userData != null) {
-				boolean describesMainModule = Boolean.parseBoolean(userData);
-				if (describesMainModule) {
-					return false;// main modules are never shadowed
-				}
-			}
+		boolean describesMainModule = N4JSResourceDescriptionStrategy.getMainModule(fromParent);
+		if (describesMainModule) {
+			return false;// main modules are never shadowed
 		}
 		return super.isShadowed(fromParent);
 	}

@@ -11,7 +11,7 @@ Contributors:
 
 N4JS Runtime Library for the V8 engine.
 
-For more information about N4JS, please refer to the official [project home](https://numberfour.github.io/n4js).
+For more information about N4JS, please refer to the official [project home](https://www.eclipse.org/n4js/).
 
 ## License
 

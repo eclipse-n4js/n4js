@@ -14,9 +14,11 @@ import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.ui.label.DefaultDescriptionLabelProvider;
 
 /**
- * Provides labels for {@link IEObjectDescription}s that represent JSON model elements in the index.
+ * Provides labels for {@link IEObjectDescription}s that represent JSON model
+ * elements in the index.
  * 
- * For now, this does nothing as the content of JSON resources is not exposed to the index.
+ * For now, this does nothing as the content of JSON resources is not exposed to
+ * the index.
  */
 public class JSONDescriptionLabelProvider extends DefaultDescriptionLabelProvider {
 	// no custom behavior

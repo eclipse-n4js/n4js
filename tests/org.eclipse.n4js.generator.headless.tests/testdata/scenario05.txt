@@ -9,19 +9,22 @@ export public class A {
 	}
 }
 
-# wsp1/A/manifest.n4mf
-ProjectId: A
-VendorId: org.eclipse.n4js
-VendorName: "Eclipse N4JS Project"
-ProjectType: library
-ProjectVersion: 0.0.1-SNAPSHOT
-Output: "src-gen"
-Sources {
-	source { 
-		"src"
+# wsp1/A/package.json
+{
+	"name": "A",
+	"version": "0.0.1-SNAPSHOT",
+	"n4js": {
+		"projectType": "library",
+		"vendorId": "org.eclipse.n4js",
+		"vendorName": "Eclipse N4JS Project",
+		"output": "src-gen",
+		"sources": {
+			"source": [
+				"src"
+			]
+		}
 	}
 }
-
 # wsp1/notAproject
 # nest/wsp2/B/src/packB/B.n4js
 export public class B {
@@ -30,19 +33,22 @@ export public class B {
 	}
 }
 
-# nest/wsp2/B/manifest.n4mf
-ProjectId: B
-VendorId: org.eclipse.n4js
-VendorName: "Eclipse N4JS Project"
-ProjectType: library
-ProjectVersion: 0.0.1-SNAPSHOT
-Output: "src-gen"
-Sources {
-	source { 
-		"src"
+# nest/wsp2/B/package.json
+{
+	"name": "B",
+	"version": "0.0.1-SNAPSHOT",
+	"n4js": {
+		"projectType": "library",
+		"vendorId": "org.eclipse.n4js",
+		"vendorName": "Eclipse N4JS Project",
+		"output": "src-gen",
+		"sources": {
+			"source": [
+				"src"
+			]
+		}
 	}
 }
-
 # nest/wsp2/D/src/packD/D.n4js
 import { A } from "packA/A"
 export public class D extends A {
@@ -59,16 +65,23 @@ export public class D2 extends B {
 	}
 }
 
-# nest/wsp2/D/manifest.n4mf
-ProjectId: D
-VendorId: org.eclipse.n4js
-VendorName: "Eclipse N4JS Project"
-ProjectType: library
-ProjectVersion: 0.0.1-SNAPSHOT
-ProjectDependencies { A,B }
-Output: "src-gen"
-Sources {
-	source { 
-		"src"
+# nest/wsp2/D/package.json
+{
+	"name": "D",
+	"version": "0.0.1-SNAPSHOT",
+	"dependencies": {
+		"A": "*",
+		"B": "*"
+	},
+	"n4js": {
+		"projectType": "library",
+		"vendorId": "org.eclipse.n4js",
+		"vendorName": "Eclipse N4JS Project",
+		"output": "src-gen",
+		"sources": {
+			"source": [
+				"src"
+			]
+		}
 	}
 }

@@ -24,6 +24,7 @@ import org.eclipse.xtext.resource.IResourceDescriptions
 import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionDelta
 import org.eclipse.xtext.util.StringInputStream
 import org.junit.Test
+import org.eclipse.n4js.N4JSGlobals
 
 import static org.junit.Assert.*
 
@@ -52,8 +53,8 @@ public class IncrementalBuilderCornerCasesPluginTest extends AbstractBuilderPart
 
 		val firstProjectUnderTest = createJSProject("XBugAuxiliary")
 		val src1 = configureProjectWithXtext(firstProjectUnderTest)
-		val manifest1 = firstProjectUnderTest.project.getFile("manifest.n4mf")
-		assertMarkers("manifest of first project should have no errors", manifest1, 0)
+		val projectDescriptionFile1 = firstProjectUnderTest.project.getFile(N4JSGlobals.PACKAGE_JSON)
+		assertMarkers("project description file (package.json) of first project should have no errors", projectDescriptionFile1, 0)
 
 		createTestFile(src1, "A", "")
 		createTestFile(src1, "B", "")
@@ -70,8 +71,8 @@ public class IncrementalBuilderCornerCasesPluginTest extends AbstractBuilderPart
 
 		val secondProjectUnderTest = createJSProject("XBugMain","src/n4js","src-gen",null)
 		val src2 = configureProjectWithXtext(secondProjectUnderTest,"src/n4js")
-		val manifest2 = secondProjectUnderTest.project.getFile("manifest.n4mf")
-		assertMarkers("manifest of second project should have no errors", manifest2, 0)
+		val projectDescriptionFile2 = secondProjectUnderTest.project.getFile(N4JSGlobals.PACKAGE_JSON);
+		assertMarkers("manifest of second project should have no errors", projectDescriptionFile2, 0)
 
 		val someClazz = createTestFile(src2, "SomeClazz", '''
 
@@ -143,10 +144,10 @@ public class IncrementalBuilderCornerCasesPluginTest extends AbstractBuilderPart
 		val secondProjectUnderTest = createJSProject("Second")
 		val src = configureProjectWithXtext(firstProjectUnderTest)
 		val src2 = configureProjectWithXtext(secondProjectUnderTest)
-		val manifest1 = firstProjectUnderTest.project.getFile("manifest.n4mf")
-		assertMarkers("manifest of first project should have no errors", manifest1, 0)
-		val manifest2 = secondProjectUnderTest.project.getFile("manifest.n4mf")
-		assertMarkers("manifest of second project should have no errors", manifest2, 0)
+		val projectDescriptionFile1 = firstProjectUnderTest.project.getFile(N4JSGlobals.PACKAGE_JSON)
+		assertMarkers("project description file (package.json) of first project should have no errors", projectDescriptionFile1, 0)
+		val projectDescriptionFile2 = secondProjectUnderTest.project.getFile(N4JSGlobals.PACKAGE_JSON)
+		assertMarkers("project description file (package.json) of second project should have no errors", projectDescriptionFile2, 0)
 
 		waitForAutoBuild
 

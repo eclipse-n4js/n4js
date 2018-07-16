@@ -123,7 +123,7 @@ class ES_07_08_4_StringLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testInvalidContinuation() {
-		val script = '''"Hello\02World"'''.parseESWithError
+		val script = '''"Hello\02World"'''.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val stringLiteral = statement.expression as StringLiteral
 		assertEquals("Hello\u0002World", stringLiteral.value)
@@ -131,7 +131,7 @@ class ES_07_08_4_StringLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testOctalSequence() {
-		val script = '''"Hello\012World"'''.parseESWithError
+		val script = '''"Hello\012World"'''.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val stringLiteral = statement.expression as StringLiteral
 		assertEquals("Hello\u000AWorld", stringLiteral.value)
@@ -139,7 +139,7 @@ class ES_07_08_4_StringLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testOctalEscape_01() {
-		val script = '''"Hello\112World"'''.parseESWithError
+		val script = '''"Hello\112World"'''.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val stringLiteral = statement.expression as StringLiteral
 		assertEquals("HelloJWorld", stringLiteral.value)
@@ -147,7 +147,7 @@ class ES_07_08_4_StringLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testOctalEscape_02() {
-		val script = '''"Hello\0112World"'''.parseESWithError
+		val script = '''"Hello\0112World"'''.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val stringLiteral = statement.expression as StringLiteral
 		assertEquals("Hello\t2World", stringLiteral.value)
@@ -155,7 +155,7 @@ class ES_07_08_4_StringLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testOctalEscape_03() {
-		val script = '''"Hello\312World"'''.parseESWithError
+		val script = '''"Hello\312World"'''.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val stringLiteral = statement.expression as StringLiteral
 		assertEquals("Hello\u00CAWorld", stringLiteral.value)
@@ -163,7 +163,7 @@ class ES_07_08_4_StringLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testOctalEscape_04() {
-		val script = '''"Hello\412World"'''.parseESWithError
+		val script = '''"Hello\412World"'''.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val stringLiteral = statement.expression as StringLiteral
 		assertEquals("Hello!2World", stringLiteral.value)
@@ -171,7 +171,7 @@ class ES_07_08_4_StringLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testOctalEscape_05() {
-		val script = '''"Hello\812World"'''.parseESWithError
+		val script = '''"Hello\812World"'''.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val stringLiteral = statement.expression as StringLiteral
 		assertEquals("Hello812World", stringLiteral.value)
@@ -179,7 +179,7 @@ class ES_07_08_4_StringLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testOctalEscape_06() {
-		val script = '''"Hello\712World"'''.parseESWithError
+		val script = '''"Hello\712World"'''.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val stringLiteral = statement.expression as StringLiteral
 		assertEquals("Hello92World", stringLiteral.value)
@@ -187,7 +187,7 @@ class ES_07_08_4_StringLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testOctalEscape_07() {
-		val script = '''"Hello\1World"'''.parseESWithError
+		val script = '''"Hello\1World"'''.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val stringLiteral = statement.expression as StringLiteral
 		assertEquals("Hello\u0001World", stringLiteral.value)

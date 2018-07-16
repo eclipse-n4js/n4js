@@ -37,37 +37,10 @@ public class NodeProcessBuilder {
 	private static final String[] NIX_SHELL_COMAMNDS = { "sh", "-c" };
 
 	@Inject
-	private Provider<NodeJsBinary> nodeBinaryProvider;
-
-	@Inject
 	private Provider<NpmBinary> npmBinaryProvider;
 
 	@Inject
 	private Provider<NpmrcBinary> npmrcBinaryProvider;
-
-	/**
-	 * Prepares process builder configured to invoke Node.js for main module resolution.
-	 *
-	 * @param packageRoot
-	 *            package name to resolve.
-	 * @return configured process builder
-	 */
-	public ProcessBuilder prepareMainModuleResolveProcessBuilder(File packageRoot) {
-		final Builder<String> builder = ImmutableList.<String> builder();
-		NodeJsBinary nodeBinary = nodeBinaryProvider.get();
-		if (isWindows()) {
-			builder.add(WIN_SHELL_COMAMNDS);
-			builder.add(escapeBinaryPath(nodeBinary.getBinaryAbsolutePath()));
-			builder.add("-e");
-			builder.add("console.log(require.resolve('" + packageRoot.getName() + "'));");
-		} else {
-			builder.add(NIX_SHELL_COMAMNDS);
-			builder.add(escapeBinaryPath(nodeBinary.getBinaryAbsolutePath())
-					+ " -e \"console.log(require.resolve('" + packageRoot.getName() + "'));\"");
-		}
-
-		return create(builder.build(), nodeBinary, packageRoot, false);
-	}
 
 	/**
 	 * Prepares process builder for "npm install" command.
@@ -132,7 +105,8 @@ public class NodeProcessBuilder {
 	 * @param invokationPath
 	 *            location on which npm command should be invoked
 	 * @param packageName
-	 *            package passed as parameter to the command (might be space separated list of names)
+	 *            package passed as parameter to the command (might be space separated list of names). If packageName is
+	 *            null, it is assume to be the empty string.
 	 * @param save
 	 *            instructs npm to save command result to packages in package.json (if available)
 	 * @param simpleCommand
@@ -143,14 +117,17 @@ public class NodeProcessBuilder {
 		Builder<String> builder = ImmutableList.<String> builder();
 		NpmBinary npmBinary = npmBinaryProvider.get();
 		String saveCommand = save ? NPM_OPTION_SAVE : "";
+		String resolvedPackageName = (packageName == null) ? "" : packageName;
 
 		if (isWindows()) {
 			builder.add(WIN_SHELL_COMAMNDS);
-			builder.add(escapeBinaryPath(npmBinary.getBinaryAbsolutePath()), simpleCommand, packageName, saveCommand);
+			builder.add(escapeBinaryPath(npmBinary.getBinaryAbsolutePath()), simpleCommand, resolvedPackageName,
+					saveCommand);
 		} else {
 			builder.add(NIX_SHELL_COMAMNDS);
 			builder.add(
-					escapeBinaryPath(npmBinary.getBinaryAbsolutePath()) + " " + simpleCommand + " " + packageName + " "
+					escapeBinaryPath(npmBinary.getBinaryAbsolutePath()) + " " + simpleCommand + " "
+							+ resolvedPackageName + " "
 							+ saveCommand);
 		}
 

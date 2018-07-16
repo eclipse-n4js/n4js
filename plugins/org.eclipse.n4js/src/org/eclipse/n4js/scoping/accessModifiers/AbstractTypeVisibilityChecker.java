@@ -43,7 +43,7 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 	@Override
 	public TypeVisibility isVisible(
 			Resource contextResource, IEObjectDescription e) {
-		TypeAccessModifier typeAccessModifier = N4JSResourceDescriptionStrategy.tryGetAccessModifier(e);
+		TypeAccessModifier typeAccessModifier = N4JSResourceDescriptionStrategy.getTypeAccessModifier(e);
 		return isVisible(contextResource, typeAccessModifier, e);
 	}
 

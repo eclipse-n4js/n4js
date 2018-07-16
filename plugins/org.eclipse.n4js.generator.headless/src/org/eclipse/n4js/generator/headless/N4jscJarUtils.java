@@ -13,6 +13,8 @@ package org.eclipse.n4js.generator.headless;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.io.File;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -23,6 +25,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
+import org.eclipse.n4js.binaries.BinaryCommandFactory;
+import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
+import org.eclipse.n4js.utils.process.ProcessResult;
 
 import com.google.common.base.Joiner;
 
@@ -161,4 +166,85 @@ public class N4jscJarUtils {
 			throw new IllegalStateException(msg);
 		}
 	}
+
+	/**
+	 * Build headless with N4jscli
+	 */
+	public static void buildHeadlessWithN4jscli(BinaryCommandFactory commandFactory, NodeJsBinary nodeJsBinary,
+			File workspaceRoot,
+			List<String> javaOpts,
+			List<String> n4jscOpts) {
+		Objects.requireNonNull(workspaceRoot);
+		Objects.requireNonNull(javaOpts);
+		Objects.requireNonNull(n4jscOpts);
+
+		// Install n4js-cli from npm registry -> node_modules folder
+		final File parentFolder = workspaceRoot.getParentFile();
+		final ProcessResult result = commandFactory
+				.createInstallPackageCommand(parentFolder, "n4js-cli@test", false)
+				.execute();
+		if (result.getExitCode() != 0) {
+			final String msg = "Cannot install n4js-cli@test";
+			LOGGER.error(msg);
+			throw new IllegalStateException(msg);
+		}
+
+		// Call n4js-cli to build the workspace
+		final List<String> cmdline = new ArrayList<>();
+		cmdline.add(nodeJsBinary.getBinaryAbsolutePath());
+		Path n4jscliAbsolutePath = FileSystems.getDefault()
+				.getPath(parentFolder.getPath() + File.separatorChar + "node_modules/n4js-cli/bin/n4jsc.js")
+				.normalize().toAbsolutePath();
+		cmdline.add(n4jscliAbsolutePath.toString());
+
+		cmdline.addAll(javaOpts);
+
+		cmdline.addAll(Arrays.asList("--buildType", "allprojects"));
+		cmdline.addAll(n4jscOpts);
+		cmdline.add("--projectlocations");
+		cmdline.add(workspaceRoot.getAbsolutePath());
+
+		ProcessBuilder pb = new ProcessBuilder(cmdline);
+		pb.directory(null); // set to home of current process, which should be the module (mvn: ${project.basedir})
+		pb.inheritIO();
+
+		LOGGER.info("current directory is: " + new File("").getAbsolutePath());
+		LOGGER.info("spawning process with command: " + Joiner.on(" ").join(cmdline));
+
+		boolean timeout = false;
+		int exitCode = 0;
+		boolean gotExitCode = false;
+		Exception ex = null;
+
+		System.out.println("--- start of output of external process");
+		try {
+			Process ps = pb.start();
+			timeout = !ps.waitFor(PROCESS_TIMEOUT_IN_MINUTES, TimeUnit.MINUTES);
+			if (!timeout) {
+				exitCode = ps.exitValue();
+				gotExitCode = true;
+			}
+		} catch (Exception e) {
+			ex = e;
+		}
+		System.out.println("--- end of output of external process");
+
+		LOGGER.info("external process done (exit code: " + (gotExitCode ? exitCode : "<none>") + ")");
+		if (ex != null) {
+			final String msg = "exception while running external process";
+			LOGGER.error(msg, ex);
+			ex.printStackTrace();
+			throw new IllegalStateException(msg, ex);
+		} else if (timeout) {
+			final String msg = "external process timed out (after " + PROCESS_TIMEOUT_IN_MINUTES + " minutes)";
+			LOGGER.error(msg);
+			throw new IllegalStateException(msg);
+		} else if (exitCode != 0) {
+			final String msg = "external process returned non-zero exit code: " + exitCode;
+			LOGGER.error(msg);
+			throw new IllegalStateException(msg);
+		}
+
+	}
+
 }

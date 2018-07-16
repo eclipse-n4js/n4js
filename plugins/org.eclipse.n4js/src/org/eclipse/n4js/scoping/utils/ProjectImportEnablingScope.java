@@ -130,7 +130,7 @@ public class ProjectImportEnablingScope implements IScope {
 			return result.iterator().next();
 		}
 
-		// Special case handling when we have a definition and a pure JS file in the score.
+		// Special case handling when we have a definition and a pure JS file in the scope.
 		// In such cases we return with the description that corresponds to the definition file.
 		if (size == 2) {
 

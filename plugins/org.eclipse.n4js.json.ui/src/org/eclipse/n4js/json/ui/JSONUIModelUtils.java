@@ -10,8 +10,7 @@ import org.eclipse.n4js.json.JSON.JSONPackage;
 import org.eclipse.n4js.json.JSON.JSONValue;
 
 /**
- * Static utility class for dealing with {@link JSONPackage} elements 
- * in the UI.
+ * Static utility class for dealing with {@link JSONPackage} elements in the UI.
  */
 public class JSONUIModelUtils {
 	/**
@@ -31,15 +30,16 @@ public class JSONUIModelUtils {
 			return Collections.emptyList();
 		}
 	}
-	
+
 	/**
-	 * Returns {@code true} iff the given {@link JSONValue} may contain
-	 * children (e.g. object, array) and does not just represent a primitive value (e.g. string, boolean).
+	 * Returns {@code true} iff the given {@link JSONValue} may contain children
+	 * (e.g. object, array) and does not just represent a primitive value (e.g.
+	 * string, boolean).
 	 */
 	public static boolean isContainer(JSONValue value) {
 		return (value instanceof JSONObject) || (value instanceof JSONArray);
 	}
-	
+
 	private JSONUIModelUtils() {
 		// non-instantiable utility class
 	}

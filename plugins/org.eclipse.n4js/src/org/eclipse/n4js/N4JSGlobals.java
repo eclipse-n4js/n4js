@@ -81,7 +81,6 @@ public final class N4JSGlobals {
 	 * {@link #JSX_FILE_EXTENSION}.
 	 */
 	// TODO TODO IDE-2493 multiple languages topic
-	// Clarify usage and why N4MF is excluded
 	public static final Collection<String> ALL_N4_FILE_EXTENSIONS = unmodifiableCollection(newLinkedHashSet(asList(
 			N4JS_FILE_EXTENSION,
 			N4JSD_FILE_EXTENSION,
@@ -115,6 +114,10 @@ public final class N4JSGlobals {
 	 */
 	public static final String NPM = "npm";
 	/**
+	 * Name of the npm "node_modules" folder.
+	 */
+	public static final String NODE_MODULES = "node_modules";
+	/**
 	 * The name of an npm install command.
 	 */
 	public static final String NPM_INSTALL = NPM + " install";
@@ -122,6 +125,18 @@ public final class N4JSGlobals {
 	 * The name of an NPM's package json file.
 	 */
 	public static final String PACKAGE_JSON = "package.json";
+	/**
+	 * Name of the package.json fragment file from the "n4jsd" type definitions repository.
+	 */
+	public static final String PACKAGE_FRAGMENT_JSON = "package-fragment.json";
+	/**
+	 * The name of the N4JS-specific marker file used to denote sub-folders of the external libraries "node_modules"
+	 * folder that were installed directly, instead of only indirectly by "npm install" as a transitive dependency.
+	 * <p>
+	 * These marker files are required only temporarily. When removing this, make sure to remove all files with name
+	 * {@value N4JSGlobals#PACKAGE_MARKER} from sub-folders of top-level folder "n4js-libs"!
+	 */
+	public static final String PACKAGE_MARKER = "package.n4js-marker";
 
 	private N4JSGlobals() {
 		// private to prevent inheritance & instantiation.

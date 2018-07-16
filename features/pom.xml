@@ -30,7 +30,6 @@ Contributors:
 		<module>org.eclipse.n4js.compiler.sdk</module>
 		<module>org.eclipse.n4js.sdk</module>
 		<module>org.eclipse.n4js.lang.sdk</module>
-		<module>org.eclipse.n4js.n4mf.sdk</module>
 		<module>org.eclipse.n4js.json.sdk</module>
 		<module>org.eclipse.n4js.regex.sdk</module>
 		<module>org.eclipse.n4js.ts.sdk</module>

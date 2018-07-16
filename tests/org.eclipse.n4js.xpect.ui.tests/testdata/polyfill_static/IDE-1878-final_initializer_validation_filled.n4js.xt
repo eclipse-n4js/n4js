@@ -21,7 +21,7 @@
 	   	 		ThisFile "A.n4js" { from="IDE-1878-final_initializer_validation_filled.n4js.xt"}
 	   	 	}
 	   	}
-   	 	File "manifest.n4mf" { from="manifest_uses_b00.n4mf" }
+   	 	File "package.json" { from="package_uses_b00.json" }
    	 }
    }
 

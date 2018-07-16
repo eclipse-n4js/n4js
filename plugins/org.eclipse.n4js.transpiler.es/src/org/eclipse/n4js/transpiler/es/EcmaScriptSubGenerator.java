@@ -89,7 +89,7 @@ public class EcmaScriptSubGenerator extends AbstractSubGenerator {
 	@Override
 	protected void internalDoGenerate(Resource resource, GeneratorOption[] options, IFileSystemAccess fsa) {
 		if (!(resource instanceof N4JSResource)) {
-			if (IN4JSProject.N4MF_MANIFEST.equals(resource.getURI().lastSegment())) {
+			if (IN4JSProject.PACKAGE_JSON.equals(resource.getURI().lastSegment())) {
 				return;
 			}
 			throw new IllegalArgumentException("Given resource is not an N4JSResource. " + resource);

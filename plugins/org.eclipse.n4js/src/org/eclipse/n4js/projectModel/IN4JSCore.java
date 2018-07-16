@@ -54,6 +54,17 @@ public interface IN4JSCore {
 	Optional<? extends IN4JSProject> findProject(URI nestedLocation);
 
 	/**
+	 * Given a nested location inside an existing(!) {@link IN4JSProject}, this method will return the "depth" of this
+	 * location, i.e. 0 if the location points to the project folder itself, 1 if it points to a file or folder in the
+	 * project's root folder, 2 if it points to a file or folder in a direct sub folder of the project's root folder,
+	 * etc.
+	 * <p>
+	 * Returns -1 if the given location is not a nested location in one of the registered, existing
+	 * {@code IN4JSProject}s.
+	 */
+	int getDepthOfLocation(URI nestedLocation);
+
+	/**
 	 * Tells if the two given nested locations are contained in the same N4JS project.
 	 */
 	boolean isInSameProject(URI nestedLocation1, URI nestedLocation2);

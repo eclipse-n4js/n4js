@@ -25,5 +25,5 @@ public class JSONIdeSetup extends JSONStandaloneSetup {
 	public Injector createInjector() {
 		return Guice.createInjector(Modules2.mixin(new JSONRuntimeModule(), new JSONIdeModule()));
 	}
-	
+
 }

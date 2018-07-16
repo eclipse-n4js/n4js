@@ -30,7 +30,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.compare.ApiImplMapping;
 import org.eclipse.n4js.generator.AbstractSubGenerator;
-import org.eclipse.n4js.n4mf.BootstrapModule;
 import org.eclipse.n4js.n4mf.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSCore;
@@ -143,13 +142,16 @@ public class RunnerHelper {
 		List<String> execModules = extendedDeps.stream()
 				.filter(p -> ProjectType.RUNTIME_ENVIRONMENT.equals(p.getProjectType()))
 				.map(re -> {
-					Optional<URI> execModuleAsURI = getExecModuleAsURI(re);
-					if (!execModuleAsURI.isPresent()) {
+					// obtain the module specifier of the execModule
+					final Optional<String> oExecModuleSpecifier = re.getExecModule()
+							.transform(bootstrapModule -> bootstrapModule.getModuleSpecifierWithWildcard());
+
+					if (!oExecModuleSpecifier.isPresent()) {
 						return null;
 					}
-					return getProjectRelativePath(re,
-							compilerHelper.generateFileDescriptor(re, execModuleAsURI.get(),
-									N4JSGlobals.JS_FILE_EXTENSION));
+
+					// compute execModule location, by appending FQN to output folder location
+					return getProjectRelativePath(re, oExecModuleSpecifier.get() + "." + N4JSGlobals.JS_FILE_EXTENSION);
 				})
 				.filter(s -> !Strings.isNullOrEmpty(s))
 				.collect(Collectors.toList());
@@ -241,18 +243,6 @@ public class RunnerHelper {
 		final RecursionGuard<URI> guard = new RecursionGuard<>();
 		recursiveDependencyCollector(sourceContainerAware, dependencies, guard);
 		return dependencies;
-	}
-
-	/**
-	 * Same as {@link IN4JSProject#getExecModule()}, but returns the execution module as URI.
-	 */
-	private Optional<URI> getExecModuleAsURI(IN4JSProject project) {
-		Optional<BootstrapModule> oExecModule = project.getExecModule();
-		if (oExecModule.isPresent()) {
-			return Optional.of(artifactHelper.findArtifact(project, oExecModule.get().getModuleSpecifierWithWildcard(),
-					Optional.of(".js")));
-		}
-		return Optional.absent();
 	}
 
 	/**
@@ -397,6 +387,8 @@ public class RunnerHelper {
 		if (reProject.isPresent()) {
 			IN4JSProject re = reProject.get();
 			recursiveExtendedREsCollector(re, deps);
+			// also add dependencies of the runtime environment
+			recursiveDependencyCollector(re, deps, new RecursionGuard<>());
 		} else {
 			// IDE-1359: don't throw exception to make runners work without user-defined runtime environment
 			// (will be changed later when library manager is available!)

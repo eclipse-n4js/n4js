@@ -13,7 +13,7 @@
 
 	Workspace {
 		Project "calling.project" {
-			File "manifest.n4mf" { from="IDE-1025__16.6.5.1__manifest.n4mf" }
+			File "package.json" { from="IDE-1025__16.6.5.1__package.json" }
 			Folder "src" {
 				ThisFile {}
 				File "OtherFile.n4js" { from="IDE-1025__16.6.5.1__OtherFile.n4js" }
