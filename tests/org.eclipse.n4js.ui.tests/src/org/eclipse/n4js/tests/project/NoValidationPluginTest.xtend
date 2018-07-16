@@ -91,6 +91,7 @@ class NoValidationPluginTest extends AbstractBuilderParticipantTest {
 
 		waitForAutoBuild();
 
+		// assert markers
 		assertMarkers("file src/js/Shadowed.js should have 0 markers", fileImpl, 0);
 		assertMarkers("file src/n4js/Shadowed.n4jsd should have 2 markers since it's invalid", fileTypeDef, 1);
 		
