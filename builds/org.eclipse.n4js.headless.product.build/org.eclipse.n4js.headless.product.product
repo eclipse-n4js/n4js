@@ -96,7 +96,6 @@
       <plugin id="org.eclipse.n4js.generator.headless"/>
       <plugin id="org.eclipse.n4js.hlc.base"/>
       <plugin id="org.eclipse.n4js.model"/>
-      <plugin id="org.eclipse.n4js.n4mf"/>
       <plugin id="org.eclipse.n4js.n4mf.model"/>
       <plugin id="org.eclipse.n4js.regex"/>
       <plugin id="org.eclipse.n4js.releng.utils"/>

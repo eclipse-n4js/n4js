@@ -277,13 +277,31 @@ public interface N4mfPackage extends EPackage {
 	int PROJECT_DESCRIPTION__MODULE_LOADER = 20;
 
 	/**
+	 * The feature id for the '<em><b>Has Nested Node Modules Folder</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROJECT_DESCRIPTION__HAS_NESTED_NODE_MODULES_FOLDER = 21;
+
+	/**
+	 * The feature id for the '<em><b>Has N4JS Nature</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROJECT_DESCRIPTION__HAS_N4JS_NATURE = 22;
+
+	/**
 	 * The number of structural features of the '<em>Project Description</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION_FEATURE_COUNT = 21;
+	int PROJECT_DESCRIPTION_FEATURE_COUNT = 23;
 
 	/**
 	 * The operation id for the '<em>Get Output Path</em>' operation.
@@ -377,13 +395,22 @@ public interface N4mfPackage extends EPackage {
 	int DECLARED_VERSION__QUALIFIER = 3;
 
 	/**
+	 * The feature id for the '<em><b>Build Meta Data</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DECLARED_VERSION__BUILD_META_DATA = 4;
+
+	/**
 	 * The number of structural features of the '<em>Declared Version</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DECLARED_VERSION_FEATURE_COUNT = 4;
+	int DECLARED_VERSION_FEATURE_COUNT = 5;
 
 	/**
 	 * The number of operations of the '<em>Declared Version</em>' class.
@@ -1099,6 +1126,28 @@ public interface N4mfPackage extends EPackage {
 	EAttribute getProjectDescription_ModuleLoader();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4mf.ProjectDescription#isHasNestedNodeModulesFolder <em>Has Nested Node Modules Folder</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Has Nested Node Modules Folder</em>'.
+	 * @see org.eclipse.n4js.n4mf.ProjectDescription#isHasNestedNodeModulesFolder()
+	 * @see #getProjectDescription()
+	 * @generated
+	 */
+	EAttribute getProjectDescription_HasNestedNodeModulesFolder();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4mf.ProjectDescription#isHasN4JSNature <em>Has N4JS Nature</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Has N4JS Nature</em>'.
+	 * @see org.eclipse.n4js.n4mf.ProjectDescription#isHasN4JSNature()
+	 * @see #getProjectDescription()
+	 * @generated
+	 */
+	EAttribute getProjectDescription_HasN4JSNature();
+
+	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.n4mf.ProjectDescription#getOutputPath() <em>Get Output Path</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1191,6 +1240,17 @@ public interface N4mfPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getDeclaredVersion_Qualifier();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4mf.DeclaredVersion#getBuildMetaData <em>Build Meta Data</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Build Meta Data</em>'.
+	 * @see org.eclipse.n4js.n4mf.DeclaredVersion#getBuildMetaData()
+	 * @see #getDeclaredVersion()
+	 * @generated
+	 */
+	EAttribute getDeclaredVersion_BuildMetaData();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4mf.SourceContainerDescription <em>Source Container Description</em>}'.
@@ -1740,6 +1800,22 @@ public interface N4mfPackage extends EPackage {
 		EAttribute PROJECT_DESCRIPTION__MODULE_LOADER = eINSTANCE.getProjectDescription_ModuleLoader();
 
 		/**
+		 * The meta object literal for the '<em><b>Has Nested Node Modules Folder</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PROJECT_DESCRIPTION__HAS_NESTED_NODE_MODULES_FOLDER = eINSTANCE.getProjectDescription_HasNestedNodeModulesFolder();
+
+		/**
+		 * The meta object literal for the '<em><b>Has N4JS Nature</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PROJECT_DESCRIPTION__HAS_N4JS_NATURE = eINSTANCE.getProjectDescription_HasN4JSNature();
+
+		/**
 		 * The meta object literal for the '<em><b>Get Output Path</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1812,6 +1888,14 @@ public interface N4mfPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute DECLARED_VERSION__QUALIFIER = eINSTANCE.getDeclaredVersion_Qualifier();
+
+		/**
+		 * The meta object literal for the '<em><b>Build Meta Data</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute DECLARED_VERSION__BUILD_META_DATA = eINSTANCE.getDeclaredVersion_BuildMetaData();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4mf.impl.SourceContainerDescriptionImpl <em>Source Container Description</em>}' class.

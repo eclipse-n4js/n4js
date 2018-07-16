@@ -18,7 +18,6 @@ import org.eclipse.n4js.xpect.methods.TypeXpectMethod;
 import org.eclipse.n4js.xpect.methods.scoping.ScopeXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.OutputXpectMethod;
 import org.eclipse.n4js.xpect.validation.suppression.N4JSSuppressIssuesSetup;
-import org.junit.runner.RunWith;
 import org.eclipse.xpect.XpectImport;
 import org.eclipse.xpect.runner.XpectRunner;
 import org.eclipse.xpect.runner.XpectSuiteClasses;
@@ -26,6 +25,7 @@ import org.eclipse.xpect.runner.XpectTestFiles;
 import org.eclipse.xpect.runner.XpectTestFiles.FileRoot;
 import org.eclipse.xpect.xtext.lib.tests.ResourceDescriptionTest;
 import org.eclipse.xpect.xtext.lib.tests.ValidationTest;
+import org.junit.runner.RunWith;
 
 /**
  * Test class for all Xpect tests in folder xpect-tests; this test class is also configured in the plugin.xml so that is

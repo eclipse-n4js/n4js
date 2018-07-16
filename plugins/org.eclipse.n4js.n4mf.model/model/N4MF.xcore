@@ -49,6 +49,18 @@ class ProjectDescription {
 	contains ModuleFilter[] moduleFilters
 	contains ProjectDependency[] testedProjects
 	ModuleLoader moduleLoader
+	/* 
+	 * Tells if the project represented by this project description has a nested
+	 * "node_modules" folder, i.e. a folder named "node_modules" located right next
+	 * to the package.json file.
+	 */
+	boolean hasNestedNodeModulesFolder
+
+	/**
+	 * Indicates whether the underlying project description explicitly configured
+	 * the project to be an N4JS project (e.g. includes n4js section). 
+	 */
+	boolean hasN4JSNature
 
 	op String getOutputPath() {
 		return FileUtils.normalizeDotWhenEmpty(outputPathRaw);
@@ -88,6 +100,7 @@ class DeclaredVersion {
 	int minor
 	int micro
 	String qualifier
+	String buildMetaData
 }
 
 /**
@@ -102,14 +115,14 @@ class DeclaredVersion {
  * </description>
  */
 enum ProjectType {
-	APPLICATION = 0,
-	PROCESSOR = 1,
-	LIBRARY = 2,
-	API = 3,
-	RUNTIME_ENVIRONMENT = 4,
-	RUNTIME_LIBRARY = 5,
-	TEST = 6,
-	VALIDATION = 7
+	VALIDATION = 0,
+	APPLICATION = 1,
+	PROCESSOR = 2,
+	LIBRARY = 3,
+	API = 4,
+	RUNTIME_ENVIRONMENT = 5,
+	RUNTIME_LIBRARY = 6,
+	TEST = 7
 }
 
 /**

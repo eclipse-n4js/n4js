@@ -21,7 +21,7 @@
 				File "Poly.n4js" { from="Polyfill_filled.n4js.xt" }
 	   	 	}
    	 	}
-   	 	File "manifest.n4mf" { from="manifest.n4mf" }
+   	 	File "package.json" { from="package.json" }
    	 }
    }
    END_SETUP

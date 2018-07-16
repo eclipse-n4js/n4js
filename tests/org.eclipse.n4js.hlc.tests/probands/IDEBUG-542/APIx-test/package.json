@@ -1,0 +1,29 @@
+{
+	"name": "APIx-test",
+	"version": "0.0.1-SNAPSHOT",
+	"dependencies": {
+		"n4js-runtime-es2015": "*",
+		"APIx": "*",
+		"org.eclipse.n4js.mangelhaft": "*"
+	},
+	"n4js": {
+		"projectType": "test",
+		"vendorId": "org.eclipse.n4js",
+		"vendorName": "Eclipse N4JS Project",
+		"output": "src-gen",
+		"sources": {
+			"source": [
+				"src"
+			],
+			"test": [
+				"test"
+			]
+		},
+		"requiredRuntimeLibraries": [
+			"n4js-runtime-es2015"
+		],
+		"testedProjects": [
+			"APIx"
+		]
+	}
+}

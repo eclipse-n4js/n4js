@@ -11,7 +11,6 @@
 package org.eclipse.n4js.ui.wizard.generator;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-
 import org.eclipse.n4js.ui.wizard.workspace.WorkspaceWizardModel;
 
 /**
@@ -44,11 +43,14 @@ public interface WorkspaceWizardGenerator<M extends WorkspaceWizardModel> {
 	public void writeToFile(M model, IProgressMonitor monitor) throws WorkspaceWizardGeneratorException;
 
 	/**
-	 * Performs all necessary changes in the manifest file to prepare the creation of the model's workspace element.
+	 * Performs all necessary changes in the project description file to prepare the creation of the model's workspace
+	 * element.
 	 *
 	 * @param model
-	 *            The model to change the manifest for
+	 *            The model to change the project description for.
+	 *
 	 * @throw {@link WorkspaceWizardGeneratorException} when problems during the process occur.
 	 */
-	public void performManifestChanges(M model, IProgressMonitor monitor) throws WorkspaceWizardGeneratorException;
+	public void performProjectDescriptionChanges(M model, IProgressMonitor monitor)
+			throws WorkspaceWizardGeneratorException;
 }

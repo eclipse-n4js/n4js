@@ -16,7 +16,7 @@ import java.io.IOException
 import org.eclipse.n4js.hlc.base.BuildType
 import org.eclipse.n4js.hlc.base.ExitCodeException
 import org.eclipse.n4js.hlc.tests.AbstractN4jscTest
-import org.eclipse.n4js.hlc.tests.N4CliHelper
+import org.eclipse.n4js.test.helper.hlc.N4CliHelper
 import org.eclipse.n4js.utils.io.FileDeleter
 import org.junit.After
 import org.junit.Before
@@ -29,7 +29,7 @@ import static org.eclipse.n4js.runner.SystemLoaderInfo.COMMON_JS
  *
  * Asserts that all used versions are imported correctly and that no obsolete versions are imported.
  */
-class ObsoleteVersionedImportsTest extends AbstractN4jscTest {
+public class ObsoleteVersionedImportsTest extends AbstractN4jscTest {
 	File workspace;
 
 	/** Prepare workspace. */
@@ -58,7 +58,7 @@ class ObsoleteVersionedImportsTest extends AbstractN4jscTest {
 	private def String compileAndRun(String projectName, String fileToRunFQN) throws ExitCodeException, IOException {
 		val wsRoot = workspace.getAbsolutePath().toString();
 
-		val fileToRun = wsRoot + "/" + projectName + "/src/" + fileToRunFQN;
+		val fileToRun = wsRoot + "/" + projectName + "/src-ext/" + fileToRunFQN;
 		val projectToCompile = wsRoot + "/" + projectName;
 
 		val String[] args = #[
@@ -66,9 +66,7 @@ class ObsoleteVersionedImportsTest extends AbstractN4jscTest {
 				"--runWith", "nodejs",
 				"--run", fileToRun,
 				"--buildType", BuildType.projects.toString(),
-				projectToCompile,
-				"--run",
-				fileToRun];
+				projectToCompile];
 		
 		return runAndCaptureOutput(args);
 	}
@@ -76,11 +74,11 @@ class ObsoleteVersionedImportsTest extends AbstractN4jscTest {
 	/**
 	 * Compiles and runs the test project.
 	 *
-	 * Assert the output to be equal to 'ObsoleteVersionedImports/expectations.log'.
+	 * Asserts the output to be equal to 'ObsoleteVersionedImports/expectations.log'.
 	 */
 	@Test
 	public def void testNoObsoleteVersionsImported() throws IOException, ExitCodeException {
-		val out = compileAndRun("ObsoleteVersionedImports", "imports/ImplicitVersionImport_run.n4js");
+		val out = compileAndRun("ObsoleteVersionedImports", "run.js");
 		val expectations = '''
 		R#1: function R$1() {}
 		R#2: undefined

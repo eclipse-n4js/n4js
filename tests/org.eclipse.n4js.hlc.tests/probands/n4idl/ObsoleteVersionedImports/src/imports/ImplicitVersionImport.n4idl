@@ -34,7 +34,7 @@ function globalIdentifier(identifier : string) {
 }
 
 @Migration
-export public function f() {
+export public function f(r : R#1) : R#2 {
 	var r1: R#1 = new R#1();
 	var r3: R#3 = new R#3();
 
@@ -61,4 +61,6 @@ export public function f() {
 	console.log("T#2:", globalIdentifier("T$2"));
 	
 	console.log("Q#1:", globalIdentifier("Q$1"));
+	
+	return null;
 }

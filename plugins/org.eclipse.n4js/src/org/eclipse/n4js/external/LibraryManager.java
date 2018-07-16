@@ -16,10 +16,8 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static org.eclipse.n4js.external.LibraryChange.LibraryChangeType.Install;
 import static org.eclipse.n4js.external.LibraryChange.LibraryChangeType.Uninstall;
-import static org.eclipse.n4js.projectModel.IN4JSProject.N4MF_MANIFEST;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
@@ -32,6 +30,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IProject;
@@ -47,7 +46,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.n4js.binaries.IllegalBinaryStateException;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
-import org.eclipse.n4js.external.libraries.PackageJson;
 import org.eclipse.n4js.external.version.VersionConstraintFormatUtil;
 import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
 import org.eclipse.n4js.n4mf.ProjectDependency;
@@ -104,7 +102,13 @@ public class LibraryManager {
 	private ExternalIndexSynchronizer indexSynchronizer;
 
 	@Inject
-	private FileBasedExternalPackageManager filbasedPackageManger;
+	private FileBasedExternalPackageManager filebasedPackageManager;
+
+	@Inject
+	private IN4JSCore n4jsCore;
+
+	// @Inject
+	// private ProjectDescriptionHelper projectDescriptionHelper;
 
 	/**
 	 * see {@link ExternalIndexSynchronizer#isProjectsSynchronized()}.
@@ -211,6 +215,17 @@ public class LibraryManager {
 				List<LibraryChange> deltaChanges = installUninstallNPMs(monitor, status, npmsToInstall, emptyList());
 				actualChanges.addAll(deltaChanges);
 				npmsToInstall = getDependenciesOfNPMs(deltaChanges);
+
+				// obtain list of all available project IDs (external and workspace)
+				Set<String> allProjectsIds = StreamSupport.stream(n4jsCore.findAllProjects().spliterator(), false)
+						.map(p -> p.getProjectId()).collect(Collectors.toSet());
+
+				// Note: need to make sure the projects in npmsToInstall are not in the workspace yet; method
+				// #installUninstallNPMs() (which will be invoked in a moment) is doing this as well, but that method
+				// does not consider the shipped code. For example, without the next line, "n4js-runtime-node" would be
+				// installed even though it is already available via the shipped code.
+				npmsToInstall.keySet().removeAll(allProjectsIds);
+
 				if (!npmsToInstall.isEmpty()) {
 					msg = "Installing transitive dependencies: " + String.join(", ", npmsToInstall.keySet());
 					logger.logInfo(msg);
@@ -227,31 +242,74 @@ public class LibraryManager {
 	}
 
 	/**
-	 * This method will install all dependencies of the requested NPMs. Since it calls
-	 * {@link #installNPMsInternal(Map, IProgressMonitor)}, this method will install all transitive dependencies of the
-	 * requested NPMs.
+	 * This method returns all transitive dependencies that are implied by the given list of {@link LibraryChange}s.
+	 *
+	 * For non-N4JS npm packages, these are the dependencies of the corresponding type definitions (if present) and for
+	 * N4JS npm packages, these are all package dependencies.
 	 * <p>
-	 * GH-862: Please remove this after GH-821 is solved
+	 * GH-862: This must be revisited when solving GH-821
 	 */
 	private Map<String, String> getDependenciesOfNPMs(List<LibraryChange> actualChanges) {
 		Map<String, String> dependencies = new HashMap<>();
 		for (LibraryChange libChange : actualChanges) {
 			if (libChange.type == LibraryChangeType.Added) {
-				ProjectDescription pd = filbasedPackageManger.loadManifestFromProjectRoot(libChange.location);
-				if (pd != null) {
-					for (ProjectDependency pDep : pd.getProjectDependencies()) {
-						String name = pDep.getProjectId();
-						String version = NO_VERSION;
-						if (pDep.getVersionConstraint() != null) {
-							version = VersionConstraintFormatUtil.npmFormat(pDep.getVersionConstraint());
-						}
-						dependencies.put(name, version);
-					}
+				final org.eclipse.emf.common.util.URI npmLocation = libChange.location;
+
+				// We need to consider three different cases here (see 1, 2, 3):
+
+				// 1. The package has a package-fragment.json: Make sure to only collect
+				// transitive dependencies declared in the fragment (type definition dependencies)
+				if (filebasedPackageManager.isExternalProjectWithFragment(npmLocation)) {
+					ProjectDescription description = filebasedPackageManager
+							.loadFragmentProjectDescriptionFromProjectRoot(npmLocation);
+					collectDependencies(description, dependencies);
+					continue;
 				}
+
+				// obtain project description of the added project (package.json + fragment)
+				final ProjectDescription pd = filebasedPackageManager
+						.loadProjectDescriptionFromProjectRoot(npmLocation);
+
+				if (pd == null) {
+					LOGGER.error("Cannot obtain project description of npm at " + npmLocation
+							+ ". Installation results may be inaccurate.");
+					continue;
+				}
+
+				// 2. The package represents an actual N4JS project (with .n4js resources), which
+				// needs to be built. In that case we must install all of its dependencies, as declared
+				// in its package.json file.
+				if (pd.isHasN4JSNature()) {
+					collectDependencies(pd, dependencies);
+					continue;
+				}
+
+				// 3. The package is a plain npm package w/o fragment (type definitions): In this case we do not collect
+				// its dependencies transitively (no type definitions required)
 			}
 		}
 
 		return dependencies;
+	}
+
+	/**
+	 * Reads all dependencies from the given project {@code description} and puts them in {@code dependencies}.
+	 *
+	 * @param description
+	 *            The project description to collect dependencies from.
+	 * @param dependencies
+	 *            The map to store the collected dependencies in. Stores a mapping of the dependency name to the version
+	 *            constraint.
+	 */
+	private void collectDependencies(ProjectDescription description, Map<String, String> dependencies) {
+		for (ProjectDependency pDep : description.getProjectDependencies()) {
+			String name = pDep.getProjectId();
+			String version = NO_VERSION;
+			if (pDep.getVersionConstraint() != null) {
+				version = VersionConstraintFormatUtil.npmFormat(pDep.getVersionConstraint());
+			}
+			dependencies.put(name, version);
+		}
 	}
 
 	private List<LibraryChange> installUninstallNPMs(IProgressMonitor monitor, MultiStatus status,
@@ -470,18 +528,9 @@ public class LibraryManager {
 			}
 
 			File packageRoot = new File(uri);
-			PackageJson packageJson = npmPackageToProjectAdapter.getPackageJson(packageRoot);
-			File manifest = new File(packageRoot, N4MF_MANIFEST);
-			if (!manifest.isFile()) {
-				String message = "Cannot locate N4JS manifest for '" + packageName + "' at '" + manifest + "'.";
-				IStatus error = statusHelper.createError(message);
-				logger.logError(error);
-			}
 
 			IStatus status = npmPackageToProjectAdapter.addTypeDefinitions(
 					packageRoot,
-					packageJson,
-					manifest,
 					definitionsFolder);
 
 			if (!status.isOK()) {
@@ -490,11 +539,6 @@ public class LibraryManager {
 
 			return status;
 
-		} catch (IOException e) {
-			String message = "Error while refreshing npm type definitions for '" + packageName + "'.";
-			IStatus error = statusHelper.createError(message, e);
-			logger.logError(error);
-			return error;
 		} finally {
 			monitor.done();
 		}

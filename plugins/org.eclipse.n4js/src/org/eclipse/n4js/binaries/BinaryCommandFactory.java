@@ -12,14 +12,14 @@ package org.eclipse.n4js.binaries;
 
 import java.io.File;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
 import org.eclipse.n4js.binaries.nodejs.NodeProcessBuilder;
 import org.eclipse.n4js.utils.process.OutputRedirection;
 import org.eclipse.n4js.utils.process.ProcessExecutionCommand;
 import org.eclipse.n4js.utils.process.ProcessExecutor;
 import org.eclipse.n4js.utils.process.ProcessResult;
+
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * Factory for commands used to interact with external binaries.
@@ -95,24 +95,6 @@ public class BinaryCommandFactory {
 			public ProcessResult execute() {
 				ProcessBuilder processBuilder = nodeProccessBuilder.getNpmCacheCleanProcessBuilder(invocationPath);
 				return processExecutor.createAndExecute(processBuilder, COMMAND_NAME, OutputRedirection.REDIRECT);
-			}
-		};
-	}
-
-	/**
-	 * Creates command that will execute external node process to resolve the main module.
-	 *
-	 * @param packageRoot
-	 *            package name to resolve.
-	 */
-	public ProcessExecutionCommand createResolveMainModuleCommand(File packageRoot) {
-		return new ProcessExecutionCommand() {
-			private static final String COMMAND_NAME = "node_require_resolve";
-
-			@Override
-			public ProcessResult execute() {
-				ProcessBuilder processBuilder = nodeProccessBuilder.prepareMainModuleResolveProcessBuilder(packageRoot);
-				return processExecutor.createAndExecute(processBuilder, COMMAND_NAME, OutputRedirection.SUPPRESS);
 			}
 		};
 	}

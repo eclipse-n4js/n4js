@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="org.eclipse.n4js.json.validation" name="org.eclipse.n4js.json.validation" schema="schema/org.eclipse.n4js.json.validation.exsd"/>
+   <extension-point id="org.eclipse.n4js.json.resourceDescription" name="JSON Resource Description Extension" schema="schema/org.eclipse.n4js.json.resourceDescription.exsd"/>
+</plugin>

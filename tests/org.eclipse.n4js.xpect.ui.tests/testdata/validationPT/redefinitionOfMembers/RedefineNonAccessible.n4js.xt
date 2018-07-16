@@ -16,14 +16,14 @@
 			Folder "src" {
 				ThisFile {}
 			}
-			File "manifest.n4mf" { from="manifest1.n4mf" }
+			File "package.json" { from="package1.json" }
 		}
 
 		Project "Project2" {
 			Folder "src" {
 				File "Remote.n4js" {}
 			}
-			File "manifest.n4mf" { from="manifest2.n4mf" }
+			File "package.json" { from="package2.json" }
 		}
 	}
 

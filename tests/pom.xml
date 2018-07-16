@@ -23,13 +23,10 @@ Contributors:
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<modules>
+		<modules>
 		<!-- ************************************** JUnit Tests -->
 
-       		<!-- Test to ensure that shipped code is up-to-date (see /plugins/org.eclipse.n4js.external.libraries/shipped-code). -->
-		<module>org.eclipse.n4js.external.libraries.update.tests</module>
-
- 	       <!-- Release Engineering Tools Tests -->
+		<!-- Release Engineering Tools Tests -->
 		<module>org.eclipse.n4js.releng.utils.tests</module>
 
 		<!-- JSDoc tests -->
@@ -42,7 +39,6 @@ Contributors:
 		
 		<!-- Tester tests -->
 		<module>org.eclipse.n4js.tester.tests</module>
-		<module>org.eclipse.n4js.tester.ui.tests</module>
 
 		<!-- Regex tests -->
 		<module>org.eclipse.n4js.regex.tests</module>
@@ -61,9 +57,9 @@ Contributors:
 		<module>org.eclipse.n4js.transpiler.es.tests</module>
 		<module>org.eclipse.n4js.generator.headless.tests</module>
 
-		<!-- Manifest tests -->
-		<module>org.eclipse.n4js.n4mf.tests</module>
-		<module>org.eclipse.n4js.n4mf.xpect.tests</module>
+		<!-- Package.json tests -->
+		<module>org.eclipse.n4js.packagejson.xpect.tests</module>
+		<module>org.eclipse.n4js.packagejson.xpect.ui.tests</module>
 		
 		<!-- access control tests -->
 		<module>org.eclipse.n4js.accesscontrol.tests</module>
@@ -71,6 +67,7 @@ Contributors:
 		<!-- JSON tests -->
 		<module>org.eclipse.n4js.json.tests</module>
 		<module>org.eclipse.n4js.json.xpect.tests</module>
+		<module>org.eclipse.n4js.json.xpect.ui.tests</module>
 
 		<!-- ************************************** JUnit Plugin Tests -->
 
@@ -86,11 +83,7 @@ Contributors:
 		<module>org.eclipse.n4js.xpect.ui.tests</module>
 		<module>org.eclipse.n4js.n4ide.spec.tests</module> 
 
-		<!-- Manifest tests -->
-		<module>org.eclipse.n4js.n4mf.xpect.ui.tests</module>
-		<!-- JSON tests -->
-		<module>org.eclipse.n4js.json.xpect.ui.tests</module>
-		<!-- Runner tests -->
+				<!-- Runner tests -->
 		<module>org.eclipse.n4js.runner.ui.tests</module>
 
 		<!--  **************************************Other tests -->
@@ -112,6 +105,7 @@ Contributors:
 
 		<!-- *************************************** Headless Tools Tests -->
 		<module>org.eclipse.n4js.hlc.tests</module>
+		<module>org.eclipse.n4js.hlc.integrationtests</module>
 
 		<!-- *************************************** n4jsx Tests -->
 		<module>org.eclipse.n4js.n4jsx.lang.tests</module>
@@ -129,10 +123,10 @@ Contributors:
 
 	</modules>
 
-
 	<properties>
 		<!-- jacoco (ECLEmma), code coverage -->
 		<jacoco-maven-plugin.version>0.8.1</jacoco-maven-plugin.version>
+
 		<ant-contrib.version>1.0b3</ant-contrib.version>
 		<ant-nodeps.version>1.8.1</ant-nodeps.version>
 
@@ -145,7 +139,6 @@ Contributors:
 		<junit-version>4.12</junit-version>
 		<ts-version>[0.0.1,0.1.0)</ts-version>
 		<n4js-version>[0.0.1,0.1.0)</n4js-version>
-		<n4mf-version>[0.0.1,0.1.0)</n4mf-version>
 
 		<!--
 		Property defines behaviour of <tycho-surefire-plugin> plugin
@@ -446,6 +439,7 @@ Contributors:
 							<exclude>**/*SmokeTest.java</exclude>
 							<exclude>**/*SwtBotTest.java</exclude>
 							<exclude>**/*SwtBotPerfTest.java</exclude>
+							<exclude>**/*JarTest.java</exclude>
 						</excludes>
 					</configuration>
 					<executions>

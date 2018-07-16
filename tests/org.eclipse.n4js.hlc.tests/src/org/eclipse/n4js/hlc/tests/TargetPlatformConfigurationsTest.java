@@ -32,6 +32,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.common.base.Predicates;
+
 /**
  * Downloads, installs, compiles and runs 'express' for different target platform configurations.
  */
@@ -44,7 +46,7 @@ public class TargetPlatformConfigurationsTest extends AbstractN4jscTest {
 	@Before
 	public void setupWorkspace() throws IOException {
 		setupExternals(platformFiles, description.getMethodName());
-		workspace = setupWorkspace("external_with_n4jsd_tpt");
+		workspace = setupWorkspace("external_with_n4jsd_tpt", Predicates.alwaysTrue());
 	}
 
 	/** Delete workspace. */

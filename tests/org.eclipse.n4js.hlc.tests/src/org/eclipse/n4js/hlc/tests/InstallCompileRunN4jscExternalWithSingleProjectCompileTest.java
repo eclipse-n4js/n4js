@@ -17,6 +17,7 @@ import java.io.IOException;
 
 import org.eclipse.n4js.hlc.base.BuildType;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
+import org.eclipse.n4js.test.helper.hlc.N4CliHelper;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
@@ -57,6 +58,7 @@ public class InstallCompileRunN4jscExternalWithSingleProjectCompileTest extends 
 				"--installMissingDependencies",
 				"--runWith", "nodejs",
 				"--run", fileToRun,
+				"--projectlocations", wsRoot,
 				"--buildType", BuildType.projects.toString(),
 				projectToCompile
 		};

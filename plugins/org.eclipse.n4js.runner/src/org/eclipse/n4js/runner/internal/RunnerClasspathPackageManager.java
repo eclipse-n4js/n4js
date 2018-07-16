@@ -16,7 +16,6 @@ import org.eclipse.n4js.internal.ClasspathPackageManager;
 /**
  * Stub of the {@link ClasspathPackageManager}.
  */
-
 class RunnerClasspathPackageManager extends ClasspathPackageManager {
 
 	RunnerClasspathPackageManager() {

@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.n4mf.BootstrapModule;
 import org.eclipse.n4js.n4mf.DeclaredVersion;
@@ -96,18 +97,18 @@ public class N4JSProject implements IN4JSProject {
 	}
 
 	@Override
-	public Optional<URI> getManifestLocation() {
-		final File manifestFile = getManifestFile().orNull();
-		if (null == manifestFile) {
+	public Optional<URI> getProjectDescriptionLocation() {
+		final File projectDescriptionFile = getProjectDescriptionFile(location).orNull();
+		if (null == projectDescriptionFile) {
 			return absent();
 		}
-		return fromNullable(getFileUri(manifestFile));
+		return fromNullable(getFileUri(projectDescriptionFile));
 	}
 
 	/**
-	 * Returns with the {@link URI EMF URI} of the file. Returns with {@code null} if the file argument is {@code null}
-	 * or the file does not exist. This method may throw runtime exception if the canonical file cannot be retrieved of
-	 * the argument.
+	 * Returns with the {@link org.eclipse.emf.common.util.URI} of the file. Returns with {@code null} if the file
+	 * argument is {@code null} or the file does not exist. This method may throw runtime exception if the canonical
+	 * file cannot be retrieved of the argument.
 	 *
 	 * @param file
 	 *            the file to get the URI of.
@@ -121,22 +122,13 @@ public class N4JSProject implements IN4JSProject {
 			final File canonicalFile = file.getCanonicalFile();
 			return createFileURI(canonicalFile.getAbsolutePath());
 		} catch (final IOException e) {
-			throw new RuntimeException("Error while trying to getting canonical file of the N4JS manifest.", e);
+			throw new RuntimeException(
+					"Error while resolving the canonical File of package.json file " + file.getPath() + ".", e);
 		}
-	}
-
-	private Optional<File> getManifestFile() {
-		final File locationAsFile = new File(java.net.URI.create(location.toString()));
-		if (locationAsFile.exists() && locationAsFile.isDirectory()) {
-			final File manifest = new File(locationAsFile, IN4JSProject.N4MF_MANIFEST);
-			return manifest.isFile() ? fromNullable(manifest) : absent();
-		}
-
-		return absent();
 	}
 
 	protected boolean checkExists() {
-		return getManifestFile().isPresent();
+		return getProjectDescriptionFile(location).isPresent();
 	}
 
 	@Override
@@ -395,5 +387,43 @@ public class N4JSProject implements IN4JSProject {
 	@Override
 	public boolean isExternal() {
 		return external;
+	}
+
+	/**
+	 * Indicates whether {@code directory} may be regarded as valid N4JS project directory.
+	 */
+	public static boolean isN4JSProjectDirectory(URI location) {
+		return getProjectDescriptionFile(location).isPresent();
+	}
+
+	private static Optional<File> getProjectDescriptionFile(URI projectLocation) {
+		final File locationAsFile = new File(java.net.URI.create(projectLocation.toString()));
+		if (locationAsFile.exists() && locationAsFile.isDirectory()) {
+			// first check for a 'package.json' file
+			final File packageJSON = new File(locationAsFile, IN4JSProject.PACKAGE_JSON);
+			if (packageJSON.isFile()) {
+				return fromNullable(packageJSON);
+			}
+			// next check for an XPECT 'package.json.xt' fiel
+			final File packageJSONXpect = new File(locationAsFile,
+					IN4JSProject.PACKAGE_JSON + "." + N4JSGlobals.XT_FILE_EXTENSION);
+
+			if (packageJSONXpect.isFile()) {
+				return fromNullable(packageJSONXpect);
+			}
+		}
+
+		return absent();
+	}
+
+	@Override
+	public boolean hasN4JSNature() {
+		if (!exists())
+			return false;
+		final ProjectDescription pd = model.getProjectDescription(getLocation());
+		if (pd == null) {
+			return false;
+		}
+		return pd.isHasN4JSNature();
 	}
 }

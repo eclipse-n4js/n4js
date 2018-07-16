@@ -13,6 +13,8 @@ package org.eclipse.n4js;
 import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression.IssueSuppressionModule;
 import org.eclipse.n4js.N4JSInjectorProviderWithMockProject.MockProjectModule;
 
+import com.google.inject.util.Modules;
+
 /**
  * An injector provider which combines {@link N4JSInjectorProviderWithMockProject} and
  * {@link N4JSInjectorProviderWithIssueSuppression}
@@ -20,6 +22,6 @@ import org.eclipse.n4js.N4JSInjectorProviderWithMockProject.MockProjectModule;
 public class N4JSInjectorProviderMockProjectSuppressedValidator extends N4JSInjectorProvider {
 	/** */
 	public N4JSInjectorProviderMockProjectSuppressedValidator() {
-		super(new MockProjectModule(), new IssueSuppressionModule());
+		super(Modules.override(new IssueSuppressionModule()).with(new MockProjectModule()));
 	}
 }

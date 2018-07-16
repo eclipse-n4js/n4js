@@ -11,7 +11,6 @@ Require-Bundle: org.eclipse.n4js.runner,
  org.eclipse.emf.ecore,
  org.eclipse.n4js,
  org.eclipse.n4js.external.libraries,
- org.eclipse.n4js.n4mf,
  org.apache.log4j,
  org.eclipse.n4js.utils
 Export-Package: org.eclipse.n4js.runner.nodejs

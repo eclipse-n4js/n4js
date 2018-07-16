@@ -16,10 +16,12 @@ import org.eclipse.n4js.N4JSInjectorProvider;
 import org.eclipse.n4js.internal.ClasspathPackageManager;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4JSRuntimeCore;
+import org.eclipse.n4js.utils.ProjectDescriptionHelper;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.XtextRunner;
 import org.junit.ComparisonFailure;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -49,6 +51,9 @@ abstract public class JSDoc2SpecProcessorFullTest {
 
 	@Inject
 	protected ClasspathPackageManager classpathPackageManager;
+
+	@Inject
+	protected ProjectDescriptionHelper projectDescriptionHelper;
 
 	@Inject
 	protected Injector injector;
@@ -125,6 +130,7 @@ abstract public class JSDoc2SpecProcessorFullTest {
 	 * Full test with SpecSample9 project, cf. IDE-2160
 	 */
 	@Test
+	@Ignore
 	public void testSample9() throws IOException, InterruptedException {
 		fullTest("SpecSample9_StaticPolyfill");
 	}

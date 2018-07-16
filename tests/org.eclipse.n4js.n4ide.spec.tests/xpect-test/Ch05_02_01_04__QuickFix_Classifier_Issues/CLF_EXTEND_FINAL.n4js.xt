@@ -17,7 +17,7 @@
 				ThisFile {}
 			}
 			Folder "src-gen" {}
-			File "manifest.n4mf" { from="../../test-config/manifest.n4mf" }
+			File "package.json" { from="../../test-config/package.json" }
 		}
 	}
 
