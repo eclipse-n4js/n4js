@@ -191,9 +191,8 @@ import org.eclipse.n4js.n4mf.VersionConstraint;
 				ver.setMicro(0);
 			}
 			DeclaredVersion lower = ver;
-			DeclaredVersion upper = EcoreUtil.copy(ver);
+			// for exact versions, we only set the lower version bound
 			result.setLowerVersion(lower);
-			result.setUpperVersion(upper);
 			result.setExclLowerBound(false);
 			result.setExclUpperBound(false);
 		}
