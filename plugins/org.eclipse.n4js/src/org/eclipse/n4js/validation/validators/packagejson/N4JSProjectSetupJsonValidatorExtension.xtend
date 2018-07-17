@@ -52,6 +52,7 @@ import org.eclipse.n4js.n4mf.ProjectDescription
 import org.eclipse.n4js.n4mf.ProjectType
 import org.eclipse.n4js.n4mf.SourceContainerDescription
 import org.eclipse.n4js.n4mf.SourceContainerType
+import org.eclipse.n4js.packagejson.PackageJsonUtils
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware
@@ -380,7 +381,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	private def holdsProjectWithTestFragmentDependsOnTestLibrary(IN4JSProject project) {
 
 		val JSONValue sourcesSection = getSingleDocumentValue(PROP__N4JS + "." + PROP__SOURCES, JSONValue);
-		val List<SourceContainerDescription> sourceContainers = ProjectDescriptionUtils.getSourceContainerDescriptions(sourcesSection);
+		val List<SourceContainerDescription> sourceContainers = PackageJsonUtils.asSourceContainerDescriptionsOrEmpty(sourcesSection);
 		
 		if (sourceContainers === null) {
 			return;
@@ -705,7 +706,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			.filter(JSONArray)
 			.flatMap[elements]
 			.filterNull
-			.map[ProjectDescriptionUtils.getModuleFilterSpecifier(it)->it]
+			.map[PackageJsonUtils.asModuleFilterSpecifierOrNull(it)->it]
 
 		holdsValidModuleSpecifiers(filterSpecifierPairs, project);
 	}

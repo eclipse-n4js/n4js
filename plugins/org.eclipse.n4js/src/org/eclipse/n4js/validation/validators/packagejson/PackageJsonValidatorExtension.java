@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.validation.validators.packagejson;
 
+import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asStringOrNull;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.DEFAULT_VALUE_OUTPUT;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__DEPENDENCIES;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__DEV_DEPENDENCIES;
@@ -75,12 +76,12 @@ import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectType;
 import org.eclipse.n4js.n4mf.SourceContainerType;
 import org.eclipse.n4js.packagejson.PackageJsonConstants;
+import org.eclipse.n4js.packagejson.PackageJsonUtils;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
 import org.eclipse.n4js.semver.SEMVERHelper;
 import org.eclipse.n4js.semver.SEMVER.VersionRangeSet;
-import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.validation.helper.FolderContainmentHelper;
@@ -293,7 +294,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 
 		// check whether the given value represents a valid project type
 		final String projectTypeString = ((JSONStringLiteral) projectTypeValue).getValue();
-		final ProjectType type = ProjectDescriptionUtils.parseProjectType(projectTypeString);
+		final ProjectType type = PackageJsonUtils.parseProjectType(projectTypeString);
 
 		// check type can be parsed successfully
 		if (type == null) {
@@ -329,7 +330,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		}
 		// check whether the given value represents a valid project type
 		final String moduleLoaderString = ((JSONStringLiteral) moduleLoaderValue).getValue();
-		if (ProjectDescriptionUtils.parseModuleLoader(moduleLoaderString) == null) {
+		if (PackageJsonUtils.parseModuleLoader(moduleLoaderString) == null) {
 			addIssue(IssueCodes.getMessageForPKGJ_INVALID_MODULE_LOADER(moduleLoaderString),
 					moduleLoaderValue, IssueCodes.PKGJ_INVALID_MODULE_LOADER);
 		}
@@ -704,7 +705,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	 */
 	private void internalCheckModuleFilterEntry(NameValuePair moduleFilterPair) {
 		// obtain enum-representation of the validated module filter type
-		final ModuleFilterType filterType = ProjectDescriptionUtils.parseModuleFilterType(moduleFilterPair.getName());
+		final ModuleFilterType filterType = PackageJsonUtils.parseModuleFilterType(moduleFilterPair.getName());
 
 		// make sure the module filter type could be parsed successfully
 		if (filterType == null) {
@@ -813,7 +814,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	 *
 	 * Returns {@code null} if the given {@code value} is not a valid representation of a module filter specifier.
 	 *
-	 * Similar to {@link ProjectDescriptionUtils#getModuleFilterSpecifier(JSONValue)} but also validates the structure
+	 * Similar to {@link PackageJsonUtils#asModuleFilterSpecifierOrNull(JSONValue)} but also validates the structure
 	 * along the way.
 	 */
 	private ValidationModuleFilterSpecifier getModuleFilterInformation(JSONValue value, ModuleFilterType type) {
@@ -1026,7 +1027,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		final JSONValue projectTypeValue = getSingleDocumentValue(
 				PROP__N4JS + "." + PROP__PROJECT_TYPE);
 		if (projectTypeValue instanceof JSONStringLiteral) {
-			return ProjectDescriptionUtils.getProjectType(projectTypeValue);
+			return PackageJsonUtils.parseProjectType(asStringOrNull(projectTypeValue));
 		} else {
 			return ProjectType.get(0);
 		}

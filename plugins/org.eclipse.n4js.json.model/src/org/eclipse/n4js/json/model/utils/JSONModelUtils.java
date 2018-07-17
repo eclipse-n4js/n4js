@@ -12,6 +12,7 @@ package org.eclipse.n4js.json.model.utils;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -31,10 +32,49 @@ import org.eclipse.n4js.json.JSON.JSONStringLiteral;
 import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.JSON.NameValuePair;
 
+import com.google.common.base.Strings;
+
 /**
  * Utility methods for more convenient access to elements of the {@link JSONPackage} model.
  */
 public class JSONModelUtils {
+
+	/**
+	 * If given JSON value is a {@link JSONStringLiteral}, returns its value, otherwise <code>null</code>.
+	 */
+	public static String asStringOrNull(JSONValue jsonValue) {
+		final String strValue = jsonValue instanceof JSONStringLiteral ? ((JSONStringLiteral) jsonValue).getValue()
+				: null;
+		if (Strings.isNullOrEmpty(strValue)) {
+			return null;
+		}
+		return strValue;
+	}
+
+	/**
+	 * If given JSON value is a {@link JSONArray}, returns its elements converted to strings with
+	 * {@link #asStringOrNull(JSONValue)}; otherwise an empty list is returned.
+	 */
+	public static List<String> asStringsInArrayOrEmpty(JSONValue jsonValue) {
+		return asArrayElementsOrEmpty(jsonValue).stream()
+				.map(JSONModelUtils::asStringOrNull)
+				.filter(str -> !Strings.isNullOrEmpty(str))
+				.collect(Collectors.toList());
+	}
+
+	/**
+	 * If given JSON value is a {@link JSONArray}, returns its elements, otherwise an empty list.
+	 */
+	public static List<JSONValue> asArrayElementsOrEmpty(JSONValue jsonValue) {
+		return jsonValue instanceof JSONArray ? ((JSONArray) jsonValue).getElements() : Collections.emptyList();
+	}
+
+	/**
+	 * If given JSON value is a {@link JSONObject}, returns its name/value pairs, otherwise an empty list.
+	 */
+	public static List<NameValuePair> asNameValuePairsOrEmpty(JSONValue jsonValue) {
+		return jsonValue instanceof JSONObject ? ((JSONObject) jsonValue).getNameValuePairs() : Collections.emptyList();
+	}
 
 	/**
 	 * Returns the {@link JSONDocument} instance that is contained in the given {@link Resource}.

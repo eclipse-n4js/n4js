@@ -11,6 +11,8 @@
 package org.eclipse.n4js.utils;
 
 import static org.eclipse.n4js.internal.N4JSModel.DIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT;
+import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNameValuePairsOrEmpty;
+import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asStringOrNull;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.DEFAULT_VALUE_OUTPUT;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.DEFAULT_VALUE_VERSION;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__DEPENDENCIES;
@@ -35,11 +37,16 @@ import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__TESTED_PRO
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__VENDOR_ID;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__VENDOR_NAME;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__VERSION;
+import static org.eclipse.n4js.packagejson.PackageJsonUtils.asBootstrapModuleOrNull;
+import static org.eclipse.n4js.packagejson.PackageJsonUtils.asBootstrapModulesInArrayOrEmpty;
+import static org.eclipse.n4js.packagejson.PackageJsonUtils.asModuleFiltersInObjectOrEmpty;
+import static org.eclipse.n4js.packagejson.PackageJsonUtils.asProjectReferenceOrNull;
+import static org.eclipse.n4js.packagejson.PackageJsonUtils.asProjectReferencesInArrayOrEmpty;
+import static org.eclipse.n4js.packagejson.PackageJsonUtils.asSourceContainerDescriptionsOrEmpty;
+import static org.eclipse.n4js.packagejson.PackageJsonUtils.parseModuleLoader;
+import static org.eclipse.n4js.packagejson.PackageJsonUtils.parseProjectType;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -57,23 +64,16 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.json.JSON.JSONArray;
 import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONFactory;
 import org.eclipse.n4js.json.JSON.JSONObject;
-import org.eclipse.n4js.json.JSON.JSONStringLiteral;
 import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.JSON.NameValuePair;
 import org.eclipse.n4js.json.model.utils.JSONModelUtils;
-import org.eclipse.n4js.n4mf.BootstrapModule;
-import org.eclipse.n4js.n4mf.ModuleFilter;
-import org.eclipse.n4js.n4mf.ModuleFilterSpecifier;
-import org.eclipse.n4js.n4mf.ModuleFilterType;
 import org.eclipse.n4js.n4mf.ModuleLoader;
 import org.eclipse.n4js.n4mf.N4mfFactory;
 import org.eclipse.n4js.n4mf.ProjectDependency;
 import org.eclipse.n4js.n4mf.ProjectDescription;
-import org.eclipse.n4js.n4mf.ProjectReference;
 import org.eclipse.n4js.n4mf.ProjectType;
 import org.eclipse.n4js.n4mf.SourceContainerDescription;
 import org.eclipse.n4js.n4mf.SourceContainerType;
@@ -83,14 +83,14 @@ import org.eclipse.n4js.semver.SEMVER.VersionNumber;
 import org.eclipse.n4js.semver.SEMVER.VersionRangeSet;
 import org.eclipse.xtext.resource.XtextResourceSet;
 
-import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
- * Load a {@link ProjectDescription} from disk. For the moment, both package.json and the legacy manifest.n4mf are
- * considered.
+ * Load a {@link ProjectDescription} from disk, optionally also loading and merging additional information from a
+ * {@code package-fragment.json} (when passing <code>true</code> as last argument to
+ * {@link #loadProjectDescriptionAtLocation(URI, JSONDocument, boolean)}).
  */
 @Singleton
 public class ProjectDescriptionHelper {
@@ -140,12 +140,6 @@ public class ProjectDescriptionHelper {
 		} else {
 			return null;
 		}
-		// System.out.println("USING MANIFEST.N4MF: " + location);
-		// return loadManifestAtLocation(location);
-		// ProjectDescription fromPackageJSON = loadPackageJSONAtLocation(location);
-		// ProjectDescription fromManifest = loadManifestAtLocation(location);
-		// ProjectDescription merged = mergeProjectDescriptions(fromPackageJSON, fromManifest);
-		// return merged;
 	}
 
 	/**
@@ -340,8 +334,7 @@ public class ProjectDescriptionHelper {
 			}
 			return null;
 		} catch (Exception e) {
-			// TODO Luca: I think this message is not valid anymore?
-			throw new WrappedException("Failed to load project description resource at " + uri, e);
+			throw new WrappedException("Failed to load Xtext file at " + uri, e);
 		}
 	}
 
@@ -411,7 +404,7 @@ public class ProjectDescriptionHelper {
 				convertDependencies(target, asNameValuePairsOrEmpty(value), true);
 				break;
 			case PROP__DEV_DEPENDENCIES:
-				// TODO consider separating normal from dev deps internally
+				// for the moment, we do not separate devDependencies from ordinary dependencies in ProjectDescription
 				convertDependencies(target, asNameValuePairsOrEmpty(value), true);
 				break;
 			case PROP__MAIN:
@@ -464,7 +457,7 @@ public class ProjectDescriptionHelper {
 			case PROP__PROJECT_TYPE:
 				// parseProjectType returns null if value is invalid, this will
 				// cause the setProjectType setter to use the default value of ProjectType.
-				target.setProjectType(ProjectDescriptionUtils.parseProjectType(asStringOrNull(value)));
+				target.setProjectType(parseProjectType(asStringOrNull(value)));
 				break;
 			case PROP__VENDOR_ID:
 				target.setVendorId(asStringOrNull(value));
@@ -476,16 +469,16 @@ public class ProjectDescriptionHelper {
 				target.setOutputPath(asStringOrNull(value));
 				break;
 			case PROP__SOURCES:
-				convertSourceContainers(target, value);
+				target.getSourceContainers().addAll(asSourceContainerDescriptionsOrEmpty(value));
 				break;
 			case PROP__MODULE_FILTERS:
-				convertModuleFilters(target, asNameValuePairsOrEmpty(value));
+				target.getModuleFilters().addAll(asModuleFiltersInObjectOrEmpty(value));
 				break;
 			case PROP__MAIN_MODULE:
 				target.setMainModule(asStringOrNull(value));
 				break;
 			case PROP__TESTED_PROJECTS:
-				target.getTestedProjects().addAll(toProjectDependencies(asProjectReferencesInArrayOrEmpty(value)));
+				target.getTestedProjects().addAll(asProjectReferencesInArrayOrEmpty(value));
 				break;
 			case PROP__IMPLEMENTATION_ID:
 				target.setImplementationId(asStringOrNull(value));
@@ -503,7 +496,7 @@ public class ProjectDescriptionHelper {
 				target.getRequiredRuntimeLibraries().addAll(asProjectReferencesInArrayOrEmpty(value));
 				break;
 			case PROP__MODULE_LOADER:
-				target.setModuleLoader(ProjectDescriptionUtils.parseModuleLoader(asStringOrNull(value)));
+				target.setModuleLoader(parseModuleLoader(asStringOrNull(value)));
 				break;
 			case PROP__INIT_MODULES:
 				target.getInitModules().addAll(asBootstrapModulesInArrayOrEmpty(value));
@@ -551,63 +544,6 @@ public class ProjectDescriptionHelper {
 		}
 	}
 
-	/**
-	 * Format:
-	 *
-	 * <pre>
-	 * "sources": {
-	 *     "source": [
-	 *         "src1",
-	 *         "src2"
-	 *     ],
-	 *     "external": [
-	 *         "src-ext"
-	 *     ]
-	 * }
-	 * </pre>
-	 */
-	private void convertSourceContainers(ProjectDescription target, JSONValue sourcesSection) {
-		final List<SourceContainerDescription> sourceContainerDescriptions = ProjectDescriptionUtils
-				.getSourceContainerDescriptions(sourcesSection);
-		if (sourceContainerDescriptions != null) {
-			target.getSourceContainers().addAll(sourceContainerDescriptions);
-		}
-	}
-
-	/**
-	 * Format:
-	 *
-	 * <pre>
-	 * "moduleFilters": {
-	 *     "noValidate": [
-	 *         "abc*",
-	 *         ["src", "abc*"],
-	 *         {
-	 *             "sourceContainer": "src"
-	 *             "module": "abc*",
-	 *         }
-	 *     ],
-	 *     "noModuleWrap": [
-	 *         // as above
-	 *     ]
-	 * }
-	 * </pre>
-	 */
-	private void convertModuleFilters(ProjectDescription target, List<NameValuePair> moduleFilterPairs) {
-		for (NameValuePair pair : moduleFilterPairs) {
-			ModuleFilterType type = ProjectDescriptionUtils.parseModuleFilterType(pair.getName());
-			if (type != null) {
-				List<ModuleFilterSpecifier> mspecs = asModuleFilterSpecifierInArrayOrEmpty(pair.getValue());
-				if (!mspecs.isEmpty()) {
-					ModuleFilter mfilter = N4mfFactory.eINSTANCE.createModuleFilter();
-					mfilter.setModuleFilterType(type);
-					mfilter.getModuleSpecifiers().addAll(mspecs);
-					target.getModuleFilters().add(mfilter);
-				}
-			}
-		}
-	}
-
 	private VersionNumber parseVersion(String versionStr) {
 		if (versionStr == null) {
 			return null;
@@ -615,85 +551,6 @@ public class ProjectDescriptionHelper {
 		VersionNumber result = semverHelper.parseVersionNumber(versionStr);
 		if (result == null) {
 			System.err.println("WARNING: invalid or unsupported version: " + versionStr);
-		}
-		return result;
-	}
-
-	private String asStringOrNull(JSONValue jsonValue) {
-		final String strValue = jsonValue instanceof JSONStringLiteral ? ((JSONStringLiteral) jsonValue).getValue()
-				: null;
-		if (Strings.isNullOrEmpty(strValue)) {
-			return null;
-		}
-		return strValue;
-	}
-
-	private List<JSONValue> asArrayElementsOrEmpty(JSONValue jsonValue) {
-		return jsonValue instanceof JSONArray ? ((JSONArray) jsonValue).getElements() : Collections.emptyList();
-	}
-
-	private List<NameValuePair> asNameValuePairsOrEmpty(JSONValue jsonValue) {
-		return jsonValue instanceof JSONObject ? ((JSONObject) jsonValue).getNameValuePairs() : Collections.emptyList();
-	}
-
-	private ProjectReference asProjectReferenceOrNull(JSONValue jsonValue) {
-		String valueStr = asStringOrNull(jsonValue);
-		if (!Strings.isNullOrEmpty(valueStr)) {
-			final ProjectReference result = N4mfFactory.eINSTANCE.createProjectReference();
-			result.setProjectId(valueStr);
-			return result;
-		}
-		return null;
-	}
-
-	private List<ProjectReference> asProjectReferencesInArrayOrEmpty(JSONValue jsonValue) {
-		return asArrayElementsOrEmpty(jsonValue).stream()
-				.map(this::asProjectReferenceOrNull)
-				.filter(ref -> ref != null)
-				.collect(Collectors.toList());
-	}
-
-	private BootstrapModule asBootstrapModuleOrNull(JSONValue jsonValue) {
-		String valueStr = asStringOrNull(jsonValue);
-		if (!Strings.isNullOrEmpty(valueStr)) {
-			final BootstrapModule result = N4mfFactory.eINSTANCE.createBootstrapModule();
-			result.setModuleSpecifier(valueStr);
-			return result;
-		}
-		return null;
-	}
-
-	private List<BootstrapModule> asBootstrapModulesInArrayOrEmpty(JSONValue jsonValue) {
-		return asArrayElementsOrEmpty(jsonValue).stream()
-				.map(this::asBootstrapModuleOrNull)
-				.filter(boomod -> boomod != null)
-				.collect(Collectors.toList());
-	}
-
-	@SuppressWarnings("unused")
-	private List<String> asStringLiteralsInArrayOrEmpty(JSONValue jsonValue) {
-		return asArrayElementsOrEmpty(jsonValue).stream()
-				.map(v -> (v instanceof JSONStringLiteral) ? ((JSONStringLiteral) v).getValue() : null)
-				.filter(str -> !Strings.isNullOrEmpty(str))
-				.collect(Collectors.toList());
-	}
-
-	private List<ModuleFilterSpecifier> asModuleFilterSpecifierInArrayOrEmpty(JSONValue jsonValue) {
-		return asArrayElementsOrEmpty(jsonValue).stream()
-				.map(ProjectDescriptionUtils::getModuleFilterSpecifier)
-				.filter(mspec -> mspec != null)
-				.collect(Collectors.toList());
-	}
-
-	private List<ProjectDependency> toProjectDependencies(Collection<? extends ProjectReference> prefs) {
-		if (prefs == null) {
-			return null;
-		}
-		List<ProjectDependency> result = new ArrayList<>(prefs.size());
-		for (ProjectReference pref : prefs) {
-			ProjectDependency pdep = N4mfFactory.eINSTANCE.createProjectDependency();
-			pdep.setProjectId(pref.getProjectId());
-			result.add(pdep);
 		}
 		return result;
 	}
