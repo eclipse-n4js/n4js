@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.semver.SEMVER;
 
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
@@ -22,5 +21,5 @@ import org.eclipse.emf.ecore.EObject;
  * @model abstract="true"
  * @generated
  */
-public interface URLVersionSpecifier extends EObject {
+public interface URLVersionSpecifier extends AbstractSEMVERSerializer {
 } // URLVersionSpecifier

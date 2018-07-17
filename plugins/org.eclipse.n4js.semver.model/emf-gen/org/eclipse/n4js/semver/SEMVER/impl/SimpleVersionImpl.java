@@ -23,7 +23,6 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 import org.eclipse.emf.ecore.util.EDataTypeEList;
 
@@ -31,8 +30,6 @@ import org.eclipse.n4js.semver.SEMVER.SEMVERPackage;
 import org.eclipse.n4js.semver.SEMVER.SimpleVersion;
 import org.eclipse.n4js.semver.SEMVER.VersionComparator;
 import org.eclipse.n4js.semver.SEMVER.VersionNumber;
-
-import org.eclipse.n4js.semver.model.SEMVERSerializer;
 
 /**
  * <!-- begin-user-doc -->
@@ -48,7 +45,7 @@ import org.eclipse.n4js.semver.model.SEMVERSerializer;
  *
  * @generated
  */
-public class SimpleVersionImpl extends MinimalEObjectImpl.Container implements SimpleVersion {
+public class SimpleVersionImpl extends AbstractSEMVERSerializerImpl implements SimpleVersion {
 	/**
 	 * The cached value of the '{@link #getNumber() <em>Number</em>}' containment reference.
 	 * <!-- begin-user-doc -->
@@ -211,15 +208,6 @@ public class SimpleVersionImpl extends MinimalEObjectImpl.Container implements S
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String toString() {
-		return SEMVERSerializer.toString(this);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -321,10 +309,24 @@ public class SimpleVersionImpl extends MinimalEObjectImpl.Container implements S
 				return isSmaller();
 			case SEMVERPackage.SIMPLE_VERSION___IS_SMALLER_EQUALS:
 				return isSmallerEquals();
-			case SEMVERPackage.SIMPLE_VERSION___TO_STRING:
-				return toString();
 		}
 		return super.eInvoke(operationID, arguments);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		if (eIsProxy()) return super.toString();
+
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (comparators: ");
+		result.append(comparators);
+		result.append(')');
+		return result.toString();
 	}
 
 } //SimpleVersionImpl

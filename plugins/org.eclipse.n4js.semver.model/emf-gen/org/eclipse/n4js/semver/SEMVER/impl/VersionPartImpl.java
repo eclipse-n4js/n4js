@@ -21,7 +21,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 import org.eclipse.n4js.semver.SEMVER.SEMVERPackage;
 import org.eclipse.n4js.semver.SEMVER.VersionPart;
@@ -40,7 +39,7 @@ import org.eclipse.n4js.semver.SEMVER.VersionPart;
  *
  * @generated
  */
-public class VersionPartImpl extends MinimalEObjectImpl.Container implements VersionPart {
+public class VersionPartImpl extends AbstractSEMVERSerializerImpl implements VersionPart {
 	/**
 	 * The default value of the '{@link #isWildcard() <em>Wildcard</em>}' attribute.
 	 * <!-- begin-user-doc -->

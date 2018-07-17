@@ -76,6 +76,10 @@ public class SEMVERAdapterFactory extends AdapterFactoryImpl {
 	protected SEMVERSwitch<Adapter> modelSwitch =
 		new SEMVERSwitch<Adapter>() {
 			@Override
+			public Adapter caseAbstractSEMVERSerializer(AbstractSEMVERSerializer object) {
+				return createAbstractSEMVERSerializerAdapter();
+			}
+			@Override
 			public Adapter caseNPMVersion(NPMVersion object) {
 				return createNPMVersionAdapter();
 			}
@@ -162,6 +166,20 @@ public class SEMVERAdapterFactory extends AdapterFactoryImpl {
 		return modelSwitch.doSwitch((EObject)target);
 	}
 
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.semver.SEMVER.AbstractSEMVERSerializer <em>Abstract SEMVER Serializer</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.semver.SEMVER.AbstractSEMVERSerializer
+	 * @generated
+	 */
+	public Adapter createAbstractSEMVERSerializerAdapter() {
+		return null;
+	}
 
 	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.semver.SEMVER.NPMVersion <em>NPM Version</em>}'.

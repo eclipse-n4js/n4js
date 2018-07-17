@@ -12,8 +12,6 @@ package org.eclipse.n4js.semver.SEMVER;
 
 import org.eclipse.emf.common.util.EList;
 
-import org.eclipse.emf.ecore.EObject;
-
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Simple Version</b></em>'.
@@ -31,7 +29,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface SimpleVersion extends EObject {
+public interface SimpleVersion extends AbstractSEMVERSerializer {
 	/**
 	 * Returns the value of the '<em><b>Number</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
@@ -141,14 +139,5 @@ public interface SimpleVersion extends EObject {
 	 * @generated
 	 */
 	boolean isSmallerEquals();
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return &lt;%org.eclipse.n4js.semver.model.SEMVERSerializer%&gt;.toString(this);'"
-	 * @generated
-	 */
-	String toString();
 
 } // SimpleVersion

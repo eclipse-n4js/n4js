@@ -21,7 +21,6 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 import org.eclipse.n4js.semver.SEMVER.Qualifier;
 import org.eclipse.n4js.semver.SEMVER.QualifierTag;
@@ -41,7 +40,7 @@ import org.eclipse.n4js.semver.SEMVER.SEMVERPackage;
  *
  * @generated
  */
-public class QualifierImpl extends MinimalEObjectImpl.Container implements Qualifier {
+public class QualifierImpl extends AbstractSEMVERSerializerImpl implements Qualifier {
 	/**
 	 * The cached value of the '{@link #getPreRelease() <em>Pre Release</em>}' containment reference.
 	 * <!-- begin-user-doc -->

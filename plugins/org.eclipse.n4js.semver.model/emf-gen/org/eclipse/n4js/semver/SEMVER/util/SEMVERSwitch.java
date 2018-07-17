@@ -74,9 +74,16 @@ public class SEMVERSwitch<T> extends Switch<T> {
 	@Override
 	protected T doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
+			case SEMVERPackage.ABSTRACT_SEMVER_SERIALIZER: {
+				AbstractSEMVERSerializer abstractSEMVERSerializer = (AbstractSEMVERSerializer)theEObject;
+				T result = caseAbstractSEMVERSerializer(abstractSEMVERSerializer);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case SEMVERPackage.NPM_VERSION: {
 				NPMVersion npmVersion = (NPMVersion)theEObject;
 				T result = caseNPMVersion(npmVersion);
+				if (result == null) result = caseAbstractSEMVERSerializer(npmVersion);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -84,12 +91,14 @@ public class SEMVERSwitch<T> extends Switch<T> {
 				URLVersion urlVersion = (URLVersion)theEObject;
 				T result = caseURLVersion(urlVersion);
 				if (result == null) result = caseNPMVersion(urlVersion);
+				if (result == null) result = caseAbstractSEMVERSerializer(urlVersion);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case SEMVERPackage.URL_VERSION_SPECIFIER: {
 				URLVersionSpecifier urlVersionSpecifier = (URLVersionSpecifier)theEObject;
 				T result = caseURLVersionSpecifier(urlVersionSpecifier);
+				if (result == null) result = caseAbstractSEMVERSerializer(urlVersionSpecifier);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -97,6 +106,7 @@ public class SEMVERSwitch<T> extends Switch<T> {
 				URLSemver urlSemver = (URLSemver)theEObject;
 				T result = caseURLSemver(urlSemver);
 				if (result == null) result = caseURLVersionSpecifier(urlSemver);
+				if (result == null) result = caseAbstractSEMVERSerializer(urlSemver);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -104,6 +114,7 @@ public class SEMVERSwitch<T> extends Switch<T> {
 				URLCommitISH urlCommitISH = (URLCommitISH)theEObject;
 				T result = caseURLCommitISH(urlCommitISH);
 				if (result == null) result = caseURLVersionSpecifier(urlCommitISH);
+				if (result == null) result = caseAbstractSEMVERSerializer(urlCommitISH);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -111,6 +122,7 @@ public class SEMVERSwitch<T> extends Switch<T> {
 				GitHubVersion gitHubVersion = (GitHubVersion)theEObject;
 				T result = caseGitHubVersion(gitHubVersion);
 				if (result == null) result = caseNPMVersion(gitHubVersion);
+				if (result == null) result = caseAbstractSEMVERSerializer(gitHubVersion);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -118,6 +130,7 @@ public class SEMVERSwitch<T> extends Switch<T> {
 				LocalPathVersion localPathVersion = (LocalPathVersion)theEObject;
 				T result = caseLocalPathVersion(localPathVersion);
 				if (result == null) result = caseNPMVersion(localPathVersion);
+				if (result == null) result = caseAbstractSEMVERSerializer(localPathVersion);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -125,6 +138,7 @@ public class SEMVERSwitch<T> extends Switch<T> {
 				TagVersion tagVersion = (TagVersion)theEObject;
 				T result = caseTagVersion(tagVersion);
 				if (result == null) result = caseNPMVersion(tagVersion);
+				if (result == null) result = caseAbstractSEMVERSerializer(tagVersion);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -132,12 +146,14 @@ public class SEMVERSwitch<T> extends Switch<T> {
 				VersionRangeSet versionRangeSet = (VersionRangeSet)theEObject;
 				T result = caseVersionRangeSet(versionRangeSet);
 				if (result == null) result = caseNPMVersion(versionRangeSet);
+				if (result == null) result = caseAbstractSEMVERSerializer(versionRangeSet);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case SEMVERPackage.VERSION_RANGE: {
 				VersionRange versionRange = (VersionRange)theEObject;
 				T result = caseVersionRange(versionRange);
+				if (result == null) result = caseAbstractSEMVERSerializer(versionRange);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -145,6 +161,7 @@ public class SEMVERSwitch<T> extends Switch<T> {
 				HyphenVersionRange hyphenVersionRange = (HyphenVersionRange)theEObject;
 				T result = caseHyphenVersionRange(hyphenVersionRange);
 				if (result == null) result = caseVersionRange(hyphenVersionRange);
+				if (result == null) result = caseAbstractSEMVERSerializer(hyphenVersionRange);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -152,41 +169,62 @@ public class SEMVERSwitch<T> extends Switch<T> {
 				VersionRangeConstraint versionRangeConstraint = (VersionRangeConstraint)theEObject;
 				T result = caseVersionRangeConstraint(versionRangeConstraint);
 				if (result == null) result = caseVersionRange(versionRangeConstraint);
+				if (result == null) result = caseAbstractSEMVERSerializer(versionRangeConstraint);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case SEMVERPackage.SIMPLE_VERSION: {
 				SimpleVersion simpleVersion = (SimpleVersion)theEObject;
 				T result = caseSimpleVersion(simpleVersion);
+				if (result == null) result = caseAbstractSEMVERSerializer(simpleVersion);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case SEMVERPackage.VERSION_NUMBER: {
 				VersionNumber versionNumber = (VersionNumber)theEObject;
 				T result = caseVersionNumber(versionNumber);
+				if (result == null) result = caseAbstractSEMVERSerializer(versionNumber);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case SEMVERPackage.VERSION_PART: {
 				VersionPart versionPart = (VersionPart)theEObject;
 				T result = caseVersionPart(versionPart);
+				if (result == null) result = caseAbstractSEMVERSerializer(versionPart);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case SEMVERPackage.QUALIFIER: {
 				Qualifier qualifier = (Qualifier)theEObject;
 				T result = caseQualifier(qualifier);
+				if (result == null) result = caseAbstractSEMVERSerializer(qualifier);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case SEMVERPackage.QUALIFIER_TAG: {
 				QualifierTag qualifierTag = (QualifierTag)theEObject;
 				T result = caseQualifierTag(qualifierTag);
+				if (result == null) result = caseAbstractSEMVERSerializer(qualifierTag);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			default: return defaultCase(theEObject);
 		}
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Abstract SEMVER Serializer</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Abstract SEMVER Serializer</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseAbstractSEMVERSerializer(AbstractSEMVERSerializer object) {
+		return null;
 	}
 
 	/**

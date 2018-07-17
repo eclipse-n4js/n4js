@@ -12,8 +12,6 @@ package org.eclipse.n4js.semver.SEMVER;
 
 import org.eclipse.emf.common.util.EList;
 
-import org.eclipse.emf.ecore.EObject;
-
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Qualifier Tag</b></em>'.
@@ -30,7 +28,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface QualifierTag extends EObject {
+public interface QualifierTag extends AbstractSEMVERSerializer {
 	/**
 	 * Returns the value of the '<em><b>Parts</b></em>' attribute list.
 	 * The list contents are of type {@link java.lang.String}.

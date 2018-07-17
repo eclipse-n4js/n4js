@@ -12,8 +12,6 @@ package org.eclipse.n4js.semver.SEMVER.impl;
 
 import org.eclipse.emf.ecore.EClass;
 
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
-
 import org.eclipse.n4js.semver.SEMVER.SEMVERPackage;
 import org.eclipse.n4js.semver.SEMVER.URLVersionSpecifier;
 
@@ -24,7 +22,7 @@ import org.eclipse.n4js.semver.SEMVER.URLVersionSpecifier;
  *
  * @generated
  */
-public abstract class URLVersionSpecifierImpl extends MinimalEObjectImpl.Container implements URLVersionSpecifier {
+public abstract class URLVersionSpecifierImpl extends AbstractSEMVERSerializerImpl implements URLVersionSpecifier {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.semver.SEMVER;
 
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
@@ -22,14 +21,5 @@ import org.eclipse.emf.ecore.EObject;
  * @model abstract="true"
  * @generated
  */
-public interface VersionRange extends EObject {
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return &lt;%org.eclipse.n4js.semver.model.SEMVERSerializer%&gt;.toString(this);'"
-	 * @generated
-	 */
-	String toString();
-
+public interface VersionRange extends AbstractSEMVERSerializer {
 } // VersionRange

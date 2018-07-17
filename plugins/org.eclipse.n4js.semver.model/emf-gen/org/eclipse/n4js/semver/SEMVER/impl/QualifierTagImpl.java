@@ -18,8 +18,6 @@ import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
-
 import org.eclipse.emf.ecore.util.EDataTypeEList;
 
 import org.eclipse.n4js.semver.SEMVER.QualifierTag;
@@ -38,7 +36,7 @@ import org.eclipse.n4js.semver.SEMVER.SEMVERPackage;
  *
  * @generated
  */
-public class QualifierTagImpl extends MinimalEObjectImpl.Container implements QualifierTag {
+public class QualifierTagImpl extends AbstractSEMVERSerializerImpl implements QualifierTag {
 	/**
 	 * The cached value of the '{@link #getParts() <em>Parts</em>}' attribute list.
 	 * <!-- begin-user-doc -->

@@ -12,8 +12,6 @@ package org.eclipse.n4js.semver.SEMVER;
 
 import org.eclipse.emf.common.util.EList;
 
-import org.eclipse.emf.ecore.EObject;
-
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Version Number</b></em>'.
@@ -34,7 +32,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface VersionNumber extends EObject {
+public interface VersionNumber extends AbstractSEMVERSerializer {
 	/**
 	 * Returns the value of the '<em><b>Major</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
@@ -199,14 +197,5 @@ public interface VersionNumber extends EObject {
 	 * @generated
 	 */
 	boolean equals(Object obj);
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return &lt;%org.eclipse.n4js.semver.model.SEMVERSerializer%&gt;.toString(this);'"
-	 * @generated
-	 */
-	String toString();
 
 } // VersionNumber

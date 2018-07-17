@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.semver.SEMVER;
 
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
@@ -29,7 +28,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface VersionPart extends EObject {
+public interface VersionPart extends AbstractSEMVERSerializer {
 	/**
 	 * Returns the value of the '<em><b>Wildcard</b></em>' attribute.
 	 * <!-- begin-user-doc -->

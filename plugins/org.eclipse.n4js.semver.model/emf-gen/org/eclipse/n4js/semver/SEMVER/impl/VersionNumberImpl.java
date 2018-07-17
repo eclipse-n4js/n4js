@@ -23,7 +23,6 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
@@ -32,8 +31,6 @@ import org.eclipse.n4js.semver.SEMVER.Qualifier;
 import org.eclipse.n4js.semver.SEMVER.SEMVERPackage;
 import org.eclipse.n4js.semver.SEMVER.VersionNumber;
 import org.eclipse.n4js.semver.SEMVER.VersionPart;
-
-import org.eclipse.n4js.semver.model.SEMVERSerializer;
 
 /**
  * <!-- begin-user-doc -->
@@ -52,7 +49,7 @@ import org.eclipse.n4js.semver.model.SEMVERSerializer;
  *
  * @generated
  */
-public class VersionNumberImpl extends MinimalEObjectImpl.Container implements VersionNumber {
+public class VersionNumberImpl extends AbstractSEMVERSerializerImpl implements VersionNumber {
 	/**
 	 * The cached value of the '{@link #getMajor() <em>Major</em>}' containment reference.
 	 * <!-- begin-user-doc -->
@@ -405,15 +402,6 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String toString() {
-		return SEMVERSerializer.toString(this);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -549,8 +537,6 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 				return getPart((Integer)arguments.get(0));
 			case SEMVERPackage.VERSION_NUMBER___EQUALS__OBJECT:
 				return equals(arguments.get(0));
-			case SEMVERPackage.VERSION_NUMBER___TO_STRING:
-				return toString();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

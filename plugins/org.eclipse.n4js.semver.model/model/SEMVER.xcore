@@ -29,11 +29,14 @@ package org.eclipse.n4js.semver.SEMVER
 
 import org.eclipse.n4js.semver.model.SEMVERSerializer
 
-abstract class NPMVersion {
+
+abstract class AbstractSEMVERSerializer {
 	op String toString() {
 		return SEMVERSerializer.toString(this);
 	}
 }
+
+abstract class NPMVersion extends AbstractSEMVERSerializer {}
 
 class URLVersion extends NPMVersion {
 	contains URLVersionSpecifier versionSpecifier
@@ -53,7 +56,7 @@ class URLVersion extends NPMVersion {
 	}
 }
 
-abstract class URLVersionSpecifier {}
+abstract class URLVersionSpecifier extends AbstractSEMVERSerializer {}
 
 class URLSemver extends URLVersionSpecifier {
 	contains SimpleVersion simpleVersion
@@ -80,11 +83,7 @@ class VersionRangeSet extends NPMVersion {
 	contains VersionRange[] ranges
 }
 
-abstract class VersionRange {
-	op String toString() {
-		return SEMVERSerializer.toString(this);
-	}
-}
+abstract class VersionRange extends AbstractSEMVERSerializer {}
 
 class HyphenVersionRange extends VersionRange {
 	contains VersionNumber from
@@ -95,7 +94,7 @@ class VersionRangeConstraint extends VersionRange {
 	contains SimpleVersion[] versionConstraints
 }
 
-class SimpleVersion {
+class SimpleVersion extends AbstractSEMVERSerializer {
 	contains VersionNumber number
 	VersionComparator[] comparators
 
@@ -127,13 +126,9 @@ class SimpleVersion {
 	op boolean isSmallerEquals() {
 		return comparators.contains(VersionComparator.SMALLER_EQUALS);
 	}
-
-	op String toString() {
-		return SEMVERSerializer.toString(this);
-	}
 }
 
-class VersionNumber {
+class VersionNumber extends AbstractSEMVERSerializer {
 	contains VersionPart major
 	contains VersionPart minor
 	contains VersionPart patch
@@ -182,13 +177,9 @@ class VersionNumber {
 		equals = equals && (qualifier === null || qualifier.equals(vn.qualifier));
 		return equals;
 	}
-
-	op String toString() {
-		return SEMVERSerializer.toString(this);
-	}
 }
 
-class VersionPart {
+class VersionPart extends AbstractSEMVERSerializer {
 	boolean wildcard
 	Integer numberRaw
 
@@ -208,7 +199,7 @@ class VersionPart {
 	}
 }
 
-class Qualifier {
+class Qualifier extends AbstractSEMVERSerializer {
 	contains QualifierTag preRelease
 	contains QualifierTag buildMetadata
 
@@ -225,7 +216,7 @@ class Qualifier {
 	}
 }
 
-class QualifierTag {
+class QualifierTag extends AbstractSEMVERSerializer {
 	String[] parts
 
 	op boolean equals(Object obj) {
