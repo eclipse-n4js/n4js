@@ -88,8 +88,8 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
- * Load a {@link ProjectDescription} from disk, optionally also loading and merging additional information from a
- * {@code package-fragment.json} (when passing <code>true</code> as last argument to
+ * Helper class for loading a {@link ProjectDescription} from disk, optionally also loading and merging additional
+ * information from a {@code package-fragment.json} (when passing <code>true</code> as last argument to
  * {@link #loadProjectDescriptionAtLocation(URI, JSONDocument, boolean)}).
  */
 @Singleton
@@ -219,6 +219,10 @@ public class ProjectDescriptionHelper {
 		pd.setHasNestedNodeModulesFolder(hasNestedNodeModulesFolder);
 	}
 
+	/**
+	 * Apply default values to the given project description. This should be performed right after loading and
+	 * converting the project description from JSON.
+	 */
 	private void applyDefaults(ProjectDescription pd, URI location) {
 		// implementation note: we do not have to set the default for 'projectType' here,
 		// because this default is already handled by EMF by defining VALIDATION as the
@@ -273,7 +277,7 @@ public class ProjectDescriptionHelper {
 		return packageJSON;
 	}
 
-	/** Will change the given 'targetPackageJSON' document in place. */
+	/** This method will change the given 'targetPackageJSON' document in place. */
 	private boolean mergePackageJSONFragmentAtLocation(URI location, JSONDocument targetPackageJSON) {
 		JSONDocument fragment = loadXtextFileAtLocation(location, N4JSGlobals.PACKAGE_FRAGMENT_JSON,
 				JSONDocument.class);
@@ -334,7 +338,7 @@ public class ProjectDescriptionHelper {
 			}
 			return null;
 		} catch (Exception e) {
-			throw new WrappedException("Failed to load Xtext file at " + uri, e);
+			throw new WrappedException("failed to load Xtext file at " + uri, e);
 		}
 	}
 
