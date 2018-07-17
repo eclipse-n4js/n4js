@@ -11,6 +11,30 @@
 package org.eclipse.n4js.utils;
 
 import static org.eclipse.n4js.internal.N4JSModel.DIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.DEFAULT_VALUE_OUTPUT;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.DEFAULT_VALUE_VERSION;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__DEPENDENCIES;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__DEV_DEPENDENCIES;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__EXEC_MODULE;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__EXTENDED_RUNTIME_ENVIRONMENT;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__IMPLEMENTATION_ID;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__IMPLEMENTED_PROJECTS;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__INIT_MODULES;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__MAIN;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__MAIN_MODULE;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__MODULE_FILTERS;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__MODULE_LOADER;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__N4JS;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__NAME;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__OUTPUT;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__PROJECT_TYPE;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__PROVIDED_RUNTIME_LIBRARIES;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__REQUIRED_RUNTIME_LIBRARIES;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__SOURCES;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__TESTED_PROJECTS;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__VENDOR_ID;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__VENDOR_NAME;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__VERSION;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -74,68 +98,6 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class ProjectDescriptionHelper {
-
-	// root-level properties:
-
-	/** Default value for the property "version". */
-	public static final String DEFAULT_VALUE_VERSION = "0.0.1";
-	/** Default value for the property "output". */
-	public static final String DEFAULT_VALUE_OUTPUT = ".";
-
-	/** Key of package.json property "name". */
-	public static final String PROP__NAME = "name";
-	/** Key of package.json property "version". */
-	public static final String PROP__VERSION = "version";
-	/** Key of package.json property "dependencies". */
-	public static final String PROP__DEPENDENCIES = "dependencies";
-	/** Key of package.json property "devDependences". */
-	public static final String PROP__DEV_DEPENDENCIES = "devDependencies";
-	/** Key of package.json property "main". */
-	public static final String PROP__MAIN = "main";
-	/** Key of package.json property "n4js". */
-	public static final String PROP__N4JS = "n4js";
-
-	// properties in section "n4js":
-
-	/** Key of package.json property "projectType". */
-	public static final String PROP__PROJECT_TYPE = "projectType";
-	/** Key of package.json property "vendorId". */
-	public static final String PROP__VENDOR_ID = "vendorId";
-	/** Key of package.json property "vendorName". */
-	public static final String PROP__VENDOR_NAME = "vendorName";
-	/** Key of package.json property "output". */
-	public static final String PROP__OUTPUT = "output";
-	/** Key of package.json property "sources". */
-	public static final String PROP__SOURCES = "sources";
-	/** Key of package.json property "moduleFilters". */
-	public static final String PROP__MODULE_FILTERS = "moduleFilters";
-	/** Key of package.json property "mainModule". */
-	public static final String PROP__MAIN_MODULE = "mainModule";
-	/** Key of package.json property "testedProjects". */
-	public static final String PROP__TESTED_PROJECTS = "testedProjects";
-	/** Key of package.json property "implementationId". */
-	public static final String PROP__IMPLEMENTATION_ID = "implementationId";
-	/** Key of package.json property "implementedProjects". */
-	public static final String PROP__IMPLEMENTED_PROJECTS = "implementedProjects";
-	/** Key of package.json property "extendedRuntimeEnvironment". */
-	public static final String PROP__EXTENDED_RUNTIME_ENVIRONMENT = "extendedRuntimeEnvironment";
-	/** Key of package.json property "providedRuntimeLibraries". */
-	public static final String PROP__PROVIDED_RUNTIME_LIBRARIES = "providedRuntimeLibraries";
-	/** Key of package.json property "requiredRuntimeLibraries". */
-	public static final String PROP__REQUIRED_RUNTIME_LIBRARIES = "requiredRuntimeLibraries";
-	/** Key of package.json property "moduleLoader". */
-	public static final String PROP__MODULE_LOADER = "moduleLoader";
-	/** Key of package.json property "initModules". */
-	public static final String PROP__INIT_MODULES = "initModules";
-	/** Key of package.json property "execModule". */
-	public static final String PROP__EXEC_MODULE = "execModule";
-
-	// properties of module filter specifiers:
-
-	/** Key of package.json property "sourceContainer". */
-	public static final String PROP__SOURCE_CONTAINER = "sourceContainer";
-	/** Key of package.json property "module". */
-	public static final String PROP__MODULE = "module";
 
 	@Inject
 	private Provider<XtextResourceSet> resourceSetProvider;

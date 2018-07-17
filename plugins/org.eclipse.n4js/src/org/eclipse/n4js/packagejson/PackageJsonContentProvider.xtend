@@ -13,6 +13,8 @@ package org.eclipse.n4js.packagejson
 import com.google.common.base.Optional
 import java.io.IOException
 import java.io.StringWriter
+import java.util.Map
+import java.util.SortedMap
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.resource.ResourceSet
@@ -24,21 +26,25 @@ import org.eclipse.n4js.json.JSONGlobals
 import org.eclipse.n4js.json.model.utils.JSONModelUtils
 import org.eclipse.n4js.n4mf.ProjectType
 import org.eclipse.n4js.n4mf.SourceContainerType
-import org.eclipse.n4js.utils.ProjectDescriptionHelper
 import org.eclipse.n4js.utils.languages.N4LanguageUtils
 import org.eclipse.xtext.resource.SaveOptions
 import org.eclipse.xtext.serializer.ISerializer
 
-import static org.eclipse.n4js.utils.ProjectDescriptionHelper.PROP__N4JS
-import static org.eclipse.n4js.utils.ProjectDescriptionHelper.PROP__NAME
-import static org.eclipse.n4js.utils.ProjectDescriptionHelper.PROP__OUTPUT
-import static org.eclipse.n4js.utils.ProjectDescriptionHelper.PROP__PROJECT_TYPE
-import static org.eclipse.n4js.utils.ProjectDescriptionHelper.PROP__SOURCES
-import static org.eclipse.n4js.utils.ProjectDescriptionHelper.PROP__VENDOR_ID
-import static org.eclipse.n4js.utils.ProjectDescriptionHelper.PROP__VENDOR_NAME
-import static org.eclipse.n4js.utils.ProjectDescriptionHelper.PROP__VERSION
-import java.util.Map
-import java.util.SortedMap
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__DEPENDENCIES
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__EXTENDED_RUNTIME_ENVIRONMENT
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__IMPLEMENTATION_ID
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__IMPLEMENTED_PROJECTS
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__N4JS
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__NAME
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__OUTPUT
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__PROJECT_TYPE
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__PROVIDED_RUNTIME_LIBRARIES
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__REQUIRED_RUNTIME_LIBRARIES
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__SOURCES
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__TESTED_PROJECTS
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__VENDOR_ID
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__VENDOR_NAME
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__VERSION
 
 /**
  * Class for providing the content of N4JS-specific package.json files.
@@ -100,7 +106,7 @@ package class PackageJsonContentProvider {
 				pair.value = JSONModelUtils.createStringLiteral(e.value);
 				return pair;
 			]);
-			JSONModelUtils.addProperty(root, ProjectDescriptionHelper.PROP__DEPENDENCIES, dependenciesSection);
+			JSONModelUtils.addProperty(root, PROP__DEPENDENCIES, dependenciesSection);
 		}
 		
 		// add "n4js" section
@@ -140,30 +146,30 @@ package class PackageJsonContentProvider {
 
 		// add provided and required runtime libraries if given
 		if (!providedRL.empty) {
-			JSONModelUtils.addProperty(n4jsRoot, ProjectDescriptionHelper.PROP__PROVIDED_RUNTIME_LIBRARIES,
+			JSONModelUtils.addProperty(n4jsRoot, PROP__PROVIDED_RUNTIME_LIBRARIES,
 				JSONModelUtils.createStringArray(providedRL));
 		}
 		if (!requiredRL.empty) {
-			JSONModelUtils.addProperty(n4jsRoot, ProjectDescriptionHelper.PROP__REQUIRED_RUNTIME_LIBRARIES,
+			JSONModelUtils.addProperty(n4jsRoot, PROP__REQUIRED_RUNTIME_LIBRARIES,
 				JSONModelUtils.createStringArray(requiredRL));
 		}
 			
 		if (extendedRE.isPresent) {
-			JSONModelUtils.addProperty(n4jsRoot, ProjectDescriptionHelper.PROP__EXTENDED_RUNTIME_ENVIRONMENT,
+			JSONModelUtils.addProperty(n4jsRoot, PROP__EXTENDED_RUNTIME_ENVIRONMENT,
 				extendedRE.get());
 		}
 		if (implementationId.isPresent) {
-			JSONModelUtils.addProperty(n4jsRoot, ProjectDescriptionHelper.PROP__IMPLEMENTATION_ID,
+			JSONModelUtils.addProperty(n4jsRoot, PROP__IMPLEMENTATION_ID,
 				implementationId.get());
 		}
 
 		if (!implementedProjects.empty) {
-			JSONModelUtils.addProperty(n4jsRoot, ProjectDescriptionHelper.PROP__IMPLEMENTED_PROJECTS,
+			JSONModelUtils.addProperty(n4jsRoot, PROP__IMPLEMENTED_PROJECTS,
 				JSONModelUtils.createStringArray(implementedProjects));
 		}
 		
 		if (!testedProjects.empty) {
-			JSONModelUtils.addProperty(n4jsRoot, ProjectDescriptionHelper.PROP__TESTED_PROJECTS,
+			JSONModelUtils.addProperty(n4jsRoot, PROP__TESTED_PROJECTS,
 				JSONModelUtils.createStringArray(testedProjects));
 		}
 

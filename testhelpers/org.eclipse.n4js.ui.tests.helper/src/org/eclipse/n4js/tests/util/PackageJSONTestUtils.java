@@ -10,7 +10,16 @@
  */
 package org.eclipse.n4js.tests.util;
 
-import static org.eclipse.n4js.utils.ProjectDescriptionHelper.PROP__N4JS;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__DEPENDENCIES;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__IMPLEMENTATION_ID;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__IMPLEMENTED_PROJECTS;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__MODULE;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__MODULE_FILTERS;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__N4JS;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__NAME;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__PROJECT_TYPE;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__SOURCES;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__SOURCE_CONTAINER;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,7 +40,7 @@ import org.eclipse.n4js.n4mf.ModuleFilterType;
 import org.eclipse.n4js.n4mf.ProjectType;
 import org.eclipse.n4js.n4mf.SourceContainerType;
 import org.eclipse.n4js.packagejson.PackageJsonBuilder;
-import org.eclipse.n4js.utils.ProjectDescriptionHelper;
+import org.eclipse.n4js.packagejson.PackageJsonConstants;
 
 /**
  * Test utility methods for creating and modifying N4JS package.json files in terms of its {@link JSONPackage} model
@@ -57,20 +66,20 @@ public class PackageJSONTestUtils extends JSONModelUtils {
 	/**
 	 * Sets the package name (project ID) in the given {@link JSONObject} representation of an N4JS package.json file.
 	 *
-	 * @see ProjectDescriptionHelper#PROP__NAME
+	 * @see PackageJsonConstants#PROP__NAME
 	 */
 	public static void setProjectId(JSONObject root, String name) {
-		final String path = ProjectDescriptionHelper.PROP__NAME;
+		final String path = PROP__NAME;
 		setPath(root, path, name);
 	}
 
 	/**
 	 * Sets the N4JS {@link ProjectType} in the given {@link JSONObject} representation of an N4JS package.json file.
 	 *
-	 * @see ProjectDescriptionHelper#PROP__PROJECT_TYPE
+	 * @see PackageJsonConstants#PROP__PROJECT_TYPE
 	 */
 	public static void setProjectType(JSONObject root, ProjectType type) {
-		final String path = ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__PROJECT_TYPE;
+		final String path = PROP__N4JS + "." + PROP__PROJECT_TYPE;
 		setPath(root, path, type.getLiteral().toLowerCase());
 	}
 
@@ -88,7 +97,7 @@ public class PackageJSONTestUtils extends JSONModelUtils {
 	 *            The version constraint of the dependency.
 	 */
 	public static void addProjectDependency(JSONObject root, String projectId, String versionConstraint) {
-		setPath(root, Arrays.asList(ProjectDescriptionHelper.PROP__DEPENDENCIES, projectId),
+		setPath(root, Arrays.asList(PROP__DEPENDENCIES, projectId),
 				createStringLiteral(versionConstraint));
 	}
 
@@ -96,14 +105,14 @@ public class PackageJSONTestUtils extends JSONModelUtils {
 	 * Sets (replaces) the list of source container specifiers of the given {@code type} (e.g. source, external, test)
 	 * for the given {@link JSONObject} representation of an N4JS package.json file.
 	 *
-	 * @see ProjectDescriptionHelper#PROP__SOURCES
+	 * @see PackageJsonConstants#PROP__SOURCES
 	 */
 	public static void setSourceContainerSpecifiers(JSONObject root, SourceContainerType type,
 			List<String> sourceContainerSpecifiers) {
 		// make sure n4js section exists
 		JSONObject n4jsSection = getOrCreateN4JSSection(root);
 		// make sure n4js.sources section exists
-		JSONObject sourcesSection = getOrCreateObject(n4jsSection, ProjectDescriptionHelper.PROP__SOURCES);
+		JSONObject sourcesSection = getOrCreateObject(n4jsSection, PROP__SOURCES);
 		// create new entry for SourceContainerType and set it to the list of source container specifiers
 		setProperty(sourcesSection, type.getLiteral().toLowerCase(),
 				createStringArray(sourceContainerSpecifiers));
@@ -117,7 +126,7 @@ public class PackageJSONTestUtils extends JSONModelUtils {
 			String specifier) {
 		JSONObject n4jsSection = getOrCreateN4JSSection(root);
 		// make sure n4js.sources section exists
-		JSONObject sourcesSection = getOrCreateObject(n4jsSection, ProjectDescriptionHelper.PROP__SOURCES);
+		JSONObject sourcesSection = getOrCreateObject(n4jsSection, PROP__SOURCES);
 
 		final String typeLabel = type.getLiteral().toLowerCase();
 
@@ -131,11 +140,11 @@ public class PackageJSONTestUtils extends JSONModelUtils {
 	/**
 	 * Sets the N4JS implementation ID in the given {@link JSONObject} representation of an N4JS package.json file.
 	 *
-	 * @see ProjectDescriptionHelper#PROP__IMPLEMENTATION_ID
+	 * @see PackageJsonConstants#PROP__IMPLEMENTATION_ID
 	 */
 	public static void setImplementationId(JSONObject root, String implementationId) {
-		final String path = ProjectDescriptionHelper.PROP__N4JS + "."
-				+ ProjectDescriptionHelper.PROP__IMPLEMENTATION_ID;
+		final String path = PROP__N4JS + "."
+				+ PROP__IMPLEMENTATION_ID;
 		setPath(root, path, implementationId);
 	}
 
@@ -143,11 +152,11 @@ public class PackageJSONTestUtils extends JSONModelUtils {
 	 * Sets the N4JS implemented-projects list in the given {@link JSONObject} representation of an N4JS package.json
 	 * file.
 	 *
-	 * @see ProjectDescriptionHelper#PROP__IMPLEMENTED_PROJECTS
+	 * @see PackageJsonConstants#PROP__IMPLEMENTED_PROJECTS
 	 */
 	public static void setImplementedProjects(JSONObject root, List<String> implementedProjects) {
-		final String path = ProjectDescriptionHelper.PROP__N4JS + "."
-				+ ProjectDescriptionHelper.PROP__IMPLEMENTED_PROJECTS;
+		final String path = PROP__N4JS + "."
+				+ PROP__IMPLEMENTED_PROJECTS;
 		setPath(root, path, createStringArray(implementedProjects));
 	}
 
@@ -163,7 +172,7 @@ public class PackageJSONTestUtils extends JSONModelUtils {
 	 */
 	public static void setModuleFilters(JSONObject root, ModuleFilterType type, List<String> filterSpecifiers) {
 		setPath(root,
-				Arrays.asList(PROP__N4JS, ProjectDescriptionHelper.PROP__MODULE_FILTERS, getStringRepresentation(type)),
+				Arrays.asList(PROP__N4JS, PROP__MODULE_FILTERS, getStringRepresentation(type)),
 				createStringArray(filterSpecifiers));
 	}
 
@@ -180,7 +189,7 @@ public class PackageJSONTestUtils extends JSONModelUtils {
 			String sourceContainer) {
 		final JSONObject n4jsSection = getOrCreateN4JSSection(root);
 		final JSONObject moduleFilterSection = getOrCreateObject(n4jsSection,
-				ProjectDescriptionHelper.PROP__MODULE_FILTERS);
+				PROP__MODULE_FILTERS);
 		final JSONArray filterTypeSection = getOrCreateArray(moduleFilterSection,
 				getStringRepresentation(type));
 
@@ -190,11 +199,11 @@ public class PackageJSONTestUtils extends JSONModelUtils {
 			final JSONObject filterObject = JSONFactory.eINSTANCE.createJSONObject();
 
 			final NameValuePair filterPair = JSONFactory.eINSTANCE.createNameValuePair();
-			filterPair.setName(ProjectDescriptionHelper.PROP__MODULE);
+			filterPair.setName(PROP__MODULE);
 			filterPair.setValue(createStringLiteral(filterSpecifier));
 
 			final NameValuePair sourceContainerPair = JSONFactory.eINSTANCE.createNameValuePair();
-			sourceContainerPair.setName(ProjectDescriptionHelper.PROP__SOURCE_CONTAINER);
+			sourceContainerPair.setName(PROP__SOURCE_CONTAINER);
 			sourceContainerPair.setValue(createStringLiteral(sourceContainer));
 
 			filterObject.getNameValuePairs().add(filterPair);
@@ -212,13 +221,13 @@ public class PackageJSONTestUtils extends JSONModelUtils {
 	 * Does not remove entries that are declared using a syntax that restricts a module filter to a specific source
 	 * container.
 	 *
-	 * @See {@link ProjectDescriptionHelper#PROP__MODULE_FILTERS}
-	 * @See {@link ProjectDescriptionHelper#PROP__SOURCE_CONTAINER}
-	 * @See {@link ProjectDescriptionHelper#PROP__MODULE}
+	 * @See {@link PackageJsonConstants#PROP__MODULE_FILTERS}
+	 * @See {@link PackageJsonConstants#PROP__SOURCE_CONTAINER}
+	 * @See {@link PackageJsonConstants#PROP__MODULE}
 	 */
 	public static void removePathFromModuleFilter(JSONObject root, ModuleFilterType type, String filterSpecifier) {
 		Optional<JSONValue> moduleFilterSection = getPath(root,
-				Arrays.asList(PROP__N4JS, ProjectDescriptionHelper.PROP__MODULE_FILTERS,
+				Arrays.asList(PROP__N4JS, PROP__MODULE_FILTERS,
 						getStringRepresentation(type)));
 		// only remove specifier, if corresponding module filter section is present
 		if (moduleFilterSection.isPresent()) {

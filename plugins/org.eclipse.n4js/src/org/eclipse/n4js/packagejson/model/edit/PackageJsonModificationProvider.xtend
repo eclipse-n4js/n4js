@@ -17,9 +17,12 @@ import org.eclipse.n4js.json.JSON.JSONDocument
 import org.eclipse.n4js.json.JSON.JSONFactory
 import org.eclipse.n4js.json.JSON.JSONObject
 import org.eclipse.n4js.json.model.utils.JSONModelUtils
-import org.eclipse.n4js.utils.ProjectDescriptionHelper
 
-import static org.eclipse.n4js.utils.ProjectDescriptionHelper.PROP__N4JS
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__DEPENDENCIES
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__EXTENDED_RUNTIME_ENVIRONMENT
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__N4JS
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__PROJECT_TYPE
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__REQUIRED_RUNTIME_LIBRARIES
 
 /**
  * This class provides basic edit operations for N4JS package.json files 
@@ -67,7 +70,7 @@ class PackageJsonModificationProvider {
 				
 				val root = getDocumentRoot(document);
 				val n4jsSection = getOrCreateN4JSSection(root);
-				val requiredRuntimeLibrariesList = getOrCreateArray(n4jsSection, ProjectDescriptionHelper.PROP__REQUIRED_RUNTIME_LIBRARIES);
+				val requiredRuntimeLibrariesList = getOrCreateArray(n4jsSection, PROP__REQUIRED_RUNTIME_LIBRARIES);
 				
 				for(library : runtimeLibraries) {
 					requiredRuntimeLibrariesList.elements.add(JSONModelUtils.createStringLiteral(library));
@@ -88,7 +91,7 @@ class PackageJsonModificationProvider {
 				val root = getDocumentRoot(document);
 				val n4jsSection = getOrCreateN4JSSection(root);
 				
-				JSONModelUtils.setProperty(n4jsSection, ProjectDescriptionHelper.PROP__EXTENDED_RUNTIME_ENVIRONMENT, runtimeEnvironment);
+				JSONModelUtils.setProperty(n4jsSection, PROP__EXTENDED_RUNTIME_ENVIRONMENT, runtimeEnvironment);
 			}
 		}
 	}
@@ -106,7 +109,7 @@ class PackageJsonModificationProvider {
 				val root = getDocumentRoot(document);
 				val n4jsSection = getOrCreateN4JSSection(root);
 				
-				JSONModelUtils.setProperty(n4jsSection, ProjectDescriptionHelper.PROP__PROJECT_TYPE, projectType)
+				JSONModelUtils.setProperty(n4jsSection, PROP__PROJECT_TYPE, projectType)
 			}
 		}
 	}
@@ -121,7 +124,7 @@ class PackageJsonModificationProvider {
 	}
 	
 	public static def void addProjectDependency(JSONObject root, String projectId, String versionConstraint) {
-		JSONModelUtils.setPath(root, Arrays.asList(ProjectDescriptionHelper.PROP__DEPENDENCIES, projectId),
+		JSONModelUtils.setPath(root, Arrays.asList(PROP__DEPENDENCIES, projectId),
 				JSONModelUtils.createStringLiteral(versionConstraint));
 	}
 	

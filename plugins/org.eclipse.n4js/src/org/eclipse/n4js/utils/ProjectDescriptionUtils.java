@@ -10,6 +10,9 @@
  */
 package org.eclipse.n4js.utils;
 
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__MODULE;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__SOURCE_CONTAINER;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -127,9 +130,9 @@ public class ProjectDescriptionUtils {
 		// 2nd variant:
 		List<NameValuePair> pairs = asNameValuePairsOrEmpty(jsonValue);
 		NameValuePair pathNVP = pairs.stream()
-				.filter(p -> ProjectDescriptionHelper.PROP__SOURCE_CONTAINER.equals(p.getName())).findFirst()
+				.filter(p -> PROP__SOURCE_CONTAINER.equals(p.getName())).findFirst()
 				.orElse(null);
-		NameValuePair moduleNVP = pairs.stream().filter(p -> ProjectDescriptionHelper.PROP__MODULE.equals(p.getName()))
+		NameValuePair moduleNVP = pairs.stream().filter(p -> PROP__MODULE.equals(p.getName()))
 				.findFirst().orElse(null);
 		String pathStr = pathNVP != null ? asStringOrNull(pathNVP.getValue()) : null;
 		String moduleStr = moduleNVP != null ? asStringOrNull(moduleNVP.getValue()) : null;
