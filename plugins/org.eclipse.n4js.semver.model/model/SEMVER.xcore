@@ -25,7 +25,15 @@
 package org.eclipse.n4js.semver.SEMVER
 
 
-abstract class NPMVersion {}
+
+
+import org.eclipse.n4js.semver.model.SEMVERSerializer
+
+abstract class NPMVersion {
+	op String toString() {
+		return SEMVERSerializer.toString(this);
+	}
+}
 
 class URLVersion extends NPMVersion {
 	contains URLVersionSpecifier versionSpecifier
@@ -73,6 +81,9 @@ class VersionRangeSet extends NPMVersion {
 }
 
 abstract class VersionRange {
+	op String toString() {
+		return SEMVERSerializer.toString(this);
+	}
 }
 
 class HyphenVersionRange extends VersionRange {
@@ -115,6 +126,10 @@ class SimpleVersion {
 
 	op boolean isSmallerEquals() {
 		return comparators.contains(VersionComparator.SMALLER_EQUALS);
+	}
+
+	op String toString() {
+		return SEMVERSerializer.toString(this);
 	}
 }
 
@@ -166,6 +181,10 @@ class VersionNumber {
 		equals = equals && (qualifier === null) === (vn.qualifier === null);
 		equals = equals && (qualifier === null || qualifier.equals(vn.qualifier));
 		return equals;
+	}
+
+	op String toString() {
+		return SEMVERSerializer.toString(this);
 	}
 }
 
@@ -219,13 +238,6 @@ class QualifierTag {
 	}
 }
 
-//class Url {
-//	String[] parts
-//
-//	op String getString() {
-//		return String.join("", parts);
-//	}
-//}
 
 enum VersionComparator {
 	Version = 0,

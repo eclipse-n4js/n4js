@@ -60,7 +60,7 @@ import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
 import org.eclipse.n4js.semver.SEMVER.NPMVersion
 import org.eclipse.n4js.semver.SEMVERHelper
 import org.eclipse.n4js.semver.SEMVERMatcher
-import org.eclipse.n4js.semver.SEMVERSerializer
+import org.eclipse.n4js.semver.model.SEMVERSerializer
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TypesPackage

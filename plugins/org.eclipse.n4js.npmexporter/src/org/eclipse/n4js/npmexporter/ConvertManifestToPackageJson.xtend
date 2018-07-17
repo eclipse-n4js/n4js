@@ -15,7 +15,7 @@ import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.runner.^extension.RuntimeEnvironment
 import java.nio.file.Path
 
-import org.eclipse.n4js.semver.SEMVERSerializer
+import org.eclipse.n4js.semver.model.SEMVERSerializer
 
 /**
  * Converting all relevant Manifest-data into an DataObject.

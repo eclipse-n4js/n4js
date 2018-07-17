@@ -23,4 +23,13 @@ import org.eclipse.emf.ecore.EObject;
  * @generated
  */
 public interface NPMVersion extends EObject {
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model unique="false"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return &lt;%org.eclipse.n4js.semver.model.SEMVERSerializer%&gt;.toString(this);'"
+	 * @generated
+	 */
+	String toString();
+
 } // NPMVersion

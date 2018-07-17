@@ -28,6 +28,7 @@ import org.eclipse.n4js.n4mf.ProjectDescription
 import org.eclipse.n4js.n4mf.ProjectReference
 import org.eclipse.n4js.n4mf.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSCore
+import org.eclipse.n4js.semver.model.SEMVERSerializer
 import org.eclipse.n4js.utils.ProjectDescriptionHelper
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.naming.QualifiedName
@@ -39,7 +40,6 @@ import org.eclipse.xtext.resource.IResourceDescriptions
 import org.eclipse.xtext.util.IAcceptor
 
 import static extension com.google.common.base.Strings.nullToEmpty
-import org.eclipse.n4js.semver.SEMVERSerializer
 
 /**
  * {@link IJSONResourceDescriptionExtension} implementation that provides custom resource descriptions of

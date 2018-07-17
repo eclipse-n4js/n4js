@@ -22,8 +22,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.n4js.binaries.BinariesPreferenceStore;
 import org.eclipse.n4js.binaries.BinariesValidator;
 import org.eclipse.n4js.binaries.Binary;
-import org.eclipse.n4js.semver.SEMVERSerializer;
 import org.eclipse.n4js.semver.SEMVER.VersionNumber;
+import org.eclipse.n4js.semver.model.SEMVERSerializer;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;

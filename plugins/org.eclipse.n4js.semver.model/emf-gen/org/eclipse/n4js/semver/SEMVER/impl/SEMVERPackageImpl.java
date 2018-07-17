@@ -252,6 +252,15 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EOperation getNPMVersion__ToString() {
+		return npmVersionEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getURLVersion() {
 		return urlVersionEClass;
 	}
@@ -441,6 +450,15 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EOperation getVersionRange__ToString() {
+		return versionRangeEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getHyphenVersionRange() {
 		return hyphenVersionRangeEClass;
 	}
@@ -576,6 +594,15 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EOperation getSimpleVersion__ToString() {
+		return simpleVersionEClass.getEOperations().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getVersionNumber() {
 		return versionNumberEClass;
 	}
@@ -668,6 +695,15 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 */
 	public EOperation getVersionNumber__Equals__Object() {
 		return versionNumberEClass.getEOperations().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOperation getVersionNumber__ToString() {
+		return versionNumberEClass.getEOperations().get(5);
 	}
 
 	/**
@@ -816,6 +852,7 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 
 		// Create classes and their features
 		npmVersionEClass = createEClass(NPM_VERSION);
+		createEOperation(npmVersionEClass, NPM_VERSION___TO_STRING);
 
 		urlVersionEClass = createEClass(URL_VERSION);
 		createEReference(urlVersionEClass, URL_VERSION__VERSION_SPECIFIER);
@@ -846,6 +883,7 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 		createEReference(versionRangeSetEClass, VERSION_RANGE_SET__RANGES);
 
 		versionRangeEClass = createEClass(VERSION_RANGE);
+		createEOperation(versionRangeEClass, VERSION_RANGE___TO_STRING);
 
 		hyphenVersionRangeEClass = createEClass(HYPHEN_VERSION_RANGE);
 		createEReference(hyphenVersionRangeEClass, HYPHEN_VERSION_RANGE__FROM);
@@ -864,6 +902,7 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 		createEOperation(simpleVersionEClass, SIMPLE_VERSION___IS_GREATER_EQUALS);
 		createEOperation(simpleVersionEClass, SIMPLE_VERSION___IS_SMALLER);
 		createEOperation(simpleVersionEClass, SIMPLE_VERSION___IS_SMALLER_EQUALS);
+		createEOperation(simpleVersionEClass, SIMPLE_VERSION___TO_STRING);
 
 		versionNumberEClass = createEClass(VERSION_NUMBER);
 		createEReference(versionNumberEClass, VERSION_NUMBER__MAJOR);
@@ -876,6 +915,7 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 		createEOperation(versionNumberEClass, VERSION_NUMBER___LENGTH);
 		createEOperation(versionNumberEClass, VERSION_NUMBER___GET_PART__INT);
 		createEOperation(versionNumberEClass, VERSION_NUMBER___EQUALS__OBJECT);
+		createEOperation(versionNumberEClass, VERSION_NUMBER___TO_STRING);
 
 		versionPartEClass = createEClass(VERSION_PART);
 		createEAttribute(versionPartEClass, VERSION_PART__WILDCARD);
@@ -940,6 +980,8 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 		// Initialize classes, features, and operations; add parameters
 		initEClass(npmVersionEClass, NPMVersion.class, "NPMVersion", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
+		initEOperation(getNPMVersion__ToString(), theEcorePackage.getEString(), "toString", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
 		initEClass(urlVersionEClass, URLVersion.class, "URLVersion", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getURLVersion_VersionSpecifier(), this.getURLVersionSpecifier(), null, "versionSpecifier", null, 0, 1, URLVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getURLVersion_Protocol(), theEcorePackage.getEString(), "protocol", null, 0, 1, URLVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -972,6 +1014,8 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 
 		initEClass(versionRangeEClass, VersionRange.class, "VersionRange", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
+		initEOperation(getVersionRange__ToString(), theEcorePackage.getEString(), "toString", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
 		initEClass(hyphenVersionRangeEClass, HyphenVersionRange.class, "HyphenVersionRange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getHyphenVersionRange_From(), this.getVersionNumber(), null, "from", null, 0, 1, HyphenVersionRange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getHyphenVersionRange_To(), this.getVersionNumber(), null, "to", null, 0, 1, HyphenVersionRange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -997,6 +1041,8 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 
 		initEOperation(getSimpleVersion__IsSmallerEquals(), theEcorePackage.getEBoolean(), "isSmallerEquals", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
+		initEOperation(getSimpleVersion__ToString(), theEcorePackage.getEString(), "toString", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
 		initEClass(versionNumberEClass, VersionNumber.class, "VersionNumber", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getVersionNumber_Major(), this.getVersionPart(), null, "major", null, 0, 1, VersionNumber.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getVersionNumber_Minor(), this.getVersionPart(), null, "minor", null, 0, 1, VersionNumber.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1015,6 +1061,8 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 
 		op = initEOperation(getVersionNumber__Equals__Object(), theEcorePackage.getEBoolean(), "equals", 0, 1, !IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, theEcorePackage.getEJavaObject(), "obj", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getVersionNumber__ToString(), theEcorePackage.getEString(), "toString", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(versionPartEClass, VersionPart.class, "VersionPart", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getVersionPart_Wildcard(), theEcorePackage.getEBoolean(), "wildcard", null, 0, 1, VersionPart.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

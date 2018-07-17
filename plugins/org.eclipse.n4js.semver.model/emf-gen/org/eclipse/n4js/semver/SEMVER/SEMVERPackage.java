@@ -97,13 +97,22 @@ public interface SEMVERPackage extends EPackage {
 	int NPM_VERSION_FEATURE_COUNT = 0;
 
 	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NPM_VERSION___TO_STRING = 0;
+
+	/**
 	 * The number of operations of the '<em>NPM Version</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int NPM_VERSION_OPERATION_COUNT = 0;
+	int NPM_VERSION_OPERATION_COUNT = 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.semver.SEMVER.impl.URLVersionImpl <em>URL Version</em>}' class.
@@ -150,6 +159,15 @@ public interface SEMVERPackage extends EPackage {
 	 * @ordered
 	 */
 	int URL_VERSION_FEATURE_COUNT = NPM_VERSION_FEATURE_COUNT + 3;
+
+	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int URL_VERSION___TO_STRING = NPM_VERSION___TO_STRING;
 
 	/**
 	 * The operation id for the '<em>Has Simple Version</em>' operation.
@@ -318,6 +336,15 @@ public interface SEMVERPackage extends EPackage {
 	int GIT_HUB_VERSION_FEATURE_COUNT = NPM_VERSION_FEATURE_COUNT + 2;
 
 	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GIT_HUB_VERSION___TO_STRING = NPM_VERSION___TO_STRING;
+
+	/**
 	 * The number of operations of the '<em>Git Hub Version</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -353,6 +380,15 @@ public interface SEMVERPackage extends EPackage {
 	 * @ordered
 	 */
 	int LOCAL_PATH_VERSION_FEATURE_COUNT = NPM_VERSION_FEATURE_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LOCAL_PATH_VERSION___TO_STRING = NPM_VERSION___TO_STRING;
 
 	/**
 	 * The number of operations of the '<em>Local Path Version</em>' class.
@@ -392,6 +428,15 @@ public interface SEMVERPackage extends EPackage {
 	int TAG_VERSION_FEATURE_COUNT = NPM_VERSION_FEATURE_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TAG_VERSION___TO_STRING = NPM_VERSION___TO_STRING;
+
+	/**
 	 * The number of operations of the '<em>Tag Version</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -429,6 +474,15 @@ public interface SEMVERPackage extends EPackage {
 	int VERSION_RANGE_SET_FEATURE_COUNT = NPM_VERSION_FEATURE_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSION_RANGE_SET___TO_STRING = NPM_VERSION___TO_STRING;
+
+	/**
 	 * The number of operations of the '<em>Version Range Set</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -457,13 +511,22 @@ public interface SEMVERPackage extends EPackage {
 	int VERSION_RANGE_FEATURE_COUNT = 0;
 
 	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSION_RANGE___TO_STRING = 0;
+
+	/**
 	 * The number of operations of the '<em>Version Range</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_RANGE_OPERATION_COUNT = 0;
+	int VERSION_RANGE_OPERATION_COUNT = 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.semver.SEMVER.impl.HyphenVersionRangeImpl <em>Hyphen Version Range</em>}' class.
@@ -503,6 +566,15 @@ public interface SEMVERPackage extends EPackage {
 	int HYPHEN_VERSION_RANGE_FEATURE_COUNT = VERSION_RANGE_FEATURE_COUNT + 2;
 
 	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int HYPHEN_VERSION_RANGE___TO_STRING = VERSION_RANGE___TO_STRING;
+
+	/**
 	 * The number of operations of the '<em>Hyphen Version Range</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -538,6 +610,15 @@ public interface SEMVERPackage extends EPackage {
 	 * @ordered
 	 */
 	int VERSION_RANGE_CONSTRAINT_FEATURE_COUNT = VERSION_RANGE_FEATURE_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSION_RANGE_CONSTRAINT___TO_STRING = VERSION_RANGE___TO_STRING;
 
 	/**
 	 * The number of operations of the '<em>Version Range Constraint</em>' class.
@@ -649,13 +730,22 @@ public interface SEMVERPackage extends EPackage {
 	int SIMPLE_VERSION___IS_SMALLER_EQUALS = 6;
 
 	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SIMPLE_VERSION___TO_STRING = 7;
+
+	/**
 	 * The number of operations of the '<em>Simple Version</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SIMPLE_VERSION_OPERATION_COUNT = 7;
+	int SIMPLE_VERSION_OPERATION_COUNT = 8;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.semver.SEMVER.impl.VersionNumberImpl <em>Version Number</em>}' class.
@@ -767,13 +857,22 @@ public interface SEMVERPackage extends EPackage {
 	int VERSION_NUMBER___EQUALS__OBJECT = 4;
 
 	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSION_NUMBER___TO_STRING = 5;
+
+	/**
 	 * The number of operations of the '<em>Version Number</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_NUMBER_OPERATION_COUNT = 5;
+	int VERSION_NUMBER_OPERATION_COUNT = 6;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.semver.SEMVER.impl.VersionPartImpl <em>Version Part</em>}' class.
@@ -960,6 +1059,16 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getNPMVersion();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.semver.SEMVER.NPMVersion#toString() <em>To String</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>To String</em>' operation.
+	 * @see org.eclipse.n4js.semver.SEMVER.NPMVersion#toString()
+	 * @generated
+	 */
+	EOperation getNPMVersion__ToString();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.semver.SEMVER.URLVersion <em>URL Version</em>}'.
@@ -1182,6 +1291,16 @@ public interface SEMVERPackage extends EPackage {
 	EClass getVersionRange();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.semver.SEMVER.VersionRange#toString() <em>To String</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>To String</em>' operation.
+	 * @see org.eclipse.n4js.semver.SEMVER.VersionRange#toString()
+	 * @generated
+	 */
+	EOperation getVersionRange__ToString();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.semver.SEMVER.HyphenVersionRange <em>Hyphen Version Range</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1337,6 +1456,16 @@ public interface SEMVERPackage extends EPackage {
 	EOperation getSimpleVersion__IsSmallerEquals();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.semver.SEMVER.SimpleVersion#toString() <em>To String</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>To String</em>' operation.
+	 * @see org.eclipse.n4js.semver.SEMVER.SimpleVersion#toString()
+	 * @generated
+	 */
+	EOperation getSimpleVersion__ToString();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.semver.SEMVER.VersionNumber <em>Version Number</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1450,6 +1579,16 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getVersionNumber__Equals__Object();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.semver.SEMVER.VersionNumber#toString() <em>To String</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>To String</em>' operation.
+	 * @see org.eclipse.n4js.semver.SEMVER.VersionNumber#toString()
+	 * @generated
+	 */
+	EOperation getVersionNumber__ToString();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.semver.SEMVER.VersionPart <em>Version Part</em>}'.
@@ -1618,6 +1757,14 @@ public interface SEMVERPackage extends EPackage {
 		 * @generated
 		 */
 		EClass NPM_VERSION = eINSTANCE.getNPMVersion();
+
+		/**
+		 * The meta object literal for the '<em><b>To String</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation NPM_VERSION___TO_STRING = eINSTANCE.getNPMVersion__ToString();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.semver.SEMVER.impl.URLVersionImpl <em>URL Version</em>}' class.
@@ -1806,6 +1953,14 @@ public interface SEMVERPackage extends EPackage {
 		EClass VERSION_RANGE = eINSTANCE.getVersionRange();
 
 		/**
+		 * The meta object literal for the '<em><b>To String</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation VERSION_RANGE___TO_STRING = eINSTANCE.getVersionRange__ToString();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.semver.SEMVER.impl.HyphenVersionRangeImpl <em>Hyphen Version Range</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1932,6 +2087,14 @@ public interface SEMVERPackage extends EPackage {
 		EOperation SIMPLE_VERSION___IS_SMALLER_EQUALS = eINSTANCE.getSimpleVersion__IsSmallerEquals();
 
 		/**
+		 * The meta object literal for the '<em><b>To String</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation SIMPLE_VERSION___TO_STRING = eINSTANCE.getSimpleVersion__ToString();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.semver.SEMVER.impl.VersionNumberImpl <em>Version Number</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2020,6 +2183,14 @@ public interface SEMVERPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation VERSION_NUMBER___EQUALS__OBJECT = eINSTANCE.getVersionNumber__Equals__Object();
+
+		/**
+		 * The meta object literal for the '<em><b>To String</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation VERSION_NUMBER___TO_STRING = eINSTANCE.getVersionNumber__ToString();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.semver.SEMVER.impl.VersionPartImpl <em>Version Part</em>}' class.

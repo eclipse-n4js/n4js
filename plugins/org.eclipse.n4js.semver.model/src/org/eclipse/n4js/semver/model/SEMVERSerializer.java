@@ -1,4 +1,4 @@
-package org.eclipse.n4js.semver;
+package org.eclipse.n4js.semver.model;
 
 import java.io.IOException;
 import java.io.Writer;

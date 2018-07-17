@@ -25,7 +25,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.n4js.n4mf.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.semver.SEMVERSerializer;
+import org.eclipse.n4js.semver.model.SEMVERSerializer;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 import org.eclipse.swt.graphics.Image;
 

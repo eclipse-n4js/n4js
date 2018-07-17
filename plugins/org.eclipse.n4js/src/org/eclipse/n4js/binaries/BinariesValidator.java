@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.n4js.semver.SEMVERHelper;
 import org.eclipse.n4js.semver.SEMVERMatcher;
 import org.eclipse.n4js.semver.SEMVERMatcher.VersionNumberRelation;
-import org.eclipse.n4js.semver.SEMVERSerializer;
+import org.eclipse.n4js.semver.model.SEMVERSerializer;
 import org.eclipse.n4js.semver.SEMVER.VersionNumber;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.process.ProcessResult;

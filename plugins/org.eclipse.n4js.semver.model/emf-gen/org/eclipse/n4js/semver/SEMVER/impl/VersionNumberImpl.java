@@ -33,6 +33,8 @@ import org.eclipse.n4js.semver.SEMVER.SEMVERPackage;
 import org.eclipse.n4js.semver.SEMVER.VersionNumber;
 import org.eclipse.n4js.semver.SEMVER.VersionPart;
 
+import org.eclipse.n4js.semver.model.SEMVERSerializer;
+
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Version Number</b></em>'.
@@ -403,6 +405,15 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String toString() {
+		return SEMVERSerializer.toString(this);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -538,6 +549,8 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 				return getPart((Integer)arguments.get(0));
 			case SEMVERPackage.VERSION_NUMBER___EQUALS__OBJECT:
 				return equals(arguments.get(0));
+			case SEMVERPackage.VERSION_NUMBER___TO_STRING:
+				return toString();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

@@ -14,7 +14,7 @@ package org.eclipse.n4js.projectModel.dependencies;
 
 import org.eclipse.n4js.n4mf.ProjectDependency;
 import org.eclipse.n4js.n4mf.ProjectReference;
-import org.eclipse.n4js.semver.SEMVERSerializer;
+import org.eclipse.n4js.semver.model.SEMVERSerializer;
 
 /** Custom type for {@code Pair<String, String>} that is used to describe dependency (i.e. npm package). */
 public class DependencyInfo {

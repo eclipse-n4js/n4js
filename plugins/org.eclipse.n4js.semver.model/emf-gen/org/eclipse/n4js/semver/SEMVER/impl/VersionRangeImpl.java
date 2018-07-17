@@ -10,12 +10,18 @@
  */
 package org.eclipse.n4js.semver.SEMVER.impl;
 
+import java.lang.reflect.InvocationTargetException;
+
+import org.eclipse.emf.common.util.EList;
+
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 import org.eclipse.n4js.semver.SEMVER.SEMVERPackage;
 import org.eclipse.n4js.semver.SEMVER.VersionRange;
+
+import org.eclipse.n4js.semver.model.SEMVERSerializer;
 
 /**
  * <!-- begin-user-doc -->
@@ -42,6 +48,29 @@ public abstract class VersionRangeImpl extends MinimalEObjectImpl.Container impl
 	@Override
 	protected EClass eStaticClass() {
 		return SEMVERPackage.Literals.VERSION_RANGE;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String toString() {
+		return SEMVERSerializer.toString(this);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case SEMVERPackage.VERSION_RANGE___TO_STRING:
+				return toString();
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 } //VersionRangeImpl

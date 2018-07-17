@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.semver;
 
+import org.eclipse.n4js.semver.model.SEMVERSerializer;
 import org.eclipse.n4js.semver.validation.SEMVERIssueCodes;
 import org.eclipse.n4js.semver.validation.SEMVERIssueSeveritiesProvider;
 import org.eclipse.xtext.serializer.ISerializer;
