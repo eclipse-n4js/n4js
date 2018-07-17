@@ -199,8 +199,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 
 		// 1.a. For Each containing File: get the Exported Polyfills:   <QN, PolyFilledProvision>
 		// if the file is from our self, then ignore it; validation will be done for the local file separately.
-		val LinkedListMultimap<String, PolyFilledProvisionPackageJson> exportedPolyfills_QN_to_PolyProvision = LinkedListMultimap.
-			create
+		val LinkedListMultimap<String, PolyFilledProvision> exportedPolyfills_QN_to_PolyProvision = LinkedListMultimap.create
 		for (ieoT : allPolyFillTypes) {
 			val optSrcContainer = findN4JSSourceContainer(ieoT.EObjectURI)
 			if (optSrcContainer.present) {
@@ -212,7 +211,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 				} else if (dependency !== selfProject) {
 					exportedPolyfills_QN_to_PolyProvision.put(
 						ieoT.qualifiedName.toString,
-						new PolyFilledProvisionPackageJson(depQName, dependency, ieoT)
+						new PolyFilledProvision(depQName, dependency, ieoT)
 					)
 				}
 			} else {
@@ -228,7 +227,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			if (polyProvisions.size > 1) {
 
 				// For each filled member determine the set of fillers:
-				val m = LinkedListMultimap.<String, PolyFilledProvisionPackageJson>create // memberName->PolyProvisionA,PolyProvisionB ...
+				val m = LinkedListMultimap.<String, PolyFilledProvision>create // memberName->PolyProvisionA,PolyProvisionB ...
 				for (prov : polyProvisions) {
 
 					// contextScope.getSingleElement( prov.ieoDescrOfPolyfill.qualifiedName )
