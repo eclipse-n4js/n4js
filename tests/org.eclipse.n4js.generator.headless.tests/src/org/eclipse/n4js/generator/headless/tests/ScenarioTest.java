@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.n4js.HeadlessCompilerFactory;
+import org.eclipse.n4js.generator.headless.BuildSet;
 import org.eclipse.n4js.generator.headless.N4HeadlessCompiler;
 import org.eclipse.n4js.generator.headless.N4JSCompileException;
 import org.eclipse.n4js.utils.io.FileDeleter;
@@ -125,7 +126,8 @@ public class ScenarioTest {
 				new File(root, "wsp6") // G
 		);
 
-		hlc.compileAllProjects(pProjectRoots);
+		final BuildSet buildSet = hlc.getBuildSetComputer().createAllProjectsBuildSet(pProjectRoots);
+		hlc.compile(buildSet);
 		// expect source-files:
 		assertExists(root, "wsp1/A/src-gen/packA/A.js");
 		assertExists(root, "nest/wsp2/B/src-gen/packB/B.js");
@@ -150,7 +152,8 @@ public class ScenarioTest {
 				new File(root, "wsp1") // A
 		);
 
-		hlc.compileAllProjects(pProjectRoots);
+		final BuildSet buildSet = hlc.getBuildSetComputer().createAllProjectsBuildSet(pProjectRoots);
+		hlc.compile(buildSet);
 	}
 
 	/**
@@ -163,7 +166,8 @@ public class ScenarioTest {
 		List<File> pProjectRoots = Arrays.asList(//
 				new File(root, "wsp1") // A
 		);
-		hlc.compileAllProjects(pProjectRoots);
+		final BuildSet buildSet = hlc.getBuildSetComputer().createAllProjectsBuildSet(pProjectRoots);
+		hlc.compile(buildSet);
 	}
 
 	/**
@@ -185,7 +189,8 @@ public class ScenarioTest {
 				new File(root, "nest/wsp2/D") // requires B and A to be loaded.
 		);
 
-		hlc.compileProjects(pProjectRoots, toCompile);
+		final BuildSet buildSet = hlc.getBuildSetComputer().createProjectsBuildSet(pProjectRoots, toCompile);
+		hlc.compile(buildSet);
 
 		assertNotExists(root, "wsp1/A/src-gen/packA/A.js");
 		assertNotExists(root, "nest/wsp2/B/src-gen/packB/B.js");
@@ -214,7 +219,8 @@ public class ScenarioTest {
 				new File(root, "wsp1/A") // requires nothing
 		);
 
-		hlc.compileProjects(toCompile);
+		final BuildSet buildSet = hlc.getBuildSetComputer().createProjectsBuildSet(toCompile);
+		hlc.compile(buildSet);
 
 		// those should be available
 		assertExists(root, "wsp1/A/src-gen/packA/A.js");
@@ -237,7 +243,8 @@ public class ScenarioTest {
 				new File(root, "wsp1/P1") // requires nothing
 		);
 
-		hlc.compileProjects(toCompile);
+		final BuildSet buildSet = hlc.getBuildSetComputer().createProjectsBuildSet(toCompile);
+		hlc.compile(buildSet);
 
 		// those should be available
 		assertExists(root, "wsp1/P1/outfolder/c/Csrc1.js");
@@ -266,7 +273,8 @@ public class ScenarioTest {
 				new File(root, "wsp1/P1") // requires nothing
 		);
 
-		hlc.compileProjects(toCompile);
+		final BuildSet buildSet = hlc.getBuildSetComputer().createProjectsBuildSet(toCompile);
+		hlc.compile(buildSet);
 
 		// those should be available
 		assertExists(root, "wsp1/P1/outfolder/c/X.js");
@@ -296,7 +304,9 @@ public class ScenarioTest {
 
 		hlc.setCompileSourceCode(false);
 		hlc.setProcessTestCode(true);
-		hlc.compileProjects(toCompile);
+
+		final BuildSet buildSet = hlc.getBuildSetComputer().createProjectsBuildSet(toCompile);
+		hlc.compile(buildSet);
 
 		// those should be available
 		assertNotExists(root, "wsp1/P1/outfolder/c/Csrc1.js");
@@ -325,7 +335,9 @@ public class ScenarioTest {
 
 		hlc.setCompileSourceCode(true);
 		hlc.setProcessTestCode(false);
-		hlc.compileProjects(toCompile);
+
+		final BuildSet buildSet = hlc.getBuildSetComputer().createProjectsBuildSet(toCompile);
+		hlc.compile(buildSet);
 
 		// those should be available
 		assertExists(root, "wsp1/P1/outfolder/c/Csrc1.js");
@@ -352,7 +364,8 @@ public class ScenarioTest {
 		// new File(root, "wsp1/A") // requires nothing
 		);
 
-		hlc.compileSingleFiles(toCompile);
+		final BuildSet buildSet = hlc.getBuildSetComputer().createSingleFilesBuildSet(toCompile);
+		hlc.compile(buildSet);
 
 		assertExists(root, "nest/wsp2/B/src-gen/packB/B2.js");
 
@@ -380,7 +393,8 @@ public class ScenarioTest {
 				new File(root, "nest/wsp2"),
 				new File(root, "wsp1"));
 
-		hlc.compileSingleFiles(wspRoots, toCompile);
+		final BuildSet buildSet = hlc.getBuildSetComputer().createSingleFilesBuildSet(wspRoots, toCompile);
+		hlc.compile(buildSet);
 
 		assertExists(root, "nest/wsp2/D/src-gen/packD/D2.js");
 
@@ -403,7 +417,8 @@ public class ScenarioTest {
 				new File(root, "wsp1"));
 
 		try {
-			hlc.compileAllProjects(pProjectRoots);
+			final BuildSet buildSet = hlc.getBuildSetComputer().createAllProjectsBuildSet(pProjectRoots);
+			hlc.compile(buildSet);
 			assertFalse("Should not have reached this point.", true);
 		} catch (N4JSCompileException e) {
 			String msg = e.getMessage();
