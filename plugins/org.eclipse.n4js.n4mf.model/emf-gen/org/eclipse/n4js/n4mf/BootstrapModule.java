@@ -21,8 +21,7 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.n4mf.BootstrapModule#getModuleSpecifierWithWildcard <em>Module Specifier With Wildcard</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4mf.BootstrapModule#getSourcePath <em>Source Path</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4mf.BootstrapModule#getModuleSpecifier <em>Module Specifier</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.n4mf.N4mfPackage#getBootstrapModule()
@@ -31,55 +30,29 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface BootstrapModule extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Module Specifier With Wildcard</b></em>' attribute.
+	 * Returns the value of the '<em><b>Module Specifier</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Module Specifier With Wildcard</em>' attribute isn't clear,
+	 * If the meaning of the '<em>Module Specifier</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Module Specifier With Wildcard</em>' attribute.
-	 * @see #setModuleSpecifierWithWildcard(String)
-	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getBootstrapModule_ModuleSpecifierWithWildcard()
+	 * @return the value of the '<em>Module Specifier</em>' attribute.
+	 * @see #setModuleSpecifier(String)
+	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getBootstrapModule_ModuleSpecifier()
 	 * @model unique="false"
 	 * @generated
 	 */
-	String getModuleSpecifierWithWildcard();
+	String getModuleSpecifier();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4mf.BootstrapModule#getModuleSpecifierWithWildcard <em>Module Specifier With Wildcard</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.n4js.n4mf.BootstrapModule#getModuleSpecifier <em>Module Specifier</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Module Specifier With Wildcard</em>' attribute.
-	 * @see #getModuleSpecifierWithWildcard()
+	 * @param value the new value of the '<em>Module Specifier</em>' attribute.
+	 * @see #getModuleSpecifier()
 	 * @generated
 	 */
-	void setModuleSpecifierWithWildcard(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Source Path</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Source Path</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Source Path</em>' attribute.
-	 * @see #setSourcePath(String)
-	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getBootstrapModule_SourcePath()
-	 * @model unique="false"
-	 * @generated
-	 */
-	String getSourcePath();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4mf.BootstrapModule#getSourcePath <em>Source Path</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Source Path</em>' attribute.
-	 * @see #getSourcePath()
-	 * @generated
-	 */
-	void setSourcePath(String value);
+	void setModuleSpecifier(String value);
 
 } // BootstrapModule

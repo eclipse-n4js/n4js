@@ -46,11 +46,9 @@ class ProjectDescription {
 	contains BootstrapModule[] initModules
 	contains BootstrapModule execModule
 	String outputPathRaw
-	String[] libraryPathsRaw
-	String[] resourcePathsRaw
 	contains SourceContainerDescription[] sourceContainers
 	contains ModuleFilter[] moduleFilters
-	contains ProjectDependency[] testedProjects
+	contains ProjectReference[] testedProjects
 	ModuleLoader moduleLoader
 	/* 
 	 * Tells if the project represented by this project description has a nested
@@ -71,24 +69,6 @@ class ProjectDescription {
 
 	op void setOutputPath(String newOutputPath) {
 		this.outputPathRaw = newOutputPath;
-	}
-
-	op String[] getLibraryPaths() {
-		val paths = new BasicEList(libraryPathsRaw.length());
-		for (String pathRaw : libraryPathsRaw) {
-			val normalizedPath = FileUtils.normalizeDotWhenEmpty(pathRaw);
-			paths.add(normalizedPath);
-		}
-		return paths;
-	}
-
-	op String[] getResourcePaths() {
-		val paths = new BasicEList(resourcePathsRaw.length());
-		for (String pathRaw : resourcePathsRaw) {
-			val normalizedPath = FileUtils.normalizeDotWhenEmpty(pathRaw);
-			paths.add(normalizedPath);
-		}
-		return paths;
 	}
 }
 
@@ -182,8 +162,7 @@ class ModuleFilter {
 }
 
 class BootstrapModule {
-	String moduleSpecifierWithWildcard
-	String sourcePath
+	String moduleSpecifier
 }
 
 /**
@@ -204,22 +183,6 @@ class ProjectReference {
 	 * the project ID
 	 */
 	String projectId
-
-	// TODO is following property and operation really required?
-	/**
-	 * the vendor ID
-	 */
-	String declaredVendorId
-	op String getVendorId() {
-		return if (declaredVendorId !== null) declaredVendorId else (eContainer as ProjectDescription)?.vendorId;
-	}
-
-	/**
-	 * COMPILE by default
-	 */
-	op ProjectDependencyScope getScope() {
-		return ProjectDependencyScope.COMPILE
-	}
 }
 
 class ModuleFilterSpecifier {
@@ -232,19 +195,12 @@ class ModuleFilterSpecifier {
  * projectId. The allowed version can be defined either in a range by
  * stating lower and upper version bound or by stating only one version.
  * So lowerVersionBound and upperVersionBound should be null if exactVersion
- * is and vice versa. The project dependency scope defines whether the
- * dependency affects runtime or is only required for testing.
+ * is and vice versa.
  */
 class ProjectDependency extends ProjectReference {
 //	contains VersionConstraint versionConstraint
 	contains VersionRangeSet versionConstraint
 	String versionConstraintString
-
-	ProjectDependencyScope declaredScope
-
-	op ProjectDependencyScope getScope() {
-		declaredScope ?: ProjectDependencyScope.COMPILE
-	}
 }
 
 /**
@@ -261,15 +217,6 @@ class ProjectDependency extends ProjectReference {
 //	boolean exclUpperBound
 //	contains DeclaredVersion upperVersion
 //}
-
-/**
- * To define if a dependency is only required while executing testing or
- * if it is a dependency at runtime (COMPILE).
- */
-enum ProjectDependencyScope {
-	COMPILE = 0,
-	TEST = 1
-}
 
 /*
  * One of the Javascript module loading techniques.

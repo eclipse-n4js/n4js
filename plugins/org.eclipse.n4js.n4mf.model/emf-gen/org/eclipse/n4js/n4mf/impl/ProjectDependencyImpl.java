@@ -10,12 +10,8 @@
  */
 package org.eclipse.n4js.n4mf.impl;
 
-import java.lang.reflect.InvocationTargetException;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
-import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -24,8 +20,6 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.n4js.n4mf.N4mfPackage;
 import org.eclipse.n4js.n4mf.ProjectDependency;
-import org.eclipse.n4js.n4mf.ProjectDependencyScope;
-import org.eclipse.n4js.n4mf.ProjectReference;
 
 import org.eclipse.n4js.semver.SEMVER.VersionRangeSet;
 
@@ -39,7 +33,6 @@ import org.eclipse.n4js.semver.SEMVER.VersionRangeSet;
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDependencyImpl#getVersionConstraint <em>Version Constraint</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDependencyImpl#getVersionConstraintString <em>Version Constraint String</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDependencyImpl#getDeclaredScope <em>Declared Scope</em>}</li>
  * </ul>
  *
  * @generated
@@ -74,26 +67,6 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 	 * @ordered
 	 */
 	protected String versionConstraintString = VERSION_CONSTRAINT_STRING_EDEFAULT;
-
-	/**
-	 * The default value of the '{@link #getDeclaredScope() <em>Declared Scope</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getDeclaredScope()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final ProjectDependencyScope DECLARED_SCOPE_EDEFAULT = ProjectDependencyScope.COMPILE;
-
-	/**
-	 * The cached value of the '{@link #getDeclaredScope() <em>Declared Scope</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getDeclaredScope()
-	 * @generated
-	 * @ordered
-	 */
-	protected ProjectDependencyScope declaredScope = DECLARED_SCOPE_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -183,43 +156,6 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ProjectDependencyScope getDeclaredScope() {
-		return declaredScope;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setDeclaredScope(ProjectDependencyScope newDeclaredScope) {
-		ProjectDependencyScope oldDeclaredScope = declaredScope;
-		declaredScope = newDeclaredScope == null ? DECLARED_SCOPE_EDEFAULT : newDeclaredScope;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4mfPackage.PROJECT_DEPENDENCY__DECLARED_SCOPE, oldDeclaredScope, declaredScope));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public ProjectDependencyScope getScope() {
-		ProjectDependencyScope _elvis = null;
-		ProjectDependencyScope _declaredScope = this.getDeclaredScope();
-		if (_declaredScope != null) {
-			_elvis = _declaredScope;
-		} else {
-			_elvis = ProjectDependencyScope.COMPILE;
-		}
-		return _elvis;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -241,8 +177,6 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 				return getVersionConstraint();
 			case N4mfPackage.PROJECT_DEPENDENCY__VERSION_CONSTRAINT_STRING:
 				return getVersionConstraintString();
-			case N4mfPackage.PROJECT_DEPENDENCY__DECLARED_SCOPE:
-				return getDeclaredScope();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -260,9 +194,6 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 				return;
 			case N4mfPackage.PROJECT_DEPENDENCY__VERSION_CONSTRAINT_STRING:
 				setVersionConstraintString((String)newValue);
-				return;
-			case N4mfPackage.PROJECT_DEPENDENCY__DECLARED_SCOPE:
-				setDeclaredScope((ProjectDependencyScope)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -282,9 +213,6 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 			case N4mfPackage.PROJECT_DEPENDENCY__VERSION_CONSTRAINT_STRING:
 				setVersionConstraintString(VERSION_CONSTRAINT_STRING_EDEFAULT);
 				return;
-			case N4mfPackage.PROJECT_DEPENDENCY__DECLARED_SCOPE:
-				setDeclaredScope(DECLARED_SCOPE_EDEFAULT);
-				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -301,40 +229,8 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 				return versionConstraint != null;
 			case N4mfPackage.PROJECT_DEPENDENCY__VERSION_CONSTRAINT_STRING:
 				return VERSION_CONSTRAINT_STRING_EDEFAULT == null ? versionConstraintString != null : !VERSION_CONSTRAINT_STRING_EDEFAULT.equals(versionConstraintString);
-			case N4mfPackage.PROJECT_DEPENDENCY__DECLARED_SCOPE:
-				return declaredScope != DECLARED_SCOPE_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
-		if (baseClass == ProjectReference.class) {
-			switch (baseOperationID) {
-				case N4mfPackage.PROJECT_REFERENCE___GET_SCOPE: return N4mfPackage.PROJECT_DEPENDENCY___GET_SCOPE;
-				default: return super.eDerivedOperationID(baseOperationID, baseClass);
-			}
-		}
-		return super.eDerivedOperationID(baseOperationID, baseClass);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
-		switch (operationID) {
-			case N4mfPackage.PROJECT_DEPENDENCY___GET_SCOPE:
-				return getScope();
-		}
-		return super.eInvoke(operationID, arguments);
 	}
 
 	/**
@@ -349,8 +245,6 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (versionConstraintString: ");
 		result.append(versionConstraintString);
-		result.append(", declaredScope: ");
-		result.append(declaredScope);
 		result.append(')');
 		return result.toString();
 	}

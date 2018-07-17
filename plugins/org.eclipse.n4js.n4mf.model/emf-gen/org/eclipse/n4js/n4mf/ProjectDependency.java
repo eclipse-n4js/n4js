@@ -23,8 +23,7 @@ import org.eclipse.n4js.semver.SEMVER.VersionRangeSet;
  * projectId. The allowed version can be defined either in a range by
  * stating lower and upper version bound or by stating only one version.
  * So lowerVersionBound and upperVersionBound should be null if exactVersion
- * is and vice versa. The project dependency scope defines whether the
- * dependency affects runtime or is only required for testing.
+ * is and vice versa.
  * <!-- end-model-doc -->
  *
  * <p>
@@ -33,7 +32,6 @@ import org.eclipse.n4js.semver.SEMVER.VersionRangeSet;
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDependency#getVersionConstraint <em>Version Constraint</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDependency#getVersionConstraintString <em>Version Constraint String</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4mf.ProjectDependency#getDeclaredScope <em>Declared Scope</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDependency()
@@ -92,43 +90,5 @@ public interface ProjectDependency extends ProjectReference {
 	 * @generated
 	 */
 	void setVersionConstraintString(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Declared Scope</b></em>' attribute.
-	 * The literals are from the enumeration {@link org.eclipse.n4js.n4mf.ProjectDependencyScope}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Declared Scope</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Declared Scope</em>' attribute.
-	 * @see org.eclipse.n4js.n4mf.ProjectDependencyScope
-	 * @see #setDeclaredScope(ProjectDependencyScope)
-	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDependency_DeclaredScope()
-	 * @model unique="false"
-	 * @generated
-	 */
-	ProjectDependencyScope getDeclaredScope();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4mf.ProjectDependency#getDeclaredScope <em>Declared Scope</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Declared Scope</em>' attribute.
-	 * @see org.eclipse.n4js.n4mf.ProjectDependencyScope
-	 * @see #getDeclaredScope()
-	 * @generated
-	 */
-	void setDeclaredScope(ProjectDependencyScope value);
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.n4js.n4mf.ProjectDependencyScope%&gt; _elvis = null;\n&lt;%org.eclipse.n4js.n4mf.ProjectDependencyScope%&gt; _declaredScope = this.getDeclaredScope();\nif (_declaredScope != null)\n{\n\t_elvis = _declaredScope;\n} else\n{\n\t_elvis = &lt;%org.eclipse.n4js.n4mf.ProjectDependencyScope%&gt;.COMPILE;\n}\nreturn _elvis;'"
-	 * @generated
-	 */
-	ProjectDependencyScope getScope();
 
 } // ProjectDependency

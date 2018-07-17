@@ -17,7 +17,6 @@ import java.util.Collection;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
-import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
@@ -26,7 +25,6 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
-import org.eclipse.emf.ecore.util.EDataTypeEList;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -67,8 +65,6 @@ import org.eclipse.n4js.utils.io.FileUtils;
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getInitModules <em>Init Modules</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getExecModule <em>Exec Module</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getOutputPathRaw <em>Output Path Raw</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getLibraryPathsRaw <em>Library Paths Raw</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getResourcePathsRaw <em>Resource Paths Raw</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getSourceContainers <em>Source Containers</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getModuleFilters <em>Module Filters</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getTestedProjects <em>Tested Projects</em>}</li>
@@ -301,26 +297,6 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	protected String outputPathRaw = OUTPUT_PATH_RAW_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getLibraryPathsRaw() <em>Library Paths Raw</em>}' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getLibraryPathsRaw()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<String> libraryPathsRaw;
-
-	/**
-	 * The cached value of the '{@link #getResourcePathsRaw() <em>Resource Paths Raw</em>}' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getResourcePathsRaw()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<String> resourcePathsRaw;
-
-	/**
 	 * The cached value of the '{@link #getSourceContainers() <em>Source Containers</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -348,7 +324,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<ProjectDependency> testedProjects;
+	protected EList<ProjectReference> testedProjects;
 
 	/**
 	 * The default value of the '{@link #getModuleLoader() <em>Module Loader</em>}' attribute.
@@ -770,30 +746,6 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<String> getLibraryPathsRaw() {
-		if (libraryPathsRaw == null) {
-			libraryPathsRaw = new EDataTypeEList<String>(String.class, this, N4mfPackage.PROJECT_DESCRIPTION__LIBRARY_PATHS_RAW);
-		}
-		return libraryPathsRaw;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EList<String> getResourcePathsRaw() {
-		if (resourcePathsRaw == null) {
-			resourcePathsRaw = new EDataTypeEList<String>(String.class, this, N4mfPackage.PROJECT_DESCRIPTION__RESOURCE_PATHS_RAW);
-		}
-		return resourcePathsRaw;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EList<SourceContainerDescription> getSourceContainers() {
 		if (sourceContainers == null) {
 			sourceContainers = new EObjectContainmentEList<SourceContainerDescription>(SourceContainerDescription.class, this, N4mfPackage.PROJECT_DESCRIPTION__SOURCE_CONTAINERS);
@@ -818,9 +770,9 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<ProjectDependency> getTestedProjects() {
+	public EList<ProjectReference> getTestedProjects() {
 		if (testedProjects == null) {
-			testedProjects = new EObjectContainmentEList<ProjectDependency>(ProjectDependency.class, this, N4mfPackage.PROJECT_DESCRIPTION__TESTED_PROJECTS);
+			testedProjects = new EObjectContainmentEList<ProjectReference>(ProjectReference.class, this, N4mfPackage.PROJECT_DESCRIPTION__TESTED_PROJECTS);
 		}
 		return testedProjects;
 	}
@@ -911,42 +863,6 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<String> getLibraryPaths() {
-		int _length = ((Object[])org.eclipse.xtext.xbase.lib.Conversions.unwrapArray(this.getLibraryPathsRaw(), Object.class)).length;
-		final BasicEList<String> paths = new BasicEList<String>(_length);
-		EList<String> _libraryPathsRaw = this.getLibraryPathsRaw();
-		for (final String pathRaw : _libraryPathsRaw) {
-			{
-				final String normalizedPath = FileUtils.normalizeDotWhenEmpty(pathRaw);
-				paths.add(normalizedPath);
-			}
-		}
-		return paths;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EList<String> getResourcePaths() {
-		int _length = ((Object[])org.eclipse.xtext.xbase.lib.Conversions.unwrapArray(this.getResourcePathsRaw(), Object.class)).length;
-		final BasicEList<String> paths = new BasicEList<String>(_length);
-		EList<String> _resourcePathsRaw = this.getResourcePathsRaw();
-		for (final String pathRaw : _resourcePathsRaw) {
-			{
-				final String normalizedPath = FileUtils.normalizeDotWhenEmpty(pathRaw);
-				paths.add(normalizedPath);
-			}
-		}
-		return paths;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -1014,10 +930,6 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 				return getExecModule();
 			case N4mfPackage.PROJECT_DESCRIPTION__OUTPUT_PATH_RAW:
 				return getOutputPathRaw();
-			case N4mfPackage.PROJECT_DESCRIPTION__LIBRARY_PATHS_RAW:
-				return getLibraryPathsRaw();
-			case N4mfPackage.PROJECT_DESCRIPTION__RESOURCE_PATHS_RAW:
-				return getResourcePathsRaw();
 			case N4mfPackage.PROJECT_DESCRIPTION__SOURCE_CONTAINERS:
 				return getSourceContainers();
 			case N4mfPackage.PROJECT_DESCRIPTION__MODULE_FILTERS:
@@ -1093,14 +1005,6 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 			case N4mfPackage.PROJECT_DESCRIPTION__OUTPUT_PATH_RAW:
 				setOutputPathRaw((String)newValue);
 				return;
-			case N4mfPackage.PROJECT_DESCRIPTION__LIBRARY_PATHS_RAW:
-				getLibraryPathsRaw().clear();
-				getLibraryPathsRaw().addAll((Collection<? extends String>)newValue);
-				return;
-			case N4mfPackage.PROJECT_DESCRIPTION__RESOURCE_PATHS_RAW:
-				getResourcePathsRaw().clear();
-				getResourcePathsRaw().addAll((Collection<? extends String>)newValue);
-				return;
 			case N4mfPackage.PROJECT_DESCRIPTION__SOURCE_CONTAINERS:
 				getSourceContainers().clear();
 				getSourceContainers().addAll((Collection<? extends SourceContainerDescription>)newValue);
@@ -1111,7 +1015,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 				return;
 			case N4mfPackage.PROJECT_DESCRIPTION__TESTED_PROJECTS:
 				getTestedProjects().clear();
-				getTestedProjects().addAll((Collection<? extends ProjectDependency>)newValue);
+				getTestedProjects().addAll((Collection<? extends ProjectReference>)newValue);
 				return;
 			case N4mfPackage.PROJECT_DESCRIPTION__MODULE_LOADER:
 				setModuleLoader((ModuleLoader)newValue);
@@ -1179,12 +1083,6 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 			case N4mfPackage.PROJECT_DESCRIPTION__OUTPUT_PATH_RAW:
 				setOutputPathRaw(OUTPUT_PATH_RAW_EDEFAULT);
 				return;
-			case N4mfPackage.PROJECT_DESCRIPTION__LIBRARY_PATHS_RAW:
-				getLibraryPathsRaw().clear();
-				return;
-			case N4mfPackage.PROJECT_DESCRIPTION__RESOURCE_PATHS_RAW:
-				getResourcePathsRaw().clear();
-				return;
 			case N4mfPackage.PROJECT_DESCRIPTION__SOURCE_CONTAINERS:
 				getSourceContainers().clear();
 				return;
@@ -1245,10 +1143,6 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 				return execModule != null;
 			case N4mfPackage.PROJECT_DESCRIPTION__OUTPUT_PATH_RAW:
 				return OUTPUT_PATH_RAW_EDEFAULT == null ? outputPathRaw != null : !OUTPUT_PATH_RAW_EDEFAULT.equals(outputPathRaw);
-			case N4mfPackage.PROJECT_DESCRIPTION__LIBRARY_PATHS_RAW:
-				return libraryPathsRaw != null && !libraryPathsRaw.isEmpty();
-			case N4mfPackage.PROJECT_DESCRIPTION__RESOURCE_PATHS_RAW:
-				return resourcePathsRaw != null && !resourcePathsRaw.isEmpty();
 			case N4mfPackage.PROJECT_DESCRIPTION__SOURCE_CONTAINERS:
 				return sourceContainers != null && !sourceContainers.isEmpty();
 			case N4mfPackage.PROJECT_DESCRIPTION__MODULE_FILTERS:
@@ -1278,10 +1172,6 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 			case N4mfPackage.PROJECT_DESCRIPTION___SET_OUTPUT_PATH__STRING:
 				setOutputPath((String)arguments.get(0));
 				return null;
-			case N4mfPackage.PROJECT_DESCRIPTION___GET_LIBRARY_PATHS:
-				return getLibraryPaths();
-			case N4mfPackage.PROJECT_DESCRIPTION___GET_RESOURCE_PATHS:
-				return getResourcePaths();
 		}
 		return super.eInvoke(operationID, arguments);
 	}
@@ -1310,10 +1200,6 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 		result.append(implementationId);
 		result.append(", outputPathRaw: ");
 		result.append(outputPathRaw);
-		result.append(", libraryPathsRaw: ");
-		result.append(libraryPathsRaw);
-		result.append(", resourcePathsRaw: ");
-		result.append(resourcePathsRaw);
 		result.append(", moduleLoader: ");
 		result.append(moduleLoader);
 		result.append(", hasNestedNodeModulesFolder: ");

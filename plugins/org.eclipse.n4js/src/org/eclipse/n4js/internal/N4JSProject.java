@@ -278,17 +278,6 @@ public class N4JSProject implements IN4JSProject {
 	}
 
 	@Override
-	public List<String> getResourcePaths() {
-		if (!exists())
-			return emptyList();
-		ProjectDescription pd = model.getProjectDescription(getLocation());
-		if (pd == null) {
-			return emptyList();
-		}
-		return pd.getResourcePaths();
-	}
-
-	@Override
 	public ModuleFilter getModuleValidationFilter() {
 		return getModuleFilterByType(ModuleFilterType.NO_VALIDATE);
 	}
@@ -313,16 +302,6 @@ public class N4JSProject implements IN4JSProject {
 			return emptyList();
 		}
 		return pd.getModuleFilters();
-	}
-
-	@Override
-	public List<String> getLibraryFolders() {
-		ProjectDescription pd = model.getProjectDescription(getLocation());
-		if (pd == null) {
-			return emptyList();
-		} else {
-			return pd.getLibraryPaths();
-		}
 	}
 
 	@Override

@@ -129,13 +129,14 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 		if (expectedN4JSSourceContainerType == N4JSSourceContainerType.ARCHIVE) {
 			LazyProjectDescriptionHandle baseHandle = projectElementHandles.get(projectURI);
 			if (baseHandle != null && !baseHandle.isArchive()) {
-				String archiveFileName = projectId + IN4JSArchive.NFAR_FILE_EXTENSION_WITH_DOT;
-				for (String libraryPath : baseHandle.resolve().getLibraryPaths()) {
-					URI archiveURI = projectURI.appendSegments(new String[] { libraryPath, archiveFileName });
-					if (projectElementHandles.containsKey(archiveURI)) {
-						return archiveURI;
-					}
-				}
+				// TODO remove .nfar support
+				// String archiveFileName = projectId + IN4JSArchive.NFAR_FILE_EXTENSION_WITH_DOT;
+				// for (String libraryPath : baseHandle.resolve().getLibraryPaths()) {
+				// URI archiveURI = projectURI.appendSegments(new String[] { libraryPath, archiveFileName });
+				// if (projectElementHandles.containsKey(archiveURI)) {
+				// return archiveURI;
+				// }
+				// }
 			} else {
 				String archiveFileName = projectId + IN4JSArchive.NFAR_FILE_EXTENSION_WITH_DOT;
 				for (URI location : projectElementHandles.keySet()) {

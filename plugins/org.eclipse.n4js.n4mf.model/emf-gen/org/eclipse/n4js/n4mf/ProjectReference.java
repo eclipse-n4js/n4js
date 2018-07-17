@@ -22,7 +22,6 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectReference#getProjectId <em>Project Id</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4mf.ProjectReference#getDeclaredVendorId <em>Declared Vendor Id</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectReference()
@@ -55,53 +54,5 @@ public interface ProjectReference extends EObject {
 	 * @generated
 	 */
 	void setProjectId(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Declared Vendor Id</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * *
-	 * the vendor ID
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Declared Vendor Id</em>' attribute.
-	 * @see #setDeclaredVendorId(String)
-	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectReference_DeclaredVendorId()
-	 * @model unique="false"
-	 * @generated
-	 */
-	String getDeclaredVendorId();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4mf.ProjectReference#getDeclaredVendorId <em>Declared Vendor Id</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Declared Vendor Id</em>' attribute.
-	 * @see #getDeclaredVendorId()
-	 * @generated
-	 */
-	void setDeclaredVendorId(String value);
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%java.lang.String%&gt; _xifexpression = null;\n&lt;%java.lang.String%&gt; _declaredVendorId = this.getDeclaredVendorId();\nboolean _tripleNotEquals = (_declaredVendorId != null);\nif (_tripleNotEquals)\n{\n\t_xifexpression = this.getDeclaredVendorId();\n}\nelse\n{\n\t&lt;%org.eclipse.emf.ecore.EObject%&gt; _eContainer = this.eContainer();\n\t&lt;%java.lang.String%&gt; _vendorId = null;\n\tif (((&lt;%org.eclipse.n4js.n4mf.ProjectDescription%&gt;) _eContainer)!=null)\n\t{\n\t\t_vendorId=((&lt;%org.eclipse.n4js.n4mf.ProjectDescription%&gt;) _eContainer).getVendorId();\n\t}\n\t_xifexpression = _vendorId;\n}\nreturn _xifexpression;'"
-	 * @generated
-	 */
-	String getVendorId();
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * *
-	 * COMPILE by default
-	 * <!-- end-model-doc -->
-	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return &lt;%org.eclipse.n4js.n4mf.ProjectDependencyScope%&gt;.COMPILE;'"
-	 * @generated
-	 */
-	ProjectDependencyScope getScope();
 
 } // ProjectReference

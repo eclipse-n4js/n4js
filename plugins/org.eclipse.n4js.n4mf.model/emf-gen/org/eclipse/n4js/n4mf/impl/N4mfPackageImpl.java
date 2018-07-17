@@ -28,7 +28,6 @@ import org.eclipse.n4js.n4mf.ModuleLoader;
 import org.eclipse.n4js.n4mf.N4mfFactory;
 import org.eclipse.n4js.n4mf.N4mfPackage;
 import org.eclipse.n4js.n4mf.ProjectDependency;
-import org.eclipse.n4js.n4mf.ProjectDependencyScope;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectReference;
 import org.eclipse.n4js.n4mf.ProjectType;
@@ -113,13 +112,6 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 * @generated
 	 */
 	private EEnum moduleFilterTypeEEnum = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EEnum projectDependencyScopeEEnum = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -342,26 +334,8 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getProjectDescription_LibraryPathsRaw() {
-		return (EAttribute)projectDescriptionEClass.getEStructuralFeatures().get(15);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getProjectDescription_ResourcePathsRaw() {
-		return (EAttribute)projectDescriptionEClass.getEStructuralFeatures().get(16);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EReference getProjectDescription_SourceContainers() {
-		return (EReference)projectDescriptionEClass.getEStructuralFeatures().get(17);
+		return (EReference)projectDescriptionEClass.getEStructuralFeatures().get(15);
 	}
 
 	/**
@@ -370,7 +344,7 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 * @generated
 	 */
 	public EReference getProjectDescription_ModuleFilters() {
-		return (EReference)projectDescriptionEClass.getEStructuralFeatures().get(18);
+		return (EReference)projectDescriptionEClass.getEStructuralFeatures().get(16);
 	}
 
 	/**
@@ -379,7 +353,7 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 * @generated
 	 */
 	public EReference getProjectDescription_TestedProjects() {
-		return (EReference)projectDescriptionEClass.getEStructuralFeatures().get(19);
+		return (EReference)projectDescriptionEClass.getEStructuralFeatures().get(17);
 	}
 
 	/**
@@ -388,7 +362,7 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 * @generated
 	 */
 	public EAttribute getProjectDescription_ModuleLoader() {
-		return (EAttribute)projectDescriptionEClass.getEStructuralFeatures().get(20);
+		return (EAttribute)projectDescriptionEClass.getEStructuralFeatures().get(18);
 	}
 
 	/**
@@ -397,7 +371,7 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 * @generated
 	 */
 	public EAttribute getProjectDescription_HasNestedNodeModulesFolder() {
-		return (EAttribute)projectDescriptionEClass.getEStructuralFeatures().get(21);
+		return (EAttribute)projectDescriptionEClass.getEStructuralFeatures().get(19);
 	}
 
 	/**
@@ -406,7 +380,7 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 * @generated
 	 */
 	public EAttribute getProjectDescription_HasN4JSNature() {
-		return (EAttribute)projectDescriptionEClass.getEStructuralFeatures().get(22);
+		return (EAttribute)projectDescriptionEClass.getEStructuralFeatures().get(20);
 	}
 
 	/**
@@ -425,24 +399,6 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 */
 	public EOperation getProjectDescription__SetOutputPath__String() {
 		return projectDescriptionEClass.getEOperations().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EOperation getProjectDescription__GetLibraryPaths() {
-		return projectDescriptionEClass.getEOperations().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EOperation getProjectDescription__GetResourcePaths() {
-		return projectDescriptionEClass.getEOperations().get(3);
 	}
 
 	/**
@@ -531,17 +487,8 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getBootstrapModule_ModuleSpecifierWithWildcard() {
+	public EAttribute getBootstrapModule_ModuleSpecifier() {
 		return (EAttribute)bootstrapModuleEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getBootstrapModule_SourcePath() {
-		return (EAttribute)bootstrapModuleEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -560,33 +507,6 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 */
 	public EAttribute getProjectReference_ProjectId() {
 		return (EAttribute)projectReferenceEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getProjectReference_DeclaredVendorId() {
-		return (EAttribute)projectReferenceEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EOperation getProjectReference__GetVendorId() {
-		return projectReferenceEClass.getEOperations().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EOperation getProjectReference__GetScope() {
-		return projectReferenceEClass.getEOperations().get(1);
 	}
 
 	/**
@@ -648,24 +568,6 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getProjectDependency_DeclaredScope() {
-		return (EAttribute)projectDependencyEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EOperation getProjectDependency__GetScope() {
-		return projectDependencyEClass.getEOperations().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EEnum getProjectType() {
 		return projectTypeEEnum;
 	}
@@ -686,15 +588,6 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 */
 	public EEnum getModuleFilterType() {
 		return moduleFilterTypeEEnum;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EEnum getProjectDependencyScope() {
-		return projectDependencyScopeEEnum;
 	}
 
 	/**
@@ -750,8 +643,6 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 		createEReference(projectDescriptionEClass, PROJECT_DESCRIPTION__INIT_MODULES);
 		createEReference(projectDescriptionEClass, PROJECT_DESCRIPTION__EXEC_MODULE);
 		createEAttribute(projectDescriptionEClass, PROJECT_DESCRIPTION__OUTPUT_PATH_RAW);
-		createEAttribute(projectDescriptionEClass, PROJECT_DESCRIPTION__LIBRARY_PATHS_RAW);
-		createEAttribute(projectDescriptionEClass, PROJECT_DESCRIPTION__RESOURCE_PATHS_RAW);
 		createEReference(projectDescriptionEClass, PROJECT_DESCRIPTION__SOURCE_CONTAINERS);
 		createEReference(projectDescriptionEClass, PROJECT_DESCRIPTION__MODULE_FILTERS);
 		createEReference(projectDescriptionEClass, PROJECT_DESCRIPTION__TESTED_PROJECTS);
@@ -760,8 +651,6 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 		createEAttribute(projectDescriptionEClass, PROJECT_DESCRIPTION__HAS_N4JS_NATURE);
 		createEOperation(projectDescriptionEClass, PROJECT_DESCRIPTION___GET_OUTPUT_PATH);
 		createEOperation(projectDescriptionEClass, PROJECT_DESCRIPTION___SET_OUTPUT_PATH__STRING);
-		createEOperation(projectDescriptionEClass, PROJECT_DESCRIPTION___GET_LIBRARY_PATHS);
-		createEOperation(projectDescriptionEClass, PROJECT_DESCRIPTION___GET_RESOURCE_PATHS);
 
 		sourceContainerDescriptionEClass = createEClass(SOURCE_CONTAINER_DESCRIPTION);
 		createEAttribute(sourceContainerDescriptionEClass, SOURCE_CONTAINER_DESCRIPTION__SOURCE_CONTAINER_TYPE);
@@ -774,14 +663,10 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 		createEReference(moduleFilterEClass, MODULE_FILTER__MODULE_SPECIFIERS);
 
 		bootstrapModuleEClass = createEClass(BOOTSTRAP_MODULE);
-		createEAttribute(bootstrapModuleEClass, BOOTSTRAP_MODULE__MODULE_SPECIFIER_WITH_WILDCARD);
-		createEAttribute(bootstrapModuleEClass, BOOTSTRAP_MODULE__SOURCE_PATH);
+		createEAttribute(bootstrapModuleEClass, BOOTSTRAP_MODULE__MODULE_SPECIFIER);
 
 		projectReferenceEClass = createEClass(PROJECT_REFERENCE);
 		createEAttribute(projectReferenceEClass, PROJECT_REFERENCE__PROJECT_ID);
-		createEAttribute(projectReferenceEClass, PROJECT_REFERENCE__DECLARED_VENDOR_ID);
-		createEOperation(projectReferenceEClass, PROJECT_REFERENCE___GET_VENDOR_ID);
-		createEOperation(projectReferenceEClass, PROJECT_REFERENCE___GET_SCOPE);
 
 		moduleFilterSpecifierEClass = createEClass(MODULE_FILTER_SPECIFIER);
 		createEAttribute(moduleFilterSpecifierEClass, MODULE_FILTER_SPECIFIER__MODULE_SPECIFIER_WITH_WILDCARD);
@@ -790,14 +675,11 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 		projectDependencyEClass = createEClass(PROJECT_DEPENDENCY);
 		createEReference(projectDependencyEClass, PROJECT_DEPENDENCY__VERSION_CONSTRAINT);
 		createEAttribute(projectDependencyEClass, PROJECT_DEPENDENCY__VERSION_CONSTRAINT_STRING);
-		createEAttribute(projectDependencyEClass, PROJECT_DEPENDENCY__DECLARED_SCOPE);
-		createEOperation(projectDependencyEClass, PROJECT_DEPENDENCY___GET_SCOPE);
 
 		// Create enums
 		projectTypeEEnum = createEEnum(PROJECT_TYPE);
 		sourceContainerTypeEEnum = createEEnum(SOURCE_CONTAINER_TYPE);
 		moduleFilterTypeEEnum = createEEnum(MODULE_FILTER_TYPE);
-		projectDependencyScopeEEnum = createEEnum(PROJECT_DEPENDENCY_SCOPE);
 		moduleLoaderEEnum = createEEnum(MODULE_LOADER);
 	}
 
@@ -852,11 +734,9 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 		initEReference(getProjectDescription_InitModules(), this.getBootstrapModule(), null, "initModules", null, 0, -1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProjectDescription_ExecModule(), this.getBootstrapModule(), null, "execModule", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getProjectDescription_OutputPathRaw(), theEcorePackage.getEString(), "outputPathRaw", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getProjectDescription_LibraryPathsRaw(), theEcorePackage.getEString(), "libraryPathsRaw", null, 0, -1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getProjectDescription_ResourcePathsRaw(), theEcorePackage.getEString(), "resourcePathsRaw", null, 0, -1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProjectDescription_SourceContainers(), this.getSourceContainerDescription(), null, "sourceContainers", null, 0, -1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProjectDescription_ModuleFilters(), this.getModuleFilter(), null, "moduleFilters", null, 0, -1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getProjectDescription_TestedProjects(), this.getProjectDependency(), null, "testedProjects", null, 0, -1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getProjectDescription_TestedProjects(), this.getProjectReference(), null, "testedProjects", null, 0, -1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getProjectDescription_ModuleLoader(), this.getModuleLoader(), "moduleLoader", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getProjectDescription_HasNestedNodeModulesFolder(), theEcorePackage.getEBoolean(), "hasNestedNodeModulesFolder", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getProjectDescription_HasN4JSNature(), theEcorePackage.getEBoolean(), "hasN4JSNature", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -865,10 +745,6 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 
 		EOperation op = initEOperation(getProjectDescription__SetOutputPath__String(), null, "setOutputPath", 0, 1, !IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, theEcorePackage.getEString(), "newOutputPath", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEOperation(getProjectDescription__GetLibraryPaths(), theEcorePackage.getEString(), "getLibraryPaths", 0, -1, !IS_UNIQUE, IS_ORDERED);
-
-		initEOperation(getProjectDescription__GetResourcePaths(), theEcorePackage.getEString(), "getResourcePaths", 0, -1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(sourceContainerDescriptionEClass, SourceContainerDescription.class, "SourceContainerDescription", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getSourceContainerDescription_SourceContainerType(), this.getSourceContainerType(), "sourceContainerType", null, 0, 1, SourceContainerDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -884,16 +760,10 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 		initEReference(getModuleFilter_ModuleSpecifiers(), this.getModuleFilterSpecifier(), null, "moduleSpecifiers", null, 0, -1, ModuleFilter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(bootstrapModuleEClass, BootstrapModule.class, "BootstrapModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getBootstrapModule_ModuleSpecifierWithWildcard(), theEcorePackage.getEString(), "moduleSpecifierWithWildcard", null, 0, 1, BootstrapModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getBootstrapModule_SourcePath(), theEcorePackage.getEString(), "sourcePath", null, 0, 1, BootstrapModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getBootstrapModule_ModuleSpecifier(), theEcorePackage.getEString(), "moduleSpecifier", null, 0, 1, BootstrapModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(projectReferenceEClass, ProjectReference.class, "ProjectReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getProjectReference_ProjectId(), theEcorePackage.getEString(), "projectId", null, 0, 1, ProjectReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getProjectReference_DeclaredVendorId(), theEcorePackage.getEString(), "declaredVendorId", null, 0, 1, ProjectReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEOperation(getProjectReference__GetVendorId(), theEcorePackage.getEString(), "getVendorId", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEOperation(getProjectReference__GetScope(), this.getProjectDependencyScope(), "getScope", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(moduleFilterSpecifierEClass, ModuleFilterSpecifier.class, "ModuleFilterSpecifier", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getModuleFilterSpecifier_ModuleSpecifierWithWildcard(), theEcorePackage.getEString(), "moduleSpecifierWithWildcard", null, 0, 1, ModuleFilterSpecifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -902,9 +772,6 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 		initEClass(projectDependencyEClass, ProjectDependency.class, "ProjectDependency", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getProjectDependency_VersionConstraint(), theSEMVERPackage.getVersionRangeSet(), null, "versionConstraint", null, 0, 1, ProjectDependency.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getProjectDependency_VersionConstraintString(), theEcorePackage.getEString(), "versionConstraintString", null, 0, 1, ProjectDependency.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getProjectDependency_DeclaredScope(), this.getProjectDependencyScope(), "declaredScope", null, 0, 1, ProjectDependency.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEOperation(getProjectDependency__GetScope(), this.getProjectDependencyScope(), "getScope", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		// Initialize enums and add enum literals
 		initEEnum(projectTypeEEnum, ProjectType.class, "ProjectType");
@@ -925,10 +792,6 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 		initEEnum(moduleFilterTypeEEnum, ModuleFilterType.class, "ModuleFilterType");
 		addEEnumLiteral(moduleFilterTypeEEnum, ModuleFilterType.NO_VALIDATE);
 		addEEnumLiteral(moduleFilterTypeEEnum, ModuleFilterType.NO_MODULE_WRAPPING);
-
-		initEEnum(projectDependencyScopeEEnum, ProjectDependencyScope.class, "ProjectDependencyScope");
-		addEEnumLiteral(projectDependencyScopeEEnum, ProjectDependencyScope.COMPILE);
-		addEEnumLiteral(projectDependencyScopeEEnum, ProjectDependencyScope.TEST);
 
 		initEEnum(moduleLoaderEEnum, ModuleLoader.class, "ModuleLoader");
 		addEEnumLiteral(moduleLoaderEEnum, ModuleLoader.N4JS);

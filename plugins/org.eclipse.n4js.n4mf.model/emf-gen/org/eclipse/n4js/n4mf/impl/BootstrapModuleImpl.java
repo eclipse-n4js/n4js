@@ -28,52 +28,31 @@ import org.eclipse.n4js.n4mf.N4mfPackage;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.n4mf.impl.BootstrapModuleImpl#getModuleSpecifierWithWildcard <em>Module Specifier With Wildcard</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4mf.impl.BootstrapModuleImpl#getSourcePath <em>Source Path</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4mf.impl.BootstrapModuleImpl#getModuleSpecifier <em>Module Specifier</em>}</li>
  * </ul>
  *
  * @generated
  */
 public class BootstrapModuleImpl extends MinimalEObjectImpl.Container implements BootstrapModule {
 	/**
-	 * The default value of the '{@link #getModuleSpecifierWithWildcard() <em>Module Specifier With Wildcard</em>}' attribute.
+	 * The default value of the '{@link #getModuleSpecifier() <em>Module Specifier</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getModuleSpecifierWithWildcard()
+	 * @see #getModuleSpecifier()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String MODULE_SPECIFIER_WITH_WILDCARD_EDEFAULT = null;
+	protected static final String MODULE_SPECIFIER_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getModuleSpecifierWithWildcard() <em>Module Specifier With Wildcard</em>}' attribute.
+	 * The cached value of the '{@link #getModuleSpecifier() <em>Module Specifier</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getModuleSpecifierWithWildcard()
+	 * @see #getModuleSpecifier()
 	 * @generated
 	 * @ordered
 	 */
-	protected String moduleSpecifierWithWildcard = MODULE_SPECIFIER_WITH_WILDCARD_EDEFAULT;
-
-	/**
-	 * The default value of the '{@link #getSourcePath() <em>Source Path</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getSourcePath()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final String SOURCE_PATH_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getSourcePath() <em>Source Path</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getSourcePath()
-	 * @generated
-	 * @ordered
-	 */
-	protected String sourcePath = SOURCE_PATH_EDEFAULT;
+	protected String moduleSpecifier = MODULE_SPECIFIER_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -99,8 +78,8 @@ public class BootstrapModuleImpl extends MinimalEObjectImpl.Container implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getModuleSpecifierWithWildcard() {
-		return moduleSpecifierWithWildcard;
+	public String getModuleSpecifier() {
+		return moduleSpecifier;
 	}
 
 	/**
@@ -108,32 +87,11 @@ public class BootstrapModuleImpl extends MinimalEObjectImpl.Container implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setModuleSpecifierWithWildcard(String newModuleSpecifierWithWildcard) {
-		String oldModuleSpecifierWithWildcard = moduleSpecifierWithWildcard;
-		moduleSpecifierWithWildcard = newModuleSpecifierWithWildcard;
+	public void setModuleSpecifier(String newModuleSpecifier) {
+		String oldModuleSpecifier = moduleSpecifier;
+		moduleSpecifier = newModuleSpecifier;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4mfPackage.BOOTSTRAP_MODULE__MODULE_SPECIFIER_WITH_WILDCARD, oldModuleSpecifierWithWildcard, moduleSpecifierWithWildcard));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String getSourcePath() {
-		return sourcePath;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setSourcePath(String newSourcePath) {
-		String oldSourcePath = sourcePath;
-		sourcePath = newSourcePath;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4mfPackage.BOOTSTRAP_MODULE__SOURCE_PATH, oldSourcePath, sourcePath));
+			eNotify(new ENotificationImpl(this, Notification.SET, N4mfPackage.BOOTSTRAP_MODULE__MODULE_SPECIFIER, oldModuleSpecifier, moduleSpecifier));
 	}
 
 	/**
@@ -144,10 +102,8 @@ public class BootstrapModuleImpl extends MinimalEObjectImpl.Container implements
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case N4mfPackage.BOOTSTRAP_MODULE__MODULE_SPECIFIER_WITH_WILDCARD:
-				return getModuleSpecifierWithWildcard();
-			case N4mfPackage.BOOTSTRAP_MODULE__SOURCE_PATH:
-				return getSourcePath();
+			case N4mfPackage.BOOTSTRAP_MODULE__MODULE_SPECIFIER:
+				return getModuleSpecifier();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -160,11 +116,8 @@ public class BootstrapModuleImpl extends MinimalEObjectImpl.Container implements
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case N4mfPackage.BOOTSTRAP_MODULE__MODULE_SPECIFIER_WITH_WILDCARD:
-				setModuleSpecifierWithWildcard((String)newValue);
-				return;
-			case N4mfPackage.BOOTSTRAP_MODULE__SOURCE_PATH:
-				setSourcePath((String)newValue);
+			case N4mfPackage.BOOTSTRAP_MODULE__MODULE_SPECIFIER:
+				setModuleSpecifier((String)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -178,11 +131,8 @@ public class BootstrapModuleImpl extends MinimalEObjectImpl.Container implements
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case N4mfPackage.BOOTSTRAP_MODULE__MODULE_SPECIFIER_WITH_WILDCARD:
-				setModuleSpecifierWithWildcard(MODULE_SPECIFIER_WITH_WILDCARD_EDEFAULT);
-				return;
-			case N4mfPackage.BOOTSTRAP_MODULE__SOURCE_PATH:
-				setSourcePath(SOURCE_PATH_EDEFAULT);
+			case N4mfPackage.BOOTSTRAP_MODULE__MODULE_SPECIFIER:
+				setModuleSpecifier(MODULE_SPECIFIER_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -196,10 +146,8 @@ public class BootstrapModuleImpl extends MinimalEObjectImpl.Container implements
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case N4mfPackage.BOOTSTRAP_MODULE__MODULE_SPECIFIER_WITH_WILDCARD:
-				return MODULE_SPECIFIER_WITH_WILDCARD_EDEFAULT == null ? moduleSpecifierWithWildcard != null : !MODULE_SPECIFIER_WITH_WILDCARD_EDEFAULT.equals(moduleSpecifierWithWildcard);
-			case N4mfPackage.BOOTSTRAP_MODULE__SOURCE_PATH:
-				return SOURCE_PATH_EDEFAULT == null ? sourcePath != null : !SOURCE_PATH_EDEFAULT.equals(sourcePath);
+			case N4mfPackage.BOOTSTRAP_MODULE__MODULE_SPECIFIER:
+				return MODULE_SPECIFIER_EDEFAULT == null ? moduleSpecifier != null : !MODULE_SPECIFIER_EDEFAULT.equals(moduleSpecifier);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -214,10 +162,8 @@ public class BootstrapModuleImpl extends MinimalEObjectImpl.Container implements
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (moduleSpecifierWithWildcard: ");
-		result.append(moduleSpecifierWithWildcard);
-		result.append(", sourcePath: ");
-		result.append(sourcePath);
+		result.append(" (moduleSpecifier: ");
+		result.append(moduleSpecifier);
 		result.append(')');
 		return result.toString();
 	}

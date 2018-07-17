@@ -36,7 +36,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.HlcExternalLibraryWorkspace;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
-import org.eclipse.n4js.n4mf.ProjectDependency;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectReference;
 import org.eclipse.n4js.n4mf.SourceContainerDescription;
@@ -471,7 +470,7 @@ public class N4JSModel {
 		final ProjectDescription description = getProjectDescription(location);
 
 		if (null != description) {
-			for (ProjectDependency testedProject : description.getTestedProjects()) {
+			for (ProjectReference testedProject : description.getTestedProjects()) {
 				URI hostLocation = workspace.getLocation(location, testedProject, PROJECT);
 
 				if (null == hostLocation) {

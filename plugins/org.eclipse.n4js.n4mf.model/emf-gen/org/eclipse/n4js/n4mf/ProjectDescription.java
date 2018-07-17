@@ -40,8 +40,6 @@ import org.eclipse.n4js.semver.SEMVER.VersionNumber;
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getInitModules <em>Init Modules</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getExecModule <em>Exec Module</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getOutputPathRaw <em>Output Path Raw</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getLibraryPathsRaw <em>Library Paths Raw</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getResourcePathsRaw <em>Resource Paths Raw</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getSourceContainers <em>Source Containers</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getModuleFilters <em>Module Filters</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getTestedProjects <em>Tested Projects</em>}</li>
@@ -399,38 +397,6 @@ public interface ProjectDescription extends EObject {
 	void setOutputPathRaw(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Library Paths Raw</b></em>' attribute list.
-	 * The list contents are of type {@link java.lang.String}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Library Paths Raw</em>' attribute list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Library Paths Raw</em>' attribute list.
-	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDescription_LibraryPathsRaw()
-	 * @model unique="false"
-	 * @generated
-	 */
-	EList<String> getLibraryPathsRaw();
-
-	/**
-	 * Returns the value of the '<em><b>Resource Paths Raw</b></em>' attribute list.
-	 * The list contents are of type {@link java.lang.String}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Resource Paths Raw</em>' attribute list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Resource Paths Raw</em>' attribute list.
-	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDescription_ResourcePathsRaw()
-	 * @model unique="false"
-	 * @generated
-	 */
-	EList<String> getResourcePathsRaw();
-
-	/**
 	 * Returns the value of the '<em><b>Source Containers</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.n4mf.SourceContainerDescription}.
 	 * <!-- begin-user-doc -->
@@ -464,7 +430,7 @@ public interface ProjectDescription extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Tested Projects</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.n4js.n4mf.ProjectDependency}.
+	 * The list contents are of type {@link org.eclipse.n4js.n4mf.ProjectReference}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Tested Projects</em>' containment reference list isn't clear,
@@ -476,7 +442,7 @@ public interface ProjectDescription extends EObject {
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<ProjectDependency> getTestedProjects();
+	EList<ProjectReference> getTestedProjects();
 
 	/**
 	 * Returns the value of the '<em><b>Module Loader</b></em>' attribute.
@@ -578,23 +544,5 @@ public interface ProjectDescription extends EObject {
 	 * @generated
 	 */
 	void setOutputPath(String newOutputPath);
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='int _length = ((&lt;%java.lang.Object%&gt;[])org.eclipse.xtext.xbase.lib.Conversions.unwrapArray(this.getLibraryPathsRaw(), &lt;%java.lang.Object%&gt;.class)).length;\nfinal &lt;%org.eclipse.emf.common.util.BasicEList%&gt;&lt;&lt;%java.lang.String%&gt;&gt; paths = new &lt;%org.eclipse.emf.common.util.BasicEList%&gt;&lt;&lt;%java.lang.String%&gt;&gt;(_length);\n&lt;%org.eclipse.emf.common.util.EList%&gt;&lt;&lt;%java.lang.String%&gt;&gt; _libraryPathsRaw = this.getLibraryPathsRaw();\nfor (final &lt;%java.lang.String%&gt; pathRaw : _libraryPathsRaw)\n{\n\t{\n\t\tfinal &lt;%java.lang.String%&gt; normalizedPath = &lt;%org.eclipse.n4js.utils.io.FileUtils%&gt;.normalizeDotWhenEmpty(pathRaw);\n\t\tpaths.add(normalizedPath);\n\t}\n}\nreturn paths;'"
-	 * @generated
-	 */
-	EList<String> getLibraryPaths();
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='int _length = ((&lt;%java.lang.Object%&gt;[])org.eclipse.xtext.xbase.lib.Conversions.unwrapArray(this.getResourcePathsRaw(), &lt;%java.lang.Object%&gt;.class)).length;\nfinal &lt;%org.eclipse.emf.common.util.BasicEList%&gt;&lt;&lt;%java.lang.String%&gt;&gt; paths = new &lt;%org.eclipse.emf.common.util.BasicEList%&gt;&lt;&lt;%java.lang.String%&gt;&gt;(_length);\n&lt;%org.eclipse.emf.common.util.EList%&gt;&lt;&lt;%java.lang.String%&gt;&gt; _resourcePathsRaw = this.getResourcePathsRaw();\nfor (final &lt;%java.lang.String%&gt; pathRaw : _resourcePathsRaw)\n{\n\t{\n\t\tfinal &lt;%java.lang.String%&gt; normalizedPath = &lt;%org.eclipse.n4js.utils.io.FileUtils%&gt;.normalizeDotWhenEmpty(pathRaw);\n\t\tpaths.add(normalizedPath);\n\t}\n}\nreturn paths;'"
-	 * @generated
-	 */
-	EList<String> getResourcePaths();
 
 } // ProjectDescription

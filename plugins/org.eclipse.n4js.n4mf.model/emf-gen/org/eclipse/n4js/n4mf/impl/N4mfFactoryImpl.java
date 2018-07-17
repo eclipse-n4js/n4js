@@ -91,8 +91,6 @@ public class N4mfFactoryImpl extends EFactoryImpl implements N4mfFactory {
 				return createSourceContainerTypeFromString(eDataType, initialValue);
 			case N4mfPackage.MODULE_FILTER_TYPE:
 				return createModuleFilterTypeFromString(eDataType, initialValue);
-			case N4mfPackage.PROJECT_DEPENDENCY_SCOPE:
-				return createProjectDependencyScopeFromString(eDataType, initialValue);
 			case N4mfPackage.MODULE_LOADER:
 				return createModuleLoaderFromString(eDataType, initialValue);
 			default:
@@ -114,8 +112,6 @@ public class N4mfFactoryImpl extends EFactoryImpl implements N4mfFactory {
 				return convertSourceContainerTypeToString(eDataType, instanceValue);
 			case N4mfPackage.MODULE_FILTER_TYPE:
 				return convertModuleFilterTypeToString(eDataType, instanceValue);
-			case N4mfPackage.PROJECT_DEPENDENCY_SCOPE:
-				return convertProjectDependencyScopeToString(eDataType, instanceValue);
 			case N4mfPackage.MODULE_LOADER:
 				return convertModuleLoaderToString(eDataType, instanceValue);
 			default:
@@ -250,26 +246,6 @@ public class N4mfFactoryImpl extends EFactoryImpl implements N4mfFactory {
 	 * @generated
 	 */
 	public String convertModuleFilterTypeToString(EDataType eDataType, Object instanceValue) {
-		return instanceValue == null ? null : instanceValue.toString();
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public ProjectDependencyScope createProjectDependencyScopeFromString(EDataType eDataType, String initialValue) {
-		ProjectDependencyScope result = ProjectDependencyScope.get(initialValue);
-		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
-		return result;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String convertProjectDependencyScopeToString(EDataType eDataType, Object instanceValue) {
 		return instanceValue == null ? null : instanceValue.toString();
 	}
 

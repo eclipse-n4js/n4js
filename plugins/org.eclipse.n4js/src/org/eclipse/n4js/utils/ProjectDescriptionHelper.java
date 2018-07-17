@@ -68,22 +68,6 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
-/*
- * NOTE:
- *
- * The following properties were verified to be unused in stdlib, fabelhaft, and OPR:
- * - ProjectReference#declaredVendorId
- * - ProjectDependency#versionConstraint (except in ProjectDescription#projectDependencies!!)
- * - ProjectDependency#declaredScope
- * - BootstrapModule#sourcePath
- * - libraryPathsRaw
- * - resourcePathsRaw
- *
- * Exceptions:
- * resourcePathsRaw used in: n4js-chrome
- *
- */
-
 /**
  * Load a {@link ProjectDescription} from disk. For the moment, both package.json and the legacy manifest.n4mf are
  * considered.
@@ -715,7 +699,7 @@ public class ProjectDescriptionHelper {
 		String valueStr = asStringOrNull(jsonValue);
 		if (!Strings.isNullOrEmpty(valueStr)) {
 			final BootstrapModule result = N4mfFactory.eINSTANCE.createBootstrapModule();
-			result.setModuleSpecifierWithWildcard(valueStr);
+			result.setModuleSpecifier(valueStr);
 			return result;
 		}
 		return null;

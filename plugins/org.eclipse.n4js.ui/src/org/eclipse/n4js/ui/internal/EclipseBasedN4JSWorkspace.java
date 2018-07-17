@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.ui.internal;
 
-import static java.util.Collections.emptyList;
 import static org.eclipse.n4js.internal.N4JSModel.DIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT;
 
 import java.io.File;
@@ -38,7 +37,6 @@ import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.internal.N4JSSourceContainerType;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectReference;
-import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.utils.ProjectDescriptionHelper;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 
@@ -123,24 +121,20 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 						return URI.createPlatformResourceURI(expectedProjectName, true);
 					}
 				} else if (expectedN4JSSourceContainerType == N4JSSourceContainerType.ARCHIVE) {
-					for (String libFolder : getLibraryFolders(projectURI)) {
-						IFile archiveFile = workspace.getFile(new Path(projectURI.segment(1) + "/" + libFolder
-								+ "/"
-								+ expectedProjectName
-								+ IN4JSArchive.NFAR_FILE_EXTENSION_WITH_DOT));
-						if (archiveFile.exists()) {
-							return URI.createPlatformResourceURI(archiveFile.getFullPath().toString(), true);
-						}
-					}
+					// TODO remove .nfar support
+					// for (String libFolder : getLibraryFolders(projectURI)) {
+					// IFile archiveFile = workspace.getFile(new Path(projectURI.segment(1) + "/" + libFolder
+					// + "/"
+					// + expectedProjectName
+					// + IN4JSArchive.NFAR_FILE_EXTENSION_WITH_DOT));
+					// if (archiveFile.exists()) {
+					// return URI.createPlatformResourceURI(archiveFile.getFullPath().toString(), true);
+					// }
+					// }
 				}
 			}
 		}
 		return null;
-	}
-
-	private List<String> getLibraryFolders(URI projectURI) {
-		ProjectDescription pd = getProjectDescription(projectURI);
-		return null == pd ? emptyList() : pd.getLibraryPaths();
 	}
 
 	@Override
