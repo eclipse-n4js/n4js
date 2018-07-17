@@ -43,6 +43,9 @@ public class SEMVERHelper {
 
 	/** @return {@link IParseResult} of the given input string */
 	public IParseResult getParseResult(String semverString) {
+		if (semverString == null) {
+			return null;
+		}
 		IParseResult parseResult = getSEMVERParser().parse(new StringReader(semverString));
 		return parseResult;
 	}
@@ -50,19 +53,28 @@ public class SEMVERHelper {
 	/** @return {@link NPMVersion} of the given input string */
 	public NPMVersion parse(String semverString) {
 		IParseResult parseResult = getParseResult(semverString);
-		NPMVersion npmVersion = (NPMVersion) parseResult.getRootASTElement();
-		return npmVersion;
+		if (parseResult.getRootASTElement() instanceof NPMVersion) {
+			NPMVersion npmVersion = (NPMVersion) parseResult.getRootASTElement();
+			return npmVersion;
+		}
+		return null;
 	}
 
 	/** @return {@link VersionRangeSet} of the given input string */
 	public VersionRangeSet parseVersionRangeSet(String semverString) {
 		IParseResult parseResult = getParseResult(semverString);
-		VersionRangeSet vrs = (VersionRangeSet) parseResult.getRootASTElement();
-		return vrs;
+		if (parseResult.getRootASTElement() instanceof VersionRangeSet) {
+			VersionRangeSet vrs = (VersionRangeSet) parseResult.getRootASTElement();
+			return vrs;
+		}
+		return null;
 	}
 
 	/** @return {@link VersionNumber} of the given {@link IParseResult} */
 	public VersionNumber parseVersionNumber(IParseResult semverParseResult) {
+		if (semverParseResult == null) {
+			return null;
+		}
 		VersionRangeSet vrs = (VersionRangeSet) semverParseResult.getRootASTElement();
 		if (vrs.getRanges().isEmpty()) {
 			return null;

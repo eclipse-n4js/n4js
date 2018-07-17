@@ -203,7 +203,7 @@ public class NpmPackageToProjectAdapter {
 		for (int i = 0; i < list.length; i++) {
 			String version = list[i];
 			VersionNumber availableTypeDefinitionsVersion = semverHelper.parseVersionNumber(version);
-			if (availableTypeDefinitionsVersion == null) {
+			if (availableTypeDefinitionsVersion != null) {
 				availableTDVersions.add(availableTypeDefinitionsVersion);
 			}
 		}

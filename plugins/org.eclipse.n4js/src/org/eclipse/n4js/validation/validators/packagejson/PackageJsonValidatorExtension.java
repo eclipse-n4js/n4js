@@ -53,7 +53,7 @@ import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
 import org.eclipse.n4js.semver.SEMVERHelper;
-import org.eclipse.n4js.semver.SEMVER.VersionRangeSet;
+import org.eclipse.n4js.semver.SEMVER.NPMVersion;
 import org.eclipse.n4js.utils.ProjectDescriptionHelper;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.io.FileUtils;
@@ -207,8 +207,8 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 			// check version
 			if (checkIsType(entry.getValue(), JSONPackage.Literals.JSON_STRING_LITERAL, "as version specifier")) {
 				final String constraintValue = ((JSONStringLiteral) entry.getValue()).getValue();
-				final VersionRangeSet parsedConstraint = semverHelper.parseVersionRangeSet(constraintValue);
-				if (parsedConstraint == null) {
+				final NPMVersion parsedNPMVersion = semverHelper.parse(constraintValue);
+				if (parsedNPMVersion == null) {
 					addIssue(IssueCodes.getMessageForPKGJ_INVALID_VERSION_CONSTRAINT(constraintValue),
 							entry.getValue(), IssueCodes.PKGJ_INVALID_VERSION_CONSTRAINT);
 				}
