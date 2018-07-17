@@ -2484,32 +2484,32 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__NPMVersion__Alternatives_1_0"
-    // InternalSEMVER.g:711:1: rule__NPMVersion__Alternatives_1_0 : ( ( ruleTagVersion ) | ( ruleURLVersion ) | ( ruleGitHubVersion ) | ( ruleLocalPathVersion ) );
+    // InternalSEMVER.g:711:1: rule__NPMVersion__Alternatives_1_0 : ( ( ruleURLVersion ) | ( ruleLocalPathVersion ) | ( ruleGitHubVersion ) | ( ruleTagVersion ) );
     public final void rule__NPMVersion__Alternatives_1_0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:715:1: ( ( ruleTagVersion ) | ( ruleURLVersion ) | ( ruleGitHubVersion ) | ( ruleLocalPathVersion ) )
+            // InternalSEMVER.g:715:1: ( ( ruleURLVersion ) | ( ruleLocalPathVersion ) | ( ruleGitHubVersion ) | ( ruleTagVersion ) )
             int alt4=4;
             alt4 = dfa4.predict(input);
             switch (alt4) {
                 case 1 :
-                    // InternalSEMVER.g:716:2: ( ruleTagVersion )
+                    // InternalSEMVER.g:716:2: ( ruleURLVersion )
                     {
-                    // InternalSEMVER.g:716:2: ( ruleTagVersion )
-                    // InternalSEMVER.g:717:3: ruleTagVersion
+                    // InternalSEMVER.g:716:2: ( ruleURLVersion )
+                    // InternalSEMVER.g:717:3: ruleURLVersion
                     {
                     if ( state.backtracking==0 ) {
-                       before(grammarAccess.getNPMVersionAccess().getTagVersionParserRuleCall_1_0_0()); 
+                       before(grammarAccess.getNPMVersionAccess().getURLVersionParserRuleCall_1_0_0()); 
                     }
                     pushFollow(FOLLOW_2);
-                    ruleTagVersion();
+                    ruleURLVersion();
 
                     state._fsp--;
                     if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       after(grammarAccess.getNPMVersionAccess().getTagVersionParserRuleCall_1_0_0()); 
+                       after(grammarAccess.getNPMVersionAccess().getURLVersionParserRuleCall_1_0_0()); 
                     }
 
                     }
@@ -2518,21 +2518,21 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
                     }
                     break;
                 case 2 :
-                    // InternalSEMVER.g:722:2: ( ruleURLVersion )
+                    // InternalSEMVER.g:722:2: ( ruleLocalPathVersion )
                     {
-                    // InternalSEMVER.g:722:2: ( ruleURLVersion )
-                    // InternalSEMVER.g:723:3: ruleURLVersion
+                    // InternalSEMVER.g:722:2: ( ruleLocalPathVersion )
+                    // InternalSEMVER.g:723:3: ruleLocalPathVersion
                     {
                     if ( state.backtracking==0 ) {
-                       before(grammarAccess.getNPMVersionAccess().getURLVersionParserRuleCall_1_0_1()); 
+                       before(grammarAccess.getNPMVersionAccess().getLocalPathVersionParserRuleCall_1_0_1()); 
                     }
                     pushFollow(FOLLOW_2);
-                    ruleURLVersion();
+                    ruleLocalPathVersion();
 
                     state._fsp--;
                     if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       after(grammarAccess.getNPMVersionAccess().getURLVersionParserRuleCall_1_0_1()); 
+                       after(grammarAccess.getNPMVersionAccess().getLocalPathVersionParserRuleCall_1_0_1()); 
                     }
 
                     }
@@ -2564,21 +2564,21 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
                     }
                     break;
                 case 4 :
-                    // InternalSEMVER.g:734:2: ( ruleLocalPathVersion )
+                    // InternalSEMVER.g:734:2: ( ruleTagVersion )
                     {
-                    // InternalSEMVER.g:734:2: ( ruleLocalPathVersion )
-                    // InternalSEMVER.g:735:3: ruleLocalPathVersion
+                    // InternalSEMVER.g:734:2: ( ruleTagVersion )
+                    // InternalSEMVER.g:735:3: ruleTagVersion
                     {
                     if ( state.backtracking==0 ) {
-                       before(grammarAccess.getNPMVersionAccess().getLocalPathVersionParserRuleCall_1_0_3()); 
+                       before(grammarAccess.getNPMVersionAccess().getTagVersionParserRuleCall_1_0_3()); 
                     }
                     pushFollow(FOLLOW_2);
-                    ruleLocalPathVersion();
+                    ruleTagVersion();
 
                     state._fsp--;
                     if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       after(grammarAccess.getNPMVersionAccess().getLocalPathVersionParserRuleCall_1_0_3()); 
+                       after(grammarAccess.getNPMVersionAccess().getTagVersionParserRuleCall_1_0_3()); 
                     }
 
                     }
@@ -12430,25 +12430,25 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
     protected DFA28 dfa28 = new DFA28(this);
     protected DFA38 dfa38 = new DFA38(this);
     static final String dfa_1s = "\15\uffff";
-    static final String dfa_2s = "\2\uffff\2\13\3\uffff\1\13\1\uffff\2\13\1\uffff\1\13";
-    static final String dfa_3s = "\4\4\3\uffff\4\4\1\uffff\1\4";
-    static final String dfa_4s = "\1\60\1\5\2\60\3\uffff\1\60\1\5\2\60\1\uffff\1\60";
-    static final String dfa_5s = "\4\uffff\1\2\1\3\1\4\4\uffff\1\1\1\uffff";
+    static final String dfa_2s = "\1\uffff\1\12\3\uffff\1\12\1\uffff\1\12\1\uffff\1\12\1\uffff\2\12";
+    static final String dfa_3s = "\2\4\2\uffff\2\4\1\uffff\3\4\1\uffff\2\4";
+    static final String dfa_4s = "\2\60\2\uffff\1\5\1\60\1\uffff\1\60\1\5\1\60\1\uffff\2\60";
+    static final String dfa_5s = "\2\uffff\1\1\1\2\2\uffff\1\3\3\uffff\1\4\2\uffff";
     static final String dfa_6s = "\15\uffff}>";
     static final String[] dfa_7s = {
-            "\1\3\1\2\30\uffff\1\4\4\5\13\uffff\1\6\1\uffff\1\1",
-            "\1\7\1\2",
-            "\1\12\1\11\1\13\30\uffff\4\5\15\uffff\1\10",
-            "\1\14\1\11\1\13\27\uffff\1\4\4\5\10\uffff\1\4\4\uffff\1\10",
+            "\1\1\1\5\30\uffff\1\2\4\6\13\uffff\1\3\1\uffff\1\4",
+            "\1\7\1\11\1\12\27\uffff\1\2\4\6\10\uffff\1\2\4\uffff\1\10",
             "",
             "",
+            "\1\13\1\5",
+            "\1\14\1\11\1\12\30\uffff\4\6\15\uffff\1\10",
             "",
-            "\1\12\1\11\1\13\30\uffff\4\5\15\uffff\1\10",
-            "\1\12\1\11",
-            "\1\12\1\11\1\13\30\uffff\4\5\15\uffff\1\10",
-            "\1\12\1\11\1\13\30\uffff\4\5\15\uffff\1\10",
+            "\1\7\1\11\1\12\27\uffff\1\2\4\6\10\uffff\1\2\4\uffff\1\10",
+            "\1\14\1\11",
+            "\1\14\1\11\1\12\30\uffff\4\6\15\uffff\1\10",
             "",
-            "\1\14\1\11\1\13\27\uffff\1\4\4\5\10\uffff\1\4\4\uffff\1\10"
+            "\1\14\1\11\1\12\30\uffff\4\6\15\uffff\1\10",
+            "\1\14\1\11\1\12\30\uffff\4\6\15\uffff\1\10"
     };
 
     static final short[] dfa_1 = DFA.unpackEncodedString(dfa_1s);
@@ -12473,7 +12473,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             this.transition = dfa_7;
         }
         public String getDescription() {
-            return "711:1: rule__NPMVersion__Alternatives_1_0 : ( ( ruleTagVersion ) | ( ruleURLVersion ) | ( ruleGitHubVersion ) | ( ruleLocalPathVersion ) );";
+            return "711:1: rule__NPMVersion__Alternatives_1_0 : ( ( ruleURLVersion ) | ( ruleLocalPathVersion ) | ( ruleGitHubVersion ) | ( ruleTagVersion ) );";
         }
     }
     static final String dfa_8s = "\102\uffff";

@@ -714,15 +714,15 @@ rule__NPMVersion__Alternatives_1_0
 	}
 :
 	(
-		{ before(grammarAccess.getNPMVersionAccess().getTagVersionParserRuleCall_1_0_0()); }
-		ruleTagVersion
-		{ after(grammarAccess.getNPMVersionAccess().getTagVersionParserRuleCall_1_0_0()); }
+		{ before(grammarAccess.getNPMVersionAccess().getURLVersionParserRuleCall_1_0_0()); }
+		ruleURLVersion
+		{ after(grammarAccess.getNPMVersionAccess().getURLVersionParserRuleCall_1_0_0()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getNPMVersionAccess().getURLVersionParserRuleCall_1_0_1()); }
-		ruleURLVersion
-		{ after(grammarAccess.getNPMVersionAccess().getURLVersionParserRuleCall_1_0_1()); }
+		{ before(grammarAccess.getNPMVersionAccess().getLocalPathVersionParserRuleCall_1_0_1()); }
+		ruleLocalPathVersion
+		{ after(grammarAccess.getNPMVersionAccess().getLocalPathVersionParserRuleCall_1_0_1()); }
 	)
 	|
 	(
@@ -732,9 +732,9 @@ rule__NPMVersion__Alternatives_1_0
 	)
 	|
 	(
-		{ before(grammarAccess.getNPMVersionAccess().getLocalPathVersionParserRuleCall_1_0_3()); }
-		ruleLocalPathVersion
-		{ after(grammarAccess.getNPMVersionAccess().getLocalPathVersionParserRuleCall_1_0_3()); }
+		{ before(grammarAccess.getNPMVersionAccess().getTagVersionParserRuleCall_1_0_3()); }
+		ruleTagVersion
+		{ after(grammarAccess.getNPMVersionAccess().getTagVersionParserRuleCall_1_0_3()); }
 	)
 ;
 finally {

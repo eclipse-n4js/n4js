@@ -288,6 +288,24 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EOperation getURLVersion__HasSimpleVersion() {
+		return urlVersionEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOperation getURLVersion__GetSimpleVersion() {
+		return urlVersionEClass.getEOperations().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getURLVersionSpecifier() {
 		return urlVersionSpecifierEClass;
 	}
@@ -803,6 +821,8 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 		createEReference(urlVersionEClass, URL_VERSION__VERSION_SPECIFIER);
 		createEAttribute(urlVersionEClass, URL_VERSION__PROTOCOL);
 		createEAttribute(urlVersionEClass, URL_VERSION__URL);
+		createEOperation(urlVersionEClass, URL_VERSION___HAS_SIMPLE_VERSION);
+		createEOperation(urlVersionEClass, URL_VERSION___GET_SIMPLE_VERSION);
 
 		urlVersionSpecifierEClass = createEClass(URL_VERSION_SPECIFIER);
 
@@ -924,6 +944,10 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 		initEReference(getURLVersion_VersionSpecifier(), this.getURLVersionSpecifier(), null, "versionSpecifier", null, 0, 1, URLVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getURLVersion_Protocol(), theEcorePackage.getEString(), "protocol", null, 0, 1, URLVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getURLVersion_Url(), theEcorePackage.getEString(), "url", null, 0, 1, URLVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getURLVersion__HasSimpleVersion(), theEcorePackage.getEBoolean(), "hasSimpleVersion", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getURLVersion__GetSimpleVersion(), this.getSimpleVersion(), "getSimpleVersion", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(urlVersionSpecifierEClass, URLVersionSpecifier.class, "URLVersionSpecifier", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

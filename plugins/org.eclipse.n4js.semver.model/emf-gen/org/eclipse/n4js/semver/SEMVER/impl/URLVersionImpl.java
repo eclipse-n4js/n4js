@@ -10,8 +10,12 @@
  */
 package org.eclipse.n4js.semver.SEMVER.impl;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+
+import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -19,6 +23,8 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.n4js.semver.SEMVER.SEMVERPackage;
+import org.eclipse.n4js.semver.SEMVER.SimpleVersion;
+import org.eclipse.n4js.semver.SEMVER.URLSemver;
 import org.eclipse.n4js.semver.SEMVER.URLVersion;
 import org.eclipse.n4js.semver.SEMVER.URLVersionSpecifier;
 
@@ -197,6 +203,31 @@ public class URLVersionImpl extends NPMVersionImpl implements URLVersion {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean hasSimpleVersion() {
+		SimpleVersion _simpleVersion = this.getSimpleVersion();
+		return (_simpleVersion != null);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public SimpleVersion getSimpleVersion() {
+		URLVersionSpecifier _versionSpecifier = this.getVersionSpecifier();
+		if ((_versionSpecifier instanceof URLSemver)) {
+			URLVersionSpecifier _versionSpecifier_1 = this.getVersionSpecifier();
+			final URLSemver urlSemver = ((URLSemver) _versionSpecifier_1);
+			return urlSemver.getSimpleVersion();
+		}
+		return null;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -282,6 +313,22 @@ public class URLVersionImpl extends NPMVersionImpl implements URLVersion {
 				return URL_EDEFAULT == null ? url != null : !URL_EDEFAULT.equals(url);
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case SEMVERPackage.URL_VERSION___HAS_SIMPLE_VERSION:
+				return hasSimpleVersion();
+			case SEMVERPackage.URL_VERSION___GET_SIMPLE_VERSION:
+				return getSimpleVersion();
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 	/**

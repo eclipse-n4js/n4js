@@ -4,31 +4,39 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
 package org.eclipse.n4js.semver.SEMVER.impl;
 
 import java.lang.reflect.InvocationTargetException;
+
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+
 import org.eclipse.emf.common.util.EList;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
+
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
+
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
+
 import org.eclipse.n4js.semver.SEMVER.Qualifier;
 import org.eclipse.n4js.semver.SEMVER.SEMVERPackage;
 import org.eclipse.n4js.semver.SEMVER.VersionNumber;
 import org.eclipse.n4js.semver.SEMVER.VersionPart;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Version Number</b></em>'. <!-- end-user-doc -->
+ * <!-- begin-user-doc -->
+ * An implementation of the model object '<em><b>Version Number</b></em>'.
+ * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
@@ -45,8 +53,8 @@ import org.eclipse.n4js.semver.SEMVER.VersionPart;
 public class VersionNumberImpl extends MinimalEObjectImpl.Container implements VersionNumber {
 	/**
 	 * The cached value of the '{@link #getMajor() <em>Major</em>}' containment reference.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @see #getMajor()
 	 * @generated
 	 * @ordered
@@ -55,8 +63,8 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 
 	/**
 	 * The cached value of the '{@link #getMinor() <em>Minor</em>}' containment reference.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @see #getMinor()
 	 * @generated
 	 * @ordered
@@ -65,8 +73,8 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 
 	/**
 	 * The cached value of the '{@link #getPatch() <em>Patch</em>}' containment reference.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @see #getPatch()
 	 * @generated
 	 * @ordered
@@ -74,9 +82,9 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 	protected VersionPart patch;
 
 	/**
-	 * The cached value of the '{@link #getExtended() <em>Extended</em>}' containment reference list. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getExtended() <em>Extended</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @see #getExtended()
 	 * @generated
 	 * @ordered
@@ -85,8 +93,8 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 
 	/**
 	 * The cached value of the '{@link #getQualifier() <em>Qualifier</em>}' containment reference.
-	 * <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @see #getQualifier()
 	 * @generated
 	 * @ordered
@@ -94,7 +102,8 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 	protected Qualifier qualifier;
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	protected VersionNumberImpl() {
@@ -102,7 +111,8 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -111,16 +121,17 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public VersionPart getMajor() {
 		return major;
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public NotificationChain basicSetMajor(VersionPart newMajor, NotificationChain msgs) {
@@ -134,10 +145,10 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setMajor(VersionPart newMajor) {
 		if (newMajor != major) {
 			NotificationChain msgs = null;
@@ -153,16 +164,17 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public VersionPart getMinor() {
 		return minor;
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public NotificationChain basicSetMinor(VersionPart newMinor, NotificationChain msgs) {
@@ -176,10 +188,10 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setMinor(VersionPart newMinor) {
 		if (newMinor != minor) {
 			NotificationChain msgs = null;
@@ -195,16 +207,17 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public VersionPart getPatch() {
 		return patch;
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public NotificationChain basicSetPatch(VersionPart newPatch, NotificationChain msgs) {
@@ -218,10 +231,10 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setPatch(VersionPart newPatch) {
 		if (newPatch != patch) {
 			NotificationChain msgs = null;
@@ -237,10 +250,10 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<VersionPart> getExtended() {
 		if (extended == null) {
 			extended = new EObjectContainmentEList<VersionPart>(VersionPart.class, this, SEMVERPackage.VERSION_NUMBER__EXTENDED);
@@ -249,16 +262,17 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Qualifier getQualifier() {
 		return qualifier;
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public NotificationChain basicSetQualifier(Qualifier newQualifier, NotificationChain msgs) {
@@ -272,10 +286,10 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setQualifier(Qualifier newQualifier) {
 		if (newQualifier != qualifier) {
 			NotificationChain msgs = null;
@@ -291,10 +305,10 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<String> getPreReleaseTag() {
 		EList<String> _xifexpression = null;
 		if (((this.getQualifier() != null) && (this.getQualifier().getPreRelease() != null))) {
@@ -307,19 +321,19 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean hasPreReleaseTag() {
 		return ((this.getPreReleaseTag() != null) && (!this.getPreReleaseTag().isEmpty()));
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public int length() {
 		int length = 0;
 		VersionPart _major = this.getMajor();
@@ -344,10 +358,10 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public VersionPart getPart(final int idx) {
 		switch (idx) {
 			case 0:
@@ -362,10 +376,10 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean equals(final Object obj) {
 		if ((!(obj instanceof VersionNumber))) {
 			return false;
@@ -385,7 +399,8 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -406,7 +421,8 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -427,7 +443,8 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -455,7 +472,8 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -481,7 +499,8 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -502,7 +521,8 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -522,4 +542,4 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 		return super.eInvoke(operationID, arguments);
 	}
 
-} // VersionNumberImpl
+} //VersionNumberImpl

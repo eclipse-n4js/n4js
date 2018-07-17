@@ -152,13 +152,31 @@ public interface SEMVERPackage extends EPackage {
 	int URL_VERSION_FEATURE_COUNT = NPM_VERSION_FEATURE_COUNT + 3;
 
 	/**
+	 * The operation id for the '<em>Has Simple Version</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int URL_VERSION___HAS_SIMPLE_VERSION = NPM_VERSION_OPERATION_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Get Simple Version</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int URL_VERSION___GET_SIMPLE_VERSION = NPM_VERSION_OPERATION_COUNT + 1;
+
+	/**
 	 * The number of operations of the '<em>URL Version</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int URL_VERSION_OPERATION_COUNT = NPM_VERSION_OPERATION_COUNT + 0;
+	int URL_VERSION_OPERATION_COUNT = NPM_VERSION_OPERATION_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.semver.SEMVER.impl.URLVersionSpecifierImpl <em>URL Version Specifier</em>}' class.
@@ -987,6 +1005,26 @@ public interface SEMVERPackage extends EPackage {
 	EAttribute getURLVersion_Url();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.semver.SEMVER.URLVersion#hasSimpleVersion() <em>Has Simple Version</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Has Simple Version</em>' operation.
+	 * @see org.eclipse.n4js.semver.SEMVER.URLVersion#hasSimpleVersion()
+	 * @generated
+	 */
+	EOperation getURLVersion__HasSimpleVersion();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.semver.SEMVER.URLVersion#getSimpleVersion() <em>Get Simple Version</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Simple Version</em>' operation.
+	 * @see org.eclipse.n4js.semver.SEMVER.URLVersion#getSimpleVersion()
+	 * @generated
+	 */
+	EOperation getURLVersion__GetSimpleVersion();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.semver.SEMVER.URLVersionSpecifier <em>URL Version Specifier</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1614,6 +1652,22 @@ public interface SEMVERPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute URL_VERSION__URL = eINSTANCE.getURLVersion_Url();
+
+		/**
+		 * The meta object literal for the '<em><b>Has Simple Version</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation URL_VERSION___HAS_SIMPLE_VERSION = eINSTANCE.getURLVersion__HasSimpleVersion();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Simple Version</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation URL_VERSION___GET_SIMPLE_VERSION = eINSTANCE.getURLVersion__GetSimpleVersion();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.semver.SEMVER.impl.URLVersionSpecifierImpl <em>URL Version Specifier</em>}' class.

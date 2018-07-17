@@ -6,9 +6,7 @@ import java.util.List;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.n4js.semver.SEMVER.NPMVersion;
 import org.eclipse.n4js.semver.SEMVER.SimpleVersion;
-import org.eclipse.n4js.semver.SEMVER.URLSemver;
 import org.eclipse.n4js.semver.SEMVER.URLVersion;
-import org.eclipse.n4js.semver.SEMVER.URLVersionSpecifier;
 import org.eclipse.n4js.semver.SEMVER.VersionComparator;
 import org.eclipse.n4js.semver.SEMVER.VersionNumber;
 import org.eclipse.n4js.semver.SEMVER.VersionPart;
@@ -44,11 +42,19 @@ public class SEMVERMatcher {
 	 * @return true iff the given arguments will yield a useful result when passed to the method
 	 *         {@link #matches(VersionNumber, VersionRangeSet)}
 	 */
-	static public boolean validMatchesArguments(VersionNumber proband, VersionRangeSet constraint) {
-		boolean invalidMatchesParams = true;
-		invalidMatchesParams |= proband == null;
-		invalidMatchesParams |= constraint.getRanges().isEmpty();
-		return invalidMatchesParams;
+	static public boolean canComputeMatch(VersionNumber proband, NPMVersion npmv) {
+		if (proband == null) {
+			return false;
+		}
+		if (npmv instanceof VersionRangeSet) {
+			return true;
+		}
+		if (npmv instanceof URLVersion) {
+			URLVersion urlVersion = (URLVersion) npmv;
+			return urlVersion.hasSimpleVersion();
+		}
+
+		return false;
 	}
 
 	/**
@@ -64,6 +70,9 @@ public class SEMVERMatcher {
 	 *         {@code constraint} does neither contain a SEMVER version range nor a simple version
 	 */
 	static public boolean matches(VersionNumber proband, NPMVersion constraint) {
+		if (proband == null) {
+			return false;
+		}
 		if (constraint instanceof VersionRangeSet) {
 			return matches(proband, (VersionRangeSet) constraint);
 		}
@@ -148,11 +157,8 @@ public class SEMVERMatcher {
 	 * @return true iff the given {@code proband} version matches the given {@code constraint} version
 	 */
 	static private boolean matches(VersionNumber proband, URLVersion constraint) {
-		URLVersionSpecifier versionSpecifier = constraint.getVersionSpecifier();
-		if (versionSpecifier != null && versionSpecifier instanceof URLSemver) {
-			URLSemver urlSemver = (URLSemver) versionSpecifier;
-			SimpleVersion simpleVersion = urlSemver.getSimpleVersion();
-
+		if (constraint.hasSimpleVersion()) {
+			SimpleVersion simpleVersion = constraint.getSimpleVersion();
 			List<SimpleVersion> simpleConstraints = SEMVERConverter.simplify(simpleVersion);
 			return matches(proband, simpleConstraints);
 		}

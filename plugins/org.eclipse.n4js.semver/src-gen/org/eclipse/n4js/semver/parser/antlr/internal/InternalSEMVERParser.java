@@ -167,7 +167,7 @@ public class InternalSEMVERParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleNPMVersion"
-    // InternalSEMVER.g:85:1: ruleNPMVersion returns [EObject current=null] : ( ( (this_WS_0= RULE_WS )* this_VersionRangeSet_1= ruleVersionRangeSet ) | ( (this_TagVersion_2= ruleTagVersion | this_URLVersion_3= ruleURLVersion | this_GitHubVersion_4= ruleGitHubVersion | this_LocalPathVersion_5= ruleLocalPathVersion ) (this_WS_6= RULE_WS )* ) ) ;
+    // InternalSEMVER.g:85:1: ruleNPMVersion returns [EObject current=null] : ( ( (this_WS_0= RULE_WS )* this_VersionRangeSet_1= ruleVersionRangeSet ) | ( (this_URLVersion_2= ruleURLVersion | this_LocalPathVersion_3= ruleLocalPathVersion | this_GitHubVersion_4= ruleGitHubVersion | this_TagVersion_5= ruleTagVersion ) (this_WS_6= RULE_WS )* ) ) ;
     public final EObject ruleNPMVersion() throws RecognitionException {
         EObject current = null;
 
@@ -175,23 +175,23 @@ public class InternalSEMVERParser extends AbstractInternalAntlrParser {
         Token this_WS_6=null;
         EObject this_VersionRangeSet_1 = null;
 
-        EObject this_TagVersion_2 = null;
+        EObject this_URLVersion_2 = null;
 
-        EObject this_URLVersion_3 = null;
+        EObject this_LocalPathVersion_3 = null;
 
         EObject this_GitHubVersion_4 = null;
 
-        EObject this_LocalPathVersion_5 = null;
+        EObject this_TagVersion_5 = null;
 
 
 
         	enterRule();
 
         try {
-            // InternalSEMVER.g:91:2: ( ( ( (this_WS_0= RULE_WS )* this_VersionRangeSet_1= ruleVersionRangeSet ) | ( (this_TagVersion_2= ruleTagVersion | this_URLVersion_3= ruleURLVersion | this_GitHubVersion_4= ruleGitHubVersion | this_LocalPathVersion_5= ruleLocalPathVersion ) (this_WS_6= RULE_WS )* ) ) )
-            // InternalSEMVER.g:92:2: ( ( (this_WS_0= RULE_WS )* this_VersionRangeSet_1= ruleVersionRangeSet ) | ( (this_TagVersion_2= ruleTagVersion | this_URLVersion_3= ruleURLVersion | this_GitHubVersion_4= ruleGitHubVersion | this_LocalPathVersion_5= ruleLocalPathVersion ) (this_WS_6= RULE_WS )* ) )
+            // InternalSEMVER.g:91:2: ( ( ( (this_WS_0= RULE_WS )* this_VersionRangeSet_1= ruleVersionRangeSet ) | ( (this_URLVersion_2= ruleURLVersion | this_LocalPathVersion_3= ruleLocalPathVersion | this_GitHubVersion_4= ruleGitHubVersion | this_TagVersion_5= ruleTagVersion ) (this_WS_6= RULE_WS )* ) ) )
+            // InternalSEMVER.g:92:2: ( ( (this_WS_0= RULE_WS )* this_VersionRangeSet_1= ruleVersionRangeSet ) | ( (this_URLVersion_2= ruleURLVersion | this_LocalPathVersion_3= ruleLocalPathVersion | this_GitHubVersion_4= ruleGitHubVersion | this_TagVersion_5= ruleTagVersion ) (this_WS_6= RULE_WS )* ) )
             {
-            // InternalSEMVER.g:92:2: ( ( (this_WS_0= RULE_WS )* this_VersionRangeSet_1= ruleVersionRangeSet ) | ( (this_TagVersion_2= ruleTagVersion | this_URLVersion_3= ruleURLVersion | this_GitHubVersion_4= ruleGitHubVersion | this_LocalPathVersion_5= ruleLocalPathVersion ) (this_WS_6= RULE_WS )* ) )
+            // InternalSEMVER.g:92:2: ( ( (this_WS_0= RULE_WS )* this_VersionRangeSet_1= ruleVersionRangeSet ) | ( (this_URLVersion_2= ruleURLVersion | this_LocalPathVersion_3= ruleLocalPathVersion | this_GitHubVersion_4= ruleGitHubVersion | this_TagVersion_5= ruleTagVersion ) (this_WS_6= RULE_WS )* ) )
             int alt4=2;
             switch ( input.LA(1) ) {
             case EOF:
@@ -315,17 +315,17 @@ public class InternalSEMVERParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalSEMVER.g:113:3: ( (this_TagVersion_2= ruleTagVersion | this_URLVersion_3= ruleURLVersion | this_GitHubVersion_4= ruleGitHubVersion | this_LocalPathVersion_5= ruleLocalPathVersion ) (this_WS_6= RULE_WS )* )
+                    // InternalSEMVER.g:113:3: ( (this_URLVersion_2= ruleURLVersion | this_LocalPathVersion_3= ruleLocalPathVersion | this_GitHubVersion_4= ruleGitHubVersion | this_TagVersion_5= ruleTagVersion ) (this_WS_6= RULE_WS )* )
                     {
-                    // InternalSEMVER.g:113:3: ( (this_TagVersion_2= ruleTagVersion | this_URLVersion_3= ruleURLVersion | this_GitHubVersion_4= ruleGitHubVersion | this_LocalPathVersion_5= ruleLocalPathVersion ) (this_WS_6= RULE_WS )* )
-                    // InternalSEMVER.g:114:4: (this_TagVersion_2= ruleTagVersion | this_URLVersion_3= ruleURLVersion | this_GitHubVersion_4= ruleGitHubVersion | this_LocalPathVersion_5= ruleLocalPathVersion ) (this_WS_6= RULE_WS )*
+                    // InternalSEMVER.g:113:3: ( (this_URLVersion_2= ruleURLVersion | this_LocalPathVersion_3= ruleLocalPathVersion | this_GitHubVersion_4= ruleGitHubVersion | this_TagVersion_5= ruleTagVersion ) (this_WS_6= RULE_WS )* )
+                    // InternalSEMVER.g:114:4: (this_URLVersion_2= ruleURLVersion | this_LocalPathVersion_3= ruleLocalPathVersion | this_GitHubVersion_4= ruleGitHubVersion | this_TagVersion_5= ruleTagVersion ) (this_WS_6= RULE_WS )*
                     {
-                    // InternalSEMVER.g:114:4: (this_TagVersion_2= ruleTagVersion | this_URLVersion_3= ruleURLVersion | this_GitHubVersion_4= ruleGitHubVersion | this_LocalPathVersion_5= ruleLocalPathVersion )
+                    // InternalSEMVER.g:114:4: (this_URLVersion_2= ruleURLVersion | this_LocalPathVersion_3= ruleLocalPathVersion | this_GitHubVersion_4= ruleGitHubVersion | this_TagVersion_5= ruleTagVersion )
                     int alt2=4;
                     alt2 = dfa2.predict(input);
                     switch (alt2) {
                         case 1 :
-                            // InternalSEMVER.g:115:5: this_TagVersion_2= ruleTagVersion
+                            // InternalSEMVER.g:115:5: this_URLVersion_2= ruleURLVersion
                             {
                             if ( state.backtracking==0 ) {
 
@@ -334,17 +334,17 @@ public class InternalSEMVERParser extends AbstractInternalAntlrParser {
                             }
                             if ( state.backtracking==0 ) {
 
-                              					newCompositeNode(grammarAccess.getNPMVersionAccess().getTagVersionParserRuleCall_1_0_0());
+                              					newCompositeNode(grammarAccess.getNPMVersionAccess().getURLVersionParserRuleCall_1_0_0());
                               				
                             }
                             pushFollow(FOLLOW_4);
-                            this_TagVersion_2=ruleTagVersion();
+                            this_URLVersion_2=ruleURLVersion();
 
                             state._fsp--;
                             if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
-                              					current = this_TagVersion_2;
+                              					current = this_URLVersion_2;
                               					afterParserOrEnumRuleCall();
                               				
                             }
@@ -352,7 +352,7 @@ public class InternalSEMVERParser extends AbstractInternalAntlrParser {
                             }
                             break;
                         case 2 :
-                            // InternalSEMVER.g:127:5: this_URLVersion_3= ruleURLVersion
+                            // InternalSEMVER.g:127:5: this_LocalPathVersion_3= ruleLocalPathVersion
                             {
                             if ( state.backtracking==0 ) {
 
@@ -361,17 +361,17 @@ public class InternalSEMVERParser extends AbstractInternalAntlrParser {
                             }
                             if ( state.backtracking==0 ) {
 
-                              					newCompositeNode(grammarAccess.getNPMVersionAccess().getURLVersionParserRuleCall_1_0_1());
+                              					newCompositeNode(grammarAccess.getNPMVersionAccess().getLocalPathVersionParserRuleCall_1_0_1());
                               				
                             }
                             pushFollow(FOLLOW_4);
-                            this_URLVersion_3=ruleURLVersion();
+                            this_LocalPathVersion_3=ruleLocalPathVersion();
 
                             state._fsp--;
                             if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
-                              					current = this_URLVersion_3;
+                              					current = this_LocalPathVersion_3;
                               					afterParserOrEnumRuleCall();
                               				
                             }
@@ -406,7 +406,7 @@ public class InternalSEMVERParser extends AbstractInternalAntlrParser {
                             }
                             break;
                         case 4 :
-                            // InternalSEMVER.g:151:5: this_LocalPathVersion_5= ruleLocalPathVersion
+                            // InternalSEMVER.g:151:5: this_TagVersion_5= ruleTagVersion
                             {
                             if ( state.backtracking==0 ) {
 
@@ -415,17 +415,17 @@ public class InternalSEMVERParser extends AbstractInternalAntlrParser {
                             }
                             if ( state.backtracking==0 ) {
 
-                              					newCompositeNode(grammarAccess.getNPMVersionAccess().getLocalPathVersionParserRuleCall_1_0_3());
+                              					newCompositeNode(grammarAccess.getNPMVersionAccess().getTagVersionParserRuleCall_1_0_3());
                               				
                             }
                             pushFollow(FOLLOW_4);
-                            this_LocalPathVersion_5=ruleLocalPathVersion();
+                            this_TagVersion_5=ruleTagVersion();
 
                             state._fsp--;
                             if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
-                              					current = this_LocalPathVersion_5;
+                              					current = this_TagVersion_5;
                               					afterParserOrEnumRuleCall();
                               				
                             }
@@ -5371,21 +5371,21 @@ public class InternalSEMVERParser extends AbstractInternalAntlrParser {
     protected DFA26 dfa26 = new DFA26(this);
     protected DFA32 dfa32 = new DFA32(this);
     static final String dfa_1s = "\11\uffff";
-    static final String dfa_2s = "\2\uffff\2\10\3\uffff\1\10\1\uffff";
-    static final String dfa_3s = "\2\5\2\4\3\uffff\1\4\1\uffff";
-    static final String dfa_4s = "\1\50\1\6\2\50\3\uffff\1\50\1\uffff";
-    static final String dfa_5s = "\4\uffff\1\2\1\3\1\4\1\uffff\1\1";
+    static final String dfa_2s = "\1\uffff\1\7\3\uffff\1\7\2\uffff\1\7";
+    static final String dfa_3s = "\1\5\1\4\2\uffff\1\5\1\4\2\uffff\1\4";
+    static final String dfa_4s = "\2\50\2\uffff\1\6\1\50\2\uffff\1\50";
+    static final String dfa_5s = "\2\uffff\1\1\1\2\2\uffff\1\3\1\4\1\uffff";
     static final String dfa_6s = "\11\uffff}>";
     static final String[] dfa_7s = {
-            "\1\2\1\3\27\uffff\1\6\1\uffff\1\1\1\5\1\4\3\uffff\3\5",
-            "\1\2\1\7",
-            "\1\10\1\2\1\7\31\uffff\1\1\1\5\4\uffff\3\5",
-            "\1\10\1\2\1\3\24\uffff\1\4\4\uffff\1\1\1\5\1\4\3\uffff\3\5",
+            "\1\5\1\1\27\uffff\1\3\1\uffff\1\4\1\6\1\2\3\uffff\3\6",
+            "\1\7\1\5\1\1\24\uffff\1\2\4\uffff\1\4\1\6\1\2\3\uffff\3\6",
             "",
             "",
+            "\1\5\1\10",
+            "\1\7\1\5\1\10\31\uffff\1\4\1\6\4\uffff\3\6",
             "",
-            "\1\10\1\2\1\7\31\uffff\1\1\1\5\4\uffff\3\5",
-            ""
+            "",
+            "\1\7\1\5\1\10\31\uffff\1\4\1\6\4\uffff\3\6"
     };
 
     static final short[] dfa_1 = DFA.unpackEncodedString(dfa_1s);
@@ -5410,7 +5410,7 @@ public class InternalSEMVERParser extends AbstractInternalAntlrParser {
             this.transition = dfa_7;
         }
         public String getDescription() {
-            return "114:4: (this_TagVersion_2= ruleTagVersion | this_URLVersion_3= ruleURLVersion | this_GitHubVersion_4= ruleGitHubVersion | this_LocalPathVersion_5= ruleLocalPathVersion )";
+            return "114:4: (this_URLVersion_2= ruleURLVersion | this_LocalPathVersion_3= ruleLocalPathVersion | this_GitHubVersion_4= ruleGitHubVersion | this_TagVersion_5= ruleTagVersion )";
         }
     }
     static final String dfa_8s = "\4\uffff";

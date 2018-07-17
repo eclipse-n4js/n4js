@@ -53,8 +53,8 @@ import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.semver.SEMVERHelper;
 import org.eclipse.n4js.semver.SEMVERMatcher;
 import org.eclipse.n4js.semver.SEMVERSerializer;
+import org.eclipse.n4js.semver.SEMVER.NPMVersion;
 import org.eclipse.n4js.semver.SEMVER.VersionNumber;
-import org.eclipse.n4js.semver.SEMVER.VersionRangeSet;
 import org.eclipse.n4js.smith.ClosableMeasurement;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
@@ -347,24 +347,21 @@ public class LibraryManager {
 
 		for (Map.Entry<String, String> reqestedNpm : installRequested.entrySet()) {
 			String name = reqestedNpm.getKey();
-			String versionRequestedString = reqestedNpm.getValue();
-			if (installedNpms.containsKey(name)) {
-				org.eclipse.emf.common.util.URI location = installedNpms.get(name).getKey();
-				String versionInstalledString = Strings.emptyIfNull(installedNpms.get(name).getValue());
-				VersionRangeSet versionRangeRequested = semverHelper.parseVersionRangeSet(versionRequestedString);
-				VersionNumber versionInstalled = semverHelper.parseVersionNumber(versionInstalledString);
+			String requestedVersionString = reqestedNpm.getValue();
 
-				boolean validArgs = SEMVERMatcher.validMatchesArguments(versionInstalled, versionRangeRequested);
-				boolean versionsMatch = validArgs && SEMVERMatcher.matches(versionInstalled, versionRangeRequested);
-				if (!validArgs || versionsMatch) {
-					// already installed (relaxed checking)
-				} else {
-					// wrong version installed -> update (uninstall, then install)
-					requestedChanges.add(new LibraryChange(Uninstall, location, name, versionInstalledString));
-					requestedChanges.add(new LibraryChange(Install, location, name, versionRequestedString));
+			if (installedNpms.containsKey(name)) {
+				String installedVersionString = Strings.emptyIfNull(installedNpms.get(name).getValue());
+				if (isAlreadyInstalled(installedVersionString, name, requestedVersionString)) {
+					// if a matching version is installed, do not reinstall
+					continue;
 				}
+
+				// wrong version installed -> update (uninstall, then install)
+				org.eclipse.emf.common.util.URI location = installedNpms.get(name).getKey();
+				requestedChanges.add(new LibraryChange(Uninstall, location, name, installedVersionString));
+				requestedChanges.add(new LibraryChange(Install, location, name, requestedVersionString));
 			} else {
-				requestedChanges.add(new LibraryChange(Install, null, name, versionRequestedString));
+				requestedChanges.add(new LibraryChange(Install, null, name, requestedVersionString));
 			}
 		}
 
@@ -377,6 +374,34 @@ public class LibraryManager {
 		}
 
 		return requestedChanges;
+	}
+
+	/**
+	 * Returns {@code true} iff the given map of {@code installedNpms} contains the {@code requestedPackage} in a
+	 * version that fulfills the given {@code requestedVersion}.
+	 *
+	 * Returns {@code false} otherwise.
+	 *
+	 * @param installedVersionString
+	 *            The name of the already installed package.
+	 * @param requestedPackageString
+	 *            The name of the requested package.
+	 * @param requestedVersionString
+	 *            The requested version constraint in npm format.
+	 */
+	private boolean isAlreadyInstalled(String installedVersionString,
+			String requestedPackageString, String requestedVersionString) {
+
+		NPMVersion requestedVersion = semverHelper.parse(requestedVersionString);
+		VersionNumber installedVersion = semverHelper.parseVersionNumber(installedVersionString);
+
+		boolean canComputeMatch = SEMVERMatcher.canComputeMatch(installedVersion, requestedVersion);
+		if (canComputeMatch) {
+			return false;
+		}
+
+		boolean versionsMatch = SEMVERMatcher.matches(installedVersion, requestedVersion);
+		return versionsMatch;
 	}
 
 	private Collection<File> adaptNPMPackages(IProgressMonitor monitor, MultiStatus status,

@@ -31,6 +31,18 @@ class URLVersion extends NPMVersion {
 	contains URLVersionSpecifier versionSpecifier
 	String protocol
 	String url
+
+	op boolean hasSimpleVersion() {
+		return getSimpleVersion() !== null;
+	}
+
+	op SimpleVersion getSimpleVersion() {
+		if (versionSpecifier instanceof URLSemver) {
+			val urlSemver = versionSpecifier as URLSemver;
+			return urlSemver.simpleVersion;
+		}
+		return null;
+	}
 }
 
 abstract class URLVersionSpecifier {}

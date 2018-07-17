@@ -41,10 +41,10 @@ public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cVersionRangeSetParserRuleCall_0_1 = (RuleCall)cGroup_0.eContents().get(1);
 		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
 		private final Alternatives cAlternatives_1_0 = (Alternatives)cGroup_1.eContents().get(0);
-		private final RuleCall cTagVersionParserRuleCall_1_0_0 = (RuleCall)cAlternatives_1_0.eContents().get(0);
-		private final RuleCall cURLVersionParserRuleCall_1_0_1 = (RuleCall)cAlternatives_1_0.eContents().get(1);
+		private final RuleCall cURLVersionParserRuleCall_1_0_0 = (RuleCall)cAlternatives_1_0.eContents().get(0);
+		private final RuleCall cLocalPathVersionParserRuleCall_1_0_1 = (RuleCall)cAlternatives_1_0.eContents().get(1);
 		private final RuleCall cGitHubVersionParserRuleCall_1_0_2 = (RuleCall)cAlternatives_1_0.eContents().get(2);
-		private final RuleCall cLocalPathVersionParserRuleCall_1_0_3 = (RuleCall)cAlternatives_1_0.eContents().get(3);
+		private final RuleCall cTagVersionParserRuleCall_1_0_3 = (RuleCall)cAlternatives_1_0.eContents().get(3);
 		private final RuleCall cWSTerminalRuleCall_1_1 = (RuleCall)cGroup_1.eContents().get(1);
 		
 		//// This grammar of SemVer 2.0.0 is an adapted version of the BNF found at:
@@ -52,13 +52,13 @@ public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 		//NPMVersion:
 		//	WS*
 		//	VersionRangeSet
-		//	| (TagVersion
-		//	| URLVersion
+		//	| (URLVersion
+		//	| LocalPathVersion
 		//	| GitHubVersion
-		//	| LocalPathVersion) WS*;
+		//	| TagVersion) WS*;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//WS* VersionRangeSet | (TagVersion | URLVersion | GitHubVersion | LocalPathVersion) WS*
+		//WS* VersionRangeSet | (URLVersion | LocalPathVersion | GitHubVersion | TagVersion) WS*
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//WS* VersionRangeSet
@@ -70,23 +70,23 @@ public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 		//VersionRangeSet
 		public RuleCall getVersionRangeSetParserRuleCall_0_1() { return cVersionRangeSetParserRuleCall_0_1; }
 		
-		//(TagVersion | URLVersion | GitHubVersion | LocalPathVersion) WS*
+		//(URLVersion | LocalPathVersion | GitHubVersion | TagVersion) WS*
 		public Group getGroup_1() { return cGroup_1; }
 		
-		//TagVersion | URLVersion | GitHubVersion | LocalPathVersion
+		//URLVersion | LocalPathVersion | GitHubVersion | TagVersion
 		public Alternatives getAlternatives_1_0() { return cAlternatives_1_0; }
 		
-		//TagVersion
-		public RuleCall getTagVersionParserRuleCall_1_0_0() { return cTagVersionParserRuleCall_1_0_0; }
-		
 		//URLVersion
-		public RuleCall getURLVersionParserRuleCall_1_0_1() { return cURLVersionParserRuleCall_1_0_1; }
+		public RuleCall getURLVersionParserRuleCall_1_0_0() { return cURLVersionParserRuleCall_1_0_0; }
+		
+		//LocalPathVersion
+		public RuleCall getLocalPathVersionParserRuleCall_1_0_1() { return cLocalPathVersionParserRuleCall_1_0_1; }
 		
 		//GitHubVersion
 		public RuleCall getGitHubVersionParserRuleCall_1_0_2() { return cGitHubVersionParserRuleCall_1_0_2; }
 		
-		//LocalPathVersion
-		public RuleCall getLocalPathVersionParserRuleCall_1_0_3() { return cLocalPathVersionParserRuleCall_1_0_3; }
+		//TagVersion
+		public RuleCall getTagVersionParserRuleCall_1_0_3() { return cTagVersionParserRuleCall_1_0_3; }
 		
 		//WS*
 		public RuleCall getWSTerminalRuleCall_1_1() { return cWSTerminalRuleCall_1_1; }
@@ -1046,10 +1046,10 @@ public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 	//NPMVersion:
 	//	WS*
 	//	VersionRangeSet
-	//	| (TagVersion
-	//	| URLVersion
+	//	| (URLVersion
+	//	| LocalPathVersion
 	//	| GitHubVersion
-	//	| LocalPathVersion) WS*;
+	//	| TagVersion) WS*;
 	public NPMVersionElements getNPMVersionAccess() {
 		return pNPMVersion;
 	}

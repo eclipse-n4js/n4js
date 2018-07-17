@@ -108,4 +108,22 @@ public interface URLVersion extends NPMVersion {
 	 */
 	void setUrl(String value);
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model unique="false"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.n4js.semver.SEMVER.SimpleVersion%&gt; _simpleVersion = this.getSimpleVersion();\nreturn (_simpleVersion != null);'"
+	 * @generated
+	 */
+	boolean hasSimpleVersion();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.n4js.semver.SEMVER.URLVersionSpecifier%&gt; _versionSpecifier = this.getVersionSpecifier();\nif ((_versionSpecifier instanceof &lt;%org.eclipse.n4js.semver.SEMVER.URLSemver%&gt;))\n{\n\t&lt;%org.eclipse.n4js.semver.SEMVER.URLVersionSpecifier%&gt; _versionSpecifier_1 = this.getVersionSpecifier();\n\tfinal &lt;%org.eclipse.n4js.semver.SEMVER.URLSemver%&gt; urlSemver = ((&lt;%org.eclipse.n4js.semver.SEMVER.URLSemver%&gt;) _versionSpecifier_1);\n\treturn urlSemver.getSimpleVersion();\n}\nreturn null;'"
+	 * @generated
+	 */
+	SimpleVersion getSimpleVersion();
+
 } // URLVersion

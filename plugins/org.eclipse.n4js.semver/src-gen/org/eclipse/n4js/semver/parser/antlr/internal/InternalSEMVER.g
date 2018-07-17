@@ -116,11 +116,11 @@ ruleNPMVersion returns [EObject current=null]
 					/* */
 				}
 				{
-					newCompositeNode(grammarAccess.getNPMVersionAccess().getTagVersionParserRuleCall_1_0_0());
+					newCompositeNode(grammarAccess.getNPMVersionAccess().getURLVersionParserRuleCall_1_0_0());
 				}
-				this_TagVersion_2=ruleTagVersion
+				this_URLVersion_2=ruleURLVersion
 				{
-					$current = $this_TagVersion_2.current;
+					$current = $this_URLVersion_2.current;
 					afterParserOrEnumRuleCall();
 				}
 				    |
@@ -128,11 +128,11 @@ ruleNPMVersion returns [EObject current=null]
 					/* */
 				}
 				{
-					newCompositeNode(grammarAccess.getNPMVersionAccess().getURLVersionParserRuleCall_1_0_1());
+					newCompositeNode(grammarAccess.getNPMVersionAccess().getLocalPathVersionParserRuleCall_1_0_1());
 				}
-				this_URLVersion_3=ruleURLVersion
+				this_LocalPathVersion_3=ruleLocalPathVersion
 				{
-					$current = $this_URLVersion_3.current;
+					$current = $this_LocalPathVersion_3.current;
 					afterParserOrEnumRuleCall();
 				}
 				    |
@@ -152,11 +152,11 @@ ruleNPMVersion returns [EObject current=null]
 					/* */
 				}
 				{
-					newCompositeNode(grammarAccess.getNPMVersionAccess().getLocalPathVersionParserRuleCall_1_0_3());
+					newCompositeNode(grammarAccess.getNPMVersionAccess().getTagVersionParserRuleCall_1_0_3());
 				}
-				this_LocalPathVersion_5=ruleLocalPathVersion
+				this_TagVersion_5=ruleTagVersion
 				{
-					$current = $this_LocalPathVersion_5.current;
+					$current = $this_TagVersion_5.current;
 					afterParserOrEnumRuleCall();
 				}
 			)
