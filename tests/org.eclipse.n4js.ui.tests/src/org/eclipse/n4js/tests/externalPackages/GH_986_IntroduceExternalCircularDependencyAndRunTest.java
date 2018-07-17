@@ -40,8 +40,9 @@ import com.google.common.base.Optional;
 import com.google.inject.Inject;
 
 /**
- * Installs {@code mocha} as project dependency, which will introduce a dependency cycle in the dependency tree of the
- * test project.
+ * Installs {@code mocha} and {@code eslint} as project dependency, which will introduce a dependency cycle in the
+ * dependency tree of the test project ({@code eslint} and {@code mocha} depend on each other via
+ * {@code devDependencies}).
  *
  * This test asserts that despite this dependency cycle, a module in the test project can be run using the runners.
  */
@@ -93,13 +94,13 @@ public class GH_986_IntroduceExternalCircularDependencyAndRunTest extends Abstra
 	 * See JavaDoc of class.
 	 */
 	@Test
-	public void testInstallRuntimeFromNpmTest() throws CoreException {
+	public void testRunWithCycleInDependencyTree() throws CoreException {
 		final IProject project = createJSProject(CLIENT, "src", "src-gen",
 				b -> b
 						// test project of type 'library'
 						.withType(ProjectType.LIBRARY)
-						// add dependency to node runtime environment in specific version
-						.withDependency("mocha", "*"));
+						.withDependency("mocha", "*")
+						.withDependency("eslint", "*"));
 
 		configureProjectWithXtext(project);
 
@@ -130,7 +131,7 @@ public class GH_986_IntroduceExternalCircularDependencyAndRunTest extends Abstra
 		final Set<RuntimeEnvironment> compatibleRuntimeEnvironments = runtimeEnvironmentsHelper
 				.findCompatibleRuntimeEnvironments(projectOptional.get());
 
-		if (compatibleRuntimeEnvironments.size() < 0) {
+		if (compatibleRuntimeEnvironments.size() < 1) {
 			Assert.fail("Expected the set of compatible runtime environments to be of size >= 1, but was "
 					+ compatibleRuntimeEnvironments.size());
 		}
