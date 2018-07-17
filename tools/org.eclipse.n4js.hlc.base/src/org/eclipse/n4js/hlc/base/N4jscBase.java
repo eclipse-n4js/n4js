@@ -72,6 +72,7 @@ import org.eclipse.n4js.tester.TestCatalogSupplier;
 import org.eclipse.n4js.tester.TestTreeTransformer;
 import org.eclipse.n4js.tester.TesterModule;
 import org.eclipse.n4js.tester.extension.TesterRegistry;
+import org.eclipse.n4js.tester.internal.TesterActivator;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.eclipse.xtext.ISetup;
 import org.kohsuke.args4j.Argument;
@@ -630,14 +631,15 @@ public class N4jscBase implements IApplication {
 		java.net.URI platformLocation = locationProvider.getTargetPlatformInstallLocation();
 		File packageJsonFile = new File(new File(platformLocation), N4JSGlobals.PACKAGE_JSON);
 		try {
+			// Create new target platform definition file, only if not present.
+			// If a target platform definition file exists, it will be reused.
 			if (!packageJsonFile.exists()) {
 				packageJsonFile.createNewFile();
-			}
-			try (PrintWriter pw = new PrintWriter(packageJsonFile)) {
-				pw.write(packageJson.toString());
-				pw.flush();
-				locationProvider.setTargetPlatformFileLocation(packageJsonFile.toURI());
-
+				try (PrintWriter pw = new PrintWriter(packageJsonFile)) {
+					pw.write(packageJson.toString());
+					pw.flush();
+					locationProvider.setTargetPlatformFileLocation(packageJsonFile.toURI());
+				}
 			}
 		} catch (IOException e) {
 			throw new ExitCodeException(EXITCODE_CONFIGURATION_ERROR,
@@ -777,6 +779,11 @@ public class N4jscBase implements IApplication {
 		final Injector injector = setup.createInjectorAndDoEMFRegistration();
 
 		injector.injectMembers(this);
+
+		// if tester activator instance is present, initialize it with created injector
+		if (TesterActivator.getInstance() != null) {
+			TesterActivator.getInstance().startupWithInjector(injector);
+		}
 	}
 
 	/**

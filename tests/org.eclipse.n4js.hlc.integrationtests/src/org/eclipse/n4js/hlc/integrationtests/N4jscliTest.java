@@ -145,7 +145,7 @@ public class N4jscliTest extends AbstractN4jscJarTest {
 	}
 
 	private Path pathToProject(String projectName) {
-		return FileSystems.getDefault().getPath(TARGET + File.separatorChar + WSP + File.separatorChar + projectName)
+		return FileSystems.getDefault().getPath(TARGET + File.separatorChar + WORKSPACE_FOLDER + File.separatorChar + projectName)
 				.normalize().toAbsolutePath();
 	}
 

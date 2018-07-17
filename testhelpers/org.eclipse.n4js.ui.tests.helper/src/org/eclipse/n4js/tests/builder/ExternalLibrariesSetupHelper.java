@@ -81,7 +81,7 @@ public class ExternalLibrariesSetupHelper {
 		assertTrue("Error while saving external library preference changes.", result.isOK());
 
 		if (tearDownShippedCode) {
-			shippedCodeInitializeTestHelper.teardowneBuiltIns();
+			shippedCodeInitializeTestHelper.tearDownBuiltIns();
 		}
 
 		// cleanup leftovers in the file system

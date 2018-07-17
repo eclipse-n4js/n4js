@@ -75,7 +75,7 @@ public class IDEBUG_856_PluginTest extends AbstractBuilderParticipantTest {
 	public void tearDown() throws Exception {
 		cleanWorkspace();
 		waitForAutoBuild();
-		shippedCodeInitializeTestHelper.teardowneBuiltIns();
+		shippedCodeInitializeTestHelper.tearDownBuiltIns();
 		waitForAutoBuild();
 	}
 

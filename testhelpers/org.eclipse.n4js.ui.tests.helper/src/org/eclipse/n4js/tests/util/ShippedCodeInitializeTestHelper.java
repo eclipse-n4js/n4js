@@ -38,7 +38,7 @@ public class ShippedCodeInitializeTestHelper {
 	}
 
 	/** Tear down shipped projects in all {@link ExternalLibrariesActivator#EXTERNAL_LIBRARIES_SUPPLIER locations}. */
-	public void teardowneBuiltIns() {
+	public void tearDownBuiltIns() {
 		forAllLocations(externalLibraryPreferenceStore::remove);
 		assertTrue("Error while saving external library preference changes.",
 				externalLibraryPreferenceStore.save(new NullProgressMonitor()).isOK());
