@@ -34,8 +34,9 @@ import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware;
 import org.eclipse.n4js.runner.exceptions.DependencyCycleDetectedException;
 import org.eclipse.n4js.runner.exceptions.InsolvableRuntimeEnvironmentException;
 import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
-import org.eclipse.n4js.validation.helper.SourceContainerAwareDependencyTraverser;
+import org.eclipse.n4js.utils.RecursionGuard;
 
+import com.google.common.base.Equivalence;
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
 
@@ -145,11 +146,9 @@ public class RuntimeEnvironmentsHelper {
 	 * @return list of transitive dependencies of type runtime library, no duplicates
 	 */
 	private List<IN4JSProject> collectRequiredRuntimeLibraries(IN4JSProject project) {
-		if (new SourceContainerAwareDependencyTraverser(project).getResult().hasCycle()) {
-			throw new DependencyCycleDetectedException(project);
-		}
 		Set<IN4JSProject> depsRuntimeLibraries = new HashSet<>();
-		recursiveDependencyCollector(project, depsRuntimeLibraries, p -> isRuntimeLibrary(p));
+		recursiveDependencyCollector(project, depsRuntimeLibraries, p -> isRuntimeLibrary(p),
+				new RecursionGuard<>((new IN4JSProjectEquivalence())));
 		return new ArrayList<>(depsRuntimeLibraries);
 	}
 
@@ -170,15 +169,23 @@ public class RuntimeEnvironmentsHelper {
 	 */
 	private void recursiveDependencyCollector(IN4JSSourceContainerAware sourceContainer,
 			Collection<IN4JSProject> collection,
-			Predicate<IN4JSProject> predicate) {
+			Predicate<IN4JSProject> predicate,
+			RecursionGuard<IN4JSProject> recursionGuard) {
 
 		IN4JSProject project = (extractProject(sourceContainer));
+
+		// if recursion is detected, skip this project (already processed)
+		if (!recursionGuard.tryNext(project)) {
+			return;
+		}
+
+		System.out.println("Collecting required runtime libraries from " + project.getProjectId());
 
 		if (predicate.test(project))
 			collection.add(project);
 
 		sourceContainer.getAllDirectDependencies().forEach(
-				dep -> recursiveDependencyCollector(dep, collection, predicate));
+				dep -> recursiveDependencyCollector(dep, collection, predicate, recursionGuard));
 	}
 
 	/**
@@ -396,5 +403,23 @@ public class RuntimeEnvironmentsHelper {
 
 	private boolean isRuntimeLibrary(IN4JSProject project) {
 		return ProjectType.RUNTIME_LIBRARY.equals(project.getProjectType());
+	}
+
+	/**
+	 * {@link Equivalence} implementation for {@link IN4JSProject} that uses {@link IN4JSProject#equals(Object)} and
+	 * {@link IN4JSProject#hashCode()}.
+	 */
+	private static final class IN4JSProjectEquivalence extends Equivalence<IN4JSProject> {
+
+		@Override
+		protected boolean doEquivalent(IN4JSProject a, IN4JSProject b) {
+			return a != null && a.equals(b);
+		}
+
+		@Override
+		protected int doHash(IN4JSProject t) {
+			return t.hashCode();
+		}
+
 	}
 }
