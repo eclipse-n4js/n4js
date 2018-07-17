@@ -51,15 +51,11 @@ import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
-import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.json.JSON.JSONArray;
 import org.eclipse.n4js.json.JSON.JSONDocument;
@@ -700,87 +696,5 @@ public class ProjectDescriptionHelper {
 			result.add(pdep);
 		}
 		return result;
-	}
-
-	// ******************************************************************************************
-	// TODO remove the following method/class when removing legacy support for N4MF
-
-	/**
-	 * May return target or source unchanged or target with (in-place) changes.
-	 */
-	@SuppressWarnings("unused")
-	private ProjectDescription mergeProjectDescriptions(ProjectDescription target, ProjectDescription source) {
-		if (source == null) {
-			return target; // covers case that both are null
-		} else if (target == null) {
-			return source;
-		}
-		// both are non-null
-		// -> so copy values missing in 'target' from 'source' to 'target'
-		// (and only if missing in 'target', because values in 'target' have priority)
-		return new MergingCopier<>(target).merge(source);
-	}
-
-	private static final class MergingCopier<T extends EObject> extends Copier {
-
-		private final T target;
-		private EObject source;
-
-		public MergingCopier(T target) {
-			Objects.requireNonNull(target);
-			this.target = target;
-		}
-
-		@SuppressWarnings("unchecked")
-		public T merge(EObject eObject) {
-			if (eObject.eClass() != target.eClass()) {
-				throw new IllegalArgumentException("cannot merge source into target due to type mismatch");
-			}
-			this.source = eObject;
-			T result = (T) super.copy(eObject);
-			this.source = null;
-			return result;
-		}
-
-		@Override
-		protected EObject createCopy(EObject eObject) {
-			if (eObject == source) {
-				return target;
-			}
-			return super.createCopy(eObject);
-		}
-
-		@Override
-		protected void copyAttribute(EAttribute eAttribute, EObject eObject, EObject copyEObject) {
-			if (eObject == source && isDefinedInTarget(eAttribute)) {
-				return;
-			}
-			super.copyAttribute(eAttribute, eObject, copyEObject);
-		}
-
-		@Override
-		protected void copyReference(EReference eReference, EObject eObject, EObject copyEObject) {
-			if (eObject == source && isDefinedInTarget(eReference)) {
-				return;
-			}
-			super.copyReference(eReference, eObject, copyEObject);
-		}
-
-		@Override
-		protected void copyContainment(EReference eReference, EObject eObject, EObject copyEObject) {
-			if (eObject == source && isDefinedInTarget(eReference)) {
-				return;
-			}
-			super.copyContainment(eReference, eObject, copyEObject);
-		}
-
-		private boolean isDefinedInTarget(EStructuralFeature eFeature) {
-			if (eFeature.isUnsettable() && !target.eIsSet(eFeature)) {
-				return false;
-			}
-			return eFeature.isMany()
-					? !((Collection<?>) target.eGet(eFeature)).isEmpty()
-					: target.eGet(eFeature) != null;
-		}
 	}
 }
