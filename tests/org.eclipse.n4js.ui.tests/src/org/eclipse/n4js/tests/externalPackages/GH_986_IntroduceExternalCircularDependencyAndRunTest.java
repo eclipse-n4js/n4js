@@ -44,7 +44,8 @@ import com.google.inject.Inject;
  * dependency tree of the test project ({@code eslint} and {@code mocha} depend on each other via
  * {@code devDependencies}).
  *
- * This test asserts that despite this dependency cycle, a module in the test project can be run using the runners.
+ * This test asserts that despite this dependency cycle, the runner will correctly compute the set of compatible runtime
+ * environment for the test project (for now this is the node.js runner only).
  */
 public class GH_986_IntroduceExternalCircularDependencyAndRunTest extends AbstractBuilderParticipantTest {
 
