@@ -33,7 +33,7 @@ import org.eclipse.n4js.semver.SEMVERHelper;
 import org.eclipse.n4js.semver.SEMVERMatcher;
 import org.eclipse.n4js.semver.SEMVERUtils;
 import org.eclipse.n4js.semver.SEMVER.VersionNumber;
-import org.eclipse.n4js.utils.ProjectDescriptionHelper;
+import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.git.GitUtils;
 import org.eclipse.n4js.utils.io.FileCopier;
@@ -63,7 +63,7 @@ public class NpmPackageToProjectAdapter {
 	private GitCloneSupplier gitCloneSupplier;
 
 	@Inject
-	private ProjectDescriptionHelper projectDescriptionHelper;
+	private ProjectDescriptionLoader ProjectDescriptionLoader;
 
 	@Inject
 	private SEMVERHelper semverHelper;
@@ -190,7 +190,7 @@ public class NpmPackageToProjectAdapter {
 		}
 
 		URI packageURI = URI.createFileURI(packageRoot.getAbsolutePath());
-		String packageJsonVersion = projectDescriptionHelper.loadVersionFromProjectDescriptionAtLocation(packageURI);
+		String packageJsonVersion = ProjectDescriptionLoader.loadVersionFromProjectDescriptionAtLocation(packageURI);
 		VersionNumber packageVersion = semverHelper.parseVersionNumber(packageJsonVersion);
 		if (packageVersion == null) {
 			final String message = "Cannot read version from package.json of npm package '" + packageName + "'.";

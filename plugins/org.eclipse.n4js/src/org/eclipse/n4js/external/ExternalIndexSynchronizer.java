@@ -31,7 +31,7 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.packagejson.PackageJsonResourceDescriptionExtension;
 import org.eclipse.n4js.semver.SEMVER.VersionNumber;
 import org.eclipse.n4js.semver.model.SEMVERSerializer;
-import org.eclipse.n4js.utils.ProjectDescriptionHelper;
+import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
@@ -58,7 +58,7 @@ public abstract class ExternalIndexSynchronizer {
 	private TargetPlatformInstallLocationProvider locationProvider;
 
 	@Inject
-	private ProjectDescriptionHelper projectDescriptionHelper;
+	private ProjectDescriptionLoader ProjectDescriptionLoader;
 
 	/**
 	 * Call this method to synchronize the information in the Xtext index with all external projects in the external
@@ -119,7 +119,7 @@ public abstract class ExternalIndexSynchronizer {
 
 	private String getVersionFromPackageJSON(File packageJSON) {
 		URI uri = URI.createFileURI(packageJSON.getAbsolutePath());
-		ProjectDescription pDescr = projectDescriptionHelper.loadProjectDescriptionAtLocation(uri);
+		ProjectDescription pDescr = ProjectDescriptionLoader.loadProjectDescriptionAtLocation(uri);
 		if (pDescr != null) {
 			VersionNumber pV = pDescr.getProjectVersion();
 			String version = SEMVERSerializer.toString(pV);

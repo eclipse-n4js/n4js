@@ -25,7 +25,7 @@ import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.utils.ProjectDescriptionHelper;
+import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
@@ -41,7 +41,7 @@ public class RunnerN4JSCore {
 	private static final int DANGLING_SEGMENT_COUNT = 1;
 
 	@Inject
-	private ProjectDescriptionHelper projectDescriptionHelper;
+	private ProjectDescriptionLoader ProjectDescriptionLoader;
 
 	/**
 	 * Returns all shipped projects as iterable. Returned projects are stubs for real {@link N4JSProject}. They
@@ -55,7 +55,7 @@ public class RunnerN4JSCore {
 
 		final RunnerTargetPlatformInstallLocationProvider locationProvider = new RunnerTargetPlatformInstallLocationProvider();
 		final RunnerClasspathPackageManager manager = new RunnerClasspathPackageManager();
-		final FileBasedWorkspace workspace = new FileBasedWorkspace(manager, projectDescriptionHelper);
+		final FileBasedWorkspace workspace = new FileBasedWorkspace(manager, ProjectDescriptionLoader);
 		final N4JSModel model = new N4JSModel(workspace, locationProvider);
 
 		ShippedCodeAccess.getAllShippedPaths().forEach(path -> discoverProjects(path, workspace));

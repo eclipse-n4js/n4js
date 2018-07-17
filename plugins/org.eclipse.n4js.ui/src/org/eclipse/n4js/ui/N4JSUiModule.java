@@ -116,7 +116,7 @@ import org.eclipse.n4js.ui.wizard.project.N4JSProjectCreator;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBroker;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBrokerImpl;
 import org.eclipse.n4js.ui.workingsets.WorkspaceRepositoriesProvider;
-import org.eclipse.n4js.utils.ProjectDescriptionHelper;
+import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.process.OutputStreamPrinterThreadProvider;
 import org.eclipse.n4js.utils.process.OutputStreamProvider;
@@ -355,8 +355,8 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	}
 
 	/** Delegate to shared injector */
-	public Provider<ProjectDescriptionHelper> provideProjectDescriptionHelper() {
-		return Access.contributedProvider(ProjectDescriptionHelper.class);
+	public Provider<ProjectDescriptionLoader> provideProjectDescriptionLoader() {
+		return Access.contributedProvider(ProjectDescriptionLoader.class);
 	}
 
 	/** Delegate to shared injector */

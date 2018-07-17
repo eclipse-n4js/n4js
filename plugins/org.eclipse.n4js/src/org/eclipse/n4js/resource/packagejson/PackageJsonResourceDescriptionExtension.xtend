@@ -29,7 +29,7 @@ import org.eclipse.n4js.n4mf.ProjectReference
 import org.eclipse.n4js.n4mf.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.semver.model.SEMVERSerializer
-import org.eclipse.n4js.utils.ProjectDescriptionHelper
+import org.eclipse.n4js.utils.ProjectDescriptionLoader
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.resource.EObjectDescription
@@ -112,7 +112,7 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 	private IQualifiedNameProvider qualifiedNameProvider;
 
 	@Inject
-	private ProjectDescriptionHelper projectDescriptionHelper;
+	private ProjectDescriptionLoader ProjectDescriptionLoader;
 
 
     private static final Logger LOGGER = Logger.getLogger(PackageJsonResourceDescriptionExtension);
@@ -184,7 +184,7 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 			LOGGER.error("creation of EObjectDescriptions failed: cannot derive project location from document");
 			return;
 		}
-		val description = projectDescriptionHelper.loadProjectDescriptionAtLocation(projectLocation, document, true);
+		val description = ProjectDescriptionLoader.loadProjectDescriptionAtLocation(projectLocation, document, true);
 		if(description === null) {
 			LOGGER.error("creation of EObjectDescriptions failed: cannot load project description at location: " + projectLocation);
 			return;

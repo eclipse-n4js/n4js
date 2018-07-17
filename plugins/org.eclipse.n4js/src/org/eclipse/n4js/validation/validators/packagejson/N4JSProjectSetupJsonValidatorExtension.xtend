@@ -65,7 +65,7 @@ import org.eclipse.n4js.semver.model.SEMVERSerializer
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TypesPackage
-import org.eclipse.n4js.utils.ProjectDescriptionHelper
+import org.eclipse.n4js.utils.ProjectDescriptionLoader
 import org.eclipse.n4js.utils.ProjectDescriptionUtils
 import org.eclipse.n4js.utils.WildcardPathFilterHelper
 import org.eclipse.n4js.validation.IssueCodes
@@ -106,7 +106,7 @@ import static extension com.google.common.base.Strings.nullToEmpty
  * of higher-level concepts such as project references, the general project setup and feature restrictions.
  * 
  * Generally, this validator includes constraints that are implemented based on the converted {@link ProjectDescription}
- * as it can be obtained from the {@link ProjectDescriptionHelper}. This especially includes non-local validation
+ * as it can be obtained from the {@link ProjectDescriptionLoader}. This especially includes non-local validation
  * such as the resolution of referenced projects.
  * 
  * For lower-level, structural and local validations with regard to {@code package.json} 
@@ -153,7 +153,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	private XpectAwareFileExtensionCalculator fileExtensionCalculator;
 	
 	@Inject
-	private ProjectDescriptionHelper projectDescriptionHelper;
+	private ProjectDescriptionLoader ProjectDescriptionLoader;
 	
 	@Inject
 	private WildcardPathFilterHelper wildcardHelper;
@@ -1133,12 +1133,12 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	 * Returns the {@link ProjectDescription} that can be created based on the information
 	 * to be found in the currently validated {@link JSONDocument}.
 	 * 
-	 * @See {@link ProjectDescriptionHelper}
+	 * @See {@link ProjectDescriptionLoader}
 	 */
 	protected def ProjectDescription getProjectDescription() {
 		return contextMemoize(PROJECT_DESCRIPTION_CACHE, [
 			val doc = getDocument();
-			projectDescriptionHelper.loadProjectDescriptionAtLocation(doc.eResource.URI.trimSegments(1), doc, false);
+			ProjectDescriptionLoader.loadProjectDescriptionAtLocation(doc.eResource.URI.trimSegments(1), doc, false);
 		]);
 	}
 

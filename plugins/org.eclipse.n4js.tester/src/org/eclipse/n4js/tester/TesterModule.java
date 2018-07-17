@@ -64,7 +64,7 @@ import org.eclipse.n4js.tester.server.resources.ResourceProvider;
 import org.eclipse.n4js.tester.server.resources.ServletHolderBuilder;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.n4js.utils.N4ExecutableExtensionFactory;
-import org.eclipse.n4js.utils.ProjectDescriptionHelper;
+import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.ResourceNameComputer;
 import org.eclipse.n4js.utils.StatusHelper;
 
@@ -125,8 +125,8 @@ public class TesterModule implements Module {
 					.toProvider(() -> n4jsInjector.getInstance(RunnerRegistry.class));
 			binder.bind(StatusHelper.class)
 					.toProvider(() -> n4jsInjector.getInstance(StatusHelper.class));
-			binder.bind(ProjectDescriptionHelper.class)
-					.toProvider(() -> n4jsInjector.getInstance(ProjectDescriptionHelper.class));
+			binder.bind(ProjectDescriptionLoader.class)
+					.toProvider(() -> n4jsInjector.getInstance(ProjectDescriptionLoader.class));
 		}
 
 		binder.bind(TesterRegistry.class);

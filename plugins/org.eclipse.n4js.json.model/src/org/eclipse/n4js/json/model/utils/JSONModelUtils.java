@@ -228,6 +228,14 @@ public class JSONModelUtils {
 	}
 
 	/**
+	 * Same as {@link #getProperty(JSONObject, String)}, but invokes {@link #asStringOrNull(JSONValue)} on the property
+	 * value before returning it.
+	 */
+	public static String getPropertyAsStringOrNull(JSONObject object, String property) {
+		return asStringOrNull(JSONModelUtils.getProperty(object, property).orElse(null));
+	}
+
+	/**
 	 * Returns the value of the given {@code property} of {@code object}, or an absent optional if no value has been set
 	 * for the given {@code property}.
 	 */

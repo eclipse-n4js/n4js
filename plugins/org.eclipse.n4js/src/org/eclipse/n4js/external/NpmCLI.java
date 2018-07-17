@@ -26,7 +26,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.binaries.BinaryCommandFactory;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
 import org.eclipse.n4js.utils.ProcessExecutionCommandStatus;
-import org.eclipse.n4js.utils.ProjectDescriptionHelper;
+import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.StatusHelper;
 
 import com.google.inject.Inject;
@@ -54,7 +54,7 @@ public class NpmCLI {
 	private NpmLogger logger;
 
 	@Inject
-	private ProjectDescriptionHelper projectDescriptionHelper;
+	private ProjectDescriptionLoader ProjectDescriptionLoader;
 
 	/** Simple validation if the package name is not null or empty */
 	public boolean invalidPackageName(String packageName) {
@@ -184,7 +184,7 @@ public class NpmCLI {
 
 	private String getActualVersion(MultiStatus batchStatus, LibraryChange reqChg, Path completePath) {
 		URI location = URI.createFileURI(completePath.toString());
-		String versionStr = projectDescriptionHelper.loadVersionFromProjectDescriptionAtLocation(location);
+		String versionStr = ProjectDescriptionLoader.loadVersionFromProjectDescriptionAtLocation(location);
 		if (versionStr == null) {
 			String msg = "Error reading package json when " + reqChg.toString();
 			IStatus packJsonError = statusHelper.createError(msg);

@@ -15,7 +15,7 @@ import java.util.Map
 import org.eclipse.n4js.json.JSON.JSONDocument
 import org.eclipse.n4js.n4mf.ProjectType
 import org.eclipse.n4js.n4mf.SourceContainerType
-import org.eclipse.n4js.utils.ProjectDescriptionHelper
+import org.eclipse.n4js.utils.ProjectDescriptionLoader
 
 import static com.google.common.base.Optional.fromNullable
 import static com.google.common.base.Preconditions.checkNotNull
@@ -27,7 +27,7 @@ import java.util.TreeMap
  * instances or file content.#
  * 
  * Provides support for most supported N4JS-specific package.json properties. 
- * See {@link ProjectDescriptionHelper} for details on all supported properties. 
+ * See {@link ProjectDescriptionLoader} for details on all supported properties. 
  */
 public class PackageJsonBuilder {
 
