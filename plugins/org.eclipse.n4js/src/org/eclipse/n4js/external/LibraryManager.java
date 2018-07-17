@@ -396,7 +396,7 @@ public class LibraryManager {
 		VersionNumber installedVersion = semverHelper.parseVersionNumber(installedVersionString);
 
 		boolean canComputeMatch = SEMVERMatcher.canComputeMatch(installedVersion, requestedVersion);
-		if (canComputeMatch) {
+		if (!canComputeMatch) {
 			return false;
 		}
 
