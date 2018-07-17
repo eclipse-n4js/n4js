@@ -69,7 +69,8 @@ public class LibraryChange {
 
 	@Override
 	public String toString() {
-		return type.name() + ":" + name + version;
+		String versionString = (version.isEmpty()) ? "" : "@" + version;
+		return type.name() + ":" + name + versionString;
 	}
 
 }

@@ -152,7 +152,7 @@ public class NpmCLI {
 		LibraryChangeType actualChangeType = null;
 		String actualVersion = "";
 		if (reqChg.type == LibraryChangeType.Install) {
-			packageProcessingStatus = install(reqChg.name, reqChg.version, installPath);
+			packageProcessingStatus = install(reqChg.name, "@" + reqChg.version, installPath);
 
 			if (packageProcessingStatus == null || !packageProcessingStatus.isOK()) {
 				batchStatus.merge(packageProcessingStatus);

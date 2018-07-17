@@ -28,6 +28,8 @@ import com.fasterxml.jackson.databind.JsonMappingException
 import java.util.Set
 import java.util.Map
 
+// FIXME GH-809: revisit TargetPlatform* classes (probably remove)
+
 /**
  * POJO for representing an N4JS target platform file.
  *
