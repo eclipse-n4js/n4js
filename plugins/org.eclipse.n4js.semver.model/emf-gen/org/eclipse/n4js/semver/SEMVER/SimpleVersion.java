@@ -17,6 +17,13 @@ import org.eclipse.emf.common.util.EList;
  * A representation of the model object '<em><b>Simple Version</b></em>'.
  * <!-- end-user-doc -->
  *
+ * <!-- begin-model-doc -->
+ * *
+ * The name 'SimpleVersion' is taken from the SEMVER documentation.
+ * However, this name can be misleading since a SimpleVersion can represent
+ * a range of versions, e.g. >1.
+ * <!-- end-model-doc -->
+ *
  * <p>
  * The following features are supported:
  * </p>
