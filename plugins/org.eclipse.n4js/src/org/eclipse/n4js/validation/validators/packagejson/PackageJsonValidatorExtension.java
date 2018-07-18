@@ -53,12 +53,22 @@ import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
 import org.eclipse.n4js.semver.SEMVERHelper;
+import org.eclipse.n4js.semver.SEMVER.GitHubVersion;
+import org.eclipse.n4js.semver.SEMVER.LocalPathVersion;
 import org.eclipse.n4js.semver.SEMVER.NPMVersion;
+import org.eclipse.n4js.semver.SEMVER.SimpleVersion;
+import org.eclipse.n4js.semver.SEMVER.TagVersion;
+import org.eclipse.n4js.semver.SEMVER.URLVersion;
+import org.eclipse.n4js.semver.SEMVER.VersionNumber;
+import org.eclipse.n4js.semver.SEMVER.VersionRangeConstraint;
+import org.eclipse.n4js.semver.SEMVER.VersionRangeSet;
+import org.eclipse.n4js.semver.model.SEMVERSerializer;
 import org.eclipse.n4js.utils.ProjectDescriptionHelper;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.validation.helper.FolderContainmentHelper;
+import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.validation.Check;
 
 import com.google.common.base.Optional;
@@ -179,7 +189,58 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	/** Check the version property. */
 	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__VERSION)
 	public void checkVersion(JSONValue versionValue) {
-		checkIsType(versionValue, JSONPackage.Literals.JSON_STRING_LITERAL, "as package version");
+		if (!checkIsType(versionValue, JSONPackage.Literals.JSON_STRING_LITERAL, "as package version")) {
+			return;
+		}
+		JSONStringLiteral versionJsonString = (JSONStringLiteral) versionValue;
+		String versionString = versionJsonString.getValue();
+
+		IParseResult parseResult = semverHelper.getParseResult(versionString);
+		if (parseResult.hasSyntaxErrors()) {
+			String reason = parseResult.getSyntaxErrors().iterator().next().getText();
+			String msg = IssueCodes.getMessageForPKGJ_INVALID_VERSION_NUMBER(versionString, reason);
+			addIssue(msg, versionValue, IssueCodes.PKGJ_INVALID_VERSION_NUMBER);
+			return;
+		}
+
+		NPMVersion npmVersion = semverHelper.parse(parseResult);
+		VersionRangeSet vrs = semverHelper.parseVersionRangeSet(parseResult);
+		VersionNumber vn = semverHelper.parseVersionNumber(parseResult);
+		if (vrs == null || vn == null || !(vrs.getRanges().get(0) instanceof VersionRangeConstraint)) {
+			String reason = "Cannot parse given string";
+			if (npmVersion != null) {
+				reason = "Given string is parsed as " + getVersionRequirementType(npmVersion);
+			}
+			String msg = IssueCodes.getMessageForPKGJ_INVALID_VERSION_NUMBER(versionString, reason);
+			addIssue(msg, versionValue, IssueCodes.PKGJ_INVALID_VERSION_NUMBER);
+			return;
+		}
+
+		VersionRangeConstraint vrc = (VersionRangeConstraint) vrs.getRanges().get(0);
+		SimpleVersion simpleVersion = vrc.getVersionConstraints().get(0);
+		if (!simpleVersion.getComparators().isEmpty()) {
+			String comparator = SEMVERSerializer.toString(simpleVersion.getComparators().get(0));
+			String reason = "Version number must not have the comparator '" + comparator + "'";
+			String msg = IssueCodes.getMessageForPKGJ_INVALID_VERSION_NUMBER(versionString, reason);
+			addIssue(msg, versionValue, IssueCodes.PKGJ_INVALID_VERSION_NUMBER);
+			return;
+		}
+	}
+
+	private String getVersionRequirementType(NPMVersion npmVersion) {
+		if (npmVersion instanceof TagVersion) {
+			return "tag";
+		}
+		if (npmVersion instanceof URLVersion) {
+			return "url";
+		}
+		if (npmVersion instanceof GitHubVersion) {
+			return "github location";
+		}
+		if (npmVersion instanceof LocalPathVersion) {
+			return "local path";
+		}
+		return "unknown";
 	}
 
 	/** Check the dependencies section structure. */

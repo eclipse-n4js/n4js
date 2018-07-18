@@ -178,6 +178,10 @@ public class SEMVERMatcher {
 	static private boolean matches(VersionNumber proband, VersionRangeSet constraint) {
 		EList<VersionRange> cRanges = constraint.getRanges();
 
+		if (cRanges.isEmpty()) {
+			return true; // Empty versions are interpreted as "latest". Thus return true here.
+		}
+
 		for (VersionRange cRange : cRanges) {
 			List<SimpleVersion> simpleConstraints = SEMVERConverter.simplify(cRange);
 			boolean rangeMatches = matches(proband, simpleConstraints);

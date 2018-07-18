@@ -32,6 +32,11 @@ public class SEMVERSerializer implements ISerializer {
 		return new SEMVERSerializer().serialize(eobj);
 	}
 
+	/** Serializes the given {@link VersionComparator} */
+	static public String toString(VersionComparator vc) {
+		return new SEMVERSerializer().serialize(vc);
+	}
+
 	/** @return string representation of {@link URLVersion} */
 	public String serialize(URLVersion urlv) {
 		if (urlv == null)

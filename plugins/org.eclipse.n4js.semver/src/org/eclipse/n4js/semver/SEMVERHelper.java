@@ -53,6 +53,11 @@ public class SEMVERHelper {
 	/** @return {@link NPMVersion} of the given input string */
 	public NPMVersion parse(String semverString) {
 		IParseResult parseResult = getParseResult(semverString);
+		return parse(parseResult);
+	}
+
+	/** @return {@link NPMVersion} of the given parse result */
+	public NPMVersion parse(IParseResult parseResult) {
 		if (parseResult != null && parseResult.getRootASTElement() instanceof NPMVersion) {
 			NPMVersion npmVersion = (NPMVersion) parseResult.getRootASTElement();
 			return npmVersion;
@@ -62,9 +67,19 @@ public class SEMVERHelper {
 
 	/** @return {@link VersionRangeSet} of the given input string */
 	public VersionRangeSet parseVersionRangeSet(String semverString) {
-		IParseResult parseResult = getParseResult(semverString);
-		if (parseResult != null && parseResult.getRootASTElement() instanceof VersionRangeSet) {
-			VersionRangeSet vrs = (VersionRangeSet) parseResult.getRootASTElement();
+		NPMVersion npmVersion = parse(semverString);
+		if (npmVersion instanceof VersionRangeSet) {
+			VersionRangeSet vrs = (VersionRangeSet) npmVersion;
+			return vrs;
+		}
+		return null;
+	}
+
+	/** @return {@link VersionRangeSet} of the given {@link IParseResult} */
+	public VersionRangeSet parseVersionRangeSet(IParseResult semverParseResult) {
+		NPMVersion npmVersion = parse(semverParseResult);
+		if (npmVersion instanceof VersionRangeSet) {
+			VersionRangeSet vrs = (VersionRangeSet) npmVersion;
 			return vrs;
 		}
 		return null;
@@ -72,11 +87,8 @@ public class SEMVERHelper {
 
 	/** @return {@link VersionNumber} of the given {@link IParseResult} */
 	public VersionNumber parseVersionNumber(IParseResult semverParseResult) {
-		if (semverParseResult == null) {
-			return null;
-		}
-		VersionRangeSet vrs = (VersionRangeSet) semverParseResult.getRootASTElement();
-		if (vrs == null || vrs.getRanges().isEmpty()) {
+		VersionRangeSet vrs = parseVersionRangeSet(semverParseResult);
+		if (vrs == null) {
 			return null;
 		}
 		VersionRange firstVersionRange = vrs.getRanges().get(0);

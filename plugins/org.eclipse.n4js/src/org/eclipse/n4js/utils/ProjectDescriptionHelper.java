@@ -449,6 +449,7 @@ public class ProjectDescriptionHelper {
 	 */
 	private ProjectDescription convertToProjectDescription(URI location, JSONDocument packageJSON,
 			boolean applyDefaultValues) {
+
 		JSONValue rootValue = packageJSON.getContent();
 		if (rootValue instanceof JSONObject) {
 			ProjectDescription result = N4mfFactory.eINSTANCE.createProjectDescription();
@@ -461,6 +462,7 @@ public class ProjectDescriptionHelper {
 
 	private void convertRootPairs(URI location, ProjectDescription target, List<NameValuePair> rootPairs,
 			boolean applyDefaultValues) {
+
 		String valueOfTopLevelPropertyMain = null;
 		for (NameValuePair pair : rootPairs) {
 			String name = pair.getName();
@@ -678,9 +680,6 @@ public class ProjectDescriptionHelper {
 			return null;
 		}
 		VersionNumber result = semverHelper.parseVersionNumber(versionStr);
-		if (result == null) {
-			System.err.println("WARNING: invalid or unsupported version: " + versionStr);
-		}
 		return result;
 	}
 
