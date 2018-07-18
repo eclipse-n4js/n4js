@@ -30,6 +30,7 @@ import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.runner.RuntimeEnvironmentsHelper;
+import org.eclipse.n4js.runner.exceptions.DependencyCycleDetectedException;
 import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
@@ -143,12 +144,17 @@ public class GH_986_ExternalCircularDependencyAndRuntimeLibrariesTest extends Ab
 						+ ".",
 				projectOptional.isPresent());
 
-		final Set<RuntimeEnvironment> compatibleRuntimeEnvironments = runtimeEnvironmentsHelper
-				.findCompatibleRuntimeEnvironments(projectOptional.get());
+		try {
+			final Set<RuntimeEnvironment> compatibleRuntimeEnvironments = runtimeEnvironmentsHelper
+					.findCompatibleRuntimeEnvironments(projectOptional.get());
 
-		if (compatibleRuntimeEnvironments.size() < 1) {
-			Assert.fail("Expected the set of compatible runtime environments to be of size >= 1, but was "
-					+ compatibleRuntimeEnvironments.size());
+			if (compatibleRuntimeEnvironments.size() < 1) {
+				Assert.fail("Expected the set of compatible runtime environments to be of size >= 1, but was "
+						+ compatibleRuntimeEnvironments.size());
+			}
+		} catch (DependencyCycleDetectedException e) {
+			Assert.fail(
+					"Computation of the set of compatible runtime environments should not throw a dependency-cycle-exception.");
 		}
 
 		// tear down
@@ -175,12 +181,17 @@ public class GH_986_ExternalCircularDependencyAndRuntimeLibrariesTest extends Ab
 						+ ".",
 				projectOptional.isPresent());
 
-		final Set<RuntimeEnvironment> compatibleRuntimeEnvironments = runtimeEnvironmentsHelper
-				.findCompatibleRuntimeEnvironments(projectOptional.get());
+		try {
+			final Set<RuntimeEnvironment> compatibleRuntimeEnvironments = runtimeEnvironmentsHelper
+					.findCompatibleRuntimeEnvironments(projectOptional.get());
 
-		if (compatibleRuntimeEnvironments.size() < 1) {
-			Assert.fail("Expected the set of compatible runtime environments to be of size >= 1, but was "
-					+ compatibleRuntimeEnvironments.size());
+			if (compatibleRuntimeEnvironments.size() < 1) {
+				Assert.fail("Expected the set of compatible runtime environments to be of size >= 1, but was "
+						+ compatibleRuntimeEnvironments.size());
+			}
+		} catch (DependencyCycleDetectedException e) {
+			Assert.fail(
+					"Computation of the set of compatible runtime environments should not throw a dependency-cycle-exception.");
 		}
 
 		// tear down
