@@ -55,6 +55,7 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 	@Inject
 	private OperationCanceledManager cancelManager;
 
+	@Inject
 	private N4JSDocletParser docletParser;
 
 	override protected getFirstLine(EObject o) {
