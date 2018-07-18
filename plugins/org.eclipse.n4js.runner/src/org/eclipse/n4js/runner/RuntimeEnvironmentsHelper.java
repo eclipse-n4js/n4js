@@ -207,7 +207,7 @@ public class RuntimeEnvironmentsHelper {
 	private void collectProvidedRuntimeLibrariesCollector(IN4JSProject project, Collection<IN4JSProject> collection) {
 		final DependencyVisitor<IN4JSSourceContainerAware> visitor = new DependencyVisitor<IN4JSSourceContainerAware>() {
 			@Override
-			public Collection<? extends IN4JSSourceContainerAware> visit(
+			public Collection<? extends IN4JSSourceContainerAware> accept(
 					IN4JSSourceContainerAware sourceContainerAware) {
 				IN4JSProject p = (extractProject(sourceContainerAware));
 				if (isRuntimeLibrary(p))
@@ -386,12 +386,12 @@ public class RuntimeEnvironmentsHelper {
 		}
 
 		@Override
-		public Collection<? extends IN4JSSourceContainerAware> visit(IN4JSSourceContainerAware p) {
+		public Collection<? extends IN4JSSourceContainerAware> accept(IN4JSSourceContainerAware p) {
 			if (p instanceof IN4JSProject && projectFilter.test((IN4JSProject) p)) {
 				// collect runtime library projects only
 				depsRuntimeLibraries.add((IN4JSProject) p);
 			}
-			return super.visit(p);
+			return super.accept(p);
 		}
 	}
 }

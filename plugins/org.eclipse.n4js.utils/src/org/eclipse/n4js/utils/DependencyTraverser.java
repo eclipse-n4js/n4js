@@ -24,6 +24,11 @@ public class DependencyTraverser<T> {
 	/**
 	 * A visitor for traversing dependency trees.
 	 *
+	 * The {@link #accept(Object)} method of this visitor will be invoked for every visited node.
+	 *
+	 * However, in contrast to a pure visitor pattern, the {@link #accept(Object)} method furthermore specifies the
+	 * strategy with which the list of dependencies of a given node is obtained.
+	 *
 	 * @See {@link DependencyTraverser}.
 	 */
 	@FunctionalInterface
@@ -31,7 +36,7 @@ public class DependencyTraverser<T> {
 		/**
 		 * Visit the given dependency {@code node} and return with all its direct dependencies.
 		 */
-		Collection<? extends NodeT> visit(NodeT node);
+		Collection<? extends NodeT> accept(NodeT node);
 	}
 
 	/**
@@ -149,7 +154,7 @@ public class DependencyTraverser<T> {
 			// should visit node:
 			if (guard.tryNext(node)) {
 				// load dependency and analyze.
-				final Collection<? extends T> dependencies = this.visitor.visit(node);
+				final Collection<? extends T> dependencies = this.visitor.accept(node);
 
 				if (dependencies != null) {
 					for (final T dependency : dependencies) {

@@ -40,7 +40,7 @@ class SourceContainerAwareDependencyVisitor implements DependencyVisitor<IN4JSSo
 		this.ignoreExternalValidationProjects = ignoreExternalValidationProjects;
 	}
 	
-	override visit(IN4JSSourceContainerAware p) {
+	override accept(IN4JSSourceContainerAware p) {
 		if (ignoreExternalValidationProjects) {
 			// this is used if external projects of project type VALIDATION are requested to be ignored
 			return ImmutableList.copyOf(p.allDirectDependencies.filter[dep|!isExternalValidation(dep)]);
