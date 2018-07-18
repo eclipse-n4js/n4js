@@ -538,7 +538,7 @@ public class N4jscBase implements IApplication {
 				// run and dispatch.
 				doCompileAndTestAndRun(buildSet);
 			}
-		} catch (ExitCodeException e) {
+		} catch (Throwable e) {
 			dumpThrowable(e);
 			throw e;
 		} finally {
