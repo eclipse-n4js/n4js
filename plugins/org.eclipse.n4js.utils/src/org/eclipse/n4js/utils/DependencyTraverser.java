@@ -70,10 +70,9 @@ public class DependencyTraverser<T> {
 	 *
 	 * Apart from that see {@link #DependencyTraverser(Object, Equivalence, DependencyVisitor, boolean)}.
 	 */
-	@SuppressWarnings("unchecked")
 	public DependencyTraverser(final T rootNode, DependencyVisitor<T> visitor,
 			boolean ignoreCycles) {
-		this(rootNode, (Equivalence<T>) Equivalence.identity(), visitor, ignoreCycles);
+		this(rootNode, Equivalence.equals(), visitor, ignoreCycles);
 	}
 
 	/**
@@ -89,9 +88,8 @@ public class DependencyTraverser<T> {
 	 *            Specifies whether dependency cycles should be ignored (e.g. do not follow cyclic edges, only visit
 	 *            every node once).
 	 */
-	public DependencyTraverser(final T rootNode, final Equivalence<T> equivalence,
+	public DependencyTraverser(final T rootNode, final Equivalence<? super T> equivalence,
 			DependencyVisitor<T> visitor, boolean ignoreCycles) {
-
 		this.rootNode = rootNode;
 		this.guard = new RecursionGuard<>(equivalence);
 		this.pathGuard = new RecursionGuard<>(equivalence);
