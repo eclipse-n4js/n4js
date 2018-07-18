@@ -34,6 +34,7 @@ import org.eclipse.n4js.generator.N4JSCompositeGenerator;
 import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.internal.N4JSModel;
+import org.eclipse.n4js.packagejson.PackageJsonHelper;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
@@ -357,6 +358,11 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	/** Delegate to shared injector */
 	public Provider<ProjectDescriptionLoader> provideProjectDescriptionLoader() {
 		return Access.contributedProvider(ProjectDescriptionLoader.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<PackageJsonHelper> providePackageJsonHelper() {
+		return Access.contributedProvider(PackageJsonHelper.class);
 	}
 
 	/** Delegate to shared injector */

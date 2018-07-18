@@ -44,6 +44,7 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
+import org.eclipse.n4js.packagejson.PackageJsonHelper;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.runner.RunnerFrontEnd;
 import org.eclipse.n4js.runner.RunnerHelper;
@@ -127,6 +128,8 @@ public class TesterModule implements Module {
 					.toProvider(() -> n4jsInjector.getInstance(StatusHelper.class));
 			binder.bind(ProjectDescriptionLoader.class)
 					.toProvider(() -> n4jsInjector.getInstance(ProjectDescriptionLoader.class));
+			binder.bind(PackageJsonHelper.class)
+					.toProvider(() -> n4jsInjector.getInstance(PackageJsonHelper.class));
 		}
 
 		binder.bind(TesterRegistry.class);

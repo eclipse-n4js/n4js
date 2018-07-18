@@ -37,6 +37,7 @@ import org.eclipse.n4js.generator.IWorkspaceMarkerSupport;
 import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.internal.N4JSModel;
+import org.eclipse.n4js.packagejson.PackageJsonHelper;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.preferences.OsgiExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectModel.IN4JSCore;
@@ -115,6 +116,7 @@ public class ContributingModule implements Module {
 		binder.bind(InternalN4JSWorkspace.class).to(EclipseBasedN4JSWorkspace.class);
 		binder.bind(EclipseBasedN4JSWorkspace.class);
 		binder.bind(ProjectDescriptionLoader.class);
+		binder.bind(PackageJsonHelper.class);
 		binder.bind(IWorkspaceRoot.class).toProvider(new Provider<IWorkspaceRoot>() {
 			@Inject
 			IWorkspace workspace;
