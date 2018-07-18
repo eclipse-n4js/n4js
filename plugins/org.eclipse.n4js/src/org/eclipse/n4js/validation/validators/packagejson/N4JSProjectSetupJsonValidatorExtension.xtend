@@ -337,7 +337,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	def checkCyclicDependencies(JSONDocument document) {
 		val project = findProject(document.eResource.URI).orNull;
 		if (null !== project) {
-			val result = new SourceContainerAwareDependencyTraverser(project, true).result;
+			val result = new SourceContainerAwareDependencyTraverser(project, true).findCycle;
 			if (result.hasCycle) {
 				// add issue to 'name' property or alternatively to the whole document
 				val nameValue = getSingleDocumentValue(ProjectDescriptionHelper.PROP__NAME);

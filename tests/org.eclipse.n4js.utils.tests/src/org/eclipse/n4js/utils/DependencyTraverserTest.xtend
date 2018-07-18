@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.utils
 
-import org.eclipse.n4js.utils.DependencyTraverser.DependencyCycle
 import org.junit.Assert
 import org.junit.Test
 
@@ -25,7 +24,7 @@ class DependencyTraverserTest {
 			1 -> #[2],
 			2 -> #[3]
 		};
-		new DependencyTraverser(1, [graph.get(it)]).result.assertEquals('');
+		new DependencyTraverser(1, [graph.get(it)], false).findCycle.assertEquals('');
 	}
 
 	@Test
@@ -33,7 +32,7 @@ class DependencyTraverserTest {
 		val graph = #{
 			1 -> #[1]
 		};
-		new DependencyTraverser(1, [graph.get(it)]).result.assertEquals('''[1] -> [1]''');
+		new DependencyTraverser(1, [graph.get(it)], false).findCycle.assertEquals('''[1] -> [1]''');
 	}
 
 	@Test
@@ -42,7 +41,7 @@ class DependencyTraverserTest {
 			1 -> #[2],
 			2 -> #[1]
 		};
-		new DependencyTraverser(1, [graph.get(it)]).result.assertEquals('''[1] -> 2 -> [1]''');
+		new DependencyTraverser(1, [graph.get(it)], false).findCycle.assertEquals('''[1] -> 2 -> [1]''');
 	}
 
 	@Test
@@ -52,18 +51,55 @@ class DependencyTraverserTest {
 			2 -> #[3],
 			3 -> #[1]
 		};
-		new DependencyTraverser(1, [graph.get(it)]).result.assertEquals('''[1] -> 2 -> 3 -> [1]''');
+		new DependencyTraverser(1, [graph.get(it)], false).findCycle.assertEquals('''[1] -> 2 -> 3 -> [1]''');
 	}
 
 	@Test
 	def void testHook() {
+		val visitedNodes = newArrayList;
 		val graph = #{
 			1 -> #[2],
 			2 -> #[3],
 			3 -> #[4],
 			4 -> #[3]
 		};
-		new DependencyTraverser(1, [graph.get(it)]).result.assertEquals('''1 -> 2 -> [3] -> 4 -> [3]''');
+		new DependencyTraverser(1, [visitedNodes.add(it); graph.get(it)], false).findCycle.assertEquals('''1 -> 2 -> [3] -> 4 -> [3]''');
+		Assert.assertEquals("Not all nodes were visited.", "[1, 2, 3, 4]", visitedNodes.toString)
+	}
+	
+	@Test
+	def void testNoCycleIgnoreCycles() {
+		val visitedNodes = newArrayList;
+		val graph = #{
+			1 -> #[2],
+			2 -> #[3]
+		};
+		new DependencyTraverser(1, [visitedNodes.add(it); graph.get(it)], true).findCycle.assertEquals('');
+		Assert.assertEquals("All nodes were visited.", "[1, 2, 3]", visitedNodes.toString)
+	}
+	
+	@Test
+	def void testSelfCycleIgnoreCycles() {
+		val visitedNodes = newArrayList;
+		val graph = #{
+			1 -> #[1, 2]
+		};
+		new DependencyTraverser(1, [visitedNodes.add(it); graph.get(it)], true).findCycle.assertEquals('''[1] -> [1]''');
+		Assert.assertEquals("All nodes were visited.", "[1, 2]", visitedNodes.toString)
+	}
+	
+	@Test
+	def void testHookIgnoreCycles() {
+		val visitedNodes = newArrayList;
+		val graph = #{
+			1 -> #[2],
+			2 -> #[3],
+			3 -> #[4],
+			4 -> #[3, 5]
+		};
+		new DependencyTraverser(1, [visitedNodes.add(it); return graph.get(it)], true).findCycle.assertEquals('''1 -> 2 -> [3] -> 4 -> [3]''');
+		
+		Assert.assertEquals("All nodes were visited", "[1, 2, 3, 4, 5]", visitedNodes.toString)
 	}
 
 	def private assertEquals(DependencyCycle<?> actual, String expected) {

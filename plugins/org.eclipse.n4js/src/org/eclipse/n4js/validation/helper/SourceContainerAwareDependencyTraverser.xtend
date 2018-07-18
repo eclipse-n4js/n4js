@@ -11,14 +11,13 @@
 package org.eclipse.n4js.validation.helper
 
 import com.google.common.base.Equivalence
-import com.google.common.base.Function
 import com.google.common.base.Objects
 import com.google.common.collect.ImmutableList
-import java.util.Collection
 import org.eclipse.n4js.n4mf.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware
 import org.eclipse.n4js.utils.DependencyTraverser
+import org.eclipse.n4js.utils.DependencyTraverser.DependencyVisitor
 
 /**
  * Class for traversing {@link IN4JSSourceContainerAware source container aware} dependencies and
@@ -27,13 +26,18 @@ import org.eclipse.n4js.utils.DependencyTraverser
 class SourceContainerAwareDependencyTraverser extends DependencyTraverser<IN4JSSourceContainerAware> {
 
 	// this is used by default:
-	static val DEPENDENCIES_FUNC = [ IN4JSSourceContainerAware p |
-		p.allDirectDependencies
-	];
+	static val DEPENDENCIES_VISITOR = new DependencyVisitor<IN4JSSourceContainerAware> () {
+		override visit(IN4JSSourceContainerAware p) {
+			return p.allDirectDependencies;
+		}
+	} 
+	
 	// this is used if external projects of project type VALIDATION are requested to be ignored:
-	static val DEPENDENCIES_FUNC_IGNORE_EXTERNAL_VALIDATION = [ IN4JSSourceContainerAware p |
-		ImmutableList.copyOf(p.allDirectDependencies.filter[dep|!isExternalValidation(dep)]);
-	] as Function<IN4JSSourceContainerAware, Collection<? extends IN4JSSourceContainerAware>>;
+	static val DEPENDENCIES_VISITOR_IGNORE_EXTERNAL_VALIDATION = new DependencyVisitor<IN4JSSourceContainerAware> () {
+		override visit(IN4JSSourceContainerAware p) {
+			return ImmutableList.copyOf(p.allDirectDependencies.filter[dep|!isExternalValidation(dep)]);
+		}
+	} 
 
 	/** Creates a new traverser instance with the given root node. */
 	new(IN4JSSourceContainerAware rootNode) {
@@ -45,10 +49,8 @@ class SourceContainerAwareDependencyTraverser extends DependencyTraverser<IN4JSS
 		super(
 			rootNode,
 			SourceContainerAwareEquivalence.INSTANCE,
-			if (ignoreExternalValidationProjects)
-				DEPENDENCIES_FUNC_IGNORE_EXTERNAL_VALIDATION
-			else
-				DEPENDENCIES_FUNC
+			(if (ignoreExternalValidationProjects) DEPENDENCIES_VISITOR_IGNORE_EXTERNAL_VALIDATION else DEPENDENCIES_VISITOR),
+			false
 		)
 	}
 
