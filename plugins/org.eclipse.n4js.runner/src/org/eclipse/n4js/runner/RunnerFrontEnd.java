@@ -375,7 +375,7 @@ public class RunnerFrontEnd {
 	 */
 	private List<String> getInitModulesPathsFrom(IN4JSProject runtimeEnvironment) {
 		Set<IN4JSProject> environemntWithAncestors = hRuntimeEnvironments
-				.getEnvironmentWithAncestors(runtimeEnvironment);
+				.getRuntimeEnvironmentAndAllExtendedEnvironments(runtimeEnvironment);
 		return runnerHelper.getInitModulePaths(new ArrayList<>(environemntWithAncestors));
 	}
 
