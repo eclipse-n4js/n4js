@@ -105,7 +105,7 @@ public class PackageJsonUtils {
 	}
 
 	/**
-	 * Converts given JSON value to a {@link ModuleFilter}; returns <code>null</code> if not possible.
+	 * Converts given name/value pair to a {@link ModuleFilter}; returns <code>null</code> if not possible.
 	 * <p>
 	 * Expected format of argument:
 	 *
@@ -125,18 +125,15 @@ public class PackageJsonUtils {
 	 * ]
 	 * </pre>
 	 */
-	public static ModuleFilter asModuleFilterOrNull(JSONValue jsonValue) {
-		if (jsonValue instanceof NameValuePair) {
-			NameValuePair pair = (NameValuePair) jsonValue;
-			ModuleFilterType type = parseModuleFilterType(pair.getName());
-			if (type != null) {
-				List<ModuleFilterSpecifier> mspecs = asModuleFilterSpecifierInArrayOrEmpty(pair.getValue());
-				if (!mspecs.isEmpty()) {
-					ModuleFilter mfilter = N4mfFactory.eINSTANCE.createModuleFilter();
-					mfilter.setModuleFilterType(type);
-					mfilter.getModuleSpecifiers().addAll(mspecs);
-					return mfilter;
-				}
+	public static ModuleFilter asModuleFilterOrNull(NameValuePair pair) {
+		ModuleFilterType type = parseModuleFilterType(pair.getName());
+		if (type != null) {
+			List<ModuleFilterSpecifier> mspecs = asModuleFilterSpecifierInArrayOrEmpty(pair.getValue());
+			if (!mspecs.isEmpty()) {
+				ModuleFilter mfilter = N4mfFactory.eINSTANCE.createModuleFilter();
+				mfilter.setModuleFilterType(type);
+				mfilter.getModuleSpecifiers().addAll(mspecs);
+				return mfilter;
 			}
 		}
 		return null;
@@ -144,11 +141,11 @@ public class PackageJsonUtils {
 
 	/**
 	 * If the given JSON value is a {@link JSONObject}, returns its name/value pairs converted to {@link ModuleFilter}s
-	 * with {@link #asModuleFilterOrNull(JSONValue)}; otherwise an empty list is returned.
+	 * with {@link #asModuleFilterOrNull(NameValuePair)}; otherwise an empty list is returned.
 	 */
 	public static List<ModuleFilter> asModuleFiltersInObjectOrEmpty(JSONValue jsonValue) {
 		return asNameValuePairsOrEmpty(jsonValue).stream()
-				.map(pair -> asModuleFilterOrNull((JSONValue) pair))
+				.map(PackageJsonUtils::asModuleFilterOrNull)
 				.filter(mfilter -> mfilter != null)
 				.collect(Collectors.toList());
 	}
@@ -209,7 +206,8 @@ public class PackageJsonUtils {
 	}
 
 	/**
-	 * Converts given JSON value to a {@link SourceContainerDescription}; returns <code>null</code> if not possible.
+	 * Converts given name/value pair to a {@link SourceContainerDescription}; returns <code>null</code> if not
+	 * possible.
 	 * <p>
 	 * Expected format of argument:
 	 *
@@ -226,30 +224,27 @@ public class PackageJsonUtils {
 	 * ]
 	 * </pre>
 	 */
-	public static SourceContainerDescription asSourceContainerDescriptionOrNull(JSONValue jsonValue) {
-		if (jsonValue instanceof NameValuePair) {
-			NameValuePair pair = (NameValuePair) jsonValue;
-			SourceContainerType type = parseSourceContainerType(pair.getName());
-			List<String> paths = asStringsInArrayOrEmpty(pair.getValue());
-			if (type != null && !paths.isEmpty()) {
-				SourceContainerDescription sourceContainerDescription = N4mfFactory.eINSTANCE
-						.createSourceContainerDescription();
-				sourceContainerDescription.setSourceContainerType(type);
-				sourceContainerDescription.getPathsRaw().addAll(paths);
-				return sourceContainerDescription;
-			}
+	public static SourceContainerDescription asSourceContainerDescriptionOrNull(NameValuePair pair) {
+		SourceContainerType type = parseSourceContainerType(pair.getName());
+		List<String> paths = asStringsInArrayOrEmpty(pair.getValue());
+		if (type != null && !paths.isEmpty()) {
+			SourceContainerDescription sourceContainerDescription = N4mfFactory.eINSTANCE
+					.createSourceContainerDescription();
+			sourceContainerDescription.setSourceContainerType(type);
+			sourceContainerDescription.getPathsRaw().addAll(paths);
+			return sourceContainerDescription;
 		}
 		return null;
 	}
 
 	/**
 	 * If the given JSON value is a {@link JSONObject}, returns its name/value pairs converted to
-	 * {@link SourceContainerDescription}s with {@link #asSourceContainerDescriptionOrNull(JSONValue)}; otherwise an
+	 * {@link SourceContainerDescription}s with {@link #asSourceContainerDescriptionOrNull(NameValuePair)}; otherwise an
 	 * empty list is returned.
 	 */
 	public static List<SourceContainerDescription> asSourceContainerDescriptionsOrEmpty(JSONValue sourcesSection) {
 		return asNameValuePairsOrEmpty(sourcesSection).stream()
-				.map(pair -> asSourceContainerDescriptionOrNull((JSONValue) pair))
+				.map(PackageJsonUtils::asSourceContainerDescriptionOrNull)
 				.filter(scd -> scd != null)
 				.collect(Collectors.toList());
 	}
