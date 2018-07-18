@@ -184,7 +184,8 @@ public class NpmCLI {
 
 	private String getActualVersion(MultiStatus batchStatus, LibraryChange reqChg, Path completePath) {
 		URI location = URI.createFileURI(completePath.toString());
-		String versionStr = projectDescriptionHelper.loadVersionFromProjectDescriptionAtLocation(location);
+		String versionStr = projectDescriptionHelper.getVersionAndN4JSNatureFromProjectDescriptionAtLocation(location)
+				.getFirst();
 		if (versionStr == null) {
 			String msg = "Error reading package json when " + reqChg.toString();
 			IStatus packJsonError = statusHelper.createError(msg);

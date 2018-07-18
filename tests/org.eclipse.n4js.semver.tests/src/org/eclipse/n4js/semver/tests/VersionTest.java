@@ -15,11 +15,12 @@ import java.util.List;
 
 import org.eclipse.n4js.semver.SEMVERInjectorProvider;
 import org.eclipse.n4js.semver.SEMVERMatcher;
+import org.eclipse.n4js.semver.SEMVERMatcher.RelationKind;
 import org.eclipse.n4js.semver.SEMVERMatcher.VersionNumberRelation;
-import org.eclipse.n4js.semver.model.SEMVERSerializer;
 import org.eclipse.n4js.semver.SEMVERParseHelper;
 import org.eclipse.n4js.semver.SEMVERUtils;
 import org.eclipse.n4js.semver.SEMVER.VersionNumber;
+import org.eclipse.n4js.semver.model.SEMVERSerializer;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.XtextRunner;
 import org.junit.Assert;
@@ -145,15 +146,17 @@ public class VersionTest {
 		VersionNumber lower = version(1, 2, 3, "alpha", null);
 		VersionNumber greater = version(1, 2, 3, "beta", null);
 		VersionNumber greatest = version(1, 2, 3);
-		Assert.assertEquals(VersionNumberRelation.Equal, SEMVERMatcher.relation(lower, lower, true));
-		Assert.assertEquals(VersionNumberRelation.Smaller, SEMVERMatcher.relation(lower, greater, true));
-		Assert.assertEquals(VersionNumberRelation.Smaller, SEMVERMatcher.relation(lower, greatest, true));
-		Assert.assertEquals(VersionNumberRelation.Greater, SEMVERMatcher.relation(greater, lower, true));
-		Assert.assertEquals(VersionNumberRelation.Equal, SEMVERMatcher.relation(greater, greater, true));
-		Assert.assertEquals(VersionNumberRelation.Smaller, SEMVERMatcher.relation(greater, greatest, true));
-		Assert.assertEquals(VersionNumberRelation.Greater, SEMVERMatcher.relation(greatest, lower, true));
-		Assert.assertEquals(VersionNumberRelation.Greater, SEMVERMatcher.relation(greatest, greater, true));
-		Assert.assertEquals(VersionNumberRelation.Equal, SEMVERMatcher.relation(greatest, greatest, true));
+
+		RelationKind relationKind = RelationKind.SemverMatchAllowPrereleaseTags;
+		Assert.assertEquals(VersionNumberRelation.Equal, SEMVERMatcher.relation(lower, lower, relationKind));
+		Assert.assertEquals(VersionNumberRelation.Smaller, SEMVERMatcher.relation(lower, greater, relationKind));
+		Assert.assertEquals(VersionNumberRelation.Smaller, SEMVERMatcher.relation(lower, greatest, relationKind));
+		Assert.assertEquals(VersionNumberRelation.Greater, SEMVERMatcher.relation(greater, lower, relationKind));
+		Assert.assertEquals(VersionNumberRelation.Equal, SEMVERMatcher.relation(greater, greater, relationKind));
+		Assert.assertEquals(VersionNumberRelation.Smaller, SEMVERMatcher.relation(greater, greatest, relationKind));
+		Assert.assertEquals(VersionNumberRelation.Greater, SEMVERMatcher.relation(greatest, lower, relationKind));
+		Assert.assertEquals(VersionNumberRelation.Greater, SEMVERMatcher.relation(greatest, greater, relationKind));
+		Assert.assertEquals(VersionNumberRelation.Equal, SEMVERMatcher.relation(greatest, greatest, relationKind));
 	}
 
 	private void assertMissing(VersionNumber actual) {

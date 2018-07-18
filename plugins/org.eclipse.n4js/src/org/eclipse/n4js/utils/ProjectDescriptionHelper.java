@@ -62,6 +62,8 @@ import org.eclipse.n4js.semver.SEMVERHelper;
 import org.eclipse.n4js.semver.SEMVER.VersionNumber;
 import org.eclipse.n4js.semver.SEMVER.VersionRangeSet;
 import org.eclipse.xtext.resource.XtextResourceSet;
+import org.eclipse.xtext.util.Pair;
+import org.eclipse.xtext.util.Tuples;
 
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
@@ -224,14 +226,19 @@ public class ProjectDescriptionHelper {
 	/**
 	 * Loads the project description of the N4JS project at the given {@code location} and returns the version string or
 	 * <code>null</code> if undefined or in case of error.
+	 *
+	 * @return A pair that contains (1) the version as a String and (2) a Boolean that is true iff the project
+	 *         description has a N4JS nature
 	 */
-	public String loadVersionFromProjectDescriptionAtLocation(URI location) {
+	public Pair<String, Boolean> getVersionAndN4JSNatureFromProjectDescriptionAtLocation(URI location) {
 		JSONDocument packageJSON = loadPackageJSONAtLocation(location);
 		if (packageJSON == null) {
 			return null;
 		}
+		boolean hasN4JSNature = JSONModelUtils.getProperty(packageJSON, PROP__N4JS).isPresent();
 		JSONValue versionValue = JSONModelUtils.getProperty(packageJSON, PROP__VERSION).orElse(null);
-		return asStringOrNull(versionValue);
+		Pair<String, Boolean> result = Tuples.create(asStringOrNull(versionValue), hasN4JSNature);
+		return result;
 	}
 
 	/**

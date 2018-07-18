@@ -208,8 +208,8 @@ public class SEMVERUtils {
 		}
 
 		List<VersionNumber> sortedVersions = new ArrayList<>(versions);
-		Collections.sort(sortedVersions, SEMVERMatcher::compare);
-		int index = Collections.binarySearch(sortedVersions, toFind, SEMVERMatcher::compare);
+		Collections.sort(sortedVersions, SEMVERMatcher::compareLoose);
+		int index = Collections.binarySearch(sortedVersions, toFind, SEMVERMatcher::compareLoose);
 		if (index > 0) {
 			return sortedVersions.get(index);
 		}

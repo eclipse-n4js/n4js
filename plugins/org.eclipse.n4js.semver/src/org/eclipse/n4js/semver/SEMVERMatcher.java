@@ -38,6 +38,27 @@ public class SEMVERMatcher {
 		}
 	}
 
+	/** Defines how Semver versions are compared to each other or to version constraints. */
+	public enum RelationKind {
+		/** Comparison with the notion of Semver. Can return {@link VersionNumberRelation#Unrelated} */
+		SemverMatch,
+		/**
+		 * Like {@link RelationKind#SemverMatch} but a proband is checked on a constraint with the notion of
+		 * allowPreReleaseTag iff:
+		 * <ul>
+		 * <li/>the proband has a pre-release tag,
+		 * <li/>the constraint does not have a pre-release tag, and
+		 * <li/>the proband was already successfully checked against another constraint that had a pre-release tag.
+		 * </ul>
+		 */
+		SemverMatchAllowPrereleaseTags,
+		/**
+		 * Comparison that always returns with either {@link VersionNumberRelation#Greater},
+		 * {@link VersionNumberRelation#Smaller} or {@link VersionNumberRelation#Equal}.
+		 */
+		LooseCompare
+	}
+
 	/**
 	 * @return true iff the given arguments will yield a useful result when passed to the method
 	 *         {@link #matches(VersionNumber, VersionRangeSet)}
@@ -94,11 +115,12 @@ public class SEMVERMatcher {
 	 * @return relation between two given {@link VersionNumber}s
 	 */
 	static public VersionNumberRelation relation(VersionNumber a, VersionNumber limit) {
-		return relation(a, limit, false);
+		return relation(a, limit, RelationKind.SemverMatch);
 	}
 
 	/**
-	 * Compares two SEMVER {@link VersionNumber}s A and B.
+	 * Compares two SEMVER {@link VersionNumber}s A and B and respects SEMVER semantics regarding pre-release tags.
+	 * Behaves like {@link #relation(VersionNumber, VersionNumber)}. Always returns one of the following:
 	 * <ul>
 	 * <li/>Returns 0 iff A and B are equal.
 	 * <li/>Returns 1 iff A is greater than B.
@@ -108,8 +130,28 @@ public class SEMVERMatcher {
 	 * Note that this function cannot cover cases when one version is checked against multiple other versions. In these
 	 * cases the method {@link #matches(VersionNumber, VersionRangeSet)} should be used.
 	 */
-	static public int compare(VersionNumber a, VersionNumber b) {
-		VersionNumberRelation versionRelation = relation(a, b, false);
+	static public int compareSemver(VersionNumber a, VersionNumber b) {
+		VersionNumberRelation versionRelation = relation(a, b, RelationKind.SemverMatch);
+		return compareResultToInt(versionRelation);
+	}
+
+	/**
+	 * Compares two SEMVER {@link VersionNumber}s A and B <b>but does not</b> respect SEMVER semantics regarding
+	 * pre-release tags. Always returns one of the following:
+	 * <ul>
+	 * <li/>Returns 0 iff A and B are equal.
+	 * <li/>Returns 1 iff A is greater than B.
+	 * <li/>Returns -1 iff A is smaller than B.
+	 * </ul>
+	 * Note that this function cannot cover cases when one version is checked against multiple other versions. In these
+	 * cases the method {@link #matches(VersionNumber, VersionRangeSet)} should be used.
+	 */
+	static public int compareLoose(VersionNumber a, VersionNumber b) {
+		VersionNumberRelation versionRelation = relation(a, b, RelationKind.LooseCompare);
+		return compareResultToInt(versionRelation);
+	}
+
+	private static int compareResultToInt(VersionNumberRelation versionRelation) {
 		switch (versionRelation) {
 		case Equal:
 			return 0;
@@ -171,19 +213,28 @@ public class SEMVERMatcher {
 		// check constraints on the given proband
 		for (int i = 0; i < simpleConstraints.size(); i++) {
 			SimpleVersion simpleConstraint = simpleConstraints.get(i);
+			RelationKind relationKind = computeSemverRelationKind(proband, i, simpleConstraint);
 
-			// see definition of allowPreReleaseTag in #matches(VersionNumber, SimpleVersion, boolean)
-			boolean allowPreReleaseTag = true;
-			allowPreReleaseTag &= proband.hasPreReleaseTag();
-			allowPreReleaseTag &= !simpleConstraint.getNumber().hasPreReleaseTag();
-			allowPreReleaseTag &= i > 0;
-
-			boolean constraintMatchesProband = matches(proband, simpleConstraint, allowPreReleaseTag);
+			boolean constraintMatchesProband = matches(proband, simpleConstraint, relationKind);
 			if (!constraintMatchesProband) {
 				return false;
 			}
 		}
 		return true;
+	}
+
+	private static RelationKind computeSemverRelationKind(VersionNumber proband, int i,
+			SimpleVersion simpleConstraint) {
+
+		RelationKind relationKind = RelationKind.SemverMatch;
+		boolean allowPreReleaseTag = true;
+		allowPreReleaseTag &= proband.hasPreReleaseTag();
+		allowPreReleaseTag &= !simpleConstraint.getNumber().hasPreReleaseTag();
+		allowPreReleaseTag &= i > 0;
+		if (allowPreReleaseTag) {
+			relationKind = RelationKind.SemverMatchAllowPrereleaseTags;
+		}
+		return relationKind;
 	}
 
 	/** This compareTo method clusters {@link SimpleVersion}s that do have a pre-release tag and those that do not. */
@@ -199,20 +250,10 @@ public class SEMVERMatcher {
 		throw new IllegalStateException("The Impossible State.");
 	}
 
-	/**
-	 * Checks whether a given proband matches the given constraint.
-	 * <p>
-	 * <b>Definition of allowPreReleaseTag:</b><br/>
-	 * A proband is checked on a constraint with the notion of allowPreReleaseTag iff:
-	 * <ul>
-	 * <li/>the proband has a pre-release tag,
-	 * <li/>the constraint does not have a pre-release tag, and
-	 * <li/>the proband was already successfully checked against another constraint that had a pre-release tag.
-	 * </ul>
-	 */
-	static private boolean matches(VersionNumber proband, SimpleVersion constraint, boolean allowPreReleaseTag) {
+	/** Checks whether a given proband matches the given constraint. */
+	static private boolean matches(VersionNumber proband, SimpleVersion constraint, RelationKind relationKind) {
 		VersionNumber constraintVN = constraint.getNumber();
-		VersionNumberRelation relation = relation(proband, constraintVN, allowPreReleaseTag);
+		VersionNumberRelation relation = relation(proband, constraintVN, relationKind);
 		if (relation == VersionNumberRelation.Unrelated) {
 			return false;
 		}
@@ -253,12 +294,13 @@ public class SEMVERMatcher {
 	 * {@code limit} as a context into account. Only if the context has a pre-release tag, both of the versions can have
 	 * a relation other than {@link VersionNumberRelation#Unrelated}.<br/>
 	 * However, SEMVER also specifies a relation between versions where one has a pre-release tag and the other does
-	 * not. To enable this relaxed mode, pass {@code true} as a value for the parameter {@code allowPreReleaseTag}.
+	 * not. To enable this relaxed mode, pass {@link RelationKind#SemverMatchAllowPrereleaseTags} as a value for the
+	 * parameter {@code relationKind}.
 	 */
-	static public VersionNumberRelation relation(VersionNumber vn, VersionNumber limit, boolean allowPreReleaseTag) {
+	static public VersionNumberRelation relation(VersionNumber vn, VersionNumber limit, RelationKind relationKind) {
 		boolean qHasPR = vn.hasPreReleaseTag();
 		boolean lHasPR = limit.hasPreReleaseTag();
-		if (!allowPreReleaseTag && qHasPR && !lHasPR) {
+		if (relationKind != RelationKind.SemverMatchAllowPrereleaseTags && qHasPR && !lHasPR) {
 			return VersionNumberRelation.Unrelated;
 		}
 		if (qHasPR && lHasPR) {
@@ -270,7 +312,8 @@ public class SEMVERMatcher {
 			equalVersionsNumbers &= equalVersionsNumbers && vn.getPatch().getNumber() == limit.getPatch().getNumber();
 			if (equalVersionsNumbers) {
 				return relationOfQualifiers(vn, limit);
-			} else {
+			}
+			if (relationKind != RelationKind.LooseCompare) {
 				return VersionNumberRelation.Unrelated;
 			}
 		}

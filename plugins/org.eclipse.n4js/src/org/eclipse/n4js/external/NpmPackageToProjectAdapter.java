@@ -178,19 +178,26 @@ public class NpmPackageToProjectAdapter {
 	 * @return a status representing the outcome of performed the operation.
 	 */
 	IStatus addTypeDefinitions(File packageRoot, File definitionsFolder) {
+		URI packageURI = URI.createFileURI(packageRoot.getAbsolutePath());
+		Pair<String, Boolean> info = projectDescriptionHelper
+				.getVersionAndN4JSNatureFromProjectDescriptionAtLocation(packageURI);
+		boolean hasN4JSNature = info.getSecond();
+		String packageJsonVersion = info.getFirst();
+
+		if (hasN4JSNature) {
+			return statusHelper.OK();
+		}
 
 		String packageName = packageRoot.getName();
 		File packageN4JSDsRoot = new File(definitionsFolder, packageName);
 		if (!packageN4JSDsRoot.isDirectory()) {
-			String message = "No type definitions found for '" + packageRoot + "' npm package at '" + packageN4JSDsRoot
-					+ "'";
+			String message = "No type definitions found for '" + packageRoot + "' npm package at '" + packageN4JSDsRoot;
+			message += "'" + (!packageN4JSDsRoot.isDirectory() ? " (which is not a directory)" : "") + ".";
 			logger.logInfo(message);
-			LOGGER.info(message + (!packageN4JSDsRoot.isDirectory() ? " (which is not a directory)" : "") + ".");
+			LOGGER.info(message);
 			return statusHelper.OK();
 		}
 
-		URI packageURI = URI.createFileURI(packageRoot.getAbsolutePath());
-		String packageJsonVersion = projectDescriptionHelper.loadVersionFromProjectDescriptionAtLocation(packageURI);
 		VersionNumber packageVersion = semverHelper.parseVersionNumber(packageJsonVersion);
 		if (packageVersion == null) {
 			final String message = "Cannot read version from package.json of npm package '" + packageName + "'.";
@@ -199,7 +206,7 @@ public class NpmPackageToProjectAdapter {
 			return statusHelper.createError(message);
 		}
 		String[] list = packageN4JSDsRoot.list();
-		Set<VersionNumber> availableTDVersions = new TreeSet<>(SEMVERMatcher::compare);
+		Set<VersionNumber> availableTDVersions = new TreeSet<>(SEMVERMatcher::compareLoose);
 		for (int i = 0; i < list.length; i++) {
 			String version = list[i];
 			VersionNumber availableTypeDefinitionsVersion = semverHelper.parseVersionNumber(version);
