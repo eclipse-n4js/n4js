@@ -54,7 +54,7 @@ public class NpmCLI {
 	private NpmLogger logger;
 
 	@Inject
-	private ProjectDescriptionLoader ProjectDescriptionLoader;
+	private ProjectDescriptionLoader projectDescriptionLoader;
 
 	/** Simple validation if the package name is not null or empty */
 	public boolean invalidPackageName(String packageName) {
@@ -184,7 +184,7 @@ public class NpmCLI {
 
 	private String getActualVersion(MultiStatus batchStatus, LibraryChange reqChg, Path completePath) {
 		URI location = URI.createFileURI(completePath.toString());
-		String versionStr = ProjectDescriptionLoader.loadVersionFromProjectDescriptionAtLocation(location);
+		String versionStr = projectDescriptionLoader.loadVersionFromProjectDescriptionAtLocation(location);
 		if (versionStr == null) {
 			String msg = "Error reading package json when " + reqChg.toString();
 			IStatus packJsonError = statusHelper.createError(msg);

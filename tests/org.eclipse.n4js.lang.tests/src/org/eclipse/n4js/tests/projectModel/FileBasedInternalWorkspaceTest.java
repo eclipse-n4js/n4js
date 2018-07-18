@@ -31,7 +31,7 @@ public class FileBasedInternalWorkspaceTest extends AbstractInternalWorkspaceTes
 	private ClasspathPackageManager classpathPackageManager;
 
 	@Inject
-	private ProjectDescriptionLoader ProjectDescriptionLoader;
+	private ProjectDescriptionLoader projectDescriptionLoader;
 
 	private FileBasedWorkspace testMe;
 
@@ -42,7 +42,7 @@ public class FileBasedInternalWorkspaceTest extends AbstractInternalWorkspaceTes
 
 	@Override
 	public void setUp() {
-		testMe = new FileBasedWorkspace(classpathPackageManager, ProjectDescriptionLoader);
+		testMe = new FileBasedWorkspace(classpathPackageManager, projectDescriptionLoader);
 		super.setUp();
 	}
 

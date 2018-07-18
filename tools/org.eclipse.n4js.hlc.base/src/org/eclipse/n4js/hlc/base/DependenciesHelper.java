@@ -30,7 +30,7 @@ import com.google.inject.Inject;
 class DependenciesHelper {
 
 	@Inject
-	private ProjectDescriptionLoader ProjectDescriptionLoader;
+	private ProjectDescriptionLoader projectDescriptionLoader;
 
 	/**
 	 * Discovers projects in the provided locations and projects containing provided files, then returns missing
@@ -57,7 +57,7 @@ class DependenciesHelper {
 		StreamSupport.stream(allProjects.spliterator(), false)
 				.map(p -> p.getLocationPath().toFile())
 				.forEach(root -> {
-					final ProjectDescription projectDescription = ProjectDescriptionLoader
+					final ProjectDescription projectDescription = projectDescriptionLoader
 							.loadProjectDescriptionAtLocation(URIUtils.toFileUri(root.toURI()));
 
 					if (projectDescription == null) {

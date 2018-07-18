@@ -54,7 +54,7 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 
 	private final IWorkspaceRoot workspace;
 
-	private final ProjectDescriptionLoader ProjectDescriptionLoader;
+	private final ProjectDescriptionLoader projectDescriptionLoader;
 
 	private final Map<URI, ProjectDescription> cache = Maps.newHashMap();
 
@@ -66,9 +66,9 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 	@Inject
 	public EclipseBasedN4JSWorkspace(
 			IWorkspaceRoot workspace,
-			ProjectDescriptionLoader ProjectDescriptionLoader) {
+			ProjectDescriptionLoader projectDescriptionLoader) {
 		this.workspace = workspace;
-		this.ProjectDescriptionLoader = ProjectDescriptionLoader;
+		this.projectDescriptionLoader = projectDescriptionLoader;
 	}
 
 	IWorkspaceRoot getWorkspace() {
@@ -91,7 +91,7 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 		}
 		ProjectDescription existing = cache.get(location);
 		if (existing == null) {
-			existing = ProjectDescriptionLoader.loadProjectDescriptionAtLocation(location);
+			existing = projectDescriptionLoader.loadProjectDescriptionAtLocation(location);
 			if (existing != null) {
 				cache.put(location, existing);
 				if (listener != null) {

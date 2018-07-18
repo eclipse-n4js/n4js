@@ -41,7 +41,7 @@ public class RunnerN4JSCore {
 	private static final int DANGLING_SEGMENT_COUNT = 1;
 
 	@Inject
-	private ProjectDescriptionLoader ProjectDescriptionLoader;
+	private ProjectDescriptionLoader projectDescriptionLoader;
 
 	/**
 	 * Returns all shipped projects as iterable. Returned projects are stubs for real {@link N4JSProject}. They
@@ -55,7 +55,7 @@ public class RunnerN4JSCore {
 
 		final RunnerTargetPlatformInstallLocationProvider locationProvider = new RunnerTargetPlatformInstallLocationProvider();
 		final RunnerClasspathPackageManager manager = new RunnerClasspathPackageManager();
-		final FileBasedWorkspace workspace = new FileBasedWorkspace(manager, ProjectDescriptionLoader);
+		final FileBasedWorkspace workspace = new FileBasedWorkspace(manager, projectDescriptionLoader);
 		final N4JSModel model = new N4JSModel(workspace, locationProvider);
 
 		ShippedCodeAccess.getAllShippedPaths().forEach(path -> discoverProjects(path, workspace));

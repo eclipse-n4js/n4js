@@ -44,7 +44,7 @@ import com.google.inject.Inject;
 public class HeadlessHelper {
 
 	@Inject
-	private ProjectDescriptionLoader ProjectDescriptionLoader;
+	private ProjectDescriptionLoader projectDescriptionLoader;
 
 	@Inject
 	private N4JSModel n4jsModel;
@@ -110,7 +110,7 @@ public class HeadlessHelper {
 		for (URI uri : projectURIs) {
 			URI projectURI = URIUtils.normalize(uri);
 
-			final ProjectDescription projectDescription = ProjectDescriptionLoader
+			final ProjectDescription projectDescription = projectDescriptionLoader
 					.loadProjectDescriptionAtLocation(projectURI);
 
 			if (projectDescription == null) {

@@ -28,7 +28,7 @@ import com.google.inject.Singleton;
 public class FileBasedExternalPackageManager implements IExternalPackageManager {
 
 	@Inject
-	private ProjectDescriptionLoader ProjectDescriptionLoader;
+	private ProjectDescriptionLoader projectDescriptionLoader;
 
 	@Override
 	public boolean isN4ProjectRoot(URI rootLocation) {
@@ -63,7 +63,7 @@ public class FileBasedExternalPackageManager implements IExternalPackageManager 
 		if (null != rootLocation && rootLocation.isFile()) {
 			File projectRoot = new File(rootLocation.toFileString());
 			if (projectRoot.exists() && projectRoot.isDirectory()) {
-				return ProjectDescriptionLoader.loadProjectDescriptionAtLocation(rootLocation);
+				return projectDescriptionLoader.loadProjectDescriptionAtLocation(rootLocation);
 			}
 		}
 		return null;
@@ -82,7 +82,7 @@ public class FileBasedExternalPackageManager implements IExternalPackageManager 
 		if (null != rootLocation && rootLocation.isFile()) {
 			File projectRoot = new File(rootLocation.toFileString());
 			if (projectRoot.exists() && projectRoot.isDirectory()) {
-				return ProjectDescriptionLoader.loadProjectDescriptionAtLocation(rootLocation);
+				return projectDescriptionLoader.loadProjectDescriptionAtLocation(rootLocation);
 			}
 		}
 		return null;

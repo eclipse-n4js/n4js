@@ -33,8 +33,8 @@ public class AutoDiscoveryFileBasedWorkspace extends FileBasedWorkspace {
 	/** Initializes the workspace. */
 	@Inject
 	public AutoDiscoveryFileBasedWorkspace(ClasspathPackageManager packageManager,
-			ProjectDescriptionLoader ProjectDescriptionLoader) {
-		super(packageManager, ProjectDescriptionLoader);
+			ProjectDescriptionLoader projectDescriptionLoader) {
+		super(packageManager, projectDescriptionLoader);
 	}
 
 	@Override

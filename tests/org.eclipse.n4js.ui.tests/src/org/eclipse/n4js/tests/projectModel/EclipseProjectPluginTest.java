@@ -34,7 +34,7 @@ public class EclipseProjectPluginTest extends AbstractN4JSProjectTest {
 	private IWorkspaceRoot workspace;
 
 	@Inject
-	private ProjectDescriptionLoader ProjectDescriptionLoader;
+	private ProjectDescriptionLoader projectDescriptionLoader;
 
 	@Inject
 	private Injector injector;
@@ -50,7 +50,7 @@ public class EclipseProjectPluginTest extends AbstractN4JSProjectTest {
 
 	@Override
 	public void setUp() {
-		internalWorkspace = new EclipseBasedN4JSWorkspace(workspace, ProjectDescriptionLoader);
+		internalWorkspace = new EclipseBasedN4JSWorkspace(workspace, projectDescriptionLoader);
 		N4JSEclipseModel model = new N4JSEclipseModel(internalWorkspace);
 		injector.injectMembers(model);
 		testMe = new N4JSEclipseCore(model);

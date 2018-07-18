@@ -58,7 +58,7 @@ public abstract class ExternalIndexSynchronizer {
 	private TargetPlatformInstallLocationProvider locationProvider;
 
 	@Inject
-	private ProjectDescriptionLoader ProjectDescriptionLoader;
+	private ProjectDescriptionLoader projectDescriptionLoader;
 
 	/**
 	 * Call this method to synchronize the information in the Xtext index with all external projects in the external
@@ -119,7 +119,7 @@ public abstract class ExternalIndexSynchronizer {
 
 	private String getVersionFromPackageJSON(File packageJSON) {
 		URI uri = URI.createFileURI(packageJSON.getAbsolutePath());
-		ProjectDescription pDescr = ProjectDescriptionLoader.loadProjectDescriptionAtLocation(uri);
+		ProjectDescription pDescr = projectDescriptionLoader.loadProjectDescriptionAtLocation(uri);
 		if (pDescr != null) {
 			VersionNumber pV = pDescr.getProjectVersion();
 			String version = SEMVERSerializer.toString(pV);

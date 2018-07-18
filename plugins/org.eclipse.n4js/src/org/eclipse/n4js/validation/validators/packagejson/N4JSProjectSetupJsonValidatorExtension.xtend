@@ -153,7 +153,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	private XpectAwareFileExtensionCalculator fileExtensionCalculator;
 	
 	@Inject
-	private ProjectDescriptionLoader ProjectDescriptionLoader;
+	private ProjectDescriptionLoader projectDescriptionLoader;
 	
 	@Inject
 	private WildcardPathFilterHelper wildcardHelper;
@@ -1138,7 +1138,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	protected def ProjectDescription getProjectDescription() {
 		return contextMemoize(PROJECT_DESCRIPTION_CACHE, [
 			val doc = getDocument();
-			ProjectDescriptionLoader.loadProjectDescriptionAtLocation(doc.eResource.URI.trimSegments(1), doc, false);
+			projectDescriptionLoader.loadProjectDescriptionAtLocation(doc.eResource.URI.trimSegments(1), doc, false);
 		]);
 	}
 

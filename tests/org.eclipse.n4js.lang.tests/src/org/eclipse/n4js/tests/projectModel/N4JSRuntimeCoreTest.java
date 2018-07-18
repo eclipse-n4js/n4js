@@ -34,7 +34,7 @@ public class N4JSRuntimeCoreTest extends AbstractN4JSCoreTest {
 	private ClasspathPackageManager classpathPackageManager;
 
 	@Inject
-	private ProjectDescriptionLoader ProjectDescriptionLoader;
+	private ProjectDescriptionLoader projectDescriptionLoader;
 
 	@Inject
 	private Injector injector;
@@ -50,7 +50,7 @@ public class N4JSRuntimeCoreTest extends AbstractN4JSCoreTest {
 
 	@Override
 	public void setUp() {
-		workspace = new FileBasedWorkspace(classpathPackageManager, ProjectDescriptionLoader);
+		workspace = new FileBasedWorkspace(classpathPackageManager, projectDescriptionLoader);
 		N4JSModel model = new N4JSModel(workspace);
 		injector.injectMembers(model);
 		testMe = new N4JSRuntimeCore(workspace, model);

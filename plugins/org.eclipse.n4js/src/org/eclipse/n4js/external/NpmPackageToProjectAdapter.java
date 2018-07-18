@@ -63,7 +63,7 @@ public class NpmPackageToProjectAdapter {
 	private GitCloneSupplier gitCloneSupplier;
 
 	@Inject
-	private ProjectDescriptionLoader ProjectDescriptionLoader;
+	private ProjectDescriptionLoader projectDescriptionLoader;
 
 	@Inject
 	private SEMVERHelper semverHelper;
@@ -190,7 +190,7 @@ public class NpmPackageToProjectAdapter {
 		}
 
 		URI packageURI = URI.createFileURI(packageRoot.getAbsolutePath());
-		String packageJsonVersion = ProjectDescriptionLoader.loadVersionFromProjectDescriptionAtLocation(packageURI);
+		String packageJsonVersion = projectDescriptionLoader.loadVersionFromProjectDescriptionAtLocation(packageURI);
 		VersionNumber packageVersion = semverHelper.parseVersionNumber(packageJsonVersion);
 		if (packageVersion == null) {
 			final String message = "Cannot read version from package.json of npm package '" + packageName + "'.";

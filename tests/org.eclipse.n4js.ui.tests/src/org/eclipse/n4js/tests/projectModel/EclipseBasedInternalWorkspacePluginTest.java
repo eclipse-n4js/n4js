@@ -31,7 +31,7 @@ public class EclipseBasedInternalWorkspacePluginTest extends AbstractInternalWor
 	private IWorkspaceRoot workspace;
 
 	@Inject
-	private ProjectDescriptionLoader ProjectDescriptionLoader;
+	private ProjectDescriptionLoader projectDescriptionLoader;
 
 	private EclipseBasedN4JSWorkspace testMe;
 
@@ -42,7 +42,7 @@ public class EclipseBasedInternalWorkspacePluginTest extends AbstractInternalWor
 
 	@Override
 	public void setUp() {
-		testMe = new EclipseBasedN4JSWorkspace(workspace, ProjectDescriptionLoader);
+		testMe = new EclipseBasedN4JSWorkspace(workspace, projectDescriptionLoader);
 		super.setUp();
 	}
 

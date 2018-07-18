@@ -45,15 +45,15 @@ import com.google.inject.Singleton;
 @Singleton
 public class FileBasedWorkspace extends InternalN4JSWorkspace {
 
-	private final ProjectDescriptionLoader ProjectDescriptionLoader;
+	private final ProjectDescriptionLoader projectDescriptionLoader;
 
 	private final ClasspathPackageManager packageManager;
 
 	@Inject
 	public FileBasedWorkspace(ClasspathPackageManager packageManager,
-			ProjectDescriptionLoader ProjectDescriptionLoader) {
+			ProjectDescriptionLoader projectDescriptionLoader) {
 		this.packageManager = packageManager;
-		this.ProjectDescriptionLoader = ProjectDescriptionLoader;
+		this.projectDescriptionLoader = projectDescriptionLoader;
 	}
 
 	private final Map<URI, LazyProjectDescriptionHandle> projectElementHandles = Maps.newConcurrentMap();
@@ -79,7 +79,7 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 	}
 
 	protected LazyProjectDescriptionHandle createLazyDescriptionHandle(URI location, boolean archive) {
-		return new LazyProjectDescriptionHandle(location, archive, ProjectDescriptionLoader);
+		return new LazyProjectDescriptionHandle(location, archive, projectDescriptionLoader);
 	}
 
 	@Override

@@ -53,7 +53,7 @@ abstract public class JSDoc2SpecProcessorFullTest {
 	protected ClasspathPackageManager classpathPackageManager;
 
 	@Inject
-	protected ProjectDescriptionLoader ProjectDescriptionLoader;
+	protected ProjectDescriptionLoader projectDescriptionLoader;
 
 	@Inject
 	protected Injector injector;

@@ -112,7 +112,7 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 	private IQualifiedNameProvider qualifiedNameProvider;
 
 	@Inject
-	private ProjectDescriptionLoader ProjectDescriptionLoader;
+	private ProjectDescriptionLoader projectDescriptionLoader;
 
 
     private static final Logger LOGGER = Logger.getLogger(PackageJsonResourceDescriptionExtension);
@@ -184,7 +184,7 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 			LOGGER.error("creation of EObjectDescriptions failed: cannot derive project location from document");
 			return;
 		}
-		val description = ProjectDescriptionLoader.loadProjectDescriptionAtLocation(projectLocation, document, true);
+		val description = projectDescriptionLoader.loadProjectDescriptionAtLocation(projectLocation, document, true);
 		if(description === null) {
 			LOGGER.error("creation of EObjectDescriptions failed: cannot load project description at location: " + projectLocation);
 			return;
