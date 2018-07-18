@@ -11,7 +11,7 @@
 package org.eclipse.n4js.validation.validators.packagejson;
 
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asStringOrNull;
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.DEFAULT_VALUE_OUTPUT;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.DEFAULT_OUTPUT;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__DEPENDENCIES;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__DEV_DEPENDENCIES;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__EXEC_MODULE;
@@ -600,7 +600,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	 * wrt. transpile loops and workspace clean operations (e.g. output folder is considered source folder).
 	 *
 	 * This check runs on the whole {@link JSONDocument}, since we must also validate in case of the implicit output
-	 * folder as given by {@link PackageJsonConstants#DEFAULT_VALUE_OUTPUT}.
+	 * folder as given by {@link PackageJsonConstants#DEFAULT_OUTPUT}.
 	 */
 	@Check
 	public void checkOutputFolder(@SuppressWarnings("unused") JSONDocument document) {
@@ -625,7 +625,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 					Optional.fromNullable(outputPathValue));
 		} else {
 			// otherwise, run check with default value for output folder
-			internalCheckOutput(DEFAULT_VALUE_OUTPUT, Optional.absent());
+			internalCheckOutput(DEFAULT_OUTPUT, Optional.absent());
 		}
 	}
 
@@ -661,7 +661,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 				if (containmentHelper.isContained(absoluteSourceLocation, absoluteOutputLocation)) {
 					final String containingFolder = ("A " + srcFrgmtName + " folder");
 					final String nestedFolder = astOutputValue.isPresent() ? "the output folder"
-							: "the default output folder \"" + DEFAULT_VALUE_OUTPUT + "\"";
+							: "the default output folder \"" + DEFAULT_OUTPUT + "\"";
 					final String message = IssueCodes
 							.getMessageForOUTPUT_AND_SOURCES_FOLDER_NESTING(containingFolder, nestedFolder);
 

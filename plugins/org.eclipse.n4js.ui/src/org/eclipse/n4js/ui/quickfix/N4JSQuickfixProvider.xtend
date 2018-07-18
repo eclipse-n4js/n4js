@@ -690,7 +690,7 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 				val dependency = element as ProjectReference;
 				val packageName = dependency.projectId;
 				val packageVersion = if (dependency instanceof ProjectDependency) {
-						SEMVERSerializer.toString(dependency.versionConstraint);
+						SEMVERSerializer.toString(dependency.versionRequirement);
 					} else {
 						"";
 					};

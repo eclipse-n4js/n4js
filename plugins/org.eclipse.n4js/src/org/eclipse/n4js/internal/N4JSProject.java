@@ -284,7 +284,7 @@ public class N4JSProject implements IN4JSProject {
 
 	@Override
 	public ModuleFilter getNoModuleWrappingFilter() {
-		return getModuleFilterByType(ModuleFilterType.NO_MODULE_WRAPPING);
+		return getModuleFilterByType(ModuleFilterType.NO_MODULE_WRAP);
 	}
 
 	private ModuleFilter getModuleFilterByType(ModuleFilterType type) {

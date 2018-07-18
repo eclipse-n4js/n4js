@@ -29,6 +29,7 @@ import org.eclipse.n4js.utils.io.FileUtils
 import org.eclipse.n4js.semver.SEMVER.VersionRangeSet
 import org.eclipse.n4js.semver.SEMVER.VersionNumber
 
+// FIXME GH-809 clean up properties called "...Raw"
 
 class ProjectDescription {
 	String projectId
@@ -71,20 +72,6 @@ class ProjectDescription {
 		this.outputPathRaw = newOutputPath;
 	}
 }
-
-/**
- * All elements of the declared version not set manually will be set automatically to 0.
- *
- * To be later validated: The length of the major, minor and micro numbers is
- * additionally limited to four digits.
- */
-//class DeclaredVersion {
-//	int major
-//	int minor
-//	int micro
-//	String qualifier
-//	String buildMetaData
-//}
 
 /**
  * The type of a project characterizes the later usage of the project. This information
@@ -174,7 +161,7 @@ class BootstrapModule {
  */
 enum ModuleFilterType {
 	NO_VALIDATE = 0,
-	NO_MODULE_WRAPPING = 1
+	NO_MODULE_WRAP = 1
 }
 
 class ProjectReference {
@@ -198,25 +185,9 @@ class ModuleFilterSpecifier {
  * is and vice versa.
  */
 class ProjectDependency extends ProjectReference {
-//	contains VersionConstraint versionConstraint
-	contains VersionRangeSet versionConstraint
-	String versionConstraintString
+	contains VersionRangeSet versionRequirement
+	String versionRequirementString
 }
-
-/**
- * A version bound describes a side of an version range.
- * A version bound can be inclusive or exclusive,
- * so e.g. in (1.0.0, 2.0.0] 1.0.0 is excluded,
- * but 2.0.0 is included, so all versions x with
- * 1.0.0 < x <= 2.0.0 are allowed. If only a lowerVersion
- * is assigned this means [version, infinity).
- */
-//class VersionConstraint {
-//	boolean exclLowerBound
-//	contains DeclaredVersion lowerVersion
-//	boolean exclUpperBound
-//	contains DeclaredVersion upperVersion
-//}
 
 /*
  * One of the Javascript module loading techniques.

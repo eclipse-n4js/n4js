@@ -308,8 +308,8 @@ public class LibraryManager {
 		for (ProjectDependency pDep : description.getProjectDependencies()) {
 			String name = pDep.getProjectId();
 			String version = NO_VERSION;
-			if (pDep.getVersionConstraint() != null) {
-				version = SEMVERSerializer.toString(pDep.getVersionConstraint());
+			if (pDep.getVersionRequirement() != null) {
+				version = SEMVERSerializer.toString(pDep.getVersionRequirement());
 			}
 			dependencies.put(name, version);
 		}

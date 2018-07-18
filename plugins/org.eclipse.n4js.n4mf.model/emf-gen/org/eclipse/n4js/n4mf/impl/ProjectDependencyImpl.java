@@ -31,42 +31,42 @@ import org.eclipse.n4js.semver.SEMVER.VersionRangeSet;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDependencyImpl#getVersionConstraint <em>Version Constraint</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDependencyImpl#getVersionConstraintString <em>Version Constraint String</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDependencyImpl#getVersionRequirement <em>Version Requirement</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDependencyImpl#getVersionRequirementString <em>Version Requirement String</em>}</li>
  * </ul>
  *
  * @generated
  */
 public class ProjectDependencyImpl extends ProjectReferenceImpl implements ProjectDependency {
 	/**
-	 * The cached value of the '{@link #getVersionConstraint() <em>Version Constraint</em>}' containment reference.
+	 * The cached value of the '{@link #getVersionRequirement() <em>Version Requirement</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getVersionConstraint()
+	 * @see #getVersionRequirement()
 	 * @generated
 	 * @ordered
 	 */
-	protected VersionRangeSet versionConstraint;
+	protected VersionRangeSet versionRequirement;
 
 	/**
-	 * The default value of the '{@link #getVersionConstraintString() <em>Version Constraint String</em>}' attribute.
+	 * The default value of the '{@link #getVersionRequirementString() <em>Version Requirement String</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getVersionConstraintString()
+	 * @see #getVersionRequirementString()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String VERSION_CONSTRAINT_STRING_EDEFAULT = null;
+	protected static final String VERSION_REQUIREMENT_STRING_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getVersionConstraintString() <em>Version Constraint String</em>}' attribute.
+	 * The cached value of the '{@link #getVersionRequirementString() <em>Version Requirement String</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getVersionConstraintString()
+	 * @see #getVersionRequirementString()
 	 * @generated
 	 * @ordered
 	 */
-	protected String versionConstraintString = VERSION_CONSTRAINT_STRING_EDEFAULT;
+	protected String versionRequirementString = VERSION_REQUIREMENT_STRING_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -92,8 +92,8 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public VersionRangeSet getVersionConstraint() {
-		return versionConstraint;
+	public VersionRangeSet getVersionRequirement() {
+		return versionRequirement;
 	}
 
 	/**
@@ -101,11 +101,11 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetVersionConstraint(VersionRangeSet newVersionConstraint, NotificationChain msgs) {
-		VersionRangeSet oldVersionConstraint = versionConstraint;
-		versionConstraint = newVersionConstraint;
+	public NotificationChain basicSetVersionRequirement(VersionRangeSet newVersionRequirement, NotificationChain msgs) {
+		VersionRangeSet oldVersionRequirement = versionRequirement;
+		versionRequirement = newVersionRequirement;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4mfPackage.PROJECT_DEPENDENCY__VERSION_CONSTRAINT, oldVersionConstraint, newVersionConstraint);
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4mfPackage.PROJECT_DEPENDENCY__VERSION_REQUIREMENT, oldVersionRequirement, newVersionRequirement);
 			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
 		return msgs;
@@ -116,18 +116,18 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setVersionConstraint(VersionRangeSet newVersionConstraint) {
-		if (newVersionConstraint != versionConstraint) {
+	public void setVersionRequirement(VersionRangeSet newVersionRequirement) {
+		if (newVersionRequirement != versionRequirement) {
 			NotificationChain msgs = null;
-			if (versionConstraint != null)
-				msgs = ((InternalEObject)versionConstraint).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4mfPackage.PROJECT_DEPENDENCY__VERSION_CONSTRAINT, null, msgs);
-			if (newVersionConstraint != null)
-				msgs = ((InternalEObject)newVersionConstraint).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4mfPackage.PROJECT_DEPENDENCY__VERSION_CONSTRAINT, null, msgs);
-			msgs = basicSetVersionConstraint(newVersionConstraint, msgs);
+			if (versionRequirement != null)
+				msgs = ((InternalEObject)versionRequirement).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4mfPackage.PROJECT_DEPENDENCY__VERSION_REQUIREMENT, null, msgs);
+			if (newVersionRequirement != null)
+				msgs = ((InternalEObject)newVersionRequirement).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4mfPackage.PROJECT_DEPENDENCY__VERSION_REQUIREMENT, null, msgs);
+			msgs = basicSetVersionRequirement(newVersionRequirement, msgs);
 			if (msgs != null) msgs.dispatch();
 		}
 		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4mfPackage.PROJECT_DEPENDENCY__VERSION_CONSTRAINT, newVersionConstraint, newVersionConstraint));
+			eNotify(new ENotificationImpl(this, Notification.SET, N4mfPackage.PROJECT_DEPENDENCY__VERSION_REQUIREMENT, newVersionRequirement, newVersionRequirement));
 	}
 
 	/**
@@ -135,8 +135,8 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getVersionConstraintString() {
-		return versionConstraintString;
+	public String getVersionRequirementString() {
+		return versionRequirementString;
 	}
 
 	/**
@@ -144,11 +144,11 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setVersionConstraintString(String newVersionConstraintString) {
-		String oldVersionConstraintString = versionConstraintString;
-		versionConstraintString = newVersionConstraintString;
+	public void setVersionRequirementString(String newVersionRequirementString) {
+		String oldVersionRequirementString = versionRequirementString;
+		versionRequirementString = newVersionRequirementString;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4mfPackage.PROJECT_DEPENDENCY__VERSION_CONSTRAINT_STRING, oldVersionConstraintString, versionConstraintString));
+			eNotify(new ENotificationImpl(this, Notification.SET, N4mfPackage.PROJECT_DEPENDENCY__VERSION_REQUIREMENT_STRING, oldVersionRequirementString, versionRequirementString));
 	}
 
 	/**
@@ -159,8 +159,8 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case N4mfPackage.PROJECT_DEPENDENCY__VERSION_CONSTRAINT:
-				return basicSetVersionConstraint(null, msgs);
+			case N4mfPackage.PROJECT_DEPENDENCY__VERSION_REQUIREMENT:
+				return basicSetVersionRequirement(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -173,10 +173,10 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case N4mfPackage.PROJECT_DEPENDENCY__VERSION_CONSTRAINT:
-				return getVersionConstraint();
-			case N4mfPackage.PROJECT_DEPENDENCY__VERSION_CONSTRAINT_STRING:
-				return getVersionConstraintString();
+			case N4mfPackage.PROJECT_DEPENDENCY__VERSION_REQUIREMENT:
+				return getVersionRequirement();
+			case N4mfPackage.PROJECT_DEPENDENCY__VERSION_REQUIREMENT_STRING:
+				return getVersionRequirementString();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -189,11 +189,11 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case N4mfPackage.PROJECT_DEPENDENCY__VERSION_CONSTRAINT:
-				setVersionConstraint((VersionRangeSet)newValue);
+			case N4mfPackage.PROJECT_DEPENDENCY__VERSION_REQUIREMENT:
+				setVersionRequirement((VersionRangeSet)newValue);
 				return;
-			case N4mfPackage.PROJECT_DEPENDENCY__VERSION_CONSTRAINT_STRING:
-				setVersionConstraintString((String)newValue);
+			case N4mfPackage.PROJECT_DEPENDENCY__VERSION_REQUIREMENT_STRING:
+				setVersionRequirementString((String)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -207,11 +207,11 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case N4mfPackage.PROJECT_DEPENDENCY__VERSION_CONSTRAINT:
-				setVersionConstraint((VersionRangeSet)null);
+			case N4mfPackage.PROJECT_DEPENDENCY__VERSION_REQUIREMENT:
+				setVersionRequirement((VersionRangeSet)null);
 				return;
-			case N4mfPackage.PROJECT_DEPENDENCY__VERSION_CONSTRAINT_STRING:
-				setVersionConstraintString(VERSION_CONSTRAINT_STRING_EDEFAULT);
+			case N4mfPackage.PROJECT_DEPENDENCY__VERSION_REQUIREMENT_STRING:
+				setVersionRequirementString(VERSION_REQUIREMENT_STRING_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -225,10 +225,10 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case N4mfPackage.PROJECT_DEPENDENCY__VERSION_CONSTRAINT:
-				return versionConstraint != null;
-			case N4mfPackage.PROJECT_DEPENDENCY__VERSION_CONSTRAINT_STRING:
-				return VERSION_CONSTRAINT_STRING_EDEFAULT == null ? versionConstraintString != null : !VERSION_CONSTRAINT_STRING_EDEFAULT.equals(versionConstraintString);
+			case N4mfPackage.PROJECT_DEPENDENCY__VERSION_REQUIREMENT:
+				return versionRequirement != null;
+			case N4mfPackage.PROJECT_DEPENDENCY__VERSION_REQUIREMENT_STRING:
+				return VERSION_REQUIREMENT_STRING_EDEFAULT == null ? versionRequirementString != null : !VERSION_REQUIREMENT_STRING_EDEFAULT.equals(versionRequirementString);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -243,8 +243,8 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (versionConstraintString: ");
-		result.append(versionConstraintString);
+		result.append(" (versionRequirementString: ");
+		result.append(versionRequirementString);
 		result.append(')');
 		return result.toString();
 	}

@@ -23,9 +23,15 @@ import org.eclipse.emf.common.util.Enumerator;
  * <!-- end-user-doc -->
  * <!-- begin-model-doc -->
  * *
- * All elements of the declared version not set manually will be set automatically to 0.
- *  * To be later validated: The length of the major, minor and micro numbers is
- * additionally limited to four digits.
+ * The type of a project characterizes the later usage of the project. This information
+ * is used later to decide how to bundle a project.
+ * <description>
+ * <dt>application			</dt><dd>10.2.1. Apps</dd>
+ * <dt>processor 			</dt><dd>10.2.2. Processors</dd>
+ * <dt>library				</dt><dd>10.2.3. Libraries</dd>
+ * <dt>runtimeEnvironment	</dt><dd>10.2.5. Runtime Environment</dd>
+ * <dt>runtimeLibrary		</dt><dd>10.2.5. Runtime Library</dd>
+ * </description>
  * <!-- end-model-doc -->
  * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectType()
  * @model

@@ -12,7 +12,7 @@ package org.eclipse.n4js.utils;
 
 import static org.eclipse.n4js.internal.N4JSModel.DIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asStringOrNull;
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.DEFAULT_VALUE_OUTPUT;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.DEFAULT_OUTPUT;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__DEPENDENCIES;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__DEV_DEPENDENCIES;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__MAIN;
@@ -184,7 +184,7 @@ public class ProjectDescriptionLoader {
 
 		if (packageJSON == null) {
 			packageJSON = loadXtextFileAtLocation(location,
-					IN4JSProject.PACKAGE_JSON + DEFAULT_VALUE_OUTPUT + N4JSGlobals.XT_FILE_EXTENSION,
+					IN4JSProject.PACKAGE_JSON + DEFAULT_OUTPUT + N4JSGlobals.XT_FILE_EXTENSION,
 					JSONDocument.class);
 		}
 

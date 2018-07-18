@@ -113,8 +113,8 @@ public class PackageJsonUtils {
 	 * "noValidate": [
 	 *     "abc*",
 	 *     {
-	 *         "sourceContainer": "src"
-	 *         "module": "abc*",
+	 *         "sourceContainer": "src",
+	 *         "module": "abc*"
 	 *     }
 	 * ]
 	 *
@@ -258,7 +258,7 @@ public class PackageJsonUtils {
 		if (value.equals("noValidate")) {
 			return ModuleFilterType.NO_VALIDATE;
 		} else if (value.equals("noModuleWrap")) {
-			return ModuleFilterType.NO_MODULE_WRAPPING;
+			return ModuleFilterType.NO_MODULE_WRAP;
 		} else {
 			return null;
 		}
@@ -270,7 +270,7 @@ public class PackageJsonUtils {
 	public static String getModuleFilterTypeStringRepresentation(ModuleFilterType type) {
 		if (type == ModuleFilterType.NO_VALIDATE) {
 			return "noValidate";
-		} else if (type == ModuleFilterType.NO_MODULE_WRAPPING) {
+		} else if (type == ModuleFilterType.NO_MODULE_WRAP) {
 			return "noModuleWrap";
 		} else {
 			return "<invalid module filter type>";

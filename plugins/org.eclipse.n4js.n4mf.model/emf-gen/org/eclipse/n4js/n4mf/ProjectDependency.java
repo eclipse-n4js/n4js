@@ -30,8 +30,8 @@ import org.eclipse.n4js.semver.SEMVER.VersionRangeSet;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.n4mf.ProjectDependency#getVersionConstraint <em>Version Constraint</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4mf.ProjectDependency#getVersionConstraintString <em>Version Constraint String</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4mf.ProjectDependency#getVersionRequirement <em>Version Requirement</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4mf.ProjectDependency#getVersionRequirementString <em>Version Requirement String</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDependency()
@@ -40,55 +40,55 @@ import org.eclipse.n4js.semver.SEMVER.VersionRangeSet;
  */
 public interface ProjectDependency extends ProjectReference {
 	/**
-	 * Returns the value of the '<em><b>Version Constraint</b></em>' containment reference.
+	 * Returns the value of the '<em><b>Version Requirement</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Version Constraint</em>' containment reference isn't clear,
+	 * If the meaning of the '<em>Version Requirement</em>' containment reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Version Constraint</em>' containment reference.
-	 * @see #setVersionConstraint(VersionRangeSet)
-	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDependency_VersionConstraint()
+	 * @return the value of the '<em>Version Requirement</em>' containment reference.
+	 * @see #setVersionRequirement(VersionRangeSet)
+	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDependency_VersionRequirement()
 	 * @model containment="true"
 	 * @generated
 	 */
-	VersionRangeSet getVersionConstraint();
+	VersionRangeSet getVersionRequirement();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4mf.ProjectDependency#getVersionConstraint <em>Version Constraint</em>}' containment reference.
+	 * Sets the value of the '{@link org.eclipse.n4js.n4mf.ProjectDependency#getVersionRequirement <em>Version Requirement</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Version Constraint</em>' containment reference.
-	 * @see #getVersionConstraint()
+	 * @param value the new value of the '<em>Version Requirement</em>' containment reference.
+	 * @see #getVersionRequirement()
 	 * @generated
 	 */
-	void setVersionConstraint(VersionRangeSet value);
+	void setVersionRequirement(VersionRangeSet value);
 
 	/**
-	 * Returns the value of the '<em><b>Version Constraint String</b></em>' attribute.
+	 * Returns the value of the '<em><b>Version Requirement String</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Version Constraint String</em>' attribute isn't clear,
+	 * If the meaning of the '<em>Version Requirement String</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Version Constraint String</em>' attribute.
-	 * @see #setVersionConstraintString(String)
-	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDependency_VersionConstraintString()
+	 * @return the value of the '<em>Version Requirement String</em>' attribute.
+	 * @see #setVersionRequirementString(String)
+	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDependency_VersionRequirementString()
 	 * @model unique="false"
 	 * @generated
 	 */
-	String getVersionConstraintString();
+	String getVersionRequirementString();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4mf.ProjectDependency#getVersionConstraintString <em>Version Constraint String</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.n4js.n4mf.ProjectDependency#getVersionRequirementString <em>Version Requirement String</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Version Constraint String</em>' attribute.
-	 * @see #getVersionConstraintString()
+	 * @param value the new value of the '<em>Version Requirement String</em>' attribute.
+	 * @see #getVersionRequirementString()
 	 * @generated
 	 */
-	void setVersionConstraintString(String value);
+	void setVersionRequirementString(String value);
 
 } // ProjectDependency

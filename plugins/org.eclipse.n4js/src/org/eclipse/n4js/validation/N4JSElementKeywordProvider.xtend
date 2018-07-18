@@ -163,7 +163,7 @@ class N4JSElementKeywordProvider extends TypesKeywordProvider {
 		switch (moduleFilterType) {
 			case NO_VALIDATE:
 				"noValidate"
-			case NO_MODULE_WRAPPING:
+			case NO_MODULE_WRAP:
 				"noModuleWrap"
 			default: {
 				"unknown filter type"

@@ -13,8 +13,11 @@ package org.eclipse.n4js.packagejson;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNameValuePairsOrEmpty;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asStringOrNull;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.getPropertyAsStringOrNull;
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.DEFAULT_VALUE_OUTPUT;
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.DEFAULT_VALUE_VERSION;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.DEFAULT_MAIN_MODULE;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.DEFAULT_MODULE_LOADER_FOR_VALIDATION;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.DEFAULT_OUTPUT;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.DEFAULT_VENDOR_ID;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.DEFAULT_VERSION;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__DEPENDENCIES;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__DEV_DEPENDENCIES;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__EXEC_MODULE;
@@ -56,7 +59,6 @@ import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.JSON.NameValuePair;
-import org.eclipse.n4js.n4mf.ModuleLoader;
 import org.eclipse.n4js.n4mf.N4mfFactory;
 import org.eclipse.n4js.n4mf.ProjectDependency;
 import org.eclipse.n4js.n4mf.ProjectDescription;
@@ -219,15 +221,15 @@ public class PackageJsonHelper {
 				String valueStr = asStringOrNull(value);
 				ProjectDependency dep = N4mfFactory.eINSTANCE.createProjectDependency();
 				dep.setProjectId(projectId);
-				dep.setVersionConstraintString(valueStr);
+				dep.setVersionRequirementString(valueStr);
 
 				boolean canParseSEMVER = true;
 				canParseSEMVER = !"latest".equals(valueStr);
 				if (canParseSEMVER) {
 					VersionRangeSet vrs = semverHelper.parseVersionRangeSet(valueStr);
-					dep.setVersionConstraint(vrs);
+					dep.setVersionRequirement(vrs);
 				} else {
-					dep.setVersionConstraint(null);
+					dep.setVersionRequirement(null);
 				}
 				target.getProjectDependencies().add(dep);
 			}
@@ -284,16 +286,16 @@ public class PackageJsonHelper {
 			target.setProjectId(defaultProjectId);
 		}
 		if (target.getProjectVersion() == null) {
-			target.setProjectVersion(parseVersion(DEFAULT_VALUE_VERSION));
+			target.setProjectVersion(parseVersion(DEFAULT_VERSION));
 		}
 		if (target.getVendorId() == null) {
-			target.setVendorId("vendor.default");
+			target.setVendorId(DEFAULT_VENDOR_ID);
 		}
 		if (target.getMainModule() == null) {
-			target.setMainModule("index");
+			target.setMainModule(DEFAULT_MAIN_MODULE);
 		}
 		if (target.getOutputPathRaw() == null) {
-			target.setOutputPathRaw(DEFAULT_VALUE_OUTPUT);
+			target.setOutputPathRaw(DEFAULT_OUTPUT);
 		}
 		// if no source containers are defined (no matter what type),
 		// then add a default source container of type "source" with path "."
@@ -306,15 +308,16 @@ public class PackageJsonHelper {
 			if (scd == null) {
 				SourceContainerDescription scdNew = N4mfFactory.eINSTANCE.createSourceContainerDescription();
 				scdNew.setSourceContainerType(SourceContainerType.SOURCE);
-				scdNew.getPathsRaw().add(DEFAULT_VALUE_OUTPUT);
+				scdNew.getPathsRaw().add(DEFAULT_OUTPUT);
 				target.getSourceContainers().add(scdNew);
 			} else if (scd.getPathsRaw().isEmpty()) {
-				scd.getPathsRaw().add(DEFAULT_VALUE_OUTPUT);
+				scd.getPathsRaw().add(DEFAULT_OUTPUT);
 			}
 		}
 		// module loader must be commonjs for VALIDATION projects
+		// (no need to set default in case of other project types, because this is handled by EMF)
 		if (target.getProjectType() == ProjectType.VALIDATION) {
-			target.setModuleLoader(ModuleLoader.COMMONJS);
+			target.setModuleLoader(DEFAULT_MODULE_LOADER_FOR_VALIDATION);
 		}
 	}
 

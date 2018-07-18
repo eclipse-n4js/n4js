@@ -562,22 +562,22 @@ public interface N4mfPackage extends EPackage {
 	int PROJECT_DEPENDENCY__PROJECT_ID = PROJECT_REFERENCE__PROJECT_ID;
 
 	/**
-	 * The feature id for the '<em><b>Version Constraint</b></em>' containment reference.
+	 * The feature id for the '<em><b>Version Requirement</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DEPENDENCY__VERSION_CONSTRAINT = PROJECT_REFERENCE_FEATURE_COUNT + 0;
+	int PROJECT_DEPENDENCY__VERSION_REQUIREMENT = PROJECT_REFERENCE_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Version Constraint String</b></em>' attribute.
+	 * The feature id for the '<em><b>Version Requirement String</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DEPENDENCY__VERSION_CONSTRAINT_STRING = PROJECT_REFERENCE_FEATURE_COUNT + 1;
+	int PROJECT_DEPENDENCY__VERSION_REQUIREMENT_STRING = PROJECT_REFERENCE_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Project Dependency</em>' class.
@@ -1068,26 +1068,26 @@ public interface N4mfPackage extends EPackage {
 	EClass getProjectDependency();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4mf.ProjectDependency#getVersionConstraint <em>Version Constraint</em>}'.
+	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4mf.ProjectDependency#getVersionRequirement <em>Version Requirement</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Version Constraint</em>'.
-	 * @see org.eclipse.n4js.n4mf.ProjectDependency#getVersionConstraint()
+	 * @return the meta object for the containment reference '<em>Version Requirement</em>'.
+	 * @see org.eclipse.n4js.n4mf.ProjectDependency#getVersionRequirement()
 	 * @see #getProjectDependency()
 	 * @generated
 	 */
-	EReference getProjectDependency_VersionConstraint();
+	EReference getProjectDependency_VersionRequirement();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4mf.ProjectDependency#getVersionConstraintString <em>Version Constraint String</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4mf.ProjectDependency#getVersionRequirementString <em>Version Requirement String</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Version Constraint String</em>'.
-	 * @see org.eclipse.n4js.n4mf.ProjectDependency#getVersionConstraintString()
+	 * @return the meta object for the attribute '<em>Version Requirement String</em>'.
+	 * @see org.eclipse.n4js.n4mf.ProjectDependency#getVersionRequirementString()
 	 * @see #getProjectDependency()
 	 * @generated
 	 */
-	EAttribute getProjectDependency_VersionConstraintString();
+	EAttribute getProjectDependency_VersionRequirementString();
 
 	/**
 	 * Returns the meta object for enum '{@link org.eclipse.n4js.n4mf.ProjectType <em>Project Type</em>}'.
@@ -1487,20 +1487,20 @@ public interface N4mfPackage extends EPackage {
 		EClass PROJECT_DEPENDENCY = eINSTANCE.getProjectDependency();
 
 		/**
-		 * The meta object literal for the '<em><b>Version Constraint</b></em>' containment reference feature.
+		 * The meta object literal for the '<em><b>Version Requirement</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference PROJECT_DEPENDENCY__VERSION_CONSTRAINT = eINSTANCE.getProjectDependency_VersionConstraint();
+		EReference PROJECT_DEPENDENCY__VERSION_REQUIREMENT = eINSTANCE.getProjectDependency_VersionRequirement();
 
 		/**
-		 * The meta object literal for the '<em><b>Version Constraint String</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Version Requirement String</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute PROJECT_DEPENDENCY__VERSION_CONSTRAINT_STRING = eINSTANCE.getProjectDependency_VersionConstraintString();
+		EAttribute PROJECT_DEPENDENCY__VERSION_REQUIREMENT_STRING = eINSTANCE.getProjectDependency_VersionRequirementString();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4mf.ProjectType <em>Project Type</em>}' enum.

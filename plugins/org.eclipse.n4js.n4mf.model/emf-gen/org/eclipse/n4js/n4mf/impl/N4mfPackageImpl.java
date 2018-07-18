@@ -550,7 +550,7 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getProjectDependency_VersionConstraint() {
+	public EReference getProjectDependency_VersionRequirement() {
 		return (EReference)projectDependencyEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -559,7 +559,7 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getProjectDependency_VersionConstraintString() {
+	public EAttribute getProjectDependency_VersionRequirementString() {
 		return (EAttribute)projectDependencyEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -673,8 +673,8 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 		createEAttribute(moduleFilterSpecifierEClass, MODULE_FILTER_SPECIFIER__SOURCE_PATH);
 
 		projectDependencyEClass = createEClass(PROJECT_DEPENDENCY);
-		createEReference(projectDependencyEClass, PROJECT_DEPENDENCY__VERSION_CONSTRAINT);
-		createEAttribute(projectDependencyEClass, PROJECT_DEPENDENCY__VERSION_CONSTRAINT_STRING);
+		createEReference(projectDependencyEClass, PROJECT_DEPENDENCY__VERSION_REQUIREMENT);
+		createEAttribute(projectDependencyEClass, PROJECT_DEPENDENCY__VERSION_REQUIREMENT_STRING);
 
 		// Create enums
 		projectTypeEEnum = createEEnum(PROJECT_TYPE);
@@ -770,8 +770,8 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 		initEAttribute(getModuleFilterSpecifier_SourcePath(), theEcorePackage.getEString(), "sourcePath", null, 0, 1, ModuleFilterSpecifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(projectDependencyEClass, ProjectDependency.class, "ProjectDependency", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getProjectDependency_VersionConstraint(), theSEMVERPackage.getVersionRangeSet(), null, "versionConstraint", null, 0, 1, ProjectDependency.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getProjectDependency_VersionConstraintString(), theEcorePackage.getEString(), "versionConstraintString", null, 0, 1, ProjectDependency.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getProjectDependency_VersionRequirement(), theSEMVERPackage.getVersionRangeSet(), null, "versionRequirement", null, 0, 1, ProjectDependency.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getProjectDependency_VersionRequirementString(), theEcorePackage.getEString(), "versionRequirementString", null, 0, 1, ProjectDependency.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize enums and add enum literals
 		initEEnum(projectTypeEEnum, ProjectType.class, "ProjectType");
@@ -791,7 +791,7 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 
 		initEEnum(moduleFilterTypeEEnum, ModuleFilterType.class, "ModuleFilterType");
 		addEEnumLiteral(moduleFilterTypeEEnum, ModuleFilterType.NO_VALIDATE);
-		addEEnumLiteral(moduleFilterTypeEEnum, ModuleFilterType.NO_MODULE_WRAPPING);
+		addEEnumLiteral(moduleFilterTypeEEnum, ModuleFilterType.NO_MODULE_WRAP);
 
 		initEEnum(moduleLoaderEEnum, ModuleLoader.class, "ModuleLoader");
 		addEEnumLiteral(moduleLoaderEEnum, ModuleLoader.N4JS);

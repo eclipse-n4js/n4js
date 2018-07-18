@@ -22,13 +22,7 @@ import org.eclipse.emf.common.util.Enumerator;
  * and utility methods for working with them.
  * <!-- end-user-doc -->
  * <!-- begin-model-doc -->
- * *
- * A version bound describes a side of an version range.
- * A version bound can be inclusive or exclusive,
- * so e.g. in (1.0.0, 2.0.0] 1.0.0 is excluded,
- * but 2.0.0 is included, so all versions x with
- * 1.0.0 < x <= 2.0.0 are allowed. If only a lowerVersion
- * is assigned this means [version, infinity).
+ * One of the Javascript module loading techniques.
  * <!-- end-model-doc -->
  * @see org.eclipse.n4js.n4mf.N4mfPackage#getModuleLoader()
  * @model

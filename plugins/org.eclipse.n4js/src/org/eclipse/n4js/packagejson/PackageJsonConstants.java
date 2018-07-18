@@ -10,7 +10,9 @@
  */
 package org.eclipse.n4js.packagejson;
 
+import org.eclipse.n4js.n4mf.ModuleLoader;
 import org.eclipse.n4js.n4mf.ProjectDescription;
+import org.eclipse.n4js.n4mf.ProjectType;
 
 /**
  * Constants for dealing with package.json files on the generic JSON level. Try to avoid this by using
@@ -21,9 +23,17 @@ public class PackageJsonConstants {
 	// root-level properties:
 
 	/** Default value for the property "version". */
-	public static final String DEFAULT_VALUE_VERSION = "0.0.1";
+	public static final String DEFAULT_VERSION = "0.0.1";
+	/** Default value for the property "vendorId". */
+	public static final String DEFAULT_VENDOR_ID = "vendor.default";
+	/** Default value for the property "mainModule". */
+	public static final String DEFAULT_MAIN_MODULE = "index";
 	/** Default value for the property "output". */
-	public static final String DEFAULT_VALUE_OUTPUT = ".";
+	public static final String DEFAULT_OUTPUT = ".";
+	/** Default for property "moduleLoader" for *other* project types than {@link ProjectType#VALIDATION VALIDATION}. */
+	public static final ModuleLoader DEFAULT_MODULE_LOADER = ModuleLoader.N4JS;
+	/** Default for property "moduleLoader" for project type {@link ProjectType#VALIDATION VALIDATION}. */
+	public static final ModuleLoader DEFAULT_MODULE_LOADER_FOR_VALIDATION = ModuleLoader.COMMONJS;
 
 	/** Key of package.json property "name". */
 	public static final String PROP__NAME = "name";
