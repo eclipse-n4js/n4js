@@ -126,8 +126,7 @@ public class ScenarioTest {
 				new File(root, "wsp6") // G
 		);
 
-		final BuildSet buildSet = hlc.getBuildSetComputer().createAllProjectsBuildSet(pProjectRoots);
-		hlc.compile(buildSet);
+		hlc.compile(allProjects(hlc, pProjectRoots));
 		// expect source-files:
 		assertExists(root, "wsp1/A/src-gen/packA/A.js");
 		assertExists(root, "nest/wsp2/B/src-gen/packB/B.js");
@@ -152,8 +151,7 @@ public class ScenarioTest {
 				new File(root, "wsp1") // A
 		);
 
-		final BuildSet buildSet = hlc.getBuildSetComputer().createAllProjectsBuildSet(pProjectRoots);
-		hlc.compile(buildSet);
+		hlc.compile(allProjects(hlc, pProjectRoots));
 	}
 
 	/**
@@ -166,8 +164,7 @@ public class ScenarioTest {
 		List<File> pProjectRoots = Arrays.asList(//
 				new File(root, "wsp1") // A
 		);
-		final BuildSet buildSet = hlc.getBuildSetComputer().createAllProjectsBuildSet(pProjectRoots);
-		hlc.compile(buildSet);
+		hlc.compile(allProjects(hlc, pProjectRoots));
 	}
 
 	/**
@@ -219,8 +216,7 @@ public class ScenarioTest {
 				new File(root, "wsp1/A") // requires nothing
 		);
 
-		final BuildSet buildSet = hlc.getBuildSetComputer().createProjectsBuildSet(toCompile);
-		hlc.compile(buildSet);
+		hlc.compile(projects(hlc, toCompile));
 
 		// those should be available
 		assertExists(root, "wsp1/A/src-gen/packA/A.js");
@@ -243,8 +239,7 @@ public class ScenarioTest {
 				new File(root, "wsp1/P1") // requires nothing
 		);
 
-		final BuildSet buildSet = hlc.getBuildSetComputer().createProjectsBuildSet(toCompile);
-		hlc.compile(buildSet);
+		hlc.compile(projects(hlc, toCompile));
 
 		// those should be available
 		assertExists(root, "wsp1/P1/outfolder/c/Csrc1.js");
@@ -273,8 +268,7 @@ public class ScenarioTest {
 				new File(root, "wsp1/P1") // requires nothing
 		);
 
-		final BuildSet buildSet = hlc.getBuildSetComputer().createProjectsBuildSet(toCompile);
-		hlc.compile(buildSet);
+		hlc.compile(projects(hlc, toCompile));
 
 		// those should be available
 		assertExists(root, "wsp1/P1/outfolder/c/X.js");
@@ -305,8 +299,7 @@ public class ScenarioTest {
 		hlc.setCompileSourceCode(false);
 		hlc.setProcessTestCode(true);
 
-		final BuildSet buildSet = hlc.getBuildSetComputer().createProjectsBuildSet(toCompile);
-		hlc.compile(buildSet);
+		hlc.compile(projects(hlc, toCompile));
 
 		// those should be available
 		assertNotExists(root, "wsp1/P1/outfolder/c/Csrc1.js");
@@ -336,8 +329,7 @@ public class ScenarioTest {
 		hlc.setCompileSourceCode(true);
 		hlc.setProcessTestCode(false);
 
-		final BuildSet buildSet = hlc.getBuildSetComputer().createProjectsBuildSet(toCompile);
-		hlc.compile(buildSet);
+		hlc.compile(projects(hlc, toCompile));
 
 		// those should be available
 		assertExists(root, "wsp1/P1/outfolder/c/Csrc1.js");
@@ -417,8 +409,7 @@ public class ScenarioTest {
 				new File(root, "wsp1"));
 
 		try {
-			final BuildSet buildSet = hlc.getBuildSetComputer().createAllProjectsBuildSet(pProjectRoots);
-			hlc.compile(buildSet);
+			hlc.compile(allProjects(hlc, pProjectRoots));
 			assertFalse("Should not have reached this point.", true);
 		} catch (N4JSCompileException e) {
 			String msg = e.getMessage();
@@ -452,6 +443,20 @@ public class ScenarioTest {
 		// First line is CJS System-patching, second is System-call:
 		String firstLine = lines.get(1).trim();
 		assertFalse("File " + file + " should NOT start with " + content, firstLine.startsWith(content));
+	}
+
+	/**
+	 * Computes a 'Projects' build set based on the given project locations.
+	 */
+	private static BuildSet allProjects(N4HeadlessCompiler hlc, List<File> projectRoots) throws N4JSCompileException {
+		return hlc.getBuildSetComputer().createAllProjectsBuildSet(projectRoots);
+	}
+
+	/**
+	 * Computes an 'All Projects' build set by scanning the given project root locations.
+	 */
+	private static BuildSet projects(N4HeadlessCompiler hlc, List<File> projectLocations) throws N4JSCompileException {
+		return hlc.getBuildSetComputer().createProjectsBuildSet(projectLocations);
 	}
 
 	/**
