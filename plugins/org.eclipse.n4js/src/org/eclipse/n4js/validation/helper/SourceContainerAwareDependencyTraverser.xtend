@@ -21,40 +21,46 @@ import org.eclipse.n4js.utils.DependencyTraverser.DependencyVisitor
 
 /**
  * Class for traversing {@link IN4JSSourceContainerAware source container aware} dependencies and
- * indicating cycles in the dependency graph.
+ * finding cycles in the dependency graph.
  */
 class SourceContainerAwareDependencyTraverser extends DependencyTraverser<IN4JSSourceContainerAware> {
 
 	// this is used by default:
-	static val DEPENDENCIES_VISITOR = new DependencyVisitor<IN4JSSourceContainerAware> () {
+	private static val DEPENDENCIES_VISITOR = new DependencyVisitor<IN4JSSourceContainerAware> () {
 		override visit(IN4JSSourceContainerAware p) {
 			return p.allDirectDependencies;
 		}
 	} 
 	
 	// this is used if external projects of project type VALIDATION are requested to be ignored:
-	static val DEPENDENCIES_VISITOR_IGNORE_EXTERNAL_VALIDATION = new DependencyVisitor<IN4JSSourceContainerAware> () {
+	private static val DEPENDENCIES_VISITOR_IGNORE_EXTERNAL_VALIDATION = new DependencyVisitor<IN4JSSourceContainerAware> () {
 		override visit(IN4JSSourceContainerAware p) {
 			return ImmutableList.copyOf(p.allDirectDependencies.filter[dep|!isExternalValidation(dep)]);
 		}
-	} 
-
-	/** Creates a new traverser instance with the given root node. */
-	new(IN4JSSourceContainerAware rootNode) {
-		this(rootNode, false);
 	}
 
-	/** Creates a new traverser instance with the given root node. */
-	new(IN4JSSourceContainerAware rootNode, boolean ignoreExternalValidationProjects) {
+	/** 
+	 * Creates a new traverser instance with the given root node.
+	 * 
+	 * @param rootNode 
+	 * 				The root node to start the traversal from.
+	 * @param ignoreExternalValidationProjects 
+	 * 				Specifies whether dependency edges to external {@link ProjectType#VALIDATION} projects should
+	 * 				be excluded when traversing the dependency graph.
+	 * @param ignoreCycles
+	 * 				Specifies whether the traverser should terminate early when dependency cycles are 
+	 * 				detected, or whether it should continue.
+	 */
+	public new(IN4JSSourceContainerAware rootNode, boolean ignoreExternalValidationProjects, boolean ignoreCycles) {
 		super(
 			rootNode,
 			SourceContainerAwareEquivalence.INSTANCE,
 			(if (ignoreExternalValidationProjects) DEPENDENCIES_VISITOR_IGNORE_EXTERNAL_VALIDATION else DEPENDENCIES_VISITOR),
-			false
+			ignoreCycles
 		)
 	}
 
-	def private static boolean isExternalValidation(IN4JSSourceContainerAware project) {
+	private static def boolean isExternalValidation(IN4JSSourceContainerAware project) {
 		return project.external
 			&& project instanceof IN4JSProject
 			&& (project as IN4JSProject).projectType===ProjectType.VALIDATION;
@@ -64,7 +70,7 @@ class SourceContainerAwareDependencyTraverser extends DependencyTraverser<IN4JSS
 	 * {@link Equivalence} implementation for {@link IN4JSSourceContainerAware} instances. Considers only the URI of the
 	 * location property.
 	 */
-	static class SourceContainerAwareEquivalence extends Equivalence<IN4JSSourceContainerAware> {
+	private static class SourceContainerAwareEquivalence extends Equivalence<IN4JSSourceContainerAware> {
 
 		private static final SourceContainerAwareEquivalence INSTANCE = new SourceContainerAwareEquivalence();
 
