@@ -65,13 +65,13 @@ public class SEMVERFactoryImpl extends EFactoryImpl implements SEMVERFactory {
 	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
-			case SEMVERPackage.URL_VERSION: return createURLVersion();
+			case SEMVERPackage.URL_VERSION_REQUIREMENT: return createURLVersionRequirement();
 			case SEMVERPackage.URL_SEMVER: return createURLSemver();
 			case SEMVERPackage.URL_COMMIT_ISH: return createURLCommitISH();
-			case SEMVERPackage.GIT_HUB_VERSION: return createGitHubVersion();
-			case SEMVERPackage.LOCAL_PATH_VERSION: return createLocalPathVersion();
-			case SEMVERPackage.TAG_VERSION: return createTagVersion();
-			case SEMVERPackage.VERSION_RANGE_SET: return createVersionRangeSet();
+			case SEMVERPackage.GIT_HUB_VERSION_REQUIREMENT: return createGitHubVersionRequirement();
+			case SEMVERPackage.LOCAL_PATH_VERSION_REQUIREMENT: return createLocalPathVersionRequirement();
+			case SEMVERPackage.TAG_VERSION_REQUIREMENT: return createTagVersionRequirement();
+			case SEMVERPackage.VERSION_RANGE_SET_REQUIREMENT: return createVersionRangeSetRequirement();
 			case SEMVERPackage.HYPHEN_VERSION_RANGE: return createHyphenVersionRange();
 			case SEMVERPackage.VERSION_RANGE_CONSTRAINT: return createVersionRangeConstraint();
 			case SEMVERPackage.SIMPLE_VERSION: return createSimpleVersion();
@@ -119,9 +119,9 @@ public class SEMVERFactoryImpl extends EFactoryImpl implements SEMVERFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public URLVersion createURLVersion() {
-		URLVersionImpl urlVersion = new URLVersionImpl();
-		return urlVersion;
+	public URLVersionRequirement createURLVersionRequirement() {
+		URLVersionRequirementImpl urlVersionRequirement = new URLVersionRequirementImpl();
+		return urlVersionRequirement;
 	}
 
 	/**
@@ -149,9 +149,9 @@ public class SEMVERFactoryImpl extends EFactoryImpl implements SEMVERFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public GitHubVersion createGitHubVersion() {
-		GitHubVersionImpl gitHubVersion = new GitHubVersionImpl();
-		return gitHubVersion;
+	public GitHubVersionRequirement createGitHubVersionRequirement() {
+		GitHubVersionRequirementImpl gitHubVersionRequirement = new GitHubVersionRequirementImpl();
+		return gitHubVersionRequirement;
 	}
 
 	/**
@@ -159,9 +159,9 @@ public class SEMVERFactoryImpl extends EFactoryImpl implements SEMVERFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public LocalPathVersion createLocalPathVersion() {
-		LocalPathVersionImpl localPathVersion = new LocalPathVersionImpl();
-		return localPathVersion;
+	public LocalPathVersionRequirement createLocalPathVersionRequirement() {
+		LocalPathVersionRequirementImpl localPathVersionRequirement = new LocalPathVersionRequirementImpl();
+		return localPathVersionRequirement;
 	}
 
 	/**
@@ -169,9 +169,9 @@ public class SEMVERFactoryImpl extends EFactoryImpl implements SEMVERFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public TagVersion createTagVersion() {
-		TagVersionImpl tagVersion = new TagVersionImpl();
-		return tagVersion;
+	public TagVersionRequirement createTagVersionRequirement() {
+		TagVersionRequirementImpl tagVersionRequirement = new TagVersionRequirementImpl();
+		return tagVersionRequirement;
 	}
 
 	/**
@@ -179,9 +179,9 @@ public class SEMVERFactoryImpl extends EFactoryImpl implements SEMVERFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public VersionRangeSet createVersionRangeSet() {
-		VersionRangeSetImpl versionRangeSet = new VersionRangeSetImpl();
-		return versionRangeSet;
+	public VersionRangeSetRequirement createVersionRangeSetRequirement() {
+		VersionRangeSetRequirementImpl versionRangeSetRequirement = new VersionRangeSetRequirementImpl();
+		return versionRangeSetRequirement;
 	}
 
 	/**

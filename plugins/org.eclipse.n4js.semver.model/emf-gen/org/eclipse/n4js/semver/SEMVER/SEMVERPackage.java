@@ -78,23 +78,23 @@ public interface SEMVERPackage extends EPackage {
 	SEMVERPackage eINSTANCE = org.eclipse.n4js.semver.SEMVER.impl.SEMVERPackageImpl.init();
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.semver.SEMVER.impl.AbstractSEMVERSerializerImpl <em>Abstract SEMVER Serializer</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.n4js.semver.SEMVER.impl.SEMVERtoStringableImpl <em>SEMVE Rto Stringable</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.semver.SEMVER.impl.AbstractSEMVERSerializerImpl
-	 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERPackageImpl#getAbstractSEMVERSerializer()
+	 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERtoStringableImpl
+	 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERPackageImpl#getSEMVERtoStringable()
 	 * @generated
 	 */
-	int ABSTRACT_SEMVER_SERIALIZER = 0;
+	int SEMVE_RTO_STRINGABLE = 0;
 
 	/**
-	 * The number of structural features of the '<em>Abstract SEMVER Serializer</em>' class.
+	 * The number of structural features of the '<em>SEMVE Rto Stringable</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_SEMVER_SERIALIZER_FEATURE_COUNT = 0;
+	int SEMVE_RTO_STRINGABLE_FEATURE_COUNT = 0;
 
 	/**
 	 * The operation id for the '<em>To String</em>' operation.
@@ -103,35 +103,35 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_SEMVER_SERIALIZER___TO_STRING = 0;
+	int SEMVE_RTO_STRINGABLE___TO_STRING = 0;
 
 	/**
-	 * The number of operations of the '<em>Abstract SEMVER Serializer</em>' class.
+	 * The number of operations of the '<em>SEMVE Rto Stringable</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_SEMVER_SERIALIZER_OPERATION_COUNT = 1;
+	int SEMVE_RTO_STRINGABLE_OPERATION_COUNT = 1;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.semver.SEMVER.impl.NPMVersionImpl <em>NPM Version</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.n4js.semver.SEMVER.impl.NPMVersionRequirementImpl <em>NPM Version Requirement</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.semver.SEMVER.impl.NPMVersionImpl
-	 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERPackageImpl#getNPMVersion()
+	 * @see org.eclipse.n4js.semver.SEMVER.impl.NPMVersionRequirementImpl
+	 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERPackageImpl#getNPMVersionRequirement()
 	 * @generated
 	 */
-	int NPM_VERSION = 1;
+	int NPM_VERSION_REQUIREMENT = 1;
 
 	/**
-	 * The number of structural features of the '<em>NPM Version</em>' class.
+	 * The number of structural features of the '<em>NPM Version Requirement</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int NPM_VERSION_FEATURE_COUNT = ABSTRACT_SEMVER_SERIALIZER_FEATURE_COUNT + 0;
+	int NPM_VERSION_REQUIREMENT_FEATURE_COUNT = SEMVE_RTO_STRINGABLE_FEATURE_COUNT + 0;
 
 	/**
 	 * The operation id for the '<em>To String</em>' operation.
@@ -140,26 +140,26 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NPM_VERSION___TO_STRING = ABSTRACT_SEMVER_SERIALIZER___TO_STRING;
+	int NPM_VERSION_REQUIREMENT___TO_STRING = SEMVE_RTO_STRINGABLE___TO_STRING;
 
 	/**
-	 * The number of operations of the '<em>NPM Version</em>' class.
+	 * The number of operations of the '<em>NPM Version Requirement</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int NPM_VERSION_OPERATION_COUNT = ABSTRACT_SEMVER_SERIALIZER_OPERATION_COUNT + 0;
+	int NPM_VERSION_REQUIREMENT_OPERATION_COUNT = SEMVE_RTO_STRINGABLE_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.semver.SEMVER.impl.URLVersionImpl <em>URL Version</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.n4js.semver.SEMVER.impl.URLVersionRequirementImpl <em>URL Version Requirement</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.semver.SEMVER.impl.URLVersionImpl
-	 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERPackageImpl#getURLVersion()
+	 * @see org.eclipse.n4js.semver.SEMVER.impl.URLVersionRequirementImpl
+	 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERPackageImpl#getURLVersionRequirement()
 	 * @generated
 	 */
-	int URL_VERSION = 2;
+	int URL_VERSION_REQUIREMENT = 2;
 
 	/**
 	 * The feature id for the '<em><b>Version Specifier</b></em>' containment reference.
@@ -168,7 +168,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int URL_VERSION__VERSION_SPECIFIER = NPM_VERSION_FEATURE_COUNT + 0;
+	int URL_VERSION_REQUIREMENT__VERSION_SPECIFIER = NPM_VERSION_REQUIREMENT_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Protocol</b></em>' attribute.
@@ -177,7 +177,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int URL_VERSION__PROTOCOL = NPM_VERSION_FEATURE_COUNT + 1;
+	int URL_VERSION_REQUIREMENT__PROTOCOL = NPM_VERSION_REQUIREMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Url</b></em>' attribute.
@@ -186,16 +186,16 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int URL_VERSION__URL = NPM_VERSION_FEATURE_COUNT + 2;
+	int URL_VERSION_REQUIREMENT__URL = NPM_VERSION_REQUIREMENT_FEATURE_COUNT + 2;
 
 	/**
-	 * The number of structural features of the '<em>URL Version</em>' class.
+	 * The number of structural features of the '<em>URL Version Requirement</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int URL_VERSION_FEATURE_COUNT = NPM_VERSION_FEATURE_COUNT + 3;
+	int URL_VERSION_REQUIREMENT_FEATURE_COUNT = NPM_VERSION_REQUIREMENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>To String</em>' operation.
@@ -204,7 +204,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int URL_VERSION___TO_STRING = NPM_VERSION___TO_STRING;
+	int URL_VERSION_REQUIREMENT___TO_STRING = NPM_VERSION_REQUIREMENT___TO_STRING;
 
 	/**
 	 * The operation id for the '<em>Has Simple Version</em>' operation.
@@ -213,7 +213,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int URL_VERSION___HAS_SIMPLE_VERSION = NPM_VERSION_OPERATION_COUNT + 0;
+	int URL_VERSION_REQUIREMENT___HAS_SIMPLE_VERSION = NPM_VERSION_REQUIREMENT_OPERATION_COUNT + 0;
 
 	/**
 	 * The operation id for the '<em>Get Simple Version</em>' operation.
@@ -222,16 +222,16 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int URL_VERSION___GET_SIMPLE_VERSION = NPM_VERSION_OPERATION_COUNT + 1;
+	int URL_VERSION_REQUIREMENT___GET_SIMPLE_VERSION = NPM_VERSION_REQUIREMENT_OPERATION_COUNT + 1;
 
 	/**
-	 * The number of operations of the '<em>URL Version</em>' class.
+	 * The number of operations of the '<em>URL Version Requirement</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int URL_VERSION_OPERATION_COUNT = NPM_VERSION_OPERATION_COUNT + 2;
+	int URL_VERSION_REQUIREMENT_OPERATION_COUNT = NPM_VERSION_REQUIREMENT_OPERATION_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.semver.SEMVER.impl.URLVersionSpecifierImpl <em>URL Version Specifier</em>}' class.
@@ -250,7 +250,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int URL_VERSION_SPECIFIER_FEATURE_COUNT = ABSTRACT_SEMVER_SERIALIZER_FEATURE_COUNT + 0;
+	int URL_VERSION_SPECIFIER_FEATURE_COUNT = SEMVE_RTO_STRINGABLE_FEATURE_COUNT + 0;
 
 	/**
 	 * The operation id for the '<em>To String</em>' operation.
@@ -259,7 +259,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int URL_VERSION_SPECIFIER___TO_STRING = ABSTRACT_SEMVER_SERIALIZER___TO_STRING;
+	int URL_VERSION_SPECIFIER___TO_STRING = SEMVE_RTO_STRINGABLE___TO_STRING;
 
 	/**
 	 * The number of operations of the '<em>URL Version Specifier</em>' class.
@@ -268,7 +268,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int URL_VERSION_SPECIFIER_OPERATION_COUNT = ABSTRACT_SEMVER_SERIALIZER_OPERATION_COUNT + 0;
+	int URL_VERSION_SPECIFIER_OPERATION_COUNT = SEMVE_RTO_STRINGABLE_OPERATION_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.semver.SEMVER.impl.URLSemverImpl <em>URL Semver</em>}' class.
@@ -363,14 +363,14 @@ public interface SEMVERPackage extends EPackage {
 	int URL_COMMIT_ISH_OPERATION_COUNT = URL_VERSION_SPECIFIER_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.semver.SEMVER.impl.GitHubVersionImpl <em>Git Hub Version</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.n4js.semver.SEMVER.impl.GitHubVersionRequirementImpl <em>Git Hub Version Requirement</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.semver.SEMVER.impl.GitHubVersionImpl
-	 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERPackageImpl#getGitHubVersion()
+	 * @see org.eclipse.n4js.semver.SEMVER.impl.GitHubVersionRequirementImpl
+	 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERPackageImpl#getGitHubVersionRequirement()
 	 * @generated
 	 */
-	int GIT_HUB_VERSION = 6;
+	int GIT_HUB_VERSION_REQUIREMENT = 6;
 
 	/**
 	 * The feature id for the '<em><b>Github Url</b></em>' attribute.
@@ -379,7 +379,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GIT_HUB_VERSION__GITHUB_URL = NPM_VERSION_FEATURE_COUNT + 0;
+	int GIT_HUB_VERSION_REQUIREMENT__GITHUB_URL = NPM_VERSION_REQUIREMENT_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Commit ISH</b></em>' attribute.
@@ -388,16 +388,16 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GIT_HUB_VERSION__COMMIT_ISH = NPM_VERSION_FEATURE_COUNT + 1;
+	int GIT_HUB_VERSION_REQUIREMENT__COMMIT_ISH = NPM_VERSION_REQUIREMENT_FEATURE_COUNT + 1;
 
 	/**
-	 * The number of structural features of the '<em>Git Hub Version</em>' class.
+	 * The number of structural features of the '<em>Git Hub Version Requirement</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int GIT_HUB_VERSION_FEATURE_COUNT = NPM_VERSION_FEATURE_COUNT + 2;
+	int GIT_HUB_VERSION_REQUIREMENT_FEATURE_COUNT = NPM_VERSION_REQUIREMENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>To String</em>' operation.
@@ -406,26 +406,26 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GIT_HUB_VERSION___TO_STRING = NPM_VERSION___TO_STRING;
+	int GIT_HUB_VERSION_REQUIREMENT___TO_STRING = NPM_VERSION_REQUIREMENT___TO_STRING;
 
 	/**
-	 * The number of operations of the '<em>Git Hub Version</em>' class.
+	 * The number of operations of the '<em>Git Hub Version Requirement</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int GIT_HUB_VERSION_OPERATION_COUNT = NPM_VERSION_OPERATION_COUNT + 0;
+	int GIT_HUB_VERSION_REQUIREMENT_OPERATION_COUNT = NPM_VERSION_REQUIREMENT_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.semver.SEMVER.impl.LocalPathVersionImpl <em>Local Path Version</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.n4js.semver.SEMVER.impl.LocalPathVersionRequirementImpl <em>Local Path Version Requirement</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.semver.SEMVER.impl.LocalPathVersionImpl
-	 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERPackageImpl#getLocalPathVersion()
+	 * @see org.eclipse.n4js.semver.SEMVER.impl.LocalPathVersionRequirementImpl
+	 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERPackageImpl#getLocalPathVersionRequirement()
 	 * @generated
 	 */
-	int LOCAL_PATH_VERSION = 7;
+	int LOCAL_PATH_VERSION_REQUIREMENT = 7;
 
 	/**
 	 * The feature id for the '<em><b>Local Path</b></em>' attribute.
@@ -434,16 +434,16 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LOCAL_PATH_VERSION__LOCAL_PATH = NPM_VERSION_FEATURE_COUNT + 0;
+	int LOCAL_PATH_VERSION_REQUIREMENT__LOCAL_PATH = NPM_VERSION_REQUIREMENT_FEATURE_COUNT + 0;
 
 	/**
-	 * The number of structural features of the '<em>Local Path Version</em>' class.
+	 * The number of structural features of the '<em>Local Path Version Requirement</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int LOCAL_PATH_VERSION_FEATURE_COUNT = NPM_VERSION_FEATURE_COUNT + 1;
+	int LOCAL_PATH_VERSION_REQUIREMENT_FEATURE_COUNT = NPM_VERSION_REQUIREMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>To String</em>' operation.
@@ -452,26 +452,26 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LOCAL_PATH_VERSION___TO_STRING = NPM_VERSION___TO_STRING;
+	int LOCAL_PATH_VERSION_REQUIREMENT___TO_STRING = NPM_VERSION_REQUIREMENT___TO_STRING;
 
 	/**
-	 * The number of operations of the '<em>Local Path Version</em>' class.
+	 * The number of operations of the '<em>Local Path Version Requirement</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int LOCAL_PATH_VERSION_OPERATION_COUNT = NPM_VERSION_OPERATION_COUNT + 0;
+	int LOCAL_PATH_VERSION_REQUIREMENT_OPERATION_COUNT = NPM_VERSION_REQUIREMENT_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.semver.SEMVER.impl.TagVersionImpl <em>Tag Version</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.n4js.semver.SEMVER.impl.TagVersionRequirementImpl <em>Tag Version Requirement</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.semver.SEMVER.impl.TagVersionImpl
-	 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERPackageImpl#getTagVersion()
+	 * @see org.eclipse.n4js.semver.SEMVER.impl.TagVersionRequirementImpl
+	 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERPackageImpl#getTagVersionRequirement()
 	 * @generated
 	 */
-	int TAG_VERSION = 8;
+	int TAG_VERSION_REQUIREMENT = 8;
 
 	/**
 	 * The feature id for the '<em><b>Tag Name</b></em>' attribute.
@@ -480,16 +480,16 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TAG_VERSION__TAG_NAME = NPM_VERSION_FEATURE_COUNT + 0;
+	int TAG_VERSION_REQUIREMENT__TAG_NAME = NPM_VERSION_REQUIREMENT_FEATURE_COUNT + 0;
 
 	/**
-	 * The number of structural features of the '<em>Tag Version</em>' class.
+	 * The number of structural features of the '<em>Tag Version Requirement</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TAG_VERSION_FEATURE_COUNT = NPM_VERSION_FEATURE_COUNT + 1;
+	int TAG_VERSION_REQUIREMENT_FEATURE_COUNT = NPM_VERSION_REQUIREMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>To String</em>' operation.
@@ -498,26 +498,26 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TAG_VERSION___TO_STRING = NPM_VERSION___TO_STRING;
+	int TAG_VERSION_REQUIREMENT___TO_STRING = NPM_VERSION_REQUIREMENT___TO_STRING;
 
 	/**
-	 * The number of operations of the '<em>Tag Version</em>' class.
+	 * The number of operations of the '<em>Tag Version Requirement</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TAG_VERSION_OPERATION_COUNT = NPM_VERSION_OPERATION_COUNT + 0;
+	int TAG_VERSION_REQUIREMENT_OPERATION_COUNT = NPM_VERSION_REQUIREMENT_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.semver.SEMVER.impl.VersionRangeSetImpl <em>Version Range Set</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.n4js.semver.SEMVER.impl.VersionRangeSetRequirementImpl <em>Version Range Set Requirement</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.semver.SEMVER.impl.VersionRangeSetImpl
-	 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERPackageImpl#getVersionRangeSet()
+	 * @see org.eclipse.n4js.semver.SEMVER.impl.VersionRangeSetRequirementImpl
+	 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERPackageImpl#getVersionRangeSetRequirement()
 	 * @generated
 	 */
-	int VERSION_RANGE_SET = 9;
+	int VERSION_RANGE_SET_REQUIREMENT = 9;
 
 	/**
 	 * The feature id for the '<em><b>Ranges</b></em>' containment reference list.
@@ -526,16 +526,16 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_RANGE_SET__RANGES = NPM_VERSION_FEATURE_COUNT + 0;
+	int VERSION_RANGE_SET_REQUIREMENT__RANGES = NPM_VERSION_REQUIREMENT_FEATURE_COUNT + 0;
 
 	/**
-	 * The number of structural features of the '<em>Version Range Set</em>' class.
+	 * The number of structural features of the '<em>Version Range Set Requirement</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_RANGE_SET_FEATURE_COUNT = NPM_VERSION_FEATURE_COUNT + 1;
+	int VERSION_RANGE_SET_REQUIREMENT_FEATURE_COUNT = NPM_VERSION_REQUIREMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>To String</em>' operation.
@@ -544,16 +544,16 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_RANGE_SET___TO_STRING = NPM_VERSION___TO_STRING;
+	int VERSION_RANGE_SET_REQUIREMENT___TO_STRING = NPM_VERSION_REQUIREMENT___TO_STRING;
 
 	/**
-	 * The number of operations of the '<em>Version Range Set</em>' class.
+	 * The number of operations of the '<em>Version Range Set Requirement</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_RANGE_SET_OPERATION_COUNT = NPM_VERSION_OPERATION_COUNT + 0;
+	int VERSION_RANGE_SET_REQUIREMENT_OPERATION_COUNT = NPM_VERSION_REQUIREMENT_OPERATION_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.semver.SEMVER.impl.VersionRangeImpl <em>Version Range</em>}' class.
@@ -572,7 +572,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_RANGE_FEATURE_COUNT = ABSTRACT_SEMVER_SERIALIZER_FEATURE_COUNT + 0;
+	int VERSION_RANGE_FEATURE_COUNT = SEMVE_RTO_STRINGABLE_FEATURE_COUNT + 0;
 
 	/**
 	 * The operation id for the '<em>To String</em>' operation.
@@ -581,7 +581,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_RANGE___TO_STRING = ABSTRACT_SEMVER_SERIALIZER___TO_STRING;
+	int VERSION_RANGE___TO_STRING = SEMVE_RTO_STRINGABLE___TO_STRING;
 
 	/**
 	 * The number of operations of the '<em>Version Range</em>' class.
@@ -590,7 +590,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_RANGE_OPERATION_COUNT = ABSTRACT_SEMVER_SERIALIZER_OPERATION_COUNT + 0;
+	int VERSION_RANGE_OPERATION_COUNT = SEMVE_RTO_STRINGABLE_OPERATION_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.semver.SEMVER.impl.HyphenVersionRangeImpl <em>Hyphen Version Range</em>}' class.
@@ -710,7 +710,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SIMPLE_VERSION__NUMBER = ABSTRACT_SEMVER_SERIALIZER_FEATURE_COUNT + 0;
+	int SIMPLE_VERSION__NUMBER = SEMVE_RTO_STRINGABLE_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Comparators</b></em>' attribute list.
@@ -719,7 +719,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SIMPLE_VERSION__COMPARATORS = ABSTRACT_SEMVER_SERIALIZER_FEATURE_COUNT + 1;
+	int SIMPLE_VERSION__COMPARATORS = SEMVE_RTO_STRINGABLE_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Simple Version</em>' class.
@@ -728,7 +728,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SIMPLE_VERSION_FEATURE_COUNT = ABSTRACT_SEMVER_SERIALIZER_FEATURE_COUNT + 2;
+	int SIMPLE_VERSION_FEATURE_COUNT = SEMVE_RTO_STRINGABLE_FEATURE_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>To String</em>' operation.
@@ -737,7 +737,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SIMPLE_VERSION___TO_STRING = ABSTRACT_SEMVER_SERIALIZER___TO_STRING;
+	int SIMPLE_VERSION___TO_STRING = SEMVE_RTO_STRINGABLE___TO_STRING;
 
 	/**
 	 * The operation id for the '<em>Is Specific</em>' operation.
@@ -746,7 +746,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SIMPLE_VERSION___IS_SPECIFIC = ABSTRACT_SEMVER_SERIALIZER_OPERATION_COUNT + 0;
+	int SIMPLE_VERSION___IS_SPECIFIC = SEMVE_RTO_STRINGABLE_OPERATION_COUNT + 0;
 
 	/**
 	 * The operation id for the '<em>Is Caret</em>' operation.
@@ -755,7 +755,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SIMPLE_VERSION___IS_CARET = ABSTRACT_SEMVER_SERIALIZER_OPERATION_COUNT + 1;
+	int SIMPLE_VERSION___IS_CARET = SEMVE_RTO_STRINGABLE_OPERATION_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Is Tilde</em>' operation.
@@ -764,7 +764,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SIMPLE_VERSION___IS_TILDE = ABSTRACT_SEMVER_SERIALIZER_OPERATION_COUNT + 2;
+	int SIMPLE_VERSION___IS_TILDE = SEMVE_RTO_STRINGABLE_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Is Greater</em>' operation.
@@ -773,7 +773,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SIMPLE_VERSION___IS_GREATER = ABSTRACT_SEMVER_SERIALIZER_OPERATION_COUNT + 3;
+	int SIMPLE_VERSION___IS_GREATER = SEMVE_RTO_STRINGABLE_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Is Greater Equals</em>' operation.
@@ -782,7 +782,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SIMPLE_VERSION___IS_GREATER_EQUALS = ABSTRACT_SEMVER_SERIALIZER_OPERATION_COUNT + 4;
+	int SIMPLE_VERSION___IS_GREATER_EQUALS = SEMVE_RTO_STRINGABLE_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Is Smaller</em>' operation.
@@ -791,7 +791,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SIMPLE_VERSION___IS_SMALLER = ABSTRACT_SEMVER_SERIALIZER_OPERATION_COUNT + 5;
+	int SIMPLE_VERSION___IS_SMALLER = SEMVE_RTO_STRINGABLE_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Is Smaller Equals</em>' operation.
@@ -800,7 +800,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SIMPLE_VERSION___IS_SMALLER_EQUALS = ABSTRACT_SEMVER_SERIALIZER_OPERATION_COUNT + 6;
+	int SIMPLE_VERSION___IS_SMALLER_EQUALS = SEMVE_RTO_STRINGABLE_OPERATION_COUNT + 6;
 
 	/**
 	 * The number of operations of the '<em>Simple Version</em>' class.
@@ -809,7 +809,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SIMPLE_VERSION_OPERATION_COUNT = ABSTRACT_SEMVER_SERIALIZER_OPERATION_COUNT + 7;
+	int SIMPLE_VERSION_OPERATION_COUNT = SEMVE_RTO_STRINGABLE_OPERATION_COUNT + 7;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.semver.SEMVER.impl.VersionNumberImpl <em>Version Number</em>}' class.
@@ -828,7 +828,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_NUMBER__MAJOR = ABSTRACT_SEMVER_SERIALIZER_FEATURE_COUNT + 0;
+	int VERSION_NUMBER__MAJOR = SEMVE_RTO_STRINGABLE_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Minor</b></em>' containment reference.
@@ -837,7 +837,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_NUMBER__MINOR = ABSTRACT_SEMVER_SERIALIZER_FEATURE_COUNT + 1;
+	int VERSION_NUMBER__MINOR = SEMVE_RTO_STRINGABLE_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Patch</b></em>' containment reference.
@@ -846,7 +846,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_NUMBER__PATCH = ABSTRACT_SEMVER_SERIALIZER_FEATURE_COUNT + 2;
+	int VERSION_NUMBER__PATCH = SEMVE_RTO_STRINGABLE_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Extended</b></em>' containment reference list.
@@ -855,7 +855,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_NUMBER__EXTENDED = ABSTRACT_SEMVER_SERIALIZER_FEATURE_COUNT + 3;
+	int VERSION_NUMBER__EXTENDED = SEMVE_RTO_STRINGABLE_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Qualifier</b></em>' containment reference.
@@ -864,7 +864,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_NUMBER__QUALIFIER = ABSTRACT_SEMVER_SERIALIZER_FEATURE_COUNT + 4;
+	int VERSION_NUMBER__QUALIFIER = SEMVE_RTO_STRINGABLE_FEATURE_COUNT + 4;
 
 	/**
 	 * The number of structural features of the '<em>Version Number</em>' class.
@@ -873,7 +873,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_NUMBER_FEATURE_COUNT = ABSTRACT_SEMVER_SERIALIZER_FEATURE_COUNT + 5;
+	int VERSION_NUMBER_FEATURE_COUNT = SEMVE_RTO_STRINGABLE_FEATURE_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>To String</em>' operation.
@@ -882,7 +882,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_NUMBER___TO_STRING = ABSTRACT_SEMVER_SERIALIZER___TO_STRING;
+	int VERSION_NUMBER___TO_STRING = SEMVE_RTO_STRINGABLE___TO_STRING;
 
 	/**
 	 * The operation id for the '<em>Get Pre Release Tag</em>' operation.
@@ -891,7 +891,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_NUMBER___GET_PRE_RELEASE_TAG = ABSTRACT_SEMVER_SERIALIZER_OPERATION_COUNT + 0;
+	int VERSION_NUMBER___GET_PRE_RELEASE_TAG = SEMVE_RTO_STRINGABLE_OPERATION_COUNT + 0;
 
 	/**
 	 * The operation id for the '<em>Has Pre Release Tag</em>' operation.
@@ -900,7 +900,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_NUMBER___HAS_PRE_RELEASE_TAG = ABSTRACT_SEMVER_SERIALIZER_OPERATION_COUNT + 1;
+	int VERSION_NUMBER___HAS_PRE_RELEASE_TAG = SEMVE_RTO_STRINGABLE_OPERATION_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Length</em>' operation.
@@ -909,7 +909,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_NUMBER___LENGTH = ABSTRACT_SEMVER_SERIALIZER_OPERATION_COUNT + 2;
+	int VERSION_NUMBER___LENGTH = SEMVE_RTO_STRINGABLE_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Get Part</em>' operation.
@@ -918,7 +918,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_NUMBER___GET_PART__INT = ABSTRACT_SEMVER_SERIALIZER_OPERATION_COUNT + 3;
+	int VERSION_NUMBER___GET_PART__INT = SEMVE_RTO_STRINGABLE_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Equals</em>' operation.
@@ -927,7 +927,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_NUMBER___EQUALS__OBJECT = ABSTRACT_SEMVER_SERIALIZER_OPERATION_COUNT + 4;
+	int VERSION_NUMBER___EQUALS__OBJECT = SEMVE_RTO_STRINGABLE_OPERATION_COUNT + 4;
 
 	/**
 	 * The number of operations of the '<em>Version Number</em>' class.
@@ -936,7 +936,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_NUMBER_OPERATION_COUNT = ABSTRACT_SEMVER_SERIALIZER_OPERATION_COUNT + 5;
+	int VERSION_NUMBER_OPERATION_COUNT = SEMVE_RTO_STRINGABLE_OPERATION_COUNT + 5;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.semver.SEMVER.impl.VersionPartImpl <em>Version Part</em>}' class.
@@ -955,7 +955,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_PART__WILDCARD = ABSTRACT_SEMVER_SERIALIZER_FEATURE_COUNT + 0;
+	int VERSION_PART__WILDCARD = SEMVE_RTO_STRINGABLE_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Number Raw</b></em>' attribute.
@@ -964,7 +964,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_PART__NUMBER_RAW = ABSTRACT_SEMVER_SERIALIZER_FEATURE_COUNT + 1;
+	int VERSION_PART__NUMBER_RAW = SEMVE_RTO_STRINGABLE_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Version Part</em>' class.
@@ -973,7 +973,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_PART_FEATURE_COUNT = ABSTRACT_SEMVER_SERIALIZER_FEATURE_COUNT + 2;
+	int VERSION_PART_FEATURE_COUNT = SEMVE_RTO_STRINGABLE_FEATURE_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>To String</em>' operation.
@@ -982,7 +982,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_PART___TO_STRING = ABSTRACT_SEMVER_SERIALIZER___TO_STRING;
+	int VERSION_PART___TO_STRING = SEMVE_RTO_STRINGABLE___TO_STRING;
 
 	/**
 	 * The operation id for the '<em>Get Number</em>' operation.
@@ -991,7 +991,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_PART___GET_NUMBER = ABSTRACT_SEMVER_SERIALIZER_OPERATION_COUNT + 0;
+	int VERSION_PART___GET_NUMBER = SEMVE_RTO_STRINGABLE_OPERATION_COUNT + 0;
 
 	/**
 	 * The operation id for the '<em>Equals</em>' operation.
@@ -1000,7 +1000,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_PART___EQUALS__OBJECT = ABSTRACT_SEMVER_SERIALIZER_OPERATION_COUNT + 1;
+	int VERSION_PART___EQUALS__OBJECT = SEMVE_RTO_STRINGABLE_OPERATION_COUNT + 1;
 
 	/**
 	 * The number of operations of the '<em>Version Part</em>' class.
@@ -1009,7 +1009,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_PART_OPERATION_COUNT = ABSTRACT_SEMVER_SERIALIZER_OPERATION_COUNT + 2;
+	int VERSION_PART_OPERATION_COUNT = SEMVE_RTO_STRINGABLE_OPERATION_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.semver.SEMVER.impl.QualifierImpl <em>Qualifier</em>}' class.
@@ -1028,7 +1028,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int QUALIFIER__PRE_RELEASE = ABSTRACT_SEMVER_SERIALIZER_FEATURE_COUNT + 0;
+	int QUALIFIER__PRE_RELEASE = SEMVE_RTO_STRINGABLE_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Build Metadata</b></em>' containment reference.
@@ -1037,7 +1037,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int QUALIFIER__BUILD_METADATA = ABSTRACT_SEMVER_SERIALIZER_FEATURE_COUNT + 1;
+	int QUALIFIER__BUILD_METADATA = SEMVE_RTO_STRINGABLE_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Qualifier</em>' class.
@@ -1046,7 +1046,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int QUALIFIER_FEATURE_COUNT = ABSTRACT_SEMVER_SERIALIZER_FEATURE_COUNT + 2;
+	int QUALIFIER_FEATURE_COUNT = SEMVE_RTO_STRINGABLE_FEATURE_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>To String</em>' operation.
@@ -1055,7 +1055,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int QUALIFIER___TO_STRING = ABSTRACT_SEMVER_SERIALIZER___TO_STRING;
+	int QUALIFIER___TO_STRING = SEMVE_RTO_STRINGABLE___TO_STRING;
 
 	/**
 	 * The operation id for the '<em>Equals</em>' operation.
@@ -1064,7 +1064,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int QUALIFIER___EQUALS__OBJECT = ABSTRACT_SEMVER_SERIALIZER_OPERATION_COUNT + 0;
+	int QUALIFIER___EQUALS__OBJECT = SEMVE_RTO_STRINGABLE_OPERATION_COUNT + 0;
 
 	/**
 	 * The number of operations of the '<em>Qualifier</em>' class.
@@ -1073,7 +1073,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int QUALIFIER_OPERATION_COUNT = ABSTRACT_SEMVER_SERIALIZER_OPERATION_COUNT + 1;
+	int QUALIFIER_OPERATION_COUNT = SEMVE_RTO_STRINGABLE_OPERATION_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.semver.SEMVER.impl.QualifierTagImpl <em>Qualifier Tag</em>}' class.
@@ -1092,7 +1092,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int QUALIFIER_TAG__PARTS = ABSTRACT_SEMVER_SERIALIZER_FEATURE_COUNT + 0;
+	int QUALIFIER_TAG__PARTS = SEMVE_RTO_STRINGABLE_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>Qualifier Tag</em>' class.
@@ -1101,7 +1101,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int QUALIFIER_TAG_FEATURE_COUNT = ABSTRACT_SEMVER_SERIALIZER_FEATURE_COUNT + 1;
+	int QUALIFIER_TAG_FEATURE_COUNT = SEMVE_RTO_STRINGABLE_FEATURE_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>To String</em>' operation.
@@ -1110,7 +1110,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int QUALIFIER_TAG___TO_STRING = ABSTRACT_SEMVER_SERIALIZER___TO_STRING;
+	int QUALIFIER_TAG___TO_STRING = SEMVE_RTO_STRINGABLE___TO_STRING;
 
 	/**
 	 * The operation id for the '<em>Equals</em>' operation.
@@ -1119,7 +1119,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int QUALIFIER_TAG___EQUALS__OBJECT = ABSTRACT_SEMVER_SERIALIZER_OPERATION_COUNT + 0;
+	int QUALIFIER_TAG___EQUALS__OBJECT = SEMVE_RTO_STRINGABLE_OPERATION_COUNT + 0;
 
 	/**
 	 * The number of operations of the '<em>Qualifier Tag</em>' class.
@@ -1128,7 +1128,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int QUALIFIER_TAG_OPERATION_COUNT = ABSTRACT_SEMVER_SERIALIZER_OPERATION_COUNT + 1;
+	int QUALIFIER_TAG_OPERATION_COUNT = SEMVE_RTO_STRINGABLE_OPERATION_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.semver.SEMVER.VersionComparator <em>Version Comparator</em>}' enum.
@@ -1142,97 +1142,97 @@ public interface SEMVERPackage extends EPackage {
 
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.semver.SEMVER.AbstractSEMVERSerializer <em>Abstract SEMVER Serializer</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.n4js.semver.SEMVER.SEMVERtoStringable <em>SEMVE Rto Stringable</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Abstract SEMVER Serializer</em>'.
-	 * @see org.eclipse.n4js.semver.SEMVER.AbstractSEMVERSerializer
+	 * @return the meta object for class '<em>SEMVE Rto Stringable</em>'.
+	 * @see org.eclipse.n4js.semver.SEMVER.SEMVERtoStringable
 	 * @generated
 	 */
-	EClass getAbstractSEMVERSerializer();
+	EClass getSEMVERtoStringable();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.semver.SEMVER.AbstractSEMVERSerializer#toString() <em>To String</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.semver.SEMVER.SEMVERtoStringable#toString() <em>To String</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the '<em>To String</em>' operation.
-	 * @see org.eclipse.n4js.semver.SEMVER.AbstractSEMVERSerializer#toString()
+	 * @see org.eclipse.n4js.semver.SEMVER.SEMVERtoStringable#toString()
 	 * @generated
 	 */
-	EOperation getAbstractSEMVERSerializer__ToString();
+	EOperation getSEMVERtoStringable__ToString();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.semver.SEMVER.NPMVersion <em>NPM Version</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.n4js.semver.SEMVER.NPMVersionRequirement <em>NPM Version Requirement</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>NPM Version</em>'.
-	 * @see org.eclipse.n4js.semver.SEMVER.NPMVersion
+	 * @return the meta object for class '<em>NPM Version Requirement</em>'.
+	 * @see org.eclipse.n4js.semver.SEMVER.NPMVersionRequirement
 	 * @generated
 	 */
-	EClass getNPMVersion();
+	EClass getNPMVersionRequirement();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.semver.SEMVER.URLVersion <em>URL Version</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.n4js.semver.SEMVER.URLVersionRequirement <em>URL Version Requirement</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>URL Version</em>'.
-	 * @see org.eclipse.n4js.semver.SEMVER.URLVersion
+	 * @return the meta object for class '<em>URL Version Requirement</em>'.
+	 * @see org.eclipse.n4js.semver.SEMVER.URLVersionRequirement
 	 * @generated
 	 */
-	EClass getURLVersion();
+	EClass getURLVersionRequirement();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.semver.SEMVER.URLVersion#getVersionSpecifier <em>Version Specifier</em>}'.
+	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.semver.SEMVER.URLVersionRequirement#getVersionSpecifier <em>Version Specifier</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference '<em>Version Specifier</em>'.
-	 * @see org.eclipse.n4js.semver.SEMVER.URLVersion#getVersionSpecifier()
-	 * @see #getURLVersion()
+	 * @see org.eclipse.n4js.semver.SEMVER.URLVersionRequirement#getVersionSpecifier()
+	 * @see #getURLVersionRequirement()
 	 * @generated
 	 */
-	EReference getURLVersion_VersionSpecifier();
+	EReference getURLVersionRequirement_VersionSpecifier();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.semver.SEMVER.URLVersion#getProtocol <em>Protocol</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.semver.SEMVER.URLVersionRequirement#getProtocol <em>Protocol</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Protocol</em>'.
-	 * @see org.eclipse.n4js.semver.SEMVER.URLVersion#getProtocol()
-	 * @see #getURLVersion()
+	 * @see org.eclipse.n4js.semver.SEMVER.URLVersionRequirement#getProtocol()
+	 * @see #getURLVersionRequirement()
 	 * @generated
 	 */
-	EAttribute getURLVersion_Protocol();
+	EAttribute getURLVersionRequirement_Protocol();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.semver.SEMVER.URLVersion#getUrl <em>Url</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.semver.SEMVER.URLVersionRequirement#getUrl <em>Url</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Url</em>'.
-	 * @see org.eclipse.n4js.semver.SEMVER.URLVersion#getUrl()
-	 * @see #getURLVersion()
+	 * @see org.eclipse.n4js.semver.SEMVER.URLVersionRequirement#getUrl()
+	 * @see #getURLVersionRequirement()
 	 * @generated
 	 */
-	EAttribute getURLVersion_Url();
+	EAttribute getURLVersionRequirement_Url();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.semver.SEMVER.URLVersion#hasSimpleVersion() <em>Has Simple Version</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.semver.SEMVER.URLVersionRequirement#hasSimpleVersion() <em>Has Simple Version</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the '<em>Has Simple Version</em>' operation.
-	 * @see org.eclipse.n4js.semver.SEMVER.URLVersion#hasSimpleVersion()
+	 * @see org.eclipse.n4js.semver.SEMVER.URLVersionRequirement#hasSimpleVersion()
 	 * @generated
 	 */
-	EOperation getURLVersion__HasSimpleVersion();
+	EOperation getURLVersionRequirement__HasSimpleVersion();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.semver.SEMVER.URLVersion#getSimpleVersion() <em>Get Simple Version</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.semver.SEMVER.URLVersionRequirement#getSimpleVersion() <em>Get Simple Version</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the '<em>Get Simple Version</em>' operation.
-	 * @see org.eclipse.n4js.semver.SEMVER.URLVersion#getSimpleVersion()
+	 * @see org.eclipse.n4js.semver.SEMVER.URLVersionRequirement#getSimpleVersion()
 	 * @generated
 	 */
-	EOperation getURLVersion__GetSimpleVersion();
+	EOperation getURLVersionRequirement__GetSimpleVersion();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.semver.SEMVER.URLVersionSpecifier <em>URL Version Specifier</em>}'.
@@ -1287,99 +1287,99 @@ public interface SEMVERPackage extends EPackage {
 	EAttribute getURLCommitISH_CommitISH();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.semver.SEMVER.GitHubVersion <em>Git Hub Version</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.n4js.semver.SEMVER.GitHubVersionRequirement <em>Git Hub Version Requirement</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Git Hub Version</em>'.
-	 * @see org.eclipse.n4js.semver.SEMVER.GitHubVersion
+	 * @return the meta object for class '<em>Git Hub Version Requirement</em>'.
+	 * @see org.eclipse.n4js.semver.SEMVER.GitHubVersionRequirement
 	 * @generated
 	 */
-	EClass getGitHubVersion();
+	EClass getGitHubVersionRequirement();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.semver.SEMVER.GitHubVersion#getGithubUrl <em>Github Url</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.semver.SEMVER.GitHubVersionRequirement#getGithubUrl <em>Github Url</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Github Url</em>'.
-	 * @see org.eclipse.n4js.semver.SEMVER.GitHubVersion#getGithubUrl()
-	 * @see #getGitHubVersion()
+	 * @see org.eclipse.n4js.semver.SEMVER.GitHubVersionRequirement#getGithubUrl()
+	 * @see #getGitHubVersionRequirement()
 	 * @generated
 	 */
-	EAttribute getGitHubVersion_GithubUrl();
+	EAttribute getGitHubVersionRequirement_GithubUrl();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.semver.SEMVER.GitHubVersion#getCommitISH <em>Commit ISH</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.semver.SEMVER.GitHubVersionRequirement#getCommitISH <em>Commit ISH</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Commit ISH</em>'.
-	 * @see org.eclipse.n4js.semver.SEMVER.GitHubVersion#getCommitISH()
-	 * @see #getGitHubVersion()
+	 * @see org.eclipse.n4js.semver.SEMVER.GitHubVersionRequirement#getCommitISH()
+	 * @see #getGitHubVersionRequirement()
 	 * @generated
 	 */
-	EAttribute getGitHubVersion_CommitISH();
+	EAttribute getGitHubVersionRequirement_CommitISH();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.semver.SEMVER.LocalPathVersion <em>Local Path Version</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.n4js.semver.SEMVER.LocalPathVersionRequirement <em>Local Path Version Requirement</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Local Path Version</em>'.
-	 * @see org.eclipse.n4js.semver.SEMVER.LocalPathVersion
+	 * @return the meta object for class '<em>Local Path Version Requirement</em>'.
+	 * @see org.eclipse.n4js.semver.SEMVER.LocalPathVersionRequirement
 	 * @generated
 	 */
-	EClass getLocalPathVersion();
+	EClass getLocalPathVersionRequirement();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.semver.SEMVER.LocalPathVersion#getLocalPath <em>Local Path</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.semver.SEMVER.LocalPathVersionRequirement#getLocalPath <em>Local Path</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Local Path</em>'.
-	 * @see org.eclipse.n4js.semver.SEMVER.LocalPathVersion#getLocalPath()
-	 * @see #getLocalPathVersion()
+	 * @see org.eclipse.n4js.semver.SEMVER.LocalPathVersionRequirement#getLocalPath()
+	 * @see #getLocalPathVersionRequirement()
 	 * @generated
 	 */
-	EAttribute getLocalPathVersion_LocalPath();
+	EAttribute getLocalPathVersionRequirement_LocalPath();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.semver.SEMVER.TagVersion <em>Tag Version</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.n4js.semver.SEMVER.TagVersionRequirement <em>Tag Version Requirement</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Tag Version</em>'.
-	 * @see org.eclipse.n4js.semver.SEMVER.TagVersion
+	 * @return the meta object for class '<em>Tag Version Requirement</em>'.
+	 * @see org.eclipse.n4js.semver.SEMVER.TagVersionRequirement
 	 * @generated
 	 */
-	EClass getTagVersion();
+	EClass getTagVersionRequirement();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.semver.SEMVER.TagVersion#getTagName <em>Tag Name</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.semver.SEMVER.TagVersionRequirement#getTagName <em>Tag Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Tag Name</em>'.
-	 * @see org.eclipse.n4js.semver.SEMVER.TagVersion#getTagName()
-	 * @see #getTagVersion()
+	 * @see org.eclipse.n4js.semver.SEMVER.TagVersionRequirement#getTagName()
+	 * @see #getTagVersionRequirement()
 	 * @generated
 	 */
-	EAttribute getTagVersion_TagName();
+	EAttribute getTagVersionRequirement_TagName();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.semver.SEMVER.VersionRangeSet <em>Version Range Set</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.n4js.semver.SEMVER.VersionRangeSetRequirement <em>Version Range Set Requirement</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Version Range Set</em>'.
-	 * @see org.eclipse.n4js.semver.SEMVER.VersionRangeSet
+	 * @return the meta object for class '<em>Version Range Set Requirement</em>'.
+	 * @see org.eclipse.n4js.semver.SEMVER.VersionRangeSetRequirement
 	 * @generated
 	 */
-	EClass getVersionRangeSet();
+	EClass getVersionRangeSetRequirement();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.semver.SEMVER.VersionRangeSet#getRanges <em>Ranges</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.semver.SEMVER.VersionRangeSetRequirement#getRanges <em>Ranges</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>Ranges</em>'.
-	 * @see org.eclipse.n4js.semver.SEMVER.VersionRangeSet#getRanges()
-	 * @see #getVersionRangeSet()
+	 * @see org.eclipse.n4js.semver.SEMVER.VersionRangeSetRequirement#getRanges()
+	 * @see #getVersionRangeSetRequirement()
 	 * @generated
 	 */
-	EReference getVersionRangeSet_Ranges();
+	EReference getVersionRangeSetRequirement_Ranges();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.semver.SEMVER.VersionRange <em>Version Range</em>}'.
@@ -1820,14 +1820,14 @@ public interface SEMVERPackage extends EPackage {
 	 */
 	interface Literals {
 		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.semver.SEMVER.impl.AbstractSEMVERSerializerImpl <em>Abstract SEMVER Serializer</em>}' class.
+		 * The meta object literal for the '{@link org.eclipse.n4js.semver.SEMVER.impl.SEMVERtoStringableImpl <em>SEMVE Rto Stringable</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.semver.SEMVER.impl.AbstractSEMVERSerializerImpl
-		 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERPackageImpl#getAbstractSEMVERSerializer()
+		 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERtoStringableImpl
+		 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERPackageImpl#getSEMVERtoStringable()
 		 * @generated
 		 */
-		EClass ABSTRACT_SEMVER_SERIALIZER = eINSTANCE.getAbstractSEMVERSerializer();
+		EClass SEMVE_RTO_STRINGABLE = eINSTANCE.getSEMVERtoStringable();
 
 		/**
 		 * The meta object literal for the '<em><b>To String</b></em>' operation.
@@ -1835,27 +1835,27 @@ public interface SEMVERPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation ABSTRACT_SEMVER_SERIALIZER___TO_STRING = eINSTANCE.getAbstractSEMVERSerializer__ToString();
+		EOperation SEMVE_RTO_STRINGABLE___TO_STRING = eINSTANCE.getSEMVERtoStringable__ToString();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.semver.SEMVER.impl.NPMVersionImpl <em>NPM Version</em>}' class.
+		 * The meta object literal for the '{@link org.eclipse.n4js.semver.SEMVER.impl.NPMVersionRequirementImpl <em>NPM Version Requirement</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.semver.SEMVER.impl.NPMVersionImpl
-		 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERPackageImpl#getNPMVersion()
+		 * @see org.eclipse.n4js.semver.SEMVER.impl.NPMVersionRequirementImpl
+		 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERPackageImpl#getNPMVersionRequirement()
 		 * @generated
 		 */
-		EClass NPM_VERSION = eINSTANCE.getNPMVersion();
+		EClass NPM_VERSION_REQUIREMENT = eINSTANCE.getNPMVersionRequirement();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.semver.SEMVER.impl.URLVersionImpl <em>URL Version</em>}' class.
+		 * The meta object literal for the '{@link org.eclipse.n4js.semver.SEMVER.impl.URLVersionRequirementImpl <em>URL Version Requirement</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.semver.SEMVER.impl.URLVersionImpl
-		 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERPackageImpl#getURLVersion()
+		 * @see org.eclipse.n4js.semver.SEMVER.impl.URLVersionRequirementImpl
+		 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERPackageImpl#getURLVersionRequirement()
 		 * @generated
 		 */
-		EClass URL_VERSION = eINSTANCE.getURLVersion();
+		EClass URL_VERSION_REQUIREMENT = eINSTANCE.getURLVersionRequirement();
 
 		/**
 		 * The meta object literal for the '<em><b>Version Specifier</b></em>' containment reference feature.
@@ -1863,7 +1863,7 @@ public interface SEMVERPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference URL_VERSION__VERSION_SPECIFIER = eINSTANCE.getURLVersion_VersionSpecifier();
+		EReference URL_VERSION_REQUIREMENT__VERSION_SPECIFIER = eINSTANCE.getURLVersionRequirement_VersionSpecifier();
 
 		/**
 		 * The meta object literal for the '<em><b>Protocol</b></em>' attribute feature.
@@ -1871,7 +1871,7 @@ public interface SEMVERPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute URL_VERSION__PROTOCOL = eINSTANCE.getURLVersion_Protocol();
+		EAttribute URL_VERSION_REQUIREMENT__PROTOCOL = eINSTANCE.getURLVersionRequirement_Protocol();
 
 		/**
 		 * The meta object literal for the '<em><b>Url</b></em>' attribute feature.
@@ -1879,7 +1879,7 @@ public interface SEMVERPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute URL_VERSION__URL = eINSTANCE.getURLVersion_Url();
+		EAttribute URL_VERSION_REQUIREMENT__URL = eINSTANCE.getURLVersionRequirement_Url();
 
 		/**
 		 * The meta object literal for the '<em><b>Has Simple Version</b></em>' operation.
@@ -1887,7 +1887,7 @@ public interface SEMVERPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation URL_VERSION___HAS_SIMPLE_VERSION = eINSTANCE.getURLVersion__HasSimpleVersion();
+		EOperation URL_VERSION_REQUIREMENT___HAS_SIMPLE_VERSION = eINSTANCE.getURLVersionRequirement__HasSimpleVersion();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Simple Version</b></em>' operation.
@@ -1895,7 +1895,7 @@ public interface SEMVERPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation URL_VERSION___GET_SIMPLE_VERSION = eINSTANCE.getURLVersion__GetSimpleVersion();
+		EOperation URL_VERSION_REQUIREMENT___GET_SIMPLE_VERSION = eINSTANCE.getURLVersionRequirement__GetSimpleVersion();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.semver.SEMVER.impl.URLVersionSpecifierImpl <em>URL Version Specifier</em>}' class.
@@ -1944,14 +1944,14 @@ public interface SEMVERPackage extends EPackage {
 		EAttribute URL_COMMIT_ISH__COMMIT_ISH = eINSTANCE.getURLCommitISH_CommitISH();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.semver.SEMVER.impl.GitHubVersionImpl <em>Git Hub Version</em>}' class.
+		 * The meta object literal for the '{@link org.eclipse.n4js.semver.SEMVER.impl.GitHubVersionRequirementImpl <em>Git Hub Version Requirement</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.semver.SEMVER.impl.GitHubVersionImpl
-		 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERPackageImpl#getGitHubVersion()
+		 * @see org.eclipse.n4js.semver.SEMVER.impl.GitHubVersionRequirementImpl
+		 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERPackageImpl#getGitHubVersionRequirement()
 		 * @generated
 		 */
-		EClass GIT_HUB_VERSION = eINSTANCE.getGitHubVersion();
+		EClass GIT_HUB_VERSION_REQUIREMENT = eINSTANCE.getGitHubVersionRequirement();
 
 		/**
 		 * The meta object literal for the '<em><b>Github Url</b></em>' attribute feature.
@@ -1959,7 +1959,7 @@ public interface SEMVERPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute GIT_HUB_VERSION__GITHUB_URL = eINSTANCE.getGitHubVersion_GithubUrl();
+		EAttribute GIT_HUB_VERSION_REQUIREMENT__GITHUB_URL = eINSTANCE.getGitHubVersionRequirement_GithubUrl();
 
 		/**
 		 * The meta object literal for the '<em><b>Commit ISH</b></em>' attribute feature.
@@ -1967,17 +1967,17 @@ public interface SEMVERPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute GIT_HUB_VERSION__COMMIT_ISH = eINSTANCE.getGitHubVersion_CommitISH();
+		EAttribute GIT_HUB_VERSION_REQUIREMENT__COMMIT_ISH = eINSTANCE.getGitHubVersionRequirement_CommitISH();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.semver.SEMVER.impl.LocalPathVersionImpl <em>Local Path Version</em>}' class.
+		 * The meta object literal for the '{@link org.eclipse.n4js.semver.SEMVER.impl.LocalPathVersionRequirementImpl <em>Local Path Version Requirement</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.semver.SEMVER.impl.LocalPathVersionImpl
-		 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERPackageImpl#getLocalPathVersion()
+		 * @see org.eclipse.n4js.semver.SEMVER.impl.LocalPathVersionRequirementImpl
+		 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERPackageImpl#getLocalPathVersionRequirement()
 		 * @generated
 		 */
-		EClass LOCAL_PATH_VERSION = eINSTANCE.getLocalPathVersion();
+		EClass LOCAL_PATH_VERSION_REQUIREMENT = eINSTANCE.getLocalPathVersionRequirement();
 
 		/**
 		 * The meta object literal for the '<em><b>Local Path</b></em>' attribute feature.
@@ -1985,17 +1985,17 @@ public interface SEMVERPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute LOCAL_PATH_VERSION__LOCAL_PATH = eINSTANCE.getLocalPathVersion_LocalPath();
+		EAttribute LOCAL_PATH_VERSION_REQUIREMENT__LOCAL_PATH = eINSTANCE.getLocalPathVersionRequirement_LocalPath();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.semver.SEMVER.impl.TagVersionImpl <em>Tag Version</em>}' class.
+		 * The meta object literal for the '{@link org.eclipse.n4js.semver.SEMVER.impl.TagVersionRequirementImpl <em>Tag Version Requirement</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.semver.SEMVER.impl.TagVersionImpl
-		 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERPackageImpl#getTagVersion()
+		 * @see org.eclipse.n4js.semver.SEMVER.impl.TagVersionRequirementImpl
+		 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERPackageImpl#getTagVersionRequirement()
 		 * @generated
 		 */
-		EClass TAG_VERSION = eINSTANCE.getTagVersion();
+		EClass TAG_VERSION_REQUIREMENT = eINSTANCE.getTagVersionRequirement();
 
 		/**
 		 * The meta object literal for the '<em><b>Tag Name</b></em>' attribute feature.
@@ -2003,17 +2003,17 @@ public interface SEMVERPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute TAG_VERSION__TAG_NAME = eINSTANCE.getTagVersion_TagName();
+		EAttribute TAG_VERSION_REQUIREMENT__TAG_NAME = eINSTANCE.getTagVersionRequirement_TagName();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.semver.SEMVER.impl.VersionRangeSetImpl <em>Version Range Set</em>}' class.
+		 * The meta object literal for the '{@link org.eclipse.n4js.semver.SEMVER.impl.VersionRangeSetRequirementImpl <em>Version Range Set Requirement</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.semver.SEMVER.impl.VersionRangeSetImpl
-		 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERPackageImpl#getVersionRangeSet()
+		 * @see org.eclipse.n4js.semver.SEMVER.impl.VersionRangeSetRequirementImpl
+		 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERPackageImpl#getVersionRangeSetRequirement()
 		 * @generated
 		 */
-		EClass VERSION_RANGE_SET = eINSTANCE.getVersionRangeSet();
+		EClass VERSION_RANGE_SET_REQUIREMENT = eINSTANCE.getVersionRangeSetRequirement();
 
 		/**
 		 * The meta object literal for the '<em><b>Ranges</b></em>' containment reference list feature.
@@ -2021,7 +2021,7 @@ public interface SEMVERPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference VERSION_RANGE_SET__RANGES = eINSTANCE.getVersionRangeSet_Ranges();
+		EReference VERSION_RANGE_SET_REQUIREMENT__RANGES = eINSTANCE.getVersionRangeSetRequirement_Ranges();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.semver.SEMVER.impl.VersionRangeImpl <em>Version Range</em>}' class.

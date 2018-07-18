@@ -28,7 +28,7 @@ package org.eclipse.n4js.semver.SEMVER;
  * @model
  * @generated
  */
-public interface Qualifier extends AbstractSEMVERSerializer {
+public interface Qualifier extends SEMVERtoStringable {
 	/**
 	 * Returns the value of the '<em><b>Pre Release</b></em>' containment reference.
 	 * <!-- begin-user-doc -->

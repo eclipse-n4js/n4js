@@ -4,21 +4,21 @@ import java.io.IOException;
 import java.io.Writer;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.semver.SEMVER.GitHubVersion;
+import org.eclipse.n4js.semver.SEMVER.GitHubVersionRequirement;
 import org.eclipse.n4js.semver.SEMVER.HyphenVersionRange;
-import org.eclipse.n4js.semver.SEMVER.LocalPathVersion;
+import org.eclipse.n4js.semver.SEMVER.LocalPathVersionRequirement;
 import org.eclipse.n4js.semver.SEMVER.Qualifier;
 import org.eclipse.n4js.semver.SEMVER.QualifierTag;
 import org.eclipse.n4js.semver.SEMVER.SimpleVersion;
-import org.eclipse.n4js.semver.SEMVER.TagVersion;
+import org.eclipse.n4js.semver.SEMVER.TagVersionRequirement;
 import org.eclipse.n4js.semver.SEMVER.URLCommitISH;
 import org.eclipse.n4js.semver.SEMVER.URLSemver;
-import org.eclipse.n4js.semver.SEMVER.URLVersion;
+import org.eclipse.n4js.semver.SEMVER.URLVersionRequirement;
 import org.eclipse.n4js.semver.SEMVER.VersionComparator;
 import org.eclipse.n4js.semver.SEMVER.VersionNumber;
 import org.eclipse.n4js.semver.SEMVER.VersionPart;
 import org.eclipse.n4js.semver.SEMVER.VersionRangeConstraint;
-import org.eclipse.n4js.semver.SEMVER.VersionRangeSet;
+import org.eclipse.n4js.semver.SEMVER.VersionRangeSetRequirement;
 import org.eclipse.xtext.resource.SaveOptions;
 import org.eclipse.xtext.serializer.ISerializer;
 import org.eclipse.xtext.util.ReplaceRegion;
@@ -37,8 +37,8 @@ public class SEMVERSerializer implements ISerializer {
 		return new SEMVERSerializer().serialize(vc);
 	}
 
-	/** @return string representation of {@link URLVersion} */
-	public String serialize(URLVersion urlv) {
+	/** @return string representation of {@link URLVersionRequirement} */
+	public String serialize(URLVersionRequirement urlv) {
 		if (urlv == null)
 			return "";
 
@@ -67,16 +67,16 @@ public class SEMVERSerializer implements ISerializer {
 		return urlc.getCommitISH();
 	}
 
-	/** @return string representation of {@link TagVersion} */
-	public String serialize(TagVersion tv) {
+	/** @return string representation of {@link TagVersionRequirement} */
+	public String serialize(TagVersionRequirement tv) {
 		if (tv == null)
 			return "";
 
 		return tv.getTagName();
 	}
 
-	/** @return string representation of {@link GitHubVersion} */
-	public String serialize(GitHubVersion ghv) {
+	/** @return string representation of {@link GitHubVersionRequirement} */
+	public String serialize(GitHubVersionRequirement ghv) {
 		if (ghv == null)
 			return "";
 
@@ -86,16 +86,16 @@ public class SEMVERSerializer implements ISerializer {
 		return str;
 	}
 
-	/** @return string representation of {@link LocalPathVersion} */
-	public String serialize(LocalPathVersion lpv) {
+	/** @return string representation of {@link LocalPathVersionRequirement} */
+	public String serialize(LocalPathVersionRequirement lpv) {
 		if (lpv == null)
 			return "";
 
 		return "file:" + lpv.getLocalPath();
 	}
 
-	/** @return string representation of {@link VersionRangeSet} */
-	public String serialize(VersionRangeSet vrs) {
+	/** @return string representation of {@link VersionRangeSetRequirement} */
+	public String serialize(VersionRangeSetRequirement vrs) {
 		if (vrs == null)
 			return "";
 
@@ -228,8 +228,8 @@ public class SEMVERSerializer implements ISerializer {
 		if (obj == null)
 			return "";
 
-		if (obj instanceof URLVersion) {
-			return serialize((URLVersion) obj);
+		if (obj instanceof URLVersionRequirement) {
+			return serialize((URLVersionRequirement) obj);
 		}
 		if (obj instanceof URLSemver) {
 			return serialize((URLSemver) obj);
@@ -237,17 +237,17 @@ public class SEMVERSerializer implements ISerializer {
 		if (obj instanceof URLCommitISH) {
 			return serialize((URLCommitISH) obj);
 		}
-		if (obj instanceof TagVersion) {
-			return serialize((TagVersion) obj);
+		if (obj instanceof TagVersionRequirement) {
+			return serialize((TagVersionRequirement) obj);
 		}
-		if (obj instanceof GitHubVersion) {
-			return serialize((GitHubVersion) obj);
+		if (obj instanceof GitHubVersionRequirement) {
+			return serialize((GitHubVersionRequirement) obj);
 		}
-		if (obj instanceof LocalPathVersion) {
-			return serialize((LocalPathVersion) obj);
+		if (obj instanceof LocalPathVersionRequirement) {
+			return serialize((LocalPathVersionRequirement) obj);
 		}
-		if (obj instanceof VersionRangeSet) {
-			return serialize((VersionRangeSet) obj);
+		if (obj instanceof VersionRangeSetRequirement) {
+			return serialize((VersionRangeSetRequirement) obj);
 		}
 		if (obj instanceof HyphenVersionRange) {
 			return serialize((HyphenVersionRange) obj);

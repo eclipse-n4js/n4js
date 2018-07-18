@@ -12,13 +12,13 @@ package org.eclipse.n4js.semver.formatting2
 
 import org.eclipse.n4js.semver.SEMVER.HyphenVersionRange
 import org.eclipse.n4js.semver.SEMVER.VersionRange
-import org.eclipse.n4js.semver.SEMVER.VersionRangeSet
 import org.eclipse.xtext.formatting2.AbstractFormatter2
 import org.eclipse.xtext.formatting2.IFormattableDocument
+import org.eclipse.n4js.semver.SEMVER.VersionRangeSetRequirement
 
 class SEMVERFormatter extends AbstractFormatter2 {
 
-	def dispatch void format(VersionRangeSet versionRangeSet, extension IFormattableDocument document) {
+	def dispatch void format(VersionRangeSetRequirement versionRangeSet, extension IFormattableDocument document) {
 		// TODO: format HiddenRegions around keywords, attributes, cross references, etc. 
 		for (VersionRange versionRange : versionRangeSet.getRanges()) {
 			versionRange.format;

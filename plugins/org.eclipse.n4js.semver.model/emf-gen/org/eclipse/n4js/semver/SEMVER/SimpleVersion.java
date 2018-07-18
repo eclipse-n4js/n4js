@@ -29,7 +29,7 @@ import org.eclipse.emf.common.util.EList;
  * @model
  * @generated
  */
-public interface SimpleVersion extends AbstractSEMVERSerializer {
+public interface SimpleVersion extends SEMVERtoStringable {
 	/**
 	 * Returns the value of the '<em><b>Number</b></em>' containment reference.
 	 * <!-- begin-user-doc -->

@@ -39,7 +39,7 @@ import org.eclipse.n4js.semver.SEMVER.VersionPart;
  *
  * @generated
  */
-public class VersionPartImpl extends AbstractSEMVERSerializerImpl implements VersionPart {
+public class VersionPartImpl extends SEMVERtoStringableImpl implements VersionPart {
 	/**
 	 * The default value of the '{@link #isWildcard() <em>Wildcard</em>}' attribute.
 	 * <!-- begin-user-doc -->

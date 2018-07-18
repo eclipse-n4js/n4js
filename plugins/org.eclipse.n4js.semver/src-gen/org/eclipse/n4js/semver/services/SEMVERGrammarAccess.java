@@ -33,66 +33,67 @@ import org.eclipse.xtext.service.GrammarProvider;
 @Singleton
 public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 	
-	public class NPMVersionElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.SEMVER.NPMVersion");
+	public class NPMVersionRequirementElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.SEMVER.NPMVersionRequirement");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
 		private final Group cGroup_0 = (Group)cAlternatives.eContents().get(0);
 		private final RuleCall cWSTerminalRuleCall_0_0 = (RuleCall)cGroup_0.eContents().get(0);
-		private final RuleCall cVersionRangeSetParserRuleCall_0_1 = (RuleCall)cGroup_0.eContents().get(1);
+		private final RuleCall cVersionRangeSetRequirementParserRuleCall_0_1 = (RuleCall)cGroup_0.eContents().get(1);
 		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
 		private final Alternatives cAlternatives_1_0 = (Alternatives)cGroup_1.eContents().get(0);
-		private final RuleCall cURLVersionParserRuleCall_1_0_0 = (RuleCall)cAlternatives_1_0.eContents().get(0);
-		private final RuleCall cLocalPathVersionParserRuleCall_1_0_1 = (RuleCall)cAlternatives_1_0.eContents().get(1);
-		private final RuleCall cGitHubVersionParserRuleCall_1_0_2 = (RuleCall)cAlternatives_1_0.eContents().get(2);
-		private final RuleCall cTagVersionParserRuleCall_1_0_3 = (RuleCall)cAlternatives_1_0.eContents().get(3);
+		private final RuleCall cURLVersionRequirementParserRuleCall_1_0_0 = (RuleCall)cAlternatives_1_0.eContents().get(0);
+		private final RuleCall cLocalPathVersionRequirementParserRuleCall_1_0_1 = (RuleCall)cAlternatives_1_0.eContents().get(1);
+		private final RuleCall cGitHubVersionRequirementParserRuleCall_1_0_2 = (RuleCall)cAlternatives_1_0.eContents().get(2);
+		private final RuleCall cTagVersionRequirementParserRuleCall_1_0_3 = (RuleCall)cAlternatives_1_0.eContents().get(3);
 		private final RuleCall cWSTerminalRuleCall_1_1 = (RuleCall)cGroup_1.eContents().get(1);
 		
 		//// This grammar of SemVer 2.0.0 is an adapted version of the BNF found at:
 		////  https://docs.npmjs.com/misc/semver
-		//NPMVersion:
+		//NPMVersionRequirement:
 		//	WS*
-		//	VersionRangeSet
-		//	| (URLVersion
-		//	| LocalPathVersion
-		//	| GitHubVersion
-		//	| TagVersion) WS*;
+		//	VersionRangeSetRequirement
+		//	| (URLVersionRequirement
+		//	| LocalPathVersionRequirement
+		//	| GitHubVersionRequirement
+		//	| TagVersionRequirement) WS*;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//WS* VersionRangeSet | (URLVersion | LocalPathVersion | GitHubVersion | TagVersion) WS*
+		//WS* VersionRangeSetRequirement | (URLVersionRequirement | LocalPathVersionRequirement | GitHubVersionRequirement |
+		//TagVersionRequirement) WS*
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
-		//WS* VersionRangeSet
+		//WS* VersionRangeSetRequirement
 		public Group getGroup_0() { return cGroup_0; }
 		
 		//WS*
 		public RuleCall getWSTerminalRuleCall_0_0() { return cWSTerminalRuleCall_0_0; }
 		
-		//VersionRangeSet
-		public RuleCall getVersionRangeSetParserRuleCall_0_1() { return cVersionRangeSetParserRuleCall_0_1; }
+		//VersionRangeSetRequirement
+		public RuleCall getVersionRangeSetRequirementParserRuleCall_0_1() { return cVersionRangeSetRequirementParserRuleCall_0_1; }
 		
-		//(URLVersion | LocalPathVersion | GitHubVersion | TagVersion) WS*
+		//(URLVersionRequirement | LocalPathVersionRequirement | GitHubVersionRequirement | TagVersionRequirement) WS*
 		public Group getGroup_1() { return cGroup_1; }
 		
-		//URLVersion | LocalPathVersion | GitHubVersion | TagVersion
+		//URLVersionRequirement | LocalPathVersionRequirement | GitHubVersionRequirement | TagVersionRequirement
 		public Alternatives getAlternatives_1_0() { return cAlternatives_1_0; }
 		
-		//URLVersion
-		public RuleCall getURLVersionParserRuleCall_1_0_0() { return cURLVersionParserRuleCall_1_0_0; }
+		//URLVersionRequirement
+		public RuleCall getURLVersionRequirementParserRuleCall_1_0_0() { return cURLVersionRequirementParserRuleCall_1_0_0; }
 		
-		//LocalPathVersion
-		public RuleCall getLocalPathVersionParserRuleCall_1_0_1() { return cLocalPathVersionParserRuleCall_1_0_1; }
+		//LocalPathVersionRequirement
+		public RuleCall getLocalPathVersionRequirementParserRuleCall_1_0_1() { return cLocalPathVersionRequirementParserRuleCall_1_0_1; }
 		
-		//GitHubVersion
-		public RuleCall getGitHubVersionParserRuleCall_1_0_2() { return cGitHubVersionParserRuleCall_1_0_2; }
+		//GitHubVersionRequirement
+		public RuleCall getGitHubVersionRequirementParserRuleCall_1_0_2() { return cGitHubVersionRequirementParserRuleCall_1_0_2; }
 		
-		//TagVersion
-		public RuleCall getTagVersionParserRuleCall_1_0_3() { return cTagVersionParserRuleCall_1_0_3; }
+		//TagVersionRequirement
+		public RuleCall getTagVersionRequirementParserRuleCall_1_0_3() { return cTagVersionRequirementParserRuleCall_1_0_3; }
 		
 		//WS*
 		public RuleCall getWSTerminalRuleCall_1_1() { return cWSTerminalRuleCall_1_1; }
 	}
-	public class URLVersionElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.SEMVER.URLVersion");
+	public class URLVersionRequirementElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.SEMVER.URLVersionRequirement");
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Assignment cProtocolAssignment_0 = (Assignment)cGroup.eContents().get(0);
 		private final RuleCall cProtocolURL_PROTOCOLParserRuleCall_0_0 = (RuleCall)cProtocolAssignment_0.eContents().get(0);
@@ -104,7 +105,7 @@ public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cVersionSpecifierAssignment_3_1 = (Assignment)cGroup_3.eContents().get(1);
 		private final RuleCall cVersionSpecifierURLVersionSpecifierParserRuleCall_3_1_0 = (RuleCall)cVersionSpecifierAssignment_3_1.eContents().get(0);
 		
-		//URLVersion:
+		//URLVersionRequirement:
 		//	protocol=URL_PROTOCOL '://' url=URL ('#' versionSpecifier=URLVersionSpecifier)?;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -196,12 +197,12 @@ public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 		//ALPHA_NUMERIC_CHARS
 		public RuleCall getCommitISHALPHA_NUMERIC_CHARSParserRuleCall_0() { return cCommitISHALPHA_NUMERIC_CHARSParserRuleCall_0; }
 	}
-	public class TagVersionElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.SEMVER.TagVersion");
+	public class TagVersionRequirementElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.SEMVER.TagVersionRequirement");
 		private final Assignment cTagNameAssignment = (Assignment)rule.eContents().get(1);
 		private final RuleCall cTagNameTAGParserRuleCall_0 = (RuleCall)cTagNameAssignment.eContents().get(0);
 		
-		//TagVersion:
+		//TagVersionRequirement:
 		//	tagName=TAG;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -211,8 +212,8 @@ public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 		//TAG
 		public RuleCall getTagNameTAGParserRuleCall_0() { return cTagNameTAGParserRuleCall_0; }
 	}
-	public class GitHubVersionElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.SEMVER.GitHubVersion");
+	public class GitHubVersionRequirementElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.SEMVER.GitHubVersionRequirement");
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Assignment cGithubUrlAssignment_0 = (Assignment)cGroup.eContents().get(0);
 		private final RuleCall cGithubUrlURLParserRuleCall_0_0 = (RuleCall)cGithubUrlAssignment_0.eContents().get(0);
@@ -221,7 +222,7 @@ public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cCommitISHAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
 		private final RuleCall cCommitISHALPHA_NUMERIC_CHARSParserRuleCall_1_1_0 = (RuleCall)cCommitISHAssignment_1_1.eContents().get(0);
 		
-		//GitHubVersion:
+		//GitHubVersionRequirement:
 		//	githubUrl=URL ('#' commitISH=ALPHA_NUMERIC_CHARS)?;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -246,14 +247,14 @@ public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 		//ALPHA_NUMERIC_CHARS
 		public RuleCall getCommitISHALPHA_NUMERIC_CHARSParserRuleCall_1_1_0() { return cCommitISHALPHA_NUMERIC_CHARSParserRuleCall_1_1_0; }
 	}
-	public class LocalPathVersionElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.SEMVER.LocalPathVersion");
+	public class LocalPathVersionRequirementElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.SEMVER.LocalPathVersionRequirement");
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Keyword cFileKeyword_0 = (Keyword)cGroup.eContents().get(0);
 		private final Assignment cLocalPathAssignment_1 = (Assignment)cGroup.eContents().get(1);
 		private final RuleCall cLocalPathPATHParserRuleCall_1_0 = (RuleCall)cLocalPathAssignment_1.eContents().get(0);
 		
-		//LocalPathVersion:
+		//LocalPathVersionRequirement:
 		//	"file:" localPath=PATH;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -269,10 +270,10 @@ public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 		//PATH
 		public RuleCall getLocalPathPATHParserRuleCall_1_0() { return cLocalPathPATHParserRuleCall_1_0; }
 	}
-	public class VersionRangeSetElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.SEMVER.VersionRangeSet");
+	public class VersionRangeSetRequirementElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.SEMVER.VersionRangeSetRequirement");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Action cVersionRangeSetAction_0 = (Action)cGroup.eContents().get(0);
+		private final Action cVersionRangeSetRequirementAction_0 = (Action)cGroup.eContents().get(0);
 		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
 		private final Assignment cRangesAssignment_1_0 = (Assignment)cGroup_1.eContents().get(0);
 		private final RuleCall cRangesVersionRangeParserRuleCall_1_0_0 = (RuleCall)cRangesAssignment_1_0.eContents().get(0);
@@ -284,15 +285,15 @@ public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cRangesVersionRangeParserRuleCall_1_1_3_0 = (RuleCall)cRangesAssignment_1_1_3.eContents().get(0);
 		private final RuleCall cWSTerminalRuleCall_1_2 = (RuleCall)cGroup_1.eContents().get(2);
 		
-		//VersionRangeSet:
-		//	{VersionRangeSet} (ranges+=VersionRange (WS* '||' WS* ranges+=VersionRange)* WS*)?;
+		//VersionRangeSetRequirement:
+		//	{VersionRangeSetRequirement} (ranges+=VersionRange (WS* '||' WS* ranges+=VersionRange)* WS*)?;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//{VersionRangeSet} (ranges+=VersionRange (WS* '||' WS* ranges+=VersionRange)* WS*)?
+		//{VersionRangeSetRequirement} (ranges+=VersionRange (WS* '||' WS* ranges+=VersionRange)* WS*)?
 		public Group getGroup() { return cGroup; }
 		
-		//{VersionRangeSet}
-		public Action getVersionRangeSetAction_0() { return cVersionRangeSetAction_0; }
+		//{VersionRangeSetRequirement}
+		public Action getVersionRangeSetRequirementAction_0() { return cVersionRangeSetRequirementAction_0; }
 		
 		//(ranges+=VersionRange (WS* '||' WS* ranges+=VersionRange)* WS*)?
 		public Group getGroup_1() { return cGroup_1; }
@@ -940,15 +941,15 @@ public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 		public Keyword getGreaterEqualsGreaterThanSignEqualsSignKeyword_7_0() { return cGreaterEqualsGreaterThanSignEqualsSignKeyword_7_0; }
 	}
 	
-	private final NPMVersionElements pNPMVersion;
-	private final URLVersionElements pURLVersion;
+	private final NPMVersionRequirementElements pNPMVersionRequirement;
+	private final URLVersionRequirementElements pURLVersionRequirement;
 	private final URLVersionSpecifierElements pURLVersionSpecifier;
 	private final URLSemverElements pURLSemver;
 	private final URLCommitISHElements pURLCommitISH;
-	private final TagVersionElements pTagVersion;
-	private final GitHubVersionElements pGitHubVersion;
-	private final LocalPathVersionElements pLocalPathVersion;
-	private final VersionRangeSetElements pVersionRangeSet;
+	private final TagVersionRequirementElements pTagVersionRequirement;
+	private final GitHubVersionRequirementElements pGitHubVersionRequirement;
+	private final LocalPathVersionRequirementElements pLocalPathVersionRequirement;
+	private final VersionRangeSetRequirementElements pVersionRangeSetRequirement;
 	private final VersionRangeElements pVersionRange;
 	private final HyphenVersionRangeElements pHyphenVersionRange;
 	private final VersionRangeContraintElements pVersionRangeContraint;
@@ -981,15 +982,15 @@ public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 			UnicodeGrammarAccess gaUnicode) {
 		this.grammar = internalFindGrammar(grammarProvider);
 		this.gaUnicode = gaUnicode;
-		this.pNPMVersion = new NPMVersionElements();
-		this.pURLVersion = new URLVersionElements();
+		this.pNPMVersionRequirement = new NPMVersionRequirementElements();
+		this.pURLVersionRequirement = new URLVersionRequirementElements();
 		this.pURLVersionSpecifier = new URLVersionSpecifierElements();
 		this.pURLSemver = new URLSemverElements();
 		this.pURLCommitISH = new URLCommitISHElements();
-		this.pTagVersion = new TagVersionElements();
-		this.pGitHubVersion = new GitHubVersionElements();
-		this.pLocalPathVersion = new LocalPathVersionElements();
-		this.pVersionRangeSet = new VersionRangeSetElements();
+		this.pTagVersionRequirement = new TagVersionRequirementElements();
+		this.pGitHubVersionRequirement = new GitHubVersionRequirementElements();
+		this.pLocalPathVersionRequirement = new LocalPathVersionRequirementElements();
+		this.pVersionRangeSetRequirement = new VersionRangeSetRequirementElements();
 		this.pVersionRange = new VersionRangeElements();
 		this.pHyphenVersionRange = new HyphenVersionRangeElements();
 		this.pVersionRangeContraint = new VersionRangeContraintElements();
@@ -1043,29 +1044,29 @@ public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//// This grammar of SemVer 2.0.0 is an adapted version of the BNF found at:
 	////  https://docs.npmjs.com/misc/semver
-	//NPMVersion:
+	//NPMVersionRequirement:
 	//	WS*
-	//	VersionRangeSet
-	//	| (URLVersion
-	//	| LocalPathVersion
-	//	| GitHubVersion
-	//	| TagVersion) WS*;
-	public NPMVersionElements getNPMVersionAccess() {
-		return pNPMVersion;
+	//	VersionRangeSetRequirement
+	//	| (URLVersionRequirement
+	//	| LocalPathVersionRequirement
+	//	| GitHubVersionRequirement
+	//	| TagVersionRequirement) WS*;
+	public NPMVersionRequirementElements getNPMVersionRequirementAccess() {
+		return pNPMVersionRequirement;
 	}
 	
-	public ParserRule getNPMVersionRule() {
-		return getNPMVersionAccess().getRule();
+	public ParserRule getNPMVersionRequirementRule() {
+		return getNPMVersionRequirementAccess().getRule();
 	}
 	
-	//URLVersion:
+	//URLVersionRequirement:
 	//	protocol=URL_PROTOCOL '://' url=URL ('#' versionSpecifier=URLVersionSpecifier)?;
-	public URLVersionElements getURLVersionAccess() {
-		return pURLVersion;
+	public URLVersionRequirementElements getURLVersionRequirementAccess() {
+		return pURLVersionRequirement;
 	}
 	
-	public ParserRule getURLVersionRule() {
-		return getURLVersionAccess().getRule();
+	public ParserRule getURLVersionRequirementRule() {
+		return getURLVersionRequirementAccess().getRule();
 	}
 	
 	//URLVersionSpecifier:
@@ -1099,44 +1100,44 @@ public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 		return getURLCommitISHAccess().getRule();
 	}
 	
-	//TagVersion:
+	//TagVersionRequirement:
 	//	tagName=TAG;
-	public TagVersionElements getTagVersionAccess() {
-		return pTagVersion;
+	public TagVersionRequirementElements getTagVersionRequirementAccess() {
+		return pTagVersionRequirement;
 	}
 	
-	public ParserRule getTagVersionRule() {
-		return getTagVersionAccess().getRule();
+	public ParserRule getTagVersionRequirementRule() {
+		return getTagVersionRequirementAccess().getRule();
 	}
 	
-	//GitHubVersion:
+	//GitHubVersionRequirement:
 	//	githubUrl=URL ('#' commitISH=ALPHA_NUMERIC_CHARS)?;
-	public GitHubVersionElements getGitHubVersionAccess() {
-		return pGitHubVersion;
+	public GitHubVersionRequirementElements getGitHubVersionRequirementAccess() {
+		return pGitHubVersionRequirement;
 	}
 	
-	public ParserRule getGitHubVersionRule() {
-		return getGitHubVersionAccess().getRule();
+	public ParserRule getGitHubVersionRequirementRule() {
+		return getGitHubVersionRequirementAccess().getRule();
 	}
 	
-	//LocalPathVersion:
+	//LocalPathVersionRequirement:
 	//	"file:" localPath=PATH;
-	public LocalPathVersionElements getLocalPathVersionAccess() {
-		return pLocalPathVersion;
+	public LocalPathVersionRequirementElements getLocalPathVersionRequirementAccess() {
+		return pLocalPathVersionRequirement;
 	}
 	
-	public ParserRule getLocalPathVersionRule() {
-		return getLocalPathVersionAccess().getRule();
+	public ParserRule getLocalPathVersionRequirementRule() {
+		return getLocalPathVersionRequirementAccess().getRule();
 	}
 	
-	//VersionRangeSet:
-	//	{VersionRangeSet} (ranges+=VersionRange (WS* '||' WS* ranges+=VersionRange)* WS*)?;
-	public VersionRangeSetElements getVersionRangeSetAccess() {
-		return pVersionRangeSet;
+	//VersionRangeSetRequirement:
+	//	{VersionRangeSetRequirement} (ranges+=VersionRange (WS* '||' WS* ranges+=VersionRange)* WS*)?;
+	public VersionRangeSetRequirementElements getVersionRangeSetRequirementAccess() {
+		return pVersionRangeSetRequirement;
 	}
 	
-	public ParserRule getVersionRangeSetRule() {
-		return getVersionRangeSetAccess().getRule();
+	public ParserRule getVersionRangeSetRequirementRule() {
+		return getVersionRangeSetRequirementAccess().getRule();
 	}
 	
 	//VersionRange:

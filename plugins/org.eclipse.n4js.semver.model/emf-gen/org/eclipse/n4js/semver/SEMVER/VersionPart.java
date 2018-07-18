@@ -28,7 +28,7 @@ package org.eclipse.n4js.semver.SEMVER;
  * @model
  * @generated
  */
-public interface VersionPart extends AbstractSEMVERSerializer {
+public interface VersionPart extends SEMVERtoStringable {
 	/**
 	 * Returns the value of the '<em><b>Wildcard</b></em>' attribute.
 	 * <!-- begin-user-doc -->

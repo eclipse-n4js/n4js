@@ -21,5 +21,5 @@ package org.eclipse.n4js.semver.SEMVER;
  * @model abstract="true"
  * @generated
  */
-public interface URLVersionSpecifier extends AbstractSEMVERSerializer {
+public interface URLVersionSpecifier extends SEMVERtoStringable {
 } // URLVersionSpecifier

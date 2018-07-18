@@ -57,50 +57,50 @@ import org.eclipse.n4js.semver.services.SEMVERGrammarAccess;
 	}
 }
 
-// Entry rule entryRuleNPMVersion
-entryRuleNPMVersion
+// Entry rule entryRuleNPMVersionRequirement
+entryRuleNPMVersionRequirement
 :
-{ before(grammarAccess.getNPMVersionRule()); }
-	 ruleNPMVersion
-{ after(grammarAccess.getNPMVersionRule()); } 
+{ before(grammarAccess.getNPMVersionRequirementRule()); }
+	 ruleNPMVersionRequirement
+{ after(grammarAccess.getNPMVersionRequirementRule()); } 
 	 EOF 
 ;
 
-// Rule NPMVersion
-ruleNPMVersion 
+// Rule NPMVersionRequirement
+ruleNPMVersionRequirement 
 	@init {
 		int stackSize = keepStackSize();
 	}
 	:
 	(
-		{ before(grammarAccess.getNPMVersionAccess().getAlternatives()); }
-		(rule__NPMVersion__Alternatives)
-		{ after(grammarAccess.getNPMVersionAccess().getAlternatives()); }
+		{ before(grammarAccess.getNPMVersionRequirementAccess().getAlternatives()); }
+		(rule__NPMVersionRequirement__Alternatives)
+		{ after(grammarAccess.getNPMVersionRequirementAccess().getAlternatives()); }
 	)
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-// Entry rule entryRuleURLVersion
-entryRuleURLVersion
+// Entry rule entryRuleURLVersionRequirement
+entryRuleURLVersionRequirement
 :
-{ before(grammarAccess.getURLVersionRule()); }
-	 ruleURLVersion
-{ after(grammarAccess.getURLVersionRule()); } 
+{ before(grammarAccess.getURLVersionRequirementRule()); }
+	 ruleURLVersionRequirement
+{ after(grammarAccess.getURLVersionRequirementRule()); } 
 	 EOF 
 ;
 
-// Rule URLVersion
-ruleURLVersion 
+// Rule URLVersionRequirement
+ruleURLVersionRequirement 
 	@init {
 		int stackSize = keepStackSize();
 	}
 	:
 	(
-		{ before(grammarAccess.getURLVersionAccess().getGroup()); }
-		(rule__URLVersion__Group__0)
-		{ after(grammarAccess.getURLVersionAccess().getGroup()); }
+		{ before(grammarAccess.getURLVersionRequirementAccess().getGroup()); }
+		(rule__URLVersionRequirement__Group__0)
+		{ after(grammarAccess.getURLVersionRequirementAccess().getGroup()); }
 	)
 ;
 finally {
@@ -182,100 +182,100 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-// Entry rule entryRuleTagVersion
-entryRuleTagVersion
+// Entry rule entryRuleTagVersionRequirement
+entryRuleTagVersionRequirement
 :
-{ before(grammarAccess.getTagVersionRule()); }
-	 ruleTagVersion
-{ after(grammarAccess.getTagVersionRule()); } 
+{ before(grammarAccess.getTagVersionRequirementRule()); }
+	 ruleTagVersionRequirement
+{ after(grammarAccess.getTagVersionRequirementRule()); } 
 	 EOF 
 ;
 
-// Rule TagVersion
-ruleTagVersion 
+// Rule TagVersionRequirement
+ruleTagVersionRequirement 
 	@init {
 		int stackSize = keepStackSize();
 	}
 	:
 	(
-		{ before(grammarAccess.getTagVersionAccess().getTagNameAssignment()); }
-		(rule__TagVersion__TagNameAssignment)
-		{ after(grammarAccess.getTagVersionAccess().getTagNameAssignment()); }
+		{ before(grammarAccess.getTagVersionRequirementAccess().getTagNameAssignment()); }
+		(rule__TagVersionRequirement__TagNameAssignment)
+		{ after(grammarAccess.getTagVersionRequirementAccess().getTagNameAssignment()); }
 	)
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-// Entry rule entryRuleGitHubVersion
-entryRuleGitHubVersion
+// Entry rule entryRuleGitHubVersionRequirement
+entryRuleGitHubVersionRequirement
 :
-{ before(grammarAccess.getGitHubVersionRule()); }
-	 ruleGitHubVersion
-{ after(grammarAccess.getGitHubVersionRule()); } 
+{ before(grammarAccess.getGitHubVersionRequirementRule()); }
+	 ruleGitHubVersionRequirement
+{ after(grammarAccess.getGitHubVersionRequirementRule()); } 
 	 EOF 
 ;
 
-// Rule GitHubVersion
-ruleGitHubVersion 
+// Rule GitHubVersionRequirement
+ruleGitHubVersionRequirement 
 	@init {
 		int stackSize = keepStackSize();
 	}
 	:
 	(
-		{ before(grammarAccess.getGitHubVersionAccess().getGroup()); }
-		(rule__GitHubVersion__Group__0)
-		{ after(grammarAccess.getGitHubVersionAccess().getGroup()); }
+		{ before(grammarAccess.getGitHubVersionRequirementAccess().getGroup()); }
+		(rule__GitHubVersionRequirement__Group__0)
+		{ after(grammarAccess.getGitHubVersionRequirementAccess().getGroup()); }
 	)
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-// Entry rule entryRuleLocalPathVersion
-entryRuleLocalPathVersion
+// Entry rule entryRuleLocalPathVersionRequirement
+entryRuleLocalPathVersionRequirement
 :
-{ before(grammarAccess.getLocalPathVersionRule()); }
-	 ruleLocalPathVersion
-{ after(grammarAccess.getLocalPathVersionRule()); } 
+{ before(grammarAccess.getLocalPathVersionRequirementRule()); }
+	 ruleLocalPathVersionRequirement
+{ after(grammarAccess.getLocalPathVersionRequirementRule()); } 
 	 EOF 
 ;
 
-// Rule LocalPathVersion
-ruleLocalPathVersion 
+// Rule LocalPathVersionRequirement
+ruleLocalPathVersionRequirement 
 	@init {
 		int stackSize = keepStackSize();
 	}
 	:
 	(
-		{ before(grammarAccess.getLocalPathVersionAccess().getGroup()); }
-		(rule__LocalPathVersion__Group__0)
-		{ after(grammarAccess.getLocalPathVersionAccess().getGroup()); }
+		{ before(grammarAccess.getLocalPathVersionRequirementAccess().getGroup()); }
+		(rule__LocalPathVersionRequirement__Group__0)
+		{ after(grammarAccess.getLocalPathVersionRequirementAccess().getGroup()); }
 	)
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-// Entry rule entryRuleVersionRangeSet
-entryRuleVersionRangeSet
+// Entry rule entryRuleVersionRangeSetRequirement
+entryRuleVersionRangeSetRequirement
 :
-{ before(grammarAccess.getVersionRangeSetRule()); }
-	 ruleVersionRangeSet
-{ after(grammarAccess.getVersionRangeSetRule()); } 
+{ before(grammarAccess.getVersionRangeSetRequirementRule()); }
+	 ruleVersionRangeSetRequirement
+{ after(grammarAccess.getVersionRangeSetRequirementRule()); } 
 	 EOF 
 ;
 
-// Rule VersionRangeSet
-ruleVersionRangeSet 
+// Rule VersionRangeSetRequirement
+ruleVersionRangeSetRequirement 
 	@init {
 		int stackSize = keepStackSize();
 	}
 	:
 	(
-		{ before(grammarAccess.getVersionRangeSetAccess().getGroup()); }
-		(rule__VersionRangeSet__Group__0)
-		{ after(grammarAccess.getVersionRangeSetAccess().getGroup()); }
+		{ before(grammarAccess.getVersionRangeSetRequirementAccess().getGroup()); }
+		(rule__VersionRangeSetRequirement__Group__0)
+		{ after(grammarAccess.getVersionRangeSetRequirementAccess().getGroup()); }
 	)
 ;
 finally {
@@ -687,54 +687,54 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__NPMVersion__Alternatives
+rule__NPMVersionRequirement__Alternatives
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getNPMVersionAccess().getGroup_0()); }
-		(rule__NPMVersion__Group_0__0)
-		{ after(grammarAccess.getNPMVersionAccess().getGroup_0()); }
+		{ before(grammarAccess.getNPMVersionRequirementAccess().getGroup_0()); }
+		(rule__NPMVersionRequirement__Group_0__0)
+		{ after(grammarAccess.getNPMVersionRequirementAccess().getGroup_0()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getNPMVersionAccess().getGroup_1()); }
-		(rule__NPMVersion__Group_1__0)
-		{ after(grammarAccess.getNPMVersionAccess().getGroup_1()); }
+		{ before(grammarAccess.getNPMVersionRequirementAccess().getGroup_1()); }
+		(rule__NPMVersionRequirement__Group_1__0)
+		{ after(grammarAccess.getNPMVersionRequirementAccess().getGroup_1()); }
 	)
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__NPMVersion__Alternatives_1_0
+rule__NPMVersionRequirement__Alternatives_1_0
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getNPMVersionAccess().getURLVersionParserRuleCall_1_0_0()); }
-		ruleURLVersion
-		{ after(grammarAccess.getNPMVersionAccess().getURLVersionParserRuleCall_1_0_0()); }
+		{ before(grammarAccess.getNPMVersionRequirementAccess().getURLVersionRequirementParserRuleCall_1_0_0()); }
+		ruleURLVersionRequirement
+		{ after(grammarAccess.getNPMVersionRequirementAccess().getURLVersionRequirementParserRuleCall_1_0_0()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getNPMVersionAccess().getLocalPathVersionParserRuleCall_1_0_1()); }
-		ruleLocalPathVersion
-		{ after(grammarAccess.getNPMVersionAccess().getLocalPathVersionParserRuleCall_1_0_1()); }
+		{ before(grammarAccess.getNPMVersionRequirementAccess().getLocalPathVersionRequirementParserRuleCall_1_0_1()); }
+		ruleLocalPathVersionRequirement
+		{ after(grammarAccess.getNPMVersionRequirementAccess().getLocalPathVersionRequirementParserRuleCall_1_0_1()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getNPMVersionAccess().getGitHubVersionParserRuleCall_1_0_2()); }
-		ruleGitHubVersion
-		{ after(grammarAccess.getNPMVersionAccess().getGitHubVersionParserRuleCall_1_0_2()); }
+		{ before(grammarAccess.getNPMVersionRequirementAccess().getGitHubVersionRequirementParserRuleCall_1_0_2()); }
+		ruleGitHubVersionRequirement
+		{ after(grammarAccess.getNPMVersionRequirementAccess().getGitHubVersionRequirementParserRuleCall_1_0_2()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getNPMVersionAccess().getTagVersionParserRuleCall_1_0_3()); }
-		ruleTagVersion
-		{ after(grammarAccess.getNPMVersionAccess().getTagVersionParserRuleCall_1_0_3()); }
+		{ before(grammarAccess.getNPMVersionRequirementAccess().getTagVersionRequirementParserRuleCall_1_0_3()); }
+		ruleTagVersionRequirement
+		{ after(grammarAccess.getNPMVersionRequirementAccess().getTagVersionRequirementParserRuleCall_1_0_3()); }
 	)
 ;
 finally {
@@ -1032,53 +1032,53 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__NPMVersion__Group_0__0
+rule__NPMVersionRequirement__Group_0__0
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
-	rule__NPMVersion__Group_0__0__Impl
-	rule__NPMVersion__Group_0__1
+	rule__NPMVersionRequirement__Group_0__0__Impl
+	rule__NPMVersionRequirement__Group_0__1
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__NPMVersion__Group_0__0__Impl
+rule__NPMVersionRequirement__Group_0__0__Impl
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 (
-	{ before(grammarAccess.getNPMVersionAccess().getWSTerminalRuleCall_0_0()); }
+	{ before(grammarAccess.getNPMVersionRequirementAccess().getWSTerminalRuleCall_0_0()); }
 	(RULE_WS)*
-	{ after(grammarAccess.getNPMVersionAccess().getWSTerminalRuleCall_0_0()); }
+	{ after(grammarAccess.getNPMVersionRequirementAccess().getWSTerminalRuleCall_0_0()); }
 )
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__NPMVersion__Group_0__1
+rule__NPMVersionRequirement__Group_0__1
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
-	rule__NPMVersion__Group_0__1__Impl
+	rule__NPMVersionRequirement__Group_0__1__Impl
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__NPMVersion__Group_0__1__Impl
+rule__NPMVersionRequirement__Group_0__1__Impl
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 (
-	{ before(grammarAccess.getNPMVersionAccess().getVersionRangeSetParserRuleCall_0_1()); }
-	ruleVersionRangeSet
-	{ after(grammarAccess.getNPMVersionAccess().getVersionRangeSetParserRuleCall_0_1()); }
+	{ before(grammarAccess.getNPMVersionRequirementAccess().getVersionRangeSetRequirementParserRuleCall_0_1()); }
+	ruleVersionRangeSetRequirement
+	{ after(grammarAccess.getNPMVersionRequirementAccess().getVersionRangeSetRequirementParserRuleCall_0_1()); }
 )
 ;
 finally {
@@ -1086,53 +1086,53 @@ finally {
 }
 
 
-rule__NPMVersion__Group_1__0
+rule__NPMVersionRequirement__Group_1__0
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
-	rule__NPMVersion__Group_1__0__Impl
-	rule__NPMVersion__Group_1__1
+	rule__NPMVersionRequirement__Group_1__0__Impl
+	rule__NPMVersionRequirement__Group_1__1
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__NPMVersion__Group_1__0__Impl
+rule__NPMVersionRequirement__Group_1__0__Impl
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 (
-	{ before(grammarAccess.getNPMVersionAccess().getAlternatives_1_0()); }
-	(rule__NPMVersion__Alternatives_1_0)
-	{ after(grammarAccess.getNPMVersionAccess().getAlternatives_1_0()); }
+	{ before(grammarAccess.getNPMVersionRequirementAccess().getAlternatives_1_0()); }
+	(rule__NPMVersionRequirement__Alternatives_1_0)
+	{ after(grammarAccess.getNPMVersionRequirementAccess().getAlternatives_1_0()); }
 )
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__NPMVersion__Group_1__1
+rule__NPMVersionRequirement__Group_1__1
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
-	rule__NPMVersion__Group_1__1__Impl
+	rule__NPMVersionRequirement__Group_1__1__Impl
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__NPMVersion__Group_1__1__Impl
+rule__NPMVersionRequirement__Group_1__1__Impl
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 (
-	{ before(grammarAccess.getNPMVersionAccess().getWSTerminalRuleCall_1_1()); }
+	{ before(grammarAccess.getNPMVersionRequirementAccess().getWSTerminalRuleCall_1_1()); }
 	(RULE_WS)*
-	{ after(grammarAccess.getNPMVersionAccess().getWSTerminalRuleCall_1_1()); }
+	{ after(grammarAccess.getNPMVersionRequirementAccess().getWSTerminalRuleCall_1_1()); }
 )
 ;
 finally {
@@ -1140,107 +1140,107 @@ finally {
 }
 
 
-rule__URLVersion__Group__0
+rule__URLVersionRequirement__Group__0
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
-	rule__URLVersion__Group__0__Impl
-	rule__URLVersion__Group__1
+	rule__URLVersionRequirement__Group__0__Impl
+	rule__URLVersionRequirement__Group__1
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__URLVersion__Group__0__Impl
+rule__URLVersionRequirement__Group__0__Impl
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 (
-	{ before(grammarAccess.getURLVersionAccess().getProtocolAssignment_0()); }
-	(rule__URLVersion__ProtocolAssignment_0)
-	{ after(grammarAccess.getURLVersionAccess().getProtocolAssignment_0()); }
+	{ before(grammarAccess.getURLVersionRequirementAccess().getProtocolAssignment_0()); }
+	(rule__URLVersionRequirement__ProtocolAssignment_0)
+	{ after(grammarAccess.getURLVersionRequirementAccess().getProtocolAssignment_0()); }
 )
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__URLVersion__Group__1
+rule__URLVersionRequirement__Group__1
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
-	rule__URLVersion__Group__1__Impl
-	rule__URLVersion__Group__2
+	rule__URLVersionRequirement__Group__1__Impl
+	rule__URLVersionRequirement__Group__2
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__URLVersion__Group__1__Impl
+rule__URLVersionRequirement__Group__1__Impl
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 (
-	{ before(grammarAccess.getURLVersionAccess().getColonSolidusSolidusKeyword_1()); }
+	{ before(grammarAccess.getURLVersionRequirementAccess().getColonSolidusSolidusKeyword_1()); }
 	'://'
-	{ after(grammarAccess.getURLVersionAccess().getColonSolidusSolidusKeyword_1()); }
+	{ after(grammarAccess.getURLVersionRequirementAccess().getColonSolidusSolidusKeyword_1()); }
 )
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__URLVersion__Group__2
+rule__URLVersionRequirement__Group__2
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
-	rule__URLVersion__Group__2__Impl
-	rule__URLVersion__Group__3
+	rule__URLVersionRequirement__Group__2__Impl
+	rule__URLVersionRequirement__Group__3
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__URLVersion__Group__2__Impl
+rule__URLVersionRequirement__Group__2__Impl
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 (
-	{ before(grammarAccess.getURLVersionAccess().getUrlAssignment_2()); }
-	(rule__URLVersion__UrlAssignment_2)
-	{ after(grammarAccess.getURLVersionAccess().getUrlAssignment_2()); }
+	{ before(grammarAccess.getURLVersionRequirementAccess().getUrlAssignment_2()); }
+	(rule__URLVersionRequirement__UrlAssignment_2)
+	{ after(grammarAccess.getURLVersionRequirementAccess().getUrlAssignment_2()); }
 )
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__URLVersion__Group__3
+rule__URLVersionRequirement__Group__3
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
-	rule__URLVersion__Group__3__Impl
+	rule__URLVersionRequirement__Group__3__Impl
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__URLVersion__Group__3__Impl
+rule__URLVersionRequirement__Group__3__Impl
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 (
-	{ before(grammarAccess.getURLVersionAccess().getGroup_3()); }
-	(rule__URLVersion__Group_3__0)?
-	{ after(grammarAccess.getURLVersionAccess().getGroup_3()); }
+	{ before(grammarAccess.getURLVersionRequirementAccess().getGroup_3()); }
+	(rule__URLVersionRequirement__Group_3__0)?
+	{ after(grammarAccess.getURLVersionRequirementAccess().getGroup_3()); }
 )
 ;
 finally {
@@ -1248,53 +1248,53 @@ finally {
 }
 
 
-rule__URLVersion__Group_3__0
+rule__URLVersionRequirement__Group_3__0
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
-	rule__URLVersion__Group_3__0__Impl
-	rule__URLVersion__Group_3__1
+	rule__URLVersionRequirement__Group_3__0__Impl
+	rule__URLVersionRequirement__Group_3__1
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__URLVersion__Group_3__0__Impl
+rule__URLVersionRequirement__Group_3__0__Impl
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 (
-	{ before(grammarAccess.getURLVersionAccess().getNumberSignKeyword_3_0()); }
+	{ before(grammarAccess.getURLVersionRequirementAccess().getNumberSignKeyword_3_0()); }
 	'#'
-	{ after(grammarAccess.getURLVersionAccess().getNumberSignKeyword_3_0()); }
+	{ after(grammarAccess.getURLVersionRequirementAccess().getNumberSignKeyword_3_0()); }
 )
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__URLVersion__Group_3__1
+rule__URLVersionRequirement__Group_3__1
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
-	rule__URLVersion__Group_3__1__Impl
+	rule__URLVersionRequirement__Group_3__1__Impl
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__URLVersion__Group_3__1__Impl
+rule__URLVersionRequirement__Group_3__1__Impl
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 (
-	{ before(grammarAccess.getURLVersionAccess().getVersionSpecifierAssignment_3_1()); }
-	(rule__URLVersion__VersionSpecifierAssignment_3_1)
-	{ after(grammarAccess.getURLVersionAccess().getVersionSpecifierAssignment_3_1()); }
+	{ before(grammarAccess.getURLVersionRequirementAccess().getVersionSpecifierAssignment_3_1()); }
+	(rule__URLVersionRequirement__VersionSpecifierAssignment_3_1)
+	{ after(grammarAccess.getURLVersionRequirementAccess().getVersionSpecifierAssignment_3_1()); }
 )
 ;
 finally {
@@ -1356,53 +1356,53 @@ finally {
 }
 
 
-rule__GitHubVersion__Group__0
+rule__GitHubVersionRequirement__Group__0
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
-	rule__GitHubVersion__Group__0__Impl
-	rule__GitHubVersion__Group__1
+	rule__GitHubVersionRequirement__Group__0__Impl
+	rule__GitHubVersionRequirement__Group__1
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__GitHubVersion__Group__0__Impl
+rule__GitHubVersionRequirement__Group__0__Impl
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 (
-	{ before(grammarAccess.getGitHubVersionAccess().getGithubUrlAssignment_0()); }
-	(rule__GitHubVersion__GithubUrlAssignment_0)
-	{ after(grammarAccess.getGitHubVersionAccess().getGithubUrlAssignment_0()); }
+	{ before(grammarAccess.getGitHubVersionRequirementAccess().getGithubUrlAssignment_0()); }
+	(rule__GitHubVersionRequirement__GithubUrlAssignment_0)
+	{ after(grammarAccess.getGitHubVersionRequirementAccess().getGithubUrlAssignment_0()); }
 )
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__GitHubVersion__Group__1
+rule__GitHubVersionRequirement__Group__1
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
-	rule__GitHubVersion__Group__1__Impl
+	rule__GitHubVersionRequirement__Group__1__Impl
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__GitHubVersion__Group__1__Impl
+rule__GitHubVersionRequirement__Group__1__Impl
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 (
-	{ before(grammarAccess.getGitHubVersionAccess().getGroup_1()); }
-	(rule__GitHubVersion__Group_1__0)?
-	{ after(grammarAccess.getGitHubVersionAccess().getGroup_1()); }
+	{ before(grammarAccess.getGitHubVersionRequirementAccess().getGroup_1()); }
+	(rule__GitHubVersionRequirement__Group_1__0)?
+	{ after(grammarAccess.getGitHubVersionRequirementAccess().getGroup_1()); }
 )
 ;
 finally {
@@ -1410,53 +1410,53 @@ finally {
 }
 
 
-rule__GitHubVersion__Group_1__0
+rule__GitHubVersionRequirement__Group_1__0
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
-	rule__GitHubVersion__Group_1__0__Impl
-	rule__GitHubVersion__Group_1__1
+	rule__GitHubVersionRequirement__Group_1__0__Impl
+	rule__GitHubVersionRequirement__Group_1__1
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__GitHubVersion__Group_1__0__Impl
+rule__GitHubVersionRequirement__Group_1__0__Impl
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 (
-	{ before(grammarAccess.getGitHubVersionAccess().getNumberSignKeyword_1_0()); }
+	{ before(grammarAccess.getGitHubVersionRequirementAccess().getNumberSignKeyword_1_0()); }
 	'#'
-	{ after(grammarAccess.getGitHubVersionAccess().getNumberSignKeyword_1_0()); }
+	{ after(grammarAccess.getGitHubVersionRequirementAccess().getNumberSignKeyword_1_0()); }
 )
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__GitHubVersion__Group_1__1
+rule__GitHubVersionRequirement__Group_1__1
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
-	rule__GitHubVersion__Group_1__1__Impl
+	rule__GitHubVersionRequirement__Group_1__1__Impl
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__GitHubVersion__Group_1__1__Impl
+rule__GitHubVersionRequirement__Group_1__1__Impl
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 (
-	{ before(grammarAccess.getGitHubVersionAccess().getCommitISHAssignment_1_1()); }
-	(rule__GitHubVersion__CommitISHAssignment_1_1)
-	{ after(grammarAccess.getGitHubVersionAccess().getCommitISHAssignment_1_1()); }
+	{ before(grammarAccess.getGitHubVersionRequirementAccess().getCommitISHAssignment_1_1()); }
+	(rule__GitHubVersionRequirement__CommitISHAssignment_1_1)
+	{ after(grammarAccess.getGitHubVersionRequirementAccess().getCommitISHAssignment_1_1()); }
 )
 ;
 finally {
@@ -1464,53 +1464,53 @@ finally {
 }
 
 
-rule__LocalPathVersion__Group__0
+rule__LocalPathVersionRequirement__Group__0
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
-	rule__LocalPathVersion__Group__0__Impl
-	rule__LocalPathVersion__Group__1
+	rule__LocalPathVersionRequirement__Group__0__Impl
+	rule__LocalPathVersionRequirement__Group__1
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__LocalPathVersion__Group__0__Impl
+rule__LocalPathVersionRequirement__Group__0__Impl
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 (
-	{ before(grammarAccess.getLocalPathVersionAccess().getFileKeyword_0()); }
+	{ before(grammarAccess.getLocalPathVersionRequirementAccess().getFileKeyword_0()); }
 	'file:'
-	{ after(grammarAccess.getLocalPathVersionAccess().getFileKeyword_0()); }
+	{ after(grammarAccess.getLocalPathVersionRequirementAccess().getFileKeyword_0()); }
 )
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__LocalPathVersion__Group__1
+rule__LocalPathVersionRequirement__Group__1
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
-	rule__LocalPathVersion__Group__1__Impl
+	rule__LocalPathVersionRequirement__Group__1__Impl
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__LocalPathVersion__Group__1__Impl
+rule__LocalPathVersionRequirement__Group__1__Impl
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 (
-	{ before(grammarAccess.getLocalPathVersionAccess().getLocalPathAssignment_1()); }
-	(rule__LocalPathVersion__LocalPathAssignment_1)
-	{ after(grammarAccess.getLocalPathVersionAccess().getLocalPathAssignment_1()); }
+	{ before(grammarAccess.getLocalPathVersionRequirementAccess().getLocalPathAssignment_1()); }
+	(rule__LocalPathVersionRequirement__LocalPathAssignment_1)
+	{ after(grammarAccess.getLocalPathVersionRequirementAccess().getLocalPathAssignment_1()); }
 )
 ;
 finally {
@@ -1518,53 +1518,53 @@ finally {
 }
 
 
-rule__VersionRangeSet__Group__0
+rule__VersionRangeSetRequirement__Group__0
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
-	rule__VersionRangeSet__Group__0__Impl
-	rule__VersionRangeSet__Group__1
+	rule__VersionRangeSetRequirement__Group__0__Impl
+	rule__VersionRangeSetRequirement__Group__1
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__VersionRangeSet__Group__0__Impl
+rule__VersionRangeSetRequirement__Group__0__Impl
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 (
-	{ before(grammarAccess.getVersionRangeSetAccess().getVersionRangeSetAction_0()); }
+	{ before(grammarAccess.getVersionRangeSetRequirementAccess().getVersionRangeSetRequirementAction_0()); }
 	()
-	{ after(grammarAccess.getVersionRangeSetAccess().getVersionRangeSetAction_0()); }
+	{ after(grammarAccess.getVersionRangeSetRequirementAccess().getVersionRangeSetRequirementAction_0()); }
 )
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__VersionRangeSet__Group__1
+rule__VersionRangeSetRequirement__Group__1
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
-	rule__VersionRangeSet__Group__1__Impl
+	rule__VersionRangeSetRequirement__Group__1__Impl
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__VersionRangeSet__Group__1__Impl
+rule__VersionRangeSetRequirement__Group__1__Impl
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 (
-	{ before(grammarAccess.getVersionRangeSetAccess().getGroup_1()); }
-	(rule__VersionRangeSet__Group_1__0)?
-	{ after(grammarAccess.getVersionRangeSetAccess().getGroup_1()); }
+	{ before(grammarAccess.getVersionRangeSetRequirementAccess().getGroup_1()); }
+	(rule__VersionRangeSetRequirement__Group_1__0)?
+	{ after(grammarAccess.getVersionRangeSetRequirementAccess().getGroup_1()); }
 )
 ;
 finally {
@@ -1572,80 +1572,80 @@ finally {
 }
 
 
-rule__VersionRangeSet__Group_1__0
+rule__VersionRangeSetRequirement__Group_1__0
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
-	rule__VersionRangeSet__Group_1__0__Impl
-	rule__VersionRangeSet__Group_1__1
+	rule__VersionRangeSetRequirement__Group_1__0__Impl
+	rule__VersionRangeSetRequirement__Group_1__1
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__VersionRangeSet__Group_1__0__Impl
+rule__VersionRangeSetRequirement__Group_1__0__Impl
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 (
-	{ before(grammarAccess.getVersionRangeSetAccess().getRangesAssignment_1_0()); }
-	(rule__VersionRangeSet__RangesAssignment_1_0)
-	{ after(grammarAccess.getVersionRangeSetAccess().getRangesAssignment_1_0()); }
+	{ before(grammarAccess.getVersionRangeSetRequirementAccess().getRangesAssignment_1_0()); }
+	(rule__VersionRangeSetRequirement__RangesAssignment_1_0)
+	{ after(grammarAccess.getVersionRangeSetRequirementAccess().getRangesAssignment_1_0()); }
 )
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__VersionRangeSet__Group_1__1
+rule__VersionRangeSetRequirement__Group_1__1
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
-	rule__VersionRangeSet__Group_1__1__Impl
-	rule__VersionRangeSet__Group_1__2
+	rule__VersionRangeSetRequirement__Group_1__1__Impl
+	rule__VersionRangeSetRequirement__Group_1__2
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__VersionRangeSet__Group_1__1__Impl
+rule__VersionRangeSetRequirement__Group_1__1__Impl
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 (
-	{ before(grammarAccess.getVersionRangeSetAccess().getGroup_1_1()); }
-	(rule__VersionRangeSet__Group_1_1__0)*
-	{ after(grammarAccess.getVersionRangeSetAccess().getGroup_1_1()); }
+	{ before(grammarAccess.getVersionRangeSetRequirementAccess().getGroup_1_1()); }
+	(rule__VersionRangeSetRequirement__Group_1_1__0)*
+	{ after(grammarAccess.getVersionRangeSetRequirementAccess().getGroup_1_1()); }
 )
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__VersionRangeSet__Group_1__2
+rule__VersionRangeSetRequirement__Group_1__2
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
-	rule__VersionRangeSet__Group_1__2__Impl
+	rule__VersionRangeSetRequirement__Group_1__2__Impl
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__VersionRangeSet__Group_1__2__Impl
+rule__VersionRangeSetRequirement__Group_1__2__Impl
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 (
-	{ before(grammarAccess.getVersionRangeSetAccess().getWSTerminalRuleCall_1_2()); }
+	{ before(grammarAccess.getVersionRangeSetRequirementAccess().getWSTerminalRuleCall_1_2()); }
 	(RULE_WS)*
-	{ after(grammarAccess.getVersionRangeSetAccess().getWSTerminalRuleCall_1_2()); }
+	{ after(grammarAccess.getVersionRangeSetRequirementAccess().getWSTerminalRuleCall_1_2()); }
 )
 ;
 finally {
@@ -1653,107 +1653,107 @@ finally {
 }
 
 
-rule__VersionRangeSet__Group_1_1__0
+rule__VersionRangeSetRequirement__Group_1_1__0
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
-	rule__VersionRangeSet__Group_1_1__0__Impl
-	rule__VersionRangeSet__Group_1_1__1
+	rule__VersionRangeSetRequirement__Group_1_1__0__Impl
+	rule__VersionRangeSetRequirement__Group_1_1__1
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__VersionRangeSet__Group_1_1__0__Impl
+rule__VersionRangeSetRequirement__Group_1_1__0__Impl
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 (
-	{ before(grammarAccess.getVersionRangeSetAccess().getWSTerminalRuleCall_1_1_0()); }
+	{ before(grammarAccess.getVersionRangeSetRequirementAccess().getWSTerminalRuleCall_1_1_0()); }
 	(RULE_WS)*
-	{ after(grammarAccess.getVersionRangeSetAccess().getWSTerminalRuleCall_1_1_0()); }
+	{ after(grammarAccess.getVersionRangeSetRequirementAccess().getWSTerminalRuleCall_1_1_0()); }
 )
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__VersionRangeSet__Group_1_1__1
+rule__VersionRangeSetRequirement__Group_1_1__1
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
-	rule__VersionRangeSet__Group_1_1__1__Impl
-	rule__VersionRangeSet__Group_1_1__2
+	rule__VersionRangeSetRequirement__Group_1_1__1__Impl
+	rule__VersionRangeSetRequirement__Group_1_1__2
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__VersionRangeSet__Group_1_1__1__Impl
+rule__VersionRangeSetRequirement__Group_1_1__1__Impl
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 (
-	{ before(grammarAccess.getVersionRangeSetAccess().getVerticalLineVerticalLineKeyword_1_1_1()); }
+	{ before(grammarAccess.getVersionRangeSetRequirementAccess().getVerticalLineVerticalLineKeyword_1_1_1()); }
 	'||'
-	{ after(grammarAccess.getVersionRangeSetAccess().getVerticalLineVerticalLineKeyword_1_1_1()); }
+	{ after(grammarAccess.getVersionRangeSetRequirementAccess().getVerticalLineVerticalLineKeyword_1_1_1()); }
 )
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__VersionRangeSet__Group_1_1__2
+rule__VersionRangeSetRequirement__Group_1_1__2
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
-	rule__VersionRangeSet__Group_1_1__2__Impl
-	rule__VersionRangeSet__Group_1_1__3
+	rule__VersionRangeSetRequirement__Group_1_1__2__Impl
+	rule__VersionRangeSetRequirement__Group_1_1__3
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__VersionRangeSet__Group_1_1__2__Impl
+rule__VersionRangeSetRequirement__Group_1_1__2__Impl
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 (
-	{ before(grammarAccess.getVersionRangeSetAccess().getWSTerminalRuleCall_1_1_2()); }
+	{ before(grammarAccess.getVersionRangeSetRequirementAccess().getWSTerminalRuleCall_1_1_2()); }
 	(RULE_WS)*
-	{ after(grammarAccess.getVersionRangeSetAccess().getWSTerminalRuleCall_1_1_2()); }
+	{ after(grammarAccess.getVersionRangeSetRequirementAccess().getWSTerminalRuleCall_1_1_2()); }
 )
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__VersionRangeSet__Group_1_1__3
+rule__VersionRangeSetRequirement__Group_1_1__3
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
-	rule__VersionRangeSet__Group_1_1__3__Impl
+	rule__VersionRangeSetRequirement__Group_1_1__3__Impl
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__VersionRangeSet__Group_1_1__3__Impl
+rule__VersionRangeSetRequirement__Group_1_1__3__Impl
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 (
-	{ before(grammarAccess.getVersionRangeSetAccess().getRangesAssignment_1_1_3()); }
-	(rule__VersionRangeSet__RangesAssignment_1_1_3)
-	{ after(grammarAccess.getVersionRangeSetAccess().getRangesAssignment_1_1_3()); }
+	{ before(grammarAccess.getVersionRangeSetRequirementAccess().getRangesAssignment_1_1_3()); }
+	(rule__VersionRangeSetRequirement__RangesAssignment_1_1_3)
+	{ after(grammarAccess.getVersionRangeSetRequirementAccess().getRangesAssignment_1_1_3()); }
 )
 ;
 finally {
@@ -3160,45 +3160,45 @@ finally {
 }
 
 
-rule__URLVersion__ProtocolAssignment_0
+rule__URLVersionRequirement__ProtocolAssignment_0
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getURLVersionAccess().getProtocolURL_PROTOCOLParserRuleCall_0_0()); }
+		{ before(grammarAccess.getURLVersionRequirementAccess().getProtocolURL_PROTOCOLParserRuleCall_0_0()); }
 		ruleURL_PROTOCOL
-		{ after(grammarAccess.getURLVersionAccess().getProtocolURL_PROTOCOLParserRuleCall_0_0()); }
+		{ after(grammarAccess.getURLVersionRequirementAccess().getProtocolURL_PROTOCOLParserRuleCall_0_0()); }
 	)
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__URLVersion__UrlAssignment_2
+rule__URLVersionRequirement__UrlAssignment_2
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getURLVersionAccess().getUrlURLParserRuleCall_2_0()); }
+		{ before(grammarAccess.getURLVersionRequirementAccess().getUrlURLParserRuleCall_2_0()); }
 		ruleURL
-		{ after(grammarAccess.getURLVersionAccess().getUrlURLParserRuleCall_2_0()); }
+		{ after(grammarAccess.getURLVersionRequirementAccess().getUrlURLParserRuleCall_2_0()); }
 	)
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__URLVersion__VersionSpecifierAssignment_3_1
+rule__URLVersionRequirement__VersionSpecifierAssignment_3_1
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getURLVersionAccess().getVersionSpecifierURLVersionSpecifierParserRuleCall_3_1_0()); }
+		{ before(grammarAccess.getURLVersionRequirementAccess().getVersionSpecifierURLVersionSpecifierParserRuleCall_3_1_0()); }
 		ruleURLVersionSpecifier
-		{ after(grammarAccess.getURLVersionAccess().getVersionSpecifierURLVersionSpecifierParserRuleCall_3_1_0()); }
+		{ after(grammarAccess.getURLVersionRequirementAccess().getVersionSpecifierURLVersionSpecifierParserRuleCall_3_1_0()); }
 	)
 ;
 finally {
@@ -3235,90 +3235,90 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__TagVersion__TagNameAssignment
+rule__TagVersionRequirement__TagNameAssignment
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getTagVersionAccess().getTagNameTAGParserRuleCall_0()); }
+		{ before(grammarAccess.getTagVersionRequirementAccess().getTagNameTAGParserRuleCall_0()); }
 		ruleTAG
-		{ after(grammarAccess.getTagVersionAccess().getTagNameTAGParserRuleCall_0()); }
+		{ after(grammarAccess.getTagVersionRequirementAccess().getTagNameTAGParserRuleCall_0()); }
 	)
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__GitHubVersion__GithubUrlAssignment_0
+rule__GitHubVersionRequirement__GithubUrlAssignment_0
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getGitHubVersionAccess().getGithubUrlURLParserRuleCall_0_0()); }
+		{ before(grammarAccess.getGitHubVersionRequirementAccess().getGithubUrlURLParserRuleCall_0_0()); }
 		ruleURL
-		{ after(grammarAccess.getGitHubVersionAccess().getGithubUrlURLParserRuleCall_0_0()); }
+		{ after(grammarAccess.getGitHubVersionRequirementAccess().getGithubUrlURLParserRuleCall_0_0()); }
 	)
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__GitHubVersion__CommitISHAssignment_1_1
+rule__GitHubVersionRequirement__CommitISHAssignment_1_1
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getGitHubVersionAccess().getCommitISHALPHA_NUMERIC_CHARSParserRuleCall_1_1_0()); }
+		{ before(grammarAccess.getGitHubVersionRequirementAccess().getCommitISHALPHA_NUMERIC_CHARSParserRuleCall_1_1_0()); }
 		ruleALPHA_NUMERIC_CHARS
-		{ after(grammarAccess.getGitHubVersionAccess().getCommitISHALPHA_NUMERIC_CHARSParserRuleCall_1_1_0()); }
+		{ after(grammarAccess.getGitHubVersionRequirementAccess().getCommitISHALPHA_NUMERIC_CHARSParserRuleCall_1_1_0()); }
 	)
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__LocalPathVersion__LocalPathAssignment_1
+rule__LocalPathVersionRequirement__LocalPathAssignment_1
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getLocalPathVersionAccess().getLocalPathPATHParserRuleCall_1_0()); }
+		{ before(grammarAccess.getLocalPathVersionRequirementAccess().getLocalPathPATHParserRuleCall_1_0()); }
 		rulePATH
-		{ after(grammarAccess.getLocalPathVersionAccess().getLocalPathPATHParserRuleCall_1_0()); }
+		{ after(grammarAccess.getLocalPathVersionRequirementAccess().getLocalPathPATHParserRuleCall_1_0()); }
 	)
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__VersionRangeSet__RangesAssignment_1_0
+rule__VersionRangeSetRequirement__RangesAssignment_1_0
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getVersionRangeSetAccess().getRangesVersionRangeParserRuleCall_1_0_0()); }
+		{ before(grammarAccess.getVersionRangeSetRequirementAccess().getRangesVersionRangeParserRuleCall_1_0_0()); }
 		ruleVersionRange
-		{ after(grammarAccess.getVersionRangeSetAccess().getRangesVersionRangeParserRuleCall_1_0_0()); }
+		{ after(grammarAccess.getVersionRangeSetRequirementAccess().getRangesVersionRangeParserRuleCall_1_0_0()); }
 	)
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__VersionRangeSet__RangesAssignment_1_1_3
+rule__VersionRangeSetRequirement__RangesAssignment_1_1_3
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getVersionRangeSetAccess().getRangesVersionRangeParserRuleCall_1_1_3_0()); }
+		{ before(grammarAccess.getVersionRangeSetRequirementAccess().getRangesVersionRangeParserRuleCall_1_1_3_0()); }
 		ruleVersionRange
-		{ after(grammarAccess.getVersionRangeSetAccess().getRangesVersionRangeParserRuleCall_1_1_3_0()); }
+		{ after(grammarAccess.getVersionRangeSetRequirementAccess().getRangesVersionRangeParserRuleCall_1_1_3_0()); }
 	)
 ;
 finally {

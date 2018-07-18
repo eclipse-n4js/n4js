@@ -4,14 +4,14 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.n4js.semver.SEMVER.NPMVersion;
+import org.eclipse.n4js.semver.SEMVER.NPMVersionRequirement;
 import org.eclipse.n4js.semver.SEMVER.SimpleVersion;
-import org.eclipse.n4js.semver.SEMVER.URLVersion;
+import org.eclipse.n4js.semver.SEMVER.URLVersionRequirement;
 import org.eclipse.n4js.semver.SEMVER.VersionComparator;
 import org.eclipse.n4js.semver.SEMVER.VersionNumber;
 import org.eclipse.n4js.semver.SEMVER.VersionPart;
 import org.eclipse.n4js.semver.SEMVER.VersionRange;
-import org.eclipse.n4js.semver.SEMVER.VersionRangeSet;
+import org.eclipse.n4js.semver.SEMVER.VersionRangeSetRequirement;
 
 /** Utility class to provide methods to check matching of versions. */
 public class SEMVERMatcher {
@@ -61,17 +61,17 @@ public class SEMVERMatcher {
 
 	/**
 	 * @return true iff the given arguments will yield a useful result when passed to the method
-	 *         {@link #matches(VersionNumber, VersionRangeSet)}
+	 *         {@link #matches(VersionNumber, VersionRangeSetRequirement)}
 	 */
-	static public boolean canComputeMatch(VersionNumber proband, NPMVersion npmv) {
+	static public boolean canComputeMatch(VersionNumber proband, NPMVersionRequirement npmv) {
 		if (proband == null) {
 			return false;
 		}
-		if (npmv instanceof VersionRangeSet) {
+		if (npmv instanceof VersionRangeSetRequirement) {
 			return true;
 		}
-		if (npmv instanceof URLVersion) {
-			URLVersion urlVersion = (URLVersion) npmv;
+		if (npmv instanceof URLVersionRequirement) {
+			URLVersionRequirement urlVersion = (URLVersionRequirement) npmv;
 			return urlVersion.hasSimpleVersion();
 		}
 
@@ -79,8 +79,8 @@ public class SEMVERMatcher {
 	}
 
 	/**
-	 * This method checks {@link NPMVersion}s whether they match or not. In case the given npm constraint is a SEMVER
-	 * version (i.e. {@link VersionRangeSet} or other subtypes that contain {@link SimpleVersion}), the given proband is
+	 * This method checks {@link NPMVersionRequirement}s whether they match or not. In case the given npm constraint is a SEMVER
+	 * version (i.e. {@link VersionRangeSetRequirement} or other subtypes that contain {@link SimpleVersion}), the given proband is
 	 * checked against it and the result of this check is returned. Otherwise {@code true} is returned.
 	 *
 	 * @param proband
@@ -90,15 +90,15 @@ public class SEMVERMatcher {
 	 * @return true iff either the given {@code proband} version matches the given {@code constraint} version or iff the
 	 *         {@code constraint} does neither contain a SEMVER version range nor a simple version
 	 */
-	static public boolean matches(VersionNumber proband, NPMVersion constraint) {
+	static public boolean matches(VersionNumber proband, NPMVersionRequirement constraint) {
 		if (proband == null) {
 			return false;
 		}
-		if (constraint instanceof VersionRangeSet) {
-			return matches(proband, (VersionRangeSet) constraint);
+		if (constraint instanceof VersionRangeSetRequirement) {
+			return matches(proband, (VersionRangeSetRequirement) constraint);
 		}
-		if (constraint instanceof URLVersion) {
-			return matches(proband, (URLVersion) constraint);
+		if (constraint instanceof URLVersionRequirement) {
+			return matches(proband, (URLVersionRequirement) constraint);
 		}
 		return true;
 	}
@@ -110,7 +110,7 @@ public class SEMVERMatcher {
 	 * {@code limit} also has a pre-release tag.
 	 * <p>
 	 * Note that this function cannot cover cases when one version is checked against multiple other versions. In these
-	 * cases the method {@link #matches(VersionNumber, VersionRangeSet)} should be used.
+	 * cases the method {@link #matches(VersionNumber, VersionRangeSetRequirement)} should be used.
 	 *
 	 * @return relation between two given {@link VersionNumber}s
 	 */
@@ -128,7 +128,7 @@ public class SEMVERMatcher {
 	 * <li/>Returns -10 otherwise.
 	 * </ul>
 	 * Note that this function cannot cover cases when one version is checked against multiple other versions. In these
-	 * cases the method {@link #matches(VersionNumber, VersionRangeSet)} should be used.
+	 * cases the method {@link #matches(VersionNumber, VersionRangeSetRequirement)} should be used.
 	 */
 	static public int compareSemver(VersionNumber a, VersionNumber b) {
 		VersionNumberRelation versionRelation = relation(a, b, RelationKind.SemverMatch);
@@ -144,7 +144,7 @@ public class SEMVERMatcher {
 	 * <li/>Returns -1 iff A is smaller than B.
 	 * </ul>
 	 * Note that this function cannot cover cases when one version is checked against multiple other versions. In these
-	 * cases the method {@link #matches(VersionNumber, VersionRangeSet)} should be used.
+	 * cases the method {@link #matches(VersionNumber, VersionRangeSetRequirement)} should be used.
 	 */
 	static public int compareLoose(VersionNumber a, VersionNumber b) {
 		VersionNumberRelation versionRelation = relation(a, b, RelationKind.LooseCompare);
@@ -166,7 +166,7 @@ public class SEMVERMatcher {
 	}
 
 	/**
-	 * This method checks {@link VersionRangeSet}s whether they match or not. Its semantics is aligned to
+	 * This method checks {@link VersionRangeSetRequirement}s whether they match or not. Its semantics is aligned to
 	 * <a href="https://semver.npmjs.com/">semver.npmjs.com<a>.
 	 *
 	 * @param proband
@@ -175,7 +175,7 @@ public class SEMVERMatcher {
 	 *            version that must be met by the proband
 	 * @return true iff the given {@code proband} version matches the given {@code constraint} version
 	 */
-	static private boolean matches(VersionNumber proband, VersionRangeSet constraint) {
+	static private boolean matches(VersionNumber proband, VersionRangeSetRequirement constraint) {
 		EList<VersionRange> cRanges = constraint.getRanges();
 
 		if (cRanges.isEmpty()) {
@@ -193,7 +193,7 @@ public class SEMVERMatcher {
 	}
 
 	/**
-	 * This method checks {@link VersionRangeSet}s whether they match or not. Its semantics is aligned to
+	 * This method checks {@link VersionRangeSetRequirement}s whether they match or not. Its semantics is aligned to
 	 * <a href="https://semver.npmjs.com/">semver.npmjs.com<a>.
 	 *
 	 * @param proband
@@ -202,7 +202,7 @@ public class SEMVERMatcher {
 	 *            version that must be met by the proband
 	 * @return true iff the given {@code proband} version matches the given {@code constraint} version
 	 */
-	static private boolean matches(VersionNumber proband, URLVersion constraint) {
+	static private boolean matches(VersionNumber proband, URLVersionRequirement constraint) {
 		if (constraint.hasSimpleVersion()) {
 			SimpleVersion simpleVersion = constraint.getSimpleVersion();
 			List<SimpleVersion> simpleConstraints = SEMVERConverter.simplify(simpleVersion);

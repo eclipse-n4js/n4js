@@ -22,7 +22,7 @@ import org.eclipse.n4js.semver.SEMVER.VersionRange;
  *
  * @generated
  */
-public abstract class VersionRangeImpl extends AbstractSEMVERSerializerImpl implements VersionRange {
+public abstract class VersionRangeImpl extends SEMVERtoStringableImpl implements VersionRange {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

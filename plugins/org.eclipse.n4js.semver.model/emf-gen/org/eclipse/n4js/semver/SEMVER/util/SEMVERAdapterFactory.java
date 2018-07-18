@@ -76,16 +76,16 @@ public class SEMVERAdapterFactory extends AdapterFactoryImpl {
 	protected SEMVERSwitch<Adapter> modelSwitch =
 		new SEMVERSwitch<Adapter>() {
 			@Override
-			public Adapter caseAbstractSEMVERSerializer(AbstractSEMVERSerializer object) {
-				return createAbstractSEMVERSerializerAdapter();
+			public Adapter caseSEMVERtoStringable(SEMVERtoStringable object) {
+				return createSEMVERtoStringableAdapter();
 			}
 			@Override
-			public Adapter caseNPMVersion(NPMVersion object) {
-				return createNPMVersionAdapter();
+			public Adapter caseNPMVersionRequirement(NPMVersionRequirement object) {
+				return createNPMVersionRequirementAdapter();
 			}
 			@Override
-			public Adapter caseURLVersion(URLVersion object) {
-				return createURLVersionAdapter();
+			public Adapter caseURLVersionRequirement(URLVersionRequirement object) {
+				return createURLVersionRequirementAdapter();
 			}
 			@Override
 			public Adapter caseURLVersionSpecifier(URLVersionSpecifier object) {
@@ -100,20 +100,20 @@ public class SEMVERAdapterFactory extends AdapterFactoryImpl {
 				return createURLCommitISHAdapter();
 			}
 			@Override
-			public Adapter caseGitHubVersion(GitHubVersion object) {
-				return createGitHubVersionAdapter();
+			public Adapter caseGitHubVersionRequirement(GitHubVersionRequirement object) {
+				return createGitHubVersionRequirementAdapter();
 			}
 			@Override
-			public Adapter caseLocalPathVersion(LocalPathVersion object) {
-				return createLocalPathVersionAdapter();
+			public Adapter caseLocalPathVersionRequirement(LocalPathVersionRequirement object) {
+				return createLocalPathVersionRequirementAdapter();
 			}
 			@Override
-			public Adapter caseTagVersion(TagVersion object) {
-				return createTagVersionAdapter();
+			public Adapter caseTagVersionRequirement(TagVersionRequirement object) {
+				return createTagVersionRequirementAdapter();
 			}
 			@Override
-			public Adapter caseVersionRangeSet(VersionRangeSet object) {
-				return createVersionRangeSetAdapter();
+			public Adapter caseVersionRangeSetRequirement(VersionRangeSetRequirement object) {
+				return createVersionRangeSetRequirementAdapter();
 			}
 			@Override
 			public Adapter caseVersionRange(VersionRange object) {
@@ -168,44 +168,44 @@ public class SEMVERAdapterFactory extends AdapterFactoryImpl {
 
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.semver.SEMVER.AbstractSEMVERSerializer <em>Abstract SEMVER Serializer</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.semver.SEMVER.SEMVERtoStringable <em>SEMVE Rto Stringable</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.n4js.semver.SEMVER.AbstractSEMVERSerializer
+	 * @see org.eclipse.n4js.semver.SEMVER.SEMVERtoStringable
 	 * @generated
 	 */
-	public Adapter createAbstractSEMVERSerializerAdapter() {
+	public Adapter createSEMVERtoStringableAdapter() {
 		return null;
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.semver.SEMVER.NPMVersion <em>NPM Version</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.semver.SEMVER.NPMVersionRequirement <em>NPM Version Requirement</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.n4js.semver.SEMVER.NPMVersion
+	 * @see org.eclipse.n4js.semver.SEMVER.NPMVersionRequirement
 	 * @generated
 	 */
-	public Adapter createNPMVersionAdapter() {
+	public Adapter createNPMVersionRequirementAdapter() {
 		return null;
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.semver.SEMVER.URLVersion <em>URL Version</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.semver.SEMVER.URLVersionRequirement <em>URL Version Requirement</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.n4js.semver.SEMVER.URLVersion
+	 * @see org.eclipse.n4js.semver.SEMVER.URLVersionRequirement
 	 * @generated
 	 */
-	public Adapter createURLVersionAdapter() {
+	public Adapter createURLVersionRequirementAdapter() {
 		return null;
 	}
 
@@ -252,58 +252,58 @@ public class SEMVERAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.semver.SEMVER.GitHubVersion <em>Git Hub Version</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.semver.SEMVER.GitHubVersionRequirement <em>Git Hub Version Requirement</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.n4js.semver.SEMVER.GitHubVersion
+	 * @see org.eclipse.n4js.semver.SEMVER.GitHubVersionRequirement
 	 * @generated
 	 */
-	public Adapter createGitHubVersionAdapter() {
+	public Adapter createGitHubVersionRequirementAdapter() {
 		return null;
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.semver.SEMVER.LocalPathVersion <em>Local Path Version</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.semver.SEMVER.LocalPathVersionRequirement <em>Local Path Version Requirement</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.n4js.semver.SEMVER.LocalPathVersion
+	 * @see org.eclipse.n4js.semver.SEMVER.LocalPathVersionRequirement
 	 * @generated
 	 */
-	public Adapter createLocalPathVersionAdapter() {
+	public Adapter createLocalPathVersionRequirementAdapter() {
 		return null;
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.semver.SEMVER.TagVersion <em>Tag Version</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.semver.SEMVER.TagVersionRequirement <em>Tag Version Requirement</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.n4js.semver.SEMVER.TagVersion
+	 * @see org.eclipse.n4js.semver.SEMVER.TagVersionRequirement
 	 * @generated
 	 */
-	public Adapter createTagVersionAdapter() {
+	public Adapter createTagVersionRequirementAdapter() {
 		return null;
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.semver.SEMVER.VersionRangeSet <em>Version Range Set</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.semver.SEMVER.VersionRangeSetRequirement <em>Version Range Set Requirement</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.n4js.semver.SEMVER.VersionRangeSet
+	 * @see org.eclipse.n4js.semver.SEMVER.VersionRangeSetRequirement
 	 * @generated
 	 */
-	public Adapter createVersionRangeSetAdapter() {
+	public Adapter createVersionRangeSetRequirementAdapter() {
 		return null;
 	}
 

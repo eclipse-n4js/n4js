@@ -16,7 +16,7 @@ import org.eclipse.n4js.semver.SEMVER.VersionComparator;
 import org.eclipse.n4js.semver.SEMVER.VersionNumber;
 import org.eclipse.n4js.semver.SEMVER.VersionPart;
 import org.eclipse.n4js.semver.SEMVER.VersionRangeConstraint;
-import org.eclipse.n4js.semver.SEMVER.VersionRangeSet;
+import org.eclipse.n4js.semver.SEMVER.VersionRangeSetRequirement;
 
 import com.google.common.base.Strings;
 
@@ -163,8 +163,8 @@ public class SEMVERUtils {
 		return createVersionNumber(vnd);
 	}
 
-	/** Creates a new instance of {@link VersionRangeSet} with the given properties. */
-	public static VersionRangeSet createVersionRangeSet(VersionComparator comparator,
+	/** Creates a new instance of {@link VersionRangeSetRequirement} with the given properties. */
+	public static VersionRangeSetRequirement createVersionRangeSet(VersionComparator comparator,
 			Integer major, Integer minor, Integer patch) {
 
 		VersionNumberDescriptor vnd = new VersionNumberDescriptor(major, minor, patch);
@@ -173,8 +173,8 @@ public class SEMVERUtils {
 		return createVersionRangeSet(comparator, versionNumber);
 	}
 
-	/** Creates a new instance of {@link VersionRangeSet} with the given properties. */
-	public static VersionRangeSet createVersionRangeSet(VersionComparator comparator, VersionNumber version) {
+	/** Creates a new instance of {@link VersionRangeSetRequirement} with the given properties. */
+	public static VersionRangeSetRequirement createVersionRangeSet(VersionComparator comparator, VersionNumber version) {
 		VersionNumber versionNumber = copyVersionNumber(version);
 
 		SimpleVersion simpleVersion = SEMVERFactory.eINSTANCE.createSimpleVersion();
@@ -184,7 +184,7 @@ public class SEMVERUtils {
 		VersionRangeConstraint versionRangeConstraint = SEMVERFactory.eINSTANCE.createVersionRangeConstraint();
 		versionRangeConstraint.getVersionConstraints().add(simpleVersion);
 
-		VersionRangeSet versionRangeSet = SEMVERFactory.eINSTANCE.createVersionRangeSet();
+		VersionRangeSetRequirement versionRangeSet = SEMVERFactory.eINSTANCE.createVersionRangeSetRequirement();
 		versionRangeSet.getRanges().add(versionRangeConstraint);
 
 		return versionRangeSet;

@@ -57,7 +57,6 @@ import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
-import org.eclipse.n4js.semver.SEMVER.NPMVersion
 import org.eclipse.n4js.semver.SEMVERHelper
 import org.eclipse.n4js.semver.SEMVERMatcher
 import org.eclipse.n4js.semver.model.SEMVERSerializer
@@ -85,6 +84,7 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 import static org.eclipse.n4js.validation.validators.packagejson.ProjectTypePredicate.*
 
 import static extension com.google.common.base.Strings.nullToEmpty
+import org.eclipse.n4js.semver.SEMVER.NPMVersionRequirement
 
 /**
  * A JSON validator extension that validates {@code package.json} resources in the context
@@ -915,7 +915,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	@Data
 	private static class ValidationProjectReference {
 		String referencedProjectId;
-		NPMVersion npmVersion;
+		NPMVersionRequirement npmVersion;
 		EObject astRepresentation;
 	}
 	

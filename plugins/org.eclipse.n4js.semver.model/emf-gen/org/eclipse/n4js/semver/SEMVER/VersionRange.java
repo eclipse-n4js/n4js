@@ -21,5 +21,5 @@ package org.eclipse.n4js.semver.SEMVER;
  * @model abstract="true"
  * @generated
  */
-public interface VersionRange extends AbstractSEMVERSerializer {
+public interface VersionRange extends SEMVERtoStringable {
 } // VersionRange

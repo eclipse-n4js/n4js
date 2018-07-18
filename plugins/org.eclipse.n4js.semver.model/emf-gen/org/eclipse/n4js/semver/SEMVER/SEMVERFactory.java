@@ -30,13 +30,13 @@ public interface SEMVERFactory extends EFactory {
 	SEMVERFactory eINSTANCE = org.eclipse.n4js.semver.SEMVER.impl.SEMVERFactoryImpl.init();
 
 	/**
-	 * Returns a new object of class '<em>URL Version</em>'.
+	 * Returns a new object of class '<em>URL Version Requirement</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>URL Version</em>'.
+	 * @return a new object of class '<em>URL Version Requirement</em>'.
 	 * @generated
 	 */
-	URLVersion createURLVersion();
+	URLVersionRequirement createURLVersionRequirement();
 
 	/**
 	 * Returns a new object of class '<em>URL Semver</em>'.
@@ -57,40 +57,40 @@ public interface SEMVERFactory extends EFactory {
 	URLCommitISH createURLCommitISH();
 
 	/**
-	 * Returns a new object of class '<em>Git Hub Version</em>'.
+	 * Returns a new object of class '<em>Git Hub Version Requirement</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Git Hub Version</em>'.
+	 * @return a new object of class '<em>Git Hub Version Requirement</em>'.
 	 * @generated
 	 */
-	GitHubVersion createGitHubVersion();
+	GitHubVersionRequirement createGitHubVersionRequirement();
 
 	/**
-	 * Returns a new object of class '<em>Local Path Version</em>'.
+	 * Returns a new object of class '<em>Local Path Version Requirement</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Local Path Version</em>'.
+	 * @return a new object of class '<em>Local Path Version Requirement</em>'.
 	 * @generated
 	 */
-	LocalPathVersion createLocalPathVersion();
+	LocalPathVersionRequirement createLocalPathVersionRequirement();
 
 	/**
-	 * Returns a new object of class '<em>Tag Version</em>'.
+	 * Returns a new object of class '<em>Tag Version Requirement</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Tag Version</em>'.
+	 * @return a new object of class '<em>Tag Version Requirement</em>'.
 	 * @generated
 	 */
-	TagVersion createTagVersion();
+	TagVersionRequirement createTagVersionRequirement();
 
 	/**
-	 * Returns a new object of class '<em>Version Range Set</em>'.
+	 * Returns a new object of class '<em>Version Range Set Requirement</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Version Range Set</em>'.
+	 * @return a new object of class '<em>Version Range Set Requirement</em>'.
 	 * @generated
 	 */
-	VersionRangeSet createVersionRangeSet();
+	VersionRangeSetRequirement createVersionRangeSetRequirement();
 
 	/**
 	 * Returns a new object of class '<em>Hyphen Version Range</em>'.

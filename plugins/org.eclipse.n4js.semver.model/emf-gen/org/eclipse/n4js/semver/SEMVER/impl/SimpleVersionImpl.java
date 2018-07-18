@@ -45,7 +45,7 @@ import org.eclipse.n4js.semver.SEMVER.VersionNumber;
  *
  * @generated
  */
-public class SimpleVersionImpl extends AbstractSEMVERSerializerImpl implements SimpleVersion {
+public class SimpleVersionImpl extends SEMVERtoStringableImpl implements SimpleVersion {
 	/**
 	 * The cached value of the '{@link #getNumber() <em>Number</em>}' containment reference.
 	 * <!-- begin-user-doc -->

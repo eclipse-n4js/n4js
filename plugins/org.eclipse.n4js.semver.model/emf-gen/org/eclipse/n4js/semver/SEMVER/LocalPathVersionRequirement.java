@@ -13,21 +13,21 @@ package org.eclipse.n4js.semver.SEMVER;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Local Path Version</b></em>'.
+ * A representation of the model object '<em><b>Local Path Version Requirement</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.semver.SEMVER.LocalPathVersion#getLocalPath <em>Local Path</em>}</li>
+ *   <li>{@link org.eclipse.n4js.semver.SEMVER.LocalPathVersionRequirement#getLocalPath <em>Local Path</em>}</li>
  * </ul>
  *
- * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getLocalPathVersion()
+ * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getLocalPathVersionRequirement()
  * @model
  * @generated
  */
-public interface LocalPathVersion extends NPMVersion {
+public interface LocalPathVersionRequirement extends NPMVersionRequirement {
 	/**
 	 * Returns the value of the '<em><b>Local Path</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -38,14 +38,14 @@ public interface LocalPathVersion extends NPMVersion {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Local Path</em>' attribute.
 	 * @see #setLocalPath(String)
-	 * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getLocalPathVersion_LocalPath()
+	 * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getLocalPathVersionRequirement_LocalPath()
 	 * @model unique="false"
 	 * @generated
 	 */
 	String getLocalPath();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.semver.SEMVER.LocalPathVersion#getLocalPath <em>Local Path</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.n4js.semver.SEMVER.LocalPathVersionRequirement#getLocalPath <em>Local Path</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Local Path</em>' attribute.
@@ -54,4 +54,4 @@ public interface LocalPathVersion extends NPMVersion {
 	 */
 	void setLocalPath(String value);
 
-} // LocalPathVersion
+} // LocalPathVersionRequirement

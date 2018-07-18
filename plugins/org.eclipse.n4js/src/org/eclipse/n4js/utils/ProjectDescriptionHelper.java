@@ -60,7 +60,7 @@ import org.eclipse.n4js.n4mf.SourceContainerType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.semver.SEMVERHelper;
 import org.eclipse.n4js.semver.SEMVER.VersionNumber;
-import org.eclipse.n4js.semver.SEMVER.VersionRangeSet;
+import org.eclipse.n4js.semver.SEMVER.VersionRangeSetRequirement;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.Tuples;
@@ -608,7 +608,7 @@ public class ProjectDescriptionHelper {
 				boolean canParseSEMVER = true;
 				canParseSEMVER = !"latest".equals(valueStr);
 				if (canParseSEMVER) {
-					VersionRangeSet vrs = semverHelper.parseVersionRangeSet(valueStr);
+					VersionRangeSetRequirement vrs = semverHelper.parseVersionRangeSet(valueStr);
 					dep.setVersionConstraint(vrs);
 				} else {
 					dep.setVersionConstraint(null);

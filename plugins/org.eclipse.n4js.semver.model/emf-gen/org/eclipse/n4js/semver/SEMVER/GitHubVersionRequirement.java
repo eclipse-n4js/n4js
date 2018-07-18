@@ -13,22 +13,22 @@ package org.eclipse.n4js.semver.SEMVER;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Git Hub Version</b></em>'.
+ * A representation of the model object '<em><b>Git Hub Version Requirement</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.semver.SEMVER.GitHubVersion#getGithubUrl <em>Github Url</em>}</li>
- *   <li>{@link org.eclipse.n4js.semver.SEMVER.GitHubVersion#getCommitISH <em>Commit ISH</em>}</li>
+ *   <li>{@link org.eclipse.n4js.semver.SEMVER.GitHubVersionRequirement#getGithubUrl <em>Github Url</em>}</li>
+ *   <li>{@link org.eclipse.n4js.semver.SEMVER.GitHubVersionRequirement#getCommitISH <em>Commit ISH</em>}</li>
  * </ul>
  *
- * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getGitHubVersion()
+ * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getGitHubVersionRequirement()
  * @model
  * @generated
  */
-public interface GitHubVersion extends NPMVersion {
+public interface GitHubVersionRequirement extends NPMVersionRequirement {
 	/**
 	 * Returns the value of the '<em><b>Github Url</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -39,14 +39,14 @@ public interface GitHubVersion extends NPMVersion {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Github Url</em>' attribute.
 	 * @see #setGithubUrl(String)
-	 * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getGitHubVersion_GithubUrl()
+	 * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getGitHubVersionRequirement_GithubUrl()
 	 * @model unique="false"
 	 * @generated
 	 */
 	String getGithubUrl();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.semver.SEMVER.GitHubVersion#getGithubUrl <em>Github Url</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.n4js.semver.SEMVER.GitHubVersionRequirement#getGithubUrl <em>Github Url</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Github Url</em>' attribute.
@@ -65,14 +65,14 @@ public interface GitHubVersion extends NPMVersion {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Commit ISH</em>' attribute.
 	 * @see #setCommitISH(String)
-	 * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getGitHubVersion_CommitISH()
+	 * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getGitHubVersionRequirement_CommitISH()
 	 * @model unique="false"
 	 * @generated
 	 */
 	String getCommitISH();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.semver.SEMVER.GitHubVersion#getCommitISH <em>Commit ISH</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.n4js.semver.SEMVER.GitHubVersionRequirement#getCommitISH <em>Commit ISH</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Commit ISH</em>' attribute.
@@ -81,4 +81,4 @@ public interface GitHubVersion extends NPMVersion {
 	 */
 	void setCommitISH(String value);
 
-} // GitHubVersion
+} // GitHubVersionRequirement

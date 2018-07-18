@@ -18,25 +18,25 @@ import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
-import org.eclipse.n4js.semver.SEMVER.AbstractSEMVERSerializer;
 import org.eclipse.n4js.semver.SEMVER.SEMVERPackage;
+import org.eclipse.n4js.semver.SEMVER.SEMVERtoStringable;
 
 import org.eclipse.n4js.semver.model.SEMVERSerializer;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Abstract SEMVER Serializer</b></em>'.
+ * An implementation of the model object '<em><b>SEMVE Rto Stringable</b></em>'.
  * <!-- end-user-doc -->
  *
  * @generated
  */
-public abstract class AbstractSEMVERSerializerImpl extends MinimalEObjectImpl.Container implements AbstractSEMVERSerializer {
+public abstract class SEMVERtoStringableImpl extends MinimalEObjectImpl.Container implements SEMVERtoStringable {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected AbstractSEMVERSerializerImpl() {
+	protected SEMVERtoStringableImpl() {
 		super();
 	}
 
@@ -47,7 +47,7 @@ public abstract class AbstractSEMVERSerializerImpl extends MinimalEObjectImpl.Co
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return SEMVERPackage.Literals.ABSTRACT_SEMVER_SERIALIZER;
+		return SEMVERPackage.Literals.SEMVE_RTO_STRINGABLE;
 	}
 
 	/**
@@ -67,10 +67,10 @@ public abstract class AbstractSEMVERSerializerImpl extends MinimalEObjectImpl.Co
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
-			case SEMVERPackage.ABSTRACT_SEMVER_SERIALIZER___TO_STRING:
+			case SEMVERPackage.SEMVE_RTO_STRINGABLE___TO_STRING:
 				return toString();
 		}
 		return super.eInvoke(operationID, arguments);
 	}
 
-} //AbstractSEMVERSerializerImpl
+} //SEMVERtoStringableImpl

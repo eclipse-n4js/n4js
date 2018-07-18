@@ -14,15 +14,15 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Abstract SEMVER Serializer</b></em>'.
+ * A representation of the model object '<em><b>SEMVE Rto Stringable</b></em>'.
  * <!-- end-user-doc -->
  *
  *
- * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getAbstractSEMVERSerializer()
+ * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getSEMVERtoStringable()
  * @model abstract="true"
  * @generated
  */
-public interface AbstractSEMVERSerializer extends EObject {
+public interface SEMVERtoStringable extends EObject {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -32,4 +32,4 @@ public interface AbstractSEMVERSerializer extends EObject {
 	 */
 	String toString();
 
-} // AbstractSEMVERSerializer
+} // SEMVERtoStringable

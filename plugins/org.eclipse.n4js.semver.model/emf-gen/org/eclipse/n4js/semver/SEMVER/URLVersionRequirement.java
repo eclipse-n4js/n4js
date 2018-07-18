@@ -13,23 +13,23 @@ package org.eclipse.n4js.semver.SEMVER;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>URL Version</b></em>'.
+ * A representation of the model object '<em><b>URL Version Requirement</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.semver.SEMVER.URLVersion#getVersionSpecifier <em>Version Specifier</em>}</li>
- *   <li>{@link org.eclipse.n4js.semver.SEMVER.URLVersion#getProtocol <em>Protocol</em>}</li>
- *   <li>{@link org.eclipse.n4js.semver.SEMVER.URLVersion#getUrl <em>Url</em>}</li>
+ *   <li>{@link org.eclipse.n4js.semver.SEMVER.URLVersionRequirement#getVersionSpecifier <em>Version Specifier</em>}</li>
+ *   <li>{@link org.eclipse.n4js.semver.SEMVER.URLVersionRequirement#getProtocol <em>Protocol</em>}</li>
+ *   <li>{@link org.eclipse.n4js.semver.SEMVER.URLVersionRequirement#getUrl <em>Url</em>}</li>
  * </ul>
  *
- * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getURLVersion()
+ * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getURLVersionRequirement()
  * @model
  * @generated
  */
-public interface URLVersion extends NPMVersion {
+public interface URLVersionRequirement extends NPMVersionRequirement {
 	/**
 	 * Returns the value of the '<em><b>Version Specifier</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
@@ -40,14 +40,14 @@ public interface URLVersion extends NPMVersion {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Version Specifier</em>' containment reference.
 	 * @see #setVersionSpecifier(URLVersionSpecifier)
-	 * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getURLVersion_VersionSpecifier()
+	 * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getURLVersionRequirement_VersionSpecifier()
 	 * @model containment="true"
 	 * @generated
 	 */
 	URLVersionSpecifier getVersionSpecifier();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.semver.SEMVER.URLVersion#getVersionSpecifier <em>Version Specifier</em>}' containment reference.
+	 * Sets the value of the '{@link org.eclipse.n4js.semver.SEMVER.URLVersionRequirement#getVersionSpecifier <em>Version Specifier</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Version Specifier</em>' containment reference.
@@ -66,14 +66,14 @@ public interface URLVersion extends NPMVersion {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Protocol</em>' attribute.
 	 * @see #setProtocol(String)
-	 * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getURLVersion_Protocol()
+	 * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getURLVersionRequirement_Protocol()
 	 * @model unique="false"
 	 * @generated
 	 */
 	String getProtocol();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.semver.SEMVER.URLVersion#getProtocol <em>Protocol</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.n4js.semver.SEMVER.URLVersionRequirement#getProtocol <em>Protocol</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Protocol</em>' attribute.
@@ -92,14 +92,14 @@ public interface URLVersion extends NPMVersion {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Url</em>' attribute.
 	 * @see #setUrl(String)
-	 * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getURLVersion_Url()
+	 * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getURLVersionRequirement_Url()
 	 * @model unique="false"
 	 * @generated
 	 */
 	String getUrl();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.semver.SEMVER.URLVersion#getUrl <em>Url</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.n4js.semver.SEMVER.URLVersionRequirement#getUrl <em>Url</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Url</em>' attribute.
@@ -126,4 +126,4 @@ public interface URLVersion extends NPMVersion {
 	 */
 	SimpleVersion getSimpleVersion();
 
-} // URLVersion
+} // URLVersionRequirement

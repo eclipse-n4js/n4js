@@ -53,15 +53,15 @@ import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
 import org.eclipse.n4js.semver.SEMVERHelper;
-import org.eclipse.n4js.semver.SEMVER.GitHubVersion;
-import org.eclipse.n4js.semver.SEMVER.LocalPathVersion;
-import org.eclipse.n4js.semver.SEMVER.NPMVersion;
+import org.eclipse.n4js.semver.SEMVER.GitHubVersionRequirement;
+import org.eclipse.n4js.semver.SEMVER.LocalPathVersionRequirement;
+import org.eclipse.n4js.semver.SEMVER.NPMVersionRequirement;
 import org.eclipse.n4js.semver.SEMVER.SimpleVersion;
-import org.eclipse.n4js.semver.SEMVER.TagVersion;
-import org.eclipse.n4js.semver.SEMVER.URLVersion;
+import org.eclipse.n4js.semver.SEMVER.TagVersionRequirement;
+import org.eclipse.n4js.semver.SEMVER.URLVersionRequirement;
 import org.eclipse.n4js.semver.SEMVER.VersionNumber;
 import org.eclipse.n4js.semver.SEMVER.VersionRangeConstraint;
-import org.eclipse.n4js.semver.SEMVER.VersionRangeSet;
+import org.eclipse.n4js.semver.SEMVER.VersionRangeSetRequirement;
 import org.eclipse.n4js.semver.model.SEMVERSerializer;
 import org.eclipse.n4js.utils.ProjectDescriptionHelper;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
@@ -203,8 +203,8 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 			return;
 		}
 
-		NPMVersion npmVersion = semverHelper.parse(parseResult);
-		VersionRangeSet vrs = semverHelper.parseVersionRangeSet(parseResult);
+		NPMVersionRequirement npmVersion = semverHelper.parse(parseResult);
+		VersionRangeSetRequirement vrs = semverHelper.parseVersionRangeSet(parseResult);
 		VersionNumber vn = semverHelper.parseVersionNumber(parseResult);
 		if (vrs == null || vn == null || !(vrs.getRanges().get(0) instanceof VersionRangeConstraint)) {
 			String reason = "Cannot parse given string";
@@ -227,17 +227,17 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		}
 	}
 
-	private String getVersionRequirementType(NPMVersion npmVersion) {
-		if (npmVersion instanceof TagVersion) {
+	private String getVersionRequirementType(NPMVersionRequirement npmVersion) {
+		if (npmVersion instanceof TagVersionRequirement) {
 			return "tag";
 		}
-		if (npmVersion instanceof URLVersion) {
+		if (npmVersion instanceof URLVersionRequirement) {
 			return "url";
 		}
-		if (npmVersion instanceof GitHubVersion) {
+		if (npmVersion instanceof GitHubVersionRequirement) {
 			return "github location";
 		}
-		if (npmVersion instanceof LocalPathVersion) {
+		if (npmVersion instanceof LocalPathVersionRequirement) {
 			return "local path";
 		}
 		return "unknown";
@@ -268,7 +268,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 			// check version
 			if (checkIsType(entry.getValue(), JSONPackage.Literals.JSON_STRING_LITERAL, "as version specifier")) {
 				final String constraintValue = ((JSONStringLiteral) entry.getValue()).getValue();
-				final NPMVersion parsedNPMVersion = semverHelper.parse(constraintValue);
+				final NPMVersionRequirement parsedNPMVersion = semverHelper.parse(constraintValue);
 				if (parsedNPMVersion == null) {
 					addIssue(IssueCodes.getMessageForPKGJ_INVALID_VERSION_CONSTRAINT(constraintValue),
 							entry.getValue(), IssueCodes.PKGJ_INVALID_VERSION_CONSTRAINT);

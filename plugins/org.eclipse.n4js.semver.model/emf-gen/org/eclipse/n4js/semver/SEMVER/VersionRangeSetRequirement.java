@@ -14,21 +14,21 @@ import org.eclipse.emf.common.util.EList;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Version Range Set</b></em>'.
+ * A representation of the model object '<em><b>Version Range Set Requirement</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.semver.SEMVER.VersionRangeSet#getRanges <em>Ranges</em>}</li>
+ *   <li>{@link org.eclipse.n4js.semver.SEMVER.VersionRangeSetRequirement#getRanges <em>Ranges</em>}</li>
  * </ul>
  *
- * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getVersionRangeSet()
+ * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getVersionRangeSetRequirement()
  * @model
  * @generated
  */
-public interface VersionRangeSet extends NPMVersion {
+public interface VersionRangeSetRequirement extends NPMVersionRequirement {
 	/**
 	 * Returns the value of the '<em><b>Ranges</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.semver.SEMVER.VersionRange}.
@@ -39,10 +39,10 @@ public interface VersionRangeSet extends NPMVersion {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Ranges</em>' containment reference list.
-	 * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getVersionRangeSet_Ranges()
+	 * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getVersionRangeSetRequirement_Ranges()
 	 * @model containment="true"
 	 * @generated
 	 */
 	EList<VersionRange> getRanges();
 
-} // VersionRangeSet
+} // VersionRangeSetRequirement

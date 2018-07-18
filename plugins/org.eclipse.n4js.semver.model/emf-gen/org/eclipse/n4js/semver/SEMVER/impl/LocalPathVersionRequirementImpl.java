@@ -16,49 +16,49 @@ import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.eclipse.n4js.semver.SEMVER.LocalPathVersionRequirement;
 import org.eclipse.n4js.semver.SEMVER.SEMVERPackage;
-import org.eclipse.n4js.semver.SEMVER.TagVersion;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Tag Version</b></em>'.
+ * An implementation of the model object '<em><b>Local Path Version Requirement</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.semver.SEMVER.impl.TagVersionImpl#getTagName <em>Tag Name</em>}</li>
+ *   <li>{@link org.eclipse.n4js.semver.SEMVER.impl.LocalPathVersionRequirementImpl#getLocalPath <em>Local Path</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class TagVersionImpl extends NPMVersionImpl implements TagVersion {
+public class LocalPathVersionRequirementImpl extends NPMVersionRequirementImpl implements LocalPathVersionRequirement {
 	/**
-	 * The default value of the '{@link #getTagName() <em>Tag Name</em>}' attribute.
+	 * The default value of the '{@link #getLocalPath() <em>Local Path</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getTagName()
+	 * @see #getLocalPath()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String TAG_NAME_EDEFAULT = null;
+	protected static final String LOCAL_PATH_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getTagName() <em>Tag Name</em>}' attribute.
+	 * The cached value of the '{@link #getLocalPath() <em>Local Path</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getTagName()
+	 * @see #getLocalPath()
 	 * @generated
 	 * @ordered
 	 */
-	protected String tagName = TAG_NAME_EDEFAULT;
+	protected String localPath = LOCAL_PATH_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected TagVersionImpl() {
+	protected LocalPathVersionRequirementImpl() {
 		super();
 	}
 
@@ -69,7 +69,7 @@ public class TagVersionImpl extends NPMVersionImpl implements TagVersion {
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return SEMVERPackage.Literals.TAG_VERSION;
+		return SEMVERPackage.Literals.LOCAL_PATH_VERSION_REQUIREMENT;
 	}
 
 	/**
@@ -77,8 +77,8 @@ public class TagVersionImpl extends NPMVersionImpl implements TagVersion {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getTagName() {
-		return tagName;
+	public String getLocalPath() {
+		return localPath;
 	}
 
 	/**
@@ -86,11 +86,11 @@ public class TagVersionImpl extends NPMVersionImpl implements TagVersion {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setTagName(String newTagName) {
-		String oldTagName = tagName;
-		tagName = newTagName;
+	public void setLocalPath(String newLocalPath) {
+		String oldLocalPath = localPath;
+		localPath = newLocalPath;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SEMVERPackage.TAG_VERSION__TAG_NAME, oldTagName, tagName));
+			eNotify(new ENotificationImpl(this, Notification.SET, SEMVERPackage.LOCAL_PATH_VERSION_REQUIREMENT__LOCAL_PATH, oldLocalPath, localPath));
 	}
 
 	/**
@@ -101,8 +101,8 @@ public class TagVersionImpl extends NPMVersionImpl implements TagVersion {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case SEMVERPackage.TAG_VERSION__TAG_NAME:
-				return getTagName();
+			case SEMVERPackage.LOCAL_PATH_VERSION_REQUIREMENT__LOCAL_PATH:
+				return getLocalPath();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -115,8 +115,8 @@ public class TagVersionImpl extends NPMVersionImpl implements TagVersion {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case SEMVERPackage.TAG_VERSION__TAG_NAME:
-				setTagName((String)newValue);
+			case SEMVERPackage.LOCAL_PATH_VERSION_REQUIREMENT__LOCAL_PATH:
+				setLocalPath((String)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -130,8 +130,8 @@ public class TagVersionImpl extends NPMVersionImpl implements TagVersion {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case SEMVERPackage.TAG_VERSION__TAG_NAME:
-				setTagName(TAG_NAME_EDEFAULT);
+			case SEMVERPackage.LOCAL_PATH_VERSION_REQUIREMENT__LOCAL_PATH:
+				setLocalPath(LOCAL_PATH_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -145,8 +145,8 @@ public class TagVersionImpl extends NPMVersionImpl implements TagVersion {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case SEMVERPackage.TAG_VERSION__TAG_NAME:
-				return TAG_NAME_EDEFAULT == null ? tagName != null : !TAG_NAME_EDEFAULT.equals(tagName);
+			case SEMVERPackage.LOCAL_PATH_VERSION_REQUIREMENT__LOCAL_PATH:
+				return LOCAL_PATH_EDEFAULT == null ? localPath != null : !LOCAL_PATH_EDEFAULT.equals(localPath);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -161,10 +161,10 @@ public class TagVersionImpl extends NPMVersionImpl implements TagVersion {
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (tagName: ");
-		result.append(tagName);
+		result.append(" (localPath: ");
+		result.append(localPath);
 		result.append(')');
 		return result.toString();
 	}
 
-} //TagVersionImpl
+} //LocalPathVersionRequirementImpl

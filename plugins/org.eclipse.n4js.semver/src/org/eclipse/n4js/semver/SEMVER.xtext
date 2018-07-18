@@ -22,21 +22,21 @@ import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 //  https://docs.npmjs.com/misc/semver
 
 
-NPMVersion:
+NPMVersionRequirement:
 	WS*
-	VersionRangeSet
+	VersionRangeSetRequirement
 	| (
 		(
-			URLVersion
-			| LocalPathVersion
-			| GitHubVersion
-			| TagVersion
+			URLVersionRequirement
+			| LocalPathVersionRequirement
+			| GitHubVersionRequirement
+			| TagVersionRequirement
 		)
 		WS*
 	)
 ;
 
-URLVersion:
+URLVersionRequirement:
 	protocol=URL_PROTOCOL '://' url=URL
 	('#' versionSpecifier=URLVersionSpecifier)?
 ;
@@ -54,21 +54,21 @@ URLCommitISH:
 	commitISH=ALPHA_NUMERIC_CHARS
 ;
 
-TagVersion:
+TagVersionRequirement:
 	tagName=TAG
 ;
 
-GitHubVersion:
+GitHubVersionRequirement:
 	githubUrl=URL ('#' commitISH=ALPHA_NUMERIC_CHARS)?
 ;
 
-LocalPathVersion:
+LocalPathVersionRequirement:
 	"file:" localPath=PATH
 ;
 
 
-VersionRangeSet:
-	{VersionRangeSet} (ranges+=VersionRange (WS* '||' WS* ranges+=VersionRange)* WS*)?
+VersionRangeSetRequirement:
+	{VersionRangeSetRequirement} (ranges+=VersionRange (WS* '||' WS* ranges+=VersionRange)* WS*)?
 ;
 
 VersionRange:

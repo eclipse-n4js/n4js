@@ -12,23 +12,23 @@ package org.eclipse.n4js.semver.SEMVER.impl;
 
 import org.eclipse.emf.ecore.EClass;
 
-import org.eclipse.n4js.semver.SEMVER.NPMVersion;
+import org.eclipse.n4js.semver.SEMVER.NPMVersionRequirement;
 import org.eclipse.n4js.semver.SEMVER.SEMVERPackage;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>NPM Version</b></em>'.
+ * An implementation of the model object '<em><b>NPM Version Requirement</b></em>'.
  * <!-- end-user-doc -->
  *
  * @generated
  */
-public abstract class NPMVersionImpl extends AbstractSEMVERSerializerImpl implements NPMVersion {
+public abstract class NPMVersionRequirementImpl extends SEMVERtoStringableImpl implements NPMVersionRequirement {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected NPMVersionImpl() {
+	protected NPMVersionRequirementImpl() {
 		super();
 	}
 
@@ -39,7 +39,7 @@ public abstract class NPMVersionImpl extends AbstractSEMVERSerializerImpl implem
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return SEMVERPackage.Literals.NPM_VERSION;
+		return SEMVERPackage.Literals.NPM_VERSION_REQUIREMENT;
 	}
 
-} //NPMVersionImpl
+} //NPMVersionRequirementImpl

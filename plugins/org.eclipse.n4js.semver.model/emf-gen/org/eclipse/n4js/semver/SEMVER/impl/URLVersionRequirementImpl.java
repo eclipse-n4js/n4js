@@ -25,25 +25,25 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.n4js.semver.SEMVER.SEMVERPackage;
 import org.eclipse.n4js.semver.SEMVER.SimpleVersion;
 import org.eclipse.n4js.semver.SEMVER.URLSemver;
-import org.eclipse.n4js.semver.SEMVER.URLVersion;
+import org.eclipse.n4js.semver.SEMVER.URLVersionRequirement;
 import org.eclipse.n4js.semver.SEMVER.URLVersionSpecifier;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>URL Version</b></em>'.
+ * An implementation of the model object '<em><b>URL Version Requirement</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.semver.SEMVER.impl.URLVersionImpl#getVersionSpecifier <em>Version Specifier</em>}</li>
- *   <li>{@link org.eclipse.n4js.semver.SEMVER.impl.URLVersionImpl#getProtocol <em>Protocol</em>}</li>
- *   <li>{@link org.eclipse.n4js.semver.SEMVER.impl.URLVersionImpl#getUrl <em>Url</em>}</li>
+ *   <li>{@link org.eclipse.n4js.semver.SEMVER.impl.URLVersionRequirementImpl#getVersionSpecifier <em>Version Specifier</em>}</li>
+ *   <li>{@link org.eclipse.n4js.semver.SEMVER.impl.URLVersionRequirementImpl#getProtocol <em>Protocol</em>}</li>
+ *   <li>{@link org.eclipse.n4js.semver.SEMVER.impl.URLVersionRequirementImpl#getUrl <em>Url</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class URLVersionImpl extends NPMVersionImpl implements URLVersion {
+public class URLVersionRequirementImpl extends NPMVersionRequirementImpl implements URLVersionRequirement {
 	/**
 	 * The cached value of the '{@link #getVersionSpecifier() <em>Version Specifier</em>}' containment reference.
 	 * <!-- begin-user-doc -->
@@ -99,7 +99,7 @@ public class URLVersionImpl extends NPMVersionImpl implements URLVersion {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected URLVersionImpl() {
+	protected URLVersionRequirementImpl() {
 		super();
 	}
 
@@ -110,7 +110,7 @@ public class URLVersionImpl extends NPMVersionImpl implements URLVersion {
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return SEMVERPackage.Literals.URL_VERSION;
+		return SEMVERPackage.Literals.URL_VERSION_REQUIREMENT;
 	}
 
 	/**
@@ -131,7 +131,7 @@ public class URLVersionImpl extends NPMVersionImpl implements URLVersion {
 		URLVersionSpecifier oldVersionSpecifier = versionSpecifier;
 		versionSpecifier = newVersionSpecifier;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, SEMVERPackage.URL_VERSION__VERSION_SPECIFIER, oldVersionSpecifier, newVersionSpecifier);
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, SEMVERPackage.URL_VERSION_REQUIREMENT__VERSION_SPECIFIER, oldVersionSpecifier, newVersionSpecifier);
 			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
 		return msgs;
@@ -146,14 +146,14 @@ public class URLVersionImpl extends NPMVersionImpl implements URLVersion {
 		if (newVersionSpecifier != versionSpecifier) {
 			NotificationChain msgs = null;
 			if (versionSpecifier != null)
-				msgs = ((InternalEObject)versionSpecifier).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - SEMVERPackage.URL_VERSION__VERSION_SPECIFIER, null, msgs);
+				msgs = ((InternalEObject)versionSpecifier).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - SEMVERPackage.URL_VERSION_REQUIREMENT__VERSION_SPECIFIER, null, msgs);
 			if (newVersionSpecifier != null)
-				msgs = ((InternalEObject)newVersionSpecifier).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - SEMVERPackage.URL_VERSION__VERSION_SPECIFIER, null, msgs);
+				msgs = ((InternalEObject)newVersionSpecifier).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - SEMVERPackage.URL_VERSION_REQUIREMENT__VERSION_SPECIFIER, null, msgs);
 			msgs = basicSetVersionSpecifier(newVersionSpecifier, msgs);
 			if (msgs != null) msgs.dispatch();
 		}
 		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SEMVERPackage.URL_VERSION__VERSION_SPECIFIER, newVersionSpecifier, newVersionSpecifier));
+			eNotify(new ENotificationImpl(this, Notification.SET, SEMVERPackage.URL_VERSION_REQUIREMENT__VERSION_SPECIFIER, newVersionSpecifier, newVersionSpecifier));
 	}
 
 	/**
@@ -174,7 +174,7 @@ public class URLVersionImpl extends NPMVersionImpl implements URLVersion {
 		String oldProtocol = protocol;
 		protocol = newProtocol;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SEMVERPackage.URL_VERSION__PROTOCOL, oldProtocol, protocol));
+			eNotify(new ENotificationImpl(this, Notification.SET, SEMVERPackage.URL_VERSION_REQUIREMENT__PROTOCOL, oldProtocol, protocol));
 	}
 
 	/**
@@ -195,7 +195,7 @@ public class URLVersionImpl extends NPMVersionImpl implements URLVersion {
 		String oldUrl = url;
 		url = newUrl;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SEMVERPackage.URL_VERSION__URL, oldUrl, url));
+			eNotify(new ENotificationImpl(this, Notification.SET, SEMVERPackage.URL_VERSION_REQUIREMENT__URL, oldUrl, url));
 	}
 
 	/**
@@ -231,7 +231,7 @@ public class URLVersionImpl extends NPMVersionImpl implements URLVersion {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case SEMVERPackage.URL_VERSION__VERSION_SPECIFIER:
+			case SEMVERPackage.URL_VERSION_REQUIREMENT__VERSION_SPECIFIER:
 				return basicSetVersionSpecifier(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
@@ -245,11 +245,11 @@ public class URLVersionImpl extends NPMVersionImpl implements URLVersion {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case SEMVERPackage.URL_VERSION__VERSION_SPECIFIER:
+			case SEMVERPackage.URL_VERSION_REQUIREMENT__VERSION_SPECIFIER:
 				return getVersionSpecifier();
-			case SEMVERPackage.URL_VERSION__PROTOCOL:
+			case SEMVERPackage.URL_VERSION_REQUIREMENT__PROTOCOL:
 				return getProtocol();
-			case SEMVERPackage.URL_VERSION__URL:
+			case SEMVERPackage.URL_VERSION_REQUIREMENT__URL:
 				return getUrl();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -263,13 +263,13 @@ public class URLVersionImpl extends NPMVersionImpl implements URLVersion {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case SEMVERPackage.URL_VERSION__VERSION_SPECIFIER:
+			case SEMVERPackage.URL_VERSION_REQUIREMENT__VERSION_SPECIFIER:
 				setVersionSpecifier((URLVersionSpecifier)newValue);
 				return;
-			case SEMVERPackage.URL_VERSION__PROTOCOL:
+			case SEMVERPackage.URL_VERSION_REQUIREMENT__PROTOCOL:
 				setProtocol((String)newValue);
 				return;
-			case SEMVERPackage.URL_VERSION__URL:
+			case SEMVERPackage.URL_VERSION_REQUIREMENT__URL:
 				setUrl((String)newValue);
 				return;
 		}
@@ -284,13 +284,13 @@ public class URLVersionImpl extends NPMVersionImpl implements URLVersion {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case SEMVERPackage.URL_VERSION__VERSION_SPECIFIER:
+			case SEMVERPackage.URL_VERSION_REQUIREMENT__VERSION_SPECIFIER:
 				setVersionSpecifier((URLVersionSpecifier)null);
 				return;
-			case SEMVERPackage.URL_VERSION__PROTOCOL:
+			case SEMVERPackage.URL_VERSION_REQUIREMENT__PROTOCOL:
 				setProtocol(PROTOCOL_EDEFAULT);
 				return;
-			case SEMVERPackage.URL_VERSION__URL:
+			case SEMVERPackage.URL_VERSION_REQUIREMENT__URL:
 				setUrl(URL_EDEFAULT);
 				return;
 		}
@@ -305,11 +305,11 @@ public class URLVersionImpl extends NPMVersionImpl implements URLVersion {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case SEMVERPackage.URL_VERSION__VERSION_SPECIFIER:
+			case SEMVERPackage.URL_VERSION_REQUIREMENT__VERSION_SPECIFIER:
 				return versionSpecifier != null;
-			case SEMVERPackage.URL_VERSION__PROTOCOL:
+			case SEMVERPackage.URL_VERSION_REQUIREMENT__PROTOCOL:
 				return PROTOCOL_EDEFAULT == null ? protocol != null : !PROTOCOL_EDEFAULT.equals(protocol);
-			case SEMVERPackage.URL_VERSION__URL:
+			case SEMVERPackage.URL_VERSION_REQUIREMENT__URL:
 				return URL_EDEFAULT == null ? url != null : !URL_EDEFAULT.equals(url);
 		}
 		return super.eIsSet(featureID);
@@ -323,9 +323,9 @@ public class URLVersionImpl extends NPMVersionImpl implements URLVersion {
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
-			case SEMVERPackage.URL_VERSION___HAS_SIMPLE_VERSION:
+			case SEMVERPackage.URL_VERSION_REQUIREMENT___HAS_SIMPLE_VERSION:
 				return hasSimpleVersion();
-			case SEMVERPackage.URL_VERSION___GET_SIMPLE_VERSION:
+			case SEMVERPackage.URL_VERSION_REQUIREMENT___GET_SIMPLE_VERSION:
 				return getSimpleVersion();
 		}
 		return super.eInvoke(operationID, arguments);
@@ -349,4 +349,4 @@ public class URLVersionImpl extends NPMVersionImpl implements URLVersion {
 		return result.toString();
 	}
 
-} //URLVersionImpl
+} //URLVersionRequirementImpl

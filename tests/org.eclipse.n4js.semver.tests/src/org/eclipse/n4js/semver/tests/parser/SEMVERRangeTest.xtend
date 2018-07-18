@@ -11,7 +11,6 @@
 package org.eclipse.n4js.semver.tests.parser
 
 import com.google.inject.Inject
-import org.eclipse.n4js.semver.SEMVER.VersionRangeSet
 import org.eclipse.n4js.semver.SEMVERInjectorProvider
 import org.eclipse.n4js.semver.SEMVERMatcher
 import org.eclipse.n4js.semver.SEMVERParseHelper
@@ -21,6 +20,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 import static org.junit.Assert.*
+import org.eclipse.n4js.semver.SEMVER.VersionRangeSetRequirement
 
 /**
  * Tests for parsing SEMVER files.
@@ -110,7 +110,7 @@ class SEMVERRangeTest {
 		}
 	}
 
-	def private void checkMatching(String underTestStr, VersionRangeSet underTestVRS, String matchingString, boolean shouldMatch) {
+	def private void checkMatching(String underTestStr, VersionRangeSetRequirement underTestVRS, String matchingString, boolean shouldMatch) {
 		val versionNumber = matchingString.parseVersionNumber
 		assertTrue(versionNumber !== null);
 

@@ -13,21 +13,21 @@ package org.eclipse.n4js.semver.SEMVER;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Tag Version</b></em>'.
+ * A representation of the model object '<em><b>Tag Version Requirement</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.semver.SEMVER.TagVersion#getTagName <em>Tag Name</em>}</li>
+ *   <li>{@link org.eclipse.n4js.semver.SEMVER.TagVersionRequirement#getTagName <em>Tag Name</em>}</li>
  * </ul>
  *
- * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getTagVersion()
+ * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getTagVersionRequirement()
  * @model
  * @generated
  */
-public interface TagVersion extends NPMVersion {
+public interface TagVersionRequirement extends NPMVersionRequirement {
 	/**
 	 * Returns the value of the '<em><b>Tag Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -38,14 +38,14 @@ public interface TagVersion extends NPMVersion {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Tag Name</em>' attribute.
 	 * @see #setTagName(String)
-	 * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getTagVersion_TagName()
+	 * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getTagVersionRequirement_TagName()
 	 * @model unique="false"
 	 * @generated
 	 */
 	String getTagName();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.semver.SEMVER.TagVersion#getTagName <em>Tag Name</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.n4js.semver.SEMVER.TagVersionRequirement#getTagName <em>Tag Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Tag Name</em>' attribute.
@@ -54,4 +54,4 @@ public interface TagVersion extends NPMVersion {
 	 */
 	void setTagName(String value);
 
-} // TagVersion
+} // TagVersionRequirement

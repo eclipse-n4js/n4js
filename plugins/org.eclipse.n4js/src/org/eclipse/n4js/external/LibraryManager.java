@@ -52,7 +52,7 @@ import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.semver.SEMVERHelper;
 import org.eclipse.n4js.semver.SEMVERMatcher;
-import org.eclipse.n4js.semver.SEMVER.NPMVersion;
+import org.eclipse.n4js.semver.SEMVER.NPMVersionRequirement;
 import org.eclipse.n4js.semver.SEMVER.VersionNumber;
 import org.eclipse.n4js.semver.model.SEMVERSerializer;
 import org.eclipse.n4js.smith.ClosableMeasurement;
@@ -392,7 +392,7 @@ public class LibraryManager {
 	private boolean isAlreadyInstalled(String installedVersionString,
 			String requestedPackageString, String requestedVersionString) {
 
-		NPMVersion requestedVersion = semverHelper.parse(requestedVersionString);
+		NPMVersionRequirement requestedVersion = semverHelper.parse(requestedVersionString);
 		VersionNumber installedVersion = semverHelper.parseVersionNumber(installedVersionString);
 
 		boolean canComputeMatch = SEMVERMatcher.canComputeMatch(installedVersion, requestedVersion);

@@ -36,7 +36,7 @@ import org.eclipse.n4js.semver.SEMVER.SEMVERPackage;
  *
  * @generated
  */
-public class QualifierTagImpl extends AbstractSEMVERSerializerImpl implements QualifierTag {
+public class QualifierTagImpl extends SEMVERtoStringableImpl implements QualifierTag {
 	/**
 	 * The cached value of the '{@link #getParts() <em>Parts</em>}' attribute list.
 	 * <!-- begin-user-doc -->

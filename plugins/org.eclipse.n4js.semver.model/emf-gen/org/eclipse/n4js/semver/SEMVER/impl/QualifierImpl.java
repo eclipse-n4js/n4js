@@ -40,7 +40,7 @@ import org.eclipse.n4js.semver.SEMVER.SEMVERPackage;
  *
  * @generated
  */
-public class QualifierImpl extends AbstractSEMVERSerializerImpl implements Qualifier {
+public class QualifierImpl extends SEMVERtoStringableImpl implements Qualifier {
 	/**
 	 * The cached value of the '{@link #getPreRelease() <em>Pre Release</em>}' containment reference.
 	 * <!-- begin-user-doc -->

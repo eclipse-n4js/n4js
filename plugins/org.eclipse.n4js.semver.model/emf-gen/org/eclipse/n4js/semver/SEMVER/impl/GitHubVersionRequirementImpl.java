@@ -16,24 +16,24 @@ import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
-import org.eclipse.n4js.semver.SEMVER.GitHubVersion;
+import org.eclipse.n4js.semver.SEMVER.GitHubVersionRequirement;
 import org.eclipse.n4js.semver.SEMVER.SEMVERPackage;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Git Hub Version</b></em>'.
+ * An implementation of the model object '<em><b>Git Hub Version Requirement</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.semver.SEMVER.impl.GitHubVersionImpl#getGithubUrl <em>Github Url</em>}</li>
- *   <li>{@link org.eclipse.n4js.semver.SEMVER.impl.GitHubVersionImpl#getCommitISH <em>Commit ISH</em>}</li>
+ *   <li>{@link org.eclipse.n4js.semver.SEMVER.impl.GitHubVersionRequirementImpl#getGithubUrl <em>Github Url</em>}</li>
+ *   <li>{@link org.eclipse.n4js.semver.SEMVER.impl.GitHubVersionRequirementImpl#getCommitISH <em>Commit ISH</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class GitHubVersionImpl extends NPMVersionImpl implements GitHubVersion {
+public class GitHubVersionRequirementImpl extends NPMVersionRequirementImpl implements GitHubVersionRequirement {
 	/**
 	 * The default value of the '{@link #getGithubUrl() <em>Github Url</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -79,7 +79,7 @@ public class GitHubVersionImpl extends NPMVersionImpl implements GitHubVersion {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected GitHubVersionImpl() {
+	protected GitHubVersionRequirementImpl() {
 		super();
 	}
 
@@ -90,7 +90,7 @@ public class GitHubVersionImpl extends NPMVersionImpl implements GitHubVersion {
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return SEMVERPackage.Literals.GIT_HUB_VERSION;
+		return SEMVERPackage.Literals.GIT_HUB_VERSION_REQUIREMENT;
 	}
 
 	/**
@@ -111,7 +111,7 @@ public class GitHubVersionImpl extends NPMVersionImpl implements GitHubVersion {
 		String oldGithubUrl = githubUrl;
 		githubUrl = newGithubUrl;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SEMVERPackage.GIT_HUB_VERSION__GITHUB_URL, oldGithubUrl, githubUrl));
+			eNotify(new ENotificationImpl(this, Notification.SET, SEMVERPackage.GIT_HUB_VERSION_REQUIREMENT__GITHUB_URL, oldGithubUrl, githubUrl));
 	}
 
 	/**
@@ -132,7 +132,7 @@ public class GitHubVersionImpl extends NPMVersionImpl implements GitHubVersion {
 		String oldCommitISH = commitISH;
 		commitISH = newCommitISH;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SEMVERPackage.GIT_HUB_VERSION__COMMIT_ISH, oldCommitISH, commitISH));
+			eNotify(new ENotificationImpl(this, Notification.SET, SEMVERPackage.GIT_HUB_VERSION_REQUIREMENT__COMMIT_ISH, oldCommitISH, commitISH));
 	}
 
 	/**
@@ -143,9 +143,9 @@ public class GitHubVersionImpl extends NPMVersionImpl implements GitHubVersion {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case SEMVERPackage.GIT_HUB_VERSION__GITHUB_URL:
+			case SEMVERPackage.GIT_HUB_VERSION_REQUIREMENT__GITHUB_URL:
 				return getGithubUrl();
-			case SEMVERPackage.GIT_HUB_VERSION__COMMIT_ISH:
+			case SEMVERPackage.GIT_HUB_VERSION_REQUIREMENT__COMMIT_ISH:
 				return getCommitISH();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -159,10 +159,10 @@ public class GitHubVersionImpl extends NPMVersionImpl implements GitHubVersion {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case SEMVERPackage.GIT_HUB_VERSION__GITHUB_URL:
+			case SEMVERPackage.GIT_HUB_VERSION_REQUIREMENT__GITHUB_URL:
 				setGithubUrl((String)newValue);
 				return;
-			case SEMVERPackage.GIT_HUB_VERSION__COMMIT_ISH:
+			case SEMVERPackage.GIT_HUB_VERSION_REQUIREMENT__COMMIT_ISH:
 				setCommitISH((String)newValue);
 				return;
 		}
@@ -177,10 +177,10 @@ public class GitHubVersionImpl extends NPMVersionImpl implements GitHubVersion {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case SEMVERPackage.GIT_HUB_VERSION__GITHUB_URL:
+			case SEMVERPackage.GIT_HUB_VERSION_REQUIREMENT__GITHUB_URL:
 				setGithubUrl(GITHUB_URL_EDEFAULT);
 				return;
-			case SEMVERPackage.GIT_HUB_VERSION__COMMIT_ISH:
+			case SEMVERPackage.GIT_HUB_VERSION_REQUIREMENT__COMMIT_ISH:
 				setCommitISH(COMMIT_ISH_EDEFAULT);
 				return;
 		}
@@ -195,9 +195,9 @@ public class GitHubVersionImpl extends NPMVersionImpl implements GitHubVersion {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case SEMVERPackage.GIT_HUB_VERSION__GITHUB_URL:
+			case SEMVERPackage.GIT_HUB_VERSION_REQUIREMENT__GITHUB_URL:
 				return GITHUB_URL_EDEFAULT == null ? githubUrl != null : !GITHUB_URL_EDEFAULT.equals(githubUrl);
-			case SEMVERPackage.GIT_HUB_VERSION__COMMIT_ISH:
+			case SEMVERPackage.GIT_HUB_VERSION_REQUIREMENT__COMMIT_ISH:
 				return COMMIT_ISH_EDEFAULT == null ? commitISH != null : !COMMIT_ISH_EDEFAULT.equals(commitISH);
 		}
 		return super.eIsSet(featureID);
@@ -221,4 +221,4 @@ public class GitHubVersionImpl extends NPMVersionImpl implements GitHubVersion {
 		return result.toString();
 	}
 
-} //GitHubVersionImpl
+} //GitHubVersionRequirementImpl

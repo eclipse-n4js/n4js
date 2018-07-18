@@ -14,21 +14,21 @@ import com.google.inject.Inject;
 import java.util.Set;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.n4js.semver.SEMVER.GitHubVersion;
+import org.eclipse.n4js.semver.SEMVER.GitHubVersionRequirement;
 import org.eclipse.n4js.semver.SEMVER.HyphenVersionRange;
-import org.eclipse.n4js.semver.SEMVER.LocalPathVersion;
+import org.eclipse.n4js.semver.SEMVER.LocalPathVersionRequirement;
 import org.eclipse.n4js.semver.SEMVER.Qualifier;
 import org.eclipse.n4js.semver.SEMVER.QualifierTag;
 import org.eclipse.n4js.semver.SEMVER.SEMVERPackage;
 import org.eclipse.n4js.semver.SEMVER.SimpleVersion;
-import org.eclipse.n4js.semver.SEMVER.TagVersion;
+import org.eclipse.n4js.semver.SEMVER.TagVersionRequirement;
 import org.eclipse.n4js.semver.SEMVER.URLCommitISH;
 import org.eclipse.n4js.semver.SEMVER.URLSemver;
-import org.eclipse.n4js.semver.SEMVER.URLVersion;
+import org.eclipse.n4js.semver.SEMVER.URLVersionRequirement;
 import org.eclipse.n4js.semver.SEMVER.VersionNumber;
 import org.eclipse.n4js.semver.SEMVER.VersionPart;
 import org.eclipse.n4js.semver.SEMVER.VersionRangeConstraint;
-import org.eclipse.n4js.semver.SEMVER.VersionRangeSet;
+import org.eclipse.n4js.semver.SEMVER.VersionRangeSetRequirement;
 import org.eclipse.n4js.semver.services.SEMVERGrammarAccess;
 import org.eclipse.xtext.Action;
 import org.eclipse.xtext.Parameter;
@@ -52,14 +52,14 @@ public class SEMVERSemanticSequencer extends AbstractDelegatingSemanticSequencer
 		Set<Parameter> parameters = context.getEnabledBooleanParameters();
 		if (epackage == SEMVERPackage.eINSTANCE)
 			switch (semanticObject.eClass().getClassifierID()) {
-			case SEMVERPackage.GIT_HUB_VERSION:
-				sequence_GitHubVersion(context, (GitHubVersion) semanticObject); 
+			case SEMVERPackage.GIT_HUB_VERSION_REQUIREMENT:
+				sequence_GitHubVersionRequirement(context, (GitHubVersionRequirement) semanticObject); 
 				return; 
 			case SEMVERPackage.HYPHEN_VERSION_RANGE:
 				sequence_HyphenVersionRange(context, (HyphenVersionRange) semanticObject); 
 				return; 
-			case SEMVERPackage.LOCAL_PATH_VERSION:
-				sequence_LocalPathVersion(context, (LocalPathVersion) semanticObject); 
+			case SEMVERPackage.LOCAL_PATH_VERSION_REQUIREMENT:
+				sequence_LocalPathVersionRequirement(context, (LocalPathVersionRequirement) semanticObject); 
 				return; 
 			case SEMVERPackage.QUALIFIER:
 				sequence_Qualifier(context, (Qualifier) semanticObject); 
@@ -70,8 +70,8 @@ public class SEMVERSemanticSequencer extends AbstractDelegatingSemanticSequencer
 			case SEMVERPackage.SIMPLE_VERSION:
 				sequence_SimpleVersion(context, (SimpleVersion) semanticObject); 
 				return; 
-			case SEMVERPackage.TAG_VERSION:
-				sequence_TagVersion(context, (TagVersion) semanticObject); 
+			case SEMVERPackage.TAG_VERSION_REQUIREMENT:
+				sequence_TagVersionRequirement(context, (TagVersionRequirement) semanticObject); 
 				return; 
 			case SEMVERPackage.URL_COMMIT_ISH:
 				sequence_URLCommitISH(context, (URLCommitISH) semanticObject); 
@@ -79,8 +79,8 @@ public class SEMVERSemanticSequencer extends AbstractDelegatingSemanticSequencer
 			case SEMVERPackage.URL_SEMVER:
 				sequence_URLSemver(context, (URLSemver) semanticObject); 
 				return; 
-			case SEMVERPackage.URL_VERSION:
-				sequence_URLVersion(context, (URLVersion) semanticObject); 
+			case SEMVERPackage.URL_VERSION_REQUIREMENT:
+				sequence_URLVersionRequirement(context, (URLVersionRequirement) semanticObject); 
 				return; 
 			case SEMVERPackage.VERSION_NUMBER:
 				sequence_VersionNumber(context, (VersionNumber) semanticObject); 
@@ -91,8 +91,8 @@ public class SEMVERSemanticSequencer extends AbstractDelegatingSemanticSequencer
 			case SEMVERPackage.VERSION_RANGE_CONSTRAINT:
 				sequence_VersionRangeContraint(context, (VersionRangeConstraint) semanticObject); 
 				return; 
-			case SEMVERPackage.VERSION_RANGE_SET:
-				sequence_VersionRangeSet(context, (VersionRangeSet) semanticObject); 
+			case SEMVERPackage.VERSION_RANGE_SET_REQUIREMENT:
+				sequence_VersionRangeSetRequirement(context, (VersionRangeSetRequirement) semanticObject); 
 				return; 
 			}
 		if (errorAcceptor != null)
@@ -101,13 +101,13 @@ public class SEMVERSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	
 	/**
 	 * Contexts:
-	 *     NPMVersion returns GitHubVersion
-	 *     GitHubVersion returns GitHubVersion
+	 *     NPMVersionRequirement returns GitHubVersionRequirement
+	 *     GitHubVersionRequirement returns GitHubVersionRequirement
 	 *
 	 * Constraint:
 	 *     (githubUrl=URL commitISH=ALPHA_NUMERIC_CHARS?)
 	 */
-	protected void sequence_GitHubVersion(ISerializationContext context, GitHubVersion semanticObject) {
+	protected void sequence_GitHubVersionRequirement(ISerializationContext context, GitHubVersionRequirement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -136,19 +136,19 @@ public class SEMVERSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	
 	/**
 	 * Contexts:
-	 *     NPMVersion returns LocalPathVersion
-	 *     LocalPathVersion returns LocalPathVersion
+	 *     NPMVersionRequirement returns LocalPathVersionRequirement
+	 *     LocalPathVersionRequirement returns LocalPathVersionRequirement
 	 *
 	 * Constraint:
 	 *     localPath=PATH
 	 */
-	protected void sequence_LocalPathVersion(ISerializationContext context, LocalPathVersion semanticObject) {
+	protected void sequence_LocalPathVersionRequirement(ISerializationContext context, LocalPathVersionRequirement semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, SEMVERPackage.Literals.LOCAL_PATH_VERSION__LOCAL_PATH) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, SEMVERPackage.Literals.LOCAL_PATH_VERSION__LOCAL_PATH));
+			if (transientValues.isValueTransient(semanticObject, SEMVERPackage.Literals.LOCAL_PATH_VERSION_REQUIREMENT__LOCAL_PATH) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, SEMVERPackage.Literals.LOCAL_PATH_VERSION_REQUIREMENT__LOCAL_PATH));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getLocalPathVersionAccess().getLocalPathPATHParserRuleCall_1_0(), semanticObject.getLocalPath());
+		feeder.accept(grammarAccess.getLocalPathVersionRequirementAccess().getLocalPathPATHParserRuleCall_1_0(), semanticObject.getLocalPath());
 		feeder.finish();
 	}
 	
@@ -191,19 +191,19 @@ public class SEMVERSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	
 	/**
 	 * Contexts:
-	 *     NPMVersion returns TagVersion
-	 *     TagVersion returns TagVersion
+	 *     NPMVersionRequirement returns TagVersionRequirement
+	 *     TagVersionRequirement returns TagVersionRequirement
 	 *
 	 * Constraint:
 	 *     tagName=TAG
 	 */
-	protected void sequence_TagVersion(ISerializationContext context, TagVersion semanticObject) {
+	protected void sequence_TagVersionRequirement(ISerializationContext context, TagVersionRequirement semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, SEMVERPackage.Literals.TAG_VERSION__TAG_NAME) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, SEMVERPackage.Literals.TAG_VERSION__TAG_NAME));
+			if (transientValues.isValueTransient(semanticObject, SEMVERPackage.Literals.TAG_VERSION_REQUIREMENT__TAG_NAME) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, SEMVERPackage.Literals.TAG_VERSION_REQUIREMENT__TAG_NAME));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getTagVersionAccess().getTagNameTAGParserRuleCall_0(), semanticObject.getTagName());
+		feeder.accept(grammarAccess.getTagVersionRequirementAccess().getTagNameTAGParserRuleCall_0(), semanticObject.getTagName());
 		feeder.finish();
 	}
 	
@@ -248,13 +248,13 @@ public class SEMVERSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	
 	/**
 	 * Contexts:
-	 *     NPMVersion returns URLVersion
-	 *     URLVersion returns URLVersion
+	 *     NPMVersionRequirement returns URLVersionRequirement
+	 *     URLVersionRequirement returns URLVersionRequirement
 	 *
 	 * Constraint:
 	 *     (protocol=URL_PROTOCOL url=URL versionSpecifier=URLVersionSpecifier?)
 	 */
-	protected void sequence_URLVersion(ISerializationContext context, URLVersion semanticObject) {
+	protected void sequence_URLVersionRequirement(ISerializationContext context, URLVersionRequirement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -298,13 +298,13 @@ public class SEMVERSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	
 	/**
 	 * Contexts:
-	 *     NPMVersion returns VersionRangeSet
-	 *     VersionRangeSet returns VersionRangeSet
+	 *     NPMVersionRequirement returns VersionRangeSetRequirement
+	 *     VersionRangeSetRequirement returns VersionRangeSetRequirement
 	 *
 	 * Constraint:
 	 *     (ranges+=VersionRange ranges+=VersionRange*)?
 	 */
-	protected void sequence_VersionRangeSet(ISerializationContext context, VersionRangeSet semanticObject) {
+	protected void sequence_VersionRangeSetRequirement(ISerializationContext context, VersionRangeSetRequirement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

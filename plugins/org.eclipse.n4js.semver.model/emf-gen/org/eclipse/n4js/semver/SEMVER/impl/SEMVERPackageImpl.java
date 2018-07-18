@@ -20,27 +20,27 @@ import org.eclipse.emf.ecore.EcorePackage;
 
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
-import org.eclipse.n4js.semver.SEMVER.AbstractSEMVERSerializer;
-import org.eclipse.n4js.semver.SEMVER.GitHubVersion;
+import org.eclipse.n4js.semver.SEMVER.GitHubVersionRequirement;
 import org.eclipse.n4js.semver.SEMVER.HyphenVersionRange;
-import org.eclipse.n4js.semver.SEMVER.LocalPathVersion;
-import org.eclipse.n4js.semver.SEMVER.NPMVersion;
+import org.eclipse.n4js.semver.SEMVER.LocalPathVersionRequirement;
+import org.eclipse.n4js.semver.SEMVER.NPMVersionRequirement;
 import org.eclipse.n4js.semver.SEMVER.Qualifier;
 import org.eclipse.n4js.semver.SEMVER.QualifierTag;
 import org.eclipse.n4js.semver.SEMVER.SEMVERFactory;
 import org.eclipse.n4js.semver.SEMVER.SEMVERPackage;
+import org.eclipse.n4js.semver.SEMVER.SEMVERtoStringable;
 import org.eclipse.n4js.semver.SEMVER.SimpleVersion;
-import org.eclipse.n4js.semver.SEMVER.TagVersion;
+import org.eclipse.n4js.semver.SEMVER.TagVersionRequirement;
 import org.eclipse.n4js.semver.SEMVER.URLCommitISH;
 import org.eclipse.n4js.semver.SEMVER.URLSemver;
-import org.eclipse.n4js.semver.SEMVER.URLVersion;
+import org.eclipse.n4js.semver.SEMVER.URLVersionRequirement;
 import org.eclipse.n4js.semver.SEMVER.URLVersionSpecifier;
 import org.eclipse.n4js.semver.SEMVER.VersionComparator;
 import org.eclipse.n4js.semver.SEMVER.VersionNumber;
 import org.eclipse.n4js.semver.SEMVER.VersionPart;
 import org.eclipse.n4js.semver.SEMVER.VersionRange;
 import org.eclipse.n4js.semver.SEMVER.VersionRangeConstraint;
-import org.eclipse.n4js.semver.SEMVER.VersionRangeSet;
+import org.eclipse.n4js.semver.SEMVER.VersionRangeSetRequirement;
 
 /**
  * <!-- begin-user-doc -->
@@ -54,21 +54,21 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass abstractSEMVERSerializerEClass = null;
+	private EClass semveRtoStringableEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass npmVersionEClass = null;
+	private EClass npmVersionRequirementEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass urlVersionEClass = null;
+	private EClass urlVersionRequirementEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -96,28 +96,28 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass gitHubVersionEClass = null;
+	private EClass gitHubVersionRequirementEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass localPathVersionEClass = null;
+	private EClass localPathVersionRequirementEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass tagVersionEClass = null;
+	private EClass tagVersionRequirementEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass versionRangeSetEClass = null;
+	private EClass versionRangeSetRequirementEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -251,8 +251,8 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getAbstractSEMVERSerializer() {
-		return abstractSEMVERSerializerEClass;
+	public EClass getSEMVERtoStringable() {
+		return semveRtoStringableEClass;
 	}
 
 	/**
@@ -260,8 +260,8 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getAbstractSEMVERSerializer__ToString() {
-		return abstractSEMVERSerializerEClass.getEOperations().get(0);
+	public EOperation getSEMVERtoStringable__ToString() {
+		return semveRtoStringableEClass.getEOperations().get(0);
 	}
 
 	/**
@@ -269,8 +269,8 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getNPMVersion() {
-		return npmVersionEClass;
+	public EClass getNPMVersionRequirement() {
+		return npmVersionRequirementEClass;
 	}
 
 	/**
@@ -278,8 +278,8 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getURLVersion() {
-		return urlVersionEClass;
+	public EClass getURLVersionRequirement() {
+		return urlVersionRequirementEClass;
 	}
 
 	/**
@@ -287,8 +287,8 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getURLVersion_VersionSpecifier() {
-		return (EReference)urlVersionEClass.getEStructuralFeatures().get(0);
+	public EReference getURLVersionRequirement_VersionSpecifier() {
+		return (EReference)urlVersionRequirementEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -296,8 +296,8 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getURLVersion_Protocol() {
-		return (EAttribute)urlVersionEClass.getEStructuralFeatures().get(1);
+	public EAttribute getURLVersionRequirement_Protocol() {
+		return (EAttribute)urlVersionRequirementEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -305,8 +305,8 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getURLVersion_Url() {
-		return (EAttribute)urlVersionEClass.getEStructuralFeatures().get(2);
+	public EAttribute getURLVersionRequirement_Url() {
+		return (EAttribute)urlVersionRequirementEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -314,8 +314,8 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getURLVersion__HasSimpleVersion() {
-		return urlVersionEClass.getEOperations().get(0);
+	public EOperation getURLVersionRequirement__HasSimpleVersion() {
+		return urlVersionRequirementEClass.getEOperations().get(0);
 	}
 
 	/**
@@ -323,8 +323,8 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getURLVersion__GetSimpleVersion() {
-		return urlVersionEClass.getEOperations().get(1);
+	public EOperation getURLVersionRequirement__GetSimpleVersion() {
+		return urlVersionRequirementEClass.getEOperations().get(1);
 	}
 
 	/**
@@ -377,8 +377,8 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getGitHubVersion() {
-		return gitHubVersionEClass;
+	public EClass getGitHubVersionRequirement() {
+		return gitHubVersionRequirementEClass;
 	}
 
 	/**
@@ -386,8 +386,8 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getGitHubVersion_GithubUrl() {
-		return (EAttribute)gitHubVersionEClass.getEStructuralFeatures().get(0);
+	public EAttribute getGitHubVersionRequirement_GithubUrl() {
+		return (EAttribute)gitHubVersionRequirementEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -395,8 +395,8 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getGitHubVersion_CommitISH() {
-		return (EAttribute)gitHubVersionEClass.getEStructuralFeatures().get(1);
+	public EAttribute getGitHubVersionRequirement_CommitISH() {
+		return (EAttribute)gitHubVersionRequirementEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -404,8 +404,8 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getLocalPathVersion() {
-		return localPathVersionEClass;
+	public EClass getLocalPathVersionRequirement() {
+		return localPathVersionRequirementEClass;
 	}
 
 	/**
@@ -413,8 +413,8 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getLocalPathVersion_LocalPath() {
-		return (EAttribute)localPathVersionEClass.getEStructuralFeatures().get(0);
+	public EAttribute getLocalPathVersionRequirement_LocalPath() {
+		return (EAttribute)localPathVersionRequirementEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -422,8 +422,8 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getTagVersion() {
-		return tagVersionEClass;
+	public EClass getTagVersionRequirement() {
+		return tagVersionRequirementEClass;
 	}
 
 	/**
@@ -431,8 +431,8 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getTagVersion_TagName() {
-		return (EAttribute)tagVersionEClass.getEStructuralFeatures().get(0);
+	public EAttribute getTagVersionRequirement_TagName() {
+		return (EAttribute)tagVersionRequirementEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -440,8 +440,8 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getVersionRangeSet() {
-		return versionRangeSetEClass;
+	public EClass getVersionRangeSetRequirement() {
+		return versionRangeSetRequirementEClass;
 	}
 
 	/**
@@ -449,8 +449,8 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getVersionRangeSet_Ranges() {
-		return (EReference)versionRangeSetEClass.getEStructuralFeatures().get(0);
+	public EReference getVersionRangeSetRequirement_Ranges() {
+		return (EReference)versionRangeSetRequirementEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -841,17 +841,17 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 		isCreated = true;
 
 		// Create classes and their features
-		abstractSEMVERSerializerEClass = createEClass(ABSTRACT_SEMVER_SERIALIZER);
-		createEOperation(abstractSEMVERSerializerEClass, ABSTRACT_SEMVER_SERIALIZER___TO_STRING);
+		semveRtoStringableEClass = createEClass(SEMVE_RTO_STRINGABLE);
+		createEOperation(semveRtoStringableEClass, SEMVE_RTO_STRINGABLE___TO_STRING);
 
-		npmVersionEClass = createEClass(NPM_VERSION);
+		npmVersionRequirementEClass = createEClass(NPM_VERSION_REQUIREMENT);
 
-		urlVersionEClass = createEClass(URL_VERSION);
-		createEReference(urlVersionEClass, URL_VERSION__VERSION_SPECIFIER);
-		createEAttribute(urlVersionEClass, URL_VERSION__PROTOCOL);
-		createEAttribute(urlVersionEClass, URL_VERSION__URL);
-		createEOperation(urlVersionEClass, URL_VERSION___HAS_SIMPLE_VERSION);
-		createEOperation(urlVersionEClass, URL_VERSION___GET_SIMPLE_VERSION);
+		urlVersionRequirementEClass = createEClass(URL_VERSION_REQUIREMENT);
+		createEReference(urlVersionRequirementEClass, URL_VERSION_REQUIREMENT__VERSION_SPECIFIER);
+		createEAttribute(urlVersionRequirementEClass, URL_VERSION_REQUIREMENT__PROTOCOL);
+		createEAttribute(urlVersionRequirementEClass, URL_VERSION_REQUIREMENT__URL);
+		createEOperation(urlVersionRequirementEClass, URL_VERSION_REQUIREMENT___HAS_SIMPLE_VERSION);
+		createEOperation(urlVersionRequirementEClass, URL_VERSION_REQUIREMENT___GET_SIMPLE_VERSION);
 
 		urlVersionSpecifierEClass = createEClass(URL_VERSION_SPECIFIER);
 
@@ -861,18 +861,18 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 		urlCommitISHEClass = createEClass(URL_COMMIT_ISH);
 		createEAttribute(urlCommitISHEClass, URL_COMMIT_ISH__COMMIT_ISH);
 
-		gitHubVersionEClass = createEClass(GIT_HUB_VERSION);
-		createEAttribute(gitHubVersionEClass, GIT_HUB_VERSION__GITHUB_URL);
-		createEAttribute(gitHubVersionEClass, GIT_HUB_VERSION__COMMIT_ISH);
+		gitHubVersionRequirementEClass = createEClass(GIT_HUB_VERSION_REQUIREMENT);
+		createEAttribute(gitHubVersionRequirementEClass, GIT_HUB_VERSION_REQUIREMENT__GITHUB_URL);
+		createEAttribute(gitHubVersionRequirementEClass, GIT_HUB_VERSION_REQUIREMENT__COMMIT_ISH);
 
-		localPathVersionEClass = createEClass(LOCAL_PATH_VERSION);
-		createEAttribute(localPathVersionEClass, LOCAL_PATH_VERSION__LOCAL_PATH);
+		localPathVersionRequirementEClass = createEClass(LOCAL_PATH_VERSION_REQUIREMENT);
+		createEAttribute(localPathVersionRequirementEClass, LOCAL_PATH_VERSION_REQUIREMENT__LOCAL_PATH);
 
-		tagVersionEClass = createEClass(TAG_VERSION);
-		createEAttribute(tagVersionEClass, TAG_VERSION__TAG_NAME);
+		tagVersionRequirementEClass = createEClass(TAG_VERSION_REQUIREMENT);
+		createEAttribute(tagVersionRequirementEClass, TAG_VERSION_REQUIREMENT__TAG_NAME);
 
-		versionRangeSetEClass = createEClass(VERSION_RANGE_SET);
-		createEReference(versionRangeSetEClass, VERSION_RANGE_SET__RANGES);
+		versionRangeSetRequirementEClass = createEClass(VERSION_RANGE_SET_REQUIREMENT);
+		createEReference(versionRangeSetRequirementEClass, VERSION_RANGE_SET_REQUIREMENT__RANGES);
 
 		versionRangeEClass = createEClass(VERSION_RANGE);
 
@@ -956,39 +956,39 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 		// Set bounds for type parameters
 
 		// Add supertypes to classes
-		npmVersionEClass.getESuperTypes().add(this.getAbstractSEMVERSerializer());
-		urlVersionEClass.getESuperTypes().add(this.getNPMVersion());
-		urlVersionSpecifierEClass.getESuperTypes().add(this.getAbstractSEMVERSerializer());
+		npmVersionRequirementEClass.getESuperTypes().add(this.getSEMVERtoStringable());
+		urlVersionRequirementEClass.getESuperTypes().add(this.getNPMVersionRequirement());
+		urlVersionSpecifierEClass.getESuperTypes().add(this.getSEMVERtoStringable());
 		urlSemverEClass.getESuperTypes().add(this.getURLVersionSpecifier());
 		urlCommitISHEClass.getESuperTypes().add(this.getURLVersionSpecifier());
-		gitHubVersionEClass.getESuperTypes().add(this.getNPMVersion());
-		localPathVersionEClass.getESuperTypes().add(this.getNPMVersion());
-		tagVersionEClass.getESuperTypes().add(this.getNPMVersion());
-		versionRangeSetEClass.getESuperTypes().add(this.getNPMVersion());
-		versionRangeEClass.getESuperTypes().add(this.getAbstractSEMVERSerializer());
+		gitHubVersionRequirementEClass.getESuperTypes().add(this.getNPMVersionRequirement());
+		localPathVersionRequirementEClass.getESuperTypes().add(this.getNPMVersionRequirement());
+		tagVersionRequirementEClass.getESuperTypes().add(this.getNPMVersionRequirement());
+		versionRangeSetRequirementEClass.getESuperTypes().add(this.getNPMVersionRequirement());
+		versionRangeEClass.getESuperTypes().add(this.getSEMVERtoStringable());
 		hyphenVersionRangeEClass.getESuperTypes().add(this.getVersionRange());
 		versionRangeConstraintEClass.getESuperTypes().add(this.getVersionRange());
-		simpleVersionEClass.getESuperTypes().add(this.getAbstractSEMVERSerializer());
-		versionNumberEClass.getESuperTypes().add(this.getAbstractSEMVERSerializer());
-		versionPartEClass.getESuperTypes().add(this.getAbstractSEMVERSerializer());
-		qualifierEClass.getESuperTypes().add(this.getAbstractSEMVERSerializer());
-		qualifierTagEClass.getESuperTypes().add(this.getAbstractSEMVERSerializer());
+		simpleVersionEClass.getESuperTypes().add(this.getSEMVERtoStringable());
+		versionNumberEClass.getESuperTypes().add(this.getSEMVERtoStringable());
+		versionPartEClass.getESuperTypes().add(this.getSEMVERtoStringable());
+		qualifierEClass.getESuperTypes().add(this.getSEMVERtoStringable());
+		qualifierTagEClass.getESuperTypes().add(this.getSEMVERtoStringable());
 
 		// Initialize classes, features, and operations; add parameters
-		initEClass(abstractSEMVERSerializerEClass, AbstractSEMVERSerializer.class, "AbstractSEMVERSerializer", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(semveRtoStringableEClass, SEMVERtoStringable.class, "SEMVERtoStringable", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-		initEOperation(getAbstractSEMVERSerializer__ToString(), theEcorePackage.getEString(), "toString", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		initEOperation(getSEMVERtoStringable__ToString(), theEcorePackage.getEString(), "toString", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
-		initEClass(npmVersionEClass, NPMVersion.class, "NPMVersion", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(npmVersionRequirementEClass, NPMVersionRequirement.class, "NPMVersionRequirement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-		initEClass(urlVersionEClass, URLVersion.class, "URLVersion", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getURLVersion_VersionSpecifier(), this.getURLVersionSpecifier(), null, "versionSpecifier", null, 0, 1, URLVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getURLVersion_Protocol(), theEcorePackage.getEString(), "protocol", null, 0, 1, URLVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getURLVersion_Url(), theEcorePackage.getEString(), "url", null, 0, 1, URLVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(urlVersionRequirementEClass, URLVersionRequirement.class, "URLVersionRequirement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getURLVersionRequirement_VersionSpecifier(), this.getURLVersionSpecifier(), null, "versionSpecifier", null, 0, 1, URLVersionRequirement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getURLVersionRequirement_Protocol(), theEcorePackage.getEString(), "protocol", null, 0, 1, URLVersionRequirement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getURLVersionRequirement_Url(), theEcorePackage.getEString(), "url", null, 0, 1, URLVersionRequirement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEOperation(getURLVersion__HasSimpleVersion(), theEcorePackage.getEBoolean(), "hasSimpleVersion", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		initEOperation(getURLVersionRequirement__HasSimpleVersion(), theEcorePackage.getEBoolean(), "hasSimpleVersion", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
-		initEOperation(getURLVersion__GetSimpleVersion(), this.getSimpleVersion(), "getSimpleVersion", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		initEOperation(getURLVersionRequirement__GetSimpleVersion(), this.getSimpleVersion(), "getSimpleVersion", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(urlVersionSpecifierEClass, URLVersionSpecifier.class, "URLVersionSpecifier", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -998,18 +998,18 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 		initEClass(urlCommitISHEClass, URLCommitISH.class, "URLCommitISH", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getURLCommitISH_CommitISH(), theEcorePackage.getEString(), "commitISH", null, 0, 1, URLCommitISH.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(gitHubVersionEClass, GitHubVersion.class, "GitHubVersion", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getGitHubVersion_GithubUrl(), theEcorePackage.getEString(), "githubUrl", null, 0, 1, GitHubVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getGitHubVersion_CommitISH(), theEcorePackage.getEString(), "commitISH", null, 0, 1, GitHubVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(gitHubVersionRequirementEClass, GitHubVersionRequirement.class, "GitHubVersionRequirement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getGitHubVersionRequirement_GithubUrl(), theEcorePackage.getEString(), "githubUrl", null, 0, 1, GitHubVersionRequirement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getGitHubVersionRequirement_CommitISH(), theEcorePackage.getEString(), "commitISH", null, 0, 1, GitHubVersionRequirement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(localPathVersionEClass, LocalPathVersion.class, "LocalPathVersion", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getLocalPathVersion_LocalPath(), theEcorePackage.getEString(), "localPath", null, 0, 1, LocalPathVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(localPathVersionRequirementEClass, LocalPathVersionRequirement.class, "LocalPathVersionRequirement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getLocalPathVersionRequirement_LocalPath(), theEcorePackage.getEString(), "localPath", null, 0, 1, LocalPathVersionRequirement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(tagVersionEClass, TagVersion.class, "TagVersion", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getTagVersion_TagName(), theEcorePackage.getEString(), "tagName", null, 0, 1, TagVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(tagVersionRequirementEClass, TagVersionRequirement.class, "TagVersionRequirement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getTagVersionRequirement_TagName(), theEcorePackage.getEString(), "tagName", null, 0, 1, TagVersionRequirement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(versionRangeSetEClass, VersionRangeSet.class, "VersionRangeSet", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getVersionRangeSet_Ranges(), this.getVersionRange(), null, "ranges", null, 0, -1, VersionRangeSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(versionRangeSetRequirementEClass, VersionRangeSetRequirement.class, "VersionRangeSetRequirement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getVersionRangeSetRequirement_Ranges(), this.getVersionRange(), null, "ranges", null, 0, -1, VersionRangeSetRequirement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(versionRangeEClass, VersionRange.class, "VersionRange", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

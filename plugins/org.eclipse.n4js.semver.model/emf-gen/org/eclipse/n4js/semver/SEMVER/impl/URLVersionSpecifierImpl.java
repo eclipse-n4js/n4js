@@ -22,7 +22,7 @@ import org.eclipse.n4js.semver.SEMVER.URLVersionSpecifier;
  *
  * @generated
  */
-public abstract class URLVersionSpecifierImpl extends AbstractSEMVERSerializerImpl implements URLVersionSpecifier {
+public abstract class URLVersionSpecifierImpl extends SEMVERtoStringableImpl implements URLVersionSpecifier {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

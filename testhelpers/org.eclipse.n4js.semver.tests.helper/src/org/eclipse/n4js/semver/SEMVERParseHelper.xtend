@@ -12,23 +12,23 @@ package org.eclipse.n4js.semver
 
 import org.eclipse.n4js.semver.SEMVER.VersionNumber
 import org.eclipse.n4js.semver.SEMVER.VersionRangeConstraint
-import org.eclipse.n4js.semver.SEMVER.VersionRangeSet
 import org.eclipse.xtext.resource.XtextSyntaxDiagnostic
 import org.eclipse.xtext.testing.util.ParseHelper
 
 import static org.junit.Assert.*
-import org.eclipse.n4js.semver.SEMVER.NPMVersion
+import org.eclipse.n4js.semver.SEMVER.NPMVersionRequirement
+import org.eclipse.n4js.semver.SEMVER.VersionRangeSetRequirement
 
 /**
  * A parse helper for SEMVER parsing tests.
  */
-class SEMVERParseHelper extends ParseHelper<NPMVersion> {
+class SEMVERParseHelper extends ParseHelper<NPMVersionRequirement> {
 
 	/**
 	 * Asserts that the given {@code semver} character sequence can be parsed correctly. Returns the
-	 * resulting {@link VersionRangeSet} instance.
+	 * resulting {@link VersionRangeSetRequirement} instance.
 	 */
-	public def NPMVersion parseSuccessfully(CharSequence semver) {
+	public def NPMVersionRequirement parseSuccessfully(CharSequence semver) {
 		val doc = semver.parse;
 		val msg = '''"«semver»" ''' + doc.eResource.errors.join('\n')[line + ': ' + message];
 		val errorList = doc.eResource.errors;
@@ -46,13 +46,13 @@ class SEMVERParseHelper extends ParseHelper<NPMVersion> {
 		assertFalse(msg, errorList.empty);
 	}
 
-	public def VersionRangeSet parseVersionRangeSet(String versionString) {
+	public def VersionRangeSetRequirement parseVersionRangeSet(String versionString) {
 		if (versionString === null)
 			return null;
 		val npmVersion = versionString.parse();
-		if (!(npmVersion instanceof VersionRangeSet))
+		if (!(npmVersion instanceof VersionRangeSetRequirement))
 			return null;
-		val vrs = npmVersion as VersionRangeSet;
+		val vrs = npmVersion as VersionRangeSetRequirement;
 		return vrs;
 	}
 

@@ -49,7 +49,7 @@ import org.eclipse.n4js.semver.SEMVER.VersionPart;
  *
  * @generated
  */
-public class VersionNumberImpl extends AbstractSEMVERSerializerImpl implements VersionNumber {
+public class VersionNumberImpl extends SEMVERtoStringableImpl implements VersionNumber {
 	/**
 	 * The cached value of the '{@link #getMajor() <em>Major</em>}' containment reference.
 	 * <!-- begin-user-doc -->

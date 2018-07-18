@@ -34,7 +34,7 @@ public class SEMVERParser extends AbstractAntlrParser {
 
 	@Override 
 	protected String getDefaultRuleName() {
-		return "NPMVersion";
+		return "NPMVersionRequirement";
 	}
 
 	public SEMVERGrammarAccess getGrammarAccess() {

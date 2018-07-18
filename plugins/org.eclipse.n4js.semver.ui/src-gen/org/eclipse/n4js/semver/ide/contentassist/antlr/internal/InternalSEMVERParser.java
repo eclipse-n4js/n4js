@@ -117,23 +117,23 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
 
 
 
-    // $ANTLR start "entryRuleNPMVersion"
-    // InternalSEMVER.g:61:1: entryRuleNPMVersion : ruleNPMVersion EOF ;
-    public final void entryRuleNPMVersion() throws RecognitionException {
+    // $ANTLR start "entryRuleNPMVersionRequirement"
+    // InternalSEMVER.g:61:1: entryRuleNPMVersionRequirement : ruleNPMVersionRequirement EOF ;
+    public final void entryRuleNPMVersionRequirement() throws RecognitionException {
         try {
-            // InternalSEMVER.g:62:1: ( ruleNPMVersion EOF )
-            // InternalSEMVER.g:63:1: ruleNPMVersion EOF
+            // InternalSEMVER.g:62:1: ( ruleNPMVersionRequirement EOF )
+            // InternalSEMVER.g:63:1: ruleNPMVersionRequirement EOF
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getNPMVersionRule()); 
+               before(grammarAccess.getNPMVersionRequirementRule()); 
             }
             pushFollow(FOLLOW_1);
-            ruleNPMVersion();
+            ruleNPMVersionRequirement();
 
             state._fsp--;
             if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getNPMVersionRule()); 
+               after(grammarAccess.getNPMVersionRequirementRule()); 
             }
             match(input,EOF,FOLLOW_2); if (state.failed) return ;
 
@@ -148,30 +148,30 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "entryRuleNPMVersion"
+    // $ANTLR end "entryRuleNPMVersionRequirement"
 
 
-    // $ANTLR start "ruleNPMVersion"
-    // InternalSEMVER.g:70:1: ruleNPMVersion : ( ( rule__NPMVersion__Alternatives ) ) ;
-    public final void ruleNPMVersion() throws RecognitionException {
+    // $ANTLR start "ruleNPMVersionRequirement"
+    // InternalSEMVER.g:70:1: ruleNPMVersionRequirement : ( ( rule__NPMVersionRequirement__Alternatives ) ) ;
+    public final void ruleNPMVersionRequirement() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:74:2: ( ( ( rule__NPMVersion__Alternatives ) ) )
-            // InternalSEMVER.g:75:2: ( ( rule__NPMVersion__Alternatives ) )
+            // InternalSEMVER.g:74:2: ( ( ( rule__NPMVersionRequirement__Alternatives ) ) )
+            // InternalSEMVER.g:75:2: ( ( rule__NPMVersionRequirement__Alternatives ) )
             {
-            // InternalSEMVER.g:75:2: ( ( rule__NPMVersion__Alternatives ) )
-            // InternalSEMVER.g:76:3: ( rule__NPMVersion__Alternatives )
+            // InternalSEMVER.g:75:2: ( ( rule__NPMVersionRequirement__Alternatives ) )
+            // InternalSEMVER.g:76:3: ( rule__NPMVersionRequirement__Alternatives )
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getNPMVersionAccess().getAlternatives()); 
+               before(grammarAccess.getNPMVersionRequirementAccess().getAlternatives()); 
             }
-            // InternalSEMVER.g:77:3: ( rule__NPMVersion__Alternatives )
-            // InternalSEMVER.g:77:4: rule__NPMVersion__Alternatives
+            // InternalSEMVER.g:77:3: ( rule__NPMVersionRequirement__Alternatives )
+            // InternalSEMVER.g:77:4: rule__NPMVersionRequirement__Alternatives
             {
             pushFollow(FOLLOW_2);
-            rule__NPMVersion__Alternatives();
+            rule__NPMVersionRequirement__Alternatives();
 
             state._fsp--;
             if (state.failed) return ;
@@ -179,7 +179,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getNPMVersionAccess().getAlternatives()); 
+               after(grammarAccess.getNPMVersionRequirementAccess().getAlternatives()); 
             }
 
             }
@@ -199,26 +199,26 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "ruleNPMVersion"
+    // $ANTLR end "ruleNPMVersionRequirement"
 
 
-    // $ANTLR start "entryRuleURLVersion"
-    // InternalSEMVER.g:86:1: entryRuleURLVersion : ruleURLVersion EOF ;
-    public final void entryRuleURLVersion() throws RecognitionException {
+    // $ANTLR start "entryRuleURLVersionRequirement"
+    // InternalSEMVER.g:86:1: entryRuleURLVersionRequirement : ruleURLVersionRequirement EOF ;
+    public final void entryRuleURLVersionRequirement() throws RecognitionException {
         try {
-            // InternalSEMVER.g:87:1: ( ruleURLVersion EOF )
-            // InternalSEMVER.g:88:1: ruleURLVersion EOF
+            // InternalSEMVER.g:87:1: ( ruleURLVersionRequirement EOF )
+            // InternalSEMVER.g:88:1: ruleURLVersionRequirement EOF
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getURLVersionRule()); 
+               before(grammarAccess.getURLVersionRequirementRule()); 
             }
             pushFollow(FOLLOW_1);
-            ruleURLVersion();
+            ruleURLVersionRequirement();
 
             state._fsp--;
             if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getURLVersionRule()); 
+               after(grammarAccess.getURLVersionRequirementRule()); 
             }
             match(input,EOF,FOLLOW_2); if (state.failed) return ;
 
@@ -233,30 +233,30 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "entryRuleURLVersion"
+    // $ANTLR end "entryRuleURLVersionRequirement"
 
 
-    // $ANTLR start "ruleURLVersion"
-    // InternalSEMVER.g:95:1: ruleURLVersion : ( ( rule__URLVersion__Group__0 ) ) ;
-    public final void ruleURLVersion() throws RecognitionException {
+    // $ANTLR start "ruleURLVersionRequirement"
+    // InternalSEMVER.g:95:1: ruleURLVersionRequirement : ( ( rule__URLVersionRequirement__Group__0 ) ) ;
+    public final void ruleURLVersionRequirement() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:99:2: ( ( ( rule__URLVersion__Group__0 ) ) )
-            // InternalSEMVER.g:100:2: ( ( rule__URLVersion__Group__0 ) )
+            // InternalSEMVER.g:99:2: ( ( ( rule__URLVersionRequirement__Group__0 ) ) )
+            // InternalSEMVER.g:100:2: ( ( rule__URLVersionRequirement__Group__0 ) )
             {
-            // InternalSEMVER.g:100:2: ( ( rule__URLVersion__Group__0 ) )
-            // InternalSEMVER.g:101:3: ( rule__URLVersion__Group__0 )
+            // InternalSEMVER.g:100:2: ( ( rule__URLVersionRequirement__Group__0 ) )
+            // InternalSEMVER.g:101:3: ( rule__URLVersionRequirement__Group__0 )
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getURLVersionAccess().getGroup()); 
+               before(grammarAccess.getURLVersionRequirementAccess().getGroup()); 
             }
-            // InternalSEMVER.g:102:3: ( rule__URLVersion__Group__0 )
-            // InternalSEMVER.g:102:4: rule__URLVersion__Group__0
+            // InternalSEMVER.g:102:3: ( rule__URLVersionRequirement__Group__0 )
+            // InternalSEMVER.g:102:4: rule__URLVersionRequirement__Group__0
             {
             pushFollow(FOLLOW_2);
-            rule__URLVersion__Group__0();
+            rule__URLVersionRequirement__Group__0();
 
             state._fsp--;
             if (state.failed) return ;
@@ -264,7 +264,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getURLVersionAccess().getGroup()); 
+               after(grammarAccess.getURLVersionRequirementAccess().getGroup()); 
             }
 
             }
@@ -284,7 +284,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "ruleURLVersion"
+    // $ANTLR end "ruleURLVersionRequirement"
 
 
     // $ANTLR start "entryRuleURLVersionSpecifier"
@@ -542,23 +542,23 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
     // $ANTLR end "ruleURLCommitISH"
 
 
-    // $ANTLR start "entryRuleTagVersion"
-    // InternalSEMVER.g:186:1: entryRuleTagVersion : ruleTagVersion EOF ;
-    public final void entryRuleTagVersion() throws RecognitionException {
+    // $ANTLR start "entryRuleTagVersionRequirement"
+    // InternalSEMVER.g:186:1: entryRuleTagVersionRequirement : ruleTagVersionRequirement EOF ;
+    public final void entryRuleTagVersionRequirement() throws RecognitionException {
         try {
-            // InternalSEMVER.g:187:1: ( ruleTagVersion EOF )
-            // InternalSEMVER.g:188:1: ruleTagVersion EOF
+            // InternalSEMVER.g:187:1: ( ruleTagVersionRequirement EOF )
+            // InternalSEMVER.g:188:1: ruleTagVersionRequirement EOF
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getTagVersionRule()); 
+               before(grammarAccess.getTagVersionRequirementRule()); 
             }
             pushFollow(FOLLOW_1);
-            ruleTagVersion();
+            ruleTagVersionRequirement();
 
             state._fsp--;
             if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getTagVersionRule()); 
+               after(grammarAccess.getTagVersionRequirementRule()); 
             }
             match(input,EOF,FOLLOW_2); if (state.failed) return ;
 
@@ -573,30 +573,30 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "entryRuleTagVersion"
+    // $ANTLR end "entryRuleTagVersionRequirement"
 
 
-    // $ANTLR start "ruleTagVersion"
-    // InternalSEMVER.g:195:1: ruleTagVersion : ( ( rule__TagVersion__TagNameAssignment ) ) ;
-    public final void ruleTagVersion() throws RecognitionException {
+    // $ANTLR start "ruleTagVersionRequirement"
+    // InternalSEMVER.g:195:1: ruleTagVersionRequirement : ( ( rule__TagVersionRequirement__TagNameAssignment ) ) ;
+    public final void ruleTagVersionRequirement() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:199:2: ( ( ( rule__TagVersion__TagNameAssignment ) ) )
-            // InternalSEMVER.g:200:2: ( ( rule__TagVersion__TagNameAssignment ) )
+            // InternalSEMVER.g:199:2: ( ( ( rule__TagVersionRequirement__TagNameAssignment ) ) )
+            // InternalSEMVER.g:200:2: ( ( rule__TagVersionRequirement__TagNameAssignment ) )
             {
-            // InternalSEMVER.g:200:2: ( ( rule__TagVersion__TagNameAssignment ) )
-            // InternalSEMVER.g:201:3: ( rule__TagVersion__TagNameAssignment )
+            // InternalSEMVER.g:200:2: ( ( rule__TagVersionRequirement__TagNameAssignment ) )
+            // InternalSEMVER.g:201:3: ( rule__TagVersionRequirement__TagNameAssignment )
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getTagVersionAccess().getTagNameAssignment()); 
+               before(grammarAccess.getTagVersionRequirementAccess().getTagNameAssignment()); 
             }
-            // InternalSEMVER.g:202:3: ( rule__TagVersion__TagNameAssignment )
-            // InternalSEMVER.g:202:4: rule__TagVersion__TagNameAssignment
+            // InternalSEMVER.g:202:3: ( rule__TagVersionRequirement__TagNameAssignment )
+            // InternalSEMVER.g:202:4: rule__TagVersionRequirement__TagNameAssignment
             {
             pushFollow(FOLLOW_2);
-            rule__TagVersion__TagNameAssignment();
+            rule__TagVersionRequirement__TagNameAssignment();
 
             state._fsp--;
             if (state.failed) return ;
@@ -604,7 +604,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getTagVersionAccess().getTagNameAssignment()); 
+               after(grammarAccess.getTagVersionRequirementAccess().getTagNameAssignment()); 
             }
 
             }
@@ -624,26 +624,26 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "ruleTagVersion"
+    // $ANTLR end "ruleTagVersionRequirement"
 
 
-    // $ANTLR start "entryRuleGitHubVersion"
-    // InternalSEMVER.g:211:1: entryRuleGitHubVersion : ruleGitHubVersion EOF ;
-    public final void entryRuleGitHubVersion() throws RecognitionException {
+    // $ANTLR start "entryRuleGitHubVersionRequirement"
+    // InternalSEMVER.g:211:1: entryRuleGitHubVersionRequirement : ruleGitHubVersionRequirement EOF ;
+    public final void entryRuleGitHubVersionRequirement() throws RecognitionException {
         try {
-            // InternalSEMVER.g:212:1: ( ruleGitHubVersion EOF )
-            // InternalSEMVER.g:213:1: ruleGitHubVersion EOF
+            // InternalSEMVER.g:212:1: ( ruleGitHubVersionRequirement EOF )
+            // InternalSEMVER.g:213:1: ruleGitHubVersionRequirement EOF
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getGitHubVersionRule()); 
+               before(grammarAccess.getGitHubVersionRequirementRule()); 
             }
             pushFollow(FOLLOW_1);
-            ruleGitHubVersion();
+            ruleGitHubVersionRequirement();
 
             state._fsp--;
             if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getGitHubVersionRule()); 
+               after(grammarAccess.getGitHubVersionRequirementRule()); 
             }
             match(input,EOF,FOLLOW_2); if (state.failed) return ;
 
@@ -658,30 +658,30 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "entryRuleGitHubVersion"
+    // $ANTLR end "entryRuleGitHubVersionRequirement"
 
 
-    // $ANTLR start "ruleGitHubVersion"
-    // InternalSEMVER.g:220:1: ruleGitHubVersion : ( ( rule__GitHubVersion__Group__0 ) ) ;
-    public final void ruleGitHubVersion() throws RecognitionException {
+    // $ANTLR start "ruleGitHubVersionRequirement"
+    // InternalSEMVER.g:220:1: ruleGitHubVersionRequirement : ( ( rule__GitHubVersionRequirement__Group__0 ) ) ;
+    public final void ruleGitHubVersionRequirement() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:224:2: ( ( ( rule__GitHubVersion__Group__0 ) ) )
-            // InternalSEMVER.g:225:2: ( ( rule__GitHubVersion__Group__0 ) )
+            // InternalSEMVER.g:224:2: ( ( ( rule__GitHubVersionRequirement__Group__0 ) ) )
+            // InternalSEMVER.g:225:2: ( ( rule__GitHubVersionRequirement__Group__0 ) )
             {
-            // InternalSEMVER.g:225:2: ( ( rule__GitHubVersion__Group__0 ) )
-            // InternalSEMVER.g:226:3: ( rule__GitHubVersion__Group__0 )
+            // InternalSEMVER.g:225:2: ( ( rule__GitHubVersionRequirement__Group__0 ) )
+            // InternalSEMVER.g:226:3: ( rule__GitHubVersionRequirement__Group__0 )
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getGitHubVersionAccess().getGroup()); 
+               before(grammarAccess.getGitHubVersionRequirementAccess().getGroup()); 
             }
-            // InternalSEMVER.g:227:3: ( rule__GitHubVersion__Group__0 )
-            // InternalSEMVER.g:227:4: rule__GitHubVersion__Group__0
+            // InternalSEMVER.g:227:3: ( rule__GitHubVersionRequirement__Group__0 )
+            // InternalSEMVER.g:227:4: rule__GitHubVersionRequirement__Group__0
             {
             pushFollow(FOLLOW_2);
-            rule__GitHubVersion__Group__0();
+            rule__GitHubVersionRequirement__Group__0();
 
             state._fsp--;
             if (state.failed) return ;
@@ -689,7 +689,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getGitHubVersionAccess().getGroup()); 
+               after(grammarAccess.getGitHubVersionRequirementAccess().getGroup()); 
             }
 
             }
@@ -709,26 +709,26 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "ruleGitHubVersion"
+    // $ANTLR end "ruleGitHubVersionRequirement"
 
 
-    // $ANTLR start "entryRuleLocalPathVersion"
-    // InternalSEMVER.g:236:1: entryRuleLocalPathVersion : ruleLocalPathVersion EOF ;
-    public final void entryRuleLocalPathVersion() throws RecognitionException {
+    // $ANTLR start "entryRuleLocalPathVersionRequirement"
+    // InternalSEMVER.g:236:1: entryRuleLocalPathVersionRequirement : ruleLocalPathVersionRequirement EOF ;
+    public final void entryRuleLocalPathVersionRequirement() throws RecognitionException {
         try {
-            // InternalSEMVER.g:237:1: ( ruleLocalPathVersion EOF )
-            // InternalSEMVER.g:238:1: ruleLocalPathVersion EOF
+            // InternalSEMVER.g:237:1: ( ruleLocalPathVersionRequirement EOF )
+            // InternalSEMVER.g:238:1: ruleLocalPathVersionRequirement EOF
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getLocalPathVersionRule()); 
+               before(grammarAccess.getLocalPathVersionRequirementRule()); 
             }
             pushFollow(FOLLOW_1);
-            ruleLocalPathVersion();
+            ruleLocalPathVersionRequirement();
 
             state._fsp--;
             if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getLocalPathVersionRule()); 
+               after(grammarAccess.getLocalPathVersionRequirementRule()); 
             }
             match(input,EOF,FOLLOW_2); if (state.failed) return ;
 
@@ -743,30 +743,30 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "entryRuleLocalPathVersion"
+    // $ANTLR end "entryRuleLocalPathVersionRequirement"
 
 
-    // $ANTLR start "ruleLocalPathVersion"
-    // InternalSEMVER.g:245:1: ruleLocalPathVersion : ( ( rule__LocalPathVersion__Group__0 ) ) ;
-    public final void ruleLocalPathVersion() throws RecognitionException {
+    // $ANTLR start "ruleLocalPathVersionRequirement"
+    // InternalSEMVER.g:245:1: ruleLocalPathVersionRequirement : ( ( rule__LocalPathVersionRequirement__Group__0 ) ) ;
+    public final void ruleLocalPathVersionRequirement() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:249:2: ( ( ( rule__LocalPathVersion__Group__0 ) ) )
-            // InternalSEMVER.g:250:2: ( ( rule__LocalPathVersion__Group__0 ) )
+            // InternalSEMVER.g:249:2: ( ( ( rule__LocalPathVersionRequirement__Group__0 ) ) )
+            // InternalSEMVER.g:250:2: ( ( rule__LocalPathVersionRequirement__Group__0 ) )
             {
-            // InternalSEMVER.g:250:2: ( ( rule__LocalPathVersion__Group__0 ) )
-            // InternalSEMVER.g:251:3: ( rule__LocalPathVersion__Group__0 )
+            // InternalSEMVER.g:250:2: ( ( rule__LocalPathVersionRequirement__Group__0 ) )
+            // InternalSEMVER.g:251:3: ( rule__LocalPathVersionRequirement__Group__0 )
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getLocalPathVersionAccess().getGroup()); 
+               before(grammarAccess.getLocalPathVersionRequirementAccess().getGroup()); 
             }
-            // InternalSEMVER.g:252:3: ( rule__LocalPathVersion__Group__0 )
-            // InternalSEMVER.g:252:4: rule__LocalPathVersion__Group__0
+            // InternalSEMVER.g:252:3: ( rule__LocalPathVersionRequirement__Group__0 )
+            // InternalSEMVER.g:252:4: rule__LocalPathVersionRequirement__Group__0
             {
             pushFollow(FOLLOW_2);
-            rule__LocalPathVersion__Group__0();
+            rule__LocalPathVersionRequirement__Group__0();
 
             state._fsp--;
             if (state.failed) return ;
@@ -774,7 +774,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getLocalPathVersionAccess().getGroup()); 
+               after(grammarAccess.getLocalPathVersionRequirementAccess().getGroup()); 
             }
 
             }
@@ -794,26 +794,26 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "ruleLocalPathVersion"
+    // $ANTLR end "ruleLocalPathVersionRequirement"
 
 
-    // $ANTLR start "entryRuleVersionRangeSet"
-    // InternalSEMVER.g:261:1: entryRuleVersionRangeSet : ruleVersionRangeSet EOF ;
-    public final void entryRuleVersionRangeSet() throws RecognitionException {
+    // $ANTLR start "entryRuleVersionRangeSetRequirement"
+    // InternalSEMVER.g:261:1: entryRuleVersionRangeSetRequirement : ruleVersionRangeSetRequirement EOF ;
+    public final void entryRuleVersionRangeSetRequirement() throws RecognitionException {
         try {
-            // InternalSEMVER.g:262:1: ( ruleVersionRangeSet EOF )
-            // InternalSEMVER.g:263:1: ruleVersionRangeSet EOF
+            // InternalSEMVER.g:262:1: ( ruleVersionRangeSetRequirement EOF )
+            // InternalSEMVER.g:263:1: ruleVersionRangeSetRequirement EOF
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getVersionRangeSetRule()); 
+               before(grammarAccess.getVersionRangeSetRequirementRule()); 
             }
             pushFollow(FOLLOW_1);
-            ruleVersionRangeSet();
+            ruleVersionRangeSetRequirement();
 
             state._fsp--;
             if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getVersionRangeSetRule()); 
+               after(grammarAccess.getVersionRangeSetRequirementRule()); 
             }
             match(input,EOF,FOLLOW_2); if (state.failed) return ;
 
@@ -828,30 +828,30 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "entryRuleVersionRangeSet"
+    // $ANTLR end "entryRuleVersionRangeSetRequirement"
 
 
-    // $ANTLR start "ruleVersionRangeSet"
-    // InternalSEMVER.g:270:1: ruleVersionRangeSet : ( ( rule__VersionRangeSet__Group__0 ) ) ;
-    public final void ruleVersionRangeSet() throws RecognitionException {
+    // $ANTLR start "ruleVersionRangeSetRequirement"
+    // InternalSEMVER.g:270:1: ruleVersionRangeSetRequirement : ( ( rule__VersionRangeSetRequirement__Group__0 ) ) ;
+    public final void ruleVersionRangeSetRequirement() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:274:2: ( ( ( rule__VersionRangeSet__Group__0 ) ) )
-            // InternalSEMVER.g:275:2: ( ( rule__VersionRangeSet__Group__0 ) )
+            // InternalSEMVER.g:274:2: ( ( ( rule__VersionRangeSetRequirement__Group__0 ) ) )
+            // InternalSEMVER.g:275:2: ( ( rule__VersionRangeSetRequirement__Group__0 ) )
             {
-            // InternalSEMVER.g:275:2: ( ( rule__VersionRangeSet__Group__0 ) )
-            // InternalSEMVER.g:276:3: ( rule__VersionRangeSet__Group__0 )
+            // InternalSEMVER.g:275:2: ( ( rule__VersionRangeSetRequirement__Group__0 ) )
+            // InternalSEMVER.g:276:3: ( rule__VersionRangeSetRequirement__Group__0 )
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getVersionRangeSetAccess().getGroup()); 
+               before(grammarAccess.getVersionRangeSetRequirementAccess().getGroup()); 
             }
-            // InternalSEMVER.g:277:3: ( rule__VersionRangeSet__Group__0 )
-            // InternalSEMVER.g:277:4: rule__VersionRangeSet__Group__0
+            // InternalSEMVER.g:277:3: ( rule__VersionRangeSetRequirement__Group__0 )
+            // InternalSEMVER.g:277:4: rule__VersionRangeSetRequirement__Group__0
             {
             pushFollow(FOLLOW_2);
-            rule__VersionRangeSet__Group__0();
+            rule__VersionRangeSetRequirement__Group__0();
 
             state._fsp--;
             if (state.failed) return ;
@@ -859,7 +859,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getVersionRangeSetAccess().getGroup()); 
+               after(grammarAccess.getVersionRangeSetRequirementAccess().getGroup()); 
             }
 
             }
@@ -879,7 +879,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "ruleVersionRangeSet"
+    // $ANTLR end "ruleVersionRangeSetRequirement"
 
 
     // $ANTLR start "entryRuleVersionRange"
@@ -2341,14 +2341,14 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
     // $ANTLR end "ruleVersionComparator"
 
 
-    // $ANTLR start "rule__NPMVersion__Alternatives"
-    // InternalSEMVER.g:690:1: rule__NPMVersion__Alternatives : ( ( ( rule__NPMVersion__Group_0__0 ) ) | ( ( rule__NPMVersion__Group_1__0 ) ) );
-    public final void rule__NPMVersion__Alternatives() throws RecognitionException {
+    // $ANTLR start "rule__NPMVersionRequirement__Alternatives"
+    // InternalSEMVER.g:690:1: rule__NPMVersionRequirement__Alternatives : ( ( ( rule__NPMVersionRequirement__Group_0__0 ) ) | ( ( rule__NPMVersionRequirement__Group_1__0 ) ) );
+    public final void rule__NPMVersionRequirement__Alternatives() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:694:1: ( ( ( rule__NPMVersion__Group_0__0 ) ) | ( ( rule__NPMVersion__Group_1__0 ) ) )
+            // InternalSEMVER.g:694:1: ( ( ( rule__NPMVersionRequirement__Group_0__0 ) ) | ( ( rule__NPMVersionRequirement__Group_1__0 ) ) )
             int alt3=2;
             switch ( input.LA(1) ) {
             case EOF:
@@ -2409,19 +2409,19 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
 
             switch (alt3) {
                 case 1 :
-                    // InternalSEMVER.g:695:2: ( ( rule__NPMVersion__Group_0__0 ) )
+                    // InternalSEMVER.g:695:2: ( ( rule__NPMVersionRequirement__Group_0__0 ) )
                     {
-                    // InternalSEMVER.g:695:2: ( ( rule__NPMVersion__Group_0__0 ) )
-                    // InternalSEMVER.g:696:3: ( rule__NPMVersion__Group_0__0 )
+                    // InternalSEMVER.g:695:2: ( ( rule__NPMVersionRequirement__Group_0__0 ) )
+                    // InternalSEMVER.g:696:3: ( rule__NPMVersionRequirement__Group_0__0 )
                     {
                     if ( state.backtracking==0 ) {
-                       before(grammarAccess.getNPMVersionAccess().getGroup_0()); 
+                       before(grammarAccess.getNPMVersionRequirementAccess().getGroup_0()); 
                     }
-                    // InternalSEMVER.g:697:3: ( rule__NPMVersion__Group_0__0 )
-                    // InternalSEMVER.g:697:4: rule__NPMVersion__Group_0__0
+                    // InternalSEMVER.g:697:3: ( rule__NPMVersionRequirement__Group_0__0 )
+                    // InternalSEMVER.g:697:4: rule__NPMVersionRequirement__Group_0__0
                     {
                     pushFollow(FOLLOW_2);
-                    rule__NPMVersion__Group_0__0();
+                    rule__NPMVersionRequirement__Group_0__0();
 
                     state._fsp--;
                     if (state.failed) return ;
@@ -2429,7 +2429,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
                     }
 
                     if ( state.backtracking==0 ) {
-                       after(grammarAccess.getNPMVersionAccess().getGroup_0()); 
+                       after(grammarAccess.getNPMVersionRequirementAccess().getGroup_0()); 
                     }
 
                     }
@@ -2438,19 +2438,19 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
                     }
                     break;
                 case 2 :
-                    // InternalSEMVER.g:701:2: ( ( rule__NPMVersion__Group_1__0 ) )
+                    // InternalSEMVER.g:701:2: ( ( rule__NPMVersionRequirement__Group_1__0 ) )
                     {
-                    // InternalSEMVER.g:701:2: ( ( rule__NPMVersion__Group_1__0 ) )
-                    // InternalSEMVER.g:702:3: ( rule__NPMVersion__Group_1__0 )
+                    // InternalSEMVER.g:701:2: ( ( rule__NPMVersionRequirement__Group_1__0 ) )
+                    // InternalSEMVER.g:702:3: ( rule__NPMVersionRequirement__Group_1__0 )
                     {
                     if ( state.backtracking==0 ) {
-                       before(grammarAccess.getNPMVersionAccess().getGroup_1()); 
+                       before(grammarAccess.getNPMVersionRequirementAccess().getGroup_1()); 
                     }
-                    // InternalSEMVER.g:703:3: ( rule__NPMVersion__Group_1__0 )
-                    // InternalSEMVER.g:703:4: rule__NPMVersion__Group_1__0
+                    // InternalSEMVER.g:703:3: ( rule__NPMVersionRequirement__Group_1__0 )
+                    // InternalSEMVER.g:703:4: rule__NPMVersionRequirement__Group_1__0
                     {
                     pushFollow(FOLLOW_2);
-                    rule__NPMVersion__Group_1__0();
+                    rule__NPMVersionRequirement__Group_1__0();
 
                     state._fsp--;
                     if (state.failed) return ;
@@ -2458,7 +2458,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
                     }
 
                     if ( state.backtracking==0 ) {
-                       after(grammarAccess.getNPMVersionAccess().getGroup_1()); 
+                       after(grammarAccess.getNPMVersionRequirementAccess().getGroup_1()); 
                     }
 
                     }
@@ -2480,36 +2480,36 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__NPMVersion__Alternatives"
+    // $ANTLR end "rule__NPMVersionRequirement__Alternatives"
 
 
-    // $ANTLR start "rule__NPMVersion__Alternatives_1_0"
-    // InternalSEMVER.g:711:1: rule__NPMVersion__Alternatives_1_0 : ( ( ruleURLVersion ) | ( ruleLocalPathVersion ) | ( ruleGitHubVersion ) | ( ruleTagVersion ) );
-    public final void rule__NPMVersion__Alternatives_1_0() throws RecognitionException {
+    // $ANTLR start "rule__NPMVersionRequirement__Alternatives_1_0"
+    // InternalSEMVER.g:711:1: rule__NPMVersionRequirement__Alternatives_1_0 : ( ( ruleURLVersionRequirement ) | ( ruleLocalPathVersionRequirement ) | ( ruleGitHubVersionRequirement ) | ( ruleTagVersionRequirement ) );
+    public final void rule__NPMVersionRequirement__Alternatives_1_0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:715:1: ( ( ruleURLVersion ) | ( ruleLocalPathVersion ) | ( ruleGitHubVersion ) | ( ruleTagVersion ) )
+            // InternalSEMVER.g:715:1: ( ( ruleURLVersionRequirement ) | ( ruleLocalPathVersionRequirement ) | ( ruleGitHubVersionRequirement ) | ( ruleTagVersionRequirement ) )
             int alt4=4;
             alt4 = dfa4.predict(input);
             switch (alt4) {
                 case 1 :
-                    // InternalSEMVER.g:716:2: ( ruleURLVersion )
+                    // InternalSEMVER.g:716:2: ( ruleURLVersionRequirement )
                     {
-                    // InternalSEMVER.g:716:2: ( ruleURLVersion )
-                    // InternalSEMVER.g:717:3: ruleURLVersion
+                    // InternalSEMVER.g:716:2: ( ruleURLVersionRequirement )
+                    // InternalSEMVER.g:717:3: ruleURLVersionRequirement
                     {
                     if ( state.backtracking==0 ) {
-                       before(grammarAccess.getNPMVersionAccess().getURLVersionParserRuleCall_1_0_0()); 
+                       before(grammarAccess.getNPMVersionRequirementAccess().getURLVersionRequirementParserRuleCall_1_0_0()); 
                     }
                     pushFollow(FOLLOW_2);
-                    ruleURLVersion();
+                    ruleURLVersionRequirement();
 
                     state._fsp--;
                     if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       after(grammarAccess.getNPMVersionAccess().getURLVersionParserRuleCall_1_0_0()); 
+                       after(grammarAccess.getNPMVersionRequirementAccess().getURLVersionRequirementParserRuleCall_1_0_0()); 
                     }
 
                     }
@@ -2518,21 +2518,21 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
                     }
                     break;
                 case 2 :
-                    // InternalSEMVER.g:722:2: ( ruleLocalPathVersion )
+                    // InternalSEMVER.g:722:2: ( ruleLocalPathVersionRequirement )
                     {
-                    // InternalSEMVER.g:722:2: ( ruleLocalPathVersion )
-                    // InternalSEMVER.g:723:3: ruleLocalPathVersion
+                    // InternalSEMVER.g:722:2: ( ruleLocalPathVersionRequirement )
+                    // InternalSEMVER.g:723:3: ruleLocalPathVersionRequirement
                     {
                     if ( state.backtracking==0 ) {
-                       before(grammarAccess.getNPMVersionAccess().getLocalPathVersionParserRuleCall_1_0_1()); 
+                       before(grammarAccess.getNPMVersionRequirementAccess().getLocalPathVersionRequirementParserRuleCall_1_0_1()); 
                     }
                     pushFollow(FOLLOW_2);
-                    ruleLocalPathVersion();
+                    ruleLocalPathVersionRequirement();
 
                     state._fsp--;
                     if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       after(grammarAccess.getNPMVersionAccess().getLocalPathVersionParserRuleCall_1_0_1()); 
+                       after(grammarAccess.getNPMVersionRequirementAccess().getLocalPathVersionRequirementParserRuleCall_1_0_1()); 
                     }
 
                     }
@@ -2541,21 +2541,21 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
                     }
                     break;
                 case 3 :
-                    // InternalSEMVER.g:728:2: ( ruleGitHubVersion )
+                    // InternalSEMVER.g:728:2: ( ruleGitHubVersionRequirement )
                     {
-                    // InternalSEMVER.g:728:2: ( ruleGitHubVersion )
-                    // InternalSEMVER.g:729:3: ruleGitHubVersion
+                    // InternalSEMVER.g:728:2: ( ruleGitHubVersionRequirement )
+                    // InternalSEMVER.g:729:3: ruleGitHubVersionRequirement
                     {
                     if ( state.backtracking==0 ) {
-                       before(grammarAccess.getNPMVersionAccess().getGitHubVersionParserRuleCall_1_0_2()); 
+                       before(grammarAccess.getNPMVersionRequirementAccess().getGitHubVersionRequirementParserRuleCall_1_0_2()); 
                     }
                     pushFollow(FOLLOW_2);
-                    ruleGitHubVersion();
+                    ruleGitHubVersionRequirement();
 
                     state._fsp--;
                     if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       after(grammarAccess.getNPMVersionAccess().getGitHubVersionParserRuleCall_1_0_2()); 
+                       after(grammarAccess.getNPMVersionRequirementAccess().getGitHubVersionRequirementParserRuleCall_1_0_2()); 
                     }
 
                     }
@@ -2564,21 +2564,21 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
                     }
                     break;
                 case 4 :
-                    // InternalSEMVER.g:734:2: ( ruleTagVersion )
+                    // InternalSEMVER.g:734:2: ( ruleTagVersionRequirement )
                     {
-                    // InternalSEMVER.g:734:2: ( ruleTagVersion )
-                    // InternalSEMVER.g:735:3: ruleTagVersion
+                    // InternalSEMVER.g:734:2: ( ruleTagVersionRequirement )
+                    // InternalSEMVER.g:735:3: ruleTagVersionRequirement
                     {
                     if ( state.backtracking==0 ) {
-                       before(grammarAccess.getNPMVersionAccess().getTagVersionParserRuleCall_1_0_3()); 
+                       before(grammarAccess.getNPMVersionRequirementAccess().getTagVersionRequirementParserRuleCall_1_0_3()); 
                     }
                     pushFollow(FOLLOW_2);
-                    ruleTagVersion();
+                    ruleTagVersionRequirement();
 
                     state._fsp--;
                     if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       after(grammarAccess.getNPMVersionAccess().getTagVersionParserRuleCall_1_0_3()); 
+                       after(grammarAccess.getNPMVersionRequirementAccess().getTagVersionRequirementParserRuleCall_1_0_3()); 
                     }
 
                     }
@@ -2600,7 +2600,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__NPMVersion__Alternatives_1_0"
+    // $ANTLR end "rule__NPMVersionRequirement__Alternatives_1_0"
 
 
     // $ANTLR start "rule__URLVersionSpecifier__Alternatives"
@@ -3857,23 +3857,23 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__VersionComparator__Alternatives"
 
 
-    // $ANTLR start "rule__NPMVersion__Group_0__0"
-    // InternalSEMVER.g:1035:1: rule__NPMVersion__Group_0__0 : rule__NPMVersion__Group_0__0__Impl rule__NPMVersion__Group_0__1 ;
-    public final void rule__NPMVersion__Group_0__0() throws RecognitionException {
+    // $ANTLR start "rule__NPMVersionRequirement__Group_0__0"
+    // InternalSEMVER.g:1035:1: rule__NPMVersionRequirement__Group_0__0 : rule__NPMVersionRequirement__Group_0__0__Impl rule__NPMVersionRequirement__Group_0__1 ;
+    public final void rule__NPMVersionRequirement__Group_0__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:1039:1: ( rule__NPMVersion__Group_0__0__Impl rule__NPMVersion__Group_0__1 )
-            // InternalSEMVER.g:1040:2: rule__NPMVersion__Group_0__0__Impl rule__NPMVersion__Group_0__1
+            // InternalSEMVER.g:1039:1: ( rule__NPMVersionRequirement__Group_0__0__Impl rule__NPMVersionRequirement__Group_0__1 )
+            // InternalSEMVER.g:1040:2: rule__NPMVersionRequirement__Group_0__0__Impl rule__NPMVersionRequirement__Group_0__1
             {
             pushFollow(FOLLOW_5);
-            rule__NPMVersion__Group_0__0__Impl();
+            rule__NPMVersionRequirement__Group_0__0__Impl();
 
             state._fsp--;
             if (state.failed) return ;
             pushFollow(FOLLOW_2);
-            rule__NPMVersion__Group_0__1();
+            rule__NPMVersionRequirement__Group_0__1();
 
             state._fsp--;
             if (state.failed) return ;
@@ -3892,12 +3892,12 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__NPMVersion__Group_0__0"
+    // $ANTLR end "rule__NPMVersionRequirement__Group_0__0"
 
 
-    // $ANTLR start "rule__NPMVersion__Group_0__0__Impl"
-    // InternalSEMVER.g:1047:1: rule__NPMVersion__Group_0__0__Impl : ( ( RULE_WS )* ) ;
-    public final void rule__NPMVersion__Group_0__0__Impl() throws RecognitionException {
+    // $ANTLR start "rule__NPMVersionRequirement__Group_0__0__Impl"
+    // InternalSEMVER.g:1047:1: rule__NPMVersionRequirement__Group_0__0__Impl : ( ( RULE_WS )* ) ;
+    public final void rule__NPMVersionRequirement__Group_0__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
@@ -3909,7 +3909,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             // InternalSEMVER.g:1053:2: ( RULE_WS )*
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getNPMVersionAccess().getWSTerminalRuleCall_0_0()); 
+               before(grammarAccess.getNPMVersionRequirementAccess().getWSTerminalRuleCall_0_0()); 
             }
             // InternalSEMVER.g:1054:2: ( RULE_WS )*
             loop16:
@@ -3937,7 +3937,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             } while (true);
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getNPMVersionAccess().getWSTerminalRuleCall_0_0()); 
+               after(grammarAccess.getNPMVersionRequirementAccess().getWSTerminalRuleCall_0_0()); 
             }
 
             }
@@ -3957,21 +3957,21 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__NPMVersion__Group_0__0__Impl"
+    // $ANTLR end "rule__NPMVersionRequirement__Group_0__0__Impl"
 
 
-    // $ANTLR start "rule__NPMVersion__Group_0__1"
-    // InternalSEMVER.g:1062:1: rule__NPMVersion__Group_0__1 : rule__NPMVersion__Group_0__1__Impl ;
-    public final void rule__NPMVersion__Group_0__1() throws RecognitionException {
+    // $ANTLR start "rule__NPMVersionRequirement__Group_0__1"
+    // InternalSEMVER.g:1062:1: rule__NPMVersionRequirement__Group_0__1 : rule__NPMVersionRequirement__Group_0__1__Impl ;
+    public final void rule__NPMVersionRequirement__Group_0__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:1066:1: ( rule__NPMVersion__Group_0__1__Impl )
-            // InternalSEMVER.g:1067:2: rule__NPMVersion__Group_0__1__Impl
+            // InternalSEMVER.g:1066:1: ( rule__NPMVersionRequirement__Group_0__1__Impl )
+            // InternalSEMVER.g:1067:2: rule__NPMVersionRequirement__Group_0__1__Impl
             {
             pushFollow(FOLLOW_2);
-            rule__NPMVersion__Group_0__1__Impl();
+            rule__NPMVersionRequirement__Group_0__1__Impl();
 
             state._fsp--;
             if (state.failed) return ;
@@ -3990,32 +3990,32 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__NPMVersion__Group_0__1"
+    // $ANTLR end "rule__NPMVersionRequirement__Group_0__1"
 
 
-    // $ANTLR start "rule__NPMVersion__Group_0__1__Impl"
-    // InternalSEMVER.g:1073:1: rule__NPMVersion__Group_0__1__Impl : ( ruleVersionRangeSet ) ;
-    public final void rule__NPMVersion__Group_0__1__Impl() throws RecognitionException {
+    // $ANTLR start "rule__NPMVersionRequirement__Group_0__1__Impl"
+    // InternalSEMVER.g:1073:1: rule__NPMVersionRequirement__Group_0__1__Impl : ( ruleVersionRangeSetRequirement ) ;
+    public final void rule__NPMVersionRequirement__Group_0__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:1077:1: ( ( ruleVersionRangeSet ) )
-            // InternalSEMVER.g:1078:1: ( ruleVersionRangeSet )
+            // InternalSEMVER.g:1077:1: ( ( ruleVersionRangeSetRequirement ) )
+            // InternalSEMVER.g:1078:1: ( ruleVersionRangeSetRequirement )
             {
-            // InternalSEMVER.g:1078:1: ( ruleVersionRangeSet )
-            // InternalSEMVER.g:1079:2: ruleVersionRangeSet
+            // InternalSEMVER.g:1078:1: ( ruleVersionRangeSetRequirement )
+            // InternalSEMVER.g:1079:2: ruleVersionRangeSetRequirement
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getNPMVersionAccess().getVersionRangeSetParserRuleCall_0_1()); 
+               before(grammarAccess.getNPMVersionRequirementAccess().getVersionRangeSetRequirementParserRuleCall_0_1()); 
             }
             pushFollow(FOLLOW_2);
-            ruleVersionRangeSet();
+            ruleVersionRangeSetRequirement();
 
             state._fsp--;
             if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getNPMVersionAccess().getVersionRangeSetParserRuleCall_0_1()); 
+               after(grammarAccess.getNPMVersionRequirementAccess().getVersionRangeSetRequirementParserRuleCall_0_1()); 
             }
 
             }
@@ -4035,26 +4035,26 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__NPMVersion__Group_0__1__Impl"
+    // $ANTLR end "rule__NPMVersionRequirement__Group_0__1__Impl"
 
 
-    // $ANTLR start "rule__NPMVersion__Group_1__0"
-    // InternalSEMVER.g:1089:1: rule__NPMVersion__Group_1__0 : rule__NPMVersion__Group_1__0__Impl rule__NPMVersion__Group_1__1 ;
-    public final void rule__NPMVersion__Group_1__0() throws RecognitionException {
+    // $ANTLR start "rule__NPMVersionRequirement__Group_1__0"
+    // InternalSEMVER.g:1089:1: rule__NPMVersionRequirement__Group_1__0 : rule__NPMVersionRequirement__Group_1__0__Impl rule__NPMVersionRequirement__Group_1__1 ;
+    public final void rule__NPMVersionRequirement__Group_1__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:1093:1: ( rule__NPMVersion__Group_1__0__Impl rule__NPMVersion__Group_1__1 )
-            // InternalSEMVER.g:1094:2: rule__NPMVersion__Group_1__0__Impl rule__NPMVersion__Group_1__1
+            // InternalSEMVER.g:1093:1: ( rule__NPMVersionRequirement__Group_1__0__Impl rule__NPMVersionRequirement__Group_1__1 )
+            // InternalSEMVER.g:1094:2: rule__NPMVersionRequirement__Group_1__0__Impl rule__NPMVersionRequirement__Group_1__1
             {
             pushFollow(FOLLOW_7);
-            rule__NPMVersion__Group_1__0__Impl();
+            rule__NPMVersionRequirement__Group_1__0__Impl();
 
             state._fsp--;
             if (state.failed) return ;
             pushFollow(FOLLOW_2);
-            rule__NPMVersion__Group_1__1();
+            rule__NPMVersionRequirement__Group_1__1();
 
             state._fsp--;
             if (state.failed) return ;
@@ -4073,30 +4073,30 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__NPMVersion__Group_1__0"
+    // $ANTLR end "rule__NPMVersionRequirement__Group_1__0"
 
 
-    // $ANTLR start "rule__NPMVersion__Group_1__0__Impl"
-    // InternalSEMVER.g:1101:1: rule__NPMVersion__Group_1__0__Impl : ( ( rule__NPMVersion__Alternatives_1_0 ) ) ;
-    public final void rule__NPMVersion__Group_1__0__Impl() throws RecognitionException {
+    // $ANTLR start "rule__NPMVersionRequirement__Group_1__0__Impl"
+    // InternalSEMVER.g:1101:1: rule__NPMVersionRequirement__Group_1__0__Impl : ( ( rule__NPMVersionRequirement__Alternatives_1_0 ) ) ;
+    public final void rule__NPMVersionRequirement__Group_1__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:1105:1: ( ( ( rule__NPMVersion__Alternatives_1_0 ) ) )
-            // InternalSEMVER.g:1106:1: ( ( rule__NPMVersion__Alternatives_1_0 ) )
+            // InternalSEMVER.g:1105:1: ( ( ( rule__NPMVersionRequirement__Alternatives_1_0 ) ) )
+            // InternalSEMVER.g:1106:1: ( ( rule__NPMVersionRequirement__Alternatives_1_0 ) )
             {
-            // InternalSEMVER.g:1106:1: ( ( rule__NPMVersion__Alternatives_1_0 ) )
-            // InternalSEMVER.g:1107:2: ( rule__NPMVersion__Alternatives_1_0 )
+            // InternalSEMVER.g:1106:1: ( ( rule__NPMVersionRequirement__Alternatives_1_0 ) )
+            // InternalSEMVER.g:1107:2: ( rule__NPMVersionRequirement__Alternatives_1_0 )
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getNPMVersionAccess().getAlternatives_1_0()); 
+               before(grammarAccess.getNPMVersionRequirementAccess().getAlternatives_1_0()); 
             }
-            // InternalSEMVER.g:1108:2: ( rule__NPMVersion__Alternatives_1_0 )
-            // InternalSEMVER.g:1108:3: rule__NPMVersion__Alternatives_1_0
+            // InternalSEMVER.g:1108:2: ( rule__NPMVersionRequirement__Alternatives_1_0 )
+            // InternalSEMVER.g:1108:3: rule__NPMVersionRequirement__Alternatives_1_0
             {
             pushFollow(FOLLOW_2);
-            rule__NPMVersion__Alternatives_1_0();
+            rule__NPMVersionRequirement__Alternatives_1_0();
 
             state._fsp--;
             if (state.failed) return ;
@@ -4104,7 +4104,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getNPMVersionAccess().getAlternatives_1_0()); 
+               after(grammarAccess.getNPMVersionRequirementAccess().getAlternatives_1_0()); 
             }
 
             }
@@ -4124,21 +4124,21 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__NPMVersion__Group_1__0__Impl"
+    // $ANTLR end "rule__NPMVersionRequirement__Group_1__0__Impl"
 
 
-    // $ANTLR start "rule__NPMVersion__Group_1__1"
-    // InternalSEMVER.g:1116:1: rule__NPMVersion__Group_1__1 : rule__NPMVersion__Group_1__1__Impl ;
-    public final void rule__NPMVersion__Group_1__1() throws RecognitionException {
+    // $ANTLR start "rule__NPMVersionRequirement__Group_1__1"
+    // InternalSEMVER.g:1116:1: rule__NPMVersionRequirement__Group_1__1 : rule__NPMVersionRequirement__Group_1__1__Impl ;
+    public final void rule__NPMVersionRequirement__Group_1__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:1120:1: ( rule__NPMVersion__Group_1__1__Impl )
-            // InternalSEMVER.g:1121:2: rule__NPMVersion__Group_1__1__Impl
+            // InternalSEMVER.g:1120:1: ( rule__NPMVersionRequirement__Group_1__1__Impl )
+            // InternalSEMVER.g:1121:2: rule__NPMVersionRequirement__Group_1__1__Impl
             {
             pushFollow(FOLLOW_2);
-            rule__NPMVersion__Group_1__1__Impl();
+            rule__NPMVersionRequirement__Group_1__1__Impl();
 
             state._fsp--;
             if (state.failed) return ;
@@ -4157,12 +4157,12 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__NPMVersion__Group_1__1"
+    // $ANTLR end "rule__NPMVersionRequirement__Group_1__1"
 
 
-    // $ANTLR start "rule__NPMVersion__Group_1__1__Impl"
-    // InternalSEMVER.g:1127:1: rule__NPMVersion__Group_1__1__Impl : ( ( RULE_WS )* ) ;
-    public final void rule__NPMVersion__Group_1__1__Impl() throws RecognitionException {
+    // $ANTLR start "rule__NPMVersionRequirement__Group_1__1__Impl"
+    // InternalSEMVER.g:1127:1: rule__NPMVersionRequirement__Group_1__1__Impl : ( ( RULE_WS )* ) ;
+    public final void rule__NPMVersionRequirement__Group_1__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
@@ -4174,7 +4174,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             // InternalSEMVER.g:1133:2: ( RULE_WS )*
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getNPMVersionAccess().getWSTerminalRuleCall_1_1()); 
+               before(grammarAccess.getNPMVersionRequirementAccess().getWSTerminalRuleCall_1_1()); 
             }
             // InternalSEMVER.g:1134:2: ( RULE_WS )*
             loop17:
@@ -4202,7 +4202,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             } while (true);
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getNPMVersionAccess().getWSTerminalRuleCall_1_1()); 
+               after(grammarAccess.getNPMVersionRequirementAccess().getWSTerminalRuleCall_1_1()); 
             }
 
             }
@@ -4222,26 +4222,26 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__NPMVersion__Group_1__1__Impl"
+    // $ANTLR end "rule__NPMVersionRequirement__Group_1__1__Impl"
 
 
-    // $ANTLR start "rule__URLVersion__Group__0"
-    // InternalSEMVER.g:1143:1: rule__URLVersion__Group__0 : rule__URLVersion__Group__0__Impl rule__URLVersion__Group__1 ;
-    public final void rule__URLVersion__Group__0() throws RecognitionException {
+    // $ANTLR start "rule__URLVersionRequirement__Group__0"
+    // InternalSEMVER.g:1143:1: rule__URLVersionRequirement__Group__0 : rule__URLVersionRequirement__Group__0__Impl rule__URLVersionRequirement__Group__1 ;
+    public final void rule__URLVersionRequirement__Group__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:1147:1: ( rule__URLVersion__Group__0__Impl rule__URLVersion__Group__1 )
-            // InternalSEMVER.g:1148:2: rule__URLVersion__Group__0__Impl rule__URLVersion__Group__1
+            // InternalSEMVER.g:1147:1: ( rule__URLVersionRequirement__Group__0__Impl rule__URLVersionRequirement__Group__1 )
+            // InternalSEMVER.g:1148:2: rule__URLVersionRequirement__Group__0__Impl rule__URLVersionRequirement__Group__1
             {
             pushFollow(FOLLOW_8);
-            rule__URLVersion__Group__0__Impl();
+            rule__URLVersionRequirement__Group__0__Impl();
 
             state._fsp--;
             if (state.failed) return ;
             pushFollow(FOLLOW_2);
-            rule__URLVersion__Group__1();
+            rule__URLVersionRequirement__Group__1();
 
             state._fsp--;
             if (state.failed) return ;
@@ -4260,30 +4260,30 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__URLVersion__Group__0"
+    // $ANTLR end "rule__URLVersionRequirement__Group__0"
 
 
-    // $ANTLR start "rule__URLVersion__Group__0__Impl"
-    // InternalSEMVER.g:1155:1: rule__URLVersion__Group__0__Impl : ( ( rule__URLVersion__ProtocolAssignment_0 ) ) ;
-    public final void rule__URLVersion__Group__0__Impl() throws RecognitionException {
+    // $ANTLR start "rule__URLVersionRequirement__Group__0__Impl"
+    // InternalSEMVER.g:1155:1: rule__URLVersionRequirement__Group__0__Impl : ( ( rule__URLVersionRequirement__ProtocolAssignment_0 ) ) ;
+    public final void rule__URLVersionRequirement__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:1159:1: ( ( ( rule__URLVersion__ProtocolAssignment_0 ) ) )
-            // InternalSEMVER.g:1160:1: ( ( rule__URLVersion__ProtocolAssignment_0 ) )
+            // InternalSEMVER.g:1159:1: ( ( ( rule__URLVersionRequirement__ProtocolAssignment_0 ) ) )
+            // InternalSEMVER.g:1160:1: ( ( rule__URLVersionRequirement__ProtocolAssignment_0 ) )
             {
-            // InternalSEMVER.g:1160:1: ( ( rule__URLVersion__ProtocolAssignment_0 ) )
-            // InternalSEMVER.g:1161:2: ( rule__URLVersion__ProtocolAssignment_0 )
+            // InternalSEMVER.g:1160:1: ( ( rule__URLVersionRequirement__ProtocolAssignment_0 ) )
+            // InternalSEMVER.g:1161:2: ( rule__URLVersionRequirement__ProtocolAssignment_0 )
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getURLVersionAccess().getProtocolAssignment_0()); 
+               before(grammarAccess.getURLVersionRequirementAccess().getProtocolAssignment_0()); 
             }
-            // InternalSEMVER.g:1162:2: ( rule__URLVersion__ProtocolAssignment_0 )
-            // InternalSEMVER.g:1162:3: rule__URLVersion__ProtocolAssignment_0
+            // InternalSEMVER.g:1162:2: ( rule__URLVersionRequirement__ProtocolAssignment_0 )
+            // InternalSEMVER.g:1162:3: rule__URLVersionRequirement__ProtocolAssignment_0
             {
             pushFollow(FOLLOW_2);
-            rule__URLVersion__ProtocolAssignment_0();
+            rule__URLVersionRequirement__ProtocolAssignment_0();
 
             state._fsp--;
             if (state.failed) return ;
@@ -4291,7 +4291,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getURLVersionAccess().getProtocolAssignment_0()); 
+               after(grammarAccess.getURLVersionRequirementAccess().getProtocolAssignment_0()); 
             }
 
             }
@@ -4311,26 +4311,26 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__URLVersion__Group__0__Impl"
+    // $ANTLR end "rule__URLVersionRequirement__Group__0__Impl"
 
 
-    // $ANTLR start "rule__URLVersion__Group__1"
-    // InternalSEMVER.g:1170:1: rule__URLVersion__Group__1 : rule__URLVersion__Group__1__Impl rule__URLVersion__Group__2 ;
-    public final void rule__URLVersion__Group__1() throws RecognitionException {
+    // $ANTLR start "rule__URLVersionRequirement__Group__1"
+    // InternalSEMVER.g:1170:1: rule__URLVersionRequirement__Group__1 : rule__URLVersionRequirement__Group__1__Impl rule__URLVersionRequirement__Group__2 ;
+    public final void rule__URLVersionRequirement__Group__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:1174:1: ( rule__URLVersion__Group__1__Impl rule__URLVersion__Group__2 )
-            // InternalSEMVER.g:1175:2: rule__URLVersion__Group__1__Impl rule__URLVersion__Group__2
+            // InternalSEMVER.g:1174:1: ( rule__URLVersionRequirement__Group__1__Impl rule__URLVersionRequirement__Group__2 )
+            // InternalSEMVER.g:1175:2: rule__URLVersionRequirement__Group__1__Impl rule__URLVersionRequirement__Group__2
             {
             pushFollow(FOLLOW_9);
-            rule__URLVersion__Group__1__Impl();
+            rule__URLVersionRequirement__Group__1__Impl();
 
             state._fsp--;
             if (state.failed) return ;
             pushFollow(FOLLOW_2);
-            rule__URLVersion__Group__2();
+            rule__URLVersionRequirement__Group__2();
 
             state._fsp--;
             if (state.failed) return ;
@@ -4349,12 +4349,12 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__URLVersion__Group__1"
+    // $ANTLR end "rule__URLVersionRequirement__Group__1"
 
 
-    // $ANTLR start "rule__URLVersion__Group__1__Impl"
-    // InternalSEMVER.g:1182:1: rule__URLVersion__Group__1__Impl : ( '://' ) ;
-    public final void rule__URLVersion__Group__1__Impl() throws RecognitionException {
+    // $ANTLR start "rule__URLVersionRequirement__Group__1__Impl"
+    // InternalSEMVER.g:1182:1: rule__URLVersionRequirement__Group__1__Impl : ( '://' ) ;
+    public final void rule__URLVersionRequirement__Group__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
@@ -4366,11 +4366,11 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             // InternalSEMVER.g:1188:2: '://'
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getURLVersionAccess().getColonSolidusSolidusKeyword_1()); 
+               before(grammarAccess.getURLVersionRequirementAccess().getColonSolidusSolidusKeyword_1()); 
             }
             match(input,43,FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getURLVersionAccess().getColonSolidusSolidusKeyword_1()); 
+               after(grammarAccess.getURLVersionRequirementAccess().getColonSolidusSolidusKeyword_1()); 
             }
 
             }
@@ -4390,26 +4390,26 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__URLVersion__Group__1__Impl"
+    // $ANTLR end "rule__URLVersionRequirement__Group__1__Impl"
 
 
-    // $ANTLR start "rule__URLVersion__Group__2"
-    // InternalSEMVER.g:1197:1: rule__URLVersion__Group__2 : rule__URLVersion__Group__2__Impl rule__URLVersion__Group__3 ;
-    public final void rule__URLVersion__Group__2() throws RecognitionException {
+    // $ANTLR start "rule__URLVersionRequirement__Group__2"
+    // InternalSEMVER.g:1197:1: rule__URLVersionRequirement__Group__2 : rule__URLVersionRequirement__Group__2__Impl rule__URLVersionRequirement__Group__3 ;
+    public final void rule__URLVersionRequirement__Group__2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:1201:1: ( rule__URLVersion__Group__2__Impl rule__URLVersion__Group__3 )
-            // InternalSEMVER.g:1202:2: rule__URLVersion__Group__2__Impl rule__URLVersion__Group__3
+            // InternalSEMVER.g:1201:1: ( rule__URLVersionRequirement__Group__2__Impl rule__URLVersionRequirement__Group__3 )
+            // InternalSEMVER.g:1202:2: rule__URLVersionRequirement__Group__2__Impl rule__URLVersionRequirement__Group__3
             {
             pushFollow(FOLLOW_10);
-            rule__URLVersion__Group__2__Impl();
+            rule__URLVersionRequirement__Group__2__Impl();
 
             state._fsp--;
             if (state.failed) return ;
             pushFollow(FOLLOW_2);
-            rule__URLVersion__Group__3();
+            rule__URLVersionRequirement__Group__3();
 
             state._fsp--;
             if (state.failed) return ;
@@ -4428,30 +4428,30 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__URLVersion__Group__2"
+    // $ANTLR end "rule__URLVersionRequirement__Group__2"
 
 
-    // $ANTLR start "rule__URLVersion__Group__2__Impl"
-    // InternalSEMVER.g:1209:1: rule__URLVersion__Group__2__Impl : ( ( rule__URLVersion__UrlAssignment_2 ) ) ;
-    public final void rule__URLVersion__Group__2__Impl() throws RecognitionException {
+    // $ANTLR start "rule__URLVersionRequirement__Group__2__Impl"
+    // InternalSEMVER.g:1209:1: rule__URLVersionRequirement__Group__2__Impl : ( ( rule__URLVersionRequirement__UrlAssignment_2 ) ) ;
+    public final void rule__URLVersionRequirement__Group__2__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:1213:1: ( ( ( rule__URLVersion__UrlAssignment_2 ) ) )
-            // InternalSEMVER.g:1214:1: ( ( rule__URLVersion__UrlAssignment_2 ) )
+            // InternalSEMVER.g:1213:1: ( ( ( rule__URLVersionRequirement__UrlAssignment_2 ) ) )
+            // InternalSEMVER.g:1214:1: ( ( rule__URLVersionRequirement__UrlAssignment_2 ) )
             {
-            // InternalSEMVER.g:1214:1: ( ( rule__URLVersion__UrlAssignment_2 ) )
-            // InternalSEMVER.g:1215:2: ( rule__URLVersion__UrlAssignment_2 )
+            // InternalSEMVER.g:1214:1: ( ( rule__URLVersionRequirement__UrlAssignment_2 ) )
+            // InternalSEMVER.g:1215:2: ( rule__URLVersionRequirement__UrlAssignment_2 )
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getURLVersionAccess().getUrlAssignment_2()); 
+               before(grammarAccess.getURLVersionRequirementAccess().getUrlAssignment_2()); 
             }
-            // InternalSEMVER.g:1216:2: ( rule__URLVersion__UrlAssignment_2 )
-            // InternalSEMVER.g:1216:3: rule__URLVersion__UrlAssignment_2
+            // InternalSEMVER.g:1216:2: ( rule__URLVersionRequirement__UrlAssignment_2 )
+            // InternalSEMVER.g:1216:3: rule__URLVersionRequirement__UrlAssignment_2
             {
             pushFollow(FOLLOW_2);
-            rule__URLVersion__UrlAssignment_2();
+            rule__URLVersionRequirement__UrlAssignment_2();
 
             state._fsp--;
             if (state.failed) return ;
@@ -4459,7 +4459,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getURLVersionAccess().getUrlAssignment_2()); 
+               after(grammarAccess.getURLVersionRequirementAccess().getUrlAssignment_2()); 
             }
 
             }
@@ -4479,21 +4479,21 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__URLVersion__Group__2__Impl"
+    // $ANTLR end "rule__URLVersionRequirement__Group__2__Impl"
 
 
-    // $ANTLR start "rule__URLVersion__Group__3"
-    // InternalSEMVER.g:1224:1: rule__URLVersion__Group__3 : rule__URLVersion__Group__3__Impl ;
-    public final void rule__URLVersion__Group__3() throws RecognitionException {
+    // $ANTLR start "rule__URLVersionRequirement__Group__3"
+    // InternalSEMVER.g:1224:1: rule__URLVersionRequirement__Group__3 : rule__URLVersionRequirement__Group__3__Impl ;
+    public final void rule__URLVersionRequirement__Group__3() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:1228:1: ( rule__URLVersion__Group__3__Impl )
-            // InternalSEMVER.g:1229:2: rule__URLVersion__Group__3__Impl
+            // InternalSEMVER.g:1228:1: ( rule__URLVersionRequirement__Group__3__Impl )
+            // InternalSEMVER.g:1229:2: rule__URLVersionRequirement__Group__3__Impl
             {
             pushFollow(FOLLOW_2);
-            rule__URLVersion__Group__3__Impl();
+            rule__URLVersionRequirement__Group__3__Impl();
 
             state._fsp--;
             if (state.failed) return ;
@@ -4512,26 +4512,26 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__URLVersion__Group__3"
+    // $ANTLR end "rule__URLVersionRequirement__Group__3"
 
 
-    // $ANTLR start "rule__URLVersion__Group__3__Impl"
-    // InternalSEMVER.g:1235:1: rule__URLVersion__Group__3__Impl : ( ( rule__URLVersion__Group_3__0 )? ) ;
-    public final void rule__URLVersion__Group__3__Impl() throws RecognitionException {
+    // $ANTLR start "rule__URLVersionRequirement__Group__3__Impl"
+    // InternalSEMVER.g:1235:1: rule__URLVersionRequirement__Group__3__Impl : ( ( rule__URLVersionRequirement__Group_3__0 )? ) ;
+    public final void rule__URLVersionRequirement__Group__3__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:1239:1: ( ( ( rule__URLVersion__Group_3__0 )? ) )
-            // InternalSEMVER.g:1240:1: ( ( rule__URLVersion__Group_3__0 )? )
+            // InternalSEMVER.g:1239:1: ( ( ( rule__URLVersionRequirement__Group_3__0 )? ) )
+            // InternalSEMVER.g:1240:1: ( ( rule__URLVersionRequirement__Group_3__0 )? )
             {
-            // InternalSEMVER.g:1240:1: ( ( rule__URLVersion__Group_3__0 )? )
-            // InternalSEMVER.g:1241:2: ( rule__URLVersion__Group_3__0 )?
+            // InternalSEMVER.g:1240:1: ( ( rule__URLVersionRequirement__Group_3__0 )? )
+            // InternalSEMVER.g:1241:2: ( rule__URLVersionRequirement__Group_3__0 )?
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getURLVersionAccess().getGroup_3()); 
+               before(grammarAccess.getURLVersionRequirementAccess().getGroup_3()); 
             }
-            // InternalSEMVER.g:1242:2: ( rule__URLVersion__Group_3__0 )?
+            // InternalSEMVER.g:1242:2: ( rule__URLVersionRequirement__Group_3__0 )?
             int alt18=2;
             int LA18_0 = input.LA(1);
 
@@ -4540,10 +4540,10 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             }
             switch (alt18) {
                 case 1 :
-                    // InternalSEMVER.g:1242:3: rule__URLVersion__Group_3__0
+                    // InternalSEMVER.g:1242:3: rule__URLVersionRequirement__Group_3__0
                     {
                     pushFollow(FOLLOW_2);
-                    rule__URLVersion__Group_3__0();
+                    rule__URLVersionRequirement__Group_3__0();
 
                     state._fsp--;
                     if (state.failed) return ;
@@ -4554,7 +4554,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getURLVersionAccess().getGroup_3()); 
+               after(grammarAccess.getURLVersionRequirementAccess().getGroup_3()); 
             }
 
             }
@@ -4574,26 +4574,26 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__URLVersion__Group__3__Impl"
+    // $ANTLR end "rule__URLVersionRequirement__Group__3__Impl"
 
 
-    // $ANTLR start "rule__URLVersion__Group_3__0"
-    // InternalSEMVER.g:1251:1: rule__URLVersion__Group_3__0 : rule__URLVersion__Group_3__0__Impl rule__URLVersion__Group_3__1 ;
-    public final void rule__URLVersion__Group_3__0() throws RecognitionException {
+    // $ANTLR start "rule__URLVersionRequirement__Group_3__0"
+    // InternalSEMVER.g:1251:1: rule__URLVersionRequirement__Group_3__0 : rule__URLVersionRequirement__Group_3__0__Impl rule__URLVersionRequirement__Group_3__1 ;
+    public final void rule__URLVersionRequirement__Group_3__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:1255:1: ( rule__URLVersion__Group_3__0__Impl rule__URLVersion__Group_3__1 )
-            // InternalSEMVER.g:1256:2: rule__URLVersion__Group_3__0__Impl rule__URLVersion__Group_3__1
+            // InternalSEMVER.g:1255:1: ( rule__URLVersionRequirement__Group_3__0__Impl rule__URLVersionRequirement__Group_3__1 )
+            // InternalSEMVER.g:1256:2: rule__URLVersionRequirement__Group_3__0__Impl rule__URLVersionRequirement__Group_3__1
             {
             pushFollow(FOLLOW_11);
-            rule__URLVersion__Group_3__0__Impl();
+            rule__URLVersionRequirement__Group_3__0__Impl();
 
             state._fsp--;
             if (state.failed) return ;
             pushFollow(FOLLOW_2);
-            rule__URLVersion__Group_3__1();
+            rule__URLVersionRequirement__Group_3__1();
 
             state._fsp--;
             if (state.failed) return ;
@@ -4612,12 +4612,12 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__URLVersion__Group_3__0"
+    // $ANTLR end "rule__URLVersionRequirement__Group_3__0"
 
 
-    // $ANTLR start "rule__URLVersion__Group_3__0__Impl"
-    // InternalSEMVER.g:1263:1: rule__URLVersion__Group_3__0__Impl : ( '#' ) ;
-    public final void rule__URLVersion__Group_3__0__Impl() throws RecognitionException {
+    // $ANTLR start "rule__URLVersionRequirement__Group_3__0__Impl"
+    // InternalSEMVER.g:1263:1: rule__URLVersionRequirement__Group_3__0__Impl : ( '#' ) ;
+    public final void rule__URLVersionRequirement__Group_3__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
@@ -4629,11 +4629,11 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             // InternalSEMVER.g:1269:2: '#'
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getURLVersionAccess().getNumberSignKeyword_3_0()); 
+               before(grammarAccess.getURLVersionRequirementAccess().getNumberSignKeyword_3_0()); 
             }
             match(input,44,FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getURLVersionAccess().getNumberSignKeyword_3_0()); 
+               after(grammarAccess.getURLVersionRequirementAccess().getNumberSignKeyword_3_0()); 
             }
 
             }
@@ -4653,21 +4653,21 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__URLVersion__Group_3__0__Impl"
+    // $ANTLR end "rule__URLVersionRequirement__Group_3__0__Impl"
 
 
-    // $ANTLR start "rule__URLVersion__Group_3__1"
-    // InternalSEMVER.g:1278:1: rule__URLVersion__Group_3__1 : rule__URLVersion__Group_3__1__Impl ;
-    public final void rule__URLVersion__Group_3__1() throws RecognitionException {
+    // $ANTLR start "rule__URLVersionRequirement__Group_3__1"
+    // InternalSEMVER.g:1278:1: rule__URLVersionRequirement__Group_3__1 : rule__URLVersionRequirement__Group_3__1__Impl ;
+    public final void rule__URLVersionRequirement__Group_3__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:1282:1: ( rule__URLVersion__Group_3__1__Impl )
-            // InternalSEMVER.g:1283:2: rule__URLVersion__Group_3__1__Impl
+            // InternalSEMVER.g:1282:1: ( rule__URLVersionRequirement__Group_3__1__Impl )
+            // InternalSEMVER.g:1283:2: rule__URLVersionRequirement__Group_3__1__Impl
             {
             pushFollow(FOLLOW_2);
-            rule__URLVersion__Group_3__1__Impl();
+            rule__URLVersionRequirement__Group_3__1__Impl();
 
             state._fsp--;
             if (state.failed) return ;
@@ -4686,30 +4686,30 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__URLVersion__Group_3__1"
+    // $ANTLR end "rule__URLVersionRequirement__Group_3__1"
 
 
-    // $ANTLR start "rule__URLVersion__Group_3__1__Impl"
-    // InternalSEMVER.g:1289:1: rule__URLVersion__Group_3__1__Impl : ( ( rule__URLVersion__VersionSpecifierAssignment_3_1 ) ) ;
-    public final void rule__URLVersion__Group_3__1__Impl() throws RecognitionException {
+    // $ANTLR start "rule__URLVersionRequirement__Group_3__1__Impl"
+    // InternalSEMVER.g:1289:1: rule__URLVersionRequirement__Group_3__1__Impl : ( ( rule__URLVersionRequirement__VersionSpecifierAssignment_3_1 ) ) ;
+    public final void rule__URLVersionRequirement__Group_3__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:1293:1: ( ( ( rule__URLVersion__VersionSpecifierAssignment_3_1 ) ) )
-            // InternalSEMVER.g:1294:1: ( ( rule__URLVersion__VersionSpecifierAssignment_3_1 ) )
+            // InternalSEMVER.g:1293:1: ( ( ( rule__URLVersionRequirement__VersionSpecifierAssignment_3_1 ) ) )
+            // InternalSEMVER.g:1294:1: ( ( rule__URLVersionRequirement__VersionSpecifierAssignment_3_1 ) )
             {
-            // InternalSEMVER.g:1294:1: ( ( rule__URLVersion__VersionSpecifierAssignment_3_1 ) )
-            // InternalSEMVER.g:1295:2: ( rule__URLVersion__VersionSpecifierAssignment_3_1 )
+            // InternalSEMVER.g:1294:1: ( ( rule__URLVersionRequirement__VersionSpecifierAssignment_3_1 ) )
+            // InternalSEMVER.g:1295:2: ( rule__URLVersionRequirement__VersionSpecifierAssignment_3_1 )
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getURLVersionAccess().getVersionSpecifierAssignment_3_1()); 
+               before(grammarAccess.getURLVersionRequirementAccess().getVersionSpecifierAssignment_3_1()); 
             }
-            // InternalSEMVER.g:1296:2: ( rule__URLVersion__VersionSpecifierAssignment_3_1 )
-            // InternalSEMVER.g:1296:3: rule__URLVersion__VersionSpecifierAssignment_3_1
+            // InternalSEMVER.g:1296:2: ( rule__URLVersionRequirement__VersionSpecifierAssignment_3_1 )
+            // InternalSEMVER.g:1296:3: rule__URLVersionRequirement__VersionSpecifierAssignment_3_1
             {
             pushFollow(FOLLOW_2);
-            rule__URLVersion__VersionSpecifierAssignment_3_1();
+            rule__URLVersionRequirement__VersionSpecifierAssignment_3_1();
 
             state._fsp--;
             if (state.failed) return ;
@@ -4717,7 +4717,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getURLVersionAccess().getVersionSpecifierAssignment_3_1()); 
+               after(grammarAccess.getURLVersionRequirementAccess().getVersionSpecifierAssignment_3_1()); 
             }
 
             }
@@ -4737,7 +4737,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__URLVersion__Group_3__1__Impl"
+    // $ANTLR end "rule__URLVersionRequirement__Group_3__1__Impl"
 
 
     // $ANTLR start "rule__URLSemver__Group__0"
@@ -4920,23 +4920,23 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__URLSemver__Group__1__Impl"
 
 
-    // $ANTLR start "rule__GitHubVersion__Group__0"
-    // InternalSEMVER.g:1359:1: rule__GitHubVersion__Group__0 : rule__GitHubVersion__Group__0__Impl rule__GitHubVersion__Group__1 ;
-    public final void rule__GitHubVersion__Group__0() throws RecognitionException {
+    // $ANTLR start "rule__GitHubVersionRequirement__Group__0"
+    // InternalSEMVER.g:1359:1: rule__GitHubVersionRequirement__Group__0 : rule__GitHubVersionRequirement__Group__0__Impl rule__GitHubVersionRequirement__Group__1 ;
+    public final void rule__GitHubVersionRequirement__Group__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:1363:1: ( rule__GitHubVersion__Group__0__Impl rule__GitHubVersion__Group__1 )
-            // InternalSEMVER.g:1364:2: rule__GitHubVersion__Group__0__Impl rule__GitHubVersion__Group__1
+            // InternalSEMVER.g:1363:1: ( rule__GitHubVersionRequirement__Group__0__Impl rule__GitHubVersionRequirement__Group__1 )
+            // InternalSEMVER.g:1364:2: rule__GitHubVersionRequirement__Group__0__Impl rule__GitHubVersionRequirement__Group__1
             {
             pushFollow(FOLLOW_10);
-            rule__GitHubVersion__Group__0__Impl();
+            rule__GitHubVersionRequirement__Group__0__Impl();
 
             state._fsp--;
             if (state.failed) return ;
             pushFollow(FOLLOW_2);
-            rule__GitHubVersion__Group__1();
+            rule__GitHubVersionRequirement__Group__1();
 
             state._fsp--;
             if (state.failed) return ;
@@ -4955,30 +4955,30 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__GitHubVersion__Group__0"
+    // $ANTLR end "rule__GitHubVersionRequirement__Group__0"
 
 
-    // $ANTLR start "rule__GitHubVersion__Group__0__Impl"
-    // InternalSEMVER.g:1371:1: rule__GitHubVersion__Group__0__Impl : ( ( rule__GitHubVersion__GithubUrlAssignment_0 ) ) ;
-    public final void rule__GitHubVersion__Group__0__Impl() throws RecognitionException {
+    // $ANTLR start "rule__GitHubVersionRequirement__Group__0__Impl"
+    // InternalSEMVER.g:1371:1: rule__GitHubVersionRequirement__Group__0__Impl : ( ( rule__GitHubVersionRequirement__GithubUrlAssignment_0 ) ) ;
+    public final void rule__GitHubVersionRequirement__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:1375:1: ( ( ( rule__GitHubVersion__GithubUrlAssignment_0 ) ) )
-            // InternalSEMVER.g:1376:1: ( ( rule__GitHubVersion__GithubUrlAssignment_0 ) )
+            // InternalSEMVER.g:1375:1: ( ( ( rule__GitHubVersionRequirement__GithubUrlAssignment_0 ) ) )
+            // InternalSEMVER.g:1376:1: ( ( rule__GitHubVersionRequirement__GithubUrlAssignment_0 ) )
             {
-            // InternalSEMVER.g:1376:1: ( ( rule__GitHubVersion__GithubUrlAssignment_0 ) )
-            // InternalSEMVER.g:1377:2: ( rule__GitHubVersion__GithubUrlAssignment_0 )
+            // InternalSEMVER.g:1376:1: ( ( rule__GitHubVersionRequirement__GithubUrlAssignment_0 ) )
+            // InternalSEMVER.g:1377:2: ( rule__GitHubVersionRequirement__GithubUrlAssignment_0 )
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getGitHubVersionAccess().getGithubUrlAssignment_0()); 
+               before(grammarAccess.getGitHubVersionRequirementAccess().getGithubUrlAssignment_0()); 
             }
-            // InternalSEMVER.g:1378:2: ( rule__GitHubVersion__GithubUrlAssignment_0 )
-            // InternalSEMVER.g:1378:3: rule__GitHubVersion__GithubUrlAssignment_0
+            // InternalSEMVER.g:1378:2: ( rule__GitHubVersionRequirement__GithubUrlAssignment_0 )
+            // InternalSEMVER.g:1378:3: rule__GitHubVersionRequirement__GithubUrlAssignment_0
             {
             pushFollow(FOLLOW_2);
-            rule__GitHubVersion__GithubUrlAssignment_0();
+            rule__GitHubVersionRequirement__GithubUrlAssignment_0();
 
             state._fsp--;
             if (state.failed) return ;
@@ -4986,7 +4986,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getGitHubVersionAccess().getGithubUrlAssignment_0()); 
+               after(grammarAccess.getGitHubVersionRequirementAccess().getGithubUrlAssignment_0()); 
             }
 
             }
@@ -5006,21 +5006,21 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__GitHubVersion__Group__0__Impl"
+    // $ANTLR end "rule__GitHubVersionRequirement__Group__0__Impl"
 
 
-    // $ANTLR start "rule__GitHubVersion__Group__1"
-    // InternalSEMVER.g:1386:1: rule__GitHubVersion__Group__1 : rule__GitHubVersion__Group__1__Impl ;
-    public final void rule__GitHubVersion__Group__1() throws RecognitionException {
+    // $ANTLR start "rule__GitHubVersionRequirement__Group__1"
+    // InternalSEMVER.g:1386:1: rule__GitHubVersionRequirement__Group__1 : rule__GitHubVersionRequirement__Group__1__Impl ;
+    public final void rule__GitHubVersionRequirement__Group__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:1390:1: ( rule__GitHubVersion__Group__1__Impl )
-            // InternalSEMVER.g:1391:2: rule__GitHubVersion__Group__1__Impl
+            // InternalSEMVER.g:1390:1: ( rule__GitHubVersionRequirement__Group__1__Impl )
+            // InternalSEMVER.g:1391:2: rule__GitHubVersionRequirement__Group__1__Impl
             {
             pushFollow(FOLLOW_2);
-            rule__GitHubVersion__Group__1__Impl();
+            rule__GitHubVersionRequirement__Group__1__Impl();
 
             state._fsp--;
             if (state.failed) return ;
@@ -5039,26 +5039,26 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__GitHubVersion__Group__1"
+    // $ANTLR end "rule__GitHubVersionRequirement__Group__1"
 
 
-    // $ANTLR start "rule__GitHubVersion__Group__1__Impl"
-    // InternalSEMVER.g:1397:1: rule__GitHubVersion__Group__1__Impl : ( ( rule__GitHubVersion__Group_1__0 )? ) ;
-    public final void rule__GitHubVersion__Group__1__Impl() throws RecognitionException {
+    // $ANTLR start "rule__GitHubVersionRequirement__Group__1__Impl"
+    // InternalSEMVER.g:1397:1: rule__GitHubVersionRequirement__Group__1__Impl : ( ( rule__GitHubVersionRequirement__Group_1__0 )? ) ;
+    public final void rule__GitHubVersionRequirement__Group__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:1401:1: ( ( ( rule__GitHubVersion__Group_1__0 )? ) )
-            // InternalSEMVER.g:1402:1: ( ( rule__GitHubVersion__Group_1__0 )? )
+            // InternalSEMVER.g:1401:1: ( ( ( rule__GitHubVersionRequirement__Group_1__0 )? ) )
+            // InternalSEMVER.g:1402:1: ( ( rule__GitHubVersionRequirement__Group_1__0 )? )
             {
-            // InternalSEMVER.g:1402:1: ( ( rule__GitHubVersion__Group_1__0 )? )
-            // InternalSEMVER.g:1403:2: ( rule__GitHubVersion__Group_1__0 )?
+            // InternalSEMVER.g:1402:1: ( ( rule__GitHubVersionRequirement__Group_1__0 )? )
+            // InternalSEMVER.g:1403:2: ( rule__GitHubVersionRequirement__Group_1__0 )?
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getGitHubVersionAccess().getGroup_1()); 
+               before(grammarAccess.getGitHubVersionRequirementAccess().getGroup_1()); 
             }
-            // InternalSEMVER.g:1404:2: ( rule__GitHubVersion__Group_1__0 )?
+            // InternalSEMVER.g:1404:2: ( rule__GitHubVersionRequirement__Group_1__0 )?
             int alt20=2;
             int LA20_0 = input.LA(1);
 
@@ -5067,10 +5067,10 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             }
             switch (alt20) {
                 case 1 :
-                    // InternalSEMVER.g:1404:3: rule__GitHubVersion__Group_1__0
+                    // InternalSEMVER.g:1404:3: rule__GitHubVersionRequirement__Group_1__0
                     {
                     pushFollow(FOLLOW_2);
-                    rule__GitHubVersion__Group_1__0();
+                    rule__GitHubVersionRequirement__Group_1__0();
 
                     state._fsp--;
                     if (state.failed) return ;
@@ -5081,7 +5081,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getGitHubVersionAccess().getGroup_1()); 
+               after(grammarAccess.getGitHubVersionRequirementAccess().getGroup_1()); 
             }
 
             }
@@ -5101,26 +5101,26 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__GitHubVersion__Group__1__Impl"
+    // $ANTLR end "rule__GitHubVersionRequirement__Group__1__Impl"
 
 
-    // $ANTLR start "rule__GitHubVersion__Group_1__0"
-    // InternalSEMVER.g:1413:1: rule__GitHubVersion__Group_1__0 : rule__GitHubVersion__Group_1__0__Impl rule__GitHubVersion__Group_1__1 ;
-    public final void rule__GitHubVersion__Group_1__0() throws RecognitionException {
+    // $ANTLR start "rule__GitHubVersionRequirement__Group_1__0"
+    // InternalSEMVER.g:1413:1: rule__GitHubVersionRequirement__Group_1__0 : rule__GitHubVersionRequirement__Group_1__0__Impl rule__GitHubVersionRequirement__Group_1__1 ;
+    public final void rule__GitHubVersionRequirement__Group_1__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:1417:1: ( rule__GitHubVersion__Group_1__0__Impl rule__GitHubVersion__Group_1__1 )
-            // InternalSEMVER.g:1418:2: rule__GitHubVersion__Group_1__0__Impl rule__GitHubVersion__Group_1__1
+            // InternalSEMVER.g:1417:1: ( rule__GitHubVersionRequirement__Group_1__0__Impl rule__GitHubVersionRequirement__Group_1__1 )
+            // InternalSEMVER.g:1418:2: rule__GitHubVersionRequirement__Group_1__0__Impl rule__GitHubVersionRequirement__Group_1__1
             {
             pushFollow(FOLLOW_11);
-            rule__GitHubVersion__Group_1__0__Impl();
+            rule__GitHubVersionRequirement__Group_1__0__Impl();
 
             state._fsp--;
             if (state.failed) return ;
             pushFollow(FOLLOW_2);
-            rule__GitHubVersion__Group_1__1();
+            rule__GitHubVersionRequirement__Group_1__1();
 
             state._fsp--;
             if (state.failed) return ;
@@ -5139,12 +5139,12 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__GitHubVersion__Group_1__0"
+    // $ANTLR end "rule__GitHubVersionRequirement__Group_1__0"
 
 
-    // $ANTLR start "rule__GitHubVersion__Group_1__0__Impl"
-    // InternalSEMVER.g:1425:1: rule__GitHubVersion__Group_1__0__Impl : ( '#' ) ;
-    public final void rule__GitHubVersion__Group_1__0__Impl() throws RecognitionException {
+    // $ANTLR start "rule__GitHubVersionRequirement__Group_1__0__Impl"
+    // InternalSEMVER.g:1425:1: rule__GitHubVersionRequirement__Group_1__0__Impl : ( '#' ) ;
+    public final void rule__GitHubVersionRequirement__Group_1__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
@@ -5156,11 +5156,11 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             // InternalSEMVER.g:1431:2: '#'
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getGitHubVersionAccess().getNumberSignKeyword_1_0()); 
+               before(grammarAccess.getGitHubVersionRequirementAccess().getNumberSignKeyword_1_0()); 
             }
             match(input,44,FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getGitHubVersionAccess().getNumberSignKeyword_1_0()); 
+               after(grammarAccess.getGitHubVersionRequirementAccess().getNumberSignKeyword_1_0()); 
             }
 
             }
@@ -5180,21 +5180,21 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__GitHubVersion__Group_1__0__Impl"
+    // $ANTLR end "rule__GitHubVersionRequirement__Group_1__0__Impl"
 
 
-    // $ANTLR start "rule__GitHubVersion__Group_1__1"
-    // InternalSEMVER.g:1440:1: rule__GitHubVersion__Group_1__1 : rule__GitHubVersion__Group_1__1__Impl ;
-    public final void rule__GitHubVersion__Group_1__1() throws RecognitionException {
+    // $ANTLR start "rule__GitHubVersionRequirement__Group_1__1"
+    // InternalSEMVER.g:1440:1: rule__GitHubVersionRequirement__Group_1__1 : rule__GitHubVersionRequirement__Group_1__1__Impl ;
+    public final void rule__GitHubVersionRequirement__Group_1__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:1444:1: ( rule__GitHubVersion__Group_1__1__Impl )
-            // InternalSEMVER.g:1445:2: rule__GitHubVersion__Group_1__1__Impl
+            // InternalSEMVER.g:1444:1: ( rule__GitHubVersionRequirement__Group_1__1__Impl )
+            // InternalSEMVER.g:1445:2: rule__GitHubVersionRequirement__Group_1__1__Impl
             {
             pushFollow(FOLLOW_2);
-            rule__GitHubVersion__Group_1__1__Impl();
+            rule__GitHubVersionRequirement__Group_1__1__Impl();
 
             state._fsp--;
             if (state.failed) return ;
@@ -5213,30 +5213,30 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__GitHubVersion__Group_1__1"
+    // $ANTLR end "rule__GitHubVersionRequirement__Group_1__1"
 
 
-    // $ANTLR start "rule__GitHubVersion__Group_1__1__Impl"
-    // InternalSEMVER.g:1451:1: rule__GitHubVersion__Group_1__1__Impl : ( ( rule__GitHubVersion__CommitISHAssignment_1_1 ) ) ;
-    public final void rule__GitHubVersion__Group_1__1__Impl() throws RecognitionException {
+    // $ANTLR start "rule__GitHubVersionRequirement__Group_1__1__Impl"
+    // InternalSEMVER.g:1451:1: rule__GitHubVersionRequirement__Group_1__1__Impl : ( ( rule__GitHubVersionRequirement__CommitISHAssignment_1_1 ) ) ;
+    public final void rule__GitHubVersionRequirement__Group_1__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:1455:1: ( ( ( rule__GitHubVersion__CommitISHAssignment_1_1 ) ) )
-            // InternalSEMVER.g:1456:1: ( ( rule__GitHubVersion__CommitISHAssignment_1_1 ) )
+            // InternalSEMVER.g:1455:1: ( ( ( rule__GitHubVersionRequirement__CommitISHAssignment_1_1 ) ) )
+            // InternalSEMVER.g:1456:1: ( ( rule__GitHubVersionRequirement__CommitISHAssignment_1_1 ) )
             {
-            // InternalSEMVER.g:1456:1: ( ( rule__GitHubVersion__CommitISHAssignment_1_1 ) )
-            // InternalSEMVER.g:1457:2: ( rule__GitHubVersion__CommitISHAssignment_1_1 )
+            // InternalSEMVER.g:1456:1: ( ( rule__GitHubVersionRequirement__CommitISHAssignment_1_1 ) )
+            // InternalSEMVER.g:1457:2: ( rule__GitHubVersionRequirement__CommitISHAssignment_1_1 )
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getGitHubVersionAccess().getCommitISHAssignment_1_1()); 
+               before(grammarAccess.getGitHubVersionRequirementAccess().getCommitISHAssignment_1_1()); 
             }
-            // InternalSEMVER.g:1458:2: ( rule__GitHubVersion__CommitISHAssignment_1_1 )
-            // InternalSEMVER.g:1458:3: rule__GitHubVersion__CommitISHAssignment_1_1
+            // InternalSEMVER.g:1458:2: ( rule__GitHubVersionRequirement__CommitISHAssignment_1_1 )
+            // InternalSEMVER.g:1458:3: rule__GitHubVersionRequirement__CommitISHAssignment_1_1
             {
             pushFollow(FOLLOW_2);
-            rule__GitHubVersion__CommitISHAssignment_1_1();
+            rule__GitHubVersionRequirement__CommitISHAssignment_1_1();
 
             state._fsp--;
             if (state.failed) return ;
@@ -5244,7 +5244,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getGitHubVersionAccess().getCommitISHAssignment_1_1()); 
+               after(grammarAccess.getGitHubVersionRequirementAccess().getCommitISHAssignment_1_1()); 
             }
 
             }
@@ -5264,26 +5264,26 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__GitHubVersion__Group_1__1__Impl"
+    // $ANTLR end "rule__GitHubVersionRequirement__Group_1__1__Impl"
 
 
-    // $ANTLR start "rule__LocalPathVersion__Group__0"
-    // InternalSEMVER.g:1467:1: rule__LocalPathVersion__Group__0 : rule__LocalPathVersion__Group__0__Impl rule__LocalPathVersion__Group__1 ;
-    public final void rule__LocalPathVersion__Group__0() throws RecognitionException {
+    // $ANTLR start "rule__LocalPathVersionRequirement__Group__0"
+    // InternalSEMVER.g:1467:1: rule__LocalPathVersionRequirement__Group__0 : rule__LocalPathVersionRequirement__Group__0__Impl rule__LocalPathVersionRequirement__Group__1 ;
+    public final void rule__LocalPathVersionRequirement__Group__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:1471:1: ( rule__LocalPathVersion__Group__0__Impl rule__LocalPathVersion__Group__1 )
-            // InternalSEMVER.g:1472:2: rule__LocalPathVersion__Group__0__Impl rule__LocalPathVersion__Group__1
+            // InternalSEMVER.g:1471:1: ( rule__LocalPathVersionRequirement__Group__0__Impl rule__LocalPathVersionRequirement__Group__1 )
+            // InternalSEMVER.g:1472:2: rule__LocalPathVersionRequirement__Group__0__Impl rule__LocalPathVersionRequirement__Group__1
             {
             pushFollow(FOLLOW_13);
-            rule__LocalPathVersion__Group__0__Impl();
+            rule__LocalPathVersionRequirement__Group__0__Impl();
 
             state._fsp--;
             if (state.failed) return ;
             pushFollow(FOLLOW_2);
-            rule__LocalPathVersion__Group__1();
+            rule__LocalPathVersionRequirement__Group__1();
 
             state._fsp--;
             if (state.failed) return ;
@@ -5302,12 +5302,12 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__LocalPathVersion__Group__0"
+    // $ANTLR end "rule__LocalPathVersionRequirement__Group__0"
 
 
-    // $ANTLR start "rule__LocalPathVersion__Group__0__Impl"
-    // InternalSEMVER.g:1479:1: rule__LocalPathVersion__Group__0__Impl : ( 'file:' ) ;
-    public final void rule__LocalPathVersion__Group__0__Impl() throws RecognitionException {
+    // $ANTLR start "rule__LocalPathVersionRequirement__Group__0__Impl"
+    // InternalSEMVER.g:1479:1: rule__LocalPathVersionRequirement__Group__0__Impl : ( 'file:' ) ;
+    public final void rule__LocalPathVersionRequirement__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
@@ -5319,11 +5319,11 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             // InternalSEMVER.g:1485:2: 'file:'
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getLocalPathVersionAccess().getFileKeyword_0()); 
+               before(grammarAccess.getLocalPathVersionRequirementAccess().getFileKeyword_0()); 
             }
             match(input,46,FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getLocalPathVersionAccess().getFileKeyword_0()); 
+               after(grammarAccess.getLocalPathVersionRequirementAccess().getFileKeyword_0()); 
             }
 
             }
@@ -5343,21 +5343,21 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__LocalPathVersion__Group__0__Impl"
+    // $ANTLR end "rule__LocalPathVersionRequirement__Group__0__Impl"
 
 
-    // $ANTLR start "rule__LocalPathVersion__Group__1"
-    // InternalSEMVER.g:1494:1: rule__LocalPathVersion__Group__1 : rule__LocalPathVersion__Group__1__Impl ;
-    public final void rule__LocalPathVersion__Group__1() throws RecognitionException {
+    // $ANTLR start "rule__LocalPathVersionRequirement__Group__1"
+    // InternalSEMVER.g:1494:1: rule__LocalPathVersionRequirement__Group__1 : rule__LocalPathVersionRequirement__Group__1__Impl ;
+    public final void rule__LocalPathVersionRequirement__Group__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:1498:1: ( rule__LocalPathVersion__Group__1__Impl )
-            // InternalSEMVER.g:1499:2: rule__LocalPathVersion__Group__1__Impl
+            // InternalSEMVER.g:1498:1: ( rule__LocalPathVersionRequirement__Group__1__Impl )
+            // InternalSEMVER.g:1499:2: rule__LocalPathVersionRequirement__Group__1__Impl
             {
             pushFollow(FOLLOW_2);
-            rule__LocalPathVersion__Group__1__Impl();
+            rule__LocalPathVersionRequirement__Group__1__Impl();
 
             state._fsp--;
             if (state.failed) return ;
@@ -5376,30 +5376,30 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__LocalPathVersion__Group__1"
+    // $ANTLR end "rule__LocalPathVersionRequirement__Group__1"
 
 
-    // $ANTLR start "rule__LocalPathVersion__Group__1__Impl"
-    // InternalSEMVER.g:1505:1: rule__LocalPathVersion__Group__1__Impl : ( ( rule__LocalPathVersion__LocalPathAssignment_1 ) ) ;
-    public final void rule__LocalPathVersion__Group__1__Impl() throws RecognitionException {
+    // $ANTLR start "rule__LocalPathVersionRequirement__Group__1__Impl"
+    // InternalSEMVER.g:1505:1: rule__LocalPathVersionRequirement__Group__1__Impl : ( ( rule__LocalPathVersionRequirement__LocalPathAssignment_1 ) ) ;
+    public final void rule__LocalPathVersionRequirement__Group__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:1509:1: ( ( ( rule__LocalPathVersion__LocalPathAssignment_1 ) ) )
-            // InternalSEMVER.g:1510:1: ( ( rule__LocalPathVersion__LocalPathAssignment_1 ) )
+            // InternalSEMVER.g:1509:1: ( ( ( rule__LocalPathVersionRequirement__LocalPathAssignment_1 ) ) )
+            // InternalSEMVER.g:1510:1: ( ( rule__LocalPathVersionRequirement__LocalPathAssignment_1 ) )
             {
-            // InternalSEMVER.g:1510:1: ( ( rule__LocalPathVersion__LocalPathAssignment_1 ) )
-            // InternalSEMVER.g:1511:2: ( rule__LocalPathVersion__LocalPathAssignment_1 )
+            // InternalSEMVER.g:1510:1: ( ( rule__LocalPathVersionRequirement__LocalPathAssignment_1 ) )
+            // InternalSEMVER.g:1511:2: ( rule__LocalPathVersionRequirement__LocalPathAssignment_1 )
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getLocalPathVersionAccess().getLocalPathAssignment_1()); 
+               before(grammarAccess.getLocalPathVersionRequirementAccess().getLocalPathAssignment_1()); 
             }
-            // InternalSEMVER.g:1512:2: ( rule__LocalPathVersion__LocalPathAssignment_1 )
-            // InternalSEMVER.g:1512:3: rule__LocalPathVersion__LocalPathAssignment_1
+            // InternalSEMVER.g:1512:2: ( rule__LocalPathVersionRequirement__LocalPathAssignment_1 )
+            // InternalSEMVER.g:1512:3: rule__LocalPathVersionRequirement__LocalPathAssignment_1
             {
             pushFollow(FOLLOW_2);
-            rule__LocalPathVersion__LocalPathAssignment_1();
+            rule__LocalPathVersionRequirement__LocalPathAssignment_1();
 
             state._fsp--;
             if (state.failed) return ;
@@ -5407,7 +5407,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getLocalPathVersionAccess().getLocalPathAssignment_1()); 
+               after(grammarAccess.getLocalPathVersionRequirementAccess().getLocalPathAssignment_1()); 
             }
 
             }
@@ -5427,26 +5427,26 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__LocalPathVersion__Group__1__Impl"
+    // $ANTLR end "rule__LocalPathVersionRequirement__Group__1__Impl"
 
 
-    // $ANTLR start "rule__VersionRangeSet__Group__0"
-    // InternalSEMVER.g:1521:1: rule__VersionRangeSet__Group__0 : rule__VersionRangeSet__Group__0__Impl rule__VersionRangeSet__Group__1 ;
-    public final void rule__VersionRangeSet__Group__0() throws RecognitionException {
+    // $ANTLR start "rule__VersionRangeSetRequirement__Group__0"
+    // InternalSEMVER.g:1521:1: rule__VersionRangeSetRequirement__Group__0 : rule__VersionRangeSetRequirement__Group__0__Impl rule__VersionRangeSetRequirement__Group__1 ;
+    public final void rule__VersionRangeSetRequirement__Group__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:1525:1: ( rule__VersionRangeSet__Group__0__Impl rule__VersionRangeSet__Group__1 )
-            // InternalSEMVER.g:1526:2: rule__VersionRangeSet__Group__0__Impl rule__VersionRangeSet__Group__1
+            // InternalSEMVER.g:1525:1: ( rule__VersionRangeSetRequirement__Group__0__Impl rule__VersionRangeSetRequirement__Group__1 )
+            // InternalSEMVER.g:1526:2: rule__VersionRangeSetRequirement__Group__0__Impl rule__VersionRangeSetRequirement__Group__1
             {
             pushFollow(FOLLOW_5);
-            rule__VersionRangeSet__Group__0__Impl();
+            rule__VersionRangeSetRequirement__Group__0__Impl();
 
             state._fsp--;
             if (state.failed) return ;
             pushFollow(FOLLOW_2);
-            rule__VersionRangeSet__Group__1();
+            rule__VersionRangeSetRequirement__Group__1();
 
             state._fsp--;
             if (state.failed) return ;
@@ -5465,12 +5465,12 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__VersionRangeSet__Group__0"
+    // $ANTLR end "rule__VersionRangeSetRequirement__Group__0"
 
 
-    // $ANTLR start "rule__VersionRangeSet__Group__0__Impl"
-    // InternalSEMVER.g:1533:1: rule__VersionRangeSet__Group__0__Impl : ( () ) ;
-    public final void rule__VersionRangeSet__Group__0__Impl() throws RecognitionException {
+    // $ANTLR start "rule__VersionRangeSetRequirement__Group__0__Impl"
+    // InternalSEMVER.g:1533:1: rule__VersionRangeSetRequirement__Group__0__Impl : ( () ) ;
+    public final void rule__VersionRangeSetRequirement__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
@@ -5482,7 +5482,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             // InternalSEMVER.g:1539:2: ()
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getVersionRangeSetAccess().getVersionRangeSetAction_0()); 
+               before(grammarAccess.getVersionRangeSetRequirementAccess().getVersionRangeSetRequirementAction_0()); 
             }
             // InternalSEMVER.g:1540:2: ()
             // InternalSEMVER.g:1540:3: 
@@ -5490,7 +5490,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getVersionRangeSetAccess().getVersionRangeSetAction_0()); 
+               after(grammarAccess.getVersionRangeSetRequirementAccess().getVersionRangeSetRequirementAction_0()); 
             }
 
             }
@@ -5506,21 +5506,21 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__VersionRangeSet__Group__0__Impl"
+    // $ANTLR end "rule__VersionRangeSetRequirement__Group__0__Impl"
 
 
-    // $ANTLR start "rule__VersionRangeSet__Group__1"
-    // InternalSEMVER.g:1548:1: rule__VersionRangeSet__Group__1 : rule__VersionRangeSet__Group__1__Impl ;
-    public final void rule__VersionRangeSet__Group__1() throws RecognitionException {
+    // $ANTLR start "rule__VersionRangeSetRequirement__Group__1"
+    // InternalSEMVER.g:1548:1: rule__VersionRangeSetRequirement__Group__1 : rule__VersionRangeSetRequirement__Group__1__Impl ;
+    public final void rule__VersionRangeSetRequirement__Group__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:1552:1: ( rule__VersionRangeSet__Group__1__Impl )
-            // InternalSEMVER.g:1553:2: rule__VersionRangeSet__Group__1__Impl
+            // InternalSEMVER.g:1552:1: ( rule__VersionRangeSetRequirement__Group__1__Impl )
+            // InternalSEMVER.g:1553:2: rule__VersionRangeSetRequirement__Group__1__Impl
             {
             pushFollow(FOLLOW_2);
-            rule__VersionRangeSet__Group__1__Impl();
+            rule__VersionRangeSetRequirement__Group__1__Impl();
 
             state._fsp--;
             if (state.failed) return ;
@@ -5539,26 +5539,26 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__VersionRangeSet__Group__1"
+    // $ANTLR end "rule__VersionRangeSetRequirement__Group__1"
 
 
-    // $ANTLR start "rule__VersionRangeSet__Group__1__Impl"
-    // InternalSEMVER.g:1559:1: rule__VersionRangeSet__Group__1__Impl : ( ( rule__VersionRangeSet__Group_1__0 )? ) ;
-    public final void rule__VersionRangeSet__Group__1__Impl() throws RecognitionException {
+    // $ANTLR start "rule__VersionRangeSetRequirement__Group__1__Impl"
+    // InternalSEMVER.g:1559:1: rule__VersionRangeSetRequirement__Group__1__Impl : ( ( rule__VersionRangeSetRequirement__Group_1__0 )? ) ;
+    public final void rule__VersionRangeSetRequirement__Group__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:1563:1: ( ( ( rule__VersionRangeSet__Group_1__0 )? ) )
-            // InternalSEMVER.g:1564:1: ( ( rule__VersionRangeSet__Group_1__0 )? )
+            // InternalSEMVER.g:1563:1: ( ( ( rule__VersionRangeSetRequirement__Group_1__0 )? ) )
+            // InternalSEMVER.g:1564:1: ( ( rule__VersionRangeSetRequirement__Group_1__0 )? )
             {
-            // InternalSEMVER.g:1564:1: ( ( rule__VersionRangeSet__Group_1__0 )? )
-            // InternalSEMVER.g:1565:2: ( rule__VersionRangeSet__Group_1__0 )?
+            // InternalSEMVER.g:1564:1: ( ( rule__VersionRangeSetRequirement__Group_1__0 )? )
+            // InternalSEMVER.g:1565:2: ( rule__VersionRangeSetRequirement__Group_1__0 )?
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getVersionRangeSetAccess().getGroup_1()); 
+               before(grammarAccess.getVersionRangeSetRequirementAccess().getGroup_1()); 
             }
-            // InternalSEMVER.g:1566:2: ( rule__VersionRangeSet__Group_1__0 )?
+            // InternalSEMVER.g:1566:2: ( rule__VersionRangeSetRequirement__Group_1__0 )?
             int alt21=2;
             int LA21_0 = input.LA(1);
 
@@ -5567,10 +5567,10 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             }
             switch (alt21) {
                 case 1 :
-                    // InternalSEMVER.g:1566:3: rule__VersionRangeSet__Group_1__0
+                    // InternalSEMVER.g:1566:3: rule__VersionRangeSetRequirement__Group_1__0
                     {
                     pushFollow(FOLLOW_2);
-                    rule__VersionRangeSet__Group_1__0();
+                    rule__VersionRangeSetRequirement__Group_1__0();
 
                     state._fsp--;
                     if (state.failed) return ;
@@ -5581,7 +5581,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getVersionRangeSetAccess().getGroup_1()); 
+               after(grammarAccess.getVersionRangeSetRequirementAccess().getGroup_1()); 
             }
 
             }
@@ -5601,26 +5601,26 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__VersionRangeSet__Group__1__Impl"
+    // $ANTLR end "rule__VersionRangeSetRequirement__Group__1__Impl"
 
 
-    // $ANTLR start "rule__VersionRangeSet__Group_1__0"
-    // InternalSEMVER.g:1575:1: rule__VersionRangeSet__Group_1__0 : rule__VersionRangeSet__Group_1__0__Impl rule__VersionRangeSet__Group_1__1 ;
-    public final void rule__VersionRangeSet__Group_1__0() throws RecognitionException {
+    // $ANTLR start "rule__VersionRangeSetRequirement__Group_1__0"
+    // InternalSEMVER.g:1575:1: rule__VersionRangeSetRequirement__Group_1__0 : rule__VersionRangeSetRequirement__Group_1__0__Impl rule__VersionRangeSetRequirement__Group_1__1 ;
+    public final void rule__VersionRangeSetRequirement__Group_1__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:1579:1: ( rule__VersionRangeSet__Group_1__0__Impl rule__VersionRangeSet__Group_1__1 )
-            // InternalSEMVER.g:1580:2: rule__VersionRangeSet__Group_1__0__Impl rule__VersionRangeSet__Group_1__1
+            // InternalSEMVER.g:1579:1: ( rule__VersionRangeSetRequirement__Group_1__0__Impl rule__VersionRangeSetRequirement__Group_1__1 )
+            // InternalSEMVER.g:1580:2: rule__VersionRangeSetRequirement__Group_1__0__Impl rule__VersionRangeSetRequirement__Group_1__1
             {
             pushFollow(FOLLOW_14);
-            rule__VersionRangeSet__Group_1__0__Impl();
+            rule__VersionRangeSetRequirement__Group_1__0__Impl();
 
             state._fsp--;
             if (state.failed) return ;
             pushFollow(FOLLOW_2);
-            rule__VersionRangeSet__Group_1__1();
+            rule__VersionRangeSetRequirement__Group_1__1();
 
             state._fsp--;
             if (state.failed) return ;
@@ -5639,30 +5639,30 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__VersionRangeSet__Group_1__0"
+    // $ANTLR end "rule__VersionRangeSetRequirement__Group_1__0"
 
 
-    // $ANTLR start "rule__VersionRangeSet__Group_1__0__Impl"
-    // InternalSEMVER.g:1587:1: rule__VersionRangeSet__Group_1__0__Impl : ( ( rule__VersionRangeSet__RangesAssignment_1_0 ) ) ;
-    public final void rule__VersionRangeSet__Group_1__0__Impl() throws RecognitionException {
+    // $ANTLR start "rule__VersionRangeSetRequirement__Group_1__0__Impl"
+    // InternalSEMVER.g:1587:1: rule__VersionRangeSetRequirement__Group_1__0__Impl : ( ( rule__VersionRangeSetRequirement__RangesAssignment_1_0 ) ) ;
+    public final void rule__VersionRangeSetRequirement__Group_1__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:1591:1: ( ( ( rule__VersionRangeSet__RangesAssignment_1_0 ) ) )
-            // InternalSEMVER.g:1592:1: ( ( rule__VersionRangeSet__RangesAssignment_1_0 ) )
+            // InternalSEMVER.g:1591:1: ( ( ( rule__VersionRangeSetRequirement__RangesAssignment_1_0 ) ) )
+            // InternalSEMVER.g:1592:1: ( ( rule__VersionRangeSetRequirement__RangesAssignment_1_0 ) )
             {
-            // InternalSEMVER.g:1592:1: ( ( rule__VersionRangeSet__RangesAssignment_1_0 ) )
-            // InternalSEMVER.g:1593:2: ( rule__VersionRangeSet__RangesAssignment_1_0 )
+            // InternalSEMVER.g:1592:1: ( ( rule__VersionRangeSetRequirement__RangesAssignment_1_0 ) )
+            // InternalSEMVER.g:1593:2: ( rule__VersionRangeSetRequirement__RangesAssignment_1_0 )
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getVersionRangeSetAccess().getRangesAssignment_1_0()); 
+               before(grammarAccess.getVersionRangeSetRequirementAccess().getRangesAssignment_1_0()); 
             }
-            // InternalSEMVER.g:1594:2: ( rule__VersionRangeSet__RangesAssignment_1_0 )
-            // InternalSEMVER.g:1594:3: rule__VersionRangeSet__RangesAssignment_1_0
+            // InternalSEMVER.g:1594:2: ( rule__VersionRangeSetRequirement__RangesAssignment_1_0 )
+            // InternalSEMVER.g:1594:3: rule__VersionRangeSetRequirement__RangesAssignment_1_0
             {
             pushFollow(FOLLOW_2);
-            rule__VersionRangeSet__RangesAssignment_1_0();
+            rule__VersionRangeSetRequirement__RangesAssignment_1_0();
 
             state._fsp--;
             if (state.failed) return ;
@@ -5670,7 +5670,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getVersionRangeSetAccess().getRangesAssignment_1_0()); 
+               after(grammarAccess.getVersionRangeSetRequirementAccess().getRangesAssignment_1_0()); 
             }
 
             }
@@ -5690,26 +5690,26 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__VersionRangeSet__Group_1__0__Impl"
+    // $ANTLR end "rule__VersionRangeSetRequirement__Group_1__0__Impl"
 
 
-    // $ANTLR start "rule__VersionRangeSet__Group_1__1"
-    // InternalSEMVER.g:1602:1: rule__VersionRangeSet__Group_1__1 : rule__VersionRangeSet__Group_1__1__Impl rule__VersionRangeSet__Group_1__2 ;
-    public final void rule__VersionRangeSet__Group_1__1() throws RecognitionException {
+    // $ANTLR start "rule__VersionRangeSetRequirement__Group_1__1"
+    // InternalSEMVER.g:1602:1: rule__VersionRangeSetRequirement__Group_1__1 : rule__VersionRangeSetRequirement__Group_1__1__Impl rule__VersionRangeSetRequirement__Group_1__2 ;
+    public final void rule__VersionRangeSetRequirement__Group_1__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:1606:1: ( rule__VersionRangeSet__Group_1__1__Impl rule__VersionRangeSet__Group_1__2 )
-            // InternalSEMVER.g:1607:2: rule__VersionRangeSet__Group_1__1__Impl rule__VersionRangeSet__Group_1__2
+            // InternalSEMVER.g:1606:1: ( rule__VersionRangeSetRequirement__Group_1__1__Impl rule__VersionRangeSetRequirement__Group_1__2 )
+            // InternalSEMVER.g:1607:2: rule__VersionRangeSetRequirement__Group_1__1__Impl rule__VersionRangeSetRequirement__Group_1__2
             {
             pushFollow(FOLLOW_14);
-            rule__VersionRangeSet__Group_1__1__Impl();
+            rule__VersionRangeSetRequirement__Group_1__1__Impl();
 
             state._fsp--;
             if (state.failed) return ;
             pushFollow(FOLLOW_2);
-            rule__VersionRangeSet__Group_1__2();
+            rule__VersionRangeSetRequirement__Group_1__2();
 
             state._fsp--;
             if (state.failed) return ;
@@ -5728,36 +5728,36 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__VersionRangeSet__Group_1__1"
+    // $ANTLR end "rule__VersionRangeSetRequirement__Group_1__1"
 
 
-    // $ANTLR start "rule__VersionRangeSet__Group_1__1__Impl"
-    // InternalSEMVER.g:1614:1: rule__VersionRangeSet__Group_1__1__Impl : ( ( rule__VersionRangeSet__Group_1_1__0 )* ) ;
-    public final void rule__VersionRangeSet__Group_1__1__Impl() throws RecognitionException {
+    // $ANTLR start "rule__VersionRangeSetRequirement__Group_1__1__Impl"
+    // InternalSEMVER.g:1614:1: rule__VersionRangeSetRequirement__Group_1__1__Impl : ( ( rule__VersionRangeSetRequirement__Group_1_1__0 )* ) ;
+    public final void rule__VersionRangeSetRequirement__Group_1__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:1618:1: ( ( ( rule__VersionRangeSet__Group_1_1__0 )* ) )
-            // InternalSEMVER.g:1619:1: ( ( rule__VersionRangeSet__Group_1_1__0 )* )
+            // InternalSEMVER.g:1618:1: ( ( ( rule__VersionRangeSetRequirement__Group_1_1__0 )* ) )
+            // InternalSEMVER.g:1619:1: ( ( rule__VersionRangeSetRequirement__Group_1_1__0 )* )
             {
-            // InternalSEMVER.g:1619:1: ( ( rule__VersionRangeSet__Group_1_1__0 )* )
-            // InternalSEMVER.g:1620:2: ( rule__VersionRangeSet__Group_1_1__0 )*
+            // InternalSEMVER.g:1619:1: ( ( rule__VersionRangeSetRequirement__Group_1_1__0 )* )
+            // InternalSEMVER.g:1620:2: ( rule__VersionRangeSetRequirement__Group_1_1__0 )*
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getVersionRangeSetAccess().getGroup_1_1()); 
+               before(grammarAccess.getVersionRangeSetRequirementAccess().getGroup_1_1()); 
             }
-            // InternalSEMVER.g:1621:2: ( rule__VersionRangeSet__Group_1_1__0 )*
+            // InternalSEMVER.g:1621:2: ( rule__VersionRangeSetRequirement__Group_1_1__0 )*
             loop22:
             do {
                 int alt22=2;
                 alt22 = dfa22.predict(input);
                 switch (alt22) {
             	case 1 :
-            	    // InternalSEMVER.g:1621:3: rule__VersionRangeSet__Group_1_1__0
+            	    // InternalSEMVER.g:1621:3: rule__VersionRangeSetRequirement__Group_1_1__0
             	    {
             	    pushFollow(FOLLOW_15);
-            	    rule__VersionRangeSet__Group_1_1__0();
+            	    rule__VersionRangeSetRequirement__Group_1_1__0();
 
             	    state._fsp--;
             	    if (state.failed) return ;
@@ -5771,7 +5771,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             } while (true);
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getVersionRangeSetAccess().getGroup_1_1()); 
+               after(grammarAccess.getVersionRangeSetRequirementAccess().getGroup_1_1()); 
             }
 
             }
@@ -5791,21 +5791,21 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__VersionRangeSet__Group_1__1__Impl"
+    // $ANTLR end "rule__VersionRangeSetRequirement__Group_1__1__Impl"
 
 
-    // $ANTLR start "rule__VersionRangeSet__Group_1__2"
-    // InternalSEMVER.g:1629:1: rule__VersionRangeSet__Group_1__2 : rule__VersionRangeSet__Group_1__2__Impl ;
-    public final void rule__VersionRangeSet__Group_1__2() throws RecognitionException {
+    // $ANTLR start "rule__VersionRangeSetRequirement__Group_1__2"
+    // InternalSEMVER.g:1629:1: rule__VersionRangeSetRequirement__Group_1__2 : rule__VersionRangeSetRequirement__Group_1__2__Impl ;
+    public final void rule__VersionRangeSetRequirement__Group_1__2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:1633:1: ( rule__VersionRangeSet__Group_1__2__Impl )
-            // InternalSEMVER.g:1634:2: rule__VersionRangeSet__Group_1__2__Impl
+            // InternalSEMVER.g:1633:1: ( rule__VersionRangeSetRequirement__Group_1__2__Impl )
+            // InternalSEMVER.g:1634:2: rule__VersionRangeSetRequirement__Group_1__2__Impl
             {
             pushFollow(FOLLOW_2);
-            rule__VersionRangeSet__Group_1__2__Impl();
+            rule__VersionRangeSetRequirement__Group_1__2__Impl();
 
             state._fsp--;
             if (state.failed) return ;
@@ -5824,12 +5824,12 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__VersionRangeSet__Group_1__2"
+    // $ANTLR end "rule__VersionRangeSetRequirement__Group_1__2"
 
 
-    // $ANTLR start "rule__VersionRangeSet__Group_1__2__Impl"
-    // InternalSEMVER.g:1640:1: rule__VersionRangeSet__Group_1__2__Impl : ( ( RULE_WS )* ) ;
-    public final void rule__VersionRangeSet__Group_1__2__Impl() throws RecognitionException {
+    // $ANTLR start "rule__VersionRangeSetRequirement__Group_1__2__Impl"
+    // InternalSEMVER.g:1640:1: rule__VersionRangeSetRequirement__Group_1__2__Impl : ( ( RULE_WS )* ) ;
+    public final void rule__VersionRangeSetRequirement__Group_1__2__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
@@ -5841,7 +5841,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             // InternalSEMVER.g:1646:2: ( RULE_WS )*
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getVersionRangeSetAccess().getWSTerminalRuleCall_1_2()); 
+               before(grammarAccess.getVersionRangeSetRequirementAccess().getWSTerminalRuleCall_1_2()); 
             }
             // InternalSEMVER.g:1647:2: ( RULE_WS )*
             loop23:
@@ -5869,7 +5869,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             } while (true);
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getVersionRangeSetAccess().getWSTerminalRuleCall_1_2()); 
+               after(grammarAccess.getVersionRangeSetRequirementAccess().getWSTerminalRuleCall_1_2()); 
             }
 
             }
@@ -5889,26 +5889,26 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__VersionRangeSet__Group_1__2__Impl"
+    // $ANTLR end "rule__VersionRangeSetRequirement__Group_1__2__Impl"
 
 
-    // $ANTLR start "rule__VersionRangeSet__Group_1_1__0"
-    // InternalSEMVER.g:1656:1: rule__VersionRangeSet__Group_1_1__0 : rule__VersionRangeSet__Group_1_1__0__Impl rule__VersionRangeSet__Group_1_1__1 ;
-    public final void rule__VersionRangeSet__Group_1_1__0() throws RecognitionException {
+    // $ANTLR start "rule__VersionRangeSetRequirement__Group_1_1__0"
+    // InternalSEMVER.g:1656:1: rule__VersionRangeSetRequirement__Group_1_1__0 : rule__VersionRangeSetRequirement__Group_1_1__0__Impl rule__VersionRangeSetRequirement__Group_1_1__1 ;
+    public final void rule__VersionRangeSetRequirement__Group_1_1__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:1660:1: ( rule__VersionRangeSet__Group_1_1__0__Impl rule__VersionRangeSet__Group_1_1__1 )
-            // InternalSEMVER.g:1661:2: rule__VersionRangeSet__Group_1_1__0__Impl rule__VersionRangeSet__Group_1_1__1
+            // InternalSEMVER.g:1660:1: ( rule__VersionRangeSetRequirement__Group_1_1__0__Impl rule__VersionRangeSetRequirement__Group_1_1__1 )
+            // InternalSEMVER.g:1661:2: rule__VersionRangeSetRequirement__Group_1_1__0__Impl rule__VersionRangeSetRequirement__Group_1_1__1
             {
             pushFollow(FOLLOW_14);
-            rule__VersionRangeSet__Group_1_1__0__Impl();
+            rule__VersionRangeSetRequirement__Group_1_1__0__Impl();
 
             state._fsp--;
             if (state.failed) return ;
             pushFollow(FOLLOW_2);
-            rule__VersionRangeSet__Group_1_1__1();
+            rule__VersionRangeSetRequirement__Group_1_1__1();
 
             state._fsp--;
             if (state.failed) return ;
@@ -5927,12 +5927,12 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__VersionRangeSet__Group_1_1__0"
+    // $ANTLR end "rule__VersionRangeSetRequirement__Group_1_1__0"
 
 
-    // $ANTLR start "rule__VersionRangeSet__Group_1_1__0__Impl"
-    // InternalSEMVER.g:1668:1: rule__VersionRangeSet__Group_1_1__0__Impl : ( ( RULE_WS )* ) ;
-    public final void rule__VersionRangeSet__Group_1_1__0__Impl() throws RecognitionException {
+    // $ANTLR start "rule__VersionRangeSetRequirement__Group_1_1__0__Impl"
+    // InternalSEMVER.g:1668:1: rule__VersionRangeSetRequirement__Group_1_1__0__Impl : ( ( RULE_WS )* ) ;
+    public final void rule__VersionRangeSetRequirement__Group_1_1__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
@@ -5944,7 +5944,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             // InternalSEMVER.g:1674:2: ( RULE_WS )*
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getVersionRangeSetAccess().getWSTerminalRuleCall_1_1_0()); 
+               before(grammarAccess.getVersionRangeSetRequirementAccess().getWSTerminalRuleCall_1_1_0()); 
             }
             // InternalSEMVER.g:1675:2: ( RULE_WS )*
             loop24:
@@ -5972,7 +5972,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             } while (true);
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getVersionRangeSetAccess().getWSTerminalRuleCall_1_1_0()); 
+               after(grammarAccess.getVersionRangeSetRequirementAccess().getWSTerminalRuleCall_1_1_0()); 
             }
 
             }
@@ -5992,26 +5992,26 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__VersionRangeSet__Group_1_1__0__Impl"
+    // $ANTLR end "rule__VersionRangeSetRequirement__Group_1_1__0__Impl"
 
 
-    // $ANTLR start "rule__VersionRangeSet__Group_1_1__1"
-    // InternalSEMVER.g:1683:1: rule__VersionRangeSet__Group_1_1__1 : rule__VersionRangeSet__Group_1_1__1__Impl rule__VersionRangeSet__Group_1_1__2 ;
-    public final void rule__VersionRangeSet__Group_1_1__1() throws RecognitionException {
+    // $ANTLR start "rule__VersionRangeSetRequirement__Group_1_1__1"
+    // InternalSEMVER.g:1683:1: rule__VersionRangeSetRequirement__Group_1_1__1 : rule__VersionRangeSetRequirement__Group_1_1__1__Impl rule__VersionRangeSetRequirement__Group_1_1__2 ;
+    public final void rule__VersionRangeSetRequirement__Group_1_1__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:1687:1: ( rule__VersionRangeSet__Group_1_1__1__Impl rule__VersionRangeSet__Group_1_1__2 )
-            // InternalSEMVER.g:1688:2: rule__VersionRangeSet__Group_1_1__1__Impl rule__VersionRangeSet__Group_1_1__2
+            // InternalSEMVER.g:1687:1: ( rule__VersionRangeSetRequirement__Group_1_1__1__Impl rule__VersionRangeSetRequirement__Group_1_1__2 )
+            // InternalSEMVER.g:1688:2: rule__VersionRangeSetRequirement__Group_1_1__1__Impl rule__VersionRangeSetRequirement__Group_1_1__2
             {
             pushFollow(FOLLOW_16);
-            rule__VersionRangeSet__Group_1_1__1__Impl();
+            rule__VersionRangeSetRequirement__Group_1_1__1__Impl();
 
             state._fsp--;
             if (state.failed) return ;
             pushFollow(FOLLOW_2);
-            rule__VersionRangeSet__Group_1_1__2();
+            rule__VersionRangeSetRequirement__Group_1_1__2();
 
             state._fsp--;
             if (state.failed) return ;
@@ -6030,12 +6030,12 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__VersionRangeSet__Group_1_1__1"
+    // $ANTLR end "rule__VersionRangeSetRequirement__Group_1_1__1"
 
 
-    // $ANTLR start "rule__VersionRangeSet__Group_1_1__1__Impl"
-    // InternalSEMVER.g:1695:1: rule__VersionRangeSet__Group_1_1__1__Impl : ( '||' ) ;
-    public final void rule__VersionRangeSet__Group_1_1__1__Impl() throws RecognitionException {
+    // $ANTLR start "rule__VersionRangeSetRequirement__Group_1_1__1__Impl"
+    // InternalSEMVER.g:1695:1: rule__VersionRangeSetRequirement__Group_1_1__1__Impl : ( '||' ) ;
+    public final void rule__VersionRangeSetRequirement__Group_1_1__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
@@ -6047,11 +6047,11 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             // InternalSEMVER.g:1701:2: '||'
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getVersionRangeSetAccess().getVerticalLineVerticalLineKeyword_1_1_1()); 
+               before(grammarAccess.getVersionRangeSetRequirementAccess().getVerticalLineVerticalLineKeyword_1_1_1()); 
             }
             match(input,47,FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getVersionRangeSetAccess().getVerticalLineVerticalLineKeyword_1_1_1()); 
+               after(grammarAccess.getVersionRangeSetRequirementAccess().getVerticalLineVerticalLineKeyword_1_1_1()); 
             }
 
             }
@@ -6071,26 +6071,26 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__VersionRangeSet__Group_1_1__1__Impl"
+    // $ANTLR end "rule__VersionRangeSetRequirement__Group_1_1__1__Impl"
 
 
-    // $ANTLR start "rule__VersionRangeSet__Group_1_1__2"
-    // InternalSEMVER.g:1710:1: rule__VersionRangeSet__Group_1_1__2 : rule__VersionRangeSet__Group_1_1__2__Impl rule__VersionRangeSet__Group_1_1__3 ;
-    public final void rule__VersionRangeSet__Group_1_1__2() throws RecognitionException {
+    // $ANTLR start "rule__VersionRangeSetRequirement__Group_1_1__2"
+    // InternalSEMVER.g:1710:1: rule__VersionRangeSetRequirement__Group_1_1__2 : rule__VersionRangeSetRequirement__Group_1_1__2__Impl rule__VersionRangeSetRequirement__Group_1_1__3 ;
+    public final void rule__VersionRangeSetRequirement__Group_1_1__2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:1714:1: ( rule__VersionRangeSet__Group_1_1__2__Impl rule__VersionRangeSet__Group_1_1__3 )
-            // InternalSEMVER.g:1715:2: rule__VersionRangeSet__Group_1_1__2__Impl rule__VersionRangeSet__Group_1_1__3
+            // InternalSEMVER.g:1714:1: ( rule__VersionRangeSetRequirement__Group_1_1__2__Impl rule__VersionRangeSetRequirement__Group_1_1__3 )
+            // InternalSEMVER.g:1715:2: rule__VersionRangeSetRequirement__Group_1_1__2__Impl rule__VersionRangeSetRequirement__Group_1_1__3
             {
             pushFollow(FOLLOW_16);
-            rule__VersionRangeSet__Group_1_1__2__Impl();
+            rule__VersionRangeSetRequirement__Group_1_1__2__Impl();
 
             state._fsp--;
             if (state.failed) return ;
             pushFollow(FOLLOW_2);
-            rule__VersionRangeSet__Group_1_1__3();
+            rule__VersionRangeSetRequirement__Group_1_1__3();
 
             state._fsp--;
             if (state.failed) return ;
@@ -6109,12 +6109,12 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__VersionRangeSet__Group_1_1__2"
+    // $ANTLR end "rule__VersionRangeSetRequirement__Group_1_1__2"
 
 
-    // $ANTLR start "rule__VersionRangeSet__Group_1_1__2__Impl"
-    // InternalSEMVER.g:1722:1: rule__VersionRangeSet__Group_1_1__2__Impl : ( ( RULE_WS )* ) ;
-    public final void rule__VersionRangeSet__Group_1_1__2__Impl() throws RecognitionException {
+    // $ANTLR start "rule__VersionRangeSetRequirement__Group_1_1__2__Impl"
+    // InternalSEMVER.g:1722:1: rule__VersionRangeSetRequirement__Group_1_1__2__Impl : ( ( RULE_WS )* ) ;
+    public final void rule__VersionRangeSetRequirement__Group_1_1__2__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
@@ -6126,7 +6126,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             // InternalSEMVER.g:1728:2: ( RULE_WS )*
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getVersionRangeSetAccess().getWSTerminalRuleCall_1_1_2()); 
+               before(grammarAccess.getVersionRangeSetRequirementAccess().getWSTerminalRuleCall_1_1_2()); 
             }
             // InternalSEMVER.g:1729:2: ( RULE_WS )*
             loop25:
@@ -6154,7 +6154,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             } while (true);
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getVersionRangeSetAccess().getWSTerminalRuleCall_1_1_2()); 
+               after(grammarAccess.getVersionRangeSetRequirementAccess().getWSTerminalRuleCall_1_1_2()); 
             }
 
             }
@@ -6174,21 +6174,21 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__VersionRangeSet__Group_1_1__2__Impl"
+    // $ANTLR end "rule__VersionRangeSetRequirement__Group_1_1__2__Impl"
 
 
-    // $ANTLR start "rule__VersionRangeSet__Group_1_1__3"
-    // InternalSEMVER.g:1737:1: rule__VersionRangeSet__Group_1_1__3 : rule__VersionRangeSet__Group_1_1__3__Impl ;
-    public final void rule__VersionRangeSet__Group_1_1__3() throws RecognitionException {
+    // $ANTLR start "rule__VersionRangeSetRequirement__Group_1_1__3"
+    // InternalSEMVER.g:1737:1: rule__VersionRangeSetRequirement__Group_1_1__3 : rule__VersionRangeSetRequirement__Group_1_1__3__Impl ;
+    public final void rule__VersionRangeSetRequirement__Group_1_1__3() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:1741:1: ( rule__VersionRangeSet__Group_1_1__3__Impl )
-            // InternalSEMVER.g:1742:2: rule__VersionRangeSet__Group_1_1__3__Impl
+            // InternalSEMVER.g:1741:1: ( rule__VersionRangeSetRequirement__Group_1_1__3__Impl )
+            // InternalSEMVER.g:1742:2: rule__VersionRangeSetRequirement__Group_1_1__3__Impl
             {
             pushFollow(FOLLOW_2);
-            rule__VersionRangeSet__Group_1_1__3__Impl();
+            rule__VersionRangeSetRequirement__Group_1_1__3__Impl();
 
             state._fsp--;
             if (state.failed) return ;
@@ -6207,30 +6207,30 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__VersionRangeSet__Group_1_1__3"
+    // $ANTLR end "rule__VersionRangeSetRequirement__Group_1_1__3"
 
 
-    // $ANTLR start "rule__VersionRangeSet__Group_1_1__3__Impl"
-    // InternalSEMVER.g:1748:1: rule__VersionRangeSet__Group_1_1__3__Impl : ( ( rule__VersionRangeSet__RangesAssignment_1_1_3 ) ) ;
-    public final void rule__VersionRangeSet__Group_1_1__3__Impl() throws RecognitionException {
+    // $ANTLR start "rule__VersionRangeSetRequirement__Group_1_1__3__Impl"
+    // InternalSEMVER.g:1748:1: rule__VersionRangeSetRequirement__Group_1_1__3__Impl : ( ( rule__VersionRangeSetRequirement__RangesAssignment_1_1_3 ) ) ;
+    public final void rule__VersionRangeSetRequirement__Group_1_1__3__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSEMVER.g:1752:1: ( ( ( rule__VersionRangeSet__RangesAssignment_1_1_3 ) ) )
-            // InternalSEMVER.g:1753:1: ( ( rule__VersionRangeSet__RangesAssignment_1_1_3 ) )
+            // InternalSEMVER.g:1752:1: ( ( ( rule__VersionRangeSetRequirement__RangesAssignment_1_1_3 ) ) )
+            // InternalSEMVER.g:1753:1: ( ( rule__VersionRangeSetRequirement__RangesAssignment_1_1_3 ) )
             {
-            // InternalSEMVER.g:1753:1: ( ( rule__VersionRangeSet__RangesAssignment_1_1_3 ) )
-            // InternalSEMVER.g:1754:2: ( rule__VersionRangeSet__RangesAssignment_1_1_3 )
+            // InternalSEMVER.g:1753:1: ( ( rule__VersionRangeSetRequirement__RangesAssignment_1_1_3 ) )
+            // InternalSEMVER.g:1754:2: ( rule__VersionRangeSetRequirement__RangesAssignment_1_1_3 )
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getVersionRangeSetAccess().getRangesAssignment_1_1_3()); 
+               before(grammarAccess.getVersionRangeSetRequirementAccess().getRangesAssignment_1_1_3()); 
             }
-            // InternalSEMVER.g:1755:2: ( rule__VersionRangeSet__RangesAssignment_1_1_3 )
-            // InternalSEMVER.g:1755:3: rule__VersionRangeSet__RangesAssignment_1_1_3
+            // InternalSEMVER.g:1755:2: ( rule__VersionRangeSetRequirement__RangesAssignment_1_1_3 )
+            // InternalSEMVER.g:1755:3: rule__VersionRangeSetRequirement__RangesAssignment_1_1_3
             {
             pushFollow(FOLLOW_2);
-            rule__VersionRangeSet__RangesAssignment_1_1_3();
+            rule__VersionRangeSetRequirement__RangesAssignment_1_1_3();
 
             state._fsp--;
             if (state.failed) return ;
@@ -6238,7 +6238,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getVersionRangeSetAccess().getRangesAssignment_1_1_3()); 
+               after(grammarAccess.getVersionRangeSetRequirementAccess().getRangesAssignment_1_1_3()); 
             }
 
             }
@@ -6258,7 +6258,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__VersionRangeSet__Group_1_1__3__Impl"
+    // $ANTLR end "rule__VersionRangeSetRequirement__Group_1_1__3__Impl"
 
 
     // $ANTLR start "rule__HyphenVersionRange__Group__0"
@@ -10957,9 +10957,9 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__ALPHA_NUMERIC_CHAR__Group__1__Impl"
 
 
-    // $ANTLR start "rule__URLVersion__ProtocolAssignment_0"
-    // InternalSEMVER.g:3163:1: rule__URLVersion__ProtocolAssignment_0 : ( ruleURL_PROTOCOL ) ;
-    public final void rule__URLVersion__ProtocolAssignment_0() throws RecognitionException {
+    // $ANTLR start "rule__URLVersionRequirement__ProtocolAssignment_0"
+    // InternalSEMVER.g:3163:1: rule__URLVersionRequirement__ProtocolAssignment_0 : ( ruleURL_PROTOCOL ) ;
+    public final void rule__URLVersionRequirement__ProtocolAssignment_0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
@@ -10971,7 +10971,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             // InternalSEMVER.g:3169:3: ruleURL_PROTOCOL
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getURLVersionAccess().getProtocolURL_PROTOCOLParserRuleCall_0_0()); 
+               before(grammarAccess.getURLVersionRequirementAccess().getProtocolURL_PROTOCOLParserRuleCall_0_0()); 
             }
             pushFollow(FOLLOW_2);
             ruleURL_PROTOCOL();
@@ -10979,7 +10979,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             state._fsp--;
             if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getURLVersionAccess().getProtocolURL_PROTOCOLParserRuleCall_0_0()); 
+               after(grammarAccess.getURLVersionRequirementAccess().getProtocolURL_PROTOCOLParserRuleCall_0_0()); 
             }
 
             }
@@ -10999,12 +10999,12 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__URLVersion__ProtocolAssignment_0"
+    // $ANTLR end "rule__URLVersionRequirement__ProtocolAssignment_0"
 
 
-    // $ANTLR start "rule__URLVersion__UrlAssignment_2"
-    // InternalSEMVER.g:3178:1: rule__URLVersion__UrlAssignment_2 : ( ruleURL ) ;
-    public final void rule__URLVersion__UrlAssignment_2() throws RecognitionException {
+    // $ANTLR start "rule__URLVersionRequirement__UrlAssignment_2"
+    // InternalSEMVER.g:3178:1: rule__URLVersionRequirement__UrlAssignment_2 : ( ruleURL ) ;
+    public final void rule__URLVersionRequirement__UrlAssignment_2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
@@ -11016,7 +11016,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             // InternalSEMVER.g:3184:3: ruleURL
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getURLVersionAccess().getUrlURLParserRuleCall_2_0()); 
+               before(grammarAccess.getURLVersionRequirementAccess().getUrlURLParserRuleCall_2_0()); 
             }
             pushFollow(FOLLOW_2);
             ruleURL();
@@ -11024,7 +11024,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             state._fsp--;
             if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getURLVersionAccess().getUrlURLParserRuleCall_2_0()); 
+               after(grammarAccess.getURLVersionRequirementAccess().getUrlURLParserRuleCall_2_0()); 
             }
 
             }
@@ -11044,12 +11044,12 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__URLVersion__UrlAssignment_2"
+    // $ANTLR end "rule__URLVersionRequirement__UrlAssignment_2"
 
 
-    // $ANTLR start "rule__URLVersion__VersionSpecifierAssignment_3_1"
-    // InternalSEMVER.g:3193:1: rule__URLVersion__VersionSpecifierAssignment_3_1 : ( ruleURLVersionSpecifier ) ;
-    public final void rule__URLVersion__VersionSpecifierAssignment_3_1() throws RecognitionException {
+    // $ANTLR start "rule__URLVersionRequirement__VersionSpecifierAssignment_3_1"
+    // InternalSEMVER.g:3193:1: rule__URLVersionRequirement__VersionSpecifierAssignment_3_1 : ( ruleURLVersionSpecifier ) ;
+    public final void rule__URLVersionRequirement__VersionSpecifierAssignment_3_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
@@ -11061,7 +11061,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             // InternalSEMVER.g:3199:3: ruleURLVersionSpecifier
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getURLVersionAccess().getVersionSpecifierURLVersionSpecifierParserRuleCall_3_1_0()); 
+               before(grammarAccess.getURLVersionRequirementAccess().getVersionSpecifierURLVersionSpecifierParserRuleCall_3_1_0()); 
             }
             pushFollow(FOLLOW_2);
             ruleURLVersionSpecifier();
@@ -11069,7 +11069,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             state._fsp--;
             if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getURLVersionAccess().getVersionSpecifierURLVersionSpecifierParserRuleCall_3_1_0()); 
+               after(grammarAccess.getURLVersionRequirementAccess().getVersionSpecifierURLVersionSpecifierParserRuleCall_3_1_0()); 
             }
 
             }
@@ -11089,7 +11089,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__URLVersion__VersionSpecifierAssignment_3_1"
+    // $ANTLR end "rule__URLVersionRequirement__VersionSpecifierAssignment_3_1"
 
 
     // $ANTLR start "rule__URLSemver__SimpleVersionAssignment_1"
@@ -11182,9 +11182,9 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__URLCommitISH__CommitISHAssignment"
 
 
-    // $ANTLR start "rule__TagVersion__TagNameAssignment"
-    // InternalSEMVER.g:3238:1: rule__TagVersion__TagNameAssignment : ( ruleTAG ) ;
-    public final void rule__TagVersion__TagNameAssignment() throws RecognitionException {
+    // $ANTLR start "rule__TagVersionRequirement__TagNameAssignment"
+    // InternalSEMVER.g:3238:1: rule__TagVersionRequirement__TagNameAssignment : ( ruleTAG ) ;
+    public final void rule__TagVersionRequirement__TagNameAssignment() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
@@ -11196,7 +11196,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             // InternalSEMVER.g:3244:3: ruleTAG
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getTagVersionAccess().getTagNameTAGParserRuleCall_0()); 
+               before(grammarAccess.getTagVersionRequirementAccess().getTagNameTAGParserRuleCall_0()); 
             }
             pushFollow(FOLLOW_2);
             ruleTAG();
@@ -11204,7 +11204,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             state._fsp--;
             if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getTagVersionAccess().getTagNameTAGParserRuleCall_0()); 
+               after(grammarAccess.getTagVersionRequirementAccess().getTagNameTAGParserRuleCall_0()); 
             }
 
             }
@@ -11224,12 +11224,12 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__TagVersion__TagNameAssignment"
+    // $ANTLR end "rule__TagVersionRequirement__TagNameAssignment"
 
 
-    // $ANTLR start "rule__GitHubVersion__GithubUrlAssignment_0"
-    // InternalSEMVER.g:3253:1: rule__GitHubVersion__GithubUrlAssignment_0 : ( ruleURL ) ;
-    public final void rule__GitHubVersion__GithubUrlAssignment_0() throws RecognitionException {
+    // $ANTLR start "rule__GitHubVersionRequirement__GithubUrlAssignment_0"
+    // InternalSEMVER.g:3253:1: rule__GitHubVersionRequirement__GithubUrlAssignment_0 : ( ruleURL ) ;
+    public final void rule__GitHubVersionRequirement__GithubUrlAssignment_0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
@@ -11241,7 +11241,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             // InternalSEMVER.g:3259:3: ruleURL
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getGitHubVersionAccess().getGithubUrlURLParserRuleCall_0_0()); 
+               before(grammarAccess.getGitHubVersionRequirementAccess().getGithubUrlURLParserRuleCall_0_0()); 
             }
             pushFollow(FOLLOW_2);
             ruleURL();
@@ -11249,7 +11249,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             state._fsp--;
             if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getGitHubVersionAccess().getGithubUrlURLParserRuleCall_0_0()); 
+               after(grammarAccess.getGitHubVersionRequirementAccess().getGithubUrlURLParserRuleCall_0_0()); 
             }
 
             }
@@ -11269,12 +11269,12 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__GitHubVersion__GithubUrlAssignment_0"
+    // $ANTLR end "rule__GitHubVersionRequirement__GithubUrlAssignment_0"
 
 
-    // $ANTLR start "rule__GitHubVersion__CommitISHAssignment_1_1"
-    // InternalSEMVER.g:3268:1: rule__GitHubVersion__CommitISHAssignment_1_1 : ( ruleALPHA_NUMERIC_CHARS ) ;
-    public final void rule__GitHubVersion__CommitISHAssignment_1_1() throws RecognitionException {
+    // $ANTLR start "rule__GitHubVersionRequirement__CommitISHAssignment_1_1"
+    // InternalSEMVER.g:3268:1: rule__GitHubVersionRequirement__CommitISHAssignment_1_1 : ( ruleALPHA_NUMERIC_CHARS ) ;
+    public final void rule__GitHubVersionRequirement__CommitISHAssignment_1_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
@@ -11286,7 +11286,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             // InternalSEMVER.g:3274:3: ruleALPHA_NUMERIC_CHARS
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getGitHubVersionAccess().getCommitISHALPHA_NUMERIC_CHARSParserRuleCall_1_1_0()); 
+               before(grammarAccess.getGitHubVersionRequirementAccess().getCommitISHALPHA_NUMERIC_CHARSParserRuleCall_1_1_0()); 
             }
             pushFollow(FOLLOW_2);
             ruleALPHA_NUMERIC_CHARS();
@@ -11294,7 +11294,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             state._fsp--;
             if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getGitHubVersionAccess().getCommitISHALPHA_NUMERIC_CHARSParserRuleCall_1_1_0()); 
+               after(grammarAccess.getGitHubVersionRequirementAccess().getCommitISHALPHA_NUMERIC_CHARSParserRuleCall_1_1_0()); 
             }
 
             }
@@ -11314,12 +11314,12 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__GitHubVersion__CommitISHAssignment_1_1"
+    // $ANTLR end "rule__GitHubVersionRequirement__CommitISHAssignment_1_1"
 
 
-    // $ANTLR start "rule__LocalPathVersion__LocalPathAssignment_1"
-    // InternalSEMVER.g:3283:1: rule__LocalPathVersion__LocalPathAssignment_1 : ( rulePATH ) ;
-    public final void rule__LocalPathVersion__LocalPathAssignment_1() throws RecognitionException {
+    // $ANTLR start "rule__LocalPathVersionRequirement__LocalPathAssignment_1"
+    // InternalSEMVER.g:3283:1: rule__LocalPathVersionRequirement__LocalPathAssignment_1 : ( rulePATH ) ;
+    public final void rule__LocalPathVersionRequirement__LocalPathAssignment_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
@@ -11331,7 +11331,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             // InternalSEMVER.g:3289:3: rulePATH
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getLocalPathVersionAccess().getLocalPathPATHParserRuleCall_1_0()); 
+               before(grammarAccess.getLocalPathVersionRequirementAccess().getLocalPathPATHParserRuleCall_1_0()); 
             }
             pushFollow(FOLLOW_2);
             rulePATH();
@@ -11339,7 +11339,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             state._fsp--;
             if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getLocalPathVersionAccess().getLocalPathPATHParserRuleCall_1_0()); 
+               after(grammarAccess.getLocalPathVersionRequirementAccess().getLocalPathPATHParserRuleCall_1_0()); 
             }
 
             }
@@ -11359,12 +11359,12 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__LocalPathVersion__LocalPathAssignment_1"
+    // $ANTLR end "rule__LocalPathVersionRequirement__LocalPathAssignment_1"
 
 
-    // $ANTLR start "rule__VersionRangeSet__RangesAssignment_1_0"
-    // InternalSEMVER.g:3298:1: rule__VersionRangeSet__RangesAssignment_1_0 : ( ruleVersionRange ) ;
-    public final void rule__VersionRangeSet__RangesAssignment_1_0() throws RecognitionException {
+    // $ANTLR start "rule__VersionRangeSetRequirement__RangesAssignment_1_0"
+    // InternalSEMVER.g:3298:1: rule__VersionRangeSetRequirement__RangesAssignment_1_0 : ( ruleVersionRange ) ;
+    public final void rule__VersionRangeSetRequirement__RangesAssignment_1_0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
@@ -11376,7 +11376,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             // InternalSEMVER.g:3304:3: ruleVersionRange
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getVersionRangeSetAccess().getRangesVersionRangeParserRuleCall_1_0_0()); 
+               before(grammarAccess.getVersionRangeSetRequirementAccess().getRangesVersionRangeParserRuleCall_1_0_0()); 
             }
             pushFollow(FOLLOW_2);
             ruleVersionRange();
@@ -11384,7 +11384,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             state._fsp--;
             if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getVersionRangeSetAccess().getRangesVersionRangeParserRuleCall_1_0_0()); 
+               after(grammarAccess.getVersionRangeSetRequirementAccess().getRangesVersionRangeParserRuleCall_1_0_0()); 
             }
 
             }
@@ -11404,12 +11404,12 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__VersionRangeSet__RangesAssignment_1_0"
+    // $ANTLR end "rule__VersionRangeSetRequirement__RangesAssignment_1_0"
 
 
-    // $ANTLR start "rule__VersionRangeSet__RangesAssignment_1_1_3"
-    // InternalSEMVER.g:3313:1: rule__VersionRangeSet__RangesAssignment_1_1_3 : ( ruleVersionRange ) ;
-    public final void rule__VersionRangeSet__RangesAssignment_1_1_3() throws RecognitionException {
+    // $ANTLR start "rule__VersionRangeSetRequirement__RangesAssignment_1_1_3"
+    // InternalSEMVER.g:3313:1: rule__VersionRangeSetRequirement__RangesAssignment_1_1_3 : ( ruleVersionRange ) ;
+    public final void rule__VersionRangeSetRequirement__RangesAssignment_1_1_3() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
@@ -11421,7 +11421,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             // InternalSEMVER.g:3319:3: ruleVersionRange
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getVersionRangeSetAccess().getRangesVersionRangeParserRuleCall_1_1_3_0()); 
+               before(grammarAccess.getVersionRangeSetRequirementAccess().getRangesVersionRangeParserRuleCall_1_1_3_0()); 
             }
             pushFollow(FOLLOW_2);
             ruleVersionRange();
@@ -11429,7 +11429,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             state._fsp--;
             if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getVersionRangeSetAccess().getRangesVersionRangeParserRuleCall_1_1_3_0()); 
+               after(grammarAccess.getVersionRangeSetRequirementAccess().getRangesVersionRangeParserRuleCall_1_1_3_0()); 
             }
 
             }
@@ -11449,7 +11449,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__VersionRangeSet__RangesAssignment_1_1_3"
+    // $ANTLR end "rule__VersionRangeSetRequirement__RangesAssignment_1_1_3"
 
 
     // $ANTLR start "rule__HyphenVersionRange__FromAssignment_1"
@@ -12319,20 +12319,20 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
 
     // $ANTLR start synpred3_InternalSEMVER
     public final void synpred3_InternalSEMVER_fragment() throws RecognitionException {   
-        // InternalSEMVER.g:695:2: ( ( ( rule__NPMVersion__Group_0__0 ) ) )
-        // InternalSEMVER.g:695:2: ( ( rule__NPMVersion__Group_0__0 ) )
+        // InternalSEMVER.g:695:2: ( ( ( rule__NPMVersionRequirement__Group_0__0 ) ) )
+        // InternalSEMVER.g:695:2: ( ( rule__NPMVersionRequirement__Group_0__0 ) )
         {
-        // InternalSEMVER.g:695:2: ( ( rule__NPMVersion__Group_0__0 ) )
-        // InternalSEMVER.g:696:3: ( rule__NPMVersion__Group_0__0 )
+        // InternalSEMVER.g:695:2: ( ( rule__NPMVersionRequirement__Group_0__0 ) )
+        // InternalSEMVER.g:696:3: ( rule__NPMVersionRequirement__Group_0__0 )
         {
         if ( state.backtracking==0 ) {
-           before(grammarAccess.getNPMVersionAccess().getGroup_0()); 
+           before(grammarAccess.getNPMVersionRequirementAccess().getGroup_0()); 
         }
-        // InternalSEMVER.g:697:3: ( rule__NPMVersion__Group_0__0 )
-        // InternalSEMVER.g:697:4: rule__NPMVersion__Group_0__0
+        // InternalSEMVER.g:697:3: ( rule__NPMVersionRequirement__Group_0__0 )
+        // InternalSEMVER.g:697:4: rule__NPMVersionRequirement__Group_0__0
         {
         pushFollow(FOLLOW_2);
-        rule__NPMVersion__Group_0__0();
+        rule__NPMVersionRequirement__Group_0__0();
 
         state._fsp--;
         if (state.failed) return ;
@@ -12473,7 +12473,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             this.transition = dfa_7;
         }
         public String getDescription() {
-            return "711:1: rule__NPMVersion__Alternatives_1_0 : ( ( ruleURLVersion ) | ( ruleLocalPathVersion ) | ( ruleGitHubVersion ) | ( ruleTagVersion ) );";
+            return "711:1: rule__NPMVersionRequirement__Alternatives_1_0 : ( ( ruleURLVersionRequirement ) | ( ruleLocalPathVersionRequirement ) | ( ruleGitHubVersionRequirement ) | ( ruleTagVersionRequirement ) );";
         }
     }
     static final String dfa_8s = "\102\uffff";
@@ -12663,7 +12663,7 @@ public class InternalSEMVERParser extends AbstractInternalContentAssistParser {
             this.transition = dfa_28;
         }
         public String getDescription() {
-            return "()* loopback of 1621:2: ( rule__VersionRangeSet__Group_1_1__0 )*";
+            return "()* loopback of 1621:2: ( rule__VersionRangeSetRequirement__Group_1_1__0 )*";
         }
     }
     static final String dfa_29s = "\5\uffff";

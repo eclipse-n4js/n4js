@@ -24,22 +24,22 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.n4js.semver.SEMVER.SEMVERPackage;
 import org.eclipse.n4js.semver.SEMVER.VersionRange;
-import org.eclipse.n4js.semver.SEMVER.VersionRangeSet;
+import org.eclipse.n4js.semver.SEMVER.VersionRangeSetRequirement;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Version Range Set</b></em>'.
+ * An implementation of the model object '<em><b>Version Range Set Requirement</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.semver.SEMVER.impl.VersionRangeSetImpl#getRanges <em>Ranges</em>}</li>
+ *   <li>{@link org.eclipse.n4js.semver.SEMVER.impl.VersionRangeSetRequirementImpl#getRanges <em>Ranges</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class VersionRangeSetImpl extends NPMVersionImpl implements VersionRangeSet {
+public class VersionRangeSetRequirementImpl extends NPMVersionRequirementImpl implements VersionRangeSetRequirement {
 	/**
 	 * The cached value of the '{@link #getRanges() <em>Ranges</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -55,7 +55,7 @@ public class VersionRangeSetImpl extends NPMVersionImpl implements VersionRangeS
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected VersionRangeSetImpl() {
+	protected VersionRangeSetRequirementImpl() {
 		super();
 	}
 
@@ -66,7 +66,7 @@ public class VersionRangeSetImpl extends NPMVersionImpl implements VersionRangeS
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return SEMVERPackage.Literals.VERSION_RANGE_SET;
+		return SEMVERPackage.Literals.VERSION_RANGE_SET_REQUIREMENT;
 	}
 
 	/**
@@ -76,7 +76,7 @@ public class VersionRangeSetImpl extends NPMVersionImpl implements VersionRangeS
 	 */
 	public EList<VersionRange> getRanges() {
 		if (ranges == null) {
-			ranges = new EObjectContainmentEList<VersionRange>(VersionRange.class, this, SEMVERPackage.VERSION_RANGE_SET__RANGES);
+			ranges = new EObjectContainmentEList<VersionRange>(VersionRange.class, this, SEMVERPackage.VERSION_RANGE_SET_REQUIREMENT__RANGES);
 		}
 		return ranges;
 	}
@@ -89,7 +89,7 @@ public class VersionRangeSetImpl extends NPMVersionImpl implements VersionRangeS
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case SEMVERPackage.VERSION_RANGE_SET__RANGES:
+			case SEMVERPackage.VERSION_RANGE_SET_REQUIREMENT__RANGES:
 				return ((InternalEList<?>)getRanges()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
@@ -103,7 +103,7 @@ public class VersionRangeSetImpl extends NPMVersionImpl implements VersionRangeS
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case SEMVERPackage.VERSION_RANGE_SET__RANGES:
+			case SEMVERPackage.VERSION_RANGE_SET_REQUIREMENT__RANGES:
 				return getRanges();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -118,7 +118,7 @@ public class VersionRangeSetImpl extends NPMVersionImpl implements VersionRangeS
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case SEMVERPackage.VERSION_RANGE_SET__RANGES:
+			case SEMVERPackage.VERSION_RANGE_SET_REQUIREMENT__RANGES:
 				getRanges().clear();
 				getRanges().addAll((Collection<? extends VersionRange>)newValue);
 				return;
@@ -134,7 +134,7 @@ public class VersionRangeSetImpl extends NPMVersionImpl implements VersionRangeS
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case SEMVERPackage.VERSION_RANGE_SET__RANGES:
+			case SEMVERPackage.VERSION_RANGE_SET_REQUIREMENT__RANGES:
 				getRanges().clear();
 				return;
 		}
@@ -149,10 +149,10 @@ public class VersionRangeSetImpl extends NPMVersionImpl implements VersionRangeS
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case SEMVERPackage.VERSION_RANGE_SET__RANGES:
+			case SEMVERPackage.VERSION_RANGE_SET_REQUIREMENT__RANGES:
 				return ranges != null && !ranges.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
 
-} //VersionRangeSetImpl
+} //VersionRangeSetRequirementImpl

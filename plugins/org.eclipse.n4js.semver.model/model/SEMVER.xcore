@@ -30,15 +30,15 @@ package org.eclipse.n4js.semver.SEMVER
 import org.eclipse.n4js.semver.model.SEMVERSerializer
 
 
-abstract class AbstractSEMVERSerializer {
+abstract class SEMVERtoStringable {
 	op String toString() {
 		return SEMVERSerializer.toString(this);
 	}
 }
 
-abstract class NPMVersion extends AbstractSEMVERSerializer {}
+abstract class NPMVersionRequirement extends SEMVERtoStringable {}
 
-class URLVersion extends NPMVersion {
+class URLVersionRequirement extends NPMVersionRequirement {
 	contains URLVersionSpecifier versionSpecifier
 	String protocol
 	String url
@@ -48,15 +48,15 @@ class URLVersion extends NPMVersion {
 	}
 
 	op SimpleVersion getSimpleVersion() {
-		if (versionSpecifier instanceof URLSemver) {
-			val urlSemver = versionSpecifier as URLSemver;
+		if (getVersionSpecifier instanceof URLSemver) {
+			val urlSemver = getVersionSpecifier as URLSemver;
 			return urlSemver.simpleVersion;
 		}
 		return null;
 	}
 }
 
-abstract class URLVersionSpecifier extends AbstractSEMVERSerializer {}
+abstract class URLVersionSpecifier extends SEMVERtoStringable {}
 
 class URLSemver extends URLVersionSpecifier {
 	contains SimpleVersion simpleVersion
@@ -66,24 +66,24 @@ class URLCommitISH extends URLVersionSpecifier {
 	String commitISH
 }
 
-class GitHubVersion extends NPMVersion {
+class GitHubVersionRequirement extends NPMVersionRequirement {
 	String githubUrl
 	String commitISH
 }
 
-class LocalPathVersion extends NPMVersion {
+class LocalPathVersionRequirement extends NPMVersionRequirement {
 	String localPath
 }
 
-class TagVersion extends NPMVersion {
+class TagVersionRequirement extends NPMVersionRequirement {
 	String tagName
 }
 
-class VersionRangeSet extends NPMVersion {
+class VersionRangeSetRequirement extends NPMVersionRequirement {
 	contains VersionRange[] ranges
 }
 
-abstract class VersionRange extends AbstractSEMVERSerializer {}
+abstract class VersionRange extends SEMVERtoStringable {}
 
 class HyphenVersionRange extends VersionRange {
 	contains VersionNumber from
@@ -94,7 +94,7 @@ class VersionRangeConstraint extends VersionRange {
 	contains SimpleVersion[] versionConstraints
 }
 
-class SimpleVersion extends AbstractSEMVERSerializer {
+class SimpleVersion extends SEMVERtoStringable {
 	contains VersionNumber number
 	VersionComparator[] comparators
 
@@ -128,7 +128,7 @@ class SimpleVersion extends AbstractSEMVERSerializer {
 	}
 }
 
-class VersionNumber extends AbstractSEMVERSerializer {
+class VersionNumber extends SEMVERtoStringable {
 	contains VersionPart major
 	contains VersionPart minor
 	contains VersionPart patch
@@ -179,7 +179,7 @@ class VersionNumber extends AbstractSEMVERSerializer {
 	}
 }
 
-class VersionPart extends AbstractSEMVERSerializer {
+class VersionPart extends SEMVERtoStringable {
 	boolean wildcard
 	Integer numberRaw
 
@@ -199,7 +199,7 @@ class VersionPart extends AbstractSEMVERSerializer {
 	}
 }
 
-class Qualifier extends AbstractSEMVERSerializer {
+class Qualifier extends SEMVERtoStringable {
 	contains QualifierTag preRelease
 	contains QualifierTag buildMetadata
 
@@ -216,7 +216,7 @@ class Qualifier extends AbstractSEMVERSerializer {
 	}
 }
 
-class QualifierTag extends AbstractSEMVERSerializer {
+class QualifierTag extends SEMVERtoStringable {
 	String[] parts
 
 	op boolean equals(Object obj) {

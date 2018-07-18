@@ -13,13 +13,13 @@ package org.eclipse.n4js.semver.SEMVER;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>NPM Version</b></em>'.
+ * A representation of the model object '<em><b>NPM Version Requirement</b></em>'.
  * <!-- end-user-doc -->
  *
  *
- * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getNPMVersion()
+ * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getNPMVersionRequirement()
  * @model abstract="true"
  * @generated
  */
-public interface NPMVersion extends AbstractSEMVERSerializer {
-} // NPMVersion
+public interface NPMVersionRequirement extends SEMVERtoStringable {
+} // NPMVersionRequirement

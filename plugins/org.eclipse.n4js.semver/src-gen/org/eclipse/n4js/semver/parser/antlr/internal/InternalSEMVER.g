@@ -57,7 +57,7 @@ import org.eclipse.n4js.semver.services.SEMVERGrammarAccess;
 
     @Override
     protected String getFirstRuleName() {
-    	return "NPMVersion";
+    	return "NPMVersionRequirement";
    	}
 
    	@Override
@@ -74,15 +74,15 @@ import org.eclipse.n4js.semver.services.SEMVERGrammarAccess;
     }
 }
 
-// Entry rule entryRuleNPMVersion
-entryRuleNPMVersion returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getNPMVersionRule()); }
-	iv_ruleNPMVersion=ruleNPMVersion
-	{ $current=$iv_ruleNPMVersion.current; }
+// Entry rule entryRuleNPMVersionRequirement
+entryRuleNPMVersionRequirement returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getNPMVersionRequirementRule()); }
+	iv_ruleNPMVersionRequirement=ruleNPMVersionRequirement
+	{ $current=$iv_ruleNPMVersionRequirement.current; }
 	EOF;
 
-// Rule NPMVersion
-ruleNPMVersion returns [EObject current=null]
+// Rule NPMVersionRequirement
+ruleNPMVersionRequirement returns [EObject current=null]
 @init {
 	enterRule();
 }
@@ -94,18 +94,18 @@ ruleNPMVersion returns [EObject current=null]
 			(
 				this_WS_0=RULE_WS
 				{
-					newLeafNode(this_WS_0, grammarAccess.getNPMVersionAccess().getWSTerminalRuleCall_0_0());
+					newLeafNode(this_WS_0, grammarAccess.getNPMVersionRequirementAccess().getWSTerminalRuleCall_0_0());
 				}
 			)*
 			{
 				/* */
 			}
 			{
-				newCompositeNode(grammarAccess.getNPMVersionAccess().getVersionRangeSetParserRuleCall_0_1());
+				newCompositeNode(grammarAccess.getNPMVersionRequirementAccess().getVersionRangeSetRequirementParserRuleCall_0_1());
 			}
-			this_VersionRangeSet_1=ruleVersionRangeSet
+			this_VersionRangeSetRequirement_1=ruleVersionRangeSetRequirement
 			{
-				$current = $this_VersionRangeSet_1.current;
+				$current = $this_VersionRangeSetRequirement_1.current;
 				afterParserOrEnumRuleCall();
 			}
 		)
@@ -116,11 +116,11 @@ ruleNPMVersion returns [EObject current=null]
 					/* */
 				}
 				{
-					newCompositeNode(grammarAccess.getNPMVersionAccess().getURLVersionParserRuleCall_1_0_0());
+					newCompositeNode(grammarAccess.getNPMVersionRequirementAccess().getURLVersionRequirementParserRuleCall_1_0_0());
 				}
-				this_URLVersion_2=ruleURLVersion
+				this_URLVersionRequirement_2=ruleURLVersionRequirement
 				{
-					$current = $this_URLVersion_2.current;
+					$current = $this_URLVersionRequirement_2.current;
 					afterParserOrEnumRuleCall();
 				}
 				    |
@@ -128,11 +128,11 @@ ruleNPMVersion returns [EObject current=null]
 					/* */
 				}
 				{
-					newCompositeNode(grammarAccess.getNPMVersionAccess().getLocalPathVersionParserRuleCall_1_0_1());
+					newCompositeNode(grammarAccess.getNPMVersionRequirementAccess().getLocalPathVersionRequirementParserRuleCall_1_0_1());
 				}
-				this_LocalPathVersion_3=ruleLocalPathVersion
+				this_LocalPathVersionRequirement_3=ruleLocalPathVersionRequirement
 				{
-					$current = $this_LocalPathVersion_3.current;
+					$current = $this_LocalPathVersionRequirement_3.current;
 					afterParserOrEnumRuleCall();
 				}
 				    |
@@ -140,11 +140,11 @@ ruleNPMVersion returns [EObject current=null]
 					/* */
 				}
 				{
-					newCompositeNode(grammarAccess.getNPMVersionAccess().getGitHubVersionParserRuleCall_1_0_2());
+					newCompositeNode(grammarAccess.getNPMVersionRequirementAccess().getGitHubVersionRequirementParserRuleCall_1_0_2());
 				}
-				this_GitHubVersion_4=ruleGitHubVersion
+				this_GitHubVersionRequirement_4=ruleGitHubVersionRequirement
 				{
-					$current = $this_GitHubVersion_4.current;
+					$current = $this_GitHubVersionRequirement_4.current;
 					afterParserOrEnumRuleCall();
 				}
 				    |
@@ -152,33 +152,33 @@ ruleNPMVersion returns [EObject current=null]
 					/* */
 				}
 				{
-					newCompositeNode(grammarAccess.getNPMVersionAccess().getTagVersionParserRuleCall_1_0_3());
+					newCompositeNode(grammarAccess.getNPMVersionRequirementAccess().getTagVersionRequirementParserRuleCall_1_0_3());
 				}
-				this_TagVersion_5=ruleTagVersion
+				this_TagVersionRequirement_5=ruleTagVersionRequirement
 				{
-					$current = $this_TagVersion_5.current;
+					$current = $this_TagVersionRequirement_5.current;
 					afterParserOrEnumRuleCall();
 				}
 			)
 			(
 				this_WS_6=RULE_WS
 				{
-					newLeafNode(this_WS_6, grammarAccess.getNPMVersionAccess().getWSTerminalRuleCall_1_1());
+					newLeafNode(this_WS_6, grammarAccess.getNPMVersionRequirementAccess().getWSTerminalRuleCall_1_1());
 				}
 			)*
 		)
 	)
 ;
 
-// Entry rule entryRuleURLVersion
-entryRuleURLVersion returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getURLVersionRule()); }
-	iv_ruleURLVersion=ruleURLVersion
-	{ $current=$iv_ruleURLVersion.current; }
+// Entry rule entryRuleURLVersionRequirement
+entryRuleURLVersionRequirement returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getURLVersionRequirementRule()); }
+	iv_ruleURLVersionRequirement=ruleURLVersionRequirement
+	{ $current=$iv_ruleURLVersionRequirement.current; }
 	EOF;
 
-// Rule URLVersion
-ruleURLVersion returns [EObject current=null]
+// Rule URLVersionRequirement
+ruleURLVersionRequirement returns [EObject current=null]
 @init {
 	enterRule();
 }
@@ -189,12 +189,12 @@ ruleURLVersion returns [EObject current=null]
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getURLVersionAccess().getProtocolURL_PROTOCOLParserRuleCall_0_0());
+					newCompositeNode(grammarAccess.getURLVersionRequirementAccess().getProtocolURL_PROTOCOLParserRuleCall_0_0());
 				}
 				lv_protocol_0_0=ruleURL_PROTOCOL
 				{
 					if ($current==null) {
-						$current = createModelElementForParent(grammarAccess.getURLVersionRule());
+						$current = createModelElementForParent(grammarAccess.getURLVersionRequirementRule());
 					}
 					set(
 						$current,
@@ -207,17 +207,17 @@ ruleURLVersion returns [EObject current=null]
 		)
 		otherlv_1='://'
 		{
-			newLeafNode(otherlv_1, grammarAccess.getURLVersionAccess().getColonSolidusSolidusKeyword_1());
+			newLeafNode(otherlv_1, grammarAccess.getURLVersionRequirementAccess().getColonSolidusSolidusKeyword_1());
 		}
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getURLVersionAccess().getUrlURLParserRuleCall_2_0());
+					newCompositeNode(grammarAccess.getURLVersionRequirementAccess().getUrlURLParserRuleCall_2_0());
 				}
 				lv_url_2_0=ruleURL
 				{
 					if ($current==null) {
-						$current = createModelElementForParent(grammarAccess.getURLVersionRule());
+						$current = createModelElementForParent(grammarAccess.getURLVersionRequirementRule());
 					}
 					set(
 						$current,
@@ -231,17 +231,17 @@ ruleURLVersion returns [EObject current=null]
 		(
 			otherlv_3='#'
 			{
-				newLeafNode(otherlv_3, grammarAccess.getURLVersionAccess().getNumberSignKeyword_3_0());
+				newLeafNode(otherlv_3, grammarAccess.getURLVersionRequirementAccess().getNumberSignKeyword_3_0());
 			}
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getURLVersionAccess().getVersionSpecifierURLVersionSpecifierParserRuleCall_3_1_0());
+						newCompositeNode(grammarAccess.getURLVersionRequirementAccess().getVersionSpecifierURLVersionSpecifierParserRuleCall_3_1_0());
 					}
 					lv_versionSpecifier_4_0=ruleURLVersionSpecifier
 					{
 						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getURLVersionRule());
+							$current = createModelElementForParent(grammarAccess.getURLVersionRequirementRule());
 						}
 						set(
 							$current,
@@ -381,15 +381,15 @@ ruleURLCommitISH returns [EObject current=null]
 	)
 ;
 
-// Entry rule entryRuleTagVersion
-entryRuleTagVersion returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getTagVersionRule()); }
-	iv_ruleTagVersion=ruleTagVersion
-	{ $current=$iv_ruleTagVersion.current; }
+// Entry rule entryRuleTagVersionRequirement
+entryRuleTagVersionRequirement returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getTagVersionRequirementRule()); }
+	iv_ruleTagVersionRequirement=ruleTagVersionRequirement
+	{ $current=$iv_ruleTagVersionRequirement.current; }
 	EOF;
 
-// Rule TagVersion
-ruleTagVersion returns [EObject current=null]
+// Rule TagVersionRequirement
+ruleTagVersionRequirement returns [EObject current=null]
 @init {
 	enterRule();
 }
@@ -399,12 +399,12 @@ ruleTagVersion returns [EObject current=null]
 	(
 		(
 			{
-				newCompositeNode(grammarAccess.getTagVersionAccess().getTagNameTAGParserRuleCall_0());
+				newCompositeNode(grammarAccess.getTagVersionRequirementAccess().getTagNameTAGParserRuleCall_0());
 			}
 			lv_tagName_0_0=ruleTAG
 			{
 				if ($current==null) {
-					$current = createModelElementForParent(grammarAccess.getTagVersionRule());
+					$current = createModelElementForParent(grammarAccess.getTagVersionRequirementRule());
 				}
 				set(
 					$current,
@@ -417,15 +417,15 @@ ruleTagVersion returns [EObject current=null]
 	)
 ;
 
-// Entry rule entryRuleGitHubVersion
-entryRuleGitHubVersion returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getGitHubVersionRule()); }
-	iv_ruleGitHubVersion=ruleGitHubVersion
-	{ $current=$iv_ruleGitHubVersion.current; }
+// Entry rule entryRuleGitHubVersionRequirement
+entryRuleGitHubVersionRequirement returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getGitHubVersionRequirementRule()); }
+	iv_ruleGitHubVersionRequirement=ruleGitHubVersionRequirement
+	{ $current=$iv_ruleGitHubVersionRequirement.current; }
 	EOF;
 
-// Rule GitHubVersion
-ruleGitHubVersion returns [EObject current=null]
+// Rule GitHubVersionRequirement
+ruleGitHubVersionRequirement returns [EObject current=null]
 @init {
 	enterRule();
 }
@@ -436,12 +436,12 @@ ruleGitHubVersion returns [EObject current=null]
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getGitHubVersionAccess().getGithubUrlURLParserRuleCall_0_0());
+					newCompositeNode(grammarAccess.getGitHubVersionRequirementAccess().getGithubUrlURLParserRuleCall_0_0());
 				}
 				lv_githubUrl_0_0=ruleURL
 				{
 					if ($current==null) {
-						$current = createModelElementForParent(grammarAccess.getGitHubVersionRule());
+						$current = createModelElementForParent(grammarAccess.getGitHubVersionRequirementRule());
 					}
 					set(
 						$current,
@@ -455,17 +455,17 @@ ruleGitHubVersion returns [EObject current=null]
 		(
 			otherlv_1='#'
 			{
-				newLeafNode(otherlv_1, grammarAccess.getGitHubVersionAccess().getNumberSignKeyword_1_0());
+				newLeafNode(otherlv_1, grammarAccess.getGitHubVersionRequirementAccess().getNumberSignKeyword_1_0());
 			}
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getGitHubVersionAccess().getCommitISHALPHA_NUMERIC_CHARSParserRuleCall_1_1_0());
+						newCompositeNode(grammarAccess.getGitHubVersionRequirementAccess().getCommitISHALPHA_NUMERIC_CHARSParserRuleCall_1_1_0());
 					}
 					lv_commitISH_2_0=ruleALPHA_NUMERIC_CHARS
 					{
 						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getGitHubVersionRule());
+							$current = createModelElementForParent(grammarAccess.getGitHubVersionRequirementRule());
 						}
 						set(
 							$current,
@@ -480,15 +480,15 @@ ruleGitHubVersion returns [EObject current=null]
 	)
 ;
 
-// Entry rule entryRuleLocalPathVersion
-entryRuleLocalPathVersion returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getLocalPathVersionRule()); }
-	iv_ruleLocalPathVersion=ruleLocalPathVersion
-	{ $current=$iv_ruleLocalPathVersion.current; }
+// Entry rule entryRuleLocalPathVersionRequirement
+entryRuleLocalPathVersionRequirement returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getLocalPathVersionRequirementRule()); }
+	iv_ruleLocalPathVersionRequirement=ruleLocalPathVersionRequirement
+	{ $current=$iv_ruleLocalPathVersionRequirement.current; }
 	EOF;
 
-// Rule LocalPathVersion
-ruleLocalPathVersion returns [EObject current=null]
+// Rule LocalPathVersionRequirement
+ruleLocalPathVersionRequirement returns [EObject current=null]
 @init {
 	enterRule();
 }
@@ -498,17 +498,17 @@ ruleLocalPathVersion returns [EObject current=null]
 	(
 		otherlv_0='file:'
 		{
-			newLeafNode(otherlv_0, grammarAccess.getLocalPathVersionAccess().getFileKeyword_0());
+			newLeafNode(otherlv_0, grammarAccess.getLocalPathVersionRequirementAccess().getFileKeyword_0());
 		}
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getLocalPathVersionAccess().getLocalPathPATHParserRuleCall_1_0());
+					newCompositeNode(grammarAccess.getLocalPathVersionRequirementAccess().getLocalPathPATHParserRuleCall_1_0());
 				}
 				lv_localPath_1_0=rulePATH
 				{
 					if ($current==null) {
-						$current = createModelElementForParent(grammarAccess.getLocalPathVersionRule());
+						$current = createModelElementForParent(grammarAccess.getLocalPathVersionRequirementRule());
 					}
 					set(
 						$current,
@@ -522,15 +522,15 @@ ruleLocalPathVersion returns [EObject current=null]
 	)
 ;
 
-// Entry rule entryRuleVersionRangeSet
-entryRuleVersionRangeSet returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getVersionRangeSetRule()); }
-	iv_ruleVersionRangeSet=ruleVersionRangeSet
-	{ $current=$iv_ruleVersionRangeSet.current; }
+// Entry rule entryRuleVersionRangeSetRequirement
+entryRuleVersionRangeSetRequirement returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getVersionRangeSetRequirementRule()); }
+	iv_ruleVersionRangeSetRequirement=ruleVersionRangeSetRequirement
+	{ $current=$iv_ruleVersionRangeSetRequirement.current; }
 	EOF;
 
-// Rule VersionRangeSet
-ruleVersionRangeSet returns [EObject current=null]
+// Rule VersionRangeSetRequirement
+ruleVersionRangeSetRequirement returns [EObject current=null]
 @init {
 	enterRule();
 }
@@ -544,7 +544,7 @@ ruleVersionRangeSet returns [EObject current=null]
 			}
 			{
 				$current = forceCreateModelElement(
-					grammarAccess.getVersionRangeSetAccess().getVersionRangeSetAction_0(),
+					grammarAccess.getVersionRangeSetRequirementAccess().getVersionRangeSetRequirementAction_0(),
 					$current);
 			}
 		)
@@ -552,12 +552,12 @@ ruleVersionRangeSet returns [EObject current=null]
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getVersionRangeSetAccess().getRangesVersionRangeParserRuleCall_1_0_0());
+						newCompositeNode(grammarAccess.getVersionRangeSetRequirementAccess().getRangesVersionRangeParserRuleCall_1_0_0());
 					}
 					lv_ranges_1_0=ruleVersionRange
 					{
 						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getVersionRangeSetRule());
+							$current = createModelElementForParent(grammarAccess.getVersionRangeSetRequirementRule());
 						}
 						add(
 							$current,
@@ -572,28 +572,28 @@ ruleVersionRangeSet returns [EObject current=null]
 				(
 					this_WS_2=RULE_WS
 					{
-						newLeafNode(this_WS_2, grammarAccess.getVersionRangeSetAccess().getWSTerminalRuleCall_1_1_0());
+						newLeafNode(this_WS_2, grammarAccess.getVersionRangeSetRequirementAccess().getWSTerminalRuleCall_1_1_0());
 					}
 				)*
 				otherlv_3='||'
 				{
-					newLeafNode(otherlv_3, grammarAccess.getVersionRangeSetAccess().getVerticalLineVerticalLineKeyword_1_1_1());
+					newLeafNode(otherlv_3, grammarAccess.getVersionRangeSetRequirementAccess().getVerticalLineVerticalLineKeyword_1_1_1());
 				}
 				(
 					this_WS_4=RULE_WS
 					{
-						newLeafNode(this_WS_4, grammarAccess.getVersionRangeSetAccess().getWSTerminalRuleCall_1_1_2());
+						newLeafNode(this_WS_4, grammarAccess.getVersionRangeSetRequirementAccess().getWSTerminalRuleCall_1_1_2());
 					}
 				)*
 				(
 					(
 						{
-							newCompositeNode(grammarAccess.getVersionRangeSetAccess().getRangesVersionRangeParserRuleCall_1_1_3_0());
+							newCompositeNode(grammarAccess.getVersionRangeSetRequirementAccess().getRangesVersionRangeParserRuleCall_1_1_3_0());
 						}
 						lv_ranges_5_0=ruleVersionRange
 						{
 							if ($current==null) {
-								$current = createModelElementForParent(grammarAccess.getVersionRangeSetRule());
+								$current = createModelElementForParent(grammarAccess.getVersionRangeSetRequirementRule());
 							}
 							add(
 								$current,
@@ -608,7 +608,7 @@ ruleVersionRangeSet returns [EObject current=null]
 			(
 				this_WS_6=RULE_WS
 				{
-					newLeafNode(this_WS_6, grammarAccess.getVersionRangeSetAccess().getWSTerminalRuleCall_1_2());
+					newLeafNode(this_WS_6, grammarAccess.getVersionRangeSetRequirementAccess().getWSTerminalRuleCall_1_2());
 				}
 			)*
 		)?

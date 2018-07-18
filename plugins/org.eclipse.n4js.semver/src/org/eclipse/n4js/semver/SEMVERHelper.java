@@ -3,12 +3,12 @@ package org.eclipse.n4js.semver;
 import java.io.StringReader;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.semver.SEMVER.NPMVersion;
+import org.eclipse.n4js.semver.SEMVER.NPMVersionRequirement;
 import org.eclipse.n4js.semver.SEMVER.SimpleVersion;
 import org.eclipse.n4js.semver.SEMVER.VersionNumber;
 import org.eclipse.n4js.semver.SEMVER.VersionRange;
 import org.eclipse.n4js.semver.SEMVER.VersionRangeConstraint;
-import org.eclipse.n4js.semver.SEMVER.VersionRangeSet;
+import org.eclipse.n4js.semver.SEMVER.VersionRangeSetRequirement;
 import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.parser.IParser;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
@@ -50,36 +50,36 @@ public class SEMVERHelper {
 		return parseResult;
 	}
 
-	/** @return {@link NPMVersion} of the given input string */
-	public NPMVersion parse(String semverString) {
+	/** @return {@link NPMVersionRequirement} of the given input string */
+	public NPMVersionRequirement parse(String semverString) {
 		IParseResult parseResult = getParseResult(semverString);
 		return parse(parseResult);
 	}
 
-	/** @return {@link NPMVersion} of the given parse result */
-	public NPMVersion parse(IParseResult parseResult) {
-		if (parseResult != null && parseResult.getRootASTElement() instanceof NPMVersion) {
-			NPMVersion npmVersion = (NPMVersion) parseResult.getRootASTElement();
+	/** @return {@link NPMVersionRequirement} of the given parse result */
+	public NPMVersionRequirement parse(IParseResult parseResult) {
+		if (parseResult != null && parseResult.getRootASTElement() instanceof NPMVersionRequirement) {
+			NPMVersionRequirement npmVersion = (NPMVersionRequirement) parseResult.getRootASTElement();
 			return npmVersion;
 		}
 		return null;
 	}
 
-	/** @return {@link VersionRangeSet} of the given input string */
-	public VersionRangeSet parseVersionRangeSet(String semverString) {
-		NPMVersion npmVersion = parse(semverString);
-		if (npmVersion instanceof VersionRangeSet) {
-			VersionRangeSet vrs = (VersionRangeSet) npmVersion;
+	/** @return {@link VersionRangeSetRequirement} of the given input string */
+	public VersionRangeSetRequirement parseVersionRangeSet(String semverString) {
+		NPMVersionRequirement npmVersion = parse(semverString);
+		if (npmVersion instanceof VersionRangeSetRequirement) {
+			VersionRangeSetRequirement vrs = (VersionRangeSetRequirement) npmVersion;
 			return vrs;
 		}
 		return null;
 	}
 
-	/** @return {@link VersionRangeSet} of the given {@link IParseResult} */
-	public VersionRangeSet parseVersionRangeSet(IParseResult semverParseResult) {
-		NPMVersion npmVersion = parse(semverParseResult);
-		if (npmVersion instanceof VersionRangeSet) {
-			VersionRangeSet vrs = (VersionRangeSet) npmVersion;
+	/** @return {@link VersionRangeSetRequirement} of the given {@link IParseResult} */
+	public VersionRangeSetRequirement parseVersionRangeSet(IParseResult semverParseResult) {
+		NPMVersionRequirement npmVersion = parse(semverParseResult);
+		if (npmVersion instanceof VersionRangeSetRequirement) {
+			VersionRangeSetRequirement vrs = (VersionRangeSetRequirement) npmVersion;
 			return vrs;
 		}
 		return null;
@@ -87,7 +87,7 @@ public class SEMVERHelper {
 
 	/** @return {@link VersionNumber} of the given {@link IParseResult} */
 	public VersionNumber parseVersionNumber(IParseResult semverParseResult) {
-		VersionRangeSet vrs = parseVersionRangeSet(semverParseResult);
+		VersionRangeSetRequirement vrs = parseVersionRangeSet(semverParseResult);
 		if (vrs == null) {
 			return null;
 		}
