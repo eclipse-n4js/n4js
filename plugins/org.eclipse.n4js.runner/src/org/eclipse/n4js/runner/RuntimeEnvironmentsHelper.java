@@ -179,8 +179,6 @@ public class RuntimeEnvironmentsHelper {
 			return;
 		}
 
-		System.out.println("Collecting required runtime libraries from " + project.getProjectId());
-
 		if (predicate.test(project))
 			collection.add(project);
 
