@@ -67,7 +67,7 @@ public class ManifestAwareResourceValidator extends N4JSResourceValidator {
 		Optional<? extends IN4JSSourceContainer> sourceContainerOpt = eclipseCore.findN4JSSourceContainer(uri);
 		if (sourceContainerOpt.isPresent()) {
 			IN4JSSourceContainer sourceContainer = sourceContainerOpt.get();
-			return !sourceContainer.isLibrary() && !sourceContainer.isExternal();
+			return !sourceContainer.isExternal();
 		}
 		return false;
 	}

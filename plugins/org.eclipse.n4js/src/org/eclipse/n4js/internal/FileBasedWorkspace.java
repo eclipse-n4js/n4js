@@ -28,7 +28,6 @@ import org.eclipse.emf.common.util.AbstractTreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectReference;
-import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.utils.ProjectDescriptionHelper;
 import org.eclipse.n4js.utils.URIUtils;
 
@@ -47,12 +46,8 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 
 	private final ProjectDescriptionHelper projectDescriptionHelper;
 
-	private final ClasspathPackageManager packageManager;
-
 	@Inject
-	public FileBasedWorkspace(ClasspathPackageManager packageManager,
-			ProjectDescriptionHelper projectDescriptionHelper) {
-		this.packageManager = packageManager;
+	public FileBasedWorkspace(ProjectDescriptionHelper projectDescriptionHelper) {
 		this.projectDescriptionHelper = projectDescriptionHelper;
 	}
 
@@ -124,44 +119,12 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 	@Override
 	public URI getLocation(URI unsafeLocation, ProjectReference projectReference,
 			N4JSSourceContainerType expectedN4JSSourceContainerType) {
-		URI projectURI = URIUtils.normalize(unsafeLocation);
 		String projectId = projectReference.getProjectId();
-		if (expectedN4JSSourceContainerType == N4JSSourceContainerType.ARCHIVE) {
-			LazyProjectDescriptionHandle baseHandle = projectElementHandles.get(projectURI);
-			if (baseHandle != null && !baseHandle.isArchive()) {
-				String archiveFileName = projectId + IN4JSArchive.NFAR_FILE_EXTENSION_WITH_DOT;
-				for (String libraryPath : baseHandle.resolve().getLibraryPaths()) {
-					URI archiveURI = projectURI.appendSegments(new String[] { libraryPath, archiveFileName });
-					if (projectElementHandles.containsKey(archiveURI)) {
-						return archiveURI;
-					}
-				}
-			} else {
-				String archiveFileName = projectId + IN4JSArchive.NFAR_FILE_EXTENSION_WITH_DOT;
-				for (URI location : projectElementHandles.keySet()) {
-					if (location.lastSegment().equals(archiveFileName)) {
-						LazyProjectDescriptionHandle lazyHandle = projectElementHandles.get(location);
-						if (lazyHandle != null) {
-							return lazyHandle.getLocation();
-						}
-					}
-				}
-			}
-			URI location = packageManager.getLocation(projectId);
-			if (location != null) {
-				if (projectElementHandles.containsKey(location)) {
-					return location;
-				}
-				projectElementHandles.put(location, createLazyDescriptionHandle(location, true));
-				return location;
-			}
-		} else {
-			for (URI location : projectElementHandles.keySet()) {
-				if (location.lastSegment().equals(projectId)) {
-					LazyProjectDescriptionHandle lazyHandle = projectElementHandles.get(location);
-					if (lazyHandle != null) {
-						return lazyHandle.getLocation();
-					}
+		for (URI location : projectElementHandles.keySet()) {
+			if (location.lastSegment().equals(projectId)) {
+				LazyProjectDescriptionHandle lazyHandle = projectElementHandles.get(location);
+				if (lazyHandle != null) {
+					return lazyHandle.getLocation();
 				}
 			}
 		}

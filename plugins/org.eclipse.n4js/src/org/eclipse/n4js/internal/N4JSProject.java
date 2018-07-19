@@ -33,7 +33,6 @@ import org.eclipse.n4js.n4mf.ModuleFilterType;
 import org.eclipse.n4js.n4mf.ModuleLoader;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectType;
-import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware;
@@ -132,14 +131,6 @@ public class N4JSProject implements IN4JSProject {
 	}
 
 	@Override
-	public ImmutableList<? extends IN4JSArchive> getLibraries() {
-		if (!exists()) {
-			return ImmutableList.of();
-		}
-		return model.getLibraries(this);
-	}
-
-	@Override
 	public ImmutableList<? extends IN4JSProject> getDependencies() {
 		if (!exists()) {
 			return ImmutableList.of();
@@ -182,7 +173,6 @@ public class N4JSProject implements IN4JSProject {
 		}
 		ImmutableList.Builder<IN4JSSourceContainerAware> result = ImmutableList.builder();
 		result.addAll(getDependencies());
-		result.addAll(getLibraries());
 		return result.build();
 	}
 
@@ -313,16 +303,6 @@ public class N4JSProject implements IN4JSProject {
 			return emptyList();
 		}
 		return pd.getModuleFilters();
-	}
-
-	@Override
-	public List<String> getLibraryFolders() {
-		ProjectDescription pd = model.getProjectDescription(getLocation());
-		if (pd == null) {
-			return emptyList();
-		} else {
-			return pd.getLibraryPaths();
-		}
 	}
 
 	@Override

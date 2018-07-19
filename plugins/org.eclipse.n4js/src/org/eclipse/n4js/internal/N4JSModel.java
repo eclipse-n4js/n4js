@@ -403,23 +403,18 @@ public class N4JSModel {
 	}
 
 	public Iterator<URI> iterator(IN4JSSourceContainer sourceContainer) {
-		if (sourceContainer.isLibrary()) {
-			return workspace.getArchiveIterator(sourceContainer.getLibrary().getLocation(),
-					sourceContainer.getRelativeLocation());
-		} else {
-			if (sourceContainer.getProject().isExternal() && Platform.isRunning()) {
-				// The `Platform.isRunning()` is not valid check for the OSGI headless compiler
-				// it may still be valid in some scenarios (maybe some test scenarios)
-				if (externalLibraryWorkspace instanceof HlcExternalLibraryWorkspace
-						&& workspace instanceof FileBasedWorkspace
-						&& workspace.findProjectWith(sourceContainer.getLocation()) != null) {
-					return workspace.getFolderIterator(sourceContainer.getLocation());
-				}
-
-				return externalLibraryWorkspace.getFolderIterator(sourceContainer.getLocation());
+		if (sourceContainer.getProject().isExternal() && Platform.isRunning()) {
+			// The `Platform.isRunning()` is not valid check for the OSGI headless compiler
+			// it may still be valid in some scenarios (maybe some test scenarios)
+			if (externalLibraryWorkspace instanceof HlcExternalLibraryWorkspace
+					&& workspace instanceof FileBasedWorkspace
+					&& workspace.findProjectWith(sourceContainer.getLocation()) != null) {
+				return workspace.getFolderIterator(sourceContainer.getLocation());
 			}
-			return workspace.getFolderIterator(sourceContainer.getLocation());
+
+			return externalLibraryWorkspace.getFolderIterator(sourceContainer.getLocation());
 		}
+		return workspace.getFolderIterator(sourceContainer.getLocation());
 	}
 
 	/**
@@ -429,16 +424,13 @@ public class N4JSModel {
 		final String ext = fileExtension.or("").trim();
 		final String extWithDot = !ext.isEmpty() && !ext.startsWith(".") ? "." + ext : ext;
 		final String pathStr = name.toString("/") + extWithDot; // no need for IQualifiedNameConverter here!
-		if (sourceContainer.isLibrary()) {
-			return null; // TODO support for finding artifacts in libraries
-		} else {
-			URI artifactLocation = workspace.findArtifactInFolder(sourceContainer.getLocation(), pathStr);
-			if (null == artifactLocation) {
-				artifactLocation = externalLibraryWorkspace.findArtifactInFolder(sourceContainer.getLocation(),
-						pathStr);
-			}
-			return artifactLocation;
+
+		URI artifactLocation = workspace.findArtifactInFolder(sourceContainer.getLocation(), pathStr);
+		if (null == artifactLocation) {
+			artifactLocation = externalLibraryWorkspace.findArtifactInFolder(sourceContainer.getLocation(),
+					pathStr);
 		}
+		return artifactLocation;
 	}
 
 	public Optional<String> getExtendedRuntimeEnvironmentName(URI location) {

@@ -13,15 +13,13 @@ package org.eclipse.n4js.internal;
 import java.util.Iterator;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.ArchiveURIUtil;
+import org.eclipse.n4js.n4mf.SourceContainerType;
+import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.xtext.naming.QualifiedName;
 
 import com.google.common.base.Optional;
-
-import org.eclipse.n4js.ArchiveURIUtil;
-import org.eclipse.n4js.projectModel.IN4JSArchive;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
-import org.eclipse.n4js.n4mf.SourceContainerType;
 
 /**
  */
@@ -38,16 +36,6 @@ public class N4JSArchiveSourceContainer extends AbstractSourceContainer implemen
 	@Override
 	public IN4JSProject getProject() {
 		return archive.getProject();
-	}
-
-	@Override
-	public IN4JSArchive getLibrary() {
-		return archive;
-	}
-
-	@Override
-	public boolean isLibrary() {
-		return true;
 	}
 
 	@Override

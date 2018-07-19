@@ -98,13 +98,8 @@ public class N4JSProjectsStateHelper extends AbstractStorage2UriMapperClient {
 		List<String> result = Lists.newArrayList();
 		if (containerOpt.isPresent()) {
 			IN4JSSourceContainer container = containerOpt.get();
-			if (container.isLibrary()) {
-				IN4JSArchive archive = container.getLibrary();
-				fullCollectLocationHandles(result, archive);
-			} else {
-				IN4JSProject project = container.getProject();
-				fullCollectLocationHandles(result, project);
-			}
+			IN4JSProject project = container.getProject();
+			fullCollectLocationHandles(result, project);
 			return result;
 		}
 		return Collections.emptyList();
@@ -114,9 +109,6 @@ public class N4JSProjectsStateHelper extends AbstractStorage2UriMapperClient {
 		collectLocationHandles(project, result);
 
 		for (IN4JSProject dependency : project.getDependencies()) {
-			collectLocationHandles(dependency, result);
-		}
-		for (IN4JSArchive dependency : project.getLibraries()) {
 			collectLocationHandles(dependency, result);
 		}
 	}

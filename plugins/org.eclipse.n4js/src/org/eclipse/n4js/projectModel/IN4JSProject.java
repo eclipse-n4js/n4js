@@ -64,21 +64,8 @@ public interface IN4JSProject extends IN4JSSourceContainerAware {
 	boolean exists();
 
 	/**
-	 * The configured libraries on the search path, empty if the project does not exist.
-	 *
-	 * The project's manifest may declare dependencies that either resolve to archives or other projects.
-	 *
-	 * @see #getDependencies()
-	 */
-	ImmutableList<? extends IN4JSArchive> getLibraries();
-
-	/**
 	 * The configured projects on the search path (including runtime environment and libraries), empty if the project
 	 * does not exist.
-	 *
-	 * The project's manifest may declare dependencies that either resolve to archives or other projects.
-	 *
-	 * @see #getLibraries()
 	 */
 	ImmutableList<? extends IN4JSProject> getDependencies();
 
@@ -154,11 +141,6 @@ public interface IN4JSProject extends IN4JSSourceContainerAware {
 	 * returns the no-module-wrapping module filter
 	 */
 	ModuleFilter getNoModuleWrappingFilter();
-
-	/**
-	 * returns the project relative paths to the library folders
-	 */
-	List<String> getLibraryFolders();
 
 	/**
 	 * returns the module specifier of this project's main module or <code>null</code> if not given in manifest.

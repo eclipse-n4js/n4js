@@ -54,8 +54,7 @@ public class RunnerN4JSCore {
 	public Iterable<IN4JSProject> getAllShippedProjects() {
 
 		final RunnerTargetPlatformInstallLocationProvider locationProvider = new RunnerTargetPlatformInstallLocationProvider();
-		final RunnerClasspathPackageManager manager = new RunnerClasspathPackageManager();
-		final FileBasedWorkspace workspace = new FileBasedWorkspace(manager, projectDescriptionHelper);
+		final FileBasedWorkspace workspace = new FileBasedWorkspace(projectDescriptionHelper);
 		final N4JSModel model = new N4JSModel(workspace, locationProvider);
 
 		ShippedCodeAccess.getAllShippedPaths().forEach(path -> discoverProjects(path, workspace));
