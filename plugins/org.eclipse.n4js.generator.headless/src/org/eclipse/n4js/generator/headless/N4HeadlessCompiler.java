@@ -74,8 +74,8 @@ import com.google.inject.Provider;
  * Entry for headless compilation.
  *
  * This class has three ways of operation which all map down to a single algorithm implemented in
- * {@link #compile(BuildSet, IssueAcceptor)}. All other compileXXXX methods call this algorithm providing the
- * correct content of the arguments.
+ * {@link #compile(BuildSet, IssueAcceptor)}. All other compileXXXX methods call this algorithm providing the correct
+ * content of the arguments.
  *
  * Use {@link BuildSetComputer} to compute {@link BuildSet}s of files/projects to compile.
  *
@@ -140,6 +140,8 @@ public class N4HeadlessCompiler {
 	/**
 	 * Compile the given {@link BuildSet}.
 	 *
+	 * Delegates to {@link #compile(BuildSet, IssueAcceptor)}.
+	 *
 	 * @param buildSet
 	 *            the build set to compile
 	 * @throws N4JSCompileException
@@ -150,8 +152,10 @@ public class N4HeadlessCompiler {
 	}
 
 	/**
-	 * Compile the given {@link BuildSet}. This method controls the actual build process. All other
-	 * <code>compile*</code> methods are just convenience overloads that delegate to this method.
+	 * Compile the given {@link BuildSet}. This method controls the actual build process.
+	 *
+	 * If any of the project in the given {@link BuildSet} is not registered with the {@link FileBasedWorkspace}, this
+	 * method will register them before the actual compilation is performed.
 	 *
 	 * @param buildSet
 	 *            the build set to compile
@@ -164,12 +168,16 @@ public class N4HeadlessCompiler {
 		Set<N4JSProject> allProjects = buildSet.getAllProjects();
 		Set<N4JSProject> requestedProjects = buildSet.requestedProjects;
 		Predicate<URI> singleSourceFilter = buildSet.resourceFilter;
-	
+
+		// make sure all to-be-compiled projects are registered with the workspace
+		// if a project had been registered before, it will be skipped by this registration method
+		headlessHelper.registerProjects(buildSet, n4jsFileBasedWorkspace);
+
 		configureResourceSetContainerState(allProjects);
-	
+
 		final List<MarkedProject> buildOrder = computeBuildOrder(allProjects, requestedProjects);
 		printBuildOrder(buildOrder);
-	
+
 		processProjects(buildOrder, singleSourceFilter, issueAcceptor);
 	}
 
@@ -221,8 +229,6 @@ public class N4HeadlessCompiler {
 		List<URI> projectURIs = headlessHelper.createFileURIs(absProjectPaths);
 		return projectURIs;
 	}
-
-	
 
 	/*
 	 * ===============================================================================================================
