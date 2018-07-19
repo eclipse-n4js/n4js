@@ -52,7 +52,7 @@ public class RepoRelativePath {
 		String uriFileString = uri.toString();
 		String uriProjString = project.getLocation().toString();
 		String fileRelString = uriFileString.substring(uriProjString.length());
-		// strip anchor part, i.e. path to type with in the resource
+		// strip anchor part if present, i.e. path to type within the resource
 		int anchorIndex = fileRelString.indexOf("#");
 		if (anchorIndex >= 0)
 			fileRelString = fileRelString.substring(0, anchorIndex);
