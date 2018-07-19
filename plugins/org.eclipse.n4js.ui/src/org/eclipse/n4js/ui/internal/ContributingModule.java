@@ -210,6 +210,14 @@ public class ContributingModule implements Module {
 		binder.bind(NpmrcBinary.class);
 
 		binder.bind(SEMVERHelper.class);
+		// binder.bind(SemverResourceValidator.class);
+		// binder.bind(Diagnostician.class);
+		// binder.bind(IDiagnosticConverter.class);
+		// // binder.bind(OperationCanceledManager.class);
+		// binder.bind(OperationCanceledManager.class).toProvider(() -> {
+		// return N4JSActivator.getInstance().getInjector(N4JSActivator.ORG_ECLIPSE_N4JS_N4JS)
+		// .getInstance(OperationCanceledManager.class);
+		// });
 
 		binder.bind(TypesKeywordProvider.class);
 		binder.bind(ExternalLibraryErrorMarkerManager.class);

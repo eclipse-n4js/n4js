@@ -68,6 +68,8 @@ import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.validation.helper.FolderContainmentHelper;
+import org.eclipse.xtext.nodemodel.ICompositeNode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.Issue;
@@ -204,13 +206,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 			return;
 		}
 
-		List<Issue> issues = semverHelper.validate(versionValue.eResource(), parseResult);
-		if (!issues.isEmpty()) {
-			String reason = issues.iterator().next().getMessage();
-			String msg = IssueCodes.getMessageForPKGJ_INVALID_VERSION_NUMBER(versionString, reason);
-			addIssue(msg, versionValue, IssueCodes.PKGJ_INVALID_VERSION_NUMBER);
-			return;
-		}
+		validateSEMVER(versionValue, parseResult);
 
 		NPMVersionRequirement npmVersion = semverHelper.parse(parseResult);
 		VersionRangeSetRequirement vrs = semverHelper.parseVersionRangeSet(parseResult);
@@ -233,6 +229,31 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 			String msg = IssueCodes.getMessageForPKGJ_INVALID_VERSION_NUMBER(versionString, reason);
 			addIssue(msg, versionValue, IssueCodes.PKGJ_INVALID_VERSION_NUMBER);
 			return;
+		}
+	}
+
+	private void validateSEMVER(JSONValue versionValue, IParseResult parseResult) {
+		List<Issue> issues = semverHelper.validate(versionValue.eResource(), parseResult);
+		for (Issue issue : issues) {
+			String msg = "";
+			String issueCode = IssueCodes.PKGJ_INVALID_VERSION_NUMBER;
+			switch (issue.getSeverity()) {
+			case WARNING:
+				msg = IssueCodes.getMessageForPKGJ_SEMVER_WARNING(issue.getMessage());
+				issueCode = IssueCodes.PKGJ_SEMVER_WARNING;
+				break;
+			case ERROR:
+				msg = IssueCodes.getMessageForPKGJ_SEMVER_ERROR(issue.getMessage());
+				issueCode = IssueCodes.PKGJ_SEMVER_ERROR;
+				break;
+			default:
+				break;
+			}
+
+			ICompositeNode actualNode = NodeModelUtils.findActualNodeFor(versionValue);
+			int offset = actualNode.getOffset() + issue.getOffset() + 1;
+			int length = issue.getLength();
+			addIssue(msg, versionValue, offset, length, issueCode);
 		}
 	}
 
@@ -294,13 +315,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 			return;
 		}
 
-		List<Issue> issues = semverHelper.validate(jsonStringVersionRequirement.eResource(), semverParseResult);
-		if (!issues.isEmpty()) {
-			String reason = issues.iterator().next().getMessage();
-			String msg = IssueCodes.getMessageForPKGJ_INVALID_VERSION_REQUIREMENT(constraintValue, reason);
-			addIssue(msg, jsonStringVersionRequirement, IssueCodes.PKGJ_INVALID_VERSION_REQUIREMENT);
-			return;
-		}
+		validateSEMVER(jsonStringVersionRequirement, semverParseResult);
 	}
 
 	/** Checks basic structural properties of the 'n4js' section (e.g. mandatory properties). */

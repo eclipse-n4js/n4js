@@ -5,7 +5,10 @@ package org.eclipse.n4js.semver;
  */
 public class SEMVERGlobals {
 
-	/** The JSON file extension. */
+	/** The SEMVER language name. */
+	public static final String LANGUAGE_NAME = "org.eclipse.n4js.semver.SEMVER";
+
+	/** The SEMVER file extension. */
 	public static final String FILE_EXTENSION = "semver";
 
 	private SEMVERGlobals() {

@@ -38,7 +38,9 @@
 	},
 	"dependencies": {
 		"XYZ": "1a.2.3",
-		// XPECT errors --> "Invalid version number "1.2.3.4": Given string is parsed as github location." at ""1.2.3.4""
-		"XYZ": "1.2.3.4"
+		// XPECT errors --> "Only zero or one comparator allowed." at """
+		"XYZ": "< > 1.2.3",
+		// XPECT errors --> "Too many version parts. Semantic versions consist only of major, minor and patch." at "."
+		"XYZ": "1.2.3.45"
 	}
 }

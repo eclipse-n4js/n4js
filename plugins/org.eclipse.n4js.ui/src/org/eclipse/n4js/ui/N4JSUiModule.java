@@ -37,6 +37,7 @@ import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
+import org.eclipse.n4js.semver.SEMVERHelper;
 import org.eclipse.n4js.ts.findReferences.TargetURIKey;
 import org.eclipse.n4js.ts.ui.search.BuiltinSchemeAwareTargetURIKey;
 import org.eclipse.n4js.ts.validation.TypesKeywordProvider;
@@ -217,6 +218,11 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	/** Delegate to shared injector */
 	public Provider<ExternalLibraryWorkspace> provideExternalLibraryWorkspace() {
 		return Access.contributedProvider(ExternalLibraryWorkspace.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<SEMVERHelper> provideSEMVERHelper() {
+		return Access.contributedProvider(SEMVERHelper.class);
 	}
 
 	/** Delegate to shared injector */

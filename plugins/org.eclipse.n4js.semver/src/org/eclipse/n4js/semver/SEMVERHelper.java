@@ -19,11 +19,8 @@ import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.Issue;
 
-import com.google.inject.Inject;
-
 /** Helper class to parse SEMVER strings and create instances of the SEMVER language */
 public class SEMVERHelper {
-	@Inject
 	private SemverResourceValidator validator;
 	private IParser semverParser;
 
@@ -33,6 +30,15 @@ public class SEMVERHelper {
 			semverParser = N4LanguageUtils.getServiceForContext(SEMVERGlobals.FILE_EXTENSION, IParser.class).get();
 		}
 		return semverParser;
+	}
+
+	/** @return validator to validate SEMVER strings */
+	public SemverResourceValidator getSEMVERValidator() {
+		if (validator == null) {
+			validator = N4LanguageUtils
+					.getServiceForContext(SEMVERGlobals.FILE_EXTENSION, SemverResourceValidator.class).get();
+		}
+		return validator;
 	}
 
 	/** @return {@link IParseResult} of the given input string */
@@ -103,16 +109,23 @@ public class SEMVERHelper {
 		return parseVersionNumber(semverParseResult);
 	}
 
+	/**
+	 * Validates the given {@link IParseResult}
+	 *
+	 * @param resource
+	 *            A {@link Resource} that can be detached from the {@link IParseResult}
+	 * @param semverParseResult
+	 *            A {@link IParseResult} of a SEMVER string
+	 * @return A list of validation issues
+	 */
 	public List<Issue> validate(Resource resource, IParseResult semverParseResult) {
-		// if (validator == null) {
-		// validator = N4LanguageUtils.getServiceForContext(SEMVERGlobals.FILE_EXTENSION, IResourceValidator.class)
-		// .get();
-		// }
 		EObject rootASTElement = semverParseResult.getRootASTElement();
 		if (rootASTElement == null) {
 			return Collections.emptyList();
 		}
-		List<Issue> issues = validator.validate(resource, rootASTElement, CheckMode.ALL, CancelIndicator.NullImpl);
+
+		SemverResourceValidator validat0r = getSEMVERValidator();
+		List<Issue> issues = validat0r.validate(resource, rootASTElement, CheckMode.ALL, CancelIndicator.NullImpl);
 		return issues;
 	}
 
