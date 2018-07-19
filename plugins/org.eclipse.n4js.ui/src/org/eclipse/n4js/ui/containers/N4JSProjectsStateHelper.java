@@ -68,8 +68,8 @@ public class N4JSProjectsStateHelper extends AbstractStorage2UriMapperClient {
 
 	public List<String> initVisibleHandles(String handle) {
 		if (handle.startsWith(PROJECT_CONTAINER_PREFIX)) {
-			// similar to source-container-prefix but we are only interested in the project and
-			// don't have an actual file of the source-locations.
+			// similar to source-container-prefix but we are only interested in the project and don't have an actual
+			// file of the source-locations.
 			URI uri = URI.createURI(handle.substring(PROJECT_CONTAINER_PREFIX.length()));
 
 			List<String> result = Lists.newArrayList();

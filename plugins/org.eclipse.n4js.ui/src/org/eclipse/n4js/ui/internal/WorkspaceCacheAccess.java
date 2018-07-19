@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.ui.internal;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.common.util.URI;
 
@@ -35,13 +34,6 @@ public class WorkspaceCacheAccess {
 	 */
 	public void discardEntries() {
 		workspace.discardEntries();
-	}
-
-	/**
-	 * Allows to remove an entry from the workspace cache.
-	 */
-	public void discardEntry(IFile archiveFile) {
-		workspace.discardEntry(URI.createPlatformResourceURI(archiveFile.getFullPath().toString(), true));
 	}
 
 }
