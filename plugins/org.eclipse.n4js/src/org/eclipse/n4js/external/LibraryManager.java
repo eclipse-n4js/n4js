@@ -309,7 +309,7 @@ public class LibraryManager {
 			String name = pDep.getProjectId();
 			String version = NO_VERSION;
 			if (pDep.getVersionConstraint() != null) {
-				version = SEMVERSerializer.toString(pDep.getVersionConstraint());
+				version = SEMVERSerializer.serialize(pDep.getVersionConstraint());
 			}
 			dependencies.put(name, version);
 		}

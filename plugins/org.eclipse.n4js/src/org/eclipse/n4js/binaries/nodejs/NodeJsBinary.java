@@ -65,7 +65,7 @@ public class NodeJsBinary implements Binary {
 		return "Configuration of the folder location of the Node.js\u00AE executable "
 				+ "can be provided here. If not given, then the '" + getDefaultNodePath()
 				+ "' location will be used as the default location. The required minimum version for Node.js is '"
-				+ SEMVERSerializer.toString(getMinimumVersion()) + "'.";
+				+ SEMVERSerializer.serialize(getMinimumVersion()) + "'.";
 	}
 
 	@Override

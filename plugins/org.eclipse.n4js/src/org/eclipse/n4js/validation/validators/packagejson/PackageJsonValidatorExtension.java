@@ -70,6 +70,7 @@ import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.validation.helper.FolderContainmentHelper;
 import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.validation.Check;
+import org.eclipse.xtext.validation.Issue;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.HashMultimap;
@@ -203,6 +204,14 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 			return;
 		}
 
+		List<Issue> issues = semverHelper.validate(versionValue.eResource(), parseResult);
+		if (!issues.isEmpty()) {
+			String reason = issues.iterator().next().getMessage();
+			String msg = IssueCodes.getMessageForPKGJ_INVALID_VERSION_NUMBER(versionString, reason);
+			addIssue(msg, versionValue, IssueCodes.PKGJ_INVALID_VERSION_NUMBER);
+			return;
+		}
+
 		NPMVersionRequirement npmVersion = semverHelper.parse(parseResult);
 		VersionRangeSetRequirement vrs = semverHelper.parseVersionRangeSet(parseResult);
 		VersionNumber vn = semverHelper.parseVersionNumber(parseResult);
@@ -219,7 +228,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		VersionRangeConstraint vrc = (VersionRangeConstraint) vrs.getRanges().get(0);
 		SimpleVersion simpleVersion = vrc.getVersionConstraints().get(0);
 		if (!simpleVersion.getComparators().isEmpty()) {
-			String comparator = SEMVERSerializer.toString(simpleVersion.getComparators().get(0));
+			String comparator = SEMVERSerializer.serialize(simpleVersion.getComparators().get(0));
 			String reason = "Version number must not have the comparator '" + comparator + "'";
 			String msg = IssueCodes.getMessageForPKGJ_INVALID_VERSION_NUMBER(versionString, reason);
 			addIssue(msg, versionValue, IssueCodes.PKGJ_INVALID_VERSION_NUMBER);
@@ -265,15 +274,32 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		}
 		final JSONObject dependenciesObject = (JSONObject) sectionValue;
 		for (NameValuePair entry : dependenciesObject.getNameValuePairs()) {
-			// check version
-			if (checkIsType(entry.getValue(), JSONPackage.Literals.JSON_STRING_LITERAL, "as version specifier")) {
-				final String constraintValue = ((JSONStringLiteral) entry.getValue()).getValue();
-				final NPMVersionRequirement parsedNPMVersion = semverHelper.parse(constraintValue);
-				if (parsedNPMVersion == null) {
-					addIssue(IssueCodes.getMessageForPKGJ_INVALID_VERSION_CONSTRAINT(constraintValue),
-							entry.getValue(), IssueCodes.PKGJ_INVALID_VERSION_CONSTRAINT);
-				}
+			final JSONValue versionRequirement = entry.getValue();
+			if (checkIsType(versionRequirement, JSONPackage.Literals.JSON_STRING_LITERAL, "as version specifier")) {
+				checkIsDependencyVersionRequirement((JSONStringLiteral) versionRequirement);
 			}
+		}
+	}
+
+	/**
+	 */
+	private void checkIsDependencyVersionRequirement(JSONStringLiteral jsonStringVersionRequirement) {
+		final String constraintValue = jsonStringVersionRequirement.getValue();
+		final IParseResult semverParseResult = semverHelper.getParseResult(constraintValue);
+		final NPMVersionRequirement parsedNPMVersion = semverHelper.parse(semverParseResult);
+		if (parsedNPMVersion == null) {
+			String reason = "Cannot parse given string";
+			String msg = IssueCodes.getMessageForPKGJ_INVALID_VERSION_REQUIREMENT(constraintValue, reason);
+			addIssue(msg, jsonStringVersionRequirement, IssueCodes.PKGJ_INVALID_VERSION_REQUIREMENT);
+			return;
+		}
+
+		List<Issue> issues = semverHelper.validate(jsonStringVersionRequirement.eResource(), semverParseResult);
+		if (!issues.isEmpty()) {
+			String reason = issues.iterator().next().getMessage();
+			String msg = IssueCodes.getMessageForPKGJ_INVALID_VERSION_REQUIREMENT(constraintValue, reason);
+			addIssue(msg, jsonStringVersionRequirement, IssueCodes.PKGJ_INVALID_VERSION_REQUIREMENT);
+			return;
 		}
 	}
 

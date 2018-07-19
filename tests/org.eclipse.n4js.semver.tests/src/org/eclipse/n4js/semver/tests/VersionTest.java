@@ -164,8 +164,8 @@ public class VersionTest {
 	}
 
 	private void assertEquals(VersionNumber actual, VersionNumber expected) {
-		String msg = "Expected '" + SEMVERSerializer.toString(expected);
-		msg += "'. Was: '" + SEMVERSerializer.toString(actual) + "' instead.";
+		String msg = "Expected '" + SEMVERSerializer.serialize(expected);
+		msg += "'. Was: '" + SEMVERSerializer.serialize(actual) + "' instead.";
 		Assert.assertEquals(msg, expected, actual);
 	}
 

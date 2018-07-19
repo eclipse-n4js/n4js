@@ -56,7 +56,7 @@ public abstract class SEMVERtoStringableImpl extends MinimalEObjectImpl.Containe
 	 * @generated
 	 */
 	public String toString() {
-		return SEMVERSerializer.toString(this);
+		return SEMVERSerializer.serialize(this);
 	}
 
 	/**

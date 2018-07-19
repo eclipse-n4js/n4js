@@ -1130,8 +1130,8 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 
 			val availableVersionMatches = SEMVERMatcher.matches(availableVersion, desiredVersion);
 			if (!availableVersionMatches) {
-				val desiredStr = SEMVERSerializer.toString(desiredVersion);
-				val availableStr = SEMVERSerializer.toString(availableVersion);
+				val desiredStr = SEMVERSerializer.serialize(desiredVersion);
+				val availableStr = SEMVERSerializer.serialize(availableVersion);
 				addVersionMismatchIssue(ref.astRepresentation, id, desiredStr, availableStr);
 			}
 		}

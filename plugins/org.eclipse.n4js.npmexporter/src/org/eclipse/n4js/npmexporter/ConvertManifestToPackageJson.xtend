@@ -29,7 +29,7 @@ class ConvertManifestToPackageJson {
 //	TODO	val pDescription = project.projectName  /
 		data.name = project.projectId;
 		// TODO data.author = // map to project.vendorId ??
-		data.version = SEMVERSerializer.toString(project.getVersion());
+		data.version = SEMVERSerializer.serialize(project.getVersion());
 		val depIn4jsprojects = project.getDependencies; // TODO includes requiered RT-Libs, OK?
 
 		data.dependencies = newLinkedHashMap();

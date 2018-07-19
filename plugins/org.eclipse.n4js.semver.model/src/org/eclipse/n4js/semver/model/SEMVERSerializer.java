@@ -9,14 +9,17 @@ import org.eclipse.n4js.semver.SEMVER.HyphenVersionRange;
 import org.eclipse.n4js.semver.SEMVER.LocalPathVersionRequirement;
 import org.eclipse.n4js.semver.SEMVER.Qualifier;
 import org.eclipse.n4js.semver.SEMVER.QualifierTag;
+import org.eclipse.n4js.semver.SEMVER.SEMVERtoStringable;
 import org.eclipse.n4js.semver.SEMVER.SimpleVersion;
 import org.eclipse.n4js.semver.SEMVER.TagVersionRequirement;
 import org.eclipse.n4js.semver.SEMVER.URLCommitISH;
 import org.eclipse.n4js.semver.SEMVER.URLSemver;
 import org.eclipse.n4js.semver.SEMVER.URLVersionRequirement;
+import org.eclipse.n4js.semver.SEMVER.URLVersionSpecifier;
 import org.eclipse.n4js.semver.SEMVER.VersionComparator;
 import org.eclipse.n4js.semver.SEMVER.VersionNumber;
 import org.eclipse.n4js.semver.SEMVER.VersionPart;
+import org.eclipse.n4js.semver.SEMVER.VersionRange;
 import org.eclipse.n4js.semver.SEMVER.VersionRangeConstraint;
 import org.eclipse.n4js.semver.SEMVER.VersionRangeSetRequirement;
 import org.eclipse.xtext.resource.SaveOptions;
@@ -27,18 +30,8 @@ import org.eclipse.xtext.util.Strings;
 /** Serializes SEMVER elements */
 public class SEMVERSerializer implements ISerializer {
 
-	/** Serializes the given {@link EObject} */
-	static public String toString(EObject eobj) {
-		return new SEMVERSerializer().serialize(eobj);
-	}
-
-	/** Serializes the given {@link VersionComparator} */
-	static public String toString(VersionComparator vc) {
-		return new SEMVERSerializer().serialize(vc);
-	}
-
 	/** @return string representation of {@link URLVersionRequirement} */
-	public String serialize(URLVersionRequirement urlv) {
+	static public String serialize(URLVersionRequirement urlv) {
 		if (urlv == null)
 			return "";
 
@@ -52,7 +45,17 @@ public class SEMVERSerializer implements ISerializer {
 	}
 
 	/** @return string representation of {@link URLSemver} */
-	public String serialize(URLSemver urls) {
+	static public String serialize(URLVersionSpecifier urlvs) {
+		if (urlvs instanceof URLCommitISH)
+			return serialize((URLCommitISH) urlvs);
+		if (urlvs instanceof URLSemver)
+			return serialize((URLSemver) urlvs);
+
+		return "";
+	}
+
+	/** @return string representation of {@link URLSemver} */
+	static public String serialize(URLSemver urls) {
 		if (urls == null)
 			return "";
 
@@ -60,7 +63,7 @@ public class SEMVERSerializer implements ISerializer {
 	}
 
 	/** @return string representation of {@link URLCommitISH} */
-	public String serialize(URLCommitISH urlc) {
+	static public String serialize(URLCommitISH urlc) {
 		if (urlc == null)
 			return "";
 
@@ -68,7 +71,7 @@ public class SEMVERSerializer implements ISerializer {
 	}
 
 	/** @return string representation of {@link TagVersionRequirement} */
-	public String serialize(TagVersionRequirement tv) {
+	static public String serialize(TagVersionRequirement tv) {
 		if (tv == null)
 			return "";
 
@@ -76,7 +79,7 @@ public class SEMVERSerializer implements ISerializer {
 	}
 
 	/** @return string representation of {@link GitHubVersionRequirement} */
-	public String serialize(GitHubVersionRequirement ghv) {
+	static public String serialize(GitHubVersionRequirement ghv) {
 		if (ghv == null)
 			return "";
 
@@ -87,7 +90,7 @@ public class SEMVERSerializer implements ISerializer {
 	}
 
 	/** @return string representation of {@link LocalPathVersionRequirement} */
-	public String serialize(LocalPathVersionRequirement lpv) {
+	static public String serialize(LocalPathVersionRequirement lpv) {
 		if (lpv == null)
 			return "";
 
@@ -95,7 +98,7 @@ public class SEMVERSerializer implements ISerializer {
 	}
 
 	/** @return string representation of {@link VersionRangeSetRequirement} */
-	public String serialize(VersionRangeSetRequirement vrs) {
+	static public String serialize(VersionRangeSetRequirement vrs) {
 		if (vrs == null)
 			return "";
 
@@ -110,7 +113,17 @@ public class SEMVERSerializer implements ISerializer {
 	}
 
 	/** @return string representation of {@link HyphenVersionRange} */
-	public String serialize(HyphenVersionRange hvr) {
+	static public String serialize(VersionRange vr) {
+		if (vr instanceof HyphenVersionRange)
+			return serialize((HyphenVersionRange) vr);
+		if (vr instanceof VersionRangeConstraint)
+			return serialize((VersionRangeConstraint) vr);
+
+		return "";
+	}
+
+	/** @return string representation of {@link HyphenVersionRange} */
+	static public String serialize(HyphenVersionRange hvr) {
 		if (hvr == null)
 			return "";
 
@@ -119,7 +132,7 @@ public class SEMVERSerializer implements ISerializer {
 	}
 
 	/** @return string representation of {@link VersionRangeConstraint} */
-	public String serialize(VersionRangeConstraint vrc) {
+	static public String serialize(VersionRangeConstraint vrc) {
 		if (vrc == null)
 			return "";
 
@@ -134,7 +147,7 @@ public class SEMVERSerializer implements ISerializer {
 	}
 
 	/** @return string representation of {@link SimpleVersion} */
-	public String serialize(SimpleVersion sv) {
+	static public String serialize(SimpleVersion sv) {
 		if (sv == null)
 			return "";
 
@@ -147,7 +160,7 @@ public class SEMVERSerializer implements ISerializer {
 	}
 
 	/** @return string representation of {@link VersionNumber} */
-	public String serialize(VersionNumber vn) {
+	static public String serialize(VersionNumber vn) {
 		if (vn == null)
 			return "";
 
@@ -165,7 +178,7 @@ public class SEMVERSerializer implements ISerializer {
 	}
 
 	/** @return string representation of {@link VersionPart} */
-	public String serialize(VersionPart vp) {
+	static public String serialize(VersionPart vp) {
 		if (vp == null)
 			return "";
 
@@ -179,7 +192,7 @@ public class SEMVERSerializer implements ISerializer {
 	}
 
 	/** @return string representation of {@link Qualifier} */
-	public String serialize(Qualifier q) {
+	static public String serialize(Qualifier q) {
 		if (q == null)
 			return "";
 
@@ -192,7 +205,7 @@ public class SEMVERSerializer implements ISerializer {
 	}
 
 	/** @return string representation of {@link QualifierTag} */
-	public String serialize(QualifierTag qt) {
+	static public String serialize(QualifierTag qt) {
 		if (qt == null)
 			return "";
 
@@ -201,7 +214,7 @@ public class SEMVERSerializer implements ISerializer {
 	}
 
 	/** @return string representation of {@link VersionComparator} */
-	public String serialize(VersionComparator vc) {
+	static public String serialize(VersionComparator vc) {
 		switch (vc) {
 		case VERSION:
 			return "v";
@@ -223,8 +236,8 @@ public class SEMVERSerializer implements ISerializer {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public String serialize(EObject obj) {
+	/** @return string representation of {@link SEMVERtoStringable} */
+	static public String serialize(SEMVERtoStringable obj) {
 		if (obj == null)
 			return "";
 
@@ -271,6 +284,14 @@ public class SEMVERSerializer implements ISerializer {
 			return serialize((QualifierTag) obj);
 		}
 		throw new UnsupportedOperationException("No serialize method found for type " + obj.getClass().getSimpleName());
+	}
+
+	@Override
+	public String serialize(EObject obj) {
+		if (obj instanceof SEMVERtoStringable) {
+			return serialize((SEMVERtoStringable) obj);
+		}
+		return null;
 	}
 
 	@Override

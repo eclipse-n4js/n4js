@@ -71,7 +71,7 @@ class BuiltInLibrariesLabelProvider extends LabelProvider implements IStyledLabe
 		} else if (element instanceof IN4JSProject) {
 			final IN4JSProject project = ((IN4JSProject) element);
 			final ProjectType type = project.getProjectType();
-			String version = SEMVERSerializer.toString(project.getVersion());
+			String version = SEMVERSerializer.serialize(project.getVersion());
 			// for better visual representation MyProject @1.2.3 -> MyProject v1.2.3
 			version = version.replaceFirst("@", "v");
 			final String typeLabel = getProjectTypeLabel(type);

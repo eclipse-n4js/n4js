@@ -19,8 +19,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.n4js.semver.SEMVERHelper;
 import org.eclipse.n4js.semver.SEMVERMatcher;
 import org.eclipse.n4js.semver.SEMVERMatcher.VersionNumberRelation;
-import org.eclipse.n4js.semver.model.SEMVERSerializer;
 import org.eclipse.n4js.semver.SEMVER.VersionNumber;
+import org.eclipse.n4js.semver.model.SEMVERSerializer;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.process.ProcessResult;
 import org.eclipse.xtext.nodemodel.INode;
@@ -92,11 +92,11 @@ public class BinariesValidator {
 			return error(binary, msg);
 		}
 
-		final VersionNumber minimumVersion = binary.getMinimumVersion();
+		VersionNumber minimumVersion = binary.getMinimumVersion();
 		VersionNumberRelation versionRelation = SEMVERMatcher.relation(versionNumber, minimumVersion);
 		if (!versionRelation.isGreaterOrEqual()) {
-			String minimumVersionText = SEMVERSerializer.toString(minimumVersion);
-			String parsedVersionText = SEMVERSerializer.toString(versionNumber);
+			String minimumVersionText = SEMVERSerializer.serialize(minimumVersion);
+			String parsedVersionText = SEMVERSerializer.serialize(versionNumber);
 			String msg = "The required minimum version of '" + binary.getLabel() + "' is '" + minimumVersionText
 					+ "'. Currently configured version is '" + parsedVersionText
 					+ "' which is '" + versionRelation + "' than the minimum version but it must be greater or equal.";

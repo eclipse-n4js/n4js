@@ -122,7 +122,7 @@ public abstract class ExternalIndexSynchronizer {
 		ProjectDescription pDescr = projectDescriptionHelper.loadProjectDescriptionAtLocation(uri);
 		if (pDescr != null) {
 			VersionNumber pV = pDescr.getProjectVersion();
-			String version = SEMVERSerializer.toString(pV);
+			String version = SEMVERSerializer.serialize(pV);
 			return version;
 		}
 

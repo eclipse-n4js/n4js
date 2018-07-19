@@ -348,7 +348,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 
 		final Map<String, String> versionedNpms = new HashMap<>();
 		projects.forEach((ProjectDescription pd) -> {
-			versionedNpms.put(pd.getProjectId(), SEMVERSerializer.toString(pd.getProjectVersion()));
+			versionedNpms.put(pd.getProjectId(), SEMVERSerializer.serialize(pd.getProjectVersion()));
 		});
 
 		return versionedNpms;

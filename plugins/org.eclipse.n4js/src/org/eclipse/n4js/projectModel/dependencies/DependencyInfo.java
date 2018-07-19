@@ -43,7 +43,7 @@ public class DependencyInfo {
 		String version = "";
 		if (projectReference instanceof ProjectDependency) {
 			ProjectDependency prjDep = (ProjectDependency) projectReference;
-			version = SEMVERSerializer.toString(prjDep.getVersionConstraint());
+			version = SEMVERSerializer.serialize(prjDep.getVersionConstraint());
 		}
 		return version;
 	}

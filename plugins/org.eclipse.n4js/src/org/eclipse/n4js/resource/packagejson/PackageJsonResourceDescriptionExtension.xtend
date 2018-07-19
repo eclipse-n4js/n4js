@@ -204,7 +204,7 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 
 		val vers = projectVersion;
 		if (vers !== null) {
-			val versionStr = SEMVERSerializer.toString(vers);
+			val versionStr = SEMVERSerializer.serialize(vers);
 			builder.put(PROJECT_VERSION_KEY, versionStr);
 		}
 

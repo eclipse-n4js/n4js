@@ -32,7 +32,7 @@ import org.eclipse.n4js.semver.model.SEMVERSerializer
 
 abstract class SEMVERtoStringable {
 	op String toString() {
-		return SEMVERSerializer.toString(this);
+		return SEMVERSerializer.serialize(this);
 	}
 }
 

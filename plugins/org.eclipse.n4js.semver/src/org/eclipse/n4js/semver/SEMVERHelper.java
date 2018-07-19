@@ -1,42 +1,36 @@
 package org.eclipse.n4js.semver;
 
 import java.io.StringReader;
+import java.util.Collections;
+import java.util.List;
 
-import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.semver.SEMVER.NPMVersionRequirement;
 import org.eclipse.n4js.semver.SEMVER.SimpleVersion;
 import org.eclipse.n4js.semver.SEMVER.VersionNumber;
 import org.eclipse.n4js.semver.SEMVER.VersionRange;
 import org.eclipse.n4js.semver.SEMVER.VersionRangeConstraint;
 import org.eclipse.n4js.semver.SEMVER.VersionRangeSetRequirement;
+import org.eclipse.n4js.utils.languages.N4LanguageUtils;
 import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.parser.IParser;
-import org.eclipse.xtext.resource.IResourceServiceProvider;
+import org.eclipse.xtext.util.CancelIndicator;
+import org.eclipse.xtext.validation.CheckMode;
+import org.eclipse.xtext.validation.Issue;
 
 import com.google.inject.Inject;
 
 /** Helper class to parse SEMVER strings and create instances of the SEMVER language */
 public class SEMVERHelper {
-
-	private final IResourceServiceProvider.Registry serviceProviders;
-
-	private IParser semverParser;
-
-	/**
-	 * Creates a new literal converter that obtains an {@link IParser} for regular expressions from the given registry.
-	 */
 	@Inject
-	public SEMVERHelper(IResourceServiceProvider.Registry serviceProviders) {
-		this.serviceProviders = serviceProviders;
-	}
+	private SemverResourceValidator validator;
+	private IParser semverParser;
 
 	/** @return parser to parse SEMVER strings */
 	public IParser getSEMVERParser() {
 		if (semverParser == null) {
-			// no need for sync since we can also use a new semverParser if concurrent access happens by accident
-			IResourceServiceProvider serviceProvider = serviceProviders.getResourceServiceProvider(URI
-					.createURI("a." + SEMVERGlobals.FILE_EXTENSION));
-			semverParser = serviceProvider.get(IParser.class);
+			semverParser = N4LanguageUtils.getServiceForContext(SEMVERGlobals.FILE_EXTENSION, IParser.class).get();
 		}
 		return semverParser;
 	}
@@ -107,6 +101,19 @@ public class SEMVERHelper {
 	public VersionNumber parseVersionNumber(String semverString) {
 		IParseResult semverParseResult = getParseResult(semverString);
 		return parseVersionNumber(semverParseResult);
+	}
+
+	public List<Issue> validate(Resource resource, IParseResult semverParseResult) {
+		// if (validator == null) {
+		// validator = N4LanguageUtils.getServiceForContext(SEMVERGlobals.FILE_EXTENSION, IResourceValidator.class)
+		// .get();
+		// }
+		EObject rootASTElement = semverParseResult.getRootASTElement();
+		if (rootASTElement == null) {
+			return Collections.emptyList();
+		}
+		List<Issue> issues = validator.validate(resource, rootASTElement, CheckMode.ALL, CancelIndicator.NullImpl);
+		return issues;
 	}
 
 }
