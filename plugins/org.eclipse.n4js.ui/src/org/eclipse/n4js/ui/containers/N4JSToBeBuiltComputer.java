@@ -37,7 +37,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Add the contents of NFARs to the list of to-be-built resources in to make sure they are indexed properly.
+ * Adjust the behavior of the builder in that the resources of a project are rebuilt, when the project description file
+ * changes (e.g. {@code package.json}).
  *
  * @see IToBeBuiltComputerContribution
  */
@@ -72,7 +73,6 @@ public class N4JSToBeBuiltComputer implements IToBeBuiltComputerContribution {
 				// changed project description resource - schedule all resources from source folders
 				final IN4JSEclipseProject project = eclipseCore.create(file.getProject()).orNull();
 				if (null != project && project.exists()) {
-
 					List<? extends IN4JSEclipseSourceContainer> sourceContainers = project.getSourceContainers();
 					Set<URI> toBeUpdated = toBeBuilt.getToBeUpdated();
 					for (IN4JSEclipseSourceContainer sourceContainer : sourceContainers) {
@@ -84,6 +84,7 @@ public class N4JSToBeBuiltComputer implements IToBeBuiltComputerContribution {
 					}
 				}
 
+				// delete all resource descriptions of resources that are contained by this project
 				IProject resourceProject = file.getProject();
 				String projectName = resourceProject.getName();
 				Set<URI> toBeDeleted = toBeBuilt.getToBeDeleted();
