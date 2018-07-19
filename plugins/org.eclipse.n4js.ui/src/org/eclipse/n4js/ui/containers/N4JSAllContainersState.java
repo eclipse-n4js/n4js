@@ -32,7 +32,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.fileextensions.FileExtensionTypeHelper;
-import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuilder;
@@ -112,10 +111,6 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 				clearProjectCache();
 				return true;
 			}
-			if (IN4JSArchive.NFAR_FILE_EXTENSION.equals(fileExtension)) {
-				clearProjectCache(delta);
-				return true;
-			}
 			if (delta.getResource() instanceof IProject) {
 				clearProjectCache();
 				return true;
@@ -139,7 +134,7 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 			}
 			return false;
 		}
-		if (nfarHasBeenChanged(delta) || packageJSONFileHasBeenChanged(delta)) {
+		if (packageJSONFileHasBeenChanged(delta)) {
 			clearProjectCache(delta);
 			return true;
 		}
@@ -226,12 +221,6 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 					.isPresent();
 		}
 		return false;
-	}
-
-	private boolean nfarHasBeenChanged(IResourceDelta delta) {
-		return delta.getKind() == IResourceDelta.CHANGED
-				&& delta.getResource().getType() == IResource.FILE
-				&& IN4JSArchive.NFAR_FILE_EXTENSION.equalsIgnoreCase(delta.getFullPath().getFileExtension());
 	}
 
 	private boolean packageJSONFileHasBeenChanged(IResourceDelta delta) {

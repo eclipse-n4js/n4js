@@ -32,15 +32,12 @@ import org.eclipse.emf.common.CommonPlugin;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.internal.N4JSProject;
-import org.eclipse.n4js.internal.N4JSSourceContainerType;
-import org.eclipse.n4js.n4mf.ProjectDependency;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.SourceContainerDescription;
 import org.eclipse.n4js.n4mf.SourceContainerType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
-import org.eclipse.n4js.ui.projectModel.IN4JSEclipseArchive;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseSourceContainer;
 import org.eclipse.n4js.utils.resources.ExternalProject;
@@ -183,33 +180,6 @@ public class N4JSEclipseModel extends N4JSModel {
 
 	public N4JSEclipseArchive getN4JSArchive(N4JSEclipseProject project, IFile archiveFile) {
 		return new N4JSEclipseArchive(project, archiveFile);
-	}
-
-	public ImmutableList<? extends IN4JSEclipseArchive> getLibraries(N4JSEclipseProject project) {
-		URI location = project.getLocation();
-		return doGetLibraries(project, location);
-	}
-
-	protected ImmutableList<? extends IN4JSEclipseArchive> doGetLibraries(N4JSEclipseProject project, URI location) {
-		ImmutableList.Builder<IN4JSEclipseArchive> result = ImmutableList.builder();
-		ProjectDescription description = getProjectDescription(location);
-		if (description != null) {
-			List<ProjectDependency> dependencies = description.getProjectDependencies();
-			for (ProjectDependency dependency : dependencies) {
-				URI dependencyLocation = getInternalWorkspace().getLocation(location, dependency,
-						N4JSSourceContainerType.ARCHIVE);
-				if (dependencyLocation != null) {
-					IFile archive = workspace.getFile(new Path(dependencyLocation.toPlatformString(true)));
-					result.add(getN4JSArchive(project, archive));
-				}
-			}
-		}
-		return result.build();
-	}
-
-	public ImmutableList<? extends IN4JSEclipseArchive> getLibraries(N4JSEclipseArchive archive) {
-		URI location = archive.getLocation();
-		return doGetLibraries(archive.getProject(), location);
 	}
 
 	@Override

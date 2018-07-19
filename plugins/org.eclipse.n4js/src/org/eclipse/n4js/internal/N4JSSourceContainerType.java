@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.internal;
 
-import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware;
 
@@ -24,13 +23,6 @@ public enum N4JSSourceContainerType {
 		@Override
 		public boolean isTypeOf(IN4JSSourceContainerAware container) {
 			return container instanceof IN4JSProject;
-		}
-	},
-	/** Represents the {@link IN4JSArchive NFAR} type. */
-	ARCHIVE {
-		@Override
-		public boolean isTypeOf(IN4JSSourceContainerAware container) {
-			return container instanceof IN4JSArchive;
 		}
 	},
 	/** Represents the {@link IN4JSSourceContainerAware N4JS source container} type. This is the default case. */
@@ -61,8 +53,6 @@ public enum N4JSSourceContainerType {
 	public N4JSSourceContainerType getContaienrType(IN4JSSourceContainerAware container) {
 		if (PROJECT.isTypeOf(container)) {
 			return PROJECT;
-		} else if (ARCHIVE.isTypeOf(container)) {
-			return ARCHIVE;
 		} else {
 			return SOURCECONTAINER;
 		}

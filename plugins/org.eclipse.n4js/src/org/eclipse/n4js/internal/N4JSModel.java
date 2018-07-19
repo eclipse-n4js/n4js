@@ -17,7 +17,6 @@ import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Iterables.isEmpty;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.emptyList;
-import static org.eclipse.n4js.internal.N4JSSourceContainerType.ARCHIVE;
 import static org.eclipse.n4js.internal.N4JSSourceContainerType.PROJECT;
 import static org.eclipse.n4js.n4mf.ProjectType.TEST;
 
@@ -41,7 +40,6 @@ import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectReference;
 import org.eclipse.n4js.n4mf.SourceContainerDescription;
 import org.eclipse.n4js.n4mf.SourceContainerType;
-import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware;
@@ -208,42 +206,8 @@ public class N4JSModel {
 		return new N4JSArchive(project, archiveLocation);
 	}
 
-	public ImmutableList<? extends IN4JSArchive> getLibraries(N4JSProject project) {
-		URI location = project.getLocation();
-		return doGetLibraries(project, location);
-	}
-
 	protected InternalN4JSWorkspace getInternalWorkspace() {
 		return workspace;
-	}
-
-	protected ImmutableList<? extends IN4JSArchive> doGetLibraries(N4JSProject project, URI location) {
-		ImmutableList.Builder<IN4JSArchive> result = ImmutableList.builder();
-		ProjectDescription description = getProjectDescription(location);
-		if (description != null) {
-			description.getRequiredRuntimeLibraries().forEach(
-					lib -> addArchiveFromDependency(project, location, lib, result));
-			description.getProjectDependencies().forEach(
-					lib -> addArchiveFromDependency(project, location, lib, result));
-		}
-		return result.build();
-	}
-
-	private void addArchiveFromDependency(final N4JSProject project, final URI location,
-			final ProjectReference dependency, final ImmutableList.Builder<IN4JSArchive> result) {
-
-		if (null != dependency) {
-			final URI dependencyLocation = workspace.getLocation(location, dependency,
-					N4JSSourceContainerType.ARCHIVE);
-			if (dependencyLocation != null) {
-				result.add(getN4JSArchive(project, dependencyLocation));
-			}
-		}
-	}
-
-	public ImmutableList<? extends IN4JSArchive> getLibraries(N4JSArchive archive) {
-		URI location = archive.getLocation();
-		return doGetLibraries(archive.getProject(), location);
 	}
 
 	/**
@@ -373,13 +337,6 @@ public class N4JSModel {
 
 			if (null != location) {
 				providedRuntimes.add(getN4JSProject(location));
-			} else {
-
-				// Assuming archive (NFAR)
-				location = workspace.getLocation(projectLocation, runtimeLibrary, ARCHIVE);
-				if (null != location) {
-					providedRuntimes.add(getN4JSArchive(project, location));
-				}
 			}
 		}
 

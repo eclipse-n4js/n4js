@@ -63,11 +63,6 @@ public class N4JSProject implements IN4JSProject {
 	}
 
 	@Override
-	public boolean isArchive() {
-		return false;
-	}
-
-	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;

@@ -18,7 +18,6 @@ import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.ui.internal.WorkspaceCacheAccess;
@@ -78,18 +77,6 @@ public class N4JSProjectsStateHelper extends AbstractStorage2UriMapperClient {
 			Optional<? extends IN4JSEclipseProject> containerProjectOpt = core.findProject(uri);
 			if (containerProjectOpt.isPresent()) {
 				fullCollectLocationHandles(result, containerProjectOpt.get());
-			} else {
-				// archive
-				Optional<? extends IN4JSArchive> containerArchiveOpt = core.findArchive(uri);
-				if (containerArchiveOpt.isPresent()) {
-					// out of archive
-					IN4JSArchive archive = containerArchiveOpt.get();
-					fullCollectLocationHandles(result, archive);
-				} else {
-
-					// Nothing found.
-					return Collections.emptyList();
-				}
 			}
 			return result;
 		}
@@ -110,19 +97,6 @@ public class N4JSProjectsStateHelper extends AbstractStorage2UriMapperClient {
 
 		for (IN4JSProject dependency : project.getDependencies()) {
 			collectLocationHandles(dependency, result);
-		}
-	}
-
-	private void fullCollectLocationHandles(List<String> result, IN4JSArchive archive) {
-		collectLocationHandles(archive, result);
-		for (IN4JSArchive dependency : archive.getReferencedLibraries()) {
-			collectLocationHandles(dependency, result);
-		}
-	}
-
-	private void collectLocationHandles(IN4JSArchive archive, List<String> result) {
-		for (IN4JSSourceContainer container : archive.getSourceContainers()) {
-			result.add(SOURCE_CONTAINER_PREFIX + container.getLocation());
 		}
 	}
 

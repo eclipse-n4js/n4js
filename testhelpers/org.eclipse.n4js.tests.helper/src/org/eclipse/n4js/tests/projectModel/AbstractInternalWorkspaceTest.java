@@ -77,16 +77,6 @@ public abstract class AbstractInternalWorkspaceTest extends AbstractProjectModel
 
 	@SuppressWarnings("javadoc")
 	@Test
-	public void testGetLocation_04() {
-		ProjectDescription description = getWorkspace().getProjectDescription(myProjectURI);
-		ProjectDependency dependencyOnArchive = description.getProjectDependencies().get(0);
-		URI expectedToBeNull = getWorkspace().getLocation(myProjectURI, dependencyOnArchive,
-				N4JSSourceContainerType.ARCHIVE);
-		assertNull(expectedToBeNull);
-	}
-
-	@SuppressWarnings("javadoc")
-	@Test
 	public void testGetFolderIterator_01() {
 		Set<URI> containedURIs = Sets.newHashSet(getWorkspace().getFolderIterator(
 				myProjectURI.appendSegment("src")));

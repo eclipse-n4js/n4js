@@ -12,12 +12,11 @@ package org.eclipse.n4js.ui.internal;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.URI;
-
-import com.google.common.collect.ImmutableList;
-
 import org.eclipse.n4js.internal.N4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseArchive;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  */
@@ -56,11 +55,6 @@ public class N4JSEclipseArchive extends N4JSArchive implements IN4JSEclipseArchi
 		if (exists())
 			return super.getSourceContainers();
 		return ImmutableList.of();
-	}
-
-	@Override
-	public ImmutableList<? extends IN4JSEclipseArchive> getReferencedLibraries() {
-		return getModel().getLibraries(this);
 	}
 
 }

@@ -11,13 +11,12 @@
 package org.eclipse.n4js.internal;
 
 import org.eclipse.emf.common.util.URI;
-
-import com.google.common.collect.ImmutableList;
-
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  */
@@ -35,11 +34,6 @@ public class N4JSArchive implements IN4JSArchive {
 	@Override
 	public boolean isProject() {
 		return false;
-	}
-
-	@Override
-	public boolean isArchive() {
-		return true;
 	}
 
 	@Override
@@ -87,11 +81,6 @@ public class N4JSArchive implements IN4JSArchive {
 	}
 
 	@Override
-	public ImmutableList<? extends IN4JSArchive> getReferencedLibraries() {
-		return getModel().getLibraries(this);
-	}
-
-	@Override
 	public ImmutableList<? extends IN4JSSourceContainerAware> getAllDirectDependencies() {
 		return getReferencedLibraries();
 	}
@@ -130,6 +119,12 @@ public class N4JSArchive implements IN4JSArchive {
 	@Override
 	public boolean isExternal() {
 		return false;
+	}
+
+	@Override
+	public ImmutableList<? extends IN4JSArchive> getReferencedLibraries() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

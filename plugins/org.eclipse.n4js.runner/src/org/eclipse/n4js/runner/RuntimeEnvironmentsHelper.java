@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.eclipse.n4js.n4mf.ProjectType;
-import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware;
@@ -156,8 +155,7 @@ public class RuntimeEnvironmentsHelper {
 	/**
 	 * Collects dependencies of the provided source container, by analyzing direct dependencies of the container and
 	 * recursively their dependencies. Dependencies in form of {@link IN4JSSourceContainerAware} are mapped to
-	 * {@link IN4JSProject}s, that is instances of {@link IN4JSProject} project are returned as they are, while
-	 * instances of {@link IN4JSArchive} have contained project extracted.
+	 * {@link IN4JSProject}s, that is instances of {@link IN4JSProject} project are returned.
 	 *
 	 * Discovered dependencies are collected only if they pass test specified by provided predicate.
 	 *
@@ -231,8 +229,7 @@ public class RuntimeEnvironmentsHelper {
 
 	/**
 	 * Maps passed collection of {@link IN4JSSourceContainerAware} to list of {@link IN4JSProject}, that is instances of
-	 * {@link IN4JSProject} project are returned as they are, while instances of {@link IN4JSArchive} have contained
-	 * project extracted. For each result of that transformation, examines its
+	 * {@link IN4JSProject} project are returned. For each result of that transformation, examines its
 	 * {@link IN4JSProject#getProvidedRuntimeLibraries()} to check if they pass predicate test. Instances that do are
 	 * stored in the passed collection.
 	 *
@@ -259,7 +256,7 @@ public class RuntimeEnvironmentsHelper {
 
 	/**
 	 * Map provided source container to instance of {@link IN4JSProject}, that is instances of {@link IN4JSProject}
-	 * project are returned as they are, while instances of {@link IN4JSArchive} have contained project extracted.
+	 * project are returned.
 	 *
 	 * @param container
 	 *            that is mapped to project
@@ -272,9 +269,6 @@ public class RuntimeEnvironmentsHelper {
 	private IN4JSProject extractProject(IN4JSSourceContainerAware container) {
 		if (container instanceof IN4JSProject) {
 			return (IN4JSProject) container;
-		}
-		if (container instanceof IN4JSArchive) {
-			return ((IN4JSArchive) container).getProject();
 		}
 		throw new RuntimeException("Unknown instance type of container " + container.getClass().getName());
 	}

@@ -11,9 +11,6 @@
 package org.eclipse.n4js.ui.projectModel;
 
 import org.eclipse.core.resources.IFile;
-
-import com.google.common.collect.ImmutableList;
-
 import org.eclipse.n4js.projectModel.IN4JSArchive;
 
 /**
@@ -25,9 +22,6 @@ public interface IN4JSEclipseArchive extends IN4JSArchive {
 
 	@Override
 	IN4JSEclipseProject getProject();
-
-	@Override
-	ImmutableList<? extends IN4JSEclipseArchive> getReferencedLibraries();
 
 	boolean exists();
 

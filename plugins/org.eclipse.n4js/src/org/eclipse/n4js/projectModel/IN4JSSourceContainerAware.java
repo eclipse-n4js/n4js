@@ -35,11 +35,6 @@ public interface IN4JSSourceContainerAware {
 	boolean isProject();
 
 	/**
-	 * @return true if this is an {@link IN4JSArchive}.
-	 */
-	boolean isArchive();
-
-	/**
 	 * @return true if this container structure is external to the workspace.
 	 */
 	boolean isExternal();

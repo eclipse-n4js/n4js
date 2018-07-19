@@ -31,7 +31,6 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.compare.ApiImplMapping;
 import org.eclipse.n4js.generator.AbstractSubGenerator;
 import org.eclipse.n4js.n4mf.ProjectType;
-import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware;
@@ -274,10 +273,6 @@ public class RunnerHelper {
 	private IN4JSProject extractProject(IN4JSSourceContainerAware container) {
 		if (container instanceof IN4JSProject) {
 			return (IN4JSProject) container;
-		}
-		if (container instanceof IN4JSArchive) {
-			// TODO #getProject() in next line will return containing(!) project, which is probably not what we want
-			return ((IN4JSArchive) container).getProject();
 		}
 		throw new RuntimeException("unknown instance type of container " + container.getClass().getName());
 	}

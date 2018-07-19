@@ -13,7 +13,6 @@ package org.eclipse.n4js.jsdoc2spec;
 import java.io.IOException;
 
 import org.eclipse.n4js.N4JSInjectorProvider;
-import org.eclipse.n4js.internal.ClasspathPackageManager;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4JSRuntimeCore;
 import org.eclipse.n4js.utils.ProjectDescriptionHelper;
@@ -48,9 +47,6 @@ abstract public class JSDoc2SpecProcessorFullTest {
 
 	@Inject
 	protected Provider<XtextResourceSet> resourceSetProvider;
-
-	@Inject
-	protected ClasspathPackageManager classpathPackageManager;
 
 	@Inject
 	protected ProjectDescriptionHelper projectDescriptionHelper;

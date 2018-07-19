@@ -68,13 +68,13 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 
 		URI location = URIUtils.normalize(unsafeLocation);
 		if (!projectElementHandles.containsKey(location)) {
-			LazyProjectDescriptionHandle lazyDescriptionHandle = createLazyDescriptionHandle(location, false);
+			LazyProjectDescriptionHandle lazyDescriptionHandle = createLazyDescriptionHandle(location);
 			projectElementHandles.put(location, lazyDescriptionHandle);
 		}
 	}
 
-	protected LazyProjectDescriptionHandle createLazyDescriptionHandle(URI location, boolean archive) {
-		return new LazyProjectDescriptionHandle(location, archive, projectDescriptionHelper);
+	protected LazyProjectDescriptionHandle createLazyDescriptionHandle(URI location) {
+		return new LazyProjectDescriptionHandle(location, projectDescriptionHelper);
 	}
 
 	@Override
