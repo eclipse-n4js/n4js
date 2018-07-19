@@ -133,16 +133,10 @@ public class N4JSModel {
 
 	public Optional<? extends IN4JSSourceContainer> findN4JSSourceContainer(URI nestedLocation) {
 		Optional<? extends IN4JSSourceContainer> foundN4JSSourceContainer = Optional.absent();
-		if (!nestedLocation.isArchive()) {
-			N4JSProject project = findProjectWith(nestedLocation);
-			foundN4JSSourceContainer = findN4JSSourceContainerInProject(project, nestedLocation);
-		} else {
-			String pathToArchive = nestedLocation.authority();
-			URI archiveURI = URI.createURI(pathToArchive.substring(0, pathToArchive.length() - 1));
-			N4JSProject project = findProjectWith(archiveURI);
-			N4JSArchive archive = getN4JSArchive(project, archiveURI);
-			foundN4JSSourceContainer = findN4JSSourceContainerInArchive(archiveURI, archive);
-		}
+
+		N4JSProject project = findProjectWith(nestedLocation);
+		foundN4JSSourceContainer = findN4JSSourceContainerInProject(project, nestedLocation);
+
 		return foundN4JSSourceContainer;
 	}
 
@@ -183,27 +177,6 @@ public class N4JSModel {
 			return true;
 		}
 		return false;
-	}
-
-	protected Optional<? extends IN4JSSourceContainer> findN4JSSourceContainerInArchive(URI location,
-			N4JSArchive archive) {
-		int maxSegments = location.segmentCount();
-		OUTER: for (IN4JSSourceContainer sourceContainer : archive.getSourceContainers()) {
-			URI sourceContainerLocation = sourceContainer.getLocation();
-			if (sourceContainerLocation.segmentCount() <= maxSegments) {
-				for (int i = 0; i < sourceContainerLocation.segmentCount(); i++) {
-					if (!sourceContainerLocation.segment(i).equals(location.segment(i))) {
-						continue OUTER;
-					}
-				}
-				return Optional.of(sourceContainer);
-			}
-		}
-		return Optional.absent();
-	}
-
-	public N4JSArchive getN4JSArchive(N4JSProject project, URI archiveLocation) {
-		return new N4JSArchive(project, archiveLocation);
 	}
 
 	protected InternalN4JSWorkspace getInternalWorkspace() {
@@ -247,33 +220,9 @@ public class N4JSModel {
 		return location.toFileString();
 	}
 
-	protected IN4JSSourceContainer createArchiveN4JSSourceContainer(N4JSArchive archive, SourceContainerType type,
-			String relativeLocation) {
-		return new N4JSArchiveSourceContainer(archive, type, relativeLocation);
-	}
-
 	protected IN4JSSourceContainer createProjectN4JSSourceContainer(N4JSProject project, SourceContainerType type,
 			String relativeLocation) {
 		return new N4JSProjectSourceContainer(project, type, relativeLocation);
-	}
-
-	public ImmutableList<IN4JSSourceContainer> getSourceContainers(N4JSArchive archive) {
-		ImmutableList.Builder<IN4JSSourceContainer> result = ImmutableList.builder();
-		URI location = archive.getLocation();
-		ProjectDescription description = getProjectDescription(location);
-		if (description != null) {
-			List<SourceContainerDescription> sourceFragments = newArrayList(from(description.getSourceContainers()));
-			sourceFragments.sort((f1, fDIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT) -> f1
-					.compareByFragmentType(fDIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT));
-			for (SourceContainerDescription sourceFragment : sourceFragments) {
-				List<String> paths = sourceFragment.getPaths();
-				for (String path : paths) {
-					result.add(
-							createArchiveN4JSSourceContainer(archive, sourceFragment.getSourceContainerType(), path));
-				}
-			}
-		}
-		return result.build();
 	}
 
 	public ImmutableList<? extends IN4JSProject> getDependencies(N4JSProject project, boolean includeAbsentProjects) {

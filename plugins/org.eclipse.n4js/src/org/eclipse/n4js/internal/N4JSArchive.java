@@ -43,7 +43,7 @@ public class N4JSArchive implements IN4JSArchive {
 
 	@Override
 	public ImmutableList<? extends IN4JSSourceContainer> getSourceContainers() {
-		return getModel().getSourceContainers(this);
+		return ImmutableList.of();
 	}
 
 	@Override

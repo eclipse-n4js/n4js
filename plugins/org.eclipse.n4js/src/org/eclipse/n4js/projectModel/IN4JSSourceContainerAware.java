@@ -15,7 +15,7 @@ import org.eclipse.emf.common.util.URI;
 import com.google.common.collect.ImmutableList;
 
 /**
- * Abstracts over {@link IN4JSProject projects } and {@link IN4JSArchive archives}.
+ * Abstracts over {@link IN4JSProject projects}.
  */
 public interface IN4JSSourceContainerAware {
 

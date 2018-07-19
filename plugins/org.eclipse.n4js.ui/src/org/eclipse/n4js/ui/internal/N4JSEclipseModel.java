@@ -22,7 +22,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -103,61 +102,52 @@ public class N4JSEclipseModel extends N4JSModel {
 	public Optional<? extends IN4JSSourceContainer> findN4JSSourceContainer(URI location) {
 
 		Optional<? extends IN4JSSourceContainer> n4jsContainer = Optional.absent();
-		if (!location.isArchive()) {
 
-			if (N4Scheme.isN4Scheme(location)) {
+		if (N4Scheme.isN4Scheme(location)) {
+			return n4jsContainer;
+		}
+
+		if (!location.isPlatformResource()) {
+
+			// in case of compare views (git, resource compare,...) we get requests with schemes like
+			// "revision:/Variadic1.js"
+			// just do not throw exception then, but continue with null:
+			if ("revision".equals(location.scheme())) {
+				if (LOGGER.isDebugEnabled()) {
+					final String message = "Got revision-scheme request, but refuse to find source-container for that:"
+							+ location;
+					LOGGER.debug(message);
+				}
 				return n4jsContainer;
 			}
 
-			if (!location.isPlatformResource()) {
-
-				// in case of compare views (git, resource compare,...) we get requests with schemes like
-				// "revision:/Variadic1.js"
-				// just do not throw exception then, but continue with null:
-				if ("revision".equals(location.scheme())) {
-					if (LOGGER.isDebugEnabled()) {
-						final String message = "Got revision-scheme request, but refuse to find source-container for that:"
-								+ location;
-						LOGGER.debug(message);
-					}
-					return n4jsContainer;
-				}
-
-				if (location.isFile()) {
-					final IN4JSEclipseProject eclipseProject = findProjectWith(location);
-					if (null != eclipseProject && eclipseProject.exists()) {
-						if (eclipseProject.getProject() instanceof ExternalProject) {
-							final IResource resource = externalLibraryWorkspace.getResource(location);
-							if (null != resource) {
-								n4jsContainer = getN4JSSourceContainer(resource);
-							}
+			if (location.isFile()) {
+				final IN4JSEclipseProject eclipseProject = findProjectWith(location);
+				if (null != eclipseProject && eclipseProject.exists()) {
+					if (eclipseProject.getProject() instanceof ExternalProject) {
+						final IResource resource = externalLibraryWorkspace.getResource(location);
+						if (null != resource) {
+							n4jsContainer = getN4JSSourceContainer(resource);
 						}
 					}
 				}
-
-				return n4jsContainer;
 			}
 
-			final IN4JSEclipseProject project = findProjectWith(location);
-			if (null != project && project.exists()) {
-				final Path path = new Path(location.toPlatformString(true));
-				final IResource resource;
-				if (1 == path.segmentCount()) {
-					resource = workspace.getProject(path.segment(0));
-				} else {
-					resource = workspace.getFile(path);
-				}
-				n4jsContainer = getN4JSSourceContainer(resource);
-			}
-
-		} else {
-			String archiveFilePath = location.authority();
-			URI archiveURI = URI.createURI(archiveFilePath.substring(0, archiveFilePath.length() - 1));
-			N4JSEclipseProject containingProject = findProjectWith(archiveURI);
-			N4JSEclipseArchive archive = getN4JSArchive(containingProject,
-					workspace.getFile(new Path(archiveURI.toPlatformString(true))));
-			n4jsContainer = findN4JSSourceContainerInArchive(location, archive);
+			return n4jsContainer;
 		}
+
+		final IN4JSEclipseProject project = findProjectWith(location);
+		if (null != project && project.exists()) {
+			final Path path = new Path(location.toPlatformString(true));
+			final IResource resource;
+			if (1 == path.segmentCount()) {
+				resource = workspace.getProject(path.segment(0));
+			} else {
+				resource = workspace.getFile(path);
+			}
+			n4jsContainer = getN4JSSourceContainer(resource);
+		}
+
 		return n4jsContainer;
 	}
 
@@ -171,15 +161,6 @@ public class N4JSEclipseModel extends N4JSModel {
 
 	private N4JSEclipseProject doGetN4JSProject(IProject project, URI location) {
 		return new N4JSEclipseProject(project, location, this);
-	}
-
-	public N4JSEclipseArchive getN4JSArchive(N4JSEclipseProject project, URI archiveLocation) {
-		IFile archive = workspace.getFile(new Path(archiveLocation.toPlatformString(true)));
-		return getN4JSArchive(project, archive);
-	}
-
-	public N4JSEclipseArchive getN4JSArchive(N4JSEclipseProject project, IFile archiveFile) {
-		return new N4JSEclipseArchive(project, archiveFile);
 	}
 
 	@Override
