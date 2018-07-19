@@ -52,17 +52,17 @@ import org.eclipse.n4js.n4mf.SourceContainerType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
-import org.eclipse.n4js.semver.SEMVERHelper;
-import org.eclipse.n4js.semver.SEMVER.GitHubVersionRequirement;
-import org.eclipse.n4js.semver.SEMVER.LocalPathVersionRequirement;
-import org.eclipse.n4js.semver.SEMVER.NPMVersionRequirement;
-import org.eclipse.n4js.semver.SEMVER.SimpleVersion;
-import org.eclipse.n4js.semver.SEMVER.TagVersionRequirement;
-import org.eclipse.n4js.semver.SEMVER.URLVersionRequirement;
-import org.eclipse.n4js.semver.SEMVER.VersionNumber;
-import org.eclipse.n4js.semver.SEMVER.VersionRangeConstraint;
-import org.eclipse.n4js.semver.SEMVER.VersionRangeSetRequirement;
-import org.eclipse.n4js.semver.model.SEMVERSerializer;
+import org.eclipse.n4js.semver.SemverHelper;
+import org.eclipse.n4js.semver.Semver.GitHubVersionRequirement;
+import org.eclipse.n4js.semver.Semver.LocalPathVersionRequirement;
+import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
+import org.eclipse.n4js.semver.Semver.SimpleVersion;
+import org.eclipse.n4js.semver.Semver.TagVersionRequirement;
+import org.eclipse.n4js.semver.Semver.URLVersionRequirement;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
+import org.eclipse.n4js.semver.Semver.VersionRangeConstraint;
+import org.eclipse.n4js.semver.Semver.VersionRangeSetRequirement;
+import org.eclipse.n4js.semver.model.SemverSerializer;
 import org.eclipse.n4js.utils.ProjectDescriptionHelper;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.io.FileUtils;
@@ -104,7 +104,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	@Inject
 	private FolderContainmentHelper containmentHelper;
 	@Inject
-	private SEMVERHelper semverHelper;
+	private SemverHelper semverHelper;
 
 	@Override
 	protected boolean isResponsible(Map<Object, Object> context, EObject eObject) {
@@ -224,7 +224,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		VersionRangeConstraint vrc = (VersionRangeConstraint) vrs.getRanges().get(0);
 		SimpleVersion simpleVersion = vrc.getVersionConstraints().get(0);
 		if (!simpleVersion.getComparators().isEmpty()) {
-			String comparator = SEMVERSerializer.serialize(simpleVersion.getComparators().get(0));
+			String comparator = SemverSerializer.serialize(simpleVersion.getComparators().get(0));
 			String reason = "Version number must not have the comparator '" + comparator + "'";
 			String msg = IssueCodes.getMessageForPKGJ_INVALID_VERSION_NUMBER(versionString, reason);
 			addIssue(msg, versionValue, IssueCodes.PKGJ_INVALID_VERSION_NUMBER);

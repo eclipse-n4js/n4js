@@ -13,13 +13,13 @@ package org.eclipse.n4js.semver.ide;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.eclipse.n4js.semver.SEMVERRuntimeModule;
-import org.eclipse.n4js.semver.SEMVERStandaloneSetup;
+import org.eclipse.n4js.semver.SemverStandaloneSetup;
 import org.eclipse.xtext.util.Modules2;
 
 /**
  * Initialization support for running Xtext languages as language servers.
  */
-public class SEMVERIdeSetup extends SEMVERStandaloneSetup {
+public class SEMVERIdeSetup extends SemverStandaloneSetup {
 
 	@Override
 	public Injector createInjector() {

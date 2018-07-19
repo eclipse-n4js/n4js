@@ -40,7 +40,7 @@ import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.preferences.OsgiExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.semver.SEMVERHelper;
+import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.ts.validation.TypesKeywordProvider;
 import org.eclipse.n4js.ui.containers.CompositeStorage2UriMapperContribution;
 import org.eclipse.n4js.ui.containers.N4JSExternalLibraryStorage2UriMapperContribution;
@@ -209,7 +209,7 @@ public class ContributingModule implements Module {
 		binder.bind(NpmBinary.class);
 		binder.bind(NpmrcBinary.class);
 
-		binder.bind(SEMVERHelper.class);
+		binder.bind(SemverHelper.class);
 		// binder.bind(SemverResourceValidator.class);
 		// binder.bind(Diagnostician.class);
 		// binder.bind(IDiagnosticConverter.class);

@@ -57,8 +57,8 @@ import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.semver.SEMVERHelper;
-import org.eclipse.n4js.semver.model.SEMVERSerializer;
+import org.eclipse.n4js.semver.SemverHelper;
+import org.eclipse.n4js.semver.model.SemverSerializer;
 import org.eclipse.n4js.ui.utils.InputComposedValidator;
 import org.eclipse.n4js.ui.utils.InputFunctionalValidator;
 import org.eclipse.n4js.ui.utils.UIUtils;
@@ -118,7 +118,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	private StatusHelper statusHelper;
 
 	@Inject
-	private SEMVERHelper semverHelper;
+	private SemverHelper semverHelper;
 
 	private TreeViewer viewer;
 
@@ -348,7 +348,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 
 		final Map<String, String> versionedNpms = new HashMap<>();
 		projects.forEach((ProjectDescription pd) -> {
-			versionedNpms.put(pd.getProjectId(), SEMVERSerializer.serialize(pd.getProjectVersion()));
+			versionedNpms.put(pd.getProjectId(), SemverSerializer.serialize(pd.getProjectVersion()));
 		});
 
 		return versionedNpms;

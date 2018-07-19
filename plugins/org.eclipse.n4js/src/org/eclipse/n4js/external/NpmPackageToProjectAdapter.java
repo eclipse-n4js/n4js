@@ -29,10 +29,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.semver.SEMVERHelper;
-import org.eclipse.n4js.semver.SEMVERMatcher;
-import org.eclipse.n4js.semver.SEMVERUtils;
-import org.eclipse.n4js.semver.SEMVER.VersionNumber;
+import org.eclipse.n4js.semver.SemverHelper;
+import org.eclipse.n4js.semver.SemverMatcher;
+import org.eclipse.n4js.semver.SemverUtils;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.utils.ProjectDescriptionHelper;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.git.GitUtils;
@@ -66,7 +66,7 @@ public class NpmPackageToProjectAdapter {
 	private ProjectDescriptionHelper projectDescriptionHelper;
 
 	@Inject
-	private SEMVERHelper semverHelper;
+	private SemverHelper semverHelper;
 
 	/** Default filter for copying N4JSD project contents during adaptation */
 	private final static Predicate<Path> COPY_N4JSD_PREDICATE = new Predicate<Path>() {
@@ -206,7 +206,7 @@ public class NpmPackageToProjectAdapter {
 			return statusHelper.createError(message);
 		}
 		String[] list = packageN4JSDsRoot.list();
-		Set<VersionNumber> availableTDVersions = new TreeSet<>(SEMVERMatcher::compareLoose);
+		Set<VersionNumber> availableTDVersions = new TreeSet<>(SemverMatcher::compareLoose);
 		for (int i = 0; i < list.length; i++) {
 			String version = list[i];
 			VersionNumber availableTypeDefinitionsVersion = semverHelper.parseVersionNumber(version);
@@ -215,7 +215,7 @@ public class NpmPackageToProjectAdapter {
 			}
 		}
 
-		VersionNumber closestMatchingVersion = SEMVERUtils.findClosestMatching(availableTDVersions, packageVersion);
+		VersionNumber closestMatchingVersion = SemverUtils.findClosestMatching(availableTDVersions, packageVersion);
 		if (closestMatchingVersion == null) {
 			String details = "";
 			if (availableTDVersions.isEmpty()) {

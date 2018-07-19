@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.n4mf;
 
-import org.eclipse.n4js.semver.SEMVER.VersionRangeSetRequirement;
+import org.eclipse.n4js.semver.Semver.VersionRangeSetRequirement;
 
 /**
  * <!-- begin-user-doc -->

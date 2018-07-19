@@ -58,9 +58,9 @@ import org.eclipse.n4js.n4mf.ProjectType;
 import org.eclipse.n4js.n4mf.SourceContainerDescription;
 import org.eclipse.n4js.n4mf.SourceContainerType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.semver.SEMVERHelper;
-import org.eclipse.n4js.semver.SEMVER.VersionNumber;
-import org.eclipse.n4js.semver.SEMVER.VersionRangeSetRequirement;
+import org.eclipse.n4js.semver.SemverHelper;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
+import org.eclipse.n4js.semver.Semver.VersionRangeSetRequirement;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.Tuples;
@@ -159,7 +159,7 @@ public class ProjectDescriptionHelper {
 	private Provider<XtextResourceSet> resourceSetProvider;
 
 	@Inject
-	private SEMVERHelper semverHelper;
+	private SemverHelper semverHelper;
 
 	/**
 	 * Loads the project description of the N4JS project at the given {@code location}.

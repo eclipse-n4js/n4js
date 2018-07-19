@@ -50,11 +50,11 @@ import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
 import org.eclipse.n4js.n4mf.ProjectDependency;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.semver.SEMVERHelper;
-import org.eclipse.n4js.semver.SEMVERMatcher;
-import org.eclipse.n4js.semver.SEMVER.NPMVersionRequirement;
-import org.eclipse.n4js.semver.SEMVER.VersionNumber;
-import org.eclipse.n4js.semver.model.SEMVERSerializer;
+import org.eclipse.n4js.semver.SemverHelper;
+import org.eclipse.n4js.semver.SemverMatcher;
+import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
+import org.eclipse.n4js.semver.model.SemverSerializer;
 import org.eclipse.n4js.smith.ClosableMeasurement;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
@@ -111,7 +111,7 @@ public class LibraryManager {
 	private IN4JSCore n4jsCore;
 
 	@Inject
-	private SEMVERHelper semverHelper;
+	private SemverHelper semverHelper;
 
 	/**
 	 * see {@link ExternalIndexSynchronizer#isProjectsSynchronized()}.
@@ -309,7 +309,7 @@ public class LibraryManager {
 			String name = pDep.getProjectId();
 			String version = NO_VERSION;
 			if (pDep.getVersionConstraint() != null) {
-				version = SEMVERSerializer.serialize(pDep.getVersionConstraint());
+				version = SemverSerializer.serialize(pDep.getVersionConstraint());
 			}
 			dependencies.put(name, version);
 		}
@@ -391,12 +391,12 @@ public class LibraryManager {
 		NPMVersionRequirement requestedVersion = semverHelper.parse(requestedVersionRequirementString);
 		VersionNumber installedVersion = semverHelper.parseVersionNumber(installedVersionString);
 
-		boolean canComputeMatch = SEMVERMatcher.canComputeMatch(installedVersion, requestedVersion);
+		boolean canComputeMatch = SemverMatcher.canComputeMatch(installedVersion, requestedVersion);
 		if (!canComputeMatch) {
 			return false;
 		}
 
-		boolean versionsMatch = SEMVERMatcher.matches(installedVersion, requestedVersion);
+		boolean versionsMatch = SemverMatcher.matches(installedVersion, requestedVersion);
 		return versionsMatch;
 	}
 

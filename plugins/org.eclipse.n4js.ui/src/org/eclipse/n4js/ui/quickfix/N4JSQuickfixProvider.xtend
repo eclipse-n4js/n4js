@@ -44,7 +44,7 @@ import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.PropertyNameOwner
 import org.eclipse.n4js.n4mf.ProjectDependency
 import org.eclipse.n4js.n4mf.ProjectReference
-import org.eclipse.n4js.semver.model.SEMVERSerializer
+import org.eclipse.n4js.semver.model.SemverSerializer
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
@@ -690,7 +690,7 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 				val dependency = element as ProjectReference;
 				val packageName = dependency.projectId;
 				val packageVersion = if (dependency instanceof ProjectDependency) {
-						SEMVERSerializer.serialize(dependency.versionConstraint);
+						SemverSerializer.serialize(dependency.versionConstraint);
 					} else {
 						"";
 					};

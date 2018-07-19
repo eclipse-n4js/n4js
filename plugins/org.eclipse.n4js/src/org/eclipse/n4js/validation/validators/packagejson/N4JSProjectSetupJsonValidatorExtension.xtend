@@ -58,10 +58,8 @@ import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
-import org.eclipse.n4js.semver.SEMVER.NPMVersionRequirement
-import org.eclipse.n4js.semver.SEMVERHelper
-import org.eclipse.n4js.semver.SEMVERMatcher
-import org.eclipse.n4js.semver.model.SEMVERSerializer
+import org.eclipse.n4js.semver.Semver.NPMVersionRequirement
+import org.eclipse.n4js.semver.model.SemverSerializer
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TypesPackage
@@ -86,6 +84,8 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 import static org.eclipse.n4js.validation.validators.packagejson.ProjectTypePredicate.*
 
 import static extension com.google.common.base.Strings.nullToEmpty
+import org.eclipse.n4js.semver.SemverHelper
+import org.eclipse.n4js.semver.SemverMatcher
 
 /**
  * A JSON validator extension that validates {@code package.json} resources in the context
@@ -150,7 +150,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	protected N4JSElementKeywordProvider keywordProvider;
 	
 	@Inject
-	protected SEMVERHelper semverHelper;
+	protected SemverHelper semverHelper;
 	
 	override boolean isResponsible(Map<Object, Object> context, EObject eObject) {
 		// this validator extension only applies to package.json files
@@ -1132,10 +1132,10 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		if (desiredVersion !== null) {
 			val availableVersion = allProjects.get(id).version;
 
-			val availableVersionMatches = SEMVERMatcher.matches(availableVersion, desiredVersion);
+			val availableVersionMatches = SemverMatcher.matches(availableVersion, desiredVersion);
 			if (!availableVersionMatches) {
-				val desiredStr = SEMVERSerializer.serialize(desiredVersion);
-				val availableStr = SEMVERSerializer.serialize(availableVersion);
+				val desiredStr = SemverSerializer.serialize(desiredVersion);
+				val availableStr = SemverSerializer.serialize(availableVersion);
 				addVersionMismatchIssue(ref.astRepresentation, id, desiredStr, availableStr);
 			}
 		}

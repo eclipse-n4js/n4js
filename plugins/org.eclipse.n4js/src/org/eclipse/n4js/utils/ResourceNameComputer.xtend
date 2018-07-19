@@ -27,7 +27,7 @@ import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.naming.QualifiedName
 
 import static org.eclipse.emf.ecore.util.EcoreUtil.getRootContainer
-import org.eclipse.n4js.semver.SEMVER.VersionNumber
+import org.eclipse.n4js.semver.Semver.VersionNumber
 
 /**
  * Helper class for computing descriptors for compiled files. Descriptors are used for file names and paths of generated files,

@@ -10,14 +10,14 @@
  */
 package org.eclipse.n4js.semver
 
-import org.eclipse.n4js.semver.SEMVER.VersionNumber
-import org.eclipse.n4js.semver.SEMVER.VersionRangeConstraint
+import org.eclipse.n4js.semver.Semver.VersionNumber
+import org.eclipse.n4js.semver.Semver.VersionRangeConstraint
 import org.eclipse.xtext.resource.XtextSyntaxDiagnostic
 import org.eclipse.xtext.testing.util.ParseHelper
 
 import static org.junit.Assert.*
-import org.eclipse.n4js.semver.SEMVER.NPMVersionRequirement
-import org.eclipse.n4js.semver.SEMVER.VersionRangeSetRequirement
+import org.eclipse.n4js.semver.Semver.NPMVersionRequirement
+import org.eclipse.n4js.semver.Semver.VersionRangeSetRequirement
 
 /**
  * A parse helper for SEMVER parsing tests.

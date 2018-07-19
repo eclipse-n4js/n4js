@@ -14,7 +14,7 @@ import java.net.URI;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.n4js.semver.SEMVER.VersionNumber;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
 
 /**
  * Representation of a binary.

@@ -17,10 +17,10 @@ import org.eclipse.n4js.binaries.BinaryCommandFactory;
 import org.eclipse.n4js.binaries.nodejs.NodeBinariesConstants;
 import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
-import org.eclipse.n4js.semver.SEMVERHelper;
-import org.eclipse.n4js.semver.SEMVERMatcher;
-import org.eclipse.n4js.semver.SEMVERMatcher.VersionNumberRelation;
-import org.eclipse.n4js.semver.SEMVER.VersionNumber;
+import org.eclipse.n4js.semver.SemverHelper;
+import org.eclipse.n4js.semver.SemverMatcher;
+import org.eclipse.n4js.semver.SemverMatcher.VersionNumberRelation;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.utils.process.ProcessResult;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.XtextRunner;
@@ -47,7 +47,7 @@ public class NodeVersionTest {
 	private BinaryCommandFactory commandFactory;
 
 	@Inject
-	private SEMVERHelper semverHelper;
+	private SemverHelper semverHelper;
 
 	/**
 	 * Simply checks if the npm version found by default matches the required version. Prints out path if this fails.
@@ -60,7 +60,7 @@ public class NodeVersionTest {
 		String msg = "Version of npm in " + npmBinary.getBinaryAbsolutePath() + ": " + currentVersion
 				+ ",  need at least " + NodeBinariesConstants.NPM_MIN_VERSION;
 
-		VersionNumberRelation relation = SEMVERMatcher.relation(currentVersion, NodeBinariesConstants.NPM_MIN_VERSION);
+		VersionNumberRelation relation = SemverMatcher.relation(currentVersion, NodeBinariesConstants.NPM_MIN_VERSION);
 		assertTrue(msg, relation.isGreaterOrEqual());
 	}
 
@@ -75,7 +75,7 @@ public class NodeVersionTest {
 		String msg = "Version of node in " + nodeJsBinary.getBinaryAbsolutePath() + ": " + currentVersion
 				+ ",  need at least " + NodeBinariesConstants.NODE_MIN_VERSION;
 
-		VersionNumberRelation relation = SEMVERMatcher.relation(currentVersion, NodeBinariesConstants.NODE_MIN_VERSION);
+		VersionNumberRelation relation = SemverMatcher.relation(currentVersion, NodeBinariesConstants.NODE_MIN_VERSION);
 		assertTrue(msg, relation.isGreaterOrEqual());
 	}
 

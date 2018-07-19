@@ -19,7 +19,7 @@ import java.util.stream.StreamSupport;
 
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.SubMonitor;
-import org.eclipse.n4js.semver.SEMVER.VersionNumber;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.ui.external.ExternalLibrariesActionsHelper;
 
 import com.google.inject.Inject;

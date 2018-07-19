@@ -14,13 +14,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.n4js.semver.SEMVERInjectorProvider;
-import org.eclipse.n4js.semver.SEMVERMatcher;
-import org.eclipse.n4js.semver.SEMVERMatcher.RelationKind;
-import org.eclipse.n4js.semver.SEMVERMatcher.VersionNumberRelation;
+import org.eclipse.n4js.semver.SemverMatcher;
+import org.eclipse.n4js.semver.SemverMatcher.RelationKind;
+import org.eclipse.n4js.semver.SemverMatcher.VersionNumberRelation;
 import org.eclipse.n4js.semver.SEMVERParseHelper;
-import org.eclipse.n4js.semver.SEMVERUtils;
-import org.eclipse.n4js.semver.SEMVER.VersionNumber;
-import org.eclipse.n4js.semver.model.SEMVERSerializer;
+import org.eclipse.n4js.semver.SemverUtils;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
+import org.eclipse.n4js.semver.model.SemverSerializer;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.XtextRunner;
 import org.junit.Assert;
@@ -45,11 +45,11 @@ public class VersionTest {
 	}
 
 	VersionNumber version(int major, int minor, int patch, String preRelease, String buildMetadata) {
-		return SEMVERUtils.createVersionNumber(major, minor, patch, preRelease, buildMetadata);
+		return SemverUtils.createVersionNumber(major, minor, patch, preRelease, buildMetadata);
 	}
 
 	VersionNumber closestMatch(List<VersionNumber> versions, VersionNumber version) {
-		return SEMVERUtils.findClosestMatching(versions, version);
+		return SemverUtils.findClosestMatching(versions, version);
 
 	}
 
@@ -148,15 +148,15 @@ public class VersionTest {
 		VersionNumber greatest = version(1, 2, 3);
 
 		RelationKind relationKind = RelationKind.SemverMatchAllowPrereleaseTags;
-		Assert.assertEquals(VersionNumberRelation.Equal, SEMVERMatcher.relation(lower, lower, relationKind));
-		Assert.assertEquals(VersionNumberRelation.Smaller, SEMVERMatcher.relation(lower, greater, relationKind));
-		Assert.assertEquals(VersionNumberRelation.Smaller, SEMVERMatcher.relation(lower, greatest, relationKind));
-		Assert.assertEquals(VersionNumberRelation.Greater, SEMVERMatcher.relation(greater, lower, relationKind));
-		Assert.assertEquals(VersionNumberRelation.Equal, SEMVERMatcher.relation(greater, greater, relationKind));
-		Assert.assertEquals(VersionNumberRelation.Smaller, SEMVERMatcher.relation(greater, greatest, relationKind));
-		Assert.assertEquals(VersionNumberRelation.Greater, SEMVERMatcher.relation(greatest, lower, relationKind));
-		Assert.assertEquals(VersionNumberRelation.Greater, SEMVERMatcher.relation(greatest, greater, relationKind));
-		Assert.assertEquals(VersionNumberRelation.Equal, SEMVERMatcher.relation(greatest, greatest, relationKind));
+		Assert.assertEquals(VersionNumberRelation.Equal, SemverMatcher.relation(lower, lower, relationKind));
+		Assert.assertEquals(VersionNumberRelation.Smaller, SemverMatcher.relation(lower, greater, relationKind));
+		Assert.assertEquals(VersionNumberRelation.Smaller, SemverMatcher.relation(lower, greatest, relationKind));
+		Assert.assertEquals(VersionNumberRelation.Greater, SemverMatcher.relation(greater, lower, relationKind));
+		Assert.assertEquals(VersionNumberRelation.Equal, SemverMatcher.relation(greater, greater, relationKind));
+		Assert.assertEquals(VersionNumberRelation.Smaller, SemverMatcher.relation(greater, greatest, relationKind));
+		Assert.assertEquals(VersionNumberRelation.Greater, SemverMatcher.relation(greatest, lower, relationKind));
+		Assert.assertEquals(VersionNumberRelation.Greater, SemverMatcher.relation(greatest, greater, relationKind));
+		Assert.assertEquals(VersionNumberRelation.Equal, SemverMatcher.relation(greatest, greatest, relationKind));
 	}
 
 	private void assertMissing(VersionNumber actual) {
@@ -164,8 +164,8 @@ public class VersionTest {
 	}
 
 	private void assertEquals(VersionNumber actual, VersionNumber expected) {
-		String msg = "Expected '" + SEMVERSerializer.serialize(expected);
-		msg += "'. Was: '" + SEMVERSerializer.serialize(actual) + "' instead.";
+		String msg = "Expected '" + SemverSerializer.serialize(expected);
+		msg += "'. Was: '" + SemverSerializer.serialize(actual) + "' instead.";
 		Assert.assertEquals(msg, expected, actual);
 	}
 

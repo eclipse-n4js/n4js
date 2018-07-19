@@ -27,7 +27,7 @@ import org.eclipse.n4js.n4mf.ProjectDependency;
 import org.eclipse.n4js.n4mf.ProjectDependencyScope;
 import org.eclipse.n4js.n4mf.ProjectReference;
 
-import org.eclipse.n4js.semver.SEMVER.VersionRangeSetRequirement;
+import org.eclipse.n4js.semver.Semver.VersionRangeSetRequirement;
 
 /**
  * <!-- begin-user-doc -->

@@ -9,7 +9,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EValidator;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.Diagnostician;
-import org.eclipse.n4js.semver.SEMVER.NPMVersionRequirement;
+import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -24,7 +24,7 @@ import org.eclipse.xtext.validation.impl.ConcreteSyntaxEValidator;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
-/** Customized validator class to validate SEMVER objects */
+/** Customized validator class to validate Semver objects */
 public class SemverResourceValidator extends ResourceValidatorImpl {
 	@Inject
 	private Diagnostician diagnostician;
@@ -32,12 +32,12 @@ public class SemverResourceValidator extends ResourceValidatorImpl {
 	private OperationCanceledManager operationCanceledManager;
 
 	/**
-	 * Validates SEMVER {@link EObject}s
+	 * Validates Semver {@link EObject}s
 	 *
 	 * @param resource
 	 *            A JSON resource
 	 * @param root
-	 *            A SEMVER {@link EObject}, usually {@link NPMVersionRequirement}
+	 *            A Semver {@link EObject}, usually {@link NPMVersionRequirement}
 	 */
 	public List<Issue> validate(Resource resource, EObject root, CheckMode mode, CancelIndicator monitor) {
 		List<Issue> result = new ArrayList<>();
@@ -54,7 +54,7 @@ public class SemverResourceValidator extends ResourceValidatorImpl {
 		throw new IllegalStateException("Not supported");
 	}
 
-	/** Copied from parent class to change language to {@code SEMVERGlobals.LANGUAGE_NAME} */
+	/** Copied from parent class to change language to {@code SemverGlobals.LANGUAGE_NAME} */
 	@Override
 	protected void validate(Resource resource, EObject eObject, CheckMode mode, CancelIndicator monitor,
 			IAcceptor<Issue> acceptor) {
@@ -69,7 +69,7 @@ public class SemverResourceValidator extends ResourceValidatorImpl {
 			options.put(EValidator.class, diagnostician);
 			if (resource instanceof XtextResource) {
 				options.put(AbstractInjectableValidator.CURRENT_LANGUAGE_NAME,
-						SEMVERGlobals.LANGUAGE_NAME);
+						SemverGlobals.LANGUAGE_NAME);
 			}
 			Diagnostic diagnostic = diagnostician.validate(eObject, options);
 			if (!diagnostic.getChildren().isEmpty()) {
