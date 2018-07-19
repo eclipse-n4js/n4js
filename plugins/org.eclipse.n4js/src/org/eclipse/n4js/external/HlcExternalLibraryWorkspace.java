@@ -102,11 +102,6 @@ public class HlcExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	}
 
 	@Override
-	public Iterator<URI> getArchiveIterator(final URI archiveLocation, final String archiveRelativeLocation) {
-		return emptyIterator();
-	}
-
-	@Override
 	public Iterator<URI> getFolderIterator(final URI folderLocation) {
 		return emptyIterator();
 	}

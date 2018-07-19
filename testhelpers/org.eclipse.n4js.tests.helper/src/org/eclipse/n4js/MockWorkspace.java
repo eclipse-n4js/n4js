@@ -60,11 +60,6 @@ public class MockWorkspace extends InternalN4JSWorkspace {
 	}
 
 	@Override
-	public UnmodifiableIterator<URI> getArchiveIterator(URI archiveLocation, String archiveRelativeLocation) {
-		return Iterators.unmodifiableIterator(Collections.emptyIterator());
-	}
-
-	@Override
 	public UnmodifiableIterator<URI> getFolderIterator(URI folderLocation) {
 		return Iterators.unmodifiableIterator(Collections.emptyIterator());
 	}

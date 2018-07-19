@@ -23,10 +23,8 @@ import com.google.common.base.Optional;
 public interface IN4JSSourceContainer extends Iterable<URI> {
 
 	/**
-	 * Returns the project this source container belongs to. If the source container is nested in an archive, the
-	 * project where the archive is used as a library is returned.
+	 * Returns the project this source container belongs to.
 	 */
-	// TODO should return IN4JSComponent
 	IN4JSProject getProject();
 
 	/**
@@ -63,7 +61,7 @@ public interface IN4JSSourceContainer extends Iterable<URI> {
 	URI findArtifact(QualifiedName name, Optional<String> fileExtension);
 
 	/**
-	 * The relative location in the archive file or under the project root.
+	 * The relative location under the project root.
 	 */
 	String getRelativeLocation();
 

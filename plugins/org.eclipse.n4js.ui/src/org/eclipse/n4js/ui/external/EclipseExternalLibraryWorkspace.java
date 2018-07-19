@@ -123,11 +123,6 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	}
 
 	@Override
-	public Iterator<URI> getArchiveIterator(URI archiveLocation, String archiveRelativeLocation) {
-		return Collections.emptyIterator();
-	}
-
-	@Override
 	public Iterator<URI> getFolderIterator(URI folderLocation) {
 		URI findProjectWith = findProjectWith(folderLocation);
 		if (null != findProjectWith) {

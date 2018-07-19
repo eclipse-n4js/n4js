@@ -49,9 +49,6 @@ public abstract class AbstractProjectModelTest {
 	/***/
 	protected URI libProjectURI;
 
-	/***/
-	public final String archiveProjectId = "archive";
-
 	private AbstractProjectModelSetup setup;
 
 	/***/

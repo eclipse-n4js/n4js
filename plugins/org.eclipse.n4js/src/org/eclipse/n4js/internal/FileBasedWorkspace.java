@@ -10,19 +10,13 @@
  */
 package org.eclipse.n4js.internal;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 import org.eclipse.emf.common.util.AbstractTreeIterator;
 import org.eclipse.emf.common.util.URI;
@@ -128,28 +122,6 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 			}
 		}
 		return null;
-	}
-
-	@Override
-	public Iterator<URI> getArchiveIterator(final URI unsafeLocation, String archiveRelativeLocation) {
-		URI archiveLocation = URIUtils.normalize(unsafeLocation);
-		File archiveFile = new File(java.net.URI.create(archiveLocation.toString()));
-		ZipInputStream stream = null;
-		try {
-			stream = new ZipInputStream(new BufferedInputStream(new FileInputStream(archiveFile)));
-			Iterator<ZipEntry> entries = getArchiveIterator(stream, archiveRelativeLocation);
-			return toArchiveURIs(archiveLocation, entries);
-		} catch (FileNotFoundException e) {
-			return Collections.emptyIterator();
-		} finally {
-			if (stream != null) {
-				try {
-					stream.close();
-				} catch (IOException e) {
-					// ignore
-				}
-			}
-		}
 	}
 
 	@Override

@@ -29,8 +29,8 @@ import com.google.common.collect.ImmutableList;
 
 /**
  * A common interface to projects and their configuration. {@link IN4JSProject Projects} have a set of relevant
- * properties like the configured dependencies and how they resolve to either archives or other projects, or the
- * configured source containers.
+ * properties like the configured dependencies and how they resolve to other projects, or the configured source
+ * containers.
  * <p>
  * IN4JSProjects are handle objects that are not necessarily backed by existing structures in the file system. Some
  * methods don't yield interesting information, if the element does not exist. Others work. See the JavaDoc of each
@@ -40,7 +40,7 @@ import com.google.common.collect.ImmutableList;
  * This is modeled similar to {@code org.eclipse.jdt.core.JavaCore} works, e.g. instances of {@link IN4JSProject} are
  * obtained via {@link IN4JSCore#create(URI)}.
  */
-public interface IN4JSProject  {
+public interface IN4JSProject {
 
 	/**
 	 * The name of the package.json file.
