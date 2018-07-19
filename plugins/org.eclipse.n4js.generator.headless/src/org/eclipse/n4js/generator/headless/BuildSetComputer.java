@@ -166,13 +166,15 @@ public class BuildSetComputer {
 	 */
 	public BuildSet createBuildSet(List<File> searchPaths, List<File> projectPaths, List<File> singleSourceFiles)
 			throws N4JSCompileException {
-		printCompileArguments(searchPaths, projectPaths, singleSourceFiles);
+		logBuildSetComputerConfiguration(searchPaths, projectPaths, singleSourceFiles);
 		return collectProjects(searchPaths, projectPaths, singleSourceFiles);
 	}
 
 	/**
-	 * Prints out some debug information about the user-provided compilation arguments (only if {@link #logger} is
-	 * configured in debug mode.
+	 * Logs some debug information about the user-provided project discovery arguments (only if {@link #logger} is
+	 * configured in debug mode).
+	 *
+	 * This includes the specified project locations, project search paths and potential paths of single-file arguments.
 	 *
 	 * @param searchPaths
 	 *            where to search for dependent projects.
@@ -181,7 +183,8 @@ public class BuildSetComputer {
 	 * @param singleSourceFiles
 	 *            if non-empty limit compilation to the sources files listed here
 	 */
-	private void printCompileArguments(List<File> searchPaths, List<File> projectPaths, List<File> singleSourceFiles) {
+	private void logBuildSetComputerConfiguration(List<File> searchPaths, List<File> projectPaths,
+			List<File> singleSourceFiles) {
 		if (logger.isCreateDebugOutput()) {
 			logger.debug("Computing build set with the following arguments");
 			logger.debug("  Search paths: " + Joiner.on(", ").join(searchPaths));
