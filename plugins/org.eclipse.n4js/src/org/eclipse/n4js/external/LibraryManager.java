@@ -351,7 +351,7 @@ public class LibraryManager {
 
 			if (installedNpms.containsKey(name)) {
 				String installedVersionString = Strings.emptyIfNull(installedNpms.get(name).getValue());
-				if (isAlreadyInstalled(installedVersionString, name, requestedVersionString)) {
+				if (installedMatchesRequestedVersion(installedVersionString, requestedVersionString)) {
 					// if a matching version is installed, do not reinstall
 					continue;
 				}
@@ -377,22 +377,18 @@ public class LibraryManager {
 	}
 
 	/**
-	 * Returns {@code true} iff the given map of {@code installedNpms} contains the {@code requestedPackage} in a
-	 * version that fulfills the given {@code requestedVersion}.
-	 *
+	 * Returns {@code true} iff the given {@code installedVersionString} matches the {@code requestedVersionString}.
 	 * Returns {@code false} otherwise.
 	 *
 	 * @param installedVersionString
-	 *            The name of the already installed package.
-	 * @param requestedPackageString
-	 *            The name of the requested package.
-	 * @param requestedVersionString
-	 *            The requested version constraint in npm format.
+	 *            The version of the already installed package.
+	 * @param requestedVersionRequirementString
+	 *            The requested version requirement in npm-semver format of the same package.
 	 */
-	private boolean isAlreadyInstalled(String installedVersionString,
-			String requestedPackageString, String requestedVersionString) {
+	private boolean installedMatchesRequestedVersion(String installedVersionString,
+			String requestedVersionRequirementString) {
 
-		NPMVersionRequirement requestedVersion = semverHelper.parse(requestedVersionString);
+		NPMVersionRequirement requestedVersion = semverHelper.parse(requestedVersionRequirementString);
 		VersionNumber installedVersion = semverHelper.parseVersionNumber(installedVersionString);
 
 		boolean canComputeMatch = SEMVERMatcher.canComputeMatch(installedVersion, requestedVersion);

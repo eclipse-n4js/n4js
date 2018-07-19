@@ -17,6 +17,7 @@ import java.nio.file.Path
 
 import org.eclipse.n4js.semver.model.SEMVERSerializer
 
+// GH-809 delete this class
 /**
  * Converting all relevant Manifest-data into an DataObject.
  */

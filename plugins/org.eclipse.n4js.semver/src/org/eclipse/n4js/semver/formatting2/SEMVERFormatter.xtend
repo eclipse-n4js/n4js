@@ -19,17 +19,14 @@ import org.eclipse.n4js.semver.SEMVER.VersionRangeSetRequirement
 class SEMVERFormatter extends AbstractFormatter2 {
 
 	def dispatch void format(VersionRangeSetRequirement versionRangeSet, extension IFormattableDocument document) {
-		// TODO: format HiddenRegions around keywords, attributes, cross references, etc. 
 		for (VersionRange versionRange : versionRangeSet.getRanges()) {
 			versionRange.format;
 		}
 	}
 
 	def dispatch void format(HyphenVersionRange hyphenVersionRange, extension IFormattableDocument document) {
-		// TODO: format HiddenRegions around keywords, attributes, cross references, etc. 
 		hyphenVersionRange.getFrom.format;
 		hyphenVersionRange.getTo.format;
 	}
 
-	// TODO: implement for EnumeratedVersionRange, SimpleVersion, VersionNumber
 }

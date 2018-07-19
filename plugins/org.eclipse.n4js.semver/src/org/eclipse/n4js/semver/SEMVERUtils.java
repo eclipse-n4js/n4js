@@ -23,6 +23,7 @@ import com.google.common.base.Strings;
 /** Utilities to create {@link VersionNumber}s */
 public class SEMVERUtils {
 
+	/** Utility class to simplify handling when dealing with versions, especially inside {@link SEMVERMatcher} */
 	static class VersionNumberDescriptor {
 		final Integer major;
 		final Integer minor;
@@ -174,7 +175,8 @@ public class SEMVERUtils {
 	}
 
 	/** Creates a new instance of {@link VersionRangeSetRequirement} with the given properties. */
-	public static VersionRangeSetRequirement createVersionRangeSet(VersionComparator comparator, VersionNumber version) {
+	public static VersionRangeSetRequirement createVersionRangeSet(VersionComparator comparator,
+			VersionNumber version) {
 		VersionNumber versionNumber = copyVersionNumber(version);
 
 		SimpleVersion simpleVersion = SEMVERFactory.eINSTANCE.createSimpleVersion();

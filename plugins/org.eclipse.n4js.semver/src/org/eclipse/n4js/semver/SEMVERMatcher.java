@@ -60,6 +60,10 @@ public class SEMVERMatcher {
 	}
 
 	/**
+	 * The methods like {@link #matches(VersionNumber, NPMVersionRequirement)} cannot compute a valid result iff the
+	 * given arguments are invalid or give no information about matching. In these cases, this method here returns
+	 * {@code false}.
+	 *
 	 * @return true iff the given arguments will yield a useful result when passed to the method
 	 *         {@link #matches(VersionNumber, VersionRangeSetRequirement)}
 	 */
@@ -79,9 +83,10 @@ public class SEMVERMatcher {
 	}
 
 	/**
-	 * This method checks {@link NPMVersionRequirement}s whether they match or not. In case the given npm constraint is a SEMVER
-	 * version (i.e. {@link VersionRangeSetRequirement} or other subtypes that contain {@link SimpleVersion}), the given proband is
-	 * checked against it and the result of this check is returned. Otherwise {@code true} is returned.
+	 * This method checks {@link NPMVersionRequirement}s whether they match or not. In case the given npm constraint is
+	 * a SEMVER version (i.e. {@link VersionRangeSetRequirement} or other subtypes that contain {@link SimpleVersion}),
+	 * the given proband is checked against it and the result of this check is returned. Otherwise {@code true} is
+	 * returned.
 	 *
 	 * @param proband
 	 *            version that is checked to match the constraint

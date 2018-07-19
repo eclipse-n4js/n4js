@@ -605,14 +605,8 @@ public class ProjectDescriptionHelper {
 				dep.setProjectId(projectId);
 				dep.setVersionConstraintString(valueStr);
 
-				boolean canParseSEMVER = true;
-				canParseSEMVER = !"latest".equals(valueStr);
-				if (canParseSEMVER) {
-					VersionRangeSetRequirement vrs = semverHelper.parseVersionRangeSet(valueStr);
-					dep.setVersionConstraint(vrs);
-				} else {
-					dep.setVersionConstraint(null);
-				}
+				VersionRangeSetRequirement vrs = semverHelper.parseVersionRangeSet(valueStr);
+				dep.setVersionConstraint(vrs);
 				target.getProjectDependencies().add(dep);
 			}
 		}

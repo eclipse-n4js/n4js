@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.projectModel.dependencies;
 
-//import static org.eclipse.n4js.external.version.VersionConstraintFormatUtil.npmFormat;
-
 import org.eclipse.n4js.n4mf.ProjectDependency;
 import org.eclipse.n4js.n4mf.ProjectReference;
 import org.eclipse.n4js.semver.model.SEMVERSerializer;
