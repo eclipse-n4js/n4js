@@ -40,12 +40,38 @@ import com.google.common.collect.ImmutableList;
  * This is modeled similar to {@code org.eclipse.jdt.core.JavaCore} works, e.g. instances of {@link IN4JSProject} are
  * obtained via {@link IN4JSCore#create(URI)}.
  */
-public interface IN4JSProject extends IN4JSSourceContainerAware {
+public interface IN4JSProject  {
 
 	/**
 	 * The name of the package.json file.
 	 */
 	public final static String PACKAGE_JSON = N4JSGlobals.PACKAGE_JSON;
+
+	/**
+	 * @return the receiving project's ID. Also available if the project does not exist.
+	 */
+	String getProjectId();
+
+	/**
+	 * The project's location. Also available if the project does not exist. This will return a platform URI when
+	 * running within Eclipse, and a file URI in headless mode.
+	 */
+	URI getLocation();
+
+	/**
+	 * The source containers of this container structure, possibly empty.
+	 */
+	ImmutableList<? extends IN4JSSourceContainer> getSourceContainers();
+
+	/**
+	 * All direct dependencies for this structure.
+	 */
+	ImmutableList<? extends IN4JSProject> getAllDirectDependencies();
+
+	/**
+	 * @return true if this container structure is external to the workspace.
+	 */
+	boolean isExternal();
 
 	/**
 	 * Returns the project type of the project or null, if type is not available
@@ -79,7 +105,7 @@ public interface IN4JSProject extends IN4JSSourceContainerAware {
 	 * Returns the raw provided runtime libraries data for this project. Empty list returned if project is not
 	 * {@link ProjectType#RUNTIME_ENVIRONMENT} or does not provide any libraries.
 	 */
-	ImmutableList<? extends IN4JSSourceContainerAware> getProvidedRuntimeLibraries();
+	ImmutableList<? extends IN4JSProject> getProvidedRuntimeLibraries();
 
 	/**
 	 * Returns projectId of the extended runtime, if any.
@@ -93,7 +119,7 @@ public interface IN4JSProject extends IN4JSSourceContainerAware {
 	 *
 	 * @return the extended RE. Could be absent but never {@code null}.
 	 */
-	Optional<IN4JSSourceContainerAware> getExtendedRuntimeEnvironment();
+	Optional<IN4JSProject> getExtendedRuntimeEnvironment();
 
 	/**
 	 * The vendor ID. It is not available, if the project does not exist.
@@ -104,13 +130,6 @@ public interface IN4JSProject extends IN4JSSourceContainerAware {
 	 * returns the value of the <code>ModuleLoader</code> property in the manifest.
 	 */
 	ModuleLoader getModuleLoader();
-
-	/**
-	 * The project's location. Also available if the project does not exist. This will return a platform URI when
-	 * running within Eclipse, and a file URI in headless mode.
-	 */
-	@Override
-	URI getLocation();
 
 	/**
 	 * The project's location in the local file system.

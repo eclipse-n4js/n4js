@@ -29,7 +29,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.n4js.n4mf.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware;
 import org.eclipse.n4js.runner.exceptions.DependencyCycleDetectedException;
 import org.eclipse.n4js.runner.exceptions.InsolvableRuntimeEnvironmentException;
 import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
@@ -122,9 +121,9 @@ public class RuntimeEnvironmentsHelper {
 		if (!project.getProjectType().equals(ProjectType.RUNTIME_ENVIRONMENT)) {
 			return;
 		}
-		Optional<IN4JSSourceContainerAware> maybePArent = project.getExtendedRuntimeEnvironment();
+		Optional<IN4JSProject> maybePArent = project.getExtendedRuntimeEnvironment();
 		if (maybePArent.isPresent()) {
-			IN4JSProject parent = (IN4JSProject) maybePArent.get();
+			IN4JSProject parent = maybePArent.get();
 			environemtns.add(parent);
 			getEnvironemntWithAncestorsRecursive(parent, environemtns);
 		}
@@ -154,28 +153,26 @@ public class RuntimeEnvironmentsHelper {
 
 	/**
 	 * Collects dependencies of the provided source container, by analyzing direct dependencies of the container and
-	 * recursively their dependencies. Dependencies in form of {@link IN4JSSourceContainerAware} are mapped to
-	 * {@link IN4JSProject}s, that is instances of {@link IN4JSProject} project are returned.
+	 * recursively their dependencies. Dependencies in form of {@link IN4JSProject} are mapped to {@link IN4JSProject}s,
+	 * that is instances of {@link IN4JSProject} project are returned.
 	 *
 	 * Discovered dependencies are collected only if they pass test specified by provided predicate.
 	 *
-	 * @param sourceContainer
+	 * @param project
 	 *            whose dependencies will be collected
 	 * @param collection
 	 *            where dependencies are collected
 	 * @param predicate
 	 *            to test if given dependency should be collected
 	 */
-	private void recursiveDependencyCollector(IN4JSSourceContainerAware sourceContainer,
+	private void recursiveDependencyCollector(IN4JSProject project,
 			Collection<IN4JSProject> collection,
 			Predicate<IN4JSProject> predicate) {
-
-		IN4JSProject project = (extractProject(sourceContainer));
 
 		if (predicate.test(project))
 			collection.add(project);
 
-		sourceContainer.getAllDirectDependencies().forEach(
+		project.getAllDirectDependencies().forEach(
 				dep -> recursiveDependencyCollector(dep, collection, predicate));
 	}
 
@@ -228,7 +225,7 @@ public class RuntimeEnvironmentsHelper {
 	}
 
 	/**
-	 * Maps passed collection of {@link IN4JSSourceContainerAware} to list of {@link IN4JSProject}, that is instances of
+	 * Maps passed collection of {@link IN4JSProject} to list of {@link IN4JSProject}, that is instances of
 	 * {@link IN4JSProject} project are returned. For each result of that transformation, examines its
 	 * {@link IN4JSProject#getProvidedRuntimeLibraries()} to check if they pass predicate test. Instances that do are
 	 * stored in the passed collection.
@@ -243,34 +240,15 @@ public class RuntimeEnvironmentsHelper {
 	 *            to test if provided project is of type {@link ProjectType#RUNTIME_LIBRARY}
 	 */
 	private void recursiveProvidedRuntimeLibrariesCollector(
-			com.google.common.collect.ImmutableList<? extends IN4JSSourceContainerAware> runtimeLibraries,
+			com.google.common.collect.ImmutableList<? extends IN4JSProject> runtimeLibraries,
 			Collection<IN4JSProject> collection, Predicate<IN4JSProject> predicate) {
 
 		runtimeLibraries.forEach(runtimeLibrary -> {
-			IN4JSProject project = (extractProject(runtimeLibrary));
-			if (predicate.test(project))
-				collection.add(project);
-			recursiveProvidedRuntimeLibrariesCollector(project.getProvidedRuntimeLibraries(), collection, predicate);
+			if (predicate.test(runtimeLibrary))
+				collection.add(runtimeLibrary);
+			recursiveProvidedRuntimeLibrariesCollector(runtimeLibrary.getProvidedRuntimeLibraries(), collection,
+					predicate);
 		});
-	}
-
-	/**
-	 * Map provided source container to instance of {@link IN4JSProject}, that is instances of {@link IN4JSProject}
-	 * project are returned.
-	 *
-	 * @param container
-	 *            that is mapped to project
-	 *
-	 * @return project resulting from mapping
-	 * @throws RuntimeException
-	 *             if mapping cannot be performed
-	 */
-
-	private IN4JSProject extractProject(IN4JSSourceContainerAware container) {
-		if (container instanceof IN4JSProject) {
-			return (IN4JSProject) container;
-		}
-		throw new RuntimeException("Unknown instance type of container " + container.getClass().getName());
 	}
 
 	/**
@@ -359,11 +337,9 @@ public class RuntimeEnvironmentsHelper {
 	/**
 	 * recursively searches given source container for provided runtime environments
 	 */
-	private void recursiveCompatibleEnvironemntCollector(IN4JSSourceContainerAware sourceContainer,
+	private void recursiveCompatibleEnvironemntCollector(IN4JSProject project,
 			Collection<String> collection,
 			Predicate<IN4JSProject> predicate, List<IN4JSProject> allRuntimeEnv) {
-
-		IN4JSProject project = (extractProject(sourceContainer));
 
 		if (predicate.test(project)) {
 			com.google.common.base.Optional<String> oExtendedProjectId = project.getExtendedRuntimeEnvironmentId();

@@ -31,6 +31,7 @@ import java.util.List
 import java.util.Map
 import java.util.Set
 import java.util.Stack
+import org.apache.log4j.Logger
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
@@ -56,7 +57,6 @@ import org.eclipse.n4js.n4mf.SourceContainerType
 import org.eclipse.n4js.n4mf.VersionConstraint
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.IN4JSProject
-import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
 import org.eclipse.n4js.ts.types.TClassifier
@@ -68,6 +68,7 @@ import org.eclipse.n4js.utils.Version
 import org.eclipse.n4js.utils.WildcardPathFilterHelper
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
+import org.eclipse.n4js.validation.helper.SourceContainerAwareDependencyTraverser
 import org.eclipse.xtend.lib.annotations.Data
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.resource.IContainer
@@ -83,8 +84,6 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 import static org.eclipse.n4js.validation.validators.packagejson.ProjectTypePredicate.*
 
 import static extension com.google.common.base.Strings.nullToEmpty
-import org.eclipse.n4js.validation.helper.SourceContainerAwareDependencyTraverser
-import org.apache.log4j.Logger
 
 /**
  * A JSON validator extension that validates {@code package.json} resources in the context
@@ -397,7 +396,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			] !== null
 	}
 
-	private def String calculateName(IN4JSSourceContainerAware it) {
+	private def String calculateName(IN4JSProject it) {
 		it.projectId;
 	}
 

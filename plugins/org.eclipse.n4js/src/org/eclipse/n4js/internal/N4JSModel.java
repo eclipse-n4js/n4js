@@ -17,7 +17,6 @@ import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Iterables.isEmpty;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.emptyList;
-import static org.eclipse.n4js.internal.N4JSSourceContainerType.PROJECT;
 import static org.eclipse.n4js.n4mf.ProjectType.TEST;
 
 import java.io.File;
@@ -42,7 +41,6 @@ import org.eclipse.n4js.n4mf.SourceContainerDescription;
 import org.eclipse.n4js.n4mf.SourceContainerType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
-import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware;
 import org.eclipse.xtext.naming.QualifiedName;
 
 import com.google.common.base.Objects;
@@ -270,19 +268,15 @@ public class N4JSModel {
 		return result.build();
 	}
 
-	public ImmutableList<? extends IN4JSSourceContainerAware> getProvidedRuntimeLibraries(N4JSProject project) {
+	public ImmutableList<? extends IN4JSProject> getProvidedRuntimeLibraries(N4JSProject project) {
 
-		ImmutableList.Builder<IN4JSSourceContainerAware> providedRuntimes = ImmutableList.builder();
+		ImmutableList.Builder<IN4JSProject> providedRuntimes = ImmutableList.builder();
 		EList<ProjectReference> runtimeLibraries = getAllProvidedRuntimeLibraries(project);
 		URI projectLocation = project.getLocation();
 
 		// GHOLD-249: If the project n4mf file has parse errors, we need a lot of null checks.
 		for (ProjectReference runtimeLibrary : runtimeLibraries) {
-			URI location = workspace.getLocation(projectLocation, runtimeLibrary, PROJECT);
-			if (null == location) {
-				location = externalLibraryWorkspace.getLocation(projectLocation, runtimeLibrary,
-						PROJECT);
-			}
+			URI location = workspace.getLocation(projectLocation, runtimeLibrary);
 
 			if (null != location) {
 				providedRuntimes.add(getN4JSProject(location));
@@ -370,11 +364,7 @@ public class N4JSModel {
 
 		if (null != description) {
 			for (ProjectDependency testedProject : description.getTestedProjects()) {
-				URI hostLocation = workspace.getLocation(location, testedProject, PROJECT);
-
-				if (null == hostLocation) {
-					hostLocation = externalLibraryWorkspace.getLocation(location, testedProject, PROJECT);
-				}
+				URI hostLocation = workspace.getLocation(location, testedProject);
 
 				if (hostLocation != null) {
 					final N4JSProject tested = getN4JSProject(hostLocation);
@@ -411,12 +401,12 @@ public class N4JSModel {
 			return absent();
 		}
 
-		URI dependencyLocation = workspace.getLocation(location, reference, PROJECT);
+		URI dependencyLocation = workspace.getLocation(location, reference);
 		if (null != dependencyLocation) {
 			return fromNullable(getN4JSProject(dependencyLocation));
 		}
 
-		dependencyLocation = externalLibraryWorkspace.getLocation(location, reference, PROJECT);
+		dependencyLocation = externalLibraryWorkspace.getLocation(location, reference);
 		if (null != dependencyLocation) {
 			return fromNullable(getN4JSProject(dependencyLocation));
 		}

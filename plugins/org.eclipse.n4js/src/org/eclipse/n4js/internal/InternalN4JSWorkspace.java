@@ -46,11 +46,8 @@ public abstract class InternalN4JSWorkspace {
 	 *            the uri of the project that declares the reference
 	 * @param reference
 	 *            the project reference
-	 * @param expectedN4JSSourceContainerType
-	 *            what kind of source container to look for
 	 */
-	public abstract URI getLocation(URI projectURI, ProjectReference reference,
-			N4JSSourceContainerType expectedN4JSSourceContainerType);
+	public abstract URI getLocation(URI projectURI, ProjectReference reference);
 
 	/**
 	 * Iterates the contents of an archive.

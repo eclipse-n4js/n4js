@@ -33,7 +33,6 @@ import org.eclipse.n4js.generator.AbstractSubGenerator;
 import org.eclipse.n4js.n4mf.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware;
 import org.eclipse.n4js.runner.extension.IRunnerDescriptor;
 import org.eclipse.n4js.runner.extension.RunnerRegistry;
 import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
@@ -196,7 +195,7 @@ public class RunnerHelper {
 	 *
 	 * @see RuntimeEnvironmentsHelper#recursiveDependencyCollector
 	 */
-	public void recursiveExtendedREsCollector(IN4JSSourceContainerAware sourceContainer,
+	public void recursiveExtendedREsCollector(IN4JSProject sourceContainer,
 			Collection<IN4JSProject> addHere) {
 		recursiveExtendedREsCollector(sourceContainer, addHere, n4jsCore.findAllProjects());
 	}
@@ -206,16 +205,14 @@ public class RunnerHelper {
 	 *
 	 * @see RuntimeEnvironmentsHelper#recursiveDependencyCollector
 	 */
-	public void recursiveExtendedREsCollector(IN4JSSourceContainerAware sourceContainer,
+	public void recursiveExtendedREsCollector(IN4JSProject project,
 			Collection<IN4JSProject> addHere, Iterable<IN4JSProject> projects) {
-		final IN4JSProject project = extractProject(sourceContainer);
-
 		if (project.getProjectType().equals(ProjectType.RUNTIME_ENVIRONMENT)) {
 			addHere.add(project);
 			// TODO RLs can extend each other, should we use recursive RL deps collector?
 			// if RLs extend each other and are provided by REs in hierarchy we will collect them anyway
 			// if RLs extend each other but are from independent REs, that is and error?
-			project.getProvidedRuntimeLibraries().forEach(rl -> addHere.add(extractProject(rl)));
+			project.getProvidedRuntimeLibraries().forEach(rl -> addHere.add(rl));
 
 			Optional<String> ep = project.getExtendedRuntimeEnvironmentId();
 			Optional<IN4JSProject> extendedRE = Optional.absent();
@@ -234,7 +231,7 @@ public class RunnerHelper {
 	 *
 	 * @see RuntimeEnvironmentsHelper#recursiveDependencyCollector
 	 */
-	public Collection<IN4JSProject> recursiveDependencyCollector(IN4JSSourceContainerAware sourceContainerAware) {
+	public Collection<IN4JSProject> recursiveDependencyCollector(IN4JSProject sourceContainerAware) {
 		if (null == sourceContainerAware) {
 			return emptyList();
 		}
@@ -255,26 +252,18 @@ public class RunnerHelper {
 				.filter(module -> module != null).collect(Collectors.toList());
 	}
 
-	private void recursiveDependencyCollector(IN4JSSourceContainerAware sourceContainer,
+	private void recursiveDependencyCollector(IN4JSProject project,
 			Collection<IN4JSProject> addHere, RecursionGuard<URI> guard) {
 
-		final IN4JSProject project = extractProject(sourceContainer);
 		if (project.exists()) {
 			addHere.add(project);
 		}
 
-		for (final IN4JSSourceContainerAware dep : sourceContainer.getAllDirectDependencies()) {
+		for (final IN4JSProject dep : project.getAllDirectDependencies()) {
 			if (guard.tryNext(dep.getLocation())) {
 				recursiveDependencyCollector(dep, addHere, guard);
 			}
 		}
-	}
-
-	private IN4JSProject extractProject(IN4JSSourceContainerAware container) {
-		if (container instanceof IN4JSProject) {
-			return (IN4JSProject) container;
-		}
-		throw new RuntimeException("unknown instance type of container " + container.getClass().getName());
 	}
 
 	/**

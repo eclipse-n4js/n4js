@@ -19,7 +19,6 @@ import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
-import org.eclipse.n4js.internal.N4JSSourceContainerType;
 import org.eclipse.n4js.n4mf.ProjectDependency;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.junit.Test;
@@ -70,8 +69,7 @@ public abstract class AbstractInternalWorkspaceTest extends AbstractProjectModel
 	public void testGetLocation_01() {
 		ProjectDescription description = getWorkspace().getProjectDescription(myProjectURI);
 		ProjectDependency dependency = description.getProjectDependencies().get(0);
-		URI resolvedLocation = getWorkspace().getLocation(myProjectURI, dependency,
-				N4JSSourceContainerType.PROJECT);
+		URI resolvedLocation = getWorkspace().getLocation(myProjectURI, dependency);
 		assertEquals(libProjectURI, resolvedLocation);
 	}
 

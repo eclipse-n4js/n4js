@@ -34,7 +34,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
-import org.eclipse.n4js.internal.N4JSSourceContainerType;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectReference;
 import org.eclipse.n4js.utils.ProjectDescriptionHelper;
@@ -103,9 +102,7 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 	}
 
 	@Override
-	public URI getLocation(URI projectURI, ProjectReference projectReference,
-			N4JSSourceContainerType expectedN4JSSourceContainerType) {
-
+	public URI getLocation(URI projectURI, ProjectReference projectReference) {
 		if (projectURI.segmentCount() >= DIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT) {
 			String expectedProjectName = projectReference.getProjectId();
 			if (expectedProjectName != null && expectedProjectName.length() > 0) {

@@ -117,8 +117,7 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 	}
 
 	@Override
-	public URI getLocation(URI unsafeLocation, ProjectReference projectReference,
-			N4JSSourceContainerType expectedN4JSSourceContainerType) {
+	public URI getLocation(URI unsafeLocation, ProjectReference projectReference) {
 		String projectId = projectReference.getProjectId();
 		for (URI location : projectElementHandles.keySet()) {
 			if (location.lastSegment().equals(projectId)) {

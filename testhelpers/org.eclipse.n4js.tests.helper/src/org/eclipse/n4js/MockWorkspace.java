@@ -14,7 +14,6 @@ import java.util.Collections;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
-import org.eclipse.n4js.internal.N4JSSourceContainerType;
 import org.eclipse.n4js.n4mf.DeclaredVersion;
 import org.eclipse.n4js.n4mf.N4mfFactory;
 import org.eclipse.n4js.n4mf.ProjectDescription;
@@ -56,8 +55,7 @@ public class MockWorkspace extends InternalN4JSWorkspace {
 	}
 
 	@Override
-	public URI getLocation(URI projectURI, ProjectReference reference,
-			N4JSSourceContainerType expectedSourceContainerType) {
+	public URI getLocation(URI projectURI, ProjectReference reference) {
 		return MockProject.MOCK_URI;
 	}
 

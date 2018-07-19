@@ -35,7 +35,6 @@ import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
-import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware;
 import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.common.base.Optional;
@@ -55,11 +54,6 @@ public class N4JSProject implements IN4JSProject {
 		this.location = location;
 		this.external = external;
 		this.model = model;
-	}
-
-	@Override
-	public boolean isProject() {
-		return true;
 	}
 
 	@Override
@@ -162,17 +156,17 @@ public class N4JSProject implements IN4JSProject {
 	}
 
 	@Override
-	public ImmutableList<? extends IN4JSSourceContainerAware> getAllDirectDependencies() {
+	public ImmutableList<? extends IN4JSProject> getAllDirectDependencies() {
 		if (!exists()) {
 			return ImmutableList.of();
 		}
-		ImmutableList.Builder<IN4JSSourceContainerAware> result = ImmutableList.builder();
+		ImmutableList.Builder<IN4JSProject> result = ImmutableList.builder();
 		result.addAll(getDependencies());
 		return result.build();
 	}
 
 	@Override
-	public ImmutableList<? extends IN4JSSourceContainerAware> getProvidedRuntimeLibraries() {
+	public ImmutableList<? extends IN4JSProject> getProvidedRuntimeLibraries() {
 		if (!exists()) {
 			return ImmutableList.of();
 		}
@@ -329,7 +323,7 @@ public class N4JSProject implements IN4JSProject {
 	}
 
 	@Override
-	public Optional<IN4JSSourceContainerAware> getExtendedRuntimeEnvironment() {
+	public Optional<IN4JSProject> getExtendedRuntimeEnvironment() {
 		return fromNullable(model.getExtendedRuntimeEnvironment(this).orNull());
 	}
 

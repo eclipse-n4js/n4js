@@ -52,11 +52,7 @@ class ConvertManifestToPackageJson {
 		val extRE = project.extendedRuntimeEnvironment.orNull;
 		if(extRE!==null) {
 			// note: inconsistency in return type between getExtendedRuntimeEnvironment() and getDependencies()
-			if(extRE instanceof IN4JSProject) {
-				data.dependencies.put(extRE.projectId, "*");
-			} else {
-				throw new IllegalStateException("expected an IN4JSProject but got: " + extRE.class.name);
-			}
+			data.dependencies.put(extRE.projectId, "*");
 		}
 
 		// add N4JS node runtime environment to dependencies

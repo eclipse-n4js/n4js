@@ -20,7 +20,6 @@ import java.util.Set;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.internal.N4JSSourceContainerType;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectReference;
 
@@ -98,8 +97,7 @@ public class HlcExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	}
 
 	@Override
-	public URI getLocation(final URI projectURI, final ProjectReference reference,
-			final N4JSSourceContainerType expectedN4JSSourceContainerType) {
+	public URI getLocation(final URI projectURI, final ProjectReference reference) {
 		return null;
 	}
 
