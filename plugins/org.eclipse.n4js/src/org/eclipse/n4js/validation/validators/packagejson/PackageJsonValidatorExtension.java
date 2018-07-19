@@ -59,7 +59,6 @@ import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.semver.Semver.SimpleVersion;
 import org.eclipse.n4js.semver.Semver.TagVersionRequirement;
 import org.eclipse.n4js.semver.Semver.URLVersionRequirement;
-import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.semver.Semver.VersionRangeConstraint;
 import org.eclipse.n4js.semver.Semver.VersionRangeSetRequirement;
 import org.eclipse.n4js.semver.model.SemverSerializer;
@@ -210,8 +209,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 
 		NPMVersionRequirement npmVersion = semverHelper.parse(parseResult);
 		VersionRangeSetRequirement vrs = semverHelper.parseVersionRangeSet(parseResult);
-		VersionNumber vn = semverHelper.parseVersionNumber(parseResult);
-		if (vrs == null || vn == null || !(vrs.getRanges().get(0) instanceof VersionRangeConstraint)) {
+		if (vrs == null) {
 			String reason = "Cannot parse given string";
 			if (npmVersion != null) {
 				reason = "Given string is parsed as " + getVersionRequirementType(npmVersion);
@@ -221,14 +219,16 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 			return;
 		}
 
-		VersionRangeConstraint vrc = (VersionRangeConstraint) vrs.getRanges().get(0);
-		SimpleVersion simpleVersion = vrc.getVersionConstraints().get(0);
-		if (!simpleVersion.getComparators().isEmpty()) {
-			String comparator = SemverSerializer.serialize(simpleVersion.getComparators().get(0));
-			String reason = "Version number must not have the comparator '" + comparator + "'";
-			String msg = IssueCodes.getMessageForPKGJ_INVALID_VERSION_NUMBER(versionString, reason);
-			addIssue(msg, versionValue, IssueCodes.PKGJ_INVALID_VERSION_NUMBER);
-			return;
+		if (!vrs.getRanges().isEmpty() && vrs.getRanges().get(0) instanceof VersionRangeConstraint) {
+			VersionRangeConstraint vrc = (VersionRangeConstraint) vrs.getRanges().get(0);
+			SimpleVersion simpleVersion = vrc.getVersionConstraints().get(0);
+			if (!simpleVersion.getComparators().isEmpty()) {
+				String comparator = SemverSerializer.serialize(simpleVersion.getComparators().get(0));
+				String reason = "Version numbers must not have comparators: '" + comparator + "'";
+				String msg = IssueCodes.getMessageForPKGJ_INVALID_VERSION_NUMBER(versionString, reason);
+				addIssue(msg, versionValue, IssueCodes.PKGJ_INVALID_VERSION_NUMBER);
+				return;
+			}
 		}
 	}
 

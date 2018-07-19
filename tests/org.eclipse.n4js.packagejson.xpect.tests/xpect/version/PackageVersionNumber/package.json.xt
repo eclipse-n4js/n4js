@@ -26,7 +26,7 @@
 	"name": "PackageVersionNumber",
 	// XPECT errors --> "Invalid version number "0a.0.1": Given string is parsed as github location." at ""0a.0.1""
 	"version": "0a.0.1",
-	// XPECT errors --> "Invalid version number ">0.0.1": Version number must not have the comparator '>'." at "">0.0.1""
+	// XPECT errors --> "Invalid version number ">0.0.1": Version numbers must not have comparators: '>'." at "">0.0.1""
 	"version": ">0.0.1",
 	// XPECT errors --> "Too many version parts. Semantic versions consist only of major, minor and patch." at "23"
 	"version": "0.0.1.23",

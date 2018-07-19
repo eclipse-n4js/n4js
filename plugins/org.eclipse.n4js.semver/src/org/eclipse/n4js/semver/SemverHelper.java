@@ -88,7 +88,7 @@ public class SemverHelper {
 	/** @return {@link VersionNumber} of the given {@link IParseResult} */
 	public VersionNumber parseVersionNumber(IParseResult semverParseResult) {
 		VersionRangeSetRequirement vrs = parseVersionRangeSet(semverParseResult);
-		if (vrs == null) {
+		if (vrs == null || vrs.getRanges().isEmpty()) {
 			return null;
 		}
 		VersionRange firstVersionRange = vrs.getRanges().get(0);
