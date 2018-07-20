@@ -53,8 +53,8 @@ Contributors:
             </activeWhen>
         </handler>
     </extension>
-    -->
-    <!--
+-->
+<!--
     <extension point="org.eclipse.core.expressions.definitions">
         <definition id="org.eclipse.n4js.semver.SEMVER.Editor.opened">
             <and>
@@ -319,7 +319,7 @@ Contributors:
 			</command>
 		</menuContribution>
 	</extension>
-	-->
+-->
     <!-- quickfix marker resolution generator for org.eclipse.n4js.semver.SEMVER 
     <extension
             point="org.eclipse.ui.ide.markerResolution">
@@ -348,7 +348,7 @@ Contributors:
             </attribute>
         </markerResolutionGenerator>
     </extension>
-    -->
+-->
    	<!-- Rename Refactoring 
 	<extension point="org.eclipse.ui.handlers">
 		<handler 
@@ -409,4 +409,25 @@ Contributors:
     </fileTypes>
   </extension>
 -->
+<!--
+	<extension
+		point="org.eclipse.ui.editors">
+		<editor
+			class="org.eclipse.n4js.semver.ui.SemverExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
+			contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
+			default="true"
+			extensions="semver"
+			id="org.eclipse.n4js.semver.Semver"
+			name="SEMVER Editor">
+		</editor>
+	</extension>
+-->
+	<extension
+	      point="org.eclipse.xpect.fileExtensions">
+	      <fileExtension
+             fileExtension="semver"
+             xtextLanguageName="semver"
+             xtextRuntimeModule="org.eclipse.n4js.semver.SemverRuntimeModule">
+	      </fileExtension>
+	</extension>
 </plugin>
