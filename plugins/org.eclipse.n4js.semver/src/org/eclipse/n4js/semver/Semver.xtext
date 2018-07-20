@@ -28,8 +28,10 @@ NPMVersionRequirement:
 	| (
 		(
 			URLVersionRequirement
-			| LocalPathVersionRequirement
-			| GitHubVersionRequirement
+			| 
+			LocalPathVersionRequirement
+			| 
+			GitHubVersionRequirement
 			| TagVersionRequirement
 		)
 		WS*
@@ -63,7 +65,7 @@ GitHubVersionRequirement:
 ;
 
 LocalPathVersionRequirement:
-	"file:" localPath=PATH
+	'file:' localPath=PATH
 ;
 
 
@@ -113,24 +115,21 @@ QualifierTag:
 ;
 
 
-WILDCARD:
-	'x' | 'X' | '*'
-;
 
 URL_PROTOCOL:
 	(LETTERS | '+')+
 ;
 
 TAG:
-	ALPHA_NUMERIC_CHARS
+	LETTER_NO_V ALPHA_NUMERIC_CHARS*
 ;
 
 PATH:
-	ALPHA_NUMERIC_CHARS* (('/' | ".")+ ALPHA_NUMERIC_CHARS)+ ('/' | ".")*
+	(LETTER_NO_V ALPHA_NUMERIC_CHAR)* (('/' | ".")+ ALPHA_NUMERIC_CHARS)+ ('/' | ".")*
 ;
 
 URL:
-	ALPHA_NUMERIC_CHAR*  (('/' | "." | ':' | '@')+ ALPHA_NUMERIC_CHARS)+
+	(LETTER_NO_V ALPHA_NUMERIC_CHAR)*  (('/' | "." | ':' | '@')+ ALPHA_NUMERIC_CHARS)+
 ;
 
 
@@ -143,8 +142,33 @@ ALPHA_NUMERIC_CHAR:
 ;
 
 
-terminal LETTERS:
-	LETTER+
+
+LETTERS:
+	(LETTER_V | LETTER_NO_V)+
+;
+
+LETTER_NO_V:
+	LETTER_X | LETTER_NO_VX
+;
+
+WILDCARD:
+	LETTER_X | ASTERIX
+;
+
+terminal LETTER_NO_VX :
+	"a".."u" | "w" | "y" | "z" | "A".."U" | "W" | "Y" | "Z"
+;
+
+terminal LETTER_X:
+	'x' | 'X'
+;
+
+terminal ASTERIX:
+	'*'
+;
+
+terminal LETTER_V :
+	"v" | "V"
 ;
 
 terminal DIGITS returns ecore::EInt:
@@ -153,10 +177,6 @@ terminal DIGITS returns ecore::EInt:
 
 terminal fragment DIGIT:
 	"0".."9"
-;
-
-terminal fragment LETTER :
-	"a".."z" | "A".."Z"
 ;
 
 

@@ -135,21 +135,24 @@ class SEMVERParserTest {
 	];
 
 	String[] npmData = #[
+		"expressjs/express",
 		"latest",
-		"001tag",
 		"xyztag",
 		"XYZtag",
-		"vtag",
-		"Vtag",
 		"http://asdf.com/asdf.tar.gz",
 		"git+ssh://git@github.com:npm/npm.git#v1.0.27",
 		"git+ssh://git@github.com:npm/npm#semver:^5.0",
 		"git+https://isaacs@github.com/npm/npm.git",
 		"git://github.com/npm/npm.git#v1.0.27",
-		"expressjs/express",
 		"mochajs/mocha#4727d357ea",
 		"file:../foo/bar",
 		"file:../dyl"
+	];
+
+	String[] errorData = #[
+		"001tag",
+		"vtag",
+		"Vtag"
 	];
 	//@formatter:on
 
@@ -174,14 +177,27 @@ class SEMVERParserTest {
 		internalTestParseAndToString(npmData, [s | return s.replace("semver:", "")]);
 	}
 
+	/** Checks other NPM supported versions. */
+	@Test
+	def void testNPMError() {
+		internalTestError(errorData);
+	}
+
 	/** Checks a range. */
 	private def void internalTestParseAndToString(String[] data, (String)=>String adjust) {
 		for (String entry : data) {
-			val versionRangeSet = entry.parseSuccessfully // empty document
+			val versionRangeSet = entry.parseSuccessfully
 			assertTrue(versionRangeSet !== null);
 			val serialized = serializer.serialize(versionRangeSet);
-			val adjustedEntry = adjust.apply(entry.trim);
+			val adjustedEntry = if (adjust !== null) adjust.apply(entry.trim) else entry.trim;
 			assertEquals(adjustedEntry, serialized);
+		}
+	}
+
+	/** Checks a range. */
+	private def void internalTestError(String[] data) {
+		for (String entry : data) {
+			entry.parseUnsuccessfully
 		}
 	}
 

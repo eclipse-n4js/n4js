@@ -79,9 +79,10 @@ public class BinariesValidator {
 		final String stdOutString = result.getStdOut();
 		final IParseResult parseResult = semverHelper.getParseResult(stdOutString.trim());
 		if (parseResult.hasSyntaxErrors()) {
-			INode firstErrorText = parseResult.getSyntaxErrors().iterator().next();
-			String msg = "Error in binary '" + binary.getLabel() +
-					"' when parsing version '" + stdOutString + "': " + firstErrorText.getText();
+			INode firstErrorNode = parseResult.getSyntaxErrors().iterator().next();
+			String syntaxErr = firstErrorNode.getSyntaxErrorMessage().getMessage();
+			String msg = "Error in binary '" + binary.getLabel()
+					+ "' when parsing version '" + stdOutString + "': " + syntaxErr;
 			return error(binary, msg);
 		}
 

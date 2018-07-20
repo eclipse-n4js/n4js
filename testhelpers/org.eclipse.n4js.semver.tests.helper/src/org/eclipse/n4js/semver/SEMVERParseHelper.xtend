@@ -25,11 +25,20 @@ import org.eclipse.n4js.semver.Semver.VersionRangeSetRequirement
 class SEMVERParseHelper extends ParseHelper<NPMVersionRequirement> {
 
 	/**
+	 * Returns a {@link VersionRangeSetRequirement} instance or throws an exception if the given
+	 * string could not be parsed.
+	 */
+	public def NPMVersionRequirement tryParse(CharSequence semver) {
+		val doc = semver.parse;
+		return doc;
+	}
+
+	/**
 	 * Asserts that the given {@code semver} character sequence can be parsed correctly. Returns the
 	 * resulting {@link VersionRangeSetRequirement} instance.
 	 */
 	public def NPMVersionRequirement parseSuccessfully(CharSequence semver) {
-		val doc = semver.parse;
+		val doc = semver.tryParse;
 		val msg = '''"«semver»" ''' + doc.eResource.errors.join('\n')[line + ': ' + message];
 		val errorList = doc.eResource.errors;
 		assertTrue(msg, errorList.empty);
@@ -41,7 +50,7 @@ class SEMVERParseHelper extends ParseHelper<NPMVersionRequirement> {
 	 */
 	public def void parseUnsuccessfully(CharSequence semver) {
 		val doc = semver.parse;
-		val msg = '''The following SemVer text did not cause any syntax errors as expected: "«semver»" ''';
+		val msg = '''The following Semver text did not cause any syntax errors as expected: "«semver»" ''';
 		val errorList = doc.eResource.errors.filter(XtextSyntaxDiagnostic);
 		assertFalse(msg, errorList.empty);
 	}

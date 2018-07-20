@@ -10,22 +10,22 @@
  */
 
 /* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.tests.PackageJsonXpectTest 
-   
+
    IssueConfiguration {
    		IssueCode "JSON_DUPLICATE_KEY" { enabled = false }
    		IssueCode "INVALID_FEATURE_FOR_PROJECT_TYPE" { enabled = false }
    		IssueCode "OBSOLETE_BLOCK" { enabled = false }
    		IssueCode "NON_EXISTING_PROJECT" { enabled = false }
    }
-   
+
    END_SETUP
-   
+
    Disable issue codes above to limit this tests to validation wrt. the structure of package.json files.
  */
 {
 	"name": "PackageVersionNumber",
-	// XPECT errors --> "Invalid version number "0a.0.1": Given string is parsed as github location." at ""0a.0.1""
-	"version": "0a.0.1",
+	// XPECT errors --> "Invalid version number "0.1a.2": no viable alternative at input 'a'." at ""0.1a.2""
+	"version": "0.1a.2",
 	// XPECT errors --> "Invalid version number ">0.0.1": Version numbers must not have comparators: '>'." at "">0.0.1""
 	"version": ">0.0.1",
 	// XPECT errors --> "Too many version parts. Semantic versions consist only of major, minor and patch." at "23"

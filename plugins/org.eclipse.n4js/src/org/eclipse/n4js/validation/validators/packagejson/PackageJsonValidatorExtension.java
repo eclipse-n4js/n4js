@@ -68,6 +68,7 @@ import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.validation.helper.FolderContainmentHelper;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
+import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.validation.Check;
@@ -199,7 +200,8 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 
 		IParseResult parseResult = semverHelper.getParseResult(versionString);
 		if (parseResult.hasSyntaxErrors()) {
-			String reason = parseResult.getSyntaxErrors().iterator().next().getText();
+			INode firstErrorNode = parseResult.getSyntaxErrors().iterator().next();
+			String reason = firstErrorNode.getSyntaxErrorMessage().getMessage();
 			String msg = IssueCodes.getMessageForPKGJ_INVALID_VERSION_NUMBER(versionString, reason);
 			addIssue(msg, versionValue, IssueCodes.PKGJ_INVALID_VERSION_NUMBER);
 			return;

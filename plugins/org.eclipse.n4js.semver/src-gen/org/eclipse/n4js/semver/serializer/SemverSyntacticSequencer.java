@@ -64,7 +64,7 @@ public class SemverSyntacticSequencer extends AbstractSyntacticSequencer {
 	
 	/**
 	 * WILDCARD:
-	 * 	'x' | 'X' | '*'
+	 * 	LETTER_X | ASTERIX
 	 * ;
 	 */
 	protected String getWILDCARDToken(EObject semanticObject, RuleCall ruleCall, INode node) {

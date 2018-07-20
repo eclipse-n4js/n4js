@@ -76,6 +76,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.parser.IParseResult;
 
 import com.google.inject.Inject;
@@ -326,7 +327,8 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 		if (parseResult == null) {
 			result = "Could not create version from string :" + data + ":\n";
 		} else if (parseResult.hasSyntaxErrors()) {
-			result = "Parsing error: " + parseResult.getSyntaxErrors().iterator().next().getText();
+			INode firstErrorNode = parseResult.getSyntaxErrors().iterator().next();
+			result = "Parsing error: " + firstErrorNode.getSyntaxErrorMessage().getMessage();
 		}
 
 		// otherwise, parsedVersion is valid and result remains 'null'

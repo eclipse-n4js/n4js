@@ -44,12 +44,14 @@ public class SemverParser extends AbstractContentAssistParser {
 					put(grammarAccess.getVersionRangeAccess().getAlternatives(), "rule__VersionRange__Alternatives");
 					put(grammarAccess.getVersionPartAccess().getAlternatives(), "rule__VersionPart__Alternatives");
 					put(grammarAccess.getQualifierAccess().getAlternatives(), "rule__Qualifier__Alternatives");
-					put(grammarAccess.getWILDCARDAccess().getAlternatives(), "rule__WILDCARD__Alternatives");
 					put(grammarAccess.getURL_PROTOCOLAccess().getAlternatives(), "rule__URL_PROTOCOL__Alternatives");
 					put(grammarAccess.getPATHAccess().getAlternatives_1_0(), "rule__PATH__Alternatives_1_0");
 					put(grammarAccess.getPATHAccess().getAlternatives_2(), "rule__PATH__Alternatives_2");
 					put(grammarAccess.getURLAccess().getAlternatives_1_0(), "rule__URL__Alternatives_1_0");
 					put(grammarAccess.getALPHA_NUMERIC_CHARAccess().getAlternatives_1(), "rule__ALPHA_NUMERIC_CHAR__Alternatives_1");
+					put(grammarAccess.getLETTERSAccess().getAlternatives(), "rule__LETTERS__Alternatives");
+					put(grammarAccess.getLETTER_NO_VAccess().getAlternatives(), "rule__LETTER_NO_V__Alternatives");
+					put(grammarAccess.getWILDCARDAccess().getAlternatives(), "rule__WILDCARD__Alternatives");
 					put(grammarAccess.getVersionComparatorAccess().getAlternatives(), "rule__VersionComparator__Alternatives");
 					put(grammarAccess.getNPMVersionRequirementAccess().getGroup_0(), "rule__NPMVersionRequirement__Group_0__0");
 					put(grammarAccess.getNPMVersionRequirementAccess().getGroup_1(), "rule__NPMVersionRequirement__Group_1__0");
@@ -76,9 +78,12 @@ public class SemverParser extends AbstractContentAssistParser {
 					put(grammarAccess.getQualifierAccess().getGroup_2(), "rule__Qualifier__Group_2__0");
 					put(grammarAccess.getQualifierTagAccess().getGroup(), "rule__QualifierTag__Group__0");
 					put(grammarAccess.getQualifierTagAccess().getGroup_1(), "rule__QualifierTag__Group_1__0");
+					put(grammarAccess.getTAGAccess().getGroup(), "rule__TAG__Group__0");
 					put(grammarAccess.getPATHAccess().getGroup(), "rule__PATH__Group__0");
+					put(grammarAccess.getPATHAccess().getGroup_0(), "rule__PATH__Group_0__0");
 					put(grammarAccess.getPATHAccess().getGroup_1(), "rule__PATH__Group_1__0");
 					put(grammarAccess.getURLAccess().getGroup(), "rule__URL__Group__0");
+					put(grammarAccess.getURLAccess().getGroup_0(), "rule__URL__Group_0__0");
 					put(grammarAccess.getURLAccess().getGroup_1(), "rule__URL__Group_1__0");
 					put(grammarAccess.getALPHA_NUMERIC_CHARAccess().getGroup(), "rule__ALPHA_NUMERIC_CHAR__Group__0");
 					put(grammarAccess.getURLVersionRequirementAccess().getProtocolAssignment_0(), "rule__URLVersionRequirement__ProtocolAssignment_0");
