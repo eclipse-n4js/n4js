@@ -22,9 +22,11 @@
 
    Disable issue codes above to limit this tests to validation wrt. the structure of package.json files.
  */
+
+
 {
 	"name": "PackageVersionNumber",
-	// XPECT errors --> "Invalid version number "0.1a.2": no viable alternative at input 'a'." at ""0.1a.2""
+	// XPECT errors --> "Invalid version number "0.1a.2": no viable alternative at input 'a'." at "0.1a.2"
 	"version": "0.1a.2",
 	// XPECT errors --> "Invalid version number ">0.0.1": Version numbers must not have comparators: '>'." at "">0.0.1""
 	"version": ">0.0.1",

@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -198,16 +199,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		JSONStringLiteral versionJsonString = (JSONStringLiteral) versionValue;
 		String versionString = versionJsonString.getValue();
 
-		IParseResult parseResult = semverHelper.getParseResult(versionString);
-		if (parseResult.hasSyntaxErrors()) {
-			INode firstErrorNode = parseResult.getSyntaxErrors().iterator().next();
-			String reason = firstErrorNode.getSyntaxErrorMessage().getMessage();
-			String msg = IssueCodes.getMessageForPKGJ_INVALID_VERSION_NUMBER(versionString, reason);
-			addIssue(msg, versionValue, IssueCodes.PKGJ_INVALID_VERSION_NUMBER);
-			return;
-		}
-
-		validateSEMVER(versionValue, parseResult);
+		IParseResult parseResult = validateSemver(versionValue, versionString);
 
 		NPMVersionRequirement npmVersion = semverHelper.parse(parseResult);
 		VersionRangeSetRequirement vrs = semverHelper.parseVersionRangeSet(parseResult);
@@ -234,7 +226,29 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		}
 	}
 
-	private void validateSEMVER(JSONValue versionValue, IParseResult parseResult) {
+	private IParseResult validateSemver(JSONValue versionValue, String versionString) {
+		IParseResult parseResult = semverHelper.getParseResult(versionString);
+
+		if (parseResult.hasSyntaxErrors()) {
+			Iterator<INode> errorIterator = parseResult.getSyntaxErrors().iterator();
+
+			while (errorIterator.hasNext()) {
+				INode firstErrorNode = errorIterator.next();
+
+				String reason = firstErrorNode.getSyntaxErrorMessage().getMessage();
+				String msg = IssueCodes.getMessageForPKGJ_INVALID_VERSION_NUMBER(versionString, reason);
+
+				ICompositeNode actualNode = NodeModelUtils.findActualNodeFor(versionValue);
+				int actOffset = actualNode.getOffset();
+				int actLength = actualNode.getLength();
+				int offset = actOffset + firstErrorNode.getOffset() + 1; // +1 due to " char
+				int lengthTmp = actLength - firstErrorNode.getOffset() - 2; // -2 due to "" chars
+				int length = Math.max(1, lengthTmp);
+				addIssue(msg, versionValue, offset, length, IssueCodes.PKGJ_INVALID_VERSION_NUMBER);
+			}
+			return parseResult;
+		}
+
 		List<Issue> issues = semverHelper.validate(parseResult);
 		for (Issue issue : issues) {
 			String msg = "";
@@ -257,6 +271,8 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 			int length = issue.getLength();
 			addIssue(msg, versionValue, offset, length, issueCode);
 		}
+
+		return parseResult;
 	}
 
 	private String getVersionRequirementType(NPMVersionRequirement npmVersion) {
@@ -299,25 +315,11 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		for (NameValuePair entry : dependenciesObject.getNameValuePairs()) {
 			final JSONValue versionRequirement = entry.getValue();
 			if (checkIsType(versionRequirement, JSONPackage.Literals.JSON_STRING_LITERAL, "as version specifier")) {
-				checkIsDependencyVersionRequirement((JSONStringLiteral) versionRequirement);
+				JSONStringLiteral jsonStringVersionRequirement = (JSONStringLiteral) versionRequirement;
+				String constraintValue = jsonStringVersionRequirement.getValue();
+				validateSemver(jsonStringVersionRequirement, constraintValue);
 			}
 		}
-	}
-
-	/**
-	 */
-	private void checkIsDependencyVersionRequirement(JSONStringLiteral jsonStringVersionRequirement) {
-		final String constraintValue = jsonStringVersionRequirement.getValue();
-		final IParseResult semverParseResult = semverHelper.getParseResult(constraintValue);
-		final NPMVersionRequirement parsedNPMVersion = semverHelper.parse(semverParseResult);
-		if (parsedNPMVersion == null) {
-			String reason = "Cannot parse given string";
-			String msg = IssueCodes.getMessageForPKGJ_INVALID_VERSION_REQUIREMENT(constraintValue, reason);
-			addIssue(msg, jsonStringVersionRequirement, IssueCodes.PKGJ_INVALID_VERSION_REQUIREMENT);
-			return;
-		}
-
-		validateSEMVER(jsonStringVersionRequirement, semverParseResult);
 	}
 
 	/** Checks basic structural properties of the 'n4js' section (e.g. mandatory properties). */

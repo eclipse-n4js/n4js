@@ -151,6 +151,9 @@ class SEMVERParserTest {
 
 	String[] errorData = #[
 		"001tag",
+		"1s",
+		"1.7.2d",
+		">1.7.2d",
 		"vtag",
 		"Vtag"
 	];

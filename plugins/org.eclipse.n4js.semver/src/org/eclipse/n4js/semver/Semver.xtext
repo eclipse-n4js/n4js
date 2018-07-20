@@ -28,10 +28,8 @@ NPMVersionRequirement:
 	| (
 		(
 			URLVersionRequirement
-			| 
-			LocalPathVersionRequirement
-			| 
-			GitHubVersionRequirement
+			| LocalPathVersionRequirement
+			| GitHubVersionRequirement
 			| TagVersionRequirement
 		)
 		WS*
@@ -132,7 +130,6 @@ URL:
 	(LETTER_NO_V ALPHA_NUMERIC_CHAR)*  (('/' | "." | ':' | '@')+ ALPHA_NUMERIC_CHARS)+
 ;
 
-
 ALPHA_NUMERIC_CHARS:
 	ALPHA_NUMERIC_CHAR+
 ;
@@ -140,8 +137,6 @@ ALPHA_NUMERIC_CHARS:
 ALPHA_NUMERIC_CHAR:
 	"-"? (DIGITS | LETTERS)
 ;
-
-
 
 LETTERS:
 	(LETTER_V | LETTER_NO_V)+
@@ -155,8 +150,14 @@ WILDCARD:
 	LETTER_X | ASTERIX
 ;
 
+
+
 terminal LETTER_NO_VX :
 	"a".."u" | "w" | "y" | "z" | "A".."U" | "W" | "Y" | "Z"
+;
+
+terminal LETTER_V :
+	"v" | "V"
 ;
 
 terminal LETTER_X:
@@ -165,10 +166,6 @@ terminal LETTER_X:
 
 terminal ASTERIX:
 	'*'
-;
-
-terminal LETTER_V :
-	"v" | "V"
 ;
 
 terminal DIGITS returns ecore::EInt:
