@@ -1128,17 +1128,20 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	/** Checks if version constraint of the project reference is satisfied by any available project.*/
 	private def checkVersions(ValidationProjectReference ref, String id, Map<String, IN4JSProject> allProjects) {
 		val desiredVersion = ref.npmVersion;
-
-		if (desiredVersion !== null) {
-			val availableVersion = allProjects.get(id).version;
-
-			val availableVersionMatches = SemverMatcher.matches(availableVersion, desiredVersion);
-			if (!availableVersionMatches) {
-				val desiredStr = SemverSerializer.serialize(desiredVersion);
-				val availableStr = SemverSerializer.serialize(availableVersion);
-				addVersionMismatchIssue(ref.astRepresentation, id, desiredStr, availableStr);
-			}
+		if (desiredVersion === null) {
+			return;
 		}
+
+		val availableVersion = allProjects.get(id).version;
+		val availableVersionMatches = SemverMatcher.matches(availableVersion, desiredVersion);
+		if (availableVersionMatches) {
+			return; // version does match
+		}
+
+		// version does not match
+		val desiredStr = SemverSerializer.serialize(desiredVersion);
+		val availableStr = SemverSerializer.serialize(availableVersion);
+		addVersionMismatchIssue(ref.astRepresentation, id, desiredStr, availableStr);
 	}
 
 	/**

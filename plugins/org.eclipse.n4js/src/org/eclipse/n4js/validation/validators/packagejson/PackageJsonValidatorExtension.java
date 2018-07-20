@@ -235,7 +235,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	}
 
 	private void validateSEMVER(JSONValue versionValue, IParseResult parseResult) {
-		List<Issue> issues = semverHelper.validate(versionValue.eResource(), parseResult);
+		List<Issue> issues = semverHelper.validate(parseResult);
 		for (Issue issue : issues) {
 			String msg = "";
 			String issueCode = IssueCodes.PKGJ_INVALID_VERSION_NUMBER;

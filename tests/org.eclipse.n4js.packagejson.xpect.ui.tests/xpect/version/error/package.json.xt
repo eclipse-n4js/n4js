@@ -30,7 +30,10 @@
 	"name": "error",
 	"version": "0.0.1",
 	"dependencies": {
-		// XPECT errors --> "Only zero or one comparator allowed." at ">"
+		/* XPECT errors ---
+			"Only zero or one comparator allowed." at ">"
+			"Project one is required in version ><11.0.0, but only version 11.0.0 is present." at ""one": "> <11.0.0""
+		--- */
 		"one": "> <11.0.0",
 		// XPECT errors --> "Too many version parts. Semantic versions consist only of major, minor and patch." at "7"
 		"two": "<=13.0.0.7"

@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.semver.Semver.SimpleVersion;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
@@ -112,20 +111,32 @@ public class SemverHelper {
 	/**
 	 * Validates the given {@link IParseResult}
 	 *
-	 * @param resource
-	 *            A {@link Resource} that can be detached from the {@link IParseResult}
 	 * @param semverParseResult
 	 *            A {@link IParseResult} of a Semver string
 	 * @return A list of validation issues
 	 */
-	public List<Issue> validate(Resource resource, IParseResult semverParseResult) {
+	public List<Issue> validate(IParseResult semverParseResult) {
 		EObject rootASTElement = semverParseResult.getRootASTElement();
+		if (!(rootASTElement instanceof NPMVersionRequirement)) {
+			return Collections.emptyList();
+		}
+		return validate((NPMVersionRequirement) rootASTElement);
+	}
+
+	/**
+	 * Validates the given {@link NPMVersionRequirement}
+	 *
+	 * @param rootASTElement
+	 *            A {@link NPMVersionRequirement} of a Semver element
+	 * @return A list of validation issues
+	 */
+	public List<Issue> validate(NPMVersionRequirement rootASTElement) {
 		if (rootASTElement == null) {
 			return Collections.emptyList();
 		}
 
 		SemverResourceValidator validat0r = getSemverValidator();
-		List<Issue> issues = validat0r.validate(resource, rootASTElement, CheckMode.ALL, CancelIndicator.NullImpl);
+		List<Issue> issues = validat0r.validate(rootASTElement, CheckMode.ALL, CancelIndicator.NullImpl);
 		return issues;
 	}
 

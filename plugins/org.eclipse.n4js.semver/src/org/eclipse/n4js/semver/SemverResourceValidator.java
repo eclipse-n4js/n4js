@@ -10,7 +10,6 @@ import org.eclipse.emf.ecore.EValidator;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.Diagnostician;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
-import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IAcceptor;
@@ -34,16 +33,14 @@ public class SemverResourceValidator extends ResourceValidatorImpl {
 	/**
 	 * Validates Semver {@link EObject}s
 	 *
-	 * @param resource
-	 *            A JSON resource
 	 * @param root
 	 *            A Semver {@link EObject}, usually {@link NPMVersionRequirement}
 	 */
-	public List<Issue> validate(Resource resource, EObject root, CheckMode mode, CancelIndicator monitor) {
+	public List<Issue> validate(EObject root, CheckMode mode, CancelIndicator monitor) {
 		List<Issue> result = new ArrayList<>();
 		IAcceptor<Issue> acceptor = createAcceptor(result);
 		operationCanceledManager.checkCanceled(monitor);
-		validate(resource, root, mode, monitor, acceptor);
+		validate(null, root, mode, monitor, acceptor);
 
 		return result;
 	}
@@ -67,10 +64,8 @@ public class SemverResourceValidator extends ResourceValidatorImpl {
 			options.put(ConcreteSyntaxEValidator.DISABLE_CONCRETE_SYNTAX_EVALIDATOR, Boolean.TRUE);
 			// see EObjectValidator.getRootEValidator(Map<Object, Object>)
 			options.put(EValidator.class, diagnostician);
-			if (resource instanceof XtextResource) {
-				options.put(AbstractInjectableValidator.CURRENT_LANGUAGE_NAME,
-						SemverGlobals.LANGUAGE_NAME);
-			}
+			options.put(AbstractInjectableValidator.CURRENT_LANGUAGE_NAME, SemverGlobals.LANGUAGE_NAME);
+
 			Diagnostic diagnostic = diagnostician.validate(eObject, options);
 			if (!diagnostic.getChildren().isEmpty()) {
 				for (Diagnostic childDiagnostic : diagnostic.getChildren()) {
