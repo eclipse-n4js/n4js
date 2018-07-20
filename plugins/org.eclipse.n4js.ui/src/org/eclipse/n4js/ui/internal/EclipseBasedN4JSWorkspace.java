@@ -62,15 +62,22 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 
 	private ProjectDescriptionLoadListener listener;
 
+	private final WorkspaceCacheSynchronizer cacheSynchronizer;
+
 	/**
 	 * Public for testing purpose.
 	 */
 	@Inject
 	public EclipseBasedN4JSWorkspace(
 			IWorkspaceRoot workspace,
-			ProjectDescriptionHelper projectDescriptionHelper) {
+			ProjectDescriptionHelper projectDescriptionHelper,
+			WorkspaceCacheSynchronizer synchronizer) {
 		this.workspace = workspace;
 		this.projectDescriptionHelper = projectDescriptionHelper;
+		this.cacheSynchronizer = synchronizer;
+
+		// configure cache synchronizer with this workspace instance
+		this.cacheSynchronizer.setWorkspace(this);
 	}
 
 	IWorkspaceRoot getWorkspace() {
@@ -227,5 +234,4 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 	void setProjectDescriptionLoadListener(ProjectDescriptionLoadListener listener) {
 		this.listener = listener;
 	}
-
 }

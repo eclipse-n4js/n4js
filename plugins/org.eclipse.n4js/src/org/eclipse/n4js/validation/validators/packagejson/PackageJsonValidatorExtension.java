@@ -158,8 +158,9 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 			}
 
 			if (platformProjectContainer == null) {
-				throw new IllegalStateException("Failed to determine project name "
-						+ "for resource " + packageJsonUri.toString());
+				return;
+				// throw new IllegalStateException("Failed to determine project name "
+				// + "for resource " + packageJsonUri.toString());
 			}
 
 			if (!platformProjectContainer.equals(projectName.getValue())) {
@@ -890,21 +891,36 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	}
 
 	/**
-	 * Checks whether the given {@code pathLiteral} represents an existing relative path to a directory in the project.
+	 * Checks whether the given {@code pathLiteral} represents an existing relative path to the currently validated
+	 * {@link Resource}.
 	 *
 	 * Returns {@code false} and adds issues to {@code pathLiteral} otherwise.
 	 */
 	private boolean holdsExistingDirectoryPath(JSONStringLiteral pathLiteral) {
 		final URI resourceURI = pathLiteral.eResource().getURI();
-		final Path absoluteProjectPath = getAbsoluteProjectPath(resourceURI);
+		final Optional<? extends IN4JSProject> n4jsProject = n4jsCore.findProject(resourceURI);
 
+		if (!n4jsProject.isPresent()) {
+			// TODO GH-984 log this
+			return true;
+		}
+
+		final URI projectLocation = n4jsProject.get().getLocation();
+		// resolve against project uri with trailing slash
+		final URI projectRelativeResourceURI = resourceURI.deresolve(projectLocation.appendSegment(""));
+
+		final Path absoluteProjectPath = getAbsoluteProjectPath(resourceURI);
 		if (absoluteProjectPath == null) {
 			throw new IllegalStateException(
 					"Failed to compute project path for package.json at " + resourceURI.toString());
 		}
 
+		final Path baseResourcePath = new File(
+				absoluteProjectPath.toString(),
+				projectRelativeResourceURI.trimSegments(1).toFileString()).toPath();
+
 		final String relativePath = pathLiteral.getValue();
-		final File file = new File(absoluteProjectPath.toString() + "/" + relativePath);
+		final File file = new File(baseResourcePath.toString(), relativePath);
 
 		if (!file.exists()) {
 			addIssue(IssueCodes.getMessageForPKGJ_NON_EXISTING_SOURCE_PATH(relativePath),

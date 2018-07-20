@@ -16,12 +16,10 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
-import org.eclipse.n4js.ui.internal.WorkspaceCacheAccess;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
 import org.eclipse.xtext.ui.containers.AbstractStorage2UriMapperClient;
@@ -48,9 +46,6 @@ public class N4JSProjectsStateHelper extends AbstractStorage2UriMapperClient {
 
 	@Inject
 	private IN4JSEclipseCore core;
-
-	@Inject
-	private WorkspaceCacheAccess cacheAccess;
 
 	public String initHandle(URI uri) {
 		String handle = null;
@@ -158,13 +153,5 @@ public class N4JSProjectsStateHelper extends AbstractStorage2UriMapperClient {
 		}
 		return uris;
 
-	}
-
-	void clearProjectCache(IProject project) {
-		cacheAccess.discardEntry(project);
-	}
-
-	void clearProjectCache() {
-		cacheAccess.discardEntries();
 	}
 }
