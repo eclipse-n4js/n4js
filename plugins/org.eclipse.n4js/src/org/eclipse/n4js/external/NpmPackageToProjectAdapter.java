@@ -181,8 +181,8 @@ public class NpmPackageToProjectAdapter {
 		URI packageURI = URI.createFileURI(packageRoot.getAbsolutePath());
 		Pair<String, Boolean> info = projectDescriptionHelper
 				.getVersionAndN4JSNatureFromProjectDescriptionAtLocation(packageURI);
-		boolean hasN4JSNature = info.getSecond();
-		String packageJsonVersion = info.getFirst();
+		boolean hasN4JSNature = (info == null) ? false : info.getSecond();
+		String packageJsonVersion = (info == null) ? null : info.getFirst();
 
 		if (hasN4JSNature) {
 			return statusHelper.OK();
