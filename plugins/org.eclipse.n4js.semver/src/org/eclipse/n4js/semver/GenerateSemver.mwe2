@@ -39,7 +39,7 @@ Workflow {
 			name = "org.eclipse.n4js.semver.Semver"
 			fileExtensions = "semver"
 			referencedResource = "platform:/resource/org.eclipse.n4js.semver.model/model/Semver.xcore"
-			
+
 			fragment = serializer.SerializerFragment2 {
 				generateStub = false
 			}
@@ -48,18 +48,7 @@ Workflow {
 			fragment = validation.ValidatorFragment2 {
 				inheritImplementation = false
 			}
-			
-			// include custom Semver formatter
-			fragment = formatting.Formatter2Fragment2 {
-//				generateStub = true
-				generateXtendStub = true
-			}
-			
-			// make sure content-assist does not inherit from the Unicode language
-			fragment = ui.contentAssist.ContentAssistFragment2 {
-				inheritImplementation = false
-			}
-			
+
 			fragment = grammarAccess.GrammarAccessFragment2 {}
 			fragment = ecore.EMFGeneratorFragment2 {}
 			fragment = resourceFactory.ResourceFactoryFragment2 {}
@@ -69,16 +58,7 @@ Workflow {
 					backtrack = true
 				}
 			}
-			fragment = exporting.QualifiedNamesFragment2 {}
-			fragment = ui.labeling.LabelProviderFragment2 {}
-			fragment = ui.outline.OutlineTreeProviderFragment2 {}
-			fragment = ui.quickfix.QuickfixProviderFragment2 {}
 			fragment = junit.Junit4Fragment2 {}
-			fragment = ui.refactoring.RefactorElementNameFragment2 {}
-			fragment = xbase.XtypeGeneratorFragment2 {}
-			fragment = xbase.XbaseGeneratorFragment2 {}
-			fragment = ui.templates.CodetemplatesGeneratorFragment2 {}
-			fragment = ui.compare.CompareFragment2 {}
 		}
 	}
 }

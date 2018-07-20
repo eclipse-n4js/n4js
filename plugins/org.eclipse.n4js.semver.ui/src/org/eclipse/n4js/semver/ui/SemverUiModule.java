@@ -8,12 +8,17 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.semver.ui.contentassist;
+package org.eclipse.n4js.semver.ui;
+
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
- * See https://www.eclipse.org/Xtext/documentation/304_ide_concepts.html#content-assist on how to customize the content
- * assistant.
+ * Use this class to register components to be used within the Eclipse IDE.
  */
-public class SEMVERProposalProvider extends AbstractSEMVERProposalProvider {
-	// empty
+public class SemverUiModule extends AbstractSemverUiModule {
+
+	/** Constructor */
+	public SemverUiModule(AbstractUIPlugin plugin) {
+		super(plugin);
+	}
 }

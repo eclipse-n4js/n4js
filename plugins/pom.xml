@@ -60,6 +60,7 @@ Contributors:
 		<module>org.eclipse.n4js.json.ui</module>
 		<!-- semver -->
 		<module>org.eclipse.n4js.semver</module>
+		<module>org.eclipse.n4js.semver.ui</module>
 		<module>org.eclipse.n4js.semver.model</module>
 		<!-- transpiler -->
 		<module>org.eclipse.n4js.generator.headless</module>

@@ -41,9 +41,6 @@ public class PackageJsonXpectInjectorSetup extends InjectorSetup {
 		return injector;
 	});
 
-	// private static Supplier<Injector> semverInjector = Suppliers.memoize(() ->
-	// IResourceServiceProvider.Registry.INSTANCE.getExtensionToFactoryMap().get("semver"));
-
 	public PackageJsonXpectInjectorSetup(XpectJavaModel xjm, XpectFile file) {
 		super(xjm, file);
 	}

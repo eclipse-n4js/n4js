@@ -8,17 +8,11 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.semver.ui;
-
-import org.eclipse.ui.plugin.AbstractUIPlugin;
+package org.eclipse.n4js.semver.ide;
 
 /**
- * Use this class to register components to be used within the Eclipse IDE.
+ * Use this class to register ide components.
  */
-public class SEMVERUiModule extends AbstractSEMVERUiModule {
-
-	/** Constructor */
-	public SEMVERUiModule(AbstractUIPlugin plugin) {
-		super(plugin);
-	}
+public class SemverIdeModule extends AbstractSemverIdeModule {
+	// empty
 }

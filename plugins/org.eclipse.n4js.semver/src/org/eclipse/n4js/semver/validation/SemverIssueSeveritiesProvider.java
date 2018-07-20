@@ -15,11 +15,13 @@ import java.util.Map;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.preferences.IPreferenceValues;
 import org.eclipse.xtext.preferences.IPreferenceValuesProvider;
+import org.eclipse.xtext.preferences.MapBasedPreferenceValues;
 import org.eclipse.xtext.preferences.PreferenceKey;
 import org.eclipse.xtext.validation.ConfigurableIssueCodesProvider;
 import org.eclipse.xtext.validation.IssueSeveritiesProvider;
 import org.eclipse.xtext.validation.SeverityConverter;
 
+import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
 /**
@@ -45,7 +47,7 @@ public class SemverIssueSeveritiesProvider extends IssueSeveritiesProvider {
 
 	@Override
 	public SemverIssueSeverities getIssueSeverities(Resource context) {
-		IPreferenceValues preferenceValues = valuesProvider.getPreferenceValues(context);
+		IPreferenceValues preferenceValues = new MapBasedPreferenceValues(Maps.<String, String> newLinkedHashMap());
 		Map<String, PreferenceKey> issueCodes = issueCodesProvider.getConfigurableIssueCodes();
 		return new SemverIssueSeverities(preferenceValues, issueCodes, severityConverter);
 	}
