@@ -9,64 +9,63 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* X-PECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
 
 
 
-// disabled issues until GH-855 is solved
 
 
 var someglobal;
-// X-PECT noerrors --> "in plain JS, variables are inferred to any+"
+// XPECT noerrors --> "in plain JS, variables are inferred to any+"
 someglobal.name;
 
 function require() {}
-// X-PECT noerrors --> "in plain JS, all functions return any+"
+// XPECT noerrors --> "in plain JS, all functions return any+"
 var X = require("unknown");
 
 function f() {
 	if (true) {
-		// X-PECT noerrors --> "in plain JS, return is not validated"
+		// XPECT noerrors --> "in plain JS, return is not validated"
 		return;
 	}
-	// X-PECT noerrors --> "in plain JS, return is not validated"
+	// XPECT noerrors --> "in plain JS, return is not validated"
 	return 1;
 }
 
-// X-PECT noerrors --> "in plain JS, no type arguments are required"
+// XPECT noerrors --> "in plain JS, no type arguments are required"
 var /* Array<any+> */ a = new Array /* <any+> */ ();
 
 
-// X-PECT noerrors --> "in plain JS, new expression is allowed with any+"
+// XPECT noerrors --> "in plain JS, new expression is allowed with any+"
 var x  = new X();
-// X-PECT noerrors --> "in plain JS, new expression is allowed with any+"
+// XPECT noerrors --> "in plain JS, new expression is allowed with any+"
 var z = X.z();
 
 function CatchedErrorsError(errors, message) {
-// X-PECT noerrors --> "in plain JS, new expression is allowed with any+"
+// XPECT noerrors --> "in plain JS, new expression is allowed with any+"
     Error.call(this, message || "Any errors happens and catched");
-// X-PECT noerrors --> "in plain JS, new expression is allowed with any+"
+// XPECT noerrors --> "in plain JS, new expression is allowed with any+"
     this.errors = errors;
 }
 
-// X-PECT noerrors --> "in plain JS, new expression is allowed with any+"
+// XPECT noerrors --> "in plain JS, new expression is allowed with any+"
 CatchedErrorsError.prototype = Object.create(Error.prototype);
-// X-PECT noerrors --> "in plain JS, new expression is allowed with any+"
+// XPECT noerrors --> "in plain JS, new expression is allowed with any+"
 CatchedErrorsError.prototype.constructor = CatchedErrorsError;
 
 
 var handler;
-// X-PECT noerrors --> "in plain JS, call expression is allowed with any+"
+// XPECT noerrors --> "in plain JS, call expression is allowed with any+"
 handler();
 
 
 var args = (true) ? x : z;
-// X-PECT noerrors --> "in plain JS, call expression is allowed with any+"
+// XPECT noerrors --> "in plain JS, call expression is allowed with any+"
 args.foo();
 
 var a2;
-// X-PECT noerrors --> "in plain JS, call expression is allowed with any+"
+// XPECT noerrors --> "in plain JS, call expression is allowed with any+"
 a2[0].bar();
 
-// X-PECT noerrors --> "in plain JS, call expression is allowed with any+"
+// XPECT noerrors --> "in plain JS, call expression is allowed with any+"
 someUnknown.bar;

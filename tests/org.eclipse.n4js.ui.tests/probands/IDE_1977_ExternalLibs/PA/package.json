@@ -1,4 +1,5 @@
 {
+  "version": "0.0.1-SNAPSHOT",
   "name": "PA",
   "author": {
     "name": "NumberFour AG",
@@ -7,7 +8,7 @@
   "license": "EPL-1.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/NumberFour/n4js-libs"
+    "url": "https://github.com/eclipse/n4js"
   },
   "description": "Test Project",
   "keywords": [
@@ -15,5 +16,17 @@
   ],
   "engines": {
     "node": ">= 5.0.0"
+  },
+  "n4js": {
+    "projectType": "library",
+    "vendorId": "org.eclipse.n4js",
+    "vendorName": "Eclipse N4JS Project",
+    "output": "src-gen",
+    "sources": {
+      "source": [
+        "src"
+      ]
+    },
+    "moduleLoader": "n4js"
   }
 }

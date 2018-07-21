@@ -33,6 +33,7 @@ import org.eclipse.xtext.resource.IResourceDescriptions
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData
 import org.junit.Before
 import org.junit.Test
+import org.eclipse.n4js.N4JSGlobals
 
 import static org.junit.Assert.*
 
@@ -67,8 +68,8 @@ class ModuleToModuleProxyPluginTest extends AbstractBuilderParticipantTest {
 
 		project = createJSProject("M2MUriTestProject")
 		val srcFolder = configureProjectWithXtext(project)
-		val manifest = project.getFile("manifest.n4mf")
-		assertMarkers("manifest should have no errors", manifest, 0)
+		val projectDescriptionFile = project.getFile(N4JSGlobals.PACKAGE_JSON)
+		assertMarkers("project description file (package.json) should have no errors", projectDescriptionFile, 0)
 
 		projectN4JS = n4jsCore.findAllProjects.head as IN4JSEclipseProject;
 		assertSame(projectN4JS.getProject, project)

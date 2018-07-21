@@ -8,12 +8,11 @@ import org.eclipse.xtext.nodemodel.INode;
  * JSON specific STRING value converter.
  * 
  * <p>
- * Behaves similar to superclass {@link STRINGValueConverter} with two
- * exceptions:
+ * Behaves similar to superclass {@link STRINGValueConverter} with two exceptions:
  * 
  * <ul>
- * 	<li> Does not allow escape sequence {@code \'}</li>
- * 	<li> Allows escape sequence {@code \/}</li>
+ * <li>Does not allow escape sequence {@code \'}</li>
+ * <li>Allows escape sequence {@code \/}</li>
  * </ul>
  *
  */
@@ -21,7 +20,7 @@ public class JSONSTRINGValueConverter extends STRINGValueConverter {
 
 	@Override
 	/*
-	 * Copied from superclass (modified portion is indicates by "=====" comment). 
+	 * Copied from superclass (modified portion is indicates by "=====" comment).
 	 * 
 	 * Adapts behavior with regard to valid escape sequences.
 	 */

@@ -48,6 +48,7 @@ import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -141,6 +142,7 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 	}
 
 	/***/
+	@Ignore("IDE-3130") // TODO IDE-3130 randomly failing test
 	@Test
 	public void runClientWithAllOpenedWorkspaceProjects() throws CoreException {
 		waitForAutoBuildCheckIndexRigid();
@@ -301,6 +303,7 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 	}
 
 	/***/
+	@Ignore("IDE-3130") // TODO IDE-3130 randomly failing test
 	@Test
 	public void runClientWithTwoDeletedWorkspaceProjectsThenReImportThem() throws Exception {
 

@@ -17,6 +17,5 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.jetty.util.ajax,
  org.eclipse.jetty.util,
  org.eclipse.core.resources,
- org.eclipse.n4js.external.libraries,
- org.eclipse.n4js.n4mf
+ org.eclipse.n4js.external.libraries
 Automatic-Module-Name: org.eclipse.n4js.runner

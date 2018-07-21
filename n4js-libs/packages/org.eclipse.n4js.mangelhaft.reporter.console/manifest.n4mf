@@ -1,0 +1,32 @@
+/*
+ * Copyright (c) 2018 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+ProjectId: org.eclipse.n4js.mangelhaft.reporter.console
+VendorId: org.eclipse.n4js
+VendorName: "Eclipse N4JS Project"
+ProjectType: library
+ProjectVersion: 0.3.3
+Output: "src-gen"
+
+RequiredRuntimeLibraries {
+    n4js-runtime-n4,
+    n4js-runtime-v8,
+	n4js-runtime-es2015
+}
+
+ProjectDependencies {
+    org.eclipse.n4js.mangelhaft
+}
+
+Sources {
+    source {
+        "src/n4js"
+    }
+}

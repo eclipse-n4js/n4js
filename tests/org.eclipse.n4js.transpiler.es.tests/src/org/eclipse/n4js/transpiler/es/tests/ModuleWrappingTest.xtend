@@ -802,6 +802,23 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 		assertCompileResult(scriptNode, moduleWrapped)
 	}
 
+	@Test
+	def _13_external_JSX_module_wrap_resource() throws Throwable  {
+		val script = '''
+			var x = 5;
+		'''
+		val moduleWrapped = '''
+			System.registerDynamic([], true, function(require, exports, module) {
+				var x = 5;
+			});
+		'''.cjsPatched(false);
+
+		val jsResource = script.installJSXScript();
+		val scriptNode = jsResource.contents.get(0) as Script;
+
+		assertCompileResult(scriptNode, moduleWrapped)
+	}
+
 	/** Helper method transpiling and checking.  */
 	def assertCompileResult(String script, String expectedTranspilerText) throws Throwable  {
 		val scriptNode = script.parse()

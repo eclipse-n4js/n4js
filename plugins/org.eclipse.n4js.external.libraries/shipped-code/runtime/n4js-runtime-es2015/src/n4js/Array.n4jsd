@@ -26,5 +26,6 @@ export public interface ~ArrayIterator<T> extends Iterator<T> {}
 
     public entries(): IteratorExt<Iterable2<int, T>>;
     public keys(): IteratorExt<int>;
+    public values(): IteratorExt<T>;
 }
 

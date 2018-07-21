@@ -8,7 +8,7 @@
   "license": "EPL-1.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/NumberFour/n4js-libs"
+    "url": "https://github.com/eclipse/n4js"
   },
   "description": "N4JS core library.",
   "keywords": [
@@ -33,9 +33,9 @@
     "moduleLoader": "n4js"
   },
   "dependencies": {
-    "n4js-node": "latest"
+    "n4js-node": "^0.1.0"
   },
   "devDependencies": {
-    "n4js-runtime-es2015": "latest"
+    "n4js-runtime-es2015": "^0.1.0"
   }
 }

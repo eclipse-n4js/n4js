@@ -19,7 +19,7 @@
 				File "ModuleB.n4js" {}
 				File "ModuleC.n4js" {}
 			}
-			File "manifest.n4mf" { from="./manifest.n4mf" }
+			File "package.json" { from="./package.json" }
 		}
 	}
 	

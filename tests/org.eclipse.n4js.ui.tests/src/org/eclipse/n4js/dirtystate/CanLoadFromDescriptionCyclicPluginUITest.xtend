@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.emf.common.util.URI
 import org.junit.Ignore
 import org.junit.Test
+import org.eclipse.n4js.N4JSGlobals
 
 import static org.junit.Assert.*
 import org.eclipse.n4js.tests.util.EclipseUIUtils
@@ -137,8 +138,8 @@ class CanLoadFromDescriptionCyclicPluginUITest extends AbstractCanLoadFromDescri
 		project = createJSProject(projectName)
 		val ICoreRunnable runnable = [
 			srcFolder = configureProjectWithXtext(project)
-			val manifest = project.getFile("manifest.n4mf")
-			assertMarkers("manifest should have no errors", manifest, 0)
+			val projectDescriptionFile = project.getFile(N4JSGlobals.PACKAGE_JSON);
+			assertMarkers("project description file (package.json) should have no errors", projectDescriptionFile, 0)
 	
 			srcFolderM = srcFolder.getFolder("m")
 			srcFolderM.create(true, true, null)

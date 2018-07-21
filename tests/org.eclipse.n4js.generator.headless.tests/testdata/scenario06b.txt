@@ -7,23 +7,31 @@ export public class A {
 	}
 }
 
-# wsp1/P1/manifest.n4mf
-ProjectId: P1
-VendorId: org.eclipse.n4js
-VendorName: "Eclipse N4JS Project"
-ProjectType: application
-ProjectVersion: 0.0.1-SNAPSHOT
-Output: "outfolder"
-Sources {
-	external {
-		"ext1","ext2"
+# wsp1/P1/package.json
+{
+	"name": "P1",
+	"version": "0.0.1-SNAPSHOT",
+	"n4js": {
+		"projectType": "application",
+		"vendorId": "org.eclipse.n4js",
+		"vendorName": "Eclipse N4JS Project",
+		"output": "outfolder",
+		"sources": {
+			"external": [
+				"ext1",
+				"ext2"
+			]
+		},
+		"moduleFilters": {
+			"noModuleWrap": [
+				{
+					"module": "c/*",
+					"sourceContainer": "ext2"
+				}
+			]
+		}
 	}
 }
-ModuleFilters{
-	noModuleWrap { "c/*" in "ext2" }
-}
-
-
 # wsp1/P1/ext2/c/X2.js
 export public class C {
 	constructor() {

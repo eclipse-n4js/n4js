@@ -30,16 +30,12 @@ public abstract class AbstractParserTest extends Assert {
 	@Inject
 	protected extension N4JSParseHelper
 
-	@Deprecated // until GH-855 is solved
-	@SuppressWarnings("deprecation")
 	protected def Script parseJSSuccessfully(CharSequence js) {
 		val script = js.parseUnrestricted
 		assertTrue(script.eResource.errors.join('\n') [ line + ': ' + message] , script.eResource.errors.empty)
 		return script
 	}
 
-	@Deprecated // until GH-855 is solved
-	@SuppressWarnings("deprecation")
 	protected def parseJSWithError(CharSequence js) {
 		val script = js.parseUnrestricted
 		val errors = script.eResource.errors;
@@ -48,11 +44,11 @@ public abstract class AbstractParserTest extends Assert {
 	}
 
 	protected def Script parseESSuccessfully(CharSequence js) {
-		return parseN4jsSuccessfully(js);
+		return parseJSSuccessfully(js);
 	}
 
 	protected def parseESWithError(CharSequence js) {
-		return parseN4jsWithError(js);
+		return parseJSWithError(js);
 	}
 
 	protected def Script parseN4jsSuccessfully(CharSequence js) {

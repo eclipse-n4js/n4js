@@ -15,6 +15,7 @@
 
 import {N4Injector} from "n4js/lang/N4Injector";
 import {DIAsserts} from "runtime/n4/di/DIAsserts";
+
 class X {}
 class Y {}
 

@@ -68,11 +68,11 @@ class HeadlessReferenceFinderTest extends Assert {
 		val scriptA = '''
 			export class A {
 			}
-		'''.parse(URI.createURI('a.n4js'), resourceSet) // GH-855: change extension to .js
+		'''.parse(URI.createURI('a.js'), resourceSet)
 		val scriptB = '''
 			import * as N from 'a'
 			var a: N.A
-		'''.parse(URI.createURI('b.n4js'), resourceSet) // GH-855: change extension to .js
+		'''.parse(URI.createURI('b.js'), resourceSet)
 		val aModule = scriptA.module
 		val references = aModule.findReferencesTo
 		assertEquals(1, references.size)
@@ -86,11 +86,11 @@ class HeadlessReferenceFinderTest extends Assert {
 		val scriptA = '''
 			export class A {
 			}
-		'''.parse(URI.createURI('a.n4js'), resourceSet) // GH-855: change extension to .js
+		'''.parse(URI.createURI('a.js'), resourceSet)
 		val scriptB = '''
 			import * as N from 'a'
 			export var a: N.A
-		'''.parse(URI.createURI('b.n4js'), resourceSet) // GH-855: change extension to .js
+		'''.parse(URI.createURI('b.js'), resourceSet)
 		val a = (scriptA.scriptElements.head as ExportDeclaration).exportedElement as N4ClassDeclaration
 		val references = a.findReferencesTo
 		assertEquals(1, references.size)
@@ -108,12 +108,12 @@ class HeadlessReferenceFinderTest extends Assert {
 				get p(): String {}
 				set p(newP: String) {}
 			}
-		'''.parse(URI.createURI('a.n4js'), resourceSet) // GH-855: change extension to .js
+		'''.parse(URI.createURI('a.js'), resourceSet)
 		val scriptB = '''
 			import * as N from 'a'
 			var a: N.A = null
 			a.p = ""
-		'''.parse(URI.createURI('b.n4js'), resourceSet) // GH-855: change extension to .js
+		'''.parse(URI.createURI('b.js'), resourceSet)
 		val a = (scriptA.scriptElements.head as ExportDeclaration).exportedElement as N4ClassDeclaration
 		val setter = a.ownedSetters.head
 		val references = setter.findReferencesTo

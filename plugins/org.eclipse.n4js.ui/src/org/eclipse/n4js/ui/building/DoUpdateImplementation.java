@@ -384,8 +384,8 @@ class DoUpdateImplementation {
 	}
 
 	private void writeNewResourceDescriptions() {
-		state.writeNewResourceDescriptions(buildData, state, newState,
-				splitMonitor(buildData.getToBeUpdated().size() * 2));
+		SubMonitor splitMonitor = splitMonitor(buildData.getToBeUpdated().size() * 2);
+		state.writeNewResourceDescriptions(buildData, state, newState, splitMonitor);
 	}
 
 }

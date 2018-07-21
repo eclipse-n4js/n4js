@@ -35,7 +35,7 @@ class ES_11_13_AssignmentOperatorEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testAssignment_02() {
-		val program = 'eval = 42'.parseESWithError
+		val program = 'eval = 42'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val expression = statement.expression as AssignmentExpression
 		val op = expression.op
@@ -49,7 +49,7 @@ class ES_11_13_AssignmentOperatorEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testAssignment_03() {
-		val program = 'arguments = 42'.parseESWithError
+		val program = 'arguments = 42'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val expression = statement.expression as AssignmentExpression
 		val op = expression.op

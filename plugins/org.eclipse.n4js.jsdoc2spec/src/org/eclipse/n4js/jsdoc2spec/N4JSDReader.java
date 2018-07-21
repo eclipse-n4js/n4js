@@ -40,7 +40,6 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.scoping.N4JSGlobalScopeProvider;
-import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TMember;
@@ -50,15 +49,11 @@ import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.util.MemberList;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
-import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
 import org.eclipse.xtext.EcoreUtil2;
-import org.eclipse.xtext.naming.QualifiedName;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 
 /**
@@ -93,23 +88,24 @@ public class N4JSDReader {
 	public Collection<SpecInfo> readN4JSDs(Collection<IN4JSProject> projects,
 			Function<IN4JSProject, ResourceSet> resSetProvider, SubMonitorMsg monitor) throws InterruptedException {
 
-		Multimap<String, SpecInfo> specInfoByName = HashMultimap.create();
+		SpecInfosByName specInfosByName = new SpecInfosByName(issueAcceptor, globalScopeProvider, containerTypesHelper,
+				n4jsCore);
 		ResourceSet resSet = null;
 		SubMonitorMsg sub = monitor.convert(2 * 100 * projects.size());
 		for (IN4JSProject project : projects) {
 			if (resSet == null) {
 				resSet = resSetProvider.apply(project);
 			}
-			readScripts(specInfoByName, project, resSet, sub.newChild(100));
+			readScripts(specInfosByName, project, resSet, sub.newChild(100));
 		}
 		for (IN4JSProject project : projects) {
 			if (resSet == null) {
 				resSet = resSetProvider.apply(project);
 			}
-			linkTests(specInfoByName, project, resSet, sub.newChild(100));
+			linkTests(specInfosByName, project, resSet, sub.newChild(100));
 		}
 
-		return specInfoByName.values();
+		return specInfosByName.values();
 	}
 
 	/**
@@ -117,12 +113,12 @@ public class N4JSDReader {
 	 * map with fully qualified type name (inclusive module spec) as key, the type info only contains the types, no
 	 * other information yet.
 	 *
-	 * @param specInfoByName
+	 * @param specInfosByName
 	 *            map of fqn of types or reqid keys to their corresponding spec info.
 	 * @throws InterruptedException
 	 *             thrown when user cancels the operation
 	 */
-	private void readScripts(Multimap<String, SpecInfo> specInfoByName, IN4JSProject project, ResourceSet resSet,
+	private void readScripts(SpecInfosByName specInfosByName, IN4JSProject project, ResourceSet resSet,
 			SubMonitorMsg monitor) throws InterruptedException {
 
 		ImmutableList<? extends IN4JSSourceContainer> srcCont = project.getSourceContainers();
@@ -152,10 +148,10 @@ public class N4JSDReader {
 							}
 							N4JSResource.postProcess(resource);
 							for (Type type : getRealTopLevelTypes(script)) {
-								createTypeSpecInfo(type, specInfoByName);
+								specInfosByName.createTypeSpecInfo(type, rrph);
 							}
 							for (TVariable tvar : script.getModule().getVariables()) {
-								createTVarSpecInfo(tvar, specInfoByName);
+								specInfosByName.createTVarSpecInfo(tvar, rrph);
 							}
 						}
 					} catch (Exception ex) {
@@ -194,49 +190,13 @@ public class N4JSDReader {
 		return realTLT;
 	}
 
-	private void createTVarSpecInfo(TVariable tvar, Multimap<String, SpecInfo> specInfoByName) {
-		String name = KeyUtils.getSpecKeyWithoutProjectFolder(rrph, tvar);
-		specInfoByName.put(name, new SpecInfo(tvar));
-	}
-
-	private void createTypeSpecInfo(Type type, Multimap<String, SpecInfo> specInfoByName) {
-		SpecInfo typeInfo = new SpecInfo(type);
-		String regionName = KeyUtils.getSpecKeyWithoutProjectFolder(rrph, type);
-		specInfoByName.put(regionName, typeInfo);
-
-		Collection<SpecInfo> identicalSpecInfo = specInfoByName.get(regionName);
-		if (identicalSpecInfo.size() > 1) {
-			SpecInfo polyfillAware = null;
-			List<SpecInfo> polyfilling = new LinkedList<>();
-			for (SpecInfo si : identicalSpecInfo) {
-				Type moduleType = si.specElementRef.getElementAsType();
-
-				if (moduleType != null) {
-					TModule typeModule = moduleType.getContainingModule();
-					if (typeModule.isStaticPolyfillModule()) {
-						polyfilling.add(si);
-					} else if (typeModule.isStaticPolyfillAware()) {
-						polyfillAware = si;
-					}
-				}
-			}
-
-			if (polyfillAware != null) {
-				Type polyfillAwareType = polyfillAware.specElementRef.getElementAsType();
-				for (SpecInfo si : polyfilling) {
-					si.specElementRef.polyfillAware = polyfillAwareType;
-				}
-			}
-		}
-	}
-
 	/**
 	 * Links the tests to the testees and may create new specInfos for requirement ID related tests.
 	 *
 	 * @throws InterruptedException
 	 *             thrown when user cancels the operation
 	 */
-	private void linkTests(Multimap<String, SpecInfo> specInfoByName, IN4JSProject project, ResourceSet resSet,
+	private void linkTests(SpecInfosByName specInfosByName, IN4JSProject project, ResourceSet resSet,
 			SubMonitorMsg monitor) throws InterruptedException {
 
 		List<Type> testTypes = getTestTypes(project, resSet, monitor);
@@ -245,7 +205,7 @@ public class N4JSDReader {
 			try {
 				if (testType instanceof TClassifier) {
 					TClassifier ctype = (TClassifier) testType;
-					processClassifier(specInfoByName, testType, ctype);
+					processClassifier(specInfosByName, ctype);
 				}
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -298,23 +258,27 @@ public class N4JSDReader {
 		return testTypes;
 	}
 
-	private void processClassifier(Multimap<String, SpecInfo> specInfoByName, Type testType, TClassifier ctype) {
-		RepoRelativePath rrp = RepoRelativePath.compute(testType.eResource(), n4jsCore);
-		Doclet testTypeDoclet = n4jsDocHelper.getDoclet(ctype.getAstElement());
+	private void processClassifier(SpecInfosByName specInfosByName, TClassifier testType) {
+		RepoRelativePath rrpOfTest = RepoRelativePath.compute(testType.eResource().getURI(), n4jsCore);
+
+		// Retrieve the references to testees stated in the jsdoc of the test class itself.
+		Doclet testTypeDoclet = n4jsDocHelper.getDoclet(testType.getAstElement());
 		Collection<FullMemberReference> testeeRefsFromType = getFullMemberRefsFromType(testTypeDoclet);
 		Collection<FullMemberReference> testeeTypeRefsFromType = getFullTypeRefsFromType(testTypeDoclet);
 
-		MemberList<TMember> allMembers = containerTypesHelper.fromContext(testType).allMembers(ctype, false, false);
+		MemberList<TMember> allMembers = containerTypesHelper.fromContext(testType).allMembers(testType, false, false);
 		for (TMember testMember : allMembers) {
-			boolean isOwnedMember = testMember.getContainingType() == ctype;
+			boolean isOwnedMember = testMember.getContainingType() == testType;
 			if (testMember instanceof TMethod && AnnotationDefinition.TEST_METHOD.hasAnnotation(testMember)) {
 				EObject astElement = testMember.getAstElement();
 				if (!astElement.eIsProxy()) {
+
+					// Retrieve the references to testees stated in the jsdoc of the test
 					Doclet testMethodDoclet = n4jsDocHelper.getDoclet(astElement);
 					LineTag tag = findLinkToElementTag(testMethodDoclet, isOwnedMember);
 
 					if (tag != null) {
-						processTag(specInfoByName, rrp, testeeRefsFromType, testeeTypeRefsFromType, testMember,
+						processTag(specInfosByName, rrpOfTest, testeeRefsFromType, testeeTypeRefsFromType, testMember,
 								isOwnedMember, astElement, testMethodDoclet, tag);
 					}
 				} else {
@@ -324,7 +288,7 @@ public class N4JSDReader {
 		}
 	}
 
-	private void processTag(Multimap<String, SpecInfo> specInfoByName, RepoRelativePath rrp,
+	private void processTag(SpecInfosByName specInfosByName, RepoRelativePath rrpOfTest,
 			Collection<FullMemberReference> testeeRefsFromType, Collection<FullMemberReference> testeeTypeRefsFromType,
 			TMember testMember, boolean isOwnedMember, EObject astElement, Doclet testMethodDoclet, LineTag tag) {
 
@@ -332,32 +296,31 @@ public class N4JSDReader {
 		if ("testee".equals(title)) {
 			FullMemberReference ref = getFullMemberRef(tag);
 			if (ref != null) {
-				addTestInfoForCodeElement(rrp, testMethodDoclet, ref, testMember, specInfoByName);
+				specInfosByName.addTestInfoForCodeElement(rrpOfTest, testMethodDoclet, ref, testMember);
 			}
 
 		} else if ("testeeFromType".equals(title)) {
-			RepoRelativePath rrpTestMethod = isOwnedMember ? rrp
-					: RepoRelativePath.compute(astElement.eResource(), n4jsCore);
+			RepoRelativePath rrpTestMethod = isOwnedMember ? rrpOfTest
+					: RepoRelativePath.compute(astElement.eResource().getURI(), n4jsCore);
 
 			for (FullMemberReference ref : testeeRefsFromType) {
-				addTestInfoForCodeElement(rrpTestMethod, testMethodDoclet, ref, testMember, specInfoByName);
+				specInfosByName.addTestInfoForCodeElement(rrpTestMethod, testMethodDoclet, ref, testMember);
 			}
 
 		} else if ("testeeMember".equals(title)) {
 			String testeeMember = N4JSDocletParser.TAG_TESTEEMEMBER.getValue(tag, "");
-			RepoRelativePath rrpTestMethod = isOwnedMember ? rrp
-					: RepoRelativePath.compute(astElement.eResource(), n4jsCore);
+			RepoRelativePath rrpTestMethod = isOwnedMember ? rrpOfTest
+					: RepoRelativePath.compute(astElement.eResource().getURI(), n4jsCore);
 
 			for (FullMemberReference testeeTypeRef : testeeTypeRefsFromType) {
 				FullMemberReference combinedTesteeRef = EcoreUtil.copy(testeeTypeRef);
 				combinedTesteeRef.setMemberName(testeeMember);
 				combinedTesteeRef.setRange(tag.getBegin(), tag.getEnd());
-				addTestInfoForCodeElement(
+				specInfosByName.addTestInfoForCodeElement(
 						rrpTestMethod,
 						testMethodDoclet,
 						combinedTesteeRef,
-						testMember,
-						specInfoByName);
+						testMember);
 			}
 
 		} else if ("reqid".equals(title)) {
@@ -365,10 +328,10 @@ public class N4JSDReader {
 			if (Strings.isNullOrEmpty(reqid)) {
 				throw new IllegalStateException("Found reqid tag without requirement ID.");
 			}
-			RepoRelativePath rrpTestMethod = isOwnedMember ? rrp
-					: RepoRelativePath.compute(astElement.eResource(), n4jsCore);
+			RepoRelativePath rrpTestMethod = isOwnedMember ? rrpOfTest
+					: RepoRelativePath.compute(astElement.eResource().getURI(), n4jsCore);
 
-			addTestInfoForRequirement(rrpTestMethod, testMethodDoclet, reqid, testMember, specInfoByName);
+			specInfosByName.addTestInfoForRequirement(rrpTestMethod, testMethodDoclet, reqid, testMember);
 
 		} else {
 			// should not happen
@@ -426,96 +389,12 @@ public class N4JSDReader {
 		return refsByName.values();
 	}
 
-	/**
-	 * Adds test info to an identified element.
-	 */
-	private void addTestInfoForCodeElement(RepoRelativePath rrp, Doclet testMethodDoclet, FullMemberReference ref,
-			TMember testMember, Multimap<String, SpecInfo> typesByName) {
-
-		String fullTypeName = ref.fullTypeName();
-		String regionName = KeyUtils.getSpecKeyWithoutProjectFolder(rrp, fullTypeName);
-		Collection<SpecInfo> specInfos = typesByName.get(regionName);
-
-		boolean testeeMemberFound = false;
-		for (SpecInfo specInfo : specInfos) {
-			for (Type testee : specInfo.specElementRef.getTypes()) {
-				if (testee instanceof ContainerType<?> && ref.memberNameSet()) {
-					TMember testeeMember = getRefMember((ContainerType<?>) testee, ref);
-					if (testeeMember != null) {
-						String testeeName = testeeMember.getName();
-						SpecTestInfo testSpecInfo = createTestSpecInfo(testeeName, testMethodDoclet, testMember, rrp);
-						specInfo.addMemberTestInfo(testeeMember, testSpecInfo);
-					}
-					testeeMemberFound = true;
-				}
-			}
-		}
-
-		if (!testeeMemberFound) {
-			for (SpecInfo specInfo : specInfos) {
-				// Type, TFunction of TVariable
-				String elementName = specInfo.specElementRef.identifiableElement.getName();
-				SpecTestInfo testSpecInfo = createTestSpecInfo(elementName, testMethodDoclet, testMember, rrp);
-				specInfo.addTypeTestInfo(testSpecInfo);
-			}
-
-			if (specInfos.isEmpty()) {
-				issueAcceptor.addWarning("Testee " + fullTypeName + " not found", testMember);
-			}
-		}
-	}
-
-	private void addTestInfoForRequirement(RepoRelativePath rrp, Doclet testMethodDoclet, String reqid,
-			TMember testMember, Multimap<String, SpecInfo> typesByName) {
-
-		Collection<SpecInfo> specInfos = typesByName.get(SpecElementRef.reqidKey(reqid));
-		if (specInfos.isEmpty()) {
-			SpecInfo specInfo = new SpecInfo(reqid);
-			typesByName.put(SpecElementRef.reqidKey(reqid), specInfo);
-		}
-		for (SpecInfo specInfo : specInfos) {
-			specInfo.addTypeTestInfo(createTestSpecInfo(reqid, testMethodDoclet, testMember, rrp));
-		}
-	}
-
 	private FullMemberReference getFullMemberRef(LineTag tag) {
 		EList<ContentNode> contents = tag.getValueByKey(LineTagWithFullElementReference.REF).getContents();
 		if (!contents.isEmpty()) {
 			return (FullMemberReference) contents.get(0);
 		}
 		return null;
-	}
-
-	private SpecTestInfo createTestSpecInfo(String testeeName, Doclet doclet, TMember testMember,
-			RepoRelativePath rrp) {
-
-		String moduleName = testMember.getContainingModule().getModuleSpecifier();
-		String typeName = testMember.getContainingType().getName();
-		String memberName = testMember.getName();
-		QualifiedName qualifiedName = QualifiedName.create(moduleName, typeName, memberName);
-		RepoRelativePath repoRelPath = rrp != null ? rrp.withLine(testMember) : null;
-		return new SpecTestInfo(testeeName, qualifiedName, doclet, repoRelPath);
-	}
-
-	// TODO fqn of getter vs setter, fqn of static vs instance
-	private TMember getRefMember(ContainerType<?> ct, FullMemberReference ref) {
-		TMember member = null;
-		String memberName = ref.getMemberName();
-		boolean _static = ref.isStaticMember();
-		MemberCollector memberCollector = containerTypesHelper.fromContext(ct);
-		member = memberCollector.findMember(ct, memberName, false, _static);
-
-		if (member == null) {
-			member = memberCollector.findMember(ct, memberName, false, !_static);
-			if (member == null) {
-				member = memberCollector.findMember(ct, memberName, true, _static);
-				if (member == null) {
-					member = memberCollector.findMember(ct, memberName, true, !_static);
-				}
-			}
-		}
-		return member;
-
 	}
 
 }

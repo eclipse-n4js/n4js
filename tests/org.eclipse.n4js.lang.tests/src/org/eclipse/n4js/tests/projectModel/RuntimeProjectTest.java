@@ -10,17 +10,16 @@
  */
 package org.eclipse.n4js.tests.projectModel;
 
+import org.eclipse.n4js.N4JSInjectorProvider;
+import org.eclipse.n4js.internal.FileBasedWorkspace;
+import org.eclipse.n4js.internal.N4JSRuntimeCore;
+import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.XtextRunner;
 import org.junit.runner.RunWith;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-
-import org.eclipse.n4js.N4JSInjectorProvider;
-import org.eclipse.n4js.internal.FileBasedWorkspace;
-import org.eclipse.n4js.internal.N4JSRuntimeCore;
-import org.eclipse.n4js.projectModel.IN4JSCore;
 
 /**
  */

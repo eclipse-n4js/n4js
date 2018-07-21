@@ -11,16 +11,16 @@
 package org.eclipse.n4js.external;
 
 import static com.google.common.collect.Sets.newHashSet;
-import static org.eclipse.n4js.external.libraries.PackageJson.PACKAGE_JSON;
-import static org.eclipse.n4js.n4mf.utils.N4MFConstants.N4MF_MANIFEST;
 import static org.eclipse.xtext.util.Tuples.pair;
 
 import java.io.File;
-import java.io.FileFilter;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,27 +29,14 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.binaries.BinaryCommandFactory;
-import org.eclipse.n4js.external.libraries.PackageJson;
-import org.eclipse.n4js.external.libraries.TargetPlatformFactory;
-import org.eclipse.n4js.n4mf.ProjectDescription;
-import org.eclipse.n4js.n4mf.resource.ManifestMerger;
-import org.eclipse.n4js.n4mf.serialization.N4MFManifestSerializer;
-import org.eclipse.n4js.n4mf.utils.N4MFConstants;
-import org.eclipse.n4js.utils.LightweightException;
-import org.eclipse.n4js.utils.OSInfo;
+import org.eclipse.n4js.utils.ProjectDescriptionHelper;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.Version;
-import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.n4js.utils.git.GitUtils;
 import org.eclipse.n4js.utils.io.FileCopier;
-import org.eclipse.n4js.utils.io.FileDeleter;
-import org.eclipse.n4js.utils.process.ProcessResult;
 import org.eclipse.xtext.util.Pair;
-import org.eclipse.xtext.xbase.lib.Exceptions;
 
 import com.google.common.base.Predicate;
-import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
@@ -64,35 +51,16 @@ public class NpmPackageToProjectAdapter {
 	private NpmLogger logger;
 
 	@Inject
-	private N4JSNpmManifestContentProvider manifestContentProvider;
-
-	@Inject
 	private StatusHelper statusHelper;
 
 	@Inject
 	private TargetPlatformInstallLocationProvider installLocationProvider;
 
 	@Inject
-	private ManifestMerger manifestMerger;
-
-	@Inject
-	private N4MFManifestSerializer manifestSerializer;
-
-	@Inject
-	private BinaryCommandFactory commandFactory;
-
-	@Inject
 	private GitCloneSupplier gitCloneSupplier;
 
-	/** Default filter for manifest fragments */
-	private final static FileFilter ONLY_MANIFEST_FRAGMENTS = new FileFilter() {
-		private final static String MANIFEST_FRAGMENT = "manifest.fragment";
-
-		@Override
-		public boolean accept(File pathname) {
-			return pathname.toPath().endsWith(MANIFEST_FRAGMENT);
-		}
-	};
+	@Inject
+	private ProjectDescriptionHelper projectDescriptionHelper;
 
 	/** Default filter for copying N4JSD project contents during adaptation */
 	private final static Predicate<Path> COPY_N4JSD_PREDICATE = new Predicate<Path>() {
@@ -110,12 +78,17 @@ public class NpmPackageToProjectAdapter {
 	 * packages are adapted. It is expected that npm flattens packages structures, therefore it is assumed that other
 	 * folders are dependencies (also transitive) of the requested packages.
 	 *
-	 * Requested npm packages already look like N4JS projects (i.e. have N4MF manifest file), those packages are not
-	 * adapted (proper structure is assumed), but they will be returned in to the caller to allow further processing
-	 * (i.e. passing them to the builder).
+	 * Adaptation of a package P means:
+	 * <ul>
+	 * <li>add n4jsd files from P's corresponding folder in the type definitions repository (if any),
+	 * <li>if no {@link N4JSGlobals#PACKAGE_FRAGMENT_JSON package.json fragment} was added by the previous step (either
+	 * because P has no folder in the type definitions repository or that folder does not contain a package.json
+	 * fragment), then a {@link N4JSGlobals#PACKAGE_MARKER marker file} will be added to the package to denote that this
+	 * package was part of the given 'namesOfPackagesToAdapt' (for later use by other code).
+	 * </ul>
 	 *
 	 * Returned set of N4JS project folders will not include those installed by the npm but without matching names in
-	 * provided set of expected packages. Those packages are treated as transitive dependencies and are not return to
+	 * provided set of expected packages. Those packages are treated as transitive dependencies and are not returned to
 	 * the caller.
 	 *
 	 * @param namesOfPackagesToAdapt
@@ -124,7 +97,6 @@ public class NpmPackageToProjectAdapter {
 	 */
 	public Pair<IStatus, Collection<File>> adaptPackages(Collection<String> namesOfPackagesToAdapt) {
 		final MultiStatus status = statusHelper.createMultiStatus("Status of adapting npm packages");
-		final Collection<File> adaptedProjects = newHashSet();
 		final File nodeModulesFolder = new File(installLocationProvider.getTargetPlatformNodeModulesLocation());
 		final Collection<String> names = newHashSet(namesOfPackagesToAdapt);
 		final File[] packageRoots = nodeModulesFolder.listFiles(packageName -> names.contains(packageName.getName()));
@@ -132,46 +104,15 @@ public class NpmPackageToProjectAdapter {
 
 		for (File packageRoot : packageRoots) {
 			try {
-				PackageJson packageJson = getPackageJson(packageRoot);
-
-				final File manifest = new File(packageRoot, N4MF_MANIFEST);
-				// looks like n4js project skip adaptation
-				if (manifest.exists() && manifest.isFile()) {
-					if (!names.remove(packageRoot.getName())) {
-						throw new IOException("Unexpected error occurred while adapting '"
-								+ packageRoot.getName() + "' npm package into N4JS format.");
-					}
-					adaptedProjects.add(packageRoot);
-				} else {
-
-					if (manifest.isDirectory()) {
-						throw new IOException("The manifest location is occupied by the folder '" + manifest + "'.");
-					}
-
-					manifest.createNewFile();
-
-					try {
-						String mainModule = computeMainModule(packageRoot);
-						generateManifestContent(packageRoot, packageJson, mainModule, manifest);
-						if (!names.remove(packageRoot.getName())) {
-							throw new IOException("Unexpected error occurred while adapting '" + packageRoot.getName()
-									+ "' npm package into N4JS format.");
-						}
-						adaptedProjects.add(packageRoot);
-					} catch (final Exception e) {
-						try {
-							FileDeleter.delete(manifest);
-						} catch (IOException ioe) {
-							// Intentionally swallowed to get the original cause.
-							LOGGER.error("Error while trying to clean up corrupted " + manifest + " file.", e);
-						}
-						throw e;
-					}
+				// add type definitions
+				if (n4jsdsFolder != null) {
+					addTypeDefinitions(packageRoot, n4jsdsFolder);
 				}
-
-				if (n4jsdsFolder != null && adaptedProjects.contains(packageRoot)) {
-					addTypeDefinitions(packageRoot, packageJson, manifest, n4jsdsFolder);
-				}
+				// create marker file to denote that this package was among "namesOfPackagesToAdapt"
+				// (compare with: ExternalProjectLocationsProvider#isExternalProjectDirectory(File))
+				File markerFile = new File(packageRoot, N4JSGlobals.PACKAGE_MARKER);
+				Files.write(markerFile.toPath(), Collections.singletonList( // will overwrite existing file
+						"Temporary marker file. See N4JSGlobals#PACKAGE_MARKER for details."));
 			} catch (final Exception e) {
 				status.merge(
 						statusHelper.createError("Unexpected error occurred while adapting '" + packageRoot.getName()
@@ -179,30 +120,7 @@ public class NpmPackageToProjectAdapter {
 			}
 		}
 
-		return pair(status, adaptedProjects);
-
-	}
-
-	/**
-	 * Reads, parses and returns with the content of the {@code package.json} file as a POJO for the given npm package
-	 * root location.
-	 *
-	 * @param packageRoot
-	 *            the root location of the npm package.
-	 *
-	 * @return the POJO instance that represents the read, parsed content of the {@code package.json} file.
-	 *
-	 * @throws IOException
-	 *             if {@code package.json} file does not exists, hence the content cannot be read.
-	 */
-	PackageJson getPackageJson(File packageRoot) throws IOException {
-
-		final File packageJsonResource = new File(packageRoot, PACKAGE_JSON);
-		if (!packageJsonResource.exists() || !packageJsonResource.isFile()) {
-			throw new IOException("Cannot read package.json content for package '" + packageJsonResource.getName()
-					+ "' at '" + packageJsonResource + "'.");
-		}
-		return PackageJson.readValue(packageJsonResource.toURI());
+		return pair(status, Arrays.asList(packageRoots));
 	}
 
 	private static String NPM_DEFINITIONS_FOLDER_NAME = "npm";
@@ -248,17 +166,12 @@ public class NpmPackageToProjectAdapter {
 	 *
 	 * @param packageRoot
 	 *            npm package folder.
-	 * @param packageJson
-	 *            {@link TargetPlatformFactory package.json} of that package.
-	 * @param manifest
-	 *            file that will be adjusted according to manifest fragments.
 	 * @param definitionsFolder
 	 *            root folder for npm type definitions.
 	 *
 	 * @return a status representing the outcome of performed the operation.
 	 */
-	IStatus addTypeDefinitions(File packageRoot, PackageJson packageJson, File manifest,
-			File definitionsFolder) {
+	IStatus addTypeDefinitions(File packageRoot, File definitionsFolder) {
 
 		String packageName = packageRoot.getName();
 		File packageN4JSDsRoot = new File(definitionsFolder, packageName);
@@ -270,8 +183,15 @@ public class NpmPackageToProjectAdapter {
 			return statusHelper.OK();
 		}
 
-		String packageJsonVersion = packageJson.version;
+		String packageJsonVersion = projectDescriptionHelper.loadVersionFromProjectDescriptionAtLocation(
+				URI.createFileURI(packageRoot.getAbsolutePath()));
 		Version packageVersion = Version.createFromString(packageJsonVersion);
+		if (Version.MISSING.equals(packageVersion)) {
+			final String message = "Cannot read version from package.json of npm package '" + packageName + "'.";
+			logger.logInfo(message);
+			LOGGER.error(message);
+			return statusHelper.createError(message);
+		}
 		String[] list = packageN4JSDsRoot.list();
 		Set<Version> availableTypeDefinitionsVersions = new HashSet<>();
 		for (int i = 0; i < list.length; i++) {
@@ -301,19 +221,20 @@ public class NpmPackageToProjectAdapter {
 			return statusHelper.OK();
 		}
 
-		if (!(definitionsFolder.exists() && definitionsFolder.isDirectory())) {
-			final String message = "Cannot find type definitions folder for '" + packageName
-					+ "' npm package for version '" + closestMatchingVersion + "'.";
+		File packageVersionedN4JSDProjectRoot = new File(packageN4JSDsRoot, closestMatchingVersion.toString());
+		if (!(packageVersionedN4JSDProjectRoot.exists() && packageVersionedN4JSDProjectRoot.isDirectory())) {
+			final String message = "Cannot find type definitions folder for npm package '" + packageName
+					+ "' for version '" + closestMatchingVersion + "'.";
 			logger.logInfo(message);
 			LOGGER.error(message);
 			return statusHelper.createError(message);
 		}
 
-		File packageVersionedN4JSDProjectRoot = new File(packageN4JSDsRoot, closestMatchingVersion.toString());
-		try {
-			Path sourcePath = packageVersionedN4JSDProjectRoot.toPath();
-			Path targetPath = packageRoot.toPath();
+		Path sourcePath = packageVersionedN4JSDProjectRoot.toPath();
+		Path targetPath = packageRoot.toPath();
 
+		// copy all n4jsd files
+		try {
 			FileCopier.copy(sourcePath, targetPath, COPY_N4JSD_PREDICATE);
 		} catch (IOException e) {
 			final String message = "Error while trying to update type definitions content for '" + packageName
@@ -323,179 +244,23 @@ public class NpmPackageToProjectAdapter {
 			return statusHelper.createError(message, e);
 		}
 
-		// adjust manifest according to type definitions manifest fragments
+		// copy package.json fragment
 		try {
-			File[] manifestFragments = prepareManifestFragments(packageVersionedN4JSDProjectRoot, packageRoot);
-			return adjustManifest(manifest, manifestFragments);
+			Path sourceFragmentPath = sourcePath.resolve(N4JSGlobals.PACKAGE_FRAGMENT_JSON);
+			if (sourceFragmentPath.toFile().isFile()) {
+				Files.copy(
+						sourceFragmentPath,
+						targetPath.resolve(N4JSGlobals.PACKAGE_FRAGMENT_JSON),
+						StandardCopyOption.REPLACE_EXISTING);
+			}
 		} catch (IOException e) {
-			final String message = "Error while trying to prepare manifest fragments for '" + packageName
-					+ "' npm package.";
+			final String message = "Error while trying to copy the package.json fragment '"
+					+ N4JSGlobals.PACKAGE_FRAGMENT_JSON + "' for '" + packageName + "' npm package.";
 			logger.logInfo(message);
 			LOGGER.error(message);
 			return statusHelper.createError(message, e);
 		}
+
+		return statusHelper.OK();
 	}
-
-	/**
-	 * Take the manifest.fragment file from the N4JSD project root folder and copy it to fragment.n4mf in the NPM
-	 * package root folder.
-	 *
-	 * @param n4jsdRoot
-	 *            The N4JSD project root folder.
-	 * @param packageRoot
-	 *            The NPM package root folder.
-	 * @return An array containing the full absolute path to the fragment.n4mf file.
-	 * @throws IOException
-	 *             if an error occurs while copying the file
-	 */
-	private File[] prepareManifestFragments(File n4jsdRoot, File packageRoot)
-			throws IOException {
-		File[] sourceFragments = n4jsdRoot.listFiles(ONLY_MANIFEST_FRAGMENTS);
-		if (sourceFragments.length > 0) {
-			File sourceFile = sourceFragments[0];
-			File targetFile = new File(packageRoot, N4MFConstants.MANIFEST_FRAGMENT);
-			FileCopier.copy(sourceFile.toPath(), targetFile.toPath());
-			return new File[] { targetFile };
-		}
-
-		return new File[] {};
-	}
-
-	/**
-	 * Adjust manifests based on provided manifest fragments.
-	 *
-	 * @param manifest
-	 *            file to be adjusted
-	 * @param manifestFragments
-	 *            that will be used to adjust the manifest
-	 */
-	private IStatus adjustManifest(final File manifest, final File... manifestFragments) {
-
-		if (Arrays2.isEmpty(manifestFragments)) {
-			// Nothing to merge.
-			return statusHelper.OK();
-		}
-
-		final URI manifestURI = URI.createFileURI(manifest.getAbsolutePath());
-
-		ProjectDescription pd = null;
-		for (int i = 0; i < manifestFragments.length; i++) {
-			File fragment = manifestFragments[i];
-			if (fragment.exists() && fragment.isFile()) {
-				URI manifestFragmentURI = URI.createFileURI(fragment.getAbsolutePath());
-				pd = manifestMerger.mergeContent(manifestFragmentURI, manifestURI);
-				fragment.delete();
-			} else {
-				LOGGER.warn("Broken manifest fragment: " + fragment + ".");
-			}
-		}
-
-		if (pd != null) {
-			final String adjustedManifestContent = manifestSerializer.serialize(pd);
-
-			try (FileWriter fw = new FileWriter(manifest)) {
-				// write adjusted manifest content to file
-				fw.write(adjustedManifestContent);
-				return statusHelper.OK();
-			} catch (IOException e) {
-				final String message = "Error while trying to write N4JS manifest content for: " + manifestURI + ".";
-				LOGGER.error(message, e);
-				return statusHelper.createError(message, e);
-			}
-		} else {
-			final String message = "Failed to merge N4JS manifest fragments into '" + manifestURI + "'.";
-			LOGGER.error(message);
-			return statusHelper.createError(message);
-		}
-	}
-
-	/**
-	 * Writes contents of the {@link N4MFConstants#N4MF_MANIFEST manifest file} for a given npm package.
-	 *
-	 * @param projectFolder
-	 *            root folder of the npm package in which manifest is written
-	 * @param packageJSON
-	 *            that will be used as manifest data source
-	 * @param mainModule
-	 *            the main module
-	 * @param manifest
-	 *            file to which contents should be written
-	 *
-	 */
-	private void generateManifestContent(File projectFolder, PackageJson packageJSON, String mainModule,
-			File manifest)
-			throws IOException {
-
-		String projectId = packageJSON.name;
-		String projectVersion = packageJSON.version;
-
-		if (!projectFolder.getName().equals(projectId)) {
-			LOGGER.warn("project folder and project name are different : " + projectFolder.getName() + " <> + "
-					+ packageJSON.name);
-		}
-
-		try (FileWriter fw = new FileWriter(manifest)) {
-			fw.write(manifestContentProvider.getContent(projectId, ".", ".", mainModule, projectVersion));
-		}
-	}
-
-	String computeMainModule(File projectFolder) {
-
-		String mainModule = resolveMainModule(projectFolder);
-
-		if (Strings.isNullOrEmpty(mainModule))
-			return mainModule;
-
-		File main = new File(mainModule);
-
-		if (!main.isFile()) {
-			throw Exceptions
-					.sneakyThrow(new LightweightException("Cannot locate main module with path " + main.toString()));
-		}
-
-		Path packagePath = projectFolder.toPath();
-		Path packageMainModulePath = main.toPath();
-
-		Path mainmoduleRelative = packagePath.relativize(packageMainModulePath);
-
-		String mainSpecifier = mainmoduleRelative.toString();
-
-		// strip extension
-		int dotIndex = mainSpecifier.lastIndexOf('.');
-		String ext = (dotIndex == -1) ? "" : mainSpecifier.substring(dotIndex);
-		mainSpecifier = mainSpecifier.substring(0, (mainSpecifier.length() - ext.length()));
-
-		// replace windows path separators
-		if (OSInfo.isWindows())
-			mainSpecifier = mainSpecifier.replace(File.separator, "/");
-
-		// strip relative start part
-		if (mainSpecifier.startsWith("./"))
-			mainSpecifier = mainSpecifier.substring(2);
-
-		return mainSpecifier;
-	}
-
-	/**
-	 * Calls node process to resolve main module of the provided npm package.
-	 *
-	 * @param packageRoot
-	 *            package root folder
-	 * @return string with absolute path to the package main module
-	 */
-	private String resolveMainModule(File packageRoot) {
-
-		ProcessResult per = commandFactory.createResolveMainModuleCommand(packageRoot).execute();
-
-		if (per.isOK()) {
-			// happy case string with full path to the main module (terminated with line ending)
-			return per.getStdOut().trim();
-		} else {
-			// unhappy case, maybe package is broken, maybe it is library with no single facade.
-			LOGGER.warn(
-					"Cannot resolve npm package main module, generated project will NOT have MainModule compatible with module import.");
-			return null;
-		}
-	}
-
 }

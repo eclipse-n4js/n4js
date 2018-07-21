@@ -8,7 +8,7 @@
   "license": "EPL-1.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/NumberFour/n4js-libs"
+    "url": "https://github.com/eclipse/n4js"
   },
   "description": "N4JS node.js runtime environment.",
   "keywords": [
@@ -31,10 +31,11 @@
   "react-native": "./src-gen/react-native.js",
   "dependencies": {
     "node-fetch": "~1.6.3",
-    "systemjs": "~0.19.40"
+    "systemjs": "~0.19.40",
+    "n4js-es5": "^0.1.0"
   },
   "files": [
-    "manifest.n4mf",
+    "src",
     "src-gen"
   ],
   "n4js": {
@@ -48,7 +49,7 @@
       ]
     },
     "moduleFilters": {
-      "noModuleWrapping": [
+      "noModuleWrap": [
         "**"
       ]
     },

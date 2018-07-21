@@ -86,10 +86,15 @@ public class KeyUtils {
 	/** @return a unique key for elements in the given {@link RepoRelativePath} and element name. */
 	public static String getSpecKeyWithoutProjectFolder(RepoRelativePath rrp, String elementName) {
 		String key = "";
-		key += rrp.repositoryName;
-		key += "." + rrp.pathInRepository;
-		key += "." + rrp.projectName;
-		key += "." + elementName;
+		if (rrp != null) { // this happens in an error case only, we created a warning before
+			key += rrp.repositoryName;
+			if (!rrp.pathInRepository.isEmpty()) {
+				key += "." + rrp.pathInRepository;
+			}
+			key += "." + rrp.projectName;
+			key += ".";
+		}
+		key += elementName;
 		return key;
 	}
 

@@ -1,0 +1,62 @@
+{
+  "name": "n4js-cli",
+  "author": "NumberFour AG <npm@numberfour.eu>",
+  "repository": "https://github.com/eclipse/n4js",
+  "license": "EPL-1.0",
+  "version": "0.1.0",
+  "description": "N4JS compiler and command line tools.",
+  "scripts": {
+    "postinstall": "./npm-postinstall.js",
+    "build": "./npm-build.sh",
+    "test": "eslint . && mocha tests"
+  },
+  "bin": {
+    "n4jsc": "./bin/n4jsc.js"
+  },
+  "files": [
+    "bin",
+    "npm-postinstall.js",
+    "index.js",
+    "index.n4jsd"
+  ],
+  "devDependencies": {
+    "eslint": "^3.19.0",
+    "mocha": "^3.5.3"
+  },
+  "eslintConfig": {
+    "env": {
+      "es6": true,
+      "node": true,
+      "mocha": true
+    },
+    "extends": "eslint:recommended",
+    "rules": {
+      "strict": "error",
+      "no-trailing-spaces": "error"
+    }
+  },
+  "dependencies": {
+    "npmlog": "4.1.2",
+    "n4js-runtime-fetch": "^0.1.0",
+    "n4js-runtime-es2015": "^0.1.0",
+    "n4js-runtime-node": "^0.1.0"
+  },
+  "n4js": {
+    "projectType": "validation",
+    "vendorId": "org.eclipse.n4js",
+    "vendorName": "Eclipse N4JS Project",
+    "output": ".",
+    "mainModule": "index",
+    "sources": {
+      "source": [
+        "."
+      ]
+    },
+    "requiredRuntimeLibraries": [
+      "n4js-runtime-fetch",
+      "n4js-runtime-es2015",
+      "n4js-runtime-node"
+    ],
+    "moduleLoader": "commonjs"
+  }
+}

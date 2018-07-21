@@ -1,0 +1,16 @@
+{
+	"name": "express",
+	"version": "4.0.0-incomplete",
+	"n4js": {
+		"projectType": "library",
+		"vendorId": "npm",
+		"output": ".",
+		"mainModule": "index",
+		"sources": {
+			"source": [
+				"src"
+			]
+		},
+		"moduleLoader": "commonjs"
+	}
+}

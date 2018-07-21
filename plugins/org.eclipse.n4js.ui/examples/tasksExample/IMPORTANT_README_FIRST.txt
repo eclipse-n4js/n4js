@@ -23,7 +23,7 @@ you could do:
 $ cd n4js.example.tasks
 $ zip -r ../n4js.example.tasks.zip .project *
   adding: .project (deflated 49%)
-  adding: manifest.n4mf (deflated 39%)
+  adding: package.json (deflated 41%)
   adding: src/ (stored 0%)
   adding: src/StorageMongoDB.n4js (deflated 61%)
   adding: src/model.n4js (deflated 46%)

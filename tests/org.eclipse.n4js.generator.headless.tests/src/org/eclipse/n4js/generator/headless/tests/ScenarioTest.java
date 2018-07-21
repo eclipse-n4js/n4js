@@ -140,10 +140,10 @@ public class ScenarioTest {
 	}
 
 	/**
-	 * Broken manifest will result in parse-error.
+	 * Broken project description file (package.json) will result in parse-error.
 	 */
 	@Test(expected = N4JSCompileException.class)
-	public void testScenario02brokenManifest() throws N4JSCompileException {
+	public void testScenario02brokenProjectDescriptionFile() throws N4JSCompileException {
 		N4HeadlessCompiler hlc = HeadlessCompilerFactory.createCompilerWithDefaults();
 		File root = new File(workspace, "scenario02");
 		List<File> pProjectRoots = Arrays.asList(//
@@ -225,7 +225,7 @@ public class ScenarioTest {
 	}
 
 	/**
-	 * Testing for different output-folder, configured in manifest. Testing for external source and configuration of
+	 * Testing for different output-folder, configured in package.json. Testing for external source and configuration of
 	 * noModuleWrapFilter
 	 */
 	@Test
@@ -291,8 +291,8 @@ public class ScenarioTest {
 		File root = new File(workspace, "scenario07");
 
 		List<File> toCompile = Arrays.asList(//
-				new File(root, "wsp1/P1") // requires nothing
-		);
+				new File(root, "wsp1/P1"),
+				new File(root, "wsp1/org.eclipse.n4js.mangelhaft"));
 
 		hlc.setCompileSourceCode(false);
 		hlc.setProcessTestCode(true);
@@ -320,8 +320,8 @@ public class ScenarioTest {
 		File root = new File(workspace, "scenario08");
 
 		List<File> toCompile = Arrays.asList(//
-				new File(root, "wsp1/P1") // requires nothing
-		);
+				new File(root, "wsp1/P1"),
+				new File(root, "wsp1/org.eclipse.n4js.mangelhaft"));
 
 		hlc.setCompileSourceCode(true);
 		hlc.setProcessTestCode(false);

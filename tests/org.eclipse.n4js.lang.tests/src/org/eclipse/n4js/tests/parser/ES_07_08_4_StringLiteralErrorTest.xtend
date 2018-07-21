@@ -28,7 +28,7 @@ class ES_07_08_4_StringLiteralErrorTest extends AbstractParserTest {
 
 	@Test
 	def void testBogusEscape_01() {
-		val script = "'\\123'".parseESWithError
+		val script = "'\\123'".parseESWithWarning
 		val statement = script.scriptElements.head as ExpressionStatement
 		val stringLiteral = statement.expression as StringLiteral
 		assertEquals("S", stringLiteral.value)
@@ -36,7 +36,7 @@ class ES_07_08_4_StringLiteralErrorTest extends AbstractParserTest {
 
 	@Test
 	def void testBogusEscape_02() {
-		val script = "'\\0123'".parseESWithError
+		val script = "'\\0123'".parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val stringLiteral = statement.expression as StringLiteral
 		assertEquals("\n3", stringLiteral.value)
@@ -119,37 +119,37 @@ class ES_07_08_4_StringLiteralErrorTest extends AbstractParserTest {
 
 	@Test
 	def void testBadEscapement_01() {
-		'''"Hello\112World"'''.parseESWithError
+		'''"Hello\112World"'''.parseESWithWarning
 	}
 
 	@Test
 	def void testBadEscapement_02() {
-		'''"Hello\212World"'''.parseESWithError
+		'''"Hello\212World"'''.parseESWithWarning
 	}
 
 	@Test
 	def void testBadEscapement_03() {
-		'''"Hello\312World"'''.parseESWithError
+		'''"Hello\312World"'''.parseESWithWarning
 	}
 
 	@Test
 	def void testBadEscapement_04() {
-		'''"Hello\412World"'''.parseESWithError
+		'''"Hello\412World"'''.parseESWithWarning
 	}
 
 	@Test
 	def void testBadEscapement_05() {
-		'''"Hello\512World"'''.parseESWithError
+		'''"Hello\512World"'''.parseESWithWarning
 	}
 
 	@Test
 	def void testBadEscapement_06() {
-		'''"Hello\612World"'''.parseESWithError
+		'''"Hello\612World"'''.parseESWithWarning
 	}
 
 	@Test
 	def void testBadEscapement_07() {
-		'''"Hello\712World"'''.parseESWithError
+		'''"Hello\712World"'''.parseESWithWarning
 	}
 
 }

@@ -8,14 +8,14 @@
   "license": "EPL-1.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/NumberFour/n4js-libs"
+    "url": "https://github.com/eclipse/n4js"
   },
   "description": "(Abstract) N4JS ES5 runtime environment.",
   "engines": {
     "node": ">= 5.0.0"
   },
   "files": [
-    "manifest.n4mf",
+    "src",
     "src-gen"
   ],
   "n4js": {
@@ -29,7 +29,7 @@
       ]
     },
     "moduleFilters": {
-      "noModuleWrapping": [
+      "noModuleWrap": [
         "**"
       ]
     },

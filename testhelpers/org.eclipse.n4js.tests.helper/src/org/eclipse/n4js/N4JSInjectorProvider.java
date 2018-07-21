@@ -12,8 +12,12 @@ package org.eclipse.n4js;
 
 import java.util.Arrays;
 
+import org.eclipse.n4js.internal.FileBasedWorkspace;
+import org.eclipse.n4js.internal.InternalN4JSWorkspace;
+import org.eclipse.n4js.xpect.projects.AutoDiscoveryFileBasedWorkspace;
 import org.eclipse.xtext.service.AbstractGenericModule;
 import org.eclipse.xtext.service.DefaultRuntimeModule;
+import org.eclipse.xtext.service.SingletonBinding;
 import org.eclipse.xtext.testing.GlobalRegistries;
 import org.eclipse.xtext.testing.GlobalRegistries.GlobalStateMemento;
 import org.eclipse.xtext.testing.IInjectorProvider;
@@ -145,6 +149,18 @@ public class N4JSInjectorProvider implements IInjectorProvider, IRegistryConfigu
 		 */
 		public java.lang.ClassLoader bindClassLoaderToInstance() {
 			return getClass().getClassLoader();
+		}
+
+		/** Bind custom workspace implementation that automatically discovers existing projects on-the-fly. */
+		@SingletonBinding
+		public Class<? extends InternalN4JSWorkspace> bindInternalN4JSWorkspace() {
+			return AutoDiscoveryFileBasedWorkspace.class;
+		}
+
+		/** @see #bindInternalN4JSWorkspace() */
+		@SingletonBinding
+		public Class<? extends FileBasedWorkspace> bindFileBasedWorkspace() {
+			return AutoDiscoveryFileBasedWorkspace.class;
 		}
 	}
 }

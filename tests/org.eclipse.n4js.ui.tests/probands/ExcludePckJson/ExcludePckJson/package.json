@@ -1,0 +1,15 @@
+{
+	"name": "ExcludePckJson",
+	"dependencies": {
+		"missingDependency": "*"
+	},
+	"n4js": {
+		"projectType": "library",
+		"sources": {
+			"source": [
+				"src"
+			]
+		},
+		"output": "src-gen"
+	}
+}

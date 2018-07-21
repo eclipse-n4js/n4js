@@ -12,12 +12,12 @@ package org.eclipse.n4js;
 
 import org.eclipse.n4js.N4JSInjectorProvider.BaseTestModule;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.xpect.setup.XpectGuiceModule;
 import org.eclipse.xtext.resource.containers.IAllContainersState;
 import org.eclipse.xtext.service.SingletonBinding;
 import org.eclipse.xtext.testing.util.ParseHelper;
 import org.eclipse.xtext.testing.util.ResourceHelper;
 import org.eclipse.xtext.validation.IDiagnosticConverter;
-import org.eclipse.xpect.setup.XpectGuiceModule;
 
 /**
  * A Guice module that is used when running standalone tests.
@@ -28,6 +28,23 @@ import org.eclipse.xpect.setup.XpectGuiceModule;
  */
 @XpectGuiceModule
 public class N4JSStandaloneTestsModule extends BaseTestModule {
+
+	/** Constructor enables JS support */
+	public N4JSStandaloneTestsModule() {
+		JSActivationUtil.enableJSSupport();
+	}
+
+	/**
+	 * This bindings triggers a registration of the language services (validators, resource description managers, etc.)
+	 * provided by this module with the global EMF registry.
+	 *
+	 * Due to its eager-singleton binding, it will be executed at the time of injector creation.
+	 */
+	@SingletonBinding(eager = true)
+	public Class<? extends N4JSStandloneRegistrationHelper> bindRegistrationHelper() {
+		return N4JSStandloneRegistrationHelper.class;
+	}
+
 	/** */
 	public Class<? extends IDiagnosticConverter> bindDiagnosticConverter() {
 		return ExceptionAwareDiagnosticConverter.class;

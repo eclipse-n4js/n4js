@@ -119,7 +119,7 @@ public class UpdateShippedCode implements IWorkflowComponent {
 		// step 1: clean then compile projects under top-level folder "n4js-libs"
 		println("==== STEP 1/4: compiling code under top-level folder \"" + N4JSGlobals.N4JS_LIBS_FOLDER_NAME
 				+ "\" in n4js repository:");
-		cleanAndcompile(n4jsLibsRoot);
+		cleanAndCompile(n4jsLibsRoot);
 		// step 2: create/clean the "shipped-code" folder
 		println("==== STEP 2/4: cleaning folder " + actualTargetPath);
 		initFolder(actualTargetPath.toFile());
@@ -128,7 +128,8 @@ public class UpdateShippedCode implements IWorkflowComponent {
 				+ "\" to target folder");
 		println("    FROM: " + n4jsLibsRoot);
 		println("    TO  : " + actualTargetPath);
-		final File[] n4jsLibsSubfolders = n4jsLibsRoot.listFiles(file -> file.isDirectory());
+		final File[] n4jsLibsSubfolders = n4jsLibsRoot
+				.listFiles(file -> file.isDirectory());
 		copyN4jsLibsToShippedCodeFolder(n4jsLibsSubfolders, actualTargetPath);
 		// step 4: run "npm install" in project "n4js-node"
 		// TODO let HLC resolve missing dependencies
@@ -136,6 +137,10 @@ public class UpdateShippedCode implements IWorkflowComponent {
 				+ N4JS_NODE_PROJECT_NAME + "\"");
 		final File n4jsNodeFolder = actualTargetPath.resolve(ExternalLibrariesActivator.RUNTIME_CATEGORY)
 				.resolve(N4JS_NODE_PROJECT_NAME).toFile();
+
+		final File n4jsNodePkgJson = n4jsNodeFolder.toPath().resolve("package.json").toFile();
+
+		temporaryHackRemoveN4JSES5Dependency(n4jsNodePkgJson);
 		runNpmInstall(n4jsNodeFolder);
 		cleanJsonFiles(n4jsNodeFolder);
 	}
@@ -162,6 +167,12 @@ public class UpdateShippedCode implements IWorkflowComponent {
 			final String projectName = subfolder.getName();
 			if (projectName.contains("test")) {
 				println("NOT copying project " + projectName + " (because project name contains substring \"test\")");
+			} else if (projectName.contains("n4js-cli") || projectName.contains("n4js-mangelhaft-cli")
+					|| projectName.contains("org.eclipse.n4js.mangelhaft.reporter.console")
+					|| projectName.contains("org.eclipse.n4js.mangelhaft.reporter.xunit")
+					|| projectName.contains("n4mf-parser")) {
+				println("NOT copying project " + projectName
+						+ " (because this project will be published to npm registry only)");
 			} else {
 				println("    copying project " + projectName);
 				final String category = getCategoryForN4jsLibsProject(projectName);
@@ -176,7 +187,7 @@ public class UpdateShippedCode implements IWorkflowComponent {
 		return !org.eclipse.xtext.util.Arrays.contains(IGNORED_FILES, path.getFileName().toString());
 	}
 
-	private static void cleanAndcompile(File... foldersContainingProjectFolders) {
+	private static void cleanAndCompile(File... foldersContainingProjectFolders) {
 		final String foldersContainingProjectsStr = Stream.of(foldersContainingProjectFolders)
 				.map(file -> file.getAbsolutePath())
 				.collect(Collectors.joining(File.pathSeparator));
@@ -199,8 +210,10 @@ public class UpdateShippedCode implements IWorkflowComponent {
 		// Then compile the projects
 		final String[] args = {
 				"--buildType", "allprojects",
-				"--projectlocations", foldersContainingProjectsStr,
+				"--installMissingDependencies",
+				"--projectlocations", foldersContainingProjectsStr
 		};
+
 		try {
 			new N4jscBase().doMain(args);
 		} catch (ExitCodeException e) {
@@ -254,12 +267,59 @@ public class UpdateShippedCode implements IWorkflowComponent {
 		println("Cleaning of Json file started...");
 		FileVisitor<Path> fileVisitor = new PackageJsonVisitor();
 		try {
-			Files.walkFileTree(workingDirectory.toPath().resolve(ExternalLibrariesActivator.NPM_CATEGORY),
+			Files.walkFileTree(workingDirectory.toPath(),
 					fileVisitor);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		println("Cleaning of Json file finished.");
+	}
+
+	/** TODO: REMOVE THIS HACK when we can copy the n4js-libs with canary version to the shipped code */
+	private static void temporaryHackRemoveN4JSES5Dependency(File packJson) {
+		println("  Remove n4js-es5 from dependency: " + packJson);
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			ObjectNode root = (ObjectNode) mapper.readTree(packJson);
+			Iterator<Entry<String, JsonNode>> rootFieldIterator = root.fields();
+			List<String> removeFields = new LinkedList<>();
+			JsonNode dependenciesNode = null;
+			while (rootFieldIterator.hasNext()) {
+				Entry<String, JsonNode> fieldInRoot = rootFieldIterator.next();
+				String name = fieldInRoot.getKey();
+				if ("dependencies".equals(name)) {
+					dependenciesNode = fieldInRoot.getValue();
+					Iterator<Entry<String, JsonNode>> dependenciesIterator = dependenciesNode.fields();
+					while (dependenciesIterator.hasNext()) {
+						Entry<String, JsonNode> fieldInDependencies = dependenciesIterator.next();
+						String fieldInDependenciesName = fieldInDependencies.getKey();
+						if (fieldInDependenciesName.contains("n4js-es5")) {
+							removeFields.add(fieldInDependenciesName);
+						}
+					}
+				}
+			}
+
+			final StringBuilder sb = new StringBuilder();
+			sb.append("    removing fields: ");
+			for (String fieldName : removeFields) {
+				sb.append(fieldName + " ");
+				if (dependenciesNode != null) {
+					((ObjectNode) dependenciesNode).remove(fieldName);
+				}
+			}
+			println(sb.toString());
+
+			String cleanJson = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(root);
+			FileWriter f2 = new FileWriter(packJson, false);
+			f2.write(cleanJson);
+			f2.write('\n'); // note: by convention, N4JS repository uses \n as line separator (independent of OS)
+			f2.close();
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private static void cleanJsonFile(File packJson) {

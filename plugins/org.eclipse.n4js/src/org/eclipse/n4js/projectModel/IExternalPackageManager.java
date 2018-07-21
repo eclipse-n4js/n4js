@@ -11,6 +11,7 @@
 package org.eclipse.n4js.projectModel;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 
 /**
@@ -18,22 +19,26 @@ import org.eclipse.n4js.n4mf.ProjectDescription;
 public interface IExternalPackageManager {
 
 	/**
-	 * Loads the N4JS manifest content and returns with a project description instance which actually the representation
-	 * of the manifest content.
-	 *
-	 * @param manifest
-	 *            location of the external package manifest.
-	 * @return the project description instance for the external library.
+	 * Loads the N4JS {@link ProjectDescription} for the given external project root location.
 	 */
-	ProjectDescription loadManifest(URI manifest);
+	ProjectDescription loadProjectDescriptionFromProjectRoot(URI rootLocation);
 
 	/**
-	 * Convenience method for {@link #loadManifest(URI)}
+	 * Loads the N4JS {@link ProjectDescription} for the given external project root location, purely based on the
+	 * information found in the {@link N4JSGlobals#PACKAGE_FRAGMENT_JSON}.
+	 *
+	 * Returns {@code null} if no fragment can be found in the given location.
 	 */
-	ProjectDescription loadManifestFromProjectRoot(URI rootLocation);
+	ProjectDescription loadFragmentProjectDescriptionFromProjectRoot(URI rootLocation);
 
 	/**
 	 * @return true iff the given location is the (existing) root folder of a project that contains a manifest.n4mf file
 	 */
 	public boolean isN4ProjectRoot(URI rootLocation);
+
+	/**
+	 * @return true iff at the given external library project location, a {@link N4JSGlobals#PACKAGE_FRAGMENT_JSON}
+	 *         exists.
+	 */
+	boolean isExternalProjectWithFragment(URI rootLocation);
 }

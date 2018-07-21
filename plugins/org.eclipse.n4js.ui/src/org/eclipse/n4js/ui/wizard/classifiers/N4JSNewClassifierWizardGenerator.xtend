@@ -152,15 +152,15 @@ abstract class N4JSNewClassifierWizardGenerator<M extends N4JSClassifierWizardMo
 
 
 	/**
-	 * Performs the manifest changes required by the classifier specified by the model.
+	 * Performs the project description changes required by the classifier specified by the model.
 	 *
-	 * This means for now the computation of necessary project dependencies and their addition to the project manifest file.
+	 * This means for now the computation of necessary project dependencies and their addition to the project description file.
 	 *
 	 * <p> IMPORTANT: This method should always be called before invoking {@link #writeToFile(N4JSClassWizardModel)} as
-	 * writeToFile may need manifest changes to resolve all imports.</p>
+	 * writeToFile may need project description changes to resolve all imports.</p>
 	 */
-	override performManifestChanges(M model, IProgressMonitor monitor) throws WorkspaceWizardGeneratorException {
-		monitor.subTask("Performing manifest changes");
+	override performProjectDescriptionChanges(M model, IProgressMonitor monitor) throws WorkspaceWizardGeneratorException {
+		monitor.subTask("Performing project changes");
 
 		val project = n4jsCore.findProject(URI.createPlatformResourceURI(model.computeFileLocation.toString, true));
 
@@ -168,21 +168,21 @@ abstract class N4JSNewClassifierWizardGenerator<M extends N4JSClassifierWizardMo
 			throw new WorkspaceWizardGeneratorException("The target project couldn't be found.");
 		}
 
-		val manifestLocation = project.get().manifestLocation;
-		val manifest = getResource(manifestLocation.get());
+		val projectDescriptionLocation = project.get().projectDescriptionLocation;
+		val projectDescriptionResource = getResource(projectDescriptionLocation.get());
 
 		// Gather referenced projects
 		val referencedProjects = getReferencedProjects(model);
 
-		// Create manifest changes
+		// Create project description file modifications
 		val moduleURI = URI.createPlatformResourceURI(model.computeFileLocation.toString, true);
-		val manifestChanges = manifest.manifestChanges(model, referencedProjects, moduleURI);
+		val projectDescriptionModifications = projectDescriptionResource.projectDescriptionModifications(model, referencedProjects, moduleURI);
 
 
-		// Only perform non-empty changes. (To prevent useless history entries)
-		if (manifestChanges.length > 0) {
-			if (!manifest.applyChanges(manifestChanges)) {
-				throw new WorkspaceWizardGeneratorException("Couldn't apply manifest changes.");
+		// Only execute non-empty list of modifications (to prevent useless history entries)
+		if (projectDescriptionModifications.length > 0) {
+			if (!projectDescriptionResource.applyJSONModifications(projectDescriptionModifications)) {
+				throw new WorkspaceWizardGeneratorException("Couldn't apply package.json changes.");
 			}
 		}
 	}

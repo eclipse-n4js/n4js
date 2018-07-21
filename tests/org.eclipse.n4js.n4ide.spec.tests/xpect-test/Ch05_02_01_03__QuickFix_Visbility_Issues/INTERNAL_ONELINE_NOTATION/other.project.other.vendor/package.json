@@ -1,0 +1,15 @@
+{
+	"name": "other.project.other.vendor",
+	"version": "0.0.1-SNAPSHOT",
+	"n4js": {
+		"projectType": "library",
+		"vendorId": "org.eclipse.n4js1",
+		"vendorName": "Eclipse N4JS Project",
+		"output": "src-gen",
+		"sources": {
+			"source": [
+				"src"
+			]
+		}
+	}
+}

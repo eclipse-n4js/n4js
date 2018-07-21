@@ -15,13 +15,14 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.n4mf.BootstrapModule;
 import org.eclipse.n4js.n4mf.DeclaredVersion;
 import org.eclipse.n4js.n4mf.ModuleFilter;
 import org.eclipse.n4js.n4mf.ModuleLoader;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectType;
-import org.eclipse.n4js.n4mf.utils.N4MFConstants;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
@@ -42,9 +43,9 @@ import com.google.common.collect.ImmutableList;
 public interface IN4JSProject extends IN4JSSourceContainerAware {
 
 	/**
-	 * The name of the manifest file
+	 * The name of the package.json file.
 	 */
-	public final static String N4MF_MANIFEST = N4MFConstants.N4MF_MANIFEST;
+	public final static String PACKAGE_JSON = N4JSGlobals.PACKAGE_JSON;
 
 	/**
 	 * Returns the project type of the project or null, if type is not available
@@ -185,12 +186,14 @@ public interface IN4JSProject extends IN4JSSourceContainerAware {
 	Optional<BootstrapModule> getExecModule();
 
 	/**
-	 * Returns with the URI of the N4JS manifest file from the project. Optional, could return with an absent instance
-	 * if the manifest file does not exist in the project. Never {@code null}.
+	 * Returns with the URI of the file that contains the project description of this project.
 	 *
-	 * @return the URI of the N4JS manifest file. Optional, may be missing but never {@code null}.
+	 * Optional, could return with an absent instance if the project description file does not exist in the project.
+	 * Never {@code null}.
+	 *
+	 * @return the URI of the project description file. Optional, may be missing but never {@code null}.
 	 */
-	Optional<URI> getManifestLocation();
+	Optional<URI> getProjectDescriptionLocation();
 
 	/**
 	 * Returns with a collection of the tested projects for the current project. May return with an empty collection if:
@@ -205,4 +208,11 @@ public interface IN4JSProject extends IN4JSSourceContainerAware {
 	 * @return a collection of tested projects for the current test project.
 	 */
 	Collection<IN4JSProject> getTestedProjects();
+
+	/**
+	 * Returns {@code true} if this {@link N4JSProject} was explicitly configured to be of the N4JS nature.
+	 *
+	 * @See {@link ProjectDescription#isHasN4JSNature()}
+	 */
+	boolean hasN4JSNature();
 }

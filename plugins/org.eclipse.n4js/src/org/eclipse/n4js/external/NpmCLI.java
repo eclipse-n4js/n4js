@@ -13,7 +13,6 @@ package org.eclipse.n4js.external;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -26,8 +25,8 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.binaries.BinaryCommandFactory;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
-import org.eclipse.n4js.external.libraries.PackageJson;
 import org.eclipse.n4js.utils.ProcessExecutionCommandStatus;
+import org.eclipse.n4js.utils.ProjectDescriptionHelper;
 import org.eclipse.n4js.utils.StatusHelper;
 
 import com.google.inject.Inject;
@@ -55,7 +54,7 @@ public class NpmCLI {
 	private NpmLogger logger;
 
 	@Inject
-	private NpmPackageToProjectAdapter packageAdapter;
+	private ProjectDescriptionHelper projectDescriptionHelper;
 
 	/** Simple validation if the package name is not null or empty */
 	public boolean invalidPackageName(String packageName) {
@@ -184,16 +183,16 @@ public class NpmCLI {
 	}
 
 	private String getActualVersion(MultiStatus batchStatus, LibraryChange reqChg, Path completePath) {
-		try {
-			PackageJson packageJson = packageAdapter.getPackageJson(completePath.toFile());
-			return packageJson.version;
-		} catch (IOException e) {
+		URI location = URI.createFileURI(completePath.toString());
+		String versionStr = projectDescriptionHelper.loadVersionFromProjectDescriptionAtLocation(location);
+		if (versionStr == null) {
 			String msg = "Error reading package json when " + reqChg.toString();
-			IStatus packJsonError = statusHelper.createError(msg, e);
-			logger.logError(msg, e);
+			IStatus packJsonError = statusHelper.createError(msg);
+			logger.logError(msg, new IllegalStateException(msg));
 			batchStatus.merge(packJsonError);
+			return "";
 		}
-		return "";
+		return versionStr;
 	}
 
 	/**

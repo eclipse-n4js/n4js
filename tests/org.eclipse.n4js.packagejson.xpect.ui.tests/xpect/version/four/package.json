@@ -1,0 +1,14 @@
+{
+	"name": "four",
+	"version": "14.0.0",
+	"n4js": {
+		"projectType": "library",
+		"vendorId": "org.eclipse.n4js",
+		"output": "src-gen",
+		"sources": {
+			"source": [
+				"src"
+			]
+		}
+	}
+}

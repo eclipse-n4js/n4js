@@ -1,0 +1,25 @@
+{
+	"name": "IMPLx",
+	"version": "0.0.1-SNAPSHOT",
+	"dependencies": {
+		"n4js-runtime-es2015": "*"
+	},
+	"n4js": {
+		"projectType": "library",
+		"vendorId": "org.eclipse.n4js",
+		"vendorName": "Eclipse N4JS Project",
+		"output": "src-gen",
+		"sources": {
+			"source": [
+				"src"
+			]
+		},
+		"requiredRuntimeLibraries": [
+			"n4js-runtime-es2015"
+		],
+		"implementationId": "apiId1",
+		"implementedProjects": [
+			"APIx"
+		]
+	}
+}

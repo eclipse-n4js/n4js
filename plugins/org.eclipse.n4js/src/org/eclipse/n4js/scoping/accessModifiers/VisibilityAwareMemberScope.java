@@ -50,9 +50,9 @@ public class VisibilityAwareMemberScope extends FilterWithErrorMarkerScope {
 	}
 
 	@Override
-	protected IEObjectDescriptionWithError wrapFilteredDescription(IEObjectDescription result) {
-		return new InvisibleMemberDescription(result,
-				accessModifierSuggestionStore.get(result.getEObjectURI().toString()));
+	protected IEObjectDescriptionWithError wrapFilteredDescription(IEObjectDescription description) {
+		String uriString = description.getEObjectURI().toString();
+		return new InvisibleMemberDescription(description, accessModifierSuggestionStore.get(uriString));
 	}
 
 	@Override
@@ -63,11 +63,12 @@ public class VisibilityAwareMemberScope extends FilterWithErrorMarkerScope {
 				TMember member = (TMember) proxyOrInstance;
 				MemberVisibility result = checker.isVisible(context, receiverType, member);
 
-				if (!result.visibility)
-					this.accessModifierSuggestionStore.put(description.getEObjectURI().toString(),
-							result.accessModifierSuggestion);
-
+				if (!result.visibility) {
+					String uriString = description.getEObjectURI().toString();
+					accessModifierSuggestionStore.put(uriString, result.accessModifierSuggestion);
+				}
 				return result.visibility;
+
 			} else if (proxyOrInstance instanceof TEnumLiteral) {
 				return checker.isEnumLiteralVisible(context, receiverType);
 			}

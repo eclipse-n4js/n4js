@@ -15,13 +15,13 @@
    	 	Folder "src" { 
    	 		ThisFile {}
    	 	}
-   	 	File "manifest.n4mf" { from="manifest_p1.n4mf" }
+   	 	File "package.json" { from="package_p1.json" }
    	 }
    	 Project "express" {
    	 	Folder "src" { 
    	 		File "index.n4jsd" { from="../../express/index.n4jsd" }
    	 	}
-   	 	File "manifest.n4mf" { from="../../express/manifest_express.n4mf" }
+   	 	File "package.json" { from="../../express/package_express.json" }
    	 }
    }
    END_SETUP

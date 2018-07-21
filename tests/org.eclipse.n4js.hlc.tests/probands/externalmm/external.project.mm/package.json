@@ -1,0 +1,29 @@
+{
+	"name": "external.project.mm",
+	"version": "0.0.1-SNAPSHOT",
+	"dependencies": {
+		"express": "4.13.4",
+		"jade": "1.11.0",
+		"lodash": "4.6.0",
+		"karma": "0.13.21",
+		"bar": "0.1.2",
+		"pouchdb-find": "0.10.3",
+		"next": "1.1.1",
+		"body-parser": "1.15.0",
+		"n4js-runtime-node": "*"
+	},
+	"n4js": {
+		"projectType": "library",
+		"vendorId": "org.eclipse.n4js",
+		"vendorName": "Eclipse N4JS Project",
+		"output": "src-gen",
+		"sources": {
+			"source": [
+				"src"
+			]
+		},
+		"requiredRuntimeLibraries": [
+			"n4js-runtime-node"
+		]
+	}
+}

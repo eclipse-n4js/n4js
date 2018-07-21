@@ -40,6 +40,8 @@ Contributors:
 		<module>org.eclipse.n4js.model</module>
 		<module>org.eclipse.n4js</module>
 		<module>org.eclipse.n4js.ui</module>
+		<!-- n4js project model (n4mf) -->
+		<module>org.eclipse.n4js.n4mf.model</module>
 		<!-- execution environments -->
 		<module>org.eclipse.n4js.environments</module>
 		<!-- external libraries bundles -->
@@ -52,10 +54,6 @@ Contributors:
 		<module>org.eclipse.n4js.runner.nodejs.ui</module>
 		<module>org.eclipse.n4js.runner.chrome</module>
 		<module>org.eclipse.n4js.runner.chrome.ui</module>
-		<!-- n4mf -->
-		<module>org.eclipse.n4js.n4mf.model</module>
-		<module>org.eclipse.n4js.n4mf</module>
-		<module>org.eclipse.n4js.n4mf.ui</module>
 		<!-- json -->
 		<module>org.eclipse.n4js.json</module>
 		<module>org.eclipse.n4js.json.model</module>
