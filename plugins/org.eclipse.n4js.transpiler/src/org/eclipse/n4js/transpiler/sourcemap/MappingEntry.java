@@ -37,7 +37,8 @@ public class MappingEntry implements Comparable<MappingEntry> {
 	 */
 	public final int genLine;
 	/**
-	 * The zero-based column in the generated file (i.e. the JavaScript file).
+	 * The zero-based column in the generated file (i.e. the JavaScript file). This information is indirectly stored in
+	 * the source map: the n-th mapping defines the mappings for the n-th line of the generated file.
 	 */
 	public final int genColumn;
 	/**

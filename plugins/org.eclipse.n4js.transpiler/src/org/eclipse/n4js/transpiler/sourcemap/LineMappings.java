@@ -20,7 +20,7 @@ import java.util.TreeSet;
 public abstract class LineMappings extends TreeSet<MappingEntry> {
 
 	LineMappings(Comparator<MappingEntry> comparator) {
-		// TODO Auto-generated constructor stub
+		super(comparator);
 	}
 
 	/**
@@ -51,6 +51,9 @@ public abstract class LineMappings extends TreeSet<MappingEntry> {
 	 */
 	public static class ByGen extends LineMappings {
 
+		/**
+		 * Creates a new line mapping, mapping entries will be ordered by genColumn.
+		 */
 		public ByGen() {
 			super(new Comparator<MappingEntry>() {
 				@Override
@@ -62,12 +65,15 @@ public abstract class LineMappings extends TreeSet<MappingEntry> {
 
 		@Override
 		public MappingEntry findEntryByColumn(int col) {
+			MappingEntry match = null;
 			for (MappingEntry entry : this) {
 				if (entry.srcColumn <= col) {
-					return entry;
+					match = entry;
+				} else {
+					break;
 				}
 			}
-			return null;
+			return match;
 		}
 	}
 
@@ -76,6 +82,9 @@ public abstract class LineMappings extends TreeSet<MappingEntry> {
 	 */
 	public static class BySrc extends LineMappings {
 
+		/**
+		 * Creates a new line mapping, mapping entries will be ordered by srcColumn.
+		 */
 		public BySrc() {
 			super(new Comparator<MappingEntry>() {
 				@Override
@@ -85,17 +94,17 @@ public abstract class LineMappings extends TreeSet<MappingEntry> {
 			});
 		}
 
-		/**
-		 * Returns the closes mapping entry or null, if no such entry is found.
-		 */
 		@Override
 		public MappingEntry findEntryByColumn(int col) {
+			MappingEntry match = null;
 			for (MappingEntry entry : this) {
 				if (entry.srcColumn <= col) {
-					return entry;
+					match = entry;
+				} else {
+					break;
 				}
 			}
-			return null;
+			return match;
 		}
 	}
 }

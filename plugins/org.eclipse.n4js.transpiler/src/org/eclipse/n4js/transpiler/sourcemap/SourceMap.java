@@ -29,7 +29,8 @@ import com.google.common.io.CharStreams;
 /**
  * Source map data structure according to the
  * <a href="https://docs.google.com/document/d/1U1RGAehQwRypUTovF1KRlpiOFze0b-_2gc6fAH0KY0k">Source Map Revision 3
- * Proposal</a> including output line (which is not present in the Base64 VLQ representation.
+ * Proposal</a> including output line which is not present in the Base64 VLQ representation. The output line is used to
+ * enable efficient bidirectional mappings for tools such as sourcemap viewers.
  */
 public class SourceMap {
 
@@ -88,7 +89,8 @@ public class SourceMap {
 	final List<LineMappings.ByGen> genMappings = new ArrayList<>();
 
 	/**
-	 * Similar to mappings but based on src.
+	 * Similar to mappings but based on src. This is a derived property not directly found in the source map file (which
+	 * only maps from generated code to source).
 	 */
 	final List<List<LineMappings.BySrc>> srcMappings = new ArrayList<>();
 
@@ -330,15 +332,39 @@ public class SourceMap {
 	 * Returns the length of the mapping in the generated code, that is the length either of the referenced name or the
 	 * length to the next mapping in the same line. Returns -1 if length cannot be computed.
 	 */
-	public int computeLength(MappingEntry entry) {
-		if (entry == null || entry.genLine < 0 || entry.genLine >= genMappings.size()) {
-			return -1;
-		}
+	public int computeLengthGen(MappingEntry entry) {
 		if (entry.nameIndex >= 0 && entry.nameIndex < names.size()) {
 			return names.get(entry.nameIndex).length();
 		}
+		MappingEntry next = nextEntryForTarget(entry, entry.genLine, genMappings);
+		if (next == null) {
+			return -1;
+		}
+		return next.genColumn - entry.genColumn;
+	}
 
-		LineMappings.ByGen lineMappings = genMappings.get(entry.genLine);
+	/**
+	 * Returns the length of the mapping in the source code, that is the length either of the referenced name or the
+	 * length to the next mapping in the same line. Returns -1 if length cannot be computed.
+	 */
+	public int computeLengthSrc(MappingEntry entry) {
+		MappingEntry next = nextEntryForTarget(entry, entry.srcLine, srcMappings.get(entry.srcIndex));
+		if (next == null) {
+			return -1;
+		}
+		return next.srcColumn - entry.srcColumn;
+	}
+
+	/**
+	 * Used by computeLength method to find the next mapping entry on the same line of the source or generated code.
+	 */
+	private MappingEntry nextEntryForTarget(MappingEntry entry, int targetLine,
+			List<? extends LineMappings> targetMappings) {
+		if (entry == null || targetLine < 0 || targetLine >= targetMappings.size()) {
+			return null;
+		}
+
+		LineMappings lineMappings = targetMappings.get(targetLine);
 		boolean entryFound = false;
 		MappingEntry next = null;
 		for (MappingEntry e : lineMappings) {
@@ -351,10 +377,19 @@ public class SourceMap {
 				}
 			}
 		}
-		if (next == null) {
-			return -1;
-		}
-		return next.genColumn - entry.genColumn;
+		return next;
+	}
+
+	/**
+	 * Returns an iterable over the gen mappings (i.e. the mapping s found in the source file).
+	 */
+	public Iterable<MappingEntry> getGenMappings() {
+		return new Iterable<MappingEntry>() {
+			@Override
+			public Iterator<MappingEntry> iterator() {
+				return new MappingEntryIterator(genMappings.iterator());
+			}
+		};
 	}
 
 }

@@ -15,9 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Source Map Revision 3
- *
- * TODO: IDE-2203
+ * Source Map Revision 3 without index map support.
  *
  * @see <a href="https://docs.google.com/document/d/1U1RGAehQwRypUTovF1KRlpiOFze0b-_2gc6fAH0KY0k">Source Map Revision 3
  *      Proposal</a>

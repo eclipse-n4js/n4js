@@ -17,22 +17,23 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.n4js.transpiler.sourcemap.MappingEntry;
 import org.eclipse.n4js.transpiler.sourcemap.SourceMap;
 import org.eclipse.n4js.transpiler.sourcemap.SourceMapFileLocator;
+import org.eclipse.n4js.validation.helper.FunctionValidationHelper.TripleConsumer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.Bullet;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.CaretEvent;
 import org.eclipse.swt.custom.CaretListener;
-import org.eclipse.swt.custom.LineStyleEvent;
-import org.eclipse.swt.custom.LineStyleListener;
-import org.eclipse.swt.custom.ST;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
@@ -40,7 +41,6 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.GlyphMetrics;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -59,9 +59,10 @@ import com.google.inject.Inject;
  */
 public class SourceMapView extends ViewPart {
 
-	private final String GEN_EXT = "js";
-	private final String MAP_EXT = "map";
-	private final String N4JS_EXT = "n4js";
+	private static final String GEN_EXT = "js";
+	private static final String MAP_EXT = "map";
+	private static final String N4JS_EXT = "n4js";
+	private static final int FILENAME_LENGTH = 36;
 
 	private CTabFolder tabsOrg;
 	private LinkedHashMap<File, StyledText> textOrgs;
@@ -72,150 +73,131 @@ public class SourceMapView extends ViewPart {
 
 	private IEditorPart activeEditor;
 
-	private Color[] colors;
-
+	private Color colorBgMapped;
+	private Color colorBgMarked;
 	private Font font;
 
 	@Inject
 	private SourceMapFileLocator sourceMapFileLocator;
 
+	/**
+	 * The created source map which is used for mapping gen to sources.
+	 */
 	private SourceMap sourceMap;
+
+	/**
+	 * Map to find the index (i.e. the line number in the mapping view text) of an mapping entry. This map is recreated
+	 * when the mappings are loaded.
+	 */
+	private final Map<MappingEntry, Integer> mappingEntriesByIndex = new HashMap<>();
+	/**
+	 * List to find mapping by index (of the array) when selecting a mapping in the text.
+	 */
+	private final List<MappingEntry> mappingEntriesAsList = new ArrayList<>();
+
+	private final Map<StyledText, Point> textMarkers = new HashMap<>();
 
 	@Override
 	public void createPartControl(Composite parent) {
 		Display display = parent.getDisplay();
 		font = new Font(parent.getDisplay(), "Courier New", 12, SWT.NORMAL);
-		int diff = 60, shades = 3;
-		int index = 0;
-		// colors = new Color[2 * 3 * shades];
-		// for (int r = 0; r < shades; r++) {
-		// for (int g = 0; g < shades; g++) {
-		// for (int b = 0; b < shades; b++) {
-		// if (r != g || r != b || g != b) {
-		// colors[index++] = new Color(display, 255 - diff * r, 255 - diff * g, 255 - diff * b);
-		// }
-		// }
-		// }
-		// }
 
-		SashForm codeMapping = new SashForm(parent, SWT.VERTICAL);
-		SashForm orgGen = new SashForm(codeMapping, SWT.HORIZONTAL);
-		tabsOrg = new CTabFolder(orgGen, SWT.BORDER);
+		colorBgMapped = new Color(display, 255, 248, 217); // light yellow
+		colorBgMarked = new Color(display, 255, 183, 219); // light red
 
-		textOrgs = new LinkedHashMap<>();
-		textGen = createText(orgGen, true);
-		textGen.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseDown(MouseEvent e) {
-				try {
-					if (textGen.isFocusControl()) {
-						int offset = textGen.getOffsetAtLocation(new Point(e.x, e.y));
-						int line = textGen.getLineAtOffset(offset);
-						int column = offset - textGen.getOffsetAtLine(line);
-						selectSrcByGenPos(line, column);
+		SashForm sashFilesAndMapping = new SashForm(parent, SWT.VERTICAL);
+		SashForm sashGenAndOrgFiles = new SashForm(sashFilesAndMapping, SWT.HORIZONTAL);
+		textGen = createText(sashGenAndOrgFiles, true);
+		addTextSelectionListerners(textGen,
+				(t, genLine, genColumn) -> {
+					if (sourceMap != null) {
+						MappingEntry entry = sourceMap.findMappingForGenPosition(genLine, genColumn);
+						markMapping(t, entry);
 					}
-				} catch (IllegalArgumentException ex) {
-					// we ignore exceptions due to wrong locations
-				}
-			}
-		});
-		textGen.addCaretListener(new CaretListener() {
+				});
 
-			@Override
-			public void caretMoved(CaretEvent event) {
-				if (textGen.isFocusControl()) {
-					int offset = event.caretOffset;
-					int line = textGen.getLineAtOffset(offset);
-					int column = offset - textGen.getOffsetAtLine(line);
-					selectSrcByGenPos(line, column);
-				}
-			}
-		});
+		tabsOrg = new CTabFolder(sashGenAndOrgFiles, SWT.BORDER);
+		textOrgs = new LinkedHashMap<>();
 
-		SashForm mappingAndMessages = new SashForm(codeMapping, SWT.HORIZONTAL);
-
-		TabFolder tabFolder = new TabFolder(mappingAndMessages, SWT.BORDER);
+		TabFolder tabFolder = new TabFolder(sashFilesAndMapping, SWT.BORDER);
 		TabItem tabMappings = new TabItem(tabFolder, SWT.NULL);
 		tabMappings.setText("Mappings");
 		textMappings = createText(tabFolder, true);
+		addTextSelectionListerners(textMappings, (t, line, c) -> {
+			if (line >= mappingEntriesByIndex.size()) {
+				return;
+			}
+			MappingEntry entry = mappingEntriesAsList.get(line);
+			markMapping(t, entry);
+		});
 		tabMappings.setControl(textMappings);
 		TabItem tabMapFile = new TabItem(tabFolder, SWT.NULL);
 		tabMapFile.setText("Map-File");
 		textMapFile = createText(tabFolder, true);
 		tabMapFile.setControl(textMapFile);
 
-		textMessages = createText(mappingAndMessages, false);
+		TabItem tabMessages = new TabItem(tabFolder, SWT.NULL);
+		tabMessages.setText("Messages");
+		textMessages = createText(tabFolder, false);
+		tabMessages.setControl(textMessages);
 
 		// add listener to track the active editor
 		this.getSite().getPage().addPartListener(new ActiveEditorChangeListener(this::updateActiveEditor));
 
 	}
 
+	/**
+	 * Adds a mouse and caret listener to the given text widget. The selector function is called with the text widget
+	 * and the text coordinates of the event.
+	 */
+	private void addTextSelectionListerners(StyledText text,
+			TripleConsumer<StyledText, Integer, Integer> selectorFunction) {
+		text.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+				try {
+					if (text.isFocusControl()) {
+						int offset = text.getOffsetAtLocation(new Point(e.x, e.y));
+						int line = text.getLineAtOffset(offset);
+						int column = offset - text.getOffsetAtLine(line);
+						selectorFunction.accept(text, line, column);
+					}
+				} catch (IllegalArgumentException ex) {
+					// we ignore exceptions due to wrong locations
+				}
+			}
+		});
+		text.addCaretListener(new CaretListener() {
+
+			@Override
+			public void caretMoved(CaretEvent event) {
+				if (text.isFocusControl()) {
+					int offset = event.caretOffset;
+					int line = text.getLineAtOffset(offset);
+					int column = offset - text.getOffsetAtLine(line);
+					selectorFunction.accept(text, line, column);
+				}
+			}
+		});
+	}
+
 	@Override
 	public void dispose() {
 		font.dispose();
-		// for (int i = 0; i < colors.length; i++) {
-		// colors[i].dispose();
-		// }
+		colorBgMapped.dispose();
+		colorBgMarked.dispose();
 	}
 
 	private StyledText createText(Composite parent, boolean nonPropFont) {
 		StyledText text = new StyledText(parent, SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
-
-		text.addLineStyleListener(new LineStyleListener() {
-			@Override
-			public void lineGetStyle(LineStyleEvent e) {
-				e.bulletIndex = text.getLineAtOffset(e.lineOffset);
-				StyleRange style = new StyleRange();
-				style.metrics = new GlyphMetrics(0, 0, Integer.toString(text.getLineCount() + 1).length() * 12);
-				e.bullet = new Bullet(ST.BULLET_NUMBER, style);
-			}
-		});
 		if (nonPropFont) {
 			text.setFont(font);
 		}
 		return text;
 	}
 
-	void log(String s) {
+	private void log(String s) {
 		textMessages.append("\n" + s);
-	}
-
-	void err(String s) {
-		textMessages.append("\n" + s);
-	}
-
-	boolean markText(StyledText text, int colIndex, int line, int colStart, int colEnd) {
-		final int lineCount = text.getLineCount();
-		final int max = text.getCharCount();
-		if (lineCount < line) {
-			return false;
-		}
-		final int lineOffset = text.getOffsetAtLine(line);
-		final int start = lineOffset + colStart;
-		if (start >= max) {
-			return false;
-		}
-		int end;
-		if (colEnd < 0) {
-			end = line + 1 < lineCount ? text.getOffsetAtLine(line + 1) - 1 : max - 1;
-		} else {
-			if (colEnd < colStart) {
-				return false;
-			}
-			end = lineOffset + colEnd;
-		}
-		if (end >= max) {
-			return false;
-		}
-		StyleRange styleRange = new StyleRange();
-		styleRange.start = start;
-		styleRange.length = end - start;
-		// styleRange.fontStyle = SWT.BOLD;
-		styleRange.background = colors[colIndex];
-		text.setStyleRange(styleRange);
-
-		return true;
 	}
 
 	private void updateActiveEditor(IEditorPart editorPart) {
@@ -224,7 +206,6 @@ public class SourceMapView extends ViewPart {
 			activeEditor = editorPart;
 			IFileEditorInput fei = (IFileEditorInput) activeEditor.getEditorInput();
 			activeEditor = editorPart;
-
 			reset();
 
 			IFile editorFile = fei.getFile();
@@ -236,25 +217,30 @@ public class SourceMapView extends ViewPart {
 				try {
 					resolveFromMap(path);
 				} catch (Exception ex) {
-					err("Error reading map file " + editorFile + ": " + ex);
+					log("Error reading map file " + editorFile + ": " + ex);
 				}
 			} else if (GEN_EXT.equals(editorFileExt)) {
 				log("Found javascript file in editor, try to resolve map file and original code.");
 				try {
 					resolveFromGen(path);
 				} catch (Exception ex) {
+					log("Error resolving from generated file: " + ex);
 				}
 			} else if (N4JS_EXT.equals(editorFileExt)) {
 				log("Found n4js file in editor, try to resolve map file and generated code.");
 				try {
 					resolveFromSrc(path);
 				} catch (Exception ex) {
-					err("Error reading source file " + editorFile + ": " + ex);
+					ex.printStackTrace();
+					log("Error reading source file " + editorFile + ": " + ex);
 				}
 			}
 		}
 	}
 
+	/**
+	 * Tries to find the map file from source, then delegates to {@link #resolveFromMap(Path)} to initialize the view.
+	 */
 	private void resolveFromSrc(Path path) throws Exception {
 		File file = sourceMapFileLocator.resolveSourceMapFromSrc(path);
 		if (file == null)
@@ -262,6 +248,9 @@ public class SourceMapView extends ViewPart {
 		resolveFromMap(file.toPath());
 	}
 
+	/**
+	 * Tries to find the map file from gen, then delegates to {@link #resolveFromMap(Path)} to initialize the view.
+	 */
 	private void resolveFromGen(Path path) throws Exception {
 		File file = sourceMapFileLocator.resolveSourceMapFromGen(path);
 		if (file == null)
@@ -269,12 +258,40 @@ public class SourceMapView extends ViewPart {
 		resolveFromMap(file.toPath());
 	}
 
+	/**
+	 * Loads the map file from given path and initializes the view.
+	 */
 	private void resolveFromMap(Path path) throws Exception {
 		File mapFile = path.toFile();
 		String s = readFile(mapFile);
 		textMapFile.setText(s);
 
 		sourceMap = SourceMap.loadAndResolve(path);
+
+		StringBuffer strb = new StringBuffer();
+
+		String genShort = sourceMap.getResolvedFile().getFileName().toString();
+		if (genShort.length() > FILENAME_LENGTH) {
+			genShort = "…" + genShort.substring(genShort.length() - FILENAME_LENGTH - 1);
+		}
+
+		for (MappingEntry mappingEntry : sourceMap.getGenMappings()) {
+			mappingEntriesByIndex.put(mappingEntry, mappingEntriesByIndex.size());
+			mappingEntriesAsList.add(mappingEntry);
+			if (strb.length() > 0) {
+				strb.append("\n");
+			}
+			String srcShort = sourceMap.sources.get(mappingEntry.srcIndex);
+			if (srcShort.length() > FILENAME_LENGTH) {
+				srcShort = "…" + srcShort.substring(srcShort.length() - FILENAME_LENGTH - 1);
+			}
+			strb.append(String.format("%1$-3s:%2$03d:%3$03d -> %4$-3s:%5$03d:%6$03d)",
+					genShort,
+					mappingEntry.genLine + 1, mappingEntry.genColumn + 1,
+					srcShort,
+					mappingEntry.srcLine + 1, mappingEntry.srcColumn + 1));
+		}
+		textMappings.setText(strb.toString());
 
 		File file = sourceMap.getResolvedFile().toFile();
 		s = readFile(file);
@@ -283,10 +300,20 @@ public class SourceMapView extends ViewPart {
 		for (Path srcPath : sourceMap.getResolvedSources()) {
 			addOrg(srcPath.toFile());
 		}
+
+		for (MappingEntry mappingEntry : sourceMap.getGenMappings()) {
+			highlightMapping(mappingEntry);
+		}
+	}
+
+	private void highlightMapping(MappingEntry entry) {
+		styleMappedTextGen(null, entry, false);
+		styleMappedTextOrg(null, entry, false);
 	}
 
 	/**
-	 *
+	 * Called when new mapping are to be loaded, e.g. when active editor has changed. This method must be called before
+	 * all resolve methods.
 	 */
 	private void reset() {
 		textGen.setText("");
@@ -302,6 +329,9 @@ public class SourceMapView extends ViewPart {
 		}
 		textOrgs.clear();
 		sourceMap = null;
+		mappingEntriesByIndex.clear();
+		mappingEntriesAsList.clear();
+		textMarkers.clear();
 
 	}
 
@@ -324,49 +354,20 @@ public class SourceMapView extends ViewPart {
 		tabItem.setText(file.getName());
 		textOrgs.put(canFile, text);
 		tabsOrg.setSelection(tabsOrg.getItemCount() - 1);
-
-		text.addCaretListener(new CaretListener() {
-
-			@Override
-			public void caretMoved(CaretEvent event) {
-				if (text.isFocusControl()) {
-					int offset = event.caretOffset;
-					int line = text.getLineAtOffset(offset);
-					int column = offset - text.getOffsetAtLine(line);
-
-					int index = 0;
-					for (Entry<File, StyledText> entry : textOrgs.entrySet()) {
-						if (entry.getValue() == text) {
-							selectGenBySrcPos(index, line, column);
-							break;
-						}
-						index++;
+		addTextSelectionListerners(text, (t, srcLine, srcColumn) -> {
+			if (sourceMap != null) {
+				int srcIndex = 0;
+				for (Entry<File, StyledText> e : textOrgs.entrySet()) {
+					if (e.getValue() == t) {
+						break;
 					}
+					srcIndex++;
 				}
-			}
-		});
-
-		text.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseDown(MouseEvent e) {
-				try {
-					if (text.isFocusControl()) {
-						int offset = text.getOffsetAtLocation(new Point(e.x, e.y));
-						int line = text.getLineAtOffset(offset);
-						int column = offset - text.getOffsetAtLine(line);
-
-						int index = 0;
-						for (Entry<File, StyledText> entry : textOrgs.entrySet()) {
-							if (entry.getValue() == text) {
-								selectGenBySrcPos(index, line, column);
-								break;
-							}
-							index++;
-						}
-					}
-				} catch (IllegalArgumentException ex) {
-					// we ignore exceptoins due to wrong mouse locations
+				if (srcIndex >= textOrgs.size()) { // text sending event not found
+					return;
 				}
+				MappingEntry entry = sourceMap.findMappingForSrcPosition(srcIndex, srcLine, srcColumn);
+				markMapping(text, entry);
 			}
 		});
 
@@ -381,57 +382,103 @@ public class SourceMapView extends ViewPart {
 
 	@Override
 	public void setFocus() {
-		// TODO Auto-generated method stub
-
+		// nothing todo
 	}
 
-	private void selectSrcByGenPos(int genLine, int genColumn) {
-		if (sourceMap != null) {
-			MappingEntry entry = sourceMap.findMappingForGenPosition(genLine, genColumn);
-			if (entry != null) {
-				Path srcPath = sourceMap.getResolvedSources().get(entry.srcIndex);
-				StyledText text = textOrgs.get(srcPath.normalize().toFile());
-				int delta = genColumn - entry.genColumn;
-				int srcOffset = text.getOffsetAtLine(entry.srcLine)
-						+ entry.srcColumn;
-				int srcOffsetEnd = srcOffset;
-				if (delta > 0) {
-					int length = sourceMap.computeLength(entry);
-					if (length >= 0) {
-						srcOffsetEnd += length;
-					} else {
-						srcOffsetEnd = text.getOffsetAtLine(entry.srcLine + 1) - 1;
-					}
-				}
-				text.setSelection(srcOffset, srcOffsetEnd);
+	private void markMapping(StyledText textEmittingEvent, MappingEntry entry) {
+		for (Entry<StyledText, Point> e : textMarkers.entrySet()) {
+			doStyleText(e.getKey(), e.getKey() == textMappings ? null : colorBgMapped, e.getValue().x, e.getValue().y);
+		}
+		textMarkers.clear();
+
+		styleMappedTextGen(textEmittingEvent, entry, true);
+		styleMappedTextOrg(textEmittingEvent, entry, true);
+		styleMapping(textEmittingEvent, entry, true);
+	}
+
+	private void styleMappedTextOrg(StyledText textEmittingEvent, MappingEntry entry, boolean mark) {
+		if (entry != null) {
+			Path srcPath = sourceMap.getResolvedSources().get(entry.srcIndex);
+			StyledText text = textOrgs.get(srcPath.normalize().toFile());
+			int srcOffset = text.getOffsetAtLine(entry.srcLine)
+					+ entry.srcColumn;
+			int srcOffsetEnd = srcOffset;
+			int length = sourceMap.computeLengthSrc(entry);
+			if (length >= 0) {
+				srcOffsetEnd += length;
 			} else {
-				StyledText text = (StyledText) tabsOrg.getSelection().getControl();
-				text.setSelection(0, 0);
+				srcOffsetEnd = text.getOffsetAtLine(entry.srcLine + 1) - 1;
+			}
+			styleText(text, srcOffset, srcOffsetEnd, mark);
+			if (mark && text != textEmittingEvent) {
+				text.setSelection(srcOffset);
+			}
+		} else {
+			StyledText text = (StyledText) tabsOrg.getSelection().getControl();
+			styleText(text, 0, 0, mark);
+		}
+	}
+
+	private void styleMappedTextGen(StyledText textEmittingEvent, MappingEntry entry, boolean mark) {
+		if (entry != null) {
+			int genOffset = textGen.getOffsetAtLine(entry.genLine) + entry.genColumn;
+			int genOffsetEnd = genOffset;
+			int length = sourceMap.computeLengthGen(entry);
+			if (length >= 0) {
+				genOffsetEnd += length;
+			} else {
+				genOffsetEnd = textGen.getOffsetAtLine(entry.genLine + 1) - 1;
+			}
+			styleText(textGen, genOffset, genOffsetEnd, mark);
+			if (mark && textGen != textEmittingEvent) {
+				textGen.setSelection(genOffset);
+			}
+		} else {
+			styleText(textGen, 0, 0, mark);
+		}
+	}
+
+	private void styleMapping(StyledText textEmittingEvent, MappingEntry entry, boolean mark) {
+		if (entry != null) {
+			int mapIndex = mappingEntriesByIndex.get(entry);
+			if (mapIndex >= 0) {
+				int mapOffset = textMappings.getOffsetAtLine(mapIndex);
+				int mapOffsetEnd = mapIndex < mappingEntriesByIndex.size() - 1
+						? textMappings.getOffsetAtLine(mapIndex + 1) - 1
+						: textMappings.getText().length() - 1;
+				styleText(textMappings, mapOffset, mapOffsetEnd, mark);
+				if (mark && textGen != textEmittingEvent) {
+					textMappings.setSelection(mapOffset);
+				}
+				return;
+			}
+		}
+		styleText(textMappings, 0, 0, mark);
+	}
+
+	private void styleText(StyledText text, int start, int end, boolean mark) {
+		Color color = mark ? colorBgMarked : colorBgMapped;
+		if (start <= end) {
+			doStyleText(text, color, start, end);
+			if (mark) {
+				textMarkers.put(text, new Point(start, end));
 			}
 		}
 	}
 
-	private void selectGenBySrcPos(int srcIndex, int srcLine, int srcColumn) {
-		if (sourceMap != null) {
-			MappingEntry entry = sourceMap.findMappingForSrcPosition(srcIndex, srcLine, srcColumn);
-			if (entry != null) {
-				int delta = srcColumn - entry.srcColumn;
-				int genOffset = textGen.getOffsetAtLine(entry.genLine)
-						+ entry.genColumn;
-				int genOffsetEnd = genOffset;
-				if (delta > 0) {
-					int length = sourceMap.computeLength(entry);
-					if (length >= 0) {
-						genOffsetEnd += length;
-					} else {
-						genOffsetEnd = textGen.getOffsetAtLine(entry.genLine + 1) - 1;
-					}
-				}
-				textGen.setSelection(genOffset, genOffsetEnd);
-			} else {
-				textGen.setSelection(0, 0);
-			}
+	private static void doStyleText(StyledText text, Color colorBackground, int start, int end) {
+		final int max = text.getCharCount();
+		if (end >= max) {
+			end = max - 1;
 		}
+		if (start < 0 || end < 0 || start > end || end - start == 0) {
+			return;
+		}
+		StyleRange styleRange = new StyleRange();
+		styleRange.start = start;
+		styleRange.length = end - start;
+		styleRange.background = colorBackground;
+		text.setStyleRange(styleRange);
 	}
 
 }
