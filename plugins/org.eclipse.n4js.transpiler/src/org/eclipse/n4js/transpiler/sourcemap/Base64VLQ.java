@@ -75,11 +75,7 @@ final public class Base64VLQ {
 	/**
 	 * Returns the given base64VLQ as an array of integers. Throws IllegalArgumentException if input leads to problems.
 	 */
-<<<<<<< HEAD
 	public static int[] decode(CharSequence s) {
-=======
-	public static int[] decode(String s) {
->>>>>>> master
 		if (s == null || s.length() == 0)
 			return new int[] {};
 

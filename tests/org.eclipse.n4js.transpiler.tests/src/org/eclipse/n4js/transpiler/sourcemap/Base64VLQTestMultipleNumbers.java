@@ -41,13 +41,9 @@ public class Base64VLQTestMultipleNumbers {
 				{ "CuBwcO", ints(1, 23, 456, 7) },
 				{ "AACKA", ints(0, 0, 1, 5, 0) },
 				{ "IACIC", ints(4, 0, 1, 4, 1) },
-<<<<<<< HEAD
 				{ "MACTC", ints(6, 0, 1, -9, 1) },
 				{ "IACpB", ints(4, 0, 1, -20) }
 
-=======
-				{ "MACTC", ints(6, 0, 1, -9, 1) }
->>>>>>> master
 		});
 	}
 
@@ -69,18 +65,13 @@ public class Base64VLQTestMultipleNumbers {
 	}
 
 	/**
-<<<<<<< HEAD
-	 *
-=======
-	 * Test method for {@link org.eclipse.n4js.transpiler.sourcemap.Base64VLQ#decode(java.lang.String)}.
->>>>>>> master
+	 * Test method for {@link org.eclipse.n4js.transpiler.sourcemap.Base64VLQ#decode(java.lang.CharSequence)}.
 	 */
 	@Test
 	public void testDecode() {
 		assertArrayEquals(decimals, Base64VLQ.decode(base64VLQ));
 	}
 
-<<<<<<< HEAD
 	/**
 	 * Test en/decoding
 	 */
@@ -89,6 +80,4 @@ public class Base64VLQTestMultipleNumbers {
 		assertEquals(base64VLQ, Base64VLQ.encode(Base64VLQ.decode(base64VLQ)));
 	}
 
-=======
->>>>>>> master
 }
