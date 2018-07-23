@@ -123,18 +123,19 @@ public class ProjectTestsUtils {
 	}
 
 	/**
-	 * Imports the given project from the {@code probandsName} into the running JUnit workspace.
+	 * Creates a new workspace project with the given project location in the probands folder (cf.
+	 * {@code probandsName}).
 	 *
-	 * Imports the given project location as a project with name {@code workspaceName}. Note that the project folder and
-	 * the imported project name may differ.
+	 * Creates a new workspace project with name {@code workspaceName}. Note that the project folder (based on the given
+	 * project location) and the project name may differ.
 	 *
 	 * Does not copy the proband resources into the workspaces, but keeps the project files at the given location (cf.
-	 * import without copying into workspace)
+	 * create new project with non-default location outside of workspace)
 	 *
 	 * @throws CoreException
-	 *             If the project creation/import does not succeed.
+	 *             If the project creation does not succeed.
 	 */
-	public static IProject importProjectWithoutCopying(File probandsFolder, String projectLocationFolder,
+	public static IProject createProjectWithLocation(File probandsFolder, String projectLocationFolder,
 			String workspaceName)
 			throws CoreException {
 		File projectSourceFolder = new File(probandsFolder, projectLocationFolder);

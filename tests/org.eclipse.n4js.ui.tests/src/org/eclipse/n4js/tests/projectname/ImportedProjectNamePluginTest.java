@@ -78,7 +78,7 @@ public class ImportedProjectNamePluginTest extends AbstractBuilderParticipantTes
 	@Test
 	public void testDifferentFileSystemName() throws CoreException {
 		// workspace setup
-		final IProject testProject = ProjectTestsUtils.importProjectWithoutCopying(projectsRoot,
+		final IProject testProject = ProjectTestsUtils.createProjectWithLocation(projectsRoot,
 				"file-other-system", "file-system");
 		configureProjectWithXtext(testProject);
 		waitForAutoBuild();
@@ -106,7 +106,7 @@ public class ImportedProjectNamePluginTest extends AbstractBuilderParticipantTes
 	@Test
 	public void testDifferentFileSystemAndEclipseName() throws CoreException {
 		// workspace setup
-		final IProject testProject = ProjectTestsUtils.importProjectWithoutCopying(projectsRoot,
+		final IProject testProject = ProjectTestsUtils.createProjectWithLocation(projectsRoot,
 				"eclipse-file-other-system", "eclipse-system");
 		configureProjectWithXtext(testProject);
 		waitForAutoBuild();
@@ -134,7 +134,7 @@ public class ImportedProjectNamePluginTest extends AbstractBuilderParticipantTes
 	@Test
 	public void testDifferentEclipseName() throws CoreException {
 		// workspace setup
-		final IProject testProject = ProjectTestsUtils.importProjectWithoutCopying(projectsRoot,
+		final IProject testProject = ProjectTestsUtils.createProjectWithLocation(projectsRoot,
 				"eclipse", "eclipse-other");
 		configureProjectWithXtext(testProject);
 		waitForAutoBuild();
@@ -162,7 +162,7 @@ public class ImportedProjectNamePluginTest extends AbstractBuilderParticipantTes
 	@Test
 	public void testAllNamesMatch() throws CoreException {
 		// workspace setup
-		final IProject testProject = ProjectTestsUtils.importProjectWithoutCopying(projectsRoot,
+		final IProject testProject = ProjectTestsUtils.createProjectWithLocation(projectsRoot,
 				"all-match", "all-match");
 		configureProjectWithXtext(testProject);
 		waitForAutoBuild();
