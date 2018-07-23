@@ -247,7 +247,7 @@ public class PackageJsonHelper {
 		if (valueOfTopLevelPropertyMain != null) {
 			if (!hasN4jsSpecificMainModule) { // only if no N4JS-specific "mainModule" property was given
 				List<String> sourceContainerPaths = target.getSourceContainers().stream()
-						.flatMap(scd -> scd.getPaths().stream())
+						.flatMap(scd -> scd.getPathsNormalized().stream())
 						.collect(Collectors.toList());
 				String mainModulePath = ProjectDescriptionUtils.convertMainPathToModuleSpecifier(
 						valueOfTopLevelPropertyMain, sourceContainerPaths);
@@ -289,13 +289,13 @@ public class PackageJsonHelper {
 		if (target.getMainModule() == null) {
 			target.setMainModule(DEFAULT_MAIN_MODULE);
 		}
-		if (target.getOutputPathRaw() == null) {
-			target.setOutputPathRaw(DEFAULT_OUTPUT);
+		if (target.getOutputPath() == null) {
+			target.setOutputPath(DEFAULT_OUTPUT);
 		}
 		// if no source containers are defined (no matter what type),
 		// then add a default source container of type "source" with path "."
 		Iterator<String> sourceContainerPaths = target.getSourceContainers().stream()
-				.flatMap(sc -> sc.getPathsRaw().stream()).iterator();
+				.flatMap(sc -> sc.getPaths().stream()).iterator();
 		if (!sourceContainerPaths.hasNext()) {
 			SourceContainerDescription scd = target.getSourceContainers().stream()
 					.filter(sc -> sc.getSourceContainerType() == SourceContainerType.SOURCE)
@@ -303,10 +303,10 @@ public class PackageJsonHelper {
 			if (scd == null) {
 				SourceContainerDescription scdNew = N4mfFactory.eINSTANCE.createSourceContainerDescription();
 				scdNew.setSourceContainerType(SourceContainerType.SOURCE);
-				scdNew.getPathsRaw().add(DEFAULT_OUTPUT);
+				scdNew.getPaths().add(DEFAULT_OUTPUT);
 				target.getSourceContainers().add(scdNew);
-			} else if (scd.getPathsRaw().isEmpty()) {
-				scd.getPathsRaw().add(DEFAULT_OUTPUT);
+			} else if (scd.getPaths().isEmpty()) {
+				scd.getPaths().add(DEFAULT_OUTPUT);
 			}
 		}
 		// module loader must be commonjs for VALIDATION projects

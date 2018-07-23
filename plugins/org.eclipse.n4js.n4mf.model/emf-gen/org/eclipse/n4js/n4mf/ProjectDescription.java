@@ -39,7 +39,7 @@ import org.eclipse.n4js.semver.Semver.VersionNumber;
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getImplementedProjects <em>Implemented Projects</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getInitModules <em>Init Modules</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getExecModule <em>Exec Module</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getOutputPathRaw <em>Output Path Raw</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getOutputPath <em>Output Path</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getSourceContainers <em>Source Containers</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getModuleFilters <em>Module Filters</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getTestedProjects <em>Tested Projects</em>}</li>
@@ -371,30 +371,30 @@ public interface ProjectDescription extends EObject {
 	void setExecModule(BootstrapModule value);
 
 	/**
-	 * Returns the value of the '<em><b>Output Path Raw</b></em>' attribute.
+	 * Returns the value of the '<em><b>Output Path</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Output Path Raw</em>' attribute isn't clear,
+	 * If the meaning of the '<em>Output Path</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Output Path Raw</em>' attribute.
-	 * @see #setOutputPathRaw(String)
-	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDescription_OutputPathRaw()
+	 * @return the value of the '<em>Output Path</em>' attribute.
+	 * @see #setOutputPath(String)
+	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDescription_OutputPath()
 	 * @model unique="false"
 	 * @generated
 	 */
-	String getOutputPathRaw();
+	String getOutputPath();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4mf.ProjectDescription#getOutputPathRaw <em>Output Path Raw</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.n4js.n4mf.ProjectDescription#getOutputPath <em>Output Path</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Output Path Raw</em>' attribute.
-	 * @see #getOutputPathRaw()
+	 * @param value the new value of the '<em>Output Path</em>' attribute.
+	 * @see #getOutputPath()
 	 * @generated
 	 */
-	void setOutputPathRaw(String value);
+	void setOutputPath(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Source Containers</b></em>' containment reference list.
@@ -526,23 +526,5 @@ public interface ProjectDescription extends EObject {
 	 * @generated
 	 */
 	void setHasN4JSNature(boolean value);
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return &lt;%org.eclipse.n4js.utils.io.FileUtils%&gt;.normalizeDotWhenEmpty(this.getOutputPathRaw());'"
-	 * @generated
-	 */
-	String getOutputPath();
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model newOutputPathUnique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='this.setOutputPathRaw(newOutputPath);'"
-	 * @generated
-	 */
-	void setOutputPath(String newOutputPath);
 
 } // ProjectDescription

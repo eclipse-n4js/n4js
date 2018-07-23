@@ -265,7 +265,7 @@ public class N4JSModel {
 			sourceFragments.sort((f1, fDIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT) -> f1
 					.compareByFragmentType(fDIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT));
 			for (SourceContainerDescription sourceFragment : sourceFragments) {
-				List<String> paths = sourceFragment.getPaths();
+				List<String> paths = sourceFragment.getPathsNormalized();
 				for (String path : paths) {
 					// XXX poor man's canonical path conversion. Consider headless compiler with npm projects.
 					final String relativeLocation = ".".equals(path) ? "" : path;
@@ -301,7 +301,7 @@ public class N4JSModel {
 			sourceFragments.sort((f1, fDIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT) -> f1
 					.compareByFragmentType(fDIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT));
 			for (SourceContainerDescription sourceFragment : sourceFragments) {
-				List<String> paths = sourceFragment.getPaths();
+				List<String> paths = sourceFragment.getPathsNormalized();
 				for (String path : paths) {
 					result.add(
 							createArchiveN4JSSourceContainer(archive, sourceFragment.getSourceContainerType(), path));

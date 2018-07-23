@@ -29,7 +29,7 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4mf.SourceContainerDescription#getSourceContainerType <em>Source Container Type</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4mf.SourceContainerDescription#getPathsRaw <em>Paths Raw</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4mf.SourceContainerDescription#getPaths <em>Paths</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.n4mf.N4mfPackage#getSourceContainerDescription()
@@ -67,20 +67,20 @@ public interface SourceContainerDescription extends EObject {
 	void setSourceContainerType(SourceContainerType value);
 
 	/**
-	 * Returns the value of the '<em><b>Paths Raw</b></em>' attribute list.
+	 * Returns the value of the '<em><b>Paths</b></em>' attribute list.
 	 * The list contents are of type {@link java.lang.String}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Paths Raw</em>' attribute list isn't clear,
+	 * If the meaning of the '<em>Paths</em>' attribute list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Paths Raw</em>' attribute list.
-	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getSourceContainerDescription_PathsRaw()
+	 * @return the value of the '<em>Paths</em>' attribute list.
+	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getSourceContainerDescription_Paths()
 	 * @model unique="false"
 	 * @generated
 	 */
-	EList<String> getPathsRaw();
+	EList<String> getPaths();
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -102,9 +102,9 @@ public interface SourceContainerDescription extends EObject {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='int _length = ((&lt;%java.lang.Object%&gt;[])org.eclipse.xtext.xbase.lib.Conversions.unwrapArray(this.getPathsRaw(), &lt;%java.lang.Object%&gt;.class)).length;\nfinal &lt;%org.eclipse.emf.common.util.BasicEList%&gt;&lt;&lt;%java.lang.String%&gt;&gt; paths = new &lt;%org.eclipse.emf.common.util.BasicEList%&gt;&lt;&lt;%java.lang.String%&gt;&gt;(_length);\n&lt;%org.eclipse.emf.common.util.EList%&gt;&lt;&lt;%java.lang.String%&gt;&gt; _pathsRaw = this.getPathsRaw();\nfor (final &lt;%java.lang.String%&gt; pathRaw : _pathsRaw)\n{\n\t{\n\t\tfinal &lt;%java.lang.String%&gt; normalizedPath = &lt;%org.eclipse.n4js.utils.io.FileUtils%&gt;.normalizeDotWhenEmpty(pathRaw);\n\t\tpaths.add(normalizedPath);\n\t}\n}\nreturn paths;'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='int _length = ((&lt;%java.lang.Object%&gt;[])org.eclipse.xtext.xbase.lib.Conversions.unwrapArray(this.getPaths(), &lt;%java.lang.Object%&gt;.class)).length;\nfinal &lt;%org.eclipse.emf.common.util.BasicEList%&gt;&lt;&lt;%java.lang.String%&gt;&gt; normalizedPaths = new &lt;%org.eclipse.emf.common.util.BasicEList%&gt;&lt;&lt;%java.lang.String%&gt;&gt;(_length);\n&lt;%org.eclipse.emf.common.util.EList%&gt;&lt;&lt;%java.lang.String%&gt;&gt; _paths = this.getPaths();\nfor (final &lt;%java.lang.String%&gt; path : _paths)\n{\n\t{\n\t\tfinal &lt;%java.lang.String%&gt; normalizedPath = &lt;%org.eclipse.n4js.utils.io.FileUtils%&gt;.normalizeDotWhenEmpty(path);\n\t\tnormalizedPaths.add(normalizedPath);\n\t}\n}\nreturn normalizedPaths;'"
 	 * @generated
 	 */
-	EList<String> getPaths();
+	EList<String> getPathsNormalized();
 
 } // SourceContainerDescription

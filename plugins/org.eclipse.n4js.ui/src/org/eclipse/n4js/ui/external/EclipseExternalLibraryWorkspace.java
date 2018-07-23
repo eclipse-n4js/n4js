@@ -346,7 +346,9 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 		Set<N4JSExternalProject> projectsToBeUpdated = new HashSet<>();
 		for (URI tbu : toBeUpdated) {
 			N4JSExternalProject n4Prj = projectProvider.getProject(tbu);
-			projectsToBeUpdated.add(n4Prj);
+			if (n4Prj != null) {
+				projectsToBeUpdated.add(n4Prj);
+			}
 		}
 
 		Collection<N4JSExternalProject> nonWSProjects = collector.filterNonWSProjects(projectsToBeUpdated);

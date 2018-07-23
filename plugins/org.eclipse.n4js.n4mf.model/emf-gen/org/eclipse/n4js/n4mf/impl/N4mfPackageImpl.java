@@ -325,7 +325,7 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getProjectDescription_OutputPathRaw() {
+	public EAttribute getProjectDescription_OutputPath() {
 		return (EAttribute)projectDescriptionEClass.getEStructuralFeatures().get(14);
 	}
 
@@ -388,24 +388,6 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getProjectDescription__GetOutputPath() {
-		return projectDescriptionEClass.getEOperations().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EOperation getProjectDescription__SetOutputPath__String() {
-		return projectDescriptionEClass.getEOperations().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EClass getSourceContainerDescription() {
 		return sourceContainerDescriptionEClass;
 	}
@@ -424,7 +406,7 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getSourceContainerDescription_PathsRaw() {
+	public EAttribute getSourceContainerDescription_Paths() {
 		return (EAttribute)sourceContainerDescriptionEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -442,7 +424,7 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getSourceContainerDescription__GetPaths() {
+	public EOperation getSourceContainerDescription__GetPathsNormalized() {
 		return sourceContainerDescriptionEClass.getEOperations().get(1);
 	}
 
@@ -642,21 +624,19 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 		createEReference(projectDescriptionEClass, PROJECT_DESCRIPTION__IMPLEMENTED_PROJECTS);
 		createEReference(projectDescriptionEClass, PROJECT_DESCRIPTION__INIT_MODULES);
 		createEReference(projectDescriptionEClass, PROJECT_DESCRIPTION__EXEC_MODULE);
-		createEAttribute(projectDescriptionEClass, PROJECT_DESCRIPTION__OUTPUT_PATH_RAW);
+		createEAttribute(projectDescriptionEClass, PROJECT_DESCRIPTION__OUTPUT_PATH);
 		createEReference(projectDescriptionEClass, PROJECT_DESCRIPTION__SOURCE_CONTAINERS);
 		createEReference(projectDescriptionEClass, PROJECT_DESCRIPTION__MODULE_FILTERS);
 		createEReference(projectDescriptionEClass, PROJECT_DESCRIPTION__TESTED_PROJECTS);
 		createEAttribute(projectDescriptionEClass, PROJECT_DESCRIPTION__MODULE_LOADER);
 		createEAttribute(projectDescriptionEClass, PROJECT_DESCRIPTION__HAS_NESTED_NODE_MODULES_FOLDER);
 		createEAttribute(projectDescriptionEClass, PROJECT_DESCRIPTION__HAS_N4JS_NATURE);
-		createEOperation(projectDescriptionEClass, PROJECT_DESCRIPTION___GET_OUTPUT_PATH);
-		createEOperation(projectDescriptionEClass, PROJECT_DESCRIPTION___SET_OUTPUT_PATH__STRING);
 
 		sourceContainerDescriptionEClass = createEClass(SOURCE_CONTAINER_DESCRIPTION);
 		createEAttribute(sourceContainerDescriptionEClass, SOURCE_CONTAINER_DESCRIPTION__SOURCE_CONTAINER_TYPE);
-		createEAttribute(sourceContainerDescriptionEClass, SOURCE_CONTAINER_DESCRIPTION__PATHS_RAW);
+		createEAttribute(sourceContainerDescriptionEClass, SOURCE_CONTAINER_DESCRIPTION__PATHS);
 		createEOperation(sourceContainerDescriptionEClass, SOURCE_CONTAINER_DESCRIPTION___COMPARE_BY_FRAGMENT_TYPE__SOURCECONTAINERDESCRIPTION);
-		createEOperation(sourceContainerDescriptionEClass, SOURCE_CONTAINER_DESCRIPTION___GET_PATHS);
+		createEOperation(sourceContainerDescriptionEClass, SOURCE_CONTAINER_DESCRIPTION___GET_PATHS_NORMALIZED);
 
 		moduleFilterEClass = createEClass(MODULE_FILTER);
 		createEAttribute(moduleFilterEClass, MODULE_FILTER__MODULE_FILTER_TYPE);
@@ -733,7 +713,7 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 		initEReference(getProjectDescription_ImplementedProjects(), this.getProjectReference(), null, "implementedProjects", null, 0, -1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProjectDescription_InitModules(), this.getBootstrapModule(), null, "initModules", null, 0, -1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProjectDescription_ExecModule(), this.getBootstrapModule(), null, "execModule", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getProjectDescription_OutputPathRaw(), theEcorePackage.getEString(), "outputPathRaw", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getProjectDescription_OutputPath(), theEcorePackage.getEString(), "outputPath", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProjectDescription_SourceContainers(), this.getSourceContainerDescription(), null, "sourceContainers", null, 0, -1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProjectDescription_ModuleFilters(), this.getModuleFilter(), null, "moduleFilters", null, 0, -1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProjectDescription_TestedProjects(), this.getProjectReference(), null, "testedProjects", null, 0, -1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -741,19 +721,14 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 		initEAttribute(getProjectDescription_HasNestedNodeModulesFolder(), theEcorePackage.getEBoolean(), "hasNestedNodeModulesFolder", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getProjectDescription_HasN4JSNature(), theEcorePackage.getEBoolean(), "hasN4JSNature", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEOperation(getProjectDescription__GetOutputPath(), theEcorePackage.getEString(), "getOutputPath", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		EOperation op = initEOperation(getProjectDescription__SetOutputPath__String(), null, "setOutputPath", 0, 1, !IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, theEcorePackage.getEString(), "newOutputPath", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
 		initEClass(sourceContainerDescriptionEClass, SourceContainerDescription.class, "SourceContainerDescription", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getSourceContainerDescription_SourceContainerType(), this.getSourceContainerType(), "sourceContainerType", null, 0, 1, SourceContainerDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getSourceContainerDescription_PathsRaw(), theEcorePackage.getEString(), "pathsRaw", null, 0, -1, SourceContainerDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getSourceContainerDescription_Paths(), theEcorePackage.getEString(), "paths", null, 0, -1, SourceContainerDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		op = initEOperation(getSourceContainerDescription__CompareByFragmentType__SourceContainerDescription(), theEcorePackage.getEInt(), "compareByFragmentType", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		EOperation op = initEOperation(getSourceContainerDescription__CompareByFragmentType__SourceContainerDescription(), theEcorePackage.getEInt(), "compareByFragmentType", 0, 1, !IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getSourceContainerDescription(), "other", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
-		initEOperation(getSourceContainerDescription__GetPaths(), theEcorePackage.getEString(), "getPaths", 0, -1, !IS_UNIQUE, IS_ORDERED);
+		initEOperation(getSourceContainerDescription__GetPathsNormalized(), theEcorePackage.getEString(), "getPathsNormalized", 0, -1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(moduleFilterEClass, ModuleFilter.class, "ModuleFilter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getModuleFilter_ModuleFilterType(), this.getModuleFilterType(), "moduleFilterType", null, 0, 1, ModuleFilter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

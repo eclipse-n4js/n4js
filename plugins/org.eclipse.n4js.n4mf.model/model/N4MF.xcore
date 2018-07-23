@@ -46,7 +46,7 @@ class ProjectDescription {
 	contains ProjectReference[] implementedProjects
 	contains BootstrapModule[] initModules
 	contains BootstrapModule execModule
-	String outputPathRaw
+	String outputPath
 	contains SourceContainerDescription[] sourceContainers
 	contains ModuleFilter[] moduleFilters
 	contains ProjectReference[] testedProjects
@@ -63,14 +63,6 @@ class ProjectDescription {
 	 * the project to be an N4JS project (e.g. includes n4js section). 
 	 */
 	boolean hasN4JSNature
-
-	op String getOutputPath() {
-		return FileUtils.normalizeDotWhenEmpty(outputPathRaw);
-	}
-
-	op void setOutputPath(String newOutputPath) {
-		this.outputPathRaw = newOutputPath;
-	}
 }
 
 /**
@@ -100,7 +92,7 @@ enum ProjectType {
  */
 class SourceContainerDescription {
 	SourceContainerType sourceContainerType
-	String[] pathsRaw
+	String[] paths
 
 	/**
 	 * Compares the current source fragment instance with the {@code other} one based on the
@@ -118,15 +110,14 @@ class SourceContainerDescription {
 		return sourceContainerType.compareTo(other.sourceContainerType);
 	}
 
-	op String[] getPaths() {
-		val paths = new BasicEList(pathsRaw.length());
-		for (String pathRaw : pathsRaw) {
-			val normalizedPath = FileUtils.normalizeDotWhenEmpty(pathRaw);
-			paths.add(normalizedPath);
+	op String[] getPathsNormalized() {
+		val normalizedPaths = new BasicEList(paths.length());
+		for (String path : paths) {
+			val normalizedPath = FileUtils.normalizeDotWhenEmpty(path);
+			normalizedPaths.add(normalizedPath);
 		}
-		return paths;
+		return normalizedPaths;
 	}
-
 }
 
 /**

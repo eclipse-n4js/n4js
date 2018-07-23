@@ -41,7 +41,7 @@ import org.eclipse.n4js.utils.io.FileUtils;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4mf.impl.SourceContainerDescriptionImpl#getSourceContainerType <em>Source Container Type</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4mf.impl.SourceContainerDescriptionImpl#getPathsRaw <em>Paths Raw</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4mf.impl.SourceContainerDescriptionImpl#getPaths <em>Paths</em>}</li>
  * </ul>
  *
  * @generated
@@ -68,14 +68,14 @@ public class SourceContainerDescriptionImpl extends MinimalEObjectImpl.Container
 	protected SourceContainerType sourceContainerType = SOURCE_CONTAINER_TYPE_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getPathsRaw() <em>Paths Raw</em>}' attribute list.
+	 * The cached value of the '{@link #getPaths() <em>Paths</em>}' attribute list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getPathsRaw()
+	 * @see #getPaths()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<String> pathsRaw;
+	protected EList<String> paths;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -122,11 +122,11 @@ public class SourceContainerDescriptionImpl extends MinimalEObjectImpl.Container
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<String> getPathsRaw() {
-		if (pathsRaw == null) {
-			pathsRaw = new EDataTypeEList<String>(String.class, this, N4mfPackage.SOURCE_CONTAINER_DESCRIPTION__PATHS_RAW);
+	public EList<String> getPaths() {
+		if (paths == null) {
+			paths = new EDataTypeEList<String>(String.class, this, N4mfPackage.SOURCE_CONTAINER_DESCRIPTION__PATHS);
 		}
-		return pathsRaw;
+		return paths;
 	}
 
 	/**
@@ -160,17 +160,17 @@ public class SourceContainerDescriptionImpl extends MinimalEObjectImpl.Container
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<String> getPaths() {
-		int _length = ((Object[])org.eclipse.xtext.xbase.lib.Conversions.unwrapArray(this.getPathsRaw(), Object.class)).length;
-		final BasicEList<String> paths = new BasicEList<String>(_length);
-		EList<String> _pathsRaw = this.getPathsRaw();
-		for (final String pathRaw : _pathsRaw) {
+	public EList<String> getPathsNormalized() {
+		int _length = ((Object[])org.eclipse.xtext.xbase.lib.Conversions.unwrapArray(this.getPaths(), Object.class)).length;
+		final BasicEList<String> normalizedPaths = new BasicEList<String>(_length);
+		EList<String> _paths = this.getPaths();
+		for (final String path : _paths) {
 			{
-				final String normalizedPath = FileUtils.normalizeDotWhenEmpty(pathRaw);
-				paths.add(normalizedPath);
+				final String normalizedPath = FileUtils.normalizeDotWhenEmpty(path);
+				normalizedPaths.add(normalizedPath);
 			}
 		}
-		return paths;
+		return normalizedPaths;
 	}
 
 	/**
@@ -183,8 +183,8 @@ public class SourceContainerDescriptionImpl extends MinimalEObjectImpl.Container
 		switch (featureID) {
 			case N4mfPackage.SOURCE_CONTAINER_DESCRIPTION__SOURCE_CONTAINER_TYPE:
 				return getSourceContainerType();
-			case N4mfPackage.SOURCE_CONTAINER_DESCRIPTION__PATHS_RAW:
-				return getPathsRaw();
+			case N4mfPackage.SOURCE_CONTAINER_DESCRIPTION__PATHS:
+				return getPaths();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -201,9 +201,9 @@ public class SourceContainerDescriptionImpl extends MinimalEObjectImpl.Container
 			case N4mfPackage.SOURCE_CONTAINER_DESCRIPTION__SOURCE_CONTAINER_TYPE:
 				setSourceContainerType((SourceContainerType)newValue);
 				return;
-			case N4mfPackage.SOURCE_CONTAINER_DESCRIPTION__PATHS_RAW:
-				getPathsRaw().clear();
-				getPathsRaw().addAll((Collection<? extends String>)newValue);
+			case N4mfPackage.SOURCE_CONTAINER_DESCRIPTION__PATHS:
+				getPaths().clear();
+				getPaths().addAll((Collection<? extends String>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -220,8 +220,8 @@ public class SourceContainerDescriptionImpl extends MinimalEObjectImpl.Container
 			case N4mfPackage.SOURCE_CONTAINER_DESCRIPTION__SOURCE_CONTAINER_TYPE:
 				setSourceContainerType(SOURCE_CONTAINER_TYPE_EDEFAULT);
 				return;
-			case N4mfPackage.SOURCE_CONTAINER_DESCRIPTION__PATHS_RAW:
-				getPathsRaw().clear();
+			case N4mfPackage.SOURCE_CONTAINER_DESCRIPTION__PATHS:
+				getPaths().clear();
 				return;
 		}
 		super.eUnset(featureID);
@@ -237,8 +237,8 @@ public class SourceContainerDescriptionImpl extends MinimalEObjectImpl.Container
 		switch (featureID) {
 			case N4mfPackage.SOURCE_CONTAINER_DESCRIPTION__SOURCE_CONTAINER_TYPE:
 				return sourceContainerType != SOURCE_CONTAINER_TYPE_EDEFAULT;
-			case N4mfPackage.SOURCE_CONTAINER_DESCRIPTION__PATHS_RAW:
-				return pathsRaw != null && !pathsRaw.isEmpty();
+			case N4mfPackage.SOURCE_CONTAINER_DESCRIPTION__PATHS:
+				return paths != null && !paths.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
@@ -253,8 +253,8 @@ public class SourceContainerDescriptionImpl extends MinimalEObjectImpl.Container
 		switch (operationID) {
 			case N4mfPackage.SOURCE_CONTAINER_DESCRIPTION___COMPARE_BY_FRAGMENT_TYPE__SOURCECONTAINERDESCRIPTION:
 				return compareByFragmentType((SourceContainerDescription)arguments.get(0));
-			case N4mfPackage.SOURCE_CONTAINER_DESCRIPTION___GET_PATHS:
-				return getPaths();
+			case N4mfPackage.SOURCE_CONTAINER_DESCRIPTION___GET_PATHS_NORMALIZED:
+				return getPathsNormalized();
 		}
 		return super.eInvoke(operationID, arguments);
 	}
@@ -271,8 +271,8 @@ public class SourceContainerDescriptionImpl extends MinimalEObjectImpl.Container
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (sourceContainerType: ");
 		result.append(sourceContainerType);
-		result.append(", pathsRaw: ");
-		result.append(pathsRaw);
+		result.append(", paths: ");
+		result.append(paths);
 		result.append(')');
 		return result.toString();
 	}

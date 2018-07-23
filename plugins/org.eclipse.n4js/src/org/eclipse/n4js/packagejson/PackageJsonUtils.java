@@ -231,7 +231,7 @@ public class PackageJsonUtils {
 			SourceContainerDescription sourceContainerDescription = N4mfFactory.eINSTANCE
 					.createSourceContainerDescription();
 			sourceContainerDescription.setSourceContainerType(type);
-			sourceContainerDescription.getPathsRaw().addAll(paths);
+			sourceContainerDescription.getPaths().addAll(paths);
 			return sourceContainerDescription;
 		}
 		return null;

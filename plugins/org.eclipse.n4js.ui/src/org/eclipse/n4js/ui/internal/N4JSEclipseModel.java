@@ -221,7 +221,7 @@ public class N4JSEclipseModel extends N4JSModel {
 			List<SourceContainerDescription> sourceFragments = newArrayList(from(description.getSourceContainers()));
 			sourceFragments.sort((f1, f2) -> f1.compareByFragmentType(f2));
 			for (SourceContainerDescription sourceFragment : sourceFragments) {
-				List<String> paths = sourceFragment.getPaths();
+				List<String> paths = sourceFragment.getPathsNormalized();
 				for (String p : paths) {
 					IN4JSEclipseSourceContainer sourceContainer = createProjectN4JSSourceContainer(project,
 							sourceFragment.getSourceContainerType(), p);

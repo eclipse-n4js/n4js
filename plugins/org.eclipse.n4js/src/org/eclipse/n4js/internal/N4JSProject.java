@@ -38,6 +38,7 @@ import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.utils.URIUtils;
+import org.eclipse.n4js.utils.io.FileUtils;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
@@ -274,7 +275,7 @@ public class N4JSProject implements IN4JSProject {
 		if (pd == null) {
 			return null;
 		}
-		return pd.getOutputPath();
+		return FileUtils.normalizeDotWhenEmpty(pd.getOutputPath());
 	}
 
 	@Override

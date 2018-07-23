@@ -214,13 +214,13 @@ public interface N4mfPackage extends EPackage {
 	int PROJECT_DESCRIPTION__EXEC_MODULE = 13;
 
 	/**
-	 * The feature id for the '<em><b>Output Path Raw</b></em>' attribute.
+	 * The feature id for the '<em><b>Output Path</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION__OUTPUT_PATH_RAW = 14;
+	int PROJECT_DESCRIPTION__OUTPUT_PATH = 14;
 
 	/**
 	 * The feature id for the '<em><b>Source Containers</b></em>' containment reference list.
@@ -286,31 +286,13 @@ public interface N4mfPackage extends EPackage {
 	int PROJECT_DESCRIPTION_FEATURE_COUNT = 21;
 
 	/**
-	 * The operation id for the '<em>Get Output Path</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROJECT_DESCRIPTION___GET_OUTPUT_PATH = 0;
-
-	/**
-	 * The operation id for the '<em>Set Output Path</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROJECT_DESCRIPTION___SET_OUTPUT_PATH__STRING = 1;
-
-	/**
 	 * The number of operations of the '<em>Project Description</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION_OPERATION_COUNT = 2;
+	int PROJECT_DESCRIPTION_OPERATION_COUNT = 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.impl.SourceContainerDescriptionImpl <em>Source Container Description</em>}' class.
@@ -332,13 +314,13 @@ public interface N4mfPackage extends EPackage {
 	int SOURCE_CONTAINER_DESCRIPTION__SOURCE_CONTAINER_TYPE = 0;
 
 	/**
-	 * The feature id for the '<em><b>Paths Raw</b></em>' attribute list.
+	 * The feature id for the '<em><b>Paths</b></em>' attribute list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SOURCE_CONTAINER_DESCRIPTION__PATHS_RAW = 1;
+	int SOURCE_CONTAINER_DESCRIPTION__PATHS = 1;
 
 	/**
 	 * The number of structural features of the '<em>Source Container Description</em>' class.
@@ -359,13 +341,13 @@ public interface N4mfPackage extends EPackage {
 	int SOURCE_CONTAINER_DESCRIPTION___COMPARE_BY_FRAGMENT_TYPE__SOURCECONTAINERDESCRIPTION = 0;
 
 	/**
-	 * The operation id for the '<em>Get Paths</em>' operation.
+	 * The operation id for the '<em>Get Paths Normalized</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SOURCE_CONTAINER_DESCRIPTION___GET_PATHS = 1;
+	int SOURCE_CONTAINER_DESCRIPTION___GET_PATHS_NORMALIZED = 1;
 
 	/**
 	 * The number of operations of the '<em>Source Container Description</em>' class.
@@ -803,15 +785,15 @@ public interface N4mfPackage extends EPackage {
 	EReference getProjectDescription_ExecModule();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4mf.ProjectDescription#getOutputPathRaw <em>Output Path Raw</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4mf.ProjectDescription#getOutputPath <em>Output Path</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Output Path Raw</em>'.
-	 * @see org.eclipse.n4js.n4mf.ProjectDescription#getOutputPathRaw()
+	 * @return the meta object for the attribute '<em>Output Path</em>'.
+	 * @see org.eclipse.n4js.n4mf.ProjectDescription#getOutputPath()
 	 * @see #getProjectDescription()
 	 * @generated
 	 */
-	EAttribute getProjectDescription_OutputPathRaw();
+	EAttribute getProjectDescription_OutputPath();
 
 	/**
 	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.n4mf.ProjectDescription#getSourceContainers <em>Source Containers</em>}'.
@@ -880,26 +862,6 @@ public interface N4mfPackage extends EPackage {
 	EAttribute getProjectDescription_HasN4JSNature();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.n4mf.ProjectDescription#getOutputPath() <em>Get Output Path</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Output Path</em>' operation.
-	 * @see org.eclipse.n4js.n4mf.ProjectDescription#getOutputPath()
-	 * @generated
-	 */
-	EOperation getProjectDescription__GetOutputPath();
-
-	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.n4mf.ProjectDescription#setOutputPath(java.lang.String) <em>Set Output Path</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Set Output Path</em>' operation.
-	 * @see org.eclipse.n4js.n4mf.ProjectDescription#setOutputPath(java.lang.String)
-	 * @generated
-	 */
-	EOperation getProjectDescription__SetOutputPath__String();
-
-	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4mf.SourceContainerDescription <em>Source Container Description</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -921,15 +883,15 @@ public interface N4mfPackage extends EPackage {
 	EAttribute getSourceContainerDescription_SourceContainerType();
 
 	/**
-	 * Returns the meta object for the attribute list '{@link org.eclipse.n4js.n4mf.SourceContainerDescription#getPathsRaw <em>Paths Raw</em>}'.
+	 * Returns the meta object for the attribute list '{@link org.eclipse.n4js.n4mf.SourceContainerDescription#getPaths <em>Paths</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute list '<em>Paths Raw</em>'.
-	 * @see org.eclipse.n4js.n4mf.SourceContainerDescription#getPathsRaw()
+	 * @return the meta object for the attribute list '<em>Paths</em>'.
+	 * @see org.eclipse.n4js.n4mf.SourceContainerDescription#getPaths()
 	 * @see #getSourceContainerDescription()
 	 * @generated
 	 */
-	EAttribute getSourceContainerDescription_PathsRaw();
+	EAttribute getSourceContainerDescription_Paths();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.n4mf.SourceContainerDescription#compareByFragmentType(org.eclipse.n4js.n4mf.SourceContainerDescription) <em>Compare By Fragment Type</em>}' operation.
@@ -942,14 +904,14 @@ public interface N4mfPackage extends EPackage {
 	EOperation getSourceContainerDescription__CompareByFragmentType__SourceContainerDescription();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.n4mf.SourceContainerDescription#getPaths() <em>Get Paths</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4mf.SourceContainerDescription#getPathsNormalized() <em>Get Paths Normalized</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Paths</em>' operation.
-	 * @see org.eclipse.n4js.n4mf.SourceContainerDescription#getPaths()
+	 * @return the meta object for the '<em>Get Paths Normalized</em>' operation.
+	 * @see org.eclipse.n4js.n4mf.SourceContainerDescription#getPathsNormalized()
 	 * @generated
 	 */
-	EOperation getSourceContainerDescription__GetPaths();
+	EOperation getSourceContainerDescription__GetPathsNormalized();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4mf.ModuleFilter <em>Module Filter</em>}'.
@@ -1275,12 +1237,12 @@ public interface N4mfPackage extends EPackage {
 		EReference PROJECT_DESCRIPTION__EXEC_MODULE = eINSTANCE.getProjectDescription_ExecModule();
 
 		/**
-		 * The meta object literal for the '<em><b>Output Path Raw</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Output Path</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute PROJECT_DESCRIPTION__OUTPUT_PATH_RAW = eINSTANCE.getProjectDescription_OutputPathRaw();
+		EAttribute PROJECT_DESCRIPTION__OUTPUT_PATH = eINSTANCE.getProjectDescription_OutputPath();
 
 		/**
 		 * The meta object literal for the '<em><b>Source Containers</b></em>' containment reference list feature.
@@ -1331,22 +1293,6 @@ public interface N4mfPackage extends EPackage {
 		EAttribute PROJECT_DESCRIPTION__HAS_N4JS_NATURE = eINSTANCE.getProjectDescription_HasN4JSNature();
 
 		/**
-		 * The meta object literal for the '<em><b>Get Output Path</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation PROJECT_DESCRIPTION___GET_OUTPUT_PATH = eINSTANCE.getProjectDescription__GetOutputPath();
-
-		/**
-		 * The meta object literal for the '<em><b>Set Output Path</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation PROJECT_DESCRIPTION___SET_OUTPUT_PATH__STRING = eINSTANCE.getProjectDescription__SetOutputPath__String();
-
-		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4mf.impl.SourceContainerDescriptionImpl <em>Source Container Description</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1365,12 +1311,12 @@ public interface N4mfPackage extends EPackage {
 		EAttribute SOURCE_CONTAINER_DESCRIPTION__SOURCE_CONTAINER_TYPE = eINSTANCE.getSourceContainerDescription_SourceContainerType();
 
 		/**
-		 * The meta object literal for the '<em><b>Paths Raw</b></em>' attribute list feature.
+		 * The meta object literal for the '<em><b>Paths</b></em>' attribute list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute SOURCE_CONTAINER_DESCRIPTION__PATHS_RAW = eINSTANCE.getSourceContainerDescription_PathsRaw();
+		EAttribute SOURCE_CONTAINER_DESCRIPTION__PATHS = eINSTANCE.getSourceContainerDescription_Paths();
 
 		/**
 		 * The meta object literal for the '<em><b>Compare By Fragment Type</b></em>' operation.
@@ -1381,12 +1327,12 @@ public interface N4mfPackage extends EPackage {
 		EOperation SOURCE_CONTAINER_DESCRIPTION___COMPARE_BY_FRAGMENT_TYPE__SOURCECONTAINERDESCRIPTION = eINSTANCE.getSourceContainerDescription__CompareByFragmentType__SourceContainerDescription();
 
 		/**
-		 * The meta object literal for the '<em><b>Get Paths</b></em>' operation.
+		 * The meta object literal for the '<em><b>Get Paths Normalized</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation SOURCE_CONTAINER_DESCRIPTION___GET_PATHS = eINSTANCE.getSourceContainerDescription__GetPaths();
+		EOperation SOURCE_CONTAINER_DESCRIPTION___GET_PATHS_NORMALIZED = eINSTANCE.getSourceContainerDescription__GetPathsNormalized();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4mf.impl.ModuleFilterImpl <em>Module Filter</em>}' class.

@@ -190,11 +190,11 @@ class PackageJsonHelperTest {
 		val sc2 = pd.sourceContainers.get(2);
 
 		assertEquals(SourceContainerType.EXTERNAL, sc0.sourceContainerType);
-		assertEquals(#[ "src-ext1", "src-ext2" ], sc0.pathsRaw);
+		assertEquals(#[ "src-ext1", "src-ext2" ], sc0.paths);
 		assertEquals(SourceContainerType.SOURCE, sc1.sourceContainerType);
-		assertEquals(#[ "src1", "src2" ], sc1.pathsRaw);
+		assertEquals(#[ "src1", "src2" ], sc1.paths);
 		assertEquals(SourceContainerType.TEST, sc2.sourceContainerType);
-		assertEquals(#[ "src-test1", "src-test2" ], sc2.pathsRaw);
+		assertEquals(#[ "src-test1", "src-test2" ], sc2.paths);
 	}
 
 	@Test
@@ -288,7 +288,7 @@ class PackageJsonHelperTest {
 		assertEquals(#[], pd.implementedProjects);
 		assertEquals(#[], pd.initModules);
 		assertEquals(null, pd.execModule);
-		assertEquals(DEFAULT_OUTPUT, pd.outputPathRaw);
+		assertEquals(DEFAULT_OUTPUT, pd.outputPath);
 		assertEquals(#[], pd.moduleFilters);
 		assertEquals(#[], pd.testedProjects);
 		if (hasDefaultProjectType) {
@@ -301,7 +301,7 @@ class PackageJsonHelperTest {
 	def private assertCorrectDefaultSourceContainers(ProjectDescription pd) {
 		// expect a single source container of type "source" with path "."
 		assertEquals(1, pd.sourceContainers.size);
-		assertEquals(#["."], pd.sourceContainers.head.pathsRaw);
+		assertEquals(#["."], pd.sourceContainers.head.paths);
 		assertEquals(SourceContainerType.SOURCE, pd.sourceContainers.head.sourceContainerType);
 	}
 

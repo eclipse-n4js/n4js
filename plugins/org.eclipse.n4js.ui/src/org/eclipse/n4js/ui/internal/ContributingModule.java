@@ -170,8 +170,8 @@ public class ContributingModule implements Module {
 		binder.bind(XtextResourceSet.class);
 		binder.bind(ProjectDescriptionLoadListener.class);
 		binder.bind(IEagerContribution.class).to(ProjectDescriptionLoadListener.class);
-		binder.bind(ProjectDescriptionLoadListener.Strategy.class).to(N4MFProjectDependencyStrategy.class);
-		binder.bind(N4MFProjectDependencyStrategy.class);
+		binder.bind(ProjectDescriptionLoadListener.Strategy.class).to(N4JSProjectDependencyStrategy.class);
+		binder.bind(N4JSProjectDependencyStrategy.class);
 		binder.bind(IResourceSetInitializer.class).to(ScopeInitializer.class);
 		binder.bind(ClassLoader.class).toInstance(getClass().getClassLoader());
 

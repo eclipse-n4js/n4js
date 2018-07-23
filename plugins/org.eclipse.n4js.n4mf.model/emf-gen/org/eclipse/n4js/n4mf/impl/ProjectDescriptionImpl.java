@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.n4mf.impl;
 
-import java.lang.reflect.InvocationTargetException;
-
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -40,8 +38,6 @@ import org.eclipse.n4js.n4mf.SourceContainerDescription;
 
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 
-import org.eclipse.n4js.utils.io.FileUtils;
-
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Project Description</b></em>'.
@@ -64,7 +60,7 @@ import org.eclipse.n4js.utils.io.FileUtils;
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getImplementedProjects <em>Implemented Projects</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getInitModules <em>Init Modules</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getExecModule <em>Exec Module</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getOutputPathRaw <em>Output Path Raw</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getOutputPath <em>Output Path</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getSourceContainers <em>Source Containers</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getModuleFilters <em>Module Filters</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getTestedProjects <em>Tested Projects</em>}</li>
@@ -277,24 +273,24 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	protected BootstrapModule execModule;
 
 	/**
-	 * The default value of the '{@link #getOutputPathRaw() <em>Output Path Raw</em>}' attribute.
+	 * The default value of the '{@link #getOutputPath() <em>Output Path</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getOutputPathRaw()
+	 * @see #getOutputPath()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String OUTPUT_PATH_RAW_EDEFAULT = null;
+	protected static final String OUTPUT_PATH_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getOutputPathRaw() <em>Output Path Raw</em>}' attribute.
+	 * The cached value of the '{@link #getOutputPath() <em>Output Path</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getOutputPathRaw()
+	 * @see #getOutputPath()
 	 * @generated
 	 * @ordered
 	 */
-	protected String outputPathRaw = OUTPUT_PATH_RAW_EDEFAULT;
+	protected String outputPath = OUTPUT_PATH_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getSourceContainers() <em>Source Containers</em>}' containment reference list.
@@ -725,8 +721,8 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getOutputPathRaw() {
-		return outputPathRaw;
+	public String getOutputPath() {
+		return outputPath;
 	}
 
 	/**
@@ -734,11 +730,11 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setOutputPathRaw(String newOutputPathRaw) {
-		String oldOutputPathRaw = outputPathRaw;
-		outputPathRaw = newOutputPathRaw;
+	public void setOutputPath(String newOutputPath) {
+		String oldOutputPath = outputPath;
+		outputPath = newOutputPath;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4mfPackage.PROJECT_DESCRIPTION__OUTPUT_PATH_RAW, oldOutputPathRaw, outputPathRaw));
+			eNotify(new ENotificationImpl(this, Notification.SET, N4mfPackage.PROJECT_DESCRIPTION__OUTPUT_PATH, oldOutputPath, outputPath));
 	}
 
 	/**
@@ -845,24 +841,6 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getOutputPath() {
-		return FileUtils.normalizeDotWhenEmpty(this.getOutputPathRaw());
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setOutputPath(final String newOutputPath) {
-		this.setOutputPathRaw(newOutputPath);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -928,8 +906,8 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 				return getInitModules();
 			case N4mfPackage.PROJECT_DESCRIPTION__EXEC_MODULE:
 				return getExecModule();
-			case N4mfPackage.PROJECT_DESCRIPTION__OUTPUT_PATH_RAW:
-				return getOutputPathRaw();
+			case N4mfPackage.PROJECT_DESCRIPTION__OUTPUT_PATH:
+				return getOutputPath();
 			case N4mfPackage.PROJECT_DESCRIPTION__SOURCE_CONTAINERS:
 				return getSourceContainers();
 			case N4mfPackage.PROJECT_DESCRIPTION__MODULE_FILTERS:
@@ -1002,8 +980,8 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 			case N4mfPackage.PROJECT_DESCRIPTION__EXEC_MODULE:
 				setExecModule((BootstrapModule)newValue);
 				return;
-			case N4mfPackage.PROJECT_DESCRIPTION__OUTPUT_PATH_RAW:
-				setOutputPathRaw((String)newValue);
+			case N4mfPackage.PROJECT_DESCRIPTION__OUTPUT_PATH:
+				setOutputPath((String)newValue);
 				return;
 			case N4mfPackage.PROJECT_DESCRIPTION__SOURCE_CONTAINERS:
 				getSourceContainers().clear();
@@ -1080,8 +1058,8 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 			case N4mfPackage.PROJECT_DESCRIPTION__EXEC_MODULE:
 				setExecModule((BootstrapModule)null);
 				return;
-			case N4mfPackage.PROJECT_DESCRIPTION__OUTPUT_PATH_RAW:
-				setOutputPathRaw(OUTPUT_PATH_RAW_EDEFAULT);
+			case N4mfPackage.PROJECT_DESCRIPTION__OUTPUT_PATH:
+				setOutputPath(OUTPUT_PATH_EDEFAULT);
 				return;
 			case N4mfPackage.PROJECT_DESCRIPTION__SOURCE_CONTAINERS:
 				getSourceContainers().clear();
@@ -1141,8 +1119,8 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 				return initModules != null && !initModules.isEmpty();
 			case N4mfPackage.PROJECT_DESCRIPTION__EXEC_MODULE:
 				return execModule != null;
-			case N4mfPackage.PROJECT_DESCRIPTION__OUTPUT_PATH_RAW:
-				return OUTPUT_PATH_RAW_EDEFAULT == null ? outputPathRaw != null : !OUTPUT_PATH_RAW_EDEFAULT.equals(outputPathRaw);
+			case N4mfPackage.PROJECT_DESCRIPTION__OUTPUT_PATH:
+				return OUTPUT_PATH_EDEFAULT == null ? outputPath != null : !OUTPUT_PATH_EDEFAULT.equals(outputPath);
 			case N4mfPackage.PROJECT_DESCRIPTION__SOURCE_CONTAINERS:
 				return sourceContainers != null && !sourceContainers.isEmpty();
 			case N4mfPackage.PROJECT_DESCRIPTION__MODULE_FILTERS:
@@ -1157,23 +1135,6 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 				return hasN4JSNature != HAS_N4JS_NATURE_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
-		switch (operationID) {
-			case N4mfPackage.PROJECT_DESCRIPTION___GET_OUTPUT_PATH:
-				return getOutputPath();
-			case N4mfPackage.PROJECT_DESCRIPTION___SET_OUTPUT_PATH__STRING:
-				setOutputPath((String)arguments.get(0));
-				return null;
-		}
-		return super.eInvoke(operationID, arguments);
 	}
 
 	/**
@@ -1198,8 +1159,8 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 		result.append(mainModule);
 		result.append(", implementationId: ");
 		result.append(implementationId);
-		result.append(", outputPathRaw: ");
-		result.append(outputPathRaw);
+		result.append(", outputPath: ");
+		result.append(outputPath);
 		result.append(", moduleLoader: ");
 		result.append(moduleLoader);
 		result.append(", hasNestedNodeModulesFolder: ");

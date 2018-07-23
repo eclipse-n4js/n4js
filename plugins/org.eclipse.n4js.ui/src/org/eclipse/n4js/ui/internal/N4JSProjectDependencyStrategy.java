@@ -28,12 +28,12 @@ import com.google.inject.Inject;
 /**
  * Compute the project dependencies based on the content of the n4mf files.
  */
-public class N4MFProjectDependencyStrategy implements ProjectDescriptionLoadListener.Strategy {
+public class N4JSProjectDependencyStrategy implements ProjectDescriptionLoadListener.Strategy {
 
 	private final IN4JSEclipseCore core;
 
 	@Inject
-	N4MFProjectDependencyStrategy(final IN4JSEclipseCore core) {
+	N4JSProjectDependencyStrategy(final IN4JSEclipseCore core) {
 		this.core = core;
 	}
 
