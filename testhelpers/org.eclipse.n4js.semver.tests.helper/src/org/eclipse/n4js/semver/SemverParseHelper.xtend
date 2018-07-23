@@ -22,7 +22,7 @@ import org.eclipse.n4js.semver.Semver.VersionRangeSetRequirement
 /**
  * A parse helper for SEMVER parsing tests.
  */
-class SEMVERParseHelper extends ParseHelper<NPMVersionRequirement> {
+class SemverParseHelper extends ParseHelper<NPMVersionRequirement> {
 
 	/**
 	 * Returns a {@link VersionRangeSetRequirement} instance or throws an exception if the given

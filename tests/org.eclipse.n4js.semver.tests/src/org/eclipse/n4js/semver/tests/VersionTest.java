@@ -13,11 +13,11 @@ package org.eclipse.n4js.semver.tests;
 import java.util.Arrays;
 import java.util.List;
 
-import org.eclipse.n4js.semver.SEMVERInjectorProvider;
+import org.eclipse.n4js.semver.SemverInjectorProvider;
 import org.eclipse.n4js.semver.SemverMatcher;
 import org.eclipse.n4js.semver.SemverMatcher.RelationKind;
 import org.eclipse.n4js.semver.SemverMatcher.VersionNumberRelation;
-import org.eclipse.n4js.semver.SEMVERParseHelper;
+import org.eclipse.n4js.semver.SemverParseHelper;
 import org.eclipse.n4js.semver.SemverUtils;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.semver.model.SemverSerializer;
@@ -35,10 +35,10 @@ import com.google.inject.Inject;
  */
 @SuppressWarnings("javadoc")
 @RunWith(XtextRunner.class)
-@InjectWith(SEMVERInjectorProvider.class)
+@InjectWith(SemverInjectorProvider.class)
 public class VersionTest {
 	@Inject
-	SEMVERParseHelper semverParseHelper;
+	SemverParseHelper semverParseHelper;
 
 	VersionNumber version(int major, int minor, int patch) {
 		return version(major, minor, patch, null, null);

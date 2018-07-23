@@ -11,8 +11,7 @@
 package org.eclipse.n4js.semver.tests.validation
 
 import com.google.inject.Inject
-import org.eclipse.n4js.semver.SEMVERInjectorProvider
-import org.eclipse.n4js.semver.SEMVERParseHelper
+import org.eclipse.n4js.semver.SemverParseHelper
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.validation.ValidationTestHelper
@@ -20,15 +19,16 @@ import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.eclipse.n4js.semver.validation.SemverIssueCodes
+import org.eclipse.n4js.semver.SemverInjectorProvider
 
 /**
  * Tests that checks for the validation of comments in SEMVER resources.
  */
 @RunWith(XtextRunner)
-@InjectWith(SEMVERInjectorProvider)
-class SEMVERCommentValidationTest extends Assert {
+@InjectWith(SemverInjectorProvider)
+class SemverCommentValidationTest extends Assert {
 
-	@Inject extension SEMVERParseHelper
+	@Inject extension SemverParseHelper
 	@Inject extension ValidationTestHelper
 
 	/** Test error of too many numbers */
