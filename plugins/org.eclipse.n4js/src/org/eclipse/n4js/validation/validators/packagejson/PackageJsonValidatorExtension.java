@@ -153,14 +153,13 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 					platformProjectContainer = resolvedResource.getName();
 				}
 			} else {
-				// in headless case, assume file-based workspace representation
+				// otherwise assume file-based workspace representation
 				platformProjectContainer = new File(packageJsonUri.toFileString()).getParentFile().getName();
 			}
 
 			if (platformProjectContainer == null) {
+				// container project cannot be determined, fail gracefully (possibly a nested package.json file)
 				return;
-				// throw new IllegalStateException("Failed to determine project name "
-				// + "for resource " + packageJsonUri.toString());
 			}
 
 			if (!platformProjectContainer.equals(projectName.getValue())) {
@@ -901,7 +900,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		final Optional<? extends IN4JSProject> n4jsProject = n4jsCore.findProject(resourceURI);
 
 		if (!n4jsProject.isPresent()) {
-			// TODO GH-984 log this
+			// container project cannot be determined, fail gracefully (validation running on non-N4JS project?)
 			return true;
 		}
 
@@ -909,12 +908,13 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		// resolve against project uri with trailing slash
 		final URI projectRelativeResourceURI = resourceURI.deresolve(projectLocation.appendSegment(""));
 
-		final Path absoluteProjectPath = getAbsoluteProjectPath(resourceURI);
+		final Path absoluteProjectPath = n4jsProject.get().getLocationPath().toAbsolutePath();
 		if (absoluteProjectPath == null) {
 			throw new IllegalStateException(
 					"Failed to compute project path for package.json at " + resourceURI.toString());
 		}
 
+		// compute the path of the folder that contains the currently validated package.json file
 		final Path baseResourcePath = new File(
 				absoluteProjectPath.toString(),
 				projectRelativeResourceURI.trimSegments(1).toFileString()).toPath();

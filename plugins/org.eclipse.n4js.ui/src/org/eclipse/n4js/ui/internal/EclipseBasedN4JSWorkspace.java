@@ -227,4 +227,5 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 	void setProjectDescriptionLoadListener(ProjectDescriptionLoadListener listener) {
 		this.listener = listener;
 	}
+
 }

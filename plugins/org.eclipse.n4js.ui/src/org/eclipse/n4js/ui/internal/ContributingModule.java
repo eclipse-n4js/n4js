@@ -113,7 +113,6 @@ public class ContributingModule implements Module {
 		binder.bind(NfarStorageMapper.class);
 		binder.bind(InternalN4JSWorkspace.class).to(EclipseBasedN4JSWorkspace.class);
 		binder.bind(EclipseBasedN4JSWorkspace.class);
-
 		binder.bind(ProjectDescriptionHelper.class);
 		binder.bind(IWorkspaceRoot.class).toProvider(new Provider<IWorkspaceRoot>() {
 			@Inject
