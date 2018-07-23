@@ -14,7 +14,6 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.n4js.N4JSUiInjectorProvider;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
-import org.eclipse.n4js.ui.internal.WorkspaceCacheSynchronizer;
 import org.eclipse.n4js.utils.ProjectDescriptionHelper;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.XtextRunner;
@@ -34,9 +33,6 @@ public class EclipseBasedInternalWorkspacePluginTest extends AbstractInternalWor
 	@Inject
 	private ProjectDescriptionHelper projectDescriptionHelper;
 
-	@Inject
-	private WorkspaceCacheSynchronizer workspaceCacheSynchronizer;
-
 	private EclipseBasedN4JSWorkspace testMe;
 
 	@Override
@@ -46,7 +42,7 @@ public class EclipseBasedInternalWorkspacePluginTest extends AbstractInternalWor
 
 	@Override
 	public void setUp() {
-		testMe = new EclipseBasedN4JSWorkspace(workspace, projectDescriptionHelper, workspaceCacheSynchronizer);
+		testMe = new EclipseBasedN4JSWorkspace(workspace, projectDescriptionHelper);
 		super.setUp();
 	}
 

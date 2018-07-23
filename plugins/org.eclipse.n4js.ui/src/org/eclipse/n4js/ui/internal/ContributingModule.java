@@ -114,10 +114,6 @@ public class ContributingModule implements Module {
 		binder.bind(InternalN4JSWorkspace.class).to(EclipseBasedN4JSWorkspace.class);
 		binder.bind(EclipseBasedN4JSWorkspace.class);
 
-		binder.bind(WorkspaceCacheSynchronizer.class);
-		binder.bind(OwnResourceValidatorAwareValidatingEditorCallback.class);
-		binder.bind(ResourceUIValidatorExtension.class);
-
 		binder.bind(ProjectDescriptionHelper.class);
 		binder.bind(IWorkspaceRoot.class).toProvider(new Provider<IWorkspaceRoot>() {
 			@Inject

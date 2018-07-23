@@ -16,7 +16,6 @@ import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
 import org.eclipse.n4js.ui.internal.N4JSEclipseCore;
 import org.eclipse.n4js.ui.internal.N4JSEclipseModel;
-import org.eclipse.n4js.ui.internal.WorkspaceCacheSynchronizer;
 import org.eclipse.n4js.utils.ProjectDescriptionHelper;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.XtextRunner;
@@ -40,9 +39,6 @@ public class EclipseProjectPluginTest extends AbstractN4JSProjectTest {
 	@Inject
 	private Injector injector;
 
-	@Inject
-	private WorkspaceCacheSynchronizer workspaceCacheSynchronizer;
-
 	private EclipseBasedN4JSWorkspace internalWorkspace;
 
 	private N4JSEclipseCore testMe;
@@ -54,8 +50,7 @@ public class EclipseProjectPluginTest extends AbstractN4JSProjectTest {
 
 	@Override
 	public void setUp() {
-		internalWorkspace = new EclipseBasedN4JSWorkspace(workspace, projectDescriptionHelper,
-				workspaceCacheSynchronizer);
+		internalWorkspace = new EclipseBasedN4JSWorkspace(workspace, projectDescriptionHelper);
 		N4JSEclipseModel model = new N4JSEclipseModel(internalWorkspace);
 		injector.injectMembers(model);
 		testMe = new N4JSEclipseCore(model);
