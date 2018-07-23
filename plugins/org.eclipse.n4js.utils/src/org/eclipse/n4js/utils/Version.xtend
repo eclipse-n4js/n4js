@@ -119,7 +119,7 @@ class Version implements Comparable<Version> {
 
 	static def int getVersionNumber(String versionString, int place) {
 		if (versionString !== null) {
-			val split = versionString.split(".");
+			val split = versionString.split("\\.");
 			if (split.length > place && split.get(place).length() > 0) {
 				val versionNumber = Integer.parseInt(split.get(place));
 				return versionNumber

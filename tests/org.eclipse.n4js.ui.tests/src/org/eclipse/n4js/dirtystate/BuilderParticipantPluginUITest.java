@@ -23,6 +23,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.dirtystate.testdata.CaseSensitiveTestFiles;
 import org.eclipse.n4js.dirtystate.testdata.EnumTestFiles;
 import org.eclipse.n4js.dirtystate.testdata.InheritanceTestFiles;
@@ -200,23 +201,25 @@ public class BuilderParticipantPluginUITest extends AbstractBuilderParticipantTe
 
 		parentFileXtextEditor.close(true);
 
-		parentFile.move(new Path("Parent2" + F_EXT), true, true, monitor());
+		parentFile.move(new Path("Parent2" + "." + N4JSGlobals.N4JS_FILE_EXTENSION), true, true, monitor());
 		moduleFolder.refreshLocal(IResource.DEPTH_INFINITE, monitor());
 		waitForAutoBuild();
 		waitForUpdateEditorJob();
 
-		assertFalse("Parent.n4js doesn't exist anymore", moduleFolder.getFile(new Path("Parent" + F_EXT)).exists());
-		IFile movedParentFile = moduleFolder.getFile("Parent2" + F_EXT);
+		assertFalse("Parent.n4js doesn't exist anymore",
+				moduleFolder.getFile(new Path("Parent" + "." + N4JSGlobals.N4JS_FILE_EXTENSION)).exists());
+		IFile movedParentFile = moduleFolder.getFile("Parent2" + "." + N4JSGlobals.N4JS_FILE_EXTENSION);
 		assertTrue("Parent2.n4js does exist", movedParentFile.exists());
 
 		errors = getEditorErrors(childFileXtextEditor);
 		assertEquals("Editor of child should have got error markers", 3, errors.size());
 
-		movedParentFile.move(new Path("Parent" + F_EXT), true, true, monitor());
+		movedParentFile.move(new Path("Parent" + "." + N4JSGlobals.N4JS_FILE_EXTENSION), true, true, monitor());
 		moduleFolder.refreshLocal(IResource.DEPTH_INFINITE, monitor());
 		waitForAutoBuild();
 		waitForUpdateEditorJob();
-		assertTrue("Parent.n4js does exist", moduleFolder.getFile(new Path("Parent" + F_EXT)).exists());
+		assertTrue("Parent.n4js does exist",
+				moduleFolder.getFile(new Path("Parent" + "." + N4JSGlobals.N4JS_FILE_EXTENSION)).exists());
 
 		errors = getEditorErrors(childFileXtextEditor);
 		assertEquals("Editor of child should have no errors", 0, errors.size());
@@ -262,7 +265,8 @@ public class BuilderParticipantPluginUITest extends AbstractBuilderParticipantTe
 		moduleFolder.refreshLocal(IResource.DEPTH_INFINITE, monitor());
 		waitForAutoBuild();
 		waitForUpdateEditorJob();
-		assertFalse("Parent.n4js doesn't exist anymore", moduleFolder.getFile(new Path("Parent" + F_EXT)).exists());
+		assertFalse("Parent.n4js doesn't exist anymore",
+				moduleFolder.getFile(new Path("Parent" + "." + N4JSGlobals.N4JS_FILE_EXTENSION)).exists());
 		errors = getEditorErrors(childFileXtextEditor);
 		assertEquals("Editor of child should have error markers", 3, errors.size());
 

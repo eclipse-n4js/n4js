@@ -27,7 +27,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSUiInjectorProvider;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
@@ -64,8 +63,6 @@ public abstract class AbstractBuilderTest {
 
 	private static final Logger LOGGER = getLogger(AbstractBuilderTest.class);
 
-	/** {@code .n4js} file extension */
-	public static final String F_EXT = "." + N4JSGlobals.N4JS_FILE_EXTENSION;
 	static {
 		EclipseGracefulUIShutdownEnabler.enableOnce();
 	}

@@ -506,7 +506,13 @@ class ADocSerializer {
 			strb.append(testInfo.testMethodTypeName() + "." + testInfo.testMethodName());
 		} else {
 			val pc = SourceEntryFactory.create(testInfo);
-			val strCase = if (testInfo.testCase === null) "Test" else pass(removePrecedingNumber(testInfo.testCase));
+			val strCase = if (testInfo.testCase.nullOrEmpty) "Test" else {
+				var formattedCase = removePrecedingNumber(testInfo.testCase);
+				if (formattedCase.nullOrEmpty) {
+					formattedCase = testInfo.testCase;
+				} 
+				pass(formattedCase);
+			}
 			val strbTmp = new StringBuilder();
 			strbTmp.appendSourceLink(pc, strCase);
 			strb.append(small(strbTmp));
