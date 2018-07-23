@@ -81,13 +81,13 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 	private IN4JSCore core;
 
 	@Inject
+	private OwnResourceValidatorAwareValidatingEditorCallback editorCallback;
+
+	@Inject
 	private ResourceUIValidatorExtension validatorExtension;
 
 	@Inject
 	private ExternalLibraryBuilder externalLibraryBuilder;
-
-	@Inject
-	private OwnResourceValidatorAwareValidatingEditorCallback editorCallback;
 
 	@Override
 	protected String doInitHandle(URI uri) {

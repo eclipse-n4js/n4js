@@ -43,7 +43,8 @@ import com.google.common.base.Optional;
 import com.google.inject.Inject;
 
 /**
- *
+ * Checks that the {@link EclipseBasedN4JSWorkspace} correctly invalidates its cache of project descriptions based on
+ * resource change events.
  */
 public class ProjectCacheInvalidationPluginTest extends AbstractBuilderParticipantTest {
 
@@ -54,6 +55,41 @@ public class ProjectCacheInvalidationPluginTest extends AbstractBuilderParticipa
 	private IN4JSCore n4jsCore;
 
 	/**
+	 * Alters a single project description and asserts that the project handle obtained from {@link IN4JSCore} correctly
+	 * reflects the changes after the operation has been performed.
+	 */
+	@Test
+	public void testSingleProjectDescriptionChange() throws CoreException {
+		// test case constants
+		final String updatedImplementationId1 = "updated1";
+		// setup
+		final IProject testProject1 = createN4JSProject("P1", ProjectType.LIBRARY);
+
+		// perform package.json modification
+		runAtomicWorkspaceOperation(monitor -> {
+			final IFile packageJson1 = testProject1.getFile(IN4JSProject.PACKAGE_JSON);
+
+			updatePackageJsonFile(packageJson1,
+					o -> PackageJSONTestUtils.setImplementationId(o, updatedImplementationId1));
+		});
+
+		// obtain workspace representation of test projects
+		Optional<? extends IN4JSProject> projectHandle1 = n4jsCore
+				.findProject(URI.createPlatformResourceURI(testProject1.getFullPath().toString(), true));
+
+		// make assertions
+		assertTrue("Project handle for the test project can be obtained.", projectHandle1.isPresent());
+
+		assertTrue("Project handle for the test project should have implementation ID (cache was invalidated).",
+				projectHandle1.get().getImplementationId().isPresent());
+
+		assertEquals(updatedImplementationId1, projectHandle1.get().getImplementationId().get());
+
+		// tear down
+		testProject1.delete(true, new NullProgressMonitor());
+	}
+
+	/**
 	 * Updates two project description files in the workspace within one atomic workspace operation, resulting in a
 	 * single {@link IResourceChangeEvent} that notifies clients of both modifications.
 	 *
@@ -61,7 +97,7 @@ public class ProjectCacheInvalidationPluginTest extends AbstractBuilderParticipa
 	 * correctly reflects the changes of both project description files.
 	 */
 	@Test
-	public void testUpdateProjectDescription() throws CoreException {
+	public void testMultipleProjectDescriptionChanges() throws CoreException {
 		// test case constants
 		final String updatedImplementationId1 = "updated1";
 		final String updatedImplementationId2 = "updated2";
