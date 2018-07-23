@@ -82,7 +82,7 @@ public class N4JSEclipseModel extends N4JSModel {
 		final String projectName = location.lastSegment();
 		IProject project;
 		project = workspace.getProject(projectName);
-		if (project == null && location.isFile()) {
+		if (location.isFile()) {
 			project = externalLibraryWorkspace.getProject(projectName);
 			checkNotNull(project, "Project does not exist in external workspace. URI: " + location);
 		}
