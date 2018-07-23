@@ -27,7 +27,7 @@ import org.eclipse.n4js.n4mf.ProjectDependency;
 import org.eclipse.n4js.n4mf.ProjectDependencyScope;
 import org.eclipse.n4js.n4mf.ProjectReference;
 
-import org.eclipse.n4js.semver.Semver.VersionRangeSetRequirement;
+import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 
 /**
  * <!-- begin-user-doc -->
@@ -53,7 +53,7 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 	 * @generated
 	 * @ordered
 	 */
-	protected VersionRangeSetRequirement versionConstraint;
+	protected NPMVersionRequirement versionConstraint;
 
 	/**
 	 * The default value of the '{@link #getVersionConstraintString() <em>Version Constraint String</em>}' attribute.
@@ -119,7 +119,7 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public VersionRangeSetRequirement getVersionConstraint() {
+	public NPMVersionRequirement getVersionConstraint() {
 		return versionConstraint;
 	}
 
@@ -128,8 +128,8 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetVersionConstraint(VersionRangeSetRequirement newVersionConstraint, NotificationChain msgs) {
-		VersionRangeSetRequirement oldVersionConstraint = versionConstraint;
+	public NotificationChain basicSetVersionConstraint(NPMVersionRequirement newVersionConstraint, NotificationChain msgs) {
+		NPMVersionRequirement oldVersionConstraint = versionConstraint;
 		versionConstraint = newVersionConstraint;
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4mfPackage.PROJECT_DEPENDENCY__VERSION_CONSTRAINT, oldVersionConstraint, newVersionConstraint);
@@ -143,7 +143,7 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setVersionConstraint(VersionRangeSetRequirement newVersionConstraint) {
+	public void setVersionConstraint(NPMVersionRequirement newVersionConstraint) {
 		if (newVersionConstraint != versionConstraint) {
 			NotificationChain msgs = null;
 			if (versionConstraint != null)
@@ -256,7 +256,7 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case N4mfPackage.PROJECT_DEPENDENCY__VERSION_CONSTRAINT:
-				setVersionConstraint((VersionRangeSetRequirement)newValue);
+				setVersionConstraint((NPMVersionRequirement)newValue);
 				return;
 			case N4mfPackage.PROJECT_DEPENDENCY__VERSION_CONSTRAINT_STRING:
 				setVersionConstraintString((String)newValue);
@@ -277,7 +277,7 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case N4mfPackage.PROJECT_DEPENDENCY__VERSION_CONSTRAINT:
-				setVersionConstraint((VersionRangeSetRequirement)null);
+				setVersionConstraint((NPMVersionRequirement)null);
 				return;
 			case N4mfPackage.PROJECT_DEPENDENCY__VERSION_CONSTRAINT_STRING:
 				setVersionConstraintString(VERSION_CONSTRAINT_STRING_EDEFAULT);

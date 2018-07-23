@@ -27,7 +27,7 @@ package org.eclipse.n4js.n4mf
 import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.n4js.utils.io.FileUtils
 import org.eclipse.n4js.semver.Semver.VersionNumber
-import org.eclipse.n4js.semver.Semver.VersionRangeSetRequirement
+import org.eclipse.n4js.semver.Semver.NPMVersionRequirement
 
 
 class ProjectDescription {
@@ -237,7 +237,7 @@ class ModuleFilterSpecifier {
  */
 class ProjectDependency extends ProjectReference {
 //	contains VersionConstraint versionConstraint
-	contains VersionRangeSetRequirement versionConstraint
+	contains NPMVersionRequirement versionConstraint
 	String versionConstraintString
 
 	ProjectDependencyScope declaredScope
