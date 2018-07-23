@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.validation.validators.packagejson;
 
-import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asStringOrNull;
+import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNonEmptyStringOrNull;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.DEFAULT_OUTPUT;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__DEPENDENCIES;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__DEV_DEPENDENCIES;
@@ -1133,7 +1133,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		final JSONValue projectTypeValue = getSingleDocumentValue(
 				PROP__N4JS + "." + PROP__PROJECT_TYPE);
 		if (projectTypeValue instanceof JSONStringLiteral) {
-			return PackageJsonUtils.parseProjectType(asStringOrNull(projectTypeValue));
+			return PackageJsonUtils.parseProjectType(asNonEmptyStringOrNull(projectTypeValue));
 		} else {
 			return ProjectType.get(0);
 		}

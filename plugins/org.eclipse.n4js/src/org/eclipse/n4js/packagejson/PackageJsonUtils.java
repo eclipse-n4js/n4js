@@ -12,8 +12,8 @@ package org.eclipse.n4js.packagejson;
 
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asArrayElementsOrEmpty;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNameValuePairsOrEmpty;
-import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asStringOrNull;
-import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asStringsInArrayOrEmpty;
+import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNonEmptyStringOrNull;
+import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNonEmptyStringsInArrayOrEmpty;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__MODULE;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__SOURCE_CONTAINER;
 
@@ -60,7 +60,7 @@ public class PackageJsonUtils {
 	 * Converts given JSON value to a {@link ProjectReference}; returns <code>null</code> if not possible.
 	 */
 	public static ProjectReference asProjectReferenceOrNull(JSONValue jsonValue) {
-		String valueStr = asStringOrNull(jsonValue);
+		String valueStr = asNonEmptyStringOrNull(jsonValue);
 		if (!Strings.isNullOrEmpty(valueStr)) {
 			final ProjectReference result = N4mfFactory.eINSTANCE.createProjectReference();
 			result.setProjectId(valueStr);
@@ -84,7 +84,7 @@ public class PackageJsonUtils {
 	 * Converts given JSON value to a {@link BootstrapModule}; returns <code>null</code> if not possible.
 	 */
 	public static BootstrapModule asBootstrapModuleOrNull(JSONValue jsonValue) {
-		String valueStr = asStringOrNull(jsonValue);
+		String valueStr = asNonEmptyStringOrNull(jsonValue);
 		if (!Strings.isNullOrEmpty(valueStr)) {
 			final BootstrapModule result = N4mfFactory.eINSTANCE.createBootstrapModule();
 			result.setModuleSpecifier(valueStr);
@@ -167,7 +167,7 @@ public class PackageJsonUtils {
 	 */
 	public static ModuleFilterSpecifier asModuleFilterSpecifierOrNull(JSONValue jsonValue) {
 		// 1st variant:
-		String singleString = asStringOrNull(jsonValue);
+		String singleString = asNonEmptyStringOrNull(jsonValue);
 		if (singleString != null) {
 			return createModuleFilterSpecifier(null, singleString);
 		}
@@ -178,8 +178,8 @@ public class PackageJsonUtils {
 				.orElse(null);
 		NameValuePair moduleNVP = pairs.stream().filter(p -> PROP__MODULE.equals(p.getName()))
 				.findFirst().orElse(null);
-		String pathStr = pathNVP != null ? asStringOrNull(pathNVP.getValue()) : null;
-		String moduleStr = moduleNVP != null ? asStringOrNull(moduleNVP.getValue()) : null;
+		String pathStr = pathNVP != null ? asNonEmptyStringOrNull(pathNVP.getValue()) : null;
+		String moduleStr = moduleNVP != null ? asNonEmptyStringOrNull(moduleNVP.getValue()) : null;
 		if (moduleStr != null) { // pathStr may be null, i.e. "sourceContainer" is optional
 			return createModuleFilterSpecifier(pathStr, moduleStr);
 		}
@@ -226,7 +226,7 @@ public class PackageJsonUtils {
 	 */
 	public static SourceContainerDescription asSourceContainerDescriptionOrNull(NameValuePair pair) {
 		SourceContainerType type = parseSourceContainerType(pair.getName());
-		List<String> paths = asStringsInArrayOrEmpty(pair.getValue());
+		List<String> paths = asNonEmptyStringsInArrayOrEmpty(pair.getValue());
 		if (type != null && !paths.isEmpty()) {
 			SourceContainerDescription sourceContainerDescription = N4mfFactory.eINSTANCE
 					.createSourceContainerDescription();

@@ -11,7 +11,7 @@
 package org.eclipse.n4js.utils;
 
 import static org.eclipse.n4js.internal.N4JSModel.DIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT;
-import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asStringOrNull;
+import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNonEmptyStringOrNull;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.DEFAULT_OUTPUT;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__DEPENDENCIES;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__DEV_DEPENDENCIES;
@@ -131,7 +131,7 @@ public class ProjectDescriptionLoader {
 		}
 		JSONValue versionValue = JSONModelUtils.getProperty(packageJSON, PROP__VERSION).orElse(null);
 		boolean hasN4JSNature = JSONModelUtils.getProperty(packageJSON, PROP__N4JS).isPresent();
-		Pair<String, Boolean> result = Tuples.create(asStringOrNull(versionValue), hasN4JSNature);
+		Pair<String, Boolean> result = Tuples.create(asNonEmptyStringOrNull(versionValue), hasN4JSNature);
 		return result;
 	}
 
@@ -149,7 +149,7 @@ public class ProjectDescriptionLoader {
 		if (!(content instanceof JSONObject))
 			return;
 		JSONObject contentCasted = (JSONObject) content;
-		String main = asStringOrNull(JSONModelUtils.getProperty(contentCasted, PROP__MAIN).orElse(null));
+		String main = asNonEmptyStringOrNull(JSONModelUtils.getProperty(contentCasted, PROP__MAIN).orElse(null));
 		if (main == null) {
 			return;
 		}

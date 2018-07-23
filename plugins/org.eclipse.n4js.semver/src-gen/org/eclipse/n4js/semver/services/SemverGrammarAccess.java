@@ -1026,9 +1026,9 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 	private final LETTER_NO_VElements pLETTER_NO_V;
 	private final WILDCARDElements pWILDCARD;
 	private final TerminalRule tLETTER_NO_VX;
+	private final TerminalRule tLETTER_V;
 	private final TerminalRule tLETTER_X;
 	private final TerminalRule tASTERIX;
-	private final TerminalRule tLETTER_V;
 	private final TerminalRule tDIGITS;
 	private final TerminalRule tDIGIT;
 	private final TerminalRule tWS;
@@ -1071,9 +1071,9 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 		this.pLETTER_NO_V = new LETTER_NO_VElements();
 		this.pWILDCARD = new WILDCARDElements();
 		this.tLETTER_NO_VX = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.LETTER_NO_VX");
+		this.tLETTER_V = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.LETTER_V");
 		this.tLETTER_X = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.LETTER_X");
 		this.tASTERIX = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.ASTERIX");
-		this.tLETTER_V = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.LETTER_V");
 		this.tDIGITS = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.DIGITS");
 		this.tDIGIT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.DIGIT");
 		this.tWS = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.WS");
@@ -1384,6 +1384,12 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 		return tLETTER_NO_VX;
 	}
 	
+	//terminal LETTER_V:
+	//	"v" | "V";
+	public TerminalRule getLETTER_VRule() {
+		return tLETTER_V;
+	}
+	
 	//terminal LETTER_X:
 	//	'x' | 'X';
 	public TerminalRule getLETTER_XRule() {
@@ -1394,12 +1400,6 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 	//	'*';
 	public TerminalRule getASTERIXRule() {
 		return tASTERIX;
-	}
-	
-	//terminal LETTER_V:
-	//	"v" | "V";
-	public TerminalRule getLETTER_VRule() {
-		return tLETTER_V;
 	}
 	
 	//terminal DIGITS returns ecore::EInt:

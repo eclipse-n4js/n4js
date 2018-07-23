@@ -15,9 +15,13 @@ import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.json.JSON.JSONDocument
 import org.eclipse.n4js.json.JSONGlobals
 import org.eclipse.n4js.json.JSONParseHelper
+import org.eclipse.n4js.n4mf.ModuleFilterType
 import org.eclipse.n4js.n4mf.ProjectDescription
 import org.eclipse.n4js.n4mf.ProjectType
+import org.eclipse.n4js.n4mf.SourceContainerType
 import org.eclipse.n4js.packagejson.PackageJsonHelper
+import org.eclipse.n4js.semver.Semver.TagVersionRequirement
+import org.eclipse.n4js.semver.Semver.VersionRangeSetRequirement
 import org.eclipse.n4js.utils.languages.N4LanguageUtils
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
@@ -26,8 +30,6 @@ import org.junit.runner.RunWith
 
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.*
 import static org.junit.Assert.*
-import org.eclipse.n4js.n4mf.SourceContainerType
-import org.eclipse.n4js.n4mf.ModuleFilterType
 
 /**
  * Testing the conversion from {@link JSONDocument} to {@link ProjectDescription}.
@@ -54,17 +56,20 @@ class PackageJsonHelperTest {
 					"lodash": "~2.3.4"
 				},
 				"devDependencies": {
-					"eslint": "^3.4.5"
+					"eslint": "^3.4.5",
+					"emptyVersionRequirement": "",
+					"latestVersionRequirement": "latest"
 				}
 			}
 		'''.parseAndConvert
 
 		// currently normal and "dev" dependencies are not distinguished
-		assertEquals(3, pd.projectDependencies.size);
-
+		assertEquals(5, pd.projectDependencies.size);
 		val dep0 = pd.projectDependencies.get(0);
 		val dep1 = pd.projectDependencies.get(1);
 		val dep2 = pd.projectDependencies.get(2);
+		val dep3 = pd.projectDependencies.get(3);
+		val dep4 = pd.projectDependencies.get(4);
 
 		assertEquals("express", dep0.projectId);
 		assertEquals(">=1.2.3", dep0.versionRequirement.toString);
@@ -72,6 +77,17 @@ class PackageJsonHelperTest {
 		assertEquals("~2.3.4", dep1.versionRequirement.toString);
 		assertEquals("eslint", dep2.projectId);
 		assertEquals("^3.4.5", dep2.versionRequirement.toString);
+
+		// a dependency with an empty version requirement:
+		assertEquals("emptyVersionRequirement", dep3.projectId);
+		assertTrue("empty string as version requirement should be parsed to an empty VersionRangeSetRequirement",
+			dep3.versionRequirement instanceof VersionRangeSetRequirement
+			&& (dep3.versionRequirement as VersionRangeSetRequirement).ranges.empty);
+		// a dependency with version requirement "latest":
+		assertEquals("latestVersionRequirement", dep4.projectId);
+		assertTrue("'latest' as version requirement should be parsed to a TagVersionRequirement",
+			dep4.versionRequirement instanceof TagVersionRequirement);
+		assertEquals("latest", (dep4.versionRequirement as TagVersionRequirement).tagName);
 	}
 
 	@Test
@@ -79,26 +95,22 @@ class PackageJsonHelperTest {
 		val pd = '''
 			{
 				"dependencies": {
-					"emptyVersionRequirement": "",
 					"invalidVersionRequirement": 42,
 					"": "0.0.1"
 				}
 			}
 		'''.parseAndConvert
 
-		assertEquals(2, pd.projectDependencies.size);
+		// make sure no dependency was added for the invalid entry with empty key:
+		assertNull(pd.projectDependencies.filter[projectId.nullOrEmpty].head);
 
+		assertEquals(1, pd.projectDependencies.size);
 		val dep0 = pd.projectDependencies.get(0);
-		val dep1 = pd.projectDependencies.get(1);
 
 		// a dependency with an invalid version requirement is not ignored entirely,
 		// just the version requirement is omitted:
-		assertEquals("emptyVersionRequirement", dep0.projectId);
-		assertEquals("latest", dep0.versionRequirement.toString);
-		// a dependency with an invalid version requirement is not ignored entirely,
-		// just the version requirement is omitted:
-		assertEquals("invalidVersionRequirement", dep1.projectId);
-		assertEquals(null, dep1.versionRequirement);
+		assertEquals("invalidVersionRequirement", dep0.projectId);
+		assertEquals(null, dep0.versionRequirement);
 	}
 
 	@Test
@@ -127,7 +139,6 @@ class PackageJsonHelperTest {
 		'''.parseAndConvert
 
 		assertEquals(2, pd.moduleFilters.size);
-
 		val mf0 = pd.moduleFilters.get(0);
 		val mf1 = pd.moduleFilters.get(1);
 
@@ -174,7 +185,6 @@ class PackageJsonHelperTest {
 		'''.parseAndConvert
 
 		assertEquals(3, pd.sourceContainers.size);
-
 		val sc0 = pd.sourceContainers.get(0);
 		val sc1 = pd.sourceContainers.get(1);
 		val sc2 = pd.sourceContainers.get(2);

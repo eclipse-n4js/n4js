@@ -485,13 +485,41 @@ public class InternalSemverLexer extends Lexer {
     }
     // $ANTLR end "RULE_LETTER_NO_VX"
 
+    // $ANTLR start "RULE_LETTER_V"
+    public final void mRULE_LETTER_V() throws RecognitionException {
+        try {
+            int _type = RULE_LETTER_V;
+            int _channel = DEFAULT_TOKEN_CHANNEL;
+            // InternalSemver.g:1754:15: ( ( 'v' | 'V' ) )
+            // InternalSemver.g:1754:17: ( 'v' | 'V' )
+            {
+            if ( input.LA(1)=='V'||input.LA(1)=='v' ) {
+                input.consume();
+
+            }
+            else {
+                MismatchedSetException mse = new MismatchedSetException(null,input);
+                recover(mse);
+                throw mse;}
+
+
+            }
+
+            state.type = _type;
+            state.channel = _channel;
+        }
+        finally {
+        }
+    }
+    // $ANTLR end "RULE_LETTER_V"
+
     // $ANTLR start "RULE_LETTER_X"
     public final void mRULE_LETTER_X() throws RecognitionException {
         try {
             int _type = RULE_LETTER_X;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // InternalSemver.g:1754:15: ( ( 'x' | 'X' ) )
-            // InternalSemver.g:1754:17: ( 'x' | 'X' )
+            // InternalSemver.g:1756:15: ( ( 'x' | 'X' ) )
+            // InternalSemver.g:1756:17: ( 'x' | 'X' )
             {
             if ( input.LA(1)=='X'||input.LA(1)=='x' ) {
                 input.consume();
@@ -518,8 +546,8 @@ public class InternalSemverLexer extends Lexer {
         try {
             int _type = RULE_ASTERIX;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // InternalSemver.g:1756:14: ( '*' )
-            // InternalSemver.g:1756:16: '*'
+            // InternalSemver.g:1758:14: ( '*' )
+            // InternalSemver.g:1758:16: '*'
             {
             match('*'); 
 
@@ -532,34 +560,6 @@ public class InternalSemverLexer extends Lexer {
         }
     }
     // $ANTLR end "RULE_ASTERIX"
-
-    // $ANTLR start "RULE_LETTER_V"
-    public final void mRULE_LETTER_V() throws RecognitionException {
-        try {
-            int _type = RULE_LETTER_V;
-            int _channel = DEFAULT_TOKEN_CHANNEL;
-            // InternalSemver.g:1758:15: ( ( 'v' | 'V' ) )
-            // InternalSemver.g:1758:17: ( 'v' | 'V' )
-            {
-            if ( input.LA(1)=='V'||input.LA(1)=='v' ) {
-                input.consume();
-
-            }
-            else {
-                MismatchedSetException mse = new MismatchedSetException(null,input);
-                recover(mse);
-                throw mse;}
-
-
-            }
-
-            state.type = _type;
-            state.channel = _channel;
-        }
-        finally {
-        }
-    }
-    // $ANTLR end "RULE_LETTER_V"
 
     // $ANTLR start "RULE_DIGITS"
     public final void mRULE_DIGITS() throws RecognitionException {
@@ -1243,7 +1243,7 @@ public class InternalSemverLexer extends Lexer {
     // $ANTLR end "RULE_ANY_OTHER"
 
     public void mTokens() throws RecognitionException {
-        // InternalSemver.g:1:8: ( T__29 | T__30 | T__31 | T__32 | T__33 | T__34 | T__35 | T__36 | T__37 | T__38 | T__39 | T__40 | T__41 | T__42 | T__43 | T__44 | T__45 | T__46 | T__47 | RULE_LETTER_NO_VX | RULE_LETTER_X | RULE_ASTERIX | RULE_LETTER_V | RULE_DIGITS | RULE_WS | RULE_EOL )
+        // InternalSemver.g:1:8: ( T__29 | T__30 | T__31 | T__32 | T__33 | T__34 | T__35 | T__36 | T__37 | T__38 | T__39 | T__40 | T__41 | T__42 | T__43 | T__44 | T__45 | T__46 | T__47 | RULE_LETTER_NO_VX | RULE_LETTER_V | RULE_LETTER_X | RULE_ASTERIX | RULE_DIGITS | RULE_WS | RULE_EOL )
         int alt9=26;
         alt9 = dfa9.predict(input);
         switch (alt9) {
@@ -1388,23 +1388,23 @@ public class InternalSemverLexer extends Lexer {
                 }
                 break;
             case 21 :
-                // InternalSemver.g:1:142: RULE_LETTER_X
+                // InternalSemver.g:1:142: RULE_LETTER_V
+                {
+                mRULE_LETTER_V(); 
+
+                }
+                break;
+            case 22 :
+                // InternalSemver.g:1:156: RULE_LETTER_X
                 {
                 mRULE_LETTER_X(); 
 
                 }
                 break;
-            case 22 :
-                // InternalSemver.g:1:156: RULE_ASTERIX
+            case 23 :
+                // InternalSemver.g:1:170: RULE_ASTERIX
                 {
                 mRULE_ASTERIX(); 
-
-                }
-                break;
-            case 23 :
-                // InternalSemver.g:1:169: RULE_LETTER_V
-                {
-                mRULE_LETTER_V(); 
 
                 }
                 break;
@@ -1449,7 +1449,7 @@ public class InternalSemverLexer extends Lexer {
     static final String DFA9_specialS =
         "\41\uffff}>";
     static final String[] DFA9_transitionS = {
-            "\1\26\1\27\2\26\1\27\22\uffff\1\26\2\uffff\1\2\6\uffff\1\23\1\10\1\uffff\1\6\1\7\1\11\12\25\1\1\1\uffff\1\15\1\14\1\20\1\uffff\1\12\25\21\1\24\1\21\1\22\2\21\3\uffff\1\17\2\uffff\5\21\1\4\14\21\1\3\2\21\1\13\1\21\1\22\2\21\1\uffff\1\5\1\uffff\1\16\41\uffff\1\26\u15df\uffff\1\26\u097f\uffff\13\26\35\uffff\2\27\5\uffff\1\26\57\uffff\1\26\u0fa0\uffff\1\26\ucefe\uffff\1\26",
+            "\1\26\1\27\2\26\1\27\22\uffff\1\26\2\uffff\1\2\6\uffff\1\24\1\10\1\uffff\1\6\1\7\1\11\12\25\1\1\1\uffff\1\15\1\14\1\20\1\uffff\1\12\25\21\1\22\1\21\1\23\2\21\3\uffff\1\17\2\uffff\5\21\1\4\14\21\1\3\2\21\1\13\1\21\1\23\2\21\1\uffff\1\5\1\uffff\1\16\41\uffff\1\26\u15df\uffff\1\26\u097f\uffff\13\26\35\uffff\2\27\5\uffff\1\26\57\uffff\1\26\u0fa0\uffff\1\26\ucefe\uffff\1\26",
             "\1\30",
             "",
             "\1\32",
@@ -1514,7 +1514,7 @@ public class InternalSemverLexer extends Lexer {
             this.transition = DFA9_transition;
         }
         public String getDescription() {
-            return "1:1: Tokens : ( T__29 | T__30 | T__31 | T__32 | T__33 | T__34 | T__35 | T__36 | T__37 | T__38 | T__39 | T__40 | T__41 | T__42 | T__43 | T__44 | T__45 | T__46 | T__47 | RULE_LETTER_NO_VX | RULE_LETTER_X | RULE_ASTERIX | RULE_LETTER_V | RULE_DIGITS | RULE_WS | RULE_EOL );";
+            return "1:1: Tokens : ( T__29 | T__30 | T__31 | T__32 | T__33 | T__34 | T__35 | T__36 | T__37 | T__38 | T__39 | T__40 | T__41 | T__42 | T__43 | T__44 | T__45 | T__46 | T__47 | RULE_LETTER_NO_VX | RULE_LETTER_V | RULE_LETTER_X | RULE_ASTERIX | RULE_DIGITS | RULE_WS | RULE_EOL );";
         }
     }
  

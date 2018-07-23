@@ -11,8 +11,9 @@
 package org.eclipse.n4js.packagejson;
 
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNameValuePairsOrEmpty;
+import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNonEmptyStringOrNull;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asStringOrNull;
-import static org.eclipse.n4js.json.model.utils.JSONModelUtils.getPropertyAsStringOrNull;
+import static org.eclipse.n4js.json.model.utils.JSONModelUtils.getProperty;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.DEFAULT_MAIN_MODULE;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.DEFAULT_MODULE_LOADER_FOR_VALIDATION;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.DEFAULT_OUTPUT;
@@ -66,8 +67,8 @@ import org.eclipse.n4js.n4mf.ProjectType;
 import org.eclipse.n4js.n4mf.SourceContainerDescription;
 import org.eclipse.n4js.n4mf.SourceContainerType;
 import org.eclipse.n4js.semver.SemverHelper;
+import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
-import org.eclipse.n4js.semver.Semver.VersionRangeSetRequirement;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 
 import com.google.inject.Inject;
@@ -104,7 +105,7 @@ public class PackageJsonHelper {
 			List<NameValuePair> rootPairs = ((JSONObject) rootValue).getNameValuePairs();
 			convertRootPairs(result, rootPairs);
 			adjustProjectDescriptionAfterConversion(result, applyDefaultValues, defaultProjectId,
-					getPropertyAsStringOrNull((JSONObject) rootValue, PROP__MAIN));
+					asNonEmptyStringOrNull(getProperty((JSONObject) rootValue, PROP__MAIN).orElse(null)));
 			return result;
 		}
 		return null;
@@ -116,10 +117,10 @@ public class PackageJsonHelper {
 			JSONValue value = pair.getValue();
 			switch (name) {
 			case PROP__NAME:
-				target.setProjectId(asStringOrNull(value));
+				target.setProjectId(asNonEmptyStringOrNull(value));
 				break;
 			case PROP__VERSION:
-				target.setProjectVersion(parseVersion(asStringOrNull(value)));
+				target.setProjectVersion(parseVersion(asNonEmptyStringOrNull(value)));
 				break;
 			case PROP__DEPENDENCIES:
 				convertDependencies(target, asNameValuePairsOrEmpty(value), true);
@@ -149,16 +150,16 @@ public class PackageJsonHelper {
 			case PROP__PROJECT_TYPE:
 				// parseProjectType returns null if value is invalid, this will
 				// cause the setProjectType setter to use the default value of ProjectType.
-				target.setProjectType(parseProjectType(asStringOrNull(value)));
+				target.setProjectType(parseProjectType(asNonEmptyStringOrNull(value)));
 				break;
 			case PROP__VENDOR_ID:
-				target.setVendorId(asStringOrNull(value));
+				target.setVendorId(asNonEmptyStringOrNull(value));
 				break;
 			case PROP__VENDOR_NAME:
-				target.setVendorName(asStringOrNull(value));
+				target.setVendorName(asNonEmptyStringOrNull(value));
 				break;
 			case PROP__OUTPUT:
-				target.setOutputPath(asStringOrNull(value));
+				target.setOutputPath(asNonEmptyStringOrNull(value));
 				break;
 			case PROP__SOURCES:
 				target.getSourceContainers().addAll(asSourceContainerDescriptionsOrEmpty(value));
@@ -167,13 +168,13 @@ public class PackageJsonHelper {
 				target.getModuleFilters().addAll(asModuleFiltersInObjectOrEmpty(value));
 				break;
 			case PROP__MAIN_MODULE:
-				target.setMainModule(asStringOrNull(value));
+				target.setMainModule(asNonEmptyStringOrNull(value));
 				break;
 			case PROP__TESTED_PROJECTS:
 				target.getTestedProjects().addAll(asProjectReferencesInArrayOrEmpty(value));
 				break;
 			case PROP__IMPLEMENTATION_ID:
-				target.setImplementationId(asStringOrNull(value));
+				target.setImplementationId(asNonEmptyStringOrNull(value));
 				break;
 			case PROP__IMPLEMENTED_PROJECTS:
 				target.getImplementedProjects().addAll(asProjectReferencesInArrayOrEmpty(value));
@@ -188,7 +189,7 @@ public class PackageJsonHelper {
 				target.getRequiredRuntimeLibraries().addAll(asProjectReferencesInArrayOrEmpty(value));
 				break;
 			case PROP__MODULE_LOADER:
-				target.setModuleLoader(parseModuleLoader(asStringOrNull(value)));
+				target.setModuleLoader(parseModuleLoader(asNonEmptyStringOrNull(value)));
 				break;
 			case PROP__INIT_MODULES:
 				target.getInitModules().addAll(asBootstrapModulesInArrayOrEmpty(value));
@@ -223,8 +224,8 @@ public class PackageJsonHelper {
 				dep.setProjectId(projectId);
 				dep.setVersionRequirementString(valueStr);
 
-				VersionRangeSetRequirement vrs = semverHelper.parseVersionRangeSet(valueStr);
-				dep.setVersionRequirement(vrs);
+				NPMVersionRequirement vreq = parseVersionRequirement(valueStr);
+				dep.setVersionRequirement(vreq);
 				target.getProjectDependencies().add(dep);
 			}
 		}
@@ -320,6 +321,17 @@ public class PackageJsonHelper {
 			return null;
 		}
 		VersionNumber result = semverHelper.parseVersionNumber(versionStr);
+		return result;
+	}
+
+	private NPMVersionRequirement parseVersionRequirement(String versionRequirementStr) {
+		if (versionRequirementStr == null) {
+			return null;
+		}
+		// if (versionRequirementStr.trim().isEmpty()) {
+		// versionRequirementStr = "latest";
+		// }
+		NPMVersionRequirement result = semverHelper.parse(versionRequirementStr);
 		return result;
 	}
 }

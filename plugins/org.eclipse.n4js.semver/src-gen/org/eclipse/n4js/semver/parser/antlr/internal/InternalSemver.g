@@ -1751,11 +1751,11 @@ ruleVersionComparator returns [Enumerator current=null]
 
 RULE_LETTER_NO_VX : ('a'..'u'|'w'|'y'|'z'|'A'..'U'|'W'|'Y'|'Z');
 
+RULE_LETTER_V : ('v'|'V');
+
 RULE_LETTER_X : ('x'|'X');
 
 RULE_ASTERIX : '*';
-
-RULE_LETTER_V : ('v'|'V');
 
 RULE_DIGITS : RULE_DIGIT+;
 

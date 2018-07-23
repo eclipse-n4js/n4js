@@ -40,12 +40,13 @@ import com.google.common.base.Strings;
 public class JSONModelUtils {
 
 	/**
-	 * If given JSON value is a {@link JSONStringLiteral}, returns its value, otherwise <code>null</code>.
+	 * If given JSON value is a {@link JSONStringLiteral}, returns its value (possibly the empty string), otherwise
+	 * <code>null</code>.
 	 */
 	public static String asStringOrNull(JSONValue jsonValue) {
 		final String strValue = jsonValue instanceof JSONStringLiteral ? ((JSONStringLiteral) jsonValue).getValue()
 				: null;
-		if (Strings.isNullOrEmpty(strValue)) {
+		if (strValue == null) {
 			return null;
 		}
 		return strValue;
@@ -58,6 +59,30 @@ public class JSONModelUtils {
 	public static List<String> asStringsInArrayOrEmpty(JSONValue jsonValue) {
 		return asArrayElementsOrEmpty(jsonValue).stream()
 				.map(JSONModelUtils::asStringOrNull)
+				.filter(str -> !Strings.isNullOrEmpty(str))
+				.collect(Collectors.toList());
+	}
+
+	/**
+	 * If given JSON value is a {@link JSONStringLiteral} with a non-empty string as value, returns its value, otherwise
+	 * <code>null</code>.
+	 */
+	public static String asNonEmptyStringOrNull(JSONValue jsonValue) {
+		final String strValue = jsonValue instanceof JSONStringLiteral ? ((JSONStringLiteral) jsonValue).getValue()
+				: null;
+		if (Strings.isNullOrEmpty(strValue)) {
+			return null;
+		}
+		return strValue;
+	}
+
+	/**
+	 * If given JSON value is a {@link JSONArray}, returns its elements converted to strings with
+	 * {@link #asNonEmptyStringOrNull(JSONValue)}; otherwise an empty list is returned.
+	 */
+	public static List<String> asNonEmptyStringsInArrayOrEmpty(JSONValue jsonValue) {
+		return asArrayElementsOrEmpty(jsonValue).stream()
+				.map(JSONModelUtils::asNonEmptyStringOrNull)
 				.filter(str -> !Strings.isNullOrEmpty(str))
 				.collect(Collectors.toList());
 	}
@@ -228,8 +253,8 @@ public class JSONModelUtils {
 	}
 
 	/**
-	 * Same as {@link #getProperty(JSONObject, String)}, but invokes {@link #asStringOrNull(JSONValue)} on the property
-	 * value before returning it.
+	 * Same as {@link #getProperty(JSONObject, String)}, but invokes {@link #asNonEmptyStringOrNull(JSONValue)} on the
+	 * property value before returning it.
 	 */
 	public static String getPropertyAsStringOrNull(JSONObject object, String property) {
 		return asStringOrNull(JSONModelUtils.getProperty(object, property).orElse(null));

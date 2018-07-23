@@ -25,9 +25,9 @@
 package org.eclipse.n4js.n4mf
 
 import org.eclipse.emf.common.util.BasicEList
-import org.eclipse.n4js.utils.io.FileUtils
+import org.eclipse.n4js.semver.Semver.NPMVersionRequirement
 import org.eclipse.n4js.semver.Semver.VersionNumber
-import org.eclipse.n4js.semver.Semver.VersionRangeSetRequirement
+import org.eclipse.n4js.utils.io.FileUtils
 
 // FIXME GH-809 clean up properties called "...Raw"
 
@@ -185,7 +185,7 @@ class ModuleFilterSpecifier {
  * is and vice versa.
  */
 class ProjectDependency extends ProjectReference {
-	contains VersionRangeSetRequirement versionRequirement
+	contains NPMVersionRequirement versionRequirement
 	String versionRequirementString
 }
 

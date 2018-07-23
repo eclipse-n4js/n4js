@@ -90,12 +90,14 @@ import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__EXTENDED_R
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__IMPLEMENTATION_ID
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__IMPLEMENTED_PROJECTS
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__INIT_MODULES
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__MODULE
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__MODULE_FILTERS
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__N4JS
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__NAME
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__PROVIDED_RUNTIME_LIBRARIES
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__REQUIRED_RUNTIME_LIBRARIES
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__SOURCES
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__SOURCE_CONTAINER
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__TESTED_PROJECTS
 import static org.eclipse.n4js.validation.IssueCodes.*
 import static org.eclipse.n4js.validation.validators.packagejson.ProjectTypePredicate.*
@@ -719,7 +721,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		val validFilterSpecifier = new ArrayList<ASTTraceable<ModuleFilterSpecifier>>();
 
 		for (ASTTraceable<ModuleFilterSpecifier> filterSpecifier : moduleFilterSpecifiers) {
-			val valid = holdsValidWildcardModuleSpecifier(filterSpecifier);
+			val valid = holdsValidModuleFilterSpecifier(filterSpecifier);
 			if (valid) {
 				validFilterSpecifier.add(filterSpecifier);
 			}
@@ -728,16 +730,11 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		internalCheckModuleSpecifierHasFile(project, validFilterSpecifier);
 	}
 
-	private def holdsValidWildcardModuleSpecifier(ASTTraceable<ModuleFilterSpecifier> filterSpecifierTraceable) {
+	private def holdsValidModuleFilterSpecifier(ASTTraceable<ModuleFilterSpecifier> filterSpecifierTraceable) {
 		val wrongWildcardPattern = "***"
-		
+
 		val ModuleFilterSpecifier filterSpecifier = filterSpecifierTraceable?.element;
-		
-		// check for specifier to be non-null
-		if (filterSpecifier === null) {
-			return false;
-		}
-		
+
 		// check for invalid character sequences within wildcard patterns
 		if (filterSpecifier?.moduleSpecifierWithWildcard !== null) {
 			if (filterSpecifier.moduleSpecifierWithWildcard.contains(wrongWildcardPattern)) {
@@ -758,28 +755,35 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 				return false
 			}
 		}
-		
-		// check for empty filter or source container values
-		val moduleSpecifier = filterSpecifier?.moduleSpecifierWithWildcard;
-		if (moduleSpecifier === null) {
-			// in this case, error message is created elsewhere
-			return false;
-		}
-		if (moduleSpecifier.empty
-			|| (filterSpecifier?.sourcePath !== null && filterSpecifier?.sourcePath.empty)) {
+
+		// check for empty module filter or source container values
+		// (need to read from AST because these values are normalized during loading/conversion)
+		val astElement = filterSpecifierTraceable.astElement as JSONValue;
+		val moduleSpecifierWithWildcardFromAST = switch (astElement) {
+			JSONStringLiteral:
+				astElement.value
+			JSONObject:
+				JSONModelUtils.getPropertyAsStringOrNull(astElement, PROP__MODULE)
+		};
+		val sourceContainerFromAST = switch (astElement) {
+			JSONObject:
+				JSONModelUtils.getPropertyAsStringOrNull(astElement, PROP__SOURCE_CONTAINER)
+		};
+		if ((moduleSpecifierWithWildcardFromAST !== null && moduleSpecifierWithWildcardFromAST.empty)
+			|| (sourceContainerFromAST !== null && sourceContainerFromAST.empty)) {
 			addIssue(IssueCodes.getMessageForPKGJ_INVALID_MODULE_FILTER_SPECIFIER_EMPTY(),
 					filterSpecifierTraceable.astElement, IssueCodes.PKGJ_INVALID_MODULE_FILTER_SPECIFIER_EMPTY);
 			return false;
 		}
-		
-		return true
+
+		return true;
 	}
 
 	private def internalCheckModuleSpecifierHasFile(IN4JSProject project, List<ASTTraceable<ModuleFilterSpecifier>> filterSpecifiers) {
 		// keep track of filter specifiers with matches (initialize with false for no matches)
 		val checkedFilterSpecifiers = new HashMap<ASTTraceable<ModuleFilterSpecifier>, Boolean>();
-		checkedFilterSpecifiers.putAll(filterSpecifiers.toMap([p | p], [false]));
-		
+		checkedFilterSpecifiers.putAll(filterSpecifiers.filter[element!==null].toMap([p | p], [false]));
+
 		try {
 			val treeWalker = new ModuleSpecifierFileVisitor(this, project, checkedFilterSpecifiers);
 			Files.walkFileTree(project.locationPath, treeWalker);
@@ -787,7 +791,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			LOGGER.error("Failed to check module filter section of package.json file " + document.eResource.URI + ".");
 			e.printStackTrace;
 		}
-	
+
 		// obtain list of filter specifiers for which no file matches could be found
 		val unmatchedSpecifiers = checkedFilterSpecifiers.entrySet
 			.filter[e | e.value == false].map[e | e.key]
