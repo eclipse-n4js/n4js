@@ -530,8 +530,17 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getSimpleVersion_Comparators() {
+	public EAttribute getSimpleVersion_WithLetterV() {
 		return (EAttribute)simpleVersionEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getSimpleVersion_Comparators() {
+		return (EAttribute)simpleVersionEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -885,6 +894,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 
 		simpleVersionEClass = createEClass(SIMPLE_VERSION);
 		createEReference(simpleVersionEClass, SIMPLE_VERSION__NUMBER);
+		createEAttribute(simpleVersionEClass, SIMPLE_VERSION__WITH_LETTER_V);
 		createEAttribute(simpleVersionEClass, SIMPLE_VERSION__COMPARATORS);
 		createEOperation(simpleVersionEClass, SIMPLE_VERSION___IS_SPECIFIC);
 		createEOperation(simpleVersionEClass, SIMPLE_VERSION___IS_CARET);
@@ -1022,6 +1032,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 
 		initEClass(simpleVersionEClass, SimpleVersion.class, "SimpleVersion", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getSimpleVersion_Number(), this.getVersionNumber(), null, "number", null, 0, 1, SimpleVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getSimpleVersion_WithLetterV(), theEcorePackage.getEBoolean(), "withLetterV", null, 0, 1, SimpleVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSimpleVersion_Comparators(), this.getVersionComparator(), "comparators", null, 0, -1, SimpleVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getSimpleVersion__IsSpecific(), theEcorePackage.getEBoolean(), "isSpecific", 0, 1, !IS_UNIQUE, IS_ORDERED);
@@ -1081,7 +1092,6 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 
 		// Initialize enums and add enum literals
 		initEEnum(versionComparatorEEnum, VersionComparator.class, "VersionComparator");
-		addEEnumLiteral(versionComparatorEEnum, VersionComparator.VERSION);
 		addEEnumLiteral(versionComparatorEEnum, VersionComparator.EQUALS);
 		addEEnumLiteral(versionComparatorEEnum, VersionComparator.TILDE);
 		addEEnumLiteral(versionComparatorEEnum, VersionComparator.CARET);

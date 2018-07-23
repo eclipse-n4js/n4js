@@ -182,7 +182,7 @@ public class SemverSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 *     SimpleVersion returns SimpleVersion
 	 *
 	 * Constraint:
-	 *     (comparators+=VersionComparator* number=VersionNumber)
+	 *     (comparators+=VersionComparator* withLetterV?=LETTER_V? number=VersionNumber)
 	 */
 	protected void sequence_SimpleVersion(ISerializationContext context, SimpleVersion semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

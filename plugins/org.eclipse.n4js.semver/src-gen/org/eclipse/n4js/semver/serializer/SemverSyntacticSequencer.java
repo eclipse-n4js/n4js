@@ -55,11 +55,24 @@ public class SemverSyntacticSequencer extends AbstractSyntacticSequencer {
 	
 	@Override
 	protected String getUnassignedRuleCallToken(EObject semanticObject, RuleCall ruleCall, INode node) {
-		if (ruleCall.getRule() == grammarAccess.getWILDCARDRule())
+		if (ruleCall.getRule() == grammarAccess.getLETTER_VRule())
+			return getLETTER_VToken(semanticObject, ruleCall, node);
+		else if (ruleCall.getRule() == grammarAccess.getWILDCARDRule())
 			return getWILDCARDToken(semanticObject, ruleCall, node);
 		else if (ruleCall.getRule() == grammarAccess.getWSRule())
 			return getWSToken(semanticObject, ruleCall, node);
 		return "";
+	}
+	
+	/**
+	 * terminal LETTER_V :
+	 * 	'v' | 'V'
+	 * ;
+	 */
+	protected String getLETTER_VToken(EObject semanticObject, RuleCall ruleCall, INode node) {
+		if (node != null)
+			return getTokenText(node);
+		return "v";
 	}
 	
 	/**
@@ -170,6 +183,7 @@ public class SemverSyntacticSequencer extends AbstractSyntacticSequencer {
 	 * This ambiguous syntax occurs at:
 	 *     comparators+=VersionComparator (ambiguity) comparators+=VersionComparator
 	 *     comparators+=VersionComparator (ambiguity) number=VersionNumber
+	 *     comparators+=VersionComparator (ambiguity) withLetterV?=LETTER_V
 	 */
 	protected void emit_SimpleVersion_WSTerminalRuleCall_1_1_a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);

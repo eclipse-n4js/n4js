@@ -155,6 +155,9 @@ public class SemverSerializer implements ISerializer {
 		for (VersionComparator vc : sv.getComparators()) {
 			str += serialize(vc);
 		}
+		if (sv.isWithLetterV()) {
+			str += "v";
+		}
 		str += serialize(sv.getNumber());
 		return str;
 	}
@@ -216,8 +219,6 @@ public class SemverSerializer implements ISerializer {
 	/** @return string representation of {@link VersionComparator} */
 	static public String serialize(VersionComparator vc) {
 		switch (vc) {
-		case VERSION:
-			return "v";
 		case TILDE:
 			return "~";
 		case CARET:

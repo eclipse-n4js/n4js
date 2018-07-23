@@ -713,13 +713,22 @@ public interface SemverPackage extends EPackage {
 	int SIMPLE_VERSION__NUMBER = SEMVER_TO_STRINGABLE_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>With Letter V</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SIMPLE_VERSION__WITH_LETTER_V = SEMVER_TO_STRINGABLE_FEATURE_COUNT + 1;
+
+	/**
 	 * The feature id for the '<em><b>Comparators</b></em>' attribute list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SIMPLE_VERSION__COMPARATORS = SEMVER_TO_STRINGABLE_FEATURE_COUNT + 1;
+	int SIMPLE_VERSION__COMPARATORS = SEMVER_TO_STRINGABLE_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of structural features of the '<em>Simple Version</em>' class.
@@ -728,7 +737,7 @@ public interface SemverPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SIMPLE_VERSION_FEATURE_COUNT = SEMVER_TO_STRINGABLE_FEATURE_COUNT + 2;
+	int SIMPLE_VERSION_FEATURE_COUNT = SEMVER_TO_STRINGABLE_FEATURE_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>To String</em>' operation.
@@ -1466,6 +1475,17 @@ public interface SemverPackage extends EPackage {
 	EReference getSimpleVersion_Number();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.semver.Semver.SimpleVersion#isWithLetterV <em>With Letter V</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>With Letter V</em>'.
+	 * @see org.eclipse.n4js.semver.Semver.SimpleVersion#isWithLetterV()
+	 * @see #getSimpleVersion()
+	 * @generated
+	 */
+	EAttribute getSimpleVersion_WithLetterV();
+
+	/**
 	 * Returns the meta object for the attribute list '{@link org.eclipse.n4js.semver.Semver.SimpleVersion#getComparators <em>Comparators</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2094,6 +2114,14 @@ public interface SemverPackage extends EPackage {
 		 * @generated
 		 */
 		EReference SIMPLE_VERSION__NUMBER = eINSTANCE.getSimpleVersion_Number();
+
+		/**
+		 * The meta object literal for the '<em><b>With Letter V</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SIMPLE_VERSION__WITH_LETTER_V = eINSTANCE.getSimpleVersion_WithLetterV();
 
 		/**
 		 * The meta object literal for the '<em><b>Comparators</b></em>' attribute list feature.

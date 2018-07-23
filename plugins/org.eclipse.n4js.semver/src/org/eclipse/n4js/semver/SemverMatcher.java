@@ -284,7 +284,6 @@ public class SemverMatcher {
 		case CARET:
 		case TILDE:
 		case EQUALS:
-		case VERSION:
 			throw new IllegalStateException("This comparator should have been replaced in SemverConverter#simplify.");
 		}
 

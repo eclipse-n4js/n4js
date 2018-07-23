@@ -101,11 +101,12 @@ class VersionRangeConstraint extends VersionRange {
  */
 class SimpleVersion extends SemverToStringable {
 	contains VersionNumber number
+	boolean withLetterV
 	VersionComparator[] comparators
 
 	/** @return true iff the comparators are either empty, or contain 'v' or '=' */
 	op boolean isSpecific() {
-		return comparators.empty || comparators.contains(VersionComparator.VERSION) || comparators.contains(VersionComparator.EQUALS);
+		return comparators.empty || withLetterV || comparators.contains(VersionComparator.EQUALS);
 	}
 
 	op boolean isCaret() {
@@ -236,7 +237,6 @@ class QualifierTag extends SemverToStringable {
 
 
 enum VersionComparator {
-	Version = 0,
 	Equals = 1,
 	Tilde = 2,
 	Caret = 3,

@@ -53,7 +53,7 @@ Workflow {
 			fragment = ecore.EMFGeneratorFragment2 {}
 			fragment = resourceFactory.ResourceFactoryFragment2 {}
 			fragment = parser.antlr.XtextAntlrGeneratorFragment2 {
-				// debugGrammar = true
+				debugGrammar = true // generate antlr grammar file
 				options = {
 					backtrack = true
 				}

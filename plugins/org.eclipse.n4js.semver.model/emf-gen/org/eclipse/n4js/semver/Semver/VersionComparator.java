@@ -27,16 +27,6 @@ import org.eclipse.emf.common.util.Enumerator;
  */
 public enum VersionComparator implements Enumerator {
 	/**
-	 * The '<em><b>Version</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #VERSION_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	VERSION(0, "Version", "Version"),
-
-	/**
 	 * The '<em><b>Equals</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -105,21 +95,6 @@ public enum VersionComparator implements Enumerator {
 	 * @ordered
 	 */
 	GREATER_EQUALS(7, "GreaterEquals", "GreaterEquals");
-
-	/**
-	 * The '<em><b>Version</b></em>' literal value.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Version</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @see #VERSION
-	 * @model name="Version"
-	 * @generated
-	 * @ordered
-	 */
-	public static final int VERSION_VALUE = 0;
 
 	/**
 	 * The '<em><b>Equals</b></em>' literal value.
@@ -234,7 +209,6 @@ public enum VersionComparator implements Enumerator {
 	 */
 	private static final VersionComparator[] VALUES_ARRAY =
 		new VersionComparator[] {
-			VERSION,
 			EQUALS,
 			TILDE,
 			CARET,
@@ -298,7 +272,6 @@ public enum VersionComparator implements Enumerator {
 	 */
 	public static VersionComparator get(int value) {
 		switch (value) {
-			case VERSION_VALUE: return VERSION;
 			case EQUALS_VALUE: return EQUALS;
 			case TILDE_VALUE: return TILDE;
 			case CARET_VALUE: return CARET;
