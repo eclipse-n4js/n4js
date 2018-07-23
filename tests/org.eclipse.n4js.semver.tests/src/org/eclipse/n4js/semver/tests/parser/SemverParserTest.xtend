@@ -146,7 +146,9 @@ class SemverParserTest {
 		"git://github.com/npm/npm.git#v1.0.27",
 		"mochajs/mocha#4727d357ea",
 		"file:../foo/bar",
-		"file:../dyl"
+		"file:../dyl",
+		"github:christkv/mongodb-version-manager#master",
+		"github:xyz/mongodb-version-manager#master"
 	];
 
 	String[] errorData = #[
