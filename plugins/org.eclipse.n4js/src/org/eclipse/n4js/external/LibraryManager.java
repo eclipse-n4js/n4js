@@ -50,11 +50,11 @@ import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
 import org.eclipse.n4js.n4mf.ProjectDependency;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.semver.SEMVERHelper;
-import org.eclipse.n4js.semver.SEMVERMatcher;
-import org.eclipse.n4js.semver.SEMVER.NPMVersion;
-import org.eclipse.n4js.semver.SEMVER.VersionNumber;
-import org.eclipse.n4js.semver.model.SEMVERSerializer;
+import org.eclipse.n4js.semver.SemverHelper;
+import org.eclipse.n4js.semver.SemverMatcher;
+import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
+import org.eclipse.n4js.semver.model.SemverSerializer;
 import org.eclipse.n4js.smith.ClosableMeasurement;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
@@ -111,7 +111,7 @@ public class LibraryManager {
 	private IN4JSCore n4jsCore;
 
 	@Inject
-	private SEMVERHelper semverHelper;
+	private SemverHelper semverHelper;
 
 	/**
 	 * see {@link ExternalIndexSynchronizer#isProjectsSynchronized()}.
@@ -309,7 +309,7 @@ public class LibraryManager {
 			String name = pDep.getProjectId();
 			String version = NO_VERSION;
 			if (pDep.getVersionRequirement() != null) {
-				version = SEMVERSerializer.toString(pDep.getVersionRequirement());
+				version = SemverSerializer.serialize(pDep.getVersionRequirement());
 			}
 			dependencies.put(name, version);
 		}
@@ -351,7 +351,7 @@ public class LibraryManager {
 
 			if (installedNpms.containsKey(name)) {
 				String installedVersionString = Strings.emptyIfNull(installedNpms.get(name).getValue());
-				if (isAlreadyInstalled(installedVersionString, name, requestedVersionString)) {
+				if (installedMatchesRequestedVersion(installedVersionString, requestedVersionString)) {
 					// if a matching version is installed, do not reinstall
 					continue;
 				}
@@ -377,30 +377,26 @@ public class LibraryManager {
 	}
 
 	/**
-	 * Returns {@code true} iff the given map of {@code installedNpms} contains the {@code requestedPackage} in a
-	 * version that fulfills the given {@code requestedVersion}.
-	 *
+	 * Returns {@code true} iff the given {@code installedVersionString} matches the {@code requestedVersionString}.
 	 * Returns {@code false} otherwise.
 	 *
 	 * @param installedVersionString
-	 *            The name of the already installed package.
-	 * @param requestedPackageString
-	 *            The name of the requested package.
-	 * @param requestedVersionString
-	 *            The requested version constraint in npm format.
+	 *            The version of the already installed package.
+	 * @param requestedVersionRequirementString
+	 *            The requested version requirement in npm-semver format of the same package.
 	 */
-	private boolean isAlreadyInstalled(String installedVersionString,
-			String requestedPackageString, String requestedVersionString) {
+	private boolean installedMatchesRequestedVersion(String installedVersionString,
+			String requestedVersionRequirementString) {
 
-		NPMVersion requestedVersion = semverHelper.parse(requestedVersionString);
+		NPMVersionRequirement requestedVersion = semverHelper.parse(requestedVersionRequirementString);
 		VersionNumber installedVersion = semverHelper.parseVersionNumber(installedVersionString);
 
-		boolean canComputeMatch = SEMVERMatcher.canComputeMatch(installedVersion, requestedVersion);
+		boolean canComputeMatch = SemverMatcher.canComputeMatch(installedVersion, requestedVersion);
 		if (!canComputeMatch) {
 			return false;
 		}
 
-		boolean versionsMatch = SEMVERMatcher.matches(installedVersion, requestedVersion);
+		boolean versionsMatch = SemverMatcher.matches(installedVersion, requestedVersion);
 		return versionsMatch;
 	}
 

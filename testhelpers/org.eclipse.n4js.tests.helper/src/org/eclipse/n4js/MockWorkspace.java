@@ -19,8 +19,8 @@ import org.eclipse.n4js.n4mf.N4mfFactory;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectReference;
 import org.eclipse.n4js.n4mf.ProjectType;
-import org.eclipse.n4js.semver.SEMVERUtils;
-import org.eclipse.n4js.semver.SEMVER.VersionNumber;
+import org.eclipse.n4js.semver.SemverUtils;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
 
 import com.google.common.collect.Iterators;
 import com.google.common.collect.UnmodifiableIterator;
@@ -43,7 +43,7 @@ public class MockWorkspace extends InternalN4JSWorkspace {
 		projectDescription.setProjectId(TEST_PROJECT__PROJECT_ID);
 		projectDescription.setVendorId(TEST_PROJECT__VENDOR_ID);
 		projectDescription.setProjectType(ProjectType.APPLICATION);
-		VersionNumber versionNumber = SEMVERUtils.createVersionNumber(1, 0, 0);
+		VersionNumber versionNumber = SemverUtils.createVersionNumber(1, 0, 0);
 		projectDescription.setProjectVersion(versionNumber);
 	}
 

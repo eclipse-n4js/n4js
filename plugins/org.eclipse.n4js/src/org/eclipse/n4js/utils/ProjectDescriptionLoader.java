@@ -16,6 +16,7 @@ import static org.eclipse.n4js.packagejson.PackageJsonConstants.DEFAULT_OUTPUT;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__DEPENDENCIES;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__DEV_DEPENDENCIES;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__MAIN;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__N4JS;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__VERSION;
 
 import java.io.File;
@@ -41,6 +42,8 @@ import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.packagejson.PackageJsonHelper;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.xtext.resource.XtextResourceSet;
+import org.eclipse.xtext.util.Pair;
+import org.eclipse.xtext.util.Tuples;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -121,13 +124,15 @@ public class ProjectDescriptionLoader {
 	 * Loads the project description of the N4JS project at the given {@code location} and returns the version string or
 	 * <code>null</code> if undefined or in case of error.
 	 */
-	public String loadVersionFromProjectDescriptionAtLocation(URI location) {
+	public Pair<String, Boolean> loadVersionAndN4JSNatureFromProjectDescriptionAtLocation(URI location) {
 		JSONDocument packageJSON = loadPackageJSONAtLocation(location);
 		if (packageJSON == null) {
 			return null;
 		}
 		JSONValue versionValue = JSONModelUtils.getProperty(packageJSON, PROP__VERSION).orElse(null);
-		return asStringOrNull(versionValue);
+		boolean hasN4JSNature = JSONModelUtils.getProperty(packageJSON, PROP__N4JS).isPresent();
+		Pair<String, Boolean> result = Tuples.create(asStringOrNull(versionValue), hasN4JSNature);
+		return result;
 	}
 
 	/**

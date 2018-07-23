@@ -21,7 +21,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.n4js.n4mf.N4mfPackage;
 import org.eclipse.n4js.n4mf.ProjectDependency;
 
-import org.eclipse.n4js.semver.SEMVER.VersionRangeSet;
+import org.eclipse.n4js.semver.Semver.VersionRangeSetRequirement;
 
 /**
  * <!-- begin-user-doc -->
@@ -46,7 +46,7 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 	 * @generated
 	 * @ordered
 	 */
-	protected VersionRangeSet versionRequirement;
+	protected VersionRangeSetRequirement versionRequirement;
 
 	/**
 	 * The default value of the '{@link #getVersionRequirementString() <em>Version Requirement String</em>}' attribute.
@@ -92,7 +92,7 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public VersionRangeSet getVersionRequirement() {
+	public VersionRangeSetRequirement getVersionRequirement() {
 		return versionRequirement;
 	}
 
@@ -101,8 +101,8 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetVersionRequirement(VersionRangeSet newVersionRequirement, NotificationChain msgs) {
-		VersionRangeSet oldVersionRequirement = versionRequirement;
+	public NotificationChain basicSetVersionRequirement(VersionRangeSetRequirement newVersionRequirement, NotificationChain msgs) {
+		VersionRangeSetRequirement oldVersionRequirement = versionRequirement;
 		versionRequirement = newVersionRequirement;
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4mfPackage.PROJECT_DEPENDENCY__VERSION_REQUIREMENT, oldVersionRequirement, newVersionRequirement);
@@ -116,7 +116,7 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setVersionRequirement(VersionRangeSet newVersionRequirement) {
+	public void setVersionRequirement(VersionRangeSetRequirement newVersionRequirement) {
 		if (newVersionRequirement != versionRequirement) {
 			NotificationChain msgs = null;
 			if (versionRequirement != null)
@@ -190,7 +190,7 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case N4mfPackage.PROJECT_DEPENDENCY__VERSION_REQUIREMENT:
-				setVersionRequirement((VersionRangeSet)newValue);
+				setVersionRequirement((VersionRangeSetRequirement)newValue);
 				return;
 			case N4mfPackage.PROJECT_DEPENDENCY__VERSION_REQUIREMENT_STRING:
 				setVersionRequirementString((String)newValue);
@@ -208,7 +208,7 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case N4mfPackage.PROJECT_DEPENDENCY__VERSION_REQUIREMENT:
-				setVersionRequirement((VersionRangeSet)null);
+				setVersionRequirement((VersionRangeSetRequirement)null);
 				return;
 			case N4mfPackage.PROJECT_DEPENDENCY__VERSION_REQUIREMENT_STRING:
 				setVersionRequirementString(VERSION_REQUIREMENT_STRING_EDEFAULT);

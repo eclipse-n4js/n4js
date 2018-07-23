@@ -45,7 +45,7 @@ public class SEMVERInjectorProvider implements IInjectorProvider, IRegistryConfi
 
 	/***/
 	protected Injector internalCreateInjector() {
-		return new SEMVERStandaloneSetup().createInjectorAndDoEMFRegistration();
+		return new SemverStandaloneSetup().createInjectorAndDoEMFRegistration();
 	}
 
 	@Override

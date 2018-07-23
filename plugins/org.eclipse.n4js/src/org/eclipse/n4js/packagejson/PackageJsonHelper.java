@@ -65,9 +65,9 @@ import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectType;
 import org.eclipse.n4js.n4mf.SourceContainerDescription;
 import org.eclipse.n4js.n4mf.SourceContainerType;
-import org.eclipse.n4js.semver.SEMVERHelper;
-import org.eclipse.n4js.semver.SEMVER.VersionNumber;
-import org.eclipse.n4js.semver.SEMVER.VersionRangeSet;
+import org.eclipse.n4js.semver.SemverHelper;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
+import org.eclipse.n4js.semver.Semver.VersionRangeSetRequirement;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 
 import com.google.inject.Inject;
@@ -79,7 +79,7 @@ import com.google.inject.Inject;
 public class PackageJsonHelper {
 
 	@Inject
-	private SEMVERHelper semverHelper;
+	private SemverHelper semverHelper;
 
 	/**
 	 * Transform the given {@code packageJSON} into an equivalent {@link ProjectDescription} instance.
@@ -223,14 +223,8 @@ public class PackageJsonHelper {
 				dep.setProjectId(projectId);
 				dep.setVersionRequirementString(valueStr);
 
-				boolean canParseSEMVER = true;
-				canParseSEMVER = !"latest".equals(valueStr);
-				if (canParseSEMVER) {
-					VersionRangeSet vrs = semverHelper.parseVersionRangeSet(valueStr);
-					dep.setVersionRequirement(vrs);
-				} else {
-					dep.setVersionRequirement(null);
-				}
+				VersionRangeSetRequirement vrs = semverHelper.parseVersionRangeSet(valueStr);
+				dep.setVersionRequirement(vrs);
 				target.getProjectDependencies().add(dep);
 			}
 		}
@@ -326,9 +320,6 @@ public class PackageJsonHelper {
 			return null;
 		}
 		VersionNumber result = semverHelper.parseVersionNumber(versionStr);
-		if (result == null) {
-			System.err.println("WARNING: invalid or unsupported version: " + versionStr);
-		}
 		return result;
 	}
 }

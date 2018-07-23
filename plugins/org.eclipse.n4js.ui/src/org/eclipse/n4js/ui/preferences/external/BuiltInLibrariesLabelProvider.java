@@ -25,7 +25,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.n4js.n4mf.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.semver.model.SEMVERSerializer;
+import org.eclipse.n4js.semver.model.SemverSerializer;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 import org.eclipse.swt.graphics.Image;
 
@@ -71,7 +71,7 @@ class BuiltInLibrariesLabelProvider extends LabelProvider implements IStyledLabe
 		} else if (element instanceof IN4JSProject) {
 			final IN4JSProject project = ((IN4JSProject) element);
 			final ProjectType type = project.getProjectType();
-			String version = SEMVERSerializer.toString(project.getVersion());
+			String version = SemverSerializer.serialize(project.getVersion());
 			// for better visual representation MyProject @1.2.3 -> MyProject v1.2.3
 			version = version.replaceFirst("@", "v");
 			final String typeLabel = getProjectTypeLabel(type);

@@ -29,8 +29,8 @@ import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.packagejson.PackageJsonResourceDescriptionExtension;
-import org.eclipse.n4js.semver.SEMVER.VersionNumber;
-import org.eclipse.n4js.semver.model.SEMVERSerializer;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
+import org.eclipse.n4js.semver.model.SemverSerializer;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -122,7 +122,7 @@ public abstract class ExternalIndexSynchronizer {
 		ProjectDescription pDescr = projectDescriptionLoader.loadProjectDescriptionAtLocation(uri);
 		if (pDescr != null) {
 			VersionNumber pV = pDescr.getProjectVersion();
-			String version = SEMVERSerializer.toString(pV);
+			String version = SemverSerializer.serialize(pV);
 			return version;
 		}
 

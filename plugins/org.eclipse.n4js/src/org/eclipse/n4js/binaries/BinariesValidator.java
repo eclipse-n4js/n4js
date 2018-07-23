@@ -16,11 +16,11 @@ import java.io.File;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.n4js.semver.SEMVERHelper;
-import org.eclipse.n4js.semver.SEMVERMatcher;
-import org.eclipse.n4js.semver.SEMVERMatcher.VersionNumberRelation;
-import org.eclipse.n4js.semver.model.SEMVERSerializer;
-import org.eclipse.n4js.semver.SEMVER.VersionNumber;
+import org.eclipse.n4js.semver.SemverHelper;
+import org.eclipse.n4js.semver.SemverMatcher;
+import org.eclipse.n4js.semver.SemverMatcher.VersionNumberRelation;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
+import org.eclipse.n4js.semver.model.SemverSerializer;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.process.ProcessResult;
 import org.eclipse.xtext.nodemodel.INode;
@@ -43,7 +43,7 @@ public class BinariesValidator {
 	private BinaryCommandFactory commandFactory;
 
 	@Inject
-	private SEMVERHelper semverHelper;
+	private SemverHelper semverHelper;
 
 	/**
 	 * Validates the availability, accessibility and version of the given binary. Returns with a status representing the
@@ -79,9 +79,10 @@ public class BinariesValidator {
 		final String stdOutString = result.getStdOut();
 		final IParseResult parseResult = semverHelper.getParseResult(stdOutString.trim());
 		if (parseResult.hasSyntaxErrors()) {
-			INode firstErrorText = parseResult.getSyntaxErrors().iterator().next();
-			String msg = "Error in binary '" + binary.getLabel() +
-					"' when parsing version '" + stdOutString + "': " + firstErrorText.getText();
+			INode firstErrorNode = parseResult.getSyntaxErrors().iterator().next();
+			String syntaxErr = firstErrorNode.getSyntaxErrorMessage().getMessage();
+			String msg = "Error in binary '" + binary.getLabel()
+					+ "' when parsing version '" + stdOutString + "': " + syntaxErr;
 			return error(binary, msg);
 		}
 
@@ -92,11 +93,11 @@ public class BinariesValidator {
 			return error(binary, msg);
 		}
 
-		final VersionNumber minimumVersion = binary.getMinimumVersion();
-		VersionNumberRelation versionRelation = SEMVERMatcher.relation(versionNumber, minimumVersion);
+		VersionNumber minimumVersion = binary.getMinimumVersion();
+		VersionNumberRelation versionRelation = SemverMatcher.relation(versionNumber, minimumVersion);
 		if (!versionRelation.isGreaterOrEqual()) {
-			String minimumVersionText = SEMVERSerializer.toString(minimumVersion);
-			String parsedVersionText = SEMVERSerializer.toString(versionNumber);
+			String minimumVersionText = SemverSerializer.serialize(minimumVersion);
+			String parsedVersionText = SemverSerializer.serialize(versionNumber);
 			String msg = "The required minimum version of '" + binary.getLabel() + "' is '" + minimumVersionText
 					+ "'. Currently configured version is '" + parsedVersionText
 					+ "' which is '" + versionRelation + "' than the minimum version but it must be greater or equal.";

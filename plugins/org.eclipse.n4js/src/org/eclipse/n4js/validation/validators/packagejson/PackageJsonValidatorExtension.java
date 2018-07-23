@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -80,12 +81,25 @@ import org.eclipse.n4js.packagejson.PackageJsonUtils;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
-import org.eclipse.n4js.semver.SEMVERHelper;
-import org.eclipse.n4js.semver.SEMVER.NPMVersion;
+import org.eclipse.n4js.semver.SemverHelper;
+import org.eclipse.n4js.semver.Semver.GitHubVersionRequirement;
+import org.eclipse.n4js.semver.Semver.LocalPathVersionRequirement;
+import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
+import org.eclipse.n4js.semver.Semver.SimpleVersion;
+import org.eclipse.n4js.semver.Semver.TagVersionRequirement;
+import org.eclipse.n4js.semver.Semver.URLVersionRequirement;
+import org.eclipse.n4js.semver.Semver.VersionRangeConstraint;
+import org.eclipse.n4js.semver.Semver.VersionRangeSetRequirement;
+import org.eclipse.n4js.semver.model.SemverSerializer;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.validation.helper.FolderContainmentHelper;
+import org.eclipse.xtext.nodemodel.ICompositeNode;
+import org.eclipse.xtext.nodemodel.INode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
+import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.validation.Check;
+import org.eclipse.xtext.validation.Issue;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.HashMultimap;
@@ -117,7 +131,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	@Inject
 	private FolderContainmentHelper containmentHelper;
 	@Inject
-	private SEMVERHelper semverHelper;
+	private SemverHelper semverHelper;
 
 	@Override
 	protected boolean isResponsible(Map<Object, Object> context, EObject eObject) {
@@ -205,7 +219,102 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	/** Check the version property. */
 	@CheckProperty(propertyPath = PROP__VERSION)
 	public void checkVersion(JSONValue versionValue) {
-		checkIsType(versionValue, JSONPackage.Literals.JSON_STRING_LITERAL, "as package version");
+		if (!checkIsType(versionValue, JSONPackage.Literals.JSON_STRING_LITERAL, "as package version")) {
+			return;
+		}
+		JSONStringLiteral versionJsonString = (JSONStringLiteral) versionValue;
+		String versionString = versionJsonString.getValue();
+
+		IParseResult parseResult = validateSemver(versionValue, versionString);
+
+		NPMVersionRequirement npmVersion = semverHelper.parse(parseResult);
+		VersionRangeSetRequirement vrs = semverHelper.parseVersionRangeSet(parseResult);
+		if (vrs == null) {
+			String reason = "Cannot parse given string";
+			if (npmVersion != null) {
+				reason = "Given string is parsed as " + getVersionRequirementType(npmVersion);
+			}
+			String msg = IssueCodes.getMessageForPKGJ_INVALID_VERSION_NUMBER(versionString, reason);
+			addIssue(msg, versionValue, IssueCodes.PKGJ_INVALID_VERSION_NUMBER);
+			return;
+		}
+
+		if (!vrs.getRanges().isEmpty() && vrs.getRanges().get(0) instanceof VersionRangeConstraint) {
+			VersionRangeConstraint vrc = (VersionRangeConstraint) vrs.getRanges().get(0);
+			SimpleVersion simpleVersion = vrc.getVersionConstraints().get(0);
+			if (!simpleVersion.getComparators().isEmpty()) {
+				String comparator = SemverSerializer.serialize(simpleVersion.getComparators().get(0));
+				String reason = "Version numbers must not have comparators: '" + comparator + "'";
+				String msg = IssueCodes.getMessageForPKGJ_INVALID_VERSION_NUMBER(versionString, reason);
+				addIssue(msg, versionValue, IssueCodes.PKGJ_INVALID_VERSION_NUMBER);
+				return;
+			}
+		}
+	}
+
+	private IParseResult validateSemver(JSONValue versionValue, String versionString) {
+		IParseResult parseResult = semverHelper.getParseResult(versionString);
+
+		if (parseResult.hasSyntaxErrors()) {
+			Iterator<INode> errorIterator = parseResult.getSyntaxErrors().iterator();
+
+			while (errorIterator.hasNext()) {
+				INode firstErrorNode = errorIterator.next();
+
+				String reason = firstErrorNode.getSyntaxErrorMessage().getMessage();
+				String msg = IssueCodes.getMessageForPKGJ_INVALID_VERSION_NUMBER(versionString, reason);
+
+				ICompositeNode actualNode = NodeModelUtils.findActualNodeFor(versionValue);
+				int actOffset = actualNode.getOffset();
+				int actLength = actualNode.getLength();
+				int offset = actOffset + firstErrorNode.getOffset() + 1; // +1 due to " char
+				int lengthTmp = actLength - firstErrorNode.getOffset() - 2; // -2 due to "" chars
+				int length = Math.max(1, lengthTmp);
+				addIssue(msg, versionValue, offset, length, IssueCodes.PKGJ_INVALID_VERSION_NUMBER);
+			}
+			return parseResult;
+		}
+
+		List<Issue> issues = semverHelper.validate(parseResult);
+		for (Issue issue : issues) {
+			String msg = "";
+			String issueCode = IssueCodes.PKGJ_INVALID_VERSION_NUMBER;
+			switch (issue.getSeverity()) {
+			case WARNING:
+				msg = IssueCodes.getMessageForPKGJ_SEMVER_WARNING(issue.getMessage());
+				issueCode = IssueCodes.PKGJ_SEMVER_WARNING;
+				break;
+			case ERROR:
+				msg = IssueCodes.getMessageForPKGJ_SEMVER_ERROR(issue.getMessage());
+				issueCode = IssueCodes.PKGJ_SEMVER_ERROR;
+				break;
+			default:
+				break;
+			}
+
+			ICompositeNode actualNode = NodeModelUtils.findActualNodeFor(versionValue);
+			int offset = actualNode.getOffset() + issue.getOffset() + 1;
+			int length = issue.getLength();
+			addIssue(msg, versionValue, offset, length, issueCode);
+		}
+
+		return parseResult;
+	}
+
+	private String getVersionRequirementType(NPMVersionRequirement npmVersion) {
+		if (npmVersion instanceof TagVersionRequirement) {
+			return "tag";
+		}
+		if (npmVersion instanceof URLVersionRequirement) {
+			return "url";
+		}
+		if (npmVersion instanceof GitHubVersionRequirement) {
+			return "github location";
+		}
+		if (npmVersion instanceof LocalPathVersionRequirement) {
+			return "local path";
+		}
+		return "unknown";
 	}
 
 	/** Check the dependencies section structure. */
@@ -230,14 +339,11 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		}
 		final JSONObject dependenciesObject = (JSONObject) sectionValue;
 		for (NameValuePair entry : dependenciesObject.getNameValuePairs()) {
-			// check version
-			if (checkIsType(entry.getValue(), JSONPackage.Literals.JSON_STRING_LITERAL, "as version specifier")) {
-				final String constraintValue = ((JSONStringLiteral) entry.getValue()).getValue();
-				final NPMVersion parsedNPMVersion = semverHelper.parse(constraintValue);
-				if (parsedNPMVersion == null) {
-					addIssue(IssueCodes.getMessageForPKGJ_INVALID_VERSION_CONSTRAINT(constraintValue),
-							entry.getValue(), IssueCodes.PKGJ_INVALID_VERSION_CONSTRAINT);
-				}
+			final JSONValue versionRequirement = entry.getValue();
+			if (checkIsType(versionRequirement, JSONPackage.Literals.JSON_STRING_LITERAL, "as version specifier")) {
+				JSONStringLiteral jsonStringVersionRequirement = (JSONStringLiteral) versionRequirement;
+				String constraintValue = jsonStringVersionRequirement.getValue();
+				validateSemver(jsonStringVersionRequirement, constraintValue);
 			}
 		}
 	}

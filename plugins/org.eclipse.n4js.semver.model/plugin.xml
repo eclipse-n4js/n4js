@@ -13,10 +13,12 @@
 -->
 
 <plugin>
-	<extension point="org.eclipse.emf.ecore.generated_package">
-		<package 
-			uri = "http://www.eclipse.org/n4js/SEMVER"
-			class = "org.eclipse.n4js.semver.SEMVER.SEMVERPackage"
-			genModel = "model/SEMVER.xcore" />
-	</extension>
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated Semver -->
+      <package
+            uri="http://www.eclipse.org/n4js/Semver"
+            class="org.eclipse.n4js.semver.Semver.SemverPackage"
+            genModel="model/Semver.xcore"/>
+   </extension>
+
 </plugin>

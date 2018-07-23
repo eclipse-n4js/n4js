@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.n4mf;
 
-import org.eclipse.n4js.semver.SEMVER.VersionRangeSet;
+import org.eclipse.n4js.semver.Semver.VersionRangeSetRequirement;
 
 /**
  * <!-- begin-user-doc -->
@@ -48,12 +48,12 @@ public interface ProjectDependency extends ProjectReference {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Version Requirement</em>' containment reference.
-	 * @see #setVersionRequirement(VersionRangeSet)
+	 * @see #setVersionRequirement(VersionRangeSetRequirement)
 	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDependency_VersionRequirement()
 	 * @model containment="true"
 	 * @generated
 	 */
-	VersionRangeSet getVersionRequirement();
+	VersionRangeSetRequirement getVersionRequirement();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.n4js.n4mf.ProjectDependency#getVersionRequirement <em>Version Requirement</em>}' containment reference.
@@ -63,7 +63,7 @@ public interface ProjectDependency extends ProjectReference {
 	 * @see #getVersionRequirement()
 	 * @generated
 	 */
-	void setVersionRequirement(VersionRangeSet value);
+	void setVersionRequirement(VersionRangeSetRequirement value);
 
 	/**
 	 * Returns the value of the '<em><b>Version Requirement String</b></em>' attribute.

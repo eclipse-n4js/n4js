@@ -15,8 +15,9 @@ import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.runner.^extension.RuntimeEnvironment
 import java.nio.file.Path
 
-import org.eclipse.n4js.semver.model.SEMVERSerializer
+import org.eclipse.n4js.semver.model.SemverSerializer
 
+// GH-809 delete this class
 /**
  * Converting all relevant Manifest-data into an DataObject.
  */
@@ -29,7 +30,7 @@ class ConvertManifestToPackageJson {
 //	TODO	val pDescription = project.projectName  /
 		data.name = project.projectId;
 		// TODO data.author = // map to project.vendorId ??
-		data.version = SEMVERSerializer.toString(project.getVersion());
+		data.version = SemverSerializer.serialize(project.getVersion());
 		val depIn4jsprojects = project.getDependencies; // TODO includes requiered RT-Libs, OK?
 
 		data.dependencies = newLinkedHashMap();

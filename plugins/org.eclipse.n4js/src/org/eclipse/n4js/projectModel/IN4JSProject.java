@@ -22,7 +22,7 @@ import org.eclipse.n4js.n4mf.ModuleFilter;
 import org.eclipse.n4js.n4mf.ModuleLoader;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectType;
-import org.eclipse.n4js.semver.SEMVER.VersionNumber;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;

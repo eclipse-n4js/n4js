@@ -1,0 +1,247 @@
+/**
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+@Ecore(nsURI="http://www.eclipse.org/n4js/Semver")
+@GenModel(fileExtensions="semver",
+	modelDirectory="/org.eclipse.n4js.semver.model/emf-gen",
+	forceOverwrite="true",
+	updateClasspath="false",
+	literalsInterface="true",
+	loadInitialization="false",
+	complianceLevel="8.0",
+	copyrightFields="false",
+	// both copyrightText and documentation are required to align the output of the MWE2 and incremental builder (see GH-841)
+	copyrightText="Copyright (c) 2016 NumberFour AG.\nAll rights reserved. This program and the accompanying materials\nare made available under the terms of the Eclipse Public License v1.0\nwhich accompanies this distribution, and is available at\nhttp://www.eclipse.org/legal/epl-v10.html\n\nContributors:\n  NumberFour AG - Initial API and implementation",
+	documentation="*\nCopyright (c) 2016 NumberFour AG.\nAll rights reserved. This program and the accompanying materials\nare made available under the terms of the Eclipse Public License v1.0\nwhich accompanies this distribution, and is available at\nhttp://www.eclipse.org/legal/epl-v10.html\n * Contributors:\n  NumberFour AG - Initial API and implementation",
+	language="")
+
+package org.eclipse.n4js.semver.Semver
+
+
+
+
+import org.eclipse.n4js.semver.model.SemverSerializer
+
+
+abstract class SemverToStringable {
+	op String toString() {
+		return SemverSerializer.serialize(this);
+	}
+}
+
+abstract class NPMVersionRequirement extends SemverToStringable {}
+
+class URLVersionRequirement extends NPMVersionRequirement {
+	contains URLVersionSpecifier versionSpecifier
+	String protocol
+	String url
+
+	op boolean hasSimpleVersion() {
+		return getSimpleVersion() !== null;
+	}
+
+	op SimpleVersion getSimpleVersion() {
+		if (getVersionSpecifier instanceof URLSemver) {
+			val urlSemver = getVersionSpecifier as URLSemver;
+			return urlSemver.simpleVersion;
+		}
+		return null;
+	}
+}
+
+abstract class URLVersionSpecifier extends SemverToStringable {}
+
+class URLSemver extends URLVersionSpecifier {
+	contains SimpleVersion simpleVersion
+}
+
+class URLCommitISH extends URLVersionSpecifier {
+	String commitISH
+}
+
+class GitHubVersionRequirement extends NPMVersionRequirement {
+	String githubUrl
+	String commitISH
+}
+
+class LocalPathVersionRequirement extends NPMVersionRequirement {
+	String localPath
+}
+
+class TagVersionRequirement extends NPMVersionRequirement {
+	String tagName
+}
+
+class VersionRangeSetRequirement extends NPMVersionRequirement {
+	contains VersionRange[] ranges
+}
+
+abstract class VersionRange extends SemverToStringable {}
+
+class HyphenVersionRange extends VersionRange {
+	contains VersionNumber from
+	contains VersionNumber to
+}
+
+class VersionRangeConstraint extends VersionRange {
+	contains SimpleVersion[] versionConstraints
+}
+
+/**
+ * The name 'SimpleVersion' is taken from the Semver documentation.
+ * However, this name can be misleading since a SimpleVersion can represent
+ * a range of versions, e.g. >1.
+ */
+class SimpleVersion extends SemverToStringable {
+	contains VersionNumber number
+	VersionComparator[] comparators
+
+	/** @return true iff the comparators are either empty, or contain 'v' or '=' */
+	op boolean isSpecific() {
+		return comparators.empty || comparators.contains(VersionComparator.VERSION) || comparators.contains(VersionComparator.EQUALS);
+	}
+
+	op boolean isCaret() {
+		return comparators.contains(VersionComparator.CARET);
+	}
+
+	op boolean isTilde() {
+		return comparators.contains(VersionComparator.TILDE);
+	}
+
+	op boolean isGreater() {
+		return comparators.contains(VersionComparator.GREATER);
+	}
+
+	op boolean isGreaterEquals() {
+		return comparators.contains(VersionComparator.GREATER_EQUALS);
+	}
+
+	op boolean isSmaller() {
+		return comparators.contains(VersionComparator.SMALLER);
+	}
+
+	op boolean isSmallerEquals() {
+		return comparators.contains(VersionComparator.SMALLER_EQUALS);
+	}
+}
+
+class VersionNumber extends SemverToStringable {
+	contains VersionPart major
+	contains VersionPart minor
+	contains VersionPart patch
+	contains VersionPart[] extended
+	contains Qualifier qualifier
+
+	op String[] getPreReleaseTag() {
+		return if (qualifier !== null && qualifier.preRelease !== null) qualifier.preRelease.parts else null;
+	}
+
+	op boolean hasPreReleaseTag() {
+		return getPreReleaseTag() !== null && !getPreReleaseTag().empty;
+	}
+
+	op int length() {
+		var length = 0;
+		if (major !== null) length++;
+		if (minor !== null) length++;
+		if (patch !== null) {
+			length++;
+			length += extended.length;
+		}
+		return length;
+	}
+
+	op VersionPart getPart(int idx) {
+		switch (idx) {
+			case 0: return major
+			case 1: return minor
+			case 2: return patch
+			default: return extended.get(idx - 3)
+		};
+	}
+
+	op boolean equals(Object obj) {
+		if (!(obj instanceof VersionNumber)) {
+			return false;
+		}
+		val vn = obj as VersionNumber;
+		var equals = true;
+		equals = length == vn.length;
+		for (var i=0; i<length; i++) {
+			equals = equals && getPart(i).equals(vn.getPart(i));
+		}
+		equals = equals && (qualifier === null) === (vn.qualifier === null);
+		equals = equals && (qualifier === null || qualifier.equals(vn.qualifier));
+		return equals;
+	}
+}
+
+class VersionPart extends SemverToStringable {
+	boolean wildcard
+	Integer numberRaw
+
+	op Integer getNumber() {
+		if (wildcard)
+			return null;
+		return numberRaw;
+	}
+
+	op boolean equals(Object obj) {
+		if (!(obj instanceof VersionPart)) {
+			return false;
+		}
+		val vp = obj as VersionPart;
+		var equals = wildcard == vp.wildcard && numberRaw == vp.numberRaw;
+		return equals;
+	}
+}
+
+class Qualifier extends SemverToStringable {
+	contains QualifierTag preRelease
+	contains QualifierTag buildMetadata
+
+	op boolean equals(Object obj) {
+		if (!(obj instanceof Qualifier)) {
+			return false;
+		}
+		val q = obj as Qualifier;
+		var equals = (preRelease === null) === (q.preRelease === null);
+		equals = equals && (preRelease === null) || (preRelease.equals(q.preRelease));
+		equals = equals && (buildMetadata === null) === (q.buildMetadata === null);
+		equals = equals && (buildMetadata === null) || (buildMetadata.equals(q.buildMetadata));
+		return equals;
+	}
+}
+
+class QualifierTag extends SemverToStringable {
+	String[] parts
+
+	op boolean equals(Object obj) {
+		if (!(obj instanceof QualifierTag)) {
+			return false;
+		}
+		val qt = obj as QualifierTag;
+		var equals = parts.equals(qt.parts);
+		return equals;
+	}
+}
+
+
+enum VersionComparator {
+	Version = 0,
+	Equals = 1,
+	Tilde = 2,
+	Caret = 3,
+	Smaller = 4,
+	SmallerEquals = 5,
+	Greater = 6,
+	GreaterEquals = 7
+}

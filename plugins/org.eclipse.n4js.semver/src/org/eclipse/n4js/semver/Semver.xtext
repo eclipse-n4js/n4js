@@ -1,0 +1,201 @@
+/**
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+grammar org.eclipse.n4js.semver.Semver
+	with org.eclipse.n4js.common.unicode.Unicode
+	hidden (EOL)
+
+import "http://www.eclipse.org/n4js/Semver"
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+
+
+
+// This grammar of SemVer 2.0.0 is an adapted version of the BNF found at:
+//  https://docs.npmjs.com/misc/semver
+
+
+NPMVersionRequirement:
+	WS*
+	VersionRangeSetRequirement
+	| (
+		(
+			URLVersionRequirement
+			| LocalPathVersionRequirement
+			| GitHubVersionRequirement
+			| TagVersionRequirement
+		)
+		WS*
+	)
+;
+
+URLVersionRequirement:
+	protocol=URL_PROTOCOL '://' url=URL
+	('#' versionSpecifier=URLVersionSpecifier)?
+;
+
+URLVersionSpecifier:
+	=>URLSemver
+	| URLCommitISH
+;
+
+URLSemver:
+	("semver:")? simpleVersion=SimpleVersion
+;
+
+URLCommitISH:
+	commitISH=ALPHA_NUMERIC_CHARS
+;
+
+TagVersionRequirement:
+	tagName=TAG
+;
+
+GitHubVersionRequirement:
+	githubUrl=URL ('#' commitISH=ALPHA_NUMERIC_CHARS)?
+;
+
+LocalPathVersionRequirement:
+	'file:' localPath=PATH
+;
+
+
+VersionRangeSetRequirement:
+	{VersionRangeSetRequirement} (ranges+=VersionRange (WS* '||' WS* ranges+=VersionRange)* WS*)?
+;
+
+VersionRange:
+	VersionRangeContraint | HyphenVersionRange
+;
+
+HyphenVersionRange returns VersionRange:
+	{HyphenVersionRange} from=VersionNumber WS+ '-' WS+  to=VersionNumber
+;
+
+VersionRangeContraint returns VersionRange:
+	{VersionRangeConstraint} versionConstraints+=SimpleVersion (WS+ versionConstraints+=SimpleVersion)*
+;
+
+SimpleVersion:
+	{SimpleVersion} (comparators+=VersionComparator WS*)* number=VersionNumber
+;
+
+VersionNumber:
+	major=VersionPart
+	("." minor=VersionPart
+		("." patch=VersionPart
+			("." extended+=VersionPart)*
+		)?
+	)?
+	(qualifier=Qualifier)?
+;
+
+VersionPart:
+	wildcard?=WILDCARD | numberRaw=DIGITS
+;
+
+Qualifier:
+		('-' preRelease=QualifierTag)
+	|	('+' buildMetadata=QualifierTag)
+	|	('-' preRelease=QualifierTag '+' buildMetadata=QualifierTag)
+;
+
+QualifierTag:
+	parts+=ALPHA_NUMERIC_CHARS
+	("." parts+=ALPHA_NUMERIC_CHARS)*
+;
+
+
+
+URL_PROTOCOL:
+	(LETTERS | '+')+
+;
+
+TAG:
+	LETTER_NO_V ALPHA_NUMERIC_CHARS*
+;
+
+PATH:
+	(LETTER_NO_V ALPHA_NUMERIC_CHAR)* (('/' | ".")+ ALPHA_NUMERIC_CHARS)+ ('/' | ".")*
+;
+
+URL:
+	(LETTER_NO_V ALPHA_NUMERIC_CHAR)*  (('/' | "." | ':' | '@')+ ALPHA_NUMERIC_CHARS)+
+;
+
+ALPHA_NUMERIC_CHARS:
+	ALPHA_NUMERIC_CHAR+
+;
+
+ALPHA_NUMERIC_CHAR:
+	"-"? (DIGITS | LETTERS)
+;
+
+LETTERS:
+	(LETTER_V | LETTER_NO_V)+
+;
+
+LETTER_NO_V:
+	LETTER_X | LETTER_NO_VX
+;
+
+WILDCARD:
+	LETTER_X | ASTERIX
+;
+
+
+
+terminal LETTER_NO_VX :
+	"a".."u" | "w" | "y" | "z" | "A".."U" | "W" | "Y" | "Z"
+;
+
+terminal LETTER_V :
+	"v" | "V"
+;
+
+terminal LETTER_X:
+	'x' | 'X'
+;
+
+terminal ASTERIX:
+	'*'
+;
+
+terminal DIGITS returns ecore::EInt:
+	DIGIT+
+;
+
+terminal fragment DIGIT:
+	"0".."9"
+;
+
+
+
+
+
+terminal WS:
+	WHITESPACE_FRAGMENT+;
+
+terminal EOL:
+	LINE_TERMINATOR_SEQUENCE_FRAGMENT;
+
+
+
+
+enum VersionComparator:
+	Version = 'v'
+|	Equals = '='
+|	Smaller = '<'
+|	Tilde = '~'
+|	Caret = '^'
+|	SmallerEquals = '<='
+|	Greater = '>'
+|	GreaterEquals = '>='
+;

@@ -10,11 +10,9 @@
  */
 package org.eclipse.n4js.projectModel.dependencies;
 
-//import static org.eclipse.n4js.external.version.VersionConstraintFormatUtil.npmFormat;
-
 import org.eclipse.n4js.n4mf.ProjectDependency;
 import org.eclipse.n4js.n4mf.ProjectReference;
-import org.eclipse.n4js.semver.model.SEMVERSerializer;
+import org.eclipse.n4js.semver.model.SemverSerializer;
 
 /** Custom type for {@code Pair<String, String>} that is used to describe dependency (i.e. npm package). */
 public class DependencyInfo {
@@ -43,7 +41,7 @@ public class DependencyInfo {
 		String version = "";
 		if (projectReference instanceof ProjectDependency) {
 			ProjectDependency prjDep = (ProjectDependency) projectReference;
-			version = SEMVERSerializer.toString(prjDep.getVersionRequirement());
+			version = SemverSerializer.serialize(prjDep.getVersionRequirement());
 		}
 		return version;
 	}

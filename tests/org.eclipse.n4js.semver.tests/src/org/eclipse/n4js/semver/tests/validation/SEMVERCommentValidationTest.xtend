@@ -19,7 +19,7 @@ import org.eclipse.xtext.testing.validation.ValidationTestHelper
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.eclipse.n4js.semver.validation.SEMVERIssueCodes
+import org.eclipse.n4js.semver.validation.SemverIssueCodes
 
 /**
  * Tests that checks for the validation of comments in SEMVER resources.
@@ -34,19 +34,19 @@ class SEMVERCommentValidationTest extends Assert {
 	/** Test error of too many numbers */
 	@Test
 	def void testTooManyNumbers() {
-		'''1.2.3.4'''.assertIssues('''1 1 ERROR: «SEMVERIssueCodes.SEMVER_TOO_MANY_NUMBERS»''');
+		'''1.2.3.4'''.assertIssues('''1 1 ERROR: «SemverIssueCodes.SEMVER_TOO_MANY_NUMBERS»''');
 	}
 
 	/** Test error of too many comparators */
 	@Test
 	def void testTooManyComparators1() {
-		'''< > 1.2.3'''.assertIssues('''1 1 ERROR: «SEMVERIssueCodes.SEMVER_TOO_MANY_COMPARATORS»''');
+		'''< > 1.2.3'''.assertIssues('''1 1 ERROR: «SemverIssueCodes.SEMVER_TOO_MANY_COMPARATORS»''');
 	}
 
 	/** Test error of too many comparators */
 	@Test
 	def void testTooManyComparators2a() {
-		'''< = 1.2.3'''.assertIssues('''1 1 ERROR: «SEMVERIssueCodes.SEMVER_TOO_MANY_COMPARATORS»''');
+		'''< = 1.2.3'''.assertIssues('''1 1 ERROR: «SemverIssueCodes.SEMVER_TOO_MANY_COMPARATORS»''');
 	}
 
 	/** Test error of too many comparators */
@@ -58,19 +58,19 @@ class SEMVERCommentValidationTest extends Assert {
 	/** Test error of too many comparators */
 	@Test
 	def void testTooManyComparators2c() {
-		'''=< 1.2.3'''.assertIssues('''1 1 ERROR: «SEMVERIssueCodes.SEMVER_TOO_MANY_COMPARATORS»''');
+		'''=< 1.2.3'''.assertIssues('''1 1 ERROR: «SemverIssueCodes.SEMVER_TOO_MANY_COMPARATORS»''');
 	}
 
 	/** Test error of too many comparators */
 	@Test
 	def void testTooManyComparators2d() {
-		'''= < 1.2.3'''.assertIssues('''1 1 ERROR: «SEMVERIssueCodes.SEMVER_TOO_MANY_COMPARATORS»''');
+		'''= < 1.2.3'''.assertIssues('''1 1 ERROR: «SemverIssueCodes.SEMVER_TOO_MANY_COMPARATORS»''');
 	}
 
 	/** Test error of too many comparators */
 	@Test
 	def void testTooManyComparators3a() {
-		'''> = 1.2.3'''.assertIssues('''1 1 ERROR: «SEMVERIssueCodes.SEMVER_TOO_MANY_COMPARATORS»''');
+		'''> = 1.2.3'''.assertIssues('''1 1 ERROR: «SemverIssueCodes.SEMVER_TOO_MANY_COMPARATORS»''');
 	}
 
 	/** Test error of too many comparators */
@@ -82,13 +82,13 @@ class SEMVERCommentValidationTest extends Assert {
 	/** Test error of too many comparators */
 	@Test
 	def void testTooManyComparators3c() {
-		'''=> 1.2.3'''.assertIssues('''1 1 ERROR: «SEMVERIssueCodes.SEMVER_TOO_MANY_COMPARATORS»''');
+		'''=> 1.2.3'''.assertIssues('''1 1 ERROR: «SemverIssueCodes.SEMVER_TOO_MANY_COMPARATORS»''');
 	}
 
 	/** Test error of too many comparators */
 	@Test
 	def void testTooManyComparators3d() {
-		'''= > 1.2.3'''.assertIssues('''1 1 ERROR: «SEMVERIssueCodes.SEMVER_TOO_MANY_COMPARATORS»''');
+		'''= > 1.2.3'''.assertIssues('''1 1 ERROR: «SemverIssueCodes.SEMVER_TOO_MANY_COMPARATORS»''');
 	}
 
 	/**

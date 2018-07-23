@@ -22,8 +22,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.n4js.binaries.BinariesPreferenceStore;
 import org.eclipse.n4js.binaries.BinariesValidator;
 import org.eclipse.n4js.binaries.Binary;
-import org.eclipse.n4js.semver.SEMVER.VersionNumber;
-import org.eclipse.n4js.semver.model.SEMVERSerializer;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
+import org.eclipse.n4js.semver.model.SemverSerializer;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -65,7 +65,7 @@ public class NodeJsBinary implements Binary {
 		return "Configuration of the folder location of the Node.js\u00AE executable "
 				+ "can be provided here. If not given, then the '" + getDefaultNodePath()
 				+ "' location will be used as the default location. The required minimum version for Node.js is '"
-				+ SEMVERSerializer.toString(getMinimumVersion()) + "'.";
+				+ SemverSerializer.serialize(getMinimumVersion()) + "'.";
 	}
 
 	@Override

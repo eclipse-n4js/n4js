@@ -10,26 +10,35 @@
  */
 package org.eclipse.n4js.semver
 
-import org.eclipse.n4js.semver.SEMVER.VersionNumber
-import org.eclipse.n4js.semver.SEMVER.VersionRangeConstraint
-import org.eclipse.n4js.semver.SEMVER.VersionRangeSet
+import org.eclipse.n4js.semver.Semver.VersionNumber
+import org.eclipse.n4js.semver.Semver.VersionRangeConstraint
 import org.eclipse.xtext.resource.XtextSyntaxDiagnostic
 import org.eclipse.xtext.testing.util.ParseHelper
 
 import static org.junit.Assert.*
-import org.eclipse.n4js.semver.SEMVER.NPMVersion
+import org.eclipse.n4js.semver.Semver.NPMVersionRequirement
+import org.eclipse.n4js.semver.Semver.VersionRangeSetRequirement
 
 /**
  * A parse helper for SEMVER parsing tests.
  */
-class SEMVERParseHelper extends ParseHelper<NPMVersion> {
+class SEMVERParseHelper extends ParseHelper<NPMVersionRequirement> {
+
+	/**
+	 * Returns a {@link VersionRangeSetRequirement} instance or throws an exception if the given
+	 * string could not be parsed.
+	 */
+	public def NPMVersionRequirement tryParse(CharSequence semver) {
+		val doc = semver.parse;
+		return doc;
+	}
 
 	/**
 	 * Asserts that the given {@code semver} character sequence can be parsed correctly. Returns the
-	 * resulting {@link VersionRangeSet} instance.
+	 * resulting {@link VersionRangeSetRequirement} instance.
 	 */
-	public def NPMVersion parseSuccessfully(CharSequence semver) {
-		val doc = semver.parse;
+	public def NPMVersionRequirement parseSuccessfully(CharSequence semver) {
+		val doc = semver.tryParse;
 		val msg = '''"«semver»" ''' + doc.eResource.errors.join('\n')[line + ': ' + message];
 		val errorList = doc.eResource.errors;
 		assertTrue(msg, errorList.empty);
@@ -41,18 +50,18 @@ class SEMVERParseHelper extends ParseHelper<NPMVersion> {
 	 */
 	public def void parseUnsuccessfully(CharSequence semver) {
 		val doc = semver.parse;
-		val msg = '''The following SemVer text did not cause any syntax errors as expected: "«semver»" ''';
+		val msg = '''The following Semver text did not cause any syntax errors as expected: "«semver»" ''';
 		val errorList = doc.eResource.errors.filter(XtextSyntaxDiagnostic);
 		assertFalse(msg, errorList.empty);
 	}
 
-	public def VersionRangeSet parseVersionRangeSet(String versionString) {
+	public def VersionRangeSetRequirement parseVersionRangeSet(String versionString) {
 		if (versionString === null)
 			return null;
 		val npmVersion = versionString.parse();
-		if (!(npmVersion instanceof VersionRangeSet))
+		if (!(npmVersion instanceof VersionRangeSetRequirement))
 			return null;
-		val vrs = npmVersion as VersionRangeSet;
+		val vrs = npmVersion as VersionRangeSetRequirement;
 		return vrs;
 	}
 

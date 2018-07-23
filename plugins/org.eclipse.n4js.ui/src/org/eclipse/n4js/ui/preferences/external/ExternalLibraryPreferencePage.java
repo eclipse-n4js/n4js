@@ -57,8 +57,8 @@ import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.semver.SEMVERHelper;
-import org.eclipse.n4js.semver.model.SEMVERSerializer;
+import org.eclipse.n4js.semver.SemverHelper;
+import org.eclipse.n4js.semver.model.SemverSerializer;
 import org.eclipse.n4js.ui.utils.InputComposedValidator;
 import org.eclipse.n4js.ui.utils.InputFunctionalValidator;
 import org.eclipse.n4js.ui.utils.UIUtils;
@@ -76,6 +76,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.parser.IParseResult;
 
 import com.google.inject.Inject;
@@ -118,7 +119,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	private StatusHelper statusHelper;
 
 	@Inject
-	private SEMVERHelper semverHelper;
+	private SemverHelper semverHelper;
 
 	private TreeViewer viewer;
 
@@ -326,7 +327,8 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 		if (parseResult == null) {
 			result = "Could not create version from string :" + data + ":\n";
 		} else if (parseResult.hasSyntaxErrors()) {
-			result = "Parsing error: " + parseResult.getSyntaxErrors().iterator().next().getText();
+			INode firstErrorNode = parseResult.getSyntaxErrors().iterator().next();
+			result = "Parsing error: " + firstErrorNode.getSyntaxErrorMessage().getMessage();
 		}
 
 		// otherwise, parsedVersion is valid and result remains 'null'
@@ -348,7 +350,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 
 		final Map<String, String> versionedNpms = new HashMap<>();
 		projects.forEach((ProjectDescription pd) -> {
-			versionedNpms.put(pd.getProjectId(), SEMVERSerializer.toString(pd.getProjectVersion()));
+			versionedNpms.put(pd.getProjectId(), SemverSerializer.serialize(pd.getProjectVersion()));
 		});
 
 		return versionedNpms;
