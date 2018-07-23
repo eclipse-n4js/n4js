@@ -269,14 +269,17 @@ public class N4JSModel {
 	}
 
 	public ImmutableList<? extends IN4JSProject> getProvidedRuntimeLibraries(N4JSProject project) {
-
 		ImmutableList.Builder<IN4JSProject> providedRuntimes = ImmutableList.builder();
+
 		EList<ProjectReference> runtimeLibraries = getAllProvidedRuntimeLibraries(project);
 		URI projectLocation = project.getLocation();
 
-		// GHOLD-249: If the project n4mf file has parse errors, we need a lot of null checks.
+		// GHOLD-249: If the project description file has parse errors, we need a lot of null checks.
 		for (ProjectReference runtimeLibrary : runtimeLibraries) {
 			URI location = workspace.getLocation(projectLocation, runtimeLibrary);
+			if (null == location) {
+				location = externalLibraryWorkspace.getLocation(projectLocation, runtimeLibrary);
+			}
 
 			if (null != location) {
 				providedRuntimes.add(getN4JSProject(location));
@@ -365,6 +368,10 @@ public class N4JSModel {
 		if (null != description) {
 			for (ProjectDependency testedProject : description.getTestedProjects()) {
 				URI hostLocation = workspace.getLocation(location, testedProject);
+
+				if (null == hostLocation) {
+					hostLocation = externalLibraryWorkspace.getLocation(location, testedProject);
+				}
 
 				if (hostLocation != null) {
 					final N4JSProject tested = getN4JSProject(hostLocation);

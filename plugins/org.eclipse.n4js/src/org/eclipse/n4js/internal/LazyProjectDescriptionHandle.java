@@ -20,13 +20,13 @@ import org.eclipse.n4js.utils.ProjectDescriptionHelper;
 @SuppressWarnings("javadoc")
 public class LazyProjectDescriptionHandle {
 
-	private final URI location;
+	private final URI projectLocation;
 	private final ProjectDescriptionHelper descriptionHelper;
 
 	private ProjectDescription resolved;
 
 	protected LazyProjectDescriptionHandle(URI location, ProjectDescriptionHelper descriptionHelper) {
-		this.location = location;
+		this.projectLocation = location;
 		this.descriptionHelper = descriptionHelper;
 	}
 
@@ -37,18 +37,13 @@ public class LazyProjectDescriptionHandle {
 		if (resolved != null) {
 			return resolved;
 		}
-		return resolved = loadProjectDescriptionFromLocation(this.getLocation());
-	}
-
-	URI getLocation() {
-		return location;
+		return resolved = descriptionHelper.loadProjectDescriptionAtLocation(this.getLocation());
 	}
 
 	/**
-	 * Loads the {@link ProjectDescription} for the project at the given {@code projectLocation}.
+	 * Returns the project location this handle represents.
 	 */
-	protected ProjectDescription loadProjectDescriptionFromLocation(URI projectLocation) {
-		return descriptionHelper.loadProjectDescriptionAtLocation(projectLocation);
+	URI getLocation() {
+		return projectLocation;
 	}
-
 }

@@ -57,7 +57,7 @@ public class N4JSToBeBuiltComputer implements IToBeBuiltComputerContribution {
 
 	@Override
 	public void removeProject(ToBeBuilt toBeBuilt, IProject project, IProgressMonitor monitor) {
-		// nothing to remove TODO GH-809 re-consider whether this method needs to do something
+		// nothing to remove
 	}
 
 	@Override
@@ -106,7 +106,7 @@ public class N4JSToBeBuiltComputer implements IToBeBuiltComputerContribution {
 
 	@Override
 	public boolean removeStorage(ToBeBuilt toBeBuilt, IStorage storage, IProgressMonitor monitor) {
-		// nothing remove
+		// nothing to remove
 		return false;
 	}
 
