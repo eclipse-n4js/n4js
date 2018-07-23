@@ -16,10 +16,14 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.n4js.ui.internal.WorkspaceCacheAccess;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
 import org.eclipse.xtext.ui.containers.AbstractStorage2UriMapperClient;
@@ -41,11 +45,17 @@ import com.google.inject.Singleton;
 @Singleton
 @SuppressWarnings("javadoc")
 public class N4JSProjectsStateHelper extends AbstractStorage2UriMapperClient {
+
+	private static final Logger LOGGER = Logger.getLogger(N4JSProjectsStateHelper.class);
+
 	private static final String SOURCE_CONTAINER_PREFIX = "n4jssc:";
 	private static final String PROJECT_CONTAINER_PREFIX = "n4jsproj:";
 
 	@Inject
 	private IN4JSEclipseCore core;
+
+	@Inject
+	private WorkspaceCacheAccess cacheAccess;
 
 	public String initHandle(URI uri) {
 		String handle = null;
@@ -153,5 +163,16 @@ public class N4JSProjectsStateHelper extends AbstractStorage2UriMapperClient {
 		}
 		return uris;
 
+	}
+
+	public void clearProjectCache() {
+		LOGGER.info("Clearing all cached project descriptions.");
+		cacheAccess.discardEntries();
+	}
+
+	public void clearProjectCache(IResourceDelta delta) {
+		IProject project = delta.getResource().getProject();
+		LOGGER.info("Clearing cache for " + project.getProject().getName() + ".");
+		cacheAccess.discardEntry(project);
 	}
 }

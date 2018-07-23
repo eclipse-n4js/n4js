@@ -330,7 +330,7 @@ public class ExternalLibraryBuilder {
 		// we do not need a lock on the workspace; however, when cleaning/building external libraries we use the Xtext
 		// builder and because it is working on state shared across the entire Eclipse instance (e.g. the singleton
 		// QueuedBuildData), we have to make sure no other Xtext build is running in parallel while we are building
-		// the external libraries. Otherwise we might run into ConcurrentModificationExcpetions, etc.
+		// the external libraries. Otherwise we might run into ConcurrentModificationExceptions, etc.
 		// 2) we do not use IResourceRuleFactory#buildRule() because we want to control the scope of the scheduling rule
 		// ourselves to make sure no other build is happening anywhere at the same time (within same Eclipse instance).
 		return ResourcesPlugin.getWorkspace().getRoot();

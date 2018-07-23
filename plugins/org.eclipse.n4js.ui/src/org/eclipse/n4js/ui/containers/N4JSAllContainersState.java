@@ -89,9 +89,6 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 	@Inject
 	private OwnResourceValidatorAwareValidatingEditorCallback editorCallback;
 
-	@Inject
-	private WorkspaceCacheAccess cacheAccess;
-
 	@Override
 	protected String doInitHandle(URI uri) {
 		String handle = projectsHelper.initHandle(uri);
@@ -164,31 +161,31 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 	private void updateProjectState(IResourceDelta delta) {
 		if (delta.getKind() == IResourceDelta.ADDED || delta.getKind() == IResourceDelta.REMOVED) {
 			if (IN4JSProject.PACKAGE_JSON.equals(delta.getFullPath().lastSegment())) {
-				clearProjectCache();
+				projectsHelper.clearProjectCache();
 				return;
 			}
 			if (delta.getResource() instanceof IProject) {
-				clearProjectCache();
+				projectsHelper.clearProjectCache();
 				return;
 			}
 			if (delta.getResource() instanceof IFolder) {
 				if (isSourceContainerModification(delta)) {
 					tryValidateProjectDescriptionFile(delta);
 					tryValidateProjectDescriptionInEditor(delta);
-					clearProjectCache(delta);
+					projectsHelper.clearProjectCache(delta);
 					return;
 				}
 			}
 			return;
 		} else if (delta.getKind() == IResourceDelta.CHANGED && delta.getResource() instanceof IProject) {
 			if ((delta.getFlags() & IResourceDelta.OPEN) != 0) {
-				clearProjectCache();
+				projectsHelper.clearProjectCache();
 				return;
 			}
 			return;
 		}
 		if (packageJSONFileHasBeenChanged(delta)) {
-			clearProjectCache(delta);
+			projectsHelper.clearProjectCache(delta);
 			return;
 		}
 		return;
@@ -233,17 +230,6 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 			return true;
 		}
 		return false;
-	}
-
-	private void clearProjectCache() {
-		LOGGER.info("Clearing all cached project descriptions.");
-		cacheAccess.discardEntries();
-	}
-
-	private void clearProjectCache(IResourceDelta delta) {
-		IProject project = delta.getResource().getProject();
-		LOGGER.info("Clearing cache for " + project.getProject().getName() + ".");
-		cacheAccess.discardEntry(project);
 	}
 
 	private void tryValidateProjectDescriptionFile(final IResourceDelta delta) {
