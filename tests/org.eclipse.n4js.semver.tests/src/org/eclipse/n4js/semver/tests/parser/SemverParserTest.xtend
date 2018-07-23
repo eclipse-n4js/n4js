@@ -11,8 +11,7 @@
 package org.eclipse.n4js.semver.tests.parser
 
 import com.google.inject.Inject
-import org.eclipse.n4js.semver.SEMVERInjectorProvider
-import org.eclipse.n4js.semver.SEMVERParseHelper
+import org.eclipse.n4js.semver.SemverParseHelper
 import org.eclipse.xtext.serializer.ISerializer
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
@@ -20,15 +19,16 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 import static org.junit.Assert.*
+import org.eclipse.n4js.semver.SemverInjectorProvider
 
 /**
  * Tests for parsing SEMVER files.
  */
 @RunWith(XtextRunner)
-@InjectWith(SEMVERInjectorProvider)
-class SEMVERParserTest {
+@InjectWith(SemverInjectorProvider)
+class SemverParserTest {
 
-	@Inject extension SEMVERParseHelper;
+	@Inject extension SemverParseHelper;
 	@Inject ISerializer serializer;
 
 	//@formatter:off

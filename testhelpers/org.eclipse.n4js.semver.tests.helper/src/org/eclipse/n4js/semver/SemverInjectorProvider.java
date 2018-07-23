@@ -20,7 +20,7 @@ import com.google.inject.Injector;
 /**
  * An injector for the JSON language.
  */
-public class SEMVERInjectorProvider implements IInjectorProvider, IRegistryConfigurator {
+public class SemverInjectorProvider implements IInjectorProvider, IRegistryConfigurator {
 
 	/***/
 	protected GlobalStateMemento stateBeforeInjectorCreation;
