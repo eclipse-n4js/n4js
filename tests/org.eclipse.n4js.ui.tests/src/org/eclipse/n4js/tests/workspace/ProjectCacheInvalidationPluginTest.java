@@ -177,8 +177,6 @@ public class ProjectCacheInvalidationPluginTest extends AbstractBuilderParticipa
 		final IProject topLevelTestProject = ProjectTestsUtils.createProjectWithLocation(projectsRoot,
 				"TopLevel", "TopLevel");
 
-		System.out.println("Setup complete");
-
 		// obtain workspace representation of the nested test projects
 		Optional<? extends IN4JSProject> projectHandle1 = n4jsCore
 				.findProject(URI.createPlatformResourceURI(nestedTestProject1.getFullPath().toString(), true));
@@ -231,8 +229,6 @@ public class ProjectCacheInvalidationPluginTest extends AbstractBuilderParticipa
 		assertEquals(updatedImplementationId1, projectHandle1.get().getImplementationId().get());
 		assertEquals(updatedImplementationId2, projectHandle2.get().getImplementationId().get());
 		assertEquals(updatedImplementationId3, projectHandle3.get().getImplementationId().get());
-
-		System.out.println("Tearing down...");
 
 		// tear down
 		nestedTestProject1.delete(true, new NullProgressMonitor());
