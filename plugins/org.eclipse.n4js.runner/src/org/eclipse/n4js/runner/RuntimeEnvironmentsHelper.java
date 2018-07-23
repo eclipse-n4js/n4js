@@ -120,7 +120,8 @@ public class RuntimeEnvironmentsHelper {
 	}
 
 	private void getEnvironemntWithAncestorsRecursive(IN4JSProject project, Set<IN4JSProject> environemtns) {
-		if (!project.getProjectType().equals(ProjectType.RUNTIME_ENVIRONMENT)) {
+		ProjectType projectType = project.getProjectType();
+		if (projectType == null || !projectType.equals(ProjectType.RUNTIME_ENVIRONMENT)) {
 			return;
 		}
 		Optional<IN4JSSourceContainerAware> maybePArent = project.getExtendedRuntimeEnvironment();

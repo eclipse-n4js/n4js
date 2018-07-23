@@ -63,7 +63,7 @@ public class Base64VLQTestSingleNumbers {
 	}
 
 	/**
-	 * Test method for {@link org.eclipse.n4js.transpiler.sourcemap.Base64VLQ#decode(java.lang.String)}.
+	 * Test method for {@link org.eclipse.n4js.transpiler.sourcemap.Base64VLQ#decode(java.lang.CharSequence)}.
 	 */
 	@Test
 	public void testDecode() {
