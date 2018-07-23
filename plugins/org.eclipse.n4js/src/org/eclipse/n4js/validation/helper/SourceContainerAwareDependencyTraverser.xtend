@@ -15,7 +15,7 @@ import com.google.common.base.Function
 import com.google.common.base.Objects
 import com.google.common.collect.ImmutableList
 import java.util.Collection
-import org.eclipse.n4js.n4mf.ProjectType
+import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware
 import org.eclipse.n4js.utils.DependencyTraverser

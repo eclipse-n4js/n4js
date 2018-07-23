@@ -10,8 +10,8 @@
  */
 package org.eclipse.n4js.projectModel.dependencies;
 
-import org.eclipse.n4js.n4mf.ProjectDependency;
-import org.eclipse.n4js.n4mf.ProjectReference;
+import org.eclipse.n4js.projectDescription.ProjectDependency;
+import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.semver.model.SemverSerializer;
 
 /** Custom type for {@code Pair<String, String>} that is used to describe dependency (i.e. npm package). */

@@ -33,16 +33,17 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.internal.N4JSSourceContainerType;
-import org.eclipse.n4js.n4mf.ProjectDependency;
-import org.eclipse.n4js.n4mf.ProjectDescription;
-import org.eclipse.n4js.n4mf.SourceContainerDescription;
-import org.eclipse.n4js.n4mf.SourceContainerType;
+import org.eclipse.n4js.projectDescription.ProjectDependency;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectDescription.SourceContainerDescription;
+import org.eclipse.n4js.projectDescription.SourceContainerType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseArchive;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseSourceContainer;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.resources.ExternalProject;
 
 import com.google.common.base.Optional;
@@ -219,9 +220,9 @@ public class N4JSEclipseModel extends N4JSModel {
 		ProjectDescription description = getProjectDescription(location);
 		if (description != null) {
 			List<SourceContainerDescription> sourceFragments = newArrayList(from(description.getSourceContainers()));
-			sourceFragments.sort((f1, f2) -> f1.compareByFragmentType(f2));
+			sourceFragments.sort((f1, f2) -> ProjectDescriptionUtils.compareBySourceContainerType(f1, f2));
 			for (SourceContainerDescription sourceFragment : sourceFragments) {
-				List<String> paths = sourceFragment.getPathsNormalized();
+				List<String> paths = ProjectDescriptionUtils.getPathsNormalized(sourceFragment);
 				for (String p : paths) {
 					IN4JSEclipseSourceContainer sourceContainer = createProjectN4JSSourceContainer(project,
 							sourceFragment.getSourceContainerType(), p);

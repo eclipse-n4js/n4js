@@ -1,0 +1,137 @@
+/**
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+@Ecore(nsURI="http://www.eclipse.org/n4js/projectDescription/projectDescription")
+@GenModel(fileExtensions="n4jsProjectDescription",
+// As with IDE-1456 removing the modelPluginID to avoid IOE with 'The path' ... 'is unmapped.' in
+// the maven plugin: "xtext-maven-plugin:2.8.2:generate"
+//	modelPluginID="org.eclipse.n4js.n4mf.model",
+	modelDirectory="/org.eclipse.n4js.model/emf-gen",
+	forceOverwrite="true",
+	updateClasspath="false",
+	complianceLevel="8.0",
+	copyrightFields="false",
+	// both copyrightText and documentation are required to align the output of the MWE2 and incremental builder (see GH-841)
+	copyrightText="Copyright (c) 2016 NumberFour AG.\nAll rights reserved. This program and the accompanying materials\nare made available under the terms of the Eclipse Public License v1.0\nwhich accompanies this distribution, and is available at\nhttp://www.eclipse.org/legal/epl-v10.html\n\nContributors:\n  NumberFour AG - Initial API and implementation",
+	documentation="*\nCopyright (c) 2016 NumberFour AG.\nAll rights reserved. This program and the accompanying materials\nare made available under the terms of the Eclipse Public License v1.0\nwhich accompanies this distribution, and is available at\nhttp://www.eclipse.org/legal/epl-v10.html\n * Contributors:\n  NumberFour AG - Initial API and implementation",
+	language="")
+
+package org.eclipse.n4js.projectDescription
+
+import org.eclipse.n4js.semver.Semver.NPMVersionRequirement
+import org.eclipse.n4js.semver.Semver.VersionNumber
+
+/*
+ * Basic information about a project, as read from the {@code package.json}
+ * file in the project's root folder.
+ */
+class ProjectDescription {
+
+	String projectId
+	String vendorId
+	String vendorName
+	contains VersionNumber projectVersion
+	ProjectType projectType
+	String mainModule
+	contains ProjectReference extendedRuntimeEnvironment
+	contains ProjectReference[] providedRuntimeLibraries
+	contains ProjectReference[] requiredRuntimeLibraries
+	contains ProjectDependency[] projectDependencies
+	String implementationId
+	contains ProjectReference[] implementedProjects
+	contains BootstrapModule[] initModules
+	contains BootstrapModule execModule
+	String outputPath
+	contains SourceContainerDescription[] sourceContainers
+	contains ModuleFilter[] moduleFilters
+	contains ProjectReference[] testedProjects
+	ModuleLoader moduleLoader
+
+	/* 
+	 * Tells if the project represented by this project description has a nested
+	 * "node_modules" folder, i.e. a folder named "node_modules" located right next
+	 * to the package.json file.
+	 */
+	boolean hasNestedNodeModulesFolder
+
+	/*
+	 * Indicates whether the underlying project description explicitly configured
+	 * the project to be an N4JS project (e.g. includes n4js section). 
+	 */
+	boolean hasN4JSNature
+}
+
+/*
+ * Lists one or more source folders inside the project with a common intended usage (e.g. main source, tests).
+ */
+class SourceContainerDescription {
+	SourceContainerType sourceContainerType
+	String[] paths
+}
+
+/* Reference to another project without version requirement. */
+class ProjectReference {
+	String projectId
+}
+
+/* Reference to another project, including a version requirement. */
+class ProjectDependency extends ProjectReference {
+	String versionRequirementString
+	contains NPMVersionRequirement versionRequirement
+}
+
+/*
+ * Lists the filters that add special treatment to some of the files regarding
+ * validation, compilation and wrapping of output code.
+ */
+class ModuleFilter {
+	ModuleFilterType moduleFilterType
+	contains ModuleFilterSpecifier[] moduleSpecifiers
+}
+
+class ModuleFilterSpecifier {
+	String moduleSpecifierWithWildcard
+	String sourcePath
+}
+
+class BootstrapModule {
+	String moduleSpecifier
+}
+
+enum ProjectType {
+	VALIDATION = 0,
+	APPLICATION = 1,
+	PROCESSOR = 2,
+	LIBRARY = 3,
+	API = 4,
+	RUNTIME_ENVIRONMENT = 5,
+	RUNTIME_LIBRARY = 6,
+	TEST = 7
+}
+
+enum SourceContainerType {
+	SOURCE = 0,
+	TEST = 1,
+	EXTERNAL = 2
+}
+
+enum ModuleFilterType {
+	/* Turns off validation of affected modules. */
+	NO_VALIDATE = 0,
+	/* Turns off wrapping of output code *and* validation of affected modules. */
+	NO_MODULE_WRAP = 1
+}
+
+/* The Javascript module loading techniques. */
+enum ModuleLoader {
+	N4JS = 0,
+	COMMONJS = 1,
+	NODE_BUILTIN = 2
+}

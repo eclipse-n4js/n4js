@@ -213,7 +213,7 @@ public class FileChecker extends AbstractFileChecker {
 			"plugins/org.eclipse.n4js.jsdoc/emf-gen/org/eclipse/n4js/jsdoc/dom/DomPackage.java",
 			"plugins/org.eclipse.n4js.model/emf-gen/org/eclipse/n4js/n4JS/N4JSPackage.java",
 			"plugins/org.eclipse.n4js.n4jsx.model/emf-gen/org/eclipse/n4js/n4jsx/n4JSX/N4JSXPackage.java",
-			"plugins/org.eclipse.n4js.n4mf.model/emf-gen/org/eclipse/n4js/n4mf/N4mfPackage.java",
+			"plugins/org.eclipse.n4js.n4mf.model/emf-gen/org/eclipse/n4js/n4mf/ProjectDescriptionPackage.java",
 			"plugins/org.eclipse.n4js.transpiler/emf-gen/org/eclipse/n4js/transpiler/im/ImPackage.java",
 			"plugins/org.eclipse.n4js.ts.model/emf-gen/org/eclipse/n4js/ts/typeRefs/TypeRefsPackage.java",
 			"plugins/org.eclipse.n4js.ts.model/emf-gen/org/eclipse/n4js/ts/types/TypesPackage.java",

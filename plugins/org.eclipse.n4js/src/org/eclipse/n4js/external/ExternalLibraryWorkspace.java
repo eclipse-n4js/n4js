@@ -20,7 +20,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
-import org.eclipse.n4js.n4mf.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.utils.URIUtils;
 

@@ -33,7 +33,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
-import org.eclipse.n4js.n4mf.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore.ExternalProjectLocationsProvider;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore.StoreUpdatedListener;

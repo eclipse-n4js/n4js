@@ -15,7 +15,7 @@ import java.io.File;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.ExternalLibraryUtils;
-import org.eclipse.n4js.n4mf.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IExternalPackageManager;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 

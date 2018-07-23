@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.scoping.utils;
 
-import org.eclipse.n4js.n4mf.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
 
 /**
  * Internal Distinction of different import types.

@@ -28,17 +28,17 @@ import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONPackage;
 import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.JSON.NameValuePair;
-import org.eclipse.n4js.n4mf.BootstrapModule;
-import org.eclipse.n4js.n4mf.ModuleFilter;
-import org.eclipse.n4js.n4mf.ModuleFilterSpecifier;
-import org.eclipse.n4js.n4mf.ModuleFilterType;
-import org.eclipse.n4js.n4mf.ModuleLoader;
-import org.eclipse.n4js.n4mf.N4mfFactory;
-import org.eclipse.n4js.n4mf.N4mfPackage;
-import org.eclipse.n4js.n4mf.ProjectReference;
-import org.eclipse.n4js.n4mf.ProjectType;
-import org.eclipse.n4js.n4mf.SourceContainerDescription;
-import org.eclipse.n4js.n4mf.SourceContainerType;
+import org.eclipse.n4js.projectDescription.BootstrapModule;
+import org.eclipse.n4js.projectDescription.ModuleFilter;
+import org.eclipse.n4js.projectDescription.ModuleFilterSpecifier;
+import org.eclipse.n4js.projectDescription.ModuleFilterType;
+import org.eclipse.n4js.projectDescription.ModuleLoader;
+import org.eclipse.n4js.projectDescription.ProjectDescriptionFactory;
+import org.eclipse.n4js.projectDescription.ProjectDescriptionPackage;
+import org.eclipse.n4js.projectDescription.ProjectReference;
+import org.eclipse.n4js.projectDescription.ProjectType;
+import org.eclipse.n4js.projectDescription.SourceContainerDescription;
+import org.eclipse.n4js.projectDescription.SourceContainerType;
 import org.eclipse.n4js.validation.validators.packagejson.N4JSProjectSetupJsonValidatorExtension;
 import org.eclipse.n4js.validation.validators.packagejson.PackageJsonValidatorExtension;
 
@@ -49,7 +49,7 @@ import com.google.common.base.Strings;
  * <p>
  * These utility methods do not validate the structure of the given {@link JSONPackage} instances. Rather, they will
  * defensively abort and return {@code null} in case the given {@link JSONValue} is not a valid representation of the
- * {@link N4mfPackage} instance in question (for validation see {@link PackageJsonValidatorExtension} and
+ * {@link ProjectDescriptionPackage} instance in question (for validation see {@link PackageJsonValidatorExtension} and
  * {@link N4JSProjectSetupJsonValidatorExtension}).
  * <p>
  * Example: obtain source containers in terms of {@link SourceContainerDescription}s from a given {@link JSONObject})
@@ -62,7 +62,7 @@ public class PackageJsonUtils {
 	public static ProjectReference asProjectReferenceOrNull(JSONValue jsonValue) {
 		String valueStr = asNonEmptyStringOrNull(jsonValue);
 		if (!Strings.isNullOrEmpty(valueStr)) {
-			final ProjectReference result = N4mfFactory.eINSTANCE.createProjectReference();
+			final ProjectReference result = ProjectDescriptionFactory.eINSTANCE.createProjectReference();
 			result.setProjectId(valueStr);
 			return result;
 		}
@@ -86,7 +86,7 @@ public class PackageJsonUtils {
 	public static BootstrapModule asBootstrapModuleOrNull(JSONValue jsonValue) {
 		String valueStr = asNonEmptyStringOrNull(jsonValue);
 		if (!Strings.isNullOrEmpty(valueStr)) {
-			final BootstrapModule result = N4mfFactory.eINSTANCE.createBootstrapModule();
+			final BootstrapModule result = ProjectDescriptionFactory.eINSTANCE.createBootstrapModule();
 			result.setModuleSpecifier(valueStr);
 			return result;
 		}
@@ -130,7 +130,7 @@ public class PackageJsonUtils {
 		if (type != null) {
 			List<ModuleFilterSpecifier> mspecs = asModuleFilterSpecifierInArrayOrEmpty(pair.getValue());
 			if (!mspecs.isEmpty()) {
-				ModuleFilter mfilter = N4mfFactory.eINSTANCE.createModuleFilter();
+				ModuleFilter mfilter = ProjectDescriptionFactory.eINSTANCE.createModuleFilter();
 				mfilter.setModuleFilterType(type);
 				mfilter.getModuleSpecifiers().addAll(mspecs);
 				return mfilter;
@@ -188,7 +188,7 @@ public class PackageJsonUtils {
 
 	private static ModuleFilterSpecifier createModuleFilterSpecifier(String sourcePath,
 			String moduleSpecifierWithWildcard) {
-		final ModuleFilterSpecifier result = N4mfFactory.eINSTANCE.createModuleFilterSpecifier();
+		final ModuleFilterSpecifier result = ProjectDescriptionFactory.eINSTANCE.createModuleFilterSpecifier();
 		result.setSourcePath(sourcePath);
 		result.setModuleSpecifierWithWildcard(moduleSpecifierWithWildcard);
 		return result;
@@ -228,7 +228,7 @@ public class PackageJsonUtils {
 		SourceContainerType type = parseSourceContainerType(pair.getName());
 		List<String> paths = asNonEmptyStringsInArrayOrEmpty(pair.getValue());
 		if (type != null && !paths.isEmpty()) {
-			SourceContainerDescription sourceContainerDescription = N4mfFactory.eINSTANCE
+			SourceContainerDescription sourceContainerDescription = ProjectDescriptionFactory.eINSTANCE
 					.createSourceContainerDescription();
 			sourceContainerDescription.setSourceContainerType(type);
 			sourceContainerDescription.getPaths().addAll(paths);
@@ -287,7 +287,7 @@ public class PackageJsonUtils {
 			return ProjectType.RUNTIME_ENVIRONMENT;
 		if ("runtimeLibrary".equals(projectTypeStr))
 			return ProjectType.RUNTIME_LIBRARY;
-		return parseEnumLiteral(N4mfPackage.eINSTANCE.getProjectType(), ProjectType.class,
+		return parseEnumLiteral(ProjectDescriptionPackage.eINSTANCE.getProjectType(), ProjectType.class,
 				projectTypeStr);
 	}
 
@@ -297,7 +297,7 @@ public class PackageJsonUtils {
 	 * Returns {@code null} if {@code value} is not a valid string representation of a {@link ModuleLoader}.
 	 */
 	public static ModuleLoader parseModuleLoader(String moduleLoaderStr) {
-		return parseEnumLiteral(N4mfPackage.eINSTANCE.getModuleLoader(), ModuleLoader.class,
+		return parseEnumLiteral(ProjectDescriptionPackage.eINSTANCE.getModuleLoader(), ModuleLoader.class,
 				moduleLoaderStr);
 	}
 
@@ -308,7 +308,7 @@ public class PackageJsonUtils {
 	 * representation.
 	 */
 	public static SourceContainerType parseSourceContainerType(String sourceContainerTypeStr) {
-		return parseEnumLiteral(N4mfPackage.eINSTANCE.getSourceContainerType(), SourceContainerType.class,
+		return parseEnumLiteral(ProjectDescriptionPackage.eINSTANCE.getSourceContainerType(), SourceContainerType.class,
 				sourceContainerTypeStr);
 	}
 

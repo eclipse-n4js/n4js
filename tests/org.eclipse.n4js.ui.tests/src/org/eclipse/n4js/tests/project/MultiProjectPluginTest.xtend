@@ -24,8 +24,8 @@ import org.eclipse.n4js.json.JSON.JSONDocument
 import org.eclipse.n4js.json.JSON.JSONFactory
 import org.eclipse.n4js.json.JSON.JSONObject
 import org.eclipse.n4js.json.model.utils.JSONModelUtils
-import org.eclipse.n4js.n4mf.ProjectType
-import org.eclipse.n4js.n4mf.SourceContainerType
+import org.eclipse.n4js.projectDescription.ProjectType
+import org.eclipse.n4js.projectDescription.SourceContainerType
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
 import org.eclipse.n4js.tests.util.PackageJSONTestUtils
 import org.eclipse.n4js.tests.util.ProjectTestsUtils

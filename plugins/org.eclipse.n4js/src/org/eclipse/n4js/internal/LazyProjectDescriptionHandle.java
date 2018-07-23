@@ -12,7 +12,7 @@ package org.eclipse.n4js.internal;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.n4mf.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 

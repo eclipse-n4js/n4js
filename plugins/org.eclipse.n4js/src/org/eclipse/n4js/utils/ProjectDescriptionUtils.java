@@ -12,10 +12,13 @@ package org.eclipse.n4js.utils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.eclipse.n4js.n4mf.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectDescription.SourceContainerDescription;
+import org.eclipse.n4js.utils.io.FileUtils;
 
 import com.google.common.base.Joiner;
 
@@ -107,6 +110,32 @@ public class ProjectDescriptionUtils {
 			return ".";
 		}
 		return Joiner.on('/').join(segmentsNew);
+	}
+
+	/**
+	 * Compares the given source container descriptions based on the natural ordering of the wrapped
+	 * {@link SourceContainerDescription source container type}. For more details, see
+	 * {@link Comparator#compare(Object, Object)}.
+	 */
+	public static int compareBySourceContainerType(SourceContainerDescription first, SourceContainerDescription other) {
+		if (first == null)
+			return other == null ? 0 : 1;
+		if (other == null)
+			return -1;
+		return first.getSourceContainerType().compareTo(other.getSourceContainerType());
+	}
+
+	/**
+	 * Returns the {@link SourceContainerDescription#getPaths() paths} of the given source container description but
+	 * normalized with {@link FileUtils#normalizeToDotWhenEmpty(String)}.
+	 */
+	public static List<String> getPathsNormalized(SourceContainerDescription scd) {
+		List<String> normalizedPaths = new ArrayList<>(scd.getPaths().size());
+		for (String path : scd.getPaths()) {
+			String normalizedPath = FileUtils.normalizeToDotWhenEmpty(path);
+			normalizedPaths.add(normalizedPath);
+		}
+		return normalizedPaths;
 	}
 
 	private ProjectDescriptionUtils() {

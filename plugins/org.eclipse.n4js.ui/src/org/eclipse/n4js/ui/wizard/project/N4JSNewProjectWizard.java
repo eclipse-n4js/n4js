@@ -12,7 +12,7 @@ package org.eclipse.n4js.ui.wizard.project;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.n4js.n4mf.ProjectType;
+import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.swt.widgets.Composite;

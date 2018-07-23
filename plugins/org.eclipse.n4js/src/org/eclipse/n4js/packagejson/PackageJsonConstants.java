@@ -10,9 +10,9 @@
  */
 package org.eclipse.n4js.packagejson;
 
-import org.eclipse.n4js.n4mf.ModuleLoader;
-import org.eclipse.n4js.n4mf.ProjectDescription;
-import org.eclipse.n4js.n4mf.ProjectType;
+import org.eclipse.n4js.projectDescription.ModuleLoader;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectType;
 
 /**
  * Constants for dealing with package.json files on the generic JSON level. Try to avoid this by using

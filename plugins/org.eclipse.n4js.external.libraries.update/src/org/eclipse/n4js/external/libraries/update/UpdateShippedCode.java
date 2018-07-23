@@ -169,8 +169,7 @@ public class UpdateShippedCode implements IWorkflowComponent {
 				println("NOT copying project " + projectName + " (because project name contains substring \"test\")");
 			} else if (projectName.contains("n4js-cli") || projectName.contains("n4js-mangelhaft-cli")
 					|| projectName.contains("org.eclipse.n4js.mangelhaft.reporter.console")
-					|| projectName.contains("org.eclipse.n4js.mangelhaft.reporter.xunit")
-					|| projectName.contains("n4mf-parser")) {
+					|| projectName.contains("org.eclipse.n4js.mangelhaft.reporter.xunit")) {
 				println("NOT copying project " + projectName
 						+ " (because this project will be published to npm registry only)");
 			} else {

@@ -26,12 +26,12 @@ import java.util.List;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSLanguageConstants;
-import org.eclipse.n4js.n4mf.BootstrapModule;
-import org.eclipse.n4js.n4mf.ModuleFilter;
-import org.eclipse.n4js.n4mf.ModuleFilterType;
-import org.eclipse.n4js.n4mf.ModuleLoader;
-import org.eclipse.n4js.n4mf.ProjectDescription;
-import org.eclipse.n4js.n4mf.ProjectType;
+import org.eclipse.n4js.projectDescription.BootstrapModule;
+import org.eclipse.n4js.projectDescription.ModuleFilter;
+import org.eclipse.n4js.projectDescription.ModuleFilterType;
+import org.eclipse.n4js.projectDescription.ModuleLoader;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
@@ -275,7 +275,7 @@ public class N4JSProject implements IN4JSProject {
 		if (pd == null) {
 			return null;
 		}
-		return FileUtils.normalizeDotWhenEmpty(pd.getOutputPath());
+		return FileUtils.normalizeToDotWhenEmpty(pd.getOutputPath());
 	}
 
 	@Override

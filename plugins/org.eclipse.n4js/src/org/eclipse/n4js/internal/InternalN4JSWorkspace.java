@@ -18,8 +18,8 @@ import java.util.zip.ZipInputStream;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ArchiveURIUtil;
-import org.eclipse.n4js.n4mf.ProjectDescription;
-import org.eclipse.n4js.n4mf.ProjectReference;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectReference;
 
 import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.ImmutableList;

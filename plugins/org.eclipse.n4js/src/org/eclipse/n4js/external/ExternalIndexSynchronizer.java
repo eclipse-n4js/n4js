@@ -25,7 +25,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
 import org.eclipse.n4js.json.JSON.JSONPackage;
-import org.eclipse.n4js.n4mf.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.packagejson.PackageJsonResourceDescriptionExtension;

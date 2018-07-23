@@ -47,12 +47,12 @@ import org.eclipse.n4js.json.JSON.NameValuePair
 import org.eclipse.n4js.json.model.utils.JSONModelUtils
 import org.eclipse.n4js.json.validation.^extension.AbstractJSONValidatorExtension
 import org.eclipse.n4js.json.validation.^extension.CheckProperty
-import org.eclipse.n4js.n4mf.ModuleFilterSpecifier
-import org.eclipse.n4js.n4mf.ProjectDependency
-import org.eclipse.n4js.n4mf.ProjectDescription
-import org.eclipse.n4js.n4mf.ProjectType
-import org.eclipse.n4js.n4mf.SourceContainerDescription
-import org.eclipse.n4js.n4mf.SourceContainerType
+import org.eclipse.n4js.projectDescription.ModuleFilterSpecifier
+import org.eclipse.n4js.projectDescription.ProjectDependency
+import org.eclipse.n4js.projectDescription.ProjectDescription
+import org.eclipse.n4js.projectDescription.ProjectType
+import org.eclipse.n4js.projectDescription.SourceContainerDescription
+import org.eclipse.n4js.projectDescription.SourceContainerType
 import org.eclipse.n4js.packagejson.PackageJsonUtils
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.IN4JSProject
@@ -82,7 +82,7 @@ import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider
 import org.eclipse.xtext.validation.Check
 
 import static com.google.common.base.Preconditions.checkState
-import static org.eclipse.n4js.n4mf.ProjectType.*
+import static org.eclipse.n4js.projectDescription.ProjectType.*
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__DEPENDENCIES
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__DEV_DEPENDENCIES
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__EXEC_MODULE

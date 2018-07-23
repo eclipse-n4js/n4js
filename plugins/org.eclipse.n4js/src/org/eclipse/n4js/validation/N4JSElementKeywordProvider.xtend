@@ -39,7 +39,7 @@ import org.eclipse.n4js.n4JS.BreakStatement
 import org.eclipse.n4js.n4JS.ContinueStatement
 import org.eclipse.n4js.n4JS.ThrowStatement
 import org.eclipse.n4js.n4JS.ReturnStatement
-import org.eclipse.n4js.n4mf.ModuleFilterType
+import org.eclipse.n4js.projectDescription.ModuleFilterType
 
 /**
  * Helper returning the keyword of a given AST or type element, e.g., "class" for a class declaration.

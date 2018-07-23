@@ -14,7 +14,7 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.base.Strings.nullToEmpty;
 import static org.eclipse.jface.viewers.StyledString.DECORATIONS_STYLER;
 import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.EXTERNAL_LIBRARY_NAMES;
-import static org.eclipse.n4js.n4mf.ProjectType.API;
+import static org.eclipse.n4js.projectDescription.ProjectType.API;
 import static org.eclipse.xtext.util.Strings.toFirstUpper;
 
 import java.io.File;
@@ -23,7 +23,7 @@ import java.net.URI;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StyledString;
-import org.eclipse.n4js.n4mf.ProjectType;
+import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.semver.model.SemverSerializer;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;

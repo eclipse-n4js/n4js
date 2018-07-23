@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.n4mf.SourceContainerType;
+import org.eclipse.n4js.projectDescription.SourceContainerType;
 import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;

@@ -36,9 +36,9 @@ import org.eclipse.n4js.json.JSON.JSONStringLiteral;
 import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.JSON.NameValuePair;
 import org.eclipse.n4js.json.model.utils.JSONModelUtils;
-import org.eclipse.n4js.n4mf.ModuleFilterType;
-import org.eclipse.n4js.n4mf.ProjectType;
-import org.eclipse.n4js.n4mf.SourceContainerType;
+import org.eclipse.n4js.projectDescription.ModuleFilterType;
+import org.eclipse.n4js.projectDescription.ProjectType;
+import org.eclipse.n4js.projectDescription.SourceContainerType;
 import org.eclipse.n4js.packagejson.PackageJsonBuilder;
 import org.eclipse.n4js.packagejson.PackageJsonConstants;
 

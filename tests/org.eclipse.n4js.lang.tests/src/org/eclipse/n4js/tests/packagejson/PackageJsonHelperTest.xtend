@@ -15,10 +15,10 @@ import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.json.JSON.JSONDocument
 import org.eclipse.n4js.json.JSONGlobals
 import org.eclipse.n4js.json.JSONParseHelper
-import org.eclipse.n4js.n4mf.ModuleFilterType
-import org.eclipse.n4js.n4mf.ProjectDescription
-import org.eclipse.n4js.n4mf.ProjectType
-import org.eclipse.n4js.n4mf.SourceContainerType
+import org.eclipse.n4js.projectDescription.ModuleFilterType
+import org.eclipse.n4js.projectDescription.ProjectDescription
+import org.eclipse.n4js.projectDescription.ProjectType
+import org.eclipse.n4js.projectDescription.SourceContainerType
 import org.eclipse.n4js.packagejson.PackageJsonHelper
 import org.eclipse.n4js.semver.Semver.TagVersionRequirement
 import org.eclipse.n4js.semver.Semver.VersionRangeSetRequirement

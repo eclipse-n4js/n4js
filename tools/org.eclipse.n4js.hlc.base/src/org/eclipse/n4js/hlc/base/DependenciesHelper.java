@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.StreamSupport;
 
-import org.eclipse.n4js.n4mf.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.dependencies.DependenciesCollectingUtil;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;

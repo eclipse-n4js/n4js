@@ -54,7 +54,7 @@ import org.eclipse.n4js.external.GitCloneSupplier;
 import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.external.NpmCLI;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
-import org.eclipse.n4js.n4mf.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.semver.SemverHelper;

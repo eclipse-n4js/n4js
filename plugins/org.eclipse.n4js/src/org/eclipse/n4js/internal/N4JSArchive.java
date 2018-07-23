@@ -14,7 +14,7 @@ import org.eclipse.emf.common.util.URI;
 
 import com.google.common.collect.ImmutableList;
 
-import org.eclipse.n4js.n4mf.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware;

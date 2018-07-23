@@ -15,8 +15,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import org.eclipse.n4js.n4mf.ProjectDescription;
-import org.eclipse.n4js.n4mf.ProjectReference;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectReference;
 
 import com.google.common.base.Strings;
 

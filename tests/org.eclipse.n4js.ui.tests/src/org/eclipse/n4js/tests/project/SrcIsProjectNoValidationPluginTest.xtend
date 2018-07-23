@@ -17,9 +17,9 @@ import org.eclipse.emf.common.util.URI
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.json.JSON.JSONDocument
 import org.eclipse.n4js.json.JSON.JSONObject
-import org.eclipse.n4js.n4mf.ModuleFilter
-import org.eclipse.n4js.n4mf.ModuleFilterSpecifier
-import org.eclipse.n4js.n4mf.ModuleFilterType
+import org.eclipse.n4js.projectDescription.ModuleFilter
+import org.eclipse.n4js.projectDescription.ModuleFilterSpecifier
+import org.eclipse.n4js.projectDescription.ModuleFilterType
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
 import org.eclipse.n4js.tests.util.PackageJSONTestUtils
 import org.junit.Before

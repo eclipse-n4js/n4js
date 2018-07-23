@@ -24,8 +24,8 @@ import org.eclipse.n4js.json.JSON.JSONFactory
 import org.eclipse.n4js.json.JSON.JSONObject
 import org.eclipse.n4js.json.JSONGlobals
 import org.eclipse.n4js.json.model.utils.JSONModelUtils
-import org.eclipse.n4js.n4mf.ProjectType
-import org.eclipse.n4js.n4mf.SourceContainerType
+import org.eclipse.n4js.projectDescription.ProjectType
+import org.eclipse.n4js.projectDescription.SourceContainerType
 import org.eclipse.n4js.utils.languages.N4LanguageUtils
 import org.eclipse.xtext.resource.SaveOptions
 import org.eclipse.xtext.serializer.ISerializer

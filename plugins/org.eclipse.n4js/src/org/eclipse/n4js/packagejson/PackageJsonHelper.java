@@ -60,12 +60,12 @@ import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.JSON.NameValuePair;
-import org.eclipse.n4js.n4mf.N4mfFactory;
-import org.eclipse.n4js.n4mf.ProjectDependency;
-import org.eclipse.n4js.n4mf.ProjectDescription;
-import org.eclipse.n4js.n4mf.ProjectType;
-import org.eclipse.n4js.n4mf.SourceContainerDescription;
-import org.eclipse.n4js.n4mf.SourceContainerType;
+import org.eclipse.n4js.projectDescription.ProjectDescriptionFactory;
+import org.eclipse.n4js.projectDescription.ProjectDependency;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectType;
+import org.eclipse.n4js.projectDescription.SourceContainerDescription;
+import org.eclipse.n4js.projectDescription.SourceContainerType;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
@@ -101,7 +101,7 @@ public class PackageJsonHelper {
 			String defaultProjectId) {
 		JSONValue rootValue = packageJSON.getContent();
 		if (rootValue instanceof JSONObject) {
-			ProjectDescription result = N4mfFactory.eINSTANCE.createProjectDescription();
+			ProjectDescription result = ProjectDescriptionFactory.eINSTANCE.createProjectDescription();
 			List<NameValuePair> rootPairs = ((JSONObject) rootValue).getNameValuePairs();
 			convertRootPairs(result, rootPairs);
 			adjustProjectDescriptionAfterConversion(result, applyDefaultValues, defaultProjectId,
@@ -220,7 +220,7 @@ public class PackageJsonHelper {
 			if (addProjectDependency) {
 				JSONValue value = pair.getValue();
 				String valueStr = asStringOrNull(value);
-				ProjectDependency dep = N4mfFactory.eINSTANCE.createProjectDependency();
+				ProjectDependency dep = ProjectDescriptionFactory.eINSTANCE.createProjectDependency();
 				dep.setProjectId(projectId);
 				dep.setVersionRequirementString(valueStr);
 
@@ -247,7 +247,7 @@ public class PackageJsonHelper {
 		if (valueOfTopLevelPropertyMain != null) {
 			if (!hasN4jsSpecificMainModule) { // only if no N4JS-specific "mainModule" property was given
 				List<String> sourceContainerPaths = target.getSourceContainers().stream()
-						.flatMap(scd -> scd.getPathsNormalized().stream())
+						.flatMap(scd -> ProjectDescriptionUtils.getPathsNormalized(scd).stream())
 						.collect(Collectors.toList());
 				String mainModulePath = ProjectDescriptionUtils.convertMainPathToModuleSpecifier(
 						valueOfTopLevelPropertyMain, sourceContainerPaths);
@@ -301,7 +301,7 @@ public class PackageJsonHelper {
 					.filter(sc -> sc.getSourceContainerType() == SourceContainerType.SOURCE)
 					.findFirst().orElse(null);
 			if (scd == null) {
-				SourceContainerDescription scdNew = N4mfFactory.eINSTANCE.createSourceContainerDescription();
+				SourceContainerDescription scdNew = ProjectDescriptionFactory.eINSTANCE.createSourceContainerDescription();
 				scdNew.setSourceContainerType(SourceContainerType.SOURCE);
 				scdNew.getPaths().add(DEFAULT_OUTPUT);
 				target.getSourceContainers().add(scdNew);

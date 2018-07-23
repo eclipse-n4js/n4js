@@ -16,8 +16,8 @@ import org.eclipse.core.resources.IProject
 import org.eclipse.emf.common.util.URI
 import org.eclipse.n4js.json.JSON.JSONDocument
 import org.eclipse.n4js.json.JSON.JSONObject
-import org.eclipse.n4js.n4mf.ModuleFilterType
-import org.eclipse.n4js.n4mf.SourceContainerType
+import org.eclipse.n4js.projectDescription.ModuleFilterType
+import org.eclipse.n4js.projectDescription.SourceContainerType
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
 import org.eclipse.n4js.tests.util.PackageJSONTestUtils

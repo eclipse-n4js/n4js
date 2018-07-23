@@ -38,7 +38,7 @@ import org.eclipse.n4js.json.JSON.JSONFactory;
 import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.model.utils.JSONModelUtils;
-import org.eclipse.n4js.n4mf.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.packagejson.PackageJsonHelper;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.xtext.resource.XtextResourceSet;

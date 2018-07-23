@@ -13,8 +13,8 @@ package org.eclipse.n4js.packagejson
 import java.util.Collection
 import java.util.Map
 import org.eclipse.n4js.json.JSON.JSONDocument
-import org.eclipse.n4js.n4mf.ProjectType
-import org.eclipse.n4js.n4mf.SourceContainerType
+import org.eclipse.n4js.projectDescription.ProjectType
+import org.eclipse.n4js.projectDescription.SourceContainerType
 import org.eclipse.n4js.utils.ProjectDescriptionLoader
 
 import static com.google.common.base.Optional.fromNullable
