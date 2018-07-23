@@ -195,8 +195,7 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 	}
 
 	/**
-	 * Indicates whether the resource change represented by the given {@code delta} does affect the container state of
-	 * the workspace.
+	 * Indicates whether the resource change represented by the given {@code delta} does affect this container state.
 	 *
 	 * Note that this method will only be invoked until a container-state-affecting delta is found. Thus, it is not
 	 * suitable for listening for all resource changes that may occur in the workspace.
