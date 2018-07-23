@@ -11,6 +11,7 @@
 package org.eclipse.n4js.tests.workspace;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -156,7 +157,7 @@ public class ProjectCacheInvalidationPluginTest extends AbstractBuilderParticipa
 	 * changes of both project description files.
 	 */
 	@Test
-	public void testUpdateNestedProject() throws CoreException, IOException {
+	public void testUpdateNestedProjectDescription() throws CoreException, IOException {
 		// test case constants
 		final String updatedImplementationId1 = "updated1";
 		final String updatedImplementationId2 = "updated2";
@@ -176,6 +177,27 @@ public class ProjectCacheInvalidationPluginTest extends AbstractBuilderParticipa
 		final IProject topLevelTestProject = ProjectTestsUtils.createProjectWithLocation(projectsRoot,
 				"TopLevel", "TopLevel");
 
+		System.out.println("Setup complete");
+
+		// obtain workspace representation of the nested test projects
+		Optional<? extends IN4JSProject> projectHandle1 = n4jsCore
+				.findProject(URI.createPlatformResourceURI(nestedTestProject1.getFullPath().toString(), true));
+		Optional<? extends IN4JSProject> projectHandle2 = n4jsCore
+				.findProject(URI.createPlatformResourceURI(nestedTestProject2.getFullPath().toString(), true));
+		Optional<? extends IN4JSProject> projectHandle3 = n4jsCore
+				.findProject(URI.createPlatformResourceURI(topLevelTestProject.getFullPath().toString(), true));
+
+		// check for initial value of implementationId (triggers initial population of cache)
+		assertFalse(
+				"Project handle for nested test project 1 should initially not have implementation ID (cache was invalidated).",
+				projectHandle1.get().getImplementationId().isPresent());
+		assertFalse(
+				"Project handle for nested test project 2 should initially not have implementation ID (cache was invalidated).",
+				projectHandle2.get().getImplementationId().isPresent());
+		assertFalse(
+				"Project handle for the top-level test project should initially not have implementation ID (cache was invalidated).",
+				projectHandle3.get().getImplementationId().isPresent());
+
 		// perform package.json modification
 		runAtomicWorkspaceOperation(monitor -> {
 			final IFile packageJson1 = nestedTestProject1.getFile(IN4JSProject.PACKAGE_JSON);
@@ -193,14 +215,6 @@ public class ProjectCacheInvalidationPluginTest extends AbstractBuilderParticipa
 					o -> PackageJSONTestUtils.setImplementationId(o, updatedImplementationId3));
 		});
 
-		// obtain workspace representation of the nested test projects
-		Optional<? extends IN4JSProject> projectHandle1 = n4jsCore
-				.findProject(URI.createPlatformResourceURI(nestedTestProject1.getFullPath().toString(), true));
-		Optional<? extends IN4JSProject> projectHandle2 = n4jsCore
-				.findProject(URI.createPlatformResourceURI(nestedTestProject2.getFullPath().toString(), true));
-		Optional<? extends IN4JSProject> projectHandle3 = n4jsCore
-				.findProject(URI.createPlatformResourceURI(topLevelTestProject.getFullPath().toString(), true));
-
 		// make assertions
 		assertTrue("Project handle for nested test project 1 can be obtained.", projectHandle1.isPresent());
 		assertTrue("Project handle for nested test project 2 can be obtained.", projectHandle2.isPresent());
@@ -217,6 +231,8 @@ public class ProjectCacheInvalidationPluginTest extends AbstractBuilderParticipa
 		assertEquals(updatedImplementationId1, projectHandle1.get().getImplementationId().get());
 		assertEquals(updatedImplementationId2, projectHandle2.get().getImplementationId().get());
 		assertEquals(updatedImplementationId3, projectHandle3.get().getImplementationId().get());
+
+		System.out.println("Tearing down...");
 
 		// tear down
 		nestedTestProject1.delete(true, new NullProgressMonitor());
