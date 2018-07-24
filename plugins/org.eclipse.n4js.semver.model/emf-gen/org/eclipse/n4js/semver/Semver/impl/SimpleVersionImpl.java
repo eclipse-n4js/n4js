@@ -187,6 +187,15 @@ public class SimpleVersionImpl extends SemverToStringableImpl implements SimpleV
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean isWildcard() {
+		return this.getNumber().isWildcard();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public boolean isSpecific() {
 		return ((this.getComparators().isEmpty() || this.isWithLetterV()) || this.getComparators().contains(VersionComparator.EQUALS));
 	}
@@ -347,6 +356,8 @@ public class SimpleVersionImpl extends SemverToStringableImpl implements SimpleV
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
+			case SemverPackage.SIMPLE_VERSION___IS_WILDCARD:
+				return isWildcard();
 			case SemverPackage.SIMPLE_VERSION___IS_SPECIFIC:
 				return isSpecific();
 			case SemverPackage.SIMPLE_VERSION___IS_CARET:

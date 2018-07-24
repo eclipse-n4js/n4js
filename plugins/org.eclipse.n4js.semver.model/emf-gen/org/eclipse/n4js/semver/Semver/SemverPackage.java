@@ -758,13 +758,22 @@ public interface SemverPackage extends EPackage {
 	int SIMPLE_VERSION___TO_STRING = SEMVER_TO_STRINGABLE___TO_STRING;
 
 	/**
+	 * The operation id for the '<em>Is Wildcard</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SIMPLE_VERSION___IS_WILDCARD = SEMVER_TO_STRINGABLE_OPERATION_COUNT + 0;
+
+	/**
 	 * The operation id for the '<em>Is Specific</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SIMPLE_VERSION___IS_SPECIFIC = SEMVER_TO_STRINGABLE_OPERATION_COUNT + 0;
+	int SIMPLE_VERSION___IS_SPECIFIC = SEMVER_TO_STRINGABLE_OPERATION_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Is Caret</em>' operation.
@@ -773,7 +782,7 @@ public interface SemverPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SIMPLE_VERSION___IS_CARET = SEMVER_TO_STRINGABLE_OPERATION_COUNT + 1;
+	int SIMPLE_VERSION___IS_CARET = SEMVER_TO_STRINGABLE_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Is Tilde</em>' operation.
@@ -782,7 +791,7 @@ public interface SemverPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SIMPLE_VERSION___IS_TILDE = SEMVER_TO_STRINGABLE_OPERATION_COUNT + 2;
+	int SIMPLE_VERSION___IS_TILDE = SEMVER_TO_STRINGABLE_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Is Greater</em>' operation.
@@ -791,7 +800,7 @@ public interface SemverPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SIMPLE_VERSION___IS_GREATER = SEMVER_TO_STRINGABLE_OPERATION_COUNT + 3;
+	int SIMPLE_VERSION___IS_GREATER = SEMVER_TO_STRINGABLE_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Is Greater Equals</em>' operation.
@@ -800,7 +809,7 @@ public interface SemverPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SIMPLE_VERSION___IS_GREATER_EQUALS = SEMVER_TO_STRINGABLE_OPERATION_COUNT + 4;
+	int SIMPLE_VERSION___IS_GREATER_EQUALS = SEMVER_TO_STRINGABLE_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Is Smaller</em>' operation.
@@ -809,7 +818,7 @@ public interface SemverPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SIMPLE_VERSION___IS_SMALLER = SEMVER_TO_STRINGABLE_OPERATION_COUNT + 5;
+	int SIMPLE_VERSION___IS_SMALLER = SEMVER_TO_STRINGABLE_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Is Smaller Equals</em>' operation.
@@ -818,7 +827,7 @@ public interface SemverPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SIMPLE_VERSION___IS_SMALLER_EQUALS = SEMVER_TO_STRINGABLE_OPERATION_COUNT + 6;
+	int SIMPLE_VERSION___IS_SMALLER_EQUALS = SEMVER_TO_STRINGABLE_OPERATION_COUNT + 7;
 
 	/**
 	 * The number of operations of the '<em>Simple Version</em>' class.
@@ -827,7 +836,7 @@ public interface SemverPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SIMPLE_VERSION_OPERATION_COUNT = SEMVER_TO_STRINGABLE_OPERATION_COUNT + 7;
+	int SIMPLE_VERSION_OPERATION_COUNT = SEMVER_TO_STRINGABLE_OPERATION_COUNT + 8;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.semver.Semver.impl.VersionNumberImpl <em>Version Number</em>}' class.
@@ -903,13 +912,22 @@ public interface SemverPackage extends EPackage {
 	int VERSION_NUMBER___TO_STRING = SEMVER_TO_STRINGABLE___TO_STRING;
 
 	/**
+	 * The operation id for the '<em>Is Wildcard</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSION_NUMBER___IS_WILDCARD = SEMVER_TO_STRINGABLE_OPERATION_COUNT + 0;
+
+	/**
 	 * The operation id for the '<em>Get Pre Release Tag</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_NUMBER___GET_PRE_RELEASE_TAG = SEMVER_TO_STRINGABLE_OPERATION_COUNT + 0;
+	int VERSION_NUMBER___GET_PRE_RELEASE_TAG = SEMVER_TO_STRINGABLE_OPERATION_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Has Pre Release Tag</em>' operation.
@@ -918,7 +936,7 @@ public interface SemverPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_NUMBER___HAS_PRE_RELEASE_TAG = SEMVER_TO_STRINGABLE_OPERATION_COUNT + 1;
+	int VERSION_NUMBER___HAS_PRE_RELEASE_TAG = SEMVER_TO_STRINGABLE_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Length</em>' operation.
@@ -927,7 +945,7 @@ public interface SemverPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_NUMBER___LENGTH = SEMVER_TO_STRINGABLE_OPERATION_COUNT + 2;
+	int VERSION_NUMBER___LENGTH = SEMVER_TO_STRINGABLE_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Get Part</em>' operation.
@@ -936,7 +954,7 @@ public interface SemverPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_NUMBER___GET_PART__INT = SEMVER_TO_STRINGABLE_OPERATION_COUNT + 3;
+	int VERSION_NUMBER___GET_PART__INT = SEMVER_TO_STRINGABLE_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Equals</em>' operation.
@@ -945,7 +963,7 @@ public interface SemverPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_NUMBER___EQUALS__OBJECT = SEMVER_TO_STRINGABLE_OPERATION_COUNT + 4;
+	int VERSION_NUMBER___EQUALS__OBJECT = SEMVER_TO_STRINGABLE_OPERATION_COUNT + 5;
 
 	/**
 	 * The number of operations of the '<em>Version Number</em>' class.
@@ -954,7 +972,7 @@ public interface SemverPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_NUMBER_OPERATION_COUNT = SEMVER_TO_STRINGABLE_OPERATION_COUNT + 5;
+	int VERSION_NUMBER_OPERATION_COUNT = SEMVER_TO_STRINGABLE_OPERATION_COUNT + 6;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.semver.Semver.impl.VersionPartImpl <em>Version Part</em>}' class.
@@ -1517,6 +1535,16 @@ public interface SemverPackage extends EPackage {
 	EAttribute getSimpleVersion_Comparators();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.semver.Semver.SimpleVersion#isWildcard() <em>Is Wildcard</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Wildcard</em>' operation.
+	 * @see org.eclipse.n4js.semver.Semver.SimpleVersion#isWildcard()
+	 * @generated
+	 */
+	EOperation getSimpleVersion__IsWildcard();
+
+	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.semver.Semver.SimpleVersion#isSpecific() <em>Is Specific</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1650,6 +1678,16 @@ public interface SemverPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getVersionNumber_Qualifier();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.semver.Semver.VersionNumber#isWildcard() <em>Is Wildcard</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Wildcard</em>' operation.
+	 * @see org.eclipse.n4js.semver.Semver.VersionNumber#isWildcard()
+	 * @generated
+	 */
+	EOperation getVersionNumber__IsWildcard();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.semver.Semver.VersionNumber#getPreReleaseTag() <em>Get Pre Release Tag</em>}' operation.
@@ -2160,6 +2198,14 @@ public interface SemverPackage extends EPackage {
 		EAttribute SIMPLE_VERSION__COMPARATORS = eINSTANCE.getSimpleVersion_Comparators();
 
 		/**
+		 * The meta object literal for the '<em><b>Is Wildcard</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation SIMPLE_VERSION___IS_WILDCARD = eINSTANCE.getSimpleVersion__IsWildcard();
+
+		/**
 		 * The meta object literal for the '<em><b>Is Specific</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2264,6 +2310,14 @@ public interface SemverPackage extends EPackage {
 		 * @generated
 		 */
 		EReference VERSION_NUMBER__QUALIFIER = eINSTANCE.getVersionNumber_Qualifier();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Wildcard</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation VERSION_NUMBER___IS_WILDCARD = eINSTANCE.getVersionNumber__IsWildcard();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Pre Release Tag</b></em>' operation.

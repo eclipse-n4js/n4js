@@ -11,6 +11,7 @@ import org.eclipse.n4js.semver.Semver.VersionComparator;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.semver.Semver.VersionPart;
 import org.eclipse.n4js.semver.Semver.VersionRange;
+import org.eclipse.n4js.semver.Semver.VersionRangeConstraint;
 import org.eclipse.n4js.semver.Semver.VersionRangeSetRequirement;
 
 /** Utility class to provide methods to check matching of versions. */
@@ -184,7 +185,12 @@ public class SemverMatcher {
 		EList<VersionRange> cRanges = constraint.getRanges();
 
 		if (cRanges.isEmpty()) {
-			return true; // Empty versions are interpreted as "latest". Thus return true here.
+			// Empty versions are interpreted as "latest". Thus return true here.
+			return true;
+		}
+
+		if (isWildcard(constraint)) {
+			return true;
 		}
 
 		for (VersionRange cRange : cRanges) {
@@ -195,6 +201,29 @@ public class SemverMatcher {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * The matching of wildcards is specified different on than it is behaving using npm with regard to the handling of
+	 * pre-release tagged versions. However, this matching method will mimic the npm behavior e.g. when executing 'npm
+	 * install package@*'.
+	 *
+	 * @return true iff the given constraint consists of one wildcard only
+	 */
+	private static boolean isWildcard(VersionRangeSetRequirement constraint) {
+		if (constraint.getRanges().size() != 1) {
+			return false;
+		}
+		VersionRange versionRange = constraint.getRanges().get(0);
+		if (!(versionRange instanceof VersionRangeConstraint)) {
+			return false;
+		}
+		VersionRangeConstraint vrc = (VersionRangeConstraint) versionRange;
+		if (vrc.getVersionConstraints().size() != 1) {
+			return false;
+		}
+		SimpleVersion simpleVersion = vrc.getVersionConstraints().get(0);
+		return simpleVersion.isWildcard();
 	}
 
 	/**

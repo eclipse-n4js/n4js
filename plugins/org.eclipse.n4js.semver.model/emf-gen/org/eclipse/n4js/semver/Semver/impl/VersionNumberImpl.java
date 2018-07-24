@@ -308,6 +308,15 @@ public class VersionNumberImpl extends SemverToStringableImpl implements Version
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean isWildcard() {
+		return this.getMajor().isWildcard();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EList<String> getPreReleaseTag() {
 		EList<String> _xifexpression = null;
 		if (((this.getQualifier() != null) && (this.getQualifier().getPreRelease() != null))) {
@@ -527,6 +536,8 @@ public class VersionNumberImpl extends SemverToStringableImpl implements Version
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
+			case SemverPackage.VERSION_NUMBER___IS_WILDCARD:
+				return isWildcard();
 			case SemverPackage.VERSION_NUMBER___GET_PRE_RELEASE_TAG:
 				return getPreReleaseTag();
 			case SemverPackage.VERSION_NUMBER___HAS_PRE_RELEASE_TAG:
