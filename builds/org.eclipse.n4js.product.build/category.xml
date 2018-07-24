@@ -75,6 +75,9 @@
    <feature url="features/org.eclipse.n4js.json.sdk_0.0.1.qualifier.jar" id="org.eclipse.n4js.json.sdk" version="0.0.1.qualifier">
       <category name="org.eclipse.n4js.yard"/>
    </feature>
+   <feature url="features/org.eclipse.n4js.semver.sdk_0.0.1.qualifier.jar" id="org.eclipse.n4js.semver.sdk" version="0.0.1.qualifier">
+      <category name="org.eclipse.n4js.yard"/>
+   </feature>
    <category-def name="org.eclipse.n4js.yard" label="N4JS SDKs">
       <description>
          All thing required to develop &amp; run N4JS.

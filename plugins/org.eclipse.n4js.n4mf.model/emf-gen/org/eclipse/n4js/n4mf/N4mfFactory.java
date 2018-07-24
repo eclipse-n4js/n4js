@@ -39,15 +39,6 @@ public interface N4mfFactory extends EFactory {
 	ProjectDescription createProjectDescription();
 
 	/**
-	 * Returns a new object of class '<em>Declared Version</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Declared Version</em>'.
-	 * @generated
-	 */
-	DeclaredVersion createDeclaredVersion();
-
-	/**
 	 * Returns a new object of class '<em>Source Container Description</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -100,15 +91,6 @@ public interface N4mfFactory extends EFactory {
 	 * @generated
 	 */
 	ProjectDependency createProjectDependency();
-
-	/**
-	 * Returns a new object of class '<em>Version Constraint</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Version Constraint</em>'.
-	 * @generated
-	 */
-	VersionConstraint createVersionConstraint();
 
 	/**
 	 * Returns the package supported by this factory.

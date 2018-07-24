@@ -25,11 +25,12 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
 import org.eclipse.n4js.json.JSON.JSONPackage;
-import org.eclipse.n4js.n4mf.DeclaredVersion;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.packagejson.PackageJsonResourceDescriptionExtension;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
+import org.eclipse.n4js.semver.model.SemverSerializer;
 import org.eclipse.n4js.utils.ProjectDescriptionHelper;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -120,11 +121,8 @@ public abstract class ExternalIndexSynchronizer {
 		URI uri = URI.createFileURI(packageJSON.getAbsolutePath());
 		ProjectDescription pDescr = projectDescriptionHelper.loadProjectDescriptionAtLocation(uri);
 		if (pDescr != null) {
-			DeclaredVersion pV = pDescr.getProjectVersion();
-			String version = pV.getMajor() + "." + pV.getMinor() + "." + pV.getMicro();
-			if (pV.getQualifier() != null) {
-				version += ":" + pV.getQualifier();
-			}
+			VersionNumber pV = pDescr.getProjectVersion();
+			String version = SemverSerializer.serialize(pV);
 			return version;
 		}
 

@@ -79,9 +79,8 @@ public class TargetPlatformReuseTest extends AbstractN4jscTest {
 		final SortedMap<String, Long> moduleFootprintAfter = computeFolderModificationFootprint(nodeModulesFolder);
 		final List<String> modifiedPackages = computeModifiedFiles(moduleFootprintBefore, moduleFootprintAfter);
 
-		Assert.assertEquals(
-				"Only packages that are not specified in an exact version, are reinstalled on target platform location reuse.",
-				"[encoding, is-stream, node-fetch, systemjs, when]", modifiedPackages.toString());
+		Assert.assertEquals("Packages should not be re-installed on target platform location reuse.",
+				"[]", modifiedPackages.toString());
 	}
 
 	/**

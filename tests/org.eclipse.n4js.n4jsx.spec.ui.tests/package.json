@@ -1,6 +1,6 @@
 {
 	"name": "N4JSXSpecTest",
-	"version": "0.0.1-SNAPSHOT",
+	"version": "0.0.1",
 	"dependencies": {
 		"react": "*"
 	},

@@ -72,10 +72,10 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 	}
 
 	@Override
-	public URI findProjectWith(URI unsafeLocation) {
-		URI key = URIUtils.normalize(unsafeLocation.trimFragment());
+	public URI findProjectWith(URI nestedLocation) {
+		URI key = URIUtils.normalize(nestedLocation.trimFragment());
 
-		// determine longest registered project location, that is a prefix of key
+		// determine longest registered project location, that is a prefix of 'key'
 		while (key.segmentCount() > 0) {
 			LazyProjectDescriptionHandle match = this.projectElementHandles.get(key);
 			if (match != null) {

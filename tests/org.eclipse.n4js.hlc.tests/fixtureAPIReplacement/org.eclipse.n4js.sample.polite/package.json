@@ -1,6 +1,6 @@
 {
 	"name": "org.eclipse.n4js.sample.polite",
-	"version": "0.0.1-SNAPSHOT",
+	"version": "0.0.1",
 	"dependencies": {
 		"org.eclipse.n4js.sample.utils": "*"
 	},

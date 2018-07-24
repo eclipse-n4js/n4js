@@ -23,8 +23,12 @@ import org.eclipse.emf.common.util.Enumerator;
  * <!-- end-user-doc -->
  * <!-- begin-model-doc -->
  * *
- * To define if a dependency is only required while executing testing or
- * if it is a dependency at runtime (COMPILE).
+ * A version bound describes a side of an version range.
+ * A version bound can be inclusive or exclusive,
+ * so e.g. in (1.0.0, 2.0.0] 1.0.0 is excluded,
+ * but 2.0.0 is included, so all versions x with
+ * 1.0.0 < x <= 2.0.0 are allowed. If only a lowerVersion
+ * is assigned this means [version, infinity).
  * <!-- end-model-doc -->
  * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDependencyScope()
  * @model

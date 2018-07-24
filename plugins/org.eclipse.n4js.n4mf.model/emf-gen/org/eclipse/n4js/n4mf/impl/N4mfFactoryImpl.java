@@ -66,14 +66,12 @@ public class N4mfFactoryImpl extends EFactoryImpl implements N4mfFactory {
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case N4mfPackage.PROJECT_DESCRIPTION: return createProjectDescription();
-			case N4mfPackage.DECLARED_VERSION: return createDeclaredVersion();
 			case N4mfPackage.SOURCE_CONTAINER_DESCRIPTION: return createSourceContainerDescription();
 			case N4mfPackage.MODULE_FILTER: return createModuleFilter();
 			case N4mfPackage.BOOTSTRAP_MODULE: return createBootstrapModule();
 			case N4mfPackage.PROJECT_REFERENCE: return createProjectReference();
 			case N4mfPackage.MODULE_FILTER_SPECIFIER: return createModuleFilterSpecifier();
 			case N4mfPackage.PROJECT_DEPENDENCY: return createProjectDependency();
-			case N4mfPackage.VERSION_CONSTRAINT: return createVersionConstraint();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -140,16 +138,6 @@ public class N4mfFactoryImpl extends EFactoryImpl implements N4mfFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public DeclaredVersion createDeclaredVersion() {
-		DeclaredVersionImpl declaredVersion = new DeclaredVersionImpl();
-		return declaredVersion;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public SourceContainerDescription createSourceContainerDescription() {
 		SourceContainerDescriptionImpl sourceContainerDescription = new SourceContainerDescriptionImpl();
 		return sourceContainerDescription;
@@ -203,16 +191,6 @@ public class N4mfFactoryImpl extends EFactoryImpl implements N4mfFactory {
 	public ProjectDependency createProjectDependency() {
 		ProjectDependencyImpl projectDependency = new ProjectDependencyImpl();
 		return projectDependency;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public VersionConstraint createVersionConstraint() {
-		VersionConstraintImpl versionConstraint = new VersionConstraintImpl();
-		return versionConstraint;
 	}
 
 	/**

@@ -19,7 +19,7 @@ import java.util.stream.StreamSupport;
 
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.SubMonitor;
-import org.eclipse.n4js.n4mf.DeclaredVersion;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.ui.external.ExternalLibrariesActionsHelper;
 
 import com.google.inject.Inject;
@@ -54,7 +54,7 @@ public class ExternalLibrariesInstallHelper {
 		// remove npms
 		externals.maintenanceDeleteNpms(multistatus);
 
-		Map<String, DeclaredVersion> projectIdsOfShippedCode = StreamSupport
+		Map<String, VersionNumber> projectIdsOfShippedCode = StreamSupport
 				.stream(dependenciesHelper.getAvailableProjectsDescriptions(true).spliterator(), false)
 				.collect(Collectors.toMap(pd -> pd.getProjectId(), pd -> pd.getProjectVersion()));
 
@@ -79,10 +79,10 @@ public class ExternalLibrariesInstallHelper {
 	 * compare!
 	 */
 	private void removeDependenciesToShippedCodeIfVersionMatches(Map<String, String> dependenciesToInstall,
-			Map<String, DeclaredVersion> projectIdsOfShippedCode) {
+			Map<String, VersionNumber> projectIdsOfShippedCode) {
 		for (Entry<String, String> depToInstall : dependenciesToInstall.entrySet()) {
 			String projectId = depToInstall.getKey();
-			DeclaredVersion availableVersionInShippedCode = projectIdsOfShippedCode.get(projectId);
+			VersionNumber availableVersionInShippedCode = projectIdsOfShippedCode.get(projectId);
 			if (availableVersionInShippedCode != null) {
 				String versionConstraintStr = depToInstall.getValue();
 				if (versionConstraintStr != null && versionConstraintStr.trim().equals("@\">=0.1.0 <=0.1.0\"")) {

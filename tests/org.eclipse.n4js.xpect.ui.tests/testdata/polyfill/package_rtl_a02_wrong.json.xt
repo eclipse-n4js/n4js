@@ -50,7 +50,7 @@
 
 {
 	"name": "P_RTL_A02",
-	"version": "0.0.1-SNAPSHOT",
+	"version": "0.0.1",
 	"dependencies": {
 		"P_RTL_A01": "*"
 	},

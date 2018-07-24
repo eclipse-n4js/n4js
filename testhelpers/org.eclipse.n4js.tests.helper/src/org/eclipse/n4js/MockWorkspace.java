@@ -14,11 +14,12 @@ import java.util.Collections;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
-import org.eclipse.n4js.n4mf.DeclaredVersion;
 import org.eclipse.n4js.n4mf.N4mfFactory;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectReference;
 import org.eclipse.n4js.n4mf.ProjectType;
+import org.eclipse.n4js.semver.SemverUtils;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
 
 import com.google.common.collect.Iterators;
 import com.google.common.collect.UnmodifiableIterator;
@@ -41,12 +42,8 @@ public class MockWorkspace extends InternalN4JSWorkspace {
 		projectDescription.setProjectId(TEST_PROJECT__PROJECT_ID);
 		projectDescription.setVendorId(TEST_PROJECT__VENDOR_ID);
 		projectDescription.setProjectType(ProjectType.APPLICATION);
-		DeclaredVersion declaredVersion = N4mfFactory.eINSTANCE.createDeclaredVersion();
-		declaredVersion.setMajor(1);
-		declaredVersion.setMicro(0);
-		declaredVersion.setMinor(0);
-		declaredVersion.setQualifier("");
-		projectDescription.setProjectVersion(declaredVersion);
+		VersionNumber versionNumber = SemverUtils.createVersionNumber(1, 0, 0);
+		projectDescription.setProjectVersion(versionNumber);
 	}
 
 	@Override

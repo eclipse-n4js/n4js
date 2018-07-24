@@ -43,7 +43,7 @@
 // XPECT noerrors --> "Contradicting defintion in this library will be reported in the files or if the project is used."
 {
 	"name": "P_RTL_A01",
-	"version": "0.0.1-SNAPSHOT",
+	"version": "0.0.1",
 	"dependencies": {
 		"P_RTL_A00": "*"
 	},
