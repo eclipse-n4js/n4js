@@ -12,7 +12,7 @@
 @GenModel(fileExtensions="n4jsProjectDescription",
 // As with IDE-1456 removing the modelPluginID to avoid IOE with 'The path' ... 'is unmapped.' in
 // the maven plugin: "xtext-maven-plugin:2.8.2:generate"
-//	modelPluginID="org.eclipse.n4js.n4mf.model",
+//	modelPluginID="org.eclipse.n4js.model",
 	modelDirectory="/org.eclipse.n4js.model/emf-gen",
 	forceOverwrite="true",
 	updateClasspath="false",
