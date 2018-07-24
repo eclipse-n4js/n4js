@@ -17,8 +17,9 @@ import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
 
 /**
+ * Validation-only intermediate representation of a polyfill.
  */
-public class PolyFilledProvisionPackageJson {
+public class PolyFilledProvision {
 
 	/**
 	 * ~ "a.b.ModulName.!POLY.ElementName"
@@ -48,7 +49,7 @@ public class PolyFilledProvisionPackageJson {
 	/**
 	 *
 	 */
-	public PolyFilledProvisionPackageJson(String library, JSONStringLiteral libProjectDescription,
+	public PolyFilledProvision(String library, JSONStringLiteral libProjectDescription,
 			IEObjectDescription ieoDescrOfPolyfill) {
 		this.library = library;
 		this.libraryProjectReferenceLiteral = libProjectDescription;
