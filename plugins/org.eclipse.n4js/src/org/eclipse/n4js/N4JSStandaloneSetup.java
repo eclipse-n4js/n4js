@@ -83,7 +83,7 @@ public class N4JSStandaloneSetup implements ISetup {
 	}
 
 	/**
-	 * Registers all dependent packages (N4JS, Types, N4MF, XML) and file extensions (n4js, js)
+	 * Registers all dependent packages (N4JS, Types, ProjectDescription, XML) and file extensions (n4js, js)
 	 *
 	 * @param injector
 	 *            the injector to get the resource service provider from
@@ -92,7 +92,8 @@ public class N4JSStandaloneSetup implements ISetup {
 		EPackage.Registry.INSTANCE.put(N4JSPackage.eINSTANCE.getNsURI(), N4JSPackage.eINSTANCE);
 		EPackage.Registry.INSTANCE.put(TypeRefsPackage.eINSTANCE.getNsURI(), TypeRefsPackage.eINSTANCE);
 		EPackage.Registry.INSTANCE.put(TypesPackage.eINSTANCE.getNsURI(), TypesPackage.eINSTANCE);
-		EPackage.Registry.INSTANCE.put(ProjectDescriptionPackage.eINSTANCE.getNsURI(), ProjectDescriptionPackage.eINSTANCE);
+		EPackage.Registry.INSTANCE.put(ProjectDescriptionPackage.eINSTANCE.getNsURI(),
+				ProjectDescriptionPackage.eINSTANCE);
 		EPackage.Registry.INSTANCE.put(XMLTypePackage.eINSTANCE.getNsURI(), XMLTypePackage.eINSTANCE);
 
 		org.eclipse.xtext.resource.IResourceFactory resourceFactory = injector

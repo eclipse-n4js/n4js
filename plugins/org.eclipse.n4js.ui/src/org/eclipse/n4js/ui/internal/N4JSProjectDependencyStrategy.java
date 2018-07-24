@@ -26,7 +26,7 @@ import org.eclipse.n4js.utils.resources.ExternalProject;
 import com.google.inject.Inject;
 
 /**
- * Compute the project dependencies based on the content of the n4mf files.
+ * Compute the project dependencies based on the content of the package.json files.
  */
 public class N4JSProjectDependencyStrategy implements ProjectDescriptionLoadListener.Strategy {
 

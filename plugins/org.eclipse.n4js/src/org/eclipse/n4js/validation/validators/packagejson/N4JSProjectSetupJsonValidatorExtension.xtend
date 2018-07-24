@@ -183,7 +183,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	@Check
 	def checkConsistentPolyfills(JSONDocument document) {
 		// Take the RTE and RTL's check for duplicate fillings.
-		// lookup of Names in n4mf &
+		// lookup of names in project description
 		val Map<String, JSONStringLiteral> mQName2rtDep = newHashMap()
 
 		val description = getProjectDescription();

@@ -60,9 +60,9 @@ import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.JSON.NameValuePair;
-import org.eclipse.n4js.projectDescription.ProjectDescriptionFactory;
 import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectDescriptionFactory;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectDescription.SourceContainerDescription;
 import org.eclipse.n4js.projectDescription.SourceContainerType;
@@ -276,7 +276,7 @@ public class PackageJsonHelper {
 	private void applyDefaults(ProjectDescription target, String defaultProjectId) {
 		// implementation note: we do not have to set the default for 'projectType' here,
 		// because this default is already handled by EMF by defining VALIDATION as the
-		// first literal of enum ProjectType in N4MF.xcore.
+		// first literal of enum ProjectType in ProjectDescription.xcore
 		if (target.getProjectId() == null) {
 			target.setProjectId(defaultProjectId);
 		}
@@ -301,7 +301,8 @@ public class PackageJsonHelper {
 					.filter(sc -> sc.getSourceContainerType() == SourceContainerType.SOURCE)
 					.findFirst().orElse(null);
 			if (scd == null) {
-				SourceContainerDescription scdNew = ProjectDescriptionFactory.eINSTANCE.createSourceContainerDescription();
+				SourceContainerDescription scdNew = ProjectDescriptionFactory.eINSTANCE
+						.createSourceContainerDescription();
 				scdNew.setSourceContainerType(SourceContainerType.SOURCE);
 				scdNew.getPaths().add(DEFAULT_OUTPUT);
 				target.getSourceContainers().add(scdNew);

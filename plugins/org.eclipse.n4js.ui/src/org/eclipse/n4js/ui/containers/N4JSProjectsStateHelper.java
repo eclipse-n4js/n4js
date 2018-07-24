@@ -24,6 +24,7 @@ import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.ui.internal.WorkspaceCacheAccess;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
+import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.xtext.ui.containers.AbstractStorage2UriMapperClient;
 
 import com.google.common.base.Optional;
@@ -36,7 +37,7 @@ import com.google.inject.Singleton;
  * consideration during calculation. Handling of changes (project closes, properties file changed) is done in
  * {@link N4JSProjectDescription}.
  * <p/>
- * Uses the project description read in from file manifest.n4mf by {@link N4JSProjectDescription}. So e.g. it can be
+ * Uses the project description read in from package.json file by {@link ProjectDescriptionLoader}. So e.g. it can be
  * configured that all files in src and src-test should be part of the container.
  * <p/>
  */

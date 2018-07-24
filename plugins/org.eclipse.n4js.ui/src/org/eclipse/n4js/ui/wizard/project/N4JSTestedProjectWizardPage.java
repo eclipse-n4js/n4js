@@ -43,7 +43,7 @@ public class N4JSTestedProjectWizardPage extends WizardPage {
 	 * Create a new tested project wizard page.
 	 *
 	 * @param projectInfo
-	 *            The N4MFProjectInfo to use as model
+	 *            The N4JSProjectInfo to use as model
 	 * @param resourceDescriptions
 	 *            A {@link IResourceDescriptions} implementation.
 	 */

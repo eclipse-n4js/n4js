@@ -64,7 +64,7 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 	/**
 	 *
 	 * @param location
-	 *            project directory containing manifest.n4mf directly
+	 *            project directory containing package.json directly
 	 */
 	public void registerProject(URI unsafeLocation) {
 		if (unsafeLocation.lastSegment().isEmpty()) {

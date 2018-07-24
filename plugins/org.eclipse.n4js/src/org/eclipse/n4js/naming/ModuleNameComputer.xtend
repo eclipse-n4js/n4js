@@ -22,7 +22,7 @@ import org.eclipse.xtext.resource.IResourceDescription
 
 /**
  * Utility class to calculate the qualified name of the resource depending on the project configuration.
- * The project configuration is provided by a manifest.n4mf file in the root of the project.
+ * The project configuration is provided by a package.json file in the root folder of the project.
  * This file contains the definition which folders of the current project should be handled as src rsp.
  * src-test folders. So if a resource is placed under MyProject/src/my/pack/MyResource.n4js, the calculated
  * qualified name would be my.pack.MyResource.

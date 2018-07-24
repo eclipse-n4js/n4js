@@ -32,7 +32,7 @@ public enum ResourceType {
 	/** Raw file has extension <code>.n4jsd</code> or <code>.n4jsd.xt</code> */
 	N4JSD,
 	/** Raw file has extension <code>.n4mf</code> or <code>.n4mf.xt</code> */
-	N4MF,
+	N4MF, // FIXME GH-809 delete!
 	/** Raw file has extension is <code>.xt</code> */
 	XT,
 	/** Raw file has extension <code>.n4idl</code> or <code>.n4idl.xt</code> */

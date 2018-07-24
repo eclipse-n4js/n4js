@@ -430,8 +430,8 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	/**
 	 * Updates the internal state based on the available external project root locations.
 	 * <p>
-	 * This cannot be done in construction time, because it might happen that N4MF is not initialized yet, hence not
-	 * available when injecting this instance.
+	 * This cannot be done in construction time, because it might happen that some bundles/classes are not initialized
+	 * yet, hence not available when injecting this instance.
 	 */
 	@Override
 	public void updateState() {

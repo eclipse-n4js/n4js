@@ -57,7 +57,7 @@ public class CRHStatsPrinter {
 				"-- Number of files that can have a copyright header: ");
 
 		Set<String> interestingExt = sortedHist.keySet();
-		// String[] interestingExt = { "n4js", "n4mf", "js" };
+		// String[] interestingExt = { "n4js", "js" };
 
 		interestingExt.removeAll(CANNOT_HAVE_CRH);
 		for (String ext : interestingExt) {

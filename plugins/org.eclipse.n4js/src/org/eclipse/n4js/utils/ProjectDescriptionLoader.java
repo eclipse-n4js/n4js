@@ -38,8 +38,8 @@ import org.eclipse.n4js.json.JSON.JSONFactory;
 import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.model.utils.JSONModelUtils;
-import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.packagejson.PackageJsonHelper;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.util.Pair;
@@ -66,8 +66,7 @@ public class ProjectDescriptionLoader {
 	/**
 	 * Loads the project description of the N4JS project at the given {@code location}.
 	 * <p>
-	 * Returns {@code null} if the project description cannot be loaded successfully (e.g. missing package.json and
-	 * manifest.n4mf file).
+	 * Returns {@code null} if the project description cannot be loaded successfully (e.g. missing package.json).
 	 */
 	public ProjectDescription loadProjectDescriptionAtLocation(URI location) {
 		JSONDocument packageJSON = loadPackageJSONAtLocation(location);

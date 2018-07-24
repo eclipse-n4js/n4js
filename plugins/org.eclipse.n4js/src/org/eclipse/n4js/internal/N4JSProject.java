@@ -199,7 +199,7 @@ public class N4JSProject implements IN4JSProject {
 	public String getProjectId() {
 		// because the projectId must be available even if the project does not exist, we do not read from the
 		// ProjectDescription, here, but instead use the last segment of the location URI (equality between the two is
-		// ensured by an n4mf validation)
+		// ensured by a package.json validation)
 		return location.lastSegment();
 	}
 

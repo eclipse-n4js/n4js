@@ -363,7 +363,6 @@ public class N4JSModel {
 		EList<ProjectReference> runtimeLibraries = getAllProvidedRuntimeLibraries(project);
 		URI projectLocation = project.getLocation();
 
-		// GHOLD-249: If the project n4mf file has parse errors, we need a lot of null checks.
 		for (ProjectReference runtimeLibrary : runtimeLibraries) {
 			URI location = workspace.getLocation(projectLocation, runtimeLibrary, PROJECT);
 			if (null == location) {
