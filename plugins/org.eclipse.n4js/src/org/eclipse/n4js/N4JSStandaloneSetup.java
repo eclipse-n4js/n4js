@@ -17,6 +17,7 @@ import org.eclipse.n4js.json.JSONStandaloneSetup;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4mf.N4mfPackage;
 import org.eclipse.n4js.regex.RegularExpressionStandaloneSetup;
+import org.eclipse.n4js.semver.SemverStandaloneSetup;
 import org.eclipse.n4js.ts.TypeExpressionsStandaloneSetup;
 import org.eclipse.n4js.ts.TypesStandaloneSetup;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
@@ -74,6 +75,7 @@ public class N4JSStandaloneSetup implements ISetup {
 		TypesStandaloneSetup.doSetup();
 		TypeExpressionsStandaloneSetup.doSetup();
 		JSONStandaloneSetup.doSetup();
+		SemverStandaloneSetup.doSetup();
 
 		Injector injector = createInjector();
 		register(injector);

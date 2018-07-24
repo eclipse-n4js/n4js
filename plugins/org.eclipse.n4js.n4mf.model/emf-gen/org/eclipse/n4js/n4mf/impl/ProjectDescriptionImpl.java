@@ -31,7 +31,6 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.n4js.n4mf.BootstrapModule;
-import org.eclipse.n4js.n4mf.DeclaredVersion;
 import org.eclipse.n4js.n4mf.ModuleFilter;
 import org.eclipse.n4js.n4mf.ModuleLoader;
 import org.eclipse.n4js.n4mf.N4mfPackage;
@@ -40,6 +39,8 @@ import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectReference;
 import org.eclipse.n4js.n4mf.ProjectType;
 import org.eclipse.n4js.n4mf.SourceContainerDescription;
+
+import org.eclipse.n4js.semver.Semver.VersionNumber;
 
 import org.eclipse.n4js.utils.io.FileUtils;
 
@@ -147,7 +148,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 * @ordered
 	 */
-	protected DeclaredVersion projectVersion;
+	protected VersionNumber projectVersion;
 
 	/**
 	 * The default value of the '{@link #getProjectType() <em>Project Type</em>}' attribute.
@@ -496,7 +497,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public DeclaredVersion getProjectVersion() {
+	public VersionNumber getProjectVersion() {
 		return projectVersion;
 	}
 
@@ -505,8 +506,8 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetProjectVersion(DeclaredVersion newProjectVersion, NotificationChain msgs) {
-		DeclaredVersion oldProjectVersion = projectVersion;
+	public NotificationChain basicSetProjectVersion(VersionNumber newProjectVersion, NotificationChain msgs) {
+		VersionNumber oldProjectVersion = projectVersion;
 		projectVersion = newProjectVersion;
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4mfPackage.PROJECT_DESCRIPTION__PROJECT_VERSION, oldProjectVersion, newProjectVersion);
@@ -520,7 +521,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setProjectVersion(DeclaredVersion newProjectVersion) {
+	public void setProjectVersion(VersionNumber newProjectVersion) {
 		if (newProjectVersion != projectVersion) {
 			NotificationChain msgs = null;
 			if (projectVersion != null)
@@ -1052,7 +1053,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 				setVendorName((String)newValue);
 				return;
 			case N4mfPackage.PROJECT_DESCRIPTION__PROJECT_VERSION:
-				setProjectVersion((DeclaredVersion)newValue);
+				setProjectVersion((VersionNumber)newValue);
 				return;
 			case N4mfPackage.PROJECT_DESCRIPTION__PROJECT_TYPE:
 				setProjectType((ProjectType)newValue);
@@ -1143,7 +1144,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 				setVendorName(VENDOR_NAME_EDEFAULT);
 				return;
 			case N4mfPackage.PROJECT_DESCRIPTION__PROJECT_VERSION:
-				setProjectVersion((DeclaredVersion)null);
+				setProjectVersion((VersionNumber)null);
 				return;
 			case N4mfPackage.PROJECT_DESCRIPTION__PROJECT_TYPE:
 				setProjectType(PROJECT_TYPE_EDEFAULT);

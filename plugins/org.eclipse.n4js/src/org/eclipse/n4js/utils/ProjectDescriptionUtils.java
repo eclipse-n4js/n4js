@@ -25,7 +25,6 @@ import org.eclipse.n4js.json.JSON.JSONPackage;
 import org.eclipse.n4js.json.JSON.JSONStringLiteral;
 import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.JSON.NameValuePair;
-import org.eclipse.n4js.n4mf.DeclaredVersion;
 import org.eclipse.n4js.n4mf.ModuleFilterSpecifier;
 import org.eclipse.n4js.n4mf.ModuleFilterType;
 import org.eclipse.n4js.n4mf.ModuleLoader;
@@ -34,7 +33,6 @@ import org.eclipse.n4js.n4mf.N4mfPackage;
 import org.eclipse.n4js.n4mf.ProjectType;
 import org.eclipse.n4js.n4mf.SourceContainerDescription;
 import org.eclipse.n4js.n4mf.SourceContainerType;
-import org.eclipse.n4js.n4mf.VersionConstraint;
 import org.eclipse.n4js.validation.validators.packagejson.N4JSProjectSetupJsonValidatorExtension;
 import org.eclipse.n4js.validation.validators.packagejson.PackageJsonValidatorExtension;
 
@@ -183,22 +181,6 @@ public class ProjectDescriptionUtils {
 	 */
 
 	/**
-	 * Parses a {@link VersionConstraint} from the given string representation.
-	 *
-	 * Returns {@code null} if {@code versionConstraintStr} is not a valid version constraint string representation.
-	 */
-	public static VersionConstraint parseVersionConstraint(String versionConstraintStr) {
-		if (versionConstraintStr == null) {
-			return null;
-		}
-		VersionConstraint result = ProjectDescriptionUtils.parseVersionRange(versionConstraintStr);
-		if (result == null) {
-			System.err.println("WARNING: invalid or unsupported version constraint: " + versionConstraintStr);
-		}
-		return result;
-	}
-
-	/**
 	 * Parses a {@link SourceContainerType} from the given string representation.
 	 *
 	 * Returns {@code null} if {@code sourceContainerTypeStr} is not a valid source container type string
@@ -302,24 +284,6 @@ public class ProjectDescriptionUtils {
 	 */
 	public static boolean isProjectNameWithScope(String projectName) {
 		return projectName != null && projectName.startsWith("@") && projectName.contains("/");
-	}
-
-	/**
-	 * Parses a SemVer version string according to the SemVer Specification at https://semver.org/
-	 *
-	 * Very simple, temporary implementation. For example, well-formedness of pre-release version and build meta-data
-	 * are not checked.
-	 */
-	public static DeclaredVersion parseVersion(String str) {
-		return ProjectDescriptionUtilsTEMP.parseVersion(str);
-	}
-
-	/**
-	 * Parses a small subset of SemVer version ranges as defined at https://docs.npmjs.com/misc/semver, Section
-	 * "Ranges".
-	 */
-	public static VersionConstraint parseVersionRange(String str) {
-		return ProjectDescriptionUtilsTEMP.parseVersionRange(str);
 	}
 
 	private static ModuleFilterSpecifier createModuleFilterSpecifier(String sourcePath,
