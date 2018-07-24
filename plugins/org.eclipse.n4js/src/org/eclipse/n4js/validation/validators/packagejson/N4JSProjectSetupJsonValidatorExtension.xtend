@@ -47,13 +47,13 @@ import org.eclipse.n4js.json.JSON.NameValuePair
 import org.eclipse.n4js.json.model.utils.JSONModelUtils
 import org.eclipse.n4js.json.validation.^extension.AbstractJSONValidatorExtension
 import org.eclipse.n4js.json.validation.^extension.CheckProperty
+import org.eclipse.n4js.packagejson.PackageJsonUtils
 import org.eclipse.n4js.projectDescription.ModuleFilterSpecifier
 import org.eclipse.n4js.projectDescription.ProjectDependency
 import org.eclipse.n4js.projectDescription.ProjectDescription
 import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectDescription.SourceContainerDescription
 import org.eclipse.n4js.projectDescription.SourceContainerType
-import org.eclipse.n4js.packagejson.PackageJsonUtils
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware
@@ -82,7 +82,6 @@ import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider
 import org.eclipse.xtext.validation.Check
 
 import static com.google.common.base.Preconditions.checkState
-import static org.eclipse.n4js.projectDescription.ProjectType.*
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__DEPENDENCIES
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__DEV_DEPENDENCIES
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__EXEC_MODULE
@@ -99,6 +98,7 @@ import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__REQUIRED_R
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__SOURCES
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__SOURCE_CONTAINER
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__TESTED_PROJECTS
+import static org.eclipse.n4js.projectDescription.ProjectType.*
 import static org.eclipse.n4js.validation.IssueCodes.*
 import static org.eclipse.n4js.validation.validators.packagejson.ProjectTypePredicate.*
 
@@ -223,8 +223,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 
 		// 1.a. For Each containing File: get the Exported Polyfills:   <QN, PolyFilledProvision>
 		// if the file is from our self, then ignore it; validation will be done for the local file separately.
-		val LinkedListMultimap<String, PolyFilledProvisionPackageJson> exportedPolyfills_QN_to_PolyProvision = LinkedListMultimap.
-			create
+		val LinkedListMultimap<String, PolyFilledProvision> exportedPolyfills_QN_to_PolyProvision = LinkedListMultimap.create
 		for (ieoT : allPolyFillTypes) {
 			val optSrcContainer = findN4JSSourceContainer(ieoT.EObjectURI)
 			if (optSrcContainer.present) {
@@ -236,7 +235,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 				} else if (dependency !== selfProject) {
 					exportedPolyfills_QN_to_PolyProvision.put(
 						ieoT.qualifiedName.toString,
-						new PolyFilledProvisionPackageJson(depQName, dependency, ieoT)
+						new PolyFilledProvision(depQName, dependency, ieoT)
 					)
 				}
 			} else {
@@ -252,7 +251,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			if (polyProvisions.size > 1) {
 
 				// For each filled member determine the set of fillers:
-				val m = LinkedListMultimap.<String, PolyFilledProvisionPackageJson>create // memberName->PolyProvisionA,PolyProvisionB ...
+				val m = LinkedListMultimap.<String, PolyFilledProvision>create // memberName->PolyProvisionA,PolyProvisionB ...
 				for (prov : polyProvisions) {
 
 					// contextScope.getSingleElement( prov.ieoDescrOfPolyfill.qualifiedName )

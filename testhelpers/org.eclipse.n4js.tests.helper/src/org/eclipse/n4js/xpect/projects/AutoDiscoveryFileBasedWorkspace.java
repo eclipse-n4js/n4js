@@ -38,9 +38,9 @@ public class AutoDiscoveryFileBasedWorkspace extends FileBasedWorkspace {
 	}
 
 	@Override
-	public URI findProjectWith(URI unsafeLocation) {
-		final URI closestProjectLocation = findClosestProjectLocation(unsafeLocation);
-		final URI knownProjectLocation = super.findProjectWith(unsafeLocation);
+	public URI findProjectWith(URI nestedLocation) {
+		final URI closestProjectLocation = findClosestProjectLocation(nestedLocation);
+		final URI knownProjectLocation = super.findProjectWith(nestedLocation);
 
 		if (closestProjectLocation != null
 				&& (knownProjectLocation == null || !knownProjectLocation.equals(closestProjectLocation))) {

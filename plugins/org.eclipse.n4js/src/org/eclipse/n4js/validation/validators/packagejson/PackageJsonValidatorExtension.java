@@ -72,12 +72,12 @@ import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.JSON.NameValuePair;
 import org.eclipse.n4js.json.validation.extension.AbstractJSONValidatorExtension;
 import org.eclipse.n4js.json.validation.extension.CheckProperty;
+import org.eclipse.n4js.packagejson.PackageJsonConstants;
+import org.eclipse.n4js.packagejson.PackageJsonUtils;
 import org.eclipse.n4js.projectDescription.ModuleFilterType;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectDescription.SourceContainerType;
-import org.eclipse.n4js.packagejson.PackageJsonConstants;
-import org.eclipse.n4js.packagejson.PackageJsonUtils;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
@@ -175,13 +175,6 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 					projectNameValue, IssueCodes.PKGJ_INVALID_PROJECT_NAME);
 		}
 
-		// make sure the package name equals the package folder name
-		final String packageFolderName = projectNameValue.eResource().getURI().trimSegments(1).lastSegment();
-		if (!packageFolderName.equals(projectName.getValue())) {
-			addIssue(IssueCodes.getMessageForPKGJ_PACKAGE_NAME_MISMATCH(projectName.getValue(), packageFolderName),
-					projectName, IssueCodes.PKGJ_PACKAGE_NAME_MISMATCH);
-		}
-
 		// in case the Platform is running (can be UI and headless)
 		if (Platform.isRunning()) {
 			final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
@@ -195,8 +188,15 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 				if (resolvedResource instanceof IProject) {
 					platformProjectContainer = resolvedResource.getName();
 				}
+				// check project name to match file system folder name
+				final String fileSystemName = resolvedResource.getLocation().lastSegment();
+				if (!fileSystemName.equals(projectName.getValue())) {
+					addIssue(
+							IssueCodes.getMessageForPKGJ_PACKAGE_NAME_MISMATCH(projectName.getValue(), fileSystemName),
+							projectName, IssueCodes.PKGJ_PACKAGE_NAME_MISMATCH);
+				}
 			} else {
-				// in headless case, assume file-based workspace representation
+				// otherwise, assume file-based URI
 				platformProjectContainer = new File(packageJsonUri.toFileString()).getParentFile().getName();
 			}
 
@@ -205,12 +205,23 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 						+ "for resource " + packageJsonUri.toString());
 			}
 
+			// check project name to match Eclipse workspace project name
 			if (!platformProjectContainer.equals(projectName.getValue())) {
 				final String message = IssueCodes.getMessageForPKGJ_PROJECT_NAME_ECLIPSE_MISMATCH(
 						projectName.getValue(),
 						platformProjectContainer);
 				addIssue(message, projectName,
 						IssueCodes.PKGJ_PROJECT_NAME_ECLIPSE_MISMATCH);
+			}
+		} else {
+			// Make sure the package name equals the package folder name.
+			// Assumption: since the platform is not running, the URI actually represents the file system hierarchy
+			final String packageUriFolderName = projectNameValue.eResource().getURI().trimSegments(1).lastSegment();
+			if (!packageUriFolderName.equals(projectName.getValue())) {
+				addIssue(
+						IssueCodes.getMessageForPKGJ_PACKAGE_NAME_MISMATCH(projectName.getValue(),
+								packageUriFolderName),
+						projectName, IssueCodes.PKGJ_PACKAGE_NAME_MISMATCH);
 			}
 		}
 

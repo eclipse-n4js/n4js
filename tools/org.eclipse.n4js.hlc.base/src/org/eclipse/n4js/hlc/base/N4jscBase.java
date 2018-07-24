@@ -863,7 +863,7 @@ public class N4jscBase implements IApplication {
 			}
 
 			// trigger build using pre-computed buildSet (differs depending on #buildtype)
-			headless.compileProjects(buildSet);
+			headless.compile(buildSet);
 		} catch (N4JSCompileException e) {
 			// dump all information to error-stream.
 			e.userDump(System.err);

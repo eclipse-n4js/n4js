@@ -15,6 +15,7 @@
     "node": ">= 5.0.0"
   },
   "files": [
+    "src",
     "src-gen"
   ],
   "n4js": {

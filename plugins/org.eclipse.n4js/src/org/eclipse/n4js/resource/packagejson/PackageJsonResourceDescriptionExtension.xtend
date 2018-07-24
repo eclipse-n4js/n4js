@@ -28,8 +28,8 @@ import org.eclipse.n4js.projectDescription.ProjectDescription
 import org.eclipse.n4js.projectDescription.ProjectReference
 import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSCore
-import org.eclipse.n4js.utils.ProjectDescriptionLoader
 import org.eclipse.n4js.semver.model.SemverSerializer
+import org.eclipse.n4js.utils.ProjectDescriptionLoader
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.resource.EObjectDescription
@@ -113,6 +113,7 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 
 	@Inject
 	private ProjectDescriptionLoader projectDescriptionLoader;
+
 
 
     private static final Logger LOGGER = Logger.getLogger(PackageJsonResourceDescriptionExtension);

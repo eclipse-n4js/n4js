@@ -20,6 +20,8 @@ import org.eclipse.n4js.projectDescription.ProjectReference;
 
 import com.google.common.base.Strings;
 
+import com.google.common.base.Strings;
+
 /**
  * Utility for collecting project dependencies. Focused on reading {@link ProjectDescription} only, and does not check
  * data against workspace or library manager.
