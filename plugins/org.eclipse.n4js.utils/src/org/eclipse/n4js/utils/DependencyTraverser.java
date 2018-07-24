@@ -15,9 +15,12 @@ import java.util.Collection;
 import com.google.common.base.Equivalence;
 
 /**
- * A generic dependency traverser for traversing a dependency graph as given by a {@link DependencyVisitor}.
+ * A generic dependency traverser for traversing a dependency graph as given by a {@link DependencyProvider}.
  *
- * This traverse may either be used to detect dependency cycles in graphs, or to
+ * Integrates an optional {@link DependencyVisitor} that may be used to enable custom behavior during traversal (e.g.
+ * collect transitive dependencies).
+ *
+ * Apart from that this traverser may also be used to detect dependency cycles.
  */
 public class DependencyTraverser<T> {
 
@@ -26,15 +29,12 @@ public class DependencyTraverser<T> {
 	 *
 	 * The {@link #accept(Object)} method of this visitor will be invoked for every visited node.
 	 *
-	 * However, in contrast to a pure visitor pattern, the {@link #accept(Object)} method furthermore specifies the
-	 * strategy with which the list of dependencies of a given node is obtained.
-	 *
 	 * @See {@link DependencyTraverser}.
 	 */
 	@FunctionalInterface
 	public static interface DependencyVisitor<NodeT> {
 		/**
-		 * Visit the given dependency {@code node} and return with all its direct dependencies.
+		 * Visit the given dependency {@code node}.
 		 */
 		void accept(NodeT node);
 	}
@@ -119,6 +119,8 @@ public class DependencyTraverser<T> {
 	 *            The equivalence strategy to use for detecting dependency cycles.
 	 * @param visitor
 	 *            The visitor to use to obtain node dependencies and execute on every visited node.
+	 * @param dependencyProvider
+	 *            The provider to use to obtain the list of dependencies per node.
 	 * @param ignoreCycles
 	 *            Specifies whether dependency cycles should be ignored (e.g. do not follow cyclic edges, only visit
 	 *            every node once).
@@ -135,7 +137,7 @@ public class DependencyTraverser<T> {
 	}
 
 	/**
-	 * Searches for any dependency cycle in the dependency graph specified by {@link #rootNode}. Returns the first
+	 * Searches for any dependency cycle in the dependency graph rooted in {@link #rootNode}. Returns the first
 	 * discovered {@link DependencyCycle}, if the traversed graph contains any.
 	 *
 	 * Returns an empty {@link DependencyCycle}, if no dependency cycle could be discovered.
@@ -222,7 +224,7 @@ public class DependencyTraverser<T> {
 	}
 
 	/**
-	 * Instantiates a new No-Op-{@link DependencyVisitor} for the given type.
+	 * Instantiates a new No-Op-{@link DependencyVisitor} for the given generic type.
 	 */
 	private static <T> DependencyVisitor<T> nopVisitor() {
 		return new DependencyVisitor<T>() {
