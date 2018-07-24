@@ -36,8 +36,9 @@ import org.eclipse.n4js.runner.exceptions.InsolvableRuntimeEnvironmentException;
 import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
 import org.eclipse.n4js.utils.DependencyCycle;
 import org.eclipse.n4js.utils.DependencyTraverser;
+import org.eclipse.n4js.utils.DependencyTraverser.DependencyProvider;
 import org.eclipse.n4js.utils.DependencyTraverser.DependencyVisitor;
-import org.eclipse.n4js.validation.helper.SourceContainerAwareDependencyVisitor;
+import org.eclipse.n4js.validation.helper.SourceContainerAwareDependencyProvider;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
@@ -141,8 +142,8 @@ public class RuntimeEnvironmentsHelper {
 
 		final DependencyVisitor<IN4JSSourceContainerAware> visitor = new ProjectsCollectingDependencyVisitor(
 				runtimeLibraryDependencies, p -> isRuntimeLibrary(p));
-		final DependencyTraverser<IN4JSSourceContainerAware> traverser = new DependencyTraverser<>(project, visitor,
-				true);
+		final DependencyTraverser<IN4JSSourceContainerAware> traverser = new DependencyTraverser<>(
+				project, visitor, new SourceContainerAwareDependencyProvider(true), true);
 
 		// traverse and check for cycles
 		final DependencyCycle<IN4JSSourceContainerAware> result = traverser.findCycle();
@@ -168,7 +169,7 @@ public class RuntimeEnvironmentsHelper {
 		Set<IN4JSProject> providedRuntimeLibraries = new HashSet<>();
 
 		if (isRuntimeEnvironment(runtimeEnvironment)) {
-			collectProvidedRuntimeLibrariesCollector(runtimeEnvironment, providedRuntimeLibraries);
+			collectProvidedRuntimeLibraries(runtimeEnvironment, providedRuntimeLibraries);
 		}
 
 		// include RLs provided by extended REs and runtimeEnvironment itself
@@ -187,7 +188,7 @@ public class RuntimeEnvironmentsHelper {
 		// collect all provided runtime environments by all extended runtime environments of runtimeEnvironment
 		// and runtimeEnvironment itself
 		for (IN4JSProject extendedRuntimeEnvironment : getExtendedRuntimeEnvironments(runtimeEnvironment)) {
-			collectProvidedRuntimeLibrariesCollector(extendedRuntimeEnvironment, collection);
+			collectProvidedRuntimeLibraries(extendedRuntimeEnvironment, collection);
 		}
 	}
 
@@ -204,20 +205,18 @@ public class RuntimeEnvironmentsHelper {
 	 * @param collection
 	 *            where provided runtime libraries are collected
 	 */
-	private void collectProvidedRuntimeLibrariesCollector(IN4JSProject project, Collection<IN4JSProject> collection) {
-		final DependencyVisitor<IN4JSSourceContainerAware> visitor = new DependencyVisitor<IN4JSSourceContainerAware>() {
-			@Override
-			public Collection<? extends IN4JSSourceContainerAware> accept(
-					IN4JSSourceContainerAware sourceContainerAware) {
-				IN4JSProject p = (extractProject(sourceContainerAware));
-				if (isRuntimeLibrary(p))
-					collection.add(p);
-				return p.getProvidedRuntimeLibraries();
-			}
+	private void collectProvidedRuntimeLibraries(IN4JSProject project, Collection<IN4JSProject> collection) {
+		// collect provided runtime libraries into 'collection'
+		final ProjectsCollectingDependencyVisitor visitor = new ProjectsCollectingDependencyVisitor(collection,
+				s -> isRuntimeLibrary(s));
+		// traverse provided runtime libraries only
+		final DependencyProvider<IN4JSSourceContainerAware> dependencyProvider = sourceContainerAware -> {
+			IN4JSProject p = (extractProject(sourceContainerAware));
+			return p.getProvidedRuntimeLibraries();
 		};
 
 		final DependencyTraverser<IN4JSSourceContainerAware> traverser = new DependencyTraverser<>(project, visitor,
-				true);
+				dependencyProvider, true);
 		// trigger actual traversal
 		traverser.traverse();
 	}
@@ -358,7 +357,7 @@ public class RuntimeEnvironmentsHelper {
 	 *             if mapping cannot be performed
 	 */
 
-	private IN4JSProject extractProject(IN4JSSourceContainerAware container) {
+	private static IN4JSProject extractProject(IN4JSSourceContainerAware container) {
 		if (container instanceof IN4JSProject) {
 			return (IN4JSProject) container;
 		}
@@ -373,25 +372,24 @@ public class RuntimeEnvironmentsHelper {
 	}
 
 	/** A {@link DependencyVisitor} that collect a filtered set of discovered transitive dependencies. */
-	private final class ProjectsCollectingDependencyVisitor extends SourceContainerAwareDependencyVisitor {
-		private final Set<IN4JSProject> depsRuntimeLibraries;
+	private final class ProjectsCollectingDependencyVisitor implements DependencyVisitor<IN4JSSourceContainerAware> {
+		private final Collection<IN4JSProject> collectedProjects;
 		private final Predicate<IN4JSProject> projectFilter;
 
 		/** */
-		private ProjectsCollectingDependencyVisitor(Set<IN4JSProject> depsRuntimeLibraries,
+		private ProjectsCollectingDependencyVisitor(Collection<IN4JSProject> depsRuntimeLibraries,
 				Predicate<IN4JSProject> projectFilter) {
-			super(true);
 			this.projectFilter = projectFilter;
-			this.depsRuntimeLibraries = depsRuntimeLibraries;
+			this.collectedProjects = depsRuntimeLibraries;
 		}
 
 		@Override
-		public Collection<? extends IN4JSSourceContainerAware> accept(IN4JSSourceContainerAware p) {
+		public void accept(IN4JSSourceContainerAware p) {
 			if (p instanceof IN4JSProject && projectFilter.test((IN4JSProject) p)) {
 				// collect runtime library projects only
-				depsRuntimeLibraries.add((IN4JSProject) p);
+				collectedProjects.add((IN4JSProject) p);
 			}
-			return super.accept(p);
+
 		}
 	}
 }

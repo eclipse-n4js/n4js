@@ -70,7 +70,6 @@ import org.eclipse.n4js.utils.Version
 import org.eclipse.n4js.utils.WildcardPathFilterHelper
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
-import org.eclipse.n4js.validation.helper.SourceContainerAwareDependencyVisitor
 import org.eclipse.xtend.lib.annotations.Data
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.resource.IContainer
@@ -86,6 +85,7 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 import static org.eclipse.n4js.validation.validators.packagejson.ProjectTypePredicate.*
 
 import static extension com.google.common.base.Strings.nullToEmpty
+import org.eclipse.n4js.validation.helper.SourceContainerAwareDependencyProvider
 
 /**
  * A JSON validator extension that validates {@code package.json} resources in the context
@@ -342,8 +342,8 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		val project = findProject(document.eResource.URI).orNull;
 		if (null !== project) {
 			
-			val visitor = new SourceContainerAwareDependencyVisitor(true);
-			val traverser = new DependencyTraverser(project, visitor, true);
+			val dependencyProvider = new SourceContainerAwareDependencyProvider(true);
+			val traverser = new DependencyTraverser(project, dependencyProvider, true);
 			
 			val traversalResult = traverser.findCycle();
 			

@@ -14,13 +14,14 @@ import com.google.common.collect.ImmutableList
 import org.eclipse.n4js.n4mf.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware
-import org.eclipse.n4js.utils.DependencyTraverser.DependencyVisitor
+import org.eclipse.n4js.utils.DependencyTraverser.DependencyProvider
+import org.eclipse.n4js.utils.DependencyTraverser
 
 /**
- * Class for traversing {@link IN4JSSourceContainerAware source container aware} dependencies and
- * finding cycles in the dependency graph.
+ * A {@link DependencyProvider} implementation for traversing the dependency 
+ * graph defined by {@link IN4JSSourceContainerAware source container aware} entities via {@link DependencyTraverser}. 
  */
-class SourceContainerAwareDependencyVisitor implements DependencyVisitor<IN4JSSourceContainerAware> {
+class SourceContainerAwareDependencyProvider implements DependencyProvider<IN4JSSourceContainerAware> {
 
 	private final boolean ignoreExternalValidationProjects;
 	
@@ -40,7 +41,7 @@ class SourceContainerAwareDependencyVisitor implements DependencyVisitor<IN4JSSo
 		this.ignoreExternalValidationProjects = ignoreExternalValidationProjects;
 	}
 	
-	override accept(IN4JSSourceContainerAware p) {
+	override getDependencies(IN4JSSourceContainerAware p) {
 		if (ignoreExternalValidationProjects) {
 			// this is used if external projects of project type VALIDATION are requested to be ignored
 			return ImmutableList.copyOf(p.allDirectDependencies.filter[dep|!isExternalValidation(dep)]);

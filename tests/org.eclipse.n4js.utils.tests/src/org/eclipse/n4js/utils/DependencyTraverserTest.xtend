@@ -63,7 +63,7 @@ class DependencyTraverserTest {
 			3 -> #[4],
 			4 -> #[3]
 		};
-		new DependencyTraverser(1, [visitedNodes.add(it); graph.get(it)], false).findCycle.assertEquals('''1 -> 2 -> [3] -> 4 -> [3]''');
+		new DependencyTraverser(1, [visitedNodes.add(it)], [graph.get(it)], false).findCycle.assertEquals('''1 -> 2 -> [3] -> 4 -> [3]''');
 		Assert.assertEquals("Not all nodes were visited.", "[1, 2, 3, 4]", visitedNodes.toString)
 	}
 	
@@ -74,7 +74,7 @@ class DependencyTraverserTest {
 			1 -> #[2],
 			2 -> #[3]
 		};
-		new DependencyTraverser(1, [visitedNodes.add(it); graph.get(it)], true).findCycle.assertEquals('');
+		new DependencyTraverser(1, [visitedNodes.add(it)], [graph.get(it)], true).findCycle.assertEquals('');
 		Assert.assertEquals("All nodes were visited.", "[1, 2, 3]", visitedNodes.toString)
 	}
 	
@@ -84,7 +84,7 @@ class DependencyTraverserTest {
 		val graph = #{
 			1 -> #[1, 2]
 		};
-		new DependencyTraverser(1, [visitedNodes.add(it); graph.get(it)], true).findCycle.assertEquals('''[1] -> [1]''');
+		new DependencyTraverser(1, [visitedNodes.add(it)], [graph.get(it)], true).findCycle.assertEquals('''[1] -> [1]''');
 		Assert.assertEquals("All nodes were visited.", "[1, 2]", visitedNodes.toString)
 	}
 	
@@ -97,7 +97,7 @@ class DependencyTraverserTest {
 			3 -> #[4],
 			4 -> #[3, 5]
 		};
-		new DependencyTraverser(1, [visitedNodes.add(it); return graph.get(it)], true).findCycle.assertEquals('''1 -> 2 -> [3] -> 4 -> [3]''');
+		new DependencyTraverser(1, [visitedNodes.add(it)], [graph.get(it)], true).findCycle.assertEquals('''1 -> 2 -> [3] -> 4 -> [3]''');
 		
 		Assert.assertEquals("All nodes were visited", "[1, 2, 3, 4, 5]", visitedNodes.toString)
 	}

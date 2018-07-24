@@ -36,7 +36,19 @@ public class DependencyTraverser<T> {
 		/**
 		 * Visit the given dependency {@code node} and return with all its direct dependencies.
 		 */
-		Collection<? extends NodeT> accept(NodeT node);
+		void accept(NodeT node);
+	}
+
+	/**
+	 * Provider that is used to define the structure of the dependency graph in terms of the set of dependencies per
+	 * node.
+	 */
+	@FunctionalInterface
+	public static interface DependencyProvider<NodeT> {
+		/**
+		 * Return the list of nodes that represent the dependencies of {@code node}.
+		 */
+		Collection<? extends NodeT> getDependencies(NodeT node);
 	}
 
 	/**
@@ -60,6 +72,11 @@ public class DependencyTraverser<T> {
 	private DependencyVisitor<T> visitor;
 
 	/**
+	 * The dependency provider to use for obtaining the list of dependencies per node.
+	 */
+	private DependencyProvider<T> dependencyProvider;
+
+	/**
 	 * Holds a reference to the first discovered cycle of the most recent traversal.
 	 */
 	private DependencyCycle<T> firstDiscoveredCycle;
@@ -71,13 +88,26 @@ public class DependencyTraverser<T> {
 	private final boolean ignoreCycles;
 
 	/**
+	 * Instantiates a new {@link DependencyTraverser} that detects a cycle based on an identity check between nodes and
+	 * does not consider a custom visitor.
+	 *
+	 * Apart from that see
+	 * {@link #DependencyTraverser(Object, Equivalence, DependencyVisitor, DependencyProvider, boolean)}.
+	 */
+	public DependencyTraverser(final T rootNode, DependencyProvider<T> dependencyProvider,
+			boolean ignoreCycles) {
+		this(rootNode, Equivalence.equals(), nopVisitor(), dependencyProvider, ignoreCycles);
+	}
+
+	/**
 	 * Instantiates a new {@link DependencyTraverser} that detects a cycle based on an identity check between nodes.
 	 *
-	 * Apart from that see {@link #DependencyTraverser(Object, Equivalence, DependencyVisitor, boolean)}.
+	 * Apart from that see
+	 * {@link #DependencyTraverser(Object, Equivalence, DependencyVisitor, DependencyProvider, boolean)}.
 	 */
 	public DependencyTraverser(final T rootNode, DependencyVisitor<T> visitor,
-			boolean ignoreCycles) {
-		this(rootNode, Equivalence.equals(), visitor, ignoreCycles);
+			DependencyProvider<T> dependencyProvider, boolean ignoreCycles) {
+		this(rootNode, Equivalence.equals(), visitor, dependencyProvider, ignoreCycles);
 	}
 
 	/**
@@ -94,13 +124,14 @@ public class DependencyTraverser<T> {
 	 *            every node once).
 	 */
 	public DependencyTraverser(final T rootNode, final Equivalence<? super T> equivalence,
-			DependencyVisitor<T> visitor, boolean ignoreCycles) {
+			DependencyVisitor<T> visitor, DependencyProvider<T> dependencyProvider, boolean ignoreCycles) {
 		this.rootNode = rootNode;
-		this.guard = new RecursionGuard<>(equivalence);
-		this.pathGuard = new RecursionGuard<>(equivalence);
+		this.visitor = visitor;
+		this.dependencyProvider = dependencyProvider;
 		this.ignoreCycles = ignoreCycles;
 
-		this.visitor = visitor;
+		this.guard = new RecursionGuard<>(equivalence);
+		this.pathGuard = new RecursionGuard<>(equivalence);
 	}
 
 	/**
@@ -153,8 +184,10 @@ public class DependencyTraverser<T> {
 		if (pathGuard.tryNext(node)) { // object on stack.
 			// should visit node:
 			if (guard.tryNext(node)) {
+				// invoke visitor
+				visitor.accept(node);
 				// load dependency and analyze.
-				final Collection<? extends T> dependencies = this.visitor.accept(node);
+				final Collection<? extends T> dependencies = dependencyProvider.getDependencies(node);
 
 				if (dependencies != null) {
 					for (final T dependency : dependencies) {
@@ -186,6 +219,18 @@ public class DependencyTraverser<T> {
 			return false;
 		}
 
+	}
+
+	/**
+	 * Instantiates a new No-Op-{@link DependencyVisitor} for the given type.
+	 */
+	private static <T> DependencyVisitor<T> nopVisitor() {
+		return new DependencyVisitor<T>() {
+			@Override
+			public void accept(T node) {
+				// nop
+			}
+		};
 	}
 
 }
