@@ -33,27 +33,27 @@ import java.util.HashMap;
 @SuppressWarnings("all")
 public class InternalSemverParser extends AbstractInternalAntlrParser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "RULE_WS", "RULE_DIGITS", "RULE_LETTER_V", "RULE_LETTER_X", "RULE_LETTER_NO_VX", "RULE_ASTERIX", "RULE_DIGIT", "RULE_WHITESPACE_FRAGMENT", "RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT", "RULE_EOL", "RULE_DECIMAL_DIGIT_FRAGMENT", "RULE_HEX_DIGIT", "RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT", "RULE_ZWJ", "RULE_ZWNJ", "RULE_BOM", "RULE_UNICODE_SPACE_SEPARATOR_FRAGMENT", "RULE_LINE_TERMINATOR_FRAGMENT", "RULE_SL_COMMENT_FRAGMENT", "RULE_ML_COMMENT_FRAGMENT", "RULE_UNICODE_COMBINING_MARK_FRAGMENT", "RULE_UNICODE_DIGIT_FRAGMENT", "RULE_UNICODE_CONNECTOR_PUNCTUATION_FRAGMENT", "RULE_UNICODE_LETTER_FRAGMENT", "RULE_ANY_OTHER", "'://'", "'#'", "'semver:'", "'file:'", "'||'", "'-'", "'.'", "'+'", "'/'", "':'", "'@'", "'v'", "'='", "'<'", "'~'", "'^'", "'<='", "'>'", "'>='"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "RULE_WS", "RULE_LETTER_V", "RULE_DIGITS", "RULE_LETTER_NO_VX", "RULE_LETTER_X", "RULE_ASTERIX", "RULE_WHITESPACE_FRAGMENT", "RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT", "RULE_EOL", "RULE_DECIMAL_DIGIT_FRAGMENT", "RULE_HEX_DIGIT", "RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT", "RULE_ZWJ", "RULE_ZWNJ", "RULE_BOM", "RULE_UNICODE_SPACE_SEPARATOR_FRAGMENT", "RULE_LINE_TERMINATOR_FRAGMENT", "RULE_SL_COMMENT_FRAGMENT", "RULE_ML_COMMENT_FRAGMENT", "RULE_UNICODE_COMBINING_MARK_FRAGMENT", "RULE_UNICODE_DIGIT_FRAGMENT", "RULE_UNICODE_CONNECTOR_PUNCTUATION_FRAGMENT", "RULE_UNICODE_LETTER_FRAGMENT", "RULE_ANY_OTHER", "'file:'", "'://'", "'#'", "'semver:'", "'||'", "'-'", "'.'", "'+'", "'/'", "':'", "'@'", "'='", "'<'", "'~'", "'^'", "'<='", "'>'", "'>='"
     };
-    public static final int RULE_WHITESPACE_FRAGMENT=11;
-    public static final int RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT=12;
-    public static final int RULE_EOL=13;
-    public static final int RULE_DIGIT=10;
-    public static final int RULE_UNICODE_COMBINING_MARK_FRAGMENT=24;
-    public static final int RULE_ZWNJ=18;
+    public static final int RULE_WHITESPACE_FRAGMENT=10;
+    public static final int RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT=11;
+    public static final int RULE_EOL=12;
+    public static final int RULE_UNICODE_COMBINING_MARK_FRAGMENT=23;
+    public static final int RULE_ZWNJ=17;
+    public static final int T__28=28;
     public static final int T__29=29;
     public static final int RULE_ASTERIX=9;
-    public static final int RULE_LETTER_NO_VX=8;
-    public static final int RULE_ML_COMMENT_FRAGMENT=23;
-    public static final int RULE_DIGITS=5;
-    public static final int RULE_ZWJ=17;
-    public static final int RULE_SL_COMMENT_FRAGMENT=22;
-    public static final int RULE_UNICODE_DIGIT_FRAGMENT=25;
+    public static final int RULE_LETTER_NO_VX=7;
+    public static final int RULE_ML_COMMENT_FRAGMENT=22;
+    public static final int RULE_DIGITS=6;
+    public static final int RULE_ZWJ=16;
+    public static final int RULE_SL_COMMENT_FRAGMENT=21;
+    public static final int RULE_UNICODE_DIGIT_FRAGMENT=24;
     public static final int T__37=37;
     public static final int T__38=38;
     public static final int T__39=39;
     public static final int T__33=33;
-    public static final int RULE_UNICODE_SPACE_SEPARATOR_FRAGMENT=20;
+    public static final int RULE_UNICODE_SPACE_SEPARATOR_FRAGMENT=19;
     public static final int T__34=34;
     public static final int T__35=35;
     public static final int T__36=36;
@@ -62,20 +62,18 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
     public static final int T__31=31;
     public static final int T__32=32;
     public static final int RULE_WS=4;
-    public static final int RULE_BOM=19;
-    public static final int RULE_LETTER_V=6;
-    public static final int RULE_LETTER_X=7;
-    public static final int RULE_ANY_OTHER=28;
-    public static final int RULE_LINE_TERMINATOR_FRAGMENT=21;
-    public static final int RULE_UNICODE_LETTER_FRAGMENT=27;
-    public static final int RULE_DECIMAL_DIGIT_FRAGMENT=14;
+    public static final int RULE_BOM=18;
+    public static final int RULE_LETTER_V=5;
+    public static final int RULE_LETTER_X=8;
+    public static final int RULE_ANY_OTHER=27;
+    public static final int RULE_LINE_TERMINATOR_FRAGMENT=20;
+    public static final int RULE_UNICODE_LETTER_FRAGMENT=26;
+    public static final int RULE_DECIMAL_DIGIT_FRAGMENT=13;
     public static final int T__44=44;
     public static final int T__45=45;
-    public static final int RULE_HEX_DIGIT=15;
-    public static final int RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT=16;
-    public static final int RULE_UNICODE_CONNECTOR_PUNCTUATION_FRAGMENT=26;
-    public static final int T__46=46;
-    public static final int T__47=47;
+    public static final int RULE_HEX_DIGIT=14;
+    public static final int RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT=15;
+    public static final int RULE_UNICODE_CONNECTOR_PUNCTUATION_FRAGMENT=25;
     public static final int T__40=40;
     public static final int T__41=41;
     public static final int T__42=42;
@@ -99,11 +97,6 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
 
-    /*
-      This grammar contains a lot of empty actions to work around a bug in ANTLR.
-      Otherwise the ANTLR tool will create synpreds that cannot be compiled in some rare cases.
-    */
-
      	private SemverGrammarAccess grammarAccess;
 
         public InternalSemverParser(TokenStream input, SemverGrammarAccess grammarAccess) {
@@ -126,7 +119,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleNPMVersionRequirement"
-    // InternalSemver.g:78:1: entryRuleNPMVersionRequirement returns [EObject current=null] : iv_ruleNPMVersionRequirement= ruleNPMVersionRequirement EOF ;
+    // InternalSemver.g:72:1: entryRuleNPMVersionRequirement returns [EObject current=null] : iv_ruleNPMVersionRequirement= ruleNPMVersionRequirement EOF ;
     public final EObject entryRuleNPMVersionRequirement() throws RecognitionException {
         EObject current = null;
 
@@ -134,8 +127,8 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalSemver.g:78:62: (iv_ruleNPMVersionRequirement= ruleNPMVersionRequirement EOF )
-            // InternalSemver.g:79:2: iv_ruleNPMVersionRequirement= ruleNPMVersionRequirement EOF
+            // InternalSemver.g:72:62: (iv_ruleNPMVersionRequirement= ruleNPMVersionRequirement EOF )
+            // InternalSemver.g:73:2: iv_ruleNPMVersionRequirement= ruleNPMVersionRequirement EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getNPMVersionRequirementRule()); 
@@ -166,7 +159,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleNPMVersionRequirement"
-    // InternalSemver.g:85:1: ruleNPMVersionRequirement returns [EObject current=null] : ( ( (this_WS_0= RULE_WS )* this_VersionRangeSetRequirement_1= ruleVersionRangeSetRequirement ) | ( (this_URLVersionRequirement_2= ruleURLVersionRequirement | this_LocalPathVersionRequirement_3= ruleLocalPathVersionRequirement | this_GitHubVersionRequirement_4= ruleGitHubVersionRequirement | this_TagVersionRequirement_5= ruleTagVersionRequirement ) (this_WS_6= RULE_WS )* ) ) ;
+    // InternalSemver.g:79:1: ruleNPMVersionRequirement returns [EObject current=null] : ( ( (this_WS_0= RULE_WS )* this_VersionRangeSetRequirement_1= ruleVersionRangeSetRequirement ) | ( ( ( ( 'file:' )=>this_LocalPathVersionRequirement_2= ruleLocalPathVersionRequirement ) | this_URLVersionRequirement_3= ruleURLVersionRequirement | this_GitHubVersionRequirement_4= ruleGitHubVersionRequirement | this_TagVersionRequirement_5= ruleTagVersionRequirement ) (this_WS_6= RULE_WS )* ) ) ;
     public final EObject ruleNPMVersionRequirement() throws RecognitionException {
         EObject current = null;
 
@@ -174,9 +167,9 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
         Token this_WS_6=null;
         EObject this_VersionRangeSetRequirement_1 = null;
 
-        EObject this_URLVersionRequirement_2 = null;
+        EObject this_LocalPathVersionRequirement_2 = null;
 
-        EObject this_LocalPathVersionRequirement_3 = null;
+        EObject this_URLVersionRequirement_3 = null;
 
         EObject this_GitHubVersionRequirement_4 = null;
 
@@ -187,75 +180,34 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalSemver.g:91:2: ( ( ( (this_WS_0= RULE_WS )* this_VersionRangeSetRequirement_1= ruleVersionRangeSetRequirement ) | ( (this_URLVersionRequirement_2= ruleURLVersionRequirement | this_LocalPathVersionRequirement_3= ruleLocalPathVersionRequirement | this_GitHubVersionRequirement_4= ruleGitHubVersionRequirement | this_TagVersionRequirement_5= ruleTagVersionRequirement ) (this_WS_6= RULE_WS )* ) ) )
-            // InternalSemver.g:92:2: ( ( (this_WS_0= RULE_WS )* this_VersionRangeSetRequirement_1= ruleVersionRangeSetRequirement ) | ( (this_URLVersionRequirement_2= ruleURLVersionRequirement | this_LocalPathVersionRequirement_3= ruleLocalPathVersionRequirement | this_GitHubVersionRequirement_4= ruleGitHubVersionRequirement | this_TagVersionRequirement_5= ruleTagVersionRequirement ) (this_WS_6= RULE_WS )* ) )
+            // InternalSemver.g:85:2: ( ( ( (this_WS_0= RULE_WS )* this_VersionRangeSetRequirement_1= ruleVersionRangeSetRequirement ) | ( ( ( ( 'file:' )=>this_LocalPathVersionRequirement_2= ruleLocalPathVersionRequirement ) | this_URLVersionRequirement_3= ruleURLVersionRequirement | this_GitHubVersionRequirement_4= ruleGitHubVersionRequirement | this_TagVersionRequirement_5= ruleTagVersionRequirement ) (this_WS_6= RULE_WS )* ) ) )
+            // InternalSemver.g:86:2: ( ( (this_WS_0= RULE_WS )* this_VersionRangeSetRequirement_1= ruleVersionRangeSetRequirement ) | ( ( ( ( 'file:' )=>this_LocalPathVersionRequirement_2= ruleLocalPathVersionRequirement ) | this_URLVersionRequirement_3= ruleURLVersionRequirement | this_GitHubVersionRequirement_4= ruleGitHubVersionRequirement | this_TagVersionRequirement_5= ruleTagVersionRequirement ) (this_WS_6= RULE_WS )* ) )
             {
-            // InternalSemver.g:92:2: ( ( (this_WS_0= RULE_WS )* this_VersionRangeSetRequirement_1= ruleVersionRangeSetRequirement ) | ( (this_URLVersionRequirement_2= ruleURLVersionRequirement | this_LocalPathVersionRequirement_3= ruleLocalPathVersionRequirement | this_GitHubVersionRequirement_4= ruleGitHubVersionRequirement | this_TagVersionRequirement_5= ruleTagVersionRequirement ) (this_WS_6= RULE_WS )* ) )
+            // InternalSemver.g:86:2: ( ( (this_WS_0= RULE_WS )* this_VersionRangeSetRequirement_1= ruleVersionRangeSetRequirement ) | ( ( ( ( 'file:' )=>this_LocalPathVersionRequirement_2= ruleLocalPathVersionRequirement ) | this_URLVersionRequirement_3= ruleURLVersionRequirement | this_GitHubVersionRequirement_4= ruleGitHubVersionRequirement | this_TagVersionRequirement_5= ruleTagVersionRequirement ) (this_WS_6= RULE_WS )* ) )
             int alt4=2;
-            switch ( input.LA(1) ) {
-            case EOF:
-            case RULE_WS:
-            case RULE_DIGITS:
-            case RULE_ASTERIX:
-            case 40:
-            case 41:
-            case 42:
-            case 43:
-            case 44:
-            case 45:
-            case 46:
-            case 47:
-                {
+            int LA4_0 = input.LA(1);
+
+            if ( (LA4_0==EOF||(LA4_0>=RULE_WS && LA4_0<=RULE_DIGITS)||(LA4_0>=RULE_LETTER_X && LA4_0<=RULE_ASTERIX)||(LA4_0>=39 && LA4_0<=45)) ) {
                 alt4=1;
-                }
-                break;
-            case RULE_LETTER_X:
-                {
-                int LA4_2 = input.LA(2);
-
-                if ( (synpred2_InternalSemver()) ) {
-                    alt4=1;
-                }
-                else if ( (true) ) {
-                    alt4=2;
-                }
-                else {
-                    if (state.backtracking>0) {state.failed=true; return current;}
-                    NoViableAltException nvae =
-                        new NoViableAltException("", 4, 2, input);
-
-                    throw nvae;
-                }
-                }
-                break;
-            case RULE_LETTER_V:
-            case RULE_LETTER_NO_VX:
-            case 32:
-            case 35:
-            case 36:
-            case 37:
-            case 38:
-            case 39:
-                {
+            }
+            else if ( (LA4_0==RULE_LETTER_NO_VX||LA4_0==28) ) {
                 alt4=2;
-                }
-                break;
-            default:
+            }
+            else {
                 if (state.backtracking>0) {state.failed=true; return current;}
                 NoViableAltException nvae =
                     new NoViableAltException("", 4, 0, input);
 
                 throw nvae;
             }
-
             switch (alt4) {
                 case 1 :
-                    // InternalSemver.g:93:3: ( (this_WS_0= RULE_WS )* this_VersionRangeSetRequirement_1= ruleVersionRangeSetRequirement )
+                    // InternalSemver.g:87:3: ( (this_WS_0= RULE_WS )* this_VersionRangeSetRequirement_1= ruleVersionRangeSetRequirement )
                     {
-                    // InternalSemver.g:93:3: ( (this_WS_0= RULE_WS )* this_VersionRangeSetRequirement_1= ruleVersionRangeSetRequirement )
-                    // InternalSemver.g:94:4: (this_WS_0= RULE_WS )* this_VersionRangeSetRequirement_1= ruleVersionRangeSetRequirement
+                    // InternalSemver.g:87:3: ( (this_WS_0= RULE_WS )* this_VersionRangeSetRequirement_1= ruleVersionRangeSetRequirement )
+                    // InternalSemver.g:88:4: (this_WS_0= RULE_WS )* this_VersionRangeSetRequirement_1= ruleVersionRangeSetRequirement
                     {
-                    // InternalSemver.g:94:4: (this_WS_0= RULE_WS )*
+                    // InternalSemver.g:88:4: (this_WS_0= RULE_WS )*
                     loop1:
                     do {
                         int alt1=2;
@@ -268,7 +220,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
                         switch (alt1) {
                     	case 1 :
-                    	    // InternalSemver.g:95:5: this_WS_0= RULE_WS
+                    	    // InternalSemver.g:89:5: this_WS_0= RULE_WS
                     	    {
                     	    this_WS_0=(Token)match(input,RULE_WS,FOLLOW_3); if (state.failed) return current;
                     	    if ( state.backtracking==0 ) {
@@ -285,11 +237,6 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                         }
                     } while (true);
 
-                    if ( state.backtracking==0 ) {
-
-                      				/* */
-                      			
-                    }
                     if ( state.backtracking==0 ) {
 
                       				newCompositeNode(grammarAccess.getNPMVersionRequirementAccess().getVersionRangeSetRequirementParserRuleCall_0_1());
@@ -313,63 +260,59 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalSemver.g:113:3: ( (this_URLVersionRequirement_2= ruleURLVersionRequirement | this_LocalPathVersionRequirement_3= ruleLocalPathVersionRequirement | this_GitHubVersionRequirement_4= ruleGitHubVersionRequirement | this_TagVersionRequirement_5= ruleTagVersionRequirement ) (this_WS_6= RULE_WS )* )
+                    // InternalSemver.g:104:3: ( ( ( ( 'file:' )=>this_LocalPathVersionRequirement_2= ruleLocalPathVersionRequirement ) | this_URLVersionRequirement_3= ruleURLVersionRequirement | this_GitHubVersionRequirement_4= ruleGitHubVersionRequirement | this_TagVersionRequirement_5= ruleTagVersionRequirement ) (this_WS_6= RULE_WS )* )
                     {
-                    // InternalSemver.g:113:3: ( (this_URLVersionRequirement_2= ruleURLVersionRequirement | this_LocalPathVersionRequirement_3= ruleLocalPathVersionRequirement | this_GitHubVersionRequirement_4= ruleGitHubVersionRequirement | this_TagVersionRequirement_5= ruleTagVersionRequirement ) (this_WS_6= RULE_WS )* )
-                    // InternalSemver.g:114:4: (this_URLVersionRequirement_2= ruleURLVersionRequirement | this_LocalPathVersionRequirement_3= ruleLocalPathVersionRequirement | this_GitHubVersionRequirement_4= ruleGitHubVersionRequirement | this_TagVersionRequirement_5= ruleTagVersionRequirement ) (this_WS_6= RULE_WS )*
+                    // InternalSemver.g:104:3: ( ( ( ( 'file:' )=>this_LocalPathVersionRequirement_2= ruleLocalPathVersionRequirement ) | this_URLVersionRequirement_3= ruleURLVersionRequirement | this_GitHubVersionRequirement_4= ruleGitHubVersionRequirement | this_TagVersionRequirement_5= ruleTagVersionRequirement ) (this_WS_6= RULE_WS )* )
+                    // InternalSemver.g:105:4: ( ( ( 'file:' )=>this_LocalPathVersionRequirement_2= ruleLocalPathVersionRequirement ) | this_URLVersionRequirement_3= ruleURLVersionRequirement | this_GitHubVersionRequirement_4= ruleGitHubVersionRequirement | this_TagVersionRequirement_5= ruleTagVersionRequirement ) (this_WS_6= RULE_WS )*
                     {
-                    // InternalSemver.g:114:4: (this_URLVersionRequirement_2= ruleURLVersionRequirement | this_LocalPathVersionRequirement_3= ruleLocalPathVersionRequirement | this_GitHubVersionRequirement_4= ruleGitHubVersionRequirement | this_TagVersionRequirement_5= ruleTagVersionRequirement )
+                    // InternalSemver.g:105:4: ( ( ( 'file:' )=>this_LocalPathVersionRequirement_2= ruleLocalPathVersionRequirement ) | this_URLVersionRequirement_3= ruleURLVersionRequirement | this_GitHubVersionRequirement_4= ruleGitHubVersionRequirement | this_TagVersionRequirement_5= ruleTagVersionRequirement )
                     int alt2=4;
                     alt2 = dfa2.predict(input);
                     switch (alt2) {
                         case 1 :
-                            // InternalSemver.g:115:5: this_URLVersionRequirement_2= ruleURLVersionRequirement
+                            // InternalSemver.g:106:5: ( ( 'file:' )=>this_LocalPathVersionRequirement_2= ruleLocalPathVersionRequirement )
+                            {
+                            // InternalSemver.g:106:5: ( ( 'file:' )=>this_LocalPathVersionRequirement_2= ruleLocalPathVersionRequirement )
+                            // InternalSemver.g:107:6: ( 'file:' )=>this_LocalPathVersionRequirement_2= ruleLocalPathVersionRequirement
                             {
                             if ( state.backtracking==0 ) {
 
-                              					/* */
-                              				
-                            }
-                            if ( state.backtracking==0 ) {
-
-                              					newCompositeNode(grammarAccess.getNPMVersionRequirementAccess().getURLVersionRequirementParserRuleCall_1_0_0());
-                              				
+                              						newCompositeNode(grammarAccess.getNPMVersionRequirementAccess().getLocalPathVersionRequirementParserRuleCall_1_0_0());
+                              					
                             }
                             pushFollow(FOLLOW_4);
-                            this_URLVersionRequirement_2=ruleURLVersionRequirement();
+                            this_LocalPathVersionRequirement_2=ruleLocalPathVersionRequirement();
 
                             state._fsp--;
                             if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
-                              					current = this_URLVersionRequirement_2;
-                              					afterParserOrEnumRuleCall();
-                              				
+                              						current = this_LocalPathVersionRequirement_2;
+                              						afterParserOrEnumRuleCall();
+                              					
                             }
+
+                            }
+
 
                             }
                             break;
                         case 2 :
-                            // InternalSemver.g:127:5: this_LocalPathVersionRequirement_3= ruleLocalPathVersionRequirement
+                            // InternalSemver.g:118:5: this_URLVersionRequirement_3= ruleURLVersionRequirement
                             {
                             if ( state.backtracking==0 ) {
 
-                              					/* */
-                              				
-                            }
-                            if ( state.backtracking==0 ) {
-
-                              					newCompositeNode(grammarAccess.getNPMVersionRequirementAccess().getLocalPathVersionRequirementParserRuleCall_1_0_1());
+                              					newCompositeNode(grammarAccess.getNPMVersionRequirementAccess().getURLVersionRequirementParserRuleCall_1_0_1());
                               				
                             }
                             pushFollow(FOLLOW_4);
-                            this_LocalPathVersionRequirement_3=ruleLocalPathVersionRequirement();
+                            this_URLVersionRequirement_3=ruleURLVersionRequirement();
 
                             state._fsp--;
                             if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
-                              					current = this_LocalPathVersionRequirement_3;
+                              					current = this_URLVersionRequirement_3;
                               					afterParserOrEnumRuleCall();
                               				
                             }
@@ -377,13 +320,8 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                             }
                             break;
                         case 3 :
-                            // InternalSemver.g:139:5: this_GitHubVersionRequirement_4= ruleGitHubVersionRequirement
+                            // InternalSemver.g:127:5: this_GitHubVersionRequirement_4= ruleGitHubVersionRequirement
                             {
-                            if ( state.backtracking==0 ) {
-
-                              					/* */
-                              				
-                            }
                             if ( state.backtracking==0 ) {
 
                               					newCompositeNode(grammarAccess.getNPMVersionRequirementAccess().getGitHubVersionRequirementParserRuleCall_1_0_2());
@@ -404,13 +342,8 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                             }
                             break;
                         case 4 :
-                            // InternalSemver.g:151:5: this_TagVersionRequirement_5= ruleTagVersionRequirement
+                            // InternalSemver.g:136:5: this_TagVersionRequirement_5= ruleTagVersionRequirement
                             {
-                            if ( state.backtracking==0 ) {
-
-                              					/* */
-                              				
-                            }
                             if ( state.backtracking==0 ) {
 
                               					newCompositeNode(grammarAccess.getNPMVersionRequirementAccess().getTagVersionRequirementParserRuleCall_1_0_3());
@@ -433,7 +366,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    // InternalSemver.g:163:4: (this_WS_6= RULE_WS )*
+                    // InternalSemver.g:145:4: (this_WS_6= RULE_WS )*
                     loop3:
                     do {
                         int alt3=2;
@@ -446,7 +379,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
                         switch (alt3) {
                     	case 1 :
-                    	    // InternalSemver.g:164:5: this_WS_6= RULE_WS
+                    	    // InternalSemver.g:146:5: this_WS_6= RULE_WS
                     	    {
                     	    this_WS_6=(Token)match(input,RULE_WS,FOLLOW_4); if (state.failed) return current;
                     	    if ( state.backtracking==0 ) {
@@ -493,8 +426,138 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
     // $ANTLR end "ruleNPMVersionRequirement"
 
 
+    // $ANTLR start "entryRuleLocalPathVersionRequirement"
+    // InternalSemver.g:156:1: entryRuleLocalPathVersionRequirement returns [EObject current=null] : iv_ruleLocalPathVersionRequirement= ruleLocalPathVersionRequirement EOF ;
+    public final EObject entryRuleLocalPathVersionRequirement() throws RecognitionException {
+        EObject current = null;
+
+        EObject iv_ruleLocalPathVersionRequirement = null;
+
+
+        try {
+            // InternalSemver.g:156:68: (iv_ruleLocalPathVersionRequirement= ruleLocalPathVersionRequirement EOF )
+            // InternalSemver.g:157:2: iv_ruleLocalPathVersionRequirement= ruleLocalPathVersionRequirement EOF
+            {
+            if ( state.backtracking==0 ) {
+               newCompositeNode(grammarAccess.getLocalPathVersionRequirementRule()); 
+            }
+            pushFollow(FOLLOW_1);
+            iv_ruleLocalPathVersionRequirement=ruleLocalPathVersionRequirement();
+
+            state._fsp--;
+            if (state.failed) return current;
+            if ( state.backtracking==0 ) {
+               current =iv_ruleLocalPathVersionRequirement; 
+            }
+            match(input,EOF,FOLLOW_2); if (state.failed) return current;
+
+            }
+
+        }
+
+            catch (RecognitionException re) {
+                recover(input,re);
+                appendSkippedTokens();
+            }
+        finally {
+        }
+        return current;
+    }
+    // $ANTLR end "entryRuleLocalPathVersionRequirement"
+
+
+    // $ANTLR start "ruleLocalPathVersionRequirement"
+    // InternalSemver.g:163:1: ruleLocalPathVersionRequirement returns [EObject current=null] : ( ( ( 'file:' )=>otherlv_0= 'file:' ) ( (lv_localPath_1_0= rulePATH ) ) ) ;
+    public final EObject ruleLocalPathVersionRequirement() throws RecognitionException {
+        EObject current = null;
+
+        Token otherlv_0=null;
+        AntlrDatatypeRuleToken lv_localPath_1_0 = null;
+
+
+
+        	enterRule();
+
+        try {
+            // InternalSemver.g:169:2: ( ( ( ( 'file:' )=>otherlv_0= 'file:' ) ( (lv_localPath_1_0= rulePATH ) ) ) )
+            // InternalSemver.g:170:2: ( ( ( 'file:' )=>otherlv_0= 'file:' ) ( (lv_localPath_1_0= rulePATH ) ) )
+            {
+            // InternalSemver.g:170:2: ( ( ( 'file:' )=>otherlv_0= 'file:' ) ( (lv_localPath_1_0= rulePATH ) ) )
+            // InternalSemver.g:171:3: ( ( 'file:' )=>otherlv_0= 'file:' ) ( (lv_localPath_1_0= rulePATH ) )
+            {
+            // InternalSemver.g:171:3: ( ( 'file:' )=>otherlv_0= 'file:' )
+            // InternalSemver.g:172:4: ( 'file:' )=>otherlv_0= 'file:'
+            {
+            otherlv_0=(Token)match(input,28,FOLLOW_5); if (state.failed) return current;
+            if ( state.backtracking==0 ) {
+
+              				newLeafNode(otherlv_0, grammarAccess.getLocalPathVersionRequirementAccess().getFileKeyword_0());
+              			
+            }
+
+            }
+
+            // InternalSemver.g:178:3: ( (lv_localPath_1_0= rulePATH ) )
+            // InternalSemver.g:179:4: (lv_localPath_1_0= rulePATH )
+            {
+            // InternalSemver.g:179:4: (lv_localPath_1_0= rulePATH )
+            // InternalSemver.g:180:5: lv_localPath_1_0= rulePATH
+            {
+            if ( state.backtracking==0 ) {
+
+              					newCompositeNode(grammarAccess.getLocalPathVersionRequirementAccess().getLocalPathPATHParserRuleCall_1_0());
+              				
+            }
+            pushFollow(FOLLOW_2);
+            lv_localPath_1_0=rulePATH();
+
+            state._fsp--;
+            if (state.failed) return current;
+            if ( state.backtracking==0 ) {
+
+              					if (current==null) {
+              						current = createModelElementForParent(grammarAccess.getLocalPathVersionRequirementRule());
+              					}
+              					set(
+              						current,
+              						"localPath",
+              						lv_localPath_1_0,
+              						"org.eclipse.n4js.semver.Semver.PATH");
+              					afterParserOrEnumRuleCall();
+              				
+            }
+
+            }
+
+
+            }
+
+
+            }
+
+
+            }
+
+            if ( state.backtracking==0 ) {
+
+              	leaveRule();
+
+            }
+        }
+
+            catch (RecognitionException re) {
+                recover(input,re);
+                appendSkippedTokens();
+            }
+        finally {
+        }
+        return current;
+    }
+    // $ANTLR end "ruleLocalPathVersionRequirement"
+
+
     // $ANTLR start "entryRuleURLVersionRequirement"
-    // InternalSemver.g:174:1: entryRuleURLVersionRequirement returns [EObject current=null] : iv_ruleURLVersionRequirement= ruleURLVersionRequirement EOF ;
+    // InternalSemver.g:201:1: entryRuleURLVersionRequirement returns [EObject current=null] : iv_ruleURLVersionRequirement= ruleURLVersionRequirement EOF ;
     public final EObject entryRuleURLVersionRequirement() throws RecognitionException {
         EObject current = null;
 
@@ -502,8 +565,8 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalSemver.g:174:62: (iv_ruleURLVersionRequirement= ruleURLVersionRequirement EOF )
-            // InternalSemver.g:175:2: iv_ruleURLVersionRequirement= ruleURLVersionRequirement EOF
+            // InternalSemver.g:201:62: (iv_ruleURLVersionRequirement= ruleURLVersionRequirement EOF )
+            // InternalSemver.g:202:2: iv_ruleURLVersionRequirement= ruleURLVersionRequirement EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getURLVersionRequirementRule()); 
@@ -534,7 +597,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleURLVersionRequirement"
-    // InternalSemver.g:181:1: ruleURLVersionRequirement returns [EObject current=null] : ( ( (lv_protocol_0_0= ruleURL_PROTOCOL ) ) otherlv_1= '://' ( (lv_url_2_0= ruleURL ) ) (otherlv_3= '#' ( (lv_versionSpecifier_4_0= ruleURLVersionSpecifier ) ) )? ) ;
+    // InternalSemver.g:208:1: ruleURLVersionRequirement returns [EObject current=null] : ( ( (lv_protocol_0_0= ruleURL_PROTOCOL ) ) ( ( '://' )=>otherlv_1= '://' ) ( (lv_url_2_0= ruleURL ) ) (otherlv_3= '#' ( (lv_versionSpecifier_4_0= ruleURLVersionSpecifier ) ) )? ) ;
     public final EObject ruleURLVersionRequirement() throws RecognitionException {
         EObject current = null;
 
@@ -551,24 +614,24 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalSemver.g:187:2: ( ( ( (lv_protocol_0_0= ruleURL_PROTOCOL ) ) otherlv_1= '://' ( (lv_url_2_0= ruleURL ) ) (otherlv_3= '#' ( (lv_versionSpecifier_4_0= ruleURLVersionSpecifier ) ) )? ) )
-            // InternalSemver.g:188:2: ( ( (lv_protocol_0_0= ruleURL_PROTOCOL ) ) otherlv_1= '://' ( (lv_url_2_0= ruleURL ) ) (otherlv_3= '#' ( (lv_versionSpecifier_4_0= ruleURLVersionSpecifier ) ) )? )
+            // InternalSemver.g:214:2: ( ( ( (lv_protocol_0_0= ruleURL_PROTOCOL ) ) ( ( '://' )=>otherlv_1= '://' ) ( (lv_url_2_0= ruleURL ) ) (otherlv_3= '#' ( (lv_versionSpecifier_4_0= ruleURLVersionSpecifier ) ) )? ) )
+            // InternalSemver.g:215:2: ( ( (lv_protocol_0_0= ruleURL_PROTOCOL ) ) ( ( '://' )=>otherlv_1= '://' ) ( (lv_url_2_0= ruleURL ) ) (otherlv_3= '#' ( (lv_versionSpecifier_4_0= ruleURLVersionSpecifier ) ) )? )
             {
-            // InternalSemver.g:188:2: ( ( (lv_protocol_0_0= ruleURL_PROTOCOL ) ) otherlv_1= '://' ( (lv_url_2_0= ruleURL ) ) (otherlv_3= '#' ( (lv_versionSpecifier_4_0= ruleURLVersionSpecifier ) ) )? )
-            // InternalSemver.g:189:3: ( (lv_protocol_0_0= ruleURL_PROTOCOL ) ) otherlv_1= '://' ( (lv_url_2_0= ruleURL ) ) (otherlv_3= '#' ( (lv_versionSpecifier_4_0= ruleURLVersionSpecifier ) ) )?
+            // InternalSemver.g:215:2: ( ( (lv_protocol_0_0= ruleURL_PROTOCOL ) ) ( ( '://' )=>otherlv_1= '://' ) ( (lv_url_2_0= ruleURL ) ) (otherlv_3= '#' ( (lv_versionSpecifier_4_0= ruleURLVersionSpecifier ) ) )? )
+            // InternalSemver.g:216:3: ( (lv_protocol_0_0= ruleURL_PROTOCOL ) ) ( ( '://' )=>otherlv_1= '://' ) ( (lv_url_2_0= ruleURL ) ) (otherlv_3= '#' ( (lv_versionSpecifier_4_0= ruleURLVersionSpecifier ) ) )?
             {
-            // InternalSemver.g:189:3: ( (lv_protocol_0_0= ruleURL_PROTOCOL ) )
-            // InternalSemver.g:190:4: (lv_protocol_0_0= ruleURL_PROTOCOL )
+            // InternalSemver.g:216:3: ( (lv_protocol_0_0= ruleURL_PROTOCOL ) )
+            // InternalSemver.g:217:4: (lv_protocol_0_0= ruleURL_PROTOCOL )
             {
-            // InternalSemver.g:190:4: (lv_protocol_0_0= ruleURL_PROTOCOL )
-            // InternalSemver.g:191:5: lv_protocol_0_0= ruleURL_PROTOCOL
+            // InternalSemver.g:217:4: (lv_protocol_0_0= ruleURL_PROTOCOL )
+            // InternalSemver.g:218:5: lv_protocol_0_0= ruleURL_PROTOCOL
             {
             if ( state.backtracking==0 ) {
 
               					newCompositeNode(grammarAccess.getURLVersionRequirementAccess().getProtocolURL_PROTOCOLParserRuleCall_0_0());
               				
             }
-            pushFollow(FOLLOW_5);
+            pushFollow(FOLLOW_6);
             lv_protocol_0_0=ruleURL_PROTOCOL();
 
             state._fsp--;
@@ -592,24 +655,30 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,29,FOLLOW_6); if (state.failed) return current;
+            // InternalSemver.g:235:3: ( ( '://' )=>otherlv_1= '://' )
+            // InternalSemver.g:236:4: ( '://' )=>otherlv_1= '://'
+            {
+            otherlv_1=(Token)match(input,29,FOLLOW_7); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
-              			newLeafNode(otherlv_1, grammarAccess.getURLVersionRequirementAccess().getColonSolidusSolidusKeyword_1());
-              		
+              				newLeafNode(otherlv_1, grammarAccess.getURLVersionRequirementAccess().getColonSolidusSolidusKeyword_1());
+              			
             }
-            // InternalSemver.g:212:3: ( (lv_url_2_0= ruleURL ) )
-            // InternalSemver.g:213:4: (lv_url_2_0= ruleURL )
+
+            }
+
+            // InternalSemver.g:242:3: ( (lv_url_2_0= ruleURL ) )
+            // InternalSemver.g:243:4: (lv_url_2_0= ruleURL )
             {
-            // InternalSemver.g:213:4: (lv_url_2_0= ruleURL )
-            // InternalSemver.g:214:5: lv_url_2_0= ruleURL
+            // InternalSemver.g:243:4: (lv_url_2_0= ruleURL )
+            // InternalSemver.g:244:5: lv_url_2_0= ruleURL
             {
             if ( state.backtracking==0 ) {
 
               					newCompositeNode(grammarAccess.getURLVersionRequirementAccess().getUrlURLParserRuleCall_2_0());
               				
             }
-            pushFollow(FOLLOW_7);
+            pushFollow(FOLLOW_8);
             lv_url_2_0=ruleURL();
 
             state._fsp--;
@@ -633,7 +702,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalSemver.g:231:3: (otherlv_3= '#' ( (lv_versionSpecifier_4_0= ruleURLVersionSpecifier ) ) )?
+            // InternalSemver.g:261:3: (otherlv_3= '#' ( (lv_versionSpecifier_4_0= ruleURLVersionSpecifier ) ) )?
             int alt5=2;
             int LA5_0 = input.LA(1);
 
@@ -642,19 +711,19 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
             }
             switch (alt5) {
                 case 1 :
-                    // InternalSemver.g:232:4: otherlv_3= '#' ( (lv_versionSpecifier_4_0= ruleURLVersionSpecifier ) )
+                    // InternalSemver.g:262:4: otherlv_3= '#' ( (lv_versionSpecifier_4_0= ruleURLVersionSpecifier ) )
                     {
-                    otherlv_3=(Token)match(input,30,FOLLOW_8); if (state.failed) return current;
+                    otherlv_3=(Token)match(input,30,FOLLOW_9); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				newLeafNode(otherlv_3, grammarAccess.getURLVersionRequirementAccess().getNumberSignKeyword_3_0());
                       			
                     }
-                    // InternalSemver.g:236:4: ( (lv_versionSpecifier_4_0= ruleURLVersionSpecifier ) )
-                    // InternalSemver.g:237:5: (lv_versionSpecifier_4_0= ruleURLVersionSpecifier )
+                    // InternalSemver.g:266:4: ( (lv_versionSpecifier_4_0= ruleURLVersionSpecifier ) )
+                    // InternalSemver.g:267:5: (lv_versionSpecifier_4_0= ruleURLVersionSpecifier )
                     {
-                    // InternalSemver.g:237:5: (lv_versionSpecifier_4_0= ruleURLVersionSpecifier )
-                    // InternalSemver.g:238:6: lv_versionSpecifier_4_0= ruleURLVersionSpecifier
+                    // InternalSemver.g:267:5: (lv_versionSpecifier_4_0= ruleURLVersionSpecifier )
+                    // InternalSemver.g:268:6: lv_versionSpecifier_4_0= ruleURLVersionSpecifier
                     {
                     if ( state.backtracking==0 ) {
 
@@ -716,7 +785,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleURLVersionSpecifier"
-    // InternalSemver.g:260:1: entryRuleURLVersionSpecifier returns [EObject current=null] : iv_ruleURLVersionSpecifier= ruleURLVersionSpecifier EOF ;
+    // InternalSemver.g:290:1: entryRuleURLVersionSpecifier returns [EObject current=null] : iv_ruleURLVersionSpecifier= ruleURLVersionSpecifier EOF ;
     public final EObject entryRuleURLVersionSpecifier() throws RecognitionException {
         EObject current = null;
 
@@ -724,8 +793,8 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalSemver.g:260:60: (iv_ruleURLVersionSpecifier= ruleURLVersionSpecifier EOF )
-            // InternalSemver.g:261:2: iv_ruleURLVersionSpecifier= ruleURLVersionSpecifier EOF
+            // InternalSemver.g:290:60: (iv_ruleURLVersionSpecifier= ruleURLVersionSpecifier EOF )
+            // InternalSemver.g:291:2: iv_ruleURLVersionSpecifier= ruleURLVersionSpecifier EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getURLVersionSpecifierRule()); 
@@ -756,107 +825,37 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleURLVersionSpecifier"
-    // InternalSemver.g:267:1: ruleURLVersionSpecifier returns [EObject current=null] : ( ( ( ruleURLSemver )=>this_URLSemver_0= ruleURLSemver ) | this_URLCommitISH_1= ruleURLCommitISH ) ;
+    // InternalSemver.g:297:1: ruleURLVersionSpecifier returns [EObject current=null] : ( ( ( ruleURLSemver )=>this_URLSemver_0= ruleURLSemver ) | ( () ( (lv_commitISH_2_0= ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS ) ) ) | ( () ( (lv_commitISH_4_0= ruleALPHA_NUMERIC_CHARS ) ) ) ) ;
     public final EObject ruleURLVersionSpecifier() throws RecognitionException {
         EObject current = null;
 
         EObject this_URLSemver_0 = null;
 
-        EObject this_URLCommitISH_1 = null;
+        AntlrDatatypeRuleToken lv_commitISH_2_0 = null;
+
+        AntlrDatatypeRuleToken lv_commitISH_4_0 = null;
 
 
 
         	enterRule();
 
         try {
-            // InternalSemver.g:273:2: ( ( ( ( ruleURLSemver )=>this_URLSemver_0= ruleURLSemver ) | this_URLCommitISH_1= ruleURLCommitISH ) )
-            // InternalSemver.g:274:2: ( ( ( ruleURLSemver )=>this_URLSemver_0= ruleURLSemver ) | this_URLCommitISH_1= ruleURLCommitISH )
+            // InternalSemver.g:303:2: ( ( ( ( ruleURLSemver )=>this_URLSemver_0= ruleURLSemver ) | ( () ( (lv_commitISH_2_0= ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS ) ) ) | ( () ( (lv_commitISH_4_0= ruleALPHA_NUMERIC_CHARS ) ) ) ) )
+            // InternalSemver.g:304:2: ( ( ( ruleURLSemver )=>this_URLSemver_0= ruleURLSemver ) | ( () ( (lv_commitISH_2_0= ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS ) ) ) | ( () ( (lv_commitISH_4_0= ruleALPHA_NUMERIC_CHARS ) ) ) )
             {
-            // InternalSemver.g:274:2: ( ( ( ruleURLSemver )=>this_URLSemver_0= ruleURLSemver ) | this_URLCommitISH_1= ruleURLCommitISH )
-            int alt6=2;
-            switch ( input.LA(1) ) {
-            case RULE_ASTERIX:
-            case 31:
-            case 40:
-            case 41:
-            case 42:
-            case 43:
-            case 44:
-            case 45:
-            case 46:
-            case 47:
-                {
-                alt6=1;
-                }
-                break;
-            case RULE_LETTER_X:
-                {
-                int LA6_2 = input.LA(2);
-
-                if ( (synpred9_InternalSemver()) ) {
-                    alt6=1;
-                }
-                else if ( (true) ) {
-                    alt6=2;
-                }
-                else {
-                    if (state.backtracking>0) {state.failed=true; return current;}
-                    NoViableAltException nvae =
-                        new NoViableAltException("", 6, 2, input);
-
-                    throw nvae;
-                }
-                }
-                break;
-            case RULE_DIGITS:
-                {
-                int LA6_3 = input.LA(2);
-
-                if ( (synpred9_InternalSemver()) ) {
-                    alt6=1;
-                }
-                else if ( (true) ) {
-                    alt6=2;
-                }
-                else {
-                    if (state.backtracking>0) {state.failed=true; return current;}
-                    NoViableAltException nvae =
-                        new NoViableAltException("", 6, 3, input);
-
-                    throw nvae;
-                }
-                }
-                break;
-            case RULE_LETTER_V:
-            case RULE_LETTER_NO_VX:
-            case 34:
-                {
-                alt6=2;
-                }
-                break;
-            default:
-                if (state.backtracking>0) {state.failed=true; return current;}
-                NoViableAltException nvae =
-                    new NoViableAltException("", 6, 0, input);
-
-                throw nvae;
-            }
-
+            // InternalSemver.g:304:2: ( ( ( ruleURLSemver )=>this_URLSemver_0= ruleURLSemver ) | ( () ( (lv_commitISH_2_0= ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS ) ) ) | ( () ( (lv_commitISH_4_0= ruleALPHA_NUMERIC_CHARS ) ) ) )
+            int alt6=3;
+            alt6 = dfa6.predict(input);
             switch (alt6) {
                 case 1 :
-                    // InternalSemver.g:275:3: ( ( ruleURLSemver )=>this_URLSemver_0= ruleURLSemver )
+                    // InternalSemver.g:305:3: ( ( ruleURLSemver )=>this_URLSemver_0= ruleURLSemver )
                     {
-                    // InternalSemver.g:275:3: ( ( ruleURLSemver )=>this_URLSemver_0= ruleURLSemver )
-                    // InternalSemver.g:276:4: ( ruleURLSemver )=>this_URLSemver_0= ruleURLSemver
+                    // InternalSemver.g:305:3: ( ( ruleURLSemver )=>this_URLSemver_0= ruleURLSemver )
+                    // InternalSemver.g:306:4: ( ruleURLSemver )=>this_URLSemver_0= ruleURLSemver
                     {
                     if ( state.backtracking==0 ) {
 
-                      				/* */
-                      			
-                    }
-                    if ( state.backtracking==0 ) {
-
-                      				newCompositeNode(grammarAccess.getURLVersionSpecifierAccess().getURLSemverParserRuleCall_0());
+                      				newCompositeNode(grammarAccess.getURLVersionSpecifierAccess().getURLSemverParserRuleCall_0_0());
                       			
                     }
                     pushFollow(FOLLOW_2);
@@ -877,29 +876,122 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalSemver.g:290:3: this_URLCommitISH_1= ruleURLCommitISH
+                    // InternalSemver.g:318:3: ( () ( (lv_commitISH_2_0= ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS ) ) )
+                    {
+                    // InternalSemver.g:318:3: ( () ( (lv_commitISH_2_0= ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS ) ) )
+                    // InternalSemver.g:319:4: () ( (lv_commitISH_2_0= ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS ) )
+                    {
+                    // InternalSemver.g:319:4: ()
+                    // InternalSemver.g:320:5: 
                     {
                     if ( state.backtracking==0 ) {
 
-                      			/* */
-                      		
+                      					current = forceCreateModelElement(
+                      						grammarAccess.getURLVersionSpecifierAccess().getURLCommitISHAction_1_0(),
+                      						current);
+                      				
                     }
+
+                    }
+
+                    // InternalSemver.g:326:4: ( (lv_commitISH_2_0= ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS ) )
+                    // InternalSemver.g:327:5: (lv_commitISH_2_0= ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS )
+                    {
+                    // InternalSemver.g:327:5: (lv_commitISH_2_0= ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS )
+                    // InternalSemver.g:328:6: lv_commitISH_2_0= ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS
+                    {
                     if ( state.backtracking==0 ) {
 
-                      			newCompositeNode(grammarAccess.getURLVersionSpecifierAccess().getURLCommitISHParserRuleCall_1());
-                      		
+                      						newCompositeNode(grammarAccess.getURLVersionSpecifierAccess().getCommitISHALPHA_NUMERIC_CHARS_START_WITH_DIGITSParserRuleCall_1_1_0());
+                      					
                     }
                     pushFollow(FOLLOW_2);
-                    this_URLCommitISH_1=ruleURLCommitISH();
+                    lv_commitISH_2_0=ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS();
 
                     state._fsp--;
                     if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
-                      			current = this_URLCommitISH_1;
-                      			afterParserOrEnumRuleCall();
-                      		
+                      						if (current==null) {
+                      							current = createModelElementForParent(grammarAccess.getURLVersionSpecifierRule());
+                      						}
+                      						set(
+                      							current,
+                      							"commitISH",
+                      							lv_commitISH_2_0,
+                      							"org.eclipse.n4js.semver.Semver.ALPHA_NUMERIC_CHARS_START_WITH_DIGITS");
+                      						afterParserOrEnumRuleCall();
+                      					
                     }
+
+                    }
+
+
+                    }
+
+
+                    }
+
+
+                    }
+                    break;
+                case 3 :
+                    // InternalSemver.g:347:3: ( () ( (lv_commitISH_4_0= ruleALPHA_NUMERIC_CHARS ) ) )
+                    {
+                    // InternalSemver.g:347:3: ( () ( (lv_commitISH_4_0= ruleALPHA_NUMERIC_CHARS ) ) )
+                    // InternalSemver.g:348:4: () ( (lv_commitISH_4_0= ruleALPHA_NUMERIC_CHARS ) )
+                    {
+                    // InternalSemver.g:348:4: ()
+                    // InternalSemver.g:349:5: 
+                    {
+                    if ( state.backtracking==0 ) {
+
+                      					current = forceCreateModelElement(
+                      						grammarAccess.getURLVersionSpecifierAccess().getURLCommitISHAction_2_0(),
+                      						current);
+                      				
+                    }
+
+                    }
+
+                    // InternalSemver.g:355:4: ( (lv_commitISH_4_0= ruleALPHA_NUMERIC_CHARS ) )
+                    // InternalSemver.g:356:5: (lv_commitISH_4_0= ruleALPHA_NUMERIC_CHARS )
+                    {
+                    // InternalSemver.g:356:5: (lv_commitISH_4_0= ruleALPHA_NUMERIC_CHARS )
+                    // InternalSemver.g:357:6: lv_commitISH_4_0= ruleALPHA_NUMERIC_CHARS
+                    {
+                    if ( state.backtracking==0 ) {
+
+                      						newCompositeNode(grammarAccess.getURLVersionSpecifierAccess().getCommitISHALPHA_NUMERIC_CHARSParserRuleCall_2_1_0());
+                      					
+                    }
+                    pushFollow(FOLLOW_2);
+                    lv_commitISH_4_0=ruleALPHA_NUMERIC_CHARS();
+
+                    state._fsp--;
+                    if (state.failed) return current;
+                    if ( state.backtracking==0 ) {
+
+                      						if (current==null) {
+                      							current = createModelElementForParent(grammarAccess.getURLVersionSpecifierRule());
+                      						}
+                      						set(
+                      							current,
+                      							"commitISH",
+                      							lv_commitISH_4_0,
+                      							"org.eclipse.n4js.semver.Semver.ALPHA_NUMERIC_CHARS");
+                      						afterParserOrEnumRuleCall();
+                      					
+                    }
+
+                    }
+
+
+                    }
+
+
+                    }
+
 
                     }
                     break;
@@ -928,7 +1020,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleURLSemver"
-    // InternalSemver.g:305:1: entryRuleURLSemver returns [EObject current=null] : iv_ruleURLSemver= ruleURLSemver EOF ;
+    // InternalSemver.g:379:1: entryRuleURLSemver returns [EObject current=null] : iv_ruleURLSemver= ruleURLSemver EOF ;
     public final EObject entryRuleURLSemver() throws RecognitionException {
         EObject current = null;
 
@@ -936,8 +1028,8 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalSemver.g:305:50: (iv_ruleURLSemver= ruleURLSemver EOF )
-            // InternalSemver.g:306:2: iv_ruleURLSemver= ruleURLSemver EOF
+            // InternalSemver.g:379:50: (iv_ruleURLSemver= ruleURLSemver EOF )
+            // InternalSemver.g:380:2: iv_ruleURLSemver= ruleURLSemver EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getURLSemverRule()); 
@@ -968,25 +1060,38 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleURLSemver"
-    // InternalSemver.g:312:1: ruleURLSemver returns [EObject current=null] : ( (otherlv_0= 'semver:' )? ( (lv_simpleVersion_1_0= ruleSimpleVersion ) ) ) ;
+    // InternalSemver.g:386:1: ruleURLSemver returns [EObject current=null] : ( () ( (lv_withSemverTag_1_0= 'semver:' ) )? ( (lv_simpleVersion_2_0= ruleSimpleVersion ) ) ) ;
     public final EObject ruleURLSemver() throws RecognitionException {
         EObject current = null;
 
-        Token otherlv_0=null;
-        EObject lv_simpleVersion_1_0 = null;
+        Token lv_withSemverTag_1_0=null;
+        EObject lv_simpleVersion_2_0 = null;
 
 
 
         	enterRule();
 
         try {
-            // InternalSemver.g:318:2: ( ( (otherlv_0= 'semver:' )? ( (lv_simpleVersion_1_0= ruleSimpleVersion ) ) ) )
-            // InternalSemver.g:319:2: ( (otherlv_0= 'semver:' )? ( (lv_simpleVersion_1_0= ruleSimpleVersion ) ) )
+            // InternalSemver.g:392:2: ( ( () ( (lv_withSemverTag_1_0= 'semver:' ) )? ( (lv_simpleVersion_2_0= ruleSimpleVersion ) ) ) )
+            // InternalSemver.g:393:2: ( () ( (lv_withSemverTag_1_0= 'semver:' ) )? ( (lv_simpleVersion_2_0= ruleSimpleVersion ) ) )
             {
-            // InternalSemver.g:319:2: ( (otherlv_0= 'semver:' )? ( (lv_simpleVersion_1_0= ruleSimpleVersion ) ) )
-            // InternalSemver.g:320:3: (otherlv_0= 'semver:' )? ( (lv_simpleVersion_1_0= ruleSimpleVersion ) )
+            // InternalSemver.g:393:2: ( () ( (lv_withSemverTag_1_0= 'semver:' ) )? ( (lv_simpleVersion_2_0= ruleSimpleVersion ) ) )
+            // InternalSemver.g:394:3: () ( (lv_withSemverTag_1_0= 'semver:' ) )? ( (lv_simpleVersion_2_0= ruleSimpleVersion ) )
             {
-            // InternalSemver.g:320:3: (otherlv_0= 'semver:' )?
+            // InternalSemver.g:394:3: ()
+            // InternalSemver.g:395:4: 
+            {
+            if ( state.backtracking==0 ) {
+
+              				current = forceCreateModelElement(
+              					grammarAccess.getURLSemverAccess().getURLSemverAction_0(),
+              					current);
+              			
+            }
+
+            }
+
+            // InternalSemver.g:401:3: ( (lv_withSemverTag_1_0= 'semver:' ) )?
             int alt7=2;
             int LA7_0 = input.LA(1);
 
@@ -995,33 +1100,47 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
             }
             switch (alt7) {
                 case 1 :
-                    // InternalSemver.g:321:4: otherlv_0= 'semver:'
+                    // InternalSemver.g:402:4: (lv_withSemverTag_1_0= 'semver:' )
                     {
-                    otherlv_0=(Token)match(input,31,FOLLOW_9); if (state.failed) return current;
+                    // InternalSemver.g:402:4: (lv_withSemverTag_1_0= 'semver:' )
+                    // InternalSemver.g:403:5: lv_withSemverTag_1_0= 'semver:'
+                    {
+                    lv_withSemverTag_1_0=(Token)match(input,31,FOLLOW_10); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
-                      				newLeafNode(otherlv_0, grammarAccess.getURLSemverAccess().getSemverKeyword_0());
-                      			
+                      					newLeafNode(lv_withSemverTag_1_0, grammarAccess.getURLSemverAccess().getWithSemverTagSemverKeyword_1_0());
+                      				
                     }
+                    if ( state.backtracking==0 ) {
+
+                      					if (current==null) {
+                      						current = createModelElement(grammarAccess.getURLSemverRule());
+                      					}
+                      					setWithLastConsumed(current, "withSemverTag", true, "semver:");
+                      				
+                    }
+
+                    }
+
 
                     }
                     break;
 
             }
 
-            // InternalSemver.g:326:3: ( (lv_simpleVersion_1_0= ruleSimpleVersion ) )
-            // InternalSemver.g:327:4: (lv_simpleVersion_1_0= ruleSimpleVersion )
+            // InternalSemver.g:415:3: ( (lv_simpleVersion_2_0= ruleSimpleVersion ) )
+            // InternalSemver.g:416:4: (lv_simpleVersion_2_0= ruleSimpleVersion )
             {
-            // InternalSemver.g:327:4: (lv_simpleVersion_1_0= ruleSimpleVersion )
-            // InternalSemver.g:328:5: lv_simpleVersion_1_0= ruleSimpleVersion
+            // InternalSemver.g:416:4: (lv_simpleVersion_2_0= ruleSimpleVersion )
+            // InternalSemver.g:417:5: lv_simpleVersion_2_0= ruleSimpleVersion
             {
             if ( state.backtracking==0 ) {
 
-              					newCompositeNode(grammarAccess.getURLSemverAccess().getSimpleVersionSimpleVersionParserRuleCall_1_0());
+              					newCompositeNode(grammarAccess.getURLSemverAccess().getSimpleVersionSimpleVersionParserRuleCall_2_0());
               				
             }
             pushFollow(FOLLOW_2);
-            lv_simpleVersion_1_0=ruleSimpleVersion();
+            lv_simpleVersion_2_0=ruleSimpleVersion();
 
             state._fsp--;
             if (state.failed) return current;
@@ -1033,7 +1152,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
               					set(
               						current,
               						"simpleVersion",
-              						lv_simpleVersion_1_0,
+              						lv_simpleVersion_2_0,
               						"org.eclipse.n4js.semver.Semver.SimpleVersion");
               					afterParserOrEnumRuleCall();
               				
@@ -1068,119 +1187,8 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
     // $ANTLR end "ruleURLSemver"
 
 
-    // $ANTLR start "entryRuleURLCommitISH"
-    // InternalSemver.g:349:1: entryRuleURLCommitISH returns [EObject current=null] : iv_ruleURLCommitISH= ruleURLCommitISH EOF ;
-    public final EObject entryRuleURLCommitISH() throws RecognitionException {
-        EObject current = null;
-
-        EObject iv_ruleURLCommitISH = null;
-
-
-        try {
-            // InternalSemver.g:349:53: (iv_ruleURLCommitISH= ruleURLCommitISH EOF )
-            // InternalSemver.g:350:2: iv_ruleURLCommitISH= ruleURLCommitISH EOF
-            {
-            if ( state.backtracking==0 ) {
-               newCompositeNode(grammarAccess.getURLCommitISHRule()); 
-            }
-            pushFollow(FOLLOW_1);
-            iv_ruleURLCommitISH=ruleURLCommitISH();
-
-            state._fsp--;
-            if (state.failed) return current;
-            if ( state.backtracking==0 ) {
-               current =iv_ruleURLCommitISH; 
-            }
-            match(input,EOF,FOLLOW_2); if (state.failed) return current;
-
-            }
-
-        }
-
-            catch (RecognitionException re) {
-                recover(input,re);
-                appendSkippedTokens();
-            }
-        finally {
-        }
-        return current;
-    }
-    // $ANTLR end "entryRuleURLCommitISH"
-
-
-    // $ANTLR start "ruleURLCommitISH"
-    // InternalSemver.g:356:1: ruleURLCommitISH returns [EObject current=null] : ( (lv_commitISH_0_0= ruleALPHA_NUMERIC_CHARS ) ) ;
-    public final EObject ruleURLCommitISH() throws RecognitionException {
-        EObject current = null;
-
-        AntlrDatatypeRuleToken lv_commitISH_0_0 = null;
-
-
-
-        	enterRule();
-
-        try {
-            // InternalSemver.g:362:2: ( ( (lv_commitISH_0_0= ruleALPHA_NUMERIC_CHARS ) ) )
-            // InternalSemver.g:363:2: ( (lv_commitISH_0_0= ruleALPHA_NUMERIC_CHARS ) )
-            {
-            // InternalSemver.g:363:2: ( (lv_commitISH_0_0= ruleALPHA_NUMERIC_CHARS ) )
-            // InternalSemver.g:364:3: (lv_commitISH_0_0= ruleALPHA_NUMERIC_CHARS )
-            {
-            // InternalSemver.g:364:3: (lv_commitISH_0_0= ruleALPHA_NUMERIC_CHARS )
-            // InternalSemver.g:365:4: lv_commitISH_0_0= ruleALPHA_NUMERIC_CHARS
-            {
-            if ( state.backtracking==0 ) {
-
-              				newCompositeNode(grammarAccess.getURLCommitISHAccess().getCommitISHALPHA_NUMERIC_CHARSParserRuleCall_0());
-              			
-            }
-            pushFollow(FOLLOW_2);
-            lv_commitISH_0_0=ruleALPHA_NUMERIC_CHARS();
-
-            state._fsp--;
-            if (state.failed) return current;
-            if ( state.backtracking==0 ) {
-
-              				if (current==null) {
-              					current = createModelElementForParent(grammarAccess.getURLCommitISHRule());
-              				}
-              				set(
-              					current,
-              					"commitISH",
-              					lv_commitISH_0_0,
-              					"org.eclipse.n4js.semver.Semver.ALPHA_NUMERIC_CHARS");
-              				afterParserOrEnumRuleCall();
-              			
-            }
-
-            }
-
-
-            }
-
-
-            }
-
-            if ( state.backtracking==0 ) {
-
-              	leaveRule();
-
-            }
-        }
-
-            catch (RecognitionException re) {
-                recover(input,re);
-                appendSkippedTokens();
-            }
-        finally {
-        }
-        return current;
-    }
-    // $ANTLR end "ruleURLCommitISH"
-
-
     // $ANTLR start "entryRuleTagVersionRequirement"
-    // InternalSemver.g:385:1: entryRuleTagVersionRequirement returns [EObject current=null] : iv_ruleTagVersionRequirement= ruleTagVersionRequirement EOF ;
+    // InternalSemver.g:438:1: entryRuleTagVersionRequirement returns [EObject current=null] : iv_ruleTagVersionRequirement= ruleTagVersionRequirement EOF ;
     public final EObject entryRuleTagVersionRequirement() throws RecognitionException {
         EObject current = null;
 
@@ -1188,8 +1196,8 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalSemver.g:385:62: (iv_ruleTagVersionRequirement= ruleTagVersionRequirement EOF )
-            // InternalSemver.g:386:2: iv_ruleTagVersionRequirement= ruleTagVersionRequirement EOF
+            // InternalSemver.g:438:62: (iv_ruleTagVersionRequirement= ruleTagVersionRequirement EOF )
+            // InternalSemver.g:439:2: iv_ruleTagVersionRequirement= ruleTagVersionRequirement EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getTagVersionRequirementRule()); 
@@ -1220,7 +1228,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleTagVersionRequirement"
-    // InternalSemver.g:392:1: ruleTagVersionRequirement returns [EObject current=null] : ( (lv_tagName_0_0= ruleTAG ) ) ;
+    // InternalSemver.g:445:1: ruleTagVersionRequirement returns [EObject current=null] : ( (lv_tagName_0_0= ruleTAG ) ) ;
     public final EObject ruleTagVersionRequirement() throws RecognitionException {
         EObject current = null;
 
@@ -1231,14 +1239,14 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalSemver.g:398:2: ( ( (lv_tagName_0_0= ruleTAG ) ) )
-            // InternalSemver.g:399:2: ( (lv_tagName_0_0= ruleTAG ) )
+            // InternalSemver.g:451:2: ( ( (lv_tagName_0_0= ruleTAG ) ) )
+            // InternalSemver.g:452:2: ( (lv_tagName_0_0= ruleTAG ) )
             {
-            // InternalSemver.g:399:2: ( (lv_tagName_0_0= ruleTAG ) )
-            // InternalSemver.g:400:3: (lv_tagName_0_0= ruleTAG )
+            // InternalSemver.g:452:2: ( (lv_tagName_0_0= ruleTAG ) )
+            // InternalSemver.g:453:3: (lv_tagName_0_0= ruleTAG )
             {
-            // InternalSemver.g:400:3: (lv_tagName_0_0= ruleTAG )
-            // InternalSemver.g:401:4: lv_tagName_0_0= ruleTAG
+            // InternalSemver.g:453:3: (lv_tagName_0_0= ruleTAG )
+            // InternalSemver.g:454:4: lv_tagName_0_0= ruleTAG
             {
             if ( state.backtracking==0 ) {
 
@@ -1291,7 +1299,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleGitHubVersionRequirement"
-    // InternalSemver.g:421:1: entryRuleGitHubVersionRequirement returns [EObject current=null] : iv_ruleGitHubVersionRequirement= ruleGitHubVersionRequirement EOF ;
+    // InternalSemver.g:474:1: entryRuleGitHubVersionRequirement returns [EObject current=null] : iv_ruleGitHubVersionRequirement= ruleGitHubVersionRequirement EOF ;
     public final EObject entryRuleGitHubVersionRequirement() throws RecognitionException {
         EObject current = null;
 
@@ -1299,8 +1307,8 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalSemver.g:421:65: (iv_ruleGitHubVersionRequirement= ruleGitHubVersionRequirement EOF )
-            // InternalSemver.g:422:2: iv_ruleGitHubVersionRequirement= ruleGitHubVersionRequirement EOF
+            // InternalSemver.g:474:65: (iv_ruleGitHubVersionRequirement= ruleGitHubVersionRequirement EOF )
+            // InternalSemver.g:475:2: iv_ruleGitHubVersionRequirement= ruleGitHubVersionRequirement EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getGitHubVersionRequirementRule()); 
@@ -1331,7 +1339,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleGitHubVersionRequirement"
-    // InternalSemver.g:428:1: ruleGitHubVersionRequirement returns [EObject current=null] : ( ( (lv_githubUrl_0_0= ruleURL ) ) (otherlv_1= '#' ( (lv_commitISH_2_0= ruleALPHA_NUMERIC_CHARS ) ) )? ) ;
+    // InternalSemver.g:481:1: ruleGitHubVersionRequirement returns [EObject current=null] : ( ( (lv_githubUrl_0_0= ruleURL ) ) (otherlv_1= '#' ( (lv_commitISH_2_0= ruleALPHA_NUMERIC_CHARS ) ) )? ) ;
     public final EObject ruleGitHubVersionRequirement() throws RecognitionException {
         EObject current = null;
 
@@ -1345,24 +1353,24 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalSemver.g:434:2: ( ( ( (lv_githubUrl_0_0= ruleURL ) ) (otherlv_1= '#' ( (lv_commitISH_2_0= ruleALPHA_NUMERIC_CHARS ) ) )? ) )
-            // InternalSemver.g:435:2: ( ( (lv_githubUrl_0_0= ruleURL ) ) (otherlv_1= '#' ( (lv_commitISH_2_0= ruleALPHA_NUMERIC_CHARS ) ) )? )
+            // InternalSemver.g:487:2: ( ( ( (lv_githubUrl_0_0= ruleURL ) ) (otherlv_1= '#' ( (lv_commitISH_2_0= ruleALPHA_NUMERIC_CHARS ) ) )? ) )
+            // InternalSemver.g:488:2: ( ( (lv_githubUrl_0_0= ruleURL ) ) (otherlv_1= '#' ( (lv_commitISH_2_0= ruleALPHA_NUMERIC_CHARS ) ) )? )
             {
-            // InternalSemver.g:435:2: ( ( (lv_githubUrl_0_0= ruleURL ) ) (otherlv_1= '#' ( (lv_commitISH_2_0= ruleALPHA_NUMERIC_CHARS ) ) )? )
-            // InternalSemver.g:436:3: ( (lv_githubUrl_0_0= ruleURL ) ) (otherlv_1= '#' ( (lv_commitISH_2_0= ruleALPHA_NUMERIC_CHARS ) ) )?
+            // InternalSemver.g:488:2: ( ( (lv_githubUrl_0_0= ruleURL ) ) (otherlv_1= '#' ( (lv_commitISH_2_0= ruleALPHA_NUMERIC_CHARS ) ) )? )
+            // InternalSemver.g:489:3: ( (lv_githubUrl_0_0= ruleURL ) ) (otherlv_1= '#' ( (lv_commitISH_2_0= ruleALPHA_NUMERIC_CHARS ) ) )?
             {
-            // InternalSemver.g:436:3: ( (lv_githubUrl_0_0= ruleURL ) )
-            // InternalSemver.g:437:4: (lv_githubUrl_0_0= ruleURL )
+            // InternalSemver.g:489:3: ( (lv_githubUrl_0_0= ruleURL ) )
+            // InternalSemver.g:490:4: (lv_githubUrl_0_0= ruleURL )
             {
-            // InternalSemver.g:437:4: (lv_githubUrl_0_0= ruleURL )
-            // InternalSemver.g:438:5: lv_githubUrl_0_0= ruleURL
+            // InternalSemver.g:490:4: (lv_githubUrl_0_0= ruleURL )
+            // InternalSemver.g:491:5: lv_githubUrl_0_0= ruleURL
             {
             if ( state.backtracking==0 ) {
 
               					newCompositeNode(grammarAccess.getGitHubVersionRequirementAccess().getGithubUrlURLParserRuleCall_0_0());
               				
             }
-            pushFollow(FOLLOW_7);
+            pushFollow(FOLLOW_8);
             lv_githubUrl_0_0=ruleURL();
 
             state._fsp--;
@@ -1386,7 +1394,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalSemver.g:455:3: (otherlv_1= '#' ( (lv_commitISH_2_0= ruleALPHA_NUMERIC_CHARS ) ) )?
+            // InternalSemver.g:508:3: (otherlv_1= '#' ( (lv_commitISH_2_0= ruleALPHA_NUMERIC_CHARS ) ) )?
             int alt8=2;
             int LA8_0 = input.LA(1);
 
@@ -1395,19 +1403,19 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
             }
             switch (alt8) {
                 case 1 :
-                    // InternalSemver.g:456:4: otherlv_1= '#' ( (lv_commitISH_2_0= ruleALPHA_NUMERIC_CHARS ) )
+                    // InternalSemver.g:509:4: otherlv_1= '#' ( (lv_commitISH_2_0= ruleALPHA_NUMERIC_CHARS ) )
                     {
-                    otherlv_1=(Token)match(input,30,FOLLOW_8); if (state.failed) return current;
+                    otherlv_1=(Token)match(input,30,FOLLOW_9); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				newLeafNode(otherlv_1, grammarAccess.getGitHubVersionRequirementAccess().getNumberSignKeyword_1_0());
                       			
                     }
-                    // InternalSemver.g:460:4: ( (lv_commitISH_2_0= ruleALPHA_NUMERIC_CHARS ) )
-                    // InternalSemver.g:461:5: (lv_commitISH_2_0= ruleALPHA_NUMERIC_CHARS )
+                    // InternalSemver.g:513:4: ( (lv_commitISH_2_0= ruleALPHA_NUMERIC_CHARS ) )
+                    // InternalSemver.g:514:5: (lv_commitISH_2_0= ruleALPHA_NUMERIC_CHARS )
                     {
-                    // InternalSemver.g:461:5: (lv_commitISH_2_0= ruleALPHA_NUMERIC_CHARS )
-                    // InternalSemver.g:462:6: lv_commitISH_2_0= ruleALPHA_NUMERIC_CHARS
+                    // InternalSemver.g:514:5: (lv_commitISH_2_0= ruleALPHA_NUMERIC_CHARS )
+                    // InternalSemver.g:515:6: lv_commitISH_2_0= ruleALPHA_NUMERIC_CHARS
                     {
                     if ( state.backtracking==0 ) {
 
@@ -1468,132 +1476,8 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
     // $ANTLR end "ruleGitHubVersionRequirement"
 
 
-    // $ANTLR start "entryRuleLocalPathVersionRequirement"
-    // InternalSemver.g:484:1: entryRuleLocalPathVersionRequirement returns [EObject current=null] : iv_ruleLocalPathVersionRequirement= ruleLocalPathVersionRequirement EOF ;
-    public final EObject entryRuleLocalPathVersionRequirement() throws RecognitionException {
-        EObject current = null;
-
-        EObject iv_ruleLocalPathVersionRequirement = null;
-
-
-        try {
-            // InternalSemver.g:484:68: (iv_ruleLocalPathVersionRequirement= ruleLocalPathVersionRequirement EOF )
-            // InternalSemver.g:485:2: iv_ruleLocalPathVersionRequirement= ruleLocalPathVersionRequirement EOF
-            {
-            if ( state.backtracking==0 ) {
-               newCompositeNode(grammarAccess.getLocalPathVersionRequirementRule()); 
-            }
-            pushFollow(FOLLOW_1);
-            iv_ruleLocalPathVersionRequirement=ruleLocalPathVersionRequirement();
-
-            state._fsp--;
-            if (state.failed) return current;
-            if ( state.backtracking==0 ) {
-               current =iv_ruleLocalPathVersionRequirement; 
-            }
-            match(input,EOF,FOLLOW_2); if (state.failed) return current;
-
-            }
-
-        }
-
-            catch (RecognitionException re) {
-                recover(input,re);
-                appendSkippedTokens();
-            }
-        finally {
-        }
-        return current;
-    }
-    // $ANTLR end "entryRuleLocalPathVersionRequirement"
-
-
-    // $ANTLR start "ruleLocalPathVersionRequirement"
-    // InternalSemver.g:491:1: ruleLocalPathVersionRequirement returns [EObject current=null] : (otherlv_0= 'file:' ( (lv_localPath_1_0= rulePATH ) ) ) ;
-    public final EObject ruleLocalPathVersionRequirement() throws RecognitionException {
-        EObject current = null;
-
-        Token otherlv_0=null;
-        AntlrDatatypeRuleToken lv_localPath_1_0 = null;
-
-
-
-        	enterRule();
-
-        try {
-            // InternalSemver.g:497:2: ( (otherlv_0= 'file:' ( (lv_localPath_1_0= rulePATH ) ) ) )
-            // InternalSemver.g:498:2: (otherlv_0= 'file:' ( (lv_localPath_1_0= rulePATH ) ) )
-            {
-            // InternalSemver.g:498:2: (otherlv_0= 'file:' ( (lv_localPath_1_0= rulePATH ) ) )
-            // InternalSemver.g:499:3: otherlv_0= 'file:' ( (lv_localPath_1_0= rulePATH ) )
-            {
-            otherlv_0=(Token)match(input,32,FOLLOW_10); if (state.failed) return current;
-            if ( state.backtracking==0 ) {
-
-              			newLeafNode(otherlv_0, grammarAccess.getLocalPathVersionRequirementAccess().getFileKeyword_0());
-              		
-            }
-            // InternalSemver.g:503:3: ( (lv_localPath_1_0= rulePATH ) )
-            // InternalSemver.g:504:4: (lv_localPath_1_0= rulePATH )
-            {
-            // InternalSemver.g:504:4: (lv_localPath_1_0= rulePATH )
-            // InternalSemver.g:505:5: lv_localPath_1_0= rulePATH
-            {
-            if ( state.backtracking==0 ) {
-
-              					newCompositeNode(grammarAccess.getLocalPathVersionRequirementAccess().getLocalPathPATHParserRuleCall_1_0());
-              				
-            }
-            pushFollow(FOLLOW_2);
-            lv_localPath_1_0=rulePATH();
-
-            state._fsp--;
-            if (state.failed) return current;
-            if ( state.backtracking==0 ) {
-
-              					if (current==null) {
-              						current = createModelElementForParent(grammarAccess.getLocalPathVersionRequirementRule());
-              					}
-              					set(
-              						current,
-              						"localPath",
-              						lv_localPath_1_0,
-              						"org.eclipse.n4js.semver.Semver.PATH");
-              					afterParserOrEnumRuleCall();
-              				
-            }
-
-            }
-
-
-            }
-
-
-            }
-
-
-            }
-
-            if ( state.backtracking==0 ) {
-
-              	leaveRule();
-
-            }
-        }
-
-            catch (RecognitionException re) {
-                recover(input,re);
-                appendSkippedTokens();
-            }
-        finally {
-        }
-        return current;
-    }
-    // $ANTLR end "ruleLocalPathVersionRequirement"
-
-
     // $ANTLR start "entryRuleVersionRangeSetRequirement"
-    // InternalSemver.g:526:1: entryRuleVersionRangeSetRequirement returns [EObject current=null] : iv_ruleVersionRangeSetRequirement= ruleVersionRangeSetRequirement EOF ;
+    // InternalSemver.g:537:1: entryRuleVersionRangeSetRequirement returns [EObject current=null] : iv_ruleVersionRangeSetRequirement= ruleVersionRangeSetRequirement EOF ;
     public final EObject entryRuleVersionRangeSetRequirement() throws RecognitionException {
         EObject current = null;
 
@@ -1601,8 +1485,8 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalSemver.g:526:67: (iv_ruleVersionRangeSetRequirement= ruleVersionRangeSetRequirement EOF )
-            // InternalSemver.g:527:2: iv_ruleVersionRangeSetRequirement= ruleVersionRangeSetRequirement EOF
+            // InternalSemver.g:537:67: (iv_ruleVersionRangeSetRequirement= ruleVersionRangeSetRequirement EOF )
+            // InternalSemver.g:538:2: iv_ruleVersionRangeSetRequirement= ruleVersionRangeSetRequirement EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getVersionRangeSetRequirementRule()); 
@@ -1633,7 +1517,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleVersionRangeSetRequirement"
-    // InternalSemver.g:533:1: ruleVersionRangeSetRequirement returns [EObject current=null] : ( () ( ( (lv_ranges_1_0= ruleVersionRange ) ) ( (this_WS_2= RULE_WS )* otherlv_3= '||' (this_WS_4= RULE_WS )* ( (lv_ranges_5_0= ruleVersionRange ) ) )* (this_WS_6= RULE_WS )* )? ) ;
+    // InternalSemver.g:544:1: ruleVersionRangeSetRequirement returns [EObject current=null] : ( () ( ( (lv_ranges_1_0= ruleVersionRange ) ) ( (this_WS_2= RULE_WS )* otherlv_3= '||' (this_WS_4= RULE_WS )* ( (lv_ranges_5_0= ruleVersionRange ) ) )* (this_WS_6= RULE_WS )* )? ) ;
     public final EObject ruleVersionRangeSetRequirement() throws RecognitionException {
         EObject current = null;
 
@@ -1650,20 +1534,15 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalSemver.g:539:2: ( ( () ( ( (lv_ranges_1_0= ruleVersionRange ) ) ( (this_WS_2= RULE_WS )* otherlv_3= '||' (this_WS_4= RULE_WS )* ( (lv_ranges_5_0= ruleVersionRange ) ) )* (this_WS_6= RULE_WS )* )? ) )
-            // InternalSemver.g:540:2: ( () ( ( (lv_ranges_1_0= ruleVersionRange ) ) ( (this_WS_2= RULE_WS )* otherlv_3= '||' (this_WS_4= RULE_WS )* ( (lv_ranges_5_0= ruleVersionRange ) ) )* (this_WS_6= RULE_WS )* )? )
+            // InternalSemver.g:550:2: ( ( () ( ( (lv_ranges_1_0= ruleVersionRange ) ) ( (this_WS_2= RULE_WS )* otherlv_3= '||' (this_WS_4= RULE_WS )* ( (lv_ranges_5_0= ruleVersionRange ) ) )* (this_WS_6= RULE_WS )* )? ) )
+            // InternalSemver.g:551:2: ( () ( ( (lv_ranges_1_0= ruleVersionRange ) ) ( (this_WS_2= RULE_WS )* otherlv_3= '||' (this_WS_4= RULE_WS )* ( (lv_ranges_5_0= ruleVersionRange ) ) )* (this_WS_6= RULE_WS )* )? )
             {
-            // InternalSemver.g:540:2: ( () ( ( (lv_ranges_1_0= ruleVersionRange ) ) ( (this_WS_2= RULE_WS )* otherlv_3= '||' (this_WS_4= RULE_WS )* ( (lv_ranges_5_0= ruleVersionRange ) ) )* (this_WS_6= RULE_WS )* )? )
-            // InternalSemver.g:541:3: () ( ( (lv_ranges_1_0= ruleVersionRange ) ) ( (this_WS_2= RULE_WS )* otherlv_3= '||' (this_WS_4= RULE_WS )* ( (lv_ranges_5_0= ruleVersionRange ) ) )* (this_WS_6= RULE_WS )* )?
+            // InternalSemver.g:551:2: ( () ( ( (lv_ranges_1_0= ruleVersionRange ) ) ( (this_WS_2= RULE_WS )* otherlv_3= '||' (this_WS_4= RULE_WS )* ( (lv_ranges_5_0= ruleVersionRange ) ) )* (this_WS_6= RULE_WS )* )? )
+            // InternalSemver.g:552:3: () ( ( (lv_ranges_1_0= ruleVersionRange ) ) ( (this_WS_2= RULE_WS )* otherlv_3= '||' (this_WS_4= RULE_WS )* ( (lv_ranges_5_0= ruleVersionRange ) ) )* (this_WS_6= RULE_WS )* )?
             {
-            // InternalSemver.g:541:3: ()
-            // InternalSemver.g:542:4: 
+            // InternalSemver.g:552:3: ()
+            // InternalSemver.g:553:4: 
             {
-            if ( state.backtracking==0 ) {
-
-              				/* */
-              			
-            }
             if ( state.backtracking==0 ) {
 
               				current = forceCreateModelElement(
@@ -1674,22 +1553,22 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalSemver.g:551:3: ( ( (lv_ranges_1_0= ruleVersionRange ) ) ( (this_WS_2= RULE_WS )* otherlv_3= '||' (this_WS_4= RULE_WS )* ( (lv_ranges_5_0= ruleVersionRange ) ) )* (this_WS_6= RULE_WS )* )?
+            // InternalSemver.g:559:3: ( ( (lv_ranges_1_0= ruleVersionRange ) ) ( (this_WS_2= RULE_WS )* otherlv_3= '||' (this_WS_4= RULE_WS )* ( (lv_ranges_5_0= ruleVersionRange ) ) )* (this_WS_6= RULE_WS )* )?
             int alt13=2;
             int LA13_0 = input.LA(1);
 
-            if ( (LA13_0==RULE_DIGITS||LA13_0==RULE_LETTER_X||LA13_0==RULE_ASTERIX||(LA13_0>=40 && LA13_0<=47)) ) {
+            if ( ((LA13_0>=RULE_LETTER_V && LA13_0<=RULE_DIGITS)||(LA13_0>=RULE_LETTER_X && LA13_0<=RULE_ASTERIX)||(LA13_0>=39 && LA13_0<=45)) ) {
                 alt13=1;
             }
             switch (alt13) {
                 case 1 :
-                    // InternalSemver.g:552:4: ( (lv_ranges_1_0= ruleVersionRange ) ) ( (this_WS_2= RULE_WS )* otherlv_3= '||' (this_WS_4= RULE_WS )* ( (lv_ranges_5_0= ruleVersionRange ) ) )* (this_WS_6= RULE_WS )*
+                    // InternalSemver.g:560:4: ( (lv_ranges_1_0= ruleVersionRange ) ) ( (this_WS_2= RULE_WS )* otherlv_3= '||' (this_WS_4= RULE_WS )* ( (lv_ranges_5_0= ruleVersionRange ) ) )* (this_WS_6= RULE_WS )*
                     {
-                    // InternalSemver.g:552:4: ( (lv_ranges_1_0= ruleVersionRange ) )
-                    // InternalSemver.g:553:5: (lv_ranges_1_0= ruleVersionRange )
+                    // InternalSemver.g:560:4: ( (lv_ranges_1_0= ruleVersionRange ) )
+                    // InternalSemver.g:561:5: (lv_ranges_1_0= ruleVersionRange )
                     {
-                    // InternalSemver.g:553:5: (lv_ranges_1_0= ruleVersionRange )
-                    // InternalSemver.g:554:6: lv_ranges_1_0= ruleVersionRange
+                    // InternalSemver.g:561:5: (lv_ranges_1_0= ruleVersionRange )
+                    // InternalSemver.g:562:6: lv_ranges_1_0= ruleVersionRange
                     {
                     if ( state.backtracking==0 ) {
 
@@ -1720,16 +1599,16 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    // InternalSemver.g:571:4: ( (this_WS_2= RULE_WS )* otherlv_3= '||' (this_WS_4= RULE_WS )* ( (lv_ranges_5_0= ruleVersionRange ) ) )*
+                    // InternalSemver.g:579:4: ( (this_WS_2= RULE_WS )* otherlv_3= '||' (this_WS_4= RULE_WS )* ( (lv_ranges_5_0= ruleVersionRange ) ) )*
                     loop11:
                     do {
                         int alt11=2;
                         alt11 = dfa11.predict(input);
                         switch (alt11) {
                     	case 1 :
-                    	    // InternalSemver.g:572:5: (this_WS_2= RULE_WS )* otherlv_3= '||' (this_WS_4= RULE_WS )* ( (lv_ranges_5_0= ruleVersionRange ) )
+                    	    // InternalSemver.g:580:5: (this_WS_2= RULE_WS )* otherlv_3= '||' (this_WS_4= RULE_WS )* ( (lv_ranges_5_0= ruleVersionRange ) )
                     	    {
-                    	    // InternalSemver.g:572:5: (this_WS_2= RULE_WS )*
+                    	    // InternalSemver.g:580:5: (this_WS_2= RULE_WS )*
                     	    loop9:
                     	    do {
                     	        int alt9=2;
@@ -1742,7 +1621,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
                     	        switch (alt9) {
                     	    	case 1 :
-                    	    	    // InternalSemver.g:573:6: this_WS_2= RULE_WS
+                    	    	    // InternalSemver.g:581:6: this_WS_2= RULE_WS
                     	    	    {
                     	    	    this_WS_2=(Token)match(input,RULE_WS,FOLLOW_12); if (state.failed) return current;
                     	    	    if ( state.backtracking==0 ) {
@@ -1759,13 +1638,13 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                     	        }
                     	    } while (true);
 
-                    	    otherlv_3=(Token)match(input,33,FOLLOW_3); if (state.failed) return current;
+                    	    otherlv_3=(Token)match(input,32,FOLLOW_3); if (state.failed) return current;
                     	    if ( state.backtracking==0 ) {
 
                     	      					newLeafNode(otherlv_3, grammarAccess.getVersionRangeSetRequirementAccess().getVerticalLineVerticalLineKeyword_1_1_1());
                     	      				
                     	    }
-                    	    // InternalSemver.g:582:5: (this_WS_4= RULE_WS )*
+                    	    // InternalSemver.g:590:5: (this_WS_4= RULE_WS )*
                     	    loop10:
                     	    do {
                     	        int alt10=2;
@@ -1778,7 +1657,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
                     	        switch (alt10) {
                     	    	case 1 :
-                    	    	    // InternalSemver.g:583:6: this_WS_4= RULE_WS
+                    	    	    // InternalSemver.g:591:6: this_WS_4= RULE_WS
                     	    	    {
                     	    	    this_WS_4=(Token)match(input,RULE_WS,FOLLOW_3); if (state.failed) return current;
                     	    	    if ( state.backtracking==0 ) {
@@ -1795,11 +1674,11 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                     	        }
                     	    } while (true);
 
-                    	    // InternalSemver.g:588:5: ( (lv_ranges_5_0= ruleVersionRange ) )
-                    	    // InternalSemver.g:589:6: (lv_ranges_5_0= ruleVersionRange )
+                    	    // InternalSemver.g:596:5: ( (lv_ranges_5_0= ruleVersionRange ) )
+                    	    // InternalSemver.g:597:6: (lv_ranges_5_0= ruleVersionRange )
                     	    {
-                    	    // InternalSemver.g:589:6: (lv_ranges_5_0= ruleVersionRange )
-                    	    // InternalSemver.g:590:7: lv_ranges_5_0= ruleVersionRange
+                    	    // InternalSemver.g:597:6: (lv_ranges_5_0= ruleVersionRange )
+                    	    // InternalSemver.g:598:7: lv_ranges_5_0= ruleVersionRange
                     	    {
                     	    if ( state.backtracking==0 ) {
 
@@ -1839,7 +1718,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                         }
                     } while (true);
 
-                    // InternalSemver.g:608:4: (this_WS_6= RULE_WS )*
+                    // InternalSemver.g:616:4: (this_WS_6= RULE_WS )*
                     loop12:
                     do {
                         int alt12=2;
@@ -1852,7 +1731,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
                         switch (alt12) {
                     	case 1 :
-                    	    // InternalSemver.g:609:5: this_WS_6= RULE_WS
+                    	    // InternalSemver.g:617:5: this_WS_6= RULE_WS
                     	    {
                     	    this_WS_6=(Token)match(input,RULE_WS,FOLLOW_4); if (state.failed) return current;
                     	    if ( state.backtracking==0 ) {
@@ -1900,7 +1779,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleVersionRange"
-    // InternalSemver.g:619:1: entryRuleVersionRange returns [EObject current=null] : iv_ruleVersionRange= ruleVersionRange EOF ;
+    // InternalSemver.g:627:1: entryRuleVersionRange returns [EObject current=null] : iv_ruleVersionRange= ruleVersionRange EOF ;
     public final EObject entryRuleVersionRange() throws RecognitionException {
         EObject current = null;
 
@@ -1908,8 +1787,8 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalSemver.g:619:53: (iv_ruleVersionRange= ruleVersionRange EOF )
-            // InternalSemver.g:620:2: iv_ruleVersionRange= ruleVersionRange EOF
+            // InternalSemver.g:627:53: (iv_ruleVersionRange= ruleVersionRange EOF )
+            // InternalSemver.g:628:2: iv_ruleVersionRange= ruleVersionRange EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getVersionRangeRule()); 
@@ -1940,7 +1819,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleVersionRange"
-    // InternalSemver.g:626:1: ruleVersionRange returns [EObject current=null] : (this_VersionRangeContraint_0= ruleVersionRangeContraint | this_HyphenVersionRange_1= ruleHyphenVersionRange ) ;
+    // InternalSemver.g:634:1: ruleVersionRange returns [EObject current=null] : (this_VersionRangeContraint_0= ruleVersionRangeContraint | this_HyphenVersionRange_1= ruleHyphenVersionRange ) ;
     public final EObject ruleVersionRange() throws RecognitionException {
         EObject current = null;
 
@@ -1953,21 +1832,16 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalSemver.g:632:2: ( (this_VersionRangeContraint_0= ruleVersionRangeContraint | this_HyphenVersionRange_1= ruleHyphenVersionRange ) )
-            // InternalSemver.g:633:2: (this_VersionRangeContraint_0= ruleVersionRangeContraint | this_HyphenVersionRange_1= ruleHyphenVersionRange )
+            // InternalSemver.g:640:2: ( (this_VersionRangeContraint_0= ruleVersionRangeContraint | this_HyphenVersionRange_1= ruleHyphenVersionRange ) )
+            // InternalSemver.g:641:2: (this_VersionRangeContraint_0= ruleVersionRangeContraint | this_HyphenVersionRange_1= ruleHyphenVersionRange )
             {
-            // InternalSemver.g:633:2: (this_VersionRangeContraint_0= ruleVersionRangeContraint | this_HyphenVersionRange_1= ruleHyphenVersionRange )
+            // InternalSemver.g:641:2: (this_VersionRangeContraint_0= ruleVersionRangeContraint | this_HyphenVersionRange_1= ruleHyphenVersionRange )
             int alt14=2;
             alt14 = dfa14.predict(input);
             switch (alt14) {
                 case 1 :
-                    // InternalSemver.g:634:3: this_VersionRangeContraint_0= ruleVersionRangeContraint
+                    // InternalSemver.g:642:3: this_VersionRangeContraint_0= ruleVersionRangeContraint
                     {
-                    if ( state.backtracking==0 ) {
-
-                      			/* */
-                      		
-                    }
                     if ( state.backtracking==0 ) {
 
                       			newCompositeNode(grammarAccess.getVersionRangeAccess().getVersionRangeContraintParserRuleCall_0());
@@ -1988,13 +1862,8 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalSemver.g:646:3: this_HyphenVersionRange_1= ruleHyphenVersionRange
+                    // InternalSemver.g:651:3: this_HyphenVersionRange_1= ruleHyphenVersionRange
                     {
-                    if ( state.backtracking==0 ) {
-
-                      			/* */
-                      		
-                    }
                     if ( state.backtracking==0 ) {
 
                       			newCompositeNode(grammarAccess.getVersionRangeAccess().getHyphenVersionRangeParserRuleCall_1());
@@ -2039,7 +1908,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleHyphenVersionRange"
-    // InternalSemver.g:661:1: entryRuleHyphenVersionRange returns [EObject current=null] : iv_ruleHyphenVersionRange= ruleHyphenVersionRange EOF ;
+    // InternalSemver.g:663:1: entryRuleHyphenVersionRange returns [EObject current=null] : iv_ruleHyphenVersionRange= ruleHyphenVersionRange EOF ;
     public final EObject entryRuleHyphenVersionRange() throws RecognitionException {
         EObject current = null;
 
@@ -2047,8 +1916,8 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalSemver.g:661:59: (iv_ruleHyphenVersionRange= ruleHyphenVersionRange EOF )
-            // InternalSemver.g:662:2: iv_ruleHyphenVersionRange= ruleHyphenVersionRange EOF
+            // InternalSemver.g:663:59: (iv_ruleHyphenVersionRange= ruleHyphenVersionRange EOF )
+            // InternalSemver.g:664:2: iv_ruleHyphenVersionRange= ruleHyphenVersionRange EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getHyphenVersionRangeRule()); 
@@ -2079,7 +1948,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleHyphenVersionRange"
-    // InternalSemver.g:668:1: ruleHyphenVersionRange returns [EObject current=null] : ( () ( (lv_from_1_0= ruleVersionNumber ) ) (this_WS_2= RULE_WS )+ otherlv_3= '-' (this_WS_4= RULE_WS )+ ( (lv_to_5_0= ruleVersionNumber ) ) ) ;
+    // InternalSemver.g:670:1: ruleHyphenVersionRange returns [EObject current=null] : ( () ( (lv_from_1_0= ruleVersionNumber ) ) (this_WS_2= RULE_WS )+ otherlv_3= '-' (this_WS_4= RULE_WS )+ ( (lv_to_5_0= ruleVersionNumber ) ) ) ;
     public final EObject ruleHyphenVersionRange() throws RecognitionException {
         EObject current = null;
 
@@ -2095,20 +1964,15 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalSemver.g:674:2: ( ( () ( (lv_from_1_0= ruleVersionNumber ) ) (this_WS_2= RULE_WS )+ otherlv_3= '-' (this_WS_4= RULE_WS )+ ( (lv_to_5_0= ruleVersionNumber ) ) ) )
-            // InternalSemver.g:675:2: ( () ( (lv_from_1_0= ruleVersionNumber ) ) (this_WS_2= RULE_WS )+ otherlv_3= '-' (this_WS_4= RULE_WS )+ ( (lv_to_5_0= ruleVersionNumber ) ) )
+            // InternalSemver.g:676:2: ( ( () ( (lv_from_1_0= ruleVersionNumber ) ) (this_WS_2= RULE_WS )+ otherlv_3= '-' (this_WS_4= RULE_WS )+ ( (lv_to_5_0= ruleVersionNumber ) ) ) )
+            // InternalSemver.g:677:2: ( () ( (lv_from_1_0= ruleVersionNumber ) ) (this_WS_2= RULE_WS )+ otherlv_3= '-' (this_WS_4= RULE_WS )+ ( (lv_to_5_0= ruleVersionNumber ) ) )
             {
-            // InternalSemver.g:675:2: ( () ( (lv_from_1_0= ruleVersionNumber ) ) (this_WS_2= RULE_WS )+ otherlv_3= '-' (this_WS_4= RULE_WS )+ ( (lv_to_5_0= ruleVersionNumber ) ) )
-            // InternalSemver.g:676:3: () ( (lv_from_1_0= ruleVersionNumber ) ) (this_WS_2= RULE_WS )+ otherlv_3= '-' (this_WS_4= RULE_WS )+ ( (lv_to_5_0= ruleVersionNumber ) )
+            // InternalSemver.g:677:2: ( () ( (lv_from_1_0= ruleVersionNumber ) ) (this_WS_2= RULE_WS )+ otherlv_3= '-' (this_WS_4= RULE_WS )+ ( (lv_to_5_0= ruleVersionNumber ) ) )
+            // InternalSemver.g:678:3: () ( (lv_from_1_0= ruleVersionNumber ) ) (this_WS_2= RULE_WS )+ otherlv_3= '-' (this_WS_4= RULE_WS )+ ( (lv_to_5_0= ruleVersionNumber ) )
             {
-            // InternalSemver.g:676:3: ()
-            // InternalSemver.g:677:4: 
+            // InternalSemver.g:678:3: ()
+            // InternalSemver.g:679:4: 
             {
-            if ( state.backtracking==0 ) {
-
-              				/* */
-              			
-            }
             if ( state.backtracking==0 ) {
 
               				current = forceCreateModelElement(
@@ -2119,11 +1983,11 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalSemver.g:686:3: ( (lv_from_1_0= ruleVersionNumber ) )
-            // InternalSemver.g:687:4: (lv_from_1_0= ruleVersionNumber )
+            // InternalSemver.g:685:3: ( (lv_from_1_0= ruleVersionNumber ) )
+            // InternalSemver.g:686:4: (lv_from_1_0= ruleVersionNumber )
             {
-            // InternalSemver.g:687:4: (lv_from_1_0= ruleVersionNumber )
-            // InternalSemver.g:688:5: lv_from_1_0= ruleVersionNumber
+            // InternalSemver.g:686:4: (lv_from_1_0= ruleVersionNumber )
+            // InternalSemver.g:687:5: lv_from_1_0= ruleVersionNumber
             {
             if ( state.backtracking==0 ) {
 
@@ -2154,7 +2018,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalSemver.g:705:3: (this_WS_2= RULE_WS )+
+            // InternalSemver.g:704:3: (this_WS_2= RULE_WS )+
             int cnt15=0;
             loop15:
             do {
@@ -2168,7 +2032,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
                 switch (alt15) {
             	case 1 :
-            	    // InternalSemver.g:706:4: this_WS_2= RULE_WS
+            	    // InternalSemver.g:705:4: this_WS_2= RULE_WS
             	    {
             	    this_WS_2=(Token)match(input,RULE_WS,FOLLOW_14); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
@@ -2190,13 +2054,13 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                 cnt15++;
             } while (true);
 
-            otherlv_3=(Token)match(input,34,FOLLOW_13); if (state.failed) return current;
+            otherlv_3=(Token)match(input,33,FOLLOW_13); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_3, grammarAccess.getHyphenVersionRangeAccess().getHyphenMinusKeyword_3());
               		
             }
-            // InternalSemver.g:715:3: (this_WS_4= RULE_WS )+
+            // InternalSemver.g:714:3: (this_WS_4= RULE_WS )+
             int cnt16=0;
             loop16:
             do {
@@ -2210,7 +2074,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
                 switch (alt16) {
             	case 1 :
-            	    // InternalSemver.g:716:4: this_WS_4= RULE_WS
+            	    // InternalSemver.g:715:4: this_WS_4= RULE_WS
             	    {
             	    this_WS_4=(Token)match(input,RULE_WS,FOLLOW_3); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
@@ -2232,11 +2096,11 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                 cnt16++;
             } while (true);
 
-            // InternalSemver.g:721:3: ( (lv_to_5_0= ruleVersionNumber ) )
-            // InternalSemver.g:722:4: (lv_to_5_0= ruleVersionNumber )
+            // InternalSemver.g:720:3: ( (lv_to_5_0= ruleVersionNumber ) )
+            // InternalSemver.g:721:4: (lv_to_5_0= ruleVersionNumber )
             {
-            // InternalSemver.g:722:4: (lv_to_5_0= ruleVersionNumber )
-            // InternalSemver.g:723:5: lv_to_5_0= ruleVersionNumber
+            // InternalSemver.g:721:4: (lv_to_5_0= ruleVersionNumber )
+            // InternalSemver.g:722:5: lv_to_5_0= ruleVersionNumber
             {
             if ( state.backtracking==0 ) {
 
@@ -2292,7 +2156,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleVersionRangeContraint"
-    // InternalSemver.g:744:1: entryRuleVersionRangeContraint returns [EObject current=null] : iv_ruleVersionRangeContraint= ruleVersionRangeContraint EOF ;
+    // InternalSemver.g:743:1: entryRuleVersionRangeContraint returns [EObject current=null] : iv_ruleVersionRangeContraint= ruleVersionRangeContraint EOF ;
     public final EObject entryRuleVersionRangeContraint() throws RecognitionException {
         EObject current = null;
 
@@ -2300,8 +2164,8 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalSemver.g:744:62: (iv_ruleVersionRangeContraint= ruleVersionRangeContraint EOF )
-            // InternalSemver.g:745:2: iv_ruleVersionRangeContraint= ruleVersionRangeContraint EOF
+            // InternalSemver.g:743:62: (iv_ruleVersionRangeContraint= ruleVersionRangeContraint EOF )
+            // InternalSemver.g:744:2: iv_ruleVersionRangeContraint= ruleVersionRangeContraint EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getVersionRangeContraintRule()); 
@@ -2332,7 +2196,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleVersionRangeContraint"
-    // InternalSemver.g:751:1: ruleVersionRangeContraint returns [EObject current=null] : ( () ( (lv_versionConstraints_1_0= ruleSimpleVersion ) ) ( (this_WS_2= RULE_WS )+ ( (lv_versionConstraints_3_0= ruleSimpleVersion ) ) )* ) ;
+    // InternalSemver.g:750:1: ruleVersionRangeContraint returns [EObject current=null] : ( () ( (lv_versionConstraints_1_0= ruleSimpleVersion ) ) ( (this_WS_2= RULE_WS )+ ( (lv_versionConstraints_3_0= ruleSimpleVersion ) ) )* ) ;
     public final EObject ruleVersionRangeContraint() throws RecognitionException {
         EObject current = null;
 
@@ -2346,20 +2210,15 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalSemver.g:757:2: ( ( () ( (lv_versionConstraints_1_0= ruleSimpleVersion ) ) ( (this_WS_2= RULE_WS )+ ( (lv_versionConstraints_3_0= ruleSimpleVersion ) ) )* ) )
-            // InternalSemver.g:758:2: ( () ( (lv_versionConstraints_1_0= ruleSimpleVersion ) ) ( (this_WS_2= RULE_WS )+ ( (lv_versionConstraints_3_0= ruleSimpleVersion ) ) )* )
+            // InternalSemver.g:756:2: ( ( () ( (lv_versionConstraints_1_0= ruleSimpleVersion ) ) ( (this_WS_2= RULE_WS )+ ( (lv_versionConstraints_3_0= ruleSimpleVersion ) ) )* ) )
+            // InternalSemver.g:757:2: ( () ( (lv_versionConstraints_1_0= ruleSimpleVersion ) ) ( (this_WS_2= RULE_WS )+ ( (lv_versionConstraints_3_0= ruleSimpleVersion ) ) )* )
             {
-            // InternalSemver.g:758:2: ( () ( (lv_versionConstraints_1_0= ruleSimpleVersion ) ) ( (this_WS_2= RULE_WS )+ ( (lv_versionConstraints_3_0= ruleSimpleVersion ) ) )* )
-            // InternalSemver.g:759:3: () ( (lv_versionConstraints_1_0= ruleSimpleVersion ) ) ( (this_WS_2= RULE_WS )+ ( (lv_versionConstraints_3_0= ruleSimpleVersion ) ) )*
+            // InternalSemver.g:757:2: ( () ( (lv_versionConstraints_1_0= ruleSimpleVersion ) ) ( (this_WS_2= RULE_WS )+ ( (lv_versionConstraints_3_0= ruleSimpleVersion ) ) )* )
+            // InternalSemver.g:758:3: () ( (lv_versionConstraints_1_0= ruleSimpleVersion ) ) ( (this_WS_2= RULE_WS )+ ( (lv_versionConstraints_3_0= ruleSimpleVersion ) ) )*
             {
-            // InternalSemver.g:759:3: ()
-            // InternalSemver.g:760:4: 
+            // InternalSemver.g:758:3: ()
+            // InternalSemver.g:759:4: 
             {
-            if ( state.backtracking==0 ) {
-
-              				/* */
-              			
-            }
             if ( state.backtracking==0 ) {
 
               				current = forceCreateModelElement(
@@ -2370,11 +2229,11 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalSemver.g:769:3: ( (lv_versionConstraints_1_0= ruleSimpleVersion ) )
-            // InternalSemver.g:770:4: (lv_versionConstraints_1_0= ruleSimpleVersion )
+            // InternalSemver.g:765:3: ( (lv_versionConstraints_1_0= ruleSimpleVersion ) )
+            // InternalSemver.g:766:4: (lv_versionConstraints_1_0= ruleSimpleVersion )
             {
-            // InternalSemver.g:770:4: (lv_versionConstraints_1_0= ruleSimpleVersion )
-            // InternalSemver.g:771:5: lv_versionConstraints_1_0= ruleSimpleVersion
+            // InternalSemver.g:766:4: (lv_versionConstraints_1_0= ruleSimpleVersion )
+            // InternalSemver.g:767:5: lv_versionConstraints_1_0= ruleSimpleVersion
             {
             if ( state.backtracking==0 ) {
 
@@ -2405,16 +2264,16 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalSemver.g:788:3: ( (this_WS_2= RULE_WS )+ ( (lv_versionConstraints_3_0= ruleSimpleVersion ) ) )*
+            // InternalSemver.g:784:3: ( (this_WS_2= RULE_WS )+ ( (lv_versionConstraints_3_0= ruleSimpleVersion ) ) )*
             loop18:
             do {
                 int alt18=2;
                 alt18 = dfa18.predict(input);
                 switch (alt18) {
             	case 1 :
-            	    // InternalSemver.g:789:4: (this_WS_2= RULE_WS )+ ( (lv_versionConstraints_3_0= ruleSimpleVersion ) )
+            	    // InternalSemver.g:785:4: (this_WS_2= RULE_WS )+ ( (lv_versionConstraints_3_0= ruleSimpleVersion ) )
             	    {
-            	    // InternalSemver.g:789:4: (this_WS_2= RULE_WS )+
+            	    // InternalSemver.g:785:4: (this_WS_2= RULE_WS )+
             	    int cnt17=0;
             	    loop17:
             	    do {
@@ -2428,7 +2287,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
             	        switch (alt17) {
             	    	case 1 :
-            	    	    // InternalSemver.g:790:5: this_WS_2= RULE_WS
+            	    	    // InternalSemver.g:786:5: this_WS_2= RULE_WS
             	    	    {
             	    	    this_WS_2=(Token)match(input,RULE_WS,FOLLOW_3); if (state.failed) return current;
             	    	    if ( state.backtracking==0 ) {
@@ -2450,11 +2309,11 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
             	        cnt17++;
             	    } while (true);
 
-            	    // InternalSemver.g:795:4: ( (lv_versionConstraints_3_0= ruleSimpleVersion ) )
-            	    // InternalSemver.g:796:5: (lv_versionConstraints_3_0= ruleSimpleVersion )
+            	    // InternalSemver.g:791:4: ( (lv_versionConstraints_3_0= ruleSimpleVersion ) )
+            	    // InternalSemver.g:792:5: (lv_versionConstraints_3_0= ruleSimpleVersion )
             	    {
-            	    // InternalSemver.g:796:5: (lv_versionConstraints_3_0= ruleSimpleVersion )
-            	    // InternalSemver.g:797:6: lv_versionConstraints_3_0= ruleSimpleVersion
+            	    // InternalSemver.g:792:5: (lv_versionConstraints_3_0= ruleSimpleVersion )
+            	    // InternalSemver.g:793:6: lv_versionConstraints_3_0= ruleSimpleVersion
             	    {
             	    if ( state.backtracking==0 ) {
 
@@ -2519,7 +2378,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleSimpleVersion"
-    // InternalSemver.g:819:1: entryRuleSimpleVersion returns [EObject current=null] : iv_ruleSimpleVersion= ruleSimpleVersion EOF ;
+    // InternalSemver.g:815:1: entryRuleSimpleVersion returns [EObject current=null] : iv_ruleSimpleVersion= ruleSimpleVersion EOF ;
     public final EObject entryRuleSimpleVersion() throws RecognitionException {
         EObject current = null;
 
@@ -2527,8 +2386,8 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalSemver.g:819:54: (iv_ruleSimpleVersion= ruleSimpleVersion EOF )
-            // InternalSemver.g:820:2: iv_ruleSimpleVersion= ruleSimpleVersion EOF
+            // InternalSemver.g:815:54: (iv_ruleSimpleVersion= ruleSimpleVersion EOF )
+            // InternalSemver.g:816:2: iv_ruleSimpleVersion= ruleSimpleVersion EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getSimpleVersionRule()); 
@@ -2559,12 +2418,13 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleSimpleVersion"
-    // InternalSemver.g:826:1: ruleSimpleVersion returns [EObject current=null] : ( () ( ( (lv_comparators_1_0= ruleVersionComparator ) ) (this_WS_2= RULE_WS )* )* ( (lv_number_3_0= ruleVersionNumber ) ) ) ;
+    // InternalSemver.g:822:1: ruleSimpleVersion returns [EObject current=null] : ( ( ( (lv_comparators_0_0= ruleVersionComparator ) ) (this_WS_1= RULE_WS )* )* ( (lv_withLetterV_2_0= RULE_LETTER_V ) )? ( (lv_number_3_0= ruleVersionNumber ) ) ) ;
     public final EObject ruleSimpleVersion() throws RecognitionException {
         EObject current = null;
 
-        Token this_WS_2=null;
-        Enumerator lv_comparators_1_0 = null;
+        Token this_WS_1=null;
+        Token lv_withLetterV_2_0=null;
+        Enumerator lv_comparators_0_0 = null;
 
         EObject lv_number_3_0 = null;
 
@@ -2573,58 +2433,40 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalSemver.g:832:2: ( ( () ( ( (lv_comparators_1_0= ruleVersionComparator ) ) (this_WS_2= RULE_WS )* )* ( (lv_number_3_0= ruleVersionNumber ) ) ) )
-            // InternalSemver.g:833:2: ( () ( ( (lv_comparators_1_0= ruleVersionComparator ) ) (this_WS_2= RULE_WS )* )* ( (lv_number_3_0= ruleVersionNumber ) ) )
+            // InternalSemver.g:828:2: ( ( ( ( (lv_comparators_0_0= ruleVersionComparator ) ) (this_WS_1= RULE_WS )* )* ( (lv_withLetterV_2_0= RULE_LETTER_V ) )? ( (lv_number_3_0= ruleVersionNumber ) ) ) )
+            // InternalSemver.g:829:2: ( ( ( (lv_comparators_0_0= ruleVersionComparator ) ) (this_WS_1= RULE_WS )* )* ( (lv_withLetterV_2_0= RULE_LETTER_V ) )? ( (lv_number_3_0= ruleVersionNumber ) ) )
             {
-            // InternalSemver.g:833:2: ( () ( ( (lv_comparators_1_0= ruleVersionComparator ) ) (this_WS_2= RULE_WS )* )* ( (lv_number_3_0= ruleVersionNumber ) ) )
-            // InternalSemver.g:834:3: () ( ( (lv_comparators_1_0= ruleVersionComparator ) ) (this_WS_2= RULE_WS )* )* ( (lv_number_3_0= ruleVersionNumber ) )
+            // InternalSemver.g:829:2: ( ( ( (lv_comparators_0_0= ruleVersionComparator ) ) (this_WS_1= RULE_WS )* )* ( (lv_withLetterV_2_0= RULE_LETTER_V ) )? ( (lv_number_3_0= ruleVersionNumber ) ) )
+            // InternalSemver.g:830:3: ( ( (lv_comparators_0_0= ruleVersionComparator ) ) (this_WS_1= RULE_WS )* )* ( (lv_withLetterV_2_0= RULE_LETTER_V ) )? ( (lv_number_3_0= ruleVersionNumber ) )
             {
-            // InternalSemver.g:834:3: ()
-            // InternalSemver.g:835:4: 
-            {
-            if ( state.backtracking==0 ) {
-
-              				/* */
-              			
-            }
-            if ( state.backtracking==0 ) {
-
-              				current = forceCreateModelElement(
-              					grammarAccess.getSimpleVersionAccess().getSimpleVersionAction_0(),
-              					current);
-              			
-            }
-
-            }
-
-            // InternalSemver.g:844:3: ( ( (lv_comparators_1_0= ruleVersionComparator ) ) (this_WS_2= RULE_WS )* )*
+            // InternalSemver.g:830:3: ( ( (lv_comparators_0_0= ruleVersionComparator ) ) (this_WS_1= RULE_WS )* )*
             loop20:
             do {
                 int alt20=2;
                 int LA20_0 = input.LA(1);
 
-                if ( ((LA20_0>=40 && LA20_0<=47)) ) {
+                if ( ((LA20_0>=39 && LA20_0<=45)) ) {
                     alt20=1;
                 }
 
 
                 switch (alt20) {
             	case 1 :
-            	    // InternalSemver.g:845:4: ( (lv_comparators_1_0= ruleVersionComparator ) ) (this_WS_2= RULE_WS )*
+            	    // InternalSemver.g:831:4: ( (lv_comparators_0_0= ruleVersionComparator ) ) (this_WS_1= RULE_WS )*
             	    {
-            	    // InternalSemver.g:845:4: ( (lv_comparators_1_0= ruleVersionComparator ) )
-            	    // InternalSemver.g:846:5: (lv_comparators_1_0= ruleVersionComparator )
+            	    // InternalSemver.g:831:4: ( (lv_comparators_0_0= ruleVersionComparator ) )
+            	    // InternalSemver.g:832:5: (lv_comparators_0_0= ruleVersionComparator )
             	    {
-            	    // InternalSemver.g:846:5: (lv_comparators_1_0= ruleVersionComparator )
-            	    // InternalSemver.g:847:6: lv_comparators_1_0= ruleVersionComparator
+            	    // InternalSemver.g:832:5: (lv_comparators_0_0= ruleVersionComparator )
+            	    // InternalSemver.g:833:6: lv_comparators_0_0= ruleVersionComparator
             	    {
             	    if ( state.backtracking==0 ) {
 
-            	      						newCompositeNode(grammarAccess.getSimpleVersionAccess().getComparatorsVersionComparatorEnumRuleCall_1_0_0());
+            	      						newCompositeNode(grammarAccess.getSimpleVersionAccess().getComparatorsVersionComparatorEnumRuleCall_0_0_0());
             	      					
             	    }
             	    pushFollow(FOLLOW_3);
-            	    lv_comparators_1_0=ruleVersionComparator();
+            	    lv_comparators_0_0=ruleVersionComparator();
 
             	    state._fsp--;
             	    if (state.failed) return current;
@@ -2636,7 +2478,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
             	      						add(
             	      							current,
             	      							"comparators",
-            	      							lv_comparators_1_0,
+            	      							lv_comparators_0_0,
             	      							"org.eclipse.n4js.semver.Semver.VersionComparator");
             	      						afterParserOrEnumRuleCall();
             	      					
@@ -2647,7 +2489,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
             	    }
 
-            	    // InternalSemver.g:864:4: (this_WS_2= RULE_WS )*
+            	    // InternalSemver.g:850:4: (this_WS_1= RULE_WS )*
             	    loop19:
             	    do {
             	        int alt19=2;
@@ -2660,12 +2502,12 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
             	        switch (alt19) {
             	    	case 1 :
-            	    	    // InternalSemver.g:865:5: this_WS_2= RULE_WS
+            	    	    // InternalSemver.g:851:5: this_WS_1= RULE_WS
             	    	    {
-            	    	    this_WS_2=(Token)match(input,RULE_WS,FOLLOW_3); if (state.failed) return current;
+            	    	    this_WS_1=(Token)match(input,RULE_WS,FOLLOW_3); if (state.failed) return current;
             	    	    if ( state.backtracking==0 ) {
 
-            	    	      					newLeafNode(this_WS_2, grammarAccess.getSimpleVersionAccess().getWSTerminalRuleCall_1_1());
+            	    	      					newLeafNode(this_WS_1, grammarAccess.getSimpleVersionAccess().getWSTerminalRuleCall_0_1());
             	    	      				
             	    	    }
 
@@ -2686,11 +2528,52 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                 }
             } while (true);
 
-            // InternalSemver.g:871:3: ( (lv_number_3_0= ruleVersionNumber ) )
-            // InternalSemver.g:872:4: (lv_number_3_0= ruleVersionNumber )
+            // InternalSemver.g:857:3: ( (lv_withLetterV_2_0= RULE_LETTER_V ) )?
+            int alt21=2;
+            int LA21_0 = input.LA(1);
+
+            if ( (LA21_0==RULE_LETTER_V) ) {
+                alt21=1;
+            }
+            switch (alt21) {
+                case 1 :
+                    // InternalSemver.g:858:4: (lv_withLetterV_2_0= RULE_LETTER_V )
+                    {
+                    // InternalSemver.g:858:4: (lv_withLetterV_2_0= RULE_LETTER_V )
+                    // InternalSemver.g:859:5: lv_withLetterV_2_0= RULE_LETTER_V
+                    {
+                    lv_withLetterV_2_0=(Token)match(input,RULE_LETTER_V,FOLLOW_10); if (state.failed) return current;
+                    if ( state.backtracking==0 ) {
+
+                      					newLeafNode(lv_withLetterV_2_0, grammarAccess.getSimpleVersionAccess().getWithLetterVLETTER_VTerminalRuleCall_1_0());
+                      				
+                    }
+                    if ( state.backtracking==0 ) {
+
+                      					if (current==null) {
+                      						current = createModelElement(grammarAccess.getSimpleVersionRule());
+                      					}
+                      					setWithLastConsumed(
+                      						current,
+                      						"withLetterV",
+                      						true,
+                      						"org.eclipse.n4js.semver.Semver.LETTER_V");
+                      				
+                    }
+
+                    }
+
+
+                    }
+                    break;
+
+            }
+
+            // InternalSemver.g:875:3: ( (lv_number_3_0= ruleVersionNumber ) )
+            // InternalSemver.g:876:4: (lv_number_3_0= ruleVersionNumber )
             {
-            // InternalSemver.g:872:4: (lv_number_3_0= ruleVersionNumber )
-            // InternalSemver.g:873:5: lv_number_3_0= ruleVersionNumber
+            // InternalSemver.g:876:4: (lv_number_3_0= ruleVersionNumber )
+            // InternalSemver.g:877:5: lv_number_3_0= ruleVersionNumber
             {
             if ( state.backtracking==0 ) {
 
@@ -2746,7 +2629,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleVersionNumber"
-    // InternalSemver.g:894:1: entryRuleVersionNumber returns [EObject current=null] : iv_ruleVersionNumber= ruleVersionNumber EOF ;
+    // InternalSemver.g:898:1: entryRuleVersionNumber returns [EObject current=null] : iv_ruleVersionNumber= ruleVersionNumber EOF ;
     public final EObject entryRuleVersionNumber() throws RecognitionException {
         EObject current = null;
 
@@ -2754,8 +2637,8 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalSemver.g:894:54: (iv_ruleVersionNumber= ruleVersionNumber EOF )
-            // InternalSemver.g:895:2: iv_ruleVersionNumber= ruleVersionNumber EOF
+            // InternalSemver.g:898:54: (iv_ruleVersionNumber= ruleVersionNumber EOF )
+            // InternalSemver.g:899:2: iv_ruleVersionNumber= ruleVersionNumber EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getVersionNumberRule()); 
@@ -2786,7 +2669,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleVersionNumber"
-    // InternalSemver.g:901:1: ruleVersionNumber returns [EObject current=null] : ( ( (lv_major_0_0= ruleVersionPart ) ) (otherlv_1= '.' ( (lv_minor_2_0= ruleVersionPart ) ) (otherlv_3= '.' ( (lv_patch_4_0= ruleVersionPart ) ) (otherlv_5= '.' ( (lv_extended_6_0= ruleVersionPart ) ) )* )? )? ( (lv_qualifier_7_0= ruleQualifier ) )? ) ;
+    // InternalSemver.g:905:1: ruleVersionNumber returns [EObject current=null] : ( ( (lv_major_0_0= ruleVersionPart ) ) (otherlv_1= '.' ( (lv_minor_2_0= ruleVersionPart ) ) (otherlv_3= '.' ( (lv_patch_4_0= ruleVersionPart ) ) (otherlv_5= '.' ( (lv_extended_6_0= ruleVersionPart ) ) )* )? )? ( (lv_qualifier_7_0= ruleQualifier ) )? ) ;
     public final EObject ruleVersionNumber() throws RecognitionException {
         EObject current = null;
 
@@ -2808,17 +2691,17 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalSemver.g:907:2: ( ( ( (lv_major_0_0= ruleVersionPart ) ) (otherlv_1= '.' ( (lv_minor_2_0= ruleVersionPart ) ) (otherlv_3= '.' ( (lv_patch_4_0= ruleVersionPart ) ) (otherlv_5= '.' ( (lv_extended_6_0= ruleVersionPart ) ) )* )? )? ( (lv_qualifier_7_0= ruleQualifier ) )? ) )
-            // InternalSemver.g:908:2: ( ( (lv_major_0_0= ruleVersionPart ) ) (otherlv_1= '.' ( (lv_minor_2_0= ruleVersionPart ) ) (otherlv_3= '.' ( (lv_patch_4_0= ruleVersionPart ) ) (otherlv_5= '.' ( (lv_extended_6_0= ruleVersionPart ) ) )* )? )? ( (lv_qualifier_7_0= ruleQualifier ) )? )
+            // InternalSemver.g:911:2: ( ( ( (lv_major_0_0= ruleVersionPart ) ) (otherlv_1= '.' ( (lv_minor_2_0= ruleVersionPart ) ) (otherlv_3= '.' ( (lv_patch_4_0= ruleVersionPart ) ) (otherlv_5= '.' ( (lv_extended_6_0= ruleVersionPart ) ) )* )? )? ( (lv_qualifier_7_0= ruleQualifier ) )? ) )
+            // InternalSemver.g:912:2: ( ( (lv_major_0_0= ruleVersionPart ) ) (otherlv_1= '.' ( (lv_minor_2_0= ruleVersionPart ) ) (otherlv_3= '.' ( (lv_patch_4_0= ruleVersionPart ) ) (otherlv_5= '.' ( (lv_extended_6_0= ruleVersionPart ) ) )* )? )? ( (lv_qualifier_7_0= ruleQualifier ) )? )
             {
-            // InternalSemver.g:908:2: ( ( (lv_major_0_0= ruleVersionPart ) ) (otherlv_1= '.' ( (lv_minor_2_0= ruleVersionPart ) ) (otherlv_3= '.' ( (lv_patch_4_0= ruleVersionPart ) ) (otherlv_5= '.' ( (lv_extended_6_0= ruleVersionPart ) ) )* )? )? ( (lv_qualifier_7_0= ruleQualifier ) )? )
-            // InternalSemver.g:909:3: ( (lv_major_0_0= ruleVersionPart ) ) (otherlv_1= '.' ( (lv_minor_2_0= ruleVersionPart ) ) (otherlv_3= '.' ( (lv_patch_4_0= ruleVersionPart ) ) (otherlv_5= '.' ( (lv_extended_6_0= ruleVersionPart ) ) )* )? )? ( (lv_qualifier_7_0= ruleQualifier ) )?
+            // InternalSemver.g:912:2: ( ( (lv_major_0_0= ruleVersionPart ) ) (otherlv_1= '.' ( (lv_minor_2_0= ruleVersionPart ) ) (otherlv_3= '.' ( (lv_patch_4_0= ruleVersionPart ) ) (otherlv_5= '.' ( (lv_extended_6_0= ruleVersionPart ) ) )* )? )? ( (lv_qualifier_7_0= ruleQualifier ) )? )
+            // InternalSemver.g:913:3: ( (lv_major_0_0= ruleVersionPart ) ) (otherlv_1= '.' ( (lv_minor_2_0= ruleVersionPart ) ) (otherlv_3= '.' ( (lv_patch_4_0= ruleVersionPart ) ) (otherlv_5= '.' ( (lv_extended_6_0= ruleVersionPart ) ) )* )? )? ( (lv_qualifier_7_0= ruleQualifier ) )?
             {
-            // InternalSemver.g:909:3: ( (lv_major_0_0= ruleVersionPart ) )
-            // InternalSemver.g:910:4: (lv_major_0_0= ruleVersionPart )
+            // InternalSemver.g:913:3: ( (lv_major_0_0= ruleVersionPart ) )
+            // InternalSemver.g:914:4: (lv_major_0_0= ruleVersionPart )
             {
-            // InternalSemver.g:910:4: (lv_major_0_0= ruleVersionPart )
-            // InternalSemver.g:911:5: lv_major_0_0= ruleVersionPart
+            // InternalSemver.g:914:4: (lv_major_0_0= ruleVersionPart )
+            // InternalSemver.g:915:5: lv_major_0_0= ruleVersionPart
             {
             if ( state.backtracking==0 ) {
 
@@ -2849,28 +2732,28 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalSemver.g:928:3: (otherlv_1= '.' ( (lv_minor_2_0= ruleVersionPart ) ) (otherlv_3= '.' ( (lv_patch_4_0= ruleVersionPart ) ) (otherlv_5= '.' ( (lv_extended_6_0= ruleVersionPart ) ) )* )? )?
-            int alt23=2;
-            int LA23_0 = input.LA(1);
+            // InternalSemver.g:932:3: (otherlv_1= '.' ( (lv_minor_2_0= ruleVersionPart ) ) (otherlv_3= '.' ( (lv_patch_4_0= ruleVersionPart ) ) (otherlv_5= '.' ( (lv_extended_6_0= ruleVersionPart ) ) )* )? )?
+            int alt24=2;
+            int LA24_0 = input.LA(1);
 
-            if ( (LA23_0==35) ) {
-                alt23=1;
+            if ( (LA24_0==34) ) {
+                alt24=1;
             }
-            switch (alt23) {
+            switch (alt24) {
                 case 1 :
-                    // InternalSemver.g:929:4: otherlv_1= '.' ( (lv_minor_2_0= ruleVersionPart ) ) (otherlv_3= '.' ( (lv_patch_4_0= ruleVersionPart ) ) (otherlv_5= '.' ( (lv_extended_6_0= ruleVersionPart ) ) )* )?
+                    // InternalSemver.g:933:4: otherlv_1= '.' ( (lv_minor_2_0= ruleVersionPart ) ) (otherlv_3= '.' ( (lv_patch_4_0= ruleVersionPart ) ) (otherlv_5= '.' ( (lv_extended_6_0= ruleVersionPart ) ) )* )?
                     {
-                    otherlv_1=(Token)match(input,35,FOLLOW_9); if (state.failed) return current;
+                    otherlv_1=(Token)match(input,34,FOLLOW_10); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				newLeafNode(otherlv_1, grammarAccess.getVersionNumberAccess().getFullStopKeyword_1_0());
                       			
                     }
-                    // InternalSemver.g:933:4: ( (lv_minor_2_0= ruleVersionPart ) )
-                    // InternalSemver.g:934:5: (lv_minor_2_0= ruleVersionPart )
+                    // InternalSemver.g:937:4: ( (lv_minor_2_0= ruleVersionPart ) )
+                    // InternalSemver.g:938:5: (lv_minor_2_0= ruleVersionPart )
                     {
-                    // InternalSemver.g:934:5: (lv_minor_2_0= ruleVersionPart )
-                    // InternalSemver.g:935:6: lv_minor_2_0= ruleVersionPart
+                    // InternalSemver.g:938:5: (lv_minor_2_0= ruleVersionPart )
+                    // InternalSemver.g:939:6: lv_minor_2_0= ruleVersionPart
                     {
                     if ( state.backtracking==0 ) {
 
@@ -2901,28 +2784,28 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    // InternalSemver.g:952:4: (otherlv_3= '.' ( (lv_patch_4_0= ruleVersionPart ) ) (otherlv_5= '.' ( (lv_extended_6_0= ruleVersionPart ) ) )* )?
-                    int alt22=2;
-                    int LA22_0 = input.LA(1);
+                    // InternalSemver.g:956:4: (otherlv_3= '.' ( (lv_patch_4_0= ruleVersionPart ) ) (otherlv_5= '.' ( (lv_extended_6_0= ruleVersionPart ) ) )* )?
+                    int alt23=2;
+                    int LA23_0 = input.LA(1);
 
-                    if ( (LA22_0==35) ) {
-                        alt22=1;
+                    if ( (LA23_0==34) ) {
+                        alt23=1;
                     }
-                    switch (alt22) {
+                    switch (alt23) {
                         case 1 :
-                            // InternalSemver.g:953:5: otherlv_3= '.' ( (lv_patch_4_0= ruleVersionPart ) ) (otherlv_5= '.' ( (lv_extended_6_0= ruleVersionPart ) ) )*
+                            // InternalSemver.g:957:5: otherlv_3= '.' ( (lv_patch_4_0= ruleVersionPart ) ) (otherlv_5= '.' ( (lv_extended_6_0= ruleVersionPart ) ) )*
                             {
-                            otherlv_3=(Token)match(input,35,FOLLOW_9); if (state.failed) return current;
+                            otherlv_3=(Token)match(input,34,FOLLOW_10); if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
                               					newLeafNode(otherlv_3, grammarAccess.getVersionNumberAccess().getFullStopKeyword_1_2_0());
                               				
                             }
-                            // InternalSemver.g:957:5: ( (lv_patch_4_0= ruleVersionPart ) )
-                            // InternalSemver.g:958:6: (lv_patch_4_0= ruleVersionPart )
+                            // InternalSemver.g:961:5: ( (lv_patch_4_0= ruleVersionPart ) )
+                            // InternalSemver.g:962:6: (lv_patch_4_0= ruleVersionPart )
                             {
-                            // InternalSemver.g:958:6: (lv_patch_4_0= ruleVersionPart )
-                            // InternalSemver.g:959:7: lv_patch_4_0= ruleVersionPart
+                            // InternalSemver.g:962:6: (lv_patch_4_0= ruleVersionPart )
+                            // InternalSemver.g:963:7: lv_patch_4_0= ruleVersionPart
                             {
                             if ( state.backtracking==0 ) {
 
@@ -2953,32 +2836,32 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
                             }
 
-                            // InternalSemver.g:976:5: (otherlv_5= '.' ( (lv_extended_6_0= ruleVersionPart ) ) )*
-                            loop21:
+                            // InternalSemver.g:980:5: (otherlv_5= '.' ( (lv_extended_6_0= ruleVersionPart ) ) )*
+                            loop22:
                             do {
-                                int alt21=2;
-                                int LA21_0 = input.LA(1);
+                                int alt22=2;
+                                int LA22_0 = input.LA(1);
 
-                                if ( (LA21_0==35) ) {
-                                    alt21=1;
+                                if ( (LA22_0==34) ) {
+                                    alt22=1;
                                 }
 
 
-                                switch (alt21) {
+                                switch (alt22) {
                             	case 1 :
-                            	    // InternalSemver.g:977:6: otherlv_5= '.' ( (lv_extended_6_0= ruleVersionPart ) )
+                            	    // InternalSemver.g:981:6: otherlv_5= '.' ( (lv_extended_6_0= ruleVersionPart ) )
                             	    {
-                            	    otherlv_5=(Token)match(input,35,FOLLOW_9); if (state.failed) return current;
+                            	    otherlv_5=(Token)match(input,34,FOLLOW_10); if (state.failed) return current;
                             	    if ( state.backtracking==0 ) {
 
                             	      						newLeafNode(otherlv_5, grammarAccess.getVersionNumberAccess().getFullStopKeyword_1_2_2_0());
                             	      					
                             	    }
-                            	    // InternalSemver.g:981:6: ( (lv_extended_6_0= ruleVersionPart ) )
-                            	    // InternalSemver.g:982:7: (lv_extended_6_0= ruleVersionPart )
+                            	    // InternalSemver.g:985:6: ( (lv_extended_6_0= ruleVersionPart ) )
+                            	    // InternalSemver.g:986:7: (lv_extended_6_0= ruleVersionPart )
                             	    {
-                            	    // InternalSemver.g:982:7: (lv_extended_6_0= ruleVersionPart )
-                            	    // InternalSemver.g:983:8: lv_extended_6_0= ruleVersionPart
+                            	    // InternalSemver.g:986:7: (lv_extended_6_0= ruleVersionPart )
+                            	    // InternalSemver.g:987:8: lv_extended_6_0= ruleVersionPart
                             	    {
                             	    if ( state.backtracking==0 ) {
 
@@ -3014,7 +2897,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                             	    break;
 
                             	default :
-                            	    break loop21;
+                            	    break loop22;
                                 }
                             } while (true);
 
@@ -3030,19 +2913,19 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalSemver.g:1003:3: ( (lv_qualifier_7_0= ruleQualifier ) )?
-            int alt24=2;
-            int LA24_0 = input.LA(1);
+            // InternalSemver.g:1007:3: ( (lv_qualifier_7_0= ruleQualifier ) )?
+            int alt25=2;
+            int LA25_0 = input.LA(1);
 
-            if ( (LA24_0==34||LA24_0==36) ) {
-                alt24=1;
+            if ( (LA25_0==33||LA25_0==35) ) {
+                alt25=1;
             }
-            switch (alt24) {
+            switch (alt25) {
                 case 1 :
-                    // InternalSemver.g:1004:4: (lv_qualifier_7_0= ruleQualifier )
+                    // InternalSemver.g:1008:4: (lv_qualifier_7_0= ruleQualifier )
                     {
-                    // InternalSemver.g:1004:4: (lv_qualifier_7_0= ruleQualifier )
-                    // InternalSemver.g:1005:5: lv_qualifier_7_0= ruleQualifier
+                    // InternalSemver.g:1008:4: (lv_qualifier_7_0= ruleQualifier )
+                    // InternalSemver.g:1009:5: lv_qualifier_7_0= ruleQualifier
                     {
                     if ( state.backtracking==0 ) {
 
@@ -3101,7 +2984,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleVersionPart"
-    // InternalSemver.g:1026:1: entryRuleVersionPart returns [EObject current=null] : iv_ruleVersionPart= ruleVersionPart EOF ;
+    // InternalSemver.g:1030:1: entryRuleVersionPart returns [EObject current=null] : iv_ruleVersionPart= ruleVersionPart EOF ;
     public final EObject entryRuleVersionPart() throws RecognitionException {
         EObject current = null;
 
@@ -3109,8 +2992,8 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalSemver.g:1026:52: (iv_ruleVersionPart= ruleVersionPart EOF )
-            // InternalSemver.g:1027:2: iv_ruleVersionPart= ruleVersionPart EOF
+            // InternalSemver.g:1030:52: (iv_ruleVersionPart= ruleVersionPart EOF )
+            // InternalSemver.g:1031:2: iv_ruleVersionPart= ruleVersionPart EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getVersionPartRule()); 
@@ -3141,7 +3024,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleVersionPart"
-    // InternalSemver.g:1033:1: ruleVersionPart returns [EObject current=null] : ( ( (lv_wildcard_0_0= ruleWILDCARD ) ) | ( (lv_numberRaw_1_0= RULE_DIGITS ) ) ) ;
+    // InternalSemver.g:1037:1: ruleVersionPart returns [EObject current=null] : ( ( (lv_wildcard_0_0= ruleWILDCARD ) ) | ( (lv_numberRaw_1_0= RULE_DIGITS ) ) ) ;
     public final EObject ruleVersionPart() throws RecognitionException {
         EObject current = null;
 
@@ -3153,35 +3036,35 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalSemver.g:1039:2: ( ( ( (lv_wildcard_0_0= ruleWILDCARD ) ) | ( (lv_numberRaw_1_0= RULE_DIGITS ) ) ) )
-            // InternalSemver.g:1040:2: ( ( (lv_wildcard_0_0= ruleWILDCARD ) ) | ( (lv_numberRaw_1_0= RULE_DIGITS ) ) )
+            // InternalSemver.g:1043:2: ( ( ( (lv_wildcard_0_0= ruleWILDCARD ) ) | ( (lv_numberRaw_1_0= RULE_DIGITS ) ) ) )
+            // InternalSemver.g:1044:2: ( ( (lv_wildcard_0_0= ruleWILDCARD ) ) | ( (lv_numberRaw_1_0= RULE_DIGITS ) ) )
             {
-            // InternalSemver.g:1040:2: ( ( (lv_wildcard_0_0= ruleWILDCARD ) ) | ( (lv_numberRaw_1_0= RULE_DIGITS ) ) )
-            int alt25=2;
-            int LA25_0 = input.LA(1);
+            // InternalSemver.g:1044:2: ( ( (lv_wildcard_0_0= ruleWILDCARD ) ) | ( (lv_numberRaw_1_0= RULE_DIGITS ) ) )
+            int alt26=2;
+            int LA26_0 = input.LA(1);
 
-            if ( (LA25_0==RULE_LETTER_X||LA25_0==RULE_ASTERIX) ) {
-                alt25=1;
+            if ( ((LA26_0>=RULE_LETTER_X && LA26_0<=RULE_ASTERIX)) ) {
+                alt26=1;
             }
-            else if ( (LA25_0==RULE_DIGITS) ) {
-                alt25=2;
+            else if ( (LA26_0==RULE_DIGITS) ) {
+                alt26=2;
             }
             else {
                 if (state.backtracking>0) {state.failed=true; return current;}
                 NoViableAltException nvae =
-                    new NoViableAltException("", 25, 0, input);
+                    new NoViableAltException("", 26, 0, input);
 
                 throw nvae;
             }
-            switch (alt25) {
+            switch (alt26) {
                 case 1 :
-                    // InternalSemver.g:1041:3: ( (lv_wildcard_0_0= ruleWILDCARD ) )
+                    // InternalSemver.g:1045:3: ( (lv_wildcard_0_0= ruleWILDCARD ) )
                     {
-                    // InternalSemver.g:1041:3: ( (lv_wildcard_0_0= ruleWILDCARD ) )
-                    // InternalSemver.g:1042:4: (lv_wildcard_0_0= ruleWILDCARD )
+                    // InternalSemver.g:1045:3: ( (lv_wildcard_0_0= ruleWILDCARD ) )
+                    // InternalSemver.g:1046:4: (lv_wildcard_0_0= ruleWILDCARD )
                     {
-                    // InternalSemver.g:1042:4: (lv_wildcard_0_0= ruleWILDCARD )
-                    // InternalSemver.g:1043:5: lv_wildcard_0_0= ruleWILDCARD
+                    // InternalSemver.g:1046:4: (lv_wildcard_0_0= ruleWILDCARD )
+                    // InternalSemver.g:1047:5: lv_wildcard_0_0= ruleWILDCARD
                     {
                     if ( state.backtracking==0 ) {
 
@@ -3216,13 +3099,13 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalSemver.g:1061:3: ( (lv_numberRaw_1_0= RULE_DIGITS ) )
+                    // InternalSemver.g:1065:3: ( (lv_numberRaw_1_0= RULE_DIGITS ) )
                     {
-                    // InternalSemver.g:1061:3: ( (lv_numberRaw_1_0= RULE_DIGITS ) )
-                    // InternalSemver.g:1062:4: (lv_numberRaw_1_0= RULE_DIGITS )
+                    // InternalSemver.g:1065:3: ( (lv_numberRaw_1_0= RULE_DIGITS ) )
+                    // InternalSemver.g:1066:4: (lv_numberRaw_1_0= RULE_DIGITS )
                     {
-                    // InternalSemver.g:1062:4: (lv_numberRaw_1_0= RULE_DIGITS )
-                    // InternalSemver.g:1063:5: lv_numberRaw_1_0= RULE_DIGITS
+                    // InternalSemver.g:1066:4: (lv_numberRaw_1_0= RULE_DIGITS )
+                    // InternalSemver.g:1067:5: lv_numberRaw_1_0= RULE_DIGITS
                     {
                     lv_numberRaw_1_0=(Token)match(input,RULE_DIGITS,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -3276,7 +3159,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleQualifier"
-    // InternalSemver.g:1083:1: entryRuleQualifier returns [EObject current=null] : iv_ruleQualifier= ruleQualifier EOF ;
+    // InternalSemver.g:1087:1: entryRuleQualifier returns [EObject current=null] : iv_ruleQualifier= ruleQualifier EOF ;
     public final EObject entryRuleQualifier() throws RecognitionException {
         EObject current = null;
 
@@ -3284,8 +3167,8 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalSemver.g:1083:50: (iv_ruleQualifier= ruleQualifier EOF )
-            // InternalSemver.g:1084:2: iv_ruleQualifier= ruleQualifier EOF
+            // InternalSemver.g:1087:50: (iv_ruleQualifier= ruleQualifier EOF )
+            // InternalSemver.g:1088:2: iv_ruleQualifier= ruleQualifier EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getQualifierRule()); 
@@ -3316,7 +3199,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleQualifier"
-    // InternalSemver.g:1090:1: ruleQualifier returns [EObject current=null] : ( (otherlv_0= '-' ( (lv_preRelease_1_0= ruleQualifierTag ) ) ) | (otherlv_2= '+' ( (lv_buildMetadata_3_0= ruleQualifierTag ) ) ) | (otherlv_4= '-' ( (lv_preRelease_5_0= ruleQualifierTag ) ) otherlv_6= '+' ( (lv_buildMetadata_7_0= ruleQualifierTag ) ) ) ) ;
+    // InternalSemver.g:1094:1: ruleQualifier returns [EObject current=null] : ( (otherlv_0= '-' ( (lv_preRelease_1_0= ruleQualifierTag ) ) ) | (otherlv_2= '+' ( (lv_buildMetadata_3_0= ruleQualifierTag ) ) ) | (otherlv_4= '-' ( (lv_preRelease_5_0= ruleQualifierTag ) ) otherlv_6= '+' ( (lv_buildMetadata_7_0= ruleQualifierTag ) ) ) ) ;
     public final EObject ruleQualifier() throws RecognitionException {
         EObject current = null;
 
@@ -3337,30 +3220,30 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalSemver.g:1096:2: ( ( (otherlv_0= '-' ( (lv_preRelease_1_0= ruleQualifierTag ) ) ) | (otherlv_2= '+' ( (lv_buildMetadata_3_0= ruleQualifierTag ) ) ) | (otherlv_4= '-' ( (lv_preRelease_5_0= ruleQualifierTag ) ) otherlv_6= '+' ( (lv_buildMetadata_7_0= ruleQualifierTag ) ) ) ) )
-            // InternalSemver.g:1097:2: ( (otherlv_0= '-' ( (lv_preRelease_1_0= ruleQualifierTag ) ) ) | (otherlv_2= '+' ( (lv_buildMetadata_3_0= ruleQualifierTag ) ) ) | (otherlv_4= '-' ( (lv_preRelease_5_0= ruleQualifierTag ) ) otherlv_6= '+' ( (lv_buildMetadata_7_0= ruleQualifierTag ) ) ) )
+            // InternalSemver.g:1100:2: ( ( (otherlv_0= '-' ( (lv_preRelease_1_0= ruleQualifierTag ) ) ) | (otherlv_2= '+' ( (lv_buildMetadata_3_0= ruleQualifierTag ) ) ) | (otherlv_4= '-' ( (lv_preRelease_5_0= ruleQualifierTag ) ) otherlv_6= '+' ( (lv_buildMetadata_7_0= ruleQualifierTag ) ) ) ) )
+            // InternalSemver.g:1101:2: ( (otherlv_0= '-' ( (lv_preRelease_1_0= ruleQualifierTag ) ) ) | (otherlv_2= '+' ( (lv_buildMetadata_3_0= ruleQualifierTag ) ) ) | (otherlv_4= '-' ( (lv_preRelease_5_0= ruleQualifierTag ) ) otherlv_6= '+' ( (lv_buildMetadata_7_0= ruleQualifierTag ) ) ) )
             {
-            // InternalSemver.g:1097:2: ( (otherlv_0= '-' ( (lv_preRelease_1_0= ruleQualifierTag ) ) ) | (otherlv_2= '+' ( (lv_buildMetadata_3_0= ruleQualifierTag ) ) ) | (otherlv_4= '-' ( (lv_preRelease_5_0= ruleQualifierTag ) ) otherlv_6= '+' ( (lv_buildMetadata_7_0= ruleQualifierTag ) ) ) )
-            int alt26=3;
-            alt26 = dfa26.predict(input);
-            switch (alt26) {
+            // InternalSemver.g:1101:2: ( (otherlv_0= '-' ( (lv_preRelease_1_0= ruleQualifierTag ) ) ) | (otherlv_2= '+' ( (lv_buildMetadata_3_0= ruleQualifierTag ) ) ) | (otherlv_4= '-' ( (lv_preRelease_5_0= ruleQualifierTag ) ) otherlv_6= '+' ( (lv_buildMetadata_7_0= ruleQualifierTag ) ) ) )
+            int alt27=3;
+            alt27 = dfa27.predict(input);
+            switch (alt27) {
                 case 1 :
-                    // InternalSemver.g:1098:3: (otherlv_0= '-' ( (lv_preRelease_1_0= ruleQualifierTag ) ) )
+                    // InternalSemver.g:1102:3: (otherlv_0= '-' ( (lv_preRelease_1_0= ruleQualifierTag ) ) )
                     {
-                    // InternalSemver.g:1098:3: (otherlv_0= '-' ( (lv_preRelease_1_0= ruleQualifierTag ) ) )
-                    // InternalSemver.g:1099:4: otherlv_0= '-' ( (lv_preRelease_1_0= ruleQualifierTag ) )
+                    // InternalSemver.g:1102:3: (otherlv_0= '-' ( (lv_preRelease_1_0= ruleQualifierTag ) ) )
+                    // InternalSemver.g:1103:4: otherlv_0= '-' ( (lv_preRelease_1_0= ruleQualifierTag ) )
                     {
-                    otherlv_0=(Token)match(input,34,FOLLOW_8); if (state.failed) return current;
+                    otherlv_0=(Token)match(input,33,FOLLOW_9); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				newLeafNode(otherlv_0, grammarAccess.getQualifierAccess().getHyphenMinusKeyword_0_0());
                       			
                     }
-                    // InternalSemver.g:1103:4: ( (lv_preRelease_1_0= ruleQualifierTag ) )
-                    // InternalSemver.g:1104:5: (lv_preRelease_1_0= ruleQualifierTag )
+                    // InternalSemver.g:1107:4: ( (lv_preRelease_1_0= ruleQualifierTag ) )
+                    // InternalSemver.g:1108:5: (lv_preRelease_1_0= ruleQualifierTag )
                     {
-                    // InternalSemver.g:1104:5: (lv_preRelease_1_0= ruleQualifierTag )
-                    // InternalSemver.g:1105:6: lv_preRelease_1_0= ruleQualifierTag
+                    // InternalSemver.g:1108:5: (lv_preRelease_1_0= ruleQualifierTag )
+                    // InternalSemver.g:1109:6: lv_preRelease_1_0= ruleQualifierTag
                     {
                     if ( state.backtracking==0 ) {
 
@@ -3398,22 +3281,22 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalSemver.g:1124:3: (otherlv_2= '+' ( (lv_buildMetadata_3_0= ruleQualifierTag ) ) )
+                    // InternalSemver.g:1128:3: (otherlv_2= '+' ( (lv_buildMetadata_3_0= ruleQualifierTag ) ) )
                     {
-                    // InternalSemver.g:1124:3: (otherlv_2= '+' ( (lv_buildMetadata_3_0= ruleQualifierTag ) ) )
-                    // InternalSemver.g:1125:4: otherlv_2= '+' ( (lv_buildMetadata_3_0= ruleQualifierTag ) )
+                    // InternalSemver.g:1128:3: (otherlv_2= '+' ( (lv_buildMetadata_3_0= ruleQualifierTag ) ) )
+                    // InternalSemver.g:1129:4: otherlv_2= '+' ( (lv_buildMetadata_3_0= ruleQualifierTag ) )
                     {
-                    otherlv_2=(Token)match(input,36,FOLLOW_8); if (state.failed) return current;
+                    otherlv_2=(Token)match(input,35,FOLLOW_9); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				newLeafNode(otherlv_2, grammarAccess.getQualifierAccess().getPlusSignKeyword_1_0());
                       			
                     }
-                    // InternalSemver.g:1129:4: ( (lv_buildMetadata_3_0= ruleQualifierTag ) )
-                    // InternalSemver.g:1130:5: (lv_buildMetadata_3_0= ruleQualifierTag )
+                    // InternalSemver.g:1133:4: ( (lv_buildMetadata_3_0= ruleQualifierTag ) )
+                    // InternalSemver.g:1134:5: (lv_buildMetadata_3_0= ruleQualifierTag )
                     {
-                    // InternalSemver.g:1130:5: (lv_buildMetadata_3_0= ruleQualifierTag )
-                    // InternalSemver.g:1131:6: lv_buildMetadata_3_0= ruleQualifierTag
+                    // InternalSemver.g:1134:5: (lv_buildMetadata_3_0= ruleQualifierTag )
+                    // InternalSemver.g:1135:6: lv_buildMetadata_3_0= ruleQualifierTag
                     {
                     if ( state.backtracking==0 ) {
 
@@ -3451,22 +3334,22 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 3 :
-                    // InternalSemver.g:1150:3: (otherlv_4= '-' ( (lv_preRelease_5_0= ruleQualifierTag ) ) otherlv_6= '+' ( (lv_buildMetadata_7_0= ruleQualifierTag ) ) )
+                    // InternalSemver.g:1154:3: (otherlv_4= '-' ( (lv_preRelease_5_0= ruleQualifierTag ) ) otherlv_6= '+' ( (lv_buildMetadata_7_0= ruleQualifierTag ) ) )
                     {
-                    // InternalSemver.g:1150:3: (otherlv_4= '-' ( (lv_preRelease_5_0= ruleQualifierTag ) ) otherlv_6= '+' ( (lv_buildMetadata_7_0= ruleQualifierTag ) ) )
-                    // InternalSemver.g:1151:4: otherlv_4= '-' ( (lv_preRelease_5_0= ruleQualifierTag ) ) otherlv_6= '+' ( (lv_buildMetadata_7_0= ruleQualifierTag ) )
+                    // InternalSemver.g:1154:3: (otherlv_4= '-' ( (lv_preRelease_5_0= ruleQualifierTag ) ) otherlv_6= '+' ( (lv_buildMetadata_7_0= ruleQualifierTag ) ) )
+                    // InternalSemver.g:1155:4: otherlv_4= '-' ( (lv_preRelease_5_0= ruleQualifierTag ) ) otherlv_6= '+' ( (lv_buildMetadata_7_0= ruleQualifierTag ) )
                     {
-                    otherlv_4=(Token)match(input,34,FOLLOW_8); if (state.failed) return current;
+                    otherlv_4=(Token)match(input,33,FOLLOW_9); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				newLeafNode(otherlv_4, grammarAccess.getQualifierAccess().getHyphenMinusKeyword_2_0());
                       			
                     }
-                    // InternalSemver.g:1155:4: ( (lv_preRelease_5_0= ruleQualifierTag ) )
-                    // InternalSemver.g:1156:5: (lv_preRelease_5_0= ruleQualifierTag )
+                    // InternalSemver.g:1159:4: ( (lv_preRelease_5_0= ruleQualifierTag ) )
+                    // InternalSemver.g:1160:5: (lv_preRelease_5_0= ruleQualifierTag )
                     {
-                    // InternalSemver.g:1156:5: (lv_preRelease_5_0= ruleQualifierTag )
-                    // InternalSemver.g:1157:6: lv_preRelease_5_0= ruleQualifierTag
+                    // InternalSemver.g:1160:5: (lv_preRelease_5_0= ruleQualifierTag )
+                    // InternalSemver.g:1161:6: lv_preRelease_5_0= ruleQualifierTag
                     {
                     if ( state.backtracking==0 ) {
 
@@ -3497,17 +3380,17 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    otherlv_6=(Token)match(input,36,FOLLOW_8); if (state.failed) return current;
+                    otherlv_6=(Token)match(input,35,FOLLOW_9); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				newLeafNode(otherlv_6, grammarAccess.getQualifierAccess().getPlusSignKeyword_2_2());
                       			
                     }
-                    // InternalSemver.g:1178:4: ( (lv_buildMetadata_7_0= ruleQualifierTag ) )
-                    // InternalSemver.g:1179:5: (lv_buildMetadata_7_0= ruleQualifierTag )
+                    // InternalSemver.g:1182:4: ( (lv_buildMetadata_7_0= ruleQualifierTag ) )
+                    // InternalSemver.g:1183:5: (lv_buildMetadata_7_0= ruleQualifierTag )
                     {
-                    // InternalSemver.g:1179:5: (lv_buildMetadata_7_0= ruleQualifierTag )
-                    // InternalSemver.g:1180:6: lv_buildMetadata_7_0= ruleQualifierTag
+                    // InternalSemver.g:1183:5: (lv_buildMetadata_7_0= ruleQualifierTag )
+                    // InternalSemver.g:1184:6: lv_buildMetadata_7_0= ruleQualifierTag
                     {
                     if ( state.backtracking==0 ) {
 
@@ -3569,7 +3452,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleQualifierTag"
-    // InternalSemver.g:1202:1: entryRuleQualifierTag returns [EObject current=null] : iv_ruleQualifierTag= ruleQualifierTag EOF ;
+    // InternalSemver.g:1206:1: entryRuleQualifierTag returns [EObject current=null] : iv_ruleQualifierTag= ruleQualifierTag EOF ;
     public final EObject entryRuleQualifierTag() throws RecognitionException {
         EObject current = null;
 
@@ -3577,8 +3460,8 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalSemver.g:1202:53: (iv_ruleQualifierTag= ruleQualifierTag EOF )
-            // InternalSemver.g:1203:2: iv_ruleQualifierTag= ruleQualifierTag EOF
+            // InternalSemver.g:1206:53: (iv_ruleQualifierTag= ruleQualifierTag EOF )
+            // InternalSemver.g:1207:2: iv_ruleQualifierTag= ruleQualifierTag EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getQualifierTagRule()); 
@@ -3609,7 +3492,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleQualifierTag"
-    // InternalSemver.g:1209:1: ruleQualifierTag returns [EObject current=null] : ( ( (lv_parts_0_0= ruleALPHA_NUMERIC_CHARS ) ) (otherlv_1= '.' ( (lv_parts_2_0= ruleALPHA_NUMERIC_CHARS ) ) )* ) ;
+    // InternalSemver.g:1213:1: ruleQualifierTag returns [EObject current=null] : ( ( (lv_parts_0_0= ruleALPHA_NUMERIC_CHARS ) ) (otherlv_1= '.' ( (lv_parts_2_0= ruleALPHA_NUMERIC_CHARS ) ) )* ) ;
     public final EObject ruleQualifierTag() throws RecognitionException {
         EObject current = null;
 
@@ -3623,17 +3506,17 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalSemver.g:1215:2: ( ( ( (lv_parts_0_0= ruleALPHA_NUMERIC_CHARS ) ) (otherlv_1= '.' ( (lv_parts_2_0= ruleALPHA_NUMERIC_CHARS ) ) )* ) )
-            // InternalSemver.g:1216:2: ( ( (lv_parts_0_0= ruleALPHA_NUMERIC_CHARS ) ) (otherlv_1= '.' ( (lv_parts_2_0= ruleALPHA_NUMERIC_CHARS ) ) )* )
+            // InternalSemver.g:1219:2: ( ( ( (lv_parts_0_0= ruleALPHA_NUMERIC_CHARS ) ) (otherlv_1= '.' ( (lv_parts_2_0= ruleALPHA_NUMERIC_CHARS ) ) )* ) )
+            // InternalSemver.g:1220:2: ( ( (lv_parts_0_0= ruleALPHA_NUMERIC_CHARS ) ) (otherlv_1= '.' ( (lv_parts_2_0= ruleALPHA_NUMERIC_CHARS ) ) )* )
             {
-            // InternalSemver.g:1216:2: ( ( (lv_parts_0_0= ruleALPHA_NUMERIC_CHARS ) ) (otherlv_1= '.' ( (lv_parts_2_0= ruleALPHA_NUMERIC_CHARS ) ) )* )
-            // InternalSemver.g:1217:3: ( (lv_parts_0_0= ruleALPHA_NUMERIC_CHARS ) ) (otherlv_1= '.' ( (lv_parts_2_0= ruleALPHA_NUMERIC_CHARS ) ) )*
+            // InternalSemver.g:1220:2: ( ( (lv_parts_0_0= ruleALPHA_NUMERIC_CHARS ) ) (otherlv_1= '.' ( (lv_parts_2_0= ruleALPHA_NUMERIC_CHARS ) ) )* )
+            // InternalSemver.g:1221:3: ( (lv_parts_0_0= ruleALPHA_NUMERIC_CHARS ) ) (otherlv_1= '.' ( (lv_parts_2_0= ruleALPHA_NUMERIC_CHARS ) ) )*
             {
-            // InternalSemver.g:1217:3: ( (lv_parts_0_0= ruleALPHA_NUMERIC_CHARS ) )
-            // InternalSemver.g:1218:4: (lv_parts_0_0= ruleALPHA_NUMERIC_CHARS )
+            // InternalSemver.g:1221:3: ( (lv_parts_0_0= ruleALPHA_NUMERIC_CHARS ) )
+            // InternalSemver.g:1222:4: (lv_parts_0_0= ruleALPHA_NUMERIC_CHARS )
             {
-            // InternalSemver.g:1218:4: (lv_parts_0_0= ruleALPHA_NUMERIC_CHARS )
-            // InternalSemver.g:1219:5: lv_parts_0_0= ruleALPHA_NUMERIC_CHARS
+            // InternalSemver.g:1222:4: (lv_parts_0_0= ruleALPHA_NUMERIC_CHARS )
+            // InternalSemver.g:1223:5: lv_parts_0_0= ruleALPHA_NUMERIC_CHARS
             {
             if ( state.backtracking==0 ) {
 
@@ -3664,32 +3547,32 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalSemver.g:1236:3: (otherlv_1= '.' ( (lv_parts_2_0= ruleALPHA_NUMERIC_CHARS ) ) )*
-            loop27:
+            // InternalSemver.g:1240:3: (otherlv_1= '.' ( (lv_parts_2_0= ruleALPHA_NUMERIC_CHARS ) ) )*
+            loop28:
             do {
-                int alt27=2;
-                int LA27_0 = input.LA(1);
+                int alt28=2;
+                int LA28_0 = input.LA(1);
 
-                if ( (LA27_0==35) ) {
-                    alt27=1;
+                if ( (LA28_0==34) ) {
+                    alt28=1;
                 }
 
 
-                switch (alt27) {
+                switch (alt28) {
             	case 1 :
-            	    // InternalSemver.g:1237:4: otherlv_1= '.' ( (lv_parts_2_0= ruleALPHA_NUMERIC_CHARS ) )
+            	    // InternalSemver.g:1241:4: otherlv_1= '.' ( (lv_parts_2_0= ruleALPHA_NUMERIC_CHARS ) )
             	    {
-            	    otherlv_1=(Token)match(input,35,FOLLOW_8); if (state.failed) return current;
+            	    otherlv_1=(Token)match(input,34,FOLLOW_9); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
 
             	      				newLeafNode(otherlv_1, grammarAccess.getQualifierTagAccess().getFullStopKeyword_1_0());
             	      			
             	    }
-            	    // InternalSemver.g:1241:4: ( (lv_parts_2_0= ruleALPHA_NUMERIC_CHARS ) )
-            	    // InternalSemver.g:1242:5: (lv_parts_2_0= ruleALPHA_NUMERIC_CHARS )
+            	    // InternalSemver.g:1245:4: ( (lv_parts_2_0= ruleALPHA_NUMERIC_CHARS ) )
+            	    // InternalSemver.g:1246:5: (lv_parts_2_0= ruleALPHA_NUMERIC_CHARS )
             	    {
-            	    // InternalSemver.g:1242:5: (lv_parts_2_0= ruleALPHA_NUMERIC_CHARS )
-            	    // InternalSemver.g:1243:6: lv_parts_2_0= ruleALPHA_NUMERIC_CHARS
+            	    // InternalSemver.g:1246:5: (lv_parts_2_0= ruleALPHA_NUMERIC_CHARS )
+            	    // InternalSemver.g:1247:6: lv_parts_2_0= ruleALPHA_NUMERIC_CHARS
             	    {
             	    if ( state.backtracking==0 ) {
 
@@ -3725,7 +3608,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
             	    break;
 
             	default :
-            	    break loop27;
+            	    break loop28;
                 }
             } while (true);
 
@@ -3753,299 +3636,8 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
     // $ANTLR end "ruleQualifierTag"
 
 
-    // $ANTLR start "entryRuleURL_PROTOCOL"
-    // InternalSemver.g:1265:1: entryRuleURL_PROTOCOL returns [String current=null] : iv_ruleURL_PROTOCOL= ruleURL_PROTOCOL EOF ;
-    public final String entryRuleURL_PROTOCOL() throws RecognitionException {
-        String current = null;
-
-        AntlrDatatypeRuleToken iv_ruleURL_PROTOCOL = null;
-
-
-        try {
-            // InternalSemver.g:1265:52: (iv_ruleURL_PROTOCOL= ruleURL_PROTOCOL EOF )
-            // InternalSemver.g:1266:2: iv_ruleURL_PROTOCOL= ruleURL_PROTOCOL EOF
-            {
-            if ( state.backtracking==0 ) {
-               newCompositeNode(grammarAccess.getURL_PROTOCOLRule()); 
-            }
-            pushFollow(FOLLOW_1);
-            iv_ruleURL_PROTOCOL=ruleURL_PROTOCOL();
-
-            state._fsp--;
-            if (state.failed) return current;
-            if ( state.backtracking==0 ) {
-               current =iv_ruleURL_PROTOCOL.getText(); 
-            }
-            match(input,EOF,FOLLOW_2); if (state.failed) return current;
-
-            }
-
-        }
-
-            catch (RecognitionException re) {
-                recover(input,re);
-                appendSkippedTokens();
-            }
-        finally {
-        }
-        return current;
-    }
-    // $ANTLR end "entryRuleURL_PROTOCOL"
-
-
-    // $ANTLR start "ruleURL_PROTOCOL"
-    // InternalSemver.g:1272:1: ruleURL_PROTOCOL returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_LETTERS_0= ruleLETTERS | kw= '+' )+ ;
-    public final AntlrDatatypeRuleToken ruleURL_PROTOCOL() throws RecognitionException {
-        AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
-
-        Token kw=null;
-        AntlrDatatypeRuleToken this_LETTERS_0 = null;
-
-
-
-        	enterRule();
-
-        try {
-            // InternalSemver.g:1278:2: ( (this_LETTERS_0= ruleLETTERS | kw= '+' )+ )
-            // InternalSemver.g:1279:2: (this_LETTERS_0= ruleLETTERS | kw= '+' )+
-            {
-            // InternalSemver.g:1279:2: (this_LETTERS_0= ruleLETTERS | kw= '+' )+
-            int cnt28=0;
-            loop28:
-            do {
-                int alt28=3;
-                int LA28_0 = input.LA(1);
-
-                if ( ((LA28_0>=RULE_LETTER_V && LA28_0<=RULE_LETTER_NO_VX)) ) {
-                    alt28=1;
-                }
-                else if ( (LA28_0==36) ) {
-                    alt28=2;
-                }
-
-
-                switch (alt28) {
-            	case 1 :
-            	    // InternalSemver.g:1280:3: this_LETTERS_0= ruleLETTERS
-            	    {
-            	    if ( state.backtracking==0 ) {
-
-            	      			newCompositeNode(grammarAccess.getURL_PROTOCOLAccess().getLETTERSParserRuleCall_0());
-            	      		
-            	    }
-            	    pushFollow(FOLLOW_18);
-            	    this_LETTERS_0=ruleLETTERS();
-
-            	    state._fsp--;
-            	    if (state.failed) return current;
-            	    if ( state.backtracking==0 ) {
-
-            	      			current.merge(this_LETTERS_0);
-            	      		
-            	    }
-            	    if ( state.backtracking==0 ) {
-
-            	      			afterParserOrEnumRuleCall();
-            	      		
-            	    }
-
-            	    }
-            	    break;
-            	case 2 :
-            	    // InternalSemver.g:1291:3: kw= '+'
-            	    {
-            	    kw=(Token)match(input,36,FOLLOW_18); if (state.failed) return current;
-            	    if ( state.backtracking==0 ) {
-
-            	      			current.merge(kw);
-            	      			newLeafNode(kw, grammarAccess.getURL_PROTOCOLAccess().getPlusSignKeyword_1());
-            	      		
-            	    }
-
-            	    }
-            	    break;
-
-            	default :
-            	    if ( cnt28 >= 1 ) break loop28;
-            	    if (state.backtracking>0) {state.failed=true; return current;}
-                        EarlyExitException eee =
-                            new EarlyExitException(28, input);
-                        throw eee;
-                }
-                cnt28++;
-            } while (true);
-
-
-            }
-
-            if ( state.backtracking==0 ) {
-
-              	leaveRule();
-
-            }
-        }
-
-            catch (RecognitionException re) {
-                recover(input,re);
-                appendSkippedTokens();
-            }
-        finally {
-        }
-        return current;
-    }
-    // $ANTLR end "ruleURL_PROTOCOL"
-
-
-    // $ANTLR start "entryRuleTAG"
-    // InternalSemver.g:1300:1: entryRuleTAG returns [String current=null] : iv_ruleTAG= ruleTAG EOF ;
-    public final String entryRuleTAG() throws RecognitionException {
-        String current = null;
-
-        AntlrDatatypeRuleToken iv_ruleTAG = null;
-
-
-        try {
-            // InternalSemver.g:1300:43: (iv_ruleTAG= ruleTAG EOF )
-            // InternalSemver.g:1301:2: iv_ruleTAG= ruleTAG EOF
-            {
-            if ( state.backtracking==0 ) {
-               newCompositeNode(grammarAccess.getTAGRule()); 
-            }
-            pushFollow(FOLLOW_1);
-            iv_ruleTAG=ruleTAG();
-
-            state._fsp--;
-            if (state.failed) return current;
-            if ( state.backtracking==0 ) {
-               current =iv_ruleTAG.getText(); 
-            }
-            match(input,EOF,FOLLOW_2); if (state.failed) return current;
-
-            }
-
-        }
-
-            catch (RecognitionException re) {
-                recover(input,re);
-                appendSkippedTokens();
-            }
-        finally {
-        }
-        return current;
-    }
-    // $ANTLR end "entryRuleTAG"
-
-
-    // $ANTLR start "ruleTAG"
-    // InternalSemver.g:1307:1: ruleTAG returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_LETTER_NO_V_0= ruleLETTER_NO_V (this_ALPHA_NUMERIC_CHARS_1= ruleALPHA_NUMERIC_CHARS )* ) ;
-    public final AntlrDatatypeRuleToken ruleTAG() throws RecognitionException {
-        AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
-
-        AntlrDatatypeRuleToken this_LETTER_NO_V_0 = null;
-
-        AntlrDatatypeRuleToken this_ALPHA_NUMERIC_CHARS_1 = null;
-
-
-
-        	enterRule();
-
-        try {
-            // InternalSemver.g:1313:2: ( (this_LETTER_NO_V_0= ruleLETTER_NO_V (this_ALPHA_NUMERIC_CHARS_1= ruleALPHA_NUMERIC_CHARS )* ) )
-            // InternalSemver.g:1314:2: (this_LETTER_NO_V_0= ruleLETTER_NO_V (this_ALPHA_NUMERIC_CHARS_1= ruleALPHA_NUMERIC_CHARS )* )
-            {
-            // InternalSemver.g:1314:2: (this_LETTER_NO_V_0= ruleLETTER_NO_V (this_ALPHA_NUMERIC_CHARS_1= ruleALPHA_NUMERIC_CHARS )* )
-            // InternalSemver.g:1315:3: this_LETTER_NO_V_0= ruleLETTER_NO_V (this_ALPHA_NUMERIC_CHARS_1= ruleALPHA_NUMERIC_CHARS )*
-            {
-            if ( state.backtracking==0 ) {
-
-              			newCompositeNode(grammarAccess.getTAGAccess().getLETTER_NO_VParserRuleCall_0());
-              		
-            }
-            pushFollow(FOLLOW_19);
-            this_LETTER_NO_V_0=ruleLETTER_NO_V();
-
-            state._fsp--;
-            if (state.failed) return current;
-            if ( state.backtracking==0 ) {
-
-              			current.merge(this_LETTER_NO_V_0);
-              		
-            }
-            if ( state.backtracking==0 ) {
-
-              			afterParserOrEnumRuleCall();
-              		
-            }
-            // InternalSemver.g:1325:3: (this_ALPHA_NUMERIC_CHARS_1= ruleALPHA_NUMERIC_CHARS )*
-            loop29:
-            do {
-                int alt29=2;
-                int LA29_0 = input.LA(1);
-
-                if ( ((LA29_0>=RULE_DIGITS && LA29_0<=RULE_LETTER_NO_VX)||LA29_0==34) ) {
-                    alt29=1;
-                }
-
-
-                switch (alt29) {
-            	case 1 :
-            	    // InternalSemver.g:1326:4: this_ALPHA_NUMERIC_CHARS_1= ruleALPHA_NUMERIC_CHARS
-            	    {
-            	    if ( state.backtracking==0 ) {
-
-            	      				newCompositeNode(grammarAccess.getTAGAccess().getALPHA_NUMERIC_CHARSParserRuleCall_1());
-            	      			
-            	    }
-            	    pushFollow(FOLLOW_19);
-            	    this_ALPHA_NUMERIC_CHARS_1=ruleALPHA_NUMERIC_CHARS();
-
-            	    state._fsp--;
-            	    if (state.failed) return current;
-            	    if ( state.backtracking==0 ) {
-
-            	      				current.merge(this_ALPHA_NUMERIC_CHARS_1);
-            	      			
-            	    }
-            	    if ( state.backtracking==0 ) {
-
-            	      				afterParserOrEnumRuleCall();
-            	      			
-            	    }
-
-            	    }
-            	    break;
-
-            	default :
-            	    break loop29;
-                }
-            } while (true);
-
-
-            }
-
-
-            }
-
-            if ( state.backtracking==0 ) {
-
-              	leaveRule();
-
-            }
-        }
-
-            catch (RecognitionException re) {
-                recover(input,re);
-                appendSkippedTokens();
-            }
-        finally {
-        }
-        return current;
-    }
-    // $ANTLR end "ruleTAG"
-
-
     // $ANTLR start "entryRulePATH"
-    // InternalSemver.g:1341:1: entryRulePATH returns [String current=null] : iv_rulePATH= rulePATH EOF ;
+    // InternalSemver.g:1269:1: entryRulePATH returns [String current=null] : iv_rulePATH= rulePATH EOF ;
     public final String entryRulePATH() throws RecognitionException {
         String current = null;
 
@@ -4053,8 +3645,8 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalSemver.g:1341:44: (iv_rulePATH= rulePATH EOF )
-            // InternalSemver.g:1342:2: iv_rulePATH= rulePATH EOF
+            // InternalSemver.g:1269:44: (iv_rulePATH= rulePATH EOF )
+            // InternalSemver.g:1270:2: iv_rulePATH= rulePATH EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getPATHRule()); 
@@ -4085,225 +3677,247 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "rulePATH"
-    // InternalSemver.g:1348:1: rulePATH returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : ( (this_LETTER_NO_V_0= ruleLETTER_NO_V this_ALPHA_NUMERIC_CHAR_1= ruleALPHA_NUMERIC_CHAR )* ( (kw= '/' | kw= '.' )+ this_ALPHA_NUMERIC_CHARS_4= ruleALPHA_NUMERIC_CHARS )+ (kw= '/' | kw= '.' )* ) ;
+    // InternalSemver.g:1276:1: rulePATH returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : ( (this_LETTER_NO_VX_0= RULE_LETTER_NO_VX | kw= '/' | kw= '.' ) (kw= '/' | kw= '.' | kw= '-' | this_DIGITS_6= RULE_DIGITS | this_LETTER_V_7= RULE_LETTER_V | this_LETTER_X_8= RULE_LETTER_X | this_LETTER_NO_VX_9= RULE_LETTER_NO_VX )+ ) ;
     public final AntlrDatatypeRuleToken rulePATH() throws RecognitionException {
         AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
+        Token this_LETTER_NO_VX_0=null;
         Token kw=null;
-        AntlrDatatypeRuleToken this_LETTER_NO_V_0 = null;
-
-        AntlrDatatypeRuleToken this_ALPHA_NUMERIC_CHAR_1 = null;
-
-        AntlrDatatypeRuleToken this_ALPHA_NUMERIC_CHARS_4 = null;
-
+        Token this_DIGITS_6=null;
+        Token this_LETTER_V_7=null;
+        Token this_LETTER_X_8=null;
+        Token this_LETTER_NO_VX_9=null;
 
 
         	enterRule();
 
         try {
-            // InternalSemver.g:1354:2: ( ( (this_LETTER_NO_V_0= ruleLETTER_NO_V this_ALPHA_NUMERIC_CHAR_1= ruleALPHA_NUMERIC_CHAR )* ( (kw= '/' | kw= '.' )+ this_ALPHA_NUMERIC_CHARS_4= ruleALPHA_NUMERIC_CHARS )+ (kw= '/' | kw= '.' )* ) )
-            // InternalSemver.g:1355:2: ( (this_LETTER_NO_V_0= ruleLETTER_NO_V this_ALPHA_NUMERIC_CHAR_1= ruleALPHA_NUMERIC_CHAR )* ( (kw= '/' | kw= '.' )+ this_ALPHA_NUMERIC_CHARS_4= ruleALPHA_NUMERIC_CHARS )+ (kw= '/' | kw= '.' )* )
+            // InternalSemver.g:1282:2: ( ( (this_LETTER_NO_VX_0= RULE_LETTER_NO_VX | kw= '/' | kw= '.' ) (kw= '/' | kw= '.' | kw= '-' | this_DIGITS_6= RULE_DIGITS | this_LETTER_V_7= RULE_LETTER_V | this_LETTER_X_8= RULE_LETTER_X | this_LETTER_NO_VX_9= RULE_LETTER_NO_VX )+ ) )
+            // InternalSemver.g:1283:2: ( (this_LETTER_NO_VX_0= RULE_LETTER_NO_VX | kw= '/' | kw= '.' ) (kw= '/' | kw= '.' | kw= '-' | this_DIGITS_6= RULE_DIGITS | this_LETTER_V_7= RULE_LETTER_V | this_LETTER_X_8= RULE_LETTER_X | this_LETTER_NO_VX_9= RULE_LETTER_NO_VX )+ )
             {
-            // InternalSemver.g:1355:2: ( (this_LETTER_NO_V_0= ruleLETTER_NO_V this_ALPHA_NUMERIC_CHAR_1= ruleALPHA_NUMERIC_CHAR )* ( (kw= '/' | kw= '.' )+ this_ALPHA_NUMERIC_CHARS_4= ruleALPHA_NUMERIC_CHARS )+ (kw= '/' | kw= '.' )* )
-            // InternalSemver.g:1356:3: (this_LETTER_NO_V_0= ruleLETTER_NO_V this_ALPHA_NUMERIC_CHAR_1= ruleALPHA_NUMERIC_CHAR )* ( (kw= '/' | kw= '.' )+ this_ALPHA_NUMERIC_CHARS_4= ruleALPHA_NUMERIC_CHARS )+ (kw= '/' | kw= '.' )*
+            // InternalSemver.g:1283:2: ( (this_LETTER_NO_VX_0= RULE_LETTER_NO_VX | kw= '/' | kw= '.' ) (kw= '/' | kw= '.' | kw= '-' | this_DIGITS_6= RULE_DIGITS | this_LETTER_V_7= RULE_LETTER_V | this_LETTER_X_8= RULE_LETTER_X | this_LETTER_NO_VX_9= RULE_LETTER_NO_VX )+ )
+            // InternalSemver.g:1284:3: (this_LETTER_NO_VX_0= RULE_LETTER_NO_VX | kw= '/' | kw= '.' ) (kw= '/' | kw= '.' | kw= '-' | this_DIGITS_6= RULE_DIGITS | this_LETTER_V_7= RULE_LETTER_V | this_LETTER_X_8= RULE_LETTER_X | this_LETTER_NO_VX_9= RULE_LETTER_NO_VX )+
             {
-            // InternalSemver.g:1356:3: (this_LETTER_NO_V_0= ruleLETTER_NO_V this_ALPHA_NUMERIC_CHAR_1= ruleALPHA_NUMERIC_CHAR )*
+            // InternalSemver.g:1284:3: (this_LETTER_NO_VX_0= RULE_LETTER_NO_VX | kw= '/' | kw= '.' )
+            int alt29=3;
+            switch ( input.LA(1) ) {
+            case RULE_LETTER_NO_VX:
+                {
+                alt29=1;
+                }
+                break;
+            case 36:
+                {
+                alt29=2;
+                }
+                break;
+            case 34:
+                {
+                alt29=3;
+                }
+                break;
+            default:
+                if (state.backtracking>0) {state.failed=true; return current;}
+                NoViableAltException nvae =
+                    new NoViableAltException("", 29, 0, input);
+
+                throw nvae;
+            }
+
+            switch (alt29) {
+                case 1 :
+                    // InternalSemver.g:1285:4: this_LETTER_NO_VX_0= RULE_LETTER_NO_VX
+                    {
+                    this_LETTER_NO_VX_0=(Token)match(input,RULE_LETTER_NO_VX,FOLLOW_18); if (state.failed) return current;
+                    if ( state.backtracking==0 ) {
+
+                      				current.merge(this_LETTER_NO_VX_0);
+                      			
+                    }
+                    if ( state.backtracking==0 ) {
+
+                      				newLeafNode(this_LETTER_NO_VX_0, grammarAccess.getPATHAccess().getLETTER_NO_VXTerminalRuleCall_0_0());
+                      			
+                    }
+
+                    }
+                    break;
+                case 2 :
+                    // InternalSemver.g:1293:4: kw= '/'
+                    {
+                    kw=(Token)match(input,36,FOLLOW_18); if (state.failed) return current;
+                    if ( state.backtracking==0 ) {
+
+                      				current.merge(kw);
+                      				newLeafNode(kw, grammarAccess.getPATHAccess().getSolidusKeyword_0_1());
+                      			
+                    }
+
+                    }
+                    break;
+                case 3 :
+                    // InternalSemver.g:1299:4: kw= '.'
+                    {
+                    kw=(Token)match(input,34,FOLLOW_18); if (state.failed) return current;
+                    if ( state.backtracking==0 ) {
+
+                      				current.merge(kw);
+                      				newLeafNode(kw, grammarAccess.getPATHAccess().getFullStopKeyword_0_2());
+                      			
+                    }
+
+                    }
+                    break;
+
+            }
+
+            // InternalSemver.g:1305:3: (kw= '/' | kw= '.' | kw= '-' | this_DIGITS_6= RULE_DIGITS | this_LETTER_V_7= RULE_LETTER_V | this_LETTER_X_8= RULE_LETTER_X | this_LETTER_NO_VX_9= RULE_LETTER_NO_VX )+
+            int cnt30=0;
             loop30:
             do {
-                int alt30=2;
-                int LA30_0 = input.LA(1);
-
-                if ( ((LA30_0>=RULE_LETTER_X && LA30_0<=RULE_LETTER_NO_VX)) ) {
+                int alt30=8;
+                switch ( input.LA(1) ) {
+                case 36:
+                    {
                     alt30=1;
-                }
+                    }
+                    break;
+                case 34:
+                    {
+                    alt30=2;
+                    }
+                    break;
+                case 33:
+                    {
+                    alt30=3;
+                    }
+                    break;
+                case RULE_DIGITS:
+                    {
+                    alt30=4;
+                    }
+                    break;
+                case RULE_LETTER_V:
+                    {
+                    alt30=5;
+                    }
+                    break;
+                case RULE_LETTER_X:
+                    {
+                    alt30=6;
+                    }
+                    break;
+                case RULE_LETTER_NO_VX:
+                    {
+                    alt30=7;
+                    }
+                    break;
 
+                }
 
                 switch (alt30) {
             	case 1 :
-            	    // InternalSemver.g:1357:4: this_LETTER_NO_V_0= ruleLETTER_NO_V this_ALPHA_NUMERIC_CHAR_1= ruleALPHA_NUMERIC_CHAR
+            	    // InternalSemver.g:1306:4: kw= '/'
             	    {
-            	    if ( state.backtracking==0 ) {
-
-            	      				newCompositeNode(grammarAccess.getPATHAccess().getLETTER_NO_VParserRuleCall_0_0());
-            	      			
-            	    }
-            	    pushFollow(FOLLOW_8);
-            	    this_LETTER_NO_V_0=ruleLETTER_NO_V();
-
-            	    state._fsp--;
-            	    if (state.failed) return current;
-            	    if ( state.backtracking==0 ) {
-
-            	      				current.merge(this_LETTER_NO_V_0);
-            	      			
-            	    }
-            	    if ( state.backtracking==0 ) {
-
-            	      				afterParserOrEnumRuleCall();
-            	      			
-            	    }
-            	    if ( state.backtracking==0 ) {
-
-            	      				newCompositeNode(grammarAccess.getPATHAccess().getALPHA_NUMERIC_CHARParserRuleCall_0_1());
-            	      			
-            	    }
-            	    pushFollow(FOLLOW_10);
-            	    this_ALPHA_NUMERIC_CHAR_1=ruleALPHA_NUMERIC_CHAR();
-
-            	    state._fsp--;
-            	    if (state.failed) return current;
-            	    if ( state.backtracking==0 ) {
-
-            	      				current.merge(this_ALPHA_NUMERIC_CHAR_1);
-            	      			
-            	    }
-            	    if ( state.backtracking==0 ) {
-
-            	      				afterParserOrEnumRuleCall();
-            	      			
-            	    }
-
-            	    }
-            	    break;
-
-            	default :
-            	    break loop30;
-                }
-            } while (true);
-
-            // InternalSemver.g:1378:3: ( (kw= '/' | kw= '.' )+ this_ALPHA_NUMERIC_CHARS_4= ruleALPHA_NUMERIC_CHARS )+
-            int cnt32=0;
-            loop32:
-            do {
-                int alt32=2;
-                alt32 = dfa32.predict(input);
-                switch (alt32) {
-            	case 1 :
-            	    // InternalSemver.g:1379:4: (kw= '/' | kw= '.' )+ this_ALPHA_NUMERIC_CHARS_4= ruleALPHA_NUMERIC_CHARS
-            	    {
-            	    // InternalSemver.g:1379:4: (kw= '/' | kw= '.' )+
-            	    int cnt31=0;
-            	    loop31:
-            	    do {
-            	        int alt31=3;
-            	        int LA31_0 = input.LA(1);
-
-            	        if ( (LA31_0==37) ) {
-            	            alt31=1;
-            	        }
-            	        else if ( (LA31_0==35) ) {
-            	            alt31=2;
-            	        }
-
-
-            	        switch (alt31) {
-            	    	case 1 :
-            	    	    // InternalSemver.g:1380:5: kw= '/'
-            	    	    {
-            	    	    kw=(Token)match(input,37,FOLLOW_20); if (state.failed) return current;
-            	    	    if ( state.backtracking==0 ) {
-
-            	    	      					current.merge(kw);
-            	    	      					newLeafNode(kw, grammarAccess.getPATHAccess().getSolidusKeyword_1_0_0());
-            	    	      				
-            	    	    }
-
-            	    	    }
-            	    	    break;
-            	    	case 2 :
-            	    	    // InternalSemver.g:1386:5: kw= '.'
-            	    	    {
-            	    	    kw=(Token)match(input,35,FOLLOW_20); if (state.failed) return current;
-            	    	    if ( state.backtracking==0 ) {
-
-            	    	      					current.merge(kw);
-            	    	      					newLeafNode(kw, grammarAccess.getPATHAccess().getFullStopKeyword_1_0_1());
-            	    	      				
-            	    	    }
-
-            	    	    }
-            	    	    break;
-
-            	    	default :
-            	    	    if ( cnt31 >= 1 ) break loop31;
-            	    	    if (state.backtracking>0) {state.failed=true; return current;}
-            	                EarlyExitException eee =
-            	                    new EarlyExitException(31, input);
-            	                throw eee;
-            	        }
-            	        cnt31++;
-            	    } while (true);
-
-            	    if ( state.backtracking==0 ) {
-
-            	      				newCompositeNode(grammarAccess.getPATHAccess().getALPHA_NUMERIC_CHARSParserRuleCall_1_1());
-            	      			
-            	    }
-            	    pushFollow(FOLLOW_21);
-            	    this_ALPHA_NUMERIC_CHARS_4=ruleALPHA_NUMERIC_CHARS();
-
-            	    state._fsp--;
-            	    if (state.failed) return current;
-            	    if ( state.backtracking==0 ) {
-
-            	      				current.merge(this_ALPHA_NUMERIC_CHARS_4);
-            	      			
-            	    }
-            	    if ( state.backtracking==0 ) {
-
-            	      				afterParserOrEnumRuleCall();
-            	      			
-            	    }
-
-            	    }
-            	    break;
-
-            	default :
-            	    if ( cnt32 >= 1 ) break loop32;
-            	    if (state.backtracking>0) {state.failed=true; return current;}
-                        EarlyExitException eee =
-                            new EarlyExitException(32, input);
-                        throw eee;
-                }
-                cnt32++;
-            } while (true);
-
-            // InternalSemver.g:1403:3: (kw= '/' | kw= '.' )*
-            loop33:
-            do {
-                int alt33=3;
-                int LA33_0 = input.LA(1);
-
-                if ( (LA33_0==37) ) {
-                    alt33=1;
-                }
-                else if ( (LA33_0==35) ) {
-                    alt33=2;
-                }
-
-
-                switch (alt33) {
-            	case 1 :
-            	    // InternalSemver.g:1404:4: kw= '/'
-            	    {
-            	    kw=(Token)match(input,37,FOLLOW_21); if (state.failed) return current;
+            	    kw=(Token)match(input,36,FOLLOW_19); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
 
             	      				current.merge(kw);
-            	      				newLeafNode(kw, grammarAccess.getPATHAccess().getSolidusKeyword_2_0());
+            	      				newLeafNode(kw, grammarAccess.getPATHAccess().getSolidusKeyword_1_0());
             	      			
             	    }
 
             	    }
             	    break;
             	case 2 :
-            	    // InternalSemver.g:1410:4: kw= '.'
+            	    // InternalSemver.g:1312:4: kw= '.'
             	    {
-            	    kw=(Token)match(input,35,FOLLOW_21); if (state.failed) return current;
+            	    kw=(Token)match(input,34,FOLLOW_19); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
 
             	      				current.merge(kw);
-            	      				newLeafNode(kw, grammarAccess.getPATHAccess().getFullStopKeyword_2_1());
+            	      				newLeafNode(kw, grammarAccess.getPATHAccess().getFullStopKeyword_1_1());
+            	      			
+            	    }
+
+            	    }
+            	    break;
+            	case 3 :
+            	    // InternalSemver.g:1318:4: kw= '-'
+            	    {
+            	    kw=(Token)match(input,33,FOLLOW_19); if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      				current.merge(kw);
+            	      				newLeafNode(kw, grammarAccess.getPATHAccess().getHyphenMinusKeyword_1_2());
+            	      			
+            	    }
+
+            	    }
+            	    break;
+            	case 4 :
+            	    // InternalSemver.g:1324:4: this_DIGITS_6= RULE_DIGITS
+            	    {
+            	    this_DIGITS_6=(Token)match(input,RULE_DIGITS,FOLLOW_19); if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      				current.merge(this_DIGITS_6);
+            	      			
+            	    }
+            	    if ( state.backtracking==0 ) {
+
+            	      				newLeafNode(this_DIGITS_6, grammarAccess.getPATHAccess().getDIGITSTerminalRuleCall_1_3());
+            	      			
+            	    }
+
+            	    }
+            	    break;
+            	case 5 :
+            	    // InternalSemver.g:1332:4: this_LETTER_V_7= RULE_LETTER_V
+            	    {
+            	    this_LETTER_V_7=(Token)match(input,RULE_LETTER_V,FOLLOW_19); if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      				current.merge(this_LETTER_V_7);
+            	      			
+            	    }
+            	    if ( state.backtracking==0 ) {
+
+            	      				newLeafNode(this_LETTER_V_7, grammarAccess.getPATHAccess().getLETTER_VTerminalRuleCall_1_4());
+            	      			
+            	    }
+
+            	    }
+            	    break;
+            	case 6 :
+            	    // InternalSemver.g:1340:4: this_LETTER_X_8= RULE_LETTER_X
+            	    {
+            	    this_LETTER_X_8=(Token)match(input,RULE_LETTER_X,FOLLOW_19); if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      				current.merge(this_LETTER_X_8);
+            	      			
+            	    }
+            	    if ( state.backtracking==0 ) {
+
+            	      				newLeafNode(this_LETTER_X_8, grammarAccess.getPATHAccess().getLETTER_XTerminalRuleCall_1_5());
+            	      			
+            	    }
+
+            	    }
+            	    break;
+            	case 7 :
+            	    // InternalSemver.g:1348:4: this_LETTER_NO_VX_9= RULE_LETTER_NO_VX
+            	    {
+            	    this_LETTER_NO_VX_9=(Token)match(input,RULE_LETTER_NO_VX,FOLLOW_19); if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      				current.merge(this_LETTER_NO_VX_9);
+            	      			
+            	    }
+            	    if ( state.backtracking==0 ) {
+
+            	      				newLeafNode(this_LETTER_NO_VX_9, grammarAccess.getPATHAccess().getLETTER_NO_VXTerminalRuleCall_1_6());
             	      			
             	    }
 
@@ -4311,8 +3925,13 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
             	    break;
 
             	default :
-            	    break loop33;
+            	    if ( cnt30 >= 1 ) break loop30;
+            	    if (state.backtracking>0) {state.failed=true; return current;}
+                        EarlyExitException eee =
+                            new EarlyExitException(30, input);
+                        throw eee;
                 }
+                cnt30++;
             } while (true);
 
 
@@ -4339,8 +3958,209 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
     // $ANTLR end "rulePATH"
 
 
+    // $ANTLR start "entryRuleURL_PROTOCOL"
+    // InternalSemver.g:1360:1: entryRuleURL_PROTOCOL returns [String current=null] : iv_ruleURL_PROTOCOL= ruleURL_PROTOCOL EOF ;
+    public final String entryRuleURL_PROTOCOL() throws RecognitionException {
+        String current = null;
+
+        AntlrDatatypeRuleToken iv_ruleURL_PROTOCOL = null;
+
+
+        try {
+            // InternalSemver.g:1360:52: (iv_ruleURL_PROTOCOL= ruleURL_PROTOCOL EOF )
+            // InternalSemver.g:1361:2: iv_ruleURL_PROTOCOL= ruleURL_PROTOCOL EOF
+            {
+            if ( state.backtracking==0 ) {
+               newCompositeNode(grammarAccess.getURL_PROTOCOLRule()); 
+            }
+            pushFollow(FOLLOW_1);
+            iv_ruleURL_PROTOCOL=ruleURL_PROTOCOL();
+
+            state._fsp--;
+            if (state.failed) return current;
+            if ( state.backtracking==0 ) {
+               current =iv_ruleURL_PROTOCOL.getText(); 
+            }
+            match(input,EOF,FOLLOW_2); if (state.failed) return current;
+
+            }
+
+        }
+
+            catch (RecognitionException re) {
+                recover(input,re);
+                appendSkippedTokens();
+            }
+        finally {
+        }
+        return current;
+    }
+    // $ANTLR end "entryRuleURL_PROTOCOL"
+
+
+    // $ANTLR start "ruleURL_PROTOCOL"
+    // InternalSemver.g:1367:1: ruleURL_PROTOCOL returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_LETTER_NO_VX_0= RULE_LETTER_NO_VX (this_LETTER_V_1= RULE_LETTER_V | this_LETTER_X_2= RULE_LETTER_X | this_LETTER_NO_VX_3= RULE_LETTER_NO_VX | kw= '+' )+ ) ;
+    public final AntlrDatatypeRuleToken ruleURL_PROTOCOL() throws RecognitionException {
+        AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
+
+        Token this_LETTER_NO_VX_0=null;
+        Token this_LETTER_V_1=null;
+        Token this_LETTER_X_2=null;
+        Token this_LETTER_NO_VX_3=null;
+        Token kw=null;
+
+
+        	enterRule();
+
+        try {
+            // InternalSemver.g:1373:2: ( (this_LETTER_NO_VX_0= RULE_LETTER_NO_VX (this_LETTER_V_1= RULE_LETTER_V | this_LETTER_X_2= RULE_LETTER_X | this_LETTER_NO_VX_3= RULE_LETTER_NO_VX | kw= '+' )+ ) )
+            // InternalSemver.g:1374:2: (this_LETTER_NO_VX_0= RULE_LETTER_NO_VX (this_LETTER_V_1= RULE_LETTER_V | this_LETTER_X_2= RULE_LETTER_X | this_LETTER_NO_VX_3= RULE_LETTER_NO_VX | kw= '+' )+ )
+            {
+            // InternalSemver.g:1374:2: (this_LETTER_NO_VX_0= RULE_LETTER_NO_VX (this_LETTER_V_1= RULE_LETTER_V | this_LETTER_X_2= RULE_LETTER_X | this_LETTER_NO_VX_3= RULE_LETTER_NO_VX | kw= '+' )+ )
+            // InternalSemver.g:1375:3: this_LETTER_NO_VX_0= RULE_LETTER_NO_VX (this_LETTER_V_1= RULE_LETTER_V | this_LETTER_X_2= RULE_LETTER_X | this_LETTER_NO_VX_3= RULE_LETTER_NO_VX | kw= '+' )+
+            {
+            this_LETTER_NO_VX_0=(Token)match(input,RULE_LETTER_NO_VX,FOLLOW_20); if (state.failed) return current;
+            if ( state.backtracking==0 ) {
+
+              			current.merge(this_LETTER_NO_VX_0);
+              		
+            }
+            if ( state.backtracking==0 ) {
+
+              			newLeafNode(this_LETTER_NO_VX_0, grammarAccess.getURL_PROTOCOLAccess().getLETTER_NO_VXTerminalRuleCall_0());
+              		
+            }
+            // InternalSemver.g:1382:3: (this_LETTER_V_1= RULE_LETTER_V | this_LETTER_X_2= RULE_LETTER_X | this_LETTER_NO_VX_3= RULE_LETTER_NO_VX | kw= '+' )+
+            int cnt31=0;
+            loop31:
+            do {
+                int alt31=5;
+                switch ( input.LA(1) ) {
+                case RULE_LETTER_V:
+                    {
+                    alt31=1;
+                    }
+                    break;
+                case RULE_LETTER_X:
+                    {
+                    alt31=2;
+                    }
+                    break;
+                case RULE_LETTER_NO_VX:
+                    {
+                    alt31=3;
+                    }
+                    break;
+                case 35:
+                    {
+                    alt31=4;
+                    }
+                    break;
+
+                }
+
+                switch (alt31) {
+            	case 1 :
+            	    // InternalSemver.g:1383:4: this_LETTER_V_1= RULE_LETTER_V
+            	    {
+            	    this_LETTER_V_1=(Token)match(input,RULE_LETTER_V,FOLLOW_21); if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      				current.merge(this_LETTER_V_1);
+            	      			
+            	    }
+            	    if ( state.backtracking==0 ) {
+
+            	      				newLeafNode(this_LETTER_V_1, grammarAccess.getURL_PROTOCOLAccess().getLETTER_VTerminalRuleCall_1_0());
+            	      			
+            	    }
+
+            	    }
+            	    break;
+            	case 2 :
+            	    // InternalSemver.g:1391:4: this_LETTER_X_2= RULE_LETTER_X
+            	    {
+            	    this_LETTER_X_2=(Token)match(input,RULE_LETTER_X,FOLLOW_21); if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      				current.merge(this_LETTER_X_2);
+            	      			
+            	    }
+            	    if ( state.backtracking==0 ) {
+
+            	      				newLeafNode(this_LETTER_X_2, grammarAccess.getURL_PROTOCOLAccess().getLETTER_XTerminalRuleCall_1_1());
+            	      			
+            	    }
+
+            	    }
+            	    break;
+            	case 3 :
+            	    // InternalSemver.g:1399:4: this_LETTER_NO_VX_3= RULE_LETTER_NO_VX
+            	    {
+            	    this_LETTER_NO_VX_3=(Token)match(input,RULE_LETTER_NO_VX,FOLLOW_21); if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      				current.merge(this_LETTER_NO_VX_3);
+            	      			
+            	    }
+            	    if ( state.backtracking==0 ) {
+
+            	      				newLeafNode(this_LETTER_NO_VX_3, grammarAccess.getURL_PROTOCOLAccess().getLETTER_NO_VXTerminalRuleCall_1_2());
+            	      			
+            	    }
+
+            	    }
+            	    break;
+            	case 4 :
+            	    // InternalSemver.g:1407:4: kw= '+'
+            	    {
+            	    kw=(Token)match(input,35,FOLLOW_21); if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      				current.merge(kw);
+            	      				newLeafNode(kw, grammarAccess.getURL_PROTOCOLAccess().getPlusSignKeyword_1_3());
+            	      			
+            	    }
+
+            	    }
+            	    break;
+
+            	default :
+            	    if ( cnt31 >= 1 ) break loop31;
+            	    if (state.backtracking>0) {state.failed=true; return current;}
+                        EarlyExitException eee =
+                            new EarlyExitException(31, input);
+                        throw eee;
+                }
+                cnt31++;
+            } while (true);
+
+
+            }
+
+
+            }
+
+            if ( state.backtracking==0 ) {
+
+              	leaveRule();
+
+            }
+        }
+
+            catch (RecognitionException re) {
+                recover(input,re);
+                appendSkippedTokens();
+            }
+        finally {
+        }
+        return current;
+    }
+    // $ANTLR end "ruleURL_PROTOCOL"
+
+
     // $ANTLR start "entryRuleURL"
-    // InternalSemver.g:1420:1: entryRuleURL returns [String current=null] : iv_ruleURL= ruleURL EOF ;
+    // InternalSemver.g:1417:1: entryRuleURL returns [String current=null] : iv_ruleURL= ruleURL EOF ;
     public final String entryRuleURL() throws RecognitionException {
         String current = null;
 
@@ -4348,8 +4168,8 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalSemver.g:1420:43: (iv_ruleURL= ruleURL EOF )
-            // InternalSemver.g:1421:2: iv_ruleURL= ruleURL EOF
+            // InternalSemver.g:1417:43: (iv_ruleURL= ruleURL EOF )
+            // InternalSemver.g:1418:2: iv_ruleURL= ruleURL EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getURLRule()); 
@@ -4380,81 +4200,432 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleURL"
-    // InternalSemver.g:1427:1: ruleURL returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : ( (this_LETTER_NO_V_0= ruleLETTER_NO_V this_ALPHA_NUMERIC_CHAR_1= ruleALPHA_NUMERIC_CHAR )* ( (kw= '/' | kw= '.' | kw= ':' | kw= '@' )+ this_ALPHA_NUMERIC_CHARS_6= ruleALPHA_NUMERIC_CHARS )+ ) ;
+    // InternalSemver.g:1424:1: ruleURL returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_LETTER_NO_VX_0= RULE_LETTER_NO_VX (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_V_3= RULE_LETTER_V | this_LETTER_X_4= RULE_LETTER_X | this_LETTER_NO_VX_5= RULE_LETTER_NO_VX )* (kw= '/' | kw= '.' | kw= ':' | kw= '@' ) (kw= '/' | kw= '.' | kw= ':' | kw= '@' | kw= '-' | this_DIGITS_15= RULE_DIGITS | this_LETTER_V_16= RULE_LETTER_V | this_LETTER_X_17= RULE_LETTER_X | this_LETTER_NO_VX_18= RULE_LETTER_NO_VX )* ) ;
     public final AntlrDatatypeRuleToken ruleURL() throws RecognitionException {
         AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
+        Token this_LETTER_NO_VX_0=null;
         Token kw=null;
-        AntlrDatatypeRuleToken this_LETTER_NO_V_0 = null;
-
-        AntlrDatatypeRuleToken this_ALPHA_NUMERIC_CHAR_1 = null;
-
-        AntlrDatatypeRuleToken this_ALPHA_NUMERIC_CHARS_6 = null;
-
+        Token this_DIGITS_2=null;
+        Token this_LETTER_V_3=null;
+        Token this_LETTER_X_4=null;
+        Token this_LETTER_NO_VX_5=null;
+        Token this_DIGITS_15=null;
+        Token this_LETTER_V_16=null;
+        Token this_LETTER_X_17=null;
+        Token this_LETTER_NO_VX_18=null;
 
 
         	enterRule();
 
         try {
-            // InternalSemver.g:1433:2: ( ( (this_LETTER_NO_V_0= ruleLETTER_NO_V this_ALPHA_NUMERIC_CHAR_1= ruleALPHA_NUMERIC_CHAR )* ( (kw= '/' | kw= '.' | kw= ':' | kw= '@' )+ this_ALPHA_NUMERIC_CHARS_6= ruleALPHA_NUMERIC_CHARS )+ ) )
-            // InternalSemver.g:1434:2: ( (this_LETTER_NO_V_0= ruleLETTER_NO_V this_ALPHA_NUMERIC_CHAR_1= ruleALPHA_NUMERIC_CHAR )* ( (kw= '/' | kw= '.' | kw= ':' | kw= '@' )+ this_ALPHA_NUMERIC_CHARS_6= ruleALPHA_NUMERIC_CHARS )+ )
+            // InternalSemver.g:1430:2: ( (this_LETTER_NO_VX_0= RULE_LETTER_NO_VX (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_V_3= RULE_LETTER_V | this_LETTER_X_4= RULE_LETTER_X | this_LETTER_NO_VX_5= RULE_LETTER_NO_VX )* (kw= '/' | kw= '.' | kw= ':' | kw= '@' ) (kw= '/' | kw= '.' | kw= ':' | kw= '@' | kw= '-' | this_DIGITS_15= RULE_DIGITS | this_LETTER_V_16= RULE_LETTER_V | this_LETTER_X_17= RULE_LETTER_X | this_LETTER_NO_VX_18= RULE_LETTER_NO_VX )* ) )
+            // InternalSemver.g:1431:2: (this_LETTER_NO_VX_0= RULE_LETTER_NO_VX (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_V_3= RULE_LETTER_V | this_LETTER_X_4= RULE_LETTER_X | this_LETTER_NO_VX_5= RULE_LETTER_NO_VX )* (kw= '/' | kw= '.' | kw= ':' | kw= '@' ) (kw= '/' | kw= '.' | kw= ':' | kw= '@' | kw= '-' | this_DIGITS_15= RULE_DIGITS | this_LETTER_V_16= RULE_LETTER_V | this_LETTER_X_17= RULE_LETTER_X | this_LETTER_NO_VX_18= RULE_LETTER_NO_VX )* )
             {
-            // InternalSemver.g:1434:2: ( (this_LETTER_NO_V_0= ruleLETTER_NO_V this_ALPHA_NUMERIC_CHAR_1= ruleALPHA_NUMERIC_CHAR )* ( (kw= '/' | kw= '.' | kw= ':' | kw= '@' )+ this_ALPHA_NUMERIC_CHARS_6= ruleALPHA_NUMERIC_CHARS )+ )
-            // InternalSemver.g:1435:3: (this_LETTER_NO_V_0= ruleLETTER_NO_V this_ALPHA_NUMERIC_CHAR_1= ruleALPHA_NUMERIC_CHAR )* ( (kw= '/' | kw= '.' | kw= ':' | kw= '@' )+ this_ALPHA_NUMERIC_CHARS_6= ruleALPHA_NUMERIC_CHARS )+
+            // InternalSemver.g:1431:2: (this_LETTER_NO_VX_0= RULE_LETTER_NO_VX (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_V_3= RULE_LETTER_V | this_LETTER_X_4= RULE_LETTER_X | this_LETTER_NO_VX_5= RULE_LETTER_NO_VX )* (kw= '/' | kw= '.' | kw= ':' | kw= '@' ) (kw= '/' | kw= '.' | kw= ':' | kw= '@' | kw= '-' | this_DIGITS_15= RULE_DIGITS | this_LETTER_V_16= RULE_LETTER_V | this_LETTER_X_17= RULE_LETTER_X | this_LETTER_NO_VX_18= RULE_LETTER_NO_VX )* )
+            // InternalSemver.g:1432:3: this_LETTER_NO_VX_0= RULE_LETTER_NO_VX (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_V_3= RULE_LETTER_V | this_LETTER_X_4= RULE_LETTER_X | this_LETTER_NO_VX_5= RULE_LETTER_NO_VX )* (kw= '/' | kw= '.' | kw= ':' | kw= '@' ) (kw= '/' | kw= '.' | kw= ':' | kw= '@' | kw= '-' | this_DIGITS_15= RULE_DIGITS | this_LETTER_V_16= RULE_LETTER_V | this_LETTER_X_17= RULE_LETTER_X | this_LETTER_NO_VX_18= RULE_LETTER_NO_VX )*
             {
-            // InternalSemver.g:1435:3: (this_LETTER_NO_V_0= ruleLETTER_NO_V this_ALPHA_NUMERIC_CHAR_1= ruleALPHA_NUMERIC_CHAR )*
-            loop34:
-            do {
-                int alt34=2;
-                int LA34_0 = input.LA(1);
+            this_LETTER_NO_VX_0=(Token)match(input,RULE_LETTER_NO_VX,FOLLOW_22); if (state.failed) return current;
+            if ( state.backtracking==0 ) {
 
-                if ( ((LA34_0>=RULE_LETTER_X && LA34_0<=RULE_LETTER_NO_VX)) ) {
-                    alt34=1;
+              			current.merge(this_LETTER_NO_VX_0);
+              		
+            }
+            if ( state.backtracking==0 ) {
+
+              			newLeafNode(this_LETTER_NO_VX_0, grammarAccess.getURLAccess().getLETTER_NO_VXTerminalRuleCall_0());
+              		
+            }
+            // InternalSemver.g:1439:3: (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_V_3= RULE_LETTER_V | this_LETTER_X_4= RULE_LETTER_X | this_LETTER_NO_VX_5= RULE_LETTER_NO_VX )*
+            loop32:
+            do {
+                int alt32=6;
+                switch ( input.LA(1) ) {
+                case 33:
+                    {
+                    alt32=1;
+                    }
+                    break;
+                case RULE_DIGITS:
+                    {
+                    alt32=2;
+                    }
+                    break;
+                case RULE_LETTER_V:
+                    {
+                    alt32=3;
+                    }
+                    break;
+                case RULE_LETTER_X:
+                    {
+                    alt32=4;
+                    }
+                    break;
+                case RULE_LETTER_NO_VX:
+                    {
+                    alt32=5;
+                    }
+                    break;
+
                 }
 
+                switch (alt32) {
+            	case 1 :
+            	    // InternalSemver.g:1440:4: kw= '-'
+            	    {
+            	    kw=(Token)match(input,33,FOLLOW_22); if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      				current.merge(kw);
+            	      				newLeafNode(kw, grammarAccess.getURLAccess().getHyphenMinusKeyword_1_0());
+            	      			
+            	    }
+
+            	    }
+            	    break;
+            	case 2 :
+            	    // InternalSemver.g:1446:4: this_DIGITS_2= RULE_DIGITS
+            	    {
+            	    this_DIGITS_2=(Token)match(input,RULE_DIGITS,FOLLOW_22); if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      				current.merge(this_DIGITS_2);
+            	      			
+            	    }
+            	    if ( state.backtracking==0 ) {
+
+            	      				newLeafNode(this_DIGITS_2, grammarAccess.getURLAccess().getDIGITSTerminalRuleCall_1_1());
+            	      			
+            	    }
+
+            	    }
+            	    break;
+            	case 3 :
+            	    // InternalSemver.g:1454:4: this_LETTER_V_3= RULE_LETTER_V
+            	    {
+            	    this_LETTER_V_3=(Token)match(input,RULE_LETTER_V,FOLLOW_22); if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      				current.merge(this_LETTER_V_3);
+            	      			
+            	    }
+            	    if ( state.backtracking==0 ) {
+
+            	      				newLeafNode(this_LETTER_V_3, grammarAccess.getURLAccess().getLETTER_VTerminalRuleCall_1_2());
+            	      			
+            	    }
+
+            	    }
+            	    break;
+            	case 4 :
+            	    // InternalSemver.g:1462:4: this_LETTER_X_4= RULE_LETTER_X
+            	    {
+            	    this_LETTER_X_4=(Token)match(input,RULE_LETTER_X,FOLLOW_22); if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      				current.merge(this_LETTER_X_4);
+            	      			
+            	    }
+            	    if ( state.backtracking==0 ) {
+
+            	      				newLeafNode(this_LETTER_X_4, grammarAccess.getURLAccess().getLETTER_XTerminalRuleCall_1_3());
+            	      			
+            	    }
+
+            	    }
+            	    break;
+            	case 5 :
+            	    // InternalSemver.g:1470:4: this_LETTER_NO_VX_5= RULE_LETTER_NO_VX
+            	    {
+            	    this_LETTER_NO_VX_5=(Token)match(input,RULE_LETTER_NO_VX,FOLLOW_22); if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      				current.merge(this_LETTER_NO_VX_5);
+            	      			
+            	    }
+            	    if ( state.backtracking==0 ) {
+
+            	      				newLeafNode(this_LETTER_NO_VX_5, grammarAccess.getURLAccess().getLETTER_NO_VXTerminalRuleCall_1_4());
+            	      			
+            	    }
+
+            	    }
+            	    break;
+
+            	default :
+            	    break loop32;
+                }
+            } while (true);
+
+            // InternalSemver.g:1478:3: (kw= '/' | kw= '.' | kw= ':' | kw= '@' )
+            int alt33=4;
+            switch ( input.LA(1) ) {
+            case 36:
+                {
+                alt33=1;
+                }
+                break;
+            case 34:
+                {
+                alt33=2;
+                }
+                break;
+            case 37:
+                {
+                alt33=3;
+                }
+                break;
+            case 38:
+                {
+                alt33=4;
+                }
+                break;
+            default:
+                if (state.backtracking>0) {state.failed=true; return current;}
+                NoViableAltException nvae =
+                    new NoViableAltException("", 33, 0, input);
+
+                throw nvae;
+            }
+
+            switch (alt33) {
+                case 1 :
+                    // InternalSemver.g:1479:4: kw= '/'
+                    {
+                    kw=(Token)match(input,36,FOLLOW_23); if (state.failed) return current;
+                    if ( state.backtracking==0 ) {
+
+                      				current.merge(kw);
+                      				newLeafNode(kw, grammarAccess.getURLAccess().getSolidusKeyword_2_0());
+                      			
+                    }
+
+                    }
+                    break;
+                case 2 :
+                    // InternalSemver.g:1485:4: kw= '.'
+                    {
+                    kw=(Token)match(input,34,FOLLOW_23); if (state.failed) return current;
+                    if ( state.backtracking==0 ) {
+
+                      				current.merge(kw);
+                      				newLeafNode(kw, grammarAccess.getURLAccess().getFullStopKeyword_2_1());
+                      			
+                    }
+
+                    }
+                    break;
+                case 3 :
+                    // InternalSemver.g:1491:4: kw= ':'
+                    {
+                    kw=(Token)match(input,37,FOLLOW_23); if (state.failed) return current;
+                    if ( state.backtracking==0 ) {
+
+                      				current.merge(kw);
+                      				newLeafNode(kw, grammarAccess.getURLAccess().getColonKeyword_2_2());
+                      			
+                    }
+
+                    }
+                    break;
+                case 4 :
+                    // InternalSemver.g:1497:4: kw= '@'
+                    {
+                    kw=(Token)match(input,38,FOLLOW_23); if (state.failed) return current;
+                    if ( state.backtracking==0 ) {
+
+                      				current.merge(kw);
+                      				newLeafNode(kw, grammarAccess.getURLAccess().getCommercialAtKeyword_2_3());
+                      			
+                    }
+
+                    }
+                    break;
+
+            }
+
+            // InternalSemver.g:1503:3: (kw= '/' | kw= '.' | kw= ':' | kw= '@' | kw= '-' | this_DIGITS_15= RULE_DIGITS | this_LETTER_V_16= RULE_LETTER_V | this_LETTER_X_17= RULE_LETTER_X | this_LETTER_NO_VX_18= RULE_LETTER_NO_VX )*
+            loop34:
+            do {
+                int alt34=10;
+                switch ( input.LA(1) ) {
+                case 36:
+                    {
+                    alt34=1;
+                    }
+                    break;
+                case 34:
+                    {
+                    alt34=2;
+                    }
+                    break;
+                case 37:
+                    {
+                    alt34=3;
+                    }
+                    break;
+                case 38:
+                    {
+                    alt34=4;
+                    }
+                    break;
+                case 33:
+                    {
+                    alt34=5;
+                    }
+                    break;
+                case RULE_DIGITS:
+                    {
+                    alt34=6;
+                    }
+                    break;
+                case RULE_LETTER_V:
+                    {
+                    alt34=7;
+                    }
+                    break;
+                case RULE_LETTER_X:
+                    {
+                    alt34=8;
+                    }
+                    break;
+                case RULE_LETTER_NO_VX:
+                    {
+                    alt34=9;
+                    }
+                    break;
+
+                }
 
                 switch (alt34) {
             	case 1 :
-            	    // InternalSemver.g:1436:4: this_LETTER_NO_V_0= ruleLETTER_NO_V this_ALPHA_NUMERIC_CHAR_1= ruleALPHA_NUMERIC_CHAR
+            	    // InternalSemver.g:1504:4: kw= '/'
             	    {
+            	    kw=(Token)match(input,36,FOLLOW_23); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
 
-            	      				newCompositeNode(grammarAccess.getURLAccess().getLETTER_NO_VParserRuleCall_0_0());
+            	      				current.merge(kw);
+            	      				newLeafNode(kw, grammarAccess.getURLAccess().getSolidusKeyword_3_0());
             	      			
             	    }
-            	    pushFollow(FOLLOW_8);
-            	    this_LETTER_NO_V_0=ruleLETTER_NO_V();
 
-            	    state._fsp--;
-            	    if (state.failed) return current;
+            	    }
+            	    break;
+            	case 2 :
+            	    // InternalSemver.g:1510:4: kw= '.'
+            	    {
+            	    kw=(Token)match(input,34,FOLLOW_23); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
 
-            	      				current.merge(this_LETTER_NO_V_0);
+            	      				current.merge(kw);
+            	      				newLeafNode(kw, grammarAccess.getURLAccess().getFullStopKeyword_3_1());
+            	      			
+            	    }
+
+            	    }
+            	    break;
+            	case 3 :
+            	    // InternalSemver.g:1516:4: kw= ':'
+            	    {
+            	    kw=(Token)match(input,37,FOLLOW_23); if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      				current.merge(kw);
+            	      				newLeafNode(kw, grammarAccess.getURLAccess().getColonKeyword_3_2());
+            	      			
+            	    }
+
+            	    }
+            	    break;
+            	case 4 :
+            	    // InternalSemver.g:1522:4: kw= '@'
+            	    {
+            	    kw=(Token)match(input,38,FOLLOW_23); if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      				current.merge(kw);
+            	      				newLeafNode(kw, grammarAccess.getURLAccess().getCommercialAtKeyword_3_3());
+            	      			
+            	    }
+
+            	    }
+            	    break;
+            	case 5 :
+            	    // InternalSemver.g:1528:4: kw= '-'
+            	    {
+            	    kw=(Token)match(input,33,FOLLOW_23); if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      				current.merge(kw);
+            	      				newLeafNode(kw, grammarAccess.getURLAccess().getHyphenMinusKeyword_3_4());
+            	      			
+            	    }
+
+            	    }
+            	    break;
+            	case 6 :
+            	    // InternalSemver.g:1534:4: this_DIGITS_15= RULE_DIGITS
+            	    {
+            	    this_DIGITS_15=(Token)match(input,RULE_DIGITS,FOLLOW_23); if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      				current.merge(this_DIGITS_15);
             	      			
             	    }
             	    if ( state.backtracking==0 ) {
 
-            	      				afterParserOrEnumRuleCall();
+            	      				newLeafNode(this_DIGITS_15, grammarAccess.getURLAccess().getDIGITSTerminalRuleCall_3_5());
+            	      			
+            	    }
+
+            	    }
+            	    break;
+            	case 7 :
+            	    // InternalSemver.g:1542:4: this_LETTER_V_16= RULE_LETTER_V
+            	    {
+            	    this_LETTER_V_16=(Token)match(input,RULE_LETTER_V,FOLLOW_23); if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      				current.merge(this_LETTER_V_16);
             	      			
             	    }
             	    if ( state.backtracking==0 ) {
 
-            	      				newCompositeNode(grammarAccess.getURLAccess().getALPHA_NUMERIC_CHARParserRuleCall_0_1());
+            	      				newLeafNode(this_LETTER_V_16, grammarAccess.getURLAccess().getLETTER_VTerminalRuleCall_3_6());
             	      			
             	    }
-            	    pushFollow(FOLLOW_6);
-            	    this_ALPHA_NUMERIC_CHAR_1=ruleALPHA_NUMERIC_CHAR();
 
-            	    state._fsp--;
-            	    if (state.failed) return current;
+            	    }
+            	    break;
+            	case 8 :
+            	    // InternalSemver.g:1550:4: this_LETTER_X_17= RULE_LETTER_X
+            	    {
+            	    this_LETTER_X_17=(Token)match(input,RULE_LETTER_X,FOLLOW_23); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
 
-            	      				current.merge(this_ALPHA_NUMERIC_CHAR_1);
+            	      				current.merge(this_LETTER_X_17);
             	      			
             	    }
             	    if ( state.backtracking==0 ) {
 
-            	      				afterParserOrEnumRuleCall();
+            	      				newLeafNode(this_LETTER_X_17, grammarAccess.getURLAccess().getLETTER_XTerminalRuleCall_3_7());
+            	      			
+            	    }
+
+            	    }
+            	    break;
+            	case 9 :
+            	    // InternalSemver.g:1558:4: this_LETTER_NO_VX_18= RULE_LETTER_NO_VX
+            	    {
+            	    this_LETTER_NO_VX_18=(Token)match(input,RULE_LETTER_NO_VX,FOLLOW_23); if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      				current.merge(this_LETTER_NO_VX_18);
+            	      			
+            	    }
+            	    if ( state.backtracking==0 ) {
+
+            	      				newLeafNode(this_LETTER_NO_VX_18, grammarAccess.getURLAccess().getLETTER_NO_VXTerminalRuleCall_3_8());
             	      			
             	    }
 
@@ -4464,149 +4635,6 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
             	default :
             	    break loop34;
                 }
-            } while (true);
-
-            // InternalSemver.g:1457:3: ( (kw= '/' | kw= '.' | kw= ':' | kw= '@' )+ this_ALPHA_NUMERIC_CHARS_6= ruleALPHA_NUMERIC_CHARS )+
-            int cnt36=0;
-            loop36:
-            do {
-                int alt36=2;
-                int LA36_0 = input.LA(1);
-
-                if ( (LA36_0==35||(LA36_0>=37 && LA36_0<=39)) ) {
-                    alt36=1;
-                }
-
-
-                switch (alt36) {
-            	case 1 :
-            	    // InternalSemver.g:1458:4: (kw= '/' | kw= '.' | kw= ':' | kw= '@' )+ this_ALPHA_NUMERIC_CHARS_6= ruleALPHA_NUMERIC_CHARS
-            	    {
-            	    // InternalSemver.g:1458:4: (kw= '/' | kw= '.' | kw= ':' | kw= '@' )+
-            	    int cnt35=0;
-            	    loop35:
-            	    do {
-            	        int alt35=5;
-            	        switch ( input.LA(1) ) {
-            	        case 37:
-            	            {
-            	            alt35=1;
-            	            }
-            	            break;
-            	        case 35:
-            	            {
-            	            alt35=2;
-            	            }
-            	            break;
-            	        case 38:
-            	            {
-            	            alt35=3;
-            	            }
-            	            break;
-            	        case 39:
-            	            {
-            	            alt35=4;
-            	            }
-            	            break;
-
-            	        }
-
-            	        switch (alt35) {
-            	    	case 1 :
-            	    	    // InternalSemver.g:1459:5: kw= '/'
-            	    	    {
-            	    	    kw=(Token)match(input,37,FOLLOW_22); if (state.failed) return current;
-            	    	    if ( state.backtracking==0 ) {
-
-            	    	      					current.merge(kw);
-            	    	      					newLeafNode(kw, grammarAccess.getURLAccess().getSolidusKeyword_1_0_0());
-            	    	      				
-            	    	    }
-
-            	    	    }
-            	    	    break;
-            	    	case 2 :
-            	    	    // InternalSemver.g:1465:5: kw= '.'
-            	    	    {
-            	    	    kw=(Token)match(input,35,FOLLOW_22); if (state.failed) return current;
-            	    	    if ( state.backtracking==0 ) {
-
-            	    	      					current.merge(kw);
-            	    	      					newLeafNode(kw, grammarAccess.getURLAccess().getFullStopKeyword_1_0_1());
-            	    	      				
-            	    	    }
-
-            	    	    }
-            	    	    break;
-            	    	case 3 :
-            	    	    // InternalSemver.g:1471:5: kw= ':'
-            	    	    {
-            	    	    kw=(Token)match(input,38,FOLLOW_22); if (state.failed) return current;
-            	    	    if ( state.backtracking==0 ) {
-
-            	    	      					current.merge(kw);
-            	    	      					newLeafNode(kw, grammarAccess.getURLAccess().getColonKeyword_1_0_2());
-            	    	      				
-            	    	    }
-
-            	    	    }
-            	    	    break;
-            	    	case 4 :
-            	    	    // InternalSemver.g:1477:5: kw= '@'
-            	    	    {
-            	    	    kw=(Token)match(input,39,FOLLOW_22); if (state.failed) return current;
-            	    	    if ( state.backtracking==0 ) {
-
-            	    	      					current.merge(kw);
-            	    	      					newLeafNode(kw, grammarAccess.getURLAccess().getCommercialAtKeyword_1_0_3());
-            	    	      				
-            	    	    }
-
-            	    	    }
-            	    	    break;
-
-            	    	default :
-            	    	    if ( cnt35 >= 1 ) break loop35;
-            	    	    if (state.backtracking>0) {state.failed=true; return current;}
-            	                EarlyExitException eee =
-            	                    new EarlyExitException(35, input);
-            	                throw eee;
-            	        }
-            	        cnt35++;
-            	    } while (true);
-
-            	    if ( state.backtracking==0 ) {
-
-            	      				newCompositeNode(grammarAccess.getURLAccess().getALPHA_NUMERIC_CHARSParserRuleCall_1_1());
-            	      			
-            	    }
-            	    pushFollow(FOLLOW_23);
-            	    this_ALPHA_NUMERIC_CHARS_6=ruleALPHA_NUMERIC_CHARS();
-
-            	    state._fsp--;
-            	    if (state.failed) return current;
-            	    if ( state.backtracking==0 ) {
-
-            	      				current.merge(this_ALPHA_NUMERIC_CHARS_6);
-            	      			
-            	    }
-            	    if ( state.backtracking==0 ) {
-
-            	      				afterParserOrEnumRuleCall();
-            	      			
-            	    }
-
-            	    }
-            	    break;
-
-            	default :
-            	    if ( cnt36 >= 1 ) break loop36;
-            	    if (state.backtracking>0) {state.failed=true; return current;}
-                        EarlyExitException eee =
-                            new EarlyExitException(36, input);
-                        throw eee;
-                }
-                cnt36++;
             } while (true);
 
 
@@ -4633,8 +4661,232 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
     // $ANTLR end "ruleURL"
 
 
+    // $ANTLR start "entryRuleTAG"
+    // InternalSemver.g:1570:1: entryRuleTAG returns [String current=null] : iv_ruleTAG= ruleTAG EOF ;
+    public final String entryRuleTAG() throws RecognitionException {
+        String current = null;
+
+        AntlrDatatypeRuleToken iv_ruleTAG = null;
+
+
+        try {
+            // InternalSemver.g:1570:43: (iv_ruleTAG= ruleTAG EOF )
+            // InternalSemver.g:1571:2: iv_ruleTAG= ruleTAG EOF
+            {
+            if ( state.backtracking==0 ) {
+               newCompositeNode(grammarAccess.getTAGRule()); 
+            }
+            pushFollow(FOLLOW_1);
+            iv_ruleTAG=ruleTAG();
+
+            state._fsp--;
+            if (state.failed) return current;
+            if ( state.backtracking==0 ) {
+               current =iv_ruleTAG.getText(); 
+            }
+            match(input,EOF,FOLLOW_2); if (state.failed) return current;
+
+            }
+
+        }
+
+            catch (RecognitionException re) {
+                recover(input,re);
+                appendSkippedTokens();
+            }
+        finally {
+        }
+        return current;
+    }
+    // $ANTLR end "entryRuleTAG"
+
+
+    // $ANTLR start "ruleTAG"
+    // InternalSemver.g:1577:1: ruleTAG returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_LETTER_NO_VX_0= RULE_LETTER_NO_VX (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_V_3= RULE_LETTER_V | this_LETTER_X_4= RULE_LETTER_X | this_LETTER_NO_VX_5= RULE_LETTER_NO_VX )+ ) ;
+    public final AntlrDatatypeRuleToken ruleTAG() throws RecognitionException {
+        AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
+
+        Token this_LETTER_NO_VX_0=null;
+        Token kw=null;
+        Token this_DIGITS_2=null;
+        Token this_LETTER_V_3=null;
+        Token this_LETTER_X_4=null;
+        Token this_LETTER_NO_VX_5=null;
+
+
+        	enterRule();
+
+        try {
+            // InternalSemver.g:1583:2: ( (this_LETTER_NO_VX_0= RULE_LETTER_NO_VX (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_V_3= RULE_LETTER_V | this_LETTER_X_4= RULE_LETTER_X | this_LETTER_NO_VX_5= RULE_LETTER_NO_VX )+ ) )
+            // InternalSemver.g:1584:2: (this_LETTER_NO_VX_0= RULE_LETTER_NO_VX (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_V_3= RULE_LETTER_V | this_LETTER_X_4= RULE_LETTER_X | this_LETTER_NO_VX_5= RULE_LETTER_NO_VX )+ )
+            {
+            // InternalSemver.g:1584:2: (this_LETTER_NO_VX_0= RULE_LETTER_NO_VX (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_V_3= RULE_LETTER_V | this_LETTER_X_4= RULE_LETTER_X | this_LETTER_NO_VX_5= RULE_LETTER_NO_VX )+ )
+            // InternalSemver.g:1585:3: this_LETTER_NO_VX_0= RULE_LETTER_NO_VX (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_V_3= RULE_LETTER_V | this_LETTER_X_4= RULE_LETTER_X | this_LETTER_NO_VX_5= RULE_LETTER_NO_VX )+
+            {
+            this_LETTER_NO_VX_0=(Token)match(input,RULE_LETTER_NO_VX,FOLLOW_24); if (state.failed) return current;
+            if ( state.backtracking==0 ) {
+
+              			current.merge(this_LETTER_NO_VX_0);
+              		
+            }
+            if ( state.backtracking==0 ) {
+
+              			newLeafNode(this_LETTER_NO_VX_0, grammarAccess.getTAGAccess().getLETTER_NO_VXTerminalRuleCall_0());
+              		
+            }
+            // InternalSemver.g:1592:3: (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_V_3= RULE_LETTER_V | this_LETTER_X_4= RULE_LETTER_X | this_LETTER_NO_VX_5= RULE_LETTER_NO_VX )+
+            int cnt35=0;
+            loop35:
+            do {
+                int alt35=6;
+                switch ( input.LA(1) ) {
+                case 33:
+                    {
+                    alt35=1;
+                    }
+                    break;
+                case RULE_DIGITS:
+                    {
+                    alt35=2;
+                    }
+                    break;
+                case RULE_LETTER_V:
+                    {
+                    alt35=3;
+                    }
+                    break;
+                case RULE_LETTER_X:
+                    {
+                    alt35=4;
+                    }
+                    break;
+                case RULE_LETTER_NO_VX:
+                    {
+                    alt35=5;
+                    }
+                    break;
+
+                }
+
+                switch (alt35) {
+            	case 1 :
+            	    // InternalSemver.g:1593:4: kw= '-'
+            	    {
+            	    kw=(Token)match(input,33,FOLLOW_25); if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      				current.merge(kw);
+            	      				newLeafNode(kw, grammarAccess.getTAGAccess().getHyphenMinusKeyword_1_0());
+            	      			
+            	    }
+
+            	    }
+            	    break;
+            	case 2 :
+            	    // InternalSemver.g:1599:4: this_DIGITS_2= RULE_DIGITS
+            	    {
+            	    this_DIGITS_2=(Token)match(input,RULE_DIGITS,FOLLOW_25); if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      				current.merge(this_DIGITS_2);
+            	      			
+            	    }
+            	    if ( state.backtracking==0 ) {
+
+            	      				newLeafNode(this_DIGITS_2, grammarAccess.getTAGAccess().getDIGITSTerminalRuleCall_1_1());
+            	      			
+            	    }
+
+            	    }
+            	    break;
+            	case 3 :
+            	    // InternalSemver.g:1607:4: this_LETTER_V_3= RULE_LETTER_V
+            	    {
+            	    this_LETTER_V_3=(Token)match(input,RULE_LETTER_V,FOLLOW_25); if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      				current.merge(this_LETTER_V_3);
+            	      			
+            	    }
+            	    if ( state.backtracking==0 ) {
+
+            	      				newLeafNode(this_LETTER_V_3, grammarAccess.getTAGAccess().getLETTER_VTerminalRuleCall_1_2());
+            	      			
+            	    }
+
+            	    }
+            	    break;
+            	case 4 :
+            	    // InternalSemver.g:1615:4: this_LETTER_X_4= RULE_LETTER_X
+            	    {
+            	    this_LETTER_X_4=(Token)match(input,RULE_LETTER_X,FOLLOW_25); if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      				current.merge(this_LETTER_X_4);
+            	      			
+            	    }
+            	    if ( state.backtracking==0 ) {
+
+            	      				newLeafNode(this_LETTER_X_4, grammarAccess.getTAGAccess().getLETTER_XTerminalRuleCall_1_3());
+            	      			
+            	    }
+
+            	    }
+            	    break;
+            	case 5 :
+            	    // InternalSemver.g:1623:4: this_LETTER_NO_VX_5= RULE_LETTER_NO_VX
+            	    {
+            	    this_LETTER_NO_VX_5=(Token)match(input,RULE_LETTER_NO_VX,FOLLOW_25); if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      				current.merge(this_LETTER_NO_VX_5);
+            	      			
+            	    }
+            	    if ( state.backtracking==0 ) {
+
+            	      				newLeafNode(this_LETTER_NO_VX_5, grammarAccess.getTAGAccess().getLETTER_NO_VXTerminalRuleCall_1_4());
+            	      			
+            	    }
+
+            	    }
+            	    break;
+
+            	default :
+            	    if ( cnt35 >= 1 ) break loop35;
+            	    if (state.backtracking>0) {state.failed=true; return current;}
+                        EarlyExitException eee =
+                            new EarlyExitException(35, input);
+                        throw eee;
+                }
+                cnt35++;
+            } while (true);
+
+
+            }
+
+
+            }
+
+            if ( state.backtracking==0 ) {
+
+              	leaveRule();
+
+            }
+        }
+
+            catch (RecognitionException re) {
+                recover(input,re);
+                appendSkippedTokens();
+            }
+        finally {
+        }
+        return current;
+    }
+    // $ANTLR end "ruleTAG"
+
+
     // $ANTLR start "entryRuleALPHA_NUMERIC_CHARS"
-    // InternalSemver.g:1498:1: entryRuleALPHA_NUMERIC_CHARS returns [String current=null] : iv_ruleALPHA_NUMERIC_CHARS= ruleALPHA_NUMERIC_CHARS EOF ;
+    // InternalSemver.g:1635:1: entryRuleALPHA_NUMERIC_CHARS returns [String current=null] : iv_ruleALPHA_NUMERIC_CHARS= ruleALPHA_NUMERIC_CHARS EOF ;
     public final String entryRuleALPHA_NUMERIC_CHARS() throws RecognitionException {
         String current = null;
 
@@ -4642,8 +4894,8 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalSemver.g:1498:59: (iv_ruleALPHA_NUMERIC_CHARS= ruleALPHA_NUMERIC_CHARS EOF )
-            // InternalSemver.g:1499:2: iv_ruleALPHA_NUMERIC_CHARS= ruleALPHA_NUMERIC_CHARS EOF
+            // InternalSemver.g:1635:59: (iv_ruleALPHA_NUMERIC_CHARS= ruleALPHA_NUMERIC_CHARS EOF )
+            // InternalSemver.g:1636:2: iv_ruleALPHA_NUMERIC_CHARS= ruleALPHA_NUMERIC_CHARS EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getALPHA_NUMERIC_CHARSRule()); 
@@ -4674,106 +4926,134 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleALPHA_NUMERIC_CHARS"
-    // InternalSemver.g:1505:1: ruleALPHA_NUMERIC_CHARS returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_ALPHA_NUMERIC_CHAR_0= ruleALPHA_NUMERIC_CHAR )+ ;
+    // InternalSemver.g:1642:1: ruleALPHA_NUMERIC_CHARS returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (kw= '-' | this_DIGITS_1= RULE_DIGITS | this_LETTER_V_2= RULE_LETTER_V | this_LETTER_X_3= RULE_LETTER_X | this_LETTER_NO_VX_4= RULE_LETTER_NO_VX )+ ;
     public final AntlrDatatypeRuleToken ruleALPHA_NUMERIC_CHARS() throws RecognitionException {
         AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
-        AntlrDatatypeRuleToken this_ALPHA_NUMERIC_CHAR_0 = null;
-
+        Token kw=null;
+        Token this_DIGITS_1=null;
+        Token this_LETTER_V_2=null;
+        Token this_LETTER_X_3=null;
+        Token this_LETTER_NO_VX_4=null;
 
 
         	enterRule();
 
         try {
-            // InternalSemver.g:1511:2: ( (this_ALPHA_NUMERIC_CHAR_0= ruleALPHA_NUMERIC_CHAR )+ )
-            // InternalSemver.g:1512:2: (this_ALPHA_NUMERIC_CHAR_0= ruleALPHA_NUMERIC_CHAR )+
+            // InternalSemver.g:1648:2: ( (kw= '-' | this_DIGITS_1= RULE_DIGITS | this_LETTER_V_2= RULE_LETTER_V | this_LETTER_X_3= RULE_LETTER_X | this_LETTER_NO_VX_4= RULE_LETTER_NO_VX )+ )
+            // InternalSemver.g:1649:2: (kw= '-' | this_DIGITS_1= RULE_DIGITS | this_LETTER_V_2= RULE_LETTER_V | this_LETTER_X_3= RULE_LETTER_X | this_LETTER_NO_VX_4= RULE_LETTER_NO_VX )+
             {
-            // InternalSemver.g:1512:2: (this_ALPHA_NUMERIC_CHAR_0= ruleALPHA_NUMERIC_CHAR )+
-            int cnt37=0;
-            loop37:
+            // InternalSemver.g:1649:2: (kw= '-' | this_DIGITS_1= RULE_DIGITS | this_LETTER_V_2= RULE_LETTER_V | this_LETTER_X_3= RULE_LETTER_X | this_LETTER_NO_VX_4= RULE_LETTER_NO_VX )+
+            int cnt36=0;
+            loop36:
             do {
-                int alt37=2;
+                int alt36=6;
                 switch ( input.LA(1) ) {
-                case 34:
+                case 33:
                     {
-                    int LA37_2 = input.LA(2);
-
-                    if ( (synpred47_InternalSemver()) ) {
-                        alt37=1;
-                    }
-
-
+                    alt36=1;
                     }
                     break;
                 case RULE_DIGITS:
                     {
-                    int LA37_3 = input.LA(2);
-
-                    if ( (synpred47_InternalSemver()) ) {
-                        alt37=1;
-                    }
-
-
+                    alt36=2;
                     }
                     break;
                 case RULE_LETTER_V:
                     {
-                    int LA37_4 = input.LA(2);
-
-                    if ( (synpred47_InternalSemver()) ) {
-                        alt37=1;
-                    }
-
-
+                    alt36=3;
                     }
                     break;
                 case RULE_LETTER_X:
                     {
-                    int LA37_5 = input.LA(2);
-
-                    if ( (synpred47_InternalSemver()) ) {
-                        alt37=1;
-                    }
-
-
+                    alt36=4;
                     }
                     break;
                 case RULE_LETTER_NO_VX:
                     {
-                    int LA37_6 = input.LA(2);
-
-                    if ( (synpred47_InternalSemver()) ) {
-                        alt37=1;
-                    }
-
-
+                    alt36=5;
                     }
                     break;
 
                 }
 
-                switch (alt37) {
+                switch (alt36) {
             	case 1 :
-            	    // InternalSemver.g:1513:3: this_ALPHA_NUMERIC_CHAR_0= ruleALPHA_NUMERIC_CHAR
+            	    // InternalSemver.g:1650:3: kw= '-'
             	    {
+            	    kw=(Token)match(input,33,FOLLOW_25); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
 
-            	      			newCompositeNode(grammarAccess.getALPHA_NUMERIC_CHARSAccess().getALPHA_NUMERIC_CHARParserRuleCall());
+            	      			current.merge(kw);
+            	      			newLeafNode(kw, grammarAccess.getALPHA_NUMERIC_CHARSAccess().getHyphenMinusKeyword_0());
             	      		
             	    }
-            	    pushFollow(FOLLOW_19);
-            	    this_ALPHA_NUMERIC_CHAR_0=ruleALPHA_NUMERIC_CHAR();
 
-            	    state._fsp--;
-            	    if (state.failed) return current;
+            	    }
+            	    break;
+            	case 2 :
+            	    // InternalSemver.g:1656:3: this_DIGITS_1= RULE_DIGITS
+            	    {
+            	    this_DIGITS_1=(Token)match(input,RULE_DIGITS,FOLLOW_25); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
 
-            	      			current.merge(this_ALPHA_NUMERIC_CHAR_0);
+            	      			current.merge(this_DIGITS_1);
             	      		
             	    }
             	    if ( state.backtracking==0 ) {
 
-            	      			afterParserOrEnumRuleCall();
+            	      			newLeafNode(this_DIGITS_1, grammarAccess.getALPHA_NUMERIC_CHARSAccess().getDIGITSTerminalRuleCall_1());
+            	      		
+            	    }
+
+            	    }
+            	    break;
+            	case 3 :
+            	    // InternalSemver.g:1664:3: this_LETTER_V_2= RULE_LETTER_V
+            	    {
+            	    this_LETTER_V_2=(Token)match(input,RULE_LETTER_V,FOLLOW_25); if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      			current.merge(this_LETTER_V_2);
+            	      		
+            	    }
+            	    if ( state.backtracking==0 ) {
+
+            	      			newLeafNode(this_LETTER_V_2, grammarAccess.getALPHA_NUMERIC_CHARSAccess().getLETTER_VTerminalRuleCall_2());
+            	      		
+            	    }
+
+            	    }
+            	    break;
+            	case 4 :
+            	    // InternalSemver.g:1672:3: this_LETTER_X_3= RULE_LETTER_X
+            	    {
+            	    this_LETTER_X_3=(Token)match(input,RULE_LETTER_X,FOLLOW_25); if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      			current.merge(this_LETTER_X_3);
+            	      		
+            	    }
+            	    if ( state.backtracking==0 ) {
+
+            	      			newLeafNode(this_LETTER_X_3, grammarAccess.getALPHA_NUMERIC_CHARSAccess().getLETTER_XTerminalRuleCall_3());
+            	      		
+            	    }
+
+            	    }
+            	    break;
+            	case 5 :
+            	    // InternalSemver.g:1680:3: this_LETTER_NO_VX_4= RULE_LETTER_NO_VX
+            	    {
+            	    this_LETTER_NO_VX_4=(Token)match(input,RULE_LETTER_NO_VX,FOLLOW_25); if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      			current.merge(this_LETTER_NO_VX_4);
+            	      		
+            	    }
+            	    if ( state.backtracking==0 ) {
+
+            	      			newLeafNode(this_LETTER_NO_VX_4, grammarAccess.getALPHA_NUMERIC_CHARSAccess().getLETTER_NO_VXTerminalRuleCall_4());
             	      		
             	    }
 
@@ -4781,13 +5061,13 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
             	    break;
 
             	default :
-            	    if ( cnt37 >= 1 ) break loop37;
+            	    if ( cnt36 >= 1 ) break loop36;
             	    if (state.backtracking>0) {state.failed=true; return current;}
                         EarlyExitException eee =
-                            new EarlyExitException(37, input);
+                            new EarlyExitException(36, input);
                         throw eee;
                 }
-                cnt37++;
+                cnt36++;
             } while (true);
 
 
@@ -4811,28 +5091,28 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
     // $ANTLR end "ruleALPHA_NUMERIC_CHARS"
 
 
-    // $ANTLR start "entryRuleALPHA_NUMERIC_CHAR"
-    // InternalSemver.g:1527:1: entryRuleALPHA_NUMERIC_CHAR returns [String current=null] : iv_ruleALPHA_NUMERIC_CHAR= ruleALPHA_NUMERIC_CHAR EOF ;
-    public final String entryRuleALPHA_NUMERIC_CHAR() throws RecognitionException {
+    // $ANTLR start "entryRuleALPHA_NUMERIC_CHARS_START_WITH_DIGITS"
+    // InternalSemver.g:1691:1: entryRuleALPHA_NUMERIC_CHARS_START_WITH_DIGITS returns [String current=null] : iv_ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS= ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS EOF ;
+    public final String entryRuleALPHA_NUMERIC_CHARS_START_WITH_DIGITS() throws RecognitionException {
         String current = null;
 
-        AntlrDatatypeRuleToken iv_ruleALPHA_NUMERIC_CHAR = null;
+        AntlrDatatypeRuleToken iv_ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS = null;
 
 
         try {
-            // InternalSemver.g:1527:58: (iv_ruleALPHA_NUMERIC_CHAR= ruleALPHA_NUMERIC_CHAR EOF )
-            // InternalSemver.g:1528:2: iv_ruleALPHA_NUMERIC_CHAR= ruleALPHA_NUMERIC_CHAR EOF
+            // InternalSemver.g:1691:77: (iv_ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS= ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS EOF )
+            // InternalSemver.g:1692:2: iv_ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS= ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS EOF
             {
             if ( state.backtracking==0 ) {
-               newCompositeNode(grammarAccess.getALPHA_NUMERIC_CHARRule()); 
+               newCompositeNode(grammarAccess.getALPHA_NUMERIC_CHARS_START_WITH_DIGITSRule()); 
             }
             pushFollow(FOLLOW_1);
-            iv_ruleALPHA_NUMERIC_CHAR=ruleALPHA_NUMERIC_CHAR();
+            iv_ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS=ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS();
 
             state._fsp--;
             if (state.failed) return current;
             if ( state.backtracking==0 ) {
-               current =iv_ruleALPHA_NUMERIC_CHAR.getText(); 
+               current =iv_ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS.getText(); 
             }
             match(input,EOF,FOLLOW_2); if (state.failed) return current;
 
@@ -4848,425 +5128,172 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
         }
         return current;
     }
-    // $ANTLR end "entryRuleALPHA_NUMERIC_CHAR"
+    // $ANTLR end "entryRuleALPHA_NUMERIC_CHARS_START_WITH_DIGITS"
 
 
-    // $ANTLR start "ruleALPHA_NUMERIC_CHAR"
-    // InternalSemver.g:1534:1: ruleALPHA_NUMERIC_CHAR returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : ( (kw= '-' )? (this_DIGITS_1= RULE_DIGITS | this_LETTERS_2= ruleLETTERS ) ) ;
-    public final AntlrDatatypeRuleToken ruleALPHA_NUMERIC_CHAR() throws RecognitionException {
+    // $ANTLR start "ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS"
+    // InternalSemver.g:1698:1: ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_DIGITS_0= RULE_DIGITS (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_V_3= RULE_LETTER_V | this_LETTER_X_4= RULE_LETTER_X | this_LETTER_NO_VX_5= RULE_LETTER_NO_VX )+ ) ;
+    public final AntlrDatatypeRuleToken ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS() throws RecognitionException {
         AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
+        Token this_DIGITS_0=null;
         Token kw=null;
-        Token this_DIGITS_1=null;
-        AntlrDatatypeRuleToken this_LETTERS_2 = null;
-
-
-
-        	enterRule();
-
-        try {
-            // InternalSemver.g:1540:2: ( ( (kw= '-' )? (this_DIGITS_1= RULE_DIGITS | this_LETTERS_2= ruleLETTERS ) ) )
-            // InternalSemver.g:1541:2: ( (kw= '-' )? (this_DIGITS_1= RULE_DIGITS | this_LETTERS_2= ruleLETTERS ) )
-            {
-            // InternalSemver.g:1541:2: ( (kw= '-' )? (this_DIGITS_1= RULE_DIGITS | this_LETTERS_2= ruleLETTERS ) )
-            // InternalSemver.g:1542:3: (kw= '-' )? (this_DIGITS_1= RULE_DIGITS | this_LETTERS_2= ruleLETTERS )
-            {
-            // InternalSemver.g:1542:3: (kw= '-' )?
-            int alt38=2;
-            int LA38_0 = input.LA(1);
-
-            if ( (LA38_0==34) ) {
-                alt38=1;
-            }
-            switch (alt38) {
-                case 1 :
-                    // InternalSemver.g:1543:4: kw= '-'
-                    {
-                    kw=(Token)match(input,34,FOLLOW_8); if (state.failed) return current;
-                    if ( state.backtracking==0 ) {
-
-                      				current.merge(kw);
-                      				newLeafNode(kw, grammarAccess.getALPHA_NUMERIC_CHARAccess().getHyphenMinusKeyword_0());
-                      			
-                    }
-
-                    }
-                    break;
-
-            }
-
-            // InternalSemver.g:1549:3: (this_DIGITS_1= RULE_DIGITS | this_LETTERS_2= ruleLETTERS )
-            int alt39=2;
-            int LA39_0 = input.LA(1);
-
-            if ( (LA39_0==RULE_DIGITS) ) {
-                alt39=1;
-            }
-            else if ( ((LA39_0>=RULE_LETTER_V && LA39_0<=RULE_LETTER_NO_VX)) ) {
-                alt39=2;
-            }
-            else {
-                if (state.backtracking>0) {state.failed=true; return current;}
-                NoViableAltException nvae =
-                    new NoViableAltException("", 39, 0, input);
-
-                throw nvae;
-            }
-            switch (alt39) {
-                case 1 :
-                    // InternalSemver.g:1550:4: this_DIGITS_1= RULE_DIGITS
-                    {
-                    this_DIGITS_1=(Token)match(input,RULE_DIGITS,FOLLOW_2); if (state.failed) return current;
-                    if ( state.backtracking==0 ) {
-
-                      				current.merge(this_DIGITS_1);
-                      			
-                    }
-                    if ( state.backtracking==0 ) {
-
-                      				newLeafNode(this_DIGITS_1, grammarAccess.getALPHA_NUMERIC_CHARAccess().getDIGITSTerminalRuleCall_1_0());
-                      			
-                    }
-
-                    }
-                    break;
-                case 2 :
-                    // InternalSemver.g:1558:4: this_LETTERS_2= ruleLETTERS
-                    {
-                    if ( state.backtracking==0 ) {
-
-                      				newCompositeNode(grammarAccess.getALPHA_NUMERIC_CHARAccess().getLETTERSParserRuleCall_1_1());
-                      			
-                    }
-                    pushFollow(FOLLOW_2);
-                    this_LETTERS_2=ruleLETTERS();
-
-                    state._fsp--;
-                    if (state.failed) return current;
-                    if ( state.backtracking==0 ) {
-
-                      				current.merge(this_LETTERS_2);
-                      			
-                    }
-                    if ( state.backtracking==0 ) {
-
-                      				afterParserOrEnumRuleCall();
-                      			
-                    }
-
-                    }
-                    break;
-
-            }
-
-
-            }
-
-
-            }
-
-            if ( state.backtracking==0 ) {
-
-              	leaveRule();
-
-            }
-        }
-
-            catch (RecognitionException re) {
-                recover(input,re);
-                appendSkippedTokens();
-            }
-        finally {
-        }
-        return current;
-    }
-    // $ANTLR end "ruleALPHA_NUMERIC_CHAR"
-
-
-    // $ANTLR start "entryRuleLETTERS"
-    // InternalSemver.g:1573:1: entryRuleLETTERS returns [String current=null] : iv_ruleLETTERS= ruleLETTERS EOF ;
-    public final String entryRuleLETTERS() throws RecognitionException {
-        String current = null;
-
-        AntlrDatatypeRuleToken iv_ruleLETTERS = null;
-
-
-        try {
-            // InternalSemver.g:1573:47: (iv_ruleLETTERS= ruleLETTERS EOF )
-            // InternalSemver.g:1574:2: iv_ruleLETTERS= ruleLETTERS EOF
-            {
-            if ( state.backtracking==0 ) {
-               newCompositeNode(grammarAccess.getLETTERSRule()); 
-            }
-            pushFollow(FOLLOW_1);
-            iv_ruleLETTERS=ruleLETTERS();
-
-            state._fsp--;
-            if (state.failed) return current;
-            if ( state.backtracking==0 ) {
-               current =iv_ruleLETTERS.getText(); 
-            }
-            match(input,EOF,FOLLOW_2); if (state.failed) return current;
-
-            }
-
-        }
-
-            catch (RecognitionException re) {
-                recover(input,re);
-                appendSkippedTokens();
-            }
-        finally {
-        }
-        return current;
-    }
-    // $ANTLR end "entryRuleLETTERS"
-
-
-    // $ANTLR start "ruleLETTERS"
-    // InternalSemver.g:1580:1: ruleLETTERS returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_LETTER_V_0= RULE_LETTER_V | this_LETTER_NO_V_1= ruleLETTER_NO_V )+ ;
-    public final AntlrDatatypeRuleToken ruleLETTERS() throws RecognitionException {
-        AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
-
-        Token this_LETTER_V_0=null;
-        AntlrDatatypeRuleToken this_LETTER_NO_V_1 = null;
-
+        Token this_DIGITS_2=null;
+        Token this_LETTER_V_3=null;
+        Token this_LETTER_X_4=null;
+        Token this_LETTER_NO_VX_5=null;
 
 
         	enterRule();
 
         try {
-            // InternalSemver.g:1586:2: ( (this_LETTER_V_0= RULE_LETTER_V | this_LETTER_NO_V_1= ruleLETTER_NO_V )+ )
-            // InternalSemver.g:1587:2: (this_LETTER_V_0= RULE_LETTER_V | this_LETTER_NO_V_1= ruleLETTER_NO_V )+
+            // InternalSemver.g:1704:2: ( (this_DIGITS_0= RULE_DIGITS (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_V_3= RULE_LETTER_V | this_LETTER_X_4= RULE_LETTER_X | this_LETTER_NO_VX_5= RULE_LETTER_NO_VX )+ ) )
+            // InternalSemver.g:1705:2: (this_DIGITS_0= RULE_DIGITS (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_V_3= RULE_LETTER_V | this_LETTER_X_4= RULE_LETTER_X | this_LETTER_NO_VX_5= RULE_LETTER_NO_VX )+ )
             {
-            // InternalSemver.g:1587:2: (this_LETTER_V_0= RULE_LETTER_V | this_LETTER_NO_V_1= ruleLETTER_NO_V )+
-            int cnt40=0;
-            loop40:
+            // InternalSemver.g:1705:2: (this_DIGITS_0= RULE_DIGITS (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_V_3= RULE_LETTER_V | this_LETTER_X_4= RULE_LETTER_X | this_LETTER_NO_VX_5= RULE_LETTER_NO_VX )+ )
+            // InternalSemver.g:1706:3: this_DIGITS_0= RULE_DIGITS (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_V_3= RULE_LETTER_V | this_LETTER_X_4= RULE_LETTER_X | this_LETTER_NO_VX_5= RULE_LETTER_NO_VX )+
+            {
+            this_DIGITS_0=(Token)match(input,RULE_DIGITS,FOLLOW_24); if (state.failed) return current;
+            if ( state.backtracking==0 ) {
+
+              			current.merge(this_DIGITS_0);
+              		
+            }
+            if ( state.backtracking==0 ) {
+
+              			newLeafNode(this_DIGITS_0, grammarAccess.getALPHA_NUMERIC_CHARS_START_WITH_DIGITSAccess().getDIGITSTerminalRuleCall_0());
+              		
+            }
+            // InternalSemver.g:1713:3: (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_V_3= RULE_LETTER_V | this_LETTER_X_4= RULE_LETTER_X | this_LETTER_NO_VX_5= RULE_LETTER_NO_VX )+
+            int cnt37=0;
+            loop37:
             do {
-                int alt40=3;
+                int alt37=6;
                 switch ( input.LA(1) ) {
+                case 33:
+                    {
+                    alt37=1;
+                    }
+                    break;
+                case RULE_DIGITS:
+                    {
+                    alt37=2;
+                    }
+                    break;
                 case RULE_LETTER_V:
                     {
-                    int LA40_2 = input.LA(2);
-
-                    if ( (synpred50_InternalSemver()) ) {
-                        alt40=1;
-                    }
-
-
+                    alt37=3;
                     }
                     break;
                 case RULE_LETTER_X:
                     {
-                    int LA40_3 = input.LA(2);
-
-                    if ( (synpred51_InternalSemver()) ) {
-                        alt40=2;
-                    }
-
-
+                    alt37=4;
                     }
                     break;
                 case RULE_LETTER_NO_VX:
                     {
-                    int LA40_4 = input.LA(2);
-
-                    if ( (synpred51_InternalSemver()) ) {
-                        alt40=2;
-                    }
-
-
+                    alt37=5;
                     }
                     break;
 
                 }
 
-                switch (alt40) {
+                switch (alt37) {
             	case 1 :
-            	    // InternalSemver.g:1588:3: this_LETTER_V_0= RULE_LETTER_V
+            	    // InternalSemver.g:1714:4: kw= '-'
             	    {
-            	    this_LETTER_V_0=(Token)match(input,RULE_LETTER_V,FOLLOW_24); if (state.failed) return current;
+            	    kw=(Token)match(input,33,FOLLOW_25); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
 
-            	      			current.merge(this_LETTER_V_0);
-            	      		
-            	    }
-            	    if ( state.backtracking==0 ) {
-
-            	      			newLeafNode(this_LETTER_V_0, grammarAccess.getLETTERSAccess().getLETTER_VTerminalRuleCall_0());
-            	      		
+            	      				current.merge(kw);
+            	      				newLeafNode(kw, grammarAccess.getALPHA_NUMERIC_CHARS_START_WITH_DIGITSAccess().getHyphenMinusKeyword_1_0());
+            	      			
             	    }
 
             	    }
             	    break;
             	case 2 :
-            	    // InternalSemver.g:1596:3: this_LETTER_NO_V_1= ruleLETTER_NO_V
+            	    // InternalSemver.g:1720:4: this_DIGITS_2= RULE_DIGITS
             	    {
+            	    this_DIGITS_2=(Token)match(input,RULE_DIGITS,FOLLOW_25); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
 
-            	      			newCompositeNode(grammarAccess.getLETTERSAccess().getLETTER_NO_VParserRuleCall_1());
-            	      		
-            	    }
-            	    pushFollow(FOLLOW_24);
-            	    this_LETTER_NO_V_1=ruleLETTER_NO_V();
-
-            	    state._fsp--;
-            	    if (state.failed) return current;
-            	    if ( state.backtracking==0 ) {
-
-            	      			current.merge(this_LETTER_NO_V_1);
-            	      		
+            	      				current.merge(this_DIGITS_2);
+            	      			
             	    }
             	    if ( state.backtracking==0 ) {
 
-            	      			afterParserOrEnumRuleCall();
-            	      		
+            	      				newLeafNode(this_DIGITS_2, grammarAccess.getALPHA_NUMERIC_CHARS_START_WITH_DIGITSAccess().getDIGITSTerminalRuleCall_1_1());
+            	      			
+            	    }
+
+            	    }
+            	    break;
+            	case 3 :
+            	    // InternalSemver.g:1728:4: this_LETTER_V_3= RULE_LETTER_V
+            	    {
+            	    this_LETTER_V_3=(Token)match(input,RULE_LETTER_V,FOLLOW_25); if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      				current.merge(this_LETTER_V_3);
+            	      			
+            	    }
+            	    if ( state.backtracking==0 ) {
+
+            	      				newLeafNode(this_LETTER_V_3, grammarAccess.getALPHA_NUMERIC_CHARS_START_WITH_DIGITSAccess().getLETTER_VTerminalRuleCall_1_2());
+            	      			
+            	    }
+
+            	    }
+            	    break;
+            	case 4 :
+            	    // InternalSemver.g:1736:4: this_LETTER_X_4= RULE_LETTER_X
+            	    {
+            	    this_LETTER_X_4=(Token)match(input,RULE_LETTER_X,FOLLOW_25); if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      				current.merge(this_LETTER_X_4);
+            	      			
+            	    }
+            	    if ( state.backtracking==0 ) {
+
+            	      				newLeafNode(this_LETTER_X_4, grammarAccess.getALPHA_NUMERIC_CHARS_START_WITH_DIGITSAccess().getLETTER_XTerminalRuleCall_1_3());
+            	      			
+            	    }
+
+            	    }
+            	    break;
+            	case 5 :
+            	    // InternalSemver.g:1744:4: this_LETTER_NO_VX_5= RULE_LETTER_NO_VX
+            	    {
+            	    this_LETTER_NO_VX_5=(Token)match(input,RULE_LETTER_NO_VX,FOLLOW_25); if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      				current.merge(this_LETTER_NO_VX_5);
+            	      			
+            	    }
+            	    if ( state.backtracking==0 ) {
+
+            	      				newLeafNode(this_LETTER_NO_VX_5, grammarAccess.getALPHA_NUMERIC_CHARS_START_WITH_DIGITSAccess().getLETTER_NO_VXTerminalRuleCall_1_4());
+            	      			
             	    }
 
             	    }
             	    break;
 
             	default :
-            	    if ( cnt40 >= 1 ) break loop40;
+            	    if ( cnt37 >= 1 ) break loop37;
             	    if (state.backtracking>0) {state.failed=true; return current;}
                         EarlyExitException eee =
-                            new EarlyExitException(40, input);
+                            new EarlyExitException(37, input);
                         throw eee;
                 }
-                cnt40++;
+                cnt37++;
             } while (true);
 
 
             }
 
-            if ( state.backtracking==0 ) {
-
-              	leaveRule();
-
-            }
-        }
-
-            catch (RecognitionException re) {
-                recover(input,re);
-                appendSkippedTokens();
-            }
-        finally {
-        }
-        return current;
-    }
-    // $ANTLR end "ruleLETTERS"
-
-
-    // $ANTLR start "entryRuleLETTER_NO_V"
-    // InternalSemver.g:1610:1: entryRuleLETTER_NO_V returns [String current=null] : iv_ruleLETTER_NO_V= ruleLETTER_NO_V EOF ;
-    public final String entryRuleLETTER_NO_V() throws RecognitionException {
-        String current = null;
-
-        AntlrDatatypeRuleToken iv_ruleLETTER_NO_V = null;
-
-
-        try {
-            // InternalSemver.g:1610:51: (iv_ruleLETTER_NO_V= ruleLETTER_NO_V EOF )
-            // InternalSemver.g:1611:2: iv_ruleLETTER_NO_V= ruleLETTER_NO_V EOF
-            {
-            if ( state.backtracking==0 ) {
-               newCompositeNode(grammarAccess.getLETTER_NO_VRule()); 
-            }
-            pushFollow(FOLLOW_1);
-            iv_ruleLETTER_NO_V=ruleLETTER_NO_V();
-
-            state._fsp--;
-            if (state.failed) return current;
-            if ( state.backtracking==0 ) {
-               current =iv_ruleLETTER_NO_V.getText(); 
-            }
-            match(input,EOF,FOLLOW_2); if (state.failed) return current;
-
-            }
-
-        }
-
-            catch (RecognitionException re) {
-                recover(input,re);
-                appendSkippedTokens();
-            }
-        finally {
-        }
-        return current;
-    }
-    // $ANTLR end "entryRuleLETTER_NO_V"
-
-
-    // $ANTLR start "ruleLETTER_NO_V"
-    // InternalSemver.g:1617:1: ruleLETTER_NO_V returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_LETTER_X_0= RULE_LETTER_X | this_LETTER_NO_VX_1= RULE_LETTER_NO_VX ) ;
-    public final AntlrDatatypeRuleToken ruleLETTER_NO_V() throws RecognitionException {
-        AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
-
-        Token this_LETTER_X_0=null;
-        Token this_LETTER_NO_VX_1=null;
-
-
-        	enterRule();
-
-        try {
-            // InternalSemver.g:1623:2: ( (this_LETTER_X_0= RULE_LETTER_X | this_LETTER_NO_VX_1= RULE_LETTER_NO_VX ) )
-            // InternalSemver.g:1624:2: (this_LETTER_X_0= RULE_LETTER_X | this_LETTER_NO_VX_1= RULE_LETTER_NO_VX )
-            {
-            // InternalSemver.g:1624:2: (this_LETTER_X_0= RULE_LETTER_X | this_LETTER_NO_VX_1= RULE_LETTER_NO_VX )
-            int alt41=2;
-            int LA41_0 = input.LA(1);
-
-            if ( (LA41_0==RULE_LETTER_X) ) {
-                alt41=1;
-            }
-            else if ( (LA41_0==RULE_LETTER_NO_VX) ) {
-                alt41=2;
-            }
-            else {
-                if (state.backtracking>0) {state.failed=true; return current;}
-                NoViableAltException nvae =
-                    new NoViableAltException("", 41, 0, input);
-
-                throw nvae;
-            }
-            switch (alt41) {
-                case 1 :
-                    // InternalSemver.g:1625:3: this_LETTER_X_0= RULE_LETTER_X
-                    {
-                    this_LETTER_X_0=(Token)match(input,RULE_LETTER_X,FOLLOW_2); if (state.failed) return current;
-                    if ( state.backtracking==0 ) {
-
-                      			current.merge(this_LETTER_X_0);
-                      		
-                    }
-                    if ( state.backtracking==0 ) {
-
-                      			newLeafNode(this_LETTER_X_0, grammarAccess.getLETTER_NO_VAccess().getLETTER_XTerminalRuleCall_0());
-                      		
-                    }
-
-                    }
-                    break;
-                case 2 :
-                    // InternalSemver.g:1633:3: this_LETTER_NO_VX_1= RULE_LETTER_NO_VX
-                    {
-                    this_LETTER_NO_VX_1=(Token)match(input,RULE_LETTER_NO_VX,FOLLOW_2); if (state.failed) return current;
-                    if ( state.backtracking==0 ) {
-
-                      			current.merge(this_LETTER_NO_VX_1);
-                      		
-                    }
-                    if ( state.backtracking==0 ) {
-
-                      			newLeafNode(this_LETTER_NO_VX_1, grammarAccess.getLETTER_NO_VAccess().getLETTER_NO_VXTerminalRuleCall_1());
-                      		
-                    }
-
-                    }
-                    break;
-
-            }
-
 
             }
 
@@ -5285,11 +5312,11 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
         }
         return current;
     }
-    // $ANTLR end "ruleLETTER_NO_V"
+    // $ANTLR end "ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS"
 
 
     // $ANTLR start "entryRuleWILDCARD"
-    // InternalSemver.g:1644:1: entryRuleWILDCARD returns [String current=null] : iv_ruleWILDCARD= ruleWILDCARD EOF ;
+    // InternalSemver.g:1756:1: entryRuleWILDCARD returns [String current=null] : iv_ruleWILDCARD= ruleWILDCARD EOF ;
     public final String entryRuleWILDCARD() throws RecognitionException {
         String current = null;
 
@@ -5297,8 +5324,8 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalSemver.g:1644:48: (iv_ruleWILDCARD= ruleWILDCARD EOF )
-            // InternalSemver.g:1645:2: iv_ruleWILDCARD= ruleWILDCARD EOF
+            // InternalSemver.g:1756:48: (iv_ruleWILDCARD= ruleWILDCARD EOF )
+            // InternalSemver.g:1757:2: iv_ruleWILDCARD= ruleWILDCARD EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getWILDCARDRule()); 
@@ -5329,7 +5356,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleWILDCARD"
-    // InternalSemver.g:1651:1: ruleWILDCARD returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_LETTER_X_0= RULE_LETTER_X | this_ASTERIX_1= RULE_ASTERIX ) ;
+    // InternalSemver.g:1763:1: ruleWILDCARD returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_LETTER_X_0= RULE_LETTER_X | this_ASTERIX_1= RULE_ASTERIX ) ;
     public final AntlrDatatypeRuleToken ruleWILDCARD() throws RecognitionException {
         AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -5340,29 +5367,29 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalSemver.g:1657:2: ( (this_LETTER_X_0= RULE_LETTER_X | this_ASTERIX_1= RULE_ASTERIX ) )
-            // InternalSemver.g:1658:2: (this_LETTER_X_0= RULE_LETTER_X | this_ASTERIX_1= RULE_ASTERIX )
+            // InternalSemver.g:1769:2: ( (this_LETTER_X_0= RULE_LETTER_X | this_ASTERIX_1= RULE_ASTERIX ) )
+            // InternalSemver.g:1770:2: (this_LETTER_X_0= RULE_LETTER_X | this_ASTERIX_1= RULE_ASTERIX )
             {
-            // InternalSemver.g:1658:2: (this_LETTER_X_0= RULE_LETTER_X | this_ASTERIX_1= RULE_ASTERIX )
-            int alt42=2;
-            int LA42_0 = input.LA(1);
+            // InternalSemver.g:1770:2: (this_LETTER_X_0= RULE_LETTER_X | this_ASTERIX_1= RULE_ASTERIX )
+            int alt38=2;
+            int LA38_0 = input.LA(1);
 
-            if ( (LA42_0==RULE_LETTER_X) ) {
-                alt42=1;
+            if ( (LA38_0==RULE_LETTER_X) ) {
+                alt38=1;
             }
-            else if ( (LA42_0==RULE_ASTERIX) ) {
-                alt42=2;
+            else if ( (LA38_0==RULE_ASTERIX) ) {
+                alt38=2;
             }
             else {
                 if (state.backtracking>0) {state.failed=true; return current;}
                 NoViableAltException nvae =
-                    new NoViableAltException("", 42, 0, input);
+                    new NoViableAltException("", 38, 0, input);
 
                 throw nvae;
             }
-            switch (alt42) {
+            switch (alt38) {
                 case 1 :
-                    // InternalSemver.g:1659:3: this_LETTER_X_0= RULE_LETTER_X
+                    // InternalSemver.g:1771:3: this_LETTER_X_0= RULE_LETTER_X
                     {
                     this_LETTER_X_0=(Token)match(input,RULE_LETTER_X,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -5379,7 +5406,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalSemver.g:1667:3: this_ASTERIX_1= RULE_ASTERIX
+                    // InternalSemver.g:1779:3: this_ASTERIX_1= RULE_ASTERIX
                     {
                     this_ASTERIX_1=(Token)match(input,RULE_ASTERIX,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -5420,7 +5447,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleVersionComparator"
-    // InternalSemver.g:1678:1: ruleVersionComparator returns [Enumerator current=null] : ( (enumLiteral_0= 'v' ) | (enumLiteral_1= '=' ) | (enumLiteral_2= '<' ) | (enumLiteral_3= '~' ) | (enumLiteral_4= '^' ) | (enumLiteral_5= '<=' ) | (enumLiteral_6= '>' ) | (enumLiteral_7= '>=' ) ) ;
+    // InternalSemver.g:1790:1: ruleVersionComparator returns [Enumerator current=null] : ( (enumLiteral_0= '=' ) | (enumLiteral_1= '<' ) | (enumLiteral_2= '~' ) | (enumLiteral_3= '^' ) | (enumLiteral_4= '<=' ) | (enumLiteral_5= '>' ) | (enumLiteral_6= '>=' ) ) ;
     public final Enumerator ruleVersionComparator() throws RecognitionException {
         Enumerator current = null;
 
@@ -5431,78 +5458,72 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
         Token enumLiteral_4=null;
         Token enumLiteral_5=null;
         Token enumLiteral_6=null;
-        Token enumLiteral_7=null;
 
 
         	enterRule();
 
         try {
-            // InternalSemver.g:1684:2: ( ( (enumLiteral_0= 'v' ) | (enumLiteral_1= '=' ) | (enumLiteral_2= '<' ) | (enumLiteral_3= '~' ) | (enumLiteral_4= '^' ) | (enumLiteral_5= '<=' ) | (enumLiteral_6= '>' ) | (enumLiteral_7= '>=' ) ) )
-            // InternalSemver.g:1685:2: ( (enumLiteral_0= 'v' ) | (enumLiteral_1= '=' ) | (enumLiteral_2= '<' ) | (enumLiteral_3= '~' ) | (enumLiteral_4= '^' ) | (enumLiteral_5= '<=' ) | (enumLiteral_6= '>' ) | (enumLiteral_7= '>=' ) )
+            // InternalSemver.g:1796:2: ( ( (enumLiteral_0= '=' ) | (enumLiteral_1= '<' ) | (enumLiteral_2= '~' ) | (enumLiteral_3= '^' ) | (enumLiteral_4= '<=' ) | (enumLiteral_5= '>' ) | (enumLiteral_6= '>=' ) ) )
+            // InternalSemver.g:1797:2: ( (enumLiteral_0= '=' ) | (enumLiteral_1= '<' ) | (enumLiteral_2= '~' ) | (enumLiteral_3= '^' ) | (enumLiteral_4= '<=' ) | (enumLiteral_5= '>' ) | (enumLiteral_6= '>=' ) )
             {
-            // InternalSemver.g:1685:2: ( (enumLiteral_0= 'v' ) | (enumLiteral_1= '=' ) | (enumLiteral_2= '<' ) | (enumLiteral_3= '~' ) | (enumLiteral_4= '^' ) | (enumLiteral_5= '<=' ) | (enumLiteral_6= '>' ) | (enumLiteral_7= '>=' ) )
-            int alt43=8;
+            // InternalSemver.g:1797:2: ( (enumLiteral_0= '=' ) | (enumLiteral_1= '<' ) | (enumLiteral_2= '~' ) | (enumLiteral_3= '^' ) | (enumLiteral_4= '<=' ) | (enumLiteral_5= '>' ) | (enumLiteral_6= '>=' ) )
+            int alt39=7;
             switch ( input.LA(1) ) {
+            case 39:
+                {
+                alt39=1;
+                }
+                break;
             case 40:
                 {
-                alt43=1;
+                alt39=2;
                 }
                 break;
             case 41:
                 {
-                alt43=2;
+                alt39=3;
                 }
                 break;
             case 42:
                 {
-                alt43=3;
+                alt39=4;
                 }
                 break;
             case 43:
                 {
-                alt43=4;
+                alt39=5;
                 }
                 break;
             case 44:
                 {
-                alt43=5;
+                alt39=6;
                 }
                 break;
             case 45:
                 {
-                alt43=6;
-                }
-                break;
-            case 46:
-                {
-                alt43=7;
-                }
-                break;
-            case 47:
-                {
-                alt43=8;
+                alt39=7;
                 }
                 break;
             default:
                 if (state.backtracking>0) {state.failed=true; return current;}
                 NoViableAltException nvae =
-                    new NoViableAltException("", 43, 0, input);
+                    new NoViableAltException("", 39, 0, input);
 
                 throw nvae;
             }
 
-            switch (alt43) {
+            switch (alt39) {
                 case 1 :
-                    // InternalSemver.g:1686:3: (enumLiteral_0= 'v' )
+                    // InternalSemver.g:1798:3: (enumLiteral_0= '=' )
                     {
-                    // InternalSemver.g:1686:3: (enumLiteral_0= 'v' )
-                    // InternalSemver.g:1687:4: enumLiteral_0= 'v'
+                    // InternalSemver.g:1798:3: (enumLiteral_0= '=' )
+                    // InternalSemver.g:1799:4: enumLiteral_0= '='
                     {
-                    enumLiteral_0=(Token)match(input,40,FOLLOW_2); if (state.failed) return current;
+                    enumLiteral_0=(Token)match(input,39,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
-                      				current = grammarAccess.getVersionComparatorAccess().getVersionEnumLiteralDeclaration_0().getEnumLiteral().getInstance();
-                      				newLeafNode(enumLiteral_0, grammarAccess.getVersionComparatorAccess().getVersionEnumLiteralDeclaration_0());
+                      				current = grammarAccess.getVersionComparatorAccess().getEqualsEnumLiteralDeclaration_0().getEnumLiteral().getInstance();
+                      				newLeafNode(enumLiteral_0, grammarAccess.getVersionComparatorAccess().getEqualsEnumLiteralDeclaration_0());
                       			
                     }
 
@@ -5512,16 +5533,16 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalSemver.g:1694:3: (enumLiteral_1= '=' )
+                    // InternalSemver.g:1806:3: (enumLiteral_1= '<' )
                     {
-                    // InternalSemver.g:1694:3: (enumLiteral_1= '=' )
-                    // InternalSemver.g:1695:4: enumLiteral_1= '='
+                    // InternalSemver.g:1806:3: (enumLiteral_1= '<' )
+                    // InternalSemver.g:1807:4: enumLiteral_1= '<'
                     {
-                    enumLiteral_1=(Token)match(input,41,FOLLOW_2); if (state.failed) return current;
+                    enumLiteral_1=(Token)match(input,40,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
-                      				current = grammarAccess.getVersionComparatorAccess().getEqualsEnumLiteralDeclaration_1().getEnumLiteral().getInstance();
-                      				newLeafNode(enumLiteral_1, grammarAccess.getVersionComparatorAccess().getEqualsEnumLiteralDeclaration_1());
+                      				current = grammarAccess.getVersionComparatorAccess().getSmallerEnumLiteralDeclaration_1().getEnumLiteral().getInstance();
+                      				newLeafNode(enumLiteral_1, grammarAccess.getVersionComparatorAccess().getSmallerEnumLiteralDeclaration_1());
                       			
                     }
 
@@ -5531,16 +5552,16 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 3 :
-                    // InternalSemver.g:1702:3: (enumLiteral_2= '<' )
+                    // InternalSemver.g:1814:3: (enumLiteral_2= '~' )
                     {
-                    // InternalSemver.g:1702:3: (enumLiteral_2= '<' )
-                    // InternalSemver.g:1703:4: enumLiteral_2= '<'
+                    // InternalSemver.g:1814:3: (enumLiteral_2= '~' )
+                    // InternalSemver.g:1815:4: enumLiteral_2= '~'
                     {
-                    enumLiteral_2=(Token)match(input,42,FOLLOW_2); if (state.failed) return current;
+                    enumLiteral_2=(Token)match(input,41,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
-                      				current = grammarAccess.getVersionComparatorAccess().getSmallerEnumLiteralDeclaration_2().getEnumLiteral().getInstance();
-                      				newLeafNode(enumLiteral_2, grammarAccess.getVersionComparatorAccess().getSmallerEnumLiteralDeclaration_2());
+                      				current = grammarAccess.getVersionComparatorAccess().getTildeEnumLiteralDeclaration_2().getEnumLiteral().getInstance();
+                      				newLeafNode(enumLiteral_2, grammarAccess.getVersionComparatorAccess().getTildeEnumLiteralDeclaration_2());
                       			
                     }
 
@@ -5550,16 +5571,16 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 4 :
-                    // InternalSemver.g:1710:3: (enumLiteral_3= '~' )
+                    // InternalSemver.g:1822:3: (enumLiteral_3= '^' )
                     {
-                    // InternalSemver.g:1710:3: (enumLiteral_3= '~' )
-                    // InternalSemver.g:1711:4: enumLiteral_3= '~'
+                    // InternalSemver.g:1822:3: (enumLiteral_3= '^' )
+                    // InternalSemver.g:1823:4: enumLiteral_3= '^'
                     {
-                    enumLiteral_3=(Token)match(input,43,FOLLOW_2); if (state.failed) return current;
+                    enumLiteral_3=(Token)match(input,42,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
-                      				current = grammarAccess.getVersionComparatorAccess().getTildeEnumLiteralDeclaration_3().getEnumLiteral().getInstance();
-                      				newLeafNode(enumLiteral_3, grammarAccess.getVersionComparatorAccess().getTildeEnumLiteralDeclaration_3());
+                      				current = grammarAccess.getVersionComparatorAccess().getCaretEnumLiteralDeclaration_3().getEnumLiteral().getInstance();
+                      				newLeafNode(enumLiteral_3, grammarAccess.getVersionComparatorAccess().getCaretEnumLiteralDeclaration_3());
                       			
                     }
 
@@ -5569,16 +5590,16 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 5 :
-                    // InternalSemver.g:1718:3: (enumLiteral_4= '^' )
+                    // InternalSemver.g:1830:3: (enumLiteral_4= '<=' )
                     {
-                    // InternalSemver.g:1718:3: (enumLiteral_4= '^' )
-                    // InternalSemver.g:1719:4: enumLiteral_4= '^'
+                    // InternalSemver.g:1830:3: (enumLiteral_4= '<=' )
+                    // InternalSemver.g:1831:4: enumLiteral_4= '<='
                     {
-                    enumLiteral_4=(Token)match(input,44,FOLLOW_2); if (state.failed) return current;
+                    enumLiteral_4=(Token)match(input,43,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
-                      				current = grammarAccess.getVersionComparatorAccess().getCaretEnumLiteralDeclaration_4().getEnumLiteral().getInstance();
-                      				newLeafNode(enumLiteral_4, grammarAccess.getVersionComparatorAccess().getCaretEnumLiteralDeclaration_4());
+                      				current = grammarAccess.getVersionComparatorAccess().getSmallerEqualsEnumLiteralDeclaration_4().getEnumLiteral().getInstance();
+                      				newLeafNode(enumLiteral_4, grammarAccess.getVersionComparatorAccess().getSmallerEqualsEnumLiteralDeclaration_4());
                       			
                     }
 
@@ -5588,16 +5609,16 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 6 :
-                    // InternalSemver.g:1726:3: (enumLiteral_5= '<=' )
+                    // InternalSemver.g:1838:3: (enumLiteral_5= '>' )
                     {
-                    // InternalSemver.g:1726:3: (enumLiteral_5= '<=' )
-                    // InternalSemver.g:1727:4: enumLiteral_5= '<='
+                    // InternalSemver.g:1838:3: (enumLiteral_5= '>' )
+                    // InternalSemver.g:1839:4: enumLiteral_5= '>'
                     {
-                    enumLiteral_5=(Token)match(input,45,FOLLOW_2); if (state.failed) return current;
+                    enumLiteral_5=(Token)match(input,44,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
-                      				current = grammarAccess.getVersionComparatorAccess().getSmallerEqualsEnumLiteralDeclaration_5().getEnumLiteral().getInstance();
-                      				newLeafNode(enumLiteral_5, grammarAccess.getVersionComparatorAccess().getSmallerEqualsEnumLiteralDeclaration_5());
+                      				current = grammarAccess.getVersionComparatorAccess().getGreaterEnumLiteralDeclaration_5().getEnumLiteral().getInstance();
+                      				newLeafNode(enumLiteral_5, grammarAccess.getVersionComparatorAccess().getGreaterEnumLiteralDeclaration_5());
                       			
                     }
 
@@ -5607,35 +5628,16 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 7 :
-                    // InternalSemver.g:1734:3: (enumLiteral_6= '>' )
+                    // InternalSemver.g:1846:3: (enumLiteral_6= '>=' )
                     {
-                    // InternalSemver.g:1734:3: (enumLiteral_6= '>' )
-                    // InternalSemver.g:1735:4: enumLiteral_6= '>'
+                    // InternalSemver.g:1846:3: (enumLiteral_6= '>=' )
+                    // InternalSemver.g:1847:4: enumLiteral_6= '>='
                     {
-                    enumLiteral_6=(Token)match(input,46,FOLLOW_2); if (state.failed) return current;
+                    enumLiteral_6=(Token)match(input,45,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
-                      				current = grammarAccess.getVersionComparatorAccess().getGreaterEnumLiteralDeclaration_6().getEnumLiteral().getInstance();
-                      				newLeafNode(enumLiteral_6, grammarAccess.getVersionComparatorAccess().getGreaterEnumLiteralDeclaration_6());
-                      			
-                    }
-
-                    }
-
-
-                    }
-                    break;
-                case 8 :
-                    // InternalSemver.g:1742:3: (enumLiteral_7= '>=' )
-                    {
-                    // InternalSemver.g:1742:3: (enumLiteral_7= '>=' )
-                    // InternalSemver.g:1743:4: enumLiteral_7= '>='
-                    {
-                    enumLiteral_7=(Token)match(input,47,FOLLOW_2); if (state.failed) return current;
-                    if ( state.backtracking==0 ) {
-
-                      				current = grammarAccess.getVersionComparatorAccess().getGreaterEqualsEnumLiteralDeclaration_7().getEnumLiteral().getInstance();
-                      				newLeafNode(enumLiteral_7, grammarAccess.getVersionComparatorAccess().getGreaterEqualsEnumLiteralDeclaration_7());
+                      				current = grammarAccess.getVersionComparatorAccess().getGreaterEqualsEnumLiteralDeclaration_6().getEnumLiteral().getInstance();
+                      				newLeafNode(enumLiteral_6, grammarAccess.getVersionComparatorAccess().getGreaterEqualsEnumLiteralDeclaration_6());
                       			
                     }
 
@@ -5667,146 +5669,39 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
     }
     // $ANTLR end "ruleVersionComparator"
 
-    // $ANTLR start synpred2_InternalSemver
-    public final void synpred2_InternalSemver_fragment() throws RecognitionException {   
-        Token this_WS_0=null;
-        EObject this_VersionRangeSetRequirement_1 = null;
-
-
-        // InternalSemver.g:93:3: ( ( (this_WS_0= RULE_WS )* this_VersionRangeSetRequirement_1= ruleVersionRangeSetRequirement ) )
-        // InternalSemver.g:93:3: ( (this_WS_0= RULE_WS )* this_VersionRangeSetRequirement_1= ruleVersionRangeSetRequirement )
+    // $ANTLR start synpred1_InternalSemver
+    public final void synpred1_InternalSemver_fragment() throws RecognitionException {   
+        // InternalSemver.g:107:6: ( 'file:' )
+        // InternalSemver.g:107:7: 'file:'
         {
-        // InternalSemver.g:93:3: ( (this_WS_0= RULE_WS )* this_VersionRangeSetRequirement_1= ruleVersionRangeSetRequirement )
-        // InternalSemver.g:94:4: (this_WS_0= RULE_WS )* this_VersionRangeSetRequirement_1= ruleVersionRangeSetRequirement
-        {
-        // InternalSemver.g:94:4: (this_WS_0= RULE_WS )*
-        loop44:
-        do {
-            int alt44=2;
-            int LA44_0 = input.LA(1);
-
-            if ( (LA44_0==RULE_WS) ) {
-                alt44=1;
-            }
-
-
-            switch (alt44) {
-        	case 1 :
-        	    // InternalSemver.g:95:5: this_WS_0= RULE_WS
-        	    {
-        	    this_WS_0=(Token)match(input,RULE_WS,FOLLOW_3); if (state.failed) return ;
-
-        	    }
-        	    break;
-
-        	default :
-        	    break loop44;
-            }
-        } while (true);
-
-        pushFollow(FOLLOW_2);
-        this_VersionRangeSetRequirement_1=ruleVersionRangeSetRequirement();
-
-        state._fsp--;
-        if (state.failed) return ;
-
-        }
-
+        match(input,28,FOLLOW_2); if (state.failed) return ;
 
         }
     }
-    // $ANTLR end synpred2_InternalSemver
+    // $ANTLR end synpred1_InternalSemver
 
-    // $ANTLR start synpred9_InternalSemver
-    public final void synpred9_InternalSemver_fragment() throws RecognitionException {   
-        EObject this_URLSemver_0 = null;
-
-
-        // InternalSemver.g:275:3: ( ( ( ruleURLSemver )=>this_URLSemver_0= ruleURLSemver ) )
-        // InternalSemver.g:275:3: ( ( ruleURLSemver )=>this_URLSemver_0= ruleURLSemver )
-        {
-        // InternalSemver.g:275:3: ( ( ruleURLSemver )=>this_URLSemver_0= ruleURLSemver )
-        // InternalSemver.g:276:4: ( ruleURLSemver )=>this_URLSemver_0= ruleURLSemver
+    // $ANTLR start synpred4_InternalSemver
+    public final void synpred4_InternalSemver_fragment() throws RecognitionException {   
+        // InternalSemver.g:306:4: ( ruleURLSemver )
+        // InternalSemver.g:306:5: ruleURLSemver
         {
         pushFollow(FOLLOW_2);
-        this_URLSemver_0=ruleURLSemver();
-
-        state._fsp--;
-        if (state.failed) return ;
-
-        }
-
-
-        }
-    }
-    // $ANTLR end synpred9_InternalSemver
-
-    // $ANTLR start synpred47_InternalSemver
-    public final void synpred47_InternalSemver_fragment() throws RecognitionException {   
-        AntlrDatatypeRuleToken this_ALPHA_NUMERIC_CHAR_0 = null;
-
-
-        // InternalSemver.g:1513:3: (this_ALPHA_NUMERIC_CHAR_0= ruleALPHA_NUMERIC_CHAR )
-        // InternalSemver.g:1513:3: this_ALPHA_NUMERIC_CHAR_0= ruleALPHA_NUMERIC_CHAR
-        {
-        if ( state.backtracking==0 ) {
-
-          			newCompositeNode(grammarAccess.getALPHA_NUMERIC_CHARSAccess().getALPHA_NUMERIC_CHARParserRuleCall());
-          		
-        }
-        pushFollow(FOLLOW_2);
-        this_ALPHA_NUMERIC_CHAR_0=ruleALPHA_NUMERIC_CHAR();
+        ruleURLSemver();
 
         state._fsp--;
         if (state.failed) return ;
 
         }
     }
-    // $ANTLR end synpred47_InternalSemver
-
-    // $ANTLR start synpred50_InternalSemver
-    public final void synpred50_InternalSemver_fragment() throws RecognitionException {   
-        Token this_LETTER_V_0=null;
-
-        // InternalSemver.g:1588:3: (this_LETTER_V_0= RULE_LETTER_V )
-        // InternalSemver.g:1588:3: this_LETTER_V_0= RULE_LETTER_V
-        {
-        this_LETTER_V_0=(Token)match(input,RULE_LETTER_V,FOLLOW_2); if (state.failed) return ;
-
-        }
-    }
-    // $ANTLR end synpred50_InternalSemver
-
-    // $ANTLR start synpred51_InternalSemver
-    public final void synpred51_InternalSemver_fragment() throws RecognitionException {   
-        AntlrDatatypeRuleToken this_LETTER_NO_V_1 = null;
-
-
-        // InternalSemver.g:1596:3: (this_LETTER_NO_V_1= ruleLETTER_NO_V )
-        // InternalSemver.g:1596:3: this_LETTER_NO_V_1= ruleLETTER_NO_V
-        {
-        if ( state.backtracking==0 ) {
-
-          			newCompositeNode(grammarAccess.getLETTERSAccess().getLETTER_NO_VParserRuleCall_1());
-          		
-        }
-        pushFollow(FOLLOW_2);
-        this_LETTER_NO_V_1=ruleLETTER_NO_V();
-
-        state._fsp--;
-        if (state.failed) return ;
-
-        }
-    }
-    // $ANTLR end synpred51_InternalSemver
+    // $ANTLR end synpred4_InternalSemver
 
     // Delegated rules
 
-    public final boolean synpred47_InternalSemver() {
+    public final boolean synpred1_InternalSemver() {
         state.backtracking++;
         int start = input.mark();
         try {
-            synpred47_InternalSemver_fragment(); // can never throw exception
+            synpred1_InternalSemver_fragment(); // can never throw exception
         } catch (RecognitionException re) {
             System.err.println("impossible: "+re);
         }
@@ -5816,53 +5711,11 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
         state.failed=false;
         return success;
     }
-    public final boolean synpred2_InternalSemver() {
+    public final boolean synpred4_InternalSemver() {
         state.backtracking++;
         int start = input.mark();
         try {
-            synpred2_InternalSemver_fragment(); // can never throw exception
-        } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
-        }
-        boolean success = !state.failed;
-        input.rewind(start);
-        state.backtracking--;
-        state.failed=false;
-        return success;
-    }
-    public final boolean synpred50_InternalSemver() {
-        state.backtracking++;
-        int start = input.mark();
-        try {
-            synpred50_InternalSemver_fragment(); // can never throw exception
-        } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
-        }
-        boolean success = !state.failed;
-        input.rewind(start);
-        state.backtracking--;
-        state.failed=false;
-        return success;
-    }
-    public final boolean synpred51_InternalSemver() {
-        state.backtracking++;
-        int start = input.mark();
-        try {
-            synpred51_InternalSemver_fragment(); // can never throw exception
-        } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
-        }
-        boolean success = !state.failed;
-        input.rewind(start);
-        state.backtracking--;
-        state.failed=false;
-        return success;
-    }
-    public final boolean synpred9_InternalSemver() {
-        state.backtracking++;
-        int start = input.mark();
-        try {
-            synpred9_InternalSemver_fragment(); // can never throw exception
+            synpred4_InternalSemver_fragment(); // can never throw exception
         } catch (RecognitionException re) {
             System.err.println("impossible: "+re);
         }
@@ -5875,39 +5728,32 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     protected DFA2 dfa2 = new DFA2(this);
+    protected DFA6 dfa6 = new DFA6(this);
     protected DFA11 dfa11 = new DFA11(this);
     protected DFA14 dfa14 = new DFA14(this);
     protected DFA18 dfa18 = new DFA18(this);
-    protected DFA26 dfa26 = new DFA26(this);
-    protected DFA32 dfa32 = new DFA32(this);
-    static final String dfa_1s = "\25\uffff";
-    static final String dfa_2s = "\2\uffff\2\13\3\uffff\4\13\1\uffff\11\13";
-    static final String dfa_3s = "\1\6\1\uffff\2\4\2\uffff\1\5\4\4\1\uffff\11\4";
-    static final String dfa_4s = "\1\47\1\uffff\2\44\2\uffff\1\10\4\47\1\uffff\3\47\2\42\4\47";
-    static final String dfa_5s = "\1\uffff\1\1\2\uffff\1\2\1\3\5\uffff\1\4\11\uffff";
-    static final String dfa_6s = "\25\uffff}>";
+    protected DFA27 dfa27 = new DFA27(this);
+    static final String dfa_1s = "\16\uffff";
+    static final String dfa_2s = "\3\uffff\5\12\3\uffff\3\12";
+    static final String dfa_3s = "\1\7\1\uffff\1\5\5\4\3\uffff\3\4";
+    static final String dfa_4s = "\1\34\1\uffff\6\46\3\uffff\3\46";
+    static final String dfa_5s = "\1\uffff\1\1\6\uffff\1\3\1\2\1\4\3\uffff";
+    static final String dfa_6s = "\1\0\15\uffff}>";
     static final String[] dfa_7s = {
-            "\1\1\1\2\1\3\27\uffff\1\4\2\uffff\1\5\1\1\3\5",
+            "\1\2\24\uffff\1\1",
             "",
-            "\1\13\1\7\1\10\1\11\1\12\24\uffff\1\1\4\uffff\1\6\1\uffff\1\1",
-            "\1\13\1\7\1\10\1\11\1\12\24\uffff\1\1\4\uffff\1\6\1\uffff\1\1",
+            "\1\5\1\4\1\7\1\6\30\uffff\1\3\1\10\1\11\3\10",
+            "\1\12\1\13\1\4\1\15\1\14\30\uffff\1\3\1\10\1\uffff\3\10",
+            "\1\12\1\13\1\4\1\15\1\14\30\uffff\1\3\1\10\1\uffff\3\10",
+            "\1\12\1\5\1\4\1\7\1\6\24\uffff\1\11\3\uffff\1\3\1\10\1\11\3\10",
+            "\1\12\1\5\1\4\1\7\1\6\24\uffff\1\11\3\uffff\1\3\1\10\1\11\3\10",
+            "\1\12\1\5\1\4\1\7\1\6\24\uffff\1\11\3\uffff\1\3\1\10\1\11\3\10",
             "",
             "",
-            "\1\7\1\14\1\15\1\16",
-            "\3\13\1\17\1\20\31\uffff\1\13\1\5\1\uffff\3\5",
-            "\2\13\1\10\1\21\1\22\24\uffff\1\1\4\uffff\1\13\1\5\1\1\3\5",
-            "\2\13\1\10\1\21\1\22\24\uffff\1\1\4\uffff\1\13\1\5\1\1\3\5",
-            "\2\13\1\10\1\21\1\22\24\uffff\1\1\4\uffff\1\13\1\5\1\1\3\5",
             "",
-            "\2\13\1\14\1\23\1\24\31\uffff\1\13\1\5\1\uffff\3\5",
-            "\2\13\1\14\1\23\1\24\31\uffff\1\13\1\5\1\uffff\3\5",
-            "\2\13\1\14\1\23\1\24\31\uffff\1\13\1\5\1\uffff\3\5",
-            "\1\13\1\7\1\14\1\15\1\16\31\uffff\1\6",
-            "\1\13\1\7\1\14\1\15\1\16\31\uffff\1\6",
-            "\1\13\1\7\1\10\1\21\1\22\24\uffff\1\1\4\uffff\1\6\1\5\1\1\3\5",
-            "\1\13\1\7\1\10\1\21\1\22\24\uffff\1\1\4\uffff\1\6\1\5\1\1\3\5",
-            "\1\13\1\7\1\14\1\23\1\24\31\uffff\1\6\1\5\1\uffff\3\5",
-            "\1\13\1\7\1\14\1\23\1\24\31\uffff\1\6\1\5\1\uffff\3\5"
+            "\1\12\1\13\1\4\1\15\1\14\30\uffff\1\3\1\10\1\uffff\3\10",
+            "\1\12\1\13\1\4\1\15\1\14\30\uffff\1\3\1\10\1\uffff\3\10",
+            "\1\12\1\13\1\4\1\15\1\14\30\uffff\1\3\1\10\1\uffff\3\10"
     };
 
     static final short[] dfa_1 = DFA.unpackEncodedString(dfa_1s);
@@ -5932,19 +5778,57 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
             this.transition = dfa_7;
         }
         public String getDescription() {
-            return "114:4: (this_URLVersionRequirement_2= ruleURLVersionRequirement | this_LocalPathVersionRequirement_3= ruleLocalPathVersionRequirement | this_GitHubVersionRequirement_4= ruleGitHubVersionRequirement | this_TagVersionRequirement_5= ruleTagVersionRequirement )";
+            return "105:4: ( ( ( 'file:' )=>this_LocalPathVersionRequirement_2= ruleLocalPathVersionRequirement ) | this_URLVersionRequirement_3= ruleURLVersionRequirement | this_GitHubVersionRequirement_4= ruleGitHubVersionRequirement | this_TagVersionRequirement_5= ruleTagVersionRequirement )";
+        }
+        public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
+            TokenStream input = (TokenStream)_input;
+        	int _s = s;
+            switch ( s ) {
+                    case 0 : 
+                        int LA2_0 = input.LA(1);
+
+                         
+                        int index2_0 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA2_0==28) && (synpred1_InternalSemver())) {s = 1;}
+
+                        else if ( (LA2_0==RULE_LETTER_NO_VX) ) {s = 2;}
+
+                         
+                        input.seek(index2_0);
+                        if ( s>=0 ) return s;
+                        break;
+            }
+            if (state.backtracking>0) {state.failed=true; return -1;}
+            NoViableAltException nvae =
+                new NoViableAltException(getDescription(), 2, _s, input);
+            error(nvae);
+            throw nvae;
         }
     }
-    static final String dfa_8s = "\4\uffff";
-    static final String dfa_9s = "\2\2\2\uffff";
-    static final String dfa_10s = "\2\4\2\uffff";
-    static final String dfa_11s = "\2\41\2\uffff";
-    static final String dfa_12s = "\2\uffff\1\2\1\1";
-    static final String dfa_13s = "\4\uffff}>";
+    static final String dfa_8s = "\20\uffff";
+    static final String dfa_9s = "\11\uffff\1\15\6\uffff";
+    static final String dfa_10s = "\1\5\10\uffff\1\4\1\0\1\uffff\1\5\1\uffff\1\0\1\uffff";
+    static final String dfa_11s = "\1\55\10\uffff\1\41\1\0\1\uffff\1\41\1\uffff\1\0\1\uffff";
+    static final String dfa_12s = "\1\uffff\10\1\2\uffff\1\1\1\uffff\1\3\1\uffff\1\2";
+    static final String dfa_13s = "\1\4\10\uffff\1\3\1\0\1\uffff\1\1\1\uffff\1\2\1\uffff}>";
     static final String[] dfa_14s = {
-            "\1\1\34\uffff\1\3",
-            "\1\1\34\uffff\1\3",
+            "\1\11\1\14\1\15\1\12\1\13\25\uffff\1\1\1\uffff\1\15\5\uffff\1\2\1\3\1\4\1\5\1\6\1\7\1\10",
             "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "\2\15\1\16\1\15\1\12\1\13\27\uffff\1\15",
+            "\1\uffff",
+            "",
+            "\4\17\30\uffff\1\17",
+            "",
+            "\1\uffff",
             ""
     };
 
@@ -5956,11 +5840,11 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
     static final short[] dfa_13 = DFA.unpackEncodedString(dfa_13s);
     static final short[][] dfa_14 = unpackEncodedStringArray(dfa_14s);
 
-    class DFA11 extends DFA {
+    class DFA6 extends DFA {
 
-        public DFA11(BaseRecognizer recognizer) {
+        public DFA6(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
-            this.decisionNumber = 11;
+            this.decisionNumber = 6;
             this.eot = dfa_8;
             this.eof = dfa_9;
             this.min = dfa_10;
@@ -5970,71 +5854,134 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
             this.transition = dfa_14;
         }
         public String getDescription() {
-            return "()* loopback of 571:4: ( (this_WS_2= RULE_WS )* otherlv_3= '||' (this_WS_4= RULE_WS )* ( (lv_ranges_5_0= ruleVersionRange ) ) )*";
+            return "304:2: ( ( ( ruleURLSemver )=>this_URLSemver_0= ruleURLSemver ) | ( () ( (lv_commitISH_2_0= ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS ) ) ) | ( () ( (lv_commitISH_4_0= ruleALPHA_NUMERIC_CHARS ) ) ) )";
+        }
+        public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
+            TokenStream input = (TokenStream)_input;
+        	int _s = s;
+            switch ( s ) {
+                    case 0 : 
+                        int LA6_10 = input.LA(1);
+
+                         
+                        int index6_10 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred4_InternalSemver()) ) {s = 11;}
+
+                        else if ( (true) ) {s = 13;}
+
+                         
+                        input.seek(index6_10);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 1 : 
+                        int LA6_12 = input.LA(1);
+
+                         
+                        int index6_12 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( ((LA6_12>=RULE_LETTER_V && LA6_12<=RULE_LETTER_X)||LA6_12==33) ) {s = 15;}
+
+                        else if ( (synpred4_InternalSemver()) ) {s = 11;}
+
+                        else if ( (true) ) {s = 13;}
+
+                         
+                        input.seek(index6_12);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 2 : 
+                        int LA6_14 = input.LA(1);
+
+                         
+                        int index6_14 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred4_InternalSemver()) ) {s = 11;}
+
+                        else if ( (true) ) {s = 13;}
+
+                         
+                        input.seek(index6_14);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 3 : 
+                        int LA6_9 = input.LA(1);
+
+                         
+                        int index6_9 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA6_9==EOF||(LA6_9>=RULE_WS && LA6_9<=RULE_LETTER_V)||LA6_9==RULE_LETTER_NO_VX||LA6_9==33) ) {s = 13;}
+
+                        else if ( (LA6_9==RULE_DIGITS) ) {s = 14;}
+
+                        else if ( (LA6_9==RULE_LETTER_X) ) {s = 10;}
+
+                        else if ( (LA6_9==RULE_ASTERIX) && (synpred4_InternalSemver())) {s = 11;}
+
+                         
+                        input.seek(index6_9);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 4 : 
+                        int LA6_0 = input.LA(1);
+
+                         
+                        int index6_0 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA6_0==31) && (synpred4_InternalSemver())) {s = 1;}
+
+                        else if ( (LA6_0==39) && (synpred4_InternalSemver())) {s = 2;}
+
+                        else if ( (LA6_0==40) && (synpred4_InternalSemver())) {s = 3;}
+
+                        else if ( (LA6_0==41) && (synpred4_InternalSemver())) {s = 4;}
+
+                        else if ( (LA6_0==42) && (synpred4_InternalSemver())) {s = 5;}
+
+                        else if ( (LA6_0==43) && (synpred4_InternalSemver())) {s = 6;}
+
+                        else if ( (LA6_0==44) && (synpred4_InternalSemver())) {s = 7;}
+
+                        else if ( (LA6_0==45) && (synpred4_InternalSemver())) {s = 8;}
+
+                        else if ( (LA6_0==RULE_LETTER_V) ) {s = 9;}
+
+                        else if ( (LA6_0==RULE_LETTER_X) ) {s = 10;}
+
+                        else if ( (LA6_0==RULE_ASTERIX) && (synpred4_InternalSemver())) {s = 11;}
+
+                        else if ( (LA6_0==RULE_DIGITS) ) {s = 12;}
+
+                        else if ( (LA6_0==RULE_LETTER_NO_VX||LA6_0==33) ) {s = 13;}
+
+                         
+                        input.seek(index6_0);
+                        if ( s>=0 ) return s;
+                        break;
+            }
+            if (state.backtracking>0) {state.failed=true; return -1;}
+            NoViableAltException nvae =
+                new NoViableAltException(getDescription(), 6, _s, input);
+            error(nvae);
+            throw nvae;
         }
     }
-    static final String dfa_15s = "\67\uffff";
-    static final String dfa_16s = "\2\uffff\3\1\3\uffff\4\1\1\uffff\4\1\1\uffff\4\1\5\uffff\3\1\1\uffff\4\1\1\uffff\4\1\1\uffff\4\1\2\uffff\3\1\1\uffff\4\1";
-    static final String dfa_17s = "\1\5\1\uffff\3\4\3\5\4\4\1\5\4\4\1\5\4\4\1\uffff\4\5\3\4\1\5\4\4\1\5\4\4\1\5\4\4\2\5\3\4\1\5\4\4";
-    static final String dfa_18s = "\1\57\1\uffff\3\44\1\11\2\42\1\57\3\44\1\10\4\44\1\10\4\43\1\uffff\1\11\3\42\3\44\1\10\4\44\1\10\4\43\1\10\4\43\1\11\1\42\3\44\1\10\4\43";
-    static final String dfa_19s = "\1\uffff\1\1\24\uffff\1\2\40\uffff";
-    static final String dfa_20s = "\67\uffff}>";
+    static final String dfa_15s = "\4\uffff";
+    static final String dfa_16s = "\2\2\2\uffff";
+    static final String dfa_17s = "\2\4\2\uffff";
+    static final String dfa_18s = "\2\40\2\uffff";
+    static final String dfa_19s = "\2\uffff\1\2\1\1";
+    static final String dfa_20s = "\4\uffff}>";
     static final String[] dfa_21s = {
-            "\1\4\1\uffff\1\2\1\uffff\1\3\36\uffff\10\1",
+            "\1\1\33\uffff\1\3",
+            "\1\1\33\uffff\1\3",
             "",
-            "\1\10\34\uffff\1\1\1\6\1\5\1\7",
-            "\1\10\34\uffff\1\1\1\6\1\5\1\7",
-            "\1\10\34\uffff\1\1\1\6\1\5\1\7",
-            "\1\13\1\uffff\1\11\1\uffff\1\12",
-            "\1\15\1\16\1\17\1\20\31\uffff\1\14",
-            "\1\22\1\23\1\24\1\25\31\uffff\1\21",
-            "\1\10\1\1\1\uffff\1\1\1\uffff\1\1\27\uffff\1\1\1\26\5\uffff\10\1",
-            "\1\10\34\uffff\1\1\1\6\1\27\1\7",
-            "\1\10\34\uffff\1\1\1\6\1\27\1\7",
-            "\1\10\34\uffff\1\1\1\6\1\27\1\7",
-            "\1\15\1\16\1\17\1\20",
-            "\1\10\1\15\1\16\1\17\1\20\30\uffff\1\1\1\14\1\30\1\31",
-            "\1\10\1\15\1\16\1\17\1\20\30\uffff\1\1\1\14\1\30\1\31",
-            "\1\10\1\15\1\16\1\17\1\20\30\uffff\1\1\1\14\1\30\1\31",
-            "\1\10\1\15\1\16\1\17\1\20\30\uffff\1\1\1\14\1\30\1\31",
-            "\1\22\1\23\1\24\1\25",
-            "\1\10\1\22\1\23\1\24\1\25\30\uffff\1\1\1\21\1\32",
-            "\1\10\1\22\1\23\1\24\1\25\30\uffff\1\1\1\21\1\32",
-            "\1\10\1\22\1\23\1\24\1\25\30\uffff\1\1\1\21\1\32",
-            "\1\10\1\22\1\23\1\24\1\25\30\uffff\1\1\1\21\1\32",
-            "",
-            "\1\35\1\uffff\1\33\1\uffff\1\34",
-            "\1\37\1\40\1\41\1\42\31\uffff\1\36",
-            "\1\44\1\45\1\46\1\47\31\uffff\1\43",
-            "\1\51\1\52\1\53\1\54\31\uffff\1\50",
-            "\1\10\34\uffff\1\1\1\6\1\55\1\7",
-            "\1\10\34\uffff\1\1\1\6\1\55\1\7",
-            "\1\10\34\uffff\1\1\1\6\1\55\1\7",
-            "\1\37\1\40\1\41\1\42",
-            "\1\10\1\37\1\40\1\41\1\42\30\uffff\1\1\1\36\1\30\1\31",
-            "\1\10\1\37\1\40\1\41\1\42\30\uffff\1\1\1\36\1\30\1\31",
-            "\1\10\1\37\1\40\1\41\1\42\30\uffff\1\1\1\36\1\30\1\31",
-            "\1\10\1\37\1\40\1\41\1\42\30\uffff\1\1\1\36\1\30\1\31",
-            "\1\44\1\45\1\46\1\47",
-            "\1\10\1\44\1\45\1\46\1\47\30\uffff\1\1\1\43\1\56",
-            "\1\10\1\44\1\45\1\46\1\47\30\uffff\1\1\1\43\1\56",
-            "\1\10\1\44\1\45\1\46\1\47\30\uffff\1\1\1\43\1\56",
-            "\1\10\1\44\1\45\1\46\1\47\30\uffff\1\1\1\43\1\56",
-            "\1\51\1\52\1\53\1\54",
-            "\1\10\1\51\1\52\1\53\1\54\30\uffff\1\1\1\50\1\32",
-            "\1\10\1\51\1\52\1\53\1\54\30\uffff\1\1\1\50\1\32",
-            "\1\10\1\51\1\52\1\53\1\54\30\uffff\1\1\1\50\1\32",
-            "\1\10\1\51\1\52\1\53\1\54\30\uffff\1\1\1\50\1\32",
-            "\1\61\1\uffff\1\57\1\uffff\1\60",
-            "\1\63\1\64\1\65\1\66\31\uffff\1\62",
-            "\1\10\34\uffff\1\1\1\6\1\55\1\7",
-            "\1\10\34\uffff\1\1\1\6\1\55\1\7",
-            "\1\10\34\uffff\1\1\1\6\1\55\1\7",
-            "\1\63\1\64\1\65\1\66",
-            "\1\10\1\63\1\64\1\65\1\66\30\uffff\1\1\1\62\1\56",
-            "\1\10\1\63\1\64\1\65\1\66\30\uffff\1\1\1\62\1\56",
-            "\1\10\1\63\1\64\1\65\1\66\30\uffff\1\1\1\62\1\56",
-            "\1\10\1\63\1\64\1\65\1\66\30\uffff\1\1\1\62\1\56"
+            ""
     };
 
     static final short[] dfa_15 = DFA.unpackEncodedString(dfa_15s);
@@ -6045,11 +5992,11 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
     static final short[] dfa_20 = DFA.unpackEncodedString(dfa_20s);
     static final short[][] dfa_21 = unpackEncodedStringArray(dfa_21s);
 
-    class DFA14 extends DFA {
+    class DFA11 extends DFA {
 
-        public DFA14(BaseRecognizer recognizer) {
+        public DFA11(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
-            this.decisionNumber = 14;
+            this.decisionNumber = 11;
             this.eot = dfa_15;
             this.eof = dfa_16;
             this.min = dfa_17;
@@ -6059,150 +6006,198 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
             this.transition = dfa_21;
         }
         public String getDescription() {
-            return "633:2: (this_VersionRangeContraint_0= ruleVersionRangeContraint | this_HyphenVersionRange_1= ruleHyphenVersionRange )";
+            return "()* loopback of 579:4: ( (this_WS_2= RULE_WS )* otherlv_3= '||' (this_WS_4= RULE_WS )* ( (lv_ranges_5_0= ruleVersionRange ) ) )*";
         }
     }
-    static final String dfa_22s = "\1\41\1\57\2\uffff";
-    static final String[] dfa_23s = {
-            "\1\1\34\uffff\1\2",
-            "\1\1\1\3\1\uffff\1\3\1\uffff\1\3\27\uffff\1\2\6\uffff\10\3",
+    static final String dfa_22s = "\67\uffff";
+    static final String dfa_23s = "\2\uffff\3\1\3\uffff\16\1\5\uffff\22\1\2\uffff\10\1";
+    static final String dfa_24s = "\1\5\1\uffff\3\4\1\6\2\5\16\4\1\uffff\1\6\3\5\22\4\1\6\1\5\10\4";
+    static final String dfa_25s = "\1\55\1\uffff\3\43\1\11\2\41\1\55\10\43\5\42\1\uffff\1\11\3\41\10\43\12\42\1\11\1\41\3\43\5\42";
+    static final String dfa_26s = "\1\uffff\1\1\24\uffff\1\2\40\uffff";
+    static final String dfa_27s = "\67\uffff}>";
+    static final String[] dfa_28s = {
+            "\1\1\1\4\1\uffff\1\2\1\3\35\uffff\7\1",
+            "",
+            "\1\10\33\uffff\1\1\1\6\1\5\1\7",
+            "\1\10\33\uffff\1\1\1\6\1\5\1\7",
+            "\1\10\33\uffff\1\1\1\6\1\5\1\7",
+            "\1\13\1\uffff\1\11\1\12",
+            "\1\16\1\15\1\20\1\17\30\uffff\1\14",
+            "\1\23\1\22\1\25\1\24\30\uffff\1\21",
+            "\1\10\2\1\1\uffff\2\1\26\uffff\1\1\1\26\5\uffff\7\1",
+            "\1\10\33\uffff\1\1\1\6\1\27\1\7",
+            "\1\10\33\uffff\1\1\1\6\1\27\1\7",
+            "\1\10\33\uffff\1\1\1\6\1\27\1\7",
+            "\1\10\1\16\1\15\1\20\1\17\27\uffff\1\1\1\14\1\30\1\31",
+            "\1\10\1\16\1\15\1\20\1\17\27\uffff\1\1\1\14\1\30\1\31",
+            "\1\10\1\16\1\15\1\20\1\17\27\uffff\1\1\1\14\1\30\1\31",
+            "\1\10\1\16\1\15\1\20\1\17\27\uffff\1\1\1\14\1\30\1\31",
+            "\1\10\1\16\1\15\1\20\1\17\27\uffff\1\1\1\14\1\30\1\31",
+            "\1\10\1\23\1\22\1\25\1\24\27\uffff\1\1\1\21\1\32",
+            "\1\10\1\23\1\22\1\25\1\24\27\uffff\1\1\1\21\1\32",
+            "\1\10\1\23\1\22\1\25\1\24\27\uffff\1\1\1\21\1\32",
+            "\1\10\1\23\1\22\1\25\1\24\27\uffff\1\1\1\21\1\32",
+            "\1\10\1\23\1\22\1\25\1\24\27\uffff\1\1\1\21\1\32",
+            "",
+            "\1\35\1\uffff\1\33\1\34",
+            "\1\40\1\37\1\42\1\41\30\uffff\1\36",
+            "\1\45\1\44\1\47\1\46\30\uffff\1\43",
+            "\1\52\1\51\1\54\1\53\30\uffff\1\50",
+            "\1\10\33\uffff\1\1\1\6\1\55\1\7",
+            "\1\10\33\uffff\1\1\1\6\1\55\1\7",
+            "\1\10\33\uffff\1\1\1\6\1\55\1\7",
+            "\1\10\1\40\1\37\1\42\1\41\27\uffff\1\1\1\36\1\30\1\31",
+            "\1\10\1\40\1\37\1\42\1\41\27\uffff\1\1\1\36\1\30\1\31",
+            "\1\10\1\40\1\37\1\42\1\41\27\uffff\1\1\1\36\1\30\1\31",
+            "\1\10\1\40\1\37\1\42\1\41\27\uffff\1\1\1\36\1\30\1\31",
+            "\1\10\1\40\1\37\1\42\1\41\27\uffff\1\1\1\36\1\30\1\31",
+            "\1\10\1\45\1\44\1\47\1\46\27\uffff\1\1\1\43\1\56",
+            "\1\10\1\45\1\44\1\47\1\46\27\uffff\1\1\1\43\1\56",
+            "\1\10\1\45\1\44\1\47\1\46\27\uffff\1\1\1\43\1\56",
+            "\1\10\1\45\1\44\1\47\1\46\27\uffff\1\1\1\43\1\56",
+            "\1\10\1\45\1\44\1\47\1\46\27\uffff\1\1\1\43\1\56",
+            "\1\10\1\52\1\51\1\54\1\53\27\uffff\1\1\1\50\1\32",
+            "\1\10\1\52\1\51\1\54\1\53\27\uffff\1\1\1\50\1\32",
+            "\1\10\1\52\1\51\1\54\1\53\27\uffff\1\1\1\50\1\32",
+            "\1\10\1\52\1\51\1\54\1\53\27\uffff\1\1\1\50\1\32",
+            "\1\10\1\52\1\51\1\54\1\53\27\uffff\1\1\1\50\1\32",
+            "\1\61\1\uffff\1\57\1\60",
+            "\1\64\1\63\1\66\1\65\30\uffff\1\62",
+            "\1\10\33\uffff\1\1\1\6\1\55\1\7",
+            "\1\10\33\uffff\1\1\1\6\1\55\1\7",
+            "\1\10\33\uffff\1\1\1\6\1\55\1\7",
+            "\1\10\1\64\1\63\1\66\1\65\27\uffff\1\1\1\62\1\56",
+            "\1\10\1\64\1\63\1\66\1\65\27\uffff\1\1\1\62\1\56",
+            "\1\10\1\64\1\63\1\66\1\65\27\uffff\1\1\1\62\1\56",
+            "\1\10\1\64\1\63\1\66\1\65\27\uffff\1\1\1\62\1\56",
+            "\1\10\1\64\1\63\1\66\1\65\27\uffff\1\1\1\62\1\56"
+    };
+
+    static final short[] dfa_22 = DFA.unpackEncodedString(dfa_22s);
+    static final short[] dfa_23 = DFA.unpackEncodedString(dfa_23s);
+    static final char[] dfa_24 = DFA.unpackEncodedStringToUnsignedChars(dfa_24s);
+    static final char[] dfa_25 = DFA.unpackEncodedStringToUnsignedChars(dfa_25s);
+    static final short[] dfa_26 = DFA.unpackEncodedString(dfa_26s);
+    static final short[] dfa_27 = DFA.unpackEncodedString(dfa_27s);
+    static final short[][] dfa_28 = unpackEncodedStringArray(dfa_28s);
+
+    class DFA14 extends DFA {
+
+        public DFA14(BaseRecognizer recognizer) {
+            this.recognizer = recognizer;
+            this.decisionNumber = 14;
+            this.eot = dfa_22;
+            this.eof = dfa_23;
+            this.min = dfa_24;
+            this.max = dfa_25;
+            this.accept = dfa_26;
+            this.special = dfa_27;
+            this.transition = dfa_28;
+        }
+        public String getDescription() {
+            return "641:2: (this_VersionRangeContraint_0= ruleVersionRangeContraint | this_HyphenVersionRange_1= ruleHyphenVersionRange )";
+        }
+    }
+    static final String dfa_29s = "\1\40\1\55\2\uffff";
+    static final String[] dfa_30s = {
+            "\1\1\33\uffff\1\2",
+            "\1\1\2\3\1\uffff\2\3\26\uffff\1\2\6\uffff\7\3",
             "",
             ""
     };
-    static final char[] dfa_22 = DFA.unpackEncodedStringToUnsignedChars(dfa_22s);
-    static final short[][] dfa_23 = unpackEncodedStringArray(dfa_23s);
+    static final char[] dfa_29 = DFA.unpackEncodedStringToUnsignedChars(dfa_29s);
+    static final short[][] dfa_30 = unpackEncodedStringArray(dfa_30s);
 
     class DFA18 extends DFA {
 
         public DFA18(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 18;
-            this.eot = dfa_8;
-            this.eof = dfa_9;
-            this.min = dfa_10;
-            this.max = dfa_22;
-            this.accept = dfa_12;
-            this.special = dfa_13;
-            this.transition = dfa_23;
-        }
-        public String getDescription() {
-            return "()* loopback of 788:3: ( (this_WS_2= RULE_WS )+ ( (lv_versionConstraints_3_0= ruleSimpleVersion ) ) )*";
-        }
-    }
-    static final String dfa_24s = "\20\uffff";
-    static final String dfa_25s = "\4\uffff\4\11\4\uffff\4\11";
-    static final String dfa_26s = "\1\42\1\5\1\uffff\1\5\4\4\1\5\2\uffff\1\5\4\4";
-    static final String dfa_27s = "\1\44\1\42\1\uffff\1\10\4\44\1\42\2\uffff\1\10\4\44";
-    static final String dfa_28s = "\2\uffff\1\2\6\uffff\1\1\1\3\5\uffff";
-    static final String dfa_29s = "\20\uffff}>";
-    static final String[] dfa_30s = {
-            "\1\1\1\uffff\1\2",
-            "\1\4\1\5\1\6\1\7\31\uffff\1\3",
-            "",
-            "\1\4\1\5\1\6\1\7",
-            "\1\11\1\4\1\5\1\6\1\7\30\uffff\1\11\1\3\1\10\1\12",
-            "\1\11\1\4\1\5\1\6\1\7\30\uffff\1\11\1\3\1\10\1\12",
-            "\1\11\1\4\1\5\1\6\1\7\30\uffff\1\11\1\3\1\10\1\12",
-            "\1\11\1\4\1\5\1\6\1\7\30\uffff\1\11\1\3\1\10\1\12",
-            "\1\14\1\15\1\16\1\17\31\uffff\1\13",
-            "",
-            "",
-            "\1\14\1\15\1\16\1\17",
-            "\1\11\1\14\1\15\1\16\1\17\30\uffff\1\11\1\13\1\10\1\12",
-            "\1\11\1\14\1\15\1\16\1\17\30\uffff\1\11\1\13\1\10\1\12",
-            "\1\11\1\14\1\15\1\16\1\17\30\uffff\1\11\1\13\1\10\1\12",
-            "\1\11\1\14\1\15\1\16\1\17\30\uffff\1\11\1\13\1\10\1\12"
-    };
-
-    static final short[] dfa_24 = DFA.unpackEncodedString(dfa_24s);
-    static final short[] dfa_25 = DFA.unpackEncodedString(dfa_25s);
-    static final char[] dfa_26 = DFA.unpackEncodedStringToUnsignedChars(dfa_26s);
-    static final char[] dfa_27 = DFA.unpackEncodedStringToUnsignedChars(dfa_27s);
-    static final short[] dfa_28 = DFA.unpackEncodedString(dfa_28s);
-    static final short[] dfa_29 = DFA.unpackEncodedString(dfa_29s);
-    static final short[][] dfa_30 = unpackEncodedStringArray(dfa_30s);
-
-    class DFA26 extends DFA {
-
-        public DFA26(BaseRecognizer recognizer) {
-            this.recognizer = recognizer;
-            this.decisionNumber = 26;
-            this.eot = dfa_24;
-            this.eof = dfa_25;
-            this.min = dfa_26;
-            this.max = dfa_27;
-            this.accept = dfa_28;
-            this.special = dfa_29;
+            this.eot = dfa_15;
+            this.eof = dfa_16;
+            this.min = dfa_17;
+            this.max = dfa_29;
+            this.accept = dfa_19;
+            this.special = dfa_20;
             this.transition = dfa_30;
         }
         public String getDescription() {
-            return "1097:2: ( (otherlv_0= '-' ( (lv_preRelease_1_0= ruleQualifierTag ) ) ) | (otherlv_2= '+' ( (lv_buildMetadata_3_0= ruleQualifierTag ) ) ) | (otherlv_4= '-' ( (lv_preRelease_5_0= ruleQualifierTag ) ) otherlv_6= '+' ( (lv_buildMetadata_7_0= ruleQualifierTag ) ) ) )";
+            return "()* loopback of 784:3: ( (this_WS_2= RULE_WS )+ ( (lv_versionConstraints_3_0= ruleSimpleVersion ) ) )*";
         }
     }
-    static final String dfa_31s = "\5\uffff";
-    static final String dfa_32s = "\3\3\2\uffff";
-    static final String dfa_33s = "\3\4\2\uffff";
-    static final String dfa_34s = "\3\45\2\uffff";
-    static final String dfa_35s = "\3\uffff\1\2\1\1";
-    static final String dfa_36s = "\5\uffff}>";
-    static final String[] dfa_37s = {
-            "\1\3\36\uffff\1\2\1\uffff\1\1",
-            "\1\3\4\4\31\uffff\1\4\1\2\1\uffff\1\1",
-            "\1\3\4\4\31\uffff\1\4\1\2\1\uffff\1\1",
+    static final String dfa_31s = "\3\uffff\5\12\3\uffff\5\12";
+    static final String dfa_32s = "\1\41\1\5\1\uffff\5\4\1\5\2\uffff\5\4";
+    static final String dfa_33s = "\1\43\1\41\1\uffff\5\43\1\41\2\uffff\5\43";
+    static final String dfa_34s = "\2\uffff\1\2\6\uffff\1\3\1\1\5\uffff";
+    static final String dfa_35s = "\20\uffff}>";
+    static final String[] dfa_36s = {
+            "\1\1\1\uffff\1\2",
+            "\1\5\1\4\1\7\1\6\30\uffff\1\3",
             "",
-            ""
+            "\1\12\1\5\1\4\1\7\1\6\27\uffff\1\12\1\3\1\10\1\11",
+            "\1\12\1\5\1\4\1\7\1\6\27\uffff\1\12\1\3\1\10\1\11",
+            "\1\12\1\5\1\4\1\7\1\6\27\uffff\1\12\1\3\1\10\1\11",
+            "\1\12\1\5\1\4\1\7\1\6\27\uffff\1\12\1\3\1\10\1\11",
+            "\1\12\1\5\1\4\1\7\1\6\27\uffff\1\12\1\3\1\10\1\11",
+            "\1\15\1\14\1\17\1\16\30\uffff\1\13",
+            "",
+            "",
+            "\1\12\1\15\1\14\1\17\1\16\27\uffff\1\12\1\13\1\10\1\11",
+            "\1\12\1\15\1\14\1\17\1\16\27\uffff\1\12\1\13\1\10\1\11",
+            "\1\12\1\15\1\14\1\17\1\16\27\uffff\1\12\1\13\1\10\1\11",
+            "\1\12\1\15\1\14\1\17\1\16\27\uffff\1\12\1\13\1\10\1\11",
+            "\1\12\1\15\1\14\1\17\1\16\27\uffff\1\12\1\13\1\10\1\11"
     };
-
     static final short[] dfa_31 = DFA.unpackEncodedString(dfa_31s);
-    static final short[] dfa_32 = DFA.unpackEncodedString(dfa_32s);
+    static final char[] dfa_32 = DFA.unpackEncodedStringToUnsignedChars(dfa_32s);
     static final char[] dfa_33 = DFA.unpackEncodedStringToUnsignedChars(dfa_33s);
-    static final char[] dfa_34 = DFA.unpackEncodedStringToUnsignedChars(dfa_34s);
+    static final short[] dfa_34 = DFA.unpackEncodedString(dfa_34s);
     static final short[] dfa_35 = DFA.unpackEncodedString(dfa_35s);
-    static final short[] dfa_36 = DFA.unpackEncodedString(dfa_36s);
-    static final short[][] dfa_37 = unpackEncodedStringArray(dfa_37s);
+    static final short[][] dfa_36 = unpackEncodedStringArray(dfa_36s);
 
-    class DFA32 extends DFA {
+    class DFA27 extends DFA {
 
-        public DFA32(BaseRecognizer recognizer) {
+        public DFA27(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
-            this.decisionNumber = 32;
-            this.eot = dfa_31;
-            this.eof = dfa_32;
-            this.min = dfa_33;
-            this.max = dfa_34;
-            this.accept = dfa_35;
-            this.special = dfa_36;
-            this.transition = dfa_37;
+            this.decisionNumber = 27;
+            this.eot = dfa_8;
+            this.eof = dfa_31;
+            this.min = dfa_32;
+            this.max = dfa_33;
+            this.accept = dfa_34;
+            this.special = dfa_35;
+            this.transition = dfa_36;
         }
         public String getDescription() {
-            return "()+ loopback of 1378:3: ( (kw= '/' | kw= '.' )+ this_ALPHA_NUMERIC_CHARS_4= ruleALPHA_NUMERIC_CHARS )+";
+            return "1101:2: ( (otherlv_0= '-' ( (lv_preRelease_1_0= ruleQualifierTag ) ) ) | (otherlv_2= '+' ( (lv_buildMetadata_3_0= ruleQualifierTag ) ) ) | (otherlv_4= '-' ( (lv_preRelease_5_0= ruleQualifierTag ) ) otherlv_6= '+' ( (lv_buildMetadata_7_0= ruleQualifierTag ) ) ) )";
         }
     }
  
 
     public static final BitSet FOLLOW_1 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_2 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_3 = new BitSet(new long[]{0x0000FF00000002B0L});
+    public static final BitSet FOLLOW_3 = new BitSet(new long[]{0x00003F8000000370L});
     public static final BitSet FOLLOW_4 = new BitSet(new long[]{0x0000000000000012L});
-    public static final BitSet FOLLOW_5 = new BitSet(new long[]{0x0000000020000000L});
-    public static final BitSet FOLLOW_6 = new BitSet(new long[]{0x000000E800000180L});
-    public static final BitSet FOLLOW_7 = new BitSet(new long[]{0x0000000040000002L});
-    public static final BitSet FOLLOW_8 = new BitSet(new long[]{0x0000FF04800003E0L});
-    public static final BitSet FOLLOW_9 = new BitSet(new long[]{0x0000FF00000002A0L});
-    public static final BitSet FOLLOW_10 = new BitSet(new long[]{0x0000002800000180L});
-    public static final BitSet FOLLOW_11 = new BitSet(new long[]{0x0000000200000012L});
-    public static final BitSet FOLLOW_12 = new BitSet(new long[]{0x0000000200000010L});
+    public static final BitSet FOLLOW_5 = new BitSet(new long[]{0x0000001400000080L});
+    public static final BitSet FOLLOW_6 = new BitSet(new long[]{0x0000000020000000L});
+    public static final BitSet FOLLOW_7 = new BitSet(new long[]{0x0000000000000080L});
+    public static final BitSet FOLLOW_8 = new BitSet(new long[]{0x0000000040000002L});
+    public static final BitSet FOLLOW_9 = new BitSet(new long[]{0x00003F82800003E0L});
+    public static final BitSet FOLLOW_10 = new BitSet(new long[]{0x00003F8000000360L});
+    public static final BitSet FOLLOW_11 = new BitSet(new long[]{0x0000000100000012L});
+    public static final BitSet FOLLOW_12 = new BitSet(new long[]{0x0000000100000010L});
     public static final BitSet FOLLOW_13 = new BitSet(new long[]{0x0000000000000010L});
-    public static final BitSet FOLLOW_14 = new BitSet(new long[]{0x0000000400000010L});
-    public static final BitSet FOLLOW_15 = new BitSet(new long[]{0x0000001C00000002L});
-    public static final BitSet FOLLOW_16 = new BitSet(new long[]{0x0000001000000000L});
-    public static final BitSet FOLLOW_17 = new BitSet(new long[]{0x0000000800000002L});
-    public static final BitSet FOLLOW_18 = new BitSet(new long[]{0x0000FF14800003E2L});
-    public static final BitSet FOLLOW_19 = new BitSet(new long[]{0x0000FF04800003E2L});
-    public static final BitSet FOLLOW_20 = new BitSet(new long[]{0x0000FF2C800003E0L});
-    public static final BitSet FOLLOW_21 = new BitSet(new long[]{0x0000002800000002L});
-    public static final BitSet FOLLOW_22 = new BitSet(new long[]{0x0000FFEC800003E0L});
-    public static final BitSet FOLLOW_23 = new BitSet(new long[]{0x000000E800000002L});
-    public static final BitSet FOLLOW_24 = new BitSet(new long[]{0x00000000000001C2L});
+    public static final BitSet FOLLOW_14 = new BitSet(new long[]{0x0000000200000010L});
+    public static final BitSet FOLLOW_15 = new BitSet(new long[]{0x0000000E00000002L});
+    public static final BitSet FOLLOW_16 = new BitSet(new long[]{0x0000000800000000L});
+    public static final BitSet FOLLOW_17 = new BitSet(new long[]{0x0000000400000002L});
+    public static final BitSet FOLLOW_18 = new BitSet(new long[]{0x00000016000001E0L});
+    public static final BitSet FOLLOW_19 = new BitSet(new long[]{0x00000016000001E2L});
+    public static final BitSet FOLLOW_20 = new BitSet(new long[]{0x00000008000001A0L});
+    public static final BitSet FOLLOW_21 = new BitSet(new long[]{0x00000008000001A2L});
+    public static final BitSet FOLLOW_22 = new BitSet(new long[]{0x00000076000001E0L});
+    public static final BitSet FOLLOW_23 = new BitSet(new long[]{0x00000076000001E2L});
+    public static final BitSet FOLLOW_24 = new BitSet(new long[]{0x00000002000001E0L});
+    public static final BitSet FOLLOW_25 = new BitSet(new long[]{0x00000002000001E2L});
 
 }

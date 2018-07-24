@@ -40,6 +40,7 @@ import org.eclipse.n4js.semver.Semver.VersionNumber;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.semver.Semver.impl.SimpleVersionImpl#getNumber <em>Number</em>}</li>
+ *   <li>{@link org.eclipse.n4js.semver.Semver.impl.SimpleVersionImpl#isWithLetterV <em>With Letter V</em>}</li>
  *   <li>{@link org.eclipse.n4js.semver.Semver.impl.SimpleVersionImpl#getComparators <em>Comparators</em>}</li>
  * </ul>
  *
@@ -55,6 +56,26 @@ public class SimpleVersionImpl extends SemverToStringableImpl implements SimpleV
 	 * @ordered
 	 */
 	protected VersionNumber number;
+
+	/**
+	 * The default value of the '{@link #isWithLetterV() <em>With Letter V</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isWithLetterV()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean WITH_LETTER_V_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isWithLetterV() <em>With Letter V</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isWithLetterV()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean withLetterV = WITH_LETTER_V_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getComparators() <em>Comparators</em>}' attribute list.
@@ -133,6 +154,27 @@ public class SimpleVersionImpl extends SemverToStringableImpl implements SimpleV
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean isWithLetterV() {
+		return withLetterV;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setWithLetterV(boolean newWithLetterV) {
+		boolean oldWithLetterV = withLetterV;
+		withLetterV = newWithLetterV;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, SemverPackage.SIMPLE_VERSION__WITH_LETTER_V, oldWithLetterV, withLetterV));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EList<VersionComparator> getComparators() {
 		if (comparators == null) {
 			comparators = new EDataTypeEList<VersionComparator>(VersionComparator.class, this, SemverPackage.SIMPLE_VERSION__COMPARATORS);
@@ -146,7 +188,7 @@ public class SimpleVersionImpl extends SemverToStringableImpl implements SimpleV
 	 * @generated
 	 */
 	public boolean isSpecific() {
-		return ((this.getComparators().isEmpty() || this.getComparators().contains(VersionComparator.VERSION)) || this.getComparators().contains(VersionComparator.EQUALS));
+		return ((this.getComparators().isEmpty() || this.isWithLetterV()) || this.getComparators().contains(VersionComparator.EQUALS));
 	}
 
 	/**
@@ -227,6 +269,8 @@ public class SimpleVersionImpl extends SemverToStringableImpl implements SimpleV
 		switch (featureID) {
 			case SemverPackage.SIMPLE_VERSION__NUMBER:
 				return getNumber();
+			case SemverPackage.SIMPLE_VERSION__WITH_LETTER_V:
+				return isWithLetterV();
 			case SemverPackage.SIMPLE_VERSION__COMPARATORS:
 				return getComparators();
 		}
@@ -244,6 +288,9 @@ public class SimpleVersionImpl extends SemverToStringableImpl implements SimpleV
 		switch (featureID) {
 			case SemverPackage.SIMPLE_VERSION__NUMBER:
 				setNumber((VersionNumber)newValue);
+				return;
+			case SemverPackage.SIMPLE_VERSION__WITH_LETTER_V:
+				setWithLetterV((Boolean)newValue);
 				return;
 			case SemverPackage.SIMPLE_VERSION__COMPARATORS:
 				getComparators().clear();
@@ -264,6 +311,9 @@ public class SimpleVersionImpl extends SemverToStringableImpl implements SimpleV
 			case SemverPackage.SIMPLE_VERSION__NUMBER:
 				setNumber((VersionNumber)null);
 				return;
+			case SemverPackage.SIMPLE_VERSION__WITH_LETTER_V:
+				setWithLetterV(WITH_LETTER_V_EDEFAULT);
+				return;
 			case SemverPackage.SIMPLE_VERSION__COMPARATORS:
 				getComparators().clear();
 				return;
@@ -281,6 +331,8 @@ public class SimpleVersionImpl extends SemverToStringableImpl implements SimpleV
 		switch (featureID) {
 			case SemverPackage.SIMPLE_VERSION__NUMBER:
 				return number != null;
+			case SemverPackage.SIMPLE_VERSION__WITH_LETTER_V:
+				return withLetterV != WITH_LETTER_V_EDEFAULT;
 			case SemverPackage.SIMPLE_VERSION__COMPARATORS:
 				return comparators != null && !comparators.isEmpty();
 		}
@@ -323,7 +375,9 @@ public class SimpleVersionImpl extends SemverToStringableImpl implements SimpleV
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (comparators: ");
+		result.append(" (withLetterV: ");
+		result.append(withLetterV);
+		result.append(", comparators: ");
 		result.append(comparators);
 		result.append(')');
 		return result.toString();

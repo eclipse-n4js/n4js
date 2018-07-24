@@ -29,6 +29,7 @@ import org.eclipse.emf.common.util.EList;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.semver.Semver.SimpleVersion#getNumber <em>Number</em>}</li>
+ *   <li>{@link org.eclipse.n4js.semver.Semver.SimpleVersion#isWithLetterV <em>With Letter V</em>}</li>
  *   <li>{@link org.eclipse.n4js.semver.Semver.SimpleVersion#getComparators <em>Comparators</em>}</li>
  * </ul>
  *
@@ -64,6 +65,32 @@ public interface SimpleVersion extends SemverToStringable {
 	void setNumber(VersionNumber value);
 
 	/**
+	 * Returns the value of the '<em><b>With Letter V</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>With Letter V</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>With Letter V</em>' attribute.
+	 * @see #setWithLetterV(boolean)
+	 * @see org.eclipse.n4js.semver.Semver.SemverPackage#getSimpleVersion_WithLetterV()
+	 * @model unique="false"
+	 * @generated
+	 */
+	boolean isWithLetterV();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.semver.Semver.SimpleVersion#isWithLetterV <em>With Letter V</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>With Letter V</em>' attribute.
+	 * @see #isWithLetterV()
+	 * @generated
+	 */
+	void setWithLetterV(boolean value);
+
+	/**
 	 * Returns the value of the '<em><b>Comparators</b></em>' attribute list.
 	 * The list contents are of type {@link org.eclipse.n4js.semver.Semver.VersionComparator}.
 	 * The literals are from the enumeration {@link org.eclipse.n4js.semver.Semver.VersionComparator}.
@@ -88,7 +115,7 @@ public interface SimpleVersion extends SemverToStringable {
 	 * * @return true iff the comparators are either empty, or contain 'v' or '='
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return ((this.getComparators().isEmpty() || this.getComparators().contains(&lt;%org.eclipse.n4js.semver.Semver.VersionComparator%&gt;.VERSION)) || this.getComparators().contains(&lt;%org.eclipse.n4js.semver.Semver.VersionComparator%&gt;.EQUALS));'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return ((this.getComparators().isEmpty() || this.isWithLetterV()) || this.getComparators().contains(&lt;%org.eclipse.n4js.semver.Semver.VersionComparator%&gt;.EQUALS));'"
 	 * @generated
 	 */
 	boolean isSpecific();

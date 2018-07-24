@@ -290,13 +290,22 @@ public interface SemverPackage extends EPackage {
 	int URL_SEMVER__SIMPLE_VERSION = URL_VERSION_SPECIFIER_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>With Semver Tag</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int URL_SEMVER__WITH_SEMVER_TAG = URL_VERSION_SPECIFIER_FEATURE_COUNT + 1;
+
+	/**
 	 * The number of structural features of the '<em>URL Semver</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int URL_SEMVER_FEATURE_COUNT = URL_VERSION_SPECIFIER_FEATURE_COUNT + 1;
+	int URL_SEMVER_FEATURE_COUNT = URL_VERSION_SPECIFIER_FEATURE_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>To String</em>' operation.
@@ -713,13 +722,22 @@ public interface SemverPackage extends EPackage {
 	int SIMPLE_VERSION__NUMBER = SEMVER_TO_STRINGABLE_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>With Letter V</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SIMPLE_VERSION__WITH_LETTER_V = SEMVER_TO_STRINGABLE_FEATURE_COUNT + 1;
+
+	/**
 	 * The feature id for the '<em><b>Comparators</b></em>' attribute list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SIMPLE_VERSION__COMPARATORS = SEMVER_TO_STRINGABLE_FEATURE_COUNT + 1;
+	int SIMPLE_VERSION__COMPARATORS = SEMVER_TO_STRINGABLE_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of structural features of the '<em>Simple Version</em>' class.
@@ -728,7 +746,7 @@ public interface SemverPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SIMPLE_VERSION_FEATURE_COUNT = SEMVER_TO_STRINGABLE_FEATURE_COUNT + 2;
+	int SIMPLE_VERSION_FEATURE_COUNT = SEMVER_TO_STRINGABLE_FEATURE_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>To String</em>' operation.
@@ -1266,6 +1284,17 @@ public interface SemverPackage extends EPackage {
 	EReference getURLSemver_SimpleVersion();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.semver.Semver.URLSemver#isWithSemverTag <em>With Semver Tag</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>With Semver Tag</em>'.
+	 * @see org.eclipse.n4js.semver.Semver.URLSemver#isWithSemverTag()
+	 * @see #getURLSemver()
+	 * @generated
+	 */
+	EAttribute getURLSemver_WithSemverTag();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.semver.Semver.URLCommitISH <em>URL Commit ISH</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1464,6 +1493,17 @@ public interface SemverPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getSimpleVersion_Number();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.semver.Semver.SimpleVersion#isWithLetterV <em>With Letter V</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>With Letter V</em>'.
+	 * @see org.eclipse.n4js.semver.Semver.SimpleVersion#isWithLetterV()
+	 * @see #getSimpleVersion()
+	 * @generated
+	 */
+	EAttribute getSimpleVersion_WithLetterV();
 
 	/**
 	 * Returns the meta object for the attribute list '{@link org.eclipse.n4js.semver.Semver.SimpleVersion#getComparators <em>Comparators</em>}'.
@@ -1926,6 +1966,14 @@ public interface SemverPackage extends EPackage {
 		EReference URL_SEMVER__SIMPLE_VERSION = eINSTANCE.getURLSemver_SimpleVersion();
 
 		/**
+		 * The meta object literal for the '<em><b>With Semver Tag</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute URL_SEMVER__WITH_SEMVER_TAG = eINSTANCE.getURLSemver_WithSemverTag();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.semver.Semver.impl.URLCommitISHImpl <em>URL Commit ISH</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2094,6 +2142,14 @@ public interface SemverPackage extends EPackage {
 		 * @generated
 		 */
 		EReference SIMPLE_VERSION__NUMBER = eINSTANCE.getSimpleVersion_Number();
+
+		/**
+		 * The meta object literal for the '<em><b>With Letter V</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SIMPLE_VERSION__WITH_LETTER_V = eINSTANCE.getSimpleVersion_WithLetterV();
 
 		/**
 		 * The meta object literal for the '<em><b>Comparators</b></em>' attribute list feature.

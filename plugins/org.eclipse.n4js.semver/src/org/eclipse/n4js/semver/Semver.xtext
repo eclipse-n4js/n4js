@@ -13,8 +13,8 @@ grammar org.eclipse.n4js.semver.Semver
 	with org.eclipse.n4js.common.unicode.Unicode
 	hidden (EOL)
 
-import "http://www.eclipse.org/n4js/Semver"
-import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+import 'http://www.eclipse.org/n4js/Semver'
+import 'http://www.eclipse.org/emf/2002/Ecore' as ecore
 
 
 
@@ -27,8 +27,8 @@ NPMVersionRequirement:
 	VersionRangeSetRequirement
 	| (
 		(
-			URLVersionRequirement
-			| LocalPathVersionRequirement
+			LocalPathVersionRequirement
+			| URLVersionRequirement
 			| GitHubVersionRequirement
 			| TagVersionRequirement
 		)
@@ -36,23 +36,30 @@ NPMVersionRequirement:
 	)
 ;
 
+LocalPathVersionRequirement:
+	=>'file:' localPath=PATH
+;
+
 URLVersionRequirement:
-	protocol=URL_PROTOCOL '://' url=URL
+	protocol=URL_PROTOCOL =>'://' url=URL
 	('#' versionSpecifier=URLVersionSpecifier)?
 ;
 
 URLVersionSpecifier:
-	=>URLSemver
-	| URLCommitISH
+	=>(URLSemver)
+	| ({URLCommitISH} commitISH=ALPHA_NUMERIC_CHARS_START_WITH_DIGITS)
+	| ({URLCommitISH} commitISH=ALPHA_NUMERIC_CHARS)
 ;
 
 URLSemver:
-	("semver:")? simpleVersion=SimpleVersion
+	{URLSemver}
+	withSemverTag?='semver:'?
+	simpleVersion=SimpleVersion
 ;
 
-URLCommitISH:
-	commitISH=ALPHA_NUMERIC_CHARS
-;
+//URLCommitISH:
+//	commitISH=ALPHA_NUMERIC_CHARS
+//;
 
 TagVersionRequirement:
 	tagName=TAG
@@ -60,10 +67,6 @@ TagVersionRequirement:
 
 GitHubVersionRequirement:
 	githubUrl=URL ('#' commitISH=ALPHA_NUMERIC_CHARS)?
-;
-
-LocalPathVersionRequirement:
-	'file:' localPath=PATH
 ;
 
 
@@ -84,14 +87,14 @@ VersionRangeContraint returns VersionRange:
 ;
 
 SimpleVersion:
-	{SimpleVersion} (comparators+=VersionComparator WS*)* number=VersionNumber
+	(comparators+=VersionComparator WS*)* withLetterV?=LETTER_V? number=VersionNumber
 ;
 
 VersionNumber:
 	major=VersionPart
-	("." minor=VersionPart
-		("." patch=VersionPart
-			("." extended+=VersionPart)*
+	('.' minor=VersionPart
+		('.' patch=VersionPart
+			('.' extended+=VersionPart)*
 		)?
 	)?
 	(qualifier=Qualifier)?
@@ -109,41 +112,37 @@ Qualifier:
 
 QualifierTag:
 	parts+=ALPHA_NUMERIC_CHARS
-	("." parts+=ALPHA_NUMERIC_CHARS)*
+	('.' parts+=ALPHA_NUMERIC_CHARS)*
 ;
 
 
 
-URL_PROTOCOL:
-	(LETTERS | '+')+
-;
-
-TAG:
-	LETTER_NO_V ALPHA_NUMERIC_CHARS*
-;
 
 PATH:
-	(LETTER_NO_V ALPHA_NUMERIC_CHAR)* (('/' | ".")+ ALPHA_NUMERIC_CHARS)+ ('/' | ".")*
+	(LETTER_NO_VX | '/' | '.') ('/' | '.' | '-' | DIGITS | LETTER_V | LETTER_X | LETTER_NO_VX)+
+;
+
+URL_PROTOCOL:
+	(LETTER_NO_VX) (LETTER_V | LETTER_X | LETTER_NO_VX | '+')+
 ;
 
 URL:
-	(LETTER_NO_V ALPHA_NUMERIC_CHAR)*  (('/' | "." | ':' | '@')+ ALPHA_NUMERIC_CHARS)+
+	(LETTER_NO_VX)
+	('-' | DIGITS | LETTER_V | LETTER_X | LETTER_NO_VX)*
+	('/' | '.' | ':' | '@')
+	('/' | '.' | ':' | '@' | '-' | DIGITS | LETTER_V | LETTER_X | LETTER_NO_VX)*
+;
+
+TAG:
+	(LETTER_NO_VX /*| LETTER_X*/) ('-' | DIGITS | LETTER_V | LETTER_X | LETTER_NO_VX)+
 ;
 
 ALPHA_NUMERIC_CHARS:
-	ALPHA_NUMERIC_CHAR+
+	('-' | DIGITS | LETTER_V | LETTER_X | LETTER_NO_VX)+
 ;
 
-ALPHA_NUMERIC_CHAR:
-	"-"? (DIGITS | LETTERS)
-;
-
-LETTERS:
-	(LETTER_V | LETTER_NO_V)+
-;
-
-LETTER_NO_V:
-	LETTER_X | LETTER_NO_VX
+ALPHA_NUMERIC_CHARS_START_WITH_DIGITS:
+	DIGITS ('-' | DIGITS | LETTER_V | LETTER_X | LETTER_NO_VX)+
 ;
 
 WILDCARD:
@@ -152,12 +151,15 @@ WILDCARD:
 
 
 
+
+
+
 terminal LETTER_NO_VX :
-	"a".."u" | "w" | "y" | "z" | "A".."U" | "W" | "Y" | "Z"
+	'a'..'u' | 'w' | 'y' | 'z' | 'A'..'U' | 'W' | 'Y' | 'Z'
 ;
 
 terminal LETTER_V :
-	"v" | "V"
+	'v' | 'V'
 ;
 
 terminal LETTER_X:
@@ -169,11 +171,7 @@ terminal ASTERIX:
 ;
 
 terminal DIGITS returns ecore::EInt:
-	DIGIT+
-;
-
-terminal fragment DIGIT:
-	"0".."9"
+	('0'..'9')+
 ;
 
 
@@ -190,8 +188,7 @@ terminal EOL:
 
 
 enum VersionComparator:
-	Version = 'v'
-|	Equals = '='
+	Equals = '='
 |	Smaller = '<'
 |	Tilde = '~'
 |	Caret = '^'

@@ -21,6 +21,7 @@ package org.eclipse.n4js.semver.Semver;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.semver.Semver.URLSemver#getSimpleVersion <em>Simple Version</em>}</li>
+ *   <li>{@link org.eclipse.n4js.semver.Semver.URLSemver#isWithSemverTag <em>With Semver Tag</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.semver.Semver.SemverPackage#getURLSemver()
@@ -53,5 +54,31 @@ public interface URLSemver extends URLVersionSpecifier {
 	 * @generated
 	 */
 	void setSimpleVersion(SimpleVersion value);
+
+	/**
+	 * Returns the value of the '<em><b>With Semver Tag</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>With Semver Tag</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>With Semver Tag</em>' attribute.
+	 * @see #setWithSemverTag(boolean)
+	 * @see org.eclipse.n4js.semver.Semver.SemverPackage#getURLSemver_WithSemverTag()
+	 * @model unique="false"
+	 * @generated
+	 */
+	boolean isWithSemverTag();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.semver.Semver.URLSemver#isWithSemverTag <em>With Semver Tag</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>With Semver Tag</em>' attribute.
+	 * @see #isWithSemverTag()
+	 * @generated
+	 */
+	void setWithSemverTag(boolean value);
 
 } // URLSemver
