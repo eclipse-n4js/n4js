@@ -165,66 +165,96 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 	public class URLVersionSpecifierElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.URLVersionSpecifier");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
-		private final RuleCall cURLSemverParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
-		private final RuleCall cURLCommitISHParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		private final Group cGroup_0 = (Group)cAlternatives.eContents().get(0);
+		private final RuleCall cURLSemverParserRuleCall_0_0 = (RuleCall)cGroup_0.eContents().get(0);
+		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
+		private final Action cURLCommitISHAction_1_0 = (Action)cGroup_1.eContents().get(0);
+		private final Assignment cCommitISHAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
+		private final RuleCall cCommitISHALPHA_NUMERIC_CHARS_START_WITH_DIGITSParserRuleCall_1_1_0 = (RuleCall)cCommitISHAssignment_1_1.eContents().get(0);
+		private final Group cGroup_2 = (Group)cAlternatives.eContents().get(2);
+		private final Action cURLCommitISHAction_2_0 = (Action)cGroup_2.eContents().get(0);
+		private final Assignment cCommitISHAssignment_2_1 = (Assignment)cGroup_2.eContents().get(1);
+		private final RuleCall cCommitISHALPHA_NUMERIC_CHARSParserRuleCall_2_1_0 = (RuleCall)cCommitISHAssignment_2_1.eContents().get(0);
 		
 		//URLVersionSpecifier:
-		//	=> URLSemver
-		//	| URLCommitISH;
+		//	=> (URLSemver) | {URLCommitISH} commitISH=ALPHA_NUMERIC_CHARS_START_WITH_DIGITS | {URLCommitISH}
+		//	commitISH=ALPHA_NUMERIC_CHARS;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//=> URLSemver | URLCommitISH
+		//=> (URLSemver) | {URLCommitISH} commitISH=ALPHA_NUMERIC_CHARS_START_WITH_DIGITS | {URLCommitISH}
+		//commitISH=ALPHA_NUMERIC_CHARS
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
-		//=> URLSemver
-		public RuleCall getURLSemverParserRuleCall_0() { return cURLSemverParserRuleCall_0; }
+		//=> (URLSemver)
+		public Group getGroup_0() { return cGroup_0; }
 		
-		//URLCommitISH
-		public RuleCall getURLCommitISHParserRuleCall_1() { return cURLCommitISHParserRuleCall_1; }
+		//URLSemver
+		public RuleCall getURLSemverParserRuleCall_0_0() { return cURLSemverParserRuleCall_0_0; }
+		
+		//{URLCommitISH} commitISH=ALPHA_NUMERIC_CHARS_START_WITH_DIGITS
+		public Group getGroup_1() { return cGroup_1; }
+		
+		//{URLCommitISH}
+		public Action getURLCommitISHAction_1_0() { return cURLCommitISHAction_1_0; }
+		
+		//commitISH=ALPHA_NUMERIC_CHARS_START_WITH_DIGITS
+		public Assignment getCommitISHAssignment_1_1() { return cCommitISHAssignment_1_1; }
+		
+		//ALPHA_NUMERIC_CHARS_START_WITH_DIGITS
+		public RuleCall getCommitISHALPHA_NUMERIC_CHARS_START_WITH_DIGITSParserRuleCall_1_1_0() { return cCommitISHALPHA_NUMERIC_CHARS_START_WITH_DIGITSParserRuleCall_1_1_0; }
+		
+		//{URLCommitISH} commitISH=ALPHA_NUMERIC_CHARS
+		public Group getGroup_2() { return cGroup_2; }
+		
+		//{URLCommitISH}
+		public Action getURLCommitISHAction_2_0() { return cURLCommitISHAction_2_0; }
+		
+		//commitISH=ALPHA_NUMERIC_CHARS
+		public Assignment getCommitISHAssignment_2_1() { return cCommitISHAssignment_2_1; }
+		
+		//ALPHA_NUMERIC_CHARS
+		public RuleCall getCommitISHALPHA_NUMERIC_CHARSParserRuleCall_2_1_0() { return cCommitISHALPHA_NUMERIC_CHARSParserRuleCall_2_1_0; }
 	}
 	public class URLSemverElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.URLSemver");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Keyword cSemverKeyword_0 = (Keyword)cGroup.eContents().get(0);
-		private final Assignment cSimpleVersionAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cSimpleVersionSimpleVersionParserRuleCall_1_0 = (RuleCall)cSimpleVersionAssignment_1.eContents().get(0);
+		private final Action cURLSemverAction_0 = (Action)cGroup.eContents().get(0);
+		private final Assignment cWithSemverTagAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final Keyword cWithSemverTagSemverKeyword_1_0 = (Keyword)cWithSemverTagAssignment_1.eContents().get(0);
+		private final Assignment cSimpleVersionAssignment_2 = (Assignment)cGroup.eContents().get(2);
+		private final RuleCall cSimpleVersionSimpleVersionParserRuleCall_2_0 = (RuleCall)cSimpleVersionAssignment_2.eContents().get(0);
 		
 		//URLSemver:
-		//	=> 'semver:'? simpleVersion=SimpleVersion;
+		//	{URLSemver} withSemverTag?='semver:'?
+		//	simpleVersion=SimpleVersion;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//=> 'semver:'? simpleVersion=SimpleVersion
+		//{URLSemver} withSemverTag?='semver:'? simpleVersion=SimpleVersion
 		public Group getGroup() { return cGroup; }
 		
-		//=> 'semver:'?
-		public Keyword getSemverKeyword_0() { return cSemverKeyword_0; }
+		//{URLSemver}
+		public Action getURLSemverAction_0() { return cURLSemverAction_0; }
+		
+		//withSemverTag?='semver:'?
+		public Assignment getWithSemverTagAssignment_1() { return cWithSemverTagAssignment_1; }
+		
+		//'semver:'
+		public Keyword getWithSemverTagSemverKeyword_1_0() { return cWithSemverTagSemverKeyword_1_0; }
 		
 		//simpleVersion=SimpleVersion
-		public Assignment getSimpleVersionAssignment_1() { return cSimpleVersionAssignment_1; }
+		public Assignment getSimpleVersionAssignment_2() { return cSimpleVersionAssignment_2; }
 		
 		//SimpleVersion
-		public RuleCall getSimpleVersionSimpleVersionParserRuleCall_1_0() { return cSimpleVersionSimpleVersionParserRuleCall_1_0; }
-	}
-	public class URLCommitISHElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.URLCommitISH");
-		private final Assignment cCommitISHAssignment = (Assignment)rule.eContents().get(1);
-		private final RuleCall cCommitISHALPHA_NUMERIC_CHARSParserRuleCall_0 = (RuleCall)cCommitISHAssignment.eContents().get(0);
-		
-		//URLCommitISH:
-		//	commitISH=ALPHA_NUMERIC_CHARS;
-		@Override public ParserRule getRule() { return rule; }
-		
-		//commitISH=ALPHA_NUMERIC_CHARS
-		public Assignment getCommitISHAssignment() { return cCommitISHAssignment; }
-		
-		//ALPHA_NUMERIC_CHARS
-		public RuleCall getCommitISHALPHA_NUMERIC_CHARSParserRuleCall_0() { return cCommitISHALPHA_NUMERIC_CHARSParserRuleCall_0; }
+		public RuleCall getSimpleVersionSimpleVersionParserRuleCall_2_0() { return cSimpleVersionSimpleVersionParserRuleCall_2_0; }
 	}
 	public class TagVersionRequirementElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.TagVersionRequirement");
 		private final Assignment cTagNameAssignment = (Assignment)rule.eContents().get(1);
 		private final RuleCall cTagNameTAGParserRuleCall_0 = (RuleCall)cTagNameAssignment.eContents().get(0);
 		
+		////URLCommitISH:
+		////	commitISH=ALPHA_NUMERIC_CHARS
+		////;
 		//TagVersionRequirement:
 		//	tagName=TAG;
 		@Override public ParserRule getRule() { return rule; }
@@ -429,49 +459,45 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 	public class SimpleVersionElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.SimpleVersion");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Action cSimpleVersionAction_0 = (Action)cGroup.eContents().get(0);
-		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
-		private final Assignment cComparatorsAssignment_1_0 = (Assignment)cGroup_1.eContents().get(0);
-		private final RuleCall cComparatorsVersionComparatorEnumRuleCall_1_0_0 = (RuleCall)cComparatorsAssignment_1_0.eContents().get(0);
-		private final RuleCall cWSTerminalRuleCall_1_1 = (RuleCall)cGroup_1.eContents().get(1);
-		private final Assignment cWithLetterVAssignment_2 = (Assignment)cGroup.eContents().get(2);
-		private final RuleCall cWithLetterVLETTER_VTerminalRuleCall_2_0 = (RuleCall)cWithLetterVAssignment_2.eContents().get(0);
-		private final Assignment cNumberAssignment_3 = (Assignment)cGroup.eContents().get(3);
-		private final RuleCall cNumberVersionNumberParserRuleCall_3_0 = (RuleCall)cNumberAssignment_3.eContents().get(0);
+		private final Group cGroup_0 = (Group)cGroup.eContents().get(0);
+		private final Assignment cComparatorsAssignment_0_0 = (Assignment)cGroup_0.eContents().get(0);
+		private final RuleCall cComparatorsVersionComparatorEnumRuleCall_0_0_0 = (RuleCall)cComparatorsAssignment_0_0.eContents().get(0);
+		private final RuleCall cWSTerminalRuleCall_0_1 = (RuleCall)cGroup_0.eContents().get(1);
+		private final Assignment cWithLetterVAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cWithLetterVLETTER_VTerminalRuleCall_1_0 = (RuleCall)cWithLetterVAssignment_1.eContents().get(0);
+		private final Assignment cNumberAssignment_2 = (Assignment)cGroup.eContents().get(2);
+		private final RuleCall cNumberVersionNumberParserRuleCall_2_0 = (RuleCall)cNumberAssignment_2.eContents().get(0);
 		
 		//SimpleVersion:
-		//	{SimpleVersion} (comparators+=VersionComparator WS*)* withLetterV?=LETTER_V? number=VersionNumber;
+		//	(comparators+=VersionComparator WS*)* withLetterV?=LETTER_V? number=VersionNumber;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//{SimpleVersion} (comparators+=VersionComparator WS*)* withLetterV?=LETTER_V? number=VersionNumber
+		//(comparators+=VersionComparator WS*)* withLetterV?=LETTER_V? number=VersionNumber
 		public Group getGroup() { return cGroup; }
 		
-		//{SimpleVersion}
-		public Action getSimpleVersionAction_0() { return cSimpleVersionAction_0; }
-		
 		//(comparators+=VersionComparator WS*)*
-		public Group getGroup_1() { return cGroup_1; }
+		public Group getGroup_0() { return cGroup_0; }
 		
 		//comparators+=VersionComparator
-		public Assignment getComparatorsAssignment_1_0() { return cComparatorsAssignment_1_0; }
+		public Assignment getComparatorsAssignment_0_0() { return cComparatorsAssignment_0_0; }
 		
 		//VersionComparator
-		public RuleCall getComparatorsVersionComparatorEnumRuleCall_1_0_0() { return cComparatorsVersionComparatorEnumRuleCall_1_0_0; }
+		public RuleCall getComparatorsVersionComparatorEnumRuleCall_0_0_0() { return cComparatorsVersionComparatorEnumRuleCall_0_0_0; }
 		
 		//WS*
-		public RuleCall getWSTerminalRuleCall_1_1() { return cWSTerminalRuleCall_1_1; }
+		public RuleCall getWSTerminalRuleCall_0_1() { return cWSTerminalRuleCall_0_1; }
 		
 		//withLetterV?=LETTER_V?
-		public Assignment getWithLetterVAssignment_2() { return cWithLetterVAssignment_2; }
+		public Assignment getWithLetterVAssignment_1() { return cWithLetterVAssignment_1; }
 		
 		//LETTER_V
-		public RuleCall getWithLetterVLETTER_VTerminalRuleCall_2_0() { return cWithLetterVLETTER_VTerminalRuleCall_2_0; }
+		public RuleCall getWithLetterVLETTER_VTerminalRuleCall_1_0() { return cWithLetterVLETTER_VTerminalRuleCall_1_0; }
 		
 		//number=VersionNumber
-		public Assignment getNumberAssignment_3() { return cNumberAssignment_3; }
+		public Assignment getNumberAssignment_2() { return cNumberAssignment_2; }
 		
 		//VersionNumber
-		public RuleCall getNumberVersionNumberParserRuleCall_3_0() { return cNumberVersionNumberParserRuleCall_3_0; }
+		public RuleCall getNumberVersionNumberParserRuleCall_2_0() { return cNumberVersionNumberParserRuleCall_2_0; }
 	}
 	public class VersionNumberElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.VersionNumber");
@@ -882,9 +908,7 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 	public class TAGElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.TAG");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Alternatives cAlternatives_0 = (Alternatives)cGroup.eContents().get(0);
-		private final RuleCall cLETTER_NO_VXTerminalRuleCall_0_0 = (RuleCall)cAlternatives_0.eContents().get(0);
-		private final RuleCall cLETTER_XTerminalRuleCall_0_1 = (RuleCall)cAlternatives_0.eContents().get(1);
+		private final RuleCall cLETTER_NO_VXTerminalRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
 		private final Alternatives cAlternatives_1 = (Alternatives)cGroup.eContents().get(1);
 		private final Keyword cHyphenMinusKeyword_1_0 = (Keyword)cAlternatives_1.eContents().get(0);
 		private final RuleCall cDIGITSTerminalRuleCall_1_1 = (RuleCall)cAlternatives_1.eContents().get(1);
@@ -893,20 +917,14 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cLETTER_NO_VXTerminalRuleCall_1_4 = (RuleCall)cAlternatives_1.eContents().get(4);
 		
 		//TAG:
-		//	(LETTER_NO_VX | LETTER_X) ('-' | DIGITS | LETTER_V | LETTER_X | LETTER_NO_VX)+;
+		//	LETTER_NO_VX /*| LETTER_X*/ ('-' | DIGITS | LETTER_V | LETTER_X | LETTER_NO_VX)+;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//(LETTER_NO_VX | LETTER_X) ('-' | DIGITS | LETTER_V | LETTER_X | LETTER_NO_VX)+
+		//LETTER_NO_VX /*| LETTER_X*/ ('-' | DIGITS | LETTER_V | LETTER_X | LETTER_NO_VX)+
 		public Group getGroup() { return cGroup; }
 		
-		//LETTER_NO_VX | LETTER_X
-		public Alternatives getAlternatives_0() { return cAlternatives_0; }
-		
 		//LETTER_NO_VX
-		public RuleCall getLETTER_NO_VXTerminalRuleCall_0_0() { return cLETTER_NO_VXTerminalRuleCall_0_0; }
-		
-		//LETTER_X
-		public RuleCall getLETTER_XTerminalRuleCall_0_1() { return cLETTER_XTerminalRuleCall_0_1; }
+		public RuleCall getLETTER_NO_VXTerminalRuleCall_0() { return cLETTER_NO_VXTerminalRuleCall_0; }
 		
 		//('-' | DIGITS | LETTER_V | LETTER_X | LETTER_NO_VX)+
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
@@ -956,6 +974,45 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//LETTER_NO_VX
 		public RuleCall getLETTER_NO_VXTerminalRuleCall_4() { return cLETTER_NO_VXTerminalRuleCall_4; }
+	}
+	public class ALPHA_NUMERIC_CHARS_START_WITH_DIGITSElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.ALPHA_NUMERIC_CHARS_START_WITH_DIGITS");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cDIGITSTerminalRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final Alternatives cAlternatives_1 = (Alternatives)cGroup.eContents().get(1);
+		private final Keyword cHyphenMinusKeyword_1_0 = (Keyword)cAlternatives_1.eContents().get(0);
+		private final RuleCall cDIGITSTerminalRuleCall_1_1 = (RuleCall)cAlternatives_1.eContents().get(1);
+		private final RuleCall cLETTER_VTerminalRuleCall_1_2 = (RuleCall)cAlternatives_1.eContents().get(2);
+		private final RuleCall cLETTER_XTerminalRuleCall_1_3 = (RuleCall)cAlternatives_1.eContents().get(3);
+		private final RuleCall cLETTER_NO_VXTerminalRuleCall_1_4 = (RuleCall)cAlternatives_1.eContents().get(4);
+		
+		//ALPHA_NUMERIC_CHARS_START_WITH_DIGITS:
+		//	DIGITS ('-' | DIGITS | LETTER_V | LETTER_X | LETTER_NO_VX)+;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//DIGITS ('-' | DIGITS | LETTER_V | LETTER_X | LETTER_NO_VX)+
+		public Group getGroup() { return cGroup; }
+		
+		//DIGITS
+		public RuleCall getDIGITSTerminalRuleCall_0() { return cDIGITSTerminalRuleCall_0; }
+		
+		//('-' | DIGITS | LETTER_V | LETTER_X | LETTER_NO_VX)+
+		public Alternatives getAlternatives_1() { return cAlternatives_1; }
+		
+		//'-'
+		public Keyword getHyphenMinusKeyword_1_0() { return cHyphenMinusKeyword_1_0; }
+		
+		//DIGITS
+		public RuleCall getDIGITSTerminalRuleCall_1_1() { return cDIGITSTerminalRuleCall_1_1; }
+		
+		//LETTER_V
+		public RuleCall getLETTER_VTerminalRuleCall_1_2() { return cLETTER_VTerminalRuleCall_1_2; }
+		
+		//LETTER_X
+		public RuleCall getLETTER_XTerminalRuleCall_1_3() { return cLETTER_XTerminalRuleCall_1_3; }
+		
+		//LETTER_NO_VX
+		public RuleCall getLETTER_NO_VXTerminalRuleCall_1_4() { return cLETTER_NO_VXTerminalRuleCall_1_4; }
 	}
 	public class WILDCARDElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.WILDCARD");
@@ -1056,7 +1113,6 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 	private final URLVersionRequirementElements pURLVersionRequirement;
 	private final URLVersionSpecifierElements pURLVersionSpecifier;
 	private final URLSemverElements pURLSemver;
-	private final URLCommitISHElements pURLCommitISH;
 	private final TagVersionRequirementElements pTagVersionRequirement;
 	private final GitHubVersionRequirementElements pGitHubVersionRequirement;
 	private final VersionRangeSetRequirementElements pVersionRangeSetRequirement;
@@ -1073,13 +1129,13 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 	private final URLElements pURL;
 	private final TAGElements pTAG;
 	private final ALPHA_NUMERIC_CHARSElements pALPHA_NUMERIC_CHARS;
+	private final ALPHA_NUMERIC_CHARS_START_WITH_DIGITSElements pALPHA_NUMERIC_CHARS_START_WITH_DIGITS;
 	private final WILDCARDElements pWILDCARD;
 	private final TerminalRule tLETTER_NO_VX;
 	private final TerminalRule tLETTER_V;
 	private final TerminalRule tLETTER_X;
 	private final TerminalRule tASTERIX;
 	private final TerminalRule tDIGITS;
-	private final TerminalRule tDIGIT;
 	private final TerminalRule tWS;
 	private final TerminalRule tEOL;
 	private final VersionComparatorElements eVersionComparator;
@@ -1098,7 +1154,6 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 		this.pURLVersionRequirement = new URLVersionRequirementElements();
 		this.pURLVersionSpecifier = new URLVersionSpecifierElements();
 		this.pURLSemver = new URLSemverElements();
-		this.pURLCommitISH = new URLCommitISHElements();
 		this.pTagVersionRequirement = new TagVersionRequirementElements();
 		this.pGitHubVersionRequirement = new GitHubVersionRequirementElements();
 		this.pVersionRangeSetRequirement = new VersionRangeSetRequirementElements();
@@ -1115,13 +1170,13 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 		this.pURL = new URLElements();
 		this.pTAG = new TAGElements();
 		this.pALPHA_NUMERIC_CHARS = new ALPHA_NUMERIC_CHARSElements();
+		this.pALPHA_NUMERIC_CHARS_START_WITH_DIGITS = new ALPHA_NUMERIC_CHARS_START_WITH_DIGITSElements();
 		this.pWILDCARD = new WILDCARDElements();
 		this.tLETTER_NO_VX = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.LETTER_NO_VX");
 		this.tLETTER_V = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.LETTER_V");
 		this.tLETTER_X = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.LETTER_X");
 		this.tASTERIX = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.ASTERIX");
 		this.tDIGITS = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.DIGITS");
-		this.tDIGIT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.DIGIT");
 		this.tWS = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.WS");
 		this.tEOL = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.EOL");
 		this.eVersionComparator = new VersionComparatorElements();
@@ -1192,8 +1247,8 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//URLVersionSpecifier:
-	//	=> URLSemver
-	//	| URLCommitISH;
+	//	=> (URLSemver) | {URLCommitISH} commitISH=ALPHA_NUMERIC_CHARS_START_WITH_DIGITS | {URLCommitISH}
+	//	commitISH=ALPHA_NUMERIC_CHARS;
 	public URLVersionSpecifierElements getURLVersionSpecifierAccess() {
 		return pURLVersionSpecifier;
 	}
@@ -1203,7 +1258,8 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//URLSemver:
-	//	=> 'semver:'? simpleVersion=SimpleVersion;
+	//	{URLSemver} withSemverTag?='semver:'?
+	//	simpleVersion=SimpleVersion;
 	public URLSemverElements getURLSemverAccess() {
 		return pURLSemver;
 	}
@@ -1212,16 +1268,9 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 		return getURLSemverAccess().getRule();
 	}
 	
-	//URLCommitISH:
-	//	commitISH=ALPHA_NUMERIC_CHARS;
-	public URLCommitISHElements getURLCommitISHAccess() {
-		return pURLCommitISH;
-	}
-	
-	public ParserRule getURLCommitISHRule() {
-		return getURLCommitISHAccess().getRule();
-	}
-	
+	////URLCommitISH:
+	////	commitISH=ALPHA_NUMERIC_CHARS
+	////;
 	//TagVersionRequirement:
 	//	tagName=TAG;
 	public TagVersionRequirementElements getTagVersionRequirementAccess() {
@@ -1283,7 +1332,7 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//SimpleVersion:
-	//	{SimpleVersion} (comparators+=VersionComparator WS*)* withLetterV?=LETTER_V? number=VersionNumber;
+	//	(comparators+=VersionComparator WS*)* withLetterV?=LETTER_V? number=VersionNumber;
 	public SimpleVersionElements getSimpleVersionAccess() {
 		return pSimpleVersion;
 	}
@@ -1366,7 +1415,7 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//TAG:
-	//	(LETTER_NO_VX | LETTER_X) ('-' | DIGITS | LETTER_V | LETTER_X | LETTER_NO_VX)+;
+	//	LETTER_NO_VX /*| LETTER_X*/ ('-' | DIGITS | LETTER_V | LETTER_X | LETTER_NO_VX)+;
 	public TAGElements getTAGAccess() {
 		return pTAG;
 	}
@@ -1383,6 +1432,16 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public ParserRule getALPHA_NUMERIC_CHARSRule() {
 		return getALPHA_NUMERIC_CHARSAccess().getRule();
+	}
+	
+	//ALPHA_NUMERIC_CHARS_START_WITH_DIGITS:
+	//	DIGITS ('-' | DIGITS | LETTER_V | LETTER_X | LETTER_NO_VX)+;
+	public ALPHA_NUMERIC_CHARS_START_WITH_DIGITSElements getALPHA_NUMERIC_CHARS_START_WITH_DIGITSAccess() {
+		return pALPHA_NUMERIC_CHARS_START_WITH_DIGITS;
+	}
+	
+	public ParserRule getALPHA_NUMERIC_CHARS_START_WITH_DIGITSRule() {
+		return getALPHA_NUMERIC_CHARS_START_WITH_DIGITSAccess().getRule();
 	}
 	
 	//WILDCARD:
@@ -1420,15 +1479,9 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//terminal DIGITS returns ecore::EInt:
-	//	DIGIT+;
+	//	'0'..'9'+;
 	public TerminalRule getDIGITSRule() {
 		return tDIGITS;
-	}
-	
-	//terminal fragment DIGIT:
-	//	'0'..'9';
-	public TerminalRule getDIGITRule() {
-		return tDIGIT;
 	}
 	
 	//terminal WS:

@@ -31,6 +31,7 @@ import org.eclipse.n4js.semver.Semver.URLSemver;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.semver.Semver.impl.URLSemverImpl#getSimpleVersion <em>Simple Version</em>}</li>
+ *   <li>{@link org.eclipse.n4js.semver.Semver.impl.URLSemverImpl#isWithSemverTag <em>With Semver Tag</em>}</li>
  * </ul>
  *
  * @generated
@@ -45,6 +46,26 @@ public class URLSemverImpl extends URLVersionSpecifierImpl implements URLSemver 
 	 * @ordered
 	 */
 	protected SimpleVersion simpleVersion;
+
+	/**
+	 * The default value of the '{@link #isWithSemverTag() <em>With Semver Tag</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isWithSemverTag()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean WITH_SEMVER_TAG_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isWithSemverTag() <em>With Semver Tag</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isWithSemverTag()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean withSemverTag = WITH_SEMVER_TAG_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -113,6 +134,27 @@ public class URLSemverImpl extends URLVersionSpecifierImpl implements URLSemver 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean isWithSemverTag() {
+		return withSemverTag;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setWithSemverTag(boolean newWithSemverTag) {
+		boolean oldWithSemverTag = withSemverTag;
+		withSemverTag = newWithSemverTag;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, SemverPackage.URL_SEMVER__WITH_SEMVER_TAG, oldWithSemverTag, withSemverTag));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -132,6 +174,8 @@ public class URLSemverImpl extends URLVersionSpecifierImpl implements URLSemver 
 		switch (featureID) {
 			case SemverPackage.URL_SEMVER__SIMPLE_VERSION:
 				return getSimpleVersion();
+			case SemverPackage.URL_SEMVER__WITH_SEMVER_TAG:
+				return isWithSemverTag();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -146,6 +190,9 @@ public class URLSemverImpl extends URLVersionSpecifierImpl implements URLSemver 
 		switch (featureID) {
 			case SemverPackage.URL_SEMVER__SIMPLE_VERSION:
 				setSimpleVersion((SimpleVersion)newValue);
+				return;
+			case SemverPackage.URL_SEMVER__WITH_SEMVER_TAG:
+				setWithSemverTag((Boolean)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -162,6 +209,9 @@ public class URLSemverImpl extends URLVersionSpecifierImpl implements URLSemver 
 			case SemverPackage.URL_SEMVER__SIMPLE_VERSION:
 				setSimpleVersion((SimpleVersion)null);
 				return;
+			case SemverPackage.URL_SEMVER__WITH_SEMVER_TAG:
+				setWithSemverTag(WITH_SEMVER_TAG_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -176,8 +226,26 @@ public class URLSemverImpl extends URLVersionSpecifierImpl implements URLSemver 
 		switch (featureID) {
 			case SemverPackage.URL_SEMVER__SIMPLE_VERSION:
 				return simpleVersion != null;
+			case SemverPackage.URL_SEMVER__WITH_SEMVER_TAG:
+				return withSemverTag != WITH_SEMVER_TAG_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		if (eIsProxy()) return super.toString();
+
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (withSemverTag: ");
+		result.append(withSemverTag);
+		result.append(')');
+		return result.toString();
 	}
 
 } //URLSemverImpl

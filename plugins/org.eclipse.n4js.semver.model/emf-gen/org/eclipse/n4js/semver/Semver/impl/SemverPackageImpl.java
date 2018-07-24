@@ -359,6 +359,15 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getURLSemver_WithSemverTag() {
+		return (EAttribute)urlSemverEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getURLCommitISH() {
 		return urlCommitISHEClass;
 	}
@@ -866,6 +875,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 
 		urlSemverEClass = createEClass(URL_SEMVER);
 		createEReference(urlSemverEClass, URL_SEMVER__SIMPLE_VERSION);
+		createEAttribute(urlSemverEClass, URL_SEMVER__WITH_SEMVER_TAG);
 
 		urlCommitISHEClass = createEClass(URL_COMMIT_ISH);
 		createEAttribute(urlCommitISHEClass, URL_COMMIT_ISH__COMMIT_ISH);
@@ -1004,6 +1014,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 
 		initEClass(urlSemverEClass, URLSemver.class, "URLSemver", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getURLSemver_SimpleVersion(), this.getSimpleVersion(), null, "simpleVersion", null, 0, 1, URLSemver.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getURLSemver_WithSemverTag(), theEcorePackage.getEBoolean(), "withSemverTag", null, 0, 1, URLSemver.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(urlCommitISHEClass, URLCommitISH.class, "URLCommitISH", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getURLCommitISH_CommitISH(), theEcorePackage.getEString(), "commitISH", null, 0, 1, URLCommitISH.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

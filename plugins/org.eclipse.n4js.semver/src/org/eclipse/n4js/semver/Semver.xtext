@@ -46,17 +46,20 @@ URLVersionRequirement:
 ;
 
 URLVersionSpecifier:
-	=>URLSemver
-	| URLCommitISH
+	=>(URLSemver)
+	| ({URLCommitISH} commitISH=ALPHA_NUMERIC_CHARS_START_WITH_DIGITS)
+	| ({URLCommitISH} commitISH=ALPHA_NUMERIC_CHARS)
 ;
 
 URLSemver:
-	(=>'semver:')? simpleVersion=SimpleVersion
+	{URLSemver}
+	withSemverTag?='semver:'?
+	simpleVersion=SimpleVersion
 ;
 
-URLCommitISH:
-	commitISH=ALPHA_NUMERIC_CHARS
-;
+//URLCommitISH:
+//	commitISH=ALPHA_NUMERIC_CHARS
+//;
 
 TagVersionRequirement:
 	tagName=TAG
@@ -84,7 +87,7 @@ VersionRangeContraint returns VersionRange:
 ;
 
 SimpleVersion:
-	{SimpleVersion} (comparators+=VersionComparator WS*)* withLetterV?=LETTER_V? number=VersionNumber
+	(comparators+=VersionComparator WS*)* withLetterV?=LETTER_V? number=VersionNumber
 ;
 
 VersionNumber:
@@ -131,11 +134,15 @@ URL:
 ;
 
 TAG:
-	(LETTER_NO_VX | LETTER_X) ('-' | DIGITS | LETTER_V | LETTER_X | LETTER_NO_VX)+
+	(LETTER_NO_VX /*| LETTER_X*/) ('-' | DIGITS | LETTER_V | LETTER_X | LETTER_NO_VX)+
 ;
 
 ALPHA_NUMERIC_CHARS:
 	('-' | DIGITS | LETTER_V | LETTER_X | LETTER_NO_VX)+
+;
+
+ALPHA_NUMERIC_CHARS_START_WITH_DIGITS:
+	DIGITS ('-' | DIGITS | LETTER_V | LETTER_X | LETTER_NO_VX)+
 ;
 
 WILDCARD:
@@ -164,11 +171,7 @@ terminal ASTERIX:
 ;
 
 terminal DIGITS returns ecore::EInt:
-	DIGIT+
-;
-
-terminal fragment DIGIT:
-	'0'..'9'
+	('0'..'9')+
 ;
 
 

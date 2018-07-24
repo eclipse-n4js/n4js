@@ -38,6 +38,7 @@ class SemverParserTest {
 		"1 ",
 		"1.2.3",
 		"v1.2",
+		"V1.2",
 		"2.3.4",
 		"0.2.3",
 		"<2.0.0",
@@ -135,10 +136,14 @@ class SemverParserTest {
 	];
 
 	String[] npmData = #[
+//		"123abc",
+//		"1.2.3-abc",
+		"git://github.com/coderbyheart.git#123abc",
+		"git://github.com/coderbyheart.git#1.2.3-abc",
 		"expressjs/express",
 		"latest",
-		"xyztag",
-		"XYZtag",
+//		"xyztag",
+//		"XYZtag",
 		"http://asdf.com/asdf.tar.gz",
 		"git+ssh://git@github.com:npm/npm.git#v1.0.27",
 		"git+ssh://git@github.com:npm/npm#semver:^5.0",
@@ -173,7 +178,7 @@ class SemverParserTest {
 	/** Check SEMVER versions and ranges. */
 	@Test
 	def void testSEMVERParseAndToString() {
-		internalTestParseAndToString(semverData, [s | return s.replace("x", "*").replace("X", "*")]);
+		internalTestParseAndToString(semverData, [s | return s.replace("x", "*").replace("X", "*").replace("V", "v")]);
 	}
 
 	/** Checks other NPM supported versions. */

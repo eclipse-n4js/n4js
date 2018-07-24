@@ -12,7 +12,6 @@ grammar InternalSemver;
 
 options {
 	superClass=AbstractInternalAntlrParser;
-	backtrack=true;
 }
 
 @lexer::header {
@@ -41,11 +40,6 @@ import org.eclipse.n4js.semver.services.SemverGrammarAccess;
 }
 
 @parser::members {
-
-/*
-  This grammar contains a lot of empty actions to work around a bug in ANTLR.
-  Otherwise the ANTLR tool will create synpreds that cannot be compiled in some rare cases.
-*/
 
  	private SemverGrammarAccess grammarAccess;
 
@@ -98,9 +92,6 @@ ruleNPMVersionRequirement returns [EObject current=null]
 				}
 			)*
 			{
-				/* */
-			}
-			{
 				newCompositeNode(grammarAccess.getNPMVersionRequirementAccess().getVersionRangeSetRequirementParserRuleCall_0_1());
 			}
 			this_VersionRangeSetRequirement_1=ruleVersionRangeSetRequirement
@@ -115,9 +106,6 @@ ruleNPMVersionRequirement returns [EObject current=null]
 				(
 					('file:')=>
 					{
-						/* */
-					}
-					{
 						newCompositeNode(grammarAccess.getNPMVersionRequirementAccess().getLocalPathVersionRequirementParserRuleCall_1_0_0());
 					}
 					this_LocalPathVersionRequirement_2=ruleLocalPathVersionRequirement
@@ -128,9 +116,6 @@ ruleNPMVersionRequirement returns [EObject current=null]
 				)
 				    |
 				{
-					/* */
-				}
-				{
 					newCompositeNode(grammarAccess.getNPMVersionRequirementAccess().getURLVersionRequirementParserRuleCall_1_0_1());
 				}
 				this_URLVersionRequirement_3=ruleURLVersionRequirement
@@ -140,9 +125,6 @@ ruleNPMVersionRequirement returns [EObject current=null]
 				}
 				    |
 				{
-					/* */
-				}
-				{
 					newCompositeNode(grammarAccess.getNPMVersionRequirementAccess().getGitHubVersionRequirementParserRuleCall_1_0_2());
 				}
 				this_GitHubVersionRequirement_4=ruleGitHubVersionRequirement
@@ -151,9 +133,6 @@ ruleNPMVersionRequirement returns [EObject current=null]
 					afterParserOrEnumRuleCall();
 				}
 				    |
-				{
-					/* */
-				}
 				{
 					newCompositeNode(grammarAccess.getNPMVersionRequirementAccess().getTagVersionRequirementParserRuleCall_1_0_3());
 				}
@@ -324,12 +303,10 @@ ruleURLVersionSpecifier returns [EObject current=null]
 }:
 	(
 		(
-			(ruleURLSemver)=>
+			(ruleURLSemver
+			)=>
 			{
-				/* */
-			}
-			{
-				newCompositeNode(grammarAccess.getURLVersionSpecifierAccess().getURLSemverParserRuleCall_0());
+				newCompositeNode(grammarAccess.getURLVersionSpecifierAccess().getURLSemverParserRuleCall_0_0());
 			}
 			this_URLSemver_0=ruleURLSemver
 			{
@@ -338,17 +315,63 @@ ruleURLVersionSpecifier returns [EObject current=null]
 			}
 		)
 		    |
-		{
-			/* */
-		}
-		{
-			newCompositeNode(grammarAccess.getURLVersionSpecifierAccess().getURLCommitISHParserRuleCall_1());
-		}
-		this_URLCommitISH_1=ruleURLCommitISH
-		{
-			$current = $this_URLCommitISH_1.current;
-			afterParserOrEnumRuleCall();
-		}
+		(
+			(
+				{
+					$current = forceCreateModelElement(
+						grammarAccess.getURLVersionSpecifierAccess().getURLCommitISHAction_1_0(),
+						$current);
+				}
+			)
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getURLVersionSpecifierAccess().getCommitISHALPHA_NUMERIC_CHARS_START_WITH_DIGITSParserRuleCall_1_1_0());
+					}
+					lv_commitISH_2_0=ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getURLVersionSpecifierRule());
+						}
+						set(
+							$current,
+							"commitISH",
+							lv_commitISH_2_0,
+							"org.eclipse.n4js.semver.Semver.ALPHA_NUMERIC_CHARS_START_WITH_DIGITS");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
+		)
+		    |
+		(
+			(
+				{
+					$current = forceCreateModelElement(
+						grammarAccess.getURLVersionSpecifierAccess().getURLCommitISHAction_2_0(),
+						$current);
+				}
+			)
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getURLVersionSpecifierAccess().getCommitISHALPHA_NUMERIC_CHARSParserRuleCall_2_1_0());
+					}
+					lv_commitISH_4_0=ruleALPHA_NUMERIC_CHARS
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getURLVersionSpecifierRule());
+						}
+						set(
+							$current,
+							"commitISH",
+							lv_commitISH_4_0,
+							"org.eclipse.n4js.semver.Semver.ALPHA_NUMERIC_CHARS");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
+		)
 	)
 ;
 
@@ -369,18 +392,32 @@ ruleURLSemver returns [EObject current=null]
 }:
 	(
 		(
-			('semver:')=>
-			otherlv_0='semver:'
 			{
-				newLeafNode(otherlv_0, grammarAccess.getURLSemverAccess().getSemverKeyword_0());
+				$current = forceCreateModelElement(
+					grammarAccess.getURLSemverAccess().getURLSemverAction_0(),
+					$current);
 			}
+		)
+		(
+			(
+				lv_withSemverTag_1_0='semver:'
+				{
+					newLeafNode(lv_withSemverTag_1_0, grammarAccess.getURLSemverAccess().getWithSemverTagSemverKeyword_1_0());
+				}
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getURLSemverRule());
+					}
+					setWithLastConsumed($current, "withSemverTag", true, "semver:");
+				}
+			)
 		)?
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getURLSemverAccess().getSimpleVersionSimpleVersionParserRuleCall_1_0());
+					newCompositeNode(grammarAccess.getURLSemverAccess().getSimpleVersionSimpleVersionParserRuleCall_2_0());
 				}
-				lv_simpleVersion_1_0=ruleSimpleVersion
+				lv_simpleVersion_2_0=ruleSimpleVersion
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getURLSemverRule());
@@ -388,47 +425,11 @@ ruleURLSemver returns [EObject current=null]
 					set(
 						$current,
 						"simpleVersion",
-						lv_simpleVersion_1_0,
+						lv_simpleVersion_2_0,
 						"org.eclipse.n4js.semver.Semver.SimpleVersion");
 					afterParserOrEnumRuleCall();
 				}
 			)
-		)
-	)
-;
-
-// Entry rule entryRuleURLCommitISH
-entryRuleURLCommitISH returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getURLCommitISHRule()); }
-	iv_ruleURLCommitISH=ruleURLCommitISH
-	{ $current=$iv_ruleURLCommitISH.current; }
-	EOF;
-
-// Rule URLCommitISH
-ruleURLCommitISH returns [EObject current=null]
-@init {
-	enterRule();
-}
-@after {
-	leaveRule();
-}:
-	(
-		(
-			{
-				newCompositeNode(grammarAccess.getURLCommitISHAccess().getCommitISHALPHA_NUMERIC_CHARSParserRuleCall_0());
-			}
-			lv_commitISH_0_0=ruleALPHA_NUMERIC_CHARS
-			{
-				if ($current==null) {
-					$current = createModelElementForParent(grammarAccess.getURLCommitISHRule());
-				}
-				set(
-					$current,
-					"commitISH",
-					lv_commitISH_0_0,
-					"org.eclipse.n4js.semver.Semver.ALPHA_NUMERIC_CHARS");
-				afterParserOrEnumRuleCall();
-			}
 		)
 	)
 ;
@@ -550,9 +551,6 @@ ruleVersionRangeSetRequirement returns [EObject current=null]
 	(
 		(
 			{
-				/* */
-			}
-			{
 				$current = forceCreateModelElement(
 					grammarAccess.getVersionRangeSetRequirementAccess().getVersionRangeSetRequirementAction_0(),
 					$current);
@@ -642,9 +640,6 @@ ruleVersionRange returns [EObject current=null]
 }:
 	(
 		{
-			/* */
-		}
-		{
 			newCompositeNode(grammarAccess.getVersionRangeAccess().getVersionRangeContraintParserRuleCall_0());
 		}
 		this_VersionRangeContraint_0=ruleVersionRangeContraint
@@ -653,9 +648,6 @@ ruleVersionRange returns [EObject current=null]
 			afterParserOrEnumRuleCall();
 		}
 		    |
-		{
-			/* */
-		}
 		{
 			newCompositeNode(grammarAccess.getVersionRangeAccess().getHyphenVersionRangeParserRuleCall_1());
 		}
@@ -684,9 +676,6 @@ ruleHyphenVersionRange returns [EObject current=null]
 }:
 	(
 		(
-			{
-				/* */
-			}
 			{
 				$current = forceCreateModelElement(
 					grammarAccess.getHyphenVersionRangeAccess().getHyphenVersionRangeAction_0(),
@@ -768,9 +757,6 @@ ruleVersionRangeContraint returns [EObject current=null]
 	(
 		(
 			{
-				/* */
-			}
-			{
 				$current = forceCreateModelElement(
 					grammarAccess.getVersionRangeContraintAccess().getVersionRangeConstraintAction_0(),
 					$current);
@@ -842,22 +828,12 @@ ruleSimpleVersion returns [EObject current=null]
 }:
 	(
 		(
-			{
-				/* */
-			}
-			{
-				$current = forceCreateModelElement(
-					grammarAccess.getSimpleVersionAccess().getSimpleVersionAction_0(),
-					$current);
-			}
-		)
-		(
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getSimpleVersionAccess().getComparatorsVersionComparatorEnumRuleCall_1_0_0());
+						newCompositeNode(grammarAccess.getSimpleVersionAccess().getComparatorsVersionComparatorEnumRuleCall_0_0_0());
 					}
-					lv_comparators_1_0=ruleVersionComparator
+					lv_comparators_0_0=ruleVersionComparator
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getSimpleVersionRule());
@@ -865,24 +841,24 @@ ruleSimpleVersion returns [EObject current=null]
 						add(
 							$current,
 							"comparators",
-							lv_comparators_1_0,
+							lv_comparators_0_0,
 							"org.eclipse.n4js.semver.Semver.VersionComparator");
 						afterParserOrEnumRuleCall();
 					}
 				)
 			)
 			(
-				this_WS_2=RULE_WS
+				this_WS_1=RULE_WS
 				{
-					newLeafNode(this_WS_2, grammarAccess.getSimpleVersionAccess().getWSTerminalRuleCall_1_1());
+					newLeafNode(this_WS_1, grammarAccess.getSimpleVersionAccess().getWSTerminalRuleCall_0_1());
 				}
 			)*
 		)*
 		(
 			(
-				lv_withLetterV_3_0=RULE_LETTER_V
+				lv_withLetterV_2_0=RULE_LETTER_V
 				{
-					newLeafNode(lv_withLetterV_3_0, grammarAccess.getSimpleVersionAccess().getWithLetterVLETTER_VTerminalRuleCall_2_0());
+					newLeafNode(lv_withLetterV_2_0, grammarAccess.getSimpleVersionAccess().getWithLetterVLETTER_VTerminalRuleCall_1_0());
 				}
 				{
 					if ($current==null) {
@@ -899,9 +875,9 @@ ruleSimpleVersion returns [EObject current=null]
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getSimpleVersionAccess().getNumberVersionNumberParserRuleCall_3_0());
+					newCompositeNode(grammarAccess.getSimpleVersionAccess().getNumberVersionNumberParserRuleCall_2_0());
 				}
-				lv_number_4_0=ruleVersionNumber
+				lv_number_3_0=ruleVersionNumber
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getSimpleVersionRule());
@@ -909,7 +885,7 @@ ruleSimpleVersion returns [EObject current=null]
 					set(
 						$current,
 						"number",
-						lv_number_4_0,
+						lv_number_3_0,
 						"org.eclipse.n4js.semver.Semver.VersionNumber");
 					afterParserOrEnumRuleCall();
 				}
@@ -1606,23 +1582,13 @@ ruleTAG returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
 	leaveRule();
 }:
 	(
-		(
-			this_LETTER_NO_VX_0=RULE_LETTER_NO_VX
-			{
-				$current.merge(this_LETTER_NO_VX_0);
-			}
-			{
-				newLeafNode(this_LETTER_NO_VX_0, grammarAccess.getTAGAccess().getLETTER_NO_VXTerminalRuleCall_0_0());
-			}
-			    |
-			this_LETTER_X_1=RULE_LETTER_X
-			{
-				$current.merge(this_LETTER_X_1);
-			}
-			{
-				newLeafNode(this_LETTER_X_1, grammarAccess.getTAGAccess().getLETTER_XTerminalRuleCall_0_1());
-			}
-		)
+		this_LETTER_NO_VX_0=RULE_LETTER_NO_VX
+		{
+			$current.merge(this_LETTER_NO_VX_0);
+		}
+		{
+			newLeafNode(this_LETTER_NO_VX_0, grammarAccess.getTAGAccess().getLETTER_NO_VXTerminalRuleCall_0());
+		}
 		(
 			kw='-'
 			{
@@ -1630,36 +1596,36 @@ ruleTAG returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
 				newLeafNode(kw, grammarAccess.getTAGAccess().getHyphenMinusKeyword_1_0());
 			}
 			    |
-			this_DIGITS_3=RULE_DIGITS
+			this_DIGITS_2=RULE_DIGITS
 			{
-				$current.merge(this_DIGITS_3);
+				$current.merge(this_DIGITS_2);
 			}
 			{
-				newLeafNode(this_DIGITS_3, grammarAccess.getTAGAccess().getDIGITSTerminalRuleCall_1_1());
-			}
-			    |
-			this_LETTER_V_4=RULE_LETTER_V
-			{
-				$current.merge(this_LETTER_V_4);
-			}
-			{
-				newLeafNode(this_LETTER_V_4, grammarAccess.getTAGAccess().getLETTER_VTerminalRuleCall_1_2());
+				newLeafNode(this_DIGITS_2, grammarAccess.getTAGAccess().getDIGITSTerminalRuleCall_1_1());
 			}
 			    |
-			this_LETTER_X_5=RULE_LETTER_X
+			this_LETTER_V_3=RULE_LETTER_V
 			{
-				$current.merge(this_LETTER_X_5);
+				$current.merge(this_LETTER_V_3);
 			}
 			{
-				newLeafNode(this_LETTER_X_5, grammarAccess.getTAGAccess().getLETTER_XTerminalRuleCall_1_3());
+				newLeafNode(this_LETTER_V_3, grammarAccess.getTAGAccess().getLETTER_VTerminalRuleCall_1_2());
 			}
 			    |
-			this_LETTER_NO_VX_6=RULE_LETTER_NO_VX
+			this_LETTER_X_4=RULE_LETTER_X
 			{
-				$current.merge(this_LETTER_NO_VX_6);
+				$current.merge(this_LETTER_X_4);
 			}
 			{
-				newLeafNode(this_LETTER_NO_VX_6, grammarAccess.getTAGAccess().getLETTER_NO_VXTerminalRuleCall_1_4());
+				newLeafNode(this_LETTER_X_4, grammarAccess.getTAGAccess().getLETTER_XTerminalRuleCall_1_3());
+			}
+			    |
+			this_LETTER_NO_VX_5=RULE_LETTER_NO_VX
+			{
+				$current.merge(this_LETTER_NO_VX_5);
+			}
+			{
+				newLeafNode(this_LETTER_NO_VX_5, grammarAccess.getTAGAccess().getLETTER_NO_VXTerminalRuleCall_1_4());
 			}
 		)+
 	)
@@ -1719,6 +1685,71 @@ ruleALPHA_NUMERIC_CHARS returns [AntlrDatatypeRuleToken current=new AntlrDatatyp
 			newLeafNode(this_LETTER_NO_VX_4, grammarAccess.getALPHA_NUMERIC_CHARSAccess().getLETTER_NO_VXTerminalRuleCall_4());
 		}
 	)+
+;
+
+// Entry rule entryRuleALPHA_NUMERIC_CHARS_START_WITH_DIGITS
+entryRuleALPHA_NUMERIC_CHARS_START_WITH_DIGITS returns [String current=null]:
+	{ newCompositeNode(grammarAccess.getALPHA_NUMERIC_CHARS_START_WITH_DIGITSRule()); }
+	iv_ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS=ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS
+	{ $current=$iv_ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS.current.getText(); }
+	EOF;
+
+// Rule ALPHA_NUMERIC_CHARS_START_WITH_DIGITS
+ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		this_DIGITS_0=RULE_DIGITS
+		{
+			$current.merge(this_DIGITS_0);
+		}
+		{
+			newLeafNode(this_DIGITS_0, grammarAccess.getALPHA_NUMERIC_CHARS_START_WITH_DIGITSAccess().getDIGITSTerminalRuleCall_0());
+		}
+		(
+			kw='-'
+			{
+				$current.merge(kw);
+				newLeafNode(kw, grammarAccess.getALPHA_NUMERIC_CHARS_START_WITH_DIGITSAccess().getHyphenMinusKeyword_1_0());
+			}
+			    |
+			this_DIGITS_2=RULE_DIGITS
+			{
+				$current.merge(this_DIGITS_2);
+			}
+			{
+				newLeafNode(this_DIGITS_2, grammarAccess.getALPHA_NUMERIC_CHARS_START_WITH_DIGITSAccess().getDIGITSTerminalRuleCall_1_1());
+			}
+			    |
+			this_LETTER_V_3=RULE_LETTER_V
+			{
+				$current.merge(this_LETTER_V_3);
+			}
+			{
+				newLeafNode(this_LETTER_V_3, grammarAccess.getALPHA_NUMERIC_CHARS_START_WITH_DIGITSAccess().getLETTER_VTerminalRuleCall_1_2());
+			}
+			    |
+			this_LETTER_X_4=RULE_LETTER_X
+			{
+				$current.merge(this_LETTER_X_4);
+			}
+			{
+				newLeafNode(this_LETTER_X_4, grammarAccess.getALPHA_NUMERIC_CHARS_START_WITH_DIGITSAccess().getLETTER_XTerminalRuleCall_1_3());
+			}
+			    |
+			this_LETTER_NO_VX_5=RULE_LETTER_NO_VX
+			{
+				$current.merge(this_LETTER_NO_VX_5);
+			}
+			{
+				newLeafNode(this_LETTER_NO_VX_5, grammarAccess.getALPHA_NUMERIC_CHARS_START_WITH_DIGITSAccess().getLETTER_NO_VXTerminalRuleCall_1_4());
+			}
+		)+
+	)
 ;
 
 // Entry rule entryRuleWILDCARD
@@ -1830,9 +1861,7 @@ RULE_LETTER_X : ('x'|'X');
 
 RULE_ASTERIX : '*';
 
-RULE_DIGITS : RULE_DIGIT+;
-
-fragment RULE_DIGIT : '0'..'9';
+RULE_DIGITS : ('0'..'9')+;
 
 RULE_WS : RULE_WHITESPACE_FRAGMENT+;
 

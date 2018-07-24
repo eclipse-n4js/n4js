@@ -5,7 +5,9 @@ import org.eclipse.xtext.xtext.generator.model.project.*
 
 var rootPath = ".."
 var runtimeProjectName = "org.eclipse.n4js.semver"
-var runtimeProjectPath = "${rootPath}/${runtimeProjectName}"/**
+var runtimeProjectPath = "${rootPath}/${runtimeProjectName}"
+
+/**
  * Workflow to generate the language infrastructure of the Semver language.
  */
 Workflow {
@@ -26,7 +28,7 @@ Workflow {
 			}
 			code = {
 				encoding = "UTF-8"// same as org.eclipse.n4js.releng.utils.license.LicenseTemplate.COPYRIGHT_HEADER
-// should re-use in the long run
+				// should re-use in the long run
 				fileHeader =
 				"/**\n * Copyright (c) 2017 NumberFour AG.\n * All rights reserved. This program and the accompanying materials\n * are made available under the terms of the Eclipse Public License v1.0\n * which accompanies this distribution, and is available at\n * http://www.eclipse.org/legal/epl-v10.html\n *\n * Contributors:\n *   NumberFour AG - Initial API and implementation\n */"
 				lineDelimiter = '\n'
@@ -53,9 +55,9 @@ Workflow {
 			fragment = ecore.EMFGeneratorFragment2 {}
 			fragment = resourceFactory.ResourceFactoryFragment2 {}
 			fragment = parser.antlr.XtextAntlrGeneratorFragment2 {
-				debugGrammar = true // generate antlr grammar file
+				// debugGrammar = true // generate antlr grammar file
 				options = {
-					backtrack = true
+					// backtrack = true
 				}
 			}
 			fragment = junit.Junit4Fragment2 {}

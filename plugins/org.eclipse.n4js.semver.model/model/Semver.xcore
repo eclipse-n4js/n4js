@@ -60,6 +60,7 @@ abstract class URLVersionSpecifier extends SemverToStringable {}
 
 class URLSemver extends URLVersionSpecifier {
 	contains SimpleVersion simpleVersion
+	boolean withSemverTag
 }
 
 class URLCommitISH extends URLVersionSpecifier {

@@ -74,7 +74,7 @@ public class SemverSemanticSequencer extends AbstractDelegatingSemanticSequencer
 				sequence_TagVersionRequirement(context, (TagVersionRequirement) semanticObject); 
 				return; 
 			case SemverPackage.URL_COMMIT_ISH:
-				sequence_URLCommitISH(context, (URLCommitISH) semanticObject); 
+				sequence_URLVersionSpecifier(context, (URLCommitISH) semanticObject); 
 				return; 
 			case SemverPackage.URL_SEMVER:
 				sequence_URLSemver(context, (URLSemver) semanticObject); 
@@ -210,39 +210,14 @@ public class SemverSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	
 	/**
 	 * Contexts:
-	 *     URLVersionSpecifier returns URLCommitISH
-	 *     URLCommitISH returns URLCommitISH
-	 *
-	 * Constraint:
-	 *     commitISH=ALPHA_NUMERIC_CHARS
-	 */
-	protected void sequence_URLCommitISH(ISerializationContext context, URLCommitISH semanticObject) {
-		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, SemverPackage.Literals.URL_COMMIT_ISH__COMMIT_ISH) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, SemverPackage.Literals.URL_COMMIT_ISH__COMMIT_ISH));
-		}
-		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getURLCommitISHAccess().getCommitISHALPHA_NUMERIC_CHARSParserRuleCall_0(), semanticObject.getCommitISH());
-		feeder.finish();
-	}
-	
-	
-	/**
-	 * Contexts:
 	 *     URLVersionSpecifier returns URLSemver
 	 *     URLSemver returns URLSemver
 	 *
 	 * Constraint:
-	 *     simpleVersion=SimpleVersion
+	 *     (withSemverTag?='semver:'? simpleVersion=SimpleVersion)
 	 */
 	protected void sequence_URLSemver(ISerializationContext context, URLSemver semanticObject) {
-		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, SemverPackage.Literals.URL_SEMVER__SIMPLE_VERSION) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, SemverPackage.Literals.URL_SEMVER__SIMPLE_VERSION));
-		}
-		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getURLSemverAccess().getSimpleVersionSimpleVersionParserRuleCall_1_0(), semanticObject.getSimpleVersion());
-		feeder.finish();
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
@@ -255,6 +230,18 @@ public class SemverSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 *     (protocol=URL_PROTOCOL url=URL versionSpecifier=URLVersionSpecifier?)
 	 */
 	protected void sequence_URLVersionRequirement(ISerializationContext context, URLVersionRequirement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     URLVersionSpecifier returns URLCommitISH
+	 *
+	 * Constraint:
+	 *     (commitISH=ALPHA_NUMERIC_CHARS_START_WITH_DIGITS | commitISH=ALPHA_NUMERIC_CHARS)
+	 */
+	protected void sequence_URLVersionSpecifier(ISerializationContext context, URLCommitISH semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
