@@ -348,6 +348,8 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 			N4JSExternalProject n4Prj = projectProvider.getProject(tbu);
 			if (n4Prj != null) {
 				projectsToBeUpdated.add(n4Prj);
+			} else {
+				throw new NullPointerException(); // FIXME
 			}
 		}
 
