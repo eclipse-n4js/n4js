@@ -214,6 +214,12 @@ public class NpmCLI {
 			return statusHelper.createError("Malformed npm package version: '" + packageVersion + "'.");
 		}
 
+		// FIXME: solved/removable when GH-824 is done. Hack to solve current compatibility problems between
+		// SEMVER, big-button and DBO's package.json files
+		if (packageVersion.equals("@latest")) {
+			packageVersion = "";
+		}
+
 		String nameAndVersion = packageVersion.isEmpty() ? packageName : packageName + packageVersion;
 
 		return executor.execute(
