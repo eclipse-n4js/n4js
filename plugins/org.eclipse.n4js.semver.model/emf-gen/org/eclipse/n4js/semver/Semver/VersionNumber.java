@@ -156,6 +156,18 @@ public interface VersionNumber extends SemverToStringable {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * * @return true if the major part is a wildcard
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getMajor().isWildcard();'"
+	 * @generated
+	 */
+	boolean isWildcard();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
 	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.emf.common.util.EList%&gt;&lt;&lt;%java.lang.String%&gt;&gt; _xifexpression = null;\nif (((this.getQualifier() != null) &amp;&amp; (this.getQualifier().getPreRelease() != null)))\n{\n\t_xifexpression = this.getQualifier().getPreRelease().getParts();\n}\nelse\n{\n\t_xifexpression = null;\n}\nreturn _xifexpression;'"
 	 * @generated

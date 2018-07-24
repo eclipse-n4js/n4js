@@ -557,7 +557,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getSimpleVersion__IsSpecific() {
+	public EOperation getSimpleVersion__IsWildcard() {
 		return simpleVersionEClass.getEOperations().get(0);
 	}
 
@@ -566,7 +566,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getSimpleVersion__IsCaret() {
+	public EOperation getSimpleVersion__IsSpecific() {
 		return simpleVersionEClass.getEOperations().get(1);
 	}
 
@@ -575,7 +575,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getSimpleVersion__IsTilde() {
+	public EOperation getSimpleVersion__IsCaret() {
 		return simpleVersionEClass.getEOperations().get(2);
 	}
 
@@ -584,7 +584,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getSimpleVersion__IsGreater() {
+	public EOperation getSimpleVersion__IsTilde() {
 		return simpleVersionEClass.getEOperations().get(3);
 	}
 
@@ -593,7 +593,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getSimpleVersion__IsGreaterEquals() {
+	public EOperation getSimpleVersion__IsGreater() {
 		return simpleVersionEClass.getEOperations().get(4);
 	}
 
@@ -602,7 +602,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getSimpleVersion__IsSmaller() {
+	public EOperation getSimpleVersion__IsGreaterEquals() {
 		return simpleVersionEClass.getEOperations().get(5);
 	}
 
@@ -611,8 +611,17 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getSimpleVersion__IsSmallerEquals() {
+	public EOperation getSimpleVersion__IsSmaller() {
 		return simpleVersionEClass.getEOperations().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOperation getSimpleVersion__IsSmallerEquals() {
+		return simpleVersionEClass.getEOperations().get(7);
 	}
 
 	/**
@@ -674,7 +683,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getVersionNumber__GetPreReleaseTag() {
+	public EOperation getVersionNumber__IsWildcard() {
 		return versionNumberEClass.getEOperations().get(0);
 	}
 
@@ -683,7 +692,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getVersionNumber__HasPreReleaseTag() {
+	public EOperation getVersionNumber__GetPreReleaseTag() {
 		return versionNumberEClass.getEOperations().get(1);
 	}
 
@@ -692,7 +701,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getVersionNumber__Length() {
+	public EOperation getVersionNumber__HasPreReleaseTag() {
 		return versionNumberEClass.getEOperations().get(2);
 	}
 
@@ -701,7 +710,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getVersionNumber__GetPart__int() {
+	public EOperation getVersionNumber__Length() {
 		return versionNumberEClass.getEOperations().get(3);
 	}
 
@@ -710,8 +719,17 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getVersionNumber__Equals__Object() {
+	public EOperation getVersionNumber__GetPart__int() {
 		return versionNumberEClass.getEOperations().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOperation getVersionNumber__Equals__Object() {
+		return versionNumberEClass.getEOperations().get(5);
 	}
 
 	/**
@@ -906,6 +924,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 		createEReference(simpleVersionEClass, SIMPLE_VERSION__NUMBER);
 		createEAttribute(simpleVersionEClass, SIMPLE_VERSION__WITH_LETTER_V);
 		createEAttribute(simpleVersionEClass, SIMPLE_VERSION__COMPARATORS);
+		createEOperation(simpleVersionEClass, SIMPLE_VERSION___IS_WILDCARD);
 		createEOperation(simpleVersionEClass, SIMPLE_VERSION___IS_SPECIFIC);
 		createEOperation(simpleVersionEClass, SIMPLE_VERSION___IS_CARET);
 		createEOperation(simpleVersionEClass, SIMPLE_VERSION___IS_TILDE);
@@ -920,6 +939,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 		createEReference(versionNumberEClass, VERSION_NUMBER__PATCH);
 		createEReference(versionNumberEClass, VERSION_NUMBER__EXTENDED);
 		createEReference(versionNumberEClass, VERSION_NUMBER__QUALIFIER);
+		createEOperation(versionNumberEClass, VERSION_NUMBER___IS_WILDCARD);
 		createEOperation(versionNumberEClass, VERSION_NUMBER___GET_PRE_RELEASE_TAG);
 		createEOperation(versionNumberEClass, VERSION_NUMBER___HAS_PRE_RELEASE_TAG);
 		createEOperation(versionNumberEClass, VERSION_NUMBER___LENGTH);
@@ -1046,6 +1066,8 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 		initEAttribute(getSimpleVersion_WithLetterV(), theEcorePackage.getEBoolean(), "withLetterV", null, 0, 1, SimpleVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSimpleVersion_Comparators(), this.getVersionComparator(), "comparators", null, 0, -1, SimpleVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+		initEOperation(getSimpleVersion__IsWildcard(), theEcorePackage.getEBoolean(), "isWildcard", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
 		initEOperation(getSimpleVersion__IsSpecific(), theEcorePackage.getEBoolean(), "isSpecific", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getSimpleVersion__IsCaret(), theEcorePackage.getEBoolean(), "isCaret", 0, 1, !IS_UNIQUE, IS_ORDERED);
@@ -1066,6 +1088,8 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 		initEReference(getVersionNumber_Patch(), this.getVersionPart(), null, "patch", null, 0, 1, VersionNumber.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getVersionNumber_Extended(), this.getVersionPart(), null, "extended", null, 0, -1, VersionNumber.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getVersionNumber_Qualifier(), this.getQualifier(), null, "qualifier", null, 0, 1, VersionNumber.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getVersionNumber__IsWildcard(), theEcorePackage.getEBoolean(), "isWildcard", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getVersionNumber__GetPreReleaseTag(), theEcorePackage.getEString(), "getPreReleaseTag", 0, -1, !IS_UNIQUE, IS_ORDERED);
 

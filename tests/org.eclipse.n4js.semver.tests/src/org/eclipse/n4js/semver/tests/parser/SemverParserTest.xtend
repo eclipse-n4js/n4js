@@ -136,14 +136,10 @@ class SemverParserTest {
 	];
 
 	String[] npmData = #[
-//		"123abc",
-//		"1.2.3-abc",
 		"git://github.com/coderbyheart.git#123abc",
 		"git://github.com/coderbyheart.git#1.2.3-abc",
 		"expressjs/express",
 		"latest",
-//		"xyztag",
-//		"XYZtag",
 		"http://asdf.com/asdf.tar.gz",
 		"git+ssh://git@github.com:npm/npm.git#v1.0.27",
 		"git+ssh://git@github.com:npm/npm#semver:^5.0",
@@ -161,6 +157,8 @@ class SemverParserTest {
 		"1s",
 		"1.7.2d",
 		">1.7.2d",
+		"xyztag",
+		"XYZtag",
 		"vtag",
 		"Vtag"
 	];

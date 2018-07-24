@@ -112,6 +112,18 @@ public interface SimpleVersion extends SemverToStringable {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
+	 * * @return true if the version number is a wildcard
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getNumber().isWildcard();'"
+	 * @generated
+	 */
+	boolean isWildcard();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
 	 * * @return true iff the comparators are either empty, or contain 'v' or '='
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"

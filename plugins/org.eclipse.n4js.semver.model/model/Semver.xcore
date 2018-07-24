@@ -105,6 +105,12 @@ class SimpleVersion extends SemverToStringable {
 	boolean withLetterV
 	VersionComparator[] comparators
 
+
+	/** @return true if the version number is a wildcard */
+	op boolean isWildcard() {
+		return number.isWildcard();
+	}
+
 	/** @return true iff the comparators are either empty, or contain 'v' or '=' */
 	op boolean isSpecific() {
 		return comparators.empty || withLetterV || comparators.contains(VersionComparator.EQUALS);
@@ -141,6 +147,11 @@ class VersionNumber extends SemverToStringable {
 	contains VersionPart patch
 	contains VersionPart[] extended
 	contains Qualifier qualifier
+
+	/** @return true if the major part is a wildcard */
+	op boolean isWildcard() {
+		return major.isWildcard();
+	}
 
 	op String[] getPreReleaseTag() {
 		return if (qualifier !== null && qualifier.preRelease !== null) qualifier.preRelease.parts else null;
