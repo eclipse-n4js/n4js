@@ -954,8 +954,6 @@ public class N4HeadlessCompiler {
 		switch (resourceType) {
 		case UNKOWN:
 			return false;
-		case N4MF:
-			return false;
 		default:
 			return true;
 		}
