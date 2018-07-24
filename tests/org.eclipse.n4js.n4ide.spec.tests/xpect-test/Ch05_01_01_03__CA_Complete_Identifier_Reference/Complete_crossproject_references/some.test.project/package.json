@@ -1,6 +1,6 @@
 {
 	"name": "some.test.project",
-	"version": "0.0.1-SNAPSHOT",
+	"version": "0.0.1",
 	"dependencies": {
 		"some.tested.system.project": "*"
 	},

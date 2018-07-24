@@ -32,6 +32,7 @@ import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.csv.CSVData;
 import org.eclipse.n4js.csv.CSVParser;
 import org.eclipse.n4js.csv.CSVRecord;
+import org.eclipse.n4js.generator.headless.BuildSet;
 import org.eclipse.n4js.generator.headless.IssueCollector;
 import org.eclipse.n4js.generator.headless.N4HeadlessCompiler;
 import org.eclipse.n4js.generator.headless.N4JSCompileException;
@@ -631,7 +632,9 @@ public class AccessControlTest {
 			N4HeadlessCompiler hlc = HeadlessCompilerFactory.createCompilerWithDefaults();
 
 			final File projectRoot = Paths.get(FIXTURE_ROOT, memberType.name()).toFile();
-			hlc.compileAllProjects(Arrays.asList(projectRoot), issueCollector);
+
+			final BuildSet buildSet = hlc.getBuildSetComputer().createAllProjectsBuildSet(Arrays.asList(projectRoot));
+			hlc.compile(buildSet, issueCollector);
 		} catch (N4JSCompileException e) {
 			// nothing to do
 		}

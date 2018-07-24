@@ -1,6 +1,6 @@
 {
 	"name": "APIx",
-	"version": "0.0.1-SNAPSHOT",
+	"version": "0.0.1",
 	"devDependencies": {
 		"n4js-runtime-es2015": "*"
 	},

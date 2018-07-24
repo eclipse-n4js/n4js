@@ -1,6 +1,6 @@
 {
 	"name": "test.data.re.project",
-	"version": "0.0.1-SNAPSHOT",
+	"version": "0.0.1",
 	"n4js": {
 		"projectType": "runtimeEnvironment",
 		"vendorId": "org.eclipse.n4js",

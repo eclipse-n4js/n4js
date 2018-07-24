@@ -1,6 +1,6 @@
 {
 	"name": "calling.project",
-	"version": "0.0.1-SNAPSHOT",
+	"version": "0.0.1",
 	"dependencies": {
 		"other.project.same.vendor": "*",
 		"other.project.other.vendor": "*"

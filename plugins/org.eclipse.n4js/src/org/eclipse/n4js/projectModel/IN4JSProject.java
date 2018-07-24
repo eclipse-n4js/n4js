@@ -18,11 +18,11 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.n4mf.BootstrapModule;
-import org.eclipse.n4js.n4mf.DeclaredVersion;
 import org.eclipse.n4js.n4mf.ModuleFilter;
 import org.eclipse.n4js.n4mf.ModuleLoader;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectType;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
@@ -133,7 +133,7 @@ public interface IN4JSProject extends IN4JSSourceContainerAware {
 	/**
 	 * The declared version of the project. It is not available, if the project does not exist.
 	 */
-	DeclaredVersion getVersion();
+	VersionNumber getVersion();
 
 	/**
 	 * returns the project relative path to the folder where the generated files should be placed

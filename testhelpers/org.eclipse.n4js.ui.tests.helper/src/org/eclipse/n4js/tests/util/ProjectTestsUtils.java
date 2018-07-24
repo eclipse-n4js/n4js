@@ -45,6 +45,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -119,6 +120,44 @@ public class ProjectTestsUtils {
 	 */
 	public static IProject importProjectFromExternalSource(File probandsFolder, String projectName) throws Exception {
 		return importProject(probandsFolder, projectName, false);
+	}
+
+	/**
+	 * Creates a new workspace project with the given project location in the probands folder (cf.
+	 * {@code probandsName}).
+	 *
+	 * Creates a new workspace project with name {@code workspaceName}. Note that the project folder (based on the given
+	 * project location) and the project name may differ.
+	 *
+	 * Does not copy the proband resources into the workspaces, but keeps the project files at the given location (cf.
+	 * create new project with non-default location outside of workspace)
+	 *
+	 * @throws CoreException
+	 *             If the project creation does not succeed.
+	 */
+	public static IProject createProjectWithLocation(File probandsFolder, String projectLocationFolder,
+			String workspaceName)
+			throws CoreException {
+		File projectSourceFolder = new File(probandsFolder, projectLocationFolder);
+		if (!projectSourceFolder.exists()) {
+			throw new IllegalArgumentException("proband not found in " + projectSourceFolder);
+		}
+		prepareDotProject(projectSourceFolder);
+
+		IProgressMonitor monitor = new NullProgressMonitor();
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		IProject project = workspace.getRoot().getProject(workspaceName);
+
+		workspace.run((mon) -> {
+			IProjectDescription newProjectDescription = workspace.newProjectDescription(workspaceName);
+			final Path absoluteProjectPath = new Path(projectSourceFolder.getAbsolutePath());
+			newProjectDescription.setLocation(absoluteProjectPath);
+			project.create(newProjectDescription, mon);
+			project.open(mon);
+		}, monitor);
+
+		return project;
+
 	}
 
 	private static IProject importProject(File probandsFolder, String projectName, boolean prepareDotProject)
