@@ -1,6 +1,6 @@
 {
 	"name": "IDEBUG-314_C_differentVendor",
-	"version": "0.0.1-SNAPSHOT",
+	"version": "0.0.1",
 	"dependencies": {
 		"IDEBUG-314_A": "*"
 	},

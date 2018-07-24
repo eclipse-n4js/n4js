@@ -50,8 +50,9 @@ public class BinaryCommandFactory {
 
 			@Override
 			public ProcessResult execute() {
+				String escapedPackageName = "\"" + packageName + "\"";
 				ProcessBuilder processBuilder = nodeProccessBuilder.getNpmInstallProcessBuilder(invocationPath,
-						packageName, saveDependency);
+						escapedPackageName, saveDependency);
 				return processExecutor.createAndExecute(processBuilder, COMMAND_NAME, OutputRedirection.REDIRECT);
 			}
 		};

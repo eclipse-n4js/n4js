@@ -1,5 +1,5 @@
 {
-  "version": "0.0.1-SNAPSHOT",
+  "version": "0.0.1",
   "name": "org.eclipse.n4js.spec.tests",
   "n4js": {
     "projectType": "library",

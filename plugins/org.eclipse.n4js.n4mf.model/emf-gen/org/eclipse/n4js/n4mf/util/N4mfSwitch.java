@@ -80,12 +80,6 @@ public class N4mfSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case N4mfPackage.DECLARED_VERSION: {
-				DeclaredVersion declaredVersion = (DeclaredVersion)theEObject;
-				T result = caseDeclaredVersion(declaredVersion);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case N4mfPackage.SOURCE_CONTAINER_DESCRIPTION: {
 				SourceContainerDescription sourceContainerDescription = (SourceContainerDescription)theEObject;
 				T result = caseSourceContainerDescription(sourceContainerDescription);
@@ -123,12 +117,6 @@ public class N4mfSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case N4mfPackage.VERSION_CONSTRAINT: {
-				VersionConstraint versionConstraint = (VersionConstraint)theEObject;
-				T result = caseVersionConstraint(versionConstraint);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -145,21 +133,6 @@ public class N4mfSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseProjectDescription(ProjectDescription object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Declared Version</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Declared Version</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseDeclaredVersion(DeclaredVersion object) {
 		return null;
 	}
 
@@ -250,21 +223,6 @@ public class N4mfSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseProjectDependency(ProjectDependency object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Version Constraint</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Version Constraint</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseVersionConstraint(VersionConstraint object) {
 		return null;
 	}
 

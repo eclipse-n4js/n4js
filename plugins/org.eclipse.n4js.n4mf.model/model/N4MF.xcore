@@ -26,12 +26,15 @@ package org.eclipse.n4js.n4mf
 
 import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.n4js.utils.io.FileUtils
+import org.eclipse.n4js.semver.Semver.VersionNumber
+import org.eclipse.n4js.semver.Semver.NPMVersionRequirement
+
 
 class ProjectDescription {
 	String projectId
 	String vendorId
 	String vendorName
-	contains DeclaredVersion projectVersion
+	contains VersionNumber projectVersion
 	ProjectType projectType
 	String mainModule
 	contains ProjectReference extendedRuntimeEnvironment
@@ -95,13 +98,13 @@ class ProjectDescription {
  * To be later validated: The length of the major, minor and micro numbers is
  * additionally limited to four digits.
  */
-class DeclaredVersion {
-	int major
-	int minor
-	int micro
-	String qualifier
-	String buildMetaData
-}
+//class DeclaredVersion {
+//	int major
+//	int minor
+//	int micro
+//	String qualifier
+//	String buildMetaData
+//}
 
 /**
  * The type of a project characterizes the later usage of the project. This information
@@ -233,7 +236,9 @@ class ModuleFilterSpecifier {
  * dependency affects runtime or is only required for testing.
  */
 class ProjectDependency extends ProjectReference {
-	contains VersionConstraint versionConstraint
+//	contains VersionConstraint versionConstraint
+	contains NPMVersionRequirement versionConstraint
+	String versionConstraintString
 
 	ProjectDependencyScope declaredScope
 
@@ -250,12 +255,12 @@ class ProjectDependency extends ProjectReference {
  * 1.0.0 < x <= 2.0.0 are allowed. If only a lowerVersion
  * is assigned this means [version, infinity).
  */
-class VersionConstraint {
-	boolean exclLowerBound
-	contains DeclaredVersion lowerVersion
-	boolean exclUpperBound
-	contains DeclaredVersion upperVersion
-}
+//class VersionConstraint {
+//	boolean exclLowerBound
+//	contains DeclaredVersion lowerVersion
+//	boolean exclUpperBound
+//	contains DeclaredVersion upperVersion
+//}
 
 /**
  * To define if a dependency is only required while executing testing or

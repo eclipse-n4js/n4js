@@ -16,6 +16,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +46,6 @@ import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.JSON.NameValuePair;
 import org.eclipse.n4js.json.model.utils.JSONModelUtils;
 import org.eclipse.n4js.n4mf.BootstrapModule;
-import org.eclipse.n4js.n4mf.DeclaredVersion;
 import org.eclipse.n4js.n4mf.ModuleFilter;
 import org.eclipse.n4js.n4mf.ModuleFilterSpecifier;
 import org.eclipse.n4js.n4mf.ModuleFilterType;
@@ -57,9 +57,13 @@ import org.eclipse.n4js.n4mf.ProjectReference;
 import org.eclipse.n4js.n4mf.ProjectType;
 import org.eclipse.n4js.n4mf.SourceContainerDescription;
 import org.eclipse.n4js.n4mf.SourceContainerType;
-import org.eclipse.n4js.n4mf.VersionConstraint;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.semver.SemverHelper;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
+import org.eclipse.n4js.semver.Semver.VersionRangeSetRequirement;
 import org.eclipse.xtext.resource.XtextResourceSet;
+import org.eclipse.xtext.util.Pair;
+import org.eclipse.xtext.util.Tuples;
 
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
@@ -154,6 +158,9 @@ public class ProjectDescriptionHelper {
 	@Inject
 	private Provider<XtextResourceSet> resourceSetProvider;
 
+	@Inject
+	private SemverHelper semverHelper;
+
 	/**
 	 * Loads the project description of the N4JS project at the given {@code location}.
 	 * <p>
@@ -219,14 +226,19 @@ public class ProjectDescriptionHelper {
 	/**
 	 * Loads the project description of the N4JS project at the given {@code location} and returns the version string or
 	 * <code>null</code> if undefined or in case of error.
+	 *
+	 * @return A pair that contains (1) the version as a String and (2) a Boolean that is true iff the project
+	 *         description has a N4JS nature
 	 */
-	public String loadVersionFromProjectDescriptionAtLocation(URI location) {
+	public Pair<String, Boolean> getVersionAndN4JSNatureFromProjectDescriptionAtLocation(URI location) {
 		JSONDocument packageJSON = loadPackageJSONAtLocation(location);
 		if (packageJSON == null) {
 			return null;
 		}
+		boolean hasN4JSNature = JSONModelUtils.getProperty(packageJSON, PROP__N4JS).isPresent();
 		JSONValue versionValue = JSONModelUtils.getProperty(packageJSON, PROP__VERSION).orElse(null);
-		return asStringOrNull(versionValue);
+		Pair<String, Boolean> result = Tuples.create(asStringOrNull(versionValue), hasN4JSNature);
+		return result;
 	}
 
 	/**
@@ -437,6 +449,7 @@ public class ProjectDescriptionHelper {
 	 */
 	private ProjectDescription convertToProjectDescription(URI location, JSONDocument packageJSON,
 			boolean applyDefaultValues) {
+
 		JSONValue rootValue = packageJSON.getContent();
 		if (rootValue instanceof JSONObject) {
 			ProjectDescription result = N4mfFactory.eINSTANCE.createProjectDescription();
@@ -449,6 +462,7 @@ public class ProjectDescriptionHelper {
 
 	private void convertRootPairs(URI location, ProjectDescription target, List<NameValuePair> rootPairs,
 			boolean applyDefaultValues) {
+
 		String valueOfTopLevelPropertyMain = null;
 		for (NameValuePair pair : rootPairs) {
 			String name = pair.getName();
@@ -569,26 +583,30 @@ public class ProjectDescriptionHelper {
 	}
 
 	private void convertDependencies(ProjectDescription target, List<NameValuePair> depPairs, boolean avoidDuplicates) {
-		Set<String> existingProjectIds = avoidDuplicates
-				? target.getProjectDependencies().stream().map(dep -> dep.getProjectId()).collect(Collectors.toSet())
-				: Collections.emptySet();
+		Set<String> existingProjectIds = new HashSet<>();
+		if (avoidDuplicates) {
+			for (ProjectDependency pd : target.getProjectDependencies()) {
+				existingProjectIds.add(pd.getProjectId());
+			}
+		}
+
 		for (NameValuePair pair : depPairs) {
 			String projectId = pair.getName();
-			if (projectId != null && !projectId.isEmpty()) {
-				if (avoidDuplicates && !existingProjectIds.add(projectId)) {
-					continue;
-				}
+
+			boolean addProjectDependency = true;
+			addProjectDependency &= projectId != null && !projectId.isEmpty();
+			addProjectDependency &= !(avoidDuplicates && existingProjectIds.contains(projectId));
+			existingProjectIds.add(projectId);
+
+			if (addProjectDependency) {
 				JSONValue value = pair.getValue();
 				String valueStr = asStringOrNull(value);
-				VersionConstraint versionConstraint = ProjectDescriptionUtils.parseVersionConstraint(valueStr);
 				ProjectDependency dep = N4mfFactory.eINSTANCE.createProjectDependency();
 				dep.setProjectId(projectId);
-				if ("*".equals(valueStr) || "latest".equals(valueStr)) {
-					dep.setVersionConstraint(null); // FIXME
-				} else {
-					// 'versionConstraint' may also be null, then no constraint is set
-					dep.setVersionConstraint(versionConstraint);
-				}
+				dep.setVersionConstraintString(valueStr);
+
+				VersionRangeSetRequirement vrs = semverHelper.parseVersionRangeSet(valueStr);
+				dep.setVersionConstraint(vrs);
 				target.getProjectDependencies().add(dep);
 			}
 		}
@@ -651,14 +669,11 @@ public class ProjectDescriptionHelper {
 		}
 	}
 
-	private DeclaredVersion parseVersion(String versionStr) {
+	private VersionNumber parseVersion(String versionStr) {
 		if (versionStr == null) {
 			return null;
 		}
-		DeclaredVersion result = ProjectDescriptionUtils.parseVersion(versionStr);
-		if (result == null) {
-			System.err.println("WARNING: invalid or unsupported version: " + versionStr);
-		}
+		VersionNumber result = semverHelper.parseVersionNumber(versionStr);
 		return result;
 	}
 

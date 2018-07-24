@@ -27,7 +27,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.n4mf.BootstrapModule;
-import org.eclipse.n4js.n4mf.DeclaredVersion;
 import org.eclipse.n4js.n4mf.ModuleFilter;
 import org.eclipse.n4js.n4mf.ModuleFilterType;
 import org.eclipse.n4js.n4mf.ModuleLoader;
@@ -37,6 +36,7 @@ import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.common.base.Optional;
@@ -256,7 +256,7 @@ public class N4JSProject implements IN4JSProject {
 	}
 
 	@Override
-	public DeclaredVersion getVersion() {
+	public VersionNumber getVersion() {
 		if (!exists())
 			return null;
 		ProjectDescription pd = model.getProjectDescription(getLocation());

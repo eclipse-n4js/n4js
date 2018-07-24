@@ -15,7 +15,8 @@ import static org.eclipse.n4js.utils.OSInfo.isWindows;
 
 import java.io.File;
 
-import org.eclipse.n4js.utils.Version;
+import org.eclipse.n4js.semver.SemverUtils;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
 
 /**
  * Contains constants for {@code Node.js} binaries all over the system.
@@ -76,7 +77,7 @@ public abstract class NodeBinariesConstants {
 			: new File(separator + "usr" + File.separator + "local" + separator + "bin").getAbsolutePath();
 
 	/** The minimum {@code Node.js} version. */
-	public static final Version NODE_MIN_VERSION = new Version(8, 0, 0);
+	public static final VersionNumber NODE_MIN_VERSION = SemverUtils.createVersionNumber(8, 0, 0);
 	/** The label for {@code Node.js}. */
 	public static final String NODE_LABEL = "Node.js";
 	/** The {@code Node.js} binary name (OS specific). */
@@ -85,7 +86,7 @@ public abstract class NodeBinariesConstants {
 	public static final String VERSION_ARGUMENT = "-v";
 
 	/** The minimum {@code npm} version. */
-	public static final Version NPM_MIN_VERSION = new Version(5, 0, 0);
+	public static final VersionNumber NPM_MIN_VERSION = SemverUtils.createVersionNumber(5, 0, 0);
 	/** The label for {@code npm}. */
 	public static final String NPM_LABEL = "npm";
 	/** The {@code npm} binary name. */

@@ -44,6 +44,7 @@ import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.PropertyNameOwner
 import org.eclipse.n4js.n4mf.ProjectDependency
 import org.eclipse.n4js.n4mf.ProjectReference
+import org.eclipse.n4js.semver.model.SemverSerializer
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
@@ -79,8 +80,6 @@ import static org.eclipse.core.resources.IncrementalProjectBuilder.CLEAN_BUILD
 import static org.eclipse.n4js.ui.changes.ChangeProvider.*
 import static org.eclipse.n4js.ui.quickfix.QuickfixUtil.*
 
-import static extension org.eclipse.n4js.external.version.VersionConstraintFormatUtil.npmFormat
-
 /**
  * N4JS quick fixes.
  *
@@ -109,6 +108,7 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 
 	@Inject
 	private LibraryManager libraryManager;
+
 
 	/** Retrieve annotation constants from AnnotationDefinition */
 	static final String INTERNAL_ANNOTATION = AnnotationDefinition.INTERNAL.name;
@@ -690,7 +690,7 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 				val dependency = element as ProjectReference;
 				val packageName = dependency.projectId;
 				val packageVersion = if (dependency instanceof ProjectDependency) {
-						dependency.versionConstraint.npmFormat;
+						SemverSerializer.serialize(dependency.versionConstraint);
 					} else {
 						"";
 					};
