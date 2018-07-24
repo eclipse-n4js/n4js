@@ -175,7 +175,9 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 			}
 
 			if (platformProjectContainer == null) {
-				// container project cannot be determined, fail gracefully (possibly a nested package.json file)
+				// Container project cannot be determined, fail gracefully. We currently assume that this
+				// case will only occur when a nested package.json is validated in an editor (we ignore
+				// nested package.json files in the builder)
 				return;
 			}
 
