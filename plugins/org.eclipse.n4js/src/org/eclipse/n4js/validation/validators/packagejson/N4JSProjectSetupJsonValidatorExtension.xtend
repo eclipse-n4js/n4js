@@ -1019,7 +1019,10 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		val allProjects = getAllExistingProjectIds();
 		
 		val existentIds = HashMultimap.<String, ValidationProjectReference>create;
-
+		
+		val projectDescriptionFileURI = document.eResource.URI;
+		val currentProject = findProject(projectDescriptionFileURI).orNull;
+		
 		// Check project existence.
 		references.forEach[ ref |
 			val id = ref.referencedProjectId;
@@ -1037,8 +1040,6 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 
 				// Type cannot be resolved from index, hence project does not exist in workspace.
 				if (null === project || null === project.projectType) {
-					val projectDescriptionFileURI = ref.astRepresentation.eResource.URI;
-					val currentProject = findProject(projectDescriptionFileURI).orNull;
 					if (!currentProject.isExternal) { // in GH-821: remove this condition
 						addIssue(getMessageForNON_EXISTING_PROJECT(id), ref.astRepresentation, NON_EXISTING_PROJECT);
 					}
@@ -1052,8 +1053,11 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 						addInvalidProjectTypeIssue(ref.astRepresentation, id, 
 							project.projectType, sectionLabel);
 					} else {
-						// check version constraint if this project has no nested node_modules folder
-						if (!description.hasNestedNodeModulesFolder) {
+						// check version constraint if the current project is not external and has no nested 
+						// node_modules folder
+						val boolean ignoreVersion = (currentProject.isExternal && description.hasNestedNodeModulesFolder);
+						 
+						if (!ignoreVersion) {
 							checkVersions(ref, id, allProjects);
 						}
 					}
