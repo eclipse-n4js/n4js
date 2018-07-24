@@ -183,7 +183,6 @@ public class FileChecker extends AbstractFileChecker {
 			/* templates */
 			"plugins/org.eclipse.n4js.external.libraries/src/org/eclipse/n4js/external/libraries/PackageJson.java",
 			"plugins/org.eclipse.n4js.external.libraries/src/org/eclipse/n4js/external/libraries/TargetPlatformFactory.xtend",
-			"plugins/org.eclipse.n4js.npmexporter/src/org/eclipse/n4js/npmexporter/PackageJsonData.java",
 			"plugins/org.eclipse.n4js.runner/schema/org.eclipse.n4js.runner.runners.exsd",
 			"plugins/org.eclipse.n4js.utils/schema/org.eclipse.n4js.utils.fileExtensions.exsd",
 			"plugins/org.eclipse.n4js.common.unicode/src/org/eclipse/n4js/common/unicode/generator/UnicodeGrammarGenerator.xtend",
@@ -192,7 +191,6 @@ public class FileChecker extends AbstractFileChecker {
 			"tests/org.eclipse.n4js.n4ide.spec.tests/Xpect-test/Ch05_04_01_02__Organize_Imports/organize_imports/GHOLD_103/GHOLD_103.txt",
 			"tests/org.eclipse.n4js.smoke.tests/src/org/eclipse/n4js/smoke/tests/GeneratedSmokeTestCases2.xtend",
 			"tests/org.eclipse.n4js.lang.tests/src/org/eclipse/n4js/tests/contentassist/NodeModelTokenSourceTest.xtend",
-			"tests/org.eclipse.n4js.lang.tests/src/org/eclipse/n4js/npmexporter/PackageJasonTemplateTest.xtend",
 
 			/* update site */
 			"releng/org.eclipse.n4js.targetplatform/N4JS.setup",
