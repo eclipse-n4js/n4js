@@ -60,6 +60,7 @@ class TimedDataCollector extends DataCollector {
 		return (TimedMeasurement) getMeasurement(name);
 	}
 
+	/** This method must be synchronized to protect race conditions when calling data.add */
 	synchronized private void consume(TimedMeasurement measurement) {
 		TimedMeasurement timed = measurement;
 		data.add(new DataPoint(timed.name, timed.elapsed(NANOSECONDS)));
