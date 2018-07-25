@@ -59,16 +59,19 @@ import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement
+import org.eclipse.n4js.semver.SemverHelper
+import org.eclipse.n4js.semver.SemverMatcher
 import org.eclipse.n4js.semver.model.SemverSerializer
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TypesPackage
+import org.eclipse.n4js.utils.DependencyTraverser
 import org.eclipse.n4js.utils.ProjectDescriptionHelper
 import org.eclipse.n4js.utils.ProjectDescriptionUtils
 import org.eclipse.n4js.utils.WildcardPathFilterHelper
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
-import org.eclipse.n4js.validation.helper.SourceContainerAwareDependencyTraverser
+import org.eclipse.n4js.validation.helper.SourceContainerAwareDependencyProvider
 import org.eclipse.xtend.lib.annotations.Data
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.resource.IContainer
@@ -84,8 +87,6 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 import static org.eclipse.n4js.validation.validators.packagejson.ProjectTypePredicate.*
 
 import static extension com.google.common.base.Strings.nullToEmpty
-import org.eclipse.n4js.semver.SemverHelper
-import org.eclipse.n4js.semver.SemverMatcher
 
 /**
  * A JSON validator extension that validates {@code package.json} resources in the context
@@ -343,11 +344,16 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	def checkCyclicDependencies(JSONDocument document) {
 		val project = findProject(document.eResource.URI).orNull;
 		if (null !== project) {
-			val result = new SourceContainerAwareDependencyTraverser(project, true).result;
-			if (result.hasCycle) {
+			
+			val dependencyProvider = new SourceContainerAwareDependencyProvider(true);
+			val traverser = new DependencyTraverser(project, dependencyProvider, true);
+			
+			val traversalResult = traverser.findCycle();
+			
+			if (traversalResult.hasCycle) {
 				// add issue to 'name' property or alternatively to the whole document
 				val nameValue = getSingleDocumentValue(ProjectDescriptionHelper.PROP__NAME);
-				val message = getMessageForPROJECT_DEPENDENCY_CYCLE(result.prettyPrint([calculateName]));
+				val message = getMessageForPROJECT_DEPENDENCY_CYCLE(traversalResult.prettyPrint([calculateName]));
 				addIssuePreferred(#[nameValue], message, PROJECT_DEPENDENCY_CYCLE);
 			} else {
 				//for performance reasons following is not separate check
@@ -1194,14 +1200,15 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	}
 	
 	/**
-	 * Adds an issue to each element in {@code preferredTargets}.
+	 * Adds an issue to every non-null element in {@code preferredTargets}.
 	 *
 	 * If {@code preferredTargets} is empty (or contains null entries only), adds an issue to 
 	 * the {@code name} property of the {@code package.json} file. 
 	 * 
-	 * If there is no {@code name} property, falls back to {@link #getDocument()}.
+	 * If there is no {@code name} property, adds an issue to the whole document (see {@link #getDocument()}).
 	 */ 
 	private def void addIssuePreferred(Iterable<? extends EObject> preferredTargets, String message, String issueCode) {
+		// add issue to preferred targets
 		if (!preferredTargets.filterNull.empty) {
 			preferredTargets.filterNull
 				.forEach[t | addIssue(message, t, issueCode); ]

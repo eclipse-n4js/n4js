@@ -109,7 +109,7 @@ public class ProjectTestsUtils {
 	 *      "http://stackoverflow.com/questions/12484128/how-do-i-import-an-eclipse-project-from-a-zip-file-programmatically">
 	 *      stackoverflow: from zip</a>
 	 */
-	public static IProject importProject(File probandsFolder, String projectName) throws Exception {
+	public static IProject importProject(File probandsFolder, String projectName) throws CoreException {
 		return importProject(probandsFolder, projectName, true);
 	}
 
@@ -161,7 +161,7 @@ public class ProjectTestsUtils {
 	}
 
 	private static IProject importProject(File probandsFolder, String projectName, boolean prepareDotProject)
-			throws Exception {
+			throws CoreException {
 		File projectSourceFolder = new File(probandsFolder, projectName);
 		if (!projectSourceFolder.exists()) {
 			throw new IllegalArgumentException("proband not found in " + projectSourceFolder);
