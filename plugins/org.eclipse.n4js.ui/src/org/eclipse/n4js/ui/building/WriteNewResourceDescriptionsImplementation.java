@@ -102,7 +102,8 @@ class WriteNewResourceDescriptionsImplementation {
 				counter = 0;
 			}
 
-			indexNextResource(loadOperation.next());
+			LoadResult nextOp = loadOperation.next(); // this may throw an exception
+			indexNextResource(nextOp);
 			counter++;
 		}
 	}
