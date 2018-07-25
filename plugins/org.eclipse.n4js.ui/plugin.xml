@@ -1115,7 +1115,7 @@ Contributors:
        <decorator
              adaptable="true"
              class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.decorator.ProjectTypeLabelDecorator"
-             id="org.eclipse.n4js.n4mf.ui.decorator.ProjectTypeLabelDecorator"
+             id="org.eclipse.n4js.ui.decorator.ProjectTypeLabelDecorator"
              label="Project Type Label Decorator"
              lightweight="true"
              location="TOP_RIGHT"

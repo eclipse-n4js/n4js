@@ -44,7 +44,7 @@ import static org.hamcrest.core.IsCollectionContaining.*
 import static org.hamcrest.core.IsNot.not
 import static org.junit.Assert.*
 import org.eclipse.n4js.packagejson.PackageJsonBuilder
-import org.eclipse.n4js.n4mf.ProjectType
+import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.internal.FileBasedWorkspace
 
 /**

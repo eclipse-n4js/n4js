@@ -29,9 +29,9 @@ import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4JSBrokenProjectException;
 import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.internal.N4JSProject;
-import org.eclipse.n4js.n4mf.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.utils.ProjectDescriptionHelper;
+import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.common.collect.Iterables;
@@ -44,7 +44,7 @@ import com.google.inject.Inject;
 public class HeadlessHelper {
 
 	@Inject
-	private ProjectDescriptionHelper projectDescriptionHelper;
+	private ProjectDescriptionLoader projectDescriptionLoader;
 
 	@Inject
 	private N4JSModel n4jsModel;
@@ -117,7 +117,7 @@ public class HeadlessHelper {
 		for (URI uri : projectURIs) {
 			URI projectURI = URIUtils.normalize(uri);
 
-			final ProjectDescription projectDescription = projectDescriptionHelper
+			final ProjectDescription projectDescription = projectDescriptionLoader
 					.loadProjectDescriptionAtLocation(projectURI);
 
 			if (projectDescription == null) {

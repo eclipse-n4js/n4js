@@ -12,9 +12,9 @@ package org.eclipse.n4js.internal;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.n4mf.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSArchive;
-import org.eclipse.n4js.utils.ProjectDescriptionHelper;
+import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 
 /**
  * Lazy handle that is registered as a proxy at runtime.
@@ -26,12 +26,12 @@ public class LazyProjectDescriptionHandle {
 
 	private final URI location;
 	private final boolean archive;
-	private final ProjectDescriptionHelper descriptionHelper;
+	private final ProjectDescriptionLoader descriptionHelper;
 
 	private ProjectDescription resolved;
 
 	protected LazyProjectDescriptionHandle(URI location, boolean archive,
-			ProjectDescriptionHelper descriptionHelper) {
+			ProjectDescriptionLoader descriptionHelper) {
 		this.location = location;
 		this.archive = archive;
 		this.descriptionHelper = descriptionHelper;

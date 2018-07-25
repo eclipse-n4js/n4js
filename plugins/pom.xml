@@ -40,8 +40,6 @@ Contributors:
 		<module>org.eclipse.n4js.model</module>
 		<module>org.eclipse.n4js</module>
 		<module>org.eclipse.n4js.ui</module>
-		<!-- n4js project model (n4mf) -->
-		<module>org.eclipse.n4js.n4mf.model</module>
 		<!-- execution environments -->
 		<module>org.eclipse.n4js.environments</module>
 		<!-- external libraries bundles -->

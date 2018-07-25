@@ -31,8 +31,6 @@ public enum ResourceType {
 	N4JSX,
 	/** Raw file has extension <code>.n4jsd</code> or <code>.n4jsd.xt</code> */
 	N4JSD,
-	/** Raw file has extension <code>.n4mf</code> or <code>.n4mf.xt</code> */
-	N4MF,
 	/** Raw file has extension is <code>.xt</code> */
 	XT,
 	/** Raw file has extension <code>.n4idl</code> or <code>.n4idl.xt</code> */
@@ -46,7 +44,6 @@ public enum ResourceType {
 	private final static String EXT_N4JS = N4JSGlobals.N4JS_FILE_EXTENSION;
 	private final static String EXT_N4JSX = N4JSGlobals.N4JSX_FILE_EXTENSION;
 	private final static String EXT_N4JSD = N4JSGlobals.N4JSD_FILE_EXTENSION;
-	private final static String EXT_N4MF = "n4mf";
 	private final static String EXT_XT = N4JSGlobals.XT_FILE_EXTENSION;
 	private final static String EXT_N4IDL = N4JSGlobals.N4IDL_FILE_EXTENSION;
 
@@ -131,8 +128,6 @@ public enum ResourceType {
 			return N4JSX;
 		case EXT_N4JSD:
 			return N4JSD;
-		case EXT_N4MF:
-			return N4MF;
 		case EXT_XT:
 			return XT;
 		case EXT_N4IDL:

@@ -13,8 +13,6 @@ package org.eclipse.n4js.runner;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.emptyList;
 
-import java.io.File;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -30,7 +28,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.compare.ApiImplMapping;
 import org.eclipse.n4js.generator.AbstractSubGenerator;
-import org.eclipse.n4js.n4mf.ProjectType;
+import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
@@ -92,34 +90,6 @@ public class RunnerHelper {
 	}
 
 	/**
-	 * Returns absolute path to the resources defined in the projects manifest.
-	 *
-	 * This method was used before GH-394 to provide basic support for project resources at runtime. After GH-394 it is
-	 * not used, but its future should be decided in GH-70
-	 */
-	// TODO GH-70 handle projects resources
-	@SuppressWarnings("unused")
-	private List<String> getProjectResourcePaths(IN4JSProject project) {
-		final List<String> relativeResourcePathStr = new ArrayList<>(project.getResourcePaths());
-		if (relativeResourcePathStr.isEmpty()) {
-			return relativeResourcePathStr;
-		}
-
-		return relativeResourcePathStr.stream()
-				.map(s -> toAbsolutePath(project, s))
-				.collect(Collectors.toList());
-	}
-
-	private String toAbsolutePath(IN4JSProject project, String projectRelativePath) {
-		if (projectRelativePath.startsWith(File.separator)) {
-			projectRelativePath = projectRelativePath.substring(File.separator.length());
-		}
-		final Path projectPath = project.getLocationPath().toAbsolutePath();
-		final Path absolutePath = projectPath.resolve(projectRelativePath);
-		return absolutePath.normalize().toString();
-	}
-
-	/**
 	 * Returns paths to all bootstrap files defined in the given N4JS projects. The paths are relative to their
 	 * containing project's output folder.
 	 */
@@ -144,7 +114,7 @@ public class RunnerHelper {
 				.map(re -> {
 					// obtain the module specifier of the execModule
 					final Optional<String> oExecModuleSpecifier = re.getExecModule()
-							.transform(bootstrapModule -> bootstrapModule.getModuleSpecifierWithWildcard());
+							.transform(bootstrapModule -> bootstrapModule.getModuleSpecifier());
 
 					if (!oExecModuleSpecifier.isPresent()) {
 						return null;
@@ -244,8 +214,7 @@ public class RunnerHelper {
 	 */
 	private List<URI> getInitModulesAsURIs(IN4JSProject project) {
 		return project.getInitModules().stream()
-
-				.map(bm -> artifactHelper.findArtifact(project, bm.getModuleSpecifierWithWildcard(),
+				.map(bm -> artifactHelper.findArtifact(project, bm.getModuleSpecifier(),
 						Optional.of(".js")))
 				.filter(module -> module != null).collect(Collectors.toList());
 	}

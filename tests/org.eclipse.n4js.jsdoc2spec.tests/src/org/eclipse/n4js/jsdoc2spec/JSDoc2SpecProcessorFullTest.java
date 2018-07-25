@@ -16,7 +16,7 @@ import org.eclipse.n4js.N4JSInjectorProvider;
 import org.eclipse.n4js.internal.ClasspathPackageManager;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4JSRuntimeCore;
-import org.eclipse.n4js.utils.ProjectDescriptionHelper;
+import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.XtextRunner;
@@ -53,7 +53,7 @@ abstract public class JSDoc2SpecProcessorFullTest {
 	protected ClasspathPackageManager classpathPackageManager;
 
 	@Inject
-	protected ProjectDescriptionHelper projectDescriptionHelper;
+	protected ProjectDescriptionLoader projectDescriptionLoader;
 
 	@Inject
 	protected Injector injector;

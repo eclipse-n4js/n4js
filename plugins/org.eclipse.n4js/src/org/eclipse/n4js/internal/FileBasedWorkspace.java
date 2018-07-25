@@ -26,10 +26,10 @@ import java.util.zip.ZipInputStream;
 
 import org.eclipse.emf.common.util.AbstractTreeIterator;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.n4mf.ProjectDescription;
-import org.eclipse.n4js.n4mf.ProjectReference;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.projectModel.IN4JSArchive;
-import org.eclipse.n4js.utils.ProjectDescriptionHelper;
+import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.common.base.Function;
@@ -45,15 +45,15 @@ import com.google.inject.Singleton;
 @Singleton
 public class FileBasedWorkspace extends InternalN4JSWorkspace {
 
-	private final ProjectDescriptionHelper projectDescriptionHelper;
+	private final ProjectDescriptionLoader projectDescriptionLoader;
 
 	private final ClasspathPackageManager packageManager;
 
 	@Inject
 	public FileBasedWorkspace(ClasspathPackageManager packageManager,
-			ProjectDescriptionHelper projectDescriptionHelper) {
+			ProjectDescriptionLoader projectDescriptionLoader) {
 		this.packageManager = packageManager;
-		this.projectDescriptionHelper = projectDescriptionHelper;
+		this.projectDescriptionLoader = projectDescriptionLoader;
 	}
 
 	private final Map<URI, LazyProjectDescriptionHandle> projectElementHandles = Maps.newConcurrentMap();
@@ -64,7 +64,7 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 	/**
 	 *
 	 * @param location
-	 *            project directory containing manifest.n4mf directly
+	 *            project directory containing package.json directly
 	 */
 	public void registerProject(URI unsafeLocation) {
 		if (unsafeLocation.lastSegment().isEmpty()) {
@@ -79,7 +79,7 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 	}
 
 	protected LazyProjectDescriptionHandle createLazyDescriptionHandle(URI location, boolean archive) {
-		return new LazyProjectDescriptionHandle(location, archive, projectDescriptionHelper);
+		return new LazyProjectDescriptionHandle(location, archive, projectDescriptionLoader);
 	}
 
 	@Override
@@ -129,13 +129,14 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 		if (expectedN4JSSourceContainerType == N4JSSourceContainerType.ARCHIVE) {
 			LazyProjectDescriptionHandle baseHandle = projectElementHandles.get(projectURI);
 			if (baseHandle != null && !baseHandle.isArchive()) {
-				String archiveFileName = projectId + IN4JSArchive.NFAR_FILE_EXTENSION_WITH_DOT;
-				for (String libraryPath : baseHandle.resolve().getLibraryPaths()) {
-					URI archiveURI = projectURI.appendSegments(new String[] { libraryPath, archiveFileName });
-					if (projectElementHandles.containsKey(archiveURI)) {
-						return archiveURI;
-					}
-				}
+				// TODO remove .nfar support
+				// String archiveFileName = projectId + IN4JSArchive.NFAR_FILE_EXTENSION_WITH_DOT;
+				// for (String libraryPath : baseHandle.resolve().getLibraryPaths()) {
+				// URI archiveURI = projectURI.appendSegments(new String[] { libraryPath, archiveFileName });
+				// if (projectElementHandles.containsKey(archiveURI)) {
+				// return archiveURI;
+				// }
+				// }
 			} else {
 				String archiveFileName = projectId + IN4JSArchive.NFAR_FILE_EXTENSION_WITH_DOT;
 				for (URI location : projectElementHandles.keySet()) {

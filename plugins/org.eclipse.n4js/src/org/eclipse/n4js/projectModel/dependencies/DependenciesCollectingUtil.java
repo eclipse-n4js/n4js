@@ -15,8 +15,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import org.eclipse.n4js.n4mf.ProjectDescription;
-import org.eclipse.n4js.n4mf.ProjectReference;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectReference;
 
 import com.google.common.base.Strings;
 
@@ -67,9 +67,19 @@ public class DependenciesCollectingUtil {
 		}
 	}
 
-	/** Resolve conflict between two versions. Simple strategy - returns first if it is not empty. */
+	/**
+	 * Resolve conflict between two version requirements. Simple strategy - returns first if it is not empty and not
+	 * "*".
+	 * <p>
+	 * This implements the following heuristic: if we encounter (during dependency collection) two version requirements
+	 * for the same npm package, we always use the first version requirement encountered, unless the first version is a
+	 * form of version requirement which does not provide much information, i.e. null, "", or "*" (then we use the
+	 * second version).
+	 * <p>
+	 * TODO GH-1017 improve this heuristic
+	 */
 	public static String resolve(String version1, String version2) {
-		return Strings.isNullOrEmpty(version1) ? version2 : version1;
+		return Strings.isNullOrEmpty(version1) || "*".equals(version1) ? version2 : version1;
 	}
 
 	/** TODO https://github.com/eclipse/n4js/issues/613 */

@@ -24,12 +24,12 @@ import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.json.JSON.JSONDocument
 import org.eclipse.n4js.json.JSON.JSONPackage
 import org.eclipse.n4js.json.^extension.IJSONResourceDescriptionExtension
-import org.eclipse.n4js.n4mf.ProjectDescription
-import org.eclipse.n4js.n4mf.ProjectReference
-import org.eclipse.n4js.n4mf.ProjectType
+import org.eclipse.n4js.projectDescription.ProjectDescription
+import org.eclipse.n4js.projectDescription.ProjectReference
+import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.semver.model.SemverSerializer
-import org.eclipse.n4js.utils.ProjectDescriptionHelper
+import org.eclipse.n4js.utils.ProjectDescriptionLoader
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.resource.EObjectDescription
@@ -112,7 +112,8 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 	private IQualifiedNameProvider qualifiedNameProvider;
 
 	@Inject
-	private ProjectDescriptionHelper projectDescriptionHelper;
+	private ProjectDescriptionLoader projectDescriptionLoader;
+
 
 
     private static final Logger LOGGER = Logger.getLogger(PackageJsonResourceDescriptionExtension);
@@ -184,7 +185,7 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 			LOGGER.error("creation of EObjectDescriptions failed: cannot derive project location from document");
 			return;
 		}
-		val description = projectDescriptionHelper.loadProjectDescriptionAtLocation(projectLocation, document, true);
+		val description = projectDescriptionLoader.loadProjectDescriptionAtLocation(projectLocation, document, true);
 		if(description === null) {
 			LOGGER.error("creation of EObjectDescriptions failed: cannot load project description at location: " + projectLocation);
 			return;

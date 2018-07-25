@@ -248,24 +248,8 @@ public class NfarStorageMapper implements IStorage2UriMapperContribution {
 
 	@Override
 	public boolean isRejected(IFolder folder) {
-		if (isLibraryFolder(folder)) {
-			return false;
-		}
 		Optional<? extends IN4JSSourceContainer> sourceContainerOpt = eclipseCore.create(folder);
 		return !sourceContainerOpt.isPresent();
-	}
-
-	private boolean isLibraryFolder(IResource folder) {
-		Optional<? extends IN4JSEclipseProject> projectOpt = eclipseCore.create(folder.getProject());
-		if (projectOpt.isPresent()) {
-			IN4JSEclipseProject project = projectOpt.get();
-			for (String libraryFolder : project.getLibraryFolders()) {
-				if (libraryFolder.equals(folder.getProjectRelativePath().toString())) {
-					return true;
-				}
-			}
-		}
-		return false;
 	}
 
 	@Override

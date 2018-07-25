@@ -75,8 +75,7 @@ public class ExternalLibrariesInstallHelper {
 	 * Removes from map 'dependenciesToInstall' all entries for projects that are in the shipped code, if and only if
 	 * the requested version is the "fake" version of the shipped code.
 	 *
-	 * FIXME GH-957 / GH-809 change implementation to use a proper SemVer version-range-check instead of the string
-	 * compare!
+	 * FIXME GH-957 change implementation to use a proper SemVer version-range-check instead of the string compare!
 	 */
 	private void removeDependenciesToShippedCodeIfVersionMatches(Map<String, String> dependenciesToInstall,
 			Map<String, VersionNumber> projectIdsOfShippedCode) {
@@ -114,7 +113,7 @@ public class ExternalLibrariesInstallHelper {
 					.map(id -> dependenciesToInstall.get(id))
 					.collect(Collectors.toSet());
 			if (versionConstraintsOfShippedCodeToInstall.size() > 1) {
-				// FIXME GH-957 / GH-809 warn about conflicting version constraints for shipped code!
+				// FIXME GH-957 warn about conflicting version constraints for shipped code!
 			}
 			String versionConstraint = versionConstraintsOfShippedCodeToInstall.stream().findFirst()
 					.orElse(null);

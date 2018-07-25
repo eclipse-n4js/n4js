@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.tests.misc
 
-import org.eclipse.n4js.n4mf.ProjectType
+import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
 import org.junit.Test
 

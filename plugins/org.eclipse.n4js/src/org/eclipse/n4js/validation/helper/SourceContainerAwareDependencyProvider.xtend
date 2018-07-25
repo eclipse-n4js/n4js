@@ -11,11 +11,11 @@
 package org.eclipse.n4js.validation.helper
 
 import com.google.common.collect.ImmutableList
-import org.eclipse.n4js.n4mf.ProjectType
+import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware
-import org.eclipse.n4js.utils.DependencyTraverser.DependencyProvider
 import org.eclipse.n4js.utils.DependencyTraverser
+import org.eclipse.n4js.utils.DependencyTraverser.DependencyProvider
 
 /**
  * A {@link DependencyProvider} implementation for traversing the dependency 

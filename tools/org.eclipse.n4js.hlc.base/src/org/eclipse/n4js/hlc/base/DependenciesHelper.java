@@ -16,10 +16,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.StreamSupport;
 
-import org.eclipse.n4js.n4mf.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.dependencies.DependenciesCollectingUtil;
-import org.eclipse.n4js.utils.ProjectDescriptionHelper;
+import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.inject.Inject;
@@ -30,7 +30,7 @@ import com.google.inject.Inject;
 class DependenciesHelper {
 
 	@Inject
-	private ProjectDescriptionHelper projectDescriptionHelper;
+	private ProjectDescriptionLoader projectDescriptionLoader;
 
 	/**
 	 * Discovers projects in the provided locations and projects containing provided files, then returns missing
@@ -57,7 +57,7 @@ class DependenciesHelper {
 		StreamSupport.stream(allProjects.spliterator(), false)
 				.map(p -> p.getLocationPath().toFile())
 				.forEach(root -> {
-					final ProjectDescription projectDescription = projectDescriptionHelper
+					final ProjectDescription projectDescription = projectDescriptionLoader
 							.loadProjectDescriptionAtLocation(URIUtils.toFileUri(root.toURI()));
 
 					if (projectDescription == null) {
