@@ -120,7 +120,7 @@ class RuntimeEnvironmentResolutionTest {
 	 * Resolving execution environment throws exception when called on project of type RE.
 	 */
 	@Test(expected = InsolvableRuntimeEnvironmentException)
-	def void testCannotResolveExecutionEnvironmentForRuntimeEnviroenmtnProjectType() {
+	def void testCannotResolveExecutionEnvironmentForRuntimeEnvironmentProjectType() {
 		newBuilderForRE.createProject(V8).findCompatibleRuntimeEnvironments;
 	}
 	
