@@ -329,9 +329,6 @@ public class PackageJsonHelper {
 		if (versionRequirementStr == null) {
 			return null;
 		}
-		// if (versionRequirementStr.trim().isEmpty()) {
-		// versionRequirementStr = "latest";
-		// }
 		NPMVersionRequirement result = semverHelper.parse(versionRequirementStr);
 		return result;
 	}
