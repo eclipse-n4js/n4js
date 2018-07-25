@@ -29,7 +29,7 @@
 
 {
 	"name": "test.10",
-	"version": "0.0.1-SNAPSHOT",
+	"version": "0.0.1",
 	"dependencies": {
 		"test.data.re.project": "*",
 		"test.data.rl.project.one": "*"

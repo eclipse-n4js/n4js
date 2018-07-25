@@ -1,6 +1,6 @@
 {
 	"name": "test.data.test.project.one",
-	"version": "0.0.1-SNAPSHOT",
+	"version": "0.0.1",
 	"n4js": {
 		"projectType": "test",
 		"vendorId": "org.eclipse.n4js",

@@ -18,6 +18,8 @@ import java.util.stream.Stream;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectReference;
 
+import com.google.common.base.Strings;
+
 /**
  * Utility for collecting project dependencies. Focused on reading {@link ProjectDescription} only, and does not check
  * data against workspace or library manager.
@@ -61,8 +63,13 @@ public class DependenciesCollectingUtil {
 					pd.getImplementedProjects().stream().map(DependencyInfo::create))
 					.reduce(Stream::concat)
 					.orElseGet(Stream::empty)
-					.forEach(info -> dependencies.merge(info.name, info.version, DependencyInfo::resolve));
+					.forEach(info -> dependencies.merge(info.name, info.version, DependenciesCollectingUtil::resolve));
 		}
+	}
+
+	/** Resolve conflict between two versions. Simple strategy - returns first if it is not empty. */
+	public static String resolve(String version1, String version2) {
+		return Strings.isNullOrEmpty(version1) ? version2 : version1;
 	}
 
 	/** TODO https://github.com/eclipse/n4js/issues/613 */

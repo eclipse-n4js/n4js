@@ -36,14 +36,13 @@ public class RecursionGuard<T> {
 	}
 
 	private Item<T> head;
-	private final Equivalence<T> equivalence;
+	private final Equivalence<? super T> equivalence;
 
 	/**
 	 * Creates a new recursion guard with {@link Equivalence#identity() identity equivalence} checking logic.
 	 */
-	@SuppressWarnings("unchecked")
 	public RecursionGuard() {
-		this((Equivalence<T>) identity());
+		this(identity());
 	}
 
 	/**
@@ -53,7 +52,7 @@ public class RecursionGuard<T> {
 	 *            the equivalence instance encapsulating the logic that is used to identify already visited items.
 	 *            Cannot be {@code null}.
 	 */
-	public RecursionGuard(final Equivalence<T> equivalence) {
+	public RecursionGuard(final Equivalence<? super T> equivalence) {
 		this.equivalence = checkNotNull(equivalence, "equivalence");
 	}
 

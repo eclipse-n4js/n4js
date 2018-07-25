@@ -28,6 +28,7 @@ import org.eclipse.n4js.n4mf.ProjectDescription
 import org.eclipse.n4js.n4mf.ProjectReference
 import org.eclipse.n4js.n4mf.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSCore
+import org.eclipse.n4js.semver.model.SemverSerializer
 import org.eclipse.n4js.utils.ProjectDescriptionHelper
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.naming.QualifiedName
@@ -112,6 +113,7 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 
 	@Inject
 	private ProjectDescriptionHelper projectDescriptionHelper;
+
 
     private static final Logger LOGGER = Logger.getLogger(PackageJsonResourceDescriptionExtension);
 
@@ -202,11 +204,8 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 
 		val vers = projectVersion;
 		if (vers !== null) {
-			val versionStr = '''«vers.major».«vers.minor».«vers.micro»''';
-			val versionWithQualifierStr = if (vers.qualifier.nullOrEmpty)
-					versionStr else '''«versionStr»:«vers.qualifier.nullToEmpty»''';
-
-			builder.put(PROJECT_VERSION_KEY, versionWithQualifierStr);
+			val versionStr = SemverSerializer.serialize(vers);
+			builder.put(PROJECT_VERSION_KEY, versionStr);
 		}
 
 		val testedProjects = it.testedProjects;
