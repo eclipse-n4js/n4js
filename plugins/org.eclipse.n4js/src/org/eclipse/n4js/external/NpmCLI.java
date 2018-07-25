@@ -25,6 +25,9 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.binaries.BinaryCommandFactory;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
+import org.eclipse.n4js.semver.SemverHelper;
+import org.eclipse.n4js.semver.Semver.GitHubVersionRequirement;
+import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.utils.ProcessExecutionCommandStatus;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.StatusHelper;
@@ -55,6 +58,9 @@ public class NpmCLI {
 
 	@Inject
 	private ProjectDescriptionLoader projectDescriptionLoader;
+
+	@Inject
+	private SemverHelper semverHelper;
 
 	/** Simple validation if the package name is not null or empty */
 	public boolean invalidPackageName(String packageName) {
@@ -212,6 +218,15 @@ public class NpmCLI {
 		}
 		if (invalidPackageVersion(packageVersion)) {
 			return statusHelper.createError("Malformed npm package version: '" + packageVersion + "'.");
+		}
+
+		// TODO IDE-3136 / GH-1011 workaround for missing support of GitHub version requirements
+		NPMVersionRequirement packageVersionParsed = semverHelper.parse(packageVersion.substring(1));
+		if (packageVersionParsed instanceof GitHubVersionRequirement) {
+			// In case of a dependency like "JSONSelect@dbo/JSONSelect" (wherein "dbo/JSONSelect"
+			// is a GitHub version requirement), we only report "JSONSelect@" to npm. For details
+			// why this is necessary, see GH-1011.
+			packageVersion = "@";
 		}
 
 		String nameAndVersion = packageVersion.isEmpty() ? packageName : packageName + packageVersion;
