@@ -36,7 +36,9 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.eclipse.core.resources,
  org.eclipse.n4js.smith,
  org.eclipse.n4js.flowgraphs,
- org.eclipse.n4js.json
+ org.eclipse.n4js.json,
+ org.eclipse.n4js.semver.model,
+ org.eclipse.n4js.semver
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.eclipse.n4js,
  org.eclipse.n4js.binaries,
@@ -45,7 +47,6 @@ Export-Package: org.eclipse.n4js,
  org.eclipse.n4js.conversion,
  org.eclipse.n4js.documentation,
  org.eclipse.n4js.external,
- org.eclipse.n4js.external.version,
  org.eclipse.n4js.findReferences,
  org.eclipse.n4js.formatting2,
  org.eclipse.n4js.generator,

@@ -349,79 +349,6 @@ public interface N4mfPackage extends EPackage {
 	int PROJECT_DESCRIPTION_OPERATION_COUNT = 4;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.impl.DeclaredVersionImpl <em>Declared Version</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.n4mf.impl.DeclaredVersionImpl
-	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getDeclaredVersion()
-	 * @generated
-	 */
-	int DECLARED_VERSION = 1;
-
-	/**
-	 * The feature id for the '<em><b>Major</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DECLARED_VERSION__MAJOR = 0;
-
-	/**
-	 * The feature id for the '<em><b>Minor</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DECLARED_VERSION__MINOR = 1;
-
-	/**
-	 * The feature id for the '<em><b>Micro</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DECLARED_VERSION__MICRO = 2;
-
-	/**
-	 * The feature id for the '<em><b>Qualifier</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DECLARED_VERSION__QUALIFIER = 3;
-
-	/**
-	 * The feature id for the '<em><b>Build Meta Data</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DECLARED_VERSION__BUILD_META_DATA = 4;
-
-	/**
-	 * The number of structural features of the '<em>Declared Version</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DECLARED_VERSION_FEATURE_COUNT = 5;
-
-	/**
-	 * The number of operations of the '<em>Declared Version</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DECLARED_VERSION_OPERATION_COUNT = 0;
-
-	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.impl.SourceContainerDescriptionImpl <em>Source Container Description</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -429,7 +356,7 @@ public interface N4mfPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getSourceContainerDescription()
 	 * @generated
 	 */
-	int SOURCE_CONTAINER_DESCRIPTION = 2;
+	int SOURCE_CONTAINER_DESCRIPTION = 1;
 
 	/**
 	 * The feature id for the '<em><b>Source Container Type</b></em>' attribute.
@@ -493,7 +420,7 @@ public interface N4mfPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getModuleFilter()
 	 * @generated
 	 */
-	int MODULE_FILTER = 3;
+	int MODULE_FILTER = 2;
 
 	/**
 	 * The feature id for the '<em><b>Module Filter Type</b></em>' attribute.
@@ -539,7 +466,7 @@ public interface N4mfPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getBootstrapModule()
 	 * @generated
 	 */
-	int BOOTSTRAP_MODULE = 4;
+	int BOOTSTRAP_MODULE = 3;
 
 	/**
 	 * The feature id for the '<em><b>Module Specifier With Wildcard</b></em>' attribute.
@@ -585,7 +512,7 @@ public interface N4mfPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getProjectReference()
 	 * @generated
 	 */
-	int PROJECT_REFERENCE = 5;
+	int PROJECT_REFERENCE = 4;
 
 	/**
 	 * The feature id for the '<em><b>Project Id</b></em>' attribute.
@@ -649,7 +576,7 @@ public interface N4mfPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getModuleFilterSpecifier()
 	 * @generated
 	 */
-	int MODULE_FILTER_SPECIFIER = 6;
+	int MODULE_FILTER_SPECIFIER = 5;
 
 	/**
 	 * The feature id for the '<em><b>Module Specifier With Wildcard</b></em>' attribute.
@@ -695,7 +622,7 @@ public interface N4mfPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getProjectDependency()
 	 * @generated
 	 */
-	int PROJECT_DEPENDENCY = 7;
+	int PROJECT_DEPENDENCY = 6;
 
 	/**
 	 * The feature id for the '<em><b>Project Id</b></em>' attribute.
@@ -725,13 +652,22 @@ public interface N4mfPackage extends EPackage {
 	int PROJECT_DEPENDENCY__VERSION_CONSTRAINT = PROJECT_REFERENCE_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Version Constraint String</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROJECT_DEPENDENCY__VERSION_CONSTRAINT_STRING = PROJECT_REFERENCE_FEATURE_COUNT + 1;
+
+	/**
 	 * The feature id for the '<em><b>Declared Scope</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DEPENDENCY__DECLARED_SCOPE = PROJECT_REFERENCE_FEATURE_COUNT + 1;
+	int PROJECT_DEPENDENCY__DECLARED_SCOPE = PROJECT_REFERENCE_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of structural features of the '<em>Project Dependency</em>' class.
@@ -740,7 +676,7 @@ public interface N4mfPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DEPENDENCY_FEATURE_COUNT = PROJECT_REFERENCE_FEATURE_COUNT + 2;
+	int PROJECT_DEPENDENCY_FEATURE_COUNT = PROJECT_REFERENCE_FEATURE_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Get Vendor Id</em>' operation.
@@ -770,70 +706,6 @@ public interface N4mfPackage extends EPackage {
 	int PROJECT_DEPENDENCY_OPERATION_COUNT = PROJECT_REFERENCE_OPERATION_COUNT + 1;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.impl.VersionConstraintImpl <em>Version Constraint</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.n4mf.impl.VersionConstraintImpl
-	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getVersionConstraint()
-	 * @generated
-	 */
-	int VERSION_CONSTRAINT = 8;
-
-	/**
-	 * The feature id for the '<em><b>Excl Lower Bound</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSION_CONSTRAINT__EXCL_LOWER_BOUND = 0;
-
-	/**
-	 * The feature id for the '<em><b>Lower Version</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSION_CONSTRAINT__LOWER_VERSION = 1;
-
-	/**
-	 * The feature id for the '<em><b>Excl Upper Bound</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSION_CONSTRAINT__EXCL_UPPER_BOUND = 2;
-
-	/**
-	 * The feature id for the '<em><b>Upper Version</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSION_CONSTRAINT__UPPER_VERSION = 3;
-
-	/**
-	 * The number of structural features of the '<em>Version Constraint</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSION_CONSTRAINT_FEATURE_COUNT = 4;
-
-	/**
-	 * The number of operations of the '<em>Version Constraint</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSION_CONSTRAINT_OPERATION_COUNT = 0;
-
-	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.ProjectType <em>Project Type</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -841,7 +713,7 @@ public interface N4mfPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getProjectType()
 	 * @generated
 	 */
-	int PROJECT_TYPE = 9;
+	int PROJECT_TYPE = 7;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.SourceContainerType <em>Source Container Type</em>}' enum.
@@ -851,7 +723,7 @@ public interface N4mfPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getSourceContainerType()
 	 * @generated
 	 */
-	int SOURCE_CONTAINER_TYPE = 10;
+	int SOURCE_CONTAINER_TYPE = 8;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.ModuleFilterType <em>Module Filter Type</em>}' enum.
@@ -861,7 +733,7 @@ public interface N4mfPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getModuleFilterType()
 	 * @generated
 	 */
-	int MODULE_FILTER_TYPE = 11;
+	int MODULE_FILTER_TYPE = 9;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.ProjectDependencyScope <em>Project Dependency Scope</em>}' enum.
@@ -871,7 +743,7 @@ public interface N4mfPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getProjectDependencyScope()
 	 * @generated
 	 */
-	int PROJECT_DEPENDENCY_SCOPE = 12;
+	int PROJECT_DEPENDENCY_SCOPE = 10;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.ModuleLoader <em>Module Loader</em>}' enum.
@@ -881,7 +753,7 @@ public interface N4mfPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getModuleLoader()
 	 * @generated
 	 */
-	int MODULE_LOADER = 13;
+	int MODULE_LOADER = 11;
 
 
 	/**
@@ -1188,71 +1060,6 @@ public interface N4mfPackage extends EPackage {
 	EOperation getProjectDescription__GetResourcePaths();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.n4mf.DeclaredVersion <em>Declared Version</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Declared Version</em>'.
-	 * @see org.eclipse.n4js.n4mf.DeclaredVersion
-	 * @generated
-	 */
-	EClass getDeclaredVersion();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4mf.DeclaredVersion#getMajor <em>Major</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Major</em>'.
-	 * @see org.eclipse.n4js.n4mf.DeclaredVersion#getMajor()
-	 * @see #getDeclaredVersion()
-	 * @generated
-	 */
-	EAttribute getDeclaredVersion_Major();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4mf.DeclaredVersion#getMinor <em>Minor</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Minor</em>'.
-	 * @see org.eclipse.n4js.n4mf.DeclaredVersion#getMinor()
-	 * @see #getDeclaredVersion()
-	 * @generated
-	 */
-	EAttribute getDeclaredVersion_Minor();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4mf.DeclaredVersion#getMicro <em>Micro</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Micro</em>'.
-	 * @see org.eclipse.n4js.n4mf.DeclaredVersion#getMicro()
-	 * @see #getDeclaredVersion()
-	 * @generated
-	 */
-	EAttribute getDeclaredVersion_Micro();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4mf.DeclaredVersion#getQualifier <em>Qualifier</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Qualifier</em>'.
-	 * @see org.eclipse.n4js.n4mf.DeclaredVersion#getQualifier()
-	 * @see #getDeclaredVersion()
-	 * @generated
-	 */
-	EAttribute getDeclaredVersion_Qualifier();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4mf.DeclaredVersion#getBuildMetaData <em>Build Meta Data</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Build Meta Data</em>'.
-	 * @see org.eclipse.n4js.n4mf.DeclaredVersion#getBuildMetaData()
-	 * @see #getDeclaredVersion()
-	 * @generated
-	 */
-	EAttribute getDeclaredVersion_BuildMetaData();
-
-	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4mf.SourceContainerDescription <em>Source Container Description</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1474,6 +1281,17 @@ public interface N4mfPackage extends EPackage {
 	EReference getProjectDependency_VersionConstraint();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4mf.ProjectDependency#getVersionConstraintString <em>Version Constraint String</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Version Constraint String</em>'.
+	 * @see org.eclipse.n4js.n4mf.ProjectDependency#getVersionConstraintString()
+	 * @see #getProjectDependency()
+	 * @generated
+	 */
+	EAttribute getProjectDependency_VersionConstraintString();
+
+	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4mf.ProjectDependency#getDeclaredScope <em>Declared Scope</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1493,60 +1311,6 @@ public interface N4mfPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getProjectDependency__GetScope();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.n4mf.VersionConstraint <em>Version Constraint</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Version Constraint</em>'.
-	 * @see org.eclipse.n4js.n4mf.VersionConstraint
-	 * @generated
-	 */
-	EClass getVersionConstraint();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4mf.VersionConstraint#isExclLowerBound <em>Excl Lower Bound</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Excl Lower Bound</em>'.
-	 * @see org.eclipse.n4js.n4mf.VersionConstraint#isExclLowerBound()
-	 * @see #getVersionConstraint()
-	 * @generated
-	 */
-	EAttribute getVersionConstraint_ExclLowerBound();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4mf.VersionConstraint#getLowerVersion <em>Lower Version</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Lower Version</em>'.
-	 * @see org.eclipse.n4js.n4mf.VersionConstraint#getLowerVersion()
-	 * @see #getVersionConstraint()
-	 * @generated
-	 */
-	EReference getVersionConstraint_LowerVersion();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4mf.VersionConstraint#isExclUpperBound <em>Excl Upper Bound</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Excl Upper Bound</em>'.
-	 * @see org.eclipse.n4js.n4mf.VersionConstraint#isExclUpperBound()
-	 * @see #getVersionConstraint()
-	 * @generated
-	 */
-	EAttribute getVersionConstraint_ExclUpperBound();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4mf.VersionConstraint#getUpperVersion <em>Upper Version</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Upper Version</em>'.
-	 * @see org.eclipse.n4js.n4mf.VersionConstraint#getUpperVersion()
-	 * @see #getVersionConstraint()
-	 * @generated
-	 */
-	EReference getVersionConstraint_UpperVersion();
 
 	/**
 	 * Returns the meta object for enum '{@link org.eclipse.n4js.n4mf.ProjectType <em>Project Type</em>}'.
@@ -1848,56 +1612,6 @@ public interface N4mfPackage extends EPackage {
 		EOperation PROJECT_DESCRIPTION___GET_RESOURCE_PATHS = eINSTANCE.getProjectDescription__GetResourcePaths();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.n4mf.impl.DeclaredVersionImpl <em>Declared Version</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.n4mf.impl.DeclaredVersionImpl
-		 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getDeclaredVersion()
-		 * @generated
-		 */
-		EClass DECLARED_VERSION = eINSTANCE.getDeclaredVersion();
-
-		/**
-		 * The meta object literal for the '<em><b>Major</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute DECLARED_VERSION__MAJOR = eINSTANCE.getDeclaredVersion_Major();
-
-		/**
-		 * The meta object literal for the '<em><b>Minor</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute DECLARED_VERSION__MINOR = eINSTANCE.getDeclaredVersion_Minor();
-
-		/**
-		 * The meta object literal for the '<em><b>Micro</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute DECLARED_VERSION__MICRO = eINSTANCE.getDeclaredVersion_Micro();
-
-		/**
-		 * The meta object literal for the '<em><b>Qualifier</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute DECLARED_VERSION__QUALIFIER = eINSTANCE.getDeclaredVersion_Qualifier();
-
-		/**
-		 * The meta object literal for the '<em><b>Build Meta Data</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute DECLARED_VERSION__BUILD_META_DATA = eINSTANCE.getDeclaredVersion_BuildMetaData();
-
-		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4mf.impl.SourceContainerDescriptionImpl <em>Source Container Description</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2078,6 +1792,14 @@ public interface N4mfPackage extends EPackage {
 		EReference PROJECT_DEPENDENCY__VERSION_CONSTRAINT = eINSTANCE.getProjectDependency_VersionConstraint();
 
 		/**
+		 * The meta object literal for the '<em><b>Version Constraint String</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PROJECT_DEPENDENCY__VERSION_CONSTRAINT_STRING = eINSTANCE.getProjectDependency_VersionConstraintString();
+
+		/**
 		 * The meta object literal for the '<em><b>Declared Scope</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2092,48 +1814,6 @@ public interface N4mfPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation PROJECT_DEPENDENCY___GET_SCOPE = eINSTANCE.getProjectDependency__GetScope();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.n4mf.impl.VersionConstraintImpl <em>Version Constraint</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.n4mf.impl.VersionConstraintImpl
-		 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getVersionConstraint()
-		 * @generated
-		 */
-		EClass VERSION_CONSTRAINT = eINSTANCE.getVersionConstraint();
-
-		/**
-		 * The meta object literal for the '<em><b>Excl Lower Bound</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute VERSION_CONSTRAINT__EXCL_LOWER_BOUND = eINSTANCE.getVersionConstraint_ExclLowerBound();
-
-		/**
-		 * The meta object literal for the '<em><b>Lower Version</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference VERSION_CONSTRAINT__LOWER_VERSION = eINSTANCE.getVersionConstraint_LowerVersion();
-
-		/**
-		 * The meta object literal for the '<em><b>Excl Upper Bound</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute VERSION_CONSTRAINT__EXCL_UPPER_BOUND = eINSTANCE.getVersionConstraint_ExclUpperBound();
-
-		/**
-		 * The meta object literal for the '<em><b>Upper Version</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference VERSION_CONSTRAINT__UPPER_VERSION = eINSTANCE.getVersionConstraint_UpperVersion();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4mf.ProjectType <em>Project Type</em>}' enum.

@@ -194,8 +194,6 @@ public class RunnerHelper {
 
 	/**
 	 * Collects transitive collection of project extended RuntimeEnvironemnts
-	 *
-	 * @see RuntimeEnvironmentsHelper#recursiveDependencyCollector
 	 */
 	public void recursiveExtendedREsCollector(IN4JSSourceContainerAware sourceContainer,
 			Collection<IN4JSProject> addHere) {
@@ -204,8 +202,6 @@ public class RunnerHelper {
 
 	/**
 	 * Collects transitive collection of project extended RuntimeEnvironemnts
-	 *
-	 * @see RuntimeEnvironmentsHelper#recursiveDependencyCollector
 	 */
 	public void recursiveExtendedREsCollector(IN4JSSourceContainerAware sourceContainer,
 			Collection<IN4JSProject> addHere, Iterable<IN4JSProject> projects) {
@@ -232,8 +228,6 @@ public class RunnerHelper {
 
 	/**
 	 * Collects transitive collection of project dependencies including project itself.
-	 *
-	 * @see RuntimeEnvironmentsHelper#recursiveDependencyCollector
 	 */
 	public Collection<IN4JSProject> recursiveDependencyCollector(IN4JSSourceContainerAware sourceContainerAware) {
 		if (null == sourceContainerAware) {

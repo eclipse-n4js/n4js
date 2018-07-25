@@ -1,6 +1,6 @@
 {
 	"name": "P4",
-	"version": "0.0.1-SNAPSHOT",
+	"version": "0.0.1",
 	"dependencies": {
 		"P2": "*"
 	},

@@ -57,7 +57,7 @@ public class N4JSTasksExampleWizard extends ExampleInstallerWizard {
 	public boolean performFinish() {
 		if (super.performFinish()) {
 			installDependencies(ImmutableMap.of(
-					"mongodb", "@\">=2.0.0 <3.0.0\"",
+					"mongodb", ">=2.0.0 <3.0.0",
 					"express", ""));
 			return true;
 		}

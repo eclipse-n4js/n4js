@@ -31,6 +31,7 @@ import java.util.List
 import java.util.Map
 import java.util.Set
 import java.util.Stack
+import org.apache.log4j.Logger
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
@@ -46,28 +47,31 @@ import org.eclipse.n4js.json.JSON.NameValuePair
 import org.eclipse.n4js.json.model.utils.JSONModelUtils
 import org.eclipse.n4js.json.validation.^extension.AbstractJSONValidatorExtension
 import org.eclipse.n4js.json.validation.^extension.CheckProperty
-import org.eclipse.n4js.n4mf.DeclaredVersion
 import org.eclipse.n4js.n4mf.ModuleFilterSpecifier
 import org.eclipse.n4js.n4mf.ProjectDependency
 import org.eclipse.n4js.n4mf.ProjectDescription
 import org.eclipse.n4js.n4mf.ProjectType
 import org.eclipse.n4js.n4mf.SourceContainerDescription
 import org.eclipse.n4js.n4mf.SourceContainerType
-import org.eclipse.n4js.n4mf.VersionConstraint
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
+import org.eclipse.n4js.semver.Semver.NPMVersionRequirement
+import org.eclipse.n4js.semver.SemverHelper
+import org.eclipse.n4js.semver.SemverMatcher
+import org.eclipse.n4js.semver.model.SemverSerializer
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TypesPackage
+import org.eclipse.n4js.utils.DependencyTraverser
 import org.eclipse.n4js.utils.ProjectDescriptionHelper
 import org.eclipse.n4js.utils.ProjectDescriptionUtils
-import org.eclipse.n4js.utils.Version
 import org.eclipse.n4js.utils.WildcardPathFilterHelper
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
+import org.eclipse.n4js.validation.helper.SourceContainerAwareDependencyProvider
 import org.eclipse.xtend.lib.annotations.Data
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.resource.IContainer
@@ -83,8 +87,6 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 import static org.eclipse.n4js.validation.validators.packagejson.ProjectTypePredicate.*
 
 import static extension com.google.common.base.Strings.nullToEmpty
-import org.eclipse.n4js.validation.helper.SourceContainerAwareDependencyTraverser
-import org.apache.log4j.Logger
 
 /**
  * A JSON validator extension that validates {@code package.json} resources in the context
@@ -148,6 +150,9 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	@Inject
 	protected N4JSElementKeywordProvider keywordProvider;
 	
+	@Inject
+	protected SemverHelper semverHelper;
+	
 	override boolean isResponsible(Map<Object, Object> context, EObject eObject) {
 		// this validator extension only applies to package.json files
 		return fileExtensionCalculator.getFilenameWithoutXpectExtension(eObject.eResource().getURI())
@@ -202,8 +207,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 
 		// 1.a. For Each containing File: get the Exported Polyfills:   <QN, PolyFilledProvision>
 		// if the file is from our self, then ignore it; validation will be done for the local file separately.
-		val LinkedListMultimap<String, PolyFilledProvisionPackageJson> exportedPolyfills_QN_to_PolyProvision = LinkedListMultimap.
-			create
+		val LinkedListMultimap<String, PolyFilledProvision> exportedPolyfills_QN_to_PolyProvision = LinkedListMultimap.create
 		for (ieoT : allPolyFillTypes) {
 			val optSrcContainer = findN4JSSourceContainer(ieoT.EObjectURI)
 			if (optSrcContainer.present) {
@@ -215,7 +219,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 				} else if (dependency !== selfProject) {
 					exportedPolyfills_QN_to_PolyProvision.put(
 						ieoT.qualifiedName.toString,
-						new PolyFilledProvisionPackageJson(depQName, dependency, ieoT)
+						new PolyFilledProvision(depQName, dependency, ieoT)
 					)
 				}
 			} else {
@@ -231,7 +235,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			if (polyProvisions.size > 1) {
 
 				// For each filled member determine the set of fillers:
-				val m = LinkedListMultimap.<String, PolyFilledProvisionPackageJson>create // memberName->PolyProvisionA,PolyProvisionB ...
+				val m = LinkedListMultimap.<String, PolyFilledProvision>create // memberName->PolyProvisionA,PolyProvisionB ...
 				for (prov : polyProvisions) {
 
 					// contextScope.getSingleElement( prov.ieoDescrOfPolyfill.qualifiedName )
@@ -340,11 +344,16 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	def checkCyclicDependencies(JSONDocument document) {
 		val project = findProject(document.eResource.URI).orNull;
 		if (null !== project) {
-			val result = new SourceContainerAwareDependencyTraverser(project, true).result;
-			if (result.hasCycle) {
+			
+			val dependencyProvider = new SourceContainerAwareDependencyProvider(true);
+			val traverser = new DependencyTraverser(project, dependencyProvider, true);
+			
+			val traversalResult = traverser.findCycle();
+			
+			if (traversalResult.hasCycle) {
 				// add issue to 'name' property or alternatively to the whole document
 				val nameValue = getSingleDocumentValue(ProjectDescriptionHelper.PROP__NAME);
-				val message = getMessageForPROJECT_DEPENDENCY_CYCLE(result.prettyPrint([calculateName]));
+				val message = getMessageForPROJECT_DEPENDENCY_CYCLE(traversalResult.prettyPrint([calculateName]));
 				addIssuePreferred(#[nameValue], message, PROJECT_DEPENDENCY_CYCLE);
 			} else {
 				//for performance reasons following is not separate check
@@ -934,7 +943,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	@Data
 	private static class ValidationProjectReference {
 		String referencedProjectId;
-		VersionConstraint versionConstraint;
+		NPMVersionRequirement npmVersion;
 		EObject astRepresentation;
 	}
 	
@@ -966,17 +975,22 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		if (!(value instanceof JSONObject)) {
 			return emptyList;
 		}
-		return (value as JSONObject).nameValuePairs
-			.filter[pair | pair.value instanceof JSONStringLiteral]
-			.map[pair |
-				return new ValidationProjectReference(
-					pair.name, 
-					ProjectDescriptionUtils.parseVersionConstraint((pair.value as JSONStringLiteral).value),
-					 pair
-				);
-			]
-			.filter[ref | !ProjectDescriptionUtils.isProjectNameWithScope(ref.referencedProjectId)]
-			.toList
+
+		val jsonObj = value as JSONObject;
+		val vprs = new ArrayList<ValidationProjectReference>();
+		for (NameValuePair pair : jsonObj.nameValuePairs) {
+			if (pair.value instanceof JSONStringLiteral) {
+				val stringLit = pair.value as JSONStringLiteral;
+				val prjID = pair.name;
+				if (!ProjectDescriptionUtils.isProjectNameWithScope(prjID)) {
+					val npmVersion = semverHelper.parse(stringLit.value);
+					val vpr = new ValidationProjectReference(prjID, npmVersion, pair);
+					vprs.add(vpr);
+				}
+			}
+		}
+
+		return vprs;
 	}
 	
 	/**
@@ -1118,60 +1132,21 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 
 	/** Checks if version constraint of the project reference is satisfied by any available project.*/
 	private def checkVersions(ValidationProjectReference ref, String id, Map<String, IN4JSProject> allProjects) {
-		val desiredVersion = ref.versionConstraint
-		
-		// determine ast representation of the version specifier
-		val refRepresentation = ref.astRepresentation;
-		val versionValue = if (refRepresentation instanceof NameValuePair) refRepresentation.value else refRepresentation; 
-		
-		if (desiredVersion !== null) {
-			val availableVersion = allProjects.get(id).version
-			val available = new Version(availableVersion.major, availableVersion.minor, availableVersion.micro,
-				availableVersion.qualifier);
-			val desiredLower = desiredVersion.lowerVersion
-			val desiredUpper = desiredVersion.upperVersion
-			if (desiredLower !== null) {
-				if (desiredUpper !== null) {
-					checkLowerVersion(desiredLower, desiredVersion.exclLowerBound, available, id, versionValue)
-					checkUpperVersion(desiredUpper, desiredVersion.exclUpperBound, available, id, versionValue)
-				} else {
-					checkExactVersion(desiredLower, available, id, versionValue)
-				}
-			}
+		val desiredVersion = ref.npmVersion;
+		if (desiredVersion === null) {
+			return;
 		}
-	}
 
-	private def checkExactVersion(DeclaredVersion exactVersion, Version available, String id, EObject astRepresentation) {
-		val lower = new Version(exactVersion.major, exactVersion.minor, exactVersion.micro, exactVersion.qualifier);
-		if (!lower.equals(Version.MISSING))
-			if (available.compareTo(lower) !== 0)
-				addVersionMismatchIssue(astRepresentation, id, lower.toString, available.toString);
-	}
-
-	private def checkLowerVersion(DeclaredVersion desiredLower, boolean exclusive, Version available, String id, EObject astRepresentation) {
-		val lower = new Version(desiredLower.major, desiredLower.minor, desiredLower.micro, desiredLower.qualifier);
-		switch (available.compareTo(lower)) {
-			case 0: {
-				if (exclusive)
-					addVersionMismatchIssue(astRepresentation, id, "higher than " + lower.toString, available.toString);
-			}
-			case -1: {
-				addVersionMismatchIssue(astRepresentation, id, "higher than " + lower.toString, available.toString);
-			}
+		val availableVersion = allProjects.get(id).version;
+		val availableVersionMatches = SemverMatcher.matches(availableVersion, desiredVersion);
+		if (availableVersionMatches) {
+			return; // version does match
 		}
-	}
 
-	private def checkUpperVersion(DeclaredVersion desiredUpper, boolean exclusive, Version available, String id, EObject astRepresentation) {
-		val upper = new Version(desiredUpper.major, desiredUpper.minor, desiredUpper.micro, desiredUpper.qualifier);
-		switch (available.compareTo(upper)) {
-			case 1: {
-				addVersionMismatchIssue(astRepresentation, id, "lower than " + upper.toString, available.toString);
-			}
-			case 0: {
-				if (exclusive)
-					addVersionMismatchIssue(astRepresentation, id, "lower than " + upper.toString, available.toString);
-			}
-		}
+		// version does not match
+		val desiredStr = SemverSerializer.serialize(desiredVersion);
+		val availableStr = SemverSerializer.serialize(availableVersion);
+		addVersionMismatchIssue(ref.astRepresentation, id, desiredStr, availableStr);
 	}
 
 	/**
@@ -1186,7 +1161,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			projectDescriptionHelper.loadProjectDescriptionAtLocation(doc.eResource.URI.trimSegments(1), doc, false);
 		]);
 	}
-	
+
 	/**
 	 * Returns a cached view on all declared project dependencies mapped to the dependency project ID.
 	 *
@@ -1225,14 +1200,15 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	}
 	
 	/**
-	 * Adds an issue to each element in {@code preferredTargets}.
+	 * Adds an issue to every non-null element in {@code preferredTargets}.
 	 *
 	 * If {@code preferredTargets} is empty (or contains null entries only), adds an issue to 
 	 * the {@code name} property of the {@code package.json} file. 
 	 * 
-	 * If there is no {@code name} property, falls back to {@link #getDocument()}.
+	 * If there is no {@code name} property, adds an issue to the whole document (see {@link #getDocument()}).
 	 */ 
 	private def void addIssuePreferred(Iterable<? extends EObject> preferredTargets, String message, String issueCode) {
+		// add issue to preferred targets
 		if (!preferredTargets.filterNull.empty) {
 			preferredTargets.filterNull
 				.forEach[t | addIssue(message, t, issueCode); ]

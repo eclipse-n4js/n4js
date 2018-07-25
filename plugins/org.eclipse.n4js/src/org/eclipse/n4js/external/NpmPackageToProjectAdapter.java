@@ -21,17 +21,20 @@ import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.semver.SemverHelper;
+import org.eclipse.n4js.semver.SemverMatcher;
+import org.eclipse.n4js.semver.SemverUtils;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.utils.ProjectDescriptionHelper;
 import org.eclipse.n4js.utils.StatusHelper;
-import org.eclipse.n4js.utils.Version;
 import org.eclipse.n4js.utils.git.GitUtils;
 import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.xtext.util.Pair;
@@ -61,6 +64,9 @@ public class NpmPackageToProjectAdapter {
 
 	@Inject
 	private ProjectDescriptionHelper projectDescriptionHelper;
+
+	@Inject
+	private SemverHelper semverHelper;
 
 	/** Default filter for copying N4JSD project contents during adaptation */
 	private final static Predicate<Path> COPY_N4JSD_PREDICATE = new Predicate<Path>() {
@@ -172,46 +178,53 @@ public class NpmPackageToProjectAdapter {
 	 * @return a status representing the outcome of performed the operation.
 	 */
 	IStatus addTypeDefinitions(File packageRoot, File definitionsFolder) {
+		URI packageURI = URI.createFileURI(packageRoot.getAbsolutePath());
+		Pair<String, Boolean> info = projectDescriptionHelper
+				.getVersionAndN4JSNatureFromProjectDescriptionAtLocation(packageURI);
+		boolean hasN4JSNature = (info == null) ? false : info.getSecond();
+		String packageJsonVersion = (info == null) ? null : info.getFirst();
+
+		if (hasN4JSNature) {
+			return statusHelper.OK();
+		}
 
 		String packageName = packageRoot.getName();
 		File packageN4JSDsRoot = new File(definitionsFolder, packageName);
 		if (!packageN4JSDsRoot.isDirectory()) {
-			String message = "No type definitions found for '" + packageRoot + "' npm package at '" + packageN4JSDsRoot
-					+ "'";
+			String message = "No type definitions found for '" + packageRoot + "' npm package at '" + packageN4JSDsRoot;
+			message += "'" + (!packageN4JSDsRoot.isDirectory() ? " (which is not a directory)" : "") + ".";
 			logger.logInfo(message);
-			LOGGER.info(message + (!packageN4JSDsRoot.isDirectory() ? " (which is not a directory)" : "") + ".");
+			LOGGER.info(message);
 			return statusHelper.OK();
 		}
 
-		String packageJsonVersion = projectDescriptionHelper.loadVersionFromProjectDescriptionAtLocation(
-				URI.createFileURI(packageRoot.getAbsolutePath()));
-		Version packageVersion = Version.createFromString(packageJsonVersion);
-		if (Version.MISSING.equals(packageVersion)) {
+		VersionNumber packageVersion = semverHelper.parseVersionNumber(packageJsonVersion);
+		if (packageVersion == null) {
 			final String message = "Cannot read version from package.json of npm package '" + packageName + "'.";
 			logger.logInfo(message);
 			LOGGER.error(message);
 			return statusHelper.createError(message);
 		}
 		String[] list = packageN4JSDsRoot.list();
-		Set<Version> availableTypeDefinitionsVersions = new HashSet<>();
+		Set<VersionNumber> availableTDVersions = new TreeSet<>(SemverMatcher::compareLoose);
 		for (int i = 0; i < list.length; i++) {
 			String version = list[i];
-			Version availableTypeDefinitionsVersion = Version.createFromString(version);
-			if (!Version.MISSING.equals(availableTypeDefinitionsVersion)) {
-				availableTypeDefinitionsVersions.add(availableTypeDefinitionsVersion);
+			VersionNumber availableTypeDefinitionsVersion = semverHelper.parseVersionNumber(version);
+			if (availableTypeDefinitionsVersion != null) {
+				availableTDVersions.add(availableTypeDefinitionsVersion);
 			}
 		}
 
-		Version closestMatchingVersion = Version.findClosestMatching(availableTypeDefinitionsVersions, packageVersion);
-		if (Version.MISSING.equals(closestMatchingVersion)) {
+		VersionNumber closestMatchingVersion = SemverUtils.findClosestMatching(availableTDVersions, packageVersion);
+		if (closestMatchingVersion == null) {
 			String details = "";
-			if (availableTypeDefinitionsVersions.isEmpty()) {
+			if (availableTDVersions.isEmpty()) {
 				details = " Cannot find any type definitions for  '" + packageName + "'.";
-			} else if (1 == availableTypeDefinitionsVersions.size()) {
-				final Version head = availableTypeDefinitionsVersions.iterator().next();
+			} else if (1 == availableTDVersions.size()) {
+				final VersionNumber head = availableTDVersions.iterator().next();
 				details = " Type definitions are available only in version : " + head + ".";
 			} else {
-				final String versions = Iterables.toString(availableTypeDefinitionsVersions);
+				final String versions = Iterables.toString(availableTDVersions);
 				details = " Type definitions are available only in versions : " + versions + ".";
 			}
 			String message = "Type definitions for '" + packageName + "' npm package in version " + packageVersion
@@ -263,4 +276,5 @@ public class NpmPackageToProjectAdapter {
 
 		return statusHelper.OK();
 	}
+
 }

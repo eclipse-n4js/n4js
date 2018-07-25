@@ -152,7 +152,7 @@ public class NpmCLI {
 		LibraryChangeType actualChangeType = null;
 		String actualVersion = "";
 		if (reqChg.type == LibraryChangeType.Install) {
-			packageProcessingStatus = install(reqChg.name, reqChg.version, installPath);
+			packageProcessingStatus = install(reqChg.name, "@" + reqChg.version, installPath);
 
 			if (packageProcessingStatus == null || !packageProcessingStatus.isOK()) {
 				batchStatus.merge(packageProcessingStatus);
@@ -184,7 +184,8 @@ public class NpmCLI {
 
 	private String getActualVersion(MultiStatus batchStatus, LibraryChange reqChg, Path completePath) {
 		URI location = URI.createFileURI(completePath.toString());
-		String versionStr = projectDescriptionHelper.loadVersionFromProjectDescriptionAtLocation(location);
+		String versionStr = projectDescriptionHelper.getVersionAndN4JSNatureFromProjectDescriptionAtLocation(location)
+				.getFirst();
 		if (versionStr == null) {
 			String msg = "Error reading package json when " + reqChg.toString();
 			IStatus packJsonError = statusHelper.createError(msg);

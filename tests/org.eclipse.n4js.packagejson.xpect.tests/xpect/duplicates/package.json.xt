@@ -12,11 +12,11 @@
 /* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.tests.PackageJsonXpectTest END_SETUP */
 {
 	"name": "duplicates",
-	"version": "0.0.1-SNAPSHOT",
+	"version": "0.0.1",
 	// TODO re-consider whether this validation is desired X!PECT errors --> "There is no output folder defined, so compilation isn't possible." at ""n4js""
 	"n4js": {
 		"projectType": "library",
-		"projectVersion": "0.0.1-SNAPSHOT",
+		"projectVersion": "0.0.1",
 		"vendorId": "MyVendorID",
 		"vendorName": "My Vendor Name",
 		"output": "src-gen",
