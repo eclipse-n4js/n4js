@@ -226,7 +226,7 @@ public class Project {
 			case DEFINITION: "definition"
 		};
 	}
-	
+
 	/**
 	 * Creates this project in the given parent directory, which must exist.
 	 *

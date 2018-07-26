@@ -430,8 +430,8 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		if (isDefType != hasDefPck) {
 			EObject issueObj = propDefinesPck == null ? projectTypeValue : propDefinesPck.eContainer();
 			String not = propDefinesPck == null ? "" : "not ";
-			String msg = IssueCodes.getMessageForPKGJ_DEFINES_PACKAGE(type.toString(), not);
-			addIssue(msg, issueObj, IssueCodes.PKGJ_DEFINES_PACKAGE);
+			String msg = IssueCodes.getMessageForPKGJ_DEFINES_PROPERTY(type.toString(), not, "definesPackage");
+			addIssue(msg, issueObj, IssueCodes.PKGJ_DEFINES_PROPERTY);
 		}
 
 		if (type != ProjectType.DEFINITION && type != ProjectType.VALIDATION) {
@@ -763,12 +763,13 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		final URI absoluteOutputLocation = getResourceRelativeURI(resource, outputPath);
 
 		// forbid output folder for 'definition' projects
-		if (getProjectType() == ProjectType.DEFINITION && astOutputValue.isPresent()) {
-			String message = IssueCodes.getMessageForPKGJ_DEF_PRJ_NO_OUTPUT();
-			addIssue(message, astOutputValue.get().eContainer(), IssueCodes.PKGJ_DEF_PRJ_NO_OUTPUT);
+		final ProjectType projectType = getProjectType();
+		if (projectType == ProjectType.DEFINITION && astOutputValue.isPresent()) {
+			String message = IssueCodes.getMessageForPKGJ_DEFINES_PROPERTY(projectType.name(), "not ", "output");
+			addIssue(message, astOutputValue.get().eContainer(), IssueCodes.PKGJ_DEFINES_PROPERTY);
 		}
 		// do not perform check for projects of type 'validation' and 'definition'
-		if (getProjectType() == ProjectType.DEFINITION || getProjectType() == ProjectType.VALIDATION) {
+		if (projectType == ProjectType.DEFINITION || projectType == ProjectType.VALIDATION) {
 			return;
 		}
 
@@ -1171,7 +1172,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		if (projectTypeValue instanceof JSONStringLiteral) {
 			return PackageJsonUtils.parseProjectType(asNonEmptyStringOrNull(projectTypeValue));
 		} else {
-			return ProjectType.get(0);
+			return ProjectType.VALIDATION;
 		}
 	}
 
