@@ -384,7 +384,7 @@ public class N4JSProject implements IN4JSProject {
 			if (packageJSON.isFile()) {
 				return fromNullable(packageJSON);
 			}
-			// next check for an XPECT 'package.json.xt' fiel
+			// next check for an XPECT 'package.json.xt' file
 			final File packageJSONXpect = new File(locationAsFile,
 					IN4JSProject.PACKAGE_JSON + "." + N4JSGlobals.XT_FILE_EXTENSION);
 

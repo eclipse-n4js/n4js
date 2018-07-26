@@ -12,6 +12,7 @@ package org.eclipse.n4js.validation.validators.packagejson;
 
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNonEmptyStringOrNull;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.DEFAULT_OUTPUT;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__DEFINES_PACKAGE;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__DEPENDENCIES;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__DEV_DEPENDENCIES;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__EXEC_MODULE;
@@ -401,8 +402,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	}
 
 	/** Check the projectType value structure and limitations. */
-	@CheckProperty(propertyPath = PROP__N4JS + "."
-			+ PROP__PROJECT_TYPE)
+	@CheckProperty(propertyPath = PROP__N4JS + "." + PROP__PROJECT_TYPE)
 	public void checkProjectType(JSONValue projectTypeValue) {
 		if (!checkIsType(projectTypeValue, JSONPackage.Literals.JSON_STRING_LITERAL)) {
 			return;
@@ -423,15 +423,24 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		}
 
 		// check limitations of specific project types
-		if (type != ProjectType.VALIDATION) {
+
+		final boolean isDefType = type == ProjectType.DEFINITION;
+		final JSONValue propDefinesPck = getSingleDocumentValue(PROP__N4JS + "." + PROP__DEFINES_PACKAGE);
+		final boolean hasDefPck = propDefinesPck != null;
+		if (isDefType != hasDefPck) {
+			EObject issueObj = propDefinesPck == null ? projectTypeValue : propDefinesPck.eContainer();
+			String not = propDefinesPck == null ? "" : "not ";
+			String msg = IssueCodes.getMessageForPKGJ_DEFINES_PACKAGE(type.toString(), not);
+			addIssue(msg, issueObj, IssueCodes.PKGJ_DEFINES_PACKAGE);
+		}
+
+		if (type != ProjectType.DEFINITION && type != ProjectType.VALIDATION) {
 			// make sure non-validation projects always declare an output and at least one source folder
-			final boolean hasSources = getSingleDocumentValue(
-					PROP__N4JS + "." + PROP__SOURCES) != null;
-			final boolean hasOutput = getSingleDocumentValue(
-					PROP__N4JS + "." + PROP__OUTPUT) != null;
+			final boolean hasSources = getSingleDocumentValue(PROP__N4JS + "." + PROP__SOURCES) != null;
+			final boolean hasOutput = getSingleDocumentValue(PROP__N4JS + "." + PROP__OUTPUT) != null;
 			if (!hasSources || !hasOutput) {
-				addIssue(IssueCodes.getMessageForPKGJ_PROJECT_TYPE_MANDATORY_OUTPUT_AND_SOURCES(projectTypeString),
-						projectTypeValue, IssueCodes.PKGJ_PROJECT_TYPE_MANDATORY_OUTPUT_AND_SOURCES);
+				String msg = IssueCodes.getMessageForPKGJ_PROJECT_TYPE_MANDATORY_OUTPUT_AND_SOURCES(projectTypeString);
+				addIssue(msg, projectTypeValue, IssueCodes.PKGJ_PROJECT_TYPE_MANDATORY_OUTPUT_AND_SOURCES);
 			}
 		}
 	}
@@ -719,8 +728,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	 */
 	@Check
 	public void checkOutputFolder(@SuppressWarnings("unused") JSONDocument document) {
-		final JSONValue outputPathValue = getSingleDocumentValue(
-				PROP__N4JS + "." + PROP__OUTPUT);
+		final JSONValue outputPathValue = getSingleDocumentValue(PROP__N4JS + "." + PROP__OUTPUT);
 
 		// only check basic JSONValue constraints, when an explicit outputPathValue is present
 		if (outputPathValue != null) {
@@ -735,7 +743,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		}
 
 		if (outputPathValue != null) {
-			// if available, run check with explictly declared output folder
+			// if available, run check with explicitly declared output folder
 			internalCheckOutput(((JSONStringLiteral) outputPathValue).getValue(),
 					Optional.fromNullable(outputPathValue));
 		} else {
@@ -751,12 +759,16 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	 *            If present, the ast representation. May be {@code null} if {@code outputPath} is a default value.
 	 */
 	private void internalCheckOutput(String outputPath, Optional<JSONValue> astOutputValue) {
-
 		final Resource resource = getDocument().eResource();
 		final URI absoluteOutputLocation = getResourceRelativeURI(resource, outputPath);
 
-		// do not perform check for projects of type 'validation'
-		if (getProjectType() == ProjectType.VALIDATION) {
+		// forbid output folder for 'definition' projects
+		if (getProjectType() == ProjectType.DEFINITION && astOutputValue.isPresent()) {
+			String message = IssueCodes.getMessageForPKGJ_DEF_PRJ_NO_OUTPUT();
+			addIssue(message, astOutputValue.get().eContainer(), IssueCodes.PKGJ_DEF_PRJ_NO_OUTPUT);
+		}
+		// do not perform check for projects of type 'validation' and 'definition'
+		if (getProjectType() == ProjectType.DEFINITION || getProjectType() == ProjectType.VALIDATION) {
 			return;
 		}
 

@@ -223,6 +223,7 @@ public class Project {
 			case RUNTIME_LIBRARY: "runtimeLibrary"
 			case TEST: "test"
 			case VALIDATION: "validation"
+			case DEFINITION: "definition"
 		};
 	}
 	
