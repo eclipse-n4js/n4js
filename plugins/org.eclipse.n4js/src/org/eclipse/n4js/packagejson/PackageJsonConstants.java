@@ -82,6 +82,8 @@ public class PackageJsonConstants {
 	public static final String PROP__INIT_MODULES = "initModules";
 	/** Key of package.json property "execModule". */
 	public static final String PROP__EXEC_MODULE = "execModule";
+	/** Key of package.json property "definesPackage". */
+	public static final String PROP__DEFINES_PACKAGE = "definesPackage";
 
 	// properties of module filter specifiers:
 
