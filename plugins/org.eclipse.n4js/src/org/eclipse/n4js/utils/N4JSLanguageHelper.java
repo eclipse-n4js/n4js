@@ -102,6 +102,9 @@ public final class N4JSLanguageHelper {
 	public boolean isOpaqueModule(URI resourceURI) {
 		ResourceType resourceType = ResourceType.getResourceType(resourceURI);
 		N4JSProject project = n4jsModel.findProjectWith(resourceURI);
+		if (project == null) {
+			return false; // happens in tests
+		}
 		ProjectType projectType = project.getProjectType();
 
 		switch (resourceType) {
