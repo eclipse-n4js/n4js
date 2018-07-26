@@ -49,6 +49,7 @@ import org.eclipse.n4js.semver.Semver.VersionNumber;
  *   <li>{@link org.eclipse.n4js.projectDescription.ProjectDescription#getModuleFilters <em>Module Filters</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.ProjectDescription#getTestedProjects <em>Tested Projects</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.ProjectDescription#getModuleLoader <em>Module Loader</em>}</li>
+ *   <li>{@link org.eclipse.n4js.projectDescription.ProjectDescription#getDefinesPackage <em>Defines Package</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.ProjectDescription#isHasNestedNodeModulesFolder <em>Has Nested Node Modules Folder</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.ProjectDescription#isHasN4JSNature <em>Has N4JS Nature</em>}</li>
  * </ul>
@@ -477,6 +478,32 @@ public interface ProjectDescription extends EObject {
 	 * @generated
 	 */
 	void setModuleLoader(ModuleLoader value);
+
+	/**
+	 * Returns the value of the '<em><b>Defines Package</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Defines Package</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Defines Package</em>' attribute.
+	 * @see #setDefinesPackage(String)
+	 * @see org.eclipse.n4js.projectDescription.ProjectDescriptionPackage#getProjectDescription_DefinesPackage()
+	 * @model unique="false"
+	 * @generated
+	 */
+	String getDefinesPackage();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.projectDescription.ProjectDescription#getDefinesPackage <em>Defines Package</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Defines Package</em>' attribute.
+	 * @see #getDefinesPackage()
+	 * @generated
+	 */
+	void setDefinesPackage(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Has Nested Node Modules Folder</b></em>' attribute.
