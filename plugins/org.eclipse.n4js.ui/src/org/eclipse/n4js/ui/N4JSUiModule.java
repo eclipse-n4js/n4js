@@ -113,7 +113,7 @@ import org.eclipse.n4js.ui.search.MyReferenceSearchResultContentProvider;
 import org.eclipse.n4js.ui.search.N4JSEditorResourceAccess;
 import org.eclipse.n4js.ui.search.N4JSReferenceQueryExecutor;
 import org.eclipse.n4js.ui.utils.CancelIndicatorUiExtractor;
-import org.eclipse.n4js.ui.validation.ManifestAwareResourceValidator;
+import org.eclipse.n4js.ui.validation.SourceContainerAwareResourceValidator;
 import org.eclipse.n4js.ui.wizard.project.N4JSProjectCreator;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBroker;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBrokerImpl;
@@ -492,7 +492,7 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	 * the manifest.
 	 */
 	public Class<? extends IResourceValidator> bindResourceValidator() {
-		return ManifestAwareResourceValidator.class;
+		return SourceContainerAwareResourceValidator.class;
 	}
 
 	/**
