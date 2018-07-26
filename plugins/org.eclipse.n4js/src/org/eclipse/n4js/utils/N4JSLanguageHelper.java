@@ -14,7 +14,13 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.N4JSLanguageConstants;
+import org.eclipse.n4js.internal.N4JSModel;
+import org.eclipse.n4js.internal.N4JSProject;
+import org.eclipse.n4js.projectDescription.ProjectType;
+import org.eclipse.n4js.services.N4JSGrammarAccess;
 import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.ParserRule;
 
@@ -22,16 +28,22 @@ import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.inject.Inject;
 
-import org.eclipse.n4js.N4JSLanguageConstants;
-import org.eclipse.n4js.services.N4JSGrammarAccess;
-
 /**
  * This helper class offers access to ECMAScript as well as N4JS keywords. Its implementation directly accesses the
  * grammar which means that any grammar changes will be reflected by this class.
  */
 public final class N4JSLanguageHelper {
+
+	/**
+	 * Opaque modules have empty Script nodes in their AST. Other than that they behave normally.
+	 */
+	private static boolean OPAQUE_JS_MODULES = true;
+
 	@Inject
-	N4JSGrammarAccess grammarAccess;
+	private N4JSGrammarAccess grammarAccess;
+
+	@Inject
+	private N4JSModel n4jsModel;
 
 	/**
 	 * Returns the reserved ECMAScript keywords which are defined in the grammar. The result is cached.
@@ -80,4 +92,36 @@ public final class N4JSLanguageHelper {
 				.collect(Collectors.toList());
 	}
 
+	/**
+	 * Opaque resources are not post processed neither validated. The transpiler will wrap opaque resources only.
+	 *
+	 * @param resourceURI
+	 *            The URI of a resource
+	 * @return true if the given resource is opaque.
+	 */
+	public boolean isOpaqueModule(URI resourceURI) {
+		ResourceType resourceType = ResourceType.getResourceType(resourceURI);
+		N4JSProject project = n4jsModel.findProjectWith(resourceURI);
+		ProjectType projectType = project.getProjectType();
+
+		switch (resourceType) {
+		case JS:
+		case JSX:
+			return OPAQUE_JS_MODULES; // JavaScript modules are not processed iff OPAQUE_JS_MODULES is true
+
+		case N4JS:
+		case N4JSX:
+		case N4IDL:
+			// N4JS files of definition projects are not processed.
+			return projectType == ProjectType.DEFINITION;
+
+		case N4JSD:
+		case UNKOWN:
+		case XT:
+			// default
+		}
+
+		// default: process file
+		return false;
+	}
 }
