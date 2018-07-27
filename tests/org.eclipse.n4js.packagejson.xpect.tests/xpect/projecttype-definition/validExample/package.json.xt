@@ -10,17 +10,7 @@
  */
 
 /* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.tests.PackageJsonXpectTest 
-
-   IssueConfiguration {
-   		IssueCode "JSON_DUPLICATE_KEY" { enabled = false }
-   		IssueCode "INVALID_FEATURE_FOR_PROJECT_TYPE" { enabled = false }
-   		IssueCode "OBSOLETE_BLOCK" { enabled = false }
-   		IssueCode "NON_EXISTING_PROJECT" { enabled = false }
-   }
-
    END_SETUP
-
-   Disable issue codes above to limit this tests to validation wrt. the structure of package.json files.
  */
 {
 	"name": "validExample",
