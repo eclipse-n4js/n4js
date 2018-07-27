@@ -1,0 +1,25 @@
+
+
+/* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.ui.tests.PackageJsonXpectPluginTest
+
+    Workspace {
+        JavaProject "projecttype-definition" {
+	        	Folder "src" {
+		            ThisFile {}
+		        	File "Lib.n4js" {from="Lib.n4js"}
+	        	}
+        	File "package.json" {from="../package.json"}
+        }
+    }
+
+    END_SETUP
+*/
+
+// XPECT warnings --> "The import of <Lib>(proxy) is unused." at "Lib"
+// XPECT errors --> "Couldn't resolve reference to TExportableElement 'Lib'." at "Lib"
+import {Lib} from "Lib";
+
+export external public class SomeClass {
+	// XPECT errors --> "Couldn't resolve reference to Type 'Lib'." at "Lib"
+	l : Lib;
+}

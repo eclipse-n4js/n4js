@@ -369,7 +369,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getProjectDescription_HasNestedNodeModulesFolder() {
+	public EAttribute getProjectDescription_DefinesPackage() {
 		return (EAttribute)projectDescriptionEClass.getEStructuralFeatures().get(19);
 	}
 
@@ -378,8 +378,17 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getProjectDescription_HasN4JSNature() {
+	public EAttribute getProjectDescription_HasNestedNodeModulesFolder() {
 		return (EAttribute)projectDescriptionEClass.getEStructuralFeatures().get(20);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getProjectDescription_HasN4JSNature() {
+		return (EAttribute)projectDescriptionEClass.getEStructuralFeatures().get(21);
 	}
 
 	/**
@@ -610,6 +619,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 		createEReference(projectDescriptionEClass, PROJECT_DESCRIPTION__MODULE_FILTERS);
 		createEReference(projectDescriptionEClass, PROJECT_DESCRIPTION__TESTED_PROJECTS);
 		createEAttribute(projectDescriptionEClass, PROJECT_DESCRIPTION__MODULE_LOADER);
+		createEAttribute(projectDescriptionEClass, PROJECT_DESCRIPTION__DEFINES_PACKAGE);
 		createEAttribute(projectDescriptionEClass, PROJECT_DESCRIPTION__HAS_NESTED_NODE_MODULES_FOLDER);
 		createEAttribute(projectDescriptionEClass, PROJECT_DESCRIPTION__HAS_N4JS_NATURE);
 
@@ -697,6 +707,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 		initEReference(getProjectDescription_ModuleFilters(), this.getModuleFilter(), null, "moduleFilters", null, 0, -1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProjectDescription_TestedProjects(), this.getProjectReference(), null, "testedProjects", null, 0, -1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getProjectDescription_ModuleLoader(), this.getModuleLoader(), "moduleLoader", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getProjectDescription_DefinesPackage(), theEcorePackage.getEString(), "definesPackage", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getProjectDescription_HasNestedNodeModulesFolder(), theEcorePackage.getEBoolean(), "hasNestedNodeModulesFolder", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getProjectDescription_HasN4JSNature(), theEcorePackage.getEBoolean(), "hasN4JSNature", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -725,6 +736,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 		// Initialize enums and add enum literals
 		initEEnum(projectTypeEEnum, ProjectType.class, "ProjectType");
 		addEEnumLiteral(projectTypeEEnum, ProjectType.VALIDATION);
+		addEEnumLiteral(projectTypeEEnum, ProjectType.DEFINITION);
 		addEEnumLiteral(projectTypeEEnum, ProjectType.APPLICATION);
 		addEEnumLiteral(projectTypeEEnum, ProjectType.PROCESSOR);
 		addEEnumLiteral(projectTypeEEnum, ProjectType.LIBRARY);

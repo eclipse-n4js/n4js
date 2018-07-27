@@ -43,7 +43,7 @@ public class PackageJsonBuilder {
 	private String version;
 
 	private SortedMap<String, String> dependencies;
-	
+
 	private String vendorId;
 	private String vendorName;
 
@@ -59,7 +59,7 @@ public class PackageJsonBuilder {
 	private Map<SourceContainerType, String> sourceContainers;
 
 	private new() {
-		type = ProjectType.get(0) // use default project type (index 0)
+		type = ProjectType.VALIDATION // use project type 'validation'
 		providedRLs = newArrayList
 		requiredRLs = newArrayList
 		dependencies = new TreeMap();
@@ -70,9 +70,9 @@ public class PackageJsonBuilder {
 
 	/**
 	 * Builds the N4JS package.json file contents for a project with the given name.
-	 * 
+	 *
 	 * @param projectId the name of the project. Cannot be {@code null}.
-	 * 
+	 *
 	 * @return the N4JS package.json file contents as a string.
 	 */
 	def String build() {

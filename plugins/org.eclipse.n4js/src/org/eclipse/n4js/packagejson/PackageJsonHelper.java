@@ -274,9 +274,7 @@ public class PackageJsonHelper {
 	 * converting the project description from JSON.
 	 */
 	private void applyDefaults(ProjectDescription target, String defaultProjectId) {
-		// implementation note: we do not have to set the default for 'projectType' here,
-		// because this default is already handled by EMF by defining VALIDATION as the
-		// first literal of enum ProjectType in ProjectDescription.xcore
+		target.setProjectType(ProjectType.VALIDATION);
 		if (target.getProjectId() == null) {
 			target.setProjectId(defaultProjectId);
 		}

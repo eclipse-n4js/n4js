@@ -223,9 +223,10 @@ public class Project {
 			case RUNTIME_LIBRARY: "runtimeLibrary"
 			case TEST: "test"
 			case VALIDATION: "validation"
+			case DEFINITION: "definition"
 		};
 	}
-	
+
 	/**
 	 * Creates this project in the given parent directory, which must exist.
 	 *

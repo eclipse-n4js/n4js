@@ -10,10 +10,10 @@
  */
 package org.eclipse.n4js.utils
 
-import org.eclipse.xsemantics.runtime.RuleEnvironment
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.N4JSGlobals
+import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.common.unicode.CharTypes
 import org.eclipse.n4js.compileTime.CompileTimeValue
 import org.eclipse.n4js.conversion.IdentifierValueConverter
@@ -88,7 +88,7 @@ import org.eclipse.n4js.ts.types.util.ExtendedClassesIterable
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
-import org.eclipse.n4js.N4JSLanguageConstants
+import org.eclipse.xsemantics.runtime.RuleEnvironment
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
@@ -96,7 +96,6 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import static org.eclipse.n4js.N4JSLanguageConstants.*
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
-import org.eclipse.emf.common.util.URI
 
 /**
  * Intended for small, static utility methods that
@@ -115,11 +114,6 @@ public class N4JSLanguageUtils {
 	 * See {@link ComputedPropertyNameValueConverter#SYMBOL_IDENTIFIER_PREFIX}.
 	 */
 	public static final String SYMBOL_IDENTIFIER_PREFIX = ComputedPropertyNameValueConverter.SYMBOL_IDENTIFIER_PREFIX;
-
-	/**
-	 * Opaque modules have empty Script nodes in their AST. Other than that they behave normally.
-	 */
-	private static boolean OPAQUE_MODULE_SUPPORTED = true;
 
 	/**
 	 * If the given function definition is asynchronous, will wrap given return type into a Promise.
@@ -918,18 +912,6 @@ public class N4JSLanguageUtils {
 		}
 
 		return result;
-	}
-
-	/**
-	 * Opaque resources are not post processed neither validated. The transpiler will only wrap opaque resources.
-	 *
-	 * @param resourceURI
-	 *            The URI of a resource
-	 * @return true if the given resource is opaque.
-	 */
-	def static boolean isOpaqueModule(URI resourceURI) {
-		val resourceType = ResourceType.getResourceType(resourceURI);
-		return OPAQUE_MODULE_SUPPORTED && (resourceType == ResourceType.JS || resourceType == ResourceType.JSX);
 	}
 
 	/**

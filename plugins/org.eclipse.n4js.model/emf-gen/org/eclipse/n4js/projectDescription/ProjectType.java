@@ -34,7 +34,17 @@ public enum ProjectType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	VALIDATION(0, "VALIDATION", "VALIDATION"),
+	VALIDATION(1, "VALIDATION", "VALIDATION"),
+
+	/**
+	 * The '<em><b>DEFINITION</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #DEFINITION_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	DEFINITION(2, "DEFINITION", "DEFINITION"),
 
 	/**
 	 * The '<em><b>APPLICATION</b></em>' literal object.
@@ -44,7 +54,7 @@ public enum ProjectType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	APPLICATION(1, "APPLICATION", "APPLICATION"),
+	APPLICATION(3, "APPLICATION", "APPLICATION"),
 
 	/**
 	 * The '<em><b>PROCESSOR</b></em>' literal object.
@@ -54,7 +64,7 @@ public enum ProjectType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	PROCESSOR(2, "PROCESSOR", "PROCESSOR"),
+	PROCESSOR(4, "PROCESSOR", "PROCESSOR"),
 
 	/**
 	 * The '<em><b>LIBRARY</b></em>' literal object.
@@ -64,7 +74,7 @@ public enum ProjectType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	LIBRARY(3, "LIBRARY", "LIBRARY"),
+	LIBRARY(5, "LIBRARY", "LIBRARY"),
 
 	/**
 	 * The '<em><b>API</b></em>' literal object.
@@ -74,7 +84,7 @@ public enum ProjectType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	API(4, "API", "API"),
+	API(6, "API", "API"),
 
 	/**
 	 * The '<em><b>RUNTIME ENVIRONMENT</b></em>' literal object.
@@ -84,7 +94,7 @@ public enum ProjectType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	RUNTIME_ENVIRONMENT(5, "RUNTIME_ENVIRONMENT", "RUNTIME_ENVIRONMENT"),
+	RUNTIME_ENVIRONMENT(7, "RUNTIME_ENVIRONMENT", "RUNTIME_ENVIRONMENT"),
 
 	/**
 	 * The '<em><b>RUNTIME LIBRARY</b></em>' literal object.
@@ -94,7 +104,7 @@ public enum ProjectType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	RUNTIME_LIBRARY(6, "RUNTIME_LIBRARY", "RUNTIME_LIBRARY"),
+	RUNTIME_LIBRARY(8, "RUNTIME_LIBRARY", "RUNTIME_LIBRARY"),
 
 	/**
 	 * The '<em><b>TEST</b></em>' literal object.
@@ -104,7 +114,7 @@ public enum ProjectType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	TEST(7, "TEST", "TEST");
+	TEST(9, "TEST", "TEST");
 
 	/**
 	 * The '<em><b>VALIDATION</b></em>' literal value.
@@ -119,7 +129,22 @@ public enum ProjectType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int VALIDATION_VALUE = 0;
+	public static final int VALIDATION_VALUE = 1;
+
+	/**
+	 * The '<em><b>DEFINITION</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of '<em><b>DEFINITION</b></em>' literal object isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @see #DEFINITION
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int DEFINITION_VALUE = 2;
 
 	/**
 	 * The '<em><b>APPLICATION</b></em>' literal value.
@@ -134,7 +159,7 @@ public enum ProjectType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int APPLICATION_VALUE = 1;
+	public static final int APPLICATION_VALUE = 3;
 
 	/**
 	 * The '<em><b>PROCESSOR</b></em>' literal value.
@@ -149,7 +174,7 @@ public enum ProjectType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int PROCESSOR_VALUE = 2;
+	public static final int PROCESSOR_VALUE = 4;
 
 	/**
 	 * The '<em><b>LIBRARY</b></em>' literal value.
@@ -164,7 +189,7 @@ public enum ProjectType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int LIBRARY_VALUE = 3;
+	public static final int LIBRARY_VALUE = 5;
 
 	/**
 	 * The '<em><b>API</b></em>' literal value.
@@ -179,7 +204,7 @@ public enum ProjectType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int API_VALUE = 4;
+	public static final int API_VALUE = 6;
 
 	/**
 	 * The '<em><b>RUNTIME ENVIRONMENT</b></em>' literal value.
@@ -194,7 +219,7 @@ public enum ProjectType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int RUNTIME_ENVIRONMENT_VALUE = 5;
+	public static final int RUNTIME_ENVIRONMENT_VALUE = 7;
 
 	/**
 	 * The '<em><b>RUNTIME LIBRARY</b></em>' literal value.
@@ -209,7 +234,7 @@ public enum ProjectType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int RUNTIME_LIBRARY_VALUE = 6;
+	public static final int RUNTIME_LIBRARY_VALUE = 8;
 
 	/**
 	 * The '<em><b>TEST</b></em>' literal value.
@@ -224,7 +249,7 @@ public enum ProjectType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int TEST_VALUE = 7;
+	public static final int TEST_VALUE = 9;
 
 	/**
 	 * An array of all the '<em><b>Project Type</b></em>' enumerators.
@@ -235,6 +260,7 @@ public enum ProjectType implements Enumerator {
 	private static final ProjectType[] VALUES_ARRAY =
 		new ProjectType[] {
 			VALIDATION,
+			DEFINITION,
 			APPLICATION,
 			PROCESSOR,
 			LIBRARY,
@@ -299,6 +325,7 @@ public enum ProjectType implements Enumerator {
 	public static ProjectType get(int value) {
 		switch (value) {
 			case VALIDATION_VALUE: return VALIDATION;
+			case DEFINITION_VALUE: return DEFINITION;
 			case APPLICATION_VALUE: return APPLICATION;
 			case PROCESSOR_VALUE: return PROCESSOR;
 			case LIBRARY_VALUE: return LIBRARY;

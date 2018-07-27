@@ -258,13 +258,22 @@ public interface ProjectDescriptionPackage extends EPackage {
 	int PROJECT_DESCRIPTION__MODULE_LOADER = 18;
 
 	/**
+	 * The feature id for the '<em><b>Defines Package</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROJECT_DESCRIPTION__DEFINES_PACKAGE = 19;
+
+	/**
 	 * The feature id for the '<em><b>Has Nested Node Modules Folder</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION__HAS_NESTED_NODE_MODULES_FOLDER = 19;
+	int PROJECT_DESCRIPTION__HAS_NESTED_NODE_MODULES_FOLDER = 20;
 
 	/**
 	 * The feature id for the '<em><b>Has N4JS Nature</b></em>' attribute.
@@ -273,7 +282,7 @@ public interface ProjectDescriptionPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION__HAS_N4JS_NATURE = 20;
+	int PROJECT_DESCRIPTION__HAS_N4JS_NATURE = 21;
 
 	/**
 	 * The number of structural features of the '<em>Project Description</em>' class.
@@ -282,7 +291,7 @@ public interface ProjectDescriptionPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION_FEATURE_COUNT = 21;
+	int PROJECT_DESCRIPTION_FEATURE_COUNT = 22;
 
 	/**
 	 * The number of operations of the '<em>Project Description</em>' class.
@@ -821,6 +830,17 @@ public interface ProjectDescriptionPackage extends EPackage {
 	EAttribute getProjectDescription_ModuleLoader();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.projectDescription.ProjectDescription#getDefinesPackage <em>Defines Package</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Defines Package</em>'.
+	 * @see org.eclipse.n4js.projectDescription.ProjectDescription#getDefinesPackage()
+	 * @see #getProjectDescription()
+	 * @generated
+	 */
+	EAttribute getProjectDescription_DefinesPackage();
+
+	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.projectDescription.ProjectDescription#isHasNestedNodeModulesFolder <em>Has Nested Node Modules Folder</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1236,6 +1256,14 @@ public interface ProjectDescriptionPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute PROJECT_DESCRIPTION__MODULE_LOADER = eINSTANCE.getProjectDescription_ModuleLoader();
+
+		/**
+		 * The meta object literal for the '<em><b>Defines Package</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PROJECT_DESCRIPTION__DEFINES_PACKAGE = eINSTANCE.getProjectDescription_DefinesPackage();
 
 		/**
 		 * The meta object literal for the '<em><b>Has Nested Node Modules Folder</b></em>' attribute feature.

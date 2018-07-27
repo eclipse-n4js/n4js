@@ -65,6 +65,7 @@ import org.eclipse.n4js.semver.Semver.VersionNumber;
  *   <li>{@link org.eclipse.n4js.projectDescription.impl.ProjectDescriptionImpl#getModuleFilters <em>Module Filters</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.impl.ProjectDescriptionImpl#getTestedProjects <em>Tested Projects</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.impl.ProjectDescriptionImpl#getModuleLoader <em>Module Loader</em>}</li>
+ *   <li>{@link org.eclipse.n4js.projectDescription.impl.ProjectDescriptionImpl#getDefinesPackage <em>Defines Package</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.impl.ProjectDescriptionImpl#isHasNestedNodeModulesFolder <em>Has Nested Node Modules Folder</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.impl.ProjectDescriptionImpl#isHasN4JSNature <em>Has N4JS Nature</em>}</li>
  * </ul>
@@ -341,6 +342,26 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * @ordered
 	 */
 	protected ModuleLoader moduleLoader = MODULE_LOADER_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getDefinesPackage() <em>Defines Package</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDefinesPackage()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String DEFINES_PACKAGE_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getDefinesPackage() <em>Defines Package</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDefinesPackage()
+	 * @generated
+	 * @ordered
+	 */
+	protected String definesPackage = DEFINES_PACKAGE_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #isHasNestedNodeModulesFolder() <em>Has Nested Node Modules Folder</em>}' attribute.
@@ -799,6 +820,27 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String getDefinesPackage() {
+		return definesPackage;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setDefinesPackage(String newDefinesPackage) {
+		String oldDefinesPackage = definesPackage;
+		definesPackage = newDefinesPackage;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ProjectDescriptionPackage.PROJECT_DESCRIPTION__DEFINES_PACKAGE, oldDefinesPackage, definesPackage));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public boolean isHasNestedNodeModulesFolder() {
 		return hasNestedNodeModulesFolder;
 	}
@@ -916,6 +958,8 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 				return getTestedProjects();
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__MODULE_LOADER:
 				return getModuleLoader();
+			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__DEFINES_PACKAGE:
+				return getDefinesPackage();
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__HAS_NESTED_NODE_MODULES_FOLDER:
 				return isHasNestedNodeModulesFolder();
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__HAS_N4JS_NATURE:
@@ -998,6 +1042,9 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__MODULE_LOADER:
 				setModuleLoader((ModuleLoader)newValue);
 				return;
+			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__DEFINES_PACKAGE:
+				setDefinesPackage((String)newValue);
+				return;
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__HAS_NESTED_NODE_MODULES_FOLDER:
 				setHasNestedNodeModulesFolder((Boolean)newValue);
 				return;
@@ -1073,6 +1120,9 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__MODULE_LOADER:
 				setModuleLoader(MODULE_LOADER_EDEFAULT);
 				return;
+			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__DEFINES_PACKAGE:
+				setDefinesPackage(DEFINES_PACKAGE_EDEFAULT);
+				return;
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__HAS_NESTED_NODE_MODULES_FOLDER:
 				setHasNestedNodeModulesFolder(HAS_NESTED_NODE_MODULES_FOLDER_EDEFAULT);
 				return;
@@ -1129,6 +1179,8 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 				return testedProjects != null && !testedProjects.isEmpty();
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__MODULE_LOADER:
 				return moduleLoader != MODULE_LOADER_EDEFAULT;
+			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__DEFINES_PACKAGE:
+				return DEFINES_PACKAGE_EDEFAULT == null ? definesPackage != null : !DEFINES_PACKAGE_EDEFAULT.equals(definesPackage);
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__HAS_NESTED_NODE_MODULES_FOLDER:
 				return hasNestedNodeModulesFolder != HAS_NESTED_NODE_MODULES_FOLDER_EDEFAULT;
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__HAS_N4JS_NATURE:
@@ -1163,6 +1215,8 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 		result.append(outputPath);
 		result.append(", moduleLoader: ");
 		result.append(moduleLoader);
+		result.append(", definesPackage: ");
+		result.append(definesPackage);
 		result.append(", hasNestedNodeModulesFolder: ");
 		result.append(hasNestedNodeModulesFolder);
 		result.append(", hasN4JSNature: ");

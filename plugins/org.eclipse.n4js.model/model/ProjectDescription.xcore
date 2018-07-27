@@ -53,6 +53,7 @@ class ProjectDescription {
 	contains ModuleFilter[] moduleFilters
 	contains ProjectReference[] testedProjects
 	ModuleLoader moduleLoader
+	String definesPackage
 
 	/* 
 	 * Tells if the project represented by this project description has a nested
@@ -106,14 +107,16 @@ class BootstrapModule {
 }
 
 enum ProjectType {
-	VALIDATION = 0,
-	APPLICATION = 1,
-	PROCESSOR = 2,
-	LIBRARY = 3,
-	API = 4,
-	RUNTIME_ENVIRONMENT = 5,
-	RUNTIME_LIBRARY = 6,
-	TEST = 7
+	//PLAINJS = 0,
+	VALIDATION = 1,
+	DEFINITION = 2,
+	APPLICATION = 3,
+	PROCESSOR = 4,
+	LIBRARY = 5,
+	API = 6,
+	RUNTIME_ENVIRONMENT = 7,
+	RUNTIME_LIBRARY = 8,
+	TEST = 9
 }
 
 enum SourceContainerType {
