@@ -274,7 +274,9 @@ public class PackageJsonHelper {
 	 * converting the project description from JSON.
 	 */
 	private void applyDefaults(ProjectDescription target, String defaultProjectId) {
-		target.setProjectType(ProjectType.VALIDATION);
+		if (!target.isHasN4JSNature()) {
+			target.setProjectType(ProjectType.VALIDATION);
+		}
 		if (target.getProjectId() == null) {
 			target.setProjectId(defaultProjectId);
 		}
