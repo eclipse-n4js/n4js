@@ -53,6 +53,12 @@ class ProjectDescription {
 	contains ModuleFilter[] moduleFilters
 	contains ProjectReference[] testedProjects
 	ModuleLoader moduleLoader
+	/**
+	 *  Returns the name of the package the project provides type definitions for.
+	 *
+	 * {@code null} if this project is not a type definitions project (cf. {@link ProjectType#DEFINITION} and/or does
+	 * not specify the property.
+	 */
 	String definesPackage
 
 	/* 

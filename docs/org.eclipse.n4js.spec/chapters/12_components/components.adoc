@@ -230,6 +230,12 @@ TODO
 execModule::
 TODO
 
+definesPackage::
+(string) The name of the package this component provides type definitions for. Only components of project type "definition" may declare this property.
+typeDependencies::
+(object) A list of type dependencies (same format as the regular "dependencies" section). This list of dependencies declares type definition projects that are required to successfully compile this component. The listed dependencies are pure compile-time dependencies. All components, but components of project type "definition" may declare this property.
+
+
 All properties described above are optional. The following default values apply:
 
 |===
@@ -702,6 +708,15 @@ ModuleFilters {
 ----
 
 ====
+
+.Type Dependencies
+[req,id=GH-821,version=1]
+--
+Each listed project in the "typeDependencies" section of a project's `package.json` file must fulfill the following properties:
+
+. Only components of type "definition" may be listed as type dependency.
+. For each listed type dependency, a corresponding regular dependencies must be declared whose "name" matches the "definesPackage" property value of the specified type dependency.
+--
 
 [.language-n4js]
 == Component Dependencies

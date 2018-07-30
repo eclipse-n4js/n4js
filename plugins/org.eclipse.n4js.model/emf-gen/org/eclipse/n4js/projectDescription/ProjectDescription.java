@@ -482,11 +482,13 @@ public interface ProjectDescription extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Defines Package</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Defines Package</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * *
+	 *  Returns the name of the package the project provides type definitions for.
+	 * 	 * {@code null} if this project is not a type definitions project (cf. {@link ProjectType#DEFINITION} and/or does
+	 * not specify the property.
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Defines Package</em>' attribute.
 	 * @see #setDefinesPackage(String)
 	 * @see org.eclipse.n4js.projectDescription.ProjectDescriptionPackage#getProjectDescription_DefinesPackage()

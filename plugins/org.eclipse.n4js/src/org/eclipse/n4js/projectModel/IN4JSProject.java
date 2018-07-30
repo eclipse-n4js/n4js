@@ -205,4 +205,12 @@ public interface IN4JSProject extends IN4JSSourceContainerAware {
 	 * @See {@link ProjectDescription#isHasN4JSNature()}
 	 */
 	boolean hasN4JSNature();
+
+	/**
+	 * Returns the name of the package this {@code project} provides type definitions for.
+	 *
+	 * {@code null} if this project is not a type definitions project (cf. {@link ProjectType#DEFINITION} and/or does
+	 * not specify the property.
+	 */
+	public String getDefinesPackage();
 }

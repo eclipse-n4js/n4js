@@ -38,6 +38,7 @@ import org.eclipse.n4js.external.HlcExternalLibraryWorkspace;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectReference;
+import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectDescription.SourceContainerDescription;
 import org.eclipse.n4js.projectDescription.SourceContainerType;
 import org.eclipse.n4js.projectModel.IN4JSArchive;
@@ -564,5 +565,19 @@ public class N4JSModel {
 		}
 
 		return resolvedReferences;
+	}
+
+	/**
+	 * Returns the name of the package the given {@code project} provides type definitions for.
+	 *
+	 * {@code null} if this project is not a type definitions project (cf. {@link ProjectType#DEFINITION} and/or does
+	 * not specify the property.
+	 */
+	public String getDefinesPackage(final IN4JSProject project) {
+		if (null == project) {
+			return null;
+		}
+		final ProjectDescription projectDescription = getProjectDescription(project.getLocation());
+		return projectDescription.getDefinesPackage();
 	}
 }
