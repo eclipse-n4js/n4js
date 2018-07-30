@@ -23,13 +23,11 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.n4js.json.JSONGlobals;
 import org.eclipse.n4js.json.JSON.JSONArray;
 import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.model.utils.JSONModelUtils;
-import org.eclipse.n4js.utils.languages.N4LanguageUtils;
 
 import com.google.common.base.StandardSystemProperty;
 import com.google.common.collect.ImmutableMap;
@@ -93,10 +91,9 @@ public class ExternalLibraryPreferenceModel {
 	 * @return a new preference model instance.
 	 */
 	public static ExternalLibraryPreferenceModel createFromJson(final String jsonString) {
-		JSONDocument document = N4LanguageUtils.parseXtextLanguage(
-				JSONGlobals.FILE_EXTENSION, JSONDocument.class, jsonString).ast;
+		JSONDocument document = JSONModelUtils.parseJSON(jsonString);
 		if (document == null) {
-			throw new RuntimeException("Error occurred while trying to deserialize JSON string.");
+			throw new RuntimeException("Error occurred while trying to parse JSON string.");
 		}
 		JSONValue extLibLocsValue = JSONModelUtils.getProperty(document, PROP_EXTERNAL_LIBRARY_LOCATIONS).orElse(null);
 		List<String> extLibLocs = JSONModelUtils.asStringsInArrayOrEmpty(extLibLocsValue);

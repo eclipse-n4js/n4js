@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
@@ -37,6 +38,7 @@ import org.eclipse.n4js.json.JSON.JSONStringLiteral;
 import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.JSON.NameValuePair;
 import org.eclipse.n4js.utils.languages.N4LanguageUtils;
+import org.eclipse.n4js.utils.languages.N4LanguageUtils.ParseResult;
 import org.eclipse.xtext.resource.SaveOptions;
 import org.eclipse.xtext.serializer.ISerializer;
 
@@ -132,6 +134,29 @@ public class JSONModelUtils {
 		}
 
 		return (JSONDocument) firstSlot;
+	}
+
+	/**
+	 * Like {@link #getContent(JSONDocument, Class)}, but accepts a {@link Resource}.
+	 *
+	 * See {@link #getDocument(Resource)}, {@link #getContent(JSONDocument, Class)}.
+	 */
+	public static <T extends JSONValue> T getContent(Resource resource, Class<T> expectedType) {
+		return getContent(getDocument(resource), expectedType);
+	}
+
+	/**
+	 * If the given document is non-null, its content is non-null and of the given expected type, then this method
+	 * returns the content; otherwise <code>null</code>.
+	 */
+	public static <T extends JSONValue> T getContent(JSONDocument document, Class<T> expectedType) {
+		JSONValue content = document.getContent();
+		if (content != null && expectedType.isInstance(content)) {
+			@SuppressWarnings("unchecked")
+			T contentCasted = (T) content;
+			return contentCasted;
+		}
+		return null;
 	}
 
 	/**
@@ -456,6 +481,21 @@ public class JSONModelUtils {
 	}
 
 	/**
+	 * Like {@link #createObject(Map)}, but accepts a map of any type together with two functions for converting the
+	 * map's original key/value to the name/value of the {@link NameValuePair}s of the {@link JSONObject} to be created.
+	 */
+	public static <K, V> JSONObject createObject(Map<K, V> properties,
+			Function<K, String> fnKey, Function<V, JSONValue> fnValue) {
+		JSONObject result = JSONFactory.eINSTANCE.createJSONObject();
+		for (Entry<K, V> entry : properties.entrySet()) {
+			result.getNameValuePairs().add(createNameValuePair(
+					fnKey.apply(entry.getKey()),
+					fnValue.apply(entry.getValue())));
+		}
+		return result;
+	}
+
+	/**
 	 * Creates a new {@link NameValuePair}.
 	 */
 	public static NameValuePair createNameValuePair(String name, JSONValue value) {
@@ -472,6 +512,24 @@ public class JSONModelUtils {
 		JSONDocument result = JSONFactory.eINSTANCE.createJSONDocument();
 		result.setContent(content);
 		return result;
+	}
+
+	/**
+	 * Parses the given string as a JSON document. Returns <code>null</code> in case of syntax errors. If more
+	 * fine-grained error handling is needed, use {@link N4LanguageUtils#parseXtextLanguage(String, Class, String)}
+	 * instead.
+	 */
+	public static JSONDocument parseJSON(String jsonString) {
+		ParseResult<JSONDocument> result = N4LanguageUtils.parseXtextLanguage(FILE_EXTENSION, JSONDocument.class,
+				jsonString);
+		return result.errors.isEmpty() ? result.ast : null;
+	}
+
+	/**
+	 * Like {@link #serializeJSON(JSONDocument)}, but accepts any kind of {@link JSONValue}.
+	 */
+	public static String serializeJSON(JSONValue value) {
+		return serializeJSON(createDocument(value));
 	}
 
 	/**
