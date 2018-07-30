@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.utils.languages;
 
+import java.io.StringReader;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
@@ -19,7 +21,14 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.xtext.ParserRule;
+import org.eclipse.xtext.nodemodel.SyntaxErrorMessage;
+import org.eclipse.xtext.parser.AbstractParser;
+import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
+
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 
 /**
  * Utility methods for our custom Xtext languages (N4JS, N4JSX, N4IDL, ...) that are <em>language independent</em>, i.e.
@@ -28,6 +37,54 @@ import org.eclipse.xtext.resource.IResourceServiceProvider;
  * Note that there are language-specific variants of this class, e.g. {@code N4JSLanguageUtils}.
  */
 public class N4LanguageUtils {
+
+	@SuppressWarnings("javadoc")
+	public static final class ParseResult<T extends EObject> {
+		/** The AST. May be <code>null</code> in case of error. */
+		public final T ast;
+		/** List of syntax error. May be empty but never <code>null</code>. */
+		public final List<SyntaxErrorMessage> errors;
+
+		public ParseResult(T ast, Iterable<SyntaxErrorMessage> errors) {
+			this.ast = ast;
+			this.errors = Lists.newArrayList(errors);
+		}
+	}
+
+	/**
+	 * Same as {@link #parseXtextLanguage(String, ParserRule, Class, String)}, but uses the Xtext language's default
+	 * rule name (see {@code AbstractAntlrParser#getDefaultRuleName()}).
+	 */
+	public static <T extends EObject> ParseResult<T> parseXtextLanguage(String fileExtOfLanguage,
+			Class<T> expectedTypeOfRoot, String source) {
+		return parseXtextLanguage(fileExtOfLanguage, null, expectedTypeOfRoot, source);
+	}
+
+	/**
+	 * Parses the given string with the parser of the Xtext language denoted by the given file extension. In case of
+	 * syntax errors, the returned parse result will have a non-empty list of {@link ParseResult#errors}.
+	 */
+	public static <T extends EObject> ParseResult<T> parseXtextLanguage(String fileExtOfLanguage,
+			ParserRule parserRuleOrNull, Class<T> expectedTypeOfRoot, String source) {
+		final AbstractParser parser = getServiceForContext(fileExtOfLanguage, AbstractParser.class)
+				.orElseThrow(() -> new RuntimeException(
+						"Cannot obtain Xtext parser for language with file extension: " + fileExtOfLanguage));
+		final IParseResult result;
+		if (parserRuleOrNull != null) {
+			result = parser.parse(parserRuleOrNull, new StringReader(source));
+		} else {
+			result = parser.parse(new StringReader(source));
+		}
+		final Iterable<SyntaxErrorMessage> errors = Iterables.transform(result.getSyntaxErrors(),
+				node -> node.getSyntaxErrorMessage());
+		final EObject root = result.getRootASTElement();
+		if (root != null && expectedTypeOfRoot.isInstance(root)) {
+			@SuppressWarnings("unchecked")
+			final T rootCasted = (T) root;
+			return new ParseResult<>(rootCasted, errors);
+		}
+		return new ParseResult<>(null, errors);
+	}
 
 	/**
 	 * Same as {@link #getServiceForContext(URI, Class)}, but accepts any {@link EObject} contained in an Xtext language

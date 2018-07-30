@@ -276,6 +276,7 @@ public class UpdateShippedCode implements IWorkflowComponent {
 	}
 
 	/** TODO: REMOVE THIS HACK when we can copy the n4js-libs with canary version to the shipped code */
+	// TODO when removing this, also remove dependency to com.fasterxml.jackson from this bundle!!
 	private static void temporaryHackRemoveN4JSES5Dependency(File packJson) {
 		println("  Remove n4js-es5 from dependency: " + packJson);
 		ObjectMapper mapper = new ObjectMapper();
