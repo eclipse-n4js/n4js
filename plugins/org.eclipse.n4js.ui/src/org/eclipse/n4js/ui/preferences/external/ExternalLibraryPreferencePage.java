@@ -16,6 +16,7 @@ import static java.util.Collections.singletonList;
 import static org.eclipse.jface.layout.GridDataFactory.fillDefaults;
 import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.EXTERNAL_LIBRARIES_SUPPLIER;
 import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.N4_NPM_FOLDER_SUPPLIER;
+import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.N4_TYPE_DEFINITIONS_FOLDER_SUPPLIER;
 import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.repairNpmFolderState;
 import static org.eclipse.n4js.ui.preferences.external.ButtonFactoryUtil.createDisabledPushButton;
 import static org.eclipse.n4js.ui.preferences.external.ButtonFactoryUtil.createEnabledPushButton;
@@ -471,23 +472,35 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	 */
 	private void maintenanceDeleteNpms(final MaintenanceActionsChoice userChoice, final MultiStatus multistatus) {
 		if (userChoice.decisionPurgeNpm) {
-			// get folder
-			File npmFolder = N4_NPM_FOLDER_SUPPLIER.get();
 
+			// get folders
+			File npmFolder = N4_NPM_FOLDER_SUPPLIER.get();
+			File typesDefFolder = N4_TYPE_DEFINITIONS_FOLDER_SUPPLIER.get();
+
+			// delete folders
 			if (npmFolder.exists()) {
 				FileDeleter.delete(npmFolder, (IOException ioe) -> multistatus.merge(
 						statusHelper.createError("Exception during deletion of the npm folder.", ioe)));
 			}
+			if (typesDefFolder.exists()) {
+				FileDeleter.delete(typesDefFolder, (IOException ioe) -> multistatus.merge(
+						statusHelper.createError("Exception during deletion of the npm folder.", ioe)));
+			}
 
-			if (!npmFolder.exists()) {
-				// recreate npm folder
-				if (!repairNpmFolderState()) {
+			// re-create folders
+			if (!npmFolder.exists() || !typesDefFolder.exists()) {
+				// recreate folders
+				boolean repairSucceeded = repairNpmFolderState();
+				if (!repairSucceeded) {
 					multistatus.merge(statusHelper.createError("The npm folder was not recreated correctly."));
 				}
-			} else {// should never happen
-				multistatus
-						.merge(statusHelper.createError("Could not verify deletion of " + npmFolder.getAbsolutePath()));
+			} else {
+				// should never happen
+				File stillExists = npmFolder.exists() ? npmFolder : typesDefFolder;
+				String msg = "Could not verify deletion of " + stillExists.getAbsolutePath();
+				multistatus.merge(statusHelper.createError(msg));
 			}
+
 			// other actions like reinstall depends on this state
 			externalLibraryWorkspace.updateState();
 		}

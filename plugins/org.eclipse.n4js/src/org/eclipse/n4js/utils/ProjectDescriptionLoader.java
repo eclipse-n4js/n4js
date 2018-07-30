@@ -125,11 +125,12 @@ public class ProjectDescriptionLoader {
 	 */
 	public Pair<String, Boolean> loadVersionAndN4JSNatureFromProjectDescriptionAtLocation(URI location) {
 		JSONDocument packageJSON = loadPackageJSONAtLocation(location);
-		if (packageJSON == null) {
-			return null;
+		JSONValue versionValue = null;
+		boolean hasN4JSNature = false;
+		if (packageJSON != null) {
+			versionValue = JSONModelUtils.getProperty(packageJSON, PROP__VERSION).orElse(null);
+			hasN4JSNature = JSONModelUtils.getProperty(packageJSON, PROP__N4JS).isPresent();
 		}
-		JSONValue versionValue = JSONModelUtils.getProperty(packageJSON, PROP__VERSION).orElse(null);
-		boolean hasN4JSNature = JSONModelUtils.getProperty(packageJSON, PROP__N4JS).isPresent();
 		Pair<String, Boolean> result = Tuples.create(asNonEmptyStringOrNull(versionValue), hasN4JSNature);
 		return result;
 	}

@@ -11,6 +11,7 @@
 package org.eclipse.n4js.external;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,6 +25,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
+import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
 import org.eclipse.n4js.json.JSON.JSONPackage;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSCore;
@@ -39,6 +41,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 import com.google.inject.ImplementedBy;
@@ -98,18 +101,24 @@ public abstract class ExternalIndexSynchronizer {
 	final public Map<String, Pair<URI, String>> findNpmsInFolder() {
 		Map<String, Pair<URI, String>> npmsFolder = new HashMap<>();
 
+		File typeDefFolder = ExternalLibrariesActivator.N4_TYPE_DEFINITIONS_FOLDER_SUPPLIER.get();
 		java.net.URI nodeModulesLocation = locationProvider.getTargetPlatformNodeModulesLocation();
 		File nodeModulesFolder = new File(nodeModulesLocation.getPath());
-		if (nodeModulesFolder.isDirectory()) {
-			for (File npmLibrary : nodeModulesFolder.listFiles()) {
-				if (ExternalLibraryUtils.isExternalProjectDirectory(npmLibrary)) {
-					String npmName = npmLibrary.getName();
-					String version = getVersionFromPackageJSON(npmLibrary);
-					if (version != null) {
-						String path = npmLibrary.getAbsolutePath();
-						URI location = URI.createFileURI(path);
-						npmsFolder.put(npmName, Pair.of(location, version));
-					}
+		ArrayList<File> rootFolders = Lists.newArrayList(nodeModulesFolder, typeDefFolder);
+		for (File rootFolder : rootFolders) {
+			if (!rootFolder.isDirectory()) {
+				continue;
+			}
+			for (File npmLibrary : rootFolder.listFiles()) {
+				if (!ExternalLibraryUtils.isExternalProjectDirectory(npmLibrary)) {
+					continue;
+				}
+				String npmName = npmLibrary.getName();
+				String version = getVersionFromPackageJSON(npmLibrary);
+				if (version != null) {
+					String path = npmLibrary.getAbsolutePath();
+					URI location = URI.createFileURI(path);
+					npmsFolder.put(npmName, Pair.of(location, version));
 				}
 			}
 		}
@@ -185,15 +194,18 @@ public abstract class ExternalIndexSynchronizer {
 		Map<String, Pair<URI, String>> npmsIndex = new HashMap<>();
 
 		String nodeModulesLocation = locationProvider.getTargetPlatformNodeModulesLocation().toString();
+		File typeDefLocationFolder = ExternalLibrariesActivator.N4_TYPE_DEFINITIONS_FOLDER_SUPPLIER.get();
+		String typeDefLocation = URI.createFileURI(typeDefLocationFolder.toString()).toString();
 		ResourceSet resourceSet = core.createResourceSet(Optional.absent());
 		IResourceDescriptions index = core.getXtextIndex(resourceSet);
 
 		for (IResourceDescription res : index.getAllResourceDescriptions()) {
 			String resLocation = res.getURI().toString();
-			boolean isNPM = resLocation.startsWith(nodeModulesLocation);
 
-			if (isNPM) {
+			if (resLocation.startsWith(nodeModulesLocation)) {
 				addToIndex(npmsIndex, nodeModulesLocation, res, resLocation);
+			} else if (resLocation.startsWith(typeDefLocation)) {
+				addToIndex(npmsIndex, typeDefLocation, res, resLocation);
 			}
 		}
 
