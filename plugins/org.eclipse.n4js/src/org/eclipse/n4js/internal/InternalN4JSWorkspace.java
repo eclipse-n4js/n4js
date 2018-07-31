@@ -14,8 +14,8 @@ import java.io.File;
 import java.util.Iterator;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.n4mf.ProjectDescription;
-import org.eclipse.n4js.n4mf.ProjectReference;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectReference;
 
 /**
  * Internal representation of the known projects. At runtime, it's implemented based on registered project locations, in

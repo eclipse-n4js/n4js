@@ -29,9 +29,9 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
-import org.eclipse.n4js.n4mf.ProjectDescription;
-import org.eclipse.n4js.n4mf.ProjectReference;
-import org.eclipse.n4js.utils.ProjectDescriptionHelper;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectReference;
+import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 
 import com.google.common.collect.Iterators;
@@ -48,7 +48,7 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 
 	private final IWorkspaceRoot workspace;
 
-	private final ProjectDescriptionHelper projectDescriptionHelper;
+	private final ProjectDescriptionLoader projectDescriptionLoader;
 
 	private final Map<URI, ProjectDescription> cache = Maps.newHashMap();
 
@@ -60,9 +60,9 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 	@Inject
 	public EclipseBasedN4JSWorkspace(
 			IWorkspaceRoot workspace,
-			ProjectDescriptionHelper projectDescriptionHelper) {
+			ProjectDescriptionLoader projectDescriptionLoader) {
 		this.workspace = workspace;
-		this.projectDescriptionHelper = projectDescriptionHelper;
+		this.projectDescriptionLoader = projectDescriptionLoader;
 	}
 
 	IWorkspaceRoot getWorkspace() {
@@ -85,7 +85,7 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 		}
 		ProjectDescription existing = cache.get(location);
 		if (existing == null) {
-			existing = projectDescriptionHelper.loadProjectDescriptionAtLocation(location);
+			existing = projectDescriptionLoader.loadProjectDescriptionAtLocation(location);
 			if (existing != null) {
 				cache.put(location, existing);
 				if (listener != null) {

@@ -11,23 +11,23 @@
 package org.eclipse.n4js.internal;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.n4mf.ProjectDescription;
-import org.eclipse.n4js.utils.ProjectDescriptionHelper;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 
 /**
  * Lazy handle that is registered as a proxy at runtime.
  */
-@SuppressWarnings("javadoc")
 public class LazyProjectDescriptionHandle {
 
 	private final URI projectLocation;
-	private final ProjectDescriptionHelper descriptionHelper;
+	private final ProjectDescriptionLoader descriptionLoader;
 
 	private ProjectDescription resolved;
 
-	protected LazyProjectDescriptionHandle(URI location, ProjectDescriptionHelper descriptionHelper) {
+	/** */
+	protected LazyProjectDescriptionHandle(URI location, ProjectDescriptionLoader descriptionLoader) {
 		this.projectLocation = location;
-		this.descriptionHelper = descriptionHelper;
+		this.descriptionLoader = descriptionLoader;
 	}
 
 	/**
@@ -37,7 +37,7 @@ public class LazyProjectDescriptionHandle {
 		if (resolved != null) {
 			return resolved;
 		}
-		return resolved = descriptionHelper.loadProjectDescriptionAtLocation(this.getLocation());
+		return resolved = descriptionLoader.loadProjectDescriptionAtLocation(this.getLocation());
 	}
 
 	/**

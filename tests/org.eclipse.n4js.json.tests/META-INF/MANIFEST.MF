@@ -4,8 +4,8 @@ Bundle-Name: org.eclipse.n4js.json.tests
 Bundle-Vendor: org.eclipse.n4js
 Bundle-Version: 0.0.1.qualifier
 Bundle-SymbolicName: org.eclipse.n4js.json.tests; singleton:=true
-Fragment-Host: org.eclipse.n4js
-Require-Bundle: org.eclipse.n4js.json,
+Fragment-Host: org.eclipse.n4js.json
+Require-Bundle: org.eclipse.core.resources,
  org.eclipse.xtext.testing,
  org.junit,
  org.eclipse.n4js.json.tests.helper,

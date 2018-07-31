@@ -20,7 +20,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
-import org.eclipse.n4js.n4mf.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.utils.URIUtils;
 
@@ -182,8 +182,8 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 	 * This method will remove/add available projects of {@link IN4JSCore}. It should only be invoked through
 	 * {@link HlcExternalIndexSynchronizer#synchronizeNpms(IProgressMonitor)}.
 	 * <p>
-	 * This cannot be done in construction time, because it might happen that N4MF is not initialized yet, hence not
-	 * available when injecting this instance.
+	 * This cannot be done in construction time, because it might happen that some bundles/classes are not initialized
+	 * yet, hence not available when injecting this instance.
 	 */
 	public abstract void updateState();
 

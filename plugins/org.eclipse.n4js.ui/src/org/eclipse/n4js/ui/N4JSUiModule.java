@@ -34,6 +34,7 @@ import org.eclipse.n4js.generator.N4JSCompositeGenerator;
 import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.internal.N4JSModel;
+import org.eclipse.n4js.packagejson.PackageJsonHelper;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
@@ -111,12 +112,12 @@ import org.eclipse.n4js.ui.search.MyReferenceSearchResultContentProvider;
 import org.eclipse.n4js.ui.search.N4JSEditorResourceAccess;
 import org.eclipse.n4js.ui.search.N4JSReferenceQueryExecutor;
 import org.eclipse.n4js.ui.utils.CancelIndicatorUiExtractor;
-import org.eclipse.n4js.ui.validation.ManifestAwareResourceValidator;
+import org.eclipse.n4js.ui.validation.SourceContainerAwareResourceValidator;
 import org.eclipse.n4js.ui.wizard.project.N4JSProjectCreator;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBroker;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBrokerImpl;
 import org.eclipse.n4js.ui.workingsets.WorkspaceRepositoriesProvider;
-import org.eclipse.n4js.utils.ProjectDescriptionHelper;
+import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.process.OutputStreamPrinterThreadProvider;
 import org.eclipse.n4js.utils.process.OutputStreamProvider;
@@ -359,8 +360,13 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	}
 
 	/** Delegate to shared injector */
-	public Provider<ProjectDescriptionHelper> provideProjectDescriptionHelper() {
-		return Access.contributedProvider(ProjectDescriptionHelper.class);
+	public Provider<ProjectDescriptionLoader> provideProjectDescriptionLoader() {
+		return Access.contributedProvider(ProjectDescriptionLoader.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<PackageJsonHelper> providePackageJsonHelper() {
+		return Access.contributedProvider(PackageJsonHelper.class);
 	}
 
 	/** Delegate to shared injector */
@@ -484,7 +490,7 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	 * the manifest.
 	 */
 	public Class<? extends IResourceValidator> bindResourceValidator() {
-		return ManifestAwareResourceValidator.class;
+		return SourceContainerAwareResourceValidator.class;
 	}
 
 	/**

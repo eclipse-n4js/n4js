@@ -33,10 +33,10 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
-import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore.ExternalProjectLocationsProvider;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore.StoreUpdatedListener;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.ui.internal.ExternalProjectCacheLoader;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.resources.ExternalProject;
@@ -207,8 +207,8 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 	/**
 	 * Updates the internal state based on the available external project root locations.
 	 * <p>
-	 * This cannot be done in construction time, because it might happen that N4MF is not initialized yet, hence not
-	 * available when injecting this instance.
+	 * This cannot be done in construction time, because it might happen that some bundles/classes are not initialized
+	 * yet, hence not available when injecting this instance.
 	 */
 	private void updateMappings() {
 		Map<URI, Optional<Pair<N4JSExternalProject, ProjectDescription>>> cachedProjects = projectCache.asMap();

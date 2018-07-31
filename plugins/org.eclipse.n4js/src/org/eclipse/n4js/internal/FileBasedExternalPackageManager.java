@@ -15,9 +15,9 @@ import java.io.File;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.ExternalLibraryUtils;
-import org.eclipse.n4js.n4mf.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IExternalPackageManager;
-import org.eclipse.n4js.utils.ProjectDescriptionHelper;
+import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -28,7 +28,7 @@ import com.google.inject.Singleton;
 public class FileBasedExternalPackageManager implements IExternalPackageManager {
 
 	@Inject
-	private ProjectDescriptionHelper projectDescriptionHelper;
+	private ProjectDescriptionLoader projectDescriptionLoader;
 
 	@Override
 	public boolean isN4ProjectRoot(URI rootLocation) {
@@ -63,7 +63,7 @@ public class FileBasedExternalPackageManager implements IExternalPackageManager 
 		if (null != rootLocation && rootLocation.isFile()) {
 			File projectRoot = new File(rootLocation.toFileString());
 			if (projectRoot.exists() && projectRoot.isDirectory()) {
-				return projectDescriptionHelper.loadProjectDescriptionAtLocation(rootLocation);
+				return projectDescriptionLoader.loadProjectDescriptionAtLocation(rootLocation);
 			}
 		}
 		return null;
@@ -82,7 +82,7 @@ public class FileBasedExternalPackageManager implements IExternalPackageManager 
 		if (null != rootLocation && rootLocation.isFile()) {
 			File projectRoot = new File(rootLocation.toFileString());
 			if (projectRoot.exists() && projectRoot.isDirectory()) {
-				return projectDescriptionHelper.loadProjectDescriptionAtLocation(rootLocation);
+				return projectDescriptionLoader.loadProjectDescriptionAtLocation(rootLocation);
 			}
 		}
 		return null;

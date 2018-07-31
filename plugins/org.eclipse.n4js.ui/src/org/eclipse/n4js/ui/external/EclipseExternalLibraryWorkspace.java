@@ -42,8 +42,8 @@ import org.eclipse.n4js.external.ExternalProjectsCollector;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.external.RebuildWorkspaceProjectsScheduler;
 import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
-import org.eclipse.n4js.n4mf.ProjectDescription;
-import org.eclipse.n4js.n4mf.ProjectReference;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
@@ -415,8 +415,8 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	/**
 	 * Updates the internal state based on the available external project root locations.
 	 * <p>
-	 * This cannot be done in construction time, because it might happen that N4MF is not initialized yet, hence not
-	 * available when injecting this instance.
+	 * This cannot be done in construction time, because it might happen that some bundles/classes are not initialized
+	 * yet, hence not available when injecting this instance.
 	 */
 	@Override
 	public void updateState() {

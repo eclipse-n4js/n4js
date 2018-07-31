@@ -27,7 +27,7 @@ class ConvertManifestToPackageJson {
 	static  def  PackageJsonData convert(IN4JSProject project, Path outputPathComplete)
 	{
 		 val data = new PackageJsonData();
-//	TODO	val pDescription = project.projectName  /
+		// TODO val pDescription = project.projectName  /
 		data.name = project.projectId;
 		// TODO data.author = // map to project.vendorId ??
 		data.version = SemverSerializer.serialize(project.getVersion());

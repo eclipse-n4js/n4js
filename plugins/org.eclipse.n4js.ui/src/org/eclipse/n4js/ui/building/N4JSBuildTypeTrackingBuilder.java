@@ -32,7 +32,7 @@ import org.eclipse.n4js.internal.RaceDetectionHelper;
 import org.eclipse.n4js.ui.building.BuilderStateLogger.BuilderState;
 import org.eclipse.n4js.ui.external.EclipseExternalIndexSynchronizer;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildScheduler;
-import org.eclipse.n4js.ui.internal.N4MFProjectDependencyStrategy;
+import org.eclipse.n4js.ui.internal.N4JSProjectDependencyStrategy;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant.BuildType;
 import org.eclipse.xtext.builder.builderState.IBuilderState;
 import org.eclipse.xtext.builder.debug.IBuildLogger;
@@ -69,7 +69,7 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 
 	private ExternalLibraryBuildScheduler externalLibraryBuildJobProvider;
 
-	private N4MFProjectDependencyStrategy projectDependencyStrategy;
+	private N4JSProjectDependencyStrategy projectDependencyStrategy;
 
 	@Inject
 	private void injectSharedContributions(ISharedStateContributionRegistry registry) {
@@ -78,11 +78,11 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 		this.externalIndexSynchronizer = registry
 				.getSingleContributedInstance(EclipseExternalIndexSynchronizer.class);
 		try {
-			this.projectDependencyStrategy = registry.getSingleContributedInstance(N4MFProjectDependencyStrategy.class);
+			this.projectDependencyStrategy = registry.getSingleContributedInstance(N4JSProjectDependencyStrategy.class);
 		} catch (RuntimeException e) {
 			// happens if the contribution is not part of the loaded bundles, e.g. in types specific tests
 			LOGGER.warn("Building projects based on default dependencies but without "
-					+ N4MFProjectDependencyStrategy.class);
+					+ N4JSProjectDependencyStrategy.class);
 		}
 	}
 

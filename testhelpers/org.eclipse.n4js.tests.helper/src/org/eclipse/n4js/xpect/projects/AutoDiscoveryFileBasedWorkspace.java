@@ -16,7 +16,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.utils.ProjectDescriptionHelper;
+import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.inject.Inject;
@@ -31,8 +31,8 @@ public class AutoDiscoveryFileBasedWorkspace extends FileBasedWorkspace {
 
 	/** Initializes the workspace. */
 	@Inject
-	public AutoDiscoveryFileBasedWorkspace(ProjectDescriptionHelper projectDescriptionHelper) {
-		super(projectDescriptionHelper);
+	public AutoDiscoveryFileBasedWorkspace(ProjectDescriptionLoader projectDescriptionLoader) {
+		super(projectDescriptionLoader);
 	}
 
 	@Override

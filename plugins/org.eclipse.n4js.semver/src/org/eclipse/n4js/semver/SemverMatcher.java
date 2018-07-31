@@ -204,13 +204,15 @@ public class SemverMatcher {
 	}
 
 	/**
-	 * The matching of wildcards is specified different on than it is behaving using npm with regard to the handling of
-	 * pre-release tagged versions. However, this matching method will mimic the npm behavior e.g. when executing 'npm
-	 * install package@*'.
+	 * The matching of wildcards is specified different on <a href="https://docs.npmjs.com/misc/semver">npmjs.com<a>
+	 * than it is behaving using npm with regard to the handling of pre-release tagged versions. Namely, npmjs.com says
+	 * {@code "" (empty string) := * := >=0.0.0} which is not true for npm. Therefore, this matching method will mimic
+	 * the npm behavior e.g. when executing 'npm install package@*' and match any version for {@code @*} including
+	 * pre-release tagged ones.
 	 *
 	 * @return true iff the given constraint consists of one wildcard only
 	 */
-	private static boolean isWildcard(VersionRangeSetRequirement constraint) {
+	static private boolean isWildcard(VersionRangeSetRequirement constraint) {
 		if (constraint.getRanges().size() != 1) {
 			return false;
 		}

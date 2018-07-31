@@ -13,7 +13,7 @@ package org.eclipse.n4js.tests.projectModel;
 import org.eclipse.n4js.N4JSInjectorProvider;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
-import org.eclipse.n4js.utils.ProjectDescriptionHelper;
+import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.XtextRunner;
 import org.junit.runner.RunWith;
@@ -27,7 +27,7 @@ import com.google.inject.Inject;
 public class FileBasedInternalWorkspaceTest extends AbstractInternalWorkspaceTest {
 
 	@Inject
-	private ProjectDescriptionHelper projectDescriptionHelper;
+	private ProjectDescriptionLoader projectDescriptionLoader;
 
 	private FileBasedWorkspace testMe;
 
@@ -38,7 +38,7 @@ public class FileBasedInternalWorkspaceTest extends AbstractInternalWorkspaceTes
 
 	@Override
 	public void setUp() {
-		testMe = new FileBasedWorkspace(projectDescriptionHelper);
+		testMe = new FileBasedWorkspace(projectDescriptionLoader);
 		super.setUp();
 	}
 

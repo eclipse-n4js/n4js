@@ -32,6 +32,7 @@ import org.eclipse.n4js.N4JSStandaloneSetup;
 import org.eclipse.n4js.binaries.nodejs.NodeBinaryLocatorHelper;
 import org.eclipse.n4js.binaries.nodejs.NodeProcessBuilder;
 import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
+import org.eclipse.n4js.external.libraries.ExternalLibraryFolderUtils;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.hlc.base.N4jscBase;
 import org.eclipse.n4js.utils.UtilN4;
@@ -138,7 +139,7 @@ public class UpdateShippedCode implements IWorkflowComponent {
 		final File n4jsNodeFolder = actualTargetPath.resolve(ExternalLibrariesActivator.RUNTIME_CATEGORY)
 				.resolve(N4JS_NODE_PROJECT_NAME).toFile();
 
-		final File n4jsNodePkgJson = n4jsNodeFolder.toPath().resolve("package.json").toFile();
+		final File n4jsNodePkgJson = n4jsNodeFolder.toPath().resolve(ExternalLibraryFolderUtils.PACKAGE_JSON).toFile();
 
 		temporaryHackRemoveN4JSES5Dependency(n4jsNodePkgJson);
 		runNpmInstall(n4jsNodeFolder);
@@ -169,8 +170,7 @@ public class UpdateShippedCode implements IWorkflowComponent {
 				println("NOT copying project " + projectName + " (because project name contains substring \"test\")");
 			} else if (projectName.contains("n4js-cli") || projectName.contains("n4js-mangelhaft-cli")
 					|| projectName.contains("org.eclipse.n4js.mangelhaft.reporter.console")
-					|| projectName.contains("org.eclipse.n4js.mangelhaft.reporter.xunit")
-					|| projectName.contains("n4mf-parser")) {
+					|| projectName.contains("org.eclipse.n4js.mangelhaft.reporter.xunit")) {
 				println("NOT copying project " + projectName
 						+ " (because this project will be published to npm registry only)");
 			} else {
@@ -276,6 +276,7 @@ public class UpdateShippedCode implements IWorkflowComponent {
 	}
 
 	/** TODO: REMOVE THIS HACK when we can copy the n4js-libs with canary version to the shipped code */
+	// TODO when removing this, also remove dependency to com.fasterxml.jackson from this bundle!!
 	private static void temporaryHackRemoveN4JSES5Dependency(File packJson) {
 		println("  Remove n4js-es5 from dependency: " + packJson);
 		ObjectMapper mapper = new ObjectMapper();

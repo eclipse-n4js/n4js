@@ -47,27 +47,31 @@ import org.eclipse.n4js.json.JSON.NameValuePair
 import org.eclipse.n4js.json.model.utils.JSONModelUtils
 import org.eclipse.n4js.json.validation.^extension.AbstractJSONValidatorExtension
 import org.eclipse.n4js.json.validation.^extension.CheckProperty
-import org.eclipse.n4js.n4mf.ModuleFilterSpecifier
-import org.eclipse.n4js.n4mf.ProjectDependency
-import org.eclipse.n4js.n4mf.ProjectDescription
-import org.eclipse.n4js.n4mf.ProjectType
-import org.eclipse.n4js.n4mf.SourceContainerDescription
-import org.eclipse.n4js.n4mf.SourceContainerType
+import org.eclipse.n4js.packagejson.PackageJsonUtils
+import org.eclipse.n4js.projectDescription.ModuleFilterSpecifier
+import org.eclipse.n4js.projectDescription.ProjectDependency
+import org.eclipse.n4js.projectDescription.ProjectDescription
+import org.eclipse.n4js.projectDescription.ProjectType
+import org.eclipse.n4js.projectDescription.SourceContainerDescription
+import org.eclipse.n4js.projectDescription.SourceContainerType
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement
+import org.eclipse.n4js.semver.SemverHelper
+import org.eclipse.n4js.semver.SemverMatcher
 import org.eclipse.n4js.semver.model.SemverSerializer
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TypesPackage
-import org.eclipse.n4js.utils.ProjectDescriptionHelper
+import org.eclipse.n4js.utils.DependencyTraverser
+import org.eclipse.n4js.utils.ProjectDescriptionLoader
 import org.eclipse.n4js.utils.ProjectDescriptionUtils
 import org.eclipse.n4js.utils.WildcardPathFilterHelper
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
-import org.eclipse.n4js.validation.helper.SourceContainerAwareDependencyTraverser
+import org.eclipse.n4js.validation.helper.SourceContainerAwareDependencyProvider
 import org.eclipse.xtend.lib.annotations.Data
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.resource.IContainer
@@ -78,20 +82,34 @@ import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider
 import org.eclipse.xtext.validation.Check
 
 import static com.google.common.base.Preconditions.checkState
-import static org.eclipse.n4js.n4mf.ProjectType.*
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__DEPENDENCIES
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__DEV_DEPENDENCIES
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__EXEC_MODULE
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__EXTENDED_RUNTIME_ENVIRONMENT
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__IMPLEMENTATION_ID
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__IMPLEMENTED_PROJECTS
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__INIT_MODULES
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__MODULE
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__MODULE_FILTERS
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__N4JS
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__NAME
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__PROVIDED_RUNTIME_LIBRARIES
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__REQUIRED_RUNTIME_LIBRARIES
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__SOURCES
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__SOURCE_CONTAINER
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__TESTED_PROJECTS
+import static org.eclipse.n4js.projectDescription.ProjectType.*
 import static org.eclipse.n4js.validation.IssueCodes.*
 import static org.eclipse.n4js.validation.validators.packagejson.ProjectTypePredicate.*
 
 import static extension com.google.common.base.Strings.nullToEmpty
-import org.eclipse.n4js.semver.SemverHelper
-import org.eclipse.n4js.semver.SemverMatcher
 
 /**
  * A JSON validator extension that validates {@code package.json} resources in the context
  * of higher-level concepts such as project references, the general project setup and feature restrictions.
  * 
  * Generally, this validator includes constraints that are implemented based on the converted {@link ProjectDescription}
- * as it can be obtained from the {@link ProjectDescriptionHelper}. This especially includes non-local validation
+ * as it can be obtained from the {@link ProjectDescriptionLoader}. This especially includes non-local validation
  * such as the resolution of referenced projects.
  * 
  * For lower-level, structural and local validations with regard to {@code package.json} 
@@ -140,7 +158,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	private XpectAwareFileExtensionCalculator fileExtensionCalculator;
 	
 	@Inject
-	private ProjectDescriptionHelper projectDescriptionHelper;
+	private ProjectDescriptionLoader projectDescriptionLoader;
 	
 	@Inject
 	private WildcardPathFilterHelper wildcardHelper;
@@ -165,7 +183,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	@Check
 	def checkConsistentPolyfills(JSONDocument document) {
 		// Take the RTE and RTL's check for duplicate fillings.
-		// lookup of Names in n4mf &
+		// lookup of names in project description
 		val Map<String, JSONStringLiteral> mQName2rtDep = newHashMap()
 
 		val description = getProjectDescription();
@@ -178,7 +196,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 
 		// gather required runtime libraries in terms of JSONStringLiterals
 		val requiredRuntimeLibrariesValue = getSingleDocumentValue(
-			ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__REQUIRED_RUNTIME_LIBRARIES,
+			PROP__N4JS + "." + PROP__REQUIRED_RUNTIME_LIBRARIES,
 			JSONArray);
 		if (requiredRuntimeLibrariesValue === null) {
 			return;
@@ -342,11 +360,16 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	def checkCyclicDependencies(JSONDocument document) {
 		val project = findProject(document.eResource.URI).orNull;
 		if (null !== project) {
-			val result = new SourceContainerAwareDependencyTraverser(project, true).result;
-			if (result.hasCycle) {
+			
+			val dependencyProvider = new SourceContainerAwareDependencyProvider(true);
+			val traverser = new DependencyTraverser(project, dependencyProvider, true);
+			
+			val traversalResult = traverser.findCycle();
+			
+			if (traversalResult.hasCycle) {
 				// add issue to 'name' property or alternatively to the whole document
-				val nameValue = getSingleDocumentValue(ProjectDescriptionHelper.PROP__NAME);
-				val message = getMessageForPROJECT_DEPENDENCY_CYCLE(result.prettyPrint([calculateName]));
+				val nameValue = getSingleDocumentValue(PROP__NAME);
+				val message = getMessageForPROJECT_DEPENDENCY_CYCLE(traversalResult.prettyPrint([calculateName]));
 				addIssuePreferred(#[nameValue], message, PROJECT_DEPENDENCY_CYCLE);
 			} else {
 				//for performance reasons following is not separate check
@@ -366,8 +389,8 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	 */
 	private def holdsProjectWithTestFragmentDependsOnTestLibrary(IN4JSProject project) {
 
-		val JSONValue sourcesSection = getSingleDocumentValue(ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__SOURCES, JSONValue);
-		val List<SourceContainerDescription> sourceContainers = ProjectDescriptionUtils.getSourceContainerDescriptions(sourcesSection);
+		val JSONValue sourcesSection = getSingleDocumentValue(PROP__N4JS + "." + PROP__SOURCES, JSONValue);
+		val List<SourceContainerDescription> sourceContainers = PackageJsonUtils.asSourceContainerDescriptionsOrEmpty(sourcesSection);
 		
 		if (sourceContainers === null) {
 			return;
@@ -408,7 +431,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	 * tests both APIs and libraries. Does nothing if the project description of the validated project is NOT a test
 	 * project.
 	 */
-	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__TESTED_PROJECTS)
+	@CheckProperty(propertyPath = PROP__N4JS + "." + PROP__TESTED_PROJECTS)
 	def checkTestedProjectsType(JSONValue testedProjectsValue) {
 		val description = getProjectDescription();
 		
@@ -438,7 +461,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	 * Checks whether a library project, that belongs to a specific implementation (has defined implementation ID) does not
 	 * depend on any other libraries that belong to any other implementation. In such cases, raises validation issue.
 	 */
-	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__DEPENDENCIES)
+	@CheckProperty(propertyPath = PROP__DEPENDENCIES)
 	def checkHasConsistentImplementationIdChain(JSONValue dependenciesValue) {
 		// exit early in case of a malformed dependencies section (structural validation is handled elsewhere)
 		if (!(dependenciesValue instanceof JSONObject)) {
@@ -470,7 +493,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	 * Checks if any transitive external dependency of a workspace project references to a workspace
 	 * project. If so, raises a validation warning.
 	 */
-	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__DEPENDENCIES)
+	@CheckProperty(propertyPath = PROP__DEPENDENCIES)
 	def checkExternalProjectDoesNotReferenceWorkspaceProject(JSONValue dependenciesValue) {
 		val allProjects = getAllExistingProjectIds();
 		val description = getProjectDescription();
@@ -523,10 +546,10 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	@Check
 	def void checkDependenciesAndDevDependencies(JSONDocument document) {
 		val references = newArrayList;
-		for (value : getDocumentValues(ProjectDescriptionHelper.PROP__DEPENDENCIES)) {
+		for (value : getDocumentValues(PROP__DEPENDENCIES)) {
 			references += getReferencesFromDependenciesObject(value);
 		}
-		for (value : getDocumentValues(ProjectDescriptionHelper.PROP__DEV_DEPENDENCIES)) {
+		for (value : getDocumentValues(PROP__DEV_DEPENDENCIES)) {
 			// do not validate devDependencies in external projects, because these are not installed
 			// by npm for transitive dependencies
 			val project = findProject(value.eResource.URI);
@@ -563,7 +586,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	}
 
 	/** Checks the 'n4js.extendedRuntimeEnvironment' section. */
-	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__EXTENDED_RUNTIME_ENVIRONMENT)
+	@CheckProperty(propertyPath = PROP__N4JS + "." + PROP__EXTENDED_RUNTIME_ENVIRONMENT)
 	def checkExtendedRuntimeEnvironment(JSONValue extendedRuntimeEnvironmentValue) {
 		// make sure 'extendedRuntimeEnvironment' is allowed in combination with the current project type
 		if (!checkFeatureRestrictions("extended runtime environment", extendedRuntimeEnvironmentValue, RE_TYPE)) {
@@ -575,7 +598,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	}
 	
 	/** Checks the 'n4js.requiredRuntimeLibraries' section. */
-	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__REQUIRED_RUNTIME_LIBRARIES)
+	@CheckProperty(propertyPath = PROP__N4JS + "." + PROP__REQUIRED_RUNTIME_LIBRARIES)
 	def checkRequiredRuntimeLibraries(JSONValue requiredRuntimeLibrariesValue) {
 		// make sure 'requiredRuntimeLibraries' is allowed in combination with the current project type
 		if (!checkFeatureRestrictions("required runtime libraries", requiredRuntimeLibrariesValue, not(RE_TYPE))) {
@@ -588,7 +611,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	}
 	
 	/** Checks the 'n4js.providedRuntimeLibraries' section. */
-	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__PROVIDED_RUNTIME_LIBRARIES)
+	@CheckProperty(propertyPath = PROP__N4JS + "." + PROP__PROVIDED_RUNTIME_LIBRARIES)
 	def checkProvidedRuntimeLibraries(JSONValue providedRuntimeLibraries) {
 		// make sure 'requiredRuntimeLibraries' is allowed in combination with the current project type
 		if (!checkFeatureRestrictions("provided runtime libraries", providedRuntimeLibraries, RE_TYPE)) {
@@ -600,7 +623,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	}
 	
 	/** Checks the 'n4js.testedProjects' section. */
-	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__TESTED_PROJECTS)
+	@CheckProperty(propertyPath = PROP__N4JS + "." + PROP__TESTED_PROJECTS)
 	def checkTestedProjects(JSONValue testedProjectsValue) {
 		// make sure 'testedProjects' is allowed in combination with the current project type
 		if (!checkFeatureRestrictions("tested projects", testedProjectsValue, TEST_TYPE)) {
@@ -613,10 +636,10 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	}
 	
 	/** Checks the 'n4js.initModules' section. */
-	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__INIT_MODULES)
+	@CheckProperty(propertyPath = PROP__N4JS + "." + PROP__INIT_MODULES)
 	def checkInitModules(JSONValue initModulesValue) {
 		// initModule usage restriction
-		if (checkFeatureRestrictions(ProjectDescriptionHelper.PROP__INIT_MODULES, initModulesValue, RE_OR_RL_TYPE)) {
+		if (checkFeatureRestrictions(PROP__INIT_MODULES, initModulesValue, RE_OR_RL_TYPE)) {
 			if (initModulesValue instanceof JSONArray) {
 				// check all init module entries for empty strings
 				initModulesValue.elements.filter(JSONStringLiteral)
@@ -630,38 +653,38 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	}
 	
 	/** Checks the 'n4js.execModule' section. */
-	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__EXEC_MODULE)
+	@CheckProperty(propertyPath = PROP__N4JS + "." + PROP__EXEC_MODULE)
 	def checkExecModule(JSONValue execModuleValue) {
 		// execModule usage restriction
-		if (checkFeatureRestrictions(ProjectDescriptionHelper.PROP__EXEC_MODULE, execModuleValue, RE_OR_RL_TYPE)) {
+		if (checkFeatureRestrictions(PROP__EXEC_MODULE, execModuleValue, RE_OR_RL_TYPE)) {
 			// check for empty string
 			if (execModuleValue instanceof JSONStringLiteral) {
-				checkIsNonEmptyString(execModuleValue, ProjectDescriptionHelper.PROP__EXEC_MODULE);
+				checkIsNonEmptyString(execModuleValue, PROP__EXEC_MODULE);
 			}
 		}
 	}
 	
 	/** Checks the 'n4js.implementationId' section. */
-	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__IMPLEMENTATION_ID)
+	@CheckProperty(propertyPath = PROP__N4JS + "." + PROP__IMPLEMENTATION_ID)
 	def checkImplementationId(JSONValue implementationIdValue) {
 		// implemenationId usage restriction
-		checkFeatureRestrictions(ProjectDescriptionHelper.PROP__IMPLEMENTATION_ID, implementationIdValue, 
+		checkFeatureRestrictions(PROP__IMPLEMENTATION_ID, implementationIdValue, 
 			not(or(RE_OR_RL_TYPE, TEST_TYPE)));
 	}
 	
 	/** Checks the 'n4js.implementedProjects' section. */
-	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__IMPLEMENTED_PROJECTS)
+	@CheckProperty(propertyPath = PROP__N4JS + "." + PROP__IMPLEMENTED_PROJECTS)
 	def checkImplementedProjects(JSONValue implementedProjectsValue) {
 		// implementedProjects usage restriction
-		if(checkFeatureRestrictions(ProjectDescriptionHelper.PROP__IMPLEMENTED_PROJECTS, implementedProjectsValue, 
+		if(checkFeatureRestrictions(PROP__IMPLEMENTED_PROJECTS, implementedProjectsValue, 
 			not(or(RE_OR_RL_TYPE, TEST_TYPE)))) {
 		
 			val references = implementedProjectsValue.referencesFromJSONStringArray;
 			checkReferencedProjects(references, API_TYPE.forN4jsProjects, "implemented projects", false, true);
 			
 			// make sure an implementationId has been declared
-			val JSONValue implementationIdValue = getSingleDocumentValue(ProjectDescriptionHelper.PROP__N4JS + "." + 
-				ProjectDescriptionHelper.PROP__IMPLEMENTATION_ID);
+			val JSONValue implementationIdValue = getSingleDocumentValue(PROP__N4JS + "." + 
+				PROP__IMPLEMENTATION_ID);
 			if (!references.isEmpty() && implementationIdValue === null ) {
 				addIssue(IssueCodes.getMessageForPKGJ_APIIMPL_MISSING_IMPL_ID(), implementedProjectsValue.eContainer,
 					JSONPackage.Literals.NAME_VALUE_PAIR__NAME, IssueCodes.PKGJ_APIIMPL_MISSING_IMPL_ID);
@@ -677,7 +700,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	 * This includes limited syntactical validation of the wildcards as well as a check whether the filters
 	 * actually filter any resources or whether they are obsolete.
 	 */
-	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__MODULE_FILTERS)
+	@CheckProperty(propertyPath = PROP__N4JS + "." + PROP__MODULE_FILTERS)
 	def checkModuleFilters(JSONValue moduleFiltersValue) {
 		val project = findProject(moduleFiltersValue.eResource.URI).get;
 		
@@ -692,7 +715,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			.filter(JSONArray)
 			.flatMap[elements]
 			.filterNull
-			.map[filter | ASTTraceable.of(filter, ProjectDescriptionUtils.getModuleFilterSpecifier(filter))];
+			.map[filter | ASTTraceable.of(filter, PackageJsonUtils.asModuleFilterSpecifierOrNull(filter))];
 
 		holdsValidModuleSpecifiers(filterSpecifierTraceables, project);
 	}
@@ -702,7 +725,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		val validFilterSpecifier = new ArrayList<ASTTraceable<ModuleFilterSpecifier>>();
 
 		for (ASTTraceable<ModuleFilterSpecifier> filterSpecifier : moduleFilterSpecifiers) {
-			val valid = holdsValidWildcardModuleSpecifier(filterSpecifier);
+			val valid = holdsValidModuleFilterSpecifier(filterSpecifier);
 			if (valid) {
 				validFilterSpecifier.add(filterSpecifier);
 			}
@@ -711,16 +734,11 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		internalCheckModuleSpecifierHasFile(project, validFilterSpecifier);
 	}
 
-	private def holdsValidWildcardModuleSpecifier(ASTTraceable<ModuleFilterSpecifier> filterSpecifierTraceable) {
+	private def holdsValidModuleFilterSpecifier(ASTTraceable<ModuleFilterSpecifier> filterSpecifierTraceable) {
 		val wrongWildcardPattern = "***"
-		
+
 		val ModuleFilterSpecifier filterSpecifier = filterSpecifierTraceable?.element;
-		
-		// check for specifier to be non-null
-		if (filterSpecifier === null) {
-			return false;
-		}
-		
+
 		// check for invalid character sequences within wildcard patterns
 		if (filterSpecifier?.moduleSpecifierWithWildcard !== null) {
 			if (filterSpecifier.moduleSpecifierWithWildcard.contains(wrongWildcardPattern)) {
@@ -741,28 +759,35 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 				return false
 			}
 		}
-		
-		// check for empty filter or source container values
-		val moduleSpecifier = filterSpecifier?.moduleSpecifierWithWildcard;
-		if (moduleSpecifier === null) {
-			// in this case, error message is created elsewhere
-			return false;
-		}
-		if (moduleSpecifier.empty
-			|| (filterSpecifier?.sourcePath !== null && filterSpecifier?.sourcePath.empty)) {
+
+		// check for empty module filter or source container values
+		// (need to read from AST because these values are normalized during loading/conversion)
+		val astElement = filterSpecifierTraceable.astElement as JSONValue;
+		val moduleSpecifierWithWildcardFromAST = switch (astElement) {
+			JSONStringLiteral:
+				astElement.value
+			JSONObject:
+				JSONModelUtils.getPropertyAsStringOrNull(astElement, PROP__MODULE)
+		};
+		val sourceContainerFromAST = switch (astElement) {
+			JSONObject:
+				JSONModelUtils.getPropertyAsStringOrNull(astElement, PROP__SOURCE_CONTAINER)
+		};
+		if ((moduleSpecifierWithWildcardFromAST !== null && moduleSpecifierWithWildcardFromAST.empty)
+			|| (sourceContainerFromAST !== null && sourceContainerFromAST.empty)) {
 			addIssue(IssueCodes.getMessageForPKGJ_INVALID_MODULE_FILTER_SPECIFIER_EMPTY(),
 					filterSpecifierTraceable.astElement, IssueCodes.PKGJ_INVALID_MODULE_FILTER_SPECIFIER_EMPTY);
 			return false;
 		}
-		
-		return true
+
+		return true;
 	}
 
 	private def internalCheckModuleSpecifierHasFile(IN4JSProject project, List<ASTTraceable<ModuleFilterSpecifier>> filterSpecifiers) {
 		// keep track of filter specifiers with matches (initialize with false for no matches)
 		val checkedFilterSpecifiers = new HashMap<ASTTraceable<ModuleFilterSpecifier>, Boolean>();
-		checkedFilterSpecifiers.putAll(filterSpecifiers.toMap([p | p], [false]));
-		
+		checkedFilterSpecifiers.putAll(filterSpecifiers.filter[element!==null].toMap([p | p], [false]));
+
 		try {
 			val treeWalker = new ModuleSpecifierFileVisitor(this, project, checkedFilterSpecifiers);
 			Files.walkFileTree(project.locationPath, treeWalker);
@@ -770,7 +795,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			LOGGER.error("Failed to check module filter section of package.json file " + document.eResource.URI + ".");
 			e.printStackTrace;
 		}
-	
+
 		// obtain list of filter specifiers for which no file matches could be found
 		val unmatchedSpecifiers = checkedFilterSpecifiers.entrySet
 			.filter[e | e.value == false].map[e | e.key]
@@ -1146,12 +1171,12 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	 * Returns the {@link ProjectDescription} that can be created based on the information
 	 * to be found in the currently validated {@link JSONDocument}.
 	 * 
-	 * @See {@link ProjectDescriptionHelper}
+	 * @See {@link ProjectDescriptionLoader}
 	 */
 	protected def ProjectDescription getProjectDescription() {
 		return contextMemoize(PROJECT_DESCRIPTION_CACHE, [
 			val doc = getDocument();
-			projectDescriptionHelper.loadProjectDescriptionAtLocation(doc.eResource.URI.trimSegments(1), doc, false);
+			projectDescriptionLoader.loadProjectDescriptionAtLocation(doc.eResource.URI.trimSegments(1), doc, false);
 		]);
 	}
 
@@ -1193,21 +1218,22 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	}
 	
 	/**
-	 * Adds an issue to each element in {@code preferredTargets}.
+	 * Adds an issue to every non-null element in {@code preferredTargets}.
 	 *
 	 * If {@code preferredTargets} is empty (or contains null entries only), adds an issue to 
 	 * the {@code name} property of the {@code package.json} file. 
 	 * 
-	 * If there is no {@code name} property, falls back to {@link #getDocument()}.
+	 * If there is no {@code name} property, adds an issue to the whole document (see {@link #getDocument()}).
 	 */ 
 	private def void addIssuePreferred(Iterable<? extends EObject> preferredTargets, String message, String issueCode) {
+		// add issue to preferred targets
 		if (!preferredTargets.filterNull.empty) {
 			preferredTargets.filterNull
 				.forEach[t | addIssue(message, t, issueCode); ]
 			return;
 		}
 		// fall back to property 'name' 
-		val nameValue = getSingleDocumentValue(ProjectDescriptionHelper.PROP__NAME);
+		val nameValue = getSingleDocumentValue(PROP__NAME);
 		if (nameValue !== null) {
 			addIssue(message, nameValue, issueCode);
 			return;

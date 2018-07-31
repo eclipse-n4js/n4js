@@ -20,9 +20,9 @@ import java.util.Map;
 
 import org.eclipse.emf.common.util.AbstractTreeIterator;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.n4mf.ProjectDescription;
-import org.eclipse.n4js.n4mf.ProjectReference;
-import org.eclipse.n4js.utils.ProjectDescriptionHelper;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectReference;
+import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.common.base.Function;
@@ -38,11 +38,11 @@ import com.google.inject.Singleton;
 @Singleton
 public class FileBasedWorkspace extends InternalN4JSWorkspace {
 
-	private final ProjectDescriptionHelper projectDescriptionHelper;
+	private final ProjectDescriptionLoader projectDescriptionLoader;
 
 	@Inject
-	public FileBasedWorkspace(ProjectDescriptionHelper projectDescriptionHelper) {
-		this.projectDescriptionHelper = projectDescriptionHelper;
+	public FileBasedWorkspace(ProjectDescriptionLoader projectDescriptionLoader) {
+		this.projectDescriptionLoader = projectDescriptionLoader;
 	}
 
 	private final Map<URI, LazyProjectDescriptionHandle> projectElementHandles = Maps.newConcurrentMap();
@@ -53,7 +53,7 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 	/**
 	 *
 	 * @param location
-	 *            project directory containing manifest.n4mf directly
+	 *            project directory containing package.json directly
 	 */
 	public void registerProject(URI unsafeLocation) {
 		if (unsafeLocation.lastSegment().isEmpty()) {
@@ -68,7 +68,7 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 	}
 
 	protected LazyProjectDescriptionHandle createLazyDescriptionHandle(URI location) {
-		return new LazyProjectDescriptionHandle(location, projectDescriptionHelper);
+		return new LazyProjectDescriptionHandle(location, projectDescriptionLoader);
 	}
 
 	@Override

@@ -47,8 +47,8 @@ import org.eclipse.n4js.binaries.IllegalBinaryStateException;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
 import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
-import org.eclipse.n4js.n4mf.ProjectDependency;
-import org.eclipse.n4js.n4mf.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectDependency;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.SemverMatcher;
@@ -308,8 +308,8 @@ public class LibraryManager {
 		for (ProjectDependency pDep : description.getProjectDependencies()) {
 			String name = pDep.getProjectId();
 			String version = NO_VERSION;
-			if (pDep.getVersionConstraint() != null) {
-				version = SemverSerializer.serialize(pDep.getVersionConstraint());
+			if (pDep.getVersionRequirement() != null) {
+				version = SemverSerializer.serialize(pDep.getVersionRequirement());
 			}
 			dependencies.put(name, version);
 		}

@@ -12,7 +12,7 @@ package org.eclipse.n4js.ui.wizard.project;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.n4js.n4mf.ProjectType;
+import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.swt.widgets.Composite;
@@ -33,7 +33,7 @@ public class N4JSNewProjectWizard extends XtextNewProjectWizard {
 	private static final ImageDescriptor NEW_PROJECT_WIZBAN_DESC = ImageRef.NEW_PROJECT_WIZBAN.asImageDescriptor()
 			.orNull();
 
-	private static final String DIALOG_SETTINGS_SECTION_KEY = "org.eclipse.n4js.n4mf.ui.wizard.SimpleN4MFNewProjectWizard";
+	private static final String DIALOG_SETTINGS_SECTION_KEY = "org.eclipse.n4js.ui.wizard.project.N4JSNewProjectWizard.dialogSettings";
 	private static final String CREATE_GREETER_SETTINGS_KEY = "createGreeterFile";
 	private static final String VENDOR_ID_SETTINGS_KEY = "vendorId";
 
@@ -42,7 +42,7 @@ public class N4JSNewProjectWizard extends XtextNewProjectWizard {
 	@Inject
 	private IResourceDescriptions resourceDescriptions;
 
-	private N4JSNewProjectWizardCreationPage n4mfWizardNewProjectCreationPage;
+	private N4JSNewProjectWizardCreationPage newProjectWizardCreationPage;
 
 	/**
 	 * Creates a new wizard container for creating and initializing a new N4JS project into the workspace.
@@ -84,8 +84,8 @@ public class N4JSNewProjectWizard extends XtextNewProjectWizard {
 
 	@Override
 	public void addPages() {
-		n4mfWizardNewProjectCreationPage = new N4JSNewProjectWizardCreationPage(projectInfo);
-		addPage(n4mfWizardNewProjectCreationPage);
+		newProjectWizardCreationPage = new N4JSNewProjectWizardCreationPage(projectInfo);
+		addPage(newProjectWizardCreationPage);
 		addPage(new N4JSTestedProjectWizardPage(projectInfo, resourceDescriptions));
 	}
 
@@ -106,13 +106,13 @@ public class N4JSNewProjectWizard extends XtextNewProjectWizard {
 		 * This means that even for test projects the whole second page can be completely skipped.
 		 */
 		return (!ProjectType.TEST.equals(projectInfo.getProjectType()) &&
-				n4mfWizardNewProjectCreationPage.isPageComplete()) || super.canFinish();
+				newProjectWizardCreationPage.isPageComplete()) || super.canFinish();
 	}
 
 	@Override
 	protected IProjectInfo getProjectInfo() {
 		// update workingsets:
-		n4mfWizardNewProjectCreationPage.updateSelectedWorkingSets();
+		newProjectWizardCreationPage.updateSelectedWorkingSets();
 
 		return projectInfo;
 	}

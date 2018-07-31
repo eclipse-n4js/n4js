@@ -37,6 +37,7 @@ import org.eclipse.n4js.generator.IWorkspaceMarkerSupport;
 import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.internal.N4JSModel;
+import org.eclipse.n4js.packagejson.PackageJsonHelper;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.preferences.OsgiExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectModel.IN4JSCore;
@@ -67,7 +68,7 @@ import org.eclipse.n4js.ui.workingsets.WorkingSetManualAssociationWizard;
 import org.eclipse.n4js.ui.workingsets.WorkingSetProjectNameFilterWizard;
 import org.eclipse.n4js.ui.workingsets.WorkspaceRepositoriesProvider;
 import org.eclipse.n4js.utils.InjectorCollector;
-import org.eclipse.n4js.utils.ProjectDescriptionHelper;
+import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.WildcardPathFilterHelper;
 import org.eclipse.n4js.utils.process.OutputStreamPrinterThreadProvider;
@@ -86,7 +87,6 @@ import org.eclipse.xtext.ui.resource.IResourceSetInitializer;
 import org.eclipse.xtext.ui.resource.IStorage2UriMapperContribution;
 import org.eclipse.xtext.ui.shared.contribution.IEagerContribution;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Binder;
 import com.google.inject.Inject;
 import com.google.inject.Module;
@@ -112,7 +112,8 @@ public class ContributingModule implements Module {
 		binder.bind(IStorage2UriMapperContribution.class).to(CompositeStorage2UriMapperContribution.class);
 		binder.bind(InternalN4JSWorkspace.class).to(EclipseBasedN4JSWorkspace.class);
 		binder.bind(EclipseBasedN4JSWorkspace.class);
-		binder.bind(ProjectDescriptionHelper.class);
+		binder.bind(ProjectDescriptionLoader.class);
+		binder.bind(PackageJsonHelper.class);
 		binder.bind(IWorkspaceRoot.class).toProvider(new Provider<IWorkspaceRoot>() {
 			@Inject
 			IWorkspace workspace;
@@ -166,8 +167,8 @@ public class ContributingModule implements Module {
 		binder.bind(XtextResourceSet.class);
 		binder.bind(ProjectDescriptionLoadListener.class);
 		binder.bind(IEagerContribution.class).to(ProjectDescriptionLoadListener.class);
-		binder.bind(ProjectDescriptionLoadListener.Strategy.class).to(N4MFProjectDependencyStrategy.class);
-		binder.bind(N4MFProjectDependencyStrategy.class);
+		binder.bind(ProjectDescriptionLoadListener.Strategy.class).to(N4JSProjectDependencyStrategy.class);
+		binder.bind(N4JSProjectDependencyStrategy.class);
 		binder.bind(IResourceSetInitializer.class).to(ScopeInitializer.class);
 		binder.bind(ClassLoader.class).toInstance(getClass().getClassLoader());
 
@@ -178,7 +179,6 @@ public class ContributingModule implements Module {
 		binder.bind(WorkingSetProjectNameFilterWizard.class);
 		binder.bind(N4JSProjectExplorerLabelProvider.class);
 		binder.bind(N4JSProjectExplorerHelper.class);
-		binder.bind(ObjectMapper.class);
 
 		binder.bind(WorkspaceRepositoriesProvider.class);
 

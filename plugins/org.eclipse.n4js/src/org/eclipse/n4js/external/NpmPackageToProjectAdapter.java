@@ -33,7 +33,7 @@ import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.SemverMatcher;
 import org.eclipse.n4js.semver.SemverUtils;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
-import org.eclipse.n4js.utils.ProjectDescriptionHelper;
+import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.git.GitUtils;
 import org.eclipse.n4js.utils.io.FileCopier;
@@ -63,7 +63,7 @@ public class NpmPackageToProjectAdapter {
 	private GitCloneSupplier gitCloneSupplier;
 
 	@Inject
-	private ProjectDescriptionHelper projectDescriptionHelper;
+	private ProjectDescriptionLoader projectDescriptionLoader;
 
 	@Inject
 	private SemverHelper semverHelper;
@@ -179,8 +179,8 @@ public class NpmPackageToProjectAdapter {
 	 */
 	IStatus addTypeDefinitions(File packageRoot, File definitionsFolder) {
 		URI packageURI = URI.createFileURI(packageRoot.getAbsolutePath());
-		Pair<String, Boolean> info = projectDescriptionHelper
-				.getVersionAndN4JSNatureFromProjectDescriptionAtLocation(packageURI);
+		Pair<String, Boolean> info = projectDescriptionLoader
+				.loadVersionAndN4JSNatureFromProjectDescriptionAtLocation(packageURI);
 		boolean hasN4JSNature = (info == null) ? false : info.getSecond();
 		String packageJsonVersion = (info == null) ? null : info.getFirst();
 
