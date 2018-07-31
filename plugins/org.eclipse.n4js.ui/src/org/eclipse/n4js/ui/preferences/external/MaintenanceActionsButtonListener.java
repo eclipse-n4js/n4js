@@ -80,7 +80,7 @@ public class MaintenanceActionsButtonListener extends SelectionAdapter {
 
 			Object[] result = dialog.getResult();
 			if (result == null) {
-				return; // happen when quitting the IDE
+				return; // happens when quitting the IDE
 			}
 			for (int i = 0; i < result.length; i++) {
 				String dialogItem = (String) result[i];
