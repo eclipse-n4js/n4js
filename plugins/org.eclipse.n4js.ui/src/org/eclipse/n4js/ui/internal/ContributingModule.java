@@ -24,6 +24,7 @@ import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.binaries.nodejs.NpmrcBinary;
 import org.eclipse.n4js.external.EclipseTargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.external.ExternalIndexSynchronizer;
+import org.eclipse.n4js.external.ExternalLibraryHelper;
 import org.eclipse.n4js.external.ExternalLibraryUriHelper;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalProjectsCollector;
@@ -130,6 +131,7 @@ public class ContributingModule implements Module {
 				return workspace.getRoot();
 			}
 		});
+		binder.bind(ExternalLibraryHelper.class);
 		binder.bind(StatusHelper.class);
 		binder.bind(TargetPlatformInstallLocationProvider.class).to(EclipseTargetPlatformInstallLocationProvider.class);
 		binder.bind(GitCloneSupplier.class);
