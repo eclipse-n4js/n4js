@@ -107,6 +107,9 @@ public class UpdateShippedCode implements IWorkflowComponent {
 	 *            present, folder "shipped-code" in bundle "org.eclipse.n4js.external.libraries" will be used.
 	 */
 	public static void updateShippedCode(Optional<Path> targetPath) throws IOException {
+		// step 1: clean then compile projects under top-level folder "n4js-libs"
+		println("==== Running UPDATE SHIPPED CODE ====");
+
 		final Path n4jsRootPath = UtilN4.findN4jsRepoRootPath();
 		final Path n4jsLibsRootPath = n4jsRootPath.resolve(N4JSGlobals.SHIPPED_CODE_SOURCES_FOLDER_NAME);
 		final File n4jsLibsRoot = n4jsLibsRootPath.toFile();
@@ -143,6 +146,8 @@ public class UpdateShippedCode implements IWorkflowComponent {
 		temporaryHackRemoveN4JSES5Dependency(n4jsNodePkgJson);
 		runNpmInstall(n4jsNodeFolder);
 		cleanJsonFiles(n4jsNodeFolder);
+
+		println("==== UPDATE SHIPPED CODE finished ====");
 	}
 
 	private static void initFolder(File folder) throws IOException {
