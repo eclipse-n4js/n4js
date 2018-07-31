@@ -41,15 +41,24 @@ public interface TargetPlatformInstallLocationProvider {
 	String TYPE_DEFINITIONS_FOLDER = ExternalLibrariesActivator.TYPE_DEFINITIONS_CATEGORY;
 
 	/**
+	 * Returns with an {@link File} pointing to the target platform install location, called '.n4npm' folder.
+	 *
+	 * @return the {@link File} pointing to the target platform install location.
+	 */
+	File getTargetPlatformInstallFolder();
+
+	/**
 	 * Returns with an URI pointing to the target platform install location.
 	 *
 	 * @return the URI pointing to the target platform install location.
 	 */
-	URI getTargetPlatformInstallLocation();
+	default URI getTargetPlatformInstallURI() {
+		return getTargetPlatformInstallFolder().toURI();
+	}
 
 	/**
 	 * Returns with an URI pointing to the target platform file that has to be used to install any third party
-	 * dependencies to the {@link #getTargetPlatformInstallLocation() target platform install location}.
+	 * dependencies to the {@link #getTargetPlatformInstallURI() target platform install location}.
 	 *
 	 * @return the URI pointing to the actual target platform file.
 	 */
@@ -90,7 +99,7 @@ public interface TargetPlatformInstallLocationProvider {
 	/** @return the {@link File} pointing to the given folder inside the target platf. */
 	default File getFolderInTargetPlatformLocation(String folderName) {
 		synchronized (folderName) {
-			if (null == getTargetPlatformInstallLocation()) {
+			if (null == getTargetPlatformInstallURI()) {
 				final String message = "Target platform install location was not specified.";
 				final NullPointerException exception = new NullPointerException(message);
 				LOGGER.error(message, exception);
@@ -98,7 +107,7 @@ public interface TargetPlatformInstallLocationProvider {
 				throw exception;
 			}
 
-			final File installLocation = new File(getTargetPlatformInstallLocation());
+			final File installLocation = new File(getTargetPlatformInstallURI());
 			checkState(installLocation.isDirectory(),
 					"Cannot locate target platform install location: " + installLocation);
 
@@ -125,14 +134,14 @@ public interface TargetPlatformInstallLocationProvider {
 	 * @return the URI pointing to the local git repository location for the N4JSD files in the file system.
 	 */
 	default URI getTargetPlatformLocalGitRepositoryLocation() {
-		if (null == getTargetPlatformInstallLocation()) {
+		if (null == getTargetPlatformInstallURI()) {
 			final String message = "Target platform install location was not specified.";
 			final NullPointerException exception = new NullPointerException(message);
 			LOGGER.error(message, exception);
 			exception.printStackTrace(); // This if for the HLC as it swallows the actual stack trace.
 			throw exception;
 		}
-		final File installLocation = new File(getTargetPlatformInstallLocation());
+		final File installLocation = new File(getTargetPlatformInstallURI());
 		checkState(installLocation.isDirectory(), "Cannot locate target platform install location: " + installLocation);
 		// The local git repository should be a sibling folder of the install location.
 		File parentFile = installLocation.getParentFile();

@@ -342,7 +342,7 @@ public class HeadlessHelper {
 	 */
 	private File getTargetPlatformInstallLocation() {
 		final java.net.URI targetPlatformLocation = targetPlatformInstallLocationProvider
-				.getTargetPlatformInstallLocation();
+				.getTargetPlatformInstallURI();
 		if (null == targetPlatformLocation) {
 			return null;
 		}

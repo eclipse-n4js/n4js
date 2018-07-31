@@ -628,7 +628,7 @@ public class N4jscBase implements IApplication {
 
 		// generate n4tp file for libManager to use
 		PackageJson packageJson = TargetPlatformFactory.createN4Default();
-		java.net.URI platformLocation = locationProvider.getTargetPlatformInstallLocation();
+		java.net.URI platformLocation = locationProvider.getTargetPlatformInstallURI();
 		File packageJsonFile = new File(new File(platformLocation), N4JSGlobals.PACKAGE_JSON);
 		try {
 			// Create new target platform definition file, only if not present.
@@ -703,7 +703,7 @@ public class N4jscBase implements IApplication {
 
 			try {
 				// make sure the target platform location is resolved (follow symlinks)
-				java.net.URI resolvedLocation = targetPlatformInstallLocation.toPath().toRealPath().toUri();
+				File resolvedLocation = targetPlatformInstallLocation.toPath().toRealPath().toFile();
 				locationProvider.setTargetPlatformInstallLocation(resolvedLocation);
 			} catch (IOException e) {
 				throw new ExitCodeException(EXITCODE_CONFIGURATION_ERROR,
@@ -988,7 +988,7 @@ public class N4jscBase implements IApplication {
 				flushAndIinsertMarkerInOutputs();
 			}
 			headlessRunner.startRunner(runner, implementationId, systemLoader, checkFileToRun(),
-					new File(installLocationProvider.getTargetPlatformInstallLocation()));
+					new File(installLocationProvider.getTargetPlatformInstallURI()));
 		}
 	}
 

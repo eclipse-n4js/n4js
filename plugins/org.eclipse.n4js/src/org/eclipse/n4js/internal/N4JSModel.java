@@ -96,7 +96,7 @@ public class N4JSModel {
 	public N4JSProject getN4JSProject(URI location) {
 		checkArgument(location.isFile(), "Expecting file URI. Was: " + location);
 		boolean external = false;
-		if (null != installLocationProvider.getTargetPlatformInstallLocation()) {
+		if (null != installLocationProvider.getTargetPlatformInstallURI()) {
 			Path projectPath = new File(location.toFileString()).toPath();
 			Path nodeModulesPath = new File(installLocationProvider.getNodeModulesURI()).toPath();
 			try {

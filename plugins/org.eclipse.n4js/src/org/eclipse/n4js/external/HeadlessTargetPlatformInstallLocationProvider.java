@@ -37,14 +37,14 @@ public class HeadlessTargetPlatformInstallLocationProvider implements TargetPlat
 	@Inject
 	private TypeDefinitionGitLocationProvider gitLocationProvider;
 
-	private URI targetPlatformInstallLocation;
+	private File targetPlatformInstallLocation;
 
 	private URI targetPlatformFileLocation;
 
 	private URI tempRoot;
 
 	@Override
-	public URI getTargetPlatformInstallLocation() {
+	public File getTargetPlatformInstallFolder() {
 		return targetPlatformInstallLocation;
 	}
 
@@ -66,7 +66,7 @@ public class HeadlessTargetPlatformInstallLocationProvider implements TargetPlat
 	 * @param targetPlatformInstallLocation
 	 *            the location of the desired target platform install location.
 	 */
-	public void setTargetPlatformInstallLocation(final URI targetPlatformInstallLocation) {
+	public void setTargetPlatformInstallLocation(final File targetPlatformInstallLocation) {
 		this.targetPlatformInstallLocation = targetPlatformInstallLocation;
 	}
 
@@ -105,7 +105,7 @@ public class HeadlessTargetPlatformInstallLocationProvider implements TargetPlat
 		}
 		packageJson.deleteOnExit();
 		this.tempRoot = root.toUri();
-		this.targetPlatformInstallLocation = n4npm.toFile().toURI();
+		this.targetPlatformInstallLocation = n4npm.toFile();
 		this.targetPlatformFileLocation = packageJson.toURI();
 	}
 
