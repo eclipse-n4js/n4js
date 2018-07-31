@@ -10,6 +10,9 @@
  */
 package org.eclipse.n4js.internal;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -23,10 +26,11 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import com.google.common.collect.ImmutableList;
 
 /**
- * Supplier for the ordered list of dependencies of a given {@link IN4JSProject}.
+ * Supplier for the ordered list of dependencies of a given {@link IN4JSProject}, in such that it is assured sthat type
+ * definitions shadow their implementation projects..
  *
- * In contrast to {@link IN4JSProject#getDependencies()}, this supplier applies an ordering to the list of dependencies,
- * in such that it is assured that type definitions shadow their implementation projects.
+ * In contrast to {@link IN4JSProject#getDependencies()}, this supplier applies an explicit ordering that is of
+ * significance when using the list of dependencies to constructing scopes.
  */
 public class TypeDefinitionsAwareDependenciesSupplier {
 	/**
@@ -35,10 +39,16 @@ public class TypeDefinitionsAwareDependenciesSupplier {
 	 * Re-arranges the positions of type definition projects in such, that they always occur right in front of the
 	 * corresponding implementation project. As a consequence, the contents of the type definition source containers
 	 * always has precedence over implementation project's source containers, enabling shadowing on the module-level.
+	 *
+	 * @throws IllegalStateException
+	 *             This method will always return with a list of all dependencies declared by the given {@code project}.
+	 *             In case the computation encounters a problem that results in the loss of a dependency, this method
+	 *             will throw an {@link IllegalStateException}.
 	 */
 	public Iterable<IN4JSProject> get(IN4JSProject project) {
 		final ImmutableList<? extends IN4JSProject> dependencies = project.getDependencies();
-		final Map<String, IN4JSProject> typeDefinitionsById = new HashMap<>();
+		// keep ordered list of type definition projects per project Id
+		final Map<String, List<IN4JSProject>> typeDefinitionsById = new HashMap<>();
 		// runtime dependencies (non-type dependencies)
 		final List<IN4JSProject> runtimeDependencies = new LinkedList<>();
 
@@ -51,7 +61,11 @@ public class TypeDefinitionsAwareDependenciesSupplier {
 			if (dependency.getProjectType() == ProjectType.DEFINITION) {
 				final String definesPackage = dependency.getDefinesPackage();
 				if (definesPackage != null) {
-					typeDefinitionsById.put(dependency.getDefinesPackage(), dependency);
+					// get existing or create new list of type definition projects
+					List<IN4JSProject> typeDefinitionsProjects = typeDefinitionsById.getOrDefault(definesPackage,
+							new ArrayList<>());
+					typeDefinitionsProjects.add(dependency);
+					typeDefinitionsById.put(definesPackage, typeDefinitionsProjects);
 				}
 				unusedTypeDefinitionProjects.add(dependency);
 			} else {
@@ -63,10 +77,11 @@ public class TypeDefinitionsAwareDependenciesSupplier {
 
 		for (IN4JSProject dependency : runtimeDependencies) {
 			final String projectId = dependency.getProjectId();
-			final IN4JSProject typeDefinitionProject = typeDefinitionsById.get(projectId);
+			final Collection<IN4JSProject> typeDefinitionProjects = typeDefinitionsById.getOrDefault(projectId,
+					Collections.emptyList());
 
-			// first list type definition dependency
-			if (typeDefinitionProject != null) {
+			// first list all type definition dependencies
+			for (IN4JSProject typeDefinitionProject : typeDefinitionProjects) {
 				// only add type definition, if it has not been added further up already
 				if (unusedTypeDefinitionProjects.contains(typeDefinitionProject)) {
 					orderedDependencies.add(typeDefinitionProject);
