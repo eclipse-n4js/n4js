@@ -1,0 +1,5 @@
+import {A} from "A";
+import * as B+ from "B";
+
+const a = new A();
+B;a;
