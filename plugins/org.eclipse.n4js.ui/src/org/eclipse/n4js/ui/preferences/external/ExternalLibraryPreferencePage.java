@@ -15,8 +15,6 @@ import static com.google.common.primitives.Ints.asList;
 import static java.util.Collections.singletonList;
 import static org.eclipse.jface.layout.GridDataFactory.fillDefaults;
 import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.EXTERNAL_LIBRARIES_SUPPLIER;
-import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.N4_NPM_FOLDER_SUPPLIER;
-import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.N4_TYPE_DEFINITIONS_FOLDER_SUPPLIER;
 import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.repairNpmFolderState;
 import static org.eclipse.n4js.ui.preferences.external.ButtonFactoryUtil.createDisabledPushButton;
 import static org.eclipse.n4js.ui.preferences.external.ButtonFactoryUtil.createEnabledPushButton;
@@ -111,7 +109,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	private ExternalLibraryWorkspace externalLibraryWorkspace;
 
 	@Inject
-	private TargetPlatformInstallLocationProvider installLocationProvider;
+	private TargetPlatformInstallLocationProvider locationsProvider;
 
 	@Inject
 	private GitCloneSupplier gitSupplier;
@@ -339,14 +337,14 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	}
 
 	private boolean isNpmWithNameInstalled(final String packageName) {
-		final File root = new File(installLocationProvider.getTargetPlatformNodeModulesLocation());
+		final File root = new File(locationsProvider.getNodeModulesURI());
 		return from(externalLibraryWorkspace.getProjectsIn(root.toURI()))
 				.transform(p -> p.getName())
 				.anyMatch(name -> name.equals(packageName));
 	}
 
 	private Map<String, String> getInstalledNpms() {
-		final URI root = installLocationProvider.getTargetPlatformNodeModulesLocation();
+		final URI root = locationsProvider.getNodeModulesURI();
 		final Set<ProjectDescription> projects = from(externalLibraryWorkspace.getProjectsDescriptions((root))).toSet();
 
 		final Map<String, String> versionedNpms = new HashMap<>();
@@ -474,8 +472,8 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 		if (userChoice.decisionPurgeNpm) {
 
 			// get folders
-			File npmFolder = N4_NPM_FOLDER_SUPPLIER.get();
-			File typesDefFolder = N4_TYPE_DEFINITIONS_FOLDER_SUPPLIER.get();
+			File npmFolder = locationsProvider.getNodeModulesFolder();
+			File typesDefFolder = locationsProvider.getTypeDefinitionsFolder();
 
 			// delete folders
 			if (npmFolder.exists()) {

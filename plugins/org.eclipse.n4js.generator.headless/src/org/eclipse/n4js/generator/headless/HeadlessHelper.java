@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.external.ExternalLibraryUtils;
+import org.eclipse.n4js.external.ExternalLibraryHelper;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
@@ -54,6 +54,9 @@ public class HeadlessHelper {
 
 	@Inject
 	private TargetPlatformInstallLocationProvider targetPlatformInstallLocationProvider;
+
+	@Inject
+	private ExternalLibraryHelper externalLibraryHelper;
 
 	/**
 	 * Configure FileBasedWorkspace with all projects contained in {@code buildSet}.
@@ -252,7 +255,7 @@ public class HeadlessHelper {
 	 */
 	public boolean isProjectToBeBuilt(IN4JSProject project) {
 		if (project.isExternal()) {
-			return ExternalLibraryUtils.isExternalProjectDirectory(project.getLocationPath().toFile());
+			return externalLibraryHelper.isExternalProjectDirectory(project.getLocationPath().toFile());
 		}
 		return true;
 	}

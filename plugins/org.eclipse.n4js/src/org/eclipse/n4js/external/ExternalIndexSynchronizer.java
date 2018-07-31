@@ -25,7 +25,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
-import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
 import org.eclipse.n4js.json.JSON.JSONPackage;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSCore;
@@ -58,10 +57,13 @@ public abstract class ExternalIndexSynchronizer {
 	private IN4JSCore core;
 
 	@Inject
-	private TargetPlatformInstallLocationProvider locationProvider;
+	private TargetPlatformInstallLocationProvider locationsProvider;
 
 	@Inject
 	private ProjectDescriptionLoader projectDescriptionLoader;
+
+	@Inject
+	private ExternalLibraryHelper externalLibraryHelper;
 
 	/**
 	 * Call this method to synchronize the information in the Xtext index with all external projects in the external
@@ -101,16 +103,15 @@ public abstract class ExternalIndexSynchronizer {
 	final public Map<String, Pair<URI, String>> findNpmsInFolder() {
 		Map<String, Pair<URI, String>> npmsFolder = new HashMap<>();
 
-		File typeDefFolder = ExternalLibrariesActivator.N4_TYPE_DEFINITIONS_FOLDER_SUPPLIER.get();
-		java.net.URI nodeModulesLocation = locationProvider.getTargetPlatformNodeModulesLocation();
-		File nodeModulesFolder = new File(nodeModulesLocation.getPath());
+		File typeDefFolder = locationsProvider.getTypeDefinitionsFolder();
+		File nodeModulesFolder = locationsProvider.getNodeModulesFolder();
 		ArrayList<File> rootFolders = Lists.newArrayList(nodeModulesFolder, typeDefFolder);
 		for (File rootFolder : rootFolders) {
 			if (!rootFolder.isDirectory()) {
 				continue;
 			}
 			for (File npmLibrary : rootFolder.listFiles()) {
-				if (!ExternalLibraryUtils.isExternalProjectDirectory(npmLibrary)) {
+				if (!externalLibraryHelper.isExternalProjectDirectory(npmLibrary)) {
 					continue;
 				}
 				String npmName = npmLibrary.getName();
@@ -193,9 +194,8 @@ public abstract class ExternalIndexSynchronizer {
 	private Map<String, Pair<URI, String>> findNpmsInIndex() {
 		Map<String, Pair<URI, String>> npmsIndex = new HashMap<>();
 
-		String nodeModulesLocation = locationProvider.getTargetPlatformNodeModulesLocation().toString();
-		File typeDefLocationFolder = ExternalLibrariesActivator.N4_TYPE_DEFINITIONS_FOLDER_SUPPLIER.get();
-		String typeDefLocation = URI.createFileURI(typeDefLocationFolder.toString()).toString() + File.separator;
+		String nodeModulesLocation = locationsProvider.getNodeModulesURI().toString();
+		String typeDefLocation = locationsProvider.getTypeDefinitionsURI().toString() + File.separator;
 		ResourceSet resourceSet = core.createResourceSet(Optional.absent());
 		IResourceDescriptions index = core.getXtextIndex(resourceSet);
 

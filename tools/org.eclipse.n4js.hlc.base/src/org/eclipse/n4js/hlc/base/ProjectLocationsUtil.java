@@ -32,7 +32,7 @@ public class ProjectLocationsUtil {
 			TargetPlatformInstallLocationProvider installLocationProvider) {
 		final List<File> retList = new ArrayList<>();
 		if (null != installLocationProvider.getTargetPlatformInstallLocation()) {
-			final File tpLoc = new File(installLocationProvider.getTargetPlatformNodeModulesLocation());
+			final File tpLoc = new File(installLocationProvider.getNodeModulesURI());
 			HlcFileUtils.isExistingWriteableDir(tpLoc);
 			retList.add(tpLoc);
 		}

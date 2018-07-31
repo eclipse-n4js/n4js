@@ -98,7 +98,7 @@ public class N4JSModel {
 		boolean external = false;
 		if (null != installLocationProvider.getTargetPlatformInstallLocation()) {
 			Path projectPath = new File(location.toFileString()).toPath();
-			Path nodeModulesPath = new File(installLocationProvider.getTargetPlatformNodeModulesLocation()).toPath();
+			Path nodeModulesPath = new File(installLocationProvider.getNodeModulesURI()).toPath();
 			try {
 
 				final Path projectRoot = projectPath.getRoot();

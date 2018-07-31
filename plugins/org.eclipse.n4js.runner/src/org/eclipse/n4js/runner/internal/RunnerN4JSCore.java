@@ -18,7 +18,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.external.ExternalLibraryUtils;
+import org.eclipse.n4js.external.ExternalLibraryHelper;
 import org.eclipse.n4js.external.libraries.ShippedCodeAccess;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4JSModel;
@@ -42,6 +42,9 @@ public class RunnerN4JSCore {
 
 	@Inject
 	private ProjectDescriptionLoader projectDescriptionLoader;
+
+	@Inject
+	private ExternalLibraryHelper externalLibraryHelper;
 
 	/**
 	 * Returns all shipped projects as iterable. Returned projects are stubs for real {@link N4JSProject}. They
@@ -85,7 +88,7 @@ public class RunnerN4JSCore {
 		File root = new File(rootLocation);
 
 		Arrays.asList(root.listFiles()).stream().filter(File::isDirectory).forEach(projectDir -> {
-			if (ExternalLibraryUtils.isExternalProjectDirectory(projectDir)) {
+			if (externalLibraryHelper.isExternalProjectDirectory(projectDir)) {
 				URI createURI = createProjectUri(projectDir);
 				workspace.registerProject(createURI);
 			} else {

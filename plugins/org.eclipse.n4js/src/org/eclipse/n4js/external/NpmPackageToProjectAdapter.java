@@ -29,7 +29,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.SemverMatcher;
 import org.eclipse.n4js.semver.SemverUtils;
@@ -58,7 +57,7 @@ public class NpmPackageToProjectAdapter {
 	private StatusHelper statusHelper;
 
 	@Inject
-	private TargetPlatformInstallLocationProvider installLocationProvider;
+	private TargetPlatformInstallLocationProvider locationsProvider;
 
 	@Inject
 	private GitCloneSupplier gitCloneSupplier;
@@ -104,7 +103,8 @@ public class NpmPackageToProjectAdapter {
 	 */
 	public Pair<IStatus, Collection<File>> adaptPackages(Collection<String> namesOfPackagesToAdapt) {
 		final MultiStatus status = statusHelper.createMultiStatus("Status of adapting npm packages");
-		final File nodeModulesFolder = new File(installLocationProvider.getTargetPlatformNodeModulesLocation());
+		final File nodeModulesFolder = locationsProvider.getNodeModulesFolder();
+		final File typeDefFolder = locationsProvider.getTypeDefinitionsFolder();
 		final Collection<String> names = newHashSet(namesOfPackagesToAdapt);
 		final File[] packageRoots = nodeModulesFolder.listFiles(packageName -> names.contains(packageName.getName()));
 		final File n4jsdsFolder = getNpmsTypeDefinitionsFolder();
@@ -121,7 +121,6 @@ public class NpmPackageToProjectAdapter {
 				String content = "Temporary marker file. See N4JSGlobals#PACKAGE_MARKER for details.";
 				Files.write(markerFile.toPath(), Collections.singletonList(content)); // will overwrite existing file
 
-				File typeDefFolder = ExternalLibrariesActivator.N4_TYPE_DEFINITIONS_FOLDER_SUPPLIER.get();
 				File newPackageRoot = new File(typeDefFolder, packageRoot.getName() + "-n4jsd");
 				if (!newPackageRoot.exists()) {
 					newPackageRoot.mkdir();
@@ -155,7 +154,7 @@ public class NpmPackageToProjectAdapter {
 	 */
 	File getNpmsTypeDefinitionsFolder(final boolean performGitPull) {
 
-		File repositoryLocation = new File(installLocationProvider.getTargetPlatformLocalGitRepositoryLocation());
+		File repositoryLocation = new File(locationsProvider.getTargetPlatformLocalGitRepositoryLocation());
 
 		if (performGitPull && gitCloneSupplier.remoteRepoAvailable()) {
 			// pull changes
@@ -283,7 +282,7 @@ public class NpmPackageToProjectAdapter {
 	}
 
 	private IStatus copyTypeDefinitionPackage(String packageName, Path sourcePath) {
-		File typeDefFolder = ExternalLibrariesActivator.N4_TYPE_DEFINITIONS_FOLDER_SUPPLIER.get();
+		File typeDefFolder = locationsProvider.getTypeDefinitionsFolder();
 		Path newTargetPath = typeDefFolder.toPath().resolve(packageName + "-n4jsd");
 		IStatus status = copyN4JSDFiles(packageName, sourcePath, newTargetPath);
 		if (!status.isOK()) {

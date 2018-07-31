@@ -13,15 +13,16 @@ package org.eclipse.n4js.external;
 import java.io.File;
 
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
+
+import com.google.inject.Inject;
 
 /**
  * Utilities and core rules for external libraries.
  */
-public final class ExternalLibraryUtils {
+public final class ExternalLibraryHelper {
 
-	private ExternalLibraryUtils() {
-	}
+	@Inject
+	private TargetPlatformInstallLocationProvider locationsProvider;
 
 	/**
 	 * Returns {@code true} iff the given {@link File} represents a project directory in the workspace that is available
@@ -30,13 +31,13 @@ public final class ExternalLibraryUtils {
 	 * This excludes packages that have been installed to the external workspace as transitive dependency of a package
 	 * that has been explicitly installed on user request.
 	 */
-	public static boolean isExternalProjectDirectory(File projectDirectory) {
+	public boolean isExternalProjectDirectory(File projectDirectory) {
 		if (!projectDirectory.isDirectory()) {
 			return false;
 		}
 
 		// GH-821-sub6: remove
-		String typeDefFolder = ExternalLibrariesActivator.N4_TYPE_DEFINITIONS_FOLDER_SUPPLIER.get().toString();
+		String typeDefFolder = locationsProvider.getTypeDefinitionsFolder().toString();
 		if (projectDirectory.toString().startsWith(typeDefFolder)) {
 			return false;
 		}
