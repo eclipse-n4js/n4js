@@ -55,7 +55,8 @@ public interface TargetPlatformInstallLocationProvider {
 	 * @return the URI pointing to the target platform install location.
 	 */
 	default URI getTargetPlatformInstallURI() {
-		return getTargetPlatformInstallFolder().toURI();
+		File tpFolder = getTargetPlatformInstallFolder();
+		return tpFolder == null ? null : tpFolder.toURI();
 	}
 
 	/**

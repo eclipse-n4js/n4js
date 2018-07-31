@@ -12,6 +12,7 @@ package org.eclipse.n4js.validation.validators.packagejson;
 
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNonEmptyStringOrNull;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.DEFAULT_OUTPUT;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROPS__N4JS;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__DEFINES_PACKAGE;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__DEPENDENCIES;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__DEV_DEPENDENCIES;
@@ -399,6 +400,16 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 				PROP__VENDOR_ID);
 		checkIsNonEmptyString(n4jsValues.get(PROP__VENDOR_NAME),
 				PROP__VENDOR_NAME);
+
+		for (String n4jsKey : n4jsValues.keys()) {
+			if (!PROPS__N4JS.contains(n4jsKey)) {
+				for (JSONValue value : n4jsValues.get(n4jsKey)) {
+					String msg = IssueCodes.getMessageForPKGJ_PROPERTY_UNKNOWN(n4jsKey);
+					addIssue(msg, value.eContainer(), JSONPackage.Literals.NAME_VALUE_PAIR__NAME,
+							IssueCodes.PKGJ_PROPERTY_UNKNOWN);
+				}
+			}
+		}
 	}
 
 	/** Check the projectType value structure and limitations. */

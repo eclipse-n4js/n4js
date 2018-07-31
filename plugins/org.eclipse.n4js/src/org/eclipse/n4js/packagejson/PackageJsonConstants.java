@@ -10,9 +10,14 @@
  */
 package org.eclipse.n4js.packagejson;
 
+import java.util.Collections;
+import java.util.Set;
+
 import org.eclipse.n4js.projectDescription.ModuleLoader;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
+
+import com.google.common.collect.Sets;
 
 /**
  * Constants for dealing with package.json files on the generic JSON level. Try to avoid this by using
@@ -84,6 +89,12 @@ public class PackageJsonConstants {
 	public static final String PROP__EXEC_MODULE = "execModule";
 	/** Key of package.json property "definesPackage". */
 	public static final String PROP__DEFINES_PACKAGE = "definesPackage";
+	/** All keys of N4JS property */
+	public static final Set<String> PROPS__N4JS = Collections.unmodifiableSet(Sets.newHashSet(PROP__PROJECT_TYPE,
+			PROP__VENDOR_ID, PROP__VENDOR_NAME, PROP__OUTPUT, PROP__SOURCES, PROP__MODULE_FILTERS, PROP__MAIN_MODULE,
+			PROP__TESTED_PROJECTS, PROP__IMPLEMENTATION_ID, PROP__IMPLEMENTED_PROJECTS,
+			PROP__EXTENDED_RUNTIME_ENVIRONMENT, PROP__PROVIDED_RUNTIME_LIBRARIES, PROP__REQUIRED_RUNTIME_LIBRARIES,
+			PROP__MODULE_LOADER, PROP__INIT_MODULES, PROP__EXEC_MODULE, PROP__DEFINES_PACKAGE));
 
 	// properties of module filter specifiers:
 
