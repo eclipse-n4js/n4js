@@ -53,8 +53,7 @@ import org.eclipse.n4js.external.HeadlessTargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider;
-import org.eclipse.n4js.external.libraries.PackageJson;
-import org.eclipse.n4js.external.libraries.TargetPlatformFactory;
+import org.eclipse.n4js.external.libraries.ExternalLibraryFolderUtils;
 import org.eclipse.n4js.generator.headless.BuildSet;
 import org.eclipse.n4js.generator.headless.BuildSetComputer;
 import org.eclipse.n4js.generator.headless.HeadlessHelper;
@@ -626,8 +625,8 @@ public class N4jscBase implements IApplication {
 				gitLocationProvider.getGitLocation().getRemoteBranch(), true);
 		pull(localClonePath);
 
-		// generate n4tp file for libManager to use
-		PackageJson packageJson = TargetPlatformFactory.createN4Default();
+		// generate initial target platform package.json file for libManager to use
+		String packageJson = ExternalLibraryFolderUtils.createTargetPlatformPackageJson();
 		java.net.URI platformLocation = locationProvider.getTargetPlatformInstallLocation();
 		File packageJsonFile = new File(new File(platformLocation), N4JSGlobals.PACKAGE_JSON);
 		try {
@@ -636,7 +635,7 @@ public class N4jscBase implements IApplication {
 			if (!packageJsonFile.exists()) {
 				packageJsonFile.createNewFile();
 				try (PrintWriter pw = new PrintWriter(packageJsonFile)) {
-					pw.write(packageJson.toString());
+					pw.write(packageJson);
 					pw.flush();
 					locationProvider.setTargetPlatformFileLocation(packageJsonFile.toURI());
 				}

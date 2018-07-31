@@ -28,9 +28,9 @@ import org.eclipse.n4js.N4JSGlobals;
 import com.google.common.io.Files;
 
 /**
- * Helper that scans file system of the projects in the workspace for {@code .npmrc} and {@code *.n4tp} settings files.
- * Considers projects folders or their git repo folders as root folders to scan. Will avoid scanning same paths multiple
- * times, even if multiple workspace projects are contained in the same git repo.
+ * Helper that scans file system of the projects in the workspace for {@code .npmrc} settings files. Considers projects
+ * folders or their git repo folders as root folders to scan. Will avoid scanning same paths multiple times, even if
+ * multiple workspace projects are contained in the same git repo.
  */
 public final class ProjectsSettingsFilesLocator {
 	private static final String GIT = ".git";

@@ -19,6 +19,8 @@ import static com.google.common.collect.Maps.newLinkedHashMap;
 import static java.lang.Boolean.parseBoolean;
 import static org.eclipse.core.runtime.Platform.inDebugMode;
 import static org.eclipse.core.runtime.Platform.inDevelopmentMode;
+import static org.eclipse.n4js.external.libraries.ExternalLibraryFolderUtils.NPM_ROOT;
+import static org.eclipse.n4js.external.libraries.ExternalLibraryFolderUtils.PACKAGE_JSON;
 import static org.eclipse.xtext.util.Tuples.pair;
 
 import java.io.File;
@@ -98,9 +100,6 @@ public class ExternalLibrariesActivator implements BundleActivator {
 			.add(MANGELHAFT_CATEGORY)
 			.add(NPM_CATEGORY)
 			.build();
-
-	/** Unique name of the root npm folder for N4JS. */
-	public static final String NPM_ROOT = ".n4npm";
 
 	private static final Function<URL, URL> URL_TO_FILE_URL_FUNC = url -> {
 		try {
@@ -342,12 +341,12 @@ public class ExternalLibrariesActivator implements BundleActivator {
 		}
 		checkState(nodeModulesFolder.isDirectory(), "Expecting directory but was a file: " + nodeModulesFolder + ".");
 
-		final File targetPlatformFile = new File(targetPlatform, PackageJson.PACKAGE_JSON);
+		final File targetPlatformFile = new File(targetPlatform, PACKAGE_JSON);
 		if (!targetPlatformFile.exists()) {
 			try {
 				checkState(targetPlatformFile.createNewFile(), "Error while creating default target platform file.");
 				try (final FileWriter fw = new FileWriter(targetPlatformFile)) {
-					fw.write(TargetPlatformFactory.createN4Default().toString());
+					fw.write(ExternalLibraryFolderUtils.createTargetPlatformPackageJson());
 					fw.flush();
 				}
 			} catch (final IOException e) {

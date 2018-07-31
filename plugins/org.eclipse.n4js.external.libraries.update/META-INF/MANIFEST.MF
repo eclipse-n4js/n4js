@@ -13,6 +13,8 @@ Require-Bundle: com.google.guava,
  org.eclipse.n4js.external.libraries,
  org.eclipse.n4js.hlc.base,
  org.eclipse.n4js.utils,
- com.fasterxml.jackson.core.jackson-core
+ com.fasterxml.jackson.core.jackson-core,
+ com.fasterxml.jackson.core.jackson-databind,
+ com.fasterxml.jackson.core.jackson-annotations
 Export-Package: org.eclipse.n4js.external.libraries.update
 Automatic-Module-Name: org.eclipse.n4js.external.libraries.update
