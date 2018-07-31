@@ -195,7 +195,7 @@ public abstract class ExternalIndexSynchronizer {
 
 		String nodeModulesLocation = locationProvider.getTargetPlatformNodeModulesLocation().toString();
 		File typeDefLocationFolder = ExternalLibrariesActivator.N4_TYPE_DEFINITIONS_FOLDER_SUPPLIER.get();
-		String typeDefLocation = URI.createFileURI(typeDefLocationFolder.toString()).toString();
+		String typeDefLocation = URI.createFileURI(typeDefLocationFolder.toString()).toString() + File.separator;
 		ResourceSet resourceSet = core.createResourceSet(Optional.absent());
 		IResourceDescriptions index = core.getXtextIndex(resourceSet);
 

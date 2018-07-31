@@ -13,6 +13,7 @@ package org.eclipse.n4js.external;
 import java.io.File;
 
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
 
 /**
  * Utilities and core rules for external libraries.
@@ -33,6 +34,13 @@ public final class ExternalLibraryUtils {
 		if (!projectDirectory.isDirectory()) {
 			return false;
 		}
+
+		// GH-821-sub6: remove
+		String typeDefFolder = ExternalLibrariesActivator.N4_TYPE_DEFINITIONS_FOLDER_SUPPLIER.get().toString();
+		if (projectDirectory.toString().startsWith(typeDefFolder)) {
+			return false;
+		}
+
 		// check whether package.json and package.marker files exists
 		// (we here require package.marker in order to return false for packages that have been installed as
 		// transitive dependency, i.e. indirectly by "npm install"; see N4JSGlobals#PACKAGE_MARKER for details)

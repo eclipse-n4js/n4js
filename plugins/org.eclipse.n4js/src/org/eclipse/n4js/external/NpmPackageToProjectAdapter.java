@@ -123,6 +123,9 @@ public class NpmPackageToProjectAdapter {
 
 				File typeDefFolder = ExternalLibrariesActivator.N4_TYPE_DEFINITIONS_FOLDER_SUPPLIER.get();
 				File newPackageRoot = new File(typeDefFolder, packageRoot.getName() + "-n4jsd");
+				if (!newPackageRoot.exists()) {
+					newPackageRoot.mkdir();
+				}
 				File markerFile2 = new File(newPackageRoot, N4JSGlobals.PACKAGE_MARKER);
 				Files.write(markerFile2.toPath(), Collections.singletonList(content)); // will overwrite existing file
 			} catch (final Exception e) {
