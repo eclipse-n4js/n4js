@@ -22,6 +22,8 @@ import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
 /**
  * Provides information about the target platform install location and about the location of the actual target platform
  * file.
+ * <p>
+ * Keep folder computations in sync with {@link ExternalLibrariesActivator}!
  */
 public interface TargetPlatformInstallLocationProvider {
 
@@ -91,12 +93,12 @@ public interface TargetPlatformInstallLocationProvider {
 		return getFolderInTargetPlatformLocation(TYPE_DEFINITIONS_FOLDER);
 	}
 
-	/** @return the {@link URI} pointing to the given folder inside the target platf. */
+	/** @return the {@link URI} pointing to the given folder inside the target platform */
 	default URI getURIInTargetPlatformLocation(String folderName) {
 		return getFolderInTargetPlatformLocation(folderName).toURI();
 	}
 
-	/** @return the {@link File} pointing to the given folder inside the target platf. */
+	/** @return the {@link File} pointing to the given folder inside the target platform */
 	default File getFolderInTargetPlatformLocation(String folderName) {
 		synchronized (folderName) {
 			if (null == getTargetPlatformInstallURI()) {
@@ -134,14 +136,14 @@ public interface TargetPlatformInstallLocationProvider {
 	 * @return the URI pointing to the local git repository location for the N4JSD files in the file system.
 	 */
 	default URI getTargetPlatformLocalGitRepositoryLocation() {
-		if (null == getTargetPlatformInstallURI()) {
+		if (null == getTargetPlatformInstallFolder()) {
 			final String message = "Target platform install location was not specified.";
 			final NullPointerException exception = new NullPointerException(message);
 			LOGGER.error(message, exception);
 			exception.printStackTrace(); // This if for the HLC as it swallows the actual stack trace.
 			throw exception;
 		}
-		final File installLocation = new File(getTargetPlatformInstallURI());
+		final File installLocation = getTargetPlatformInstallFolder();
 		checkState(installLocation.isDirectory(), "Cannot locate target platform install location: " + installLocation);
 		// The local git repository should be a sibling folder of the install location.
 		File parentFile = installLocation.getParentFile();
@@ -159,4 +161,17 @@ public interface TargetPlatformInstallLocationProvider {
 		return gitRoot.toURI();
 	}
 
+	/**
+	 * Recreates the folders node_modules and type_definitions.
+	 *
+	 * @return true if folder were recreated and exist
+	 */
+	default boolean repairNpmFolderState() {
+		boolean success = true;
+		File npmFile = getNodeModulesFolder();
+		File tdFile = getTypeDefinitionsFolder();
+		success &= npmFile != null && npmFile.isDirectory();
+		success &= tdFile != null && tdFile.isDirectory();
+		return success;
+	}
 }

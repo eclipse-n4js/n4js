@@ -15,7 +15,6 @@ import static com.google.common.primitives.Ints.asList;
 import static java.util.Collections.singletonList;
 import static org.eclipse.jface.layout.GridDataFactory.fillDefaults;
 import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.EXTERNAL_LIBRARIES_SUPPLIER;
-import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.repairNpmFolderState;
 import static org.eclipse.n4js.ui.preferences.external.ButtonFactoryUtil.createDisabledPushButton;
 import static org.eclipse.n4js.ui.preferences.external.ButtonFactoryUtil.createEnabledPushButton;
 import static org.eclipse.n4js.ui.utils.DelegatingSelectionAdapter.createSelectionListener;
@@ -488,7 +487,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 			// re-create folders
 			if (!npmFolder.exists() || !typesDefFolder.exists()) {
 				// recreate folders
-				boolean repairSucceeded = repairNpmFolderState();
+				boolean repairSucceeded = locationsProvider.repairNpmFolderState();
 				if (!repairSucceeded) {
 					multistatus.merge(statusHelper.createError("The npm folder was not recreated correctly."));
 				}

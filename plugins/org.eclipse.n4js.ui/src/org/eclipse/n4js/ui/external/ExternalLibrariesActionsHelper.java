@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.ui.external;
 
-import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.repairNpmFolderState;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
@@ -111,7 +109,7 @@ public class ExternalLibrariesActionsHelper {
 
 		if (!npmFolder.exists()) {
 			// recreate npm folder
-			if (!repairNpmFolderState()) {
+			if (!locationsProvider.repairNpmFolderState()) {
 				multistatus.merge(statusHelper
 						.createError("The npm folder was not recreated correctly."));
 			}

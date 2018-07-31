@@ -51,6 +51,8 @@ import com.google.common.collect.ImmutableMap;
 
 /**
  * Activator for the bundle that holds all the external/built-in libraries.
+ * <p>
+ * Keep folder computations in sync with TargetPlatformInstallLocationProvider!
  */
 @SuppressWarnings("restriction")
 public class ExternalLibrariesActivator implements BundleActivator {
@@ -202,34 +204,12 @@ public class ExternalLibrariesActivator implements BundleActivator {
 	 */
 	public static final Supplier<File> N4_NPM_FOLDER_SUPPLIER = memoize(() -> getOrCreateNpmFolder());
 
-	/**
-	 * Supplies the {@code .n4npm/type_defintions} folder location form the worksapce's {@code .metadata} folder. This
-	 * could be missing if the {@link Platform platform} is not running.
-	 */
-	private static final Supplier<File> N4_TYPE_DEFINITIONS_FOLDER_SUPPLIER = memoize(
-			() -> getOrCreateTypeDefinitionsFolder());
-
-	/**
-	 * Repairs (if necessary) npm and type_definitions folder integrity. In most cases that is unnecessary, but in case
-	 * folder supplier by {@link #N4_NPM_FOLDER_SUPPLIER} or by {@link #N4_TYPE_DEFINITIONS_FOLDER_SUPPLIER} is broken
-	 * this method will try to recreate it.
-	 *
-	 * @return true if folders match expected state
-	 */
-	public static final boolean repairNpmFolderState() {
-		boolean success = true;
-		synchronized (N4_NPM_FOLDER_SUPPLIER) {
-			File npmFile = N4_NPM_FOLDER_SUPPLIER.get();
-			File newFile = getOrCreateNpmFolder();
-			success &= newFile.getAbsolutePath().equals(npmFile.getAbsolutePath());
-		}
-		synchronized (N4_TYPE_DEFINITIONS_FOLDER_SUPPLIER) {
-			File tdFile = N4_TYPE_DEFINITIONS_FOLDER_SUPPLIER.get();
-			File newFile = getOrCreateTypeDefinitionsFolder();
-			success &= newFile.getAbsolutePath().equals(tdFile.getAbsolutePath());
-		}
-		return success;
-	}
+	// /**
+	// * Supplies the {@code .n4npm/type_defintions} folder location form the worksapce's {@code .metadata} folder. This
+	// * could be missing if the {@link Platform platform} is not running.
+	// */
+	// private static final Supplier<File> N4_TYPE_DEFINITIONS_FOLDER_SUPPLIER = memoize(
+	// () -> getOrCreateTypeDefinitionsFolder());
 
 	/** Shared private bundle context. */
 	private static BundleContext context;
@@ -247,7 +227,6 @@ public class ExternalLibrariesActivator implements BundleActivator {
 	public void start(final BundleContext bundleContext) throws Exception {
 		context = bundleContext;
 		N4_NPM_FOLDER_SUPPLIER.get();
-		N4_TYPE_DEFINITIONS_FOLDER_SUPPLIER.get();
 	}
 
 	@Override
@@ -346,9 +325,9 @@ public class ExternalLibrariesActivator implements BundleActivator {
 		// npm packages first to be able to shadow runtime libraries and Mangelhaft from npm packages.
 		final File targetPlatformInstallLocation = N4_NPM_FOLDER_SUPPLIER.get();
 		final File nodeModulesFolder = new File(targetPlatformInstallLocation, NPM_CATEGORY);
+		final File typeDefinitionsFolder = new File(targetPlatformInstallLocation, TYPE_DEFINITIONS_CATEGORY);
 		uriMappings.put(nodeModulesFolder.toURI(), NPM_CATEGORY);
-		final File typeDefinitionsInstallLocation = N4_TYPE_DEFINITIONS_FOLDER_SUPPLIER.get();
-		uriMappings.put(typeDefinitionsInstallLocation.toURI(), TYPE_DEFINITIONS_CATEGORY);
+		uriMappings.put(typeDefinitionsFolder.toURI(), TYPE_DEFINITIONS_CATEGORY);
 
 		for (final Pair<URI, String> pair : uriNamePairs) {
 			uriMappings.put(pair.getFirst(), pair.getSecond());
@@ -361,10 +340,14 @@ public class ExternalLibrariesActivator implements BundleActivator {
 	private static File getOrCreateNpmFolder() {
 		final File targetPlatform = getOrCreateNestedFolder(NPM_ROOT);
 		final File nodeModulesFolder = new File(targetPlatform, NPM_CATEGORY);
+		final File typeDefinitionsFolder = new File(targetPlatform, TYPE_DEFINITIONS_CATEGORY);
 		if (!nodeModulesFolder.exists()) {
 			checkState(nodeModulesFolder.mkdir(), "Error while creating " + nodeModulesFolder + " folder.");
+			checkState(typeDefinitionsFolder.mkdir(), "Error while creating " + typeDefinitionsFolder + " folder.");
 		}
 		checkState(nodeModulesFolder.isDirectory(), "Expecting directory but was a file: " + nodeModulesFolder + ".");
+		checkState(typeDefinitionsFolder.isDirectory(),
+				"Expecting directory but was a file: " + typeDefinitionsFolder + ".");
 
 		final File targetPlatformFile = new File(targetPlatform, PackageJson.PACKAGE_JSON);
 		if (!targetPlatformFile.exists()) {
@@ -386,14 +369,4 @@ public class ExternalLibrariesActivator implements BundleActivator {
 		return targetPlatform;
 	}
 
-	private static File getOrCreateTypeDefinitionsFolder() {
-		final File typeDefinitionsFolder = getOrCreateNestedFolder(TYPE_DEFINITIONS_CATEGORY);
-		if (!typeDefinitionsFolder.exists()) {
-			checkState(typeDefinitionsFolder.mkdir(), "Error while creating " + typeDefinitionsFolder + " folder.");
-		}
-		checkState(typeDefinitionsFolder.isDirectory(),
-				"Expecting directory but was a file: " + typeDefinitionsFolder + ".");
-
-		return typeDefinitionsFolder;
-	}
 }
