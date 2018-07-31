@@ -11,24 +11,15 @@
 package org.eclipse.n4js.packagejson
 
 import com.google.common.base.Optional
-import java.io.IOException
-import java.io.StringWriter
 import java.util.Map
 import java.util.SortedMap
-import org.eclipse.emf.common.util.URI
-import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.emf.ecore.resource.ResourceSet
 import org.eclipse.n4js.json.JSON.JSONArray
 import org.eclipse.n4js.json.JSON.JSONDocument
 import org.eclipse.n4js.json.JSON.JSONFactory
 import org.eclipse.n4js.json.JSON.JSONObject
-import org.eclipse.n4js.json.JSONGlobals
 import org.eclipse.n4js.json.model.utils.JSONModelUtils
 import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectDescription.SourceContainerType
-import org.eclipse.n4js.utils.languages.N4LanguageUtils
-import org.eclipse.xtext.resource.SaveOptions
-import org.eclipse.xtext.serializer.ISerializer
 
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__DEPENDENCIES
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__EXTENDED_RUNTIME_ENVIRONMENT
@@ -187,30 +178,5 @@ package class PackageJsonContentProvider {
 		if (projectType == ProjectType.RUNTIME_LIBRARY)
 			return "runtimeLibrary";
 		return projectType.getName().toLowerCase();
-	}
-
-	/** Serializes the given {@link JSONDocument} using the Xtext serialization facilities provided by the JSON language. */
-	package static def String serializeJSON(JSONDocument document) {
-		val ISerializer jsonSerializer = N4LanguageUtils.getServiceForContext(JSONGlobals.FILE_EXTENSION, ISerializer).
-			get();
-		val ResourceSet resourceSet = N4LanguageUtils.getServiceForContext(JSONGlobals.FILE_EXTENSION, ResourceSet).
-			get();
-
-		// Use temporary Resource as AbstractFormatter2 implementations can only format
-		// semantic elements that are contained in a Resource.
-		val Resource temporaryResource = resourceSet.createResource(URI.createFileURI("__synthetic.json"));
-		temporaryResource.getContents().add(document);
-
-		// create string writer as serialization output
-		val StringWriter writer = new StringWriter();
-
-		// enable formatting as serialization option
-		val SaveOptions serializerOptions = SaveOptions.newBuilder().format().getOptions();
-		try {
-			jsonSerializer.serialize(document, writer, serializerOptions)
-			return writer.toString;
-		} catch (IOException e) {
-			throw new RuntimeException("Failed to serialize JSONDocument " + document, e);
-		}
 	}
 }

@@ -83,9 +83,6 @@ Contributors:
 		<module>org.eclipse.n4js.tester.ui</module>
 		<module>org.eclipse.n4js.tester.nodejs</module>
 		<module>org.eclipse.n4js.tester.nodejs.ui</module>
-		<!-- npm exporter -->
-		<module>org.eclipse.n4js.npmexporter</module>
-		<module>org.eclipse.n4js.npmexporter.ui</module>
 	</modules>
 
 	<properties>
