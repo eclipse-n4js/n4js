@@ -152,7 +152,7 @@ class TypeDefinitionsAwareDependenciesSupplierTest extends Assert {
 		val orderedDependencies = dependencySupplier.get(client);
 		
 		val orderRepresentation = orderedDependencies.join(" ");
-		val problems = checkTypeDefinitionsOccurBeforeImplementationProjects(orderedDependencies + #[typeDefProjectWithImpl.get(0)]);
+		val problems = checkTypeDefinitionsOccurBeforeImplementationProjects(orderedDependencies);
 		
 		assertEquals("Expected all type definitions to be listed before their implementation projects." 
 			+ orderRepresentation + ".", "", problems.join("\n"));
