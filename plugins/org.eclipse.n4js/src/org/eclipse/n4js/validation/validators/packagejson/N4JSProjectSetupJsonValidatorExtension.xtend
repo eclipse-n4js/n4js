@@ -1014,6 +1014,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			case API: createAPIDependenciesPredicate
 			// runtime libraries may only depend on other runtime libraries
 			case RUNTIME_LIBRARY: RL_TYPE.forN4jsProjects
+			// TODO GH-821 consider special case for type definition dependencies
 			// otherwise, any project type, but definition projects, may be declared as dependency
 			default: not(DEFINITION_TYPE).forN4jsProjects
 		}
