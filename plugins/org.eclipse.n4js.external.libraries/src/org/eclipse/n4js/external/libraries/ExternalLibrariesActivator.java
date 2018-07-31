@@ -343,6 +343,8 @@ public class ExternalLibrariesActivator implements BundleActivator {
 		final File typeDefinitionsFolder = new File(targetPlatform, TYPE_DEFINITIONS_CATEGORY);
 		if (!nodeModulesFolder.exists()) {
 			checkState(nodeModulesFolder.mkdir(), "Error while creating " + nodeModulesFolder + " folder.");
+		}
+		if (!typeDefinitionsFolder.exists()) {
 			checkState(typeDefinitionsFolder.mkdir(), "Error while creating " + typeDefinitionsFolder + " folder.");
 		}
 		checkState(nodeModulesFolder.isDirectory(), "Expecting directory but was a file: " + nodeModulesFolder + ".");
