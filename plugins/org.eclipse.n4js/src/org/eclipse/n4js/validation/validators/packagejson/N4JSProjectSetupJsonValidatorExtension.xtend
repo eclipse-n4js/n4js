@@ -1149,6 +1149,9 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 						addIssue(getMessageForNON_EXISTING_PROJECT(id), ref.astRepresentation, NON_EXISTING_PROJECT);
 					}
 					return;
+				} else {
+					// keep track of actually existing projects
+					existentIds.put(id, ref);
 				}
 				
 				// create only a  single validation issue for a particular project reference.
@@ -1171,7 +1174,6 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 					checkVersions(ref, id, allProjects);
 				}
 				
-				existentIds.put(id, ref);
 			}
 		];
 	
