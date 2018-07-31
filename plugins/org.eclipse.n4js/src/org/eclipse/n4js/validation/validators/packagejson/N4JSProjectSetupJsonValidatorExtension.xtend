@@ -593,8 +593,8 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		
 		// check corresponding runtime dependency has been declared
 		if (!declaredDependencyIds.containsKey(definesPackage)) {
-			addIssue(IssueCodes.getMessageForPKGJ_TYPE_DEPENDENCY_WO_IMPLEMENTATION(reference.referencedProjectId, definesPackage),
-				reference.astRepresentation, IssueCodes.PKGJ_TYPE_DEPENDENCY_WO_IMPLEMENTATION);
+			addIssue(IssueCodes.getMessageForPKGJ_IMPL_PROJECT_IS_MISSING_FOR_TYPE_DEF(definesPackage, reference.referencedProjectId),
+				reference.astRepresentation, IssueCodes.PKGJ_IMPL_PROJECT_IS_MISSING_FOR_TYPE_DEF);
 		}
 	}
 
@@ -1014,7 +1014,8 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			case API: createAPIDependenciesPredicate
 			// runtime libraries may only depend on other runtime libraries
 			case RUNTIME_LIBRARY: RL_TYPE.forN4jsProjects
-			// TODO GH-821 consider special case for type definition dependencies
+			// definition project may depend on any type of other projects
+			case DEFINITION: Predicates.alwaysTrue
 			// otherwise, any project type, but definition projects, may be declared as dependency
 			default: not(DEFINITION_TYPE).forN4jsProjects
 		}
