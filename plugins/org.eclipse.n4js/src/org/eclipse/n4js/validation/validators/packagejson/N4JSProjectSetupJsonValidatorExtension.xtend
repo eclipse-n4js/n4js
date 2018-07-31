@@ -1014,17 +1014,17 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			case API: createAPIDependenciesPredicate
 			// runtime libraries may only depend on other runtime libraries
 			case RUNTIME_LIBRARY: RL_TYPE.forN4jsProjects
-			// definition project may depend on any type of other projects
-			case DEFINITION: Predicates.alwaysTrue
+			// definition project may only depend on other "definition" projects
+			case DEFINITION: DEFINITION_TYPE.forN4jsProjects
 			// otherwise, any project type, but definition projects, may be declared as dependency
 			default: not(DEFINITION_TYPE).forN4jsProjects
 		}
 	}
 
 	/**
-	  * Intermediate validation-only representation of a project reference.
+	  * Intermediate validation-only representation of a project reference.*
 	  * 
-	  * This may or may not include an {@link #versionConstraint}.
+	  * This may or may not include a {@link #versionConstraint}.
 	  * 
 	  * Holds a trace link {@link #astRepresentation} to its original AST element, so that
 	  * check methods can add issues to the actual elements. 
