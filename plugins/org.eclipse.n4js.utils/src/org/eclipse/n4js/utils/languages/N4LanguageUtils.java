@@ -23,8 +23,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.ParserRule;
 import org.eclipse.xtext.nodemodel.SyntaxErrorMessage;
-import org.eclipse.xtext.parser.AbstractParser;
 import org.eclipse.xtext.parser.IParseResult;
+import org.eclipse.xtext.parser.IParser;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 
 import com.google.common.collect.Iterables;
@@ -66,7 +66,7 @@ public class N4LanguageUtils {
 	 */
 	public static <T extends EObject> ParseResult<T> parseXtextLanguage(String fileExtOfLanguage,
 			ParserRule parserRuleOrNull, Class<T> expectedTypeOfRoot, String source) {
-		final AbstractParser parser = getServiceForContext(fileExtOfLanguage, AbstractParser.class)
+		final IParser parser = getServiceForContext(fileExtOfLanguage, IParser.class)
 				.orElseThrow(() -> new RuntimeException(
 						"Cannot obtain Xtext parser for language with file extension: " + fileExtOfLanguage));
 		final IParseResult result;
