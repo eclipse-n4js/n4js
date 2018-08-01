@@ -145,8 +145,7 @@ For type definition projects, the following constraints must hold true with rega
 
 1. They must declare their _implementation project_ via the <<package-json-definesPackage>> property in their `package.json` file.
 2. They must not declare an output folder.
-3. They may only declare dependencies via the <<package-json-dependencies>> or <<package-json-devDependencies>> section.
-4. They may only declare dependencies on other projects of type "definition".
+3. They may not declare any type dependencies via the <<package-json-typeDependencies>> property.
 
 --
 
