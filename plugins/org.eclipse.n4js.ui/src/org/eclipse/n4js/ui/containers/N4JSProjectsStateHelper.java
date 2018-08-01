@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.internal.TypeDefinitionsAwareDependenciesSupplier;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.ui.internal.WorkspaceCacheAccess;
@@ -56,6 +57,9 @@ public class N4JSProjectsStateHelper extends AbstractStorage2UriMapperClient {
 
 	@Inject
 	private WorkspaceCacheAccess cacheAccess;
+
+	@Inject
+	private TypeDefinitionsAwareDependenciesSupplier dependencySupplier;
 
 	public String initHandle(URI uri) {
 		String handle = null;
@@ -101,7 +105,7 @@ public class N4JSProjectsStateHelper extends AbstractStorage2UriMapperClient {
 	private void fullCollectLocationHandles(List<String> result, IN4JSProject project) {
 		collectLocationHandles(project, result);
 
-		for (IN4JSProject dependency : project.getDependencies()) {
+		for (IN4JSProject dependency : dependencySupplier.get(project)) {
 			collectLocationHandles(dependency, result);
 		}
 	}

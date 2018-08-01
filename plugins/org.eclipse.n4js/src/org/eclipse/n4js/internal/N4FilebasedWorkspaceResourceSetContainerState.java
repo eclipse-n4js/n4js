@@ -19,7 +19,6 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.xtext.resource.containers.ResourceSetBasedAllContainersState;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 
 /**
@@ -30,7 +29,7 @@ public class N4FilebasedWorkspaceResourceSetContainerState extends ResourceSetBa
 	private IN4JSCore in4jscore;
 
 	@Inject
-	private N4JSModel n4jsmodel;
+	private TypeDefinitionsAwareDependenciesSupplier dependencySupplier;
 
 	/**
 	 * @param handle
@@ -52,7 +51,7 @@ public class N4FilebasedWorkspaceResourceSetContainerState extends ResourceSetBa
 			throw new IllegalStateException("No project with handle '" + handle + "' known in current In4jscore.");
 		}
 
-		ImmutableList<? extends IN4JSProject> dps = n4jsmodel.getDependencies((N4JSProject) project.get(), false);
+		Iterable<? extends IN4JSProject> dps = dependencySupplier.get(project.get());
 		// map uri to handle-form and add.
 		dps.forEach(d -> visibleContainers.add(FileBasedWorkspace.handleFrom(d.getLocation())));
 

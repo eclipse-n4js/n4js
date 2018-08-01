@@ -19,6 +19,7 @@ import static org.eclipse.n4js.packagejson.PackageJsonConstants.DEFAULT_MODULE_L
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.DEFAULT_OUTPUT;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.DEFAULT_VENDOR_ID;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.DEFAULT_VERSION;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__DEFINES_PACKAGE;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__DEPENDENCIES;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__DEV_DEPENDENCIES;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__EXEC_MODULE;
@@ -38,6 +39,7 @@ import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__PROVIDED_R
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__REQUIRED_RUNTIME_LIBRARIES;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__SOURCES;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__TESTED_PROJECTS;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__TYPE_DEPENDENCIES;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__VENDOR_ID;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__VENDOR_NAME;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__VERSION;
@@ -196,6 +198,13 @@ public class PackageJsonHelper {
 				break;
 			case PROP__EXEC_MODULE:
 				target.setExecModule(asBootstrapModuleOrNull(value));
+				break;
+			case PROP__DEFINES_PACKAGE:
+				target.setDefinesPackage(asStringOrNull(value));
+				break;
+			case PROP__TYPE_DEPENDENCIES:
+				// in the context of N4JS, type dependencies are considered regular project dependencies
+				convertDependencies(target, asNameValuePairsOrEmpty(value), true);
 				break;
 			}
 		}

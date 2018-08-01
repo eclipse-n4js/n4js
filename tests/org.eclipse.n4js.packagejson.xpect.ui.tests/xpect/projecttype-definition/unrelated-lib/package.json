@@ -1,0 +1,13 @@
+{
+	"name": "unrelated-lib",
+	"version": "0.0.1",
+	"n4js": {
+		"projectType": "library",
+		"sources": {
+			"source": [
+				"src"
+			]
+		},
+		"output": "src-gen"
+	}	
+}

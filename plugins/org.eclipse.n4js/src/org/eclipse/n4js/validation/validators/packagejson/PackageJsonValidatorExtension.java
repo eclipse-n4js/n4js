@@ -33,6 +33,7 @@ import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__REQUIRED_R
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__SOURCES;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__SOURCE_CONTAINER;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__TESTED_PROJECTS;
+import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__TYPE_DEPENDENCIES;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__VENDOR_ID;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__VENDOR_NAME;
 import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__VERSION;
@@ -341,6 +342,12 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	@CheckProperty(propertyPath = PROP__DEV_DEPENDENCIES)
 	public void checkDevDependenciesStructure(JSONValue devDependenciesValue) {
 		checkIsDependenciesSection(devDependenciesValue);
+	}
+
+	/** Check the typeDependencies section structure. */
+	@CheckProperty(propertyPath = PROP__N4JS + "." + PROP__TYPE_DEPENDENCIES)
+	public void checkTypeDependenciesStructure(JSONValue typeDependenciesValue) {
+		checkIsDependenciesSection(typeDependenciesValue);
 	}
 
 	/**
