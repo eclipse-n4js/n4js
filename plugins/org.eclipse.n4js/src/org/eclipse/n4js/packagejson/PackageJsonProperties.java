@@ -10,9 +10,10 @@
  */
 package org.eclipse.n4js.packagejson;
 
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.n4js.projectDescription.ModuleLoader;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
@@ -108,15 +109,31 @@ public enum PackageJsonProperties {
 		this.defaultValue = defaultValue;
 	}
 
+	static private Map<String, PackageJsonProperties> nameToEnum = new HashMap<>();
+	static {
+		for (PackageJsonProperties prop : PackageJsonProperties.values()) {
+			if (nameToEnum.containsKey(prop.name)) {
+				nameToEnum.put(prop.name, null); // ensure that props with the same name return null here
+			} else {
+				nameToEnum.put(prop.name, prop);
+			}
+		}
+	}
+
+	/** @return the result of {@link Enum#valueOf(Class, String)} or null. Does not throw an {@link Exception}. */
+	static public PackageJsonProperties valueOfOrNull(String name) {
+		return nameToEnum.getOrDefault(name, null);
+	}
+
 	/**
 	 * @return all enum values of {@link PackageJsonProperties} which are direct children of
 	 *         {@link PackageJsonProperties#N4JS}
 	 */
-	static public Collection<PackageJsonProperties> getAllN4JSProperties() {
-		List<PackageJsonProperties> n4jsProps = new LinkedList<>();
+	static public Set<String> getAllN4JSPropertyNames() {
+		Set<String> n4jsProps = new HashSet<>();
 		for (PackageJsonProperties value : PackageJsonProperties.values()) {
 			if (value.parents.length == 1 && value.parents[0] == PackageJsonProperties.N4JS) {
-				n4jsProps.add(value);
+				n4jsProps.add(value.name);
 			}
 		}
 		return n4jsProps;

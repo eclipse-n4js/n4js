@@ -95,7 +95,11 @@ public class PackageJsonHelper {
 	private void convertRootPairs(ProjectDescription target, List<NameValuePair> rootPairs) {
 		for (NameValuePair pair : rootPairs) {
 			String name = pair.getName();
-			PackageJsonProperties property = PackageJsonProperties.valueOf(name);
+			PackageJsonProperties property = PackageJsonProperties.valueOfOrNull(name);
+			if (property == null) {
+				continue;
+			}
+
 			JSONValue value = pair.getValue();
 			switch (property) {
 			case NAME:
@@ -129,7 +133,11 @@ public class PackageJsonHelper {
 	private void convertN4jsPairs(ProjectDescription target, List<NameValuePair> n4jsPairs) {
 		for (NameValuePair pair : n4jsPairs) {
 			String name = pair.getName();
-			PackageJsonProperties property = PackageJsonProperties.valueOf(name);
+			PackageJsonProperties property = PackageJsonProperties.valueOfOrNull(name);
+			if (property == null) {
+				continue;
+			}
+
 			JSONValue value = pair.getValue();
 			switch (property) {
 			case PROJECT_TYPE:

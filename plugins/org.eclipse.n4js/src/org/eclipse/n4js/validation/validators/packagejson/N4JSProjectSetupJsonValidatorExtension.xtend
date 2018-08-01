@@ -27,7 +27,6 @@ import java.nio.file.SimpleFileVisitor
 import java.nio.file.attribute.BasicFileAttributes
 import java.util.ArrayList
 import java.util.HashMap
-import java.util.HashSet
 import java.util.List
 import java.util.Map
 import java.util.Set
@@ -65,6 +64,7 @@ import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.utils.DependencyTraverser
+import org.eclipse.n4js.utils.DependencyTraverser.DependencyVisitor
 import org.eclipse.n4js.utils.ProjectDescriptionLoader
 import org.eclipse.n4js.utils.ProjectDescriptionUtils
 import org.eclipse.n4js.utils.WildcardPathFilterHelper
@@ -81,22 +81,22 @@ import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider
 import org.eclipse.xtext.validation.Check
 
 import static com.google.common.base.Preconditions.checkState
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.DEPENDENCIES
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.DEV_DEPENDENCIES
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.EXEC_MODULE
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.IMPLEMENTATION_ID
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.IMPLEMENTED_PROJECTS
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.INIT_MODULES
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.NAME
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.NV_MODULE
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.NV_SOURCE_CONTAINER
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.REQUIRED_RUNTIME_LIBRARIES
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.SOURCES
 import static org.eclipse.n4js.projectDescription.ProjectType.*
 import static org.eclipse.n4js.validation.IssueCodes.*
 import static org.eclipse.n4js.validation.validators.packagejson.ProjectTypePredicate.*
 
 import static extension com.google.common.base.Strings.nullToEmpty
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.REQUIRED_RUNTIME_LIBRARIES
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.EXEC_MODULE
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.NV_SOURCE_CONTAINER
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.IMPLEMENTATION_ID
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.DEV_DEPENDENCIES
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.INIT_MODULES
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.SOURCES
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.DEPENDENCIES
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.NV_MODULE
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.IMPLEMENTED_PROJECTS
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.NAME
 
 /**
  * A JSON validator extension that validates {@code package.json} resources in the context
@@ -398,7 +398,8 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			addIssuePreferred(#[], getMessageForSRCTEST_NO_TESTLIB_DEP(N4JSGlobals.MANGELHAFT), SRCTEST_NO_TESTLIB_DEP);
 		}
 	}
-	
+
+
 	/**
 	 * check if any project in the list has dependency on test library, if so return true.
 	 * Otherwise invoke recursively in dependencies list of each project in initial list.
@@ -406,27 +407,34 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	 * @returns true if any of the projects in the provided list depends (transitively) on the test library.
 	 */
 	private def boolean anyDependsOnTestLibrary(List<? extends IN4JSProject> projects) {
-		return anyDependsOnTestLibraryRecursive(projects, new HashSet<IN4JSProject>());
+		val dependencyProvider = new SourceContainerAwareDependencyProvider(true);
+		val hasTestDependencyVisitor = new HasTestDependencyVisitor();
+		for (IN4JSProject project : projects) {
+			val dependencyTraverser = new DependencyTraverser<IN4JSProject>(project, hasTestDependencyVisitor, dependencyProvider, true);
+			dependencyTraverser.traverse;
+		}
+		return hasTestDependencyVisitor.hasTestDependencies;
 	}
 
-	private def boolean anyDependsOnTestLibraryRecursive(List<? extends IN4JSProject> projects, Set<? extends IN4JSProject> visited) {
-		for (IN4JSProject p : projects) {
-			if (!visited.contains(p)) {
-				for (IN4JSProject pDep : p.dependencies) {
-					if ((N4JSGlobals.VENDOR_ID.equals(pDep.vendorID) && (N4JSGlobals.MANGELHAFT.equals(pDep.projectId))
-						|| N4JSGlobals.MANGELHAFT_ASSERT.equals(pDep.projectId)
-					)) {
-						return true;
-					}
-				}
-				val newVisited = new HashSet<IN4JSProject>(visited);
-				newVisited.addAll(projects);
-				if (anyDependsOnTestLibraryRecursive(p.dependencies, newVisited)) {
+	static class HasTestDependencyVisitor implements DependencyVisitor<IN4JSProject> {
+		boolean hasTestDependencies = false;
+
+		override accept(IN4JSProject project) {
+			if (hasTestDependency(project)) {
+				hasTestDependencies = true;
+			}
+		}
+
+		private def boolean hasTestDependency(IN4JSProject p) {
+			for (IN4JSProject pDep : p.dependencies) {
+				if ((N4JSGlobals.VENDOR_ID.equals(pDep.vendorID) && (N4JSGlobals.MANGELHAFT.equals(pDep.projectId))
+					|| N4JSGlobals.MANGELHAFT_ASSERT.equals(pDep.projectId)
+				)) {
 					return true;
 				}
 			}
+			return false;
 		}
-		return false;
 	}
 
 	private def String calculateName(IN4JSProject it) {
@@ -438,7 +446,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	 * tests both APIs and libraries. Does nothing if the project description of the validated project is NOT a test
 	 * project.
 	 */
-	@CheckProperty(propertyPath =  TESTED_PROJECTS)
+	@CheckProperty(propertyPath = TESTED_PROJECTS)
 	def checkTestedProjectsType(JSONValue testedProjectsValue) {
 		val description = getProjectDescription();
 		

@@ -395,8 +395,9 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		checkIsNonEmptyString(n4jsValues.get(VENDOR_ID.name), VENDOR_ID);
 		checkIsNonEmptyString(n4jsValues.get(VENDOR_NAME.name), VENDOR_NAME);
 
+		Set<String> allN4JSPropertyNames = PackageJsonProperties.getAllN4JSPropertyNames();
 		for (String n4jsKey : n4jsValues.keys()) {
-			if (!N4JS.name.contains(n4jsKey)) {
+			if (!allN4JSPropertyNames.contains(n4jsKey)) {
 				for (JSONValue value : n4jsValues.get(n4jsKey)) {
 					String msg = IssueCodes.getMessageForPKGJ_PROPERTY_UNKNOWN(n4jsKey);
 					addIssue(msg, value.eContainer(), JSONPackage.Literals.NAME_VALUE_PAIR__NAME,
