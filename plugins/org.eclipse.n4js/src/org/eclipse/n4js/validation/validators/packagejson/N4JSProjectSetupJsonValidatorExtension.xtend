@@ -423,8 +423,8 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		for (IN4JSProject p : projects) {
 			if (!visited.contains(p)) {
 				for (IN4JSProject pDep : p.dependencies) {
-					if ((N4JSGlobals.VENDOR_ID.equals(p.vendorID) && (N4JSGlobals.MANGELHAFT.equals(p.projectId))
-						|| N4JSGlobals.MANGELHAFT_ASSERT.equals(p.projectId)
+					if ((N4JSGlobals.VENDOR_ID.equals(pDep.vendorID) && (N4JSGlobals.MANGELHAFT.equals(pDep.projectId))
+						|| N4JSGlobals.MANGELHAFT_ASSERT.equals(pDep.projectId)
 					)) {
 						return true;
 					}
