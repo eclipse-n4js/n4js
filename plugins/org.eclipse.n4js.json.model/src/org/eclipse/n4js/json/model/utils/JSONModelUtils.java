@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.json.model.utils;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -17,11 +19,15 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.json.JSON.JSONArray;
 import org.eclipse.n4js.json.JSON.JSONDocument;
@@ -31,6 +37,10 @@ import org.eclipse.n4js.json.JSON.JSONPackage;
 import org.eclipse.n4js.json.JSON.JSONStringLiteral;
 import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.JSON.NameValuePair;
+import org.eclipse.n4js.utils.languages.N4LanguageUtils;
+import org.eclipse.n4js.utils.languages.N4LanguageUtils.ParseResult;
+import org.eclipse.xtext.resource.SaveOptions;
+import org.eclipse.xtext.serializer.ISerializer;
 
 import com.google.common.base.Strings;
 
@@ -38,6 +48,9 @@ import com.google.common.base.Strings;
  * Utility methods for more convenient access to elements of the {@link JSONPackage} model.
  */
 public class JSONModelUtils {
+
+	/** The JSON file extension. */
+	public static final String FILE_EXTENSION = "json";
 
 	/**
 	 * If given JSON value is a {@link JSONStringLiteral}, returns its value (possibly the empty string), otherwise
@@ -121,6 +134,29 @@ public class JSONModelUtils {
 		}
 
 		return (JSONDocument) firstSlot;
+	}
+
+	/**
+	 * Like {@link #getContent(JSONDocument, Class)}, but accepts a {@link Resource}.
+	 *
+	 * See {@link #getDocument(Resource)}, {@link #getContent(JSONDocument, Class)}.
+	 */
+	public static <T extends JSONValue> T getContent(Resource resource, Class<T> expectedType) {
+		return getContent(getDocument(resource), expectedType);
+	}
+
+	/**
+	 * If the given document is non-null, its content is non-null and of the given expected type, then this method
+	 * returns the content; otherwise <code>null</code>.
+	 */
+	public static <T extends JSONValue> T getContent(JSONDocument document, Class<T> expectedType) {
+		JSONValue content = document.getContent();
+		if (content != null && expectedType.isInstance(content)) {
+			@SuppressWarnings("unchecked")
+			T contentCasted = (T) content;
+			return contentCasted;
+		}
+		return null;
 	}
 
 	/**
@@ -430,6 +466,95 @@ public class JSONModelUtils {
 		JSONArray result = JSONFactory.eINSTANCE.createJSONArray();
 		values.forEach(v -> result.getElements().add(createStringLiteral(v)));
 		return result;
+	}
+
+	/**
+	 * Creates a new {@link JSONObject}. Be sure to pass in a {@link LinkedHashMap} or something similar if you want a
+	 * particular order of properties.
+	 */
+	public static JSONObject createObject(Map<String, JSONValue> properties) {
+		JSONObject result = JSONFactory.eINSTANCE.createJSONObject();
+		for (Entry<String, JSONValue> entry : properties.entrySet()) {
+			result.getNameValuePairs().add(createNameValuePair(entry.getKey(), entry.getValue()));
+		}
+		return result;
+	}
+
+	/**
+	 * Like {@link #createObject(Map)}, but accepts a map of any type together with two functions for converting the
+	 * map's original key/value to the name/value of the {@link NameValuePair}s of the {@link JSONObject} to be created.
+	 */
+	public static <K, V> JSONObject createObject(Map<K, V> properties,
+			Function<K, String> fnKey, Function<V, JSONValue> fnValue) {
+		JSONObject result = JSONFactory.eINSTANCE.createJSONObject();
+		for (Entry<K, V> entry : properties.entrySet()) {
+			result.getNameValuePairs().add(createNameValuePair(
+					fnKey.apply(entry.getKey()),
+					fnValue.apply(entry.getValue())));
+		}
+		return result;
+	}
+
+	/**
+	 * Creates a new {@link NameValuePair}.
+	 */
+	public static NameValuePair createNameValuePair(String name, JSONValue value) {
+		NameValuePair result = JSONFactory.eINSTANCE.createNameValuePair();
+		result.setName(name);
+		result.setValue(value);
+		return result;
+	}
+
+	/**
+	 * Creates a new {@link JSONDocument}.
+	 */
+	public static JSONDocument createDocument(JSONValue content) {
+		JSONDocument result = JSONFactory.eINSTANCE.createJSONDocument();
+		result.setContent(content);
+		return result;
+	}
+
+	/**
+	 * Parses the given string as a JSON document. Returns <code>null</code> in case of syntax errors. If more
+	 * fine-grained error handling is needed, use {@link N4LanguageUtils#parseXtextLanguage(String, Class, String)}
+	 * instead.
+	 */
+	public static JSONDocument parseJSON(String jsonString) {
+		ParseResult<JSONDocument> result = N4LanguageUtils.parseXtextLanguage(FILE_EXTENSION, JSONDocument.class,
+				jsonString);
+		return result.errors.isEmpty() ? result.ast : null;
+	}
+
+	/**
+	 * Like {@link #serializeJSON(JSONDocument)}, but accepts any kind of {@link JSONValue}.
+	 */
+	public static String serializeJSON(JSONValue value) {
+		return serializeJSON(createDocument(value));
+	}
+
+	/**
+	 * Serializes the given {@link JSONDocument} using the Xtext serialization facilities provided by the JSON language.
+	 */
+	public static String serializeJSON(JSONDocument document) {
+		ISerializer jsonSerializer = N4LanguageUtils.getServiceForContext(FILE_EXTENSION, ISerializer.class).get();
+		ResourceSet resourceSet = N4LanguageUtils.getServiceForContext(FILE_EXTENSION, ResourceSet.class).get();
+
+		// Use temporary Resource as AbstractFormatter2 implementations can only format
+		// semantic elements that are contained in a Resource.
+		Resource temporaryResource = resourceSet.createResource(URI.createFileURI("__synthetic.json"));
+		temporaryResource.getContents().add(document);
+
+		// create string writer as serialization output
+		StringWriter writer = new StringWriter();
+
+		// enable formatting as serialization option
+		SaveOptions serializerOptions = SaveOptions.newBuilder().format().getOptions();
+		try {
+			jsonSerializer.serialize(document, writer, serializerOptions);
+			return writer.toString();
+		} catch (IOException e) {
+			throw new RuntimeException("Failed to serialize JSONDocument " + document, e);
+		}
 	}
 
 	/**

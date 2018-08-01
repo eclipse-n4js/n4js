@@ -81,15 +81,6 @@ Contributors:
 
     </extension>
 
-    <extension
-         point="org.eclipse.ui.exportWizards">
-
-      <category
-            name="%Export.Category"
-            id="org.eclipse.n4js.ui.export">
-      </category>
-
-   </extension>
    <extension
          point="org.eclipse.core.expressions.definitions">
       <definition

@@ -32,9 +32,9 @@ import com.google.inject.Inject;
 
 /**
  * A custom resource validator that will not create issues for resources which are contained in folders that are not
- * marked as source folders.
+ * marked as source containers.
  */
-public class ManifestAwareResourceValidator extends N4JSResourceValidator {
+public class SourceContainerAwareResourceValidator extends N4JSResourceValidator {
 
 	private final IN4JSEclipseCore eclipseCore;
 	private final OperationCanceledManager operationCanceledManager;
@@ -42,7 +42,7 @@ public class ManifestAwareResourceValidator extends N4JSResourceValidator {
 			.getOrCreateDataCollector("ManifestAwareResourceValidator");
 
 	@Inject
-	private ManifestAwareResourceValidator(IN4JSEclipseCore eclipseCore,
+	private SourceContainerAwareResourceValidator(IN4JSEclipseCore eclipseCore,
 			OperationCanceledManager operationCanceledManager) {
 		this.eclipseCore = eclipseCore;
 		this.operationCanceledManager = operationCanceledManager;
@@ -67,7 +67,7 @@ public class ManifestAwareResourceValidator extends N4JSResourceValidator {
 		Optional<? extends IN4JSSourceContainer> sourceContainerOpt = eclipseCore.findN4JSSourceContainer(uri);
 		if (sourceContainerOpt.isPresent()) {
 			IN4JSSourceContainer sourceContainer = sourceContainerOpt.get();
-			return !sourceContainer.isLibrary() && !sourceContainer.isExternal();
+			return !sourceContainer.isExternal();
 		}
 		return false;
 	}

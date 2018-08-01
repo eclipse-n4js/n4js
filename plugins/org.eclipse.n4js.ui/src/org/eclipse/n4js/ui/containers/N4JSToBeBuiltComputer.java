@@ -10,9 +10,7 @@
  */
 package org.eclipse.n4js.ui.containers;
 
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
@@ -22,8 +20,8 @@ import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.ts.ui.navigation.URIBasedStorage;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
@@ -34,22 +32,19 @@ import org.eclipse.xtext.builder.impl.ToBeBuilt;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.ui.resource.UriValidator;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
+import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Add the contents of NFARs to the list of to-be-built resources in to make sure they are indexed properly.
+ * Adjust the behavior of the builder in that the resources of a project are rebuilt, when the project description file
+ * changes (e.g. {@code package.json}).
  *
  * @see IToBeBuiltComputerContribution
  */
 @Singleton
 @SuppressWarnings("restriction")
 public class N4JSToBeBuiltComputer implements IToBeBuiltComputerContribution {
-
-	@Inject
-	private NfarStorageMapper storageMapper;
 
 	@Inject
 	private IBuilderState builderState;
@@ -60,28 +55,9 @@ public class N4JSToBeBuiltComputer implements IToBeBuiltComputerContribution {
 	@Inject
 	private UriValidator uriValidator;
 
-	/**
-	 * Caches the URIs that are contained in an archive such that the archive is not opened each and every time the
-	 * contents has to be iterated.
-	 *
-	 * This one is used in addition to the cache in the {@link NfarStorageMapper} because it's used in a different
-	 * life-cycle, e.g. the builder is triggered asynchronously and has to provide information about files after they
-	 * have been removed physically from disk. The {@link NfarStorageMapper} updates its cache synchronously to the
-	 * delete event.
-	 */
-	private final Map<String, Set<URI>> knownEntries = Maps.newConcurrentMap();
-
 	@Override
 	public void removeProject(ToBeBuilt toBeBuilt, IProject project, IProgressMonitor monitor) {
-		storageMapper.collectNfarURIs(project, toBeBuilt.getToBeDeleted());
-		Iterator<Map.Entry<String, Set<URI>>> iterator = knownEntries.entrySet().iterator();
-		String keyPrefix = project.getName() + "|";
-		while (iterator.hasNext()) {
-			String key = iterator.next().getKey();
-			if (key.startsWith(keyPrefix)) {
-				iterator.remove();
-			}
-		}
+		// nothing to remove
 	}
 
 	@Override
@@ -91,28 +67,12 @@ public class N4JSToBeBuiltComputer implements IToBeBuiltComputerContribution {
 
 	@Override
 	public boolean updateStorage(ToBeBuilt toBeBuilt, IStorage storage, IProgressMonitor monitor) {
-
 		if (storage instanceof IFile) {
 			IFile file = (IFile) storage;
-			String extension = file.getFileExtension();
-			// changed archive - schedule contents
-			if (IN4JSArchive.NFAR_FILE_EXTENSION.equals(extension)) {
-				IProject project = file.getProject();
-				String key = project.getName() + "|" + storage.getFullPath().toPortableString();
-				Set<URI> cachedURIs = knownEntries.remove(key);
-				if (cachedURIs != null) {
-					toBeBuilt.getToBeDeleted().addAll(cachedURIs);
-				}
-				cachedURIs = Sets.newHashSet();
-				storageMapper.collectNfarURIs((IFile) storage, cachedURIs);
-				knownEntries.put(key, cachedURIs);
-				toBeBuilt.getToBeUpdated().addAll(cachedURIs);
-				return true;
-			} else if (IN4JSProject.PACKAGE_JSON.equals(file.getName())) {
+			if (IN4JSProject.PACKAGE_JSON.equals(file.getName())) {
 				// changed project description resource - schedule all resources from source folders
 				final IN4JSEclipseProject project = eclipseCore.create(file.getProject()).orNull();
 				if (null != project && project.exists()) {
-
 					List<? extends IN4JSEclipseSourceContainer> sourceContainers = project.getSourceContainers();
 					Set<URI> toBeUpdated = toBeBuilt.getToBeUpdated();
 					for (IN4JSEclipseSourceContainer sourceContainer : sourceContainers) {
@@ -124,6 +84,7 @@ public class N4JSToBeBuiltComputer implements IToBeBuiltComputerContribution {
 					}
 				}
 
+				// delete all resource descriptions of resources that are contained by this project
 				IProject resourceProject = file.getProject();
 				String projectName = resourceProject.getName();
 				Set<URI> toBeDeleted = toBeBuilt.getToBeDeleted();
@@ -145,31 +106,7 @@ public class N4JSToBeBuiltComputer implements IToBeBuiltComputerContribution {
 
 	@Override
 	public boolean removeStorage(ToBeBuilt toBeBuilt, IStorage storage, IProgressMonitor monitor) {
-		if (IN4JSArchive.NFAR_FILE_EXTENSION.equals(storage.getFullPath().getFileExtension())
-				&& storage instanceof IFile) {
-			IProject project = ((IFile) storage).getProject();
-			String key = project.getName() + "|" + storage.getFullPath().toPortableString();
-			Set<URI> cachedURIs = knownEntries.remove(key);
-			if (cachedURIs != null) {
-				toBeBuilt.getToBeDeleted().addAll(cachedURIs);
-			} else {
-				// cache not populated, use the index to find the URIs that shall be removed, e.g.
-				// can happen after a restart of Eclipse
-				Iterable<IResourceDescription> descriptions = builderState.getAllResourceDescriptions();
-				String expectedAuthority = "platform:/resource" + storage.getFullPath() + "!";
-				Set<URI> toBeDeleted = toBeBuilt.getToBeDeleted();
-				for (IResourceDescription description : descriptions) {
-					URI knownURI = description.getURI();
-					if (knownURI.isArchive()) {
-						String authority = knownURI.authority();
-						if (expectedAuthority.equals(authority)) {
-							toBeDeleted.add(knownURI);
-						}
-					}
-				}
-			}
-			return true;
-		}
+		// nothing to remove
 		return false;
 	}
 
@@ -181,8 +118,8 @@ public class N4JSToBeBuiltComputer implements IToBeBuiltComputerContribution {
 
 	@Override
 	public boolean isRejected(IFolder folder) {
-		boolean result = storageMapper.isRejected(folder);
-		return result;
+		Optional<? extends IN4JSSourceContainer> sourceContainerOpt = eclipseCore.create(folder);
+		return !sourceContainerOpt.isPresent();
 	}
 
 }

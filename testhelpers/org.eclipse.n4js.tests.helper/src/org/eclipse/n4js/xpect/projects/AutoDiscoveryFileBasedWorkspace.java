@@ -13,7 +13,6 @@ package org.eclipse.n4js.xpect.projects;
 import java.io.File;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.internal.ClasspathPackageManager;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSProject;
@@ -32,9 +31,8 @@ public class AutoDiscoveryFileBasedWorkspace extends FileBasedWorkspace {
 
 	/** Initializes the workspace. */
 	@Inject
-	public AutoDiscoveryFileBasedWorkspace(ClasspathPackageManager packageManager,
-			ProjectDescriptionLoader projectDescriptionLoader) {
-		super(packageManager, projectDescriptionLoader);
+	public AutoDiscoveryFileBasedWorkspace(ProjectDescriptionLoader projectDescriptionLoader) {
+		super(projectDescriptionLoader);
 	}
 
 	@Override

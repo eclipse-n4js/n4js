@@ -39,7 +39,6 @@ public class CompositeStorage2UriMapperContribution implements IStorage2UriMappe
 
 	private static final Iterable<Class<? extends IStorage2UriMapperContribution>> CONTRIBUTING_CLASSES = ImmutableSet
 			.<Class<? extends IStorage2UriMapperContribution>> builder()
-			.add(NfarStorageMapper.class)
 			.add(N4JSExternalLibraryStorage2UriMapperContribution.class)
 			.build();
 

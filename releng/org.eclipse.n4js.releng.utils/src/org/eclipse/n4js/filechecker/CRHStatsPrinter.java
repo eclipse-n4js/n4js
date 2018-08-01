@@ -30,7 +30,7 @@ public class CRHStatsPrinter {
 			"gitignore", "jar", "npmignore", "ico", "zip", "graffle", "pdf", "csv", "target", "licence", "license",
 			"setup", "dict", "json", "launch", "svg", "xtextbin", /* plugin. */"xml_gen", "replacement", "bib", "ecore",
 			"genmodel", "gitattributes", /* about. */"html_TEMPLATE", "icns", "ignored", "index", "map", "mappings",
-			"placeholder", "product", "see", "sublime-project", "xpm", "exsd", "xlsx", "dummy", "nfar", "xdoc",
+			"placeholder", "product", "see", "sublime-project", "xpm", "exsd", "xlsx", "dummy", "xdoc",
 			"xcf", "ext", "cspex", "api_filters", "b3aggr", "key" });
 
 	static boolean canHaveCRH(String extension) {

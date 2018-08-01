@@ -11,12 +11,12 @@
 package org.eclipse.n4js.external;
 
 import static com.google.common.base.Preconditions.checkState;
-import static org.eclipse.n4js.external.libraries.PackageJson.PACKAGE_JSON;
 
 import java.io.File;
 import java.net.URI;
 
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
 
 import com.google.inject.Inject;
@@ -44,7 +44,7 @@ public class EclipseTargetPlatformInstallLocationProvider implements TargetPlatf
 
 	@Override
 	public URI getTargetPlatformFileLocation() {
-		return new File(getTargetPlatformInstallFolder(), PACKAGE_JSON).toURI();
+		return new File(getTargetPlatformInstallFolder(), N4JSGlobals.PACKAGE_JSON).toURI();
 	}
 
 	@Override

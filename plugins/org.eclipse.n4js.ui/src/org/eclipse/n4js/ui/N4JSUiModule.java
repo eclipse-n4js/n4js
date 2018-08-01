@@ -62,7 +62,6 @@ import org.eclipse.n4js.ui.editor.N4JSHover;
 import org.eclipse.n4js.ui.editor.N4JSHyperlinkDetector;
 import org.eclipse.n4js.ui.editor.N4JSLocationInFileProvider;
 import org.eclipse.n4js.ui.editor.N4JSReconciler;
-import org.eclipse.n4js.ui.editor.NFARAwareResourceForEditorInputFactory;
 import org.eclipse.n4js.ui.editor.PrevStateAwareDocumentBasedDirtyResource;
 import org.eclipse.n4js.ui.editor.autoedit.AutoEditStrategyProvider;
 import org.eclipse.n4js.ui.editor.syntaxcoloring.HighlightingConfiguration;
@@ -113,7 +112,7 @@ import org.eclipse.n4js.ui.search.MyReferenceSearchResultContentProvider;
 import org.eclipse.n4js.ui.search.N4JSEditorResourceAccess;
 import org.eclipse.n4js.ui.search.N4JSReferenceQueryExecutor;
 import org.eclipse.n4js.ui.utils.CancelIndicatorUiExtractor;
-import org.eclipse.n4js.ui.validation.ManifestAwareResourceValidator;
+import org.eclipse.n4js.ui.validation.SourceContainerAwareResourceValidator;
 import org.eclipse.n4js.ui.wizard.project.N4JSProjectCreator;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBroker;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBrokerImpl;
@@ -154,7 +153,6 @@ import org.eclipse.xtext.ui.editor.hover.IEObjectHover;
 import org.eclipse.xtext.ui.editor.hover.IEObjectHoverProvider;
 import org.eclipse.xtext.ui.editor.hyperlinking.HyperlinkHelper;
 import org.eclipse.xtext.ui.editor.model.DocumentTokenSource;
-import org.eclipse.xtext.ui.editor.model.IResourceForEditorInputFactory;
 import org.eclipse.xtext.ui.editor.model.TerminalsTokenTypeToPartitionMapper;
 import org.eclipse.xtext.ui.editor.model.XtextDocument;
 import org.eclipse.xtext.ui.editor.model.XtextDocumentProvider;
@@ -492,7 +490,7 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	 * the manifest.
 	 */
 	public Class<? extends IResourceValidator> bindResourceValidator() {
-		return ManifestAwareResourceValidator.class;
+		return SourceContainerAwareResourceValidator.class;
 	}
 
 	/**
@@ -500,11 +498,6 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	 */
 	public Class<? extends XtextResourceSet> bindXtextResourceSet() {
 		return SynchronizedXtextResourceSet.class;
-	}
-
-	@Override
-	public Class<? extends IResourceForEditorInputFactory> bindIResourceForEditorInputFactory() {
-		return NFARAwareResourceForEditorInputFactory.class;
 	}
 
 	/**

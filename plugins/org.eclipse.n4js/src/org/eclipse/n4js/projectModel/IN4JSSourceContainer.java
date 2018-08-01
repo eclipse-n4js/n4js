@@ -18,26 +18,14 @@ import org.eclipse.xtext.naming.QualifiedName;
 import com.google.common.base.Optional;
 
 /**
- * The project model representation of a configured source folder either in a library / archive or in a project.
+ * The project model representation of a configured source folder in a project.
  */
 public interface IN4JSSourceContainer extends Iterable<URI> {
 
 	/**
-	 * Returns the project this source container belongs to. If the source container is nested in an archive, the
-	 * project where the archive is used as a library is returned.
+	 * Returns the project this source container belongs to.
 	 */
-	// TODO should return IN4JSComponent
 	IN4JSProject getProject();
-
-	/**
-	 * Returns the archive this source folder belongs to or <code>null</code>.
-	 */
-	IN4JSArchive getLibrary();
-
-	/**
-	 * Returns <code>true</code> if the source container is contained in a library.
-	 */
-	boolean isLibrary();
 
 	/**
 	 * Returns <code>true</code> if the source container contains tests.
@@ -73,7 +61,7 @@ public interface IN4JSSourceContainer extends Iterable<URI> {
 	URI findArtifact(QualifiedName name, Optional<String> fileExtension);
 
 	/**
-	 * The relative location in the archive file or under the project root.
+	 * The relative location under the project root.
 	 */
 	String getRelativeLocation();
 

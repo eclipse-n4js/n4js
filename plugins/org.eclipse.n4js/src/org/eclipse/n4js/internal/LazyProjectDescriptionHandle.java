@@ -10,31 +10,24 @@
  */
 package org.eclipse.n4js.internal;
 
-import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
-import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 
 /**
  * Lazy handle that is registered as a proxy at runtime.
  */
-@SuppressWarnings("javadoc")
 public class LazyProjectDescriptionHandle {
 
-	private static final Logger LOGGER = Logger.getLogger(LazyProjectDescriptionHandle.class);
-
-	private final URI location;
-	private final boolean archive;
-	private final ProjectDescriptionLoader descriptionHelper;
+	private final URI projectLocation;
+	private final ProjectDescriptionLoader descriptionLoader;
 
 	private ProjectDescription resolved;
 
-	protected LazyProjectDescriptionHandle(URI location, boolean archive,
-			ProjectDescriptionLoader descriptionHelper) {
-		this.location = location;
-		this.archive = archive;
-		this.descriptionHelper = descriptionHelper;
+	/** */
+	protected LazyProjectDescriptionHandle(URI location, ProjectDescriptionLoader descriptionLoader) {
+		this.projectLocation = location;
+		this.descriptionLoader = descriptionLoader;
 	}
 
 	/**
@@ -44,32 +37,13 @@ public class LazyProjectDescriptionHandle {
 		if (resolved != null) {
 			return resolved;
 		}
-		return resolved = loadProjectDescriptionFromLocation(this.getLocation());
+		return resolved = descriptionLoader.loadProjectDescriptionAtLocation(this.getLocation());
 	}
 
+	/**
+	 * Returns the project location this handle represents.
+	 */
 	URI getLocation() {
-		return location;
+		return projectLocation;
 	}
-
-	/**
-	 * Returns {@code true} iff this handle represents an N4JS project to be found in an archive.
-	 *
-	 * @See {@link IN4JSArchive}.
-	 */
-	boolean isArchive() {
-		return archive;
-	}
-
-	/**
-	 * Loads the {@link ProjectDescription} for the project at the given {@code projectLocation}.
-	 */
-	protected ProjectDescription loadProjectDescriptionFromLocation(URI projectLocation) {
-		if (this.isArchive()) {
-			LOGGER.warn("Cannot load project description for " + projectLocation.toString() + ": "
-					+ "Loading the project description of an N4JS archive is no longer supported.");
-		}
-
-		return descriptionHelper.loadProjectDescriptionAtLocation(projectLocation);
-	}
-
 }
