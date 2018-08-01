@@ -133,9 +133,13 @@ In a test project, the tested projects can be specified via `testee`.
 --
 
 === Type Definitions
-Projects of type "definition" are special projects which only provide type information for another so-called _implementation project_.
+Projects of type "definition" are special projects which only provide type information for another so-called _implementation project_,  which only provides executable JS files .
 
-Generally, client projects that depend on a given _implementation project_ may additionally declare a dependency on a corresponding type definitions project, in order to integrate type information on the implementation project. This is implemented by means of module-level shadowing. More specifically, given a client imports a module with module specifier $M$ from the implementation project. When resolving the module specifier, $M$ will first be resolved against the implementation project's type definitions and only secondarily against the implementation project. As a consequence, type definition projects may only provide partial type information, while the remaining modules of the implementation project remain accessible through dynamic namespace imports.
+Generally, client projects that depend on a given _implementation project_ may additionally declare a dependency on a corresponding type definitions project, in order to integrate type information on the implementation project. 
+This is implemented by means of module-level shadowing. 
+More specifically, given a client imports a module with module specifier $M$ from the implementation project. 
+When resolving the module specifier, $M$ will first be resolved against the implementation project's type definitions and only secondarily against the implementation project. 
+As a consequence, type definition projects may only provide partial type information, while the remaining modules of the implementation project remain accessible through dynamic namespace imports.
 
 .Type Definition Project Configuration
 [req,id=GH-821002,version=1]
