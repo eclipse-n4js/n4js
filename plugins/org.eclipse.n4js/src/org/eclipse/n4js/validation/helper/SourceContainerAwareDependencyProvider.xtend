@@ -13,15 +13,14 @@ package org.eclipse.n4js.validation.helper
 import com.google.common.collect.ImmutableList
 import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSProject
-import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware
 import org.eclipse.n4js.utils.DependencyTraverser
 import org.eclipse.n4js.utils.DependencyTraverser.DependencyProvider
 
 /**
  * A {@link DependencyProvider} implementation for traversing the dependency 
- * graph defined by {@link IN4JSSourceContainerAware source container aware} entities via {@link DependencyTraverser}. 
+ * graph defined by {@link IN4JSProject} entities via {@link DependencyTraverser}. 
  */
-class SourceContainerAwareDependencyProvider implements DependencyProvider<IN4JSSourceContainerAware> {
+class SourceContainerAwareDependencyProvider implements DependencyProvider<IN4JSProject> {
 
 	private final boolean ignoreExternalValidationProjects;
 	
@@ -41,7 +40,7 @@ class SourceContainerAwareDependencyProvider implements DependencyProvider<IN4JS
 		this.ignoreExternalValidationProjects = ignoreExternalValidationProjects;
 	}
 	
-	override getDependencies(IN4JSSourceContainerAware p) {
+	override getDependencies(IN4JSProject p) {
 		if (ignoreExternalValidationProjects) {
 			// this is used if external projects of project type VALIDATION are requested to be ignored
 			return ImmutableList.copyOf(p.allDirectDependencies.filter[dep|!isExternalValidation(dep)]);
@@ -51,10 +50,9 @@ class SourceContainerAwareDependencyProvider implements DependencyProvider<IN4JS
 		}
 	}
 	
-	private static def boolean isExternalValidation(IN4JSSourceContainerAware project) {
+	private static def boolean isExternalValidation(IN4JSProject project) {
 		return project.external
-			&& project instanceof IN4JSProject
-			&& (project as IN4JSProject).projectType===ProjectType.VALIDATION;
+			&& project.projectType===ProjectType.VALIDATION;
 	}
 
 }

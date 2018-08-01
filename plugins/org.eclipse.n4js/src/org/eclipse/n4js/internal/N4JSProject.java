@@ -32,10 +32,8 @@ import org.eclipse.n4js.projectDescription.ModuleFilterType;
 import org.eclipse.n4js.projectDescription.ModuleLoader;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
-import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
-import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.URIUtils;
@@ -58,16 +56,6 @@ public class N4JSProject implements IN4JSProject {
 		this.location = location;
 		this.external = external;
 		this.model = model;
-	}
-
-	@Override
-	public boolean isProject() {
-		return true;
-	}
-
-	@Override
-	public boolean isArchive() {
-		return false;
 	}
 
 	@Override
@@ -134,14 +122,6 @@ public class N4JSProject implements IN4JSProject {
 	}
 
 	@Override
-	public ImmutableList<? extends IN4JSArchive> getLibraries() {
-		if (!exists()) {
-			return ImmutableList.of();
-		}
-		return model.getLibraries(this);
-	}
-
-	@Override
 	public ImmutableList<? extends IN4JSProject> getDependencies() {
 		if (!exists()) {
 			return ImmutableList.of();
@@ -178,18 +158,17 @@ public class N4JSProject implements IN4JSProject {
 	}
 
 	@Override
-	public ImmutableList<? extends IN4JSSourceContainerAware> getAllDirectDependencies() {
+	public ImmutableList<? extends IN4JSProject> getAllDirectDependencies() {
 		if (!exists()) {
 			return ImmutableList.of();
 		}
-		ImmutableList.Builder<IN4JSSourceContainerAware> result = ImmutableList.builder();
+		ImmutableList.Builder<IN4JSProject> result = ImmutableList.builder();
 		result.addAll(getDependencies());
-		result.addAll(getLibraries());
 		return result.build();
 	}
 
 	@Override
-	public ImmutableList<? extends IN4JSSourceContainerAware> getProvidedRuntimeLibraries() {
+	public ImmutableList<? extends IN4JSProject> getProvidedRuntimeLibraries() {
 		if (!exists()) {
 			return ImmutableList.of();
 		}
@@ -334,7 +313,7 @@ public class N4JSProject implements IN4JSProject {
 	}
 
 	@Override
-	public Optional<IN4JSSourceContainerAware> getExtendedRuntimeEnvironment() {
+	public Optional<IN4JSProject> getExtendedRuntimeEnvironment() {
 		return fromNullable(model.getExtendedRuntimeEnvironment(this).orNull());
 	}
 
