@@ -974,10 +974,12 @@ public class TestResultsView extends ViewPart {
 	 * Invoked when user performs {@link #actionStop}.
 	 */
 	protected void performStop() {
-
+		IProcess process = DebugUITools.getCurrentProcess();
+		if (process == null) {
+			return;
+		}
 		final TestSession session = from(registeredSessions).firstMatch(s -> s.root == currentRoot).orNull();
 		if (null != session) {
-			IProcess process = DebugUITools.getCurrentProcess();
 			ILaunch launch = process.getLaunch();
 			ILaunchConfiguration runningConfig = launch.getLaunchConfiguration();
 			ILaunchConfiguration sessionConfig = getLaunchConfigForSession(session, null);
@@ -1530,5 +1532,35 @@ public class TestResultsView extends ViewPart {
 			root = resultNode;
 		}
 
+	}
+
+	/**
+	 * Listen to process stopped by other reasons then normal termination or stopping it from the view.
+	 */
+	public void listenForProcess(final Process process) {
+		if (process.isAlive()) {
+			new Thread() {
+				@Override
+				public void run() {
+					try {
+						process.waitFor();
+					} catch (InterruptedException e) {
+						// ignore, we just want to update the UI state
+					}
+					Display.getDefault().asyncExec(new Runnable() {
+						@Override
+						public void run() {
+							final TestSession session = from(registeredSessions).firstMatch(s -> s.root == currentRoot)
+									.orNull();
+							if (null != session) {
+								session.root.stopRunning();
+								refreshActions();
+							}
+						}
+					});
+
+				}
+			}.start();
+		}
 	}
 }

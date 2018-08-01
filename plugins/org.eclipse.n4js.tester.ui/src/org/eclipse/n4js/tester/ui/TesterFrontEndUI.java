@@ -50,6 +50,16 @@ public class TesterFrontEndUI {
 			}
 		});
 
-		return testerFrontEnd.test(config, runnerFrontEndUI.createEclipseExecutor());
+		final Process process = testerFrontEnd.test(config, runnerFrontEndUI.createEclipseExecutor());
+
+		Display.getDefault().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				final TestResultsView view = TestResultsView.getInstance(true);
+				view.listenForProcess(process);
+			}
+		});
+
+		return process;
 	}
 }
