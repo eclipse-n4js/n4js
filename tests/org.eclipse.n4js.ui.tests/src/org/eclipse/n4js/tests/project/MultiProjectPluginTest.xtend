@@ -33,8 +33,8 @@ import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
 
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__DEPENDENCIES
 import static org.junit.Assert.assertTrue
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.DEPENDENCIES
 
 /**
  */
@@ -107,8 +107,7 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 
 		val packageJSONRoot = PackageJSONTestUtils.getPackageJSONRoot(resource);
 		// set the 'dependencies' property of the package.json file to an empty object
-		JSONModelUtils.setProperty(packageJSONRoot, PROP__DEPENDENCIES,
-			JSONFactory.eINSTANCE.createJSONObject);
+		JSONModelUtils.setProperty(packageJSONRoot, DEPENDENCIES.name, JSONFactory.eINSTANCE.createJSONObject);
 
 		resource.save(null);
 		waitForAutoBuild;
