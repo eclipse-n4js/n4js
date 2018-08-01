@@ -1,0 +1,6 @@
+
+export public class A {
+	public foo() {
+		console.log("hello from A in @n4js/Test!");
+	}
+}

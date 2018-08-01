@@ -171,12 +171,19 @@ public class ProjectTestsUtils {
 			prepareDotProject(projectSourceFolder);
 		}
 
-		IProgressMonitor monitor = new NullProgressMonitor();
+		// load actual project name from ".project" file (might be different in case of NPM scopes)
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		IProject project = workspace.getRoot().getProject(projectName);
+		IProjectDescription description = workspace.loadProjectDescription(
+				new Path(new File(projectSourceFolder, ".project").getAbsolutePath()));
+		String projectNameFromDotProjectFile = description.getName();
 
+		IProject project = workspace.getRoot().getProject(projectNameFromDotProjectFile);
+
+		IProgressMonitor monitor = new NullProgressMonitor();
 		workspace.run((mon) -> {
-			IProjectDescription newProjectDescription = workspace.newProjectDescription(projectName);
+			// create a new project description to actually copy the project into the workspace instead of just
+			// referencing the one in the test data
+			IProjectDescription newProjectDescription = workspace.newProjectDescription(projectNameFromDotProjectFile);
 			project.create(newProjectDescription, mon);
 			project.open(mon);
 			if (!project.getLocation().toFile().exists()) {
@@ -510,6 +517,20 @@ public class ProjectTestsUtils {
 			Assert.assertEquals(message.toString(), count, markerList.size());
 		}
 		return markers;
+	}
+
+	/**
+	 * Like {@link #assertIssues(IResource, String...)}, but asserts that there are no issues in the entire workspace.
+	 */
+	public static void assertNoIssues() throws CoreException {
+		assertIssues(new String[] {});
+	}
+
+	/**
+	 * Like {@link #assertIssues(IResource, String...)}, but checks for issues in entire workspace.
+	 */
+	public static void assertIssues(String... expectedMessages) throws CoreException {
+		assertIssues(ResourcesPlugin.getWorkspace().getRoot(), expectedMessages);
 	}
 
 	/**

@@ -35,8 +35,8 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.packagejson.PackageJsonBuilder;
+import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.tests.util.EclipseUIUtils;
 import org.eclipse.n4js.tests.util.PackageJSONTestHelper;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
@@ -270,7 +270,17 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 		return ProjectTestsUtils.assertMarkers(assertMessage, resource, markerType, count, ignoreSomeWarnings);
 	}
 
-	/***/
+	/** See {@link ProjectTestsUtils#assertNoIssues()}. */
+	protected void assertNoIssues() throws CoreException {
+		ProjectTestsUtils.assertNoIssues();
+	}
+
+	/** See {@link ProjectTestsUtils#assertIssues(String...)}. */
+	protected void assertIssues(String... expectedMessages) throws CoreException {
+		ProjectTestsUtils.assertIssues(expectedMessages);
+	}
+
+	/** See {@link ProjectTestsUtils#assertIssues(IResource, String...)}. */
 	protected void assertIssues(final IResource resource, String... expectedMessages) throws CoreException {
 		ProjectTestsUtils.assertIssues(resource, expectedMessages);
 	}
