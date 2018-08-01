@@ -22,6 +22,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
@@ -66,7 +67,7 @@ public class RunnerHelper {
 	/**
 	 * Returns list of absolute paths to each of the given projects' output folder in the local files system.
 	 */
-	public Map<Path, String> getCoreProjectPaths(List<IN4JSProject> projects) {
+	public Map<Path, String> getCoreProjectPaths(Set<IN4JSProject> projects) {
 		return projects.stream()
 				.map(project -> getProjectNameAndPath(project))
 				.filter(nap -> nap != null)

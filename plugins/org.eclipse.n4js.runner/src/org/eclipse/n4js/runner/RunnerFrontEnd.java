@@ -36,6 +36,7 @@ import org.eclipse.n4js.utils.ResourceNameComputer;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -250,11 +251,11 @@ public class RunnerFrontEnd {
 
 		// 2) collect paths to all output folders of all N4JS projects (dependencies) with the compiled code
 		// (these are the .../es5/ folders)
-		final List<IN4JSProject> depsImpl = deps.stream().map(p -> {
+		final Set<IN4JSProject> depsImpl = deps.stream().map(p -> {
 			final IN4JSProject p2 = apiImplProjectMapping.get(p);
 			final IN4JSProject p3 = p2 != null ? p2 : p;
 			return p3;
-		}).collect(Collectors.toList());
+		}).collect(Collectors.toCollection(() -> Sets.newLinkedHashSet()));
 		final Map<Path, String> coreProjectPaths = runnerHelper.getCoreProjectPaths(depsImpl);
 		config.setCoreProjectPaths(coreProjectPaths);
 	}
