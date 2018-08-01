@@ -15,6 +15,7 @@ import static org.apache.log4j.Logger.getLogger;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -23,7 +24,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
-
 import org.eclipse.n4js.runner.IExecutor;
 import org.eclipse.n4js.runner.IRunner;
 import org.eclipse.n4js.runner.RunConfiguration;
@@ -64,12 +64,13 @@ public class ChromeRunner implements IRunner {
 			ChromeRunnerRunOptions runOptions = new ChromeRunnerRunOptions();
 
 			runOptions.setExecModule(runConfig.getExecModule());
-			runOptions.setCoreProjectPaths(runConfig.getCoreProjectPaths().stream()
+			runOptions.setCoreProjectPaths(runConfig.getCoreProjectPaths().keySet().stream()
+					.map(Object::toString)
 					.collect(Collectors.joining(NODE_PATH_SEP)));
 
 			runOptions.setExecutionData(runConfig.getExecutionDataAsJSON());
 
-			final List<String> paths = new ArrayList<>();
+			final List<Path> paths = new ArrayList<>();
 
 			runOptions.addInitModules(runConfig.getInitModules());
 			if (runConfig.isUseCustomBootstrap()) {
@@ -82,9 +83,9 @@ public class ChromeRunner implements IRunner {
 			File workingDirectory = Files.createTempDirectory(null)
 					.toFile();
 
-			paths.addAll(runConfig.getCoreProjectPaths());
+			paths.addAll(runConfig.getCoreProjectPaths().keySet());
 
-			String nodePaths = paths.stream().collect(Collectors.joining(NODE_PATH_SEP));
+			String nodePaths = paths.stream().map(Object::toString).collect(Collectors.joining(NODE_PATH_SEP));
 
 			Map<String, String> env = new LinkedHashMap<>();
 			env.put("NODE_PATH", nodePaths);

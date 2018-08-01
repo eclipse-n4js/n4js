@@ -109,16 +109,14 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 		if (projectURI.segmentCount() >= DIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT) {
 			String expectedProjectName = projectReference.getProjectId();
 			if (expectedProjectName != null && expectedProjectName.length() > 0) {
-				if (ProjectDescriptionUtils.isProjectNameWithScope(expectedProjectName)) {
-					// cannot create projects using npm scopes in the name, e.g. "@scopeName/projectName"
-					return null;
-				}
-				IProject existingProject = workspace.getProject(expectedProjectName);
+				String expectedEclipseProjectName = ProjectDescriptionUtils
+						.convertN4JSProjectNameToEclipseProjectName(expectedProjectName);
+				IProject existingProject = workspace.getProject(expectedEclipseProjectName);
 				if (existingProject.isAccessible()) {
 					if (expectedN4JSSourceContainerType == N4JSSourceContainerType.ARCHIVE) {
 						return null;
 					} else {
-						return URI.createPlatformResourceURI(expectedProjectName, true);
+						return URI.createPlatformResourceURI(expectedEclipseProjectName, true);
 					}
 				} else if (expectedN4JSSourceContainerType == N4JSSourceContainerType.ARCHIVE) {
 					// TODO remove .nfar support
@@ -171,7 +169,7 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 	public UnmodifiableIterator<URI> getFolderIterator(URI folderLocation) {
 		final IContainer container;
 		if (DIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT == folderLocation.segmentCount()) {
-			container = workspace.getProject(folderLocation.lastSegment());
+			container = workspace.getProject(ProjectDescriptionUtils.deriveProjectNameFromURI(folderLocation));
 		} else {
 			container = workspace.getFolder(new Path(folderLocation.toPlatformString(true)));
 		}

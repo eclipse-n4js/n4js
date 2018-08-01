@@ -11,11 +11,13 @@
 package org.eclipse.n4js.utils;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.SourceContainerDescription;
 import org.eclipse.n4js.utils.io.FileUtils;
@@ -32,6 +34,62 @@ public class ProjectDescriptionUtils {
 	 */
 	public static boolean isProjectNameWithScope(String projectName) {
 		return projectName != null && projectName.startsWith("@") && projectName.contains("/");
+	}
+
+	public static String deriveProjectNameFromURI(URI uri) {
+		int segCount = uri.segmentCount();
+		String last = segCount > 0 ? uri.segment(segCount - 1) : null;
+		if (uri.isPlatform()) {
+			if (last != null && last.startsWith("@")) {
+				last = replaceFirst(last, '_', '/');
+			}
+			return last;
+		}
+		String secondToLast = segCount > 1 ? uri.segment(segCount - 2) : null;
+		if (secondToLast != null && secondToLast.startsWith("@")) {
+			return secondToLast + "/" + last;
+		}
+		return last;
+	}
+
+	// FIXME consider supporting the UI case, i.e. creating a platform URI
+	public static URI deriveProjectURIFromFileLocation(File file) {
+		try {
+			URI createURI = URI.createURI(file.toURI().toURL().toString());
+			// by convention IN4JSProject URI does not end with '/'
+			// i.e. last segment must not be empty
+			String last = createURI.lastSegment();
+			if (last != null && last.isEmpty()) {
+				createURI = createURI.trimSegments(1);
+			}
+			return createURI;
+		} catch (MalformedURLException e) {
+			return null;
+		}
+	}
+
+	public static String convertN4JSProjectNameToEclipseProjectName(String name) {
+		if (name != null && name.startsWith("@")) {
+			return replaceFirst(name, '/', '_');
+		}
+		return name;
+	}
+
+	public static String convertEclipseProjectNameToN4JSProjectName(String name) {
+		if (name != null && name.startsWith("@")) {
+			return replaceFirst(name, '_', '/');
+		}
+		return name;
+	}
+
+	private static String replaceFirst(String str, char oldChar, char newChar) {
+		if (str != null) {
+			final int idx = str.indexOf(oldChar);
+			if (idx >= 0) {
+				return str.substring(0, idx) + newChar + str.substring(idx + 1);
+			}
+		}
+		return str;
 	}
 
 	/**

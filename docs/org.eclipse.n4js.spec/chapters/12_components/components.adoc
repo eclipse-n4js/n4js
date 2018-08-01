@@ -472,6 +472,70 @@ Examples of using external source fragments and filters are given in <<_implemen
 
 
 
+
+
+[.language-n4js]
+== Support for NPM Scopes
+
+NPM supports a namespace concept for npm packages. Such namespaces are called "scopes". For details see
+https://docs.npmjs.com/misc/scope and https://docs.npmjs.com/getting-started/scoped-packages.
+In N4JS, this is supported too.
+
+Names:
+
+1. plain name of project (e.g. "myproject"),
+2. name of scope (if any; e.g. "@myscope"),
+3. name of NPM package, i.e. value of top-level property "name" in package JSON,
+4. name of N4JS project, i.e. value of `IN4JSProject#getProjectId()`,
+5. name of Eclipse proejct, i.e. value of `#getName()` when invoked on an instance of `org.eclipse.core.resources.IProject`.
+
+TODO: introduce terminology to distinguish between 1., 3./4., and 5. and the plain project name without the scope.
+
+Rules:
+
+* the "name" property in a scoped project's package.json file includes the scope, prefixed by an `@` and
+  separated by a forward slash. For example, project "myproject" in scope "n4js" would have a "name"
+  property with value "@n4js/myproject".
+* internally, i.e. in instances of `IN4JSProject` we use the same name as given in the package.json's name
+  property. I.e. method `IN4JSProject#getProjectId()` would return "@n4js/myproject" in the aforementioned example.
+* in the UI case, the name of the Eclipse project includes the scope, too, but `_` (underscore) is used
+  as separator. For example: "@n4js_myproject".
+  Note that this applies only to the actual Eclipse projects, i.e. instances of `org.eclipse.core.resources.IProject`,
+  not instances of `IN4JSEclipseProject` (for the latter, the above rule for instances of `IN4JSProject` applies).
+* for a scoped project one of the following must hold:
+  ** it is contained in a folder named as the plain project name (without scope) which is in turn contained
+     in a folder name as the scope (e.g. parent folder called "myproject", grand-parent folder is called "@n4js").
+     +- @n4js
+        +- myproject
+           +- package.json
+  NOT THIS:
+  ** it is contained in a folder named as in 3. (e.g. "@n4js_myproject")
+     +- @n4js_myproject
+        +- package.json
+     OR
+     +- myproject
+        +- package.json
+* a project import pointing to a scoped project must look like this: `import * as M from "@n4js/myproject/a/b/c/M"`;
+  a non-project import (i.e. one only using a module specifier / fully qualified name) works as usual, i.e.
+  the order of dependencies in package.json is used to resolve any conflicts (first dependency wins).
+  ** if the imported project is a definition project -> change package prefix to that of the impl project (only in transpiler!)
+
+
+Some implementation notes:
+
+* `#` is a bad character in Eclipse project names. It causes instances of `IProject` to behave weirdly,
+  e.g. `IProject#getLocation()` returns 'null', `IProject#getName()` returns "...%2325..." (or similar). Thus,
+  we cannot use something like `@n4jsd#express` as project name.
+* PROBLEM: heuristic broken to get from last segment of URI to projectId! -> requires loading the packageJson!
+* PROBLEM: above assumption and similar assumptions in many places :(
+
+TODO:
+- project discovery (in headless compiler (--compileAllProjects) and library manager) -> factor out in new method
+- check if Eclipse allows two projects with the same name
+- double-check how requires work from inside(!) a scope folder
+  (compare with type script)
+
+
 [.language-n4js]
 == Component Dependencies
 

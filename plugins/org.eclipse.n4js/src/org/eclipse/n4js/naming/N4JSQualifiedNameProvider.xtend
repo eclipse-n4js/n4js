@@ -40,6 +40,7 @@ import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__NAME
 
 import static extension org.eclipse.emf.ecore.util.EcoreUtil.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
+import org.eclipse.n4js.utils.ProjectDescriptionUtils
 
 /**
  * Calculates the fully qualified name for the passed in objects.
@@ -150,8 +151,8 @@ class N4JSQualifiedNameProvider extends N4TSQualifiedNameProvider {
 			projectId = if (value instanceof JSONStringLiteral) value.value else null;
 		}
 		// (2) if unsuccessful, take projectId from the URI
-		if (projectId === null && uri.segmentCount > 1) {
-			projectId = uri.trimSegments(1).lastSegment;
+		if (projectId === null) {
+			projectId = ProjectDescriptionUtils.deriveProjectNameFromURI(uri.trimSegments(1));
 		}
 		// create qualified name from projectId
 		if (projectId !== null && !projectId.isEmpty) {

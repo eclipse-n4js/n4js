@@ -13,6 +13,7 @@ package org.eclipse.n4js.runner;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.emptyList;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -21,7 +22,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
@@ -39,6 +39,7 @@ import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
 import org.eclipse.n4js.utils.FindArtifactHelper;
 import org.eclipse.n4js.utils.RecursionGuard;
 import org.eclipse.n4js.utils.ResourceNameComputer;
+import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
@@ -67,26 +68,27 @@ public class RunnerHelper {
 	/**
 	 * Returns list of absolute paths to each of the given projects' output folder in the local files system.
 	 */
-	public Collection<String> getCoreProjectPaths(List<IN4JSProject> projects) {
+	public Map<Path, String> getCoreProjectPaths(List<IN4JSProject> projects) {
 		return projects.stream()
-				.map(project -> getProjectPaths(project))
-				.flatMap(paths -> paths.stream())
-				.filter(path -> !Strings.isNullOrEmpty(path))
-				.collect(Collectors.toSet());
-	}
-
-	private Collection<String> getProjectPaths(IN4JSProject project) {
-		Set<String> projectPaths = new HashSet<>();
-		projectPaths.add(getProjectPath(project));
-		return projectPaths;
+				.map(project -> getProjectNameAndPath(project))
+				.filter(nap -> nap != null)
+				.collect(Collectors.toMap(Pair::getKey, Pair::getValue));
 	}
 
 	/** get path to the project itself */
-	private String getProjectPath(IN4JSProject project) {
+	private Pair<Path, String> getProjectNameAndPath(IN4JSProject project) {
 		if (!project.exists())
 			return null;
-		final String pp = project.getLocationPath().normalize().toAbsolutePath().toString();
-		return pp;
+		final String name = project.getProjectId();
+		if (name == null)
+			return null;
+		final Path path = project.getLocationPath();
+		if (path == null)
+			return null;
+		final Path pathNormalized = path.normalize().toAbsolutePath();
+		if (pathNormalized.toString().isEmpty())
+			return null;
+		return Pair.of(pathNormalized, name);
 	}
 
 	/**

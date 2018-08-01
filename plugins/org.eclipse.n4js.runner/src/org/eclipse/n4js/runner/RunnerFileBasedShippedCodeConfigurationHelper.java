@@ -10,9 +10,10 @@
  */
 package org.eclipse.n4js.runner;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.runner.extension.RunnerRegistry;
@@ -67,7 +68,7 @@ public class RunnerFileBasedShippedCodeConfigurationHelper {
 				allShippedProjects);
 		if (!customBootstrapProjects.isEmpty()) {
 			runnerFrontEnd.configureRuntimeEnvironment(config, customBootstrapProjects);
-			Collection<String> coreProjectPaths = runnerHelper.getCoreProjectPaths(customBootstrapProjects);
+			Map<Path, String> coreProjectPaths = runnerHelper.getCoreProjectPaths(customBootstrapProjects);
 			config.addCoreProjectPaths(coreProjectPaths);
 		}
 	}

@@ -92,6 +92,7 @@ import org.eclipse.n4js.semver.Semver.URLVersionRequirement;
 import org.eclipse.n4js.semver.Semver.VersionRangeConstraint;
 import org.eclipse.n4js.semver.Semver.VersionRangeSetRequirement;
 import org.eclipse.n4js.semver.model.SemverSerializer;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.validation.helper.FolderContainmentHelper;
@@ -169,6 +170,11 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 			return;
 		}
 		final JSONStringLiteral projectName = (JSONStringLiteral) projectNameValue;
+
+		if (ProjectDescriptionUtils.isProjectNameWithScope(projectName.getValue())) {
+			// TODO validation for project names with scope, i.e. "@scope/myProject"
+			return;
+		}
 
 		// make sure the name conforms to the IDENTIFIER_PATTERN
 		if (!IDENTIFIER_PATTERN.matcher(projectName.getValue()).matches()) {

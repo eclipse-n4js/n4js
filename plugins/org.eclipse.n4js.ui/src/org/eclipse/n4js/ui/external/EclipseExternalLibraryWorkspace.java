@@ -50,6 +50,7 @@ import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
 import org.eclipse.n4js.ui.utils.UIUtils;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.resources.ExternalProject;
 import org.eclipse.n4js.utils.resources.IExternalResource;
@@ -139,7 +140,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	public Iterator<URI> getFolderIterator(URI folderLocation) {
 		URI findProjectWith = findProjectWith(folderLocation);
 		if (null != findProjectWith) {
-			String projectName = findProjectWith.lastSegment();
+			String projectName = ProjectDescriptionUtils.deriveProjectNameFromURI(findProjectWith);
 			ExternalProject project = projectProvider.getProject(projectName);
 			if (null != project) {
 				String projectPath = new File(project.getLocationURI()).getAbsolutePath();
@@ -394,7 +395,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 		if (nestedResource.exists()) {
 			URI projectLocation = findProjectWith(location);
 			if (null != projectLocation) {
-				String projectName = projectLocation.lastSegment();
+				String projectName = ProjectDescriptionUtils.deriveProjectNameFromURI(projectLocation);
 				IProject project = getProject(projectName);
 				if (project instanceof ExternalProject) {
 					File projectResource = new File(project.getLocationURI());

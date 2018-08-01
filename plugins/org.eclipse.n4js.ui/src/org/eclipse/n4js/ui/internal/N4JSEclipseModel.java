@@ -80,13 +80,15 @@ public class N4JSEclipseModel extends N4JSModel {
 					"Expected 2 segment counts for platform resource URI. Was " + location.segmentCount());
 		}
 
-		final String projectName = location.lastSegment();
+		final String projectName = ProjectDescriptionUtils.deriveProjectNameFromURI(location);
 		final IProject project;
 		if (location.isFile()) {
 			project = externalLibraryWorkspace.getProject(projectName);
 			checkNotNull(project, "Project does not exist in external workspace. URI: " + location);
 		} else {
-			project = workspace.getProject(projectName);
+			final String eclipseProjectName = ProjectDescriptionUtils
+					.convertN4JSProjectNameToEclipseProjectName(projectName);
+			project = workspace.getProject(eclipseProjectName);
 		}
 
 		return doGetN4JSProject(project, location);
@@ -94,8 +96,10 @@ public class N4JSEclipseModel extends N4JSModel {
 
 	@Override
 	protected IN4JSProject newAbsentProject(String projectId) {
-		final URI absent = URI.createPlatformResourceURI(projectId, false);
-		return new N4JSEclipseProject(workspace.getProject(projectId), absent, this);
+		final URI uri = URI.createPlatformResourceURI(projectId, false);
+		final String eclipseProjectName = ProjectDescriptionUtils
+				.convertN4JSProjectNameToEclipseProjectName(projectId);
+		return new N4JSEclipseProject(workspace.getProject(eclipseProjectName), uri, this);
 	}
 
 	@Override

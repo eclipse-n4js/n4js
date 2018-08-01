@@ -13,9 +13,9 @@ package org.eclipse.n4js.runner;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ProcessBuilder.Redirect;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,7 +35,6 @@ import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
 import org.eclipse.n4js.utils.ResourceNameComputer;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -189,7 +188,8 @@ public class RunnerFrontEnd {
 
 		config.setUseCustomBootstrap(true);
 
-		config.setCoreProjectPaths(Lists.newArrayList(additionalPath));
+		// XXX
+		// config.setCoreProjectPaths(Maps.newLinkedHashMap(additionalPath));
 
 		config.setExecutionData(RunConfiguration.EXEC_DATA_KEY__USER_SELECTION,
 				userSelectionNodePathResolvableTargetFileName);
@@ -255,7 +255,7 @@ public class RunnerFrontEnd {
 			final IN4JSProject p3 = p2 != null ? p2 : p;
 			return p3;
 		}).collect(Collectors.toList());
-		final Collection<String> coreProjectPaths = runnerHelper.getCoreProjectPaths(depsImpl);
+		final Map<Path, String> coreProjectPaths = runnerHelper.getCoreProjectPaths(depsImpl);
 		config.setCoreProjectPaths(coreProjectPaths);
 	}
 
