@@ -209,8 +209,8 @@ public interface IN4JSProject extends IN4JSSourceContainerAware {
 	/**
 	 * Returns the name of the package this {@code project} provides type definitions for.
 	 *
-	 * {@code null} if this project is not a type definitions project (cf. {@link ProjectType#DEFINITION} and/or does
-	 * not specify the property.
+	 * {@code null} if this project does not specify the property (i.e. not a type definitions project (cf.
+	 * {@link ProjectType#DEFINITION}).
 	 */
 	public String getDefinesPackage();
 }

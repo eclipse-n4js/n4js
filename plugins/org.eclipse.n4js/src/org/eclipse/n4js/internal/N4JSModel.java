@@ -570,8 +570,8 @@ public class N4JSModel {
 	/**
 	 * Returns the name of the package the given {@code project} provides type definitions for.
 	 *
-	 * {@code null} if this project is not a type definitions project (cf. {@link ProjectType#DEFINITION} and/or does
-	 * not specify the property.
+	 * {@code null} if this project does not specify the property (i.e. not a type definitions project (cf.
+	 * {@link ProjectType#DEFINITION}).
 	 */
 	public String getDefinesPackage(final IN4JSProject project) {
 		if (null == project) {

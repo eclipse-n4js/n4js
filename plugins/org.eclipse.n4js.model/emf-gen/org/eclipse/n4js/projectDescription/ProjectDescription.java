@@ -486,8 +486,8 @@ public interface ProjectDescription extends EObject {
 	 * <!-- begin-model-doc -->
 	 * *
 	 *  Returns the name of the package the project provides type definitions for.
-	 * 	 * {@code null} if this project is not a type definitions project (cf. {@link ProjectType#DEFINITION} and/or does
-	 * not specify the property.
+	 * 	 * {@code null} if this project does not specify the property (i.e. not a
+	 * type definitions project (cf. {@link ProjectType#DEFINITION}).
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Defines Package</em>' attribute.
 	 * @see #setDefinesPackage(String)

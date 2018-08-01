@@ -26,17 +26,17 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import com.google.common.collect.ImmutableList;
 
 /**
- * Supplier for the ordered list of dependencies of a given {@link IN4JSProject}, in such that it is assured sthat type
+ * Supplier for the ordered list of dependencies of a given {@link IN4JSProject} such that it is assured that type
  * definitions shadow their implementation projects..
  *
  * In contrast to {@link IN4JSProject#getDependencies()}, this supplier applies an explicit ordering that is of
- * significance when using the list of dependencies to constructing scopes.
+ * significance when using the list of dependencies for constructing scopes.
  */
 public class TypeDefinitionsAwareDependenciesSupplier {
 	/**
 	 * Returns an iterable of dependencies of the given {@code project}.
 	 *
-	 * Re-arranges the positions of type definition projects in such, that they always occur right in front of the
+	 * Re-arranges the positions of type definition projects in such that they always occur right in front of the
 	 * corresponding implementation project. As a consequence, the contents of the type definition source containers
 	 * always has precedence over implementation project's source containers, enabling shadowing on the module-level.
 	 *
@@ -47,7 +47,7 @@ public class TypeDefinitionsAwareDependenciesSupplier {
 	 */
 	public Iterable<IN4JSProject> get(IN4JSProject project) {
 		final ImmutableList<? extends IN4JSProject> dependencies = project.getDependencies();
-		// keep ordered list of type definition projects per project Id
+		// keep ordered list of type definition projects per project ID of the definesPackage property
 		final Map<String, List<IN4JSProject>> typeDefinitionsById = new HashMap<>();
 		// runtime dependencies (non-type dependencies)
 		final List<IN4JSProject> runtimeDependencies = new LinkedList<>();
@@ -75,6 +75,7 @@ public class TypeDefinitionsAwareDependenciesSupplier {
 
 		final List<IN4JSProject> orderedDependencies = new LinkedList<>();
 
+		// construct ordered list of dependencies
 		for (IN4JSProject dependency : runtimeDependencies) {
 			final String projectId = dependency.getProjectId();
 			final Collection<IN4JSProject> typeDefinitionProjects = typeDefinitionsById.getOrDefault(projectId,

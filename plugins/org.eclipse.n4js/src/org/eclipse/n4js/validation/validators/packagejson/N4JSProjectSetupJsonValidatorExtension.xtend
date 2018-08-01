@@ -619,8 +619,11 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	}
 	
 	/**
-	 * Returns a representation of all declared runtime dependencies (devDependencies + dependencies) of 
-	 * the currently validate document (cf. {@link #getDocument()}). 
+	 * Returns a representation of all declared runtime dependencies of 
+	 * the currently validate document (cf. {@link #getDocument()}).
+	 * 
+	 * @param includeDevDependencies 
+	 * 					Specifies whether the returned iterable should also include devDependencies.	
 	 */
 	private def Iterable<ValidationProjectReference> getDependencies(boolean includeDevDependencies) {
 		val references = newArrayList;
@@ -1022,7 +1025,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	}
 
 	/**
-	  * Intermediate validation-only representation of a project reference.*
+	  * Intermediate validation-only representation of a project reference.
 	  * 
 	  * This may or may not include a {@link #versionConstraint}.
 	  * 
@@ -1115,7 +1118,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	 * @param allowReflexive 
 	 * 				Specifies whether reflexive (self) references are allowed. 
 	 */
-	private def Multimap<String, ValidationProjectReference> checkReferencedProjects(Iterable<ValidationProjectReference> references, Predicate<IN4JSProject> projectPredicate, 
+	private def void checkReferencedProjects(Iterable<ValidationProjectReference> references, Predicate<IN4JSProject> projectPredicate, 
 		String sectionLabel, boolean enforceDependency, boolean allowReflexive) {
 
 		val description = getProjectDescription();
@@ -1185,8 +1188,6 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		if (enforceDependency) {
 			checkDeclaredDependencies(existentIds.values, sectionLabel)
 		}
-		
-		return existentIds;
 	}
 
 	private def checkForDuplicateProjectReferences(Multimap<String, ValidationProjectReference> validProjectRefs) {
