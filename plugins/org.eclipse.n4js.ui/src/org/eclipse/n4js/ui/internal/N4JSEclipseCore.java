@@ -23,7 +23,6 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.internal.AbstractN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
-import org.eclipse.n4js.ui.projectModel.IN4JSEclipseArchive;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
 import org.eclipse.xtext.resource.IResourceDescriptions;
@@ -105,21 +104,6 @@ public class N4JSEclipseCore extends AbstractN4JSCore implements IN4JSEclipseCor
 	}
 
 	@Override
-	public Optional<? extends IN4JSEclipseArchive> findArchive(URI archiveLocation) {
-		if (archiveLocation == null) {
-			return Optional.absent();
-		}
-		N4JSEclipseProject project = model.findProjectWith(archiveLocation);
-		if (project != null) {
-			N4JSEclipseArchive archive = model.getN4JSArchive(project, archiveLocation);
-			if (archive != null) {
-				return Optional.<IN4JSEclipseArchive> of(archive);
-			}
-		}
-		return Optional.absent();
-	}
-
-	@Override
 	public Optional<? extends IN4JSSourceContainer> create(IFile eclipseFile) {
 		if (eclipseFile == null) {
 			return Optional.absent();
@@ -146,7 +130,8 @@ public class N4JSEclipseCore extends AbstractN4JSCore implements IN4JSEclipseCor
 	@Override
 	public ResourceSet createResourceSet(Optional<IN4JSProject> contextProject) {
 		final IProject eclipseProject = contextProject.isPresent()
-				? ((IN4JSEclipseProject) contextProject.get()).getProject() : null;
+				? ((IN4JSEclipseProject) contextProject.get()).getProject()
+				: null;
 		final ResourceSet resourceSet = resourceSetProvider.get(eclipseProject);
 		// note_1: it is different than
 		// org.eclipse.n4js.internal.N4JSRuntimeCore.createResourceSet(Optional<IN4JSProject>)

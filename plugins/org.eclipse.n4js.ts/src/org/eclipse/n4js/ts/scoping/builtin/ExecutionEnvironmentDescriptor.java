@@ -21,9 +21,6 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
  */
 public class ExecutionEnvironmentDescriptor {
 
-	@SuppressWarnings("unused")
-	private static final String ENV_DEFAULT_NFAR = "env";
-
 	private final ResourceSet resourceSet;
 	@SuppressWarnings("unused")
 	private final ClassLoader classLoader;

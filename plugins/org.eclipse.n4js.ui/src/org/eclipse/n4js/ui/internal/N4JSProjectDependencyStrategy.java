@@ -18,7 +18,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
 import org.eclipse.n4js.utils.resources.ExternalProject;
@@ -64,9 +64,9 @@ public class N4JSProjectDependencyStrategy implements ProjectDescriptionLoadList
 					.filter(IN4JSEclipseProject.class).toList();
 
 			// This is for the extended RE, if specified.
-			final IN4JSSourceContainerAware srcContainerAware = n4Project.getExtendedRuntimeEnvironment().orNull();
-			final IN4JSEclipseProject extendedRE = srcContainerAware instanceof IN4JSEclipseProject
-					? (IN4JSEclipseProject) srcContainerAware
+			final IN4JSProject runtimeEnvironmentProject = n4Project.getExtendedRuntimeEnvironment().orNull();
+			final IN4JSEclipseProject extendedRE = runtimeEnvironmentProject instanceof IN4JSEclipseProject
+					? (IN4JSEclipseProject) runtimeEnvironmentProject
 					: null;
 
 			int projectCount = dependencies.size() + providedRuntimeLibs.size();
