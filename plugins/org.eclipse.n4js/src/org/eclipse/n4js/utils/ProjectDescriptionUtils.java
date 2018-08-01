@@ -29,25 +29,31 @@ import com.google.common.base.Joiner;
  */
 public class ProjectDescriptionUtils {
 
+	public static final String NPM_SCOPE_PREFIX = "@";
+	public static final char NPM_SCOPE_SEPARATOR = '/';
+	public static final char NPM_SCOPE_SEPARATOR_ECLIPSE = '_';
+
 	/**
 	 * Tells if the given project name uses an npm scope, i.e. is of the form <code>@scopeName/projectName</code>.
 	 */
 	public static boolean isProjectNameWithScope(String projectName) {
-		return projectName != null && projectName.startsWith("@") && projectName.contains("/");
+		return projectName != null
+				&& projectName.startsWith(NPM_SCOPE_PREFIX)
+				&& projectName.indexOf(NPM_SCOPE_SEPARATOR) >= 0;
 	}
 
 	public static String deriveProjectNameFromURI(URI uri) {
 		int segCount = uri.segmentCount();
 		String last = segCount > 0 ? uri.segment(segCount - 1) : null;
 		if (uri.isPlatform()) {
-			if (last != null && last.startsWith("@")) {
-				last = replaceFirst(last, '_', '/');
+			if (last != null && last.startsWith(NPM_SCOPE_PREFIX)) {
+				last = replaceFirst(last, NPM_SCOPE_SEPARATOR_ECLIPSE, NPM_SCOPE_SEPARATOR);
 			}
 			return last;
 		}
 		String secondToLast = segCount > 1 ? uri.segment(segCount - 2) : null;
-		if (secondToLast != null && secondToLast.startsWith("@")) {
-			return secondToLast + "/" + last;
+		if (secondToLast != null && secondToLast.startsWith(NPM_SCOPE_PREFIX)) {
+			return secondToLast + NPM_SCOPE_SEPARATOR + last;
 		}
 		return last;
 	}
@@ -69,15 +75,15 @@ public class ProjectDescriptionUtils {
 	}
 
 	public static String convertN4JSProjectNameToEclipseProjectName(String name) {
-		if (name != null && name.startsWith("@")) {
-			return replaceFirst(name, '/', '_');
+		if (name != null && name.startsWith(NPM_SCOPE_PREFIX)) {
+			return replaceFirst(name, NPM_SCOPE_SEPARATOR, NPM_SCOPE_SEPARATOR_ECLIPSE);
 		}
 		return name;
 	}
 
 	public static String convertEclipseProjectNameToN4JSProjectName(String name) {
-		if (name != null && name.startsWith("@")) {
-			return replaceFirst(name, '_', '/');
+		if (name != null && name.startsWith(NPM_SCOPE_PREFIX)) {
+			return replaceFirst(name, NPM_SCOPE_SEPARATOR_ECLIPSE, NPM_SCOPE_SEPARATOR);
 		}
 		return name;
 	}
