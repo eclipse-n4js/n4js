@@ -39,6 +39,7 @@ import org.eclipse.n4js.utils.DependencyTraverser.DependencyVisitor;
 import org.eclipse.n4js.validation.helper.SourceContainerAwareDependencyProvider;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 
 /**
@@ -134,7 +135,7 @@ public class RuntimeEnvironmentsHelper {
 	 *            to be analyzed
 	 * @return list of transitive dependencies of type runtime library, no duplicates
 	 */
-	private Collection<IN4JSProject> collectRequiredRuntimeLibraries(IN4JSProject project) {
+	private ImmutableList<IN4JSProject> collectRequiredRuntimeLibraries(IN4JSProject project) {
 		Set<IN4JSProject> runtimeLibraryDependencies = new HashSet<>();
 
 		final DependencyVisitor<IN4JSProject> visitor = new ProjectsCollectingDependencyVisitor(
@@ -150,7 +151,7 @@ public class RuntimeEnvironmentsHelper {
 			throw new DependencyCycleDetectedException(project);
 		}
 
-		return runtimeLibraryDependencies;
+		return ImmutableList.copyOf(runtimeLibraryDependencies);
 	}
 
 	/**
