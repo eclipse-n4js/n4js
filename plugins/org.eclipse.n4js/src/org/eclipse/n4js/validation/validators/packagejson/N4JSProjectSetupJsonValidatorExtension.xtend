@@ -104,6 +104,7 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 import static org.eclipse.n4js.validation.validators.packagejson.ProjectTypePredicate.*
 
 import static extension com.google.common.base.Strings.nullToEmpty
+import java.util.HashSet
 
 /**
  * A JSON validator extension that validates {@code package.json} resources in the context
@@ -404,7 +405,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		}
 		
 		if(!anyDependsOnTestLibrary(#[project])){
-			addIssuePreferred(#[], getMessageForSRCTEST_NO_TESTLIB_DEP(N4JSGlobals.MANGELHAFT), PROJECT_DEPENDENCY_CYCLE); 
+			addIssuePreferred(#[], getMessageForSRCTEST_NO_TESTLIB_DEP(N4JSGlobals.MANGELHAFT), SRCTEST_NO_TESTLIB_DEP);
 		}
 	}
 	
@@ -412,15 +413,30 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	 * check if any project in the list has dependency on test library, if so return true.
 	 * Otherwise invoke recursively in dependencies list of each project in initial list.
 	 *
-	 * NOTE: this implementation is not cycle safe!
-	 *
 	 * @returns true if any of the projects in the provided list depends (transitively) on the test library.
 	 */
 	private def boolean anyDependsOnTestLibrary(List<? extends IN4JSProject> projects) {
-		projects.findFirst[p|
-				p.dependencies.findFirst[N4JSGlobals.VENDOR_ID.equals(vendorID) && (N4JSGlobals.MANGELHAFT.equals(projectId) || N4JSGlobals.MANGELHAFT_ASSERT.equals(projectId))] !== null
-				|| anyDependsOnTestLibrary(p.dependencies)
-			] !== null
+		return anyDependsOnTestLibraryRecursive(projects, new HashSet<IN4JSProject>());
+	}
+
+	private def boolean anyDependsOnTestLibraryRecursive(List<? extends IN4JSProject> projects, Set<? extends IN4JSProject> visited) {
+		for (IN4JSProject p : projects) {
+			if (!visited.contains(p)) {
+				for (IN4JSProject pDep : p.dependencies) {
+					if ((N4JSGlobals.VENDOR_ID.equals(p.vendorID) && (N4JSGlobals.MANGELHAFT.equals(p.projectId))
+						|| N4JSGlobals.MANGELHAFT_ASSERT.equals(p.projectId)
+					)) {
+						return true;
+					}
+				}
+				val newVisited = new HashSet<IN4JSProject>(visited);
+				newVisited.addAll(projects);
+				if (anyDependsOnTestLibraryRecursive(p.dependencies, newVisited)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	private def String calculateName(IN4JSSourceContainerAware it) {
