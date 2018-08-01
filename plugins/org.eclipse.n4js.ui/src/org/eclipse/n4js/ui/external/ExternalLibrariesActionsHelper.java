@@ -47,7 +47,7 @@ public class ExternalLibrariesActionsHelper {
 	private ExternalLibrariesReloadHelper externalLibrariesReloadHelper;
 
 	@Inject
-	private TargetPlatformInstallLocationProvider locationsProvider;
+	private TargetPlatformInstallLocationProvider locationProvider;
 
 	/**
 	 * Performs {@link LibraryManager#cleanCache(IProgressMonitor)}. If that operation fails, status is mergegd into
@@ -100,7 +100,7 @@ public class ExternalLibrariesActionsHelper {
 	 */
 	public void maintenanceDeleteNpms(final MultiStatus multistatus) {
 		// get folder
-		File npmFolder = locationsProvider.getTargetPlatformInstallFolder();
+		File npmFolder = locationProvider.getTargetPlatformInstallFolder();
 
 		if (npmFolder.exists()) {
 			FileDeleter.delete(npmFolder, (IOException ioe) -> multistatus.merge(
@@ -109,7 +109,7 @@ public class ExternalLibrariesActionsHelper {
 
 		if (!npmFolder.exists()) {
 			// recreate npm folder
-			if (!locationsProvider.repairNpmFolderState()) {
+			if (!locationProvider.repairNpmFolderState()) {
 				multistatus.merge(statusHelper
 						.createError("The npm folder was not recreated correctly."));
 			}

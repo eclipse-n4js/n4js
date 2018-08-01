@@ -108,7 +108,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	private ExternalLibraryWorkspace externalLibraryWorkspace;
 
 	@Inject
-	private TargetPlatformInstallLocationProvider locationsProvider;
+	private TargetPlatformInstallLocationProvider locationProvider;
 
 	@Inject
 	private GitCloneSupplier gitSupplier;
@@ -336,14 +336,14 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	}
 
 	private boolean isNpmWithNameInstalled(final String packageName) {
-		final File root = new File(locationsProvider.getNodeModulesURI());
+		final File root = new File(locationProvider.getNodeModulesURI());
 		return from(externalLibraryWorkspace.getProjectsIn(root.toURI()))
 				.transform(p -> p.getName())
 				.anyMatch(name -> name.equals(packageName));
 	}
 
 	private Map<String, String> getInstalledNpms() {
-		final URI root = locationsProvider.getNodeModulesURI();
+		final URI root = locationProvider.getNodeModulesURI();
 		final Set<ProjectDescription> projects = from(externalLibraryWorkspace.getProjectsDescriptions((root))).toSet();
 
 		final Map<String, String> versionedNpms = new HashMap<>();
@@ -471,8 +471,8 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 		if (userChoice.decisionPurgeNpm) {
 
 			// get folders
-			File npmFolder = locationsProvider.getNodeModulesFolder();
-			File typesDefFolder = locationsProvider.getTypeDefinitionsFolder();
+			File npmFolder = locationProvider.getNodeModulesFolder();
+			File typesDefFolder = locationProvider.getTypeDefinitionsFolder();
 
 			// delete folders
 			if (npmFolder.exists()) {
@@ -487,7 +487,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 			// re-create folders
 			if (!npmFolder.exists() || !typesDefFolder.exists()) {
 				// recreate folders
-				boolean repairSucceeded = locationsProvider.repairNpmFolderState();
+				boolean repairSucceeded = locationProvider.repairNpmFolderState();
 				if (!repairSucceeded) {
 					multistatus.merge(statusHelper.createError("The npm folder was not recreated correctly."));
 				}

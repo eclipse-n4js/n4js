@@ -57,7 +57,7 @@ public class NpmPackageToProjectAdapter {
 	private StatusHelper statusHelper;
 
 	@Inject
-	private TargetPlatformInstallLocationProvider locationsProvider;
+	private TargetPlatformInstallLocationProvider locationProvider;
 
 	@Inject
 	private GitCloneSupplier gitCloneSupplier;
@@ -103,8 +103,8 @@ public class NpmPackageToProjectAdapter {
 	 */
 	public Pair<IStatus, Collection<File>> adaptPackages(Collection<String> namesOfPackagesToAdapt) {
 		final MultiStatus status = statusHelper.createMultiStatus("Status of adapting npm packages");
-		final File nodeModulesFolder = locationsProvider.getNodeModulesFolder();
-		final File typeDefFolder = locationsProvider.getTypeDefinitionsFolder();
+		final File nodeModulesFolder = locationProvider.getNodeModulesFolder();
+		final File typeDefFolder = locationProvider.getTypeDefinitionsFolder();
 		final Collection<String> names = newHashSet(namesOfPackagesToAdapt);
 		final File[] packageRoots = nodeModulesFolder.listFiles(packageName -> names.contains(packageName.getName()));
 		final File n4jsdsFolder = getNpmsTypeDefinitionsFolder();
@@ -122,11 +122,11 @@ public class NpmPackageToProjectAdapter {
 				Files.write(markerFile.toPath(), Collections.singletonList(content)); // will overwrite existing file
 
 				File newPackageRoot = new File(typeDefFolder, packageRoot.getName() + "-n4jsd");
-				if (!newPackageRoot.exists()) {
-					newPackageRoot.mkdir();
+				if (newPackageRoot.exists()) {
+					// if appropriate as a temporal solution, the marker file could also be put into the -n4jsd folder
+					File markerFile2 = new File(newPackageRoot, N4JSGlobals.PACKAGE_MARKER);
+					Files.write(markerFile2.toPath(), Collections.singletonList(content)); // overwrites existing file
 				}
-				File markerFile2 = new File(newPackageRoot, N4JSGlobals.PACKAGE_MARKER);
-				Files.write(markerFile2.toPath(), Collections.singletonList(content)); // will overwrite existing file
 			} catch (final Exception e) {
 				String msg = "Unexpected error occurred while adapting '" + packageRoot.getName()
 						+ "' npm package into N4JS format.";
@@ -154,7 +154,7 @@ public class NpmPackageToProjectAdapter {
 	 */
 	File getNpmsTypeDefinitionsFolder(final boolean performGitPull) {
 
-		File repositoryLocation = new File(locationsProvider.getTargetPlatformLocalGitRepositoryLocation());
+		File repositoryLocation = new File(locationProvider.getTargetPlatformLocalGitRepositoryLocation());
 
 		if (performGitPull && gitCloneSupplier.remoteRepoAvailable()) {
 			// pull changes
@@ -282,7 +282,7 @@ public class NpmPackageToProjectAdapter {
 	}
 
 	private IStatus copyTypeDefinitionPackage(String packageName, Path sourcePath) {
-		File typeDefFolder = locationsProvider.getTypeDefinitionsFolder();
+		File typeDefFolder = locationProvider.getTypeDefinitionsFolder();
 		Path newTargetPath = typeDefFolder.toPath().resolve(packageName + "-n4jsd");
 		IStatus status = copyN4JSDFiles(packageName, sourcePath, newTargetPath);
 		if (!status.isOK()) {

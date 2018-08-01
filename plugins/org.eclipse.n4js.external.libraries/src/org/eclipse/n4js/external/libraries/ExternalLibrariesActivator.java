@@ -203,13 +203,6 @@ public class ExternalLibrariesActivator implements BundleActivator {
 	 */
 	public static final Supplier<File> N4_NPM_FOLDER_SUPPLIER = memoize(() -> getOrCreateNpmFolder());
 
-	// /**
-	// * Supplies the {@code .n4npm/type_defintions} folder location form the worksapce's {@code .metadata} folder. This
-	// * could be missing if the {@link Platform platform} is not running.
-	// */
-	// private static final Supplier<File> N4_TYPE_DEFINITIONS_FOLDER_SUPPLIER = memoize(
-	// () -> getOrCreateTypeDefinitionsFolder());
-
 	/** Shared private bundle context. */
 	private static BundleContext context;
 

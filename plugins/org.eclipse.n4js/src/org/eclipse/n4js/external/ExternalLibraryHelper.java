@@ -23,7 +23,7 @@ import com.google.inject.Inject;
 public final class ExternalLibraryHelper {
 
 	@Inject
-	private TargetPlatformInstallLocationProvider locationsProvider;
+	private TargetPlatformInstallLocationProvider locationProvider;
 
 	/**
 	 * Returns {@code true} iff the given {@link File} represents a project directory in the workspace that is available
@@ -39,7 +39,7 @@ public final class ExternalLibraryHelper {
 
 		// GH-821-sub6: remove
 		if (Platform.isRunning()) {
-			String typeDefFolder = locationsProvider.getTypeDefinitionsFolder().toString();
+			String typeDefFolder = locationProvider.getTypeDefinitionsFolder().toString();
 			if (projectDirectory.toString().startsWith(typeDefFolder)) {
 				return false;
 			}

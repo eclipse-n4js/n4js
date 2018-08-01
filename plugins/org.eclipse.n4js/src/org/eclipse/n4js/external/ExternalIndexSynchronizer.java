@@ -57,7 +57,7 @@ public abstract class ExternalIndexSynchronizer {
 	private IN4JSCore core;
 
 	@Inject
-	private TargetPlatformInstallLocationProvider locationsProvider;
+	private TargetPlatformInstallLocationProvider locationProvider;
 
 	@Inject
 	private ProjectDescriptionLoader projectDescriptionLoader;
@@ -103,8 +103,8 @@ public abstract class ExternalIndexSynchronizer {
 	final public Map<String, Pair<URI, String>> findNpmsInFolder() {
 		Map<String, Pair<URI, String>> npmsFolder = new HashMap<>();
 
-		File typeDefFolder = locationsProvider.getTypeDefinitionsFolder();
-		File nodeModulesFolder = locationsProvider.getNodeModulesFolder();
+		File typeDefFolder = locationProvider.getTypeDefinitionsFolder();
+		File nodeModulesFolder = locationProvider.getNodeModulesFolder();
 		ArrayList<File> rootFolders = Lists.newArrayList(nodeModulesFolder, typeDefFolder);
 		for (File rootFolder : rootFolders) {
 			if (!rootFolder.isDirectory()) {
@@ -194,8 +194,8 @@ public abstract class ExternalIndexSynchronizer {
 	private Map<String, Pair<URI, String>> findNpmsInIndex() {
 		Map<String, Pair<URI, String>> npmsIndex = new HashMap<>();
 
-		String nodeModulesLocation = locationsProvider.getNodeModulesURI().toString();
-		String typeDefLocation = locationsProvider.getTypeDefinitionsURI().toString() + File.separator;
+		String nodeModulesLocation = locationProvider.getNodeModulesURI().toString();
+		String typeDefLocation = locationProvider.getTypeDefinitionsURI().toString() + File.separator;
 		ResourceSet resourceSet = core.createResourceSet(Optional.absent());
 		IResourceDescriptions index = core.getXtextIndex(resourceSet);
 
