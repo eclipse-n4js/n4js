@@ -35,6 +35,7 @@ import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
 import org.eclipse.n4js.utils.ResourceNameComputer;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -174,7 +175,7 @@ public class RunnerFrontEnd {
 	 */
 	public RunConfiguration createXpectOutputTestConfiguration(String runnerId,
 			String userSelectionNodePathResolvableTargetFileName, SystemLoaderInfo systemLoader,
-			String additionalPath) {
+			Path additionalProjectPath, String additionalProjectId) {
 
 		final IRunnerDescriptor runnerDesc = runnerRegistry.getDescriptor(runnerId);
 		final IRunner runner = runnerDesc.getRunner();
@@ -188,8 +189,7 @@ public class RunnerFrontEnd {
 
 		config.setUseCustomBootstrap(true);
 
-		// XXX
-		// config.setCoreProjectPaths(Maps.newLinkedHashMap(additionalPath));
+		config.setCoreProjectPaths(ImmutableMap.of(additionalProjectPath, additionalProjectId));
 
 		config.setExecutionData(RunConfiguration.EXEC_DATA_KEY__USER_SELECTION,
 				userSelectionNodePathResolvableTargetFileName);

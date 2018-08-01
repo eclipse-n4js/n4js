@@ -172,7 +172,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		final JSONStringLiteral projectName = (JSONStringLiteral) projectNameValue;
 
 		if (ProjectDescriptionUtils.isProjectNameWithScope(projectName.getValue())) {
-			// TODO validation for project names with scope, i.e. "@scope/myProject"
+			// FIXME GH-1026 validation for project names with scope, i.e. "@scope/myProject"
 			return;
 		}
 
