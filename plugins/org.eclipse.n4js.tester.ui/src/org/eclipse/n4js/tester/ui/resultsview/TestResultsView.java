@@ -31,6 +31,7 @@ import static org.eclipse.swt.SWT.NONE;
 import static org.eclipse.swt.widgets.Display.getDefault;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -1553,7 +1554,12 @@ public class TestResultsView extends ViewPart {
 							final TestSession session = from(registeredSessions).firstMatch(s -> s.root == currentRoot)
 									.orNull();
 							if (null != session) {
-								session.root.stopRunning();
+								// handle early termination of tester process
+								if (session.root.isRunning()) {
+									onEarlyTermination(session);
+									session.root.stopRunning();
+								}
+								// in any case, make sure the actions are refreshed
 								refreshActions();
 							}
 						}
@@ -1561,6 +1567,48 @@ public class TestResultsView extends ViewPart {
 
 				}
 			}.start();
+		}
+	}
+
+	/**
+	 * Handles an early termination of the tester process, by setting all remaining running test cases / suites to an
+	 * error status informing the user about the early termination.
+	 *
+	 * Also sets test cases that have not been run yet to result {@link TestStatus#SKIPPED}.
+	 */
+	private void onEarlyTermination(TestSession session) {
+		final TestResult earlyTerminationResult = new TestResult(TestStatus.ERROR);
+		earlyTerminationResult
+				.setTrace(Arrays.asList("Error: Unexpected termination of the tester process."));
+
+		// collect all nodes
+		final Set<ResultNode> allNodes = new HashSet<>();
+		collectAllNodes(session.root, allNodes);
+
+		// update status of leaf nodes
+		for (ResultNode node : allNodes) {
+			if (!node.isLeaf()) {
+				continue;
+			}
+			if (node.isRunning()) {
+				node.stopRunning();
+				node.updateResult(earlyTerminationResult);
+				updateNode(node);
+			} else if (node.getStatus() == null) {
+				node.updateResult(new TestResult(TestStatus.SKIPPED));
+				updateNode(node);
+			}
+		}
+	}
+
+	/** Recursively collects all child nodes, reachable from the given {@code root}. */
+	private void collectAllNodes(ResultNode root, Set<ResultNode> nodes) {
+		if (nodes.contains(root)) {
+			return;
+		}
+		nodes.add(root);
+		for (ResultNode child : root.getChildren()) {
+			collectAllNodes(child, nodes);
 		}
 	}
 }
