@@ -102,7 +102,7 @@ public interface TargetPlatformInstallLocationProvider {
 	/** @return the {@link File} pointing to the given folder inside the target platform */
 	default File getFolderInTargetPlatformLocation(String folderName) {
 		synchronized (folderName) {
-			if (null == getTargetPlatformInstallURI()) {
+			if (null == getTargetPlatformInstallFolder()) {
 				final String message = "Target platform install location was not specified.";
 				final NullPointerException exception = new NullPointerException(message);
 				LOGGER.error(message, exception);
@@ -110,7 +110,7 @@ public interface TargetPlatformInstallLocationProvider {
 				throw exception;
 			}
 
-			final File installLocation = new File(getTargetPlatformInstallURI());
+			final File installLocation = getTargetPlatformInstallFolder();
 			checkState(installLocation.isDirectory(),
 					"Cannot locate target platform install location: " + installLocation);
 
@@ -169,10 +169,14 @@ public interface TargetPlatformInstallLocationProvider {
 	 */
 	default boolean repairNpmFolderState() {
 		boolean success = true;
-		File npmFile = getNodeModulesFolder();
-		File tdFile = getTypeDefinitionsFolder();
-		success &= npmFile != null && npmFile.isDirectory();
-		success &= tdFile != null && tdFile.isDirectory();
+		File installLocation = getTargetPlatformInstallFolder();
+		success &= installLocation.mkdir();
+		if (success) {
+			File npmFile = getNodeModulesFolder();
+			File tdFile = getTypeDefinitionsFolder();
+			success &= npmFile != null && npmFile.isDirectory();
+			success &= tdFile != null && tdFile.isDirectory();
+		}
 		return success;
 	}
 }
