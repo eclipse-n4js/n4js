@@ -12,6 +12,7 @@ package org.eclipse.n4js.external;
 
 import java.io.File;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.n4js.N4JSGlobals;
 
 import com.google.inject.Inject;
@@ -37,9 +38,11 @@ public final class ExternalLibraryHelper {
 		}
 
 		// GH-821-sub6: remove
-		String typeDefFolder = locationsProvider.getTypeDefinitionsFolder().toString();
-		if (projectDirectory.toString().startsWith(typeDefFolder)) {
-			return false;
+		if (Platform.isRunning()) {
+			String typeDefFolder = locationsProvider.getTypeDefinitionsFolder().toString();
+			if (projectDirectory.toString().startsWith(typeDefFolder)) {
+				return false;
+			}
 		}
 
 		// check whether package.json and package.marker files exists
