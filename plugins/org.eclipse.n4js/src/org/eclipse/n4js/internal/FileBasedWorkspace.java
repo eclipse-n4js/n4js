@@ -10,25 +10,18 @@
  */
 package org.eclipse.n4js.internal;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 import org.eclipse.emf.common.util.AbstractTreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectReference;
-import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.URIUtils;
 
@@ -47,12 +40,8 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 
 	private final ProjectDescriptionLoader projectDescriptionLoader;
 
-	private final ClasspathPackageManager packageManager;
-
 	@Inject
-	public FileBasedWorkspace(ClasspathPackageManager packageManager,
-			ProjectDescriptionLoader projectDescriptionLoader) {
-		this.packageManager = packageManager;
+	public FileBasedWorkspace(ProjectDescriptionLoader projectDescriptionLoader) {
 		this.projectDescriptionLoader = projectDescriptionLoader;
 	}
 
@@ -73,13 +62,13 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 
 		URI location = URIUtils.normalize(unsafeLocation);
 		if (!projectElementHandles.containsKey(location)) {
-			LazyProjectDescriptionHandle lazyDescriptionHandle = createLazyDescriptionHandle(location, false);
+			LazyProjectDescriptionHandle lazyDescriptionHandle = createLazyDescriptionHandle(location);
 			projectElementHandles.put(location, lazyDescriptionHandle);
 		}
 	}
 
-	protected LazyProjectDescriptionHandle createLazyDescriptionHandle(URI location, boolean archive) {
-		return new LazyProjectDescriptionHandle(location, archive, projectDescriptionLoader);
+	protected LazyProjectDescriptionHandle createLazyDescriptionHandle(URI location) {
+		return new LazyProjectDescriptionHandle(location, projectDescriptionLoader);
 	}
 
 	@Override
@@ -122,73 +111,17 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 	}
 
 	@Override
-	public URI getLocation(URI unsafeLocation, ProjectReference projectReference,
-			N4JSSourceContainerType expectedN4JSSourceContainerType) {
-		URI projectURI = URIUtils.normalize(unsafeLocation);
+	public URI getLocation(URI unsafeLocation, ProjectReference projectReference) {
 		String projectId = projectReference.getProjectId();
-		if (expectedN4JSSourceContainerType == N4JSSourceContainerType.ARCHIVE) {
-			LazyProjectDescriptionHandle baseHandle = projectElementHandles.get(projectURI);
-			if (baseHandle != null && !baseHandle.isArchive()) {
-				// TODO remove .nfar support
-				// String archiveFileName = projectId + IN4JSArchive.NFAR_FILE_EXTENSION_WITH_DOT;
-				// for (String libraryPath : baseHandle.resolve().getLibraryPaths()) {
-				// URI archiveURI = projectURI.appendSegments(new String[] { libraryPath, archiveFileName });
-				// if (projectElementHandles.containsKey(archiveURI)) {
-				// return archiveURI;
-				// }
-				// }
-			} else {
-				String archiveFileName = projectId + IN4JSArchive.NFAR_FILE_EXTENSION_WITH_DOT;
-				for (URI location : projectElementHandles.keySet()) {
-					if (location.lastSegment().equals(archiveFileName)) {
-						LazyProjectDescriptionHandle lazyHandle = projectElementHandles.get(location);
-						if (lazyHandle != null) {
-							return lazyHandle.getLocation();
-						}
-					}
-				}
-			}
-			URI location = packageManager.getLocation(projectId);
-			if (location != null) {
-				if (projectElementHandles.containsKey(location)) {
-					return location;
-				}
-				projectElementHandles.put(location, createLazyDescriptionHandle(location, true));
-				return location;
-			}
-		} else {
-			for (URI location : projectElementHandles.keySet()) {
-				if (location.lastSegment().equals(projectId)) {
-					LazyProjectDescriptionHandle lazyHandle = projectElementHandles.get(location);
-					if (lazyHandle != null) {
-						return lazyHandle.getLocation();
-					}
+		for (URI location : projectElementHandles.keySet()) {
+			if (location.lastSegment().equals(projectId)) {
+				LazyProjectDescriptionHandle lazyHandle = projectElementHandles.get(location);
+				if (lazyHandle != null) {
+					return lazyHandle.getLocation();
 				}
 			}
 		}
 		return null;
-	}
-
-	@Override
-	public Iterator<URI> getArchiveIterator(final URI unsafeLocation, String archiveRelativeLocation) {
-		URI archiveLocation = URIUtils.normalize(unsafeLocation);
-		File archiveFile = new File(java.net.URI.create(archiveLocation.toString()));
-		ZipInputStream stream = null;
-		try {
-			stream = new ZipInputStream(new BufferedInputStream(new FileInputStream(archiveFile)));
-			Iterator<ZipEntry> entries = getArchiveIterator(stream, archiveRelativeLocation);
-			return toArchiveURIs(archiveLocation, entries);
-		} catch (FileNotFoundException e) {
-			return Collections.emptyIterator();
-		} finally {
-			if (stream != null) {
-				try {
-					stream.close();
-				} catch (IOException e) {
-					// ignore
-				}
-			}
-		}
 	}
 
 	@Override

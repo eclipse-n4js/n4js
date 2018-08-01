@@ -87,8 +87,8 @@ public class N4JSGlobalScopeProvider extends DefaultN4GlobalScopeProvider {
 	 * Creates a new container scope containing only resource descriptions of the current project. With this container a
 	 * {@link UserDataAwareScope} is created.
 	 * <p>
-	 * This method is called for every container (that is source folder or archive) the current project depends on
-	 * according to the settings in the manifest,. This information has been indirectly retrieved via
+	 * This method is called for every container the current project depends on according to the settings in the project
+	 * description file. This information has been indirectly retrieved via
 	 * {@link org.eclipse.n4js.projectModel.IN4JSProject#getDependencies()}.
 	 */
 	@Override

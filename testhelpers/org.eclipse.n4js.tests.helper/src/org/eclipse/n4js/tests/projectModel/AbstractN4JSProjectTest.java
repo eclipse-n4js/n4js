@@ -13,7 +13,6 @@ package org.eclipse.n4js.tests.projectModel;
 import static org.junit.Assert.assertEquals;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
@@ -97,21 +96,4 @@ public abstract class AbstractN4JSProjectTest extends AbstractProjectModelTest {
 		assertEquals(first, second);
 	}
 
-	@SuppressWarnings("javadoc")
-	@Test
-	public void testGetLibraries_02() {
-		URI doesNotExist = myProjectURI.trimSegments(1).appendSegment("doesNotExist");
-		IN4JSProject project = getN4JSCore().create(doesNotExist);
-		ImmutableList<? extends IN4JSArchive> libraries = project.getLibraries();
-		assertEquals(0, libraries.size());
-	}
-
-	@SuppressWarnings("javadoc")
-	@Test
-	public void testGetLibraries_03() {
-		IN4JSProject project = getN4JSCore().create(myProjectURI);
-		ImmutableList<? extends IN4JSArchive> first = project.getLibraries();
-		ImmutableList<? extends IN4JSArchive> second = project.getLibraries();
-		assertEquals(first, second);
-	}
 }

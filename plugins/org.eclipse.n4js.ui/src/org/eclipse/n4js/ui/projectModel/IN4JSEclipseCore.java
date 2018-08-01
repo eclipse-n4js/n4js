@@ -14,11 +14,10 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.common.util.URI;
-
-import com.google.common.base.Optional;
-
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+
+import com.google.common.base.Optional;
 
 /**
  * The plug-in runtime facade for the n4js model containing the core (UI-free) support for n4js projects.
@@ -67,13 +66,4 @@ public interface IN4JSEclipseCore extends IN4JSCore {
 
 	@Override
 	Optional<? extends IN4JSEclipseProject> findProject(URI nestedLocation);
-
-	/**
-	 * Returns the N4JS archive that contains the element at the given location.
-	 *
-	 * @param archiveLocation
-	 *            the archive location
-	 * @return the n4js archive corresponding to the given project.
-	 */
-	Optional<? extends IN4JSEclipseArchive> findArchive(URI archiveLocation);
 }

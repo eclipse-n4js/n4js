@@ -56,7 +56,6 @@ import org.eclipse.n4js.projectDescription.SourceContainerDescription
 import org.eclipse.n4js.projectDescription.SourceContainerType
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.IN4JSProject
-import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement
@@ -425,7 +424,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			] !== null
 	}
 
-	private def String calculateName(IN4JSSourceContainerAware it) {
+	private def String calculateName(IN4JSProject it) {
 		it.projectId;
 	}
 

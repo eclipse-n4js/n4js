@@ -15,7 +15,6 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.projectDescription.SourceContainerType;
-import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -38,16 +37,6 @@ public class N4JSProjectSourceContainer extends AbstractSourceContainer implemen
 	@Override
 	public IN4JSProject getProject() {
 		return project;
-	}
-
-	@Override
-	public IN4JSArchive getLibrary() {
-		return null;
-	}
-
-	@Override
-	public boolean isLibrary() {
-		return false;
 	}
 
 	@Override

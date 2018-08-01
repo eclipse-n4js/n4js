@@ -11,7 +11,6 @@
 package org.eclipse.n4js.tests.projectModel;
 
 import org.eclipse.n4js.N4JSInjectorProvider;
-import org.eclipse.n4js.internal.ClasspathPackageManager;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.internal.N4JSRuntimeCore;
@@ -31,9 +30,6 @@ import com.google.inject.Injector;
 public class N4JSRuntimeCoreTest extends AbstractN4JSCoreTest {
 
 	@Inject
-	private ClasspathPackageManager classpathPackageManager;
-
-	@Inject
 	private ProjectDescriptionLoader projectDescriptionLoader;
 
 	@Inject
@@ -50,7 +46,7 @@ public class N4JSRuntimeCoreTest extends AbstractN4JSCoreTest {
 
 	@Override
 	public void setUp() {
-		workspace = new FileBasedWorkspace(classpathPackageManager, projectDescriptionLoader);
+		workspace = new FileBasedWorkspace(projectDescriptionLoader);
 		N4JSModel model = new N4JSModel(workspace);
 		injector.injectMembers(model);
 		testMe = new N4JSRuntimeCore(workspace, model);

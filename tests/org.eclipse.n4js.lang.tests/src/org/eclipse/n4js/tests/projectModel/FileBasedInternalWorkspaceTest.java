@@ -11,7 +11,6 @@
 package org.eclipse.n4js.tests.projectModel;
 
 import org.eclipse.n4js.N4JSInjectorProvider;
-import org.eclipse.n4js.internal.ClasspathPackageManager;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
@@ -28,9 +27,6 @@ import com.google.inject.Inject;
 public class FileBasedInternalWorkspaceTest extends AbstractInternalWorkspaceTest {
 
 	@Inject
-	private ClasspathPackageManager classpathPackageManager;
-
-	@Inject
 	private ProjectDescriptionLoader projectDescriptionLoader;
 
 	private FileBasedWorkspace testMe;
@@ -42,7 +38,7 @@ public class FileBasedInternalWorkspaceTest extends AbstractInternalWorkspaceTes
 
 	@Override
 	public void setUp() {
-		testMe = new FileBasedWorkspace(classpathPackageManager, projectDescriptionLoader);
+		testMe = new FileBasedWorkspace(projectDescriptionLoader);
 		super.setUp();
 	}
 

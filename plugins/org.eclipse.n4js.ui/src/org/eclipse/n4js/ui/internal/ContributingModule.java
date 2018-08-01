@@ -46,7 +46,6 @@ import org.eclipse.n4js.ts.validation.TypesKeywordProvider;
 import org.eclipse.n4js.ui.containers.CompositeStorage2UriMapperContribution;
 import org.eclipse.n4js.ui.containers.N4JSExternalLibraryStorage2UriMapperContribution;
 import org.eclipse.n4js.ui.containers.N4JSToBeBuiltComputer;
-import org.eclipse.n4js.ui.containers.NfarStorageMapper;
 import org.eclipse.n4js.ui.external.BuildOrderComputer;
 import org.eclipse.n4js.ui.external.EclipseExternalIndexSynchronizer;
 import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
@@ -111,7 +110,6 @@ public class ContributingModule implements Module {
 
 		binder.bind(IToBeBuiltComputerContribution.class).to(N4JSToBeBuiltComputer.class);
 		binder.bind(IStorage2UriMapperContribution.class).to(CompositeStorage2UriMapperContribution.class);
-		binder.bind(NfarStorageMapper.class);
 		binder.bind(InternalN4JSWorkspace.class).to(EclipseBasedN4JSWorkspace.class);
 		binder.bind(EclipseBasedN4JSWorkspace.class);
 		binder.bind(ProjectDescriptionLoader.class);
