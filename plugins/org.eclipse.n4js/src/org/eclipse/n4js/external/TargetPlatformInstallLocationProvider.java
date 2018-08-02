@@ -170,7 +170,9 @@ public interface TargetPlatformInstallLocationProvider {
 	default boolean repairNpmFolderState() {
 		boolean success = true;
 		File installLocation = getTargetPlatformInstallFolder();
-		success &= installLocation.mkdir();
+		if (!installLocation.isDirectory()) {
+			success &= installLocation.mkdir();
+		}
 		if (success) {
 			File npmFile = getNodeModulesFolder();
 			File tdFile = getTypeDefinitionsFolder();
