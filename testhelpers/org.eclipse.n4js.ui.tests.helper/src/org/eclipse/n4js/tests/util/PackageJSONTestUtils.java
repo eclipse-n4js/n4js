@@ -143,8 +143,7 @@ public class PackageJSONTestUtils extends JSONModelUtils {
 	 * @see PackageJsonProperties#IMPLEMENTATION_ID
 	 */
 	public static void setImplementationId(JSONObject root, String implementationId) {
-		final String path = N4JS + "."
-				+ IMPLEMENTATION_ID;
+		final String path = IMPLEMENTATION_ID.getPath();
 		setPath(root, path, implementationId);
 	}
 
@@ -155,8 +154,7 @@ public class PackageJSONTestUtils extends JSONModelUtils {
 	 * @see PackageJsonProperties#IMPLEMENTED_PROJECTS
 	 */
 	public static void setImplementedProjects(JSONObject root, List<String> implementedProjects) {
-		final String path = N4JS + "."
-				+ IMPLEMENTED_PROJECTS;
+		final String path = IMPLEMENTED_PROJECTS.getPath();
 		setPath(root, path, createStringArray(implementedProjects));
 	}
 
