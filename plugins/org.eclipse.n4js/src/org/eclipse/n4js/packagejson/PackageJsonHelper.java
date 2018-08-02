@@ -14,7 +14,6 @@ import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNameValuePairsO
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNonEmptyStringOrNull;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asStringOrNull;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.getProperty;
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.DEFAULT_MODULE_LOADER_FOR_VALIDATION;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.MAIN;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.MAIN_MODULE;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.OUTPUT;
@@ -190,6 +189,14 @@ public class PackageJsonHelper {
 			case EXEC_MODULE:
 				target.setExecModule(asBootstrapModuleOrNull(value));
 				break;
+			case DEFINES_PACKAGE:
+				target.setDefinesPackage(asStringOrNull(value));
+				break;
+			case TYPE_DEPENDENCIES:
+				// in the context of N4JS, type dependencies are considered regular project dependencies
+				convertDependencies(target, asNameValuePairsOrEmpty(value), true);
+				break;
+
 			default:
 				break;
 			}
@@ -308,7 +315,7 @@ public class PackageJsonHelper {
 		// module loader must be commonjs for VALIDATION projects
 		// (no need to set default in case of other project types, because this is handled by EMF)
 		if (target.getProjectType() == ProjectType.VALIDATION) {
-			target.setModuleLoader(DEFAULT_MODULE_LOADER_FOR_VALIDATION);
+			target.setModuleLoader(PackageJsonProperties.DEFAULT_MODULE_LOADER_FOR_VALIDATION);
 		}
 	}
 

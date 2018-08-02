@@ -131,6 +131,27 @@ In other words, other components must not depend on test components.
 In a test project, the tested projects can be specified via `testee`.
 --
 
+=== Type Definitions
+Projects of type "definition" are special projects which only provide type information for another so-called _implementation project_,  which only provides executable JS files .
+
+Generally, client projects that depend on a given _implementation project_ may additionally declare a dependency on a corresponding type definitions project, in order to integrate type information on the implementation project. 
+This is implemented by means of module-level shadowing. 
+More specifically, given a client imports a module with module specifier $M$ from the implementation project. 
+When resolving the module specifier, $M$ will first be resolved against the implementation project's type definitions and only secondarily against the implementation project. 
+As a consequence, type definition projects may only provide partial type information, while the remaining modules of the implementation project remain accessible through dynamic namespace imports.
+
+.Type Definition Project Configuration
+[req,id=GH-821002,version=1]
+--
+
+For type definition projects, the following constraints must hold true with regard to their project configuration:
+
+1. They must declare their _implementation project_ via the <<package-json-definesPackage>> property in their `package.json` file.
+2. They must not declare an output folder.
+3. They may not declare any type dependencies via the <<package-json-typeDependencies>> property.
+
+--
+
 [.language-n4js]
 == Component Content
 
@@ -166,8 +187,10 @@ name ::
   Used as the globally unique identifier of the component.
 version ::
   The component's version.
+[[package-json-dependencies, dependencies]]
 dependencies ::
   List of components required at runtime and compile time.
+[[package-json-devDependencies, devDependencies]]
 devDependencies ::
   List of components required at compile time only.
 main ::
@@ -342,6 +365,15 @@ execModule::
   to the execution of a user-specified module. The underlying script must interpret the execution data and trigger the actual
   module execution in the runtime environment.
 
+[[package-json-definesPackage, definesPackage]]
+definesPackage::
+  (string) The name of the package this component provides type definitions for. Only components of project type "definition" may declare this property.
+
+[[package-json-typeDependencies, typeDependencies]]
+typeDependencies::
+  (object) A list of type dependencies (same format as the regular "dependencies" section). This list of dependencies declares type definition projects that are required to successfully compile this component. The listed dependencies are pure compile-time dependencies. All components, but components of project type "definition" may declare this property.
+
+
 All properties described above are optional. The following default values apply:
 
 |===
@@ -470,6 +502,15 @@ way:
 Examples of using external source fragments and filters are given in <<_implementation-of-external-declarations>>, see <<external-definitions-and-implementations>>.
 
 
+
+.Type Dependencies
+[req,id=GH-821001,version=1]
+--
+Each listed project in the "typeDependencies" section of a project's `package.json` file must fulfill the following properties:
+
+. Only components of type "definition" may be listed as type dependency.
+. For each listed type dependency, a corresponding dependency (in the \[dev\]dependencies section) must be declared, whose "name" matches the "definesPackage" property value of the specified type dependency.
+--
 
 [.language-n4js]
 == Component Dependencies

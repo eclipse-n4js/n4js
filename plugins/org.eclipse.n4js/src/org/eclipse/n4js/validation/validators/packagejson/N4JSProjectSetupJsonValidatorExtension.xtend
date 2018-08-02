@@ -81,17 +81,7 @@ import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider
 import org.eclipse.xtext.validation.Check
 
 import static com.google.common.base.Preconditions.checkState
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.DEPENDENCIES
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.DEV_DEPENDENCIES
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.EXEC_MODULE
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.IMPLEMENTATION_ID
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.IMPLEMENTED_PROJECTS
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.INIT_MODULES
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.NAME
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.NV_MODULE
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.NV_SOURCE_CONTAINER
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.REQUIRED_RUNTIME_LIBRARIES
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.SOURCES
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.*
 import static org.eclipse.n4js.projectDescription.ProjectType.*
 import static org.eclipse.n4js.validation.IssueCodes.*
 import static org.eclipse.n4js.validation.validators.packagejson.ProjectTypePredicate.*
@@ -120,6 +110,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	static val TEST_TYPE = anyOf(TEST);
 	static val RE_OR_RL_TYPE = anyOf(RUNTIME_ENVIRONMENT, RUNTIME_LIBRARY);
 	static val LIB_OR_VALIDATION_OR_RL = anyOf(LIBRARY, VALIDATION, RUNTIME_LIBRARY);
+	static val DEFINITION_TYPE = anyOf(DEFINITION);
 
 	/**
 	 * Key to store a converted ProjectDescription instance in the validation context for re-use across different check-methods
@@ -557,25 +548,73 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			stack.addAll(actualDirectDependencies.filter[external]);
 		}
 	}
+	
+	/**
+	 * Validates the dedicated dependencies section for type definition dependencies.
+	 */
+	@CheckProperty(property = TYPE_DEPENDENCIES)
+	def void checkTypeDependencies(JSONValue typeDependenciesValue) {
+		if (!checkFeatureRestrictions("type dependencies", typeDependenciesValue, not(DEFINITION_TYPE))) {
+			return;
+		}
+		
+		val references = getReferencesFromDependenciesObject(typeDependenciesValue);
+		
+		// check references to be of 'definition' type only
+		checkReferencedProjects(references, DEFINITION_TYPE.forN4jsProjects, "typeDependencies", false, false);
+		
+		val dependenciesById = getDependencies(true).toMap(
+			[dep | dep.referencedProjectId], [dep | dep]);
+		
+		for (reference : references) {
+			internalCheckForRuntimeDependencyForDefinitionProjects(reference, dependenciesById);
+		} 
+	}
+	
+	/**
+	 * Checks that the project description also declares a dependency on the implementation component of 
+	 * the given type definition project ({code reference}).
+	 * 
+	 * Does nothing if {@code project} is not of type {@link ProjectType#DEFINTION}. 
+	 */
+	private def internalCheckForRuntimeDependencyForDefinitionProjects(ValidationProjectReference reference,
+		Map<String, ValidationProjectReference> declaredDependencyIds) {
+		val n4jsProject = allExistingProjectIds.get(reference.getReferencedProjectId());
+		
+		// defensive null-check
+		if (n4jsProject === null) {
+			return;
+		}
+		
+		if (n4jsProject.projectType != ProjectType.DEFINITION) {
+			return;
+		}
+		val definesPackage = n4jsProject.definesPackage;
+		if (definesPackage === null) {
+			return;
+		}
+		
+		// check corresponding runtime dependency has been declared
+		if (!declaredDependencyIds.containsKey(definesPackage)) {
+			addIssue(IssueCodes.getMessageForPKGJ_IMPL_PROJECT_IS_MISSING_FOR_TYPE_DEF(definesPackage, reference.referencedProjectId),
+				reference.astRepresentation, IssueCodes.PKGJ_IMPL_PROJECT_IS_MISSING_FOR_TYPE_DEF);
+		}
+	}
 
 	@Check
 	def void checkDependenciesAndDevDependencies(JSONDocument document) {
-		val references = newArrayList;
-		for (value : getDocumentValues(DEPENDENCIES)) {
-			references += getReferencesFromDependenciesObject(value);
-		}
-		for (value : getDocumentValues(DEV_DEPENDENCIES)) {
-			// do not validate devDependencies in external projects, because these are not installed
-			// by npm for transitive dependencies
-			val project = findProject(value.eResource.URI);
-			if (project.present && !project.get.external) {
-				references += getReferencesFromDependenciesObject(value);
-			}
-		}
+		// determine whether current project is external
+		val project = findProject(document.eResource.URI);
+		val isExternal = project.present && project.get.external;
+
+		// collect all references, skip devDependencies if project is external, because these 
+		// are not installed by npm for transitive dependencies
+		val references = getDependencies(!isExternal);
+
 		if (!references.empty) {
 			checkReferencedProjects(references, createDependenciesPredicate(), "dependencies or devDependencies", false, false); 
 		}
-		
+
 		// special validation for API projects
 		if (projectDescription.projectType == API) {
 			internalValidateAPIProjectReferences(references);
@@ -583,10 +622,31 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	}
 	
 	/**
+	 * Returns a representation of all declared runtime dependencies of 
+	 * the currently validate document (cf. {@link #getDocument()}).
+	 * 
+	 * @param includeDevDependencies 
+	 * 					Specifies whether the returned iterable should also include devDependencies.	
+	 */
+	private def Iterable<ValidationProjectReference> getDependencies(boolean includeDevDependencies) {
+		val references = newArrayList;
+		
+		for (value : getDocumentValues(DEPENDENCIES)) {
+			references += getReferencesFromDependenciesObject(value);
+		}
+		if (includeDevDependencies) {
+			for (value : getDocumentValues(DEV_DEPENDENCIES)) {
+				references += getReferencesFromDependenciesObject(value);
+			}
+		}
+		return references;
+	} 
+	
+	/**
 	 * Checks that an API project does not declare any dependencies on implementation
 	 * projects (library projects with implementation ID).
 	 */
-	def internalValidateAPIProjectReferences(List<ValidationProjectReference> references) {
+	def internalValidateAPIProjectReferences(Iterable<ValidationProjectReference> references) {
 		val libraryDependenciesWithImplId = references
 			.map[ref | Pair.of(ref, allExistingProjectIds.get(ref.referencedProjectId))]
 			.filterNull
@@ -959,15 +1019,17 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			case API: createAPIDependenciesPredicate
 			// runtime libraries may only depend on other runtime libraries
 			case RUNTIME_LIBRARY: RL_TYPE.forN4jsProjects
-			// otherwise, any project may be declared as dependency
-			default: Predicates.alwaysTrue.forN4jsProjects
+			// definition project may depend on any type of project   
+			case DEFINITION: Predicates.alwaysTrue // TODO GH-821: disallow to-be-introduced PLAINJS-type here
+			// otherwise, any project type, but definition projects, may be declared as dependency
+			default: not(DEFINITION_TYPE).forN4jsProjects
 		}
 	}
 
 	/**
 	  * Intermediate validation-only representation of a project reference.
 	  * 
-	  * This may or may not include an {@link #versionConstraint}.
+	  * This may or may not include a {@link #versionConstraint}.
 	  * 
 	  * Holds a trace link {@link #astRepresentation} to its original AST element, so that
 	  * check methods can add issues to the actual elements. 
@@ -1058,20 +1120,21 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	 * @param allowReflexive 
 	 * 				Specifies whether reflexive (self) references are allowed. 
 	 */
-	private def checkReferencedProjects(Iterable<ValidationProjectReference> references, Predicate<IN4JSProject> projectPredicate, 
+	private def void checkReferencedProjects(Iterable<ValidationProjectReference> references, Predicate<IN4JSProject> projectPredicate, 
 		String sectionLabel, boolean enforceDependency, boolean allowReflexive) {
 
 		val description = getProjectDescription();
 		val currentProjectId = description.projectId;
 		val allProjects = getAllExistingProjectIds();
 		
+		// keeps track of all valid references
 		val existentIds = HashMultimap.<String, ValidationProjectReference>create;
 		
 		val projectDescriptionFileURI = document.eResource.URI;
 		val currentProject = findProject(projectDescriptionFileURI).orNull;
 		
-		// Check project existence.
-		references.forEach[ ref |
+		references.forEach[ref | 
+			// check project existence.
 			val id = ref.referencedProjectId;
 			// Assuming completely broken AST.
 			if (null !== id) {
@@ -1079,40 +1142,48 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 				if (id.isEmpty) {
 					addIssue(IssueCodes.getMessageForPKGJ_EMPTY_PROJECT_REFERENCE(), ref.astRepresentation,
 						IssueCodes.PKGJ_EMPTY_PROJECT_REFERENCE)
-						return;
+					return;
 				}
 				
 				// obtain corresponding IN4JSProject handle
 				var project = allProjects.get(id);
 
-				// Type cannot be resolved from index, hence project does not exist in workspace.
+				// type cannot be resolved from index, hence project does not exist in workspace.
 				if (null === project || null === project.projectType) {
-					if (!currentProject.isExternal) { // in GH-821: remove this condition
+					// in GH-821: remove this condition
+					if (!currentProject.isExternal) { 
 						addIssue(getMessageForNON_EXISTING_PROJECT(id), ref.astRepresentation, NON_EXISTING_PROJECT);
 					}
+					return;
 				} else {
-					// create only one single validation issue for a particular project reference.
-					if (currentProjectId == id && !allowReflexive) {
-						// reflexive self-references
-						addProjectReferencesItselfIssue(ref.astRepresentation);
-					} else if (!projectPredicate.apply(project)) {
-						// reference to project of invalid type
-						addInvalidProjectTypeIssue(ref.astRepresentation, id, 
-							project.projectType, sectionLabel);
-					} else {
-						// check version constraint if the current project is not external and has no nested 
-						// node_modules folder
-						val boolean ignoreVersion = (currentProject.isExternal && description.hasNestedNodeModulesFolder);
-						 
-						if (!ignoreVersion) {
-							checkVersions(ref, id, allProjects);
-						}
-					}
+					// keep track of actually existing projects
 					existentIds.put(id, ref);
 				}
+				
+				// create only a  single validation issue for a particular project reference.
+				if (currentProjectId == id && !allowReflexive) {
+					// reflexive self-references
+					addProjectReferencesItselfIssue(ref.astRepresentation);
+					return;
+				} else if (!projectPredicate.apply(project)) {
+					// reference to project of invalid type
+					addInvalidProjectTypeIssue(ref.astRepresentation, id, 
+						project.projectType, sectionLabel);
+					return;
+				} 
+				
+				// check version constraint if the current project is not external and has no nested 
+				// node_modules folder
+				val boolean ignoreVersion = (currentProject.isExternal && description.hasNestedNodeModulesFolder);
+				 
+				if (!ignoreVersion) {
+					checkVersions(ref, id, allProjects);
+				}
+				
 			}
 		];
-
+	
+		// check for duplicates among otherwise valid references
 		checkForDuplicateProjectReferences(existentIds)
 		
 		// if specified, check that all references also occur in the dependencies sections
@@ -1121,7 +1192,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		}
 	}
 
-	private def checkForDuplicateProjectReferences(HashMultimap<String, ValidationProjectReference> validProjectRefs) {
+	private def checkForDuplicateProjectReferences(Multimap<String, ValidationProjectReference> validProjectRefs) {
 		// obtain vendor ID of the currently validated project
 		val currentVendor = getProjectDescription().vendorId;
 		

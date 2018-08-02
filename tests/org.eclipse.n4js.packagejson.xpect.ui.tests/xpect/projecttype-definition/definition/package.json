@@ -1,0 +1,13 @@
+{
+	"name": "definition",
+	"version": "0.0.1",
+	"n4js": {
+		"projectType": "definition",
+		"definesPackage": "impl",
+		"sources": {
+			"source": [
+				"src"
+			]
+		}
+	}
+}
