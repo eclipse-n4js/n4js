@@ -159,7 +159,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	}
 
 	/** Validates the project/package name. */
-	@CheckProperty(propertyPath = NAME)
+	@CheckProperty(property = NAME)
 	public void checkName(JSONValue projectNameValue) {
 		// first check for the type of the name value
 		if (!checkIsType(projectNameValue, JSONPackage.Literals.JSON_STRING_LITERAL, "as package name")) {
@@ -228,7 +228,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	}
 
 	/** Check the version property. */
-	@CheckProperty(propertyPath = VERSION)
+	@CheckProperty(property = VERSION)
 	public void checkVersion(JSONValue versionValue) {
 		if (!checkIsType(versionValue, JSONPackage.Literals.JSON_STRING_LITERAL, "as package version")) {
 			return;
@@ -329,13 +329,13 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	}
 
 	/** Check the dependencies section structure. */
-	@CheckProperty(propertyPath = DEPENDENCIES)
+	@CheckProperty(property = DEPENDENCIES)
 	public void checkDependenciesStructure(JSONValue dependenciesValue) {
 		checkIsDependenciesSection(dependenciesValue);
 	}
 
 	/** Check the devDependencies section structure. */
-	@CheckProperty(propertyPath = DEV_DEPENDENCIES)
+	@CheckProperty(property = DEV_DEPENDENCIES)
 	public void checkDevDependenciesStructure(JSONValue devDependenciesValue) {
 		checkIsDependenciesSection(devDependenciesValue);
 	}
@@ -360,7 +360,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	}
 
 	/** Checks basic structural properties of the 'n4js' section (e.g. mandatory properties). */
-	@CheckProperty(propertyPath = N4JS)
+	@CheckProperty(property = N4JS)
 	public void checkN4JSSection(JSONValue n4jsSection) {
 		// make sure n4js section is an object
 		if (!checkIsType(n4jsSection, JSONPackage.Literals.JSON_OBJECT,
@@ -408,7 +408,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	}
 
 	/** Check the projectType value structure and limitations. */
-	@CheckProperty(propertyPath = PROJECT_TYPE)
+	@CheckProperty(property = PROJECT_TYPE)
 	public void checkProjectType(JSONValue projectTypeValue) {
 		if (!checkIsType(projectTypeValue, JSONPackage.Literals.JSON_STRING_LITERAL)) {
 			return;
@@ -452,7 +452,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	}
 
 	/** Check the projectType value structure. */
-	@CheckProperty(propertyPath = MODULE_LOADER)
+	@CheckProperty(property = MODULE_LOADER)
 	public void checkModuleLoaderStructure(JSONValue moduleLoaderValue) {
 		if (!checkIsType(moduleLoaderValue, JSONPackage.Literals.JSON_STRING_LITERAL)) {
 			return;
@@ -526,7 +526,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	}
 
 	/** Validates the source container section of N4JS package.json files */
-	@CheckProperty(propertyPath = SOURCES)
+	@CheckProperty(property = SOURCES)
 	public void checkSourceContainers() {
 		// obtain source-container-related content of the section and validate its structure
 		Multimap<SourceContainerType, List<JSONStringLiteral>> sourceContainers = getSourceContainers();
@@ -617,7 +617,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	/**
 	 * Checks the <code>n4js.mainModule</code> property of the {@code package.json}.
 	 */
-	@CheckProperty(propertyPath = MAIN_MODULE)
+	@CheckProperty(property = MAIN_MODULE)
 	public void checkMainModule(JSONValue mainModuleValue) {
 		if (!checkIsType(mainModuleValue, JSONPackage.Literals.JSON_STRING_LITERAL, "as main module specifier")) {
 			return;
@@ -636,7 +636,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	/**
 	 * Validates basic properties of the {@code n4js.implementationId}.
 	 */
-	@CheckProperty(propertyPath = IMPLEMENTATION_ID)
+	@CheckProperty(property = IMPLEMENTATION_ID)
 	public void checkImplementationId(JSONValue value) {
 		final JSONArray implementedProjectsValue = getSingleDocumentValue(IMPLEMENTED_PROJECTS, JSONArray.class);
 
@@ -662,7 +662,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	/**
 	 * Validates basic properties of the list of {@code n4js.implementedProjects}.
 	 */
-	@CheckProperty(propertyPath = IMPLEMENTED_PROJECTS)
+	@CheckProperty(property = IMPLEMENTED_PROJECTS)
 	public void checkImplementedProjects(JSONValue value) {
 		// check for correct types of implementedProjects
 		if (!checkIsType(value, JSONPackage.Literals.JSON_ARRAY, "as list of implemented projects")) {
@@ -701,7 +701,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	/**
 	 * Checks the n4js.testedProjects section of the {@code package.json}.
 	 */
-	@CheckProperty(propertyPath = TESTED_PROJECTS)
+	@CheckProperty(property = TESTED_PROJECTS)
 	public void checkTestedProjects(JSONValue testedProjectsValues) {
 		if (!checkIsArrayOfType(testedProjectsValues, JSONPackage.Literals.JSON_STRING_LITERAL,
 				"as list of tested projects", "as tested project reference")) {
@@ -817,7 +817,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	/**
 	 * Checks the n4js.moduleFilters section of the {@code package.json}.
 	 */
-	@CheckProperty(propertyPath = MODULE_FILTERS)
+	@CheckProperty(property = MODULE_FILTERS)
 	public void checkModuleFilters(JSONValue moduleFilterSection) {
 		if (!checkIsType(moduleFilterSection, JSONPackage.Literals.JSON_OBJECT, "as moduleFilters section")) {
 			return;

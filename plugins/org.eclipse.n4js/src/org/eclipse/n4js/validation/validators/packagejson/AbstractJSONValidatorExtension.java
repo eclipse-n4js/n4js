@@ -96,7 +96,7 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 			final CheckProperty annotation = methodPair.getKey();
 			final Method method = methodPair.getValue();
 
-			final PackageJsonProperties property = annotation.propertyPath();
+			final PackageJsonProperties property = annotation.property();
 			final Collection<JSONValue> values = documentValues.get(property.getPath());
 
 			// check each value that has been specified for keyPath

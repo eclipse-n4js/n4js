@@ -30,5 +30,5 @@ import org.eclipse.n4js.packagejson.PackageJsonProperties;
 @Target({ ElementType.METHOD })
 public @interface CheckProperty {
 	/** The key path in the JSON document that is checked by this method. */
-	public PackageJsonProperties propertyPath();
+	public PackageJsonProperties property();
 }
