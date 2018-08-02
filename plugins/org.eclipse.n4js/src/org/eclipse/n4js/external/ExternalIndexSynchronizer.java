@@ -11,6 +11,7 @@
 package org.eclipse.n4js.external;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -39,6 +40,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 import com.google.inject.ImplementedBy;
@@ -59,6 +61,9 @@ public abstract class ExternalIndexSynchronizer {
 
 	@Inject
 	private ProjectDescriptionLoader projectDescriptionLoader;
+
+	@Inject
+	private ExternalLibraryHelper externalLibraryHelper;
 
 	/**
 	 * Call this method to synchronize the information in the Xtext index with all external projects in the external
@@ -98,18 +103,23 @@ public abstract class ExternalIndexSynchronizer {
 	final public Map<String, Pair<URI, String>> findNpmsInFolder() {
 		Map<String, Pair<URI, String>> npmsFolder = new HashMap<>();
 
-		java.net.URI nodeModulesLocation = locationProvider.getTargetPlatformNodeModulesLocation();
-		File nodeModulesFolder = new File(nodeModulesLocation.getPath());
-		if (nodeModulesFolder.isDirectory()) {
-			for (File npmLibrary : nodeModulesFolder.listFiles()) {
-				if (ExternalLibraryUtils.isExternalProjectDirectory(npmLibrary)) {
-					String npmName = npmLibrary.getName();
-					String version = getVersionFromPackageJSON(npmLibrary);
-					if (version != null) {
-						String path = npmLibrary.getAbsolutePath();
-						URI location = URI.createFileURI(path);
-						npmsFolder.put(npmName, Pair.of(location, version));
-					}
+		File typeDefFolder = locationProvider.getTypeDefinitionsFolder();
+		File nodeModulesFolder = locationProvider.getNodeModulesFolder();
+		ArrayList<File> rootFolders = Lists.newArrayList(nodeModulesFolder, typeDefFolder);
+		for (File rootFolder : rootFolders) {
+			if (!rootFolder.isDirectory()) {
+				continue;
+			}
+			for (File npmLibrary : rootFolder.listFiles()) {
+				if (!externalLibraryHelper.isExternalProjectDirectory(npmLibrary)) {
+					continue;
+				}
+				String npmName = npmLibrary.getName();
+				String version = getVersionFromPackageJSON(npmLibrary);
+				if (version != null) {
+					String path = npmLibrary.getAbsolutePath();
+					URI location = URI.createFileURI(path);
+					npmsFolder.put(npmName, Pair.of(location, version));
 				}
 			}
 		}
@@ -184,16 +194,18 @@ public abstract class ExternalIndexSynchronizer {
 	private Map<String, Pair<URI, String>> findNpmsInIndex() {
 		Map<String, Pair<URI, String>> npmsIndex = new HashMap<>();
 
-		String nodeModulesLocation = locationProvider.getTargetPlatformNodeModulesLocation().toString();
+		String nodeModulesLocation = locationProvider.getNodeModulesURI().toString();
+		String typeDefLocation = locationProvider.getTypeDefinitionsURI().toString() + File.separator;
 		ResourceSet resourceSet = core.createResourceSet(Optional.absent());
 		IResourceDescriptions index = core.getXtextIndex(resourceSet);
 
 		for (IResourceDescription res : index.getAllResourceDescriptions()) {
 			String resLocation = res.getURI().toString();
-			boolean isNPM = resLocation.startsWith(nodeModulesLocation);
 
-			if (isNPM) {
+			if (resLocation.startsWith(nodeModulesLocation)) {
 				addToIndex(npmsIndex, nodeModulesLocation, res, resLocation);
+			} else if (resLocation.startsWith(typeDefLocation)) {
+				addToIndex(npmsIndex, typeDefLocation, res, resLocation);
 			}
 		}
 

@@ -12,15 +12,18 @@ package org.eclipse.n4js.external;
 
 import java.io.File;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.n4js.N4JSGlobals;
+
+import com.google.inject.Inject;
 
 /**
  * Utilities and core rules for external libraries.
  */
-public final class ExternalLibraryUtils {
+public final class ExternalLibraryHelper {
 
-	private ExternalLibraryUtils() {
-	}
+	@Inject
+	private TargetPlatformInstallLocationProvider locationProvider;
 
 	/**
 	 * Returns {@code true} iff the given {@link File} represents a project directory in the workspace that is available
@@ -29,10 +32,19 @@ public final class ExternalLibraryUtils {
 	 * This excludes packages that have been installed to the external workspace as transitive dependency of a package
 	 * that has been explicitly installed on user request.
 	 */
-	public static boolean isExternalProjectDirectory(File projectDirectory) {
+	public boolean isExternalProjectDirectory(File projectDirectory) {
 		if (!projectDirectory.isDirectory()) {
 			return false;
 		}
+
+		// GH-821-sub6: remove
+		if (Platform.isRunning()) {
+			String typeDefFolder = locationProvider.getTypeDefinitionsFolder().toString();
+			if (projectDirectory.toString().startsWith(typeDefFolder)) {
+				return false;
+			}
+		}
+
 		// check whether package.json and package.marker files exists
 		// (we here require package.marker in order to return false for packages that have been installed as
 		// transitive dependency, i.e. indirectly by "npm install"; see N4JSGlobals#PACKAGE_MARKER for details)

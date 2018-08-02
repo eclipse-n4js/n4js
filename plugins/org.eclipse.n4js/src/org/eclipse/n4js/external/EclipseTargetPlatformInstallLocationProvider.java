@@ -11,13 +11,13 @@
 package org.eclipse.n4js.external;
 
 import static com.google.common.base.Preconditions.checkState;
-import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.N4_NPM_FOLDER_SUPPLIER;
 
 import java.io.File;
 import java.net.URI;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -36,15 +36,15 @@ public class EclipseTargetPlatformInstallLocationProvider implements TargetPlatf
 	private TypeDefinitionGitLocationProvider gitLocationProvider;
 
 	@Override
-	public URI getTargetPlatformInstallLocation() {
+	public File getTargetPlatformInstallFolder() {
 		checkState(Platform.isRunning(), "Injection problem? Expected running platform.");
-		final File location = N4_NPM_FOLDER_SUPPLIER.get();
-		return location.toURI();
+		final File location = ExternalLibrariesActivator.N4_NPM_FOLDER_SUPPLIER.get();
+		return location;
 	}
 
 	@Override
 	public URI getTargetPlatformFileLocation() {
-		return new File(N4_NPM_FOLDER_SUPPLIER.get(), N4JSGlobals.PACKAGE_JSON).toURI();
+		return new File(getTargetPlatformInstallFolder(), N4JSGlobals.PACKAGE_JSON).toURI();
 	}
 
 	@Override
