@@ -12,18 +12,12 @@ package org.eclipse.n4js.external;
 
 import java.io.File;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.n4js.N4JSGlobals;
-
-import com.google.inject.Inject;
 
 /**
  * Utilities and core rules for external libraries.
  */
 public final class ExternalLibraryHelper {
-
-	@Inject
-	private TargetPlatformInstallLocationProvider locationProvider;
 
 	/**
 	 * Returns {@code true} iff the given {@link File} represents a project directory in the workspace that is available
@@ -35,14 +29,6 @@ public final class ExternalLibraryHelper {
 	public boolean isExternalProjectDirectory(File projectDirectory) {
 		if (!projectDirectory.isDirectory()) {
 			return false;
-		}
-
-		// GH-821-sub6: remove
-		if (Platform.isRunning()) {
-			String typeDefFolder = locationProvider.getTypeDefinitionsFolder().toString();
-			if (projectDirectory.toString().startsWith(typeDefFolder)) {
-				return false;
-			}
 		}
 
 		// check whether package.json and package.marker files exists

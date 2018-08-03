@@ -52,19 +52,21 @@ public class DependenciesCollectingUtil {
 	}
 
 	/** Add to the provided map all possible dependencies based on the {@link ProjectDescription} */
-	private static void updateFromProjectDescription(Map<String, String> dependencies,
-			ProjectDescription pd) {
-		if (pd != null) {
-			Stream.of(
-					pd.getProjectDependencies().stream().map(DependencyInfo::create),
-					// TODO GH-613, user projects can be misconfigured
-					pd.getProvidedRuntimeLibraries().stream().map(DependencyInfo::create),
-					getVersionedExtendedRuntimeEnvironment(pd),
-					pd.getImplementedProjects().stream().map(DependencyInfo::create))
-					.reduce(Stream::concat)
-					.orElseGet(Stream::empty)
-					.forEach(info -> dependencies.merge(info.name, info.version, DependenciesCollectingUtil::resolve));
+	private static void updateFromProjectDescription(Map<String, String> dependencies, ProjectDescription pd) {
+		if (pd == null) {
+			return;
 		}
+
+		Stream.of(
+				pd.getProjectDependencies().stream().map(DependencyInfo::create),
+				// TODO GH-613, user projects can be misconfigured
+				pd.getProvidedRuntimeLibraries().stream().map(DependencyInfo::create),
+				getVersionedExtendedRuntimeEnvironment(pd),
+				pd.getImplementedProjects().stream().map(DependencyInfo::create))
+				.reduce(Stream::concat)
+				.orElseGet(Stream::empty)
+				.filter(info -> !info.name.endsWith("-n4jsd")) // GH-821: re-visit when done or change to @n4jsd scope
+				.forEach(info -> dependencies.merge(info.name, info.version, DependenciesCollectingUtil::resolve));
 	}
 
 	/**

@@ -33,6 +33,7 @@ import com.google.common.collect.ImmutableList;
  * significance when using the list of dependencies for constructing scopes.
  */
 public class TypeDefinitionsAwareDependenciesSupplier {
+
 	/**
 	 * Returns an iterable of dependencies of the given {@code project}.
 	 *
@@ -45,7 +46,7 @@ public class TypeDefinitionsAwareDependenciesSupplier {
 	 *             In case the computation encounters a problem that results in the loss of a dependency, this method
 	 *             will throw an {@link IllegalStateException}.
 	 */
-	public Iterable<IN4JSProject> get(IN4JSProject project) {
+	static public Iterable<IN4JSProject> get(IN4JSProject project) {
 		final ImmutableList<? extends IN4JSProject> dependencies = project.getDependencies();
 		// keep ordered list of type definition projects per project ID of the definesPackage property
 		final Map<String, List<IN4JSProject>> typeDefinitionsById = new HashMap<>();

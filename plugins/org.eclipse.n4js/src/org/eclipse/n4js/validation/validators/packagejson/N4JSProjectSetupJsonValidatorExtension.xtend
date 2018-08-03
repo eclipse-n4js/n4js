@@ -1261,7 +1261,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	protected def ProjectDescription getProjectDescription() {
 		return contextMemoize(PROJECT_DESCRIPTION_CACHE, [
 			val doc = getDocument();
-			projectDescriptionLoader.loadProjectDescriptionAtLocation(doc.eResource.URI.trimSegments(1), doc, false);
+			projectDescriptionLoader.loadProjectDescriptionAtLocation(doc.eResource.URI.trimSegments(1), doc);
 		]);
 	}
 

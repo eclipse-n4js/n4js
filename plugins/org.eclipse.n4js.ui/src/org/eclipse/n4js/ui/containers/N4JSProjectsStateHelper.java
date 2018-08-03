@@ -58,9 +58,6 @@ public class N4JSProjectsStateHelper extends AbstractStorage2UriMapperClient {
 	@Inject
 	private WorkspaceCacheAccess cacheAccess;
 
-	@Inject
-	private TypeDefinitionsAwareDependenciesSupplier dependencySupplier;
-
 	public String initHandle(URI uri) {
 		String handle = null;
 		Optional<? extends IN4JSSourceContainer> containerOpt = core.findN4JSSourceContainer(uri);
@@ -105,7 +102,7 @@ public class N4JSProjectsStateHelper extends AbstractStorage2UriMapperClient {
 	private void fullCollectLocationHandles(List<String> result, IN4JSProject project) {
 		collectLocationHandles(project, result);
 
-		for (IN4JSProject dependency : dependencySupplier.get(project)) {
+		for (IN4JSProject dependency : TypeDefinitionsAwareDependenciesSupplier.get(project)) {
 			collectLocationHandles(dependency, result);
 		}
 	}

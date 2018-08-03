@@ -21,6 +21,7 @@ import java.util.Objects;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.internal.TypeDefinitionsAwareDependenciesSupplier;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.projectModel.IN4JSCore;
@@ -69,7 +70,6 @@ import com.google.common.collect.Iterables;
  * provided <code>delegate</code> is not doing that, at least not for the main modules.
  */
 public class ProjectImportEnablingScope implements IScope {
-
 	private final IN4JSCore n4jsCore;
 	private final IN4JSProject contextProject;
 	private final Optional<ImportDeclaration> importDeclaration;
@@ -196,15 +196,20 @@ public class ProjectImportEnablingScope implements IScope {
 	public Iterable<IEObjectDescription> getElements(QualifiedName name) {
 
 		switch (computeImportType(name, this.contextProject)) {
-		case PROJECT_IMPORT:
+		case PROJECT_IMPORT: {
 			final String firstSegment = name.getFirstSegment();
 			final IN4JSProject targetProject = findProject(firstSegment, contextProject);
-			QualifiedName mainModule = ImportSpecifierUtil.getMainModuleOfProject(targetProject);
-			return getElementsWithDesiredProjectID(mainModule, name.getFirstSegment());
-		case COMPLETE_IMPORT:
-			return getElementsWithDesiredProjectID(name.skipFirst(1), name.getFirstSegment());
-		case SIMPLE_IMPORT:
+			final QualifiedName mainModule = ImportSpecifierUtil.getMainModuleOfProject(targetProject);
+			return getElementsWithDesiredProjectID(mainModule, targetProject.getProjectId());
+		}
+		case COMPLETE_IMPORT: {
+			final String firstSegment = name.getFirstSegment();
+			final IN4JSProject targetProject = findProject(firstSegment, contextProject);
+			return getElementsWithDesiredProjectID(name.skipFirst(1), targetProject.getProjectId());
+		}
+		case SIMPLE_IMPORT: {
 			return parent.getElements(name);
+		}
 
 		default:
 			return Collections.emptyList();
@@ -251,7 +256,12 @@ public class ProjectImportEnablingScope implements IScope {
 		if (Objects.equals(project.getProjectId(), projectId)) {
 			return project;
 		}
-		for (IN4JSProject p : project.getDependencies()) {
+
+		Iterable<IN4JSProject> dependencies = TypeDefinitionsAwareDependenciesSupplier.get(project);
+		for (IN4JSProject p : dependencies) {
+			if (Objects.equals(p.getDefinesPackage(), projectId)) {
+				return p;
+			}
 			if (Objects.equals(p.getProjectId(), projectId)) {
 				return p;
 			}
