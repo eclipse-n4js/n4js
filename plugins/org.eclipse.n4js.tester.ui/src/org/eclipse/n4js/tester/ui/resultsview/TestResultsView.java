@@ -31,7 +31,6 @@ import static org.eclipse.swt.SWT.NONE;
 import static org.eclipse.swt.widgets.Display.getDefault;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -1139,7 +1138,8 @@ public class TestResultsView extends ViewPart {
 							stackTrace.setText(sb.toString());
 							stackTrace.setSelection(0);
 						} else if ((SKIPPED_IGNORE.equals(result.getTestStatus())
-								|| SKIPPED_FIXME.equals(result.getTestStatus()))
+								|| SKIPPED_FIXME.equals(result.getTestStatus())
+								|| ERROR.equals(result.getTestStatus()))
 								&& !isNullOrEmpty(result.getMessage())) {
 							stackTrace.setText(result.getMessage());
 							stackTrace.setSelection(0);
@@ -1205,8 +1205,11 @@ public class TestResultsView extends ViewPart {
 			// server completed test session SUCCESS
 			// ignore
 		} else if (event instanceof SessionFailedEvent) {
-			// server completed test session FAILURE
-			// ignore
+			// the session failed
+			final TestSession session = from(registeredSessions).firstMatch(s -> s.root == currentRoot).orNull();
+			if (session != null) {
+				notifySessionFailed(session, ((SessionFailedEvent) event).getComment().or("Unknown cause."));
+			}
 		} else {
 			// ignore all other events (e.g. TestPingedEvent)
 		}
@@ -1536,50 +1539,15 @@ public class TestResultsView extends ViewPart {
 	}
 
 	/**
-	 * Listen to process stopped by other reasons then normal termination or stopping it from the view.
-	 */
-	public void listenForProcess(final Process process) {
-		if (process.isAlive()) {
-			new Thread() {
-				@Override
-				public void run() {
-					try {
-						process.waitFor();
-					} catch (InterruptedException e) {
-						// ignore, we just want to update the UI state
-					}
-					Display.getDefault().asyncExec(new Runnable() {
-						@Override
-						public void run() {
-							final TestSession session = from(registeredSessions).firstMatch(s -> s.root == currentRoot)
-									.orNull();
-							if (null != session) {
-								// handle early termination of tester process
-								if (session.root.isRunning()) {
-									onEarlyTermination(session);
-									session.root.stopRunning();
-								}
-								// in any case, make sure the actions are refreshed
-								refreshActions();
-							}
-						}
-					});
-
-				}
-			}.start();
-		}
-	}
-
-	/**
 	 * Handles an early termination of the tester process, by setting all remaining running test cases / suites to an
 	 * error status informing the user about the early termination.
 	 *
 	 * Also sets test cases that have not been run yet to result {@link TestStatus#SKIPPED}.
 	 */
-	private void onEarlyTermination(TestSession session) {
+	private void notifySessionFailed(TestSession session, String comment) {
 		final TestResult earlyTerminationResult = new TestResult(TestStatus.ERROR);
 		earlyTerminationResult
-				.setTrace(Arrays.asList("Error: Unexpected termination of the tester process."));
+				.setMessage("Error: " + comment);
 
 		// collect all nodes
 		final Set<ResultNode> allNodes = new HashSet<>();
