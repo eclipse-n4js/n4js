@@ -1539,8 +1539,8 @@ public class TestResultsView extends ViewPart {
 	}
 
 	/**
-	 * Handles an early termination of the tester process, by setting all remaining running test cases / suites to an
-	 * error status informing the user about the early termination.
+	 * Handles an failure of the test session, by setting all remaining running test cases / suites to an error
+	 * {@link TestStatus} informing the user about the failure.
 	 *
 	 * Also sets test cases that have not been run yet to result {@link TestStatus#SKIPPED}.
 	 */

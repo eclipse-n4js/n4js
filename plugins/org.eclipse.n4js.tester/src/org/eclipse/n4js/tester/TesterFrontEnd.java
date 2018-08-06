@@ -206,7 +206,7 @@ public class TesterFrontEnd {
 	}
 
 	/**
-	 * Thread running in parallel, which waits for a given process to terminate.
+	 * Thread running in parallel which waits for a given process to terminate.
 	 *
 	 * On termination
 	 */
