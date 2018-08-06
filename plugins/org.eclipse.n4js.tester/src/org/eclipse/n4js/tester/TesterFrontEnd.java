@@ -227,6 +227,8 @@ public class TesterFrontEnd {
 			} catch (InterruptedException e) {
 				// ignore, we just want to update the UI state
 			}
+			// inform tester about the end of the session (if the internal state of
+			// the session does not allow for it, this may trigger an error state)
 			eventBus.post(new SessionEndedEvent(sessionId));
 		}
 	}

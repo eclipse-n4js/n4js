@@ -1567,6 +1567,7 @@ public class TestResultsView extends ViewPart {
 				updateNode(node);
 			}
 		}
+		updateProgressBar();
 	}
 
 	/** Recursively collects all child nodes, reachable from the given {@code root}. */
