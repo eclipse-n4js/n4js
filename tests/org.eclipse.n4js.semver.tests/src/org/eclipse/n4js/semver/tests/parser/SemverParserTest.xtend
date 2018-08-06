@@ -182,7 +182,7 @@ class SemverParserTest {
 	/** Checks other NPM supported versions. */
 	@Test
 	def void testNPMParseAndToString() {
-		internalTestParseAndToString(npmData, [s | return s.replace("semver:", "")]);
+		internalTestParseAndToString(npmData, [s | return s]);
 	}
 
 	/** Checks other NPM supported versions. */

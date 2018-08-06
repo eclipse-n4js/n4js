@@ -14,8 +14,8 @@ import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asArrayElementsOr
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNameValuePairsOrEmpty;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNonEmptyStringOrNull;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNonEmptyStringsInArrayOrEmpty;
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__MODULE;
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__SOURCE_CONTAINER;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.NV_MODULE;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.NV_SOURCE_CONTAINER;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -174,9 +174,9 @@ public class PackageJsonUtils {
 		// 2nd variant:
 		List<NameValuePair> pairs = asNameValuePairsOrEmpty(jsonValue);
 		NameValuePair pathNVP = pairs.stream()
-				.filter(p -> PROP__SOURCE_CONTAINER.equals(p.getName())).findFirst()
+				.filter(p -> NV_SOURCE_CONTAINER.name.equals(p.getName())).findFirst()
 				.orElse(null);
-		NameValuePair moduleNVP = pairs.stream().filter(p -> PROP__MODULE.equals(p.getName()))
+		NameValuePair moduleNVP = pairs.stream().filter(p -> NV_MODULE.name.equals(p.getName()))
 				.findFirst().orElse(null);
 		String pathStr = pathNVP != null ? asNonEmptyStringOrNull(pathNVP.getValue()) : null;
 		String moduleStr = moduleNVP != null ? asNonEmptyStringOrNull(moduleNVP.getValue()) : null;

@@ -28,8 +28,8 @@ import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Test
 import org.junit.runner.RunWith
 
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.*
 import static org.junit.Assert.*
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.*
 
 /**
  * Testing the conversion from {@link JSONDocument} to {@link ProjectDescription}.
@@ -271,15 +271,15 @@ class PackageJsonHelperTest {
 
 	def private assertCorrectDefaults(ProjectDescription pd, boolean hasDefaultProjectType) {
 		assertEquals(DEFAULT_PROJECT_ID, pd.projectId);
-		assertEquals(DEFAULT_VERSION, pd.projectVersion.toString);
-		assertEquals(DEFAULT_VENDOR_ID, pd.vendorId);
+		assertEquals(VERSION.defaultValue, pd.projectVersion.toString);
+		assertEquals(VENDOR_ID.defaultValue, pd.vendorId);
 		assertEquals(null, pd.vendorName);
 		if(hasDefaultProjectType) {
 			assertEquals(ProjectType.VALIDATION, pd.projectType);
 		} else {
 			assertNotEquals(ProjectType.VALIDATION, pd.projectType);
 		}
-		assertEquals(DEFAULT_MAIN_MODULE, pd.mainModule);
+		assertEquals(MAIN_MODULE.defaultValue, pd.mainModule);
 		assertEquals(null, pd.extendedRuntimeEnvironment);
 		assertEquals(#[], pd.providedRuntimeLibraries);
 		assertEquals(#[], pd.requiredRuntimeLibraries);
@@ -288,7 +288,7 @@ class PackageJsonHelperTest {
 		assertEquals(#[], pd.implementedProjects);
 		assertEquals(#[], pd.initModules);
 		assertEquals(null, pd.execModule);
-		assertEquals(DEFAULT_OUTPUT, pd.outputPath);
+		assertEquals(OUTPUT.defaultValue, pd.outputPath);
 		assertEquals(#[], pd.moduleFilters);
 		assertEquals(#[], pd.testedProjects);
 		if (hasDefaultProjectType) {

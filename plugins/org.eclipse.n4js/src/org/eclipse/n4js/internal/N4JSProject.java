@@ -385,4 +385,9 @@ public class N4JSProject implements IN4JSProject {
 		}
 		return pd.isHasN4JSNature();
 	}
+
+	@Override
+	public String getDefinesPackage() {
+		return getModel().getDefinesPackage(this);
+	}
 }

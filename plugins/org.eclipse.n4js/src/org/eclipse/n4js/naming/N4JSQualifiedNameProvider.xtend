@@ -22,6 +22,7 @@ import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.N4TypeDeclaration
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.VariableDeclaration
+import org.eclipse.n4js.packagejson.PackageJsonProperties
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TClass
@@ -34,13 +35,11 @@ import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeVariable
+import org.eclipse.n4js.utils.ProjectDescriptionUtils
 import org.eclipse.xtext.naming.QualifiedName
-
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__NAME
 
 import static extension org.eclipse.emf.ecore.util.EcoreUtil.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
-import org.eclipse.n4js.utils.ProjectDescriptionUtils
 
 /**
  * Calculates the fully qualified name for the passed in objects.
@@ -147,7 +146,7 @@ class N4JSQualifiedNameProvider extends N4TSQualifiedNameProvider {
 		var String projectId = null;
 		val content = document.content;
 		if (content instanceof JSONObject) {
-			val value = JSONModelUtils.getProperty(content, PROP__NAME).orElse(null);
+			val value = JSONModelUtils.getProperty(content, PackageJsonProperties.NAME.name).orElse(null);
 			projectId = if (value instanceof JSONStringLiteral) value.value else null;
 		}
 		// (2) if unsuccessful, take projectId from the URI

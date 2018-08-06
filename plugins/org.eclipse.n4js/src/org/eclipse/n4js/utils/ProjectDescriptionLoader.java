@@ -12,12 +12,12 @@ package org.eclipse.n4js.utils;
 
 import static org.eclipse.n4js.internal.N4JSModel.DIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNonEmptyStringOrNull;
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.DEFAULT_OUTPUT;
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__DEPENDENCIES;
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__DEV_DEPENDENCIES;
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__MAIN;
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__N4JS;
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__VERSION;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.DEPENDENCIES;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.DEV_DEPENDENCIES;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.MAIN;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.N4JS;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.OUTPUT;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.VERSION;
 
 import java.io.File;
 import java.util.List;
@@ -125,11 +125,12 @@ public class ProjectDescriptionLoader {
 	 */
 	public Pair<String, Boolean> loadVersionAndN4JSNatureFromProjectDescriptionAtLocation(URI location) {
 		JSONDocument packageJSON = loadPackageJSONAtLocation(location);
-		if (packageJSON == null) {
-			return null;
+		JSONValue versionValue = null;
+		boolean hasN4JSNature = false;
+		if (packageJSON != null) {
+			versionValue = JSONModelUtils.getProperty(packageJSON, VERSION.name).orElse(null);
+			hasN4JSNature = JSONModelUtils.getProperty(packageJSON, N4JS.name).isPresent();
 		}
-		JSONValue versionValue = JSONModelUtils.getProperty(packageJSON, PROP__VERSION).orElse(null);
-		boolean hasN4JSNature = JSONModelUtils.getProperty(packageJSON, PROP__N4JS).isPresent();
 		Pair<String, Boolean> result = Tuples.create(asNonEmptyStringOrNull(versionValue), hasN4JSNature);
 		return result;
 	}
@@ -148,7 +149,7 @@ public class ProjectDescriptionLoader {
 		if (!(content instanceof JSONObject))
 			return;
 		JSONObject contentCasted = (JSONObject) content;
-		String main = asNonEmptyStringOrNull(JSONModelUtils.getProperty(contentCasted, PROP__MAIN).orElse(null));
+		String main = asNonEmptyStringOrNull(JSONModelUtils.getProperty(contentCasted, MAIN.name).orElse(null));
 		if (main == null) {
 			return;
 		}
@@ -162,13 +163,13 @@ public class ProjectDescriptionLoader {
 
 		if (!main.endsWith(".js") && isFile(resourceSet, locationWithMain.appendFileExtension("js"))) {
 			main += ".js";
-			JSONModelUtils.setProperty(contentCasted, PROP__MAIN, main);
+			JSONModelUtils.setProperty(contentCasted, MAIN.name, main);
 		} else if (isDirectory(resourceSet, locationWithMain)) {
 			if (!(main.endsWith("/") || main.endsWith(File.separator))) {
 				main += "/";
 			}
 			main += "index.js";
-			JSONModelUtils.setProperty(contentCasted, PROP__MAIN, main);
+			JSONModelUtils.setProperty(contentCasted, MAIN.name, main);
 		}
 	}
 
@@ -188,7 +189,7 @@ public class ProjectDescriptionLoader {
 
 		if (packageJSON == null) {
 			packageJSON = loadXtextFileAtLocation(location,
-					IN4JSProject.PACKAGE_JSON + DEFAULT_OUTPUT + N4JSGlobals.XT_FILE_EXTENSION,
+					IN4JSProject.PACKAGE_JSON + OUTPUT.defaultValue + N4JSGlobals.XT_FILE_EXTENSION,
 					JSONDocument.class);
 		}
 
@@ -208,8 +209,8 @@ public class ProjectDescriptionLoader {
 			// dependencies of the original project, only in those defined in the fragment.
 			JSONValue targetContent = targetPackageJSON.getContent();
 			if (targetContent instanceof JSONObject) {
-				JSONModelUtils.removeProperty((JSONObject) targetContent, PROP__DEPENDENCIES);
-				JSONModelUtils.removeProperty((JSONObject) targetContent, PROP__DEV_DEPENDENCIES);
+				JSONModelUtils.removeProperty((JSONObject) targetContent, DEPENDENCIES.name);
+				JSONModelUtils.removeProperty((JSONObject) targetContent, DEV_DEPENDENCIES.name);
 			}
 			// merge properties from fragment into targetPackageJSON
 			JSONModelUtils.merge(targetPackageJSON, fragment, false, true);
