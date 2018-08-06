@@ -1,23 +1,2 @@
 
 // empty (will be filled with various content by test cases in class NpmScopesPluginTest)
-
-
-/*
-
-   import {A} from "A"
-// import {A} from "@myScope/Lib/A"  // <-- same as before
-// import {A} from "Lib/A"           // <-- must *not* work
-   import {B} from "B"
-   import {C as C1} from "C"
-// import {C as C1} from "@myScope/Lib/C"
-   import {C as C2} from "Lib/C"
-   import {D} from "D"
-// import {D} from "Lib/D" // <-- this should also link to the type definition
-
-new A().foo();
-new B().foo();
-new C1().foo();
-new C2().foo();
-//new D().foo();
-
-*/
