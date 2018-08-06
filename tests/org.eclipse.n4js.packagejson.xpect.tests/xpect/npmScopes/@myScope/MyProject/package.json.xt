@@ -22,8 +22,8 @@
 {
 	// XPECT noerrors -->
 	"name": "@myScope/MyProject",
-	// XPECT errors --> "The parent folder of this package.json file must be called 'MyProjectWrong'." at ""@myScope/MyProjectWrong""
+	// XPECT errors --> "The package name "MyProjectWrong" does not match the name of the project folder "MyProject" on the file system." at ""@myScope/MyProjectWrong""
 	"name": "@myScope/MyProjectWrong",
-	// XPECT errors --> "The parent folder of this package.json file must be contained in a folder called '@myScopeWrong'." at ""@myScopeWrong/MyProject""
+	// XPECT errors --> "The scope name "@myScopeWrong" does not match the name of the project folder's parent folder "@myScope" on the file system." at ""@myScopeWrong/MyProject""
 	"name": "@myScopeWrong/MyProject"
 }

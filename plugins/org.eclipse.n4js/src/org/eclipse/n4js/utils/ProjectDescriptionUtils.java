@@ -51,7 +51,7 @@ public class ProjectDescriptionUtils {
 
 	public static String getProjectNameWithoutScope(String projectName) {
 		return isProjectNameWithScope(projectName)
-				? projectName.substring(projectName.indexOf(NPM_SCOPE_SEPARATOR))
+				? projectName.substring(projectName.indexOf(NPM_SCOPE_SEPARATOR) + 1)
 				: projectName;
 	}
 

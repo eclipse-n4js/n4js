@@ -13,6 +13,6 @@
 
 
 {
-	// XPECT errors --> "Invalid scope name "invalid#scope"." at ""@invalid#scope/MyProject""
-	"name": "@invalid#scope/MyProject"
+	// XPECT errors --> "The name "" is not a valid scope name." at ""@/MyProject""
+	"name": "@/MyProject"
 }

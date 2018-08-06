@@ -13,7 +13,6 @@
 
 
 {
-	// XPECT errors --> "Invalid scope name "invalid#scope"." at ""@invalid#scope/Invalid#Project""
-	// XPECT errors --> "Invalid project name "Invalid#Project"." at ""@invalid#scope/Invalid#Project""
-	"name": "@invalid#scope/Invalid#Project"
+	// XPECT errors --> "The name "Invalid*Project" is not a valid package name." at ""@myScope/Invalid*Project""
+	"name": "@myScope/Invalid*Project"
 }

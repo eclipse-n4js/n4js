@@ -13,7 +13,9 @@
 
 
 {
-	// note: underscore not allowed in scope names (according to npm)!
-	// XPECT errors --> "Invalid scope name "invalid_scope"." at ""@invalid_scope/MyProject""
-	"name": "@invalid_scope/MyProject"
+	// XPECT errors ---
+	// "The name "invalid*scope" is not a valid scope name." at ""@invalid*scope/Invalid*Project""
+	// "The name "Invalid*Project" is not a valid package name." at ""@invalid*scope/Invalid*Project""
+	// ---
+	"name": "@invalid*scope/Invalid*Project"
 }

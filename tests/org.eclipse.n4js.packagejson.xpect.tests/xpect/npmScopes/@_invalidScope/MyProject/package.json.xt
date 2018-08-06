@@ -13,6 +13,7 @@
 
 
 {
-	// XPECT errors --> "The scope name "@myScope" does not match the name of the project folder's parent folder "npmScopes" on the file system." at ""@myScope/MyProject""
-	"name": "@myScope/MyProject"
+	// note: underscore not allowed at beginning of scope names (according to npm)!
+	// XPECT errors --> "The name "_invalidScope" is not a valid scope name." at ""@_invalidScope/MyProject""
+	"name": "@_invalidScope/MyProject"
 }
