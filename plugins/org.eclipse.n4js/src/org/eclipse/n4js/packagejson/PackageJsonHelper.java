@@ -14,33 +14,11 @@ import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNameValuePairsO
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNonEmptyStringOrNull;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asStringOrNull;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.getProperty;
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.DEFAULT_MAIN_MODULE;
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.DEFAULT_MODULE_LOADER_FOR_VALIDATION;
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.DEFAULT_OUTPUT;
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.DEFAULT_VENDOR_ID;
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.DEFAULT_VERSION;
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__DEPENDENCIES;
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__DEV_DEPENDENCIES;
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__EXEC_MODULE;
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__EXTENDED_RUNTIME_ENVIRONMENT;
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__IMPLEMENTATION_ID;
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__IMPLEMENTED_PROJECTS;
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__INIT_MODULES;
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__MAIN;
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__MAIN_MODULE;
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__MODULE_FILTERS;
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__MODULE_LOADER;
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__N4JS;
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__NAME;
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__OUTPUT;
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__PROJECT_TYPE;
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__PROVIDED_RUNTIME_LIBRARIES;
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__REQUIRED_RUNTIME_LIBRARIES;
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__SOURCES;
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__TESTED_PROJECTS;
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__VENDOR_ID;
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__VENDOR_NAME;
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.PROP__VERSION;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.MAIN;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.MAIN_MODULE;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.OUTPUT;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.VENDOR_ID;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.VERSION;
 import static org.eclipse.n4js.packagejson.PackageJsonUtils.asBootstrapModuleOrNull;
 import static org.eclipse.n4js.packagejson.PackageJsonUtils.asBootstrapModulesInArrayOrEmpty;
 import static org.eclipse.n4js.packagejson.PackageJsonUtils.asModuleFiltersInObjectOrEmpty;
@@ -104,8 +82,10 @@ public class PackageJsonHelper {
 			ProjectDescription result = ProjectDescriptionFactory.eINSTANCE.createProjectDescription();
 			List<NameValuePair> rootPairs = ((JSONObject) rootValue).getNameValuePairs();
 			convertRootPairs(result, rootPairs);
-			adjustProjectDescriptionAfterConversion(result, applyDefaultValues, defaultProjectId,
-					asNonEmptyStringOrNull(getProperty((JSONObject) rootValue, PROP__MAIN).orElse(null)));
+
+			JSONValue property = getProperty((JSONObject) rootValue, MAIN.name).orElse(null);
+			String propertyAsString = asNonEmptyStringOrNull(property);
+			adjustProjectDescriptionAfterConversion(result, applyDefaultValues, defaultProjectId, propertyAsString);
 			return result;
 		}
 		return null;
@@ -114,29 +94,36 @@ public class PackageJsonHelper {
 	private void convertRootPairs(ProjectDescription target, List<NameValuePair> rootPairs) {
 		for (NameValuePair pair : rootPairs) {
 			String name = pair.getName();
+			PackageJsonProperties property = PackageJsonProperties.valueOfOrNull(name);
+			if (property == null) {
+				continue;
+			}
+
 			JSONValue value = pair.getValue();
-			switch (name) {
-			case PROP__NAME:
+			switch (property) {
+			case NAME:
 				target.setProjectId(asNonEmptyStringOrNull(value));
 				break;
-			case PROP__VERSION:
+			case VERSION:
 				target.setProjectVersion(parseVersion(asNonEmptyStringOrNull(value)));
 				break;
-			case PROP__DEPENDENCIES:
+			case DEPENDENCIES:
 				convertDependencies(target, asNameValuePairsOrEmpty(value), true);
 				break;
-			case PROP__DEV_DEPENDENCIES:
+			case DEV_DEPENDENCIES:
 				// for the moment, we do not separate devDependencies from ordinary dependencies in ProjectDescription
 				convertDependencies(target, asNameValuePairsOrEmpty(value), true);
 				break;
-			case PROP__MAIN:
+			case MAIN:
 				// need to handle this value later after all source containers have been read
 				// (see method #adjustProjectDescriptionAfterConversion())
 				break;
-			case PROP__N4JS:
+			case N4JS:
 				// mark project with N4JS nature
 				target.setHasN4JSNature(true);
 				convertN4jsPairs(target, asNameValuePairsOrEmpty(value));
+				break;
+			default:
 				break;
 			}
 		}
@@ -145,57 +132,72 @@ public class PackageJsonHelper {
 	private void convertN4jsPairs(ProjectDescription target, List<NameValuePair> n4jsPairs) {
 		for (NameValuePair pair : n4jsPairs) {
 			String name = pair.getName();
+			PackageJsonProperties property = PackageJsonProperties.valueOfOrNull(name);
+			if (property == null) {
+				continue;
+			}
+
 			JSONValue value = pair.getValue();
-			switch (name) {
-			case PROP__PROJECT_TYPE:
+			switch (property) {
+			case PROJECT_TYPE:
 				// parseProjectType returns null if value is invalid, this will
 				// cause the setProjectType setter to use the default value of ProjectType.
 				target.setProjectType(parseProjectType(asNonEmptyStringOrNull(value)));
 				break;
-			case PROP__VENDOR_ID:
+			case VENDOR_ID:
 				target.setVendorId(asNonEmptyStringOrNull(value));
 				break;
-			case PROP__VENDOR_NAME:
+			case VENDOR_NAME:
 				target.setVendorName(asNonEmptyStringOrNull(value));
 				break;
-			case PROP__OUTPUT:
+			case OUTPUT:
 				target.setOutputPath(asNonEmptyStringOrNull(value));
 				break;
-			case PROP__SOURCES:
+			case SOURCES:
 				target.getSourceContainers().addAll(asSourceContainerDescriptionsOrEmpty(value));
 				break;
-			case PROP__MODULE_FILTERS:
+			case MODULE_FILTERS:
 				target.getModuleFilters().addAll(asModuleFiltersInObjectOrEmpty(value));
 				break;
-			case PROP__MAIN_MODULE:
+			case MAIN_MODULE:
 				target.setMainModule(asNonEmptyStringOrNull(value));
 				break;
-			case PROP__TESTED_PROJECTS:
+			case TESTED_PROJECTS:
 				target.getTestedProjects().addAll(asProjectReferencesInArrayOrEmpty(value));
 				break;
-			case PROP__IMPLEMENTATION_ID:
+			case IMPLEMENTATION_ID:
 				target.setImplementationId(asNonEmptyStringOrNull(value));
 				break;
-			case PROP__IMPLEMENTED_PROJECTS:
+			case IMPLEMENTED_PROJECTS:
 				target.getImplementedProjects().addAll(asProjectReferencesInArrayOrEmpty(value));
 				break;
-			case PROP__EXTENDED_RUNTIME_ENVIRONMENT:
+			case EXTENDED_RUNTIME_ENVIRONMENT:
 				target.setExtendedRuntimeEnvironment(asProjectReferenceOrNull(value));
 				break;
-			case PROP__PROVIDED_RUNTIME_LIBRARIES:
+			case PROVIDED_RUNTIME_LIBRARIES:
 				target.getProvidedRuntimeLibraries().addAll(asProjectReferencesInArrayOrEmpty(value));
 				break;
-			case PROP__REQUIRED_RUNTIME_LIBRARIES:
+			case REQUIRED_RUNTIME_LIBRARIES:
 				target.getRequiredRuntimeLibraries().addAll(asProjectReferencesInArrayOrEmpty(value));
 				break;
-			case PROP__MODULE_LOADER:
+			case MODULE_LOADER:
 				target.setModuleLoader(parseModuleLoader(asNonEmptyStringOrNull(value)));
 				break;
-			case PROP__INIT_MODULES:
+			case INIT_MODULES:
 				target.getInitModules().addAll(asBootstrapModulesInArrayOrEmpty(value));
 				break;
-			case PROP__EXEC_MODULE:
+			case EXEC_MODULE:
 				target.setExecModule(asBootstrapModuleOrNull(value));
+				break;
+			case DEFINES_PACKAGE:
+				target.setDefinesPackage(asStringOrNull(value));
+				break;
+			case TYPE_DEPENDENCIES:
+				// in the context of N4JS, type dependencies are considered regular project dependencies
+				convertDependencies(target, asNameValuePairsOrEmpty(value), true);
+				break;
+
+			default:
 				break;
 			}
 		}
@@ -281,16 +283,16 @@ public class PackageJsonHelper {
 			target.setProjectId(defaultProjectId);
 		}
 		if (target.getProjectVersion() == null) {
-			target.setProjectVersion(parseVersion(DEFAULT_VERSION));
+			target.setProjectVersion(parseVersion(VERSION.defaultValue));
 		}
 		if (target.getVendorId() == null) {
-			target.setVendorId(DEFAULT_VENDOR_ID);
+			target.setVendorId(VENDOR_ID.defaultValue);
 		}
 		if (target.getMainModule() == null) {
-			target.setMainModule(DEFAULT_MAIN_MODULE);
+			target.setMainModule(MAIN_MODULE.defaultValue);
 		}
 		if (target.getOutputPath() == null) {
-			target.setOutputPath(DEFAULT_OUTPUT);
+			target.setOutputPath(OUTPUT.defaultValue);
 		}
 		// if no source containers are defined (no matter what type),
 		// then add a default source container of type "source" with path "."
@@ -304,16 +306,16 @@ public class PackageJsonHelper {
 				SourceContainerDescription scdNew = ProjectDescriptionFactory.eINSTANCE
 						.createSourceContainerDescription();
 				scdNew.setSourceContainerType(SourceContainerType.SOURCE);
-				scdNew.getPaths().add(DEFAULT_OUTPUT);
+				scdNew.getPaths().add(OUTPUT.defaultValue);
 				target.getSourceContainers().add(scdNew);
 			} else if (scd.getPaths().isEmpty()) {
-				scd.getPaths().add(DEFAULT_OUTPUT);
+				scd.getPaths().add(OUTPUT.defaultValue);
 			}
 		}
 		// module loader must be commonjs for VALIDATION projects
 		// (no need to set default in case of other project types, because this is handled by EMF)
 		if (target.getProjectType() == ProjectType.VALIDATION) {
-			target.setModuleLoader(DEFAULT_MODULE_LOADER_FOR_VALIDATION);
+			target.setModuleLoader(PackageJsonProperties.DEFAULT_MODULE_LOADER_FOR_VALIDATION);
 		}
 	}
 

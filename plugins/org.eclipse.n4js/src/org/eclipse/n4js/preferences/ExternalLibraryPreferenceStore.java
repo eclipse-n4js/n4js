@@ -10,23 +10,13 @@
  */
 package org.eclipse.n4js.preferences;
 
-import static com.google.common.collect.FluentIterable.from;
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-
-import java.io.File;
 import java.net.URI;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.n4js.external.ExternalLibraryUtils;
-import org.eclipse.n4js.utils.collections.Arrays2;
-
-import com.google.common.base.Function;
 
 /**
  * Representation of a preference store for external libraries.
@@ -117,12 +107,22 @@ public interface ExternalLibraryPreferenceStore extends Iterable<URI> {
 	void removeListener(StoreUpdatedListener listener);
 
 	/**
+	 * Converts the given external library root location URIs into an iterable of existing external folder locations
+	 * URIs.
+	 *
+	 * @param externalRootLocations
+	 *            an iterable of external library root locations.
+	 * @return an iterable of URIs pointing to the external project locations nested in the external root locations.
+	 */
+	public Iterable<URI> convertToProjectRootLocations(Iterable<URI> externalRootLocations);
+
+	/**
 	 * Returns with an iterator pointing to all existing external project root locations after checking that each
 	 * project has an existing N4JS manifest file.
 	 */
 	@Override
 	default Iterator<URI> iterator() {
-		return ExternalProjectLocationsProvider.INSTANCE.convertToProjectRootLocations(getLocations()).iterator();
+		return convertToProjectRootLocations(getLocations()).iterator();
 	}
 
 	/**
@@ -140,67 +140,6 @@ public interface ExternalLibraryPreferenceStore extends Iterable<URI> {
 		 *            monitor for the notification process.
 		 */
 		void storeUpdated(ExternalLibraryPreferenceStore store, IProgressMonitor monitor);
-
-	}
-
-	/**
-	 * Provider that converts external library root locations into nested external project locations.
-	 */
-	static enum ExternalProjectLocationsProvider {
-
-		/** Shared provider instance. */
-		INSTANCE;
-
-		private static final Logger LOGGER = Logger.getLogger(ExternalProjectLocationsProvider.class);
-
-		/**
-		 * Converts the given external library root location URIs into an iterable of existing external folder locations
-		 * URIs.
-		 *
-		 * @param externalRootLocations
-		 *            an iterable of external library root locations.
-		 * @return an iterable of URIs pointing to the external project locations nested in the external root locations.
-		 */
-		public Iterable<URI> convertToProjectRootLocations(Iterable<URI> externalRootLocations) {
-			return from(externalRootLocations).transformAndConcat(new Function<URI, Iterable<URI>>() {
-
-				@Override
-				public Iterable<URI> apply(final URI rootLocation) {
-					final File rootFolder = new File(rootLocation);
-					if (isExistingFolder(rootFolder)) {
-						return from(getDirectoryContents(rootFolder))
-								.filter(f -> isExistingFolder(f))
-								.filter(f -> ExternalLibraryUtils.isExternalProjectDirectory(f))
-								.transform(file -> file.toURI());
-					}
-					return emptyList();
-				}
-
-			});
-		}
-
-		private final boolean isExistingFolder(File file) {
-			return null != file && file.exists() && file.isDirectory();
-		}
-
-		private final Iterable<File> getDirectoryContents(File folder) {
-			if (null == folder || !folder.isDirectory()) {
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Not a directory: " + folder + ".");
-				}
-				return emptyList();
-			}
-
-			final File[] files = folder.listFiles();
-			if (Arrays2.isEmpty(files)) {
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("No resources were found under: " + folder + ".");
-				}
-				return emptyList();
-			}
-
-			return asList(files);
-		}
 
 	}
 

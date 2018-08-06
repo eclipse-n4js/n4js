@@ -118,7 +118,7 @@ public class NpmCLI {
 		SubMonitor subMonitor = SubMonitor.convert(monitor, pckCount + 1);
 
 		Collection<LibraryChange> actualChanges = new LinkedHashSet<>();
-		File installPath = new File(locationProvider.getTargetPlatformInstallLocation());
+		File installPath = new File(locationProvider.getTargetPlatformInstallURI());
 
 		final String jobName = addressedType.name().toLowerCase();
 
@@ -273,7 +273,7 @@ public class NpmCLI {
 
 			subMonitor.setTaskName("Cleaning npm cache");
 
-			File targetInstallLocation = new File(locationProvider.getTargetPlatformInstallLocation());
+			File targetInstallLocation = new File(locationProvider.getTargetPlatformInstallURI());
 			return clean(targetInstallLocation);
 
 		} finally {

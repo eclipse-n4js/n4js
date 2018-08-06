@@ -1,4 +1,4 @@
-package org.eclipse.n4js.json.validation.extension;
+package org.eclipse.n4js.validation.validators.packagejson;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -22,6 +22,8 @@ import org.eclipse.n4js.json.JSON.JSONStringLiteral;
 import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.JSON.NameValuePair;
 import org.eclipse.n4js.json.validation.JSONIssueCodes;
+import org.eclipse.n4js.json.validation.extension.IJSONValidatorExtension;
+import org.eclipse.n4js.packagejson.PackageJsonProperties;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.validation.AbstractDeclarativeValidator;
 import org.eclipse.xtext.validation.Check;
@@ -36,9 +38,9 @@ import com.google.common.collect.Multimap;
 /**
  * An abstract implementation of {@link IJSONValidatorExtension} that enables the functionality of an
  * {@link AbstractDeclarativeValidator} (check methods, addIssue methods, etc.).
- * 
+ *
  * Subclasses of this class can be registered as {@code org.eclipse.n4js.json.validation} extension.
- * 
+ *
  * Subclasses may further customize their scope by overriding {@link #isResponsible(Map, EObject)} so that they only
  * apply to certain resources.
  */
@@ -94,8 +96,8 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 			final CheckProperty annotation = methodPair.getKey();
 			final Method method = methodPair.getValue();
 
-			final String keyPath = annotation.propertyPath();
-			final Collection<JSONValue> values = documentValues.get(keyPath);
+			final PackageJsonProperties property = annotation.property();
+			final Collection<JSONValue> values = documentValues.get(property.getPath());
 
 			// check each value that has been specified for keyPath
 			for (JSONValue value : values) {
@@ -127,7 +129,7 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 	/**
 	 * Returns a multimap that allows keyPath-access to all values that occur in the currently validated
 	 * {@link JSONDocument}.
-	 * 
+	 *
 	 * A key-path is a dot separated specifier of nested property access (e.g. {@code n4js.sources}).
 	 */
 	protected Multimap<String, JSONValue> getDocumentValues() {
@@ -147,7 +149,7 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 
 	/**
 	 * Memoizes the value as given by {@code supplier} in the current validation context and returns its value.
-	 * 
+	 *
 	 * Only invokes {@code supplier} once and re-uses its result in later invocations of this method with the same
 	 * {@code key}.
 	 */
@@ -167,20 +169,20 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 	 * Returns the collection of {@link JSONValue} that have been associated with the given key-path (includes
 	 * duplicates).
 	 */
-	protected Collection<JSONValue> getDocumentValues(String keyPath) {
-		return getDocumentValues().get(keyPath);
+	protected Collection<JSONValue> getDocumentValues(PackageJsonProperties property) {
+		return getDocumentValues().get(property.getPath());
 	}
 
 	/**
 	 * Returns one of the {@link JSONValue}s that have been associated with the given key-path (ignores duplicates).
-	 * 
+	 *
 	 * The {@link JSONValue} at the given key-path must be of type {@code expectedClass}. If this is not the case, this
 	 * method returns {@code null}.
-	 * 
+	 *
 	 * Returns {@code null} if no value has been associated with the given {@code keyPath}.
 	 */
-	protected <T extends JSONValue> T getSingleDocumentValue(String keyPath, Class<T> expectedClass) {
-		Collection<JSONValue> values = getDocumentValues().get(keyPath);
+	protected <T extends JSONValue> T getSingleDocumentValue(PackageJsonProperties property, Class<T> expectedClass) {
+		Collection<JSONValue> values = getDocumentValues().get(property.getPath());
 		final JSONValue value = !values.isEmpty() ? values.iterator().next() : null;
 		if (!expectedClass.isInstance(value)) {
 			return null;
@@ -190,11 +192,11 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 
 	/**
 	 * Returns one of the {@link JSONValue}s that have been associated with the given key-path (ignores duplicates).
-	 * 
+	 *
 	 * Returns {@code null} if no value has been associated with the given {@code keyPath}.
 	 */
-	protected JSONValue getSingleDocumentValue(String keyPath) {
-		return this.getSingleDocumentValue(keyPath, JSONValue.class);
+	protected JSONValue getSingleDocumentValue(PackageJsonProperties property) {
+		return this.getSingleDocumentValue(property, JSONValue.class);
 	}
 
 	/** Returns a user-facing description of the given {@link JSONValue} */
@@ -271,10 +273,10 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 
 	/**
 	 * Computes the severity of the given issue code.
-	 * 
+	 *
 	 * First considers severities as defined by {@link JSONIssueCodes}. If this is not successful, this method performs
 	 * the common severity computation via {@link #getIssueSeverities(Map, EObject)}.
-	 * 
+	 *
 	 * In extensions that extend this class, this will lead to a behavior in which first the JSON bundle severities are
 	 * considered and then the issue severities of the bundle that provides an extension.
 	 */
@@ -299,7 +301,7 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 	 * Checks that the given JSON {@code value} is an instance of the given {@code valueClass}.
 	 *
 	 * Adds an {@link JSONIssueCodes#JSON_EXPECTED_DIFFERENT_VALUE_TYPE} to {@code value} if not.
-	 * 
+	 *
 	 * @param value
 	 *            The value whose type to check.
 	 * @param valueClass
@@ -325,12 +327,12 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 	/**
 	 * Checks whether the given {@code stringLiteral} represents a {@link JSONStringLiteral} with non-empty string
 	 * value.
-	 * 
+	 *
 	 * Returns {@code true} if the check is successful, {@code false} otherwise.
 	 */
-	protected boolean checkIsNonEmptyString(JSONStringLiteral stringLiteral, String propertyName) {
+	protected boolean checkIsNonEmptyString(JSONStringLiteral stringLiteral, PackageJsonProperties property) {
 		if (stringLiteral.getValue().isEmpty()) {
-			addIssue(JSONIssueCodes.getMessageForJSON_EMPTY_STRING(propertyName), stringLiteral,
+			addIssue(JSONIssueCodes.getMessageForJSON_EMPTY_STRING(property.name), stringLiteral,
 					JSONIssueCodes.JSON_EMPTY_STRING);
 			return false;
 		}
@@ -339,7 +341,7 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 
 	/**
 	 * Returns {@code true} iff {@code method} is a valid {link CheckProperty} method.
-	 * 
+	 *
 	 * A valid {@link CheckProperty} is a valid without any or with only one parameter of type {@link JSONValue}.
 	 */
 	private boolean isValidCheckKeyMethod(Method method) {
@@ -366,7 +368,7 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 
 	/**
 	 * Collect all name-value associations that can be extracted from the given {@link JSONObject}.
-	 * 
+	 *
 	 * Does not recursively traverse any nested objects.
 	 */
 	protected Multimap<String, JSONValue> collectObjectValues(JSONObject object) {
@@ -374,8 +376,7 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 			return ImmutableMultimap.<String, JSONValue> of(); // empty map
 		}
 
-		return collectDocumentValues(object,
-				LinkedHashMultimap.<String, JSONValue> create(), "", 1);
+		return collectDocumentValues(object, LinkedHashMultimap.<String, JSONValue> create(), "", 1);
 	}
 
 	/**

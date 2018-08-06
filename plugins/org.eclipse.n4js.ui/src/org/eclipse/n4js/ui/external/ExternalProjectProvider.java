@@ -34,7 +34,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
-import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore.ExternalProjectLocationsProvider;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore.StoreUpdatedListener;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.ui.internal.ExternalProjectCacheLoader;
@@ -60,6 +59,9 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 
 	@Inject
 	private ProjectStateChangeListener projectStateChangeListener;
+
+	@Inject
+	private ExternalLibraryPreferenceStore externalLibraryPreferenceStore;
 
 	private final Collection<ExternalLocationsUpdatedListener> locListeners = new LinkedList<>();
 	private final List<java.net.URI> rootLocations = new LinkedList<>();
@@ -185,7 +187,7 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 
 	void updateCache() {
 		projectCache.invalidateAll();
-		Iterable<java.net.URI> projectRoots = ExternalProjectLocationsProvider.INSTANCE
+		Iterable<java.net.URI> projectRoots = externalLibraryPreferenceStore
 				.convertToProjectRootLocations(rootLocations);
 
 		for (java.net.URI projectRoot : projectRoots) {
@@ -215,7 +217,7 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 		Map<String, N4JSExternalProject> projectNameMappingTmp = newHashMap();
 		Map<URI, Pair<N4JSExternalProject, ProjectDescription>> projectUriMappingTmp = newHashMap();
 
-		Iterable<java.net.URI> projectRoots = ExternalProjectLocationsProvider.INSTANCE
+		Iterable<java.net.URI> projectRoots = externalLibraryPreferenceStore
 				.convertToProjectRootLocations(rootLocations); // TODO: check if this preserves order!
 		List<java.net.URI> projectRootsInReversedOrder = Lists.newArrayList(projectRoots);
 		Collections.reverse(projectRootsInReversedOrder);

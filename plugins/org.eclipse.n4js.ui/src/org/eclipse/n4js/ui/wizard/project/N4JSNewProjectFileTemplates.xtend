@@ -14,7 +14,7 @@ import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectDescription.SourceContainerType
 import org.eclipse.n4js.packagejson.PackageJsonBuilder
 
-import static org.eclipse.n4js.packagejson.PackageJsonConstants.DEFAULT_VERSION
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.VERSION
 
 /**
  * Basic Xtend templates for new project wizard.
@@ -74,7 +74,7 @@ class N4JSNewProjectFileTemplates {
 		// configure basic properties
 		val builder = PackageJsonBuilder.newBuilder()
 			.withName(projectInfo.projectName)
-			.withVersion(DEFAULT_VERSION)
+			.withVersion(VERSION.defaultValue)
 			.withType(projectInfo.projectType)
 			.withOutput(projectInfo.outputFolder)
 			.withVendorId(projectInfo.vendorId);

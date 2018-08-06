@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.json.validation.extension;
+package org.eclipse.n4js.validation.validators.packagejson;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -17,18 +17,18 @@ import java.lang.annotation.Target;
 
 import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONValue;
+import org.eclipse.n4js.packagejson.PackageJsonProperties;
 
 /**
- * Method annotation to be used in combination with {@link AbstractJSONValidatorExtension}
- * in order to declaratively specify validation check methods that validate only certain
- * properties of a {@link JSONDocument}.
- * 
- * Methods annotated with this annotation may either have no parameter at all or a single 
- * parameter of type {@link JSONValue}.
+ * Method annotation to be used in combination with {@link AbstractJSONValidatorExtension} in order to declaratively
+ * specify validation check methods that validate only certain properties of a {@link JSONDocument}.
+ *
+ * Methods annotated with this annotation may either have no parameter at all or a single parameter of type
+ * {@link JSONValue}.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.METHOD })
 public @interface CheckProperty {
 	/** The key path in the JSON document that is checked by this method. */
-	public String propertyPath();
+	public PackageJsonProperties property();
 }
