@@ -187,8 +187,12 @@ public class ProjectTestsUtils {
 		}
 
 		// load actual project name from ".project" file (might be different in case of NPM scopes)
-		IProjectDescription description = workspace.loadProjectDescription(
-				new Path(new File(projectTargetFolder, ".project").getAbsolutePath()));
+		File dotProjectFile = new File(projectTargetFolder, ".project");
+		if (!dotProjectFile.exists()) {
+			throw new IllegalArgumentException(
+					"project to import does not contain a .project file: " + projectTargetFolder);
+		}
+		IProjectDescription description = workspace.loadProjectDescription(new Path(dotProjectFile.getAbsolutePath()));
 		String projectNameFromDotProjectFile = description.getName();
 
 		IProject project = workspace.getRoot().getProject(projectNameFromDotProjectFile);
@@ -204,7 +208,7 @@ public class ProjectTestsUtils {
 			project.create(description, mon);
 			project.open(mon);
 			if (!project.getLocation().toFile().exists()) {
-				throw new IllegalArgumentException("test project correctly created in " + project.getLocation());
+				throw new IllegalArgumentException("test project not correctly created in " + project.getLocation());
 			}
 
 			IOverwriteQuery overwriteQuery = new IOverwriteQuery() {
