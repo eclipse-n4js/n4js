@@ -1,0 +1,191 @@
+/** 
+ * Copyright (c) 2018 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * Contributors:
+ * NumberFour AG - Initial API and implementation
+ */
+package org.eclipse.n4js.tests.project
+
+import com.google.inject.Inject
+import java.io.File
+import org.eclipse.core.resources.IFile
+import org.eclipse.core.resources.IProject
+import org.eclipse.core.runtime.CoreException
+import org.eclipse.emf.common.util.URI
+import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore
+import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
+import org.eclipse.n4js.tests.util.ProjectTestsHelper
+import org.eclipse.n4js.tests.util.ProjectTestsUtils
+import org.junit.Before
+import org.junit.Test
+
+import static org.eclipse.emf.common.util.URI.createPlatformResourceURI
+import static org.junit.Assert.*
+
+/**
+ * Testing the use of npm scopes as part of N4JS project names, i.e. project names of
+ * the form "@myScope/myProject".
+ */
+class NpmScopesPluginTest extends AbstractBuilderParticipantTest {
+
+	private static final String PROBANDS = "probands";
+	private static final String WORKSPACE_BASE = "npmScopes";
+	private static final String EXAMPLE1 = "example1";
+
+	private IProject clientProject;
+	private URI clientModuleURI;
+	private IFile clientModule;
+
+	@Inject private ExternalLibraryPreferenceStore externalLibraryPreferenceStore;
+	@Inject private ProjectTestsHelper projectTestsHelper;
+
+	@Before
+	def void before() {
+		val parentFolder = new File(getResourceUri(PROBANDS, WORKSPACE_BASE, EXAMPLE1));
+		ProjectTestsUtils.importProject(parentFolder, "@myScope/Lib");
+		ProjectTestsUtils.importProject(parentFolder, "Lib");
+		clientProject = ProjectTestsUtils.importProject(parentFolder, "XClient");
+		clientModule = clientProject.getFolder("src").getFile("ClientModule.n4js");
+		assertNotNull(clientModule);
+		assertTrue(clientModule.exists);
+		clientModuleURI = createPlatformResourceURI(clientProject.name + "/src/" + clientModule.name, true);
+	}
+
+	@Test
+	def void testImportModuleThatExistsOnlyInScopedProject() throws CoreException {
+		setContentsOfClientModule('''
+			import {A} from "A"
+			new A().foo();
+		''')
+		assertNoIssues();
+		assertCorrectOutput('''
+			Hello from A in @myScope/Lib!
+		''')
+
+		setContentsOfClientModule('''
+			import {A} from "@myScope/Lib/A"     // <-- should have same result as above
+			new A().foo();
+		''');
+		assertNoIssues();
+		assertCorrectOutput('''
+			Hello from A in @myScope/Lib!
+		''')
+
+		setContentsOfClientModule('''
+			import {A} from "Lib/A"              // <-- must *not* work (because module A not contained in non-scoped project "Lib")
+		''');
+		assertIssues(
+			"line 1: Cannot resolve import target :: resolving full module import : found no matching modules",
+			"line 1: Couldn't resolve reference to TExportableElement 'A'.",
+			"line 1: Import of A cannot be resolved."
+		);
+	}
+
+	@Test
+	def void testImportModuleThatExistsOnlyInNonScopedProject() throws CoreException {
+		setContentsOfClientModule('''
+			import {B} from "B"
+			new B().foo();
+		''')
+		assertNoIssues();
+		assertCorrectOutput('''
+			Hello from B in Lib!
+		''')
+
+		setContentsOfClientModule('''
+			import {B} from "@myScope/Lib/B"     // <-- must *not* work (because module B not contained in scoped project "@myScope/Lib")
+		''')
+		assertIssues(
+			"line 1: Cannot resolve import target :: resolving full module import : found no matching modules",
+			"line 1: Couldn't resolve reference to TExportableElement 'B'.",
+			"line 1: Import of B cannot be resolved."
+		);
+
+		setContentsOfClientModule('''
+			import {B} from "Lib/B"              // <-- should have same result as first import above
+			new B().foo();
+		''')
+		assertNoIssues();
+		assertCorrectOutput('''
+			Hello from B in Lib!
+		''')
+	}
+
+	@Test
+	def void testImportModuleThatExistsInBothProjects() throws CoreException {
+		setContentsOfClientModule('''
+			import {C} from "C"
+			new C().foo();
+		''')
+		assertNoIssues();
+		assertCorrectOutput('''
+			Hello from C in @myScope/Lib!
+		''')
+
+		setContentsOfClientModule('''
+			import {C as C_scoped} from "@myScope/Lib/C"
+			import {C as C_nonScoped} from "Lib/C"
+			new C_scoped().foo();
+			new C_nonScoped().foo();
+		''')
+		assertNoIssues();
+		assertCorrectOutput('''
+			Hello from C in @myScope/Lib!
+			Hello from C in Lib!
+		''')
+	}
+
+	@Test
+	def void testImportModuleThatExistsInBothProjectsInSubFolders() throws CoreException {
+		setContentsOfClientModule('''
+			import {C} from "folder1/folder2/C"
+			new C().foo();
+		''')
+		assertNoIssues();
+		assertCorrectOutput('''
+			Hello from folder1/folder2/C in @myScope/Lib!
+		''')
+
+		setContentsOfClientModule('''
+			import {C as C_scoped} from "@myScope/Lib/folder1/folder2/C"
+			import {C as C_nonScoped} from "Lib/folder1/folder2/C"
+			new C_scoped().foo();
+			new C_nonScoped().foo();
+		''')
+		assertNoIssues();
+		assertCorrectOutput('''
+			Hello from folder1/folder2/C in @myScope/Lib!
+			Hello from folder1/folder2/C in Lib!
+		''')
+	}
+
+	@Test
+	def void testImportMainModule() throws CoreException {
+		setContentsOfClientModule('''
+			import {D as D_scoped} from "@myScope/Lib"
+			import {D as D_nonScoped} from "Lib"
+			new D_scoped().foo();
+			new D_nonScoped().foo();
+		''')
+		assertNoIssues();
+		assertCorrectOutput('''
+			Hello from D in @myScope/Lib!
+			Hello from D in Lib!
+		''')
+	}
+
+	def private void setContentsOfClientModule(CharSequence source) {
+		changeTestFile(clientModule, source);
+		waitForAutoBuild();
+	}
+
+	def private void assertCorrectOutput(CharSequence expectedOutput) {
+		val result = projectTestsHelper.runWithNodeRunnerUI(clientModuleURI);
+		val actualOutput = result.stdOut.trim;
+		val expectedOutputTrimmed = expectedOutput.toString.trim;
+		assertEquals("incorrect output when running " + clientModule.name, expectedOutputTrimmed, actualOutput);
+	}
+}

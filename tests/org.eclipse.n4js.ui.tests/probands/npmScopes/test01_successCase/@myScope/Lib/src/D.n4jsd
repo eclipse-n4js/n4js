@@ -1,4 +1,0 @@
-export external public class D {
-	
-	public foo():string
-}

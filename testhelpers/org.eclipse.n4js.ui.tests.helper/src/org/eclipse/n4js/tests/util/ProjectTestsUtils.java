@@ -48,6 +48,7 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.N4JSGlobals;
@@ -57,6 +58,7 @@ import org.eclipse.n4js.ui.editor.N4JSDirtyStateEditorSupport;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.ui.utils.TimeoutRuntimeException;
 import org.eclipse.n4js.ui.utils.UIUtils;
+import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
 import org.eclipse.ui.texteditor.MarkerUtilities;
 import org.eclipse.ui.wizards.datatransfer.FileSystemStructureProvider;
@@ -171,20 +173,35 @@ public class ProjectTestsUtils {
 			prepareDotProject(projectSourceFolder);
 		}
 
-		// load actual project name from ".project" file (might be different in case of NPM scopes)
+		// copy project into workspace
+		// (need to do that manually to properly handle NPM scopes, because the Eclipse import functionality won't put
+		// those projects into an "@myScope" subfolder)
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		File workspaceFolder = workspace.getRoot().getLocation().toFile();
+		File projectTargetFolder = new File(workspaceFolder, projectName);
+		try {
+			projectTargetFolder.mkdirs();
+			FileCopier.copy(projectSourceFolder.toPath(), projectTargetFolder.toPath());
+		} catch (IOException e) {
+			throw new WrappedException("exception while copying project into workspace", e);
+		}
+
+		// load actual project name from ".project" file (might be different in case of NPM scopes)
 		IProjectDescription description = workspace.loadProjectDescription(
-				new Path(new File(projectSourceFolder, ".project").getAbsolutePath()));
+				new Path(new File(projectTargetFolder, ".project").getAbsolutePath()));
 		String projectNameFromDotProjectFile = description.getName();
 
 		IProject project = workspace.getRoot().getProject(projectNameFromDotProjectFile);
 
 		IProgressMonitor monitor = new NullProgressMonitor();
 		workspace.run((mon) -> {
-			// create a new project description to actually copy the project into the workspace instead of just
-			// referencing the one in the test data
-			IProjectDescription newProjectDescription = workspace.newProjectDescription(projectNameFromDotProjectFile);
-			project.create(newProjectDescription, mon);
+			// NOTE: the following two lines would create a new project description and make Eclipse copy the projects
+			// and its contents into the workspace:
+			// IProjectDescription newDescription = workspace.newProjectDescription(projectNameFromDotProjectFile);
+			// project.create(newDescription, mon);
+			// However, we do not want that (see above); instead, we create a project from the description we loaded
+			// above:
+			project.create(description, mon);
 			project.open(mon);
 			if (!project.getLocation().toFile().exists()) {
 				throw new IllegalArgumentException("test project correctly created in " + project.getLocation());
@@ -196,7 +213,7 @@ public class ProjectTestsUtils {
 					return ALL;
 				}
 			};
-			ImportOperation importOperation = new ImportOperation(project.getFullPath(), projectSourceFolder,
+			ImportOperation importOperation = new ImportOperation(project.getFullPath(), projectTargetFolder,
 					FileSystemStructureProvider.INSTANCE, overwriteQuery);
 			importOperation.setCreateContainerStructure(false);
 			try {

@@ -42,6 +42,19 @@ public class ProjectDescriptionUtils {
 				&& projectName.indexOf(NPM_SCOPE_SEPARATOR) >= 0;
 	}
 
+	// returned name includes the NPM_SCOPE_PREFIX!
+	public static String getScopeName(String projectName) {
+		return isProjectNameWithScope(projectName)
+				? projectName.substring(0, projectName.indexOf(NPM_SCOPE_SEPARATOR))
+				: null;
+	}
+
+	public static String getProjectNameWithoutScope(String projectName) {
+		return isProjectNameWithScope(projectName)
+				? projectName.substring(projectName.indexOf(NPM_SCOPE_SEPARATOR))
+				: projectName;
+	}
+
 	public static String deriveProjectNameFromURI(URI uri) {
 		int segCount = uri.segmentCount();
 		String last = segCount > 0 ? uri.segment(segCount - 1) : null;
