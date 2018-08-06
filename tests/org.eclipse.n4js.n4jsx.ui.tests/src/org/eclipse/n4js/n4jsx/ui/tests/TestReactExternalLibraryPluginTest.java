@@ -115,6 +115,10 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 		final ProcessResult result = runClient();
 		assertTrue("Unexpected output after running the client module: " + result.getStdOut(),
 				result.getStdOut().contains("Symbol(react.element)"));
+
+		libManager.uninstallNPM(PACKAGE_REACT, new NullProgressMonitor());
+		IResourcesSetupUtil.fullBuild();
+		waitForAutoBuild();
 	}
 
 	/**
@@ -141,6 +145,10 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 
 		assertMarkers("Expected exactly zero errors in package.json.", projectDescriptionFile, 0);
 		assertMarkers("Expected exactly 1 error in B module.", clientModule, 1);
+
+		libManager.uninstallNPM(PACKAGE_REACT, new NullProgressMonitor());
+		IResourcesSetupUtil.fullBuild();
+		waitForAutoBuild();
 	}
 
 	/**
