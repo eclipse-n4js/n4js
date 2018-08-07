@@ -22,7 +22,7 @@ public interface TestFsmRegistry {
 	 *            the session ID for the FSM.
 	 * @return return with the new FSM instance.
 	 */
-	TestFsm registerFsm(final String sessionId);
+	TestFsm getTestFsm(final String sessionId);
 
 	/**
 	 * Returns with {@code true} if a tester session exists with the given unique session ID argument.

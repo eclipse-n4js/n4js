@@ -13,6 +13,7 @@ package org.eclipse.n4js.tester.ui.resultsview;
 import static org.eclipse.swt.SWT.COLOR_WHITE;
 import static org.eclipse.swt.widgets.Display.getCurrent;
 
+import org.eclipse.n4js.tester.domain.TestStatus;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.FontMetrics;
@@ -23,8 +24,6 @@ import org.eclipse.swt.graphics.Resource;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-
-import org.eclipse.n4js.tester.domain.TestStatus;
 
 /**
  * Shows a progress bar with information on number of passed, failed, etc. tests. The expected total must be set with
