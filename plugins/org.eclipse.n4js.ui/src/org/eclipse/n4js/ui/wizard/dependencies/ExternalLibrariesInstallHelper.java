@@ -19,7 +19,7 @@ import java.util.stream.StreamSupport;
 
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.SubMonitor;
-import org.eclipse.n4js.n4mf.DeclaredVersion;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.ui.external.ExternalLibrariesActionsHelper;
 
 import com.google.inject.Inject;
@@ -54,7 +54,7 @@ public class ExternalLibrariesInstallHelper {
 		// remove npms
 		externals.maintenanceDeleteNpms(multistatus);
 
-		Map<String, DeclaredVersion> projectIdsOfShippedCode = StreamSupport
+		Map<String, VersionNumber> projectIdsOfShippedCode = StreamSupport
 				.stream(dependenciesHelper.getAvailableProjectsDescriptions(true).spliterator(), false)
 				.collect(Collectors.toMap(pd -> pd.getProjectId(), pd -> pd.getProjectVersion()));
 
@@ -75,14 +75,13 @@ public class ExternalLibrariesInstallHelper {
 	 * Removes from map 'dependenciesToInstall' all entries for projects that are in the shipped code, if and only if
 	 * the requested version is the "fake" version of the shipped code.
 	 *
-	 * FIXME GH-957 / GH-809 change implementation to use a proper SemVer version-range-check instead of the string
-	 * compare!
+	 * FIXME GH-957 change implementation to use a proper SemVer version-range-check instead of the string compare!
 	 */
 	private void removeDependenciesToShippedCodeIfVersionMatches(Map<String, String> dependenciesToInstall,
-			Map<String, DeclaredVersion> projectIdsOfShippedCode) {
+			Map<String, VersionNumber> projectIdsOfShippedCode) {
 		for (Entry<String, String> depToInstall : dependenciesToInstall.entrySet()) {
 			String projectId = depToInstall.getKey();
-			DeclaredVersion availableVersionInShippedCode = projectIdsOfShippedCode.get(projectId);
+			VersionNumber availableVersionInShippedCode = projectIdsOfShippedCode.get(projectId);
 			if (availableVersionInShippedCode != null) {
 				String versionConstraintStr = depToInstall.getValue();
 				if (versionConstraintStr != null && versionConstraintStr.trim().equals("@\">=0.1.0 <=0.1.0\"")) {
@@ -114,7 +113,7 @@ public class ExternalLibrariesInstallHelper {
 					.map(id -> dependenciesToInstall.get(id))
 					.collect(Collectors.toSet());
 			if (versionConstraintsOfShippedCodeToInstall.size() > 1) {
-				// FIXME GH-957 / GH-809 warn about conflicting version constraints for shipped code!
+				// FIXME GH-957 warn about conflicting version constraints for shipped code!
 			}
 			String versionConstraint = versionConstraintsOfShippedCodeToInstall.stream().findFirst()
 					.orElse(null);

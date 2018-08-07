@@ -24,17 +24,17 @@ import org.eclipse.n4js.json.JSON.JSONDocument
 import org.eclipse.n4js.json.JSON.JSONFactory
 import org.eclipse.n4js.json.JSON.JSONObject
 import org.eclipse.n4js.json.model.utils.JSONModelUtils
-import org.eclipse.n4js.n4mf.ProjectType
-import org.eclipse.n4js.n4mf.SourceContainerType
+import org.eclipse.n4js.projectDescription.ProjectType
+import org.eclipse.n4js.projectDescription.SourceContainerType
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
 import org.eclipse.n4js.tests.util.PackageJSONTestUtils
 import org.eclipse.n4js.tests.util.ProjectTestsUtils
-import org.eclipse.n4js.utils.ProjectDescriptionHelper
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
 
 import static org.junit.Assert.assertTrue
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.DEPENDENCIES
 
 /**
  */
@@ -107,8 +107,7 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 
 		val packageJSONRoot = PackageJSONTestUtils.getPackageJSONRoot(resource);
 		// set the 'dependencies' property of the package.json file to an empty object
-		JSONModelUtils.setProperty(packageJSONRoot, ProjectDescriptionHelper.PROP__DEPENDENCIES,
-			JSONFactory.eINSTANCE.createJSONObject);
+		JSONModelUtils.setProperty(packageJSONRoot, DEPENDENCIES.name, JSONFactory.eINSTANCE.createJSONObject);
 
 		resource.save(null);
 		waitForAutoBuild;

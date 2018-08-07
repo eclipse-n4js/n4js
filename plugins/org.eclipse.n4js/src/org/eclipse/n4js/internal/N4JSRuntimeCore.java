@@ -212,8 +212,6 @@ public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCor
 		switch (resourceType) {
 		case UNKOWN:
 			return false;
-		case N4MF:
-			return false;
 		default:
 			return !ResourceType.xtHidesOtherExtension(uri);
 		}

@@ -10,7 +10,7 @@
  */
 {
 	"name": "org.eclipse.n4js.mangelhaft",
-	"version": "0.0.1-SNAPSHOT",
+	"version": "0.0.1",
 	"n4js": {
 		"projectType": "library",
 		"vendorId": "org.eclipse.n4js",

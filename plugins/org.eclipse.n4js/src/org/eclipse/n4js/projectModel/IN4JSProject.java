@@ -17,20 +17,20 @@ import java.util.List;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.internal.N4JSProject;
-import org.eclipse.n4js.n4mf.BootstrapModule;
-import org.eclipse.n4js.n4mf.DeclaredVersion;
-import org.eclipse.n4js.n4mf.ModuleFilter;
-import org.eclipse.n4js.n4mf.ModuleLoader;
-import org.eclipse.n4js.n4mf.ProjectDescription;
-import org.eclipse.n4js.n4mf.ProjectType;
+import org.eclipse.n4js.projectDescription.BootstrapModule;
+import org.eclipse.n4js.projectDescription.ModuleFilter;
+import org.eclipse.n4js.projectDescription.ModuleLoader;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectType;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 
 /**
  * A common interface to projects and their configuration. {@link IN4JSProject Projects} have a set of relevant
- * properties like the configured dependencies and how they resolve to either archives or other projects, or the
- * configured source containers.
+ * properties like the configured dependencies and how they resolve to other projects, or the configured source
+ * containers.
  * <p>
  * IN4JSProjects are handle objects that are not necessarily backed by existing structures in the file system. Some
  * methods don't yield interesting information, if the element does not exist. Others work. See the JavaDoc of each
@@ -40,12 +40,38 @@ import com.google.common.collect.ImmutableList;
  * This is modeled similar to {@code org.eclipse.jdt.core.JavaCore} works, e.g. instances of {@link IN4JSProject} are
  * obtained via {@link IN4JSCore#create(URI)}.
  */
-public interface IN4JSProject extends IN4JSSourceContainerAware {
+public interface IN4JSProject {
 
 	/**
 	 * The name of the package.json file.
 	 */
 	public final static String PACKAGE_JSON = N4JSGlobals.PACKAGE_JSON;
+
+	/**
+	 * @return the receiving project's ID. Also available if the project does not exist.
+	 */
+	String getProjectId();
+
+	/**
+	 * The project's location. Also available if the project does not exist. This will return a platform URI when
+	 * running within Eclipse, and a file URI in headless mode.
+	 */
+	URI getLocation();
+
+	/**
+	 * The source containers of this container structure, possibly empty.
+	 */
+	ImmutableList<? extends IN4JSSourceContainer> getSourceContainers();
+
+	/**
+	 * All direct dependencies for this structure.
+	 */
+	ImmutableList<? extends IN4JSProject> getAllDirectDependencies();
+
+	/**
+	 * @return true if this container structure is external to the workspace.
+	 */
+	boolean isExternal();
 
 	/**
 	 * Returns the project type of the project or null, if type is not available
@@ -64,21 +90,8 @@ public interface IN4JSProject extends IN4JSSourceContainerAware {
 	boolean exists();
 
 	/**
-	 * The configured libraries on the search path, empty if the project does not exist.
-	 *
-	 * The project's manifest may declare dependencies that either resolve to archives or other projects.
-	 *
-	 * @see #getDependencies()
-	 */
-	ImmutableList<? extends IN4JSArchive> getLibraries();
-
-	/**
 	 * The configured projects on the search path (including runtime environment and libraries), empty if the project
 	 * does not exist.
-	 *
-	 * The project's manifest may declare dependencies that either resolve to archives or other projects.
-	 *
-	 * @see #getLibraries()
 	 */
 	ImmutableList<? extends IN4JSProject> getDependencies();
 
@@ -92,7 +105,7 @@ public interface IN4JSProject extends IN4JSSourceContainerAware {
 	 * Returns the raw provided runtime libraries data for this project. Empty list returned if project is not
 	 * {@link ProjectType#RUNTIME_ENVIRONMENT} or does not provide any libraries.
 	 */
-	ImmutableList<? extends IN4JSSourceContainerAware> getProvidedRuntimeLibraries();
+	ImmutableList<? extends IN4JSProject> getProvidedRuntimeLibraries();
 
 	/**
 	 * Returns projectId of the extended runtime, if any.
@@ -106,7 +119,7 @@ public interface IN4JSProject extends IN4JSSourceContainerAware {
 	 *
 	 * @return the extended RE. Could be absent but never {@code null}.
 	 */
-	Optional<IN4JSSourceContainerAware> getExtendedRuntimeEnvironment();
+	Optional<IN4JSProject> getExtendedRuntimeEnvironment();
 
 	/**
 	 * The vendor ID. It is not available, if the project does not exist.
@@ -119,13 +132,6 @@ public interface IN4JSProject extends IN4JSSourceContainerAware {
 	ModuleLoader getModuleLoader();
 
 	/**
-	 * The project's location. Also available if the project does not exist. This will return a platform URI when
-	 * running within Eclipse, and a file URI in headless mode.
-	 */
-	@Override
-	URI getLocation();
-
-	/**
 	 * The project's location in the local file system.
 	 */
 	Path getLocationPath();
@@ -133,17 +139,12 @@ public interface IN4JSProject extends IN4JSSourceContainerAware {
 	/**
 	 * The declared version of the project. It is not available, if the project does not exist.
 	 */
-	DeclaredVersion getVersion();
+	VersionNumber getVersion();
 
 	/**
 	 * returns the project relative path to the folder where the generated files should be placed
 	 */
 	String getOutputPath();
-
-	/**
-	 * returns the project relative paths to the folders where the resources should be placed
-	 */
-	List<String> getResourcePaths();
 
 	/**
 	 * returns the no-validate module filter
@@ -154,11 +155,6 @@ public interface IN4JSProject extends IN4JSSourceContainerAware {
 	 * returns the no-module-wrapping module filter
 	 */
 	ModuleFilter getNoModuleWrappingFilter();
-
-	/**
-	 * returns the project relative paths to the library folders
-	 */
-	List<String> getLibraryFolders();
 
 	/**
 	 * returns the module specifier of this project's main module or <code>null</code> if not given in manifest.
@@ -215,4 +211,12 @@ public interface IN4JSProject extends IN4JSSourceContainerAware {
 	 * @See {@link ProjectDescription#isHasN4JSNature()}
 	 */
 	boolean hasN4JSNature();
+
+	/**
+	 * Returns the name of the package this {@code project} provides type definitions for.
+	 *
+	 * {@code null} if this project does not specify the property (i.e. not a type definitions project (cf.
+	 * {@link ProjectType#DEFINITION}).
+	 */
+	public String getDefinesPackage();
 }

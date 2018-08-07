@@ -1,6 +1,6 @@
 {
 	"name": "IDE_2205",
-	"version": "0.0.1-SNAPSHOT",
+	"version": "0.0.1",
 	"dependencies": {
 		"foo.bar": "*"
 	},

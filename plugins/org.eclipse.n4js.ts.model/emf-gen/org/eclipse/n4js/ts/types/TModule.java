@@ -135,8 +135,9 @@ public interface TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * *
-	 * The module loader supported by this module as defined in the containing project's manifest.
-	 * Value will be an EMF enum literal, i.e. something like <code>org.eclipse.n4js.n4mf.ModuleLoader.COMMONJS.getLiteral()</code>.
+	 * The module loader supported by this module as defined in the containing project's package.json.
+	 * Value will be an EMF enum literal, i.e. something like <code>org.eclipse.n4js.projectDescription.ModuleLoader.COMMONJS.getLiteral()</code>.
+	 * See <code>PackageJsonUtils#parseModuleLoader()</code> for how to convert from String to values of enum ModuleLoader.
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Module Loader</em>' attribute.
 	 * @see #setModuleLoader(String)
@@ -241,7 +242,7 @@ public interface TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * *
-	 * Flag indicating a MainModule (see org.eclipse.n4js.n4mf.ProjectDescription#mainModule)
+	 * Flag indicating a MainModule (see ProjectDescription#mainModule)
 	 * Used in scoping to adjust shadowing rules for the project imports (see org.eclipse.n4js.scoping.utils.ProjectImportEnablingScope).
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Main Module</em>' attribute.

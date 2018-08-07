@@ -22,7 +22,7 @@ import java.util.Set;
 
 import org.eclipse.n4js.n4JS.LocalArgumentsVariable;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
-import org.eclipse.n4js.n4mf.ModuleLoader;
+import org.eclipse.n4js.projectDescription.ModuleLoader;
 import org.eclipse.n4js.validation.IssueCodes;
 
 import com.google.common.collect.ImmutableMap;

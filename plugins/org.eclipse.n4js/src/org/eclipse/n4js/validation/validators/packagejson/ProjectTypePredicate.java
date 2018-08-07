@@ -17,8 +17,8 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Lists;
 
-import org.eclipse.n4js.n4mf.ProjectDescription;
-import org.eclipse.n4js.n4mf.ProjectType;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectType;
 
 /**
  * Convenient predicate for {@link ProjectType project type}s. Provides {@code true} result for the evaluation if the

@@ -19,7 +19,7 @@ import org.eclipse.emf.common.util.URI
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.n4JS.AnnotableElement
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.n4mf.ProjectType
+import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypesPackage

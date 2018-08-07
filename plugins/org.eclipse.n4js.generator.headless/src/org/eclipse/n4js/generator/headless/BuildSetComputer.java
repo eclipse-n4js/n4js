@@ -20,12 +20,14 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.collections.Collections2;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
@@ -35,6 +37,21 @@ import com.google.inject.Inject;
  *
  * Use the {@code create*BuildSet}-methods to obtain a {@link BuildSet} instance.
  *
+ * This class allows the creation of the following types of {@link BuildSet}s:
+ * <ol>
+ *
+ * <li>Single File produces a {@link BuildSet} that instructs the compiler to only compile a limited set of single
+ * source files (see {@link #createSingleFileBuildSet(File)}, {@link #createSingleFilesBuildSet(List)} and
+ * {@link #createSingleFilesBuildSet(List, List)})</li>
+ *
+ * <li>Projects produces a {@link BuildSet} that instructs the compiler to only compile a given list of projects. (See
+ * {@link #createProjectsBuildSet(List)}, {@link #createProjectsBuildSet(List, List)})</li>
+ *
+ * <li>All Projects produces a {@link BuildSet} that instructs the compiler to compile all projects directly contained
+ * in a given projects-location (See {@link #createAllProjectsBuildSet(List)}).
+ *
+ * </ol>
+ *
  * You can use {@link HeadlessHelper#registerProjects(BuildSet, FileBasedWorkspace)} to register the projects in the
  * returned {@link BuildSet} instances with the {@link FileBasedWorkspace} in use.
  */
@@ -42,6 +59,9 @@ public class BuildSetComputer {
 
 	@Inject
 	private HeadlessHelper headlessHelper;
+
+	@Inject
+	private IHeadlessLogger logger;
 
 	/**
 	 * Creates a {@link BuildSet} for compiling a single source file.
@@ -146,7 +166,31 @@ public class BuildSetComputer {
 	 */
 	public BuildSet createBuildSet(List<File> searchPaths, List<File> projectPaths, List<File> singleSourceFiles)
 			throws N4JSCompileException {
+		logBuildSetComputerConfiguration(searchPaths, projectPaths, singleSourceFiles);
 		return collectProjects(searchPaths, projectPaths, singleSourceFiles);
+	}
+
+	/**
+	 * Logs some debug information about the user-provided project discovery arguments (only if {@link #logger} is
+	 * configured in debug mode).
+	 *
+	 * This includes the specified project locations, project search paths and potential paths of single-file arguments.
+	 *
+	 * @param searchPaths
+	 *            where to search for dependent projects.
+	 * @param projectPaths
+	 *            the projects to compile. the base folder of each project must be provided.
+	 * @param singleSourceFiles
+	 *            if non-empty limit compilation to the sources files listed here
+	 */
+	private void logBuildSetComputerConfiguration(List<File> searchPaths, List<File> projectPaths,
+			List<File> singleSourceFiles) {
+		if (logger.isCreateDebugOutput()) {
+			logger.debug("Computing build set with the following arguments");
+			logger.debug("  Search paths: " + Joiner.on(", ").join(searchPaths));
+			logger.debug("  Projects    : " + Joiner.on(", ").join(projectPaths));
+			logger.debug("  Source files: " + Joiner.on(", ").join(singleSourceFiles));
+		}
 	}
 
 	/**

@@ -16,7 +16,7 @@ import java.io.IOException
 import java.nio.file.Path
 import java.util.List
 import java.util.Objects
-import org.eclipse.n4js.n4mf.ProjectType
+import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.utils.io.FileDeleter
 
@@ -223,9 +223,10 @@ public class Project {
 			case RUNTIME_LIBRARY: "runtimeLibrary"
 			case TEST: "test"
 			case VALIDATION: "validation"
+			case DEFINITION: "definition"
 		};
 	}
-	
+
 	/**
 	 * Creates this project in the given parent directory, which must exist.
 	 *

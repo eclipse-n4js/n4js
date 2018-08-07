@@ -25,8 +25,11 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.binaries.BinaryCommandFactory;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
+import org.eclipse.n4js.semver.SemverHelper;
+import org.eclipse.n4js.semver.Semver.GitHubVersionRequirement;
+import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.utils.ProcessExecutionCommandStatus;
-import org.eclipse.n4js.utils.ProjectDescriptionHelper;
+import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.StatusHelper;
 
 import com.google.inject.Inject;
@@ -54,7 +57,10 @@ public class NpmCLI {
 	private NpmLogger logger;
 
 	@Inject
-	private ProjectDescriptionHelper projectDescriptionHelper;
+	private ProjectDescriptionLoader projectDescriptionLoader;
+
+	@Inject
+	private SemverHelper semverHelper;
 
 	/** Simple validation if the package name is not null or empty */
 	public boolean invalidPackageName(String packageName) {
@@ -112,7 +118,7 @@ public class NpmCLI {
 		SubMonitor subMonitor = SubMonitor.convert(monitor, pckCount + 1);
 
 		Collection<LibraryChange> actualChanges = new LinkedHashSet<>();
-		File installPath = new File(locationProvider.getTargetPlatformInstallLocation());
+		File installPath = new File(locationProvider.getTargetPlatformInstallURI());
 
 		final String jobName = addressedType.name().toLowerCase();
 
@@ -152,7 +158,7 @@ public class NpmCLI {
 		LibraryChangeType actualChangeType = null;
 		String actualVersion = "";
 		if (reqChg.type == LibraryChangeType.Install) {
-			packageProcessingStatus = install(reqChg.name, reqChg.version, installPath);
+			packageProcessingStatus = install(reqChg.name, "@" + reqChg.version, installPath);
 
 			if (packageProcessingStatus == null || !packageProcessingStatus.isOK()) {
 				batchStatus.merge(packageProcessingStatus);
@@ -184,7 +190,8 @@ public class NpmCLI {
 
 	private String getActualVersion(MultiStatus batchStatus, LibraryChange reqChg, Path completePath) {
 		URI location = URI.createFileURI(completePath.toString());
-		String versionStr = projectDescriptionHelper.loadVersionFromProjectDescriptionAtLocation(location);
+		String versionStr = projectDescriptionLoader.loadVersionAndN4JSNatureFromProjectDescriptionAtLocation(location)
+				.getFirst();
 		if (versionStr == null) {
 			String msg = "Error reading package json when " + reqChg.toString();
 			IStatus packJsonError = statusHelper.createError(msg);
@@ -211,6 +218,15 @@ public class NpmCLI {
 		}
 		if (invalidPackageVersion(packageVersion)) {
 			return statusHelper.createError("Malformed npm package version: '" + packageVersion + "'.");
+		}
+
+		// TODO IDE-3136 / GH-1011 workaround for missing support of GitHub version requirements
+		NPMVersionRequirement packageVersionParsed = semverHelper.parse(packageVersion.substring(1));
+		if (packageVersionParsed instanceof GitHubVersionRequirement) {
+			// In case of a dependency like "JSONSelect@dbo/JSONSelect" (wherein "dbo/JSONSelect"
+			// is a GitHub version requirement), we only report "JSONSelect@" to npm. For details
+			// why this is necessary, see GH-1011.
+			packageVersion = "@";
 		}
 
 		String nameAndVersion = packageVersion.isEmpty() ? packageName : packageName + packageVersion;
@@ -257,7 +273,7 @@ public class NpmCLI {
 
 			subMonitor.setTaskName("Cleaning npm cache");
 
-			File targetInstallLocation = new File(locationProvider.getTargetPlatformInstallLocation());
+			File targetInstallLocation = new File(locationProvider.getTargetPlatformInstallURI());
 			return clean(targetInstallLocation);
 
 		} finally {

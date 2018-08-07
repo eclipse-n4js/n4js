@@ -38,9 +38,9 @@ public class HeadlessCompilerFactory {
 	 *            preferences.
 	 */
 	public static N4HeadlessCompiler createCompilerWithProperties(Properties properties) {
-		Injector localinjector = new N4JSHeadlessStandaloneSetup(properties).createInjectorAndDoEMFRegistration();
-		N4HeadlessCompiler instance = localinjector.getInstance(N4HeadlessCompiler.class);
-		HeadlessExtensionRegistrationHelper headlessExtensionRegistrationHelper = localinjector
+		Injector localInjector = new N4JSHeadlessStandaloneSetup(properties).createInjectorAndDoEMFRegistration();
+		N4HeadlessCompiler instance = localInjector.getInstance(N4HeadlessCompiler.class);
+		HeadlessExtensionRegistrationHelper headlessExtensionRegistrationHelper = localInjector
 				.getInstance(HeadlessExtensionRegistrationHelper.class);
 		headlessExtensionRegistrationHelper.registerExtensions();
 		return instance;

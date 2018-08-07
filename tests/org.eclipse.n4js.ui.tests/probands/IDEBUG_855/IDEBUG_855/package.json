@@ -1,6 +1,6 @@
 {
   "name": "IDEBUG_855",
-  "version": "0.0.1-SNAPSHOT",
+  "version": "0.0.1",
   "dependencies": {
   	"PA": "*"
   },
