@@ -57,7 +57,7 @@ public class LoggingMockResourceTesterModule extends MockTesterModule {
 		}
 
 		@Override
-		public TestFsm registerFsm(final String sessionId) {
+		public TestFsm getTestFsm(final String sessionId) {
 			return null;
 		}
 

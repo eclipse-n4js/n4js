@@ -10,13 +10,13 @@
  */
 package org.eclipse.n4js.tester.tests;
 
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.tester.TesterEventBus;
 import org.eclipse.n4js.tester.events.SessionFinishedEvent;
 import org.eclipse.n4js.tester.fsm.TestFsm;
 import org.eclipse.n4js.tester.fsm.TestFsmRegistryImpl;
 import org.eclipse.n4js.tester.internal.InternalTestTreeRegistry;
+
+import com.google.inject.Inject;
 
 /**
  * Test FSM registry implementation creating and registering a {@link DelegatingTestFsm} instances.
@@ -33,8 +33,8 @@ public class MockTestFsmRegistry extends TestFsmRegistryImpl {
 	}
 
 	@Override
-	public TestFsm registerFsm(final String sessionId) {
-		return new DelegatingTestFsm(super.registerFsm(sessionId));
+	public TestFsm getTestFsm(final String sessionId) {
+		return new DelegatingTestFsm(super.getTestFsm(sessionId));
 	}
 
 	private final class DelegatingTestFsm implements TestFsm {
