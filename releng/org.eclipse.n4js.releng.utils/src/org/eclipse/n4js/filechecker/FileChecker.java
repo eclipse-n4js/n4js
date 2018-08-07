@@ -73,7 +73,7 @@ public class FileChecker extends AbstractFileChecker {
 
 	/** Extensions of files that should be checked more thoroughly. */
 	private static final String[] FILE_EXTENSIONS = { ".java", ".fj", ".xtend", ".xtext", ".xcore", ".xsemantics",
-			".xml", ".mwe2", ".adoc", "Jenkinsfile", ".xt", ".n4jsx", ".n4jsd", ".n4mf" };
+			".xml", ".mwe2", ".adoc", "Jenkinsfile", ".xt", ".n4jsx", ".n4jsd" };
 
 	/** These files will be ignored. May contain '/' but should not start or end with '/'. */
 	private static final String[] IGNORED_FILES = {
@@ -183,7 +183,6 @@ public class FileChecker extends AbstractFileChecker {
 			/* templates */
 			"plugins/org.eclipse.n4js.external.libraries/src/org/eclipse/n4js/external/libraries/PackageJson.java",
 			"plugins/org.eclipse.n4js.external.libraries/src/org/eclipse/n4js/external/libraries/TargetPlatformFactory.xtend",
-			"plugins/org.eclipse.n4js.npmexporter/src/org/eclipse/n4js/npmexporter/PackageJsonData.java",
 			"plugins/org.eclipse.n4js.runner/schema/org.eclipse.n4js.runner.runners.exsd",
 			"plugins/org.eclipse.n4js.utils/schema/org.eclipse.n4js.utils.fileExtensions.exsd",
 			"plugins/org.eclipse.n4js.common.unicode/src/org/eclipse/n4js/common/unicode/generator/UnicodeGrammarGenerator.xtend",
@@ -192,7 +191,6 @@ public class FileChecker extends AbstractFileChecker {
 			"tests/org.eclipse.n4js.n4ide.spec.tests/Xpect-test/Ch05_04_01_02__Organize_Imports/organize_imports/GHOLD_103/GHOLD_103.txt",
 			"tests/org.eclipse.n4js.smoke.tests/src/org/eclipse/n4js/smoke/tests/GeneratedSmokeTestCases2.xtend",
 			"tests/org.eclipse.n4js.lang.tests/src/org/eclipse/n4js/tests/contentassist/NodeModelTokenSourceTest.xtend",
-			"tests/org.eclipse.n4js.lang.tests/src/org/eclipse/n4js/npmexporter/PackageJasonTemplateTest.xtend",
 
 			/* update site */
 			"releng/org.eclipse.n4js.targetplatform/N4JS.setup",
@@ -205,15 +203,14 @@ public class FileChecker extends AbstractFileChecker {
 			"plugins/org.eclipse.n4js/src/org/eclipse/n4js/GenerateN4JS.mwe2",
 			"plugins/org.eclipse.n4js.common.unicode/src/org/eclipse/n4js/common/unicode/GenerateUnicode.mwe2",
 			"plugins/org.eclipse.n4js.n4jsx/src/org/eclipse/n4js/n4jsx/GenerateN4JSX.mwe2",
-			"plugins/org.eclipse.n4js.n4mf/src/org/eclipse/n4js/n4mf/GenerateN4MF.mwe2",
 			"plugins/org.eclipse.n4js.regex/src/org/eclipse/n4js/regex/GenerateRegularExpression.mwe2",
 			"plugins/org.eclipse.n4js.ts/src/org/eclipse/n4js/ts/GenerateTypes.mwe2",
 
 			/* EMF packages contain banned words 'copyright' outside the copyright header (only interface). */
 			"plugins/org.eclipse.n4js.jsdoc/emf-gen/org/eclipse/n4js/jsdoc/dom/DomPackage.java",
 			"plugins/org.eclipse.n4js.model/emf-gen/org/eclipse/n4js/n4JS/N4JSPackage.java",
+			"plugins/org.eclipse.n4js.model/emf-gen/org/eclipse/n4js/projectDescription/ProjectDescriptionPackage.java",
 			"plugins/org.eclipse.n4js.n4jsx.model/emf-gen/org/eclipse/n4js/n4jsx/n4JSX/N4JSXPackage.java",
-			"plugins/org.eclipse.n4js.n4mf.model/emf-gen/org/eclipse/n4js/n4mf/N4mfPackage.java",
 			"plugins/org.eclipse.n4js.transpiler/emf-gen/org/eclipse/n4js/transpiler/im/ImPackage.java",
 			"plugins/org.eclipse.n4js.ts.model/emf-gen/org/eclipse/n4js/ts/typeRefs/TypeRefsPackage.java",
 			"plugins/org.eclipse.n4js.ts.model/emf-gen/org/eclipse/n4js/ts/types/TypesPackage.java",
@@ -482,7 +479,7 @@ public class FileChecker extends AbstractFileChecker {
 			}
 		}
 
-		String[] moreCRHs = { ".xml", ".html", ".sh", ".tex", ".grammar", "adoc", "n4ts", "n4js", "n4jsx", "n4mf",
+		String[] moreCRHs = { ".xml", ".html", ".sh", ".tex", ".grammar", "adoc", "n4ts", "n4js", "n4jsx",
 				"n4jsd", "xt_IN_FOLDER_my", "xt_", "xt_IN_FOLDER_P", "xt_IN_FOLDER_p", "xt.DISABLED", ".idx", ".js",
 				".ant", ".css", ".txt", ".mwe2txt", ".oldxsem", ".md", ".xtypes", ".xcoretxt", ".yml", ".fjcached",
 				".xpt", ".def" };
@@ -725,7 +722,7 @@ public class FileChecker extends AbstractFileChecker {
 		} else if (hasExtension(path, ".adoc")) {
 			return beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_ADOC);
 
-		} else if (hasExtension(path, ".n4js", "n4jsx", ".n4jsd", ".n4mf", ".n4ts", ".xt",
+		} else if (hasExtension(path, ".n4js", "n4jsx", ".n4jsd", ".n4ts", ".xt",
 				"xt_IN_FOLDER_my", "xt_", "xt_IN_FOLDER_P", "xt_IN_FOLDER_p", "xt.DISABLED")) {
 			if (MODE == Mode.Xpect) {
 				return beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_V2);

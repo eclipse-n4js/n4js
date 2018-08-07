@@ -15,7 +15,6 @@ import java.nio.file.Path;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jgit.errors.ConfigInvalidException;
 import org.eclipse.jgit.lib.Config;
 import org.eclipse.n4js.projectModel.IN4JSCore;
@@ -41,8 +40,7 @@ public class RepoRelativePath {
 	 * Creates the RepoRelativePath from a given resource. Returns null, if resource is not contained in a repository.
 	 * If a repository is found, the simple name of the origin is used.
 	 */
-	public static RepoRelativePath compute(Resource resource, IN4JSCore n4jsCore) {
-		URI uri = resource.getURI();
+	public static RepoRelativePath compute(URI uri, IN4JSCore n4jsCore) {
 		Optional<? extends IN4JSProject> optProj = n4jsCore.findProject(uri);
 		if (!optProj.isPresent()) {
 			return null;
@@ -54,6 +52,10 @@ public class RepoRelativePath {
 		String uriFileString = uri.toString();
 		String uriProjString = project.getLocation().toString();
 		String fileRelString = uriFileString.substring(uriProjString.length());
+		// strip anchor part if present, i.e. path to type within the resource
+		int anchorIndex = fileRelString.indexOf("#");
+		if (anchorIndex >= 0)
+			fileRelString = fileRelString.substring(0, anchorIndex);
 
 		String absFileName = path.toAbsolutePath() + fileRelString;
 		File file = new File(absFileName);
@@ -92,7 +94,7 @@ public class RepoRelativePath {
 	 * {@code currendDir/.git/config}
 	 * <p>
 	 * Git clone folder name might be different from git repository name
-	 * 
+	 *
 	 * @return string with repo name or {@code null}
 	 */
 	private static String getRepoName(File currentDir) {
@@ -144,7 +146,7 @@ public class RepoRelativePath {
 		String projNameSlashes = "/" + projName + "/";
 		startIdx = absFileName.indexOf(repoNameSlashes) + repoNameSlashes.length();
 		int endIdx = absFileName.indexOf(projNameSlashes);
-		if (startIdx == -1 || endIdx == -1) {
+		if (startIdx == -1 || endIdx == -1 || endIdx < startIdx) {
 			return "";
 		}
 		String repoPath = absFileName.substring(startIdx, endIdx);
@@ -156,7 +158,8 @@ public class RepoRelativePath {
 	 */
 	public final String repositoryName;
 	/**
-	 * Absolute path in repository (with leading slash).
+	 * Absolute path in repository (with leading slash). This may be empty; this happens if the project folder is a top
+	 * level folder of the project.
 	 */
 	public final String pathInRepository;
 	/**
@@ -243,6 +246,12 @@ public class RepoRelativePath {
 	 */
 	public String getFullPath() {
 		return repositoryName + pathInRepository + projectName + pathInProject;
+	}
+
+	@Override
+	public String toString() {
+		return "repo: " + repositoryName + ", pir: " + pathInRepository + ", proj: " + projectName + ", pip: "
+				+ pathInProject + ":" + lineNumber;
 	}
 
 	/**

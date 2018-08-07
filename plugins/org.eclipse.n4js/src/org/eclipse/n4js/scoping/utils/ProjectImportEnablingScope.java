@@ -199,8 +199,8 @@ public class ProjectImportEnablingScope implements IScope {
 		case PROJECT_IMPORT:
 			final String firstSegment = name.getFirstSegment();
 			final IN4JSProject targetProject = findProject(firstSegment, contextProject);
-			return getElementsWithDesiredProjectID(ImportSpecifierUtil.getMainModuleOfProject(targetProject),
-					name.getFirstSegment());
+			QualifiedName mainModule = ImportSpecifierUtil.getMainModuleOfProject(targetProject);
+			return getElementsWithDesiredProjectID(mainModule, name.getFirstSegment());
 		case COMPLETE_IMPORT:
 			return getElementsWithDesiredProjectID(name.skipFirst(1), name.getFirstSegment());
 		case SIMPLE_IMPORT:

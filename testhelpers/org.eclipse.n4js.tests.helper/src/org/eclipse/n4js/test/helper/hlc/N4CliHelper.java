@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.test.helper.hlc;
 
+import static com.google.common.base.Preconditions.checkState;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -21,15 +22,31 @@ import java.lang.ProcessBuilder.Redirect;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
+import org.eclipse.n4js.external.libraries.ShippedCodeAccess;
+import org.eclipse.n4js.hlc.base.N4jscBase;
+import org.eclipse.n4js.utils.io.FileCopier;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Predicate;
 
 /**
- * Central helper in running tests with the command line tools.
+ * Central helper in running tests with the command line tools (e.g. {@code n4jsc.jar} or {@link N4jscBase}}.
  */
 public class N4CliHelper {
+
+	/**
+	 * A black list of n4js-libs that are never copied into a headless compiler test workspace.
+	 */
+	private static final Set<String> N4JS_LIBS_BLACKLIST = new HashSet<>(
+			Arrays.asList("org.eclipse.n4js.mangelhaft.reporter.xunit", "n4js-cli", "n4js-mangelhaft-cli"));
 
 	/**
 	 * @param expectedString
@@ -256,6 +273,40 @@ public class N4CliHelper {
 		System.out.println("===== <= Content of external Process-output below (@see: " + outputLogFile + ") => =====");
 		String output = readLogfile(outputLogFile);
 		System.out.println(output);
+	}
+
+	/**
+	 * Copies the n4js libraries to the given testing workspace {@code location}.
+	 *
+	 * Only includes n4js libraries (cf. shipped code), for whose project name {@code n4jsLibrariesPredicate} returns
+	 * {@code true}.
+	 *
+	 * @throws IOException
+	 *             In case the copying is not successful.
+	 */
+	public static void copyN4jsLibsToLocation(File location,
+			Predicate<String> n4jsLibrariesPredicate) throws IOException {
+		// obtain paths of all shipped code projects
+		final List<File> n4jsLibraries = StreamSupport
+				.stream(ShippedCodeAccess.getAllShippedPaths().spliterator(), false)
+				.flatMap(path -> Arrays.asList(new File(path).listFiles()).stream()).collect(Collectors.toList());
+
+		// copy N4JS libraries on demand
+		if (!n4jsLibraries.isEmpty()) {
+			for (final File n4jsLibrary : n4jsLibraries) {
+				if (n4jsLibrariesPredicate.apply(n4jsLibrary.getName())) {
+					if (N4JS_LIBS_BLACKLIST.contains(n4jsLibrary.getName())) {
+						continue;
+					}
+					System.out.println("Including N4JS library in workspace: '" + n4jsLibrary.getName() + "'.");
+					final File libFolder = new File(location, n4jsLibrary.getName());
+					libFolder.mkdir();
+					checkState(libFolder.isDirectory(),
+							"Error while copying N4JS library '" + n4jsLibrary.getName() + "' to workspace.");
+					FileCopier.copy(n4jsLibrary.toPath(), libFolder.toPath(), true);
+				}
+			}
+		}
 	}
 
 }

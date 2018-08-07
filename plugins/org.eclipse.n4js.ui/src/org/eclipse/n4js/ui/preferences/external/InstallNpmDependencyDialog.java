@@ -16,8 +16,6 @@ import static org.eclipse.jface.dialogs.IDialogConstants.OK_ID;
 import static org.eclipse.jface.dialogs.IDialogConstants.OK_LABEL;
 import static org.eclipse.swt.SWT.BORDER;
 import static org.eclipse.swt.SWT.CENTER;
-import static org.eclipse.swt.SWT.CHECK;
-import static org.eclipse.swt.SWT.END;
 import static org.eclipse.swt.SWT.FILL;
 import static org.eclipse.swt.SWT.NONE;
 import static org.eclipse.swt.SWT.SHADOW_ETCHED_IN;
@@ -32,17 +30,12 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-
-import org.eclipse.n4js.external.version.VersionConstraintFormatUtil;
-import org.eclipse.n4js.ui.utils.DelegatingSelectionAdapter;
 
 /**
  * Custom dialog for installing npm dependencies. Allows user to specify package name and version constraint. Uses
@@ -51,32 +44,20 @@ import org.eclipse.n4js.ui.utils.DelegatingSelectionAdapter;
 public class InstallNpmDependencyDialog extends TitleAreaDialog {
 	private static final String EMPTY = "";
 	private static final String LN_DASH = "\n - ";
-	private static final String INCLUSIVE = "Inclusive";
 	private static final String PACKAGE_NAME = "Package name";
-	private static final String MINIMUM_VERSION_OPTIONAL = "Minimum version (optional)";
-	private static final String MAXIMUM_VERSION_OPTIONAL = "Maximum version (optional)";
+	private static final String VERSION_OPTIONAL = "Version (optional)";
 	private static final String PROPERTIES_OF_NPM_DEPENDENCY = "Properties of npm dependency.";
 	private static final String PROVIDE_PROPERTIES_OF_NPM_PACKAGE_TO_INSTALL = "Provide properties of npm package to install.";
-
 	private static final String REVIEW_ISSUES = "Please review following issues:";
-	private static final String LOWER_VERSION_ISSUES = "Lower version issues: ";
-	private static final String UPPER_VERSION_ISSUES = "Upper version issues: ";
-	private static final String NO_MINIMUM_VERSION_MAXIMUM_IS_SPECIFIED = LOWER_VERSION_ISSUES
-			+ "Cannot have no minimum version if maximum is specified.";
-	private static final String MINIMUM_VERSION_IS_MISSING = UPPER_VERSION_ISSUES
-			+ "Minimum version is missing.";
+	private static final String VERSION_ISSUES = "Version issues: ";
 
 	private final IInputValidator packageNameValidator;
 	private final IInputValidator packageVersionValidator;
 	private String errPackageName = null;
-	private String errLowerVersion = null;
-	private String errUpperVersion = null;
+	private String errVersion = null;
 
-	private String upperVersion;
-	private String lowerVersion;
+	private String version;
 	private String packageName;
-	private boolean isLowerExcluded;
-	private boolean isUpperExcluded;
 
 	/** Creates dialog with custom validators. */
 	public InstallNpmDependencyDialog(Shell parentShell, IInputValidator packageNameValidator,
@@ -107,13 +88,7 @@ public class InstallNpmDependencyDialog extends TitleAreaDialog {
 		if (hasErrors())
 			return null;
 
-		if (upperVersion == null || upperVersion.isEmpty())
-			return VersionConstraintFormatUtil.npmVersionFormat(lowerVersion);
-		else
-			return VersionConstraintFormatUtil.npmRangeFormat(
-					lowerVersion, isLowerExcluded,
-					upperVersion, isUpperExcluded);
-
+		return version;
 	}
 
 	@Override
@@ -141,16 +116,12 @@ public class InstallNpmDependencyDialog extends TitleAreaDialog {
 		customDialogArea.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).align(FILL, TOP).create());
 
 		createNameArea(customDialogArea, PACKAGE_NAME, this::handlePackageNameInput);
-		createVersionArea(customDialogArea, MINIMUM_VERSION_OPTIONAL, this::handleLowerVersionInput,
-				this::setLowerExcluded);
-		createVersionArea(customDialogArea, MAXIMUM_VERSION_OPTIONAL, this::handleUpperVersionInput,
-				this::setUpperExcluded);
+		createVersionArea(customDialogArea, VERSION_OPTIONAL, this::handleVersionInput);
 
 		return customDialogArea;
 	}
 
-	private void createVersionArea(final Group parent, String versionLabel, Consumer<String> textHandler,
-			Consumer<Boolean> flagHandler) {
+	private void createVersionArea(final Group parent, String versionLabel, Consumer<String> textHandler) {
 		final Composite area = createVersionArea(parent, versionLabel);
 		final Composite textArea = createVersionInputArea(area);
 
@@ -163,8 +134,6 @@ public class InstallNpmDependencyDialog extends TitleAreaDialog {
 				textHandler.accept(textWidget.getText());
 			}
 		});
-
-		createVersionInclsivnessArea(area, flagHandler);
 	}
 
 	private Text getSimpleTextArea(Composite parent) {
@@ -186,32 +155,6 @@ public class InstallNpmDependencyDialog extends TitleAreaDialog {
 		textArea.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).equalWidth(false).create());
 		textArea.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(FILL, CENTER).create());
 		return textArea;
-	}
-
-	/**
-	 * Creates area with two radio buttons for version being exclusive / inclusive. State of the buttons is mutually
-	 * exclusive i.e. only one can be enabled (ensured by SWT handling of the radio button group).
-	 *
-	 *
-	 * @param parent
-	 *            the parent in which group is created with buttons is created
-	 */
-	private void createVersionInclsivnessArea(final Composite parent, Consumer<Boolean> setData) {
-		final Group radioArea = new Group(parent, SHADOW_ETCHED_IN);
-		radioArea.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).equalWidth(false).create());
-		radioArea.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).align(END, TOP).create());
-
-		final Button inclusive = new Button(radioArea, CHECK);
-		inclusive.setText(INCLUSIVE);
-		inclusive.setSelection(true);
-
-		// ignore events just get value from button
-		inclusive.addSelectionListener(new DelegatingSelectionAdapter((SelectionEvent event) -> {
-			setData.accept(inclusive.getSelection());
-		}, (SelectionEvent event) -> {
-			setData.accept(inclusive.getSelection());
-		}));
-
 	}
 
 	private void createNameArea(Composite parent, String areaName, Consumer<String> textHandler) {
@@ -249,8 +192,7 @@ public class InstallNpmDependencyDialog extends TitleAreaDialog {
 
 	private boolean hasErrors() {
 		return errPackageName != null
-				|| errLowerVersion != null
-				|| errUpperVersion != null;
+				|| errVersion != null;
 	}
 
 	private final void updateErrors() {
@@ -263,83 +205,40 @@ public class InstallNpmDependencyDialog extends TitleAreaDialog {
 			if (errPackageName != null)
 				sb.append(LN_DASH).append(errPackageName);
 
-			if (errLowerVersion != null)
-				sb.append(LN_DASH).append(errLowerVersion);
-
-			if (errUpperVersion != null)
-				sb.append(LN_DASH).append(errUpperVersion);
+			if (errVersion != null)
+				sb.append(LN_DASH).append(errVersion);
 
 			setErrorMessage(REVIEW_ISSUES + sb);
 		}
 	}
 
-	private void handleLowerVersionInput(final String userText) {
-		errLowerVersion = null;
+	private void handleVersionInput(final String userText) {
+		errVersion = null;
 
 		// allow no value or just whitespace (which we ignore)
-		String pereprocessed = userText == null ? EMPTY : userText.trim();
+		String preprocessed = userText == null ? EMPTY : userText.trim();
 		// if there is actual content do real parsing
-		if (!pereprocessed.isEmpty()) {
-			if (MINIMUM_VERSION_IS_MISSING.equals(errUpperVersion)) {
-				errUpperVersion = null;
-			}
-			String validateResult = validate(pereprocessed);
+		if (!preprocessed.isEmpty()) {
+			String validateResult = validate(preprocessed);
 			if (validateResult != null) {
-				errLowerVersion = LOWER_VERSION_ISSUES + validateResult;
-			}
-		} else {
-			// if lower is missing, upper has to be missing
-			final String upper = upperVersion == null ? EMPTY : upperVersion.trim();
-			if (!upper.isEmpty()) {
-				errLowerVersion = NO_MINIMUM_VERSION_MAXIMUM_IS_SPECIFIED;
+				errVersion = VERSION_ISSUES + validateResult;
 			}
 		}
 
-		this.lowerVersion = pereprocessed;
-		updateErrors();
-	}
-
-	private void handleUpperVersionInput(final String userText) {
-		errUpperVersion = null;
-
-		// allow no value or just whitespace (which we ignore)
-		String pereprocessed = userText == null ? EMPTY : userText.trim();
-		// if there is actual content do real parsing
-		if (!pereprocessed.isEmpty()) {
-			String validateResult = validate(pereprocessed);
-			if (validateResult != null) {
-				errUpperVersion = UPPER_VERSION_ISSUES + validateResult;
-			} else {
-				// if upper version is valid check interaction with lower
-				final String lower = lowerVersion == null ? EMPTY : lowerVersion.trim();
-				if (lower.isEmpty()) {
-					errUpperVersion = MINIMUM_VERSION_IS_MISSING;
-				}
-			}
-		}
-
-		this.upperVersion = pereprocessed;
+		this.version = preprocessed;
 		updateErrors();
 	}
 
 	private String validate(final String data) {
 		String result = null;
 		// allow no value or just whitespace (which we ignore)
-		String pereprocessed = data == null ? EMPTY : data.trim();
+		String preprocessed = data == null ? EMPTY : data.trim();
 		// if there is actual content do real parsing
-		if (!pereprocessed.isEmpty()) {
-			result = packageVersionValidator.isValid(pereprocessed);
+		if (!preprocessed.isEmpty()) {
+			result = packageVersionValidator.isValid(preprocessed);
 		}
 
 		return result;
-	}
-
-	private void setLowerExcluded(boolean value) {
-		isLowerExcluded = value;
-	}
-
-	private void setUpperExcluded(boolean value) {
-		isUpperExcluded = value;
 	}
 
 }

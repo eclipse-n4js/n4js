@@ -10,18 +10,12 @@
  */
 package org.eclipse.n4js.ui.internal;
 
-import static java.util.Collections.emptyList;
 import static org.eclipse.n4js.internal.N4JSModel.DIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -35,11 +29,10 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
-import org.eclipse.n4js.internal.N4JSSourceContainerType;
-import org.eclipse.n4js.n4mf.ProjectDescription;
-import org.eclipse.n4js.n4mf.ProjectReference;
-import org.eclipse.n4js.projectModel.IN4JSArchive;
-import org.eclipse.n4js.utils.ProjectDescriptionHelper;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectReference;
+import org.eclipse.n4js.utils.ProjectDescriptionLoader;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
@@ -55,7 +48,7 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 
 	private final IWorkspaceRoot workspace;
 
-	private final ProjectDescriptionHelper projectDescriptionHelper;
+	private final ProjectDescriptionLoader projectDescriptionLoader;
 
 	private final Map<URI, ProjectDescription> cache = Maps.newHashMap();
 
@@ -67,9 +60,9 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 	@Inject
 	public EclipseBasedN4JSWorkspace(
 			IWorkspaceRoot workspace,
-			ProjectDescriptionHelper projectDescriptionHelper) {
+			ProjectDescriptionLoader projectDescriptionLoader) {
 		this.workspace = workspace;
-		this.projectDescriptionHelper = projectDescriptionHelper;
+		this.projectDescriptionLoader = projectDescriptionLoader;
 	}
 
 	IWorkspaceRoot getWorkspace() {
@@ -92,7 +85,7 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 		}
 		ProjectDescription existing = cache.get(location);
 		if (existing == null) {
-			existing = projectDescriptionHelper.loadProjectDescriptionAtLocation(location);
+			existing = projectDescriptionLoader.loadProjectDescriptionAtLocation(location);
 			if (existing != null) {
 				cache.put(location, existing);
 				if (listener != null) {
@@ -104,68 +97,21 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 	}
 
 	@Override
-	public URI getLocation(URI projectURI, ProjectReference projectReference,
-			N4JSSourceContainerType expectedN4JSSourceContainerType) {
-
+	public URI getLocation(URI projectURI, ProjectReference projectReference) {
 		if (projectURI.segmentCount() >= DIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT) {
 			String expectedProjectName = projectReference.getProjectId();
 			if (expectedProjectName != null && expectedProjectName.length() > 0) {
+				if (ProjectDescriptionUtils.isProjectNameWithScope(expectedProjectName)) {
+					// cannot create projects using npm scopes in the name, e.g. "@scopeName/projectName"
+					return null;
+				}
 				IProject existingProject = workspace.getProject(expectedProjectName);
 				if (existingProject.isAccessible()) {
-					if (expectedN4JSSourceContainerType == N4JSSourceContainerType.ARCHIVE) {
-						return null;
-					} else {
-						return URI.createPlatformResourceURI(expectedProjectName, true);
-					}
-				} else if (expectedN4JSSourceContainerType == N4JSSourceContainerType.ARCHIVE) {
-					for (String libFolder : getLibraryFolders(projectURI)) {
-						IFile archiveFile = workspace.getFile(new Path(projectURI.segment(1) + "/" + libFolder
-								+ "/"
-								+ expectedProjectName
-								+ IN4JSArchive.NFAR_FILE_EXTENSION_WITH_DOT));
-						if (archiveFile.exists()) {
-							return URI.createPlatformResourceURI(archiveFile.getFullPath().toString(), true);
-						}
-					}
+					return URI.createPlatformResourceURI(expectedProjectName, true);
 				}
 			}
 		}
 		return null;
-	}
-
-	private List<String> getLibraryFolders(URI projectURI) {
-		ProjectDescription pd = getProjectDescription(projectURI);
-		return null == pd ? emptyList() : pd.getLibraryPaths();
-	}
-
-	@Override
-	public Iterator<URI> getArchiveIterator(final URI archiveLocation, String archiveRelativeLocation) {
-		ZipInputStream stream = null;
-		try {
-			stream = getArchiveStream(archiveLocation);
-			Iterator<ZipEntry> entries = getArchiveIterator(stream, archiveRelativeLocation);
-			return toArchiveURIs(archiveLocation, entries);
-		} catch (CoreException | IOException e) {
-			return Collections.emptyIterator();
-		} finally {
-			if (stream != null) {
-				try {
-					stream.close();
-				} catch (IOException e) {
-					// ignore
-				}
-			}
-		}
-	}
-
-	private ZipInputStream getArchiveStream(final URI archiveLocation) throws CoreException, IOException {
-		if (archiveLocation.isPlatformResource()) {
-			IFile workspaceFile = workspace.getFile(new Path(archiveLocation.toPlatformString(true)));
-			return new ZipInputStream(workspaceFile.getContents());
-		} else {
-			return new ZipInputStream(new URL(archiveLocation.toString()).openStream());
-		}
-
 	}
 
 	@Override

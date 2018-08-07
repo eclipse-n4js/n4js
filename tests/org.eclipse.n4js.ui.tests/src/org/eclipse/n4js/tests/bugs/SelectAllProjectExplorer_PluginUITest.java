@@ -13,8 +13,8 @@ package org.eclipse.n4js.tests.bugs;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.FluentIterable.from;
 import static java.util.Arrays.asList;
-import static org.eclipse.n4js.n4mf.ProjectType.LIBRARY;
-import static org.eclipse.n4js.n4mf.ProjectType.TEST;
+import static org.eclipse.n4js.projectDescription.ProjectType.LIBRARY;
+import static org.eclipse.n4js.projectDescription.ProjectType.TEST;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -49,7 +49,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.LegacyActionTools;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.n4js.n4mf.ProjectType;
+import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.tests.util.EclipseUIUtils;
 import org.eclipse.n4js.ui.navigator.internal.SelectWorkingSetDropDownAction;
 import org.eclipse.n4js.ui.navigator.internal.ShowHiddenWorkingSetsDropDownAction;
@@ -94,7 +94,7 @@ public class SelectAllProjectExplorer_PluginUITest extends AbstractPluginUITest 
 	/** ClosedL2 and ClosedT2 */
 	private static final int NUMBER_OF_CLOSED_PROJECTS = 2;
 
-	/** Default number of resources for a fresh project (src, src-gen, manifest.n4mf) */
+	/** Default number of resources for a fresh project (src, src-gen, ...) */
 	private static final int RESOURCES_PER_PROJECT = 3;
 
 	@Inject

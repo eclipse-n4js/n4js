@@ -13,19 +13,22 @@ package org.eclipse.n4js.packagejson
 import java.util.Collection
 import java.util.Map
 import org.eclipse.n4js.json.JSON.JSONDocument
-import org.eclipse.n4js.n4mf.ProjectType
-import org.eclipse.n4js.n4mf.SourceContainerType
-import org.eclipse.n4js.utils.ProjectDescriptionHelper
+import org.eclipse.n4js.projectDescription.ProjectType
+import org.eclipse.n4js.projectDescription.SourceContainerType
+import org.eclipse.n4js.utils.ProjectDescriptionLoader
 
 import static com.google.common.base.Optional.fromNullable
 import static com.google.common.base.Preconditions.checkNotNull
+import java.util.SortedMap
+import java.util.TreeMap
+import org.eclipse.n4js.json.model.utils.JSONModelUtils
 
 /**
  * Convenient builder for creating the N4JS package.json compliant {@link JSONDocument} model 
  * instances or file content.#
  * 
  * Provides support for most supported N4JS-specific package.json properties. 
- * See {@link ProjectDescriptionHelper} for details on all supported properties. 
+ * See {@link ProjectDescriptionLoader} for details on all supported properties. 
  */
 public class PackageJsonBuilder {
 
@@ -40,8 +43,8 @@ public class PackageJsonBuilder {
 	private ProjectType type;
 	private String version;
 
-	private Collection<String> dependencies;
-	
+	private SortedMap<String, String> dependencies;
+
 	private String vendorId;
 	private String vendorName;
 
@@ -57,10 +60,10 @@ public class PackageJsonBuilder {
 	private Map<SourceContainerType, String> sourceContainers;
 
 	private new() {
-		type = ProjectType.get(0) // use default project type (index 0)
+		type = ProjectType.VALIDATION // use project type 'validation'
 		providedRLs = newArrayList
 		requiredRLs = newArrayList
-		dependencies = newArrayList
+		dependencies = new TreeMap();
 		implementedProjects = newArrayList
 		testedProjects = newArrayList;
 		sourceContainers = newHashMap;
@@ -68,14 +71,14 @@ public class PackageJsonBuilder {
 
 	/**
 	 * Builds the N4JS package.json file contents for a project with the given name.
-	 * 
+	 *
 	 * @param projectId the name of the project. Cannot be {@code null}.
-	 * 
+	 *
 	 * @return the N4JS package.json file contents as a string.
 	 */
 	def String build() {
 		val document = this.buildModel();
-		return PackageJsonContentProvider.serializeJSON(document);
+		return JSONModelUtils.serializeJSON(document);
 	}
 
 	/**
@@ -202,13 +205,33 @@ public class PackageJsonBuilder {
 
 	/**
 	 * Adds a new required runtime library to the current builder.
+	 * 
+	 * This method will add the required runtime library both to the "requiredRuntimeLibraries" section,
+	 * as well as the "dependencies" section.
+	 * 
 	 * @param requiredRL the required runtime library to add to the current builder. Cannot be {@code null}.
 	 * @return the builder.
 	 */
 	def PackageJsonBuilder withRequiredRL(String requiredRL) {
 		requiredRLs.add(checkNotNull(requiredRL))
 		// also add to dependencies
-		dependencies.add(requiredRL)
+		dependencies.put(requiredRL, "*")
+		return this;
+	}
+	
+	/**
+	 * Adds a new required runtime library with the given version constraint.
+	 * 
+	 * This method will add the required runtime library both to the "requiredRuntimeLibraries" section,
+	 * as well as the "dependencies" section.
+	 * 
+	 * @param requiredRL The project id of the required runtime library.
+	 * @param versionConstraint The version constraint to be used in the dependency section.
+	 */
+	def PackageJsonBuilder withRequiredRL(String requiredRL, String versionConstraint) {
+		requiredRLs.add(checkNotNull(requiredRL))
+		// also add to dependencies
+		dependencies.put(requiredRL, versionConstraint)
 		return this;
 	}
 
@@ -218,12 +241,42 @@ public class PackageJsonBuilder {
 	 * @return the builder.
 	 */
 	def PackageJsonBuilder withDependency(String projectDependency) {
-		dependencies.add(checkNotNull(projectDependency))
+		dependencies.put(checkNotNull(projectDependency), "*")
+		return this;
+	}
+	
+	/**
+	 * Adds a new project dependency to the current builder.
+	 * 
+	 * @param projectDependency The project dependency to add to the current builder. Cannot be {@code null}.
+	 * @param versionConstraint The version constraint of the added project dependency.
+	 * 
+	 * @return the builder.
+	 */
+	def PackageJsonBuilder withDependency(String projectDependency, String versionConstraint) {
+		dependencies.put(checkNotNull(projectDependency), checkNotNull(versionConstraint))
 		return this;
 	}
 
+	/**
+	 * Adds the given project id to the list of tested projects.
+	 * 
+	 * This method also adds the given tested project as project dependency.
+	 */
 	def PackageJsonBuilder withTestedProject(String testedProject) {
-		dependencies.add(checkNotNull(testedProject));
+		dependencies.put(checkNotNull(testedProject), "*");
+		testedProjects.add(checkNotNull(testedProject));
+		return this;
+	}
+	
+	/**
+	 * Adds the given project id to the list of tested projects and to the list
+	 * of dependencies with the given version constraint.
+	 * 
+	 * This method also adds the given tested project as project dependency.
+	 */
+	def PackageJsonBuilder withTestedProject(String testedProject, String version) {
+		dependencies.put(checkNotNull(testedProject), "*");
 		testedProjects.add(checkNotNull(testedProject));
 		return this;
 	}

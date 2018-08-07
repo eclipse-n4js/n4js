@@ -10,17 +10,25 @@
  */
 package org.eclipse.n4js.preferences;
 
+import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Sets.newHashSet;
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static org.eclipse.core.runtime.Status.OK_STATUS;
 
+import java.io.File;
 import java.net.URI;
 import java.util.Collection;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.n4js.external.ExternalLibraryHelper;
+import org.eclipse.n4js.utils.collections.Arrays2;
 
+import com.google.common.base.Function;
 import com.google.inject.Inject;
 
 /**
@@ -28,6 +36,10 @@ import com.google.inject.Inject;
  * serialization/deserialization and persistence process.
  */
 /* default */ abstract class ExternalLibraryPreferenceStoreImpl implements ExternalLibraryPreferenceStore {
+	private static final Logger LOGGER = Logger.getLogger(ExternalLibraryPreferenceStoreImpl.class);
+
+	@Inject
+	private ExternalLibraryHelper externalLibraryHelper;
 
 	private final Collection<StoreUpdatedListener> listeners;
 
@@ -163,4 +175,53 @@ import com.google.inject.Inject;
 		return model;
 	}
 
+	/**
+	 * Converts the given external library root location URIs into an iterable of existing external folder locations
+	 * URIs.
+	 *
+	 * @param externalRootLocations
+	 *            an iterable of external library root locations.
+	 * @return an iterable of URIs pointing to the external project locations nested in the external root locations.
+	 */
+	@Override
+	public Iterable<URI> convertToProjectRootLocations(Iterable<URI> externalRootLocations) {
+		return from(externalRootLocations).transformAndConcat(new Function<URI, Iterable<URI>>() {
+
+			@Override
+			public Iterable<URI> apply(final URI rootLocation) {
+				final File rootFolder = new File(rootLocation);
+				if (isExistingFolder(rootFolder)) {
+					return from(getDirectoryContents(rootFolder))
+							.filter(f -> isExistingFolder(f))
+							.filter(f -> externalLibraryHelper.isExternalProjectDirectory(f))
+							.transform(file -> file.toURI());
+				}
+				return emptyList();
+			}
+
+		});
+	}
+
+	private final boolean isExistingFolder(File file) {
+		return null != file && file.exists() && file.isDirectory();
+	}
+
+	private final Iterable<File> getDirectoryContents(File folder) {
+		if (null == folder || !folder.isDirectory()) {
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Not a directory: " + folder + ".");
+			}
+			return emptyList();
+		}
+
+		final File[] files = folder.listFiles();
+		if (Arrays2.isEmpty(files)) {
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("No resources were found under: " + folder + ".");
+			}
+			return emptyList();
+		}
+
+		return asList(files);
+	}
 }

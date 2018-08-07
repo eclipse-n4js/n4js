@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.runner.internal;
 
+import java.io.File;
 import java.net.URI;
 
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
@@ -20,7 +21,7 @@ import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 class RunnerTargetPlatformInstallLocationProvider implements TargetPlatformInstallLocationProvider {
 
 	@Override
-	public URI getTargetPlatformInstallLocation() {
+	public File getTargetPlatformInstallFolder() {
 		return null;
 	}
 

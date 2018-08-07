@@ -105,7 +105,7 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 	}
 
 	private void unLoadBuiltIns() {
-		shippedCodeInitializeTestHelper.teardowneBuiltIns();
+		shippedCodeInitializeTestHelper.tearDownBuiltIns();
 		waitForAutoBuild();
 	}
 

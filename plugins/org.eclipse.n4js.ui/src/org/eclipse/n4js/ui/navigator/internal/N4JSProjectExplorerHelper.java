@@ -22,8 +22,8 @@ import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.LAN
 import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.MANGELHAFT_CATEGORY;
 import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.NPM_CATEGORY;
 import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.RUNTIME_CATEGORY;
-import static org.eclipse.n4js.n4mf.ProjectType.RUNTIME_ENVIRONMENT;
-import static org.eclipse.n4js.n4mf.ProjectType.RUNTIME_LIBRARY;
+import static org.eclipse.n4js.projectDescription.ProjectType.RUNTIME_ENVIRONMENT;
+import static org.eclipse.n4js.projectDescription.ProjectType.RUNTIME_LIBRARY;
 
 import java.net.URI;
 import java.util.Collection;
@@ -34,7 +34,7 @@ import java.util.Map;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
-import org.eclipse.n4js.n4mf.ProjectType;
+import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;

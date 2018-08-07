@@ -318,7 +318,7 @@ public abstract class FileUtils {
 	}
 
 	/** @return @see {@link #normalize(String)}, but iff the normalized path is empty then {@code .} is returned */
-	public static String normalizeDotWhenEmpty(String path) {
+	public static String normalizeToDotWhenEmpty(String path) {
 		String normalized = normalize(path);
 		if (normalized != null && normalized.isEmpty()) {
 			normalized = ".";

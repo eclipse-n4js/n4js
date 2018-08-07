@@ -31,8 +31,8 @@ public class ProjectLocationsUtil {
 	public static List<File> getTargetPlatformWritableDir(
 			TargetPlatformInstallLocationProvider installLocationProvider) {
 		final List<File> retList = new ArrayList<>();
-		if (null != installLocationProvider.getTargetPlatformInstallLocation()) {
-			final File tpLoc = new File(installLocationProvider.getTargetPlatformNodeModulesLocation());
+		if (null != installLocationProvider.getTargetPlatformInstallURI()) {
+			final File tpLoc = new File(installLocationProvider.getNodeModulesURI());
 			HlcFileUtils.isExistingWriteableDir(tpLoc);
 			retList.add(tpLoc);
 		}

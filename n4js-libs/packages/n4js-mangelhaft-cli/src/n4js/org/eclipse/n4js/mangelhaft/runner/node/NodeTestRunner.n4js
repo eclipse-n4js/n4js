@@ -49,7 +49,7 @@ class NodeTestRunner  {
             testCatalog = (await req.json()) as TestInfos;
         } else {
             testCatalog = {
-                testDescriptors: JSON.parse(await lib_fs.readFile(options.testCatalog, { encoding: "UTF-8" })) as Array<TestInfo>
+                testDescriptors: JSON.parse(String(lib_fs.readFileSync(options.testCatalog, { encoding: "UTF-8" }))) as Array<TestInfo>
             } as TestInfos;
         }
 

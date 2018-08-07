@@ -53,7 +53,7 @@ public class ExternalLibrariesSetupHelper {
 			((TypeDefinitionGitLocationProviderImpl) gitLocationProvider).setGitLocation(TEST_DEFINITION_LOCATION);
 		}
 
-		final URI nodeModulesLocation = locationProvider.getTargetPlatformNodeModulesLocation();
+		final URI nodeModulesLocation = locationProvider.getNodeModulesURI();
 		File nodeModuleLocationFile = new File(nodeModulesLocation);
 		if (!nodeModuleLocationFile.exists()) {
 			nodeModuleLocationFile.createNewFile();
@@ -75,13 +75,13 @@ public class ExternalLibrariesSetupHelper {
 	public void tearDownExternalLibraries(boolean tearDownShippedCode) throws Exception {
 		((TypeDefinitionGitLocationProviderImpl) gitLocationProvider).setGitLocation(PUBLIC_DEFINITION_LOCATION);
 
-		final URI nodeModulesLocation = locationProvider.getTargetPlatformNodeModulesLocation();
+		final URI nodeModulesLocation = locationProvider.getNodeModulesURI();
 		externalLibraryPreferenceStore.remove(nodeModulesLocation);
 		final IStatus result = externalLibraryPreferenceStore.save(new NullProgressMonitor());
 		assertTrue("Error while saving external library preference changes.", result.isOK());
 
 		if (tearDownShippedCode) {
-			shippedCodeInitializeTestHelper.teardowneBuiltIns();
+			shippedCodeInitializeTestHelper.tearDownBuiltIns();
 		}
 
 		// cleanup leftovers in the file system

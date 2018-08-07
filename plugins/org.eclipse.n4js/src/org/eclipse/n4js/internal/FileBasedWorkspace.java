@@ -10,26 +10,19 @@
  */
 package org.eclipse.n4js.internal;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 import org.eclipse.emf.common.util.AbstractTreeIterator;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.n4mf.ProjectDescription;
-import org.eclipse.n4js.n4mf.ProjectReference;
-import org.eclipse.n4js.projectModel.IN4JSArchive;
-import org.eclipse.n4js.utils.ProjectDescriptionHelper;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectReference;
+import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.common.base.Function;
@@ -45,15 +38,11 @@ import com.google.inject.Singleton;
 @Singleton
 public class FileBasedWorkspace extends InternalN4JSWorkspace {
 
-	private final ProjectDescriptionHelper projectDescriptionHelper;
-
-	private final ClasspathPackageManager packageManager;
+	private final ProjectDescriptionLoader projectDescriptionLoader;
 
 	@Inject
-	public FileBasedWorkspace(ClasspathPackageManager packageManager,
-			ProjectDescriptionHelper projectDescriptionHelper) {
-		this.packageManager = packageManager;
-		this.projectDescriptionHelper = projectDescriptionHelper;
+	public FileBasedWorkspace(ProjectDescriptionLoader projectDescriptionLoader) {
+		this.projectDescriptionLoader = projectDescriptionLoader;
 	}
 
 	private final Map<URI, LazyProjectDescriptionHandle> projectElementHandles = Maps.newConcurrentMap();
@@ -64,7 +53,7 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 	/**
 	 *
 	 * @param location
-	 *            project directory containing manifest.n4mf directly
+	 *            project directory containing package.json directly
 	 */
 	public void registerProject(URI unsafeLocation) {
 		if (unsafeLocation.lastSegment().isEmpty()) {
@@ -73,20 +62,20 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 
 		URI location = URIUtils.normalize(unsafeLocation);
 		if (!projectElementHandles.containsKey(location)) {
-			LazyProjectDescriptionHandle lazyDescriptionHandle = createLazyDescriptionHandle(location, false);
+			LazyProjectDescriptionHandle lazyDescriptionHandle = createLazyDescriptionHandle(location);
 			projectElementHandles.put(location, lazyDescriptionHandle);
 		}
 	}
 
-	protected LazyProjectDescriptionHandle createLazyDescriptionHandle(URI location, boolean archive) {
-		return new LazyProjectDescriptionHandle(location, archive, projectDescriptionHelper);
+	protected LazyProjectDescriptionHandle createLazyDescriptionHandle(URI location) {
+		return new LazyProjectDescriptionHandle(location, projectDescriptionLoader);
 	}
 
 	@Override
-	public URI findProjectWith(URI unsafeLocation) {
-		URI key = URIUtils.normalize(unsafeLocation.trimFragment());
+	public URI findProjectWith(URI nestedLocation) {
+		URI key = URIUtils.normalize(nestedLocation.trimFragment());
 
-		// determine longest registered project location, that is a prefix of key
+		// determine longest registered project location, that is a prefix of 'key'
 		while (key.segmentCount() > 0) {
 			LazyProjectDescriptionHandle match = this.projectElementHandles.get(key);
 			if (match != null) {
@@ -122,72 +111,17 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 	}
 
 	@Override
-	public URI getLocation(URI unsafeLocation, ProjectReference projectReference,
-			N4JSSourceContainerType expectedN4JSSourceContainerType) {
-		URI projectURI = URIUtils.normalize(unsafeLocation);
+	public URI getLocation(URI unsafeLocation, ProjectReference projectReference) {
 		String projectId = projectReference.getProjectId();
-		if (expectedN4JSSourceContainerType == N4JSSourceContainerType.ARCHIVE) {
-			LazyProjectDescriptionHandle baseHandle = projectElementHandles.get(projectURI);
-			if (baseHandle != null && !baseHandle.isArchive()) {
-				String archiveFileName = projectId + IN4JSArchive.NFAR_FILE_EXTENSION_WITH_DOT;
-				for (String libraryPath : baseHandle.resolve().getLibraryPaths()) {
-					URI archiveURI = projectURI.appendSegments(new String[] { libraryPath, archiveFileName });
-					if (projectElementHandles.containsKey(archiveURI)) {
-						return archiveURI;
-					}
-				}
-			} else {
-				String archiveFileName = projectId + IN4JSArchive.NFAR_FILE_EXTENSION_WITH_DOT;
-				for (URI location : projectElementHandles.keySet()) {
-					if (location.lastSegment().equals(archiveFileName)) {
-						LazyProjectDescriptionHandle lazyHandle = projectElementHandles.get(location);
-						if (lazyHandle != null) {
-							return lazyHandle.getLocation();
-						}
-					}
-				}
-			}
-			URI location = packageManager.getLocation(projectId);
-			if (location != null) {
-				if (projectElementHandles.containsKey(location)) {
-					return location;
-				}
-				projectElementHandles.put(location, createLazyDescriptionHandle(location, true));
-				return location;
-			}
-		} else {
-			for (URI location : projectElementHandles.keySet()) {
-				if (location.lastSegment().equals(projectId)) {
-					LazyProjectDescriptionHandle lazyHandle = projectElementHandles.get(location);
-					if (lazyHandle != null) {
-						return lazyHandle.getLocation();
-					}
+		for (URI location : projectElementHandles.keySet()) {
+			if (location.lastSegment().equals(projectId)) {
+				LazyProjectDescriptionHandle lazyHandle = projectElementHandles.get(location);
+				if (lazyHandle != null) {
+					return lazyHandle.getLocation();
 				}
 			}
 		}
 		return null;
-	}
-
-	@Override
-	public Iterator<URI> getArchiveIterator(final URI unsafeLocation, String archiveRelativeLocation) {
-		URI archiveLocation = URIUtils.normalize(unsafeLocation);
-		File archiveFile = new File(java.net.URI.create(archiveLocation.toString()));
-		ZipInputStream stream = null;
-		try {
-			stream = new ZipInputStream(new BufferedInputStream(new FileInputStream(archiveFile)));
-			Iterator<ZipEntry> entries = getArchiveIterator(stream, archiveRelativeLocation);
-			return toArchiveURIs(archiveLocation, entries);
-		} catch (FileNotFoundException e) {
-			return Collections.emptyIterator();
-		} finally {
-			if (stream != null) {
-				try {
-					stream.close();
-				} catch (IOException e) {
-					// ignore
-				}
-			}
-		}
 	}
 
 	@Override

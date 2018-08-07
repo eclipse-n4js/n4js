@@ -43,7 +43,7 @@ public class RepoRelativePathHolder {
 
 		if (res != null) {
 			if (!modulesToRepoCache.containsKey(res)) {
-				RepoRelativePath rrpRes = RepoRelativePath.compute(res, n4jscore);
+				RepoRelativePath rrpRes = RepoRelativePath.compute(res.getURI(), n4jscore);
 				if (rrpRes != null) {
 					modulesToRepoCache.put(res, rrpRes);
 				}

@@ -13,11 +13,10 @@ package org.eclipse.n4js.xpect.projects;
 import java.io.File;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.internal.ClasspathPackageManager;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.utils.ProjectDescriptionHelper;
+import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.inject.Inject;
@@ -32,15 +31,14 @@ public class AutoDiscoveryFileBasedWorkspace extends FileBasedWorkspace {
 
 	/** Initializes the workspace. */
 	@Inject
-	public AutoDiscoveryFileBasedWorkspace(ClasspathPackageManager packageManager,
-			ProjectDescriptionHelper projectDescriptionHelper) {
-		super(packageManager, projectDescriptionHelper);
+	public AutoDiscoveryFileBasedWorkspace(ProjectDescriptionLoader projectDescriptionLoader) {
+		super(projectDescriptionLoader);
 	}
 
 	@Override
-	public URI findProjectWith(URI unsafeLocation) {
-		final URI closestProjectLocation = findClosestProjectLocation(unsafeLocation);
-		final URI knownProjectLocation = super.findProjectWith(unsafeLocation);
+	public URI findProjectWith(URI nestedLocation) {
+		final URI closestProjectLocation = findClosestProjectLocation(nestedLocation);
+		final URI knownProjectLocation = super.findProjectWith(nestedLocation);
 
 		if (closestProjectLocation != null
 				&& (knownProjectLocation == null || !knownProjectLocation.equals(closestProjectLocation))) {

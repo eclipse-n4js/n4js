@@ -20,7 +20,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
 import org.eclipse.n4js.internal.N4JSBrokenProjectException;
-import org.eclipse.n4js.n4mf.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.utils.resources.ExternalProject;
 import org.eclipse.xtext.util.Pair;

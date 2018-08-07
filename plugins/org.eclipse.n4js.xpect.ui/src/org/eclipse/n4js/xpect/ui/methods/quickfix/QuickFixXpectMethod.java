@@ -361,10 +361,7 @@ public class QuickFixXpectMethod {
 			FileSetupContext fileSetupContext, ResourceTweaker resourceTweaker) {
 
 		try {
-			/**
-			 * Asking the injector is necessary, since the Xpect methods get also called from N4MF context. see test is
-			 * org.eclipse.n4js.xpect.ui/n4mf/quickfix/
-			 */
+			// Asking the injector is necessary, since the Xpect methods get also called from N4MF context.
 			XpectN4JSES5TranspilerHelper transpilerHelper = resource.getResourceServiceProvider()
 					.get(XpectN4JSES5TranspilerHelper.class);
 			return transpilerHelper.doCompileAndExecute(resource, init,

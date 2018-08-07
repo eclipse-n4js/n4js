@@ -14,8 +14,8 @@ import static com.google.common.base.CaseFormat.LOWER_CAMEL;
 import static com.google.common.base.CaseFormat.UPPER_UNDERSCORE;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.String.valueOf;
-import static org.eclipse.n4js.n4mf.ProjectType.API;
-import static org.eclipse.n4js.n4mf.ProjectType.LIBRARY;
+import static org.eclipse.n4js.projectDescription.ProjectType.API;
+import static org.eclipse.n4js.projectDescription.ProjectType.LIBRARY;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.n4js.n4mf.ProjectType;
+import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.xtext.ui.wizard.DefaultProjectInfo;
 

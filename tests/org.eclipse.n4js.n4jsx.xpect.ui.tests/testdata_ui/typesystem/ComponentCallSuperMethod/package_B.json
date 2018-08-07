@@ -1,6 +1,6 @@
 {
 	"name": "ComponentSuperB",
-	"version": "0.0.1-SNAPSHOT",
+	"version": "0.0.1",
 	"dependencies": {
 		"ComponentSuperA": "*",
 		"react": "*"

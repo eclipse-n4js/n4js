@@ -34,7 +34,8 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.n4js.n4mf.ProjectType;
+import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.packagejson.PackageJsonBuilder;
 import org.eclipse.n4js.tests.util.EclipseUIUtils;
 import org.eclipse.n4js.tests.util.PackageJSONTestHelper;
@@ -141,10 +142,27 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 	}
 
 	/**
-	 * Creates a new file in the given folder. {@link #F_EXT} is appended to the name.
+	 * Creates a new file in the given folder. {@link N4JSGlobals#N4JS_FILE_EXTENSION} is appended to the name.
 	 */
 	protected IFile createTestFile(IFolder folder, String name, CharSequence content) throws CoreException {
-		String fullName = name + F_EXT;
+		String fullName = name + "." + N4JSGlobals.N4JS_FILE_EXTENSION;
+		return doCreateTestFile(folder, fullName, content);
+	}
+
+	/**
+	 * Creates a new JavaScript file in the given folder. {@link N4JSGlobals#N4JSD_FILE_EXTENSION} is appended to the
+	 * name.
+	 */
+	protected IFile createTestN4JSDFile(IFolder folder, String name, CharSequence content) throws CoreException {
+		String fullName = name + "." + N4JSGlobals.N4JSD_FILE_EXTENSION;
+		return doCreateTestFile(folder, fullName, content);
+	}
+
+	/**
+	 * Creates a new JavaScript file in the given folder. {@link N4JSGlobals#JS_FILE_EXTENSION} is appended to the name.
+	 */
+	protected IFile createTestJSFile(IFolder folder, String name, CharSequence content) throws CoreException {
+		String fullName = name + "." + N4JSGlobals.JS_FILE_EXTENSION;
 		return doCreateTestFile(folder, fullName, content);
 	}
 

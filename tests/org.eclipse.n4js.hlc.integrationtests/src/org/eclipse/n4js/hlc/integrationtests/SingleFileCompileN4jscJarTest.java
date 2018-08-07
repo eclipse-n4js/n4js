@@ -72,7 +72,7 @@ public class SingleFileCompileN4jscJarTest extends AbstractN4jscJarTest {
 	public void testSingleFileCompile() throws Exception {
 		logFile();
 
-		Process p = createAndStartProcess("--buildType", "singleFile", WSP + "/" + "PSingle/src/a/A.n4js");
+		Process p = createAndStartProcess("--buildType", "singleFile", WORKSPACE_FOLDER + "/" + "PSingle/src/a/A.n4js");
 
 		int exitCode = p.waitFor();
 
@@ -92,9 +92,9 @@ public class SingleFileCompileN4jscJarTest extends AbstractN4jscJarTest {
 		// -rw run with
 		// -r run : file to run
 		Process p = createAndStartProcess("--buildType", "allprojects", "--projectlocations",
-				WSP, "--runWith",
+				WORKSPACE_FOLDER, "--runWith",
 				"nodejs", "--run",
-				WSP + "/" + "P1/src/A.n4js");
+				WORKSPACE_FOLDER + "/" + "P1/src/A.n4js");
 
 		int exitCode = p.waitFor();
 
@@ -116,9 +116,9 @@ public class SingleFileCompileN4jscJarTest extends AbstractN4jscJarTest {
 		logFile();
 
 		Process p = createAndStartProcess( // ----
-				"--projectlocations", WSP + "/" + "IDE-1510_Incomplete_API_Implementation", // ----
+				"--projectlocations", WORKSPACE_FOLDER + "/" + "IDE-1510_Incomplete_API_Implementation", // ----
 				"--runWith", "nodejs", // ----
-				"--run", WSP + "/"
+				"--run", WORKSPACE_FOLDER + "/"
 						+ "IDE-1510_Incomplete_API_Implementation/one.x.impl/src/AT_IDE-1510_Missing_Method.n4js", // ----
 				"--buildType", "allprojects", // ----
 				"wsp/IDE-1510_Incomplete_API_Implementation/one.api",
@@ -171,7 +171,7 @@ public class SingleFileCompileN4jscJarTest extends AbstractN4jscJarTest {
 		logFile();
 
 		// Process is running from TARGET-Folder.
-		String proot = WSP;
+		String proot = WORKSPACE_FOLDER;
 
 		// Project
 		String projectP1 = "P1";

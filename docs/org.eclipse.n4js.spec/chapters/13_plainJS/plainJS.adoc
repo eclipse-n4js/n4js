@@ -146,17 +146,17 @@ Any time the external declaration is imported, the compiler generates code that 
 
 There are two possible ways of linking an external declaration to its corresponding implementation:
 
-1.  By naming convention defined in the manifest.
+1.  By naming convention defined in the `package.json` file.
 2.  By declaring that the implementation is provided by the JavaScript runtime, see <<_runtime-definitions>> for details.
 
-The naming convention is based on the `external` source fragments defined in the manifest (<<_component-manifest>>).
-If the implementation is provided by the runtime directly, then this can be also specified in the manifest by a module filter.
+The naming convention is based on the `external` source fragments defined in the `package.json` file (<<package-json>>).
+If the implementation is provided by the runtime directly, then this can be also specified in the `package.json` file by a module filter.
 
 The implicit link via the naming convention is used to link an external class declaration to its non-N4JS implementation module.
 It does not effect validation, but only compilation and runtime.
 Essentially, this makes the compiler generate code so that at runtime, the linked implementation module is imported instead of the declaration module.
 
-In most use cases of external declarations you also want to disable validation and module wrapping by specifying appropriate filters in the manifest.
+In most use cases of external declarations you also want to disable validation and module wrapping by specifying appropriate filters in the `package.json` file.
 
 Occasionally it is not possible for the validation to correctly detect a corresponding implementation element.
 For that reason, it is possible to disable validation of implementations completely via `@@IgnoreImplementation`.
@@ -217,7 +217,7 @@ Assuming
 
 * `shapes.js` is placed in project folder */external/a/b/shapes.js*
 * `shapes.n4jsd` is placed in project folder */src/a/b/shapes.n4jsd*
-* `manifest.n4mf` defines *src* as source folder and *external* as external source folder
+* `package.json` defines *src* as source folder and *external* as external source folder
 
 the following N4JS external class declarations in *shapes.n4jsd* are sufficient:
 

@@ -13,5 +13,5 @@
 {
 	// XPECT errors --> "The package name "project-name-mismatch" does not match project folder name "project-name" used on the file system." at ""project-name-mismatch""
 	"name": "project-name-mismatch",
-	"version": "0.0.1-SNAPSHOT"
+	"version": "0.0.1"
 }

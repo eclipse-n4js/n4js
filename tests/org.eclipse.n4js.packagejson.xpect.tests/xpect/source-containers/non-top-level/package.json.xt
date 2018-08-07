@@ -12,7 +12,7 @@
 /* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.tests.PackageJsonXpectTest END_SETUP */
 {
 	"name": "non-top-level",
-	"version": "0.0.1-SNAPSHOT",
+	"version": "0.0.1",
 	"n4js": {
 		"projectType": "library",
 		"vendorId": "MyVendorID",

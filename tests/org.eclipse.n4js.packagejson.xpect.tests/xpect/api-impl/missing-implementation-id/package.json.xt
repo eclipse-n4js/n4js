@@ -12,7 +12,7 @@
 /* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.tests.PackageJsonXpectTest END_SETUP */
 {
 	"name": "missing-implementation-id",
-	"version": "0.0.1-SNAPSHOT",
+	"version": "0.0.1",
 	"n4js": {
 		"output": "src-gen",
 		"projectType": "api",

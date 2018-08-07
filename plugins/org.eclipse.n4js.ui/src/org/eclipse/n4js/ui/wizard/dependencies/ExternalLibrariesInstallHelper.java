@@ -11,14 +11,15 @@
 package org.eclipse.n4js.ui.wizard.dependencies;
 
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.ui.external.ExternalLibrariesActionsHelper;
 
 import com.google.inject.Inject;
@@ -53,14 +54,14 @@ public class ExternalLibrariesInstallHelper {
 		// remove npms
 		externals.maintenanceDeleteNpms(multistatus);
 
-		Set<String> projectIdsOfShippedCode = StreamSupport
+		Map<String, VersionNumber> projectIdsOfShippedCode = StreamSupport
 				.stream(dependenciesHelper.getAvailableProjectsDescriptions(true).spliterator(), false)
-				.map(pd -> pd.getProjectId())
-				.collect(Collectors.toCollection(LinkedHashSet::new));
+				.collect(Collectors.toMap(pd -> pd.getProjectId(), pd -> pd.getProjectVersion()));
 
 		// install npms from target platform
 		Map<String, String> dependenciesToInstall = dependenciesHelper.calculateDependenciesToInstall();
-		addDependenciesForRemainingShippedCode(dependenciesToInstall, projectIdsOfShippedCode);
+		removeDependenciesToShippedCodeIfVersionMatches(dependenciesToInstall, projectIdsOfShippedCode);
+		addDependenciesForRemainingShippedCode(dependenciesToInstall, projectIdsOfShippedCode.keySet());
 		final SubMonitor subMonitor3 = monitor.split(45);
 
 		externals.installNoUpdate(dependenciesToInstall, multistatus, subMonitor3);
@@ -68,6 +69,28 @@ public class ExternalLibrariesInstallHelper {
 		// rebuild externals & schedule full rebuild
 		final SubMonitor subMonitor4 = monitor.split(35);
 		externals.maintenanceUpateState(multistatus, subMonitor4);
+	}
+
+	/**
+	 * Removes from map 'dependenciesToInstall' all entries for projects that are in the shipped code, if and only if
+	 * the requested version is the "fake" version of the shipped code.
+	 *
+	 * FIXME GH-957 change implementation to use a proper SemVer version-range-check instead of the string compare!
+	 */
+	private void removeDependenciesToShippedCodeIfVersionMatches(Map<String, String> dependenciesToInstall,
+			Map<String, VersionNumber> projectIdsOfShippedCode) {
+		for (Entry<String, String> depToInstall : dependenciesToInstall.entrySet()) {
+			String projectId = depToInstall.getKey();
+			VersionNumber availableVersionInShippedCode = projectIdsOfShippedCode.get(projectId);
+			if (availableVersionInShippedCode != null) {
+				String versionConstraintStr = depToInstall.getValue();
+				if (versionConstraintStr != null && versionConstraintStr.trim().equals("@\">=0.1.0 <=0.1.0\"")) {
+					// the "fake" version of the project in the shipped code is requested,
+					// so remove from list of dependencies to be installed:
+					dependenciesToInstall.remove(projectId);
+				}
+			}
+		}
 	}
 
 	/**
@@ -90,7 +113,7 @@ public class ExternalLibrariesInstallHelper {
 					.map(id -> dependenciesToInstall.get(id))
 					.collect(Collectors.toSet());
 			if (versionConstraintsOfShippedCodeToInstall.size() > 1) {
-				// FIXME GH-957 / GH-809 warn about conflicting version constraints for shipped code!
+				// FIXME GH-957 warn about conflicting version constraints for shipped code!
 			}
 			String versionConstraint = versionConstraintsOfShippedCodeToInstall.stream().findFirst()
 					.orElse(null);

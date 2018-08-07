@@ -10,9 +10,6 @@
  */
 package org.eclipse.n4js.ui.external;
 
-import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.N4_NPM_FOLDER_SUPPLIER;
-import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.repairNpmFolderState;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
@@ -21,8 +18,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
-import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.external.GitCloneSupplier;
+import org.eclipse.n4js.external.LibraryManager;
+import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.ui.preferences.external.MaintenanceActionsButtonListener;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.io.FileDeleter;
@@ -48,9 +46,12 @@ public class ExternalLibrariesActionsHelper {
 	@Inject
 	private ExternalLibrariesReloadHelper externalLibrariesReloadHelper;
 
+	@Inject
+	private TargetPlatformInstallLocationProvider locationProvider;
+
 	/**
-	 * Performs {@link LibraryManager#cleanCache(IProgressMonitor)}. If that operation fails, status is mergegd
-	 * into provided status.
+	 * Performs {@link LibraryManager#cleanCache(IProgressMonitor)}. If that operation fails, status is mergegd into
+	 * provided status.
 	 *
 	 * @param multistatus
 	 *            the status used accumulate issues
@@ -99,7 +100,7 @@ public class ExternalLibrariesActionsHelper {
 	 */
 	public void maintenanceDeleteNpms(final MultiStatus multistatus) {
 		// get folder
-		File npmFolder = N4_NPM_FOLDER_SUPPLIER.get();
+		File npmFolder = locationProvider.getTargetPlatformInstallFolder();
 
 		if (npmFolder.exists()) {
 			FileDeleter.delete(npmFolder, (IOException ioe) -> multistatus.merge(
@@ -108,7 +109,7 @@ public class ExternalLibrariesActionsHelper {
 
 		if (!npmFolder.exists()) {
 			// recreate npm folder
-			if (!repairNpmFolderState()) {
+			if (!locationProvider.repairNpmFolderState()) {
 				multistatus.merge(statusHelper
 						.createError("The npm folder was not recreated correctly."));
 			}

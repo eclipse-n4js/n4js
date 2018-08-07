@@ -22,16 +22,16 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.external.ExternalLibraryUtils;
+import org.eclipse.n4js.external.ExternalLibraryHelper;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4JSBrokenProjectException;
 import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.internal.N4JSProject;
-import org.eclipse.n4js.n4mf.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.utils.ProjectDescriptionHelper;
+import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.common.collect.Iterables;
@@ -44,7 +44,7 @@ import com.google.inject.Inject;
 public class HeadlessHelper {
 
 	@Inject
-	private ProjectDescriptionHelper projectDescriptionHelper;
+	private ProjectDescriptionLoader projectDescriptionLoader;
 
 	@Inject
 	private N4JSModel n4jsModel;
@@ -55,34 +55,40 @@ public class HeadlessHelper {
 	@Inject
 	private TargetPlatformInstallLocationProvider targetPlatformInstallLocationProvider;
 
+	@Inject
+	private ExternalLibraryHelper externalLibraryHelper;
+
 	/**
 	 * Configure FileBasedWorkspace with all projects contained in {@code buildSet}.
 	 *
+	 * Skips {@link IN4JSProject}s that are already registered with the given {@code workspace}.
+	 *
 	 * @param buildSet
 	 *            build set of projects
-	 * @param n4jsFileBasedWorkspace
+	 * @param workspace
 	 *            instance of FileBasedWorkspace to configure (in N4JS injector)
 	 * @throws N4JSCompileException
 	 *             in error Case.
 	 */
-	public void registerProjects(BuildSet buildSet, FileBasedWorkspace n4jsFileBasedWorkspace)
-			throws N4JSCompileException {
+	public void registerProjects(BuildSet buildSet, FileBasedWorkspace workspace) throws N4JSCompileException {
 		Iterable<URI> projectUris = Iterables.transform(buildSet.getAllProjects(), p -> p.getLocation());
 		// Register all projects with the file based workspace.
-		this.registerProjectsToFileBasedWorkspace(projectUris, n4jsFileBasedWorkspace);
+		this.registerProjectsToFileBasedWorkspace(projectUris, workspace);
 	}
 
 	/**
 	 * Configure FileBasedWorkspace with all projects found in sub-folders of {@code projectLocations}.
 	 *
+	 * Skips {@link IN4JSProject}s that are already registered with the given {@code workspace}.
+	 *
 	 * @param projectLocations
 	 *            list of project roots
-	 * @param n4jsFileBasedWorkspace
+	 * @param workspace
 	 *            instance of FileBasedWorkspace to configure (in N4JS injector)
 	 * @throws N4JSCompileException
 	 *             in error Case.
 	 */
-	public void registerProjects(List<File> projectLocations, FileBasedWorkspace n4jsFileBasedWorkspace)
+	public void registerProjects(List<File> projectLocations, FileBasedWorkspace workspace)
 			throws N4JSCompileException {
 		// make absolute, since downstream URI conversion doesn't work if relative dir only.
 		List<File> absProjectRoots = this.toAbsoluteFileList(projectLocations);
@@ -90,27 +96,31 @@ public class HeadlessHelper {
 		// Collect all Projects in first Level
 		List<URI> pUris = collectAllProjectUris(absProjectRoots);
 
-		registerProjectsToFileBasedWorkspace(pUris, n4jsFileBasedWorkspace);
+		registerProjectsToFileBasedWorkspace(pUris, workspace);
 	}
 
-	/** Registers provided project uris in a given workspace. Logger (if provided) used to log errors. */
-	public void registerProjectsToFileBasedWorkspace(Iterable<URI> projectURIs,
-			FileBasedWorkspace n4jsFileBasedWorkspace)
+	/**
+	 * Registers provided project URIs in the given workspace.
+	 *
+	 * Skips {@link IN4JSProject}s that are already registered with the given {@code workspace}.
+	 *
+	 */
+	public void registerProjectsToFileBasedWorkspace(Iterable<URI> projectURIs, FileBasedWorkspace workspace)
 			throws N4JSCompileException {
 
 		// TODO GH-783 refactor FileBasedWorkspace, https://github.com/eclipse/n4js/issues/783
 		// this is reverse mapping of the one that is kept in the workspace
 		Map<String, URI> registeredProjects = new HashMap<>();
-		n4jsFileBasedWorkspace.getAllProjectsLocations().forEachRemaining(uri -> {
-			String projectID = n4jsFileBasedWorkspace.getProjectDescription(uri).getProjectId();
+		workspace.getAllProjectsLocations().forEachRemaining(uri -> {
+			String projectID = workspace.getProjectDescription(uri).getProjectId();
 			registeredProjects.put(projectID, URIUtils.normalize(uri));
 		});
 
-		// Register all projects with the file based workspace.
+		// register all projects with the file based workspace.
 		for (URI uri : projectURIs) {
 			URI projectURI = URIUtils.normalize(uri);
 
-			final ProjectDescription projectDescription = projectDescriptionHelper
+			final ProjectDescription projectDescription = projectDescriptionLoader
 					.loadProjectDescriptionAtLocation(projectURI);
 
 			if (projectDescription == null) {
@@ -126,8 +136,8 @@ public class HeadlessHelper {
 					logger.debug("Skipping already registered project '" + projectURI + "'");
 				}
 				/*
-				 * We could call FileBasedWorkspace.registerProject which would silently. Still to avoid potential side
-				 * effects and to keep {@code registeredProjects} management simpler,we will skip it explicitly.
+				 * We could call FileBasedWorkspace.registerProject which would fail silently. Still to avoid potential
+				 * side effects and to keep {@code registeredProjects} management simpler,we will skip it explicitly.
 				 */
 				continue;
 			}
@@ -136,7 +146,7 @@ public class HeadlessHelper {
 				if (logger != null && logger.isCreateDebugOutput()) {
 					logger.debug("Registering project '" + projectURI + "'");
 				}
-				n4jsFileBasedWorkspace.registerProject(projectURI);
+				workspace.registerProject(projectURI);
 				registeredProjects.put(projectId, projectURI);
 			} catch (N4JSBrokenProjectException e) {
 				throw new N4JSCompileException("Unable to register project '" + projectURI + "'", e);
@@ -170,21 +180,21 @@ public class HeadlessHelper {
 	 *
 	 * @param sourceFiles
 	 *            the list of single source files
-	 * @param n4jsFileBasedWorkspace
+	 * @param workspace
 	 *            the workspace to be checked for containing projects
 	 * @return list of N4JS project locations
 	 * @throws N4JSCompileException
 	 *             if no project cannot be found for one of the given files
 	 */
 	public List<File> findProjectsForSingleFiles(List<File> sourceFiles,
-			FileBasedWorkspace n4jsFileBasedWorkspace)
+			FileBasedWorkspace workspace)
 			throws N4JSCompileException {
 
 		Set<URI> result = Sets.newLinkedHashSet();
 
 		for (File sourceFile : sourceFiles) {
 			URI sourceFileURI = URI.createFileURI(sourceFile.toString());
-			URI projectURI = n4jsFileBasedWorkspace.findProjectWith(sourceFileURI);
+			URI projectURI = workspace.findProjectWith(sourceFileURI);
 			if (projectURI == null) {
 				throw new N4JSCompileException("No project for file '" + sourceFile.toString() + "' found.");
 			}
@@ -245,7 +255,7 @@ public class HeadlessHelper {
 	 */
 	public boolean isProjectToBeBuilt(IN4JSProject project) {
 		if (project.isExternal()) {
-			return ExternalLibraryUtils.isExternalProjectDirectory(project.getLocationPath().toFile());
+			return externalLibraryHelper.isExternalProjectDirectory(project.getLocationPath().toFile());
 		}
 		return true;
 	}
@@ -332,7 +342,7 @@ public class HeadlessHelper {
 	 */
 	private File getTargetPlatformInstallLocation() {
 		final java.net.URI targetPlatformLocation = targetPlatformInstallLocationProvider
-				.getTargetPlatformInstallLocation();
+				.getTargetPlatformInstallURI();
 		if (null == targetPlatformLocation) {
 			return null;
 		}
