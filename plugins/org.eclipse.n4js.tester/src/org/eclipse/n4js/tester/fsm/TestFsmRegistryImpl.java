@@ -136,8 +136,8 @@ public class TestFsmRegistryImpl implements TestFsmRegistry {
 			if (fsm instanceof TestFsmImpl && !((TestFsmImpl) fsm).isFailed()) {
 				if (!treeRegistry.validateTestTree(sessionId)) {
 					((TestFsmImpl) fsm)
-							.fail("Test session was terminated unexpectedly. "
-									+ "There are test cases without any test results after receiving session ended event.");
+							.fail("Test session has been terminated unexpectedly. "
+									+ "There are test cases without any test results after receiving the session ended event.");
 					return;
 				}
 			}

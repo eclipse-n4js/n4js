@@ -20,7 +20,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.runner.IExecutor;
 import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.n4js.runner.RunnerFrontEnd;
-import org.eclipse.n4js.tester.domain.ID;
 import org.eclipse.n4js.tester.domain.TestTree;
 import org.eclipse.n4js.tester.events.SessionEndedEvent;
 import org.eclipse.n4js.tester.extension.ITesterDescriptor;
@@ -198,39 +197,13 @@ public class TesterFrontEnd {
 		Process process = tester.test(config, executor, runnerFrontEnd);
 
 		// register process termination listener
-		if (process.isAlive()) {
-			new TesterTerminationListener(process, testTree.getSessionId()).start();
-		}
+		ProcessTerminationListener.register(process, exitCode -> {
+			// inform tester about the end of the session (if the internal state of
+			// the session does not allow for it, i.e. early termination, this may trigger an error state)
+			eventBus.post(new SessionEndedEvent(testTree.getSessionId().toString()));
+		});
 
 		return process;
-	}
-
-	/**
-	 * Thread running in parallel which waits for a given process to terminate.
-	 *
-	 * On termination
-	 */
-	private final class TesterTerminationListener extends Thread {
-		private final Process process;
-		private final String sessionId;
-
-		/** */
-		private TesterTerminationListener(Process process, ID sessionId) {
-			this.process = process;
-			this.sessionId = sessionId.getValue();
-		}
-
-		@Override
-		public void run() {
-			try {
-				process.waitFor();
-			} catch (InterruptedException e) {
-				// ignore, we just want to update the UI state
-			}
-			// inform tester about the end of the session (if the internal state of
-			// the session does not allow for it, this may trigger an error state)
-			eventBus.post(new SessionEndedEvent(sessionId));
-		}
 	}
 
 	/**
