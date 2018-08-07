@@ -99,9 +99,10 @@ public class ExternalLibrariesActionsHelper {
 	 *            the status used accumulate issues
 	 */
 	public void maintenanceDeleteNpms(final MultiStatus multistatus) {
-		// get folder
+		// get target platform folder (contains node_modules, package.json, etc.)
 		File npmFolder = locationProvider.getTargetPlatformInstallFolder();
 
+		// delete whole target platform folder
 		if (npmFolder.exists()) {
 			FileDeleter.delete(npmFolder, (IOException ioe) -> multistatus.merge(
 					statusHelper.createError("Exception during deletion of the npm folder.", ioe)));
@@ -111,7 +112,7 @@ public class ExternalLibrariesActionsHelper {
 			// recreate npm folder
 			if (!locationProvider.repairNpmFolderState()) {
 				multistatus.merge(statusHelper
-						.createError("The npm folder was not recreated correctly."));
+						.createError("The target platform location folder was not recreated correctly."));
 			}
 		} else {// should never happen
 			multistatus
