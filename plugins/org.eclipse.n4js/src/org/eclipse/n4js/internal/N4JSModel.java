@@ -482,7 +482,10 @@ public class N4JSModel {
 			return null;
 		}
 		final ProjectDescription projectDescription = getProjectDescription(project.getLocation());
-		return projectDescription.getDefinesPackage();
+		if (null != projectDescription) {
+			return projectDescription.getDefinesPackage();
+		}
+		return null;
 	}
 
 	public Iterable<IN4JSProject> getSortedDependencies(IN4JSProject project) {
