@@ -70,7 +70,7 @@ public class TypeDefinitionsShadowingPluginTest extends AbstractBuilderParticipa
 		final IProject definitionProject = ProjectTestsUtils.importProject(testdataLocation, "Broken_Def");
 		final IProject implProject = ProjectTestsUtils.importProject(testdataLocation, "Impl");
 
-		IResourcesSetupUtil.cleanBuild();
+		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 
 		IResource clientModule = clientProject.findMember("src/Client.n4js");
