@@ -44,7 +44,7 @@ import org.eclipse.n4js.projectDescription.SourceContainerType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.utils.MultiCleartriggerCache;
-import org.eclipse.n4js.utils.MultiCleartriggerCache.ResultAndTriggerProvider;
+import org.eclipse.n4js.utils.MultiCleartriggerCache.CleartriggerSupplier;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.xtext.naming.QualifiedName;
 
@@ -505,7 +505,7 @@ public class N4JSModel {
 	 * Consequently, the cache has to be invalidated every time the package.json of {@code Client} changes <b>and/or</b>
 	 * the package.json of all projects change which provide type definitions used in {@code Client}.
 	 */
-	private class SortedDependenciesProvider implements ResultAndTriggerProvider<Iterable<IN4JSProject>> {
+	private class SortedDependenciesProvider implements CleartriggerSupplier<Iterable<IN4JSProject>> {
 		final IN4JSProject project;
 		private Iterable<IN4JSProject> sortedDeps;
 

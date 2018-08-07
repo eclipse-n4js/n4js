@@ -15,7 +15,6 @@ import static org.eclipse.n4js.internal.N4JSModel.DIRECT_RESOURCE_IN_PROJECT_SEG
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -32,15 +31,14 @@ import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.utils.MultiCleartriggerCache;
+import org.eclipse.n4js.utils.MultiCleartriggerCache.CleartriggerSupplier;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.common.collect.UnmodifiableIterator;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
@@ -54,10 +52,7 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 
 	private final ProjectDescriptionLoader projectDescriptionLoader;
 
-	private final Map<URI, ProjectDescription> cacheProjectDescriptions = Maps.newHashMap();
-
-	@Inject
-	private MultiCleartriggerCache cache;
+	private final MultiCleartriggerCache cache;
 
 	private ProjectDescriptionLoadListener listener;
 
@@ -67,10 +62,12 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 	@Inject
 	public EclipseBasedN4JSWorkspace(
 			IWorkspaceRoot workspace,
-			ProjectDescriptionLoader projectDescriptionLoader) {
+			ProjectDescriptionLoader projectDescriptionLoader,
+			MultiCleartriggerCache cache) {
 
 		this.workspace = workspace;
 		this.projectDescriptionLoader = projectDescriptionLoader;
+		this.cache = cache;
 	}
 
 	IWorkspaceRoot getWorkspace() {
@@ -91,21 +88,33 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 		if (!location.isPlatformResource()) {
 			return null;
 		}
-		ProjectDescription existing = cacheProjectDescriptions.get(location);
-		if (existing == null) {
-			existing = projectDescriptionLoader.loadProjectDescriptionAtLocation(location);
-			if (existing != null) {
-				cacheProjectDescriptions.put(location, existing);
-				if (listener != null) {
-					listener.onDescriptionLoaded(location);
-				}
+		ProjectDescriptionLoaderAndNotifier supplier = new ProjectDescriptionLoaderAndNotifier(location);
+		ProjectDescription existing = cache.get(supplier, PROJECT_DESCRIPTIONS, location);
+
+		return existing;
+	}
+
+	/** Loads the project description and notifies the listener */
+	private class ProjectDescriptionLoaderAndNotifier implements CleartriggerSupplier<ProjectDescription> {
+		final URI location;
+
+		public ProjectDescriptionLoaderAndNotifier(URI location) {
+			this.location = location;
+		}
+
+		@Override
+		public ProjectDescription get() {
+			ProjectDescription pd = projectDescriptionLoader.loadProjectDescriptionAtLocation(location);
+			return pd;
+		}
+
+		@Override
+		public void postSupply() {
+			if (listener != null) {
+				// happens in test scenarios
+				listener.onDescriptionLoaded(location);
 			}
 		}
-		Provider<ProjectDescription> pdProvider = () -> projectDescriptionLoader
-				.loadProjectDescriptionAtLocation(location);
-
-		existing = cache.get(pdProvider, PROJECT_DESCRIPTIONS, location);
-		return existing;
 	}
 
 	@Override
@@ -167,14 +176,6 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 			}
 		}
 		return null;
-	}
-
-	void discardEntry(URI uri) {
-		cacheProjectDescriptions.remove(uri);
-	}
-
-	void discardEntries() {
-		cacheProjectDescriptions.clear();
 	}
 
 	void setProjectDescriptionLoadListener(ProjectDescriptionLoadListener listener) {

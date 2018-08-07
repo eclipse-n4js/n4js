@@ -11,15 +11,16 @@
 package org.eclipse.n4js.utils;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.xtext.util.IResourceScopeCache;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
@@ -32,21 +33,28 @@ public class MultiCleartriggerCache {
 	private final Map<String, Multimap<URI, URI>> triggerCache = new HashMap<>();
 
 	/**
-	 * Provides usual {@link Provider} and the method {@link #getCleartriggers()}. A clear-trigger is an {@link URI}
+	 * Provides usual {@link Supplier} and the method {@link #getCleartriggers()}. A clear-trigger is an {@link URI}
 	 * that will cause the cached value to be deleted.
 	 */
-	static public interface ResultAndTriggerProvider<Entry> extends Provider<Entry> {
+	static public interface CleartriggerSupplier<Entry> extends Supplier<Entry> {
 		/** @return a collection of other triggers */
-		public Collection<URI> getCleartriggers();
+		default public Collection<URI> getCleartriggers() {
+			return Collections.emptyList();
+		}
+
+		/** Gets called after {@link Supplier#get()} was called and cached */
+		default public void postSupply() {
+			// please implement
+		}
 	}
 
 	/**
-	 * Returns the requested value from cache. In case the cache is empty, the given {@link Provider} is called.
+	 * Returns the requested value from cache. In case the cache is empty, the given {@link Supplier} is called.
 	 * <p>
-	 * If the given {@link Provider} is of type {@link ResultAndTriggerProvider}, additional clear-triggers are computed
-	 * and added.
+	 * If the given {@link Supplier} is of type {@link CleartriggerSupplier}, additional clear-triggers are computed and
+	 * added.
 	 *
-	 * @param provider
+	 * @param supplier
 	 *            to compute the result and to compute other clear-triggers
 	 * @param key
 	 *            to select a specific kind of values on a given URI
@@ -54,25 +62,26 @@ public class MultiCleartriggerCache {
 	 *            URI for which values are cached
 	 * @return cached result of the the given provider.
 	 */
-	public <Entry> Entry get(Provider<Entry> provider, String key, URI reference) {
-
+	public <Entry> Entry get(Supplier<Entry> supplier, String key, URI reference) {
 		if (!entryCache.containsKey(key)) {
 			entryCache.put(key, new HashMap<>());
-			if (provider instanceof ResultAndTriggerProvider) {
+			if (supplier instanceof CleartriggerSupplier) {
 				triggerCache.put(key, HashMultimap.create());
 			}
 		}
 		Map<URI, Object> entryMap = entryCache.get(key);
-		if (!entryMap.containsKey(reference) && provider != null) {
-			Entry entry = provider.get();
+		if (!entryMap.containsKey(reference) && supplier != null) {
+			Entry entry = supplier.get();
 			entryMap.put(reference, entry);
 
 			if (triggerCache.containsKey(key)) {
-				ResultAndTriggerProvider<Entry> ratProvider = (ResultAndTriggerProvider<Entry>) provider;
+				CleartriggerSupplier<Entry> ratProvider = (CleartriggerSupplier<Entry>) supplier;
 				Multimap<URI, URI> triggerMap = triggerCache.get(key);
 				for (URI trigger : ratProvider.getCleartriggers()) {
 					triggerMap.put(trigger, reference);
 				}
+
+				ratProvider.postSupply();
 			}
 		}
 		@SuppressWarnings("unchecked")
