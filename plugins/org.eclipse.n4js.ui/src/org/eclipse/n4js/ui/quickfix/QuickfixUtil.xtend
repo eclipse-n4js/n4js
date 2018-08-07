@@ -59,21 +59,12 @@ public class QuickfixUtil {
 
 	 /**
 
-	 * True if the objectUri containing resource is modifiable (i.e. file system write access, not in archive)
-	 *
-	 * TODO Use N4JSCore API
-	 * NOTE The N4JSCore API doesn't really provide a working way to obtain the isArchive information
+	 * True if the objectUri containing resource is modifiable (i.e. file system write access)
 	 *
 	 * @param objectUri
 	 * 		URI referring to eobject in resource
 	 */
 	def static boolean isContainingResourceModifiable(String objectUri) {
-
-		// Check for not NFAR (archive:) or other read-only uri protocol
-		if (objectUri.indexOf("platform:/resource/") != 0) {
-			return false;
-		}
-
 		var uri = URI.createURI(objectUri, true);
 		if (uri === null) {
 			return false;

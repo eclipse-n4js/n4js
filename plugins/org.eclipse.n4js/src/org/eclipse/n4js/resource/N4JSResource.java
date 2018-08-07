@@ -67,7 +67,7 @@ import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.EcoreUtilN4;
-import org.eclipse.n4js.utils.N4JSLanguageUtils;
+import org.eclipse.n4js.utils.N4JSLanguageHelper;
 import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
 import org.eclipse.n4js.utils.emf.ProxyResolvingResource;
 import org.eclipse.xtext.diagnostics.DiagnosticMessage;
@@ -261,6 +261,9 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 
 	@Inject
 	private IDerivedStateComputer myDerivedStateComputer;
+
+	@Inject
+	private N4JSLanguageHelper langHelper;
 
 	private final DataCollector collector = DataCollectors.INSTANCE.getOrCreateDataCollector("N4JSResource");
 
@@ -624,7 +627,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		if (contents != null && !contents.isEmpty()) {
 			discardStateFromDescription(true);
 		}
-		if (N4JSLanguageUtils.isOpaqueModule(this.uri)) {
+		if (langHelper.isOpaqueModule(this.uri)) {
 			IParseResult result = new JSParseResult(inputStream);
 			updateInternalState(this.getParseResult(), result);
 		} else {
@@ -693,7 +696,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 
 	@Override
 	public void update(int offset, int replacedTextLength, String newText) {
-		if (N4JSLanguageUtils.isOpaqueModule(this.uri)) {
+		if (langHelper.isOpaqueModule(this.uri)) {
 			String oldText = this.getParseResult().getRootNode().getText();
 			String newCompleteString = oldText.substring(0, offset) + newText
 					+ oldText.substring(offset + replacedTextLength);

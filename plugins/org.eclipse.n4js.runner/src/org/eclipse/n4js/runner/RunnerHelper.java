@@ -13,8 +13,6 @@ package org.eclipse.n4js.runner;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.emptyList;
 
-import java.io.File;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -30,11 +28,9 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.compare.ApiImplMapping;
 import org.eclipse.n4js.generator.AbstractSubGenerator;
-import org.eclipse.n4js.n4mf.ProjectType;
-import org.eclipse.n4js.projectModel.IN4JSArchive;
+import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware;
 import org.eclipse.n4js.runner.extension.IRunnerDescriptor;
 import org.eclipse.n4js.runner.extension.RunnerRegistry;
 import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
@@ -92,34 +88,6 @@ public class RunnerHelper {
 	}
 
 	/**
-	 * Returns absolute path to the resources defined in the projects manifest.
-	 *
-	 * This method was used before GH-394 to provide basic support for project resources at runtime. After GH-394 it is
-	 * not used, but its future should be decided in GH-70
-	 */
-	// TODO GH-70 handle projects resources
-	@SuppressWarnings("unused")
-	private List<String> getProjectResourcePaths(IN4JSProject project) {
-		final List<String> relativeResourcePathStr = new ArrayList<>(project.getResourcePaths());
-		if (relativeResourcePathStr.isEmpty()) {
-			return relativeResourcePathStr;
-		}
-
-		return relativeResourcePathStr.stream()
-				.map(s -> toAbsolutePath(project, s))
-				.collect(Collectors.toList());
-	}
-
-	private String toAbsolutePath(IN4JSProject project, String projectRelativePath) {
-		if (projectRelativePath.startsWith(File.separator)) {
-			projectRelativePath = projectRelativePath.substring(File.separator.length());
-		}
-		final Path projectPath = project.getLocationPath().toAbsolutePath();
-		final Path absolutePath = projectPath.resolve(projectRelativePath);
-		return absolutePath.normalize().toString();
-	}
-
-	/**
 	 * Returns paths to all bootstrap files defined in the given N4JS projects. The paths are relative to their
 	 * containing project's output folder.
 	 */
@@ -144,7 +112,7 @@ public class RunnerHelper {
 				.map(re -> {
 					// obtain the module specifier of the execModule
 					final Optional<String> oExecModuleSpecifier = re.getExecModule()
-							.transform(bootstrapModule -> bootstrapModule.getModuleSpecifierWithWildcard());
+							.transform(bootstrapModule -> bootstrapModule.getModuleSpecifier());
 
 					if (!oExecModuleSpecifier.isPresent()) {
 						return null;
@@ -194,29 +162,23 @@ public class RunnerHelper {
 
 	/**
 	 * Collects transitive collection of project extended RuntimeEnvironemnts
-	 *
-	 * @see RuntimeEnvironmentsHelper#recursiveDependencyCollector
 	 */
-	public void recursiveExtendedREsCollector(IN4JSSourceContainerAware sourceContainer,
+	public void recursiveExtendedREsCollector(IN4JSProject sourceContainer,
 			Collection<IN4JSProject> addHere) {
 		recursiveExtendedREsCollector(sourceContainer, addHere, n4jsCore.findAllProjects());
 	}
 
 	/**
 	 * Collects transitive collection of project extended RuntimeEnvironemnts
-	 *
-	 * @see RuntimeEnvironmentsHelper#recursiveDependencyCollector
 	 */
-	public void recursiveExtendedREsCollector(IN4JSSourceContainerAware sourceContainer,
+	public void recursiveExtendedREsCollector(IN4JSProject project,
 			Collection<IN4JSProject> addHere, Iterable<IN4JSProject> projects) {
-		final IN4JSProject project = extractProject(sourceContainer);
-
 		if (project.getProjectType().equals(ProjectType.RUNTIME_ENVIRONMENT)) {
 			addHere.add(project);
 			// TODO RLs can extend each other, should we use recursive RL deps collector?
 			// if RLs extend each other and are provided by REs in hierarchy we will collect them anyway
 			// if RLs extend each other but are from independent REs, that is and error?
-			project.getProvidedRuntimeLibraries().forEach(rl -> addHere.add(extractProject(rl)));
+			project.getProvidedRuntimeLibraries().forEach(rl -> addHere.add(rl));
 
 			Optional<String> ep = project.getExtendedRuntimeEnvironmentId();
 			Optional<IN4JSProject> extendedRE = Optional.absent();
@@ -232,10 +194,8 @@ public class RunnerHelper {
 
 	/**
 	 * Collects transitive collection of project dependencies including project itself.
-	 *
-	 * @see RuntimeEnvironmentsHelper#recursiveDependencyCollector
 	 */
-	public Collection<IN4JSProject> recursiveDependencyCollector(IN4JSSourceContainerAware sourceContainerAware) {
+	public Collection<IN4JSProject> recursiveDependencyCollector(IN4JSProject sourceContainerAware) {
 		if (null == sourceContainerAware) {
 			return emptyList();
 		}
@@ -250,36 +210,23 @@ public class RunnerHelper {
 	 */
 	private List<URI> getInitModulesAsURIs(IN4JSProject project) {
 		return project.getInitModules().stream()
-
-				.map(bm -> artifactHelper.findArtifact(project, bm.getModuleSpecifierWithWildcard(),
+				.map(bm -> artifactHelper.findArtifact(project, bm.getModuleSpecifier(),
 						Optional.of(".js")))
 				.filter(module -> module != null).collect(Collectors.toList());
 	}
 
-	private void recursiveDependencyCollector(IN4JSSourceContainerAware sourceContainer,
+	private void recursiveDependencyCollector(IN4JSProject project,
 			Collection<IN4JSProject> addHere, RecursionGuard<URI> guard) {
 
-		final IN4JSProject project = extractProject(sourceContainer);
 		if (project.exists()) {
 			addHere.add(project);
 		}
 
-		for (final IN4JSSourceContainerAware dep : sourceContainer.getAllDirectDependencies()) {
+		for (final IN4JSProject dep : project.getAllDirectDependencies()) {
 			if (guard.tryNext(dep.getLocation())) {
 				recursiveDependencyCollector(dep, addHere, guard);
 			}
 		}
-	}
-
-	private IN4JSProject extractProject(IN4JSSourceContainerAware container) {
-		if (container instanceof IN4JSProject) {
-			return (IN4JSProject) container;
-		}
-		if (container instanceof IN4JSArchive) {
-			// TODO #getProject() in next line will return containing(!) project, which is probably not what we want
-			return ((IN4JSArchive) container).getProject();
-		}
-		throw new RuntimeException("unknown instance type of container " + container.getClass().getName());
 	}
 
 	/**

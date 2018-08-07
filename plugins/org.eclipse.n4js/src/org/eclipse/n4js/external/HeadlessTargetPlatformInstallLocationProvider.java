@@ -20,7 +20,7 @@ import java.net.URI;
 import java.nio.file.Path;
 
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.external.libraries.TargetPlatformFactory;
+import org.eclipse.n4js.external.libraries.ExternalLibraryFolderUtils;
 import org.eclipse.n4js.internal.N4JSModel;
 
 import com.google.inject.Inject;
@@ -37,14 +37,14 @@ public class HeadlessTargetPlatformInstallLocationProvider implements TargetPlat
 	@Inject
 	private TypeDefinitionGitLocationProvider gitLocationProvider;
 
-	private URI targetPlatformInstallLocation;
+	private File targetPlatformInstallLocation;
 
 	private URI targetPlatformFileLocation;
 
 	private URI tempRoot;
 
 	@Override
-	public URI getTargetPlatformInstallLocation() {
+	public File getTargetPlatformInstallFolder() {
 		return targetPlatformInstallLocation;
 	}
 
@@ -66,7 +66,7 @@ public class HeadlessTargetPlatformInstallLocationProvider implements TargetPlat
 	 * @param targetPlatformInstallLocation
 	 *            the location of the desired target platform install location.
 	 */
-	public void setTargetPlatformInstallLocation(final URI targetPlatformInstallLocation) {
+	public void setTargetPlatformInstallLocation(final File targetPlatformInstallLocation) {
 		this.targetPlatformInstallLocation = targetPlatformInstallLocation;
 	}
 
@@ -94,18 +94,18 @@ public class HeadlessTargetPlatformInstallLocationProvider implements TargetPlat
 	public void configureWithTempFolders() throws IOException {
 		// create temp location
 		final Path root = createTempDirectory("hlcTmpDepsLocation_" + System.currentTimeMillis());
-		final Path n4npm = createDirectory(root, ".n4npm");
+		final Path n4npm = createDirectory(root, ExternalLibraryFolderUtils.NPM_ROOT);
 		final File packageJson = new File(n4npm.toFile(), N4JSGlobals.PACKAGE_JSON);
 
 		packageJson.createNewFile();
 
 		try (final FileWriter fw = new FileWriter(packageJson)) {
-			fw.write(TargetPlatformFactory.createN4Default().toString());
+			fw.write(ExternalLibraryFolderUtils.createTargetPlatformPackageJson());
 			fw.flush();
 		}
 		packageJson.deleteOnExit();
 		this.tempRoot = root.toUri();
-		this.targetPlatformInstallLocation = n4npm.toFile().toURI();
+		this.targetPlatformInstallLocation = n4npm.toFile();
 		this.targetPlatformFileLocation = packageJson.toURI();
 	}
 

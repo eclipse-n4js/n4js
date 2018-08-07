@@ -17,14 +17,12 @@
 	// do not check top-level properties XPECT noerrors --> "" at """"
 	"main": "",
 	"dependencies": {
-		// XPECT warnings --> "Cannot parse version constraint , will assume no constraint." at """"
 		// XPECT errors --> "Project does not exist with project ID: non-existing-1." at ""non-existing-1": """
 		"non-existing-1": "",
 		// XPECT errors --> "A project reference must not be empty." at """: "*""
 		"": "*"
 	},
 	"devDependencies": {
-		// XPECT warnings --> "Cannot parse version constraint , will assume no constraint." at """"
 		// XPECT errors --> "Project does not exist with project ID: non-existing." at ""non-existing": """
 		"non-existing": "",
 		// XPECT errors --> "A project reference must not be empty." at """: "*""

@@ -14,8 +14,7 @@ import java.net.URI;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
-
-import org.eclipse.n4js.utils.Version;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
 
 /**
  * Representation of a binary.
@@ -57,13 +56,12 @@ public interface Binary {
 	}
 
 	/**
-	 * Returns with the desired minimum version of the binary. If the this method returns with either
-	 * {@link Version#MISSING MISSING} or {@code null} version, then no requirements are specified with respect to the
-	 * minimum version.
+	 * Returns with the desired minimum version of the binary. If the this method returns with either {@code null}
+	 * version, then no requirements are specified with respect to the minimum version.
 	 *
 	 * @return the minimum desired version or {@code null} or {@code MISSING} if no requirements are specified.
 	 */
-	Version getMinimumVersion();
+	VersionNumber getMinimumVersion();
 
 	/**
 	 * The actual binary absolute path as a string that has to be called to execute the binary.

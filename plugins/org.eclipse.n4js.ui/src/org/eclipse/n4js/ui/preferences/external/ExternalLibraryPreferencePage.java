@@ -15,8 +15,6 @@ import static com.google.common.primitives.Ints.asList;
 import static java.util.Collections.singletonList;
 import static org.eclipse.jface.layout.GridDataFactory.fillDefaults;
 import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.EXTERNAL_LIBRARIES_SUPPLIER;
-import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.N4_NPM_FOLDER_SUPPLIER;
-import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.repairNpmFolderState;
 import static org.eclipse.n4js.ui.preferences.external.ButtonFactoryUtil.createDisabledPushButton;
 import static org.eclipse.n4js.ui.preferences.external.ButtonFactoryUtil.createEnabledPushButton;
 import static org.eclipse.n4js.ui.utils.DelegatingSelectionAdapter.createSelectionListener;
@@ -54,16 +52,15 @@ import org.eclipse.n4js.external.GitCloneSupplier;
 import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.external.NpmCLI;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
-import org.eclipse.n4js.external.version.VersionConstraintFormatUtil;
-import org.eclipse.n4js.n4mf.DeclaredVersion;
-import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.semver.SemverHelper;
+import org.eclipse.n4js.semver.model.SemverSerializer;
 import org.eclipse.n4js.ui.utils.InputComposedValidator;
 import org.eclipse.n4js.ui.utils.InputFunctionalValidator;
 import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.n4js.ui.viewer.TreeViewerBuilder;
-import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.n4js.utils.io.FileDeleter;
@@ -77,6 +74,8 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.xtext.nodemodel.INode;
+import org.eclipse.xtext.parser.IParseResult;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -109,13 +108,16 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	private ExternalLibraryWorkspace externalLibraryWorkspace;
 
 	@Inject
-	private TargetPlatformInstallLocationProvider installLocationProvider;
+	private TargetPlatformInstallLocationProvider locationProvider;
 
 	@Inject
 	private GitCloneSupplier gitSupplier;
 
 	@Inject
 	private StatusHelper statusHelper;
+
+	@Inject
+	private SemverHelper semverHelper;
 
 	private TreeViewer viewer;
 
@@ -311,14 +313,20 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 				(final String version) -> parsingVersionValidator(version));
 	}
 
-	/** version validator based on N4MF parser (and its support for version syntax). */
+	/**
+	 * version validator based on N4MF parser (and its support for version syntax).
+	 *
+	 * @return error message or null if there are no errors
+	 */
 	private String parsingVersionValidator(final String data) {
 		String result = null;
 
-		DeclaredVersion parsedVersion = ProjectDescriptionUtils.parseVersion(data);
-		if (parsedVersion == null) {
-			// return parse error
-			result = "Could not create version from string :" + data;
+		IParseResult parseResult = semverHelper.getParseResult(data);
+		if (parseResult == null) {
+			result = "Could not create version from string :" + data + ":\n";
+		} else if (parseResult.hasSyntaxErrors()) {
+			INode firstErrorNode = parseResult.getSyntaxErrors().iterator().next();
+			result = "Parsing error: " + firstErrorNode.getSyntaxErrorMessage().getMessage();
 		}
 
 		// otherwise, parsedVersion is valid and result remains 'null'
@@ -328,19 +336,19 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	}
 
 	private boolean isNpmWithNameInstalled(final String packageName) {
-		final File root = new File(installLocationProvider.getTargetPlatformNodeModulesLocation());
+		final File root = new File(locationProvider.getNodeModulesURI());
 		return from(externalLibraryWorkspace.getProjectsIn(root.toURI()))
 				.transform(p -> p.getName())
 				.anyMatch(name -> name.equals(packageName));
 	}
 
 	private Map<String, String> getInstalledNpms() {
-		final URI root = installLocationProvider.getTargetPlatformNodeModulesLocation();
+		final URI root = locationProvider.getNodeModulesURI();
 		final Set<ProjectDescription> projects = from(externalLibraryWorkspace.getProjectsDescriptions((root))).toSet();
 
 		final Map<String, String> versionedNpms = new HashMap<>();
 		projects.forEach((ProjectDescription pd) -> {
-			versionedNpms.put(pd.getProjectId(), VersionConstraintFormatUtil.npmFormat(pd.getProjectVersion()));
+			versionedNpms.put(pd.getProjectId(), SemverSerializer.serialize(pd.getProjectVersion()));
 		});
 
 		return versionedNpms;
@@ -461,23 +469,35 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	 */
 	private void maintenanceDeleteNpms(final MaintenanceActionsChoice userChoice, final MultiStatus multistatus) {
 		if (userChoice.decisionPurgeNpm) {
-			// get folder
-			File npmFolder = N4_NPM_FOLDER_SUPPLIER.get();
 
+			// get folders
+			File npmFolder = locationProvider.getNodeModulesFolder();
+			File typesDefFolder = locationProvider.getTypeDefinitionsFolder();
+
+			// delete folders
 			if (npmFolder.exists()) {
 				FileDeleter.delete(npmFolder, (IOException ioe) -> multistatus.merge(
 						statusHelper.createError("Exception during deletion of the npm folder.", ioe)));
 			}
+			if (typesDefFolder.exists()) {
+				FileDeleter.delete(typesDefFolder, (IOException ioe) -> multistatus.merge(
+						statusHelper.createError("Exception during deletion of the npm folder.", ioe)));
+			}
 
-			if (!npmFolder.exists()) {
-				// recreate npm folder
-				if (!repairNpmFolderState()) {
+			// re-create folders
+			if (!npmFolder.exists() || !typesDefFolder.exists()) {
+				// recreate folders
+				boolean repairSucceeded = locationProvider.repairNpmFolderState();
+				if (!repairSucceeded) {
 					multistatus.merge(statusHelper.createError("The npm folder was not recreated correctly."));
 				}
-			} else {// should never happen
-				multistatus
-						.merge(statusHelper.createError("Could not verify deletion of " + npmFolder.getAbsolutePath()));
+			} else {
+				// should never happen
+				File stillExists = npmFolder.exists() ? npmFolder : typesDefFolder;
+				String msg = "Could not verify deletion of " + stillExists.getAbsolutePath();
+				multistatus.merge(statusHelper.createError(msg));
 			}
+
 			// other actions like reinstall depends on this state
 			externalLibraryWorkspace.updateState();
 		}

@@ -57,7 +57,7 @@ public class N4JSTasksExampleWizard extends ExampleInstallerWizard {
 	public boolean performFinish() {
 		if (super.performFinish()) {
 			installDependencies(ImmutableMap.of(
-					"mongodb", "@\">=2.0.0 <3.0.0\"",
+					"mongodb", ">=2.0.0 <3.0.0",
 					"express", ""));
 			return true;
 		}
@@ -107,7 +107,7 @@ public class N4JSTasksExampleWizard extends ExampleInstallerWizard {
 	}
 
 	private Collection<String> getInstalledNpmPackages() {
-		final File root = new File(installLocationProvider.getTargetPlatformNodeModulesLocation());
+		final File root = new File(installLocationProvider.getNodeModulesURI());
 		return from(externalLibraryWorkspace.getProjectsIn(root.toURI())).transform(p -> p.getName()).toSet();
 	}
 }

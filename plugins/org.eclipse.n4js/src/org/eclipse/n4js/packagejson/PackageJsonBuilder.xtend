@@ -13,21 +13,22 @@ package org.eclipse.n4js.packagejson
 import java.util.Collection
 import java.util.Map
 import org.eclipse.n4js.json.JSON.JSONDocument
-import org.eclipse.n4js.n4mf.ProjectType
-import org.eclipse.n4js.n4mf.SourceContainerType
-import org.eclipse.n4js.utils.ProjectDescriptionHelper
+import org.eclipse.n4js.projectDescription.ProjectType
+import org.eclipse.n4js.projectDescription.SourceContainerType
+import org.eclipse.n4js.utils.ProjectDescriptionLoader
 
 import static com.google.common.base.Optional.fromNullable
 import static com.google.common.base.Preconditions.checkNotNull
 import java.util.SortedMap
 import java.util.TreeMap
+import org.eclipse.n4js.json.model.utils.JSONModelUtils
 
 /**
  * Convenient builder for creating the N4JS package.json compliant {@link JSONDocument} model 
  * instances or file content.#
  * 
  * Provides support for most supported N4JS-specific package.json properties. 
- * See {@link ProjectDescriptionHelper} for details on all supported properties. 
+ * See {@link ProjectDescriptionLoader} for details on all supported properties. 
  */
 public class PackageJsonBuilder {
 
@@ -43,7 +44,7 @@ public class PackageJsonBuilder {
 	private String version;
 
 	private SortedMap<String, String> dependencies;
-	
+
 	private String vendorId;
 	private String vendorName;
 
@@ -59,7 +60,7 @@ public class PackageJsonBuilder {
 	private Map<SourceContainerType, String> sourceContainers;
 
 	private new() {
-		type = ProjectType.get(0) // use default project type (index 0)
+		type = ProjectType.VALIDATION // use project type 'validation'
 		providedRLs = newArrayList
 		requiredRLs = newArrayList
 		dependencies = new TreeMap();
@@ -70,14 +71,14 @@ public class PackageJsonBuilder {
 
 	/**
 	 * Builds the N4JS package.json file contents for a project with the given name.
-	 * 
+	 *
 	 * @param projectId the name of the project. Cannot be {@code null}.
-	 * 
+	 *
 	 * @return the N4JS package.json file contents as a string.
 	 */
 	def String build() {
 		val document = this.buildModel();
-		return PackageJsonContentProvider.serializeJSON(document);
+		return JSONModelUtils.serializeJSON(document);
 	}
 
 	/**

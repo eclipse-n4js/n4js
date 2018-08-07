@@ -22,7 +22,11 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IResourceDeltaVisitor;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
@@ -32,12 +36,13 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.fileextensions.FileExtensionTypeHelper;
-import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuilder;
+import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
 import org.eclipse.n4js.ui.internal.OwnResourceValidatorAwareValidatingEditorCallback;
 import org.eclipse.n4js.ui.internal.ResourceUIValidatorExtension;
+import org.eclipse.n4js.ui.internal.WorkspaceCacheAccess;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorReference;
@@ -81,7 +86,7 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 	private ResourceUIValidatorExtension validatorExtension;
 
 	@Inject
-	private ExternalLibraryBuilder builder;
+	private ExternalLibraryBuilder externalLibraryBuilder;
 
 	@Override
 	protected String doInitHandle(URI uri) {
@@ -102,6 +107,96 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 	}
 
 	@Override
+	public void resourceChanged(IResourceChangeEvent event) {
+		// first update the project state based on the resource change event
+		updateProjectState(event);
+		// then go on checking for container state changes (this may trigger a build)
+		super.resourceChanged(event);
+	}
+
+	/**
+	 * Handles the given {@link IResourceChangeEvent} and updates the project state (cache of available projects and
+	 * project descriptions) accordingly.
+	 *
+	 * If the event contains a {@link IResourceDelta}, this method traverses the resource delta tree and invokes
+	 * {@link #updateProjectState(IResourceDelta)} accordingly.
+	 */
+	private void updateProjectState(IResourceChangeEvent event) {
+		if (event.getDelta() != null) {
+			IResourceDelta eventDelta = event.getDelta();
+			try {
+				// traverse all resource deltas to a depth of 2 (projects and their direct children)
+				eventDelta.accept(new IResourceDeltaVisitor() {
+					@Override
+					public boolean visit(IResourceDelta delta) throws CoreException {
+						final IResource resource = delta.getResource();
+						if (resource == null) {
+							return true;
+						}
+						final IPath path = resource.getFullPath();
+						final int pathLength = path.segmentCount();
+
+						if (pathLength <= 2) {
+							updateProjectState(delta);
+						}
+
+						// only traverse the children of project-deltas (e.g. project description files)
+						return pathLength == 0 || resource instanceof IProject;
+					}
+				});
+			} catch (CoreException e) {
+				LOGGER.error("Failed to process IResourceDelta", e);
+			}
+		}
+	}
+
+	/**
+	 * Handles the given {@link IResourceDelta} and updates the project state (cache of available projects and project
+	 * descriptions) accordingly.
+	 *
+	 * If so, invalidates the {@link EclipseBasedN4JSWorkspace} cache of project descriptions for the updated projects
+	 * (cf. {@link WorkspaceCacheAccess}).
+	 */
+	private void updateProjectState(IResourceDelta delta) {
+		if (delta.getKind() == IResourceDelta.ADDED || delta.getKind() == IResourceDelta.REMOVED) {
+			if (IN4JSProject.PACKAGE_JSON.equals(delta.getFullPath().lastSegment())) {
+				projectsHelper.clearProjectCache();
+				return;
+			}
+			if (delta.getResource() instanceof IProject) {
+				projectsHelper.clearProjectCache();
+				return;
+			}
+			if (delta.getResource() instanceof IFolder) {
+				if (isSourceContainerModification(delta)) {
+					tryValidateProjectDescriptionFile(delta);
+					tryValidateProjectDescriptionInEditor(delta);
+					projectsHelper.clearProjectCache(delta);
+					return;
+				}
+			}
+			return;
+		} else if (delta.getKind() == IResourceDelta.CHANGED && delta.getResource() instanceof IProject) {
+			if ((delta.getFlags() & IResourceDelta.OPEN) != 0) {
+				projectsHelper.clearProjectCache();
+				return;
+			}
+			return;
+		}
+		if (packageJSONFileHasBeenChanged(delta)) {
+			projectsHelper.clearProjectCache(delta);
+			return;
+		}
+		return;
+	}
+
+	/**
+	 * Indicates whether the resource change represented by the given {@code delta} does affect this container state.
+	 *
+	 * Note that this method will only be invoked until a container-state-affecting delta is found. Thus, it is not
+	 * suitable for listening for all resource changes that may occur in the workspace.
+	 */
+	@Override
 	protected boolean isAffectingContainerState(IResourceDelta delta) {
 		if (delta.getKind() == IResourceDelta.ADDED || delta.getKind() == IResourceDelta.REMOVED) {
 			String fileExtension = delta.getFullPath().getFileExtension();
@@ -109,24 +204,14 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 				return true;
 			}
 			if (IN4JSProject.PACKAGE_JSON.equals(delta.getFullPath().lastSegment())) {
-				clearProjectCache();
 				return true;
 			}
-			if (IN4JSArchive.NFAR_FILE_EXTENSION.equals(fileExtension)) {
-				clearProjectCache(delta);
-				return true;
-			}
+
 			if (delta.getResource() instanceof IProject) {
-				clearProjectCache();
 				return true;
 			}
-			if (delta.getResource() instanceof IFolder) {
-				if (isSourceContainerModification(delta)) {
-					tryValidateProjectDescriptionFile(delta);
-					tryValidateProjectDescriptionInEditor(delta);
-					clearProjectCache(delta);
-					return true;
-				}
+			if (delta.getResource() instanceof IFolder && isSourceContainerModification(delta)) {
+				return true;
 			}
 			return false;
 		} else if (delta.getKind() == IResourceDelta.CHANGED && delta.getResource() instanceof IProject) {
@@ -134,17 +219,14 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 				return true;
 			}
 			if ((delta.getFlags() & IResourceDelta.OPEN) != 0) {
-				clearProjectCache();
 				return true;
 			}
 			return false;
 		}
-		if (nfarHasBeenChanged(delta) || packageJSONFileHasBeenChanged(delta)) {
-			clearProjectCache(delta);
+		if (packageJSONFileHasBeenChanged(delta)) {
 			return true;
 		}
 		return false;
-
 	}
 
 	private void tryValidateProjectDescriptionFile(final IResourceDelta delta) {
@@ -158,7 +240,7 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 				final ResourceSet resourceSet = core.createResourceSet(Optional.of(project));
 				final Resource resource = resourceSet.getResource(projectDescriptionLocation, true);
 				final Job job = Job.create("Update validation markers for " + resource.getURI(), monitor -> {
-					ISchedulingRule rule = builder.getRule();
+					ISchedulingRule rule = externalLibraryBuilder.getRule();
 					try {
 						Job.getJobManager().beginRule(rule, monitor);
 						validatorExtension.updateValidationMarkers(packageJSON, resource, CheckMode.ALL,
@@ -228,24 +310,9 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 		return false;
 	}
 
-	private boolean nfarHasBeenChanged(IResourceDelta delta) {
-		return delta.getKind() == IResourceDelta.CHANGED
-				&& delta.getResource().getType() == IResource.FILE
-				&& IN4JSArchive.NFAR_FILE_EXTENSION.equalsIgnoreCase(delta.getFullPath().getFileExtension());
-	}
-
 	private boolean packageJSONFileHasBeenChanged(IResourceDelta delta) {
 		return delta.getKind() == IResourceDelta.CHANGED
 				&& delta.getResource().getType() == IResource.FILE
 				&& IN4JSProject.PACKAGE_JSON.equalsIgnoreCase(delta.getFullPath().lastSegment());
-	}
-
-	private void clearProjectCache() {
-		projectsHelper.clearProjectCache();
-	}
-
-	private void clearProjectCache(IResourceDelta delta) {
-		IProject project = delta.getResource().getProject();
-		projectsHelper.clearProjectCache(project);
 	}
 }

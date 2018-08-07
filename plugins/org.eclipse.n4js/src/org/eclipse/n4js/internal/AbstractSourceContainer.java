@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.internal;
 
-import org.eclipse.n4js.n4mf.SourceContainerType;
+import org.eclipse.n4js.projectDescription.SourceContainerType;
 
 /**
  */

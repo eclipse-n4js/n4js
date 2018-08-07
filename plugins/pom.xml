@@ -40,8 +40,6 @@ Contributors:
 		<module>org.eclipse.n4js.model</module>
 		<module>org.eclipse.n4js</module>
 		<module>org.eclipse.n4js.ui</module>
-		<!-- n4js project model (n4mf) -->
-		<module>org.eclipse.n4js.n4mf.model</module>
 		<!-- execution environments -->
 		<module>org.eclipse.n4js.environments</module>
 		<!-- external libraries bundles -->
@@ -58,6 +56,10 @@ Contributors:
 		<module>org.eclipse.n4js.json</module>
 		<module>org.eclipse.n4js.json.model</module>
 		<module>org.eclipse.n4js.json.ui</module>
+		<!-- semver -->
+		<module>org.eclipse.n4js.semver</module>
+		<module>org.eclipse.n4js.semver.ui</module>
+		<module>org.eclipse.n4js.semver.model</module>
 		<!-- transpiler -->
 		<module>org.eclipse.n4js.generator.headless</module>
 		<module>org.eclipse.n4js.transpiler</module>
@@ -81,9 +83,6 @@ Contributors:
 		<module>org.eclipse.n4js.tester.ui</module>
 		<module>org.eclipse.n4js.tester.nodejs</module>
 		<module>org.eclipse.n4js.tester.nodejs.ui</module>
-		<!-- npm exporter -->
-		<module>org.eclipse.n4js.npmexporter</module>
-		<module>org.eclipse.n4js.npmexporter.ui</module>
 	</modules>
 
 	<properties>

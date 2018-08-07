@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -36,7 +35,7 @@ import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4FilebasedWorkspaceResourceSetContainerState;
 import org.eclipse.n4js.internal.N4JSProject;
-import org.eclipse.n4js.n4mf.ProjectType;
+import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
@@ -75,21 +74,13 @@ import com.google.inject.Provider;
  * Entry for headless compilation.
  *
  * This class has three ways of operation which all map down to a single algorithm implemented in
- * {@link #compileProjects(BuildSet, IssueAcceptor)}. All other compileXXXX methods call this algorithm providing the
- * correct content of the arguments.
+ * {@link #compile(BuildSet, IssueAcceptor)}. All other compileXXXX methods call this algorithm providing the correct
+ * content of the arguments.
  *
- * <ol>
- * <li>compile "single file" takes a (list of) source-file(s) to compile and just compiles these if possible
- * {@link #compileSingleFile(File)}, {@link #compileSingleFiles(List, IssueAcceptor)},
- * {@link #compileSingleFiles(List, List, IssueAcceptor)}
- * <li>compile "projects" takes a list of project-location and compiles exactly them.
- * {@link #compileProjects(List, IssueAcceptor)}, {@link #compileProjects(List, List, IssueAcceptor)}
- * <li>compile "all project" takes a list of folders and compiles each project found as direct content of one of the
- * folders. {@link #compileAllProjects(List, IssueAcceptor)}
- * </ol>
+ * Use {@link BuildSetComputer} to compute {@link BuildSet}s of files/projects to compile.
  *
- * The way how the compiler behaves can be configured through flags like {@link #keepOnCompiling},
- * {@link #processTestCode}, {@link #compileSourceCode}
+ * The way the compiler behaves can be configured through the flags {@link #keepOnCompiling}, {@link #processTestCode}
+ * and {@link #compileSourceCode}
  *
  * IMPORTANT: Before using the functionalities of this class, make sure to register composite generators first.
  * Moreover, the subgenerators must have been registered as well.
@@ -147,203 +138,51 @@ public class N4HeadlessCompiler {
 	 */
 
 	/**
-	 * Compile one single source file.
+	 * Compile the given {@link BuildSet}.
 	 *
-	 * @param singleSourceFile
-	 *            if non-empty limit compilation to the sources files listed here
+	 * Delegates to {@link #compile(BuildSet, IssueAcceptor)}.
+	 *
+	 * @param buildSet
+	 *            the build set to compile
 	 * @throws N4JSCompileException
 	 *             if one or multiple errors occur during compilation
 	 */
-	public void compileSingleFile(File singleSourceFile) throws N4JSCompileException {
-		compileSingleFile(singleSourceFile, new DismissingIssueAcceptor());
+	public void compile(BuildSet buildSet) throws N4JSCompileException {
+		compile(buildSet, new DismissingIssueAcceptor());
 	}
 
 	/**
-	 * Compile one single source file.
+	 * Compile the given {@link BuildSet}. This method controls the actual build process.
 	 *
-	 * @param singleSourceFile
-	 *            if non-empty limit compilation to the sources files listed here
+	 * If any of the project in the given {@link BuildSet} is not registered with the {@link FileBasedWorkspace}, this
+	 * method will register them before the actual compilation is performed.
+	 *
+	 * @param buildSet
+	 *            the build set to compile
 	 * @param issueAcceptor
 	 *            the issue acceptor that can be used to collect or evaluate the issues occurring during compilation
 	 * @throws N4JSCompileException
 	 *             if one or multiple errors occur during compilation
 	 */
-	public void compileSingleFile(File singleSourceFile, IssueAcceptor issueAcceptor)
-			throws N4JSCompileException {
-		compileSingleFiles(Arrays.asList(singleSourceFile));
+	public void compile(BuildSet buildSet, IssueAcceptor issueAcceptor) throws N4JSCompileException {
+		Set<N4JSProject> allProjects = buildSet.getAllProjects();
+		Set<N4JSProject> requestedProjects = buildSet.requestedProjects;
+		Predicate<URI> singleSourceFilter = buildSet.resourceFilter;
+
+		// make sure all to-be-compiled projects are registered with the workspace
+		// if a project had been registered before, it will be skipped by this registration method
+		headlessHelper.registerProjects(buildSet, n4jsFileBasedWorkspace);
+
+		configureResourceSetContainerState(allProjects);
+
+		final List<MarkedProject> buildOrder = computeBuildOrder(allProjects, requestedProjects);
+		printBuildOrder(buildOrder);
+
+		processProjects(buildOrder, singleSourceFilter, issueAcceptor);
 	}
 
 	/**
-	 * Compile multiple single source files.
-	 *
-	 * @param singleSourceFiles
-	 *            if non-empty limit compilation to the sources files listed here
-	 * @throws N4JSCompileException
-	 *             if one or multiple errors occur during compilation
-	 */
-	public void compileSingleFiles(List<File> singleSourceFiles) throws N4JSCompileException {
-		compileSingleFiles(singleSourceFiles, new DismissingIssueAcceptor());
-	}
-
-	/**
-	 * Compile multiple single source files.
-	 *
-	 * @param singleSourceFiles
-	 *            if non-empty limit compilation to the sources files listed here
-	 * @param issueAcceptor
-	 *            the issue acceptor that can be used to collect or evaluate the issues occurring during compilation
-	 * @throws N4JSCompileException
-	 *             if one or multiple errors occur during compilation
-	 */
-	public void compileSingleFiles(List<File> singleSourceFiles, IssueAcceptor issueAcceptor)
-			throws N4JSCompileException {
-		compileSingleFiles(Collections.emptyList(), singleSourceFiles, issueAcceptor);
-	}
-
-	/**
-	 * Compile multiple single source files.
-	 *
-	 * @param searchPaths
-	 *            where to search for dependent projects.
-	 * @param singleSourceFiles
-	 *            if non-empty limit compilation to the sources files listed here
-	 * @throws N4JSCompileException
-	 *             if one or multiple errors occur during compilation
-	 */
-	public void compileSingleFiles(List<File> searchPaths, List<File> singleSourceFiles)
-			throws N4JSCompileException {
-		compileSingleFiles(searchPaths, singleSourceFiles, new DismissingIssueAcceptor());
-	}
-
-	/**
-	 * Compile multiple single source files.
-	 *
-	 * @param searchPaths
-	 *            where to search for dependent projects.
-	 * @param singleSourceFiles
-	 *            if non-empty limit compilation to the sources files listed here
-	 * @param issueAcceptor
-	 *            the issue acceptor that can be used to collect or evaluate the issues occurring during compilation
-	 * @throws N4JSCompileException
-	 *             if one or multiple errors occur during compilation
-	 */
-	public void compileSingleFiles(List<File> searchPaths, List<File> singleSourceFiles, IssueAcceptor issueAcceptor)
-			throws N4JSCompileException {
-		compileProjects(searchPaths, Collections.emptyList(), singleSourceFiles, issueAcceptor);
-	}
-
-	/**
-	 * Compile a list of projects. Main algorithm.
-	 *
-	 * @param searchPaths
-	 *            where to search for the projects to compile.
-	 * @throws N4JSCompileException
-	 *             if one or multiple errors occur during compilation
-	 */
-	public void compileAllProjects(List<File> searchPaths) throws N4JSCompileException {
-		compileAllProjects(searchPaths, new DismissingIssueAcceptor());
-	}
-
-	/**
-	 * Compile a list of projects. Main algorithm.
-	 *
-	 * @param searchPaths
-	 *            where to search for the projects to compile.
-	 * @param issueAcceptor
-	 *            the issue acceptor that can be used to collect or evaluate the issues occurring during compilation
-	 * @throws N4JSCompileException
-	 *             if one or multiple errors occur during compilation
-	 */
-	public void compileAllProjects(List<File> searchPaths, IssueAcceptor issueAcceptor)
-			throws N4JSCompileException {
-		// make absolute, since downstream URI conversion doesn't work if relative directory only.
-		List<File> absProjectPaths = headlessHelper.toAbsoluteFileList(searchPaths);
-
-		// collect all projects on the first level.
-		List<File> projectPaths = headlessHelper.collectAllProjectPaths(absProjectPaths);
-
-		compileProjects(searchPaths, projectPaths, Collections.emptyList(), issueAcceptor);
-	}
-
-	/**
-	 * Compile a list of projects. Dependencies will be searched in the current directory.
-	 *
-	 * @param projectPaths
-	 *            the projects to compile. the base folder of each project must be provided.
-	 * @throws N4JSCompileException
-	 *             if one or multiple errors occur during compilation
-	 */
-	public void compileProjects(List<File> projectPaths) throws N4JSCompileException {
-		compileProjects(Arrays.asList(new File(".")), projectPaths, Collections.emptyList(),
-				new DismissingIssueAcceptor());
-	}
-
-	/**
-	 * Compile a list of projects. Dependencies will be searched in the current directory.
-	 *
-	 * @param projectPaths
-	 *            the projects to compile. the base folder of each project must be provided.
-	 * @param issueAcceptor
-	 *            the issue acceptor that can be used to collect or evaluate the issues occurring during compilation
-	 * @throws N4JSCompileException
-	 *             if one or multiple errors occur during compilation
-	 */
-	public void compileProjects(List<File> projectPaths, IssueAcceptor issueAcceptor)
-			throws N4JSCompileException {
-		compileProjects(Arrays.asList(new File(".")), projectPaths, Collections.emptyList(), issueAcceptor);
-	}
-
-	/**
-	 * Compile a list of projects.
-	 *
-	 * @param searchPaths
-	 *            where to search for dependent projects.
-	 * @param projectPaths
-	 *            the projects to compile. the base folder of each project must be provided.
-	 * @throws N4JSCompileException
-	 *             if one or multiple errors occur during compilation
-	 */
-	public void compileProjects(List<File> searchPaths, List<File> projectPaths)
-			throws N4JSCompileException {
-		compileProjects(searchPaths, projectPaths, new DismissingIssueAcceptor());
-	}
-
-	/**
-	 * Compile a list of projects.
-	 *
-	 * @param searchPaths
-	 *            where to search for dependent projects.
-	 * @param projectPaths
-	 *            the projects to compile. the base folder of each project must be provided.
-	 * @param issueAcceptor
-	 *            the issue acceptor that can be used to collect or evaluate the issues occurring during compilation
-	 * @throws N4JSCompileException
-	 *             if one or multiple errors occur during compilation
-	 */
-	public void compileProjects(List<File> searchPaths, List<File> projectPaths, IssueAcceptor issueAcceptor)
-			throws N4JSCompileException {
-		compileProjects(searchPaths, projectPaths, Collections.emptyList(), issueAcceptor);
-	}
-
-	/**
-	 * Compile a list of projects. Delegates to {@link #compileProjects(List, List, List, IssueAcceptor)}.
-	 *
-	 * @param searchPaths
-	 *            where to search for dependent projects.
-	 * @param projectPaths
-	 *            the projects to compile. the base folder of each project must be provided.
-	 * @param singleSourceFiles
-	 *            if non-empty limit compilation to the sources files listed here
-	 * @throws N4JSCompileException
-	 *             if one or multiple errors occur during compilation
-	 */
-	public void compileProjects(List<File> searchPaths, List<File> projectPaths, List<File> singleSourceFiles)
-			throws N4JSCompileException {
-		compileProjects(searchPaths, projectPaths, singleSourceFiles, new DismissingIssueAcceptor());
-	}
-
-	/**
-	 * Clean the output folders of all <b>direct</b> projects found in search paths.
+	 * Clean the output folders of all <b>directly contained</b> projects found in {@code searchPaths}.
 	 *
 	 * @param searchPaths
 	 *            where to search for projects to be cleaned.
@@ -389,69 +228,6 @@ public class N4HeadlessCompiler {
 		// Convert absolute locations to file URIs.
 		List<URI> projectURIs = headlessHelper.createFileURIs(absProjectPaths);
 		return projectURIs;
-	}
-
-	/**
-	 * Compile a list of projects. This method controls the actual build process.
-	 *
-	 * @param searchPaths
-	 *            where to search for dependent projects.
-	 * @param projectPaths
-	 *            the projects to compile. the base folder of each project must be provided.
-	 * @param singleSourceFiles
-	 *            if non-empty limit compilation to the sources files listed here
-	 * @param issueAcceptor
-	 *            the issue acceptor that can be used to collect or evaluate the issues occurring during compilation
-	 * @throws N4JSCompileException
-	 *             if one or multiple errors occur during compilation
-	 */
-	public void compileProjects(List<File> searchPaths, List<File> projectPaths, List<File> singleSourceFiles,
-			IssueAcceptor issueAcceptor)
-			throws N4JSCompileException {
-
-		printCompileArguments(searchPaths, projectPaths, singleSourceFiles);
-
-		final BuildSet buildSet = buildSetComputer.createBuildSet(searchPaths, projectPaths, singleSourceFiles);
-		// register build set projects with workspace before compiling
-		headlessHelper.registerProjects(buildSet, n4jsFileBasedWorkspace);
-
-		compileProjects(buildSet, issueAcceptor);
-	}
-
-	/**
-	 * Compile the given {@link BuildSet}.
-	 *
-	 * @param buildSet
-	 *            the build set to compile
-	 * @throws N4JSCompileException
-	 *             if one or multiple errors occur during compilation
-	 */
-	public void compileProjects(BuildSet buildSet) throws N4JSCompileException {
-		compileProjects(buildSet, new DismissingIssueAcceptor());
-	}
-
-	/**
-	 * Compile the given {@link BuildSet}. This method controls the actual build process. All other
-	 * <code>compile*</code> methods are just convenience overloads that delegate to this method.
-	 *
-	 * @param buildSet
-	 *            the build set to compile
-	 * @param issueAcceptor
-	 *            the issue acceptor that can be used to collect or evaluate the issues occurring during compilation
-	 * @throws N4JSCompileException
-	 *             if one or multiple errors occur during compilation
-	 */
-	public void compileProjects(BuildSet buildSet, IssueAcceptor issueAcceptor) throws N4JSCompileException {
-		Set<N4JSProject> allProjects = buildSet.getAllProjects();
-		Set<N4JSProject> requestedProjects = buildSet.requestedProjects;
-		Predicate<URI> singleSourceFilter = buildSet.resourceFilter;
-
-		configureResourceSetContainerState(allProjects);
-
-		final List<MarkedProject> buildOrder = computeBuildOrder(allProjects, requestedProjects);
-		printBuildOrder(buildOrder);
-
-		processProjects(buildOrder, singleSourceFilter, issueAcceptor);
 	}
 
 	/*
@@ -954,8 +730,6 @@ public class N4HeadlessCompiler {
 		switch (resourceType) {
 		case UNKOWN:
 			return false;
-		case N4MF:
-			return false;
 		default:
 			return true;
 		}
@@ -1334,26 +1108,6 @@ public class N4HeadlessCompiler {
 	 */
 
 	/**
-	 * Prints out some debug information about the user-provided compilation arguments (only if {@link #logger} is
-	 * configured in debug mode.
-	 *
-	 * @param searchPaths
-	 *            where to search for dependent projects.
-	 * @param projectPaths
-	 *            the projects to compile. the base folder of each project must be provided.
-	 * @param singleSourceFiles
-	 *            if non-empty limit compilation to the sources files listed here
-	 */
-	private void printCompileArguments(List<File> searchPaths, List<File> projectPaths, List<File> singleSourceFiles) {
-		if (logger.isCreateDebugOutput()) {
-			logger.debug("Starting compilation with the following arguments");
-			logger.debug("  Search paths: " + Joiner.on(", ").join(searchPaths));
-			logger.debug("  Projects    : " + Joiner.on(", ").join(projectPaths));
-			logger.debug("  Source files: " + Joiner.on(", ").join(singleSourceFiles));
-		}
-	}
-
-	/**
 	 * Prints the build order (only if {@link #logger} is configured in debug mode).
 	 *
 	 * @param buildOrder
@@ -1455,5 +1209,12 @@ public class N4HeadlessCompiler {
 	 */
 	public void setLogFile(String logFile) {
 		this.logFile = logFile;
+	}
+
+	/**
+	 * Returns the {@link BuildSetComputer} instance used by this headless compiler instance.
+	 */
+	public BuildSetComputer getBuildSetComputer() {
+		return buildSetComputer;
 	}
 }

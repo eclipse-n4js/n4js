@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.tester.ui;
 
+import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.tester.ui.resultsview.TestResultsView;
 import org.eclipse.n4js.ui.editor.EditorContentExtractor;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
@@ -42,6 +43,8 @@ public class TesterUiModule implements Module {
 				.toProvider(() -> n4jsInjector.getInstance(IN4JSEclipseCore.class));
 		binder.bind(IURIEditorOpener.class)
 				.toProvider(() -> n4jsInjector.getInstance(IURIEditorOpener.class));
+		binder.bind(TargetPlatformInstallLocationProvider.class)
+				.toProvider(() -> n4jsInjector.getInstance(TargetPlatformInstallLocationProvider.class));
 
 		binder.bind(TestResultsView.class);
 		binder.bind(TestConfigurationConverter.class);

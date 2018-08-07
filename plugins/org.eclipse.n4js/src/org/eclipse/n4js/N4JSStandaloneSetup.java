@@ -15,8 +15,9 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xml.type.XMLTypePackage;
 import org.eclipse.n4js.json.JSONStandaloneSetup;
 import org.eclipse.n4js.n4JS.N4JSPackage;
-import org.eclipse.n4js.n4mf.N4mfPackage;
+import org.eclipse.n4js.projectDescription.ProjectDescriptionPackage;
 import org.eclipse.n4js.regex.RegularExpressionStandaloneSetup;
+import org.eclipse.n4js.semver.SemverStandaloneSetup;
 import org.eclipse.n4js.ts.TypeExpressionsStandaloneSetup;
 import org.eclipse.n4js.ts.TypesStandaloneSetup;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
@@ -54,7 +55,7 @@ public class N4JSStandaloneSetup implements ISetup {
 		TypeRefsPackage.eINSTANCE.getNsURI();
 		TypesPackage.eINSTANCE.getNsURI();
 		N4JSPackage.eINSTANCE.getNsURI();
-		N4mfPackage.eINSTANCE.getNsURI();
+		ProjectDescriptionPackage.eINSTANCE.getNsURI();
 		XMLTypePackage.eINSTANCE.getNsURI();
 
 		/*
@@ -67,13 +68,14 @@ public class N4JSStandaloneSetup implements ISetup {
 		EPackage.Registry.INSTANCE.put(TypeRefsPackage.eNS_URI, TypeRefsPackage.eINSTANCE);
 		EPackage.Registry.INSTANCE.put(TypesPackage.eNS_URI, TypesPackage.eINSTANCE);
 		EPackage.Registry.INSTANCE.put(N4JSPackage.eNS_URI, N4JSPackage.eINSTANCE);
-		EPackage.Registry.INSTANCE.put(N4mfPackage.eNS_URI, N4mfPackage.eINSTANCE);
+		EPackage.Registry.INSTANCE.put(ProjectDescriptionPackage.eNS_URI, ProjectDescriptionPackage.eINSTANCE);
 		EPackage.Registry.INSTANCE.put(XMLTypePackage.eNS_URI, XMLTypePackage.eINSTANCE);
 
 		RegularExpressionStandaloneSetup.doSetup();
 		TypesStandaloneSetup.doSetup();
 		TypeExpressionsStandaloneSetup.doSetup();
 		JSONStandaloneSetup.doSetup();
+		SemverStandaloneSetup.doSetup();
 
 		Injector injector = createInjector();
 		register(injector);
@@ -81,7 +83,7 @@ public class N4JSStandaloneSetup implements ISetup {
 	}
 
 	/**
-	 * Registers all dependent packages (N4JS, Types, N4MF, XML) and file extensions (n4js, js)
+	 * Registers all dependent packages (N4JS, Types, ProjectDescription, XML) and file extensions (n4js, js)
 	 *
 	 * @param injector
 	 *            the injector to get the resource service provider from
@@ -90,7 +92,8 @@ public class N4JSStandaloneSetup implements ISetup {
 		EPackage.Registry.INSTANCE.put(N4JSPackage.eINSTANCE.getNsURI(), N4JSPackage.eINSTANCE);
 		EPackage.Registry.INSTANCE.put(TypeRefsPackage.eINSTANCE.getNsURI(), TypeRefsPackage.eINSTANCE);
 		EPackage.Registry.INSTANCE.put(TypesPackage.eINSTANCE.getNsURI(), TypesPackage.eINSTANCE);
-		EPackage.Registry.INSTANCE.put(N4mfPackage.eINSTANCE.getNsURI(), N4mfPackage.eINSTANCE);
+		EPackage.Registry.INSTANCE.put(ProjectDescriptionPackage.eINSTANCE.getNsURI(),
+				ProjectDescriptionPackage.eINSTANCE);
 		EPackage.Registry.INSTANCE.put(XMLTypePackage.eINSTANCE.getNsURI(), XMLTypePackage.eINSTANCE);
 
 		org.eclipse.xtext.resource.IResourceFactory resourceFactory = injector

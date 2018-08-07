@@ -1,6 +1,6 @@
 {
 	"name": "IDEBUG-314_B",
-	"version": "0.0.1-SNAPSHOT",
+	"version": "0.0.1",
 	"dependencies": {
 		"IDEBUG-314_A": "*"
 	},

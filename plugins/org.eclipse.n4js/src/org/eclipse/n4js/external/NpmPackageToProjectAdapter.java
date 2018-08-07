@@ -21,17 +21,20 @@ import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.utils.ProjectDescriptionHelper;
+import org.eclipse.n4js.semver.SemverHelper;
+import org.eclipse.n4js.semver.SemverMatcher;
+import org.eclipse.n4js.semver.SemverUtils;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
+import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.StatusHelper;
-import org.eclipse.n4js.utils.Version;
 import org.eclipse.n4js.utils.git.GitUtils;
 import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.xtext.util.Pair;
@@ -54,13 +57,16 @@ public class NpmPackageToProjectAdapter {
 	private StatusHelper statusHelper;
 
 	@Inject
-	private TargetPlatformInstallLocationProvider installLocationProvider;
+	private TargetPlatformInstallLocationProvider locationProvider;
 
 	@Inject
 	private GitCloneSupplier gitCloneSupplier;
 
 	@Inject
-	private ProjectDescriptionHelper projectDescriptionHelper;
+	private ProjectDescriptionLoader projectDescriptionLoader;
+
+	@Inject
+	private SemverHelper semverHelper;
 
 	/** Default filter for copying N4JSD project contents during adaptation */
 	private final static Predicate<Path> COPY_N4JSD_PREDICATE = new Predicate<Path>() {
@@ -97,7 +103,8 @@ public class NpmPackageToProjectAdapter {
 	 */
 	public Pair<IStatus, Collection<File>> adaptPackages(Collection<String> namesOfPackagesToAdapt) {
 		final MultiStatus status = statusHelper.createMultiStatus("Status of adapting npm packages");
-		final File nodeModulesFolder = new File(installLocationProvider.getTargetPlatformNodeModulesLocation());
+		final File nodeModulesFolder = locationProvider.getNodeModulesFolder();
+		final File typeDefFolder = locationProvider.getTypeDefinitionsFolder();
 		final Collection<String> names = newHashSet(namesOfPackagesToAdapt);
 		final File[] packageRoots = nodeModulesFolder.listFiles(packageName -> names.contains(packageName.getName()));
 		final File n4jsdsFolder = getNpmsTypeDefinitionsFolder();
@@ -111,12 +118,19 @@ public class NpmPackageToProjectAdapter {
 				// create marker file to denote that this package was among "namesOfPackagesToAdapt"
 				// (compare with: ExternalProjectLocationsProvider#isExternalProjectDirectory(File))
 				File markerFile = new File(packageRoot, N4JSGlobals.PACKAGE_MARKER);
-				Files.write(markerFile.toPath(), Collections.singletonList( // will overwrite existing file
-						"Temporary marker file. See N4JSGlobals#PACKAGE_MARKER for details."));
+				String content = "Temporary marker file. See N4JSGlobals#PACKAGE_MARKER for details.";
+				Files.write(markerFile.toPath(), Collections.singletonList(content)); // will overwrite existing file
+
+				File newPackageRoot = new File(typeDefFolder, packageRoot.getName() + "-n4jsd");
+				if (newPackageRoot.exists()) {
+					// if appropriate as a temporal solution, the marker file could also be put into the -n4jsd folder
+					File markerFile2 = new File(newPackageRoot, N4JSGlobals.PACKAGE_MARKER);
+					Files.write(markerFile2.toPath(), Collections.singletonList(content)); // overwrites existing file
+				}
 			} catch (final Exception e) {
-				status.merge(
-						statusHelper.createError("Unexpected error occurred while adapting '" + packageRoot.getName()
-								+ "' npm package into N4JS format.", e));
+				String msg = "Unexpected error occurred while adapting '" + packageRoot.getName()
+						+ "' npm package into N4JS format.";
+				status.merge(statusHelper.createError(msg, e));
 			}
 		}
 
@@ -140,7 +154,7 @@ public class NpmPackageToProjectAdapter {
 	 */
 	File getNpmsTypeDefinitionsFolder(final boolean performGitPull) {
 
-		File repositoryLocation = new File(installLocationProvider.getTargetPlatformLocalGitRepositoryLocation());
+		File repositoryLocation = new File(locationProvider.getTargetPlatformLocalGitRepositoryLocation());
 
 		if (performGitPull && gitCloneSupplier.remoteRepoAvailable()) {
 			// pull changes
@@ -172,46 +186,53 @@ public class NpmPackageToProjectAdapter {
 	 * @return a status representing the outcome of performed the operation.
 	 */
 	IStatus addTypeDefinitions(File packageRoot, File definitionsFolder) {
+		URI packageURI = URI.createFileURI(packageRoot.getAbsolutePath());
+		Pair<String, Boolean> info = projectDescriptionLoader
+				.loadVersionAndN4JSNatureFromProjectDescriptionAtLocation(packageURI);
+		boolean hasN4JSNature = info.getSecond();
+		String packageJsonVersion = info.getFirst();
+
+		if (hasN4JSNature) {
+			return statusHelper.OK();
+		}
 
 		String packageName = packageRoot.getName();
 		File packageN4JSDsRoot = new File(definitionsFolder, packageName);
 		if (!packageN4JSDsRoot.isDirectory()) {
-			String message = "No type definitions found for '" + packageRoot + "' npm package at '" + packageN4JSDsRoot
-					+ "'";
+			String message = "No type definitions found for '" + packageRoot + "' npm package at '" + packageN4JSDsRoot;
+			message += "'" + (!packageN4JSDsRoot.isDirectory() ? " (which is not a directory)" : "") + ".";
 			logger.logInfo(message);
-			LOGGER.info(message + (!packageN4JSDsRoot.isDirectory() ? " (which is not a directory)" : "") + ".");
+			LOGGER.info(message);
 			return statusHelper.OK();
 		}
 
-		String packageJsonVersion = projectDescriptionHelper.loadVersionFromProjectDescriptionAtLocation(
-				URI.createFileURI(packageRoot.getAbsolutePath()));
-		Version packageVersion = Version.createFromString(packageJsonVersion);
-		if (Version.MISSING.equals(packageVersion)) {
+		VersionNumber packageVersion = semverHelper.parseVersionNumber(packageJsonVersion);
+		if (packageVersion == null) {
 			final String message = "Cannot read version from package.json of npm package '" + packageName + "'.";
 			logger.logInfo(message);
 			LOGGER.error(message);
 			return statusHelper.createError(message);
 		}
 		String[] list = packageN4JSDsRoot.list();
-		Set<Version> availableTypeDefinitionsVersions = new HashSet<>();
+		Set<VersionNumber> availableTDVersions = new TreeSet<>(SemverMatcher::compareLoose);
 		for (int i = 0; i < list.length; i++) {
 			String version = list[i];
-			Version availableTypeDefinitionsVersion = Version.createFromString(version);
-			if (!Version.MISSING.equals(availableTypeDefinitionsVersion)) {
-				availableTypeDefinitionsVersions.add(availableTypeDefinitionsVersion);
+			VersionNumber availableTypeDefinitionsVersion = semverHelper.parseVersionNumber(version);
+			if (availableTypeDefinitionsVersion != null) {
+				availableTDVersions.add(availableTypeDefinitionsVersion);
 			}
 		}
 
-		Version closestMatchingVersion = Version.findClosestMatching(availableTypeDefinitionsVersions, packageVersion);
-		if (Version.MISSING.equals(closestMatchingVersion)) {
+		VersionNumber closestMatchingVersion = SemverUtils.findClosestMatching(availableTDVersions, packageVersion);
+		if (closestMatchingVersion == null) {
 			String details = "";
-			if (availableTypeDefinitionsVersions.isEmpty()) {
+			if (availableTDVersions.isEmpty()) {
 				details = " Cannot find any type definitions for  '" + packageName + "'.";
-			} else if (1 == availableTypeDefinitionsVersions.size()) {
-				final Version head = availableTypeDefinitionsVersions.iterator().next();
+			} else if (1 == availableTDVersions.size()) {
+				final VersionNumber head = availableTDVersions.iterator().next();
 				details = " Type definitions are available only in version : " + head + ".";
 			} else {
-				final String versions = Iterables.toString(availableTypeDefinitionsVersions);
+				final String versions = Iterables.toString(availableTDVersions);
 				details = " Type definitions are available only in versions : " + versions + ".";
 			}
 			String message = "Type definitions for '" + packageName + "' npm package in version " + packageVersion
@@ -233,9 +254,54 @@ public class NpmPackageToProjectAdapter {
 		Path sourcePath = packageVersionedN4JSDProjectRoot.toPath();
 		Path targetPath = packageRoot.toPath();
 
-		// copy all n4jsd files
+		IStatus status = mergeTypeDefinitions(packageName, sourcePath, targetPath);
+		if (!status.isOK()) {
+			return status;
+		}
+
+		status = copyTypeDefinitionPackage(packageName, sourcePath);
+		if (!status.isOK()) {
+			return status;
+		}
+
+		return statusHelper.OK();
+	}
+
+	private IStatus mergeTypeDefinitions(String packageName, Path sourcePath, Path targetPath) {
+		IStatus status = copyN4JSDFiles(packageName, sourcePath, targetPath);
+		if (!status.isOK()) {
+			return status;
+		}
+
+		status = copyFile(packageName, sourcePath, targetPath, N4JSGlobals.PACKAGE_FRAGMENT_JSON);
+		if (!status.isOK()) {
+			return status;
+		}
+
+		return statusHelper.OK();
+	}
+
+	private IStatus copyTypeDefinitionPackage(String packageName, Path sourcePath) {
+		File typeDefFolder = locationProvider.getTypeDefinitionsFolder();
+		Path newTargetPath = typeDefFolder.toPath().resolve(packageName + "-n4jsd");
+		IStatus status = copyN4JSDFiles(packageName, sourcePath, newTargetPath);
+		if (!status.isOK()) {
+			return status;
+		}
+
+		status = copyFile(packageName, sourcePath, newTargetPath, N4JSGlobals.PACKAGE_JSON);
+		if (!status.isOK()) {
+			return status;
+		}
+
+		return statusHelper.OK();
+	}
+
+	/** copy all n4jsd files */
+	private IStatus copyN4JSDFiles(String packageName, Path sourcePath, Path targetPath) {
 		try {
 			FileCopier.copy(sourcePath, targetPath, COPY_N4JSD_PREDICATE);
+			return statusHelper.OK();
 		} catch (IOException e) {
 			final String message = "Error while trying to update type definitions content for '" + packageName
 					+ "' npm package.";
@@ -243,24 +309,32 @@ public class NpmPackageToProjectAdapter {
 			LOGGER.error(message);
 			return statusHelper.createError(message, e);
 		}
+	}
 
-		// copy package.json fragment
+	/** copy package.json fragment */
+	private IStatus copyFile(String packageName, Path sourcePath, Path targetPath, String file) {
 		try {
-			Path sourceFragmentPath = sourcePath.resolve(N4JSGlobals.PACKAGE_FRAGMENT_JSON);
+			Path sourceFragmentPath = sourcePath.resolve(file);
 			if (sourceFragmentPath.toFile().isFile()) {
 				Files.copy(
 						sourceFragmentPath,
-						targetPath.resolve(N4JSGlobals.PACKAGE_FRAGMENT_JSON),
+						targetPath.resolve(file),
 						StandardCopyOption.REPLACE_EXISTING);
+				return statusHelper.OK();
 			}
+
+			final String message = "Error while trying to copy the file '" + file +
+					"' for '" + packageName + "' npm package: File not found.";
+			logger.logInfo(message);
+			LOGGER.error(message);
+			return statusHelper.createError(message);
 		} catch (IOException e) {
-			final String message = "Error while trying to copy the package.json fragment '"
-					+ N4JSGlobals.PACKAGE_FRAGMENT_JSON + "' for '" + packageName + "' npm package.";
+			final String message = "Error while trying to copy the file '" + file +
+					"' for '" + packageName + "' npm package.";
 			logger.logInfo(message);
 			LOGGER.error(message);
 			return statusHelper.createError(message, e);
 		}
-
-		return statusHelper.OK();
 	}
+
 }

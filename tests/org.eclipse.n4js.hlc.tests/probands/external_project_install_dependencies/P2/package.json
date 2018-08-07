@@ -1,6 +1,6 @@
 {
 	"name": "P2",
-	"version": "0.0.1-SNAPSHOT",
+	"version": "0.0.1",
 	"dependencies": {
 		"react": "16.2.0"
 	},

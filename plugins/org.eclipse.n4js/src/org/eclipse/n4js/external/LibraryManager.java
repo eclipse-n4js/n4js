@@ -46,16 +46,19 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.n4js.binaries.IllegalBinaryStateException;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
-import org.eclipse.n4js.external.version.VersionConstraintFormatUtil;
 import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
-import org.eclipse.n4js.n4mf.ProjectDependency;
-import org.eclipse.n4js.n4mf.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectDependency;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.semver.SemverHelper;
+import org.eclipse.n4js.semver.SemverMatcher;
+import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
+import org.eclipse.n4js.semver.model.SemverSerializer;
 import org.eclipse.n4js.smith.ClosableMeasurement;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
 import org.eclipse.n4js.utils.StatusHelper;
-import org.eclipse.n4js.utils.Version;
 import org.eclipse.n4js.utils.git.GitUtils;
 import org.eclipse.n4js.utils.resources.ExternalProject;
 import org.eclipse.xtext.util.Strings;
@@ -107,8 +110,8 @@ public class LibraryManager {
 	@Inject
 	private IN4JSCore n4jsCore;
 
-	// @Inject
-	// private ProjectDescriptionHelper projectDescriptionHelper;
+	@Inject
+	private SemverHelper semverHelper;
 
 	/**
 	 * see {@link ExternalIndexSynchronizer#isProjectsSynchronized()}.
@@ -305,8 +308,8 @@ public class LibraryManager {
 		for (ProjectDependency pDep : description.getProjectDependencies()) {
 			String name = pDep.getProjectId();
 			String version = NO_VERSION;
-			if (pDep.getVersionConstraint() != null) {
-				version = VersionConstraintFormatUtil.npmFormat(pDep.getVersionConstraint());
+			if (pDep.getVersionRequirement() != null) {
+				version = SemverSerializer.serialize(pDep.getVersionRequirement());
 			}
 			dependencies.put(name, version);
 		}
@@ -344,23 +347,21 @@ public class LibraryManager {
 
 		for (Map.Entry<String, String> reqestedNpm : installRequested.entrySet()) {
 			String name = reqestedNpm.getKey();
-			String versionRequestedString = reqestedNpm.getValue();
+			String requestedVersionString = reqestedNpm.getValue();
 
 			if (installedNpms.containsKey(name)) {
-				// determine location of the installed package
-				final org.eclipse.emf.common.util.URI location = installedNpms.get(name).getKey();
-				final String versionInstalledString = Strings.emptyIfNull(installedNpms.get(name).getValue());
-
-				if (isAlreadyInstalled(installedNpms, name, versionRequestedString)) {
+				String installedVersionString = Strings.emptyIfNull(installedNpms.get(name).getValue());
+				if (installedMatchesRequestedVersion(installedVersionString, requestedVersionString)) {
 					// if a matching version is installed, do not reinstall
 					continue;
 				}
 
 				// wrong version installed -> update (uninstall, then install)
-				requestedChanges.add(new LibraryChange(Uninstall, location, name, versionInstalledString));
-				requestedChanges.add(new LibraryChange(Install, location, name, versionRequestedString));
+				org.eclipse.emf.common.util.URI location = installedNpms.get(name).getKey();
+				requestedChanges.add(new LibraryChange(Uninstall, location, name, installedVersionString));
+				requestedChanges.add(new LibraryChange(Install, location, name, requestedVersionString));
 			} else {
-				requestedChanges.add(new LibraryChange(Install, null, name, versionRequestedString));
+				requestedChanges.add(new LibraryChange(Install, null, name, requestedVersionString));
 			}
 		}
 
@@ -376,51 +377,27 @@ public class LibraryManager {
 	}
 
 	/**
-	 * Returns {@code true} iff the given map of {@code installedNpms} contains the {@code requestedPackage} in a
-	 * version that fulfills the given {@code requestedVersion}.
-	 *
+	 * Returns {@code true} iff the given {@code installedVersionString} matches the {@code requestedVersionString}.
 	 * Returns {@code false} otherwise.
 	 *
-	 * @param installedNpms
-	 *            A map of all installed packages, mapped to a pair of their install location and installed version.
-	 * @param requestedPackage
-	 *            The name of the requested package.
-	 * @param requestedVersion
-	 *            The requested version constraint in npm format (cf. {@link VersionConstraintFormatUtil}.
+	 * @param installedVersionString
+	 *            The version of the already installed package.
+	 * @param requestedVersionRequirementString
+	 *            The requested version requirement in npm-semver format of the same package.
 	 */
-	private boolean isAlreadyInstalled(Map<String, Pair<org.eclipse.emf.common.util.URI, String>> installedNpms,
-			String requestedPackage, String requestedVersion) {
-		final String versionInstalledString = Strings.emptyIfNull(installedNpms.get(requestedPackage).getValue());
-		try {
-			if (requestedVersion.isEmpty()) {
-				// empty constraint matches any installed version
-				return true;
-			}
+	private boolean installedMatchesRequestedVersion(String installedVersionString,
+			String requestedVersionRequirementString) {
 
-			// detect an exactly specified version
-			String exactRequestedVersionString = requestedVersion;
+		NPMVersionRequirement requestedVersion = semverHelper.parse(requestedVersionRequirementString);
+		VersionNumber installedVersion = semverHelper.parseVersionNumber(installedVersionString);
 
-			// remove preceding '@' from requested version, if present
-			if (exactRequestedVersionString.startsWith("@")) {
-				exactRequestedVersionString = exactRequestedVersionString.substring(1);
-			}
-
-			// If requestedVersion is not an exact version (or uses ^ or ~) the following
-			// call will throw an exception. As a consequence we only support exact version matches here.
-			// If the requested version is a constraint, this method will always trigger the re-installation
-			// of the package, according to the requested version constraint.
-			// TODO Once GH-940 is merged, this logic can be revised to support version constraints.
-			final Version versionRequested = new Version(exactRequestedVersionString);
-			final Version versionInstalled = new Version(versionInstalledString);
-			if (versionRequested.compareTo(versionInstalled) == 0) {
-				return true;
-			}
-		} catch (NumberFormatException e) {
-			logger.logInfo("Checking whether the requested version constraint " + requestedPackage + "@"
-					+ requestedVersion
-					+ " matches the installed version of the package, is currently unsupported (use an exact version instead): Package will be re-installed.");
+		boolean canComputeMatch = SemverMatcher.canComputeMatch(installedVersion, requestedVersion);
+		if (!canComputeMatch) {
+			return false;
 		}
-		return false;
+
+		boolean versionsMatch = SemverMatcher.matches(installedVersion, requestedVersion);
+		return versionsMatch;
 	}
 
 	private Collection<File> adaptNPMPackages(IProgressMonitor monitor, MultiStatus status,
