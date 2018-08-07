@@ -304,7 +304,6 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 	}
 
 	/***/
-	@Ignore("IDE-3130") // TODO IDE-3130 randomly failing test
 	@Test
 	public void runClientWithTwoDeletedWorkspaceProjectsThenReImportThem() throws Exception {
 
