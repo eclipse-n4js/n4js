@@ -26,7 +26,10 @@ import com.google.inject.Inject;
 public class N4FilebasedWorkspaceResourceSetContainerState extends ResourceSetBasedAllContainersState {
 
 	@Inject
-	private IN4JSCore in4jscore;
+	private IN4JSCore core;
+
+	@Inject
+	private N4JSModel model;
 
 	/**
 	 * @param handle
@@ -42,13 +45,13 @@ public class N4FilebasedWorkspaceResourceSetContainerState extends ResourceSetBa
 		// add self
 		visibleContainers.add(handle);
 
-		Optional<? extends IN4JSProject> project = in4jscore.findProject(containerURI);
+		Optional<? extends IN4JSProject> project = core.findProject(containerURI);
 
 		if (!project.isPresent()) {
 			throw new IllegalStateException("No project with handle '" + handle + "' known in current In4jscore.");
 		}
 
-		Iterable<? extends IN4JSProject> dps = TypeDefinitionsAwareDependenciesSupplier.get(project.get());
+		Iterable<? extends IN4JSProject> dps = model.getSortedDependencies(project.get());
 		// map uri to handle-form and add.
 		dps.forEach(d -> visibleContainers.add(FileBasedWorkspace.handleFrom(d.getLocation())));
 

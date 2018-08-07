@@ -22,9 +22,11 @@ import static org.eclipse.n4js.projectDescription.ProjectType.TEST;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Platform;
@@ -41,6 +43,8 @@ import org.eclipse.n4js.projectDescription.SourceContainerDescription;
 import org.eclipse.n4js.projectDescription.SourceContainerType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.n4js.utils.MultiCleartriggerCache;
+import org.eclipse.n4js.utils.MultiCleartriggerCache.ResultAndTriggerProvider;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.xtext.naming.QualifiedName;
 
@@ -56,6 +60,8 @@ import com.google.inject.Singleton;
 @SuppressWarnings({ "javadoc" })
 @Singleton
 public class N4JSModel {
+
+	public static final String SORTED_DEPENDENCIES = "sortedDependencies";
 
 	private static final Logger LOGGER = Logger.getLogger(N4JSModel.class);
 
@@ -79,6 +85,9 @@ public class N4JSModel {
 
 	@Inject
 	private TargetPlatformInstallLocationProvider installLocationProvider;
+
+	@Inject
+	private MultiCleartriggerCache cache;
 
 	@Inject
 	public N4JSModel(InternalN4JSWorkspace workspace) {
@@ -475,4 +484,57 @@ public class N4JSModel {
 		final ProjectDescription projectDescription = getProjectDescription(project.getLocation());
 		return projectDescription.getDefinesPackage();
 	}
+
+	public Iterable<IN4JSProject> getSortedDependencies(IN4JSProject project) {
+		SortedDependenciesProvider sdProvider = new SortedDependenciesProvider(project);
+		Iterable<IN4JSProject> existing = cache.get(sdProvider, SORTED_DEPENDENCIES, project.getLocation());
+		return existing;
+	}
+
+	/**
+	 * The idea of this mechanism is that following use case should be supported:
+	 * <p>
+	 * Given the projects {@code Impl}, {@code Def} and {@code Client} where {@code Client} depends on the former two
+	 * and where {@code Def} is a definition project that provides n4jsd files for the project {@code Impl}.<br/>
+	 * Consider that the workspace of these three projects is error-free and that the user changes the attribute
+	 * {@code definesPackage} in the package.json file of {@code Def}. This will cause the result of
+	 * {@link TypeDefinitionsAwareDependenciesSupplier#get(IN4JSProject)} to change (parameter is {@code Client}).
+	 * Consequently, the cache has to be invalidated every time the package.json of {@code Client} changes <b>and/or</b>
+	 * the package.json of all projects change which provide type definitions used in {@code Client}.
+	 */
+	private class SortedDependenciesProvider implements ResultAndTriggerProvider<Iterable<IN4JSProject>> {
+		final IN4JSProject project;
+		private Iterable<IN4JSProject> sortedDeps;
+
+		SortedDependenciesProvider(IN4JSProject project) {
+			this.project = project;
+		}
+
+		@Override
+		public Iterable<IN4JSProject> get() {
+			computeIfNull();
+			return sortedDeps;
+		}
+
+		private void computeIfNull() {
+			if (sortedDeps != null) {
+				return;
+			}
+			sortedDeps = TypeDefinitionsAwareDependenciesSupplier.get(project);
+		}
+
+		@Override
+		public Collection<URI> getCleartriggers() {
+			computeIfNull();
+			Set<URI> triggerURIs = new HashSet<>();
+			for (IN4JSProject dep : sortedDeps) {
+				if (dep.getDefinesPackage() != null) {
+					URI uri = dep.getLocation();
+					triggerURIs.add(uri);
+				}
+			}
+			return triggerURIs;
+		}
+	}
+
 }
