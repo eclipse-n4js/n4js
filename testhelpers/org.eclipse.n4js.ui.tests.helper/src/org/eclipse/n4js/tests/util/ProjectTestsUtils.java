@@ -48,6 +48,7 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.N4JSGlobals;
@@ -199,7 +200,22 @@ public class ProjectTestsUtils {
 			}
 		}, monitor);
 
+		// TODO IDE-3141 remove this temporary work-around for random test failures due to invalid index
+		for (int i = 0; i < 3; i++) {
+			sleep(200);
+			waitForAllJobs();
+		}
+		// END OF WORK-AROUND
+
 		return project;
+	}
+
+	private static void sleep(long millis) {
+		try {
+			Thread.sleep(millis);
+		} catch (InterruptedException e) {
+			throw new WrappedException(e);
+		}
 	}
 
 	/**
