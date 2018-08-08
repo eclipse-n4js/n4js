@@ -76,7 +76,7 @@ public class N4JSEclipseModel extends N4JSModel {
 					"Expected 2 segment counts for platform resource URI. Was " + location.segmentCount());
 		}
 
-		final String projectName = ProjectDescriptionUtils.deriveProjectNameFromURI(location);
+		final String projectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location);
 		final IProject project;
 		if (location.isFile()) {
 			project = externalLibraryWorkspace.getProject(projectName);

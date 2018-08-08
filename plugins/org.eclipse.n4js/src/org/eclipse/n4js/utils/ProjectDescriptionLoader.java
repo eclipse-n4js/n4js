@@ -92,7 +92,7 @@ public class ProjectDescriptionLoader {
 			mergePackageJSONFragmentAtLocation(location, packageJSON);
 		}
 		adjustMainPath(location, packageJSON);
-		String defaultProjectId = ProjectDescriptionUtils.deriveProjectNameFromURI(location);
+		String defaultProjectId = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location);
 		ProjectDescription pdFromPackageJSON = packageJSON != null
 				? packageJsonHelper.convertToProjectDescription(packageJSON, true, defaultProjectId)
 				: null;

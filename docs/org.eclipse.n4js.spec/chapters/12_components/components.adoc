@@ -526,7 +526,7 @@ Names:
 2. name of scope (if any; e.g. "@myscope"),
 3. name of NPM package, i.e. value of top-level property "name" in package JSON,
 4. name of N4JS project, i.e. value of `IN4JSProject#getProjectId()`,
-5. name of Eclipse proejct, i.e. value of `#getName()` when invoked on an instance of `org.eclipse.core.resources.IProject`.
+5. name of Eclipse project, i.e. value of `#getName()` when invoked on an instance of `org.eclipse.core.resources.IProject`.
 
 TODO: introduce terminology to distinguish between 1., 3./4., and 5. and the plain project name without the scope.
 

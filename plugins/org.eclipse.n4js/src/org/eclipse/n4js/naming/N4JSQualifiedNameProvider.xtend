@@ -151,7 +151,7 @@ class N4JSQualifiedNameProvider extends N4TSQualifiedNameProvider {
 		}
 		// (2) if unsuccessful, take projectId from the URI
 		if (projectId === null) {
-			projectId = ProjectDescriptionUtils.deriveProjectNameFromURI(uri.trimSegments(1));
+			projectId = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(uri.trimSegments(1));
 		}
 		// create qualified name from projectId
 		if (projectId !== null && !projectId.isEmpty) {

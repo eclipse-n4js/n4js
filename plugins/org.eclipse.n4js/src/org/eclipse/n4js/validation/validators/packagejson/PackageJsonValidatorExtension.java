@@ -183,7 +183,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		}
 		final JSONStringLiteral projectNameLiteral = (JSONStringLiteral) projectNameValue;
 		final String projectName = projectNameLiteral.getValue();
-		final String projectNameWithoutScope = ProjectDescriptionUtils.getProjectNameWithoutScope(projectName);
+		final String projectNameWithoutScope = ProjectDescriptionUtils.getPlainProjectName(projectName);
 		final String scopeName = ProjectDescriptionUtils.getScopeName(projectName);
 
 		// make sure the name conforms to the IDENTIFIER_PATTERN

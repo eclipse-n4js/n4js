@@ -116,7 +116,7 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 	public UnmodifiableIterator<URI> getFolderIterator(URI folderLocation) {
 		final IContainer container;
 		if (DIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT == folderLocation.segmentCount()) {
-			container = workspace.getProject(ProjectDescriptionUtils.deriveProjectNameFromURI(folderLocation));
+			container = workspace.getProject(ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(folderLocation));
 		} else {
 			container = workspace.getFolder(new Path(folderLocation.toPlatformString(true)));
 		}

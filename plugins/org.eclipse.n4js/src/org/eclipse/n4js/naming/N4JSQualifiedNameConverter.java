@@ -26,8 +26,8 @@ public class N4JSQualifiedNameConverter extends N4TSQualifiedNameConverter {
 	/**
 	 * Delimiter used in string representations of fully-qualified names.
 	 * <p>
-	 * Copied from super class to avoid annoying warnings when accessing the constant via this class: "The static field
-	 * N4TSQualifiedNameConverter.DELIMITER should be accessed directly".
+	 * Copied from super class to avoid annoying warnings when accessing the constant via this class:
+	 * "The static field N4TSQualifiedNameConverter.DELIMITER should be accessed directly".
 	 */
 	@SuppressWarnings("hiding")
 	public static final String DELIMITER = N4TSQualifiedNameConverter.DELIMITER;

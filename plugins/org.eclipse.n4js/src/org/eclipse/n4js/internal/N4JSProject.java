@@ -179,7 +179,7 @@ public class N4JSProject implements IN4JSProject {
 	public String getProjectId() {
 		// because the projectId must be available even if the project does not exist, we do not read from the
 		// ProjectDescription, here, but instead derive the projectId from the location URI
-		return ProjectDescriptionUtils.deriveProjectNameFromURI(location);
+		return ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location);
 	}
 
 	@Override
