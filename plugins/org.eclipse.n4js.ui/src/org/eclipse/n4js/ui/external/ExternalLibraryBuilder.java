@@ -45,6 +45,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.n4js.external.N4JSExternalProject;
+import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.internal.RaceDetectionHelper;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
@@ -54,6 +55,8 @@ import org.eclipse.n4js.smith.DataCollectors;
 import org.eclipse.n4js.ui.external.ComputeProjectOrder.VertexOrder;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildQueue.Task;
 import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
+import org.eclipse.n4js.utils.MultiCleartriggerCache;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.builder.builderState.IBuilderState;
 import org.eclipse.xtext.builder.impl.BuildData;
 import org.eclipse.xtext.builder.impl.QueuedBuildData;
@@ -105,6 +108,9 @@ public class ExternalLibraryBuilder {
 
 	@Inject
 	private ExternalLibraryErrorMarkerManager errorMarkerManager;
+
+	@Inject
+	private MultiCleartriggerCache cache;
 
 	/**
 	 * Performs a full build on all registered and available external libraries.
@@ -449,6 +455,8 @@ public class ExternalLibraryBuilder {
 				ResourceSet resourceSet = null;
 
 				try {
+
+					helper.cache.clear(N4JSModel.SORTED_DEPENDENCIES, URIUtils.convert(project));
 
 					resourceSet = core.createResourceSet(Optional.of(n4EclPrj));
 					if (!resourceSet.getLoadOptions().isEmpty()) {

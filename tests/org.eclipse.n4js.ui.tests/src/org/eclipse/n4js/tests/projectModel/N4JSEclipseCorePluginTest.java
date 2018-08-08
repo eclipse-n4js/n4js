@@ -16,6 +16,7 @@ import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
 import org.eclipse.n4js.ui.internal.N4JSEclipseCore;
 import org.eclipse.n4js.ui.internal.N4JSEclipseModel;
+import org.eclipse.n4js.utils.MultiCleartriggerCache;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.XtextRunner;
@@ -39,6 +40,9 @@ public class N4JSEclipseCorePluginTest extends AbstractN4JSCoreTest {
 	@Inject
 	private Injector injector;
 
+	@Inject
+	private MultiCleartriggerCache cache;
+
 	private EclipseBasedN4JSWorkspace internalWorkspace;
 
 	private N4JSEclipseCore testMe;
@@ -50,7 +54,7 @@ public class N4JSEclipseCorePluginTest extends AbstractN4JSCoreTest {
 
 	@Override
 	public void setUp() {
-		internalWorkspace = new EclipseBasedN4JSWorkspace(workspace, projectDescriptionLoader);
+		internalWorkspace = new EclipseBasedN4JSWorkspace(workspace, projectDescriptionLoader, cache);
 		N4JSEclipseModel model = new N4JSEclipseModel(internalWorkspace);
 		injector.injectMembers(model);
 		testMe = new N4JSEclipseCore(model);

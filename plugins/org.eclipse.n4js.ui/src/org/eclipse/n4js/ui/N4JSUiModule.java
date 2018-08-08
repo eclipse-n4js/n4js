@@ -117,6 +117,7 @@ import org.eclipse.n4js.ui.wizard.project.N4JSProjectCreator;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBroker;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBrokerImpl;
 import org.eclipse.n4js.ui.workingsets.WorkspaceRepositoriesProvider;
+import org.eclipse.n4js.utils.MultiCleartriggerCache;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.process.OutputStreamPrinterThreadProvider;
@@ -232,6 +233,11 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	/** Delegate to shared injector */
 	public Provider<ExternalIndexSynchronizer> provideExternalIndexSynchronizer() {
 		return Access.contributedProvider(ExternalIndexSynchronizer.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<MultiCleartriggerCache> provideMultiCleartriggerCache() {
+		return Access.contributedProvider(MultiCleartriggerCache.class);
 	}
 
 	/** Delegate to shared injector */

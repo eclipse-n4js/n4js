@@ -16,7 +16,6 @@ import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newLinkedHashMap;
 
-import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -40,6 +39,7 @@ import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseSourceContainer;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.resources.ExternalProject;
 
 import com.google.common.base.Optional;
@@ -153,11 +153,12 @@ public class N4JSEclipseModel extends N4JSModel {
 	}
 
 	public N4JSEclipseProject getN4JSProject(IProject project) {
-		if (project instanceof ExternalProject) {
-			return doGetN4JSProject(project, URI.createFileURI(new File(project.getLocationURI()).getAbsolutePath()));
-		} else {
-			return doGetN4JSProject(project, URI.createPlatformResourceURI(project.getName(), true));
-		}
+		return doGetN4JSProject(project, URIUtils.convert(project));
+		// if (project instanceof ExternalProject) {
+		// return doGetN4JSProject(project, URI.createFileURI(new File(project.getLocationURI()).getAbsolutePath()));
+		// } else {
+		// return doGetN4JSProject(project, URI.createPlatformResourceURI(project.getName(), true));
+		// }
 	}
 
 	private N4JSEclipseProject doGetN4JSProject(IProject project, URI location) {

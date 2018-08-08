@@ -20,13 +20,15 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.internal.TypeDefinitionsAwareDependenciesSupplier;
+import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
-import org.eclipse.n4js.ui.internal.WorkspaceCacheAccess;
+import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
+import org.eclipse.n4js.utils.MultiCleartriggerCache;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.ui.containers.AbstractStorage2UriMapperClient;
 
 import com.google.common.base.Optional;
@@ -56,7 +58,10 @@ public class N4JSProjectsStateHelper extends AbstractStorage2UriMapperClient {
 	private IN4JSEclipseCore core;
 
 	@Inject
-	private WorkspaceCacheAccess cacheAccess;
+	private N4JSModel model;
+
+	@Inject
+	private MultiCleartriggerCache cache;
 
 	public String initHandle(URI uri) {
 		String handle = null;
@@ -102,7 +107,7 @@ public class N4JSProjectsStateHelper extends AbstractStorage2UriMapperClient {
 	private void fullCollectLocationHandles(List<String> result, IN4JSProject project) {
 		collectLocationHandles(project, result);
 
-		for (IN4JSProject dependency : TypeDefinitionsAwareDependenciesSupplier.get(project)) {
+		for (IN4JSProject dependency : model.getSortedDependencies(project)) {
 			collectLocationHandles(dependency, result);
 		}
 	}
@@ -135,12 +140,14 @@ public class N4JSProjectsStateHelper extends AbstractStorage2UriMapperClient {
 
 	public void clearProjectCache() {
 		LOGGER.info("Clearing all cached project descriptions.");
-		cacheAccess.discardEntries();
+		cache.clear(EclipseBasedN4JSWorkspace.PROJECT_DESCRIPTIONS);
+		cache.clear(N4JSModel.SORTED_DEPENDENCIES);
 	}
 
 	public void clearProjectCache(IResourceDelta delta) {
 		IProject project = delta.getResource().getProject();
 		LOGGER.info("Clearing cache for " + project.getProject().getName() + ".");
-		cacheAccess.discardEntry(project);
+		cache.clear(EclipseBasedN4JSWorkspace.PROJECT_DESCRIPTIONS, URIUtils.convert(project));
+		cache.clear(N4JSModel.SORTED_DEPENDENCIES, URIUtils.convert(project));
 	}
 }

@@ -21,7 +21,7 @@ import java.util.Objects;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.n4js.internal.TypeDefinitionsAwareDependenciesSupplier;
+import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.projectModel.IN4JSCore;
@@ -75,6 +75,7 @@ public class ProjectImportEnablingScope implements IScope {
 	private final Optional<ImportDeclaration> importDeclaration;
 	private final IScope parent;
 	private final IScope delegate;
+	private final N4JSModel n4jsModel;
 
 	/**
 	 * Wraps the given parent scope to enable project imports (see {@link ProjectImportEnablingScope} for details).
@@ -87,8 +88,10 @@ public class ProjectImportEnablingScope implements IScope {
 	 *            {@link IEObjectDescriptionWithError} will be returned instead of <code>null</code> in case of
 	 *            unresolvable references).
 	 */
-	public static IScope create(IN4JSCore n4jsCore, Resource resource, Optional<ImportDeclaration> importDecl,
+	public static IScope create(IN4JSCore n4jsCore, N4JSModel n4jsModel, Resource resource,
+			Optional<ImportDeclaration> importDecl,
 			IScope parent, IScope delegate) {
+
 		if (n4jsCore == null || resource == null || importDecl == null || parent == null) {
 			throw new IllegalArgumentException("none of the arguments may be null");
 		}
@@ -102,7 +105,7 @@ public class ProjectImportEnablingScope implements IScope {
 			// without properly setting up the IN4JSCore; to not break those tests, we return 'parent' here
 			return parent;
 		}
-		return new ProjectImportEnablingScope(n4jsCore, contextProject.get(), importDecl, parent, delegate);
+		return new ProjectImportEnablingScope(n4jsCore, n4jsModel, contextProject.get(), importDecl, parent, delegate);
 	}
 
 	/**
@@ -110,12 +113,14 @@ public class ProjectImportEnablingScope implements IScope {
 	 * @param contextProject
 	 *            the project containing the import declaration (not the project containing the module to import from)!
 	 */
-	private ProjectImportEnablingScope(IN4JSCore n4jsCore, IN4JSProject contextProject,
+	private ProjectImportEnablingScope(IN4JSCore n4jsCore, N4JSModel n4jsModel, IN4JSProject contextProject,
 			Optional<ImportDeclaration> importDecl, IScope parent, IScope delegate) {
+
 		if (n4jsCore == null || contextProject == null || importDecl == null || parent == null) {
 			throw new IllegalArgumentException("none of the arguments may be null");
 		}
 		this.n4jsCore = n4jsCore;
+		this.n4jsModel = n4jsModel;
 		this.contextProject = contextProject;
 		this.parent = parent;
 		this.importDeclaration = importDecl;
@@ -237,6 +242,7 @@ public class ProjectImportEnablingScope implements IScope {
 	 */
 	private Collection<IEObjectDescription> getElementsWithDesiredProjectID(QualifiedName moduleSpecifier,
 			String projectId) {
+
 		final Iterable<IEObjectDescription> moduleSpecifierMatchesWithPossibleDuplicates = delegate
 				.getElements(moduleSpecifier);
 
@@ -257,7 +263,7 @@ public class ProjectImportEnablingScope implements IScope {
 			return project;
 		}
 
-		Iterable<IN4JSProject> dependencies = TypeDefinitionsAwareDependenciesSupplier.get(project);
+		Iterable<IN4JSProject> dependencies = n4jsModel.getSortedDependencies(project);
 		for (IN4JSProject p : dependencies) {
 			if (Objects.equals(p.getDefinesPackage(), projectId)) {
 				return p;
