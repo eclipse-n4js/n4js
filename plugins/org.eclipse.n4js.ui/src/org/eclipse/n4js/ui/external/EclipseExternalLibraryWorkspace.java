@@ -106,7 +106,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 
 	@Override
 	public URI getLocation(URI projectURI, ProjectReference reference) {
-		String name = reference.getProjectId();
+		String name = reference.getProjectName();
 		ExternalProject project = projectProvider.getProject(name);
 
 		if (null == project) {

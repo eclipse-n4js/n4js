@@ -295,7 +295,7 @@ public class ExternalLibraryBuilder {
 
 			List<IProject> actualBuildOrderList = new LinkedList<>();
 			for (IN4JSProject project : buildOrderList) {
-				LOGGER.info(prefix + "ing external library: " + project.getProjectId());
+				LOGGER.info(prefix + "ing external library: " + project.getProjectName());
 
 				N4JSEclipseProject n4EclPrj = (N4JSEclipseProject) project; // bold cast
 				operation.run(this, n4EclPrj, subMonitor.newChild(1));
@@ -340,13 +340,13 @@ public class ExternalLibraryBuilder {
 	 * Returns with {@code true} if the external project is accessible in the workspace as well.
 	 */
 	private boolean hasWorkspaceCounterpart(IN4JSProject project) {
-		URI uri = URI.createPlatformResourceURI(project.getProjectId(), true);
+		URI uri = URI.createPlatformResourceURI(project.getProjectName(), true);
 		IN4JSProject n4Project = core.findProject(uri).orNull();
 		return null != n4Project && n4Project.exists() && !n4Project.isExternal();
 	}
 
 	private String getProjectNames(Iterable<IN4JSProject> projects) {
-		return Iterables.toString(from(projects).transform(p -> p.getProjectId()));
+		return Iterables.toString(from(projects).transform(p -> p.getProjectName()));
 	}
 
 	/**
@@ -361,7 +361,7 @@ public class ExternalLibraryBuilder {
 			org.eclipse.emf.common.util.URI uri = createPlatformResourceURI(project.getName(), true);
 			IN4JSProject n4Project = core.findProject(uri).get();
 			if (null != n4Project) {
-				n4Project.getProjectId(); // This will trigger dynamic project reference update.
+				n4Project.getProjectName(); // This will trigger dynamic project reference update.
 			}
 		}
 	}
@@ -427,9 +427,9 @@ public class ExternalLibraryBuilder {
 		 *            monitor for the operation.
 		 */
 		private void run(ExternalLibraryBuilder helper, N4JSEclipseProject n4EclPrj, IProgressMonitor monitor) {
-			RaceDetectionHelper.log("%s: external project ", name(), n4EclPrj.getProjectId());
+			RaceDetectionHelper.log("%s: external project ", name(), n4EclPrj.getProjectName());
 
-			monitor.setTaskName("Collecting resource for '" + n4EclPrj.getProjectId() + "'...");
+			monitor.setTaskName("Collecting resource for '" + n4EclPrj.getProjectName() + "'...");
 			SubMonitor subMonitor = SubMonitor.convert(monitor, 2);
 			IProgressMonitor computeMonitor = subMonitor.newChild(1, SUPPRESS_BEGINTASK);
 
@@ -442,7 +442,7 @@ public class ExternalLibraryBuilder {
 				return;
 			}
 
-			try (ClosableMeasurement mesBE = dcBuildExt.getClosableMeasurement("BuildExt_" + n4EclPrj.getProjectId())) {
+			try (ClosableMeasurement mesBE = dcBuildExt.getClosableMeasurement("BuildExt_" + n4EclPrj.getProjectName())) {
 				IN4JSCore core = helper.core;
 				QueuedBuildData queuedBuildData = helper.queuedBuildData;
 				IBuilderState builderState = helper.builderState;

@@ -455,7 +455,7 @@ The following constraints apply.
 .GeneralConstraints
 [req,id=IDE-158,version=1]
 --
-1.  The projectId used in the package.json file have to match the project name in file system as well as project name in the Eclipse workspace.
+1.  The projectName used in the package.json file have to match the project name in file system as well as project name in the Eclipse workspace.
 2.  There must be an output directory specified so the compiler(s) can run.
 --
 
@@ -525,7 +525,7 @@ Names:
 1. plain name of project (e.g. "myproject"),
 2. name of scope (if any; e.g. "@myscope"),
 3. name of NPM package, i.e. value of top-level property "name" in package JSON,
-4. name of N4JS project, i.e. value of `IN4JSProject#getProjectId()`,
+4. name of N4JS project, i.e. value of `IN4JSProject#getProjectName()`,
 5. name of Eclipse project, i.e. value of `#getName()` when invoked on an instance of `org.eclipse.core.resources.IProject`.
 
 TODO: introduce terminology to distinguish between 1., 3./4., and 5. and the plain project name without the scope.
@@ -536,7 +536,7 @@ Rules:
   separated by a forward slash. For example, project "myproject" in scope "n4js" would have a "name"
   property with value "@n4js/myproject".
 * internally, i.e. in instances of `IN4JSProject` we use the same name as given in the package.json's name
-  property. I.e. method `IN4JSProject#getProjectId()` would return "@n4js/myproject" in the aforementioned example.
+  property. I.e. method `IN4JSProject#getProjectName()` would return "@n4js/myproject" in the aforementioned example.
 * in the UI case, the name of the Eclipse project includes the scope, too, but `_` (underscore) is used
   as separator. For example: "@n4js_myproject".
   Note that this applies only to the actual Eclipse projects, i.e. instances of `org.eclipse.core.resources.IProject`,
@@ -565,7 +565,7 @@ Some implementation notes:
 * `#` is a bad character in Eclipse project names. It causes instances of `IProject` to behave weirdly,
   e.g. `IProject#getLocation()` returns 'null', `IProject#getName()` returns "...%2325..." (or similar). Thus,
   we cannot use something like `@n4jsd#express` as project name.
-* PROBLEM: heuristic broken to get from last segment of URI to projectId! -> requires loading the packageJson!
+* PROBLEM: heuristic broken to get from last segment of URI to projectName! -> requires loading the packageJson!
 * PROBLEM: above assumption and similar assumptions in many places :(
 
 TODO:

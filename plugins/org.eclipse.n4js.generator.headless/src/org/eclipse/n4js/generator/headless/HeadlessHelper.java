@@ -113,8 +113,8 @@ public class HeadlessHelper {
 		// this is reverse mapping of the one that is kept in the workspace
 		Map<String, URI> registeredProjects = new HashMap<>();
 		workspace.getAllProjectsLocations().forEachRemaining(uri -> {
-			String projectID = workspace.getProjectDescription(uri).getProjectId();
-			registeredProjects.put(projectID, URIUtils.normalize(uri));
+			String projectName = workspace.getProjectDescription(uri).getProjectName();
+			registeredProjects.put(projectName, URIUtils.normalize(uri));
 		});
 
 		// register all projects with the file based workspace.
@@ -130,9 +130,9 @@ public class HeadlessHelper {
 								+ ". Make sure the project contains a valid package.json file.");
 			}
 
-			final String projectId = projectDescription.getProjectId();
+			final String projectName = projectDescription.getProjectName();
 
-			if (skipRegistering(projectId, projectURI, registeredProjects)) {
+			if (skipRegistering(projectName, projectURI, registeredProjects)) {
 				if (logger != null && logger.isCreateDebugOutput()) {
 					logger.debug("Skipping already registered project '" + projectURI + "'");
 				}
@@ -148,7 +148,7 @@ public class HeadlessHelper {
 					logger.debug("Registering project '" + projectURI + "'");
 				}
 				workspace.registerProject(projectURI);
-				registeredProjects.put(projectId, projectURI);
+				registeredProjects.put(projectName, projectURI);
 			} catch (N4JSBrokenProjectException e) {
 				throw new N4JSCompileException("Unable to register project '" + projectURI + "'", e);
 			}
@@ -281,7 +281,7 @@ public class HeadlessHelper {
 	 * case project is safe to be skipped. {@code N4JSCompileException} is thrown when provided project manifest
 	 * describes already known project but in different location in which case compilation should be stopped.
 	 *
-	 * @param projectId
+	 * @param projectName
 	 *            of the new project to be considered for registering
 	 * @param projectLocation
 	 *            of the new project to be considered for registering
@@ -291,14 +291,14 @@ public class HeadlessHelper {
 	 * @throws N4JSCompileException
 	 *             if project conflicts with project in different location
 	 */
-	private boolean skipRegistering(String projectId, URI projectLocation, Map<String, URI> registeredProjects)
+	private boolean skipRegistering(String projectName, URI projectLocation, Map<String, URI> registeredProjects)
 			throws N4JSCompileException {
 
 		// new ID, don't skip registering
-		if (!registeredProjects.containsKey(projectId))
+		if (!registeredProjects.containsKey(projectName))
 			return false;
 
-		URI registeredProjectLocation = registeredProjects.get(projectId);
+		URI registeredProjectLocation = registeredProjects.get(projectName);
 
 		// duplicate is the same location, so the same project passed twice, skip registering
 		if (projectLocation.equals(registeredProjectLocation))
@@ -306,12 +306,12 @@ public class HeadlessHelper {
 
 		if (registeredProjectLocation == null)
 			// our local cache of known projects is out of sync with FileBasedWorkspace -> stop compilation
-			throw new N4JSCompileException("Duplicate project id [" + projectId
-					+ "]. Already registered project at " + registeredProjects.get(projectId)
+			throw new N4JSCompileException("Duplicate project id [" + projectName
+					+ "]. Already registered project at " + registeredProjects.get(projectName)
 					+ ", trying to register project at " + projectLocation + ".");
 
 		// duplicate is in new location, so new project with the same name -> stop compilation
-		throw new N4JSCompileException("Duplicate project id [" + projectId
+		throw new N4JSCompileException("Duplicate project id [" + projectName
 				+ "]. Already registered project at " + registeredProjectLocation
 				+ ", trying to register project at " + projectLocation + ".");
 

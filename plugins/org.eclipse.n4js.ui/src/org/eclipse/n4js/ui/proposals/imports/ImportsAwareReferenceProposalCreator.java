@@ -121,7 +121,7 @@ public class ImportsAwareReferenceProposalCreator {
 					IN4JSProject project = n4jsCore.findProject(candidate.getEObjectURI()).orNull();
 					QualifiedName candidateName;
 					if (project != null && tmodule != null && tmodule.equals(project.getMainModule())) {
-						candidateName = QualifiedName.create(project.getProjectId(),
+						candidateName = QualifiedName.create(project.getProjectName(),
 								candidate.getQualifiedName().getLastSegment().toString());
 					} else {
 						candidateName = candidate.getQualifiedName();

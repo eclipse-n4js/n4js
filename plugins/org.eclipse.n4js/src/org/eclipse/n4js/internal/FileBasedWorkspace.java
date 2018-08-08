@@ -113,10 +113,10 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 
 	@Override
 	public URI getLocation(URI unsafeLocation, ProjectReference projectReference) {
-		String projectId = projectReference.getProjectId();
+		String projectName = projectReference.getProjectName();
 		for (URI location : projectElementHandles.keySet()) {
-			String candidateProjectId = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location);
-			if (candidateProjectId.equals(projectId)) {
+			String candidateProjectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location);
+			if (candidateProjectName.equals(projectName)) {
 				LazyProjectDescriptionHandle lazyHandle = projectElementHandles.get(location);
 				if (lazyHandle != null) {
 					return lazyHandle.getLocation();

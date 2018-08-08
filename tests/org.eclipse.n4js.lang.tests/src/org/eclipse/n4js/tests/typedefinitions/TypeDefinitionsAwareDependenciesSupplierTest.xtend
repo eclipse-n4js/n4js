@@ -172,12 +172,12 @@ class TypeDefinitionsAwareDependenciesSupplierTest extends Assert {
 		for (dependency : dependencies) {
 			if (dependency.projectType == ProjectType.DEFINITION) {
 				if (encounteredImplProjectsById.containsKey(dependency.definesPackage)) {
-					problems.add("Implementation project of type definition " + dependency.projectId + 
+					problems.add("Implementation project of type definition " + dependency.projectName + 
 						" was listed before its definition.");
 				}
 				encounteredTypeDefs.add(dependency);
 			} else {
-				encounteredImplProjectsById.put(dependency.projectId, dependency);
+				encounteredImplProjectsById.put(dependency.projectName, dependency);
 			}
 		}
 		
@@ -186,46 +186,46 @@ class TypeDefinitionsAwareDependenciesSupplierTest extends Assert {
 	
 	/**
 	 * Asserts that the given list of {@code dependencies} are in 
-	 * the {@code expectedProjectIdOrder} in terms of their project IDs.
+	 * the {@code expectedProjectNameOrder} in terms of their project IDs.
 	 */
-	private static def void assertOrder(String message, Iterable<IN4JSProject> dependencies, Iterable<String> expectedProjectIdOrder) {
-		val actual = dependencies.map[d | d.projectId].join(" ");
-		val expectation = expectedProjectIdOrder.join(" ");
+	private static def void assertOrder(String message, Iterable<IN4JSProject> dependencies, Iterable<String> expectedProjectNameOrder) {
+		val actual = dependencies.map[d | d.projectName].join(" ");
+		val expectation = expectedProjectNameOrder.join(" ");
 		
 		assertEquals(message, expectation, actual);
 	}
 	
 	/**
-	 * Returns with a new project (of type 'library') with the given projectId and list of dependencies.
+	 * Returns with a new project (of type 'library') with the given projectName and list of dependencies.
 	 */
-	private static def IN4JSProject project(String projectId, IN4JSProject... dependencies) {
-		return new MockTypeDefinitionsProject(projectId, dependencies);
+	private static def IN4JSProject project(String projectName, IN4JSProject... dependencies) {
+		return new MockTypeDefinitionsProject(projectName, dependencies);
 	}
 	
 	/**
 	 * Returns with a new definition project (of type 'definition') whose "definesPackage" property is set to the 
-	 * projectId of {@code implementationProject}.
+	 * projectName of {@code implementationProject}.
 	 * 
 	 * The name of the type definition project is inferred from the {@code implementationProject} by appending the suffix {@code -n4jsd}. 
 	 */
 	private static def IN4JSProject definitionProject(IN4JSProject implementationProject) {
-		return definitionProject(implementationProject.projectId + "-n4jsd", implementationProject);
+		return definitionProject(implementationProject.projectName + "-n4jsd", implementationProject);
 	}
 	
 	/** 
 	 * Returns with a new definition project (of type 'definition') whose "definesPackage" property is set to the 
-	 * projectId of {@code implementationProject}. 
+	 * projectName of {@code implementationProject}. 
 	 */
-	private static def IN4JSProject definitionProject(String projectId, IN4JSProject implementationProject) {
-		return definitionProject(projectId, implementationProject.projectId);
+	private static def IN4JSProject definitionProject(String projectName, IN4JSProject implementationProject) {
+		return definitionProject(projectName, implementationProject.projectName);
 	}
 	
 	/** 
 	 * Returns with a new definition project (of type 'definition') whose "definesPackage" property is set to the 
 	 * {@code definesPackage}. 
 	 */
-	private static def IN4JSProject definitionProject(String projectId, String definesPackage) {
-		return new MockTypeDefinitionsProject(projectId, definesPackage);
+	private static def IN4JSProject definitionProject(String projectName, String definesPackage) {
+		return new MockTypeDefinitionsProject(projectName, definesPackage);
 	}
 }
 
@@ -239,20 +239,20 @@ class MockTypeDefinitionsProject extends N4JSProject {
 	private final String definesPackage;
 	private final ImmutableList<? extends IN4JSProject> dependencies;
 
-	new(String projectId) {
-		super(newLocation(projectId), false, null);
+	new(String projectName) {
+		super(newLocation(projectName), false, null);
 		this.definesPackage = null;
 		this.dependencies = ImmutableList.of();
 	}
 
-	new(String projectId, String definesPackage) {
-		super(newLocation(projectId), false, null);
+	new(String projectName, String definesPackage) {
+		super(newLocation(projectName), false, null);
 		this.definesPackage = definesPackage;
 		this.dependencies = ImmutableList.of();
 	}
 
-	new(String projectId, IN4JSProject... dependencies) {
-		super(newLocation(projectId), false, null);
+	new(String projectName, IN4JSProject... dependencies) {
+		super(newLocation(projectName), false, null);
 		this.definesPackage = null;
 		this.dependencies = ImmutableList.copyOf(dependencies);
 	}
@@ -275,7 +275,7 @@ class MockTypeDefinitionsProject extends N4JSProject {
 
 	public override String toString() {
 		val StringBuilder builder = new StringBuilder();
-		builder.append(getProjectId() + " {");
+		builder.append(getProjectName() + " {");
 
 		if (definesPackage !== null) {
 			builder.append("definesPackage=" + this.definesPackage);
@@ -302,8 +302,8 @@ class MockTypeDefinitionsProject extends N4JSProject {
 	 * The returned location is guaranteed to be distinct from all other locations returned
 	 * by this method (passing the same project ID twice, will yield two distinct locations). 
 	 */
-	private static def URI newLocation(String projectId) {
-		return URI.createFileURI("container" + containerCounter++ + "/" + projectId
+	private static def URI newLocation(String projectName) {
+		return URI.createFileURI("container" + containerCounter++ + "/" + projectName
 		)
 	}
 }

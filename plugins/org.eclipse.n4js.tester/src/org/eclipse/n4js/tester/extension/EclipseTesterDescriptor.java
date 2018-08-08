@@ -16,12 +16,11 @@ import java.util.stream.Stream;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
+import org.eclipse.n4js.tester.ITester;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-
-import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
-import org.eclipse.n4js.tester.ITester;
 
 /**
  * Implementation of {@link ITesterDescriptor} that represents a tester registered via the Eclipse extension point
@@ -75,12 +74,12 @@ public class EclipseTesterDescriptor implements ITesterDescriptor { // TODO move
 			throw new IllegalArgumentException(
 					"extension attribute '" + ATTR_ENVIRONMENT + "' may not be null or empty");
 		}
-		this.environment = RuntimeEnvironment.fromProjectId(environmentRaw);
+		this.environment = RuntimeEnvironment.fromProjectName(environmentRaw);
 		if (this.environment == null) {
 			throw new IllegalArgumentException("unknown runtime environment: "
 					+ environmentRaw
 					+ " (valid values are: "
-					+ Stream.of(RuntimeEnvironment.values()).map(re -> re.getProjectId())
+					+ Stream.of(RuntimeEnvironment.values()).map(re -> re.getProjectName())
 							.collect(Collectors.joining(", "))
 					+ ")");
 		}

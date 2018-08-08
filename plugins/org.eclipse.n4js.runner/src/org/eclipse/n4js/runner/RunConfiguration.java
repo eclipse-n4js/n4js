@@ -324,8 +324,8 @@ public class RunConfiguration {
 
 	/**
 	 * For each API project in the direct and indirect project dependencies of the module to run, this will contain a
-	 * mapping from the <code>projectId</code> of the API project to the <code>projectId</code> of the implementation
-	 * project to use in the run. Never returns <code>null</code> but may return an empty map.
+	 * mapping from the <code>projectName</code> of the API project to the <code>projectName</code> of the
+	 * implementation project to use in the run. Never returns <code>null</code> but may return an empty map.
 	 */
 	public Map<String, String> getApiImplProjectMapping() {
 		return Collections.unmodifiableMap(apiImplProjectMapping);
@@ -341,7 +341,7 @@ public class RunConfiguration {
 	public void setApiImplProjectMappingFromProjects(Map<IN4JSProject, IN4JSProject> apiImplProjectMapping) {
 		this.apiImplProjectMapping.clear();
 		apiImplProjectMapping.entrySet().forEach(
-				e -> this.apiImplProjectMapping.put(e.getKey().getProjectId(), e.getValue().getProjectId()));
+				e -> this.apiImplProjectMapping.put(e.getKey().getProjectName(), e.getValue().getProjectName()));
 	}
 
 	/**
@@ -454,7 +454,7 @@ public class RunConfiguration {
 		final Map<String, Object> result = new HashMap<>();
 		result.put(NAME, this.name);
 		result.put(RUNNER_ID, this.runnerId);
-		result.put(RUNTIME_ENVIRONMENT, this.runtimeEnvironment.getProjectId());
+		result.put(RUNTIME_ENVIRONMENT, this.runtimeEnvironment.getProjectName());
 		result.put(IMPLEMENTATION_ID, this.implementationId);
 		result.put(USER_SELECTION, this.userSelection.toString());
 		result.put(CUSTOM_ENGINE_PATH, getCustomEnginePath());
@@ -477,7 +477,7 @@ public class RunConfiguration {
 		this.name = getString(map, NAME, false);
 		this.runnerId = getString(map, RUNNER_ID, false);
 		this.runtimeEnvironment = RuntimeEnvironment
-				.fromProjectId(getString(map, RUNTIME_ENVIRONMENT, false));
+				.fromProjectName(getString(map, RUNTIME_ENVIRONMENT, false));
 		this.implementationId = getString(map, IMPLEMENTATION_ID, true);
 		this.userSelection = getURI(map, USER_SELECTION, false);
 		this.customEnginePath = nullToEmpty(getString(map, CUSTOM_ENGINE_PATH, true));

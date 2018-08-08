@@ -75,13 +75,13 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 		addProjectToDependencies(secondProjectUnderTest.project.name)
 	}
 
-	private def void addProjectToDependencies(String projectId) {
+	private def void addProjectToDependencies(String projectName) {
 		val uri = URI.createPlatformResourceURI(projectDescriptionFile.fullPath.toString, true);
 		val rs = getResourceSet(firstProjectUnderTest);
 		val resource = rs.getResource(uri, true);
 
 		val JSONObject packageJSONRoot = PackageJSONTestUtils.getPackageJSONRoot(resource);
-		PackageJSONTestUtils.addProjectDependency(packageJSONRoot, projectId, "*");
+		PackageJSONTestUtils.addProjectDependency(packageJSONRoot, projectName, "*");
 
 		resource.save(null)
 		waitForAutoBuild();
@@ -133,7 +133,7 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 		val resource = rs.getResource(uri, true);
 		
 		val packageJSONRoot = PackageJSONTestUtils.getPackageJSONRoot(resource);
-		PackageJSONTestUtils.setProjectId(packageJSONRoot, newName);
+		PackageJSONTestUtils.setProjectName(packageJSONRoot, newName);
 
 		resource.save(null)
 		waitForAutoBuild

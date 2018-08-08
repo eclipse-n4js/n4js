@@ -29,7 +29,7 @@ public class DependenciesCollectingUtil {
 
 	/**
 	 * Updates provided mapping of {@code id->version} with information computed from the provided project descriptions.
-	 * Returned map will not contain entries where the key matches {@code ProjectDescription#getProjectId() id} of the
+	 * Returned map will not contain entries where the key matches {@code ProjectDescription#getProjectName() id} of the
 	 * processed descriptions.
 	 *
 	 * Note that {@code ids} of the returned dependencies are not validated.
@@ -45,7 +45,7 @@ public class DependenciesCollectingUtil {
 			// in case we get non N4JS projects, user docs projects that are not N4JS projects, or something created by
 			// the plugins e.g RemoteSystemsTempFiles (see https://stackoverflow.com/q/3627463/52564 )
 			if (pd != null) {
-				availableProjectsIds.add(pd.getProjectId());
+				availableProjectsIds.add(pd.getProjectName());
 				updateFromProjectDescription(versionedPackages, pd);
 			}
 		});

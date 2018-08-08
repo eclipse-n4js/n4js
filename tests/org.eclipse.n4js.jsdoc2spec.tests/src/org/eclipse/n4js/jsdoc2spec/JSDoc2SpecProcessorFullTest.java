@@ -37,7 +37,7 @@ import com.google.inject.Provider;
 @SuppressWarnings("javadoc")
 abstract public class JSDoc2SpecProcessorFullTest {
 
-	abstract protected void fullTest(String projectId)
+	abstract protected void fullTest(String projectName)
 			throws IOException, InterruptedException, InterruptedException;
 
 	/**

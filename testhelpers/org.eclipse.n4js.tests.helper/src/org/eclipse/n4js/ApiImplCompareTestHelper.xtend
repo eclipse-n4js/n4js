@@ -115,9 +115,9 @@ class ApiImplCompareTestHelper {
 		projectCompareHelper.compareApiImpl(entry,0).description
 	}
 
-	public def ProjectReference createProjectReference(String projectIdOfTargetProject) {
+	public def ProjectReference createProjectReference(String projectNameOfTargetProject) {
 		val pref = ProjectDescriptionFactory.eINSTANCE.createProjectReference;
-		pref.projectId = projectIdOfTargetProject;
+		pref.projectName = projectNameOfTargetProject;
 		return pref;
 	}
 }

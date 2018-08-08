@@ -73,7 +73,7 @@ class ClassWithSuperClassAndRolesTypesBuilderTest extends AbstractTypesBuilderTe
 		    attr EString astMD5 '752c8770faa7f94d96cd74123d08cb8b'
 		    attr EString moduleLoader 'N4JS'
 		    attr EString moduleSpecifier 'org/eclipse/n4js/tests/typesbuilder/ClassWithSuperClassAndRoles'
-		    attr EString projectId 'org.eclipse.n4js.lang.tests'
+		    attr EString projectName 'org.eclipse.n4js.lang.tests'
 		    attr EString qualifiedName 'org/eclipse/n4js/tests/typesbuilder/ClassWithSuperClassAndRoles'
 		    cref Type topLevelTypes [
 		        0: TClass {

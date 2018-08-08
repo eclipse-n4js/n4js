@@ -63,7 +63,7 @@ public class ImportsFactory {
 		String moduleQN;
 		if (targetProject != null && tmodule.getQualifiedName().toString().equals(targetProject.getMainModule())) {
 			// If the project has a main module, use project import instead.
-			moduleQN = targetProject.getProjectId();
+			moduleQN = targetProject.getProjectName();
 		} else {
 			// Standard case
 			moduleQN = te.getContainingModule().getQualifiedName();
@@ -112,17 +112,17 @@ public class ImportsFactory {
 			Adapter nodelessMarker,
 			BiFunction<String, ImportDeclaration, ImportDeclaration> specifierFactory) {
 
-		boolean considerProjectID = fromProject != null;
-		switch (ImportSpecifierUtil.computeImportType(qn, considerProjectID, fromProject)) {
+		boolean considerProjectName = fromProject != null;
+		switch (ImportSpecifierUtil.computeImportType(qn, considerProjectName, fromProject)) {
 		case PROJECT_IMPORT:
 			return specifierFactory.apply(usedName,
-					createImportDeclaration(nodelessMarker, fromProject.getProjectId()));
+					createImportDeclaration(nodelessMarker, fromProject.getProjectName()));
 		case SIMPLE_IMPORT:
 			return specifierFactory.apply(usedName,
 					createImportDeclaration(nodelessMarker, qualifiedNameConverter.toString(qn)));
 		case COMPLETE_IMPORT:
 			return specifierFactory.apply(usedName, createImportDeclaration(nodelessMarker,
-					fromProject.getProjectId() + N4JSQualifiedNameConverter.DELIMITER +
+					fromProject.getProjectName() + N4JSQualifiedNameConverter.DELIMITER +
 							qualifiedNameConverter.toString(qn)));
 		default:
 			throw new RuntimeException("Cannot resolve default import for " + usedName);

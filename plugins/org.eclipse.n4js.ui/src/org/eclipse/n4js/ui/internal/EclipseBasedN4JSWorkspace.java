@@ -99,7 +99,7 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 	@Override
 	public URI getLocation(URI projectURI, ProjectReference projectReference) {
 		if (projectURI.segmentCount() >= DIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT) {
-			String expectedProjectName = projectReference.getProjectId();
+			String expectedProjectName = projectReference.getProjectName();
 			if (expectedProjectName != null && expectedProjectName.length() > 0) {
 				String expectedEclipseProjectName = ProjectDescriptionUtils
 						.convertN4JSProjectNameToEclipseProjectName(expectedProjectName);

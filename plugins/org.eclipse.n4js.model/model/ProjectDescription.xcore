@@ -38,7 +38,7 @@ class ProjectDescription {
 	 * The <em>N4JS project name</em>, as defined at
 	 * {@link org.eclipse.n4js.utils.ProjectDescriptionUtils#isProjectNameWithScope(String)}.
 	 */
-	String projectId
+	String projectName
 	String vendorId
 	String vendorName
 	contains VersionNumber projectVersion
@@ -89,7 +89,7 @@ class SourceContainerDescription {
 
 /* Reference to another project without version requirement. */
 class ProjectReference {
-	String projectId
+	String projectName
 }
 
 /* Reference to another project, including a version requirement. */

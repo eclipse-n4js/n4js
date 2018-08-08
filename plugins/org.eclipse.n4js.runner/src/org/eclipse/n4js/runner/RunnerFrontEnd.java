@@ -176,7 +176,7 @@ public class RunnerFrontEnd {
 	 */
 	public RunConfiguration createXpectOutputTestConfiguration(String runnerId,
 			String userSelectionNodePathResolvableTargetFileName, SystemLoaderInfo systemLoader,
-			Path additionalProjectPath, String additionalProjectId) {
+			Path additionalProjectPath, String additionalProjectName) {
 
 		final IRunnerDescriptor runnerDesc = runnerRegistry.getDescriptor(runnerId);
 		final IRunner runner = runnerDesc.getRunner();
@@ -190,7 +190,7 @@ public class RunnerFrontEnd {
 
 		config.setUseCustomBootstrap(true);
 
-		config.setCoreProjectPaths(ImmutableMap.of(additionalProjectPath, additionalProjectId));
+		config.setCoreProjectPaths(ImmutableMap.of(additionalProjectPath, additionalProjectName));
 
 		config.setExecutionData(RunConfiguration.EXEC_DATA_KEY__USER_SELECTION,
 				userSelectionNodePathResolvableTargetFileName);
@@ -239,7 +239,7 @@ public class RunnerFrontEnd {
 	 */
 	private void configureDependenciesAndPaths(RunConfiguration config) {
 		// 1) for all API projects among the direct and indirect dependencies we have to provide a mapping
-		// from the projectId of the API project to the projectId of the implementation project to be used
+		// from the projectName of the API project to the projectName of the implementation project to be used
 		final ApiUsage apiUsage = runnerHelper
 				.getProjectExtendedDepsAndApiImplMapping(config.getRuntimeEnvironment(),
 						config.getUserSelection(), config.getImplementationId(), true);

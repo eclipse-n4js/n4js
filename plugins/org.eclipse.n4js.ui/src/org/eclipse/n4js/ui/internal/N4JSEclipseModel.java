@@ -91,10 +91,10 @@ public class N4JSEclipseModel extends N4JSModel {
 	}
 
 	@Override
-	protected IN4JSProject newAbsentProject(String projectId) {
-		final URI uri = URI.createPlatformResourceURI(projectId, false);
+	protected IN4JSProject newAbsentProject(String projectName) {
+		final URI uri = URI.createPlatformResourceURI(projectName, false);
 		final String eclipseProjectName = ProjectDescriptionUtils
-				.convertN4JSProjectNameToEclipseProjectName(projectId);
+				.convertN4JSProjectNameToEclipseProjectName(projectName);
 		return new N4JSEclipseProject(workspace.getProject(eclipseProjectName), uri, this);
 	}
 
@@ -277,14 +277,14 @@ public class N4JSEclipseModel extends N4JSModel {
 		for (IProject project : workspace.getProjects()) {
 			if (project.isOpen()) {
 				N4JSEclipseProject n4jsProject = getN4JSProject(project);
-				workspaceProjectMapping.put(n4jsProject.getProjectId(), n4jsProject);
+				workspaceProjectMapping.put(n4jsProject.getProjectName(), n4jsProject);
 			}
 		}
 
 		for (IProject project : externalLibraryWorkspace.getProjects()) {
 			if (!workspaceProjectMapping.containsKey(project.getName())) {
 				N4JSEclipseProject n4jsProject = getN4JSProject(project);
-				workspaceProjectMapping.put(n4jsProject.getProjectId(), n4jsProject);
+				workspaceProjectMapping.put(n4jsProject.getProjectName(), n4jsProject);
 			}
 		}
 
