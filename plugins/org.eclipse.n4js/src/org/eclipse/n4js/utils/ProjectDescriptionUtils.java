@@ -84,7 +84,9 @@ public class ProjectDescriptionUtils {
 	 * <td>{@code @myScope}</td>
 	 * </tr>
 	 * </table>
-	 * For non-scoped projects, the N4JS project name, the Eclipse project name, and the plain project name are equal.
+	 * In case the intended meaning is apparent from the context, the "N4JS project name" can simply be referred to as
+	 * "project name" (as is common practice in the context of npm). For non-scoped projects, the N4JS project name, the
+	 * Eclipse project name, and the plain project name are equal.
 	 * <p>
 	 * Due to conventions and rules we cannot influence, an N4JS project name including a scope has to be encoded in
 	 * {@link URI}s and {@link QualifiedName}s in various ways:
