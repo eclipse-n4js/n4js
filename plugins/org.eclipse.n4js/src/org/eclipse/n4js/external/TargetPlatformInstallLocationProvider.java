@@ -18,6 +18,7 @@ import java.net.URI;
 
 import org.apache.log4j.Logger;
 import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
+import org.eclipse.n4js.external.libraries.ExternalLibraryFolderUtils;
 
 /**
  * Provides information about the target platform install location and about the location of the actual target platform
@@ -163,9 +164,10 @@ public interface TargetPlatformInstallLocationProvider {
 	}
 
 	/**
-	 * Recreates the folders node_modules and type_definitions.
+	 * Recreates the folders node_modules and type_definitions folders and the the target platform definition
+	 * {@code package.json} file.
 	 *
-	 * @return true if folder were recreated and exist
+	 * @return true if the required file system structure was recreated and now exists
 	 */
 	default boolean repairNpmFolderState() {
 		boolean success = true;
@@ -173,9 +175,13 @@ public interface TargetPlatformInstallLocationProvider {
 		if (!installLocation.isDirectory()) {
 			success &= installLocation.mkdir();
 		}
+
 		if (success) {
-			File npmFile = getNodeModulesFolder();
-			File tdFile = getTypeDefinitionsFolder();
+			final File targetPlatformDefinitionFile = ExternalLibraryFolderUtils
+					.createTargetPlatformDefinitionFile(installLocation);
+			final File npmFile = getNodeModulesFolder();
+			final File tdFile = getTypeDefinitionsFolder();
+			success &= targetPlatformDefinitionFile != null && targetPlatformDefinitionFile.isFile();
 			success &= npmFile != null && npmFile.isDirectory();
 			success &= tdFile != null && tdFile.isDirectory();
 		}

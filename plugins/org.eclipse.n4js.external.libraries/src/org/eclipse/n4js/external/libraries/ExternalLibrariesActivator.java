@@ -20,11 +20,9 @@ import static java.lang.Boolean.parseBoolean;
 import static org.eclipse.core.runtime.Platform.inDebugMode;
 import static org.eclipse.core.runtime.Platform.inDevelopmentMode;
 import static org.eclipse.n4js.external.libraries.ExternalLibraryFolderUtils.NPM_ROOT;
-import static org.eclipse.n4js.external.libraries.ExternalLibraryFolderUtils.PACKAGE_JSON;
 import static org.eclipse.xtext.util.Tuples.pair;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
@@ -198,7 +196,7 @@ public class ExternalLibrariesActivator implements BundleActivator {
 			() -> getExternalLibraries());
 
 	/**
-	 * Supplies the {@code .n4npm/node_modules} folder location form the worksapce's {@code .metadata} folder. This
+	 * Supplies the {@code .n4npm/node_modules} folder location form the workspace's {@code .metadata} folder. This
 	 * could be missing if the {@link Platform platform} is not running.
 	 */
 	public static final Supplier<File> N4_NPM_FOLDER_SUPPLIER = memoize(() -> getOrCreateNpmFolder());
@@ -343,20 +341,7 @@ public class ExternalLibrariesActivator implements BundleActivator {
 		checkState(typeDefinitionsFolder.isDirectory(),
 				"Expecting directory but was a file: " + typeDefinitionsFolder + ".");
 
-		final File targetPlatformFile = new File(targetPlatform, PACKAGE_JSON);
-		if (!targetPlatformFile.exists()) {
-			try {
-				checkState(targetPlatformFile.createNewFile(), "Error while creating default target platform file.");
-				try (final FileWriter fw = new FileWriter(targetPlatformFile)) {
-					fw.write(ExternalLibraryFolderUtils.createTargetPlatformPackageJson());
-					fw.flush();
-				}
-			} catch (final IOException e) {
-				final String message = "Error while initializing default target platform file.";
-				LOGGER.error(message, e);
-				throw new RuntimeException(message, e);
-			}
-		}
+		final File targetPlatformFile = ExternalLibraryFolderUtils.createTargetPlatformDefinitionFile(targetPlatform);
 		checkState(targetPlatformFile.isFile(),
 				"Expecting file as the target platform file: " + targetPlatformFile + ".");
 
