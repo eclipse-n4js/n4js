@@ -56,7 +56,6 @@ import org.eclipse.n4js.ui.external.ComputeProjectOrder.VertexOrder;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildQueue.Task;
 import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
 import org.eclipse.n4js.utils.MultiCleartriggerCache;
-import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.builder.builderState.IBuilderState;
 import org.eclipse.xtext.builder.impl.BuildData;
 import org.eclipse.xtext.builder.impl.QueuedBuildData;
@@ -276,6 +275,7 @@ public class ExternalLibraryBuilder {
 			Job.getJobManager().beginRule(rule, monitor);
 
 			errorMarkerManager.clearMarkers(projects);
+			cache.clear(N4JSModel.SORTED_DEPENDENCIES);
 
 			VertexOrder<IN4JSProject> buildOrder = builtOrderComputer.getBuildOrder(projects);
 			// wrap as Arrays.asList returns immutable list
@@ -455,9 +455,6 @@ public class ExternalLibraryBuilder {
 				ResourceSet resourceSet = null;
 
 				try {
-
-					helper.cache.clear(N4JSModel.SORTED_DEPENDENCIES, URIUtils.convert(project));
-
 					resourceSet = core.createResourceSet(Optional.of(n4EclPrj));
 					if (!resourceSet.getLoadOptions().isEmpty()) {
 						resourceSet.getLoadOptions().clear();
