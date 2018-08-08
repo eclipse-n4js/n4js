@@ -32,7 +32,7 @@ public class RunnerUiExecutableExtensionFactory extends N4ExecutableExtensionFac
 	}
 
 	@Override
-	protected String getBunleId() {
+	protected String getBundleId() {
 		return RunnerUiActivator.PLUGIN_ID;
 	}
 

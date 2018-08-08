@@ -55,7 +55,7 @@ public class TesterFacadeImpl implements TesterFacade {
 		}
 
 		final String sessionId = tree.getSessionId().getValue();
-		fsmRegistry.registerFsm(sessionId);
+		fsmRegistry.getTestFsm(sessionId);
 		treeRegistry.registerTestTree(tree);
 		return actualPort;
 	}

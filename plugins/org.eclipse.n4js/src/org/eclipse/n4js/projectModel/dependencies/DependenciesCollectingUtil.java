@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import org.eclipse.n4js.projectDescription.DependencyType;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectReference;
 
@@ -65,7 +66,7 @@ public class DependenciesCollectingUtil {
 				pd.getImplementedProjects().stream().map(DependencyInfo::create))
 				.reduce(Stream::concat)
 				.orElseGet(Stream::empty)
-				.filter(info -> !info.name.endsWith("-n4jsd")) // GH-821: re-visit when done or change to @n4jsd scope
+				.filter(info -> info.type != DependencyType.TYPE) // do not install missing type dependencies
 				.forEach(info -> dependencies.merge(info.name, info.version, DependenciesCollectingUtil::resolve));
 	}
 
