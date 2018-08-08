@@ -974,10 +974,12 @@ public class TestResultsView extends ViewPart {
 	 * Invoked when user performs {@link #actionStop}.
 	 */
 	protected void performStop() {
-
+		IProcess process = DebugUITools.getCurrentProcess();
+		if (process == null) {
+			return;
+		}
 		final TestSession session = from(registeredSessions).firstMatch(s -> s.root == currentRoot).orNull();
 		if (null != session) {
-			IProcess process = DebugUITools.getCurrentProcess();
 			ILaunch launch = process.getLaunch();
 			ILaunchConfiguration runningConfig = launch.getLaunchConfiguration();
 			ILaunchConfiguration sessionConfig = getLaunchConfigForSession(session, null);
@@ -1136,7 +1138,8 @@ public class TestResultsView extends ViewPart {
 							stackTrace.setText(sb.toString());
 							stackTrace.setSelection(0);
 						} else if ((SKIPPED_IGNORE.equals(result.getTestStatus())
-								|| SKIPPED_FIXME.equals(result.getTestStatus()))
+								|| SKIPPED_FIXME.equals(result.getTestStatus())
+								|| ERROR.equals(result.getTestStatus()))
 								&& !isNullOrEmpty(result.getMessage())) {
 							stackTrace.setText(result.getMessage());
 							stackTrace.setSelection(0);
@@ -1202,8 +1205,11 @@ public class TestResultsView extends ViewPart {
 			// server completed test session SUCCESS
 			// ignore
 		} else if (event instanceof SessionFailedEvent) {
-			// server completed test session FAILURE
-			// ignore
+			// the session failed
+			final TestSession session = from(registeredSessions).firstMatch(s -> s.root == currentRoot).orNull();
+			if (session != null) {
+				notifySessionFailed(session, ((SessionFailedEvent) event).getComment().or("Unknown cause."));
+			}
 		} else {
 			// ignore all other events (e.g. TestPingedEvent)
 		}
@@ -1530,5 +1536,48 @@ public class TestResultsView extends ViewPart {
 			root = resultNode;
 		}
 
+	}
+
+	/**
+	 * Handles an failure of the test session, by setting all remaining running test cases / suites to an error
+	 * {@link TestStatus} informing the user about the failure.
+	 *
+	 * Also sets test cases that have not been run yet to result {@link TestStatus#SKIPPED}.
+	 */
+	private void notifySessionFailed(TestSession session, String comment) {
+		final TestResult earlyTerminationResult = new TestResult(TestStatus.ERROR);
+		earlyTerminationResult
+				.setMessage("Error: " + comment);
+
+		// collect all nodes
+		final Set<ResultNode> allNodes = new HashSet<>();
+		collectAllNodes(session.root, allNodes);
+
+		// update status of leaf nodes
+		for (ResultNode node : allNodes) {
+			if (!node.isLeaf()) {
+				continue;
+			}
+			if (node.isRunning()) {
+				node.stopRunning();
+				node.updateResult(earlyTerminationResult);
+				updateNode(node);
+			} else if (node.getStatus() == null) {
+				node.updateResult(new TestResult(TestStatus.SKIPPED));
+				updateNode(node);
+			}
+		}
+		updateProgressBar();
+	}
+
+	/** Recursively collects all child nodes, reachable from the given {@code root}. */
+	private void collectAllNodes(ResultNode root, Set<ResultNode> nodes) {
+		if (nodes.contains(root)) {
+			return;
+		}
+		nodes.add(root);
+		for (ResultNode child : root.getChildren()) {
+			collectAllNodes(child, nodes);
+		}
 	}
 }
