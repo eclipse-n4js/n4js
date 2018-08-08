@@ -38,6 +38,7 @@ import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.JSON.NameValuePair;
+import org.eclipse.n4js.projectDescription.DependencyType;
 import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectDescriptionFactory;
@@ -108,11 +109,11 @@ public class PackageJsonHelper {
 				target.setProjectVersion(parseVersion(asNonEmptyStringOrNull(value)));
 				break;
 			case DEPENDENCIES:
-				convertDependencies(target, asNameValuePairsOrEmpty(value), true);
+				convertDependencies(target, asNameValuePairsOrEmpty(value), true, DependencyType.RUNTIME);
 				break;
 			case DEV_DEPENDENCIES:
 				// for the moment, we do not separate devDependencies from ordinary dependencies in ProjectDescription
-				convertDependencies(target, asNameValuePairsOrEmpty(value), true);
+				convertDependencies(target, asNameValuePairsOrEmpty(value), true, DependencyType.DEVELOPMENT);
 				break;
 			case MAIN:
 				// need to handle this value later after all source containers have been read
@@ -194,7 +195,7 @@ public class PackageJsonHelper {
 				break;
 			case TYPE_DEPENDENCIES:
 				// in the context of N4JS, type dependencies are considered regular project dependencies
-				convertDependencies(target, asNameValuePairsOrEmpty(value), true);
+				convertDependencies(target, asNameValuePairsOrEmpty(value), true, DependencyType.TYPE);
 				break;
 
 			default:
@@ -203,7 +204,8 @@ public class PackageJsonHelper {
 		}
 	}
 
-	private void convertDependencies(ProjectDescription target, List<NameValuePair> depPairs, boolean avoidDuplicates) {
+	private void convertDependencies(ProjectDescription target, List<NameValuePair> depPairs, boolean avoidDuplicates,
+			DependencyType type) {
 		Set<String> existingProjectIds = new HashSet<>();
 		if (avoidDuplicates) {
 			for (ProjectDependency pd : target.getProjectDependencies()) {
@@ -225,6 +227,7 @@ public class PackageJsonHelper {
 				ProjectDependency dep = ProjectDescriptionFactory.eINSTANCE.createProjectDependency();
 				dep.setProjectId(projectId);
 				dep.setVersionRequirementString(valueStr);
+				dep.setType(type);
 
 				NPMVersionRequirement vreq = parseVersionRequirement(valueStr);
 				dep.setVersionRequirement(vreq);

@@ -17,15 +17,6 @@ import static org.apache.log4j.Logger.getLogger;
 import java.util.Objects;
 
 import org.apache.log4j.Logger;
-
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
-import com.google.common.eventbus.AllowConcurrentEvents;
-import com.google.common.eventbus.Subscribe;
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.google.inject.Singleton;
-
 import org.eclipse.n4js.tester.TesterEventBus;
 import org.eclipse.n4js.tester.events.SessionEndedEvent;
 import org.eclipse.n4js.tester.events.SessionFailedEvent;
@@ -37,6 +28,14 @@ import org.eclipse.n4js.tester.events.TestEvent;
 import org.eclipse.n4js.tester.events.TestPingedEvent;
 import org.eclipse.n4js.tester.events.TestStartedEvent;
 import org.eclipse.n4js.tester.internal.InternalTestTreeRegistry;
+
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.google.common.eventbus.AllowConcurrentEvents;
+import com.google.common.eventbus.Subscribe;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.google.inject.Singleton;
 
 /**
  * Singleton FSM registry. Clients may initialize and create new tester FSM instances via this class.
@@ -83,7 +82,7 @@ public class TestFsmRegistryImpl implements TestFsmRegistry {
 	 * @return return with the new FSM instance.
 	 */
 	@Override
-	public TestFsm registerFsm(final String sessionId) {
+	public TestFsm getTestFsm(final String sessionId) {
 		if (debugEnabled) {
 			LOGGER.debug("Registering new FSM with '" + sessionId + "' session ID...");
 		}
@@ -126,7 +125,7 @@ public class TestFsmRegistryImpl implements TestFsmRegistry {
 
 		if (event instanceof SessionStartedEvent) {
 			if (!isSessionExist(sessionId)) {
-				registerFsm(sessionId);
+				getTestFsm(sessionId);
 			}
 			getSession(sessionId).startSession(sessionId);
 		} else if (event instanceof SessionPingedEvent) {
@@ -137,8 +136,8 @@ public class TestFsmRegistryImpl implements TestFsmRegistry {
 			if (fsm instanceof TestFsmImpl && !((TestFsmImpl) fsm).isFailed()) {
 				if (!treeRegistry.validateTestTree(sessionId)) {
 					((TestFsmImpl) fsm)
-							.fail("Test session failed due to invalid final state of the test tree. "
-									+ "There are test cases without any test results after receiving session ended event.");
+							.fail("Test session has been terminated unexpectedly. "
+									+ "There are test cases without any test results after receiving the session ended event.");
 					return;
 				}
 			}

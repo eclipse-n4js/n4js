@@ -31,7 +31,7 @@ public class NodejsTesterUiExecutableExtensionFactory extends N4ExecutableExtens
 	}
 
 	@Override
-	protected String getBunleId() {
+	protected String getBundleId() {
 		return NodejsTesterUiActivator.PLUGIN_ID;
 	}
 
