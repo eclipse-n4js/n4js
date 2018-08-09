@@ -37,6 +37,7 @@ import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider.TypeDefinitio
 import org.eclipse.n4js.generator.IWorkspaceMarkerSupport;
 import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
+import org.eclipse.n4js.internal.MultiCleartriggerCache;
 import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.packagejson.PackageJsonHelper;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
@@ -141,6 +142,7 @@ public class ContributingModule implements Module {
 		binder.bind(N4JSEclipseModel.class);
 		binder.bind(MarkerCreator.class);
 		binder.bind(WildcardPathFilterHelper.class);
+		binder.bind(MultiCleartriggerCache.class);
 
 		binder.bind(ExternalLibraryWorkspace.class).to(EclipseExternalLibraryWorkspace.class);
 		binder.bind(EclipseExternalLibraryWorkspace.class);
