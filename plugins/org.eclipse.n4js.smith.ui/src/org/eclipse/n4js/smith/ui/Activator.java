@@ -37,13 +37,16 @@ public class Activator extends AbstractUIPlugin {
 	@SuppressWarnings("javadoc")
 	public final ImageDescriptor ICON_SNAPSHOT = imageDescriptorFromPlugin(PLUGIN_ID, ICON_FOLDER + "snapshot.png");
 	@SuppressWarnings("javadoc")
-	public final ImageDescriptor ICON_PAUSE = imageDescriptorFromPlugin(PLUGIN_ID, ICON_FOLDER + "pause.gif");
+	public final ImageDescriptor ICON_SNAPSHOT_SAVE = imageDescriptorFromPlugin(PLUGIN_ID,
+			ICON_FOLDER + "snapshot_save.png");
 	@SuppressWarnings("javadoc")
-	public final ImageDescriptor ICON_GRAPH_AST = imageDescriptorFromPlugin(PLUGIN_ID, ICON_FOLDER + "graphAST.gif");
+	public final ImageDescriptor ICON_PAUSE = imageDescriptorFromPlugin(PLUGIN_ID, ICON_FOLDER + "pause.png");
 	@SuppressWarnings("javadoc")
-	public final ImageDescriptor ICON_GRAPH_CF = imageDescriptorFromPlugin(PLUGIN_ID, ICON_FOLDER + "graphCF.gif");
+	public final ImageDescriptor ICON_GRAPH_AST = imageDescriptorFromPlugin(PLUGIN_ID, ICON_FOLDER + "graphAST.png");
 	@SuppressWarnings("javadoc")
-	public final ImageDescriptor ICON_GRAPH_DF = imageDescriptorFromPlugin(PLUGIN_ID, ICON_FOLDER + "graphDF.gif");
+	public final ImageDescriptor ICON_GRAPH_CF = imageDescriptorFromPlugin(PLUGIN_ID, ICON_FOLDER + "graphCF.png");
+	@SuppressWarnings("javadoc")
+	public final ImageDescriptor ICON_GRAPH_DF = imageDescriptorFromPlugin(PLUGIN_ID, ICON_FOLDER + "graphDF.png");
 
 	/**
 	 * The constructor

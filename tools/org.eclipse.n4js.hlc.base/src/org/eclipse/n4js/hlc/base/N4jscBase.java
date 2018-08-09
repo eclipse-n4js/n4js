@@ -24,11 +24,13 @@ import static org.eclipse.n4js.utils.git.GitUtils.pull;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
@@ -66,6 +68,11 @@ import org.eclipse.n4js.hlc.base.running.HeadlessRunner;
 import org.eclipse.n4js.hlc.base.testing.HeadlessTester;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.runner.SystemLoaderInfo;
+import org.eclipse.n4js.smith.ClosableMeasurement;
+import org.eclipse.n4js.smith.CollectedDataAccess;
+import org.eclipse.n4js.smith.DataCollector;
+import org.eclipse.n4js.smith.DataCollectorCSVExporter;
+import org.eclipse.n4js.smith.DataCollectors;
 import org.eclipse.n4js.tester.CliTestTreeTransformer;
 import org.eclipse.n4js.tester.TestCatalogSupplier;
 import org.eclipse.n4js.tester.TestTreeTransformer;
@@ -73,7 +80,6 @@ import org.eclipse.n4js.tester.TesterModule;
 import org.eclipse.n4js.tester.extension.TesterRegistry;
 import org.eclipse.n4js.tester.internal.TesterActivator;
 import org.eclipse.n4js.utils.io.FileDeleter;
-import org.eclipse.n4js.utils.performance.PerformanceMeasurement;
 import org.eclipse.xtext.ISetup;
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.CmdLineException;
@@ -97,7 +103,14 @@ import com.google.inject.util.Modules;
  */
 public class N4jscBase implements IApplication {
 
-	private static final String N4JSC_PERFLOG_ENV = "N4JSC_PERFLOG";
+	/**
+	 * Environment variable name to be used to specify the path of the performance report that is saved after running
+	 * the headless compiler.
+	 *
+	 * If this environment variable is set, the headless compiler will always enable performance data collection,
+	 * regardless of the parameter {@link #performanceReport}.
+	 */
+	private static final String N4JSC_PERFORMANCE_REPORT_ENV = "N4JSC_PERFORMANCE_REPORT";
 
 	/**
 	 * Marker used to distinguish between compile-messages and runner output.
@@ -220,10 +233,16 @@ public class N4jscBase implements IApplication {
 			required = false)
 	String logFile = "n4jsc.log";
 
-	@Option(name = "--perflog",
+	@Option(name = "--performanceReport", aliases = "-pR",
 			// no usage, do not show in help
 			required = false)
-	String perflogPath = null;
+	File performanceReport = null;
+
+	@Option(name = "--performanceKey", aliases = "-pK",
+			// no usage, do not show in help
+			required = false)
+	/** Allows to specify the key of the data collector, whose data is saved in the report (cf. CollectedDataAccess). */
+	String performanceKey = HEADLESS_N4JS_COMPILER_COLLECTOR_NAME;
 
 	/**
 	 * Catch all last arguments as files. The actual meaning of these files depends on the {@link #buildtype} (-bt)
@@ -232,7 +251,20 @@ public class N4jscBase implements IApplication {
 	@Argument(multiValued = true, usage = "filename of source (or project, see -bt) to compile")
 	List<File> srcFiles = new ArrayList<>();
 
-	private PerformanceMeasurement measurement;
+	private static final String HEADLESS_N4JS_COMPILER_COLLECTOR_NAME = "Headless N4JS Compiler";
+
+	private static final DataCollector headlessDataCollector = DataCollectors.INSTANCE
+			.getOrCreateDataCollector(HEADLESS_N4JS_COMPILER_COLLECTOR_NAME);
+	private static final DataCollector buildSetComputationCollector = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Compute build set", HEADLESS_N4JS_COMPILER_COLLECTOR_NAME);
+	private static final DataCollector projectRegistrationCollector = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Register project in workspace", HEADLESS_N4JS_COMPILER_COLLECTOR_NAME);
+	private static final DataCollector installMissingDependencyCollector = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Install missing dependencies", HEADLESS_N4JS_COMPILER_COLLECTOR_NAME);
+	private static final DataCollector compilationCollector = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Compilation", HEADLESS_N4JS_COMPILER_COLLECTOR_NAME);
+	private static final DataCollector runnerTesterCollector = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Execute runner/tester", HEADLESS_N4JS_COMPILER_COLLECTOR_NAME);
 
 	@Inject
 	private N4HeadlessCompiler headless;
@@ -344,7 +376,12 @@ public class N4jscBase implements IApplication {
 	 * @return SuccessExitStatus {@link SuccessExitStatus#INSTANCE success status} when everything went fine
 	 */
 	public SuccessExitStatus doMain(String... args) throws ExitCodeException {
-		try {
+		// Enable data collection, if arguments appear to configure performance data collection.
+		// This need to be done early, so we can start the first measurement before the arguments are parsed.
+		CollectedDataAccess.setPaused(!isPerformanceDataCollectionEnabled());
+
+		try (ClosableMeasurement m = headlessDataCollector
+				.getClosableMeasurement(HEADLESS_N4JS_COMPILER_COLLECTOR_NAME)) {
 
 			CmdLineParser parser = new CmdLineParser(this);
 			parser.getProperties().withUsageWidth(130);
@@ -505,27 +542,24 @@ public class N4jscBase implements IApplication {
 				binariesPreferenceStore.save();
 			}
 
-			// check for perflog system environment variable
-			if (System.getenv(N4JSC_PERFLOG_ENV) != null) {
-				System.out.println("Performance Logging is enabled.");
-				measurement = PerformanceMeasurement.createMeasurement(System.getenv(N4JSC_PERFLOG_ENV));
+			// check for performance data collection system environment variable
+			if (performanceReport != null && System.getenv(N4JSC_PERFORMANCE_REPORT_ENV) != null) {
+				final String rawPath = System.getenv(N4JSC_PERFORMANCE_REPORT_ENV);
+				final File performanceReportFile = new File(rawPath);
+				this.performanceReport = performanceReportFile;
 			}
 
-			// alternatively check for perflog parameter, which always has priority over environment variable
-			if (perflogPath != null) {
-				System.out.println("Performance Logging is enabled.");
-				measurement = PerformanceMeasurement.createMeasurement(perflogPath);
+			// inform user about data collection
+			if (performanceReport != null) {
+				System.out.println("Performance Data Collection is enabled.");
 			}
 
 			validateBinaries();
 			cloneGitRepositoryAndInstallNpmPackages();
 
-			checkpoint("Computing build set");
-
 			// compute build set based on user settings (e.g. #buildmode, #srcFiles, #projectlocations)
 			BuildSet buildSet = computeBuildSet();
 
-			checkpoint("Register projects");
 			// make sure all projects in the build set are registered with the workspace
 			registerProjects(buildSet);
 
@@ -534,28 +568,27 @@ public class N4jscBase implements IApplication {
 				clean();
 			} else {
 				if (installMissingDependencies) {
-					checkpoint("Install missing dependencies");
-					Map<String, String> dependencies = dependencyHelper
-							.discoverMissingDependencies(buildSet.getAllProjects());
-					if (verbose) {
-						System.out.println("installing missing dependencies:");
-						dependencies.forEach((name, version) -> {
-							System.out.println("  # " + name + "@" + version);
-						});
+					try (ClosableMeasurement installMissingDepMeasurement = installMissingDependencyCollector
+							.getClosableMeasurement("Install missing dependencies")) {
+						Map<String, String> dependencies = dependencyHelper
+								.discoverMissingDependencies(buildSet.getAllProjects());
+						if (verbose) {
+							System.out.println("installing missing dependencies:");
+							dependencies.forEach((name, version) -> {
+								System.out.println("  # " + name + "@" + version);
+							});
+						}
+
+						IStatus status = libManager.installNPMs(dependencies, new NullProgressMonitor());
+						if (!status.isOK())
+							if (keepCompiling)
+								warn(status.getMessage());
+							else
+								throw new ExitCodeException(EXITCODE_DEPENDENCY_NOT_FOUND,
+										"Cannot install dependencies.");
 					}
-
-					IStatus status = libManager.installNPMs(dependencies, new NullProgressMonitor());
-					if (!status.isOK())
-						if (keepCompiling)
-							warn(status.getMessage());
-						else
-							throw new ExitCodeException(EXITCODE_DEPENDENCY_NOT_FOUND,
-									"Cannot install dependencies.");
-
-					checkpoint("Finished installing missing dependencies");
 				}
 
-				checkpoint("Register projects from target platform locations");
 				final BuildSet targetPlatformBuildSet = computeTargetPlatformBuildSet();
 				// make sure all newly installed dependencies are registered with the workspace
 				registerProjects(targetPlatformBuildSet);
@@ -573,7 +606,7 @@ public class N4jscBase implements IApplication {
 			targetPlatformInstallLocation = null;
 		}
 
-		checkpoint("Terminate");
+		writePerformanceReport();
 
 		// did everything there was to be done
 		return SuccessExitStatus.INSTANCE;
@@ -870,10 +903,8 @@ public class N4jscBase implements IApplication {
 		}
 
 		try {
-			checkpoint("Perform compilation");
 			compile(buildSet);
 			writeTestCatalog();
-			checkpoint("Run tester/runners");
 			testAndRun();
 
 		} finally {
@@ -887,7 +918,7 @@ public class N4jscBase implements IApplication {
 
 	/** trigger compilation using pre-computed buildSet */
 	private void compile(BuildSet buildSet) throws ExitCodeException {
-		try {
+		try (ClosableMeasurement m = compilationCollector.getClosableMeasurement("Compilation")) {
 			// early exit if dontcompile
 			if (buildtype == BuildType.dontcompile) {
 				return;
@@ -903,7 +934,7 @@ public class N4jscBase implements IApplication {
 	}
 
 	private void registerProjects(BuildSet buildSet) throws ExitCodeException {
-		try {
+		try (ClosableMeasurement m = projectRegistrationCollector.getClosableMeasurement("Register projects")) {
 			headlessHelper.registerProjects(buildSet, workspace);
 		} catch (N4JSCompileException e) {
 			// dump all information to error-stream.
@@ -925,7 +956,7 @@ public class N4jscBase implements IApplication {
 	 * </pre>
 	 */
 	private BuildSet computeBuildSet() throws ExitCodeException {
-		try {
+		try (ClosableMeasurement m = buildSetComputationCollector.getClosableMeasurement("Compute BuildSet")) {
 			switch (buildtype) {
 			case singlefile:
 				return computeSingleFilesBuildSet();
@@ -1007,19 +1038,21 @@ public class N4jscBase implements IApplication {
 
 	/** triggers runners and testers based on {@link #testThisLocation} and {@link #runThisFile} */
 	private void testAndRun() throws ExitCodeException {
-		if (testThisLocation != null) {
-			if (buildtype != BuildType.dontcompile) {
-				flushAndIinsertMarkerInOutputs();
+		try (ClosableMeasurement m = runnerTesterCollector.getClosableMeasurement("Execute tester/runner")) {
+			if (testThisLocation != null) {
+				if (buildtype != BuildType.dontcompile) {
+					flushAndIinsertMarkerInOutputs();
+				}
+				headlessTester.runTests(tester, implementationId, checkLocationToTest(), testReportRoot);
 			}
-			headlessTester.runTests(tester, implementationId, checkLocationToTest(), testReportRoot);
-		}
 
-		if (runThisFile != null) {
-			if (buildtype != BuildType.dontcompile) {
-				flushAndIinsertMarkerInOutputs();
+			if (runThisFile != null) {
+				if (buildtype != BuildType.dontcompile) {
+					flushAndIinsertMarkerInOutputs();
+				}
+				headlessRunner.startRunner(runner, implementationId, systemLoader, checkFileToRun(),
+						new File(installLocationProvider.getTargetPlatformInstallURI()));
 			}
-			headlessRunner.startRunner(runner, implementationId, systemLoader, checkFileToRun(),
-					new File(installLocationProvider.getTargetPlatformInstallURI()));
 		}
 	}
 
@@ -1168,13 +1201,31 @@ public class N4jscBase implements IApplication {
 		System.err.println(Throwables.getStackTraceAsString(throwable));
 	}
 
-	private void checkpoint(String description) {
-		if (this.measurement != null) {
-			try {
-				this.measurement.checkpoint(description);
+	/**
+	 * Returns {@code true} iff the given list of arguments configure the headless compiler to run in
+	 * performance-logging mode.
+	 *
+	 * This check can be performed, before {@link #performanceReport} has been populated by the command line argument
+	 * parser.
+	 */
+	private boolean isPerformanceDataCollectionEnabled(String... args) {
+		final List<String> arguments = Arrays.asList(args);
+		return arguments.contains("-pR") || arguments.contains("--performanceReport");
+	}
+
+	/**
+	 * If {@link #performanceReport} is non-null, this methods persists the performance data collected in
+	 * {@link #headlessDataCollector} in the specified performance report file.
+	 */
+	private void writePerformanceReport() throws ExitCodeException {
+		if (this.performanceReport != null) {
+			final String csv = DataCollectorCSVExporter.toCSV(performanceKey);
+			System.out.println(
+					"Writing performance report to " + this.performanceReport.toPath().toAbsolutePath().toString());
+			try (FileWriter writer = new FileWriter(performanceReport)) {
+				writer.write(csv);
 			} catch (IOException e) {
-				System.err.println("Failed to write performance measurement results to disk:");
-				e.printStackTrace();
+				throw new ExitCodeException(ErrorExitCode.EXITCODE_PERFORMANCE_REPORT_COULD_NOT_BE_WRITTEN);
 			}
 		}
 	}

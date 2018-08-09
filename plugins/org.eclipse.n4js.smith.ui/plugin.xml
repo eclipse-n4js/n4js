@@ -16,14 +16,14 @@ Contributors:
       <view
             category="org.eclipse.n4js.category"
             class="org.eclipse.n4js.smith.ui.SourceGraphView"
-            icon="icons/graphAST.gif"
+            icon="icons/graphAST.png"
             id="org.eclipse.n4js.smith.ui.SourceGraphView"
             name="Source Graphs">
       </view>
       <view
             category="org.eclipse.n4js.category"
             class="org.eclipse.n4js.smith.ui.PerformanceView"
-            icon="icons/graphAST.gif"
+            icon="icons/graphAST.png"
             id="org.eclipse.n4js.smith.ui.PerformanceView"
             name="Performance Graphs">
       </view>
