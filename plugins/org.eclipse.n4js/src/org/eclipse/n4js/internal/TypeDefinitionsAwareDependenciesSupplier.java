@@ -60,7 +60,7 @@ public class TypeDefinitionsAwareDependenciesSupplier {
 		// separate type definition projects from runtime projects
 		for (IN4JSProject dependency : dependencies) {
 			if (dependency.getProjectType() == ProjectType.DEFINITION) {
-				final String definesPackage = dependency.getDefinesPackage();
+				final String definesPackage = dependency.getDefinesPackageName();
 				if (definesPackage != null) {
 					// get existing or create new list of type definition projects
 					List<IN4JSProject> typeDefinitionsProjects = typeDefinitionsById.getOrDefault(definesPackage,

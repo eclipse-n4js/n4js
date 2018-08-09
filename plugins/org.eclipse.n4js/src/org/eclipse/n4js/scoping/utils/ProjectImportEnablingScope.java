@@ -265,7 +265,7 @@ public class ProjectImportEnablingScope implements IScope {
 
 		Iterable<IN4JSProject> dependencies = n4jsModel.getSortedDependencies(project);
 		for (IN4JSProject p : dependencies) {
-			if (Objects.equals(p.getDefinesPackage(), projectId)) {
+			if (Objects.equals(p.getDefinesPackageName(), projectId)) {
 				return p;
 			}
 			if (Objects.equals(p.getProjectId(), projectId)) {

@@ -36,6 +36,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.HlcExternalLibraryWorkspace;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
+import org.eclipse.n4js.internal.MultiCleartriggerCache.CleartriggerSupplier;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.projectDescription.ProjectType;
@@ -43,8 +44,6 @@ import org.eclipse.n4js.projectDescription.SourceContainerDescription;
 import org.eclipse.n4js.projectDescription.SourceContainerType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
-import org.eclipse.n4js.utils.MultiCleartriggerCache;
-import org.eclipse.n4js.utils.MultiCleartriggerCache.CleartriggerSupplier;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.xtext.naming.QualifiedName;
 
@@ -531,7 +530,7 @@ public class N4JSModel {
 			computeIfNull();
 			Set<URI> triggerURIs = new HashSet<>();
 			for (IN4JSProject dep : sortedDeps) {
-				if (dep.getDefinesPackage() != null) {
+				if (dep.getDefinesPackageName() != null) {
 					URI uri = dep.getLocation();
 					triggerURIs.add(uri);
 				}

@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.utils;
+package org.eclipse.n4js.internal;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -49,7 +49,8 @@ public class MultiCleartriggerCache {
 	}
 
 	/**
-	 * Returns the requested value from cache. In case the cache is empty, the given {@link Supplier} is called.
+	 * Returns the requested value from cache. In case the cache does not contain a value for the given key, the given
+	 * {@link Supplier} is called.
 	 * <p>
 	 * If the given {@link Supplier} is of type {@link CleartriggerSupplier}, additional clear-triggers are computed and
 	 * added.

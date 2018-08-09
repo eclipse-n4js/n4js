@@ -332,8 +332,8 @@ class ModuleWrappingTransformation extends Transformation {
 
 		var specifier = completeModuleSpecifier
 		var depProject = n4jsCore.findProject(module.eResource.URI).orNull
-		if (depProject !== null && depProject.projectType === ProjectType.DEFINITION && depProject.definesPackage !== null) {
-			depProject = n4jsCore.findAllProjectMappings.get(depProject.definesPackage);
+		if (depProject !== null && depProject.projectType === ProjectType.DEFINITION && depProject.definesPackageName !== null) {
+			depProject = n4jsCore.findAllProjectMappings.get(depProject.definesPackageName);
 		}
 
 		if (depProject !== null) {

@@ -168,7 +168,7 @@ class TypeDefinitionsAwareDependenciesSupplierTest extends Assert {
 		
 		for (dependency : dependencies) {
 			if (dependency.projectType == ProjectType.DEFINITION) {
-				if (encounteredImplProjectsById.containsKey(dependency.definesPackage)) {
+				if (encounteredImplProjectsById.containsKey(dependency.definesPackageName)) {
 					problems.add("Implementation project of type definition " + dependency.projectId + 
 						" was listed before its definition.");
 				}
@@ -266,7 +266,7 @@ class MockTypeDefinitionsProject extends N4JSProject {
 		return this.dependencies;
 	}
 
-	public override String getDefinesPackage() {
+	public override String getDefinesPackageName() {
 		return this.definesPackage;
 	}
 

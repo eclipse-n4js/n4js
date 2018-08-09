@@ -12,11 +12,11 @@ package org.eclipse.n4js.tests.projectModel;
 
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.n4js.N4JSUiInjectorProvider;
+import org.eclipse.n4js.internal.MultiCleartriggerCache;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
 import org.eclipse.n4js.ui.internal.N4JSEclipseCore;
 import org.eclipse.n4js.ui.internal.N4JSEclipseModel;
-import org.eclipse.n4js.utils.MultiCleartriggerCache;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.XtextRunner;

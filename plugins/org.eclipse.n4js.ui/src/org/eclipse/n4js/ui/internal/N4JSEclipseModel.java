@@ -14,8 +14,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Maps.newLinkedHashMap;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -154,11 +154,6 @@ public class N4JSEclipseModel extends N4JSModel {
 
 	public N4JSEclipseProject getN4JSProject(IProject project) {
 		return doGetN4JSProject(project, URIUtils.convert(project));
-		// if (project instanceof ExternalProject) {
-		// return doGetN4JSProject(project, URI.createFileURI(new File(project.getLocationURI()).getAbsolutePath()));
-		// } else {
-		// return doGetN4JSProject(project, URI.createPlatformResourceURI(project.getName(), true));
-		// }
 	}
 
 	private N4JSEclipseProject doGetN4JSProject(IProject project, URI location) {
@@ -270,21 +265,22 @@ public class N4JSEclipseModel extends N4JSModel {
 	}
 
 	public Map<String, IN4JSProject> findAllProjectMappings() {
-		final Map<String, IN4JSProject> workspaceProjectMapping = newLinkedHashMap();
+		final Map<String, IN4JSProject> workspaceProjectMapping = new LinkedHashMap<>();
 		for (IProject project : workspace.getProjects()) {
 			if (project.isOpen()) {
-				N4JSEclipseProject n4jsProject = getN4JSProject(project);
+				N4JSProject n4jsProject = getN4JSProject(project);
 				workspaceProjectMapping.put(n4jsProject.getProjectId(), n4jsProject);
 			}
 		}
 
 		for (IProject project : externalLibraryWorkspace.getProjects()) {
 			if (!workspaceProjectMapping.containsKey(project.getName())) {
-				N4JSEclipseProject n4jsProject = getN4JSProject(project);
+				N4JSProject n4jsProject = getN4JSProject(project);
 				workspaceProjectMapping.put(n4jsProject.getProjectId(), n4jsProject);
 			}
 		}
 
 		return workspaceProjectMapping;
 	}
+
 }

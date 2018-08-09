@@ -589,7 +589,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		if (n4jsProject.projectType != ProjectType.DEFINITION) {
 			return;
 		}
-		val definesPackage = n4jsProject.definesPackage;
+		val definesPackage = n4jsProject.definesPackageName;
 		if (definesPackage === null) {
 			return;
 		}

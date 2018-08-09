@@ -37,6 +37,7 @@ import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider.TypeDefinitio
 import org.eclipse.n4js.generator.IWorkspaceMarkerSupport;
 import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
+import org.eclipse.n4js.internal.MultiCleartriggerCache;
 import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.packagejson.PackageJsonHelper;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
@@ -69,7 +70,6 @@ import org.eclipse.n4js.ui.workingsets.WorkingSetManualAssociationWizard;
 import org.eclipse.n4js.ui.workingsets.WorkingSetProjectNameFilterWizard;
 import org.eclipse.n4js.ui.workingsets.WorkspaceRepositoriesProvider;
 import org.eclipse.n4js.utils.InjectorCollector;
-import org.eclipse.n4js.utils.MultiCleartriggerCache;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.WildcardPathFilterHelper;
