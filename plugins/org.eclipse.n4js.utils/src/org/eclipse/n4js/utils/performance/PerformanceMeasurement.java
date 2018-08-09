@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.tests.performance;
+package org.eclipse.n4js.utils.performance;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -36,8 +36,16 @@ public class PerformanceMeasurement {
 		return new PerformanceMeasurement(clazz.getSimpleName());
 	}
 
+	/**
+	 * Creates a new performance measurement for the given {@code name}.
+	 */
+	public static PerformanceMeasurement createMeasurement(String name) {
+		return new PerformanceMeasurement(name);
+	}
+
 	private final String name;
 	private Stopwatch currentStopwatch;
+	private String currentDescription;
 	private final Map<String, Long> checkpoints = new LinkedHashMap<>();
 
 	/**
@@ -57,13 +65,12 @@ public class PerformanceMeasurement {
 	 * measurement.
 	 */
 	public void checkpoint(String description) throws IOException {
-		if (this.currentStopwatch == null) {
-			this.checkpoints.put(description, 0L);
-		} else {
+		if (this.currentStopwatch != null) {
 			this.currentStopwatch.stop();
 			final long elapsedTime = this.currentStopwatch.elapsed(TimeUnit.MILLISECONDS);
-			this.checkpoints.put(description, elapsedTime);
+			this.checkpoints.put(currentDescription, elapsedTime);
 		}
+		this.currentDescription = description;
 		// start a new stopwatch
 		this.currentStopwatch = Stopwatch.createStarted();
 

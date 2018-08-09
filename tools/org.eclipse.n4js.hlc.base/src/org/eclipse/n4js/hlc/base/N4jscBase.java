@@ -73,6 +73,7 @@ import org.eclipse.n4js.tester.TesterModule;
 import org.eclipse.n4js.tester.extension.TesterRegistry;
 import org.eclipse.n4js.tester.internal.TesterActivator;
 import org.eclipse.n4js.utils.io.FileDeleter;
+import org.eclipse.n4js.utils.performance.PerformanceMeasurement;
 import org.eclipse.xtext.ISetup;
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.CmdLineException;
@@ -95,6 +96,8 @@ import com.google.inject.util.Modules;
  * bundles (e.g. tests, MWE2 work flows).
  */
 public class N4jscBase implements IApplication {
+
+	private static final String N4JSC_PERFLOG_ENV = "N4JSC_PERFLOG";
 
 	/**
 	 * Marker used to distinguish between compile-messages and runner output.
@@ -217,12 +220,19 @@ public class N4jscBase implements IApplication {
 			required = false)
 	String logFile = "n4jsc.log";
 
+	@Option(name = "--perflog",
+			// no usage, do not show in help
+			required = false)
+	String perflogPath = null;
+
 	/**
 	 * Catch all last arguments as files. The actual meaning of these files depends on the {@link #buildtype} (-bt)
 	 * option
 	 */
 	@Argument(multiValued = true, usage = "filename of source (or project, see -bt) to compile")
 	List<File> srcFiles = new ArrayList<>();
+
+	private PerformanceMeasurement measurement;
 
 	@Inject
 	private N4HeadlessCompiler headless;
@@ -495,11 +505,27 @@ public class N4jscBase implements IApplication {
 				binariesPreferenceStore.save();
 			}
 
+			// check for perflog system environment variable
+			if (System.getenv(N4JSC_PERFLOG_ENV) != null) {
+				System.out.println("Performance Logging is enabled.");
+				measurement = PerformanceMeasurement.createMeasurement(System.getenv(N4JSC_PERFLOG_ENV));
+			}
+
+			// alternatively check for perflog parameter, which always has priority over environment variable
+			if (perflogPath != null) {
+				System.out.println("Performance Logging is enabled.");
+				measurement = PerformanceMeasurement.createMeasurement(perflogPath);
+			}
+
 			validateBinaries();
 			cloneGitRepositoryAndInstallNpmPackages();
 
+			checkpoint("Computing build set");
+
 			// compute build set based on user settings (e.g. #buildmode, #srcFiles, #projectlocations)
 			BuildSet buildSet = computeBuildSet();
+
+			checkpoint("Register projects");
 			// make sure all projects in the build set are registered with the workspace
 			registerProjects(buildSet);
 
@@ -508,6 +534,7 @@ public class N4jscBase implements IApplication {
 				clean();
 			} else {
 				if (installMissingDependencies) {
+					checkpoint("Install missing dependencies");
 					Map<String, String> dependencies = dependencyHelper
 							.discoverMissingDependencies(buildSet.getAllProjects());
 					if (verbose) {
@@ -525,8 +552,10 @@ public class N4jscBase implements IApplication {
 							throw new ExitCodeException(EXITCODE_DEPENDENCY_NOT_FOUND,
 									"Cannot install dependencies.");
 
+					checkpoint("Finished installing missing dependencies");
 				}
 
+				checkpoint("Register projects from target platform locations");
 				final BuildSet targetPlatformBuildSet = computeTargetPlatformBuildSet();
 				// make sure all newly installed dependencies are registered with the workspace
 				registerProjects(targetPlatformBuildSet);
@@ -543,6 +572,8 @@ public class N4jscBase implements IApplication {
 		} finally {
 			targetPlatformInstallLocation = null;
 		}
+
+		checkpoint("Terminate");
 
 		// did everything there was to be done
 		return SuccessExitStatus.INSTANCE;
@@ -839,8 +870,10 @@ public class N4jscBase implements IApplication {
 		}
 
 		try {
+			checkpoint("Perform compilation");
 			compile(buildSet);
 			writeTestCatalog();
+			checkpoint("Run tester/runners");
 			testAndRun();
 
 		} finally {
@@ -1133,5 +1166,16 @@ public class N4jscBase implements IApplication {
 	 */
 	private void dumpThrowable(Throwable throwable) {
 		System.err.println(Throwables.getStackTraceAsString(throwable));
+	}
+
+	private void checkpoint(String description) {
+		if (this.measurement != null) {
+			try {
+				this.measurement.checkpoint(description);
+			} catch (IOException e) {
+				System.err.println("Failed to write performance measurement results to disk:");
+				e.printStackTrace();
+			}
+		}
 	}
 }
