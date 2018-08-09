@@ -39,6 +39,7 @@ class SemverParseHelper extends ParseHelper<NPMVersionRequirement> {
 	 */
 	public def NPMVersionRequirement parseSuccessfully(CharSequence semver) {
 		val doc = semver.tryParse;
+		assertNotNull("Could not parse " + semver, doc);
 		val msg = '''"«semver»" ''' + doc.eResource.errors.join('\n')[line + ': ' + message];
 		val errorList = doc.eResource.errors;
 		assertTrue(msg, errorList.empty);
@@ -50,9 +51,11 @@ class SemverParseHelper extends ParseHelper<NPMVersionRequirement> {
 	 */
 	public def void parseUnsuccessfully(CharSequence semver) {
 		val doc = semver.parse;
-		val msg = '''The following Semver text did not cause any syntax errors as expected: "«semver»" ''';
-		val errorList = doc.eResource.errors.filter(XtextSyntaxDiagnostic);
-		assertFalse(msg, errorList.empty);
+		if (doc !== null) {
+			val msg = '''The following Semver text did not cause any syntax errors as expected: "«semver»" ''';
+			val errorList = doc.eResource.errors.filter(XtextSyntaxDiagnostic);
+			assertFalse(msg, errorList.empty);
+		}
 	}
 
 	public def VersionRangeSetRequirement parseVersionRangeSet(String versionString) {
