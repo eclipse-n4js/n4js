@@ -772,4 +772,21 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 		});
 	}
 
+
+
+
+	@Fix(IssueCodes.NON_EXISTING_PROJECT)
+	def installMissingNPM(Issue issue, IssueResolutionAcceptor acceptor) {
+		// <--- do pre-processing here (if required)
+		acceptor.accept(issue, 'Some Label', 'Some enlightening description.', 'SomeImage.gif') [ context, marker, offset, length, element |
+			// <--- this is executed when the fix is actually applied
+			//      Do not use variable 'issue' here, and do not change the document here directly, but instead
+			//      create and return a list of instances of IChange using the convenience methods in ChangeProvider:
+			return #[
+				insertLineAbove(context.xtextDocument, offset, "@SomeAnnotationToBeAdded", true)
+				// <--- could add more changes here ... (separated by comma)
+			];
+		]
+	}
+
 }
