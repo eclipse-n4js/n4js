@@ -1152,7 +1152,9 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 				if (null === project || null === project.projectType) {
 					// in GH-821: remove this condition
 					if (!currentProject.isExternal) { 
-						addIssue(getMessageForNON_EXISTING_PROJECT(id), ref.astRepresentation, NON_EXISTING_PROJECT);
+						val msg = getMessageForNON_EXISTING_PROJECT(id);
+						val packageVersion = ref.npmVersion.toString;
+						addIssue(msg, ref.astRepresentation, null, NON_EXISTING_PROJECT, id, packageVersion);
 					}
 					return;
 				} else {

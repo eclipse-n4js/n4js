@@ -25,7 +25,7 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class JSONUiExtensionRegistry {
-	private static final String JSON_QUICKFIXPROVIDER_EXTENSIONS_POINT_ID = "org.eclipse.n4js.json.ui.quickfix";
+	private static final String JSON_QUICKFIXPROVIDER_EXTENSIONS_POINT_ID = "org.eclipse.n4js.json.ui.quickfixProvider";
 
 	private static final String JSON_EXTENSIONS_POINT_CLASS_PROPERTY = "class";
 
@@ -43,7 +43,7 @@ public class JSONUiExtensionRegistry {
 	 */
 	private void initialize() {
 		if (this.isInitialized) {
-			LOGGER.warn("JSONValidatorExtensionRegistry has already been initialized.");
+			LOGGER.warn("JSONUiExtensionRegistry has already been initialized.");
 			return;
 		}
 		// make sure fields are set to non-null value
