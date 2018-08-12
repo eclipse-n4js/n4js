@@ -24,7 +24,7 @@ import org.junit.runners.Parameterized.Parameters;
  * Test for Base64VLQ
  */
 @RunWith(Parameterized.class)
-public class Base64VLQTestSingleNumbers {
+public class Base64VLQTestSingleNumbersTest {
 
 	/** pairs of decimal and base64VLQ */
 	@Parameters(name = "{index}: {0} - {1}")
@@ -49,7 +49,7 @@ public class Base64VLQTestSingleNumbers {
 	final private String base64VLQ;
 
 	/** Setup parameterized test */
-	public Base64VLQTestSingleNumbers(int decimal, String base64VLQ) {
+	public Base64VLQTestSingleNumbersTest(int decimal, String base64VLQ) {
 		this.decimal = decimal;
 		this.base64VLQ = base64VLQ;
 	}

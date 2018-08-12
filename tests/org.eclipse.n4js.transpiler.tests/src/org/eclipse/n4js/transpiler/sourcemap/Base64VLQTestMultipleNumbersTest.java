@@ -25,7 +25,7 @@ import org.junit.runners.Parameterized.Parameters;
  * Test for Base64VLQ, multiple numbers in string.
  */
 @RunWith(Parameterized.class)
-public class Base64VLQTestMultipleNumbers {
+public class Base64VLQTestMultipleNumbersTest {
 
 	/** Only for beautifying the test fixture */
 	private static int[] ints(int... decimals) {
@@ -51,7 +51,7 @@ public class Base64VLQTestMultipleNumbers {
 	final private String base64VLQ;
 
 	/** Setup parameterized test */
-	public Base64VLQTestMultipleNumbers(String base64VLQ, int[] decimals) {
+	public Base64VLQTestMultipleNumbersTest(String base64VLQ, int[] decimals) {
 		this.base64VLQ = base64VLQ;
 		this.decimals = decimals;
 	}
