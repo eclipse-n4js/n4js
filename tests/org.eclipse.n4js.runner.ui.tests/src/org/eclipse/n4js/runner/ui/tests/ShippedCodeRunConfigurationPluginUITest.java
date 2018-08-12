@@ -37,6 +37,7 @@ import org.junit.Test;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
 
@@ -153,7 +154,9 @@ public class ShippedCodeRunConfigurationPluginUITest extends AbstractBuilderPart
 		final Collection<String> removedPaths = difference(configuredCorePaths, reconfiguredCorePaths);
 		final Collection<String> addedPaths = difference(reconfiguredCorePaths, configuredCorePaths);
 		assertTrue("Expected no paths removed, but diff was " + removedPaths.size(), removedPaths.isEmpty());
-		assertTrue("Expected no paths added, but diff was " + addedPaths.size(), addedPaths.isEmpty());
+		assertTrue("Expected no paths added, but diff was " + addedPaths.size() +
+				". The following paths were added: \n    " +
+				Joiner.on("\n    ").join(addedPaths), addedPaths.isEmpty());
 
 	}
 

@@ -407,7 +407,11 @@ public class SourceMapView extends ViewPart {
 			if (length >= 0) {
 				srcOffsetEnd += length;
 			} else {
-				srcOffsetEnd = text.getOffsetAtLine(entry.srcLine + 1) - 1;
+				if (entry.srcLine + 1 >= text.getLineCount()) { // last line
+					srcOffsetEnd = text.getCharCount();
+				} else {
+					srcOffsetEnd = text.getOffsetAtLine(entry.srcLine + 1) - 1;
+				}
 			}
 			styleText(text, srcOffset, srcOffsetEnd, mark);
 			if (mark && text != textEmittingEvent) {
