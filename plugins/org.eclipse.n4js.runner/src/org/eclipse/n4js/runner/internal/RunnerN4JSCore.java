@@ -18,14 +18,14 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.external.ExternalLibraryUtils;
+import org.eclipse.n4js.external.ExternalLibraryHelper;
 import org.eclipse.n4js.external.libraries.ShippedCodeAccess;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.utils.ProjectDescriptionHelper;
+import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
@@ -41,7 +41,10 @@ public class RunnerN4JSCore {
 	private static final int DANGLING_SEGMENT_COUNT = 1;
 
 	@Inject
-	private ProjectDescriptionHelper projectDescriptionHelper;
+	private ProjectDescriptionLoader projectDescriptionLoader;
+
+	@Inject
+	private ExternalLibraryHelper externalLibraryHelper;
 
 	/**
 	 * Returns all shipped projects as iterable. Returned projects are stubs for real {@link N4JSProject}. They
@@ -54,8 +57,7 @@ public class RunnerN4JSCore {
 	public Iterable<IN4JSProject> getAllShippedProjects() {
 
 		final RunnerTargetPlatformInstallLocationProvider locationProvider = new RunnerTargetPlatformInstallLocationProvider();
-		final RunnerClasspathPackageManager manager = new RunnerClasspathPackageManager();
-		final FileBasedWorkspace workspace = new FileBasedWorkspace(manager, projectDescriptionHelper);
+		final FileBasedWorkspace workspace = new FileBasedWorkspace(projectDescriptionLoader);
 		final N4JSModel model = new N4JSModel(workspace, locationProvider);
 
 		ShippedCodeAccess.getAllShippedPaths().forEach(path -> discoverProjects(path, workspace));
@@ -85,7 +87,7 @@ public class RunnerN4JSCore {
 		File root = new File(rootLocation);
 
 		Arrays.asList(root.listFiles()).stream().filter(File::isDirectory).forEach(projectDir -> {
-			if (ExternalLibraryUtils.isExternalProjectDirectory(projectDir)) {
+			if (externalLibraryHelper.isExternalProjectDirectory(projectDir)) {
 				URI createURI = createProjectUri(projectDir);
 				workspace.registerProject(createURI);
 			} else {

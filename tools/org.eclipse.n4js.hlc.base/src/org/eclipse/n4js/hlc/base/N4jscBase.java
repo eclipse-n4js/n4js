@@ -53,8 +53,7 @@ import org.eclipse.n4js.external.HeadlessTargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider;
-import org.eclipse.n4js.external.libraries.PackageJson;
-import org.eclipse.n4js.external.libraries.TargetPlatformFactory;
+import org.eclipse.n4js.external.libraries.ExternalLibraryFolderUtils;
 import org.eclipse.n4js.generator.headless.BuildSet;
 import org.eclipse.n4js.generator.headless.BuildSetComputer;
 import org.eclipse.n4js.generator.headless.HeadlessHelper;
@@ -538,7 +537,7 @@ public class N4jscBase implements IApplication {
 				// run and dispatch.
 				doCompileAndTestAndRun(buildSet);
 			}
-		} catch (ExitCodeException e) {
+		} catch (Throwable e) {
 			dumpThrowable(e);
 			throw e;
 		} finally {
@@ -626,9 +625,8 @@ public class N4jscBase implements IApplication {
 				gitLocationProvider.getGitLocation().getRemoteBranch(), true);
 		pull(localClonePath);
 
-		// generate n4tp file for libManager to use
-		PackageJson packageJson = TargetPlatformFactory.createN4Default();
-		java.net.URI platformLocation = locationProvider.getTargetPlatformInstallLocation();
+		String packageJson = ExternalLibraryFolderUtils.createTargetPlatformPackageJson();
+		java.net.URI platformLocation = locationProvider.getTargetPlatformInstallURI();
 		File packageJsonFile = new File(new File(platformLocation), N4JSGlobals.PACKAGE_JSON);
 		try {
 			// Create new target platform definition file, only if not present.
@@ -636,7 +634,7 @@ public class N4jscBase implements IApplication {
 			if (!packageJsonFile.exists()) {
 				packageJsonFile.createNewFile();
 				try (PrintWriter pw = new PrintWriter(packageJsonFile)) {
-					pw.write(packageJson.toString());
+					pw.write(packageJson);
 					pw.flush();
 					locationProvider.setTargetPlatformFileLocation(packageJsonFile.toURI());
 				}
@@ -703,7 +701,7 @@ public class N4jscBase implements IApplication {
 
 			try {
 				// make sure the target platform location is resolved (follow symlinks)
-				java.net.URI resolvedLocation = targetPlatformInstallLocation.toPath().toRealPath().toUri();
+				File resolvedLocation = targetPlatformInstallLocation.toPath().toRealPath().toFile();
 				locationProvider.setTargetPlatformInstallLocation(resolvedLocation);
 			} catch (IOException e) {
 				throw new ExitCodeException(EXITCODE_CONFIGURATION_ERROR,
@@ -988,7 +986,7 @@ public class N4jscBase implements IApplication {
 				flushAndIinsertMarkerInOutputs();
 			}
 			headlessRunner.startRunner(runner, implementationId, systemLoader, checkFileToRun(),
-					new File(installLocationProvider.getTargetPlatformInstallLocation()));
+					new File(installLocationProvider.getTargetPlatformInstallURI()));
 		}
 	}
 

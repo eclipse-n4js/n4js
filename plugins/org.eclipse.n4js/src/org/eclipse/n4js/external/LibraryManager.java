@@ -47,8 +47,8 @@ import org.eclipse.n4js.binaries.IllegalBinaryStateException;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
 import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
-import org.eclipse.n4js.n4mf.ProjectDependency;
-import org.eclipse.n4js.n4mf.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectDependency;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.SemverMatcher;
@@ -308,8 +308,8 @@ public class LibraryManager {
 		for (ProjectDependency pDep : description.getProjectDependencies()) {
 			String name = pDep.getProjectId();
 			String version = NO_VERSION;
-			if (pDep.getVersionConstraint() != null) {
-				version = SemverSerializer.serialize(pDep.getVersionConstraint());
+			if (pDep.getVersionRequirement() != null) {
+				version = SemverSerializer.serialize(pDep.getVersionRequirement());
 			}
 			dependencies.put(name, version);
 		}
@@ -405,13 +405,17 @@ public class LibraryManager {
 
 		monitor.setTaskName("Adapting npm package structure to N4JS project structure... [step 3 of 4]");
 		List<String> installedNpmNames = new LinkedList<>();
+		List<String> uninstalledNpmNames = new LinkedList<>();
 		for (LibraryChange change : changes) {
 			if (change.type == LibraryChangeType.Added) {
 				installedNpmNames.add(change.name);
 			}
+			if (change.type == LibraryChangeType.Removed) {
+				uninstalledNpmNames.add(change.name);
+			}
 		}
 		org.eclipse.xtext.util.Pair<IStatus, Collection<File>> result;
-		result = npmPackageToProjectAdapter.adaptPackages(installedNpmNames);
+		result = npmPackageToProjectAdapter.adaptPackages(installedNpmNames, uninstalledNpmNames);
 
 		IStatus adaptionStatus = result.getFirst();
 

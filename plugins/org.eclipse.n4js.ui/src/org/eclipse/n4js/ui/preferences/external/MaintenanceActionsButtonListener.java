@@ -46,9 +46,9 @@ public class MaintenanceActionsButtonListener extends SelectionAdapter {
 
 	static final String ACTION_NPM_RELOAD = "Reload npm libraries from disk.";
 	static final String ACTION_NPM_REINSTALL = "Reinstall npm libraries.";
-	static final String ACTION_NPM_CACHE_CLEAN = "Clean npm cache.";
-	static final String ACTION_NPM_PACKAGES_DELETE = "Delete npm packages (deletes npm folder).";
-	static final String ACTION_TYPE_DEFINITIONS_RESET = "Reset type definitions (creates fresh clone).";
+	static final String ACTION_NPM_CACHE_CLEAN = "Clean npm cache. (npm cache clean --force)";
+	static final String ACTION_NPM_PACKAGES_DELETE = "Delete npm and type definition packages (deletes folders).";
+	static final String ACTION_TYPE_DEFINITIONS_RESET = "Reset clone of n4jsd repo.";
 
 	MaintenanceActionsButtonListener(BiFunction<MaintenanceActionsChoice, IProgressMonitor, MultiStatus> runActions,
 			StatusHelper statusHelper) {
@@ -79,6 +79,9 @@ public class MaintenanceActionsButtonListener extends SelectionAdapter {
 			boolean reload = false;
 
 			Object[] result = dialog.getResult();
+			if (result == null) {
+				return; // happens when quitting the IDE
+			}
 			for (int i = 0; i < result.length; i++) {
 				String dialogItem = (String) result[i];
 

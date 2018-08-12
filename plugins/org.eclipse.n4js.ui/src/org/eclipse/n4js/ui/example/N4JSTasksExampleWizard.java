@@ -107,7 +107,7 @@ public class N4JSTasksExampleWizard extends ExampleInstallerWizard {
 	}
 
 	private Collection<String> getInstalledNpmPackages() {
-		final File root = new File(installLocationProvider.getTargetPlatformNodeModulesLocation());
+		final File root = new File(installLocationProvider.getNodeModulesURI());
 		return from(externalLibraryWorkspace.getProjectsIn(root.toURI())).transform(p -> p.getName()).toSet();
 	}
 }

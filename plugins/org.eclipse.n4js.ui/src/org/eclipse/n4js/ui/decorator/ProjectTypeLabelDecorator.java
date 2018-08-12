@@ -10,13 +10,13 @@
  */
 package org.eclipse.n4js.ui.decorator;
 
-import static org.eclipse.n4js.n4mf.ProjectType.API;
-import static org.eclipse.n4js.n4mf.ProjectType.APPLICATION;
-import static org.eclipse.n4js.n4mf.ProjectType.LIBRARY;
-import static org.eclipse.n4js.n4mf.ProjectType.PROCESSOR;
-import static org.eclipse.n4js.n4mf.ProjectType.RUNTIME_ENVIRONMENT;
-import static org.eclipse.n4js.n4mf.ProjectType.RUNTIME_LIBRARY;
-import static org.eclipse.n4js.n4mf.ProjectType.TEST;
+import static org.eclipse.n4js.projectDescription.ProjectType.API;
+import static org.eclipse.n4js.projectDescription.ProjectType.APPLICATION;
+import static org.eclipse.n4js.projectDescription.ProjectType.LIBRARY;
+import static org.eclipse.n4js.projectDescription.ProjectType.PROCESSOR;
+import static org.eclipse.n4js.projectDescription.ProjectType.RUNTIME_ENVIRONMENT;
+import static org.eclipse.n4js.projectDescription.ProjectType.RUNTIME_LIBRARY;
+import static org.eclipse.n4js.projectDescription.ProjectType.TEST;
 import static org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef.PROJECT_TYPE_APP_DECOR;
 import static org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef.PROJECT_TYPE_LIB_DECOR;
 import static org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef.PROJECT_TYPE_PROC_DECOR;
@@ -39,7 +39,7 @@ import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 
-import org.eclipse.n4js.n4mf.ProjectType;
+import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;

@@ -22,16 +22,16 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.external.ExternalLibraryUtils;
+import org.eclipse.n4js.external.ExternalLibraryHelper;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4JSBrokenProjectException;
 import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.internal.N4JSProject;
-import org.eclipse.n4js.n4mf.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.utils.ProjectDescriptionHelper;
+import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.common.collect.Iterables;
@@ -44,7 +44,7 @@ import com.google.inject.Inject;
 public class HeadlessHelper {
 
 	@Inject
-	private ProjectDescriptionHelper projectDescriptionHelper;
+	private ProjectDescriptionLoader projectDescriptionLoader;
 
 	@Inject
 	private N4JSModel n4jsModel;
@@ -54,6 +54,9 @@ public class HeadlessHelper {
 
 	@Inject
 	private TargetPlatformInstallLocationProvider targetPlatformInstallLocationProvider;
+
+	@Inject
+	private ExternalLibraryHelper externalLibraryHelper;
 
 	/**
 	 * Configure FileBasedWorkspace with all projects contained in {@code buildSet}.
@@ -117,7 +120,7 @@ public class HeadlessHelper {
 		for (URI uri : projectURIs) {
 			URI projectURI = URIUtils.normalize(uri);
 
-			final ProjectDescription projectDescription = projectDescriptionHelper
+			final ProjectDescription projectDescription = projectDescriptionLoader
 					.loadProjectDescriptionAtLocation(projectURI);
 
 			if (projectDescription == null) {
@@ -252,7 +255,7 @@ public class HeadlessHelper {
 	 */
 	public boolean isProjectToBeBuilt(IN4JSProject project) {
 		if (project.isExternal()) {
-			return ExternalLibraryUtils.isExternalProjectDirectory(project.getLocationPath().toFile());
+			return externalLibraryHelper.isExternalProjectDirectory(project.getLocationPath().toFile());
 		}
 		return true;
 	}
@@ -339,7 +342,7 @@ public class HeadlessHelper {
 	 */
 	private File getTargetPlatformInstallLocation() {
 		final java.net.URI targetPlatformLocation = targetPlatformInstallLocationProvider
-				.getTargetPlatformInstallLocation();
+				.getTargetPlatformInstallURI();
 		if (null == targetPlatformLocation) {
 			return null;
 		}

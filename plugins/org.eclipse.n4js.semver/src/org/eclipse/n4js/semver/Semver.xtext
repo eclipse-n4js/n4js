@@ -27,7 +27,7 @@ NPMVersionRequirement:
 	VersionRangeSetRequirement
 	| (
 		(
-			LocalPathVersionRequirement
+			=>LocalPathVersionRequirement
 			| URLVersionRequirement
 			| GitHubVersionRequirement
 			| TagVersionRequirement
@@ -37,7 +37,7 @@ NPMVersionRequirement:
 ;
 
 LocalPathVersionRequirement:
-	=>'file:' localPath=PATH
+	=>(FILE_TAG) localPath=PATH
 ;
 
 URLVersionRequirement:
@@ -53,7 +53,7 @@ URLVersionSpecifier:
 
 URLSemver:
 	{URLSemver}
-	withSemverTag?='semver:'?
+	withSemverTag?=SEMVER_TAG?
 	simpleVersion=SimpleVersion
 ;
 
@@ -116,33 +116,40 @@ QualifierTag:
 ;
 
 
+FILE_TAG:
+	LETTER_F LETTER_I LETTER_L LETTER_E ':'
+;
+
+SEMVER_TAG:
+	LETTER_S LETTER_E LETTER_M LETTER_V LETTER_E LETTER_R ':'
+;
 
 
 PATH:
-	(LETTER_NO_VX | '/' | '.') ('/' | '.' | '-' | DIGITS | LETTER_V | LETTER_X | LETTER_NO_VX)+
+	(LETTER_NO_VX | '/' | '.') ('/' | '.' | '-' | DIGITS | LETTER)+
 ;
 
 URL_PROTOCOL:
-	(LETTER_NO_VX) (LETTER_V | LETTER_X | LETTER_NO_VX | '+')+
+	(LETTER_NO_VX) (LETTER | '+')+
 ;
 
 URL:
 	(LETTER_NO_VX)
-	('-' | DIGITS | LETTER_V | LETTER_X | LETTER_NO_VX)*
+	('-' | DIGITS | LETTER)*
 	('/' | '.' | ':' | '@')
-	('/' | '.' | ':' | '@' | '-' | DIGITS | LETTER_V | LETTER_X | LETTER_NO_VX)*
+	('/' | '.' | ':' | '@' | '-' | DIGITS | LETTER)*
 ;
 
 TAG:
-	(LETTER_NO_VX /*| LETTER_X*/) ('-' | DIGITS | LETTER_V | LETTER_X | LETTER_NO_VX)+
+	(LETTER_NO_VX /*| LETTER_X*/) ('-' | DIGITS | LETTER)+
 ;
 
 ALPHA_NUMERIC_CHARS:
-	('-' | DIGITS | LETTER_V | LETTER_X | LETTER_NO_VX)+
+	('-' | DIGITS | LETTER)+
 ;
 
 ALPHA_NUMERIC_CHARS_START_WITH_DIGITS:
-	DIGITS ('-' | DIGITS | LETTER_V | LETTER_X | LETTER_NO_VX)+
+	DIGITS ('-' | DIGITS | LETTER)+
 ;
 
 WILDCARD:
@@ -150,12 +157,51 @@ WILDCARD:
 ;
 
 
+fragment LETTER:
+	LETTER_V
+	| LETTER_X
+	| LETTER_NO_VX
+;
 
 
+fragment LETTER_NO_VX:
+	LETTER_S
+	| LETTER_M
+	| LETTER_R
+	| LETTER_F
+	| LETTER_I
+	| LETTER_L
+	| LETTER_E
+	| LETTER_OTHER
+;
 
 
-terminal LETTER_NO_VX :
-	'a'..'u' | 'w' | 'y' | 'z' | 'A'..'U' | 'W' | 'Y' | 'Z'
+terminal LETTER_S :
+	's' | 'S'
+;
+
+terminal LETTER_M :
+	'm' | 'M'
+;
+
+terminal LETTER_R :
+	'r' | 'R'
+;
+
+terminal LETTER_F :
+	'f' | 'F'
+;
+
+terminal LETTER_I :
+	'i' | 'I'
+;
+
+terminal LETTER_L :
+	'l' | 'L'
+;
+
+terminal LETTER_E :
+	'e' | 'E'
 ;
 
 terminal LETTER_V :
@@ -164,6 +210,35 @@ terminal LETTER_V :
 
 terminal LETTER_X:
 	'x' | 'X'
+;
+
+terminal LETTER_OTHER:
+	  'a' | 'A'
+	| 'b' | 'B'
+	| 'c' | 'C'
+	| 'd' | 'D'
+	// | 'e' | 'E' // part of 'semver' and/or 'file' tag
+	// | 'f' | 'F' // part of 'file' tag
+	| 'g' | 'G'
+	| 'h' | 'H'
+	// | 'i' | 'I' // part of 'file' tag
+	| 'j' | 'J'
+	| 'k' | 'K'
+	// | 'l' | 'L' // part of 'file' tag
+	// | 'm' | 'M' // part of 'semver' tag
+	| 'n' | 'N'
+	| 'o' | 'O'
+	| 'p' | 'P'
+	| 'q' | 'Q'
+	// | 'r' | 'R' // part of 'semver' tag
+	// | 's' | 'S' // part of 'semver' tag
+	| 't' | 'T'
+	| 'u' | 'U'
+	// | 'v' | 'V' // can be a prefix of a version and/or part of 'semver' tag
+	| 'w' | 'W'
+	// | 'x' | 'X' // can be a wildcard
+	| 'y' | 'Y'
+	| 'z' | 'Z'
 ;
 
 terminal ASTERIX:

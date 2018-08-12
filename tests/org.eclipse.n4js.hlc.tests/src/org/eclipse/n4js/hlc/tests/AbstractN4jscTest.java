@@ -134,6 +134,7 @@ public abstract class AbstractN4jscTest {
 	 */
 	protected static void expectCompilerException(String[] args, ErrorExitCode expectedExitCode) {
 		try {
+			System.out.println("Expecting exception (with exit code " + expectedExitCode + ") here:");
 			new N4jscBase().doMain(args);
 		} catch (ExitCodeException excpetion) {
 			assertEquals("Wrong exit code", expectedExitCode.getExitCodeValue(), excpetion.getExitCode());

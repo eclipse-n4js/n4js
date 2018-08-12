@@ -15,8 +15,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import org.eclipse.n4js.n4mf.ProjectDescription;
-import org.eclipse.n4js.n4mf.ProjectReference;
+import org.eclipse.n4js.projectDescription.DependencyType;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectReference;
 
 import com.google.common.base.Strings;
 
@@ -52,24 +53,35 @@ public class DependenciesCollectingUtil {
 	}
 
 	/** Add to the provided map all possible dependencies based on the {@link ProjectDescription} */
-	private static void updateFromProjectDescription(Map<String, String> dependencies,
-			ProjectDescription pd) {
-		if (pd != null) {
-			Stream.of(
-					pd.getProjectDependencies().stream().map(DependencyInfo::create),
-					// TODO GH-613, user projects can be misconfigured
-					pd.getProvidedRuntimeLibraries().stream().map(DependencyInfo::create),
-					getVersionedExtendedRuntimeEnvironment(pd),
-					pd.getImplementedProjects().stream().map(DependencyInfo::create))
-					.reduce(Stream::concat)
-					.orElseGet(Stream::empty)
-					.forEach(info -> dependencies.merge(info.name, info.version, DependenciesCollectingUtil::resolve));
+	private static void updateFromProjectDescription(Map<String, String> dependencies, ProjectDescription pd) {
+		if (pd == null) {
+			return;
 		}
+		Stream.of(
+				pd.getProjectDependencies().stream().map(DependencyInfo::create),
+				// TODO GH-613, user projects can be misconfigured
+				pd.getProvidedRuntimeLibraries().stream().map(DependencyInfo::create),
+				getVersionedExtendedRuntimeEnvironment(pd),
+				pd.getImplementedProjects().stream().map(DependencyInfo::create))
+				.reduce(Stream::concat)
+				.orElseGet(Stream::empty)
+				.filter(info -> info.type != DependencyType.TYPE) // do not install missing type dependencies
+				.forEach(info -> dependencies.merge(info.name, info.version, DependenciesCollectingUtil::resolve));
 	}
 
-	/** Resolve conflict between two versions. Simple strategy - returns first if it is not empty. */
+	/**
+	 * Resolve conflict between two version requirements. Simple strategy - returns first if it is not empty and not
+	 * "*".
+	 * <p>
+	 * This implements the following heuristic: if we encounter (during dependency collection) two version requirements
+	 * for the same npm package, we always use the first version requirement encountered, unless the first version is a
+	 * form of version requirement which does not provide much information, i.e. null, "", or "*" (then we use the
+	 * second version).
+	 * <p>
+	 * TODO GH-1017 improve this heuristic
+	 */
 	public static String resolve(String version1, String version2) {
-		return Strings.isNullOrEmpty(version1) ? version2 : version1;
+		return Strings.isNullOrEmpty(version1) || "*".equals(version1) ? version2 : version1;
 	}
 
 	/** TODO https://github.com/eclipse/n4js/issues/613 */

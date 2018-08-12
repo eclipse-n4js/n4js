@@ -16,7 +16,10 @@
 	// TODO re-consider whether this validation is desired X!PECT errors --> "There is no output folder defined, so compilation isn't possible." at ""n4js""
 	"n4js": {
 		"projectType": "library",
+		// XPECT warnings --> "Property "projectVersion" is unknown." at ""projectVersion""
 		"projectVersion": "0.0.1",
+		// XPECT warnings --> "Property "hello" is unknown." at ""hello""
+		"hello": {},
 		"vendorId": "MyVendorID",
 		"vendorName": "My Vendor Name",
 		"output": "src-gen",
@@ -69,7 +72,7 @@
 					"module": "**/*"
 				}
 			],
-			// XPECT warnings --> "Property noValidate duplicates property noValidate (line 43)." at "\"noValidate\""
+			// XPECT warnings --> "Property noValidate duplicates property noValidate (line 46)." at ""noValidate""
 			"noValidate": [
 				"p/A"
 			],

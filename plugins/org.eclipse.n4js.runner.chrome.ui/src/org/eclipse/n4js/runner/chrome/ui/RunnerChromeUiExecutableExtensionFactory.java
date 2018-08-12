@@ -12,10 +12,10 @@ package org.eclipse.n4js.runner.chrome.ui;
 
 import static org.eclipse.n4js.runner.ui.RunnerUiModule.RUNNER_UI_MODULE_ID;
 
-import com.google.inject.Injector;
-
 import org.eclipse.n4js.runner.ui.RunnerUiModule;
 import org.eclipse.n4js.utils.N4ExecutableExtensionFactory;
+
+import com.google.inject.Injector;
 
 /**
  * Executable extension factory for the runner Chrome UI module.
@@ -33,7 +33,7 @@ public class RunnerChromeUiExecutableExtensionFactory extends N4ExecutableExtens
 	}
 
 	@Override
-	protected String getBunleId() {
+	protected String getBundleId() {
 		return ChromeRunnerUiActivator.PLUGIN_ID;
 	}
 

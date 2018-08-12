@@ -24,6 +24,12 @@
 		},
 		"requiredRuntimeLibraries": [
 			"n4js-runtime-node"
-		]
+		],
+		"typeDependencies": {
+			"express-n4jsd": "<=4.13.4",
+			"lodash-n4jsd": "<=4.6.0",
+			"next-n4jsd": "<=1.1.1",
+			"body-parser-n4jsd": "<=1.15.0"
+		}
 	}
 }

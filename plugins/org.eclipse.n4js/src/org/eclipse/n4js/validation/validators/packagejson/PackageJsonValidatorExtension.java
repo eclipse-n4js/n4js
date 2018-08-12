@@ -10,6 +10,33 @@
  */
 package org.eclipse.n4js.validation.validators.packagejson;
 
+import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNonEmptyStringOrNull;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.DEFINES_PACKAGE;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.DEPENDENCIES;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.DEV_DEPENDENCIES;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.EXEC_MODULE;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.EXTENDED_RUNTIME_ENVIRONMENT;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.IMPLEMENTATION_ID;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.IMPLEMENTED_PROJECTS;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.INIT_MODULES;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.MAIN_MODULE;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.MODULE_FILTERS;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.MODULE_LOADER;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.N4JS;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.NAME;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.NV_MODULE;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.NV_SOURCE_CONTAINER;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.OUTPUT;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.PROJECT_TYPE;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.PROVIDED_RUNTIME_LIBRARIES;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.REQUIRED_RUNTIME_LIBRARIES;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.SOURCES;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.TESTED_PROJECTS;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.TYPE_DEPENDENCIES;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.VENDOR_ID;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.VENDOR_NAME;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.VERSION;
+
 import java.io.File;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
@@ -44,12 +71,12 @@ import org.eclipse.n4js.json.JSON.JSONPackage;
 import org.eclipse.n4js.json.JSON.JSONStringLiteral;
 import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.JSON.NameValuePair;
-import org.eclipse.n4js.json.validation.extension.AbstractJSONValidatorExtension;
-import org.eclipse.n4js.json.validation.extension.CheckProperty;
-import org.eclipse.n4js.n4mf.ModuleFilterType;
-import org.eclipse.n4js.n4mf.ProjectDescription;
-import org.eclipse.n4js.n4mf.ProjectType;
-import org.eclipse.n4js.n4mf.SourceContainerType;
+import org.eclipse.n4js.packagejson.PackageJsonProperties;
+import org.eclipse.n4js.packagejson.PackageJsonUtils;
+import org.eclipse.n4js.projectDescription.ModuleFilterType;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectType;
+import org.eclipse.n4js.projectDescription.SourceContainerType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
@@ -63,8 +90,6 @@ import org.eclipse.n4js.semver.Semver.URLVersionRequirement;
 import org.eclipse.n4js.semver.Semver.VersionRangeConstraint;
 import org.eclipse.n4js.semver.Semver.VersionRangeSetRequirement;
 import org.eclipse.n4js.semver.model.SemverSerializer;
-import org.eclipse.n4js.utils.ProjectDescriptionHelper;
-import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.validation.helper.FolderContainmentHelper;
@@ -135,7 +160,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	}
 
 	/** Validates the project/package name. */
-	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__NAME)
+	@CheckProperty(property = NAME)
 	public void checkName(JSONValue projectNameValue) {
 		// first check for the type of the name value
 		if (!checkIsType(projectNameValue, JSONPackage.Literals.JSON_STRING_LITERAL, "as package name")) {
@@ -204,7 +229,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	}
 
 	/** Check the version property. */
-	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__VERSION)
+	@CheckProperty(property = VERSION)
 	public void checkVersion(JSONValue versionValue) {
 		if (!checkIsType(versionValue, JSONPackage.Literals.JSON_STRING_LITERAL, "as package version")) {
 			return;
@@ -305,15 +330,21 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	}
 
 	/** Check the dependencies section structure. */
-	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__DEPENDENCIES)
+	@CheckProperty(property = DEPENDENCIES)
 	public void checkDependenciesStructure(JSONValue dependenciesValue) {
 		checkIsDependenciesSection(dependenciesValue);
 	}
 
 	/** Check the devDependencies section structure. */
-	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__DEV_DEPENDENCIES)
+	@CheckProperty(property = DEV_DEPENDENCIES)
 	public void checkDevDependenciesStructure(JSONValue devDependenciesValue) {
 		checkIsDependenciesSection(devDependenciesValue);
+	}
+
+	/** Check the typeDependencies section structure. */
+	@CheckProperty(property = TYPE_DEPENDENCIES)
+	public void checkTypeDependenciesStructure(JSONValue typeDependenciesValue) {
+		checkIsDependenciesSection(typeDependenciesValue);
 	}
 
 	/**
@@ -336,7 +367,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	}
 
 	/** Checks basic structural properties of the 'n4js' section (e.g. mandatory properties). */
-	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS)
+	@CheckProperty(property = N4JS)
 	public void checkN4JSSection(JSONValue n4jsSection) {
 		// make sure n4js section is an object
 		if (!checkIsType(n4jsSection, JSONPackage.Literals.JSON_OBJECT,
@@ -348,46 +379,54 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 
 		// Check for correct types (null-values (non-existent) will not lead to issues)
 		// Properties that are not checked here, have their own check-method which also validates their types.
-		checkIsType(n4jsValues.get(ProjectDescriptionHelper.PROP__VENDOR_ID),
+		checkIsType(n4jsValues.get(VENDOR_ID.name),
 				JSONPackage.Literals.JSON_STRING_LITERAL, "as vendor ID");
-		checkIsType(n4jsValues.get(ProjectDescriptionHelper.PROP__VENDOR_NAME),
+		checkIsType(n4jsValues.get(VENDOR_NAME.name),
 				JSONPackage.Literals.JSON_STRING_LITERAL, "as vendor name");
-		checkIsType(n4jsValues.get(ProjectDescriptionHelper.PROP__OUTPUT),
+		checkIsType(n4jsValues.get(OUTPUT.name),
 				JSONPackage.Literals.JSON_STRING_LITERAL, "as output folder path");
 
-		checkIsType(n4jsValues.get(ProjectDescriptionHelper.PROP__EXTENDED_RUNTIME_ENVIRONMENT),
+		checkIsType(n4jsValues.get(EXTENDED_RUNTIME_ENVIRONMENT.name),
 				JSONPackage.Literals.JSON_STRING_LITERAL, "as reference to extended runtime environment");
-		checkIsArrayOfType(n4jsValues.get(ProjectDescriptionHelper.PROP__PROVIDED_RUNTIME_LIBRARIES),
+		checkIsArrayOfType(n4jsValues.get(PROVIDED_RUNTIME_LIBRARIES.name),
 				JSONPackage.Literals.JSON_STRING_LITERAL, "as provided runtime libraries", "as library reference");
-		checkIsArrayOfType(n4jsValues.get(ProjectDescriptionHelper.PROP__REQUIRED_RUNTIME_LIBRARIES),
+		checkIsArrayOfType(n4jsValues.get(REQUIRED_RUNTIME_LIBRARIES.name),
 				JSONPackage.Literals.JSON_STRING_LITERAL, "as required runtime libraries", "as library reference");
 
-		checkIsArrayOfType(n4jsValues.get(ProjectDescriptionHelper.PROP__INIT_MODULES),
+		checkIsArrayOfType(n4jsValues.get(INIT_MODULES.name),
 				JSONPackage.Literals.JSON_STRING_LITERAL, "as init modules", "as init module reference");
-		checkIsType(n4jsValues.get(ProjectDescriptionHelper.PROP__EXEC_MODULE),
+		checkIsType(n4jsValues.get(EXEC_MODULE.name),
 				JSONPackage.Literals.JSON_STRING_LITERAL, "as exec module");
 
 		// Check for empty strings
-		checkIsNonEmptyString(n4jsValues.get(ProjectDescriptionHelper.PROP__VENDOR_ID),
-				ProjectDescriptionHelper.PROP__VENDOR_ID);
-		checkIsNonEmptyString(n4jsValues.get(ProjectDescriptionHelper.PROP__VENDOR_NAME),
-				ProjectDescriptionHelper.PROP__VENDOR_NAME);
+		checkIsNonEmptyString(n4jsValues.get(VENDOR_ID.name), VENDOR_ID);
+		checkIsNonEmptyString(n4jsValues.get(VENDOR_NAME.name), VENDOR_NAME);
+
+		Set<String> allN4JSPropertyNames = PackageJsonProperties.getAllN4JSPropertyNames();
+		for (String n4jsKey : n4jsValues.keys()) {
+			if (!allN4JSPropertyNames.contains(n4jsKey)) {
+				for (JSONValue value : n4jsValues.get(n4jsKey)) {
+					String msg = IssueCodes.getMessageForPKGJ_PROPERTY_UNKNOWN(n4jsKey);
+					addIssue(msg, value.eContainer(), JSONPackage.Literals.NAME_VALUE_PAIR__NAME,
+							IssueCodes.PKGJ_PROPERTY_UNKNOWN);
+				}
+			}
+		}
 	}
 
 	/** Check the projectType value structure and limitations. */
-	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "."
-			+ ProjectDescriptionHelper.PROP__PROJECT_TYPE)
+	@CheckProperty(property = PROJECT_TYPE)
 	public void checkProjectType(JSONValue projectTypeValue) {
 		if (!checkIsType(projectTypeValue, JSONPackage.Literals.JSON_STRING_LITERAL)) {
 			return;
 		}
-		if (!checkIsNonEmptyString((JSONStringLiteral) projectTypeValue, ProjectDescriptionHelper.PROP__PROJECT_TYPE)) {
+		if (!checkIsNonEmptyString((JSONStringLiteral) projectTypeValue, PROJECT_TYPE)) {
 			return;
 		}
 
 		// check whether the given value represents a valid project type
 		final String projectTypeString = ((JSONStringLiteral) projectTypeValue).getValue();
-		final ProjectType type = ProjectDescriptionUtils.parseProjectType(projectTypeString);
+		final ProjectType type = PackageJsonUtils.parseProjectType(projectTypeString);
 
 		// check type can be parsed successfully
 		if (type == null) {
@@ -397,33 +436,40 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		}
 
 		// check limitations of specific project types
-		if (type != ProjectType.VALIDATION) {
+
+		final boolean isDefType = type == ProjectType.DEFINITION;
+		final JSONValue propDefinesPck = getSingleDocumentValue(DEFINES_PACKAGE);
+		final boolean hasDefPck = propDefinesPck != null;
+		if (isDefType != hasDefPck) {
+			EObject issueObj = propDefinesPck == null ? projectTypeValue : propDefinesPck.eContainer();
+			String not = propDefinesPck == null ? "" : "not ";
+			String msg = IssueCodes.getMessageForPKGJ_DEFINES_PROPERTY(type.toString(), not, "definesPackage");
+			addIssue(msg, issueObj, IssueCodes.PKGJ_DEFINES_PROPERTY);
+		}
+
+		if (type != ProjectType.DEFINITION && type != ProjectType.VALIDATION) {
 			// make sure non-validation projects always declare an output and at least one source folder
-			final boolean hasSources = getSingleDocumentValue(
-					ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__SOURCES) != null;
-			final boolean hasOutput = getSingleDocumentValue(
-					ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__OUTPUT) != null;
+			final boolean hasSources = getSingleDocumentValue(SOURCES) != null;
+			final boolean hasOutput = getSingleDocumentValue(OUTPUT) != null;
 			if (!hasSources || !hasOutput) {
-				addIssue(IssueCodes.getMessageForPKGJ_PROJECT_TYPE_MANDATORY_OUTPUT_AND_SOURCES(projectTypeString),
-						projectTypeValue, IssueCodes.PKGJ_PROJECT_TYPE_MANDATORY_OUTPUT_AND_SOURCES);
+				String msg = IssueCodes.getMessageForPKGJ_PROJECT_TYPE_MANDATORY_OUTPUT_AND_SOURCES(projectTypeString);
+				addIssue(msg, projectTypeValue, IssueCodes.PKGJ_PROJECT_TYPE_MANDATORY_OUTPUT_AND_SOURCES);
 			}
 		}
 	}
 
 	/** Check the projectType value structure. */
-	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "."
-			+ ProjectDescriptionHelper.PROP__MODULE_LOADER)
+	@CheckProperty(property = MODULE_LOADER)
 	public void checkModuleLoaderStructure(JSONValue moduleLoaderValue) {
 		if (!checkIsType(moduleLoaderValue, JSONPackage.Literals.JSON_STRING_LITERAL)) {
 			return;
 		}
-		if (!checkIsNonEmptyString((JSONStringLiteral) moduleLoaderValue,
-				ProjectDescriptionHelper.PROP__MODULE_LOADER)) {
+		if (!checkIsNonEmptyString((JSONStringLiteral) moduleLoaderValue, MODULE_LOADER)) {
 			return;
 		}
 		// check whether the given value represents a valid project type
 		final String moduleLoaderString = ((JSONStringLiteral) moduleLoaderValue).getValue();
-		if (ProjectDescriptionUtils.parseModuleLoader(moduleLoaderString) == null) {
+		if (PackageJsonUtils.parseModuleLoader(moduleLoaderString) == null) {
 			addIssue(IssueCodes.getMessageForPKGJ_INVALID_MODULE_LOADER(moduleLoaderString),
 					moduleLoaderValue, IssueCodes.PKGJ_INVALID_MODULE_LOADER);
 		}
@@ -435,13 +481,13 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	 * Skips values of non {@link JSONStringLiteral} type.
 	 *
 	 * @See {@link #checkIsType(JSONValue, EClass, String)}
-	 * @See {@link #checkIsNonEmptyString(JSONStringLiteral, String)}
+	 * @See {@link #checkIsNonEmptyString(JSONStringLiteral, PackageJsonProperties)}
 	 */
-	private boolean checkIsNonEmptyString(Iterable<JSONValue> values, String locationClause) {
+	private boolean checkIsNonEmptyString(Iterable<JSONValue> values, PackageJsonProperties property) {
 		boolean overallResult = true;
 		for (JSONValue value : values) {
 			if (value instanceof JSONStringLiteral) {
-				overallResult &= checkIsNonEmptyString((JSONStringLiteral) value, locationClause);
+				overallResult &= checkIsNonEmptyString((JSONStringLiteral) value, property);
 			}
 		}
 		return overallResult;
@@ -487,7 +533,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	}
 
 	/** Validates the source container section of N4JS package.json files */
-	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__SOURCES)
+	@CheckProperty(property = SOURCES)
 	public void checkSourceContainers() {
 		// obtain source-container-related content of the section and validate its structure
 		Multimap<SourceContainerType, List<JSONStringLiteral>> sourceContainers = getSourceContainers();
@@ -578,8 +624,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	/**
 	 * Checks the <code>n4js.mainModule</code> property of the {@code package.json}.
 	 */
-	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "."
-			+ ProjectDescriptionHelper.PROP__MAIN_MODULE)
+	@CheckProperty(property = MAIN_MODULE)
 	public void checkMainModule(JSONValue mainModuleValue) {
 		if (!checkIsType(mainModuleValue, JSONPackage.Literals.JSON_STRING_LITERAL, "as main module specifier")) {
 			return;
@@ -598,17 +643,15 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	/**
 	 * Validates basic properties of the {@code n4js.implementationId}.
 	 */
-	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS +
-			"." + ProjectDescriptionHelper.PROP__IMPLEMENTATION_ID)
+	@CheckProperty(property = IMPLEMENTATION_ID)
 	public void checkImplementationId(JSONValue value) {
-		final JSONArray implementedProjectsValue = getSingleDocumentValue(ProjectDescriptionHelper.PROP__N4JS + "." +
-				ProjectDescriptionHelper.PROP__IMPLEMENTED_PROJECTS, JSONArray.class);
+		final JSONArray implementedProjectsValue = getSingleDocumentValue(IMPLEMENTED_PROJECTS, JSONArray.class);
 
 		// check basic constraints
 		if (!checkIsType(value, JSONPackage.Literals.JSON_STRING_LITERAL, "as implementation ID")) {
 			return;
 		}
-		if (!checkIsNonEmptyString((JSONStringLiteral) value, ProjectDescriptionHelper.PROP__IMPLEMENTATION_ID)) {
+		if (!checkIsNonEmptyString((JSONStringLiteral) value, IMPLEMENTATION_ID)) {
 			return;
 		}
 
@@ -626,8 +669,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	/**
 	 * Validates basic properties of the list of {@code n4js.implementedProjects}.
 	 */
-	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS +
-			"." + ProjectDescriptionHelper.PROP__IMPLEMENTED_PROJECTS)
+	@CheckProperty(property = IMPLEMENTED_PROJECTS)
 	public void checkImplementedProjects(JSONValue value) {
 		// check for correct types of implementedProjects
 		if (!checkIsType(value, JSONPackage.Literals.JSON_ARRAY, "as list of implemented projects")) {
@@ -647,8 +689,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 				.filter(p -> p != null).collect(Collectors.toList());
 
 		// obtain the declared project name (name property)
-		final JSONStringLiteral declaredProjectNameValue = getSingleDocumentValue(ProjectDescriptionHelper.PROP__NAME,
-				JSONStringLiteral.class);
+		final JSONStringLiteral declaredProjectNameValue = getSingleDocumentValue(NAME, JSONStringLiteral.class);
 
 		// exit early if project name cannot be determined
 		if (declaredProjectNameValue == null) {
@@ -667,8 +708,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	/**
 	 * Checks the n4js.testedProjects section of the {@code package.json}.
 	 */
-	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "." +
-			ProjectDescriptionHelper.PROP__TESTED_PROJECTS)
+	@CheckProperty(property = TESTED_PROJECTS)
 	public void checkTestedProjects(JSONValue testedProjectsValues) {
 		if (!checkIsArrayOfType(testedProjectsValues, JSONPackage.Literals.JSON_STRING_LITERAL,
 				"as list of tested projects", "as tested project reference")) {
@@ -693,12 +733,11 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	 * wrt. transpile loops and workspace clean operations (e.g. output folder is considered source folder).
 	 *
 	 * This check runs on the whole {@link JSONDocument}, since we must also validate in case of the implicit output
-	 * folder as given by {@link ProjectDescriptionHelper#DEFAULT_VALUE_OUTPUT}.
+	 * folder as given by {@link PackageJsonProperties#OUTPUT}.
 	 */
 	@Check
 	public void checkOutputFolder(@SuppressWarnings("unused") JSONDocument document) {
-		final JSONValue outputPathValue = getSingleDocumentValue(
-				ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__OUTPUT);
+		final JSONValue outputPathValue = getSingleDocumentValue(OUTPUT);
 
 		// only check basic JSONValue constraints, when an explicit outputPathValue is present
 		if (outputPathValue != null) {
@@ -707,18 +746,18 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 			}
 
 			// check value to be non-empty
-			if (!checkIsNonEmptyString((JSONStringLiteral) outputPathValue, ProjectDescriptionHelper.PROP__OUTPUT)) {
+			if (!checkIsNonEmptyString((JSONStringLiteral) outputPathValue, OUTPUT)) {
 				return;
 			}
 		}
 
 		if (outputPathValue != null) {
-			// if available, run check with explictly declared output folder
+			// if available, run check with explicitly declared output folder
 			internalCheckOutput(((JSONStringLiteral) outputPathValue).getValue(),
 					Optional.fromNullable(outputPathValue));
 		} else {
 			// otherwise, run check with default value for output folder
-			internalCheckOutput(ProjectDescriptionHelper.DEFAULT_VALUE_OUTPUT, Optional.absent());
+			internalCheckOutput(OUTPUT.defaultValue, Optional.absent());
 		}
 	}
 
@@ -729,12 +768,17 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	 *            If present, the ast representation. May be {@code null} if {@code outputPath} is a default value.
 	 */
 	private void internalCheckOutput(String outputPath, Optional<JSONValue> astOutputValue) {
-
 		final Resource resource = getDocument().eResource();
 		final URI absoluteOutputLocation = getResourceRelativeURI(resource, outputPath);
 
-		// do not perform check for projects of type 'validation'
-		if (getProjectType() == ProjectType.VALIDATION) {
+		// forbid output folder for 'definition' projects
+		final ProjectType projectType = getProjectType();
+		if (projectType == ProjectType.DEFINITION && astOutputValue.isPresent()) {
+			String message = IssueCodes.getMessageForPKGJ_DEFINES_PROPERTY(projectType.name(), "not ", "output");
+			addIssue(message, astOutputValue.get().eContainer(), IssueCodes.PKGJ_DEFINES_PROPERTY);
+		}
+		// do not perform check for projects of type 'validation' and 'definition'
+		if (projectType == ProjectType.DEFINITION || projectType == ProjectType.VALIDATION) {
 			return;
 		}
 
@@ -754,7 +798,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 				if (containmentHelper.isContained(absoluteSourceLocation, absoluteOutputLocation)) {
 					final String containingFolder = ("A " + srcFrgmtName + " folder");
 					final String nestedFolder = astOutputValue.isPresent() ? "the output folder"
-							: "the default output folder \"" + ProjectDescriptionHelper.DEFAULT_VALUE_OUTPUT + "\"";
+							: "the default output folder \"" + OUTPUT.defaultValue + "\"";
 					final String message = IssueCodes
 							.getMessageForOUTPUT_AND_SOURCES_FOLDER_NESTING(containingFolder, nestedFolder);
 
@@ -780,8 +824,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	/**
 	 * Checks the n4js.moduleFilters section of the {@code package.json}.
 	 */
-	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "."
-			+ ProjectDescriptionHelper.PROP__MODULE_FILTERS)
+	@CheckProperty(property = MODULE_FILTERS)
 	public void checkModuleFilters(JSONValue moduleFilterSection) {
 		if (!checkIsType(moduleFilterSection, JSONPackage.Literals.JSON_OBJECT, "as moduleFilters section")) {
 			return;
@@ -798,7 +841,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	 */
 	private void internalCheckModuleFilterEntry(NameValuePair moduleFilterPair) {
 		// obtain enum-representation of the validated module filter type
-		final ModuleFilterType filterType = ProjectDescriptionUtils.parseModuleFilterType(moduleFilterPair.getName());
+		final ModuleFilterType filterType = PackageJsonUtils.parseModuleFilterType(moduleFilterPair.getName());
 
 		// make sure the module filter type could be parsed successfully
 		if (filterType == null) {
@@ -907,7 +950,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	 *
 	 * Returns {@code null} if the given {@code value} is not a valid representation of a module filter specifier.
 	 *
-	 * Similar to {@link ProjectDescriptionUtils#getModuleFilterSpecifier(JSONValue)} but also validates the structure
+	 * Similar to {@link PackageJsonUtils#asModuleFilterSpecifierOrNull(JSONValue)} but also validates the structure
 	 * along the way.
 	 */
 	private ValidationModuleFilterSpecifier getModuleFilterInformation(JSONValue value, ModuleFilterType type) {
@@ -920,10 +963,10 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 			final List<NameValuePair> pairs = ((JSONObject) value).getNameValuePairs();
 
 			final NameValuePair sourceContainerPair = pairs.stream()
-					.filter(p -> ProjectDescriptionHelper.PROP__SOURCE_CONTAINER.equals(p.getName()))
+					.filter(p -> NV_SOURCE_CONTAINER.name.equals(p.getName()))
 					.findFirst().orElse(null);
 			final NameValuePair moduleFilterPair = pairs.stream()
-					.filter(p -> ProjectDescriptionHelper.PROP__MODULE.equals(p.getName())).findFirst()
+					.filter(p -> NV_MODULE.name.equals(p.getName())).findFirst()
 					.orElse(null);
 
 			// make sure the pairs are of correct type (or null in case of sourceContainerPair)
@@ -1133,12 +1176,11 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	 * Returns {@link ProjectType#VALIDATION} if the project type cannot be determined.
 	 */
 	private ProjectType getProjectType() {
-		final JSONValue projectTypeValue = getSingleDocumentValue(
-				ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__PROJECT_TYPE);
+		final JSONValue projectTypeValue = getSingleDocumentValue(PROJECT_TYPE);
 		if (projectTypeValue instanceof JSONStringLiteral) {
-			return ProjectDescriptionUtils.getProjectType(projectTypeValue);
+			return PackageJsonUtils.parseProjectType(asNonEmptyStringOrNull(projectTypeValue));
 		} else {
-			return ProjectType.get(0);
+			return ProjectType.VALIDATION;
 		}
 	}
 
@@ -1152,13 +1194,12 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	}
 
 	/**
-	 * Validates the correct structure of a {@link ProjectDescriptionHelper#PROP__SOURCES} section and returns a map
-	 * between the declared source container types and corresponding {@link JSONStringLiteral}s that specify the various
-	 * source container paths.
+	 * Validates the correct structure of a {@link PackageJsonProperties#SOURCES} section and returns a map between the
+	 * declared source container types and corresponding {@link JSONStringLiteral}s that specify the various source
+	 * container paths.
 	 */
 	private Multimap<SourceContainerType, List<JSONStringLiteral>> doGetSourceContainers() {
-		final Collection<JSONValue> sourcesValues = getDocumentValues(
-				ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__SOURCES);
+		final Collection<JSONValue> sourcesValues = getDocumentValues(SOURCES);
 
 		// first check whether n4js.sources section has been defined at all
 		if (sourcesValues.isEmpty()) {

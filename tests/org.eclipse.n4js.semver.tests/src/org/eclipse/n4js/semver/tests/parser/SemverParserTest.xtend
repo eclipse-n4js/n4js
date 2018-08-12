@@ -20,6 +20,11 @@ import org.junit.runner.RunWith
 
 import static org.junit.Assert.*
 import org.eclipse.n4js.semver.SemverInjectorProvider
+import org.eclipse.n4js.semver.Semver.VersionRangeSetRequirement
+import org.eclipse.n4js.semver.Semver.TagVersionRequirement
+import org.eclipse.n4js.semver.Semver.GitHubVersionRequirement
+import org.eclipse.n4js.semver.Semver.LocalPathVersionRequirement
+import org.eclipse.n4js.semver.Semver.URLVersionRequirement
 
 /**
  * Tests for parsing SEMVER files.
@@ -59,6 +64,8 @@ class SemverParserTest {
 		"3.4.5-alpha.9",
 		"1.2.4-beta.0",
 		"1.2.4-beta.1",
+		"^2.1.0-revise",
+		"^2.1.0-fi",
 		"1.2.3 - 2.3.4",
 		">=1.2.3 <=2.3.4",
 		"1.2 - 2.3.4",
@@ -135,21 +142,31 @@ class SemverParserTest {
 		">=0.0.0 <1.0.0"
 	];
 
-	String[] npmData = #[
+	String[] urlData = #[
 		"git://github.com/coderbyheart.git#123abc",
 		"git://github.com/coderbyheart.git#1.2.3-abc",
-		"expressjs/express",
-		"latest",
-		"http://asdf.com/asdf.tar.gz",
 		"git+ssh://git@github.com:npm/npm.git#v1.0.27",
 		"git+ssh://git@github.com:npm/npm#semver:^5.0",
 		"git+https://isaacs@github.com/npm/npm.git",
-		"git://github.com/npm/npm.git#v1.0.27",
-		"mochajs/mocha#4727d357ea",
+		"http://asdf.com/asdf.tar.gz"
+	];
+
+	String[] localPathData = #[
 		"file:../foo/bar",
 		"file:../dyl",
+		"file:babel-fi",
+		"file:babel-preset"
+	];
+
+	String[] githubData = #[
+		"expressjs/express",
+		"mochajs/mocha#4727d357ea",
 		"github:christkv/mongodb-version-manager#master",
 		"github:xyz/mongodb-version-manager#master"
+	];
+
+	String[] tagData = #[
+		"latest"
 	];
 
 	String[] errorData = #[
@@ -176,13 +193,31 @@ class SemverParserTest {
 	/** Check SEMVER versions and ranges. */
 	@Test
 	def void testSEMVERParseAndToString() {
-		internalTestParseAndToString(semverData, [s | return s.replace("x", "*").replace("X", "*").replace("V", "v")]);
+		internalTestParseAndToString(semverData, VersionRangeSetRequirement, [s | return s.replace("x", "*").replace("X", "*").replace("V", "v")]);
 	}
 
 	/** Checks other NPM supported versions. */
 	@Test
-	def void testNPMParseAndToString() {
-		internalTestParseAndToString(npmData, [s | return s.replace("semver:", "")]);
+	def void testNPMURLParseAndToString() {
+		internalTestParseAndToString(urlData, URLVersionRequirement, [s | return s]);
+	}
+
+	/** Checks other NPM supported versions. */
+	@Test
+	def void testNPMLocalPathParseAndToString() {
+		internalTestParseAndToString(localPathData, LocalPathVersionRequirement, [s | return s]);
+	}
+
+	/** Checks other NPM supported versions. */
+	@Test
+	def void testNPMGithubParseAndToString() {
+		internalTestParseAndToString(githubData, GitHubVersionRequirement, [s | return s]);
+	}
+
+	/** Checks other NPM supported versions. */
+	@Test
+	def void testNPMTagParseAndToString() {
+		internalTestParseAndToString(tagData, TagVersionRequirement, [s | return s]);
 	}
 
 	/** Checks other NPM supported versions. */
@@ -192,11 +227,12 @@ class SemverParserTest {
 	}
 
 	/** Checks a range. */
-	private def void internalTestParseAndToString(String[] data, (String)=>String adjust) {
+	private def void internalTestParseAndToString(String[] data, Class<?> clazz, (String)=>String adjust) {
 		for (String entry : data) {
-			val versionRangeSet = entry.parseSuccessfully
-			assertTrue(versionRangeSet !== null);
-			val serialized = serializer.serialize(versionRangeSet);
+			val versionRequirement = entry.parseSuccessfully
+			assertTrue("Parser returned null", versionRequirement !== null);
+			assertTrue("Parser returned type "+ versionRequirement.class.simpleName + " but expected type is " + clazz.simpleName, clazz.isAssignableFrom(versionRequirement.class));
+			val serialized = serializer.serialize(versionRequirement);
 			val adjustedEntry = if (adjust !== null) adjust.apply(entry.trim) else entry.trim;
 			assertEquals(adjustedEntry, serialized);
 		}

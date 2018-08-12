@@ -45,6 +45,8 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.n4js.external.N4JSExternalProject;
+import org.eclipse.n4js.internal.MultiCleartriggerCache;
+import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.internal.RaceDetectionHelper;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
@@ -105,6 +107,9 @@ public class ExternalLibraryBuilder {
 
 	@Inject
 	private ExternalLibraryErrorMarkerManager errorMarkerManager;
+
+	@Inject
+	private MultiCleartriggerCache cache;
 
 	/**
 	 * Performs a full build on all registered and available external libraries.
@@ -270,6 +275,7 @@ public class ExternalLibraryBuilder {
 			Job.getJobManager().beginRule(rule, monitor);
 
 			errorMarkerManager.clearMarkers(projects);
+			cache.clear(N4JSModel.SORTED_DEPENDENCIES);
 
 			VertexOrder<IN4JSProject> buildOrder = builtOrderComputer.getBuildOrder(projects);
 			// wrap as Arrays.asList returns immutable list
@@ -449,7 +455,6 @@ public class ExternalLibraryBuilder {
 				ResourceSet resourceSet = null;
 
 				try {
-
 					resourceSet = core.createResourceSet(Optional.of(n4EclPrj));
 					if (!resourceSet.getLoadOptions().isEmpty()) {
 						resourceSet.getLoadOptions().clear();

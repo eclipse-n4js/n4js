@@ -21,6 +21,9 @@
     },
     "requiredRuntimeLibraries": [
       "n4js-runtime-node"
-    ]
+    ],
+    "typeDependencies": {
+      "express-n4jsd": "*"
+    }
   }
 }

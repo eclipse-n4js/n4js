@@ -9,24 +9,6 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.tests.scoping.N4JSScopeProviderPluginTest
-	
-	Workspace {
-		JavaProject "N4JSXpectTests" {
-			Folder "model" {
-				Folder "scoping" {
-					ThisFile {}
-					File "Brother.n4js" {}
-					File "Sister.n4js" {}
-				}
-			}
-			File "manifest.n4mf" { from="../../manifest.n4mf" }
-		}
-	}
-	
-   END_SETUP 
- */
-
 export class Child { 
 	project age;
 }

@@ -20,12 +20,15 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.projectModel.IN4JSArchive;
+import org.eclipse.n4js.internal.MultiCleartriggerCache;
+import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
-import org.eclipse.n4js.ui.internal.WorkspaceCacheAccess;
+import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
+import org.eclipse.n4js.utils.ProjectDescriptionLoader;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.ui.containers.AbstractStorage2UriMapperClient;
 
 import com.google.common.base.Optional;
@@ -38,7 +41,7 @@ import com.google.inject.Singleton;
  * consideration during calculation. Handling of changes (project closes, properties file changed) is done in
  * {@link N4JSProjectDescription}.
  * <p/>
- * Uses the project description read in from file manifest.n4mf by {@link N4JSProjectDescription}. So e.g. it can be
+ * Uses the project description read in from package.json file by {@link ProjectDescriptionLoader}. So e.g. it can be
  * configured that all files in src and src-test should be part of the container.
  * <p/>
  */
@@ -55,7 +58,10 @@ public class N4JSProjectsStateHelper extends AbstractStorage2UriMapperClient {
 	private IN4JSEclipseCore core;
 
 	@Inject
-	private WorkspaceCacheAccess cacheAccess;
+	private N4JSModel model;
+
+	@Inject
+	private MultiCleartriggerCache cache;
 
 	public String initHandle(URI uri) {
 		String handle = null;
@@ -74,8 +80,8 @@ public class N4JSProjectsStateHelper extends AbstractStorage2UriMapperClient {
 
 	public List<String> initVisibleHandles(String handle) {
 		if (handle.startsWith(PROJECT_CONTAINER_PREFIX)) {
-			// similar to source-container-prefix but we are only interested in the project/archive and
-			// don't have an actual file of the source-locations.
+			// similar to source-container-prefix but we are only interested in the project and don't have an actual
+			// file of the source-locations.
 			URI uri = URI.createURI(handle.substring(PROJECT_CONTAINER_PREFIX.length()));
 
 			List<String> result = Lists.newArrayList();
@@ -83,18 +89,6 @@ public class N4JSProjectsStateHelper extends AbstractStorage2UriMapperClient {
 			Optional<? extends IN4JSEclipseProject> containerProjectOpt = core.findProject(uri);
 			if (containerProjectOpt.isPresent()) {
 				fullCollectLocationHandles(result, containerProjectOpt.get());
-			} else {
-				// archive
-				Optional<? extends IN4JSArchive> containerArchiveOpt = core.findArchive(uri);
-				if (containerArchiveOpt.isPresent()) {
-					// out of archive
-					IN4JSArchive archive = containerArchiveOpt.get();
-					fullCollectLocationHandles(result, archive);
-				} else {
-
-					// Nothing found.
-					return Collections.emptyList();
-				}
 			}
 			return result;
 		}
@@ -103,13 +97,8 @@ public class N4JSProjectsStateHelper extends AbstractStorage2UriMapperClient {
 		List<String> result = Lists.newArrayList();
 		if (containerOpt.isPresent()) {
 			IN4JSSourceContainer container = containerOpt.get();
-			if (container.isLibrary()) {
-				IN4JSArchive archive = container.getLibrary();
-				fullCollectLocationHandles(result, archive);
-			} else {
-				IN4JSProject project = container.getProject();
-				fullCollectLocationHandles(result, project);
-			}
+			IN4JSProject project = container.getProject();
+			fullCollectLocationHandles(result, project);
 			return result;
 		}
 		return Collections.emptyList();
@@ -118,24 +107,8 @@ public class N4JSProjectsStateHelper extends AbstractStorage2UriMapperClient {
 	private void fullCollectLocationHandles(List<String> result, IN4JSProject project) {
 		collectLocationHandles(project, result);
 
-		for (IN4JSProject dependency : project.getDependencies()) {
+		for (IN4JSProject dependency : model.getSortedDependencies(project)) {
 			collectLocationHandles(dependency, result);
-		}
-		for (IN4JSArchive dependency : project.getLibraries()) {
-			collectLocationHandles(dependency, result);
-		}
-	}
-
-	private void fullCollectLocationHandles(List<String> result, IN4JSArchive archive) {
-		collectLocationHandles(archive, result);
-		for (IN4JSArchive dependency : archive.getReferencedLibraries()) {
-			collectLocationHandles(dependency, result);
-		}
-	}
-
-	private void collectLocationHandles(IN4JSArchive archive, List<String> result) {
-		for (IN4JSSourceContainer container : archive.getSourceContainers()) {
-			result.add(SOURCE_CONTAINER_PREFIX + container.getLocation());
 		}
 	}
 
@@ -167,12 +140,14 @@ public class N4JSProjectsStateHelper extends AbstractStorage2UriMapperClient {
 
 	public void clearProjectCache() {
 		LOGGER.info("Clearing all cached project descriptions.");
-		cacheAccess.discardEntries();
+		cache.clear(EclipseBasedN4JSWorkspace.PROJECT_DESCRIPTIONS);
+		cache.clear(N4JSModel.SORTED_DEPENDENCIES);
 	}
 
 	public void clearProjectCache(IResourceDelta delta) {
 		IProject project = delta.getResource().getProject();
 		LOGGER.info("Clearing cache for " + project.getProject().getName() + ".");
-		cacheAccess.discardEntry(project);
+		cache.clear(EclipseBasedN4JSWorkspace.PROJECT_DESCRIPTIONS, URIUtils.convert(project));
+		cache.clear(N4JSModel.SORTED_DEPENDENCIES, URIUtils.convert(project));
 	}
 }

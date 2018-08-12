@@ -94,7 +94,7 @@ public class SynchronousTesterFsmTest extends AbstractTestTreeTest {
 	 */
 	@Test
 	public void testHappyPath() {
-		registry.registerFsm(SESSION_ID_1).startSession(SESSION_ID_1)
+		registry.getTestFsm(SESSION_ID_1).startSession(SESSION_ID_1)
 				.startTest(TEST_ID_1, 1200L).endTest(TEST_ID_1)
 				.endSession(SESSION_ID_1);
 
@@ -107,7 +107,7 @@ public class SynchronousTesterFsmTest extends AbstractTestTreeTest {
 	 */
 	@Test
 	public void testHappyPathWithPing() {
-		final TestFsm fsm = registry.registerFsm(SESSION_ID_1).startSession(SESSION_ID_1)
+		final TestFsm fsm = registry.getTestFsm(SESSION_ID_1).startSession(SESSION_ID_1)
 				.pingSession(SESSION_ID_1, 500L);
 		sleep(300L);
 		fsm.pingSession(SESSION_ID_1, 1000L);
@@ -127,7 +127,7 @@ public class SynchronousTesterFsmTest extends AbstractTestTreeTest {
 	 */
 	@Test
 	public void testSetupTimout() {
-		registry.registerFsm(SESSION_ID_1).startSession(SESSION_ID_1);
+		registry.getTestFsm(SESSION_ID_1).startSession(SESSION_ID_1);
 
 		sleep(SECONDS.toMillis(2L));
 		assertTrue(failedSessionIds.contains(SESSION_ID_1));
@@ -138,7 +138,7 @@ public class SynchronousTesterFsmTest extends AbstractTestTreeTest {
 	 */
 	@Test
 	public void testPingWithSetupTimeoutAdjustment() {
-		final TestFsm fsm = registry.registerFsm(SESSION_ID_1).startSession(SESSION_ID_1)
+		final TestFsm fsm = registry.getTestFsm(SESSION_ID_1).startSession(SESSION_ID_1)
 				.pingSession(SESSION_ID_1, 500L);
 		sleep(300L);
 		fsm.pingSession(SESSION_ID_1, 1000L);
@@ -153,7 +153,7 @@ public class SynchronousTesterFsmTest extends AbstractTestTreeTest {
 	 */
 	@Test
 	public void testDefaultTimeout() {
-		registry.registerFsm(SESSION_ID_1).startSession(SESSION_ID_1);
+		registry.getTestFsm(SESSION_ID_1).startSession(SESSION_ID_1);
 
 		sleep(SECONDS.toMillis(2L));
 		assertTrue(failedSessionIds.contains(SESSION_ID_1));
@@ -164,7 +164,7 @@ public class SynchronousTesterFsmTest extends AbstractTestTreeTest {
 	 */
 	@Test
 	public void testPingWithDefaultTimeoutAdjustment() {
-		final TestFsm fsm = registry.registerFsm(SESSION_ID_1).startSession(SESSION_ID_1);
+		final TestFsm fsm = registry.getTestFsm(SESSION_ID_1).startSession(SESSION_ID_1);
 		fsm.startTest(TEST_ID_1, 1200L).pingTest(TEST_ID_1, 1200L);
 		sleep(100L);
 		fsm.pingTest(TEST_ID_1, 100L);
@@ -180,7 +180,7 @@ public class SynchronousTesterFsmTest extends AbstractTestTreeTest {
 	 */
 	@Test
 	public void testIncorrectFstStateTransition() {
-		registry.registerFsm(SESSION_ID_1).startSession(SESSION_ID_1).startSession(SESSION_ID_1);
+		registry.getTestFsm(SESSION_ID_1).startSession(SESSION_ID_1).startSession(SESSION_ID_1);
 
 		await(10L);
 		assertTrue(failedSessionIds.contains(SESSION_ID_1));
@@ -191,7 +191,7 @@ public class SynchronousTesterFsmTest extends AbstractTestTreeTest {
 	 */
 	@Test
 	public void testRunSameTestTwice() {
-		registry.registerFsm(SESSION_ID_1).startSession(SESSION_ID_1).startTest(TEST_ID_1, 1200L).endTest(TEST_ID_1)
+		registry.getTestFsm(SESSION_ID_1).startSession(SESSION_ID_1).startTest(TEST_ID_1, 1200L).endTest(TEST_ID_1)
 				.startTest(TEST_ID_1, 1200L);
 
 		await(10L);
@@ -203,7 +203,7 @@ public class SynchronousTesterFsmTest extends AbstractTestTreeTest {
 	 */
 	@Test
 	public void testParallelFsmStateTransitions() {
-		registry.registerFsm(SESSION_ID_1).startSession(SESSION_ID_1)
+		registry.getTestFsm(SESSION_ID_1).startSession(SESSION_ID_1)
 				.startTest(TEST_ID_1, 1000L)
 				.startTest(TEST_ID_2, 1000L).startTest(TEST_ID_3, 1000L).endTest(TEST_ID_3).endTest(TEST_ID_2)
 				.endTest(TEST_ID_1).endSession(SESSION_ID_1);
@@ -217,7 +217,7 @@ public class SynchronousTesterFsmTest extends AbstractTestTreeTest {
 	 */
 	@Test
 	public void testParallelFsmStateTransitionsWithPingAdjustment() {
-		registry.registerFsm(SESSION_ID_1).startSession(SESSION_ID_1)
+		registry.getTestFsm(SESSION_ID_1).startSession(SESSION_ID_1)
 				.startTest(TEST_ID_1, 1000L)
 				.startTest(TEST_ID_2, 1000L).startTest(TEST_ID_3, 1000L).pingTest(TEST_ID_2, 1000L)
 				.pingTest(TEST_ID_1, 1000L).pingTest(TEST_ID_3, 1000L).endTest(TEST_ID_3).endTest(TEST_ID_2)
@@ -232,7 +232,7 @@ public class SynchronousTesterFsmTest extends AbstractTestTreeTest {
 	 */
 	@Test
 	public void testParallelFsmStateTransitionsExpectFailureDueToEndsBeforeThanStarts() {
-		registry.registerFsm(SESSION_ID_1).startSession(SESSION_ID_1)
+		registry.getTestFsm(SESSION_ID_1).startSession(SESSION_ID_1)
 				.startTest(TEST_ID_1, 1000L)
 				.startTest(TEST_ID_2, 1000L).endTest(TEST_ID_3).startTest(TEST_ID_3, 1000L).endTest(TEST_ID_2)
 				.endTest(TEST_ID_1).endSession(SESSION_ID_1);

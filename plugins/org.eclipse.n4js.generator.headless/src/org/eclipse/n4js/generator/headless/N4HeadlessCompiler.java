@@ -35,7 +35,7 @@ import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4FilebasedWorkspaceResourceSetContainerState;
 import org.eclipse.n4js.internal.N4JSProject;
-import org.eclipse.n4js.n4mf.ProjectType;
+import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
@@ -729,8 +729,6 @@ public class N4HeadlessCompiler {
 		ResourceType resourceType = ResourceType.getResourceType(uri);
 		switch (resourceType) {
 		case UNKOWN:
-			return false;
-		case N4MF:
 			return false;
 		default:
 			return true;

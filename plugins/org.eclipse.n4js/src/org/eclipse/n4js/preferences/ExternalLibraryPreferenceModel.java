@@ -23,29 +23,25 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.n4js.utils.JsonPrettyPrinterFactory;
+import org.eclipse.n4js.json.JSON.JSONArray;
+import org.eclipse.n4js.json.JSON.JSONDocument;
+import org.eclipse.n4js.json.JSON.JSONObject;
+import org.eclipse.n4js.json.JSON.JSONValue;
+import org.eclipse.n4js.json.model.utils.JSONModelUtils;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.StandardSystemProperty;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 
 /**
  * Represents an external library preference model.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class ExternalLibraryPreferenceModel {
 
-	/**
-	 * The symbolic name of the bundle that holds the external and built-in N4JS libraries.
-	 */
-	@JsonIgnore
-	private static final String EXTERNAL_LIBRARY_BUNDLE_NAME = "org.eclipse.n4js.external.libraries";
+	/** Name of JSON property that corresponds to field {@link #externalLibraryLocations}. */
+	private static final String PROP_EXTERNAL_LIBRARY_LOCATIONS = "externalLibraryLocations";
 
-	@JsonProperty("externalLibraryLocations")
-	private final List<String> externalLibraryLocations;
+	private final List<String> externalLibraryLocations = newArrayList();
 
 	/**
 	 * Creates and returns a new external library preference model that has initially one single element pointing to the
@@ -95,15 +91,15 @@ public class ExternalLibraryPreferenceModel {
 	 * @return a new preference model instance.
 	 */
 	public static ExternalLibraryPreferenceModel createFromJson(final String jsonString) {
-		try {
-			final ExternalLibraryPreferenceModel model = new ObjectMapper(new JsonPrettyPrinterFactory()).readValue(
-					jsonString,
-					ExternalLibraryPreferenceModel.class);
-			// XXX Make sure that deserialized model instance does not contain any duplicates.
-			return new ExternalLibraryPreferenceModel(model.getExternalLibraryLocationsAsUris());
-		} catch (final Exception e) {
-			throw new RuntimeException("Error occurred while trying to deserialize JSON string.", e);
+		JSONDocument document = JSONModelUtils.parseJSON(jsonString);
+		if (document == null) {
+			throw new RuntimeException("Error occurred while trying to parse JSON string.");
 		}
+		JSONValue extLibLocsValue = JSONModelUtils.getProperty(document, PROP_EXTERNAL_LIBRARY_LOCATIONS).orElse(null);
+		List<String> extLibLocs = JSONModelUtils.asStringsInArrayOrEmpty(extLibLocsValue);
+		ExternalLibraryPreferenceModel result = new ExternalLibraryPreferenceModel();
+		result.externalLibraryLocations.addAll(extLibLocs);
+		return result;
 	}
 
 	/**
@@ -134,7 +130,6 @@ public class ExternalLibraryPreferenceModel {
 	 *            the folder locations for external libraries.
 	 */
 	public ExternalLibraryPreferenceModel(final List<URI> locations) {
-		this.externalLibraryLocations = newArrayList();
 		for (final URI location : locations) {
 			checkUri(location);
 			final String path = new File(location).getAbsolutePath();
@@ -235,7 +230,6 @@ public class ExternalLibraryPreferenceModel {
 	 *
 	 * @return a list of external library folder location URIs.
 	 */
-	@JsonIgnore
 	public List<URI> getExternalLibraryLocationsAsUris() {
 		return from(externalLibraryLocations).transform(path -> new File(path).toURI()).toList();
 	}
@@ -246,12 +240,11 @@ public class ExternalLibraryPreferenceModel {
 	 * @return the JSON string representation of the current instance.
 	 */
 	public String toJsonString() {
-		try {
-			final ObjectMapper mapper = new ObjectMapper(new JsonPrettyPrinterFactory());
-			return mapper.writeValueAsString(this);
-		} catch (final Exception e) {
-			throw new RuntimeException("Error while serializing to JSON.", e);
-		}
+		final JSONArray extLibLocsValue = JSONModelUtils.createStringArray(this.externalLibraryLocations);
+		final JSONObject obj = JSONModelUtils.createObject(
+				ImmutableMap.of(PROP_EXTERNAL_LIBRARY_LOCATIONS, extLibLocsValue));
+		final JSONDocument doc = JSONModelUtils.createDocument(obj);
+		return JSONModelUtils.serializeJSON(doc);
 	}
 
 	@Override

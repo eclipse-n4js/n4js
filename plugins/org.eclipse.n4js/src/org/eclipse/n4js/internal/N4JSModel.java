@@ -17,16 +17,16 @@ import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Iterables.isEmpty;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.emptyList;
-import static org.eclipse.n4js.internal.N4JSSourceContainerType.ARCHIVE;
-import static org.eclipse.n4js.internal.N4JSSourceContainerType.PROJECT;
-import static org.eclipse.n4js.n4mf.ProjectType.TEST;
+import static org.eclipse.n4js.projectDescription.ProjectType.TEST;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Platform;
@@ -36,15 +36,15 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.HlcExternalLibraryWorkspace;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
-import org.eclipse.n4js.n4mf.ProjectDependency;
-import org.eclipse.n4js.n4mf.ProjectDescription;
-import org.eclipse.n4js.n4mf.ProjectReference;
-import org.eclipse.n4js.n4mf.SourceContainerDescription;
-import org.eclipse.n4js.n4mf.SourceContainerType;
-import org.eclipse.n4js.projectModel.IN4JSArchive;
+import org.eclipse.n4js.internal.MultiCleartriggerCache.CleartriggerSupplier;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectReference;
+import org.eclipse.n4js.projectDescription.ProjectType;
+import org.eclipse.n4js.projectDescription.SourceContainerDescription;
+import org.eclipse.n4js.projectDescription.SourceContainerType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
-import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.xtext.naming.QualifiedName;
 
 import com.google.common.base.Objects;
@@ -59,6 +59,8 @@ import com.google.inject.Singleton;
 @SuppressWarnings({ "javadoc" })
 @Singleton
 public class N4JSModel {
+
+	public static final String SORTED_DEPENDENCIES = "sortedDependencies";
 
 	private static final Logger LOGGER = Logger.getLogger(N4JSModel.class);
 
@@ -84,6 +86,9 @@ public class N4JSModel {
 	private TargetPlatformInstallLocationProvider installLocationProvider;
 
 	@Inject
+	private MultiCleartriggerCache cache;
+
+	@Inject
 	public N4JSModel(InternalN4JSWorkspace workspace) {
 		this.workspace = workspace;
 	}
@@ -96,9 +101,9 @@ public class N4JSModel {
 	public N4JSProject getN4JSProject(URI location) {
 		checkArgument(location.isFile(), "Expecting file URI. Was: " + location);
 		boolean external = false;
-		if (null != installLocationProvider.getTargetPlatformInstallLocation()) {
+		if (null != installLocationProvider.getTargetPlatformInstallURI()) {
 			Path projectPath = new File(location.toFileString()).toPath();
-			Path nodeModulesPath = new File(installLocationProvider.getTargetPlatformNodeModulesLocation()).toPath();
+			Path nodeModulesPath = new File(installLocationProvider.getNodeModulesURI()).toPath();
 			try {
 
 				final Path projectRoot = projectPath.getRoot();
@@ -135,16 +140,10 @@ public class N4JSModel {
 
 	public Optional<? extends IN4JSSourceContainer> findN4JSSourceContainer(URI nestedLocation) {
 		Optional<? extends IN4JSSourceContainer> foundN4JSSourceContainer = Optional.absent();
-		if (!nestedLocation.isArchive()) {
-			N4JSProject project = findProjectWith(nestedLocation);
-			foundN4JSSourceContainer = findN4JSSourceContainerInProject(project, nestedLocation);
-		} else {
-			String pathToArchive = nestedLocation.authority();
-			URI archiveURI = URI.createURI(pathToArchive.substring(0, pathToArchive.length() - 1));
-			N4JSProject project = findProjectWith(archiveURI);
-			N4JSArchive archive = getN4JSArchive(project, archiveURI);
-			foundN4JSSourceContainer = findN4JSSourceContainerInArchive(archiveURI, archive);
-		}
+
+		N4JSProject project = findProjectWith(nestedLocation);
+		foundN4JSSourceContainer = findN4JSSourceContainerInProject(project, nestedLocation);
+
 		return foundN4JSSourceContainer;
 	}
 
@@ -187,63 +186,8 @@ public class N4JSModel {
 		return false;
 	}
 
-	protected Optional<? extends IN4JSSourceContainer> findN4JSSourceContainerInArchive(URI location,
-			N4JSArchive archive) {
-		int maxSegments = location.segmentCount();
-		OUTER: for (IN4JSSourceContainer sourceContainer : archive.getSourceContainers()) {
-			URI sourceContainerLocation = sourceContainer.getLocation();
-			if (sourceContainerLocation.segmentCount() <= maxSegments) {
-				for (int i = 0; i < sourceContainerLocation.segmentCount(); i++) {
-					if (!sourceContainerLocation.segment(i).equals(location.segment(i))) {
-						continue OUTER;
-					}
-				}
-				return Optional.of(sourceContainer);
-			}
-		}
-		return Optional.absent();
-	}
-
-	public N4JSArchive getN4JSArchive(N4JSProject project, URI archiveLocation) {
-		return new N4JSArchive(project, archiveLocation);
-	}
-
-	public ImmutableList<? extends IN4JSArchive> getLibraries(N4JSProject project) {
-		URI location = project.getLocation();
-		return doGetLibraries(project, location);
-	}
-
 	protected InternalN4JSWorkspace getInternalWorkspace() {
 		return workspace;
-	}
-
-	protected ImmutableList<? extends IN4JSArchive> doGetLibraries(N4JSProject project, URI location) {
-		ImmutableList.Builder<IN4JSArchive> result = ImmutableList.builder();
-		ProjectDescription description = getProjectDescription(location);
-		if (description != null) {
-			description.getRequiredRuntimeLibraries().forEach(
-					lib -> addArchiveFromDependency(project, location, lib, result));
-			description.getProjectDependencies().forEach(
-					lib -> addArchiveFromDependency(project, location, lib, result));
-		}
-		return result.build();
-	}
-
-	private void addArchiveFromDependency(final N4JSProject project, final URI location,
-			final ProjectReference dependency, final ImmutableList.Builder<IN4JSArchive> result) {
-
-		if (null != dependency) {
-			final URI dependencyLocation = workspace.getLocation(location, dependency,
-					N4JSSourceContainerType.ARCHIVE);
-			if (dependencyLocation != null) {
-				result.add(getN4JSArchive(project, dependencyLocation));
-			}
-		}
-	}
-
-	public ImmutableList<? extends IN4JSArchive> getLibraries(N4JSArchive archive) {
-		URI location = archive.getLocation();
-		return doGetLibraries(archive.getProject(), location);
 	}
 
 	/**
@@ -263,10 +207,10 @@ public class N4JSModel {
 		ProjectDescription description = getProjectDescription(location);
 		if (description != null) {
 			List<SourceContainerDescription> sourceFragments = newArrayList(from(description.getSourceContainers()));
-			sourceFragments.sort((f1, fDIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT) -> f1
-					.compareByFragmentType(fDIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT));
+			sourceFragments.sort((f1, fDIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT) -> ProjectDescriptionUtils
+					.compareBySourceContainerType(f1, fDIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT));
 			for (SourceContainerDescription sourceFragment : sourceFragments) {
-				List<String> paths = sourceFragment.getPaths();
+				List<String> paths = ProjectDescriptionUtils.getPathsNormalized(sourceFragment);
 				for (String path : paths) {
 					// XXX poor man's canonical path conversion. Consider headless compiler with npm projects.
 					final String relativeLocation = ".".equals(path) ? "" : path;
@@ -283,33 +227,9 @@ public class N4JSModel {
 		return location.toFileString();
 	}
 
-	protected IN4JSSourceContainer createArchiveN4JSSourceContainer(N4JSArchive archive, SourceContainerType type,
-			String relativeLocation) {
-		return new N4JSArchiveSourceContainer(archive, type, relativeLocation);
-	}
-
 	protected IN4JSSourceContainer createProjectN4JSSourceContainer(N4JSProject project, SourceContainerType type,
 			String relativeLocation) {
 		return new N4JSProjectSourceContainer(project, type, relativeLocation);
-	}
-
-	public ImmutableList<IN4JSSourceContainer> getSourceContainers(N4JSArchive archive) {
-		ImmutableList.Builder<IN4JSSourceContainer> result = ImmutableList.builder();
-		URI location = archive.getLocation();
-		ProjectDescription description = getProjectDescription(location);
-		if (description != null) {
-			List<SourceContainerDescription> sourceFragments = newArrayList(from(description.getSourceContainers()));
-			sourceFragments.sort((f1, fDIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT) -> f1
-					.compareByFragmentType(fDIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT));
-			for (SourceContainerDescription sourceFragment : sourceFragments) {
-				List<String> paths = sourceFragment.getPaths();
-				for (String path : paths) {
-					result.add(
-							createArchiveN4JSSourceContainer(archive, sourceFragment.getSourceContainerType(), path));
-				}
-			}
-		}
-		return result.build();
 	}
 
 	public ImmutableList<? extends IN4JSProject> getDependencies(N4JSProject project, boolean includeAbsentProjects) {
@@ -357,29 +277,20 @@ public class N4JSModel {
 		return result.build();
 	}
 
-	public ImmutableList<? extends IN4JSSourceContainerAware> getProvidedRuntimeLibraries(N4JSProject project) {
+	public ImmutableList<? extends IN4JSProject> getProvidedRuntimeLibraries(N4JSProject project) {
+		ImmutableList.Builder<IN4JSProject> providedRuntimes = ImmutableList.builder();
 
-		ImmutableList.Builder<IN4JSSourceContainerAware> providedRuntimes = ImmutableList.builder();
 		EList<ProjectReference> runtimeLibraries = getAllProvidedRuntimeLibraries(project);
 		URI projectLocation = project.getLocation();
 
-		// GHOLD-249: If the project n4mf file has parse errors, we need a lot of null checks.
 		for (ProjectReference runtimeLibrary : runtimeLibraries) {
-			URI location = workspace.getLocation(projectLocation, runtimeLibrary, PROJECT);
+			URI location = workspace.getLocation(projectLocation, runtimeLibrary);
 			if (null == location) {
-				location = externalLibraryWorkspace.getLocation(projectLocation, runtimeLibrary,
-						PROJECT);
+				location = externalLibraryWorkspace.getLocation(projectLocation, runtimeLibrary);
 			}
 
 			if (null != location) {
 				providedRuntimes.add(getN4JSProject(location));
-			} else {
-
-				// Assuming archive (NFAR)
-				location = workspace.getLocation(projectLocation, runtimeLibrary, ARCHIVE);
-				if (null != location) {
-					providedRuntimes.add(getN4JSArchive(project, location));
-				}
 			}
 		}
 
@@ -403,23 +314,18 @@ public class N4JSModel {
 	}
 
 	public Iterator<URI> iterator(IN4JSSourceContainer sourceContainer) {
-		if (sourceContainer.isLibrary()) {
-			return workspace.getArchiveIterator(sourceContainer.getLibrary().getLocation(),
-					sourceContainer.getRelativeLocation());
-		} else {
-			if (sourceContainer.getProject().isExternal() && Platform.isRunning()) {
-				// The `Platform.isRunning()` is not valid check for the OSGI headless compiler
-				// it may still be valid in some scenarios (maybe some test scenarios)
-				if (externalLibraryWorkspace instanceof HlcExternalLibraryWorkspace
-						&& workspace instanceof FileBasedWorkspace
-						&& workspace.findProjectWith(sourceContainer.getLocation()) != null) {
-					return workspace.getFolderIterator(sourceContainer.getLocation());
-				}
-
-				return externalLibraryWorkspace.getFolderIterator(sourceContainer.getLocation());
+		if (sourceContainer.getProject().isExternal() && Platform.isRunning()) {
+			// The `Platform.isRunning()` is not valid check for the OSGI headless compiler
+			// it may still be valid in some scenarios (maybe some test scenarios)
+			if (externalLibraryWorkspace instanceof HlcExternalLibraryWorkspace
+					&& workspace instanceof FileBasedWorkspace
+					&& workspace.findProjectWith(sourceContainer.getLocation()) != null) {
+				return workspace.getFolderIterator(sourceContainer.getLocation());
 			}
-			return workspace.getFolderIterator(sourceContainer.getLocation());
+
+			return externalLibraryWorkspace.getFolderIterator(sourceContainer.getLocation());
 		}
+		return workspace.getFolderIterator(sourceContainer.getLocation());
 	}
 
 	/**
@@ -429,16 +335,13 @@ public class N4JSModel {
 		final String ext = fileExtension.or("").trim();
 		final String extWithDot = !ext.isEmpty() && !ext.startsWith(".") ? "." + ext : ext;
 		final String pathStr = name.toString("/") + extWithDot; // no need for IQualifiedNameConverter here!
-		if (sourceContainer.isLibrary()) {
-			return null; // TODO support for finding artifacts in libraries
-		} else {
-			URI artifactLocation = workspace.findArtifactInFolder(sourceContainer.getLocation(), pathStr);
-			if (null == artifactLocation) {
-				artifactLocation = externalLibraryWorkspace.findArtifactInFolder(sourceContainer.getLocation(),
-						pathStr);
-			}
-			return artifactLocation;
+
+		URI artifactLocation = workspace.findArtifactInFolder(sourceContainer.getLocation(), pathStr);
+		if (null == artifactLocation) {
+			artifactLocation = externalLibraryWorkspace.findArtifactInFolder(sourceContainer.getLocation(),
+					pathStr);
 		}
+		return artifactLocation;
 	}
 
 	public Optional<String> getExtendedRuntimeEnvironmentName(URI location) {
@@ -471,11 +374,11 @@ public class N4JSModel {
 		final ProjectDescription description = getProjectDescription(location);
 
 		if (null != description) {
-			for (ProjectDependency testedProject : description.getTestedProjects()) {
-				URI hostLocation = workspace.getLocation(location, testedProject, PROJECT);
+			for (ProjectReference testedProject : description.getTestedProjects()) {
+				URI hostLocation = workspace.getLocation(location, testedProject);
 
 				if (null == hostLocation) {
-					hostLocation = externalLibraryWorkspace.getLocation(location, testedProject, PROJECT);
+					hostLocation = externalLibraryWorkspace.getLocation(location, testedProject);
 				}
 
 				if (hostLocation != null) {
@@ -513,12 +416,12 @@ public class N4JSModel {
 			return absent();
 		}
 
-		URI dependencyLocation = workspace.getLocation(location, reference, PROJECT);
+		URI dependencyLocation = workspace.getLocation(location, reference);
 		if (null != dependencyLocation) {
 			return fromNullable(getN4JSProject(dependencyLocation));
 		}
 
-		dependencyLocation = externalLibraryWorkspace.getLocation(location, reference, PROJECT);
+		dependencyLocation = externalLibraryWorkspace.getLocation(location, reference);
 		if (null != dependencyLocation) {
 			return fromNullable(getN4JSProject(dependencyLocation));
 		}
@@ -566,4 +469,74 @@ public class N4JSModel {
 
 		return resolvedReferences;
 	}
+
+	/**
+	 * Returns the name of the package the given {@code project} provides type definitions for.
+	 *
+	 * {@code null} if this project does not specify the property (i.e. not a type definitions project (cf.
+	 * {@link ProjectType#DEFINITION}).
+	 */
+	public String getDefinesPackage(final IN4JSProject project) {
+		if (null == project) {
+			return null;
+		}
+		final ProjectDescription projectDescription = getProjectDescription(project.getLocation());
+		if (null != projectDescription) {
+			return projectDescription.getDefinesPackage();
+		}
+		return null;
+	}
+
+	public Iterable<IN4JSProject> getSortedDependencies(IN4JSProject project) {
+		SortedDependenciesProvider sdProvider = new SortedDependenciesProvider(project);
+		Iterable<IN4JSProject> existing = cache.get(sdProvider, SORTED_DEPENDENCIES, project.getLocation());
+		return existing;
+	}
+
+	/**
+	 * The idea of this mechanism is that following use case should be supported:
+	 * <p>
+	 * Given the projects {@code Impl}, {@code Def} and {@code Client} where {@code Client} depends on the former two
+	 * and where {@code Def} is a definition project that provides n4jsd files for the project {@code Impl}.<br/>
+	 * Consider that the workspace of these three projects is error-free and that the user changes the attribute
+	 * {@code definesPackage} in the package.json file of {@code Def}. This will cause the result of
+	 * {@link TypeDefinitionsAwareDependenciesSupplier#get(IN4JSProject)} to change (parameter is {@code Client}).
+	 * Consequently, the cache has to be invalidated every time the package.json of {@code Client} changes <b>and/or</b>
+	 * the package.json of all projects change which provide type definitions used in {@code Client}.
+	 */
+	private class SortedDependenciesProvider implements CleartriggerSupplier<Iterable<IN4JSProject>> {
+		final IN4JSProject project;
+		private Iterable<IN4JSProject> sortedDeps;
+
+		SortedDependenciesProvider(IN4JSProject project) {
+			this.project = project;
+		}
+
+		@Override
+		public Iterable<IN4JSProject> get() {
+			computeIfNull();
+			return sortedDeps;
+		}
+
+		private void computeIfNull() {
+			if (sortedDeps != null) {
+				return;
+			}
+			sortedDeps = TypeDefinitionsAwareDependenciesSupplier.get(project);
+		}
+
+		@Override
+		public Collection<URI> getCleartriggers() {
+			computeIfNull();
+			Set<URI> triggerURIs = new HashSet<>();
+			for (IN4JSProject dep : sortedDeps) {
+				if (dep.getDefinesPackageName() != null) {
+					URI uri = dep.getLocation();
+					triggerURIs.add(uri);
+				}
+			}
+			return triggerURIs;
+		}
+	}
+
 }

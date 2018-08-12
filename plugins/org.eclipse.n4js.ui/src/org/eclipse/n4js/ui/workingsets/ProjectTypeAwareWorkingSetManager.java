@@ -13,7 +13,7 @@ package org.eclipse.n4js.ui.workingsets;
 import static com.google.common.base.Strings.nullToEmpty;
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
-import static org.eclipse.n4js.n4mf.ProjectType.API;
+import static org.eclipse.n4js.projectDescription.ProjectType.API;
 import static org.eclipse.xtext.util.Strings.toFirstUpper;
 
 import java.util.Arrays;
@@ -29,7 +29,7 @@ import org.eclipse.swt.graphics.Image;
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
 
-import org.eclipse.n4js.n4mf.ProjectType;
+import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;

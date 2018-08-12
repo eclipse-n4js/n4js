@@ -11,7 +11,7 @@
 package org.eclipse.n4js.validation.validators.packagejson;
 
 import org.eclipse.n4js.json.JSON.JSONStringLiteral;
-import org.eclipse.n4js.n4mf.ProjectReference;
+import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;

@@ -3,6 +3,7 @@
 
 <product name="N4JS Headless" uid="org.eclipse.n4js.headless.product.product" id="org.eclipse.n4js.headless.product" application="org.eclipse.n4js.hlc.base.application" version="0.0.1.qualifier" useFeatures="false" includeLaunchers="false">
 
+
    <configIni use="default">
    </configIni>
 
@@ -15,12 +16,13 @@
 
    <windowImages/>
 
+
    <launcher name="n4jsc">
-      <solaris/>
       <win useIco="false">
          <bmp/>
       </win>
    </launcher>
+
 
    <vm>
    </vm>
@@ -96,7 +98,6 @@
       <plugin id="org.eclipse.n4js.generator.headless"/>
       <plugin id="org.eclipse.n4js.hlc.base"/>
       <plugin id="org.eclipse.n4js.model"/>
-      <plugin id="org.eclipse.n4js.n4mf.model"/>
       <plugin id="org.eclipse.n4js.regex"/>
       <plugin id="org.eclipse.n4js.releng.utils"/>
       <plugin id="org.eclipse.n4js.runner"/>

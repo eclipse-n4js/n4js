@@ -100,32 +100,22 @@ public class ImportsAwareReferenceProposalCreator {
 			ICompletionProposalAcceptor acceptor,
 			Predicate<IEObjectDescription> filter,
 			Function<IEObjectDescription, ICompletionProposal> proposalFactory) {
-		if (model != null) {
-			final IScope scope = ((IContentAssistScopeProvider) scopeProvider).getScopeForContentAssist(model,
-					reference);
 
+		if (model != null) {
+			final IContentAssistScopeProvider contentAssistScopeProvider = (IContentAssistScopeProvider) scopeProvider;
+			final IScope scope = contentAssistScopeProvider.getScopeForContentAssist(model, reference);
 			// iterate over candidates, filter them, and create ICompletionProposals for them
 			final Iterable<IEObjectDescription> candidates = scope.getAllElements();
+
 			// don't use candidates.forEach since we want an early exit
 			for (IEObjectDescription candidate : candidates) {
 				if (!acceptor.canAcceptMoreProposals())
 					return;
-				if (filter.apply(candidate)) {
-					QualifiedName qfn = candidate.getQualifiedName();
-					String tmodule = null;
 
-					if (qfn.getSegmentCount() >= 2) {
-						tmodule = qfn.getSegment(qfn.getSegmentCount() - 2);
-					}
-					// In case of main module, adjust the qualified name, e.g. index.Element -> react.Element
-					IN4JSProject project = n4jsCore.findProject(candidate.getEObjectURI()).orNull();
-					QualifiedName candidateName;
-					if (project != null && tmodule != null && tmodule.equals(project.getMainModule())) {
-						candidateName = QualifiedName.create(project.getProjectId(),
-								candidate.getQualifiedName().getLastSegment().toString());
-					} else {
-						candidateName = candidate.getQualifiedName();
-					}
+				if (filter.apply(candidate)) {
+					final QualifiedName qfn = candidate.getQualifiedName();
+					final int qfnSegmentCount = qfn.getSegmentCount();
+					final String tmodule = (qfnSegmentCount >= 2) ? qfn.getSegment(qfnSegmentCount - 2) : null;
 
 					final ICompletionProposal proposal = getProposal(candidate,
 							model,
@@ -134,19 +124,39 @@ public class ImportsAwareReferenceProposalCreator {
 							context,
 							filter,
 							proposalFactory);
+
 					if (proposal instanceof ConfigurableCompletionProposal
 							&& candidate.getName().getSegmentCount() > 1) {
+
+						QualifiedName candidateName = getCandidateName(candidate, tmodule);
 						ConfigurableCompletionProposal castedProposal = (ConfigurableCompletionProposal) proposal;
-						castedProposal.setAdditionalData(FQNImporter.KEY_QUALIFIED_NAME,
-								candidateName);
+						castedProposal.setAdditionalData(FQNImporter.KEY_QUALIFIED_NAME, candidateName);
+
 						// Original qualified name is the qualified name before adjustment
-						castedProposal.setAdditionalData(FQNImporter.KEY_ORIGINAL_QUALIFIED_NAME,
-								candidate.getQualifiedName());
+						castedProposal.setAdditionalData(FQNImporter.KEY_ORIGINAL_QUALIFIED_NAME, qfn);
 					}
 					acceptor.accept(proposal);
 				}
 			}
 		}
+	}
+
+	/** In case of main module, adjust the qualified name, e.g. index.Element -> react.Element */
+	private QualifiedName getCandidateName(IEObjectDescription candidate, String tmodule) {
+		QualifiedName candidateName;
+		IN4JSProject project = n4jsCore.findProject(candidate.getEObjectURI()).orNull();
+		if (project != null && tmodule != null && tmodule.equals(project.getMainModule())) {
+			String projectName = project.getProjectId();
+			String definesPackage = project.getDefinesPackageName();
+			if (definesPackage != null) {
+				projectName = definesPackage;
+			}
+			String lastSegmentOfQFN = candidate.getQualifiedName().getLastSegment().toString();
+			candidateName = QualifiedName.create(projectName, lastSegmentOfQFN);
+		} else {
+			candidateName = candidate.getQualifiedName();
+		}
+		return candidateName;
 	}
 
 	/**
