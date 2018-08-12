@@ -122,10 +122,6 @@ public class EcmaScriptSubGenerator extends AbstractSubGenerator {
 			// the next two variables store the navigation-prefix to get to the sources
 			final Path relativeNavigationToSrc = calculateNavigationFromOutputToSourcePath(fsa, getCompilerID(),
 					resourceCasted);
-			// TODO what's that?
-			// final Path explicitNavigationToSrc = Paths.get("/sources");
-			boolean useExplicitSourceRef = false; // true use explicitNavigationToSrc | false use
-													// relativeNavigationToSrc
 
 			boolean createSourceMap = true;
 
@@ -143,8 +139,7 @@ public class EcmaScriptSubGenerator extends AbstractSubGenerator {
 						sourceMapDataInstance.simpleSourceMapFileName = simpleSourceMapFileName;
 						sourceMapDataInstance.simpleCompiledFileName = simpleCompiledFileName;
 
-						sourceMapDataInstance.isExplicitSourceRef = useExplicitSourceRef;
-						// sourceMapDataInstance.explicitNavigationToSrc = explicitNavigationToSrc;
+						sourceMapDataInstance.isExplicitSourceRef = false;
 
 						sourceMapDataInstance.n4jsFilePath = relativeNavigationToSrc
 								.resolve(resourceCasted.getURI().lastSegment()).toString();
