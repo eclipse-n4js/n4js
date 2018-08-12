@@ -19,38 +19,45 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.google.inject.Inject;
+
 /**
- * Tests SourceMapFileLocator within a workspace.
- * This test needs to be run as plugin tests. This is why it is located in the 
- * smith.ui.tests bundle rather than in the transpiler.tests bundle.
+ * Tests SourceMapFileLocator within a workspace. This test needs to be run as plugin tests. This is why it is located
+ * in the smith.ui.tests bundle rather than in the transpiler.tests bundle.
  */
 @RunWith(XtextRunner.class)
 @InjectWith(N4JSUiInjectorProvider.class)
 public class SourceMapFileLocatorTest {
-	
+
 	@Inject
 	SourceMapFileLocator sourceMapFileLocator;
 
+	/**
+	 * Imports and compiles test project
+	 * 
+	 * @throws CoreException
+	 *             in case project cannot be loaded
+	 */
 	@BeforeClass
 	public static void setupEclipseWorkspace() throws CoreException {
 		IResourcesSetupUtil.cleanWorkspace();
 		importTestProject("SVDemo");
 	}
-	
+
 	/**
 	 * Imports a project from the probands/sourcemaps folder
-	 * @throws CoreException 
+	 *
+	 * @throws CoreException
+	 *             in case loading project goes wrong
 	 */
 	private static IProject importTestProject(String name) throws CoreException {
 		IProject project = ProjectTestsUtils.importProject(new File("probands/sourcemaps"), name);
-		//addNature(project, XtextProjectHelper.NATURE_ID);
+		// addNature(project, XtextProjectHelper.NATURE_ID);
 		IResourcesSetupUtil.waitForBuild();
 		return project;
 	}
-	
+
 	/**
-	 * If this test fails, all other tests will fail as well.
-	 * This test defines the precondition of all other tests.
+	 * If this test fails, all other tests will fail as well. This test defines the precondition of all other tests.
 	 */
 	@Test
 	public void testSrcGenMapExist() {
@@ -61,13 +68,12 @@ public class SourceMapFileLocatorTest {
 		Assert.isTrue(fileGen.exists());
 		IFile fileMap = project.getFile("src-gen/pac/SVDemo.map");
 		Assert.isTrue(fileMap.exists());
-		
+
 		Assert.isNotNull(sourceMapFileLocator);
 	}
 
 	/**
-	 * Ensures that the map file can be retrieved from a given source file
-	 * within the current workspace.
+	 * Ensures that the map file can be retrieved from a given source file within the current workspace.
 	 */
 	@Test
 	public void testMapFromSrc() throws Exception {
@@ -79,8 +85,7 @@ public class SourceMapFileLocatorTest {
 	}
 
 	/**
-	 * Ensures that the map file can be retrieved from a given generated file
-	 * within the current workspace.
+	 * Ensures that the map file can be retrieved from a given generated file within the current workspace.
 	 */
 	@Test
 	public void testMapFromGen() throws Exception {
