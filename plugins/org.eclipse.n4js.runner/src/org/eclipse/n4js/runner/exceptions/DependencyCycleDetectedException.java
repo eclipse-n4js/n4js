@@ -33,6 +33,6 @@ public class DependencyCycleDetectedException extends RuntimeException {
 	}
 
 	private static final String getMessage(final IN4JSProject project) {
-		return format(MSG_TEMPLATE, project.getProjectId());
+		return format(MSG_TEMPLATE, project.getProjectName());
 	}
 }

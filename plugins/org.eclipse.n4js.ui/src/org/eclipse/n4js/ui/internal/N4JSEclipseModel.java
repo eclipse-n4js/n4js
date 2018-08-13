@@ -89,15 +89,19 @@ public class N4JSEclipseModel extends N4JSModel {
 			checkNotNull(project, "Project does not exist in external workspace. URI: " + location);
 
 		} else {
-			project = workspace.getProject(projectName);
+			final String eclipseProjectName = ProjectDescriptionUtils
+					.convertN4JSProjectNameToEclipseProjectName(projectName);
+			project = workspace.getProject(eclipseProjectName);
 		}
 		return doGetN4JSProject(project, location);
 	}
 
 	@Override
-	protected IN4JSProject newAbsentProject(String projectId) {
-		final URI absent = URI.createPlatformResourceURI(projectId, false);
-		return new N4JSEclipseProject(workspace.getProject(projectId), absent, this);
+	protected IN4JSProject newAbsentProject(String projectName) {
+		final URI uri = URI.createPlatformResourceURI(projectName, false);
+		final String eclipseProjectName = ProjectDescriptionUtils
+				.convertN4JSProjectNameToEclipseProjectName(projectName);
+		return new N4JSEclipseProject(workspace.getProject(eclipseProjectName), uri, this);
 	}
 
 	@Override
@@ -291,14 +295,14 @@ public class N4JSEclipseModel extends N4JSModel {
 		for (IProject project : workspace.getProjects()) {
 			if (project.isOpen()) {
 				N4JSProject n4jsProject = getN4JSProject(project);
-				workspaceProjectMapping.put(n4jsProject.getProjectId(), n4jsProject);
+				workspaceProjectMapping.put(n4jsProject.getProjectName(), n4jsProject);
 			}
 		}
 
 		for (IProject project : externalLibraryWorkspace.getProjects()) {
 			if (!workspaceProjectMapping.containsKey(project.getName())) {
 				N4JSProject n4jsProject = getN4JSProject(project);
-				workspaceProjectMapping.put(n4jsProject.getProjectId(), n4jsProject);
+				workspaceProjectMapping.put(n4jsProject.getProjectName(), n4jsProject);
 			}
 		}
 

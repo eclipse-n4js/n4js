@@ -61,15 +61,15 @@ public class BuildOrderComputer {
 	}
 
 	static private class FilterUnreqestedOut implements VertexFilter<String> {
-		final private Set<String> requestedProjectIds;
+		final private Set<String> requestedProjectNames;
 
-		FilterUnreqestedOut(String[] requestedProjectIds) {
-			this.requestedProjectIds = new HashSet<>(Arrays.asList(requestedProjectIds));
+		FilterUnreqestedOut(String[] requestedProjectNames) {
+			this.requestedProjectNames = new HashSet<>(Arrays.asList(requestedProjectNames));
 		}
 
 		@Override
 		public boolean matches(String vertex) {
-			boolean filterOut = !requestedProjectIds.contains(vertex);
+			boolean filterOut = !requestedProjectNames.contains(vertex);
 			return filterOut;
 		}
 	}

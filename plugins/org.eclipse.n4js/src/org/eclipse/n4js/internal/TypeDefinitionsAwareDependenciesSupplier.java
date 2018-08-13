@@ -78,8 +78,8 @@ public class TypeDefinitionsAwareDependenciesSupplier {
 
 		// construct ordered list of dependencies
 		for (IN4JSProject dependency : runtimeDependencies) {
-			final String projectId = dependency.getProjectId();
-			final Collection<IN4JSProject> typeDefinitionProjects = typeDefinitionsById.getOrDefault(projectId,
+			final String projectName = dependency.getProjectName();
+			final Collection<IN4JSProject> typeDefinitionProjects = typeDefinitionsById.getOrDefault(projectName,
 					Collections.emptyList());
 
 			// first list all type definition dependencies

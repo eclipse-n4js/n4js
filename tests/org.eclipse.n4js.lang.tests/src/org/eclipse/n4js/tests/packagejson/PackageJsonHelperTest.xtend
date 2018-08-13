@@ -71,20 +71,20 @@ class PackageJsonHelperTest {
 		val dep3 = pd.projectDependencies.get(3);
 		val dep4 = pd.projectDependencies.get(4);
 
-		assertEquals("express", dep0.projectId);
+		assertEquals("express", dep0.projectName);
 		assertEquals(">=1.2.3", dep0.versionRequirement.toString);
-		assertEquals("lodash", dep1.projectId);
+		assertEquals("lodash", dep1.projectName);
 		assertEquals("~2.3.4", dep1.versionRequirement.toString);
-		assertEquals("eslint", dep2.projectId);
+		assertEquals("eslint", dep2.projectName);
 		assertEquals("^3.4.5", dep2.versionRequirement.toString);
 
 		// a dependency with an empty version requirement:
-		assertEquals("emptyVersionRequirement", dep3.projectId);
+		assertEquals("emptyVersionRequirement", dep3.projectName);
 		assertTrue("empty string as version requirement should be parsed to an empty VersionRangeSetRequirement",
 			dep3.versionRequirement instanceof VersionRangeSetRequirement
 			&& (dep3.versionRequirement as VersionRangeSetRequirement).ranges.empty);
 		// a dependency with version requirement "latest":
-		assertEquals("latestVersionRequirement", dep4.projectId);
+		assertEquals("latestVersionRequirement", dep4.projectName);
 		assertTrue("'latest' as version requirement should be parsed to a TagVersionRequirement",
 			dep4.versionRequirement instanceof TagVersionRequirement);
 		assertEquals("latest", (dep4.versionRequirement as TagVersionRequirement).tagName);
@@ -102,14 +102,14 @@ class PackageJsonHelperTest {
 		'''.parseAndConvert
 
 		// make sure no dependency was added for the invalid entry with empty key:
-		assertNull(pd.projectDependencies.filter[projectId.nullOrEmpty].head);
+		assertNull(pd.projectDependencies.filter[projectName.nullOrEmpty].head);
 
 		assertEquals(1, pd.projectDependencies.size);
 		val dep0 = pd.projectDependencies.get(0);
 
 		// a dependency with an invalid version requirement is not ignored entirely,
 		// just the version requirement is omitted:
-		assertEquals("invalidVersionRequirement", dep0.projectId);
+		assertEquals("invalidVersionRequirement", dep0.projectName);
 		assertEquals(null, dep0.versionRequirement);
 	}
 
@@ -270,7 +270,7 @@ class PackageJsonHelperTest {
 
 
 	def private assertCorrectDefaults(ProjectDescription pd, boolean hasDefaultProjectType) {
-		assertEquals(DEFAULT_PROJECT_ID, pd.projectId);
+		assertEquals(DEFAULT_PROJECT_ID, pd.projectName);
 		assertEquals(VERSION.defaultValue, pd.projectVersion.toString);
 		assertEquals(VENDOR_ID.defaultValue, pd.vendorId);
 		assertEquals(null, pd.vendorName);
@@ -309,10 +309,10 @@ class PackageJsonHelperTest {
 	def private ProjectDescription parseAndConvert(CharSequence jsonSource) {
 		return parseAndConvert(jsonSource, true, DEFAULT_PROJECT_ID);
 	}
-	def private ProjectDescription parseAndConvert(CharSequence jsonSource, boolean applyDefaultValues, String defaultProjectId) {
+	def private ProjectDescription parseAndConvert(CharSequence jsonSource, boolean applyDefaultValues, String defaultProjectName) {
 		val jsonParseHelper = N4LanguageUtils.getServiceForContext(JSONGlobals.FILE_EXTENSION, JSONParseHelper).get();
 		val jsonDocument = jsonParseHelper.parseSuccessfully(jsonSource);
-		val pd = packageJsonHelper.convertToProjectDescription(jsonDocument, applyDefaultValues, defaultProjectId);
+		val pd = packageJsonHelper.convertToProjectDescription(jsonDocument, applyDefaultValues, defaultProjectName);
 		return pd;
 	}
 }

@@ -46,7 +46,7 @@ import org.eclipse.n4js.semver.Semver.VersionNumber;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.projectDescription.impl.ProjectDescriptionImpl#getProjectId <em>Project Id</em>}</li>
+ *   <li>{@link org.eclipse.n4js.projectDescription.impl.ProjectDescriptionImpl#getProjectName <em>Project Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.impl.ProjectDescriptionImpl#getVendorId <em>Vendor Id</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.impl.ProjectDescriptionImpl#getVendorName <em>Vendor Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.impl.ProjectDescriptionImpl#getProjectVersion <em>Project Version</em>}</li>
@@ -74,24 +74,24 @@ import org.eclipse.n4js.semver.Semver.VersionNumber;
  */
 public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container implements ProjectDescription {
 	/**
-	 * The default value of the '{@link #getProjectId() <em>Project Id</em>}' attribute.
+	 * The default value of the '{@link #getProjectName() <em>Project Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getProjectId()
+	 * @see #getProjectName()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String PROJECT_ID_EDEFAULT = null;
+	protected static final String PROJECT_NAME_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getProjectId() <em>Project Id</em>}' attribute.
+	 * The cached value of the '{@link #getProjectName() <em>Project Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getProjectId()
+	 * @see #getProjectName()
 	 * @generated
 	 * @ordered
 	 */
-	protected String projectId = PROJECT_ID_EDEFAULT;
+	protected String projectName = PROJECT_NAME_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getVendorId() <em>Vendor Id</em>}' attribute.
@@ -427,8 +427,8 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getProjectId() {
-		return projectId;
+	public String getProjectName() {
+		return projectName;
 	}
 
 	/**
@@ -436,11 +436,11 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setProjectId(String newProjectId) {
-		String oldProjectId = projectId;
-		projectId = newProjectId;
+	public void setProjectName(String newProjectName) {
+		String oldProjectName = projectName;
+		projectName = newProjectName;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProjectDescriptionPackage.PROJECT_DESCRIPTION__PROJECT_ID, oldProjectId, projectId));
+			eNotify(new ENotificationImpl(this, Notification.SET, ProjectDescriptionPackage.PROJECT_DESCRIPTION__PROJECT_NAME, oldProjectName, projectName));
 	}
 
 	/**
@@ -920,8 +920,8 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__PROJECT_ID:
-				return getProjectId();
+			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__PROJECT_NAME:
+				return getProjectName();
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__VENDOR_ID:
 				return getVendorId();
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__VENDOR_NAME:
@@ -977,8 +977,8 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__PROJECT_ID:
-				setProjectId((String)newValue);
+			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__PROJECT_NAME:
+				setProjectName((String)newValue);
 				return;
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__VENDOR_ID:
 				setVendorId((String)newValue);
@@ -1063,8 +1063,8 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__PROJECT_ID:
-				setProjectId(PROJECT_ID_EDEFAULT);
+			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__PROJECT_NAME:
+				setProjectName(PROJECT_NAME_EDEFAULT);
 				return;
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__VENDOR_ID:
 				setVendorId(VENDOR_ID_EDEFAULT);
@@ -1141,8 +1141,8 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__PROJECT_ID:
-				return PROJECT_ID_EDEFAULT == null ? projectId != null : !PROJECT_ID_EDEFAULT.equals(projectId);
+			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__PROJECT_NAME:
+				return PROJECT_NAME_EDEFAULT == null ? projectName != null : !PROJECT_NAME_EDEFAULT.equals(projectName);
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__VENDOR_ID:
 				return VENDOR_ID_EDEFAULT == null ? vendorId != null : !VENDOR_ID_EDEFAULT.equals(vendorId);
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__VENDOR_NAME:
@@ -1199,8 +1199,8 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (projectId: ");
-		result.append(projectId);
+		result.append(" (projectName: ");
+		result.append(projectName);
 		result.append(", vendorId: ");
 		result.append(vendorId);
 		result.append(", vendorName: ");

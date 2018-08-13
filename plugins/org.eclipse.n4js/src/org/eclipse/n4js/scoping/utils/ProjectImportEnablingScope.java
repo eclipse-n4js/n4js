@@ -48,18 +48,18 @@ import com.google.common.collect.Iterables;
  * By using this wrapping scope, we obtain support for two additional forms of import (called "project imports"):
  *
  * <pre>
- * import * as N from "projectId/some/path/to/Module"
+ * import * as N from "projectName/some/path/to/Module"
  * </pre>
  *
  * and
  *
  * <pre>
- * import * as N from "projectId"
+ * import * as N from "projectName"
  * </pre>
  *
- * In both cases, <code>projectId</code>> stands for the project ID of the project containing the module to import from.
- * The last case is only allowed if the containing project has defined the <code>MainModule</code> property in its
- * manifest and means that this main module will then be imported.
+ * In both cases, <code>projectName</code>> stands for the N4JS project name of the project containing the module to
+ * import from. The last case is only allowed if the containing project has defined the <code>MainModule</code> property
+ * in its manifest and means that this main module will then be imported.
  *
  *
  * Since there may exist multiple <code>MainModule</code> instances in the workspace with the same name (but not in one
@@ -205,12 +205,12 @@ public class ProjectImportEnablingScope implements IScope {
 			final String firstSegment = name.getFirstSegment();
 			final IN4JSProject targetProject = findProject(firstSegment, contextProject);
 			final QualifiedName mainModule = ImportSpecifierUtil.getMainModuleOfProject(targetProject);
-			return getElementsWithDesiredProjectID(mainModule, targetProject.getProjectId());
+			return getElementsWithDesiredProjectName(mainModule, targetProject.getProjectName());
 		}
 		case COMPLETE_IMPORT: {
 			final String firstSegment = name.getFirstSegment();
 			final IN4JSProject targetProject = findProject(firstSegment, contextProject);
-			return getElementsWithDesiredProjectID(name.skipFirst(1), targetProject.getProjectId());
+			return getElementsWithDesiredProjectName(name.skipFirst(1), targetProject.getProjectName());
 		}
 		case SIMPLE_IMPORT: {
 			return parent.getElements(name);
@@ -238,10 +238,10 @@ public class ProjectImportEnablingScope implements IScope {
 
 	/**
 	 * This method asks {@link #delegate} for elements matching provided <code>moduleSpecifier</code>. Returned results
-	 * are filtered by expected {@link IN4JSProject#getProjectId()}.
+	 * are filtered by expected {@link IN4JSProject#getProjectName()}.
 	 */
-	private Collection<IEObjectDescription> getElementsWithDesiredProjectID(QualifiedName moduleSpecifier,
-			String projectId) {
+	private Collection<IEObjectDescription> getElementsWithDesiredProjectName(QualifiedName moduleSpecifier,
+			String projectName) {
 
 		final Iterable<IEObjectDescription> moduleSpecifierMatchesWithPossibleDuplicates = delegate
 				.getElements(moduleSpecifier);
@@ -251,24 +251,24 @@ public class ProjectImportEnablingScope implements IScope {
 		final Map<String, IEObjectDescription> result = new HashMap<>();
 		for (IEObjectDescription desc : moduleSpecifierMatchesWithPossibleDuplicates) {
 			final IN4JSProject containingProject = n4jsCore.findProject(desc.getEObjectURI()).orNull();
-			if (containingProject != null && projectId.equals(containingProject.getProjectId())) {
+			if (containingProject != null && projectName.equals(containingProject.getProjectName())) {
 				result.put(desc.getEObjectURI().toString(), desc);
 			}
 		}
 		return result.values();
 	}
 
-	private IN4JSProject findProject(String projectId, IN4JSProject project) {
-		if (Objects.equals(project.getProjectId(), projectId)) {
+	private IN4JSProject findProject(String projectName, IN4JSProject project) {
+		if (Objects.equals(project.getProjectName(), projectName)) {
 			return project;
 		}
 
 		Iterable<IN4JSProject> dependencies = n4jsModel.getSortedDependencies(project);
 		for (IN4JSProject p : dependencies) {
-			if (Objects.equals(p.getDefinesPackageName(), projectId)) {
+			if (Objects.equals(p.getDefinesPackageName(), projectName)) {
 				return p;
 			}
-			if (Objects.equals(p.getProjectId(), projectId)) {
+			if (Objects.equals(p.getProjectName(), projectName)) {
 				return p;
 			}
 		}
@@ -281,8 +281,8 @@ public class ProjectImportEnablingScope implements IScope {
 	private ImportType computeImportType(QualifiedName name, IN4JSProject project) {
 		final String firstSegment = name.getFirstSegment();
 		final IN4JSProject targetProject = findProject(firstSegment, project);
-		final boolean firstSegmentIsProjectId = targetProject != null;
-		return ImportSpecifierUtil.computeImportType(name, firstSegmentIsProjectId, targetProject);
+		final boolean firstSegmentIsProjectName = targetProject != null;
+		return ImportSpecifierUtil.computeImportType(name, firstSegmentIsProjectName, targetProject);
 	}
 
 }

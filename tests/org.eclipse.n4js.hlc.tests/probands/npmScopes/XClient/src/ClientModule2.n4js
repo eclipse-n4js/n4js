@@ -1,0 +1,16 @@
+
+// same as ClientModule1.n4js, but with slightly different module specifiers; should lead to exact same output
+
+import {A} from "@myScope/Lib/A"
+import {B} from "Lib/B"
+import {C as C1} from "@myScope/Lib/C"
+import {C as C2} from "Lib/C"
+import {D as D1} from "@myScope/Lib/D"
+import {D as D2} from "Lib/D"
+
+new A().foo();
+new B().foo();
+new C1().foo();
+new C2().foo();
+new D1().foo();
+new D2().foo();

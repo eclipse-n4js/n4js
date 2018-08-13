@@ -143,9 +143,9 @@ public abstract class AbstractN4jscJarTest {
 	 * workspace directory. This can be used to change the test data by removing selected projects at the beginning of a
 	 * test method.
 	 */
-	protected void deleteProject(String projectId) throws IOException {
+	protected void deleteProject(String projectName) throws IOException {
 		File wsp = new File(TARGET, WORKSPACE_FOLDER);
-		File project = new File(wsp, projectId);
+		File project = new File(wsp, projectName);
 		FileDeleter.delete(project.toPath());
 	}
 
