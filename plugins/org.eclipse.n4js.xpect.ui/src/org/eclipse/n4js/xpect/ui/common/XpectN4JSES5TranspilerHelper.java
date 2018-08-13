@@ -177,12 +177,12 @@ public class XpectN4JSES5TranspilerHelper {
 			String fileToRun = jsModulePathToRun(testScript);
 
 			// Not in UI case, hence manually set up the resources
-			String artificialProjectId = testScript.getModule().getProjectId();
+			String artificialProjectName = testScript.getModule().getProjectName();
 			runConfig = runnerFrontEnd.createXpectOutputTestConfiguration(NodeRunner.ID,
 					fileToRun,
 					systemLoader,
-					artificialRoot.toPath().resolve(artificialProjectId),
-					artificialProjectId);
+					artificialRoot.toPath().resolve(artificialProjectName),
+					artificialProjectName);
 		}
 
 		return configRunner.executeWithConfig(runConfig, decorateStdStreams);
@@ -302,7 +302,7 @@ public class XpectN4JSES5TranspilerHelper {
 	}
 
 	private String getCompiledFileBasePath(final Script script) {
-		String path = script.getModule().getProjectId() + N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT;
+		String path = script.getModule().getProjectName() + N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT;
 
 		IN4JSProject project = core.findProject(script.eResource().getURI()).orNull();
 		if (project != null) {

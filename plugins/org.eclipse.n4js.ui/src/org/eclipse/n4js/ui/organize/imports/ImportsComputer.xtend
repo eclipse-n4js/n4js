@@ -227,7 +227,7 @@ public class ImportsComputer {
 		resources.forEach [ res |
 			val candidateProject = core.findProject(res.URI).orNull
 			if (candidateProject !== null) {
-				if (ImportSpecifierUtil.getDependencyWithID(candidateProject.projectId, contextProject) !== null) {
+				if (ImportSpecifierUtil.getDependencyWithID(candidateProject.projectName, contextProject) !== null) {
 					val exportedIEODs = res.exportedObjects.iterator
 					while (exportedIEODs.hasNext) {
 						val ieod = exportedIEODs.next

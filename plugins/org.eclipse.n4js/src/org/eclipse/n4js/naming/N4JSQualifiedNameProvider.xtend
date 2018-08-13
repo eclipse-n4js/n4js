@@ -142,20 +142,20 @@ class N4JSQualifiedNameProvider extends N4TSQualifiedNameProvider {
 		if (uri === null || uri.lastSegment != N4JSGlobals.PACKAGE_JSON) {
 			return null; // not a package.json file -> no qualified name
 		}
-		// (1) try to get projectId from the given document
-		var String projectId = null;
+		// (1) try to get projectName from the given document
+		var String projectName = null;
 		val content = document.content;
 		if (content instanceof JSONObject) {
 			val value = JSONModelUtils.getProperty(content, PackageJsonProperties.NAME.name).orElse(null);
-			projectId = if (value instanceof JSONStringLiteral) value.value else null;
+			projectName = if (value instanceof JSONStringLiteral) value.value else null;
 		}
-		// (2) if unsuccessful, take projectId from the URI
-		if (projectId === null) {
-			projectId = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(uri.trimSegments(1));
+		// (2) if unsuccessful, take projectName from the URI
+		if (projectName === null) {
+			projectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(uri.trimSegments(1));
 		}
-		// create qualified name from projectId
-		if (projectId !== null && !projectId.isEmpty) {
-			val fqnBase = converter.toQualifiedName(projectId);
+		// create qualified name from projectName
+		if (projectName !== null && !projectName.isEmpty) {
+			val fqnBase = converter.toQualifiedName(projectName);
 			if (fqnBase !== null) {
 				return fqnBase.append(PACKAGE_JSON_SEGMENT)
 			}

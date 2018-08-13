@@ -176,9 +176,9 @@ public class N4JSProject implements IN4JSProject {
 	}
 
 	@Override
-	public String getProjectId() {
-		// because the projectId must be available even if the project does not exist, we do not read from the
-		// ProjectDescription, here, but instead derive the projectId from the location URI
+	public String getProjectName() {
+		// because the projectName must be available even if the project does not exist, we do not read from the
+		// ProjectDescription, here, but instead derive the projectName from the location URI
 		return ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location);
 	}
 
@@ -338,7 +338,7 @@ public class N4JSProject implements IN4JSProject {
 
 	@Override
 	public String toString() {
-		String str = getProjectId();
+		String str = getProjectName();
 		str += " (" + (exists() ? getProjectType() : "doesn't exist") + ")";
 		return str;
 	}

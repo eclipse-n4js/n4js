@@ -50,10 +50,10 @@ class TransitiveDependencyPluginTest extends AbstractBuilderParticipantTest {
 		dependendProject.addProjectToDependencies(dependsOn.project.name)
 	}
 
-	def void addProjectToDependencies(IProject dependendProject, String projectId) {
+	def void addProjectToDependencies(IProject dependendProject, String projectName) {
 		val projectDescriptionFile = dependendProject.project.getFile(N4JSGlobals.PACKAGE_JSON);
 		projectDescriptionTestHelper.updateProjectDescription(projectDescriptionFile) [ root |
-			PackageJSONTestUtils.addProjectDependency(root, projectId, "*")
+			PackageJSONTestUtils.addProjectDependency(root, projectName, "*")
 		]
 		waitForAutoBuild();
 	}

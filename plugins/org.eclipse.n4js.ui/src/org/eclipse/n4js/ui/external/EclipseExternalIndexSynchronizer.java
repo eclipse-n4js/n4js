@@ -264,7 +264,7 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 		SortedSet<String> prjNames = new TreeSet<>();
 		for (URI location : projectLocations) {
 			IN4JSProject p = core.findProject(location).orNull();
-			prjNames.add(p.getProjectId());
+			prjNames.add(p.getProjectName());
 		}
 		return prjNames;
 	}

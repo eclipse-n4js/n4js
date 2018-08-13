@@ -98,7 +98,7 @@ public class N4JSTestedProjectWizardPage extends WizardPage {
 					return type != null && !ProjectType.TEST.equals(type);
 				})
 				.filter(desc -> !isExternal(desc.getEObjectURI()))
-				.map(d -> PackageJsonResourceDescriptionExtension.getProjectId(d))
+				.map(d -> PackageJsonResourceDescriptionExtension.getProjectName(d))
 				.sorted()
 				.toArray(String[]::new);
 

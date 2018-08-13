@@ -79,7 +79,7 @@ public class RunnerFileBasedShippedCodeConfigurationHelper {
 	protected IN4JSProject getCustomRuntimeEnvironment(RunConfiguration config,
 			Iterable<IN4JSProject> allShippedProjects) {
 		return runnerHelper.findRuntimeEnvironemtnWithName(
-				runnerRegistry.getDescriptor(config.getRunnerId()).getEnvironment().getProjectId(),
+				runnerRegistry.getDescriptor(config.getRunnerId()).getEnvironment().getProjectName(),
 				allShippedProjects).orNull();
 	}
 }

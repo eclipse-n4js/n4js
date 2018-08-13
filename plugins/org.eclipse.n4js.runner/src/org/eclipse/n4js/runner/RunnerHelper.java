@@ -78,7 +78,7 @@ public class RunnerHelper {
 	private Pair<Path, String> getProjectNameAndPath(IN4JSProject project) {
 		if (!project.exists())
 			return null;
-		final String name = project.getProjectId();
+		final String name = project.getProjectName();
 		if (name == null)
 			return null;
 		final Path path = project.getLocationPath();
@@ -239,8 +239,8 @@ public class RunnerHelper {
 	private Optional<IN4JSProject> getCustomRuntimeEnvironmentProject(RuntimeEnvironment runEnv) {
 		// final RuntimeEnvironment reOfRunner = runnerRegistry.getDescriptor(runnerId).getEnvironment();
 		if (runEnv != null) {
-			final String projectId = runEnv.getProjectId();
-			return findRuntimeEnvironemtnWithName(projectId);
+			final String projectName = runEnv.getProjectName();
+			return findRuntimeEnvironemtnWithName(projectName);
 		}
 		return Optional.absent();
 	}
@@ -248,15 +248,15 @@ public class RunnerHelper {
 	/**
 	 * Looks up all runtime environment with provided name.
 	 *
-	 * @param projectId
+	 * @param projectName
 	 *            of the project that servers as the desired environment.
 	 * @return optional with project if found, empty optional otherwise.
 	 */
-	public Optional<IN4JSProject> findRuntimeEnvironemtnWithName(final String projectId,
+	public Optional<IN4JSProject> findRuntimeEnvironemtnWithName(final String projectName,
 			Iterable<IN4JSProject> projects) {
 		for (IN4JSProject project : projects) {
 			if (project.getProjectType() == ProjectType.RUNTIME_ENVIRONMENT
-					&& project.getProjectId().equals(projectId)) {
+					&& project.getProjectName().equals(projectName)) {
 				return Optional.of(project);
 			}
 		}
@@ -266,12 +266,12 @@ public class RunnerHelper {
 	/**
 	 * Looks up all runtime environment with provided name.
 	 *
-	 * @param projectId
+	 * @param projectName
 	 *            of the project that servers as the desired environment.
 	 * @return optional with project if found, empty optional otherwise.
 	 */
-	private Optional<IN4JSProject> findRuntimeEnvironemtnWithName(final String projectId) {
-		return findRuntimeEnvironemtnWithName(projectId, n4jsCore.findAllProjects());
+	private Optional<IN4JSProject> findRuntimeEnvironemtnWithName(final String projectName) {
+		return findRuntimeEnvironemtnWithName(projectName, n4jsCore.findAllProjects());
 	}
 
 	/**
@@ -388,10 +388,10 @@ public class RunnerHelper {
 		}
 
 		final Map<IN4JSProject, IN4JSProject> apiImplProjectMapping = new LinkedHashMap<>();
-		final List<String> missing = new ArrayList<>(); // projectIds of projects without an implementation
+		final List<String> missing = new ArrayList<>(); // projectNames of projects without an implementation
 		for (IN4JSProject dep : deps) {
 			if (dep != null) {
-				final String depId = dep.getProjectId();
+				final String depId = dep.getProjectName();
 				if (depId != null && apiImplMapping.isApi(depId)) {
 					// so: dep is an API project ...
 					final IN4JSProject impl = apiImplMapping.getImpl(depId, implementationId);
@@ -441,7 +441,7 @@ public class RunnerHelper {
 			apiImplMapping.enhance(batchedPivotNewDepList, n4jsCore.findAllProjects());
 			// go over new dependencies and decide:
 			for (IN4JSProject pivNewDep : batchedPivotNewDepList) {
-				final String depId = pivNewDep.getProjectId();
+				final String depId = pivNewDep.getProjectName();
 				if (apiImplMapping.isApi(depId)) {
 					// API-mapping
 					if (joinedApiImplProjectMapping.containsKey(pivNewDep)) {

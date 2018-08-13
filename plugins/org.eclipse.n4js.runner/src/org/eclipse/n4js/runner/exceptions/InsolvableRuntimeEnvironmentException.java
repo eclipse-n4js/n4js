@@ -34,6 +34,6 @@ public class InsolvableRuntimeEnvironmentException extends RuntimeException {
 	}
 
 	private static final String getMessage(final IN4JSProject project) {
-		return format(MSG_TEMPLATE, project.getProjectId(), project.getProjectType().getName());
+		return format(MSG_TEMPLATE, project.getProjectName(), project.getProjectType().getName());
 	}
 }

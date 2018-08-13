@@ -343,7 +343,7 @@ class ModuleWrappingTransformation extends Transformation {
 				val depLocationString = depLocation.toString
 				val depProjecOutputPath = depProject.locationPath.resolve(projectRelativeSegment).normalize.toString
 				val depRelativeSpecifier = depProjecOutputPath.substring(depLocationString.length -
-					depProject.projectId.length)
+					depProject.projectName.length)
 				specifier = depRelativeSpecifier + '/' + completeModuleSpecifier
 			}
 		}

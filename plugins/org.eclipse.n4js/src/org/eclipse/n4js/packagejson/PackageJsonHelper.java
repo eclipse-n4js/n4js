@@ -72,12 +72,12 @@ public class PackageJsonHelper {
 	 *            the JSON document to convert (should be the representation of a valid {@code package.json} file).
 	 * @param applyDefaultValues
 	 *            whether default values should be applied to the project description after conversion.
-	 * @param defaultProjectId
+	 * @param defaultProjectName
 	 *            the default project ID (will be ignored if {@code applyDefaultValues} is set to <code>false</code>.
 	 * @return the project description converted from the given JSON document.
 	 */
 	public ProjectDescription convertToProjectDescription(JSONDocument packageJSON, boolean applyDefaultValues,
-			String defaultProjectId) {
+			String defaultProjectName) {
 		JSONValue rootValue = packageJSON.getContent();
 		if (rootValue instanceof JSONObject) {
 			ProjectDescription result = ProjectDescriptionFactory.eINSTANCE.createProjectDescription();
@@ -86,7 +86,7 @@ public class PackageJsonHelper {
 
 			JSONValue property = getProperty((JSONObject) rootValue, MAIN.name).orElse(null);
 			String propertyAsString = asNonEmptyStringOrNull(property);
-			adjustProjectDescriptionAfterConversion(result, applyDefaultValues, defaultProjectId, propertyAsString);
+			adjustProjectDescriptionAfterConversion(result, applyDefaultValues, defaultProjectName, propertyAsString);
 			return result;
 		}
 		return null;
@@ -103,7 +103,7 @@ public class PackageJsonHelper {
 			JSONValue value = pair.getValue();
 			switch (property) {
 			case NAME:
-				target.setProjectId(asNonEmptyStringOrNull(value));
+				target.setProjectName(asNonEmptyStringOrNull(value));
 				break;
 			case VERSION:
 				target.setProjectVersion(parseVersion(asNonEmptyStringOrNull(value)));
@@ -206,26 +206,26 @@ public class PackageJsonHelper {
 
 	private void convertDependencies(ProjectDescription target, List<NameValuePair> depPairs, boolean avoidDuplicates,
 			DependencyType type) {
-		Set<String> existingProjectIds = new HashSet<>();
+		Set<String> existingProjectNames = new HashSet<>();
 		if (avoidDuplicates) {
 			for (ProjectDependency pd : target.getProjectDependencies()) {
-				existingProjectIds.add(pd.getProjectId());
+				existingProjectNames.add(pd.getProjectName());
 			}
 		}
 
 		for (NameValuePair pair : depPairs) {
-			String projectId = pair.getName();
+			String projectName = pair.getName();
 
 			boolean addProjectDependency = true;
-			addProjectDependency &= projectId != null && !projectId.isEmpty();
-			addProjectDependency &= !(avoidDuplicates && existingProjectIds.contains(projectId));
-			existingProjectIds.add(projectId);
+			addProjectDependency &= projectName != null && !projectName.isEmpty();
+			addProjectDependency &= !(avoidDuplicates && existingProjectNames.contains(projectName));
+			existingProjectNames.add(projectName);
 
 			if (addProjectDependency) {
 				JSONValue value = pair.getValue();
 				String valueStr = asStringOrNull(value);
 				ProjectDependency dep = ProjectDescriptionFactory.eINSTANCE.createProjectDependency();
-				dep.setProjectId(projectId);
+				dep.setProjectName(projectName);
 				dep.setVersionRequirementString(valueStr);
 				dep.setType(type);
 
@@ -237,14 +237,14 @@ public class PackageJsonHelper {
 	}
 
 	private void adjustProjectDescriptionAfterConversion(ProjectDescription target, boolean applyDefaultValues,
-			String defaultProjectId, String valueOfTopLevelPropertyMain) {
+			String defaultProjectName, String valueOfTopLevelPropertyMain) {
 
 		// store whether target has a declared mainModule *before* applying the default values
 		boolean hasN4jsSpecificMainModule = target.getMainModule() != null;
 
 		// apply default values (if desired)
 		if (applyDefaultValues) {
-			applyDefaults(target, defaultProjectId);
+			applyDefaults(target, defaultProjectName);
 		}
 
 		// sanitize and set value of top-level property "main"
@@ -266,24 +266,24 @@ public class PackageJsonHelper {
 		// (this is a work-around for supporting the API/Impl concept with npm/yarn: in a client project, both the API
 		// and implementation projects will be specified as dependency in the package.json and the following code will
 		// filter out implementation projects to not confuse API/Impl logic in other places)
-		Set<String> projectIdsToRemove = target.getProjectDependencies().stream()
-				.map(pd -> pd.getProjectId())
+		Set<String> projectNamesToRemove = target.getProjectDependencies().stream()
+				.map(pd -> pd.getProjectName())
 				.filter(id -> id.endsWith(".api"))
 				.map(id -> id.substring(0, id.length() - 4))
 				.collect(Collectors.toSet());
-		target.getProjectDependencies().removeIf(pd -> projectIdsToRemove.contains(pd.getProjectId()));
+		target.getProjectDependencies().removeIf(pd -> projectNamesToRemove.contains(pd.getProjectName()));
 	}
 
 	/**
 	 * Apply default values to the given project description. This should be performed right after loading and
 	 * converting the project description from JSON.
 	 */
-	private void applyDefaults(ProjectDescription target, String defaultProjectId) {
+	private void applyDefaults(ProjectDescription target, String defaultProjectName) {
 		if (!target.isHasN4JSNature()) {
 			target.setProjectType(ProjectType.VALIDATION);
 		}
-		if (target.getProjectId() == null) {
-			target.setProjectId(defaultProjectId);
+		if (target.getProjectName() == null) {
+			target.setProjectName(defaultProjectName);
 		}
 		if (target.getProjectVersion() == null) {
 			target.setProjectVersion(parseVersion(VERSION.defaultValue));

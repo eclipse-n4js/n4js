@@ -356,7 +356,7 @@ public class N4JSModel {
 		if (null == reRef) {
 			return absent();
 		}
-		return fromNullable(reRef.getProjectId());
+		return fromNullable(reRef.getProjectName());
 	}
 
 	public Collection<IN4JSProject> getTestedProjects(final N4JSProject project) {
@@ -426,7 +426,7 @@ public class N4JSModel {
 			return fromNullable(getN4JSProject(dependencyLocation));
 		}
 		if (includeAbsentProjects) {
-			return fromNullable(newAbsentProject(reference.getProjectId()));
+			return fromNullable(newAbsentProject(reference.getProjectName()));
 		}
 
 		return absent();
@@ -436,8 +436,8 @@ public class N4JSModel {
 	 * Create a project handle for a project that does not exist. This is used to track unfulfilled dependencies to
 	 * to-be-created projects.
 	 */
-	protected IN4JSProject newAbsentProject(String projectId) {
-		final URI absent = URI.createFileURI(projectId);
+	protected IN4JSProject newAbsentProject(String projectName) {
+		final URI absent = URI.createFileURI(projectName);
 		return new N4JSProject(absent, false, this);
 	}
 

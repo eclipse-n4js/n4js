@@ -15,8 +15,6 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.util.Arrays;
-
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.ContainerType;
@@ -25,6 +23,7 @@ import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
+import org.eclipse.xtext.util.Arrays;
 
 /**
  * Each ProjectComparisonEntry relates a single project/type/member on API side to N projects/types/members on
@@ -282,7 +281,7 @@ public class ProjectComparisonEntry {
 
 	private static String toText(Object element) {
 		if (element instanceof IN4JSProject)
-			return ((IN4JSProject) element).getProjectId();
+			return ((IN4JSProject) element).getProjectName();
 		if (element instanceof TModule)
 			return ((TModule) element).getQualifiedName();
 		if (element instanceof TMember)

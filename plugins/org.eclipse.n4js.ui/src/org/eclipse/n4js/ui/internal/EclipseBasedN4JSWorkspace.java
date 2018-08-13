@@ -120,7 +120,7 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 	@Override
 	public URI getLocation(URI projectURI, ProjectReference projectReference) {
 		if (projectURI.segmentCount() >= DIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT) {
-			String expectedProjectName = projectReference.getProjectId();
+			String expectedProjectName = projectReference.getProjectName();
 			if (expectedProjectName != null && expectedProjectName.length() > 0) {
 				// the below call to workspace.getProject(name) will search the Eclipse IProject by name, using the
 				// Eclipse project name (not the N4JS project name); thus, we have to convert from N4JS project name

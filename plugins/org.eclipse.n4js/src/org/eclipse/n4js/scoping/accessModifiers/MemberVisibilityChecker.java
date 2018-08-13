@@ -15,11 +15,6 @@ import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.xtext.EcoreUtil2;
-import org.eclipse.xtext.util.Strings;
-
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor;
 import org.eclipse.n4js.n4JS.N4ClassifierDefinition;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
@@ -46,6 +41,10 @@ import org.eclipse.n4js.ts.types.util.AllSuperTypesCollector;
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
 import org.eclipse.n4js.typesystem.TypeSystemHelper;
 import org.eclipse.xsemantics.runtime.RuleEnvironment;
+import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.util.Strings;
+
+import com.google.inject.Inject;
 
 /**
  * Implements the logic for accessibility checks for {@link TMember members} within a given context, e.g. for a concrete
@@ -361,7 +360,7 @@ public class MemberVisibilityChecker {
 		TModule memberModule = EcoreUtil2.getContainerOfType(member, TModule.class);
 		// receiverModule == null indicates either a follow-up problem or a builtin type
 		return memberModule == null || memberModule == contextModule
-				|| Strings.equal(memberModule.getProjectId(), contextModule.getProjectId())
+				|| Strings.equal(memberModule.getProjectName(), contextModule.getProjectName())
 						&& Strings.equal(contextModule.getVendorID(), memberModule.getVendorID())
 				|| typeVisibilityChecker.isTestedProjectOf(contextModule, memberModule);
 	}

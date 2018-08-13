@@ -61,7 +61,7 @@ public interface IN4JSProject {
 	 * <p>
 	 * For more details, see {@link ProjectDescriptionUtils#isProjectNameWithScope(String)}.
 	 */
-	String getProjectId();
+	String getProjectName();
 
 	/**
 	 * The project's location. Also available if the project does not exist. This will return a platform URI when
@@ -119,7 +119,7 @@ public interface IN4JSProject {
 	ImmutableList<? extends IN4JSProject> getProvidedRuntimeLibraries();
 
 	/**
-	 * Returns projectId of the extended runtime, if any.
+	 * Returns projectName of the extended runtime, if any.
 	 *
 	 * @return optional but not null string
 	 */
