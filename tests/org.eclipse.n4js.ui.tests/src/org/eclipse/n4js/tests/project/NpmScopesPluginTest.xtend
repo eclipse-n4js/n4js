@@ -24,6 +24,8 @@ import org.junit.Test
 
 import static org.eclipse.emf.common.util.URI.createPlatformResourceURI
 import static org.junit.Assert.*
+import org.eclipse.n4js.utils.URIUtils
+import org.eclipse.n4js.utils.ProjectDescriptionUtils
 
 /**
  * Testing the use of npm scopes as part of N4JS project names, i.e. project names of
@@ -35,6 +37,8 @@ class NpmScopesPluginTest extends AbstractBuilderParticipantTest {
 	private static final String WORKSPACE_BASE = "npmScopes";
 	private static final String EXAMPLE1 = "example1";
 
+	private IProject scopedProject;
+	private IProject nonScopedProject;
 	private IProject clientProject;
 	private URI clientModuleURI;
 	private IFile clientModule;
@@ -45,9 +49,12 @@ class NpmScopesPluginTest extends AbstractBuilderParticipantTest {
 	@Before
 	def void before() {
 		val parentFolder = new File(getResourceUri(PROBANDS, WORKSPACE_BASE, EXAMPLE1));
-		ProjectTestsUtils.importProject(parentFolder, "@myScope/Lib");
-		ProjectTestsUtils.importProject(parentFolder, "Lib");
+		scopedProject = ProjectTestsUtils.importProject(parentFolder, "@myScope/Lib");
+		nonScopedProject = ProjectTestsUtils.importProject(parentFolder, "Lib");
 		clientProject = ProjectTestsUtils.importProject(parentFolder, "XClient");
+		assertTrue(scopedProject.exists);
+		assertTrue(nonScopedProject.exists);
+		assertTrue(clientProject.exists);
 		clientModule = clientProject.getFolder("src").getFile("ClientModule.n4js");
 		assertNotNull(clientModule);
 		assertTrue(clientModule.exists);
@@ -175,6 +182,24 @@ class NpmScopesPluginTest extends AbstractBuilderParticipantTest {
 			Hello from D in @myScope/Lib!
 			Hello from D in Lib!
 		''')
+	}
+
+	/**
+	 * This test of method {@link URIUtils#convert(String)} is included here to avoid having to create
+	 * a new bundle for this test alone (no bundle for UI tests of 'org.eclipse.n4js.utils' yet).
+	 */
+	@Test
+	def void testURIUtils_convert() {
+		val f = scopedProject.getFile("package.json");
+		assertTrue(f.exists);
+		val uri = URIUtils.convert(f);
+		assertTrue(uri.isPlatformResource);
+		val expectedSegments = #[
+			"resource",
+			"@myScope" + ProjectDescriptionUtils.NPM_SCOPE_SEPARATOR_ECLIPSE + "Lib",
+			"package.json"
+		];
+		assertArrayEquals(expectedSegments, uri.segments);
 	}
 
 	def private void setContentsOfClientModule(CharSequence source) {

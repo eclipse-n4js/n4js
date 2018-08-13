@@ -11,7 +11,6 @@
 package org.eclipse.n4js.utils;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -177,30 +176,6 @@ public class ProjectDescriptionUtils {
 			return last;
 		}
 		throw new IllegalArgumentException("neither a file nor a platform URI: " + uri);
-	}
-
-	/**
-	 * Given the location of an N4JS project on disk, this method returns a {@link URI#isFile() file URI}, as used
-	 * internally to uniquely identify N4JS projects.
-	 * <p>
-	 * Since this methods always returns file URIs, it is only intended for use in the headless case. In the UI case,
-	 * URIs for identifying projects will be created by Eclipse.
-	 * <p>
-	 * For details on N4JS project name handling, see {@link #isProjectNameWithScope(String)}.
-	 */
-	public static URI deriveProjectURIFromFileLocation(File file) {
-		try {
-			URI createURI = URI.createURI(file.getAbsoluteFile().toURI().toURL().toString());
-			// by convention IN4JSProject URI does not end with '/'
-			// i.e. last segment must not be empty
-			String last = createURI.lastSegment();
-			if (last != null && last.isEmpty()) {
-				createURI = createURI.trimSegments(1);
-			}
-			return createURI;
-		} catch (MalformedURLException e) {
-			return null;
-		}
 	}
 
 	/**
