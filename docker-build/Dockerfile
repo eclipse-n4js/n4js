@@ -118,11 +118,6 @@ RUN set -ex && \
     rm yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz
 
 #
-# lerna install
-#
-RUN npm install -g lerna
-
-#
 # xvfb install
 #
 RUN apt-get update && \
