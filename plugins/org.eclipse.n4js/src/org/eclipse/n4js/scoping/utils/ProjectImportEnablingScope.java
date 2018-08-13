@@ -205,12 +205,12 @@ public class ProjectImportEnablingScope implements IScope {
 			final String firstSegment = name.getFirstSegment();
 			final IN4JSProject targetProject = findProject(firstSegment, contextProject);
 			final QualifiedName mainModule = ImportSpecifierUtil.getMainModuleOfProject(targetProject);
-			return getElementsWithDesiredProjectID(mainModule, targetProject.getProjectName());
+			return getElementsWithDesiredProjectName(mainModule, targetProject.getProjectName());
 		}
 		case COMPLETE_IMPORT: {
 			final String firstSegment = name.getFirstSegment();
 			final IN4JSProject targetProject = findProject(firstSegment, contextProject);
-			return getElementsWithDesiredProjectID(name.skipFirst(1), targetProject.getProjectName());
+			return getElementsWithDesiredProjectName(name.skipFirst(1), targetProject.getProjectName());
 		}
 		case SIMPLE_IMPORT: {
 			return parent.getElements(name);
@@ -240,7 +240,7 @@ public class ProjectImportEnablingScope implements IScope {
 	 * This method asks {@link #delegate} for elements matching provided <code>moduleSpecifier</code>. Returned results
 	 * are filtered by expected {@link IN4JSProject#getProjectName()}.
 	 */
-	private Collection<IEObjectDescription> getElementsWithDesiredProjectID(QualifiedName moduleSpecifier,
+	private Collection<IEObjectDescription> getElementsWithDesiredProjectName(QualifiedName moduleSpecifier,
 			String projectName) {
 
 		final Iterable<IEObjectDescription> moduleSpecifierMatchesWithPossibleDuplicates = delegate
