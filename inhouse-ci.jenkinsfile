@@ -78,18 +78,22 @@ pipeline {
 
     post {
         always {
-            try {
-	            archiveArtifacts allowEmptyArchive: false, artifacts: '**/builds/**/target/products/*.zip'
-	            archiveArtifacts allowEmptyArchive: false, artifacts: '**/tools/**/target/n4jsc.jar'
-	            archiveArtifacts allowEmptyArchive: true, artifacts: '**/logs/*.log'
-	            archiveArtifacts allowEmptyArchive: true, artifacts: '**/tests/**/target/**/*-output.txt'
-	            junit '**/surefire-reports/**/*.xml'
-	            junit '**/failsafe-reports/**/*.xml'
-            } catch (Exception e) {
-                raise e
-            } finally {
-	            // Clean up the workspace
-	            deleteDir()
+            steps {
+                step {
+                    try {
+                        archiveArtifacts allowEmptyArchive: false, artifacts: '**/builds/**/target/products/*.zip'
+                        archiveArtifacts allowEmptyArchive: false, artifacts: '**/tools/**/target/n4jsc.jar'
+                        archiveArtifacts allowEmptyArchive: true, artifacts: '**/logs/*.log'
+                        archiveArtifacts allowEmptyArchive: true, artifacts: '**/tests/**/target/**/*-output.txt'
+                        junit '**/surefire-reports/**/*.xml'
+                        junit '**/failsafe-reports/**/*.xml'
+                    } catch (Exception e) {
+                        raise e
+                    } finally {
+                        // Clean up the workspace
+                        deleteDir()
+                    }    
+                }
             }
         }
     }
