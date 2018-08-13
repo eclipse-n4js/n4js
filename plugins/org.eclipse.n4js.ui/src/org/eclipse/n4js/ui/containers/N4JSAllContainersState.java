@@ -42,7 +42,6 @@ import org.eclipse.n4js.ui.external.ExternalLibraryBuilder;
 import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
 import org.eclipse.n4js.ui.internal.OwnResourceValidatorAwareValidatingEditorCallback;
 import org.eclipse.n4js.ui.internal.ResourceUIValidatorExtension;
-import org.eclipse.n4js.ui.internal.WorkspaceCacheAccess;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorReference;
@@ -154,8 +153,7 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 	 * Handles the given {@link IResourceDelta} and updates the project state (cache of available projects and project
 	 * descriptions) accordingly.
 	 *
-	 * If so, invalidates the {@link EclipseBasedN4JSWorkspace} cache of project descriptions for the updated projects
-	 * (cf. {@link WorkspaceCacheAccess}).
+	 * If so, invalidates the {@link EclipseBasedN4JSWorkspace} cache of project descriptions for the updated projects.
 	 */
 	private void updateProjectState(IResourceDelta delta) {
 		if (delta.getKind() == IResourceDelta.ADDED || delta.getKind() == IResourceDelta.REMOVED) {

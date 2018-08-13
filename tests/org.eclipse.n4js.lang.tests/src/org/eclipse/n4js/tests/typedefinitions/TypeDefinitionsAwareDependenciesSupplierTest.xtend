@@ -11,7 +11,10 @@
 package org.eclipse.n4js.tests.typedefinitions
 
 import com.google.common.collect.ImmutableList
-import com.google.inject.Inject
+import java.util.ArrayList
+import java.util.Collections
+import java.util.List
+import java.util.Random
 import org.eclipse.emf.common.util.URI
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.internal.N4JSProject
@@ -23,10 +26,6 @@ import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.util.Collections
-import java.util.Random
-import java.util.List
-import java.util.ArrayList
 
 /**
  * Unit test of {@link TypeDefinitionsAwareDependenciesSupplier}. 
@@ -36,8 +35,6 @@ import java.util.ArrayList
 @RunWith(XtextRunner)
 @InjectWith(N4JSInjectorProvider)
 class TypeDefinitionsAwareDependenciesSupplierTest extends Assert {
-	@Inject
-	private TypeDefinitionsAwareDependenciesSupplier dependencySupplier;
 	
 	/** There is a single implementation and definition project. The implementation project is listed first. */
 	@Test
@@ -46,7 +43,7 @@ class TypeDefinitionsAwareDependenciesSupplierTest extends Assert {
 		val definition = implementation.definitionProject;
 		val client = project("client", #[implementation, definition]);
 		
-		val orderedDependencies = dependencySupplier.get(client);
+		val orderedDependencies = TypeDefinitionsAwareDependenciesSupplier.get(client);
 		assertOrder("Definition project is listed before implementation.", orderedDependencies, #["impl-n4jsd", "impl"]);
 	}
 	
@@ -57,7 +54,7 @@ class TypeDefinitionsAwareDependenciesSupplierTest extends Assert {
 		val definition = implementation.definitionProject;
 		val client = project("client", #[definition, implementation]);
 		
-		val orderedDependencies = dependencySupplier.get(client);
+		val orderedDependencies = TypeDefinitionsAwareDependenciesSupplier.get(client);
 		assertOrder("Definition project is listed before implementation.", orderedDependencies, #["impl-n4jsd", "impl"]);
 	}
 	
@@ -71,7 +68,7 @@ class TypeDefinitionsAwareDependenciesSupplierTest extends Assert {
 		
 		val client = project("client", #[definition1, implementation1, definition2, implementation2]);
 		
-		val orderedDependencies = dependencySupplier.get(client);
+		val orderedDependencies = TypeDefinitionsAwareDependenciesSupplier.get(client);
 		assertOrder("Definition projects are listed before implementation.", 
 			orderedDependencies, #["impl1-n4jsd", "impl1", "impl2-n4jsd", "impl2"]);
 	}
@@ -86,7 +83,7 @@ class TypeDefinitionsAwareDependenciesSupplierTest extends Assert {
 		
 		val client = project("client", #[definition1, implementation1, definition2, implementation2]);
 		
-		val orderedDependencies = dependencySupplier.get(client);
+		val orderedDependencies = TypeDefinitionsAwareDependenciesSupplier.get(client);
 		assertOrder("Duplicate type definition project IDs do not prevent the dependency order computation 
 			from termination successfully.", orderedDependencies, 
 			#["impl-n4jsd", "impl1", "impl-n4jsd", "impl2"]);
@@ -103,8 +100,8 @@ class TypeDefinitionsAwareDependenciesSupplierTest extends Assert {
 		// notice order of 'def2', 'def1'
 		val clientReversed = project("client", #[implementation, def2, def1]);
 		
-		val orderedDependencies = dependencySupplier.get(client);
-		val orderedDependenciesReversed = dependencySupplier.get(clientReversed);
+		val orderedDependencies = TypeDefinitionsAwareDependenciesSupplier.get(client);
+		val orderedDependenciesReversed = TypeDefinitionsAwareDependenciesSupplier.get(clientReversed);
 
 		assertOrder("Two type definitions project with same definesPackage will be listed in order of 
 				declaration before their implementation project.",
@@ -124,7 +121,7 @@ class TypeDefinitionsAwareDependenciesSupplierTest extends Assert {
 		
 		val client = project("client", #[implementation, orphanDefinition, regularDefinition]);
 		
-		val orderedDependencies = dependencySupplier.get(client);
+		val orderedDependencies = TypeDefinitionsAwareDependenciesSupplier.get(client);
 		
 		assertOrder("Orphan type definitions are included at the end of the dependency list.", 
 			orderedDependencies, #["impl-n4jsd", "impl", "def"]);
@@ -149,7 +146,7 @@ class TypeDefinitionsAwareDependenciesSupplierTest extends Assert {
 		Collections.shuffle(dependencies, new Random(821));
 				
 		val client = project("client", dependencies);
-		val orderedDependencies = dependencySupplier.get(client);
+		val orderedDependencies = TypeDefinitionsAwareDependenciesSupplier.get(client);
 		
 		val orderRepresentation = orderedDependencies.join(" ");
 		val problems = checkTypeDefinitionsOccurBeforeImplementationProjects(orderedDependencies);
@@ -171,7 +168,7 @@ class TypeDefinitionsAwareDependenciesSupplierTest extends Assert {
 		
 		for (dependency : dependencies) {
 			if (dependency.projectType == ProjectType.DEFINITION) {
-				if (encounteredImplProjectsById.containsKey(dependency.definesPackage)) {
+				if (encounteredImplProjectsById.containsKey(dependency.definesPackageName)) {
 					problems.add("Implementation project of type definition " + dependency.projectName + 
 						" was listed before its definition.");
 				}
@@ -269,7 +266,7 @@ class MockTypeDefinitionsProject extends N4JSProject {
 		return this.dependencies;
 	}
 
-	public override String getDefinesPackage() {
+	public override String getDefinesPackageName() {
 		return this.definesPackage;
 	}
 

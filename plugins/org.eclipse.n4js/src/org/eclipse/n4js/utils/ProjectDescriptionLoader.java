@@ -12,8 +12,6 @@ package org.eclipse.n4js.utils;
 
 import static org.eclipse.n4js.internal.N4JSModel.DIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNonEmptyStringOrNull;
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.DEPENDENCIES;
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.DEV_DEPENDENCIES;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.MAIN;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.N4JS;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.OUTPUT;
@@ -31,10 +29,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.URIConverter;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.json.JSON.JSONDocument;
-import org.eclipse.n4js.json.JSON.JSONFactory;
 import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.model.utils.JSONModelUtils;
@@ -50,9 +46,7 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
- * Helper class for loading a {@link ProjectDescription} from disk, optionally also loading and merging additional
- * information from a {@code package-fragment.json} (when passing <code>true</code> as last argument to
- * {@link #loadProjectDescriptionAtLocation(URI, JSONDocument, boolean)}).
+ * Helper class for loading a {@link ProjectDescription} from disk.
  */
 @Singleton
 public class ProjectDescriptionLoader {
@@ -73,24 +67,13 @@ public class ProjectDescriptionLoader {
 		if (packageJSON == null) {
 			return null;
 		}
-		return loadProjectDescriptionAtLocation(location, packageJSON, true);
+		return loadProjectDescriptionAtLocation(location, packageJSON);
 	}
 
 	/**
-	 * Same as {@link #loadPackageJSONAtLocation(URI)}, but for cases in which the JSONDocument of the main package.json
-	 * file (but not the fragment) has already been loaded.
-	 *
-	 * @param mergeFragment
-	 *            if <code>true</code>, a {@link N4JSGlobals#PACKAGE_FRAGMENT_JSON package.json fragment} will be loaded
-	 *            and merged into the given package.json document before conversion to {@link ProjectDescription} (given
-	 *            document will *not* be changed).
+	 * Same as {@link #loadPackageJSONAtLocation(URI)}.
 	 */
-	public ProjectDescription loadProjectDescriptionAtLocation(URI location, JSONDocument packageJSON,
-			boolean mergeFragment) {
-		if (mergeFragment) {
-			packageJSON = EcoreUtil.copy(packageJSON);
-			mergePackageJSONFragmentAtLocation(location, packageJSON);
-		}
+	public ProjectDescription loadProjectDescriptionAtLocation(URI location, JSONDocument packageJSON) {
 		adjustMainPath(location, packageJSON);
 		String defaultProjectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location);
 		ProjectDescription pdFromPackageJSON = packageJSON != null
@@ -102,21 +85,6 @@ public class ProjectDescriptionLoader {
 		} else {
 			return null;
 		}
-	}
-
-	/**
-	 * Loads the project description defined in a {@link N4JSGlobals#PACKAGE_FRAGMENT_JSON package.json fragment} at the
-	 * given location or <code>null</code> if no fragment is found at this location.
-	 */
-	public ProjectDescription loadProjectDescriptionFragmentAtLocation(URI location) {
-		JSONDocument packageJSON = JSONFactory.eINSTANCE.createJSONDocument();
-		if (mergePackageJSONFragmentAtLocation(location, packageJSON)) {
-			adjustMainPath(location, packageJSON);
-			ProjectDescription pd = packageJsonHelper.convertToProjectDescription(packageJSON, false, null);
-			setInformationFromFileSystem(location, pd);
-			return pd;
-		}
-		return null;
 	}
 
 	/**
@@ -194,29 +162,6 @@ public class ProjectDescriptionLoader {
 		}
 
 		return packageJSON;
-	}
-
-	/** This method will change the given 'targetPackageJSON' document in place. */
-	private boolean mergePackageJSONFragmentAtLocation(URI location, JSONDocument targetPackageJSON) {
-		JSONDocument fragment = loadXtextFileAtLocation(location, N4JSGlobals.PACKAGE_FRAGMENT_JSON,
-				JSONDocument.class);
-		if (fragment == null) {
-			return false;
-		}
-		if (fragment.getContent() instanceof JSONObject) {
-			// note: dependencies are special in that we not actually merge (i.e. add) those from the fragment but
-			// instead replace the dependencies in target. Rationale: the library manager is not interested in the
-			// dependencies of the original project, only in those defined in the fragment.
-			JSONValue targetContent = targetPackageJSON.getContent();
-			if (targetContent instanceof JSONObject) {
-				JSONModelUtils.removeProperty((JSONObject) targetContent, DEPENDENCIES.name);
-				JSONModelUtils.removeProperty((JSONObject) targetContent, DEV_DEPENDENCIES.name);
-			}
-			// merge properties from fragment into targetPackageJSON
-			JSONModelUtils.merge(targetPackageJSON, fragment, false, true);
-			return true;
-		}
-		return false;
 	}
 
 	private <T extends EObject> T loadXtextFileAtLocation(URI location, String name, Class<T> expectedTypeOfRoot) {

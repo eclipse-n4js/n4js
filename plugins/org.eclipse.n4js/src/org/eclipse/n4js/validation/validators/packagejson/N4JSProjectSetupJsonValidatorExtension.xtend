@@ -588,7 +588,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		if (n4jsProject.projectType != ProjectType.DEFINITION) {
 			return;
 		}
-		val definesPackage = n4jsProject.definesPackage;
+		val definesPackage = n4jsProject.definesPackageName;
 		if (definesPackage === null) {
 			return;
 		}
@@ -1256,7 +1256,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	protected def ProjectDescription getProjectDescription() {
 		return contextMemoize(PROJECT_DESCRIPTION_CACHE, [
 			val doc = getDocument();
-			projectDescriptionLoader.loadProjectDescriptionAtLocation(doc.eResource.URI.trimSegments(1), doc, false);
+			projectDescriptionLoader.loadProjectDescriptionAtLocation(doc.eResource.URI.trimSegments(1), doc);
 		]);
 	}
 

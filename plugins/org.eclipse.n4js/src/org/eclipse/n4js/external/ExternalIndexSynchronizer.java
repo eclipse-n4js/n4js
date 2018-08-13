@@ -195,13 +195,12 @@ public abstract class ExternalIndexSynchronizer {
 		Map<String, Pair<URI, String>> npmsIndex = new HashMap<>();
 
 		String nodeModulesLocation = locationProvider.getNodeModulesURI().toString();
-		String typeDefLocation = locationProvider.getTypeDefinitionsURI().toString() + File.separator;
+		String typeDefLocation = locationProvider.getTypeDefinitionsURI().toString();
 		ResourceSet resourceSet = core.createResourceSet(Optional.absent());
 		IResourceDescriptions index = core.getXtextIndex(resourceSet);
 
 		for (IResourceDescription res : index.getAllResourceDescriptions()) {
 			String resLocation = res.getURI().toString();
-
 			if (resLocation.startsWith(nodeModulesLocation)) {
 				addToIndex(npmsIndex, nodeModulesLocation, res, resLocation);
 			} else if (resLocation.startsWith(typeDefLocation)) {

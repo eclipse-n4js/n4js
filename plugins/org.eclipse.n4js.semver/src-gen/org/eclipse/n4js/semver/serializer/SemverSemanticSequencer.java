@@ -214,7 +214,7 @@ public class SemverSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 *     URLSemver returns URLSemver
 	 *
 	 * Constraint:
-	 *     (withSemverTag?='semver:'? simpleVersion=SimpleVersion)
+	 *     (withSemverTag?=SEMVER_TAG? simpleVersion=SimpleVersion)
 	 */
 	protected void sequence_URLSemver(ISerializationContext context, URLSemver semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

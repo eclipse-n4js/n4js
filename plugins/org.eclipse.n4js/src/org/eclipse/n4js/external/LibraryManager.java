@@ -405,13 +405,17 @@ public class LibraryManager {
 
 		monitor.setTaskName("Adapting npm package structure to N4JS project structure... [step 3 of 4]");
 		List<String> installedNpmNames = new LinkedList<>();
+		List<String> uninstalledNpmNames = new LinkedList<>();
 		for (LibraryChange change : changes) {
 			if (change.type == LibraryChangeType.Added) {
 				installedNpmNames.add(change.name);
 			}
+			if (change.type == LibraryChangeType.Removed) {
+				uninstalledNpmNames.add(change.name);
+			}
 		}
 		org.eclipse.xtext.util.Pair<IStatus, Collection<File>> result;
-		result = npmPackageToProjectAdapter.adaptPackages(installedNpmNames);
+		result = npmPackageToProjectAdapter.adaptPackages(installedNpmNames, uninstalledNpmNames);
 
 		IStatus adaptionStatus = result.getFirst();
 

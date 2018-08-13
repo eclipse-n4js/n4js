@@ -13,6 +13,7 @@ package org.eclipse.n4js.tests.projectModel;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.n4js.N4JSUiInjectorProvider;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
+import org.eclipse.n4js.internal.MultiCleartriggerCache;
 import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.xtext.testing.InjectWith;
@@ -33,6 +34,9 @@ public class EclipseBasedInternalWorkspacePluginTest extends AbstractInternalWor
 	@Inject
 	private ProjectDescriptionLoader projectDescriptionLoader;
 
+	@Inject
+	private MultiCleartriggerCache cache;
+
 	private EclipseBasedN4JSWorkspace testMe;
 
 	@Override
@@ -42,7 +46,7 @@ public class EclipseBasedInternalWorkspacePluginTest extends AbstractInternalWor
 
 	@Override
 	public void setUp() {
-		testMe = new EclipseBasedN4JSWorkspace(workspace, projectDescriptionLoader);
+		testMe = new EclipseBasedN4JSWorkspace(workspace, projectDescriptionLoader, cache);
 		super.setUp();
 	}
 
