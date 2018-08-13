@@ -11,13 +11,15 @@
 package org.eclipse.n4js.utils;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
@@ -27,6 +29,7 @@ import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.xtext.naming.QualifiedName;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Optional;
 
 /**
  * Miscellaneous utilities for dealing with {@link ProjectDescription}s and values stored within them. In particular,
@@ -39,7 +42,7 @@ public class ProjectDescriptionUtils {
 	/** Character used in N4JS project names for separating the scope name from the plain project name. */
 	public static final char NPM_SCOPE_SEPARATOR = '/';
 	/** Like {@link #NPM_SCOPE_SEPARATOR}, but used in Eclipse project names. */
-	public static final char NPM_SCOPE_SEPARATOR_ECLIPSE = '_';
+	public static final char NPM_SCOPE_SEPARATOR_ECLIPSE = ':';
 
 	/**
 	 * Tells if the given N4JS project name includes an npm scope, i.e. if it is of the form
@@ -70,7 +73,7 @@ public class ProjectDescriptionUtils {
 	 * <td>The value returned by {@link IProject#getName()}. Different from the N4JS project name,<br>
 	 * because Eclipse does not support NPM's scope separator character {@value #NPM_SCOPE_SEPARATOR} in project
 	 * names.</td>
-	 * <td>{@code @myScope_myProject}</td>
+	 * <td>{@code @myScope:myProject}</td>
 	 * </tr>
 	 * <tr>
 	 * <td>plain project name</td>
@@ -100,7 +103,7 @@ public class ProjectDescriptionUtils {
 	 * <td>{@link URI#isPlatform() platform URIs}</td>
 	 * <td>Scope and plain project name represented as <em>a single</em> segment.<br>
 	 * {@link #NPM_SCOPE_SEPARATOR_ECLIPSE} used as separator.</td>
-	 * <td>{@code platform:resource/@myScope_myProject}</td>
+	 * <td>{@code platform:resource/@myScope:myProject}</td>
 	 * </tr>
 	 * <tr>
 	 * <td>{@link URI#isFile() file URIs}</td>
@@ -177,30 +180,6 @@ public class ProjectDescriptionUtils {
 			return last;
 		}
 		throw new IllegalArgumentException("neither a file nor a platform URI: " + uri);
-	}
-
-	/**
-	 * Given the location of an N4JS project on disk, this method returns a {@link URI#isFile() file URI}, as used
-	 * internally to uniquely identify N4JS projects.
-	 * <p>
-	 * Since this methods always returns file URIs, it is only intended for use in the headless case. In the UI case,
-	 * URIs for identifying projects will be created by Eclipse.
-	 * <p>
-	 * For details on N4JS project name handling, see {@link #isProjectNameWithScope(String)}.
-	 */
-	public static URI deriveProjectURIFromFileLocation(File file) {
-		try {
-			URI createURI = URI.createURI(file.getAbsoluteFile().toURI().toURL().toString());
-			// by convention IN4JSProject URI does not end with '/'
-			// i.e. last segment must not be empty
-			String last = createURI.lastSegment();
-			if (last != null && last.isEmpty()) {
-				createURI = createURI.trimSegments(1);
-			}
-			return createURI;
-		} catch (MalformedURLException e) {
-			return null;
-		}
 	}
 
 	/**
@@ -340,6 +319,49 @@ public class ProjectDescriptionUtils {
 			normalizedPaths.add(normalizedPath);
 		}
 		return normalizedPaths;
+	}
+
+	/**
+	 * Utility class to obtain and store the name of a project's <em>project folder</em> on disk, together with the name
+	 * of the project folder's <em>parent folder</em>. In the UI case, the name of the Eclipse project in the workspace
+	 * is stored, too.
+	 */
+	public static final class ProjectNameInfo {
+		/** Name of the project folder, i.e. the folder containing the project's <code>package.json</code> file. */
+		public final String projectFolderName;
+		/** Name of the folder containing the {@link #projectFolderName project folder}. */
+		public final String parentFolderName;
+		/** The Eclipse project name, iff in UI case. */
+		public final Optional<String> eclipseProjectName;
+
+		private ProjectNameInfo(String projectFolderName, String parentFolderName,
+				Optional<String> eclipseProjectName) {
+			this.projectFolderName = projectFolderName;
+			this.parentFolderName = parentFolderName;
+			this.eclipseProjectName = eclipseProjectName;
+		}
+
+		/** Creates a new instance. Given URI should point to an N4JS project, not a file within an N4JS project. */
+		public static ProjectNameInfo of(URI projectUri) {
+			if (projectUri.isFile()) {
+				// a file URI actually represents the file system hierarchy -> no need to look up names on disk
+				return new ProjectNameInfo(
+						projectUri.lastSegment(),
+						projectUri.trimSegments(1).lastSegment(),
+						Optional.absent() // no Eclipse project name in this case
+				);
+			} else if (projectUri.isPlatform()) {
+				// for platform URIs (i.e. UI case) we actually have to look up the folder name on disk
+				final String platformURI = projectUri.toPlatformString(true);
+				final IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(platformURI);
+				final IPath path = resource.getLocation();
+				return new ProjectNameInfo(
+						path.lastSegment(),
+						path.removeLastSegments(1).lastSegment(),
+						resource instanceof IProject ? Optional.of(resource.getName()) : Optional.absent());
+			}
+			throw new IllegalStateException("not a file or platform URI: " + projectUri);
+		}
 	}
 
 	private ProjectDescriptionUtils() {

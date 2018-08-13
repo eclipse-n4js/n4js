@@ -54,10 +54,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
@@ -91,6 +87,7 @@ import org.eclipse.n4js.semver.Semver.VersionRangeConstraint;
 import org.eclipse.n4js.semver.Semver.VersionRangeSetRequirement;
 import org.eclipse.n4js.semver.model.SemverSerializer;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils.ProjectNameInfo;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.validation.helper.FolderContainmentHelper;
@@ -220,18 +217,18 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		// make sure the project name equals the name of the Eclipse workspace project
 		if (Platform.isRunning()) {
 
-			if (nameInfo.eclipseProjectName == null) {
+			if (!nameInfo.eclipseProjectName.isPresent()) {
 				// Eclipse project name cannot be determined, fail gracefully. We currently assume that this case will
-				// only occur when a nested package.json is validated in an editor (we ignore nested package.json files
-				// in the builder)
+				// only occur (1) in the headless case and (2) in the UI case when a nested package.json is validated in
+				// an editor (we ignore nested package.json files in the builder)
 				return;
 			}
 
 			String expectedEclipseProjectName = ProjectDescriptionUtils
 					.convertN4JSProjectNameToEclipseProjectName(projectName);
-			if (!expectedEclipseProjectName.equals(nameInfo.eclipseProjectName)) {
+			if (!expectedEclipseProjectName.equals(nameInfo.eclipseProjectName.get())) {
 				String msg = IssueCodes.getMessageForPKGJ_PROJECT_NAME_ECLIPSE_MISMATCH(
-						expectedEclipseProjectName, nameInfo.eclipseProjectName);
+						expectedEclipseProjectName, nameInfo.eclipseProjectName.get());
 				addIssue(msg, projectNameLiteral, IssueCodes.PKGJ_PROJECT_NAME_ECLIPSE_MISMATCH);
 			}
 		}
@@ -242,39 +239,6 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 				&& name.length() <= 214
 				&& !NPM_RESERVED_PACKAGE_NAMES.contains(name)
 				&& IDENTIFIER_PATTERN.matcher(name).matches();
-	}
-
-	private static final class ProjectNameInfo {
-		final String projectFolderName;
-		final String parentFolderName;
-		final String eclipseProjectName;
-
-		private ProjectNameInfo(String projectFolderName, String parentFolderName, String eclipseProjectName) {
-			this.projectFolderName = projectFolderName;
-			this.parentFolderName = parentFolderName;
-			this.eclipseProjectName = eclipseProjectName;
-		}
-
-		public static ProjectNameInfo of(URI projectUri) {
-			if (projectUri.isFile()) {
-				// a file URI actually represents the file system hierarchy -> no need to look up names on disk
-				return new ProjectNameInfo(
-						projectUri.lastSegment(),
-						projectUri.trimSegments(1).lastSegment(),
-						null // no Eclipse project name in this case
-				);
-			} else if (projectUri.isPlatform()) {
-				// for platform URIs (i.e. UI case) we actually have to look up the folder name on disk
-				final String platformURI = projectUri.toPlatformString(true);
-				final IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(platformURI);
-				final IPath path = resource.getLocation();
-				return new ProjectNameInfo(
-						path.lastSegment(),
-						path.removeLastSegments(1).lastSegment(),
-						resource instanceof IProject ? resource.getName() : null);
-			}
-			throw new IllegalStateException("not a file or platform URI: " + projectUri);
-		}
 	}
 
 	/** Check the version property. */

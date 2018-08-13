@@ -25,7 +25,7 @@ import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
-import org.eclipse.n4js.utils.ProjectDescriptionUtils;
+import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.inject.Inject;
 
@@ -85,7 +85,7 @@ public class RunnerN4JSCore {
 
 		Arrays.asList(root.listFiles()).stream().filter(File::isDirectory).forEach(projectDir -> {
 			if (externalLibraryHelper.isExternalProjectDirectory(projectDir)) {
-				URI createURI = ProjectDescriptionUtils.deriveProjectURIFromFileLocation(projectDir);
+				URI createURI = URIUtils.deriveProjectURIFromFileLocation(projectDir);
 				workspace.registerProject(createURI);
 			} else {
 				LOGGER.warn("Cannot locate project description file (i.e. package.json) file at "
