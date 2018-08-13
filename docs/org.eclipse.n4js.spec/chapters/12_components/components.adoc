@@ -529,9 +529,9 @@ Terminology:
    separated by a `/`. For unscoped projects, this is identical to the plain project name.
    E.g., `myProject` (if unscoped), `@myScope/myProject` (if scoped).
 4. A project's _Eclipse project name_ is an ancillary name used only within the Eclipse UI for
-   the project in the workspace. It is equal to the N4JS project name, except that `_` instead of `/` is
+   the project in the workspace. It is equal to the N4JS project name, except that `:` instead of `/` is
    used as separator between the scope and plain project name.
-   E.g., `myProject` (if unscoped), `@myScope_myProject` (if scoped).
+   E.g., `myProject` (if unscoped), `@myScope:myProject` (if scoped).
 
 In case the intended meaning is apparent from the context, the "N4JS project name" can simply be referred to
 as "project name" (as is common practice in the context of npm).

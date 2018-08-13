@@ -39,7 +39,7 @@ public class ProjectDescriptionUtils {
 	/** Character used in N4JS project names for separating the scope name from the plain project name. */
 	public static final char NPM_SCOPE_SEPARATOR = '/';
 	/** Like {@link #NPM_SCOPE_SEPARATOR}, but used in Eclipse project names. */
-	public static final char NPM_SCOPE_SEPARATOR_ECLIPSE = '_';
+	public static final char NPM_SCOPE_SEPARATOR_ECLIPSE = ':';
 
 	/**
 	 * Tells if the given N4JS project name includes an npm scope, i.e. if it is of the form
@@ -70,7 +70,7 @@ public class ProjectDescriptionUtils {
 	 * <td>The value returned by {@link IProject#getName()}. Different from the N4JS project name,<br>
 	 * because Eclipse does not support NPM's scope separator character {@value #NPM_SCOPE_SEPARATOR} in project
 	 * names.</td>
-	 * <td>{@code @myScope_myProject}</td>
+	 * <td>{@code @myScope:myProject}</td>
 	 * </tr>
 	 * <tr>
 	 * <td>plain project name</td>
@@ -100,7 +100,7 @@ public class ProjectDescriptionUtils {
 	 * <td>{@link URI#isPlatform() platform URIs}</td>
 	 * <td>Scope and plain project name represented as <em>a single</em> segment.<br>
 	 * {@link #NPM_SCOPE_SEPARATOR_ECLIPSE} used as separator.</td>
-	 * <td>{@code platform:resource/@myScope_myProject}</td>
+	 * <td>{@code platform:resource/@myScope:myProject}</td>
 	 * </tr>
 	 * <tr>
 	 * <td>{@link URI#isFile() file URIs}</td>
