@@ -228,7 +228,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 					.convertN4JSProjectNameToEclipseProjectName(projectName);
 			if (!expectedEclipseProjectName.equals(nameInfo.eclipseProjectName.get())) {
 				String msg = IssueCodes.getMessageForPKGJ_PROJECT_NAME_ECLIPSE_MISMATCH(
-						expectedEclipseProjectName, nameInfo.eclipseProjectName);
+						expectedEclipseProjectName, nameInfo.eclipseProjectName.get());
 				addIssue(msg, projectNameLiteral, IssueCodes.PKGJ_PROJECT_NAME_ECLIPSE_MISMATCH);
 			}
 		}
