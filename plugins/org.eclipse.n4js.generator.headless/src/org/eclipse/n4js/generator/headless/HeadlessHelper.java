@@ -32,6 +32,7 @@ import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.common.collect.Iterables;
@@ -326,8 +327,14 @@ public class HeadlessHelper {
 	private Stream<File> getProjectStream(List<File> absProjectRoots) {
 		final File targetPlatformLocation = getTargetPlatformInstallLocation();
 
-		return absProjectRoots.stream()
-				.filter(f -> f.exists())
+		// collect all direct sub-folders that represent npm scopes
+		Stream<File> scopeFolders = absProjectRoots.stream()
+				.filter(File::isDirectory)
+				.flatMap(root -> Arrays.asList(root.listFiles(File::isDirectory)).stream())
+				.filter(f -> f.getName().startsWith(ProjectDescriptionUtils.NPM_SCOPE_PREFIX));
+
+		return Stream.concat(scopeFolders, absProjectRoots.stream())
+				.filter(File::isDirectory)
 				// find all contained folders
 				.flatMap(root -> Arrays.asList(root.listFiles(File::isDirectory)).stream())
 				// only those with package.json file

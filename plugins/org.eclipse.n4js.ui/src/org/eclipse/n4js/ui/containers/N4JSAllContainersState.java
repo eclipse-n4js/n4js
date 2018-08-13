@@ -293,8 +293,8 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 	}
 
 	private boolean isSourceContainerModification(final IResourceDelta delta) {
-		final String fullPath = delta.getFullPath().toString();
-		final URI folderUri = URI.createPlatformResourceURI(fullPath, true);
+		final String fullPathStr = delta.getFullPath().toString();
+		final URI folderUri = URI.createPlatformResourceURI(fullPathStr, true);
 		final IN4JSProject project = core.findProject(folderUri).orNull();
 		if (null != project && project.exists()) {
 			return from(project.getSourceContainers())
@@ -302,7 +302,7 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 					.filter(uri -> uri.isPlatformResource())
 					.transform(uri -> uri.toString())
 					.transform(uri -> uri.replaceFirst(PLATFORM_RESOURCE_SCHEME, ""))
-					.firstMatch(uri -> uri.equals(fullPath))
+					.firstMatch(uri -> uri.equals(fullPathStr))
 					.isPresent();
 		}
 		return false;

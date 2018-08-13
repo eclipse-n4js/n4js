@@ -177,9 +177,12 @@ public class XpectN4JSES5TranspilerHelper {
 			String fileToRun = jsModulePathToRun(testScript);
 
 			// Not in UI case, hence manually set up the resources
+			String artificialProjectId = testScript.getModule().getProjectId();
 			runConfig = runnerFrontEnd.createXpectOutputTestConfiguration(NodeRunner.ID,
 					fileToRun,
-					systemLoader, artificialRoot.toPath().toString() + "/" + testScript.getModule().getProjectId());
+					systemLoader,
+					artificialRoot.toPath().resolve(artificialProjectId),
+					artificialProjectId);
 		}
 
 		return configRunner.executeWithConfig(runConfig, decorateStdStreams);

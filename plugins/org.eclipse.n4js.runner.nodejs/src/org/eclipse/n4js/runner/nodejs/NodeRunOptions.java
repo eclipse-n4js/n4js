@@ -12,6 +12,7 @@ package org.eclipse.n4js.runner.nodejs;
 
 import static com.google.common.base.Strings.nullToEmpty;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -31,7 +32,7 @@ public class NodeRunOptions {
 
 	private String data = "{}";
 	private String mod = "dummy module";
-	private String paths = "./";
+	private final Map<Path, String> coreProjectPaths = new LinkedHashMap<>();
 	private final List<String> initModules = new ArrayList<>();
 	private String customEnginePath;
 	private String engineOptions;
@@ -70,8 +71,9 @@ public class NodeRunOptions {
 	}
 
 	/** set string representing dependencies paths */
-	public void setCoreProjectPaths(String paths) {
-		this.paths = paths;
+	public void setCoreProjectPaths(Map<Path, String> paths) {
+		this.coreProjectPaths.clear();
+		this.coreProjectPaths.putAll(paths);
 	}
 
 	/**
@@ -82,8 +84,8 @@ public class NodeRunOptions {
 	 * @see <a href="https://gist.github.com/branneman/8048520#4-the-environment">better local require</a>
 	 * @returns
 	 */
-	public String getCoreProjectPaths() {
-		return this.paths;
+	public Map<Path, String> getCoreProjectPaths() {
+		return this.coreProjectPaths;
 	}
 
 	/**

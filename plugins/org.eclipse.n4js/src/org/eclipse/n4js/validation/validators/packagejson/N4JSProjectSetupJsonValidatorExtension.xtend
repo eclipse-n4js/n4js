@@ -66,7 +66,6 @@ import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.utils.DependencyTraverser
 import org.eclipse.n4js.utils.DependencyTraverser.DependencyVisitor
 import org.eclipse.n4js.utils.ProjectDescriptionLoader
-import org.eclipse.n4js.utils.ProjectDescriptionUtils
 import org.eclipse.n4js.utils.WildcardPathFilterHelper
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
@@ -1076,11 +1075,9 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			if (pair.value instanceof JSONStringLiteral) {
 				val stringLit = pair.value as JSONStringLiteral;
 				val prjID = pair.name;
-				if (!ProjectDescriptionUtils.isProjectNameWithScope(prjID)) {
-					val npmVersion = semverHelper.parse(stringLit.value);
-					val vpr = new ValidationProjectReference(prjID, npmVersion, pair);
-					vprs.add(vpr);
-				}
+				val npmVersion = semverHelper.parse(stringLit.value);
+				val vpr = new ValidationProjectReference(prjID, npmVersion, pair);
+				vprs.add(vpr);
 			}
 		}
 
@@ -1146,7 +1143,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 				}
 				
 				// obtain corresponding IN4JSProject handle
-				var project = allProjects.get(id);
+				val project = allProjects.get(id);
 
 				// type cannot be resolved from index, hence project does not exist in workspace.
 				if (null === project || null === project.projectType) {

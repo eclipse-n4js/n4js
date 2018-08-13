@@ -455,8 +455,7 @@ The following constraints apply.
 .GeneralConstraints
 [req,id=IDE-158,version=1]
 --
-1.  The projectId used in the package.json file have to match the project name in file system as well as project name in the Eclipse workspace.
-2.  There must be an output directory specified so the compiler(s) can run.
+1.  There must be an output directory specified so the compiler(s) can run.
 --
 
 .Paths
@@ -502,7 +501,6 @@ way:
 Examples of using external source fragments and filters are given in <<_implementation-of-external-declarations>>, see <<external-definitions-and-implementations>>.
 
 
-
 .Type Dependencies
 [req,id=GH-821001,version=1]
 --
@@ -512,9 +510,59 @@ Each listed project in the "typeDependencies" section of a project's `package.js
 . For each listed type dependency, a corresponding dependency (in the \[dev\]dependencies section) must be declared, whose "name" matches the "definesPackage" property value of the specified type dependency.
 --
 
+
+
+[.language-n4js]
+== Support for NPM Scopes
+
+NPM supports a namespace concept for npm packages. Such namespaces are called "scopes". For details see
+https://docs.npmjs.com/misc/scope and https://docs.npmjs.com/getting-started/scoped-packages.
+In N4JS, this is supported too.
+
+Terminology:
+
+1. A project's _plain project name_ is its name without mentioning the project's scope (if any),
+   e.g. `myProject`.
+2. A project's _scope name_ is the name of the npm scope a project resides in, including a leading `@`.
+   E.g. `@myScope`.
+3. A project's _N4JS project name_ is its plain project name, prefixed by its scope name (if any),
+   separated by a `/`. For unscoped projects, this is identical to the plain project name.
+   E.g., `myProject` (if unscoped), `@myScope/myProject` (if scoped).
+4. A project's _Eclipse project name_ is an ancillary name used only within the Eclipse UI for
+   the project in the workspace. It is equal to the N4JS project name, except that `:` instead of `/` is
+   used as separator between the scope and plain project name.
+   E.g., `myProject` (if unscoped), `@myScope:myProject` (if scoped).
+
+In case the intended meaning is apparent from the context, the "N4JS project name" can simply be referred to
+as "project name" (as is common practice in the context of npm).
+
+In N4JS, when importing from a module `M` contained in a scoped project `@myScope/myProject`, the import statement's
+module specifier should have one of the following forms:
+
+* `import * as N from "a/b/c/M";`
+* `import * as N from "@myScope/myProject/a/b/c/M";`
+* `import * as N from "@myScope/myProject";` (if `M` is specified as main module in `myProject`'s package.json)
+
+Thus, the N4JS project name, which includes the scope name, is simply used in place of an ordinary, non-scoped
+project's name. This is in line with conventions in Javascript.
+
+.GeneralConstraints
+[req,id=GH-1026,version=1]
+--
+1. The name given in the package.json file (i.e. value of top-level property "name") must be equal to
+   the project's "N4JS project name", as defined above.
+2. The name of the project folder on disk (i.e. folder containing the package.json file) must be equal to
+   the project's "plain project name", as defined above.
+3. Iff the project is scoped, this project folder must have a parent folder with a name equal to
+   the project's "scope name", including the leading `@`.
+4. Within Eclipse, the name of of an N4JS project in the workspace UI must be equal to the project's
+   "Eclipse project name", as defined above.
+--
+
+
+
 [.language-n4js]
 == Component Dependencies
-
 
 There are several dependencies between components.
 We can distinguish between _require_ dependencies and _provide_ dependencies.

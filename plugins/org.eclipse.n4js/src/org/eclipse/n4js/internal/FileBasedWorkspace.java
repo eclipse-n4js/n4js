@@ -23,6 +23,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.common.base.Function;
@@ -114,7 +115,8 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 	public URI getLocation(URI unsafeLocation, ProjectReference projectReference) {
 		String projectId = projectReference.getProjectId();
 		for (URI location : projectElementHandles.keySet()) {
-			if (location.lastSegment().equals(projectId)) {
+			String candidateProjectId = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location);
+			if (candidateProjectId.equals(projectId)) {
 				LazyProjectDescriptionHandle lazyHandle = projectElementHandles.get(location);
 				if (lazyHandle != null) {
 					return lazyHandle.getLocation();

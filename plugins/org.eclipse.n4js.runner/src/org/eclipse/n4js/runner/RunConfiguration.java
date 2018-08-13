@@ -12,6 +12,7 @@ package org.eclipse.n4js.runner;
 
 import static com.google.common.base.Strings.nullToEmpty;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -125,7 +126,7 @@ public class RunConfiguration {
 
 	private final Map<String, String> environmentVariables = new LinkedHashMap<>();
 
-	private final List<String> coreProjectPaths = new ArrayList<>();
+	private final Map<Path, String> coreProjectPaths = new LinkedHashMap<>();
 
 	private final List<String> initModules = new ArrayList<>();
 
@@ -377,24 +378,24 @@ public class RunConfiguration {
 	 * of project containing the userSelection, its direct and indirect dependencies, the runtime environment project).
 	 * These are the <code>.../src-gen/es5/</code> folders.
 	 */
-	public List<String> getCoreProjectPaths() {
-		return Collections.unmodifiableList(coreProjectPaths);
+	public Map<Path, String> getCoreProjectPaths() {
+		return Collections.unmodifiableMap(coreProjectPaths);
 	}
 
 	/**
 	 * Adds entries to the {@link #getCoreProjectPaths() core project paths}. All previously stored values are removed,
 	 * and all provided values are stored.
 	 */
-	public void setCoreProjectPaths(Collection<String> paths) {
+	public void setCoreProjectPaths(Map<Path, String> paths) {
 		this.coreProjectPaths.clear();
-		this.coreProjectPaths.addAll(paths);
+		this.coreProjectPaths.putAll(paths);
 	}
 
 	/**
-	 * Unlike {@link #setCoreProjectPaths(Collection)} this method adds new entries without removing previous values.
+	 * Unlike {@link #setCoreProjectPaths(Map)} this method adds new entries without removing previous values.
 	 */
-	public void addCoreProjectPaths(Collection<String> paths) {
-		this.coreProjectPaths.addAll(paths);
+	public void addCoreProjectPaths(Map<Path, String> paths) {
+		this.coreProjectPaths.putAll(paths);
 	}
 
 	/**

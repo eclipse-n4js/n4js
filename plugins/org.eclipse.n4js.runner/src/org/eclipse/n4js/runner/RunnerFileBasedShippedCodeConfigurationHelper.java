@@ -10,9 +10,10 @@
  */
 package org.eclipse.n4js.runner;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.nio.file.Path;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.runner.extension.RunnerRegistry;
@@ -62,12 +63,12 @@ public class RunnerFileBasedShippedCodeConfigurationHelper {
 			throw new RuntimeException("Custom bootstrap code was requested but cannot be determined.");
 		}
 
-		List<IN4JSProject> customBootstrapProjects = new ArrayList<>();
+		Set<IN4JSProject> customBootstrapProjects = new LinkedHashSet<>();
 		runnerHelper.recursiveExtendedREsCollector(customRuntimeEnvironment, customBootstrapProjects,
 				allShippedProjects);
 		if (!customBootstrapProjects.isEmpty()) {
 			runnerFrontEnd.configureRuntimeEnvironment(config, customBootstrapProjects);
-			Collection<String> coreProjectPaths = runnerHelper.getCoreProjectPaths(customBootstrapProjects);
+			Map<Path, String> coreProjectPaths = runnerHelper.getCoreProjectPaths(customBootstrapProjects);
 			config.addCoreProjectPaths(coreProjectPaths);
 		}
 	}

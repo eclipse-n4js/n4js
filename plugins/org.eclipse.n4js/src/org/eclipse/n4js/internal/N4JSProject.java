@@ -35,6 +35,7 @@ import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.io.FileUtils;
 
@@ -177,9 +178,8 @@ public class N4JSProject implements IN4JSProject {
 	@Override
 	public String getProjectId() {
 		// because the projectId must be available even if the project does not exist, we do not read from the
-		// ProjectDescription, here, but instead use the last segment of the location URI (equality between the two is
-		// ensured by a package.json validation)
-		return location.lastSegment();
+		// ProjectDescription, here, but instead derive the projectId from the location URI
+		return ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location);
 	}
 
 	@Override

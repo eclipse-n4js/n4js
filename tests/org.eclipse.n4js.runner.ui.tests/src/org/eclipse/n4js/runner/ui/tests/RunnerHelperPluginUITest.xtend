@@ -11,7 +11,8 @@
 package org.eclipse.n4js.runner.ui.tests
 
 import com.google.inject.Inject
-import java.util.ArrayList
+import java.util.Collections
+import java.util.LinkedHashMap
 import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.emf.common.util.URI
 import org.eclipse.n4js.projectModel.IN4JSCore
@@ -39,10 +40,10 @@ class RunnerHelperPluginUITest extends AbstractBuilderParticipantTest {
 
 	@Test
 	def void testGetCoreProjectPathsWithClosedProject() {
-		val actual = new ArrayList(getCoreProjectPaths(#[closedProjectRef]));
+		val actual = new LinkedHashMap(getCoreProjectPaths(Collections.singleton(closedProjectRef)));
 		assertTrue(
 			'''Expected empty core project paths for closed projects. Was: «actual».''',
-			#[] == actual);
+			emptyMap == actual);
 	}
 
 	@Test

@@ -13,9 +13,9 @@ package org.eclipse.n4js.runner;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ProcessBuilder.Redirect;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,7 +35,8 @@ import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
 import org.eclipse.n4js.utils.ResourceNameComputer;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -175,7 +176,7 @@ public class RunnerFrontEnd {
 	 */
 	public RunConfiguration createXpectOutputTestConfiguration(String runnerId,
 			String userSelectionNodePathResolvableTargetFileName, SystemLoaderInfo systemLoader,
-			String additionalPath) {
+			Path additionalProjectPath, String additionalProjectId) {
 
 		final IRunnerDescriptor runnerDesc = runnerRegistry.getDescriptor(runnerId);
 		final IRunner runner = runnerDesc.getRunner();
@@ -189,7 +190,7 @@ public class RunnerFrontEnd {
 
 		config.setUseCustomBootstrap(true);
 
-		config.setCoreProjectPaths(Lists.newArrayList(additionalPath));
+		config.setCoreProjectPaths(ImmutableMap.of(additionalProjectPath, additionalProjectId));
 
 		config.setExecutionData(RunConfiguration.EXEC_DATA_KEY__USER_SELECTION,
 				userSelectionNodePathResolvableTargetFileName);
@@ -250,12 +251,12 @@ public class RunnerFrontEnd {
 
 		// 2) collect paths to all output folders of all N4JS projects (dependencies) with the compiled code
 		// (these are the .../es5/ folders)
-		final List<IN4JSProject> depsImpl = deps.stream().map(p -> {
+		final Set<IN4JSProject> depsImpl = deps.stream().map(p -> {
 			final IN4JSProject p2 = apiImplProjectMapping.get(p);
 			final IN4JSProject p3 = p2 != null ? p2 : p;
 			return p3;
-		}).collect(Collectors.toList());
-		final Collection<String> coreProjectPaths = runnerHelper.getCoreProjectPaths(depsImpl);
+		}).collect(Collectors.toCollection(() -> Sets.newLinkedHashSet()));
+		final Map<Path, String> coreProjectPaths = runnerHelper.getCoreProjectPaths(depsImpl);
 		config.setCoreProjectPaths(coreProjectPaths);
 	}
 

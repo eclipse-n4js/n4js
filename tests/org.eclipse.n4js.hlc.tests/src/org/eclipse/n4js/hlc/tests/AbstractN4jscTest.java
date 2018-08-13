@@ -58,6 +58,8 @@ public abstract class AbstractN4jscTest {
 	protected static final String TEST_DATA_SET__BASIC = "basic";
 	/** name of test data set for launching testers from the command line */
 	protected static final String TEST_DATA_SET__TESTERS = "testers";
+	/** name of test data set for npm scopes */
+	protected static final String TEST_DATA_SET__NPM_SCOPES = "npmScopes";
 
 	/**
 	 * Clear global registers to avoid injection-issues (validators, resource factories, etc.)

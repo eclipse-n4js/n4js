@@ -75,7 +75,7 @@ public class ProjectDescriptionLoader {
 	 */
 	public ProjectDescription loadProjectDescriptionAtLocation(URI location, JSONDocument packageJSON) {
 		adjustMainPath(location, packageJSON);
-		String defaultProjectId = location.lastSegment(); // use name of folder containing the package.json file
+		String defaultProjectId = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location);
 		ProjectDescription pdFromPackageJSON = packageJSON != null
 				? packageJsonHelper.convertToProjectDescription(packageJSON, true, defaultProjectId)
 				: null;
