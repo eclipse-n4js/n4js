@@ -13,17 +13,22 @@ package org.eclipse.n4js.ui.quickfix.packagejson;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.Map;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.n4js.external.LibraryManager;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.ui.changes.IChange;
+import org.eclipse.n4js.ui.changes.PackageJsonChangeProvider;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.ui.quickfix.AbstractN4JSQuickfixProvider;
 import org.eclipse.n4js.ui.quickfix.N4Modification;
@@ -31,6 +36,7 @@ import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.StatusUtils;
 import org.eclipse.n4js.validation.IssueCodes;
+import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.ui.editor.model.edit.IModificationContext;
 import org.eclipse.xtext.ui.editor.quickfix.Fix;
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor;
@@ -114,5 +120,38 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 		}
 
 		return Collections.emptyList();
+	}
+
+	/** Changes the project type to {@link ProjectType#VALIDATION} */
+	@Fix(IssueCodes.OUTPUT_AND_SOURCES_FOLDER_NESTING)
+	public void changeProjectTypeToValidation(Issue issue, IssueResolutionAcceptor acceptor) {
+		// <--- do pre-processing here (if required)
+		String validationPT = ProjectType.VALIDATION.getName().toLowerCase();
+		String title = "Change project type to '" + validationPT + "'";
+		String descr = "The project type '" + validationPT
+				+ "' does not generate code. Hence, output and source folders can be nested.";
+
+		accept(acceptor, issue, title, descr, null, new N4Modification() {
+			@Override
+			public Collection<? extends IChange> computeChanges(IModificationContext context, IMarker marker,
+					int offset, int length, EObject element) throws Exception {
+
+				Resource resource = element.eResource();
+				ProjectDescription prjDescr = EcoreUtil2.getContainerOfType(element, ProjectDescription.class);
+				Collection<IChange> changes = new LinkedList<>();
+				changes.add(PackageJsonChangeProvider.setProjectType(resource, ProjectType.VALIDATION, prjDescr));
+				return changes;
+			}
+
+			@Override
+			public boolean supportsMultiApply() {
+				return false;
+			}
+
+			@Override
+			public boolean isApplicableTo(IMarker marker) {
+				return true;
+			}
+		});
 	}
 }

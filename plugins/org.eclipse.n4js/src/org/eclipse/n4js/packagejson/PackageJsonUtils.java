@@ -17,13 +17,18 @@ import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNonEmptyStrings
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.NV_MODULE;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.NV_SOURCE_CONTAINER;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.Enumerator;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EEnumLiteral;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.json.JSON.JSONArray;
+import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONPackage;
 import org.eclipse.n4js.json.JSON.JSONValue;
@@ -333,5 +338,58 @@ public class PackageJsonUtils {
 		@SuppressWarnings("unchecked")
 		T javaLitCasted = javaEnumType.isInstance(javaLit) ? (T) javaLit : null;
 		return javaLitCasted;
+	}
+
+	/**
+	 * Traverses the given {@link Resource} and finds all {@link JSONValue}s that match the given
+	 * {@link PackageJsonProperties}. The list of results is filtered in case a {@link Class} is given.
+	 *
+	 * @return all {@link NameValuePair}s for the given {@link PackageJsonProperties} in the given json resource
+	 */
+	public static <T extends JSONValue> List<T> findNameValuePairs(Resource jsonResource, PackageJsonProperties prop,
+			Class<T> clazz) {
+
+		String[] pathElements = prop.getPathElements();
+		List<T> nameValuePairs = new LinkedList<>();
+		EList<EObject> contents = jsonResource.getContents();
+		EObject rootElem = contents.get(0);
+		if (rootElem instanceof JSONDocument) {
+			JSONDocument jsonDocument = (JSONDocument) rootElem;
+			JSONValue jsonContent = jsonDocument.getContent();
+			if (jsonContent instanceof JSONObject) {
+				JSONObject jsonObj = (JSONObject) jsonContent;
+				for (NameValuePair child : jsonObj.getNameValuePairs()) {
+					searchNameValuePair(child, pathElements, 0, clazz, nameValuePairs);
+				}
+			}
+		}
+
+		return nameValuePairs;
+	}
+
+	@SuppressWarnings("unchecked")
+	private static <T extends JSONValue> void searchNameValuePair(NameValuePair valuePair, String[] pathElems, int i,
+			Class<T> clazz, List<T> result) {
+
+		String searchName = pathElems[i];
+		String jsonName = valuePair.getName();
+		JSONValue jsonValue = valuePair.getValue();
+		if (i >= pathElems.length || !searchName.equals(jsonName)) {
+			return;
+		}
+
+		if (i == pathElems.length - 1) {
+			if (clazz == null || clazz.isAssignableFrom(jsonValue.getClass())) {
+				result.add((T) jsonValue);
+				return;
+			}
+		}
+
+		if (jsonValue instanceof JSONObject) {
+			JSONObject jObj = (JSONObject) jsonValue;
+			for (NameValuePair child : jObj.getNameValuePairs()) {
+				searchNameValuePair(child, pathElems, i + 1, clazz, result);
+			}
+		}
 	}
 }
