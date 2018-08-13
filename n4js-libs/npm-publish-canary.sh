@@ -46,5 +46,5 @@ else
 	lerna publish --loglevel silly --skip-git --registry="${NPM_REGISTRY}" --repo-version="9999.0.0" --exact --canary --yes --sort --npm-tag="${NPM_TAG}"
 fi
 
-#Remove node_modules before and after publishing
+# Remove node_modules after publishing
 cleanup
