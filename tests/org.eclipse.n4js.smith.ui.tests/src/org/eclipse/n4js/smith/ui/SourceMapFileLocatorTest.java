@@ -33,14 +33,19 @@ public class SourceMapFileLocatorTest {
 
 	/**
 	 * Imports and compiles test project
-	 * 
+	 *
 	 * @throws CoreException
 	 *             in case project cannot be loaded
 	 */
 	@BeforeClass
 	public static void setupEclipseWorkspace() throws CoreException {
-		IResourcesSetupUtil.cleanWorkspace();
-		importTestProject("SVDemo");
+		try {
+			IResourcesSetupUtil.cleanWorkspace();
+			importTestProject("SVDemo");
+		} catch (Exception ex) {
+			System.out.println("Cannot set up Eclipse workspace for smith.ui tests: " + ex);
+			throw ex;
+		}
 	}
 
 	/**
