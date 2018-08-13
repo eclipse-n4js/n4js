@@ -227,7 +227,8 @@ public interface IN4JSProject {
 	 * Returns the name of the package this {@code project} provides type definitions for.
 	 *
 	 * {@code null} if this project does not specify the property (i.e. not a type definitions project (cf.
-	 * {@link ProjectType#DEFINITION}).
+	 * {@link ProjectType#DEFINITION})).
 	 */
-	public String getDefinesPackage();
+	public String getDefinesPackageName();
+
 }

@@ -387,7 +387,8 @@ public class N4JSProject implements IN4JSProject {
 	}
 
 	@Override
-	public String getDefinesPackage() {
+	public String getDefinesPackageName() {
 		return getModel().getDefinesPackage(this);
 	}
+
 }

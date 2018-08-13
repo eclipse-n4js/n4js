@@ -309,7 +309,16 @@ public class VersionNumberImpl extends SemverToStringableImpl implements Version
 	 * @generated
 	 */
 	public boolean isWildcard() {
-		return this.getMajor().isWildcard();
+		boolean _xifexpression = false;
+		VersionPart _major = this.getMajor();
+		boolean _tripleEquals = (_major == null);
+		if (_tripleEquals) {
+			_xifexpression = false;
+		}
+		else {
+			_xifexpression = this.getMajor().isWildcard();
+		}
+		return _xifexpression;
 	}
 
 	/**
