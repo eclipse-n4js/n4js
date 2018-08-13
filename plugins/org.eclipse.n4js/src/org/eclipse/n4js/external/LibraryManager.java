@@ -221,7 +221,7 @@ public class LibraryManager {
 
 				// obtain list of all available project IDs (external and workspace)
 				Set<String> allProjectsIds = StreamSupport.stream(n4jsCore.findAllProjects().spliterator(), false)
-						.map(p -> p.getProjectId()).collect(Collectors.toSet());
+						.map(p -> p.getProjectName()).collect(Collectors.toSet());
 
 				// Note: need to make sure the projects in npmsToInstall are not in the workspace yet; method
 				// #installUninstallNPMs() (which will be invoked in a moment) is doing this as well, but that method
@@ -306,7 +306,7 @@ public class LibraryManager {
 	 */
 	private void collectDependencies(ProjectDescription description, Map<String, String> dependencies) {
 		for (ProjectDependency pDep : description.getProjectDependencies()) {
-			String name = pDep.getProjectId();
+			String name = pDep.getProjectName();
 			String version = NO_VERSION;
 			if (pDep.getVersionRequirement() != null) {
 				version = SemverSerializer.serialize(pDep.getVersionRequirement());

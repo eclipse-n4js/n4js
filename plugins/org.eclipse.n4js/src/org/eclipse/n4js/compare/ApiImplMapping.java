@@ -23,10 +23,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import org.eclipse.xtext.xbase.lib.Pair;
-
+import org.eclipse.n4js.packagejson.PackageJsonProperties;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.xtext.xbase.lib.Pair;
 
 /**
  * Helper class to collect associations between API and implementation projects and obtain the implementation IDs
@@ -120,13 +120,13 @@ public class ApiImplMapping {
 	 */
 	public ApiImplMapping enhance(Iterable<IN4JSProject> apiProjects, Iterable<IN4JSProject> implProjects) {
 		final Set<String> apiProjectsIds = StreamSupport.stream(apiProjects.spliterator(), false)
-				.map(p -> p.getProjectId()).collect(Collectors.toSet());
+				.map(p -> p.getProjectName()).collect(Collectors.toSet());
 
 		for (IN4JSProject pImpl : implProjects) {
 			for (IN4JSProject pApi : pImpl.getImplementedProjects()) {
 				// note: #getImplementedProjects() will return implemented projects from entire workspace,
 				// so we here have to make sure pApi is contained in apiProjects
-				if (apiProjectsIds.contains(pApi.getProjectId()))
+				if (apiProjectsIds.contains(pApi.getProjectName()))
 					this.put(pApi, pImpl);
 			}
 		}
@@ -137,7 +137,7 @@ public class ApiImplMapping {
 	 * Add a single API -> implementation association to the receiving mapping (if it is not present already).
 	 */
 	public void put(IN4JSProject api, IN4JSProject impl) {
-		final String apiId = api.getProjectId();
+		final String apiId = api.getProjectName();
 		if (apiId == null)
 			return; // just ignore (complaining about this problem is not our business)
 		final String implId = impl.getImplementationId().orNull();
@@ -187,14 +187,14 @@ public class ApiImplMapping {
 	public List<String> getErrorMessages() {
 		final List<String> msgs = new ArrayList<>();
 		for (IN4JSProject p : projectsWithUndefImplIds) {
-			msgs.add("project '" + p.getProjectId() + "' does not define an ImplementationId in its manifest");
+			msgs.add("project '" + p.getProjectName() + "' does not define an ImplementationId in its manifest");
 		}
 		for (Map.Entry<Pair<String, String>, Set<IN4JSProject>> currConflict : conflicts.entrySet()) {
 			final String apiId = currConflict.getKey().getKey();
 			final String implId = currConflict.getKey().getValue();
 			final Set<IN4JSProject> culprits = currConflict.getValue();
 			final String culpritsStr = " - "
-					+ culprits.stream().map(c -> c.getProjectId()).collect(Collectors.joining("\n - "));
+					+ culprits.stream().map(c -> c.getProjectName()).collect(Collectors.joining("\n - "));
 			msgs.add("several projects define an implementation for API project '" + apiId
 					+ "' with implementation ID '" + implId + "':\n" + culpritsStr);
 		}
@@ -234,26 +234,26 @@ public class ApiImplMapping {
 
 	/**
 	 * Returns <code>true</code> iff this mapping contains an API -> implementation association p1 -> p2 with p1 having
-	 * an projectId equal to the given ID.
+	 * an projectName equal to the given name.
 	 */
-	public boolean isApi(String projectId) {
-		return assocs.containsKey(projectId);
+	public boolean isApi(String projectName) {
+		return assocs.containsKey(projectName);
 	}
 
 	/**
-	 * Returns the API project with the given projectId or <code>null</code> if this mapping does not contain any API ->
-	 * implementation associations for an API project with the given projectId.
+	 * Returns the API project with the given projectName or <code>null</code> if this mapping does not contain any API
+	 * -> implementation associations for an API project with the given projectName.
 	 */
-	public IN4JSProject getApi(String apiId) {
-		final ApiImplMapping.ApiImplAssociation assoc = assocs.get(apiId);
+	public IN4JSProject getApi(String apiProjectName) {
+		final ApiImplMapping.ApiImplAssociation assoc = assocs.get(apiProjectName);
 		return assoc != null ? assoc.api : null;
 	}
 
 	/**
-	 * Returns all implementation projects for the API project with the given projectId registered in this mapping.
+	 * Returns all implementation projects for the API project with the given projectName registered in this mapping.
 	 */
-	public Collection<IN4JSProject> getImpls(String apiId) {
-		final ApiImplMapping.ApiImplAssociation pair = assocs.get(apiId);
+	public Collection<IN4JSProject> getImpls(String apiProjectName) {
+		final ApiImplMapping.ApiImplAssociation pair = assocs.get(apiProjectName);
 		return pair != null ? pair.getImpls() : Collections.emptyList();
 	}
 
@@ -261,21 +261,21 @@ public class ApiImplMapping {
 	 * Same as {@link #getImpls(String)}, but returns the implementation IDs of the implementation projects, not the
 	 * projects themselves.
 	 */
-	public Set<String> getImplIds(String apiId) {
-		final ApiImplMapping.ApiImplAssociation pair = assocs.get(apiId);
+	public Set<String> getImplIds(String apiProjectName) {
+		final ApiImplMapping.ApiImplAssociation pair = assocs.get(apiProjectName);
 		return pair != null ? pair.getImplIds() : Collections.emptySet();
 	}
 
 	/**
-	 * Returns the implementation project for the API project with projectId <code>apiId</code> for implementation ID
-	 * <code>implId</code>.
+	 * Returns the implementation project for the API project with projectName <code>apiProjectName</code> for
+	 * implementation ID <code>implId</code>.
 	 * <p>
-	 * Note that <code>apiId</code> is an projectId (i.e. manifest property <code>ProjectId</code>) whereas
-	 * <code>implId</code> is an implementation ID (i.e. manifest property <code>ImplementationId</code> and <b>not</b>
-	 * <code>ProjectId</code>).
+	 * Note that <code>apiProjectName</code> is a projectName (i.e. package.json property
+	 * {@link PackageJsonProperties#NAME "name"}) whereas <code>implId</code> is an implementation ID (i.e. package.json
+	 * property {@link PackageJsonProperties#IMPLEMENTATION_ID "implementationId"} and <b>not</b> <code>"name"</code>).
 	 */
-	public IN4JSProject getImpl(String apiId, String implId) {
-		final ApiImplMapping.ApiImplAssociation pair = assocs.get(apiId);
+	public IN4JSProject getImpl(String apiProjectName, String implId) {
+		final ApiImplMapping.ApiImplAssociation pair = assocs.get(apiProjectName);
 		return pair != null ? pair.getImpl(implId) : null;
 	}
 }

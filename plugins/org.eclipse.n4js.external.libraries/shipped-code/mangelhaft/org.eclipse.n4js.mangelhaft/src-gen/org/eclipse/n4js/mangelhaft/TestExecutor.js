@@ -20,14 +20,19 @@
 		getExecutingFunction = function getExecutingFunction(instrumentedTest) {
 			return async(testMethodDescriptor)=>{
 				const doPromise = async(resolve, reject)=>{
-					const timeoutError = new Error(`Test object ${testMethodDescriptor.name} timed out after ${testMethodDescriptor.timeout} milliseconds`);
-					const timeoutId = setTimeout(()=>reject(timeoutError), testMethodDescriptor.timeout);
+					let timeoutId;
+					if (!n4.runtimeOptions["mangelhaft-timeout-disabled"]) {
+						const timeoutError = new Error(`Test object ${testMethodDescriptor.name} timed out after ${testMethodDescriptor.timeout} milliseconds`);
+						timeoutId = setTimeout(()=>reject(timeoutError), testMethodDescriptor.timeout);
+					}
 					try {
 						await Promise.resolve(testMethodDescriptor.value.call(instrumentedTest.testObject));
 					} catch(error) {
 						reject(error);
 					} finally {
-						clearTimeout(timeoutId);
+						if (timeoutId !== undefined) {
+							clearTimeout(timeoutId);
+						}
 					}
 					resolve(undefined);
 				};

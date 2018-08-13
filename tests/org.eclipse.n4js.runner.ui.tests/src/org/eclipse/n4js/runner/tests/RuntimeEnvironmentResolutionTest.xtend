@@ -257,7 +257,7 @@ class RuntimeEnvironmentResolutionTest {
 		newBuilderForRL.createProject('es5.re.lib')
 		newBuilderForRE.withProvidedRL('es5.re.lib').createProject(ES5)
 		newBuilderForRL.createProject('nodejs.re.lib')
-		newBuilderForRE.withExtendedRE(ES5.projectId).withProvidedRL('nodejs.re.lib').createProject(NODEJS)
+		newBuilderForRE.withExtendedRE(ES5.projectName).withProvidedRL('nodejs.re.lib').createProject(NODEJS)
 		val es5Project = newBuilder.withRequiredRL('es5.re.lib').createProject('es5.lib.project')
 		val nodeJsProject = newBuilder.withRequiredRL('nodejs.re.lib').createProject('nodejs.lib.project')
 
@@ -324,7 +324,7 @@ class RuntimeEnvironmentResolutionTest {
 		newBuilderForRL.createProject('es5.re.lib')
 		newBuilderForRE.withProvidedRL('es5.re.lib').createProject(ES5)
 		newBuilderForRL.createProject('nodejs.re.lib')
-		newBuilderForRE.withExtendedRE(ES5.projectId).withProvidedRL('nodejs.re.lib').createProject(NODEJS)
+		newBuilderForRE.withExtendedRE(ES5.projectName).withProvidedRL('nodejs.re.lib').createProject(NODEJS)
 		val project = newBuilder.withRequiredRL('es5.re.lib').withRequiredRL('nodejs.re.lib').createProject('lib.project')
 
 		assertEquals('Expecting both NodeJS RE and ES5 RuntimeEnvironemnt.',
@@ -337,7 +337,7 @@ class RuntimeEnvironmentResolutionTest {
 	def void testNegativeSingleProjectFindsOnlyExtensionREWhenUsingLibsFromBaseREAndExtensionRE() {
 		newBuilderForRL.createProject('es5.re.lib')
 		newBuilderForRE.withProvidedRL('es5.re.lib').createProject(ES5)
-		newBuilderForRE.withExtendedRE(ES5.projectId).withProvidedRL('nodejs.re.lib').createProject(NODEJS)
+		newBuilderForRE.withExtendedRE(ES5.projectName).withProvidedRL('nodejs.re.lib').createProject(NODEJS)
 		newBuilderForRL.createProject('some.not.existing.lib')
 		newBuilderForRL.createProject('another.not.existing.lib')
 		val project = newBuilder.withRequiredRL('some.not.existing.lib').withRequiredRL('another.not.existing.lib').createProject('lib.project')
@@ -629,12 +629,12 @@ class RuntimeEnvironmentResolutionTest {
 	 * This method creates a new project in the workspace then generates a N4JS package.json file in the brand new project's root
 	 * with the given content.
 	 *
-	 * @param projectId the unique projectId of the new project.
+	 * @param projectName the unique projectName of the new project.
 	 * @param packageJsonContent the content of the new package.json file.
 	 * @return returns with the URI referencing the brand new project.
 	 */
-	protected def createProjectWithPackageJson(String projectId, String packageJsonContent) {
-		val projectFolder = createProjectFolder(projectId)
+	protected def createProjectWithPackageJson(String projectName, String packageJsonContent) {
+		val projectFolder = createProjectFolder(projectName)
 		writePackageJsonContent(createPackageJsonFile(projectFolder), packageJsonContent)
 		toUri(projectFolder);
 	}
@@ -649,18 +649,18 @@ class RuntimeEnvironmentResolutionTest {
 	}
 
 	private def IN4JSProject createProject(PackageJsonBuilder builder, RuntimeEnvironment re) {
-		createProject(builder, '''«re.getProjectId»''')
+		createProject(builder, '''«re.getProjectName»''')
 	}
 
-	private def IN4JSProject createProject(PackageJsonBuilder builder, String projectId) {
-		val content = builder.withName(projectId).build();
+	private def IN4JSProject createProject(PackageJsonBuilder builder, String projectName) {
+		val content = builder.withName(projectName).build();
 		if (LOGGER.debugEnabled) {
 			LOGGER.debug('------------------------NEW PROJECT------------------------')
-			LOGGER.debug('''New project: «projectId»''')
+			LOGGER.debug('''New project: «projectName»''')
 			LOGGER.debug('''Package.json contents:«'\n'»«content»''')
 			LOGGER.debug('--------------------END OF NEW PROJECT---------------------')
 		}
-		val uri = createProjectWithPackageJson(projectId, content)
+		val uri = createProjectWithPackageJson(projectName, content)
 		val project = core.create(uri)
 		assertTrue(project.exists)
 		workspace.registerProject(uri) // Registers the project.

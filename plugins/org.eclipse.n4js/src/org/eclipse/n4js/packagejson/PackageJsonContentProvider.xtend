@@ -48,7 +48,7 @@ package class PackageJsonContentProvider {
 	 * Creates and returns with the N4JS package.json {@link JSONDocument} representation 
 	 * based on the given arguments.
 	 * 
-	 * @param projectId the projectId of the project (cf. name).
+	 * @param projectName the N4JS project name of the project (cf. name).
 	 * @param version The declared version of the project.
 	 * @param type The type of the N4JS project.
 	 * @param vendorId The vendorId to use.
@@ -65,7 +65,7 @@ package class PackageJsonContentProvider {
 	 * @return the N4JS package.json content as a string.
 	 */
 	package static def JSONDocument getModel(
-		String projectId,
+		String projectName,
 		Optional<String> version,
 		ProjectType type,
 		Optional<String> vendorId,
@@ -81,9 +81,9 @@ package class PackageJsonContentProvider {
 		Map<SourceContainerType, String> sourceContainers
 	) {
 		val JSONObject root = JSONFactory.eINSTANCE.createJSONObject();
-		
-		JSONModelUtils.addProperty(root, NAME.name, projectId);
-		
+
+		JSONModelUtils.addProperty(root, NAME.name, projectName);
+
 		if (version.present)
 			JSONModelUtils.addProperty(root, VERSION.name, version.get());
 

@@ -72,8 +72,6 @@ public class PackageJsonBuilder {
 	/**
 	 * Builds the N4JS package.json file contents for a project with the given name.
 	 *
-	 * @param projectId the name of the project. Cannot be {@code null}.
-	 *
 	 * @return the N4JS package.json file contents as a string.
 	 */
 	def String build() {
@@ -83,8 +81,6 @@ public class PackageJsonBuilder {
 
 	/**
 	 * Builds the N4JS package.json {@code JSONDocument} model representation.
-	 * 
-	 * @param projectId the name of the project. Cannot be {@code null}.
 	 * 
 	 * @return the N4JS package.json {@code JSONDocument} representation.
 	 */

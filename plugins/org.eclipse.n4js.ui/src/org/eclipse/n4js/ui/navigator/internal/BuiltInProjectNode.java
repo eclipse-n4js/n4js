@@ -45,7 +45,7 @@ import org.eclipse.swt.graphics.Image;
 	/* default */ BuiltInProjectNode(final Node parent, final IN4JSProject project) {
 		super(parent);
 		checkNotNull(project, "project");
-		checkArgument(project.exists(), "Project '" + project.getProjectId() + "' does not exist.");
+		checkArgument(project.exists(), "Project '" + project.getProjectName() + "' does not exist.");
 		this.project = project;
 	}
 
@@ -56,7 +56,7 @@ import org.eclipse.swt.graphics.Image;
 
 	@Override
 	public String getText() {
-		return project.getProjectId();
+		return project.getProjectName();
 	}
 
 	@Override
@@ -100,7 +100,7 @@ import org.eclipse.swt.graphics.Image;
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((project.getProjectId() == null) ? 0 : project.getProjectId().hashCode());
+		result = prime * result + ((project.getProjectName() == null) ? 0 : project.getProjectName().hashCode());
 		return result;
 	}
 
@@ -116,11 +116,11 @@ import org.eclipse.swt.graphics.Image;
 			return false;
 		}
 		BuiltInProjectNode other = (BuiltInProjectNode) obj;
-		if (project.getProjectId() == null) {
-			if (other.project.getProjectId() != null) {
+		if (project.getProjectName() == null) {
+			if (other.project.getProjectName() != null) {
 				return false;
 			}
-		} else if (!project.getProjectId().equals(other.project.getProjectId())) {
+		} else if (!project.getProjectName().equals(other.project.getProjectName())) {
 			return false;
 		}
 		return true;

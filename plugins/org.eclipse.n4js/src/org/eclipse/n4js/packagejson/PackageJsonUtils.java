@@ -68,7 +68,7 @@ public class PackageJsonUtils {
 		String valueStr = asNonEmptyStringOrNull(jsonValue);
 		if (!Strings.isNullOrEmpty(valueStr)) {
 			final ProjectReference result = ProjectDescriptionFactory.eINSTANCE.createProjectReference();
-			result.setProjectId(valueStr);
+			result.setProjectName(valueStr);
 			return result;
 		}
 		return null;

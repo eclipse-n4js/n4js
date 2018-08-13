@@ -56,7 +56,7 @@ public class TesterFileBasedShippedCodeConfigurationHelper extends RunnerFileBas
 	protected IN4JSProject getCustomRuntimeEnvironment(TestConfiguration config,
 			Iterable<IN4JSProject> allShippedProjects) {
 		return runnerHelper.findRuntimeEnvironemtnWithName(
-				testerRegistry.getDescriptor(config.getTesterId()).getEnvironment().getProjectId(),
+				testerRegistry.getDescriptor(config.getTesterId()).getEnvironment().getProjectName(),
 				allShippedProjects).orNull();
 	}
 }

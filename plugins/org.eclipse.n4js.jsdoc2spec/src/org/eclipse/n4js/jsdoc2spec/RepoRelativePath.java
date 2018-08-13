@@ -66,7 +66,7 @@ public class RepoRelativePath {
 		File repoFolder = getRepoFolder(file);
 		String repoName = getRepoName(repoFolder);
 		String cloneFolder = repoFolder == null ? "NO_FOLDER" : repoFolder.getName();
-		String projName = project.getProjectId();
+		String projName = project.getProjectName();
 		String repoPath = getRepoPath(absFileName, projName, cloneFolder);
 
 		String projPath = fileRelString;

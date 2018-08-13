@@ -371,7 +371,7 @@ public class TestDiscoveryHelper {
 
 	private TestCase createTestCase(final TMethod method, final TModule module, final String clazzFqnStr) {
 		final TestCase testCase = new TestCase(createTestCaseId(clazzFqnStr, method), clazzFqnStr,
-				module.getProjectId(), method.getName(), method.getName(), EcoreUtil.getURI(method));
+				module.getProjectName(), method.getName(), method.getName(), EcoreUtil.getURI(method));
 		return testCase;
 	}
 

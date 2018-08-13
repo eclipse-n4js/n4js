@@ -346,7 +346,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 
 		final Map<String, String> versionedNpms = new HashMap<>();
 		projects.forEach((ProjectDescription pd) -> {
-			versionedNpms.put(pd.getProjectId(), SemverSerializer.serialize(pd.getProjectVersion()));
+			versionedNpms.put(pd.getProjectName(), SemverSerializer.serialize(pd.getProjectVersion()));
 		});
 
 		return versionedNpms;
@@ -569,7 +569,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 			final Object element = ((IStructuredSelection) selection).getFirstElement();
 			if (element instanceof IN4JSProject) {
 				IN4JSProject project = (IN4JSProject) element;
-				return project.getProjectId();
+				return project.getProjectName();
 			}
 		}
 		return null;

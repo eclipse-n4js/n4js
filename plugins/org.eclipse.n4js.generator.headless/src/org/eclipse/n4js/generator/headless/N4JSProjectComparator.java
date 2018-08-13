@@ -16,7 +16,7 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 
 /**
  * Naive {@link IN4JSProject comparator}, used for sorting and comparing project dependencies by their
- * {@link IN4JSProject#getProjectId()}
+ * {@link IN4JSProject#getProjectName()}
  */
 public class N4JSProjectComparator implements Comparator<IN4JSProject> {
 
@@ -25,7 +25,7 @@ public class N4JSProjectComparator implements Comparator<IN4JSProject> {
 
 	@Override
 	public int compare(IN4JSProject o1, IN4JSProject o2) {
-		return o1.getProjectId().compareTo(o2.getProjectId());
+		return o1.getProjectName().compareTo(o2.getProjectName());
 	}
 
 }

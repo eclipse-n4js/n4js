@@ -98,7 +98,7 @@ public abstract class ExternalIndexSynchronizer {
 	}
 
 	/**
-	 * @return a map that maps projectIDs to their locations and versions
+	 * @return a map that maps projectNames to their locations and versions
 	 */
 	final public Map<String, Pair<URI, String>> findNpmsInFolder() {
 		Map<String, Pair<URI, String>> npmsFolder = new HashMap<>();
@@ -231,8 +231,7 @@ public abstract class ExternalIndexSynchronizer {
 
 			if (pdsIter.hasNext()) {
 				IEObjectDescription pDescription = pdsIter.next();
-				String projectIdKey = PackageJsonResourceDescriptionExtension.PROJECT_ID_KEY;
-				String nameFromPackageJSON = pDescription.getUserData(projectIdKey);
+				String nameFromPackageJSON = PackageJsonResourceDescriptionExtension.getProjectName(pDescription);
 				if (!name.equals(nameFromPackageJSON)) {
 					String msg = "name mismatch: name=" + name + "; nameFromPackageJSON=" + nameFromPackageJSON;
 					throw new IllegalStateException(msg);

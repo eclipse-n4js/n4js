@@ -154,7 +154,7 @@ public class NodeRunner implements IRunner {
 
 		runOptions.setExecModule(runConfig.getExecModule());
 		runOptions.addInitModules(runConfig.getInitModules());
-		runOptions.setCoreProjectPaths(on(NODE_PATH_SEP).join(runConfig.getCoreProjectPaths()));
+		runOptions.setCoreProjectPaths(runConfig.getCoreProjectPaths());
 		runOptions.setEngineOptions(runConfig.getEngineOptions());
 		runOptions.setEnvironmentVariables(runConfig.getEnvironmentVariables());
 		runOptions.setCustomEnginePath(runConfig.getCustomEnginePath());

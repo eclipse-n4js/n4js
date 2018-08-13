@@ -120,15 +120,16 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 	@Override
 	public URI getLocation(URI projectURI, ProjectReference projectReference) {
 		if (projectURI.segmentCount() >= DIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT) {
-			String expectedProjectName = projectReference.getProjectId();
+			String expectedProjectName = projectReference.getProjectName();
 			if (expectedProjectName != null && expectedProjectName.length() > 0) {
-				if (ProjectDescriptionUtils.isProjectNameWithScope(expectedProjectName)) {
-					// cannot create projects using npm scopes in the name, e.g. "@scopeName/projectName"
-					return null;
-				}
-				IProject existingProject = workspace.getProject(expectedProjectName);
+				// the below call to workspace.getProject(name) will search the Eclipse IProject by name, using the
+				// Eclipse project name (not the N4JS project name); thus, we have to convert from N4JS project name
+				// to Eclipse project name, first (see ProjectDescriptionUtils#isProjectNameWithScope(String)):
+				String expectedEclipseProjectName = ProjectDescriptionUtils
+						.convertN4JSProjectNameToEclipseProjectName(expectedProjectName);
+				IProject existingProject = workspace.getProject(expectedEclipseProjectName);
 				if (existingProject.isAccessible()) {
-					return URI.createPlatformResourceURI(expectedProjectName, true);
+					return URI.createPlatformResourceURI(expectedEclipseProjectName, true);
 				}
 			}
 		}
@@ -139,7 +140,7 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 	public UnmodifiableIterator<URI> getFolderIterator(URI folderLocation) {
 		final IContainer container;
 		if (DIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT == folderLocation.segmentCount()) {
-			container = workspace.getProject(folderLocation.lastSegment());
+			container = workspace.getProject(ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(folderLocation));
 		} else {
 			container = workspace.getFolder(new Path(folderLocation.toPlatformString(true)));
 		}

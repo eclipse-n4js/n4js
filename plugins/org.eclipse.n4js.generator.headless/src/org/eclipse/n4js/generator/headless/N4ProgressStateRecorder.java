@@ -19,12 +19,11 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.generator.GeneratorException;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.xtext.validation.Issue;
 
 import com.google.common.base.Joiner;
-
-import org.eclipse.n4js.generator.GeneratorException;
-import org.eclipse.n4js.projectModel.IN4JSProject;
 
 /**
  * Class for registering progress during headless compile-actions.
@@ -135,7 +134,7 @@ public class N4ProgressStateRecorder {
 
 	/***/
 	public void markProcessing(IN4JSProject project) {
-		info("processing " + project.getProjectId());
+		info("processing " + project.getProjectName());
 		increaseIndent();
 	}
 
@@ -145,12 +144,12 @@ public class N4ProgressStateRecorder {
 	 */
 	public void markEndProcessing(IN4JSProject project) {
 		decreaseIndent();
-		info("processing of " + project.getProjectId() + " done ");
+		info("processing of " + project.getProjectName() + " done ");
 	}
 
 	/***/
 	public void markStartLoading(MarkedProject markedProject) {
-		info("start loading " + markedProject.project.getProjectId());
+		info("start loading " + markedProject.project.getProjectName());
 	}
 
 	/**
@@ -189,7 +188,7 @@ public class N4ProgressStateRecorder {
 	 *            to compile
 	 */
 	public void markStartCompiling(MarkedProject markedProject) {
-		info("Project, compiling " + markedProject.project.getProjectId());
+		info("Project, compiling " + markedProject.project.getProjectName());
 		increaseIndent();
 	}
 
@@ -199,7 +198,7 @@ public class N4ProgressStateRecorder {
 	 */
 	public void markEndCompiling(MarkedProject markedProject) {
 		decreaseIndent();
-		info("Project, finished compiling of " + markedProject.project.getProjectId());
+		info("Project, finished compiling of " + markedProject.project.getProjectName());
 	}
 
 	/**
@@ -244,7 +243,7 @@ public class N4ProgressStateRecorder {
 	 *            to unload
 	 */
 	public void markStartUnloading(MarkedProject markedProject) {
-		info("about to unload " + markedProject.project.getProjectId());
+		info("about to unload " + markedProject.project.getProjectName());
 		increaseIndent();
 	}
 
@@ -254,7 +253,7 @@ public class N4ProgressStateRecorder {
 	 */
 	public void markFinishedUnloading(MarkedProject markedProject) {
 		decreaseIndent();
-		info("finished unloading of " + markedProject.project.getProjectId());
+		info("finished unloading of " + markedProject.project.getProjectName());
 	}
 
 	/**
