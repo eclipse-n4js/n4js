@@ -18,6 +18,7 @@ Require-Bundle: org.junit,
  com.google.guava,
  org.eclipse.n4js.runner.nodejs,
  org.eclipse.n4js.json,
+ org.eclipse.n4js.json.ui,
  org.eclipse.n4js.semver.model,
  org.eclipse.n4js.semver
 Automatic-Module-Name: org.eclipse.n4js.runner.ui.tests
