@@ -79,11 +79,11 @@ public class N4JSTasksExampleWizard extends ExampleInstallerWizard {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					for (String name : toInstall) {
 						try {
-							String version = namesAndVersions.get(name).trim();
+							String versionStr = namesAndVersions.get(name);
 							IStatus status;
-							if (!version.isEmpty()) {
-								monitor.subTask("Installing dependency '" + name + "' in version " + version);
-								status = libManager.installNPM(name, version, monitor);
+							if (versionStr != null) {
+								monitor.subTask("Installing dependency '" + name + "' in version " + versionStr);
+								status = libManager.installNPM(name, versionStr, monitor);
 							} else {
 								monitor.subTask("Installing dependency '" + name + "'");
 								status = libManager.installNPM(name, monitor);

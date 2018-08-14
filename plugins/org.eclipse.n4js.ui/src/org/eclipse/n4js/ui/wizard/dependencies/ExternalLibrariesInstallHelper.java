@@ -11,6 +11,7 @@
 package org.eclipse.n4js.ui.wizard.dependencies;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -19,6 +20,7 @@ import java.util.stream.StreamSupport;
 
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.ui.external.ExternalLibrariesActionsHelper;
 
@@ -59,7 +61,7 @@ public class ExternalLibrariesInstallHelper {
 				.collect(Collectors.toMap(pd -> pd.getProjectName(), pd -> pd.getProjectVersion()));
 
 		// install npms from target platform
-		Map<String, String> dependenciesToInstall = dependenciesHelper.calculateDependenciesToInstall();
+		Map<String, NPMVersionRequirement> dependenciesToInstall = dependenciesHelper.calculateDependenciesToInstall();
 		removeDependenciesToShippedCodeIfVersionMatches(dependenciesToInstall, projectNamesOfShippedCode);
 		addDependenciesForRemainingShippedCode(dependenciesToInstall, projectNamesOfShippedCode.keySet());
 		final SubMonitor subMonitor3 = monitor.split(45);
@@ -77,14 +79,15 @@ public class ExternalLibrariesInstallHelper {
 	 *
 	 * FIXME GH-957 change implementation to use a proper SemVer version-range-check instead of the string compare!
 	 */
-	private void removeDependenciesToShippedCodeIfVersionMatches(Map<String, String> dependenciesToInstall,
+	private void removeDependenciesToShippedCodeIfVersionMatches(
+			Map<String, NPMVersionRequirement> dependenciesToInstall,
 			Map<String, VersionNumber> projectNamesOfShippedCode) {
-		for (Entry<String, String> depToInstall : dependenciesToInstall.entrySet()) {
+		for (Entry<String, NPMVersionRequirement> depToInstall : dependenciesToInstall.entrySet()) {
 			String projectName = depToInstall.getKey();
 			VersionNumber availableVersionInShippedCode = projectNamesOfShippedCode.get(projectName);
 			if (availableVersionInShippedCode != null) {
-				String versionConstraintStr = depToInstall.getValue();
-				if (versionConstraintStr != null && versionConstraintStr.trim().equals("@\">=0.1.0 <=0.1.0\"")) {
+				NPMVersionRequirement versionRequirement = depToInstall.getValue();
+				if (versionRequirement != null && versionRequirement.trim().equals("@\">=0.1.0 <=0.1.0\"")) {
 					// the "fake" version of the project in the shipped code is requested,
 					// so remove from list of dependencies to be installed:
 					dependenciesToInstall.remove(projectName);
@@ -102,20 +105,20 @@ public class ExternalLibrariesInstallHelper {
 	 * *all* shipped code projects need to be shadowed, because shipped code is now published in clusters in which each
 	 * project depends on the others with a fixed version.
 	 */
-	private void addDependenciesForRemainingShippedCode(Map<String, String> dependenciesToInstall,
+	private void addDependenciesForRemainingShippedCode(Map<String, NPMVersionRequirement> dependenciesToInstall,
 			Set<String> projectNamesOfShippedCode) {
 		Set<String> projectNamesOfShippedCodeToInstall = new HashSet<>(dependenciesToInstall.keySet());
 		projectNamesOfShippedCodeToInstall.retainAll(projectNamesOfShippedCode);
 		if (!projectNamesOfShippedCodeToInstall.isEmpty()
 				&& projectNamesOfShippedCodeToInstall.size() < projectNamesOfShippedCode.size()) {
-			Set<String> versionConstraintsOfShippedCodeToInstall = projectNamesOfShippedCodeToInstall
+			Set<NPMVersionRequirement> versionConstraintsOfShippedCodeToInstall = projectNamesOfShippedCodeToInstall
 					.stream()
 					.map(id -> dependenciesToInstall.get(id))
-					.collect(Collectors.toSet());
+					.collect(Collectors.toCollection(LinkedHashSet::new));
 			if (versionConstraintsOfShippedCodeToInstall.size() > 1) {
 				// FIXME GH-957 warn about conflicting version constraints for shipped code!
 			}
-			String versionConstraint = versionConstraintsOfShippedCodeToInstall.stream().findFirst()
+			NPMVersionRequirement versionConstraint = versionConstraintsOfShippedCodeToInstall.stream().findFirst()
 					.orElse(null);
 			if (versionConstraint != null) {
 				for (String id : projectNamesOfShippedCode) {

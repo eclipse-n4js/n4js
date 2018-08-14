@@ -24,6 +24,7 @@ import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.dependencies.DependenciesCollectingUtil;
+import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
@@ -57,8 +58,8 @@ public class ProjectDependenciesHelper {
 	 *
 	 * Will take into account only projects in workspace, not external projects (neither NPM packages nor shipped code).
 	 */
-	public Map<String, String> calculateDependenciesToInstall() {
-		Map<String, String> versionedPackages = new HashMap<>();
+	public Map<String, NPMVersionRequirement> calculateDependenciesToInstall() {
+		Map<String, NPMVersionRequirement> versionedPackages = new HashMap<>();
 		DependenciesCollectingUtil.updateMissingDependenciesMap(versionedPackages,
 				getAvailableProjectsDescriptions(false));
 		if (LOGGER.isDebugEnabled()) {

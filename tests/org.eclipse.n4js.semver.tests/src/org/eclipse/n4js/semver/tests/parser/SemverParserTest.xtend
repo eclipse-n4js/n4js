@@ -11,7 +11,14 @@
 package org.eclipse.n4js.semver.tests.parser
 
 import com.google.inject.Inject
+import org.eclipse.n4js.semver.Semver.GitHubVersionRequirement
+import org.eclipse.n4js.semver.Semver.LocalPathVersionRequirement
+import org.eclipse.n4js.semver.Semver.TagVersionRequirement
+import org.eclipse.n4js.semver.Semver.URLVersionRequirement
+import org.eclipse.n4js.semver.Semver.VersionRangeSetRequirement
+import org.eclipse.n4js.semver.SemverInjectorProvider
 import org.eclipse.n4js.semver.SemverParseHelper
+import org.eclipse.n4js.semver.SemverUtils
 import org.eclipse.xtext.serializer.ISerializer
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
@@ -19,12 +26,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 import static org.junit.Assert.*
-import org.eclipse.n4js.semver.SemverInjectorProvider
-import org.eclipse.n4js.semver.Semver.VersionRangeSetRequirement
-import org.eclipse.n4js.semver.Semver.TagVersionRequirement
-import org.eclipse.n4js.semver.Semver.GitHubVersionRequirement
-import org.eclipse.n4js.semver.Semver.LocalPathVersionRequirement
-import org.eclipse.n4js.semver.Semver.URLVersionRequirement
 
 /**
  * Tests for parsing SEMVER files.
@@ -224,6 +225,18 @@ class SemverParserTest {
 	@Test
 	def void testNPMError() {
 		internalTestError(errorData);
+	}
+
+	/**
+	 * Checks both parsing of empty/wildcard requirements <em>and</em> the corresponding
+	 * utility methods for identifying these requirements.
+	 */
+	@Test
+	def void testEmptyAndWildcardRequirements() {
+		val empty = "".parseSuccessfully;
+		val wildcard = "*".parseSuccessfully;
+		assertTrue(SemverUtils.isEmptyVersionRequirement(empty));
+		assertTrue(SemverUtils.isWildcardVersionRequirement(wildcard));
 	}
 
 	/** Checks a range. */
