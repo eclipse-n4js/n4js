@@ -308,6 +308,11 @@ public class LibraryManager {
 		for (ProjectDependency pDep : description.getProjectDependencies()) {
 			String name = pDep.getProjectName();
 			String version = NO_VERSION;
+
+			if (name.endsWith("-n4jsd")) {
+				continue;
+			}
+
 			if (pDep.getVersionRequirement() != null) {
 				version = SemverSerializer.serialize(pDep.getVersionRequirement());
 			}
