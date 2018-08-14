@@ -301,67 +301,122 @@ public class N4JSNewProjectWizardCreationPage extends ExtensibleWizardNewProject
 
 	@Override
 	protected boolean validatePage() {
-		boolean valid = super.validatePage(); // run default validation
-		valid = (valid && validateIsExistingProjectPath()); // check if existing project
+		final boolean valid = validateProjectNameNonEmpty()
+				&& super.validatePage()
+				&& validateIsExistingProjectPath()
+				&& validateProjectName()
+				&& validateVendorId()
+				&& validateImplementationId();
 
 		if (valid) {
-			String errorMsg = null;
-			final String projectName = getProjectNameWithScope();
-			final String vendorId = projectInfo.getVendorId();
-
-			if (LIBRARY.equals(projectInfo.getProjectType())) {
-
-				final String implementationId = projectInfo.getImplementationId();
-
-				// Implementation ID is optional
-				if (!isNullOrEmpty(implementationId)) {
-
-					final List<String> implementedApis = projectInfo.getImplementedProjects();
-					if (null == implementedApis || implementedApis.isEmpty()) {
-						errorMsg = "One or more API project should be selected for implementation when the implementation ID is specified.";
-					}
-
-					if (BREAKING_WHITESPACE.matchesAnyOf(implementationId)) {
-						errorMsg = "Implementation ID should not contain any whitespace characters.";
-					}
-
-					final char leadincChar = implementationId.charAt(0);
-					if (!is('_').or(JAVA_LETTER).matches(leadincChar)) {
-						errorMsg = "Implementation ID should start either an upper or a lower case character "
-								+ "from the Latin alphabet or with the underscore character.";
-					}
-				}
-			}
-
-			// vendorId constraints
-			if (!VENDOR_ID_PATTERN.matcher(vendorId).matches()) {
-				errorMsg = "Invalid vendor id.";
-			}
-			if (isNullOrEmpty(vendorId)) {
-				errorMsg = "Vendor id must not be empty.";
-			}
-
-			// projectName constraints
-			if (isNullOrEmpty(projectName)) {
-				errorMsg = "Project name should be specified.";
-			}
-
-			if (BREAKING_WHITESPACE.matchesAnyOf(projectName)) {
-				errorMsg = "Project name should not contain any whitespace characters.";
-			}
-
-			if (!ProjectDescriptionUtils.isValidProjectName(projectName)) {
-				errorMsg = "Invalid project name \"" + projectName + "\".";
-			}
-
-			setErrorMessage(errorMsg);
-			if (null == errorMsg) {
-				updateModel();
-			}
-			return null == errorMsg;
+			// clear error messages
+			setErrorMessage(null);
+			// update model only if validation passed successfully
+			updateModel();
 		}
 
 		return valid;
+	}
+
+	/** Returns {@code true} iff the specified project name is not considered empty. */
+	private boolean validateProjectNameNonEmpty() {
+		final String fullProjectName = getProjectNameWithScope();
+		final String scopeName = ProjectDescriptionUtils.getScopeName(fullProjectName);
+		final String plainProjectName = ProjectDescriptionUtils.getPlainProjectName(fullProjectName);
+
+		if (fullProjectName.isEmpty()) {
+			setErrorMessage(null);
+			setMessage("Project name must be specified");
+			return false;
+		}
+
+		if (scopeName != null && (scopeName.isEmpty() || scopeName.equals("@"))) {
+			setErrorMessage("The scope segment of the project name must not be empty.");
+			return false;
+		}
+
+		if (plainProjectName != null && plainProjectName.isEmpty()) {
+			setErrorMessage("The name segment of the project name must not be empty.");
+			return false;
+		}
+
+		return true;
+	}
+
+	/** Returns {@code true} iff the specified project name is valid. */
+	private boolean validateProjectName() {
+		final String projectName = getProjectNameWithScope();
+		final String plainProjectName = getProjectName();
+		final String scopeName = ProjectDescriptionUtils.getScopeName(projectName);
+
+		if (!ProjectDescriptionUtils.isValidScopeName(scopeName)) {
+			setErrorMessage(
+					"Invalid project name: \"" + scopeName + "\" is not a valid scope segment.");
+			return false;
+		}
+
+		if (!ProjectDescriptionUtils.isValidPlainProjectName(plainProjectName)) {
+			setErrorMessage(
+					"Invalid project name: \"" + plainProjectName
+							+ "\" is not a valid name segment.");
+			return false;
+		}
+
+		if (BREAKING_WHITESPACE.matchesAnyOf(projectName)) {
+			setErrorMessage("Project name should not contain any whitespace characters.");
+			return false;
+		}
+
+		if (isNullOrEmpty(projectName)) {
+			setErrorMessage("Project name should be specified.");
+			return false;
+		}
+
+		return true;
+	}
+
+	/** Returns {@code true} iff the vendor ID is valid. */
+	private boolean validateVendorId() {
+		final String vendorId = projectInfo.getVendorId();
+		if (isNullOrEmpty(vendorId)) {
+			setErrorMessage("Vendor id must not be empty.");
+			return false;
+		}
+
+		if (!VENDOR_ID_PATTERN.matcher(vendorId).matches()) {
+			setErrorMessage("Invalid vendor id.");
+			return false;
+		}
+		return true;
+	}
+
+	/** Returns {@code true} iff the implementation ID is valid. */
+	private boolean validateImplementationId() {
+		if (LIBRARY.equals(projectInfo.getProjectType())) {
+			final String implementationId = projectInfo.getImplementationId();
+
+			// Implementation ID is optional
+			if (!isNullOrEmpty(implementationId)) {
+				final char leadingChar = implementationId.charAt(0);
+				if (!is('_').or(JAVA_LETTER).matches(leadingChar)) {
+					setErrorMessage("Implementation ID should start either an upper or a lower case character "
+							+ "from the Latin alphabet or with the underscore character.");
+					return false;
+				}
+				final List<String> implementedApis = projectInfo.getImplementedProjects();
+				if (null == implementedApis || implementedApis.isEmpty()) {
+					setErrorMessage(
+							"One or more API project should be selected for implementation when the implementation ID is specified.");
+					return false;
+				}
+
+				if (BREAKING_WHITESPACE.matchesAnyOf(implementationId)) {
+					setErrorMessage("Implementation ID should not contain any whitespace characters.");
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 	/**
