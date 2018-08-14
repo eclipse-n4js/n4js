@@ -309,6 +309,7 @@ public class LibraryManager {
 			String name = pDep.getProjectName();
 			String version = NO_VERSION;
 
+			// remove this in GH-824 when switched to yarn workspaces and scopes are used for type definitions
 			if (name.endsWith("-n4jsd")) {
 				continue;
 			}
