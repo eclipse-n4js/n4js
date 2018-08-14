@@ -223,7 +223,9 @@ public class LibraryManager {
 	}
 
 	private IStatus installNPMsInternal(Map<String, NPMVersionRequirement> versionedNPMs, IProgressMonitor monitor) {
-		String msg = "Installing NPM(s): " + String.join(", ", versionedNPMs.keySet());
+		String msg = "Installing NPM(s): " + versionedNPMs.entrySet().stream()
+				.map(e -> e.getKey() + "@" + e.getValue())
+				.collect(Collectors.joining(", "));
 		MultiStatus status = statusHelper.createMultiStatus(msg);
 		logger.logInfo(msg);
 
@@ -409,18 +411,12 @@ public class LibraryManager {
 	 * @param requestedVersionRequirement
 	 *            The requested version requirement in npm-semver format of the same package.
 	 */
-	private boolean installedMatchesRequestedVersion(String installedVersionString,
+	public boolean installedMatchesRequestedVersion(String installedVersionString,
 			NPMVersionRequirement requestedVersionRequirement) {
 
 		VersionNumber installedVersion = semverHelper.parseVersionNumber(installedVersionString);
 
-		boolean canComputeMatch = SemverMatcher.canComputeMatch(installedVersion, requestedVersionRequirement);
-		if (!canComputeMatch) {
-			return false;
-		}
-
-		boolean versionsMatch = SemverMatcher.matches(installedVersion, requestedVersionRequirement);
-		return versionsMatch;
+		return SemverMatcher.matchesStrict(installedVersion, requestedVersionRequirement);
 	}
 
 	private Collection<File> adaptNPMPackages(IProgressMonitor monitor, MultiStatus status,
