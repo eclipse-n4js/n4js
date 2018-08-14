@@ -349,7 +349,7 @@ public class N4JSNewProjectWizardCreationPage extends ExtensibleWizardNewProject
 		final String plainProjectName = getProjectName();
 		final String scopeName = ProjectDescriptionUtils.getScopeName(projectName);
 
-		if (!ProjectDescriptionUtils.isValidScopeName(scopeName)) {
+		if (scopeName != null && !ProjectDescriptionUtils.isValidScopeName(scopeName)) {
 			setErrorMessage(
 					"Invalid project name: \"" + scopeName + "\" is not a valid scope segment.");
 			return false;
