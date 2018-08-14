@@ -221,7 +221,7 @@ public class LibraryManager {
 
 				// obtain list of all available project IDs (external and workspace)
 				Set<String> allProjectsIds = StreamSupport.stream(n4jsCore.findAllProjects().spliterator(), false)
-						.map(p -> p.getProjectId()).collect(Collectors.toSet());
+						.map(p -> p.getProjectName()).collect(Collectors.toSet());
 
 				// Note: need to make sure the projects in npmsToInstall are not in the workspace yet; method
 				// #installUninstallNPMs() (which will be invoked in a moment) is doing this as well, but that method
@@ -306,8 +306,14 @@ public class LibraryManager {
 	 */
 	private void collectDependencies(ProjectDescription description, Map<String, String> dependencies) {
 		for (ProjectDependency pDep : description.getProjectDependencies()) {
-			String name = pDep.getProjectId();
+			String name = pDep.getProjectName();
 			String version = NO_VERSION;
+
+			// remove this in GH-824 when switched to yarn workspaces and scopes are used for type definitions
+			if (name.endsWith("-n4jsd")) {
+				continue;
+			}
+
 			if (pDep.getVersionRequirement() != null) {
 				version = SemverSerializer.serialize(pDep.getVersionRequirement());
 			}
@@ -405,13 +411,17 @@ public class LibraryManager {
 
 		monitor.setTaskName("Adapting npm package structure to N4JS project structure... [step 3 of 4]");
 		List<String> installedNpmNames = new LinkedList<>();
+		List<String> uninstalledNpmNames = new LinkedList<>();
 		for (LibraryChange change : changes) {
 			if (change.type == LibraryChangeType.Added) {
 				installedNpmNames.add(change.name);
 			}
+			if (change.type == LibraryChangeType.Removed) {
+				uninstalledNpmNames.add(change.name);
+			}
 		}
 		org.eclipse.xtext.util.Pair<IStatus, Collection<File>> result;
-		result = npmPackageToProjectAdapter.adaptPackages(installedNpmNames);
+		result = npmPackageToProjectAdapter.adaptPackages(installedNpmNames, uninstalledNpmNames);
 
 		IStatus adaptionStatus = result.getFirst();
 

@@ -43,7 +43,7 @@ public class DependencyInfo {
 	}
 
 	private static String toName(ProjectReference projectReference) {
-		return projectReference.getProjectId();
+		return projectReference.getProjectName();
 	}
 
 	private static String toVersion(ProjectReference projectReference) {

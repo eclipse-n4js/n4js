@@ -22,8 +22,6 @@ import static org.eclipse.jface.layout.GridDataFactory.fillDefaults;
 import static org.eclipse.n4js.projectDescription.ProjectType.API;
 import static org.eclipse.n4js.projectDescription.ProjectType.LIBRARY;
 import static org.eclipse.n4js.projectDescription.ProjectType.TEST;
-import static org.eclipse.n4js.resource.packagejson.PackageJsonResourceDescriptionExtension.getProjectId;
-import static org.eclipse.n4js.resource.packagejson.PackageJsonResourceDescriptionExtension.getProjectType;
 import static org.eclipse.n4js.ui.wizard.project.N4JSProjectInfo.IMPLEMENTATION_ID_PROP_NAME;
 import static org.eclipse.n4js.ui.wizard.project.N4JSProjectInfo.IMPLEMENTED_PROJECTS_PROP_NAME;
 import static org.eclipse.n4js.ui.wizard.project.N4JSProjectInfo.PROJECT_TYPE_PROP_NAME;
@@ -60,6 +58,7 @@ import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.n4js.json.JSON.JSONPackage;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.resource.packagejson.PackageJsonResourceDescriptionExtension;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
@@ -226,7 +225,7 @@ public class N4JSNewProjectWizardCreationPage extends WizardNewProjectCreationPa
 		final ListViewer apiViewer = new ListViewer(libraryProjectOptionsGroup, BORDER | MULTI);
 		apiViewer.getControl().setLayoutData(fillDefaults().align(FILL, FILL).grab(true, true).span(1, 1).create());
 		apiViewer.setContentProvider(ArrayContentProvider.getInstance());
-		apiViewer.setInput(getAvailableApiProjectIds());
+		apiViewer.setInput(getAvailableApiProjectNames());
 
 		initApiViewerBinding(dbc, apiViewer);
 		initImplementationIdBinding(dbc, implementationIdText);
@@ -437,11 +436,13 @@ public class N4JSNewProjectWizardCreationPage extends WizardNewProjectCreationPa
 		}
 	}
 
-	private Collection<String> getAvailableApiProjectIds() {
+	private Collection<String> getAvailableApiProjectNames() {
 		final Collection<String> distinctIds = from(
 				getResourceDescriptions().getExportedObjectsByType(JSONPackage.Literals.JSON_DOCUMENT))
-						.filter(desc -> API.equals(getProjectType(desc))).transform(desc -> getProjectId(desc))
-						.filter(id -> null != id).toSet();
+						.filter(desc -> API.equals(PackageJsonResourceDescriptionExtension.getProjectType(desc)))
+						.transform(desc -> PackageJsonResourceDescriptionExtension.getProjectName(desc))
+						.filter(id -> null != id)
+						.toSet();
 		final List<String> ids = newArrayList(distinctIds);
 		Collections.sort(ids);
 		return ids;

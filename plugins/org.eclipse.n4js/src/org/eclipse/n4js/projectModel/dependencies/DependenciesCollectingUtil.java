@@ -29,7 +29,7 @@ public class DependenciesCollectingUtil {
 
 	/**
 	 * Updates provided mapping of {@code id->version} with information computed from the provided project descriptions.
-	 * Returned map will not contain entries where the key matches {@code ProjectDescription#getProjectId() id} of the
+	 * Returned map will not contain entries where the key matches {@code ProjectDescription#getProjectName() id} of the
 	 * processed descriptions.
 	 *
 	 * Note that {@code ids} of the returned dependencies are not validated.
@@ -45,7 +45,7 @@ public class DependenciesCollectingUtil {
 			// in case we get non N4JS projects, user docs projects that are not N4JS projects, or something created by
 			// the plugins e.g RemoteSystemsTempFiles (see https://stackoverflow.com/q/3627463/52564 )
 			if (pd != null) {
-				availableProjectsIds.add(pd.getProjectId());
+				availableProjectsIds.add(pd.getProjectName());
 				updateFromProjectDescription(versionedPackages, pd);
 			}
 		});
@@ -53,20 +53,20 @@ public class DependenciesCollectingUtil {
 	}
 
 	/** Add to the provided map all possible dependencies based on the {@link ProjectDescription} */
-	private static void updateFromProjectDescription(Map<String, String> dependencies,
-			ProjectDescription pd) {
-		if (pd != null) {
-			Stream.of(
-					pd.getProjectDependencies().stream().map(DependencyInfo::create),
-					// TODO GH-613, user projects can be misconfigured
-					pd.getProvidedRuntimeLibraries().stream().map(DependencyInfo::create),
-					getVersionedExtendedRuntimeEnvironment(pd),
-					pd.getImplementedProjects().stream().map(DependencyInfo::create))
-					.reduce(Stream::concat)
-					.orElseGet(Stream::empty)
-					.filter(info -> info.type != DependencyType.TYPE) // do not install missing type dependencies
-					.forEach(info -> dependencies.merge(info.name, info.version, DependenciesCollectingUtil::resolve));
+	private static void updateFromProjectDescription(Map<String, String> dependencies, ProjectDescription pd) {
+		if (pd == null) {
+			return;
 		}
+		Stream.of(
+				pd.getProjectDependencies().stream().map(DependencyInfo::create),
+				// TODO GH-613, user projects can be misconfigured
+				pd.getProvidedRuntimeLibraries().stream().map(DependencyInfo::create),
+				getVersionedExtendedRuntimeEnvironment(pd),
+				pd.getImplementedProjects().stream().map(DependencyInfo::create))
+				.reduce(Stream::concat)
+				.orElseGet(Stream::empty)
+				.filter(info -> info.type != DependencyType.TYPE) // do not install missing type dependencies
+				.forEach(info -> dependencies.merge(info.name, info.version, DependenciesCollectingUtil::resolve));
 	}
 
 	/**

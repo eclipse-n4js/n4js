@@ -25,7 +25,7 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.projectDescription.ProjectReference#getProjectId <em>Project Id</em>}</li>
+ *   <li>{@link org.eclipse.n4js.projectDescription.ProjectReference#getProjectName <em>Project Name</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.projectDescription.ProjectDescriptionPackage#getProjectReference()
@@ -34,29 +34,29 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface ProjectReference extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Project Id</b></em>' attribute.
+	 * Returns the value of the '<em><b>Project Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Project Id</em>' attribute isn't clear,
+	 * If the meaning of the '<em>Project Name</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Project Id</em>' attribute.
-	 * @see #setProjectId(String)
-	 * @see org.eclipse.n4js.projectDescription.ProjectDescriptionPackage#getProjectReference_ProjectId()
+	 * @return the value of the '<em>Project Name</em>' attribute.
+	 * @see #setProjectName(String)
+	 * @see org.eclipse.n4js.projectDescription.ProjectDescriptionPackage#getProjectReference_ProjectName()
 	 * @model unique="false"
 	 * @generated
 	 */
-	String getProjectId();
+	String getProjectName();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.projectDescription.ProjectReference#getProjectId <em>Project Id</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.n4js.projectDescription.ProjectReference#getProjectName <em>Project Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Project Id</em>' attribute.
-	 * @see #getProjectId()
+	 * @param value the new value of the '<em>Project Name</em>' attribute.
+	 * @see #getProjectName()
 	 * @generated
 	 */
-	void setProjectId(String value);
+	void setProjectName(String value);
 
 } // ProjectReference

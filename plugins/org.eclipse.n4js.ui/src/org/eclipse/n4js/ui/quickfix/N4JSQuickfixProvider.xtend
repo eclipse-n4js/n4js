@@ -688,7 +688,7 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 
 			def Collection<? extends IChange> invokeNpmManager(EObject element) throws Exception {
 				val dependency = element as ProjectReference;
-				val packageName = dependency.projectId;
+				val packageName = dependency.projectName;
 				val packageVersion = if (dependency instanceof ProjectDependency) {
 						SemverSerializer.serialize(dependency.versionRequirement);
 					} else {

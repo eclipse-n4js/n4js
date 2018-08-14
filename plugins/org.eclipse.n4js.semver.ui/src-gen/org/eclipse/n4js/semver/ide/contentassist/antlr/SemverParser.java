@@ -54,10 +54,13 @@ public class SemverParser extends AbstractContentAssistParser {
 					put(grammarAccess.getALPHA_NUMERIC_CHARSAccess().getAlternatives(), "rule__ALPHA_NUMERIC_CHARS__Alternatives");
 					put(grammarAccess.getALPHA_NUMERIC_CHARS_START_WITH_DIGITSAccess().getAlternatives_1(), "rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Alternatives_1");
 					put(grammarAccess.getWILDCARDAccess().getAlternatives(), "rule__WILDCARD__Alternatives");
+					put(grammarAccess.getLETTERAccess().getAlternatives(), "rule__LETTER__Alternatives");
+					put(grammarAccess.getLETTER_NO_VXAccess().getAlternatives(), "rule__LETTER_NO_VX__Alternatives");
 					put(grammarAccess.getVersionComparatorAccess().getAlternatives(), "rule__VersionComparator__Alternatives");
 					put(grammarAccess.getNPMVersionRequirementAccess().getGroup_0(), "rule__NPMVersionRequirement__Group_0__0");
 					put(grammarAccess.getNPMVersionRequirementAccess().getGroup_1(), "rule__NPMVersionRequirement__Group_1__0");
 					put(grammarAccess.getLocalPathVersionRequirementAccess().getGroup(), "rule__LocalPathVersionRequirement__Group__0");
+					put(grammarAccess.getLocalPathVersionRequirementAccess().getGroup_0(), "rule__LocalPathVersionRequirement__Group_0__0");
 					put(grammarAccess.getURLVersionRequirementAccess().getGroup(), "rule__URLVersionRequirement__Group__0");
 					put(grammarAccess.getURLVersionRequirementAccess().getGroup_3(), "rule__URLVersionRequirement__Group_3__0");
 					put(grammarAccess.getURLVersionSpecifierAccess().getGroup_0(), "rule__URLVersionSpecifier__Group_0__0");
@@ -83,6 +86,8 @@ public class SemverParser extends AbstractContentAssistParser {
 					put(grammarAccess.getQualifierAccess().getGroup_2(), "rule__Qualifier__Group_2__0");
 					put(grammarAccess.getQualifierTagAccess().getGroup(), "rule__QualifierTag__Group__0");
 					put(grammarAccess.getQualifierTagAccess().getGroup_1(), "rule__QualifierTag__Group_1__0");
+					put(grammarAccess.getFILE_TAGAccess().getGroup(), "rule__FILE_TAG__Group__0");
+					put(grammarAccess.getSEMVER_TAGAccess().getGroup(), "rule__SEMVER_TAG__Group__0");
 					put(grammarAccess.getPATHAccess().getGroup(), "rule__PATH__Group__0");
 					put(grammarAccess.getURL_PROTOCOLAccess().getGroup(), "rule__URL_PROTOCOL__Group__0");
 					put(grammarAccess.getURLAccess().getGroup(), "rule__URL__Group__0");

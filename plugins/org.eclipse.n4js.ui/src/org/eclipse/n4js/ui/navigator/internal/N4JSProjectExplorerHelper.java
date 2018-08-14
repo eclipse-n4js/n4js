@@ -175,7 +175,7 @@ public class N4JSProjectExplorerHelper {
 			Collection<IN4JSProject> libs = newHashSet();
 			Collection<IN4JSProject> envs = newHashSet();
 			for (IN4JSProject p : runtimeLibraries) {
-				IN4JSProject dependency = builtInRuntimeLibraries.get(p.getProjectId());
+				IN4JSProject dependency = builtInRuntimeLibraries.get(p.getProjectName());
 				if (null != dependency) {
 					libs.add(dependency);
 				}
@@ -229,15 +229,15 @@ public class N4JSProjectExplorerHelper {
 
 		for (IN4JSProject directDependecy : directDependencies) {
 			if (directDependecy.exists() && directDependecy.isExternal()) {
-				IN4JSProject externalDepenency = mangelhaftProjects.get(directDependecy.getProjectId());
+				IN4JSProject externalDepenency = mangelhaftProjects.get(directDependecy.getProjectName());
 				if (null != externalDepenency) {
 					requiredMangelhaftLibs.add(externalDepenency);
 				} else {
-					externalDepenency = npmProjects.get(directDependecy.getProjectId());
+					externalDepenency = npmProjects.get(directDependecy.getProjectName());
 					if (null != externalDepenency) {
 						requiredNpmLibs.add(externalDepenency);
 					} else {
-						externalDepenency = langProjects.get(directDependecy.getProjectId());
+						externalDepenency = langProjects.get(directDependecy.getProjectName());
 						if (null != externalDepenency) {
 							requiredLangLibs.add(externalDepenency);
 						}
@@ -278,25 +278,25 @@ public class N4JSProjectExplorerHelper {
 	}
 
 	private Map<String, IN4JSProject> getAvailableNpmProjects() {
-		return uniqueIndex(from(getBuiltInLibraries(NPM_CATEGORY)), p -> p.getProjectId());
+		return uniqueIndex(from(getBuiltInLibraries(NPM_CATEGORY)), p -> p.getProjectName());
 	}
 
 	private Map<String, IN4JSProject> getAvailableLangProjects() {
-		return uniqueIndex(from(getBuiltInLibraries(LANG_CATEGORY)), p -> p.getProjectId());
+		return uniqueIndex(from(getBuiltInLibraries(LANG_CATEGORY)), p -> p.getProjectName());
 	}
 
 	private Map<String, IN4JSProject> getAvailableMangelhaftProjects() {
-		return uniqueIndex(from(getBuiltInLibraries(MANGELHAFT_CATEGORY)), p -> p.getProjectId());
+		return uniqueIndex(from(getBuiltInLibraries(MANGELHAFT_CATEGORY)), p -> p.getProjectName());
 	}
 
 	private Map<String, IN4JSProject> getBuiltInRuntimeEnvironments() {
 		return uniqueIndex(from(getBuiltInLibraries(RUNTIME_CATEGORY))
-				.filter(p -> RUNTIME_ENVIRONMENT.equals(p.getProjectType())), p -> p.getProjectId());
+				.filter(p -> RUNTIME_ENVIRONMENT.equals(p.getProjectType())), p -> p.getProjectName());
 	}
 
 	private Map<String, IN4JSProject> getBuiltInRuntimeLibraries() {
 		return uniqueIndex(from(getBuiltInLibraries(RUNTIME_CATEGORY))
-				.filter(p -> RUNTIME_LIBRARY.equals(p.getProjectType())), p -> p.getProjectId());
+				.filter(p -> RUNTIME_LIBRARY.equals(p.getProjectType())), p -> p.getProjectName());
 	}
 
 	private Iterable<IN4JSProject> getBuiltInLibraries(String externalLibraryName) {

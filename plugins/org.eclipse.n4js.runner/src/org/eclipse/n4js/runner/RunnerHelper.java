@@ -13,6 +13,7 @@ package org.eclipse.n4js.runner;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.emptyList;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -37,6 +38,7 @@ import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
 import org.eclipse.n4js.utils.FindArtifactHelper;
 import org.eclipse.n4js.utils.RecursionGuard;
 import org.eclipse.n4js.utils.ResourceNameComputer;
+import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
@@ -65,26 +67,27 @@ public class RunnerHelper {
 	/**
 	 * Returns list of absolute paths to each of the given projects' output folder in the local files system.
 	 */
-	public Collection<String> getCoreProjectPaths(List<IN4JSProject> projects) {
+	public Map<Path, String> getCoreProjectPaths(Set<IN4JSProject> projects) {
 		return projects.stream()
-				.map(project -> getProjectPaths(project))
-				.flatMap(paths -> paths.stream())
-				.filter(path -> !Strings.isNullOrEmpty(path))
-				.collect(Collectors.toSet());
-	}
-
-	private Collection<String> getProjectPaths(IN4JSProject project) {
-		Set<String> projectPaths = new HashSet<>();
-		projectPaths.add(getProjectPath(project));
-		return projectPaths;
+				.map(project -> getProjectNameAndPath(project))
+				.filter(nap -> nap != null)
+				.collect(Collectors.toMap(Pair::getKey, Pair::getValue));
 	}
 
 	/** get path to the project itself */
-	private String getProjectPath(IN4JSProject project) {
+	private Pair<Path, String> getProjectNameAndPath(IN4JSProject project) {
 		if (!project.exists())
 			return null;
-		final String pp = project.getLocationPath().normalize().toAbsolutePath().toString();
-		return pp;
+		final String name = project.getProjectName();
+		if (name == null)
+			return null;
+		final Path path = project.getLocationPath();
+		if (path == null)
+			return null;
+		final Path pathNormalized = path.normalize().toAbsolutePath();
+		if (pathNormalized.toString().isEmpty())
+			return null;
+		return Pair.of(pathNormalized, name);
 	}
 
 	/**
@@ -236,8 +239,8 @@ public class RunnerHelper {
 	private Optional<IN4JSProject> getCustomRuntimeEnvironmentProject(RuntimeEnvironment runEnv) {
 		// final RuntimeEnvironment reOfRunner = runnerRegistry.getDescriptor(runnerId).getEnvironment();
 		if (runEnv != null) {
-			final String projectId = runEnv.getProjectId();
-			return findRuntimeEnvironemtnWithName(projectId);
+			final String projectName = runEnv.getProjectName();
+			return findRuntimeEnvironemtnWithName(projectName);
 		}
 		return Optional.absent();
 	}
@@ -245,15 +248,15 @@ public class RunnerHelper {
 	/**
 	 * Looks up all runtime environment with provided name.
 	 *
-	 * @param projectId
+	 * @param projectName
 	 *            of the project that servers as the desired environment.
 	 * @return optional with project if found, empty optional otherwise.
 	 */
-	public Optional<IN4JSProject> findRuntimeEnvironemtnWithName(final String projectId,
+	public Optional<IN4JSProject> findRuntimeEnvironemtnWithName(final String projectName,
 			Iterable<IN4JSProject> projects) {
 		for (IN4JSProject project : projects) {
 			if (project.getProjectType() == ProjectType.RUNTIME_ENVIRONMENT
-					&& project.getProjectId().equals(projectId)) {
+					&& project.getProjectName().equals(projectName)) {
 				return Optional.of(project);
 			}
 		}
@@ -263,12 +266,12 @@ public class RunnerHelper {
 	/**
 	 * Looks up all runtime environment with provided name.
 	 *
-	 * @param projectId
+	 * @param projectName
 	 *            of the project that servers as the desired environment.
 	 * @return optional with project if found, empty optional otherwise.
 	 */
-	private Optional<IN4JSProject> findRuntimeEnvironemtnWithName(final String projectId) {
-		return findRuntimeEnvironemtnWithName(projectId, n4jsCore.findAllProjects());
+	private Optional<IN4JSProject> findRuntimeEnvironemtnWithName(final String projectName) {
+		return findRuntimeEnvironemtnWithName(projectName, n4jsCore.findAllProjects());
 	}
 
 	/**
@@ -385,10 +388,10 @@ public class RunnerHelper {
 		}
 
 		final Map<IN4JSProject, IN4JSProject> apiImplProjectMapping = new LinkedHashMap<>();
-		final List<String> missing = new ArrayList<>(); // projectIds of projects without an implementation
+		final List<String> missing = new ArrayList<>(); // projectNames of projects without an implementation
 		for (IN4JSProject dep : deps) {
 			if (dep != null) {
-				final String depId = dep.getProjectId();
+				final String depId = dep.getProjectName();
 				if (depId != null && apiImplMapping.isApi(depId)) {
 					// so: dep is an API project ...
 					final IN4JSProject impl = apiImplMapping.getImpl(depId, implementationId);
@@ -438,7 +441,7 @@ public class RunnerHelper {
 			apiImplMapping.enhance(batchedPivotNewDepList, n4jsCore.findAllProjects());
 			// go over new dependencies and decide:
 			for (IN4JSProject pivNewDep : batchedPivotNewDepList) {
-				final String depId = pivNewDep.getProjectId();
+				final String depId = pivNewDep.getProjectName();
 				if (apiImplMapping.isApi(depId)) {
 					// API-mapping
 					if (joinedApiImplProjectMapping.containsKey(pivNewDep)) {

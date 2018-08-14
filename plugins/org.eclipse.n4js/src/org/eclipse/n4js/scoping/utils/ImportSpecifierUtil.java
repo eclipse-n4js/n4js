@@ -22,12 +22,12 @@ import org.eclipse.xtext.naming.QualifiedName;
 public class ImportSpecifierUtil {
 
 	/** Returns provided project or one of its dependencies with matching project ID. */
-	public static IN4JSProject getDependencyWithID(String projectId, IN4JSProject project) {
-		if (Objects.equals(project.getProjectId(), projectId))
+	public static IN4JSProject getDependencyWithID(String projectName, IN4JSProject project) {
+		if (Objects.equals(project.getProjectName(), projectName))
 			return project;
 
 		for (IN4JSProject p : project.getDependencies()) {
-			if (Objects.equals(p.getProjectId(), projectId))
+			if (Objects.equals(p.getProjectName(), projectName))
 				return p;
 		}
 		return null;
@@ -39,8 +39,8 @@ public class ImportSpecifierUtil {
 	public static ImportType computeImportType(QualifiedName name, IN4JSProject project) {
 		final String firstSegment = name.getFirstSegment();
 		final IN4JSProject targetProject = getDependencyWithID(firstSegment, project);
-		final boolean firstSegmentIsProjectId = targetProject != null;
-		return ImportSpecifierUtil.computeImportType(name, firstSegmentIsProjectId, targetProject);
+		final boolean firstSegmentIsProjectName = targetProject != null;
+		return ImportSpecifierUtil.computeImportType(name, firstSegmentIsProjectName, targetProject);
 	}
 
 	/**
@@ -48,17 +48,17 @@ public class ImportSpecifierUtil {
 	 *
 	 * @param name
 	 *            for which import specifier type is computed
-	 * @param useProjectId
+	 * @param useProjectName
 	 *            flag if project name should be taken into consideration
 	 * @param project
 	 *            the project from which import will be specified
 	 * @return the {@link ImportType}
 	 */
-	public static ImportType computeImportType(QualifiedName name, boolean useProjectId,
+	public static ImportType computeImportType(QualifiedName name, boolean useProjectName,
 			IN4JSProject project) {
-		if (useProjectId) {
-			// PRIORITY 1: 'name' is a complete module specifier, i.e. projectId+'/'+moduleSpecifier
-			// -> search all Xtext index entries that match moduleSpecifier and filter by projectId
+		if (useProjectName) {
+			// PRIORITY 1: 'name' is a complete module specifier, i.e. projectName+'/'+moduleSpecifier
+			// -> search all Xtext index entries that match moduleSpecifier and filter by projectName
 			final QualifiedName moduleSpecifier;
 			if (name.getSegmentCount() == 1) {
 				// special case: no module specifier given (only a project ID), i.e. we have a pure project import
