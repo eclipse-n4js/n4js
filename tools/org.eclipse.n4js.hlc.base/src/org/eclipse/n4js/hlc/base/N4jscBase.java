@@ -233,11 +233,19 @@ public class N4jscBase implements IApplication {
 			required = false)
 	String logFile = "n4jsc.log";
 
+	/**
+	 * This option enables performance data collection and specifies the location of the performance report that will be
+	 * saved once the headless compiler terminates.
+	 */
 	@Option(name = "--performanceReport", aliases = "-pR",
 			// no usage, do not show in help
 			required = false)
 	File performanceReport = null;
 
+	/**
+	 * This option specifies the data collector key of the collector whose performanc data is saved in the
+	 * {@link #performanceReport} once the headless compiler terminates.
+	 */
 	@Option(name = "--performanceKey", aliases = "-pK",
 			// no usage, do not show in help
 			required = false)
