@@ -46,20 +46,20 @@ public enum RuntimeEnvironment {
 		static Map<String, RuntimeEnvironment> data = new HashMap<>();
 	}
 
-	private final String projectId;
+	private final String projectName;
 
-	private RuntimeEnvironment(String projectId) {
-		this.projectId = projectId;
-		DataMap.data.put(projectId, this);
+	private RuntimeEnvironment(String projectName) {
+		this.projectName = projectName;
+		DataMap.data.put(projectName, this);
 	}
 
 	/** @return {@link String} value */
-	public String getProjectId() {
-		return this.projectId;
+	public String getProjectName() {
+		return this.projectName;
 	}
 
 	/** @return instance corresponding to provided representation */
-	public static RuntimeEnvironment fromProjectId(String representation) {
+	public static RuntimeEnvironment fromProjectName(String representation) {
 		return DataMap.data.get(representation);
 	}
 }

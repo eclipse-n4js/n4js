@@ -28,8 +28,8 @@ import com.google.common.collect.UnmodifiableIterator;
  */
 public class MockWorkspace extends InternalN4JSWorkspace {
 
-	/** Default {@code projectId} used for the {@link MockProject}s in {@link MockWorkspace}. */
-	public static final String TEST_PROJECT__PROJECT_ID = "test";
+	/** Default {@code projectName} used for the {@link MockProject}s in {@link MockWorkspace}. */
+	public static final String TEST_PROJECT__PROJECT_NAME = "test";
 	/** Default {@code vendorId} used for the {@link MockProject}s in {@link MockWorkspace}. */
 	public static final String TEST_PROJECT__VENDOR_ID = "tester.id";
 
@@ -38,8 +38,8 @@ public class MockWorkspace extends InternalN4JSWorkspace {
 	/***/
 	public MockWorkspace() {
 		projectDescription = ProjectDescriptionFactory.eINSTANCE.createProjectDescription();
+		projectDescription.setProjectName(TEST_PROJECT__PROJECT_NAME);
 		projectDescription.setVendorName("tester");
-		projectDescription.setProjectId(TEST_PROJECT__PROJECT_ID);
 		projectDescription.setVendorId(TEST_PROJECT__VENDOR_ID);
 		projectDescription.setProjectType(ProjectType.APPLICATION);
 		VersionNumber versionNumber = SemverUtils.createVersionNumber(1, 0, 0);

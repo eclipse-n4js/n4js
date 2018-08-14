@@ -14,9 +14,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Maps.newLinkedHashMap;
 
-import java.io.File;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,6 +39,7 @@ import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseSourceContainer;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.resources.ExternalProject;
 
 import com.google.common.base.Optional;
@@ -76,22 +76,26 @@ public class N4JSEclipseModel extends N4JSModel {
 					"Expected 2 segment counts for platform resource URI. Was " + location.segmentCount());
 		}
 
-		final String projectName = location.lastSegment();
+		final String projectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location);
 		final IProject project;
 		if (location.isFile()) {
 			project = externalLibraryWorkspace.getProject(projectName);
 			checkNotNull(project, "Project does not exist in external workspace. URI: " + location);
 		} else {
-			project = workspace.getProject(projectName);
+			final String eclipseProjectName = ProjectDescriptionUtils
+					.convertN4JSProjectNameToEclipseProjectName(projectName);
+			project = workspace.getProject(eclipseProjectName);
 		}
 
 		return doGetN4JSProject(project, location);
 	}
 
 	@Override
-	protected IN4JSProject newAbsentProject(String projectId) {
-		final URI absent = URI.createPlatformResourceURI(projectId, false);
-		return new N4JSEclipseProject(workspace.getProject(projectId), absent, this);
+	protected IN4JSProject newAbsentProject(String projectName) {
+		final URI uri = URI.createPlatformResourceURI(projectName, false);
+		final String eclipseProjectName = ProjectDescriptionUtils
+				.convertN4JSProjectNameToEclipseProjectName(projectName);
+		return new N4JSEclipseProject(workspace.getProject(eclipseProjectName), uri, this);
 	}
 
 	@Override
@@ -153,11 +157,7 @@ public class N4JSEclipseModel extends N4JSModel {
 	}
 
 	public N4JSEclipseProject getN4JSProject(IProject project) {
-		if (project instanceof ExternalProject) {
-			return doGetN4JSProject(project, URI.createFileURI(new File(project.getLocationURI()).getAbsolutePath()));
-		} else {
-			return doGetN4JSProject(project, URI.createPlatformResourceURI(project.getName(), true));
-		}
+		return doGetN4JSProject(project, URIUtils.convert(project));
 	}
 
 	private N4JSEclipseProject doGetN4JSProject(IProject project, URI location) {
@@ -269,21 +269,22 @@ public class N4JSEclipseModel extends N4JSModel {
 	}
 
 	public Map<String, IN4JSProject> findAllProjectMappings() {
-		final Map<String, IN4JSProject> workspaceProjectMapping = newLinkedHashMap();
+		final Map<String, IN4JSProject> workspaceProjectMapping = new LinkedHashMap<>();
 		for (IProject project : workspace.getProjects()) {
 			if (project.isOpen()) {
-				N4JSEclipseProject n4jsProject = getN4JSProject(project);
-				workspaceProjectMapping.put(n4jsProject.getProjectId(), n4jsProject);
+				N4JSProject n4jsProject = getN4JSProject(project);
+				workspaceProjectMapping.put(n4jsProject.getProjectName(), n4jsProject);
 			}
 		}
 
 		for (IProject project : externalLibraryWorkspace.getProjects()) {
 			if (!workspaceProjectMapping.containsKey(project.getName())) {
-				N4JSEclipseProject n4jsProject = getN4JSProject(project);
-				workspaceProjectMapping.put(n4jsProject.getProjectId(), n4jsProject);
+				N4JSProject n4jsProject = getN4JSProject(project);
+				workspaceProjectMapping.put(n4jsProject.getProjectName(), n4jsProject);
 			}
 		}
 
 		return workspaceProjectMapping;
 	}
+
 }

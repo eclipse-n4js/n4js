@@ -278,6 +278,6 @@ public class ExternalProjectsCollector {
 		return from(n4Project.getAllDirectDependencies())
 				.filter(IN4JSProject.class)
 				.filter(p -> p.isExternal())
-				.transform(p -> p.getProjectId());
+				.transform(p -> p.getProjectName());
 	}
 }

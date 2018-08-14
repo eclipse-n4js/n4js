@@ -54,14 +54,14 @@ public class ExternalLibrariesInstallHelper {
 		// remove npms
 		externals.maintenanceDeleteNpms(multistatus);
 
-		Map<String, VersionNumber> projectIdsOfShippedCode = StreamSupport
+		Map<String, VersionNumber> projectNamesOfShippedCode = StreamSupport
 				.stream(dependenciesHelper.getAvailableProjectsDescriptions(true).spliterator(), false)
-				.collect(Collectors.toMap(pd -> pd.getProjectId(), pd -> pd.getProjectVersion()));
+				.collect(Collectors.toMap(pd -> pd.getProjectName(), pd -> pd.getProjectVersion()));
 
 		// install npms from target platform
 		Map<String, String> dependenciesToInstall = dependenciesHelper.calculateDependenciesToInstall();
-		removeDependenciesToShippedCodeIfVersionMatches(dependenciesToInstall, projectIdsOfShippedCode);
-		addDependenciesForRemainingShippedCode(dependenciesToInstall, projectIdsOfShippedCode.keySet());
+		removeDependenciesToShippedCodeIfVersionMatches(dependenciesToInstall, projectNamesOfShippedCode);
+		addDependenciesForRemainingShippedCode(dependenciesToInstall, projectNamesOfShippedCode.keySet());
 		final SubMonitor subMonitor3 = monitor.split(45);
 
 		externals.installNoUpdate(dependenciesToInstall, multistatus, subMonitor3);
@@ -78,16 +78,16 @@ public class ExternalLibrariesInstallHelper {
 	 * FIXME GH-957 change implementation to use a proper SemVer version-range-check instead of the string compare!
 	 */
 	private void removeDependenciesToShippedCodeIfVersionMatches(Map<String, String> dependenciesToInstall,
-			Map<String, VersionNumber> projectIdsOfShippedCode) {
+			Map<String, VersionNumber> projectNamesOfShippedCode) {
 		for (Entry<String, String> depToInstall : dependenciesToInstall.entrySet()) {
-			String projectId = depToInstall.getKey();
-			VersionNumber availableVersionInShippedCode = projectIdsOfShippedCode.get(projectId);
+			String projectName = depToInstall.getKey();
+			VersionNumber availableVersionInShippedCode = projectNamesOfShippedCode.get(projectName);
 			if (availableVersionInShippedCode != null) {
 				String versionConstraintStr = depToInstall.getValue();
 				if (versionConstraintStr != null && versionConstraintStr.trim().equals("@\">=0.1.0 <=0.1.0\"")) {
 					// the "fake" version of the project in the shipped code is requested,
 					// so remove from list of dependencies to be installed:
-					dependenciesToInstall.remove(projectId);
+					dependenciesToInstall.remove(projectName);
 				}
 			}
 		}
@@ -103,12 +103,12 @@ public class ExternalLibrariesInstallHelper {
 	 * project depends on the others with a fixed version.
 	 */
 	private void addDependenciesForRemainingShippedCode(Map<String, String> dependenciesToInstall,
-			Set<String> projectIdsOfShippedCode) {
-		Set<String> projectIdsOfShippedCodeToInstall = new HashSet<>(dependenciesToInstall.keySet());
-		projectIdsOfShippedCodeToInstall.retainAll(projectIdsOfShippedCode);
-		if (!projectIdsOfShippedCodeToInstall.isEmpty()
-				&& projectIdsOfShippedCodeToInstall.size() < projectIdsOfShippedCode.size()) {
-			Set<String> versionConstraintsOfShippedCodeToInstall = projectIdsOfShippedCodeToInstall
+			Set<String> projectNamesOfShippedCode) {
+		Set<String> projectNamesOfShippedCodeToInstall = new HashSet<>(dependenciesToInstall.keySet());
+		projectNamesOfShippedCodeToInstall.retainAll(projectNamesOfShippedCode);
+		if (!projectNamesOfShippedCodeToInstall.isEmpty()
+				&& projectNamesOfShippedCodeToInstall.size() < projectNamesOfShippedCode.size()) {
+			Set<String> versionConstraintsOfShippedCodeToInstall = projectNamesOfShippedCodeToInstall
 					.stream()
 					.map(id -> dependenciesToInstall.get(id))
 					.collect(Collectors.toSet());
@@ -118,8 +118,8 @@ public class ExternalLibrariesInstallHelper {
 			String versionConstraint = versionConstraintsOfShippedCodeToInstall.stream().findFirst()
 					.orElse(null);
 			if (versionConstraint != null) {
-				for (String id : projectIdsOfShippedCode) {
-					if (!projectIdsOfShippedCodeToInstall.contains(id)) {
+				for (String id : projectNamesOfShippedCode) {
+					if (!projectNamesOfShippedCodeToInstall.contains(id)) {
 						dependenciesToInstall.put(id, versionConstraint);
 					}
 				}

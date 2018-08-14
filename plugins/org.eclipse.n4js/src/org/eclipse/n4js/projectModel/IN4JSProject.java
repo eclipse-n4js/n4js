@@ -14,6 +14,7 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.internal.N4JSProject;
@@ -23,6 +24,7 @@ import org.eclipse.n4js.projectDescription.ModuleLoader;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
@@ -48,9 +50,18 @@ public interface IN4JSProject {
 	public final static String PACKAGE_JSON = N4JSGlobals.PACKAGE_JSON;
 
 	/**
-	 * @return the receiving project's ID. Also available if the project does not exist.
+	 * Returns the receiving project's <em>N4JS project name</em>, as defined at
+	 * {@link ProjectDescriptionUtils#isProjectNameWithScope(String) here}.
+	 * <p>
+	 * For scoped projects this will include the scope name and be of the form {@code @myScope/myProject}. Always equal
+	 * to value of the top-level "name" property in the {@code package.json} (enforced by a validation).
+	 * <p>
+	 * NOTE: in the UI case, this is distinct from the <em>Eclipse project name</em> as returned by
+	 * {@link IProject#getName()}.
+	 * <p>
+	 * For more details, see {@link ProjectDescriptionUtils#isProjectNameWithScope(String)}.
 	 */
-	String getProjectId();
+	String getProjectName();
 
 	/**
 	 * The project's location. Also available if the project does not exist. This will return a platform URI when
@@ -108,7 +119,7 @@ public interface IN4JSProject {
 	ImmutableList<? extends IN4JSProject> getProvidedRuntimeLibraries();
 
 	/**
-	 * Returns projectId of the extended runtime, if any.
+	 * Returns projectName of the extended runtime, if any.
 	 *
 	 * @return optional but not null string
 	 */
@@ -216,7 +227,8 @@ public interface IN4JSProject {
 	 * Returns the name of the package this {@code project} provides type definitions for.
 	 *
 	 * {@code null} if this project does not specify the property (i.e. not a type definitions project (cf.
-	 * {@link ProjectType#DEFINITION}).
+	 * {@link ProjectType#DEFINITION})).
 	 */
-	public String getDefinesPackage();
+	public String getDefinesPackageName();
+
 }

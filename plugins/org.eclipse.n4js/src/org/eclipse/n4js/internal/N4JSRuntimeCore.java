@@ -101,7 +101,7 @@ public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCor
 	public Map<String, IN4JSProject> findAllProjectMappings() {
 		Map<String, IN4JSProject> allProjectMappings = new HashMap<>();
 		for (IN4JSProject project : findAllProjects()) {
-			allProjectMappings.put(project.getProjectId(), project);
+			allProjectMappings.put(project.getProjectName(), project);
 		}
 		return allProjectMappings;
 	}

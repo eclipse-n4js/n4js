@@ -66,7 +66,6 @@ import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.utils.DependencyTraverser
 import org.eclipse.n4js.utils.DependencyTraverser.DependencyVisitor
 import org.eclipse.n4js.utils.ProjectDescriptionLoader
-import org.eclipse.n4js.utils.ProjectDescriptionUtils
 import org.eclipse.n4js.utils.WildcardPathFilterHelper
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
@@ -120,7 +119,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	
 	/**
 	 * Key to store a map of all available projects in the validation context for re-use across different check-methods.
-	 * @See {@link #getAllExistingProjectIds()} 
+	 * @See {@link #getAllExistingProjectNames()} 
 	 */
 	private static String ALL_EXISTING_PROJECT_CACHE = "ALL_EXISTING_PROJECT_CACHE";
 	
@@ -172,7 +171,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		val Map<String, JSONStringLiteral> mQName2rtDep = newHashMap()
 
 		val description = getProjectDescription();
-		val projectName = description.projectId;
+		val projectName = description.projectName;
 
 		// if the project name cannot be determined, exit early
 		if (projectName === null) {
@@ -211,7 +210,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			val optSrcContainer = findN4JSSourceContainer(ieoT.EObjectURI)
 			if (optSrcContainer.present) {
 				val srcCont = optSrcContainer.get;
-				val depQName = srcCont.project.projectId;
+				val depQName = srcCont.project.projectName;
 				val dependency = mQName2rtDep.get(depQName);
 				if (dependency === null) {
 					// TODO IDE-1735 typically a static Polyfill - can only be used inside of a single project
@@ -418,8 +417,8 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 
 		private def boolean hasTestDependency(IN4JSProject p) {
 			for (IN4JSProject pDep : p.dependencies) {
-				if ((N4JSGlobals.VENDOR_ID.equals(pDep.vendorID) && (N4JSGlobals.MANGELHAFT.equals(pDep.projectId))
-					|| N4JSGlobals.MANGELHAFT_ASSERT.equals(pDep.projectId)
+				if ((N4JSGlobals.VENDOR_ID.equals(pDep.vendorID) && (N4JSGlobals.MANGELHAFT.equals(pDep.projectName))
+					|| N4JSGlobals.MANGELHAFT_ASSERT.equals(pDep.projectName)
 				)) {
 					return true;
 				}
@@ -429,7 +428,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	}
 
 	private def String calculateName(IN4JSProject it) {
-		it.projectId;
+		it.projectName;
 	}
 
 	/**
@@ -445,14 +444,14 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		if (TEST == description.projectType) {
 			val projects = description.testedProjects;
 			if (!projects.nullOrEmpty) {
-				val allProjects = getAllExistingProjectIds();
+				val allProjects = getAllExistingProjectNames();
 				val head = projects.head;
-				val refProjectType = allProjects.get(head.projectId)?.projectType
+				val refProjectType = allProjects.get(head.projectName)?.projectType
 				
 				// check whether 'projects' contains a dependency to an existing project of different
 				// type than 'head'
-				if (projects.exists[testedProject | allProjects.containsKey(testedProject.projectId) &&
-					refProjectType != allProjects.get(testedProject.projectId)?.projectType
+				if (projects.exists[testedProject | allProjects.containsKey(testedProject.projectName) &&
+					refProjectType != allProjects.get(testedProject.projectName)?.projectType
 				]) {
 					addIssue(
 						messageForMISMATCHING_TESTED_PROJECT_TYPES, 
@@ -481,14 +480,14 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		
 		if (LIBRARY == description.projectType && !description.implementationId.nullOrEmpty) {
 			val expectedImplementationId = description.implementationId;
-			val allProjects = getAllExistingProjectIds();
+			val allProjects = getAllExistingProjectNames();
 			
 			dependencyPairs.filterNull.forEach[ pair |
-				val dependencyProjectId = pair.name;
-				val actualImplementationId = allProjects.get(dependencyProjectId)?.implementationId?.orNull;
+				val dependencyProjectName = pair.name;
+				val actualImplementationId = allProjects.get(dependencyProjectName)?.implementationId?.orNull;
 				if (!actualImplementationId.nullOrEmpty && actualImplementationId != expectedImplementationId) {
 					val message = getMessageForMISMATCHING_IMPLEMENTATION_ID(expectedImplementationId, 
-						dependencyProjectId, actualImplementationId);
+						dependencyProjectName, actualImplementationId);
 					addIssue(message, pair, MISMATCHING_IMPLEMENTATION_ID);
 				}
 			];
@@ -501,32 +500,32 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	 */
 	@CheckProperty(property = DEPENDENCIES)
 	def checkExternalProjectDoesNotReferenceWorkspaceProject(JSONValue dependenciesValue) {
-		val allProjects = getAllExistingProjectIds();
+		val allProjects = getAllExistingProjectNames();
 		val description = getProjectDescription();
 		
 		// if the project name cannot be determined, exit early
-		if (description.projectId === null) {
+		if (description.projectName === null) {
 			return;
 		}
 		
-		val currentProject = allProjects.get(description.projectId);
+		val currentProject = allProjects.get(description.projectName);
 
 		// Nothing to do with non-existing, missing and/or external projects.
 		if (null === currentProject || !currentProject.exists || currentProject.external) {
 			return;
 		}
 
-		val visitedProjectIds = newHashSet();
+		val visitedProjectNames = newHashSet();
 		val stack = new Stack;
 		stack.addAll(currentProject.allDirectDependencies.filter(IN4JSProject).filter[external]);
 
 		while (!stack.isEmpty) {
 
 			val actual = stack.pop;
-			val actualId = actual.projectId;
+			val actualId = actual.projectName;
 			checkState(actual.external, '''Implementation error. Only external projects are expected: «actual».''');
 
-			if (!visitedProjectIds.add(actualId)) {
+			if (!visitedProjectNames.add(actualId)) {
 				// Cyclic dependency. This will be handles somewhere else. Nothing to do.
 				return;
 			}
@@ -535,7 +534,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			// If external has any *NON* external dependency we should raise a warning.
 			val workspaceDependency = actualDirectDependencies.findFirst[!external];
 			if (null !== workspaceDependency) {
-				val workspaceDependencyId = workspaceDependency.projectId;
+				val workspaceDependencyId = workspaceDependency.projectName;
 				val message = getMessageForEXTERNAL_PROJECT_REFERENCES_WORKSPACE_PROJECT(actualId, workspaceDependencyId);
 				addIssue(
 					message,
@@ -564,7 +563,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		checkReferencedProjects(references, DEFINITION_TYPE.forN4jsProjects, "typeDependencies", false, false);
 		
 		val dependenciesById = getDependencies(true).toMap(
-			[dep | dep.referencedProjectId], [dep | dep]);
+			[dep | dep.referencedProjectName], [dep | dep]);
 		
 		for (reference : references) {
 			internalCheckForRuntimeDependencyForDefinitionProjects(reference, dependenciesById);
@@ -579,7 +578,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	 */
 	private def internalCheckForRuntimeDependencyForDefinitionProjects(ValidationProjectReference reference,
 		Map<String, ValidationProjectReference> declaredDependencyIds) {
-		val n4jsProject = allExistingProjectIds.get(reference.getReferencedProjectId());
+		val n4jsProject = allExistingProjectNames.get(reference.getReferencedProjectName());
 		
 		// defensive null-check
 		if (n4jsProject === null) {
@@ -589,14 +588,14 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		if (n4jsProject.projectType != ProjectType.DEFINITION) {
 			return;
 		}
-		val definesPackage = n4jsProject.definesPackage;
+		val definesPackage = n4jsProject.definesPackageName;
 		if (definesPackage === null) {
 			return;
 		}
 		
 		// check corresponding runtime dependency has been declared
 		if (!declaredDependencyIds.containsKey(definesPackage)) {
-			addIssue(IssueCodes.getMessageForPKGJ_IMPL_PROJECT_IS_MISSING_FOR_TYPE_DEF(definesPackage, reference.referencedProjectId),
+			addIssue(IssueCodes.getMessageForPKGJ_IMPL_PROJECT_IS_MISSING_FOR_TYPE_DEF(definesPackage, reference.referencedProjectName),
 				reference.astRepresentation, IssueCodes.PKGJ_IMPL_PROJECT_IS_MISSING_FOR_TYPE_DEF);
 		}
 	}
@@ -648,13 +647,13 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	 */
 	def internalValidateAPIProjectReferences(Iterable<ValidationProjectReference> references) {
 		val libraryDependenciesWithImplId = references
-			.map[ref | Pair.of(ref, allExistingProjectIds.get(ref.referencedProjectId))]
+			.map[ref | Pair.of(ref, allExistingProjectNames.get(ref.referencedProjectName))]
 			.filterNull
 			.filter[pair | pair.value.projectType == LIBRARY && pair.value.implementationId.present];
 		
 		for (projectPair : libraryDependenciesWithImplId) {
 			val reference = projectPair.key;
-			addIssue(IssueCodes.getMessageForINVALID_API_PROJECT_DEPENDENCY(reference.referencedProjectId), reference.astRepresentation, 
+			addIssue(IssueCodes.getMessageForINVALID_API_PROJECT_DEPENDENCY(reference.referencedProjectName), reference.astRepresentation, 
 				IssueCodes.INVALID_API_PROJECT_DEPENDENCY);
 		}
 		
@@ -1036,7 +1035,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	  */
 	@Data
 	private static class ValidationProjectReference {
-		String referencedProjectId;
+		String referencedProjectName;
 		NPMVersionRequirement npmVersion;
 		EObject astRepresentation;
 	}
@@ -1076,11 +1075,9 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			if (pair.value instanceof JSONStringLiteral) {
 				val stringLit = pair.value as JSONStringLiteral;
 				val prjID = pair.name;
-				if (!ProjectDescriptionUtils.isProjectNameWithScope(prjID)) {
-					val npmVersion = semverHelper.parse(stringLit.value);
-					val vpr = new ValidationProjectReference(prjID, npmVersion, pair);
-					vprs.add(vpr);
-				}
+				val npmVersion = semverHelper.parse(stringLit.value);
+				val vpr = new ValidationProjectReference(prjID, npmVersion, pair);
+				vprs.add(vpr);
 			}
 		}
 
@@ -1107,8 +1104,6 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	 * This includes checking whether the referenced project can be found and validating the given 
 	 * {@link ValidationProjectReference#versionConstraint} if specified.
 	 * 
-	 * @param currentProjectId 
-	 * 				The project name of the currently validated project.
 	 * @param references 
 	 * 				The list of project references to validate.
 	 * @param allProjects 
@@ -1124,8 +1119,8 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		String sectionLabel, boolean enforceDependency, boolean allowReflexive) {
 
 		val description = getProjectDescription();
-		val currentProjectId = description.projectId;
-		val allProjects = getAllExistingProjectIds();
+		val currentProjectName = description.projectName;
+		val allProjects = getAllExistingProjectNames();
 		
 		// keeps track of all valid references
 		val existentIds = HashMultimap.<String, ValidationProjectReference>create;
@@ -1135,7 +1130,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		
 		references.forEach[ref | 
 			// check project existence.
-			val id = ref.referencedProjectId;
+			val id = ref.referencedProjectName;
 			// Assuming completely broken AST.
 			if (null !== id) {
 				// check for empty project ID
@@ -1146,7 +1141,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 				}
 				
 				// obtain corresponding IN4JSProject handle
-				var project = allProjects.get(id);
+				val project = allProjects.get(id);
 
 				// type cannot be resolved from index, hence project does not exist in workspace.
 				if (null === project || null === project.projectType) {
@@ -1161,7 +1156,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 				}
 				
 				// create only a  single validation issue for a particular project reference.
-				if (currentProjectId == id && !allowReflexive) {
+				if (currentProjectName == id && !allowReflexive) {
 					// reflexive self-references
 					addProjectReferencesItselfIssue(ref.astRepresentation);
 					return;
@@ -1197,7 +1192,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		val currentVendor = getProjectDescription().vendorId;
 		
 		validProjectRefs.asMap.keySet.forEach [
-			// grouped just by projectID
+			// grouped just by projectName
 			if (validProjectRefs.get(it).size > 1) {
 				val referencesByNameAndVendor = HashMultimap.<String, ValidationProjectReference>create;
 				validProjectRefs.get(it).forEach [
@@ -1211,7 +1206,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 						mappedRefs 
 							.sortBy[NodeModelUtils.findActualNodeFor(it.astRepresentation).offset]
 							.tail
-							.forEach [ ref | addDuplicateProjectReferenceIssue(ref.astRepresentation, ref.referencedProjectId)];
+							.forEach [ ref | addDuplicateProjectReferenceIssue(ref.astRepresentation, ref.referencedProjectName)];
 					}
 				]
 			}
@@ -1226,8 +1221,8 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		val declaredDependencies = getDeclaredProjectDependencies();
 		
 		references.forEach[reference |
-			if (!declaredDependencies.containsKey(reference.referencedProjectId)) {
-				addIssue(IssueCodes.getMessageForPKGJ_PROJECT_REFERENCE_MUST_BE_DEPENDENCY(reference.referencedProjectId, sectionLabel),
+			if (!declaredDependencies.containsKey(reference.referencedProjectName)) {
+				addIssue(IssueCodes.getMessageForPKGJ_PROJECT_REFERENCE_MUST_BE_DEPENDENCY(reference.referencedProjectName, sectionLabel),
 					reference.astRepresentation, IssueCodes.PKGJ_PROJECT_REFERENCE_MUST_BE_DEPENDENCY);
 			}
 		]
@@ -1261,7 +1256,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	protected def ProjectDescription getProjectDescription() {
 		return contextMemoize(PROJECT_DESCRIPTION_CACHE, [
 			val doc = getDocument();
-			projectDescriptionLoader.loadProjectDescriptionAtLocation(doc.eResource.URI.trimSegments(1), doc, false);
+			projectDescriptionLoader.loadProjectDescriptionAtLocation(doc.eResource.URI.trimSegments(1), doc);
 		]);
 	}
 
@@ -1273,7 +1268,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	protected def Map<String, ProjectDependency> getDeclaredProjectDependencies() {
 		return contextMemoize(DECLARED_DEPENDENCIES_CACHE, [
 			val description = getProjectDescription();
-			return description.projectDependencies.toMap[d | d.projectId];
+			return description.projectDependencies.toMap[d | d.projectName];
 		]);
 	}
 
@@ -1289,8 +1284,8 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		addIssue(messageForPROJECT_REFERENCES_ITSELF, target, PROJECT_REFERENCES_ITSELF);
 	}
 
-	private def addInvalidProjectTypeIssue(EObject target, String projectId, ProjectType type, String sectionLabel) {
-		addIssue(getMessageForINVALID_PROJECT_TYPE_REF(projectId, type.label, sectionLabel),
+	private def addInvalidProjectTypeIssue(EObject target, String projectName, ProjectType type, String sectionLabel) {
+		addIssue(getMessageForINVALID_PROJECT_TYPE_REF(projectName, type.label, sectionLabel),
 			target, INVALID_PROJECT_TYPE_REF);
 	}
 
@@ -1333,10 +1328,10 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	 *
 	 * The result of this method is cached in the validation context.
 	 */
-	private def Map<String, IN4JSProject> getAllExistingProjectIds() {
+	private def Map<String, IN4JSProject> getAllExistingProjectNames() {
 		return contextMemoize(ALL_EXISTING_PROJECT_CACHE) [
 			val Map<String, IN4JSProject> res = new HashMap
-			findAllProjects.filter[exists].forEach[p | res.put(p.projectId, p)]
+			findAllProjects.filter[exists].forEach[p | res.put(p.projectName, p)]
 			return res
 		]
 	}

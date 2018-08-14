@@ -10,9 +10,9 @@
  */
 package org.eclipse.n4js.transpiler.utils;
 
+import static java.util.Collections.emptyList;
 import static org.eclipse.n4js.AnnotationDefinition.PROVIDES_DEFAULT_IMPLEMENTATION;
 import static org.eclipse.n4js.AnnotationDefinition.PROVIDES_INITIALZER;
-import static java.util.Collections.emptyList;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,13 +32,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xtext.EcoreUtil2;
-import org.eclipse.xtext.xbase.lib.Pair;
-
-import com.google.common.collect.LinkedHashMultimap;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
 import org.eclipse.n4js.compare.ProjectCompareHelper;
 import org.eclipse.n4js.compare.ProjectComparisonEntry;
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
@@ -66,6 +59,12 @@ import org.eclipse.n4js.ts.types.util.AccessorTuple;
 import org.eclipse.n4js.ts.types.util.MemberList;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
+import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.xbase.lib.Pair;
+
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * Class for storing Api-related information about missing implementations. For a Module (Script) the API-compare will
@@ -553,10 +552,10 @@ public class ScriptApiTracker {
 	}
 
 	/**
-	 * Compares projectId and vendorId
+	 * Compares projectName and vendorId
 	 */
 	boolean isSameProject(TModule m1, TModule m2) {
-		return m1 != null && m1.getProjectId().equals(m2.getProjectId())
+		return m1 != null && m1.getProjectName().equals(m2.getProjectName())
 				&& m1.getVendorID().equals(m2.getVendorID());
 	}
 
