@@ -43,9 +43,6 @@ Contributors:
 			SWTBot tests can run with the common heap size settings and can check out the required git repositories that is why they 
 			should run earlier than plug-in UI tests.
 		 -->
-		<module>org.eclipse.n4js.ui.tests</module>
-		<module>org.eclipse.n4js.xpect.ui.tests</module>
-		<module>org.eclipse.n4js.n4ide.spec.tests</module> 
 
 				<!-- Runner tests -->
 		<module>org.eclipse.n4js.runner.ui.tests</module>
