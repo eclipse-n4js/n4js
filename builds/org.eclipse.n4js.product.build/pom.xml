@@ -102,6 +102,7 @@ Contributors:
 									<resources>
 										<resource>
 											<directory>filtertemplates</directory>
+											<directory>icons</directory>
 											<includes>
 												<include>*</include>
 											</includes>
