@@ -196,6 +196,11 @@ public class ProjectDescriptionUtils {
 	 * Tells if the given NPM scope name is valid.
 	 */
 	public static boolean isValidScopeName(String name) {
+		// if present, remove scope prefix character
+		if (name.startsWith(NPM_SCOPE_PREFIX)) {
+			return isValidNpmPackageName(name.substring(1));
+		}
+
 		return isValidNpmPackageName(name);
 	}
 

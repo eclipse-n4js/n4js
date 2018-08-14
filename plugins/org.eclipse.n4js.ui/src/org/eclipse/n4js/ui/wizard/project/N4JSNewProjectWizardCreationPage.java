@@ -42,6 +42,7 @@ import java.util.regex.Pattern;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.BeanProperties;
 import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
@@ -60,6 +61,7 @@ import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.packagejson.PackageJsonResourceDescriptionExtension;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.layout.GridData;
@@ -70,7 +72,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
+import org.eclipse.ui.dialogs.ExtensibleWizardNewProjectCreationPage;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 
 import com.google.inject.Injector;
@@ -78,7 +80,7 @@ import com.google.inject.Injector;
 /**
  * Wizard page for configuring a new N4JS project.
  */
-public class N4JSNewProjectWizardCreationPage extends WizardNewProjectCreationPage {
+public class N4JSNewProjectWizardCreationPage extends ExtensibleWizardNewProjectCreationPage {
 
 	private final N4JSProjectInfo projectInfo;
 
@@ -163,6 +165,35 @@ public class N4JSNewProjectWizardCreationPage extends WizardNewProjectCreationPa
 		dbc.updateTargets();
 
 		setControl(control);
+	}
+
+	@Override
+	public String getProjectName() {
+		return ProjectDescriptionUtils.getPlainProjectName(super.getProjectName());
+	}
+
+	@Override
+	public IProject getProjectHandle() {
+		// make sure the validated project handle considers the eclipse representation
+		// of scoped projects
+		final String eclipseProjectName = ProjectDescriptionUtils
+				.convertN4JSProjectNameToEclipseProjectName(getProjectName());
+		return ResourcesPlugin.getWorkspace().getRoot().getProject(
+				eclipseProjectName);
+	}
+
+	/**
+	 * Returns the full project name including the scope (e.g. {@code @scope/*}) prefix.
+	 */
+	protected String getProjectNameWithScope() {
+		return super.getProjectName();
+	}
+
+	@Override
+	@SuppressWarnings("restriction")
+	protected void setLocationForSelection() {
+		// use scoped project name for project location
+		locationArea.updateProjectName(getProjectNameWithScope());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -275,7 +306,7 @@ public class N4JSNewProjectWizardCreationPage extends WizardNewProjectCreationPa
 
 		if (valid) {
 			String errorMsg = null;
-			final String projectName = getProjectName();
+			final String projectName = getProjectNameWithScope();
 			final String vendorId = projectInfo.getVendorId();
 
 			if (LIBRARY.equals(projectInfo.getProjectType())) {
@@ -302,6 +333,7 @@ public class N4JSNewProjectWizardCreationPage extends WizardNewProjectCreationPa
 				}
 			}
 
+			// vendorId constraints
 			if (!VENDOR_ID_PATTERN.matcher(vendorId).matches()) {
 				errorMsg = "Invalid vendor id.";
 			}
@@ -309,6 +341,7 @@ public class N4JSNewProjectWizardCreationPage extends WizardNewProjectCreationPa
 				errorMsg = "Vendor id must not be empty.";
 			}
 
+			// projectName constraints
 			if (isNullOrEmpty(projectName)) {
 				errorMsg = "Project name should be specified.";
 			}
@@ -317,10 +350,8 @@ public class N4JSNewProjectWizardCreationPage extends WizardNewProjectCreationPa
 				errorMsg = "Project name should not contain any whitespace characters.";
 			}
 
-			final char leadincChar = projectName.charAt(0);
-			if (!is('_').or(JAVA_LETTER).matches(leadincChar)) {
-				errorMsg = "Project name should start either an upper or a lower case character "
-						+ "from the Latin alphabet or with the underscore character.";
+			if (!ProjectDescriptionUtils.isValidProjectName(projectName)) {
+				errorMsg = "Invalid project name \"" + projectName + "\".";
 			}
 
 			setErrorMessage(errorMsg);
@@ -341,8 +372,15 @@ public class N4JSNewProjectWizardCreationPage extends WizardNewProjectCreationPa
 	}
 
 	private void updateModel() {
-		projectInfo.setProjectName(getProjectName());
-		if (useDefaults()) {
+		// use eclipse project name in model
+		final String eclipseProjectName = ProjectDescriptionUtils
+				.convertN4JSProjectNameToEclipseProjectName(getProjectNameWithScope());
+		projectInfo.setProjectName(eclipseProjectName);
+
+		final boolean isScoped = getProjectNameWithScope() != getProjectName();
+		if (useDefaults() && isScoped) {
+			projectInfo.setProjectLocation(getLocationPath().append(getProjectNameWithScope()));
+		} else if (useDefaults()) {
 			projectInfo.setProjectLocation(null);
 		} else {
 			projectInfo.setProjectLocation(getLocationPath());
