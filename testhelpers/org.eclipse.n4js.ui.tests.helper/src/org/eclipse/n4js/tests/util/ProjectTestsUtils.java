@@ -227,14 +227,19 @@ public class ProjectTestsUtils {
 			}
 		}, monitor);
 
-		// TODO IDE-3141 remove this temporary work-around for random test failures due to invalid index
-		for (int i = 0; i < 3; i++) {
-			sleep(200);
-			waitForAllJobs();
-		}
-		// END OF WORK-AROUND
+		waitLongForAllJobs();
 
 		return project;
+	}
+
+	// TODO IDE-3141 remove this temporary work-around for random test failures due to invalid index
+	@SuppressWarnings("javadoc")
+	public static void waitLongForAllJobs() {
+		for (int i = 0; i < 5; i++) {
+			sleep(200);
+			UIUtils.waitForUiThread();
+			waitForAllJobs();
+		}
 	}
 
 	private static void sleep(long millis) {
