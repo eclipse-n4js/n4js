@@ -332,6 +332,12 @@ public class LibraryManager {
 		for (ProjectDependency pDep : description.getProjectDependencies()) {
 			String name = pDep.getProjectName();
 			NPMVersionRequirement version = NO_VERSION_REQUIREMENT;
+
+			// remove this in GH-824 when switched to yarn workspaces and scopes are used for type definitions
+			if (name.endsWith("-n4jsd")) {
+				continue;
+			}
+
 			if (pDep.getVersionRequirement() != null) {
 				version = pDep.getVersionRequirement();
 			}
