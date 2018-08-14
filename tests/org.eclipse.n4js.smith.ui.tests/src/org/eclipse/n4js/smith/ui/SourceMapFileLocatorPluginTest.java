@@ -26,7 +26,7 @@ import com.google.inject.Inject;
  */
 @RunWith(XtextRunner.class)
 @InjectWith(N4JSUiInjectorProvider.class)
-public class SourceMapFileLocatorTest {
+public class SourceMapFileLocatorPluginTest {
 
 	@Inject
 	SourceMapFileLocator sourceMapFileLocator;
