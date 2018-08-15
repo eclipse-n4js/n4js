@@ -20,6 +20,7 @@
    <launcher name="n4jside">
       <linux icon="/icons/n4jside.xpm"/>
       <macosx icon="/icons/n4jside.icns"/>
+      <solaris/>
       <win useIco="true">
          <ico path="/icons/n4jside.ico"/>
          <bmp/>
