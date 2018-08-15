@@ -56,6 +56,7 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 	@Inject
 	private StatusHelper statusHelper;
 
+	// write/enable tests!
 	/** Installs a specific npm */
 	@Fix(IssueCodes.NON_EXISTING_PROJECT)
 	public void installMissingNPM(Issue issue, IssueResolutionAcceptor acceptor) {
