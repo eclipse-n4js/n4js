@@ -51,6 +51,7 @@ import com.google.inject.Injector;
 /**
  * Test for testing the {@code @Ignore} annotation while running tests via Mangelhaft.
  */
+@Ignore("IDE-2270")
 @SuppressWarnings("restriction")
 public class GHOLD_45_CheckIgnoreAnnotationAtClassLevel_PluginUITest extends AbstractPluginUITest {
 
@@ -92,7 +93,6 @@ public class GHOLD_45_CheckIgnoreAnnotationAtClassLevel_PluginUITest extends Abs
 	/**
 	 * Runs a test module with one single class that has method with {@code Ignore} annotation.
 	 */
-	@Ignore("IDE-2270")
 	@Test
 	public void testModuleWithIgnoredMethod() {
 		final IProject project = ProjectTestsUtils.getProjectByName(PROJECT_NAME);
@@ -129,7 +129,6 @@ public class GHOLD_45_CheckIgnoreAnnotationAtClassLevel_PluginUITest extends Abs
 	/**
 	 * Runs a test module with one single class that has neither super class nor {@code @Ignore} annotation.
 	 */
-	@Ignore("IDE-2270")
 	@Test
 	public void testModuleWithoutSuperClass() {
 		final IProject project = ProjectTestsUtils.getProjectByName(PROJECT_NAME);
@@ -198,7 +197,7 @@ public class GHOLD_45_CheckIgnoreAnnotationAtClassLevel_PluginUITest extends Abs
 		final ILaunchShortcut launchShortcut = getLaunchShortcut();
 		eventBus.register(latch);
 		new Thread(() -> launchShortcut.launch(new StructuredSelection(moduleToTest), ILaunchManager.RUN_MODE)).start();
-		latch.startTestAndWait(5L, TimeUnit.SECONDS);
+		latch.startTestAndWait(5L, TimeUnit.SECONDS); // TODO IDE-2270 suspicious delay; might break on slow build nodes
 	}
 
 	private String[] getConsoleContentLines() {
