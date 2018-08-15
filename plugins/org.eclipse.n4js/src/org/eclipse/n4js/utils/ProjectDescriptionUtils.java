@@ -14,6 +14,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.eclipse.core.resources.IProject;
@@ -30,6 +32,8 @@ import org.eclipse.xtext.naming.QualifiedName;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
+import com.google.common.base.Strings;
+import com.google.common.collect.Sets;
 
 /**
  * Miscellaneous utilities for dealing with {@link ProjectDescription}s and values stored within them. In particular,
@@ -43,6 +47,21 @@ public class ProjectDescriptionUtils {
 	public static final char NPM_SCOPE_SEPARATOR = '/';
 	/** Like {@link #NPM_SCOPE_SEPARATOR}, but used in Eclipse project names. */
 	public static final char NPM_SCOPE_SEPARATOR_ECLIPSE = ':';
+
+	/**
+	 * Regular expression for valid package.json identifier (e.g. package name, vendor ID).
+	 * <p>
+	 * NOTE: for legacy reasons, upper case letters are accepted, even though they are not allowed by npm.
+	 */
+	private static final Pattern IDENTIFIER_PATTERN = Pattern.compile("(^)?[A-Za-z][A-Za-z_\\-\\.0-9]*");
+
+	private static final Set<String> NPM_RESERVED_PACKAGE_NAMES = Sets.newHashSet(
+			// npm core modules (as of 2018/08/06)
+			"assert", "buffer", "child_process", "cluster", "console", "constants", "crypto", "dgram", "dns", "domain",
+			"events", "fs", "http", "https", "module", "net", "os", "path", "punycode", "querystring", "readline",
+			"repl", "stream", "string_decoder", "sys", "timers", "tls", "tty", "url", "util", "vm", "zlib",
+			// other reserved names
+			"node_modules", "favicon.ico");
 
 	/**
 	 * Tells if the given N4JS project name includes an npm scope, i.e. if it is of the form
@@ -151,6 +170,45 @@ public class ProjectDescriptionUtils {
 		return isProjectNameWithScope(projectName)
 				? projectName.substring(projectName.indexOf(NPM_SCOPE_SEPARATOR) + 1)
 				: projectName;
+	}
+
+	/**
+	 * Tells if the given N4JS project name is valid, i.e. the name may include an npm scope as described
+	 * {@link #isProjectNameWithScope(String) here}.
+	 */
+	public static boolean isValidProjectName(String name) {
+		String scopeName = getScopeName(name);
+		if (scopeName != null) {
+			String plainProjectName = getPlainProjectName(name);
+			return isValidScopeName(scopeName) && isValidPlainProjectName(plainProjectName);
+		}
+		return isValidPlainProjectName(name);
+	}
+
+	/**
+	 * Tells if the given plain project name is valid.
+	 */
+	public static boolean isValidPlainProjectName(String name) {
+		return isValidNpmPackageName(name);
+	}
+
+	/**
+	 * Tells if the given NPM scope name is valid.
+	 */
+	public static boolean isValidScopeName(String name) {
+		// if present, remove scope prefix character
+		if (name.startsWith(NPM_SCOPE_PREFIX)) {
+			return isValidNpmPackageName(name.substring(1));
+		}
+
+		return isValidNpmPackageName(name);
+	}
+
+	private static boolean isValidNpmPackageName(String name) {
+		return !Strings.isNullOrEmpty(name)
+				&& name.length() <= 214
+				&& !NPM_RESERVED_PACKAGE_NAMES.contains(name)
+				&& IDENTIFIER_PATTERN.matcher(name).matches();
 	}
 
 	/**

@@ -43,7 +43,7 @@ Contributors:
          point="org.eclipse.ui.newWizards">
      <category
        id="org.eclipse.wizards"
-       name="NumberFour">
+       name="N4JS">
      </category>
      <wizard
            category="org.eclipse.wizards"
