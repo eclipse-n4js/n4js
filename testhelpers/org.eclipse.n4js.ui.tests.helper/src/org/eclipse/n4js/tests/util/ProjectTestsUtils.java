@@ -235,11 +235,11 @@ public class ProjectTestsUtils {
 	// TODO IDE-3141 remove this temporary work-around for random test failures due to invalid index
 	@SuppressWarnings("javadoc")
 	public static void waitLongForAllJobs() {
-		for (int i = 0; i < 5; i++) {
-			sleep(200);
-			UIUtils.waitForUiThread();
-			waitForAllJobs();
-		}
+		// for (int i = 0; i < 5; i++) {
+		// sleep(200);
+		// UIUtils.waitForUiThread();
+		// waitForAllJobs();
+		// }
 	}
 
 	private static void sleep(long millis) {
