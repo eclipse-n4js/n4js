@@ -11,10 +11,10 @@
 package org.eclipse.n4js.tests.bugs;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -37,6 +37,7 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.internal.console.ConsoleView;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -179,6 +180,16 @@ public class GHOLD_45_CheckIgnoreAnnotationAtClassLevel_PluginUITest extends Abs
 		final String[] actual = getConsoleContentLines();
 
 		assertArrayEquals(expected, actual);
+	}
+
+	/**
+	 * Same as {@link Assert#assertArrayEquals(Object[], Object[])}, but with a better failure message.
+	 */
+	private static void assertArrayEquals(Object[] expected, Object[] actual) {
+		Assert.assertArrayEquals("arrays are not equal"
+				+ "; expected: " + Arrays.toString(expected)
+				+ "; actual: " + Arrays.toString(actual),
+				expected, actual);
 	}
 
 	private void runTestWaitResult(final IFile moduleToTest) {
