@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.n4js.semver.SemverMatcher.VersionNumberRelation;
+import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.semver.Semver.Qualifier;
 import org.eclipse.n4js.semver.Semver.QualifierTag;
 import org.eclipse.n4js.semver.Semver.SemverFactory;
@@ -15,6 +16,7 @@ import org.eclipse.n4js.semver.Semver.SimpleVersion;
 import org.eclipse.n4js.semver.Semver.VersionComparator;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.semver.Semver.VersionPart;
+import org.eclipse.n4js.semver.Semver.VersionRange;
 import org.eclipse.n4js.semver.Semver.VersionRangeConstraint;
 import org.eclipse.n4js.semver.Semver.VersionRangeSetRequirement;
 
@@ -190,6 +192,43 @@ public class SemverUtils {
 		versionRangeSet.getRanges().add(versionRangeConstraint);
 
 		return versionRangeSet;
+	}
+
+	/**
+	 * Creates an <em>empty version requirement</em>. Such a version requirement represents the notion of "no
+	 * requirement" or "any available versions is accepted", as far as this is supported by npm. Corresponds to the
+	 * package.json version requirement string "". Note that a wildcard version requirement, corresponding to the
+	 * package.json version requirement string "*", is <em>not</em> the same thing, because "*" does not include
+	 * versions with pre-release tags.
+	 */
+	public static NPMVersionRequirement createEmptyVersionRequirement() {
+		return SemverFactory.eINSTANCE.createVersionRangeSetRequirement();
+	}
+
+	/**
+	 * Tells if the given version requirement is an empty version requirement, as obtained by parsing the empty string.
+	 */
+	public static boolean isEmptyVersionRequirement(NPMVersionRequirement versionRequirement) {
+		return versionRequirement instanceof VersionRangeSetRequirement
+				&& ((VersionRangeSetRequirement) versionRequirement).getRanges().isEmpty();
+	}
+
+	/**
+	 * Tells if the given version requirement is a wildcard version requirement, as obtained by parsing the string "*".
+	 */
+	public static boolean isWildcardVersionRequirement(NPMVersionRequirement versionRequirement) {
+		if (versionRequirement instanceof VersionRangeSetRequirement) {
+			List<VersionRange> ranges = ((VersionRangeSetRequirement) versionRequirement).getRanges();
+			VersionRange range = ranges.size() == 1 ? ranges.get(0) : null;
+			List<SimpleVersion> constraints = range instanceof VersionRangeConstraint
+					? ((VersionRangeConstraint) range).getVersionConstraints()
+					: Collections.emptyList();
+			SimpleVersion simple = constraints.size() == 1 ? constraints.get(0) : null;
+			if (simple != null) {
+				return simple.isWildcard();
+			}
+		}
+		return false;
 	}
 
 	/** Copies the given {@link VersionNumber} */

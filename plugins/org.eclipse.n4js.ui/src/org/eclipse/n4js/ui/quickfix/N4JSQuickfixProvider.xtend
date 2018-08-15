@@ -44,7 +44,8 @@ import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.PropertyNameOwner
 import org.eclipse.n4js.projectDescription.ProjectDependency
 import org.eclipse.n4js.projectDescription.ProjectReference
-import org.eclipse.n4js.semver.model.SemverSerializer
+import org.eclipse.n4js.semver.Semver.NPMVersionRequirement
+import org.eclipse.n4js.semver.SemverUtils
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
@@ -690,9 +691,9 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 				val dependency = element as ProjectReference;
 				val packageName = dependency.projectName;
 				val packageVersion = if (dependency instanceof ProjectDependency) {
-						SemverSerializer.serialize(dependency.versionRequirement);
+						dependency.versionRequirement
 					} else {
-						"";
+						SemverUtils.createEmptyVersionRequirement()
 					};
 
 				val illegalBinaryExcRef = new AtomicReference
@@ -700,7 +701,7 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 
 				new ProgressMonitorDialog(UIUtils.shell).run(true, false, [monitor |
 					try {
-						val Map<String, String> package = Collections.singletonMap(packageName, packageVersion);
+						val Map<String, NPMVersionRequirement> package = Collections.singletonMap(packageName, packageVersion);
 						multiStatus.merge(npmManager.installNPMs(package, monitor));
 
 					} catch (IllegalBinaryStateException e) {

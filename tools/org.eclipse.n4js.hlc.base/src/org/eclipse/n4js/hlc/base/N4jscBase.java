@@ -68,6 +68,7 @@ import org.eclipse.n4js.hlc.base.running.HeadlessRunner;
 import org.eclipse.n4js.hlc.base.testing.HeadlessTester;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.runner.SystemLoaderInfo;
+import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.smith.ClosableMeasurement;
 import org.eclipse.n4js.smith.CollectedDataAccess;
 import org.eclipse.n4js.smith.DataCollector;
@@ -578,7 +579,7 @@ public class N4jscBase implements IApplication {
 				if (installMissingDependencies) {
 					try (ClosableMeasurement installMissingDepMeasurement = installMissingDependencyCollector
 							.getClosableMeasurement("Install missing dependencies")) {
-						Map<String, String> dependencies = dependencyHelper
+						Map<String, NPMVersionRequirement> dependencies = dependencyHelper
 								.discoverMissingDependencies(buildSet.getAllProjects());
 						if (verbose) {
 							System.out.println("installing missing dependencies:");
