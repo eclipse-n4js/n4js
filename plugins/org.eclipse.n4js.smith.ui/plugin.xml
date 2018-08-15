@@ -27,6 +27,13 @@ Contributors:
             id="org.eclipse.n4js.smith.ui.PerformanceView"
             name="Performance Graphs">
       </view>
+      <view
+            category="org.eclipse.n4js.category"
+            class="org.eclipse.n4js.smith.ui.SmithExecutableExtensionFactory:org.eclipse.n4js.smith.ui.SourceMapView"
+            icon="icons/graphAST.gif"
+            id="org.eclipse.n4js.smith.ui.SourceMapView"
+            name="Source Mapping">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
