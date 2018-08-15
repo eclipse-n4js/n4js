@@ -197,9 +197,9 @@ public class SemverUtils {
 	/**
 	 * Creates an <em>empty version requirement</em>. Such a version requirement represents the notion of "no
 	 * requirement" or "any available versions is accepted", as far as this is supported by npm. Corresponds to the
-	 * package.json version requirement string "". Not that a wildcard version requirement, corresponding to the
-	 * package.json version requirement string "*", is <em>not</em> the same thing, as "*" does not include versions
-	 * with pre-release tags.
+	 * package.json version requirement string "". Note that a wildcard version requirement, corresponding to the
+	 * package.json version requirement string "*", is <em>not</em> the same thing, because "*" does not include
+	 * versions with pre-release tags.
 	 */
 	public static NPMVersionRequirement createEmptyVersionRequirement() {
 		return SemverFactory.eINSTANCE.createVersionRangeSetRequirement();
@@ -224,10 +224,8 @@ public class SemverUtils {
 					? ((VersionRangeConstraint) range).getVersionConstraints()
 					: Collections.emptyList();
 			SimpleVersion simple = constraints.size() == 1 ? constraints.get(0) : null;
-			VersionNumber number = simple != null ? simple.getNumber() : null;
-			VersionPart major = number != null ? number.getMajor() : null;
-			if (major != null && major.isWildcard()) {
-				return true;
+			if (simple != null) {
+				return simple.isWildcard();
 			}
 		}
 		return false;

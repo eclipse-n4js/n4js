@@ -15,8 +15,8 @@ import java.util.Objects;
 import org.eclipse.n4js.projectDescription.DependencyType;
 import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.projectDescription.ProjectReference;
+import org.eclipse.n4js.semver.SemverUtils;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
-import org.eclipse.n4js.semver.Semver.SemverFactory;
 
 /**
  * Custom type for {@code Pair<String, NPMVersionRequirement>} that is used to describe dependency (i.e. npm package).
@@ -61,8 +61,7 @@ public class DependencyInfo {
 				return vr;
 			}
 		}
-		// by default, use an empty version rage set requirement (corresponds to empty string in package.json
-		// dependencies):
-		return SemverFactory.eINSTANCE.createVersionRangeSetRequirement();
+		// by default, use an empty version requirement (corresponds to empty string in package.json dependencies):
+		return SemverUtils.createEmptyVersionRequirement();
 	}
 }
