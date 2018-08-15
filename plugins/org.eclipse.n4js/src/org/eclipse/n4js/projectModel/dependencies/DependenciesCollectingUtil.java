@@ -18,8 +18,8 @@ import java.util.stream.Stream;
 import org.eclipse.n4js.projectDescription.DependencyType;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectReference;
-
-import com.google.common.base.Strings;
+import org.eclipse.n4js.semver.SemverUtils;
+import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 
 /**
  * Utility for collecting project dependencies. Focused on reading {@link ProjectDescription} only, and does not check
@@ -38,7 +38,7 @@ public class DependenciesCollectingUtil {
 	 * present. In case of different versions simple resolution is performed, first found with non empty version is
 	 * used.
 	 */
-	public static void updateMissingDependenciesMap(Map<String, String> versionedPackages,
+	public static void updateMissingDependenciesMap(Map<String, NPMVersionRequirement> versionedPackages,
 			Iterable<ProjectDescription> projectDescriptions) {
 		final Set<String> availableProjectsIds = new HashSet<>();
 		projectDescriptions.forEach(pd -> {
@@ -53,7 +53,8 @@ public class DependenciesCollectingUtil {
 	}
 
 	/** Add to the provided map all possible dependencies based on the {@link ProjectDescription} */
-	private static void updateFromProjectDescription(Map<String, String> dependencies, ProjectDescription pd) {
+	private static void updateFromProjectDescription(Map<String, NPMVersionRequirement> dependencies,
+			ProjectDescription pd) {
 		if (pd == null) {
 			return;
 		}
@@ -80,8 +81,13 @@ public class DependenciesCollectingUtil {
 	 * <p>
 	 * TODO GH-1017 improve this heuristic
 	 */
-	public static String resolve(String version1, String version2) {
-		return Strings.isNullOrEmpty(version1) || "*".equals(version1) ? version2 : version1;
+	public static NPMVersionRequirement resolve(NPMVersionRequirement vr1, NPMVersionRequirement vr2) {
+		if (vr1 == null
+				|| SemverUtils.isEmptyVersionRequirement(vr1)
+				|| SemverUtils.isWildcardVersionRequirement(vr1)) {
+			return vr2;
+		}
+		return vr1;
 	}
 
 	/** TODO https://github.com/eclipse/n4js/issues/613 */

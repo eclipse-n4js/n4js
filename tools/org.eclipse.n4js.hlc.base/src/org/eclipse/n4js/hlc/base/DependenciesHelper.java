@@ -19,6 +19,7 @@ import java.util.stream.StreamSupport;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.dependencies.DependenciesCollectingUtil;
+import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.URIUtils;
 
@@ -42,11 +43,11 @@ class DependenciesHelper {
 	 *
 	 * This implementations analyzes all available projects, without checking which were directly requested by the user.
 	 */
-	Map<String, String> discoverMissingDependencies(Iterable<? extends IN4JSProject> allProjects) {
+	Map<String, NPMVersionRequirement> discoverMissingDependencies(Iterable<? extends IN4JSProject> allProjects) {
 
 		final Iterable<ProjectDescription> allProjectDescriptions = getAvailableProjectDescriptions(
 				allProjects);
-		final Map<String, String> dependencies = new HashMap<>();
+		final Map<String, NPMVersionRequirement> dependencies = new HashMap<>();
 		DependenciesCollectingUtil.updateMissingDependenciesMap(dependencies, allProjectDescriptions);
 
 		return dependencies;

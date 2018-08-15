@@ -11,6 +11,9 @@
 package org.eclipse.n4js.semver.tests.parser
 
 import com.google.inject.Inject
+import org.eclipse.n4js.semver.Semver.VersionRangeSetRequirement
+import org.eclipse.n4js.semver.SemverInjectorProvider
+import org.eclipse.n4js.semver.SemverMatcher
 import org.eclipse.n4js.semver.SemverParseHelper
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
@@ -18,9 +21,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 import static org.junit.Assert.*
-import org.eclipse.n4js.semver.Semver.VersionRangeSetRequirement
-import org.eclipse.n4js.semver.SemverMatcher
-import org.eclipse.n4js.semver.SemverInjectorProvider
 
 /**
  * Tests for parsing SEMVER files.
