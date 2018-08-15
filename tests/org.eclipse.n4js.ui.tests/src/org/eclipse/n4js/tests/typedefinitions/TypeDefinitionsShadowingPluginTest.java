@@ -28,7 +28,6 @@ public class TypeDefinitionsShadowingPluginTest extends AbstractBuilderParticipa
 	private static final String NEGATIVE_FIXTURE_FOLDER = "simple-negative";
 
 	/**
-	 *
 	 * Positive test case.
 	 *
 	 * Imports client, definition and implementation project and expects none of the projects to raise any compilation
@@ -46,7 +45,7 @@ public class TypeDefinitionsShadowingPluginTest extends AbstractBuilderParticipa
 		final IProject definitionProject = ProjectTestsUtils.importProject(testdataLocation, "Def");
 		final IProject implProject = ProjectTestsUtils.importProject(testdataLocation, "Impl");
 
-		IResourcesSetupUtil.cleanBuild();
+		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 
 		assertMarkers("Client project should not have any markers (no compilation issues)", clientProject, 0);
@@ -55,7 +54,6 @@ public class TypeDefinitionsShadowingPluginTest extends AbstractBuilderParticipa
 	}
 
 	/**
-	 *
 	 * Negative test case.
 	 *
 	 * Imports client, definition and implementation project that declare an invalid type definitions configuration.
@@ -72,7 +70,7 @@ public class TypeDefinitionsShadowingPluginTest extends AbstractBuilderParticipa
 		final IProject definitionProject = ProjectTestsUtils.importProject(testdataLocation, "Broken_Def");
 		final IProject implProject = ProjectTestsUtils.importProject(testdataLocation, "Impl");
 
-		IResourcesSetupUtil.cleanBuild();
+		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 
 		IResource clientModule = clientProject.findMember("src/Client.n4js");
