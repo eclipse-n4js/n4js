@@ -224,7 +224,7 @@ public class LibraryManager {
 
 	private IStatus installNPMsInternal(Map<String, NPMVersionRequirement> versionedNPMs, IProgressMonitor monitor) {
 		String msg = "Installing NPM(s): " + versionedNPMs.entrySet().stream()
-				.map(e -> e.getKey() + "@" + e.getValue())
+				.map(e -> npmWithVersionAsString(e.getKey(), e.getValue()))
 				.collect(Collectors.joining(", "));
 		MultiStatus status = statusHelper.createMultiStatus(msg);
 		logger.logInfo(msg);
@@ -266,6 +266,13 @@ public class LibraryManager {
 		} finally {
 			monitor.done();
 		}
+	}
+
+	private static String npmWithVersionAsString(String packageName, NPMVersionRequirement versionRequirement) {
+		if (versionRequirement == null || SemverUtils.isEmptyVersionRequirement(versionRequirement)) {
+			return packageName;
+		}
+		return packageName + "@" + versionRequirement;
 	}
 
 	/**
