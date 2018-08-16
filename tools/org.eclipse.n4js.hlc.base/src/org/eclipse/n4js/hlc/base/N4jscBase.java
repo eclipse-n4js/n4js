@@ -552,7 +552,7 @@ public class N4jscBase implements IApplication {
 			}
 
 			// check for performance data collection system environment variable
-			if (performanceReport != null && System.getenv(N4JSC_PERFORMANCE_REPORT_ENV) != null) {
+			if (performanceReport == null && System.getenv(N4JSC_PERFORMANCE_REPORT_ENV) != null) {
 				final String rawPath = System.getenv(N4JSC_PERFORMANCE_REPORT_ENV);
 				final File performanceReportFile = new File(rawPath);
 				this.performanceReport = performanceReportFile;
