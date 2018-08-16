@@ -5,7 +5,7 @@ export external public interface ~TextDecodeOptions {
 }
 
 export external public class TextDecoder {
-     public constructor();
+     public constructor(utflabel: string=, options: TextDecodeOptions=);
      
      public get encoding(): string;
      public get fatal(): boolean;
