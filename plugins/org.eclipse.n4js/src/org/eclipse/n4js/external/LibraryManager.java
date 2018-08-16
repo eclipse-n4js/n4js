@@ -22,7 +22,6 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -31,7 +30,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IProject;
@@ -47,9 +45,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.n4js.binaries.IllegalBinaryStateException;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
-import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
-import org.eclipse.n4js.projectDescription.ProjectDependency;
-import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.SemverMatcher;
@@ -122,12 +117,6 @@ public class LibraryManager {
 
 	@Inject
 	private ExternalIndexSynchronizer indexSynchronizer;
-
-	@Inject
-	private FileBasedExternalPackageManager filebasedPackageManager;
-
-	@Inject
-	private IN4JSCore n4jsCore;
 
 	@Inject
 	private SemverHelper semverHelper;
@@ -254,26 +243,8 @@ public class LibraryManager {
 		try (ClosableMeasurement mes = dcLibMngr.getClosableMeasurement("installDependenciesInternal");) {
 			Map<String, NPMVersionRequirement> npmsToInstall = new LinkedHashMap<>(versionedNPMs);
 			Set<LibraryChange> actualChanges = new HashSet<>();
-			do {
-				List<LibraryChange> deltaChanges = installUninstallNPMs(monitor, status, npmsToInstall, emptyList());
-				actualChanges.addAll(deltaChanges);
-				npmsToInstall = getDependenciesOfNPMs(deltaChanges);
-
-				// obtain list of all available project IDs (external and workspace)
-				Set<String> allProjectsIds = StreamSupport.stream(n4jsCore.findAllProjects().spliterator(), false)
-						.map(p -> p.getProjectName()).collect(Collectors.toSet());
-
-				// Note: need to make sure the projects in npmsToInstall are not in the workspace yet; method
-				// #installUninstallNPMs() (which will be invoked in a moment) is doing this as well, but that method
-				// does not consider the shipped code. For example, without the next line, "n4js-runtime-node" would be
-				// installed even though it is already available via the shipped code.
-				npmsToInstall.keySet().removeAll(allProjectsIds);
-
-				if (!npmsToInstall.isEmpty()) {
-					msg = "Installing transitive dependencies: " + String.join(", ", npmsToInstall.keySet());
-					logger.logInfo(msg);
-				}
-			} while (!npmsToInstall.isEmpty());
+			List<LibraryChange> deltaChanges = installUninstallNPMs(monitor, status, npmsToInstall, emptyList());
+			actualChanges.addAll(deltaChanges);
 
 			try (ClosableMeasurement m = dcIndexSynchronizer.getClosableMeasurement("synchronizeNpms")) {
 				indexSynchronizer.synchronizeNpms(monitor, actualChanges);
@@ -291,83 +262,6 @@ public class LibraryManager {
 			return packageName;
 		}
 		return packageName + "@" + versionRequirement;
-	}
-
-	/**
-	 * This method returns all transitive dependencies that are implied by the given list of {@link LibraryChange}s.
-	 *
-	 * For non-N4JS npm packages, these are the dependencies of the corresponding type definitions (if present) and for
-	 * N4JS npm packages, these are all package dependencies.
-	 * <p>
-	 * GH-862: This must be revisited when solving GH-821
-	 */
-	private Map<String, NPMVersionRequirement> getDependenciesOfNPMs(List<LibraryChange> actualChanges) {
-		Map<String, NPMVersionRequirement> dependencies = new HashMap<>();
-		for (LibraryChange libChange : actualChanges) {
-			if (libChange.type == LibraryChangeType.Added) {
-				final org.eclipse.emf.common.util.URI npmLocation = libChange.location;
-
-				// We need to consider three different cases here (see 1, 2, 3):
-
-				// 1. The package has a package-fragment.json: Make sure to only collect
-				// transitive dependencies declared in the fragment (type definition dependencies)
-				if (filebasedPackageManager.isExternalProjectWithFragment(npmLocation)) {
-					ProjectDescription description = filebasedPackageManager
-							.loadFragmentProjectDescriptionFromProjectRoot(npmLocation);
-					collectDependencies(description, dependencies);
-					continue;
-				}
-
-				// obtain project description of the added project (package.json + fragment)
-				final ProjectDescription pd = filebasedPackageManager
-						.loadProjectDescriptionFromProjectRoot(npmLocation);
-
-				if (pd == null) {
-					LOGGER.error("Cannot obtain project description of npm at " + npmLocation
-							+ ". Installation results may be inaccurate.");
-					continue;
-				}
-
-				// 2. The package represents an actual N4JS project (with .n4js resources), which
-				// needs to be built. In that case we must install all of its dependencies, as declared
-				// in its package.json file.
-				if (pd.isHasN4JSNature()) {
-					collectDependencies(pd, dependencies);
-					continue;
-				}
-
-				// 3. The package is a plain npm package w/o fragment (type definitions): In this case we do not collect
-				// its dependencies transitively (no type definitions required)
-			}
-		}
-
-		return dependencies;
-	}
-
-	/**
-	 * Reads all dependencies from the given project {@code description} and puts them in {@code dependencies}.
-	 *
-	 * @param description
-	 *            The project description to collect dependencies from.
-	 * @param dependencies
-	 *            The map to store the collected dependencies in. Stores a mapping of the dependency name to the version
-	 *            constraint.
-	 */
-	private void collectDependencies(ProjectDescription description, Map<String, NPMVersionRequirement> dependencies) {
-		for (ProjectDependency pDep : description.getProjectDependencies()) {
-			String name = pDep.getProjectName();
-			NPMVersionRequirement version = NO_VERSION_REQUIREMENT;
-
-			// remove this in GH-824 when switched to yarn workspaces and scopes are used for type definitions
-			if (name.endsWith("-n4jsd")) {
-				continue;
-			}
-
-			if (pDep.getVersionRequirement() != null) {
-				version = pDep.getVersionRequirement();
-			}
-			dependencies.put(name, version);
-		}
 	}
 
 	private List<LibraryChange> installUninstallNPMs(IProgressMonitor monitor, MultiStatus status,
