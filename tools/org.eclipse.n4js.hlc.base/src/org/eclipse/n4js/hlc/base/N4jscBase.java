@@ -1228,11 +1228,10 @@ public class N4jscBase implements IApplication {
 	 */
 	private void writePerformanceReport() throws ExitCodeException {
 		if (this.performanceReport != null) {
-			final String csv = DataCollectorCSVExporter.toCSV(performanceKey);
 			System.out.println(
 					"Writing performance report to " + this.performanceReport.toPath().toAbsolutePath().toString());
 			try (FileWriter writer = new FileWriter(performanceReport)) {
-				writer.write(csv);
+				DataCollectorCSVExporter.toFile(this.performanceReport, performanceKey);
 			} catch (IOException e) {
 				throw new ExitCodeException(ErrorExitCode.EXITCODE_PERFORMANCE_REPORT_COULD_NOT_BE_WRITTEN);
 			}
