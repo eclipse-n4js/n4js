@@ -80,10 +80,13 @@ import com.google.inject.Singleton;
 @Singleton
 public class ExternalLibraryBuilder {
 	@SuppressWarnings("unused") // necessary for dcBuildExt
-	private static DataCollector dcLibMngr = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Library Manager");
-	private static DataCollector dcBuildExt = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Build External Library", "Library Manager");
+	private static DataCollector dcExtLibBuilder = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("External Library Builder");
+	private static DataCollector dcBuildExtLibWorkspace = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Build External Library Workspace", "External Library Builder");
+
+	private static final DataCollector dcCleanExtLibWorkspace = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Clean External Library Workspace", "External Library Builder");
 
 	private static Logger LOGGER = Logger.getLogger(ExternalLibraryBuilder.class);
 
@@ -180,7 +183,11 @@ public class ExternalLibraryBuilder {
 	 *             more info, see {@link #getRule() here}.
 	 */
 	public List<IProject> build(N4JSExternalProject[] buildConfigs, IProgressMonitor monitor) {
-		return doPerformOperation(buildConfigs, BuildOperation.BUILD, monitor);
+		try (ClosableMeasurement m1 = dcExtLibBuilder.getClosableMeasurement("External Library Builder");
+				ClosableMeasurement m2 = dcBuildExtLibWorkspace
+						.getClosableMeasurement("Build External Library Workspace")) {
+			return doPerformOperation(buildConfigs, BuildOperation.BUILD, monitor);
+		}
 	}
 
 	/**
@@ -260,7 +267,11 @@ public class ExternalLibraryBuilder {
 	 *             more info, see {@link #getRule() here}.
 	 */
 	public List<IProject> clean(N4JSExternalProject[] projects, IProgressMonitor monitor) {
-		return doPerformOperation(projects, BuildOperation.CLEAN, monitor);
+		try (ClosableMeasurement m1 = dcExtLibBuilder.getClosableMeasurement("External Library Builder");
+				ClosableMeasurement m2 = dcCleanExtLibWorkspace
+						.getClosableMeasurement("Clean External Library Workspace")) {
+			return doPerformOperation(projects, BuildOperation.CLEAN, monitor);
+		}
 	}
 
 	private List<IProject> doPerformOperation(N4JSExternalProject[] projects, BuildOperation operation,
@@ -448,7 +459,7 @@ public class ExternalLibraryBuilder {
 				return;
 			}
 
-			try (ClosableMeasurement mesBE = dcBuildExt.getClosableMeasurement("BuildExt_" + n4EclPrj.getProjectName())) {
+			try {
 				IN4JSCore core = helper.core;
 				QueuedBuildData queuedBuildData = helper.queuedBuildData;
 				IBuilderState builderState = helper.builderState;

@@ -26,6 +26,9 @@ import org.eclipse.n4js.semver.SemverMatcher;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.semver.model.SemverSerializer;
+import org.eclipse.n4js.smith.DataCollector;
+import org.eclipse.n4js.smith.DataCollectors;
+import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.ui.external.ExternalLibrariesActionsHelper;
 
 import com.google.common.base.Joiner;
@@ -35,6 +38,18 @@ import com.google.inject.Inject;
  * Helper for installing npm dependencies.
  */
 public class ExternalLibrariesInstallHelper {
+
+	static private final DataCollector dcInstallHelper = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("External Libraries Install Helper");
+
+	private static final DataCollector dcCollectMissingDependencies = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Collect missing dependencies", "External Libraries Install Helper");
+
+	private static final DataCollector dcInstallMissingDependencies = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Install missing dependencies", "External Libraries Install Helper");
+
+	private static final DataCollector dcUpdateExternalLibraryWorkspace = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Update External Library Workspace State", "External Libraries Install Helper");
 
 	@Inject
 	private ProjectDependenciesHelper dependenciesHelper;
@@ -52,6 +67,9 @@ public class ExternalLibrariesInstallHelper {
 
 	/** Streamlined process of calculating and installing the dependencies, npm cache cleaning forced by passed flag */
 	public void calculateAndInstallDependencies(SubMonitor monitor, MultiStatus multistatus, boolean removeNpmCache) {
+		final Measurement overallMeasurement = dcInstallHelper
+				.getMeasurement("Install Missing Dependencies");
+
 		final SubMonitor subMonitor2 = monitor.split(1);
 
 		if (removeNpmCache)
@@ -68,18 +86,29 @@ public class ExternalLibrariesInstallHelper {
 				.stream(dependenciesHelper.getAvailableProjectsDescriptions(true).spliterator(), false)
 				.collect(Collectors.toMap(pd -> pd.getProjectName(), pd -> pd.getProjectVersion()));
 
+		Measurement measurment = dcCollectMissingDependencies.getMeasurement("Collect Missing Dependencies");
+
 		// install npms from target platform
 		Map<String, NPMVersionRequirement> dependenciesToInstall = dependenciesHelper.calculateDependenciesToInstall();
 		removeDependenciesToShippedCodeIfVersionMatches(dependenciesToInstall, projectNamesOfShippedCode);
 		addDependenciesForRemainingShippedCode(dependenciesToInstall, projectNamesOfShippedCode.keySet());
 		logShippedCodeInstallationStatus(dependenciesToInstall, projectNamesOfShippedCode.keySet());
 
+		measurment.end();
+		measurment = dcInstallMissingDependencies.getMeasurement("Install missing dependencies");
+
 		final SubMonitor subMonitor3 = monitor.split(45);
 		externals.installNoUpdate(dependenciesToInstall, multistatus, subMonitor3);
+
+		measurment.end();
+		measurment = dcUpdateExternalLibraryWorkspace.getMeasurement("Update External Library Workspace State");
 
 		// rebuild externals & schedule full rebuild
 		final SubMonitor subMonitor4 = monitor.split(35);
 		externals.maintenanceUpateState(multistatus, subMonitor4);
+
+		measurment.end();
+		overallMeasurement.end();
 	}
 
 	/**

@@ -77,11 +77,27 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class LibraryManager {
+	/** {@link DataCollector} key used for {@link LibraryManager} related activities. */
+	public static final String LIBRARY_MANAGER_DATA_COLLECTOR_KEY = "Library Manager";
+
 	private static final Logger LOGGER = Logger.getLogger(LibraryManager.class);
 
 	private static final NPMVersionRequirement NO_VERSION_REQUIREMENT = SemverUtils.createEmptyVersionRequirement();
 
-	private static final DataCollector dcLibMngr = DataCollectors.INSTANCE.getOrCreateDataCollector("Library Manager");
+	private static final DataCollector dcLibMngr = DataCollectors.INSTANCE
+			.getOrCreateDataCollector(LIBRARY_MANAGER_DATA_COLLECTOR_KEY);
+
+	private static final DataCollector dcNpmInstall = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Install NPMs", LIBRARY_MANAGER_DATA_COLLECTOR_KEY);
+
+	private static final DataCollector dcNpmUninstall = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Uninstall NPMs", LIBRARY_MANAGER_DATA_COLLECTOR_KEY);
+
+	private static final DataCollector dcPackageAdaptation = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Adapting Installed NPMs", LIBRARY_MANAGER_DATA_COLLECTOR_KEY);
+
+	private static final DataCollector dcIndexSynchronizer = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Index Synchronizer", LIBRARY_MANAGER_DATA_COLLECTOR_KEY);
 
 	@Inject
 	private NpmPackageToProjectAdapter npmPackageToProjectAdapter;
@@ -259,7 +275,9 @@ public class LibraryManager {
 				}
 			} while (!npmsToInstall.isEmpty());
 
-			indexSynchronizer.synchronizeNpms(monitor, actualChanges);
+			try (ClosableMeasurement m = dcIndexSynchronizer.getClosableMeasurement("synchronizeNpms")) {
+				indexSynchronizer.synchronizeNpms(monitor, actualChanges);
+			}
 
 			return status;
 
@@ -361,17 +379,23 @@ public class LibraryManager {
 		Collection<LibraryChange> requestedChanges = getRequestedChanges(installRequested, removeRequested);
 		List<LibraryChange> actualChanges = new LinkedList<>();
 
-		// remove
-		actualChanges.addAll(npmCli.batchUninstall(subMonitor, status, requestedChanges));
-		subMonitor.worked(1);
+		try (ClosableMeasurement m = dcNpmUninstall.getClosableMeasurement("batchUninstall")) {
+			// remove
+			actualChanges.addAll(npmCli.batchUninstall(subMonitor, status, requestedChanges));
+			subMonitor.worked(1);
+		}
 
-		// install
-		actualChanges.addAll(npmCli.batchInstall(subMonitor, status, requestedChanges));
-		subMonitor.worked(1);
+		try (ClosableMeasurement m = dcNpmInstall.getClosableMeasurement("batchInstall")) {
+			// install
+			actualChanges.addAll(npmCli.batchInstall(subMonitor, status, requestedChanges));
+			subMonitor.worked(1);
+		}
 
-		// adapt installed
-		adaptNPMPackages(monitor, status, actualChanges);
-		subMonitor.worked(1);
+		try (ClosableMeasurement m = dcPackageAdaptation.getClosableMeasurement("adaptNPMPackages")) {
+			// adapt installed
+			adaptNPMPackages(monitor, status, actualChanges);
+			subMonitor.worked(1);
+		}
 
 		return actualChanges;
 	}
@@ -507,7 +531,10 @@ public class LibraryManager {
 		try (ClosableMeasurement mes = dcLibMngr.getClosableMeasurement("uninstallDependenciesInternal");) {
 
 			List<LibraryChange> actualChanges = installUninstallNPMs(monitor, status, emptyMap(), packageNames);
-			indexSynchronizer.synchronizeNpms(monitor, actualChanges);
+
+			try (ClosableMeasurement m = dcIndexSynchronizer.getClosableMeasurement("synchronizeNpms")) {
+				indexSynchronizer.synchronizeNpms(monitor, actualChanges);
+			}
 
 			return status;
 
