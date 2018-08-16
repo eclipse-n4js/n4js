@@ -79,7 +79,6 @@ import com.google.inject.Singleton;
 @SuppressWarnings("restriction")
 @Singleton
 public class ExternalLibraryBuilder {
-	@SuppressWarnings("unused") // necessary for dcBuildExt
 	private static DataCollector dcExtLibBuilder = DataCollectors.INSTANCE
 			.getOrCreateDataCollector("External Library Builder");
 	private static DataCollector dcBuildExtLibWorkspace = DataCollectors.INSTANCE
