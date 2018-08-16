@@ -51,14 +51,16 @@ public class DataCollectorCSVExporter {
 	public static void toFile(File file, String key) throws IOException {
 		final File parentFolder = file.getParentFile();
 
-		if (parentFolder.exists() && !parentFolder.isDirectory()) {
-			throw new IllegalStateException("Failed to store collected data to file " + file.getAbsolutePath()
-					+ ": Parent folder" + parentFolder.getAbsolutePath() + " is not a directory.");
-		}
+		if (parentFolder != null) {
+			if (parentFolder.exists() && !parentFolder.isDirectory()) {
+				throw new IllegalStateException("Failed to store collected data to file " + file.getAbsolutePath()
+						+ ": Parent folder" + parentFolder.getAbsolutePath() + " is not a directory.");
+			}
 
-		// if required, create parent file hierarchy
-		if (!parentFolder.exists()) {
-			parentFolder.mkdirs();
+			// if required, create parent file hierarchy
+			if (!parentFolder.exists()) {
+				parentFolder.mkdirs();
+			}
 		}
 
 		try (FileWriter writer = new FileWriter(file)) {
