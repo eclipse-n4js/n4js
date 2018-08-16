@@ -21,4 +21,24 @@ export external public function inspect(object: Object+, options: ~Object with {
 }=): string;
 export external public function log(string: string): void;
 
+export external public class TextEncoder {
+     public constructor();
+     
+     public get encoding(): string;
+     
+     public encode(str: string): Uint8Array; 
+}
 
+export external public interface ~TextDecodeOptions {
+    public get stream(): boolean;
+}
+
+export external public class TextDecoder {
+     public constructor();
+     
+     public get encoding(): string;
+     public get fatal(): boolean;
+     public get ignoreBOM(): boolean;
+     
+     public decode(buffer: ArrayBuffer|ArrayBufferView=, options: TextDecodeOptions=): string; 
+}

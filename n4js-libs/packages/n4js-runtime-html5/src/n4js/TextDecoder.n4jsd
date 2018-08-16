@@ -1,9 +1,15 @@
 @@Global @@ProvidedByRuntime
 
-export external public class TextEncoder {
+export external public interface ~TextDecodeOptions {
+    public get stream(): boolean;
+}
+
+export external public class TextDecoder {
      public constructor();
      
      public get encoding(): string;
+     public get fatal(): boolean;
+     public get ignoreBOM(): boolean;
      
-     public encode(str: string): Uint8Array; 
+     public decode(buffer: ArrayBuffer|ArrayBufferView=, options: TextDecodeOptions=): string; 
 }
