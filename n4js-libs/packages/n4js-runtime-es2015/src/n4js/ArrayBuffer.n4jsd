@@ -10,8 +10,16 @@
  */
 @@Global @@ProvidedByRuntime
 
-/**
- * TODO
- */
-export public interface ~ArrayBuffer {}
+export external public class ArrayBuffer {
+	public static isView(obj: Object): boolean;
 
+	/* 
+	 * TODO: Symbol.species is currently not supported.
+	 * public static get [Symbol.species](): constructor{? extends ArrayBuffer};
+	 */
+
+	public constructor(length: int);
+
+	public get byteLength(): int;
+	public slice(begin: int, end: int=): ArrayBuffer;
+}
