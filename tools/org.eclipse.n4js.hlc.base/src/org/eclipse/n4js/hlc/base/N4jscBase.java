@@ -24,7 +24,6 @@ import static org.eclipse.n4js.utils.git.GitUtils.pull;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -1230,9 +1229,10 @@ public class N4jscBase implements IApplication {
 		if (this.performanceReport != null) {
 			System.out.println(
 					"Writing performance report to " + this.performanceReport.toPath().toAbsolutePath().toString());
-			try (FileWriter writer = new FileWriter(performanceReport)) {
+			try {
 				DataCollectorCSVExporter.toFile(this.performanceReport, performanceKey);
 			} catch (IOException e) {
+				e.printStackTrace();
 				throw new ExitCodeException(ErrorExitCode.EXITCODE_PERFORMANCE_REPORT_COULD_NOT_BE_WRITTEN);
 			}
 		}
