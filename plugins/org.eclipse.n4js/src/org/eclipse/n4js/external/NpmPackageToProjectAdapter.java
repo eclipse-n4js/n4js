@@ -20,7 +20,6 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -87,11 +86,7 @@ public class NpmPackageToProjectAdapter {
 	 *
 	 * Adaptation of a package P means:
 	 * <ul>
-	 * <li>add n4jsd files from P's corresponding folder in the type definitions repository (if any),
-	 * <li>if no {@link N4JSGlobals#PACKAGE_FRAGMENT_JSON package.json fragment} was added by the previous step (either
-	 * because P has no folder in the type definitions repository or that folder does not contain a package.json
-	 * fragment), then a {@link N4JSGlobals#PACKAGE_MARKER marker file} will be added to the package to denote that this
-	 * package was part of the given 'namesOfPackagesToAdapt' (for later use by other code).
+	 * <li>Install corresponding type definitions package into the type definitions external library location</li>
 	 * </ul>
 	 *
 	 * Returned set of N4JS project folders will not include those installed by the npm but without matching names in
@@ -106,7 +101,6 @@ public class NpmPackageToProjectAdapter {
 			Collection<String> uninstalledPackages) {
 		final MultiStatus status = statusHelper.createMultiStatus("Status of adapting npm packages");
 		final File nodeModulesFolder = locationProvider.getNodeModulesFolder();
-		final File typeDefFolder = locationProvider.getTypeDefinitionsFolder();
 		final Collection<String> installNames = newHashSet(installedPackages);
 		final File[] npmPackageRoots = nodeModulesFolder
 				.listFiles(packageName -> installNames.contains(packageName.getName()));
@@ -118,18 +112,6 @@ public class NpmPackageToProjectAdapter {
 				// add type definitions
 				if (n4jsdsFolder != null) {
 					addTypeDefinitions(packageRoot, n4jsdsFolder);
-				}
-				// create marker file to denote that this package was among "namesOfPackagesToAdapt"
-				// (compare with: ExternalProjectLocationsProvider#isExternalProjectDirectory(File))
-				File markerFile = new File(packageRoot, N4JSGlobals.PACKAGE_MARKER);
-				String content = "Temporary marker file. See N4JSGlobals#PACKAGE_MARKER for details.";
-				Files.write(markerFile.toPath(), Collections.singletonList(content)); // will overwrite existing file
-
-				File newPackageRoot = new File(typeDefFolder, packageRoot.getName() + "-n4jsd");
-				if (newPackageRoot.exists()) {
-					// if appropriate as a temporal solution, the marker file could also be put into the -n4jsd folder
-					File markerFile2 = new File(newPackageRoot, N4JSGlobals.PACKAGE_MARKER);
-					Files.write(markerFile2.toPath(), Collections.singletonList(content)); // overwrites existing file
 				}
 			} catch (final Exception e) {
 				String msg = "Unexpected error occurred while adapting '" + packageRoot.getName()

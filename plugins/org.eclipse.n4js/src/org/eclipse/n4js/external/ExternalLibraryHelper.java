@@ -31,11 +31,8 @@ public final class ExternalLibraryHelper {
 			return false;
 		}
 
-		// check whether package.json and package.marker files exists
-		// (we here require package.marker in order to return false for packages that have been installed as
-		// transitive dependency, i.e. indirectly by "npm install"; see N4JSGlobals#PACKAGE_MARKER for details)
+		// check whether package.json exists
 		final File packageJsonFile = new File(projectDirectory, N4JSGlobals.PACKAGE_JSON);
-		final File packageMarkerFile = new File(projectDirectory, N4JSGlobals.PACKAGE_MARKER);
-		return packageJsonFile.isFile() && packageMarkerFile.isFile();
+		return packageJsonFile.isFile();
 	}
 }
