@@ -23,7 +23,7 @@ import org.eclipse.n4js.utils.URIUtils;
 import com.google.inject.Inject;
 
 /**
- *
+ * Provides methods to compute which projects are shadowed by a given project.
  */
 public class ShadowingInfoHelper {
 
