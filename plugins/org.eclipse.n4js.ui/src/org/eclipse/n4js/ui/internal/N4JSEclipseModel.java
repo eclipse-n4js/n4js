@@ -76,17 +76,23 @@ public class N4JSEclipseModel extends N4JSModel {
 					"Expected 2 segment counts for platform resource URI. Was " + location.segmentCount());
 		}
 
-		final String projectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location);
-		final IProject project;
+		final String projectName = location.lastSegment();
+		IProject project;
 		if (location.isFile()) {
 			project = externalLibraryWorkspace.getProject(projectName);
+			if (project == null) { // via source map
+				project = workspace.getProject(projectName);
+				if (project != null) { // get location newly from project to make it a platform URI
+					return getN4JSProject(project);
+				}
+			}
 			checkNotNull(project, "Project does not exist in external workspace. URI: " + location);
+
 		} else {
 			final String eclipseProjectName = ProjectDescriptionUtils
 					.convertN4JSProjectNameToEclipseProjectName(projectName);
 			project = workspace.getProject(eclipseProjectName);
 		}
-
 		return doGetN4JSProject(project, location);
 	}
 
@@ -133,6 +139,22 @@ public class N4JSEclipseModel extends N4JSModel {
 						final IResource resource = externalLibraryWorkspace.getResource(location);
 						if (null != resource) {
 							n4jsContainer = getN4JSSourceContainer(resource);
+						}
+					} else { // in case of locating a project from source maps:
+						String locString = location.toFileString();
+
+						String projPathString = eclipseProject.getLocationPath().toString();
+						if (locString.startsWith(projPathString)) {
+							locString = eclipseProject.getLocation().toString()
+									+ locString.substring(projPathString.length());
+						}
+
+						for (IN4JSEclipseSourceContainer sc : eclipseProject.getSourceContainers()) {
+							String scLoc = sc.getLocation().toString();
+							if (locString.startsWith(scLoc)) {
+								return Optional.of(sc);
+
+							}
 						}
 					}
 				}
