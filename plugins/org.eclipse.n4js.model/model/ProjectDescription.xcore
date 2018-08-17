@@ -118,7 +118,7 @@ class BootstrapModule {
 }
 
 enum ProjectType {
-	//PLAINJS = 0,
+	PLAINJS = 0,
 	VALIDATION = 1,
 	DEFINITION = 2,
 	APPLICATION = 3,

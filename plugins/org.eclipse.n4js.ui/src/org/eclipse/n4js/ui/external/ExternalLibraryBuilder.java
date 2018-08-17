@@ -48,6 +48,7 @@ import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.internal.MultiCleartriggerCache;
 import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.internal.RaceDetectionHelper;
+import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.smith.ClosableMeasurement;
@@ -393,13 +394,23 @@ public class ExternalLibraryBuilder {
 		BUILD {
 
 			@Override
-			protected ToBeBuilt getToBeBuilt(ToBeBuiltComputer computer, IProject project, IProgressMonitor monitor) {
+			protected ToBeBuilt getToBeBuilt(ToBeBuiltComputer computer, N4JSEclipseProject n4Project,
+					IProgressMonitor monitor) {
 				try {
-					return computer.updateProject(project, monitor);
+					// only build the project description file (package.json) for PLAINJS projects
+					if (n4Project.getProjectType() == ProjectType.PLAINJS) {
+						ToBeBuilt toBeBuilt = new ToBeBuilt();
+						if (n4Project.getProjectDescriptionLocation().isPresent()) {
+							toBeBuilt.getToBeUpdated().add(n4Project.getProjectDescriptionLocation().get());
+						}
+						return toBeBuilt;
+					}
+					// for other project types use to-be-build computer
+					return computer.updateProject(n4Project.getProject(), monitor);
 				} catch (OperationCanceledException e) {
 					throw e;
 				} catch (Exception e) {
-					String name = project.getName();
+					String name = n4Project.getProjectName();
 					LOGGER.error("Error occurred while calculating to be build data for '" + name + "' project.", e);
 					throw Exceptions.sneakyThrow(e);
 				}
@@ -413,8 +424,9 @@ public class ExternalLibraryBuilder {
 		CLEAN {
 
 			@Override
-			protected ToBeBuilt getToBeBuilt(ToBeBuiltComputer computer, IProject project, IProgressMonitor monitor) {
-				return computer.removeProject(project, monitor);
+			protected ToBeBuilt getToBeBuilt(ToBeBuiltComputer computer, N4JSEclipseProject n4Project,
+					IProgressMonitor monitor) {
+				return computer.removeProject(n4Project.getProject(), monitor);
 			}
 
 		};
@@ -430,7 +442,8 @@ public class ExternalLibraryBuilder {
 		 *            the monitor for the process.
 		 * @return the calculated {@link ToBeBuilt} instance.
 		 */
-		abstract ToBeBuilt getToBeBuilt(ToBeBuiltComputer computer, IProject project, IProgressMonitor monitor);
+		abstract ToBeBuilt getToBeBuilt(ToBeBuiltComputer computer, N4JSEclipseProject project,
+				IProgressMonitor monitor);
 
 		/**
 		 * Runs the operation in a blocking fashion.
@@ -451,7 +464,8 @@ public class ExternalLibraryBuilder {
 
 			IProject project = n4EclPrj.getProject();
 			ToBeBuiltComputer computer = helper.builtComputer;
-			ToBeBuilt toBeBuilt = getToBeBuilt(computer, project, computeMonitor);
+
+			ToBeBuilt toBeBuilt = getToBeBuilt(computer, n4EclPrj, computeMonitor);
 
 			if (toBeBuilt.getToBeDeleted().isEmpty() && toBeBuilt.getToBeUpdated().isEmpty()) {
 				subMonitor.newChild(1, SUPPRESS_NONE).worked(1);

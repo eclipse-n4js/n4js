@@ -17,6 +17,7 @@ import static org.eclipse.n4js.json.model.utils.JSONModelUtils.getProperty;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.MAIN;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.MAIN_MODULE;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.OUTPUT;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.PROJECT_TYPE;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.VENDOR_ID;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.VERSION;
 import static org.eclipse.n4js.packagejson.PackageJsonUtils.asBootstrapModuleOrNull;
@@ -280,7 +281,7 @@ public class PackageJsonHelper {
 	 */
 	private void applyDefaults(ProjectDescription target, String defaultProjectName) {
 		if (!target.isHasN4JSNature()) {
-			target.setProjectType(ProjectType.VALIDATION);
+			target.setProjectType(parseProjectType(PROJECT_TYPE.defaultValue));
 		}
 		if (target.getProjectName() == null) {
 			target.setProjectName(defaultProjectName);

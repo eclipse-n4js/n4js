@@ -40,7 +40,7 @@ public enum PackageJsonProperties {
 
 	// properties in section "n4js":
 	/** Key of package.json property "projectType". */
-	PROJECT_TYPE("projectType", PackageJsonProperties.N4JS),
+	PROJECT_TYPE("projectType", ProjectType.PLAINJS.getLiteral().toLowerCase(), PackageJsonProperties.N4JS),
 	/** Key of package.json property "vendorId". */
 	VENDOR_ID("vendorId", "vendor.default", PackageJsonProperties.N4JS),
 	/** Key of package.json property "vendorName". */
