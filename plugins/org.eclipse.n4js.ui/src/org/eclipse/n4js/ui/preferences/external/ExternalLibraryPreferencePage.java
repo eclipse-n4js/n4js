@@ -136,6 +136,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 		viewer = new TreeViewerBuilder(singletonList(""), contentProvider.get())
 				.setVirtual(true)
 				.setHeaderVisible(false)
+				.setUseHashlookup(true)
 				.setHasBorder(true)
 				.setColumnWeights(asList(1))
 				.setLabelProvider(new DelegatingStyledCellLabelProvider(new BuiltInLibrariesLabelProvider()))
