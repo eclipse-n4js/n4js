@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.ui.internal;
 
-import static org.eclipse.n4js.internal.N4JSModel.DIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT;
+import static org.eclipse.n4js.internal.N4JSModel.PROJECT_PLATFORM_RESOURCE_URI_SEGMENTCOUNT;
 
 import java.io.File;
 import java.util.Collections;
@@ -77,7 +77,7 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 	@Override
 	public URI findProjectWith(URI nestedLocation) {
 		if (nestedLocation.isPlatformResource()
-				&& nestedLocation.segmentCount() >= DIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT) {
+				&& nestedLocation.segmentCount() >= PROJECT_PLATFORM_RESOURCE_URI_SEGMENTCOUNT) {
 			return URI.createPlatformResourceURI(nestedLocation.segment(1), true);
 		}
 		// this might happen if the URI was located from non-platform information, e.g. in case
@@ -131,7 +131,7 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 
 	@Override
 	public URI getLocation(URI projectURI, ProjectReference projectReference) {
-		if (projectURI.segmentCount() >= DIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT) {
+		if (projectURI.segmentCount() >= PROJECT_PLATFORM_RESOURCE_URI_SEGMENTCOUNT) {
 			String expectedProjectName = projectReference.getProjectName();
 			if (expectedProjectName != null && expectedProjectName.length() > 0) {
 				// the below call to workspace.getProject(name) will search the Eclipse IProject by name, using the
@@ -151,7 +151,7 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 	@Override
 	public UnmodifiableIterator<URI> getFolderIterator(URI folderLocation) {
 		final IContainer container;
-		if (DIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT == folderLocation.segmentCount()) {
+		if (PROJECT_PLATFORM_RESOURCE_URI_SEGMENTCOUNT == folderLocation.segmentCount()) {
 			String n4jsProjectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(folderLocation);
 			String eclipseProjectName = ProjectDescriptionUtils
 					.convertN4JSProjectNameToEclipseProjectName(n4jsProjectName);
