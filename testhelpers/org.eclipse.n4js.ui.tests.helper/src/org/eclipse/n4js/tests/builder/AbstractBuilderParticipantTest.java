@@ -67,7 +67,7 @@ import com.google.inject.Provider;
  */
 public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest {
 	@Inject
-	private Provider<IDirtyStateManager> DirtyStateManager;
+	private Provider<IDirtyStateManager> dirtyStateManager;
 
 	@Inject
 	private ExternalLibrariesSetupHelper externalLibrariesSetupHelper;
@@ -175,7 +175,7 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 	protected IFile doCreateTestFile(IFolder folder, String fullName, CharSequence content) throws CoreException {
 		IFile file = folder.getFile(fullName);
 		file.create(new StringInputStream(content.toString()), true, monitor());
-		waitForAutoBuild();
+		// waitForAutoBuild();
 		return file;
 	}
 
@@ -328,7 +328,7 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 
 	/***/
 	protected void setDocumentContent(String context, IFile file, XtextEditor fileEditor, String newContent) {
-		IDirtyStateManager dirtyStateManager = DirtyStateManager.get();
+		IDirtyStateManager dirtyStateManager = this.dirtyStateManager.get();
 
 		TestEventListener eventListener = new TestEventListener(context, file);
 		dirtyStateManager.addListener(eventListener);

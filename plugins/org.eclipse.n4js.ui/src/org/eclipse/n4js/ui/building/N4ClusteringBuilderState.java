@@ -241,6 +241,14 @@ class N4ClusteringBuilderState extends AbstractBuilderState {
 				}
 				if (affected) {
 					buildData.queueURI(candidateURI);
+					// since the candidate is affected by any of the currently changed resources, we disable
+					// the module data of the candidate to ensure that no code will see it later on by accident
+					//
+					ResourceDescriptionWithoutModuleUserData noModuleData = new ResourceDescriptionWithoutModuleUserData(
+							candidateDescription);
+					newState.register(manager.createDelta(candidateDescription, noModuleData));
+					// also we ensure that we do run a subsequent build.
+					buildData.needRebuild();
 					iter.remove();
 				}
 			}

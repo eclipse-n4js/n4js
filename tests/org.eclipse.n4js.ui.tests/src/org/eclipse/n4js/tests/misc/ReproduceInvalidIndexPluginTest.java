@@ -1,24 +1,33 @@
 package org.eclipse.n4js.tests.misc;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSUiInjectorProvider;
 import org.eclipse.n4js.XtextParametrizedRunner;
 import org.eclipse.n4js.XtextParametrizedRunner.Parameters;
+import org.eclipse.n4js.resource.UserdataMapper;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.repeat.RepeatTest;
 import org.eclipse.n4js.tests.repeat.RepeatedTestRule;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
+import org.eclipse.n4js.ts.types.TypesPackage;
+import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 
 /**
  * Temporary test class intended only to reproduce and investigate a problem with the Xtext index. For details, see
@@ -29,7 +38,7 @@ import com.google.common.collect.ImmutableList;
 @SuppressWarnings("javadoc")
 public class ReproduceInvalidIndexPluginTest extends AbstractBuilderParticipantTest {
 
-	private static final int REPITITIONS = 20;
+	private static final int REPITITIONS = 5;
 
 	private static final String PROBANDS = "probands";
 	private static final String PROBANDS_SUBFOLDER = "reproduce-invalid-index";
@@ -55,30 +64,114 @@ public class ReproduceInvalidIndexPluginTest extends AbstractBuilderParticipantT
 
 	@RepeatTest(times = REPITITIONS)
 	@Test
-	public void tryToCorruptIndex() throws CoreException {
-		final File testdataLocation = new File(getResourceUri(PROBANDS, PROBANDS_SUBFOLDER));
+	public void tryToCorruptIndexWithIncrementalBuild() throws Exception {
+		importProjects(true);
 
-		for (String projectName : projectsToImport) {
-			ProjectTestsUtils.importProject(testdataLocation, projectName);
-		}
-		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 
-		assertMarkers("workspace should have not markers", ResourcesPlugin.getWorkspace().getRoot(), 0);
+		assertIndexState();
 	}
 
 	@RepeatTest(times = REPITITIONS)
 	@Test
-	public void tryToCorruptIndexWithoutSubsequentAutobuild() throws CoreException {
+	public void tryToCorruptIndexIncrementallyWithoutSubsequentAutobuild() throws Exception {
+		importProjects(true);
+
+		assertXtextIndexIsValid();
+
+		assertIndexState();
+	}
+
+	@RepeatTest(times = REPITITIONS)
+	@Test
+	public void tryToCorruptIndexWithFullBuild() throws Exception {
+		importProjects(false);
+
+		waitForAutoBuild();
+
+		assertIndexState();
+	}
+
+	@RepeatTest(times = REPITITIONS)
+	@Test
+	public void tryToCorruptIndexWithoutSubsequentAutobuild() throws Exception {
+		importProjects(false);
+
+		assertXtextIndexIsValid();
+
+		assertIndexState();
+	}
+
+	private void assertIndexState() throws Exception, IOException, CoreException {
+		assertCientDescriptionUpToDate();
+		assertAllDescriptionsHaveModuleData();
+		assertMarkers("workspace should have not markers", ResourcesPlugin.getWorkspace().getRoot(), 0);
+	}
+
+	private void importProjects(boolean incremental) throws CoreException {
 		final File testdataLocation = new File(getResourceUri(PROBANDS, PROBANDS_SUBFOLDER));
 
 		for (String projectName : projectsToImport) {
 			ProjectTestsUtils.importProject(testdataLocation, projectName);
 		}
-		IResourcesSetupUtil.fullBuild();
-		assertXtextIndexIsValid();
 
-		assertMarkers("workspace should have not markers", ResourcesPlugin.getWorkspace().getRoot(), 0);
+		if (incremental) {
+			// This should really be calles incrementalBuild
+			IResourcesSetupUtil.waitForBuild();
+		} else {
+			IResourcesSetupUtil.fullBuild();
+		}
+
+	}
+
+	/**
+	 * Assert that all descriptions in the index do have user data in their modules.
+	 */
+	private void assertAllDescriptionsHaveModuleData() throws IOException {
+		Iterable<IResourceDescription> descriptions = getXtextIndex().getAllResourceDescriptions();
+		for (IResourceDescription description : descriptions) {
+			if (N4JSGlobals.ALL_N4_FILE_EXTENSIONS.contains(description.getURI().fileExtension())) {
+				IEObjectDescription moduleDescription = Iterables
+						.getOnlyElement(description.getExportedObjectsByType(TypesPackage.Literals.TMODULE));
+				Assert.assertNotNull(description.getURI().toString(), moduleDescription);
+				String moduleAsString = UserdataMapper.getDeserializedModuleFromDescriptionAsString(moduleDescription,
+						description.getURI());
+				Assert.assertNotNull(description.getURI().toString(), moduleAsString);
+			}
+		}
+	}
+
+	/**
+	 * Assert that the resource description of the Client.n4js resource does contain TModule data
+	 */
+	private void assertCientDescriptionUpToDate() throws Exception {
+		// import {A} from "A";
+		// import * as B+ from "B";
+		//
+		// export export const a = new A();
+		// B;a;
+
+		IResourceDescription description = getXtextIndex()
+				.getResourceDescription(URI.createPlatformResourceURI("Client/src/Client.n4js", false));
+		Assert.assertNotNull(description);
+		IEObjectDescription moduleDescription = Iterables
+				.getOnlyElement(description.getExportedObjectsByType(TypesPackage.Literals.TMODULE));
+		Assert.assertNotNull(moduleDescription);
+		String moduleAsString = UserdataMapper.getDeserializedModuleFromDescriptionAsString(moduleDescription,
+				description.getURI());
+		Assert.assertNotNull(moduleAsString);
+		Assert.assertEquals("<?xml version=\"1.0\" encoding=\"ASCII\"?>\n" +
+				"<types:TModule xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:typeRefs=\"http://www.eclipse.org/n4js/ts/TypeRefs\" xmlns:types=\"http://www.eclipse.org/n4js/ts/Types\" qualifiedName=\"Client\" projectName=\"Client\" vendorID=\"org.eclipse.n4js\" moduleLoader=\"N4JS\">\n"
+				+
+				"  <astElement href=\"#/0\"/>\n" +
+				"  <variables name=\"a\" exportedName=\"a\" const=\"true\" newExpression=\"true\">\n" +
+				"    <astElement href=\"#/0/@scriptElements.2/@exportedElement/@varDeclsOrBindings.0\"/>\n" +
+				"    <typeRef xsi:type=\"typeRefs:ParameterizedTypeRef\">\n" +
+				"      <declaredType href=\"../../Def/src/A.n4jsd#/1/@topLevelTypes.0\"/>\n" +
+				"    </typeRef>\n" +
+				"  </variables>\n" +
+				"</types:TModule>\n" +
+				"", moduleAsString);
 	}
 
 }
