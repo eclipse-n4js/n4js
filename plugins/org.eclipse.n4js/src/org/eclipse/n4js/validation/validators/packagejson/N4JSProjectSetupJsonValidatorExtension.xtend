@@ -111,6 +111,8 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	static val RE_OR_RL_TYPE = anyOf(RUNTIME_ENVIRONMENT, RUNTIME_LIBRARY);
 	static val LIB_OR_VALIDATION_OR_RL = anyOf(LIBRARY, VALIDATION, RUNTIME_LIBRARY);
 	static val DEFINITION_TYPE = anyOf(DEFINITION);
+	static val PLAINJS_TYPE = anyOf(PLAINJS);
+	
 
 	/**
 	 * Key to store a converted ProjectDescription instance in the validation context for re-use across different check-methods
@@ -1022,10 +1024,10 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			case API: createAPIDependenciesPredicate
 			// runtime libraries may only depend on other runtime libraries
 			case RUNTIME_LIBRARY: RL_TYPE.forN4jsProjects
-			// definition project may depend on any type of project   
-			case DEFINITION: Predicates.alwaysTrue // TODO GH-821: disallow to-be-introduced PLAINJS-type here
-			// otherwise, any project type, but definition projects, may be declared as dependency
-			default: not(DEFINITION_TYPE).forN4jsProjects
+			// definition project may depend on any type of project but plainjs projects
+			case DEFINITION: not(PLAINJS_TYPE).forN4jsProjects
+			// otherwise, any project type may be declared as dependency
+			default: Predicates.alwaysTrue
 		}
 	}
 

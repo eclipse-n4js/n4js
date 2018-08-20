@@ -426,6 +426,14 @@ public class ExternalLibraryBuilder {
 			@Override
 			protected ToBeBuilt getToBeBuilt(ToBeBuiltComputer computer, N4JSEclipseProject n4Project,
 					IProgressMonitor monitor) {
+				// only build the project description file (package.json) for PLAINJS projects
+				if (n4Project.getProjectType() == ProjectType.PLAINJS) {
+					ToBeBuilt toBeBuilt = new ToBeBuilt();
+					if (n4Project.getProjectDescriptionLocation().isPresent()) {
+						toBeBuilt.getToBeDeleted().add(n4Project.getProjectDescriptionLocation().get());
+					}
+					return toBeBuilt;
+				}
 				return computer.removeProject(n4Project.getProject(), monitor);
 			}
 

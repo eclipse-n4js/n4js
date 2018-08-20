@@ -76,7 +76,7 @@ public class N4JSEclipseModel extends N4JSModel {
 					"Expected 2 segment counts for platform resource URI. Was " + location.segmentCount());
 		}
 
-		final String projectName = location.lastSegment();
+		final String projectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location);
 		IProject project;
 		if (location.isFile()) {
 			project = externalLibraryWorkspace.getProject(projectName);
@@ -300,8 +300,8 @@ public class N4JSEclipseModel extends N4JSModel {
 		}
 
 		for (IProject project : externalLibraryWorkspace.getProjects()) {
-			if (!workspaceProjectMapping.containsKey(project.getName())) {
-				N4JSProject n4jsProject = getN4JSProject(project);
+			final N4JSProject n4jsProject = getN4JSProject(project);
+			if (!workspaceProjectMapping.containsKey(n4jsProject.getProjectName())) {
 				workspaceProjectMapping.put(n4jsProject.getProjectName(), n4jsProject);
 			}
 		}

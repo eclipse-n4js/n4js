@@ -76,6 +76,7 @@ import org.eclipse.n4js.utils.WildcardPathFilterHelper;
 import org.eclipse.n4js.utils.process.OutputStreamPrinterThreadProvider;
 import org.eclipse.n4js.utils.process.OutputStreamProvider;
 import org.eclipse.n4js.utils.process.ProcessExecutor;
+import org.eclipse.n4js.validation.helper.FolderContainmentHelper;
 import org.eclipse.xtext.builder.builderState.IBuilderState;
 import org.eclipse.xtext.builder.clustering.CurrentDescriptions;
 import org.eclipse.xtext.builder.impl.IToBeBuiltComputerContribution;
@@ -115,6 +116,7 @@ public class ContributingModule implements Module {
 		binder.bind(InternalN4JSWorkspace.class).to(EclipseBasedN4JSWorkspace.class);
 		binder.bind(EclipseBasedN4JSWorkspace.class);
 		binder.bind(ProjectDescriptionLoader.class);
+		binder.bind(FolderContainmentHelper.class);
 		binder.bind(PackageJsonHelper.class);
 		binder.bind(IWorkspaceRoot.class).toProvider(new Provider<IWorkspaceRoot>() {
 			@Inject

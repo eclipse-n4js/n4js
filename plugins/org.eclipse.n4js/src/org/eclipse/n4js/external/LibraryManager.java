@@ -482,8 +482,16 @@ public class LibraryManager {
 
 		performGitPull(subsubMonitor.newChild(1, SubMonitor.SUPPRESS_ALL_LABELS));
 
+		final Map<String, URI> npmProjectsMappings = getAllNpmProjectsMapping();
+
+		final File definitionsFolder = npmPackageToProjectAdapter.getNpmsTypeDefinitionsFolder(false);
+		if (null == definitionsFolder) {
+			return;
+		}
+
 		for (String packageName : packageNames) {
-			IStatus status = refreshInstalledNpmPackage(packageName, subsubMonitor.newChild(1));
+			IStatus status = refreshInstalledNpmPackage(packageName, npmProjectsMappings, definitionsFolder,
+					subsubMonitor.newChild(1));
 			if (!status.isOK()) {
 				logger.logError(status);
 				refreshStatus.merge(status);
@@ -491,7 +499,8 @@ public class LibraryManager {
 		}
 	}
 
-	private IStatus refreshInstalledNpmPackage(String packageName, IProgressMonitor monitor) {
+	private IStatus refreshInstalledNpmPackage(String packageName, final Map<String, URI> npmProjectsMapping,
+			File definitionsFolder, IProgressMonitor monitor) {
 		SubMonitor progress = SubMonitor.convert(monitor, 2);
 
 		String taskName = "Refreshing npm type definitions for '" + packageName + "' ...";
@@ -499,15 +508,9 @@ public class LibraryManager {
 
 		try {
 
-			URI uri = getAllNpmProjectsMapping().get(packageName);
+			URI uri = npmProjectsMapping.get(packageName);
 			if (null == uri) {
 				// No project with the given package name. Nothing to do.
-				return statusHelper.OK();
-			}
-
-			File definitionsFolder = npmPackageToProjectAdapter.getNpmsTypeDefinitionsFolder(false);
-			if (null == definitionsFolder) {
-				// No definitions are available at the moment.
 				return statusHelper.OK();
 			}
 

@@ -13,6 +13,7 @@ package org.eclipse.n4js.external;
 import java.io.File;
 
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 
 /**
  * Utilities and core rules for external libraries.
@@ -34,5 +35,14 @@ public final class ExternalLibraryHelper {
 		// check whether package.json exists
 		final File packageJsonFile = new File(projectDirectory, N4JSGlobals.PACKAGE_JSON);
 		return packageJsonFile.isFile();
+	}
+
+	/**
+	 * Returns {@code true} iff the given {@link File} represents a directory that is considered an npm scope directory.
+	 */
+	public boolean isScopeDirectory(File scopeDirectory) {
+		final String name = scopeDirectory.getName();
+		return name.startsWith(ProjectDescriptionUtils.NPM_SCOPE_PREFIX) &&
+				ProjectDescriptionUtils.isValidScopeName(name);
 	}
 }

@@ -37,8 +37,10 @@ import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore.StoreUpdatedListener;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.ui.internal.ExternalProjectCacheLoader;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.resources.ExternalProject;
+import org.eclipse.n4js.validation.helper.FolderContainmentHelper;
 import org.eclipse.xtext.util.Pair;
 
 import com.google.common.base.Optional;
@@ -62,6 +64,9 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 
 	@Inject
 	private ExternalLibraryPreferenceStore externalLibraryPreferenceStore;
+
+	@Inject
+	private FolderContainmentHelper containmentHelper;
 
 	private final Collection<ExternalLocationsUpdatedListener> locListeners = new LinkedList<>();
 	private final List<java.net.URI> rootLocations = new LinkedList<>();
@@ -229,7 +234,9 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 				if (null != pair) {
 					N4JSExternalProject project = pair.getFirst();
 					if (!projectNameMappingTmp.containsKey(project.getName())) {
-						projectNameMappingTmp.put(project.getName(), project);
+						final String projectName = ProjectDescriptionUtils
+								.deriveN4JSProjectNameFromURI(projectLocation);
+						projectNameMappingTmp.put(projectName, project);
 						projectUriMappingTmp.put(projectLocation, pair);
 					}
 				}
@@ -285,11 +292,13 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 
 		for (Entry<URI, Pair<N4JSExternalProject, ProjectDescription>> entry : projectUriMapping.entrySet()) {
 			URI projectLocation = entry.getKey();
-			if (rootUri.equals(projectLocation.trimSegments(1))) {
+			// TODO maybe we can be stricter here (directly contained || directly contained in scope)
+			if (containmentHelper.isContained(projectLocation, rootUri)) {
 				Pair<N4JSExternalProject, ProjectDescription> pair = entry.getValue();
 				if (null != pair && null != pair.getFirst()) {
 					N4JSExternalProject project = pair.getFirst();
-					projectsMapping.put(project.getName(), project);
+					ProjectDescription projectDescription = pair.getSecond();
+					projectsMapping.put(projectDescription.getProjectName(), project);
 				}
 			}
 		}
@@ -306,7 +315,8 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 
 		for (Entry<URI, Pair<N4JSExternalProject, ProjectDescription>> entry : projectUriMapping.entrySet()) {
 			URI projectLocation = entry.getKey();
-			if (rootUri.equals(projectLocation.trimSegments(1))) {
+			// TODO maybe we can be stricter here (directly contained || directly contained in scope)
+			if (containmentHelper.isContained(projectLocation, rootUri)) {
 				Pair<N4JSExternalProject, ProjectDescription> pair = entry.getValue();
 				if (null != pair && null != pair.getFirst()) {
 					ProjectDescription description = pair.getSecond();
