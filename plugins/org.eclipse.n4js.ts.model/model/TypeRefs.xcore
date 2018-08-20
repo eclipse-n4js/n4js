@@ -484,7 +484,6 @@ class BoundThisTypeRef extends ThisTypeRef, StructuralTypeRef {
  * on use site. However, the latter is not allowed everywhere.
  */
 class ParameterizedTypeRef extends BaseTypeRef {
-	refers ModuleNamespaceVirtualType namespace
 	refers Type declaredType
 	contains TypeArgument[] typeArgs
 	boolean arrayTypeLiteral = "false"

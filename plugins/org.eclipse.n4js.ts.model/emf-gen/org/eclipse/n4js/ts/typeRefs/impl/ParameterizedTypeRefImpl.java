@@ -54,7 +54,6 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#getNamespace <em>Namespace</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#getDeclaredType <em>Declared Type</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#getTypeArgs <em>Type Args</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#isArrayTypeLiteral <em>Array Type Literal</em>}</li>
@@ -66,16 +65,6 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  * @generated
  */
 public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements ParameterizedTypeRef {
-	/**
-	 * The cached value of the '{@link #getNamespace() <em>Namespace</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getNamespace()
-	 * @generated
-	 * @ordered
-	 */
-	protected ModuleNamespaceVirtualType namespace;
-
 	/**
 	 * The cached value of the '{@link #getDeclaredType() <em>Declared Type</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -183,44 +172,6 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	@Override
 	protected EClass eStaticClass() {
 		return TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public ModuleNamespaceVirtualType getNamespace() {
-		if (namespace != null && namespace.eIsProxy()) {
-			InternalEObject oldNamespace = (InternalEObject)namespace;
-			namespace = (ModuleNamespaceVirtualType)eResolveProxy(oldNamespace);
-			if (namespace != oldNamespace) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, TypeRefsPackage.PARAMETERIZED_TYPE_REF__NAMESPACE, oldNamespace, namespace));
-			}
-		}
-		return namespace;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public ModuleNamespaceVirtualType basicGetNamespace() {
-		return namespace;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setNamespace(ModuleNamespaceVirtualType newNamespace) {
-		ModuleNamespaceVirtualType oldNamespace = namespace;
-		namespace = newNamespace;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TypeRefsPackage.PARAMETERIZED_TYPE_REF__NAMESPACE, oldNamespace, namespace));
 	}
 
 	/**
@@ -540,9 +491,6 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__NAMESPACE:
-				if (resolve) return getNamespace();
-				return basicGetNamespace();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__DECLARED_TYPE:
 				if (resolve) return getDeclaredType();
 				return basicGetDeclaredType();
@@ -570,9 +518,6 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__NAMESPACE:
-				setNamespace((ModuleNamespaceVirtualType)newValue);
-				return;
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__DECLARED_TYPE:
 				setDeclaredType((Type)newValue);
 				return;
@@ -604,9 +549,6 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__NAMESPACE:
-				setNamespace((ModuleNamespaceVirtualType)null);
-				return;
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__DECLARED_TYPE:
 				setDeclaredType((Type)null);
 				return;
@@ -637,8 +579,6 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__NAMESPACE:
-				return namespace != null;
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__DECLARED_TYPE:
 				return declaredType != null;
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__TYPE_ARGS:

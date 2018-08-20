@@ -893,15 +893,6 @@ public interface ImPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_IM__DYNAMIC = TypeRefsPackage.PARAMETERIZED_TYPE_REF__DYNAMIC;
 
 	/**
-	 * The feature id for the '<em><b>Namespace</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_IM__NAMESPACE = TypeRefsPackage.PARAMETERIZED_TYPE_REF__NAMESPACE;
-
-	/**
 	 * The feature id for the '<em><b>Declared Type</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1261,15 +1252,6 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__DYNAMIC = PARAMETERIZED_TYPE_REF_IM__DYNAMIC;
-
-	/**
-	 * The feature id for the '<em><b>Namespace</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__NAMESPACE = PARAMETERIZED_TYPE_REF_IM__NAMESPACE;
 
 	/**
 	 * The feature id for the '<em><b>Declared Type</b></em>' reference.
@@ -3079,15 +3061,6 @@ public interface ImPackage extends EPackage {
 	int VERSIONED_PARAMETERIZED_TYPE_REF_IM__DYNAMIC = PARAMETERIZED_TYPE_REF_IM__DYNAMIC;
 
 	/**
-	 * The feature id for the '<em><b>Namespace</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM__NAMESPACE = PARAMETERIZED_TYPE_REF_IM__NAMESPACE;
-
-	/**
 	 * The feature id for the '<em><b>Declared Type</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3474,15 +3447,6 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__DYNAMIC = PARAMETERIZED_TYPE_REF_IM__DYNAMIC;
-
-	/**
-	 * The feature id for the '<em><b>Namespace</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__NAMESPACE = PARAMETERIZED_TYPE_REF_IM__NAMESPACE;
 
 	/**
 	 * The feature id for the '<em><b>Declared Type</b></em>' reference.
