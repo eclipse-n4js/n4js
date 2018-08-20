@@ -246,7 +246,7 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 				if (project != null) {
 					// The removed project shadowed an existing project.
 					// Hence, the shadowed project must be build.
-					toBeUpdated.add(change.location);
+					toBeUpdated.add(URIUtils.convert(project));
 				}
 				break;
 			}
