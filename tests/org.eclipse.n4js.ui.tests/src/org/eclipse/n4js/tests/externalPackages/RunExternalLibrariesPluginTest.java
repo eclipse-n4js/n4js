@@ -48,7 +48,6 @@ import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -229,7 +228,6 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 
 	/***/
 	@Test
-	@Ignore("IDE-3130") // @TODO: IDE-3130 randomly failing test
 	public void runClientWithTwoClosedWorkspaceProjectsThenReopenThem() throws CoreException {
 		for (final String libProjectName : newArrayList(PB, PD)) {
 			getProjectByName(libProjectName).close(new NullProgressMonitor());
