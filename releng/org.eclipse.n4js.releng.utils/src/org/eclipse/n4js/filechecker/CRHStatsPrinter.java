@@ -30,7 +30,7 @@ public class CRHStatsPrinter {
 			"gitignore", "jar", "npmignore", "ico", "zip", "graffle", "pdf", "csv", "target", "licence", "license",
 			"setup", "dict", "json", "launch", "svg", "xtextbin", /* plugin. */"xml_gen", "replacement", "bib", "ecore",
 			"genmodel", "gitattributes", /* about. */"html_TEMPLATE", "icns", "ignored", "index", "map", "mappings",
-			"placeholder", "product", "see", "sublime-project", "xpm", "exsd", "xlsx", "dummy", "nfar", "xdoc",
+			"placeholder", "product", "see", "sublime-project", "xpm", "exsd", "xlsx", "dummy", "xdoc",
 			"xcf", "ext", "cspex", "api_filters", "b3aggr", "key" });
 
 	static boolean canHaveCRH(String extension) {
@@ -57,7 +57,7 @@ public class CRHStatsPrinter {
 				"-- Number of files that can have a copyright header: ");
 
 		Set<String> interestingExt = sortedHist.keySet();
-		// String[] interestingExt = { "n4js", "n4mf", "js" };
+		// String[] interestingExt = { "n4js", "js" };
 
 		interestingExt.removeAll(CANNOT_HAVE_CRH);
 		for (String ext : interestingExt) {

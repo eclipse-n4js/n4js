@@ -15,11 +15,10 @@ import java.util.stream.StreamSupport;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
-
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+
+import com.google.inject.Inject;
 
 /**
  * A content proposal provider to propose source folders in a given project.
@@ -42,8 +41,8 @@ public class SourceFolderContentProposalProviderFactory {
 		}
 
 		IN4JSProject n4Project = StreamSupport.stream(n4jsCore.findAllProjects().spliterator(), false)
-				.filter(project -> project.getProjectId().equals(contextProject.getName())) // Filter for the context
-																							// project
+				.filter(project -> project.getProjectName().equals(contextProject.getName())) // Filter for the context
+																								// project
 				.findAny().orElse(null);
 
 		if (n4Project == null) {

@@ -24,11 +24,12 @@ import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.json.JSON.JSONDocument
 import org.eclipse.n4js.json.JSON.JSONPackage
 import org.eclipse.n4js.json.^extension.IJSONResourceDescriptionExtension
-import org.eclipse.n4js.n4mf.ProjectDescription
-import org.eclipse.n4js.n4mf.ProjectReference
-import org.eclipse.n4js.n4mf.ProjectType
+import org.eclipse.n4js.projectDescription.ProjectDescription
+import org.eclipse.n4js.projectDescription.ProjectReference
+import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSCore
-import org.eclipse.n4js.utils.ProjectDescriptionHelper
+import org.eclipse.n4js.semver.model.SemverSerializer
+import org.eclipse.n4js.utils.ProjectDescriptionLoader
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.resource.EObjectDescription
@@ -51,58 +52,58 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 	 */
 	private static val SEPARATOR = "/";
 
-	/** The key of the user data for retrieving the project ID. */
-	public static val PROJECT_ID_KEY = 'prjectId';
+	/** The key of the user data for retrieving the project name. */
+	public static val PROJECT_NAME_KEY = 'projectName';
 	
 	/** The key of the user data for retrieving the project version. */
-	public static val PROJECT_VERSION_KEY = 'prjectVersion';
+	public static val PROJECT_VERSION_KEY = 'projectVersion';
 
 	/** The key of the user data for retrieving the project type as a string. */
-	private static val PROJECT_TYPE_KEY = 'prjectType';
+	private static val PROJECT_TYPE_KEY = 'projectType';
 
 	/** Key for the project implementation ID value. {@code null} value will be mapped to empty string. */
 	private static val IMPLEMENTATION_ID_KEY = 'implementationId';
 
 	/**
-	 * Key for storing the test project IDs.
+	 * Key for storing the test project names.
 	 * If a project does not have any tested projects this key will be missing from the user data.
 	 * The values are separated with the {@link PackageJsonResourceDescriptionExtension#SEPARATOR} character.
 	 */
-	private static val TESTED_PROJECT_IDS_KEY = 'testedProjectIds';
+	private static val TESTED_PROJECT_NAMES_KEY = 'testedProjectNames';
 
 	/**
-	 * Key for storing the implemented project IDs.
+	 * Key for storing the implemented project names.
 	 * If a project does not implement any projects this key will be missing from the user data.
 	 * The values are separated with the {@link PackageJsonResourceDescriptionExtension#SEPARATOR} character.
 	 */
-	private static val IMPLEMENTED_PROJECT_IDS_KEY = 'implementedProjectIds';
+	private static val IMPLEMENTED_PROJECT_NAMES_KEY = 'implementedProjectNames';
 
 	/**
-	 * Key for storing the project IDs of all direct dependencies.
+	 * Key for storing the project names of all direct dependencies.
 	 * If a project does not have any direct projects this key will be missing from the user data.
 	 * The values are separated with the {@link PackageJsonResourceDescriptionExtension#SEPARATOR} character.
 	 */
-	private static val PROJECT_DEPENDENCY_IDS_KEY = 'projectDependencyIds';
+	private static val PROJECT_DEPENDENCY_NAMES_KEY = 'projectDependencyNames';
 
 	/**
-	 * Key for storing the IDs of all provided runtime libraries.
+	 * Key for storing the project names of all provided runtime libraries.
 	 * If the project does not provide any runtime libraries, then this value will be omitted form the user data.
 	 * Multiple values are separated with the {@link PackageJsonResourceDescriptionExtension#SEPARATOR} character.
 	 */
-	private static val PROVIDED_RUNTIME_LIBRARY_IDS_KEY = 'providedRuntimeLibraryIds';
+	private static val PROVIDED_RUNTIME_LIBRARY_NAMES_KEY = 'providedRuntimeLibraryNames';
 
 	/**
-	 * Key for storing the project IDs of all required runtime libraries.
+	 * Key for storing the project names of all required runtime libraries.
 	 * If the project does not have any runtime library requirement, this value will not be present in the user data.
 	 * Multiple values will be joined with the {@link PackageJsonResourceDescriptionExtension#SEPARATOR} separator.
 	 */
-	private static val REQUIRED_RUNTIME_LIBRARY_IDS_KEY = 'requiredRuntimeLibraryIds';
+	private static val REQUIRED_RUNTIME_LIBRARY_NAMES_KEY = 'requiredRuntimeLibraryNames';
 
 	/**
 	 * Key for storing the unique project identifier of the extended runtime environment. If the project does not
 	 * extend any runtime environment, then this value will not exist in the user data.
 	 */
-	private static val EXTENDED_RUNTIME_ENVIRONMENT_ID_KEY = 'extendedRuntimeEnvironmentId';
+	private static val EXTENDED_RUNTIME_ENVIRONMENT_NAME_KEY = 'extendedRuntimeEnvironmentName';
 
 	@Inject
 	private IN4JSCore n4jsCore;
@@ -111,7 +112,9 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 	private IQualifiedNameProvider qualifiedNameProvider;
 
 	@Inject
-	private ProjectDescriptionHelper projectDescriptionHelper;
+	private ProjectDescriptionLoader projectDescriptionLoader;
+
+
 
     private static final Logger LOGGER = Logger.getLogger(PackageJsonResourceDescriptionExtension);
 
@@ -141,19 +144,19 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 		}
 
 		// Contains only those project IDs that were changed via its N4JS manifest.
-		val changedProjectIds = deltas.map[uri].filter[isPackageJSON].map[projectIdFromPackageJSONUri].toSet;
+		val changedProjectNames = deltas.map[uri].filter[isPackageJSON].map[projectNameFromPackageJSONUri].toSet;
 
 		// Collect all referenced project IDs of the candidate.
-		val referencedProjectIds = newLinkedList;
+		val referencedProjectNames = newLinkedList;
 		candidate.getExportedObjectsByType(JSONPackage.Literals.JSON_DOCUMENT).forEach[
-			referencedProjectIds.addAll(testedProjectIds);
-			referencedProjectIds.addAll(implementedProjectIds);
-			referencedProjectIds.addAll(projectDependencyIds);
-			referencedProjectIds.addAll(providedRuntimeLibraryIds);
-			referencedProjectIds.addAll(requiredRuntimeLibraryIds);
-			val extRuntimeEnvironmentId = extendedRuntimeEnvironmentId;
+			referencedProjectNames.addAll(testedProjectNames);
+			referencedProjectNames.addAll(implementedProjectNames);
+			referencedProjectNames.addAll(projectDependencyNames);
+			referencedProjectNames.addAll(providedRuntimeLibraryNames);
+			referencedProjectNames.addAll(requiredRuntimeLibraryNames);
+			val extRuntimeEnvironmentId = extendedRuntimeEnvironmentName;
 			if (!extRuntimeEnvironmentId.nullOrEmpty) {
-				referencedProjectIds.add(extRuntimeEnvironmentId);
+				referencedProjectNames.add(extRuntimeEnvironmentId);
 			}
 		];
 
@@ -162,8 +165,8 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 		// only direct project dependencies when checking whether a candidate is affected or not.
 		//
 		// See: N4JSResourceDescriptionManager#basicIsAffected and N4JSResourceDescriptionManager#hasDependencyTo
-		for (referencedProjectId : referencedProjectIds) {
-			if (changedProjectIds.contains(referencedProjectId)) {
+		for (referencedProjectName : referencedProjectNames) {
+			if (changedProjectNames.contains(referencedProjectName)) {
 				return true;
 			}
 		}
@@ -182,7 +185,7 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 			LOGGER.error("creation of EObjectDescriptions failed: cannot derive project location from document");
 			return;
 		}
-		val description = projectDescriptionHelper.loadProjectDescriptionAtLocation(projectLocation, document, true);
+		val description = projectDescriptionLoader.loadProjectDescriptionAtLocation(projectLocation, document);
 		if(description === null) {
 			LOGGER.error("creation of EObjectDescriptions failed: cannot load project description at location: " + projectLocation);
 			return;
@@ -197,46 +200,43 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 	private def Map<String, String> createProjectDescriptionUserData(ProjectDescription it) {
 		val builder = ImmutableMap.builder;
 		builder.put(PROJECT_TYPE_KEY, '''«projectType»''');
-		builder.put(PROJECT_ID_KEY, projectId.nullToEmpty);
+		builder.put(PROJECT_NAME_KEY, projectName.nullToEmpty);
 		builder.put(IMPLEMENTATION_ID_KEY, implementationId.nullToEmpty);
 
 		val vers = projectVersion;
 		if (vers !== null) {
-			val versionStr = '''«vers.major».«vers.minor».«vers.micro»''';
-			val versionWithQualifierStr = if (vers.qualifier.nullOrEmpty)
-					versionStr else '''«versionStr»:«vers.qualifier.nullToEmpty»''';
-
-			builder.put(PROJECT_VERSION_KEY, versionWithQualifierStr);
+			val versionStr = SemverSerializer.serialize(vers);
+			builder.put(PROJECT_VERSION_KEY, versionStr);
 		}
 
 		val testedProjects = it.testedProjects;
 		if (!testedProjects.nullOrEmpty) {
-			builder.put(TESTED_PROJECT_IDS_KEY, testedProjects.asString);
+			builder.put(org.eclipse.n4js.resource.packagejson.PackageJsonResourceDescriptionExtension.TESTED_PROJECT_NAMES_KEY, testedProjects.asString);
 		}
 
 		val implementedProjects = it.implementedProjects;
 		if (!implementedProjects.nullOrEmpty) {
-			builder.put(IMPLEMENTED_PROJECT_IDS_KEY, implementedProjects.asString);
+			builder.put(IMPLEMENTED_PROJECT_NAMES_KEY, implementedProjects.asString);
 		}
 
 		val projectDependencies = it.projectDependencies;
 		if (!projectDependencies.nullOrEmpty) {
-			builder.put(PROJECT_DEPENDENCY_IDS_KEY, projectDependencies.asString);
+			builder.put(PROJECT_DEPENDENCY_NAMES_KEY, projectDependencies.asString);
 		}
 
 		val providedRuntimeLibraries = providedRuntimeLibraries;
 		if (!providedRuntimeLibraries.nullOrEmpty) {
-			builder.put(PROVIDED_RUNTIME_LIBRARY_IDS_KEY, providedRuntimeLibraries.asString);
+			builder.put(PROVIDED_RUNTIME_LIBRARY_NAMES_KEY, providedRuntimeLibraries.asString);
 		}
 
 		val requiredRuntimeLibraries = requiredRuntimeLibraries;
 		if (!requiredRuntimeLibraries.nullOrEmpty) {
-			builder.put(REQUIRED_RUNTIME_LIBRARY_IDS_KEY, requiredRuntimeLibraries.asString);
+			builder.put(REQUIRED_RUNTIME_LIBRARY_NAMES_KEY, requiredRuntimeLibraries.asString);
 		}
 
 		val extRuntimeEnvironment = it.extendedRuntimeEnvironment;
 		if (extRuntimeEnvironment !== null) {
-			builder.put(EXTENDED_RUNTIME_ENVIRONMENT_ID_KEY, Collections.singleton(it.extendedRuntimeEnvironment).asString);
+			builder.put(EXTENDED_RUNTIME_ENVIRONMENT_NAME_KEY, Collections.singleton(it.extendedRuntimeEnvironment).asString);
 		}
 
 		return builder.build;
@@ -257,65 +257,65 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 	}
 
 	/**
-	 * Optionally returns with the project project ID extracted from the user data of the given EObject description argument.
+	 * Optionally returns with the project name extracted from the user data of the given EObject description argument.
 	 */
-	public static def getProjectId(IEObjectDescription it) {
+	public static def getProjectName(IEObjectDescription it) {
 		if (it === null) {
 			return null;
 		}
-		return it.getUserData(PROJECT_ID_KEY);
+		return it.getUserData(PROJECT_NAME_KEY);
 	}
 
 	/**
 	 * Returns with a collection of distinct IDs of the tested projects. Never returns with {@code null}.
 	 */
-	public static def getTestedProjectIds(IEObjectDescription it) {
-		return getProjectIdsUserDataOf(TESTED_PROJECT_IDS_KEY);
+	public static def getTestedProjectNames(IEObjectDescription it) {
+		return getProjectNamesUserDataOf(org.eclipse.n4js.resource.packagejson.PackageJsonResourceDescriptionExtension.TESTED_PROJECT_NAMES_KEY);
 	}
 
 	/**
 	 * Returns with a collection of distinct IDs of the implemented projects. Never returns with {@code null}.
 	 */
-	public static def getImplementedProjectIds(IEObjectDescription it) {
-		return getProjectIdsUserDataOf(IMPLEMENTED_PROJECT_IDS_KEY);
+	public static def getImplementedProjectNames(IEObjectDescription it) {
+		return getProjectNamesUserDataOf(IMPLEMENTED_PROJECT_NAMES_KEY);
 	}
 
 	/**
 	 * Returns with a collection of distinct IDs of the project dependencies. Never returns with {@code null}.
 	 */
-	public static def getProjectDependencyIds(IEObjectDescription it) {
-		return getProjectIdsUserDataOf(PROJECT_DEPENDENCY_IDS_KEY);
+	public static def getProjectDependencyNames(IEObjectDescription it) {
+		return getProjectNamesUserDataOf(PROJECT_DEPENDENCY_NAMES_KEY);
 	}
 
 	/**
 	 * Returns with a collection of distinct IDs of the provided runtime libraries. Never returns with {@code null}.
 	 */
-	public static def getProvidedRuntimeLibraryIds(IEObjectDescription it) {
-		return getProjectIdsUserDataOf(PROVIDED_RUNTIME_LIBRARY_IDS_KEY);
+	public static def getProvidedRuntimeLibraryNames(IEObjectDescription it) {
+		return getProjectNamesUserDataOf(PROVIDED_RUNTIME_LIBRARY_NAMES_KEY);
 	}
 
 	/**
 	 * Returns with a collection of distinct IDs of the required runtime libraries. Never returns with {@code null}.
 	 */
-	public static def getRequiredRuntimeLibraryIds(IEObjectDescription it) {
-		return getProjectIdsUserDataOf(REQUIRED_RUNTIME_LIBRARY_IDS_KEY);
+	public static def getRequiredRuntimeLibraryNames(IEObjectDescription it) {
+		return getProjectNamesUserDataOf(REQUIRED_RUNTIME_LIBRARY_NAMES_KEY);
 	}
 
 	/**
 	 * Returns with the ID of the extended runtime environment. May return with {@code null} if argument is {@code null}
 	 * or if the value of the user data key is {@code null}. In a nutshell, if a project does not extend a RE.
 	 */
-	public static def getExtendedRuntimeEnvironmentId(IEObjectDescription it) {
+	public static def getExtendedRuntimeEnvironmentName(IEObjectDescription it) {
 		if (it === null) {
 			return null;
 		}
-		return it.getUserData(EXTENDED_RUNTIME_ENVIRONMENT_ID_KEY);
+		return it.getUserData(EXTENDED_RUNTIME_ENVIRONMENT_NAME_KEY);
 	}
 
 	/**
 	 * Returns with a collection of distinct project IDs extracted from the user data. Never returns with {@code null}.
 	 */
-	private static def getProjectIdsUserDataOf(IEObjectDescription it, String key) {
+	private static def getProjectNamesUserDataOf(IEObjectDescription it, String key) {
 		if (it === null) {
 			return emptySet;
 		}
@@ -323,11 +323,11 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 	}
 
 	private static def String asString(Iterable<? extends ProjectReference> it) {
-		it.filterNull.map[projectId].filterNull.join(SEPARATOR)
+		it.filterNull.map[projectName].filterNull.join(SEPARATOR)
 	}
 
 	/**
-	 * Returns with the projectId of an N4JS project by appending the second segment from the end of a N4JS manifest URI argument.
+	 * Returns with the projectName of an N4JS project by appending the second segment from the end of a N4JS manifest URI argument.
 	 * This method only works for N4JS manifest URIs and throws {@link IllegalArgumentException} for all other URIs.
 	 * Since this method accepts only N4JS manifest URIs it is guaranteed to get the container project name as the second URI
 	 * segment from the end. We cannot simply grab and return with the first segment as the project name, because external
@@ -337,7 +337,7 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 	 * the project ID of the project but due to plug-in dependency issues N4JS core service is not available from here.
 	 *
 	 */
-	private static def String getProjectIdFromPackageJSONUri(URI uri) {
+	private static def String getProjectNameFromPackageJSONUri(URI uri) {
 		Preconditions.checkArgument(uri.isPackageJSON, '''Expected URI with «N4JSGlobals.PACKAGE_JSON» as last segment. Was: «uri»''');
 		return uri.segment(uri.segmentCount - 2);
 	}

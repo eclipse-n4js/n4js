@@ -1,6 +1,6 @@
 {
 	"name": "P1",
-	"version": "0.0.1-SNAPSHOT",
+	"version": "0.0.1",
 	"dependencies": {
 		"react-dom": "*",
 		"react": "*",
@@ -22,6 +22,10 @@
 			"n4js-runtime-html5",
 			"n4js-runtime-fetch",
 			"n4js-runtime-es2015"
-		]
+		],
+		"typeDependencies": {
+			"react-n4jsd": "*",
+			"react-dom-n4jsd": "*"
+		}
 	}
 }

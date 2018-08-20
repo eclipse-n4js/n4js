@@ -16,9 +16,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -31,15 +29,19 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.n4js.n4mf.ProjectType;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.packagejson.PackageJsonBuilder;
+import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.tests.util.EclipseUIUtils;
 import org.eclipse.n4js.tests.util.PackageJSONTestHelper;
+import org.eclipse.n4js.tests.util.ProjectTestsHelper;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
+import org.eclipse.n4js.utils.process.ProcessResult;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
@@ -69,6 +71,9 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 
 	@Inject
 	private ExternalLibrariesSetupHelper externalLibrariesSetupHelper;
+
+	@Inject
+	private ProjectTestsHelper projectTestsHelper;
 
 	@Inject
 	private IssueUtil issueUtil;
@@ -141,10 +146,27 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 	}
 
 	/**
-	 * Creates a new file in the given folder. {@link #F_EXT} is appended to the name.
+	 * Creates a new file in the given folder. {@link N4JSGlobals#N4JS_FILE_EXTENSION} is appended to the name.
 	 */
 	protected IFile createTestFile(IFolder folder, String name, CharSequence content) throws CoreException {
-		String fullName = name + F_EXT;
+		String fullName = name + "." + N4JSGlobals.N4JS_FILE_EXTENSION;
+		return doCreateTestFile(folder, fullName, content);
+	}
+
+	/**
+	 * Creates a new JavaScript file in the given folder. {@link N4JSGlobals#N4JSD_FILE_EXTENSION} is appended to the
+	 * name.
+	 */
+	protected IFile createTestN4JSDFile(IFolder folder, String name, CharSequence content) throws CoreException {
+		String fullName = name + "." + N4JSGlobals.N4JSD_FILE_EXTENSION;
+		return doCreateTestFile(folder, fullName, content);
+	}
+
+	/**
+	 * Creates a new JavaScript file in the given folder. {@link N4JSGlobals#JS_FILE_EXTENSION} is appended to the name.
+	 */
+	protected IFile createTestJSFile(IFolder folder, String name, CharSequence content) throws CoreException {
+		String fullName = name + "." + N4JSGlobals.JS_FILE_EXTENSION;
 		return doCreateTestFile(folder, fullName, content);
 	}
 
@@ -252,9 +274,29 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 		return ProjectTestsUtils.assertMarkers(assertMessage, resource, markerType, count, ignoreSomeWarnings);
 	}
 
-	/***/
+	/** See {@link ProjectTestsUtils#assertNoIssues()}. */
+	protected void assertNoIssues() throws CoreException {
+		ProjectTestsUtils.assertNoIssues();
+	}
+
+	/** See {@link ProjectTestsUtils#assertIssues(String...)}. */
+	protected void assertIssues(String... expectedMessages) throws CoreException {
+		ProjectTestsUtils.assertIssues(expectedMessages);
+	}
+
+	/** See {@link ProjectTestsUtils#assertIssues(IResource, String...)}. */
 	protected void assertIssues(final IResource resource, String... expectedMessages) throws CoreException {
 		ProjectTestsUtils.assertIssues(resource, expectedMessages);
+	}
+
+	/** See {@link ProjectTestsHelper#runWithNodeRunnerUI(URI)}. */
+	protected ProcessResult runWithNodeRunnerUI(URI moduleToRun) {
+		return projectTestsHelper.runWithNodeRunnerUI(moduleToRun);
+	}
+
+	/** See {@link ProjectTestsHelper#runWithRunnerUI(String, String, URI)}. */
+	protected ProcessResult runWithRunnerUI(String runnerId, String implementationId, URI moduleToRun) {
+		return projectTestsHelper.runWithRunnerUI(runnerId, implementationId, moduleToRun);
 	}
 
 	/**
@@ -321,9 +363,9 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 	}
 
 	/** Returns with the absolute URI of the resource loaded from the current plug-in. */
-	protected URI getResourceUri(final String segment, final String... restSegments) {
+	protected java.net.URI getResourceUri(final String segment, final String... restSegments) {
 		final String resourceName = getResourceName(segment, restSegments);
-		final URL url = this.getClass().getClassLoader().getResource(resourceName);
+		final java.net.URL url = this.getClass().getClassLoader().getResource(resourceName);
 		try {
 			return new File(FileLocator.resolve(url).toURI()).getCanonicalFile().toURI();
 		} catch (final URISyntaxException | IOException e) {

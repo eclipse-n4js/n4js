@@ -33,7 +33,7 @@ import org.junit.runner.RunWith
  * Synthesized modules are resources, that are not contained in a  N4JS project / source container 
  * environment. (modules with top-level URIs e.g. '__synthetic.n4js').
  * 
- * <p> Note: This test requires the containing project to have a manifest.n4mf with 
+ * <p> Note: This test requires the containing project to have a package.json with 
  * this file being contained in a declared N4JS source container. </p> 
  */
 @InjectWith(N4JSInjectorProvider)

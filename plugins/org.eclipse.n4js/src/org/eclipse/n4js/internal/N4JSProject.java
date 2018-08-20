@@ -26,18 +26,18 @@ import java.util.List;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSLanguageConstants;
-import org.eclipse.n4js.n4mf.BootstrapModule;
-import org.eclipse.n4js.n4mf.DeclaredVersion;
-import org.eclipse.n4js.n4mf.ModuleFilter;
-import org.eclipse.n4js.n4mf.ModuleFilterType;
-import org.eclipse.n4js.n4mf.ModuleLoader;
-import org.eclipse.n4js.n4mf.ProjectDescription;
-import org.eclipse.n4js.n4mf.ProjectType;
-import org.eclipse.n4js.projectModel.IN4JSArchive;
+import org.eclipse.n4js.projectDescription.BootstrapModule;
+import org.eclipse.n4js.projectDescription.ModuleFilter;
+import org.eclipse.n4js.projectDescription.ModuleFilterType;
+import org.eclipse.n4js.projectDescription.ModuleLoader;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
-import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.URIUtils;
+import org.eclipse.n4js.utils.io.FileUtils;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
@@ -56,16 +56,6 @@ public class N4JSProject implements IN4JSProject {
 		this.location = location;
 		this.external = external;
 		this.model = model;
-	}
-
-	@Override
-	public boolean isProject() {
-		return true;
-	}
-
-	@Override
-	public boolean isArchive() {
-		return false;
 	}
 
 	@Override
@@ -132,14 +122,6 @@ public class N4JSProject implements IN4JSProject {
 	}
 
 	@Override
-	public ImmutableList<? extends IN4JSArchive> getLibraries() {
-		if (!exists()) {
-			return ImmutableList.of();
-		}
-		return model.getLibraries(this);
-	}
-
-	@Override
 	public ImmutableList<? extends IN4JSProject> getDependencies() {
 		if (!exists()) {
 			return ImmutableList.of();
@@ -176,18 +158,17 @@ public class N4JSProject implements IN4JSProject {
 	}
 
 	@Override
-	public ImmutableList<? extends IN4JSSourceContainerAware> getAllDirectDependencies() {
+	public ImmutableList<? extends IN4JSProject> getAllDirectDependencies() {
 		if (!exists()) {
 			return ImmutableList.of();
 		}
-		ImmutableList.Builder<IN4JSSourceContainerAware> result = ImmutableList.builder();
+		ImmutableList.Builder<IN4JSProject> result = ImmutableList.builder();
 		result.addAll(getDependencies());
-		result.addAll(getLibraries());
 		return result.build();
 	}
 
 	@Override
-	public ImmutableList<? extends IN4JSSourceContainerAware> getProvidedRuntimeLibraries() {
+	public ImmutableList<? extends IN4JSProject> getProvidedRuntimeLibraries() {
 		if (!exists()) {
 			return ImmutableList.of();
 		}
@@ -195,11 +176,10 @@ public class N4JSProject implements IN4JSProject {
 	}
 
 	@Override
-	public String getProjectId() {
-		// because the projectId must be available even if the project does not exist, we do not read from the
-		// ProjectDescription, here, but instead use the last segment of the location URI (equality between the two is
-		// ensured by an n4mf validation)
-		return location.lastSegment();
+	public String getProjectName() {
+		// because the projectName must be available even if the project does not exist, we do not read from the
+		// ProjectDescription, here, but instead derive the projectName from the location URI
+		return ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location);
 	}
 
 	@Override
@@ -256,7 +236,7 @@ public class N4JSProject implements IN4JSProject {
 	}
 
 	@Override
-	public DeclaredVersion getVersion() {
+	public VersionNumber getVersion() {
 		if (!exists())
 			return null;
 		ProjectDescription pd = model.getProjectDescription(getLocation());
@@ -274,18 +254,7 @@ public class N4JSProject implements IN4JSProject {
 		if (pd == null) {
 			return null;
 		}
-		return pd.getOutputPath();
-	}
-
-	@Override
-	public List<String> getResourcePaths() {
-		if (!exists())
-			return emptyList();
-		ProjectDescription pd = model.getProjectDescription(getLocation());
-		if (pd == null) {
-			return emptyList();
-		}
-		return pd.getResourcePaths();
+		return FileUtils.normalizeToDotWhenEmpty(pd.getOutputPath());
 	}
 
 	@Override
@@ -295,7 +264,7 @@ public class N4JSProject implements IN4JSProject {
 
 	@Override
 	public ModuleFilter getNoModuleWrappingFilter() {
-		return getModuleFilterByType(ModuleFilterType.NO_MODULE_WRAPPING);
+		return getModuleFilterByType(ModuleFilterType.NO_MODULE_WRAP);
 	}
 
 	private ModuleFilter getModuleFilterByType(ModuleFilterType type) {
@@ -313,16 +282,6 @@ public class N4JSProject implements IN4JSProject {
 			return emptyList();
 		}
 		return pd.getModuleFilters();
-	}
-
-	@Override
-	public List<String> getLibraryFolders() {
-		ProjectDescription pd = model.getProjectDescription(getLocation());
-		if (pd == null) {
-			return emptyList();
-		} else {
-			return pd.getLibraryPaths();
-		}
 	}
 
 	@Override
@@ -354,7 +313,7 @@ public class N4JSProject implements IN4JSProject {
 	}
 
 	@Override
-	public Optional<IN4JSSourceContainerAware> getExtendedRuntimeEnvironment() {
+	public Optional<IN4JSProject> getExtendedRuntimeEnvironment() {
 		return fromNullable(model.getExtendedRuntimeEnvironment(this).orNull());
 	}
 
@@ -379,7 +338,7 @@ public class N4JSProject implements IN4JSProject {
 
 	@Override
 	public String toString() {
-		String str = getProjectId();
+		String str = getProjectName();
 		str += " (" + (exists() ? getProjectType() : "doesn't exist") + ")";
 		return str;
 	}
@@ -404,7 +363,7 @@ public class N4JSProject implements IN4JSProject {
 			if (packageJSON.isFile()) {
 				return fromNullable(packageJSON);
 			}
-			// next check for an XPECT 'package.json.xt' fiel
+			// next check for an XPECT 'package.json.xt' file
 			final File packageJSONXpect = new File(locationAsFile,
 					IN4JSProject.PACKAGE_JSON + "." + N4JSGlobals.XT_FILE_EXTENSION);
 
@@ -426,4 +385,10 @@ public class N4JSProject implements IN4JSProject {
 		}
 		return pd.isHasN4JSNature();
 	}
+
+	@Override
+	public String getDefinesPackageName() {
+		return getModel().getDefinesPackage(this);
+	}
+
 }

@@ -11,23 +11,22 @@
 package org.eclipse.n4js.runner.internal;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.external.ExternalLibraryUtils;
+import org.eclipse.n4js.external.ExternalLibraryHelper;
 import org.eclipse.n4js.external.libraries.ShippedCodeAccess;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.utils.ProjectDescriptionHelper;
+import org.eclipse.n4js.utils.ProjectDescriptionLoader;
+import org.eclipse.n4js.utils.URIUtils;
 
-import com.google.common.base.Strings;
 import com.google.inject.Inject;
 
 /**
@@ -38,10 +37,11 @@ import com.google.inject.Inject;
 public class RunnerN4JSCore {
 	private static final Logger LOGGER = Logger.getLogger(RunnerN4JSCore.class);
 
-	private static final int DANGLING_SEGMENT_COUNT = 1;
+	@Inject
+	private ProjectDescriptionLoader projectDescriptionLoader;
 
 	@Inject
-	private ProjectDescriptionHelper projectDescriptionHelper;
+	private ExternalLibraryHelper externalLibraryHelper;
 
 	/**
 	 * Returns all shipped projects as iterable. Returned projects are stubs for real {@link N4JSProject}. They
@@ -54,8 +54,7 @@ public class RunnerN4JSCore {
 	public Iterable<IN4JSProject> getAllShippedProjects() {
 
 		final RunnerTargetPlatformInstallLocationProvider locationProvider = new RunnerTargetPlatformInstallLocationProvider();
-		final RunnerClasspathPackageManager manager = new RunnerClasspathPackageManager();
-		final FileBasedWorkspace workspace = new FileBasedWorkspace(manager, projectDescriptionHelper);
+		final FileBasedWorkspace workspace = new FileBasedWorkspace(projectDescriptionLoader);
 		final N4JSModel model = new N4JSModel(workspace, locationProvider);
 
 		ShippedCodeAccess.getAllShippedPaths().forEach(path -> discoverProjects(path, workspace));
@@ -85,35 +84,13 @@ public class RunnerN4JSCore {
 		File root = new File(rootLocation);
 
 		Arrays.asList(root.listFiles()).stream().filter(File::isDirectory).forEach(projectDir -> {
-			if (ExternalLibraryUtils.isExternalProjectDirectory(projectDir)) {
-				URI createURI = createProjectUri(projectDir);
+			if (externalLibraryHelper.isExternalProjectDirectory(projectDir)) {
+				URI createURI = URIUtils.deriveProjectURIFromFileLocation(projectDir);
 				workspace.registerProject(createURI);
 			} else {
 				LOGGER.warn("Cannot locate project description file (i.e. package.json) file at "
 						+ projectDir.getAbsolutePath());
 			}
 		});
-	}
-
-	/**
-	 * Creates project {@link URI} for the given file system location.
-	 *
-	 * @param location
-	 *            file system location to transform
-	 * @return {@link URI} for the provided location
-	 */
-	private URI createProjectUri(File location) {
-		URI createURI = null;
-		try {
-			createURI = URI.createURI(location.toURI().toURL().toString());
-			// by convention IN4JSProject URI does not end with '/'
-			// i.e. last segment is not empty
-			if (Strings.isNullOrEmpty(createURI.lastSegment())) {
-				createURI = createURI.trimSegments(DANGLING_SEGMENT_COUNT);
-			}
-		} catch (MalformedURLException e) {
-			LOGGER.warn("Exceptions when transforming location: " + location, e);
-		}
-		return createURI;
 	}
 }

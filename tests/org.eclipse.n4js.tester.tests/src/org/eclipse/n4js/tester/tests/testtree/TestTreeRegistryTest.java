@@ -98,7 +98,7 @@ public class TestTreeRegistryTest extends AbstractTestTreeTest {
 	@Test
 	public void testRegisterTestTree() {
 		final String sessionId = valueOf(randomUUID());
-		fsmRegistry.registerFsm(sessionId);
+		fsmRegistry.getTestFsm(sessionId);
 		treeRegistry.registerTestTree(newTestTree(sessionId));
 	}
 
@@ -106,7 +106,7 @@ public class TestTreeRegistryTest extends AbstractTestTreeTest {
 	@Test(expected = IllegalStateException.class)
 	public void testRegisterTestTreeWithMismatchingSessionId() {
 		final String sessionId = valueOf(randomUUID());
-		fsmRegistry.registerFsm(sessionId);
+		fsmRegistry.getTestFsm(sessionId);
 		treeRegistry.registerTestTree(newTestTree(valueOf(randomUUID())));
 	}
 
@@ -114,7 +114,7 @@ public class TestTreeRegistryTest extends AbstractTestTreeTest {
 	@Test
 	public void testRegisterTestTreeThenLookupAndAssertWithOriginal() {
 		final String sessionId = valueOf(randomUUID());
-		fsmRegistry.registerFsm(sessionId);
+		fsmRegistry.getTestFsm(sessionId);
 		final TestTree original = newTestTree(sessionId);
 		treeRegistry.registerTestTree(original);
 		final TestTree copy = treeRegistry.getTestTree(sessionId);
@@ -127,7 +127,7 @@ public class TestTreeRegistryTest extends AbstractTestTreeTest {
 	@Test(expected = IllegalStateException.class)
 	public void testRegisterTestTreeThenPurgeAssertNotFound() {
 		final String sessionId = valueOf(randomUUID());
-		fsmRegistry.registerFsm(sessionId);
+		fsmRegistry.getTestFsm(sessionId);
 		final TestTree original = newTestTree(sessionId);
 		treeRegistry.registerTestTree(original);
 		assertNotNull(treeRegistry.getTestTree(sessionId));
@@ -146,7 +146,7 @@ public class TestTreeRegistryTest extends AbstractTestTreeTest {
 	@Test
 	public void testValidateEmptyTestTree() {
 		final String sessionId = valueOf(randomUUID());
-		fsmRegistry.registerFsm(sessionId);
+		fsmRegistry.getTestFsm(sessionId);
 		treeRegistry.registerTestTree(newTestTree(sessionId));
 		internalTreeRegistry.validateTestTree(sessionId);
 	}
@@ -156,7 +156,7 @@ public class TestTreeRegistryTest extends AbstractTestTreeTest {
 	public void testValidateIncompleteTestTree() {
 		final String sessionId = valueOf(randomUUID());
 		final String testId = valueOf(randomUUID());
-		fsmRegistry.registerFsm(sessionId);
+		fsmRegistry.getTestFsm(sessionId);
 		treeRegistry.registerTestTree(newTestTree(sessionId, testId));
 		assertFalse(internalTreeRegistry.validateTestTree(sessionId));
 	}
@@ -167,7 +167,7 @@ public class TestTreeRegistryTest extends AbstractTestTreeTest {
 		final String sessionId = valueOf(randomUUID());
 		final String testId_1 = valueOf(randomUUID());
 		final String testId_2 = valueOf(randomUUID());
-		fsmRegistry.registerFsm(sessionId);
+		fsmRegistry.getTestFsm(sessionId);
 		treeRegistry.registerTestTree(newTestTree(sessionId, testId_1, testId_2));
 		internalTreeRegistry.putTestResult(sessionId, testId_1, newEmptyTestResult());
 		internalTreeRegistry.putTestResult(sessionId, testId_2, newEmptyTestResult());
@@ -187,7 +187,7 @@ public class TestTreeRegistryTest extends AbstractTestTreeTest {
 	public void testPutTestResultWithoutMatchingTest() {
 		final String sessionId = valueOf(randomUUID());
 		final String testId = valueOf(randomUUID());
-		fsmRegistry.registerFsm(sessionId);
+		fsmRegistry.getTestFsm(sessionId);
 		treeRegistry.registerTestTree(newTestTree(sessionId, testId));
 		internalTreeRegistry.putTestResult(sessionId, "some other test ID", newEmptyTestResult());
 	}
@@ -197,7 +197,7 @@ public class TestTreeRegistryTest extends AbstractTestTreeTest {
 	public void testPutTestResult() {
 		final String sessionId = valueOf(randomUUID());
 		final String testId = valueOf(randomUUID());
-		fsmRegistry.registerFsm(sessionId);
+		fsmRegistry.getTestFsm(sessionId);
 		treeRegistry.registerTestTree(newTestTree(sessionId, testId));
 		internalTreeRegistry.putTestResult(sessionId, testId, newEmptyTestResult());
 	}
@@ -214,7 +214,7 @@ public class TestTreeRegistryTest extends AbstractTestTreeTest {
 	public void concurrentPutTestResults() throws InterruptedException {
 		final String sessionId = valueOf(randomUUID());
 		final String[] testIds = generateTestIdRangeClosed(0, 10);
-		fsmRegistry.registerFsm(sessionId);
+		fsmRegistry.getTestFsm(sessionId);
 		treeRegistry.registerTestTree(newTestTree(sessionId, testIds));
 		final CountDownLatch latch = new CountDownLatch(testIds.length);
 		final List<Thread> putResultThreads = Arrays2.transform(testIds,

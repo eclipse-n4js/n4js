@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.n4js.binaries.BinariesPreferenceStore;
 import org.eclipse.n4js.binaries.BinariesValidator;
 import org.eclipse.n4js.binaries.Binary;
-import org.eclipse.n4js.utils.Version;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -58,12 +58,12 @@ public class NpmBinary implements Binary {
 	@Override
 	public String getDescription() {
 		return "Configuration of the folder location of the npm library "
-				+ "can be provided here. If not given, then the location will be resolved by used Node.js\u00AE. The required minimum version npm is '"
-				+ NodeBinariesConstants.NPM_MIN_VERSION + "'.";
+				+ "can be provided here. If not given, then the location will be resolved by used Node.js\u00AE. "
+				+ "The required minimum version npm is '" + NodeBinariesConstants.NPM_MIN_VERSION + "'.";
 	}
 
 	@Override
-	public Version getMinimumVersion() {
+	public VersionNumber getMinimumVersion() {
 		return NodeBinariesConstants.NPM_MIN_VERSION;
 	}
 

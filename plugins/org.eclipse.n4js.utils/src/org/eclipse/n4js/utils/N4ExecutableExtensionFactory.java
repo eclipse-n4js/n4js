@@ -60,7 +60,7 @@ public abstract class N4ExecutableExtensionFactory implements IExecutableExtensi
 			}
 			return result;
 		} catch (final Exception e) {
-			throw new CoreException(new Status(ERROR, getBunleId(),
+			throw new CoreException(new Status(ERROR, getBundleId(),
 					nullToEmpty(e.getMessage()) + " ExtensionFactory: " + getClass().getName(), e));
 		}
 	}
@@ -85,7 +85,7 @@ public abstract class N4ExecutableExtensionFactory implements IExecutableExtensi
 	 *
 	 * @return the bundle ID for the logging purposes.
 	 */
-	protected String getBunleId() {
+	protected String getBundleId() {
 		return "";
 	}
 

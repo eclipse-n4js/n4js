@@ -20,27 +20,30 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
-import org.eclipse.n4js.n4mf.ProjectType;
-import org.eclipse.n4js.projectModel.IN4JSArchive;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware;
 import org.eclipse.n4js.runner.exceptions.DependencyCycleDetectedException;
 import org.eclipse.n4js.runner.exceptions.InsolvableRuntimeEnvironmentException;
 import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
-import org.eclipse.n4js.validation.helper.SourceContainerAwareDependencyTraverser;
+import org.eclipse.n4js.utils.DependencyCycle;
+import org.eclipse.n4js.utils.DependencyTraverser;
+import org.eclipse.n4js.utils.DependencyTraverser.DependencyProvider;
+import org.eclipse.n4js.utils.DependencyTraverser.DependencyVisitor;
+import org.eclipse.n4js.validation.helper.SourceContainerAwareDependencyProvider;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 
 /**
- * Helper that resolves Runtime Environments required to execute given {@link IN4JSProject}.
+ * Helper that resolves {@link ProjectType#RUNTIME_ENVIRONMENT}s, required to execute a given {@link IN4JSProject}.
  */
 public class RuntimeEnvironmentsHelper {
 
@@ -62,8 +65,8 @@ public class RuntimeEnvironmentsHelper {
 	public Optional<IN4JSProject> findRuntimeEnvironmentProject(RuntimeEnvironment runtimeEnvironment,
 			Iterable<IN4JSProject> projects) {
 		return from(projects)
-				.filter(p -> isRuntimeEnvironemnt(p))
-				.filter(p -> runtimeEnvironment.getProjectId().equals(p.getProjectId()))
+				.filter(p -> isRuntimeEnvironment(p))
+				.filter(p -> runtimeEnvironment.getProjectName().equals(p.getProjectName()))
 				.first();
 	}
 
@@ -90,95 +93,65 @@ public class RuntimeEnvironmentsHelper {
 	 *             if the corresponding project has a dependency cycle.
 	 */
 	public Set<RuntimeEnvironment> findCompatibleRuntimeEnvironments(IN4JSProject project) {
-		if (isRuntimeEnvironemnt(project) || isRuntimeLibrary(project)) {
+		if (isRuntimeEnvironment(project) || isRuntimeLibrary(project)) {
 			throw new InsolvableRuntimeEnvironmentException(project);
 		}
-		List<IN4JSProject> reqRuntiemLibraries = collectRequiredRuntimeLibraries(project);
+		Collection<IN4JSProject> reqRuntimeLibraries = collectRequiredRuntimeLibraries(project);
 		return from(getAllProjects())
-				.filter(p -> isRuntimeEnvironemnt(p))
+				.filter(p -> isRuntimeEnvironment(p))
 				.transform(p -> new AbstractMap.SimpleEntry<>(p, getProjectProvidedRuntimeLibraries(p)))
-				.filter(e -> e.getValue().containsAll(reqRuntiemLibraries))
+				.filter(e -> e.getValue().containsAll(reqRuntimeLibraries))
 				.transform(e -> e.getKey())
-				.transformAndConcat(re -> getEnvironemntWithAncestors(re))
-				.transform(rRE -> RuntimeEnvironment.fromProjectId(rRE.getProjectId()))
+				.transformAndConcat(re -> getRuntimeEnvironmentAndAllExtendedEnvironments(re))
+				.transform(rRE -> RuntimeEnvironment.fromProjectName(rRE.getProjectName()))
 				.filter(rRE -> rRE != null)
 				.toSet();
 	}
 
 	/**
-	 * For a given environment returns set containing given environment and all environments it extends. If provided
-	 * project is not of type {@link ProjectType#RUNTIME_ENVIRONMENT} then returns empty set.
+	 * For a given environment, this method returns the set containing given environment and all environments it
+	 * extends.
+	 *
+	 * If the provided project is not of type {@link ProjectType#RUNTIME_ENVIRONMENT}, this method returns an empty set.
 	 */
-	public Set<IN4JSProject> getEnvironemntWithAncestors(IN4JSProject project) {
+	public Set<IN4JSProject> getRuntimeEnvironmentAndAllExtendedEnvironments(IN4JSProject project) {
 		if (!project.getProjectType().equals(ProjectType.RUNTIME_ENVIRONMENT)) {
 			return null;
 		}
-		Set<IN4JSProject> environemtns = new HashSet<>();
-		environemtns.add(project);
-		getEnvironemntWithAncestorsRecursive(project, environemtns);
-		return environemtns;
-	}
 
-	private void getEnvironemntWithAncestorsRecursive(IN4JSProject project, Set<IN4JSProject> environemtns) {
-		if (!project.getProjectType().equals(ProjectType.RUNTIME_ENVIRONMENT)) {
-			return;
-		}
-		Optional<IN4JSSourceContainerAware> maybePArent = project.getExtendedRuntimeEnvironment();
-		if (maybePArent.isPresent()) {
-			IN4JSProject parent = (IN4JSProject) maybePArent.get();
-			environemtns.add(parent);
-			getEnvironemntWithAncestorsRecursive(parent, environemtns);
-		}
-		return;
-	}
+		// obtain all extended REs
+		final HashSet<IN4JSProject> allREs = new HashSet<>(getExtendedRuntimeEnvironments(project));
+		// add base RE itself
+		allREs.add(project);
 
-	private Iterable<IN4JSProject> getAllProjects() {
-		return in4jscore.findAllProjects();
+		return allREs;
 	}
 
 	/**
-	 * Analyzes all transitive dependencies of the provided provided {@link IN4JSProject} . Collects all dependencies
-	 * that are of type {@link ProjectType#RUNTIME_LIBRARY}. Resulting collection contains no duplicates.
+	 * Analyzes all transitive dependencies of the provided {@link IN4JSProject}. Collects all dependencies that are of
+	 * type {@link ProjectType#RUNTIME_LIBRARY}. The resulting collection contains no duplicates.
 	 *
 	 * @param project
 	 *            to be analyzed
 	 * @return list of transitive dependencies of type runtime library, no duplicates
 	 */
-	private List<IN4JSProject> collectRequiredRuntimeLibraries(IN4JSProject project) {
-		if (new SourceContainerAwareDependencyTraverser(project).getResult().hasCycle()) {
+	private ImmutableList<IN4JSProject> collectRequiredRuntimeLibraries(IN4JSProject project) {
+		Set<IN4JSProject> runtimeLibraryDependencies = new HashSet<>();
+
+		final DependencyVisitor<IN4JSProject> visitor = new ProjectsCollectingDependencyVisitor(
+				runtimeLibraryDependencies, p -> isRuntimeLibrary(p));
+		final DependencyTraverser<IN4JSProject> traverser = new DependencyTraverser<>(
+				project, visitor, new SourceContainerAwareDependencyProvider(true), true);
+
+		// traverse and check for cycles
+		final DependencyCycle<IN4JSProject> result = traverser.findCycle();
+
+		// check whether a dependency cycle between workspace projects was discovered
+		if (result.hasCycle()) {
 			throw new DependencyCycleDetectedException(project);
 		}
-		Set<IN4JSProject> depsRuntimeLibraries = new HashSet<>();
-		recursiveDependencyCollector(project, depsRuntimeLibraries, p -> isRuntimeLibrary(p));
-		return new ArrayList<>(depsRuntimeLibraries);
-	}
 
-	/**
-	 * Collects dependencies of the provided source container, by analyzing direct dependencies of the container and
-	 * recursively their dependencies. Dependencies in form of {@link IN4JSSourceContainerAware} are mapped to
-	 * {@link IN4JSProject}s, that is instances of {@link IN4JSProject} project are returned as they are, while
-	 * instances of {@link IN4JSArchive} have contained project extracted.
-	 *
-	 * Discovered dependencies are collected only if they pass test specified by provided predicate.
-	 *
-	 * @param sourceContainer
-	 *            whose dependencies will be collected
-	 * @param collection
-	 *            where dependencies are collected
-	 * @param predicate
-	 *            to test if given dependency should be collected
-	 */
-	private void recursiveDependencyCollector(IN4JSSourceContainerAware sourceContainer,
-			Collection<IN4JSProject> collection,
-			Predicate<IN4JSProject> predicate) {
-
-		IN4JSProject project = (extractProject(sourceContainer));
-
-		if (predicate.test(project))
-			collection.add(project);
-
-		sourceContainer.getAllDirectDependencies().forEach(
-				dep -> recursiveDependencyCollector(dep, collection, predicate));
+		return ImmutableList.copyOf(runtimeLibraryDependencies);
 	}
 
 	/**
@@ -193,90 +166,52 @@ public class RuntimeEnvironmentsHelper {
 	private List<IN4JSProject> getProjectProvidedRuntimeLibraries(IN4JSProject runtimeEnvironment) {
 		Set<IN4JSProject> providedRuntimeLibraries = new HashSet<>();
 
-		if (isRuntimeEnvironemnt(runtimeEnvironment))
-			recursiveProvidedRuntimeLibrariesCollector(runtimeEnvironment.getProvidedRuntimeLibraries(),
-					providedRuntimeLibraries, p -> isRuntimeLibrary(p));
+		if (isRuntimeEnvironment(runtimeEnvironment)) {
+			collectProvidedRuntimeLibraries(runtimeEnvironment, providedRuntimeLibraries);
+		}
 
-		// include RLs provided by extended REs
-		recursiveCollectRlFromChain(runtimeEnvironment, providedRuntimeLibraries);
+		// include RLs provided by extended REs and runtimeEnvironment itself
+		collectRuntimeLibrariesFromExtendedRuntimeEnvironments(runtimeEnvironment, providedRuntimeLibraries);
 
 		return new ArrayList<>(providedRuntimeLibraries);
 	}
 
-	private void recursiveCollectRlFromChain(IN4JSProject runtimeEnvironment, Collection<IN4JSProject> collection) {
-		Optional<String> extended = runtimeEnvironment.getExtendedRuntimeEnvironmentId();
-		if (extended.isPresent()) {
-			String id = extended.get();
-			List<IN4JSProject> extendedRE = from(getAllProjects()).filter(p -> id.equals(p.getProjectId()))
-					.toList();
-
-			if (extendedRE.isEmpty()) {
-				return;
-			}
-
-			if (extendedRE.size() > 1) {
-				LOGGER.debug("multiple projects match id " + id);
-				LOGGER.error(new RuntimeException("Cannot obtain transitive list of provided libraries"));
-				return;
-			}
-
-			IN4JSProject extendedRuntimeEnvironemnt = extendedRE.get(0);
-			recursiveProvidedRuntimeLibrariesCollector(extendedRuntimeEnvironemnt.getProvidedRuntimeLibraries(),
-					collection, p -> isRuntimeLibrary(p));
-
-			recursiveCollectRlFromChain(extendedRuntimeEnvironemnt, collection);
-
+	/**
+	 * Collects all runtime libraries that are provided by all runtime environments, {@code runtimeEnvironment} extends.
+	 *
+	 * Does not include runtime libraries that are only provided directly by {@code runtimeEnvironment}.
+	 */
+	private void collectRuntimeLibrariesFromExtendedRuntimeEnvironments(IN4JSProject runtimeEnvironment,
+			Collection<IN4JSProject> collection) {
+		// collect all provided runtime environments by all extended runtime environments of runtimeEnvironment
+		// and runtimeEnvironment itself
+		for (IN4JSProject extendedRuntimeEnvironment : getExtendedRuntimeEnvironments(runtimeEnvironment)) {
+			collectProvidedRuntimeLibraries(extendedRuntimeEnvironment, collection);
 		}
 	}
 
 	/**
-	 * Maps passed collection of {@link IN4JSSourceContainerAware} to list of {@link IN4JSProject}, that is instances of
-	 * {@link IN4JSProject} project are returned as they are, while instances of {@link IN4JSArchive} have contained
-	 * project extracted. For each result of that transformation, examines its
-	 * {@link IN4JSProject#getProvidedRuntimeLibraries()} to check if they pass predicate test. Instances that do are
-	 * stored in the passed collection.
+	 * Maps passed collection of {@link IN4JSProject} to list of {@link IN4JSProject}, that is instances of
+	 * {@link IN4JSProject} project are returned. For each result of that transformation, examines its
+	 * {@link IN4JSProject#getProvidedRuntimeLibraries()} to check if they are runtime library projects.
 	 *
-	 * Calls itself recursively on each processed element, accumulating results in collection passed along call chains.
+	 * All discovered runtime library projects are then added to the given {@code collection}.
 	 *
-	 * @param runtimeLibraries
-	 *            list of source containers to analyze (usually of type {@link ProjectType#RUNTIME_LIBRARY})
+	 * @param project
+	 *            project whose provided runtime libraries should be collected
 	 * @param collection
 	 *            where provided runtime libraries are collected
-	 * @param predicate
-	 *            to test if provided project is of type {@link ProjectType#RUNTIME_LIBRARY}
 	 */
-	private void recursiveProvidedRuntimeLibrariesCollector(
-			com.google.common.collect.ImmutableList<? extends IN4JSSourceContainerAware> runtimeLibraries,
-			Collection<IN4JSProject> collection, Predicate<IN4JSProject> predicate) {
-
-		runtimeLibraries.forEach(runtimeLibrary -> {
-			IN4JSProject project = (extractProject(runtimeLibrary));
-			if (predicate.test(project))
-				collection.add(project);
-			recursiveProvidedRuntimeLibrariesCollector(project.getProvidedRuntimeLibraries(), collection, predicate);
-		});
-	}
-
-	/**
-	 * Map provided source container to instance of {@link IN4JSProject}, that is instances of {@link IN4JSProject}
-	 * project are returned as they are, while instances of {@link IN4JSArchive} have contained project extracted.
-	 *
-	 * @param container
-	 *            that is mapped to project
-	 *
-	 * @return project resulting from mapping
-	 * @throws RuntimeException
-	 *             if mapping cannot be performed
-	 */
-
-	private IN4JSProject extractProject(IN4JSSourceContainerAware container) {
-		if (container instanceof IN4JSProject) {
-			return (IN4JSProject) container;
-		}
-		if (container instanceof IN4JSArchive) {
-			return ((IN4JSArchive) container).getProject();
-		}
-		throw new RuntimeException("Unknown instance type of container " + container.getClass().getName());
+	private void collectProvidedRuntimeLibraries(IN4JSProject project, Collection<IN4JSProject> collection) {
+		// collect provided runtime libraries into 'collection'
+		final ProjectsCollectingDependencyVisitor visitor = new ProjectsCollectingDependencyVisitor(collection,
+				s -> isRuntimeLibrary(s));
+		// traverse provided runtime libraries only
+		final DependencyProvider<IN4JSProject> dependencyProvider = p -> p.getProvidedRuntimeLibraries();
+		final DependencyTraverser<IN4JSProject> traverser = new DependencyTraverser<>(project, visitor,
+				dependencyProvider, true);
+		// trigger actual traversal
+		traverser.traverse();
 	}
 
 	/**
@@ -309,11 +244,10 @@ public class RuntimeEnvironmentsHelper {
 		boolean result = true;
 
 		List<IN4JSProject> allRuntimeEnvironments = from(getAllProjects())
-				.filter(p -> isRuntimeEnvironemnt(p)).toList();
+				.filter(p -> isRuntimeEnvironment(p)).toList();
 
 		Map<IN4JSProject, List<String>> reExtendedEnvironments = allRuntimeEnvironments.stream()
-				.map(re -> getExtendedRuntimeEnvironmentsNames(re, allRuntimeEnvironments))
-				.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
+				.collect(Collectors.toMap(e -> e, e -> getExtendedRuntimeEnvironmentsIds(e, allRuntimeEnvironments)));
 
 		// if runnerEnvironments (first param) would be single IN4JSProject (instead of collection)
 		// code below could be simplified
@@ -321,15 +255,15 @@ public class RuntimeEnvironmentsHelper {
 		while (result && iterRuntimeEnvironment.hasNext()) {
 			RuntimeEnvironment re = iterRuntimeEnvironment.next();
 			List<IN4JSProject> listExtendedEnvironments = reExtendedEnvironments.keySet().stream()
-					.filter(p -> p.getProjectId().equals(re.getProjectId())).collect(Collectors.toList());
+					.filter(p -> p.getProjectName().equals(re.getProjectName())).collect(Collectors.toList());
 
 			if (listExtendedEnvironments.size() != 1) {
 				LOGGER.debug("Multiple projects with name "
-						+ re.getProjectId()
+						+ re.getProjectName()
 						+ " : "
-						+ listExtendedEnvironments.stream().map(p -> p.getProjectId())
+						+ listExtendedEnvironments.stream().map(p -> p.getProjectName())
 								.reduce(new String(), (String r, String e) -> r += ", " + e));
-				LOGGER.error("Cannot obtain project for name " + re.getProjectId());
+				LOGGER.error("Cannot obtain project for name " + re.getProjectName());
 				return false;
 			}
 
@@ -337,15 +271,15 @@ public class RuntimeEnvironmentsHelper {
 			List<String> listExtendedEnvironemntsNames = reExtendedEnvironments.get(extendedRuntimeEnvironment);
 			result = result
 					&& requiredEnvironments.stream().map(bre -> {
-						return bre.getProjectId();
+						return bre.getProjectName();
 					}).allMatch(breName -> listExtendedEnvironemntsNames.contains(breName));
 		}
 		return result;
 	}
 
 	/**
-	 * Analyzes provided list of all runtime environments and creates {@link Entry} for mapping between particular
-	 * runtime environment and ones it extends.
+	 * Analyzes provided list of all runtime environments and returns a list of the project IDs of
+	 * {@link ProjectType#RUNTIME_ENVIRONMENT} projects that {@code runtimeEnv} extends.
 	 *
 	 * @param runtimeEnv
 	 *            RE for which mapping is created
@@ -353,48 +287,78 @@ public class RuntimeEnvironmentsHelper {
 	 *            collection of REs for which are taken into account
 	 * @return map entry of mapping between RE and REs it extends
 	 */
-	private AbstractMap.SimpleEntry<IN4JSProject, List<String>> getExtendedRuntimeEnvironmentsNames(
+	private List<String> getExtendedRuntimeEnvironmentsIds(
 			IN4JSProject runtimeEnv,
 			List<IN4JSProject> allRuntimeEnv) {
-		Set<String> depsRuntimeLibraries = new HashSet<>();
-		recursiveCompatibleEnvironemntCollector(runtimeEnv, depsRuntimeLibraries, p -> isRuntimeEnvironemnt(p),
-				allRuntimeEnv);
-		return new AbstractMap.SimpleEntry<>(runtimeEnv, new ArrayList<>(depsRuntimeLibraries));
+		return getExtendedRuntimeEnvironments(runtimeEnv).stream()
+				.map(p -> p.getProjectName()).collect(Collectors.toList());
 	}
 
 	/**
-	 * recursively searches given source container for provided runtime environments
+	 * Returns a list of the {@link IN4JSProject} representation of the {@link ProjectType#RUNTIME_ENVIRONMENT} projects
+	 * that can be obtained by following the inheritance hierarchy defined by
+	 * {@link ProjectDescription#getExtendedRuntimeEnvironment()}.
+	 *
+	 * Does not include {@code runtimeEnvironment} itself.
 	 */
-	private void recursiveCompatibleEnvironemntCollector(IN4JSSourceContainerAware sourceContainer,
-			Collection<String> collection,
-			Predicate<IN4JSProject> predicate, List<IN4JSProject> allRuntimeEnv) {
+	private List<IN4JSProject> getExtendedRuntimeEnvironments(IN4JSProject runtimeEnvironment) {
+		final List<IN4JSProject> runtimeEnvironments = new ArrayList<>();
+		Optional<String> extended = runtimeEnvironment.getExtendedRuntimeEnvironmentId();
 
-		IN4JSProject project = (extractProject(sourceContainer));
+		while (extended.isPresent()) {
+			String id = extended.get();
+			List<IN4JSProject> extendedRE = from(getAllProjects()).filter(p -> id.equals(p.getProjectName())).toList();
 
-		if (predicate.test(project)) {
-			com.google.common.base.Optional<String> oExtendedProjectId = project.getExtendedRuntimeEnvironmentId();
-
-			if (!oExtendedProjectId.isPresent()) {
-				return;
+			if (extendedRE.isEmpty()) {
+				break;
 			}
 
-			String extendedProjectId = oExtendedProjectId.get();
-			collection.add(extendedProjectId);
-			allRuntimeEnv
-					.stream()
-					.filter(p -> p.getProjectId().equals(extendedProjectId))
-					.findFirst()
-					.ifPresent(exre -> recursiveCompatibleEnvironemntCollector(exre, collection, predicate,
-							allRuntimeEnv));
+			if (extendedRE.size() > 1) {
+				LOGGER.debug("multiple projects match id " + id);
+			}
 
+			final IN4JSProject extendedRuntimeEnvironment = extendedRE.get(0);
+
+			runtimeEnvironments.add(extendedRuntimeEnvironment);
+
+			// check next element in inheritance hierarchy
+			extended = extendedRuntimeEnvironment.getExtendedRuntimeEnvironmentId();
 		}
+
+		return runtimeEnvironments;
 	}
 
-	private boolean isRuntimeEnvironemnt(IN4JSProject project) {
+	private static boolean isRuntimeEnvironment(IN4JSProject project) {
 		return ProjectType.RUNTIME_ENVIRONMENT.equals(project.getProjectType());
 	}
 
-	private boolean isRuntimeLibrary(IN4JSProject project) {
+	private static boolean isRuntimeLibrary(IN4JSProject project) {
 		return ProjectType.RUNTIME_LIBRARY.equals(project.getProjectType());
+	}
+
+	private Iterable<IN4JSProject> getAllProjects() {
+		return in4jscore.findAllProjects();
+	}
+
+	/** A {@link DependencyVisitor} that collect a filtered set of discovered transitive dependencies. */
+	private final class ProjectsCollectingDependencyVisitor implements DependencyVisitor<IN4JSProject> {
+		private final Collection<IN4JSProject> collectedProjects;
+		private final Predicate<IN4JSProject> projectFilter;
+
+		/** */
+		private ProjectsCollectingDependencyVisitor(Collection<IN4JSProject> depsRuntimeLibraries,
+				Predicate<IN4JSProject> projectFilter) {
+			this.projectFilter = projectFilter;
+			this.collectedProjects = depsRuntimeLibraries;
+		}
+
+		@Override
+		public void accept(IN4JSProject p) {
+			if (projectFilter.test(p)) {
+				// collect runtime library projects only
+				collectedProjects.add(p);
+			}
+
+		}
 	}
 }

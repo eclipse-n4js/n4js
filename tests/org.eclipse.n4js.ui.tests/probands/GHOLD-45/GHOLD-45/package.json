@@ -1,6 +1,6 @@
 {
   "name": "GHOLD-45",
-  "version": "0.0.1-SNAPSHOT",
+  "version": "0.0.1",
   "dependencies": {
     "org.eclipse.n4js.mangelhaft": "*",
     "org.eclipse.n4js.mangelhaft.assert": "*"

@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.eclipse.n4js.semver.tests
+Bundle-Vendor: org.eclipse.n4js
+Bundle-Version: 0.0.1.qualifier
+Bundle-SymbolicName: org.eclipse.n4js.semver.tests;singleton:=true
+Fragment-Host: org.eclipse.n4js
+Require-Bundle: org.eclipse.n4js.semver,
+ org.eclipse.xtext.testing,
+ org.junit,
+ org.eclipse.n4js.semver.tests.helper,
+ org.eclipse.n4js.semver.model,
+ org.eclipse.n4js.common.unicode
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Automatic-Module-Name: org.eclipse.n4js.semver.tests

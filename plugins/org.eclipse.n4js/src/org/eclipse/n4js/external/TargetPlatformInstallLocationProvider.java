@@ -18,10 +18,13 @@ import java.net.URI;
 
 import org.apache.log4j.Logger;
 import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
+import org.eclipse.n4js.external.libraries.ExternalLibraryFolderUtils;
 
 /**
  * Provides information about the target platform install location and about the location of the actual target platform
  * file.
+ * <p>
+ * Keep folder computations in sync with {@link ExternalLibrariesActivator}!
  */
 public interface TargetPlatformInstallLocationProvider {
 
@@ -36,15 +39,30 @@ public interface TargetPlatformInstallLocationProvider {
 	String NODE_MODULES_FOLDER = ExternalLibrariesActivator.NPM_CATEGORY;
 
 	/**
+	 * Unique name of the {@code node_modules} folder that will be used to download npm packages.
+	 */
+	String TYPE_DEFINITIONS_FOLDER = ExternalLibrariesActivator.TYPE_DEFINITIONS_CATEGORY;
+
+	/**
+	 * Returns with an {@link File} pointing to the target platform install location, called '.n4npm' folder.
+	 *
+	 * @return the {@link File} pointing to the target platform install location.
+	 */
+	File getTargetPlatformInstallFolder();
+
+	/**
 	 * Returns with an URI pointing to the target platform install location.
 	 *
 	 * @return the URI pointing to the target platform install location.
 	 */
-	URI getTargetPlatformInstallLocation();
+	default URI getTargetPlatformInstallURI() {
+		File tpFolder = getTargetPlatformInstallFolder();
+		return tpFolder == null ? null : tpFolder.toURI();
+	}
 
 	/**
 	 * Returns with an URI pointing to the target platform file that has to be used to install any third party
-	 * dependencies to the {@link #getTargetPlatformInstallLocation() target platform install location}.
+	 * dependencies to the {@link #getTargetPlatformInstallURI() target platform install location}.
 	 *
 	 * @return the URI pointing to the actual target platform file.
 	 */
@@ -57,30 +75,59 @@ public interface TargetPlatformInstallLocationProvider {
 	 */
 	String getGitRepositoryName();
 
-	/**
-	 * Returns with an URI pointing to the {@code node_modules} folder inside the target platform install location.
-	 *
-	 * @return the URI pointing the {@code node_modules} folder which is used for installing npm packages.
-	 */
-	default URI getTargetPlatformNodeModulesLocation() {
-		if (null == getTargetPlatformInstallLocation()) {
-			final String message = "Target platform install location was not specified.";
-			final NullPointerException exception = new NullPointerException(message);
-			LOGGER.error(message, exception);
-			exception.printStackTrace(); // This if for the HLC as it swallows the actual stack trace.
-			throw exception;
-		}
-		final File installLocation = new File(getTargetPlatformInstallLocation());
-		checkState(installLocation.isDirectory(), "Cannot locate target platform install location: " + installLocation);
-		final File nodeModules = new File(installLocation, NODE_MODULES_FOLDER);
-		if (!nodeModules.exists()) {
-			checkState(nodeModules.mkdir(), "Error while creating node_modules folder for target platform.");
-		}
-		checkState(nodeModules.isDirectory(), "Cannot locate node_modules folder in target platform install location.");
-		try {
-			return nodeModules.getCanonicalFile().toURI();
-		} catch (final IOException e) {
-			throw new RuntimeException("Error while getting the canonical form of the node_modules location.", e);
+	/** @return the URI pointing to the {@code node_modules} folder which is used for installing npm packages. */
+	default URI getNodeModulesURI() {
+		return getURIInTargetPlatformLocation(NODE_MODULES_FOLDER);
+	}
+
+	/** @return the URI pointing to the {@code node_modules} folder which is used for installing npm packages. */
+	default File getNodeModulesFolder() {
+		return getFolderInTargetPlatformLocation(NODE_MODULES_FOLDER);
+	}
+
+	/** @return the URI pointing to the {@code type_definition} folder. */
+	default URI getTypeDefinitionsURI() {
+		return getURIInTargetPlatformLocation(TYPE_DEFINITIONS_FOLDER);
+	}
+
+	/** @return the URI pointing to the {@code type_definition} folder. */
+	default File getTypeDefinitionsFolder() {
+		return getFolderInTargetPlatformLocation(TYPE_DEFINITIONS_FOLDER);
+	}
+
+	/** @return the {@link URI} pointing to the given folder inside the target platform */
+	default URI getURIInTargetPlatformLocation(String folderName) {
+		return getFolderInTargetPlatformLocation(folderName).toURI();
+	}
+
+	/** @return the {@link File} pointing to the given folder inside the target platform */
+	default File getFolderInTargetPlatformLocation(String folderName) {
+		synchronized (folderName) {
+			if (null == getTargetPlatformInstallFolder()) {
+				final String message = "Target platform install location was not specified.";
+				final NullPointerException exception = new NullPointerException(message);
+				LOGGER.error(message, exception);
+				exception.printStackTrace(); // This if for the HLC as it swallows the actual stack trace.
+				throw exception;
+			}
+
+			final File installLocation = getTargetPlatformInstallFolder();
+			checkState(installLocation.isDirectory(),
+					"Cannot locate target platform install location: " + installLocation);
+
+			final File folder = new File(installLocation, folderName);
+			if (!folder.exists()) {
+				checkState(folder.mkdir(), "Error while creating " + folderName + " folder for target platform.");
+			}
+
+			checkState(folder.isDirectory(), "Cannot locate " + folderName + " folder in target platform location.");
+
+			try {
+				return folder.getCanonicalFile();
+			} catch (final IOException e) {
+				throw new RuntimeException("Error while getting the canonical form of the " + folderName + " location.",
+						e);
+			}
 		}
 	}
 
@@ -91,14 +138,14 @@ public interface TargetPlatformInstallLocationProvider {
 	 * @return the URI pointing to the local git repository location for the N4JSD files in the file system.
 	 */
 	default URI getTargetPlatformLocalGitRepositoryLocation() {
-		if (null == getTargetPlatformInstallLocation()) {
+		if (null == getTargetPlatformInstallFolder()) {
 			final String message = "Target platform install location was not specified.";
 			final NullPointerException exception = new NullPointerException(message);
 			LOGGER.error(message, exception);
 			exception.printStackTrace(); // This if for the HLC as it swallows the actual stack trace.
 			throw exception;
 		}
-		final File installLocation = new File(getTargetPlatformInstallLocation());
+		final File installLocation = getTargetPlatformInstallFolder();
 		checkState(installLocation.isDirectory(), "Cannot locate target platform install location: " + installLocation);
 		// The local git repository should be a sibling folder of the install location.
 		File parentFile = installLocation.getParentFile();
@@ -114,5 +161,30 @@ public interface TargetPlatformInstallLocationProvider {
 		checkState(gitRoot.isDirectory(),
 				"Cannot locate local git repository folder in target platform install location.");
 		return gitRoot.toURI();
+	}
+
+	/**
+	 * Recreates the folders node_modules and type_definitions folders and the the target platform definition
+	 * {@code package.json} file.
+	 *
+	 * @return true if the required file system structure was recreated and now exists
+	 */
+	default boolean repairNpmFolderState() {
+		boolean success = true;
+		File installLocation = getTargetPlatformInstallFolder();
+		if (!installLocation.isDirectory()) {
+			success &= installLocation.mkdir();
+		}
+
+		if (success) {
+			final File targetPlatformDefinitionFile = ExternalLibraryFolderUtils
+					.createTargetPlatformDefinitionFile(installLocation);
+			final File npmFile = getNodeModulesFolder();
+			final File tdFile = getTypeDefinitionsFolder();
+			success &= targetPlatformDefinitionFile != null && targetPlatformDefinitionFile.isFile();
+			success &= npmFile != null && npmFile.isDirectory();
+			success &= tdFile != null && tdFile.isDirectory();
+		}
+		return success;
 	}
 }

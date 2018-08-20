@@ -55,17 +55,17 @@ public class JSDoc2AdocFullTest extends JSDoc2SpecProcessorFullTest {
 
 	@Override
 	@SuppressWarnings("unused")
-	protected void fullTest(String projectId)
+	protected void fullTest(String projectName)
 			throws IOException, InterruptedException, InterruptedException {
 
 		String systemSeparator = System.getProperty("line.separator", "\n");
 		try {
 			for (String lsep : new String[] { "\n", "\r\n", "\r" }) {
 				System.setProperty("line.separator", lsep);
-				String expectationFileName = projectId + "/expected.adoc";
-				workspace = new FileBasedWorkspace(classpathPackageManager, projectDescriptionHelper);
+				String expectationFileName = projectName + "/expected.adoc";
+				workspace = new FileBasedWorkspace(projectDescriptionLoader);
 
-				URI uriProject = URI.createFileURI(new File(TESTRESOURCES + projectId).getAbsolutePath());
+				URI uriProject = URI.createFileURI(new File(TESTRESOURCES + projectName).getAbsolutePath());
 				workspace.registerProject(uriProject);
 				N4JSModel model = new N4JSModel(workspace);
 				injector.injectMembers(model);
@@ -80,7 +80,7 @@ public class JSDoc2AdocFullTest extends JSDoc2SpecProcessorFullTest {
 						(p) -> resourceSetProvider.get(),
 						SubMonitorMsg.nullProgressMonitor());
 
-				String adocRootName = TESTRESOURCES + projectId + "/expectedADoc";
+				String adocRootName = TESTRESOURCES + projectName + "/expectedADoc";
 				Collection<String> expectedFileNames = getExpectedFileNames(adocRootName, specChangeSet);
 				assertFalse(expectedFileNames.isEmpty());
 

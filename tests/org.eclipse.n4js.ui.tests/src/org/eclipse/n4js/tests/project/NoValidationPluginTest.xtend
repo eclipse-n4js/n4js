@@ -16,45 +16,35 @@ import org.eclipse.core.resources.IProject
 import org.eclipse.emf.common.util.URI
 import org.eclipse.n4js.json.JSON.JSONDocument
 import org.eclipse.n4js.json.JSON.JSONObject
-import org.eclipse.n4js.n4mf.ModuleFilterType
-import org.eclipse.n4js.n4mf.SourceContainerType
+import org.eclipse.n4js.projectDescription.ModuleFilterType
+import org.eclipse.n4js.projectDescription.SourceContainerType
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
 import org.eclipse.n4js.tests.util.PackageJSONTestUtils
-import org.junit.Before
 import org.junit.Test
+import java.util.List
 
 /**
  */
 class NoValidationPluginTest extends AbstractBuilderParticipantTest {
-
-	IProject projectUnderTest
-	IFolder src
-	IFolder scr_P
-	IFolder src2
-	IFolder src2_P2
-	IFolder src_P_Q
-	IFolder src_external
-	IFile packageJson
-
-	@Before
-	override void setUp() {
-		super.setUp
-		projectUnderTest = createJSProject("IDE_754")
-		src = configureProjectWithXtext(projectUnderTest)
-		scr_P = createFolder(src, "p");
-		src_P_Q = createFolder(scr_P, "q");
-		src2 = createFolder(projectUnderTest.project, "src2");
-		src2_P2 = createFolder(src2, "p2");
-		packageJson = projectUnderTest.project.getFile(IN4JSProject.PACKAGE_JSON)
-		src_external = projectUnderTest.project.getFolder("src-external");
-		src_external.create(false, true, null)
-		addFolderAsSource(src2.name)
-		waitForAutoBuild
-	}
-
 	@Test
 	def void testFileInSrc() throws Exception {
+		// setup test workspace
+		val IProject projectUnderTest = createJSProject("NoValidationPluginTest")
+		val IFolder src = configureProjectWithXtext(projectUnderTest)
+		val IFolder scr_P = createFolder(src, "p");
+		val IFolder src_P_Q = createFolder(scr_P, "q");
+		val IFolder src2 = createFolder(projectUnderTest.project, "src2");
+		val IFolder src2_P2 = createFolder(src2, "p2");
+		val IFile packageJson = projectUnderTest.project.getFile(IN4JSProject.PACKAGE_JSON)
+		val IFolder src_external = projectUnderTest.project.getFolder("src-external");
+		src_external.create(false, true, null)
+		// 'src' is a source folder by default (see #createJSProject)
+		addFolderAsSource(packageJson, src2.name)
+		
+		waitForAutoBuild
+		
+		// create files
 		val fileAValidated = createTestFile(scr_P, "A", fileA);
 		val fileAValidatedInSrc2 = createTestFile(src2_P2, "A", fileA);
 		val fileBValidated = createTestFile(scr_P, "B", fileB);
@@ -62,6 +52,8 @@ class NoValidationPluginTest extends AbstractBuilderParticipantTest {
 		val fileD = createTestFile(scr_P, "D", fileD);
 		val fileE = createTestFile(src_P_Q, "E", fileE);
 		val fileF = createTestFile(src_P_Q, "F", fileF);
+		
+		// assert markers
 		assertMarkers("file A should have 3 markers", fileAValidated, 3);
 		assertMarkers("file AInSrc should have 3 markers", fileAValidatedInSrc2, 3);
 		assertMarkers("file B should have markers", fileBValidated, 2);
@@ -70,40 +62,82 @@ class NoValidationPluginTest extends AbstractBuilderParticipantTest {
 		assertMarkers("file E should have markers", fileE, 6);
 		assertMarkers("file F should have markers", fileF, 2);
 
-		addPathsToNoValidate("p/D" -> null, "p/q/*" -> null)
+		addPathsToNoValidate(packageJson, "p/D" -> null, "p/q/*" -> null)
 		assertMarkers("file D should have no markers", fileD, 0);
 		assertMarkers("file E should have no markers", fileE, 0);
 		assertMarkers("file F should have no markers", fileF, 0);
 		assertMarkers("file AInSrc should have still 3 markers", fileAValidatedInSrc2, 3);
-		addPathsToNoValidate("p2/*" -> "src2")
+		addPathsToNoValidate(packageJson, "p2/*" -> "src2")
 		assertMarkers("file AInSrc2 should have no markers", fileAValidatedInSrc2, 0);
 	}
+	
+	@Test
+	def void testTypeDefinitionsShadowing() throws Exception {
+		// setup test workspace
+		val IProject projectUnderTest = createJSProject("NoValidationPluginTest")
+		val IFolder src = configureProjectWithXtext(projectUnderTest)
+		val IFolder scr_js = createFolder(src, "js");
+		val IFolder src_n4js = createFolder(src, "n4js");
+		val IFile packageJson = projectUnderTest.project.getFile(IN4JSProject.PACKAGE_JSON)
 
-	def void addFolderAsSource(String folderName) {
-		val packageJson = getPackageJSONContent();
+		setSourceContainers(packageJson, SourceContainerType.SOURCE, #["src/n4js"]);
+		setSourceContainers(packageJson, SourceContainerType.EXTERNAL, #["src/js"]);
 		
-		PackageJSONTestUtils.addSourceContainerSpecifier(packageJson, SourceContainerType.SOURCE, folderName);
+		waitForAutoBuild();
 		
-		packageJson.eResource.save(null)
+		// create files
+		val fileImpl = createTestJSFile(scr_js, "Shadowed", "INVALID console.log('impl');");
+		val fileTypeDef = createTestN4JSDFile(src_n4js, "Shadowed", "// invalid, since 'external' modifier is missing \n export public class Shadow {}");
+
+		waitForAutoBuild();
+
+		// assert markers
+		assertMarkers("file src/js/Shadowed.js should have 0 markers", fileImpl, 0);
+		assertMarkers("file src/n4js/Shadowed.n4jsd should have 2 markers since it's invalid", fileTypeDef, 1);
+		
+		addPathsToNoValidate(packageJson, "Shadowed" -> null);
+		
+		waitForAutoBuild();
+		
+		assertMarkers("file package.json should have 1 marker since the module filter is invalid", packageJson, 1);
+		assertMarkers("file src/js/Shadowed.js should have 0 markers", fileImpl, 0);
+		assertMarkers("file src/n4js/Shadowed.n4jsd should still have 0 markers since it is filtered by the invalid module filter", fileTypeDef, 0);
+	}
+	
+	def void setSourceContainers(IFile packageJson, SourceContainerType type, List<String> sourceContainerPaths) {
+		val packageJsonContents = getPackageJSONContent(packageJson);
+		
+		PackageJSONTestUtils.setSourceContainerSpecifiers(packageJsonContents, type, sourceContainerPaths);
+		
+		packageJsonContents.eResource.save(null)
+		waitForAutoBuild();
+	}
+	
+	def void addFolderAsSource(IFile packageJson, String folderName) {
+		val packageJsonContents = getPackageJSONContent(packageJson);
+		
+		PackageJSONTestUtils.addSourceContainerSpecifier(packageJsonContents, SourceContainerType.SOURCE, folderName);
+		
+		packageJsonContents.eResource.save(null)
 		waitForAutoBuild();
 	}
 
-	def void addPathsToNoValidate(Pair<String, String>... pathToSource) {
-		val packageJson = getPackageJSONContent();
+	def void addPathsToNoValidate(IFile packageJson, Pair<String, String>... pathToSource) {
+		val packageJsonContents = getPackageJSONContent(packageJson);
 
 		pathToSource.forEach[ filter | 
-			PackageJSONTestUtils.addModuleFilter(packageJson, ModuleFilterType.NO_VALIDATE, 
+			PackageJSONTestUtils.addModuleFilter(packageJsonContents, ModuleFilterType.NO_VALIDATE, 
 				filter.key, filter.value);
 		]
 
 
-		packageJson.eResource.save(null)
+		packageJsonContents.eResource.save(null)
 		waitForAutoBuild();
 	}
 
-	def JSONObject getPackageJSONContent() {
+	def JSONObject getPackageJSONContent(IFile packageJson) {
 		val uri = URI.createPlatformResourceURI(packageJson.fullPath.toString, true);
-		val rs = getResourceSet(projectUnderTest.project);
+		val rs = getResourceSet(packageJson.project);
 		val resource = rs.getResource(uri, true);
 		val document = resource.contents.head as JSONDocument;
 		return document.content as JSONObject;

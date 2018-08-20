@@ -43,7 +43,7 @@ Contributors:
          point="org.eclipse.ui.newWizards">
      <category
        id="org.eclipse.wizards"
-       name="NumberFour">
+       name="N4JS">
      </category>
      <wizard
            category="org.eclipse.wizards"
@@ -81,15 +81,6 @@ Contributors:
 
     </extension>
 
-    <extension
-         point="org.eclipse.ui.exportWizards">
-
-      <category
-            name="%Export.Category"
-            id="org.eclipse.n4js.ui.export">
-      </category>
-
-   </extension>
    <extension
          point="org.eclipse.core.expressions.definitions">
       <definition
@@ -1115,7 +1106,7 @@ Contributors:
        <decorator
              adaptable="true"
              class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.decorator.ProjectTypeLabelDecorator"
-             id="org.eclipse.n4js.n4mf.ui.decorator.ProjectTypeLabelDecorator"
+             id="org.eclipse.n4js.ui.decorator.ProjectTypeLabelDecorator"
              label="Project Type Label Decorator"
              lightweight="true"
              location="TOP_RIGHT"

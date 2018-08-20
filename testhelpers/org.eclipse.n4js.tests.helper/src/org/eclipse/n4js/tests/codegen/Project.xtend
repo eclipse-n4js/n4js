@@ -16,7 +16,7 @@ import java.io.IOException
 import java.nio.file.Path
 import java.util.List
 import java.util.Objects
-import org.eclipse.n4js.n4mf.ProjectType
+import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.utils.io.FileDeleter
 
@@ -80,7 +80,7 @@ public class Project {
 		}
 	}
 
-	String projectId;
+	String projectName;
 	String vendorId;
 	String vendorName;
 	ProjectType projectType = ProjectType.LIBRARY;
@@ -92,23 +92,23 @@ public class Project {
 	/**
 	 * Creates a new instance with the given parameters.
 	 *
-	 * @param projectId the project ID
+	 * @param projectName the project ID
 	 * @param vendorId the vendor ID
 	 * @param vendorName the vendor name
 	 */
-	public new(String projectId, String vendorId, String vendorName) {
-		this.projectId = Objects.requireNonNull(projectId);
+	public new(String projectName, String vendorId, String vendorName) {
+		this.projectName = Objects.requireNonNull(projectName);
 		this.vendorId = Objects.requireNonNull(vendorId);
 		this.vendorName = Objects.requireNonNull(vendorName);
 	}
 
 	/**
-	 * Returns the project ID.
+	 * Returns the project name.
 	 *
-	 * @return the project ID
+	 * @return the project name.
 	 */
-	public def String getProjectId() {
-		return projectId;
+	public def String getProjectName() {
+		return projectName;
 	}
 
 	/**
@@ -184,7 +184,7 @@ public class Project {
 	 */
 	public def generate() '''
 		{
-			"name": "«projectId»",
+			"name": "«projectName»",
 			"version": "«projectVersion»",
 			"n4js": {
 				"vendorId": "«vendorId»",
@@ -206,7 +206,7 @@ public class Project {
 			«IF !projectDependencies.nullOrEmpty
 			»,"dependencies": {
 					«FOR dep : projectDependencies SEPARATOR ','»
-						"«dep.projectId»": "*"
+						"«dep.projectName»": "*"
 					«ENDFOR»
 				}
 			«ENDIF»
@@ -223,13 +223,14 @@ public class Project {
 			case RUNTIME_LIBRARY: "runtimeLibrary"
 			case TEST: "test"
 			case VALIDATION: "validation"
+			case DEFINITION: "definition"
 		};
 	}
-	
+
 	/**
 	 * Creates this project in the given parent directory, which must exist.
 	 *
-	 * This method first creates a directory with the same name as the {@link #projectId} within
+	 * This method first creates a directory with the same name as the {@link #projectName} within
 	 * the given parent directory. If there already exists a file or directory with that name
 	 * within the given parent directory, that file or directory will be (recursively) deleted.
 	 *
@@ -247,7 +248,7 @@ public class Project {
 		if (!parentDirectory.directory)
 			throw new IOException("'" + parentDirectory + "' is not a directory");
 
-		val File projectDirectory = new File(parentDirectory, projectId);
+		val File projectDirectory = new File(parentDirectory, projectName);
 		if (projectDirectory.exists)
 			FileDeleter.delete(projectDirectory);
 		projectDirectory.mkdir();

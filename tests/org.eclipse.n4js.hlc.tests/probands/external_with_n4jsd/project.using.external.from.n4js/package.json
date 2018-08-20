@@ -1,6 +1,6 @@
 {
 	"name": "project.using.external.from.n4js",
-	"version": "0.0.1-SNAPSHOT",
+	"version": "0.0.1",
 	"dependencies": {
 		"express": "4.15.3",
 		"n4js-runtime-node": "*"
@@ -17,6 +17,9 @@
 		},
 		"requiredRuntimeLibraries": [
 			"n4js-runtime-node"
-		]
+		],
+		"typeDependencies": {
+			"express-n4jsd": "<=4.15.3"
+		}
 	}
 }

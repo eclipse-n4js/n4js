@@ -17,7 +17,7 @@ import java.util.Collection;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.n4js.n4mf.ProjectType;
+import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.N4JSResource;
@@ -188,7 +188,7 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 				return elementModule == null
 						|| elementModule == contextModule
 						|| ( //
-						Strings.equal(contextModule.getProjectId(), elementModule.getProjectId())
+						Strings.equal(contextModule.getProjectName(), elementModule.getProjectName())
 								&& Strings.equal(contextModule.getVendorID(), elementModule.getVendorID()) //
 						)
 						|| isTestedProjectOf(contextModule, elementModule);
@@ -204,7 +204,7 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 				return false;
 			}
 			return this.core.findProject(element.getEObjectURI()).transform(project -> {
-				boolean result = Strings.equal(contextModule.getProjectId(), project.getProjectId())
+				boolean result = Strings.equal(contextModule.getProjectName(), project.getProjectName())
 						&& Strings.equal(contextModule.getVendorID(), project.getVendorID())
 						|| isTestedProjectOf(contextModule, project);
 				return result;
@@ -238,7 +238,7 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 					final URI resourceUri = eResource.getURI();
 					final IN4JSProject elementProject = core.findProject(resourceUri).orNull();
 					if (null != elementProject) {
-						if (emptyIfNull(elementProject.getProjectId()).equals(testedProject.getProjectId())) {
+						if (emptyIfNull(elementProject.getProjectName()).equals(testedProject.getProjectName())) {
 							return true;
 						}
 					}
@@ -263,7 +263,7 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 	 */
 	public boolean isTestedProjectOf(final TModule contextModule, final IN4JSProject elementProject) {
 		for (final IN4JSProject testedProject : getTestedProjects(contextModule.eResource().getURI())) {
-			if (emptyIfNull(elementProject.getProjectId()).equals(testedProject.getProjectId())) {
+			if (emptyIfNull(elementProject.getProjectName()).equals(testedProject.getProjectName())) {
 				return true;
 			}
 		}

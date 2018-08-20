@@ -11,7 +11,7 @@
 
 /* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.tests.PackageJsonXpectTest END_SETUP */
 {
-	// XPECT errors --> "The package name "project-name-mismatch" does not match project folder name "project-name" used on the file system." at ""project-name-mismatch""
+	// XPECT errors --> "The package name "project-name-mismatch" does not match the name of the project folder "project-name" on the file system." at ""project-name-mismatch""
 	"name": "project-name-mismatch",
-	"version": "0.0.1-SNAPSHOT"
+	"version": "0.0.1"
 }

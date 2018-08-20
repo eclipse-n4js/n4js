@@ -87,7 +87,7 @@ public class ProjectResolveHelper {
 		}
 		if (!project.exists()) {
 			throw new RuntimeException(
-					msg + " Does project '" + project.getProjectId() + "' exists and opened in the workspace?");
+					msg + " Does project '" + project.getProjectName() + "' exists and opened in the workspace?");
 		}
 
 		final Optional<? extends IN4JSSourceContainer> optionalSourceContainer = model

@@ -32,7 +32,7 @@ public class N4TesterUiExecutableExtensionFactory extends N4ExecutableExtensionF
 	}
 
 	@Override
-	protected String getBunleId() {
+	protected String getBundleId() {
 		return PLUGIN_ID;
 	}
 

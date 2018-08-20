@@ -53,6 +53,7 @@ Contributors:
 		<module>org.eclipse.n4js.xsemantics.tests</module>
 		
 		<!-- transpiler tests -->
+		<module>org.eclipse.n4js.transpiler.tests</module>
 		<module>org.eclipse.n4js.transpiler.es5.tests</module>
 		<module>org.eclipse.n4js.transpiler.es.tests</module>
 		<module>org.eclipse.n4js.generator.headless.tests</module>
@@ -69,11 +70,14 @@ Contributors:
 		<module>org.eclipse.n4js.json.xpect.tests</module>
 		<module>org.eclipse.n4js.json.xpect.ui.tests</module>
 
+		<!-- SEMVER tests -->
+		<module>org.eclipse.n4js.semver.tests</module>
+
 		<!-- ************************************** JUnit Plugin Tests -->
 
 		<!-- JS tests -->
-		<!-- 
-			This e.n.i.n4js.ui.tests execution intentionally happens after the SWTBot one.
+		<!--
+			This ...n4js.ui.tests execution intentionally happens after the SWTBot one.
 			Jenkins jobs on Windows cannot run git checkout shell scripts, so git repositories are managed and checked out from Java code.
 			The low memory plug-in UI tests run with lower memory settings, so those cannot check out git repositories via Java (test) code.
 			SWTBot tests can run with the common heap size settings and can check out the required git repositories that is why they 
@@ -82,6 +86,7 @@ Contributors:
 		<module>org.eclipse.n4js.ui.tests</module>
 		<module>org.eclipse.n4js.xpect.ui.tests</module>
 		<module>org.eclipse.n4js.n4ide.spec.tests</module> 
+		<module>org.eclipse.n4js.smith.ui.tests</module>
 
 				<!-- Runner tests -->
 		<module>org.eclipse.n4js.runner.ui.tests</module>

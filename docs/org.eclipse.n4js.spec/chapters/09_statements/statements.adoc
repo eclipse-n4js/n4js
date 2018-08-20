@@ -621,7 +621,7 @@ import {A as H, B as I} from "p/H"
 --
 
 [discrete]
-==== Semantics [[import-statement-semantics]]
+==== Semantics [[import-statement-semantics, Import Statement Semantics]]
 
 Import statements are used to import identifiable elements from another module.
 Identifiable elements are
@@ -648,7 +648,7 @@ This string must be a valid
     import {A} from "a/b/c/M"
 
 ----
-* or project name only, assuming the project defines a main module in its manifest (using the `MainModule` manifest property, <<_properties-8>>):
+* or project name only, assuming the project defines a main module in its `package.json` file (using the `mainModule` package.json property, see <<package-json-mainModule>>):
 +
 [source,n4js]
 ----

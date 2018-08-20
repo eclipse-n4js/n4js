@@ -10,18 +10,25 @@
  */
 package org.eclipse.n4js.ui.wizard.dependencies;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.SubMonitor;
-import org.eclipse.n4js.n4mf.DeclaredVersion;
+import org.eclipse.n4js.external.NpmLogger;
+import org.eclipse.n4js.semver.SemverMatcher;
+import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
+import org.eclipse.n4js.semver.model.SemverSerializer;
 import org.eclipse.n4js.ui.external.ExternalLibrariesActionsHelper;
 
+import com.google.common.base.Joiner;
 import com.google.inject.Inject;
 
 /**
@@ -34,6 +41,9 @@ public class ExternalLibrariesInstallHelper {
 
 	@Inject
 	private ExternalLibrariesActionsHelper externals;
+
+	@Inject
+	private NpmLogger logger;
 
 	/** Streamlined process of calculating and installing the dependencies without cleaning npm cache. */
 	public void calculateAndInstallDependencies(SubMonitor monitor, MultiStatus multistatus) {
@@ -54,16 +64,17 @@ public class ExternalLibrariesInstallHelper {
 		// remove npms
 		externals.maintenanceDeleteNpms(multistatus);
 
-		Map<String, DeclaredVersion> projectIdsOfShippedCode = StreamSupport
+		Map<String, VersionNumber> projectNamesOfShippedCode = StreamSupport
 				.stream(dependenciesHelper.getAvailableProjectsDescriptions(true).spliterator(), false)
-				.collect(Collectors.toMap(pd -> pd.getProjectId(), pd -> pd.getProjectVersion()));
+				.collect(Collectors.toMap(pd -> pd.getProjectName(), pd -> pd.getProjectVersion()));
 
 		// install npms from target platform
-		Map<String, String> dependenciesToInstall = dependenciesHelper.calculateDependenciesToInstall();
-		removeDependenciesToShippedCodeIfVersionMatches(dependenciesToInstall, projectIdsOfShippedCode);
-		addDependenciesForRemainingShippedCode(dependenciesToInstall, projectIdsOfShippedCode.keySet());
-		final SubMonitor subMonitor3 = monitor.split(45);
+		Map<String, NPMVersionRequirement> dependenciesToInstall = dependenciesHelper.calculateDependenciesToInstall();
+		removeDependenciesToShippedCodeIfVersionMatches(dependenciesToInstall, projectNamesOfShippedCode);
+		addDependenciesForRemainingShippedCode(dependenciesToInstall, projectNamesOfShippedCode.keySet());
+		logShippedCodeInstallationStatus(dependenciesToInstall, projectNamesOfShippedCode.keySet());
 
+		final SubMonitor subMonitor3 = monitor.split(45);
 		externals.installNoUpdate(dependenciesToInstall, multistatus, subMonitor3);
 
 		// rebuild externals & schedule full rebuild
@@ -73,22 +84,20 @@ public class ExternalLibrariesInstallHelper {
 
 	/**
 	 * Removes from map 'dependenciesToInstall' all entries for projects that are in the shipped code, if and only if
-	 * the requested version is the "fake" version of the shipped code.
-	 *
-	 * FIXME GH-957 / GH-809 change implementation to use a proper SemVer version-range-check instead of the string
-	 * compare!
+	 * the version provided by the shipped code matches the version requirement.
 	 */
-	private void removeDependenciesToShippedCodeIfVersionMatches(Map<String, String> dependenciesToInstall,
-			Map<String, DeclaredVersion> projectIdsOfShippedCode) {
-		for (Entry<String, String> depToInstall : dependenciesToInstall.entrySet()) {
-			String projectId = depToInstall.getKey();
-			DeclaredVersion availableVersionInShippedCode = projectIdsOfShippedCode.get(projectId);
+	private void removeDependenciesToShippedCodeIfVersionMatches(
+			Map<String, NPMVersionRequirement> dependenciesToInstall,
+			Map<String, VersionNumber> projectNamesOfShippedCode) {
+		for (Entry<String, NPMVersionRequirement> depToInstall : dependenciesToInstall.entrySet()) {
+			String projectName = depToInstall.getKey();
+			VersionNumber availableVersionInShippedCode = projectNamesOfShippedCode.get(projectName);
 			if (availableVersionInShippedCode != null) {
-				String versionConstraintStr = depToInstall.getValue();
-				if (versionConstraintStr != null && versionConstraintStr.trim().equals("@\">=0.1.0 <=0.1.0\"")) {
-					// the "fake" version of the project in the shipped code is requested,
+				NPMVersionRequirement versionRequirement = depToInstall.getValue();
+				if (versionRequirement != null
+						&& SemverMatcher.matchesStrict(availableVersionInShippedCode, versionRequirement)) {
 					// so remove from list of dependencies to be installed:
-					dependenciesToInstall.remove(projectId);
+					dependenciesToInstall.remove(projectName);
 				}
 			}
 		}
@@ -103,27 +112,57 @@ public class ExternalLibrariesInstallHelper {
 	 * *all* shipped code projects need to be shadowed, because shipped code is now published in clusters in which each
 	 * project depends on the others with a fixed version.
 	 */
-	private void addDependenciesForRemainingShippedCode(Map<String, String> dependenciesToInstall,
-			Set<String> projectIdsOfShippedCode) {
-		Set<String> projectIdsOfShippedCodeToInstall = new HashSet<>(dependenciesToInstall.keySet());
-		projectIdsOfShippedCodeToInstall.retainAll(projectIdsOfShippedCode);
-		if (!projectIdsOfShippedCodeToInstall.isEmpty()
-				&& projectIdsOfShippedCodeToInstall.size() < projectIdsOfShippedCode.size()) {
-			Set<String> versionConstraintsOfShippedCodeToInstall = projectIdsOfShippedCodeToInstall
+	private void addDependenciesForRemainingShippedCode(Map<String, NPMVersionRequirement> dependenciesToInstall,
+			Set<String> projectNamesOfShippedCode) {
+		Set<String> projectNamesOfShippedCodeToInstall = new HashSet<>(dependenciesToInstall.keySet());
+		projectNamesOfShippedCodeToInstall.retainAll(projectNamesOfShippedCode);
+		if (!projectNamesOfShippedCodeToInstall.isEmpty()
+				&& projectNamesOfShippedCodeToInstall.size() < projectNamesOfShippedCode.size()) {
+			Map<String, NPMVersionRequirement> versionRequirementsOfShippedCodeToInstall = projectNamesOfShippedCodeToInstall
 					.stream()
 					.map(id -> dependenciesToInstall.get(id))
-					.collect(Collectors.toSet());
-			if (versionConstraintsOfShippedCodeToInstall.size() > 1) {
-				// FIXME GH-957 / GH-809 warn about conflicting version constraints for shipped code!
-			}
-			String versionConstraint = versionConstraintsOfShippedCodeToInstall.stream().findFirst()
-					.orElse(null);
+					.collect(Collectors.toMap(SemverSerializer::serialize, Function.identity(), (vr1, vr2) -> vr1));
+			NPMVersionRequirement versionConstraint = versionRequirementsOfShippedCodeToInstall.values().stream()
+					.findFirst().orElse(null);
 			if (versionConstraint != null) {
-				for (String id : projectIdsOfShippedCode) {
-					if (!projectIdsOfShippedCodeToInstall.contains(id)) {
+				if (versionRequirementsOfShippedCodeToInstall.size() > 1) {
+					logger.logInfo("WARNING: differing version requirements for shipped code: "
+							+ Joiner.on(", ").join(versionRequirementsOfShippedCodeToInstall.values())
+							+ "; using: " + versionConstraint);
+				}
+				for (String id : projectNamesOfShippedCode) {
+					if (!projectNamesOfShippedCodeToInstall.contains(id)) {
 						dependenciesToInstall.put(id, versionConstraint);
 					}
 				}
+			}
+		}
+	}
+
+	/**
+	 * Pure logging, won't change the arguments.
+	 */
+	private void logShippedCodeInstallationStatus(Map<String, NPMVersionRequirement> dependenciesToInstall,
+			Set<String> projectNamesOfShippedCode) {
+		// compute status of shipped code installation
+		Map<String, NPMVersionRequirement> shippedCodeToInstall = new HashMap<>(dependenciesToInstall);
+		Set<String> nonShadowedShippedCode = new HashSet<>(projectNamesOfShippedCode);
+		shippedCodeToInstall.keySet().retainAll(projectNamesOfShippedCode);
+		nonShadowedShippedCode.removeAll(shippedCodeToInstall.keySet());
+		// report status to user
+		if (shippedCodeToInstall.isEmpty()) {
+			logger.logInfo("Not going to shadow any shipped code with installed packages.");
+		} else {
+			String separator = "\n\t";
+			logger.logInfo("The following installed packages will shadow shipped code:" + separator
+					+ shippedCodeToInstall.entrySet().stream()
+							.map(e -> e.getKey() + "@" + e.getValue())
+							.collect(Collectors.joining(separator)));
+			if (nonShadowedShippedCode.isEmpty()) {
+				logger.logInfo("The entire shipped code will be shadowed.");
+			} else {
+				logger.logInfo("WARNING: shipped code will be shadowed only partially; non-shadowed shipped projects:"
+						+ separator + Joiner.on(separator).join(nonShadowedShippedCode));
 			}
 		}
 	}

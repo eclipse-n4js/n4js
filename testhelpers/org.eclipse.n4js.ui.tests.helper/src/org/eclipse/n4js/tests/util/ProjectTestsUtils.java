@@ -45,8 +45,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.N4JSGlobals;
@@ -56,6 +58,7 @@ import org.eclipse.n4js.ui.editor.N4JSDirtyStateEditorSupport;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.ui.utils.TimeoutRuntimeException;
 import org.eclipse.n4js.ui.utils.UIUtils;
+import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
 import org.eclipse.ui.texteditor.MarkerUtilities;
 import org.eclipse.ui.wizards.datatransfer.FileSystemStructureProvider;
@@ -96,7 +99,7 @@ public class ProjectTestsUtils {
 	 * Imports a project into the running JUnit test workspace. Usage:
 	 *
 	 * <pre>
-	 * IProject project = ProjectUtils.importProject(new File(&quot;probands&quot;), &quot;TestProject&quot;);
+	 * IProject project = ProjectTestsUtils.importProject(new File(&quot;probands&quot;), &quot;TestProject&quot;);
 	 * </pre>
 	 *
 	 * @param probandsFolder
@@ -108,7 +111,7 @@ public class ProjectTestsUtils {
 	 *      "http://stackoverflow.com/questions/12484128/how-do-i-import-an-eclipse-project-from-a-zip-file-programmatically">
 	 *      stackoverflow: from zip</a>
 	 */
-	public static IProject importProject(File probandsFolder, String projectName) throws Exception {
+	public static IProject importProject(File probandsFolder, String projectName) throws CoreException {
 		return importProject(probandsFolder, projectName, true);
 	}
 
@@ -121,8 +124,46 @@ public class ProjectTestsUtils {
 		return importProject(probandsFolder, projectName, false);
 	}
 
+	/**
+	 * Creates a new workspace project with the given project location in the probands folder (cf.
+	 * {@code probandsName}).
+	 *
+	 * Creates a new workspace project with name {@code workspaceName}. Note that the project folder (based on the given
+	 * project location) and the project name may differ.
+	 *
+	 * Does not copy the proband resources into the workspaces, but keeps the project files at the given location (cf.
+	 * create new project with non-default location outside of workspace)
+	 *
+	 * @throws CoreException
+	 *             If the project creation does not succeed.
+	 */
+	public static IProject createProjectWithLocation(File probandsFolder, String projectLocationFolder,
+			String workspaceName)
+			throws CoreException {
+		File projectSourceFolder = new File(probandsFolder, projectLocationFolder);
+		if (!projectSourceFolder.exists()) {
+			throw new IllegalArgumentException("proband not found in " + projectSourceFolder);
+		}
+		prepareDotProject(projectSourceFolder);
+
+		IProgressMonitor monitor = new NullProgressMonitor();
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		IProject project = workspace.getRoot().getProject(workspaceName);
+
+		workspace.run((mon) -> {
+			IProjectDescription newProjectDescription = workspace.newProjectDescription(workspaceName);
+			final Path absoluteProjectPath = new Path(projectSourceFolder.getAbsolutePath());
+			newProjectDescription.setLocation(absoluteProjectPath);
+			project.create(newProjectDescription, mon);
+			project.open(mon);
+		}, monitor);
+
+		return project;
+
+	}
+
 	private static IProject importProject(File probandsFolder, String projectName, boolean prepareDotProject)
-			throws Exception {
+			throws CoreException {
 		File projectSourceFolder = new File(probandsFolder, projectName);
 		if (!projectSourceFolder.exists()) {
 			throw new IllegalArgumentException("proband not found in " + projectSourceFolder);
@@ -132,16 +173,42 @@ public class ProjectTestsUtils {
 			prepareDotProject(projectSourceFolder);
 		}
 
-		IProgressMonitor monitor = new NullProgressMonitor();
+		// copy project into workspace
+		// (need to do that manually to properly handle NPM scopes, because the Eclipse import functionality won't put
+		// those projects into an "@myScope" subfolder)
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		IProject project = workspace.getRoot().getProject(projectName);
+		File workspaceFolder = workspace.getRoot().getLocation().toFile();
+		File projectTargetFolder = new File(workspaceFolder, projectName);
+		try {
+			projectTargetFolder.mkdirs();
+			FileCopier.copy(projectSourceFolder.toPath(), projectTargetFolder.toPath());
+		} catch (IOException e) {
+			throw new WrappedException("exception while copying project into workspace", e);
+		}
 
+		// load actual project name from ".project" file (might be different in case of NPM scopes)
+		File dotProjectFile = new File(projectTargetFolder, ".project");
+		if (!dotProjectFile.exists()) {
+			throw new IllegalArgumentException(
+					"project to import does not contain a .project file: " + projectTargetFolder);
+		}
+		IProjectDescription description = workspace.loadProjectDescription(new Path(dotProjectFile.getAbsolutePath()));
+		String projectNameFromDotProjectFile = description.getName();
+
+		IProject project = workspace.getRoot().getProject(projectNameFromDotProjectFile);
+
+		IProgressMonitor monitor = new NullProgressMonitor();
 		workspace.run((mon) -> {
-			IProjectDescription newProjectDescription = workspace.newProjectDescription(projectName);
-			project.create(newProjectDescription, mon);
+			// NOTE: the following two lines would create a new project description and make Eclipse copy the projects
+			// and its contents into the workspace:
+			// IProjectDescription newDescription = workspace.newProjectDescription(projectNameFromDotProjectFile);
+			// project.create(newDescription, mon);
+			// However, we do not want that (see above); instead, we create a project from the description we loaded
+			// above:
+			project.create(description, mon);
 			project.open(mon);
 			if (!project.getLocation().toFile().exists()) {
-				throw new IllegalArgumentException("test project correctly created in " + project.getLocation());
+				throw new IllegalArgumentException("test project not correctly created in " + project.getLocation());
 			}
 
 			IOverwriteQuery overwriteQuery = new IOverwriteQuery() {
@@ -150,7 +217,7 @@ public class ProjectTestsUtils {
 					return ALL;
 				}
 			};
-			ImportOperation importOperation = new ImportOperation(project.getFullPath(), projectSourceFolder,
+			ImportOperation importOperation = new ImportOperation(project.getFullPath(), projectTargetFolder,
 					FileSystemStructureProvider.INSTANCE, overwriteQuery);
 			importOperation.setCreateContainerStructure(false);
 			try {
@@ -160,7 +227,27 @@ public class ProjectTestsUtils {
 			}
 		}, monitor);
 
+		waitLongForAllJobs();
+
 		return project;
+	}
+
+	// TODO IDE-3141 remove this temporary work-around for random test failures due to invalid index
+	@SuppressWarnings("javadoc")
+	public static void waitLongForAllJobs() {
+		for (int i = 0; i < 5; i++) {
+			sleep(200);
+			UIUtils.waitForUiThread();
+			waitForAllJobs();
+		}
+	}
+
+	private static void sleep(long millis) {
+		try {
+			Thread.sleep(millis);
+		} catch (InterruptedException e) {
+			throw new WrappedException(e);
+		}
 	}
 
 	/**
@@ -471,6 +558,20 @@ public class ProjectTestsUtils {
 			Assert.assertEquals(message.toString(), count, markerList.size());
 		}
 		return markers;
+	}
+
+	/**
+	 * Like {@link #assertIssues(IResource, String...)}, but asserts that there are no issues in the entire workspace.
+	 */
+	public static void assertNoIssues() throws CoreException {
+		assertIssues(new String[] {});
+	}
+
+	/**
+	 * Like {@link #assertIssues(IResource, String...)}, but checks for issues in entire workspace.
+	 */
+	public static void assertIssues(String... expectedMessages) throws CoreException {
+		assertIssues(ResourcesPlugin.getWorkspace().getRoot(), expectedMessages);
 	}
 
 	/**

@@ -73,13 +73,13 @@ public class FileBasedProjectModelSetup extends AbstractProjectModelSetup {
 	protected void createTempProjects() {
 		try {
 			workspaceRoot = Files.createTempDir();
-			final URI myProjectURI = URIUtils.normalize(createTempProject(host.myProjectId));
+			final URI myProjectURI = URIUtils.normalize(createTempProject(host.myProjectName));
 			host.setMyProjectURI(myProjectURI);
 			createProject(myProjectURI, "{\n" +
-					"  \"name\": \"" + host.myProjectId + "\",\n" +
+					"  \"name\": \"" + host.myProjectName + "\",\n" +
 					"  \"version\": \"0.0.1-SNAPSHOT\",\n" +
 					"  \"dependencies\": {\n" +
-					"    \"" + host.libProjectId + "\": \"0.0.1-SNAPSHOT\"\n" +
+					"    \"" + host.libProjectName + "\": \"0.0.1-SNAPSHOT\"\n" +
 					"  },\n" +
 					"  \"n4js\": {\n" +
 					"    \"projectType\": \"library\",\n" +
@@ -94,10 +94,10 @@ public class FileBasedProjectModelSetup extends AbstractProjectModelSetup {
 					"    \"moduleLoader\": \"n4js\"\n" +
 					"  }\n" +
 					"}");
-			final URI libProjectURI = URIUtils.normalize(createTempProject(host.libProjectId));
+			final URI libProjectURI = URIUtils.normalize(createTempProject(host.libProjectName));
 			host.setLibProjectURI(libProjectURI);
 			createProject(libProjectURI, "{\n" +
-					"  \"name\": \"" + host.libProjectId + "\",\n" +
+					"  \"name\": \"" + host.libProjectName + "\",\n" +
 					"  \"version\": \"0.0.1-SNAPSHOT\",\n" +
 					"  \"n4js\": {\n" +
 					"    \"projectType\": \"library\",\n" +
@@ -142,8 +142,8 @@ public class FileBasedProjectModelSetup extends AbstractProjectModelSetup {
 	}
 
 	/***/
-	protected URI createTempProject(String projectId) {
-		File myProjectDir = new File(workspaceRoot, projectId);
+	protected URI createTempProject(String projectName) {
+		File myProjectDir = new File(workspaceRoot, projectName);
 		if (!myProjectDir.mkdir()) {
 			throw new RuntimeException();
 		}

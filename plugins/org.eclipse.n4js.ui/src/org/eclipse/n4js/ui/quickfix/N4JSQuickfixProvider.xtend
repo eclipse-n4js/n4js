@@ -42,8 +42,10 @@ import org.eclipse.n4js.n4JS.N4Modifier
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.PropertyNameOwner
-import org.eclipse.n4js.n4mf.ProjectDependency
-import org.eclipse.n4js.n4mf.ProjectReference
+import org.eclipse.n4js.projectDescription.ProjectDependency
+import org.eclipse.n4js.projectDescription.ProjectReference
+import org.eclipse.n4js.semver.Semver.NPMVersionRequirement
+import org.eclipse.n4js.semver.SemverUtils
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
@@ -79,8 +81,6 @@ import static org.eclipse.core.resources.IncrementalProjectBuilder.CLEAN_BUILD
 import static org.eclipse.n4js.ui.changes.ChangeProvider.*
 import static org.eclipse.n4js.ui.quickfix.QuickfixUtil.*
 
-import static extension org.eclipse.n4js.external.version.VersionConstraintFormatUtil.npmFormat
-
 /**
  * N4JS quick fixes.
  *
@@ -109,6 +109,7 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 
 	@Inject
 	private LibraryManager libraryManager;
+
 
 	/** Retrieve annotation constants from AnnotationDefinition */
 	static final String INTERNAL_ANNOTATION = AnnotationDefinition.INTERNAL.name;
@@ -688,11 +689,11 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 
 			def Collection<? extends IChange> invokeNpmManager(EObject element) throws Exception {
 				val dependency = element as ProjectReference;
-				val packageName = dependency.projectId;
+				val packageName = dependency.projectName;
 				val packageVersion = if (dependency instanceof ProjectDependency) {
-						dependency.versionConstraint.npmFormat;
+						dependency.versionRequirement
 					} else {
-						"";
+						SemverUtils.createEmptyVersionRequirement()
 					};
 
 				val illegalBinaryExcRef = new AtomicReference
@@ -700,7 +701,7 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 
 				new ProgressMonitorDialog(UIUtils.shell).run(true, false, [monitor |
 					try {
-						val Map<String, String> package = Collections.singletonMap(packageName, packageVersion);
+						val Map<String, NPMVersionRequirement> package = Collections.singletonMap(packageName, packageVersion);
 						multiStatus.merge(npmManager.installNPMs(package, monitor));
 
 					} catch (IllegalBinaryStateException e) {

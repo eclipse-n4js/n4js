@@ -13,7 +13,6 @@ package org.eclipse.n4js.ui.external;
 import static com.google.common.collect.Iterators.unmodifiableIterator;
 import static com.google.common.collect.Sets.newHashSet;
 import static org.eclipse.core.runtime.SubMonitor.convert;
-import static org.eclipse.n4js.internal.N4JSSourceContainerType.PROJECT;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -43,13 +42,13 @@ import org.eclipse.n4js.external.ExternalProjectsCollector;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.external.RebuildWorkspaceProjectsScheduler;
 import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
-import org.eclipse.n4js.internal.N4JSSourceContainerType;
-import org.eclipse.n4js.n4mf.ProjectDescription;
-import org.eclipse.n4js.n4mf.ProjectReference;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
 import org.eclipse.n4js.ui.utils.UIUtils;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.resources.ExternalProject;
 import org.eclipse.n4js.utils.resources.IExternalResource;
@@ -106,40 +105,29 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	}
 
 	@Override
-	public URI getLocation(URI projectURI, ProjectReference reference,
-			N4JSSourceContainerType expectedN4JSSourceContainerType) {
+	public URI getLocation(URI projectURI, ProjectReference reference) {
+		String name = reference.getProjectName();
+		ExternalProject project = projectProvider.getProject(name);
 
-		if (PROJECT.equals(expectedN4JSSourceContainerType)) {
+		if (null == project) {
+			return null;
+		}
 
-			String name = reference.getProjectId();
-			ExternalProject project = projectProvider.getProject(name);
-
-			if (null == project) {
-				return null;
-			}
-
-			File referencedProject = new File(project.getLocationURI());
-			URI refLocation = URI.createFileURI(referencedProject.getAbsolutePath());
-			Pair<N4JSExternalProject, ProjectDescription> pair = projectProvider.getProjectWithDescription(refLocation);
-			if (null != pair) {
-				return refLocation;
-			}
-
+		File referencedProject = new File(project.getLocationURI());
+		URI refLocation = URI.createFileURI(referencedProject.getAbsolutePath());
+		Pair<N4JSExternalProject, ProjectDescription> pair = projectProvider.getProjectWithDescription(refLocation);
+		if (null != pair) {
+			return refLocation;
 		}
 
 		return null;
 	}
 
 	@Override
-	public Iterator<URI> getArchiveIterator(URI archiveLocation, String archiveRelativeLocation) {
-		return Collections.emptyIterator();
-	}
-
-	@Override
 	public Iterator<URI> getFolderIterator(URI folderLocation) {
 		URI findProjectWith = findProjectWith(folderLocation);
 		if (null != findProjectWith) {
-			String projectName = findProjectWith.lastSegment();
+			String projectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(findProjectWith);
 			ExternalProject project = projectProvider.getProject(projectName);
 			if (null != project) {
 				String projectPath = new File(project.getLocationURI()).getAbsolutePath();
@@ -394,7 +382,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 		if (nestedResource.exists()) {
 			URI projectLocation = findProjectWith(location);
 			if (null != projectLocation) {
-				String projectName = projectLocation.lastSegment();
+				String projectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(projectLocation);
 				IProject project = getProject(projectName);
 				if (project instanceof ExternalProject) {
 					File projectResource = new File(project.getLocationURI());
@@ -428,8 +416,8 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	/**
 	 * Updates the internal state based on the available external project root locations.
 	 * <p>
-	 * This cannot be done in construction time, because it might happen that N4MF is not initialized yet, hence not
-	 * available when injecting this instance.
+	 * This cannot be done in construction time, because it might happen that some bundles/classes are not initialized
+	 * yet, hence not available when injecting this instance.
 	 */
 	@Override
 	public void updateState() {

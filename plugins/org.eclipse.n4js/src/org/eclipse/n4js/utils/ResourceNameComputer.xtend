@@ -16,7 +16,6 @@ import com.google.inject.Singleton
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.n4js.n4mf.DeclaredVersion
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter
 import org.eclipse.n4js.naming.N4JSQualifiedNameProvider
 import org.eclipse.n4js.projectModel.IN4JSProject
@@ -28,6 +27,7 @@ import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.naming.QualifiedName
 
 import static org.eclipse.emf.ecore.util.EcoreUtil.getRootContainer
+import org.eclipse.n4js.semver.Semver.VersionNumber
 
 /**
  * Helper class for computing descriptors for compiled files. Descriptors are used for file names and paths of generated files,
@@ -210,7 +210,7 @@ public final class ResourceNameComputer {
 	/**
 	 * Formats descriptor in form of
 	 * <pre>
-	 * projectId
+	 * projectName
 	 *  + sep1 + Project.declaredVersion.getMajor
 	 *  + sep2 + Project.declaredVersion.getMinor
 	 *  + sep2 + Project.declaredVersion.getMinor
@@ -227,10 +227,10 @@ public final class ResourceNameComputer {
 	def private static String formatDescriptor(IN4JSProject project, String unitPath, String sep1, String sep2,
 		String sep3, boolean useProjectVersion, boolean asJsIdentifier, boolean makeSimpleDescriptor) {
 
-		var projectID = project.projectId
+		var projectName = project.projectName
 		var path = unitPath
 		if (asJsIdentifier) {
-			projectID = getValidJavascriptIdentifierName(project.projectId)
+			projectName = getValidJavascriptIdentifierName(project.projectName)
 			path = getValidUnitPath(unitPath)
 		}
 
@@ -239,10 +239,10 @@ public final class ResourceNameComputer {
 		}
 
 		if (useProjectVersion) {
-			return projectID + sep1 + projectVersionToStringWithoutQualifier(project.version, sep2) + sep3 + path;
+			return projectName + sep1 + projectVersionToStringWithoutQualifier(project.version, sep2) + sep3 + path;
 		}
 
-		return projectID + sep3 + path;
+		return projectName + sep3 + path;
 	}
 
 	/** Ensures that all parts of the unit path are valid JS identifiers */
@@ -276,9 +276,9 @@ public final class ResourceNameComputer {
 	}
 
 	/** Transforms the version into a string used for variable, parameter, and file names. */
-	def private static projectVersionToStringWithoutQualifier(DeclaredVersion declaredVersion, String separatorChar) {
+	def private static projectVersionToStringWithoutQualifier(VersionNumber declaredVersion, String separatorChar) {
 		return declaredVersion.getMajor + separatorChar + declaredVersion.getMinor + separatorChar +
-			declaredVersion.getMicro;
+			declaredVersion.getPatch;
 	}
 
 }

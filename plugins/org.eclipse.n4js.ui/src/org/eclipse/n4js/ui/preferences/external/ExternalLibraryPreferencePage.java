@@ -15,8 +15,6 @@ import static com.google.common.primitives.Ints.asList;
 import static java.util.Collections.singletonList;
 import static org.eclipse.jface.layout.GridDataFactory.fillDefaults;
 import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.EXTERNAL_LIBRARIES_SUPPLIER;
-import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.N4_NPM_FOLDER_SUPPLIER;
-import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.repairNpmFolderState;
 import static org.eclipse.n4js.ui.preferences.external.ButtonFactoryUtil.createDisabledPushButton;
 import static org.eclipse.n4js.ui.preferences.external.ButtonFactoryUtil.createEnabledPushButton;
 import static org.eclipse.n4js.ui.utils.DelegatingSelectionAdapter.createSelectionListener;
@@ -27,7 +25,6 @@ import static org.eclipse.swt.SWT.Selection;
 import static org.eclipse.swt.SWT.TOP;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.util.Collection;
@@ -50,23 +47,23 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
-import org.eclipse.n4js.external.GitCloneSupplier;
 import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.external.NpmCLI;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
-import org.eclipse.n4js.external.version.VersionConstraintFormatUtil;
-import org.eclipse.n4js.n4mf.DeclaredVersion;
-import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.semver.SemverHelper;
+import org.eclipse.n4js.semver.SemverUtils;
+import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
+import org.eclipse.n4js.semver.Semver.VersionComparator;
+import org.eclipse.n4js.ui.external.ExternalLibrariesActionsHelper;
 import org.eclipse.n4js.ui.utils.InputComposedValidator;
 import org.eclipse.n4js.ui.utils.InputFunctionalValidator;
 import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.n4js.ui.viewer.TreeViewerBuilder;
-import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.collections.Arrays2;
-import org.eclipse.n4js.utils.io.FileDeleter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -77,6 +74,8 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.xtext.nodemodel.INode;
+import org.eclipse.xtext.parser.IParseResult;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -109,13 +108,16 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	private ExternalLibraryWorkspace externalLibraryWorkspace;
 
 	@Inject
-	private TargetPlatformInstallLocationProvider installLocationProvider;
-
-	@Inject
-	private GitCloneSupplier gitSupplier;
+	private TargetPlatformInstallLocationProvider locationProvider;
 
 	@Inject
 	private StatusHelper statusHelper;
+
+	@Inject
+	private SemverHelper semverHelper;
+
+	@Inject
+	ExternalLibrariesActionsHelper externalLibrariesActionsHelper;
 
 	private TreeViewer viewer;
 
@@ -166,7 +168,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 		createEnabledPushButton(subComposite, "Install npm...",
 				new InstallNpmDependencyButtonListener(this::installAndUpdate,
 						() -> getPackageNameToInstallValidator(), () -> getPackageVersionValidator(),
-						statusHelper));
+						semverHelper, statusHelper));
 
 		createEnabledPushButton(subComposite, "Uninstall npm...",
 				new UninstallNpmDependencyButtonListener(this::uninstallAndUpdate,
@@ -311,14 +313,20 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 				(final String version) -> parsingVersionValidator(version));
 	}
 
-	/** version validator based on N4MF parser (and its support for version syntax). */
+	/**
+	 * version validator based on N4MF parser (and its support for version syntax).
+	 *
+	 * @return error message or null if there are no errors
+	 */
 	private String parsingVersionValidator(final String data) {
 		String result = null;
 
-		DeclaredVersion parsedVersion = ProjectDescriptionUtils.parseVersion(data);
-		if (parsedVersion == null) {
-			// return parse error
-			result = "Could not create version from string :" + data;
+		IParseResult parseResult = semverHelper.getParseResult(data);
+		if (parseResult == null) {
+			result = "Could not create version from string :" + data + ":\n";
+		} else if (parseResult.hasSyntaxErrors()) {
+			INode firstErrorNode = parseResult.getSyntaxErrors().iterator().next();
+			result = "Parsing error: " + firstErrorNode.getSyntaxErrorMessage().getMessage();
 		}
 
 		// otherwise, parsedVersion is valid and result remains 'null'
@@ -328,19 +336,21 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	}
 
 	private boolean isNpmWithNameInstalled(final String packageName) {
-		final File root = new File(installLocationProvider.getTargetPlatformNodeModulesLocation());
+		final File root = new File(locationProvider.getNodeModulesURI());
 		return from(externalLibraryWorkspace.getProjectsIn(root.toURI()))
 				.transform(p -> p.getName())
 				.anyMatch(name -> name.equals(packageName));
 	}
 
-	private Map<String, String> getInstalledNpms() {
-		final URI root = installLocationProvider.getTargetPlatformNodeModulesLocation();
+	private Map<String, NPMVersionRequirement> getInstalledNpms() {
+		final URI root = locationProvider.getNodeModulesURI();
 		final Set<ProjectDescription> projects = from(externalLibraryWorkspace.getProjectsDescriptions((root))).toSet();
 
-		final Map<String, String> versionedNpms = new HashMap<>();
+		final Map<String, NPMVersionRequirement> versionedNpms = new HashMap<>();
 		projects.forEach((ProjectDescription pd) -> {
-			versionedNpms.put(pd.getProjectId(), VersionConstraintFormatUtil.npmFormat(pd.getProjectVersion()));
+			NPMVersionRequirement vr = SemverUtils.createVersionRangeSet(VersionComparator.EQUALS,
+					pd.getProjectVersion());
+			versionedNpms.put(pd.getProjectName(), vr);
 		});
 
 		return versionedNpms;
@@ -354,7 +364,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 				.createMultiStatus("Executing maintenance actions.");
 
 		// persist state for reinstall
-		Map<String, String> oldPackages = new HashMap<>();
+		Map<String, NPMVersionRequirement> oldPackages = new HashMap<>();
 		if (userChoice.decisionReinstall)
 			oldPackages.putAll(getInstalledNpms());
 
@@ -363,8 +373,8 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 		maintenanceCleanNpmCache(userChoice, multistatus, monitor);
 		maintenanceResetTypeDefinitions(userChoice, multistatus);
 		maintenanceDeleteNpms(userChoice, multistatus);
-		maintenanceReinstallNpms(userChoice, multistatus, monitor, oldPackages);
-		maintenanceUpateState(userChoice, multistatus, monitor);
+		reinstallNpms(userChoice, multistatus, monitor, oldPackages);
+		upateState(userChoice, multistatus, monitor);
 
 		return multistatus;
 	}
@@ -382,10 +392,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	private void maintenanceCleanNpmCache(final MaintenanceActionsChoice userChoice,
 			final MultiStatus multistatus, IProgressMonitor monitor) {
 		if (userChoice.decisionCleanCache) {
-			IStatus status = libManager.cleanCache(monitor);
-			if (!status.isOK()) {
-				multistatus.merge(status);
-			}
+			externalLibrariesActionsHelper.maintenanceCleanNpmCache(multistatus, monitor);
 		}
 	}
 
@@ -400,16 +407,13 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	 * @param monitor
 	 *            the monitor used to interact with npm manager
 	 */
-	private void maintenanceUpateState(final MaintenanceActionsChoice userChoice,
+	private void upateState(final MaintenanceActionsChoice userChoice,
 			final MultiStatus multistatus, IProgressMonitor monitor) {
 
 		if (userChoice.decisionReload || userChoice.decisionReinstall || userChoice.decisionPurgeNpm
 				|| userChoice.decisionResetTypeDefinitions) {
 
-			// externalLibraryWorkspace.updateState();
-
 			try {
-				// externalLibrariesReloadHelper.reloadLibraries(true, monitor);
 				libManager.reloadAllExternalProjects(monitor);
 
 			} catch (Exception e) {
@@ -433,8 +437,8 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	 *            names of the packages and their versions to reinstall
 	 *
 	 */
-	private void maintenanceReinstallNpms(final MaintenanceActionsChoice userChoice,
-			final MultiStatus multistatus, IProgressMonitor monitor, Map<String, String> packageNames) {
+	private void reinstallNpms(final MaintenanceActionsChoice userChoice,
+			final MultiStatus multistatus, IProgressMonitor monitor, Map<String, NPMVersionRequirement> packageNames) {
 		if (userChoice.decisionReinstall) {
 
 			// unless all npms were purged, uninstall known ones
@@ -461,25 +465,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	 */
 	private void maintenanceDeleteNpms(final MaintenanceActionsChoice userChoice, final MultiStatus multistatus) {
 		if (userChoice.decisionPurgeNpm) {
-			// get folder
-			File npmFolder = N4_NPM_FOLDER_SUPPLIER.get();
-
-			if (npmFolder.exists()) {
-				FileDeleter.delete(npmFolder, (IOException ioe) -> multistatus.merge(
-						statusHelper.createError("Exception during deletion of the npm folder.", ioe)));
-			}
-
-			if (!npmFolder.exists()) {
-				// recreate npm folder
-				if (!repairNpmFolderState()) {
-					multistatus.merge(statusHelper.createError("The npm folder was not recreated correctly."));
-				}
-			} else {// should never happen
-				multistatus
-						.merge(statusHelper.createError("Could not verify deletion of " + npmFolder.getAbsolutePath()));
-			}
-			// other actions like reinstall depends on this state
-			externalLibraryWorkspace.updateState();
+			externalLibrariesActionsHelper.maintenanceDeleteNpms(multistatus);
 		}
 	}
 
@@ -494,24 +480,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	private void maintenanceResetTypeDefinitions(final MaintenanceActionsChoice userChoice,
 			final MultiStatus multistatus) {
 		if (userChoice.decisionResetTypeDefinitions) {
-			// get folder
-			File typeDefinitionsFolder = gitSupplier.get();
-
-			if (typeDefinitionsFolder.exists()) {
-				FileDeleter.delete(typeDefinitionsFolder, (IOException ioe) -> multistatus.merge(
-						statusHelper.createError("Exception during deletion of the type definitions.", ioe)));
-			}
-
-			if (!typeDefinitionsFolder.exists()) {
-				// recreate npm folder
-				if (!gitSupplier.repairTypeDefinitions()) {
-					multistatus.merge(
-							statusHelper.createError("The type definitions folder was not recreated correctly."));
-				}
-			} else { // should never happen
-				multistatus.merge(statusHelper
-						.createError("Could not verify deletion of " + typeDefinitionsFolder.getAbsolutePath()));
-			}
+			externalLibrariesActionsHelper.maintenanceResetTypeDefinitions(multistatus);
 		}
 	}
 
@@ -577,7 +546,8 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	 *
 	 * @return status of the operation.
 	 */
-	private IStatus installAndUpdate(final Map<String, String> versionedPackages, final IProgressMonitor monitor) {
+	private IStatus installAndUpdate(final Map<String, NPMVersionRequirement> versionedPackages,
+			final IProgressMonitor monitor) {
 		IStatus status = libManager.installNPMs(versionedPackages, monitor);
 		if (status.isOK())
 			updateInput(viewer, store.getLocations());
@@ -604,7 +574,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 			final Object element = ((IStructuredSelection) selection).getFirstElement();
 			if (element instanceof IN4JSProject) {
 				IN4JSProject project = (IN4JSProject) element;
-				return project.getProjectId();
+				return project.getProjectName();
 			}
 		}
 		return null;

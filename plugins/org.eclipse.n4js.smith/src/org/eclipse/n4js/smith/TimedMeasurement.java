@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.smith;
 
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 import com.google.common.base.Stopwatch;
@@ -19,7 +20,7 @@ import com.google.common.base.Stopwatch;
  */
 class TimedMeasurement implements Measurement, ClosableMeasurement {
 	final String name;
-	final Stopwatch sw;
+	private final Stopwatch sw;
 	private boolean consumed = false;
 	private Consumer<TimedMeasurement> stopHandler;
 
@@ -29,8 +30,12 @@ class TimedMeasurement implements Measurement, ClosableMeasurement {
 		this.sw = Stopwatch.createStarted();
 	}
 
+	synchronized long elapsed(TimeUnit timeUnit) {
+		return this.sw.elapsed(timeUnit);
+	}
+
 	@Override
-	public void end() {
+	synchronized public void end() {
 		if (consumed)
 			return;
 

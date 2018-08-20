@@ -16,6 +16,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 
 import org.eclipse.core.runtime.IStatus;
@@ -53,17 +54,18 @@ public class ExternalLibrariesSetupHelper {
 			((TypeDefinitionGitLocationProviderImpl) gitLocationProvider).setGitLocation(TEST_DEFINITION_LOCATION);
 		}
 
-		final URI nodeModulesLocation = locationProvider.getTargetPlatformNodeModulesLocation();
-		File nodeModuleLocationFile = new File(nodeModulesLocation);
-		if (!nodeModuleLocationFile.exists()) {
-			nodeModuleLocationFile.createNewFile();
-		}
-		assertTrue("Provided npm location should be available.", nodeModuleLocationFile.exists());
+		// GH-821: clean-up here when done
+		final URI nodeModulesLocation = locationProvider.getNodeModulesURI();
+		final URI typeDefinitionLocation = locationProvider.getTypeDefinitionsURI();
+
+		ensureDirectoryExists(nodeModulesLocation);
+		ensureDirectoryExists(typeDefinitionLocation);
 
 		if (initShippedCode) {
 			shippedCodeInitializeTestHelper.setupBuiltIns();
 		} else {
 			externalLibraryPreferenceStore.add(nodeModulesLocation);
+			externalLibraryPreferenceStore.add(typeDefinitionLocation);
 			final IStatus result = externalLibraryPreferenceStore.save(new NullProgressMonitor());
 			assertTrue("Error while saving external library preference changes.", result.isOK());
 		}
@@ -71,11 +73,19 @@ public class ExternalLibrariesSetupHelper {
 		ProjectTestsUtils.waitForAutoBuild();
 	}
 
+	private void ensureDirectoryExists(final URI dirLocation) throws IOException {
+		File dirLocationFile = new File(dirLocation);
+		if (!dirLocationFile.exists()) {
+			dirLocationFile.createNewFile();
+		}
+		assertTrue("Provided location should be available.", dirLocationFile.exists());
+	}
+
 	/** Tears down the external libraries. */
 	public void tearDownExternalLibraries(boolean tearDownShippedCode) throws Exception {
 		((TypeDefinitionGitLocationProviderImpl) gitLocationProvider).setGitLocation(PUBLIC_DEFINITION_LOCATION);
 
-		final URI nodeModulesLocation = locationProvider.getTargetPlatformNodeModulesLocation();
+		final URI nodeModulesLocation = locationProvider.getNodeModulesURI();
 		externalLibraryPreferenceStore.remove(nodeModulesLocation);
 		final IStatus result = externalLibraryPreferenceStore.save(new NullProgressMonitor());
 		assertTrue("Error while saving external library preference changes.", result.isOK());

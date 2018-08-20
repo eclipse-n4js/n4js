@@ -1,6 +1,6 @@
 {
 	"name": "A",
-	"version": "0.0.1-SNAPSHOT",
+	"version": "0.0.1",
 	"dependencies": {
 		"react": "*"
 	},
@@ -13,6 +13,9 @@
 			"source": [
 				"src"
 			]
+		},
+		"typeDependencies": {
+			"react-n4jsd": "*"
 		}
 	}
 }

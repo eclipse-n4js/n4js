@@ -56,12 +56,13 @@ class NodejsLaunchConfigurationTab extends AbstractLaunchConfigurationTab {
 	var ComboViewer systemLoaderCombo;
 
 	/**
-	 * Converts a map to text, each entry is put on a line, key and value are separated by "=". 
-	 * @param map may be empty
+	 * Converts a map to text, each entry is put on a line, key and value are separated by "=".
+	 * For convenience reasons, the map is sorted by key.
+	 * @param map may be empty or even null.
 	 */
 	static def String mapToString(Map<String, String> map) {
 		if (map===null) return "";
-		map.entrySet.join("\n", [it.key+"="+it.value]);
+		map.entrySet.sortWith[o1,o2|return o1.key.compareTo(o2.key)].join("\n", [it.key+"="+it.value]);
 	}
 
 	/**

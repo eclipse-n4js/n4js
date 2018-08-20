@@ -1,0 +1,273 @@
+/**
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+grammar org.eclipse.n4js.semver.Semver
+	with org.eclipse.n4js.common.unicode.Unicode
+	hidden (EOL)
+
+import 'http://www.eclipse.org/n4js/Semver'
+import 'http://www.eclipse.org/emf/2002/Ecore' as ecore
+
+
+
+// This grammar of SemVer 2.0.0 is an adapted version of the BNF found at:
+//  https://docs.npmjs.com/misc/semver
+
+
+NPMVersionRequirement:
+	WS*
+	VersionRangeSetRequirement
+	| (
+		(
+			=>LocalPathVersionRequirement
+			| URLVersionRequirement
+			| GitHubVersionRequirement
+			| TagVersionRequirement
+		)
+		WS*
+	)
+;
+
+LocalPathVersionRequirement:
+	=>(FILE_TAG) localPath=PATH
+;
+
+URLVersionRequirement:
+	protocol=URL_PROTOCOL =>'://' url=URL
+	('#' versionSpecifier=URLVersionSpecifier)?
+;
+
+URLVersionSpecifier:
+	=>(URLSemver)
+	| ({URLCommitISH} commitISH=ALPHA_NUMERIC_CHARS_START_WITH_DIGITS)
+	| ({URLCommitISH} commitISH=ALPHA_NUMERIC_CHARS)
+;
+
+URLSemver:
+	{URLSemver}
+	withSemverTag?=SEMVER_TAG?
+	simpleVersion=SimpleVersion
+;
+
+//URLCommitISH:
+//	commitISH=ALPHA_NUMERIC_CHARS
+//;
+
+TagVersionRequirement:
+	tagName=TAG
+;
+
+GitHubVersionRequirement:
+	githubUrl=URL ('#' commitISH=ALPHA_NUMERIC_CHARS)?
+;
+
+
+VersionRangeSetRequirement:
+	{VersionRangeSetRequirement} (ranges+=VersionRange (WS* '||' WS* ranges+=VersionRange)* WS*)?
+;
+
+VersionRange:
+	VersionRangeContraint | HyphenVersionRange
+;
+
+HyphenVersionRange returns VersionRange:
+	{HyphenVersionRange} from=VersionNumber WS+ '-' WS+  to=VersionNumber
+;
+
+VersionRangeContraint returns VersionRange:
+	{VersionRangeConstraint} versionConstraints+=SimpleVersion (WS+ versionConstraints+=SimpleVersion)*
+;
+
+SimpleVersion:
+	(comparators+=VersionComparator WS*)* withLetterV?=LETTER_V? number=VersionNumber
+;
+
+VersionNumber:
+	major=VersionPart
+	('.' minor=VersionPart
+		('.' patch=VersionPart
+			('.' extended+=VersionPart)*
+		)?
+	)?
+	(qualifier=Qualifier)?
+;
+
+VersionPart:
+	wildcard?=WILDCARD | numberRaw=DIGITS
+;
+
+Qualifier:
+		('-' preRelease=QualifierTag)
+	|	('+' buildMetadata=QualifierTag)
+	|	('-' preRelease=QualifierTag '+' buildMetadata=QualifierTag)
+;
+
+QualifierTag:
+	parts+=ALPHA_NUMERIC_CHARS
+	('.' parts+=ALPHA_NUMERIC_CHARS)*
+;
+
+
+FILE_TAG:
+	LETTER_F LETTER_I LETTER_L LETTER_E ':'
+;
+
+SEMVER_TAG:
+	LETTER_S LETTER_E LETTER_M LETTER_V LETTER_E LETTER_R ':'
+;
+
+
+PATH:
+	(LETTER_NO_VX | '/' | '.') ('/' | '.' | '-' | DIGITS | LETTER)+
+;
+
+URL_PROTOCOL:
+	(LETTER_NO_VX) (LETTER | '+')+
+;
+
+URL:
+	(LETTER_NO_VX)
+	('-' | DIGITS | LETTER)*
+	('/' | '.' | ':' | '@')
+	('/' | '.' | ':' | '@' | '-' | DIGITS | LETTER)*
+;
+
+TAG:
+	(LETTER_NO_VX /*| LETTER_X*/) ('-' | DIGITS | LETTER)+
+;
+
+ALPHA_NUMERIC_CHARS:
+	('-' | DIGITS | LETTER)+
+;
+
+ALPHA_NUMERIC_CHARS_START_WITH_DIGITS:
+	DIGITS ('-' | DIGITS | LETTER)+
+;
+
+WILDCARD:
+	LETTER_X | ASTERIX
+;
+
+
+fragment LETTER:
+	LETTER_V
+	| LETTER_X
+	| LETTER_NO_VX
+;
+
+
+fragment LETTER_NO_VX:
+	LETTER_S
+	| LETTER_M
+	| LETTER_R
+	| LETTER_F
+	| LETTER_I
+	| LETTER_L
+	| LETTER_E
+	| LETTER_OTHER
+;
+
+
+terminal LETTER_S :
+	's' | 'S'
+;
+
+terminal LETTER_M :
+	'm' | 'M'
+;
+
+terminal LETTER_R :
+	'r' | 'R'
+;
+
+terminal LETTER_F :
+	'f' | 'F'
+;
+
+terminal LETTER_I :
+	'i' | 'I'
+;
+
+terminal LETTER_L :
+	'l' | 'L'
+;
+
+terminal LETTER_E :
+	'e' | 'E'
+;
+
+terminal LETTER_V :
+	'v' | 'V'
+;
+
+terminal LETTER_X:
+	'x' | 'X'
+;
+
+terminal LETTER_OTHER:
+	  'a' | 'A'
+	| 'b' | 'B'
+	| 'c' | 'C'
+	| 'd' | 'D'
+	// | 'e' | 'E' // part of 'semver' and/or 'file' tag
+	// | 'f' | 'F' // part of 'file' tag
+	| 'g' | 'G'
+	| 'h' | 'H'
+	// | 'i' | 'I' // part of 'file' tag
+	| 'j' | 'J'
+	| 'k' | 'K'
+	// | 'l' | 'L' // part of 'file' tag
+	// | 'm' | 'M' // part of 'semver' tag
+	| 'n' | 'N'
+	| 'o' | 'O'
+	| 'p' | 'P'
+	| 'q' | 'Q'
+	// | 'r' | 'R' // part of 'semver' tag
+	// | 's' | 'S' // part of 'semver' tag
+	| 't' | 'T'
+	| 'u' | 'U'
+	// | 'v' | 'V' // can be a prefix of a version and/or part of 'semver' tag
+	| 'w' | 'W'
+	// | 'x' | 'X' // can be a wildcard
+	| 'y' | 'Y'
+	| 'z' | 'Z'
+;
+
+terminal ASTERIX:
+	'*'
+;
+
+terminal DIGITS returns ecore::EInt:
+	('0'..'9')+
+;
+
+
+
+
+
+terminal WS:
+	WHITESPACE_FRAGMENT+;
+
+terminal EOL:
+	LINE_TERMINATOR_SEQUENCE_FRAGMENT;
+
+
+
+
+enum VersionComparator:
+	Equals = '='
+|	Smaller = '<'
+|	Tilde = '~'
+|	Caret = '^'
+|	SmallerEquals = '<='
+|	Greater = '>'
+|	GreaterEquals = '>='
+;

@@ -11,34 +11,31 @@
 package org.eclipse.n4js.packagejson
 
 import com.google.common.base.Optional
-import java.io.IOException
-import java.io.StringWriter
-import org.eclipse.emf.common.util.URI
-import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.emf.ecore.resource.ResourceSet
+import java.util.Map
+import java.util.SortedMap
 import org.eclipse.n4js.json.JSON.JSONArray
 import org.eclipse.n4js.json.JSON.JSONDocument
 import org.eclipse.n4js.json.JSON.JSONFactory
 import org.eclipse.n4js.json.JSON.JSONObject
-import org.eclipse.n4js.json.JSONGlobals
 import org.eclipse.n4js.json.model.utils.JSONModelUtils
-import org.eclipse.n4js.n4mf.ProjectType
-import org.eclipse.n4js.n4mf.SourceContainerType
-import org.eclipse.n4js.utils.ProjectDescriptionHelper
-import org.eclipse.n4js.utils.languages.N4LanguageUtils
-import org.eclipse.xtext.resource.SaveOptions
-import org.eclipse.xtext.serializer.ISerializer
+import org.eclipse.n4js.projectDescription.ProjectType
+import org.eclipse.n4js.projectDescription.SourceContainerType
 
-import static org.eclipse.n4js.utils.ProjectDescriptionHelper.PROP__N4JS
-import static org.eclipse.n4js.utils.ProjectDescriptionHelper.PROP__NAME
-import static org.eclipse.n4js.utils.ProjectDescriptionHelper.PROP__OUTPUT
-import static org.eclipse.n4js.utils.ProjectDescriptionHelper.PROP__PROJECT_TYPE
-import static org.eclipse.n4js.utils.ProjectDescriptionHelper.PROP__SOURCES
-import static org.eclipse.n4js.utils.ProjectDescriptionHelper.PROP__VENDOR_ID
-import static org.eclipse.n4js.utils.ProjectDescriptionHelper.PROP__VENDOR_NAME
-import static org.eclipse.n4js.utils.ProjectDescriptionHelper.PROP__VERSION
-import java.util.Map
-import java.util.SortedMap
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.VERSION
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.IMPLEMENTED_PROJECTS
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.NAME
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.DEPENDENCIES
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.VENDOR_ID
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.SOURCES
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.N4JS
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.EXTENDED_RUNTIME_ENVIRONMENT
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.REQUIRED_RUNTIME_LIBRARIES
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.PROJECT_TYPE
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.IMPLEMENTATION_ID
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.PROVIDED_RUNTIME_LIBRARIES
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.OUTPUT
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.TESTED_PROJECTS
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.VENDOR_NAME
 
 /**
  * Class for providing the content of N4JS-specific package.json files.
@@ -51,7 +48,7 @@ package class PackageJsonContentProvider {
 	 * Creates and returns with the N4JS package.json {@link JSONDocument} representation 
 	 * based on the given arguments.
 	 * 
-	 * @param projectId the projectId of the project (cf. name).
+	 * @param projectName the N4JS project name of the project (cf. name).
 	 * @param version The declared version of the project.
 	 * @param type The type of the N4JS project.
 	 * @param vendorId The vendorId to use.
@@ -68,7 +65,7 @@ package class PackageJsonContentProvider {
 	 * @return the N4JS package.json content as a string.
 	 */
 	package static def JSONDocument getModel(
-		String projectId,
+		String projectName,
 		Optional<String> version,
 		ProjectType type,
 		Optional<String> vendorId,
@@ -84,11 +81,11 @@ package class PackageJsonContentProvider {
 		Map<SourceContainerType, String> sourceContainers
 	) {
 		val JSONObject root = JSONFactory.eINSTANCE.createJSONObject();
-		
-		JSONModelUtils.addProperty(root, PROP__NAME, projectId);
-		
+
+		JSONModelUtils.addProperty(root, NAME.name, projectName);
+
 		if (version.present)
-			JSONModelUtils.addProperty(root, PROP__VERSION, version.get());
+			JSONModelUtils.addProperty(root, VERSION.name, version.get());
 
 		// add "dependencies" section
 		if (!dependencies.empty) {
@@ -100,24 +97,24 @@ package class PackageJsonContentProvider {
 				pair.value = JSONModelUtils.createStringLiteral(e.value);
 				return pair;
 			]);
-			JSONModelUtils.addProperty(root, ProjectDescriptionHelper.PROP__DEPENDENCIES, dependenciesSection);
+			JSONModelUtils.addProperty(root, DEPENDENCIES.name, dependenciesSection);
 		}
 		
 		// add "n4js" section
-		val JSONObject n4jsRoot = JSONModelUtils.addProperty(root, PROP__N4JS,
+		val JSONObject n4jsRoot = JSONModelUtils.addProperty(root, N4JS.name,
 			JSONFactory.eINSTANCE.createJSONObject());
 		
 		// project type
-		JSONModelUtils.addProperty(n4jsRoot, PROP__PROJECT_TYPE, getEnumAsString(type));
+		JSONModelUtils.addProperty(n4jsRoot, PROJECT_TYPE.name, getEnumAsString(type));
 
 		// add vendor related properties
 		if (vendorId.present)
-			JSONModelUtils.addProperty(n4jsRoot, PROP__VENDOR_ID, vendorId.get());
+			JSONModelUtils.addProperty(n4jsRoot, VENDOR_ID.name, vendorId.get());
 		if (vendorName.present)
-			JSONModelUtils.addProperty(n4jsRoot, PROP__VENDOR_NAME, vendorName.get());
+			JSONModelUtils.addProperty(n4jsRoot, VENDOR_NAME.name, vendorName.get());
 
 		// add sources section
-		val JSONObject sourcesSection = JSONModelUtils.addProperty(n4jsRoot, PROP__SOURCES,
+		val JSONObject sourcesSection = JSONModelUtils.addProperty(n4jsRoot, SOURCES.name,
 			JSONFactory.eINSTANCE.createJSONObject());
 
 		// add sources sub-sections
@@ -136,34 +133,34 @@ package class PackageJsonContentProvider {
 
 		// add output folder
 		if (output.present)
-			JSONModelUtils.addProperty(n4jsRoot, PROP__OUTPUT, output.get());
+			JSONModelUtils.addProperty(n4jsRoot, OUTPUT.name, output.get());
 
 		// add provided and required runtime libraries if given
 		if (!providedRL.empty) {
-			JSONModelUtils.addProperty(n4jsRoot, ProjectDescriptionHelper.PROP__PROVIDED_RUNTIME_LIBRARIES,
+			JSONModelUtils.addProperty(n4jsRoot, PROVIDED_RUNTIME_LIBRARIES.name,
 				JSONModelUtils.createStringArray(providedRL));
 		}
 		if (!requiredRL.empty) {
-			JSONModelUtils.addProperty(n4jsRoot, ProjectDescriptionHelper.PROP__REQUIRED_RUNTIME_LIBRARIES,
+			JSONModelUtils.addProperty(n4jsRoot, REQUIRED_RUNTIME_LIBRARIES.name,
 				JSONModelUtils.createStringArray(requiredRL));
 		}
 			
 		if (extendedRE.isPresent) {
-			JSONModelUtils.addProperty(n4jsRoot, ProjectDescriptionHelper.PROP__EXTENDED_RUNTIME_ENVIRONMENT,
+			JSONModelUtils.addProperty(n4jsRoot, EXTENDED_RUNTIME_ENVIRONMENT.name,
 				extendedRE.get());
 		}
 		if (implementationId.isPresent) {
-			JSONModelUtils.addProperty(n4jsRoot, ProjectDescriptionHelper.PROP__IMPLEMENTATION_ID,
+			JSONModelUtils.addProperty(n4jsRoot, IMPLEMENTATION_ID.name,
 				implementationId.get());
 		}
 
 		if (!implementedProjects.empty) {
-			JSONModelUtils.addProperty(n4jsRoot, ProjectDescriptionHelper.PROP__IMPLEMENTED_PROJECTS,
+			JSONModelUtils.addProperty(n4jsRoot, IMPLEMENTED_PROJECTS.name,
 				JSONModelUtils.createStringArray(implementedProjects));
 		}
 		
 		if (!testedProjects.empty) {
-			JSONModelUtils.addProperty(n4jsRoot, ProjectDescriptionHelper.PROP__TESTED_PROJECTS,
+			JSONModelUtils.addProperty(n4jsRoot, TESTED_PROJECTS.name,
 				JSONModelUtils.createStringArray(testedProjects));
 		}
 
@@ -181,30 +178,5 @@ package class PackageJsonContentProvider {
 		if (projectType == ProjectType.RUNTIME_LIBRARY)
 			return "runtimeLibrary";
 		return projectType.getName().toLowerCase();
-	}
-
-	/** Serializes the given {@link JSONDocument} using the Xtext serialization facilities provided by the JSON language. */
-	package static def String serializeJSON(JSONDocument document) {
-		val ISerializer jsonSerializer = N4LanguageUtils.getServiceForContext(JSONGlobals.FILE_EXTENSION, ISerializer).
-			get();
-		val ResourceSet resourceSet = N4LanguageUtils.getServiceForContext(JSONGlobals.FILE_EXTENSION, ResourceSet).
-			get();
-
-		// Use temporary Resource as AbstractFormatter2 implementations can only format
-		// semantic elements that are contained in a Resource.
-		val Resource temporaryResource = resourceSet.createResource(URI.createFileURI("__synthetic.json"));
-		temporaryResource.getContents().add(document);
-
-		// create string writer as serialization output
-		val StringWriter writer = new StringWriter();
-
-		// enable formatting as serialization option
-		val SaveOptions serializerOptions = SaveOptions.newBuilder().format().getOptions();
-		try {
-			jsonSerializer.serialize(document, writer, serializerOptions)
-			return writer.toString;
-		} catch (IOException e) {
-			throw new RuntimeException("Failed to serialize JSONDocument " + document, e);
-		}
 	}
 }

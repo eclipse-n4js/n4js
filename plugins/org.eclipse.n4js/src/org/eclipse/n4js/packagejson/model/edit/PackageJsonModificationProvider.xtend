@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
@@ -17,9 +17,12 @@ import org.eclipse.n4js.json.JSON.JSONDocument
 import org.eclipse.n4js.json.JSON.JSONFactory
 import org.eclipse.n4js.json.JSON.JSONObject
 import org.eclipse.n4js.json.model.utils.JSONModelUtils
-import org.eclipse.n4js.utils.ProjectDescriptionHelper
+import org.eclipse.n4js.packagejson.PackageJsonProperties
 
-import static org.eclipse.n4js.utils.ProjectDescriptionHelper.PROP__N4JS
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.DEPENDENCIES
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.EXTENDED_RUNTIME_ENVIRONMENT
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.N4JS
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.PROJECT_TYPE
 
 /**
  * This class provides basic edit operations for N4JS package.json files 
@@ -30,7 +33,7 @@ class PackageJsonModificationProvider {
 	/**
 	 * Returns a semantic modification that appends the given list of new project dependencies to the "dependencies"
 	 * section of a package.json file. 
-	 *
+	 * 
 	 * @param dependencies 
 	 * 			The list of project dependencies to insert.
 	 */
@@ -40,7 +43,7 @@ class PackageJsonModificationProvider {
 				if (dependencies.empty) {
 					return; // nothing to add
 				}
-				
+
 				val root = getDocumentRoot(document);
 				for (String dependency : dependencies) {
 					addProjectDependency(root, dependency, "*");
@@ -52,7 +55,7 @@ class PackageJsonModificationProvider {
 	/**
 	 * Returns a semantic modification that appends the given list of new required runtime libraries to the required-runtime-libraries-section
 	 * of a package.json file.
-	 *
+	 * 
 	 * @param resourceUri 
 	 * 			The URI of the package.json file.
 	 * @param runtimeLibraries 
@@ -64,12 +67,12 @@ class PackageJsonModificationProvider {
 				if (runtimeLibraries.empty) {
 					return; // nothing to add
 				}
-				
+
 				val root = getDocumentRoot(document);
 				val n4jsSection = getOrCreateN4JSSection(root);
-				val requiredRuntimeLibrariesList = getOrCreateArray(n4jsSection, ProjectDescriptionHelper.PROP__REQUIRED_RUNTIME_LIBRARIES);
-				
-				for(library : runtimeLibraries) {
+				val requiredRuntimeLibrariesList = getOrCreateArray(n4jsSection, PackageJsonProperties.REQUIRED_RUNTIME_LIBRARIES);
+
+				for (library : runtimeLibraries) {
 					requiredRuntimeLibrariesList.elements.add(JSONModelUtils.createStringLiteral(library));
 				}
 			}
@@ -78,7 +81,7 @@ class PackageJsonModificationProvider {
 
 	/**
 	 * Returns a semantic modification that sets the name of the extended runtime environment to the given string.
-	 *
+	 * 
 	 * @param runtimeEnvironment
 	 * 			The new extended runtime environment.
 	 */
@@ -87,15 +90,15 @@ class PackageJsonModificationProvider {
 			override apply(JSONDocument document) {
 				val root = getDocumentRoot(document);
 				val n4jsSection = getOrCreateN4JSSection(root);
-				
-				JSONModelUtils.setProperty(n4jsSection, ProjectDescriptionHelper.PROP__EXTENDED_RUNTIME_ENVIRONMENT, runtimeEnvironment);
+
+				JSONModelUtils.setProperty(n4jsSection, EXTENDED_RUNTIME_ENVIRONMENT.name, runtimeEnvironment);
 			}
 		}
 	}
 
 	/**
 	 * Returns change instance to set the ProjectType to the given value.
-	 *
+	 * 
 	 * @param manifestResource The manifest resource
 	 * @param runtimeEnvironment The runtime environment to set
 	 * @param projectDescription The project description object of the manifest
@@ -105,37 +108,38 @@ class PackageJsonModificationProvider {
 			override apply(JSONDocument document) {
 				val root = getDocumentRoot(document);
 				val n4jsSection = getOrCreateN4JSSection(root);
-				
-				JSONModelUtils.setProperty(n4jsSection, ProjectDescriptionHelper.PROP__PROJECT_TYPE, projectType)
+
+				JSONModelUtils.setProperty(n4jsSection, PROJECT_TYPE.name, projectType)
 			}
 		}
 	}
-	
+
 	private static def JSONObject getDocumentRoot(JSONDocument document) {
 		val content = document.content;
 		if (!(content instanceof JSONObject)) {
-			throw new IllegalArgumentException("The given resource does not represent a valid package.json file." + 
-				"Make sure the document root is a JSON object. (URI=" + document.eResource.URI + ")");
+			throw new IllegalArgumentException(
+				"The given resource does not represent a valid package.json file." +
+					"Make sure the document root is a JSON object. (URI=" + document.eResource.URI + ")");
 		}
 		return content as JSONObject;
 	}
-	
-	public static def void addProjectDependency(JSONObject root, String projectId, String versionConstraint) {
-		JSONModelUtils.setPath(root, Arrays.asList(ProjectDescriptionHelper.PROP__DEPENDENCIES, projectId),
-				JSONModelUtils.createStringLiteral(versionConstraint));
-	}
-	
-	private static def JSONArray getOrCreateArray(JSONObject root, String property) {
-		return JSONModelUtils.getProperty(root, property).orElseGet(
-				[JSONModelUtils.addProperty(root, property, JSONFactory.eINSTANCE.createJSONArray())]) as JSONArray;
+
+	public static def void addProjectDependency(JSONObject root, String projectName, String versionConstraint) {
+		JSONModelUtils.setPath(root, Arrays.asList(DEPENDENCIES.name, projectName),
+			JSONModelUtils.createStringLiteral(versionConstraint));
 	}
 
-	private static def JSONObject getOrCreateObject(JSONObject root, String property) {
-		return JSONModelUtils.getProperty(root, property).orElseGet(
-				[JSONModelUtils.addProperty(root, property, JSONFactory.eINSTANCE.createJSONObject())]) as JSONObject;
+	private static def JSONArray getOrCreateArray(JSONObject root, PackageJsonProperties property) {
+		return JSONModelUtils.getProperty(root, property.name).orElseGet(
+				[JSONModelUtils.addProperty(root, property.name, JSONFactory.eINSTANCE.createJSONArray())]) as JSONArray;
+	}
+
+	private static def JSONObject getOrCreateObject(JSONObject root, PackageJsonProperties property) {
+		return JSONModelUtils.getProperty(root, property.name).orElseGet(
+				[JSONModelUtils.addProperty(root, property.name, JSONFactory.eINSTANCE.createJSONObject())]) as JSONObject;
 	}
 
 	private static def JSONObject getOrCreateN4JSSection(JSONObject root) {
-		return getOrCreateObject(root, PROP__N4JS);
+		return getOrCreateObject(root, N4JS);
 	}
 }

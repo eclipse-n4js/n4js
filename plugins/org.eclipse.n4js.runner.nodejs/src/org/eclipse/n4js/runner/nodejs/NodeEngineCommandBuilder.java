@@ -18,15 +18,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
 import org.eclipse.n4js.runner.SystemLoaderInfo;
-import org.eclipse.xtext.xbase.lib.Pair;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
@@ -41,8 +43,6 @@ public class NodeEngineCommandBuilder {
 
 	/** Command line option to signal COMMON_JS */
 	private static final String CJS_COMMAND = "cjs";
-
-	private final static String NODE_PATH_SEP = File.pathSeparator;
 
 	@Inject
 	private Provider<NodeJsBinary> nodeJsBinary;
@@ -108,13 +108,7 @@ public class NodeEngineCommandBuilder {
 		final File elf = Files.createTempFile(projectRootPath, "N4JSNodeELF",
 				"." + N4JSGlobals.JS_FILE_EXTENSION).toFile();
 		elf.deleteOnExit();
-		String[] paths = nodeRunOptions.getCoreProjectPaths().split(NODE_PATH_SEP);
-		List<Pair<String, String>> path2name = new ArrayList<>();
-		for (int i = 0; i < paths.length; i++) {
-			String string = paths[i];
-			Path p = Paths.get(string);
-			path2name.add(new Pair<>(string, p.getFileName().toString()));
-		}
+		Map<Path, String> path2name = nodeRunOptions.getCoreProjectPaths();
 		// early throw, to prevent debugging runtime processes
 		String execModule = nodeRunOptions.getExecModule();
 		if (Strings.isNullOrEmpty(execModule))
@@ -148,12 +142,17 @@ public class NodeEngineCommandBuilder {
 	 *            The init modules to be loaded before the actual module execution
 	 */
 	protected String getELFCode(NodeRunOptions nodeRunOptions, final File node_modules,
-			List<Pair<String, String>> path2name, String execModule, List<String> initModules) throws IOException {
+			Map<Path, String> path2name, String execModule, List<String> initModules) throws IOException {
+		Set<String> scopeNames = path2name.values().stream()
+				.filter(name -> ProjectDescriptionUtils.isProjectNameWithScope(name))
+				.map(name -> name.substring(0, name.indexOf('/')))
+				.collect(Collectors.toSet());
 		return NodeBootScriptTemplate.getRunScriptCore(
 				node_modules.getCanonicalPath(),
 				nodeRunOptions.getExecutionData(),
 				initModules,
 				execModule,
+				scopeNames,
 				path2name);
 	}
 

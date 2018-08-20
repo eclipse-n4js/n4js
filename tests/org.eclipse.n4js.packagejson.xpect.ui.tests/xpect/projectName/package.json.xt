@@ -22,12 +22,12 @@
  */
 {
 	/** XPECT errors ---
-	   "The package name "MyProjectID" does not match project folder name "OtherProjectName" used on the file system." at ""MyProjectID""
-	   "The package name "MyProjectID" does not match project name "OtherProjectName" used in the Eclipse workspace." at ""MyProjectID""
+	   "The package name "MyProjectName" does not match the name of the project folder "OtherProjectName" on the file system." at ""MyProjectName""
+	   "The package name "MyProjectName" does not match project name "OtherProjectName" used in the Eclipse workspace." at ""MyProjectName""
 	   ---
 	 */
-	"name": "MyProjectID",
-	"version": "0.0.1-SNAPSHOT",
+	"name": "MyProjectName",
+	"version": "0.0.1",
 	"n4js": {
 		"projectType": "library",
 		"vendorId": "MyVendorID",

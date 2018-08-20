@@ -58,17 +58,17 @@ public class ExternalLibraryErrorMarkerManager {
 
 	/** Clears error markers of the given external library */
 	public void clearMarkers(N4JSEclipseProject n4EclPrj) {
-		clearMarkers(n4EclPrj.getProjectId());
+		clearMarkers(n4EclPrj.getProjectName());
 	}
 
 	/** Clears error markers of the given external library name */
-	public void clearMarkers(String projectID) {
+	public void clearMarkers(String projectName) {
 		Iterable<IN4JSProject> allProjects = n4jsCore.findAllProjects();
 		for (IN4JSProject prj : allProjects) {
 			if (!prj.isExternal() && prj.exists() && prj instanceof N4JSEclipseProject) {
 				IProject iProject = ((N4JSEclipseProject) prj).getProject();
 
-				workspaceMarkerSupport.deleteMarkersWithUriKey(iProject, projectID,
+				workspaceMarkerSupport.deleteMarkersWithUriKey(iProject, projectName,
 						IssueCodes.EXTERNAL_LIBRARY_ERRORS,
 						IssueCodes.EXTERNAL_LIBRARY_WARNINGS);
 			}
