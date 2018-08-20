@@ -70,50 +70,29 @@ NS.var1-=1;
 /* **** **** **** **** ***** ***** */
 
 // X-PECT errors --> "Imported element var1 is read-only." at "var1"
-// XPECT errors ---
-// "Couldn't resolve reference to IdentifiableElement 'var1'." at "var1"
-// "Cannot use namespace as value." at "NS"
-// ---
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'var1'." at "var1"
 ( 12, ((((NS)).var1)) = 17);
 // X-PECT errors --> "Imported element var1 is read-only." at "var1"
-// XPECT errors ---
-// "Couldn't resolve reference to IdentifiableElement 'var1'." at "var1"
-// "Cannot use namespace as value." at "NS"
-// ---
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'var1'." at "var1"
 ++( ((NS).var1) );
 
 // X-PECT errors --> "Imported element var1 is read-only." at "var1"
-// XPECT errors ---
-// "Couldn't resolve reference to IdentifiableElement 'var1'." at "var1"
-// "Cannot use namespace as value." at "NS"
-// ---
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'var1'." at "var1"
 --((NS).var1);
 
 // X-PECT errors --> "Imported element var1 is read-only." at "var1"
-// XPECT errors ---
-// "Couldn't resolve reference to IdentifiableElement 'var1'." at "var1"
-// "Cannot use namespace as value." at "NS"
-// ---
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'var1'." at "var1"
 ((NS).var1)--;
 
 // X-PECT errors --> "Imported element var1 is read-only." at "var1"
-// XPECT errors ---
-// "Couldn't resolve reference to IdentifiableElement 'var1'." at "var1"
-// "Cannot use namespace as value." at "NS"
-// ---
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'var1'." at "var1"
 ((NS).var1)+=1;
 
 
 // X-PECT errors --> "Imported element var1 is read-only." at "var1"
-// XPECT errors ---
-// "Couldn't resolve reference to IdentifiableElement 'var1'." at "var1"
-// "Cannot use namespace as value." at "NS"
-// ---
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'var1'." at "var1"
 ( 12, (((NS).var1)) = 17);
 
 // X-PECT errors --> "Imported element var1 is read-only." at "var1"
-// XPECT errors ---
-// "Couldn't resolve reference to IdentifiableElement 'var1'." at "var1"
-// "Cannot use namespace as value." at "NS"
-// ---
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'var1'." at "var1"
 ++( ((NS).var1) );
