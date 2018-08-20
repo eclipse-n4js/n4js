@@ -17,7 +17,6 @@ import static java.util.Collections.emptyMap;
 import static org.eclipse.n4js.external.LibraryChange.LibraryChangeType.Install;
 import static org.eclipse.n4js.external.LibraryChange.LibraryChangeType.Uninstall;
 
-import java.io.File;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
@@ -44,7 +43,6 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.n4js.binaries.IllegalBinaryStateException;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
-import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.SemverMatcher;
@@ -57,7 +55,6 @@ import org.eclipse.n4js.smith.ClosableMeasurement;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
 import org.eclipse.n4js.utils.StatusHelper;
-import org.eclipse.n4js.utils.git.GitUtils;
 import org.eclipse.n4js.utils.resources.ExternalProject;
 import org.eclipse.xtext.util.Strings;
 import org.eclipse.xtext.xbase.lib.Pair;
@@ -88,17 +85,8 @@ public class LibraryManager {
 	private static final DataCollector dcNpmUninstall = DataCollectors.INSTANCE
 			.getOrCreateDataCollector("Uninstall NPMs", LIBRARY_MANAGER_DATA_COLLECTOR_KEY);
 
-	private static final DataCollector dcPackageAdaptation = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Adapting Installed NPMs", LIBRARY_MANAGER_DATA_COLLECTOR_KEY);
-
 	private static final DataCollector dcIndexSynchronizer = DataCollectors.INSTANCE
 			.getOrCreateDataCollector("Index Synchronizer", LIBRARY_MANAGER_DATA_COLLECTOR_KEY);
-
-	@Inject
-	private NpmPackageToProjectAdapter npmPackageToProjectAdapter;
-
-	@Inject
-	private TargetPlatformInstallLocationProvider locationProvider;
 
 	@Inject
 	private ExternalLibraryWorkspace externalLibraryWorkspace;
@@ -243,10 +231,14 @@ public class LibraryManager {
 		try (ClosableMeasurement mes = dcLibMngr.getClosableMeasurement("installDependenciesInternal");) {
 			Map<String, NPMVersionRequirement> npmsToInstall = new LinkedHashMap<>(versionedNPMs);
 			Set<LibraryChange> actualChanges = new HashSet<>();
+
+			monitor.setTaskName("Installing packages... [step 1 of 2]");
+
 			List<LibraryChange> deltaChanges = installUninstallNPMs(monitor, status, npmsToInstall, emptyList());
 			actualChanges.addAll(deltaChanges);
 
 			try (ClosableMeasurement m = dcIndexSynchronizer.getClosableMeasurement("synchronizeNpms")) {
+				monitor.setTaskName("Building installed packages... [step 2 of 2]");
 				indexSynchronizer.synchronizeNpms(monitor, actualChanges);
 			}
 
@@ -267,8 +259,7 @@ public class LibraryManager {
 	private List<LibraryChange> installUninstallNPMs(IProgressMonitor monitor, MultiStatus status,
 			Map<String, NPMVersionRequirement> installRequested, Collection<String> removeRequested) {
 
-		monitor.setTaskName("Installing packages... [step 1 of 4]");
-		SubMonitor subMonitor = SubMonitor.convert(monitor, 3);
+		SubMonitor subMonitor = SubMonitor.convert(monitor, 2);
 
 		Collection<LibraryChange> requestedChanges = getRequestedChanges(installRequested, removeRequested);
 		List<LibraryChange> actualChanges = new LinkedList<>();
@@ -282,12 +273,6 @@ public class LibraryManager {
 		try (ClosableMeasurement m = dcNpmInstall.getClosableMeasurement("batchInstall")) {
 			// install
 			actualChanges.addAll(npmCli.batchInstall(subMonitor, status, requestedChanges));
-			subMonitor.worked(1);
-		}
-
-		try (ClosableMeasurement m = dcPackageAdaptation.getClosableMeasurement("adaptNPMPackages")) {
-			// adapt installed
-			adaptNPMPackages(monitor, status, actualChanges);
 			subMonitor.worked(1);
 		}
 
@@ -348,37 +333,6 @@ public class LibraryManager {
 		VersionNumber installedVersion = semverHelper.parseVersionNumber(installedVersionString);
 
 		return SemverMatcher.matchesStrict(installedVersion, requestedVersionRequirement);
-	}
-
-	private Collection<File> adaptNPMPackages(IProgressMonitor monitor, MultiStatus status,
-			Collection<LibraryChange> changes) {
-
-		monitor.setTaskName("Adapting npm package structure to N4JS project structure... [step 3 of 4]");
-		List<String> installedNpmNames = new LinkedList<>();
-		List<String> uninstalledNpmNames = new LinkedList<>();
-		for (LibraryChange change : changes) {
-			if (change.type == LibraryChangeType.Added) {
-				installedNpmNames.add(change.name);
-			}
-			if (change.type == LibraryChangeType.Removed) {
-				uninstalledNpmNames.add(change.name);
-			}
-		}
-		org.eclipse.xtext.util.Pair<IStatus, Collection<File>> result;
-		result = npmPackageToProjectAdapter.adaptPackages(installedNpmNames, uninstalledNpmNames);
-
-		IStatus adaptionStatus = result.getFirst();
-
-		// log possible errors, but proceed with the process
-		// assume that at least some packages were installed correctly and can be adapted
-		if (!adaptionStatus.isOK()) {
-			logger.logError(adaptionStatus);
-			status.merge(adaptionStatus);
-		}
-
-		Collection<File> adaptedPackages = result.getSecond();
-		monitor.worked(2);
-		return adaptedPackages;
 	}
 
 	/**
@@ -462,72 +416,12 @@ public class LibraryManager {
 
 		SubMonitor subMonitor = SubMonitor.convert(monitor, 10);
 		try {
-
-			refreshAllInstalledPackages(refreshStatus, packageNames, subMonitor.newChild(1));
 			indexSynchronizer.reindexAllExternalProjects(subMonitor.newChild(9));
 
 			return refreshStatus;
 
 		} finally {
 			subMonitor.done();
-		}
-	}
-
-	private void refreshAllInstalledPackages(MultiStatus refreshStatus, Collection<String> packageNames,
-			SubMonitor subMonitor) {
-
-		logger.logInfo("Refreshing installed all external projects (including NPMs).");
-		SubMonitor subsubMonitor = SubMonitor.convert(subMonitor, packageNames.size() + 1);
-		subsubMonitor.setTaskName("Refreshing npm type definitions...");
-
-		performGitPull(subsubMonitor.newChild(1, SubMonitor.SUPPRESS_ALL_LABELS));
-
-		final Map<String, URI> npmProjectsMappings = getAllNpmProjectsMapping();
-
-		final File definitionsFolder = npmPackageToProjectAdapter.getNpmsTypeDefinitionsFolder(false);
-		if (null == definitionsFolder) {
-			return;
-		}
-
-		for (String packageName : packageNames) {
-			IStatus status = refreshInstalledNpmPackage(packageName, npmProjectsMappings, definitionsFolder,
-					subsubMonitor.newChild(1));
-			if (!status.isOK()) {
-				logger.logError(status);
-				refreshStatus.merge(status);
-			}
-		}
-	}
-
-	private IStatus refreshInstalledNpmPackage(String packageName, final Map<String, URI> npmProjectsMapping,
-			File definitionsFolder, IProgressMonitor monitor) {
-		SubMonitor progress = SubMonitor.convert(monitor, 2);
-
-		String taskName = "Refreshing npm type definitions for '" + packageName + "' ...";
-		progress.setTaskName(taskName);
-
-		try {
-
-			URI uri = npmProjectsMapping.get(packageName);
-			if (null == uri) {
-				// No project with the given package name. Nothing to do.
-				return statusHelper.OK();
-			}
-
-			File packageRoot = new File(uri);
-
-			IStatus status = npmPackageToProjectAdapter.addTypeDefinitions(
-					packageRoot,
-					definitionsFolder);
-
-			if (!status.isOK()) {
-				logger.logError(status);
-			}
-
-			return status;
-
-		} finally {
-			monitor.done();
 		}
 	}
 
@@ -590,10 +484,5 @@ public class LibraryManager {
 			// locking not available/required in headless case
 			return operation.get();
 		}
-	}
-
-	private void performGitPull(IProgressMonitor monitor) {
-		URI repositoryLocation = locationProvider.getTargetPlatformLocalGitRepositoryLocation();
-		GitUtils.pull(new File(repositoryLocation).toPath(), monitor);
 	}
 }
