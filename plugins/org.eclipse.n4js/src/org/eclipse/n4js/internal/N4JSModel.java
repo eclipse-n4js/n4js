@@ -64,16 +64,6 @@ public class N4JSModel {
 
 	private static final Logger LOGGER = Logger.getLogger(N4JSModel.class);
 
-	/**
-	 * Segment count indicating that a resource is directly a sub resource of a particular project. Namely if the
-	 * resource has the following URI: platform:/resource/P/someResource.extension
-	 *
-	 * Then the first segment (at 0 index) will be the project P, and the second segment is the someResource.extension
-	 * that is directly contained in the project.
-	 *
-	 */
-	public static final int DIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT = 2;
-
 	private final InternalN4JSWorkspace workspace;
 
 	@Inject

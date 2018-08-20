@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.utils;
 
-import static org.eclipse.n4js.internal.N4JSModel.DIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNonEmptyStringOrNull;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.MAIN;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.N4JS;
@@ -166,9 +165,7 @@ public class ProjectDescriptionLoader {
 
 	private <T extends EObject> T loadXtextFileAtLocation(URI location, String name, Class<T> expectedTypeOfRoot) {
 		final T result;
-		if (location.isPlatformResource() && location.segmentCount() == DIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT) {
-			result = loadXtextFile(location.appendSegment(name), expectedTypeOfRoot);
-		} else if (location.isFile()) {
+		if (location.isPlatformResource() || location.isFile()) {
 			result = loadXtextFile(location.appendSegment(name), expectedTypeOfRoot);
 		} else {
 			// we only handle workspace and file-based cases

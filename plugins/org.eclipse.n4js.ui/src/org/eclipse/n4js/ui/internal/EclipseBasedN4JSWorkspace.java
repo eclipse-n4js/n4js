@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.ui.internal;
 
-import static org.eclipse.n4js.internal.N4JSModel.DIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT;
-
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
@@ -34,6 +32,7 @@ import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
+import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
@@ -76,8 +75,7 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 
 	@Override
 	public URI findProjectWith(URI nestedLocation) {
-		if (nestedLocation.isPlatformResource()
-				&& nestedLocation.segmentCount() >= DIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT) {
+		if (nestedLocation.isPlatformResource()) {
 			return URI.createPlatformResourceURI(nestedLocation.segment(1), true);
 		}
 		// this might happen if the URI was located from non-platform information, e.g. in case
@@ -131,18 +129,16 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 
 	@Override
 	public URI getLocation(URI projectURI, ProjectReference projectReference) {
-		if (projectURI.segmentCount() >= DIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT) {
-			String expectedProjectName = projectReference.getProjectName();
-			if (expectedProjectName != null && expectedProjectName.length() > 0) {
-				// the below call to workspace.getProject(name) will search the Eclipse IProject by name, using the
-				// Eclipse project name (not the N4JS project name); thus, we have to convert from N4JS project name
-				// to Eclipse project name, first (see ProjectDescriptionUtils#isProjectNameWithScope(String)):
-				String expectedEclipseProjectName = ProjectDescriptionUtils
-						.convertN4JSProjectNameToEclipseProjectName(expectedProjectName);
-				IProject existingProject = workspace.getProject(expectedEclipseProjectName);
-				if (existingProject.isAccessible()) {
-					return URI.createPlatformResourceURI(expectedEclipseProjectName, true);
-				}
+		String expectedProjectName = projectReference.getProjectName();
+		if (expectedProjectName != null && expectedProjectName.length() > 0) {
+			// the below call to workspace.getProject(name) will search the Eclipse IProject by name, using the
+			// Eclipse project name (not the N4JS project name); thus, we have to convert from N4JS project name
+			// to Eclipse project name, first (see ProjectDescriptionUtils#isProjectNameWithScope(String)):
+			String expectedEclipseProjectName = ProjectDescriptionUtils
+					.convertN4JSProjectNameToEclipseProjectName(expectedProjectName);
+			IProject existingProject = workspace.getProject(expectedEclipseProjectName);
+			if (existingProject.isAccessible()) {
+				return URI.createPlatformResourceURI(expectedEclipseProjectName, true);
 			}
 		}
 		return null;
@@ -151,8 +147,11 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 	@Override
 	public UnmodifiableIterator<URI> getFolderIterator(URI folderLocation) {
 		final IContainer container;
-		if (DIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT == folderLocation.segmentCount()) {
-			container = workspace.getProject(ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(folderLocation));
+		if (URIUtils.isPlatformResourceUriPointingToProject(folderLocation)) {
+			String n4jsProjectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(folderLocation);
+			String eclipseProjectName = ProjectDescriptionUtils
+					.convertN4JSProjectNameToEclipseProjectName(n4jsProjectName);
+			container = workspace.getProject(eclipseProjectName);
 		} else {
 			container = workspace.getFolder(new Path(folderLocation.toPlatformString(true)));
 		}
