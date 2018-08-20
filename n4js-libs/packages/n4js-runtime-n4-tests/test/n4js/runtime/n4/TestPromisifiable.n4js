@@ -112,9 +112,9 @@ export public class TestPromisifiable {
             }, time);
         }
 
-        let arg,
-            promisedFn = @Promisify fn(time);
-
+        let promisedFn = @Promisify fn(time);
+        let arg: Iterable2<any, any>;
+        
         await promisedFn.then((res=) => {
             arg = res;
         });
@@ -138,8 +138,8 @@ export public class TestPromisifiable {
             }, time);
         }
         
-        let arg,
-            erred: boolean = false,
+        let arg: Iterable2<any, any>;
+        let erred: boolean = false,
             promisedFn1 = @Promisify fn(1),
             promisedFn2 = @Promisify fn(2),
             promisedFn3 = @Promisify fn(3);
