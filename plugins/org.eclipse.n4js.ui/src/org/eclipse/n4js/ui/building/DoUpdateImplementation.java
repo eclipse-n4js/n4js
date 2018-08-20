@@ -69,7 +69,7 @@ class DoUpdateImplementation {
 	private final IResourceClusteringPolicy clusteringPolicy;
 	private final IResourceLoader crossLinkingResourceLoader;
 	private final IBuildLogger buildLogger;
-	private final BuildData buildData;
+	private final BuildDataWithRequestRebuild buildData;
 	private final ResourceDescriptionsData newData;
 	private final SubMonitor progress;
 	private final CancelIndicator cancelMonitor;
@@ -84,7 +84,7 @@ class DoUpdateImplementation {
 	private LoadOperation loadOperation = null;
 	private Set<URI> allRemainingURIs;
 
-	public DoUpdateImplementation(N4ClusteringBuilderState state, BuildData buildData,
+	public DoUpdateImplementation(N4ClusteringBuilderState state, BuildDataWithRequestRebuild buildData,
 			ResourceDescriptionsData newData, IProgressMonitor monitor, IBuildLogger buildLogger,
 			IResourceLoader crossLinkingResourceLoader, IResourceClusteringPolicy clusteringPolicy) {
 		this.clusteringPolicy = clusteringPolicy;

@@ -111,7 +111,7 @@ import com.google.inject.Inject;
  * corresponding serialized {@link TModule} state differs between the old and the new state, hence we put module A into
  * the changed deltas.</li>
  * <li>After processing all elements in the current build queue, we have to queue all affected resources as well via the
- * {@link #queueAffectedResources(Set, IResourceDescriptions, CurrentDescriptions, Collection, Collection, BuildData, IProgressMonitor)
+ * {@link #queueAffectedResources(Set, IResourceDescriptions, CurrentDescriptions, Collection, Collection, BuildDataWithRequestRebuild, IProgressMonitor)
  * queueAffectedResources} method.</li>
  * <li>This method will consider module B for class {@code B} as an affected one (since {@code B} imports the
  * {@link QualifiedName FQN} of class {@code A} into {@code B} and the is a direct dependency between the container
@@ -309,7 +309,7 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 			CurrentDescriptions newState,
 			Collection<Delta> changedDeltas,
 			Collection<Delta> allDeltas,
-			BuildData buildData,
+			BuildDataWithRequestRebuild buildData,
 			final IProgressMonitor monitor) {
 
 		// don't wanna copy super-class method, so using this helper to get the set of affected URIs:
@@ -362,6 +362,7 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 				 */
 				IResourceDescription resDesc = this.getResourceDescription(currAffURI);
 				ResourceDescriptionWithoutModuleUserData rdwmud = new ResourceDescriptionWithoutModuleUserData(resDesc);
+				buildData.needRebuild();
 				newState.register(new DefaultResourceDescriptionDelta(resDesc, rdwmud));
 			}
 		}
