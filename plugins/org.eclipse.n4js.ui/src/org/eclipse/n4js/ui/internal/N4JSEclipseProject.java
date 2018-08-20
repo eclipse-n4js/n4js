@@ -12,7 +12,6 @@ package org.eclipse.n4js.ui.internal;
 
 import static com.google.common.base.Optional.absent;
 import static com.google.common.base.Optional.fromNullable;
-import static org.eclipse.n4js.internal.N4JSModel.PROJECT_PLATFORM_RESOURCE_URI_SEGMENTCOUNT;
 
 import java.nio.file.Path;
 
@@ -22,6 +21,7 @@ import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseSourceContainer;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.resources.ExternalProject;
 import org.eclipse.xtext.ui.XtextProjectHelper;
 
@@ -67,7 +67,7 @@ public class N4JSEclipseProject extends N4JSProject implements IN4JSEclipseProje
 		if (checkExists() // Existing project AND
 				&& ((getLocation().isPlatformResource()
 						// Platform resource URI
-						&& PROJECT_PLATFORM_RESOURCE_URI_SEGMENTCOUNT == getLocation().segmentCount())
+						&& URIUtils.isPlatformResourceUriPointingToProject(getLocation()))
 						|| isExternal())) { // OR external
 			return fromNullable(getLocation().appendSegment(IN4JSProject.PACKAGE_JSON));
 		} else {

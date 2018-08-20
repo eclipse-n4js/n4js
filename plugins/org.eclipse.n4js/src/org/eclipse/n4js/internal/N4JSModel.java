@@ -64,19 +64,6 @@ public class N4JSModel {
 
 	private static final Logger LOGGER = Logger.getLogger(N4JSModel.class);
 
-	/**
-	 * Segment count indicating that a platform resource URI is directly pointing to an Eclipse project (and not to a
-	 * file/folder inside a project). For example, if the resource has the URI:
-	 *
-	 * <pre>
-	 * platform:/resource/P
-	 * </pre>
-	 *
-	 * Then, the first segment (at 0 index) will be the keyword "resource" and the 2nd segment (at index 1) will be the
-	 * Eclipse project name "P". Any further segments, if present, would point to files or folders inside project P.
-	 */
-	public static final int PROJECT_PLATFORM_RESOURCE_URI_SEGMENTCOUNT = 2;
-
 	private final InternalN4JSWorkspace workspace;
 
 	@Inject

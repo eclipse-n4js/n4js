@@ -70,10 +70,11 @@ public class N4JSEclipseModel extends N4JSModel {
 				location.isPlatformResource() || location.isFile(),
 				"Expected either platform:/resource or file:/ URI. Was: " + location);
 
-		if (location.isPlatformResource() && location.segmentCount() != PROJECT_PLATFORM_RESOURCE_URI_SEGMENTCOUNT) {
+		if (location.isPlatformResource() && !URIUtils.isPlatformResourceUriPointingToProject(location)) {
 			checkArgument(
-					PROJECT_PLATFORM_RESOURCE_URI_SEGMENTCOUNT == location.segmentCount(),
-					"Expected 2 segment counts for platform resource URI. Was " + location.segmentCount());
+					URIUtils.isPlatformResourceUriPointingToProject(location),
+					"Expected 2 segment counts for platform resource URI pointing to a project. Was "
+							+ location.segmentCount());
 		}
 
 		final String projectName = location.lastSegment();
