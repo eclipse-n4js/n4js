@@ -39,11 +39,6 @@ public interface TargetPlatformInstallLocationProvider {
 	String NODE_MODULES_FOLDER = ExternalLibrariesActivator.NPM_CATEGORY;
 
 	/**
-	 * Unique name of the {@code node_modules} folder that will be used to download npm packages.
-	 */
-	String TYPE_DEFINITIONS_FOLDER = ExternalLibrariesActivator.TYPE_DEFINITIONS_CATEGORY;
-
-	/**
 	 * Returns with an {@link File} pointing to the target platform install location, called '.n4npm' folder.
 	 *
 	 * @return the {@link File} pointing to the target platform install location.
@@ -83,16 +78,6 @@ public interface TargetPlatformInstallLocationProvider {
 	/** @return the URI pointing to the {@code node_modules} folder which is used for installing npm packages. */
 	default File getNodeModulesFolder() {
 		return getFolderInTargetPlatformLocation(NODE_MODULES_FOLDER);
-	}
-
-	/** @return the URI pointing to the {@code type_definition} folder. */
-	default URI getTypeDefinitionsURI() {
-		return getURIInTargetPlatformLocation(TYPE_DEFINITIONS_FOLDER);
-	}
-
-	/** @return the URI pointing to the {@code type_definition} folder. */
-	default File getTypeDefinitionsFolder() {
-		return getFolderInTargetPlatformLocation(TYPE_DEFINITIONS_FOLDER);
 	}
 
 	/** @return the {@link URI} pointing to the given folder inside the target platform */
@@ -180,10 +165,8 @@ public interface TargetPlatformInstallLocationProvider {
 			final File targetPlatformDefinitionFile = ExternalLibraryFolderUtils
 					.createTargetPlatformDefinitionFile(installLocation);
 			final File npmFile = getNodeModulesFolder();
-			final File tdFile = getTypeDefinitionsFolder();
 			success &= targetPlatformDefinitionFile != null && targetPlatformDefinitionFile.isFile();
 			success &= npmFile != null && npmFile.isDirectory();
-			success &= tdFile != null && tdFile.isDirectory();
 		}
 		return success;
 	}

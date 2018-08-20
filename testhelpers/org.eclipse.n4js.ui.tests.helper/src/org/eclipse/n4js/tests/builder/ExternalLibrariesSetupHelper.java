@@ -56,16 +56,13 @@ public class ExternalLibrariesSetupHelper {
 
 		// GH-821: clean-up here when done
 		final URI nodeModulesLocation = locationProvider.getNodeModulesURI();
-		final URI typeDefinitionLocation = locationProvider.getTypeDefinitionsURI();
 
 		ensureDirectoryExists(nodeModulesLocation);
-		ensureDirectoryExists(typeDefinitionLocation);
 
 		if (initShippedCode) {
 			shippedCodeInitializeTestHelper.setupBuiltIns();
 		} else {
 			externalLibraryPreferenceStore.add(nodeModulesLocation);
-			externalLibraryPreferenceStore.add(typeDefinitionLocation);
 			final IStatus result = externalLibraryPreferenceStore.save(new NullProgressMonitor());
 			assertTrue("Error while saving external library preference changes.", result.isOK());
 		}
