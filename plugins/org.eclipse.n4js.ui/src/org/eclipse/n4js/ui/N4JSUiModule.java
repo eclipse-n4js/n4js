@@ -33,6 +33,7 @@ import org.eclipse.n4js.generator.IWorkspaceMarkerSupport;
 import org.eclipse.n4js.generator.N4JSCompositeGenerator;
 import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
+import org.eclipse.n4js.internal.MultiCleartriggerCache;
 import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.packagejson.PackageJsonHelper;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
@@ -232,6 +233,11 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	/** Delegate to shared injector */
 	public Provider<ExternalIndexSynchronizer> provideExternalIndexSynchronizer() {
 		return Access.contributedProvider(ExternalIndexSynchronizer.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<MultiCleartriggerCache> provideMultiCleartriggerCache() {
+		return Access.contributedProvider(MultiCleartriggerCache.class);
 	}
 
 	/** Delegate to shared injector */

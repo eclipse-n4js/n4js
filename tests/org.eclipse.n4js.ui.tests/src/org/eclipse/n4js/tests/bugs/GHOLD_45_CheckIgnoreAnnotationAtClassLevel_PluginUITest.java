@@ -11,10 +11,10 @@
 package org.eclipse.n4js.tests.bugs;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -37,6 +37,7 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.internal.console.ConsoleView;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -50,6 +51,7 @@ import com.google.inject.Injector;
 /**
  * Test for testing the {@code @Ignore} annotation while running tests via Mangelhaft.
  */
+@Ignore("IDE-2270")
 @SuppressWarnings("restriction")
 public class GHOLD_45_CheckIgnoreAnnotationAtClassLevel_PluginUITest extends AbstractPluginUITest {
 
@@ -91,7 +93,6 @@ public class GHOLD_45_CheckIgnoreAnnotationAtClassLevel_PluginUITest extends Abs
 	/**
 	 * Runs a test module with one single class that has method with {@code Ignore} annotation.
 	 */
-	@Ignore("IDE-2270")
 	@Test
 	public void testModuleWithIgnoredMethod() {
 		final IProject project = ProjectTestsUtils.getProjectByName(PROJECT_NAME);
@@ -128,7 +129,6 @@ public class GHOLD_45_CheckIgnoreAnnotationAtClassLevel_PluginUITest extends Abs
 	/**
 	 * Runs a test module with one single class that has neither super class nor {@code @Ignore} annotation.
 	 */
-	@Ignore("IDE-2270")
 	@Test
 	public void testModuleWithoutSuperClass() {
 		final IProject project = ProjectTestsUtils.getProjectByName(PROJECT_NAME);
@@ -181,13 +181,23 @@ public class GHOLD_45_CheckIgnoreAnnotationAtClassLevel_PluginUITest extends Abs
 		assertArrayEquals(expected, actual);
 	}
 
+	/**
+	 * Same as {@link Assert#assertArrayEquals(Object[], Object[])}, but with a better failure message.
+	 */
+	private static void assertArrayEquals(Object[] expected, Object[] actual) {
+		Assert.assertArrayEquals("arrays are not equal"
+				+ "; expected: " + Arrays.toString(expected)
+				+ "; actual: " + Arrays.toString(actual),
+				expected, actual);
+	}
+
 	private void runTestWaitResult(final IFile moduleToTest) {
 		final SessionEndedEventLatch latch = new SessionEndedEventLatch();
 		final EventBus eventBus = getEventBus();
 		final ILaunchShortcut launchShortcut = getLaunchShortcut();
 		eventBus.register(latch);
 		new Thread(() -> launchShortcut.launch(new StructuredSelection(moduleToTest), ILaunchManager.RUN_MODE)).start();
-		latch.startTestAndWait(5L, TimeUnit.SECONDS);
+		latch.startTestAndWait(5L, TimeUnit.SECONDS); // TODO IDE-2270 suspicious delay; might break on slow build nodes
 	}
 
 	private String[] getConsoleContentLines() {

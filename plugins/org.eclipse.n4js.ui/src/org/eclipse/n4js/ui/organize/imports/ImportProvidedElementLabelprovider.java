@@ -93,6 +93,6 @@ public class ImportProvidedElementLabelprovider implements ILabelProvider {
 	}
 
 	private String findLocation(TModule module) {
-		return module.getQualifiedName() + " in " + module.getProjectId();
+		return module.getQualifiedName() + " in " + module.getProjectName();
 	}
 }

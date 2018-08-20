@@ -20,6 +20,8 @@ export external public abstract class Window extends Element implements GlobalFe
 
     public get Notification(): constructor{Notification};
 
+    public get crypto(): Crypto;
+
     public innerHeight: number;
     public innerWidth: number;
 

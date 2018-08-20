@@ -87,13 +87,13 @@ public interface ProjectDescriptionPackage extends EPackage {
 	int PROJECT_DESCRIPTION = 0;
 
 	/**
-	 * The feature id for the '<em><b>Project Id</b></em>' attribute.
+	 * The feature id for the '<em><b>Project Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION__PROJECT_ID = 0;
+	int PROJECT_DESCRIPTION__PROJECT_NAME = 0;
 
 	/**
 	 * The feature id for the '<em><b>Vendor Id</b></em>' attribute.
@@ -359,13 +359,13 @@ public interface ProjectDescriptionPackage extends EPackage {
 	int PROJECT_REFERENCE = 2;
 
 	/**
-	 * The feature id for the '<em><b>Project Id</b></em>' attribute.
+	 * The feature id for the '<em><b>Project Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_REFERENCE__PROJECT_ID = 0;
+	int PROJECT_REFERENCE__PROJECT_NAME = 0;
 
 	/**
 	 * The number of structural features of the '<em>Project Reference</em>' class.
@@ -396,13 +396,22 @@ public interface ProjectDescriptionPackage extends EPackage {
 	int PROJECT_DEPENDENCY = 3;
 
 	/**
-	 * The feature id for the '<em><b>Project Id</b></em>' attribute.
+	 * The feature id for the '<em><b>Project Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DEPENDENCY__PROJECT_ID = PROJECT_REFERENCE__PROJECT_ID;
+	int PROJECT_DEPENDENCY__PROJECT_NAME = PROJECT_REFERENCE__PROJECT_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROJECT_DEPENDENCY__TYPE = PROJECT_REFERENCE_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Version Requirement String</b></em>' attribute.
@@ -411,7 +420,7 @@ public interface ProjectDescriptionPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DEPENDENCY__VERSION_REQUIREMENT_STRING = PROJECT_REFERENCE_FEATURE_COUNT + 0;
+	int PROJECT_DEPENDENCY__VERSION_REQUIREMENT_STRING = PROJECT_REFERENCE_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Version Requirement</b></em>' containment reference.
@@ -420,7 +429,7 @@ public interface ProjectDescriptionPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DEPENDENCY__VERSION_REQUIREMENT = PROJECT_REFERENCE_FEATURE_COUNT + 1;
+	int PROJECT_DEPENDENCY__VERSION_REQUIREMENT = PROJECT_REFERENCE_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of structural features of the '<em>Project Dependency</em>' class.
@@ -429,7 +438,7 @@ public interface ProjectDescriptionPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DEPENDENCY_FEATURE_COUNT = PROJECT_REFERENCE_FEATURE_COUNT + 2;
+	int PROJECT_DEPENDENCY_FEATURE_COUNT = PROJECT_REFERENCE_FEATURE_COUNT + 3;
 
 	/**
 	 * The number of operations of the '<em>Project Dependency</em>' class.
@@ -609,6 +618,16 @@ public interface ProjectDescriptionPackage extends EPackage {
 	 */
 	int MODULE_LOADER = 10;
 
+	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.projectDescription.DependencyType <em>Dependency Type</em>}' enum.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.projectDescription.DependencyType
+	 * @see org.eclipse.n4js.projectDescription.impl.ProjectDescriptionPackageImpl#getDependencyType()
+	 * @generated
+	 */
+	int DEPENDENCY_TYPE = 11;
+
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.projectDescription.ProjectDescription <em>Project Description</em>}'.
@@ -621,15 +640,15 @@ public interface ProjectDescriptionPackage extends EPackage {
 	EClass getProjectDescription();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.projectDescription.ProjectDescription#getProjectId <em>Project Id</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.projectDescription.ProjectDescription#getProjectName <em>Project Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Project Id</em>'.
-	 * @see org.eclipse.n4js.projectDescription.ProjectDescription#getProjectId()
+	 * @return the meta object for the attribute '<em>Project Name</em>'.
+	 * @see org.eclipse.n4js.projectDescription.ProjectDescription#getProjectName()
 	 * @see #getProjectDescription()
 	 * @generated
 	 */
-	EAttribute getProjectDescription_ProjectId();
+	EAttribute getProjectDescription_ProjectName();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.projectDescription.ProjectDescription#getVendorId <em>Vendor Id</em>}'.
@@ -905,15 +924,15 @@ public interface ProjectDescriptionPackage extends EPackage {
 	EClass getProjectReference();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.projectDescription.ProjectReference#getProjectId <em>Project Id</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.projectDescription.ProjectReference#getProjectName <em>Project Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Project Id</em>'.
-	 * @see org.eclipse.n4js.projectDescription.ProjectReference#getProjectId()
+	 * @return the meta object for the attribute '<em>Project Name</em>'.
+	 * @see org.eclipse.n4js.projectDescription.ProjectReference#getProjectName()
 	 * @see #getProjectReference()
 	 * @generated
 	 */
-	EAttribute getProjectReference_ProjectId();
+	EAttribute getProjectReference_ProjectName();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.projectDescription.ProjectDependency <em>Project Dependency</em>}'.
@@ -924,6 +943,17 @@ public interface ProjectDescriptionPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getProjectDependency();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.projectDescription.ProjectDependency#getType <em>Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Type</em>'.
+	 * @see org.eclipse.n4js.projectDescription.ProjectDependency#getType()
+	 * @see #getProjectDependency()
+	 * @generated
+	 */
+	EAttribute getProjectDependency_Type();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.projectDescription.ProjectDependency#getVersionRequirementString <em>Version Requirement String</em>}'.
@@ -1073,6 +1103,16 @@ public interface ProjectDescriptionPackage extends EPackage {
 	EEnum getModuleLoader();
 
 	/**
+	 * Returns the meta object for enum '{@link org.eclipse.n4js.projectDescription.DependencyType <em>Dependency Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for enum '<em>Dependency Type</em>'.
+	 * @see org.eclipse.n4js.projectDescription.DependencyType
+	 * @generated
+	 */
+	EEnum getDependencyType();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1106,12 +1146,12 @@ public interface ProjectDescriptionPackage extends EPackage {
 		EClass PROJECT_DESCRIPTION = eINSTANCE.getProjectDescription();
 
 		/**
-		 * The meta object literal for the '<em><b>Project Id</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Project Name</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute PROJECT_DESCRIPTION__PROJECT_ID = eINSTANCE.getProjectDescription_ProjectId();
+		EAttribute PROJECT_DESCRIPTION__PROJECT_NAME = eINSTANCE.getProjectDescription_ProjectName();
 
 		/**
 		 * The meta object literal for the '<em><b>Vendor Id</b></em>' attribute feature.
@@ -1318,12 +1358,12 @@ public interface ProjectDescriptionPackage extends EPackage {
 		EClass PROJECT_REFERENCE = eINSTANCE.getProjectReference();
 
 		/**
-		 * The meta object literal for the '<em><b>Project Id</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Project Name</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute PROJECT_REFERENCE__PROJECT_ID = eINSTANCE.getProjectReference_ProjectId();
+		EAttribute PROJECT_REFERENCE__PROJECT_NAME = eINSTANCE.getProjectReference_ProjectName();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.projectDescription.impl.ProjectDependencyImpl <em>Project Dependency</em>}' class.
@@ -1334,6 +1374,14 @@ public interface ProjectDescriptionPackage extends EPackage {
 		 * @generated
 		 */
 		EClass PROJECT_DEPENDENCY = eINSTANCE.getProjectDependency();
+
+		/**
+		 * The meta object literal for the '<em><b>Type</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PROJECT_DEPENDENCY__TYPE = eINSTANCE.getProjectDependency_Type();
 
 		/**
 		 * The meta object literal for the '<em><b>Version Requirement String</b></em>' attribute feature.
@@ -1460,6 +1508,16 @@ public interface ProjectDescriptionPackage extends EPackage {
 		 * @generated
 		 */
 		EEnum MODULE_LOADER = eINSTANCE.getModuleLoader();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.n4js.projectDescription.DependencyType <em>Dependency Type</em>}' enum.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.n4js.projectDescription.DependencyType
+		 * @see org.eclipse.n4js.projectDescription.impl.ProjectDescriptionPackageImpl#getDependencyType()
+		 * @generated
+		 */
+		EEnum DEPENDENCY_TYPE = eINSTANCE.getDependencyType();
 
 	}
 

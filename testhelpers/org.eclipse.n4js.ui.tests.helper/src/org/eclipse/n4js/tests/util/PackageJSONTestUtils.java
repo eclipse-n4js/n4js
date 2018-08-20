@@ -68,7 +68,7 @@ public class PackageJSONTestUtils extends JSONModelUtils {
 	 *
 	 * @see PackageJsonProperties#NAME
 	 */
-	public static void setProjectId(JSONObject root, String name) {
+	public static void setProjectName(JSONObject root, String name) {
 		final String path = NAME.getPath();
 		setPath(root, path, name);
 	}
@@ -87,17 +87,17 @@ public class PackageJSONTestUtils extends JSONModelUtils {
 	 * Adds a new project dependency to the dependencies section of the given {@link JSONObject} representation of an
 	 * N4JS package.json file.
 	 *
-	 * Replaces an existing dependency for the same {@code projectId}.
+	 * Replaces an existing dependency for the same {@code projectName}.
 	 *
 	 * @param root
 	 *            The package.json root object.
-	 * @param projectId
+	 * @param projectName
 	 *            The ID of the project to add a dependency for.
 	 * @param versionConstraint
 	 *            The version constraint of the dependency.
 	 */
-	public static void addProjectDependency(JSONObject root, String projectId, String versionConstraint) {
-		setPath(root, Arrays.asList(DEPENDENCIES.name, projectId),
+	public static void addProjectDependency(JSONObject root, String projectName, String versionConstraint) {
+		setPath(root, Arrays.asList(DEPENDENCIES.name, projectName),
 				createStringLiteral(versionConstraint));
 	}
 
@@ -246,10 +246,10 @@ public class PackageJSONTestUtils extends JSONModelUtils {
 	 * {@code Eclipse N4JS Project} and vendor ID {@code org.eclipse.n4js}.
 	 *
 	 */
-	public static PackageJsonBuilder defaultPackageJson(String projectId, String sourceFolder,
+	public static PackageJsonBuilder defaultPackageJson(String projectName, String sourceFolder,
 			String outputFolder) {
 		return PackageJsonBuilder.newBuilder()
-				.withName(projectId)
+				.withName(projectName)
 				.withVersion("0.0.1")
 				.withVendorId("org.eclipse.n4js")
 				.withVendorName("Eclipse N4JS Project")

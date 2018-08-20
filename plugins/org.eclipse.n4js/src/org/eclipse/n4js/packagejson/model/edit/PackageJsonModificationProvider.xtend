@@ -124,8 +124,8 @@ class PackageJsonModificationProvider {
 		return content as JSONObject;
 	}
 
-	public static def void addProjectDependency(JSONObject root, String projectId, String versionConstraint) {
-		JSONModelUtils.setPath(root, Arrays.asList(DEPENDENCIES.name, projectId),
+	public static def void addProjectDependency(JSONObject root, String projectName, String versionConstraint) {
+		JSONModelUtils.setPath(root, Arrays.asList(DEPENDENCIES.name, projectName),
 			JSONModelUtils.createStringLiteral(versionConstraint));
 	}
 

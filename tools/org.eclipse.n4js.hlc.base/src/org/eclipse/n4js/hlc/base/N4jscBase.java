@@ -66,6 +66,7 @@ import org.eclipse.n4js.hlc.base.running.HeadlessRunner;
 import org.eclipse.n4js.hlc.base.testing.HeadlessTester;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.runner.SystemLoaderInfo;
+import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.tester.CliTestTreeTransformer;
 import org.eclipse.n4js.tester.TestCatalogSupplier;
 import org.eclipse.n4js.tester.TestTreeTransformer;
@@ -508,7 +509,7 @@ public class N4jscBase implements IApplication {
 				clean();
 			} else {
 				if (installMissingDependencies) {
-					Map<String, String> dependencies = dependencyHelper
+					Map<String, NPMVersionRequirement> dependencies = dependencyHelper
 							.discoverMissingDependencies(buildSet.getAllProjects());
 					if (verbose) {
 						System.out.println("installing missing dependencies:");

@@ -50,12 +50,12 @@ public class EclipseBasedProjectModelSetup extends AbstractProjectModelSetup {
 	@Override
 	protected void createTempProjects() {
 		try {
-			host.setMyProjectURI(createTempProject(host.myProjectId));
-			createProject(host.myProjectId, "{\n" +
-					"  \"name\": \"" + host.myProjectId + "\",\n" +
+			host.setMyProjectURI(createTempProject(host.myProjectName));
+			createProject(host.myProjectName, "{\n" +
+					"  \"name\": \"" + host.myProjectName + "\",\n" +
 					"  \"version\": \"0.0.1-SNAPSHOT\",\n" +
 					"  \"dependencies\": {\n" +
-					"    \"" + host.libProjectId + "\": \"0.0.1-SNAPSHOT\"\n" +
+					"    \"" + host.libProjectName + "\": \"0.0.1-SNAPSHOT\"\n" +
 					"  },\n" +
 					"  \"n4js\": {\n" +
 					"    \"projectType\": \"library\",\n" +
@@ -70,9 +70,9 @@ public class EclipseBasedProjectModelSetup extends AbstractProjectModelSetup {
 					"    \"moduleLoader\": \"n4js\"\n" +
 					"  }\n" +
 					"}");
-			host.setLibProjectURI(createTempProject(host.libProjectId));
-			createProject(host.libProjectId, "{\n" +
-					"  \"name\": \"" + host.libProjectId + "\",\n" +
+			host.setLibProjectURI(createTempProject(host.libProjectName));
+			createProject(host.libProjectName, "{\n" +
+					"  \"name\": \"" + host.libProjectName + "\",\n" +
 					"  \"version\": \"0.0.1-SNAPSHOT\",\n" +
 					"  \"n4js\": {\n" +
 					"    \"projectType\": \"library\",\n" +

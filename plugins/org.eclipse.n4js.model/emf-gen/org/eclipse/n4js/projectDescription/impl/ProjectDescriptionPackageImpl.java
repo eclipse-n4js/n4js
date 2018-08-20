@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 import org.eclipse.n4js.projectDescription.BootstrapModule;
+import org.eclipse.n4js.projectDescription.DependencyType;
 import org.eclipse.n4js.projectDescription.ModuleFilter;
 import org.eclipse.n4js.projectDescription.ModuleFilterSpecifier;
 import org.eclipse.n4js.projectDescription.ModuleFilterType;
@@ -120,6 +121,13 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	private EEnum moduleLoaderEEnum = null;
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EEnum dependencyTypeEEnum = null;
+
+	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
 	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
 	 * package URI value.
@@ -198,7 +206,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getProjectDescription_ProjectId() {
+	public EAttribute getProjectDescription_ProjectName() {
 		return (EAttribute)projectDescriptionEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -432,7 +440,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getProjectReference_ProjectId() {
+	public EAttribute getProjectReference_ProjectName() {
 		return (EAttribute)projectReferenceEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -450,7 +458,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getProjectDependency_VersionRequirementString() {
+	public EAttribute getProjectDependency_Type() {
 		return (EAttribute)projectDependencyEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -459,8 +467,17 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getProjectDependency_VersionRequirementString() {
+		return (EAttribute)projectDependencyEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EReference getProjectDependency_VersionRequirement() {
-		return (EReference)projectDependencyEClass.getEStructuralFeatures().get(1);
+		return (EReference)projectDependencyEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -576,6 +593,15 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EEnum getDependencyType() {
+		return dependencyTypeEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public ProjectDescriptionFactory getProjectDescriptionFactory() {
 		return (ProjectDescriptionFactory)getEFactoryInstance();
 	}
@@ -600,7 +626,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 
 		// Create classes and their features
 		projectDescriptionEClass = createEClass(PROJECT_DESCRIPTION);
-		createEAttribute(projectDescriptionEClass, PROJECT_DESCRIPTION__PROJECT_ID);
+		createEAttribute(projectDescriptionEClass, PROJECT_DESCRIPTION__PROJECT_NAME);
 		createEAttribute(projectDescriptionEClass, PROJECT_DESCRIPTION__VENDOR_ID);
 		createEAttribute(projectDescriptionEClass, PROJECT_DESCRIPTION__VENDOR_NAME);
 		createEReference(projectDescriptionEClass, PROJECT_DESCRIPTION__PROJECT_VERSION);
@@ -628,9 +654,10 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 		createEAttribute(sourceContainerDescriptionEClass, SOURCE_CONTAINER_DESCRIPTION__PATHS);
 
 		projectReferenceEClass = createEClass(PROJECT_REFERENCE);
-		createEAttribute(projectReferenceEClass, PROJECT_REFERENCE__PROJECT_ID);
+		createEAttribute(projectReferenceEClass, PROJECT_REFERENCE__PROJECT_NAME);
 
 		projectDependencyEClass = createEClass(PROJECT_DEPENDENCY);
+		createEAttribute(projectDependencyEClass, PROJECT_DEPENDENCY__TYPE);
 		createEAttribute(projectDependencyEClass, PROJECT_DEPENDENCY__VERSION_REQUIREMENT_STRING);
 		createEReference(projectDependencyEClass, PROJECT_DEPENDENCY__VERSION_REQUIREMENT);
 
@@ -650,6 +677,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 		sourceContainerTypeEEnum = createEEnum(SOURCE_CONTAINER_TYPE);
 		moduleFilterTypeEEnum = createEEnum(MODULE_FILTER_TYPE);
 		moduleLoaderEEnum = createEEnum(MODULE_LOADER);
+		dependencyTypeEEnum = createEEnum(DEPENDENCY_TYPE);
 	}
 
 	/**
@@ -688,7 +716,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(projectDescriptionEClass, ProjectDescription.class, "ProjectDescription", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getProjectDescription_ProjectId(), theEcorePackage.getEString(), "projectId", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getProjectDescription_ProjectName(), theEcorePackage.getEString(), "projectName", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getProjectDescription_VendorId(), theEcorePackage.getEString(), "vendorId", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getProjectDescription_VendorName(), theEcorePackage.getEString(), "vendorName", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProjectDescription_ProjectVersion(), theSemverPackage.getVersionNumber(), null, "projectVersion", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -716,9 +744,10 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 		initEAttribute(getSourceContainerDescription_Paths(), theEcorePackage.getEString(), "paths", null, 0, -1, SourceContainerDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(projectReferenceEClass, ProjectReference.class, "ProjectReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getProjectReference_ProjectId(), theEcorePackage.getEString(), "projectId", null, 0, 1, ProjectReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getProjectReference_ProjectName(), theEcorePackage.getEString(), "projectName", null, 0, 1, ProjectReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(projectDependencyEClass, ProjectDependency.class, "ProjectDependency", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getProjectDependency_Type(), this.getDependencyType(), "type", null, 0, 1, ProjectDependency.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getProjectDependency_VersionRequirementString(), theEcorePackage.getEString(), "versionRequirementString", null, 0, 1, ProjectDependency.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProjectDependency_VersionRequirement(), theSemverPackage.getNPMVersionRequirement(), null, "versionRequirement", null, 0, 1, ProjectDependency.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -758,6 +787,11 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 		addEEnumLiteral(moduleLoaderEEnum, ModuleLoader.N4JS);
 		addEEnumLiteral(moduleLoaderEEnum, ModuleLoader.COMMONJS);
 		addEEnumLiteral(moduleLoaderEEnum, ModuleLoader.NODE_BUILTIN);
+
+		initEEnum(dependencyTypeEEnum, DependencyType.class, "DependencyType");
+		addEEnumLiteral(dependencyTypeEEnum, DependencyType.RUNTIME);
+		addEEnumLiteral(dependencyTypeEEnum, DependencyType.DEVELOPMENT);
+		addEEnumLiteral(dependencyTypeEEnum, DependencyType.TYPE);
 
 		// Create resource
 		createResource(eNS_URI);

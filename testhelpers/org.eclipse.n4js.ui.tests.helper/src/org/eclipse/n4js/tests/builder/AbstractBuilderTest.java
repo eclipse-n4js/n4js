@@ -259,6 +259,7 @@ public abstract class AbstractBuilderTest {
 	 * cancellation).
 	 */
 	protected void assertXtextIndexIsValid() {
+		ProjectTestsUtils.waitLongForAllJobs();
 		// ensure no build is running while we examine the Xtext index
 		final ISchedulingRule rule = ResourcesPlugin.getWorkspace().getRoot();
 		try {

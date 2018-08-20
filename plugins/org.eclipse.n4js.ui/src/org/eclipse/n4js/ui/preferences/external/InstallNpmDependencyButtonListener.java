@@ -27,6 +27,8 @@ import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.window.Window;
+import org.eclipse.n4js.semver.SemverHelper;
+import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.n4js.utils.StatusHelper;
@@ -46,16 +48,19 @@ public class InstallNpmDependencyButtonListener extends SelectionAdapter {
 
 	final private Supplier<IInputValidator> packageNameValidator;
 	final private Supplier<IInputValidator> packageVersionValidator;
+	final private SemverHelper semverHelper;
 	final private StatusHelper statusHelper;
-	final private BiFunction<Map<String, String>, IProgressMonitor, IStatus> installAction;
+	final private BiFunction<Map<String, NPMVersionRequirement>, IProgressMonitor, IStatus> installAction;
 
-	InstallNpmDependencyButtonListener(BiFunction<Map<String, String>, IProgressMonitor, IStatus> installAction,
+	InstallNpmDependencyButtonListener(
+			BiFunction<Map<String, NPMVersionRequirement>, IProgressMonitor, IStatus> installAction,
 			Supplier<IInputValidator> packageNameValidator, Supplier<IInputValidator> packageVersionValidator,
-			StatusHelper statusHelper) {
+			SemverHelper semverHelper, StatusHelper statusHelper) {
 
 		this.installAction = installAction;
 		this.packageNameValidator = packageNameValidator;
 		this.packageVersionValidator = packageVersionValidator;
+		this.semverHelper = semverHelper;
 		this.statusHelper = statusHelper;
 	}
 
@@ -71,11 +76,15 @@ public class InstallNpmDependencyButtonListener extends SelectionAdapter {
 
 		if (!StringExtensions.isNullOrEmpty(packageName) && dialog.getReturnCode() == Window.OK) {
 			try {
-				final String packageVersion = dialog.getVersionConstraint();
-				new ProgressMonitorDialog(getShell()).run(true, true, monitor -> {
-					Map<String, String> singletonMap = Collections.singletonMap(packageName, packageVersion);
-					multistatus.merge(installAction.apply(singletonMap, monitor));
-				});
+				final String packageVersionStr = dialog.getVersionConstraint();
+				final NPMVersionRequirement packageVersion = semverHelper.parseVersionRangeSet(packageVersionStr);
+				if (packageVersion != null) { // null should never happen, since we have a validator in place
+					new ProgressMonitorDialog(getShell()).run(true, true, monitor -> {
+						Map<String, NPMVersionRequirement> singletonMap = Collections.singletonMap(packageName,
+								packageVersion);
+						multistatus.merge(installAction.apply(singletonMap, monitor));
+					});
+				}
 
 			} catch (final InterruptedException | OperationCanceledException exc) {
 				// canceled by user

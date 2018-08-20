@@ -30,7 +30,7 @@ import org.eclipse.n4js.semver.Semver.VersionNumber;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.projectDescription.ProjectDescription#getProjectId <em>Project Id</em>}</li>
+ *   <li>{@link org.eclipse.n4js.projectDescription.ProjectDescription#getProjectName <em>Project Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.ProjectDescription#getVendorId <em>Vendor Id</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.ProjectDescription#getVendorName <em>Vendor Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.ProjectDescription#getProjectVersion <em>Project Version</em>}</li>
@@ -60,30 +60,30 @@ import org.eclipse.n4js.semver.Semver.VersionNumber;
  */
 public interface ProjectDescription extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Project Id</b></em>' attribute.
+	 * Returns the value of the '<em><b>Project Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Project Id</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Project Id</em>' attribute.
-	 * @see #setProjectId(String)
-	 * @see org.eclipse.n4js.projectDescription.ProjectDescriptionPackage#getProjectDescription_ProjectId()
+	 * <!-- begin-model-doc -->
+	 * The <em>N4JS project name</em>, as defined at
+	 * {@link org.eclipse.n4js.utils.ProjectDescriptionUtils#isProjectNameWithScope(String)}.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Project Name</em>' attribute.
+	 * @see #setProjectName(String)
+	 * @see org.eclipse.n4js.projectDescription.ProjectDescriptionPackage#getProjectDescription_ProjectName()
 	 * @model unique="false"
 	 * @generated
 	 */
-	String getProjectId();
+	String getProjectName();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.projectDescription.ProjectDescription#getProjectId <em>Project Id</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.n4js.projectDescription.ProjectDescription#getProjectName <em>Project Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Project Id</em>' attribute.
-	 * @see #getProjectId()
+	 * @param value the new value of the '<em>Project Name</em>' attribute.
+	 * @see #getProjectName()
 	 * @generated
 	 */
-	void setProjectId(String value);
+	void setProjectName(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Vendor Id</b></em>' attribute.

@@ -53,13 +53,28 @@ public class SemverSyntacticSequencer extends AbstractSyntacticSequencer {
 	
 	@Override
 	protected String getUnassignedRuleCallToken(EObject semanticObject, RuleCall ruleCall, INode node) {
-		if (ruleCall.getRule() == grammarAccess.getLETTER_VRule())
+		if (ruleCall.getRule() == grammarAccess.getFILE_TAGRule())
+			return getFILE_TAGToken(semanticObject, ruleCall, node);
+		else if (ruleCall.getRule() == grammarAccess.getLETTER_VRule())
 			return getLETTER_VToken(semanticObject, ruleCall, node);
+		else if (ruleCall.getRule() == grammarAccess.getSEMVER_TAGRule())
+			return getSEMVER_TAGToken(semanticObject, ruleCall, node);
 		else if (ruleCall.getRule() == grammarAccess.getWILDCARDRule())
 			return getWILDCARDToken(semanticObject, ruleCall, node);
 		else if (ruleCall.getRule() == grammarAccess.getWSRule())
 			return getWSToken(semanticObject, ruleCall, node);
 		return "";
+	}
+	
+	/**
+	 * FILE_TAG:
+	 * 	LETTER_F LETTER_I LETTER_L LETTER_E ':'
+	 * ;
+	 */
+	protected String getFILE_TAGToken(EObject semanticObject, RuleCall ruleCall, INode node) {
+		if (node != null)
+			return getTokenText(node);
+		return "file:";
 	}
 	
 	/**
@@ -71,6 +86,17 @@ public class SemverSyntacticSequencer extends AbstractSyntacticSequencer {
 		if (node != null)
 			return getTokenText(node);
 		return "v";
+	}
+	
+	/**
+	 * SEMVER_TAG:
+	 * 	LETTER_S LETTER_E LETTER_M LETTER_V LETTER_E LETTER_R ':'
+	 * ;
+	 */
+	protected String getSEMVER_TAGToken(EObject semanticObject, RuleCall ruleCall, INode node) {
+		if (node != null)
+			return getTokenText(node);
+		return "semvr:";
 	}
 	
 	/**

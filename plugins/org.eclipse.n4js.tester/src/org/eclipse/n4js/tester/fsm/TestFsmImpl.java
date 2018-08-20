@@ -24,15 +24,14 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
+import org.eclipse.n4js.tester.TesterEventBus;
+import org.eclipse.n4js.tester.events.SessionFailedEvent;
 
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-
-import org.eclipse.n4js.tester.TesterEventBus;
-import org.eclipse.n4js.tester.events.SessionFailedEvent;
 
 /**
  * Stateful finite state machine implementation for the tester component.
@@ -178,17 +177,17 @@ public class TestFsmImpl implements TestFsm {
 		return fail("Failed when pinging test: " + testId + " " + toString());
 	}
 
-			/**
-			 * Returns with {@code true} if the current finite state machine is in {@link FsmState#FAILED failed} state.
-			 * Otherwise returns with {@code false}.
-			 *
-			 * @return {@code true} if the state machine failed.
-			 */
-			/* default */boolean isFailed() {
+	/**
+	 * Returns with {@code true} if the current finite state machine is in {@link FsmState#FAILED failed} state.
+	 * Otherwise returns with {@code false}.
+	 *
+	 * @return {@code true} if the state machine failed.
+	 */
+	/* default */boolean isFailed() {
 		return currentState == FAILED;
 	}
 
-			/* default */TestFsmImpl fail(final String comment) {
+	/* default */TestFsmImpl fail(final String comment) {
 		if (FAILED != currentState) {
 			if (null != comment) {
 				LOGGER.info("Test session failed. " + comment);

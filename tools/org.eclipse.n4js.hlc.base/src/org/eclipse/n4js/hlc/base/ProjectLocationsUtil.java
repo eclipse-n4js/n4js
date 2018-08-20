@@ -32,9 +32,12 @@ public class ProjectLocationsUtil {
 			TargetPlatformInstallLocationProvider installLocationProvider) {
 		final List<File> retList = new ArrayList<>();
 		if (null != installLocationProvider.getTargetPlatformInstallURI()) {
-			final File tpLoc = new File(installLocationProvider.getNodeModulesURI());
-			HlcFileUtils.isExistingWriteableDir(tpLoc);
-			retList.add(tpLoc);
+			final File npmLoc = new File(installLocationProvider.getNodeModulesURI());
+			HlcFileUtils.isExistingWriteableDir(npmLoc);
+			retList.add(npmLoc);
+			final File typeDefLoc = new File(installLocationProvider.getTypeDefinitionsURI());
+			HlcFileUtils.isExistingWriteableDir(typeDefLoc);
+			retList.add(typeDefLoc);
 		}
 		return retList;
 	}

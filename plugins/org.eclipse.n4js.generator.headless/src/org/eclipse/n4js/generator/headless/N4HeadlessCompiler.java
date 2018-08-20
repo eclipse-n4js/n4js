@@ -639,7 +639,7 @@ public class N4HeadlessCompiler {
 		recorder.markStartLoading(markedProject);
 
 		if (logger.isCreateDebugOutput()) {
-			logger.debug("Loading project " + markedProject.project.getProjectId());
+			logger.debug("Loading project " + markedProject.project.getProjectName());
 		}
 
 		/*
@@ -748,7 +748,7 @@ public class N4HeadlessCompiler {
 	private void loadResources(MarkedProject markedProject, N4ProgressStateRecorder recorder)
 			throws N4JSCompileErrorException {
 		if (logger.isCreateDebugOutput()) {
-			logger.debug("Loading resources for project " + markedProject.project.getProjectId());
+			logger.debug("Loading resources for project " + markedProject.project.getProjectName());
 		}
 
 		for (Resource resource : markedProject.resources) {
@@ -762,7 +762,7 @@ public class N4HeadlessCompiler {
 				recorder.markLoadResourceFailed(resource);
 				String message = "Cannot load resource=" + resource.getURI();
 				if (!isKeepOnCompiling()) {
-					throw new N4JSCompileErrorException(message, markedProject.project.getProjectId(), e);
+					throw new N4JSCompileErrorException(message, markedProject.project.getProjectName(), e);
 				}
 				logger.warn(message);
 			}
@@ -783,7 +783,7 @@ public class N4HeadlessCompiler {
 				.findResourceDescriptionsData(resourceSet);
 
 		if (logger.isCreateDebugOutput()) {
-			logger.debug("Indexing project " + markedProject.project.getProjectId());
+			logger.debug("Indexing project " + markedProject.project.getProjectName());
 		}
 
 		for (Resource resource : markedProject.resources) {
@@ -955,7 +955,7 @@ public class N4HeadlessCompiler {
 
 		// Projects should not compile if there are severe errors:
 		if (!isKeepOnCompiling()) {
-			failOnErrors(issueCollector.getCollectedIssues(), markedProject.project.getProjectId());
+			failOnErrors(issueCollector.getCollectedIssues(), markedProject.project.getProjectName());
 		}
 	}
 
@@ -964,19 +964,19 @@ public class N4HeadlessCompiler {
 	 *
 	 * @param errors
 	 *            list of errors
-	 * @param projectId
-	 *            projectId of the bad project.
+	 * @param projectName
+	 *            the N4JS project name of the bad project.
 	 * @throws N4JSCompileErrorException
 	 *             if the given issues contain errors
 	 */
-	private void failOnErrors(List<Issue> errors, String projectId)
+	private void failOnErrors(List<Issue> errors, String projectName)
 			throws N4JSCompileErrorException {
 
 		if (!errors.isEmpty()) {
 			StringBuilder message = new StringBuilder();
-			message.append("Cannot compile project " + projectId + " due to " + errors.size() + " errors.");
+			message.append("Cannot compile project " + projectName + " due to " + errors.size() + " errors.");
 			errors.forEach(error -> message.append("\n").append(error));
-			throw new N4JSCompileErrorException(message.toString(), projectId);
+			throw new N4JSCompileErrorException(message.toString(), projectName);
 		}
 
 	}
@@ -1007,13 +1007,13 @@ public class N4HeadlessCompiler {
 			Predicate<URI> compileFilter, N4ProgressStateRecorder rec) throws N4JSCompileException {
 		rec.markStartCompiling(markedProject);
 
-		final String projectId = markedProject.project.getProjectId();
+		final String projectName = markedProject.project.getProjectName();
 		if (logger.isVerbose()) {
-			logger.info("Generating " + projectId);
+			logger.info("Generating " + projectName);
 		}
 
 		Lazy<N4JSCompoundCompileException> collectedErrors = Lazy.create(() -> {
-			return new N4JSCompoundCompileException("Errors during generation of project " + projectId);
+			return new N4JSCompoundCompileException("Errors during generation of project " + projectName);
 		});
 
 		ConfiguredGenerator generator = generatorFactory.getConfiguredGenerator(markedProject.project);
@@ -1038,7 +1038,7 @@ public class N4HeadlessCompiler {
 						rec.markBrokenCompile(e);
 
 						if (isKeepOnCompiling()) {
-							collectedErrors.get().add(new N4JSCompileErrorException(e.getMessage(), projectId, e));
+							collectedErrors.get().add(new N4JSCompileErrorException(e.getMessage(), projectName, e));
 							if (logger.isVerbose()) {
 								logger.info(e.getMessage());
 							}

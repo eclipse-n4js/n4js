@@ -80,7 +80,7 @@ public class N4JSExternalProject extends ExternalProject {
 	 */
 	public Iterable<String> getAllDirectDependencyIds() {
 		return from(getAllDirectDependencies())
-				.transform(p -> p.getProjectId())
+				.transform(p -> p.getProjectName())
 				.toSet();
 	}
 
