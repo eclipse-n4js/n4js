@@ -50,14 +50,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
@@ -90,6 +85,8 @@ import org.eclipse.n4js.semver.Semver.URLVersionRequirement;
 import org.eclipse.n4js.semver.Semver.VersionRangeConstraint;
 import org.eclipse.n4js.semver.Semver.VersionRangeSetRequirement;
 import org.eclipse.n4js.semver.model.SemverSerializer;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils.ProjectNameInfo;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.validation.helper.FolderContainmentHelper;
@@ -116,9 +113,6 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtension {
-
-	/** regular expression for valid package.json identifier (e.g. package name, vendor ID) */
-	private static final Pattern IDENTIFIER_PATTERN = Pattern.compile("(^)?[A-z_][A-z_\\-\\.0-9]*");
 
 	/** key for memoization of the n4js.sources section of a package.json. See #getSourceContainers(). */
 	private static final String N4JS_SOURCE_CONTAINERS = "N4JS_SOURCE_CONTAINERS";
@@ -166,66 +160,60 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		if (!checkIsType(projectNameValue, JSONPackage.Literals.JSON_STRING_LITERAL, "as package name")) {
 			return;
 		}
-		final JSONStringLiteral projectName = (JSONStringLiteral) projectNameValue;
+		final JSONStringLiteral projectNameLiteral = (JSONStringLiteral) projectNameValue;
+		final String projectName = projectNameLiteral.getValue();
+		final String projectNameWithoutScope = ProjectDescriptionUtils.getPlainProjectName(projectName);
+		final String scopeName = ProjectDescriptionUtils.getScopeName(projectName);
 
 		// make sure the name conforms to the IDENTIFIER_PATTERN
-		if (!IDENTIFIER_PATTERN.matcher(projectName.getValue()).matches()) {
-			addIssue(IssueCodes.getMessageForPKGJ_INVALID_PROJECT_NAME(projectName.getValue()),
+		if (!ProjectDescriptionUtils.isValidPlainProjectName(projectNameWithoutScope)) {
+			addIssue(IssueCodes.getMessageForPKGJ_INVALID_PROJECT_NAME(projectNameWithoutScope),
 					projectNameValue, IssueCodes.PKGJ_INVALID_PROJECT_NAME);
 		}
-
-		// in case the Platform is running (can be UI and headless)
-		if (Platform.isRunning()) {
-			final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-			final URI packageJsonUri = projectNameValue.eResource().getURI();
-
-			String platformProjectContainer = null;
-			if (packageJsonUri.isPlatformResource()) {
-				// in UI case, assume platform:resource URIs
-				final String platformURI = packageJsonUri.trimSegments(1).toPlatformString(true);
-				final IResource resolvedResource = root.findMember(platformURI);
-				if (resolvedResource instanceof IProject) {
-					platformProjectContainer = resolvedResource.getName();
-				}
-				// check project name to match file system folder name
-				final String fileSystemName = resolvedResource.getLocation().lastSegment();
-				if (!fileSystemName.equals(projectName.getValue())) {
-					addIssue(
-							IssueCodes.getMessageForPKGJ_PACKAGE_NAME_MISMATCH(projectName.getValue(), fileSystemName),
-							projectName, IssueCodes.PKGJ_PACKAGE_NAME_MISMATCH);
-				}
-			} else {
-				// otherwise, assume file-based URI
-				platformProjectContainer = new File(packageJsonUri.toFileString()).getParentFile().getName();
+		if (scopeName != null) {
+			String scopeNameWithoutPrefix = scopeName.substring(1);
+			if (!ProjectDescriptionUtils.isValidScopeName(scopeNameWithoutPrefix)) {
+				String msg = IssueCodes.getMessageForPKGJ_INVALID_SCOPE_NAME(scopeNameWithoutPrefix);
+				addIssue(msg, projectNameValue, IssueCodes.PKGJ_INVALID_SCOPE_NAME);
 			}
+		}
 
-			if (platformProjectContainer == null) {
-				// Container project cannot be determined, fail gracefully. We currently assume that this
-				// case will only occur when a nested package.json is validated in an editor (we ignore
-				// nested package.json files in the builder)
+		// compute names of project folder, parent folder, Eclipse project folder
+		final URI projectUri = projectNameValue.eResource().getURI().trimSegments(1);
+		final ProjectNameInfo nameInfo = ProjectNameInfo.of(projectUri);
+
+		// make sure the project name equals the name of the project folder
+		if (!projectNameWithoutScope.equals(nameInfo.projectFolderName)) {
+			String msg = IssueCodes.getMessageForPKGJ_PACKAGE_NAME_MISMATCH(
+					projectNameWithoutScope, nameInfo.projectFolderName);
+			addIssue(msg, projectNameLiteral, IssueCodes.PKGJ_PACKAGE_NAME_MISMATCH);
+		}
+
+		// make sure the scope name (if any) equals the name of the parent folder
+		// (i.e. the folder containing the project folder)
+		if (scopeName != null && !scopeName.equals(nameInfo.parentFolderName)) {
+			String msg = IssueCodes.getMessageForPKGJ_SCOPE_NAME_MISMATCH(scopeName, nameInfo.parentFolderName);
+			addIssue(msg, projectNameLiteral, IssueCodes.PKGJ_SCOPE_NAME_MISMATCH);
+		}
+
+		// make sure the project name equals the name of the Eclipse workspace project
+		if (Platform.isRunning()) {
+
+			if (!nameInfo.eclipseProjectName.isPresent()) {
+				// Eclipse project name cannot be determined, fail gracefully. We currently assume that this case will
+				// only occur (1) in the headless case and (2) in the UI case when a nested package.json is validated in
+				// an editor (we ignore nested package.json files in the builder)
 				return;
 			}
 
-			// check project name to match Eclipse workspace project name
-			if (!platformProjectContainer.equals(projectName.getValue())) {
-				final String message = IssueCodes.getMessageForPKGJ_PROJECT_NAME_ECLIPSE_MISMATCH(
-						projectName.getValue(),
-						platformProjectContainer);
-				addIssue(message, projectName,
-						IssueCodes.PKGJ_PROJECT_NAME_ECLIPSE_MISMATCH);
-			}
-		} else {
-			// Make sure the package name equals the package folder name.
-			// Assumption: since the platform is not running, the URI actually represents the file system hierarchy
-			final String packageUriFolderName = projectNameValue.eResource().getURI().trimSegments(1).lastSegment();
-			if (!packageUriFolderName.equals(projectName.getValue())) {
-				addIssue(
-						IssueCodes.getMessageForPKGJ_PACKAGE_NAME_MISMATCH(projectName.getValue(),
-								packageUriFolderName),
-						projectName, IssueCodes.PKGJ_PACKAGE_NAME_MISMATCH);
+			String expectedEclipseProjectName = ProjectDescriptionUtils
+					.convertN4JSProjectNameToEclipseProjectName(projectName);
+			if (!expectedEclipseProjectName.equals(nameInfo.eclipseProjectName.get())) {
+				String msg = IssueCodes.getMessageForPKGJ_PROJECT_NAME_ECLIPSE_MISMATCH(
+						expectedEclipseProjectName, nameInfo.eclipseProjectName.get());
+				addIssue(msg, projectNameLiteral, IssueCodes.PKGJ_PROJECT_NAME_ECLIPSE_MISMATCH);
 			}
 		}
-
 	}
 
 	/** Check the version property. */

@@ -10,6 +10,11 @@
  */
 package org.eclipse.n4js.external.libraries
 
+import java.io.FileWriter
+import java.io.IOException
+import java.io.File
+import static com.google.common.base.Preconditions.checkState
+
 /**
  * Utilities for dealing with the folder containing the external libraries.
  */
@@ -35,5 +40,30 @@ class ExternalLibraryFolderUtils {
 				"name": "targetplatform"
 			}
 		''';
+	}
+	
+	/**
+	 * Creates a fresh target platform definition file ({@code package.json} file) in the given
+	 * target platform location.
+	 */
+	public static def File createTargetPlatformDefinitionFile(File targetPlatformLocationFile) {
+		val File targetPlatformFile = new File(targetPlatformLocationFile, PACKAGE_JSON);
+		if (!targetPlatformFile.exists()) {
+			try {
+				checkState(targetPlatformFile.createNewFile(), "Error while creating default target platform file.");
+				var FileWriter fw;
+				try {
+					fw = new FileWriter(targetPlatformFile);
+					fw.write(ExternalLibraryFolderUtils.createTargetPlatformPackageJson());
+					fw.flush();
+				} finally {
+					fw.close();
+				}
+			} catch (IOException e) {
+				val String message = "Error while initializing default target platform file.";
+				throw new RuntimeException(message, e);
+			}
+		}
+		return targetPlatformFile;
 	}
 }

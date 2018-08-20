@@ -150,7 +150,7 @@ class VersionNumber extends SemverToStringable {
 
 	/** @return true if the major part is a wildcard */
 	op boolean isWildcard() {
-		return major.isWildcard();
+		return if (major === null) false else major.isWildcard();
 	}
 
 	op String[] getPreReleaseTag() {

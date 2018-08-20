@@ -56,7 +56,7 @@ public class InstallNpmDependencyDialog extends TitleAreaDialog {
 	private String errPackageName = null;
 	private String errVersion = null;
 
-	private String version;
+	private String version = EMPTY;
 	private String packageName;
 
 	/** Creates dialog with custom validators. */

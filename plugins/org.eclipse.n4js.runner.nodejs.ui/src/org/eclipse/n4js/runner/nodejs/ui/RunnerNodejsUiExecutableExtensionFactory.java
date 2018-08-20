@@ -33,7 +33,7 @@ public class RunnerNodejsUiExecutableExtensionFactory extends N4ExecutableExtens
 	}
 
 	@Override
-	protected String getBunleId() {
+	protected String getBundleId() {
 		return NodejsRunnerUiActivator.PLUGIN_ID;
 	}
 

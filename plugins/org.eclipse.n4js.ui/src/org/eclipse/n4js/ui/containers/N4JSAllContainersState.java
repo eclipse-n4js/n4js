@@ -42,7 +42,6 @@ import org.eclipse.n4js.ui.external.ExternalLibraryBuilder;
 import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
 import org.eclipse.n4js.ui.internal.OwnResourceValidatorAwareValidatingEditorCallback;
 import org.eclipse.n4js.ui.internal.ResourceUIValidatorExtension;
-import org.eclipse.n4js.ui.internal.WorkspaceCacheAccess;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorReference;
@@ -154,8 +153,7 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 	 * Handles the given {@link IResourceDelta} and updates the project state (cache of available projects and project
 	 * descriptions) accordingly.
 	 *
-	 * If so, invalidates the {@link EclipseBasedN4JSWorkspace} cache of project descriptions for the updated projects
-	 * (cf. {@link WorkspaceCacheAccess}).
+	 * If so, invalidates the {@link EclipseBasedN4JSWorkspace} cache of project descriptions for the updated projects.
 	 */
 	private void updateProjectState(IResourceDelta delta) {
 		if (delta.getKind() == IResourceDelta.ADDED || delta.getKind() == IResourceDelta.REMOVED) {
@@ -295,8 +293,8 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 	}
 
 	private boolean isSourceContainerModification(final IResourceDelta delta) {
-		final String fullPath = delta.getFullPath().toString();
-		final URI folderUri = URI.createPlatformResourceURI(fullPath, true);
+		final String fullPathStr = delta.getFullPath().toString();
+		final URI folderUri = URI.createPlatformResourceURI(fullPathStr, true);
 		final IN4JSProject project = core.findProject(folderUri).orNull();
 		if (null != project && project.exists()) {
 			return from(project.getSourceContainers())
@@ -304,7 +302,7 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 					.filter(uri -> uri.isPlatformResource())
 					.transform(uri -> uri.toString())
 					.transform(uri -> uri.replaceFirst(PLATFORM_RESOURCE_SCHEME, ""))
-					.firstMatch(uri -> uri.equals(fullPath))
+					.firstMatch(uri -> uri.equals(fullPathStr))
 					.isPresent();
 		}
 		return false;

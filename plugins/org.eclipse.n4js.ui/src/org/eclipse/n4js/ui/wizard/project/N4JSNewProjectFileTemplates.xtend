@@ -15,6 +15,7 @@ import org.eclipse.n4js.projectDescription.SourceContainerType
 import org.eclipse.n4js.packagejson.PackageJsonBuilder
 
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.VERSION
+import org.eclipse.n4js.utils.ProjectDescriptionUtils
 
 /**
  * Basic Xtend templates for new project wizard.
@@ -71,9 +72,12 @@ class N4JSNewProjectFileTemplates {
 	 * Returns the project description file contents for the given project info (package.json).
 	 */
 	static def getProjectDescriptionContents(N4JSProjectInfo projectInfo) {
+		val projectName = 
+			ProjectDescriptionUtils.convertEclipseProjectNameToN4JSProjectName(projectInfo.projectName);
+		
 		// configure basic properties
 		val builder = PackageJsonBuilder.newBuilder()
-			.withName(projectInfo.projectName)
+			.withName(projectName)
 			.withVersion(VERSION.defaultValue)
 			.withType(projectInfo.projectType)
 			.withOutput(projectInfo.outputFolder)

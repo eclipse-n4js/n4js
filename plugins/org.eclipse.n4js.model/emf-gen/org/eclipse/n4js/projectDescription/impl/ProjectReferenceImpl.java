@@ -28,31 +28,31 @@ import org.eclipse.n4js.projectDescription.ProjectReference;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.projectDescription.impl.ProjectReferenceImpl#getProjectId <em>Project Id</em>}</li>
+ *   <li>{@link org.eclipse.n4js.projectDescription.impl.ProjectReferenceImpl#getProjectName <em>Project Name</em>}</li>
  * </ul>
  *
  * @generated
  */
 public class ProjectReferenceImpl extends MinimalEObjectImpl.Container implements ProjectReference {
 	/**
-	 * The default value of the '{@link #getProjectId() <em>Project Id</em>}' attribute.
+	 * The default value of the '{@link #getProjectName() <em>Project Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getProjectId()
+	 * @see #getProjectName()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String PROJECT_ID_EDEFAULT = null;
+	protected static final String PROJECT_NAME_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getProjectId() <em>Project Id</em>}' attribute.
+	 * The cached value of the '{@link #getProjectName() <em>Project Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getProjectId()
+	 * @see #getProjectName()
 	 * @generated
 	 * @ordered
 	 */
-	protected String projectId = PROJECT_ID_EDEFAULT;
+	protected String projectName = PROJECT_NAME_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -78,8 +78,8 @@ public class ProjectReferenceImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getProjectId() {
-		return projectId;
+	public String getProjectName() {
+		return projectName;
 	}
 
 	/**
@@ -87,11 +87,11 @@ public class ProjectReferenceImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setProjectId(String newProjectId) {
-		String oldProjectId = projectId;
-		projectId = newProjectId;
+	public void setProjectName(String newProjectName) {
+		String oldProjectName = projectName;
+		projectName = newProjectName;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProjectDescriptionPackage.PROJECT_REFERENCE__PROJECT_ID, oldProjectId, projectId));
+			eNotify(new ENotificationImpl(this, Notification.SET, ProjectDescriptionPackage.PROJECT_REFERENCE__PROJECT_NAME, oldProjectName, projectName));
 	}
 
 	/**
@@ -102,8 +102,8 @@ public class ProjectReferenceImpl extends MinimalEObjectImpl.Container implement
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ProjectDescriptionPackage.PROJECT_REFERENCE__PROJECT_ID:
-				return getProjectId();
+			case ProjectDescriptionPackage.PROJECT_REFERENCE__PROJECT_NAME:
+				return getProjectName();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -116,8 +116,8 @@ public class ProjectReferenceImpl extends MinimalEObjectImpl.Container implement
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ProjectDescriptionPackage.PROJECT_REFERENCE__PROJECT_ID:
-				setProjectId((String)newValue);
+			case ProjectDescriptionPackage.PROJECT_REFERENCE__PROJECT_NAME:
+				setProjectName((String)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -131,8 +131,8 @@ public class ProjectReferenceImpl extends MinimalEObjectImpl.Container implement
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ProjectDescriptionPackage.PROJECT_REFERENCE__PROJECT_ID:
-				setProjectId(PROJECT_ID_EDEFAULT);
+			case ProjectDescriptionPackage.PROJECT_REFERENCE__PROJECT_NAME:
+				setProjectName(PROJECT_NAME_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -146,8 +146,8 @@ public class ProjectReferenceImpl extends MinimalEObjectImpl.Container implement
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ProjectDescriptionPackage.PROJECT_REFERENCE__PROJECT_ID:
-				return PROJECT_ID_EDEFAULT == null ? projectId != null : !PROJECT_ID_EDEFAULT.equals(projectId);
+			case ProjectDescriptionPackage.PROJECT_REFERENCE__PROJECT_NAME:
+				return PROJECT_NAME_EDEFAULT == null ? projectName != null : !PROJECT_NAME_EDEFAULT.equals(projectName);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -162,8 +162,8 @@ public class ProjectReferenceImpl extends MinimalEObjectImpl.Container implement
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (projectId: ");
-		result.append(projectId);
+		result.append(" (projectName: ");
+		result.append(projectName);
 		result.append(')');
 		return result.toString();
 	}

@@ -61,8 +61,8 @@ class RuntimeEnvironmentResolutionPluginUITest extends RuntimeEnvironmentResolut
 		clearWorkspace()
 	}
 
-	override protected createProjectWithPackageJson(String projectId, String packageJsonContent) {
-		val project = workspace.root.getProject(projectId)
+	override protected createProjectWithPackageJson(String projectName, String packageJsonContent) {
+		val project = workspace.root.getProject(projectName)
 		assertFalse(project.exists)
 		try {
 			project.create(null)
@@ -94,7 +94,7 @@ class RuntimeEnvironmentResolutionPluginUITest extends RuntimeEnvironmentResolut
 			is = new ByteArrayInputStream(packageJsonContent.bytes)
 			packageJsonFile.create(is, true, null)
 		} catch (Exception e) {
-			LOGGER.error('''Error while creating package.json file for project: '«projectId»'.''')
+			LOGGER.error('''Error while creating package.json file for project: '«projectName»'.''')
 			throw propagate(e)
 		} finally {
 			if (null !== is) {

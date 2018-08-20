@@ -33,6 +33,7 @@ import com.google.common.collect.ImmutableList;
  * significance when using the list of dependencies for constructing scopes.
  */
 public class TypeDefinitionsAwareDependenciesSupplier {
+
 	/**
 	 * Returns an iterable of dependencies of the given {@code project}.
 	 *
@@ -45,7 +46,7 @@ public class TypeDefinitionsAwareDependenciesSupplier {
 	 *             In case the computation encounters a problem that results in the loss of a dependency, this method
 	 *             will throw an {@link IllegalStateException}.
 	 */
-	public Iterable<IN4JSProject> get(IN4JSProject project) {
+	static public Iterable<IN4JSProject> get(IN4JSProject project) {
 		final ImmutableList<? extends IN4JSProject> dependencies = project.getDependencies();
 		// keep ordered list of type definition projects per project ID of the definesPackage property
 		final Map<String, List<IN4JSProject>> typeDefinitionsById = new HashMap<>();
@@ -59,7 +60,7 @@ public class TypeDefinitionsAwareDependenciesSupplier {
 		// separate type definition projects from runtime projects
 		for (IN4JSProject dependency : dependencies) {
 			if (dependency.getProjectType() == ProjectType.DEFINITION) {
-				final String definesPackage = dependency.getDefinesPackage();
+				final String definesPackage = dependency.getDefinesPackageName();
 				if (definesPackage != null) {
 					// get existing or create new list of type definition projects
 					List<IN4JSProject> typeDefinitionsProjects = typeDefinitionsById.getOrDefault(definesPackage,
@@ -77,8 +78,8 @@ public class TypeDefinitionsAwareDependenciesSupplier {
 
 		// construct ordered list of dependencies
 		for (IN4JSProject dependency : runtimeDependencies) {
-			final String projectId = dependency.getProjectId();
-			final Collection<IN4JSProject> typeDefinitionProjects = typeDefinitionsById.getOrDefault(projectId,
+			final String projectName = dependency.getProjectName();
+			final Collection<IN4JSProject> typeDefinitionProjects = typeDefinitionsById.getOrDefault(projectName,
 					Collections.emptyList());
 
 			// first list all type definition dependencies

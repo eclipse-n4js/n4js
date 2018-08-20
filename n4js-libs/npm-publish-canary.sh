@@ -28,7 +28,6 @@ function echo_exec {
 
 cleanup() {
 	set +e
-	# Remove node_modules before and after publishing
 	for dir in $DIRS
 	do
 		rm -rf "$dir/node_modules"
@@ -37,7 +36,6 @@ cleanup() {
 	set -e
 }
 
-cleanup
 export NPM_CONFIG_GLOBALCONFIG="DIR_ROOT"
 echo "Publishing using .npmrc configuration to ${NPM_REGISTRY}";
 
@@ -48,4 +46,5 @@ else
 	lerna publish --loglevel silly --skip-git --registry="${NPM_REGISTRY}" --repo-version="9999.0.0" --exact --canary --yes --sort --npm-tag="${NPM_TAG}"
 fi
 
+# Remove node_modules after publishing
 cleanup

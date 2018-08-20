@@ -81,7 +81,7 @@ public class N4IDLAwareTopLevelElementsCollector extends TopLevelElementsCollect
 	private int getProjectContextVersion(IN4JSProject versionedProject, IN4JSProject contextProject) {
 		// disable logic to get context version from project dependency
 		// ProjectDependency moduleDependency = contextProject.getProjectDependencies().stream()
-		// .filter(dep -> dep.getProject().getProjectId().equals(versionedProject.getProjectId()))
+		// .filter(dep -> dep.getProject().getProjectName().equals(versionedProject.getProjectName()))
 		// .findAny().orElse(null);
 		//
 		// if (null == moduleDependency) {

@@ -37,6 +37,7 @@ import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.git.GitUtils;
 import org.eclipse.n4js.utils.io.FileCopier;
+import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.xtext.util.Pair;
 
 import com.google.common.base.Predicate;
@@ -97,19 +98,22 @@ public class NpmPackageToProjectAdapter {
 	 * provided set of expected packages. Those packages are treated as transitive dependencies and are not returned to
 	 * the caller.
 	 *
-	 * @param namesOfPackagesToAdapt
+	 * @param installedPackages
 	 *            names of the expected packages
 	 * @return pair of overall adaptation status and folders of successfully adapted npm packages
 	 */
-	public Pair<IStatus, Collection<File>> adaptPackages(Collection<String> namesOfPackagesToAdapt) {
+	public Pair<IStatus, Collection<File>> adaptPackages(Collection<String> installedPackages,
+			Collection<String> uninstalledPackages) {
 		final MultiStatus status = statusHelper.createMultiStatus("Status of adapting npm packages");
 		final File nodeModulesFolder = locationProvider.getNodeModulesFolder();
 		final File typeDefFolder = locationProvider.getTypeDefinitionsFolder();
-		final Collection<String> names = newHashSet(namesOfPackagesToAdapt);
-		final File[] packageRoots = nodeModulesFolder.listFiles(packageName -> names.contains(packageName.getName()));
+		final Collection<String> installNames = newHashSet(installedPackages);
+		final File[] npmPackageRoots = nodeModulesFolder
+				.listFiles(packageName -> installNames.contains(packageName.getName()));
 		final File n4jsdsFolder = getNpmsTypeDefinitionsFolder();
 
-		for (File packageRoot : packageRoots) {
+		// adapt installed
+		for (File packageRoot : npmPackageRoots) {
 			try {
 				// add type definitions
 				if (n4jsdsFolder != null) {
@@ -134,7 +138,24 @@ public class NpmPackageToProjectAdapter {
 			}
 		}
 
-		return pair(status, Arrays.asList(packageRoots));
+		// delete uninstalled type definitions
+		final Collection<String> uninstallNames = newHashSet(uninstalledPackages);
+		final File typeDefinitionsFolder = locationProvider.getTypeDefinitionsFolder();
+		final File[] tdPackageRoots = typeDefinitionsFolder
+				.listFiles(packageName -> {
+					int index = packageName.getName().lastIndexOf("-n4jsd");
+					if (index > 0) {
+						String dirName = packageName.getName().substring(0, index);
+						return uninstallNames.contains(dirName);
+					} else {
+						return false;
+					}
+				});
+		for (File tdDir : tdPackageRoots) {
+			FileUtils.deleteFileOrFolder(tdDir);
+		}
+
+		return pair(status, Arrays.asList(npmPackageRoots));
 	}
 
 	private static String NPM_DEFINITIONS_FOLDER_NAME = "npm";
@@ -252,28 +273,7 @@ public class NpmPackageToProjectAdapter {
 		}
 
 		Path sourcePath = packageVersionedN4JSDProjectRoot.toPath();
-		Path targetPath = packageRoot.toPath();
-
-		IStatus status = mergeTypeDefinitions(packageName, sourcePath, targetPath);
-		if (!status.isOK()) {
-			return status;
-		}
-
-		status = copyTypeDefinitionPackage(packageName, sourcePath);
-		if (!status.isOK()) {
-			return status;
-		}
-
-		return statusHelper.OK();
-	}
-
-	private IStatus mergeTypeDefinitions(String packageName, Path sourcePath, Path targetPath) {
-		IStatus status = copyN4JSDFiles(packageName, sourcePath, targetPath);
-		if (!status.isOK()) {
-			return status;
-		}
-
-		status = copyFile(packageName, sourcePath, targetPath, N4JSGlobals.PACKAGE_FRAGMENT_JSON);
+		IStatus status = copyTypeDefinitionPackage(packageName, sourcePath);
 		if (!status.isOK()) {
 			return status;
 		}

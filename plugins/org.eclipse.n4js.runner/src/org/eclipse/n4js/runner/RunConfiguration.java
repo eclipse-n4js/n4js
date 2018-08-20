@@ -12,6 +12,7 @@ package org.eclipse.n4js.runner;
 
 import static com.google.common.base.Strings.nullToEmpty;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -125,7 +126,7 @@ public class RunConfiguration {
 
 	private final Map<String, String> environmentVariables = new LinkedHashMap<>();
 
-	private final List<String> coreProjectPaths = new ArrayList<>();
+	private final Map<Path, String> coreProjectPaths = new LinkedHashMap<>();
 
 	private final List<String> initModules = new ArrayList<>();
 
@@ -323,8 +324,8 @@ public class RunConfiguration {
 
 	/**
 	 * For each API project in the direct and indirect project dependencies of the module to run, this will contain a
-	 * mapping from the <code>projectId</code> of the API project to the <code>projectId</code> of the implementation
-	 * project to use in the run. Never returns <code>null</code> but may return an empty map.
+	 * mapping from the <code>projectName</code> of the API project to the <code>projectName</code> of the
+	 * implementation project to use in the run. Never returns <code>null</code> but may return an empty map.
 	 */
 	public Map<String, String> getApiImplProjectMapping() {
 		return Collections.unmodifiableMap(apiImplProjectMapping);
@@ -340,7 +341,7 @@ public class RunConfiguration {
 	public void setApiImplProjectMappingFromProjects(Map<IN4JSProject, IN4JSProject> apiImplProjectMapping) {
 		this.apiImplProjectMapping.clear();
 		apiImplProjectMapping.entrySet().forEach(
-				e -> this.apiImplProjectMapping.put(e.getKey().getProjectId(), e.getValue().getProjectId()));
+				e -> this.apiImplProjectMapping.put(e.getKey().getProjectName(), e.getValue().getProjectName()));
 	}
 
 	/**
@@ -377,24 +378,24 @@ public class RunConfiguration {
 	 * of project containing the userSelection, its direct and indirect dependencies, the runtime environment project).
 	 * These are the <code>.../src-gen/es5/</code> folders.
 	 */
-	public List<String> getCoreProjectPaths() {
-		return Collections.unmodifiableList(coreProjectPaths);
+	public Map<Path, String> getCoreProjectPaths() {
+		return Collections.unmodifiableMap(coreProjectPaths);
 	}
 
 	/**
 	 * Adds entries to the {@link #getCoreProjectPaths() core project paths}. All previously stored values are removed,
 	 * and all provided values are stored.
 	 */
-	public void setCoreProjectPaths(Collection<String> paths) {
+	public void setCoreProjectPaths(Map<Path, String> paths) {
 		this.coreProjectPaths.clear();
-		this.coreProjectPaths.addAll(paths);
+		this.coreProjectPaths.putAll(paths);
 	}
 
 	/**
-	 * Unlike {@link #setCoreProjectPaths(Collection)} this method adds new entries without removing previous values.
+	 * Unlike {@link #setCoreProjectPaths(Map)} this method adds new entries without removing previous values.
 	 */
-	public void addCoreProjectPaths(Collection<String> paths) {
-		this.coreProjectPaths.addAll(paths);
+	public void addCoreProjectPaths(Map<Path, String> paths) {
+		this.coreProjectPaths.putAll(paths);
 	}
 
 	/**
@@ -453,7 +454,7 @@ public class RunConfiguration {
 		final Map<String, Object> result = new HashMap<>();
 		result.put(NAME, this.name);
 		result.put(RUNNER_ID, this.runnerId);
-		result.put(RUNTIME_ENVIRONMENT, this.runtimeEnvironment.getProjectId());
+		result.put(RUNTIME_ENVIRONMENT, this.runtimeEnvironment.getProjectName());
 		result.put(IMPLEMENTATION_ID, this.implementationId);
 		result.put(USER_SELECTION, this.userSelection.toString());
 		result.put(CUSTOM_ENGINE_PATH, getCustomEnginePath());
@@ -476,7 +477,7 @@ public class RunConfiguration {
 		this.name = getString(map, NAME, false);
 		this.runnerId = getString(map, RUNNER_ID, false);
 		this.runtimeEnvironment = RuntimeEnvironment
-				.fromProjectId(getString(map, RUNTIME_ENVIRONMENT, false));
+				.fromProjectName(getString(map, RUNTIME_ENVIRONMENT, false));
 		this.implementationId = getString(map, IMPLEMENTATION_ID, true);
 		this.userSelection = getURI(map, USER_SELECTION, false);
 		this.customEnginePath = nullToEmpty(getString(map, CUSTOM_ENGINE_PATH, true));

@@ -74,7 +74,7 @@ public abstract class AbstractN4JSCoreTest extends AbstractProjectModelTest {
 	public void testProjectId_01() {
 		IN4JSProject project = getN4JSCore().create(myProjectURI.trimSegments(1).appendSegment("doesNotExist"));
 		assertNotNull(project);
-		assertEquals("doesNotExist", project.getProjectId());
+		assertEquals("doesNotExist", project.getProjectName());
 	}
 
 	@SuppressWarnings("javadoc")
@@ -82,7 +82,7 @@ public abstract class AbstractN4JSCoreTest extends AbstractProjectModelTest {
 	public void testProjectId_02() {
 		IN4JSProject project = getN4JSCore().create(myProjectURI);
 		assertNotNull(project);
-		assertEquals(myProjectId, project.getProjectId());
+		assertEquals(myProjectName, project.getProjectName());
 	}
 
 	@SuppressWarnings("javadoc")

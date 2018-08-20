@@ -34,7 +34,11 @@ import org.eclipse.n4js.semver.Semver.VersionNumber
  */
 class ProjectDescription {
 
-	String projectId
+	/*
+	 * The <em>N4JS project name</em>, as defined at
+	 * {@link org.eclipse.n4js.utils.ProjectDescriptionUtils#isProjectNameWithScope(String)}.
+	 */
+	String projectName
 	String vendorId
 	String vendorName
 	contains VersionNumber projectVersion
@@ -85,11 +89,12 @@ class SourceContainerDescription {
 
 /* Reference to another project without version requirement. */
 class ProjectReference {
-	String projectId
+	String projectName
 }
 
 /* Reference to another project, including a version requirement. */
 class ProjectDependency extends ProjectReference {
+	DependencyType ^type
 	String versionRequirementString
 	contains NPMVersionRequirement versionRequirement
 }
@@ -143,4 +148,17 @@ enum ModuleLoader {
 	N4JS = 0,
 	COMMONJS = 1,
 	NODE_BUILTIN = 2
+}
+
+/** Different types of dependencies. */
+enum DependencyType {
+	/** Dependencies of this type must always be present. */
+	RUNTIME,
+	/** Dependencies of this type must be present at development-time. */
+	DEVELOPMENT,
+	/** 
+	 * Dependencies of this type must be present when using a package 
+	 * from a typed language or when developing the package itself.
+	 */
+	TYPE
 }

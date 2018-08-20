@@ -64,6 +64,7 @@ import static org.eclipse.n4js.n4JS.EqualityOperator.*
 import static org.eclipse.n4js.n4JS.UnaryOperator.*
 
 import static extension org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
+import org.eclipse.n4js.projectDescription.ProjectType
 
 /**
  * Module/Script wrapping transformation.
@@ -72,9 +73,9 @@ import static extension org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 class ModuleWrappingTransformation extends Transformation {
 
 	@Inject
-	private ResourceNameComputer resourceNameComputer
-	@Inject
 	private IN4JSCore n4jsCore;
+	@Inject
+	private ResourceNameComputer resourceNameComputer
 	@Inject
 	private DestructuringAssistant destructuringAssistant;
 
@@ -330,7 +331,11 @@ class ModuleWrappingTransformation extends Transformation {
 			return moduleSpecifierAdjustment.prefix + '/' + module.moduleSpecifier
 
 		var specifier = completeModuleSpecifier
-		val depProject = n4jsCore.findProject(module.eResource.URI).orNull
+		var depProject = n4jsCore.findProject(module.eResource.URI).orNull
+		if (depProject !== null && depProject.projectType === ProjectType.DEFINITION && depProject.definesPackageName !== null) {
+			depProject = n4jsCore.findAllProjectMappings.get(depProject.definesPackageName);
+		}
+
 		if (depProject !== null) {
 			val projectRelativeSegment = depProject.outputPath
 			val depLocation = depProject.locationPath
@@ -338,7 +343,7 @@ class ModuleWrappingTransformation extends Transformation {
 				val depLocationString = depLocation.toString
 				val depProjecOutputPath = depProject.locationPath.resolve(projectRelativeSegment).normalize.toString
 				val depRelativeSpecifier = depProjecOutputPath.substring(depLocationString.length -
-					depProject.projectId.length)
+					depProject.projectName.length)
 				specifier = depRelativeSpecifier + '/' + completeModuleSpecifier
 			}
 		}

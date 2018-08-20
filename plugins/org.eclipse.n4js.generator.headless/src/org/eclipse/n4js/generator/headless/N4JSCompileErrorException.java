@@ -15,36 +15,36 @@ package org.eclipse.n4js.generator.headless;
  */
 public class N4JSCompileErrorException extends N4JSCompileException implements N4ProgressStateRecorder.IProgressState {
 
-	private final String projectId;
+	private final String projectName;
 
 	/**
 	 * @param message
 	 *            user-message
-	 * @param projectId
+	 * @param projectName
 	 *            erroneous project
 	 */
-	public N4JSCompileErrorException(String message, String projectId) {
+	public N4JSCompileErrorException(String message, String projectName) {
 		super(message);
-		this.projectId = projectId;
+		this.projectName = projectName;
 	}
 
 	/**
 	 * @param message
 	 *            user-message
-	 * @param projectId
+	 * @param projectName
 	 *            erroneous project
 	 * @param t
 	 *            nested cause
 	 */
-	public N4JSCompileErrorException(String message, String projectId, Throwable t) {
+	public N4JSCompileErrorException(String message, String projectName, Throwable t) {
 		super(message, t);
-		this.projectId = projectId;
+		this.projectName = projectName;
 	}
 
 	/**
 	 * @return name of erroneous project
 	 */
-	public String getProjectId() {
-		return projectId;
+	public String getProjectName() {
+		return projectName;
 	}
 }

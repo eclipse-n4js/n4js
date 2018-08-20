@@ -11,7 +11,6 @@
 package org.eclipse.n4js.runner.internal;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,8 +25,8 @@ import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
+import org.eclipse.n4js.utils.URIUtils;
 
-import com.google.common.base.Strings;
 import com.google.inject.Inject;
 
 /**
@@ -37,8 +36,6 @@ import com.google.inject.Inject;
  */
 public class RunnerN4JSCore {
 	private static final Logger LOGGER = Logger.getLogger(RunnerN4JSCore.class);
-
-	private static final int DANGLING_SEGMENT_COUNT = 1;
 
 	@Inject
 	private ProjectDescriptionLoader projectDescriptionLoader;
@@ -88,34 +85,12 @@ public class RunnerN4JSCore {
 
 		Arrays.asList(root.listFiles()).stream().filter(File::isDirectory).forEach(projectDir -> {
 			if (externalLibraryHelper.isExternalProjectDirectory(projectDir)) {
-				URI createURI = createProjectUri(projectDir);
+				URI createURI = URIUtils.deriveProjectURIFromFileLocation(projectDir);
 				workspace.registerProject(createURI);
 			} else {
 				LOGGER.warn("Cannot locate project description file (i.e. package.json) file at "
 						+ projectDir.getAbsolutePath());
 			}
 		});
-	}
-
-	/**
-	 * Creates project {@link URI} for the given file system location.
-	 *
-	 * @param location
-	 *            file system location to transform
-	 * @return {@link URI} for the provided location
-	 */
-	private URI createProjectUri(File location) {
-		URI createURI = null;
-		try {
-			createURI = URI.createURI(location.toURI().toURL().toString());
-			// by convention IN4JSProject URI does not end with '/'
-			// i.e. last segment is not empty
-			if (Strings.isNullOrEmpty(createURI.lastSegment())) {
-				createURI = createURI.trimSegments(DANGLING_SEGMENT_COUNT);
-			}
-		} catch (MalformedURLException e) {
-			LOGGER.warn("Exceptions when transforming location: " + location, e);
-		}
-		return createURI;
 	}
 }

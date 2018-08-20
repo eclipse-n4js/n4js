@@ -210,7 +210,7 @@ public final class ResourceNameComputer {
 	/**
 	 * Formats descriptor in form of
 	 * <pre>
-	 * projectId
+	 * projectName
 	 *  + sep1 + Project.declaredVersion.getMajor
 	 *  + sep2 + Project.declaredVersion.getMinor
 	 *  + sep2 + Project.declaredVersion.getMinor
@@ -227,10 +227,10 @@ public final class ResourceNameComputer {
 	def private static String formatDescriptor(IN4JSProject project, String unitPath, String sep1, String sep2,
 		String sep3, boolean useProjectVersion, boolean asJsIdentifier, boolean makeSimpleDescriptor) {
 
-		var projectID = project.projectId
+		var projectName = project.projectName
 		var path = unitPath
 		if (asJsIdentifier) {
-			projectID = getValidJavascriptIdentifierName(project.projectId)
+			projectName = getValidJavascriptIdentifierName(project.projectName)
 			path = getValidUnitPath(unitPath)
 		}
 
@@ -239,10 +239,10 @@ public final class ResourceNameComputer {
 		}
 
 		if (useProjectVersion) {
-			return projectID + sep1 + projectVersionToStringWithoutQualifier(project.version, sep2) + sep3 + path;
+			return projectName + sep1 + projectVersionToStringWithoutQualifier(project.version, sep2) + sep3 + path;
 		}
 
-		return projectID + sep3 + path;
+		return projectName + sep3 + path;
 	}
 
 	/** Ensures that all parts of the unit path are valid JS identifiers */

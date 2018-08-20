@@ -15,9 +15,12 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
@@ -37,6 +40,7 @@ import org.junit.Test;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
 
@@ -125,11 +129,11 @@ public class ShippedCodeRunConfigurationPluginUITest extends AbstractBuilderPart
 		assertFalse("Expected exec module to be configured", Strings.isNullOrEmpty(execModule1));
 		Set<String> execModules1 = new HashSet<>(config.getInitModules());
 		assertFalse("Expected some init modules", execModules1.isEmpty());
-		Set<String> corePaths1 = new HashSet<>(config.getCoreProjectPaths());
+		Map<Path, String> corePaths1 = new LinkedHashMap<>(config.getCoreProjectPaths());
 		assertFalse("Expected core projects paths to contain more than project output", corePaths1.size() <= 1);
 
 		// clear project paths to ensure we only get paths newly computed in #configureFromFileSystem()
-		config.setCoreProjectPaths(Collections.emptyList());
+		config.setCoreProjectPaths(Collections.emptyMap());
 
 		// reconfigure config
 		shippedCodeConfigurationHelper.configureFromFileSystem(config);
@@ -137,7 +141,7 @@ public class ShippedCodeRunConfigurationPluginUITest extends AbstractBuilderPart
 		assertFalse("Expected exec module to be configured", Strings.isNullOrEmpty(execModule2));
 		Set<String> execModules2 = new HashSet<>(config.getInitModules());
 		assertFalse("Expected some init modules", execModules2.isEmpty());
-		Set<String> corePaths2 = new HashSet<>(config.getCoreProjectPaths());
+		Map<Path, String> corePaths2 = new LinkedHashMap<>(config.getCoreProjectPaths());
 		assertFalse("Expected core projects paths to contain more than project output", corePaths2.size() <= 1);
 
 		// record data to log in case of failure
@@ -153,23 +157,26 @@ public class ShippedCodeRunConfigurationPluginUITest extends AbstractBuilderPart
 		final Collection<String> removedPaths = difference(configuredCorePaths, reconfiguredCorePaths);
 		final Collection<String> addedPaths = difference(reconfiguredCorePaths, configuredCorePaths);
 		assertTrue("Expected no paths removed, but diff was " + removedPaths.size(), removedPaths.isEmpty());
-		assertTrue("Expected no paths added, but diff was " + addedPaths.size(), addedPaths.isEmpty());
+		assertTrue("Expected no paths added, but diff was " + addedPaths.size() +
+				". The following paths were added: \n    " +
+				Joiner.on("\n    ").join(addedPaths), addedPaths.isEmpty());
 
 	}
 
 	/**
 	 * remove from paths client project itself.
 	 */
-	private Set<String> processPaths(Collection<String> paths) {
-		return paths.stream()
+	private Set<String> processPaths(Map<Path, String> paths) {
+		return paths.keySet().stream()
+				.map(Object::toString)
 				// filter project path itself
 				.filter(path -> !path.contains(CLIENT))
 				.collect(Collectors.toSet());
 	}
 
-	private void recordLogData(String prefix, Set<String> data, String suffix) {
+	private void recordLogData(String prefix, Map<Path, String> data, String suffix) {
 		logs.add(prefix);
-		data.forEach(logs::add);
+		data.keySet().stream().map(Object::toString).forEach(logs::add);
 		logs.add(suffix);
 		logs.add(NL);
 	}

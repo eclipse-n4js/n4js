@@ -98,7 +98,7 @@ public abstract class ExternalIndexSynchronizer {
 	}
 
 	/**
-	 * @return a map that maps projectIDs to their locations and versions
+	 * @return a map that maps projectNames to their locations and versions
 	 */
 	final public Map<String, Pair<URI, String>> findNpmsInFolder() {
 		Map<String, Pair<URI, String>> npmsFolder = new HashMap<>();
@@ -195,13 +195,12 @@ public abstract class ExternalIndexSynchronizer {
 		Map<String, Pair<URI, String>> npmsIndex = new HashMap<>();
 
 		String nodeModulesLocation = locationProvider.getNodeModulesURI().toString();
-		String typeDefLocation = locationProvider.getTypeDefinitionsURI().toString() + File.separator;
+		String typeDefLocation = locationProvider.getTypeDefinitionsURI().toString();
 		ResourceSet resourceSet = core.createResourceSet(Optional.absent());
 		IResourceDescriptions index = core.getXtextIndex(resourceSet);
 
 		for (IResourceDescription res : index.getAllResourceDescriptions()) {
 			String resLocation = res.getURI().toString();
-
 			if (resLocation.startsWith(nodeModulesLocation)) {
 				addToIndex(npmsIndex, nodeModulesLocation, res, resLocation);
 			} else if (resLocation.startsWith(typeDefLocation)) {
@@ -232,14 +231,11 @@ public abstract class ExternalIndexSynchronizer {
 
 			if (pdsIter.hasNext()) {
 				IEObjectDescription pDescription = pdsIter.next();
-				String projectIdKey = PackageJsonResourceDescriptionExtension.PROJECT_ID_KEY;
-				String nameFromPackageJSON = pDescription.getUserData(projectIdKey);
-				if (!name.equals(nameFromPackageJSON)) {
-					String msg = "name mismatch: name=" + name + "; nameFromPackageJSON=" + nameFromPackageJSON;
-					throw new IllegalStateException(msg);
+				String nameFromPackageJSON = PackageJsonResourceDescriptionExtension.getProjectName(pDescription);
+				if (nameFromPackageJSON == null || name.equals(nameFromPackageJSON)) {
+					// consistency check
+					version = pDescription.getUserData(PackageJsonResourceDescriptionExtension.PROJECT_VERSION_KEY);
 				}
-
-				version = pDescription.getUserData(PackageJsonResourceDescriptionExtension.PROJECT_VERSION_KEY);
 			}
 		}
 

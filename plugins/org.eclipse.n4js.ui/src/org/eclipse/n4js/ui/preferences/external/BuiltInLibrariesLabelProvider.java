@@ -45,7 +45,7 @@ class BuiltInLibrariesLabelProvider extends LabelProvider implements IStyledLabe
 			}
 			return new File((URI) element).getAbsolutePath();
 		} else if (element instanceof IN4JSProject) {
-			return ((IN4JSProject) element).getProjectId();
+			return ((IN4JSProject) element).getProjectName();
 		}
 		return super.getText(element);
 	}
