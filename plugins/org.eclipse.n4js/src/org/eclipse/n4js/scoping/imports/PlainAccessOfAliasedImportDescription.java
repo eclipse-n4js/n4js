@@ -10,10 +10,9 @@
  */
 package org.eclipse.n4js.scoping.imports;
 
-import org.eclipse.xtext.resource.IEObjectDescription;
-
 import org.eclipse.n4js.scoping.utils.AbstractDescriptionWithError;
 import org.eclipse.n4js.validation.IssueCodes;
+import org.eclipse.xtext.resource.IEObjectDescription;
 
 /**
  * Aliased elements are contained in the scope with their real name, too to allow to validate an attempt to access them
@@ -33,12 +32,12 @@ public class PlainAccessOfAliasedImportDescription extends AbstractDescriptionWi
 
 	@Override
 	public String getMessage() {
-		return IssueCodes.getMessageForIMP_PLAIN_ACCESS_OF_ALIAS(getName(), alias);
+		return IssueCodes.getMessageForIMP_PLAIN_ACCESS_OF_ALIASED_TYPE(getName(), alias);
 	}
 
 	@Override
 	public String getIssueCode() {
-		return IssueCodes.IMP_PLAIN_ACCESS_OF_ALIAS;
+		return IssueCodes.IMP_PLAIN_ACCESS_OF_ALIASED_TYPE;
 	}
 
 }
