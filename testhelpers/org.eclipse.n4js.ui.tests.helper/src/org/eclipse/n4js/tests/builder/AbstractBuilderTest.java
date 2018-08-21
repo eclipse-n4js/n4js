@@ -211,6 +211,18 @@ public abstract class AbstractBuilderTest {
 			assertXtextIndexIsValid();
 	}
 
+	/***/
+	public void waitForIncrementalBuild() {
+		waitForAutoBuild(true);
+	}
+
+	/***/
+	public void waitForIncrementalBuild(boolean assertValidityOfXtextIndex) {
+		IResourcesSetupUtil.waitForBuild();
+		if (assertValidityOfXtextIndex)
+			assertXtextIndexIsValid();
+	}
+
 	/**
 	 * Waits for the jobs that do the housekeeping after project close or removal.
 	 */
