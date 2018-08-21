@@ -36,12 +36,14 @@ import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore.StoreUpdatedListener;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.ui.internal.ExternalProjectCacheLoader;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.resources.ExternalProject;
 import org.eclipse.n4js.validation.helper.FolderContainmentHelper;
 import org.eclipse.xtext.util.Pair;
+import org.eclipse.xtext.util.UriUtil;
 
 import com.google.common.base.Optional;
 import com.google.common.cache.CacheBuilder;
@@ -247,9 +249,35 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 		projectUriMapping = Collections.unmodifiableMap(projectUriMappingTmp);
 	}
 
-	Collection<URI> getProjectURIs() {
-		ensureInitialized();
-		return projectUriMapping.keySet();
+	/**
+	 * Like {@link IN4JSCore#findProject(URI)}, but returns the URI of the containing project. This method is
+	 * performance critical because it is called often!
+	 */
+	URI findProjectWith(URI nestedLocation) {
+		if (nestedLocation == null || nestedLocation.isEmpty() || !nestedLocation.isFile()) {
+			return null;
+		}
+		for (java.net.URI locRaw : externalLibraryPreferenceStore.getLocations()) {
+			URI loc = URI.createURI(locRaw.toString());
+			URI prefix = !loc.hasTrailingPathSeparator() ? loc.appendSegment("") : loc;
+			if (UriUtil.isPrefixOf(prefix, nestedLocation)) {
+				int oldSegmentCount = nestedLocation.segmentCount();
+				int newSegmentCount = prefix.segmentCount()
+						- 1 // -1 because of the trailing empty segment
+						+ 1; // +1 to include the project folder
+				if (newSegmentCount - 1 >= oldSegmentCount) {
+					return null; // can happen if the URI of an external library location is passed in
+				}
+				String projectNameCandidate = nestedLocation.segment(newSegmentCount - 1);
+				if (projectNameCandidate.startsWith("@")) {
+					// last segment is a folder representing an npm scope, not a project folder
+					// --> add 1 to include the actual project folder
+					++newSegmentCount;
+				}
+				return nestedLocation.trimSegments(oldSegmentCount - newSegmentCount);
+			}
+		}
+		return null;
 	}
 
 	Collection<N4JSExternalProject> getProjects() {
