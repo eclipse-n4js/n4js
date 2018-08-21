@@ -1218,7 +1218,9 @@ public class N4jscBase implements IApplication {
 	 */
 	private boolean isPerformanceDataCollectionEnabled(String... args) {
 		final List<String> arguments = Arrays.asList(args);
-		return arguments.contains("-pR") || arguments.contains("--performanceReport");
+		return arguments.contains("-pR")
+				|| arguments.contains("--performanceReport")
+				|| System.getenv(N4JSC_PERFORMANCE_REPORT_ENV) != null;
 	}
 
 	/**
