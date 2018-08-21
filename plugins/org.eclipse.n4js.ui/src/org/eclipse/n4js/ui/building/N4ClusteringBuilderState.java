@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.xtext.builder.builderState.AbstractBuilderState;
 import org.eclipse.xtext.builder.clustering.ClusteringBuilderState;
 import org.eclipse.xtext.builder.clustering.CurrentDescriptions;
@@ -243,12 +244,13 @@ class N4ClusteringBuilderState extends AbstractBuilderState {
 					buildData.queueURI(candidateURI);
 					// since the candidate is affected by any of the currently changed resources, we disable
 					// the module data of the candidate to ensure that no code will see it later on by accident
-					//
-					ResourceDescriptionWithoutModuleUserData noModuleData = new ResourceDescriptionWithoutModuleUserData(
-							candidateDescription);
-					newState.register(manager.createDelta(candidateDescription, noModuleData));
-					// also we ensure that we do run a subsequent build.
-					buildData.needRebuild();
+					if (!N4JSGlobals.PACKAGE_JSON.equals(candidateURI.lastSegment())) {
+						ResourceDescriptionWithoutModuleUserData noModuleData = new ResourceDescriptionWithoutModuleUserData(
+								candidateDescription);
+						newState.register(manager.createDelta(candidateDescription, noModuleData));
+						// also we ensure that we do run a subsequent build.
+						buildData.needRebuild();
+					}
 					iter.remove();
 				}
 			}
