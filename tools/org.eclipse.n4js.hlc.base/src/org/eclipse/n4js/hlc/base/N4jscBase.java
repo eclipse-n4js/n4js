@@ -386,7 +386,9 @@ public class N4jscBase implements IApplication {
 	public SuccessExitStatus doMain(String... args) throws ExitCodeException {
 		// Enable data collection, if arguments appear to configure performance data collection.
 		// This need to be done early, so we can start the first measurement before the arguments are parsed.
-		CollectedDataAccess.setPaused(!isPerformanceDataCollectionEnabled());
+		if (isPerformanceDataCollectionEnabled(args)) {
+			CollectedDataAccess.setPaused(false);
+		}
 
 		try (ClosableMeasurement m = headlessDataCollector
 				.getClosableMeasurement(HEADLESS_N4JS_COMPILER_COLLECTOR_NAME)) {
