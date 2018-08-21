@@ -25,6 +25,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
 import org.eclipse.n4js.json.JSON.JSONPackage;
+import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
@@ -61,7 +62,7 @@ public abstract class ExternalIndexSynchronizer {
 	private ProjectDescriptionLoader projectDescriptionLoader;
 
 	@Inject
-	private ExternalLibraryHelper externalLibraryHelper;
+	private ExternalLibraryPreferenceStore externalLibraryPreferenceStore;
 
 	/**
 	 * Call this method to synchronize the information in the Xtext index with all external projects in the external
@@ -106,10 +107,11 @@ public abstract class ExternalIndexSynchronizer {
 			return Collections.emptyMap();
 		}
 
-		for (File npmLibrary : nodeModulesFolder.listFiles()) {
-			if (!externalLibraryHelper.isExternalProjectDirectory(npmLibrary)) {
-				continue;
-			}
+		Iterable<java.net.URI> projectLocations = externalLibraryPreferenceStore
+				.convertToProjectRootLocations(Collections.singleton(nodeModulesFolder.toURI()));
+
+		for (java.net.URI npmLibraryLocation : projectLocations) {
+			final File npmLibrary = new File(npmLibraryLocation);
 			String npmName = npmLibrary.getName();
 			String version = getVersionFromPackageJSON(npmLibrary);
 			if (version != null) {
