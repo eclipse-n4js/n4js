@@ -48,7 +48,6 @@ import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.internal.MultiCleartriggerCache;
 import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.internal.RaceDetectionHelper;
-import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.smith.ClosableMeasurement;
@@ -397,15 +396,6 @@ public class ExternalLibraryBuilder {
 			protected ToBeBuilt getToBeBuilt(ToBeBuiltComputer computer, N4JSEclipseProject n4Project,
 					IProgressMonitor monitor) {
 				try {
-					// only build the project description file (package.json) for PLAINJS projects
-					if (n4Project.getProjectType() == ProjectType.PLAINJS) {
-						ToBeBuilt toBeBuilt = new ToBeBuilt();
-						if (n4Project.getProjectDescriptionLocation().isPresent()) {
-							toBeBuilt.getToBeUpdated().add(n4Project.getProjectDescriptionLocation().get());
-						}
-						return toBeBuilt;
-					}
-					// for other project types use to-be-build computer
 					return computer.updateProject(n4Project.getProject(), monitor);
 				} catch (OperationCanceledException e) {
 					throw e;
@@ -426,14 +416,6 @@ public class ExternalLibraryBuilder {
 			@Override
 			protected ToBeBuilt getToBeBuilt(ToBeBuiltComputer computer, N4JSEclipseProject n4Project,
 					IProgressMonitor monitor) {
-				// only build the project description file (package.json) for PLAINJS projects
-				if (n4Project.getProjectType() == ProjectType.PLAINJS) {
-					ToBeBuilt toBeBuilt = new ToBeBuilt();
-					if (n4Project.getProjectDescriptionLocation().isPresent()) {
-						toBeBuilt.getToBeDeleted().add(n4Project.getProjectDescriptionLocation().get());
-					}
-					return toBeBuilt;
-				}
 				return computer.removeProject(n4Project.getProject(), monitor);
 			}
 
