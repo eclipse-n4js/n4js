@@ -37,6 +37,7 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalProjectsCollector;
 import org.eclipse.n4js.external.N4JSExternalProject;
@@ -140,6 +141,12 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 						if (resource instanceof IFile) {
 							String path = new File(resource.getLocationURI()).getAbsolutePath();
 							result.add(URI.createFileURI(path));
+						}
+						// do not iterate over contents of nested node_modules folders
+						if (resource instanceof IFolder) {
+							if (resource.getName().equals(N4JSGlobals.NODE_MODULES)) {
+								return false;
+							}
 						}
 						return true;
 					});
