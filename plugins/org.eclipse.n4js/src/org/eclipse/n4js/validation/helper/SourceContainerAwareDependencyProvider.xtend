@@ -29,7 +29,7 @@ class SourceContainerAwareDependencyProvider implements DependencyProvider<IN4JS
 	 * 
 	 * @param rootNode 
 	 * 				The root node to start the traversal from.
-	 * @param ignoreExternalValidationProjects 
+	 * @param ignoreExternalPlainJsProjects 
 	 * 				Specifies whether dependency edges to external {@link ProjectType#PLAINJS} projects should
 	 * 				be excluded when traversing the dependency graph.
 	 * @param ignoreCycles
@@ -51,7 +51,8 @@ class SourceContainerAwareDependencyProvider implements DependencyProvider<IN4JS
 	
 	private static def boolean isIgnored(IN4JSProject project) {
 		return project.external && 
-			(project.projectType===ProjectType.VALIDATION || project.projectType===ProjectType.PLAINJS);
+			(project.projectType===ProjectType.VALIDATION || 
+				project.projectType===ProjectType.PLAINJS);
 	}
 
 }

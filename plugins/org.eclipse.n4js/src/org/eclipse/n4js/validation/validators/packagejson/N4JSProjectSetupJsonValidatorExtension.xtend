@@ -109,7 +109,6 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	static val RL_TYPE = anyOf(RUNTIME_LIBRARY);
 	static val TEST_TYPE = anyOf(TEST);
 	static val RE_OR_RL_TYPE = anyOf(RUNTIME_ENVIRONMENT, RUNTIME_LIBRARY);
-	static val LIB_OR_VALIDATION_OR_RL = anyOf(LIBRARY, VALIDATION, RUNTIME_LIBRARY);
 	static val DEFINITION_TYPE = anyOf(DEFINITION);
 	static val PLAINJS_TYPE = anyOf(PLAINJS);
 	
@@ -1001,17 +1000,22 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	}
 
 	/**
-	 * Returns with a new predicate instance that provides {@code true} only and if only one of the followings are true:
+	 * Returns with a new predicate instance that provides {@code true} only if the given N4JS project
+	 * may be declared a dependency of a project of type {@link ProjectType#API}.
+	 * 
+	 * More specifically the given project must fulfill one of the following requirements: 
 	 * <ul>
-	 * <li>The project type is API or</li>
+	 * <li>The project type is API.</li>
 	 * <li>The project type is library.</li>
 	 * <li>The project type is validation.</li>
+	 * <li>The project type is plainjs.</li>
+	 * <li>The project type is runtime library.</li>
 	 * </ul>
 	 * Otherwise the predicate provides {@code false} value.
 	 */
 	private def Predicate<IN4JSProject> createAPIDependenciesPredicate() {
 		return Predicates.or(API_TYPE.forN4jsProjects, 
-			[LIB_OR_VALIDATION_OR_RL.apply(projectType)]
+			[anyOf(LIBRARY, VALIDATION, RUNTIME_LIBRARY, PLAINJS).apply(projectType)]
 		);
 	}
 	

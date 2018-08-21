@@ -89,7 +89,10 @@ public enum PackageJsonProperties {
 	/** Key of package.json property "module" of property "noModuleWrap". */
 	NMW_MODULE("module", PackageJsonProperties.N4JS, PackageJsonProperties.NO_MODULE_WRAP);
 
-	/** Default for property "moduleLoader" for *other* project types than {@link ProjectType#VALIDATION VALIDATION}. */
+	/**
+	 * Default for property "moduleLoader" for *other* project types than {@link ProjectType#VALIDATION VALIDATION} and
+	 * {@link ProjectType#PLAINJS PLAINJS}.
+	 */
 	public static final ModuleLoader DEFAULT_MODULE_LOADER = ModuleLoader.N4JS;
 	/** Default for property "moduleLoader" for project type {@link ProjectType#VALIDATION VALIDATION}. */
 	public static final ModuleLoader DEFAULT_MODULE_LOADER_FOR_PLAINJS_AND_VALIDATION = ModuleLoader.COMMONJS;
