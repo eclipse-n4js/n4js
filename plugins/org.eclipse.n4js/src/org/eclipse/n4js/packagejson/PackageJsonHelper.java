@@ -318,8 +318,8 @@ public class PackageJsonHelper {
 		}
 		// module loader must be commonjs for VALIDATION projects
 		// (no need to set default in case of other project types, because this is handled by EMF)
-		if (target.getProjectType() == ProjectType.VALIDATION) {
-			target.setModuleLoader(PackageJsonProperties.DEFAULT_MODULE_LOADER_FOR_VALIDATION);
+		if (target.getProjectType() == ProjectType.VALIDATION || target.getProjectType() == ProjectType.PLAINJS) {
+			target.setModuleLoader(PackageJsonProperties.DEFAULT_MODULE_LOADER_FOR_PLAINJS_AND_VALIDATION);
 		}
 	}
 

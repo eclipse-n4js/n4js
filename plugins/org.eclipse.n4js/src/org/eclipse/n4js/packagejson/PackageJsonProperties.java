@@ -92,7 +92,7 @@ public enum PackageJsonProperties {
 	/** Default for property "moduleLoader" for *other* project types than {@link ProjectType#VALIDATION VALIDATION}. */
 	public static final ModuleLoader DEFAULT_MODULE_LOADER = ModuleLoader.N4JS;
 	/** Default for property "moduleLoader" for project type {@link ProjectType#VALIDATION VALIDATION}. */
-	public static final ModuleLoader DEFAULT_MODULE_LOADER_FOR_VALIDATION = ModuleLoader.COMMONJS;
+	public static final ModuleLoader DEFAULT_MODULE_LOADER_FOR_PLAINJS_AND_VALIDATION = ModuleLoader.COMMONJS;
 
 	/** section of the property within the package.json */
 	final public PackageJsonProperties[] parents;

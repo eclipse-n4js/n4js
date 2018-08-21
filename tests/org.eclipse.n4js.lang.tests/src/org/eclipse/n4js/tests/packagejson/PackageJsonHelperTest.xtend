@@ -292,7 +292,7 @@ class PackageJsonHelperTest {
 		assertEquals(#[], pd.moduleFilters);
 		assertEquals(#[], pd.testedProjects);
 		if (hasDefaultProjectType) {
-			assertEquals(DEFAULT_MODULE_LOADER_FOR_VALIDATION, pd.moduleLoader);
+			assertEquals(DEFAULT_MODULE_LOADER_FOR_PLAINJS_AND_VALIDATION, pd.moduleLoader);
 		} else {
 			assertEquals(DEFAULT_MODULE_LOADER, pd.moduleLoader);
 		}
