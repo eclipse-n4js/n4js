@@ -120,7 +120,7 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 		final IProject project = createJSProject(projectName, "src", "src-gen",
 				b -> b.withType(type));
 		configureProjectWithXtext(project);
-		waitForAutoBuild();
+		waitForIncrementalBuild();
 		return project;
 	}
 
@@ -175,7 +175,7 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 	protected IFile doCreateTestFile(IFolder folder, String fullName, CharSequence content) throws CoreException {
 		IFile file = folder.getFile(fullName);
 		file.create(new StringInputStream(content.toString()), true, monitor());
-		// waitForAutoBuild();
+		waitForIncrementalBuild();
 		return file;
 	}
 
@@ -240,7 +240,7 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 		fileWriter.write(newContent);
 		fileWriter.close();
 		folder.refreshLocal(IResource.DEPTH_INFINITE, monitor());
-		waitForAutoBuild();
+		waitForIncrementalBuild();
 	}
 
 	/***/
@@ -328,6 +328,7 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 
 	/***/
 	protected void setDocumentContent(String context, IFile file, XtextEditor fileEditor, String newContent) {
+		@SuppressWarnings("hiding")
 		IDirtyStateManager dirtyStateManager = this.dirtyStateManager.get();
 
 		TestEventListener eventListener = new TestEventListener(context, file);
@@ -342,13 +343,7 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 
 	/***/
 	protected void setDocumentContent(final XtextEditor xtextEditor, final String content) {
-		Display.getCurrent().syncExec(new Runnable() {
-
-			@Override
-			public void run() {
-				xtextEditor.getDocument().set(content);
-			}
-		});
+		Display.getCurrent().syncExec(() -> xtextEditor.getDocument().set(content));
 	}
 
 	/***/
