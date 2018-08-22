@@ -28,6 +28,12 @@ import org.eclipse.n4js.N4JSGlobals
 
 import static org.junit.Assert.*
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil
+import org.eclipse.n4js.resource.UserdataMapper
+import com.google.common.collect.Iterables
+import org.eclipse.n4js.ts.types.TypesPackage
+import java.io.IOException
+import org.junit.Assert
+import org.eclipse.xtext.resource.IEObjectDescription
 
 /**
  */
@@ -123,6 +129,21 @@ public class IncrementalBuilderCornerCasesPluginTest extends AbstractBuilderPart
 		assertMarkers("file should still have no errors", someClazz, 0);
 		assertMarkers("file should still have no errors", xt, 0);
 		assertMarkers("file should still have no errors", xt2, 0);
+		
+		assertAllDescriptionsHaveModuleData();
+	}
+	
+	def private void assertAllDescriptionsHaveModuleData() throws IOException {
+		var descriptions = xtextIndex.allResourceDescriptions
+		for (description : descriptions) {
+			if (N4JSGlobals.ALL_N4_FILE_EXTENSIONS.contains(description.URI.fileExtension)) {
+				var moduleDescription = description.getExportedObjectsByType(TypesPackage.Literals.TMODULE).head
+				assertNotNull(description.URI.toString, moduleDescription)
+				var moduleAsString = UserdataMapper.
+					getDeserializedModuleFromDescriptionAsString(moduleDescription, description.URI)
+				assertNotNull(description.URI.toString(), moduleAsString)
+			}
+		}
 	}
 
 	/**
@@ -191,6 +212,7 @@ public class IncrementalBuilderCornerCasesPluginTest extends AbstractBuilderPart
 		assertFalse("file M.n4js in second project should *not* be affected by change to file C.n4js in first project", rdm.isAffected(deltas, m2_rd, xtextIndex))
 
 		assertXtextIndexIsValid // now do the general Xtext index validity checking
+		assertAllDescriptionsHaveModuleData
 	}
 
 	private def IResourceDescription findFileInXtextIndex(IResourceDescriptions xtextIndex, IProject project, String fileNameIncludingExtension) {
