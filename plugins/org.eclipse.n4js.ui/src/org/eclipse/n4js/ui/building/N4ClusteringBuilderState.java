@@ -244,6 +244,9 @@ class N4ClusteringBuilderState extends AbstractBuilderState {
 					buildData.queueURI(candidateURI);
 					// since the candidate is affected by any of the currently changed resources, we disable
 					// the module data of the candidate to ensure that no code will see it later on by accident
+					// Related tests:
+					// - IncrementalBuilderCornerCasesPluginTest#testMissingReloadBug()
+					// - ReproduceInvalidIndexPluginTest
 					if (!N4JSGlobals.PACKAGE_JSON.equals(candidateURI.lastSegment())) {
 						ResourceDescriptionWithoutModuleUserData noModuleData = new ResourceDescriptionWithoutModuleUserData(
 								candidateDescription);

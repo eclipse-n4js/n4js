@@ -1,4 +1,4 @@
-package org.eclipse.n4js.tests.misc;
+package org.eclipse.n4js.dirtystate;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,7 +38,7 @@ import com.google.common.collect.Iterables;
 @SuppressWarnings("javadoc")
 public class ReproduceInvalidIndexPluginTest extends AbstractBuilderParticipantTest {
 
-	private static final int REPITITIONS = 3;
+	private static final int REPETITIONS = 3;
 
 	private static final String PROBANDS = "probands";
 	private static final String PROBANDS_SUBFOLDER = "reproduce-invalid-index";
@@ -62,7 +62,7 @@ public class ReproduceInvalidIndexPluginTest extends AbstractBuilderParticipantT
 		this.projectsToImport = projectsToImport;
 	}
 
-	@RepeatTest(times = REPITITIONS)
+	@RepeatTest(times = REPETITIONS)
 	@Test
 	public void tryToCorruptIndexWithIncrementalBuild() throws Exception {
 		importProjects(true);
@@ -72,7 +72,7 @@ public class ReproduceInvalidIndexPluginTest extends AbstractBuilderParticipantT
 		assertIndexState();
 	}
 
-	@RepeatTest(times = REPITITIONS)
+	@RepeatTest(times = REPETITIONS)
 	@Test
 	public void tryToCorruptIndexIncrementallyWithoutSubsequentAutobuild() throws Exception {
 		importProjects(true);
@@ -82,7 +82,7 @@ public class ReproduceInvalidIndexPluginTest extends AbstractBuilderParticipantT
 		assertIndexState();
 	}
 
-	@RepeatTest(times = REPITITIONS)
+	@RepeatTest(times = REPETITIONS)
 	@Test
 	public void tryToCorruptIndexWithFullBuild() throws Exception {
 		importProjects(false);
@@ -92,7 +92,7 @@ public class ReproduceInvalidIndexPluginTest extends AbstractBuilderParticipantT
 		assertIndexState();
 	}
 
-	@RepeatTest(times = REPITITIONS)
+	@RepeatTest(times = REPETITIONS)
 	@Test
 	public void tryToCorruptIndexWithoutSubsequentAutobuild() throws Exception {
 		importProjects(false);
