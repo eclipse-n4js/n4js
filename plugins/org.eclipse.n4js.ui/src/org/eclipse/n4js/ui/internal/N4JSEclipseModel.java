@@ -82,7 +82,8 @@ public class N4JSEclipseModel extends N4JSModel {
 		if (location.isFile()) {
 			project = externalLibraryWorkspace.getProject(projectName);
 			if (project == null) { // via source map
-				project = workspace.getProject(projectName);
+				project = workspace
+						.getProject(ProjectDescriptionUtils.convertN4JSProjectNameToEclipseProjectName(projectName));
 				if (project != null) { // get location newly from project to make it a platform URI
 					return getN4JSProject(project);
 				}
