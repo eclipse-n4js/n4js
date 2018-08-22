@@ -22,6 +22,8 @@ import org.eclipse.n4js.resource.N4JSResourceDescriptionManager
 import org.eclipse.n4js.resource.UserdataMapper
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
 import org.eclipse.n4js.ts.types.TypesPackage
+import org.eclipse.n4js.ui.building.BuildDataWithRequestRebuild
+import org.eclipse.n4js.ui.building.ResourceDescriptionWithoutModuleUserData
 import org.eclipse.xtext.resource.IResourceDescription
 import org.eclipse.xtext.resource.IResourceDescription.Delta
 import org.eclipse.xtext.resource.IResourceDescriptions
@@ -33,6 +35,7 @@ import org.junit.Test
 import static org.junit.Assert.*
 
 /**
+ * For more builder corner cases, see {@link ReproduceInvalidIndexPluginTest}.
  */
 public class IncrementalBuilderCornerCasesPluginTest extends AbstractBuilderParticipantTest {
 
@@ -41,38 +44,19 @@ public class IncrementalBuilderCornerCasesPluginTest extends AbstractBuilderPart
 
 	/**
 	 * This tests the bug fix of IDEBUG-347.
+	 * <p>
+	 * To make this test fail, comment out creation of {@link ResourceDescriptionWithoutModuleUserData}s in
+	 * method {@code N4ClusteringBuilderState#queueAffectedResources()}, including the subsequent invocation
+	 * of {@link BuildDataWithRequestRebuild#needRebuild() needRebuild()}.
 	 */
 	@Test
 	def void testMissingReloadBug() {
+		val project = createJSProject("Test");
+		val src2 = configureProjectWithXtext(project);
+		val projectDescriptionFile2 = project.project.getFile(N4JSGlobals.PACKAGE_JSON);
+		assertMarkers("manifest of project should have no errors", projectDescriptionFile2, 0)
 
-		// first project
-		// (contains only empty files and does not have any dependencies to/from main project,
-		// but is required to reproduce bug)
-
-		val firstProjectUnderTest = createJSProject("XBugAuxiliary")
-		val src1 = configureProjectWithXtext(firstProjectUnderTest)
-		val projectDescriptionFile1 = firstProjectUnderTest.project.getFile(N4JSGlobals.PACKAGE_JSON)
-		assertMarkers("project description file (package.json) of first project should have no errors", projectDescriptionFile1, 0)
-
-		createTestFile(src1, "A", "export class A {}")
-		createTestFile(src1, "B", "export class B {}")
-		createTestFile(src1, "C", "export class C {}")
-		createTestFile(src1, "D", "export class D {}")
-		createTestFile(src1, "E", "export class E {}")
-		createTestFile(src1, "F", "export class F {}")
-		createTestFile(src1, "G", "export class G {}")
-
-		IResourcesSetupUtil.fullBuild
-
-		// second project
-		// (main project; note that we need a nested source folder)
-
-		val secondProjectUnderTest = createJSProject("XBugMain","src/n4js","src-gen",null)
-		val src2 = configureProjectWithXtext(secondProjectUnderTest,"src/n4js")
-		val projectDescriptionFile2 = secondProjectUnderTest.project.getFile(N4JSGlobals.PACKAGE_JSON);
-		assertMarkers("manifest of second project should have no errors", projectDescriptionFile2, 0)
-
-		val someClazz = createTestFile(src2, "A", '''
+		val fileA = createTestFile(src2, "A", '''
 
 			// class XYZ {}
 
@@ -81,7 +65,7 @@ public class IncrementalBuilderCornerCasesPluginTest extends AbstractBuilderPart
 			export public class A {}
 
 		''')
-		val xt = createTestFile(src2, "B", '''
+		val fileB = createTestFile(src2, "B", '''
 
 			import { A } from "A"
 			import { C } from "C"
@@ -94,7 +78,7 @@ public class IncrementalBuilderCornerCasesPluginTest extends AbstractBuilderPart
 			t2.m(arrCC);
 
 		''')
-		val xt2 = createTestFile(src2, "C", '''
+		val fileC = createTestFile(src2, "C", '''
 
 			import { A } from "A"
 
@@ -105,13 +89,13 @@ public class IncrementalBuilderCornerCasesPluginTest extends AbstractBuilderPart
 
 		''')
 
-		IResourcesSetupUtil.fullBuild
+		IResourcesSetupUtil.fullBuild();
 
-		assertMarkers("file should have no errors", someClazz, 0);
-		assertMarkers("file should have no errors", xt, 0);
-		assertMarkers("file should have no errors", xt2, 0);
+		assertMarkers("file should have no errors", fileA, 0);
+		assertMarkers("file should have no errors", fileB, 0);
+		assertMarkers("file should have no errors", fileC, 0);
 
-		someClazz.setContents(new StringInputStream('''
+		fileA.setContents(new StringInputStream('''
 
 			class XYZ {}
 
@@ -121,15 +105,16 @@ public class IncrementalBuilderCornerCasesPluginTest extends AbstractBuilderPart
 
 		'''), true, true, new NullProgressMonitor)
 
-		IResourcesSetupUtil.fullBuild
+		// wait for the incremental build to be completed (but do not trigger a full build!)
+		IResourcesSetupUtil.waitForBuild;
 
-		assertMarkers("file should still have no errors", someClazz, 0);
-		assertMarkers("file should still have no errors", xt, 0);
-		assertMarkers("file should still have no errors", xt2, 0);
-		
+		// next line would fail if you comment out creation of ResourceDescriptionWithoutModuleUserData
+		// in N4ClusteringBuilderState#queueAffectedResources()
+		assertMarkers("file should still have no errors", fileB, 0);
+
 		assertAllDescriptionsHaveModuleData();
 	}
-	
+
 	def private void assertAllDescriptionsHaveModuleData() throws IOException {
 		var descriptions = xtextIndex.allResourceDescriptions
 		for (description : descriptions) {
