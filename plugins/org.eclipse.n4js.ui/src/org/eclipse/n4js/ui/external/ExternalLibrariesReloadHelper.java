@@ -53,7 +53,7 @@ public class ExternalLibrariesReloadHelper {
 	private ExternalProjectProvider projectProvider;
 
 	@Inject
-	private ExternalLibraryBuilder builderHelper;
+	private ExternalLibraryBuilder externalBuilder;
 
 	@Inject
 	private RebuildWorkspaceProjectsScheduler scheduler;
@@ -73,7 +73,7 @@ public class ExternalLibrariesReloadHelper {
 	public void reloadLibraries(final boolean refreshNpmDefinitions, final IProgressMonitor monitor)
 			throws InvocationTargetException {
 
-		final ISchedulingRule rule = builderHelper.getRule();
+		final ISchedulingRule rule = externalBuilder.getRule();
 		try {
 			Job.getJobManager().beginRule(rule, monitor);
 			reloadLibrariesInternal(refreshNpmDefinitions, monitor);
@@ -119,7 +119,7 @@ public class ExternalLibrariesReloadHelper {
 		final Collection<IProject> workspaceProjectsToRebuild = collector
 				.getWSProjectsDependendingOn(toBuild);
 
-		builderHelper.build(toBuild, subMonitor.newChild(1));
+		externalBuilder.build(toBuild, subMonitor.newChild(1));
 
 		scheduler.scheduleBuildIfNecessary(workspaceProjectsToRebuild);
 	}

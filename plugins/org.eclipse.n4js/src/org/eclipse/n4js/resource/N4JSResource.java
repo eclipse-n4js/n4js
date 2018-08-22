@@ -10,16 +10,17 @@
  */
 package org.eclipse.n4js.resource;
 
+import java.io.BufferedInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.internal.resources.ResourceException;
@@ -89,7 +90,9 @@ import org.eclipse.xtext.util.IResourceScopeCache;
 import org.eclipse.xtext.util.OnChangeEvictingCache;
 import org.eclipse.xtext.util.Triple;
 
+import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
+import com.google.common.io.CharStreams;
 import com.google.inject.Inject;
 
 /**
@@ -608,6 +611,14 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		}
 	}
 
+	@Override
+	protected void doLinking() {
+		if (langHelper.isOpaqueModule(this.uri)) {
+			return;
+		}
+		super.doLinking();
+	}
+
 	/**
 	 * Minor optimization, do no lazily create warnings and error objects.
 	 */
@@ -651,13 +662,13 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		}
 
 		private static String getCompleteString(InputStream inputStream) {
-			String completeString = "";
-			try (Scanner s = new Scanner(inputStream); Scanner ss = s.useDelimiter("\\A");) {
-				completeString = ss.hasNext() ? ss.next() : "";
-			} catch (Exception e) {
+			try (final InputStreamReader inputStreamReader = new InputStreamReader(new BufferedInputStream(inputStream),
+					Charsets.UTF_8)) {
+				return CharStreams.toString(inputStreamReader);
+			} catch (IOException e) {
 				LOGGER.error("Error when reading contents of JS file", e);
 			}
-			return completeString;
+			return "";
 		}
 
 		@Override
