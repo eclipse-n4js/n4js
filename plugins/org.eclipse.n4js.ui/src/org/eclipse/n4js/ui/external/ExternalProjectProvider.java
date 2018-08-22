@@ -257,6 +257,7 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 		if (nestedLocation == null || nestedLocation.isEmpty() || !nestedLocation.isFile()) {
 			return null;
 		}
+		ensureInitialized();
 		for (java.net.URI locRaw : externalLibraryPreferenceStore.getLocations()) {
 			URI loc = URI.createURI(locRaw.toString());
 			URI prefix = !loc.hasTrailingPathSeparator() ? loc.appendSegment("") : loc;
@@ -274,7 +275,11 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 					// --> add 1 to include the actual project folder
 					++newSegmentCount;
 				}
-				return nestedLocation.trimSegments(oldSegmentCount - newSegmentCount);
+				URI uriCandidate = nestedLocation.trimSegments(oldSegmentCount - newSegmentCount)
+						.trimFragment();
+				if (projectUriMapping.containsKey(uriCandidate)) {
+					return uriCandidate;
+				}
 			}
 		}
 		return null;

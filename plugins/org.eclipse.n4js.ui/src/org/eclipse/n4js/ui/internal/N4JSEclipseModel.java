@@ -77,13 +77,14 @@ public class N4JSEclipseModel extends N4JSModel {
 							+ location.segmentCount());
 		}
 
-		final String projectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location);
+		final String n4jsProjectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location);
 		IProject project;
 		if (location.isFile()) {
-			project = externalLibraryWorkspace.getProject(projectName);
+			project = externalLibraryWorkspace.getProject(n4jsProjectName);
 			if (project == null) { // via source map
-				project = workspace
-						.getProject(ProjectDescriptionUtils.convertN4JSProjectNameToEclipseProjectName(projectName));
+				String eclipseProjectName = ProjectDescriptionUtils
+						.convertN4JSProjectNameToEclipseProjectName(n4jsProjectName);
+				project = workspace.getProject(eclipseProjectName);
 				if (project != null) { // get location newly from project to make it a platform URI
 					return getN4JSProject(project);
 				}
@@ -92,7 +93,7 @@ public class N4JSEclipseModel extends N4JSModel {
 
 		} else {
 			final String eclipseProjectName = ProjectDescriptionUtils
-					.convertN4JSProjectNameToEclipseProjectName(projectName);
+					.convertN4JSProjectNameToEclipseProjectName(n4jsProjectName);
 			project = workspace.getProject(eclipseProjectName);
 		}
 		return doGetN4JSProject(project, location);
