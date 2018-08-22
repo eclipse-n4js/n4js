@@ -213,7 +213,7 @@ public abstract class AbstractBuilderTest {
 
 	/***/
 	public void waitForIncrementalBuild() {
-		waitForAutoBuild(true);
+		waitForIncrementalBuild(true);
 	}
 
 	/***/
