@@ -30,15 +30,15 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 
 /**
- * Temporary test class intended only to reproduce and investigate a problem with the Xtext index. For details, see
- * {@link #reproduceInvalidIndex()}.
+ * Yet another test that ensures a valid index after the build was run in consequence of certain simulated user
+ * interaction.
  */
 @RunWith(XtextParametrizedRunner.class)
 @InjectWith(N4JSUiInjectorProvider.class)
 @SuppressWarnings("javadoc")
 public class ReproduceInvalidIndexPluginTest extends AbstractBuilderParticipantTest {
 
-	private static final int REPITITIONS = 5;
+	private static final int REPITITIONS = 3;
 
 	private static final String PROBANDS = "probands";
 	private static final String PROBANDS_SUBFOLDER = "reproduce-invalid-index";
@@ -110,18 +110,15 @@ public class ReproduceInvalidIndexPluginTest extends AbstractBuilderParticipantT
 
 	private void importProjects(boolean incremental) throws CoreException {
 		final File testdataLocation = new File(getResourceUri(PROBANDS, PROBANDS_SUBFOLDER));
-
 		for (String projectName : projectsToImport) {
 			ProjectTestsUtils.importProject(testdataLocation, projectName);
 		}
-
 		if (incremental) {
 			// This should really be calles incrementalBuild
 			IResourcesSetupUtil.waitForBuild();
 		} else {
 			IResourcesSetupUtil.fullBuild();
 		}
-
 	}
 
 	/**
