@@ -12,9 +12,7 @@ package org.eclipse.n4js.flowgraphs.dataflow.symbols;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.IdentifierRef;
-import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
-import org.eclipse.n4js.ts.types.TVariable;
 
 /**
  * Creates {@link Symbol}s depending on the given AST element
@@ -38,17 +36,8 @@ public class SymbolOfIdentifierRef extends Symbol {
 
 	@Override
 	public EObject getDeclaration() {
-		VariableDeclaration varDecl = null;
 		IdentifiableElement id = ir.getId();
-		if (id instanceof TVariable) {
-			TVariable tvar = (TVariable) id;
-			varDecl = (VariableDeclaration) tvar.getAstElement();
-			return varDecl;
-		} else {
-			// id instanceof FormalParameter, or
-			// id instanceof VariableDeclaration
-			return id;
-		}
+		return id;
 	}
 
 	@Override
