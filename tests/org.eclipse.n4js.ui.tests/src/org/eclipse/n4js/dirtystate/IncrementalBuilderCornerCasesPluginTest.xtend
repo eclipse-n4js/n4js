@@ -11,29 +11,26 @@
 package org.eclipse.n4js.dirtystate;
 
 import com.google.inject.Inject
+import java.io.IOException
 import java.util.Collections
 import java.util.Objects
 import org.eclipse.core.resources.IProject
 import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.emf.common.util.URI
+import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.resource.N4JSResourceDescriptionManager
+import org.eclipse.n4js.resource.UserdataMapper
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
+import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.xtext.resource.IResourceDescription
 import org.eclipse.xtext.resource.IResourceDescription.Delta
 import org.eclipse.xtext.resource.IResourceDescriptions
 import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionDelta
+import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil
 import org.eclipse.xtext.util.StringInputStream
 import org.junit.Test
-import org.eclipse.n4js.N4JSGlobals
 
 import static org.junit.Assert.*
-import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil
-import org.eclipse.n4js.resource.UserdataMapper
-import com.google.common.collect.Iterables
-import org.eclipse.n4js.ts.types.TypesPackage
-import java.io.IOException
-import org.junit.Assert
-import org.eclipse.xtext.resource.IEObjectDescription
 
 /**
  */
