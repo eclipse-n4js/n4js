@@ -98,14 +98,8 @@ public class ExternalLibrariesInstallHelper {
 		measurment = dcInstallMissingDependencies.getMeasurement("Install missing dependencies");
 
 		final SubMonitor subMonitor3 = monitor.split(45);
-		externals.installNoUpdate(dependenciesToInstall, multistatus, subMonitor3);
-
-		measurment.end();
-		measurment = dcUpdateExternalLibraryWorkspace.getMeasurement("Update External Library Workspace State");
-
-		// rebuild externals & schedule full rebuild
-		final SubMonitor subMonitor4 = monitor.split(35);
-		externals.maintenanceUpateState(multistatus, subMonitor4);
+		// install dependencies and force external library workspace reload
+		externals.installNoUpdate(dependenciesToInstall, true, multistatus, subMonitor3);
 
 		measurment.end();
 		overallMeasurement.end();

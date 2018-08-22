@@ -549,7 +549,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	 */
 	private IStatus installAndUpdate(final Map<String, NPMVersionRequirement> versionedPackages,
 			final IProgressMonitor monitor) {
-		IStatus status = libManager.installNPMs(versionedPackages, monitor);
+		IStatus status = libManager.installNPMs(versionedPackages, false, monitor);
 		if (status.isOK())
 			updateInput(viewer, store.getLocations());
 
