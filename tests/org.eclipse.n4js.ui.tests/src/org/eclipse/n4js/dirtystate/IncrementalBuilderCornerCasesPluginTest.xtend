@@ -106,7 +106,7 @@ public class IncrementalBuilderCornerCasesPluginTest extends AbstractBuilderPart
 		'''), true, true, new NullProgressMonitor)
 
 		// wait for the incremental build to be completed (but do not trigger a full build!)
-		IResourcesSetupUtil.waitForBuild;
+		waitForIncrementalBuild();
 
 		// next line would fail if you comment out creation of ResourceDescriptionWithoutModuleUserData
 		// in N4ClusteringBuilderState#queueAffectedResources()

@@ -120,7 +120,7 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 		final IProject project = createJSProject(projectName, "src", "src-gen",
 				b -> b.withType(type));
 		configureProjectWithXtext(project);
-		waitForIncrementalBuild();
+		waitForAutoBuild();
 		return project;
 	}
 
@@ -175,7 +175,7 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 	protected IFile doCreateTestFile(IFolder folder, String fullName, CharSequence content) throws CoreException {
 		IFile file = folder.getFile(fullName);
 		file.create(new StringInputStream(content.toString()), true, monitor());
-		waitForIncrementalBuild();
+		waitForAutoBuild();
 		return file;
 	}
 
@@ -240,7 +240,7 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 		fileWriter.write(newContent);
 		fileWriter.close();
 		folder.refreshLocal(IResource.DEPTH_INFINITE, monitor());
-		waitForIncrementalBuild();
+		waitForAutoBuild();
 	}
 
 	/***/

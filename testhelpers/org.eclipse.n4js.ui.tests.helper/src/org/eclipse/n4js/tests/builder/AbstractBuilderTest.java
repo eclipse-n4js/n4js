@@ -211,12 +211,19 @@ public abstract class AbstractBuilderTest {
 			assertXtextIndexIsValid();
 	}
 
-	/***/
+	/**
+	 * Trigger a blocking, incremental build. This is usually to be favored over {@link #waitForAutoBuild()} since it is
+	 * a mere method call and does not involve job joining or similar troublesome stuff.
+	 */
 	public void waitForIncrementalBuild() {
-		waitForIncrementalBuild(true);
+		waitForAutoBuild(true);
 	}
 
-	/***/
+	/**
+	 * Wait for the incremental build and optionally assert the Xtext index to be valid.
+	 * 
+	 * @see #waitForIncrementalBuild()
+	 */
 	public void waitForIncrementalBuild(boolean assertValidityOfXtextIndex) {
 		IResourcesSetupUtil.waitForBuild();
 		if (assertValidityOfXtextIndex)
