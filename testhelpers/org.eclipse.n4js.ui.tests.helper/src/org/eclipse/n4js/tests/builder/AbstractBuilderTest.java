@@ -31,6 +31,7 @@ import org.eclipse.n4js.N4JSUiInjectorProvider;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
 import org.eclipse.n4js.tests.util.EclipseUIUtils;
+import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.ui.building.CloseProjectTaskScheduler;
 import org.eclipse.n4js.ui.building.ResourceDescriptionWithoutModuleUserData;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildScheduler;
@@ -203,7 +204,11 @@ public abstract class AbstractBuilderTest {
 
 	/***/
 	public void waitForAutoBuild(boolean assertValidityOfXtextIndex) {
-		waitForIncrementalBuild(assertValidityOfXtextIndex);
+		waitForNotReallyBuildButHousekeepingJobs();
+		ProjectTestsUtils.waitForAutoBuild();
+		ProjectTestsUtils.waitForAllJobs();
+		if (assertValidityOfXtextIndex)
+			assertXtextIndexIsValid();
 	}
 
 	/**
@@ -211,7 +216,7 @@ public abstract class AbstractBuilderTest {
 	 * a mere method call and does not involve job joining or similar troublesome stuff.
 	 */
 	public void waitForIncrementalBuild() {
-		waitForAutoBuild(true);
+		waitForIncrementalBuild(true);
 	}
 
 	/**
