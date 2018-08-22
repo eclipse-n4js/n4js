@@ -14,8 +14,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -31,7 +34,10 @@ import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.utils.ProcessExecutionCommandStatus;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.StatusHelper;
+import org.eclipse.xtext.util.Pair;
+import org.eclipse.xtext.util.Tuples;
 
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -122,21 +128,51 @@ public class NpmCLI {
 
 		final String jobName = addressedType.name().toLowerCase();
 
-		int i = 0;
-		for (LibraryChange reqChg : requestedChanges) {
-			if (subMonitor.isCanceled())
-				throw new OperationCanceledException("Operation <" + jobName + "> was canceled.");
-
-			if (reqChg.type == addressedType) {
-				String msgTail = " [package " + i++ + " of " + pckCount + "]";
-				subMonitor.setTaskName(reqChg.toString() + msgTail);
-				LibraryChange actChg = installUninstall(batchStatus, installPath, reqChg);
-				if (actChg != null) {
-					actualChanges.add(actChg);
+		if (addressedType == LibraryChangeType.Install) {
+			// for installation, we invoke npm only once for all packages
+			final List<Pair<String, String>> packageNamesAndVersions = Lists.newArrayList();
+			for (LibraryChange reqChg : requestedChanges) {
+				if (reqChg.type == addressedType) {
+					packageNamesAndVersions.add(
+							Tuples.pair(reqChg.name, "@" + reqChg.version));
 				}
-				subMonitor.worked(1);
-				if (!batchStatus.isOK()) {
-					break; // fail fast and do not let the user wait for the problem
+			}
+			IStatus installStatus = install(packageNamesAndVersions, installPath);
+			if (installStatus == null || !installStatus.isOK()) {
+				batchStatus.merge(installStatus);
+			} else {
+				String nodeModulesFolder = TargetPlatformInstallLocationProvider.NODE_MODULES_FOLDER;
+				Path basePath = installPath.toPath().resolve(nodeModulesFolder);
+				for (LibraryChange reqChg : requestedChanges) {
+					if (reqChg.type == addressedType) {
+						Path completePath = basePath.resolve(reqChg.name);
+						String actualVersion = getActualVersion(batchStatus, reqChg, completePath);
+						URI actualLocation = URI.createFileURI(completePath.toString());
+						LibraryChange actualChange = new LibraryChange(LibraryChangeType.Added, actualLocation,
+								reqChg.name, actualVersion);
+						actualChanges.add(actualChange);
+					}
+				}
+			}
+		} else {
+			// for all library change types other than installation, we invoke npm once per package
+			// FIXME invoke npm only once also when uninstalling and updating
+			int i = 0;
+			for (LibraryChange reqChg : requestedChanges) {
+				if (subMonitor.isCanceled())
+					throw new OperationCanceledException("Operation <" + jobName + "> was canceled.");
+
+				if (reqChg.type == addressedType) {
+					String msgTail = " [package " + i++ + " of " + pckCount + "]";
+					subMonitor.setTaskName(reqChg.toString() + msgTail);
+					LibraryChange actChg = installUninstall(batchStatus, installPath, reqChg);
+					if (actChg != null) {
+						actualChanges.add(actChg);
+					}
+					subMonitor.worked(1);
+					if (!batchStatus.isOK()) {
+						break; // fail fast and do not let the user wait for the problem
+					}
 				}
 			}
 		}
@@ -158,7 +194,9 @@ public class NpmCLI {
 		LibraryChangeType actualChangeType = null;
 		String actualVersion = "";
 		if (reqChg.type == LibraryChangeType.Install) {
-			packageProcessingStatus = install(reqChg.name, "@" + reqChg.version, installPath);
+			packageProcessingStatus = install(
+					Collections.singletonList(Tuples.pair(reqChg.name, "@" + reqChg.version)),
+					installPath);
 
 			if (packageProcessingStatus == null || !packageProcessingStatus.isOK()) {
 				batchStatus.merge(packageProcessingStatus);
@@ -207,32 +245,40 @@ public class NpmCLI {
 	 * there is no package.json at that location npm errors will be logged to the error log. In that case npm usual
 	 * still installs requested dependency (if possible).
 	 *
-	 * @param packageName
+	 * @param packageNamesAndVersions
 	 *            to be installed
 	 * @param installPath
 	 *            path where package is supposed to be installed
 	 */
-	private IStatus install(String packageName, String packageVersion, File installPath) {
-		if (invalidPackageName(packageName)) {
-			return statusHelper.createError("Malformed npm package name: '" + packageName + "'.");
-		}
-		if (invalidPackageVersion(packageVersion)) {
-			return statusHelper.createError("Malformed npm package version: '" + packageVersion + "'.");
-		}
+	private IStatus install(List<Pair<String, String>> packageNamesAndVersions, File installPath) {
+		List<String> packageNamesAndVersionsMerged = new ArrayList<>(packageNamesAndVersions.size());
+		for (Pair<String, String> pair : packageNamesAndVersions) {
+			String packageName = pair.getFirst();
+			String packageVersion = pair.getSecond();
 
-		// TODO IDE-3136 / GH-1011 workaround for missing support of GitHub version requirements
-		NPMVersionRequirement packageVersionParsed = semverHelper.parse(packageVersion.substring(1));
-		if (packageVersionParsed instanceof GitHubVersionRequirement) {
-			// In case of a dependency like "JSONSelect@dbo/JSONSelect" (wherein "dbo/JSONSelect"
-			// is a GitHub version requirement), we only report "JSONSelect@" to npm. For details
-			// why this is necessary, see GH-1011.
-			packageVersion = "@";
-		}
+			// FIXME better error reporting (show all invalid names/versions, not just the first)
+			if (invalidPackageName(packageName)) {
+				return statusHelper.createError("Malformed npm package name: '" + packageName + "'.");
+			}
+			if (invalidPackageVersion(packageVersion)) {
+				return statusHelper.createError("Malformed npm package version: '" + packageVersion + "'.");
+			}
 
-		String nameAndVersion = packageVersion.isEmpty() ? packageName : packageName + packageVersion;
+			// TODO IDE-3136 / GH-1011 workaround for missing support of GitHub version requirements
+			NPMVersionRequirement packageVersionParsed = semverHelper.parse(packageVersion.substring(1));
+			if (packageVersionParsed instanceof GitHubVersionRequirement) {
+				// In case of a dependency like "JSONSelect@dbo/JSONSelect" (wherein "dbo/JSONSelect"
+				// is a GitHub version requirement), we only report "JSONSelect@" to npm. For details
+				// why this is necessary, see GH-1011.
+				packageVersion = "@";
+			}
+
+			String nameAndVersion = packageVersion.isEmpty() ? packageName : packageName + packageVersion;
+			packageNamesAndVersionsMerged.add(nameAndVersion);
+		}
 
 		return executor.execute(
-				() -> commandFactory.createInstallPackageCommand(installPath, nameAndVersion, true),
+				() -> commandFactory.createInstallPackageCommand(installPath, packageNamesAndVersionsMerged, true),
 				"Error while installing npm package.");
 	}
 
