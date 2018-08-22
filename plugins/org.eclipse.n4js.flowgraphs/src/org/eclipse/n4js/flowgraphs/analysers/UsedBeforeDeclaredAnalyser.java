@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.eclipse.n4js.flowgraphs.analysis.FastFlowVisitor;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
+import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
@@ -39,6 +40,19 @@ public class UsedBeforeDeclaredAnalyser extends FastFlowVisitor {
 		}
 	}
 
+	static class CVExportedVarLocationDataEntry extends CVLocationDataEntry {
+
+		CVExportedVarLocationDataEntry(ExportedVariableDeclaration cfe) {
+			super(cfe);
+		}
+
+		@Override
+		public Object getKey() {
+			return ((ExportedVariableDeclaration) cfe).getDefinedVariable();
+		}
+
+	}
+
 	/** @return all {@link IdentifierRef}s that are used before declared */
 	public List<IdentifierRef> getUsedButNotDeclaredIdentifierRefs() {
 		List<IdentifierRef> idRefs = new LinkedList<>();
@@ -57,7 +71,11 @@ public class UsedBeforeDeclaredAnalyser extends FastFlowVisitor {
 			if (userData != null) {
 				userData.idRefs.clear();
 			} else {
-				currentBranch.activate(new CVLocationDataEntry(cfe));
+				if (cfe instanceof ExportedVariableDeclaration) {
+					currentBranch.activate(new CVExportedVarLocationDataEntry((ExportedVariableDeclaration) cfe));
+				} else {
+					currentBranch.activate(new CVLocationDataEntry(cfe));
+				}
 			}
 
 		} else if (cfe instanceof IdentifierRef) {
