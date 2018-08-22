@@ -479,7 +479,8 @@ public class ProjectTestsUtils {
 				LOGGER.info(sj.toString());
 			}
 			if (!(wasCancelled == true || wasInterrupted == true))
-				throw new TimeoutRuntimeException("Expected no jobs, found " + foundJobs.size() + " after " + sw + ".");
+				throw new TimeoutRuntimeException(
+						"Expected no jobs, found " + foundJobs.size() + " after " + sw + ". " + foundJobs);
 		}
 	}
 
