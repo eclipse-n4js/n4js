@@ -272,7 +272,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 		for (N4JSExternalProject project : allProjectsToClean) {
 			toBeWiped.add(URIUtils.toFileUri(project.getLocationURI()));
 		}
-		builder.wipeIndex(monitor, toBeWiped);
+		builder.wipeURIsFromIndex(monitor, toBeWiped);
 	}
 
 	private RegisterResult registerProjectsInternal(IProgressMonitor monitor, Set<URI> toBeUpdated) {

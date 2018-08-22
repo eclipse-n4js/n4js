@@ -21,6 +21,7 @@ import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.ts.utils.TypeHelper;
+import org.eclipse.n4js.utils.N4JSLanguageHelper;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.DerivedStateAwareResourceDescriptionManager;
@@ -60,6 +61,9 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 	@Inject
 	private FileExtensionTypeHelper fileExtensionTypeHelper;
 
+	@Inject
+	private N4JSLanguageHelper langHelper;
+
 	@Override
 	protected IResourceDescription createResourceDescription(final Resource resource,
 			IDefaultResourceDescriptionStrategy strategy) {
@@ -90,6 +94,13 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 	@Override
 	public boolean isAffected(Collection<IResourceDescription.Delta> deltas, IResourceDescription candidate,
 			IResourceDescriptions context) {
+
+		// Opaque modules cannot contain any references to one of the deltas.
+		// Thus, they will never be affected by any change.
+		if (langHelper.isOpaqueModule(candidate.getURI())) {
+			return false;
+		}
+
 		boolean result = basicIsAffected(deltas, candidate);
 		if (!result) {
 			for (IResourceDescription.Delta delta : deltas) {
