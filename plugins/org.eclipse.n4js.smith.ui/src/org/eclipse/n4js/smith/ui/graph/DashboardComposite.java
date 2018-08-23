@@ -10,6 +10,9 @@
  */
 package org.eclipse.n4js.smith.ui.graph;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -17,6 +20,9 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelection;
@@ -26,6 +32,7 @@ import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.n4js.smith.CollectedDataAccess;
+import org.eclipse.n4js.smith.DataCollectorCSVExporter;
 import org.eclipse.n4js.smith.ui.Activator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -39,6 +46,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
@@ -79,12 +87,12 @@ public class DashboardComposite extends Composite {
 
 	/** Creates are that allows for controlling this visualization, e.g. tool bar, list of snapshots, etc. */
 	private void createVisualisationControls(Composite parent) {
-		Composite composite = new Composite(parent, SWT.NONE);
+		Composite composite = new Composite(parent, SWT.H_SCROLL);
 		composite.setLayout(new GridLayout());
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, true));
 
 		// tool bar
-		ToolBar bar = new ToolBar(composite, SWT.NONE);
+		ToolBar bar = new ToolBar(composite, SWT.HORIZONTAL);
 		bar.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
 		createToolbarActions(bar);
 
@@ -119,6 +127,11 @@ public class DashboardComposite extends Composite {
 				"Take a data snapshot.",
 				Activator.getInstance().ICON_SNAPSHOT,
 				this::takeSnapshot);
+		createAction(bar, SWT.PUSH,
+				"Snapshot and Save",
+				"Take a data snapshot and save it as CSV file.",
+				Activator.getInstance().ICON_SNAPSHOT_SAVE,
+				this::takeSnapshotAndSave);
 		createAction(bar, SWT.PUSH,
 				"Delete",
 				"Delete selected snapshots from history.",
@@ -202,6 +215,44 @@ public class DashboardComposite extends Composite {
 		if (obj instanceof VisualisationSnapshot)
 			return (VisualisationSnapshot) obj;
 		return null;
+	}
+
+	private void takeSnapshotAndSave() {
+		// first attempt to save CSV file
+		if (saveCSVFileOfSnapshot()) {
+			// only create snapshot in UI, if saving was successful
+			this.takeSnapshot();
+		}
+	}
+
+	private boolean saveCSVFileOfSnapshot() {
+		final FileDialog fileDialog = new FileDialog(this.getShell(), SWT.SAVE);
+		fileDialog.setFilterNames(new String[] { "CSV (comma-separated value) files (*.csv)" });
+		fileDialog.setFilterExtensions(new String[] { "*.csv" });
+		fileDialog.setFileName(getTimeStamp() + ".csv");
+
+		final String filePath = fileDialog.open();
+
+		// user cancelled
+		if (filePath == null) {
+			return false;
+		}
+
+		final File outputFile = new File(filePath);
+
+		try (FileWriter writer = new FileWriter(outputFile)) {
+			final String csvData = DataCollectorCSVExporter.toCSV(key);
+			writer.write(csvData);
+		} catch (IOException e) {
+			// inform user about failure and abort snapshot
+			ErrorDialog.openError(this.getShell(), "Failed to save CSV file",
+					"Could not save CSV file at specified location " + filePath,
+					new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Failed to save CSV file with performance data.",
+							e));
+			return false;
+		}
+
+		return true;
 	}
 
 	private void takeSnapshot() {
