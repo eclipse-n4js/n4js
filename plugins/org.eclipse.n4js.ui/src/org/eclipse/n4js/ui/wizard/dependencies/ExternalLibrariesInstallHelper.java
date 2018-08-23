@@ -48,9 +48,6 @@ public class ExternalLibrariesInstallHelper {
 	private static final DataCollector dcInstallMissingDependencies = DataCollectors.INSTANCE
 			.getOrCreateDataCollector("Install missing dependencies", "External Libraries Install Helper");
 
-	private static final DataCollector dcUpdateExternalLibraryWorkspace = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Update External Library Workspace State", "External Libraries Install Helper");
-
 	@Inject
 	private ProjectDependenciesHelper dependenciesHelper;
 
