@@ -99,7 +99,7 @@ public class ProjectTestsUtils {
 	 * Imports a project into the running JUnit test workspace. Usage:
 	 *
 	 * <pre>
-	 * IProject project = ProjectUtils.importProject(new File(&quot;probands&quot;), &quot;TestProject&quot;);
+	 * IProject project = ProjectTestsUtils.importProject(new File(&quot;probands&quot;), &quot;TestProject&quot;);
 	 * </pre>
 	 *
 	 * @param probandsFolder
@@ -227,7 +227,27 @@ public class ProjectTestsUtils {
 			}
 		}, monitor);
 
+		waitLongForAllJobs();
+
 		return project;
+	}
+
+	// TODO IDE-3141 remove this temporary work-around for random test failures due to invalid index
+	@SuppressWarnings("javadoc")
+	public static void waitLongForAllJobs() {
+		for (int i = 0; i < 5; i++) {
+			sleep(200);
+			UIUtils.waitForUiThread();
+			waitForAllJobs();
+		}
+	}
+
+	private static void sleep(long millis) {
+		try {
+			Thread.sleep(millis);
+		} catch (InterruptedException e) {
+			throw new WrappedException(e);
+		}
 	}
 
 	/**

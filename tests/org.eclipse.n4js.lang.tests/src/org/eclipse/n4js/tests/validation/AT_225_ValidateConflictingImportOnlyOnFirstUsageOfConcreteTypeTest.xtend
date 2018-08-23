@@ -277,7 +277,7 @@ class AT_225_ValidateConflictingImportOnlyOnFirstUsageOfConcreteTypeTest {
 			import { X as XXX } from 'a/X';
 			var x: X;
 		'''.parse(rs)
-		script.assertError(TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF, IssueCodes.IMP_PLAIN_ACCESS_OF_ALIAS, "X has been imported as XXX.")
+		script.assertError(TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF, IssueCodes.IMP_PLAIN_ACCESS_OF_ALIASED_TYPE, "X has been imported as XXX.")
 	}
 
 	@Test
@@ -286,7 +286,7 @@ class AT_225_ValidateConflictingImportOnlyOnFirstUsageOfConcreteTypeTest {
 			import *  as N from 'a/X';
 			var x: X;
 		'''.parse(rs)
-		script.assertError(TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF, IssueCodes.IMP_PLAIN_ACCESS_OF_NAMESPACED, "X has been imported as N.X.")
+		script.assertError(TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF, IssueCodes.IMP_PLAIN_ACCESS_OF_NAMESPACED_TYPE, "X has been imported as N.X.")
 	}
 
 }
