@@ -18,6 +18,24 @@ import org.junit.runners.model.Statement;
  * Test rule used along with {@link RepeatTest} to let a test loop for a couple of rounds.
  */
 public class RepeatedTestRule implements TestRule {
+
+	private final boolean quiet;
+
+	/**
+	 * @param quiet
+	 *            set to true if log output is desired
+	 */
+	public RepeatedTestRule(boolean quiet) {
+		this.quiet = quiet;
+	}
+
+	/**
+	 * Creates a quiet test rule.
+	 */
+	public RepeatedTestRule() {
+		this(true);
+	}
+
 	@Override
 	public Statement apply(Statement statement, Description description) {
 		RepeatTest repeat = description.getAnnotation(RepeatTest.class);
@@ -25,7 +43,7 @@ public class RepeatedTestRule implements TestRule {
 			repeat = description.getTestClass().getAnnotation(RepeatTest.class);
 		}
 		if (repeat != null) {
-			return new RepeatableTestStatement(repeat.times(), statement);
+			return new RepeatableTestStatement(repeat.times(), statement, quiet);
 		}
 		return statement;
 	}
