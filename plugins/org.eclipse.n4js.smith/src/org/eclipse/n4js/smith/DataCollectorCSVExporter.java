@@ -10,6 +10,9 @@
  */
 package org.eclipse.n4js.smith;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -39,6 +42,30 @@ public class DataCollectorCSVExporter {
 		final String dataRow = data.stream().collect(Collectors.joining(";"));
 
 		return headerRow + "\n" + dataRow;
+	}
+
+	/**
+	 * Exports a CSV representation of all the data captured under the given {@code key} and saves it to the given
+	 * {@code file}.
+	 */
+	public static void toFile(File file, String key) throws IOException {
+		final File parentFolder = file.getParentFile();
+
+		if (parentFolder != null) {
+			if (parentFolder.exists() && !parentFolder.isDirectory()) {
+				throw new IllegalStateException("Failed to store collected data to file " + file.getAbsolutePath()
+						+ ": Parent folder" + parentFolder.getAbsolutePath() + " is not a directory.");
+			}
+
+			// if required, create parent file hierarchy
+			if (!parentFolder.exists()) {
+				parentFolder.mkdirs();
+			}
+		}
+
+		try (FileWriter writer = new FileWriter(file)) {
+			writer.write(toCSV(key));
+		}
 	}
 
 	/** Recursively collects all child data series of the given {@code series}. */

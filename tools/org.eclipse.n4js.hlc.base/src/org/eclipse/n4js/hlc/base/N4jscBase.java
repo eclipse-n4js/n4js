@@ -24,7 +24,6 @@ import static org.eclipse.n4js.utils.git.GitUtils.pull;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -387,7 +386,9 @@ public class N4jscBase implements IApplication {
 	public SuccessExitStatus doMain(String... args) throws ExitCodeException {
 		// Enable data collection, if arguments appear to configure performance data collection.
 		// This need to be done early, so we can start the first measurement before the arguments are parsed.
-		CollectedDataAccess.setPaused(!isPerformanceDataCollectionEnabled());
+		if (isPerformanceDataCollectionEnabled(args)) {
+			CollectedDataAccess.setPaused(false);
+		}
 
 		try (ClosableMeasurement m = headlessDataCollector
 				.getClosableMeasurement(HEADLESS_N4JS_COMPILER_COLLECTOR_NAME)) {
@@ -552,7 +553,7 @@ public class N4jscBase implements IApplication {
 			}
 
 			// check for performance data collection system environment variable
-			if (performanceReport != null && System.getenv(N4JSC_PERFORMANCE_REPORT_ENV) != null) {
+			if (performanceReport == null && System.getenv(N4JSC_PERFORMANCE_REPORT_ENV) != null) {
 				final String rawPath = System.getenv(N4JSC_PERFORMANCE_REPORT_ENV);
 				final File performanceReportFile = new File(rawPath);
 				this.performanceReport = performanceReportFile;
@@ -1219,7 +1220,9 @@ public class N4jscBase implements IApplication {
 	 */
 	private boolean isPerformanceDataCollectionEnabled(String... args) {
 		final List<String> arguments = Arrays.asList(args);
-		return arguments.contains("-pR") || arguments.contains("--performanceReport");
+		return arguments.contains("-pR")
+				|| arguments.contains("--performanceReport")
+				|| System.getenv(N4JSC_PERFORMANCE_REPORT_ENV) != null;
 	}
 
 	/**
@@ -1228,12 +1231,12 @@ public class N4jscBase implements IApplication {
 	 */
 	private void writePerformanceReport() throws ExitCodeException {
 		if (this.performanceReport != null) {
-			final String csv = DataCollectorCSVExporter.toCSV(performanceKey);
 			System.out.println(
 					"Writing performance report to " + this.performanceReport.toPath().toAbsolutePath().toString());
-			try (FileWriter writer = new FileWriter(performanceReport)) {
-				writer.write(csv);
+			try {
+				DataCollectorCSVExporter.toFile(this.performanceReport, performanceKey);
 			} catch (IOException e) {
+				e.printStackTrace();
 				throw new ExitCodeException(ErrorExitCode.EXITCODE_PERFORMANCE_REPORT_COULD_NOT_BE_WRITTEN);
 			}
 		}
