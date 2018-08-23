@@ -665,7 +665,7 @@ public class TestResultsView extends ViewPart {
 				new TestTreeViewerContentProvider())
 						.setUseHashlookup(true)
 						.setLinesVisible(false).setLabelProvider(new TestTreeViewerLabelProvider())
-						.setColumnWeights(asList(5, 2, 01)).build(sashForm);
+						.setColumnWeights(asList(5, 2, 1)).build(sashForm);
 		installToolTipSupport(testTreeViewer.getTree());
 		viewFilterHelper = new TestViewFilterHelper(testTreeViewer);
 
