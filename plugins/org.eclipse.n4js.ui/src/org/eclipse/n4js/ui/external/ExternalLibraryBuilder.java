@@ -520,12 +520,12 @@ public class ExternalLibraryBuilder {
 
 			ToBeBuilt toBeBuilt = getToBeBuilt(computer, n4EclPrj, computeMonitor, contribution);
 
-			if (toBeBuilt.getToBeDeleted().isEmpty() && toBeBuilt.getToBeUpdated().isEmpty()) {
-				subMonitor.newChild(1, SUPPRESS_NONE).worked(1);
-				return;
-			}
-
 			try {
+				if (toBeBuilt.getToBeDeleted().isEmpty() && toBeBuilt.getToBeUpdated().isEmpty()) {
+					subMonitor.newChild(1, SUPPRESS_NONE).worked(1);
+					return;
+				}
+
 				IN4JSCore core = helper.core;
 				QueuedBuildData queuedBuildData = helper.queuedBuildData;
 				IBuilderState builderState = helper.builderState;
