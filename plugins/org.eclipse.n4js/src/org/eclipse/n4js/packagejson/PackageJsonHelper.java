@@ -194,10 +194,6 @@ public class PackageJsonHelper {
 			case DEFINES_PACKAGE:
 				target.setDefinesPackage(asStringOrNull(value));
 				break;
-			case TYPE_DEPENDENCIES:
-				// in the context of N4JS, type dependencies are considered regular project dependencies
-				convertDependencies(target, asNameValuePairsOrEmpty(value), true, DependencyType.TYPE);
-				break;
 
 			default:
 				break;

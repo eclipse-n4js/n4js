@@ -32,7 +32,6 @@ import static org.eclipse.n4js.packagejson.PackageJsonProperties.PROVIDED_RUNTIM
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.REQUIRED_RUNTIME_LIBRARIES;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.SOURCES;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.TESTED_PROJECTS;
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.TYPE_DEPENDENCIES;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.VENDOR_ID;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.VENDOR_NAME;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.VERSION;
@@ -327,12 +326,6 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	@CheckProperty(property = DEV_DEPENDENCIES)
 	public void checkDevDependenciesStructure(JSONValue devDependenciesValue) {
 		checkIsDependenciesSection(devDependenciesValue);
-	}
-
-	/** Check the typeDependencies section structure. */
-	@CheckProperty(property = TYPE_DEPENDENCIES)
-	public void checkTypeDependenciesStructure(JSONValue typeDependenciesValue) {
-		checkIsDependenciesSection(typeDependenciesValue);
 	}
 
 	/**

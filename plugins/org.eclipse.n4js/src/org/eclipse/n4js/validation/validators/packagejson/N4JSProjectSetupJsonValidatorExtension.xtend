@@ -109,7 +109,6 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	static val RL_TYPE = anyOf(RUNTIME_LIBRARY);
 	static val TEST_TYPE = anyOf(TEST);
 	static val RE_OR_RL_TYPE = anyOf(RUNTIME_ENVIRONMENT, RUNTIME_LIBRARY);
-	static val DEFINITION_TYPE = anyOf(DEFINITION);
 	static val PLAINJS_TYPE = anyOf(PLAINJS);
 	
 
@@ -550,58 +549,6 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			}
 
 			stack.addAll(actualDirectDependencies.filter[external]);
-		}
-	}
-	
-	/**
-	 * Validates the dedicated dependencies section for type definition dependencies.
-	 */
-	@CheckProperty(property = TYPE_DEPENDENCIES)
-	def void checkTypeDependencies(JSONValue typeDependenciesValue) {
-		if (!checkFeatureRestrictions("type dependencies", typeDependenciesValue, not(DEFINITION_TYPE))) {
-			return;
-		}
-		
-		val references = getReferencesFromDependenciesObject(typeDependenciesValue);
-		
-		// check references to be of 'definition' type only
-		checkReferencedProjects(references, DEFINITION_TYPE.forN4jsProjects, "typeDependencies", false, false);
-		
-		val dependenciesById = getDependencies(true).toMap(
-			[dep | dep.referencedProjectName], [dep | dep]);
-		
-		for (reference : references) {
-			internalCheckForRuntimeDependencyForDefinitionProjects(reference, dependenciesById);
-		} 
-	}
-	
-	/**
-	 * Checks that the project description also declares a dependency on the implementation component of 
-	 * the given type definition project ({code reference}).
-	 * 
-	 * Does nothing if {@code project} is not of type {@link ProjectType#DEFINTION}. 
-	 */
-	private def internalCheckForRuntimeDependencyForDefinitionProjects(ValidationProjectReference reference,
-		Map<String, ValidationProjectReference> declaredDependencyIds) {
-		val n4jsProject = allExistingProjectNames.get(reference.getReferencedProjectName());
-		
-		// defensive null-check
-		if (n4jsProject === null) {
-			return;
-		}
-		
-		if (n4jsProject.projectType != ProjectType.DEFINITION) {
-			return;
-		}
-		val definesPackage = n4jsProject.definesPackageName;
-		if (definesPackage === null) {
-			return;
-		}
-		
-		// check corresponding runtime dependency has been declared
-		if (!declaredDependencyIds.containsKey(definesPackage)) {
-			addIssue(IssueCodes.getMessageForPKGJ_IMPL_PROJECT_IS_MISSING_FOR_TYPE_DEF(definesPackage, reference.referencedProjectName),
-				reference.astRepresentation, IssueCodes.PKGJ_IMPL_PROJECT_IS_MISSING_FOR_TYPE_DEF);
 		}
 	}
 
