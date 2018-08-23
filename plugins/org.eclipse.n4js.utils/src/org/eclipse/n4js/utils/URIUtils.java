@@ -53,6 +53,13 @@ public class URIUtils {
 	}
 
 	/**
+	 * Tells if the given URI is of the form <code>platform:/resource/EclipseProjectName</code>.
+	 */
+	static public boolean isPlatformResourceUriPointingToProject(org.eclipse.emf.common.util.URI uri) {
+		return uri.isPlatformResource() && uri.segmentCount() == 2; // n.b. "resource" counts as a segment
+	}
+
+	/**
 	 * Given the location of an N4JS project on disk, this method returns a
 	 * {@link org.eclipse.emf.common.util.URI#isFile() file URI}, as used internally to uniquely identify N4JS projects.
 	 * <p>

@@ -232,12 +232,10 @@ public abstract class ExternalIndexSynchronizer {
 			if (pdsIter.hasNext()) {
 				IEObjectDescription pDescription = pdsIter.next();
 				String nameFromPackageJSON = PackageJsonResourceDescriptionExtension.getProjectName(pDescription);
-				if (!name.equals(nameFromPackageJSON)) {
-					String msg = "name mismatch: name=" + name + "; nameFromPackageJSON=" + nameFromPackageJSON;
-					throw new IllegalStateException(msg);
+				if (nameFromPackageJSON == null || name.equals(nameFromPackageJSON)) {
+					// consistency check
+					version = pDescription.getUserData(PackageJsonResourceDescriptionExtension.PROJECT_VERSION_KEY);
 				}
-
-				version = pDescription.getUserData(PackageJsonResourceDescriptionExtension.PROJECT_VERSION_KEY);
 			}
 		}
 

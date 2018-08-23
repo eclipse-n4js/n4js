@@ -10,10 +10,9 @@
  */
 package org.eclipse.n4js.scoping.imports;
 
-import org.eclipse.xtext.resource.IEObjectDescription;
-
 import org.eclipse.n4js.scoping.utils.AbstractDescriptionWithError;
 import org.eclipse.n4js.validation.IssueCodes;
+import org.eclipse.xtext.resource.IEObjectDescription;
 
 /**
  * Namespaced elements are contained in the scope with their exported name to allow validation of an attempt to access
@@ -33,12 +32,12 @@ public class PlainAccessOfNamespacedImportDescription extends AbstractDescriptio
 
 	@Override
 	public String getMessage() {
-		return IssueCodes.getMessageForIMP_PLAIN_ACCESS_OF_NAMESPACED(getName(), namespacedName);
+		return IssueCodes.getMessageForIMP_PLAIN_ACCESS_OF_NAMESPACED_TYPE(getName(), namespacedName);
 	}
 
 	@Override
 	public String getIssueCode() {
-		return IssueCodes.IMP_PLAIN_ACCESS_OF_NAMESPACED;
+		return IssueCodes.IMP_PLAIN_ACCESS_OF_NAMESPACED_TYPE;
 	}
 
 	/**
