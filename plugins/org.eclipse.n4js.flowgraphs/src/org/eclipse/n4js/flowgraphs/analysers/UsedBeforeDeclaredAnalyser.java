@@ -27,30 +27,19 @@ import org.eclipse.n4js.ts.types.IdentifiableElement;
 public class UsedBeforeDeclaredAnalyser extends FastFlowVisitor {
 
 	static class CVLocationDataEntry extends ActivationLocation {
-		final ControlFlowElement cfe;
+		final Object cfe;
 		final List<IdentifierRef> idRefs = new LinkedList<>();
 
 		CVLocationDataEntry(ControlFlowElement cfe) {
-			this.cfe = cfe;
+			this.cfe = cfe instanceof ExportedVariableDeclaration
+					? ((ExportedVariableDeclaration) cfe).getDefinedVariable()
+					: cfe;
 		}
 
 		@Override
 		public Object getKey() {
 			return cfe;
 		}
-	}
-
-	static class CVExportedVarLocationDataEntry extends CVLocationDataEntry {
-
-		CVExportedVarLocationDataEntry(ExportedVariableDeclaration cfe) {
-			super(cfe);
-		}
-
-		@Override
-		public Object getKey() {
-			return ((ExportedVariableDeclaration) cfe).getDefinedVariable();
-		}
-
 	}
 
 	/** @return all {@link IdentifierRef}s that are used before declared */
@@ -67,17 +56,13 @@ public class UsedBeforeDeclaredAnalyser extends FastFlowVisitor {
 	protected void visitNext(FastFlowBranch currentBranch, ControlFlowElement cfe) {
 
 		if (cfe instanceof VariableDeclaration) {
-			CVLocationDataEntry userData = (CVLocationDataEntry) currentBranch.getActivationLocation(cfe);
+			CVLocationDataEntry entry = new CVLocationDataEntry(cfe);
+			CVLocationDataEntry userData = (CVLocationDataEntry) currentBranch.getActivationLocation(entry.getKey());
 			if (userData != null) {
 				userData.idRefs.clear();
 			} else {
-				if (cfe instanceof ExportedVariableDeclaration) {
-					currentBranch.activate(new CVExportedVarLocationDataEntry((ExportedVariableDeclaration) cfe));
-				} else {
-					currentBranch.activate(new CVLocationDataEntry(cfe));
-				}
+				currentBranch.activate(entry);
 			}
-
 		} else if (cfe instanceof IdentifierRef) {
 			IdentifierRef ir = (IdentifierRef) cfe;
 			IdentifiableElement id = ir.getId();
