@@ -100,19 +100,22 @@ class NodeTestRunner  {
             reporters.push(this.xunitReporter);
         }
         this.controller.reporters = reporters;
-        let resGroups = await this.controller.runGroups(testCatalog, 420187, options.testScope);
-        const success = this.consoleReporter.cliColor.green.bind(this.consoleReporter.cliColor);
-        const fail = this.consoleReporter.cliColor.red.bind(this.consoleReporter.cliColor);
-        const skipped = this.consoleReporter.cliColor.cyan.bind(this.consoleReporter.cliColor);
-        log(`\nTesting completed: ${success("SUCCESSES")}: ${resGroups.successes}, ${fail("FAILURES")}: ${resGroups.failures}, ${fail("ERRORS")}: ${resGroups.errors}, ${skipped("SKIPPED")}: ${resGroups.skipped}`)
 
-        if ((resGroups.failures !== 0) || (resGroups.errors !== 0)) {
-            log(`${fail("Test run failed.")} To rerun just the failing tests use the command: \n yarn test ${this.consoleReporter.unsuccessfulTests.map(test => `\\\n    -f ${test}`).join(" ")}`)
+        const resGroups = await this.controller.runGroups(testCatalog, 420187, options.testScope);
+        const cliColor = this.consoleReporter.cliColor;
+        const success = cliColor.green.bind(cliColor);
+        const fail = cliColor.red.bind(cliColor);
+        const skipped = cliColor.cyan.bind(cliColor);
+        log(`\nTesting completed: ${success("SUCCESSES")}: ${resGroups.successes}, ${fail("FAILURES")}: ${resGroups.failures}, ${fail("ERRORS")}: ${resGroups.errors}, ${skipped("SKIPPED")}: ${resGroups.skipped}`);
+
+        const failed = (resGroups.failures !== 0) || (resGroups.errors !== 0);
+        if (failed) {
+            log(`${fail("Test run failed.")} To rerun just the failing tests use the command: \n n4js-mangelhaft ${this.consoleReporter.unsuccessfulTests.map(test => `\\\n    -f ${test}`).join(" ")}`);
         }
 
         // Don't wait for async promises to finish, e.g. stale auth prompts.
         // In case of exceptions, the process is already exiting with code 1 (see n4js-cli):
-        process.exit(0);
+        process.exit(failed ? 1 : 0);
     }
 }
 
