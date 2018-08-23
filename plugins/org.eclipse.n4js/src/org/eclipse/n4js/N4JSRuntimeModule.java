@@ -74,7 +74,7 @@ import org.eclipse.n4js.validation.N4JSIssueSeveritiesProvider;
 import org.eclipse.n4js.validation.N4JSJavaScriptVariantHelper;
 import org.eclipse.n4js.validation.N4JSResourceValidator;
 import org.eclipse.n4js.xsemantics.InternalTypeSystem;
-import org.eclipse.n4js.xtext.serializer.SynchronizedContextFinder;
+import org.eclipse.n4js.xtext.serializer.SerializerPatchModule;
 import org.eclipse.xsemantics.runtime.StringRepresentation;
 import org.eclipse.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator;
 import org.eclipse.xtext.conversion.IValueConverterService;
@@ -104,7 +104,6 @@ import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.scoping.IGlobalScopeProvider;
 import org.eclipse.xtext.scoping.IScopeProvider;
 import org.eclipse.xtext.serializer.ISerializer;
-import org.eclipse.xtext.serializer.sequencer.ContextFinder;
 import org.eclipse.xtext.service.SingletonBinding;
 import org.eclipse.xtext.util.OnChangeEvictingCache;
 import org.eclipse.xtext.validation.ConfigurableIssueCodesProvider;
@@ -544,9 +543,9 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 		return N4JSCompositeGenerator.class;
 	}
 
-	/** Avoid concurrent installation of adapter on EObjects in the grammar access instances */
-	public Class<? extends ContextFinder> bindContextFinder() {
-		return SynchronizedContextFinder.class;
+	/** Avoid races in internal serializer caches */
+	public void configureSerializerPatches(Binder binder) {
+		new SerializerPatchModule().configure(binder);
 	}
 
 	//// N4IDL specific bindings

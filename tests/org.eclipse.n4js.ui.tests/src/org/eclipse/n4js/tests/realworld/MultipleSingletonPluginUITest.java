@@ -121,6 +121,8 @@ public class MultipleSingletonPluginUITest extends AbstractBuilderParticipantTes
 				"Regex-Injector");
 		injectors.put(TypesActivator.getInstance().getInjector(TypesActivator.ORG_ECLIPSE_N4JS_TS_TYPES),
 				"Types-Injector");
+		injectors.put(JsonActivator.getInstance().getInjector(JsonActivator.ORG_ECLIPSE_N4JS_JSON_JSON),
+				"JSON-Injector");
 		injectors.put(TesterUiActivator.getInjector(),
 				"Tester-UI-Injector");
 		injectors.put(TesterActivator.getInjector(),
