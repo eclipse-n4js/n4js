@@ -131,9 +131,10 @@ public class ExternalLibrariesActionsHelper {
 	 * {@link #maintenanceUpateState}
 	 *
 	 * @param forceReloadAll
-	 *            specifies whether after the installation finishes, all external libraries in the external library
-	 *            workspace should be reloaded and rebuilt (cf.
-	 *            {@link LibraryManager#reloadAllExternalProjects(IProgressMonitor)}).
+	 *            Specifies whether after the installation all external libraries in the external library workspace
+	 *            should be reloaded and rebuilt (cf.
+	 *            {@link LibraryManager#reloadAllExternalProjects(IProgressMonitor)}). If {@code false}, only the set of
+	 *            packages that was created and/or updated by this install call will be scheduled for a reload.
 	 */
 	public void installNoUpdate(final Map<String, NPMVersionRequirement> versionedPackages,
 			boolean forceReloadAll, final MultiStatus multistatus, final IProgressMonitor monitor) {

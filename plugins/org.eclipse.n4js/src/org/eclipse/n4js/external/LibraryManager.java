@@ -210,8 +210,10 @@ public class LibraryManager {
 	 * @param monitor
 	 *            the monitor for the blocking install process.
 	 * @param forceReloadAll
-	 *            specifies whether after the installation finishes, all external libraries in the external library
-	 *            workspace should be reloaded and rebuilt (cf. {@link #reloadAllExternalProjects(IProgressMonitor)}).
+	 *            Specifies whether after the installation all external libraries in the external library workspace
+	 *            should be reloaded and rebuilt (cf. {@link #reloadAllExternalProjects(IProgressMonitor)}). If
+	 *            {@code false}, only the set of packages that was created and/or updated by this install call will be
+	 *            scheduled for a reload.
 	 * @return a status representing the outcome of the install process.
 	 */
 	public IStatus installNPMs(Map<String, NPMVersionRequirement> versionedNPMs, boolean forceReloadAll,
