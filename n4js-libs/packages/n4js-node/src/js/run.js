@@ -20,18 +20,23 @@
                 options[i < 0 ? v : v.substring(0, i)] = i < 0 ? true : v.substring(i + 1);
             });
         }
+        const handle = options["n4js-keep-eventloop-disabled"] ? null : setInterval(function() {}, Number.MAX_SAFE_INTEGER); // dummy interval to avoid termination on open promises
 
-        return new Promise(function(resolve) {
+        return new Promise(function(resolve, reject) {
             options = require("./rt/node-bootstrap.js").installN4JSRuntime(options);
 
-            resolve(n4.handleMainModule().then(function(res) {
+            n4.handleMainModule().then(function(res) {
                 if (options.debug) {
                     console.log("## node.js exec done.");
                 }
-                return res;
-            }));
-        }).catch(function(err) {
+                resolve(res);
+            }, reject);
+        }).then(function(res) {
+            clearInterval(handle);
+            return res;
+        }, function(err) {
             console.error((err && typeof err === "object") && err.stack || err);
+            clearInterval(handle);
             if (exitOnError) {
                 process.stdout.write("", process.exit.bind(process, 1));
             }
