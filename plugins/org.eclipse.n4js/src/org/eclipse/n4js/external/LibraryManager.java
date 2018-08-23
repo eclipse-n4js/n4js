@@ -244,6 +244,8 @@ public class LibraryManager {
 			List<LibraryChange> deltaChanges = installUninstallNPMs(monitor, status, npmsToInstall, emptyList());
 			actualChanges.addAll(deltaChanges);
 
+			// if forceReloadAll, unregister all currently-registered projects from
+			// the workspace and remove them from the index
 			if (forceReloadAll) {
 				externalLibraryWorkspace.deregisterAllProjects(SubMonitor.convert(monitor, 1));
 			}
