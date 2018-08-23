@@ -11,24 +11,31 @@
 package org.eclipse.n4js.dirtystate;
 
 import com.google.inject.Inject
+import java.io.IOException
 import java.util.Collections
 import java.util.Objects
 import org.eclipse.core.resources.IProject
 import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.emf.common.util.URI
+import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.resource.N4JSResourceDescriptionManager
+import org.eclipse.n4js.resource.UserdataMapper
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
+import org.eclipse.n4js.ts.types.TypesPackage
+import org.eclipse.n4js.ui.building.BuildDataWithRequestRebuild
+import org.eclipse.n4js.ui.building.ResourceDescriptionWithoutModuleUserData
 import org.eclipse.xtext.resource.IResourceDescription
 import org.eclipse.xtext.resource.IResourceDescription.Delta
 import org.eclipse.xtext.resource.IResourceDescriptions
 import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionDelta
+import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil
 import org.eclipse.xtext.util.StringInputStream
 import org.junit.Test
-import org.eclipse.n4js.N4JSGlobals
 
 import static org.junit.Assert.*
 
 /**
+ * For more builder corner cases, see {@link ReproduceInvalidIndexPluginTest}.
  */
 public class IncrementalBuilderCornerCasesPluginTest extends AbstractBuilderParticipantTest {
 
@@ -38,96 +45,87 @@ public class IncrementalBuilderCornerCasesPluginTest extends AbstractBuilderPart
 	/**
 	 * This tests the bug fix of IDEBUG-347.
 	 * <p>
-	 * To reproduce the bug and to make the following test fail, comment out the following method
-	 * <code>#queueAffectedResources()</code> in class <code>N4JSGenerateImmediatelyBuilderState</code>.
-	 * However, the test is probably quite fragile and maybe the bug cannot be reproduced after future
-	 * other changes to the incremental builder.
-	 * <p>
+	 * To make this test fail, comment out creation of {@link ResourceDescriptionWithoutModuleUserData}s in
+	 * method {@code N4ClusteringBuilderState#queueAffectedResources()}, including the subsequent invocation
+	 * of {@link BuildDataWithRequestRebuild#needRebuild() needRebuild()}.
 	 */
 	@Test
 	def void testMissingReloadBug() {
+		val project = createJSProject("Test");
+		val src2 = configureProjectWithXtext(project);
+		val projectDescriptionFile2 = project.project.getFile(N4JSGlobals.PACKAGE_JSON);
+		assertMarkers("manifest of project should have no errors", projectDescriptionFile2, 0)
 
-		// first project
-		// (contains only empty files and does not have any dependencies to/from main project,
-		// but is required to reproduce bug)
+		val fileA = createTestFile(src2, "A", '''
 
-		val firstProjectUnderTest = createJSProject("XBugAuxiliary")
-		val src1 = configureProjectWithXtext(firstProjectUnderTest)
-		val projectDescriptionFile1 = firstProjectUnderTest.project.getFile(N4JSGlobals.PACKAGE_JSON)
-		assertMarkers("project description file (package.json) of first project should have no errors", projectDescriptionFile1, 0)
-
-		createTestFile(src1, "A", "")
-		createTestFile(src1, "B", "")
-		createTestFile(src1, "C", "")
-		createTestFile(src1, "D", "")
-		createTestFile(src1, "E", "")
-		createTestFile(src1, "F", "")
-		createTestFile(src1, "G", "")
-
-		waitForAutoBuild
-
-		// second project
-		// (main project; note that we need a nested source folder)
-
-		val secondProjectUnderTest = createJSProject("XBugMain","src/n4js","src-gen",null)
-		val src2 = configureProjectWithXtext(secondProjectUnderTest,"src/n4js")
-		val projectDescriptionFile2 = secondProjectUnderTest.project.getFile(N4JSGlobals.PACKAGE_JSON);
-		assertMarkers("manifest of second project should have no errors", projectDescriptionFile2, 0)
-
-		val someClazz = createTestFile(src2, "SomeClazz", '''
-
-			//class XYZ {}
+			// class XYZ {}
 
 			function foo() {}
 
-			export public class SomeClazz {}
+			export public class A {}
 
 		''')
-		val xt = createTestFile(src2, "XT", '''
+		val fileB = createTestFile(src2, "B", '''
 
-			import { SomeClazz } from "SomeClazz"
-			import { T2other } from "XT2"
+			import { A } from "A"
+			import { C } from "C"
 
 
-			var arrCC : Array<SomeClazz>;
+			var arrCC : Array<A>;
 
-			var t2 : T2other = new T2other();
+			var t2 : C = new C();
 
 			t2.m(arrCC);
 
 		''')
-		val xt2 = createTestFile(src2, "XT2", '''
+		val fileC = createTestFile(src2, "C", '''
 
-			import { SomeClazz } from "SomeClazz"
+			import { A } from "A"
 
 
-			export public class T2other {
-				m(param : Array<SomeClazz>) {}
+			export public class C {
+				m(param : Array<A>) {}
 			}
 
 		''')
 
-		waitForAutoBuild
+		IResourcesSetupUtil.fullBuild();
 
-		assertMarkers("file should have no errors", someClazz, 0);
-		assertMarkers("file should have no errors", xt, 0);
-		assertMarkers("file should have no errors", xt2, 0);
+		assertMarkers("file should have no errors", fileA, 0);
+		assertMarkers("file should have no errors", fileB, 0);
+		assertMarkers("file should have no errors", fileC, 0);
 
-		someClazz.setContents(new StringInputStream('''
+		fileA.setContents(new StringInputStream('''
 
 			class XYZ {}
 
 			function foo() {}
 
-			export public class SomeClazz {}
+			export public class A {}
 
 		'''), true, true, new NullProgressMonitor)
 
-		waitForAutoBuild
+		// wait for the incremental build to be completed (but do not trigger a full build!)
+		waitForIncrementalBuild();
 
-		// next line would fail if you comment out method
-		// org.eclipse.n4js.ui.building.N4JSGenerateImmediatelyBuilderState#queueAffectedResources()
-		assertMarkers("file should still have no errors", xt, 0);
+		// next line would fail if you comment out creation of ResourceDescriptionWithoutModuleUserData
+		// in N4ClusteringBuilderState#queueAffectedResources()
+		assertMarkers("file should still have no errors", fileB, 0);
+
+		assertAllDescriptionsHaveModuleData();
+	}
+
+	def private void assertAllDescriptionsHaveModuleData() throws IOException {
+		var descriptions = xtextIndex.allResourceDescriptions
+		for (description : descriptions) {
+			if (N4JSGlobals.ALL_N4_FILE_EXTENSIONS.contains(description.URI.fileExtension)) {
+				var moduleDescription = description.getExportedObjectsByType(TypesPackage.Literals.TMODULE).head
+				assertNotNull(description.URI.toString, moduleDescription)
+				var moduleAsString = UserdataMapper.
+					getDeserializedModuleFromDescriptionAsString(moduleDescription, description.URI)
+				assertNotNull(description.URI.toString(), moduleAsString)
+			}
+		}
 	}
 
 	/**
@@ -196,6 +194,7 @@ public class IncrementalBuilderCornerCasesPluginTest extends AbstractBuilderPart
 		assertFalse("file M.n4js in second project should *not* be affected by change to file C.n4js in first project", rdm.isAffected(deltas, m2_rd, xtextIndex))
 
 		assertXtextIndexIsValid // now do the general Xtext index validity checking
+		assertAllDescriptionsHaveModuleData
 	}
 
 	private def IResourceDescription findFileInXtextIndex(IResourceDescriptions xtextIndex, IProject project, String fileNameIncludingExtension) {

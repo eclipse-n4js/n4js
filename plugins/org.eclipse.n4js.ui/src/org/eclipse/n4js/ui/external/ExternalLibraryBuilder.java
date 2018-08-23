@@ -53,11 +53,12 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.smith.ClosableMeasurement;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
+import org.eclipse.n4js.ui.building.BuildDataWithRequestRebuild;
+import org.eclipse.n4js.ui.building.BuildManagerAccess;
 import org.eclipse.n4js.ui.external.ComputeProjectOrder.VertexOrder;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildQueue.Task;
 import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
 import org.eclipse.xtext.builder.builderState.IBuilderState;
-import org.eclipse.xtext.builder.impl.BuildData;
 import org.eclipse.xtext.builder.impl.QueuedBuildData;
 import org.eclipse.xtext.builder.impl.ToBeBuilt;
 import org.eclipse.xtext.builder.impl.ToBeBuiltComputer;
@@ -448,7 +449,8 @@ public class ExternalLibraryBuilder {
 				return;
 			}
 
-			try (ClosableMeasurement mesBE = dcBuildExt.getClosableMeasurement("BuildExt_" + n4EclPrj.getProjectName())) {
+			try (ClosableMeasurement mesBE = dcBuildExt
+					.getClosableMeasurement("BuildExt_" + n4EclPrj.getProjectName())) {
 				IN4JSCore core = helper.core;
 				QueuedBuildData queuedBuildData = helper.queuedBuildData;
 				IBuilderState builderState = helper.builderState;
@@ -464,12 +466,13 @@ public class ExternalLibraryBuilder {
 						((ResourceSetImpl) resourceSet).setURIResourceMap(newHashMap());
 					}
 
-					BuildData buildData = new BuildData(
+					BuildDataWithRequestRebuild buildData = new BuildDataWithRequestRebuild(
 							project.getName(),
 							resourceSet,
 							toBeBuilt,
 							queuedBuildData,
-							false /* indexingOnly */);
+							false /* indexingOnly */,
+							BuildManagerAccess::needBuild);
 
 					monitor.setTaskName("Building '" + project.getName() + "'...");
 					IProgressMonitor buildMonitor = subMonitor.newChild(1, SUPPRESS_BEGINTASK);
