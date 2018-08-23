@@ -36,6 +36,18 @@ public class SymbolOfIdentifierRef extends Symbol {
 
 	@Override
 	public EObject getDeclaration() {
+		/*
+		 * Implementation note:
+		 *
+		 * Conceptually, multiple identifiable elements can point to the same variable. Also, all identifiable elements
+		 * that point to the same variable have the same declaration site. This method is intended to return a unique
+		 * identifier for an IdentifiableElement which is the declaration site.
+		 *
+		 * However, retrieving the declaration can cause the loading of other n4js modules, for instance when an
+		 * exported declaration is imported and used in the current module. This loading triggers loading from source
+		 * and can cause side effects. Hence, instead of the declaration site, the IdentifiableElement is used as a
+		 * unique identifier for variables.
+		 */
 		IdentifiableElement id = ir.getId();
 		return id;
 	}
