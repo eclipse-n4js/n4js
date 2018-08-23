@@ -168,7 +168,7 @@ class CanLoadFromDescriptionCyclicPluginUITest extends AbstractCanLoadFromDescri
 		assertMarkers("file Q should have no errors", fileQ, 0)
 	}
 	
-	/* Same as the super impl but without the super expensivce waitForAutobuild */	
+	/* Same as the super impl but without the super expensive waitForAutobuild */	
 	override protected IFile doCreateTestFile(IFolder folder, String fullName, CharSequence content) throws CoreException {
 		return folder.getFile(fullName) => [
 			create(new StringInputStream(content.toString()), true, new NullProgressMonitor())
