@@ -143,10 +143,9 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 							result.add(URI.createFileURI(path));
 						}
 						// do not iterate over contents of nested node_modules folders
-						if (resource instanceof IFolder) {
-							if (resource.getName().equals(N4JSGlobals.NODE_MODULES)) {
-								return false;
-							}
+						if (resource.getType() == IResource.FOLDER &&
+								resource.getName().equals(N4JSGlobals.NODE_MODULES)) {
+							return false;
 						}
 						return true;
 					});

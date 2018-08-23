@@ -119,6 +119,7 @@ public class N4JSToBeBuiltComputer implements IToBeBuiltComputerContribution {
 
 	@Override
 	public boolean isRejected(IFolder folder) {
+		// do not build contents of nested node_modules folders
 		if (folder.getName().equals(N4JSGlobals.NODE_MODULES)) {
 			return true;
 		}
