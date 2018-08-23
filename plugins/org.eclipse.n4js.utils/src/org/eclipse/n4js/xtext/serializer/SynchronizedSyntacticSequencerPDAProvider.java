@@ -10,21 +10,16 @@
  */
 package org.eclipse.n4js.xtext.serializer;
 
-import org.eclipse.xtext.serializer.sequencer.ContextFinder;
+import org.eclipse.xtext.serializer.analysis.SyntacticSequencerPDAProvider;
 
 import com.google.inject.Singleton;
 
-/**
- * The ContextFinder is not threadsafe in its initConstraints. In tests and on other occasions we concurrently try to
- * init the constraints thus we need to guard against these modifications.
- */
-@SuppressWarnings("restriction")
+@SuppressWarnings({ "restriction", "javadoc" })
 @Singleton
-class SynchronizedContextFinder extends ContextFinder {
+class SynchronizedSyntacticSequencerPDAProvider extends SyntacticSequencerPDAProvider {
 
-	@Override
-	public synchronized void initConstraints() {
-		super.initConstraints();
+	public SynchronizedSyntacticSequencerPDAProvider() {
+		this.cache = new ValueWrappingMap<>(SynchronizedSerializationContextMap::from);
 	}
 
 }
