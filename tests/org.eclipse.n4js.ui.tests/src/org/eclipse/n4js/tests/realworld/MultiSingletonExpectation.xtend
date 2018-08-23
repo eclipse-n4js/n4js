@@ -16,15 +16,18 @@ package org.eclipse.n4js.tests.realworld
 class MultiSingletonExpectation {
 
 	static def String get() '''
-Found multiple instances for 2 singleton classes:
-Singleton 'org.eclipse.n4js.common.unicode.services.UnicodeGrammarAccess' has 4 instances that have the following injectors:
-	- JSON-Injector
-	- N4JS-Injector
-	- Regex-Injector
-	- Types-Injector
-Singleton 'org.eclipse.n4js.ts.services.TypeExpressionsGrammarAccess' has 2 instances that have the following injectors:
-	- N4JS-Injector
-	- Types-Injector
+		Found multiple instances for 3 singleton classes:
+		Singleton 'org.eclipse.n4js.common.unicode.services.UnicodeGrammarAccess' has 4 instances that have the following injectors:
+			- JSON-Injector
+			- N4JS-Injector
+			- Regex-Injector
+			- Types-Injector
+		Singleton 'org.eclipse.n4js.ts.services.TypeExpressionsGrammarAccess' has 2 instances that have the following injectors:
+			- N4JS-Injector
+			- Types-Injector
+		Singleton 'org.eclipse.n4js.xtext.serializer.SynchronizedContextFinder' has 2 instances that have the following injectors:
+			- JSON-Injector
+			- N4JS-Injector
 	'''
 
 }
