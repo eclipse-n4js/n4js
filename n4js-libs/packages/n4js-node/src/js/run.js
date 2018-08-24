@@ -23,7 +23,7 @@
 
         var timerHandle;
 
-        return new Promise(function(resolve, reject) {
+        new Promise(function(resolve, reject) {
             options = require("./rt/node-bootstrap.js").installN4JSRuntime(options);
 
             if (options["keep-eventloop"]) {
@@ -31,22 +31,24 @@
                 timerHandle = setInterval(function() {}, Number.MAX_SAFE_INTEGER);
             }
 
-            n4.handleMainModule().then(function(res) {
+            n4.handleMainModule().then(function() {
                 if (options.debug) {
                     console.log("## node.js exec done.");
                 }
-                resolve(res);
+                resolve();
             }, reject);
-        }).then(function(res) {
+        }).then(function() {
             clearInterval(timerHandle);
-            return res;
         }, function(err) {
-            console.error((err && typeof err === "object") && err.stack || err);
+            if (err && (typeof err === "string" || typeof err === "object")) {
+                // just log errors in case rejection with a string or an Error: 
+                console.error(err.stack || err);
+            }
             clearInterval(timerHandle);
             if (exitOnError) {
+                // Flush stdout and exit:
                 process.stdout.write("", process.exit.bind(process, 1));
             }
-            throw err;
         });
     };
 })();

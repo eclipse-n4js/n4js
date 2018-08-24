@@ -240,7 +240,7 @@ export default public class NodeTestAPI {
                 if (code === 0) {
                     resolve(code);
                 } else {
-                    reject(new Error(`TestRun exited with code: ${code}`));
+                    reject(code);
                 }
             });
         });
