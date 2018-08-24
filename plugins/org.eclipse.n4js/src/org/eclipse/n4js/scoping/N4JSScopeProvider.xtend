@@ -96,6 +96,7 @@ import org.eclipse.xtext.util.IResourceScopeCache
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
+import com.google.inject.Singleton
 
 /**
  * This class contains custom scoping description.
@@ -106,6 +107,7 @@ import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
  * see : http://www.eclipse.org/Xtext/documentation/latest/xtext.html#scoping
  * on how and when to use it
  */
+@Singleton
 class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScopeProvider, IContentAssistScopeProvider {
 
 
