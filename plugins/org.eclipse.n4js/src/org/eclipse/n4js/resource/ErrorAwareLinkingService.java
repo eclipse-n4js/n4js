@@ -27,6 +27,7 @@ import org.eclipse.n4js.scoping.IUsageAwareEObjectDescription;
 import org.eclipse.n4js.scoping.utils.UnresolvableObjectDescription;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
+import org.eclipse.n4js.utils.languages.N4LanguageUtils;
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.linking.impl.DefaultLinkingService;
@@ -65,14 +66,13 @@ public class ErrorAwareLinkingService extends DefaultLinkingService {
 	 */
 	@Override
 	protected IScope getScope(EObject context, EReference reference) {
-		IScopeProvider scopeProvider = super.getScopeProvider();
+		IScopeProvider scopeProvider;
 		Resource resource = context.eResource();
 		if (resource instanceof N4JSResource) {
-			IScopeProvider resourceScopeProvider = ((N4JSResource) resource).getScopeProvider();
-			if (scopeProvider != resourceScopeProvider) {
-				throw new IllegalArgumentException(
-						"Looks like you passed an unexpected context object into the linking service");
-			}
+			scopeProvider = ((N4JSResource) resource).getScopeProvider();
+		} else {
+			scopeProvider = N4LanguageUtils.getServiceForContext(context, IScopeProvider.class)
+					.orElseGet(() -> super.getScopeProvider());
 		}
 		if (scopeProvider == null)
 			throw new IllegalStateException("scopeProvider must not be null.");
