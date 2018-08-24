@@ -176,8 +176,8 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 			return null;
 		}
 		NavigableSet<URI> registeredProjectUris = projectProvider.getProjectURIs();
-		URI candidate = registeredProjectUris.floor(nestedLocation);
-		if (candidate != null && (candidate.equals(nestedLocation) || UriUtil.isPrefixOf(candidate, nestedLocation))) {
+		URI candidate = registeredProjectUris.lower(nestedLocation);
+		if (UriUtil.isPrefixOf(candidate, nestedLocation)) {
 			return candidate;
 		}
 		return null;
