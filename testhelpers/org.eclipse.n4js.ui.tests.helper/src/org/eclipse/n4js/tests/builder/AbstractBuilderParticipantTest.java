@@ -67,7 +67,7 @@ import com.google.inject.Provider;
  */
 public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest {
 	@Inject
-	private Provider<IDirtyStateManager> DirtyStateManager;
+	private Provider<IDirtyStateManager> dirtyStateManager;
 
 	@Inject
 	private ExternalLibrariesSetupHelper externalLibrariesSetupHelper;
@@ -328,7 +328,8 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 
 	/***/
 	protected void setDocumentContent(String context, IFile file, XtextEditor fileEditor, String newContent) {
-		IDirtyStateManager dirtyStateManager = DirtyStateManager.get();
+		@SuppressWarnings("hiding")
+		IDirtyStateManager dirtyStateManager = this.dirtyStateManager.get();
 
 		TestEventListener eventListener = new TestEventListener(context, file);
 		dirtyStateManager.addListener(eventListener);
@@ -342,13 +343,7 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 
 	/***/
 	protected void setDocumentContent(final XtextEditor xtextEditor, final String content) {
-		Display.getCurrent().syncExec(new Runnable() {
-
-			@Override
-			public void run() {
-				xtextEditor.getDocument().set(content);
-			}
-		});
+		Display.getCurrent().syncExec(() -> xtextEditor.getDocument().set(content));
 	}
 
 	/***/

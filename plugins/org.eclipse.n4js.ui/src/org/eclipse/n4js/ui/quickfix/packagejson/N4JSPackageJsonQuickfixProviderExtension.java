@@ -14,7 +14,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
-import java.util.Map;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -98,9 +97,7 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 			@Override
 			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 				try {
-					Map<String, String> packag3e = Collections.singletonMap(packageName, versionRequirement);
-					multiStatus.merge(libraryManager.installNPMs(packag3e, monitor));
-
+					multiStatus.merge(libraryManager.installNPM(packageName, versionRequirement, monitor));
 				} catch (Exception e) {
 					String msg = "Error while uninstalling npm dependency: '" + packageName + "'.";
 					multiStatus.merge(statusHelper.createError(msg, e));

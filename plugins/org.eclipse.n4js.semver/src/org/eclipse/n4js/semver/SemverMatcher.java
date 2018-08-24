@@ -110,6 +110,15 @@ public class SemverMatcher {
 	}
 
 	/**
+	 * Returns <code>true</code> iff a match {@link #canComputeMatch(VersionNumber, NPMVersionRequirement) can be
+	 * computed} and the proband {@link #matches(VersionNumber, NPMVersionRequirement) actually matches} the constraint.
+	 */
+	static public boolean matchesStrict(VersionNumber proband, NPMVersionRequirement constraint) {
+		return SemverMatcher.canComputeMatch(proband, constraint)
+				&& SemverMatcher.matches(proband, constraint);
+	}
+
+	/**
 	 * Compares two Semver {@link VersionNumber}s A and B.
 	 * <p>
 	 * In case the argument {@code a} has a pre-release tag, this method returns true only if the given argument

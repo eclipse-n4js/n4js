@@ -18,16 +18,20 @@ import org.junit.runners.model.Statement;
 class RepeatableTestStatement extends Statement {
 	private final int times;
 	private final Statement statement;
+	private final boolean quiet;
 
-	RepeatableTestStatement(int times, Statement statement) {
+	RepeatableTestStatement(int times, Statement statement, boolean quiet) {
 		this.times = times;
 		this.statement = statement;
+		this.quiet = quiet;
 	}
 
 	@Override
 	public void evaluate() throws Throwable {
 		for (int i = 1; i <= times; i++) {
-			System.out.printf("Run %d of %d\n", i, times);
+			if (!quiet) {
+				System.out.printf("Run %d of %d\n", i, times);
+			}
 			statement.evaluate();
 		}
 	}

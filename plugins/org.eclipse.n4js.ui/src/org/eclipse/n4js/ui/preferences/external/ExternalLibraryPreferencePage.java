@@ -54,7 +54,9 @@ import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.semver.SemverHelper;
-import org.eclipse.n4js.semver.model.SemverSerializer;
+import org.eclipse.n4js.semver.SemverUtils;
+import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
+import org.eclipse.n4js.semver.Semver.VersionComparator;
 import org.eclipse.n4js.ui.external.ExternalLibrariesActionsHelper;
 import org.eclipse.n4js.ui.utils.InputComposedValidator;
 import org.eclipse.n4js.ui.utils.InputFunctionalValidator;
@@ -166,7 +168,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 		createEnabledPushButton(subComposite, "Install npm...",
 				new InstallNpmDependencyButtonListener(this::installAndUpdate,
 						() -> getPackageNameToInstallValidator(), () -> getPackageVersionValidator(),
-						statusHelper));
+						semverHelper, statusHelper));
 
 		createEnabledPushButton(subComposite, "Uninstall npm...",
 				new UninstallNpmDependencyButtonListener(this::uninstallAndUpdate,
@@ -340,13 +342,15 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 				.anyMatch(name -> name.equals(packageName));
 	}
 
-	private Map<String, String> getInstalledNpms() {
+	private Map<String, NPMVersionRequirement> getInstalledNpms() {
 		final URI root = locationProvider.getNodeModulesURI();
 		final Set<ProjectDescription> projects = from(externalLibraryWorkspace.getProjectsDescriptions((root))).toSet();
 
-		final Map<String, String> versionedNpms = new HashMap<>();
+		final Map<String, NPMVersionRequirement> versionedNpms = new HashMap<>();
 		projects.forEach((ProjectDescription pd) -> {
-			versionedNpms.put(pd.getProjectName(), SemverSerializer.serialize(pd.getProjectVersion()));
+			NPMVersionRequirement vr = SemverUtils.createVersionRangeSet(VersionComparator.EQUALS,
+					pd.getProjectVersion());
+			versionedNpms.put(pd.getProjectName(), vr);
 		});
 
 		return versionedNpms;
@@ -360,7 +364,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 				.createMultiStatus("Executing maintenance actions.");
 
 		// persist state for reinstall
-		Map<String, String> oldPackages = new HashMap<>();
+		Map<String, NPMVersionRequirement> oldPackages = new HashMap<>();
 		if (userChoice.decisionReinstall)
 			oldPackages.putAll(getInstalledNpms());
 
@@ -434,7 +438,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	 *
 	 */
 	private void reinstallNpms(final MaintenanceActionsChoice userChoice,
-			final MultiStatus multistatus, IProgressMonitor monitor, Map<String, String> packageNames) {
+			final MultiStatus multistatus, IProgressMonitor monitor, Map<String, NPMVersionRequirement> packageNames) {
 		if (userChoice.decisionReinstall) {
 
 			// unless all npms were purged, uninstall known ones
@@ -542,7 +546,8 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	 *
 	 * @return status of the operation.
 	 */
-	private IStatus installAndUpdate(final Map<String, String> versionedPackages, final IProgressMonitor monitor) {
+	private IStatus installAndUpdate(final Map<String, NPMVersionRequirement> versionedPackages,
+			final IProgressMonitor monitor) {
 		IStatus status = libManager.installNPMs(versionedPackages, monitor);
 		if (status.isOK())
 			updateInput(viewer, store.getLocations());

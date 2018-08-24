@@ -50,7 +50,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -99,11 +98,9 @@ import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.Issue;
 
 import com.google.common.base.Optional;
-import com.google.common.base.Strings;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -116,21 +113,6 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtension {
-
-	/**
-	 * Regular expression for valid package.json identifier (e.g. package name, vendor ID).
-	 * <p>
-	 * NOTE: for legacy reasons, upper case letters are accepted, even though they are not allowed by npm.
-	 */
-	private static final Pattern IDENTIFIER_PATTERN = Pattern.compile("(^)?[A-Za-z][A-Za-z_\\-\\.0-9]*");
-
-	private static final Set<String> NPM_RESERVED_PACKAGE_NAMES = Sets.newHashSet(
-			// npm core modules (as of 2018/08/06)
-			"assert", "buffer", "child_process", "cluster", "console", "constants", "crypto", "dgram", "dns", "domain",
-			"events", "fs", "http", "https", "module", "net", "os", "path", "punycode", "querystring", "readline",
-			"repl", "stream", "string_decoder", "sys", "timers", "tls", "tty", "url", "util", "vm", "zlib",
-			// other reserved names
-			"node_modules", "favicon.ico");
 
 	/** key for memoization of the n4js.sources section of a package.json. See #getSourceContainers(). */
 	private static final String N4JS_SOURCE_CONTAINERS = "N4JS_SOURCE_CONTAINERS";
@@ -184,13 +166,13 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		final String scopeName = ProjectDescriptionUtils.getScopeName(projectName);
 
 		// make sure the name conforms to the IDENTIFIER_PATTERN
-		if (!isValidNpmPackageName(projectNameWithoutScope)) {
+		if (!ProjectDescriptionUtils.isValidPlainProjectName(projectNameWithoutScope)) {
 			addIssue(IssueCodes.getMessageForPKGJ_INVALID_PROJECT_NAME(projectNameWithoutScope),
 					projectNameValue, IssueCodes.PKGJ_INVALID_PROJECT_NAME);
 		}
 		if (scopeName != null) {
 			String scopeNameWithoutPrefix = scopeName.substring(1);
-			if (!isValidNpmPackageName(scopeNameWithoutPrefix)) {
+			if (!ProjectDescriptionUtils.isValidScopeName(scopeNameWithoutPrefix)) {
 				String msg = IssueCodes.getMessageForPKGJ_INVALID_SCOPE_NAME(scopeNameWithoutPrefix);
 				addIssue(msg, projectNameValue, IssueCodes.PKGJ_INVALID_SCOPE_NAME);
 			}
@@ -232,13 +214,6 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 				addIssue(msg, projectNameLiteral, IssueCodes.PKGJ_PROJECT_NAME_ECLIPSE_MISMATCH);
 			}
 		}
-	}
-
-	private static final boolean isValidNpmPackageName(String name) {
-		return !Strings.isNullOrEmpty(name)
-				&& name.length() <= 214
-				&& !NPM_RESERVED_PACKAGE_NAMES.contains(name)
-				&& IDENTIFIER_PATTERN.matcher(name).matches();
 	}
 
 	/** Check the version property. */

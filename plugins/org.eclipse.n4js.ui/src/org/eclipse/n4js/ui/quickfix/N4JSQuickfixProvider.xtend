@@ -12,11 +12,17 @@ package org.eclipse.n4js.ui.quickfix
 
 import com.google.inject.Inject
 import java.util.ArrayList
+import java.util.Collection
+import java.util.Collections
+import java.util.Map
+import java.util.concurrent.atomic.AtomicReference
 import org.eclipse.core.resources.IMarker
+import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.core.runtime.CoreException
 import org.eclipse.core.runtime.OperationCanceledException
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.jface.dialogs.ErrorDialog
 import org.eclipse.jface.dialogs.ProgressMonitorDialog
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.N4JSLanguageConstants
@@ -36,6 +42,10 @@ import org.eclipse.n4js.n4JS.N4Modifier
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.PropertyNameOwner
+import org.eclipse.n4js.projectDescription.ProjectDependency
+import org.eclipse.n4js.projectDescription.ProjectReference
+import org.eclipse.n4js.semver.Semver.NPMVersionRequirement
+import org.eclipse.n4js.semver.SemverUtils
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
@@ -47,12 +57,16 @@ import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypesPackage
+import org.eclipse.n4js.ui.binaries.IllegalBinaryStateDialog
 import org.eclipse.n4js.ui.changes.IChange
 import org.eclipse.n4js.ui.changes.SemanticChangeProvider
+import org.eclipse.n4js.ui.internal.N4JSActivator
 import org.eclipse.n4js.ui.labeling.helper.ImageNames
 import org.eclipse.n4js.ui.quickfix.TopLevelVisibilityFixProvider.TopLevelVisibilityFix
 import org.eclipse.n4js.ui.utils.ImportUtil
 import org.eclipse.n4js.ui.utils.UIUtils
+import org.eclipse.n4js.utils.StatusHelper
+import org.eclipse.n4js.utils.StatusUtils
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.IssueUserDataKeys
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
@@ -63,6 +77,7 @@ import org.eclipse.xtext.ui.editor.quickfix.Fix
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor
 import org.eclipse.xtext.validation.Issue
 
+import static org.eclipse.core.resources.IncrementalProjectBuilder.CLEAN_BUILD
 import static org.eclipse.n4js.ui.changes.ChangeProvider.*
 import static org.eclipse.n4js.ui.quickfix.QuickfixUtil.*
 
@@ -77,7 +92,13 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 	extension ImportUtil
 
 	@Inject
+	extension StatusHelper
+
+	@Inject
 	extension QuickfixUtil.IssueUserDataKeysExtension
+
+	@Inject
+	private TopLevelVisibilityFixProvider topLevelVisibilityFixProvider;
 
 	@Inject
 	extension SemanticChangeProvider
@@ -88,15 +109,10 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 	@Inject
 	private LibraryManager libraryManager;
 
-	@Inject
-	private TopLevelVisibilityFixProvider topLevelVisibilityFixProvider;
-
-
 	/** Retrieve annotation constants from AnnotationDefinition */
 	static final String INTERNAL_ANNOTATION = AnnotationDefinition.INTERNAL.name;
 	static final String OVERRIDE_ANNOTATION = AnnotationDefinition.OVERRIDE.name;
 	static final String FINAL_ANNOTATION = AnnotationDefinition.FINAL.name;
-
 
 	// EXAMPLE FOR STYLE #1 (lambda expression)
 
@@ -639,8 +655,75 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 		});
 	}
 
+	@Fix(IssueCodes.NON_EXISTING_PROJECT)
+	def tryInstallMissingDependencyFromNpm(Issue issue, IssueResolutionAcceptor acceptor) {
 
+		val modification = new N4Modification() {
+			var boolean multipleInvocations;
 
+			override Collection<? extends IChange> computeChanges(IModificationContext context, IMarker marker, int offset, int length, EObject element) throws Exception {
+				invokeNpmManager(element);
+			}
+			override Collection<? extends IChange> computeOneOfMultipleChanges(IModificationContext context, IMarker marker, int offset, int length, EObject element) throws Exception {
+				invokeNpmManager(element);
+			}
+			override void computeFinalChanges() throws Exception {
+				if (multipleInvocations) {
+					new ProgressMonitorDialog(UIUtils.shell).run(true, true, [monitor |
+						try {
+							ResourcesPlugin.getWorkspace().build(CLEAN_BUILD, monitor);
+						} catch (IllegalBinaryStateException e) {
+						} catch (CoreException e) {
+						}
+					]);
+				}
+			}
+
+			def Collection<? extends IChange> invokeNpmManager(EObject element) throws Exception {
+				val dependency = element as ProjectReference;
+				val packageName = dependency.projectName;
+				val packageVersion = if (dependency instanceof ProjectDependency) {
+						dependency.versionRequirement
+					} else {
+						SemverUtils.createEmptyVersionRequirement()
+					};
+
+				val illegalBinaryExcRef = new AtomicReference
+				val multiStatus = createMultiStatus("Installing npm '" + packageName + "'.");
+
+				new ProgressMonitorDialog(UIUtils.shell).run(true, false, [monitor |
+					try {
+						val Map<String, NPMVersionRequirement> package = Collections.singletonMap(packageName, packageVersion);
+						multiStatus.merge(libraryManager.installNPMs(package, monitor));
+
+					} catch (IllegalBinaryStateException e) {
+						illegalBinaryExcRef.set(e);
+
+					} catch (Exception e) {
+						val msg = "Error while uninstalling npm dependency: '" + packageName + "'.";
+						multiStatus.merge(createError(msg, e));
+					}
+				]);
+
+				if (null !== illegalBinaryExcRef.get) {
+					new IllegalBinaryStateDialog(illegalBinaryExcRef.get).open;
+
+				} else if (!multiStatus.isOK()) {
+					N4JSActivator.getInstance().getLog().log(multiStatus);
+					UIUtils.display.asyncExec([
+						val title = "NPM Install Failed";
+						val descr = StatusUtils.getErrorMessage(multiStatus, true);
+						ErrorDialog.openError(UIUtils.shell, title, descr, multiStatus);
+					]);
+				}
+
+			return #[];
+			}
+		}
+
+		acceptor.accept(issue, 'Install npm package to workspace', 'Download and install missing dependency from npm.', null, modification);
+	}
+	
 	/**
 	 * N4IDL-related quick-fix which adds a "@VersionAware" annotation to 
 	 * classes which do not declare an explicit type version.

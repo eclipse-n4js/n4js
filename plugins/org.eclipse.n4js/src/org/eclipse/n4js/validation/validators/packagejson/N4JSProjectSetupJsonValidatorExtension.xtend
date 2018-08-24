@@ -86,6 +86,7 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 import static org.eclipse.n4js.validation.validators.packagejson.ProjectTypePredicate.*
 
 import static extension com.google.common.base.Strings.nullToEmpty
+import org.eclipse.n4js.external.ShadowingInfoHelper
 
 /**
  * A JSON validator extension that validates {@code package.json} resources in the context
@@ -149,6 +150,9 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	
 	@Inject
 	protected N4JSElementKeywordProvider keywordProvider;
+	
+	@Inject
+	protected ShadowingInfoHelper shadowingInfoHelper;
 	
 	@Inject
 	protected SemverHelper semverHelper;
@@ -1156,7 +1160,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 					// keep track of actually existing projects
 					existentIds.put(id, ref);
 				}
-				
+
 				// create only a  single validation issue for a particular project reference.
 				if (currentProjectName == id && !allowReflexive) {
 					// reflexive self-references
@@ -1167,19 +1171,19 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 					addInvalidProjectTypeIssue(ref.astRepresentation, id, 
 						project.projectType, sectionLabel);
 					return;
-				} 
-				
+				}
+
 				// check version constraint if the current project is not external and has no nested 
 				// node_modules folder
 				val boolean ignoreVersion = (currentProject.isExternal && description.hasNestedNodeModulesFolder);
-				 
+
 				if (!ignoreVersion) {
-					checkVersions(ref, id, allProjects);
+					checkVersions(currentProject, ref, id, allProjects);
 				}
-				
+
 			}
 		];
-	
+
 		// check for duplicates among otherwise valid references
 		checkForDuplicateProjectReferences(existentIds)
 		
@@ -1214,14 +1218,14 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			}
 		];
 	}
-	
+
 	/**
 	 * Checks that the given {@code reference}s are also declared as explicit project dependencies
 	 * under {@code dependencies} or {@code devDependencies}.
-	 */	
+	 */
 	private def checkDeclaredDependencies(Iterable<ValidationProjectReference> references, String sectionLabel) {
 		val declaredDependencies = getDeclaredProjectDependencies();
-		
+
 		references.forEach[reference |
 			if (!declaredDependencies.containsKey(reference.referencedProjectName)) {
 				addIssue(IssueCodes.getMessageForPKGJ_PROJECT_REFERENCE_MUST_BE_DEPENDENCY(reference.referencedProjectName, sectionLabel),
@@ -1231,28 +1235,41 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	}
 
 	/** Checks if version constraint of the project reference is satisfied by any available project.*/
-	private def checkVersions(ValidationProjectReference ref, String id, Map<String, IN4JSProject> allProjects) {
+	private def checkVersions(IN4JSProject curPrj, ValidationProjectReference ref, String id, Map<String, IN4JSProject> allProjects) {
 		val desiredVersion = ref.npmVersion;
 		if (desiredVersion === null) {
 			return;
 		}
 
-		val availableVersion = allProjects.get(id).version;
+		val depProject = allProjects.get(id);
+		val availableVersion = depProject.version;
 		val availableVersionMatches = SemverMatcher.matches(availableVersion, desiredVersion);
 		if (availableVersionMatches) {
 			return; // version does match
 		}
 
-		// version does not match
+		// versions do not match
+
+		val curPrjShadows = shadowingInfoHelper.isShadowingProject(curPrj);
+		val dependencyShadows = shadowingInfoHelper.isShadowingProject(depProject);
 		val desiredStr = SemverSerializer.serialize(desiredVersion);
 		val availableStr = SemverSerializer.serialize(availableVersion);
-		addVersionMismatchIssue(ref.astRepresentation, id, desiredStr, availableStr);
+
+		if (curPrjShadows || dependencyShadows) {
+			val curPrjShadowsStr = if (curPrjShadows) "shadowing " else "";
+			val dependencyShadowsStr = if (dependencyShadows) "shadowed " else "";
+			val msg = getMessageForNO_MATCHING_VERSION_SHADOWING(curPrjShadowsStr, dependencyShadowsStr, id, desiredStr, availableStr);
+			addIssue(msg, ref.astRepresentation, NO_MATCHING_VERSION_SHADOWING);
+		} else {
+			val msg = getMessageForNO_MATCHING_VERSION(id, desiredStr, availableStr);
+			addIssue(msg, ref.astRepresentation, NO_MATCHING_VERSION);
+		}
 	}
 
 	/**
 	 * Returns the {@link ProjectDescription} that can be created based on the information
 	 * to be found in the currently validated {@link JSONDocument}.
-	 * 
+	 *
 	 * @See {@link ProjectDescriptionLoader}
 	 */
 	protected def ProjectDescription getProjectDescription() {
@@ -1294,11 +1311,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	private def addDuplicateProjectReferenceIssue(EObject target, String name) {
 		addIssue(getMessageForDUPLICATE_PROJECT_REF(name), target, DUPLICATE_PROJECT_REF);
 	}
-	
-	private def addVersionMismatchIssue(EObject target, String name, String requiredVersion, String presentVersion) {
-		addIssue(getMessageForNO_MATCHING_VERSION(name, requiredVersion, presentVersion), target, NO_MATCHING_VERSION)
-	}
-	
+
 	/**
 	 * Adds an issue to every non-null element in {@code preferredTargets}.
 	 *

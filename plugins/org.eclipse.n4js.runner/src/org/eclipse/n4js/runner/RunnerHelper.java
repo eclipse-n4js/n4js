@@ -36,6 +36,7 @@ import org.eclipse.n4js.runner.extension.IRunnerDescriptor;
 import org.eclipse.n4js.runner.extension.RunnerRegistry;
 import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
 import org.eclipse.n4js.utils.FindArtifactHelper;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.RecursionGuard;
 import org.eclipse.n4js.utils.ResourceNameComputer;
 import org.eclipse.xtext.xbase.lib.Pair;
@@ -280,7 +281,11 @@ public class RunnerHelper {
 	public String computeConfigurationName(String runnerId, URI moduleToRun) {
 		String modulePath = moduleToRun.path();
 		modulePath = stripStart(modulePath, "/", "resource/", "plugin/");
-		final String moduleName = modulePath.replace('/', '-');
+		// strip '@' character from project scopes
+		if (modulePath.startsWith(ProjectDescriptionUtils.NPM_SCOPE_PREFIX)) {
+			modulePath = modulePath.substring(1);
+		}
+		final String moduleName = modulePath.replace('/', '-').replace(':', '-');
 		final String runnerName = runnerRegistry.getDescriptor(runnerId).getName();
 		return moduleName + " (" + runnerName + ")";
 	}
