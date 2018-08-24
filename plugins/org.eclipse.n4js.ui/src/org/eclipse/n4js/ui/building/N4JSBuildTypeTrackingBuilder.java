@@ -90,8 +90,9 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 	protected IProject[] build(int kind, @SuppressWarnings("rawtypes") Map args, IProgressMonitor monitor)
 			throws CoreException {
 		Stopwatch stopwatch = Stopwatch.createStarted();
+		IProject project = getProject();
 		try {
-			RaceDetectionHelper.log("About to build %s", getProject());
+			RaceDetectionHelper.log("About to build %s", project);
 
 			SubMonitor builderMonitor = toBuilderMonitor(monitor, 1100);
 
@@ -112,31 +113,31 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 			 * Dynamic references have been superseded in Eclipse Photon anyways :(
 			 */
 			List<IProject> dependencies = projectDependencyStrategy != null
-					? projectDependencyStrategy.getProjectDependencies(getProject(), true)
+					? projectDependencyStrategy.getProjectDependencies(project, true)
 					: null;
 			if (dependencies == null) {
 				RaceDetectionHelper.log("Returning project results since dependencies cannot be determined");
-				RaceDetectionHelper.log("%s depends on %s", getProject(), Arrays.toString(result));
+				RaceDetectionHelper.log("%s depends on %s", project, Arrays.toString(result));
 				return result;
 			}
 			/*
 			 * And merge them with the static project references that are persisted to disc.
 			 */
-			IProject[] staticReferences = getProject().getDescription().getReferencedProjects();
+			IProject[] staticReferences = project.getDescription().getReferencedProjects();
 			if (dependencies.isEmpty()) {
 				RaceDetectionHelper.log("Returning static project results since dependencies are empty");
-				RaceDetectionHelper.log("%s depends on %s", getProject(), Arrays.toString(result));
+				RaceDetectionHelper.log("%s depends on %s", project, Arrays.toString(result));
 				return staticReferences;
 			}
 			Set<IProject> asSet = Sets.newLinkedHashSet(FluentIterable.from(dependencies).append(staticReferences));
 			result = asSet.toArray(new IProject[0]);
 			RaceDetectionHelper.log("Returning computed results");
-			RaceDetectionHelper.log("%s depends on %s", getProject(), Arrays.toString(result));
+			RaceDetectionHelper.log("%s depends on %s", project, Arrays.toString(result));
 			return result;
 		} finally {
 			stopwatch.stop();
 			if (LOGGER.isDebugEnabled()) {
-				final String msg = "Building " + getProject().getName() + " took " + stopwatch.elapsed(TimeUnit.SECONDS)
+				final String msg = "Building " + project.getName() + " took " + stopwatch.elapsed(TimeUnit.SECONDS)
 						+ " seconds";
 				LOGGER.debug(msg);
 				System.out.println(msg);
@@ -329,8 +330,8 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 
 		IProject project = getProject();
 		ResourceSet resourceSet = createResourceSet(project);
-		BuildData buildData = new BuildData(project.getName(), resourceSet, toBeBuilt, queuedBuildData,
-				indexingOnly);
+		BuildData buildData = new BuildDataWithRequestRebuild(project.getName(), resourceSet, toBeBuilt,
+				queuedBuildData, indexingOnly, this::needRebuild);
 		getBuilderState().update(buildData, progress.split(1, SubMonitor.SUPPRESS_NONE));
 		if (!indexingOnly) {
 			try {

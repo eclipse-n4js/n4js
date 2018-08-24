@@ -45,7 +45,10 @@ public enum ErrorExitCode {
 	EXITCODE_DEPENDENCY_NOT_FOUND(11, "required dependency is missing"),
 	/** Exit with 12, if srcFiles are invalid. */
 	EXITCODE_SRCFILES_INVALID(12,
-			"At least one source file or project (last parameter) is neither file nor directory.");
+			"At least one source file or project (last parameter) is neither file nor directory."),
+	/** Exit with 13, if performace report cannot be written to disk. */
+	EXITCODE_PERFORMANCE_REPORT_COULD_NOT_BE_WRITTEN(
+			13, "The performance report could not be written to disk.");
 
 	private static final Map<Integer, ErrorExitCode> lookup = new HashMap<>();
 
