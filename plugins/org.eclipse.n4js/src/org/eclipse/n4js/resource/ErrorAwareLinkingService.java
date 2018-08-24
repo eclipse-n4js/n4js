@@ -66,9 +66,15 @@ public class ErrorAwareLinkingService extends DefaultLinkingService {
 	 */
 	@Override
 	protected IScope getScope(EObject context, EReference reference) {
-		IScopeProvider scopeProvider = N4LanguageUtils.getServiceForContext(context, IScopeProvider.class)
-				.orElse(super.getScopeProvider());
-		if (getScopeProvider() == null)
+		IScopeProvider scopeProvider;
+		Resource resource = context.eResource();
+		if (resource instanceof N4JSResource) {
+			scopeProvider = ((N4JSResource) resource).getScopeProvider();
+		} else {
+			scopeProvider = N4LanguageUtils.getServiceForContext(context, IScopeProvider.class)
+					.orElseGet(() -> super.getScopeProvider());
+		}
+		if (scopeProvider == null)
 			throw new IllegalStateException("scopeProvider must not be null.");
 		try {
 			registerImportedNamesAdapter(scopeProvider, context);
