@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -246,7 +247,8 @@ public class N4CliHelper {
 	 * @throws IOException
 	 *             if errored.
 	 */
-	public static Process createAndStartProcessIntern(File log, String target, String... args) throws IOException {
+	public static Process createAndStartProcessIntern(File log, String target, Map<String, String> environment,
+			String... args) throws IOException {
 		ProcessBuilder pb = new ProcessBuilder(args);
 		/*- // Environment can be actively modified, e.g.:
 			Map<String, String> env = pb.environment();
@@ -254,6 +256,8 @@ public class N4CliHelper {
 			env.remove("OTHERVAR");
 			env.put("VAR2", env.get("VAR1") + "suffix");
 		 */
+		// include user-provided environment variables
+		pb.environment().putAll(environment);
 		pb.directory(new File(target));
 		EnvironmentVariableUtils.inheritNodeJsPathEnvVariableUtils(pb);
 
