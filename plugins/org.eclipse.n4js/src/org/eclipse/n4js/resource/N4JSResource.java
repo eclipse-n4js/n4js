@@ -72,7 +72,6 @@ import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
 import org.eclipse.n4js.utils.emf.ProxyResolvingResource;
 import org.eclipse.xtext.diagnostics.DiagnosticMessage;
 import org.eclipse.xtext.diagnostics.ExceptionDiagnostic;
-import org.eclipse.xtext.linking.LinkingScopeProviderBinding;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.SyntaxErrorMessage;
@@ -85,7 +84,6 @@ import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.XtextSyntaxDiagnostic;
 import org.eclipse.xtext.resource.XtextSyntaxDiagnosticWithRange;
-import org.eclipse.xtext.scoping.IScopeProvider;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IResourceScopeCache;
 import org.eclipse.xtext.util.OnChangeEvictingCache;
@@ -248,14 +246,6 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	 * Set to true while we are currently discarding an adapter.
 	 */
 	private boolean removingAdapters;
-
-	@Inject
-	@LinkingScopeProviderBinding
-	private IScopeProvider scopeProvider;
-
-	IScopeProvider getScopeProvider() {
-		return scopeProvider;
-	}
 
 	@Inject
 	private N4JSScopingDiagnostician scopingDiagnostician;
