@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.NavigableSet;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -53,6 +54,7 @@ import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.resources.ExternalProject;
 import org.eclipse.n4js.utils.resources.IExternalResource;
 import org.eclipse.xtext.util.Pair;
+import org.eclipse.xtext.util.UriUtil;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -173,21 +175,11 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 		if (null == path) {
 			return null;
 		}
-
-		File nestedResource = new File(path);
-		Path nestedResourcePath = nestedResource.toPath();
-
-		Iterable<URI> registeredProjectUris = projectProvider.getProjectURIs();
-		for (URI projectUri : registeredProjectUris) {
-			if (projectUri.isFile()) {
-				File projectRoot = new File(projectUri.toFileString());
-				Path projectRootPath = projectRoot.toPath();
-				if (nestedResourcePath.startsWith(projectRootPath)) {
-					return projectUri;
-				}
-			}
+		NavigableSet<URI> registeredProjectUris = projectProvider.getProjectURIs();
+		URI candidate = registeredProjectUris.lower(nestedLocation);
+		if (UriUtil.isPrefixOf(candidate, nestedLocation)) {
+			return candidate;
 		}
-
 		return null;
 	}
 

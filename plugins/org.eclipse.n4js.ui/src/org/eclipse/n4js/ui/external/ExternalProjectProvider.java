@@ -19,13 +19,17 @@ import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
 import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.NavigableMap;
+import java.util.NavigableSet;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.concurrent.ExecutionException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -66,7 +70,7 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 	private final Collection<ExternalLocationsUpdatedListener> locListeners = new LinkedList<>();
 	private final List<java.net.URI> rootLocations = new LinkedList<>();
 	private LoadingCache<URI, Optional<Pair<N4JSExternalProject, ProjectDescription>>> projectCache;
-	private Map<URI, Pair<N4JSExternalProject, ProjectDescription>> projectUriMapping;
+	private NavigableMap<URI, Pair<N4JSExternalProject, ProjectDescription>> projectUriMapping;
 	private Map<String, N4JSExternalProject> projectNameMapping;
 
 	/**
@@ -215,7 +219,25 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 	private void updateMappings() {
 		Map<URI, Optional<Pair<N4JSExternalProject, ProjectDescription>>> cachedProjects = projectCache.asMap();
 		Map<String, N4JSExternalProject> projectNameMappingTmp = newHashMap();
-		Map<URI, Pair<N4JSExternalProject, ProjectDescription>> projectUriMappingTmp = newHashMap();
+		Comparator<URI> comp = new Comparator<URI>() {
+
+			@Override
+			public int compare(URI o1, URI o2) {
+				int scheme = o1.scheme().compareTo(o2.scheme());
+				if (scheme != 0) {
+					return scheme;
+				}
+				for (int i = 0; i < Math.min(o1.segmentCount(), o2.segmentCount()); i++) {
+					int path = o1.segment(i).compareTo(o2.segment(i));
+					if (path != 0) {
+						return path;
+					}
+				}
+				return 0;
+			}
+
+		}.thenComparing(Comparator.comparingInt(URI::segmentCount));
+		TreeMap<URI, Pair<N4JSExternalProject, ProjectDescription>> projectUriMappingTmp = newTreeMap(comp);
 
 		Iterable<java.net.URI> projectRoots = externalLibraryPreferenceStore
 				.convertToProjectRootLocations(rootLocations); // TODO: check if this preserves order!
@@ -237,12 +259,12 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 		}
 
 		projectNameMapping = Collections.unmodifiableMap(projectNameMappingTmp);
-		projectUriMapping = Collections.unmodifiableMap(projectUriMappingTmp);
+		projectUriMapping = Collections.unmodifiableNavigableMap(projectUriMappingTmp);
 	}
 
-	Collection<URI> getProjectURIs() {
+	NavigableSet<URI> getProjectURIs() {
 		ensureInitialized();
-		return projectUriMapping.keySet();
+		return projectUriMapping.navigableKeySet();
 	}
 
 	Collection<N4JSExternalProject> getProjects() {
