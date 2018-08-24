@@ -20,7 +20,7 @@ import org.eclipse.xtext.xbase.lib.util.ReflectExtensions;
 
 import com.google.inject.Singleton;
 
-@SuppressWarnings({ "restriction", "javadoc" })
+@SuppressWarnings({ "restriction" })
 @Singleton
 class SynchronizedContextTypePDAProvider extends ContextTypePDAProvider {
 

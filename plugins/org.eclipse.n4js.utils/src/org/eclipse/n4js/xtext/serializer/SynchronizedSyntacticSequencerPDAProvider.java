@@ -14,7 +14,7 @@ import org.eclipse.xtext.serializer.analysis.SyntacticSequencerPDAProvider;
 
 import com.google.inject.Singleton;
 
-@SuppressWarnings({ "restriction", "javadoc" })
+@SuppressWarnings({ "restriction" })
 @Singleton
 class SynchronizedSyntacticSequencerPDAProvider extends SyntacticSequencerPDAProvider {
 
