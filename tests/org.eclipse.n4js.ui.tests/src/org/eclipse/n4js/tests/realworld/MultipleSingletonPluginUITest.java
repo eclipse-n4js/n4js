@@ -14,7 +14,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -43,8 +42,10 @@ import com.google.inject.Binding;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Key;
-import com.google.inject.Singleton;
+import com.google.inject.Scope;
+import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
+import com.google.inject.spi.DefaultBindingScopingVisitor;
 
 /**
  * This test detects multiple instances of injected classes marked with @Singleton.
@@ -130,19 +131,34 @@ public class MultipleSingletonPluginUITest extends AbstractBuilderParticipantTes
 
 	private void getN4JSSingletonsOfInjector(Injector injector, Multimap<Class<?>, Injector> singletonInstances) {
 		for (Binding<?> b : injector.getAllBindings().values()) {
-			Key<?> key = b.getKey();
-			TypeLiteral<?> typeLiteral = key.getTypeLiteral();
-			Type type = typeLiteral.getType();
-			if (type instanceof Class<?>) {
-				Class<?> singletonClass = (Class<?>) type;
-				String singletonName = singletonClass.getName();
-				Singleton annotation = singletonClass.getAnnotation(Singleton.class);
-
-				if (annotation != null && singletonName.toLowerCase().contains("n4js")) {
-					singletonInstances.put(singletonClass, injector);
+			if (isSingleton(b)) {
+				Key<?> key = b.getKey();
+				TypeLiteral<?> typeLiteral = key.getTypeLiteral();
+				String typeName = typeLiteral.toString();
+				if (typeName.contains("n4js")) {
+					singletonInstances.put(typeLiteral.getRawType(), injector);
 				}
 			}
 		}
+	}
+
+	private boolean isSingleton(Binding<?> b) {
+		return b.acceptScopingVisitor(new DefaultBindingScopingVisitor<Boolean>() {
+			@Override
+			public Boolean visitEagerSingleton() {
+				return Boolean.TRUE;
+			}
+
+			@Override
+			public Boolean visitScope(Scope scope) {
+				return Scopes.SINGLETON.equals(scope);
+			}
+
+			@Override
+			protected Boolean visitOther() {
+				return Boolean.FALSE;
+			}
+		});
 	}
 
 	private String getMultipleSingletonStatusString(Multimap<Class<?>, Injector> singletonInstances,

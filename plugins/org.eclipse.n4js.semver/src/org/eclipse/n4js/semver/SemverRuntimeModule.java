@@ -11,14 +11,17 @@
 package org.eclipse.n4js.semver;
 
 import org.eclipse.n4js.semver.model.SemverSerializer;
-import org.eclipse.n4js.semver.validation.SemverIssueSeveritiesProvider;
 import org.eclipse.n4js.semver.validation.SemverIssueCodes;
+import org.eclipse.n4js.semver.validation.SemverIssueSeveritiesProvider;
+import org.eclipse.n4js.xtext.serializer.SynchronizedContextFinder;
 import org.eclipse.xtext.serializer.ISerializer;
+import org.eclipse.xtext.serializer.sequencer.ContextFinder;
 import org.eclipse.xtext.validation.IssueSeveritiesProvider;
 
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
  */
+@SuppressWarnings("restriction")
 public class SemverRuntimeModule extends AbstractSemverRuntimeModule {
 
 	/**
@@ -32,5 +35,10 @@ public class SemverRuntimeModule extends AbstractSemverRuntimeModule {
 	/** Bind custom SEMVER issue severities provider that operates based on {@link SemverIssueCodes}. */
 	public Class<? extends IssueSeveritiesProvider> bindIssueSeveritiesProvider() {
 		return SemverIssueSeveritiesProvider.class;
+	}
+
+	/** Avoid concurrent installation of adapter on EObjects in the grammar access instances */
+	public Class<? extends ContextFinder> bindContextFinder() {
+		return SynchronizedContextFinder.class;
 	}
 }

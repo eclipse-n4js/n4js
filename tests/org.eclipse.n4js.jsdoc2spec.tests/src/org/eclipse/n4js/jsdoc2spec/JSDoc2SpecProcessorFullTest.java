@@ -20,7 +20,6 @@ import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.XtextRunner;
 import org.junit.ComparisonFailure;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -126,7 +125,6 @@ abstract public class JSDoc2SpecProcessorFullTest {
 	 * Full test with SpecSample9 project, cf. IDE-2160
 	 */
 	@Test
-	@Ignore
 	public void testSample9() throws IOException, InterruptedException {
 		fullTest("SpecSample9_StaticPolyfill");
 	}
