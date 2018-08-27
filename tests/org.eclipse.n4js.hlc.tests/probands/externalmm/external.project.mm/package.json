@@ -10,7 +10,11 @@
 		"pouchdb-find": "0.10.3",
 		"next": "1.1.1",
 		"body-parser": "1.15.0",
-		"n4js-runtime-node": "*"
+		"n4js-runtime-node": "*",
+		"@n4jsd/express": "<=4.13.*",
+		"@n4jsd/lodash": "<=4.6.*",
+		"@n4jsd/next": "<=1.1.*",
+		"@n4jsd/body-parser": "<=1.15.*"
 	},
 	"n4js": {
 		"projectType": "library",
@@ -24,12 +28,6 @@
 		},
 		"requiredRuntimeLibraries": [
 			"n4js-runtime-node"
-		],
-		"typeDependencies": {
-			"express-n4jsd": "<=4.13.4",
-			"lodash-n4jsd": "<=4.6.0",
-			"next-n4jsd": "<=1.1.1",
-			"body-parser-n4jsd": "<=1.15.0"
-		}
+		]
 	}
 }

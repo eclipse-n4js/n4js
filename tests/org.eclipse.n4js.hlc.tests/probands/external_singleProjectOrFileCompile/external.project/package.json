@@ -3,7 +3,8 @@
 	"version": "0.0.1",
 	"dependencies": {
 		"express": "4.13.4",
-		"n4js-runtime-node": "*"
+		"n4js-runtime-node": "*",
+		"@n4jsd/express": "<=4.13.*"
 	},
 	"n4js": {
 		"projectType": "library",
@@ -17,9 +18,6 @@
 		},
 		"requiredRuntimeLibraries": [
 			"n4js-runtime-node"
-		],
-		"typeDependencies": {
-			"express-n4jsd": "<=4.13.4"
-		}
+		]
 	}
 }

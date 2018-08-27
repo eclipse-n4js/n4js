@@ -589,7 +589,7 @@ public class N4jscBase implements IApplication {
 							});
 						}
 
-						IStatus status = libManager.installNPMs(dependencies, new NullProgressMonitor());
+						IStatus status = libManager.installNPMs(dependencies, false, new NullProgressMonitor());
 						if (!status.isOK())
 							if (keepCompiling)
 								warn(status.getMessage());

@@ -176,7 +176,7 @@ public class LibraryManager {
 	 * @return a status representing the outcome of the install process.
 	 */
 	public IStatus installNPM(String packageName, NPMVersionRequirement packageVersion, IProgressMonitor monitor) {
-		return installNPMs(Collections.singletonMap(packageName, packageVersion), monitor);
+		return installNPMs(Collections.singletonMap(packageName, packageVersion), false, monitor);
 	}
 
 	/**
@@ -195,7 +195,7 @@ public class LibraryManager {
 	public IStatus installNPMs(Collection<String> unversionedPackages, IProgressMonitor monitor) {
 		Map<String, NPMVersionRequirement> versionedPackages = unversionedPackages.stream()
 				.collect(Collectors.toMap((String name) -> name, (String name) -> NO_VERSION_REQUIREMENT));
-		return installNPMs(versionedPackages, monitor);
+		return installNPMs(versionedPackages, false, monitor);
 	}
 
 	/**
@@ -209,13 +209,20 @@ public class LibraryManager {
 	 *            map of name to version data for the packages to be installed via package manager.
 	 * @param monitor
 	 *            the monitor for the blocking install process.
+	 * @param forceReloadAll
+	 *            Specifies whether after the installation all external libraries in the external library workspace
+	 *            should be reloaded and rebuilt (cf. {@link #reloadAllExternalProjects(IProgressMonitor)}). If
+	 *            {@code false}, only the set of packages that was created and/or updated by this install call will be
+	 *            scheduled for a reload.
 	 * @return a status representing the outcome of the install process.
 	 */
-	public IStatus installNPMs(Map<String, NPMVersionRequirement> versionedNPMs, IProgressMonitor monitor) {
-		return runWithWorkspaceLock(() -> installNPMsInternal(versionedNPMs, monitor));
+	public IStatus installNPMs(Map<String, NPMVersionRequirement> versionedNPMs, boolean forceReloadAll,
+			IProgressMonitor monitor) {
+		return runWithWorkspaceLock(() -> installNPMsInternal(versionedNPMs, forceReloadAll, monitor));
 	}
 
-	private IStatus installNPMsInternal(Map<String, NPMVersionRequirement> versionedNPMs, IProgressMonitor monitor) {
+	private IStatus installNPMsInternal(Map<String, NPMVersionRequirement> versionedNPMs, boolean forceReloadAll,
+			IProgressMonitor monitor) {
 		String msg = "Installing NPM(s): " + versionedNPMs.entrySet().stream()
 				.map(e -> npmWithVersionAsString(e.getKey(), e.getValue()))
 				.collect(Collectors.joining(", "));
@@ -236,6 +243,12 @@ public class LibraryManager {
 
 			List<LibraryChange> deltaChanges = installUninstallNPMs(monitor, status, npmsToInstall, emptyList());
 			actualChanges.addAll(deltaChanges);
+
+			// if forceReloadAll, unregister all currently-registered projects from
+			// the workspace and remove them from the index
+			if (forceReloadAll) {
+				externalLibraryWorkspace.deregisterAllProjects(SubMonitor.convert(monitor, 1));
+			}
 
 			try (ClosableMeasurement m = dcIndexSynchronizer.getClosableMeasurement("synchronizeNpms")) {
 				monitor.setTaskName("Building installed packages... [step 2 of 2]");
