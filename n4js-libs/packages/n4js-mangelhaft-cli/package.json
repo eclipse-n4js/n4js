@@ -26,7 +26,7 @@
     "glob": "~7.1.2",
     "n4js-cli": "^0.1.0",
     "cli-color": "~1.2.0",
-    "@n4jsd/globa": "<=7.1.*"
+    "@n4jsd/glob": "<=7.1.*"
   },
   "n4js": {
     "projectType": "library",
