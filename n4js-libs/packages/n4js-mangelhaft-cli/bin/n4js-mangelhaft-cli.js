@@ -13,6 +13,5 @@
 /*eslint-disable no-empty */
 
 require("n4js-node/src-gen/run.js").runWith({
-    "test-mode": true,
     "main": "n4js-mangelhaft-cli/src-gen/org/eclipse/n4js/mangelhaft/runner/node/NodeTestCLI"
 }, true /* exitOnError */);

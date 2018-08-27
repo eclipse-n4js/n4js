@@ -143,15 +143,25 @@ public enum PackageJsonProperties {
 	}
 
 	/** @return a dot separated path of property names in the package.json */
+	public String[] getPathElements() {
+		String[] pathElements = new String[parents.length + 1];
+		for (int i = 0; i < parents.length; i++) {
+			pathElements[i] = parents[i].name;
+		}
+		pathElements[parents.length] = name;
+
+		return pathElements;
+	}
+
+	/** @return a dot separated path of property names in the package.json */
 	public String getPath() {
 		String path = "";
-		for (PackageJsonProperties parent : parents) {
-			path += parent.name;
+		for (String pathElem : getPathElements()) {
 			if (!path.isEmpty()) {
 				path += ".";
 			}
+			path += pathElem;
 		}
-		path += name;
 		return path;
 	}
 

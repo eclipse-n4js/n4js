@@ -209,11 +209,14 @@ public final class UserdataMapper {
 	 * <b>ONLY INTENDED FOR TESTS OR DEBUGGING. DON'T USE IN PRODUCTION CODE.</b>
 	 * <p>
 	 * Same as {@link #getDeserializedModuleFromDescription(IEObjectDescription, URI)}, but always returns the module as
-	 * an XMI-serialized string.
+	 * an XMI-serialized string. If no module is found, returns null.
 	 */
 	public static String getDeserializedModuleFromDescriptionAsString(IEObjectDescription eObjectDescription,
 			URI uri) throws IOException {
 		final TModule module = getDeserializedModuleFromDescription(eObjectDescription, uri);
+		if (module == null) {
+			return null;
+		}
 		final XMIResource resourceForUserData = new XMIResourceImpl(uri);
 		resourceForUserData.getContents().add(module);
 		final ByteArrayOutputStream baos = new ByteArrayOutputStream();

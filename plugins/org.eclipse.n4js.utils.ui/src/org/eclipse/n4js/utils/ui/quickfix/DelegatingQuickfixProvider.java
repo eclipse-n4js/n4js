@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider;
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolution;
+import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionProvider;
 import org.eclipse.xtext.validation.Issue;
 
 import com.google.common.collect.Iterables;
@@ -46,6 +47,6 @@ public abstract class DelegatingQuickfixProvider extends DefaultQuickfixProvider
 	/**
 	 * @return the delegates to be used to compute the quickfixes
 	 */
-	protected abstract Iterable<? extends DefaultQuickfixProvider> getDelegates();
+	protected abstract Iterable<? extends IssueResolutionProvider> getDelegates();
 
 }
