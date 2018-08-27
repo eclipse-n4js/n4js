@@ -363,7 +363,8 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 			return;
 		}
 
-		final Multimap<String, JSONValue> n4jsValues = collectObjectValues((JSONObject) n4jsSection);
+		JSONObject n4jsSectionJO = (JSONObject) n4jsSection;
+		final Multimap<String, JSONValue> n4jsValues = collectObjectValues(n4jsSectionJO);
 
 		// Check for correct types (null-values (non-existent) will not lead to issues)
 		// Properties that are not checked here, have their own check-method which also validates their types.
@@ -391,13 +392,12 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		checkIsNonEmptyString(n4jsValues.get(VENDOR_NAME.name), VENDOR_NAME);
 
 		Set<String> allN4JSPropertyNames = PackageJsonProperties.getAllN4JSPropertyNames();
-		for (String n4jsKey : n4jsValues.keys()) {
-			if (!allN4JSPropertyNames.contains(n4jsKey)) {
-				for (JSONValue value : n4jsValues.get(n4jsKey)) {
-					String msg = IssueCodes.getMessageForPKGJ_PROPERTY_UNKNOWN(n4jsKey);
-					addIssue(msg, value.eContainer(), JSONPackage.Literals.NAME_VALUE_PAIR__NAME,
-							IssueCodes.PKGJ_PROPERTY_UNKNOWN);
-				}
+		for (NameValuePair nameValuePair : n4jsSectionJO.getNameValuePairs()) {
+			String nvpName = nameValuePair.getName();
+			if (!allN4JSPropertyNames.contains(nvpName)) {
+				String msg = IssueCodes.getMessageForPKGJ_PROPERTY_UNKNOWN(nvpName);
+				addIssue(msg, nameValuePair, JSONPackage.Literals.NAME_VALUE_PAIR__NAME,
+						IssueCodes.PKGJ_PROPERTY_UNKNOWN);
 			}
 		}
 	}
