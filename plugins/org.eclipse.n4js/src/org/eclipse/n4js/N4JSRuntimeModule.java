@@ -74,6 +74,7 @@ import org.eclipse.n4js.validation.N4JSIssueSeveritiesProvider;
 import org.eclipse.n4js.validation.N4JSJavaScriptVariantHelper;
 import org.eclipse.n4js.validation.N4JSResourceValidator;
 import org.eclipse.n4js.xsemantics.InternalTypeSystem;
+import org.eclipse.n4js.xtext.serializer.SerializerPatchModule;
 import org.eclipse.xsemantics.runtime.StringRepresentation;
 import org.eclipse.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator;
 import org.eclipse.xtext.conversion.IValueConverterService;
@@ -540,6 +541,11 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 	/** Bind N4JS composite generator */
 	public Class<? extends ICompositeGenerator> bindICompositeGenerator() {
 		return N4JSCompositeGenerator.class;
+	}
+
+	/** Avoid races in internal serializer caches */
+	public void configureSerializerPatches(Binder binder) {
+		new SerializerPatchModule().configure(binder);
 	}
 
 	//// N4IDL specific bindings
