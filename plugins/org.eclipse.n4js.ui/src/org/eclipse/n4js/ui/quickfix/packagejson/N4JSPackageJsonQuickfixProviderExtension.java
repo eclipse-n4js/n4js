@@ -55,7 +55,6 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 	@Inject
 	private StatusHelper statusHelper;
 
-	// write/enable tests!
 	/** Installs a specific npm */
 	@Fix(IssueCodes.NON_EXISTING_PROJECT)
 	public void installMissingNPM(Issue issue, IssueResolutionAcceptor acceptor) {
@@ -63,7 +62,7 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 		final String packageName = userData[0];
 		final String versionRequirement = userData[1];
 		final String msgAtVersion = Strings.isNullOrEmpty(versionRequirement) ? "" : "@" + versionRequirement;
-		final String label = "npm install " + packageName + msgAtVersion + " --save";
+		final String label = "Install npm " + packageName + msgAtVersion;
 		final String description = "Calls npm to install the missing npm package into the workspace.";
 
 		N4Modification modification = new N4Modification() {
@@ -123,7 +122,6 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 	/** Changes the project type to {@link ProjectType#VALIDATION} */
 	@Fix(IssueCodes.OUTPUT_AND_SOURCES_FOLDER_NESTING)
 	public void changeProjectTypeToValidation(Issue issue, IssueResolutionAcceptor acceptor) {
-		// <--- do pre-processing here (if required)
 		String validationPT = ProjectType.VALIDATION.getName().toLowerCase();
 		String title = "Change project type to '" + validationPT + "'";
 		String descr = "The project type '" + validationPT

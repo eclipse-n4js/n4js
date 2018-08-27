@@ -19,9 +19,6 @@ import com.google.inject.Singleton;
 
 /**
  * A singleton registry for all registered JSON language extensions.
- * 
- * Language extensions may also be registered programmatically via
- * {@link #register(IssueResolutionProvider)}.
  */
 @Singleton
 public class JSONUiExtensionRegistry {
@@ -108,7 +105,7 @@ public class JSONUiExtensionRegistry {
 	 * Registers the given {@code quickfixProviderExtension} with the
 	 * {@link JSONUiExtensionRegistry}.
 	 */
-	public void register(IssueResolutionProvider quickfixProviderExtension) {
+	private void register(IssueResolutionProvider quickfixProviderExtension) {
 		ensureInitialization(); // trigger lazy initialization, if required
 		this.quickfixProviderExtensions.add(quickfixProviderExtension);
 	}

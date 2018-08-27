@@ -24,7 +24,7 @@ import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 
 /**
- *
+ * Class to implement changes that are performed in package.json files due to quickfixes.
  */
 public class PackageJsonChangeProvider {
 
