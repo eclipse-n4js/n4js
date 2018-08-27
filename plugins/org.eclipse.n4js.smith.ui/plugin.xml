@@ -30,7 +30,7 @@ Contributors:
       <view
             category="org.eclipse.n4js.category"
             class="org.eclipse.n4js.smith.ui.SmithExecutableExtensionFactory:org.eclipse.n4js.smith.ui.SourceMapView"
-            icon="icons/graphAST.gif"
+            icon="icons/graphAST.png"
             id="org.eclipse.n4js.smith.ui.SourceMapView"
             name="Source Mapping">
       </view>

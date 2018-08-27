@@ -11,6 +11,7 @@ import org.eclipse.n4js.json.JSON.JSONDocument;
  * first.
  */
 public interface IJSONValidatorExtension {
+
 	/**
 	 * Validate the given JSON document element and report issues to {@code diagnosticChain}.
 	 * 

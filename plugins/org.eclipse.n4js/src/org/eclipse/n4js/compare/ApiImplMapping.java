@@ -23,7 +23,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import org.eclipse.n4js.packagejson.PackageJsonConstants;
+import org.eclipse.n4js.packagejson.PackageJsonProperties;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.xtext.xbase.lib.Pair;
@@ -271,9 +271,8 @@ public class ApiImplMapping {
 	 * implementation ID <code>implId</code>.
 	 * <p>
 	 * Note that <code>apiProjectName</code> is a projectName (i.e. package.json property
-	 * {@link PackageJsonConstants#PROP__NAME "name"}) whereas <code>implId</code> is an implementation ID (i.e.
-	 * package.json property {@link PackageJsonConstants#PROP__IMPLEMENTATION_ID "implementationId"} and <b>not</b>
-	 * <code>"name"</code>).
+	 * {@link PackageJsonProperties#NAME "name"}) whereas <code>implId</code> is an implementation ID (i.e. package.json
+	 * property {@link PackageJsonProperties#IMPLEMENTATION_ID "implementationId"} and <b>not</b> <code>"name"</code>).
 	 */
 	public IN4JSProject getImpl(String apiProjectName, String implId) {
 		final ApiImplMapping.ApiImplAssociation pair = assocs.get(apiProjectName);

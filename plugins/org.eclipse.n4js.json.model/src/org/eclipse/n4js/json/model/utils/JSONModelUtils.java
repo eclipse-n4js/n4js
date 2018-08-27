@@ -541,7 +541,7 @@ public class JSONModelUtils {
 
 		// Use temporary Resource as AbstractFormatter2 implementations can only format
 		// semantic elements that are contained in a Resource.
-		Resource temporaryResource = resourceSet.createResource(URI.createFileURI("__synthetic.json"));
+		Resource temporaryResource = resourceSet.createResource(URI.createFileURI("__synthetic." + FILE_EXTENSION));
 		temporaryResource.getContents().add(document);
 
 		// create string writer as serialization output

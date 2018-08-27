@@ -88,7 +88,6 @@ import static org.eclipse.n4js.ui.quickfix.QuickfixUtil.*
  */
 class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 
-
 	@Inject
 	extension ImportUtil
 
@@ -99,7 +98,7 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 	extension QuickfixUtil.IssueUserDataKeysExtension
 
 	@Inject
-	TopLevelVisibilityFixProvider topLevelVisibilityFixProvider;
+	private TopLevelVisibilityFixProvider topLevelVisibilityFixProvider;
 
 	@Inject
 	extension SemanticChangeProvider
@@ -110,15 +109,10 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 	@Inject
 	private LibraryManager libraryManager;
 
-
 	/** Retrieve annotation constants from AnnotationDefinition */
 	static final String INTERNAL_ANNOTATION = AnnotationDefinition.INTERNAL.name;
 	static final String OVERRIDE_ANNOTATION = AnnotationDefinition.OVERRIDE.name;
 	static final String FINAL_ANNOTATION = AnnotationDefinition.FINAL.name;
-
-	@Inject
-	LibraryManager npmManager;
-
 
 	// EXAMPLE FOR STYLE #1 (lambda expression)
 
@@ -611,7 +605,7 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 				}
 			}
 
-			// Non local changes aren't multi appliable
+			// Non local changes aren't multi applicable
 			override supportsMultiApply() {
 				false;
 			}
@@ -661,8 +655,6 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 		});
 	}
 
-
-
 	@Fix(IssueCodes.NON_EXISTING_PROJECT)
 	def tryInstallMissingDependencyFromNpm(Issue issue, IssueResolutionAcceptor acceptor) {
 
@@ -702,7 +694,7 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 				new ProgressMonitorDialog(UIUtils.shell).run(true, false, [monitor |
 					try {
 						val Map<String, NPMVersionRequirement> package = Collections.singletonMap(packageName, packageVersion);
-						multiStatus.merge(npmManager.installNPMs(package, monitor));
+						multiStatus.merge(libraryManager.installNPMs(package, monitor));
 
 					} catch (IllegalBinaryStateException e) {
 						illegalBinaryExcRef.set(e);
