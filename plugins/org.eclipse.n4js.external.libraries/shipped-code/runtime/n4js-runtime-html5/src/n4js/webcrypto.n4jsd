@@ -92,3 +92,23 @@ export external public enum CryptoKeyFormat {
     spki,
     jwk
 }
+
+@StringBased
+export external public enum CryptoAlgorithmNames {
+    RSASSA_PKCS1_v1_5: "RSASSA-PKCS1-v1_5",
+    RSA_PSS:           "RSA-PSS",
+    RSA_OAEP:          "AES-OAEP",
+    ECDSA,
+    ECDH,
+    AES_CTR:           "AES-CTR",
+    AES_CBC:           "AES-CBC",
+    AES_GCM:           "AES-GCM",
+    AES_KW:            "AES-KW",
+    HMAC,
+    SHA_1:             "SHA-1",
+    SHA_256:           "SHA-256",
+    SHA_384:           "SHA-384",
+    SHA_512:           "SHA-512",
+    HKDF,
+    PBKDF2
+}
