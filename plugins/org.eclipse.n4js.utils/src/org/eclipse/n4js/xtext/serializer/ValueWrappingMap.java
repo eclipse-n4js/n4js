@@ -20,7 +20,6 @@ import com.google.common.collect.Maps;
 /**
  * A map that wraps its values on {@link #put(Object, Object)}.
  */
-@SuppressWarnings("javadoc")
 class ValueWrappingMap<K, V> extends ForwardingMap<K, V> {
 
 	private final Function<? super V, ? extends V> wrapper;

@@ -21,21 +21,34 @@
             });
         }
 
-        return new Promise(function(resolve) {
+        var timerHandle;
+
+        new Promise(function(resolve, reject) {
             options = require("./rt/node-bootstrap.js").installN4JSRuntime(options);
 
-            resolve(n4.handleMainModule().then(function(res) {
+            if (options["keep-eventloop"]) {
+                // dummy interval to avoid termination on open main/exec promise:
+                timerHandle = setInterval(function() {}, Number.MAX_SAFE_INTEGER);
+            }
+
+            n4.handleMainModule().then(function() {
                 if (options.debug) {
                     console.log("## node.js exec done.");
                 }
-                return res;
-            }));
-        }).catch(function(err) {
-            console.error((err && typeof err === "object") && err.stack || err);
+                resolve();
+            }, reject);
+        }).then(function() {
+            clearInterval(timerHandle);
+        }, function(err) {
+            if (err && (typeof err === "string" || typeof err === "object")) {
+                // just log errors in case rejection with a string or an Error: 
+                console.error(err.stack || err);
+            }
+            clearInterval(timerHandle);
             if (exitOnError) {
+                // Flush stdout and exit:
                 process.stdout.write("", process.exit.bind(process, 1));
             }
-            throw err;
         });
     };
 })();

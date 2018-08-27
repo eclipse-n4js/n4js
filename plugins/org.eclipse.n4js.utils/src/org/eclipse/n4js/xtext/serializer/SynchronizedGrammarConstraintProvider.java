@@ -17,7 +17,7 @@ import org.eclipse.xtext.xbase.lib.util.ReflectExtensions;
 
 import com.google.inject.Singleton;
 
-@SuppressWarnings({ "javadoc", "restriction" })
+@SuppressWarnings({ "restriction" })
 @Singleton
 class SynchronizedGrammarConstraintProvider extends GrammarConstraintProvider {
 

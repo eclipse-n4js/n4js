@@ -14,7 +14,7 @@ import org.eclipse.xtext.serializer.analysis.SemanticSequencerNfaProvider;
 
 import com.google.inject.Singleton;
 
-@SuppressWarnings({ "restriction", "javadoc" })
+@SuppressWarnings({ "restriction" })
 @Singleton
 class SynchronizedSemanticSequencerNfaProvider extends SemanticSequencerNfaProvider {
 

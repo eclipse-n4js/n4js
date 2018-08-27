@@ -19,7 +19,7 @@ import org.eclipse.xtext.util.formallang.Pda;
 
 import com.google.inject.Singleton;
 
-@SuppressWarnings({ "restriction", "javadoc" })
+@SuppressWarnings({ "restriction" })
 @Singleton
 class SynchronizedGrammarPDAProvider extends GrammarPDAProvider {
 
