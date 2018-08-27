@@ -245,9 +245,10 @@ class PackageJsonHelperTest {
 	}
 
 	@Test
-	def void testDefaultValues_projectTypeValidationExplicitlySet() {
+	def void testDefaultValues_defaultProjectTypeExplicitlySet() {
+		val defaultProjectType = "plainjs";
 		val pd = '''
-			{ "n4js": { "projectType": "validation" } }
+			{ "n4js": { "projectType": "«defaultProjectType»" } }
 		'''.parseAndConvert
 
 		assertCorrectDefaults(pd, true);
@@ -277,7 +278,7 @@ class PackageJsonHelperTest {
 		if(hasDefaultProjectType) {
 			assertEquals(ProjectType.PLAINJS, pd.projectType);
 		} else {
-			assertNotEquals(ProjectType.VALIDATION, pd.projectType);
+			assertNotEquals(ProjectType.PLAINJS, pd.projectType);
 		}
 		assertEquals(MAIN_MODULE.defaultValue, pd.mainModule);
 		assertEquals(null, pd.extendedRuntimeEnvironment);
