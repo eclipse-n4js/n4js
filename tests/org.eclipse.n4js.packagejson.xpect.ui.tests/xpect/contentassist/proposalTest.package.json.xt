@@ -1,0 +1,64 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.ui.tests.PackageJsonXpectPluginTest
+
+	Workspace {
+		JavaProject "P" {
+			ThisFile { from = "proposalTest.package.json.xt" }
+			Folder "src" {}
+		}
+	}
+
+	END_SETUP
+*/
+
+
+{
+	/* XPECT contentAssistList at '<|>"name": "P",' proposals ---
+		\"dependencies\": {} - Dependencies of this npm,
+		\"devDependencies\": {} - Development dependencies of this npm,
+		\"main\": \"\" - Main module. path is relative to package root,
+		\"name\": \"value\" - Generic name value pair,
+		\"version\": \"\" - Npm semver version
+	--- */
+	"name": "P",
+	/* XPECT contentAssistList at '"n4js": {<|>' proposals ---
+	   	\"definesPackage\": \"\" - ,
+	   	\"execModule\": \"\" - ,
+	   	\"extendedRuntimeEnvironment\": \"\" - ,
+	   	\"implementationId\": \"\" -,
+	   	\"implementedProjects\": [] -,
+	   	\"initModules\": [] -,
+	   	\"mainModule\": \"\" - Main module specifier. Starts from source folder(s),
+	   	\"moduleFilters\": {} -,
+	   	\"moduleLoader\": \"\" -,
+	   	\"name\": \"value\" - Generic name value pair,
+	   	\"noModuleWrap\": {} -,
+	   	\"noValidate\": {} -,
+	   	\"providedRuntimeLibraries\": [] -,
+	   	\"requiredRuntimeLibraries\": [] -,
+	   	\"testedProjects\": [] - Projects that are tested by this project,
+	   	\"typeDependencies\": {} - deprecated,
+	   	\"vendorId\": \"\" -,
+	   	\"vendorName\": \"\" -
+	--- */
+	"n4js": {
+		"projectType": "library",
+		"output": "src-gen",
+		"sources": {
+			"source": [
+				"src"
+			]
+		}
+	}
+}
+
