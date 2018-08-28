@@ -1455,4 +1455,10 @@ Contributors:
             class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.quickfix.packagejson.N4JSPackageJsonQuickfixProviderExtension">
       </quickfixProvider>
    </extension>
+   <extension
+         point="org.eclipse.n4js.json.ui.proposalProvider">
+      <proposalProvider
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.proposals.packagejson.PackageJsonProposalProvider">
+      </proposalProvider>
+   </extension>
 </plugin>

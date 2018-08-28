@@ -12,6 +12,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.RegistryFactory;
+import org.eclipse.n4js.json.ui.contentassist.AbstractJSONProposalProvider;
 import org.eclipse.n4js.json.validation.extension.IJSONValidatorExtension;
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionProvider;
 
@@ -23,6 +24,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class JSONUiExtensionRegistry {
 	private static final String JSON_QUICKFIXPROVIDER_EXTENSIONS_POINT_ID = "org.eclipse.n4js.json.ui.quickfixProvider";
+	private static final String JSON_PROPOSALPROVIDER_EXTENSIONS_POINT_ID = "org.eclipse.n4js.json.ui.proposalProvider";
 
 	private static final String JSON_EXTENSIONS_POINT_CLASS_PROPERTY = "class";
 
@@ -33,6 +35,10 @@ public class JSONUiExtensionRegistry {
 	// Cached result of the a query to the IExtensionRegistry.
 	// Only access via #getQuickfixProviderExtensions().
 	private Set<IssueResolutionProvider> quickfixProviderExtensions;
+
+	// Cached result of the a query to the IExtensionRegistry.
+	// Only access via #getProposalProviderExtensions().
+	private Set<AbstractJSONProposalProvider> proposalProviderExtensions;
 
 	/**
 	 * Initializes the registry by querying the {@link IExtensionRegistry} for all
@@ -45,11 +51,15 @@ public class JSONUiExtensionRegistry {
 		}
 		// make sure fields are set to non-null value
 		this.quickfixProviderExtensions = new HashSet<>();
+		this.proposalProviderExtensions = new HashSet<>();
 
 		this.isInitialized = true;
 
 		// query the extension registry for JSON quickfix extensions and register them
 		createExecutableExtensions(JSON_QUICKFIXPROVIDER_EXTENSIONS_POINT_ID, IssueResolutionProvider.class)
+				.forEach(this::register);
+		// query the extension registry for JSON proposal extensions and register them
+		createExecutableExtensions(JSON_PROPOSALPROVIDER_EXTENSIONS_POINT_ID, AbstractJSONProposalProvider.class)
 				.forEach(this::register);
 	}
 
@@ -102,12 +112,30 @@ public class JSONUiExtensionRegistry {
 	}
 
 	/**
+	 * Returns a list of all {@link IJSONValidatorExtension}s that were registered
+	 * via the JSON quickfix extension point.
+	 */
+	public Collection<AbstractJSONProposalProvider> getProposalProviderExtensions() {
+		ensureInitialization(); // trigger lazy initialization, if required
+		return this.proposalProviderExtensions;
+	}
+
+	/**
 	 * Registers the given {@code quickfixProviderExtension} with the
 	 * {@link JSONUiExtensionRegistry}.
 	 */
 	private void register(IssueResolutionProvider quickfixProviderExtension) {
 		ensureInitialization(); // trigger lazy initialization, if required
 		this.quickfixProviderExtensions.add(quickfixProviderExtension);
+	}
+
+	/**
+	 * Registers the given {@code proposalProviderExtension} with the
+	 * {@link JSONUiExtensionRegistry}.
+	 */
+	private void register(AbstractJSONProposalProvider proposalProviderExtension) {
+		ensureInitialization(); // trigger lazy initialization, if required
+		this.proposalProviderExtensions.add(proposalProviderExtension);
 	}
 
 	/**

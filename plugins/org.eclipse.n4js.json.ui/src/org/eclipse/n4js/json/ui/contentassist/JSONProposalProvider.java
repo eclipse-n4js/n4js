@@ -12,11 +12,10 @@ package org.eclipse.n4js.json.ui.contentassist;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.StyledString;
-import org.eclipse.n4js.json.JSON.NameValuePair;
+import org.eclipse.n4js.json.ui.extension.JSONUiExtensionRegistry;
 import org.eclipse.xtext.Assignment;
 import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.RuleCall;
-import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.ui.editor.contentassist.ConfigurableCompletionProposal;
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor;
@@ -27,6 +26,9 @@ import com.google.inject.Inject;
  * Custom content proposal support for JSON documents.
  */
 public class JSONProposalProvider extends AbstractJSONProposalProvider {
+
+	@Inject
+	private JSONUiExtensionRegistry registry;
 
 	@Inject
 	private NameValuePairProposalFactory nameValuePairProposalFactory;
@@ -43,6 +45,11 @@ public class JSONProposalProvider extends AbstractJSONProposalProvider {
 		if (!context.getPrefix().isEmpty()) {
 			return;
 		}
+
+		for (AbstractJSONProposalProvider pe : registry.getProposalProviderExtensions()) {
+			pe.complete_JSONArray(model, ruleCall, context, acceptor);
+		}
+
 		acceptor.accept(new ConfigurableCompletionProposal("[]", context.getOffset(), 0, 1, null,
 				createStyledString("[...]", "Array"), null, ""));
 	}
@@ -55,6 +62,7 @@ public class JSONProposalProvider extends AbstractJSONProposalProvider {
 	@Override
 	public void complete_STRING(EObject model, RuleCall ruleCall, ContentAssistContext context,
 			ICompletionProposalAcceptor acceptor) {
+
 		// do not propose a string literal, if a name-value-pair is expected
 		if (ruleCall.eContainer() instanceof Assignment
 				&& ((Assignment) ruleCall.eContainer()).getFeature().equals("name")) {
@@ -65,6 +73,11 @@ public class JSONProposalProvider extends AbstractJSONProposalProvider {
 		if (!context.getPrefix().isEmpty()) {
 			return;
 		}
+
+		for (AbstractJSONProposalProvider pe : registry.getProposalProviderExtensions()) {
+			pe.complete_STRING(model, ruleCall, context, acceptor);
+		}
+
 		acceptor.accept(new ConfigurableCompletionProposal("\"\"", context.getOffset(), 0, 1, null,
 				createStyledString("\"...\"", "String"), null, ""));
 	}
@@ -93,6 +106,11 @@ public class JSONProposalProvider extends AbstractJSONProposalProvider {
 		if (!context.getPrefix().isEmpty()) {
 			return;
 		}
+
+		for (AbstractJSONProposalProvider pe : registry.getProposalProviderExtensions()) {
+			pe.complete_JSONObject(model, ruleCall, context, acceptor);
+		}
+
 		acceptor.accept(new ConfigurableCompletionProposal("{}", context.getOffset(), 0, 1, null,
 				createStyledString("{...}", "Object"), null, ""));
 	}
@@ -109,19 +127,11 @@ public class JSONProposalProvider extends AbstractJSONProposalProvider {
 			return;
 		}
 
-		boolean trailingComma = false;
-
-		// add trailing comma, if the name-value pair is inserted in the middle of a
-		// list of existing pairs.
-		final INode currentNode = context.getCurrentNode();
-		if (currentNode.hasNextSibling()) {
-			final INode nextSibling = currentNode.getNextSibling();
-			if (nextSibling.getSemanticElement() instanceof NameValuePair) {
-				trailingComma = true;
-			}
+		for (AbstractJSONProposalProvider pe : registry.getProposalProviderExtensions()) {
+			pe.complete_NameValuePair(model, ruleCall, context, acceptor);
 		}
 
-		acceptor.accept(nameValuePairProposalFactory.createNameValuePairProposal(context, trailingComma));
+		acceptor.accept(nameValuePairProposalFactory.createNameValuePairProposal(context));
 	}
 
 	/**

@@ -1,6 +1,7 @@
 package org.eclipse.n4js.packagejson.xpect.ui.tests;
 
 import org.eclipse.n4js.json.validation.suppression.JSONSuppressIssuesSetup;
+import org.eclipse.n4js.xpect.ui.methods.contentassist.ContentAssistXpectMethod;
 import org.eclipse.xpect.XpectImport;
 import org.eclipse.xpect.runner.XpectRunner;
 import org.eclipse.xpect.runner.XpectSuiteClasses;
@@ -13,7 +14,8 @@ import org.junit.runner.RunWith;
  * Test suite for running Plug-In UI based N4JS package.json tests.
  */
 @XpectSuiteClasses({
-		ValidationTest.class
+		ValidationTest.class,
+		ContentAssistXpectMethod.class
 })
 @RunWith(XpectRunner.class)
 @XpectTestFiles(relativeTo = FileRoot.PROJECT, baseDir = "xpect", fileExtensions = { "xt" })
