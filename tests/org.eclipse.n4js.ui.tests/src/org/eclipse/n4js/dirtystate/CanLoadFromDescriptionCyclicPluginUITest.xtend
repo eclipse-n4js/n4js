@@ -17,17 +17,17 @@ import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.core.runtime.ICoreRunnable
 import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.emf.common.util.URI
-import org.junit.Ignore
 import org.junit.Test
 import org.eclipse.n4js.N4JSGlobals
 
 import static org.junit.Assert.*
 import org.eclipse.n4js.tests.util.EclipseUIUtils
+import org.eclipse.xtext.util.StringInputStream
+import org.eclipse.core.runtime.CoreException
 
 /**
  * Test builder / editor behavior with multiple files and cyclic dependencies.
  */
-@Ignore("IDE-2896") // FIXME IDE-2896 re-enable this test!
 class CanLoadFromDescriptionCyclicPluginUITest extends AbstractCanLoadFromDescriptionTest {
 	/*
 	 * X <- Y <- A <- B <- C <- D
@@ -166,6 +166,13 @@ class CanLoadFromDescriptionCyclicPluginUITest extends AbstractCanLoadFromDescri
 		assertMarkers("file D should have no errors", fileD, 0)
 		assertMarkers("file P should have no errors", fileP, 0)
 		assertMarkers("file Q should have no errors", fileQ, 0)
+	}
+	
+	/* Same as the super impl but without the super expensive waitForAutobuild */	
+	override protected IFile doCreateTestFile(IFolder folder, String fullName, CharSequence content) throws CoreException {
+		return folder.getFile(fullName) => [
+			create(new StringInputStream(content.toString()), true, new NullProgressMonitor())
+		]
 	}
 
 	@Test

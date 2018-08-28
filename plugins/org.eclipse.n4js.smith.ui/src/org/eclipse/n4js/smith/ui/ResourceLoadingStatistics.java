@@ -18,6 +18,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.eclipse.core.resources.IProject;
@@ -25,19 +26,19 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
-import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
 import org.eclipse.n4js.utils.resources.ExternalProject;
 import org.eclipse.xtext.builder.MonitorBasedCancelIndicator;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 
 import com.google.common.base.Optional;
+import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -63,6 +64,7 @@ public class ResourceLoadingStatistics {
 		int countBuiltIn;
 		int countLoadedFromAST;
 		int countLoadedFromIndex;
+		long timeInMs;
 
 		public FileLoadInfo(URI fileURI) {
 			this.fileURI = fileURI;
@@ -70,19 +72,21 @@ public class ResourceLoadingStatistics {
 
 		void println(PrintStream out) {
 			final String name = fileURI.lastSegment();
-			out.printf("%-50s   %3d   (%3d = %3d + %3d + %3d)",
+			out.printf("%-50s   %3d   (%3d = %3d + %3d + %3d) in %5d ms",
 					name,
 					countTotal,
 					countLoadedFromAST + countLoadedFromIndex + countBuiltIn,
 					countLoadedFromAST,
 					countLoadedFromIndex,
-					countBuiltIn);
+					countBuiltIn,
+					timeInMs);
 			out.println();
 		}
 
-		static void printReport(IN4JSProject project, List<FileLoadInfo> results, PrintStream out) {
+		static void printReport(IN4JSProject project, List<FileLoadInfo> results, PrintStream out, String elapsedTime) {
 			out.println("------------------------------------------------------------------------------------");
-			out.println("Resource loading per file for project: " + project.getLocation().lastSegment());
+			out.println("Resource loading per file for project: " + project.getLocation().lastSegment() + " took "
+					+ elapsedTime);
 			out.println();
 			final List<FileLoadInfo> othersFromAST = results.stream().filter(result -> result.countLoadedFromAST > 0)
 					.collect(Collectors.toList());
@@ -144,13 +148,14 @@ public class ResourceLoadingStatistics {
 		monitor.beginTask("Investigate projects in workspace ... ", uriCount);
 		for (Entry<IN4JSProject, List<URI>> entry : urisPerProject.entrySet()) {
 			operationCanceledManager.checkCanceled(cancelIndicator);
+			Stopwatch stopwatch = Stopwatch.createStarted();
 			final IN4JSProject project = entry.getKey();
 			final List<URI> uris = entry.getValue();
 			final List<FileLoadInfo> results = investigate(project, uris, out, monitor, false);
 			out.println();
 			out.println("SUMMARY:");
 			out.println();
-			FileLoadInfo.printReport(project, results, out);
+			FileLoadInfo.printReport(project, results, out, stopwatch.toString());
 		}
 	}
 
@@ -171,6 +176,7 @@ public class ResourceLoadingStatistics {
 		for (int i = 0; i < urisCount; i++) {
 			final URI uri = urisToInvestigate.get(i);
 			monitor.subTask("Investigating file " + uri.lastSegment() + " ...");
+			Stopwatch perResource = Stopwatch.createStarted();
 			if (printProgressToOut) {
 				final int progress = (int) Math.floor(((float) i) / ((float) urisCount) * 100.0f);
 				out.println("Investigating file " + uri.lastSegment()
@@ -179,6 +185,7 @@ public class ResourceLoadingStatistics {
 			try {
 				final FileLoadInfo currResult = investigate(project, uri, monitor);
 				results.add(currResult);
+				currResult.timeInMs = perResource.elapsed(TimeUnit.MILLISECONDS);
 				currResult.println(out); // note: print currResult always (even if !printProgressToOut)
 			} catch (Throwable th) {
 				if (operationCanceledManager.isOperationCanceledException(th)) {
@@ -239,8 +246,7 @@ public class ResourceLoadingStatistics {
 			if (!isBuiltInResource(res)) {
 				if (res instanceof N4JSResource) {
 					final N4JSResource resCasted = (N4JSResource) res;
-					final Script script = resCasted.getScript();
-					if (script != null && !script.eIsProxy()) {
+					if (!resCasted.isLoadedFromDescription()) {
 						n++;
 					}
 				}
@@ -255,9 +261,7 @@ public class ResourceLoadingStatistics {
 			if (!isBuiltInResource(res)) {
 				if (res instanceof N4JSResource) {
 					final N4JSResource resCasted = (N4JSResource) res;
-					final Script script = resCasted.getScript();
-					final TModule module = resCasted.getModule();
-					if (script != null && script.eIsProxy() && module != null && !module.eIsProxy()) {
+					if (resCasted.isLoadedFromDescription()) {
 						n++;
 					}
 				}
@@ -270,8 +274,11 @@ public class ResourceLoadingStatistics {
 		final List<URI> urisToInvestigate = Lists.newArrayList();
 		for (IN4JSSourceContainer container : project.getSourceContainers()) {
 			for (URI uri : container) {
-				final String lastSegment = uri.lastSegment();
-				if (lastSegment.endsWith(".n4js") || lastSegment.endsWith(".n4jsd") || lastSegment.endsWith(".n4jsx")) {
+				final String fileExtension = uri.fileExtension();
+				switch (fileExtension) {
+				case "n4js":
+				case "n4jsd":
+				case "n4jsx":
 					urisToInvestigate.add(uri);
 				}
 			}
@@ -284,11 +291,10 @@ public class ResourceLoadingStatistics {
 	}
 
 	private boolean isManagedByLibraryManager(IN4JSProject project) {
-		try {
-			IProject eclipseProject = (IProject) project.getClass().getMethod("getProject").invoke(project);
+		if (project instanceof IN4JSEclipseProject) {
+			IProject eclipseProject = ((IN4JSEclipseProject) project).getProject();
 			return eclipseProject instanceof ExternalProject;
-		} catch (Throwable th) {
-			return false;
 		}
+		return false;
 	}
 }
