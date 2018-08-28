@@ -9,11 +9,13 @@
  *   NumberFour AG - Initial API and implementation
  */
 import { Assert } from "org/eclipse/n4js/mangelhaft/assert/Assert"
-import express from "express"
+// FIXME GH-1018
+//import express from "express"
 
 export public class Failed {
     @Test
     public failed(): void {
+        // FIXME GH-1018
         //Assert.equal(typeof express, "object", "on purpose");
     }
 }
