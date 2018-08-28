@@ -101,29 +101,29 @@ import org.eclipse.n4js.external.ShadowingInfoHelper
  */
 @Singleton
 public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidatorExtension {
-	
+
 	private static final Logger LOGGER = Logger.getLogger(N4JSProjectSetupJsonValidatorExtension);
-	
+
 	static val API_TYPE = anyOf(API);
 	static val RE_TYPE = anyOf(RUNTIME_ENVIRONMENT);
 	static val RL_TYPE = anyOf(RUNTIME_LIBRARY);
 	static val TEST_TYPE = anyOf(TEST);
 	static val RE_OR_RL_TYPE = anyOf(RUNTIME_ENVIRONMENT, RUNTIME_LIBRARY);
 	static val PLAINJS_TYPE = anyOf(PLAINJS);
-	
+
 
 	/**
 	 * Key to store a converted ProjectDescription instance in the validation context for re-use across different check-methods
 	 * @See {@link #getProjectDescription()} 
 	 */
 	private static final String PROJECT_DESCRIPTION_CACHE = "PROJECT_DESCRIPTION_CACHE";
-	
+
 	/**
 	 * Key to store a map of all available projects in the validation context for re-use across different check-methods.
 	 * @See {@link #getAllExistingProjectNames()} 
 	 */
 	private static String ALL_EXISTING_PROJECT_CACHE = "ALL_EXISTING_PROJECT_CACHE";
-	
+
 	/**
 	 * Key to store a map of all declared project dependencies in the validation context for re-use across different check-methods.
 	 * @See {@link #getDeclaredProjectDependencies()} 
@@ -141,28 +141,28 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 
 	@Inject
 	private XpectAwareFileExtensionCalculator fileExtensionCalculator;
-	
+
 	@Inject
 	private ProjectDescriptionLoader projectDescriptionLoader;
-	
+
 	@Inject
 	private WildcardPathFilterHelper wildcardHelper;
-	
+
 	@Inject
 	protected N4JSElementKeywordProvider keywordProvider;
-	
+
 	@Inject
 	protected ShadowingInfoHelper shadowingInfoHelper;
-	
+
 	@Inject
 	protected SemverHelper semverHelper;
-	
+
 	override boolean isResponsible(Map<Object, Object> context, EObject eObject) {
 		// this validator extension only applies to package.json files
 		return fileExtensionCalculator.getFilenameWithoutXpectExtension(eObject.eResource().getURI())
 				.equals(IN4JSProject.PACKAGE_JSON);
 	}
-	
+
 	/**
 	 * According to IDESpec §§12.04 Polyfills at most one Polyfill can be provided for a class.
 	 * Here the consistency according to the given combination of runtime-environment and runtime-libraries of the
@@ -1078,14 +1078,16 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		val description = getProjectDescription();
 		val currentProjectName = description.projectName;
 		val allProjects = getAllExistingProjectNames();
-		
+
 		// keeps track of all valid references
 		val existentIds = HashMultimap.<String, ValidationProjectReference>create;
-		
+
 		val projectDescriptionFileURI = document.eResource.URI;
 		val currentProject = findProject(projectDescriptionFileURI).orNull;
-		
-		references.forEach[ref | 
+
+		val allReferencedProjectNames = references.map[referencedProjectName].toSet;
+
+		for(ref : references) {
 			// check project existence.
 			val id = ref.referencedProjectName;
 			// Assuming completely broken AST.
@@ -1096,7 +1098,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 						IssueCodes.PKGJ_EMPTY_PROJECT_REFERENCE)
 					return;
 				}
-				
+
 				// obtain corresponding IN4JSProject handle
 				val project = allProjects.get(id);
 
@@ -1114,7 +1116,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 					existentIds.put(id, ref);
 				}
 
-				// create only a  single validation issue for a particular project reference.
+				// create only a single validation issue for a particular project reference.
 				if (currentProjectName == id && !allowReflexive) {
 					// reflexive self-references
 					addProjectReferencesItselfIssue(ref.astRepresentation);
@@ -1129,20 +1131,37 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 				// check version constraint if the current project is not external and has no nested 
 				// node_modules folder
 				val boolean ignoreVersion = (currentProject.isExternal && description.hasNestedNodeModulesFolder);
-
 				if (!ignoreVersion) {
 					checkVersions(currentProject, ref, id, allProjects);
 				}
 
+				if (description.projectType !== ProjectType.DEFINITION) {
+					checkImplProjectPresentForReferencedTypeDef(ref, project, allReferencedProjectNames);
+				}
 			}
-		];
+		}
 
 		// check for duplicates among otherwise valid references
 		checkForDuplicateProjectReferences(existentIds)
-		
+
 		// if specified, check that all references also occur in the dependencies sections
 		if (enforceDependency) {
 			checkDeclaredDependencies(existentIds.values, sectionLabel)
+		}
+	}
+
+	private def void checkImplProjectPresentForReferencedTypeDef(ValidationProjectReference ref,
+		IN4JSProject referencedProject, Set<String> allReferencedProjectNames) {
+
+		if (referencedProject.projectType === ProjectType.DEFINITION) {
+			val nameOfProjectDefinedByReferencedProject = referencedProject.definesPackageName;
+			if (!nameOfProjectDefinedByReferencedProject.nullOrEmpty) {
+				if (!allReferencedProjectNames.contains(nameOfProjectDefinedByReferencedProject)) {
+					val msg = IssueCodes.getMessageForPKGJ_IMPL_PROJECT_IS_MISSING_FOR_TYPE_DEF(
+						nameOfProjectDefinedByReferencedProject, ref.referencedProjectName);
+					addIssue(msg, ref.astRepresentation, IssueCodes.PKGJ_IMPL_PROJECT_IS_MISSING_FOR_TYPE_DEF);
+				}
+			}
 		}
 	}
 
