@@ -39,9 +39,10 @@ public class SymbolOfIdentifierRef extends Symbol {
 		/*
 		 * Implementation note:
 		 *
-		 * Conceptually, multiple identifiable elements can point to the same variable. Also, all identifiable elements
-		 * that point to the same variable have the same declaration site. This method is intended to return a unique
-		 * identifier for an IdentifiableElement which is the declaration site.
+		 * Conceptually, multiple identifier references (i.e. IdentifierRefs) can point to the same variable. Also, all
+		 * identifier references that point to the same variable have the same declaration site (i.e. the AST node that
+		 * represents the identifiable element's declaration). This method is intended to return a unique identifier for
+		 * an IdentifierRef which is the declaration site.
 		 *
 		 * However, retrieving the declaration can cause the loading of other n4js modules, for instance when an
 		 * exported declaration is imported and used in the current module. This loading triggers loading from source

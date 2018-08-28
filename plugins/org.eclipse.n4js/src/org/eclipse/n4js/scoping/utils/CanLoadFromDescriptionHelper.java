@@ -165,7 +165,9 @@ public class CanLoadFromDescriptionHelper {
 			boolean considerOnlySameProject) {
 		IN4JSProject thisProject = null;
 		if (considerOnlySameProject && !candidates.isEmpty()) {
-			// early check whether the requested thisURI stems from the same project as the candidates
+			// early check whether the candidates stem from the same project as the requested thisURI
+			// (note: this is based on the assumption that there cannot be a cyclic dependency between modules of
+			// different projects, because cyclic dependencies between projects are disallowed)
 			thisProject = n4jsCore.findProject(thisURI).orNull();
 			candidates = filterCandidatesByProject(candidates, thisProject);
 		}
