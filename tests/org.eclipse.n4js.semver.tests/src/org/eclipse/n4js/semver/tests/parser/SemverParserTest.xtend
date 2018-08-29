@@ -153,11 +153,15 @@ class SemverParserTest {
 	];
 
 	String[] localPathData = #[
-		"file:../foo/bar",
-		"file:../dyl",
-		"file:babel-fi",
-		"file:babel-preset"
-	];
+        "file:../foo/bar",
+        "file:../dyl",
+        "file:babel-fi",
+        "file:babel-preset",
+        "file:/root/subfolder/",
+        "file:/root/subfolder",
+        "file://root/subfolder/",
+        "file://root/subfolder"
+    ];
 
 	String[] githubData = #[
 		"expressjs/express",
@@ -244,7 +248,7 @@ class SemverParserTest {
 		for (String entry : data) {
 			val versionRequirement = entry.parseSuccessfully
 			assertTrue("Parser returned null", versionRequirement !== null);
-			assertTrue("Parser returned type "+ versionRequirement.class.simpleName + " but expected type is " + clazz.simpleName, clazz.isAssignableFrom(versionRequirement.class));
+			assertTrue("Parser returned type "+ versionRequirement.class.simpleName + " but expected type is " + clazz.simpleName + ". Entry was: " + entry, clazz.isAssignableFrom(versionRequirement.class));
 			val serialized = serializer.serialize(versionRequirement);
 			val adjustedEntry = if (adjust !== null) adjust.apply(entry.trim) else entry.trim;
 			assertEquals(adjustedEntry, serialized);
