@@ -1434,20 +1434,26 @@ rulePATH returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
 			newLeafNode(kw, grammarAccess.getPATHAccess().getHyphenMinusKeyword_2());
 		}
 		    |
-		this_DIGITS_3=RULE_DIGITS
+		kw='_'
 		{
-			$current.merge(this_DIGITS_3);
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getPATHAccess().get_Keyword_3());
+		}
+		    |
+		this_DIGITS_4=RULE_DIGITS
+		{
+			$current.merge(this_DIGITS_4);
 		}
 		{
-			newLeafNode(this_DIGITS_3, grammarAccess.getPATHAccess().getDIGITSTerminalRuleCall_3());
+			newLeafNode(this_DIGITS_4, grammarAccess.getPATHAccess().getDIGITSTerminalRuleCall_4());
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getPATHAccess().getLETTERParserRuleCall_4());
+			newCompositeNode(grammarAccess.getPATHAccess().getLETTERParserRuleCall_5());
 		}
-		this_LETTER_4=ruleLETTER
+		this_LETTER_5=ruleLETTER
 		{
-			$current.merge(this_LETTER_4);
+			$current.merge(this_LETTER_5);
 		}
 		{
 			afterParserOrEnumRuleCall();
@@ -1525,20 +1531,26 @@ ruleURL returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
 				newLeafNode(kw, grammarAccess.getURLAccess().getHyphenMinusKeyword_0_0());
 			}
 			    |
-			this_DIGITS_1=RULE_DIGITS
+			kw='_'
 			{
-				$current.merge(this_DIGITS_1);
+				$current.merge(kw);
+				newLeafNode(kw, grammarAccess.getURLAccess().get_Keyword_0_1());
+			}
+			    |
+			this_DIGITS_2=RULE_DIGITS
+			{
+				$current.merge(this_DIGITS_2);
 			}
 			{
-				newLeafNode(this_DIGITS_1, grammarAccess.getURLAccess().getDIGITSTerminalRuleCall_0_1());
+				newLeafNode(this_DIGITS_2, grammarAccess.getURLAccess().getDIGITSTerminalRuleCall_0_2());
 			}
 			    |
 			{
-				newCompositeNode(grammarAccess.getURLAccess().getLETTERParserRuleCall_0_2());
+				newCompositeNode(grammarAccess.getURLAccess().getLETTERParserRuleCall_0_3());
 			}
-			this_LETTER_2=ruleLETTER
+			this_LETTER_3=ruleLETTER
 			{
-				$current.merge(this_LETTER_2);
+				$current.merge(this_LETTER_3);
 			}
 			{
 				afterParserOrEnumRuleCall();
@@ -1600,20 +1612,26 @@ ruleURL returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
 				newLeafNode(kw, grammarAccess.getURLAccess().getHyphenMinusKeyword_2_4());
 			}
 			    |
-			this_DIGITS_12=RULE_DIGITS
+			kw='_'
 			{
-				$current.merge(this_DIGITS_12);
+				$current.merge(kw);
+				newLeafNode(kw, grammarAccess.getURLAccess().get_Keyword_2_5());
+			}
+			    |
+			this_DIGITS_14=RULE_DIGITS
+			{
+				$current.merge(this_DIGITS_14);
 			}
 			{
-				newLeafNode(this_DIGITS_12, grammarAccess.getURLAccess().getDIGITSTerminalRuleCall_2_5());
+				newLeafNode(this_DIGITS_14, grammarAccess.getURLAccess().getDIGITSTerminalRuleCall_2_6());
 			}
 			    |
 			{
-				newCompositeNode(grammarAccess.getURLAccess().getLETTERParserRuleCall_2_6());
+				newCompositeNode(grammarAccess.getURLAccess().getLETTERParserRuleCall_2_7());
 			}
-			this_LETTER_13=ruleLETTER
+			this_LETTER_15=ruleLETTER
 			{
-				$current.merge(this_LETTER_13);
+				$current.merge(this_LETTER_15);
 			}
 			{
 				afterParserOrEnumRuleCall();
@@ -1638,16 +1656,30 @@ ruleURL_NO_VX returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken
 	leaveRule();
 }:
 	(
-		{
-			newCompositeNode(grammarAccess.getURL_NO_VXAccess().getLETTER_NO_VXParserRuleCall_0());
-		}
-		this_LETTER_NO_VX_0=ruleLETTER_NO_VX
-		{
-			$current.merge(this_LETTER_NO_VX_0);
-		}
-		{
-			afterParserOrEnumRuleCall();
-		}
+		(
+			kw='-'
+			{
+				$current.merge(kw);
+				newLeafNode(kw, grammarAccess.getURL_NO_VXAccess().getHyphenMinusKeyword_0_0());
+			}
+			    |
+			kw='_'
+			{
+				$current.merge(kw);
+				newLeafNode(kw, grammarAccess.getURL_NO_VXAccess().get_Keyword_0_1());
+			}
+			    |
+			{
+				newCompositeNode(grammarAccess.getURL_NO_VXAccess().getLETTER_NO_VXParserRuleCall_0_2());
+			}
+			this_LETTER_NO_VX_2=ruleLETTER_NO_VX
+			{
+				$current.merge(this_LETTER_NO_VX_2);
+			}
+			{
+				afterParserOrEnumRuleCall();
+			}
+		)
 		(
 			kw='-'
 			{
@@ -1655,20 +1687,26 @@ ruleURL_NO_VX returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken
 				newLeafNode(kw, grammarAccess.getURL_NO_VXAccess().getHyphenMinusKeyword_1_0());
 			}
 			    |
-			this_DIGITS_2=RULE_DIGITS
+			kw='_'
 			{
-				$current.merge(this_DIGITS_2);
+				$current.merge(kw);
+				newLeafNode(kw, grammarAccess.getURL_NO_VXAccess().get_Keyword_1_1());
+			}
+			    |
+			this_DIGITS_5=RULE_DIGITS
+			{
+				$current.merge(this_DIGITS_5);
 			}
 			{
-				newLeafNode(this_DIGITS_2, grammarAccess.getURL_NO_VXAccess().getDIGITSTerminalRuleCall_1_1());
+				newLeafNode(this_DIGITS_5, grammarAccess.getURL_NO_VXAccess().getDIGITSTerminalRuleCall_1_2());
 			}
 			    |
 			{
-				newCompositeNode(grammarAccess.getURL_NO_VXAccess().getLETTERParserRuleCall_1_2());
+				newCompositeNode(grammarAccess.getURL_NO_VXAccess().getLETTERParserRuleCall_1_3());
 			}
-			this_LETTER_3=ruleLETTER
+			this_LETTER_6=ruleLETTER
 			{
-				$current.merge(this_LETTER_3);
+				$current.merge(this_LETTER_6);
 			}
 			{
 				afterParserOrEnumRuleCall();
@@ -1730,20 +1768,26 @@ ruleURL_NO_VX returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken
 				newLeafNode(kw, grammarAccess.getURL_NO_VXAccess().getHyphenMinusKeyword_3_4());
 			}
 			    |
-			this_DIGITS_13=RULE_DIGITS
+			kw='_'
 			{
-				$current.merge(this_DIGITS_13);
+				$current.merge(kw);
+				newLeafNode(kw, grammarAccess.getURL_NO_VXAccess().get_Keyword_3_5());
+			}
+			    |
+			this_DIGITS_17=RULE_DIGITS
+			{
+				$current.merge(this_DIGITS_17);
 			}
 			{
-				newLeafNode(this_DIGITS_13, grammarAccess.getURL_NO_VXAccess().getDIGITSTerminalRuleCall_3_5());
+				newLeafNode(this_DIGITS_17, grammarAccess.getURL_NO_VXAccess().getDIGITSTerminalRuleCall_3_6());
 			}
 			    |
 			{
-				newCompositeNode(grammarAccess.getURL_NO_VXAccess().getLETTERParserRuleCall_3_6());
+				newCompositeNode(grammarAccess.getURL_NO_VXAccess().getLETTERParserRuleCall_3_7());
 			}
-			this_LETTER_14=ruleLETTER
+			this_LETTER_18=ruleLETTER
 			{
-				$current.merge(this_LETTER_14);
+				$current.merge(this_LETTER_18);
 			}
 			{
 				afterParserOrEnumRuleCall();

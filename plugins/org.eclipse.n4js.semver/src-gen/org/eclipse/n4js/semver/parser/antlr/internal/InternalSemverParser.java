@@ -33,8 +33,9 @@ import java.util.HashMap;
 @SuppressWarnings("all")
 public class InternalSemverParser extends AbstractInternalAntlrParser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "RULE_WS", "RULE_LETTER_V", "RULE_DIGITS", "RULE_LETTER_F", "RULE_LETTER_I", "RULE_LETTER_L", "RULE_LETTER_E", "RULE_LETTER_S", "RULE_LETTER_M", "RULE_LETTER_R", "RULE_LETTER_X", "RULE_ASTERIX", "RULE_LETTER_OTHER", "RULE_WHITESPACE_FRAGMENT", "RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT", "RULE_EOL", "RULE_DECIMAL_DIGIT_FRAGMENT", "RULE_HEX_DIGIT", "RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT", "RULE_ZWJ", "RULE_ZWNJ", "RULE_BOM", "RULE_UNICODE_SPACE_SEPARATOR_FRAGMENT", "RULE_LINE_TERMINATOR_FRAGMENT", "RULE_SL_COMMENT_FRAGMENT", "RULE_ML_COMMENT_FRAGMENT", "RULE_UNICODE_COMBINING_MARK_FRAGMENT", "RULE_UNICODE_DIGIT_FRAGMENT", "RULE_UNICODE_CONNECTOR_PUNCTUATION_FRAGMENT", "RULE_UNICODE_LETTER_FRAGMENT", "RULE_ANY_OTHER", "':'", "'/'", "'#'", "'||'", "'-'", "'.'", "'+'", "'@'", "'='", "'<'", "'~'", "'^'", "'<='", "'>'", "'>='"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "RULE_WS", "RULE_LETTER_V", "RULE_DIGITS", "RULE_LETTER_F", "RULE_LETTER_I", "RULE_LETTER_L", "RULE_LETTER_E", "RULE_LETTER_S", "RULE_LETTER_M", "RULE_LETTER_R", "RULE_LETTER_X", "RULE_ASTERIX", "RULE_LETTER_OTHER", "RULE_WHITESPACE_FRAGMENT", "RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT", "RULE_EOL", "RULE_DECIMAL_DIGIT_FRAGMENT", "RULE_HEX_DIGIT", "RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT", "RULE_ZWJ", "RULE_ZWNJ", "RULE_BOM", "RULE_UNICODE_SPACE_SEPARATOR_FRAGMENT", "RULE_LINE_TERMINATOR_FRAGMENT", "RULE_SL_COMMENT_FRAGMENT", "RULE_ML_COMMENT_FRAGMENT", "RULE_UNICODE_COMBINING_MARK_FRAGMENT", "RULE_UNICODE_DIGIT_FRAGMENT", "RULE_UNICODE_CONNECTOR_PUNCTUATION_FRAGMENT", "RULE_UNICODE_LETTER_FRAGMENT", "RULE_ANY_OTHER", "':'", "'/'", "'#'", "'||'", "'-'", "'.'", "'+'", "'_'", "'@'", "'='", "'<'", "'~'", "'^'", "'<='", "'>'", "'>='"
     };
+    public static final int T__50=50;
     public static final int RULE_WHITESPACE_FRAGMENT=17;
     public static final int RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT=18;
     public static final int RULE_EOL=19;
@@ -191,10 +192,10 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
             int alt5=2;
             int LA5_0 = input.LA(1);
 
-            if ( (LA5_0==EOF||(LA5_0>=RULE_WS && LA5_0<=RULE_DIGITS)||(LA5_0>=RULE_LETTER_X && LA5_0<=RULE_ASTERIX)||(LA5_0>=43 && LA5_0<=49)) ) {
+            if ( (LA5_0==EOF||(LA5_0>=RULE_WS && LA5_0<=RULE_DIGITS)||(LA5_0>=RULE_LETTER_X && LA5_0<=RULE_ASTERIX)||(LA5_0>=44 && LA5_0<=50)) ) {
                 alt5=1;
             }
-            else if ( ((LA5_0>=RULE_LETTER_F && LA5_0<=RULE_LETTER_R)||LA5_0==RULE_LETTER_OTHER) ) {
+            else if ( ((LA5_0>=RULE_LETTER_F && LA5_0<=RULE_LETTER_R)||LA5_0==RULE_LETTER_OTHER||LA5_0==39||LA5_0==42) ) {
                 alt5=2;
             }
             else {
@@ -1606,7 +1607,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
             int alt14=2;
             int LA14_0 = input.LA(1);
 
-            if ( ((LA14_0>=RULE_LETTER_V && LA14_0<=RULE_DIGITS)||(LA14_0>=RULE_LETTER_X && LA14_0<=RULE_ASTERIX)||(LA14_0>=43 && LA14_0<=49)) ) {
+            if ( ((LA14_0>=RULE_LETTER_V && LA14_0<=RULE_DIGITS)||(LA14_0>=RULE_LETTER_X && LA14_0<=RULE_ASTERIX)||(LA14_0>=44 && LA14_0<=50)) ) {
                 alt14=1;
             }
             switch (alt14) {
@@ -2494,7 +2495,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                 int alt21=2;
                 int LA21_0 = input.LA(1);
 
-                if ( ((LA21_0>=43 && LA21_0<=49)) ) {
+                if ( ((LA21_0>=44 && LA21_0<=50)) ) {
                     alt21=1;
                 }
 
@@ -4022,27 +4023,27 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "rulePATH"
-    // InternalSemver.g:1411:1: rulePATH returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (kw= '/' | kw= '.' | kw= '-' | this_DIGITS_3= RULE_DIGITS | this_LETTER_4= ruleLETTER )+ ;
+    // InternalSemver.g:1411:1: rulePATH returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (kw= '/' | kw= '.' | kw= '-' | kw= '_' | this_DIGITS_4= RULE_DIGITS | this_LETTER_5= ruleLETTER )+ ;
     public final AntlrDatatypeRuleToken rulePATH() throws RecognitionException {
         AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
         Token kw=null;
-        Token this_DIGITS_3=null;
-        AntlrDatatypeRuleToken this_LETTER_4 = null;
+        Token this_DIGITS_4=null;
+        AntlrDatatypeRuleToken this_LETTER_5 = null;
 
 
 
         	enterRule();
 
         try {
-            // InternalSemver.g:1417:2: ( (kw= '/' | kw= '.' | kw= '-' | this_DIGITS_3= RULE_DIGITS | this_LETTER_4= ruleLETTER )+ )
-            // InternalSemver.g:1418:2: (kw= '/' | kw= '.' | kw= '-' | this_DIGITS_3= RULE_DIGITS | this_LETTER_4= ruleLETTER )+
+            // InternalSemver.g:1417:2: ( (kw= '/' | kw= '.' | kw= '-' | kw= '_' | this_DIGITS_4= RULE_DIGITS | this_LETTER_5= ruleLETTER )+ )
+            // InternalSemver.g:1418:2: (kw= '/' | kw= '.' | kw= '-' | kw= '_' | this_DIGITS_4= RULE_DIGITS | this_LETTER_5= ruleLETTER )+
             {
-            // InternalSemver.g:1418:2: (kw= '/' | kw= '.' | kw= '-' | this_DIGITS_3= RULE_DIGITS | this_LETTER_4= ruleLETTER )+
+            // InternalSemver.g:1418:2: (kw= '/' | kw= '.' | kw= '-' | kw= '_' | this_DIGITS_4= RULE_DIGITS | this_LETTER_5= ruleLETTER )+
             int cnt30=0;
             loop30:
             do {
-                int alt30=6;
+                int alt30=7;
                 switch ( input.LA(1) ) {
                 case 36:
                     {
@@ -4059,9 +4060,14 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                     alt30=3;
                     }
                     break;
-                case RULE_DIGITS:
+                case 42:
                     {
                     alt30=4;
+                    }
+                    break;
+                case RULE_DIGITS:
+                    {
+                    alt30=5;
                     }
                     break;
                 case RULE_LETTER_V:
@@ -4075,7 +4081,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                 case RULE_LETTER_X:
                 case RULE_LETTER_OTHER:
                     {
-                    alt30=5;
+                    alt30=6;
                     }
                     break;
 
@@ -4122,38 +4128,51 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
             	    }
             	    break;
             	case 4 :
-            	    // InternalSemver.g:1437:3: this_DIGITS_3= RULE_DIGITS
+            	    // InternalSemver.g:1437:3: kw= '_'
             	    {
-            	    this_DIGITS_3=(Token)match(input,RULE_DIGITS,FOLLOW_25); if (state.failed) return current;
+            	    kw=(Token)match(input,42,FOLLOW_25); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
 
-            	      			current.merge(this_DIGITS_3);
-            	      		
-            	    }
-            	    if ( state.backtracking==0 ) {
-
-            	      			newLeafNode(this_DIGITS_3, grammarAccess.getPATHAccess().getDIGITSTerminalRuleCall_3());
+            	      			current.merge(kw);
+            	      			newLeafNode(kw, grammarAccess.getPATHAccess().get_Keyword_3());
             	      		
             	    }
 
             	    }
             	    break;
             	case 5 :
-            	    // InternalSemver.g:1445:3: this_LETTER_4= ruleLETTER
+            	    // InternalSemver.g:1443:3: this_DIGITS_4= RULE_DIGITS
+            	    {
+            	    this_DIGITS_4=(Token)match(input,RULE_DIGITS,FOLLOW_25); if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      			current.merge(this_DIGITS_4);
+            	      		
+            	    }
+            	    if ( state.backtracking==0 ) {
+
+            	      			newLeafNode(this_DIGITS_4, grammarAccess.getPATHAccess().getDIGITSTerminalRuleCall_4());
+            	      		
+            	    }
+
+            	    }
+            	    break;
+            	case 6 :
+            	    // InternalSemver.g:1451:3: this_LETTER_5= ruleLETTER
             	    {
             	    if ( state.backtracking==0 ) {
 
-            	      			newCompositeNode(grammarAccess.getPATHAccess().getLETTERParserRuleCall_4());
+            	      			newCompositeNode(grammarAccess.getPATHAccess().getLETTERParserRuleCall_5());
             	      		
             	    }
             	    pushFollow(FOLLOW_25);
-            	    this_LETTER_4=ruleLETTER();
+            	    this_LETTER_5=ruleLETTER();
 
             	    state._fsp--;
             	    if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
 
-            	      			current.merge(this_LETTER_4);
+            	      			current.merge(this_LETTER_5);
             	      		
             	    }
             	    if ( state.backtracking==0 ) {
@@ -4197,7 +4216,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleURL_PROTOCOL"
-    // InternalSemver.g:1459:1: entryRuleURL_PROTOCOL returns [String current=null] : iv_ruleURL_PROTOCOL= ruleURL_PROTOCOL EOF ;
+    // InternalSemver.g:1465:1: entryRuleURL_PROTOCOL returns [String current=null] : iv_ruleURL_PROTOCOL= ruleURL_PROTOCOL EOF ;
     public final String entryRuleURL_PROTOCOL() throws RecognitionException {
         String current = null;
 
@@ -4205,8 +4224,8 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalSemver.g:1459:52: (iv_ruleURL_PROTOCOL= ruleURL_PROTOCOL EOF )
-            // InternalSemver.g:1460:2: iv_ruleURL_PROTOCOL= ruleURL_PROTOCOL EOF
+            // InternalSemver.g:1465:52: (iv_ruleURL_PROTOCOL= ruleURL_PROTOCOL EOF )
+            // InternalSemver.g:1466:2: iv_ruleURL_PROTOCOL= ruleURL_PROTOCOL EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getURL_PROTOCOLRule()); 
@@ -4237,7 +4256,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleURL_PROTOCOL"
-    // InternalSemver.g:1466:1: ruleURL_PROTOCOL returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_LETTER_NO_VX_0= ruleLETTER_NO_VX (this_LETTER_1= ruleLETTER | kw= '+' )+ ) ;
+    // InternalSemver.g:1472:1: ruleURL_PROTOCOL returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_LETTER_NO_VX_0= ruleLETTER_NO_VX (this_LETTER_1= ruleLETTER | kw= '+' )+ ) ;
     public final AntlrDatatypeRuleToken ruleURL_PROTOCOL() throws RecognitionException {
         AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -4251,11 +4270,11 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalSemver.g:1472:2: ( (this_LETTER_NO_VX_0= ruleLETTER_NO_VX (this_LETTER_1= ruleLETTER | kw= '+' )+ ) )
-            // InternalSemver.g:1473:2: (this_LETTER_NO_VX_0= ruleLETTER_NO_VX (this_LETTER_1= ruleLETTER | kw= '+' )+ )
+            // InternalSemver.g:1478:2: ( (this_LETTER_NO_VX_0= ruleLETTER_NO_VX (this_LETTER_1= ruleLETTER | kw= '+' )+ ) )
+            // InternalSemver.g:1479:2: (this_LETTER_NO_VX_0= ruleLETTER_NO_VX (this_LETTER_1= ruleLETTER | kw= '+' )+ )
             {
-            // InternalSemver.g:1473:2: (this_LETTER_NO_VX_0= ruleLETTER_NO_VX (this_LETTER_1= ruleLETTER | kw= '+' )+ )
-            // InternalSemver.g:1474:3: this_LETTER_NO_VX_0= ruleLETTER_NO_VX (this_LETTER_1= ruleLETTER | kw= '+' )+
+            // InternalSemver.g:1479:2: (this_LETTER_NO_VX_0= ruleLETTER_NO_VX (this_LETTER_1= ruleLETTER | kw= '+' )+ )
+            // InternalSemver.g:1480:3: this_LETTER_NO_VX_0= ruleLETTER_NO_VX (this_LETTER_1= ruleLETTER | kw= '+' )+
             {
             if ( state.backtracking==0 ) {
 
@@ -4277,7 +4296,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
               			afterParserOrEnumRuleCall();
               		
             }
-            // InternalSemver.g:1484:3: (this_LETTER_1= ruleLETTER | kw= '+' )+
+            // InternalSemver.g:1490:3: (this_LETTER_1= ruleLETTER | kw= '+' )+
             int cnt31=0;
             loop31:
             do {
@@ -4294,7 +4313,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
                 switch (alt31) {
             	case 1 :
-            	    // InternalSemver.g:1485:4: this_LETTER_1= ruleLETTER
+            	    // InternalSemver.g:1491:4: this_LETTER_1= ruleLETTER
             	    {
             	    if ( state.backtracking==0 ) {
 
@@ -4320,7 +4339,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
             	    }
             	    break;
             	case 2 :
-            	    // InternalSemver.g:1496:4: kw= '+'
+            	    // InternalSemver.g:1502:4: kw= '+'
             	    {
             	    kw=(Token)match(input,41,FOLLOW_27); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
@@ -4368,7 +4387,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleURL"
-    // InternalSemver.g:1506:1: entryRuleURL returns [String current=null] : iv_ruleURL= ruleURL EOF ;
+    // InternalSemver.g:1512:1: entryRuleURL returns [String current=null] : iv_ruleURL= ruleURL EOF ;
     public final String entryRuleURL() throws RecognitionException {
         String current = null;
 
@@ -4376,8 +4395,8 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalSemver.g:1506:43: (iv_ruleURL= ruleURL EOF )
-            // InternalSemver.g:1507:2: iv_ruleURL= ruleURL EOF
+            // InternalSemver.g:1512:43: (iv_ruleURL= ruleURL EOF )
+            // InternalSemver.g:1513:2: iv_ruleURL= ruleURL EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getURLRule()); 
@@ -4408,41 +4427,46 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleURL"
-    // InternalSemver.g:1513:1: ruleURL returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : ( (kw= '-' | this_DIGITS_1= RULE_DIGITS | this_LETTER_2= ruleLETTER )* (kw= '/' | kw= '.' | kw= ':' | kw= '@' ) (kw= '/' | kw= '.' | kw= ':' | kw= '@' | kw= '-' | this_DIGITS_12= RULE_DIGITS | this_LETTER_13= ruleLETTER )* ) ;
+    // InternalSemver.g:1519:1: ruleURL returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : ( (kw= '-' | kw= '_' | this_DIGITS_2= RULE_DIGITS | this_LETTER_3= ruleLETTER )* (kw= '/' | kw= '.' | kw= ':' | kw= '@' ) (kw= '/' | kw= '.' | kw= ':' | kw= '@' | kw= '-' | kw= '_' | this_DIGITS_14= RULE_DIGITS | this_LETTER_15= ruleLETTER )* ) ;
     public final AntlrDatatypeRuleToken ruleURL() throws RecognitionException {
         AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
         Token kw=null;
-        Token this_DIGITS_1=null;
-        Token this_DIGITS_12=null;
-        AntlrDatatypeRuleToken this_LETTER_2 = null;
+        Token this_DIGITS_2=null;
+        Token this_DIGITS_14=null;
+        AntlrDatatypeRuleToken this_LETTER_3 = null;
 
-        AntlrDatatypeRuleToken this_LETTER_13 = null;
+        AntlrDatatypeRuleToken this_LETTER_15 = null;
 
 
 
         	enterRule();
 
         try {
-            // InternalSemver.g:1519:2: ( ( (kw= '-' | this_DIGITS_1= RULE_DIGITS | this_LETTER_2= ruleLETTER )* (kw= '/' | kw= '.' | kw= ':' | kw= '@' ) (kw= '/' | kw= '.' | kw= ':' | kw= '@' | kw= '-' | this_DIGITS_12= RULE_DIGITS | this_LETTER_13= ruleLETTER )* ) )
-            // InternalSemver.g:1520:2: ( (kw= '-' | this_DIGITS_1= RULE_DIGITS | this_LETTER_2= ruleLETTER )* (kw= '/' | kw= '.' | kw= ':' | kw= '@' ) (kw= '/' | kw= '.' | kw= ':' | kw= '@' | kw= '-' | this_DIGITS_12= RULE_DIGITS | this_LETTER_13= ruleLETTER )* )
+            // InternalSemver.g:1525:2: ( ( (kw= '-' | kw= '_' | this_DIGITS_2= RULE_DIGITS | this_LETTER_3= ruleLETTER )* (kw= '/' | kw= '.' | kw= ':' | kw= '@' ) (kw= '/' | kw= '.' | kw= ':' | kw= '@' | kw= '-' | kw= '_' | this_DIGITS_14= RULE_DIGITS | this_LETTER_15= ruleLETTER )* ) )
+            // InternalSemver.g:1526:2: ( (kw= '-' | kw= '_' | this_DIGITS_2= RULE_DIGITS | this_LETTER_3= ruleLETTER )* (kw= '/' | kw= '.' | kw= ':' | kw= '@' ) (kw= '/' | kw= '.' | kw= ':' | kw= '@' | kw= '-' | kw= '_' | this_DIGITS_14= RULE_DIGITS | this_LETTER_15= ruleLETTER )* )
             {
-            // InternalSemver.g:1520:2: ( (kw= '-' | this_DIGITS_1= RULE_DIGITS | this_LETTER_2= ruleLETTER )* (kw= '/' | kw= '.' | kw= ':' | kw= '@' ) (kw= '/' | kw= '.' | kw= ':' | kw= '@' | kw= '-' | this_DIGITS_12= RULE_DIGITS | this_LETTER_13= ruleLETTER )* )
-            // InternalSemver.g:1521:3: (kw= '-' | this_DIGITS_1= RULE_DIGITS | this_LETTER_2= ruleLETTER )* (kw= '/' | kw= '.' | kw= ':' | kw= '@' ) (kw= '/' | kw= '.' | kw= ':' | kw= '@' | kw= '-' | this_DIGITS_12= RULE_DIGITS | this_LETTER_13= ruleLETTER )*
+            // InternalSemver.g:1526:2: ( (kw= '-' | kw= '_' | this_DIGITS_2= RULE_DIGITS | this_LETTER_3= ruleLETTER )* (kw= '/' | kw= '.' | kw= ':' | kw= '@' ) (kw= '/' | kw= '.' | kw= ':' | kw= '@' | kw= '-' | kw= '_' | this_DIGITS_14= RULE_DIGITS | this_LETTER_15= ruleLETTER )* )
+            // InternalSemver.g:1527:3: (kw= '-' | kw= '_' | this_DIGITS_2= RULE_DIGITS | this_LETTER_3= ruleLETTER )* (kw= '/' | kw= '.' | kw= ':' | kw= '@' ) (kw= '/' | kw= '.' | kw= ':' | kw= '@' | kw= '-' | kw= '_' | this_DIGITS_14= RULE_DIGITS | this_LETTER_15= ruleLETTER )*
             {
-            // InternalSemver.g:1521:3: (kw= '-' | this_DIGITS_1= RULE_DIGITS | this_LETTER_2= ruleLETTER )*
+            // InternalSemver.g:1527:3: (kw= '-' | kw= '_' | this_DIGITS_2= RULE_DIGITS | this_LETTER_3= ruleLETTER )*
             loop32:
             do {
-                int alt32=4;
+                int alt32=5;
                 switch ( input.LA(1) ) {
                 case 39:
                     {
                     alt32=1;
                     }
                     break;
-                case RULE_DIGITS:
+                case 42:
                     {
                     alt32=2;
+                    }
+                    break;
+                case RULE_DIGITS:
+                    {
+                    alt32=3;
                     }
                     break;
                 case RULE_LETTER_V:
@@ -4456,7 +4480,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                 case RULE_LETTER_X:
                 case RULE_LETTER_OTHER:
                     {
-                    alt32=3;
+                    alt32=4;
                     }
                     break;
 
@@ -4464,7 +4488,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
                 switch (alt32) {
             	case 1 :
-            	    // InternalSemver.g:1522:4: kw= '-'
+            	    // InternalSemver.g:1528:4: kw= '-'
             	    {
             	    kw=(Token)match(input,39,FOLLOW_8); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
@@ -4477,38 +4501,51 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
             	    }
             	    break;
             	case 2 :
-            	    // InternalSemver.g:1528:4: this_DIGITS_1= RULE_DIGITS
+            	    // InternalSemver.g:1534:4: kw= '_'
             	    {
-            	    this_DIGITS_1=(Token)match(input,RULE_DIGITS,FOLLOW_8); if (state.failed) return current;
+            	    kw=(Token)match(input,42,FOLLOW_8); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
 
-            	      				current.merge(this_DIGITS_1);
-            	      			
-            	    }
-            	    if ( state.backtracking==0 ) {
-
-            	      				newLeafNode(this_DIGITS_1, grammarAccess.getURLAccess().getDIGITSTerminalRuleCall_0_1());
+            	      				current.merge(kw);
+            	      				newLeafNode(kw, grammarAccess.getURLAccess().get_Keyword_0_1());
             	      			
             	    }
 
             	    }
             	    break;
             	case 3 :
-            	    // InternalSemver.g:1536:4: this_LETTER_2= ruleLETTER
+            	    // InternalSemver.g:1540:4: this_DIGITS_2= RULE_DIGITS
+            	    {
+            	    this_DIGITS_2=(Token)match(input,RULE_DIGITS,FOLLOW_8); if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      				current.merge(this_DIGITS_2);
+            	      			
+            	    }
+            	    if ( state.backtracking==0 ) {
+
+            	      				newLeafNode(this_DIGITS_2, grammarAccess.getURLAccess().getDIGITSTerminalRuleCall_0_2());
+            	      			
+            	    }
+
+            	    }
+            	    break;
+            	case 4 :
+            	    // InternalSemver.g:1548:4: this_LETTER_3= ruleLETTER
             	    {
             	    if ( state.backtracking==0 ) {
 
-            	      				newCompositeNode(grammarAccess.getURLAccess().getLETTERParserRuleCall_0_2());
+            	      				newCompositeNode(grammarAccess.getURLAccess().getLETTERParserRuleCall_0_3());
             	      			
             	    }
             	    pushFollow(FOLLOW_8);
-            	    this_LETTER_2=ruleLETTER();
+            	    this_LETTER_3=ruleLETTER();
 
             	    state._fsp--;
             	    if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
 
-            	      				current.merge(this_LETTER_2);
+            	      				current.merge(this_LETTER_3);
             	      			
             	    }
             	    if ( state.backtracking==0 ) {
@@ -4525,7 +4562,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                 }
             } while (true);
 
-            // InternalSemver.g:1547:3: (kw= '/' | kw= '.' | kw= ':' | kw= '@' )
+            // InternalSemver.g:1559:3: (kw= '/' | kw= '.' | kw= ':' | kw= '@' )
             int alt33=4;
             switch ( input.LA(1) ) {
             case 36:
@@ -4543,7 +4580,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                 alt33=3;
                 }
                 break;
-            case 42:
+            case 43:
                 {
                 alt33=4;
                 }
@@ -4558,7 +4595,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
             switch (alt33) {
                 case 1 :
-                    // InternalSemver.g:1548:4: kw= '/'
+                    // InternalSemver.g:1560:4: kw= '/'
                     {
                     kw=(Token)match(input,36,FOLLOW_28); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -4571,7 +4608,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalSemver.g:1554:4: kw= '.'
+                    // InternalSemver.g:1566:4: kw= '.'
                     {
                     kw=(Token)match(input,40,FOLLOW_28); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -4584,7 +4621,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 3 :
-                    // InternalSemver.g:1560:4: kw= ':'
+                    // InternalSemver.g:1572:4: kw= ':'
                     {
                     kw=(Token)match(input,35,FOLLOW_28); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -4597,9 +4634,9 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 4 :
-                    // InternalSemver.g:1566:4: kw= '@'
+                    // InternalSemver.g:1578:4: kw= '@'
                     {
-                    kw=(Token)match(input,42,FOLLOW_28); if (state.failed) return current;
+                    kw=(Token)match(input,43,FOLLOW_28); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				current.merge(kw);
@@ -4612,10 +4649,10 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalSemver.g:1572:3: (kw= '/' | kw= '.' | kw= ':' | kw= '@' | kw= '-' | this_DIGITS_12= RULE_DIGITS | this_LETTER_13= ruleLETTER )*
+            // InternalSemver.g:1584:3: (kw= '/' | kw= '.' | kw= ':' | kw= '@' | kw= '-' | kw= '_' | this_DIGITS_14= RULE_DIGITS | this_LETTER_15= ruleLETTER )*
             loop34:
             do {
-                int alt34=8;
+                int alt34=9;
                 switch ( input.LA(1) ) {
                 case 36:
                     {
@@ -4632,7 +4669,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                     alt34=3;
                     }
                     break;
-                case 42:
+                case 43:
                     {
                     alt34=4;
                     }
@@ -4642,9 +4679,14 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                     alt34=5;
                     }
                     break;
-                case RULE_DIGITS:
+                case 42:
                     {
                     alt34=6;
+                    }
+                    break;
+                case RULE_DIGITS:
+                    {
+                    alt34=7;
                     }
                     break;
                 case RULE_LETTER_V:
@@ -4658,7 +4700,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                 case RULE_LETTER_X:
                 case RULE_LETTER_OTHER:
                     {
-                    alt34=7;
+                    alt34=8;
                     }
                     break;
 
@@ -4666,7 +4708,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
                 switch (alt34) {
             	case 1 :
-            	    // InternalSemver.g:1573:4: kw= '/'
+            	    // InternalSemver.g:1585:4: kw= '/'
             	    {
             	    kw=(Token)match(input,36,FOLLOW_28); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
@@ -4679,7 +4721,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
             	    }
             	    break;
             	case 2 :
-            	    // InternalSemver.g:1579:4: kw= '.'
+            	    // InternalSemver.g:1591:4: kw= '.'
             	    {
             	    kw=(Token)match(input,40,FOLLOW_28); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
@@ -4692,7 +4734,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
             	    }
             	    break;
             	case 3 :
-            	    // InternalSemver.g:1585:4: kw= ':'
+            	    // InternalSemver.g:1597:4: kw= ':'
             	    {
             	    kw=(Token)match(input,35,FOLLOW_28); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
@@ -4705,9 +4747,9 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
             	    }
             	    break;
             	case 4 :
-            	    // InternalSemver.g:1591:4: kw= '@'
+            	    // InternalSemver.g:1603:4: kw= '@'
             	    {
-            	    kw=(Token)match(input,42,FOLLOW_28); if (state.failed) return current;
+            	    kw=(Token)match(input,43,FOLLOW_28); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
 
             	      				current.merge(kw);
@@ -4718,7 +4760,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
             	    }
             	    break;
             	case 5 :
-            	    // InternalSemver.g:1597:4: kw= '-'
+            	    // InternalSemver.g:1609:4: kw= '-'
             	    {
             	    kw=(Token)match(input,39,FOLLOW_28); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
@@ -4731,38 +4773,51 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
             	    }
             	    break;
             	case 6 :
-            	    // InternalSemver.g:1603:4: this_DIGITS_12= RULE_DIGITS
+            	    // InternalSemver.g:1615:4: kw= '_'
             	    {
-            	    this_DIGITS_12=(Token)match(input,RULE_DIGITS,FOLLOW_28); if (state.failed) return current;
+            	    kw=(Token)match(input,42,FOLLOW_28); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
 
-            	      				current.merge(this_DIGITS_12);
-            	      			
-            	    }
-            	    if ( state.backtracking==0 ) {
-
-            	      				newLeafNode(this_DIGITS_12, grammarAccess.getURLAccess().getDIGITSTerminalRuleCall_2_5());
+            	      				current.merge(kw);
+            	      				newLeafNode(kw, grammarAccess.getURLAccess().get_Keyword_2_5());
             	      			
             	    }
 
             	    }
             	    break;
             	case 7 :
-            	    // InternalSemver.g:1611:4: this_LETTER_13= ruleLETTER
+            	    // InternalSemver.g:1621:4: this_DIGITS_14= RULE_DIGITS
+            	    {
+            	    this_DIGITS_14=(Token)match(input,RULE_DIGITS,FOLLOW_28); if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      				current.merge(this_DIGITS_14);
+            	      			
+            	    }
+            	    if ( state.backtracking==0 ) {
+
+            	      				newLeafNode(this_DIGITS_14, grammarAccess.getURLAccess().getDIGITSTerminalRuleCall_2_6());
+            	      			
+            	    }
+
+            	    }
+            	    break;
+            	case 8 :
+            	    // InternalSemver.g:1629:4: this_LETTER_15= ruleLETTER
             	    {
             	    if ( state.backtracking==0 ) {
 
-            	      				newCompositeNode(grammarAccess.getURLAccess().getLETTERParserRuleCall_2_6());
+            	      				newCompositeNode(grammarAccess.getURLAccess().getLETTERParserRuleCall_2_7());
             	      			
             	    }
             	    pushFollow(FOLLOW_28);
-            	    this_LETTER_13=ruleLETTER();
+            	    this_LETTER_15=ruleLETTER();
 
             	    state._fsp--;
             	    if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
 
-            	      				current.merge(this_LETTER_13);
+            	      				current.merge(this_LETTER_15);
             	      			
             	    }
             	    if ( state.backtracking==0 ) {
@@ -4804,7 +4859,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleURL_NO_VX"
-    // InternalSemver.g:1626:1: entryRuleURL_NO_VX returns [String current=null] : iv_ruleURL_NO_VX= ruleURL_NO_VX EOF ;
+    // InternalSemver.g:1644:1: entryRuleURL_NO_VX returns [String current=null] : iv_ruleURL_NO_VX= ruleURL_NO_VX EOF ;
     public final String entryRuleURL_NO_VX() throws RecognitionException {
         String current = null;
 
@@ -4812,8 +4867,8 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalSemver.g:1626:49: (iv_ruleURL_NO_VX= ruleURL_NO_VX EOF )
-            // InternalSemver.g:1627:2: iv_ruleURL_NO_VX= ruleURL_NO_VX EOF
+            // InternalSemver.g:1644:49: (iv_ruleURL_NO_VX= ruleURL_NO_VX EOF )
+            // InternalSemver.g:1645:2: iv_ruleURL_NO_VX= ruleURL_NO_VX EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getURL_NO_VXRule()); 
@@ -4844,63 +4899,137 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleURL_NO_VX"
-    // InternalSemver.g:1633:1: ruleURL_NO_VX returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_LETTER_NO_VX_0= ruleLETTER_NO_VX (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_3= ruleLETTER )* (kw= '/' | kw= '.' | kw= ':' | kw= '@' ) (kw= '/' | kw= '.' | kw= ':' | kw= '@' | kw= '-' | this_DIGITS_13= RULE_DIGITS | this_LETTER_14= ruleLETTER )* ) ;
+    // InternalSemver.g:1651:1: ruleURL_NO_VX returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : ( (kw= '-' | kw= '_' | this_LETTER_NO_VX_2= ruleLETTER_NO_VX ) (kw= '-' | kw= '_' | this_DIGITS_5= RULE_DIGITS | this_LETTER_6= ruleLETTER )* (kw= '/' | kw= '.' | kw= ':' | kw= '@' ) (kw= '/' | kw= '.' | kw= ':' | kw= '@' | kw= '-' | kw= '_' | this_DIGITS_17= RULE_DIGITS | this_LETTER_18= ruleLETTER )* ) ;
     public final AntlrDatatypeRuleToken ruleURL_NO_VX() throws RecognitionException {
         AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
         Token kw=null;
-        Token this_DIGITS_2=null;
-        Token this_DIGITS_13=null;
-        AntlrDatatypeRuleToken this_LETTER_NO_VX_0 = null;
+        Token this_DIGITS_5=null;
+        Token this_DIGITS_17=null;
+        AntlrDatatypeRuleToken this_LETTER_NO_VX_2 = null;
 
-        AntlrDatatypeRuleToken this_LETTER_3 = null;
+        AntlrDatatypeRuleToken this_LETTER_6 = null;
 
-        AntlrDatatypeRuleToken this_LETTER_14 = null;
+        AntlrDatatypeRuleToken this_LETTER_18 = null;
 
 
 
         	enterRule();
 
         try {
-            // InternalSemver.g:1639:2: ( (this_LETTER_NO_VX_0= ruleLETTER_NO_VX (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_3= ruleLETTER )* (kw= '/' | kw= '.' | kw= ':' | kw= '@' ) (kw= '/' | kw= '.' | kw= ':' | kw= '@' | kw= '-' | this_DIGITS_13= RULE_DIGITS | this_LETTER_14= ruleLETTER )* ) )
-            // InternalSemver.g:1640:2: (this_LETTER_NO_VX_0= ruleLETTER_NO_VX (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_3= ruleLETTER )* (kw= '/' | kw= '.' | kw= ':' | kw= '@' ) (kw= '/' | kw= '.' | kw= ':' | kw= '@' | kw= '-' | this_DIGITS_13= RULE_DIGITS | this_LETTER_14= ruleLETTER )* )
+            // InternalSemver.g:1657:2: ( ( (kw= '-' | kw= '_' | this_LETTER_NO_VX_2= ruleLETTER_NO_VX ) (kw= '-' | kw= '_' | this_DIGITS_5= RULE_DIGITS | this_LETTER_6= ruleLETTER )* (kw= '/' | kw= '.' | kw= ':' | kw= '@' ) (kw= '/' | kw= '.' | kw= ':' | kw= '@' | kw= '-' | kw= '_' | this_DIGITS_17= RULE_DIGITS | this_LETTER_18= ruleLETTER )* ) )
+            // InternalSemver.g:1658:2: ( (kw= '-' | kw= '_' | this_LETTER_NO_VX_2= ruleLETTER_NO_VX ) (kw= '-' | kw= '_' | this_DIGITS_5= RULE_DIGITS | this_LETTER_6= ruleLETTER )* (kw= '/' | kw= '.' | kw= ':' | kw= '@' ) (kw= '/' | kw= '.' | kw= ':' | kw= '@' | kw= '-' | kw= '_' | this_DIGITS_17= RULE_DIGITS | this_LETTER_18= ruleLETTER )* )
             {
-            // InternalSemver.g:1640:2: (this_LETTER_NO_VX_0= ruleLETTER_NO_VX (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_3= ruleLETTER )* (kw= '/' | kw= '.' | kw= ':' | kw= '@' ) (kw= '/' | kw= '.' | kw= ':' | kw= '@' | kw= '-' | this_DIGITS_13= RULE_DIGITS | this_LETTER_14= ruleLETTER )* )
-            // InternalSemver.g:1641:3: this_LETTER_NO_VX_0= ruleLETTER_NO_VX (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_3= ruleLETTER )* (kw= '/' | kw= '.' | kw= ':' | kw= '@' ) (kw= '/' | kw= '.' | kw= ':' | kw= '@' | kw= '-' | this_DIGITS_13= RULE_DIGITS | this_LETTER_14= ruleLETTER )*
+            // InternalSemver.g:1658:2: ( (kw= '-' | kw= '_' | this_LETTER_NO_VX_2= ruleLETTER_NO_VX ) (kw= '-' | kw= '_' | this_DIGITS_5= RULE_DIGITS | this_LETTER_6= ruleLETTER )* (kw= '/' | kw= '.' | kw= ':' | kw= '@' ) (kw= '/' | kw= '.' | kw= ':' | kw= '@' | kw= '-' | kw= '_' | this_DIGITS_17= RULE_DIGITS | this_LETTER_18= ruleLETTER )* )
+            // InternalSemver.g:1659:3: (kw= '-' | kw= '_' | this_LETTER_NO_VX_2= ruleLETTER_NO_VX ) (kw= '-' | kw= '_' | this_DIGITS_5= RULE_DIGITS | this_LETTER_6= ruleLETTER )* (kw= '/' | kw= '.' | kw= ':' | kw= '@' ) (kw= '/' | kw= '.' | kw= ':' | kw= '@' | kw= '-' | kw= '_' | this_DIGITS_17= RULE_DIGITS | this_LETTER_18= ruleLETTER )*
             {
-            if ( state.backtracking==0 ) {
+            // InternalSemver.g:1659:3: (kw= '-' | kw= '_' | this_LETTER_NO_VX_2= ruleLETTER_NO_VX )
+            int alt35=3;
+            switch ( input.LA(1) ) {
+            case 39:
+                {
+                alt35=1;
+                }
+                break;
+            case 42:
+                {
+                alt35=2;
+                }
+                break;
+            case RULE_LETTER_F:
+            case RULE_LETTER_I:
+            case RULE_LETTER_L:
+            case RULE_LETTER_E:
+            case RULE_LETTER_S:
+            case RULE_LETTER_M:
+            case RULE_LETTER_R:
+            case RULE_LETTER_OTHER:
+                {
+                alt35=3;
+                }
+                break;
+            default:
+                if (state.backtracking>0) {state.failed=true; return current;}
+                NoViableAltException nvae =
+                    new NoViableAltException("", 35, 0, input);
 
-              			newCompositeNode(grammarAccess.getURL_NO_VXAccess().getLETTER_NO_VXParserRuleCall_0());
-              		
+                throw nvae;
             }
-            pushFollow(FOLLOW_8);
-            this_LETTER_NO_VX_0=ruleLETTER_NO_VX();
 
-            state._fsp--;
-            if (state.failed) return current;
-            if ( state.backtracking==0 ) {
+            switch (alt35) {
+                case 1 :
+                    // InternalSemver.g:1660:4: kw= '-'
+                    {
+                    kw=(Token)match(input,39,FOLLOW_8); if (state.failed) return current;
+                    if ( state.backtracking==0 ) {
 
-              			current.merge(this_LETTER_NO_VX_0);
-              		
+                      				current.merge(kw);
+                      				newLeafNode(kw, grammarAccess.getURL_NO_VXAccess().getHyphenMinusKeyword_0_0());
+                      			
+                    }
+
+                    }
+                    break;
+                case 2 :
+                    // InternalSemver.g:1666:4: kw= '_'
+                    {
+                    kw=(Token)match(input,42,FOLLOW_8); if (state.failed) return current;
+                    if ( state.backtracking==0 ) {
+
+                      				current.merge(kw);
+                      				newLeafNode(kw, grammarAccess.getURL_NO_VXAccess().get_Keyword_0_1());
+                      			
+                    }
+
+                    }
+                    break;
+                case 3 :
+                    // InternalSemver.g:1672:4: this_LETTER_NO_VX_2= ruleLETTER_NO_VX
+                    {
+                    if ( state.backtracking==0 ) {
+
+                      				newCompositeNode(grammarAccess.getURL_NO_VXAccess().getLETTER_NO_VXParserRuleCall_0_2());
+                      			
+                    }
+                    pushFollow(FOLLOW_8);
+                    this_LETTER_NO_VX_2=ruleLETTER_NO_VX();
+
+                    state._fsp--;
+                    if (state.failed) return current;
+                    if ( state.backtracking==0 ) {
+
+                      				current.merge(this_LETTER_NO_VX_2);
+                      			
+                    }
+                    if ( state.backtracking==0 ) {
+
+                      				afterParserOrEnumRuleCall();
+                      			
+                    }
+
+                    }
+                    break;
+
             }
-            if ( state.backtracking==0 ) {
 
-              			afterParserOrEnumRuleCall();
-              		
-            }
-            // InternalSemver.g:1651:3: (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_3= ruleLETTER )*
-            loop35:
+            // InternalSemver.g:1683:3: (kw= '-' | kw= '_' | this_DIGITS_5= RULE_DIGITS | this_LETTER_6= ruleLETTER )*
+            loop36:
             do {
-                int alt35=4;
+                int alt36=5;
                 switch ( input.LA(1) ) {
                 case 39:
                     {
-                    alt35=1;
+                    alt36=1;
+                    }
+                    break;
+                case 42:
+                    {
+                    alt36=2;
                     }
                     break;
                 case RULE_DIGITS:
                     {
-                    alt35=2;
+                    alt36=3;
                     }
                     break;
                 case RULE_LETTER_V:
@@ -4914,15 +5043,15 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                 case RULE_LETTER_X:
                 case RULE_LETTER_OTHER:
                     {
-                    alt35=3;
+                    alt36=4;
                     }
                     break;
 
                 }
 
-                switch (alt35) {
+                switch (alt36) {
             	case 1 :
-            	    // InternalSemver.g:1652:4: kw= '-'
+            	    // InternalSemver.g:1684:4: kw= '-'
             	    {
             	    kw=(Token)match(input,39,FOLLOW_8); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
@@ -4935,38 +5064,51 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
             	    }
             	    break;
             	case 2 :
-            	    // InternalSemver.g:1658:4: this_DIGITS_2= RULE_DIGITS
+            	    // InternalSemver.g:1690:4: kw= '_'
             	    {
-            	    this_DIGITS_2=(Token)match(input,RULE_DIGITS,FOLLOW_8); if (state.failed) return current;
+            	    kw=(Token)match(input,42,FOLLOW_8); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
 
-            	      				current.merge(this_DIGITS_2);
-            	      			
-            	    }
-            	    if ( state.backtracking==0 ) {
-
-            	      				newLeafNode(this_DIGITS_2, grammarAccess.getURL_NO_VXAccess().getDIGITSTerminalRuleCall_1_1());
+            	      				current.merge(kw);
+            	      				newLeafNode(kw, grammarAccess.getURL_NO_VXAccess().get_Keyword_1_1());
             	      			
             	    }
 
             	    }
             	    break;
             	case 3 :
-            	    // InternalSemver.g:1666:4: this_LETTER_3= ruleLETTER
+            	    // InternalSemver.g:1696:4: this_DIGITS_5= RULE_DIGITS
+            	    {
+            	    this_DIGITS_5=(Token)match(input,RULE_DIGITS,FOLLOW_8); if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      				current.merge(this_DIGITS_5);
+            	      			
+            	    }
+            	    if ( state.backtracking==0 ) {
+
+            	      				newLeafNode(this_DIGITS_5, grammarAccess.getURL_NO_VXAccess().getDIGITSTerminalRuleCall_1_2());
+            	      			
+            	    }
+
+            	    }
+            	    break;
+            	case 4 :
+            	    // InternalSemver.g:1704:4: this_LETTER_6= ruleLETTER
             	    {
             	    if ( state.backtracking==0 ) {
 
-            	      				newCompositeNode(grammarAccess.getURL_NO_VXAccess().getLETTERParserRuleCall_1_2());
+            	      				newCompositeNode(grammarAccess.getURL_NO_VXAccess().getLETTERParserRuleCall_1_3());
             	      			
             	    }
             	    pushFollow(FOLLOW_8);
-            	    this_LETTER_3=ruleLETTER();
+            	    this_LETTER_6=ruleLETTER();
 
             	    state._fsp--;
             	    if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
 
-            	      				current.merge(this_LETTER_3);
+            	      				current.merge(this_LETTER_6);
             	      			
             	    }
             	    if ( state.backtracking==0 ) {
@@ -4979,44 +5121,44 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
             	    break;
 
             	default :
-            	    break loop35;
+            	    break loop36;
                 }
             } while (true);
 
-            // InternalSemver.g:1677:3: (kw= '/' | kw= '.' | kw= ':' | kw= '@' )
-            int alt36=4;
+            // InternalSemver.g:1715:3: (kw= '/' | kw= '.' | kw= ':' | kw= '@' )
+            int alt37=4;
             switch ( input.LA(1) ) {
             case 36:
                 {
-                alt36=1;
+                alt37=1;
                 }
                 break;
             case 40:
                 {
-                alt36=2;
+                alt37=2;
                 }
                 break;
             case 35:
                 {
-                alt36=3;
+                alt37=3;
                 }
                 break;
-            case 42:
+            case 43:
                 {
-                alt36=4;
+                alt37=4;
                 }
                 break;
             default:
                 if (state.backtracking>0) {state.failed=true; return current;}
                 NoViableAltException nvae =
-                    new NoViableAltException("", 36, 0, input);
+                    new NoViableAltException("", 37, 0, input);
 
                 throw nvae;
             }
 
-            switch (alt36) {
+            switch (alt37) {
                 case 1 :
-                    // InternalSemver.g:1678:4: kw= '/'
+                    // InternalSemver.g:1716:4: kw= '/'
                     {
                     kw=(Token)match(input,36,FOLLOW_28); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -5029,7 +5171,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalSemver.g:1684:4: kw= '.'
+                    // InternalSemver.g:1722:4: kw= '.'
                     {
                     kw=(Token)match(input,40,FOLLOW_28); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -5042,7 +5184,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 3 :
-                    // InternalSemver.g:1690:4: kw= ':'
+                    // InternalSemver.g:1728:4: kw= ':'
                     {
                     kw=(Token)match(input,35,FOLLOW_28); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -5055,9 +5197,9 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 4 :
-                    // InternalSemver.g:1696:4: kw= '@'
+                    // InternalSemver.g:1734:4: kw= '@'
                     {
-                    kw=(Token)match(input,42,FOLLOW_28); if (state.failed) return current;
+                    kw=(Token)match(input,43,FOLLOW_28); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				current.merge(kw);
@@ -5070,39 +5212,44 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalSemver.g:1702:3: (kw= '/' | kw= '.' | kw= ':' | kw= '@' | kw= '-' | this_DIGITS_13= RULE_DIGITS | this_LETTER_14= ruleLETTER )*
-            loop37:
+            // InternalSemver.g:1740:3: (kw= '/' | kw= '.' | kw= ':' | kw= '@' | kw= '-' | kw= '_' | this_DIGITS_17= RULE_DIGITS | this_LETTER_18= ruleLETTER )*
+            loop38:
             do {
-                int alt37=8;
+                int alt38=9;
                 switch ( input.LA(1) ) {
                 case 36:
                     {
-                    alt37=1;
+                    alt38=1;
                     }
                     break;
                 case 40:
                     {
-                    alt37=2;
+                    alt38=2;
                     }
                     break;
                 case 35:
                     {
-                    alt37=3;
+                    alt38=3;
                     }
                     break;
-                case 42:
+                case 43:
                     {
-                    alt37=4;
+                    alt38=4;
                     }
                     break;
                 case 39:
                     {
-                    alt37=5;
+                    alt38=5;
+                    }
+                    break;
+                case 42:
+                    {
+                    alt38=6;
                     }
                     break;
                 case RULE_DIGITS:
                     {
-                    alt37=6;
+                    alt38=7;
                     }
                     break;
                 case RULE_LETTER_V:
@@ -5116,15 +5263,15 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                 case RULE_LETTER_X:
                 case RULE_LETTER_OTHER:
                     {
-                    alt37=7;
+                    alt38=8;
                     }
                     break;
 
                 }
 
-                switch (alt37) {
+                switch (alt38) {
             	case 1 :
-            	    // InternalSemver.g:1703:4: kw= '/'
+            	    // InternalSemver.g:1741:4: kw= '/'
             	    {
             	    kw=(Token)match(input,36,FOLLOW_28); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
@@ -5137,7 +5284,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
             	    }
             	    break;
             	case 2 :
-            	    // InternalSemver.g:1709:4: kw= '.'
+            	    // InternalSemver.g:1747:4: kw= '.'
             	    {
             	    kw=(Token)match(input,40,FOLLOW_28); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
@@ -5150,7 +5297,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
             	    }
             	    break;
             	case 3 :
-            	    // InternalSemver.g:1715:4: kw= ':'
+            	    // InternalSemver.g:1753:4: kw= ':'
             	    {
             	    kw=(Token)match(input,35,FOLLOW_28); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
@@ -5163,9 +5310,9 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
             	    }
             	    break;
             	case 4 :
-            	    // InternalSemver.g:1721:4: kw= '@'
+            	    // InternalSemver.g:1759:4: kw= '@'
             	    {
-            	    kw=(Token)match(input,42,FOLLOW_28); if (state.failed) return current;
+            	    kw=(Token)match(input,43,FOLLOW_28); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
 
             	      				current.merge(kw);
@@ -5176,7 +5323,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
             	    }
             	    break;
             	case 5 :
-            	    // InternalSemver.g:1727:4: kw= '-'
+            	    // InternalSemver.g:1765:4: kw= '-'
             	    {
             	    kw=(Token)match(input,39,FOLLOW_28); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
@@ -5189,38 +5336,51 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
             	    }
             	    break;
             	case 6 :
-            	    // InternalSemver.g:1733:4: this_DIGITS_13= RULE_DIGITS
+            	    // InternalSemver.g:1771:4: kw= '_'
             	    {
-            	    this_DIGITS_13=(Token)match(input,RULE_DIGITS,FOLLOW_28); if (state.failed) return current;
+            	    kw=(Token)match(input,42,FOLLOW_28); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
 
-            	      				current.merge(this_DIGITS_13);
-            	      			
-            	    }
-            	    if ( state.backtracking==0 ) {
-
-            	      				newLeafNode(this_DIGITS_13, grammarAccess.getURL_NO_VXAccess().getDIGITSTerminalRuleCall_3_5());
+            	      				current.merge(kw);
+            	      				newLeafNode(kw, grammarAccess.getURL_NO_VXAccess().get_Keyword_3_5());
             	      			
             	    }
 
             	    }
             	    break;
             	case 7 :
-            	    // InternalSemver.g:1741:4: this_LETTER_14= ruleLETTER
+            	    // InternalSemver.g:1777:4: this_DIGITS_17= RULE_DIGITS
+            	    {
+            	    this_DIGITS_17=(Token)match(input,RULE_DIGITS,FOLLOW_28); if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      				current.merge(this_DIGITS_17);
+            	      			
+            	    }
+            	    if ( state.backtracking==0 ) {
+
+            	      				newLeafNode(this_DIGITS_17, grammarAccess.getURL_NO_VXAccess().getDIGITSTerminalRuleCall_3_6());
+            	      			
+            	    }
+
+            	    }
+            	    break;
+            	case 8 :
+            	    // InternalSemver.g:1785:4: this_LETTER_18= ruleLETTER
             	    {
             	    if ( state.backtracking==0 ) {
 
-            	      				newCompositeNode(grammarAccess.getURL_NO_VXAccess().getLETTERParserRuleCall_3_6());
+            	      				newCompositeNode(grammarAccess.getURL_NO_VXAccess().getLETTERParserRuleCall_3_7());
             	      			
             	    }
             	    pushFollow(FOLLOW_28);
-            	    this_LETTER_14=ruleLETTER();
+            	    this_LETTER_18=ruleLETTER();
 
             	    state._fsp--;
             	    if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
 
-            	      				current.merge(this_LETTER_14);
+            	      				current.merge(this_LETTER_18);
             	      			
             	    }
             	    if ( state.backtracking==0 ) {
@@ -5233,7 +5393,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
             	    break;
 
             	default :
-            	    break loop37;
+            	    break loop38;
                 }
             } while (true);
 
@@ -5262,7 +5422,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleTAG"
-    // InternalSemver.g:1756:1: entryRuleTAG returns [String current=null] : iv_ruleTAG= ruleTAG EOF ;
+    // InternalSemver.g:1800:1: entryRuleTAG returns [String current=null] : iv_ruleTAG= ruleTAG EOF ;
     public final String entryRuleTAG() throws RecognitionException {
         String current = null;
 
@@ -5270,8 +5430,8 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalSemver.g:1756:43: (iv_ruleTAG= ruleTAG EOF )
-            // InternalSemver.g:1757:2: iv_ruleTAG= ruleTAG EOF
+            // InternalSemver.g:1800:43: (iv_ruleTAG= ruleTAG EOF )
+            // InternalSemver.g:1801:2: iv_ruleTAG= ruleTAG EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getTAGRule()); 
@@ -5302,7 +5462,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleTAG"
-    // InternalSemver.g:1763:1: ruleTAG returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_LETTER_NO_VX_0= ruleLETTER_NO_VX (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_3= ruleLETTER )+ ) ;
+    // InternalSemver.g:1807:1: ruleTAG returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_LETTER_NO_VX_0= ruleLETTER_NO_VX (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_3= ruleLETTER )+ ) ;
     public final AntlrDatatypeRuleToken ruleTAG() throws RecognitionException {
         AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -5317,11 +5477,11 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalSemver.g:1769:2: ( (this_LETTER_NO_VX_0= ruleLETTER_NO_VX (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_3= ruleLETTER )+ ) )
-            // InternalSemver.g:1770:2: (this_LETTER_NO_VX_0= ruleLETTER_NO_VX (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_3= ruleLETTER )+ )
+            // InternalSemver.g:1813:2: ( (this_LETTER_NO_VX_0= ruleLETTER_NO_VX (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_3= ruleLETTER )+ ) )
+            // InternalSemver.g:1814:2: (this_LETTER_NO_VX_0= ruleLETTER_NO_VX (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_3= ruleLETTER )+ )
             {
-            // InternalSemver.g:1770:2: (this_LETTER_NO_VX_0= ruleLETTER_NO_VX (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_3= ruleLETTER )+ )
-            // InternalSemver.g:1771:3: this_LETTER_NO_VX_0= ruleLETTER_NO_VX (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_3= ruleLETTER )+
+            // InternalSemver.g:1814:2: (this_LETTER_NO_VX_0= ruleLETTER_NO_VX (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_3= ruleLETTER )+ )
+            // InternalSemver.g:1815:3: this_LETTER_NO_VX_0= ruleLETTER_NO_VX (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_3= ruleLETTER )+
             {
             if ( state.backtracking==0 ) {
 
@@ -5343,189 +5503,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
               			afterParserOrEnumRuleCall();
               		
             }
-            // InternalSemver.g:1781:3: (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_3= ruleLETTER )+
-            int cnt38=0;
-            loop38:
-            do {
-                int alt38=4;
-                switch ( input.LA(1) ) {
-                case 39:
-                    {
-                    alt38=1;
-                    }
-                    break;
-                case RULE_DIGITS:
-                    {
-                    alt38=2;
-                    }
-                    break;
-                case RULE_LETTER_V:
-                case RULE_LETTER_F:
-                case RULE_LETTER_I:
-                case RULE_LETTER_L:
-                case RULE_LETTER_E:
-                case RULE_LETTER_S:
-                case RULE_LETTER_M:
-                case RULE_LETTER_R:
-                case RULE_LETTER_X:
-                case RULE_LETTER_OTHER:
-                    {
-                    alt38=3;
-                    }
-                    break;
-
-                }
-
-                switch (alt38) {
-            	case 1 :
-            	    // InternalSemver.g:1782:4: kw= '-'
-            	    {
-            	    kw=(Token)match(input,39,FOLLOW_25); if (state.failed) return current;
-            	    if ( state.backtracking==0 ) {
-
-            	      				current.merge(kw);
-            	      				newLeafNode(kw, grammarAccess.getTAGAccess().getHyphenMinusKeyword_1_0());
-            	      			
-            	    }
-
-            	    }
-            	    break;
-            	case 2 :
-            	    // InternalSemver.g:1788:4: this_DIGITS_2= RULE_DIGITS
-            	    {
-            	    this_DIGITS_2=(Token)match(input,RULE_DIGITS,FOLLOW_25); if (state.failed) return current;
-            	    if ( state.backtracking==0 ) {
-
-            	      				current.merge(this_DIGITS_2);
-            	      			
-            	    }
-            	    if ( state.backtracking==0 ) {
-
-            	      				newLeafNode(this_DIGITS_2, grammarAccess.getTAGAccess().getDIGITSTerminalRuleCall_1_1());
-            	      			
-            	    }
-
-            	    }
-            	    break;
-            	case 3 :
-            	    // InternalSemver.g:1796:4: this_LETTER_3= ruleLETTER
-            	    {
-            	    if ( state.backtracking==0 ) {
-
-            	      				newCompositeNode(grammarAccess.getTAGAccess().getLETTERParserRuleCall_1_2());
-            	      			
-            	    }
-            	    pushFollow(FOLLOW_25);
-            	    this_LETTER_3=ruleLETTER();
-
-            	    state._fsp--;
-            	    if (state.failed) return current;
-            	    if ( state.backtracking==0 ) {
-
-            	      				current.merge(this_LETTER_3);
-            	      			
-            	    }
-            	    if ( state.backtracking==0 ) {
-
-            	      				afterParserOrEnumRuleCall();
-            	      			
-            	    }
-
-            	    }
-            	    break;
-
-            	default :
-            	    if ( cnt38 >= 1 ) break loop38;
-            	    if (state.backtracking>0) {state.failed=true; return current;}
-                        EarlyExitException eee =
-                            new EarlyExitException(38, input);
-                        throw eee;
-                }
-                cnt38++;
-            } while (true);
-
-
-            }
-
-
-            }
-
-            if ( state.backtracking==0 ) {
-
-              	leaveRule();
-
-            }
-        }
-
-            catch (RecognitionException re) {
-                recover(input,re);
-                appendSkippedTokens();
-            }
-        finally {
-        }
-        return current;
-    }
-    // $ANTLR end "ruleTAG"
-
-
-    // $ANTLR start "entryRuleALPHA_NUMERIC_CHARS"
-    // InternalSemver.g:1811:1: entryRuleALPHA_NUMERIC_CHARS returns [String current=null] : iv_ruleALPHA_NUMERIC_CHARS= ruleALPHA_NUMERIC_CHARS EOF ;
-    public final String entryRuleALPHA_NUMERIC_CHARS() throws RecognitionException {
-        String current = null;
-
-        AntlrDatatypeRuleToken iv_ruleALPHA_NUMERIC_CHARS = null;
-
-
-        try {
-            // InternalSemver.g:1811:59: (iv_ruleALPHA_NUMERIC_CHARS= ruleALPHA_NUMERIC_CHARS EOF )
-            // InternalSemver.g:1812:2: iv_ruleALPHA_NUMERIC_CHARS= ruleALPHA_NUMERIC_CHARS EOF
-            {
-            if ( state.backtracking==0 ) {
-               newCompositeNode(grammarAccess.getALPHA_NUMERIC_CHARSRule()); 
-            }
-            pushFollow(FOLLOW_1);
-            iv_ruleALPHA_NUMERIC_CHARS=ruleALPHA_NUMERIC_CHARS();
-
-            state._fsp--;
-            if (state.failed) return current;
-            if ( state.backtracking==0 ) {
-               current =iv_ruleALPHA_NUMERIC_CHARS.getText(); 
-            }
-            match(input,EOF,FOLLOW_2); if (state.failed) return current;
-
-            }
-
-        }
-
-            catch (RecognitionException re) {
-                recover(input,re);
-                appendSkippedTokens();
-            }
-        finally {
-        }
-        return current;
-    }
-    // $ANTLR end "entryRuleALPHA_NUMERIC_CHARS"
-
-
-    // $ANTLR start "ruleALPHA_NUMERIC_CHARS"
-    // InternalSemver.g:1818:1: ruleALPHA_NUMERIC_CHARS returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (kw= '-' | this_DIGITS_1= RULE_DIGITS | this_LETTER_2= ruleLETTER )+ ;
-    public final AntlrDatatypeRuleToken ruleALPHA_NUMERIC_CHARS() throws RecognitionException {
-        AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
-
-        Token kw=null;
-        Token this_DIGITS_1=null;
-        AntlrDatatypeRuleToken this_LETTER_2 = null;
-
-
-
-        	enterRule();
-
-        try {
-            // InternalSemver.g:1824:2: ( (kw= '-' | this_DIGITS_1= RULE_DIGITS | this_LETTER_2= ruleLETTER )+ )
-            // InternalSemver.g:1825:2: (kw= '-' | this_DIGITS_1= RULE_DIGITS | this_LETTER_2= ruleLETTER )+
-            {
-            // InternalSemver.g:1825:2: (kw= '-' | this_DIGITS_1= RULE_DIGITS | this_LETTER_2= ruleLETTER )+
+            // InternalSemver.g:1825:3: (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_3= ruleLETTER )+
             int cnt39=0;
             loop39:
             do {
@@ -5560,57 +5538,57 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
                 switch (alt39) {
             	case 1 :
-            	    // InternalSemver.g:1826:3: kw= '-'
+            	    // InternalSemver.g:1826:4: kw= '-'
             	    {
             	    kw=(Token)match(input,39,FOLLOW_25); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
 
-            	      			current.merge(kw);
-            	      			newLeafNode(kw, grammarAccess.getALPHA_NUMERIC_CHARSAccess().getHyphenMinusKeyword_0());
-            	      		
+            	      				current.merge(kw);
+            	      				newLeafNode(kw, grammarAccess.getTAGAccess().getHyphenMinusKeyword_1_0());
+            	      			
             	    }
 
             	    }
             	    break;
             	case 2 :
-            	    // InternalSemver.g:1832:3: this_DIGITS_1= RULE_DIGITS
+            	    // InternalSemver.g:1832:4: this_DIGITS_2= RULE_DIGITS
             	    {
-            	    this_DIGITS_1=(Token)match(input,RULE_DIGITS,FOLLOW_25); if (state.failed) return current;
+            	    this_DIGITS_2=(Token)match(input,RULE_DIGITS,FOLLOW_25); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
 
-            	      			current.merge(this_DIGITS_1);
-            	      		
+            	      				current.merge(this_DIGITS_2);
+            	      			
             	    }
             	    if ( state.backtracking==0 ) {
 
-            	      			newLeafNode(this_DIGITS_1, grammarAccess.getALPHA_NUMERIC_CHARSAccess().getDIGITSTerminalRuleCall_1());
-            	      		
+            	      				newLeafNode(this_DIGITS_2, grammarAccess.getTAGAccess().getDIGITSTerminalRuleCall_1_1());
+            	      			
             	    }
 
             	    }
             	    break;
             	case 3 :
-            	    // InternalSemver.g:1840:3: this_LETTER_2= ruleLETTER
+            	    // InternalSemver.g:1840:4: this_LETTER_3= ruleLETTER
             	    {
             	    if ( state.backtracking==0 ) {
 
-            	      			newCompositeNode(grammarAccess.getALPHA_NUMERIC_CHARSAccess().getLETTERParserRuleCall_2());
-            	      		
+            	      				newCompositeNode(grammarAccess.getTAGAccess().getLETTERParserRuleCall_1_2());
+            	      			
             	    }
             	    pushFollow(FOLLOW_25);
-            	    this_LETTER_2=ruleLETTER();
+            	    this_LETTER_3=ruleLETTER();
 
             	    state._fsp--;
             	    if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
 
-            	      			current.merge(this_LETTER_2);
-            	      		
+            	      				current.merge(this_LETTER_3);
+            	      			
             	    }
             	    if ( state.backtracking==0 ) {
 
-            	      			afterParserOrEnumRuleCall();
-            	      		
+            	      				afterParserOrEnumRuleCall();
+            	      			
             	    }
 
             	    }
@@ -5625,6 +5603,9 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                 }
                 cnt39++;
             } while (true);
+
+
+            }
 
 
             }
@@ -5644,31 +5625,31 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
         }
         return current;
     }
-    // $ANTLR end "ruleALPHA_NUMERIC_CHARS"
+    // $ANTLR end "ruleTAG"
 
 
-    // $ANTLR start "entryRuleALPHA_NUMERIC_CHARS_START_WITH_DIGITS"
-    // InternalSemver.g:1854:1: entryRuleALPHA_NUMERIC_CHARS_START_WITH_DIGITS returns [String current=null] : iv_ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS= ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS EOF ;
-    public final String entryRuleALPHA_NUMERIC_CHARS_START_WITH_DIGITS() throws RecognitionException {
+    // $ANTLR start "entryRuleALPHA_NUMERIC_CHARS"
+    // InternalSemver.g:1855:1: entryRuleALPHA_NUMERIC_CHARS returns [String current=null] : iv_ruleALPHA_NUMERIC_CHARS= ruleALPHA_NUMERIC_CHARS EOF ;
+    public final String entryRuleALPHA_NUMERIC_CHARS() throws RecognitionException {
         String current = null;
 
-        AntlrDatatypeRuleToken iv_ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS = null;
+        AntlrDatatypeRuleToken iv_ruleALPHA_NUMERIC_CHARS = null;
 
 
         try {
-            // InternalSemver.g:1854:77: (iv_ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS= ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS EOF )
-            // InternalSemver.g:1855:2: iv_ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS= ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS EOF
+            // InternalSemver.g:1855:59: (iv_ruleALPHA_NUMERIC_CHARS= ruleALPHA_NUMERIC_CHARS EOF )
+            // InternalSemver.g:1856:2: iv_ruleALPHA_NUMERIC_CHARS= ruleALPHA_NUMERIC_CHARS EOF
             {
             if ( state.backtracking==0 ) {
-               newCompositeNode(grammarAccess.getALPHA_NUMERIC_CHARS_START_WITH_DIGITSRule()); 
+               newCompositeNode(grammarAccess.getALPHA_NUMERIC_CHARSRule()); 
             }
             pushFollow(FOLLOW_1);
-            iv_ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS=ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS();
+            iv_ruleALPHA_NUMERIC_CHARS=ruleALPHA_NUMERIC_CHARS();
 
             state._fsp--;
             if (state.failed) return current;
             if ( state.backtracking==0 ) {
-               current =iv_ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS.getText(); 
+               current =iv_ruleALPHA_NUMERIC_CHARS.getText(); 
             }
             match(input,EOF,FOLLOW_2); if (state.failed) return current;
 
@@ -5684,42 +5665,27 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
         }
         return current;
     }
-    // $ANTLR end "entryRuleALPHA_NUMERIC_CHARS_START_WITH_DIGITS"
+    // $ANTLR end "entryRuleALPHA_NUMERIC_CHARS"
 
 
-    // $ANTLR start "ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS"
-    // InternalSemver.g:1861:1: ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_DIGITS_0= RULE_DIGITS (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_3= ruleLETTER )+ ) ;
-    public final AntlrDatatypeRuleToken ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS() throws RecognitionException {
+    // $ANTLR start "ruleALPHA_NUMERIC_CHARS"
+    // InternalSemver.g:1862:1: ruleALPHA_NUMERIC_CHARS returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (kw= '-' | this_DIGITS_1= RULE_DIGITS | this_LETTER_2= ruleLETTER )+ ;
+    public final AntlrDatatypeRuleToken ruleALPHA_NUMERIC_CHARS() throws RecognitionException {
         AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
-        Token this_DIGITS_0=null;
         Token kw=null;
-        Token this_DIGITS_2=null;
-        AntlrDatatypeRuleToken this_LETTER_3 = null;
+        Token this_DIGITS_1=null;
+        AntlrDatatypeRuleToken this_LETTER_2 = null;
 
 
 
         	enterRule();
 
         try {
-            // InternalSemver.g:1867:2: ( (this_DIGITS_0= RULE_DIGITS (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_3= ruleLETTER )+ ) )
-            // InternalSemver.g:1868:2: (this_DIGITS_0= RULE_DIGITS (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_3= ruleLETTER )+ )
+            // InternalSemver.g:1868:2: ( (kw= '-' | this_DIGITS_1= RULE_DIGITS | this_LETTER_2= ruleLETTER )+ )
+            // InternalSemver.g:1869:2: (kw= '-' | this_DIGITS_1= RULE_DIGITS | this_LETTER_2= ruleLETTER )+
             {
-            // InternalSemver.g:1868:2: (this_DIGITS_0= RULE_DIGITS (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_3= ruleLETTER )+ )
-            // InternalSemver.g:1869:3: this_DIGITS_0= RULE_DIGITS (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_3= ruleLETTER )+
-            {
-            this_DIGITS_0=(Token)match(input,RULE_DIGITS,FOLLOW_5); if (state.failed) return current;
-            if ( state.backtracking==0 ) {
-
-              			current.merge(this_DIGITS_0);
-              		
-            }
-            if ( state.backtracking==0 ) {
-
-              			newLeafNode(this_DIGITS_0, grammarAccess.getALPHA_NUMERIC_CHARS_START_WITH_DIGITSAccess().getDIGITSTerminalRuleCall_0());
-              		
-            }
-            // InternalSemver.g:1876:3: (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_3= ruleLETTER )+
+            // InternalSemver.g:1869:2: (kw= '-' | this_DIGITS_1= RULE_DIGITS | this_LETTER_2= ruleLETTER )+
             int cnt40=0;
             loop40:
             do {
@@ -5754,7 +5720,201 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
                 switch (alt40) {
             	case 1 :
-            	    // InternalSemver.g:1877:4: kw= '-'
+            	    // InternalSemver.g:1870:3: kw= '-'
+            	    {
+            	    kw=(Token)match(input,39,FOLLOW_25); if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      			current.merge(kw);
+            	      			newLeafNode(kw, grammarAccess.getALPHA_NUMERIC_CHARSAccess().getHyphenMinusKeyword_0());
+            	      		
+            	    }
+
+            	    }
+            	    break;
+            	case 2 :
+            	    // InternalSemver.g:1876:3: this_DIGITS_1= RULE_DIGITS
+            	    {
+            	    this_DIGITS_1=(Token)match(input,RULE_DIGITS,FOLLOW_25); if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      			current.merge(this_DIGITS_1);
+            	      		
+            	    }
+            	    if ( state.backtracking==0 ) {
+
+            	      			newLeafNode(this_DIGITS_1, grammarAccess.getALPHA_NUMERIC_CHARSAccess().getDIGITSTerminalRuleCall_1());
+            	      		
+            	    }
+
+            	    }
+            	    break;
+            	case 3 :
+            	    // InternalSemver.g:1884:3: this_LETTER_2= ruleLETTER
+            	    {
+            	    if ( state.backtracking==0 ) {
+
+            	      			newCompositeNode(grammarAccess.getALPHA_NUMERIC_CHARSAccess().getLETTERParserRuleCall_2());
+            	      		
+            	    }
+            	    pushFollow(FOLLOW_25);
+            	    this_LETTER_2=ruleLETTER();
+
+            	    state._fsp--;
+            	    if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      			current.merge(this_LETTER_2);
+            	      		
+            	    }
+            	    if ( state.backtracking==0 ) {
+
+            	      			afterParserOrEnumRuleCall();
+            	      		
+            	    }
+
+            	    }
+            	    break;
+
+            	default :
+            	    if ( cnt40 >= 1 ) break loop40;
+            	    if (state.backtracking>0) {state.failed=true; return current;}
+                        EarlyExitException eee =
+                            new EarlyExitException(40, input);
+                        throw eee;
+                }
+                cnt40++;
+            } while (true);
+
+
+            }
+
+            if ( state.backtracking==0 ) {
+
+              	leaveRule();
+
+            }
+        }
+
+            catch (RecognitionException re) {
+                recover(input,re);
+                appendSkippedTokens();
+            }
+        finally {
+        }
+        return current;
+    }
+    // $ANTLR end "ruleALPHA_NUMERIC_CHARS"
+
+
+    // $ANTLR start "entryRuleALPHA_NUMERIC_CHARS_START_WITH_DIGITS"
+    // InternalSemver.g:1898:1: entryRuleALPHA_NUMERIC_CHARS_START_WITH_DIGITS returns [String current=null] : iv_ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS= ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS EOF ;
+    public final String entryRuleALPHA_NUMERIC_CHARS_START_WITH_DIGITS() throws RecognitionException {
+        String current = null;
+
+        AntlrDatatypeRuleToken iv_ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS = null;
+
+
+        try {
+            // InternalSemver.g:1898:77: (iv_ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS= ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS EOF )
+            // InternalSemver.g:1899:2: iv_ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS= ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS EOF
+            {
+            if ( state.backtracking==0 ) {
+               newCompositeNode(grammarAccess.getALPHA_NUMERIC_CHARS_START_WITH_DIGITSRule()); 
+            }
+            pushFollow(FOLLOW_1);
+            iv_ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS=ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS();
+
+            state._fsp--;
+            if (state.failed) return current;
+            if ( state.backtracking==0 ) {
+               current =iv_ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS.getText(); 
+            }
+            match(input,EOF,FOLLOW_2); if (state.failed) return current;
+
+            }
+
+        }
+
+            catch (RecognitionException re) {
+                recover(input,re);
+                appendSkippedTokens();
+            }
+        finally {
+        }
+        return current;
+    }
+    // $ANTLR end "entryRuleALPHA_NUMERIC_CHARS_START_WITH_DIGITS"
+
+
+    // $ANTLR start "ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS"
+    // InternalSemver.g:1905:1: ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_DIGITS_0= RULE_DIGITS (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_3= ruleLETTER )+ ) ;
+    public final AntlrDatatypeRuleToken ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS() throws RecognitionException {
+        AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
+
+        Token this_DIGITS_0=null;
+        Token kw=null;
+        Token this_DIGITS_2=null;
+        AntlrDatatypeRuleToken this_LETTER_3 = null;
+
+
+
+        	enterRule();
+
+        try {
+            // InternalSemver.g:1911:2: ( (this_DIGITS_0= RULE_DIGITS (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_3= ruleLETTER )+ ) )
+            // InternalSemver.g:1912:2: (this_DIGITS_0= RULE_DIGITS (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_3= ruleLETTER )+ )
+            {
+            // InternalSemver.g:1912:2: (this_DIGITS_0= RULE_DIGITS (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_3= ruleLETTER )+ )
+            // InternalSemver.g:1913:3: this_DIGITS_0= RULE_DIGITS (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_3= ruleLETTER )+
+            {
+            this_DIGITS_0=(Token)match(input,RULE_DIGITS,FOLLOW_5); if (state.failed) return current;
+            if ( state.backtracking==0 ) {
+
+              			current.merge(this_DIGITS_0);
+              		
+            }
+            if ( state.backtracking==0 ) {
+
+              			newLeafNode(this_DIGITS_0, grammarAccess.getALPHA_NUMERIC_CHARS_START_WITH_DIGITSAccess().getDIGITSTerminalRuleCall_0());
+              		
+            }
+            // InternalSemver.g:1920:3: (kw= '-' | this_DIGITS_2= RULE_DIGITS | this_LETTER_3= ruleLETTER )+
+            int cnt41=0;
+            loop41:
+            do {
+                int alt41=4;
+                switch ( input.LA(1) ) {
+                case 39:
+                    {
+                    alt41=1;
+                    }
+                    break;
+                case RULE_DIGITS:
+                    {
+                    alt41=2;
+                    }
+                    break;
+                case RULE_LETTER_V:
+                case RULE_LETTER_F:
+                case RULE_LETTER_I:
+                case RULE_LETTER_L:
+                case RULE_LETTER_E:
+                case RULE_LETTER_S:
+                case RULE_LETTER_M:
+                case RULE_LETTER_R:
+                case RULE_LETTER_X:
+                case RULE_LETTER_OTHER:
+                    {
+                    alt41=3;
+                    }
+                    break;
+
+                }
+
+                switch (alt41) {
+            	case 1 :
+            	    // InternalSemver.g:1921:4: kw= '-'
             	    {
             	    kw=(Token)match(input,39,FOLLOW_25); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
@@ -5767,7 +5927,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
             	    }
             	    break;
             	case 2 :
-            	    // InternalSemver.g:1883:4: this_DIGITS_2= RULE_DIGITS
+            	    // InternalSemver.g:1927:4: this_DIGITS_2= RULE_DIGITS
             	    {
             	    this_DIGITS_2=(Token)match(input,RULE_DIGITS,FOLLOW_25); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
@@ -5784,7 +5944,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
             	    }
             	    break;
             	case 3 :
-            	    // InternalSemver.g:1891:4: this_LETTER_3= ruleLETTER
+            	    // InternalSemver.g:1935:4: this_LETTER_3= ruleLETTER
             	    {
             	    if ( state.backtracking==0 ) {
 
@@ -5811,13 +5971,13 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
             	    break;
 
             	default :
-            	    if ( cnt40 >= 1 ) break loop40;
+            	    if ( cnt41 >= 1 ) break loop41;
             	    if (state.backtracking>0) {state.failed=true; return current;}
                         EarlyExitException eee =
-                            new EarlyExitException(40, input);
+                            new EarlyExitException(41, input);
                         throw eee;
                 }
-                cnt40++;
+                cnt41++;
             } while (true);
 
 
@@ -5845,7 +6005,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleWILDCARD"
-    // InternalSemver.g:1906:1: entryRuleWILDCARD returns [String current=null] : iv_ruleWILDCARD= ruleWILDCARD EOF ;
+    // InternalSemver.g:1950:1: entryRuleWILDCARD returns [String current=null] : iv_ruleWILDCARD= ruleWILDCARD EOF ;
     public final String entryRuleWILDCARD() throws RecognitionException {
         String current = null;
 
@@ -5853,8 +6013,8 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalSemver.g:1906:48: (iv_ruleWILDCARD= ruleWILDCARD EOF )
-            // InternalSemver.g:1907:2: iv_ruleWILDCARD= ruleWILDCARD EOF
+            // InternalSemver.g:1950:48: (iv_ruleWILDCARD= ruleWILDCARD EOF )
+            // InternalSemver.g:1951:2: iv_ruleWILDCARD= ruleWILDCARD EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getWILDCARDRule()); 
@@ -5885,7 +6045,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleWILDCARD"
-    // InternalSemver.g:1913:1: ruleWILDCARD returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_LETTER_X_0= RULE_LETTER_X | this_ASTERIX_1= RULE_ASTERIX ) ;
+    // InternalSemver.g:1957:1: ruleWILDCARD returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_LETTER_X_0= RULE_LETTER_X | this_ASTERIX_1= RULE_ASTERIX ) ;
     public final AntlrDatatypeRuleToken ruleWILDCARD() throws RecognitionException {
         AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -5896,29 +6056,29 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalSemver.g:1919:2: ( (this_LETTER_X_0= RULE_LETTER_X | this_ASTERIX_1= RULE_ASTERIX ) )
-            // InternalSemver.g:1920:2: (this_LETTER_X_0= RULE_LETTER_X | this_ASTERIX_1= RULE_ASTERIX )
+            // InternalSemver.g:1963:2: ( (this_LETTER_X_0= RULE_LETTER_X | this_ASTERIX_1= RULE_ASTERIX ) )
+            // InternalSemver.g:1964:2: (this_LETTER_X_0= RULE_LETTER_X | this_ASTERIX_1= RULE_ASTERIX )
             {
-            // InternalSemver.g:1920:2: (this_LETTER_X_0= RULE_LETTER_X | this_ASTERIX_1= RULE_ASTERIX )
-            int alt41=2;
-            int LA41_0 = input.LA(1);
+            // InternalSemver.g:1964:2: (this_LETTER_X_0= RULE_LETTER_X | this_ASTERIX_1= RULE_ASTERIX )
+            int alt42=2;
+            int LA42_0 = input.LA(1);
 
-            if ( (LA41_0==RULE_LETTER_X) ) {
-                alt41=1;
+            if ( (LA42_0==RULE_LETTER_X) ) {
+                alt42=1;
             }
-            else if ( (LA41_0==RULE_ASTERIX) ) {
-                alt41=2;
+            else if ( (LA42_0==RULE_ASTERIX) ) {
+                alt42=2;
             }
             else {
                 if (state.backtracking>0) {state.failed=true; return current;}
                 NoViableAltException nvae =
-                    new NoViableAltException("", 41, 0, input);
+                    new NoViableAltException("", 42, 0, input);
 
                 throw nvae;
             }
-            switch (alt41) {
+            switch (alt42) {
                 case 1 :
-                    // InternalSemver.g:1921:3: this_LETTER_X_0= RULE_LETTER_X
+                    // InternalSemver.g:1965:3: this_LETTER_X_0= RULE_LETTER_X
                     {
                     this_LETTER_X_0=(Token)match(input,RULE_LETTER_X,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -5935,7 +6095,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalSemver.g:1929:3: this_ASTERIX_1= RULE_ASTERIX
+                    // InternalSemver.g:1973:3: this_ASTERIX_1= RULE_ASTERIX
                     {
                     this_ASTERIX_1=(Token)match(input,RULE_ASTERIX,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -5976,7 +6136,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleLETTER"
-    // InternalSemver.g:1941:1: ruleLETTER returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_LETTER_V_0= RULE_LETTER_V | this_LETTER_X_1= RULE_LETTER_X | this_LETTER_NO_VX_2= ruleLETTER_NO_VX ) ;
+    // InternalSemver.g:1985:1: ruleLETTER returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_LETTER_V_0= RULE_LETTER_V | this_LETTER_X_1= RULE_LETTER_X | this_LETTER_NO_VX_2= ruleLETTER_NO_VX ) ;
     public final AntlrDatatypeRuleToken ruleLETTER() throws RecognitionException {
         AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -5989,20 +6149,20 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalSemver.g:1947:2: ( (this_LETTER_V_0= RULE_LETTER_V | this_LETTER_X_1= RULE_LETTER_X | this_LETTER_NO_VX_2= ruleLETTER_NO_VX ) )
-            // InternalSemver.g:1948:2: (this_LETTER_V_0= RULE_LETTER_V | this_LETTER_X_1= RULE_LETTER_X | this_LETTER_NO_VX_2= ruleLETTER_NO_VX )
+            // InternalSemver.g:1991:2: ( (this_LETTER_V_0= RULE_LETTER_V | this_LETTER_X_1= RULE_LETTER_X | this_LETTER_NO_VX_2= ruleLETTER_NO_VX ) )
+            // InternalSemver.g:1992:2: (this_LETTER_V_0= RULE_LETTER_V | this_LETTER_X_1= RULE_LETTER_X | this_LETTER_NO_VX_2= ruleLETTER_NO_VX )
             {
-            // InternalSemver.g:1948:2: (this_LETTER_V_0= RULE_LETTER_V | this_LETTER_X_1= RULE_LETTER_X | this_LETTER_NO_VX_2= ruleLETTER_NO_VX )
-            int alt42=3;
+            // InternalSemver.g:1992:2: (this_LETTER_V_0= RULE_LETTER_V | this_LETTER_X_1= RULE_LETTER_X | this_LETTER_NO_VX_2= ruleLETTER_NO_VX )
+            int alt43=3;
             switch ( input.LA(1) ) {
             case RULE_LETTER_V:
                 {
-                alt42=1;
+                alt43=1;
                 }
                 break;
             case RULE_LETTER_X:
                 {
-                alt42=2;
+                alt43=2;
                 }
                 break;
             case RULE_LETTER_F:
@@ -6014,20 +6174,20 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
             case RULE_LETTER_R:
             case RULE_LETTER_OTHER:
                 {
-                alt42=3;
+                alt43=3;
                 }
                 break;
             default:
                 if (state.backtracking>0) {state.failed=true; return current;}
                 NoViableAltException nvae =
-                    new NoViableAltException("", 42, 0, input);
+                    new NoViableAltException("", 43, 0, input);
 
                 throw nvae;
             }
 
-            switch (alt42) {
+            switch (alt43) {
                 case 1 :
-                    // InternalSemver.g:1949:3: this_LETTER_V_0= RULE_LETTER_V
+                    // InternalSemver.g:1993:3: this_LETTER_V_0= RULE_LETTER_V
                     {
                     this_LETTER_V_0=(Token)match(input,RULE_LETTER_V,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -6044,7 +6204,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalSemver.g:1957:3: this_LETTER_X_1= RULE_LETTER_X
+                    // InternalSemver.g:2001:3: this_LETTER_X_1= RULE_LETTER_X
                     {
                     this_LETTER_X_1=(Token)match(input,RULE_LETTER_X,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -6061,7 +6221,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 3 :
-                    // InternalSemver.g:1965:3: this_LETTER_NO_VX_2= ruleLETTER_NO_VX
+                    // InternalSemver.g:2009:3: this_LETTER_NO_VX_2= ruleLETTER_NO_VX
                     {
                     if ( state.backtracking==0 ) {
 
@@ -6111,7 +6271,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleLETTER_NO_VX"
-    // InternalSemver.g:1980:1: ruleLETTER_NO_VX returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_LETTER_S_0= RULE_LETTER_S | this_LETTER_M_1= RULE_LETTER_M | this_LETTER_R_2= RULE_LETTER_R | this_LETTER_F_3= RULE_LETTER_F | this_LETTER_I_4= RULE_LETTER_I | this_LETTER_L_5= RULE_LETTER_L | this_LETTER_E_6= RULE_LETTER_E | this_LETTER_OTHER_7= RULE_LETTER_OTHER ) ;
+    // InternalSemver.g:2024:1: ruleLETTER_NO_VX returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_LETTER_S_0= RULE_LETTER_S | this_LETTER_M_1= RULE_LETTER_M | this_LETTER_R_2= RULE_LETTER_R | this_LETTER_F_3= RULE_LETTER_F | this_LETTER_I_4= RULE_LETTER_I | this_LETTER_L_5= RULE_LETTER_L | this_LETTER_E_6= RULE_LETTER_E | this_LETTER_OTHER_7= RULE_LETTER_OTHER ) ;
     public final AntlrDatatypeRuleToken ruleLETTER_NO_VX() throws RecognitionException {
         AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -6128,63 +6288,63 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalSemver.g:1986:2: ( (this_LETTER_S_0= RULE_LETTER_S | this_LETTER_M_1= RULE_LETTER_M | this_LETTER_R_2= RULE_LETTER_R | this_LETTER_F_3= RULE_LETTER_F | this_LETTER_I_4= RULE_LETTER_I | this_LETTER_L_5= RULE_LETTER_L | this_LETTER_E_6= RULE_LETTER_E | this_LETTER_OTHER_7= RULE_LETTER_OTHER ) )
-            // InternalSemver.g:1987:2: (this_LETTER_S_0= RULE_LETTER_S | this_LETTER_M_1= RULE_LETTER_M | this_LETTER_R_2= RULE_LETTER_R | this_LETTER_F_3= RULE_LETTER_F | this_LETTER_I_4= RULE_LETTER_I | this_LETTER_L_5= RULE_LETTER_L | this_LETTER_E_6= RULE_LETTER_E | this_LETTER_OTHER_7= RULE_LETTER_OTHER )
+            // InternalSemver.g:2030:2: ( (this_LETTER_S_0= RULE_LETTER_S | this_LETTER_M_1= RULE_LETTER_M | this_LETTER_R_2= RULE_LETTER_R | this_LETTER_F_3= RULE_LETTER_F | this_LETTER_I_4= RULE_LETTER_I | this_LETTER_L_5= RULE_LETTER_L | this_LETTER_E_6= RULE_LETTER_E | this_LETTER_OTHER_7= RULE_LETTER_OTHER ) )
+            // InternalSemver.g:2031:2: (this_LETTER_S_0= RULE_LETTER_S | this_LETTER_M_1= RULE_LETTER_M | this_LETTER_R_2= RULE_LETTER_R | this_LETTER_F_3= RULE_LETTER_F | this_LETTER_I_4= RULE_LETTER_I | this_LETTER_L_5= RULE_LETTER_L | this_LETTER_E_6= RULE_LETTER_E | this_LETTER_OTHER_7= RULE_LETTER_OTHER )
             {
-            // InternalSemver.g:1987:2: (this_LETTER_S_0= RULE_LETTER_S | this_LETTER_M_1= RULE_LETTER_M | this_LETTER_R_2= RULE_LETTER_R | this_LETTER_F_3= RULE_LETTER_F | this_LETTER_I_4= RULE_LETTER_I | this_LETTER_L_5= RULE_LETTER_L | this_LETTER_E_6= RULE_LETTER_E | this_LETTER_OTHER_7= RULE_LETTER_OTHER )
-            int alt43=8;
+            // InternalSemver.g:2031:2: (this_LETTER_S_0= RULE_LETTER_S | this_LETTER_M_1= RULE_LETTER_M | this_LETTER_R_2= RULE_LETTER_R | this_LETTER_F_3= RULE_LETTER_F | this_LETTER_I_4= RULE_LETTER_I | this_LETTER_L_5= RULE_LETTER_L | this_LETTER_E_6= RULE_LETTER_E | this_LETTER_OTHER_7= RULE_LETTER_OTHER )
+            int alt44=8;
             switch ( input.LA(1) ) {
             case RULE_LETTER_S:
                 {
-                alt43=1;
+                alt44=1;
                 }
                 break;
             case RULE_LETTER_M:
                 {
-                alt43=2;
+                alt44=2;
                 }
                 break;
             case RULE_LETTER_R:
                 {
-                alt43=3;
+                alt44=3;
                 }
                 break;
             case RULE_LETTER_F:
                 {
-                alt43=4;
+                alt44=4;
                 }
                 break;
             case RULE_LETTER_I:
                 {
-                alt43=5;
+                alt44=5;
                 }
                 break;
             case RULE_LETTER_L:
                 {
-                alt43=6;
+                alt44=6;
                 }
                 break;
             case RULE_LETTER_E:
                 {
-                alt43=7;
+                alt44=7;
                 }
                 break;
             case RULE_LETTER_OTHER:
                 {
-                alt43=8;
+                alt44=8;
                 }
                 break;
             default:
                 if (state.backtracking>0) {state.failed=true; return current;}
                 NoViableAltException nvae =
-                    new NoViableAltException("", 43, 0, input);
+                    new NoViableAltException("", 44, 0, input);
 
                 throw nvae;
             }
 
-            switch (alt43) {
+            switch (alt44) {
                 case 1 :
-                    // InternalSemver.g:1988:3: this_LETTER_S_0= RULE_LETTER_S
+                    // InternalSemver.g:2032:3: this_LETTER_S_0= RULE_LETTER_S
                     {
                     this_LETTER_S_0=(Token)match(input,RULE_LETTER_S,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -6201,7 +6361,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalSemver.g:1996:3: this_LETTER_M_1= RULE_LETTER_M
+                    // InternalSemver.g:2040:3: this_LETTER_M_1= RULE_LETTER_M
                     {
                     this_LETTER_M_1=(Token)match(input,RULE_LETTER_M,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -6218,7 +6378,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 3 :
-                    // InternalSemver.g:2004:3: this_LETTER_R_2= RULE_LETTER_R
+                    // InternalSemver.g:2048:3: this_LETTER_R_2= RULE_LETTER_R
                     {
                     this_LETTER_R_2=(Token)match(input,RULE_LETTER_R,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -6235,7 +6395,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 4 :
-                    // InternalSemver.g:2012:3: this_LETTER_F_3= RULE_LETTER_F
+                    // InternalSemver.g:2056:3: this_LETTER_F_3= RULE_LETTER_F
                     {
                     this_LETTER_F_3=(Token)match(input,RULE_LETTER_F,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -6252,7 +6412,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 5 :
-                    // InternalSemver.g:2020:3: this_LETTER_I_4= RULE_LETTER_I
+                    // InternalSemver.g:2064:3: this_LETTER_I_4= RULE_LETTER_I
                     {
                     this_LETTER_I_4=(Token)match(input,RULE_LETTER_I,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -6269,7 +6429,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 6 :
-                    // InternalSemver.g:2028:3: this_LETTER_L_5= RULE_LETTER_L
+                    // InternalSemver.g:2072:3: this_LETTER_L_5= RULE_LETTER_L
                     {
                     this_LETTER_L_5=(Token)match(input,RULE_LETTER_L,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -6286,7 +6446,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 7 :
-                    // InternalSemver.g:2036:3: this_LETTER_E_6= RULE_LETTER_E
+                    // InternalSemver.g:2080:3: this_LETTER_E_6= RULE_LETTER_E
                     {
                     this_LETTER_E_6=(Token)match(input,RULE_LETTER_E,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -6303,7 +6463,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 8 :
-                    // InternalSemver.g:2044:3: this_LETTER_OTHER_7= RULE_LETTER_OTHER
+                    // InternalSemver.g:2088:3: this_LETTER_OTHER_7= RULE_LETTER_OTHER
                     {
                     this_LETTER_OTHER_7=(Token)match(input,RULE_LETTER_OTHER,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -6344,7 +6504,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleVersionComparator"
-    // InternalSemver.g:2055:1: ruleVersionComparator returns [Enumerator current=null] : ( (enumLiteral_0= '=' ) | (enumLiteral_1= '<' ) | (enumLiteral_2= '~' ) | (enumLiteral_3= '^' ) | (enumLiteral_4= '<=' ) | (enumLiteral_5= '>' ) | (enumLiteral_6= '>=' ) ) ;
+    // InternalSemver.g:2099:1: ruleVersionComparator returns [Enumerator current=null] : ( (enumLiteral_0= '=' ) | (enumLiteral_1= '<' ) | (enumLiteral_2= '~' ) | (enumLiteral_3= '^' ) | (enumLiteral_4= '<=' ) | (enumLiteral_5= '>' ) | (enumLiteral_6= '>=' ) ) ;
     public final Enumerator ruleVersionComparator() throws RecognitionException {
         Enumerator current = null;
 
@@ -6360,63 +6520,63 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalSemver.g:2061:2: ( ( (enumLiteral_0= '=' ) | (enumLiteral_1= '<' ) | (enumLiteral_2= '~' ) | (enumLiteral_3= '^' ) | (enumLiteral_4= '<=' ) | (enumLiteral_5= '>' ) | (enumLiteral_6= '>=' ) ) )
-            // InternalSemver.g:2062:2: ( (enumLiteral_0= '=' ) | (enumLiteral_1= '<' ) | (enumLiteral_2= '~' ) | (enumLiteral_3= '^' ) | (enumLiteral_4= '<=' ) | (enumLiteral_5= '>' ) | (enumLiteral_6= '>=' ) )
+            // InternalSemver.g:2105:2: ( ( (enumLiteral_0= '=' ) | (enumLiteral_1= '<' ) | (enumLiteral_2= '~' ) | (enumLiteral_3= '^' ) | (enumLiteral_4= '<=' ) | (enumLiteral_5= '>' ) | (enumLiteral_6= '>=' ) ) )
+            // InternalSemver.g:2106:2: ( (enumLiteral_0= '=' ) | (enumLiteral_1= '<' ) | (enumLiteral_2= '~' ) | (enumLiteral_3= '^' ) | (enumLiteral_4= '<=' ) | (enumLiteral_5= '>' ) | (enumLiteral_6= '>=' ) )
             {
-            // InternalSemver.g:2062:2: ( (enumLiteral_0= '=' ) | (enumLiteral_1= '<' ) | (enumLiteral_2= '~' ) | (enumLiteral_3= '^' ) | (enumLiteral_4= '<=' ) | (enumLiteral_5= '>' ) | (enumLiteral_6= '>=' ) )
-            int alt44=7;
+            // InternalSemver.g:2106:2: ( (enumLiteral_0= '=' ) | (enumLiteral_1= '<' ) | (enumLiteral_2= '~' ) | (enumLiteral_3= '^' ) | (enumLiteral_4= '<=' ) | (enumLiteral_5= '>' ) | (enumLiteral_6= '>=' ) )
+            int alt45=7;
             switch ( input.LA(1) ) {
-            case 43:
-                {
-                alt44=1;
-                }
-                break;
             case 44:
                 {
-                alt44=2;
+                alt45=1;
                 }
                 break;
             case 45:
                 {
-                alt44=3;
+                alt45=2;
                 }
                 break;
             case 46:
                 {
-                alt44=4;
+                alt45=3;
                 }
                 break;
             case 47:
                 {
-                alt44=5;
+                alt45=4;
                 }
                 break;
             case 48:
                 {
-                alt44=6;
+                alt45=5;
                 }
                 break;
             case 49:
                 {
-                alt44=7;
+                alt45=6;
+                }
+                break;
+            case 50:
+                {
+                alt45=7;
                 }
                 break;
             default:
                 if (state.backtracking>0) {state.failed=true; return current;}
                 NoViableAltException nvae =
-                    new NoViableAltException("", 44, 0, input);
+                    new NoViableAltException("", 45, 0, input);
 
                 throw nvae;
             }
 
-            switch (alt44) {
+            switch (alt45) {
                 case 1 :
-                    // InternalSemver.g:2063:3: (enumLiteral_0= '=' )
+                    // InternalSemver.g:2107:3: (enumLiteral_0= '=' )
                     {
-                    // InternalSemver.g:2063:3: (enumLiteral_0= '=' )
-                    // InternalSemver.g:2064:4: enumLiteral_0= '='
+                    // InternalSemver.g:2107:3: (enumLiteral_0= '=' )
+                    // InternalSemver.g:2108:4: enumLiteral_0= '='
                     {
-                    enumLiteral_0=(Token)match(input,43,FOLLOW_2); if (state.failed) return current;
+                    enumLiteral_0=(Token)match(input,44,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				current = grammarAccess.getVersionComparatorAccess().getEqualsEnumLiteralDeclaration_0().getEnumLiteral().getInstance();
@@ -6430,12 +6590,12 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalSemver.g:2071:3: (enumLiteral_1= '<' )
+                    // InternalSemver.g:2115:3: (enumLiteral_1= '<' )
                     {
-                    // InternalSemver.g:2071:3: (enumLiteral_1= '<' )
-                    // InternalSemver.g:2072:4: enumLiteral_1= '<'
+                    // InternalSemver.g:2115:3: (enumLiteral_1= '<' )
+                    // InternalSemver.g:2116:4: enumLiteral_1= '<'
                     {
-                    enumLiteral_1=(Token)match(input,44,FOLLOW_2); if (state.failed) return current;
+                    enumLiteral_1=(Token)match(input,45,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				current = grammarAccess.getVersionComparatorAccess().getSmallerEnumLiteralDeclaration_1().getEnumLiteral().getInstance();
@@ -6449,12 +6609,12 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 3 :
-                    // InternalSemver.g:2079:3: (enumLiteral_2= '~' )
+                    // InternalSemver.g:2123:3: (enumLiteral_2= '~' )
                     {
-                    // InternalSemver.g:2079:3: (enumLiteral_2= '~' )
-                    // InternalSemver.g:2080:4: enumLiteral_2= '~'
+                    // InternalSemver.g:2123:3: (enumLiteral_2= '~' )
+                    // InternalSemver.g:2124:4: enumLiteral_2= '~'
                     {
-                    enumLiteral_2=(Token)match(input,45,FOLLOW_2); if (state.failed) return current;
+                    enumLiteral_2=(Token)match(input,46,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				current = grammarAccess.getVersionComparatorAccess().getTildeEnumLiteralDeclaration_2().getEnumLiteral().getInstance();
@@ -6468,12 +6628,12 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 4 :
-                    // InternalSemver.g:2087:3: (enumLiteral_3= '^' )
+                    // InternalSemver.g:2131:3: (enumLiteral_3= '^' )
                     {
-                    // InternalSemver.g:2087:3: (enumLiteral_3= '^' )
-                    // InternalSemver.g:2088:4: enumLiteral_3= '^'
+                    // InternalSemver.g:2131:3: (enumLiteral_3= '^' )
+                    // InternalSemver.g:2132:4: enumLiteral_3= '^'
                     {
-                    enumLiteral_3=(Token)match(input,46,FOLLOW_2); if (state.failed) return current;
+                    enumLiteral_3=(Token)match(input,47,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				current = grammarAccess.getVersionComparatorAccess().getCaretEnumLiteralDeclaration_3().getEnumLiteral().getInstance();
@@ -6487,12 +6647,12 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 5 :
-                    // InternalSemver.g:2095:3: (enumLiteral_4= '<=' )
+                    // InternalSemver.g:2139:3: (enumLiteral_4= '<=' )
                     {
-                    // InternalSemver.g:2095:3: (enumLiteral_4= '<=' )
-                    // InternalSemver.g:2096:4: enumLiteral_4= '<='
+                    // InternalSemver.g:2139:3: (enumLiteral_4= '<=' )
+                    // InternalSemver.g:2140:4: enumLiteral_4= '<='
                     {
-                    enumLiteral_4=(Token)match(input,47,FOLLOW_2); if (state.failed) return current;
+                    enumLiteral_4=(Token)match(input,48,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				current = grammarAccess.getVersionComparatorAccess().getSmallerEqualsEnumLiteralDeclaration_4().getEnumLiteral().getInstance();
@@ -6506,12 +6666,12 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 6 :
-                    // InternalSemver.g:2103:3: (enumLiteral_5= '>' )
+                    // InternalSemver.g:2147:3: (enumLiteral_5= '>' )
                     {
-                    // InternalSemver.g:2103:3: (enumLiteral_5= '>' )
-                    // InternalSemver.g:2104:4: enumLiteral_5= '>'
+                    // InternalSemver.g:2147:3: (enumLiteral_5= '>' )
+                    // InternalSemver.g:2148:4: enumLiteral_5= '>'
                     {
-                    enumLiteral_5=(Token)match(input,48,FOLLOW_2); if (state.failed) return current;
+                    enumLiteral_5=(Token)match(input,49,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				current = grammarAccess.getVersionComparatorAccess().getGreaterEnumLiteralDeclaration_5().getEnumLiteral().getInstance();
@@ -6525,12 +6685,12 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 7 :
-                    // InternalSemver.g:2111:3: (enumLiteral_6= '>=' )
+                    // InternalSemver.g:2155:3: (enumLiteral_6= '>=' )
                     {
-                    // InternalSemver.g:2111:3: (enumLiteral_6= '>=' )
-                    // InternalSemver.g:2112:4: enumLiteral_6= '>='
+                    // InternalSemver.g:2155:3: (enumLiteral_6= '>=' )
+                    // InternalSemver.g:2156:4: enumLiteral_6= '>='
                     {
-                    enumLiteral_6=(Token)match(input,49,FOLLOW_2); if (state.failed) return current;
+                    enumLiteral_6=(Token)match(input,50,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				current = grammarAccess.getVersionComparatorAccess().getGreaterEqualsEnumLiteralDeclaration_6().getEnumLiteral().getInstance();
@@ -6664,20 +6824,21 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
     protected DFA15 dfa15 = new DFA15(this);
     protected DFA19 dfa19 = new DFA19(this);
     protected DFA28 dfa28 = new DFA28(this);
-    static final String dfa_1s = "\26\uffff";
-    static final String dfa_2s = "\3\uffff\4\2\17\uffff";
-    static final String dfa_3s = "\1\7\1\5\1\uffff\4\4\16\0\1\uffff";
-    static final String dfa_4s = "\1\20\1\52\1\uffff\4\52\16\0\1\uffff";
-    static final String dfa_5s = "\2\uffff\1\2\22\uffff\1\1";
-    static final String dfa_6s = "\7\uffff\1\11\1\0\1\1\1\15\1\5\1\7\1\4\1\6\1\10\1\12\1\13\1\14\1\2\1\3\1\uffff}>";
+    static final String dfa_1s = "\27\uffff";
+    static final String dfa_2s = "\3\uffff\4\2\20\uffff";
+    static final String dfa_3s = "\1\7\1\5\1\uffff\4\4\17\0\1\uffff";
+    static final String dfa_4s = "\1\52\1\53\1\uffff\4\53\17\0\1\uffff";
+    static final String dfa_5s = "\2\uffff\1\2\23\uffff\1\1";
+    static final String dfa_6s = "\7\uffff\1\16\1\3\1\4\1\13\1\14\1\10\1\12\1\11\1\15\1\0\1\1\1\2\1\5\1\6\1\7\1\uffff}>";
     static final String[] dfa_7s = {
-            "\1\1\6\2\2\uffff\1\2",
-            "\3\2\1\3\6\2\1\uffff\1\2\22\uffff\2\2\2\uffff\4\2",
+            "\1\1\6\2\2\uffff\1\2\26\uffff\1\2\2\uffff\1\2",
+            "\3\2\1\3\6\2\1\uffff\1\2\22\uffff\2\2\2\uffff\5\2",
             "",
-            "\5\2\1\4\5\2\1\uffff\1\2\22\uffff\2\2\2\uffff\4\2",
-            "\6\2\1\5\4\2\1\uffff\1\2\22\uffff\2\2\2\uffff\4\2",
-            "\13\2\1\uffff\1\2\22\uffff\1\6\1\2\2\uffff\4\2",
-            "\1\2\1\13\1\12\1\20\1\21\1\22\1\23\1\15\1\16\1\17\1\14\1\uffff\1\24\22\uffff\1\2\1\7\1\2\1\uffff\1\11\1\10\1\uffff\1\2",
+            "\5\2\1\4\5\2\1\uffff\1\2\22\uffff\2\2\2\uffff\5\2",
+            "\6\2\1\5\4\2\1\uffff\1\2\22\uffff\2\2\2\uffff\5\2",
+            "\13\2\1\uffff\1\2\22\uffff\1\6\1\2\2\uffff\5\2",
+            "\1\2\1\14\1\13\1\21\1\22\1\23\1\24\1\16\1\17\1\20\1\15\1\uffff\1\25\22\uffff\1\2\1\7\1\2\1\uffff\1\11\1\10\1\uffff\1\12\1\2",
+            "\1\uffff",
             "\1\uffff",
             "\1\uffff",
             "\1\uffff",
@@ -6724,163 +6885,13 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
         	int _s = s;
             switch ( s ) {
                     case 0 : 
-                        int LA3_8 = input.LA(1);
-
-                         
-                        int index3_8 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred1_InternalSemver()) ) {s = 21;}
-
-                        else if ( (true) ) {s = 2;}
-
-                         
-                        input.seek(index3_8);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 1 : 
-                        int LA3_9 = input.LA(1);
-
-                         
-                        int index3_9 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred1_InternalSemver()) ) {s = 21;}
-
-                        else if ( (true) ) {s = 2;}
-
-                         
-                        input.seek(index3_9);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 2 : 
-                        int LA3_19 = input.LA(1);
-
-                         
-                        int index3_19 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred1_InternalSemver()) ) {s = 21;}
-
-                        else if ( (true) ) {s = 2;}
-
-                         
-                        input.seek(index3_19);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 3 : 
-                        int LA3_20 = input.LA(1);
-
-                         
-                        int index3_20 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred1_InternalSemver()) ) {s = 21;}
-
-                        else if ( (true) ) {s = 2;}
-
-                         
-                        input.seek(index3_20);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 4 : 
-                        int LA3_13 = input.LA(1);
-
-                         
-                        int index3_13 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred1_InternalSemver()) ) {s = 21;}
-
-                        else if ( (true) ) {s = 2;}
-
-                         
-                        input.seek(index3_13);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 5 : 
-                        int LA3_11 = input.LA(1);
-
-                         
-                        int index3_11 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred1_InternalSemver()) ) {s = 21;}
-
-                        else if ( (true) ) {s = 2;}
-
-                         
-                        input.seek(index3_11);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 6 : 
-                        int LA3_14 = input.LA(1);
-
-                         
-                        int index3_14 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred1_InternalSemver()) ) {s = 21;}
-
-                        else if ( (true) ) {s = 2;}
-
-                         
-                        input.seek(index3_14);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 7 : 
-                        int LA3_12 = input.LA(1);
-
-                         
-                        int index3_12 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred1_InternalSemver()) ) {s = 21;}
-
-                        else if ( (true) ) {s = 2;}
-
-                         
-                        input.seek(index3_12);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 8 : 
-                        int LA3_15 = input.LA(1);
-
-                         
-                        int index3_15 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred1_InternalSemver()) ) {s = 21;}
-
-                        else if ( (true) ) {s = 2;}
-
-                         
-                        input.seek(index3_15);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 9 : 
-                        int LA3_7 = input.LA(1);
-
-                         
-                        int index3_7 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred1_InternalSemver()) ) {s = 21;}
-
-                        else if ( (true) ) {s = 2;}
-
-                         
-                        input.seek(index3_7);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 10 : 
                         int LA3_16 = input.LA(1);
 
                          
                         int index3_16 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred1_InternalSemver()) ) {s = 21;}
+                        if ( (synpred1_InternalSemver()) ) {s = 22;}
 
                         else if ( (true) ) {s = 2;}
 
@@ -6888,14 +6899,14 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                         input.seek(index3_16);
                         if ( s>=0 ) return s;
                         break;
-                    case 11 : 
+                    case 1 : 
                         int LA3_17 = input.LA(1);
 
                          
                         int index3_17 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred1_InternalSemver()) ) {s = 21;}
+                        if ( (synpred1_InternalSemver()) ) {s = 22;}
 
                         else if ( (true) ) {s = 2;}
 
@@ -6903,14 +6914,14 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                         input.seek(index3_17);
                         if ( s>=0 ) return s;
                         break;
-                    case 12 : 
+                    case 2 : 
                         int LA3_18 = input.LA(1);
 
                          
                         int index3_18 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred1_InternalSemver()) ) {s = 21;}
+                        if ( (synpred1_InternalSemver()) ) {s = 22;}
 
                         else if ( (true) ) {s = 2;}
 
@@ -6918,19 +6929,184 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                         input.seek(index3_18);
                         if ( s>=0 ) return s;
                         break;
-                    case 13 : 
+                    case 3 : 
+                        int LA3_8 = input.LA(1);
+
+                         
+                        int index3_8 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred1_InternalSemver()) ) {s = 22;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index3_8);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 4 : 
+                        int LA3_9 = input.LA(1);
+
+                         
+                        int index3_9 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred1_InternalSemver()) ) {s = 22;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index3_9);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 5 : 
+                        int LA3_19 = input.LA(1);
+
+                         
+                        int index3_19 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred1_InternalSemver()) ) {s = 22;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index3_19);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 6 : 
+                        int LA3_20 = input.LA(1);
+
+                         
+                        int index3_20 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred1_InternalSemver()) ) {s = 22;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index3_20);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 7 : 
+                        int LA3_21 = input.LA(1);
+
+                         
+                        int index3_21 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred1_InternalSemver()) ) {s = 22;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index3_21);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 8 : 
+                        int LA3_12 = input.LA(1);
+
+                         
+                        int index3_12 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred1_InternalSemver()) ) {s = 22;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index3_12);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 9 : 
+                        int LA3_14 = input.LA(1);
+
+                         
+                        int index3_14 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred1_InternalSemver()) ) {s = 22;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index3_14);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 10 : 
+                        int LA3_13 = input.LA(1);
+
+                         
+                        int index3_13 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred1_InternalSemver()) ) {s = 22;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index3_13);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 11 : 
                         int LA3_10 = input.LA(1);
 
                          
                         int index3_10 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred1_InternalSemver()) ) {s = 21;}
+                        if ( (synpred1_InternalSemver()) ) {s = 22;}
 
                         else if ( (true) ) {s = 2;}
 
                          
                         input.seek(index3_10);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 12 : 
+                        int LA3_11 = input.LA(1);
+
+                         
+                        int index3_11 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred1_InternalSemver()) ) {s = 22;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index3_11);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 13 : 
+                        int LA3_15 = input.LA(1);
+
+                         
+                        int index3_15 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred1_InternalSemver()) ) {s = 22;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index3_15);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 14 : 
+                        int LA3_7 = input.LA(1);
+
+                         
+                        int index3_7 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred1_InternalSemver()) ) {s = 22;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index3_7);
                         if ( s>=0 ) return s;
                         break;
             }
@@ -6941,66 +7117,67 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
             throw nvae;
         }
     }
-    static final String dfa_8s = "\65\uffff";
-    static final String dfa_9s = "\11\uffff\14\27\3\uffff\12\27\3\26\4\uffff\14\26";
-    static final String dfa_10s = "\1\7\10\5\14\4\3\uffff\15\4\4\0\14\4";
-    static final String dfa_11s = "\1\20\24\52\3\uffff\15\52\4\0\14\52";
-    static final String dfa_12s = "\25\uffff\1\1\1\2\1\3\35\uffff";
-    static final String dfa_13s = "\1\uffff\1\2\1\13\1\24\1\11\1\20\1\4\1\14\1\0\2\uffff\1\6\1\16\1\21\1\5\1\15\1\1\1\12\1\23\1\10\1\17\20\uffff\1\22\1\25\1\3\1\7\14\uffff}>";
+    static final String dfa_8s = "\66\uffff";
+    static final String dfa_9s = "\12\uffff\12\30\1\uffff\2\30\1\11\1\uffff\12\30\2\11\4\uffff\15\11";
+    static final String dfa_10s = "\1\7\10\5\1\uffff\12\4\1\uffff\3\4\1\uffff\14\4\4\0\15\4";
+    static final String dfa_11s = "\1\52\10\53\1\uffff\12\53\1\uffff\3\53\1\uffff\14\53\4\0\15\53";
+    static final String dfa_12s = "\11\uffff\1\2\12\uffff\1\1\3\uffff\1\3\35\uffff";
+    static final String dfa_13s = "\1\uffff\1\13\1\24\1\6\1\21\1\3\1\17\1\1\1\12\1\uffff\1\25\1\11\1\0\1\10\1\22\1\4\1\20\1\2\1\15\1\23\21\uffff\1\5\1\7\1\14\1\16\15\uffff}>";
     static final String[] dfa_14s = {
-            "\1\4\1\5\1\6\1\7\1\1\1\2\1\3\2\uffff\1\10",
-            "\1\13\1\12\1\20\1\21\1\22\1\23\1\15\1\16\1\17\1\14\1\uffff\1\24\22\uffff\2\26\2\uffff\1\11\1\26\1\25\1\26",
-            "\1\13\1\12\1\20\1\21\1\22\1\23\1\15\1\16\1\17\1\14\1\uffff\1\24\22\uffff\2\26\2\uffff\1\11\1\26\1\25\1\26",
-            "\1\13\1\12\1\20\1\21\1\22\1\23\1\15\1\16\1\17\1\14\1\uffff\1\24\22\uffff\2\26\2\uffff\1\11\1\26\1\25\1\26",
-            "\1\13\1\12\1\20\1\21\1\22\1\23\1\15\1\16\1\17\1\14\1\uffff\1\24\22\uffff\2\26\2\uffff\1\11\1\26\1\25\1\26",
-            "\1\13\1\12\1\20\1\21\1\22\1\23\1\15\1\16\1\17\1\14\1\uffff\1\24\22\uffff\2\26\2\uffff\1\11\1\26\1\25\1\26",
-            "\1\13\1\12\1\20\1\21\1\22\1\23\1\15\1\16\1\17\1\14\1\uffff\1\24\22\uffff\2\26\2\uffff\1\11\1\26\1\25\1\26",
-            "\1\13\1\12\1\20\1\21\1\22\1\23\1\15\1\16\1\17\1\14\1\uffff\1\24\22\uffff\2\26\2\uffff\1\11\1\26\1\25\1\26",
-            "\1\13\1\12\1\20\1\21\1\22\1\23\1\15\1\16\1\17\1\14\1\uffff\1\24\22\uffff\2\26\2\uffff\1\11\1\26\1\25\1\26",
-            "\1\27\1\30\1\12\1\35\1\36\1\37\1\40\1\32\1\33\1\34\1\31\1\uffff\1\41\22\uffff\2\26\2\uffff\1\11\1\26\1\uffff\1\26",
-            "\1\27\1\30\1\12\1\35\1\36\1\37\1\40\1\32\1\33\1\34\1\31\1\uffff\1\41\22\uffff\2\26\2\uffff\1\11\1\26\1\uffff\1\26",
-            "\1\27\1\13\1\12\1\20\1\21\1\22\1\23\1\15\1\16\1\17\1\14\1\uffff\1\24\22\uffff\1\42\1\26\2\uffff\1\11\1\26\1\25\1\26",
-            "\1\27\1\13\1\12\1\20\1\21\1\22\1\23\1\15\1\16\1\17\1\14\1\uffff\1\24\22\uffff\1\42\1\26\2\uffff\1\11\1\26\1\25\1\26",
-            "\1\27\1\13\1\12\1\20\1\21\1\22\1\23\1\15\1\16\1\17\1\14\1\uffff\1\24\22\uffff\1\42\1\26\2\uffff\1\11\1\26\1\25\1\26",
-            "\1\27\1\13\1\12\1\20\1\21\1\22\1\23\1\15\1\16\1\17\1\14\1\uffff\1\24\22\uffff\1\42\1\26\2\uffff\1\11\1\26\1\25\1\26",
-            "\1\27\1\13\1\12\1\20\1\21\1\22\1\23\1\15\1\16\1\17\1\14\1\uffff\1\24\22\uffff\1\42\1\26\2\uffff\1\11\1\26\1\25\1\26",
-            "\1\27\1\13\1\12\1\20\1\21\1\22\1\23\1\15\1\16\1\17\1\14\1\uffff\1\24\22\uffff\1\42\1\26\2\uffff\1\11\1\26\1\25\1\26",
-            "\1\27\1\13\1\12\1\20\1\21\1\22\1\23\1\15\1\16\1\17\1\14\1\uffff\1\24\22\uffff\1\42\1\26\2\uffff\1\11\1\26\1\25\1\26",
-            "\1\27\1\13\1\12\1\20\1\21\1\22\1\23\1\15\1\16\1\17\1\14\1\uffff\1\24\22\uffff\1\42\1\26\2\uffff\1\11\1\26\1\25\1\26",
-            "\1\27\1\13\1\12\1\20\1\21\1\22\1\23\1\15\1\16\1\17\1\14\1\uffff\1\24\22\uffff\1\42\1\26\2\uffff\1\11\1\26\1\25\1\26",
-            "\1\27\1\13\1\12\1\20\1\21\1\22\1\23\1\15\1\16\1\17\1\14\1\uffff\1\24\22\uffff\1\42\1\26\2\uffff\1\11\1\26\1\25\1\26",
+            "\1\4\1\5\1\6\1\7\1\1\1\2\1\3\2\uffff\1\10\26\uffff\1\11\2\uffff\1\11",
+            "\1\12\1\26\1\17\1\20\1\21\1\22\1\14\1\15\1\16\1\13\1\uffff\1\23\22\uffff\2\11\2\uffff\1\25\1\11\1\24\2\11",
+            "\1\12\1\26\1\17\1\20\1\21\1\22\1\14\1\15\1\16\1\13\1\uffff\1\23\22\uffff\2\11\2\uffff\1\25\1\11\1\24\2\11",
+            "\1\12\1\26\1\17\1\20\1\21\1\22\1\14\1\15\1\16\1\13\1\uffff\1\23\22\uffff\2\11\2\uffff\1\25\1\11\1\24\2\11",
+            "\1\12\1\26\1\17\1\20\1\21\1\22\1\14\1\15\1\16\1\13\1\uffff\1\23\22\uffff\2\11\2\uffff\1\25\1\11\1\24\2\11",
+            "\1\12\1\26\1\17\1\20\1\21\1\22\1\14\1\15\1\16\1\13\1\uffff\1\23\22\uffff\2\11\2\uffff\1\25\1\11\1\24\2\11",
+            "\1\12\1\26\1\17\1\20\1\21\1\22\1\14\1\15\1\16\1\13\1\uffff\1\23\22\uffff\2\11\2\uffff\1\25\1\11\1\24\2\11",
+            "\1\12\1\26\1\17\1\20\1\21\1\22\1\14\1\15\1\16\1\13\1\uffff\1\23\22\uffff\2\11\2\uffff\1\25\1\11\1\24\2\11",
+            "\1\12\1\26\1\17\1\20\1\21\1\22\1\14\1\15\1\16\1\13\1\uffff\1\23\22\uffff\2\11\2\uffff\1\25\1\11\1\24\2\11",
             "",
+            "\1\30\1\12\1\26\1\17\1\20\1\21\1\22\1\14\1\15\1\16\1\13\1\uffff\1\23\22\uffff\1\27\1\11\2\uffff\1\25\1\11\1\24\2\11",
+            "\1\30\1\12\1\26\1\17\1\20\1\21\1\22\1\14\1\15\1\16\1\13\1\uffff\1\23\22\uffff\1\27\1\11\2\uffff\1\25\1\11\1\24\2\11",
+            "\1\30\1\12\1\26\1\17\1\20\1\21\1\22\1\14\1\15\1\16\1\13\1\uffff\1\23\22\uffff\1\27\1\11\2\uffff\1\25\1\11\1\24\2\11",
+            "\1\30\1\12\1\26\1\17\1\20\1\21\1\22\1\14\1\15\1\16\1\13\1\uffff\1\23\22\uffff\1\27\1\11\2\uffff\1\25\1\11\1\24\2\11",
+            "\1\30\1\12\1\26\1\17\1\20\1\21\1\22\1\14\1\15\1\16\1\13\1\uffff\1\23\22\uffff\1\27\1\11\2\uffff\1\25\1\11\1\24\2\11",
+            "\1\30\1\12\1\26\1\17\1\20\1\21\1\22\1\14\1\15\1\16\1\13\1\uffff\1\23\22\uffff\1\27\1\11\2\uffff\1\25\1\11\1\24\2\11",
+            "\1\30\1\12\1\26\1\17\1\20\1\21\1\22\1\14\1\15\1\16\1\13\1\uffff\1\23\22\uffff\1\27\1\11\2\uffff\1\25\1\11\1\24\2\11",
+            "\1\30\1\12\1\26\1\17\1\20\1\21\1\22\1\14\1\15\1\16\1\13\1\uffff\1\23\22\uffff\1\27\1\11\2\uffff\1\25\1\11\1\24\2\11",
+            "\1\30\1\12\1\26\1\17\1\20\1\21\1\22\1\14\1\15\1\16\1\13\1\uffff\1\23\22\uffff\1\27\1\11\2\uffff\1\25\1\11\1\24\2\11",
+            "\1\30\1\12\1\26\1\17\1\20\1\21\1\22\1\14\1\15\1\16\1\13\1\uffff\1\23\22\uffff\1\27\1\11\2\uffff\1\25\1\11\1\24\2\11",
             "",
+            "\1\30\1\31\1\26\1\36\1\37\1\40\1\41\1\33\1\34\1\35\1\32\1\uffff\1\42\22\uffff\2\11\2\uffff\1\25\1\11\1\uffff\2\11",
+            "\1\30\1\31\1\26\1\36\1\37\1\40\1\41\1\33\1\34\1\35\1\32\1\uffff\1\42\22\uffff\2\11\2\uffff\1\25\1\11\1\uffff\2\11",
+            "\13\11\1\uffff\1\11\22\uffff\1\11\1\43\1\11\1\uffff\2\11\1\uffff\2\11",
             "",
-            "\1\27\1\30\1\12\1\35\1\36\1\37\1\40\1\32\1\33\1\34\1\31\1\uffff\1\41\22\uffff\2\26\2\uffff\1\11\1\26\1\uffff\1\26",
-            "\1\27\1\30\1\12\1\35\1\36\1\37\1\40\1\32\1\33\1\34\1\31\1\uffff\1\41\22\uffff\2\26\2\uffff\1\11\1\26\1\uffff\1\26",
-            "\1\27\1\30\1\12\1\35\1\36\1\37\1\40\1\32\1\33\1\34\1\31\1\uffff\1\41\22\uffff\2\26\2\uffff\1\11\1\26\1\uffff\1\26",
-            "\1\27\1\30\1\12\1\35\1\36\1\37\1\40\1\32\1\33\1\34\1\31\1\uffff\1\41\22\uffff\2\26\2\uffff\1\11\1\26\1\uffff\1\26",
-            "\1\27\1\30\1\12\1\35\1\36\1\37\1\40\1\32\1\33\1\34\1\31\1\uffff\1\41\22\uffff\2\26\2\uffff\1\11\1\26\1\uffff\1\26",
-            "\1\27\1\30\1\12\1\35\1\36\1\37\1\40\1\32\1\33\1\34\1\31\1\uffff\1\41\22\uffff\2\26\2\uffff\1\11\1\26\1\uffff\1\26",
-            "\1\27\1\30\1\12\1\35\1\36\1\37\1\40\1\32\1\33\1\34\1\31\1\uffff\1\41\22\uffff\2\26\2\uffff\1\11\1\26\1\uffff\1\26",
-            "\1\27\1\30\1\12\1\35\1\36\1\37\1\40\1\32\1\33\1\34\1\31\1\uffff\1\41\22\uffff\2\26\2\uffff\1\11\1\26\1\uffff\1\26",
-            "\1\27\1\30\1\12\1\35\1\36\1\37\1\40\1\32\1\33\1\34\1\31\1\uffff\1\41\22\uffff\2\26\2\uffff\1\11\1\26\1\uffff\1\26",
-            "\1\27\1\30\1\12\1\35\1\36\1\37\1\40\1\32\1\33\1\34\1\31\1\uffff\1\41\22\uffff\2\26\2\uffff\1\11\1\26\1\uffff\1\26",
-            "\13\26\1\uffff\1\26\22\uffff\1\26\1\43\1\26\1\uffff\2\26\1\uffff\1\26",
-            "\13\26\1\uffff\1\26\22\uffff\1\26\1\44\1\26\1\uffff\2\26\1\uffff\1\26",
-            "\1\26\1\53\1\52\1\60\1\61\1\62\1\63\1\55\1\56\1\57\1\54\1\uffff\1\64\22\uffff\1\47\1\45\1\26\1\uffff\1\51\1\46\1\uffff\1\50",
+            "\1\30\1\31\1\26\1\36\1\37\1\40\1\41\1\33\1\34\1\35\1\32\1\uffff\1\42\22\uffff\2\11\2\uffff\1\25\1\11\1\uffff\2\11",
+            "\1\30\1\31\1\26\1\36\1\37\1\40\1\41\1\33\1\34\1\35\1\32\1\uffff\1\42\22\uffff\2\11\2\uffff\1\25\1\11\1\uffff\2\11",
+            "\1\30\1\31\1\26\1\36\1\37\1\40\1\41\1\33\1\34\1\35\1\32\1\uffff\1\42\22\uffff\2\11\2\uffff\1\25\1\11\1\uffff\2\11",
+            "\1\30\1\31\1\26\1\36\1\37\1\40\1\41\1\33\1\34\1\35\1\32\1\uffff\1\42\22\uffff\2\11\2\uffff\1\25\1\11\1\uffff\2\11",
+            "\1\30\1\31\1\26\1\36\1\37\1\40\1\41\1\33\1\34\1\35\1\32\1\uffff\1\42\22\uffff\2\11\2\uffff\1\25\1\11\1\uffff\2\11",
+            "\1\30\1\31\1\26\1\36\1\37\1\40\1\41\1\33\1\34\1\35\1\32\1\uffff\1\42\22\uffff\2\11\2\uffff\1\25\1\11\1\uffff\2\11",
+            "\1\30\1\31\1\26\1\36\1\37\1\40\1\41\1\33\1\34\1\35\1\32\1\uffff\1\42\22\uffff\2\11\2\uffff\1\25\1\11\1\uffff\2\11",
+            "\1\30\1\31\1\26\1\36\1\37\1\40\1\41\1\33\1\34\1\35\1\32\1\uffff\1\42\22\uffff\2\11\2\uffff\1\25\1\11\1\uffff\2\11",
+            "\1\30\1\31\1\26\1\36\1\37\1\40\1\41\1\33\1\34\1\35\1\32\1\uffff\1\42\22\uffff\2\11\2\uffff\1\25\1\11\1\uffff\2\11",
+            "\1\30\1\31\1\26\1\36\1\37\1\40\1\41\1\33\1\34\1\35\1\32\1\uffff\1\42\22\uffff\2\11\2\uffff\1\25\1\11\1\uffff\2\11",
+            "\13\11\1\uffff\1\11\22\uffff\1\11\1\44\1\11\1\uffff\2\11\1\uffff\2\11",
+            "\1\11\1\54\1\53\1\61\1\62\1\63\1\64\1\56\1\57\1\60\1\55\1\uffff\1\65\22\uffff\1\47\1\45\1\11\1\uffff\1\51\1\46\1\uffff\1\52\1\50",
             "\1\uffff",
             "\1\uffff",
             "\1\uffff",
             "\1\uffff",
-            "\1\26\1\53\1\52\1\60\1\61\1\62\1\63\1\55\1\56\1\57\1\54\1\uffff\1\64\22\uffff\1\47\1\45\1\26\1\uffff\1\51\1\46\1\uffff\1\50",
-            "\1\26\1\53\1\52\1\60\1\61\1\62\1\63\1\55\1\56\1\57\1\54\1\uffff\1\64\22\uffff\1\47\1\45\1\26\1\uffff\1\51\1\46\1\uffff\1\50",
-            "\1\26\1\53\1\52\1\60\1\61\1\62\1\63\1\55\1\56\1\57\1\54\1\uffff\1\64\22\uffff\1\47\1\45\1\26\1\uffff\1\51\1\46\1\uffff\1\50",
-            "\1\26\1\53\1\52\1\60\1\61\1\62\1\63\1\55\1\56\1\57\1\54\1\uffff\1\64\22\uffff\1\47\1\45\1\26\1\uffff\1\51\1\46\1\uffff\1\50",
-            "\1\26\1\53\1\52\1\60\1\61\1\62\1\63\1\55\1\56\1\57\1\54\1\uffff\1\64\22\uffff\1\47\1\45\1\26\1\uffff\1\51\1\46\1\uffff\1\50",
-            "\1\26\1\53\1\52\1\60\1\61\1\62\1\63\1\55\1\56\1\57\1\54\1\uffff\1\64\22\uffff\1\47\1\45\1\26\1\uffff\1\51\1\46\1\uffff\1\50",
-            "\1\26\1\53\1\52\1\60\1\61\1\62\1\63\1\55\1\56\1\57\1\54\1\uffff\1\64\22\uffff\1\47\1\45\1\26\1\uffff\1\51\1\46\1\uffff\1\50",
-            "\1\26\1\53\1\52\1\60\1\61\1\62\1\63\1\55\1\56\1\57\1\54\1\uffff\1\64\22\uffff\1\47\1\45\1\26\1\uffff\1\51\1\46\1\uffff\1\50",
-            "\1\26\1\53\1\52\1\60\1\61\1\62\1\63\1\55\1\56\1\57\1\54\1\uffff\1\64\22\uffff\1\47\1\45\1\26\1\uffff\1\51\1\46\1\uffff\1\50",
-            "\1\26\1\53\1\52\1\60\1\61\1\62\1\63\1\55\1\56\1\57\1\54\1\uffff\1\64\22\uffff\1\47\1\45\1\26\1\uffff\1\51\1\46\1\uffff\1\50",
-            "\1\26\1\53\1\52\1\60\1\61\1\62\1\63\1\55\1\56\1\57\1\54\1\uffff\1\64\22\uffff\1\47\1\45\1\26\1\uffff\1\51\1\46\1\uffff\1\50",
-            "\1\26\1\53\1\52\1\60\1\61\1\62\1\63\1\55\1\56\1\57\1\54\1\uffff\1\64\22\uffff\1\47\1\45\1\26\1\uffff\1\51\1\46\1\uffff\1\50"
+            "\1\11\1\54\1\53\1\61\1\62\1\63\1\64\1\56\1\57\1\60\1\55\1\uffff\1\65\22\uffff\1\47\1\45\1\11\1\uffff\1\51\1\46\1\uffff\1\52\1\50",
+            "\1\11\1\54\1\53\1\61\1\62\1\63\1\64\1\56\1\57\1\60\1\55\1\uffff\1\65\22\uffff\1\47\1\45\1\11\1\uffff\1\51\1\46\1\uffff\1\52\1\50",
+            "\1\11\1\54\1\53\1\61\1\62\1\63\1\64\1\56\1\57\1\60\1\55\1\uffff\1\65\22\uffff\1\47\1\45\1\11\1\uffff\1\51\1\46\1\uffff\1\52\1\50",
+            "\1\11\1\54\1\53\1\61\1\62\1\63\1\64\1\56\1\57\1\60\1\55\1\uffff\1\65\22\uffff\1\47\1\45\1\11\1\uffff\1\51\1\46\1\uffff\1\52\1\50",
+            "\1\11\1\54\1\53\1\61\1\62\1\63\1\64\1\56\1\57\1\60\1\55\1\uffff\1\65\22\uffff\1\47\1\45\1\11\1\uffff\1\51\1\46\1\uffff\1\52\1\50",
+            "\1\11\1\54\1\53\1\61\1\62\1\63\1\64\1\56\1\57\1\60\1\55\1\uffff\1\65\22\uffff\1\47\1\45\1\11\1\uffff\1\51\1\46\1\uffff\1\52\1\50",
+            "\1\11\1\54\1\53\1\61\1\62\1\63\1\64\1\56\1\57\1\60\1\55\1\uffff\1\65\22\uffff\1\47\1\45\1\11\1\uffff\1\51\1\46\1\uffff\1\52\1\50",
+            "\1\11\1\54\1\53\1\61\1\62\1\63\1\64\1\56\1\57\1\60\1\55\1\uffff\1\65\22\uffff\1\47\1\45\1\11\1\uffff\1\51\1\46\1\uffff\1\52\1\50",
+            "\1\11\1\54\1\53\1\61\1\62\1\63\1\64\1\56\1\57\1\60\1\55\1\uffff\1\65\22\uffff\1\47\1\45\1\11\1\uffff\1\51\1\46\1\uffff\1\52\1\50",
+            "\1\11\1\54\1\53\1\61\1\62\1\63\1\64\1\56\1\57\1\60\1\55\1\uffff\1\65\22\uffff\1\47\1\45\1\11\1\uffff\1\51\1\46\1\uffff\1\52\1\50",
+            "\1\11\1\54\1\53\1\61\1\62\1\63\1\64\1\56\1\57\1\60\1\55\1\uffff\1\65\22\uffff\1\47\1\45\1\11\1\uffff\1\51\1\46\1\uffff\1\52\1\50",
+            "\1\11\1\54\1\53\1\61\1\62\1\63\1\64\1\56\1\57\1\60\1\55\1\uffff\1\65\22\uffff\1\47\1\45\1\11\1\uffff\1\51\1\46\1\uffff\1\52\1\50",
+            "\1\11\1\54\1\53\1\61\1\62\1\63\1\64\1\56\1\57\1\60\1\55\1\uffff\1\65\22\uffff\1\47\1\45\1\11\1\uffff\1\51\1\46\1\uffff\1\52\1\50"
     };
 
     static final short[] dfa_8 = DFA.unpackEncodedString(dfa_8s);
@@ -7032,805 +7209,805 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
         	int _s = s;
             switch ( s ) {
                     case 0 : 
-                        int LA2_8 = input.LA(1);
-
-                         
-                        int index2_8 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA2_8==RULE_LETTER_V) ) {s = 11;}
-
-                        else if ( (LA2_8==RULE_LETTER_X) ) {s = 12;}
-
-                        else if ( (LA2_8==RULE_LETTER_S) ) {s = 13;}
-
-                        else if ( (LA2_8==RULE_LETTER_M) ) {s = 14;}
-
-                        else if ( (LA2_8==RULE_LETTER_R) ) {s = 15;}
-
-                        else if ( (LA2_8==RULE_LETTER_F) ) {s = 16;}
-
-                        else if ( (LA2_8==RULE_LETTER_I) ) {s = 17;}
-
-                        else if ( (LA2_8==RULE_LETTER_L) ) {s = 18;}
-
-                        else if ( (LA2_8==RULE_LETTER_E) ) {s = 19;}
-
-                        else if ( (LA2_8==RULE_LETTER_OTHER) ) {s = 20;}
-
-                        else if ( (LA2_8==41) && (synpred2_InternalSemver())) {s = 21;}
-
-                        else if ( (LA2_8==39) ) {s = 9;}
-
-                        else if ( (LA2_8==RULE_DIGITS) ) {s = 10;}
-
-                        else if ( ((LA2_8>=35 && LA2_8<=36)||LA2_8==40||LA2_8==42) ) {s = 22;}
-
-                         
-                        input.seek(index2_8);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 1 : 
-                        int LA2_16 = input.LA(1);
-
-                         
-                        int index2_16 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA2_16==35) ) {s = 34;}
-
-                        else if ( (LA2_16==RULE_LETTER_V) ) {s = 11;}
-
-                        else if ( (LA2_16==RULE_LETTER_X) ) {s = 12;}
-
-                        else if ( (LA2_16==RULE_LETTER_S) ) {s = 13;}
-
-                        else if ( (LA2_16==RULE_LETTER_M) ) {s = 14;}
-
-                        else if ( (LA2_16==RULE_LETTER_R) ) {s = 15;}
-
-                        else if ( (LA2_16==RULE_LETTER_F) ) {s = 16;}
-
-                        else if ( (LA2_16==RULE_LETTER_I) ) {s = 17;}
-
-                        else if ( (LA2_16==RULE_LETTER_L) ) {s = 18;}
-
-                        else if ( (LA2_16==RULE_LETTER_E) ) {s = 19;}
-
-                        else if ( (LA2_16==RULE_LETTER_OTHER) ) {s = 20;}
-
-                        else if ( (LA2_16==41) && (synpred2_InternalSemver())) {s = 21;}
-
-                        else if ( (LA2_16==EOF||LA2_16==RULE_WS) ) {s = 23;}
-
-                        else if ( (LA2_16==39) ) {s = 9;}
-
-                        else if ( (LA2_16==RULE_DIGITS) ) {s = 10;}
-
-                        else if ( (LA2_16==36||LA2_16==40||LA2_16==42) ) {s = 22;}
-
-                         
-                        input.seek(index2_16);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 2 : 
-                        int LA2_1 = input.LA(1);
-
-                         
-                        int index2_1 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA2_1==39) ) {s = 9;}
-
-                        else if ( (LA2_1==RULE_DIGITS) ) {s = 10;}
-
-                        else if ( (LA2_1==RULE_LETTER_V) ) {s = 11;}
-
-                        else if ( (LA2_1==RULE_LETTER_X) ) {s = 12;}
-
-                        else if ( (LA2_1==RULE_LETTER_S) ) {s = 13;}
-
-                        else if ( (LA2_1==RULE_LETTER_M) ) {s = 14;}
-
-                        else if ( (LA2_1==RULE_LETTER_R) ) {s = 15;}
-
-                        else if ( (LA2_1==RULE_LETTER_F) ) {s = 16;}
-
-                        else if ( (LA2_1==RULE_LETTER_I) ) {s = 17;}
-
-                        else if ( (LA2_1==RULE_LETTER_L) ) {s = 18;}
-
-                        else if ( (LA2_1==RULE_LETTER_E) ) {s = 19;}
-
-                        else if ( (LA2_1==RULE_LETTER_OTHER) ) {s = 20;}
-
-                        else if ( (LA2_1==41) && (synpred2_InternalSemver())) {s = 21;}
-
-                        else if ( ((LA2_1>=35 && LA2_1<=36)||LA2_1==40||LA2_1==42) ) {s = 22;}
-
-                         
-                        input.seek(index2_1);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 3 : 
-                        int LA2_39 = input.LA(1);
-
-                         
-                        int index2_39 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred2_InternalSemver()) ) {s = 21;}
-
-                        else if ( (true) ) {s = 22;}
-
-                         
-                        input.seek(index2_39);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 4 : 
-                        int LA2_6 = input.LA(1);
-
-                         
-                        int index2_6 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA2_6==39) ) {s = 9;}
-
-                        else if ( (LA2_6==RULE_DIGITS) ) {s = 10;}
-
-                        else if ( (LA2_6==RULE_LETTER_V) ) {s = 11;}
-
-                        else if ( (LA2_6==RULE_LETTER_X) ) {s = 12;}
-
-                        else if ( (LA2_6==RULE_LETTER_S) ) {s = 13;}
-
-                        else if ( (LA2_6==RULE_LETTER_M) ) {s = 14;}
-
-                        else if ( (LA2_6==RULE_LETTER_R) ) {s = 15;}
-
-                        else if ( (LA2_6==RULE_LETTER_F) ) {s = 16;}
-
-                        else if ( (LA2_6==RULE_LETTER_I) ) {s = 17;}
-
-                        else if ( (LA2_6==RULE_LETTER_L) ) {s = 18;}
-
-                        else if ( (LA2_6==RULE_LETTER_E) ) {s = 19;}
-
-                        else if ( (LA2_6==RULE_LETTER_OTHER) ) {s = 20;}
-
-                        else if ( (LA2_6==41) && (synpred2_InternalSemver())) {s = 21;}
-
-                        else if ( ((LA2_6>=35 && LA2_6<=36)||LA2_6==40||LA2_6==42) ) {s = 22;}
-
-                         
-                        input.seek(index2_6);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 5 : 
-                        int LA2_14 = input.LA(1);
-
-                         
-                        int index2_14 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA2_14==36||LA2_14==40||LA2_14==42) ) {s = 22;}
-
-                        else if ( (LA2_14==35) ) {s = 34;}
-
-                        else if ( (LA2_14==39) ) {s = 9;}
-
-                        else if ( (LA2_14==RULE_DIGITS) ) {s = 10;}
-
-                        else if ( (LA2_14==RULE_LETTER_V) ) {s = 11;}
-
-                        else if ( (LA2_14==RULE_LETTER_X) ) {s = 12;}
-
-                        else if ( (LA2_14==RULE_LETTER_S) ) {s = 13;}
-
-                        else if ( (LA2_14==RULE_LETTER_M) ) {s = 14;}
-
-                        else if ( (LA2_14==RULE_LETTER_R) ) {s = 15;}
-
-                        else if ( (LA2_14==RULE_LETTER_F) ) {s = 16;}
-
-                        else if ( (LA2_14==RULE_LETTER_I) ) {s = 17;}
-
-                        else if ( (LA2_14==RULE_LETTER_L) ) {s = 18;}
-
-                        else if ( (LA2_14==RULE_LETTER_E) ) {s = 19;}
-
-                        else if ( (LA2_14==RULE_LETTER_OTHER) ) {s = 20;}
-
-                        else if ( (LA2_14==41) && (synpred2_InternalSemver())) {s = 21;}
-
-                        else if ( (LA2_14==EOF||LA2_14==RULE_WS) ) {s = 23;}
-
-                         
-                        input.seek(index2_14);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 6 : 
-                        int LA2_11 = input.LA(1);
-
-                         
-                        int index2_11 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA2_11==36||LA2_11==40||LA2_11==42) ) {s = 22;}
-
-                        else if ( (LA2_11==35) ) {s = 34;}
-
-                        else if ( (LA2_11==39) ) {s = 9;}
-
-                        else if ( (LA2_11==RULE_DIGITS) ) {s = 10;}
-
-                        else if ( (LA2_11==RULE_LETTER_V) ) {s = 11;}
-
-                        else if ( (LA2_11==RULE_LETTER_X) ) {s = 12;}
-
-                        else if ( (LA2_11==RULE_LETTER_S) ) {s = 13;}
-
-                        else if ( (LA2_11==RULE_LETTER_M) ) {s = 14;}
-
-                        else if ( (LA2_11==RULE_LETTER_R) ) {s = 15;}
-
-                        else if ( (LA2_11==RULE_LETTER_F) ) {s = 16;}
-
-                        else if ( (LA2_11==RULE_LETTER_I) ) {s = 17;}
-
-                        else if ( (LA2_11==RULE_LETTER_L) ) {s = 18;}
-
-                        else if ( (LA2_11==RULE_LETTER_E) ) {s = 19;}
-
-                        else if ( (LA2_11==RULE_LETTER_OTHER) ) {s = 20;}
-
-                        else if ( (LA2_11==41) && (synpred2_InternalSemver())) {s = 21;}
-
-                        else if ( (LA2_11==EOF||LA2_11==RULE_WS) ) {s = 23;}
-
-                         
-                        input.seek(index2_11);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 7 : 
-                        int LA2_40 = input.LA(1);
-
-                         
-                        int index2_40 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred2_InternalSemver()) ) {s = 21;}
-
-                        else if ( (true) ) {s = 22;}
-
-                         
-                        input.seek(index2_40);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 8 : 
-                        int LA2_19 = input.LA(1);
-
-                         
-                        int index2_19 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA2_19==36||LA2_19==40||LA2_19==42) ) {s = 22;}
-
-                        else if ( (LA2_19==35) ) {s = 34;}
-
-                        else if ( (LA2_19==39) ) {s = 9;}
-
-                        else if ( (LA2_19==RULE_DIGITS) ) {s = 10;}
-
-                        else if ( (LA2_19==RULE_LETTER_V) ) {s = 11;}
-
-                        else if ( (LA2_19==RULE_LETTER_X) ) {s = 12;}
-
-                        else if ( (LA2_19==RULE_LETTER_S) ) {s = 13;}
-
-                        else if ( (LA2_19==RULE_LETTER_M) ) {s = 14;}
-
-                        else if ( (LA2_19==RULE_LETTER_R) ) {s = 15;}
-
-                        else if ( (LA2_19==RULE_LETTER_F) ) {s = 16;}
-
-                        else if ( (LA2_19==RULE_LETTER_I) ) {s = 17;}
-
-                        else if ( (LA2_19==RULE_LETTER_L) ) {s = 18;}
-
-                        else if ( (LA2_19==RULE_LETTER_E) ) {s = 19;}
-
-                        else if ( (LA2_19==RULE_LETTER_OTHER) ) {s = 20;}
-
-                        else if ( (LA2_19==41) && (synpred2_InternalSemver())) {s = 21;}
-
-                        else if ( (LA2_19==EOF||LA2_19==RULE_WS) ) {s = 23;}
-
-                         
-                        input.seek(index2_19);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 9 : 
-                        int LA2_4 = input.LA(1);
-
-                         
-                        int index2_4 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA2_4==39) ) {s = 9;}
-
-                        else if ( (LA2_4==RULE_DIGITS) ) {s = 10;}
-
-                        else if ( (LA2_4==RULE_LETTER_V) ) {s = 11;}
-
-                        else if ( (LA2_4==RULE_LETTER_X) ) {s = 12;}
-
-                        else if ( (LA2_4==RULE_LETTER_S) ) {s = 13;}
-
-                        else if ( (LA2_4==RULE_LETTER_M) ) {s = 14;}
-
-                        else if ( (LA2_4==RULE_LETTER_R) ) {s = 15;}
-
-                        else if ( (LA2_4==RULE_LETTER_F) ) {s = 16;}
-
-                        else if ( (LA2_4==RULE_LETTER_I) ) {s = 17;}
-
-                        else if ( (LA2_4==RULE_LETTER_L) ) {s = 18;}
-
-                        else if ( (LA2_4==RULE_LETTER_E) ) {s = 19;}
-
-                        else if ( (LA2_4==RULE_LETTER_OTHER) ) {s = 20;}
-
-                        else if ( (LA2_4==41) && (synpred2_InternalSemver())) {s = 21;}
-
-                        else if ( ((LA2_4>=35 && LA2_4<=36)||LA2_4==40||LA2_4==42) ) {s = 22;}
-
-                         
-                        input.seek(index2_4);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 10 : 
-                        int LA2_17 = input.LA(1);
-
-                         
-                        int index2_17 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA2_17==36||LA2_17==40||LA2_17==42) ) {s = 22;}
-
-                        else if ( (LA2_17==35) ) {s = 34;}
-
-                        else if ( (LA2_17==39) ) {s = 9;}
-
-                        else if ( (LA2_17==RULE_DIGITS) ) {s = 10;}
-
-                        else if ( (LA2_17==RULE_LETTER_V) ) {s = 11;}
-
-                        else if ( (LA2_17==RULE_LETTER_X) ) {s = 12;}
-
-                        else if ( (LA2_17==RULE_LETTER_S) ) {s = 13;}
-
-                        else if ( (LA2_17==RULE_LETTER_M) ) {s = 14;}
-
-                        else if ( (LA2_17==RULE_LETTER_R) ) {s = 15;}
-
-                        else if ( (LA2_17==RULE_LETTER_F) ) {s = 16;}
-
-                        else if ( (LA2_17==RULE_LETTER_I) ) {s = 17;}
-
-                        else if ( (LA2_17==RULE_LETTER_L) ) {s = 18;}
-
-                        else if ( (LA2_17==RULE_LETTER_E) ) {s = 19;}
-
-                        else if ( (LA2_17==RULE_LETTER_OTHER) ) {s = 20;}
-
-                        else if ( (LA2_17==41) && (synpred2_InternalSemver())) {s = 21;}
-
-                        else if ( (LA2_17==EOF||LA2_17==RULE_WS) ) {s = 23;}
-
-                         
-                        input.seek(index2_17);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 11 : 
-                        int LA2_2 = input.LA(1);
-
-                         
-                        int index2_2 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA2_2==RULE_LETTER_V) ) {s = 11;}
-
-                        else if ( (LA2_2==RULE_LETTER_X) ) {s = 12;}
-
-                        else if ( (LA2_2==RULE_LETTER_S) ) {s = 13;}
-
-                        else if ( (LA2_2==RULE_LETTER_M) ) {s = 14;}
-
-                        else if ( (LA2_2==RULE_LETTER_R) ) {s = 15;}
-
-                        else if ( (LA2_2==RULE_LETTER_F) ) {s = 16;}
-
-                        else if ( (LA2_2==RULE_LETTER_I) ) {s = 17;}
-
-                        else if ( (LA2_2==RULE_LETTER_L) ) {s = 18;}
-
-                        else if ( (LA2_2==RULE_LETTER_E) ) {s = 19;}
-
-                        else if ( (LA2_2==RULE_LETTER_OTHER) ) {s = 20;}
-
-                        else if ( (LA2_2==41) && (synpred2_InternalSemver())) {s = 21;}
-
-                        else if ( (LA2_2==39) ) {s = 9;}
-
-                        else if ( (LA2_2==RULE_DIGITS) ) {s = 10;}
-
-                        else if ( ((LA2_2>=35 && LA2_2<=36)||LA2_2==40||LA2_2==42) ) {s = 22;}
-
-                         
-                        input.seek(index2_2);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 12 : 
-                        int LA2_7 = input.LA(1);
-
-                         
-                        int index2_7 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA2_7==39) ) {s = 9;}
-
-                        else if ( (LA2_7==RULE_DIGITS) ) {s = 10;}
-
-                        else if ( (LA2_7==RULE_LETTER_V) ) {s = 11;}
-
-                        else if ( (LA2_7==RULE_LETTER_X) ) {s = 12;}
-
-                        else if ( (LA2_7==RULE_LETTER_S) ) {s = 13;}
-
-                        else if ( (LA2_7==RULE_LETTER_M) ) {s = 14;}
-
-                        else if ( (LA2_7==RULE_LETTER_R) ) {s = 15;}
-
-                        else if ( (LA2_7==RULE_LETTER_F) ) {s = 16;}
-
-                        else if ( (LA2_7==RULE_LETTER_I) ) {s = 17;}
-
-                        else if ( (LA2_7==RULE_LETTER_L) ) {s = 18;}
-
-                        else if ( (LA2_7==RULE_LETTER_E) ) {s = 19;}
-
-                        else if ( (LA2_7==RULE_LETTER_OTHER) ) {s = 20;}
-
-                        else if ( ((LA2_7>=35 && LA2_7<=36)||LA2_7==40||LA2_7==42) ) {s = 22;}
-
-                        else if ( (LA2_7==41) && (synpred2_InternalSemver())) {s = 21;}
-
-                         
-                        input.seek(index2_7);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 13 : 
-                        int LA2_15 = input.LA(1);
-
-                         
-                        int index2_15 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA2_15==36||LA2_15==40||LA2_15==42) ) {s = 22;}
-
-                        else if ( (LA2_15==35) ) {s = 34;}
-
-                        else if ( (LA2_15==39) ) {s = 9;}
-
-                        else if ( (LA2_15==RULE_DIGITS) ) {s = 10;}
-
-                        else if ( (LA2_15==RULE_LETTER_V) ) {s = 11;}
-
-                        else if ( (LA2_15==RULE_LETTER_X) ) {s = 12;}
-
-                        else if ( (LA2_15==RULE_LETTER_S) ) {s = 13;}
-
-                        else if ( (LA2_15==RULE_LETTER_M) ) {s = 14;}
-
-                        else if ( (LA2_15==RULE_LETTER_R) ) {s = 15;}
-
-                        else if ( (LA2_15==RULE_LETTER_F) ) {s = 16;}
-
-                        else if ( (LA2_15==RULE_LETTER_I) ) {s = 17;}
-
-                        else if ( (LA2_15==RULE_LETTER_L) ) {s = 18;}
-
-                        else if ( (LA2_15==RULE_LETTER_E) ) {s = 19;}
-
-                        else if ( (LA2_15==RULE_LETTER_OTHER) ) {s = 20;}
-
-                        else if ( (LA2_15==41) && (synpred2_InternalSemver())) {s = 21;}
-
-                        else if ( (LA2_15==EOF||LA2_15==RULE_WS) ) {s = 23;}
-
-                         
-                        input.seek(index2_15);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 14 : 
                         int LA2_12 = input.LA(1);
 
                          
                         int index2_12 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA2_12==EOF||LA2_12==RULE_WS) ) {s = 23;}
+                        if ( (LA2_12==EOF||LA2_12==RULE_WS) ) {s = 24;}
 
-                        else if ( (LA2_12==39) ) {s = 9;}
+                        else if ( (LA2_12==39) ) {s = 21;}
 
-                        else if ( (LA2_12==RULE_DIGITS) ) {s = 10;}
+                        else if ( (LA2_12==RULE_DIGITS) ) {s = 22;}
 
-                        else if ( (LA2_12==RULE_LETTER_V) ) {s = 11;}
+                        else if ( (LA2_12==RULE_LETTER_V) ) {s = 10;}
 
-                        else if ( (LA2_12==RULE_LETTER_X) ) {s = 12;}
+                        else if ( (LA2_12==RULE_LETTER_X) ) {s = 11;}
 
-                        else if ( (LA2_12==RULE_LETTER_S) ) {s = 13;}
+                        else if ( (LA2_12==RULE_LETTER_S) ) {s = 12;}
 
-                        else if ( (LA2_12==RULE_LETTER_M) ) {s = 14;}
+                        else if ( (LA2_12==RULE_LETTER_M) ) {s = 13;}
 
-                        else if ( (LA2_12==RULE_LETTER_R) ) {s = 15;}
+                        else if ( (LA2_12==RULE_LETTER_R) ) {s = 14;}
 
-                        else if ( (LA2_12==RULE_LETTER_F) ) {s = 16;}
+                        else if ( (LA2_12==RULE_LETTER_F) ) {s = 15;}
 
-                        else if ( (LA2_12==RULE_LETTER_I) ) {s = 17;}
+                        else if ( (LA2_12==RULE_LETTER_I) ) {s = 16;}
 
-                        else if ( (LA2_12==RULE_LETTER_L) ) {s = 18;}
+                        else if ( (LA2_12==RULE_LETTER_L) ) {s = 17;}
 
-                        else if ( (LA2_12==RULE_LETTER_E) ) {s = 19;}
+                        else if ( (LA2_12==RULE_LETTER_E) ) {s = 18;}
 
-                        else if ( (LA2_12==RULE_LETTER_OTHER) ) {s = 20;}
+                        else if ( (LA2_12==RULE_LETTER_OTHER) ) {s = 19;}
 
-                        else if ( (LA2_12==36||LA2_12==40||LA2_12==42) ) {s = 22;}
+                        else if ( (LA2_12==36||LA2_12==40||(LA2_12>=42 && LA2_12<=43)) ) {s = 9;}
 
-                        else if ( (LA2_12==35) ) {s = 34;}
+                        else if ( (LA2_12==35) ) {s = 23;}
 
-                        else if ( (LA2_12==41) && (synpred2_InternalSemver())) {s = 21;}
+                        else if ( (LA2_12==41) && (synpred2_InternalSemver())) {s = 20;}
 
                          
                         input.seek(index2_12);
                         if ( s>=0 ) return s;
                         break;
-                    case 15 : 
-                        int LA2_20 = input.LA(1);
+                    case 1 : 
+                        int LA2_7 = input.LA(1);
 
                          
-                        int index2_20 = input.index();
+                        int index2_7 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA2_20==36||LA2_20==40||LA2_20==42) ) {s = 22;}
+                        if ( (LA2_7==39) ) {s = 21;}
 
-                        else if ( (LA2_20==35) ) {s = 34;}
+                        else if ( (LA2_7==RULE_DIGITS) ) {s = 22;}
 
-                        else if ( (LA2_20==39) ) {s = 9;}
+                        else if ( (LA2_7==RULE_LETTER_V) ) {s = 10;}
 
-                        else if ( (LA2_20==RULE_DIGITS) ) {s = 10;}
+                        else if ( (LA2_7==RULE_LETTER_X) ) {s = 11;}
 
-                        else if ( (LA2_20==RULE_LETTER_V) ) {s = 11;}
+                        else if ( (LA2_7==RULE_LETTER_S) ) {s = 12;}
 
-                        else if ( (LA2_20==RULE_LETTER_X) ) {s = 12;}
+                        else if ( (LA2_7==RULE_LETTER_M) ) {s = 13;}
 
-                        else if ( (LA2_20==RULE_LETTER_S) ) {s = 13;}
+                        else if ( (LA2_7==RULE_LETTER_R) ) {s = 14;}
 
-                        else if ( (LA2_20==RULE_LETTER_M) ) {s = 14;}
+                        else if ( (LA2_7==RULE_LETTER_F) ) {s = 15;}
 
-                        else if ( (LA2_20==RULE_LETTER_R) ) {s = 15;}
+                        else if ( (LA2_7==RULE_LETTER_I) ) {s = 16;}
 
-                        else if ( (LA2_20==RULE_LETTER_F) ) {s = 16;}
+                        else if ( (LA2_7==RULE_LETTER_L) ) {s = 17;}
 
-                        else if ( (LA2_20==RULE_LETTER_I) ) {s = 17;}
+                        else if ( (LA2_7==RULE_LETTER_E) ) {s = 18;}
 
-                        else if ( (LA2_20==RULE_LETTER_L) ) {s = 18;}
+                        else if ( (LA2_7==RULE_LETTER_OTHER) ) {s = 19;}
 
-                        else if ( (LA2_20==RULE_LETTER_E) ) {s = 19;}
+                        else if ( (LA2_7==41) && (synpred2_InternalSemver())) {s = 20;}
 
-                        else if ( (LA2_20==RULE_LETTER_OTHER) ) {s = 20;}
-
-                        else if ( (LA2_20==41) && (synpred2_InternalSemver())) {s = 21;}
-
-                        else if ( (LA2_20==EOF||LA2_20==RULE_WS) ) {s = 23;}
+                        else if ( ((LA2_7>=35 && LA2_7<=36)||LA2_7==40||(LA2_7>=42 && LA2_7<=43)) ) {s = 9;}
 
                          
-                        input.seek(index2_20);
+                        input.seek(index2_7);
                         if ( s>=0 ) return s;
                         break;
-                    case 16 : 
+                    case 2 : 
+                        int LA2_17 = input.LA(1);
+
+                         
+                        int index2_17 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA2_17==EOF||LA2_17==RULE_WS) ) {s = 24;}
+
+                        else if ( (LA2_17==39) ) {s = 21;}
+
+                        else if ( (LA2_17==RULE_DIGITS) ) {s = 22;}
+
+                        else if ( (LA2_17==RULE_LETTER_V) ) {s = 10;}
+
+                        else if ( (LA2_17==RULE_LETTER_X) ) {s = 11;}
+
+                        else if ( (LA2_17==RULE_LETTER_S) ) {s = 12;}
+
+                        else if ( (LA2_17==RULE_LETTER_M) ) {s = 13;}
+
+                        else if ( (LA2_17==RULE_LETTER_R) ) {s = 14;}
+
+                        else if ( (LA2_17==RULE_LETTER_F) ) {s = 15;}
+
+                        else if ( (LA2_17==RULE_LETTER_I) ) {s = 16;}
+
+                        else if ( (LA2_17==RULE_LETTER_L) ) {s = 17;}
+
+                        else if ( (LA2_17==RULE_LETTER_E) ) {s = 18;}
+
+                        else if ( (LA2_17==RULE_LETTER_OTHER) ) {s = 19;}
+
+                        else if ( (LA2_17==36||LA2_17==40||(LA2_17>=42 && LA2_17<=43)) ) {s = 9;}
+
+                        else if ( (LA2_17==35) ) {s = 23;}
+
+                        else if ( (LA2_17==41) && (synpred2_InternalSemver())) {s = 20;}
+
+                         
+                        input.seek(index2_17);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 3 : 
                         int LA2_5 = input.LA(1);
 
                          
                         int index2_5 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA2_5==RULE_LETTER_V) ) {s = 11;}
+                        if ( (LA2_5==39) ) {s = 21;}
 
-                        else if ( (LA2_5==RULE_LETTER_X) ) {s = 12;}
+                        else if ( ((LA2_5>=35 && LA2_5<=36)||LA2_5==40||(LA2_5>=42 && LA2_5<=43)) ) {s = 9;}
 
-                        else if ( (LA2_5==RULE_LETTER_S) ) {s = 13;}
+                        else if ( (LA2_5==RULE_DIGITS) ) {s = 22;}
 
-                        else if ( (LA2_5==RULE_LETTER_M) ) {s = 14;}
+                        else if ( (LA2_5==RULE_LETTER_V) ) {s = 10;}
 
-                        else if ( (LA2_5==RULE_LETTER_R) ) {s = 15;}
+                        else if ( (LA2_5==RULE_LETTER_X) ) {s = 11;}
 
-                        else if ( (LA2_5==RULE_LETTER_F) ) {s = 16;}
+                        else if ( (LA2_5==RULE_LETTER_S) ) {s = 12;}
 
-                        else if ( (LA2_5==RULE_LETTER_I) ) {s = 17;}
+                        else if ( (LA2_5==RULE_LETTER_M) ) {s = 13;}
 
-                        else if ( (LA2_5==RULE_LETTER_L) ) {s = 18;}
+                        else if ( (LA2_5==RULE_LETTER_R) ) {s = 14;}
 
-                        else if ( (LA2_5==RULE_LETTER_E) ) {s = 19;}
+                        else if ( (LA2_5==RULE_LETTER_F) ) {s = 15;}
 
-                        else if ( (LA2_5==RULE_LETTER_OTHER) ) {s = 20;}
+                        else if ( (LA2_5==RULE_LETTER_I) ) {s = 16;}
 
-                        else if ( (LA2_5==41) && (synpred2_InternalSemver())) {s = 21;}
+                        else if ( (LA2_5==RULE_LETTER_L) ) {s = 17;}
 
-                        else if ( (LA2_5==39) ) {s = 9;}
+                        else if ( (LA2_5==RULE_LETTER_E) ) {s = 18;}
 
-                        else if ( (LA2_5==RULE_DIGITS) ) {s = 10;}
+                        else if ( (LA2_5==RULE_LETTER_OTHER) ) {s = 19;}
 
-                        else if ( ((LA2_5>=35 && LA2_5<=36)||LA2_5==40||LA2_5==42) ) {s = 22;}
+                        else if ( (LA2_5==41) && (synpred2_InternalSemver())) {s = 20;}
 
                          
                         input.seek(index2_5);
                         if ( s>=0 ) return s;
                         break;
-                    case 17 : 
-                        int LA2_13 = input.LA(1);
+                    case 4 : 
+                        int LA2_15 = input.LA(1);
 
                          
-                        int index2_13 = input.index();
+                        int index2_15 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA2_13==EOF||LA2_13==RULE_WS) ) {s = 23;}
+                        if ( (LA2_15==35) ) {s = 23;}
 
-                        else if ( (LA2_13==39) ) {s = 9;}
+                        else if ( (LA2_15==RULE_LETTER_V) ) {s = 10;}
 
-                        else if ( (LA2_13==RULE_DIGITS) ) {s = 10;}
+                        else if ( (LA2_15==RULE_LETTER_X) ) {s = 11;}
 
-                        else if ( (LA2_13==RULE_LETTER_V) ) {s = 11;}
+                        else if ( (LA2_15==RULE_LETTER_S) ) {s = 12;}
 
-                        else if ( (LA2_13==RULE_LETTER_X) ) {s = 12;}
+                        else if ( (LA2_15==RULE_LETTER_M) ) {s = 13;}
 
-                        else if ( (LA2_13==RULE_LETTER_S) ) {s = 13;}
+                        else if ( (LA2_15==RULE_LETTER_R) ) {s = 14;}
 
-                        else if ( (LA2_13==RULE_LETTER_M) ) {s = 14;}
+                        else if ( (LA2_15==RULE_LETTER_F) ) {s = 15;}
 
-                        else if ( (LA2_13==RULE_LETTER_R) ) {s = 15;}
+                        else if ( (LA2_15==RULE_LETTER_I) ) {s = 16;}
 
-                        else if ( (LA2_13==RULE_LETTER_F) ) {s = 16;}
+                        else if ( (LA2_15==RULE_LETTER_L) ) {s = 17;}
 
-                        else if ( (LA2_13==RULE_LETTER_I) ) {s = 17;}
+                        else if ( (LA2_15==RULE_LETTER_E) ) {s = 18;}
 
-                        else if ( (LA2_13==RULE_LETTER_L) ) {s = 18;}
+                        else if ( (LA2_15==RULE_LETTER_OTHER) ) {s = 19;}
 
-                        else if ( (LA2_13==RULE_LETTER_E) ) {s = 19;}
+                        else if ( (LA2_15==41) && (synpred2_InternalSemver())) {s = 20;}
 
-                        else if ( (LA2_13==RULE_LETTER_OTHER) ) {s = 20;}
+                        else if ( (LA2_15==EOF||LA2_15==RULE_WS) ) {s = 24;}
 
-                        else if ( (LA2_13==36||LA2_13==40||LA2_13==42) ) {s = 22;}
+                        else if ( (LA2_15==39) ) {s = 21;}
 
-                        else if ( (LA2_13==35) ) {s = 34;}
+                        else if ( (LA2_15==RULE_DIGITS) ) {s = 22;}
 
-                        else if ( (LA2_13==41) && (synpred2_InternalSemver())) {s = 21;}
+                        else if ( (LA2_15==36||LA2_15==40||(LA2_15>=42 && LA2_15<=43)) ) {s = 9;}
 
                          
-                        input.seek(index2_13);
+                        input.seek(index2_15);
                         if ( s>=0 ) return s;
                         break;
-                    case 18 : 
+                    case 5 : 
                         int LA2_37 = input.LA(1);
 
                          
                         int index2_37 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred2_InternalSemver()) ) {s = 21;}
+                        if ( (synpred2_InternalSemver()) ) {s = 20;}
 
-                        else if ( (true) ) {s = 22;}
+                        else if ( (true) ) {s = 9;}
 
                          
                         input.seek(index2_37);
                         if ( s>=0 ) return s;
                         break;
-                    case 19 : 
-                        int LA2_18 = input.LA(1);
-
-                         
-                        int index2_18 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA2_18==EOF||LA2_18==RULE_WS) ) {s = 23;}
-
-                        else if ( (LA2_18==39) ) {s = 9;}
-
-                        else if ( (LA2_18==RULE_DIGITS) ) {s = 10;}
-
-                        else if ( (LA2_18==RULE_LETTER_V) ) {s = 11;}
-
-                        else if ( (LA2_18==RULE_LETTER_X) ) {s = 12;}
-
-                        else if ( (LA2_18==RULE_LETTER_S) ) {s = 13;}
-
-                        else if ( (LA2_18==RULE_LETTER_M) ) {s = 14;}
-
-                        else if ( (LA2_18==RULE_LETTER_R) ) {s = 15;}
-
-                        else if ( (LA2_18==RULE_LETTER_F) ) {s = 16;}
-
-                        else if ( (LA2_18==RULE_LETTER_I) ) {s = 17;}
-
-                        else if ( (LA2_18==RULE_LETTER_L) ) {s = 18;}
-
-                        else if ( (LA2_18==RULE_LETTER_E) ) {s = 19;}
-
-                        else if ( (LA2_18==RULE_LETTER_OTHER) ) {s = 20;}
-
-                        else if ( (LA2_18==36||LA2_18==40||LA2_18==42) ) {s = 22;}
-
-                        else if ( (LA2_18==35) ) {s = 34;}
-
-                        else if ( (LA2_18==41) && (synpred2_InternalSemver())) {s = 21;}
-
-                         
-                        input.seek(index2_18);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 20 : 
+                    case 6 : 
                         int LA2_3 = input.LA(1);
 
                          
                         int index2_3 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA2_3==RULE_LETTER_V) ) {s = 11;}
+                        if ( (LA2_3==RULE_LETTER_V) ) {s = 10;}
 
-                        else if ( (LA2_3==RULE_LETTER_X) ) {s = 12;}
+                        else if ( (LA2_3==RULE_LETTER_X) ) {s = 11;}
 
-                        else if ( (LA2_3==RULE_LETTER_S) ) {s = 13;}
+                        else if ( (LA2_3==RULE_LETTER_S) ) {s = 12;}
 
-                        else if ( (LA2_3==RULE_LETTER_M) ) {s = 14;}
+                        else if ( (LA2_3==RULE_LETTER_M) ) {s = 13;}
 
-                        else if ( (LA2_3==RULE_LETTER_R) ) {s = 15;}
+                        else if ( (LA2_3==RULE_LETTER_R) ) {s = 14;}
 
-                        else if ( (LA2_3==RULE_LETTER_F) ) {s = 16;}
+                        else if ( (LA2_3==RULE_LETTER_F) ) {s = 15;}
 
-                        else if ( (LA2_3==RULE_LETTER_I) ) {s = 17;}
+                        else if ( (LA2_3==RULE_LETTER_I) ) {s = 16;}
 
-                        else if ( (LA2_3==RULE_LETTER_L) ) {s = 18;}
+                        else if ( (LA2_3==RULE_LETTER_L) ) {s = 17;}
 
-                        else if ( (LA2_3==RULE_LETTER_E) ) {s = 19;}
+                        else if ( (LA2_3==RULE_LETTER_E) ) {s = 18;}
 
-                        else if ( (LA2_3==RULE_LETTER_OTHER) ) {s = 20;}
+                        else if ( (LA2_3==RULE_LETTER_OTHER) ) {s = 19;}
 
-                        else if ( (LA2_3==41) && (synpred2_InternalSemver())) {s = 21;}
+                        else if ( (LA2_3==41) && (synpred2_InternalSemver())) {s = 20;}
 
-                        else if ( (LA2_3==39) ) {s = 9;}
+                        else if ( (LA2_3==39) ) {s = 21;}
 
-                        else if ( (LA2_3==RULE_DIGITS) ) {s = 10;}
+                        else if ( ((LA2_3>=35 && LA2_3<=36)||LA2_3==40||(LA2_3>=42 && LA2_3<=43)) ) {s = 9;}
 
-                        else if ( ((LA2_3>=35 && LA2_3<=36)||LA2_3==40||LA2_3==42) ) {s = 22;}
+                        else if ( (LA2_3==RULE_DIGITS) ) {s = 22;}
 
                          
                         input.seek(index2_3);
                         if ( s>=0 ) return s;
                         break;
-                    case 21 : 
+                    case 7 : 
                         int LA2_38 = input.LA(1);
 
                          
                         int index2_38 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred2_InternalSemver()) ) {s = 21;}
+                        if ( (synpred2_InternalSemver()) ) {s = 20;}
 
-                        else if ( (true) ) {s = 22;}
+                        else if ( (true) ) {s = 9;}
 
                          
                         input.seek(index2_38);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 8 : 
+                        int LA2_13 = input.LA(1);
+
+                         
+                        int index2_13 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA2_13==35) ) {s = 23;}
+
+                        else if ( (LA2_13==RULE_LETTER_V) ) {s = 10;}
+
+                        else if ( (LA2_13==RULE_LETTER_X) ) {s = 11;}
+
+                        else if ( (LA2_13==RULE_LETTER_S) ) {s = 12;}
+
+                        else if ( (LA2_13==RULE_LETTER_M) ) {s = 13;}
+
+                        else if ( (LA2_13==RULE_LETTER_R) ) {s = 14;}
+
+                        else if ( (LA2_13==RULE_LETTER_F) ) {s = 15;}
+
+                        else if ( (LA2_13==RULE_LETTER_I) ) {s = 16;}
+
+                        else if ( (LA2_13==RULE_LETTER_L) ) {s = 17;}
+
+                        else if ( (LA2_13==RULE_LETTER_E) ) {s = 18;}
+
+                        else if ( (LA2_13==RULE_LETTER_OTHER) ) {s = 19;}
+
+                        else if ( (LA2_13==41) && (synpred2_InternalSemver())) {s = 20;}
+
+                        else if ( (LA2_13==EOF||LA2_13==RULE_WS) ) {s = 24;}
+
+                        else if ( (LA2_13==39) ) {s = 21;}
+
+                        else if ( (LA2_13==RULE_DIGITS) ) {s = 22;}
+
+                        else if ( (LA2_13==36||LA2_13==40||(LA2_13>=42 && LA2_13<=43)) ) {s = 9;}
+
+                         
+                        input.seek(index2_13);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 9 : 
+                        int LA2_11 = input.LA(1);
+
+                         
+                        int index2_11 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA2_11==36||LA2_11==40||(LA2_11>=42 && LA2_11<=43)) ) {s = 9;}
+
+                        else if ( (LA2_11==35) ) {s = 23;}
+
+                        else if ( (LA2_11==39) ) {s = 21;}
+
+                        else if ( (LA2_11==RULE_DIGITS) ) {s = 22;}
+
+                        else if ( (LA2_11==RULE_LETTER_V) ) {s = 10;}
+
+                        else if ( (LA2_11==RULE_LETTER_X) ) {s = 11;}
+
+                        else if ( (LA2_11==RULE_LETTER_S) ) {s = 12;}
+
+                        else if ( (LA2_11==RULE_LETTER_M) ) {s = 13;}
+
+                        else if ( (LA2_11==RULE_LETTER_R) ) {s = 14;}
+
+                        else if ( (LA2_11==RULE_LETTER_F) ) {s = 15;}
+
+                        else if ( (LA2_11==RULE_LETTER_I) ) {s = 16;}
+
+                        else if ( (LA2_11==RULE_LETTER_L) ) {s = 17;}
+
+                        else if ( (LA2_11==RULE_LETTER_E) ) {s = 18;}
+
+                        else if ( (LA2_11==RULE_LETTER_OTHER) ) {s = 19;}
+
+                        else if ( (LA2_11==41) && (synpred2_InternalSemver())) {s = 20;}
+
+                        else if ( (LA2_11==EOF||LA2_11==RULE_WS) ) {s = 24;}
+
+                         
+                        input.seek(index2_11);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 10 : 
+                        int LA2_8 = input.LA(1);
+
+                         
+                        int index2_8 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA2_8==39) ) {s = 21;}
+
+                        else if ( ((LA2_8>=35 && LA2_8<=36)||LA2_8==40||(LA2_8>=42 && LA2_8<=43)) ) {s = 9;}
+
+                        else if ( (LA2_8==RULE_DIGITS) ) {s = 22;}
+
+                        else if ( (LA2_8==RULE_LETTER_V) ) {s = 10;}
+
+                        else if ( (LA2_8==RULE_LETTER_X) ) {s = 11;}
+
+                        else if ( (LA2_8==RULE_LETTER_S) ) {s = 12;}
+
+                        else if ( (LA2_8==RULE_LETTER_M) ) {s = 13;}
+
+                        else if ( (LA2_8==RULE_LETTER_R) ) {s = 14;}
+
+                        else if ( (LA2_8==RULE_LETTER_F) ) {s = 15;}
+
+                        else if ( (LA2_8==RULE_LETTER_I) ) {s = 16;}
+
+                        else if ( (LA2_8==RULE_LETTER_L) ) {s = 17;}
+
+                        else if ( (LA2_8==RULE_LETTER_E) ) {s = 18;}
+
+                        else if ( (LA2_8==RULE_LETTER_OTHER) ) {s = 19;}
+
+                        else if ( (LA2_8==41) && (synpred2_InternalSemver())) {s = 20;}
+
+                         
+                        input.seek(index2_8);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 11 : 
+                        int LA2_1 = input.LA(1);
+
+                         
+                        int index2_1 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA2_1==RULE_LETTER_V) ) {s = 10;}
+
+                        else if ( (LA2_1==RULE_LETTER_X) ) {s = 11;}
+
+                        else if ( (LA2_1==RULE_LETTER_S) ) {s = 12;}
+
+                        else if ( (LA2_1==RULE_LETTER_M) ) {s = 13;}
+
+                        else if ( (LA2_1==RULE_LETTER_R) ) {s = 14;}
+
+                        else if ( (LA2_1==RULE_LETTER_F) ) {s = 15;}
+
+                        else if ( (LA2_1==RULE_LETTER_I) ) {s = 16;}
+
+                        else if ( (LA2_1==RULE_LETTER_L) ) {s = 17;}
+
+                        else if ( (LA2_1==RULE_LETTER_E) ) {s = 18;}
+
+                        else if ( (LA2_1==RULE_LETTER_OTHER) ) {s = 19;}
+
+                        else if ( (LA2_1==41) && (synpred2_InternalSemver())) {s = 20;}
+
+                        else if ( (LA2_1==39) ) {s = 21;}
+
+                        else if ( ((LA2_1>=35 && LA2_1<=36)||LA2_1==40||(LA2_1>=42 && LA2_1<=43)) ) {s = 9;}
+
+                        else if ( (LA2_1==RULE_DIGITS) ) {s = 22;}
+
+                         
+                        input.seek(index2_1);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 12 : 
+                        int LA2_39 = input.LA(1);
+
+                         
+                        int index2_39 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred2_InternalSemver()) ) {s = 20;}
+
+                        else if ( (true) ) {s = 9;}
+
+                         
+                        input.seek(index2_39);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 13 : 
+                        int LA2_18 = input.LA(1);
+
+                         
+                        int index2_18 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA2_18==35) ) {s = 23;}
+
+                        else if ( (LA2_18==RULE_LETTER_V) ) {s = 10;}
+
+                        else if ( (LA2_18==RULE_LETTER_X) ) {s = 11;}
+
+                        else if ( (LA2_18==RULE_LETTER_S) ) {s = 12;}
+
+                        else if ( (LA2_18==RULE_LETTER_M) ) {s = 13;}
+
+                        else if ( (LA2_18==RULE_LETTER_R) ) {s = 14;}
+
+                        else if ( (LA2_18==RULE_LETTER_F) ) {s = 15;}
+
+                        else if ( (LA2_18==RULE_LETTER_I) ) {s = 16;}
+
+                        else if ( (LA2_18==RULE_LETTER_L) ) {s = 17;}
+
+                        else if ( (LA2_18==RULE_LETTER_E) ) {s = 18;}
+
+                        else if ( (LA2_18==RULE_LETTER_OTHER) ) {s = 19;}
+
+                        else if ( (LA2_18==41) && (synpred2_InternalSemver())) {s = 20;}
+
+                        else if ( (LA2_18==EOF||LA2_18==RULE_WS) ) {s = 24;}
+
+                        else if ( (LA2_18==39) ) {s = 21;}
+
+                        else if ( (LA2_18==RULE_DIGITS) ) {s = 22;}
+
+                        else if ( (LA2_18==36||LA2_18==40||(LA2_18>=42 && LA2_18<=43)) ) {s = 9;}
+
+                         
+                        input.seek(index2_18);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 14 : 
+                        int LA2_40 = input.LA(1);
+
+                         
+                        int index2_40 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred2_InternalSemver()) ) {s = 20;}
+
+                        else if ( (true) ) {s = 9;}
+
+                         
+                        input.seek(index2_40);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 15 : 
+                        int LA2_6 = input.LA(1);
+
+                         
+                        int index2_6 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA2_6==RULE_LETTER_V) ) {s = 10;}
+
+                        else if ( (LA2_6==RULE_LETTER_X) ) {s = 11;}
+
+                        else if ( (LA2_6==RULE_LETTER_S) ) {s = 12;}
+
+                        else if ( (LA2_6==RULE_LETTER_M) ) {s = 13;}
+
+                        else if ( (LA2_6==RULE_LETTER_R) ) {s = 14;}
+
+                        else if ( (LA2_6==RULE_LETTER_F) ) {s = 15;}
+
+                        else if ( (LA2_6==RULE_LETTER_I) ) {s = 16;}
+
+                        else if ( (LA2_6==RULE_LETTER_L) ) {s = 17;}
+
+                        else if ( (LA2_6==RULE_LETTER_E) ) {s = 18;}
+
+                        else if ( (LA2_6==RULE_LETTER_OTHER) ) {s = 19;}
+
+                        else if ( (LA2_6==41) && (synpred2_InternalSemver())) {s = 20;}
+
+                        else if ( (LA2_6==39) ) {s = 21;}
+
+                        else if ( ((LA2_6>=35 && LA2_6<=36)||LA2_6==40||(LA2_6>=42 && LA2_6<=43)) ) {s = 9;}
+
+                        else if ( (LA2_6==RULE_DIGITS) ) {s = 22;}
+
+                         
+                        input.seek(index2_6);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 16 : 
+                        int LA2_16 = input.LA(1);
+
+                         
+                        int index2_16 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA2_16==35) ) {s = 23;}
+
+                        else if ( (LA2_16==RULE_LETTER_V) ) {s = 10;}
+
+                        else if ( (LA2_16==RULE_LETTER_X) ) {s = 11;}
+
+                        else if ( (LA2_16==RULE_LETTER_S) ) {s = 12;}
+
+                        else if ( (LA2_16==RULE_LETTER_M) ) {s = 13;}
+
+                        else if ( (LA2_16==RULE_LETTER_R) ) {s = 14;}
+
+                        else if ( (LA2_16==RULE_LETTER_F) ) {s = 15;}
+
+                        else if ( (LA2_16==RULE_LETTER_I) ) {s = 16;}
+
+                        else if ( (LA2_16==RULE_LETTER_L) ) {s = 17;}
+
+                        else if ( (LA2_16==RULE_LETTER_E) ) {s = 18;}
+
+                        else if ( (LA2_16==RULE_LETTER_OTHER) ) {s = 19;}
+
+                        else if ( (LA2_16==41) && (synpred2_InternalSemver())) {s = 20;}
+
+                        else if ( (LA2_16==EOF||LA2_16==RULE_WS) ) {s = 24;}
+
+                        else if ( (LA2_16==39) ) {s = 21;}
+
+                        else if ( (LA2_16==RULE_DIGITS) ) {s = 22;}
+
+                        else if ( (LA2_16==36||LA2_16==40||(LA2_16>=42 && LA2_16<=43)) ) {s = 9;}
+
+                         
+                        input.seek(index2_16);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 17 : 
+                        int LA2_4 = input.LA(1);
+
+                         
+                        int index2_4 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA2_4==RULE_LETTER_V) ) {s = 10;}
+
+                        else if ( (LA2_4==RULE_LETTER_X) ) {s = 11;}
+
+                        else if ( (LA2_4==RULE_LETTER_S) ) {s = 12;}
+
+                        else if ( (LA2_4==RULE_LETTER_M) ) {s = 13;}
+
+                        else if ( (LA2_4==RULE_LETTER_R) ) {s = 14;}
+
+                        else if ( (LA2_4==RULE_LETTER_F) ) {s = 15;}
+
+                        else if ( (LA2_4==RULE_LETTER_I) ) {s = 16;}
+
+                        else if ( (LA2_4==RULE_LETTER_L) ) {s = 17;}
+
+                        else if ( (LA2_4==RULE_LETTER_E) ) {s = 18;}
+
+                        else if ( (LA2_4==RULE_LETTER_OTHER) ) {s = 19;}
+
+                        else if ( (LA2_4==41) && (synpred2_InternalSemver())) {s = 20;}
+
+                        else if ( (LA2_4==39) ) {s = 21;}
+
+                        else if ( ((LA2_4>=35 && LA2_4<=36)||LA2_4==40||(LA2_4>=42 && LA2_4<=43)) ) {s = 9;}
+
+                        else if ( (LA2_4==RULE_DIGITS) ) {s = 22;}
+
+                         
+                        input.seek(index2_4);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 18 : 
+                        int LA2_14 = input.LA(1);
+
+                         
+                        int index2_14 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA2_14==36||LA2_14==40||(LA2_14>=42 && LA2_14<=43)) ) {s = 9;}
+
+                        else if ( (LA2_14==35) ) {s = 23;}
+
+                        else if ( (LA2_14==39) ) {s = 21;}
+
+                        else if ( (LA2_14==RULE_DIGITS) ) {s = 22;}
+
+                        else if ( (LA2_14==RULE_LETTER_V) ) {s = 10;}
+
+                        else if ( (LA2_14==RULE_LETTER_X) ) {s = 11;}
+
+                        else if ( (LA2_14==RULE_LETTER_S) ) {s = 12;}
+
+                        else if ( (LA2_14==RULE_LETTER_M) ) {s = 13;}
+
+                        else if ( (LA2_14==RULE_LETTER_R) ) {s = 14;}
+
+                        else if ( (LA2_14==RULE_LETTER_F) ) {s = 15;}
+
+                        else if ( (LA2_14==RULE_LETTER_I) ) {s = 16;}
+
+                        else if ( (LA2_14==RULE_LETTER_L) ) {s = 17;}
+
+                        else if ( (LA2_14==RULE_LETTER_E) ) {s = 18;}
+
+                        else if ( (LA2_14==RULE_LETTER_OTHER) ) {s = 19;}
+
+                        else if ( (LA2_14==41) && (synpred2_InternalSemver())) {s = 20;}
+
+                        else if ( (LA2_14==EOF||LA2_14==RULE_WS) ) {s = 24;}
+
+                         
+                        input.seek(index2_14);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 19 : 
+                        int LA2_19 = input.LA(1);
+
+                         
+                        int index2_19 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA2_19==36||LA2_19==40||(LA2_19>=42 && LA2_19<=43)) ) {s = 9;}
+
+                        else if ( (LA2_19==35) ) {s = 23;}
+
+                        else if ( (LA2_19==39) ) {s = 21;}
+
+                        else if ( (LA2_19==RULE_DIGITS) ) {s = 22;}
+
+                        else if ( (LA2_19==RULE_LETTER_V) ) {s = 10;}
+
+                        else if ( (LA2_19==RULE_LETTER_X) ) {s = 11;}
+
+                        else if ( (LA2_19==RULE_LETTER_S) ) {s = 12;}
+
+                        else if ( (LA2_19==RULE_LETTER_M) ) {s = 13;}
+
+                        else if ( (LA2_19==RULE_LETTER_R) ) {s = 14;}
+
+                        else if ( (LA2_19==RULE_LETTER_F) ) {s = 15;}
+
+                        else if ( (LA2_19==RULE_LETTER_I) ) {s = 16;}
+
+                        else if ( (LA2_19==RULE_LETTER_L) ) {s = 17;}
+
+                        else if ( (LA2_19==RULE_LETTER_E) ) {s = 18;}
+
+                        else if ( (LA2_19==RULE_LETTER_OTHER) ) {s = 19;}
+
+                        else if ( (LA2_19==41) && (synpred2_InternalSemver())) {s = 20;}
+
+                        else if ( (LA2_19==EOF||LA2_19==RULE_WS) ) {s = 24;}
+
+                         
+                        input.seek(index2_19);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 20 : 
+                        int LA2_2 = input.LA(1);
+
+                         
+                        int index2_2 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA2_2==39) ) {s = 21;}
+
+                        else if ( (LA2_2==RULE_DIGITS) ) {s = 22;}
+
+                        else if ( (LA2_2==RULE_LETTER_V) ) {s = 10;}
+
+                        else if ( (LA2_2==RULE_LETTER_X) ) {s = 11;}
+
+                        else if ( (LA2_2==RULE_LETTER_S) ) {s = 12;}
+
+                        else if ( (LA2_2==RULE_LETTER_M) ) {s = 13;}
+
+                        else if ( (LA2_2==RULE_LETTER_R) ) {s = 14;}
+
+                        else if ( (LA2_2==RULE_LETTER_F) ) {s = 15;}
+
+                        else if ( (LA2_2==RULE_LETTER_I) ) {s = 16;}
+
+                        else if ( (LA2_2==RULE_LETTER_L) ) {s = 17;}
+
+                        else if ( (LA2_2==RULE_LETTER_E) ) {s = 18;}
+
+                        else if ( (LA2_2==RULE_LETTER_OTHER) ) {s = 19;}
+
+                        else if ( (LA2_2==41) && (synpred2_InternalSemver())) {s = 20;}
+
+                        else if ( ((LA2_2>=35 && LA2_2<=36)||LA2_2==40||(LA2_2>=42 && LA2_2<=43)) ) {s = 9;}
+
+                         
+                        input.seek(index2_2);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 21 : 
+                        int LA2_10 = input.LA(1);
+
+                         
+                        int index2_10 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA2_10==35) ) {s = 23;}
+
+                        else if ( (LA2_10==RULE_LETTER_V) ) {s = 10;}
+
+                        else if ( (LA2_10==RULE_LETTER_X) ) {s = 11;}
+
+                        else if ( (LA2_10==RULE_LETTER_S) ) {s = 12;}
+
+                        else if ( (LA2_10==RULE_LETTER_M) ) {s = 13;}
+
+                        else if ( (LA2_10==RULE_LETTER_R) ) {s = 14;}
+
+                        else if ( (LA2_10==RULE_LETTER_F) ) {s = 15;}
+
+                        else if ( (LA2_10==RULE_LETTER_I) ) {s = 16;}
+
+                        else if ( (LA2_10==RULE_LETTER_L) ) {s = 17;}
+
+                        else if ( (LA2_10==RULE_LETTER_E) ) {s = 18;}
+
+                        else if ( (LA2_10==RULE_LETTER_OTHER) ) {s = 19;}
+
+                        else if ( (LA2_10==41) && (synpred2_InternalSemver())) {s = 20;}
+
+                        else if ( (LA2_10==EOF||LA2_10==RULE_WS) ) {s = 24;}
+
+                        else if ( (LA2_10==39) ) {s = 21;}
+
+                        else if ( (LA2_10==RULE_DIGITS) ) {s = 22;}
+
+                        else if ( (LA2_10==36||LA2_10==40||(LA2_10>=42 && LA2_10<=43)) ) {s = 9;}
+
+                         
+                        input.seek(index2_10);
                         if ( s>=0 ) return s;
                         break;
             }
@@ -7841,13 +8018,14 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
             throw nvae;
         }
     }
-    static final String dfa_15s = "\1\uffff\1\15\7\uffff\1\15\4\uffff\1\15\2\uffff\4\15\1\uffff";
-    static final String dfa_16s = "\1\5\1\4\7\uffff\1\4\1\0\1\uffff\1\5\1\uffff\1\4\1\0\1\uffff\4\4\1\uffff";
-    static final String dfa_17s = "\1\61\1\47\7\uffff\1\47\1\0\1\uffff\1\47\1\uffff\1\47\1\0\1\uffff\4\47\1\uffff";
-    static final String dfa_18s = "\2\uffff\7\1\2\uffff\1\1\1\uffff\1\3\2\uffff\1\2\4\uffff\1\1";
-    static final String dfa_19s = "\1\3\10\uffff\1\1\1\2\1\uffff\1\4\2\uffff\1\5\4\uffff\1\0\1\uffff}>";
-    static final String[] dfa_20s = {
-            "\1\11\1\14\4\15\1\1\2\15\1\12\1\13\1\15\26\uffff\1\15\3\uffff\1\2\1\3\1\4\1\5\1\6\1\7\1\10",
+    static final String dfa_15s = "\26\uffff";
+    static final String dfa_16s = "\1\uffff\1\15\7\uffff\1\15\4\uffff\1\15\2\uffff\4\15\1\uffff";
+    static final String dfa_17s = "\1\5\1\4\7\uffff\1\4\1\0\1\uffff\1\5\1\uffff\1\4\1\0\1\uffff\4\4\1\uffff";
+    static final String dfa_18s = "\1\62\1\47\7\uffff\1\47\1\0\1\uffff\1\47\1\uffff\1\47\1\0\1\uffff\4\47\1\uffff";
+    static final String dfa_19s = "\2\uffff\7\1\2\uffff\1\1\1\uffff\1\3\2\uffff\1\2\4\uffff\1\1";
+    static final String dfa_20s = "\1\0\10\uffff\1\4\1\5\1\uffff\1\2\2\uffff\1\1\4\uffff\1\3\1\uffff}>";
+    static final String[] dfa_21s = {
+            "\1\11\1\14\4\15\1\1\2\15\1\12\1\13\1\15\26\uffff\1\15\4\uffff\1\2\1\3\1\4\1\5\1\6\1\7\1\10",
             "\6\15\1\16\4\15\1\uffff\1\15\26\uffff\1\15",
             "",
             "",
@@ -7870,25 +8048,27 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
             "\13\15\1\uffff\1\15\22\uffff\1\25\3\uffff\1\15",
             ""
     };
+
     static final short[] dfa_15 = DFA.unpackEncodedString(dfa_15s);
-    static final char[] dfa_16 = DFA.unpackEncodedStringToUnsignedChars(dfa_16s);
+    static final short[] dfa_16 = DFA.unpackEncodedString(dfa_16s);
     static final char[] dfa_17 = DFA.unpackEncodedStringToUnsignedChars(dfa_17s);
-    static final short[] dfa_18 = DFA.unpackEncodedString(dfa_18s);
+    static final char[] dfa_18 = DFA.unpackEncodedStringToUnsignedChars(dfa_18s);
     static final short[] dfa_19 = DFA.unpackEncodedString(dfa_19s);
-    static final short[][] dfa_20 = unpackEncodedStringArray(dfa_20s);
+    static final short[] dfa_20 = DFA.unpackEncodedString(dfa_20s);
+    static final short[][] dfa_21 = unpackEncodedStringArray(dfa_21s);
 
     class DFA7 extends DFA {
 
         public DFA7(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 7;
-            this.eot = dfa_1;
-            this.eof = dfa_15;
-            this.min = dfa_16;
-            this.max = dfa_17;
-            this.accept = dfa_18;
-            this.special = dfa_19;
-            this.transition = dfa_20;
+            this.eot = dfa_15;
+            this.eof = dfa_16;
+            this.min = dfa_17;
+            this.max = dfa_18;
+            this.accept = dfa_19;
+            this.special = dfa_20;
+            this.transition = dfa_21;
         }
         public String getDescription() {
             return "316:2: ( ( ( ruleURLSemver )=>this_URLSemver_0= ruleURLSemver ) | ( () ( (lv_commitISH_2_0= ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS ) ) ) | ( () ( (lv_commitISH_4_0= ruleALPHA_NUMERIC_CHARS ) ) ) )";
@@ -7898,55 +8078,6 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
         	int _s = s;
             switch ( s ) {
                     case 0 : 
-                        int LA7_20 = input.LA(1);
-
-                         
-                        int index7_20 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA7_20==EOF||(LA7_20>=RULE_WS && LA7_20<=RULE_LETTER_X)||LA7_20==RULE_LETTER_OTHER||LA7_20==39) ) {s = 13;}
-
-                        else if ( (LA7_20==35) && (synpred3_InternalSemver())) {s = 21;}
-
-                         
-                        input.seek(index7_20);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 1 : 
-                        int LA7_9 = input.LA(1);
-
-                         
-                        int index7_9 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA7_9==EOF||(LA7_9>=RULE_WS && LA7_9<=RULE_LETTER_V)||(LA7_9>=RULE_LETTER_F && LA7_9<=RULE_LETTER_R)||LA7_9==RULE_LETTER_OTHER||LA7_9==39) ) {s = 13;}
-
-                        else if ( (LA7_9==RULE_DIGITS) ) {s = 15;}
-
-                        else if ( (LA7_9==RULE_LETTER_X) ) {s = 10;}
-
-                        else if ( (LA7_9==RULE_ASTERIX) && (synpred3_InternalSemver())) {s = 11;}
-
-                         
-                        input.seek(index7_9);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 2 : 
-                        int LA7_10 = input.LA(1);
-
-                         
-                        int index7_10 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred3_InternalSemver()) ) {s = 11;}
-
-                        else if ( (true) ) {s = 13;}
-
-                         
-                        input.seek(index7_10);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 3 : 
                         int LA7_0 = input.LA(1);
 
                          
@@ -7955,19 +8086,19 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                         s = -1;
                         if ( (LA7_0==RULE_LETTER_S) ) {s = 1;}
 
-                        else if ( (LA7_0==43) && (synpred3_InternalSemver())) {s = 2;}
+                        else if ( (LA7_0==44) && (synpred3_InternalSemver())) {s = 2;}
 
-                        else if ( (LA7_0==44) && (synpred3_InternalSemver())) {s = 3;}
+                        else if ( (LA7_0==45) && (synpred3_InternalSemver())) {s = 3;}
 
-                        else if ( (LA7_0==45) && (synpred3_InternalSemver())) {s = 4;}
+                        else if ( (LA7_0==46) && (synpred3_InternalSemver())) {s = 4;}
 
-                        else if ( (LA7_0==46) && (synpred3_InternalSemver())) {s = 5;}
+                        else if ( (LA7_0==47) && (synpred3_InternalSemver())) {s = 5;}
 
-                        else if ( (LA7_0==47) && (synpred3_InternalSemver())) {s = 6;}
+                        else if ( (LA7_0==48) && (synpred3_InternalSemver())) {s = 6;}
 
-                        else if ( (LA7_0==48) && (synpred3_InternalSemver())) {s = 7;}
+                        else if ( (LA7_0==49) && (synpred3_InternalSemver())) {s = 7;}
 
-                        else if ( (LA7_0==49) && (synpred3_InternalSemver())) {s = 8;}
+                        else if ( (LA7_0==50) && (synpred3_InternalSemver())) {s = 8;}
 
                         else if ( (LA7_0==RULE_LETTER_V) ) {s = 9;}
 
@@ -7983,7 +8114,22 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                         input.seek(index7_0);
                         if ( s>=0 ) return s;
                         break;
-                    case 4 : 
+                    case 1 : 
+                        int LA7_15 = input.LA(1);
+
+                         
+                        int index7_15 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred3_InternalSemver()) ) {s = 11;}
+
+                        else if ( (true) ) {s = 13;}
+
+                         
+                        input.seek(index7_15);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 2 : 
                         int LA7_12 = input.LA(1);
 
                          
@@ -8000,11 +8146,45 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                         input.seek(index7_12);
                         if ( s>=0 ) return s;
                         break;
-                    case 5 : 
-                        int LA7_15 = input.LA(1);
+                    case 3 : 
+                        int LA7_20 = input.LA(1);
 
                          
-                        int index7_15 = input.index();
+                        int index7_20 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA7_20==EOF||(LA7_20>=RULE_WS && LA7_20<=RULE_LETTER_X)||LA7_20==RULE_LETTER_OTHER||LA7_20==39) ) {s = 13;}
+
+                        else if ( (LA7_20==35) && (synpred3_InternalSemver())) {s = 21;}
+
+                         
+                        input.seek(index7_20);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 4 : 
+                        int LA7_9 = input.LA(1);
+
+                         
+                        int index7_9 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA7_9==RULE_LETTER_X) ) {s = 10;}
+
+                        else if ( (LA7_9==RULE_ASTERIX) && (synpred3_InternalSemver())) {s = 11;}
+
+                        else if ( (LA7_9==RULE_DIGITS) ) {s = 15;}
+
+                        else if ( (LA7_9==EOF||(LA7_9>=RULE_WS && LA7_9<=RULE_LETTER_V)||(LA7_9>=RULE_LETTER_F && LA7_9<=RULE_LETTER_R)||LA7_9==RULE_LETTER_OTHER||LA7_9==39) ) {s = 13;}
+
+                         
+                        input.seek(index7_9);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 5 : 
+                        int LA7_10 = input.LA(1);
+
+                         
+                        int index7_10 = input.index();
                         input.rewind();
                         s = -1;
                         if ( (synpred3_InternalSemver()) ) {s = 11;}
@@ -8012,7 +8192,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
                         else if ( (true) ) {s = 13;}
 
                          
-                        input.seek(index7_15);
+                        input.seek(index7_10);
                         if ( s>=0 ) return s;
                         break;
             }
@@ -8023,52 +8203,52 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
             throw nvae;
         }
     }
-    static final String dfa_21s = "\4\uffff";
-    static final String dfa_22s = "\2\2\2\uffff";
-    static final String dfa_23s = "\2\4\2\uffff";
-    static final String dfa_24s = "\2\46\2\uffff";
-    static final String dfa_25s = "\2\uffff\1\2\1\1";
-    static final String dfa_26s = "\4\uffff}>";
-    static final String[] dfa_27s = {
+    static final String dfa_22s = "\4\uffff";
+    static final String dfa_23s = "\2\2\2\uffff";
+    static final String dfa_24s = "\2\4\2\uffff";
+    static final String dfa_25s = "\2\46\2\uffff";
+    static final String dfa_26s = "\2\uffff\1\2\1\1";
+    static final String dfa_27s = "\4\uffff}>";
+    static final String[] dfa_28s = {
             "\1\1\41\uffff\1\3",
             "\1\1\41\uffff\1\3",
             "",
             ""
     };
 
-    static final short[] dfa_21 = DFA.unpackEncodedString(dfa_21s);
     static final short[] dfa_22 = DFA.unpackEncodedString(dfa_22s);
-    static final char[] dfa_23 = DFA.unpackEncodedStringToUnsignedChars(dfa_23s);
+    static final short[] dfa_23 = DFA.unpackEncodedString(dfa_23s);
     static final char[] dfa_24 = DFA.unpackEncodedStringToUnsignedChars(dfa_24s);
-    static final short[] dfa_25 = DFA.unpackEncodedString(dfa_25s);
+    static final char[] dfa_25 = DFA.unpackEncodedStringToUnsignedChars(dfa_25s);
     static final short[] dfa_26 = DFA.unpackEncodedString(dfa_26s);
-    static final short[][] dfa_27 = unpackEncodedStringArray(dfa_27s);
+    static final short[] dfa_27 = DFA.unpackEncodedString(dfa_27s);
+    static final short[][] dfa_28 = unpackEncodedStringArray(dfa_28s);
 
     class DFA12 extends DFA {
 
         public DFA12(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 12;
-            this.eot = dfa_21;
-            this.eof = dfa_22;
-            this.min = dfa_23;
-            this.max = dfa_24;
-            this.accept = dfa_25;
-            this.special = dfa_26;
-            this.transition = dfa_27;
+            this.eot = dfa_22;
+            this.eof = dfa_23;
+            this.min = dfa_24;
+            this.max = dfa_25;
+            this.accept = dfa_26;
+            this.special = dfa_27;
+            this.transition = dfa_28;
         }
         public String getDescription() {
             return "()* loopback of 596:4: ( (this_WS_2= RULE_WS )* otherlv_3= '||' (this_WS_4= RULE_WS )* ( (lv_ranges_5_0= ruleVersionRange ) ) )*";
         }
     }
-    static final String dfa_28s = "\141\uffff";
-    static final String dfa_29s = "\2\uffff\3\1\3\uffff\34\1\5\uffff\47\1\2\uffff\17\1";
-    static final String dfa_30s = "\1\5\1\uffff\3\4\1\6\2\5\34\4\1\uffff\1\6\3\5\47\4\1\6\1\5\17\4";
-    static final String dfa_31s = "\1\61\1\uffff\3\51\1\17\2\47\1\61\17\51\14\50\1\uffff\1\17\3\47\17\51\30\50\1\17\1\47\3\51\14\50";
-    static final String dfa_32s = "\1\uffff\1\1\42\uffff\1\2\74\uffff";
-    static final String dfa_33s = "\141\uffff}>";
-    static final String[] dfa_34s = {
-            "\1\1\1\4\7\uffff\1\2\1\3\33\uffff\7\1",
+    static final String dfa_29s = "\141\uffff";
+    static final String dfa_30s = "\2\uffff\3\1\3\uffff\34\1\5\uffff\47\1\2\uffff\17\1";
+    static final String dfa_31s = "\1\5\1\uffff\3\4\1\6\2\5\34\4\1\uffff\1\6\3\5\47\4\1\6\1\5\17\4";
+    static final String dfa_32s = "\1\62\1\uffff\3\51\1\17\2\47\1\62\17\51\14\50\1\uffff\1\17\3\47\17\51\30\50\1\17\1\47\3\51\14\50";
+    static final String dfa_33s = "\1\uffff\1\1\42\uffff\1\2\74\uffff";
+    static final String dfa_34s = "\141\uffff}>";
+    static final String[] dfa_35s = {
+            "\1\1\1\4\7\uffff\1\2\1\3\34\uffff\7\1",
             "",
             "\1\10\41\uffff\1\1\1\6\1\5\1\7",
             "\1\10\41\uffff\1\1\1\6\1\5\1\7",
@@ -8076,7 +8256,7 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
             "\1\13\7\uffff\1\11\1\12",
             "\1\16\1\15\1\23\1\24\1\25\1\26\1\20\1\21\1\22\1\17\1\uffff\1\27\26\uffff\1\14",
             "\1\32\1\31\1\37\1\40\1\41\1\42\1\34\1\35\1\36\1\33\1\uffff\1\43\26\uffff\1\30",
-            "\1\10\2\1\7\uffff\2\1\26\uffff\1\1\1\44\3\uffff\7\1",
+            "\1\10\2\1\7\uffff\2\1\26\uffff\1\1\1\44\4\uffff\7\1",
             "\1\10\41\uffff\1\1\1\6\1\45\1\7",
             "\1\10\41\uffff\1\1\1\6\1\45\1\7",
             "\1\10\41\uffff\1\1\1\6\1\45\1\7",
@@ -8167,65 +8347,65 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
             "\1\10\1\127\1\126\1\134\1\135\1\136\1\137\1\131\1\132\1\133\1\130\1\uffff\1\140\25\uffff\1\1\1\125\1\121"
     };
 
-    static final short[] dfa_28 = DFA.unpackEncodedString(dfa_28s);
     static final short[] dfa_29 = DFA.unpackEncodedString(dfa_29s);
-    static final char[] dfa_30 = DFA.unpackEncodedStringToUnsignedChars(dfa_30s);
+    static final short[] dfa_30 = DFA.unpackEncodedString(dfa_30s);
     static final char[] dfa_31 = DFA.unpackEncodedStringToUnsignedChars(dfa_31s);
-    static final short[] dfa_32 = DFA.unpackEncodedString(dfa_32s);
+    static final char[] dfa_32 = DFA.unpackEncodedStringToUnsignedChars(dfa_32s);
     static final short[] dfa_33 = DFA.unpackEncodedString(dfa_33s);
-    static final short[][] dfa_34 = unpackEncodedStringArray(dfa_34s);
+    static final short[] dfa_34 = DFA.unpackEncodedString(dfa_34s);
+    static final short[][] dfa_35 = unpackEncodedStringArray(dfa_35s);
 
     class DFA15 extends DFA {
 
         public DFA15(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 15;
-            this.eot = dfa_28;
-            this.eof = dfa_29;
-            this.min = dfa_30;
-            this.max = dfa_31;
-            this.accept = dfa_32;
-            this.special = dfa_33;
-            this.transition = dfa_34;
+            this.eot = dfa_29;
+            this.eof = dfa_30;
+            this.min = dfa_31;
+            this.max = dfa_32;
+            this.accept = dfa_33;
+            this.special = dfa_34;
+            this.transition = dfa_35;
         }
         public String getDescription() {
             return "658:2: (this_VersionRangeContraint_0= ruleVersionRangeContraint | this_HyphenVersionRange_1= ruleHyphenVersionRange )";
         }
     }
-    static final String dfa_35s = "\1\46\1\61\2\uffff";
-    static final String[] dfa_36s = {
+    static final String dfa_36s = "\1\46\1\62\2\uffff";
+    static final String[] dfa_37s = {
             "\1\1\41\uffff\1\2",
-            "\1\1\2\3\7\uffff\2\3\26\uffff\1\2\4\uffff\7\3",
+            "\1\1\2\3\7\uffff\2\3\26\uffff\1\2\5\uffff\7\3",
             "",
             ""
     };
-    static final char[] dfa_35 = DFA.unpackEncodedStringToUnsignedChars(dfa_35s);
-    static final short[][] dfa_36 = unpackEncodedStringArray(dfa_36s);
+    static final char[] dfa_36 = DFA.unpackEncodedStringToUnsignedChars(dfa_36s);
+    static final short[][] dfa_37 = unpackEncodedStringArray(dfa_37s);
 
     class DFA19 extends DFA {
 
         public DFA19(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 19;
-            this.eot = dfa_21;
-            this.eof = dfa_22;
-            this.min = dfa_23;
-            this.max = dfa_35;
-            this.accept = dfa_25;
-            this.special = dfa_26;
-            this.transition = dfa_36;
+            this.eot = dfa_22;
+            this.eof = dfa_23;
+            this.min = dfa_24;
+            this.max = dfa_36;
+            this.accept = dfa_26;
+            this.special = dfa_27;
+            this.transition = dfa_37;
         }
         public String getDescription() {
             return "()* loopback of 801:3: ( (this_WS_2= RULE_WS )+ ( (lv_versionConstraints_3_0= ruleSimpleVersion ) ) )*";
         }
     }
-    static final String dfa_37s = "\36\uffff";
-    static final String dfa_38s = "\3\uffff\14\21\3\uffff\14\21";
-    static final String dfa_39s = "\1\47\1\5\1\uffff\14\4\1\5\2\uffff\14\4";
-    static final String dfa_40s = "\1\51\1\47\1\uffff\14\51\1\47\2\uffff\14\51";
-    static final String dfa_41s = "\2\uffff\1\2\15\uffff\1\3\1\1\14\uffff";
-    static final String dfa_42s = "\36\uffff}>";
-    static final String[] dfa_43s = {
+    static final String dfa_38s = "\36\uffff";
+    static final String dfa_39s = "\3\uffff\14\21\3\uffff\14\21";
+    static final String dfa_40s = "\1\47\1\5\1\uffff\14\4\1\5\2\uffff\14\4";
+    static final String dfa_41s = "\1\51\1\47\1\uffff\14\51\1\47\2\uffff\14\51";
+    static final String dfa_42s = "\2\uffff\1\2\15\uffff\1\3\1\1\14\uffff";
+    static final String dfa_43s = "\36\uffff}>";
+    static final String[] dfa_44s = {
             "\1\1\1\uffff\1\2",
             "\1\5\1\4\1\12\1\13\1\14\1\15\1\7\1\10\1\11\1\6\1\uffff\1\16\26\uffff\1\3",
             "",
@@ -8258,26 +8438,26 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
             "\1\21\1\24\1\23\1\31\1\32\1\33\1\34\1\26\1\27\1\30\1\25\1\uffff\1\35\25\uffff\1\21\1\22\1\17\1\20"
     };
 
-    static final short[] dfa_37 = DFA.unpackEncodedString(dfa_37s);
     static final short[] dfa_38 = DFA.unpackEncodedString(dfa_38s);
-    static final char[] dfa_39 = DFA.unpackEncodedStringToUnsignedChars(dfa_39s);
+    static final short[] dfa_39 = DFA.unpackEncodedString(dfa_39s);
     static final char[] dfa_40 = DFA.unpackEncodedStringToUnsignedChars(dfa_40s);
-    static final short[] dfa_41 = DFA.unpackEncodedString(dfa_41s);
+    static final char[] dfa_41 = DFA.unpackEncodedStringToUnsignedChars(dfa_41s);
     static final short[] dfa_42 = DFA.unpackEncodedString(dfa_42s);
-    static final short[][] dfa_43 = unpackEncodedStringArray(dfa_43s);
+    static final short[] dfa_43 = DFA.unpackEncodedString(dfa_43s);
+    static final short[][] dfa_44 = unpackEncodedStringArray(dfa_44s);
 
     class DFA28 extends DFA {
 
         public DFA28(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 28;
-            this.eot = dfa_37;
-            this.eof = dfa_38;
-            this.min = dfa_39;
-            this.max = dfa_40;
-            this.accept = dfa_41;
-            this.special = dfa_42;
-            this.transition = dfa_43;
+            this.eot = dfa_38;
+            this.eof = dfa_39;
+            this.min = dfa_40;
+            this.max = dfa_41;
+            this.accept = dfa_42;
+            this.special = dfa_43;
+            this.transition = dfa_44;
         }
         public String getDescription() {
             return "1118:2: ( (otherlv_0= '-' ( (lv_preRelease_1_0= ruleQualifierTag ) ) ) | (otherlv_2= '+' ( (lv_buildMetadata_3_0= ruleQualifierTag ) ) ) | (otherlv_4= '-' ( (lv_preRelease_5_0= ruleQualifierTag ) ) otherlv_6= '+' ( (lv_buildMetadata_7_0= ruleQualifierTag ) ) ) )";
@@ -8287,15 +8467,15 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
 
     public static final BitSet FOLLOW_1 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_2 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_3 = new BitSet(new long[]{0x0003F8000000C070L});
+    public static final BitSet FOLLOW_3 = new BitSet(new long[]{0x0007F0000000C070L});
     public static final BitSet FOLLOW_4 = new BitSet(new long[]{0x0000000000000012L});
-    public static final BitSet FOLLOW_5 = new BitSet(new long[]{0x0000019000017FE0L});
+    public static final BitSet FOLLOW_5 = new BitSet(new long[]{0x0000059000017FE0L});
     public static final BitSet FOLLOW_6 = new BitSet(new long[]{0x0000000800000000L});
     public static final BitSet FOLLOW_7 = new BitSet(new long[]{0x0000001000000000L});
-    public static final BitSet FOLLOW_8 = new BitSet(new long[]{0x0000059800017FE0L});
+    public static final BitSet FOLLOW_8 = new BitSet(new long[]{0x00000D9800017FE0L});
     public static final BitSet FOLLOW_9 = new BitSet(new long[]{0x0000002000000002L});
-    public static final BitSet FOLLOW_10 = new BitSet(new long[]{0x0003F9900001FFE0L});
-    public static final BitSet FOLLOW_11 = new BitSet(new long[]{0x0003F8000000C060L});
+    public static final BitSet FOLLOW_10 = new BitSet(new long[]{0x0007F5900001FFE0L});
+    public static final BitSet FOLLOW_11 = new BitSet(new long[]{0x0007F0000000C060L});
     public static final BitSet FOLLOW_12 = new BitSet(new long[]{0x0000004000000012L});
     public static final BitSet FOLLOW_13 = new BitSet(new long[]{0x0000004000000010L});
     public static final BitSet FOLLOW_14 = new BitSet(new long[]{0x0000000000000010L});
@@ -8309,9 +8489,9 @@ public class InternalSemverParser extends AbstractInternalAntlrParser {
     public static final BitSet FOLLOW_22 = new BitSet(new long[]{0x0000000000001000L});
     public static final BitSet FOLLOW_23 = new BitSet(new long[]{0x0000000000000020L});
     public static final BitSet FOLLOW_24 = new BitSet(new long[]{0x0000000000002000L});
-    public static final BitSet FOLLOW_25 = new BitSet(new long[]{0x0000019000017FE2L});
-    public static final BitSet FOLLOW_26 = new BitSet(new long[]{0x0000039000017FE0L});
-    public static final BitSet FOLLOW_27 = new BitSet(new long[]{0x0000039000017FE2L});
-    public static final BitSet FOLLOW_28 = new BitSet(new long[]{0x0000059800017FE2L});
+    public static final BitSet FOLLOW_25 = new BitSet(new long[]{0x0000059000017FE2L});
+    public static final BitSet FOLLOW_26 = new BitSet(new long[]{0x0000079000017FE0L});
+    public static final BitSet FOLLOW_27 = new BitSet(new long[]{0x0000079000017FE2L});
+    public static final BitSet FOLLOW_28 = new BitSet(new long[]{0x00000D9800017FE2L});
 
 }

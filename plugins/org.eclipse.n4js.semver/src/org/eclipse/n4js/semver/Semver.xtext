@@ -127,7 +127,7 @@ SEMVER_TAG:
 
 
 PATH:
-	('/' | '.' | '-' | DIGITS | LETTER)+
+	('/' | '.' | '-' | '_' | DIGITS | LETTER)+
 ;
 
 URL_PROTOCOL:
@@ -135,16 +135,16 @@ URL_PROTOCOL:
 ;
 
 URL:
-	('-' | DIGITS | LETTER)*
+	('-' | '_' | DIGITS | LETTER)*
 	('/' | '.' | ':' | '@')
-	('/' | '.' | ':' | '@' | '-' | DIGITS | LETTER)*
+	('/' | '.' | ':' | '@' | '-' | '_' | DIGITS | LETTER)*
 ;
 
 URL_NO_VX:
-	(LETTER_NO_VX)
-	('-' | DIGITS | LETTER)*
+	('-' | '_' | LETTER_NO_VX)
+	('-' | '_' | DIGITS | LETTER)*
 	('/' | '.' | ':' | '@')
-	('/' | '.' | ':' | '@' | '-' | DIGITS | LETTER)*
+	('/' | '.' | ':' | '@' | '-' | '_' | DIGITS | LETTER)*
 ;
 
 TAG:

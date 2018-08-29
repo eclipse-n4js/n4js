@@ -50,6 +50,7 @@ public class SemverParser extends AbstractContentAssistParser {
 					put(grammarAccess.getURLAccess().getAlternatives_0(), "rule__URL__Alternatives_0");
 					put(grammarAccess.getURLAccess().getAlternatives_1(), "rule__URL__Alternatives_1");
 					put(grammarAccess.getURLAccess().getAlternatives_2(), "rule__URL__Alternatives_2");
+					put(grammarAccess.getURL_NO_VXAccess().getAlternatives_0(), "rule__URL_NO_VX__Alternatives_0");
 					put(grammarAccess.getURL_NO_VXAccess().getAlternatives_1(), "rule__URL_NO_VX__Alternatives_1");
 					put(grammarAccess.getURL_NO_VXAccess().getAlternatives_2(), "rule__URL_NO_VX__Alternatives_2");
 					put(grammarAccess.getURL_NO_VXAccess().getAlternatives_3(), "rule__URL_NO_VX__Alternatives_3");

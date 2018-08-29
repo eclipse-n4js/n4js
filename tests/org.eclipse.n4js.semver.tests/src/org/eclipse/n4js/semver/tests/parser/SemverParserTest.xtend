@@ -149,7 +149,8 @@ class SemverParserTest {
 		"git+ssh://git@github.com:npm/npm.git#v1.0.27",
 		"git+ssh://git@github.com:npm/npm#semver:^5.0",
 		"git+https://isaacs@github.com/npm/npm.git",
-		"http://asdf.com/asdf.tar.gz"
+		"http://asdf.com/asdf.tar.gz",
+		"http://asdf.com/_/under_score/_before/after_/_"
 	];
 
 	String[] localPathData = #[
@@ -157,6 +158,7 @@ class SemverParserTest {
         "file:../dyl",
         "file:babel-fi",
         "file:babel-preset",
+        "file:_/under_score/_before/after_/_",
         "file:/root/subfolder/",
         "file:/root/subfolder",
         "file://root/subfolder/",
