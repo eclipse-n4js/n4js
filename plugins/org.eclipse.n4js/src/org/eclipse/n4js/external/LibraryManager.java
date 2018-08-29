@@ -49,7 +49,6 @@ import org.eclipse.n4js.semver.SemverMatcher;
 import org.eclipse.n4js.semver.SemverUtils;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
-import org.eclipse.n4js.semver.Semver.VersionRangeSetRequirement;
 import org.eclipse.n4js.semver.model.SemverSerializer;
 import org.eclipse.n4js.smith.ClosableMeasurement;
 import org.eclipse.n4js.smith.DataCollector;
@@ -159,7 +158,7 @@ public class LibraryManager {
 	 *             if the given version string cannot be parsed to an {@link NPMVersionRequirement}.
 	 */
 	public IStatus installNPM(String packageName, String packageVersionStr, IProgressMonitor monitor) {
-		VersionRangeSetRequirement packageVersion = semverHelper.parseVersionRangeSet(packageVersionStr);
+		NPMVersionRequirement packageVersion = semverHelper.parse(packageVersionStr);
 		if (packageVersion == null) {
 			throw new IllegalArgumentException("unable to parse version requirement: " + packageVersionStr);
 		}
