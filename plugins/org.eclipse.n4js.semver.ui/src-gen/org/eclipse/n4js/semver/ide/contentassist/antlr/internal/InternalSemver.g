@@ -954,27 +954,33 @@ rule__PATH__Alternatives
 	)
 	|
 	(
-		{ before(grammarAccess.getPATHAccess().getHyphenMinusKeyword_2()); }
+		{ before(grammarAccess.getPATHAccess().getCommercialAtKeyword_2()); }
+		'@'
+		{ after(grammarAccess.getPATHAccess().getCommercialAtKeyword_2()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getPATHAccess().getHyphenMinusKeyword_3()); }
 		'-'
-		{ after(grammarAccess.getPATHAccess().getHyphenMinusKeyword_2()); }
+		{ after(grammarAccess.getPATHAccess().getHyphenMinusKeyword_3()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getPATHAccess().get_Keyword_3()); }
+		{ before(grammarAccess.getPATHAccess().get_Keyword_4()); }
 		'_'
-		{ after(grammarAccess.getPATHAccess().get_Keyword_3()); }
+		{ after(grammarAccess.getPATHAccess().get_Keyword_4()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getPATHAccess().getDIGITSTerminalRuleCall_4()); }
+		{ before(grammarAccess.getPATHAccess().getDIGITSTerminalRuleCall_5()); }
 		RULE_DIGITS
-		{ after(grammarAccess.getPATHAccess().getDIGITSTerminalRuleCall_4()); }
+		{ after(grammarAccess.getPATHAccess().getDIGITSTerminalRuleCall_5()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getPATHAccess().getLETTERParserRuleCall_5()); }
+		{ before(grammarAccess.getPATHAccess().getLETTERParserRuleCall_6()); }
 		ruleLETTER
-		{ after(grammarAccess.getPATHAccess().getLETTERParserRuleCall_5()); }
+		{ after(grammarAccess.getPATHAccess().getLETTERParserRuleCall_6()); }
 	)
 ;
 finally {

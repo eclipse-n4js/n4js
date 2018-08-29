@@ -127,7 +127,7 @@ SEMVER_TAG:
 
 
 PATH:
-	('/' | '.' | '-' | '_' | DIGITS | LETTER)+
+	('/' | '.' | '@' | '-' | '_' | DIGITS | LETTER)+
 ;
 
 URL_PROTOCOL:

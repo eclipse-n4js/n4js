@@ -1428,32 +1428,38 @@ rulePATH returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
 			newLeafNode(kw, grammarAccess.getPATHAccess().getFullStopKeyword_1());
 		}
 		    |
+		kw='@'
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getPATHAccess().getCommercialAtKeyword_2());
+		}
+		    |
 		kw='-'
 		{
 			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getPATHAccess().getHyphenMinusKeyword_2());
+			newLeafNode(kw, grammarAccess.getPATHAccess().getHyphenMinusKeyword_3());
 		}
 		    |
 		kw='_'
 		{
 			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getPATHAccess().get_Keyword_3());
+			newLeafNode(kw, grammarAccess.getPATHAccess().get_Keyword_4());
 		}
 		    |
-		this_DIGITS_4=RULE_DIGITS
+		this_DIGITS_5=RULE_DIGITS
 		{
-			$current.merge(this_DIGITS_4);
+			$current.merge(this_DIGITS_5);
 		}
 		{
-			newLeafNode(this_DIGITS_4, grammarAccess.getPATHAccess().getDIGITSTerminalRuleCall_4());
+			newLeafNode(this_DIGITS_5, grammarAccess.getPATHAccess().getDIGITSTerminalRuleCall_5());
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getPATHAccess().getLETTERParserRuleCall_5());
+			newCompositeNode(grammarAccess.getPATHAccess().getLETTERParserRuleCall_6());
 		}
-		this_LETTER_5=ruleLETTER
+		this_LETTER_6=ruleLETTER
 		{
-			$current.merge(this_LETTER_5);
+			$current.merge(this_LETTER_6);
 		}
 		{
 			afterParserOrEnumRuleCall();

@@ -159,6 +159,7 @@ class SemverParserTest {
         "file:babel-fi",
         "file:babel-preset",
         "file:_/under_score/_before/after_/_",
+        "file:lets/try/@at/yay",
         "file:/root/subfolder/",
         "file:/root/subfolder",
         "file://root/subfolder/",
