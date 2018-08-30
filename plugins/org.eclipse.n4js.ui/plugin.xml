@@ -1461,4 +1461,10 @@ Contributors:
             class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.proposals.packagejson.PackageJsonProposalProvider">
       </proposalProvider>
    </extension>
+   <extension
+         point="org.eclipse.n4js.json.ui.hyperlinkHelper">
+      <hyperlinkHelper
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.editor.hyperlinking.packagejson.PackageJsonHyperlinkHelperExtension">
+      </hyperlinkHelper>
+   </extension>
 </plugin>
