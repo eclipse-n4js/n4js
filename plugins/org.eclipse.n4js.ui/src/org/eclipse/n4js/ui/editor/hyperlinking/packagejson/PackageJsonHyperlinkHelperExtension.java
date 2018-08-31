@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ui.editor.hyperlinking.packagejson;
 
+import java.nio.file.Path;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
@@ -77,7 +78,17 @@ public class PackageJsonHyperlinkHelperExtension implements HyperlinkHelperExten
 
 	private Pair<URI, Region> getUriRegionPair(EObject eObject) {
 		PackageJsonProperties nearestKnownPJP = findNearestKnownPJP(eObject);
+		if (nearestKnownPJP == null) {
+			return null;
+		}
+
 		switch (nearestKnownPJP) {
+
+		case MAIN:
+			if (eObject instanceof JSONStringLiteral) {
+				return hyperlinkToMain((JSONStringLiteral) eObject);
+			}
+			break;
 
 		case MAIN_MODULE:
 			if (eObject instanceof JSONStringLiteral) {
@@ -115,17 +126,18 @@ public class PackageJsonHyperlinkHelperExtension implements HyperlinkHelperExten
 		return null;
 	}
 
-	private Pair<URI, Region> hyperlinkToRequiredRTLibs(JSONStringLiteral mainModuleJsonLiteral) {
-		String projectName = mainModuleJsonLiteral.getValue();
-		if (!Strings.isNullOrEmpty(projectName)) {
-			IN4JSProject project = model.findAllProjectMappings().get(projectName);
+	private Pair<URI, Region> hyperlinkToMain(JSONStringLiteral mainModuleJsonLiteral) {
+		String mainPath = mainModuleJsonLiteral.getValue();
+		if (!Strings.isNullOrEmpty(mainPath)) {
+			URI packageJsonLoc = mainModuleJsonLiteral.eResource().getURI();
+			N4JSEclipseProject project = model.findProjectWith(packageJsonLoc);
 			INode node = NodeModelUtils.getNode(mainModuleJsonLiteral);
 
 			if (project != null && node != null) {
 				Region region = new Region(node.getOffset() + 1, node.getLength() - 2);
-				URI uri = project.getProjectDescriptionLocation().orNull();
-
-				return Tuples.pair(uri, region);
+				Path mainResolvedPath = project.getLocationPath().resolve(mainPath);
+				URI mainResolvedUri = URI.createFileURI(mainResolvedPath.toString());
+				return Tuples.pair(mainResolvedUri, region);
 			}
 		}
 
@@ -152,6 +164,23 @@ public class PackageJsonHyperlinkHelperExtension implements HyperlinkHelperExten
 						return Tuples.pair(mainModuleURI, region);
 					}
 				}
+			}
+		}
+
+		return null;
+	}
+
+	private Pair<URI, Region> hyperlinkToRequiredRTLibs(JSONStringLiteral mainModuleJsonLiteral) {
+		String projectName = mainModuleJsonLiteral.getValue();
+		if (!Strings.isNullOrEmpty(projectName)) {
+			IN4JSProject project = model.findAllProjectMappings().get(projectName);
+			INode node = NodeModelUtils.getNode(mainModuleJsonLiteral);
+
+			if (project != null && node != null) {
+				Region region = new Region(node.getOffset() + 1, node.getLength() - 2);
+				URI uri = project.getProjectDescriptionLocation().orNull();
+
+				return Tuples.pair(uri, region);
 			}
 		}
 
