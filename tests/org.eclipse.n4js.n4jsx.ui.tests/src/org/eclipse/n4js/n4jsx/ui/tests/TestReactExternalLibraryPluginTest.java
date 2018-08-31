@@ -104,7 +104,9 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 		assertTrue(projectDescriptionFile + " client module is not accessible.", projectDescriptionFile.isAccessible());
 
 		assertMarkers("Expected exactly 3 errors in client module.", clientModule, 3);
-		assertMarkers("Expected exactly one error in package.json.", projectDescriptionFile, 1);
+		// line 5: Project does not exist with project ID: react.
+		// line 6: Project does not exist with project ID: @n4jsd/react. expected:<1> but was:<2>
+		assertMarkers("Expected exactly 2 error in package.json.", projectDescriptionFile, 2);
 
 		libManager.installNPM(PACKAGE_REACT, new NullProgressMonitor());
 		libManager.installNPM(PACKAGE_N4JSD_REACT, new NullProgressMonitor());

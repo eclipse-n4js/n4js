@@ -198,7 +198,8 @@ public class NpmCLI {
 					Path completePath = basePath.resolve(reqChg.name);
 					String actualVersion = getActualVersion(completePath);
 					if (actualVersion.isEmpty()) {
-						LibraryChange actualChange = new LibraryChange(LibraryChangeType.Removed, reqChg.location,
+						URI location = URI.createFileURI(completePath.toString());
+						LibraryChange actualChange = new LibraryChange(LibraryChangeType.Removed, location,
 								reqChg.name, reqChg.version);
 						actualChanges.add(actualChange);
 					}
