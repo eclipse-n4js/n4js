@@ -55,15 +55,17 @@ import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.internal.RaceDetectionHelper;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.smith.ClosableMeasurement;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
 import org.eclipse.n4js.smith.Measurement;
+import org.eclipse.n4js.ui.building.BuildDataWithRequestRebuild;
+import org.eclipse.n4js.ui.building.BuildManagerAccess;
 import org.eclipse.n4js.ui.external.ComputeProjectOrder.VertexOrder;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildQueue.Task;
 import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.builder.builderState.IBuilderState;
-import org.eclipse.xtext.builder.impl.BuildData;
 import org.eclipse.xtext.builder.impl.IToBeBuiltComputerContribution;
 import org.eclipse.xtext.builder.impl.QueuedBuildData;
 import org.eclipse.xtext.builder.impl.ToBeBuilt;
@@ -520,7 +522,8 @@ public class ExternalLibraryBuilder {
 
 			ToBeBuilt toBeBuilt = getToBeBuilt(computer, n4EclPrj, computeMonitor, contribution);
 
-			try {
+			try (ClosableMeasurement mesBE = dcExtLibBuilder
+					.getClosableMeasurement("BuildExt_" + n4EclPrj.getProjectName())) {
 				if (toBeBuilt.getToBeDeleted().isEmpty() && toBeBuilt.getToBeUpdated().isEmpty()) {
 					subMonitor.newChild(1, SUPPRESS_NONE).worked(1);
 					return;
@@ -541,12 +544,13 @@ public class ExternalLibraryBuilder {
 						((ResourceSetImpl) resourceSet).setURIResourceMap(newHashMap());
 					}
 
-					BuildData buildData = new BuildData(
+					BuildDataWithRequestRebuild buildData = new BuildDataWithRequestRebuild(
 							project.getName(),
 							resourceSet,
 							toBeBuilt,
 							queuedBuildData,
-							false /* indexingOnly */);
+							false /* indexingOnly */,
+							BuildManagerAccess::needBuild);
 
 					monitor.setTaskName("Building '" + project.getName() + "'...");
 					IProgressMonitor buildMonitor = subMonitor.split(1, SUPPRESS_BEGINTASK);

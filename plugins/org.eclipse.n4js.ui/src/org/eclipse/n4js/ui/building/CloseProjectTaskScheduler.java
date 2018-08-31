@@ -25,7 +25,6 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.n4js.internal.RaceDetectionHelper;
 import org.eclipse.n4js.ui.building.ClosedProjectQueue.Task;
-import org.eclipse.xtext.builder.impl.BuildData;
 import org.eclipse.xtext.builder.impl.Messages;
 import org.eclipse.xtext.builder.impl.ProjectOpenedOrClosedListener;
 import org.eclipse.xtext.builder.impl.QueuedBuildData;
@@ -125,8 +124,8 @@ public class CloseProjectTaskScheduler extends ProjectOpenedOrClosedListener {
 			if (resourceSet instanceof ResourceSetImpl) {
 				((ResourceSetImpl) resourceSet).setURIResourceMap(Maps.<URI, Resource> newHashMap());
 			}
-			BuildData buildData = new BuildData(projectNames, resourceSet, task.toBeBuilt,
-					queuedBuildData);
+			BuildDataWithRequestRebuild buildData = new BuildDataWithRequestRebuild(projectNames, resourceSet,
+					task.toBeBuilt, queuedBuildData, BuildManagerAccess::needBuild);
 			getBuilderState().update(buildData, progress.newChild(1));
 		} catch (Error | RuntimeException e) {
 			task.reschedule();

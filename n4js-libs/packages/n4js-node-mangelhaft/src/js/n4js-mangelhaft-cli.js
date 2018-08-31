@@ -33,6 +33,7 @@
             "ideExecData": execData,
             "test-catalog": tryJSON(execData.testTree),
             "test-mode": true,
+            "keep-eventloop": true,
             "main": "org.eclipse.n4js.mangelhaft.runner.ide/src-gen/org/eclipse/n4js/mangelhaft/runner/ide/IDENodeTestRunner"
         }, true /* exitOnError */);
     } else {

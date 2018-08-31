@@ -258,7 +258,7 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 			return null;
 		}
 		ensureInitialized();
-		for (java.net.URI locRaw : externalLibraryPreferenceStore.getLocations()) {
+		for (java.net.URI locRaw : this.rootLocations) {
 			URI loc = URI.createURI(locRaw.toString());
 			URI prefix = !loc.hasTrailingPathSeparator() ? loc.appendSegment("") : loc;
 			if (UriUtil.isPrefixOf(prefix, nestedLocation)) {

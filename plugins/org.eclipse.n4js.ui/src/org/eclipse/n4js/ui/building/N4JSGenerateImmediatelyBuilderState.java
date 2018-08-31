@@ -12,7 +12,6 @@ package org.eclipse.n4js.ui.building;
 
 import java.time.Instant;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
@@ -25,7 +24,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.N4JSGlobals;
@@ -50,10 +48,8 @@ import org.eclipse.xtext.builder.impl.RegistryBuilderParticipant;
 import org.eclipse.xtext.builder.impl.RegistryBuilderParticipant.DeferredBuilderParticipant;
 import org.eclipse.xtext.builder.impl.ToBeBuilt;
 import org.eclipse.xtext.naming.QualifiedName;
-import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.IResourceDescriptions;
-import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionDelta;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.ui.shared.contribution.ISharedStateContributionRegistry;
 
@@ -111,7 +107,7 @@ import com.google.inject.Inject;
  * corresponding serialized {@link TModule} state differs between the old and the new state, hence we put module A into
  * the changed deltas.</li>
  * <li>After processing all elements in the current build queue, we have to queue all affected resources as well via the
- * {@link #queueAffectedResources(Set, IResourceDescriptions, CurrentDescriptions, Collection, Collection, BuildData, IProgressMonitor)
+ * {@link #queueAffectedResources(Set, IResourceDescriptions, CurrentDescriptions, Collection, Collection, BuildDataWithRequestRebuild, IProgressMonitor)
  * queueAffectedResources} method.</li>
  * <li>This method will consider module B for class {@code B} as an affected one (since {@code B} imports the
  * {@link QualifiedName FQN} of class {@code A} into {@code B} and the is a direct dependency between the container
@@ -291,80 +287,6 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 	private void handleCoreException(CoreException e) {
 		N4JSActivator.getInstance().getLog()
 				.log(new Status(IStatus.ERROR, N4JSActivator.ORG_ECLIPSE_N4JS_N4JS, e.getMessage(), e));
-	}
-
-	/**
-	 * Overriding this method to make sure that resources of all affected URIs are fully re-loaded if needed, instead of
-	 * only loading the TModule from the corresponding resource description.
-	 * <p>
-	 * This is required in case the URIs in an affected resource contain indices of a changed resource; just loading the
-	 * TModule from the user data won't update these indices. For details see the example provided in IDEBUG-347.
-	 * <p>
-	 * NOTE: this should be removed once the URI scheme has been changed to use names instead of indices.
-	 */
-	@Override
-	protected void queueAffectedResources(
-			Set<URI> allRemainingURIs,
-			IResourceDescriptions oldState,
-			CurrentDescriptions newState,
-			Collection<Delta> changedDeltas,
-			Collection<Delta> allDeltas,
-			BuildData buildData,
-			final IProgressMonitor monitor) {
-
-		// don't wanna copy super-class method, so using this helper to get the set of affected URIs:
-		final Set<URI> affectedURIs = new HashSet<>(allRemainingURIs);
-
-		super.queueAffectedResources(allRemainingURIs, oldState, newState, changedDeltas, allDeltas, buildData,
-				monitor);
-
-		// affected URIs have been removed from allRemainingURIs by super class
-		affectedURIs.removeAll(allRemainingURIs);
-
-		for (URI currAffURI : affectedURIs) {
-			if (!N4JSGlobals.PACKAGE_JSON.equals(currAffURI.lastSegment())) {
-
-				/*-
-				 * This logic here is required to get rid of the invalid serialized TModules information from the index
-				 * which are working with an index based approach. Consider the below example:
-				 *
-				 * -------Module A------
-				 *1    //class XYZ { }
-				 *2    function foo() { }
-				 *3    export public class A { }
-				 *
-				 * -------Module B------
-				 *1    import { A } from "A"
-				 *2    import { C } from "C"
-				 *3
-				 *4    var arrCC : Array<A>;
-				 *5    var t2 : C = new C();
-				 *6    t2.m(arrCC);
-				 *
-				 * -------Module C------
-				 *1    import { A } from "A"
-				 *2
-				 *3    export public class C {
-				 *4        m(param : Array<A>) { }
-				 *5    }
-				 *
-				 *
-				 * Commenting out line 1 in module A will trigger rebuild of A, and related module B and C in this order.
-				 * When loading module B, module C has to be resolved as it imports it, quickly jump to module C and load
-				 * class A from module A, class A used to have index 1 (in the serialized TModule in the Xtext index) as
-				 * it was the second top level element, but that is not true any more, because 'foo' was just commented out,
-				 * so index 1 in module A is not class A any more but 'foo'. With this, line 6 in module B will fail,
-				 * because it will think that the method 'm' accepts an array of 'foo' and not A any more.
-				 *
-				 * The following code will be executed after A was processed and B and C are the "affectedURIs". With this
-				 * code, we make sure that the cached TModule of C (in the user data of C's resource description) won't be
-				 * used while processing B during proxy resolution.
-				 */
-				IResourceDescription resDesc = this.getResourceDescription(currAffURI);
-				ResourceDescriptionWithoutModuleUserData rdwmud = new ResourceDescriptionWithoutModuleUserData(resDesc);
-				newState.register(new DefaultResourceDescriptionDelta(resDesc, rdwmud));
-			}
-		}
 	}
 
 	/** logic of {@link IN4JSCore#findAllProjects()} with filtering by name */

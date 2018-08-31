@@ -4,8 +4,7 @@
   "dependencies": {
     "org.eclipse.n4js.mangelhaft": "*",
     "org.eclipse.n4js.mangelhaft.assert": "*",
-    "express": "*",
-    "@n4jsd/express": "*"
+    "express": "*"
   },
   "devDependencies": {
     "n4js-runtime-node": "*"

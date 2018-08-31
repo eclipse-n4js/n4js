@@ -3,7 +3,7 @@
 	"version": "0.0.1",
 	"dependencies": {
 		"react": "16.2.0",
-		"@n4jsd/react": "*"
+		"@n4jsd/react": "<=16.2.*"
 	},
 	"n4js": {
 		"projectType": "library",

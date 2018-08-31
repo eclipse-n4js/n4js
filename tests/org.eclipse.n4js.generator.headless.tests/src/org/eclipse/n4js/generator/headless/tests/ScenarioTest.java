@@ -20,6 +20,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -186,7 +187,8 @@ public class ScenarioTest {
 				new File(root, "nest/wsp2/D") // requires B and A to be loaded.
 		);
 
-		final BuildSet buildSet = hlc.getBuildSetComputer().createProjectsBuildSet(pProjectRoots, toCompile);
+		final BuildSet buildSet = hlc.getBuildSetComputer().createProjectsBuildSet(pProjectRoots, toCompile,
+				Collections.emptySet());
 		hlc.compile(buildSet);
 
 		assertNotExists(root, "wsp1/A/src-gen/packA/A.js");
@@ -356,7 +358,8 @@ public class ScenarioTest {
 		// new File(root, "wsp1/A") // requires nothing
 		);
 
-		final BuildSet buildSet = hlc.getBuildSetComputer().createSingleFilesBuildSet(toCompile);
+		final BuildSet buildSet = hlc.getBuildSetComputer().createSingleFilesBuildSet(toCompile,
+				Collections.emptySet());
 		hlc.compile(buildSet);
 
 		assertExists(root, "nest/wsp2/B/src-gen/packB/B2.js");
@@ -385,7 +388,8 @@ public class ScenarioTest {
 				new File(root, "nest/wsp2"),
 				new File(root, "wsp1"));
 
-		final BuildSet buildSet = hlc.getBuildSetComputer().createSingleFilesBuildSet(wspRoots, toCompile);
+		final BuildSet buildSet = hlc.getBuildSetComputer().createSingleFilesBuildSet(wspRoots, toCompile,
+				Collections.emptySet());
 		hlc.compile(buildSet);
 
 		assertExists(root, "nest/wsp2/D/src-gen/packD/D2.js");
@@ -449,14 +453,14 @@ public class ScenarioTest {
 	 * Computes a 'Projects' build set based on the given project locations.
 	 */
 	private static BuildSet allProjects(N4HeadlessCompiler hlc, List<File> projectRoots) throws N4JSCompileException {
-		return hlc.getBuildSetComputer().createAllProjectsBuildSet(projectRoots);
+		return hlc.getBuildSetComputer().createAllProjectsBuildSet(projectRoots, Collections.emptySet());
 	}
 
 	/**
 	 * Computes an 'All Projects' build set by scanning the given project root locations.
 	 */
 	private static BuildSet projects(N4HeadlessCompiler hlc, List<File> projectLocations) throws N4JSCompileException {
-		return hlc.getBuildSetComputer().createProjectsBuildSet(projectLocations);
+		return hlc.getBuildSetComputer().createProjectsBuildSet(projectLocations, Collections.emptySet());
 	}
 
 	/**

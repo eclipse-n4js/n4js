@@ -31,18 +31,18 @@ Contributors:
 
 		<!-- JSDoc tests -->
 		<module>org.eclipse.n4js.jsdoc2spec.tests</module>
-		
+
 		<!-- Type system tests -->
 		<module>org.eclipse.n4js.ts.model.tests</module>
 		<module>org.eclipse.n4js.ts.tests</module>
 		<module>org.eclipse.n4js.ts.xpect.tests</module>
-		
+
 		<!-- Tester tests -->
 		<module>org.eclipse.n4js.tester.tests</module>
 
 		<!-- Regex tests -->
 		<module>org.eclipse.n4js.regex.tests</module>
-		
+
 		<!-- JS tests -->
 		<module>org.eclipse.n4js.lang.tests</module>
 		<module>org.eclipse.n4js.spec.tests</module>
@@ -51,7 +51,7 @@ Contributors:
 
 		<!-- Xsemantics tests -->
 		<module>org.eclipse.n4js.xsemantics.tests</module>
-		
+
 		<!-- transpiler tests -->
 		<module>org.eclipse.n4js.transpiler.tests</module>
 		<module>org.eclipse.n4js.transpiler.es5.tests</module>
@@ -61,7 +61,7 @@ Contributors:
 		<!-- Package.json tests -->
 		<module>org.eclipse.n4js.packagejson.xpect.tests</module>
 		<module>org.eclipse.n4js.packagejson.xpect.ui.tests</module>
-		
+
 		<!-- access control tests -->
 		<module>org.eclipse.n4js.accesscontrol.tests</module>
 
@@ -137,7 +137,7 @@ Contributors:
 
 		<!-- commands and command lines for code coverage, empty by default and
 			set by profiles -->
-		
+
 		<!-- use "-Dlog4j.debug -Dorg.apache.logging.log4j.simplelog.StatusLogger.level=TRACE" to get debug messages from the logger -->
 		<loggingArgs>-Dlog4j.configuration="file:${basedir}/../../plugins/org.eclipse.n4js.utils.logging/log4j_tests.xml"</loggingArgs>
 
@@ -319,7 +319,7 @@ Contributors:
 							pattern "*PluginTest.java" will be run by this execution. Note
 							also the ui.test.vmargs property that is set by the macos
 							resp. the other-os profile. 
-							
+
 							If the ${tycho.surefire.skipPluginTest}
 							property will be set to true then the test are not carried out but 
 							the expensive startup of the eclipse-test-environemnt ist still carried out.
@@ -497,7 +497,7 @@ Contributors:
 								</systemProperties>
 							</configuration>
 						</execution>
-	
+
 					</executions>
 					<configuration>
 						<!-- argLine needs to be one line, if you atoformat line break will break tests -->
