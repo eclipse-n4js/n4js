@@ -56,6 +56,7 @@ public class BinaryCommandFactory {
 	 */
 	public ProcessExecutionCommand createInstallPackageCommand(File invocationPath,
 			List<String> packageNames, boolean saveDependency) {
+
 		return new ProcessExecutionCommand() {
 			private static final String COMMAND_NAME = "npm_install";
 
@@ -74,20 +75,22 @@ public class BinaryCommandFactory {
 	 *
 	 * @param invocationPath
 	 *            path where package is supposed to be installed
-	 * @param packageName
-	 *            name of the package to uninstall
+	 * @param packageNames
+	 *            names of the packages to uninstall
 	 * @param saveDependency
 	 *            flag if uninstalled package should be saved in package.json of the uninstall path
 	 */
 	public ProcessExecutionCommand createUninstallPackageCommand(File invocationPath,
-			String packageName, boolean saveDependency) {
+			List<String> packageNames, boolean saveDependency) {
+
 		return new ProcessExecutionCommand() {
 			private static final String COMMAND_NAME = "npm_uninstall";
 
 			@Override
 			public ProcessResult execute() {
+				String escapedPackageNames = "\"" + Joiner.on("\" \"").join(packageNames) + "\"";
 				ProcessBuilder processBuilder = nodeProccessBuilder.getNpmUninstallProcessBuilder(invocationPath,
-						packageName, saveDependency);
+						escapedPackageNames, saveDependency);
 				return processExecutor.createAndExecute(processBuilder, COMMAND_NAME, OutputRedirection.REDIRECT);
 			}
 		};
