@@ -59,7 +59,11 @@ public class SemverSerializer implements ISerializer {
 		if (urls == null)
 			return "";
 
-		return serialize(urls.getSimpleVersion());
+		String str = "";
+		if (urls.isWithSemverTag())
+			str += "semver:";
+		str += serialize(urls.getSimpleVersion());
+		return str;
 	}
 
 	/** @return string representation of {@link URLCommitISH} */

@@ -12,6 +12,7 @@ package org.eclipse.n4js.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Path;
 
 import org.eclipse.core.resources.IResource;
@@ -49,6 +50,38 @@ public class URIUtils {
 			uri = org.eclipse.emf.common.util.URI.createFileURI(fullPathString);
 		}
 		return uri;
+	}
+
+	/**
+	 * Tells if the given URI is of the form <code>platform:/resource/EclipseProjectName</code>.
+	 */
+	static public boolean isPlatformResourceUriPointingToProject(org.eclipse.emf.common.util.URI uri) {
+		return uri.isPlatformResource() && uri.segmentCount() == 2; // n.b. "resource" counts as a segment
+	}
+
+	/**
+	 * Given the location of an N4JS project on disk, this method returns a
+	 * {@link org.eclipse.emf.common.util.URI#isFile() file URI}, as used internally to uniquely identify N4JS projects.
+	 * <p>
+	 * Since this methods always returns file URIs, it is only intended for use in the headless case. In the UI case,
+	 * URIs for identifying projects will be created by Eclipse.
+	 * <p>
+	 * For details on N4JS project name handling, see {@code ProjectDescriptionUtils#isProjectNameWithScope(String)}.
+	 */
+	public static org.eclipse.emf.common.util.URI deriveProjectURIFromFileLocation(File file) {
+		try {
+			org.eclipse.emf.common.util.URI createURI = org.eclipse.emf.common.util.URI
+					.createURI(file.getAbsoluteFile().toURI().toURL().toString());
+			// by convention IN4JSProject URI does not end with '/'
+			// i.e. last segment must not be empty
+			String last = createURI.lastSegment();
+			if (last != null && last.isEmpty()) {
+				createURI = createURI.trimSegments(1);
+			}
+			return createURI;
+		} catch (MalformedURLException e) {
+			return null;
+		}
 	}
 
 	/** @returns the a {@link org.eclipse.emf.common.util.URI} location for the given {@link java.net.URI} */

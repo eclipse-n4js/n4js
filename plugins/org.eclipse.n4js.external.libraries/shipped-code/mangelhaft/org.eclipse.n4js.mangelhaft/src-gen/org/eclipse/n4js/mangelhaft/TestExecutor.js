@@ -18,21 +18,20 @@
 		};
 		$n4Export('TestExecutor', TestExecutor);
 		getExecutingFunction = function getExecutingFunction(instrumentedTest) {
-			return async(testMethodDescriptor)=>{
-				const doPromise = async(resolve, reject)=>{
-					const timeoutError = new Error(`Test object ${testMethodDescriptor.name} timed out after ${testMethodDescriptor.timeout} milliseconds`);
-					const timeoutId = setTimeout(()=>reject(timeoutError), testMethodDescriptor.timeout);
-					try {
-						await Promise.resolve(testMethodDescriptor.value.call(instrumentedTest.testObject));
-					} catch(error) {
-						reject(error);
-					} finally {
-						clearTimeout(timeoutId);
-					}
-					resolve(undefined);
-				};
-				await new Promise(doPromise);
-			};
+			return (testMethodDescriptor)=>(new Promise((resolve, reject)=>{
+				const pr = Promise.resolve(testMethodDescriptor.value.call(instrumentedTest.testObject));
+				let timeoutId;
+				if (!n4.runtimeOptions["mangelhaft-timeout-disabled"]) {
+					timeoutId = setTimeout(()=>reject(new Error(`Test object ${testMethodDescriptor.name} timed out after ${testMethodDescriptor.timeout} milliseconds`)), testMethodDescriptor.timeout);
+				}
+				pr.then((res)=>{
+					clearTimeout(timeoutId);
+					resolve();
+				}, (err)=>{
+					clearTimeout(timeoutId);
+					reject(err);
+				});
+			}));
 		};
 		return {
 			setters: [

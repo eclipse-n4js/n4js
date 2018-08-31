@@ -14,11 +14,10 @@ import java.util.Collections;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
-import org.eclipse.n4js.internal.N4JSSourceContainerType;
-import org.eclipse.n4js.n4mf.N4mfFactory;
-import org.eclipse.n4js.n4mf.ProjectDescription;
-import org.eclipse.n4js.n4mf.ProjectReference;
-import org.eclipse.n4js.n4mf.ProjectType;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectDescriptionFactory;
+import org.eclipse.n4js.projectDescription.ProjectReference;
+import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.semver.SemverUtils;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 
@@ -29,8 +28,8 @@ import com.google.common.collect.UnmodifiableIterator;
  */
 public class MockWorkspace extends InternalN4JSWorkspace {
 
-	/** Default {@code projectId} used for the {@link MockProject}s in {@link MockWorkspace}. */
-	public static final String TEST_PROJECT__PROJECT_ID = "test";
+	/** Default {@code projectName} used for the {@link MockProject}s in {@link MockWorkspace}. */
+	public static final String TEST_PROJECT__PROJECT_NAME = "test";
 	/** Default {@code vendorId} used for the {@link MockProject}s in {@link MockWorkspace}. */
 	public static final String TEST_PROJECT__VENDOR_ID = "tester.id";
 
@@ -38,9 +37,9 @@ public class MockWorkspace extends InternalN4JSWorkspace {
 
 	/***/
 	public MockWorkspace() {
-		projectDescription = N4mfFactory.eINSTANCE.createProjectDescription();
+		projectDescription = ProjectDescriptionFactory.eINSTANCE.createProjectDescription();
+		projectDescription.setProjectName(TEST_PROJECT__PROJECT_NAME);
 		projectDescription.setVendorName("tester");
-		projectDescription.setProjectId(TEST_PROJECT__PROJECT_ID);
 		projectDescription.setVendorId(TEST_PROJECT__VENDOR_ID);
 		projectDescription.setProjectType(ProjectType.APPLICATION);
 		VersionNumber versionNumber = SemverUtils.createVersionNumber(1, 0, 0);
@@ -53,14 +52,8 @@ public class MockWorkspace extends InternalN4JSWorkspace {
 	}
 
 	@Override
-	public URI getLocation(URI projectURI, ProjectReference reference,
-			N4JSSourceContainerType expectedSourceContainerType) {
+	public URI getLocation(URI projectURI, ProjectReference reference) {
 		return MockProject.MOCK_URI;
-	}
-
-	@Override
-	public UnmodifiableIterator<URI> getArchiveIterator(URI archiveLocation, String archiveRelativeLocation) {
-		return Iterators.unmodifiableIterator(Collections.emptyIterator());
 	}
 
 	@Override

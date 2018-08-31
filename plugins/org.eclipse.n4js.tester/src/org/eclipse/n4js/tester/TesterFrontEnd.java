@@ -21,6 +21,7 @@ import org.eclipse.n4js.runner.IExecutor;
 import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.n4js.runner.RunnerFrontEnd;
 import org.eclipse.n4js.tester.domain.TestTree;
+import org.eclipse.n4js.tester.events.SessionEndedEvent;
 import org.eclipse.n4js.tester.extension.ITesterDescriptor;
 import org.eclipse.n4js.tester.extension.TesterRegistry;
 import org.eclipse.n4js.tester.internal.DefaultTestTreeTransformer;
@@ -54,6 +55,9 @@ public class TesterFrontEnd {
 
 	@Inject
 	private TesterFacade testerFacade;
+
+	@Inject
+	private TesterEventBus eventBus;
 
 	/**
 	 * Similar to {@link RunnerFrontEnd#canRun(String, URI)}, but for testing.
@@ -190,7 +194,16 @@ public class TesterFrontEnd {
 
 		// actually launch the test
 		ITester tester = testerRegistry.getTester(config);
-		return tester.test(config, executor, runnerFrontEnd);
+		Process process = tester.test(config, executor, runnerFrontEnd);
+
+		// register process termination listener
+		ProcessTerminationListener.register(process, exitCode -> {
+			// inform tester about the end of the session (if the internal state of
+			// the session does not allow for it, i.e. early termination, this may trigger an error state)
+			eventBus.post(new SessionEndedEvent(testTree.getSessionId().toString()));
+		});
+
+		return process;
 	}
 
 	/**

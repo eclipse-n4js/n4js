@@ -20,6 +20,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.util.Collections;
 
 import org.eclipse.n4js.N4JSInjectorProvider;
 import org.eclipse.n4js.binaries.BinaryCommandFactory;
@@ -115,7 +116,7 @@ public class N4jscliTest extends AbstractN4jscJarTest {
 	@Override
 	protected Process createAndStartProcess(String... args) throws IOException {
 		return N4CliHelper.createAndStartProcessIntern(outputLogFile,
-				pathToProject(PROJECT_NAME).toString(), args);
+				pathToProject(PROJECT_NAME).toString(), Collections.emptyMap(), args);
 	}
 
 	/**
@@ -145,7 +146,8 @@ public class N4jscliTest extends AbstractN4jscJarTest {
 	}
 
 	private Path pathToProject(String projectName) {
-		return FileSystems.getDefault().getPath(TARGET + File.separatorChar + WORKSPACE_FOLDER + File.separatorChar + projectName)
+		return FileSystems.getDefault()
+				.getPath(TARGET + File.separatorChar + WORKSPACE_FOLDER + File.separatorChar + projectName)
 				.normalize().toAbsolutePath();
 	}
 

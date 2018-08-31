@@ -17,9 +17,9 @@ import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.size;
 import static com.google.common.collect.Iterables.tryFind;
 import static com.google.common.collect.Iterators.filter;
-import static org.eclipse.n4js.ui.typesearch.TypeSearchKind.ALL_TYPES;
 import static org.eclipse.core.runtime.IProgressMonitor.UNKNOWN;
 import static org.eclipse.core.runtime.Status.OK_STATUS;
+import static org.eclipse.n4js.ui.typesearch.TypeSearchKind.ALL_TYPES;
 import static org.eclipse.swt.SWT.BOLD;
 
 import java.util.Comparator;
@@ -37,6 +37,10 @@ import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.StyledString.Styler;
+import org.eclipse.n4js.ui.internal.N4JSActivator;
+import org.eclipse.n4js.ui.labeling.N4JSLabelProvider;
+import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
+import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
@@ -60,11 +64,6 @@ import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.Ordering;
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.ui.internal.N4JSActivator;
-import org.eclipse.n4js.ui.labeling.N4JSLabelProvider;
-import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
-import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
 
 /**
  * Dialog for searching for N4JS types just like in JDT.
@@ -311,7 +310,7 @@ public class OpenTypeSelectionDialog extends FilteredItemsSelectionDialog {
 						final IN4JSEclipseProject project = core.findProject(uri).orNull();
 						if (null != project && project.exists()) {
 							sb.append(" [");
-							sb.append(project.getProjectId());
+							sb.append(project.getProjectName());
 							sb.append("]");
 							if (project.isExternal()) {
 								final IProject resourceProject = project.getProject();

@@ -227,19 +227,29 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 
 			switch (change.type) {
 			case Added:
-			case Updated:
-				toBeUpdated.add(change.location);
+			case Updated: {
+				ExternalProject project = externalLibraryWorkspace.getProject(change.location);
+				if (project != null) {
+					// Usually, updated and added projects must be in the workspace already,
+					// since the {@link ExternalLibraryWorkspace#updateState()} was called.
+					toBeUpdated.add(change.location);
+				} else {
+					String msg = "ERROR: The project '" + change.name + "' was " + change.type;
+					msg += " but could not be found at " + change.location + ".\n";
+					msg += "       Hence, the project is not available in the workspace.";
+					logger.logInfo(msg);
+				}
 				break;
-
-			case Removed:
+			}
+			case Removed: {
 				ExternalProject project = externalLibraryWorkspace.getProject(change.name);
 				if (project != null) {
 					// The removed project shadowed an existing project.
 					// Hence, the shadowed project must be build.
-					toBeUpdated.add(change.location);
+					toBeUpdated.add(URIUtils.convert(project));
 				}
 				break;
-
+			}
 			case Install:
 			case Uninstall:
 				// nothing to do
@@ -264,7 +274,7 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 		SortedSet<String> prjNames = new TreeSet<>();
 		for (URI location : projectLocations) {
 			IN4JSProject p = core.findProject(location).orNull();
-			prjNames.add(p.getProjectId());
+			prjNames.add(p.getProjectName());
 		}
 		return prjNames;
 	}

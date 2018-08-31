@@ -13,7 +13,8 @@ Require-Bundle: org.eclipse.n4js.json,
  org.eclipse.xtext.builder,
  org.eclipse.xtend.lib;resolution:=optional,
  org.eclipse.n4js.json.model,
- org.apache.log4j
+ org.apache.log4j,
+ org.eclipse.n4js.utils.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: org.eclipse.n4js.json.ui
 Export-Package: org.eclipse.n4js.json.ui,

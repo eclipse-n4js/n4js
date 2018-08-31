@@ -145,6 +145,7 @@ public class EcmaScriptSubGenerator extends AbstractSubGenerator {
 
 						sourceMapDataInstance.isExplicitSourceRef = useExplicitSourceRef;
 						// sourceMapDataInstance.explicitNavigationToSrc = explicitNavigationToSrc;
+						sourceMapDataInstance.isExplicitSourceRef = false;
 
 						sourceMapDataInstance.n4jsFilePath = relativeNavigationToSrc
 								.resolve(resourceCasted.getURI().lastSegment()).toString();

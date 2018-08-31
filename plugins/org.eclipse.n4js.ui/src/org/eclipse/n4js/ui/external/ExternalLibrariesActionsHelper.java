@@ -10,9 +10,6 @@
  */
 package org.eclipse.n4js.ui.external;
 
-import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.N4_NPM_FOLDER_SUPPLIER;
-import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.repairNpmFolderState;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
@@ -21,8 +18,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
-import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.external.GitCloneSupplier;
+import org.eclipse.n4js.external.LibraryManager;
+import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
+import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.ui.preferences.external.MaintenanceActionsButtonListener;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.io.FileDeleter;
@@ -48,9 +47,12 @@ public class ExternalLibrariesActionsHelper {
 	@Inject
 	private ExternalLibrariesReloadHelper externalLibrariesReloadHelper;
 
+	@Inject
+	private TargetPlatformInstallLocationProvider locationProvider;
+
 	/**
-	 * Performs {@link LibraryManager#cleanCache(IProgressMonitor)}. If that operation fails, status is mergegd
-	 * into provided status.
+	 * Performs {@link LibraryManager#cleanCache(IProgressMonitor)}. If that operation fails, status is mergegd into
+	 * provided status.
 	 *
 	 * @param multistatus
 	 *            the status used accumulate issues
@@ -98,9 +100,10 @@ public class ExternalLibrariesActionsHelper {
 	 *            the status used accumulate issues
 	 */
 	public void maintenanceDeleteNpms(final MultiStatus multistatus) {
-		// get folder
-		File npmFolder = N4_NPM_FOLDER_SUPPLIER.get();
+		// get target platform folder (contains node_modules, package.json, etc.)
+		File npmFolder = locationProvider.getTargetPlatformInstallFolder();
 
+		// delete whole target platform folder
 		if (npmFolder.exists()) {
 			FileDeleter.delete(npmFolder, (IOException ioe) -> multistatus.merge(
 					statusHelper.createError("Exception during deletion of the npm folder.", ioe)));
@@ -108,9 +111,9 @@ public class ExternalLibrariesActionsHelper {
 
 		if (!npmFolder.exists()) {
 			// recreate npm folder
-			if (!repairNpmFolderState()) {
+			if (!locationProvider.repairNpmFolderState()) {
 				multistatus.merge(statusHelper
-						.createError("The npm folder was not recreated correctly."));
+						.createError("The target platform location folder was not recreated correctly."));
 			}
 		} else {// should never happen
 			multistatus
@@ -127,8 +130,8 @@ public class ExternalLibrariesActionsHelper {
 	 * Rebuild of externals is not triggered, hence caller needs to take care of that, e.g. by calling
 	 * {@link #maintenanceUpateState}
 	 */
-	public void installNoUpdate(final Map<String, String> versionedPackages, final MultiStatus multistatus,
-			final IProgressMonitor monitor) {
+	public void installNoUpdate(final Map<String, NPMVersionRequirement> versionedPackages,
+			final MultiStatus multistatus, final IProgressMonitor monitor) {
 		IStatus status = libManager.installNPMs(versionedPackages, monitor);
 		if (!status.isOK())
 			multistatus.merge(status);

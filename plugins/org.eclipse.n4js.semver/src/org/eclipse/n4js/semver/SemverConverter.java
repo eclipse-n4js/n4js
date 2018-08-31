@@ -1,6 +1,7 @@
 package org.eclipse.n4js.semver;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -61,6 +62,9 @@ class SemverConverter {
 	}
 
 	private static List<SimpleVersion> simplifySpecific(SimpleVersion sv) {
+		if (sv == null || sv.getNumber() == null) {
+			return Collections.emptyList();
+		}
 		VersionNumber vn = sv.getNumber();
 		if (vn.getMajor().isWildcard()) {
 			VersionNumberDescriptor vnDescr = new VersionNumberDescriptor(0, 0, 0, null, null);

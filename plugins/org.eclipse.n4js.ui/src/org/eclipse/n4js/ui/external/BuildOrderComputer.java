@@ -24,7 +24,6 @@ import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware;
 import org.eclipse.n4js.ui.external.ComputeProjectOrder.VertexFilter;
 import org.eclipse.n4js.ui.external.ComputeProjectOrder.VertexMapper;
 import org.eclipse.n4js.ui.external.ComputeProjectOrder.VertexOrder;
@@ -62,15 +61,15 @@ public class BuildOrderComputer {
 	}
 
 	static private class FilterUnreqestedOut implements VertexFilter<String> {
-		final private Set<String> requestedProjectIds;
+		final private Set<String> requestedProjectNames;
 
-		FilterUnreqestedOut(String[] requestedProjectIds) {
-			this.requestedProjectIds = new HashSet<>(Arrays.asList(requestedProjectIds));
+		FilterUnreqestedOut(String[] requestedProjectNames) {
+			this.requestedProjectNames = new HashSet<>(Arrays.asList(requestedProjectNames));
 		}
 
 		@Override
 		public boolean matches(String vertex) {
-			boolean filterOut = !requestedProjectIds.contains(vertex);
+			boolean filterOut = !requestedProjectNames.contains(vertex);
 			return filterOut;
 		}
 	}
@@ -178,8 +177,8 @@ public class BuildOrderComputer {
 
 	private Set<N4JSProject> getDependencies(IN4JSProject project) {
 		Set<N4JSProject> prjDependencies = new HashSet<>();
-		ImmutableList<? extends IN4JSSourceContainerAware> deps = project.getAllDirectDependencies();
-		for (IN4JSSourceContainerAware dep : deps) {
+		ImmutableList<? extends IN4JSProject> deps = project.getAllDirectDependencies();
+		for (IN4JSProject dep : deps) {
 			IN4JSProject pDep = core.findProject(dep.getLocation()).orNull();
 
 			boolean isValidDep = true;

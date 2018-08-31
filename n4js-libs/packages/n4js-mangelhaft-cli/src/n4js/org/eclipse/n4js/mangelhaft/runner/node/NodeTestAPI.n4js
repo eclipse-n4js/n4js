@@ -167,7 +167,7 @@ export default public class NodeTestAPI {
             console.log("testing with test catalog:", options.testCatalog);
         }
 
-        // spawn test runner process, set parent of all projects on NODE_PATH:
+        // fork test runner process, set parent of all projects on NODE_PATH:
         let nodePath: Array<string> = [];
         for (const dir of projectDirs) {
             nodePath.push(lib_path.dirname(dir));
@@ -185,10 +185,7 @@ export default public class NodeTestAPI {
         const env: Object+ = Object.assign({}, process.env, {
             NODE_PATH: nodePath.join(lib_path.delimiter)
         });
-        if (options.noDebugLog) {
-            // giving the command line option noLog overrides the DEBUG environment value to disable all logging (if the logger is configured.)
-            env.DEBUG = "-*";
-        }
+
         const n4type = this.n4type;
         // build NodeTestRunner module path to give for n4js command line (per main, i.e. "<module>:<export>" notation),
         // leaving off export will pick default export:
@@ -202,12 +199,19 @@ export default public class NodeTestAPI {
         const args = NodeTestCLI.toCommandLine(options);
         args.unshift(consoleTestRunner.join("/"));
 
+        env.N4JS_RT_test_mode = "1";
+        env.N4JS_RT_keep_eventloop = "1";
+
         (options.define || []).forEach(kv => {
             const [k, v] = kv.split("=");
             env[`N4JS_RT_${k.replace(/-/g, "_")}`] = (v || "");
         });
         if (options.debug) {
-            env.N4JS_RT_debug = "true";
+            env.N4JS_RT_debug = "1";
+        }
+        if (options.noDebugLog) {
+            // giving the command line option noLog overrides the DEBUG environment value to disable all logging (if the logger is configured.)
+            env.DEBUG = "-*";
         }
 
         await new Promise<any, any>((resolve, reject) => {
@@ -236,7 +240,7 @@ export default public class NodeTestAPI {
                 if (code === 0) {
                     resolve(code);
                 } else {
-                    reject(new Error(`TestRun exited with code: ${code}`));
+                    reject(code);
                 }
             });
         });

@@ -8,4 +8,5 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
+export public class A {};
 console.log("I am module A");

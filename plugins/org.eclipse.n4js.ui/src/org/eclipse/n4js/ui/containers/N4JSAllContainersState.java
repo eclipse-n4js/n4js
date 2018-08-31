@@ -36,14 +36,12 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.fileextensions.FileExtensionTypeHelper;
-import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuilder;
 import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
 import org.eclipse.n4js.ui.internal.OwnResourceValidatorAwareValidatingEditorCallback;
 import org.eclipse.n4js.ui.internal.ResourceUIValidatorExtension;
-import org.eclipse.n4js.ui.internal.WorkspaceCacheAccess;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorReference;
@@ -155,8 +153,7 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 	 * Handles the given {@link IResourceDelta} and updates the project state (cache of available projects and project
 	 * descriptions) accordingly.
 	 *
-	 * If so, invalidates the {@link EclipseBasedN4JSWorkspace} cache of project descriptions for the updated projects
-	 * (cf. {@link WorkspaceCacheAccess}).
+	 * If so, invalidates the {@link EclipseBasedN4JSWorkspace} cache of project descriptions for the updated projects.
 	 */
 	private void updateProjectState(IResourceDelta delta) {
 		if (delta.getKind() == IResourceDelta.ADDED || delta.getKind() == IResourceDelta.REMOVED) {
@@ -207,9 +204,7 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 			if (IN4JSProject.PACKAGE_JSON.equals(delta.getFullPath().lastSegment())) {
 				return true;
 			}
-			if (IN4JSArchive.NFAR_FILE_EXTENSION.equals(fileExtension)) {
-				return true;
-			}
+
 			if (delta.getResource() instanceof IProject) {
 				return true;
 			}
@@ -226,7 +221,7 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 			}
 			return false;
 		}
-		if (nfarHasBeenChanged(delta) || packageJSONFileHasBeenChanged(delta)) {
+		if (packageJSONFileHasBeenChanged(delta)) {
 			return true;
 		}
 		return false;
@@ -298,8 +293,8 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 	}
 
 	private boolean isSourceContainerModification(final IResourceDelta delta) {
-		final String fullPath = delta.getFullPath().toString();
-		final URI folderUri = URI.createPlatformResourceURI(fullPath, true);
+		final String fullPathStr = delta.getFullPath().toString();
+		final URI folderUri = URI.createPlatformResourceURI(fullPathStr, true);
 		final IN4JSProject project = core.findProject(folderUri).orNull();
 		if (null != project && project.exists()) {
 			return from(project.getSourceContainers())
@@ -307,16 +302,10 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 					.filter(uri -> uri.isPlatformResource())
 					.transform(uri -> uri.toString())
 					.transform(uri -> uri.replaceFirst(PLATFORM_RESOURCE_SCHEME, ""))
-					.firstMatch(uri -> uri.equals(fullPath))
+					.firstMatch(uri -> uri.equals(fullPathStr))
 					.isPresent();
 		}
 		return false;
-	}
-
-	private boolean nfarHasBeenChanged(IResourceDelta delta) {
-		return delta.getKind() == IResourceDelta.CHANGED
-				&& delta.getResource().getType() == IResource.FILE
-				&& IN4JSArchive.NFAR_FILE_EXTENSION.equalsIgnoreCase(delta.getFullPath().getFileExtension());
 	}
 
 	private boolean packageJSONFileHasBeenChanged(IResourceDelta delta) {

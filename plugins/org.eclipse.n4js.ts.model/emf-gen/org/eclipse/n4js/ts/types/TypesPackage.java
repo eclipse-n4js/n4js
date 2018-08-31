@@ -190,13 +190,13 @@ public interface TypesPackage extends EPackage {
 	int TMODULE__QUALIFIED_NAME = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 1;
 
 	/**
-	 * The feature id for the '<em><b>Project Id</b></em>' attribute.
+	 * The feature id for the '<em><b>Project Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__PROJECT_ID = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 2;
+	int TMODULE__PROJECT_NAME = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Vendor ID</b></em>' attribute.
@@ -12706,15 +12706,15 @@ public interface TypesPackage extends EPackage {
 	EAttribute getTModule_QualifiedName();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TModule#getProjectId <em>Project Id</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TModule#getProjectName <em>Project Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Project Id</em>'.
-	 * @see org.eclipse.n4js.ts.types.TModule#getProjectId()
+	 * @return the meta object for the attribute '<em>Project Name</em>'.
+	 * @see org.eclipse.n4js.ts.types.TModule#getProjectName()
 	 * @see #getTModule()
 	 * @generated
 	 */
-	EAttribute getTModule_ProjectId();
+	EAttribute getTModule_ProjectName();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TModule#getVendorID <em>Vendor ID</em>}'.
@@ -15674,12 +15674,12 @@ public interface TypesPackage extends EPackage {
 		EAttribute TMODULE__QUALIFIED_NAME = eINSTANCE.getTModule_QualifiedName();
 
 		/**
-		 * The meta object literal for the '<em><b>Project Id</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Project Name</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute TMODULE__PROJECT_ID = eINSTANCE.getTModule_ProjectId();
+		EAttribute TMODULE__PROJECT_NAME = eINSTANCE.getTModule_ProjectName();
 
 		/**
 		 * The meta object literal for the '<em><b>Vendor ID</b></em>' attribute feature.

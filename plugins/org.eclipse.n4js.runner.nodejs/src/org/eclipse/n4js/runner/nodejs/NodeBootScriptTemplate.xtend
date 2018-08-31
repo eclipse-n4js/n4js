@@ -10,7 +10,10 @@
  */
 package org.eclipse.n4js.runner.nodejs
 
+import java.nio.file.Path
 import java.util.List
+import java.util.Map
+import java.util.Set
 
 /**
  * Template for generating N4JS ELF code for node, see N4JSDesign document, chap. 17 : Execution, section 17.2 N4JS Execution And
@@ -35,15 +38,18 @@ class NodeBootScriptTemplate {
 	 * {@code fileToInvoke} is {@code ./run.js}
 	 */
 	def static String getRunScriptCore(String pathNodeModules, String executionData, List<String> initModules,
-		String fileToInvoke, List<Pair<String, String>> path2names) '''
-		«IF !path2names.isNullOrEmpty»
+		String fileToInvoke, Set<String> scopeNames, Map<Path, String> path2names) '''
+		«IF !path2names.empty»
 			//link dependencies
 			const path = require('path')
 			const fs = require('fs')
 			const os = require("os");
-			«FOR path2name : path2names SEPARATOR "\n"»
+			«FOR scopeName : scopeNames SEPARATOR "\n"»
+				fs.mkdirSync('«pathNodeModules»/«scopeName»');
+			«ENDFOR»
+			«FOR path2name : path2names.entrySet SEPARATOR "\n"»
 				if(!fs.existsSync('«pathNodeModules»/«path2name.value»'))
-					fs.symlinkSync('«path2name.key»', '«pathNodeModules»/«path2name.value»', 'dir');
+					fs.symlinkSync('«path2name.key.toString»', '«pathNodeModules»/«path2name.value»', 'dir');
 			«ENDFOR»
 		«ELSE»
 			//no dependencies to link

@@ -21,7 +21,7 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.n4js.json.JSON.JSONPackage;
-import org.eclipse.n4js.n4mf.ProjectType;
+import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.resource.packagejson.PackageJsonResourceDescriptionExtension;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -43,7 +43,7 @@ public class N4JSTestedProjectWizardPage extends WizardPage {
 	 * Create a new tested project wizard page.
 	 *
 	 * @param projectInfo
-	 *            The N4MFProjectInfo to use as model
+	 *            The N4JSProjectInfo to use as model
 	 * @param resourceDescriptions
 	 *            A {@link IResourceDescriptions} implementation.
 	 */
@@ -98,7 +98,7 @@ public class N4JSTestedProjectWizardPage extends WizardPage {
 					return type != null && !ProjectType.TEST.equals(type);
 				})
 				.filter(desc -> !isExternal(desc.getEObjectURI()))
-				.map(d -> PackageJsonResourceDescriptionExtension.getProjectId(d))
+				.map(d -> PackageJsonResourceDescriptionExtension.getProjectName(d))
 				.sorted()
 				.toArray(String[]::new);
 

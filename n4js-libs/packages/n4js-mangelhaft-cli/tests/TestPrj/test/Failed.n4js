@@ -14,6 +14,6 @@ import express from "express"
 export public class Failed {
     @Test
     public failed(): void {
-        Assert.equal(typeof express, "object", "on purpose");
+        //Assert.equal(typeof express, "object", "on purpose");
     }
 }

@@ -14,7 +14,7 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +27,8 @@ import java.util.stream.Collectors;
 class TimedDataCollector extends DataCollector {
 
 	private final DataCollector parent;
-	private final Map<String, DataCollector> children = new HashMap<>();
+	// maintains insertion order
+	private final Map<String, DataCollector> children = new LinkedHashMap<>();
 
 	private static final TimedMeasurement NULL_MEASURMENT = new TimedMeasurement("NOOP", TimedDataCollector::noop);
 	private boolean paused = true;
@@ -60,7 +61,8 @@ class TimedDataCollector extends DataCollector {
 		return (TimedMeasurement) getMeasurement(name);
 	}
 
-	private void consume(TimedMeasurement measurement) {
+	/** This method must be synchronized to protect race conditions when calling data.add */
+	synchronized private void consume(TimedMeasurement measurement) {
 		TimedMeasurement timed = measurement;
 		data.add(new DataPoint(timed.name, timed.elapsed(NANOSECONDS)));
 	}

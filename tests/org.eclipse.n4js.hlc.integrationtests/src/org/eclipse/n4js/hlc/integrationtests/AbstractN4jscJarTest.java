@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Map;
 
 import org.eclipse.n4js.test.helper.hlc.N4CliHelper;
 import org.eclipse.n4js.utils.io.FileCopier;
@@ -143,15 +144,25 @@ public abstract class AbstractN4jscJarTest {
 	 * workspace directory. This can be used to change the test data by removing selected projects at the beginning of a
 	 * test method.
 	 */
-	protected void deleteProject(String projectId) throws IOException {
+	protected void deleteProject(String projectName) throws IOException {
 		File wsp = new File(TARGET, WORKSPACE_FOLDER);
-		File project = new File(wsp, projectId);
+		File project = new File(wsp, projectName);
 		FileDeleter.delete(project.toPath());
+	}
+
+	/**
+	 * See {@link #createAndStartProcess(Map, String...)} but uses an empty map as set of user-defined system
+	 * environment variables.
+	 */
+	protected Process createAndStartProcess(String... args) throws IOException {
+		return this.createAndStartProcess(Collections.emptyMap(), args);
 	}
 
 	/**
 	 * Create & start java-Process calling n4jsc.jar jar with args from {@value #TARGET}-folder.
 	 *
+	 * @param environment
+	 *            a map of system environment variables to set in the execution environment
 	 * @param args
 	 *            arguments to pass after jar - call
 	 *
@@ -159,12 +170,13 @@ public abstract class AbstractN4jscJarTest {
 	 * @throws IOException
 	 *             if errored.
 	 */
-	protected Process createAndStartProcess(String... args) throws IOException {
+	protected Process createAndStartProcess(Map<String, String> environment, String... args) throws IOException {
 		ArrayList<String> args2 = new ArrayList<>();
 		// Collections.addAll(args2, "java", "-jar", TARGET + "/" + N4JSC_JAR);
 		Collections.addAll(args2, "java", "-jar", N4JSC_JAR);
 		Collections.addAll(args2, args);
-		return N4CliHelper.createAndStartProcessIntern(outputLogFile, TARGET, args2.toArray(new String[args2.size()]));
+		return N4CliHelper.createAndStartProcessIntern(outputLogFile, TARGET, environment,
+				args2.toArray(new String[args2.size()]));
 	}
 
 	/**

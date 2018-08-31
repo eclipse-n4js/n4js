@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -47,13 +48,15 @@ import org.eclipse.n4js.binaries.IllegalBinaryStateException;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
 import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
-import org.eclipse.n4js.n4mf.ProjectDependency;
-import org.eclipse.n4js.n4mf.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectDependency;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.SemverMatcher;
+import org.eclipse.n4js.semver.SemverUtils;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
+import org.eclipse.n4js.semver.Semver.VersionRangeSetRequirement;
 import org.eclipse.n4js.semver.model.SemverSerializer;
 import org.eclipse.n4js.smith.ClosableMeasurement;
 import org.eclipse.n4js.smith.DataCollector;
@@ -76,9 +79,9 @@ import com.google.inject.Singleton;
 public class LibraryManager {
 	private static final Logger LOGGER = Logger.getLogger(LibraryManager.class);
 
-	private static String NO_VERSION = "";
+	private static final NPMVersionRequirement NO_VERSION_REQUIREMENT = SemverUtils.createEmptyVersionRequirement();
 
-	private static DataCollector dcLibMngr = DataCollectors.INSTANCE.getOrCreateDataCollector("Library Manager");
+	private static final DataCollector dcLibMngr = DataCollectors.INSTANCE.getOrCreateDataCollector("Library Manager");
 
 	@Inject
 	private NpmPackageToProjectAdapter npmPackageToProjectAdapter;
@@ -148,7 +151,26 @@ public class LibraryManager {
 	 * @return a status representing the outcome of the install process.
 	 */
 	public IStatus installNPM(String packageName, IProgressMonitor monitor) {
-		return installNPM(packageName, NO_VERSION, monitor);
+		return installNPM(packageName, NO_VERSION_REQUIREMENT, monitor);
+	}
+
+	/**
+	 * Installs the given npm package in a blocking fashion.
+	 *
+	 * @param packageName
+	 *            the name of the package that has to be installed via package manager.
+	 * @param monitor
+	 *            the monitor for the blocking install process.
+	 * @return a status representing the outcome of the install process.
+	 * @throws IllegalArgumentException
+	 *             if the given version string cannot be parsed to an {@link NPMVersionRequirement}.
+	 */
+	public IStatus installNPM(String packageName, String packageVersionStr, IProgressMonitor monitor) {
+		VersionRangeSetRequirement packageVersion = semverHelper.parseVersionRangeSet(packageVersionStr);
+		if (packageVersion == null) {
+			throw new IllegalArgumentException("unable to parse version requirement: " + packageVersionStr);
+		}
+		return installNPM(packageName, packageVersion, monitor);
 	}
 
 	/**
@@ -160,7 +182,7 @@ public class LibraryManager {
 	 *            the monitor for the blocking install process.
 	 * @return a status representing the outcome of the install process.
 	 */
-	public IStatus installNPM(String packageName, String packageVersion, IProgressMonitor monitor) {
+	public IStatus installNPM(String packageName, NPMVersionRequirement packageVersion, IProgressMonitor monitor) {
 		return installNPMs(Collections.singletonMap(packageName, packageVersion), monitor);
 	}
 
@@ -178,8 +200,8 @@ public class LibraryManager {
 	 * @return a status representing the outcome of the install process.
 	 */
 	public IStatus installNPMs(Collection<String> unversionedPackages, IProgressMonitor monitor) {
-		Map<String, String> versionedPackages = unversionedPackages.stream()
-				.collect(Collectors.toMap((String name) -> name, (String name) -> NO_VERSION));
+		Map<String, NPMVersionRequirement> versionedPackages = unversionedPackages.stream()
+				.collect(Collectors.toMap((String name) -> name, (String name) -> NO_VERSION_REQUIREMENT));
 		return installNPMs(versionedPackages, monitor);
 	}
 
@@ -196,12 +218,14 @@ public class LibraryManager {
 	 *            the monitor for the blocking install process.
 	 * @return a status representing the outcome of the install process.
 	 */
-	public IStatus installNPMs(Map<String, String> versionedNPMs, IProgressMonitor monitor) {
+	public IStatus installNPMs(Map<String, NPMVersionRequirement> versionedNPMs, IProgressMonitor monitor) {
 		return runWithWorkspaceLock(() -> installNPMsInternal(versionedNPMs, monitor));
 	}
 
-	private IStatus installNPMsInternal(Map<String, String> versionedNPMs, IProgressMonitor monitor) {
-		String msg = "Installing NPM(s): " + String.join(", ", versionedNPMs.keySet());
+	private IStatus installNPMsInternal(Map<String, NPMVersionRequirement> versionedNPMs, IProgressMonitor monitor) {
+		String msg = "Installing NPM(s): " + versionedNPMs.entrySet().stream()
+				.map(e -> npmWithVersionAsString(e.getKey(), e.getValue()))
+				.collect(Collectors.joining(", "));
 		MultiStatus status = statusHelper.createMultiStatus(msg);
 		logger.logInfo(msg);
 
@@ -212,7 +236,7 @@ public class LibraryManager {
 		}
 
 		try (ClosableMeasurement mes = dcLibMngr.getClosableMeasurement("installDependenciesInternal");) {
-			Map<String, String> npmsToInstall = versionedNPMs;
+			Map<String, NPMVersionRequirement> npmsToInstall = new LinkedHashMap<>(versionedNPMs);
 			Set<LibraryChange> actualChanges = new HashSet<>();
 			do {
 				List<LibraryChange> deltaChanges = installUninstallNPMs(monitor, status, npmsToInstall, emptyList());
@@ -221,7 +245,7 @@ public class LibraryManager {
 
 				// obtain list of all available project IDs (external and workspace)
 				Set<String> allProjectsIds = StreamSupport.stream(n4jsCore.findAllProjects().spliterator(), false)
-						.map(p -> p.getProjectId()).collect(Collectors.toSet());
+						.map(p -> p.getProjectName()).collect(Collectors.toSet());
 
 				// Note: need to make sure the projects in npmsToInstall are not in the workspace yet; method
 				// #installUninstallNPMs() (which will be invoked in a moment) is doing this as well, but that method
@@ -244,6 +268,13 @@ public class LibraryManager {
 		}
 	}
 
+	private static String npmWithVersionAsString(String packageName, NPMVersionRequirement versionRequirement) {
+		if (versionRequirement == null || SemverUtils.isEmptyVersionRequirement(versionRequirement)) {
+			return packageName;
+		}
+		return packageName + "@" + versionRequirement;
+	}
+
 	/**
 	 * This method returns all transitive dependencies that are implied by the given list of {@link LibraryChange}s.
 	 *
@@ -252,8 +283,8 @@ public class LibraryManager {
 	 * <p>
 	 * GH-862: This must be revisited when solving GH-821
 	 */
-	private Map<String, String> getDependenciesOfNPMs(List<LibraryChange> actualChanges) {
-		Map<String, String> dependencies = new HashMap<>();
+	private Map<String, NPMVersionRequirement> getDependenciesOfNPMs(List<LibraryChange> actualChanges) {
+		Map<String, NPMVersionRequirement> dependencies = new HashMap<>();
 		for (LibraryChange libChange : actualChanges) {
 			if (libChange.type == LibraryChangeType.Added) {
 				final org.eclipse.emf.common.util.URI npmLocation = libChange.location;
@@ -304,19 +335,25 @@ public class LibraryManager {
 	 *            The map to store the collected dependencies in. Stores a mapping of the dependency name to the version
 	 *            constraint.
 	 */
-	private void collectDependencies(ProjectDescription description, Map<String, String> dependencies) {
+	private void collectDependencies(ProjectDescription description, Map<String, NPMVersionRequirement> dependencies) {
 		for (ProjectDependency pDep : description.getProjectDependencies()) {
-			String name = pDep.getProjectId();
-			String version = NO_VERSION;
-			if (pDep.getVersionConstraint() != null) {
-				version = SemverSerializer.serialize(pDep.getVersionConstraint());
+			String name = pDep.getProjectName();
+			NPMVersionRequirement version = NO_VERSION_REQUIREMENT;
+
+			// remove this in GH-824 when switched to yarn workspaces and scopes are used for type definitions
+			if (name.endsWith("-n4jsd")) {
+				continue;
+			}
+
+			if (pDep.getVersionRequirement() != null) {
+				version = pDep.getVersionRequirement();
 			}
 			dependencies.put(name, version);
 		}
 	}
 
 	private List<LibraryChange> installUninstallNPMs(IProgressMonitor monitor, MultiStatus status,
-			Map<String, String> installRequested, Collection<String> removeRequested) {
+			Map<String, NPMVersionRequirement> installRequested, Collection<String> removeRequested) {
 
 		monitor.setTaskName("Installing packages... [step 1 of 4]");
 		SubMonitor subMonitor = SubMonitor.convert(monitor, 3);
@@ -339,19 +376,19 @@ public class LibraryManager {
 		return actualChanges;
 	}
 
-	private Collection<LibraryChange> getRequestedChanges(Map<String, String> installRequested,
+	private Collection<LibraryChange> getRequestedChanges(Map<String, NPMVersionRequirement> installRequested,
 			Collection<String> removeRequested) {
 
 		Map<String, Pair<org.eclipse.emf.common.util.URI, String>> installedNpms = indexSynchronizer.findNpmsInFolder();
 		Collection<LibraryChange> requestedChanges = new LinkedList<>();
 
-		for (Map.Entry<String, String> reqestedNpm : installRequested.entrySet()) {
+		for (Map.Entry<String, NPMVersionRequirement> reqestedNpm : installRequested.entrySet()) {
 			String name = reqestedNpm.getKey();
-			String requestedVersionString = reqestedNpm.getValue();
+			NPMVersionRequirement requestedVersion = reqestedNpm.getValue();
 
 			if (installedNpms.containsKey(name)) {
 				String installedVersionString = Strings.emptyIfNull(installedNpms.get(name).getValue());
-				if (installedMatchesRequestedVersion(installedVersionString, requestedVersionString)) {
+				if (installedMatchesRequestedVersion(installedVersionString, requestedVersion)) {
 					// if a matching version is installed, do not reinstall
 					continue;
 				}
@@ -359,9 +396,11 @@ public class LibraryManager {
 				// wrong version installed -> update (uninstall, then install)
 				org.eclipse.emf.common.util.URI location = installedNpms.get(name).getKey();
 				requestedChanges.add(new LibraryChange(Uninstall, location, name, installedVersionString));
-				requestedChanges.add(new LibraryChange(Install, location, name, requestedVersionString));
+				String requestedVersionStr = SemverSerializer.serialize(requestedVersion);
+				requestedChanges.add(new LibraryChange(Install, location, name, requestedVersionStr));
 			} else {
-				requestedChanges.add(new LibraryChange(Install, null, name, requestedVersionString));
+				String requestedVersionStr = SemverSerializer.serialize(requestedVersion);
+				requestedChanges.add(new LibraryChange(Install, null, name, requestedVersionStr));
 			}
 		}
 
@@ -382,22 +421,15 @@ public class LibraryManager {
 	 *
 	 * @param installedVersionString
 	 *            The version of the already installed package.
-	 * @param requestedVersionRequirementString
+	 * @param requestedVersionRequirement
 	 *            The requested version requirement in npm-semver format of the same package.
 	 */
-	private boolean installedMatchesRequestedVersion(String installedVersionString,
-			String requestedVersionRequirementString) {
+	public boolean installedMatchesRequestedVersion(String installedVersionString,
+			NPMVersionRequirement requestedVersionRequirement) {
 
-		NPMVersionRequirement requestedVersion = semverHelper.parse(requestedVersionRequirementString);
 		VersionNumber installedVersion = semverHelper.parseVersionNumber(installedVersionString);
 
-		boolean canComputeMatch = SemverMatcher.canComputeMatch(installedVersion, requestedVersion);
-		if (!canComputeMatch) {
-			return false;
-		}
-
-		boolean versionsMatch = SemverMatcher.matches(installedVersion, requestedVersion);
-		return versionsMatch;
+		return SemverMatcher.matchesStrict(installedVersion, requestedVersionRequirement);
 	}
 
 	private Collection<File> adaptNPMPackages(IProgressMonitor monitor, MultiStatus status,
@@ -405,13 +437,17 @@ public class LibraryManager {
 
 		monitor.setTaskName("Adapting npm package structure to N4JS project structure... [step 3 of 4]");
 		List<String> installedNpmNames = new LinkedList<>();
+		List<String> uninstalledNpmNames = new LinkedList<>();
 		for (LibraryChange change : changes) {
 			if (change.type == LibraryChangeType.Added) {
 				installedNpmNames.add(change.name);
 			}
+			if (change.type == LibraryChangeType.Removed) {
+				uninstalledNpmNames.add(change.name);
+			}
 		}
 		org.eclipse.xtext.util.Pair<IStatus, Collection<File>> result;
-		result = npmPackageToProjectAdapter.adaptPackages(installedNpmNames);
+		result = npmPackageToProjectAdapter.adaptPackages(installedNpmNames, uninstalledNpmNames);
 
 		IStatus adaptionStatus = result.getFirst();
 

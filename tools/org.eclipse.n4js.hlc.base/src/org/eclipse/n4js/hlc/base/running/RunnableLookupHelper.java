@@ -67,12 +67,12 @@ public class RunnableLookupHelper {
 		}
 
 		// fuzzy match
-		logger.warn("Could not find runnable by ID: " + runnableID + ", switching to fuzzy search.");
+		logger.info("Could not find runnable by ID: " + runnableID + ", switching to fuzzy search.");
 		final String lowerRunner = runnableID.toLowerCase();
 		final List<T> matchingRDs = descriptors.values().stream()
 				.filter(descriptor -> {
 					final String lowerID = descriptor.getId().toLowerCase();
-					return lowerID == runnableID || lowerID.endsWith("." + lowerRunner);
+					return lowerID.equals(runnableID) || lowerID.endsWith("." + lowerRunner);
 				})
 				.collect(Collectors.toList());
 		return matchingRDs;

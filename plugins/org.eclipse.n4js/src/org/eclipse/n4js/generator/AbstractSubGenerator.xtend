@@ -20,7 +20,7 @@ import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.generator.IGeneratorMarkerSupport.Severity
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.n4mf.ProjectType
+import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.resource.N4JSCache
@@ -213,7 +213,7 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 		val project = n4jsCore.findProject(n4jsSourceURI).orNull();
 		if (project !== null) {
 			val projectType = project.getProjectType();
-			if (projectType == ProjectType.VALIDATION) {
+			if (projectType == ProjectType.VALIDATION || projectType == ProjectType.DEFINITION) {
 				return false;
 			}
 		}
@@ -349,7 +349,7 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 	 * TODO IDE-1487 currently there is no notion of default compiler. We fake call to the ES5 sub generator.
 	 */
 	def final static String calculateProjectBasedOutputDirectory(IN4JSProject project) {
-		return project.projectId + "/" + project.outputPath
+		return project.projectName + "/" + project.outputPath
 	}
 
 	/** Access to compiler ID */

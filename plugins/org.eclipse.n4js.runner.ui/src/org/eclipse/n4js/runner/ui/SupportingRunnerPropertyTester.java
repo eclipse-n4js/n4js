@@ -24,12 +24,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.expressions.PropertyTester;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.part.FileEditorInput;
-
-import com.google.common.base.Optional;
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.runner.RuntimeEnvironmentsHelper;
@@ -40,6 +34,11 @@ import org.eclipse.n4js.runner.extension.RunnerRegistry;
 import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
 import org.eclipse.n4js.ui.handler.GeneratedJsFileLocator;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
+import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.part.FileEditorInput;
+
+import com.google.common.base.Optional;
+import com.google.inject.Inject;
 
 /**
  * Check if given receiver is supported by registered runners.
@@ -139,7 +138,7 @@ public class SupportingRunnerPropertyTester extends PropertyTester {
 
 		// TODO IDE-1393 connect testers with extension point
 		if (!compatibleRuntimeEnvironmets.isEmpty() &&
-				"RE_NodeJS_Mangelhaft".equals(compatibleRuntimeEnvironmets.get(0).getProjectId())) {
+				"RE_NodeJS_Mangelhaft".equals(compatibleRuntimeEnvironmets.get(0).getProjectName())) {
 			return true;
 		}
 

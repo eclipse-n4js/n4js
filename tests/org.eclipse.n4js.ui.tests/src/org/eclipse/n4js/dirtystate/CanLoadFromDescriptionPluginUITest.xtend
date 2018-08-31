@@ -14,20 +14,19 @@ import org.eclipse.core.resources.IFile
 import org.eclipse.core.resources.IFolder
 import org.eclipse.core.resources.IProject
 import org.eclipse.core.resources.ResourcesPlugin
+import org.eclipse.core.runtime.CoreException
 import org.eclipse.core.runtime.ICoreRunnable
 import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.emf.common.util.URI
-import org.junit.Ignore
-import org.junit.Test
 import org.eclipse.n4js.N4JSGlobals
+import org.eclipse.n4js.tests.util.EclipseUIUtils
+import org.eclipse.xtext.util.StringInputStream
+import org.junit.Test
 
 import static org.junit.Assert.*
-import org.eclipse.n4js.tests.util.EclipseUIUtils
 
 /**
- * 
  */
-@Ignore("IDE-2896") // FIXME IDE-2896 re-enable this test!
 class CanLoadFromDescriptionPluginUITest extends AbstractCanLoadFromDescriptionTest {
 	/*
 	 * A1 -> B1 -> C -> D
@@ -156,6 +155,13 @@ class CanLoadFromDescriptionPluginUITest extends AbstractCanLoadFromDescriptionT
 		assertMarkers("file B1 should have no errors", fileB1, 0)
 		assertMarkers("file B2 should have no errors", fileB2, 0)
 		assertMarkers("file C should have no errors", fileC, 0)
+	}
+	
+	/* Same as the super impl but without the super expensive waitForAutobuild */	
+	override protected IFile doCreateTestFile(IFolder folder, String fullName, CharSequence content) throws CoreException {
+		return folder.getFile(fullName) => [
+			create(new StringInputStream(content.toString()), true, new NullProgressMonitor())
+		]
 	}
 
 	@Test

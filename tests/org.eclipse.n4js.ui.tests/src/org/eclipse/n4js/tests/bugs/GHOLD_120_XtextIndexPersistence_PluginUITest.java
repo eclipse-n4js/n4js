@@ -127,7 +127,7 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 
 		// List of expected external library warnings originating from shipped code projects:
 		//
-		// line 0: External library warning: The use of the any type in a union type is discouraged.
+		// line 0: External library warning: public is reserved identifier.
 		// line 0: External library warning: The use of the any type in a union type is discouraged.
 		// line 0: External library warning: Neither constructor{? extends N4Object} is a subtype of type{T} nor type{T}
 		// is a subtype of constructor{? extends N4Object}. The expression will always evaluate to false.

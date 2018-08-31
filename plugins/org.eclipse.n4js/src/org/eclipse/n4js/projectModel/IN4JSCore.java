@@ -15,7 +15,7 @@ import java.util.Map;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.n4js.n4mf.ModuleFilter;
+import org.eclipse.n4js.projectDescription.ModuleFilter;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;

@@ -32,8 +32,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSLanguageConstants;
-import org.eclipse.n4js.n4mf.ProjectType;
+import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.xtext.ui.util.ProjectFactory;
@@ -181,8 +182,7 @@ public class N4JSProjectCreator extends AbstractProjectCreator {
 		}
 
 		// create files
-
-		String safeProjectName = projectName.replaceAll("\\.", "_").replaceAll("-", "_").trim();
+		final String derivedProjectNameIdentifier = deriveN4JSIdentifierFromProjectName(projectName);
 		Charset charset = getWorkspaceCharsetOrUtf8();
 
 		// Path-Content map of the files to create
@@ -190,14 +190,15 @@ public class N4JSProjectCreator extends AbstractProjectCreator {
 
 		// For test projects create a test project greeter if wanted
 		if (ProjectType.TEST.equals(pi.getProjectType()) && pi.getCreateGreeterFile()) {
-			pathContentMap.put(modelFolderName + "/" + "Test_" + safeProjectName + ".n4js",
-					N4JSNewProjectFileTemplates.getSourceFileWithTestGreeter(safeProjectName));
+			pathContentMap.put(modelFolderName + "/" + "Test_" + derivedProjectNameIdentifier + ".n4js",
+					N4JSNewProjectFileTemplates.getSourceFileWithTestGreeter(derivedProjectNameIdentifier));
 		}
 
 		// For other projects create the default greeter file
 		if (!ProjectType.TEST.equals(pi.getProjectType()) && pi.getCreateGreeterFile()) {
-			pathContentMap.put(modelFolderName + "/" + "GreeterModule_" + safeProjectName + ".n4js",
-					N4JSNewProjectFileTemplates.getSourceFileWithGreeterClass(projectName, safeProjectName));
+			pathContentMap.put(modelFolderName + "/" + "GreeterModule_" + derivedProjectNameIdentifier + ".n4js",
+					N4JSNewProjectFileTemplates.getSourceFileWithGreeterClass(projectName,
+							derivedProjectNameIdentifier));
 		}
 
 		// create initial files
@@ -233,6 +234,20 @@ public class N4JSProjectCreator extends AbstractProjectCreator {
 		createIfNotExists(project, IN4JSProject.PACKAGE_JSON, projectDescriptionContent, charset, monitor);
 
 		project.refreshLocal(DEPTH_INFINITE, monitor);
+	}
+
+	/**
+	 * Derives a new N4JS (sub-)identifier from the given Eclipse N4JS project name.
+	 *
+	 * Makes sure the returned identifier does not include any characters that are not allowed in N4JS identifiers.
+	 *
+	 * Note that this method does not provide a bijective mapping between project names and N4JS identifier (e.g. scope
+	 * name are not considered).
+	 */
+	private String deriveN4JSIdentifierFromProjectName(String projectName) {
+		final String n4jsProjectName = ProjectDescriptionUtils.convertEclipseProjectNameToN4JSProjectName(projectName);
+		final String plainProjectName = ProjectDescriptionUtils.getPlainProjectName(n4jsProjectName);
+		return plainProjectName.replaceAll("\\.", "_").replaceAll("-", "_").trim();
 	}
 
 	/**

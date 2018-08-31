@@ -19,11 +19,9 @@ import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.eclipse.jface.databinding.viewers.ViewersObservables.observeSingleSelection;
 import static org.eclipse.jface.layout.GridDataFactory.fillDefaults;
-import static org.eclipse.n4js.n4mf.ProjectType.API;
-import static org.eclipse.n4js.n4mf.ProjectType.LIBRARY;
-import static org.eclipse.n4js.n4mf.ProjectType.TEST;
-import static org.eclipse.n4js.resource.packagejson.PackageJsonResourceDescriptionExtension.getProjectId;
-import static org.eclipse.n4js.resource.packagejson.PackageJsonResourceDescriptionExtension.getProjectType;
+import static org.eclipse.n4js.projectDescription.ProjectType.API;
+import static org.eclipse.n4js.projectDescription.ProjectType.LIBRARY;
+import static org.eclipse.n4js.projectDescription.ProjectType.TEST;
 import static org.eclipse.n4js.ui.wizard.project.N4JSProjectInfo.IMPLEMENTATION_ID_PROP_NAME;
 import static org.eclipse.n4js.ui.wizard.project.N4JSProjectInfo.IMPLEMENTED_PROJECTS_PROP_NAME;
 import static org.eclipse.n4js.ui.wizard.project.N4JSProjectInfo.PROJECT_TYPE_PROP_NAME;
@@ -44,6 +42,7 @@ import java.util.regex.Pattern;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.BeanProperties;
 import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
@@ -58,9 +57,11 @@ import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.n4js.json.JSON.JSONPackage;
-import org.eclipse.n4js.n4mf.ProjectType;
+import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.resource.packagejson.PackageJsonResourceDescriptionExtension;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.layout.GridData;
@@ -71,7 +72,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
+import org.eclipse.ui.dialogs.ExtensibleWizardNewProjectCreationPage;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 
 import com.google.inject.Injector;
@@ -79,7 +80,7 @@ import com.google.inject.Injector;
 /**
  * Wizard page for configuring a new N4JS project.
  */
-public class N4JSNewProjectWizardCreationPage extends WizardNewProjectCreationPage {
+public class N4JSNewProjectWizardCreationPage extends ExtensibleWizardNewProjectCreationPage {
 
 	private final N4JSProjectInfo projectInfo;
 
@@ -166,6 +167,35 @@ public class N4JSNewProjectWizardCreationPage extends WizardNewProjectCreationPa
 		setControl(control);
 	}
 
+	@Override
+	public String getProjectName() {
+		return ProjectDescriptionUtils.getPlainProjectName(super.getProjectName());
+	}
+
+	@Override
+	public IProject getProjectHandle() {
+		// make sure the validated project handle considers the eclipse representation
+		// of scoped projects
+		final String eclipseProjectName = ProjectDescriptionUtils
+				.convertN4JSProjectNameToEclipseProjectName(getProjectName());
+		return ResourcesPlugin.getWorkspace().getRoot().getProject(
+				eclipseProjectName);
+	}
+
+	/**
+	 * Returns the full project name including the scope (e.g. {@code @scope/*}) prefix.
+	 */
+	protected String getProjectNameWithScope() {
+		return super.getProjectName();
+	}
+
+	@Override
+	@SuppressWarnings("restriction")
+	protected void setLocationForSelection() {
+		// use scoped project name for project location
+		locationArea.updateProjectName(getProjectNameWithScope());
+	}
+
 	@SuppressWarnings("unchecked")
 	private void createVendorIdControls(DataBindingContext dbc, Composite parent) {
 		final Composite composite = new Composite(parent, SWT.NULL);
@@ -226,7 +256,7 @@ public class N4JSNewProjectWizardCreationPage extends WizardNewProjectCreationPa
 		final ListViewer apiViewer = new ListViewer(libraryProjectOptionsGroup, BORDER | MULTI);
 		apiViewer.getControl().setLayoutData(fillDefaults().align(FILL, FILL).grab(true, true).span(1, 1).create());
 		apiViewer.setContentProvider(ArrayContentProvider.getInstance());
-		apiViewer.setInput(getAvailableApiProjectIds());
+		apiViewer.setInput(getAvailableApiProjectNames());
 
 		initApiViewerBinding(dbc, apiViewer);
 		initImplementationIdBinding(dbc, implementationIdText);
@@ -271,67 +301,122 @@ public class N4JSNewProjectWizardCreationPage extends WizardNewProjectCreationPa
 
 	@Override
 	protected boolean validatePage() {
-		boolean valid = super.validatePage(); // run default validation
-		valid = (valid && validateIsExistingProjectPath()); // check if existing project
+		final boolean valid = validateProjectNameNonEmpty()
+				&& super.validatePage()
+				&& validateIsExistingProjectPath()
+				&& validateProjectName()
+				&& validateVendorId()
+				&& validateImplementationId();
 
 		if (valid) {
-			String errorMsg = null;
-			final String projectName = getProjectName();
-			final String vendorId = projectInfo.getVendorId();
-
-			if (LIBRARY.equals(projectInfo.getProjectType())) {
-
-				final String implementationId = projectInfo.getImplementationId();
-
-				// Implementation ID is optional
-				if (!isNullOrEmpty(implementationId)) {
-
-					final List<String> implementedApis = projectInfo.getImplementedProjects();
-					if (null == implementedApis || implementedApis.isEmpty()) {
-						errorMsg = "One or more API project should be selected for implementation when the implementation ID is specified.";
-					}
-
-					if (BREAKING_WHITESPACE.matchesAnyOf(implementationId)) {
-						errorMsg = "Implementation ID should not contain any whitespace characters.";
-					}
-
-					final char leadincChar = implementationId.charAt(0);
-					if (!is('_').or(JAVA_LETTER).matches(leadincChar)) {
-						errorMsg = "Implementation ID should start either an upper or a lower case character "
-								+ "from the Latin alphabet or with the underscore character.";
-					}
-				}
-			}
-
-			if (!VENDOR_ID_PATTERN.matcher(vendorId).matches()) {
-				errorMsg = "Invalid vendor id.";
-			}
-			if (isNullOrEmpty(vendorId)) {
-				errorMsg = "Vendor id must not be empty.";
-			}
-
-			if (isNullOrEmpty(projectName)) {
-				errorMsg = "Project name should be specified.";
-			}
-
-			if (BREAKING_WHITESPACE.matchesAnyOf(projectName)) {
-				errorMsg = "Project name should not contain any whitespace characters.";
-			}
-
-			final char leadincChar = projectName.charAt(0);
-			if (!is('_').or(JAVA_LETTER).matches(leadincChar)) {
-				errorMsg = "Project name should start either an upper or a lower case character "
-						+ "from the Latin alphabet or with the underscore character.";
-			}
-
-			setErrorMessage(errorMsg);
-			if (null == errorMsg) {
-				updateModel();
-			}
-			return null == errorMsg;
+			// clear error messages
+			setErrorMessage(null);
+			// update model only if validation passed successfully
+			updateModel();
 		}
 
 		return valid;
+	}
+
+	/** Returns {@code true} iff the specified project name is not considered empty. */
+	private boolean validateProjectNameNonEmpty() {
+		final String fullProjectName = getProjectNameWithScope();
+		final String scopeName = ProjectDescriptionUtils.getScopeName(fullProjectName);
+		final String plainProjectName = ProjectDescriptionUtils.getPlainProjectName(fullProjectName);
+
+		if (fullProjectName.isEmpty()) {
+			setErrorMessage(null);
+			setMessage("Project name must be specified");
+			return false;
+		}
+
+		if (scopeName != null && (scopeName.isEmpty() || scopeName.equals("@"))) {
+			setErrorMessage("The scope segment of the project name must not be empty.");
+			return false;
+		}
+
+		if (plainProjectName != null && plainProjectName.isEmpty()) {
+			setErrorMessage("The name segment of the project name must not be empty.");
+			return false;
+		}
+
+		return true;
+	}
+
+	/** Returns {@code true} iff the specified project name is valid. */
+	private boolean validateProjectName() {
+		final String projectName = getProjectNameWithScope();
+		final String plainProjectName = getProjectName();
+		final String scopeName = ProjectDescriptionUtils.getScopeName(projectName);
+
+		if (scopeName != null && !ProjectDescriptionUtils.isValidScopeName(scopeName)) {
+			setErrorMessage(
+					"Invalid project name: \"" + scopeName + "\" is not a valid scope segment.");
+			return false;
+		}
+
+		if (!ProjectDescriptionUtils.isValidPlainProjectName(plainProjectName)) {
+			setErrorMessage(
+					"Invalid project name: \"" + plainProjectName
+							+ "\" is not a valid name segment.");
+			return false;
+		}
+
+		if (BREAKING_WHITESPACE.matchesAnyOf(projectName)) {
+			setErrorMessage("Project name should not contain any whitespace characters.");
+			return false;
+		}
+
+		if (isNullOrEmpty(projectName)) {
+			setErrorMessage("Project name should be specified.");
+			return false;
+		}
+
+		return true;
+	}
+
+	/** Returns {@code true} iff the vendor ID is valid. */
+	private boolean validateVendorId() {
+		final String vendorId = projectInfo.getVendorId();
+		if (isNullOrEmpty(vendorId)) {
+			setErrorMessage("Vendor id must not be empty.");
+			return false;
+		}
+
+		if (!VENDOR_ID_PATTERN.matcher(vendorId).matches()) {
+			setErrorMessage("Invalid vendor id.");
+			return false;
+		}
+		return true;
+	}
+
+	/** Returns {@code true} iff the implementation ID is valid. */
+	private boolean validateImplementationId() {
+		if (LIBRARY.equals(projectInfo.getProjectType())) {
+			final String implementationId = projectInfo.getImplementationId();
+
+			// Implementation ID is optional
+			if (!isNullOrEmpty(implementationId)) {
+				final char leadingChar = implementationId.charAt(0);
+				if (!is('_').or(JAVA_LETTER).matches(leadingChar)) {
+					setErrorMessage("Implementation ID should start either an upper or a lower case character "
+							+ "from the Latin alphabet or with the underscore character.");
+					return false;
+				}
+				final List<String> implementedApis = projectInfo.getImplementedProjects();
+				if (null == implementedApis || implementedApis.isEmpty()) {
+					setErrorMessage(
+							"One or more API project should be selected for implementation when the implementation ID is specified.");
+					return false;
+				}
+
+				if (BREAKING_WHITESPACE.matchesAnyOf(implementationId)) {
+					setErrorMessage("Implementation ID should not contain any whitespace characters.");
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 	/**
@@ -342,8 +427,15 @@ public class N4JSNewProjectWizardCreationPage extends WizardNewProjectCreationPa
 	}
 
 	private void updateModel() {
-		projectInfo.setProjectName(getProjectName());
-		if (useDefaults()) {
+		// use eclipse project name in model
+		final String eclipseProjectName = ProjectDescriptionUtils
+				.convertN4JSProjectNameToEclipseProjectName(getProjectNameWithScope());
+		projectInfo.setProjectName(eclipseProjectName);
+
+		final boolean isScoped = getProjectNameWithScope() != getProjectName();
+		if (useDefaults() && isScoped) {
+			projectInfo.setProjectLocation(getLocationPath().append(getProjectNameWithScope()));
+		} else if (useDefaults()) {
 			projectInfo.setProjectLocation(null);
 		} else {
 			projectInfo.setProjectLocation(getLocationPath());
@@ -437,11 +529,13 @@ public class N4JSNewProjectWizardCreationPage extends WizardNewProjectCreationPa
 		}
 	}
 
-	private Collection<String> getAvailableApiProjectIds() {
+	private Collection<String> getAvailableApiProjectNames() {
 		final Collection<String> distinctIds = from(
 				getResourceDescriptions().getExportedObjectsByType(JSONPackage.Literals.JSON_DOCUMENT))
-						.filter(desc -> API.equals(getProjectType(desc))).transform(desc -> getProjectId(desc))
-						.filter(id -> null != id).toSet();
+						.filter(desc -> API.equals(PackageJsonResourceDescriptionExtension.getProjectType(desc)))
+						.transform(desc -> PackageJsonResourceDescriptionExtension.getProjectName(desc))
+						.filter(id -> null != id)
+						.toSet();
 		final List<String> ids = newArrayList(distinctIds);
 		Collections.sort(ids);
 		return ids;

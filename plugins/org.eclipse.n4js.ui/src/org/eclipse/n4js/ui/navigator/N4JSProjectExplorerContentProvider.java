@@ -119,7 +119,7 @@ public class N4JSProjectExplorerContentProvider extends WorkbenchContentProvider
 						if (delta.getKind() == IResourceDelta.CHANGED) {
 							IProject project = file.getProject();
 							if (null != project && project.isAccessible()) {
-								// use case: changes in a manifest.n4mf file
+								// use case: changes in a package.json file
 								virtualNodeCache.remove(project);
 							}
 						}

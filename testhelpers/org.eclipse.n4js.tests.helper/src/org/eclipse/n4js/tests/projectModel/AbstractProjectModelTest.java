@@ -40,17 +40,14 @@ public abstract class AbstractProjectModelTest {
 	protected abstract AbstractProjectModelSetup createSetup();
 
 	/***/
-	public final String myProjectId = "myProject";
+	public final String myProjectName = "myProject";
 	/***/
 	protected URI myProjectURI;
 
 	/***/
-	public final String libProjectId = "libProject";
+	public final String libProjectName = "libProject";
 	/***/
 	protected URI libProjectURI;
-
-	/***/
-	public final String archiveProjectId = "archive";
 
 	private AbstractProjectModelSetup setup;
 
@@ -123,8 +120,8 @@ public abstract class AbstractProjectModelTest {
 	@SuppressWarnings("javadoc")
 	@Test
 	public void testSetup() throws IOException {
-		assertEquals(myProjectId, myProjectURI.lastSegment());
-		assertEquals(libProjectId, libProjectURI.lastSegment());
+		assertEquals(myProjectName, myProjectURI.lastSegment());
+		assertEquals(libProjectName, libProjectURI.lastSegment());
 
 		// make sure temporary projects have valid project descriptions
 		validateTempProjects();

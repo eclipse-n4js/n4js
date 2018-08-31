@@ -27,7 +27,7 @@ import org.eclipse.emf.common.util.EList;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getQualifiedName <em>Qualified Name</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.TModule#getProjectId <em>Project Id</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.TModule#getProjectName <em>Project Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getVendorID <em>Vendor ID</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getModuleLoader <em>Module Loader</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#isN4jsdModule <em>N4jsd Module</em>}</li>
@@ -78,30 +78,31 @@ public interface TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	void setQualifiedName(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Project Id</b></em>' attribute.
+	 * Returns the value of the '<em><b>Project Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * *
-	 * The projectId of the project containing this module.
+	 * The <em>N4JS project name</em> of the project containing this module, as defined at
+	 * {@link org.eclipse.n4js.utils.ProjectDescriptionUtils#isProjectNameWithScope(String)}.
 	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Project Id</em>' attribute.
-	 * @see #setProjectId(String)
-	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_ProjectId()
+	 * @return the value of the '<em>Project Name</em>' attribute.
+	 * @see #setProjectName(String)
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_ProjectName()
 	 * @model unique="false"
 	 * @generated
 	 */
-	String getProjectId();
+	String getProjectName();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.TModule#getProjectId <em>Project Id</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.TModule#getProjectName <em>Project Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Project Id</em>' attribute.
-	 * @see #getProjectId()
+	 * @param value the new value of the '<em>Project Name</em>' attribute.
+	 * @see #getProjectName()
 	 * @generated
 	 */
-	void setProjectId(String value);
+	void setProjectName(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Vendor ID</b></em>' attribute.
@@ -135,8 +136,9 @@ public interface TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * *
-	 * The module loader supported by this module as defined in the containing project's manifest.
-	 * Value will be an EMF enum literal, i.e. something like <code>org.eclipse.n4js.n4mf.ModuleLoader.COMMONJS.getLiteral()</code>.
+	 * The module loader supported by this module as defined in the containing project's package.json.
+	 * Value will be an EMF enum literal, i.e. something like <code>org.eclipse.n4js.projectDescription.ModuleLoader.COMMONJS.getLiteral()</code>.
+	 * See <code>PackageJsonUtils#parseModuleLoader()</code> for how to convert from String to values of enum ModuleLoader.
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Module Loader</em>' attribute.
 	 * @see #setModuleLoader(String)
@@ -241,7 +243,7 @@ public interface TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * *
-	 * Flag indicating a MainModule (see org.eclipse.n4js.n4mf.ProjectDescription#mainModule)
+	 * Flag indicating a MainModule (see ProjectDescription#mainModule)
 	 * Used in scoping to adjust shadowing rules for the project imports (see org.eclipse.n4js.scoping.utils.ProjectImportEnablingScope).
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Main Module</em>' attribute.

@@ -48,6 +48,7 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.N4JSGlobals;
@@ -57,6 +58,7 @@ import org.eclipse.n4js.ui.editor.N4JSDirtyStateEditorSupport;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.ui.utils.TimeoutRuntimeException;
 import org.eclipse.n4js.ui.utils.UIUtils;
+import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
 import org.eclipse.ui.texteditor.MarkerUtilities;
 import org.eclipse.ui.wizards.datatransfer.FileSystemStructureProvider;
@@ -97,7 +99,7 @@ public class ProjectTestsUtils {
 	 * Imports a project into the running JUnit test workspace. Usage:
 	 *
 	 * <pre>
-	 * IProject project = ProjectUtils.importProject(new File(&quot;probands&quot;), &quot;TestProject&quot;);
+	 * IProject project = ProjectTestsUtils.importProject(new File(&quot;probands&quot;), &quot;TestProject&quot;);
 	 * </pre>
 	 *
 	 * @param probandsFolder
@@ -171,16 +173,42 @@ public class ProjectTestsUtils {
 			prepareDotProject(projectSourceFolder);
 		}
 
-		IProgressMonitor monitor = new NullProgressMonitor();
+		// copy project into workspace
+		// (need to do that manually to properly handle NPM scopes, because the Eclipse import functionality won't put
+		// those projects into an "@myScope" subfolder)
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		IProject project = workspace.getRoot().getProject(projectName);
+		File workspaceFolder = workspace.getRoot().getLocation().toFile();
+		File projectTargetFolder = new File(workspaceFolder, projectName);
+		try {
+			projectTargetFolder.mkdirs();
+			FileCopier.copy(projectSourceFolder.toPath(), projectTargetFolder.toPath());
+		} catch (IOException e) {
+			throw new WrappedException("exception while copying project into workspace", e);
+		}
 
+		// load actual project name from ".project" file (might be different in case of NPM scopes)
+		File dotProjectFile = new File(projectTargetFolder, ".project");
+		if (!dotProjectFile.exists()) {
+			throw new IllegalArgumentException(
+					"project to import does not contain a .project file: " + projectTargetFolder);
+		}
+		IProjectDescription description = workspace.loadProjectDescription(new Path(dotProjectFile.getAbsolutePath()));
+		String projectNameFromDotProjectFile = description.getName();
+
+		IProject project = workspace.getRoot().getProject(projectNameFromDotProjectFile);
+
+		IProgressMonitor monitor = new NullProgressMonitor();
 		workspace.run((mon) -> {
-			IProjectDescription newProjectDescription = workspace.newProjectDescription(projectName);
-			project.create(newProjectDescription, mon);
+			// NOTE: the following two lines would create a new project description and make Eclipse copy the projects
+			// and its contents into the workspace:
+			// IProjectDescription newDescription = workspace.newProjectDescription(projectNameFromDotProjectFile);
+			// project.create(newDescription, mon);
+			// However, we do not want that (see above); instead, we create a project from the description we loaded
+			// above:
+			project.create(description, mon);
 			project.open(mon);
 			if (!project.getLocation().toFile().exists()) {
-				throw new IllegalArgumentException("test project correctly created in " + project.getLocation());
+				throw new IllegalArgumentException("test project not correctly created in " + project.getLocation());
 			}
 
 			IOverwriteQuery overwriteQuery = new IOverwriteQuery() {
@@ -189,7 +217,7 @@ public class ProjectTestsUtils {
 					return ALL;
 				}
 			};
-			ImportOperation importOperation = new ImportOperation(project.getFullPath(), projectSourceFolder,
+			ImportOperation importOperation = new ImportOperation(project.getFullPath(), projectTargetFolder,
 					FileSystemStructureProvider.INSTANCE, overwriteQuery);
 			importOperation.setCreateContainerStructure(false);
 			try {
@@ -451,7 +479,8 @@ public class ProjectTestsUtils {
 				LOGGER.info(sj.toString());
 			}
 			if (!(wasCancelled == true || wasInterrupted == true))
-				throw new TimeoutRuntimeException("Expected no jobs, found " + foundJobs.size() + " after " + sw + ".");
+				throw new TimeoutRuntimeException(
+						"Expected no jobs, found " + foundJobs.size() + " after " + sw + ". " + foundJobs);
 		}
 	}
 
@@ -510,6 +539,20 @@ public class ProjectTestsUtils {
 			Assert.assertEquals(message.toString(), count, markerList.size());
 		}
 		return markers;
+	}
+
+	/**
+	 * Like {@link #assertIssues(IResource, String...)}, but asserts that there are no issues in the entire workspace.
+	 */
+	public static void assertNoIssues() throws CoreException {
+		assertIssues(new String[] {});
+	}
+
+	/**
+	 * Like {@link #assertIssues(IResource, String...)}, but checks for issues in entire workspace.
+	 */
+	public static void assertIssues(String... expectedMessages) throws CoreException {
+		assertIssues(ResourcesPlugin.getWorkspace().getRoot(), expectedMessages);
 	}
 
 	/**

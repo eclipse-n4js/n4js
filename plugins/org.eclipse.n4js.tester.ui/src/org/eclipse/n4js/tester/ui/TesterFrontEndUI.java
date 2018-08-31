@@ -10,17 +10,16 @@
  */
 package org.eclipse.n4js.tester.ui;
 
-import org.eclipse.swt.widgets.Display;
-
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
 import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.n4js.runner.ui.RunnerFrontEndUI;
 import org.eclipse.n4js.tester.TestConfiguration;
 import org.eclipse.n4js.tester.TesterFrontEnd;
 import org.eclipse.n4js.tester.domain.TestTree;
 import org.eclipse.n4js.tester.ui.resultsview.TestResultsView;
+import org.eclipse.swt.widgets.Display;
+
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * Similar to {@link TesterFrontEnd}, but adds a method for testing code within Eclipse.

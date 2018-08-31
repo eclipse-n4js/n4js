@@ -10,7 +10,11 @@
  */
 package org.eclipse.n4js.json.ui.quickfix;
 
-import org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider;
+import org.eclipse.n4js.json.ui.extension.JSONUiExtensionRegistry;
+import org.eclipse.n4js.utils.ui.quickfix.DelegatingQuickfixProvider;
+import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionProvider;
+
+import com.google.inject.Inject;
 
 /**
  * Custom quickfixes.
@@ -18,7 +22,15 @@ import org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider;
  * See
  * https://www.eclipse.org/Xtext/documentation/310_eclipse_support.html#quick-fixes
  */
-public class JSONQuickfixProvider extends DefaultQuickfixProvider {
+public class JSONQuickfixProvider extends DelegatingQuickfixProvider {
+
+	@Inject
+	private JSONUiExtensionRegistry registry;
+
+	@Override
+	protected Iterable<? extends IssueResolutionProvider> getDelegates() {
+		return registry.getQuickfixProviderExtensions();
+	}
 
 	// @Fix(JSONValidator.INVALID_NAME)
 	// public void capitalizeName(final Issue issue, IssueResolutionAcceptor

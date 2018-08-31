@@ -15,10 +15,10 @@ import java.util.List;
 
 import org.eclipse.n4js.flowgraphs.analysis.FastFlowVisitor;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
+import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
-import org.eclipse.n4js.ts.types.TVariable;
 
 /**
  * Analysis to detect uses of {@link IdentifierRef}s that are located in the control flow before their corresponding
@@ -27,11 +27,13 @@ import org.eclipse.n4js.ts.types.TVariable;
 public class UsedBeforeDeclaredAnalyser extends FastFlowVisitor {
 
 	static class CVLocationDataEntry extends ActivationLocation {
-		final ControlFlowElement cfe;
+		final Object cfe;
 		final List<IdentifierRef> idRefs = new LinkedList<>();
 
 		CVLocationDataEntry(ControlFlowElement cfe) {
-			this.cfe = cfe;
+			this.cfe = cfe instanceof ExportedVariableDeclaration
+					? ((ExportedVariableDeclaration) cfe).getDefinedVariable()
+					: cfe;
 		}
 
 		@Override
@@ -54,20 +56,16 @@ public class UsedBeforeDeclaredAnalyser extends FastFlowVisitor {
 	protected void visitNext(FastFlowBranch currentBranch, ControlFlowElement cfe) {
 
 		if (cfe instanceof VariableDeclaration) {
-			CVLocationDataEntry userData = (CVLocationDataEntry) currentBranch.getActivationLocation(cfe);
+			CVLocationDataEntry entry = new CVLocationDataEntry(cfe);
+			CVLocationDataEntry userData = (CVLocationDataEntry) currentBranch.getActivationLocation(entry.getKey());
 			if (userData != null) {
 				userData.idRefs.clear();
 			} else {
-				currentBranch.activate(new CVLocationDataEntry(cfe));
+				currentBranch.activate(entry);
 			}
-
 		} else if (cfe instanceof IdentifierRef) {
 			IdentifierRef ir = (IdentifierRef) cfe;
 			IdentifiableElement id = ir.getId();
-			if (id instanceof TVariable) {
-				TVariable tvar = (TVariable) id;
-				id = (VariableDeclaration) tvar.getAstElement();
-			}
 			CVLocationDataEntry userData = (CVLocationDataEntry) currentBranch.getActivationLocation(id);
 			if (userData != null) {
 				userData.idRefs.add(ir);

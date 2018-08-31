@@ -19,9 +19,8 @@ import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
-import org.eclipse.n4js.internal.N4JSSourceContainerType;
-import org.eclipse.n4js.n4mf.ProjectDependency;
-import org.eclipse.n4js.n4mf.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectDependency;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.junit.Test;
 
 import com.google.common.collect.Sets;
@@ -38,7 +37,7 @@ public abstract class AbstractInternalWorkspaceTest extends AbstractProjectModel
 	public void testGetProjectDescription_01() {
 		ProjectDescription description = getWorkspace().getProjectDescription(myProjectURI);
 		assertNotNull(description);
-		assertEquals(myProjectId, description.getProjectId());
+		assertEquals(myProjectName, description.getProjectName());
 	}
 
 	@SuppressWarnings("javadoc")
@@ -46,13 +45,13 @@ public abstract class AbstractInternalWorkspaceTest extends AbstractProjectModel
 	public void testGetProjectDescription_02() {
 		ProjectDescription description = getWorkspace().getProjectDescription(libProjectURI);
 		assertNotNull(description);
-		assertEquals(libProjectId, description.getProjectId());
+		assertEquals(libProjectName, description.getProjectName());
 	}
 
 	@SuppressWarnings("javadoc")
 	@Test
 	public void testGetProjectDescription_04() {
-		final URI doesNotExist = URI.createURI(myProjectId + "doesNotExist");
+		final URI doesNotExist = URI.createURI(myProjectName + "doesNotExist");
 		final ProjectDescription description = getWorkspace().getProjectDescription(doesNotExist);
 		assertNull("Expecting null project description for non-existing project. Was: " + description, description);
 	}
@@ -70,19 +69,8 @@ public abstract class AbstractInternalWorkspaceTest extends AbstractProjectModel
 	public void testGetLocation_01() {
 		ProjectDescription description = getWorkspace().getProjectDescription(myProjectURI);
 		ProjectDependency dependency = description.getProjectDependencies().get(0);
-		URI resolvedLocation = getWorkspace().getLocation(myProjectURI, dependency,
-				N4JSSourceContainerType.PROJECT);
+		URI resolvedLocation = getWorkspace().getLocation(myProjectURI, dependency);
 		assertEquals(libProjectURI, resolvedLocation);
-	}
-
-	@SuppressWarnings("javadoc")
-	@Test
-	public void testGetLocation_04() {
-		ProjectDescription description = getWorkspace().getProjectDescription(myProjectURI);
-		ProjectDependency dependencyOnArchive = description.getProjectDependencies().get(0);
-		URI expectedToBeNull = getWorkspace().getLocation(myProjectURI, dependencyOnArchive,
-				N4JSSourceContainerType.ARCHIVE);
-		assertNull(expectedToBeNull);
 	}
 
 	@SuppressWarnings("javadoc")

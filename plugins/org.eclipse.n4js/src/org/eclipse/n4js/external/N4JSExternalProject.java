@@ -19,7 +19,6 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IBuildConfiguration;
 import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware;
 import org.eclipse.n4js.utils.resources.ExternalProject;
 
 import com.google.common.collect.ImmutableList;
@@ -69,7 +68,7 @@ public class N4JSExternalProject extends ExternalProject {
 	 *
 	 * @return an iterable of direct dependency project IDs.
 	 */
-	public ImmutableList<? extends IN4JSSourceContainerAware> getAllDirectDependencies() {
+	public ImmutableList<? extends IN4JSProject> getAllDirectDependencies() {
 		return externalPackage.getAllDirectDependencies();
 	}
 
@@ -81,7 +80,7 @@ public class N4JSExternalProject extends ExternalProject {
 	 */
 	public Iterable<String> getAllDirectDependencyIds() {
 		return from(getAllDirectDependencies())
-				.transform(p -> p.getProjectId())
+				.transform(p -> p.getProjectName())
 				.toSet();
 	}
 

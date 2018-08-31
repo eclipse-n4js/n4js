@@ -31,10 +31,13 @@ public class ProjectLocationsUtil {
 	public static List<File> getTargetPlatformWritableDir(
 			TargetPlatformInstallLocationProvider installLocationProvider) {
 		final List<File> retList = new ArrayList<>();
-		if (null != installLocationProvider.getTargetPlatformInstallLocation()) {
-			final File tpLoc = new File(installLocationProvider.getTargetPlatformNodeModulesLocation());
-			HlcFileUtils.isExistingWriteableDir(tpLoc);
-			retList.add(tpLoc);
+		if (null != installLocationProvider.getTargetPlatformInstallURI()) {
+			final File npmLoc = new File(installLocationProvider.getNodeModulesURI());
+			HlcFileUtils.isExistingWriteableDir(npmLoc);
+			retList.add(npmLoc);
+			final File typeDefLoc = new File(installLocationProvider.getTypeDefinitionsURI());
+			HlcFileUtils.isExistingWriteableDir(typeDefLoc);
+			retList.add(typeDefLoc);
 		}
 		return retList;
 	}
