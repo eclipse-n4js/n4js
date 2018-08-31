@@ -1076,7 +1076,6 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		String sectionLabel, boolean enforceDependency, boolean allowReflexive) {
 
 		val description = getProjectDescription();
-		val currentProjectName = description.projectName;
 		val allProjects = getAllExistingProjectNames();
 
 		// keeps track of all valid references
@@ -1092,52 +1091,9 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			val id = ref.referencedProjectName;
 			// Assuming completely broken AST.
 			if (null !== id) {
-				// check for empty project ID
-				if (id.isEmpty) {
-					addIssue(IssueCodes.getMessageForPKGJ_EMPTY_PROJECT_REFERENCE(), ref.astRepresentation,
-						IssueCodes.PKGJ_EMPTY_PROJECT_REFERENCE)
-					return;
-				}
-
-				// obtain corresponding IN4JSProject handle
-				val project = allProjects.get(id);
-
-				// type cannot be resolved from index, hence project does not exist in workspace.
-				if (null === project || null === project.projectType) {
-					// in GH-821: remove this condition
-					if (!currentProject.isExternal) { 
-						val msg = getMessageForNON_EXISTING_PROJECT(id);
-						val packageVersion = if (ref.npmVersion === null) "" else ref.npmVersion.toString;
-						addIssue(msg, ref.astRepresentation, null, NON_EXISTING_PROJECT, id, packageVersion);
-					}
-					return;
-				} else {
-					// keep track of actually existing projects
-					existentIds.put(id, ref);
-				}
-
-				// create only a single validation issue for a particular project reference.
-				if (currentProjectName == id && !allowReflexive) {
-					// reflexive self-references
-					addProjectReferencesItselfIssue(ref.astRepresentation);
-					return;
-				} else if (!projectPredicate.apply(project)) {
-					// reference to project of invalid type
-					addInvalidProjectTypeIssue(ref.astRepresentation, id, 
-						project.projectType, sectionLabel);
-					return;
-				}
-
-				// check version constraint if the current project is not external and has no nested 
-				// node_modules folder
-				val boolean ignoreVersion = (currentProject.isExternal && description.hasNestedNodeModulesFolder);
-				if (!ignoreVersion) {
-					checkVersions(currentProject, ref, id, allProjects);
-				}
-
-				if (description.projectType !== ProjectType.DEFINITION) {
-					checkImplProjectPresentForReferencedTypeDef(ref, project, allReferencedProjectNames);
-				}
+				checkReference(ref, allProjects, description, currentProject, allReferencedProjectNames,
+					existentIds, allowReflexive, projectPredicate, sectionLabel
+				);
 			}
 		}
 
@@ -1147,6 +1103,63 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		// if specified, check that all references also occur in the dependencies sections
 		if (enforceDependency) {
 			checkDeclaredDependencies(existentIds.values, sectionLabel)
+		}
+	}
+
+	private def void checkReference(ValidationProjectReference ref, Map<String, IN4JSProject> allProjects,
+		ProjectDescription description, IN4JSProject currentProject, Set<String> allReferencedProjectNames,
+		HashMultimap<String, ValidationProjectReference> existentIds,
+		boolean allowReflexive, Predicate<IN4JSProject> projectPredicate, String sectionLabel
+	) {
+		// check project existence.
+		val id = ref.referencedProjectName;
+		val currentProjectName = description.projectName;
+
+		// check for empty project ID
+		if (id.isEmpty) {
+			addIssue(IssueCodes.getMessageForPKGJ_EMPTY_PROJECT_REFERENCE(), ref.astRepresentation,
+				IssueCodes.PKGJ_EMPTY_PROJECT_REFERENCE)
+			return;
+		}
+
+		// obtain corresponding IN4JSProject handle
+		val project = allProjects.get(id);
+
+		// type cannot be resolved from index, hence project does not exist in workspace.
+		if (null === project || null === project.projectType) {
+			// in GH-821: remove this condition
+			if (!currentProject.isExternal) { 
+				val msg = getMessageForNON_EXISTING_PROJECT(id);
+				val packageVersion = if (ref.npmVersion === null) "" else ref.npmVersion.toString;
+				addIssue(msg, ref.astRepresentation, null, NON_EXISTING_PROJECT, id, packageVersion);
+			}
+			return;
+		} else {
+			// keep track of actually existing projects
+			existentIds.put(id, ref);
+		}
+
+		// create only a single validation issue for a particular project reference.
+		if (currentProjectName == id && !allowReflexive) {
+			// reflexive self-references
+			addProjectReferencesItselfIssue(ref.astRepresentation);
+			return;
+		} else if (!projectPredicate.apply(project)) {
+			// reference to project of invalid type
+			addInvalidProjectTypeIssue(ref.astRepresentation, id, 
+				project.projectType, sectionLabel);
+			return;
+		}
+
+		// check version constraint if the current project is not external and has no nested 
+		// node_modules folder
+		val boolean ignoreVersion = (currentProject.isExternal && description.hasNestedNodeModulesFolder);
+		if (!ignoreVersion) {
+			checkVersions(currentProject, ref, id, allProjects);
+		}
+
+		if (description.projectType !== ProjectType.DEFINITION) {
+			checkImplProjectPresentForReferencedTypeDef(ref, project, allReferencedProjectNames);
 		}
 	}
 
