@@ -13,6 +13,9 @@ import org.eclipse.ui.handlers.IHandlerActivation;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.IPageBookViewPage;
 
+/**
+ * @see org.eclipse.jdt.internal.debug.ui.console.JavaStackTracePageParticipant
+ */
 public class N4JSStackTracePageParticipant implements IConsolePageParticipant {
 
 	private CloseConsoleAction fCloseAction;

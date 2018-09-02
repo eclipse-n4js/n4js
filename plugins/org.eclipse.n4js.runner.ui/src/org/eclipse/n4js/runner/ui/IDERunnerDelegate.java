@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.runner.ui;
 
+import java.util.HashMap;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -18,11 +20,11 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.model.ILaunchConfigurationDelegate;
-
-import com.google.inject.Inject;
-
+import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.n4js.utils.StatusHelper;
+
+import com.google.inject.Inject;
 
 /**
  * Base class for runner delegates.
@@ -58,8 +60,11 @@ public abstract class IDERunnerDelegate implements ILaunchConfigurationDelegate 
 		}
 
 		try {
+			HashMap<String, String> attributes = new HashMap<>(1);
+			attributes.put(IProcess.ATTR_PROCESS_TYPE, "javascript");
 			DebugPlugin.newProcess(launch, runnerFrontEndUI.runInUI(runConfig),
-					launch.getLaunchConfiguration().getName());
+					launch.getLaunchConfiguration().getName(), attributes);
+
 		} catch (Exception e) {
 			LOGGER.error("Error occurred while trying to execute module.", e);
 			if (e instanceof CoreException) {

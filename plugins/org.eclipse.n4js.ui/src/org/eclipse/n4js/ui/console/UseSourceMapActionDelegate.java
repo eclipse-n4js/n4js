@@ -18,7 +18,7 @@ import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.IConsoleView;
 
 /**
- *
+ * @see org.eclipse.jdt.internal.debug.ui.console.FormatStackTraceActionDelegate
  */
 public class UseSourceMapActionDelegate implements IViewActionDelegate {
 
@@ -52,7 +52,7 @@ public class UseSourceMapActionDelegate implements IViewActionDelegate {
 	@Override
 	public void run(IAction action) {
 		if (console != null) {
-			// fConsole.useSourceMap();
+			console.useSourceMap();
 		} else if (view != null) {
 			IConsole consoleOfView = view.getConsole();
 			if (consoleOfView instanceof N4JSStackTraceConsole) {

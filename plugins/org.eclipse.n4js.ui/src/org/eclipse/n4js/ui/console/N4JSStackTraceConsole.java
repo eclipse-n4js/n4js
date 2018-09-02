@@ -10,17 +10,25 @@
  */
 package org.eclipse.n4js.ui.console;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobManager;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.rules.FastPartitioner;
 import org.eclipse.jface.text.rules.RuleBasedPartitionScanner;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.ui.console.IConsoleDocumentPartitioner;
 import org.eclipse.ui.console.TextConsole;
+import org.eclipse.ui.progress.WorkbenchJob;
 
 /**
- *
+ * @see org.eclipse.jdt.internal.debug.ui.console.JavaStackTraceConsole
  */
 public class N4JSStackTraceConsole extends TextConsole {
 
@@ -95,4 +103,52 @@ public class N4JSStackTraceConsole extends TextConsole {
 
 	}
 
+	/**
+	 *
+	 */
+	public void useSourceMap() {
+		WorkbenchJob job = new WorkbenchJob("Location Translator with Source Maps") {
+			@Override
+			public IStatus runInUIThread(IProgressMonitor monitor) {
+				IJobManager jobManager = Job.getJobManager();
+				try {
+					jobManager.join(this, monitor);
+				} catch (OperationCanceledException e1) {
+					return Status.CANCEL_STATUS;
+				} catch (InterruptedException e1) {
+					return Status.CANCEL_STATUS;
+				}
+				IDocument document = getDocument();
+				String orig = document.get();
+				if (orig != null && orig.length() > 0) {
+					document.set(useSourceMap(orig));
+				}
+
+				return Status.OK_STATUS;
+			}
+
+		};
+		job.setSystem(true);
+		job.schedule();
+
+	}
+
+	/**
+	 * Replaces...
+	 *
+	 * Sample stack trace which can be handled:
+	 *
+	 * <pre>
+	 * <code>
+	 * (SystemJS) error thrown
+	 * 	Error: error thrown
+	 * 	    at SVDemo.foo___n4 (/ws/SVDemo/src-gen/pac/SVDemo.js:16:14)
+	 * 	    at execute (/ws/SVDemo/src-gen/pac/SVDemo.js:39:18)
+	 * 	Error loading SVDemo/src-gen/pac/SVDemo
+	 * </code>
+	 * </pre>
+	 */
+	private String useSourceMap(String origStackTrace) {
+		return origStackTrace.replaceAll("\\.js:", ".n4js:");
+	}
 }

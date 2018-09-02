@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.console.TextConsoleViewer;
 
 /**
- * Original code copied from JavaStackTraceViewer (JDT ui debug).
+ * @see org.eclipse.jdt.internal.debug.ui.console.JavaStackTraceConsoleViewer
  */
 public class N4JSStackTraceConsoleViewer extends TextConsoleViewer {
 
@@ -34,7 +34,8 @@ public class N4JSStackTraceConsoleViewer extends TextConsoleViewer {
 		super(parent, console);
 		this.console = console;
 		getTextWidget().setOrientation(SWT.LEFT_TO_RIGHT);
-
+		this.console.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_YELLOW));
+		getTextWidget().setText("Hello....");
 		// IPreferenceStore fPreferenceStore = JDIDebugUIPlugin.getDefault().getPreferenceStore();
 		// fAutoFormat = fPreferenceStore.getBoolean(IJDIPreferencesConstants.PREF_AUTO_FORMAT_JSTCONSOLE);
 	}
