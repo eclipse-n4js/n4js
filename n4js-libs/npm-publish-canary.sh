@@ -46,7 +46,7 @@ PKG_VERSION=`cat lerna.json  | jq -r '.version' | xargs -t semver -i minor {}`
 N4JS_LIBS_COMMIT_ID_LOCAL=`git log -1 --format="%H" $DIRS | cut -c1-8`
 
 #  Check the latest commit on public npm registry, use n4js-node as a representative
-N4JS_LIBS_VERSION_PUBLIC=`curl -s https://registry.npmjs.org/n4js-node | jq -r '.["dist-tags"].latest'`
+N4JS_LIBS_VERSION_PUBLIC=`curl -s ${NPM_REGISTRY}/n4js-node | jq -r '.["dist-tags"].latest'`
 echo "N4JS_LIBS_VERSION_PUBLIC=${N4JS_LIBS_VERSION_PUBLIC}"
 
 # The commit ID is the last 8 letters of public version
