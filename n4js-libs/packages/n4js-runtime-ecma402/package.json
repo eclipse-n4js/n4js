@@ -1,6 +1,6 @@
 {
   "name": "n4js-runtime-ecma402",
-  "version": "0.1.0",
+  "version": "0.10.0-alpha.20180903+9a1c5657",
   "author": {
     "name": "NumberFour AG",
     "email": "npm@numberfour.eu"
@@ -29,7 +29,5 @@
       ]
     },
     "moduleLoader": "n4js"
-  },
-  "dependencies": {},
-  "devDependencies": {}
+  }
 }
