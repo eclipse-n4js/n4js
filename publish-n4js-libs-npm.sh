@@ -70,8 +70,8 @@ export PATH=`pwd`/node_modules/.bin:${PATH}
 # Set N4_N4JSC_JAR to the the freshly built n4jsc.jar in tools/hlc/target
 export N4_N4JSC_JAR="${CUR_DIR}/tools/org.eclipse.n4js.hlc/target/n4jsc.jar"
 
-lerna run build
-lerna run test
+#lerna run build
+#lerna run test
 
 # Run npm task script 'publish-canary' to publish n4js-libs and n4js-cli to NPM_REGISTRY
 yarn run publish-canary $DESTINATION $NPM_REGISTRY
