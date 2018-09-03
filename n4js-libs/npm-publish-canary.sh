@@ -67,11 +67,11 @@ echo "PUBLISH_VERSION=${PUBLISH_VERSION}"
 
 
 if [ "${NPM_TAG}" = "latest" ]; then
-	echo_exec lerna publish --loglevel silly --skip-git --registry="${NPM_REGISTRY}" --repo-version="${PUBLISH_VERSION}" --exact --yes --bail --npm-tag="${NPM_TAG}"
+	echo_exec lerna publish --loglevel silly --skip-git --registry="${NPM_REGISTRY}" --repo-version="${PUBLISH_VERSION}" --since=master --exact --yes --bail --npm-tag="${NPM_TAG}"
 	echo "BLAH latest"
 else
 	# Use a version that we are sure can not exist on public npm registry for 
-	echo_exec lerna publish --loglevel silly --skip-git --registry="${NPM_REGISTRY}" --repo-version="9999.0.0" --exact --yes --bail --npm-tag="${NPM_TAG}"
+	echo_exec lerna publish --loglevel silly --skip-git --registry="${NPM_REGISTRY}" --repo-version="9999.0.0" --since=master --exact --yes --bail --npm-tag="${NPM_TAG}"
 	echo "BLAH not latest"
 fi
 
