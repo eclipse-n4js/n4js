@@ -116,7 +116,7 @@ class NodeTestRunner  {
         // Don't wait for async promises to finish, e.g. stale auth prompts.
         // In case of exceptions, the process is already exiting with code 1 (see n4js-cli):
         // Flush stdout and exit:
-        process.stdout.write("", "utf-8", () => process.exit(failed ? 1 : 0));
+        process.stdout.write("", "utf-8", () => process.exit(failed ? 8 : 0));
     }
 }
 
