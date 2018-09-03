@@ -16,7 +16,7 @@
 
     var __sys = global.System || {},
         options = n4.runtimeOptions,
-        testMode = options["test-mode"],
+        testMode = options["loader-support-api-not-implemented"],
         isNodeJs = n4.runtimeInfo.platformId === "nodejs",
         windows = isNodeJs && !!process.platform.match(/^win/),
         ideExecData = options.ideExecData,

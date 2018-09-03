@@ -32,7 +32,7 @@
         lib_run.runWith({
             "ideExecData": execData,
             "test-catalog": tryJSON(execData.testTree),
-            "test-mode": true,
+            "loader-support-api-not-implemented": true,
             "keep-eventloop": true,
             "main": "org.eclipse.n4js.mangelhaft.runner.ide/src-gen/org/eclipse/n4js/mangelhaft/runner/ide/IDENodeTestRunner"
         }, true /* exitOnError */);
