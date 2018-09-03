@@ -67,6 +67,7 @@ echo "PUBLISH_VERSION=${PUBLISH_VERSION}"
 
 
 if [ "${NPM_TAG}" = "latest" ]; then
+    echo "WE ARE HERE OK?"
 	echo_exec lerna publish --loglevel silly --skip-git --registry="${NPM_REGISTRY}" --repo-version="${PUBLISH_VERSION}" --since=master --exact --yes --bail --npm-tag="${NPM_TAG}"
 	echo "BLAH latest"
 else
