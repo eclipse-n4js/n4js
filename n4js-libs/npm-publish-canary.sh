@@ -53,12 +53,11 @@ echo "N4JS_LIBS_VERSION_PUBLIC=${N4JS_LIBS_VERSION_PUBLIC}"
 N4JS_LIBS_COMMIT_ID_PUBLIC=${N4JS_LIBS_VERSION_PUBLIC: -8}
 
 # Stop if the local ID equals public ID
-if [${N4JS_LIBS_COMMIT_ID_LOCAL} -eq ${N4JS_LIBS_COMMIT_ID_PUBLIC}]
-then
+if [ "${N4JS_LIBS_COMMIT_ID_LOCAL}" = "${N4JS_LIBS_COMMIT_ID_PUBLIC}" ]; then
     echo "n4js-libs has NOT been changed since the last publish. Local commit ID = Public commit ID = ${N4JS_LIBS_COMMIT_ID_LOCAL}. n4js-libs will not be published."
     exit 0
 else
-    echo "n4js-libs has not been changed since the last publish. Local commit ID = ${N4JS_LIBS_COMMIT_ID_LOCAL} while public commit ID = ${N4JS_LIBS_COMMIT_ID_PUBLIC}"
+    echo "n4js-libs has been changed since the last publish. Local commit ID = ${N4JS_LIBS_COMMIT_ID_LOCAL} while public commit ID = ${N4JS_LIBS_COMMIT_ID_PUBLIC}"
 fi
 
 CURRENT_DATE=`date +%Y%m%d`
@@ -68,11 +67,11 @@ echo "PUBLISH_VERSION=${PUBLISH_VERSION}"
 
 
 if [ "${NPM_TAG}" = "latest" ]; then
-	echo_exec lerna publish --loglevel silly --skip-git --registry="${NPM_REGISTRY}" --repo-version="${PUBLISH_VERSION}" --force-publish=* --exact --yes --sort --npm-tag="${NPM_TAG}"
+	#echo_exec lerna publish --loglevel silly --skip-git --registry="${NPM_REGISTRY}" --repo-version="${PUBLISH_VERSION}" --force-publish=* --exact --yes --sort --npm-tag="${NPM_TAG}"
 	echo "BLAH latest"
 else
 	# Use a version that we are sure can not exist on public npm registry for 
-	echo_exec lerna publish --loglevel silly --skip-git --registry="${NPM_REGISTRY}" --repo-version="9999.0.0" --force-publish=* --exact --yes --sort --npm-tag="${NPM_TAG}"
+	#echo_exec lerna publish --loglevel silly --skip-git --registry="${NPM_REGISTRY}" --repo-version="9999.0.0" --force-publish=* --exact --yes --sort --npm-tag="${NPM_TAG}"
 	echo "BLAH not latest"
 fi
 
