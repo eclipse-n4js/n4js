@@ -1,6 +1,6 @@
 {
   "name": "n4js-node",
-  "version": "0.1.0",
+  "version": "0.10.0-alpha.20180903+051283be",
   "author": {
     "name": "NumberFour AG",
     "email": "npm@numberfour.eu"
@@ -30,9 +30,9 @@
   "browser": "./src-gen/browser.js",
   "react-native": "./src-gen/react-native.js",
   "dependencies": {
+    "n4js-es5": "0.10.0-alpha.20180903+051283be",
     "node-fetch": "~1.6.3",
-    "systemjs": "~0.19.40",
-    "n4js-es5": "^0.1.0"
+    "systemjs": "~0.19.40"
   },
   "files": [
     "src",
@@ -65,6 +65,5 @@
     ],
     "moduleLoader": "n4js",
     "execModule": "n4js-cli"
-  },
-  "devDependencies": {}
+  }
 }
