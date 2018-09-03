@@ -43,7 +43,7 @@ echo "Publishing using .npmrc configuration to ${NPM_REGISTRY}";
 
 PKG_VERSION=`cat lerna.json  | jq -r '.version' | xargs -t semver -i minor {}`
 
-N4JS_LIBS_COMMIT_ID_LOCAL=`git log -1 --format="%H" $DIRS | cut -c1-8`
+N4JS_LIBS_COMMIT_ID_LOCAL=`git log -1 --format="%H" ${DIR_ROOT} | cut -c1-8`
 
 #  Check the latest commit on public npm registry, use n4js-node as a representative
 N4JS_LIBS_VERSION_PUBLIC=`curl -s ${NPM_REGISTRY}/n4js-node | jq -r '.["dist-tags"].latest'`
