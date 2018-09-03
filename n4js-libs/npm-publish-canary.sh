@@ -39,13 +39,11 @@ cleanup() {
 export NPM_CONFIG_GLOBALCONFIG="DIR_ROOT"
 echo "Publishing using .npmrc configuration to ${NPM_REGISTRY}";
 
-# Check if there are changes in n4js-libs
-
+# We only publish if there are changes in n4js-libs since the last commit
 PKG_VERSION=`cat lerna.json  | jq -r '.version' | xargs -t semver -i minor {}`
-
 N4JS_LIBS_COMMIT_ID_LOCAL=`git log -1 --format="%H" ${DIR_ROOT} | cut -c1-8`
 
-#  Check the latest commit on public npm registry, use n4js-node as a representative
+# Check the latest commit on public npm registry, use n4js-node as a representative
 N4JS_LIBS_VERSION_PUBLIC=`curl -s ${NPM_REGISTRY}/n4js-node | jq -r '.["dist-tags"].latest'`
 echo "N4JS_LIBS_VERSION_PUBLIC=${N4JS_LIBS_VERSION_PUBLIC}"
 
@@ -69,11 +67,9 @@ echo "PUBLISH_VERSION=${PUBLISH_VERSION}"
 if [ "${NPM_TAG}" = "latest" ]; then
     echo "WE ARE HERE OK?"
 	echo_exec lerna publish --loglevel silly --skip-git --registry="${NPM_REGISTRY}" --repo-version="${PUBLISH_VERSION}" --since=master --exact --yes --bail --npm-tag="${NPM_TAG}"
-	echo "BLAH latest"
 else
 	# Use a version that we are sure can not exist on public npm registry for 
 	echo_exec lerna publish --loglevel silly --skip-git --registry="${NPM_REGISTRY}" --repo-version="9999.0.0" --since=master --exact --yes --bail --npm-tag="${NPM_TAG}"
-	echo "BLAH not latest"
 fi
 
 # Remove node_modules after publishing
