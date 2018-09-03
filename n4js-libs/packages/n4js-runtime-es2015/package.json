@@ -1,6 +1,6 @@
 {
   "name": "n4js-runtime-es2015",
-  "version": "0.1.0",
+  "version": "0.10.0-alpha.20180903+9b335f47",
   "author": {
     "name": "NumberFour AG",
     "email": "npm@numberfour.eu"
@@ -30,7 +30,5 @@
       ]
     },
     "moduleLoader": "n4js"
-  },
-  "dependencies": {},
-  "devDependencies": {}
+  }
 }
