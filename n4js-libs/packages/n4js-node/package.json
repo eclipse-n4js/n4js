@@ -30,7 +30,7 @@
   "browser": "./src-gen/browser.js",
   "react-native": "./src-gen/react-native.js",
   "dependencies": {
-    "n4js-es5": "0.10.0-alpha.20180903+051283be",
+    "n4js-es5": "^0.1.0",
     "node-fetch": "~1.6.3",
     "systemjs": "~0.19.40"
   },
