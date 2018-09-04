@@ -13,7 +13,7 @@
 
 	Workspace {
 		JavaProject "P" {
-			ThisFile { from = "proposalTest.package.json.xt" }
+			ThisFile { from = "package.json.xt" }
 			Folder "src" {}
 		}
 	}
