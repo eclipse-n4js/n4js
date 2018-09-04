@@ -65,6 +65,5 @@
     ],
     "moduleLoader": "n4js",
     "execModule": "n4js-cli"
-  },
-  "devDependencies": {}
+  }
 }
