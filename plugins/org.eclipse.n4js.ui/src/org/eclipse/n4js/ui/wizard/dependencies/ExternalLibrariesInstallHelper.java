@@ -13,7 +13,6 @@ package org.eclipse.n4js.ui.wizard.dependencies;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -109,11 +108,12 @@ public class ExternalLibrariesInstallHelper {
 	private void removeDependenciesToShippedCodeIfVersionMatches(
 			Map<String, NPMVersionRequirement> dependenciesToInstall,
 			Map<String, VersionNumber> projectNamesOfShippedCode) {
-		for (Entry<String, NPMVersionRequirement> depToInstall : dependenciesToInstall.entrySet()) {
-			String projectName = depToInstall.getKey();
+
+		Set<String> prjNames = new HashSet<>(dependenciesToInstall.keySet());
+		for (String projectName : prjNames) {
 			VersionNumber availableVersionInShippedCode = projectNamesOfShippedCode.get(projectName);
 			if (availableVersionInShippedCode != null) {
-				NPMVersionRequirement versionRequirement = depToInstall.getValue();
+				NPMVersionRequirement versionRequirement = dependenciesToInstall.get(projectName);
 				if (versionRequirement != null
 						&& SemverMatcher.matchesStrict(availableVersionInShippedCode, versionRequirement)) {
 					// so remove from list of dependencies to be installed:
