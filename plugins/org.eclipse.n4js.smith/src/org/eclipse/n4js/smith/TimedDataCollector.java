@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.smith;
 
-import static java.util.concurrent.TimeUnit.NANOSECONDS;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -64,7 +62,7 @@ class TimedDataCollector extends DataCollector {
 	/** This method must be synchronized to protect race conditions when calling data.add */
 	synchronized private void consume(TimedMeasurement measurement) {
 		TimedMeasurement timed = measurement;
-		data.add(new DataPoint(timed.name, timed.elapsed(NANOSECONDS)));
+		// data.add(new DataPoint(timed.name, timed.elapsed(NANOSECONDS)));
 	}
 
 	@Override
