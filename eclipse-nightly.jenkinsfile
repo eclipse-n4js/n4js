@@ -51,13 +51,15 @@ pipeline {
 
         stage('fs browse') {
             steps {
-                script {
-                        sh """\
-                                pwd
-                                ls -la
-                                git status
-                                git log -n 1
-                           """
+                dir('n4js'){
+                    script {
+                            sh """\
+                                    pwd
+                                    ls -la
+                                    git status
+                                    git log -n 1
+                            """
+                    }
                 }
             }
         }
