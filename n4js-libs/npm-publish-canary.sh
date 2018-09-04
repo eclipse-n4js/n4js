@@ -38,8 +38,8 @@ if [ "${NPM_TAG}" = "latest" ]; then
     # We only publish if there are changes in n4js-libs since the last commit
     PKG_VERSION=`cat lerna.json  | jq -r '.version' | xargs -t semver -i minor {}`
     N4JS_LIBS_COMMIT_ID_LOCAL=`git log -1 --format="%H" ${DIR_ROOT} | cut -c1-8`
-    
-    # Check the latest commit on public npm registry, use n4js-node as a representative
+
+    # Check the latest commit on npm registry, use n4js-node as a representative
     N4JS_LIBS_VERSION_PUBLIC=`curl -s ${NPM_REGISTRY}/n4js-node | jq -r '.["dist-tags"].latest'`
     echo "N4JS_LIBS_VERSION_PUBLIC=${N4JS_LIBS_VERSION_PUBLIC}"
     
