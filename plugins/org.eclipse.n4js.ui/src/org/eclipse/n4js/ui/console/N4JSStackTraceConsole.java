@@ -80,7 +80,7 @@ public class N4JSStackTraceConsole extends TextConsole {
 	 * Constructor
 	 */
 	public N4JSStackTraceConsole() {
-		super("N4JS Stack Trace Console", CONSOLE_TYPE, null, true);
+		super(ConsoleMessages.msgN4JSStackTraceConsole(), CONSOLE_TYPE, null, true);
 		Font font = JFaceResources.getFont(IDebugUIConstants.PREF_CONSOLE_FONT);
 		setFont(font);
 		partitioner.connect(getDocument());
@@ -109,7 +109,7 @@ public class N4JSStackTraceConsole extends TextConsole {
 				// just ignore that, not important
 			}
 		} else {
-			getDocument().set(ConsoleMessages.ConsoleCallToAction);
+			getDocument().set(ConsoleMessages.msgConsoleCallToAction());
 		}
 
 	}
