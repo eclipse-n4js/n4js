@@ -21,11 +21,6 @@ echo "We are currently in $PWD"
 # DIRS contains all direct folders of packages
 DIRS=$(find ./packages/ -type d -mindepth 1 -maxdepth 1)
 
-function echo_exec {
-    echo "$@"
-    $@
-}
-
 cleanup() {
 	set +e
 	for dir in $DIRS
