@@ -45,7 +45,7 @@ pipeline {
                             def options = [
                                 '--batch-mode',
                                 '--quiet',
-                                '--update-snapshots'
+                                '--update-snapshots',
                                 '--show-version',
                                 '--errors',
                                 '-Dtycho.localArtifacts=ignore',
