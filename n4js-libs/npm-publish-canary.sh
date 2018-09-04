@@ -9,7 +9,7 @@
 # Contributors:
 #   NumberFour AG - Initial API and implementation
 #
-set -e
+set -exo pipefail
 
 cd `dirname $0`
 cd `pwd -P`
@@ -64,10 +64,10 @@ if [ "${NPM_TAG}" = "latest" ]; then
     PUBLISH_VERSION="${PKG_VERSION}-alpha.${CURRENT_DATE}.${N4JS_LIBS_COMMIT_ID_LOCAL}" 
     echo "PUBLISH_VERSION=${PUBLISH_VERSION}"
 
-	echo_exec lerna publish --loglevel silly --skip-git --registry="${NPM_REGISTRY}" --repo-version="${PUBLISH_VERSION}" --exact --yes --bail --npm-tag="${NPM_TAG}"
+	lerna publish --loglevel silly --skip-git --registry="${NPM_REGISTRY}" --repo-version="${PUBLISH_VERSION}" --exact --yes --bail --npm-tag="${NPM_TAG}"
 else
 	# Use a version that we are sure can not exist on public npm registry for 
-	echo_exec lerna publish --loglevel silly --skip-git --registry="${NPM_REGISTRY}" --repo-version="9999.0.0" --exact --yes --bail --npm-tag="${NPM_TAG}"
+	lerna publish --loglevel silly --skip-git --registry="${NPM_REGISTRY}" --repo-version="9999.0.0" --exact --yes --bail --npm-tag="${NPM_TAG}"
 fi
 
 # Remove node_modules after publishing
