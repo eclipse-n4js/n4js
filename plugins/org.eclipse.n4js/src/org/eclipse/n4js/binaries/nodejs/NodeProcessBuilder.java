@@ -48,7 +48,8 @@ public class NodeProcessBuilder {
 	 * @param invocationPath
 	 *            location on which npm command should be invoked
 	 * @param packageName
-	 *            package to install (might be space separated list of names)
+	 *            package to install (might be space separated list of names or <code>null</code> to issue a plain "npm
+	 *            install" without package names.
 	 * @param save
 	 *            instructs npm to save installed packages in package.json (if available)
 	 * @return configured, operating system aware process builder for "npm install" command
@@ -106,7 +107,7 @@ public class NodeProcessBuilder {
 	 *            location on which npm command should be invoked
 	 * @param packageName
 	 *            package passed as parameter to the command (might be space separated list of names). If packageName is
-	 *            null, it is assume to be the empty string.
+	 *            <code>null</code>, it is assumed to be the empty string.
 	 * @param save
 	 *            instructs npm to save command result to packages in package.json (if available)
 	 * @param simpleCommand

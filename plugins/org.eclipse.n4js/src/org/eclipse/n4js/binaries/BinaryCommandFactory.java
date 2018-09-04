@@ -50,7 +50,8 @@ public class BinaryCommandFactory {
 	 * @param invocationPath
 	 *            path where package is supposed to be installed
 	 * @param packageNames
-	 *            names of the packages to install (optionally including version requirements)
+	 *            names of the packages to install (optionally including version requirements; may be an empty list to
+	 *            issue a plain "npm install" without package names given)
 	 * @param saveDependency
 	 *            flag if installed package should be saved in package.json of the install path
 	 */
@@ -62,9 +63,12 @@ public class BinaryCommandFactory {
 
 			@Override
 			public ProcessResult execute() {
-				String escapedPackageNames = "\"" + Joiner.on("\" \"").join(packageNames) + "\"";
+				String escapedPackageNames = !packageNames.isEmpty()
+						? "\"" + Joiner.on("\" \"").join(packageNames) + "\""
+						: null; // 'null' will lead to a plain "npm install" without package names given
+				boolean actualSaveDependency = saveDependency && !packageNames.isEmpty();
 				ProcessBuilder processBuilder = nodeProccessBuilder.getNpmInstallProcessBuilder(invocationPath,
-						escapedPackageNames, saveDependency);
+						escapedPackageNames, actualSaveDependency);
 				return processExecutor.createAndExecute(processBuilder, COMMAND_NAME, OutputRedirection.REDIRECT);
 			}
 		};

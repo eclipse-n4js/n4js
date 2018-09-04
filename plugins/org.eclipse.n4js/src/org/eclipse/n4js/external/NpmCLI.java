@@ -16,6 +16,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 
@@ -25,13 +26,16 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.binaries.BinaryCommandFactory;
+import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
 import org.eclipse.n4js.semver.SemverHelper;
-import org.eclipse.n4js.semver.Semver.GitHubVersionRequirement;
-import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
+import org.eclipse.n4js.semver.SemverMatcher;
+import org.eclipse.n4js.semver.SemverUtils;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.utils.ProcessExecutionCommandStatus;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.StatusHelper;
+import org.eclipse.n4js.utils.process.ProcessResult;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.Tuples;
 
@@ -64,6 +68,9 @@ public class NpmCLI {
 	private ProjectDescriptionLoader projectDescriptionLoader;
 
 	@Inject
+	private NpmBinary npmBinary;
+
+	@Inject
 	private SemverHelper semverHelper;
 
 	/** Simple validation if the package name is not null or empty */
@@ -74,6 +81,16 @@ public class NpmCLI {
 	/** Simple validation if the package version is not null or empty */
 	public boolean invalidPackageVersion(String packageVersion) {
 		return packageVersion == null || (!packageVersion.isEmpty() && !packageVersion.startsWith("@"));
+	}
+
+	/** Returns the version of the system's npm binary or <code>null</code> in case of error. */
+	public VersionNumber getNpmVersion() {
+		final ProcessResult result = commandFactory.checkBinaryVersionCommand(npmBinary).execute();
+		if (result.isOK()) {
+			final String output = result.getStdOut();
+			return semverHelper.parseVersionNumber(output.trim());
+		}
+		return null;
 	}
 
 	/**
@@ -249,22 +266,34 @@ public class NpmCLI {
 				return statusHelper.createError("Malformed npm package version: '" + packageVersion + "'.");
 			}
 
-			// TODO IDE-3136 / GH-1011 workaround for missing support of GitHub version requirements
-			NPMVersionRequirement packageVersionParsed = semverHelper.parse(packageVersion.substring(1));
-			if (packageVersionParsed instanceof GitHubVersionRequirement) {
-				// In case of a dependency like "JSONSelect@dbo/JSONSelect" (wherein "dbo/JSONSelect"
-				// is a GitHub version requirement), we only report "JSONSelect@" to npm. For details
-				// why this is necessary, see GH-1011.
-				packageVersion = "@";
-			}
-
 			String nameAndVersion = packageVersion.isEmpty() ? packageName : packageName + packageVersion;
 			packageNamesAndVersionsMerged.add(nameAndVersion);
 		}
 
-		return executor.execute(
+		IStatus status = executor.execute(
 				() -> commandFactory.createInstallPackageCommand(installPath, packageNamesAndVersionsMerged, true),
 				"Error while installing npm package.");
+
+		// TODO IDE-3136 / GH-1011 workaround for a problem in node related to URL/GitHub version requirements
+		// In case of a dependency like "JSONSelect@dbo/JSONSelect" (wherein "dbo/JSONSelect" is a GitHub version
+		// requirement), the first installation works fine, but subsequent installations of additional npm packages may
+		// uninstall(!) the earlier package that used a URL/GitHub version requirement. This is supposed to be fixed
+		// in npm version 5.7.1. As a work-around we run a plain "npm install" after every installation of new packages,
+		// which should re-install the package with a URL/GitHub version requirement.
+		VersionNumber currNpmVersion = getNpmVersion();
+		VersionNumber fixedNpmVersion = SemverUtils.createVersionNumber(5, 7, 1);
+		if (currNpmVersion != null && SemverMatcher.compareLoose(currNpmVersion, fixedNpmVersion) < 0) {
+			IStatus workaroundStatus = executor.execute(
+					() -> commandFactory.createInstallPackageCommand(installPath, Collections.emptyList(), false),
+					"Error while running \"npm install\" after installing npm packages.");
+			MultiStatus combinedStatus = statusHelper
+					.createMultiStatus("Installing npm packages with additional \"npm install\" afterwards.");
+			combinedStatus.merge(status);
+			combinedStatus.merge(workaroundStatus);
+			status = combinedStatus;
+		}
+
+		return status;
 	}
 
 	/**
