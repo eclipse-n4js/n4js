@@ -24,32 +24,32 @@
 
 {
 	/* XPECT contentAssistList at '<|>"name": "P",' proposals ---
-		\"dependencies\": {} - Dependencies of this npm,
-		\"devDependencies\": {} - Development dependencies of this npm,
-		\"main\": \"\" - Main module. path is relative to package root,
-		\"name\": \"value\" - Generic name value pair,
-		\"version\": \"\" - Npm semver version
+		dependencies: {} - Dependencies of this npm,
+		devDependencies: {} - Development dependencies of this npm,
+		main: \"\" - Main module. path is relative to package root,
+		name: \"\" - Generic name value pair,
+		version: \"\" - Npm semver version
 	--- */
 	"name": "P",
 	/* XPECT contentAssistList at '"n4js": {<|>' proposals ---
-	   	\"definesPackage\": \"\" - ,
-	   	\"execModule\": \"\" - ,
-	   	\"extendedRuntimeEnvironment\": \"\" - ,
-	   	\"implementationId\": \"\" -,
-	   	\"implementedProjects\": [] -,
-	   	\"initModules\": [] -,
-	   	\"mainModule\": \"\" - Main module specifier. Starts from source folder(s),
-	   	\"moduleFilters\": {} -,
-	   	\"moduleLoader\": \"\" -,
-	   	\"name\": \"value\" - Generic name value pair,
-	   	\"noModuleWrap\": {} -,
-	   	\"noValidate\": {} -,
-	   	\"providedRuntimeLibraries\": [] -,
-	   	\"requiredRuntimeLibraries\": [] -,
-	   	\"testedProjects\": [] - Projects that are tested by this project,
-	   	\"typeDependencies\": {} - deprecated,
-	   	\"vendorId\": \"\" -,
-	   	\"vendorName\": \"\" -
+	   	definesPackage: \"\" - ,
+	   	execModule: \"\" - ,
+	   	extendedRuntimeEnvironment: \"\" - ,
+	   	implementationId: \"\" -,
+	   	implementedProjects: [] -,
+	   	initModules: [] -,
+	   	mainModule: \"\" - Main module specifier. Starts from source folder(s),
+	   	moduleFilters: {} -,
+	   	moduleLoader: \"\" -,
+	   	name: \"\" - Generic name value pair,
+	   	noModuleWrap: {} -,
+	   	noValidate: {} -,
+	   	providedRuntimeLibraries: [] -,
+	   	requiredRuntimeLibraries: [] -,
+	   	testedProjects: [] - Projects that are tested by this project,
+	   	typeDependencies: {} - deprecated,
+	   	vendorId: \"\" -,
+	   	vendorName: \"\" -
 	--- */
 	"n4js": {
 		"projectType": "library",
