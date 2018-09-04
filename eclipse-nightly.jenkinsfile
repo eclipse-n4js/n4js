@@ -10,7 +10,6 @@
  */
 pipeline {
     options {
-    options {
         ansiColor('xterm')
         buildDiscarder(
             logRotator(
