@@ -18,8 +18,6 @@ import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_DEPENDENCY_NOT_FO
 import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_MODULE_TO_RUN_NOT_FOUND;
 import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR;
 import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_WRONG_CMDLINE_OPTIONS;
-import static org.eclipse.n4js.utils.git.GitUtils.hardReset;
-import static org.eclipse.n4js.utils.git.GitUtils.pull;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,7 +25,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -57,7 +54,6 @@ import org.eclipse.n4js.binaries.nodejs.NpmrcBinary;
 import org.eclipse.n4js.external.HeadlessTargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
-import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider;
 import org.eclipse.n4js.external.libraries.ExternalLibraryFolderUtils;
 import org.eclipse.n4js.generator.headless.BuildSet;
 import org.eclipse.n4js.generator.headless.BuildSetComputer;
@@ -314,9 +310,6 @@ public class N4jscBase implements IApplication {
 
 	@Inject
 	private BinariesPreferenceStore binariesPreferenceStore;
-
-	@Inject
-	private TypeDefinitionGitLocationProvider gitLocationProvider;
 
 	@Inject
 	private HeadlessExtensionRegistrationHelper headlessExtensionRegistrationHelper;
@@ -696,13 +689,6 @@ public class N4jscBase implements IApplication {
 				System.out.println("Skipping scanning and installation of dependencies.");
 			return;
 		}
-
-		// pull n4jsd to install location
-		java.net.URI gitRepositoryLocation = locationProvider.getTargetPlatformLocalGitRepositoryLocation();
-		Path localClonePath = new File(gitRepositoryLocation).toPath();
-		hardReset(gitLocationProvider.getGitLocation().getRepositoryRemoteURL(), localClonePath,
-				gitLocationProvider.getGitLocation().getRemoteBranch(), true);
-		pull(localClonePath);
 
 		String packageJson = ExternalLibraryFolderUtils.createTargetPlatformPackageJson();
 		java.net.URI platformLocation = locationProvider.getTargetPlatformInstallURI();
