@@ -128,10 +128,6 @@ public class JSONProposalProvider extends AbstractJSONProposalProvider {
 	@Override
 	public void complete_NameValuePair(EObject model, RuleCall ruleCall, ContentAssistContext context,
 			ICompletionProposalAcceptor acceptor) {
-		// do not add proposal for name-value-pair if a prefix is detected
-		if (!context.getPrefix().isEmpty()) {
-			return;
-		}
 
 		for (IJSONProposalProvider pe : registry.getProposalProviderExtensions()) {
 			if (pe.isResponsible(model)) {
@@ -139,7 +135,12 @@ public class JSONProposalProvider extends AbstractJSONProposalProvider {
 			}
 		}
 
-		acceptor.accept(nameValuePairProposalFactory.createNameValuePairProposal(context));
+		// do not add proposal for name-value-pair if a prefix is detected
+		if (!context.getPrefix().isEmpty()) {
+			return;
+		}
+
+		acceptor.accept(nameValuePairProposalFactory.createGenericNameValueProposal(context));
 	}
 
 	/**

@@ -44,10 +44,12 @@ public class NameValuePairProposalFactory {
 	@Inject
 	private JSONGrammarAccess grammarAccess;
 
-	private static final String NAME_VALUE_TEMPLATE_STRING = "\"${name}\": ${value}";
+	private static final String NAME_VALUE_TEMPLATE_STRING = "\"${name}\": \"${value}\"";
+	private static final String NAME_ARRAY_TEMPLATE_STRING = "\"${name}\": [${value}]";
+	private static final String NAME_OBJECT_TEMPLATE_STRING = "\"${name}\": {${value}}";
 
 	private static final String getTemplateName(String name, String value) {
-		return "\"" + name + "\": " + value;
+		return name + ": " + value;
 	}
 
 	/**
@@ -55,16 +57,91 @@ public class NameValuePairProposalFactory {
 	 * 
 	 * @param context
 	 *            The {@link ContentAssistContext} to create the proposal for.
-	 * @param defaultName
-	 *            Specifies the name of the pair.
-	 * @param defaultValue
-	 *            Specifies the value of the pair.
 	 */
-	public ICompletionProposal createNameValuePairProposal(ContentAssistContext context, String name, String value,
+	public ICompletionProposal createGenericNameValueProposal(ContentAssistContext context) {
+		return createNameValueProposal(context, "name", "", "Generic name value pair");
+	}
+
+	/**
+	 * Creates a generic name-value-pair proposal for the given context.
+	 * 
+	 * @param context
+	 *            The {@link ContentAssistContext} to create the proposal for.
+	 */
+	public ICompletionProposal createGenericNameArrayProposal(ContentAssistContext context) {
+		return createNameArrayProposal(context, "name", "", "Generic name array pair");
+	}
+
+	/**
+	 * Creates a generic name-value-pair proposal for the given context.
+	 * 
+	 * @param context
+	 *            The {@link ContentAssistContext} to create the proposal for.
+	 */
+	public ICompletionProposal createGenericNameObjectProposal(ContentAssistContext context) {
+		return createNameObjectProposal(context, "name", "", "Generic name object pair");
+	}
+
+	/**
+	 * Creates a name-value-pair proposal for the given context.
+	 * 
+	 * @param context
+	 *            The {@link ContentAssistContext} to create the proposal for.
+	 * @param name
+	 *            Specifies the name of the pair.
+	 * @param value
+	 *            Specifies the value of the pair.
+	 * @param description
+	 *            Specifies the description of the proposal.
+	 */
+	public ICompletionProposal createNameValueProposal(ContentAssistContext context, String name, String value,
 			String description) {
 
-		boolean trailingComma = hasTrailingComma(context);
-		Template nameValueTemplate = createNameValuePairTemplate(context, name, value, description, trailingComma);
+		Template nameValueTemplate = createNameValueTemplate(context, name, value, description);
+		return createProposal(context, name, value, description, nameValueTemplate);
+	}
+
+	/**
+	 * Creates a name-array-pair proposal for the given context.
+	 * 
+	 * @param context
+	 *            The {@link ContentAssistContext} to create the proposal for.
+	 * @param name
+	 *            Specifies the name of the pair.
+	 * @param array
+	 *            Specifies the value of the array.
+	 * @param description
+	 *            Specifies the description of the proposal.
+	 */
+	public ICompletionProposal createNameArrayProposal(ContentAssistContext context, String name, String array,
+			String description) {
+
+		Template nameValueTemplate = createNameArrayTemplate(context, name, array, description);
+		return createProposal(context, name, array, description, nameValueTemplate);
+	}
+
+	/**
+	 * Creates a name-object-pair proposal for the given context.
+	 * 
+	 * @param context
+	 *            The {@link ContentAssistContext} to create the proposal for.
+	 * @param name
+	 *            Specifies the name of the pair.
+	 * @param object
+	 *            Specifies the value of the object.
+	 * @param description
+	 *            Specifies the description of the proposal.
+	 */
+	public ICompletionProposal createNameObjectProposal(ContentAssistContext context, String name, String object,
+			String description) {
+
+		Template nameValueTemplate = createNameObjectTemplate(context, name, object, description);
+		return createProposal(context, name, object, description, nameValueTemplate);
+	}
+
+	private ICompletionProposal createProposal(ContentAssistContext context, String name, String value,
+			String description, Template nameValueTemplate) {
+
 		TemplateContextType contextType = getTemplateContextType();
 		IXtextDocument document = context.getDocument();
 		TemplateContext tContext = new DocumentTemplateContext(contextType, document, context.getOffset(), 0);
@@ -76,14 +153,33 @@ public class NameValuePairProposalFactory {
 		return new TemplateProposal(nameValueTemplate, tContext, context.getReplaceRegion(), null);
 	}
 
-	/**
-	 * Creates a name-value-pair proposal for the given context.
-	 * 
-	 * @param context
-	 *            The {@link ContentAssistContext} to create the proposal for.
-	 */
-	public ICompletionProposal createNameValuePairProposal(ContentAssistContext context) {
-		return createNameValuePairProposal(context, "name", "\"value\"", "Generic name value pair");
+	private Template createNameValueTemplate(ContentAssistContext context, String name, String value,
+			String description) {
+
+		return createTemplate(context, name, value, description, NAME_VALUE_TEMPLATE_STRING);
+	}
+
+	private Template createNameArrayTemplate(ContentAssistContext context, String name, String value,
+			String description) {
+
+		return createTemplate(context, name, value, description, NAME_ARRAY_TEMPLATE_STRING);
+	}
+
+	private Template createNameObjectTemplate(ContentAssistContext context, String name, String value,
+			String description) {
+
+		return createTemplate(context, name, value, description, NAME_OBJECT_TEMPLATE_STRING);
+	}
+
+	private Template createTemplate(ContentAssistContext context, String name, String value, String description,
+			String rawTemplate) {
+
+		boolean trailingComma = hasTrailingComma(context);
+		if (trailingComma) {
+			rawTemplate = rawTemplate + ",";
+		}
+
+		return new Template(getTemplateName(name, value), description, "", rawTemplate, true);
 	}
 
 	private boolean hasTrailingComma(ContentAssistContext context) {
@@ -99,26 +195,6 @@ public class NameValuePairProposalFactory {
 			}
 		}
 		return trailingComma;
-	}
-
-	/**
-	 * Creates a new name-value-pair template for the given parameters.
-	 *
-	 * @param context
-	 *            The content assist context to create the template for.
-	 * @param trailingComma
-	 *            Adds a trailing comma to the name-value-pair.
-	 */
-	private Template createNameValuePairTemplate(ContentAssistContext context, String name, String value,
-			String description, boolean trailingComma) {
-
-		String rawTemplate = NAME_VALUE_TEMPLATE_STRING;
-
-		if (trailingComma) {
-			rawTemplate = rawTemplate + ",";
-		}
-
-		return new Template(getTemplateName(name, value), description, "", rawTemplate, true);
 	}
 
 	/** Returns the template content type to use for the NameValuePair template. */

@@ -10,6 +10,7 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.n4js.json.JSON.JSONArray;
 import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONObject;
+import org.eclipse.n4js.json.JSON.JSONStringLiteral;
 import org.eclipse.n4js.json.JSON.NameValuePair;
 import org.eclipse.n4js.json.model.utils.JSONModelUtils;
 import org.eclipse.n4js.json.ui.contentassist.IJSONProposalProvider;
@@ -56,16 +57,26 @@ public class PackageJsonProposalProvider implements IJSONProposalProvider {
 			if (alreadyUsedNames.contains(name)) {
 				continue;
 			}
-			String value = "\"\"";
+			if (!context.getPrefix().isEmpty() && !name.startsWith(context.getPrefix())) {
+				continue;
+			}
+
+			String value = "";
+			String descr = pathProp.description;
+			ICompletionProposal pairProposal = null;
+			if (pathProp.valueType == JSONStringLiteral.class) {
+				pairProposal = nvpFactory.createNameValueProposal(context, name, value, descr);
+			}
 			if (pathProp.valueType == JSONArray.class) {
-				value = "[]";
+				pairProposal = nvpFactory.createNameArrayProposal(context, name, value, descr);
 			}
 			if (pathProp.valueType == JSONObject.class) {
-				value = "{}";
+				pairProposal = nvpFactory.createNameObjectProposal(context, name, value, descr);
 			}
-			String descr = pathProp.description;
-			ICompletionProposal pairProposal = nvpFactory.createNameValuePairProposal(context, name, value, descr);
-			acceptor.accept(pairProposal);
+
+			if (pairProposal != null) {
+				acceptor.accept(pairProposal);
+			}
 		}
 	}
 
