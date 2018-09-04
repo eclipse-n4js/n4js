@@ -31,7 +31,7 @@ public class JSONProposalProvider extends AbstractJSONProposalProvider {
 	private JSONUiExtensionRegistry registry;
 
 	@Inject
-	private NameValuePairProposalFactory nameValuePairProposalFactory;
+	private JSONProposalFactory nameValuePairProposalFactory;
 
 	/**
 	 * Propose an empty array literal to complete rule {@code JSONArray}.

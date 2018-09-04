@@ -14,7 +14,7 @@ import org.eclipse.n4js.json.JSON.JSONStringLiteral;
 import org.eclipse.n4js.json.JSON.NameValuePair;
 import org.eclipse.n4js.json.model.utils.JSONModelUtils;
 import org.eclipse.n4js.json.ui.contentassist.IJSONProposalProvider;
-import org.eclipse.n4js.json.ui.contentassist.NameValuePairProposalFactory;
+import org.eclipse.n4js.json.ui.contentassist.JSONProposalFactory;
 import org.eclipse.n4js.packagejson.PackageJsonProperties;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
@@ -45,8 +45,8 @@ public class PackageJsonProposalProvider implements IJSONProposalProvider {
 	public void complete_NameValuePair(EObject model, RuleCall ruleCall, ContentAssistContext context,
 			ICompletionProposalAcceptor acceptor) {
 
-		NameValuePairProposalFactory nvpFactory = N4LanguageUtils
-				.getServiceForContext(JSONModelUtils.FILE_EXTENSION, NameValuePairProposalFactory.class).get();
+		JSONProposalFactory nvpFactory = N4LanguageUtils
+				.getServiceForContext(JSONModelUtils.FILE_EXTENSION, JSONProposalFactory.class).get();
 
 		List<String> namePath = getJsonPathNames(model);
 		Set<String> alreadyUsedNames = getAlreadyUsedNames(model);

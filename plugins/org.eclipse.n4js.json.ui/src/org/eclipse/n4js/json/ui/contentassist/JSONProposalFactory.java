@@ -38,7 +38,7 @@ import com.google.inject.Inject;
  * they do for code templates or refactorings.
  * </code>
  */
-public class NameValuePairProposalFactory {
+public class JSONProposalFactory {
 	@Inject
 	private XtextTemplateContextTypeRegistry contextTypeRegistry;
 	@Inject
@@ -156,22 +156,25 @@ public class NameValuePairProposalFactory {
 	private Template createNameValueTemplate(ContentAssistContext context, String name, String value,
 			String description) {
 
-		return createTemplate(context, name, value, description, NAME_VALUE_TEMPLATE_STRING);
+		String displayLabel = getTemplateName(name, "\"" + value + "\"");
+		return createTemplate(context, displayLabel, description, NAME_VALUE_TEMPLATE_STRING);
 	}
 
 	private Template createNameArrayTemplate(ContentAssistContext context, String name, String value,
 			String description) {
 
-		return createTemplate(context, name, value, description, NAME_ARRAY_TEMPLATE_STRING);
+		String displayLabel = getTemplateName(name, "[" + value + "]");
+		return createTemplate(context, displayLabel, description, NAME_ARRAY_TEMPLATE_STRING);
 	}
 
 	private Template createNameObjectTemplate(ContentAssistContext context, String name, String value,
 			String description) {
 
-		return createTemplate(context, name, value, description, NAME_OBJECT_TEMPLATE_STRING);
+		String displayLabel = getTemplateName(name, "{" + value + "}");
+		return createTemplate(context, displayLabel, description, NAME_OBJECT_TEMPLATE_STRING);
 	}
 
-	private Template createTemplate(ContentAssistContext context, String name, String value, String description,
+	private Template createTemplate(ContentAssistContext context, String displayLabel, String description,
 			String rawTemplate) {
 
 		boolean trailingComma = hasTrailingComma(context);
@@ -179,7 +182,7 @@ public class NameValuePairProposalFactory {
 			rawTemplate = rawTemplate + ",";
 		}
 
-		return new Template(getTemplateName(name, value), description, "", rawTemplate, true);
+		return new Template(displayLabel, description, "", rawTemplate, true);
 	}
 
 	private boolean hasTrailingComma(ContentAssistContext context) {
