@@ -60,7 +60,7 @@
                   The class to use as proposal provider extension.
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.n4js.json.ui.contentassist.AbstractJSONProposalProvider:"/>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.n4js.json.ui.contentassist.IJSONProposalProvider"/>
                </appInfo>
             </annotation>
          </attribute>

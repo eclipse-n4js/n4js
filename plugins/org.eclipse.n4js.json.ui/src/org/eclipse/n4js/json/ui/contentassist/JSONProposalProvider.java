@@ -46,8 +46,10 @@ public class JSONProposalProvider extends AbstractJSONProposalProvider {
 			return;
 		}
 
-		for (AbstractJSONProposalProvider pe : registry.getProposalProviderExtensions()) {
-			pe.complete_JSONArray(model, ruleCall, context, acceptor);
+		for (IJSONProposalProvider pe : registry.getProposalProviderExtensions()) {
+			if (pe.isResponsible(model)) {
+				pe.complete_JSONArray(model, ruleCall, context, acceptor);
+			}
 		}
 
 		acceptor.accept(new ConfigurableCompletionProposal("[]", context.getOffset(), 0, 1, null,
@@ -74,8 +76,10 @@ public class JSONProposalProvider extends AbstractJSONProposalProvider {
 			return;
 		}
 
-		for (AbstractJSONProposalProvider pe : registry.getProposalProviderExtensions()) {
-			pe.complete_STRING(model, ruleCall, context, acceptor);
+		for (IJSONProposalProvider pe : registry.getProposalProviderExtensions()) {
+			if (pe.isResponsible(model)) {
+				pe.complete_STRING(model, ruleCall, context, acceptor);
+			}
 		}
 
 		acceptor.accept(new ConfigurableCompletionProposal("\"\"", context.getOffset(), 0, 1, null,
@@ -107,8 +111,10 @@ public class JSONProposalProvider extends AbstractJSONProposalProvider {
 			return;
 		}
 
-		for (AbstractJSONProposalProvider pe : registry.getProposalProviderExtensions()) {
-			pe.complete_JSONObject(model, ruleCall, context, acceptor);
+		for (IJSONProposalProvider pe : registry.getProposalProviderExtensions()) {
+			if (pe.isResponsible(model)) {
+				pe.complete_JSONObject(model, ruleCall, context, acceptor);
+			}
 		}
 
 		acceptor.accept(new ConfigurableCompletionProposal("{}", context.getOffset(), 0, 1, null,
@@ -127,8 +133,10 @@ public class JSONProposalProvider extends AbstractJSONProposalProvider {
 			return;
 		}
 
-		for (AbstractJSONProposalProvider pe : registry.getProposalProviderExtensions()) {
-			pe.complete_NameValuePair(model, ruleCall, context, acceptor);
+		for (IJSONProposalProvider pe : registry.getProposalProviderExtensions()) {
+			if (pe.isResponsible(model)) {
+				pe.complete_NameValuePair(model, ruleCall, context, acceptor);
+			}
 		}
 
 		acceptor.accept(nameValuePairProposalFactory.createNameValuePairProposal(context));

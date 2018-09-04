@@ -12,7 +12,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.RegistryFactory;
-import org.eclipse.n4js.json.ui.contentassist.AbstractJSONProposalProvider;
+import org.eclipse.n4js.json.ui.contentassist.IJSONProposalProvider;
 import org.eclipse.n4js.json.ui.editor.hyperlinking.HyperlinkHelperExtension;
 import org.eclipse.n4js.json.validation.extension.IJSONValidatorExtension;
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionProvider;
@@ -40,7 +40,7 @@ public class JSONUiExtensionRegistry {
 
 	// Cached result of the a query to the IExtensionRegistry.
 	// Only access via #getProposalProviderExtensions().
-	private Set<AbstractJSONProposalProvider> proposalProviderExtensions;
+	private Set<IJSONProposalProvider> proposalProviderExtensions;
 
 	// Cached result of the a query to the IExtensionRegistry.
 	// Only access via #getHyperlinkHelperExtensions().
@@ -66,7 +66,7 @@ public class JSONUiExtensionRegistry {
 		createExecutableExtensions(JSON_QUICKFIXPROVIDER_EXTENSIONS_POINT_ID, IssueResolutionProvider.class)
 				.forEach(this::register);
 		// query the extension registry for JSON proposal extensions and register them
-		createExecutableExtensions(JSON_PROPOSALPROVIDER_EXTENSIONS_POINT_ID, AbstractJSONProposalProvider.class)
+		createExecutableExtensions(JSON_PROPOSALPROVIDER_EXTENSIONS_POINT_ID, IJSONProposalProvider.class)
 				.forEach(this::register);
 		// query the extension registry for JSON hyperlink extensions and register them
 		createExecutableExtensions(JSON_HYPERLINKHELPER_EXTENSIONS_POINT_ID, HyperlinkHelperExtension.class)
@@ -125,7 +125,7 @@ public class JSONUiExtensionRegistry {
 	 * Returns a list of all {@link IJSONValidatorExtension}s that were registered
 	 * via the JSON quickfix extension point.
 	 */
-	public Collection<AbstractJSONProposalProvider> getProposalProviderExtensions() {
+	public Collection<IJSONProposalProvider> getProposalProviderExtensions() {
 		ensureInitialization(); // trigger lazy initialization, if required
 		return this.proposalProviderExtensions;
 	}
@@ -152,7 +152,7 @@ public class JSONUiExtensionRegistry {
 	 * Registers the given {@code proposalProviderExtension} with the
 	 * {@link JSONUiExtensionRegistry}.
 	 */
-	private void register(AbstractJSONProposalProvider proposalProviderExtension) {
+	private void register(IJSONProposalProvider proposalProviderExtension) {
 		ensureInitialization(); // trigger lazy initialization, if required
 		this.proposalProviderExtensions.add(proposalProviderExtension);
 	}
