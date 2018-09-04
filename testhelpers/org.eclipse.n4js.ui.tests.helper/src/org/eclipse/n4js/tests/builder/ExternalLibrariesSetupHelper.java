@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.tests.builder;
 
-import static org.eclipse.n4js.external.TypeDefinitionGitLocationProvider.TypeDefinitionGitLocation.PUBLIC_DEFINITION_LOCATION;
-import static org.eclipse.n4js.external.TypeDefinitionGitLocationProvider.TypeDefinitionGitLocation.TEST_DEFINITION_LOCATION;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -22,8 +20,6 @@ import java.net.URI;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
-import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider;
-import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider.TypeDefinitionGitLocationProviderImpl;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
@@ -43,16 +39,10 @@ public class ExternalLibrariesSetupHelper {
 	private ExternalLibraryPreferenceStore externalLibraryPreferenceStore;
 
 	@Inject
-	private TypeDefinitionGitLocationProvider gitLocationProvider;
-
-	@Inject
 	private ShippedCodeInitializeTestHelper shippedCodeInitializeTestHelper;
 
 	/** Sets up the known external library locations with the {@code node_modules} folder. */
-	public void setupExternalLibraries(boolean initShippedCode, boolean useSandboxN4JSD) throws Exception {
-		if (useSandboxN4JSD) {
-			((TypeDefinitionGitLocationProviderImpl) gitLocationProvider).setGitLocation(TEST_DEFINITION_LOCATION);
-		}
+	public void setupExternalLibraries(boolean initShippedCode) throws Exception {
 
 		// GH-821: clean-up here when done
 		final URI nodeModulesLocation = locationProvider.getNodeModulesURI();
@@ -80,7 +70,6 @@ public class ExternalLibrariesSetupHelper {
 
 	/** Tears down the external libraries. */
 	public void tearDownExternalLibraries(boolean tearDownShippedCode) throws Exception {
-		((TypeDefinitionGitLocationProviderImpl) gitLocationProvider).setGitLocation(PUBLIC_DEFINITION_LOCATION);
 
 		final URI nodeModulesLocation = locationProvider.getNodeModulesURI();
 		externalLibraryPreferenceStore.remove(nodeModulesLocation);

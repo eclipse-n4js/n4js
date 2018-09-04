@@ -72,9 +72,6 @@ public class ExternalLibrariesInstallHelper {
 			// remove npm cache
 			externals.maintenanceCleanNpmCache(multistatus, subMonitor2);
 
-		// reset type definitions
-		externals.maintenanceResetTypeDefinitions(multistatus);
-
 		// remove npms
 		externals.maintenanceDeleteNpms(multistatus);
 

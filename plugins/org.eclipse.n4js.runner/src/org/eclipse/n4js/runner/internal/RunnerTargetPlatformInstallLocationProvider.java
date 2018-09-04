@@ -30,9 +30,4 @@ class RunnerTargetPlatformInstallLocationProvider implements TargetPlatformInsta
 		return null;
 	}
 
-	@Override
-	public String getGitRepositoryName() {
-		return null;
-	}
-
 }

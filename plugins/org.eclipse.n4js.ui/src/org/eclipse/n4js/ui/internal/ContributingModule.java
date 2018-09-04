@@ -28,12 +28,9 @@ import org.eclipse.n4js.external.ExternalLibraryHelper;
 import org.eclipse.n4js.external.ExternalLibraryUriHelper;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalProjectsCollector;
-import org.eclipse.n4js.external.GitCloneSupplier;
 import org.eclipse.n4js.external.NpmLogger;
 import org.eclipse.n4js.external.RebuildWorkspaceProjectsScheduler;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
-import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider;
-import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider.TypeDefinitionGitLocationProviderImpl;
 import org.eclipse.n4js.generator.IWorkspaceMarkerSupport;
 import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
@@ -134,8 +131,6 @@ public class ContributingModule implements Module {
 		binder.bind(ExternalLibraryHelper.class);
 		binder.bind(StatusHelper.class);
 		binder.bind(TargetPlatformInstallLocationProvider.class).to(EclipseTargetPlatformInstallLocationProvider.class);
-		binder.bind(GitCloneSupplier.class);
-		binder.bind(TypeDefinitionGitLocationProvider.class).to(TypeDefinitionGitLocationProviderImpl.class);
 
 		binder.bind(IN4JSCore.class).to(N4JSEclipseCore.class);
 		binder.bind(IN4JSEclipseCore.class).to(N4JSEclipseCore.class);

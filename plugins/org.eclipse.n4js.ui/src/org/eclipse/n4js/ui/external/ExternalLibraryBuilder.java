@@ -79,7 +79,6 @@ import org.eclipse.xtext.util.Strings;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 
 import com.google.common.base.Optional;
-import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
@@ -297,9 +296,6 @@ public class ExternalLibraryBuilder {
 	private List<IProject> doPerformOperation(N4JSExternalProject[] projects, BuildOperation operation,
 			IProgressMonitor monitor) {
 
-		// TODO: remove sysout and stopwatches
-		Stopwatch overall = Stopwatch.createStarted();
-
 		if (projects == null || projects.length == 0) {
 			return Collections.emptyList();
 		}
@@ -339,8 +335,6 @@ public class ExternalLibraryBuilder {
 			LOGGER.info(prefix + "ing external libraries: " + projectNames);
 			SubMonitor subMonitor = SubMonitor.convert(monitor, buildOrderList.size());
 
-			System.out.println("Preparing external library workspace build took " + overall);
-
 			List<IProject> actualBuildOrderList = new LinkedList<>();
 			for (IN4JSProject project : buildOrderList) {
 				LOGGER.info(prefix + "ing external library: " + project.getProjectName());
@@ -354,8 +348,6 @@ public class ExternalLibraryBuilder {
 
 			return actualBuildOrderList;
 		} finally {
-			overall.stop();
-			System.out.println("Building whole external library workspace took " + overall);
 			allProjectsMeasurement.end();
 			Job.getJobManager().endRule(rule);
 		}
@@ -432,7 +424,8 @@ public class ExternalLibraryBuilder {
 					IProgressMonitor monitor, IToBeBuiltComputerContribution contribution) {
 				try {
 					// The following procedure is similar to computer.updateProject except for the initial
-					// doRemoveProject invocation. TODO: revisit whether doRemoveProject can really be omitted here
+					// doRemoveProject invocation. TODO GH-1018: revisit whether doRemoveProject can really be omitted
+					// here
 					ToBeBuilt toBeBuilt = new ToBeBuilt();
 					final SubMonitor childMonitor = SubMonitor.convert(monitor, 1);
 					n4Project.getProject().accept(new IResourceVisitor() {
@@ -510,8 +503,6 @@ public class ExternalLibraryBuilder {
 			final Measurement measurement = operationCollector
 					.getMeasurement(this.name().toLowerCase() + "ing " + n4EclPrj.getProjectName());
 
-			Stopwatch overall = Stopwatch.createStarted();
-
 			monitor.setTaskName("Collecting resource for '" + n4EclPrj.getProjectName() + "'...");
 			SubMonitor subMonitor = SubMonitor.convert(monitor, 2);
 			IProgressMonitor computeMonitor = subMonitor.newChild(1, SUPPRESS_BEGINTASK);
@@ -557,8 +548,6 @@ public class ExternalLibraryBuilder {
 					builderState.update(buildData, buildMonitor);
 
 				} finally {
-					overall.stop();
-					System.out.println("Building external project " + n4EclPrj.getProjectName() + " took " + overall);
 
 					if (null != resourceSet) {
 						// clear resourceSet without setDeliver to avoid potentially expensive notifications

@@ -23,7 +23,6 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.libraries.ExternalLibraryFolderUtils;
 import org.eclipse.n4js.internal.N4JSModel;
 
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
@@ -33,9 +32,6 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class HeadlessTargetPlatformInstallLocationProvider implements TargetPlatformInstallLocationProvider {
-
-	@Inject
-	private TypeDefinitionGitLocationProvider gitLocationProvider;
 
 	private File targetPlatformInstallLocation;
 
@@ -51,11 +47,6 @@ public class HeadlessTargetPlatformInstallLocationProvider implements TargetPlat
 	@Override
 	public URI getTargetPlatformFileLocation() {
 		return targetPlatformFileLocation;
-	}
-
-	@Override
-	public String getGitRepositoryName() {
-		return gitLocationProvider.getGitLocation().getRepositoryName();
 	}
 
 	/**
