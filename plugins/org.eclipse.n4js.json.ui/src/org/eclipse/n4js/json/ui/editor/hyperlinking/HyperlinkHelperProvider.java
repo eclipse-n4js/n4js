@@ -23,7 +23,10 @@ public class HyperlinkHelperProvider extends HyperlinkHelper {
 
 		Collection<HyperlinkHelperExtension> hyperlinkHelperExtensions = registry.getHyperlinkHelperExtensions();
 		for (HyperlinkHelperExtension hhExt : hyperlinkHelperExtensions) {
-			IHyperlink[] hyperlinks = hhExt.getHyperlinks(resource, offset);
+			IHyperlink[] hyperlinks = null;
+			if (hhExt.isResponsible(resource)) {
+				hyperlinks = hhExt.getHyperlinks(resource, offset);
+			}
 			if (hyperlinks == null) {
 				continue;
 			}

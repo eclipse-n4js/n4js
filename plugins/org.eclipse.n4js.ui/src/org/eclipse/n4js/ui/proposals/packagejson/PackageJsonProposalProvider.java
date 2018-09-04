@@ -5,37 +5,39 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.n4js.json.JSON.JSONArray;
 import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONObject;
-import org.eclipse.n4js.json.JSON.JSONPackage;
 import org.eclipse.n4js.json.JSON.NameValuePair;
 import org.eclipse.n4js.json.model.utils.JSONModelUtils;
 import org.eclipse.n4js.json.ui.contentassist.IJSONProposalProvider;
 import org.eclipse.n4js.json.ui.contentassist.NameValuePairProposalFactory;
 import org.eclipse.n4js.packagejson.PackageJsonProperties;
+import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
 import org.eclipse.n4js.utils.languages.N4LanguageUtils;
 import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.RuleCall;
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor;
 
+import com.google.inject.Inject;
+
 /**
  * A factory for creating {@link ICompletionProposal}s that insert new name-value-pairs into a JSON Document.
  */
 public class PackageJsonProposalProvider implements IJSONProposalProvider {
 
+	@Inject
+	private XpectAwareFileExtensionCalculator fileExtensionCalculator;
+
 	@Override
 	public boolean isResponsible(EObject eObject) {
-		Resource eResource = eObject.eResource();
-		EClass eClass = eObject.eClass();
-		EPackage ePackage = eClass.getEPackage();
-		return ePackage == JSONPackage.eINSTANCE;
+		// this validator extension only applies to package.json files
+		return fileExtensionCalculator.getFilenameWithoutXpectExtension(eObject.eResource().getURI())
+				.equals(IN4JSProject.PACKAGE_JSON);
 	}
 
 	@Override

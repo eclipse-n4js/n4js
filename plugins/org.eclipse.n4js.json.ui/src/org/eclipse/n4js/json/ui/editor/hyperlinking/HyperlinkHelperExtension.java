@@ -5,6 +5,13 @@ import org.eclipse.xtext.resource.XtextResource;
 
 public interface HyperlinkHelperExtension {
 
+	/**
+	 * @return true iff this hyperlink extension is active on the given
+	 *         {@link XtextResource}
+	 */
+	boolean isResponsible(XtextResource resource);
+
+	/** @return an array of {@link IHyperlink}s */
 	IHyperlink[] getHyperlinks(XtextResource resource, int offset);
 
 }

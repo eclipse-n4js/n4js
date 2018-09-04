@@ -24,6 +24,7 @@ import org.eclipse.n4js.json.JSON.NameValuePair;
 import org.eclipse.n4js.json.ui.editor.hyperlinking.HyperlinkHelperExtension;
 import org.eclipse.n4js.packagejson.PackageJsonProperties;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
 import org.eclipse.n4js.ui.internal.N4JSEclipseModel;
 import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseSourceContainer;
@@ -55,6 +56,16 @@ public class PackageJsonHyperlinkHelperExtension implements HyperlinkHelperExten
 
 	@Inject
 	private EObjectAtOffsetHelper eObjectAtOffsetHelper;
+
+	@Inject
+	private XpectAwareFileExtensionCalculator fileExtensionCalculator;
+
+	@Override
+	public boolean isResponsible(XtextResource resource) {
+		// this validator extension only applies to package.json files
+		return fileExtensionCalculator.getFilenameWithoutXpectExtension(resource.getURI())
+				.equals(IN4JSProject.PACKAGE_JSON);
+	}
 
 	@Override
 	public IHyperlink[] getHyperlinks(XtextResource resource, int offset) {
