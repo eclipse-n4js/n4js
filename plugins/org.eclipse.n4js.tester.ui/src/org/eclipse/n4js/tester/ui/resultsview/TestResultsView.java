@@ -64,6 +64,10 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.text.Document;
+import org.eclipse.jface.text.TextViewer;
+import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
+import org.eclipse.jface.text.hyperlink.MultipleHyperlinkPresenter;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -109,6 +113,7 @@ import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -116,7 +121,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
@@ -182,6 +186,9 @@ public class TestResultsView extends ViewPart {
 	@Inject
 	private IN4JSEclipseCore core;
 
+	@Inject
+	private TestResultHyperlinkDetector n4JSStackTraceHyperlinkDetector;
+
 	/**
 	 * Needed to convert configuration to ILaunchConfiguraton
 	 */
@@ -200,7 +207,7 @@ public class TestResultsView extends ViewPart {
 	private ToolBar toolBar;
 	private TestProgressBar progressBar;
 	private TreeViewer testTreeViewer;
-	private Text stackTrace;
+	private TextViewer stackTrace;
 
 	private Action actionScrollLock;
 	private Action actionRelaunch;
@@ -670,7 +677,13 @@ public class TestResultsView extends ViewPart {
 
 		testTreeViewer.setInput(getViewSite());
 
-		stackTrace = new Text(sashForm, SWT.MULTI | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL);
+		// stackTrace = new Text(sashForm, SWT.MULTI | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL);
+
+		stackTrace = new TextViewer(sashForm, SWT.SCROLLBAR_OVERLAY | SWT.READ_ONLY);
+		stackTrace.getTextWidget().setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+		// Note: the links are not shown since we do not use a modifier to highlight them
+		stackTrace.setHyperlinkPresenter(new MultipleHyperlinkPresenter(new RGB(0, 0, 255)));
+		stackTrace.setHyperlinkDetectors(new IHyperlinkDetector[] { n4JSStackTraceHyperlinkDetector }, SWT.NONE);
 
 		sashForm.addControlListener(new ControlListener() {
 			@Override
@@ -1108,7 +1121,8 @@ public class TestResultsView extends ViewPart {
 	 * trace area.
 	 */
 	protected void onSingleClick() {
-		stackTrace.setText("");
+		// stackTrace.setText("");
+		stackTrace.setDocument(new Document(""));
 
 		final ISelection selection = testTreeViewer.getSelection();
 		if (selection.isEmpty()) {
@@ -1135,20 +1149,24 @@ public class TestResultsView extends ViewPart {
 							}
 							final StringBuilder sb = new StringBuilder();
 							trace.forEach(line -> sb.append(line).append(lineSeparator()));
-							stackTrace.setText(sb.toString());
-							stackTrace.setSelection(0);
+							updateStackTrace(sb.toString());
+
 						} else if ((SKIPPED_IGNORE.equals(result.getTestStatus())
 								|| SKIPPED_FIXME.equals(result.getTestStatus())
 								|| ERROR.equals(result.getTestStatus()))
 								&& !isNullOrEmpty(result.getMessage())) {
-							stackTrace.setText(result.getMessage());
-							stackTrace.setSelection(0);
+							updateStackTrace(result.getMessage());
 						}
 					}
 
 				}
 			}
 		}
+	}
+
+	private void updateStackTrace(String s) {
+		stackTrace.setDocument(new Document(s));
+		stackTrace.getTextWidget().setSelection(0);
 	}
 
 	/**

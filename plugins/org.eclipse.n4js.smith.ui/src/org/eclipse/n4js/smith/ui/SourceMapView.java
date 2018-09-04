@@ -202,7 +202,7 @@ public class SourceMapView extends ViewPart {
 
 	private void updateActiveEditor(IEditorPart editorPart) {
 
-		if (editorPart != activeEditor && editorPart != null) {
+		if (editorPart != activeEditor && editorPart != null && activeEditor instanceof IFileEditorInput) {
 			activeEditor = editorPart;
 			IFileEditorInput fei = (IFileEditorInput) activeEditor.getEditorInput();
 			activeEditor = editorPart;

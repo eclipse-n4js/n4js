@@ -10,6 +10,13 @@
  */
 package org.eclipse.n4js.ui.console;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -21,6 +28,7 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.rules.FastPartitioner;
 import org.eclipse.jface.text.rules.RuleBasedPartitionScanner;
+import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.ui.console.IConsoleDocumentPartitioner;
@@ -28,7 +36,7 @@ import org.eclipse.ui.console.TextConsole;
 import org.eclipse.ui.progress.WorkbenchJob;
 
 /**
- * @see org.eclipse.jdt.internal.debug.ui.console.JavaStackTraceConsole
+ * Based on {@code org.eclipse.jdt.internal.debug.ui.console.JavaStackTraceConsole}
  */
 public class N4JSStackTraceConsole extends TextConsole {
 
@@ -54,7 +62,17 @@ public class N4JSStackTraceConsole extends TextConsole {
 
 	}
 
+	/**
+	 * Console type, used in plugin.xml to connect the hyper link tracker.
+	 */
 	public final static String CONSOLE_TYPE = "n4jsStackTraceConsole"; //$NON-NLS-1$
+
+	/**
+	 * Name of the temporary file containing the console text.
+	 */
+	private final static String FILE_NAME = N4JSActivator.getInstance().getStateLocation().toOSString() + File.separator
+			+
+			CONSOLE_TYPE + ".txt"; //$NON-NLS-1$
 
 	private final N4JSStackTraceConsolePartitioner partitioner = new N4JSStackTraceConsolePartitioner();
 
@@ -77,21 +95,22 @@ public class N4JSStackTraceConsole extends TextConsole {
 	 *
 	 */
 	public void initializeDocument() {
-		// File file = new File(FILE_NAME);
-		// if (file.exists()) {
-		// try (InputStream fin = new BufferedInputStream(new FileInputStream(file))) {
-		// int len = (int) file.length();
-		// byte[] b = new byte[len];
-		// int read = 0;
-		// while (read < len) {
-		// read += fin.read(b);
-		// }
-		// getDocument().set(new String(b));
-		// } catch (IOException e) {
-		// }
-		// } else {
-		// getDocument().set(ConsoleMessages.JavaStackTraceConsole_0);
-		// }
+		File file = new File(FILE_NAME);
+		if (file.exists()) {
+			try (InputStream fin = new BufferedInputStream(new FileInputStream(file))) {
+				int len = (int) file.length();
+				byte[] b = new byte[len];
+				int read = 0;
+				while (read < len) {
+					read += fin.read(b);
+				}
+				getDocument().set(new String(b));
+			} catch (IOException e) {
+				// just ignore that, not important
+			}
+		} else {
+			getDocument().set(ConsoleMessages.ConsoleCallToAction);
+		}
 
 	}
 
@@ -99,8 +118,20 @@ public class N4JSStackTraceConsole extends TextConsole {
 	 *
 	 */
 	public void saveDocument() {
-		// TODO Auto-generated method stub
-
+		try (FileOutputStream fout = new FileOutputStream(FILE_NAME)) {
+			IDocument document = getDocument();
+			if (document != null) {
+				if (document.getLength() > 0) {
+					String contents = document.get();
+					fout.write(contents.getBytes());
+				} else {
+					File file = new File(FILE_NAME);
+					file.delete();
+				}
+			}
+		} catch (IOException e) {
+			// just ignore that, not important
+		}
 	}
 
 	/**

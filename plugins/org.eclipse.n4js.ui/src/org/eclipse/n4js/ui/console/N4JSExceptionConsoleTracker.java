@@ -9,17 +9,23 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 /**
- * @see org.eclipse.jdt.internal.debug.ui.console.JavaConsoleTracker
+ * Console tracker which enables JavaScript/N4JS hyperlinks to the source code. Needs to be injected.
  */
 public class N4JSExceptionConsoleTracker implements IPatternMatchListenerDelegate {
 
 	/**
 	 * The console associated with this line tracker
 	 */
-	private TextConsole fConsole;
+	private TextConsole console;
 
+	/**
+	 * Set by injector in constructor.
+	 */
 	private final Provider<N4JSStackTraceHyperlink> n4JSStackTraceHyperlinkProvider;
 
+	/**
+	 * Creates this tracker with the given hyper link provider. This constructor is called by the injector.
+	 */
 	@Inject
 	public N4JSExceptionConsoleTracker(Provider<N4JSStackTraceHyperlink> n4JSStackTraceHyperlinkProvider) {
 		this.n4JSStackTraceHyperlinkProvider = n4JSStackTraceHyperlinkProvider;
@@ -31,8 +37,8 @@ public class N4JSExceptionConsoleTracker implements IPatternMatchListenerDelegat
 	 * @see org.eclipse.ui.console.IPatternMatchListenerDelegate#connect(org.eclipse.ui.console.IConsole)
 	 */
 	@Override
-	public void connect(TextConsole console) {
-		fConsole = console;
+	public void connect(TextConsole textConsole) {
+		this.console = textConsole;
 	}
 
 	/*
@@ -42,11 +48,14 @@ public class N4JSExceptionConsoleTracker implements IPatternMatchListenerDelegat
 	 */
 	@Override
 	public void disconnect() {
-		fConsole = null;
+		console = null;
 	}
 
+	/**
+	 * Returns the console, only available after connecting a console via {@link #connect(TextConsole)}.
+	 */
 	protected TextConsole getConsole() {
-		return fConsole;
+		return console;
 	}
 
 	/*
@@ -60,9 +69,10 @@ public class N4JSExceptionConsoleTracker implements IPatternMatchListenerDelegat
 			int offset = event.getOffset();
 			int length = event.getLength();
 			N4JSStackTraceHyperlink link = n4JSStackTraceHyperlinkProvider.get();
-			link.setTextConsole(fConsole);
-			fConsole.addHyperlink(link, offset + 1, length - 2);
+			link.setTextConsole(console);
+			console.addHyperlink(link, offset + 1, length - 2);
 		} catch (BadLocationException e) {
+			// no link to add
 		}
 	}
 

@@ -1437,7 +1437,7 @@ Contributors:
    <extension
          point="org.eclipse.n4js.json.validation">
       <validator
-      	class="JSLink jsLinkorg.eclipse.n4js.validation.validators.packagejson.PackageJsonValidatorExtension"
+      	class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.validation.validators.packagejson.PackageJsonValidatorExtension"
       />
       <validator
       	class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.validation.validators.packagejson.N4JSProjectSetupJsonValidatorExtension"
@@ -1482,7 +1482,7 @@ Contributors:
          <enablement>
             <or>
                <test property="org.eclipse.ui.console.consoleTypeTest" value="n4jsStackTraceConsole"/>
-               <test property="org.eclipse.debug.ui.processTypeTest" value="javascript"/>
+               <test property="org.eclipse.debug.ui.processTypeTest" value="n4js"/>
             </or>
          </enablement>
       </consolePatternMatchListener>

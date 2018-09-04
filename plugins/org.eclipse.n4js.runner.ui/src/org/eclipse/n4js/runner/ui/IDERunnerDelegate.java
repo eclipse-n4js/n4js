@@ -33,6 +33,11 @@ import com.google.inject.Inject;
 public abstract class IDERunnerDelegate implements ILaunchConfigurationDelegate {
 	// FIXME rename class to AbstractRunnerLaunchConfigurationDelegate
 
+	/**
+	 * This id is also used to connect a hyper link tracker to the IOConsole (see ui plugin.xml)
+	 */
+	private static final String N4JS_PROCESS_TYPE = "n4js";
+
 	private static final Logger LOGGER = Logger.getLogger(IDERunnerDelegate.class);
 
 	@Inject
@@ -61,7 +66,7 @@ public abstract class IDERunnerDelegate implements ILaunchConfigurationDelegate 
 
 		try {
 			HashMap<String, String> attributes = new HashMap<>(1);
-			attributes.put(IProcess.ATTR_PROCESS_TYPE, "javascript");
+			attributes.put(IProcess.ATTR_PROCESS_TYPE, N4JS_PROCESS_TYPE);
 			DebugPlugin.newProcess(launch, runnerFrontEndUI.runInUI(runConfig),
 					launch.getLaunchConfiguration().getName(), attributes);
 
