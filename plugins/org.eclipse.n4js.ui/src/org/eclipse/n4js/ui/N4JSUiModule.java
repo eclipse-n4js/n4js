@@ -90,6 +90,7 @@ import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
 import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
 import org.eclipse.n4js.ui.internal.ExternalProjectCacheLoader;
 import org.eclipse.n4js.ui.internal.N4JSEclipseCore;
+import org.eclipse.n4js.ui.internal.N4JSEclipseModel;
 import org.eclipse.n4js.ui.internal.ResourceUIValidatorExtension;
 import org.eclipse.n4js.ui.labeling.N4JSContentAssistLabelProvider;
 import org.eclipse.n4js.ui.labeling.N4JSHoverProvider;
@@ -398,6 +399,11 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	/** Delegate to shared injector */
 	public Provider<? extends N4JSModel> provideN4JSModel() {
 		return Access.contributedProvider(N4JSModel.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<? extends N4JSEclipseModel> provideN4JSEclipseModel() {
+		return Access.contributedProvider(N4JSEclipseModel.class);
 	}
 
 	/** Delegate to shared injector */
