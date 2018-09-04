@@ -54,9 +54,9 @@ pipeline {
                 script {
                         sh """\
                                 pwd
+                                ls -la
                                 git status
                                 git log -n 1
-                                ls -la
                            """
                 }
             }
