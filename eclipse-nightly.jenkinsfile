@@ -37,48 +37,37 @@ pipeline {
 
     stages {
 
-        stage('tool check') {
-            steps {
-                script {
-                        sh """\
-                            mvn -v
-                            node -v
-                            npm -v
-                           """
-                }
-            }
-        }
-
-        stage('fs browse') {
-            steps {
-                dir('n4js'){
-                    script {
-                            sh """\
-                                    pwd
-                                    ls -la
-                                    git status
-                                    git log -n 1
-                            """
-                    }
-                }
-            }
-        }
-
         stage('build') {
             steps {
                 wrap([$class: 'Xvnc', takeScreenshot: false, useXauthority: true]) {
-                    script {
-                        def options = '--batch-mode --quiet --update-snapshots --show-version --errors -Dtycho.localArtifacts=ignore -Dmaven.test.failure.ignore -DWORKSPACE=' + env.WORKSPACE
-                        def profiles = [
-                            'execute-plugin-tests',
-                            'execute-plugin-ui-tests',
-                            'execute-ecma-tests',
-                            'execute-accesscontrol-tests',
-                            'execute-smoke-tests',
-                            'execute-hlc-integration-tests'
-                        ].join(',')
+                    dir('n4js'){
+                        script {
+                            def options = [
+                                '--batch-mode',
+                                '--quiet',
+                                '--update-snapshots'
+                                '--show-version',
+                                '--errors',
+                                '-Dtycho.localArtifacts=ignore',
+                                '-Dmaven.test.failure.ignore',
+                                '-DWORKSPACE=' + env.WORKSPACE
+                            ].join(' ')
+                            def profiles = [
+                                'execute-plugin-tests',
+                                'execute-plugin-ui-tests',
+                                'execute-ecma-tests',
+                                'execute-accesscontrol-tests',
+                                'execute-smoke-tests',
+                                'execute-hlc-integration-tests'
+                            ].join(',')
 
-                        sh "mvn clean verify -P${profiles} ${options}"
+                            sh """\
+                                pwd
+                                git log -n 1
+                                npm version
+                            """
+                            sh "mvn clean verify -P${profiles} ${options}"
+                        }
                     }
                 }
             }
