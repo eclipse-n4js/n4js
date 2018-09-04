@@ -18,7 +18,7 @@ pipeline {
                 artifactNumToKeepStr:  '20',
                 daysToKeepStr:         '14'))
         disableConcurrentBuilds()
-        timeout(time: 4, unit: 'HOURS')
+        timeout(time: 6, unit: 'HOURS')
         timestamps()
     }
 
@@ -57,8 +57,7 @@ pipeline {
                                 'execute-plugin-ui-tests',
                                 'execute-ecma-tests',
                                 'execute-accesscontrol-tests',
-                                'execute-smoke-tests',
-                                'execute-hlc-integration-tests'
+                                'execute-smoke-tests'
                             ].join(',')
 
                             sh """\
@@ -85,7 +84,7 @@ pipeline {
             junit '**/failsafe-reports/**/*.xml'
         }
         cleanup {
-            // aexcute here in case archiving fails in 'always'
+            // excute here in case archiving fails in 'always'
             mail to: 'jakub.siberski@numberfour.eu',
                  subject: "${currentBuild.result}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                  body:  """\
