@@ -397,12 +397,12 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	}
 
 	/** Delegate to shared injector */
-	public Provider<? extends N4JSModel> provideN4JSModel() {
+	public Provider<N4JSModel> provideN4JSModel() {
 		return Access.contributedProvider(N4JSModel.class);
 	}
 
 	/** Delegate to shared injector */
-	public Provider<? extends N4JSEclipseModel> provideN4JSEclipseModel() {
+	public Provider<N4JSEclipseModel> provideN4JSEclipseModel() {
 		return Access.contributedProvider(N4JSEclipseModel.class);
 	}
 
