@@ -64,7 +64,7 @@ public class NpmCLI {
 
 	/** Simple validation if the package name is not null or empty */
 	public boolean invalidPackageName(String packageName) {
-		return packageName == null || packageName.trim().isEmpty() || packageName.contains("@");
+		return packageName == null || packageName.trim().isEmpty() || packageName.endsWith("@");
 	}
 
 	/** Simple validation if the package version is not null or empty */
