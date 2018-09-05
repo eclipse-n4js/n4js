@@ -43,7 +43,7 @@ pipeline {
                     dir('n4js'){
                         script {
                             def options = [
-                                '--DargLine="-Xmx4g"',
+                                '--DargLine=\"-Xmx4g\"',
                                 '--batch-mode',
                                 '--quiet',
                                 '--update-snapshots',
