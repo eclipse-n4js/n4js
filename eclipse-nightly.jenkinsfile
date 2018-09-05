@@ -43,14 +43,14 @@ pipeline {
                     dir('n4js'){
                         script {
                             def options = [
-                                '--DargLine=\"-Xmx4g\"',
                                 '--batch-mode',
                                 '--quiet',
                                 '--update-snapshots',
                                 '--show-version',
                                 '-Dtycho.localArtifacts=ignore',
                                 '-Dmaven.test.failure.ignore',
-                                '-DWORKSPACE=' + env.WORKSPACE
+                                '-DWORKSPACE=' + env.WORKSPACE,
+                                '--DargLine=\"-Xmx4g\"'
                             ].join(' ')
                             def profiles = [
                                 'execute-plugin-tests',
