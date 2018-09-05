@@ -37,6 +37,7 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.N4JSGlobals
+import org.eclipse.n4js.external.ShadowingInfoHelper
 import org.eclipse.n4js.json.JSON.JSONArray
 import org.eclipse.n4js.json.JSON.JSONDocument
 import org.eclipse.n4js.json.JSON.JSONObject
@@ -86,7 +87,6 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 import static org.eclipse.n4js.validation.validators.packagejson.ProjectTypePredicate.*
 
 import static extension com.google.common.base.Strings.nullToEmpty
-import org.eclipse.n4js.external.ShadowingInfoHelper
 
 /**
  * A JSON validator extension that validates {@code package.json} resources in the context
@@ -1128,7 +1128,9 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		// type cannot be resolved from index, hence project does not exist in workspace.
 		if (null === project || null === project.projectType) {
 			// in GH-821: remove this condition
-			if (!currentProject.isExternal) { 
+			if (!currentProject.isExternal
+				&& !id.startsWith("@") // FIXME: remove after GH-1018 is used by webteam
+			) { 
 				val msg = getMessageForNON_EXISTING_PROJECT(id);
 				val packageVersion = if (ref.npmVersion === null) "" else ref.npmVersion.toString;
 				addIssue(msg, ref.astRepresentation, null, NON_EXISTING_PROJECT, id, packageVersion);
