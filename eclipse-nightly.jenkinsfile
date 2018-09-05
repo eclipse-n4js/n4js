@@ -29,6 +29,7 @@ pipeline {
                      ":/shared/common/maven/apache-maven-3.5.2/bin/"    +
                      ":/shared/common/node-v8.11.1-linux-x64/bin"       +
                      ":/shared/common/java/oracle/jdk1.8.0_162_x64/bin"
+        MAVEN_OPTS = 'MAVEN_OPTS=-Xmx4G'
     }
 
     triggers {
@@ -49,8 +50,7 @@ pipeline {
                                 '--show-version',
                                 '-Dtycho.localArtifacts=ignore',
                                 '-Dmaven.test.failure.ignore',
-                                '-DWORKSPACE=' + env.WORKSPACE,
-                                '--DargLine=\"-Xmx4g\"'
+                                '-DWORKSPACE=' + env.WORKSPACE
                             ].join(' ')
                             def profiles = [
                                 'execute-plugin-tests',
