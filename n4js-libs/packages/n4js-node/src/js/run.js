@@ -46,8 +46,9 @@
             }
             clearInterval(timerHandle);
             if (exitOnError) {
+                const exitCode = typeof err === "number" ? err|0 : null;
                 // Flush stdout and exit:
-                process.stdout.write("", process.exit.bind(process, 1));
+                process.stdout.write("", process.exit.bind(process, exitCode || 1));
             }
         });
     };
