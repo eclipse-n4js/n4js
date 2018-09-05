@@ -62,9 +62,9 @@ public class TestResultHyperlinkDetector extends AbstractHyperlinkDetector {
 		while (matcher.find()) {
 			JSStackTraceLocationText generatedLocation = new JSStackTraceLocationText(matcher);
 			JSStackTraceLocationText originalLocation = retrieveOriginal(generatedLocation);
-			if (originalLocation != null) {
+			if (originalLocation != null) { // prefer original location (e.g. n4js)
 				links.add(new TestResultHyperlink(region, originalLocation));
-				if (!canShowMultipleHyperlinks) {
+				if (!canShowMultipleHyperlinks) { // and do not show any other in case of single hyper links
 					break;
 				}
 			}

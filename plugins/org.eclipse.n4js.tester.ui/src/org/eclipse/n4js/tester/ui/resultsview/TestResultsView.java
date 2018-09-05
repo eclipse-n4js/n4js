@@ -66,8 +66,8 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.TextViewer;
+import org.eclipse.jface.text.hyperlink.DefaultHyperlinkPresenter;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
-import org.eclipse.jface.text.hyperlink.MultipleHyperlinkPresenter;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -682,7 +682,10 @@ public class TestResultsView extends ViewPart {
 		stackTrace = new TextViewer(sashForm, SWT.SCROLLBAR_OVERLAY | SWT.READ_ONLY);
 		stackTrace.getTextWidget().setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		// Note: the links are not shown since we do not use a modifier to highlight them
-		stackTrace.setHyperlinkPresenter(new MultipleHyperlinkPresenter(new RGB(0, 0, 255)));
+		// The MultipleHyperlinkPresenter has a very odd usability, so we just use the default presenter
+		// linking to the original (N4JS) code if possible.
+		// stackTrace.setHyperlinkPresenter(new MultipleHyperlinkPresenter(new RGB(0, 0, 255)));
+		stackTrace.setHyperlinkPresenter(new DefaultHyperlinkPresenter(new RGB(0, 0, 255)));
 		stackTrace.setHyperlinkDetectors(new IHyperlinkDetector[] { n4JSStackTraceHyperlinkDetector }, SWT.NONE);
 
 		sashForm.addControlListener(new ControlListener() {
