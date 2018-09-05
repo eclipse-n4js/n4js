@@ -57,7 +57,7 @@ public class PackageJsonProposalProvider implements IJSONProposalProvider {
 			if (alreadyUsedNames.contains(name)) {
 				continue;
 			}
-			if (!context.getPrefix().isEmpty() && !name.startsWith(context.getPrefix())) {
+			if (!isMatchingPrefix(context, name)) {
 				continue;
 			}
 
@@ -78,6 +78,19 @@ public class PackageJsonProposalProvider implements IJSONProposalProvider {
 				acceptor.accept(pairProposal);
 			}
 		}
+	}
+
+	private boolean isMatchingPrefix(ContentAssistContext context, String name) {
+		String prefix = context.getPrefix();
+
+		if (prefix.isEmpty()) {
+			return true;
+		}
+		if (name.startsWith(prefix)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	private List<String> getJsonPathNames(EObject model) {

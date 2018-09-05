@@ -8,6 +8,8 @@ import org.eclipse.jface.text.templates.TemplateContextType;
 import org.eclipse.jface.text.templates.TemplateProposal;
 import org.eclipse.n4js.json.JSON.NameValuePair;
 import org.eclipse.n4js.json.services.JSONGrammarAccess;
+import org.eclipse.n4js.json.ui.labeling.JSONImageDescriptorCache;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ui.editor.model.IXtextDocument;
@@ -47,10 +49,6 @@ public class JSONProposalFactory {
 	private static final String NAME_VALUE_TEMPLATE_STRING = "\"${name}\": \"${value}\"";
 	private static final String NAME_ARRAY_TEMPLATE_STRING = "\"${name}\": [${value}]";
 	private static final String NAME_OBJECT_TEMPLATE_STRING = "\"${name}\": {${value}}";
-
-	private static final String getTemplateName(String name, String value) {
-		return name + ": " + value;
-	}
 
 	/**
 	 * Creates a name-value-pair proposal for the given context.
@@ -98,7 +96,8 @@ public class JSONProposalFactory {
 			String description) {
 
 		Template nameValueTemplate = createNameValueTemplate(context, name, value, description);
-		return createProposal(context, name, value, description, nameValueTemplate);
+		Image image = JSONImageDescriptorCache.ImageRef.JSON_VALUE.asImage().orNull();
+		return createProposal(context, name, value, description, nameValueTemplate, image);
 	}
 
 	/**
@@ -117,7 +116,8 @@ public class JSONProposalFactory {
 			String description) {
 
 		Template nameValueTemplate = createNameArrayTemplate(context, name, array, description);
-		return createProposal(context, name, array, description, nameValueTemplate);
+		Image image = JSONImageDescriptorCache.ImageRef.JSON_ARRAY.asImage().orNull();
+		return createProposal(context, name, array, description, nameValueTemplate, image);
 	}
 
 	/**
@@ -136,11 +136,12 @@ public class JSONProposalFactory {
 			String description) {
 
 		Template nameValueTemplate = createNameObjectTemplate(context, name, object, description);
-		return createProposal(context, name, object, description, nameValueTemplate);
+		Image image = JSONImageDescriptorCache.ImageRef.JSON_OBJECT.asImage().orNull();
+		return createProposal(context, name, object, description, nameValueTemplate, image);
 	}
 
 	private ICompletionProposal createProposal(ContentAssistContext context, String name, String value,
-			String description, Template nameValueTemplate) {
+			String description, Template nameValueTemplate, Image image) {
 
 		TemplateContextType contextType = getTemplateContextType();
 		IXtextDocument document = context.getDocument();
@@ -150,28 +151,25 @@ public class JSONProposalFactory {
 		tContext.setVariable("name", name);
 		tContext.setVariable("value", value);
 
-		return new TemplateProposal(nameValueTemplate, tContext, context.getReplaceRegion(), null);
+		return new TemplateProposal(nameValueTemplate, tContext, context.getReplaceRegion(), image);
 	}
 
 	private Template createNameValueTemplate(ContentAssistContext context, String name, String value,
 			String description) {
 
-		String displayLabel = getTemplateName(name, "\"" + value + "\"");
-		return createTemplate(context, displayLabel, description, NAME_VALUE_TEMPLATE_STRING);
+		return createTemplate(context, name, description, NAME_VALUE_TEMPLATE_STRING);
 	}
 
 	private Template createNameArrayTemplate(ContentAssistContext context, String name, String value,
 			String description) {
 
-		String displayLabel = getTemplateName(name, "[" + value + "]");
-		return createTemplate(context, displayLabel, description, NAME_ARRAY_TEMPLATE_STRING);
+		return createTemplate(context, name, description, NAME_ARRAY_TEMPLATE_STRING);
 	}
 
 	private Template createNameObjectTemplate(ContentAssistContext context, String name, String value,
 			String description) {
 
-		String displayLabel = getTemplateName(name, "{" + value + "}");
-		return createTemplate(context, displayLabel, description, NAME_OBJECT_TEMPLATE_STRING);
+		return createTemplate(context, name, description, NAME_OBJECT_TEMPLATE_STRING);
 	}
 
 	private Template createTemplate(ContentAssistContext context, String displayLabel, String description,
