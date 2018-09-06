@@ -36,7 +36,7 @@ public class PackageJsonProposalProvider implements IJSONProposalProvider {
 
 	@Override
 	public boolean isResponsible(EObject eObject) {
-		// this validator extension only applies to package.json files
+		// this extension only applies to package.json files
 		return fileExtensionCalculator.getFilenameWithoutXpectExtension(eObject.eResource().getURI())
 				.equals(IN4JSProject.PACKAGE_JSON);
 	}

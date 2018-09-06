@@ -62,7 +62,7 @@ public class PackageJsonHyperlinkHelperExtension implements HyperlinkHelperExten
 
 	@Override
 	public boolean isResponsible(XtextResource resource) {
-		// this validator extension only applies to package.json files
+		// this extension only applies to package.json files
 		return fileExtensionCalculator.getFilenameWithoutXpectExtension(resource.getURI())
 				.equals(IN4JSProject.PACKAGE_JSON);
 	}
