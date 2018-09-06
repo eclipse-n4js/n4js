@@ -60,7 +60,7 @@
                   The class to use as hyperlink helper extension.
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn=":org.eclipse.n4js.json.ui.editor.hyperlinking.HyperlinkHelperExtension"/>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.n4js.json.ui.editor.hyperlinking.IJSONHyperlinkHelperExtension"/>
                </appInfo>
             </annotation>
          </attribute>

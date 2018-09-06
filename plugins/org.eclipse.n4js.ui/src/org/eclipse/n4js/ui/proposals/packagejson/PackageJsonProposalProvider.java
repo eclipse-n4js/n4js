@@ -86,7 +86,7 @@ public class PackageJsonProposalProvider implements IJSONProposalProvider {
 		if (prefix.isEmpty()) {
 			return true;
 		}
-		if (name.startsWith(prefix)) {
+		if (name.toLowerCase().startsWith(prefix.toLowerCase())) {
 			return true;
 		}
 

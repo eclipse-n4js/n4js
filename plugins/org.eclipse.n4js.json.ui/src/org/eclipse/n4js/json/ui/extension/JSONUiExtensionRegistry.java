@@ -13,7 +13,7 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.RegistryFactory;
 import org.eclipse.n4js.json.ui.contentassist.IJSONProposalProvider;
-import org.eclipse.n4js.json.ui.editor.hyperlinking.HyperlinkHelperExtension;
+import org.eclipse.n4js.json.ui.editor.hyperlinking.IJSONHyperlinkHelperExtension;
 import org.eclipse.n4js.json.validation.extension.IJSONValidatorExtension;
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionProvider;
 
@@ -44,7 +44,7 @@ public class JSONUiExtensionRegistry {
 
 	// Cached result of the a query to the IExtensionRegistry.
 	// Only access via #getHyperlinkHelperExtensions().
-	private Set<HyperlinkHelperExtension> hyperlinkHelperExtensions;
+	private Set<IJSONHyperlinkHelperExtension> hyperlinkHelperExtensions;
 
 	/**
 	 * Initializes the registry by querying the {@link IExtensionRegistry} for all
@@ -69,7 +69,7 @@ public class JSONUiExtensionRegistry {
 		createExecutableExtensions(JSON_PROPOSALPROVIDER_EXTENSIONS_POINT_ID, IJSONProposalProvider.class)
 				.forEach(this::register);
 		// query the extension registry for JSON hyperlink extensions and register them
-		createExecutableExtensions(JSON_HYPERLINKHELPER_EXTENSIONS_POINT_ID, HyperlinkHelperExtension.class)
+		createExecutableExtensions(JSON_HYPERLINKHELPER_EXTENSIONS_POINT_ID, IJSONHyperlinkHelperExtension.class)
 				.forEach(this::register);
 	}
 
@@ -131,10 +131,10 @@ public class JSONUiExtensionRegistry {
 	}
 
 	/**
-	 * Returns a list of all {@link HyperlinkHelperExtension}s that were registered
+	 * Returns a list of all {@link IJSONHyperlinkHelperExtension}s that were registered
 	 * via the JSON hyperlink extension point.
 	 */
-	public Collection<HyperlinkHelperExtension> getHyperlinkHelperExtensions() {
+	public Collection<IJSONHyperlinkHelperExtension> getHyperlinkHelperExtensions() {
 		ensureInitialization(); // trigger lazy initialization, if required
 		return this.hyperlinkHelperExtensions;
 	}
@@ -161,7 +161,7 @@ public class JSONUiExtensionRegistry {
 	 * Registers the given {@code hyperlinkHelperExtension} with the
 	 * {@link JSONUiExtensionRegistry}.
 	 */
-	private void register(HyperlinkHelperExtension hyperlinkHelperExtension) {
+	private void register(IJSONHyperlinkHelperExtension hyperlinkHelperExtension) {
 		ensureInitialization(); // trigger lazy initialization, if required
 		this.hyperlinkHelperExtensions.add(hyperlinkHelperExtension);
 	}

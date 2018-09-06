@@ -21,7 +21,7 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.json.JSON.JSONPackage;
 import org.eclipse.n4js.json.JSON.JSONStringLiteral;
 import org.eclipse.n4js.json.JSON.NameValuePair;
-import org.eclipse.n4js.json.ui.editor.hyperlinking.HyperlinkHelperExtension;
+import org.eclipse.n4js.json.ui.editor.hyperlinking.IJSONHyperlinkHelperExtension;
 import org.eclipse.n4js.packagejson.PackageJsonProperties;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
@@ -44,9 +44,9 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 /**
- *
+ * Creates hyper links for elements in package json files
  */
-public class PackageJsonHyperlinkHelperExtension implements HyperlinkHelperExtension {
+public class PackageJsonHyperlinkHelperExtension implements IJSONHyperlinkHelperExtension {
 
 	@Inject
 	private N4JSEclipseModel model;
@@ -96,18 +96,27 @@ public class PackageJsonHyperlinkHelperExtension implements HyperlinkHelperExten
 		switch (nearestKnownPJP) {
 
 		case MAIN:
+			if (eObject instanceof NameValuePair) {
+				eObject = ((NameValuePair) eObject).getValue();
+			}
 			if (eObject instanceof JSONStringLiteral) {
 				return hyperlinkToMain((JSONStringLiteral) eObject);
 			}
 			break;
 
 		case MAIN_MODULE:
+			if (eObject instanceof NameValuePair) {
+				eObject = ((NameValuePair) eObject).getValue();
+			}
 			if (eObject instanceof JSONStringLiteral) {
 				return hyperlinkToMainModule((JSONStringLiteral) eObject);
 			}
 			break;
 
 		case REQUIRED_RUNTIME_LIBRARIES:
+			if (eObject instanceof NameValuePair) {
+				eObject = ((NameValuePair) eObject).getValue();
+			}
 			if (eObject instanceof JSONStringLiteral) {
 				return hyperlinkToRequiredRTLibs((JSONStringLiteral) eObject);
 			}
@@ -147,8 +156,10 @@ public class PackageJsonHyperlinkHelperExtension implements HyperlinkHelperExten
 			if (project != null && node != null) {
 				Region region = new Region(node.getOffset() + 1, node.getLength() - 2);
 				Path mainResolvedPath = project.getLocationPath().resolve(mainPath);
-				URI mainResolvedUri = URI.createFileURI(mainResolvedPath.toString());
-				return Tuples.pair(mainResolvedUri, region);
+				if (mainResolvedPath.toFile().exists()) {
+					URI mainResolvedUri = URI.createFileURI(mainResolvedPath.toString());
+					return Tuples.pair(mainResolvedUri, region);
+				}
 			}
 		}
 
@@ -235,14 +246,6 @@ public class PackageJsonHyperlinkHelperExtension implements HyperlinkHelperExten
 	private PackageJsonProperties findNearestKnownPJP(EObject eObject) {
 		EObject tmpObj = eObject;
 		while (tmpObj != null) {
-			if (tmpObj instanceof JSONStringLiteral) {
-				String value = ((JSONStringLiteral) tmpObj).getValue();
-				PackageJsonProperties pjp = PackageJsonProperties.valueOfNameOrNull(value);
-				if (pjp != null) {
-					return pjp;
-				}
-			}
-
 			if (tmpObj instanceof NameValuePair) {
 				String name = ((NameValuePair) tmpObj).getName();
 				PackageJsonProperties pjp = PackageJsonProperties.valueOfNameOrNull(name);

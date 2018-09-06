@@ -12,7 +12,7 @@ import org.eclipse.xtext.ui.editor.hyperlinking.HyperlinkHelper;
 
 import com.google.inject.Inject;
 
-public class HyperlinkHelperProvider extends HyperlinkHelper {
+public class JSONHyperlinkHelperProvider extends HyperlinkHelper {
 
 	@Inject
 	private JSONUiExtensionRegistry registry;
@@ -21,8 +21,8 @@ public class HyperlinkHelperProvider extends HyperlinkHelper {
 	public IHyperlink[] createHyperlinksByOffset(XtextResource resource, int offset, boolean createMultipleHyperlinks) {
 		List<IHyperlink> links = new LinkedList<>();
 
-		Collection<HyperlinkHelperExtension> hyperlinkHelperExtensions = registry.getHyperlinkHelperExtensions();
-		for (HyperlinkHelperExtension hhExt : hyperlinkHelperExtensions) {
+		Collection<IJSONHyperlinkHelperExtension> hyperlinkHelperExtensions = registry.getHyperlinkHelperExtensions();
+		for (IJSONHyperlinkHelperExtension hhExt : hyperlinkHelperExtensions) {
 			IHyperlink[] hyperlinks = null;
 			if (hhExt.isResponsible(resource)) {
 				hyperlinks = hhExt.getHyperlinks(resource, offset);

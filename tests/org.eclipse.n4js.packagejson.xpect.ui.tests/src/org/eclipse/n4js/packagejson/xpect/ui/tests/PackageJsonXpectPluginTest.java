@@ -1,6 +1,7 @@
 package org.eclipse.n4js.packagejson.xpect.ui.tests;
 
 import org.eclipse.n4js.json.validation.suppression.JSONSuppressIssuesSetup;
+import org.eclipse.n4js.xpect.ui.methods.HyperlinkXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.contentassist.ContentAssistXpectMethod;
 import org.eclipse.xpect.XpectImport;
 import org.eclipse.xpect.runner.XpectRunner;
@@ -15,6 +16,7 @@ import org.junit.runner.RunWith;
  */
 @XpectSuiteClasses({
 		ValidationTest.class,
+		HyperlinkXpectMethod.class,
 		ContentAssistXpectMethod.class
 })
 @RunWith(XpectRunner.class)
