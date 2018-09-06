@@ -151,7 +151,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 * @ordered
 	 */
-	protected static final ProjectType PROJECT_TYPE_EDEFAULT = ProjectType.VALIDATION;
+	protected static final ProjectType PROJECT_TYPE_EDEFAULT = ProjectType.PLAINJS;
 
 	/**
 	 * The cached value of the '{@link #getProjectType() <em>Project Type</em>}' attribute.

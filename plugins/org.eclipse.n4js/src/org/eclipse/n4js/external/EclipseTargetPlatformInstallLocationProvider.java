@@ -19,7 +19,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
 
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
@@ -28,12 +27,6 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class EclipseTargetPlatformInstallLocationProvider implements TargetPlatformInstallLocationProvider {
-
-	@Inject
-	private GitCloneSupplier gitCloneSupplier;
-
-	@Inject
-	private TypeDefinitionGitLocationProvider gitLocationProvider;
 
 	@Override
 	public File getTargetPlatformInstallFolder() {
@@ -46,15 +39,4 @@ public class EclipseTargetPlatformInstallLocationProvider implements TargetPlatf
 	public URI getTargetPlatformFileLocation() {
 		return new File(getTargetPlatformInstallFolder(), N4JSGlobals.PACKAGE_JSON).toURI();
 	}
-
-	@Override
-	public String getGitRepositoryName() {
-		return gitLocationProvider.getGitLocation().getRepositoryName();
-	}
-
-	@Override
-	public URI getTargetPlatformLocalGitRepositoryLocation() {
-		return gitCloneSupplier.get().toURI();
-	}
-
 }

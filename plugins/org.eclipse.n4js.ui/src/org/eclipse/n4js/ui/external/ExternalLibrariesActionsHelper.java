@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
-import org.eclipse.n4js.external.GitCloneSupplier;
 import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
@@ -37,9 +36,6 @@ public class ExternalLibrariesActionsHelper {
 	private StatusHelper statusHelper;
 	@Inject
 	private LibraryManager libManager;
-
-	@Inject
-	private GitCloneSupplier gitSupplier;
 
 	@Inject
 	private ExternalLibraryWorkspace externalLibraryWorkspace;
@@ -63,33 +59,6 @@ public class ExternalLibrariesActionsHelper {
 		IStatus status = libManager.cleanCache(monitor);
 		if (!status.isOK()) {
 			multistatus.merge(status);
-		}
-	}
-
-	/**
-	 * Actions to be taken if reseting type definitions is requested.
-	 *
-	 * @param multistatus
-	 *            the status used accumulate issues
-	 */
-	public void maintenanceResetTypeDefinitions(final MultiStatus multistatus) {
-		// get folder
-		File typeDefinitionsFolder = gitSupplier.get();
-
-		if (typeDefinitionsFolder.exists()) {
-			FileDeleter.delete(typeDefinitionsFolder, (IOException ioe) -> multistatus.merge(
-					statusHelper.createError("Exception during deletion of the type definitions.", ioe)));
-		}
-
-		if (!typeDefinitionsFolder.exists()) {
-			// recreate npm folder
-			if (!gitSupplier.repairTypeDefinitions()) {
-				multistatus.merge(
-						statusHelper.createError("The type definitions folder was not recreated correctly."));
-			}
-		} else { // should never happen
-			multistatus.merge(statusHelper
-					.createError("Could not verify deletion of " + typeDefinitionsFolder.getAbsolutePath()));
 		}
 	}
 
@@ -129,10 +98,16 @@ public class ExternalLibrariesActionsHelper {
 	 *
 	 * Rebuild of externals is not triggered, hence caller needs to take care of that, e.g. by calling
 	 * {@link #maintenanceUpateState}
+	 *
+	 * @param forceReloadAll
+	 *            Specifies whether after the installation all external libraries in the external library workspace
+	 *            should be reloaded and rebuilt (cf.
+	 *            {@link LibraryManager#reloadAllExternalProjects(IProgressMonitor)}). If {@code false}, only the set of
+	 *            packages that was created and/or updated by this install call will be scheduled for a reload.
 	 */
 	public void installNoUpdate(final Map<String, NPMVersionRequirement> versionedPackages,
-			final MultiStatus multistatus, final IProgressMonitor monitor) {
-		IStatus status = libManager.installNPMs(versionedPackages, monitor);
+			boolean forceReloadAll, final MultiStatus multistatus, final IProgressMonitor monitor) {
+		IStatus status = libManager.installNPMs(versionedPackages, forceReloadAll, monitor);
 		if (!status.isOK())
 			multistatus.merge(status);
 	}

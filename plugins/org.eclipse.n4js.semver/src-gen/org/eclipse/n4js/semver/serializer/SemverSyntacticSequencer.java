@@ -188,7 +188,7 @@ public class SemverSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     commitISH=ALPHA_NUMERIC_CHARS (ambiguity) (rule end)
-	 *     githubUrl=URL (ambiguity) (rule end)
+	 *     githubUrl=URL_NO_VX (ambiguity) (rule end)
 	 *     localPath=PATH (ambiguity) (rule end)
 	 *     tagName=TAG (ambiguity) (rule end)
 	 *     url=URL (ambiguity) (rule end)

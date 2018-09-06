@@ -48,7 +48,7 @@ public enum PackageJsonProperties {
 
 	// properties in section "n4js":
 	/** Key of package.json property "projectType". */
-	PROJECT_TYPE("projectType", "", N4JS),
+	PROJECT_TYPE("projectType", ProjectType.PLAINJS.getLiteral().toLowerCase(), N4JS),
 	/** Key of package.json property "vendorId". */
 	VENDOR_ID("vendorId", "", "vendor.default", N4JS),
 	/** Key of package.json property "vendorName". */
@@ -100,10 +100,13 @@ public enum PackageJsonProperties {
 	/** Key of package.json property "source" inside "sources". */
 	SOURCE("source", "List of source folders", JSONArray.class, N4JS, SOURCES);
 
-	/** Default for property "moduleLoader" for *other* project types than {@link ProjectType#VALIDATION VALIDATION}. */
+	/**
+	 * Default for property "moduleLoader" for *other* project types than {@link ProjectType#VALIDATION VALIDATION} and
+	 * {@link ProjectType#PLAINJS PLAINJS}.
+	 */
 	public static final ModuleLoader DEFAULT_MODULE_LOADER = ModuleLoader.N4JS;
 	/** Default for property "moduleLoader" for project type {@link ProjectType#VALIDATION VALIDATION}. */
-	public static final ModuleLoader DEFAULT_MODULE_LOADER_FOR_VALIDATION = ModuleLoader.COMMONJS;
+	public static final ModuleLoader DEFAULT_MODULE_LOADER_FOR_PLAINJS_AND_VALIDATION = ModuleLoader.COMMONJS;
 
 	/** section of the property within the package.json */
 	final public PackageJsonProperties[] parents;

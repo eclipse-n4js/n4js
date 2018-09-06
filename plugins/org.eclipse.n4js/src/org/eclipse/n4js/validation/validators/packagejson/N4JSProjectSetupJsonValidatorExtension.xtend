@@ -37,6 +37,7 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.N4JSGlobals
+import org.eclipse.n4js.external.ShadowingInfoHelper
 import org.eclipse.n4js.json.JSON.JSONArray
 import org.eclipse.n4js.json.JSON.JSONDocument
 import org.eclipse.n4js.json.JSON.JSONObject
@@ -86,7 +87,6 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 import static org.eclipse.n4js.validation.validators.packagejson.ProjectTypePredicate.*
 
 import static extension com.google.common.base.Strings.nullToEmpty
-import org.eclipse.n4js.external.ShadowingInfoHelper
 
 /**
  * A JSON validator extension that validates {@code package.json} resources in the context
@@ -101,29 +101,29 @@ import org.eclipse.n4js.external.ShadowingInfoHelper
  */
 @Singleton
 public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidatorExtension {
-	
+
 	private static final Logger LOGGER = Logger.getLogger(N4JSProjectSetupJsonValidatorExtension);
-	
+
 	static val API_TYPE = anyOf(API);
 	static val RE_TYPE = anyOf(RUNTIME_ENVIRONMENT);
 	static val RL_TYPE = anyOf(RUNTIME_LIBRARY);
 	static val TEST_TYPE = anyOf(TEST);
 	static val RE_OR_RL_TYPE = anyOf(RUNTIME_ENVIRONMENT, RUNTIME_LIBRARY);
-	static val LIB_OR_VALIDATION_OR_RL = anyOf(LIBRARY, VALIDATION, RUNTIME_LIBRARY);
-	static val DEFINITION_TYPE = anyOf(DEFINITION);
+	static val PLAINJS_TYPE = anyOf(PLAINJS);
+
 
 	/**
 	 * Key to store a converted ProjectDescription instance in the validation context for re-use across different check-methods
 	 * @See {@link #getProjectDescription()} 
 	 */
 	private static final String PROJECT_DESCRIPTION_CACHE = "PROJECT_DESCRIPTION_CACHE";
-	
+
 	/**
 	 * Key to store a map of all available projects in the validation context for re-use across different check-methods.
 	 * @See {@link #getAllExistingProjectNames()} 
 	 */
 	private static String ALL_EXISTING_PROJECT_CACHE = "ALL_EXISTING_PROJECT_CACHE";
-	
+
 	/**
 	 * Key to store a map of all declared project dependencies in the validation context for re-use across different check-methods.
 	 * @See {@link #getDeclaredProjectDependencies()} 
@@ -162,7 +162,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		return fileExtensionCalculator.getFilenameWithoutXpectExtension(eObject.eResource().getURI())
 				.equals(IN4JSProject.PACKAGE_JSON);
 	}
-	
+
 	/**
 	 * According to IDESpec §§12.04 Polyfills at most one Polyfill can be provided for a class.
 	 * Here the consistency according to the given combination of runtime-environment and runtime-libraries of the
@@ -549,58 +549,6 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			}
 
 			stack.addAll(actualDirectDependencies.filter[external]);
-		}
-	}
-	
-	/**
-	 * Validates the dedicated dependencies section for type definition dependencies.
-	 */
-	@CheckProperty(property = TYPE_DEPENDENCIES)
-	def void checkTypeDependencies(JSONValue typeDependenciesValue) {
-		if (!checkFeatureRestrictions("type dependencies", typeDependenciesValue, not(DEFINITION_TYPE))) {
-			return;
-		}
-		
-		val references = getReferencesFromDependenciesObject(typeDependenciesValue);
-		
-		// check references to be of 'definition' type only
-		checkReferencedProjects(references, DEFINITION_TYPE.forN4jsProjects, "typeDependencies", false, false);
-		
-		val dependenciesById = getDependencies(true).toMap(
-			[dep | dep.referencedProjectName], [dep | dep]);
-		
-		for (reference : references) {
-			internalCheckForRuntimeDependencyForDefinitionProjects(reference, dependenciesById);
-		} 
-	}
-	
-	/**
-	 * Checks that the project description also declares a dependency on the implementation component of 
-	 * the given type definition project ({code reference}).
-	 * 
-	 * Does nothing if {@code project} is not of type {@link ProjectType#DEFINTION}. 
-	 */
-	private def internalCheckForRuntimeDependencyForDefinitionProjects(ValidationProjectReference reference,
-		Map<String, ValidationProjectReference> declaredDependencyIds) {
-		val n4jsProject = allExistingProjectNames.get(reference.getReferencedProjectName());
-		
-		// defensive null-check
-		if (n4jsProject === null) {
-			return;
-		}
-		
-		if (n4jsProject.projectType != ProjectType.DEFINITION) {
-			return;
-		}
-		val definesPackage = n4jsProject.definesPackageName;
-		if (definesPackage === null) {
-			return;
-		}
-		
-		// check corresponding runtime dependency has been declared
-		if (!declaredDependencyIds.containsKey(definesPackage)) {
-			addIssue(IssueCodes.getMessageForPKGJ_IMPL_PROJECT_IS_MISSING_FOR_TYPE_DEF(definesPackage, reference.referencedProjectName),
-				reference.astRepresentation, IssueCodes.PKGJ_IMPL_PROJECT_IS_MISSING_FOR_TYPE_DEF);
 		}
 	}
 
@@ -999,17 +947,22 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	}
 
 	/**
-	 * Returns with a new predicate instance that provides {@code true} only and if only one of the followings are true:
+	 * Returns with a new predicate instance that provides {@code true} only if the given N4JS project
+	 * may be declared a dependency of a project of type {@link ProjectType#API}.
+	 * 
+	 * More specifically the given project must fulfill one of the following requirements: 
 	 * <ul>
-	 * <li>The project type is API or</li>
+	 * <li>The project type is API.</li>
 	 * <li>The project type is library.</li>
 	 * <li>The project type is validation.</li>
+	 * <li>The project type is plainjs.</li>
+	 * <li>The project type is runtime library.</li>
 	 * </ul>
 	 * Otherwise the predicate provides {@code false} value.
 	 */
 	private def Predicate<IN4JSProject> createAPIDependenciesPredicate() {
 		return Predicates.or(API_TYPE.forN4jsProjects, 
-			[LIB_OR_VALIDATION_OR_RL.apply(projectType)]
+			[anyOf(LIBRARY, VALIDATION, RUNTIME_LIBRARY, PLAINJS).apply(projectType)]
 		);
 	}
 	
@@ -1022,10 +975,10 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			case API: createAPIDependenciesPredicate
 			// runtime libraries may only depend on other runtime libraries
 			case RUNTIME_LIBRARY: RL_TYPE.forN4jsProjects
-			// definition project may depend on any type of project   
-			case DEFINITION: Predicates.alwaysTrue // TODO GH-821: disallow to-be-introduced PLAINJS-type here
-			// otherwise, any project type, but definition projects, may be declared as dependency
-			default: not(DEFINITION_TYPE).forN4jsProjects
+			// definition project may depend on any type of project but plainjs projects
+			case DEFINITION: not(PLAINJS_TYPE).forN4jsProjects
+			// otherwise, any project type may be declared as dependency
+			default: Predicates.alwaysTrue
 		}
 	}
 
@@ -1123,75 +1076,105 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		String sectionLabel, boolean enforceDependency, boolean allowReflexive) {
 
 		val description = getProjectDescription();
-		val currentProjectName = description.projectName;
 		val allProjects = getAllExistingProjectNames();
-		
+
 		// keeps track of all valid references
 		val existentIds = HashMultimap.<String, ValidationProjectReference>create;
-		
+
 		val projectDescriptionFileURI = document.eResource.URI;
 		val currentProject = findProject(projectDescriptionFileURI).orNull;
-		
-		references.forEach[ref | 
+
+		val allReferencedProjectNames = references.map[referencedProjectName].toSet;
+
+		for(ref : references) {
 			// check project existence.
 			val id = ref.referencedProjectName;
 			// Assuming completely broken AST.
 			if (null !== id) {
-				// check for empty project ID
-				if (id.isEmpty) {
-					addIssue(IssueCodes.getMessageForPKGJ_EMPTY_PROJECT_REFERENCE(), ref.astRepresentation,
-						IssueCodes.PKGJ_EMPTY_PROJECT_REFERENCE)
-					return;
-				}
-				
-				// obtain corresponding IN4JSProject handle
-				val project = allProjects.get(id);
-
-				// type cannot be resolved from index, hence project does not exist in workspace.
-				if (null === project || null === project.projectType) {
-					// in GH-821: remove this condition
-					if (!currentProject.isExternal
-						&& !id.startsWith("@") // FIXME: remove after GH-1018 is used by webteam
-					) { 
-						val msg = getMessageForNON_EXISTING_PROJECT(id);
-						val packageVersion = if (ref.npmVersion === null) "" else ref.npmVersion.toString;
-						addIssue(msg, ref.astRepresentation, null, NON_EXISTING_PROJECT, id, packageVersion);
-					}
-					return;
-				} else {
-					// keep track of actually existing projects
-					existentIds.put(id, ref);
-				}
-
-				// create only a  single validation issue for a particular project reference.
-				if (currentProjectName == id && !allowReflexive) {
-					// reflexive self-references
-					addProjectReferencesItselfIssue(ref.astRepresentation);
-					return;
-				} else if (!projectPredicate.apply(project)) {
-					// reference to project of invalid type
-					addInvalidProjectTypeIssue(ref.astRepresentation, id, 
-						project.projectType, sectionLabel);
-					return;
-				}
-
-				// check version constraint if the current project is not external and has no nested 
-				// node_modules folder
-				val boolean ignoreVersion = (currentProject.isExternal && description.hasNestedNodeModulesFolder);
-
-				if (!ignoreVersion) {
-					checkVersions(currentProject, ref, id, allProjects);
-				}
-
+				checkReference(ref, allProjects, description, currentProject, allReferencedProjectNames,
+					existentIds, allowReflexive, projectPredicate, sectionLabel
+				);
 			}
-		];
+		}
 
 		// check for duplicates among otherwise valid references
 		checkForDuplicateProjectReferences(existentIds)
-		
+
 		// if specified, check that all references also occur in the dependencies sections
 		if (enforceDependency) {
 			checkDeclaredDependencies(existentIds.values, sectionLabel)
+		}
+	}
+
+	private def void checkReference(ValidationProjectReference ref, Map<String, IN4JSProject> allProjects,
+		ProjectDescription description, IN4JSProject currentProject, Set<String> allReferencedProjectNames,
+		HashMultimap<String, ValidationProjectReference> existentIds,
+		boolean allowReflexive, Predicate<IN4JSProject> projectPredicate, String sectionLabel
+	) {
+		// check project existence.
+		val id = ref.referencedProjectName;
+		val currentProjectName = description.projectName;
+
+		// check for empty project ID
+		if (id.isEmpty) {
+			addIssue(IssueCodes.getMessageForPKGJ_EMPTY_PROJECT_REFERENCE(), ref.astRepresentation,
+				IssueCodes.PKGJ_EMPTY_PROJECT_REFERENCE)
+			return;
+		}
+
+		// obtain corresponding IN4JSProject handle
+		val project = allProjects.get(id);
+
+		// type cannot be resolved from index, hence project does not exist in workspace.
+		if (null === project || null === project.projectType) {
+			// in GH-821: remove this condition
+			if (!currentProject.isExternal) {
+				val msg = getMessageForNON_EXISTING_PROJECT(id);
+				val packageVersion = if (ref.npmVersion === null) "" else ref.npmVersion.toString;
+				addIssue(msg, ref.astRepresentation, null, NON_EXISTING_PROJECT, id, packageVersion);
+			}
+			return;
+		} else {
+			// keep track of actually existing projects
+			existentIds.put(id, ref);
+		}
+
+		// create only a single validation issue for a particular project reference.
+		if (currentProjectName == id && !allowReflexive) {
+			// reflexive self-references
+			addProjectReferencesItselfIssue(ref.astRepresentation);
+			return;
+		} else if (!projectPredicate.apply(project)) {
+			// reference to project of invalid type
+			addInvalidProjectTypeIssue(ref.astRepresentation, id, 
+				project.projectType, sectionLabel);
+			return;
+		}
+
+		// check version constraint if the current project is not external and has no nested 
+		// node_modules folder
+		val boolean ignoreVersion = (currentProject.isExternal && description.hasNestedNodeModulesFolder);
+		if (!ignoreVersion) {
+			checkVersions(currentProject, ref, id, allProjects);
+		}
+
+		if (description.projectType !== ProjectType.DEFINITION) {
+			checkImplProjectPresentForReferencedTypeDef(ref, project, allReferencedProjectNames);
+		}
+	}
+
+	private def void checkImplProjectPresentForReferencedTypeDef(ValidationProjectReference ref,
+		IN4JSProject referencedProject, Set<String> allReferencedProjectNames) {
+
+		if (referencedProject.projectType === ProjectType.DEFINITION) {
+			val nameOfProjectDefinedByReferencedProject = referencedProject.definesPackageName;
+			if (!nameOfProjectDefinedByReferencedProject.nullOrEmpty) {
+				if (!allReferencedProjectNames.contains(nameOfProjectDefinedByReferencedProject)) {
+					val msg = IssueCodes.getMessageForPKGJ_IMPL_PROJECT_IS_MISSING_FOR_TYPE_DEF(
+						nameOfProjectDefinedByReferencedProject, ref.referencedProjectName);
+					addIssue(msg, ref.astRepresentation, IssueCodes.PKGJ_IMPL_PROJECT_IS_MISSING_FOR_TYPE_DEF);
+				}
+			}
 		}
 	}
 

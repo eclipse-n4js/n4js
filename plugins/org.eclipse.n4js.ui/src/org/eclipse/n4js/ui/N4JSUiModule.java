@@ -21,11 +21,9 @@ import org.eclipse.n4js.external.ExternalIndexSynchronizer;
 import org.eclipse.n4js.external.ExternalLibraryUriHelper;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalProjectsCollector;
-import org.eclipse.n4js.external.GitCloneSupplier;
 import org.eclipse.n4js.external.NpmLogger;
 import org.eclipse.n4js.external.RebuildWorkspaceProjectsScheduler;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
-import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider;
 import org.eclipse.n4js.findReferences.ConcreteSyntaxAwareReferenceFinder;
 import org.eclipse.n4js.generator.ICompositeGenerator;
 import org.eclipse.n4js.generator.IGeneratorMarkerSupport;
@@ -247,11 +245,6 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	}
 
 	/** Delegate to shared injector */
-	public Provider<GitCloneSupplier> provideGitCloneSupplier() {
-		return Access.contributedProvider(GitCloneSupplier.class);
-	}
-
-	/** Delegate to shared injector */
 	public Provider<ExternalProjectCacheLoader> provideExternalProjectCacheLoader() {
 		return Access.contributedProvider(ExternalProjectCacheLoader.class);
 	}
@@ -339,11 +332,6 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	/** Delegate to shared injector */
 	public Provider<TargetPlatformInstallLocationProvider> provideTargetPlatformInstallLocationProvider() {
 		return Access.contributedProvider(TargetPlatformInstallLocationProvider.class);
-	}
-
-	/** Delegate to shared injector */
-	public Provider<TypeDefinitionGitLocationProvider> provideTypeDefinitionGitLocationProvider() {
-		return Access.contributedProvider(TypeDefinitionGitLocationProvider.class);
 	}
 
 	/** Delegate to shared injector */

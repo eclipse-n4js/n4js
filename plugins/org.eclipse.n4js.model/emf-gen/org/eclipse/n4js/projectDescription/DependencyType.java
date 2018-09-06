@@ -47,17 +47,7 @@ public enum DependencyType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	DEVELOPMENT(0, "DEVELOPMENT", "DEVELOPMENT"),
-
-	/**
-	 * The '<em><b>TYPE</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #TYPE_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	TYPE(0, "TYPE", "TYPE");
+	DEVELOPMENT(0, "DEVELOPMENT", "DEVELOPMENT");
 
 	/**
 	 * The '<em><b>RUNTIME</b></em>' literal value.
@@ -88,22 +78,6 @@ public enum DependencyType implements Enumerator {
 	public static final int DEVELOPMENT_VALUE = 0;
 
 	/**
-	 * The '<em><b>TYPE</b></em>' literal value.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * *
-	 * Dependencies of this type must be present when using a package
-	 * from a typed language or when developing the package itself.
-	 * <!-- end-model-doc -->
-	 * @see #TYPE
-	 * @model
-	 * @generated
-	 * @ordered
-	 */
-	public static final int TYPE_VALUE = 0;
-
-	/**
 	 * An array of all the '<em><b>Dependency Type</b></em>' enumerators.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -113,7 +87,6 @@ public enum DependencyType implements Enumerator {
 		new DependencyType[] {
 			RUNTIME,
 			DEVELOPMENT,
-			TYPE,
 		};
 
 	/**

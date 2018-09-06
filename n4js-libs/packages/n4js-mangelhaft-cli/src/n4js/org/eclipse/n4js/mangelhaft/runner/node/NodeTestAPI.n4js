@@ -199,7 +199,6 @@ export default public class NodeTestAPI {
         const args = NodeTestCLI.toCommandLine(options);
         args.unshift(consoleTestRunner.join("/"));
 
-        env.N4JS_RT_test_mode = "1";
         env.N4JS_RT_keep_eventloop = "1";
 
         (options.define || []).forEach(kv => {

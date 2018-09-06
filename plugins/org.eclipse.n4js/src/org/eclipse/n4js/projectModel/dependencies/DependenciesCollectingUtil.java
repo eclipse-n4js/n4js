@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import org.eclipse.n4js.projectDescription.DependencyType;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.semver.SemverUtils;
@@ -66,7 +65,6 @@ public class DependenciesCollectingUtil {
 				pd.getImplementedProjects().stream().map(DependencyInfo::create))
 				.reduce(Stream::concat)
 				.orElseGet(Stream::empty)
-				.filter(info -> info.type != DependencyType.TYPE) // do not install missing type dependencies
 				.forEach(info -> dependencies.merge(info.name, info.version, DependenciesCollectingUtil::resolve));
 	}
 
