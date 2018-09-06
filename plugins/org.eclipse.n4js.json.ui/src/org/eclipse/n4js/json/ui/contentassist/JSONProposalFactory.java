@@ -1,20 +1,19 @@
 package org.eclipse.n4js.json.ui.contentassist;
 
+import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.templates.DocumentTemplateContext;
-import org.eclipse.jface.text.templates.Template;
 import org.eclipse.jface.text.templates.TemplateContext;
 import org.eclipse.jface.text.templates.TemplateContextType;
-import org.eclipse.jface.text.templates.TemplateProposal;
-import org.eclipse.n4js.json.JSON.NameValuePair;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.n4js.json.services.JSONGrammarAccess;
 import org.eclipse.n4js.json.ui.labeling.JSONImageDescriptorCache;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ui.editor.model.IXtextDocument;
 import org.eclipse.xtext.ui.editor.templates.XtextTemplateContextTypeRegistry;
 
+import com.google.common.base.Strings;
 import com.google.inject.Inject;
 
 /**
@@ -95,9 +94,8 @@ public class JSONProposalFactory {
 	public ICompletionProposal createNameValueProposal(ContentAssistContext context, String name, String value,
 			String description) {
 
-		Template nameValueTemplate = createNameValueTemplate(context, name, value, description);
 		Image image = JSONImageDescriptorCache.ImageRef.JSON_VALUE.asImage().orNull();
-		return createProposal(context, name, value, description, nameValueTemplate, image);
+		return createProposal(context, name, value, description, NAME_VALUE_TEMPLATE_STRING, image);
 	}
 
 	/**
@@ -115,9 +113,8 @@ public class JSONProposalFactory {
 	public ICompletionProposal createNameArrayProposal(ContentAssistContext context, String name, String array,
 			String description) {
 
-		Template nameValueTemplate = createNameArrayTemplate(context, name, array, description);
 		Image image = JSONImageDescriptorCache.ImageRef.JSON_ARRAY.asImage().orNull();
-		return createProposal(context, name, array, description, nameValueTemplate, image);
+		return createProposal(context, name, array, description, NAME_ARRAY_TEMPLATE_STRING, image);
 	}
 
 	/**
@@ -135,71 +132,41 @@ public class JSONProposalFactory {
 	public ICompletionProposal createNameObjectProposal(ContentAssistContext context, String name, String object,
 			String description) {
 
-		Template nameValueTemplate = createNameObjectTemplate(context, name, object, description);
 		Image image = JSONImageDescriptorCache.ImageRef.JSON_OBJECT.asImage().orNull();
-		return createProposal(context, name, object, description, nameValueTemplate, image);
+		return createProposal(context, name, object, description, NAME_OBJECT_TEMPLATE_STRING, image);
 	}
 
 	private ICompletionProposal createProposal(ContentAssistContext context, String name, String value,
-			String description, Template nameValueTemplate, Image image) {
+			String description, String rawTemplate, Image image) {
 
 		TemplateContextType contextType = getTemplateContextType();
 		IXtextDocument document = context.getDocument();
 		TemplateContext tContext = new DocumentTemplateContext(contextType, document, context.getOffset(), 0);
+		Region replaceRegion = context.getReplaceRegion();
 
 		// pre-populate ${name} and ${value} with given args
 		tContext.setVariable("name", name);
 		tContext.setVariable("value", value);
 
-		return new TemplateProposal(nameValueTemplate, tContext, context.getReplaceRegion(), image);
-	}
-
-	private Template createNameValueTemplate(ContentAssistContext context, String name, String value,
-			String description) {
-
-		return createTemplate(context, name, description, NAME_VALUE_TEMPLATE_STRING);
-	}
-
-	private Template createNameArrayTemplate(ContentAssistContext context, String name, String value,
-			String description) {
-
-		return createTemplate(context, name, description, NAME_ARRAY_TEMPLATE_STRING);
-	}
-
-	private Template createNameObjectTemplate(ContentAssistContext context, String name, String value,
-			String description) {
-
-		return createTemplate(context, name, description, NAME_OBJECT_TEMPLATE_STRING);
-	}
-
-	private Template createTemplate(ContentAssistContext context, String displayLabel, String description,
-			String rawTemplate) {
-
-		boolean trailingComma = hasTrailingComma(context);
-		if (trailingComma) {
-			rawTemplate = rawTemplate + ",";
-		}
-
-		return new Template(displayLabel, description, "", rawTemplate, true);
-	}
-
-	private boolean hasTrailingComma(ContentAssistContext context) {
-		boolean trailingComma = false;
-
-		// add trailing comma, if the name-value pair is inserted in the middle of a
-		// list of existing pairs.
-		final INode currentNode = context.getCurrentNode();
-		if (currentNode.hasNextSibling()) {
-			final INode nextSibling = currentNode.getNextSibling();
-			if (nextSibling.getSemanticElement() instanceof NameValuePair) {
-				trailingComma = true;
-			}
-		}
-		return trailingComma;
+		return new StyledTemplateProposal(context, name, description, rawTemplate, tContext, replaceRegion, image);
 	}
 
 	/** Returns the template content type to use for the NameValuePair template. */
 	private TemplateContextType getTemplateContextType() {
 		return contextTypeRegistry.getContextType(contextTypeRegistry.getId(grammarAccess.getNameValuePairRule()));
+	}
+
+	/**
+	 * Creates a new {@link StyledString} with a primary and secondary portion.
+	 * 
+	 * The two parts are separated by a hyphen ({@code -}) character and the
+	 * secondary portion is styled in a slightly lighter color.
+	 */
+	static StyledString createStyledString(String primary, String secondary) {
+		final StyledString styledString = new StyledString(primary);
+		if (!Strings.isNullOrEmpty(secondary)) {
+			styledString.append(" - " + secondary, StyledString.QUALIFIER_STYLER);
+		}
+		return styledString;
 	}
 }

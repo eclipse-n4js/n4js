@@ -11,7 +11,6 @@
 package org.eclipse.n4js.json.ui.contentassist;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.n4js.json.ui.extension.JSONUiExtensionRegistry;
 import org.eclipse.xtext.Assignment;
 import org.eclipse.xtext.Keyword;
@@ -53,7 +52,7 @@ public class JSONProposalProvider extends AbstractJSONProposalProvider {
 		}
 
 		acceptor.accept(new ConfigurableCompletionProposal("[]", context.getOffset(), 0, 1, null,
-				createStyledString("[...]", "Array"), null, ""));
+				JSONProposalFactory.createStyledString("[...]", "Array"), null, ""));
 	}
 
 	/**
@@ -83,7 +82,7 @@ public class JSONProposalProvider extends AbstractJSONProposalProvider {
 		}
 
 		acceptor.accept(new ConfigurableCompletionProposal("\"\"", context.getOffset(), 0, 1, null,
-				createStyledString("\"...\"", "String"), null, ""));
+				JSONProposalFactory.createStyledString("\"...\"", "String"), null, ""));
 	}
 
 	/**
@@ -106,6 +105,7 @@ public class JSONProposalProvider extends AbstractJSONProposalProvider {
 	@Override
 	public void complete_JSONObject(EObject model, RuleCall ruleCall, ContentAssistContext context,
 			ICompletionProposalAcceptor acceptor) {
+
 		// only propose if context does not specify a prefix
 		if (!context.getPrefix().isEmpty()) {
 			return;
@@ -118,7 +118,7 @@ public class JSONProposalProvider extends AbstractJSONProposalProvider {
 		}
 
 		acceptor.accept(new ConfigurableCompletionProposal("{}", context.getOffset(), 0, 1, null,
-				createStyledString("{...}", "Object"), null, ""));
+				JSONProposalFactory.createStyledString("{...}", "Object"), null, ""));
 	}
 
 	/**
@@ -143,15 +143,4 @@ public class JSONProposalProvider extends AbstractJSONProposalProvider {
 		acceptor.accept(nameValuePairProposalFactory.createGenericNameValueProposal(context));
 	}
 
-	/**
-	 * Creates a new {@link StyledString} with a primary and secondary portion.
-	 * 
-	 * The two parts are separated by a hyphen ({@code -}) character and the
-	 * secondary portion is styled in a slightly lighter color.
-	 */
-	private StyledString createStyledString(String primary, String secondary) {
-		final StyledString styledString = new StyledString(primary);
-		styledString.append(" - " + secondary, StyledString.QUALIFIER_STYLER);
-		return styledString;
-	}
 }
