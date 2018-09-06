@@ -40,7 +40,6 @@ public class TestResultHyperlink implements IHyperlink {
 	private final IRegion region;
 	private final JSStackTraceLocationText locationText;
 	private final String hyperlinkText;
-	private final String typeLabel;
 
 	/**
 	 * Creates a hyperlink for the given region and target location. This is used only in the TestResultView, the region
@@ -52,7 +51,6 @@ public class TestResultHyperlink implements IHyperlink {
 		this.region = region;
 		this.locationText = locationText;
 		this.hyperlinkText = locationText.getSimpleName() + ":" + locationText.line + ":" + locationText.column;
-		this.typeLabel = locationText.getExtension();
 	}
 
 	@Override
@@ -62,7 +60,7 @@ public class TestResultHyperlink implements IHyperlink {
 
 	@Override
 	public String getTypeLabel() {
-		return typeLabel;
+		return null;
 	}
 
 	@Override

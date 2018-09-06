@@ -677,16 +677,13 @@ public class TestResultsView extends ViewPart {
 
 		testTreeViewer.setInput(getViewSite());
 
-		// stackTrace = new Text(sashForm, SWT.MULTI | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL);
-
-		stackTrace = new TextViewer(sashForm, SWT.SCROLLBAR_OVERLAY | SWT.READ_ONLY);
+		stackTrace = new TextViewer(sashForm, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.READ_ONLY);
 		stackTrace.getTextWidget().setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-		// Note: the links are not shown since we do not use a modifier to highlight them
-		// The MultipleHyperlinkPresenter has a very odd usability, so we just use the default presenter
-		// linking to the original (N4JS) code if possible.
 		// stackTrace.setHyperlinkPresenter(new MultipleHyperlinkPresenter(new RGB(0, 0, 255)));
 		stackTrace.setHyperlinkPresenter(new DefaultHyperlinkPresenter(new RGB(0, 0, 255)));
+
 		stackTrace.setHyperlinkDetectors(new IHyperlinkDetector[] { n4JSStackTraceHyperlinkDetector }, SWT.NONE);
+		stackTrace.setDocument(new Document());
 
 		sashForm.addControlListener(new ControlListener() {
 			@Override
@@ -1125,7 +1122,7 @@ public class TestResultsView extends ViewPart {
 	 */
 	protected void onSingleClick() {
 		// stackTrace.setText("");
-		stackTrace.setDocument(new Document(""));
+		stackTrace.getDocument().set("");
 
 		final ISelection selection = testTreeViewer.getSelection();
 		if (selection.isEmpty()) {
@@ -1152,24 +1149,19 @@ public class TestResultsView extends ViewPart {
 							}
 							final StringBuilder sb = new StringBuilder();
 							trace.forEach(line -> sb.append(line).append(lineSeparator()));
-							updateStackTrace(sb.toString());
+							stackTrace.getDocument().set(sb.toString());
 
 						} else if ((SKIPPED_IGNORE.equals(result.getTestStatus())
 								|| SKIPPED_FIXME.equals(result.getTestStatus())
 								|| ERROR.equals(result.getTestStatus()))
 								&& !isNullOrEmpty(result.getMessage())) {
-							updateStackTrace(result.getMessage());
+							stackTrace.getDocument().set(result.getMessage());
 						}
 					}
 
 				}
 			}
 		}
-	}
-
-	private void updateStackTrace(String s) {
-		stackTrace.setDocument(new Document(s));
-		stackTrace.getTextWidget().setSelection(0);
 	}
 
 	/**

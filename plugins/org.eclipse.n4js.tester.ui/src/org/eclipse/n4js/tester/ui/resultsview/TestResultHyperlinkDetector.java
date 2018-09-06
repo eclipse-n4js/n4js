@@ -20,6 +20,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.n4js.transpiler.sourcemap.MappingEntry;
@@ -61,14 +62,20 @@ public class TestResultHyperlinkDetector extends AbstractHyperlinkDetector {
 		List<IHyperlink> links = new ArrayList<>();
 		while (matcher.find()) {
 			JSStackTraceLocationText generatedLocation = new JSStackTraceLocationText(matcher);
+
+			IRegion linkRegion = new Region(
+					lineRegion.getOffset() + matcher.start(),
+					matcher.end() - matcher.start());
+
+			// generatedLocation.fileName.length());
 			JSStackTraceLocationText originalLocation = retrieveOriginal(generatedLocation);
 			if (originalLocation != null) { // prefer original location (e.g. n4js)
-				links.add(new TestResultHyperlink(region, originalLocation));
+				links.add(new TestResultHyperlink(linkRegion, originalLocation));
 				if (!canShowMultipleHyperlinks) { // and do not show any other in case of single hyper links
 					break;
 				}
 			}
-			links.add(new TestResultHyperlink(region, generatedLocation));
+			links.add(new TestResultHyperlink(linkRegion, generatedLocation));
 			if (!canShowMultipleHyperlinks) {
 				break;
 			}
