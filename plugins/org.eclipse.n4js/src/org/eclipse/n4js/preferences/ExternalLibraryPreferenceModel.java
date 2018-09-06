@@ -50,7 +50,7 @@ public class ExternalLibraryPreferenceModel {
 	 * @return a new default instance.
 	 */
 	public static ExternalLibraryPreferenceModel createDefault() {
-		final URI homeFolderUri = new File(StandardSystemProperty.USER_HOME.value()).toURI();
+		final URI homeFolderUri = new File(StandardSystemProperty.USER_HOME.value()).toURI(); // FIXME suspicious!
 		return new ExternalLibraryPreferenceModel(homeFolderUri);
 	}
 

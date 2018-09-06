@@ -28,7 +28,7 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.n4js.external.ExternalLibraryHelper;
 import org.eclipse.n4js.utils.collections.Arrays2;
 
-import com.google.common.base.Function;
+import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
 /**
@@ -185,21 +185,44 @@ import com.google.inject.Inject;
 	 */
 	@Override
 	public Iterable<URI> convertToProjectRootLocations(Iterable<URI> externalRootLocations) {
-		return from(externalRootLocations).transformAndConcat(new Function<URI, Iterable<URI>>() {
+		return from(externalRootLocations).transformAndConcat(this::getProjectsInLocation);
+	}
 
-			@Override
-			public Iterable<URI> apply(final URI rootLocation) {
-				final File rootFolder = new File(rootLocation);
-				if (isExistingFolder(rootFolder)) {
-					return from(getDirectoryContents(rootFolder))
-							.filter(f -> isExistingFolder(f))
-							.filter(f -> externalLibraryHelper.isExternalProjectDirectory(f))
-							.transform(file -> file.toURI());
-				}
-				return emptyList();
-			}
+	/**
+	 * Returns an iterable of all contained external projects in the given location.
+	 *
+	 * Also includes external projects that are contained in a scope-directory in the given location (e.g.
+	 * {@code <location>/@scope/<project>}.
+	 */
+	private final Iterable<URI> getProjectsInLocation(URI location) {
+		final File rootFolder = new File(location);
+		if (isExistingFolder(rootFolder)) {
+			final Iterable<URI> directContents = getDirectProjectsInLocation(
+					rootFolder.toURI());
+			final Iterable<URI> scopedContents = from(getDirectoryContents(rootFolder))
+					.filter(f1 -> isExistingFolder(f1))
+					.filter(f2 -> externalLibraryHelper.isScopeDirectory(f2))
+					.transformAndConcat(file -> getDirectProjectsInLocation(file.toURI()));
 
-		});
+			return Iterables.concat(directContents, scopedContents);
+		}
+		return emptyList();
+	}
+
+	/**
+	 * Returns an iterable of all directly contained external projects in the given location.
+	 *
+	 * This does not include scoped project in the given location.
+	 */
+	private final Iterable<URI> getDirectProjectsInLocation(URI location) {
+		final File rootFolder = new File(location);
+		if (isExistingFolder(rootFolder)) {
+			return from(getDirectoryContents(rootFolder))
+					.filter(f -> isExistingFolder(f))
+					.filter(f -> externalLibraryHelper.isExternalProjectDirectory(f))
+					.transform(file -> file.toURI());
+		}
+		return emptyList();
 	}
 
 	private final boolean isExistingFolder(File file) {

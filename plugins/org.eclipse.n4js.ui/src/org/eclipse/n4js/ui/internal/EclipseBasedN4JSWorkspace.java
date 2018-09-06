@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.internal.MultiCleartriggerCache;
 import org.eclipse.n4js.internal.MultiCleartriggerCache.CleartriggerSupplier;
@@ -163,6 +164,11 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 					public boolean visit(IResource resource) throws CoreException {
 						if (resource.getType() == IResource.FILE) {
 							result.add(URI.createPlatformResourceURI(resource.getFullPath().toString(), true));
+						}
+						// do not iterate over contents of nested node_modules folders
+						if (resource.getType() == IResource.FOLDER &&
+								resource.getName().equals(N4JSGlobals.NODE_MODULES)) {
+							return false;
 						}
 						return true;
 					}

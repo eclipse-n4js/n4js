@@ -30,10 +30,15 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.internal.events.BuildManager;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceVisitor;
+import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -53,22 +58,28 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.smith.ClosableMeasurement;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
+import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.ui.building.BuildDataWithRequestRebuild;
 import org.eclipse.n4js.ui.building.BuildManagerAccess;
 import org.eclipse.n4js.ui.external.ComputeProjectOrder.VertexOrder;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildQueue.Task;
 import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.builder.builderState.IBuilderState;
+import org.eclipse.xtext.builder.impl.IToBeBuiltComputerContribution;
 import org.eclipse.xtext.builder.impl.QueuedBuildData;
 import org.eclipse.xtext.builder.impl.ToBeBuilt;
 import org.eclipse.xtext.builder.impl.ToBeBuiltComputer;
+import org.eclipse.xtext.builder.impl.ToBeBuiltComputer.NullContribution;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
+import org.eclipse.xtext.ui.shared.contribution.ISharedStateContributionRegistry;
 import org.eclipse.xtext.util.Strings;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -80,11 +91,8 @@ import com.google.inject.Singleton;
 @SuppressWarnings("restriction")
 @Singleton
 public class ExternalLibraryBuilder {
-	@SuppressWarnings("unused") // necessary for dcBuildExt
-	private static DataCollector dcLibMngr = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Library Manager");
-	private static DataCollector dcBuildExt = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Build External Library", "Library Manager");
+	private static DataCollector dcExtLibBuilder = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("External Library Builder");
 
 	private static Logger LOGGER = Logger.getLogger(ExternalLibraryBuilder.class);
 
@@ -111,6 +119,27 @@ public class ExternalLibraryBuilder {
 
 	@Inject
 	private MultiCleartriggerCache cache;
+
+	private IToBeBuiltComputerContribution contribution;
+
+	@Inject
+	private void initializeContributions(ISharedStateContributionRegistry registry) {
+		contribution = getContribution(registry.getContributedInstances(IToBeBuiltComputerContribution.class));
+	}
+
+	private IToBeBuiltComputerContribution getContribution(
+			ImmutableList<? extends IToBeBuiltComputerContribution> contributedInstances) {
+		switch (contributedInstances.size()) {
+		case 0:
+			return new NullContribution();
+		case 1:
+			return contributedInstances.get(0);
+		default:
+			return new ToBeBuiltComputer.CompositeContribution(contributedInstances) {
+				// empty anonymous subclass to access protected constructor
+			};
+		}
+	}
 
 	/**
 	 * Performs a full build on all registered and available external libraries.
@@ -271,6 +300,9 @@ public class ExternalLibraryBuilder {
 			return Collections.emptyList();
 		}
 
+		Measurement allProjectsMeasurement = dcExtLibBuilder
+				.getMeasurement(operation.name().toLowerCase() + "ing all projects");
+
 		ISchedulingRule rule = getRule();
 		try {
 			Job.getJobManager().beginRule(rule, monitor);
@@ -282,6 +314,9 @@ public class ExternalLibraryBuilder {
 			// wrap as Arrays.asList returns immutable list
 			List<IN4JSProject> buildOrderList = new ArrayList<>(Arrays.asList(buildOrder.vertexes));
 			if (BuildOperation.CLEAN.equals(operation)) {
+				// use wipe to remove the resource descriptions of the given projects from index
+				wipeProjectFromIndex(SubMonitor.convert(monitor, 1), Arrays.asList(projects));
+				// clean in reverse order
 				Collections.reverse(buildOrderList);
 			}
 
@@ -305,7 +340,7 @@ public class ExternalLibraryBuilder {
 				LOGGER.info(prefix + "ing external library: " + project.getProjectName());
 
 				N4JSEclipseProject n4EclPrj = (N4JSEclipseProject) project; // bold cast
-				operation.run(this, n4EclPrj, subMonitor.newChild(1));
+				operation.run(this, n4EclPrj, subMonitor.split(1));
 
 				IProject iProject = n4EclPrj.getProject();
 				actualBuildOrderList.add(iProject);
@@ -313,6 +348,7 @@ public class ExternalLibraryBuilder {
 
 			return actualBuildOrderList;
 		} finally {
+			allProjectsMeasurement.end();
 			Job.getJobManager().endRule(rule);
 		}
 	}
@@ -384,13 +420,33 @@ public class ExternalLibraryBuilder {
 		BUILD {
 
 			@Override
-			protected ToBeBuilt getToBeBuilt(ToBeBuiltComputer computer, IProject project, IProgressMonitor monitor) {
+			protected ToBeBuilt getToBeBuilt(ToBeBuiltComputer computer, N4JSEclipseProject n4Project,
+					IProgressMonitor monitor, IToBeBuiltComputerContribution contribution) {
 				try {
-					return computer.updateProject(project, monitor);
+					// The following procedure is similar to computer.updateProject except for the initial
+					// doRemoveProject invocation. TODO GH-1018: revisit whether doRemoveProject can really be omitted
+					// here
+					ToBeBuilt toBeBuilt = new ToBeBuilt();
+					final SubMonitor childMonitor = SubMonitor.convert(monitor, 1);
+					n4Project.getProject().accept(new IResourceVisitor() {
+						@Override
+						public boolean visit(IResource resource) throws CoreException {
+							if (monitor.isCanceled())
+								throw new OperationCanceledException();
+							if (resource instanceof IStorage) {
+								return computer.updateStorage(childMonitor, toBeBuilt, (IStorage) resource);
+							}
+							if (resource instanceof IFolder) {
+								return !contribution.isRejected((IFolder) resource);
+							}
+							return true;
+						}
+					});
+					return toBeBuilt;
 				} catch (OperationCanceledException e) {
 					throw e;
 				} catch (Exception e) {
-					String name = project.getName();
+					String name = n4Project.getProjectName();
 					LOGGER.error("Error occurred while calculating to be build data for '" + name + "' project.", e);
 					throw Exceptions.sneakyThrow(e);
 				}
@@ -404,8 +460,9 @@ public class ExternalLibraryBuilder {
 		CLEAN {
 
 			@Override
-			protected ToBeBuilt getToBeBuilt(ToBeBuiltComputer computer, IProject project, IProgressMonitor monitor) {
-				return computer.removeProject(project, monitor);
+			protected ToBeBuilt getToBeBuilt(ToBeBuiltComputer computer, N4JSEclipseProject n4Project,
+					IProgressMonitor monitor, IToBeBuiltComputerContribution contribution) {
+				return computer.removeProject(n4Project.getProject(), monitor);
 			}
 
 		};
@@ -419,9 +476,12 @@ public class ExternalLibraryBuilder {
 		 *            the object of the operation.
 		 * @param monitor
 		 *            the monitor for the process.
+		 * @param contribution
+		 *            TODO
 		 * @return the calculated {@link ToBeBuilt} instance.
 		 */
-		abstract ToBeBuilt getToBeBuilt(ToBeBuiltComputer computer, IProject project, IProgressMonitor monitor);
+		abstract ToBeBuilt getToBeBuilt(ToBeBuiltComputer computer, N4JSEclipseProject project,
+				IProgressMonitor monitor, IToBeBuiltComputerContribution contribution);
 
 		/**
 		 * Runs the operation in a blocking fashion.
@@ -436,21 +496,30 @@ public class ExternalLibraryBuilder {
 		private void run(ExternalLibraryBuilder helper, N4JSEclipseProject n4EclPrj, IProgressMonitor monitor) {
 			RaceDetectionHelper.log("%s: external project ", name(), n4EclPrj.getProjectName());
 
+			final DataCollector operationCollector = DataCollectors.INSTANCE.getOrCreateDataCollector(
+					this.name().toLowerCase() + "ing " + n4EclPrj.getProjectName(),
+					dcExtLibBuilder);
+
+			final Measurement measurement = operationCollector
+					.getMeasurement(this.name().toLowerCase() + "ing " + n4EclPrj.getProjectName());
+
 			monitor.setTaskName("Collecting resource for '" + n4EclPrj.getProjectName() + "'...");
 			SubMonitor subMonitor = SubMonitor.convert(monitor, 2);
 			IProgressMonitor computeMonitor = subMonitor.newChild(1, SUPPRESS_BEGINTASK);
 
 			IProject project = n4EclPrj.getProject();
 			ToBeBuiltComputer computer = helper.builtComputer;
-			ToBeBuilt toBeBuilt = getToBeBuilt(computer, project, computeMonitor);
+			IToBeBuiltComputerContribution contribution = helper.contribution;
 
-			if (toBeBuilt.getToBeDeleted().isEmpty() && toBeBuilt.getToBeUpdated().isEmpty()) {
-				subMonitor.newChild(1, SUPPRESS_NONE).worked(1);
-				return;
-			}
+			ToBeBuilt toBeBuilt = getToBeBuilt(computer, n4EclPrj, computeMonitor, contribution);
 
-			try (ClosableMeasurement mesBE = dcBuildExt
+			try (ClosableMeasurement mesBE = dcExtLibBuilder
 					.getClosableMeasurement("BuildExt_" + n4EclPrj.getProjectName())) {
+				if (toBeBuilt.getToBeDeleted().isEmpty() && toBeBuilt.getToBeUpdated().isEmpty()) {
+					subMonitor.newChild(1, SUPPRESS_NONE).worked(1);
+					return;
+				}
+
 				IN4JSCore core = helper.core;
 				QueuedBuildData queuedBuildData = helper.queuedBuildData;
 				IBuilderState builderState = helper.builderState;
@@ -475,15 +544,25 @@ public class ExternalLibraryBuilder {
 							BuildManagerAccess::needBuild);
 
 					monitor.setTaskName("Building '" + project.getName() + "'...");
-					IProgressMonitor buildMonitor = subMonitor.newChild(1, SUPPRESS_BEGINTASK);
+					IProgressMonitor buildMonitor = subMonitor.split(1, SUPPRESS_BEGINTASK);
 					builderState.update(buildData, buildMonitor);
 
 				} finally {
 
 					if (null != resourceSet) {
-						resourceSet.getResources().clear();
-						resourceSet.eAdapters().clear();
+						// clear resourceSet without setDeliver to avoid potentially expensive notifications
+						boolean wasDeliver = resourceSet.eDeliver();
+						try {
+							resourceSet.eSetDeliver(false);
+							resourceSet.getResources().clear();
+							resourceSet.eAdapters().clear();
+						} finally {
+							resourceSet.eSetDeliver(wasDeliver);
+						}
 					}
+
+					// end measurement for this build operation
+					measurement.end();
 				}
 
 			} catch (RuntimeException e) {
@@ -499,12 +578,27 @@ public class ExternalLibraryBuilder {
 	}
 
 	/**
-	 * The all entries in the Xtext index that start with one of the given project URIs will be cleaned from the index.
+	 * Deletes all entries in the Xtext index that originate from one of the given {@code projectsToBeWiped}.
+	 *
+	 * @param projectsToBeWiped
+	 *            The projects to be wiped.
+	 */
+	public void wipeProjectFromIndex(IProgressMonitor monitor, Collection<N4JSExternalProject> projectsToBeWiped) {
+		final Set<URI> toBeWiped = new HashSet<>();
+		for (N4JSExternalProject project : projectsToBeWiped) {
+			toBeWiped.add(URIUtils.toFileUri(project.getLocationURI()));
+		}
+		this.wipeURIsFromIndex(monitor, toBeWiped);
+	}
+
+	/**
+	 * Deletes all entries in the Xtext index that start with one of the given project URIs will be cleaned from the
+	 * index.
 	 *
 	 * @param toBeWiped
 	 *            URIs of project roots
 	 */
-	public void wipeIndex(IProgressMonitor monitor, Collection<URI> toBeWiped) {
+	public void wipeURIsFromIndex(IProgressMonitor monitor, Collection<URI> toBeWiped) {
 		Set<String> toBeWipedStrings = new HashSet<>();
 		for (URI toWipe : toBeWiped) {
 			toBeWipedStrings.add(toWipe.toString());

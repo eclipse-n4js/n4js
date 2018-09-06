@@ -39,11 +39,6 @@ public interface TargetPlatformInstallLocationProvider {
 	String NODE_MODULES_FOLDER = ExternalLibrariesActivator.NPM_CATEGORY;
 
 	/**
-	 * Unique name of the {@code node_modules} folder that will be used to download npm packages.
-	 */
-	String TYPE_DEFINITIONS_FOLDER = ExternalLibrariesActivator.TYPE_DEFINITIONS_CATEGORY;
-
-	/**
 	 * Returns with an {@link File} pointing to the target platform install location, called '.n4npm' folder.
 	 *
 	 * @return the {@link File} pointing to the target platform install location.
@@ -68,13 +63,6 @@ public interface TargetPlatformInstallLocationProvider {
 	 */
 	URI getTargetPlatformFileLocation();
 
-	/**
-	 * Returns with the unique name of the Git repository for storing the type definition files for the npm packages.
-	 *
-	 * @return the unique name of the Git repository.
-	 */
-	String getGitRepositoryName();
-
 	/** @return the URI pointing to the {@code node_modules} folder which is used for installing npm packages. */
 	default URI getNodeModulesURI() {
 		return getURIInTargetPlatformLocation(NODE_MODULES_FOLDER);
@@ -83,16 +71,6 @@ public interface TargetPlatformInstallLocationProvider {
 	/** @return the URI pointing to the {@code node_modules} folder which is used for installing npm packages. */
 	default File getNodeModulesFolder() {
 		return getFolderInTargetPlatformLocation(NODE_MODULES_FOLDER);
-	}
-
-	/** @return the URI pointing to the {@code type_definition} folder. */
-	default URI getTypeDefinitionsURI() {
-		return getURIInTargetPlatformLocation(TYPE_DEFINITIONS_FOLDER);
-	}
-
-	/** @return the URI pointing to the {@code type_definition} folder. */
-	default File getTypeDefinitionsFolder() {
-		return getFolderInTargetPlatformLocation(TYPE_DEFINITIONS_FOLDER);
 	}
 
 	/** @return the {@link URI} pointing to the given folder inside the target platform */
@@ -132,38 +110,6 @@ public interface TargetPlatformInstallLocationProvider {
 	}
 
 	/**
-	 * Returns with the URI pointing to the local git repository root location for storing and retrieving N4JS
-	 * definition files for the npm installation process.
-	 *
-	 * @return the URI pointing to the local git repository location for the N4JSD files in the file system.
-	 */
-	default URI getTargetPlatformLocalGitRepositoryLocation() {
-		if (null == getTargetPlatformInstallFolder()) {
-			final String message = "Target platform install location was not specified.";
-			final NullPointerException exception = new NullPointerException(message);
-			LOGGER.error(message, exception);
-			exception.printStackTrace(); // This if for the HLC as it swallows the actual stack trace.
-			throw exception;
-		}
-		final File installLocation = getTargetPlatformInstallFolder();
-		checkState(installLocation.isDirectory(), "Cannot locate target platform install location: " + installLocation);
-		// The local git repository should be a sibling folder of the install location.
-		File parentFile = installLocation.getParentFile();
-		if (null == parentFile || !parentFile.exists() || !parentFile.isDirectory()) {
-			LOGGER.warn("Cannot get parent folder of the target platform install location: " + parentFile + ".");
-			LOGGER.warn("Falling back to install location: " + installLocation + ".");
-			parentFile = installLocation;
-		}
-		final File gitRoot = new File(parentFile, getGitRepositoryName());
-		if (!gitRoot.exists()) {
-			checkState(gitRoot.mkdir(), "Error while creating local git repository folder for target platform.");
-		}
-		checkState(gitRoot.isDirectory(),
-				"Cannot locate local git repository folder in target platform install location.");
-		return gitRoot.toURI();
-	}
-
-	/**
 	 * Recreates the folders node_modules and type_definitions folders and the the target platform definition
 	 * {@code package.json} file.
 	 *
@@ -180,10 +126,8 @@ public interface TargetPlatformInstallLocationProvider {
 			final File targetPlatformDefinitionFile = ExternalLibraryFolderUtils
 					.createTargetPlatformDefinitionFile(installLocation);
 			final File npmFile = getNodeModulesFolder();
-			final File tdFile = getTypeDefinitionsFolder();
 			success &= targetPlatformDefinitionFile != null && targetPlatformDefinitionFile.isFile();
 			success &= npmFile != null && npmFile.isDirectory();
-			success &= tdFile != null && tdFile.isDirectory();
 		}
 		return success;
 	}

@@ -32,7 +32,6 @@ import static org.eclipse.n4js.packagejson.PackageJsonProperties.PROVIDED_RUNTIM
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.REQUIRED_RUNTIME_LIBRARIES;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.SOURCES;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.TESTED_PROJECTS;
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.TYPE_DEPENDENCIES;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.VENDOR_ID;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.VENDOR_NAME;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.VERSION;
@@ -329,12 +328,6 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		checkIsDependenciesSection(devDependenciesValue);
 	}
 
-	/** Check the typeDependencies section structure. */
-	@CheckProperty(property = TYPE_DEPENDENCIES)
-	public void checkTypeDependenciesStructure(JSONValue typeDependenciesValue) {
-		checkIsDependenciesSection(typeDependenciesValue);
-	}
-
 	/**
 	 * Checks whether the given {@code sectionValue} is a structurally valid package.json dependency section (including
 	 * the version constraints).
@@ -435,7 +428,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 			addIssue(msg, issueObj, IssueCodes.PKGJ_DEFINES_PROPERTY);
 		}
 
-		if (type != ProjectType.DEFINITION && type != ProjectType.VALIDATION) {
+		if (isRequiresOutputAndSourceFolder(type)) {
 			// make sure non-validation projects always declare an output and at least one source folder
 			final boolean hasSources = getSingleDocumentValue(SOURCES) != null;
 			final boolean hasOutput = getSingleDocumentValue(OUTPUT) != null;
@@ -444,6 +437,16 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 				addIssue(msg, projectTypeValue, IssueCodes.PKGJ_PROJECT_TYPE_MANDATORY_OUTPUT_AND_SOURCES);
 			}
 		}
+	}
+
+	/**
+	 * Returns {@code true} iff the given project type requires the declaration of at least one output and source
+	 * folder.
+	 */
+	private boolean isRequiresOutputAndSourceFolder(ProjectType type) {
+		return type != ProjectType.DEFINITION &&
+				type != ProjectType.VALIDATION &&
+				type != ProjectType.PLAINJS;
 	}
 
 	/** Check the projectType value structure. */
@@ -765,8 +768,8 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 			String message = IssueCodes.getMessageForPKGJ_DEFINES_PROPERTY(projectType.name(), "not ", "output");
 			addIssue(message, astOutputValue.get().eContainer(), IssueCodes.PKGJ_DEFINES_PROPERTY);
 		}
-		// do not perform check for projects of type 'validation' and 'definition'
-		if (projectType == ProjectType.DEFINITION || projectType == ProjectType.VALIDATION) {
+		// do not perform check for projects which do not require an output folder
+		if (!isRequiresOutputAndSourceFolder(projectType)) {
 			return;
 		}
 
@@ -1161,14 +1164,14 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	/**
 	 * Returns the project type as declared by the currently validated {@link JSONDocument}.
 	 *
-	 * Returns {@link ProjectType#VALIDATION} if the project type cannot be determined.
+	 * Returns {@link ProjectType#PLAINJS} if the project type cannot be determined.
 	 */
 	private ProjectType getProjectType() {
 		final JSONValue projectTypeValue = getSingleDocumentValue(PROJECT_TYPE);
 		if (projectTypeValue instanceof JSONStringLiteral) {
 			return PackageJsonUtils.parseProjectType(asNonEmptyStringOrNull(projectTypeValue));
 		} else {
-			return ProjectType.VALIDATION;
+			return ProjectType.PLAINJS;
 		}
 	}
 

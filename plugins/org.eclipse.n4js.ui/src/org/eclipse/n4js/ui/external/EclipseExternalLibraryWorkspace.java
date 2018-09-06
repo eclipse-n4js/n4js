@@ -37,6 +37,7 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalProjectsCollector;
 import org.eclipse.n4js.external.N4JSExternalProject;
@@ -141,6 +142,11 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 							String path = new File(resource.getLocationURI()).getAbsolutePath();
 							result.add(URI.createFileURI(path));
 						}
+						// do not iterate over contents of nested node_modules folders
+						if (resource.getType() == IResource.FOLDER &&
+								resource.getName().equals(N4JSGlobals.NODE_MODULES)) {
+							return false;
+						}
 						return true;
 					});
 					return unmodifiableIterator(result.iterator());
@@ -169,26 +175,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 
 	@Override
 	public URI findProjectWith(URI nestedLocation) {
-		String path = nestedLocation.toFileString();
-		if (null == path) {
-			return null;
-		}
-
-		File nestedResource = new File(path);
-		Path nestedResourcePath = nestedResource.toPath();
-
-		Iterable<URI> registeredProjectUris = projectProvider.getProjectURIs();
-		for (URI projectUri : registeredProjectUris) {
-			if (projectUri.isFile()) {
-				File projectRoot = new File(projectUri.toFileString());
-				Path projectRootPath = projectRoot.toPath();
-				if (nestedResourcePath.startsWith(projectRootPath)) {
-					return projectUri;
-				}
-			}
-		}
-
-		return null;
+		return projectProvider.findProjectWith(nestedLocation);
 	}
 
 	@Override
@@ -284,7 +271,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 		for (N4JSExternalProject project : allProjectsToClean) {
 			toBeWiped.add(URIUtils.toFileUri(project.getLocationURI()));
 		}
-		builder.wipeIndex(monitor, toBeWiped);
+		builder.wipeURIsFromIndex(monitor, toBeWiped);
 	}
 
 	private RegisterResult registerProjectsInternal(IProgressMonitor monitor, Set<URI> toBeUpdated) {

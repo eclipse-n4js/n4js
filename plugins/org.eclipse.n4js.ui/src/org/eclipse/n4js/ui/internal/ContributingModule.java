@@ -28,12 +28,9 @@ import org.eclipse.n4js.external.ExternalLibraryHelper;
 import org.eclipse.n4js.external.ExternalLibraryUriHelper;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalProjectsCollector;
-import org.eclipse.n4js.external.GitCloneSupplier;
 import org.eclipse.n4js.external.NpmLogger;
 import org.eclipse.n4js.external.RebuildWorkspaceProjectsScheduler;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
-import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider;
-import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider.TypeDefinitionGitLocationProviderImpl;
 import org.eclipse.n4js.generator.IWorkspaceMarkerSupport;
 import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
@@ -76,6 +73,7 @@ import org.eclipse.n4js.utils.WildcardPathFilterHelper;
 import org.eclipse.n4js.utils.process.OutputStreamPrinterThreadProvider;
 import org.eclipse.n4js.utils.process.OutputStreamProvider;
 import org.eclipse.n4js.utils.process.ProcessExecutor;
+import org.eclipse.n4js.validation.helper.FolderContainmentHelper;
 import org.eclipse.xtext.builder.builderState.IBuilderState;
 import org.eclipse.xtext.builder.clustering.CurrentDescriptions;
 import org.eclipse.xtext.builder.impl.IToBeBuiltComputerContribution;
@@ -115,6 +113,7 @@ public class ContributingModule implements Module {
 		binder.bind(InternalN4JSWorkspace.class).to(EclipseBasedN4JSWorkspace.class);
 		binder.bind(EclipseBasedN4JSWorkspace.class);
 		binder.bind(ProjectDescriptionLoader.class);
+		binder.bind(FolderContainmentHelper.class);
 		binder.bind(PackageJsonHelper.class);
 		binder.bind(IWorkspaceRoot.class).toProvider(new Provider<IWorkspaceRoot>() {
 			@Inject
@@ -132,8 +131,6 @@ public class ContributingModule implements Module {
 		binder.bind(ExternalLibraryHelper.class);
 		binder.bind(StatusHelper.class);
 		binder.bind(TargetPlatformInstallLocationProvider.class).to(EclipseTargetPlatformInstallLocationProvider.class);
-		binder.bind(GitCloneSupplier.class);
-		binder.bind(TypeDefinitionGitLocationProvider.class).to(TypeDefinitionGitLocationProviderImpl.class);
 
 		binder.bind(IN4JSCore.class).to(N4JSEclipseCore.class);
 		binder.bind(IN4JSEclipseCore.class).to(N4JSEclipseCore.class);

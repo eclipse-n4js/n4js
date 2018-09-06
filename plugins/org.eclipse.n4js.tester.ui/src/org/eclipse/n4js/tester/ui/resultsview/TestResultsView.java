@@ -663,6 +663,7 @@ public class TestResultsView extends ViewPart {
 
 		testTreeViewer = new TreeViewerBuilder(newArrayList("Test", "Status", "Duration"),
 				new TestTreeViewerContentProvider())
+						.setUseHashlookup(true)
 						.setLinesVisible(false).setLabelProvider(new TestTreeViewerLabelProvider())
 						.setColumnWeights(asList(5, 2, 1)).build(sashForm);
 		installToolTipSupport(testTreeViewer.getTree());

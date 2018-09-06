@@ -3,7 +3,9 @@
 	"version": "0.0.1",
 	"dependencies": {
 		"nuka-carousel": "*",
-		"react": "*"
+		"react": "*",
+		"@n4jsd/nuka-carousel": "*",
+		"@n4jsd/react": "*"
 	},
 	"n4js": {
 		"projectType": "library",
@@ -14,10 +16,6 @@
 			"source": [
 				"src"
 			]
-		},
-		"typeDependencies": {
-			"nuka-carousel-n4jsd": "*",
-			"react-n4jsd": "*"
 		}
 	}
 }
