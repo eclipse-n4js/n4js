@@ -14,18 +14,29 @@ import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
 public class StyledTemplateProposal extends TemplateProposal implements ICompletionProposalExtension6 {
 	private final String displayLabel;
 	private final String description;
+	private final boolean isGenericProposal;
 
-	public StyledTemplateProposal(ContentAssistContext context, String name, String description, String rawTemplate,
-			TemplateContext tContext, IRegion region, Image image) {
+	public StyledTemplateProposal(ContentAssistContext context, String name, String description,
+			String rawTemplate, boolean isGenericProposal, TemplateContext tContext, IRegion region, Image image) {
 		super(createTemplate(context, name, description, rawTemplate), tContext, region, image);
 
 		this.displayLabel = name;
+		this.isGenericProposal = isGenericProposal;
 		this.description = description;
+	}
+
+	public StyledTemplateProposal(ContentAssistContext context, String name, String description, String rawTemplate,
+			TemplateContext tContext, IRegion region, Image image) {
+		this(context, name, description, rawTemplate, false, tContext, region, image);
 	}
 
 	@Override
 	public StyledString getStyledDisplayString() {
-		return JSONProposalFactory.createStyledString(displayLabel, description);
+		StyledString.Styler styler = null;
+		if (isGenericProposal) {
+			styler = StyledString.DECORATIONS_STYLER;
+		}
+		return JSONProposalFactory.createStyledString(displayLabel, description, styler);
 	}
 
 	static private Template createTemplate(ContentAssistContext context, String displayLabel, String description,

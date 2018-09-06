@@ -45,9 +45,21 @@ public class JSONProposalFactory {
 	@Inject
 	private JSONGrammarAccess grammarAccess;
 
-	private static final String NAME_VALUE_TEMPLATE_STRING = "\"${name}\": \"${value}\"";
-	private static final String NAME_ARRAY_TEMPLATE_STRING = "\"${name}\": [${value}]";
-	private static final String NAME_OBJECT_TEMPLATE_STRING = "\"${name}\": {${value}}";
+	private static final String GEN_NAME_VALUE_TEMPLATE_STRING = "\"${name}\": \"${value}\"";
+	private static final String GEN_NAME_ARRAY_TEMPLATE_STRING = "\"${name}\": [${value}]";
+	private static final String GEN_NAME_OBJECT_TEMPLATE_STRING = "\"${name}\": {${value}}";
+
+	private static final String getNAME_VALUE_TEMPLATE_STRING(String name) {
+		return "\"" + name + "\": \"${value}\"";
+	}
+
+	private static final String getNAME_ARRAY_TEMPLATE_STRING(String name) {
+		return "\"" + name + "\": [${value}]";
+	}
+
+	private static final String getNAME_OBJECT_TEMPLATE_STRING(String name) {
+		return "\"" + name + "\": {${value}}";
+	}
 
 	/**
 	 * Creates a name-value-pair proposal for the given context.
@@ -56,7 +68,7 @@ public class JSONProposalFactory {
 	 *            The {@link ContentAssistContext} to create the proposal for.
 	 */
 	public ICompletionProposal createGenericNameValueProposal(ContentAssistContext context) {
-		return createNameValueProposal(context, "<value>", "", "Generic name value pair");
+		return createNameValueProposal(context, "<value>", "", "Generic name value pair", true);
 	}
 
 	/**
@@ -66,7 +78,7 @@ public class JSONProposalFactory {
 	 *            The {@link ContentAssistContext} to create the proposal for.
 	 */
 	public ICompletionProposal createGenericNameArrayProposal(ContentAssistContext context) {
-		return createNameArrayProposal(context, "<array>", "", "Generic name array pair");
+		return createNameArrayProposal(context, "<array>", "", "Generic name array pair", true);
 	}
 
 	/**
@@ -76,7 +88,7 @@ public class JSONProposalFactory {
 	 *            The {@link ContentAssistContext} to create the proposal for.
 	 */
 	public ICompletionProposal createGenericNameObjectProposal(ContentAssistContext context) {
-		return createNameObjectProposal(context, "<object>", "", "Generic name object pair");
+		return createNameObjectProposal(context, "<object>", "", "Generic name object pair", true);
 	}
 
 	/**
@@ -93,9 +105,7 @@ public class JSONProposalFactory {
 	 */
 	public ICompletionProposal createNameValueProposal(ContentAssistContext context, String name, String value,
 			String description) {
-
-		Image image = JSONImageDescriptorCache.ImageRef.JSON_VALUE.asImage().orNull();
-		return createProposal(context, name, value, description, NAME_VALUE_TEMPLATE_STRING, image);
+		return createNameValueProposal(context, name, value, description, false);
 	}
 
 	/**
@@ -113,8 +123,7 @@ public class JSONProposalFactory {
 	public ICompletionProposal createNameArrayProposal(ContentAssistContext context, String name, String array,
 			String description) {
 
-		Image image = JSONImageDescriptorCache.ImageRef.JSON_ARRAY.asImage().orNull();
-		return createProposal(context, name, array, description, NAME_ARRAY_TEMPLATE_STRING, image);
+		return createNameArrayProposal(context, name, array, description, false);
 	}
 
 	/**
@@ -132,12 +141,35 @@ public class JSONProposalFactory {
 	public ICompletionProposal createNameObjectProposal(ContentAssistContext context, String name, String object,
 			String description) {
 
+		return createNameObjectProposal(context, name, object, description, false);
+	}
+
+	private ICompletionProposal createNameValueProposal(ContentAssistContext context, String name, String value,
+			String description, boolean isGenericProposal) {
+
+		Image image = JSONImageDescriptorCache.ImageRef.JSON_VALUE.asImage().orNull();
+		String rawTemplate = isGenericProposal ? GEN_NAME_VALUE_TEMPLATE_STRING : getNAME_VALUE_TEMPLATE_STRING(name);
+		return createProposal(context, name, value, description, rawTemplate, image, isGenericProposal);
+	}
+
+	private ICompletionProposal createNameArrayProposal(ContentAssistContext context, String name, String array,
+			String description, boolean isGenericProposal) {
+
+		Image image = JSONImageDescriptorCache.ImageRef.JSON_ARRAY.asImage().orNull();
+		String rawTemplate = isGenericProposal ? GEN_NAME_ARRAY_TEMPLATE_STRING : getNAME_ARRAY_TEMPLATE_STRING(name);
+		return createProposal(context, name, array, description, rawTemplate, image, isGenericProposal);
+	}
+
+	private ICompletionProposal createNameObjectProposal(ContentAssistContext context, String name, String object,
+			String description, boolean isGenericProposal) {
+
 		Image image = JSONImageDescriptorCache.ImageRef.JSON_OBJECT.asImage().orNull();
-		return createProposal(context, name, object, description, NAME_OBJECT_TEMPLATE_STRING, image);
+		String rawTemplate = isGenericProposal ? GEN_NAME_OBJECT_TEMPLATE_STRING : getNAME_OBJECT_TEMPLATE_STRING(name);
+		return createProposal(context, name, object, description, rawTemplate, image, isGenericProposal);
 	}
 
 	private ICompletionProposal createProposal(ContentAssistContext context, String name, String value,
-			String description, String rawTemplate, Image image) {
+			String description, String rawTemplate, Image image, boolean isGenericProposal) {
 
 		TemplateContextType contextType = getTemplateContextType();
 		IXtextDocument document = context.getDocument();
@@ -145,10 +177,13 @@ public class JSONProposalFactory {
 		Region replaceRegion = context.getReplaceRegion();
 
 		// pre-populate ${name} and ${value} with given args
-		tContext.setVariable("name", name);
+		if (isGenericProposal) {
+			tContext.setVariable("name", name);
+		}
 		tContext.setVariable("value", value);
 
-		return new StyledTemplateProposal(context, name, description, rawTemplate, tContext, replaceRegion, image);
+		return new StyledTemplateProposal(context, name, description, rawTemplate, isGenericProposal, tContext,
+				replaceRegion, image);
 	}
 
 	/** Returns the template content type to use for the NameValuePair template. */
@@ -163,7 +198,22 @@ public class JSONProposalFactory {
 	 * secondary portion is styled in a slightly lighter color.
 	 */
 	static StyledString createStyledString(String primary, String secondary) {
-		final StyledString styledString = new StyledString(primary);
+		return createStyledString(primary, secondary, null);
+	}
+
+	/**
+	 * Creates a new {@link StyledString} with a primary and secondary portion.
+	 * 
+	 * The two parts are separated by a hyphen ({@code -}) character and the
+	 * secondary portion is styled in a slightly lighter color.
+	 */
+	static StyledString createStyledString(String primary, String secondary, StyledString.Styler styler) {
+		final StyledString styledString = new StyledString();
+		if (styler != null) {
+			styledString.append(primary, styler);
+		} else {
+			styledString.append(primary);
+		}
 		if (!Strings.isNullOrEmpty(secondary)) {
 			styledString.append(" - " + secondary, StyledString.QUALIFIER_STYLER);
 		}
