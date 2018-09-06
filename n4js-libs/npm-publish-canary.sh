@@ -35,6 +35,8 @@ export NPM_CONFIG_GLOBALCONFIG="DIR_ROOT"
 echo "Publishing using .npmrc configuration to ${NPM_REGISTRY}";
 
 if [ "${NPM_TAG}" = "latest" ]; then
+    # GH-1113: Since lerna.json may have been changed by local publishing, reverse all changes
+    git checkout -- "${DIR_ROOT}/lerna.json"
     # We only publish if there are changes in n4js-libs since the last commit
     PKG_VERSION=`cat lerna.json  | jq -r '.version' | xargs -t semver -i minor {}`
     N4JS_LIBS_COMMIT_ID_LOCAL=`git log -1 --format="%H" ${DIR_ROOT} | cut -c1-8`
@@ -42,10 +44,10 @@ if [ "${NPM_TAG}" = "latest" ]; then
     # Check the latest commit on npm registry, use n4js-node as a representative
     N4JS_LIBS_VERSION_PUBLIC=`curl -s ${NPM_REGISTRY}/n4js-node | jq -r '.["dist-tags"].latest'`
     echo "N4JS_LIBS_VERSION_PUBLIC=${N4JS_LIBS_VERSION_PUBLIC}"
-    
+
     # The commit ID is the last 8 letters of public version
     N4JS_LIBS_COMMIT_ID_PUBLIC=${N4JS_LIBS_VERSION_PUBLIC: -8}
-    
+
     # Stop if the local ID equals public ID
     if [ "${N4JS_LIBS_COMMIT_ID_LOCAL}" = "${N4JS_LIBS_COMMIT_ID_PUBLIC}" ]; then
         echo "n4js-libs has NOT been changed since the last publish. Local commit ID = Public commit ID = ${N4JS_LIBS_COMMIT_ID_LOCAL}. n4js-libs will not be published."
