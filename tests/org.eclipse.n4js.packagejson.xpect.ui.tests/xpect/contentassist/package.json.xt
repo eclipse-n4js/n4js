@@ -24,14 +24,19 @@
 
 {
 	/* XPECT contentAssistList at '<|>"name": "P",' proposals ---
+	   	<array> - Generic name array pair,
+	   	<object> - Generic name object pair,
+	   	<value> - Generic name value pair,
 		dependencies - Dependencies of this npm,
 		devDependencies - Development dependencies of this npm,
-		main - Main module. path is relative to package root,
-		name - Generic name value pair,
+		main - Main module. Path is relative to package root,
 		version - Npm semver version
 	--- */
 	"name": "P",
 	/* XPECT contentAssistList at '"n4js": {<|>' proposals ---
+	   	<array> - Generic name array pair,
+	   	<object> - Generic name object pair,
+	   	<value> - Generic name value pair,
 	   	definesPackage - ,
 	   	execModule - ,
 	   	extendedRuntimeEnvironment - ,
@@ -41,7 +46,6 @@
 	   	mainModule - Main module specifier. Starts from source folder(s),
 	   	moduleFilters -,
 	   	moduleLoader -,
-	   	name - Generic name value pair,
 	   	noModuleWrap -,
 	   	noValidate -,
 	   	providedRuntimeLibraries -,
