@@ -141,6 +141,8 @@ public class JSONProposalProvider extends AbstractJSONProposalProvider {
 		}
 
 		acceptor.accept(nameValuePairProposalFactory.createGenericNameValueProposal(context));
+		acceptor.accept(nameValuePairProposalFactory.createGenericNameArrayProposal(context));
+		acceptor.accept(nameValuePairProposalFactory.createGenericNameObjectProposal(context));
 	}
 
 }

@@ -56,7 +56,7 @@ public class JSONProposalFactory {
 	 *            The {@link ContentAssistContext} to create the proposal for.
 	 */
 	public ICompletionProposal createGenericNameValueProposal(ContentAssistContext context) {
-		return createNameValueProposal(context, "name", "", "Generic name value pair");
+		return createNameValueProposal(context, "<value>", "", "Generic name value pair");
 	}
 
 	/**
@@ -66,7 +66,7 @@ public class JSONProposalFactory {
 	 *            The {@link ContentAssistContext} to create the proposal for.
 	 */
 	public ICompletionProposal createGenericNameArrayProposal(ContentAssistContext context) {
-		return createNameArrayProposal(context, "name", "", "Generic name array pair");
+		return createNameArrayProposal(context, "<array>", "", "Generic name array pair");
 	}
 
 	/**
@@ -76,7 +76,7 @@ public class JSONProposalFactory {
 	 *            The {@link ContentAssistContext} to create the proposal for.
 	 */
 	public ICompletionProposal createGenericNameObjectProposal(ContentAssistContext context) {
-		return createNameObjectProposal(context, "name", "", "Generic name object pair");
+		return createNameObjectProposal(context, "<object>", "", "Generic name object pair");
 	}
 
 	/**

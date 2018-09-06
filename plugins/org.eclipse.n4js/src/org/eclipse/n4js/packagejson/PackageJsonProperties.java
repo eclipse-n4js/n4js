@@ -42,7 +42,7 @@ public enum PackageJsonProperties {
 	/** Key of package.json property "devDependences". */
 	DEV_DEPENDENCIES("devDependencies", "Development dependencies of this npm", JSONObject.class),
 	/** Key of package.json property "main". */
-	MAIN("main", "Main module. path is relative to package root"),
+	MAIN("main", "Main module. Path is relative to package root"),
 	/** Key of package.json property "n4js". */
 	N4JS("n4js", "N4JS section", JSONObject.class),
 
