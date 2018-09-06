@@ -132,7 +132,6 @@ public class PackageJsonHyperlinkHelperExtension implements IJSONHyperlinkHelper
 
 		case DEPENDENCIES:
 		case DEV_DEPENDENCIES:
-		case TYPE_DEPENDENCIES:
 			if (eObject instanceof NameValuePair) {
 				NameValuePair nvpDependency = (NameValuePair) eObject;
 				return hyperlinkToProjectProperty(nvpDependency);

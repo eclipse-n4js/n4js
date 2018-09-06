@@ -81,8 +81,6 @@ public enum PackageJsonProperties {
 	EXEC_MODULE("execModule", "", N4JS),
 	/** Key of package.json property "definesPackage". */
 	DEFINES_PACKAGE("definesPackage", "", N4JS),
-	/** Key of package.json property "typeDependencies". */
-	TYPE_DEPENDENCIES("typeDependencies", "deprecated", JSONObject.class, N4JS),
 
 	/** Key of package.json property "noValidate". */
 	NO_VALIDATE("noValidate", "", JSONObject.class, N4JS),
