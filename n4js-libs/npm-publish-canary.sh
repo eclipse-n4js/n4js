@@ -36,9 +36,8 @@ echo "Publishing using .npmrc configuration to ${NPM_REGISTRY}";
 
 if [ "${NPM_TAG}" = "latest" ]; then
     # GH-1113: Since lerna.json may have been changed by local publishing, reverse all changes
-    git checkout -- "${DIR_ROOT}/lerna.json"
     # We only publish if there are changes in n4js-libs since the last commit
-    PKG_VERSION=`cat lerna.json  | jq -r '.version' | xargs -t semver -i minor {}`
+    PKG_VERSION=`cat lerna.json  | jq -r '.versionfixed' | xargs -t semver -i minor {}`
     N4JS_LIBS_COMMIT_ID_LOCAL=`git log -1 --format="%H" ${DIR_ROOT} | cut -c1-8`
 
     # Check the latest commit on npm registry, use n4js-node as a representative
