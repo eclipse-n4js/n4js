@@ -2,6 +2,8 @@
 <?eclipse version="3.0"?>
 <plugin>
 	<extension-point id="quickfixProvider" name="JSON Quickfix Provider Extension" schema="schema/org.eclipse.n4js.json.ui.quickfixProvider.exsd"/>
+ <extension-point id="proposalProvider" name="JSON Proposal Provider Extension" schema="schema/org.eclipse.n4js.json.ui.proposalProvider.exsd"/>
+ <extension-point id="hyperlinkHelper" name="JSON Hyperlink Helper Extension" schema="schema/org.eclipse.n4js.json.ui.hyperlinkHelper.exsd"/>
 	<extension
 		point="org.eclipse.ui.editors">
 		<editor

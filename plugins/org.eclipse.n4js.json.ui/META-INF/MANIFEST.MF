@@ -17,10 +17,11 @@ Require-Bundle: org.eclipse.n4js.json,
  org.eclipse.n4js.utils.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: org.eclipse.n4js.json.ui
-Export-Package: org.eclipse.n4js.json.ui,
- org.eclipse.n4js.json.ui.quickfix,
- org.eclipse.n4js.json.ui.internal,
- org.eclipse.n4js.json.ui.contentassist,
+Export-Package: org.eclipse.n4js.json.ide.contentassist.antlr,
  org.eclipse.n4js.json.ide.contentassist.antlr.internal,
- org.eclipse.n4js.json.ide.contentassist.antlr
+ org.eclipse.n4js.json.ui,
+ org.eclipse.n4js.json.ui.contentassist,
+ org.eclipse.n4js.json.ui.editor.hyperlinking,
+ org.eclipse.n4js.json.ui.internal,
+ org.eclipse.n4js.json.ui.quickfix
 Bundle-Activator: org.eclipse.n4js.json.ui.internal.JsonActivator

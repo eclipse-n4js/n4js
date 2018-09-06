@@ -36,11 +36,6 @@ import org.eclipse.n4js.xpect.ui.common.QuickFixTestHelper.ChangeInfo;
 import org.eclipse.n4js.xpect.ui.common.XtextResourceCleanUtil;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.xtext.diagnostics.Severity;
-import org.eclipse.xtext.resource.XtextResource;
-import org.eclipse.xtext.ui.editor.model.IXtextDocument;
-import org.eclipse.xtext.xbase.lib.IteratorExtensions;
-import org.eclipse.xtext.xbase.lib.Pair;
 import org.eclipse.xpect.XpectImport;
 import org.eclipse.xpect.expectation.CommaSeparatedValuesExpectation;
 import org.eclipse.xpect.expectation.ICommaSeparatedValuesExpectation;
@@ -55,6 +50,11 @@ import org.eclipse.xpect.setup.ISetupInitializer;
 import org.eclipse.xpect.xtext.lib.setup.ThisResource;
 import org.eclipse.xpect.xtext.lib.tests.ValidationTestModuleSetup;
 import org.eclipse.xpect.xtext.lib.tests.ValidationTestModuleSetup.ConsumedIssues;
+import org.eclipse.xtext.diagnostics.Severity;
+import org.eclipse.xtext.resource.XtextResource;
+import org.eclipse.xtext.ui.editor.model.IXtextDocument;
+import org.eclipse.xtext.xbase.lib.IteratorExtensions;
+import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
@@ -537,7 +537,7 @@ public class ContentAssistXpectMethod {
 				n4ContentAssistProcessorTestBuilderHelper.createTestBuilderForResource(resource));
 		List<String> result = Lists.newArrayList();
 		for (ICompletionProposal iCompletionProposal : computeCompletionProposals) {
-			result.add(iCompletionProposal.getDisplayString());
+			result.add(iCompletionProposal.getDisplayString().trim());
 		}
 		return result;
 	}

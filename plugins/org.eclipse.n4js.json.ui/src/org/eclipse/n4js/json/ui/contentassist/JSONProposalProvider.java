@@ -11,12 +11,10 @@
 package org.eclipse.n4js.json.ui.contentassist;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.viewers.StyledString;
-import org.eclipse.n4js.json.JSON.NameValuePair;
+import org.eclipse.n4js.json.ui.extension.JSONUiExtensionRegistry;
 import org.eclipse.xtext.Assignment;
 import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.RuleCall;
-import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.ui.editor.contentassist.ConfigurableCompletionProposal;
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor;
@@ -29,7 +27,10 @@ import com.google.inject.Inject;
 public class JSONProposalProvider extends AbstractJSONProposalProvider {
 
 	@Inject
-	private NameValuePairProposalFactory nameValuePairProposalFactory;
+	private JSONUiExtensionRegistry registry;
+
+	@Inject
+	private JSONProposalFactory nameValuePairProposalFactory;
 
 	/**
 	 * Propose an empty array literal to complete rule {@code JSONArray}.
@@ -43,8 +44,15 @@ public class JSONProposalProvider extends AbstractJSONProposalProvider {
 		if (!context.getPrefix().isEmpty()) {
 			return;
 		}
+
+		for (IJSONProposalProvider pe : registry.getProposalProviderExtensions()) {
+			if (pe.isResponsible(model)) {
+				pe.complete_JSONArray(model, ruleCall, context, acceptor);
+			}
+		}
+
 		acceptor.accept(new ConfigurableCompletionProposal("[]", context.getOffset(), 0, 1, null,
-				createStyledString("[...]", "Array"), null, ""));
+				JSONProposalFactory.createStyledString("[...]", "Array"), null, ""));
 	}
 
 	/**
@@ -55,6 +63,7 @@ public class JSONProposalProvider extends AbstractJSONProposalProvider {
 	@Override
 	public void complete_STRING(EObject model, RuleCall ruleCall, ContentAssistContext context,
 			ICompletionProposalAcceptor acceptor) {
+
 		// do not propose a string literal, if a name-value-pair is expected
 		if (ruleCall.eContainer() instanceof Assignment
 				&& ((Assignment) ruleCall.eContainer()).getFeature().equals("name")) {
@@ -65,8 +74,15 @@ public class JSONProposalProvider extends AbstractJSONProposalProvider {
 		if (!context.getPrefix().isEmpty()) {
 			return;
 		}
+
+		for (IJSONProposalProvider pe : registry.getProposalProviderExtensions()) {
+			if (pe.isResponsible(model)) {
+				pe.complete_STRING(model, ruleCall, context, acceptor);
+			}
+		}
+
 		acceptor.accept(new ConfigurableCompletionProposal("\"\"", context.getOffset(), 0, 1, null,
-				createStyledString("\"...\"", "String"), null, ""));
+				JSONProposalFactory.createStyledString("\"...\"", "String"), null, ""));
 	}
 
 	/**
@@ -89,12 +105,20 @@ public class JSONProposalProvider extends AbstractJSONProposalProvider {
 	@Override
 	public void complete_JSONObject(EObject model, RuleCall ruleCall, ContentAssistContext context,
 			ICompletionProposalAcceptor acceptor) {
+
 		// only propose if context does not specify a prefix
 		if (!context.getPrefix().isEmpty()) {
 			return;
 		}
+
+		for (IJSONProposalProvider pe : registry.getProposalProviderExtensions()) {
+			if (pe.isResponsible(model)) {
+				pe.complete_JSONObject(model, ruleCall, context, acceptor);
+			}
+		}
+
 		acceptor.accept(new ConfigurableCompletionProposal("{}", context.getOffset(), 0, 1, null,
-				createStyledString("{...}", "Object"), null, ""));
+				JSONProposalFactory.createStyledString("{...}", "Object"), null, ""));
 	}
 
 	/**
@@ -104,35 +128,21 @@ public class JSONProposalProvider extends AbstractJSONProposalProvider {
 	@Override
 	public void complete_NameValuePair(EObject model, RuleCall ruleCall, ContentAssistContext context,
 			ICompletionProposalAcceptor acceptor) {
+
+		for (IJSONProposalProvider pe : registry.getProposalProviderExtensions()) {
+			if (pe.isResponsible(model)) {
+				pe.complete_NameValuePair(model, ruleCall, context, acceptor);
+			}
+		}
+
 		// do not add proposal for name-value-pair if a prefix is detected
 		if (!context.getPrefix().isEmpty()) {
 			return;
 		}
 
-		boolean trailingComma = false;
-
-		// add trailing comma, if the name-value pair is inserted in the middle of a
-		// list of existing pairs.
-		final INode currentNode = context.getCurrentNode();
-		if (currentNode.hasNextSibling()) {
-			final INode nextSibling = currentNode.getNextSibling();
-			if (nextSibling.getSemanticElement() instanceof NameValuePair) {
-				trailingComma = true;
-			}
-		}
-
-		acceptor.accept(nameValuePairProposalFactory.createNameValuePairProposal(context, trailingComma));
+		acceptor.accept(nameValuePairProposalFactory.createGenericNameValueProposal(context));
+		acceptor.accept(nameValuePairProposalFactory.createGenericNameArrayProposal(context));
+		acceptor.accept(nameValuePairProposalFactory.createGenericNameObjectProposal(context));
 	}
 
-	/**
-	 * Creates a new {@link StyledString} with a primary and secondary portion.
-	 * 
-	 * The two parts are separated by a hyphen ({@code -}) character and the
-	 * secondary portion is styled in a slightly lighter color.
-	 */
-	private StyledString createStyledString(String primary, String secondary) {
-		final StyledString styledString = new StyledString(primary);
-		styledString.append(" - " + secondary, StyledString.QUALIFIER_STYLER);
-		return styledString;
-	}
 }

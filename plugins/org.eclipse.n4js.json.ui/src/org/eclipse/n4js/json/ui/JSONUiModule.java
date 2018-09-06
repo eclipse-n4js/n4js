@@ -11,12 +11,14 @@
 package org.eclipse.n4js.json.ui;
 
 import org.eclipse.n4js.json.ui.editor.autoedit.JSONAutoEditStrategyProvider;
+import org.eclipse.n4js.json.ui.editor.hyperlinking.JSONHyperlinkHelperProvider;
 import org.eclipse.n4js.json.ui.editor.syntaxcoloring.JSONHighlightingConfiguration;
 import org.eclipse.n4js.json.ui.editor.syntaxcoloring.JSONSemanticHighlightingCalculator;
 import org.eclipse.n4js.json.ui.editor.syntaxcoloring.JSONTokenToAttributeIdMapper;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.ide.editor.syntaxcoloring.ISemanticHighlightingCalculator;
 import org.eclipse.xtext.ui.editor.autoedit.AbstractEditStrategyProvider;
+import org.eclipse.xtext.ui.editor.hyperlinking.HyperlinkHelper;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.AbstractAntlrTokenToAttributeIdMapper;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingConfiguration;
 
@@ -53,4 +55,12 @@ public class JSONUiModule extends AbstractJSONUiModule {
 	public Class<? extends AbstractAntlrTokenToAttributeIdMapper> bindAbstractAntlrTokenToAttributeIdMapper() {
 		return JSONTokenToAttributeIdMapper.class;
 	}
+
+	/**
+	 * Provide hyperlinks from extensions.
+	 */
+	public Class<? extends HyperlinkHelper> bindHyperlinkHelper() {
+		return JSONHyperlinkHelperProvider.class;
+	}
+
 }
