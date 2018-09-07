@@ -12,7 +12,13 @@ package org.eclipse.n4js.ui.internal;
 
 import java.util.concurrent.Semaphore;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.n4js.ui.N4JSUiMessages;
 import org.eclipse.n4js.ui.utils.UIUtils;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.xtext.util.Modules2;
 
 import com.google.inject.Guice;
@@ -59,4 +65,56 @@ public class N4JSGracefulActivator extends N4JSActivator {
 			return null;
 		}
 	}
+
+	/**
+	 * Returns the active workbench shell or <code>null</code> if none
+	 *
+	 * @return the active workbench shell or <code>null</code> if none
+	 */
+	public static Shell getActiveWorkbenchShell() {
+		IWorkbenchWindow window = getInstance().getWorkbench().getActiveWorkbenchWindow();
+		if (window != null) {
+			return window.getShell();
+		}
+		return null;
+	}
+
+	/**
+	 * Opens a message dialog showing the status.
+	 */
+	public static void statusDialog(IStatus status) {
+		switch (status.getSeverity()) {
+		case IStatus.ERROR:
+			statusDialog(N4JSUiMessages.msgN4JSUI_ERROR_TITLE(), status);
+			break;
+		case IStatus.WARNING:
+			statusDialog(N4JSUiMessages.msgN4JSUI_WARNING_TITLE(), status);
+			break;
+		case IStatus.INFO:
+			statusDialog(N4JSUiMessages.msgN4JSUI_INFO_TITLE(), status);
+			break;
+		}
+	}
+
+	/**
+	 * Opens a message dialog showing the status with given title. If you do not have a title, just call
+	 * {@link #statusDialog(IStatus)}.
+	 */
+	public static void statusDialog(String title, IStatus status) {
+		Shell shell = getActiveWorkbenchShell();
+		if (shell != null) {
+			switch (status.getSeverity()) {
+			case IStatus.ERROR:
+				ErrorDialog.openError(shell, title, null, status);
+				break;
+			case IStatus.WARNING:
+				MessageDialog.openWarning(shell, title, status.getMessage());
+				break;
+			case IStatus.INFO:
+				MessageDialog.openInformation(shell, title, status.getMessage());
+				break;
+			}
+		}
+	}
+
 }
