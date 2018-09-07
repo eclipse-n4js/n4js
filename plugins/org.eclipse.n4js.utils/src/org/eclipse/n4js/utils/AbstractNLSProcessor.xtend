@@ -50,7 +50,7 @@ import org.eclipse.xtext.xbase.lib.util.ReflectExtensions
  */
 
 /** See annotation NLS */
-abstract class AbstractNLSProcessor extends AbstractClassProcessor {
+public abstract class AbstractNLSProcessor extends AbstractClassProcessor {
 	protected extension ReflectExtensions reflExt = new ReflectExtensions
 
 	protected static final String BUNDLE_NAME_FIELD = "BUNDLE_NAME"

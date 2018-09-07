@@ -78,12 +78,12 @@ import org.eclipse.xtext.diagnostics.Severity
  */
 @Target(ElementType::TYPE)
 @Active(typeof(NLSProcessor))
-annotation NLS {
+public annotation NLS {
 	String propertyFileName
 }
 
 /** See annotation NLS */
-class NLSProcessor extends AbstractNLSProcessor {
+public class NLSProcessor extends AbstractNLSProcessor {
 
 	private static List<String> SEVERITIES = #["error", "warning", "info", "ignore"]
 

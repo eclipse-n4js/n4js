@@ -64,12 +64,12 @@ import org.eclipse.xtend.lib.macro.Active
  */
 @Target(ElementType::TYPE)
 @Active(typeof(NLSMessagesProcessor))
-annotation NLSMessages {
+public annotation NLSMessages {
 	String propertyFileName
 }
 
 /** See annotation NLSMessages */
-class NLSMessagesProcessor extends AbstractNLSProcessor {
+public class NLSMessagesProcessor extends AbstractNLSProcessor {
 	
 	override Class<?> getAnnotationType() {
 		return NLSMessages;
