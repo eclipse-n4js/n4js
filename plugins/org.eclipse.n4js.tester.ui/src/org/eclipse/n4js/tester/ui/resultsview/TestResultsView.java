@@ -53,6 +53,7 @@ import org.eclipse.debug.internal.ui.DebugUIPlugin;
 import org.eclipse.debug.internal.ui.commands.actions.DebugCommandService;
 import org.eclipse.debug.internal.ui.launchConfigurations.LaunchConfigurationManager;
 import org.eclipse.debug.ui.DebugUITools;
+import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.debug.ui.ILaunchGroup;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.action.Action;
@@ -64,6 +65,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.text.hyperlink.DefaultHyperlinkPresenter;
@@ -111,6 +113,7 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
@@ -681,9 +684,10 @@ public class TestResultsView extends ViewPart {
 		stackTrace = new TextViewer(sashForm, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.READ_ONLY);
 		// stackTrace.setHyperlinkPresenter(new MultipleHyperlinkPresenter(new RGB(0, 0, 255)));
 		stackTrace.setHyperlinkPresenter(new DefaultHyperlinkPresenter(new RGB(0, 0, 255)));
-
 		stackTrace.setHyperlinkDetectors(new IHyperlinkDetector[] { n4JSStackTraceHyperlinkDetector }, SWT.NONE);
 		stackTrace.setDocument(new Document());
+		Font font = JFaceResources.getFont(IDebugUIConstants.PREF_CONSOLE_FONT);
+		stackTrace.getTextWidget().setFont(font);
 
 		sashForm.addControlListener(new ControlListener() {
 			@Override

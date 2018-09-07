@@ -29,7 +29,9 @@ import org.eclipse.ui.console.IConsoleDocumentPartitioner;
 import org.eclipse.ui.console.TextConsole;
 
 /**
- * Based on {@code org.eclipse.jdt.internal.debug.ui.console.JavaStackTraceConsole}
+ * Based on {@code org.eclipse.jdt.internal.debug.ui.console.JavaStackTraceConsole}. Users can open this console and
+ * just paste any text into it. Via extension point the {@link org.eclipse.n4js.ui.console.N4JSExceptionConsoleTracker}
+ * is registered and will detect hyperlinks in the text, i.e. stacktrace information.
  */
 public class N4JSStackTraceConsole extends TextConsole {
 
@@ -70,7 +72,7 @@ public class N4JSStackTraceConsole extends TextConsole {
 	private final N4JSStackTraceConsolePartitioner partitioner = new N4JSStackTraceConsolePartitioner();
 
 	/**
-	 * Constructor
+	 * Constructor creating the console with the console font.
 	 */
 	public N4JSStackTraceConsole() {
 		super(ConsoleMessages.msgN4JSStackTraceConsole(), CONSOLE_TYPE, null, true);
@@ -85,7 +87,7 @@ public class N4JSStackTraceConsole extends TextConsole {
 	}
 
 	/**
-	 *
+	 * Loads the text previously pasted into the console and stored via {@link #saveDocument()}.
 	 */
 	public void initializeDocument() {
 		File file = new File(FILE_NAME);
@@ -108,7 +110,8 @@ public class N4JSStackTraceConsole extends TextConsole {
 	}
 
 	/**
-	 *
+	 * Saves the pasted text into a hidden document so that it will be available the next time the console will be
+	 * opened.
 	 */
 	public void saveDocument() {
 		try (FileOutputStream fout = new FileOutputStream(FILE_NAME)) {
