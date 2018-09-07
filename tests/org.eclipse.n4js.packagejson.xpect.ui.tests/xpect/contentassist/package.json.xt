@@ -51,7 +51,6 @@
 	   	providedRuntimeLibraries -,
 	   	requiredRuntimeLibraries -,
 	   	testedProjects - Projects that are tested by this project,
-	   	typeDependencies - deprecated,
 	   	vendorId -,
 	   	vendorName -
 	--- */
