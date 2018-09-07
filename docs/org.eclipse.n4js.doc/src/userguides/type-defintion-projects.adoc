@@ -24,12 +24,25 @@ of ordinary JavaScript projects unless this type information is provided by a ty
 Type definition projects do only contain n4jsd files that reflect the classes and functions of a specific npm.
 To refer to the npm, the term implementation project will be used.
 
-== Workflow
+== Specify Type Definition
+
+project type: definition
+definesPackage: <name>
+
+mainModule
 
 
+== Name Conventions
+
+A type definition package can have an arbitrary name and define an arbitrary npm package.
+This can be handy for testing purposes or just creating some temporary type definitions for a local package.
+However, we chose to use a convention to simplify finding type definition packages.
+First, we use the scope '@n4jsd' and second the exact name of the typed package is used.
+For instance, when a user wants to install type definitions for the package 'express', our related type definitions are called '@n4jsd/express'.
 
 
-== Version Relation
+== Version Conventions
+
 
 Since the implementation project will evolve over time and publish different versions, the need arises to also
 publish the type definition project in different versions that reflect this evolution.
@@ -41,141 +54,60 @@ a version that are technically unrelated from an npm point of view, but still ar
 from a semantical point of view.
 
 
+=== Define a New Type Definition Package
+
+We use the following convention to compute the version of type definition packages.
+
+
+[source]
+.Convention for versions: Scheme
+Major~types~.Minor~types~.Patch~types~ = Major~impl~.Minor~impl~.0
+
+
+[source]
+.Convention for versions: Example for express@3.3.3
+Major~types~.Minor~types~.Patch~types~ = 3.3.0
+
+
+Let's say that a new version of a type definition package called _types_ should be created
+that defines types for an npm called _impl_ of version Major~impl~.Minor~impl~.Patch~impl~.
+According to our convention, the major and minor version numbers of the type definition package
+should just be copied from the version of the _impl_ package.
+However, the version patch number of _types_ should not be taken from _impl_.
+Instead, the patch number of _types_ starts with _0_ and increases with every update of this type definition version.
+For instance when a bug was found in version Major~types~.Minor~types~.0, the definitions have been extended, or
+adjusted to new language features, only the patch number increases to e.g. Major~types~.Minor~types~.1.
 
 
 
+=== Using a Type Definition Package
+
+On the client side, a type definition package is listed among the dependency section.
+Here we use the following convention to specify the required version of a type definition package.
 
 
-
-
-
-N4JS was created with the intention of supporting safe and intuitive Node.js development.
-When a Node application
-is ready to be published, the default
-package manager is npm which is bundled with Node.js (a prerequisite of the N4JS IDE). npm is run on the
-command
-line and will organise and install
-dependencies for an application. npm can also be used to install Node.js applications available on the npm
-registry. This npm export guide demonstrates how N4JS can be used to develop and publish Node
-applications with a simple example module.
-
-
-== Project Example
-
-In order to demonstrate exporting as npm, we can begin by creating a new N4JS
-Project using the keyboard shortcut kbd:[{commandkey} + N] and naming
-it "fibonacci". We then create a class "Fibonacci" and define it as follows:
-
-[source,n4js]
-.Fibonacci.n4js
-----
- export public class Fibonacci {
- public seq()  {
-      var arr = [];
-          var a = 0;
-          var b = 1;
-          for (var n = 1; n < 15; n++)  {
-            var current = a + b;
-            arr.push(current);
-            a = b + a;
-            b = a - b;
-          }
-      console.log(arr);
-      }
+[source]
+.Convention for dependencies: Scheme
+{
+	"@n4jsd/Types": "<=Major~impl~.Minor~impl~.*"
 }
-var run = new Fibonacci();
-run.seq();
-----
 
-
-In the above example, we are creating a function which will iterate through the Fibonacci sequence,
-push each new value into an array and report the results in the console after the for loop is complete.
-When right-clicking the module and selecting menu:Run as[Launch in node.js], we have the
-following output in the console:
-
-image::images/fibonacciconsole.png[]
-
-
-
-== Exporting as npm
-
-
-
-
-image::images/exportwizard.png[]
-
-exported package. The contents of the package are:
-
-* *Fibonacci.js* the Fibonacci.n4js file transpiled to JavaScript.
-* *package.json* npm package description (name, author, version etc.) which is described in detail below.
-* *manifest.n4mf* N4JS project dependencies.
-* *Fibonacci.map* contains debugging information.
-* *src* folder containing the original Fibonacci.n4js file.
-
-
-With a Terminal window, cd to our new folder:
-[source]
-$ cd /User/Desktop/npm/newinstall
-
-
-[source,text]
-/User/Desktop/npm/newinstall
-└─┬ fibonacci@ 0.0.1
-└─┬ n4js-node@ 0.3.1
-├── n4js-es5@ 0.3.0
-├─┬ node-fetch@ 1.4.1
-│ ├─┬ encoding@ 0.1.12
-│ │ └── iconv-lite@ 0.4.13
-│ └── is-stream@ 1.0.1
-└─┬ systemjs@ 0.19.25
-└── when@ 3.7.7
-
-
-We can now create a new JavaScript file saved as "index.js" that calls the method in our package. In our
-case, the index.js only needs to contain the following line
-
-[source,javascript]
-.index.js
-var fib = require("fibonacci/Fibonacci");
-
-Our example module can now be called if we run the index.js file from the command line with node:
 
 [source]
-----
-$ node index.js
-[ 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610 ]
-$
-----
-
-If we wanted to run this node module by itself without the use of the index.js file, we can use the command
-
-[source]
-$ node -r fibonacci/Fibonacci
-
-
-
-
-
-[source,n4mf]
-.manifest.n4mf
-----
-ProjectId: fibonacci
-ProjectType: library
-ProjectVersion: 1.2.3
-VendorId: eu.mycompany
-VendorName: "MyCompany AG"
-Output: "src-gen"
-Sources {
-    source {
-        "src"
-    }
+.Convention for dependencies: Example
+{
+	"express": "^3.3.3",
+	"@n4jsd/express": "<=3.3.*"
 }
-----
 
-used to create a new package:
 
-[source]
-$ cd /User/brian.smith/Desktop/npm/fibonacci
-$ npm init
+According to this convention, the major and minor version numbers of the implementation package are used,
+prepended with a smaller-equals and appended with an asterisk for the patch number.
+This also applies when the implementation version contains a tilde, a caret, etc., or is omitting minor or patch number.
+In case a non SemVer version is given (e.g. 'latest', only asterisk, url, etc.)
+it is recommended to plain copy the non SemVer version when possible.
+
+
+
 
 
