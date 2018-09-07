@@ -679,7 +679,6 @@ public class TestResultsView extends ViewPart {
 		testTreeViewer.setInput(getViewSite());
 
 		stackTrace = new TextViewer(sashForm, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.READ_ONLY);
-		stackTrace.getTextWidget().setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		// stackTrace.setHyperlinkPresenter(new MultipleHyperlinkPresenter(new RGB(0, 0, 255)));
 		stackTrace.setHyperlinkPresenter(new DefaultHyperlinkPresenter(new RGB(0, 0, 255)));
 
