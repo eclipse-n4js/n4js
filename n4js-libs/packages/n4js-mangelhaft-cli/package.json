@@ -42,10 +42,7 @@
       "n4js-runtime-es2015",
       "n4js-runtime-node"
     ],
-    "moduleLoader": "n4js",
-    "typeDependencies": {
-      "glob-n4jsd": "<=7.1.2"
-    }
+    "moduleLoader": "n4js"
   },
   "devDependencies": {
     "n4js-runtime-fetch": "^0.1.0",

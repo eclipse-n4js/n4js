@@ -22,37 +22,37 @@ import org.eclipse.n4js.utils.DependencyTraverser.DependencyProvider
  */
 class SourceContainerAwareDependencyProvider implements DependencyProvider<IN4JSProject> {
 
-	private final boolean ignoreExternalValidationProjects;
+	private final boolean ignoreExternalPlainJsProjects;
 	
 	/** 
 	 * Creates a new traverser instance with the given root node.
 	 * 
 	 * @param rootNode 
 	 * 				The root node to start the traversal from.
-	 * @param ignoreExternalValidationProjects 
-	 * 				Specifies whether dependency edges to external {@link ProjectType#VALIDATION} projects should
+	 * @param ignoreExternalPlainJsProjects 
+	 * 				Specifies whether dependency edges to external {@link ProjectType#PLAINJS} projects should
 	 * 				be excluded when traversing the dependency graph.
 	 * @param ignoreCycles
 	 * 				Specifies whether the traverser should terminate early when dependency cycles are 
 	 * 				detected, or whether it should continue.
 	 */
-	public new(boolean ignoreExternalValidationProjects) {
-		this.ignoreExternalValidationProjects = ignoreExternalValidationProjects;
+	public new(boolean ignoreExternalPlainJsProjects) {
+		this.ignoreExternalPlainJsProjects = ignoreExternalPlainJsProjects;
 	}
 	
 	override getDependencies(IN4JSProject p) {
-		if (ignoreExternalValidationProjects) {
-			// this is used if external projects of project type VALIDATION are requested to be ignored
-			return ImmutableList.copyOf(p.allDirectDependencies.filter[dep|!isExternalValidation(dep)]);
+		if (ignoreExternalPlainJsProjects) {
+			return ImmutableList.copyOf(p.allDirectDependencies.filter[dep|!isIgnored(dep)]);
 		} else {
 			// this is used by default
 			return p.allDirectDependencies;
 		}
 	}
 	
-	private static def boolean isExternalValidation(IN4JSProject project) {
-		return project.external
-			&& project.projectType===ProjectType.VALIDATION;
+	private static def boolean isIgnored(IN4JSProject project) {
+		return project.external && 
+			(project.projectType===ProjectType.VALIDATION || 
+				project.projectType===ProjectType.PLAINJS);
 	}
 
 }

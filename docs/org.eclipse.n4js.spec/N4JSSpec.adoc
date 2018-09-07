@@ -26,7 +26,7 @@ image::{find}images/n4jslogo.png[400,400,align="center"]
 [.center]
 *Authors:* +
 Jens von Pilgrim, Jakub Siberski, Mark-Oliver Reiser, +
-Torsten Krämer, Ákos Kitta, Sebastian Zarnekow, Lorenzo Bettini, Jörg Reichert, Kristian Duske, Marcus Mews, Minh Quang Tran
+Torsten Krämer, Ákos Kitta, Sebastian Zarnekow, Lorenzo Bettini, Jörg Reichert, Kristian Duske, Marcus Mews, Minh Quang Tran, Luca Beurer-Kellner
 
 <<<
 

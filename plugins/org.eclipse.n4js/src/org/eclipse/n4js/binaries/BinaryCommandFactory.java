@@ -11,6 +11,8 @@
 package org.eclipse.n4js.binaries;
 
 import java.io.File;
+import java.util.Collections;
+import java.util.List;
 
 import org.eclipse.n4js.binaries.nodejs.NodeProcessBuilder;
 import org.eclipse.n4js.utils.process.OutputRedirection;
@@ -18,6 +20,7 @@ import org.eclipse.n4js.utils.process.ProcessExecutionCommand;
 import org.eclipse.n4js.utils.process.ProcessExecutor;
 import org.eclipse.n4js.utils.process.ProcessResult;
 
+import com.google.common.base.Joiner;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -34,25 +37,38 @@ public class BinaryCommandFactory {
 	private NodeProcessBuilder nodeProccessBuilder;
 
 	/**
+	 * Like {@link #createInstallPackageCommand(File, List, boolean)}, but for installing a single package only.
+	 */
+	public ProcessExecutionCommand createInstallPackageCommand(File invocationPath,
+			String packageName, boolean saveDependency) {
+		return createInstallPackageCommand(invocationPath, Collections.singletonList(packageName), saveDependency);
+	}
+
+	/**
 	 * Creates command that will execute external node process that will command npm to install given package.
 	 *
 	 * @param invocationPath
 	 *            path where package is supposed to be installed
-	 * @param packageName
-	 *            name of the package to install
+	 * @param packageNames
+	 *            names of the packages to install (optionally including version requirements; may be an empty list to
+	 *            issue a plain "npm install" without package names given)
 	 * @param saveDependency
 	 *            flag if installed package should be saved in package.json of the install path
 	 */
 	public ProcessExecutionCommand createInstallPackageCommand(File invocationPath,
-			String packageName, boolean saveDependency) {
+			List<String> packageNames, boolean saveDependency) {
+
 		return new ProcessExecutionCommand() {
 			private static final String COMMAND_NAME = "npm_install";
 
 			@Override
 			public ProcessResult execute() {
-				String escapedPackageName = "\"" + packageName + "\"";
+				String escapedPackageNames = !packageNames.isEmpty()
+						? "\"" + Joiner.on("\" \"").join(packageNames) + "\""
+						: null; // 'null' will lead to a plain "npm install" without package names given
+				boolean actualSaveDependency = saveDependency && !packageNames.isEmpty();
 				ProcessBuilder processBuilder = nodeProccessBuilder.getNpmInstallProcessBuilder(invocationPath,
-						escapedPackageName, saveDependency);
+						escapedPackageNames, actualSaveDependency);
 				return processExecutor.createAndExecute(processBuilder, COMMAND_NAME, OutputRedirection.REDIRECT);
 			}
 		};
@@ -63,20 +79,22 @@ public class BinaryCommandFactory {
 	 *
 	 * @param invocationPath
 	 *            path where package is supposed to be installed
-	 * @param packageName
-	 *            name of the package to uninstall
+	 * @param packageNames
+	 *            names of the packages to uninstall
 	 * @param saveDependency
 	 *            flag if uninstalled package should be saved in package.json of the uninstall path
 	 */
 	public ProcessExecutionCommand createUninstallPackageCommand(File invocationPath,
-			String packageName, boolean saveDependency) {
+			List<String> packageNames, boolean saveDependency) {
+
 		return new ProcessExecutionCommand() {
 			private static final String COMMAND_NAME = "npm_uninstall";
 
 			@Override
 			public ProcessResult execute() {
+				String escapedPackageNames = "\"" + Joiner.on("\" \"").join(packageNames) + "\"";
 				ProcessBuilder processBuilder = nodeProccessBuilder.getNpmUninstallProcessBuilder(invocationPath,
-						packageName, saveDependency);
+						escapedPackageNames, saveDependency);
 				return processExecutor.createAndExecute(processBuilder, COMMAND_NAME, OutputRedirection.REDIRECT);
 			}
 		};

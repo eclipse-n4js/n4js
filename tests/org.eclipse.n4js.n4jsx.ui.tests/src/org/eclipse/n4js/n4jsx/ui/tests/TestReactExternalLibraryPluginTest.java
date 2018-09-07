@@ -46,6 +46,7 @@ import com.google.inject.Inject;
 public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipantTest {
 
 	private static final String PACKAGE_REACT = "react";
+	private static final String PACKAGE_N4JSD_REACT = "@n4jsd/react";
 	private static final String PROBANDS = "probands";
 
 	private static final String WORKSPACE_LOC = "workspace";
@@ -80,14 +81,14 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 	 */
 	@Before
 	public void setup() throws Exception {
-		setupExternalLibraries(false, true);
+		setupExternalLibraries(false);
 	}
 
 	/**
 	 * Imports {@value #PA} project, checks for validation errors, installs {@code React npm} package, checks that
 	 * errors are gone. Then verify that running React/JSX code is successful.
 	 */
-	// @Test
+	@Test
 	public void testInstallReactNpmThenRun() throws Exception {
 		final File projectsRoot = new File(getResourceUri(PROBANDS, WORKSPACE_LOC));
 		ProjectTestsUtils.importProject(projectsRoot, PA);
@@ -102,10 +103,13 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 		final IFile projectDescriptionFile = project.getFile(getResourceName(IN4JSProject.PACKAGE_JSON));
 		assertTrue(projectDescriptionFile + " client module is not accessible.", projectDescriptionFile.isAccessible());
 
-		assertMarkers("Expected exactly 5 errors in client module.", clientModule, 5);
-		assertMarkers("Expected exactly one error in package.json.", projectDescriptionFile, 1);
+		assertMarkers("Expected exactly 3 errors in client module.", clientModule, 3);
+		// line 5: Project does not exist with project ID: react.
+		// line 6: Project does not exist with project ID: @n4jsd/react. expected:<1> but was:<2>
+		assertMarkers("Expected exactly 2 error in package.json.", projectDescriptionFile, 2);
 
 		libManager.installNPM(PACKAGE_REACT, new NullProgressMonitor());
+		libManager.installNPM(PACKAGE_N4JSD_REACT, new NullProgressMonitor());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 
@@ -116,6 +120,7 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 		assertTrue("Unexpected output after running the client module: " + result.getStdOut(),
 				result.getStdOut().contains("Symbol(react.element)"));
 
+		libManager.uninstallNPM(PACKAGE_N4JSD_REACT, new NullProgressMonitor());
 		libManager.uninstallNPM(PACKAGE_REACT, new NullProgressMonitor());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
@@ -140,12 +145,14 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 		assertTrue(projectDescriptionFile + " B module is not accessible.", projectDescriptionFile.isAccessible());
 
 		libManager.installNPM(PACKAGE_REACT, new NullProgressMonitor());
+		libManager.installNPM(PACKAGE_N4JSD_REACT, new NullProgressMonitor());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 
 		assertMarkers("Expected exactly zero errors in package.json.", projectDescriptionFile, 0);
 		assertMarkers("Expected exactly 1 error in B module.", clientModule, 1);
 
+		libManager.uninstallNPM(PACKAGE_N4JSD_REACT, new NullProgressMonitor());
 		libManager.uninstallNPM(PACKAGE_REACT, new NullProgressMonitor());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();

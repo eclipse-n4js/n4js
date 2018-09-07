@@ -140,7 +140,6 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 				final String msg = "Building " + project.getName() + " took " + stopwatch.elapsed(TimeUnit.SECONDS)
 						+ " seconds";
 				LOGGER.debug(msg);
-				System.out.println(msg);
 			}
 		}
 

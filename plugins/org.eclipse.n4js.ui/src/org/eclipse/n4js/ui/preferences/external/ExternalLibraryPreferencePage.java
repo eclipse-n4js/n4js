@@ -136,6 +136,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 		viewer = new TreeViewerBuilder(singletonList(""), contentProvider.get())
 				.setVirtual(true)
 				.setHeaderVisible(false)
+				.setUseHashlookup(true)
 				.setHasBorder(true)
 				.setColumnWeights(asList(1))
 				.setLabelProvider(new DelegatingStyledCellLabelProvider(new BuiltInLibrariesLabelProvider()))
@@ -371,7 +372,6 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 		// keep the order Cache->TypeDefs->NPMs->Reinstall->Update
 		// actions have side effects that can interact with each other
 		maintenanceCleanNpmCache(userChoice, multistatus, monitor);
-		maintenanceResetTypeDefinitions(userChoice, multistatus);
 		maintenanceDeleteNpms(userChoice, multistatus);
 		reinstallNpms(userChoice, multistatus, monitor, oldPackages);
 		upateState(userChoice, multistatus, monitor);
@@ -410,8 +410,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	private void upateState(final MaintenanceActionsChoice userChoice,
 			final MultiStatus multistatus, IProgressMonitor monitor) {
 
-		if (userChoice.decisionReload || userChoice.decisionReinstall || userChoice.decisionPurgeNpm
-				|| userChoice.decisionResetTypeDefinitions) {
+		if (userChoice.decisionReload || userChoice.decisionReinstall || userChoice.decisionPurgeNpm) {
 
 			try {
 				libManager.reloadAllExternalProjects(monitor);
@@ -466,21 +465,6 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	private void maintenanceDeleteNpms(final MaintenanceActionsChoice userChoice, final MultiStatus multistatus) {
 		if (userChoice.decisionPurgeNpm) {
 			externalLibrariesActionsHelper.maintenanceDeleteNpms(multistatus);
-		}
-	}
-
-	/**
-	 * Actions to be taken if reseting type definitions is requested.
-	 *
-	 * @param userChoice
-	 *            options object used to decide if / how actions should be performed
-	 * @param multistatus
-	 *            the status used accumulate issues
-	 */
-	private void maintenanceResetTypeDefinitions(final MaintenanceActionsChoice userChoice,
-			final MultiStatus multistatus) {
-		if (userChoice.decisionResetTypeDefinitions) {
-			externalLibrariesActionsHelper.maintenanceResetTypeDefinitions(multistatus);
 		}
 	}
 
@@ -548,7 +532,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	 */
 	private IStatus installAndUpdate(final Map<String, NPMVersionRequirement> versionedPackages,
 			final IProgressMonitor monitor) {
-		IStatus status = libManager.installNPMs(versionedPackages, monitor);
+		IStatus status = libManager.installNPMs(versionedPackages, false, monitor);
 		if (status.isOK())
 			updateInput(viewer, store.getLocations());
 

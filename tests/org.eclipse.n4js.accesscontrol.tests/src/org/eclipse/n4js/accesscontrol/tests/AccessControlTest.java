@@ -22,6 +22,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -633,7 +634,8 @@ public class AccessControlTest {
 
 			final File projectRoot = Paths.get(FIXTURE_ROOT, memberType.name()).toFile();
 
-			final BuildSet buildSet = hlc.getBuildSetComputer().createAllProjectsBuildSet(Arrays.asList(projectRoot));
+			final BuildSet buildSet = hlc.getBuildSetComputer().createAllProjectsBuildSet(Arrays.asList(projectRoot),
+					Collections.emptySet());
 			hlc.compile(buildSet, issueCollector);
 		} catch (N4JSCompileException e) {
 			// nothing to do

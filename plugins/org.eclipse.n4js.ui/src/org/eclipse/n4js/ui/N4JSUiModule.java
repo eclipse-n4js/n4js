@@ -21,11 +21,9 @@ import org.eclipse.n4js.external.ExternalIndexSynchronizer;
 import org.eclipse.n4js.external.ExternalLibraryUriHelper;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalProjectsCollector;
-import org.eclipse.n4js.external.GitCloneSupplier;
 import org.eclipse.n4js.external.NpmLogger;
 import org.eclipse.n4js.external.RebuildWorkspaceProjectsScheduler;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
-import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider;
 import org.eclipse.n4js.findReferences.ConcreteSyntaxAwareReferenceFinder;
 import org.eclipse.n4js.generator.ICompositeGenerator;
 import org.eclipse.n4js.generator.IGeneratorMarkerSupport;
@@ -90,6 +88,7 @@ import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
 import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
 import org.eclipse.n4js.ui.internal.ExternalProjectCacheLoader;
 import org.eclipse.n4js.ui.internal.N4JSEclipseCore;
+import org.eclipse.n4js.ui.internal.N4JSEclipseModel;
 import org.eclipse.n4js.ui.internal.ResourceUIValidatorExtension;
 import org.eclipse.n4js.ui.labeling.N4JSContentAssistLabelProvider;
 import org.eclipse.n4js.ui.labeling.N4JSHoverProvider;
@@ -246,11 +245,6 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	}
 
 	/** Delegate to shared injector */
-	public Provider<GitCloneSupplier> provideGitCloneSupplier() {
-		return Access.contributedProvider(GitCloneSupplier.class);
-	}
-
-	/** Delegate to shared injector */
 	public Provider<ExternalProjectCacheLoader> provideExternalProjectCacheLoader() {
 		return Access.contributedProvider(ExternalProjectCacheLoader.class);
 	}
@@ -341,11 +335,6 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	}
 
 	/** Delegate to shared injector */
-	public Provider<TypeDefinitionGitLocationProvider> provideTypeDefinitionGitLocationProvider() {
-		return Access.contributedProvider(TypeDefinitionGitLocationProvider.class);
-	}
-
-	/** Delegate to shared injector */
 	public Provider<IN4JSCore> provideIN4JSCore() {
 		return Access.contributedProvider(IN4JSCore.class);
 	}
@@ -396,8 +385,13 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	}
 
 	/** Delegate to shared injector */
-	public Provider<? extends N4JSModel> provideN4JSModel() {
+	public Provider<N4JSModel> provideN4JSModel() {
 		return Access.contributedProvider(N4JSModel.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<N4JSEclipseModel> provideN4JSEclipseModel() {
+		return Access.contributedProvider(N4JSEclipseModel.class);
 	}
 
 	/** Delegate to shared injector */

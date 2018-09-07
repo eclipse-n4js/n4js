@@ -105,7 +105,7 @@ public class SemverSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 *     GitHubVersionRequirement returns GitHubVersionRequirement
 	 *
 	 * Constraint:
-	 *     (githubUrl=URL commitISH=ALPHA_NUMERIC_CHARS?)
+	 *     (githubUrl=URL_NO_VX commitISH=ALPHA_NUMERIC_CHARS?)
 	 */
 	protected void sequence_GitHubVersionRequirement(ISerializationContext context, GitHubVersionRequirement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

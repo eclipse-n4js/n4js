@@ -48,7 +48,7 @@ i.foo();
 
 var b : Array<any> | B;
 // XPECT hyperlinks at 'join' ---
-join,
+n4scheme:/builtin_js.n4ts#//@types.2/@ownedMembers.4,
 join: "join"(N4MethodDeclaration) in "B"(N4ClassDeclaration) in file Hyperlink_composed_member.n4js.xt
 ---
 b.join();

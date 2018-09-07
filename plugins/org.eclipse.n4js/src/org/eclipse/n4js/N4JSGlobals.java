@@ -131,14 +131,6 @@ public final class N4JSGlobals {
 	 * Name of the package.json fragment file from the "n4jsd" type definitions repository.
 	 */
 	public static final String PACKAGE_FRAGMENT_JSON = "package-fragment.json";
-	/**
-	 * The name of the N4JS-specific marker file used to denote sub-folders of the external libraries "node_modules"
-	 * folder that were installed directly, instead of only indirectly by "npm install" as a transitive dependency.
-	 * <p>
-	 * These marker files are required only temporarily. When removing this, make sure to remove all files with name
-	 * {@value N4JSGlobals#PACKAGE_MARKER} from sub-folders of top-level folder "n4js-libs"!
-	 */
-	public static final String PACKAGE_MARKER = "package.n4js-marker";
 
 	private N4JSGlobals() {
 		// private to prevent inheritance & instantiation.

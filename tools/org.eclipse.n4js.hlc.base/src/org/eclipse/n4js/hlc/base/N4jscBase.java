@@ -18,8 +18,6 @@ import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_DEPENDENCY_NOT_FO
 import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_MODULE_TO_RUN_NOT_FOUND;
 import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR;
 import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_WRONG_CMDLINE_OPTIONS;
-import static org.eclipse.n4js.utils.git.GitUtils.hardReset;
-import static org.eclipse.n4js.utils.git.GitUtils.pull;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,14 +25,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.varia.NullAppender;
@@ -53,7 +54,6 @@ import org.eclipse.n4js.binaries.nodejs.NpmrcBinary;
 import org.eclipse.n4js.external.HeadlessTargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
-import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider;
 import org.eclipse.n4js.external.libraries.ExternalLibraryFolderUtils;
 import org.eclipse.n4js.generator.headless.BuildSet;
 import org.eclipse.n4js.generator.headless.BuildSetComputer;
@@ -66,6 +66,7 @@ import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.hlc.base.running.HeadlessRunner;
 import org.eclipse.n4js.hlc.base.testing.HeadlessTester;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.runner.SystemLoaderInfo;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.smith.ClosableMeasurement;
@@ -309,9 +310,6 @@ public class N4jscBase implements IApplication {
 
 	@Inject
 	private BinariesPreferenceStore binariesPreferenceStore;
-
-	@Inject
-	private TypeDefinitionGitLocationProvider gitLocationProvider;
 
 	@Inject
 	private HeadlessExtensionRegistrationHelper headlessExtensionRegistrationHelper;
@@ -589,7 +587,7 @@ public class N4jscBase implements IApplication {
 							});
 						}
 
-						IStatus status = libManager.installNPMs(dependencies, new NullProgressMonitor());
+						IStatus status = libManager.installNPMs(dependencies, false, new NullProgressMonitor());
 						if (!status.isOK())
 							if (keepCompiling)
 								warn(status.getMessage());
@@ -599,7 +597,7 @@ public class N4jscBase implements IApplication {
 					}
 				}
 
-				final BuildSet targetPlatformBuildSet = computeTargetPlatformBuildSet();
+				final BuildSet targetPlatformBuildSet = computeTargetPlatformBuildSet(buildSet.getAllProjects());
 				// make sure all newly installed dependencies are registered with the workspace
 				registerProjects(targetPlatformBuildSet);
 
@@ -691,13 +689,6 @@ public class N4jscBase implements IApplication {
 				System.out.println("Skipping scanning and installation of dependencies.");
 			return;
 		}
-
-		// pull n4jsd to install location
-		java.net.URI gitRepositoryLocation = locationProvider.getTargetPlatformLocalGitRepositoryLocation();
-		Path localClonePath = new File(gitRepositoryLocation).toPath();
-		hardReset(gitLocationProvider.getGitLocation().getRepositoryRemoteURL(), localClonePath,
-				gitLocationProvider.getGitLocation().getRemoteBranch(), true);
-		pull(localClonePath);
 
 		String packageJson = ExternalLibraryFolderUtils.createTargetPlatformPackageJson();
 		java.net.URI platformLocation = locationProvider.getTargetPlatformInstallURI();
@@ -949,7 +940,7 @@ public class N4jscBase implements IApplication {
 		} catch (N4JSCompileException e) {
 			// dump all information to error-stream.
 			e.userDump(System.err);
-			throw new ExitCodeException(EXITCODE_COMPILE_ERROR);
+			throw new ExitCodeException(EXITCODE_COMPILE_ERROR, e);
 		}
 	}
 
@@ -992,7 +983,7 @@ public class N4jscBase implements IApplication {
 		if (projectLocations != null)
 			toBuild.addAll(ProjectLocationsUtil.convertToFiles(projectLocations));
 
-		return buildSetComputer.createSingleFilesBuildSet(toBuild, srcFiles);
+		return buildSetComputer.createSingleFilesBuildSet(toBuild, srcFiles, Collections.emptySet());
 	}
 
 	/** Collects projects in 'projects' build mode and returns corresponding BuildSet. */
@@ -1002,7 +993,7 @@ public class N4jscBase implements IApplication {
 		if (projectLocations != null)
 			toBuild.addAll(ProjectLocationsUtil.convertToFiles(projectLocations));
 
-		return buildSetComputer.createProjectsBuildSet(toBuild, srcFiles);
+		return buildSetComputer.createProjectsBuildSet(toBuild, srcFiles, Collections.emptySet());
 	}
 
 	/** Collects projects in 'allprojects' build mode and returns corresponding BuildSet. */
@@ -1018,14 +1009,17 @@ public class N4jscBase implements IApplication {
 
 		List<File> toBuild = new ArrayList<>();
 		toBuild.addAll(ProjectLocationsUtil.convertToFiles(projectLocations));
-		return buildSetComputer.createAllProjectsBuildSet(toBuild);
+		return buildSetComputer.createAllProjectsBuildSet(toBuild, Collections.emptySet());
 	}
 
-	private BuildSet computeTargetPlatformBuildSet() throws ExitCodeException {
+	private BuildSet computeTargetPlatformBuildSet(Collection<? extends IN4JSProject> workspaceProjects)
+			throws ExitCodeException {
 		List<File> toBuild = new ArrayList<>();
 		toBuild.addAll(ProjectLocationsUtil.getTargetPlatformWritableDir(installLocationProvider));
+		Set<String> namesOfWorkspaceProjects = workspaceProjects.stream().map(IN4JSProject::getProjectName)
+				.collect(Collectors.toSet());
 		try {
-			return buildSetComputer.createAllProjectsBuildSet(toBuild);
+			return buildSetComputer.createAllProjectsBuildSet(toBuild, namesOfWorkspaceProjects);
 		} catch (N4JSCompileException e) {
 			throw new ExitCodeException(EXITCODE_DEPENDENCY_NOT_FOUND,
 					"Cannot compute build set for target platform location.", e);
