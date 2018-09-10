@@ -33,9 +33,8 @@
     "moduleLoader": "n4js"
   },
   "dependencies": {
-    "n4js-node": "^0.1.0"
-  },
-  "devDependencies": {
+    "n4js-node": "^0.1.0",
     "n4js-runtime-es2015": "^0.1.0"
-  }
+  },
+  "devDependencies": {}
 }
