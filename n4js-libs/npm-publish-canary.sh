@@ -88,7 +88,8 @@ if [ "${NPM_TAG}" = "latest" ]; then
     lerna exec -- 'jq -r ".repository |= {type: \"git\", url: \"https://github.com/eclipse/n4js/tree/master/n4js-libs/packages/$LERNA_PACKAGE_NAME\"}" package.json_TEMP > package.json'
     lerna exec -- rm package.json_TEMP
 
-    PUBLISH_VERSION=`semver -i patch ${N4JS_LIBS_VERSION_PUBLIC}`
+    #PUBLISH_VERSION=`semver -i patch ${N4JS_LIBS_VERSION_PUBLIC}`
+    PUBLISH_VERSION="0.12.100"
     echo "Now publishing with version: ${PUBLISH_VERSION}"
 
     lerna publish --loglevel info --skip-git --registry="${NPM_REGISTRY}" --repo-version="${PUBLISH_VERSION}" --exact --yes --bail --npm-tag="${NPM_TAG}"
