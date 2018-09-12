@@ -19,6 +19,10 @@ set -eo pipefail
 # https://github.com/eclipse/n4js/tree/89a8d09e9dcd924ae1ffeb03138fb9140e6e370d/n4js-libs/packages/n4js-node
 EXTRACT_COMMIT_ID_REGEX=".*\/n4js\/tree\/([^\/]+)\/n4js-libs\/packages\/.*"
 
+# this is the n4js-libs package that will be used to obtain the version number and commit ID
+# of the latest published version of all n4js-libs packages
+N4JS_LIBS_REPRESENTATIVE="n4js-node"
+
 
 cd `dirname $0`
 cd `pwd -P`
@@ -48,18 +52,14 @@ if [ "${NPM_TAG}" = "latest" ]; then
     # We only publish if there are changes in n4js-libs since the last commit
     #PKG_VERSION=`cat lerna.json  | jq -r '.versionfixed' | xargs -t semver -i minor {}`
 
-    echo "Checking whether publication of n4js-libs is required:"
+    echo "Checking whether publication of n4js-libs is required (using ${N4JS_LIBS_REPRESENTATIVE} as representative) ..."
 
-    # Check the latest commit on npm registry, use n4js-node as a representative
-    N4JS_LIBS_VERSION_PUBLIC=`curl -s ${NPM_REGISTRY}/n4js-node | jq -r '.["dist-tags"].latest'`
+    # Check the latest commit on npm registry, using the representative
+    N4JS_LIBS_VERSION_PUBLIC=`curl -s ${NPM_REGISTRY}/${N4JS_LIBS_REPRESENTATIVE} | jq -r '.["dist-tags"].latest'`
     echo "  - version of latest published n4js-libs       : $N4JS_LIBS_VERSION_PUBLIC"
 
-    N4JS_LIBS_URL_PUBLIC=`curl -s ${NPM_REGISTRY}/n4js-node | jq -r '.versions."'${N4JS_LIBS_VERSION_PUBLIC}'".repository.url'`
-    echo "  - repository URL of latest published n4js-libs: $N4JS_LIBS_URL_PUBLIC"
-
-    if [[ $N4JS_LIBS_URL_PUBLIC =~ $EXTRACT_COMMIT_ID_REGEX ]]; then
-        N4JS_LIBS_COMMIT_ID_PUBLIC=${BASH_REMATCH[1]}
-    else
+    N4JS_LIBS_COMMIT_ID_PUBLIC=`curl -s ${NPM_REGISTRY}/${N4JS_LIBS_REPRESENTATIVE} | jq -r '.versions."'${N4JS_LIBS_VERSION_PUBLIC}'".gitHead'`
+    if [ "${N4JS_LIBS_COMMIT_ID_PUBLIC}" = "null" ]; then
         N4JS_LIBS_COMMIT_ID_PUBLIC=unknown
     fi
     echo "  - commit ID of latest published n4js-libs     : $N4JS_LIBS_COMMIT_ID_PUBLIC"
@@ -76,9 +76,16 @@ if [ "${NPM_TAG}" = "latest" ]; then
     fi
 
     # update repository meta-info in package.json of all n4js-libs to point to the GitHub and the correct commit
-    echo "Updating property 'repository' in package.json of all n4js-libs to point to new commit ..."
+    # (yarn isn't doing this at the moment: https://github.com/yarnpkg/yarn/issues/2978 )
+    echo "Updating property 'gitHead' in package.json of all n4js-libs to new local commit ID ..."
     lerna exec -- cp package.json package.json_TEMP
-    lerna exec -- 'jq -r ".repository |= {type: \"git\", url: \"https://github.com/eclipse/n4js/tree/'$N4JS_LIBS_COMMIT_ID_LOCAL'/n4js-libs/packages/$LERNA_PACKAGE_NAME\"}" package.json_TEMP > package.json'
+    lerna exec -- 'jq -r ".gitHead |= \"'$N4JS_LIBS_COMMIT_ID_LOCAL'\"" package.json_TEMP > package.json'
+    lerna exec -- rm package.json_TEMP
+
+    # enforce consistent repository meta-info in package.json of all n4js-libs
+    echo "Setting property 'repository' in package.json of all n4js-libs (for consistency) ..."
+    lerna exec -- cp package.json package.json_TEMP
+    lerna exec -- 'jq -r ".repository |= {type: \"git\", url: \"https://github.com/eclipse/n4js/tree/master/n4js-libs/packages/$LERNA_PACKAGE_NAME\"}" package.json_TEMP > package.json'
     lerna exec -- rm package.json_TEMP
 
     PUBLISH_VERSION=`semver -i patch ${N4JS_LIBS_VERSION_PUBLIC}`
