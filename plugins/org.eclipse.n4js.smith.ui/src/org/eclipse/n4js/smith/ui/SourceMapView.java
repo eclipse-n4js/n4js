@@ -96,6 +96,7 @@ public class SourceMapView extends ViewPart {
 	private final List<MappingEntry> mappingEntriesAsList = new ArrayList<>();
 
 	private final Map<StyledText, Point> textMarkers = new HashMap<>();
+	private ActiveEditorChangeListener activeEditorChangeListener;
 
 	@Override
 	public void createPartControl(Composite parent) {
@@ -142,7 +143,8 @@ public class SourceMapView extends ViewPart {
 		tabMessages.setControl(textMessages);
 
 		// add listener to track the active editor
-		this.getSite().getPage().addPartListener(new ActiveEditorChangeListener(this::updateActiveEditor));
+		activeEditorChangeListener = new ActiveEditorChangeListener(this::updateActiveEditor);
+		this.getSite().getPage().addPartListener(activeEditorChangeListener);
 
 	}
 
@@ -179,10 +181,15 @@ public class SourceMapView extends ViewPart {
 				}
 			}
 		});
+
 	}
 
 	@Override
 	public void dispose() {
+		if (activeEditorChangeListener != null) { // fixes #1100
+			this.getSite().getPage().removePartListener(activeEditorChangeListener);
+			activeEditorChangeListener = null;
+		}
 		font.dispose();
 		colorBgMapped.dispose();
 		colorBgMarked.dispose();
@@ -202,7 +209,8 @@ public class SourceMapView extends ViewPart {
 
 	private void updateActiveEditor(IEditorPart editorPart) {
 
-		if (editorPart != activeEditor && editorPart != null) {
+		if (editorPart != activeEditor && editorPart != null
+				&& editorPart.getEditorInput() instanceof IFileEditorInput) {
 			activeEditor = editorPart;
 			IFileEditorInput fei = (IFileEditorInput) activeEditor.getEditorInput();
 			activeEditor = editorPart;

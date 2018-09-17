@@ -39,11 +39,10 @@
   "dependencies": {
     "n4js.lang": "^0.1.0",
     "org.eclipse.n4js.mangelhaft.assert": "^0.1.0",
-    "n4js-node": "^0.1.0"
-  },
-  "devDependencies": {
+    "n4js-node": "^0.1.0",
     "n4js-runtime-n4": "^0.1.0",
     "n4js-runtime-v8": "^0.1.0",
     "n4js-runtime-es2015": "^0.1.0"
-  }
+  },
+  "devDependencies": {}
 }
