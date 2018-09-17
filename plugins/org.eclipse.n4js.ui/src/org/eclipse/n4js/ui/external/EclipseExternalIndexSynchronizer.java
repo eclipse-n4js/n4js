@@ -90,7 +90,7 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 			synchronizeIndex(subMonitor, changeSet, cleanResults);
 
 			// clean error markers 'out-of-sync'
-			setOutOfSyncMarkers(false);
+			cleanOutOfSyncMarkers();
 
 		} catch (Throwable t) {
 			checkAndSetOutOfSyncMarkers();
@@ -184,7 +184,7 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 			externalLibraryWorkspace.scheduleWorkspaceProjects(subMonitor, toBeScheduled);
 
 			// clean error markers 'out-of-sync'
-			setOutOfSyncMarkers(false);
+			cleanOutOfSyncMarkers();
 
 		} catch (Throwable t) {
 			checkAndSetOutOfSyncMarkers();
@@ -281,12 +281,24 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 
 	/** Sets error markers to every N4JS project iff the folder node_modules and the N4JS index are out of sync. */
 	public void checkAndSetOutOfSyncMarkers() {
-		boolean inSync = isProjectsSynchronized();
-		setOutOfSyncMarkers(!inSync);
+		Collection<LibraryChange> changeSet = identifyChangeSet(Collections.emptyList());
+		setOutOfSyncMarkers(changeSet);
 	}
 
-	private void setOutOfSyncMarkers(boolean setMarkers) {
+	private void cleanOutOfSyncMarkers() {
+		setOutOfSyncMarkers(Collections.emptySet());
+	}
+
+	private void setOutOfSyncMarkers(Collection<LibraryChange> changeSet) {
 		String code = IssueCodes.NODE_MODULES_OUT_OF_SYNC;
+		boolean setMarkers = !changeSet.isEmpty();
+		String changeMsg = "";
+		for (java.util.Iterator<LibraryChange> it = changeSet.iterator(); it.hasNext();) {
+			changeMsg += it.next();
+			if (it.hasNext()) {
+				changeMsg += ", ";
+			}
+		}
 
 		for (IN4JSProject prj : core.findAllProjects()) {
 			if (!prj.isExternal() && prj.exists() && prj instanceof N4JSEclipseProject) {
@@ -299,7 +311,7 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 
 				// add markers
 				if (setMarkers && !iProject.isHidden() && iProject.isAccessible()) {
-					String msg = IssueCodes.getMessageForNODE_MODULES_OUT_OF_SYNC();
+					String msg = IssueCodes.getMessageForNODE_MODULES_OUT_OF_SYNC(changeMsg);
 					String uriKey = markerResource.getLocation().toString();
 					workspaceMarkerSupport.createError(markerResource, code, "N4JS Index", msg, uriKey, true);
 				}
