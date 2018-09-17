@@ -27,10 +27,26 @@ To refer to a JavaScript npm, the term _implementation project_ will be used.
 
 == Specify Type Definition
 
-project type: definition
-definesPackage: <name>
+A type definition project is structured like a normal npm.
+The major difference is that it provides n4jsd files instead of js files.
+These n4jsd files are named like and located at the exact position in the file tree as js-counterparts.
+Besides the usual properties the package.json file needs to specify the following properties in the n4js section.
 
-mainModule
+
+[source]
+.Package.json: Important properties for type definition projects
+{
+	"n4js": {
+		"projectType": "definition"
+		"definesPackage": "..."
+		"mainModule": "..."
+	}
+}
+
+The project type declares this project to be a type definition projects.
+Consequently, it has to also declare the name for which implementation project its type definitions are provided (using `definesPackage`).
+Lastly, the main module has to be specified since this information will not be taken from the package.json of the implementation project.
+
 
 
 == Name Conventions
@@ -38,9 +54,9 @@ mainModule
 A type definition package can have an arbitrary name and define an arbitrary npm package.
 This can be handy for testing purposes or just creating some temporary type definitions for a local package.
 However, we chose to use a convention to simplify finding the right type definition package for a specific implementation project.
-First, the scope '@n4jsd' and second the exact name of the implementation project is used.
-For instance, when a user wants to install type definitions for the implementation project 'express',
-our related type definitions are called '@n4jsd/express'.
+First, the scope `@n4jsd` and second the exact name of the implementation project is used.
+For instance, when a user wants to install type definitions for the implementation project `express`,
+our related type definitions are called `@n4jsd/express`.
 
 
 == Version Conventions
@@ -61,14 +77,17 @@ from a semantical point of view.
 We use the following convention to compute the version of type definition packages.
 
 
-[source]
+
 .Convention for initial type definition versions
-Major~types~.Minor~types~.Patch~types~ = Major~impl~.Minor~impl~.0
+--
+{nbsp}{nbsp}{nbsp}{nbsp} Major~types~.Minor~types~.Patch~types~ = Major~impl~.Minor~impl~.0
+--
 
 
-[source]
 .Example for initial type definition of express@3.3.3
-Major~types~.Minor~types~.Patch~types~ = 3.3.0
+--
+{nbsp}{nbsp}{nbsp}{nbsp} Major~types~.Minor~types~.Patch~types~ = 3.3.0
+--
 
 
 Let's say that a new version of a type definition package called _types_ should be created
@@ -87,25 +106,28 @@ On the client side, a type definition package is listed among the dependency sec
 Here we use the following convention to specify the required version of a type definition package.
 
 
-[source]
+
 .Convention for dependencies
-{
-	"@n4jsd/Types": "<=Major~impl~.Minor~impl~.*"
+--
+"dependencies": { +
+{nbsp}{nbsp}{nbsp}{nbsp} "@n4jsd/Types": "++<=++Major~impl~.Minor~impl~.*" +
 }
+--
 
 
-[source]
-.Example for dependencies to express and its type definition project
-{
-	"express": "^3.3.3",
-	"@n4jsd/express": "<=3.3.*"
+.Example of dependencies to express and its type definition project
+--
+"dependencies": { +
+{nbsp}{nbsp}{nbsp}{nbsp} "express": "^3.3.3", +
+{nbsp}{nbsp}{nbsp}{nbsp} "@n4jsd/express": "++<=++3.3.*" +
 }
+--
 
 
 According to this convention, the major and minor version numbers of the implementation package are used,
 prepended with a smaller-equals and appended with an asterisk for the patch number.
 This also applies when the implementation version contains a tilde, a caret, etc., or is omitting a minor or patch number.
-In case a non SemVer version is given (e.g. 'latest', empty string, url, etc.)
+In case a non SemVer version is given (e.g. `latest`, empty string, url, etc.)
 it is recommended to plain copy the non SemVer version when possible.
 
 
@@ -113,7 +135,7 @@ it is recommended to plain copy the non SemVer version when possible.
 
 The rational behind this convention reflects the idea of semantic versioning:
 
-[quote, https://semver.org/]
+[quote, 'https://www.semver.org[semver.org]']
 ____
 Given a version number MAJOR.MINOR.PATCH, increment the:
 
@@ -130,10 +152,10 @@ This is why patch version number fully suffices to reflect bug fixes and languag
 
 On client side, we recommend to use a smaller-equals qualifier because most probably there will not be the exact version
 of a requested type definition project.
-Instead, only some version major.minor versions will have type definition counter part.
+Instead, only some major.minor versions will have a type definition counterpart.
 Using a smaller-equals qualifier will make sure that a client will always get the latest version of a requested implementation project version.
 In case a newer version of the implementation project was already published,
-this convention guarantees that new versions of the type definition project are not installed.
+this convention guarantees that a compatible version of the type definition project is installed.
 
 
 
