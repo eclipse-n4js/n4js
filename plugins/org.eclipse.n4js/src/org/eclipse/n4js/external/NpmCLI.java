@@ -278,6 +278,7 @@ public class NpmCLI {
 
 		String packageJsonName = installPath + File.separator + "package.json";
 		File packageJson = new File(packageJsonName);
+		System.out.println("searching for package.json in: " + packageJsonName);
 		if (packageJson.isFile()) {
 			try {
 				List<String> packageJsonLines = Files.readAllLines(packageJson.toPath());
