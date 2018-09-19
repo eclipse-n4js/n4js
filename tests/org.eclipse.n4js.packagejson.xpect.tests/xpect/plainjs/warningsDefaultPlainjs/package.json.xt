@@ -1,0 +1,25 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.tests.PackageJsonXpectTest END_SETUP */
+{
+	// XPECT warnings --> "The package name "project-name-mismatch" does not match the name of the project folder "warningsDefaultPlainjs" on the file system." at ""project-name-mismatch""
+	"name": "project-name-mismatch",
+	// XPECT warnings --> "Invalid version number "0.0.1*": no viable alternative at input '*'." at "0.0.1*"
+	"version": "0.0.1*",
+	"dependencies": {
+		/* XPECT warnings ---
+			"Invalid version number "1.2.3-wrong.*": no viable alternative at input '*'." at "1.2.3-wrong.*"
+			"Project does not exist with project ID: abc." at ""abc": "1.2.3-wrong.*""
+		--- */
+		"abc": "1.2.3-wrong.*"
+	}
+}
