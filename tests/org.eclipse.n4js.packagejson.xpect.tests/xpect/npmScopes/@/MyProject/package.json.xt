@@ -14,5 +14,8 @@
 
 {
 	// XPECT errors --> "The name "" is not a valid scope name." at ""@/MyProject""
-	"name": "@/MyProject"
+	"name": "@/MyProject",
+	"n4js": {
+		"projectType": "validation"
+	}
 }

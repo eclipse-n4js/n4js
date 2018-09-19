@@ -29,8 +29,7 @@
 		"": "*"
 	},
 	"n4js": {
-		// XPECT errors --> "Value for property "projectType" must not be empty." at """"
-		"projectType": "",
+		"projectType": "library",
 		// XPECT errors --> "Value for property "vendorName" must not be empty." at """"
 		"vendorName": "",
 		// XPECT errors --> "Value for property "vendorId" must not be empty." at """"
