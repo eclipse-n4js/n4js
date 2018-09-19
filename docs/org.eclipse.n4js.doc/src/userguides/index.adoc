@@ -68,15 +68,6 @@ using the N4JS IDE.
 <<npm-export-guide.adoc#npm-export-guide,npm Export Guide>> :: Basic npm export and publishing instructions.
 
 
-=== Write Type Definitions for existing npms
-
-The Type Definitions Guide briefly covers the essentials of how to write or modify or add type definitions
-to an existing implementation npm project. Also conventions on how to version a new type definition project
-with respect to the version of the related implementation project.
-
-[horizontal]
-<<type-definition-projects.adoc#type-definition-projects,Type Definitions Guide>> :: Basic instructions on how to write type definitions.
-
 === In-Depth Tutorial
 
 Using the built-in example projects as a reference, this in-depth tutorial covers the most important tools and features
