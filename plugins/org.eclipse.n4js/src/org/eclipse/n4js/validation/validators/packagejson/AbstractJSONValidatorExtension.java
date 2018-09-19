@@ -436,7 +436,8 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 	protected IssueSeverities getIssueSeverities(Map<Object, Object> context, EObject eObject) {
 		JSONDocument jsonDocument = EcoreUtil2.getContainerOfType(eObject, JSONDocument.class);
 		if (isPckjsonOfPlainJS(jsonDocument)) {
-			// switch all errors to warnings since plainjs projects do not comply to semver and other specifications
+			// switch all issues to warnings since plainjs projects do not comply to semver
+			// and other specifications, and hence cause errors that unnecessarily disturb the N4JS developers
 			return new IssueSeverities(null, null, null) {
 				@Override
 				public Severity getSeverity(String code) {
