@@ -435,18 +435,36 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 	@Override
 	protected IssueSeverities getIssueSeverities(Map<Object, Object> context, EObject eObject) {
 		JSONDocument jsonDocument = EcoreUtil2.getContainerOfType(eObject, JSONDocument.class);
-		if (isPckjsonOfPlainJS(jsonDocument)) {
-			// switch all issues to warnings since plainjs projects do not comply to semver
-			// and other specifications, and hence cause errors that unnecessarily disturb the N4JS developers
-			return new IssueSeverities(null, null, null) {
-				@Override
-				public Severity getSeverity(String code) {
+		IssueSeverities originalIssueSeverities = super.getIssueSeverities(context, eObject);
+
+		/**
+		 * Delegates to given {@link IssueSeverities} but replaces {@link Severity#ERROR} by {@link Severity#WARNING}
+		 */
+		class IssueSeveritiesDelegator extends IssueSeverities {
+			final IssueSeverities delegate;
+
+			IssueSeveritiesDelegator(IssueSeverities delegate) {
+				super(null, null, null);
+				this.delegate = delegate;
+			}
+
+			@Override
+			public Severity getSeverity(String code) {
+				Severity originalSeverity = delegate.getSeverity(code);
+				if (originalSeverity == Severity.ERROR) {
 					return Severity.WARNING;
 				}
-			};
+				return originalSeverity;
+			}
+		}
+
+		if (isPckjsonOfPlainJS(jsonDocument)) {
+			// switch all errors to warnings since plainjs projects do not comply to semver
+			// and other specifications, and hence cause errors that unnecessarily disturb the N4JS developers
+			return new IssueSeveritiesDelegator(originalIssueSeverities);
 
 		} else {
-			return super.getIssueSeverities(context, eObject);
+			return originalIssueSeverities;
 		}
 	}
 
