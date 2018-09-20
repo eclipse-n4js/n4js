@@ -14,7 +14,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URI;
 
 import org.eclipse.core.runtime.IStatus;
@@ -24,6 +23,7 @@ import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.eclipse.n4js.utils.io.FileDeleter;
+import org.eclipse.n4js.utils.io.FileUtils;
 
 import com.google.inject.Inject;
 
@@ -43,11 +43,7 @@ public class ExternalLibrariesSetupHelper {
 
 	/** Sets up the known external library locations with the {@code node_modules} folder. */
 	public void setupExternalLibraries(boolean initShippedCode) throws Exception {
-
-		// GH-821: clean-up here when done
-		final URI nodeModulesLocation = locationProvider.getNodeModulesURI();
-
-		ensureDirectoryExists(nodeModulesLocation);
+		URI nodeModulesLocation = getCleanModulesLocation();
 
 		if (initShippedCode) {
 			shippedCodeInitializeTestHelper.setupBuiltIns();
@@ -60,12 +56,19 @@ public class ExternalLibrariesSetupHelper {
 		ProjectTestsUtils.waitForAutoBuild();
 	}
 
-	private void ensureDirectoryExists(final URI dirLocation) throws IOException {
-		File dirLocationFile = new File(dirLocation);
-		if (!dirLocationFile.exists()) {
-			dirLocationFile.createNewFile();
-		}
-		assertTrue("Provided location should be available.", dirLocationFile.exists());
+	private URI getCleanModulesLocation() {
+		URI nodeModulesLocation = locationProvider.getNodeModulesURI();
+		URI targetPlatformFileLocation = locationProvider.getTargetPlatformFileLocation();
+		File nodeModulesDir = new File(nodeModulesLocation);
+		File targetPlatformFile = new File(targetPlatformFileLocation);
+
+		FileUtils.deleteFileOrFolder(nodeModulesDir);
+		FileUtils.deleteFileOrFolder(targetPlatformFile);
+		locationProvider.repairNpmFolderState();
+
+		assertTrue("Provided location should be available.", nodeModulesDir.isDirectory());
+		assertTrue("Provided location should be available.", targetPlatformFile.isFile());
+		return nodeModulesLocation;
 	}
 
 	/** Tears down the external libraries. */
