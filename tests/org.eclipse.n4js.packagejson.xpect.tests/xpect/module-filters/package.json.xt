@@ -22,6 +22,7 @@
 	"name": "module-filters",
 	"version": "0.0.1",
 	"n4js": {
+		"projectType": "library",
 		// XPECT errors --> "Expected object instead of number as moduleFilters section." at "12"
 		"moduleFilters": 12,
 		"moduleFilters": {

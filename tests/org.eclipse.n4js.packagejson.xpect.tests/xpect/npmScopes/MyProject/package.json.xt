@@ -14,5 +14,8 @@
 
 {
 	// XPECT errors --> "The scope name "@myScope" does not match the name of the project folder's parent folder "npmScopes" on the file system." at ""@myScope/MyProject""
-	"name": "@myScope/MyProject"
+	"name": "@myScope/MyProject",
+	"n4js": {
+		"projectType": "validation"
+	}
 }

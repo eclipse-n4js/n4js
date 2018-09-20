@@ -14,6 +14,7 @@
 	"name": "missing-implemented-projects",
 	"version": "0.0.1",
 	"n4js": {
+		"projectType": "validation",
 		"output": "src-gen",
 		// XPECT errors --> "When defining an implementation ID, you also have to define one or more API projects that are implemented by this project using property n4js.implementedProjects." at ""implementationId""
 		"implementationId": "some-id"

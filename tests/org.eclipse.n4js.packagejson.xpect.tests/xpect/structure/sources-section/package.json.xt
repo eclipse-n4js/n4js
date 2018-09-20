@@ -26,6 +26,7 @@
 	"name": "sources-section",
 	
 	"n4js": {
+		"projectType": "validation",
 		"sources": {
 			// XPECT errors --> "Invalid source container type "invalid-type"." at ""invalid-type""
 			"invalid-type": [],

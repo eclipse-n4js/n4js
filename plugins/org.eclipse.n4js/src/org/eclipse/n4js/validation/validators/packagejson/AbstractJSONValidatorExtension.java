@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.DiagnosticChain;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
@@ -23,17 +24,25 @@ import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.JSON.NameValuePair;
 import org.eclipse.n4js.json.validation.JSONIssueCodes;
 import org.eclipse.n4js.json.validation.extension.IJSONValidatorExtension;
+import org.eclipse.n4js.packagejson.PackageJsonHelper;
 import org.eclipse.n4js.packagejson.PackageJsonProperties;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectType;
+import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
+import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.validation.AbstractDeclarativeValidator;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.EValidatorRegistrar;
+import org.eclipse.xtext.validation.IssueSeverities;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
+import com.google.inject.Inject;
 
 /**
  * An abstract implementation of {@link IJSONValidatorExtension} that enables the functionality of an
@@ -51,6 +60,11 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 
 	private static final String JSON_DOCUMENT_VALUES = "JSON_DOCUMENT_VALUES";
 	private static final String JSON_DOCUMENT = "JSON_DOCUMENT";
+
+	@Inject
+	private XpectAwareFileExtensionCalculator fileExtensionCalculator;
+	@Inject
+	private PackageJsonHelper pckjsonHelper;
 
 	@Override
 	public final void validateJSON(JSONDocument document, DiagnosticChain diagnosticChain) {
@@ -416,5 +430,52 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 			}
 		}
 		return documentValues;
+	}
+
+	@Override
+	protected IssueSeverities getIssueSeverities(Map<Object, Object> context, EObject eObject) {
+		JSONDocument jsonDocument = EcoreUtil2.getContainerOfType(eObject, JSONDocument.class);
+		IssueSeverities originalIssueSeverities = super.getIssueSeverities(context, eObject);
+
+		/**
+		 * Delegates to given {@link IssueSeverities} but replaces {@link Severity#ERROR} by {@link Severity#WARNING}
+		 */
+		class IssueSeveritiesDelegator extends IssueSeverities {
+			final IssueSeverities delegate;
+
+			IssueSeveritiesDelegator(IssueSeverities delegate) {
+				super(null, null, null);
+				this.delegate = delegate;
+			}
+
+			@Override
+			public Severity getSeverity(String code) {
+				Severity originalSeverity = delegate.getSeverity(code);
+				if (originalSeverity == Severity.ERROR) {
+					return Severity.WARNING;
+				}
+				return originalSeverity;
+			}
+		}
+
+		if (isPckjsonOfPlainJS(jsonDocument)) {
+			// switch all errors to warnings since plainjs projects do not comply to semver
+			// and other specifications, and hence cause errors that unnecessarily disturb the N4JS developers
+			return new IssueSeveritiesDelegator(originalIssueSeverities);
+
+		} else {
+			return originalIssueSeverities;
+		}
+	}
+
+	private boolean isPckjsonOfPlainJS(JSONDocument jsonDocument) {
+		URI uri = jsonDocument.eResource().getURI();
+		String fileExtension = fileExtensionCalculator.getFilenameWithoutXpectExtension(uri);
+		boolean isPckjson = fileExtension.equals(IN4JSProject.PACKAGE_JSON);
+		if (isPckjson) {
+			ProjectDescription pd = pckjsonHelper.convertToProjectDescription(jsonDocument, true, "xyz");
+			return pd.getProjectType() == ProjectType.PLAINJS;
+		}
+		return false;
 	}
 }

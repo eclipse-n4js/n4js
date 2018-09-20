@@ -40,6 +40,7 @@
 		"lib2": "*"
 	},
 	"n4js": {
+		"projectType": "library",
 		"output": "src-gen",
 		"sources": {
 			"source": [
