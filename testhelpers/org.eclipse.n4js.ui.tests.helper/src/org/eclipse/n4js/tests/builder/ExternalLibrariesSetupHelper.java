@@ -62,6 +62,8 @@ public class ExternalLibrariesSetupHelper {
 		File nodeModulesDir = new File(nodeModulesLocation);
 		File targetPlatformFile = new File(targetPlatformFileLocation);
 
+		// When running plugin tests on Jenkins it can happen that the modules location is not clean
+		// because it still contains packages that were installed by other plugin tests.
 		FileUtils.deleteFileOrFolder(nodeModulesDir);
 		FileUtils.deleteFileOrFolder(targetPlatformFile);
 		locationProvider.repairNpmFolderState();
