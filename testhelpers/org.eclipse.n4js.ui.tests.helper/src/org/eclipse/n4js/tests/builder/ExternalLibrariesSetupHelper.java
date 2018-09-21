@@ -18,14 +18,17 @@ import java.net.URI;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
+import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.eclipse.n4js.utils.io.FileUtils;
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 
 /**
  * Use this test helper to set up and tear down the external libraries.
@@ -52,6 +55,10 @@ public class ExternalLibrariesSetupHelper {
 			final IStatus result = externalLibraryPreferenceStore.save(new NullProgressMonitor());
 			assertTrue("Error while saving external library preference changes.", result.isOK());
 		}
+
+		Injector n4jsInjector = N4JSActivator.getInstance().getInjector("org.eclipse.n4js.N4JS");
+		LibraryManager libMan = n4jsInjector.getInstance(LibraryManager.class);
+		libMan.reloadAllExternalProjects(new NullProgressMonitor());
 
 		ProjectTestsUtils.waitForAutoBuild();
 	}
