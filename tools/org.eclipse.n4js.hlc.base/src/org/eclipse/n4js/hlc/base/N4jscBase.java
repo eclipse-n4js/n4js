@@ -51,7 +51,7 @@ import org.eclipse.n4js.binaries.BinariesPreferenceStore;
 import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.binaries.nodejs.NpmrcBinary;
-import org.eclipse.n4js.external.HeadlessTargetPlatformInstallLocationProvider;
+import org.eclipse.n4js.external.HlcTargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.external.libraries.ExternalLibraryFolderUtils;
@@ -681,8 +681,8 @@ public class N4jscBase implements IApplication {
 
 	/** depends on the checks done in {@link #checkTargetPlatformConfigurations} */
 	private void cloneGitRepositoryAndInstallNpmPackages() throws ExitCodeException {
-		checkState(installLocationProvider instanceof HeadlessTargetPlatformInstallLocationProvider);
-		HeadlessTargetPlatformInstallLocationProvider locationProvider = (HeadlessTargetPlatformInstallLocationProvider) installLocationProvider;
+		checkState(installLocationProvider instanceof HlcTargetPlatformInstallLocationProvider);
+		HlcTargetPlatformInstallLocationProvider locationProvider = (HlcTargetPlatformInstallLocationProvider) installLocationProvider;
 
 		if (!installMissingDependencies) {
 			if (verbose)
@@ -718,7 +718,7 @@ public class N4jscBase implements IApplication {
 	 *             if configuration is inconsistent or cannot be fixed.
 	 */
 	private void checkTargetPlatformConfigurations() throws ExitCodeException {
-		HeadlessTargetPlatformInstallLocationProvider locationProvider = (HeadlessTargetPlatformInstallLocationProvider) installLocationProvider;
+		HlcTargetPlatformInstallLocationProvider locationProvider = (HlcTargetPlatformInstallLocationProvider) installLocationProvider;
 		if (targetPlatformInstallLocation != null) {
 			// validate and save existing one
 
@@ -1063,7 +1063,7 @@ public class N4jscBase implements IApplication {
 	/** In some cases compiler is creating files and folders in temp locations. This method deletes those leftovers. */
 	private void cleanTemporaryArtifacts() {
 		if (installLocationProvider != null) {
-			HeadlessTargetPlatformInstallLocationProvider locationProvider = (HeadlessTargetPlatformInstallLocationProvider) installLocationProvider;
+			HlcTargetPlatformInstallLocationProvider locationProvider = (HlcTargetPlatformInstallLocationProvider) installLocationProvider;
 			// TODO GH-521 reset state for HLC tests
 			final java.net.URI uri = locationProvider.getTempRoot();
 			locationProvider.resetState();

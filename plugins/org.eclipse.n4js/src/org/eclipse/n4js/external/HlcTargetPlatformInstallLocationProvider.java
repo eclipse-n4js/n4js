@@ -31,7 +31,7 @@ import com.google.inject.Singleton;
  * case of the headless compiler.
  */
 @Singleton
-public class HeadlessTargetPlatformInstallLocationProvider implements TargetPlatformInstallLocationProvider {
+public class HlcTargetPlatformInstallLocationProvider implements TargetPlatformInstallLocationProvider {
 
 	private File targetPlatformInstallLocation;
 
