@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -222,9 +223,8 @@ public class LibraryManager {
 
 	private IStatus installNPMsInternal(Map<String, NPMVersionRequirement> versionedNPMs, boolean forceReloadAll,
 			IProgressMonitor monitor) {
-		String msg = "Installing NPM(s): " + versionedNPMs.entrySet().stream()
-				.map(e -> npmWithVersionAsString(e.getKey(), e.getValue()))
-				.collect(Collectors.joining(", "));
+
+		String msg = getMessage(versionedNPMs);
 		MultiStatus status = statusHelper.createMultiStatus(msg);
 		logger.logInfo(msg);
 
@@ -261,11 +261,26 @@ public class LibraryManager {
 		}
 	}
 
-	private static String npmWithVersionAsString(String packageName, NPMVersionRequirement versionRequirement) {
-		if (versionRequirement == null || SemverUtils.isEmptyVersionRequirement(versionRequirement)) {
-			return packageName;
+	private String getMessage(Map<String, NPMVersionRequirement> versionedNPMs) {
+		String msg = "Installing NPM(s): ";
+
+		for (Iterator<Map.Entry<String, NPMVersionRequirement>> entryIter = versionedNPMs.entrySet()
+				.iterator(); entryIter.hasNext();) {
+
+			Map.Entry<String, NPMVersionRequirement> entry = entryIter.next();
+			msg += entry.getKey(); // packageName
+
+			NPMVersionRequirement versionRequirement = entry.getValue();
+			if (versionRequirement != null && SemverUtils.isEmptyVersionRequirement(versionRequirement)) {
+				msg += "@" + versionRequirement;
+			}
+
+			if (entryIter.hasNext()) {
+				msg += ", ";
+			}
 		}
-		return packageName + "@" + versionRequirement;
+
+		return msg;
 	}
 
 	private List<LibraryChange> installUninstallNPMs(IProgressMonitor monitor, MultiStatus status,
