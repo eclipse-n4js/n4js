@@ -81,15 +81,16 @@ public interface TargetPlatformInstallLocationProvider {
 	/** @return the {@link File} pointing to the given folder inside the target platform */
 	default File getFolderInTargetPlatformLocation(String folderName) {
 		synchronized (folderName) {
-			if (null == getTargetPlatformInstallFolder()) {
-				final String message = "Target platform install location was not specified.";
-				final NullPointerException exception = new NullPointerException(message);
+			File installLocation = getTargetPlatformInstallFolder();
+
+			if (installLocation == null) {
+				String message = "Target platform install location was not specified.";
+				NullPointerException exception = new NullPointerException(message);
 				LOGGER.error(message, exception);
 				exception.printStackTrace(); // This if for the HLC as it swallows the actual stack trace.
 				throw exception;
 			}
 
-			final File installLocation = getTargetPlatformInstallFolder();
 			checkState(installLocation.isDirectory(),
 					"Cannot locate target platform install location: " + installLocation);
 
