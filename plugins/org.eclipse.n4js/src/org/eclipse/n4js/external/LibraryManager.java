@@ -44,7 +44,6 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.n4js.binaries.IllegalBinaryStateException;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
-import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.SemverMatcher;
 import org.eclipse.n4js.semver.SemverUtils;
@@ -114,16 +113,6 @@ public class LibraryManager {
 	 */
 	public boolean isProjectsSynchronized() {
 		return indexSynchronizer.isProjectsSynchronized();
-	}
-
-	/**
-	 * This method will query the current build state of all external projects that are available through
-	 * {@link ExternalLibraryWorkspace} or {@link IN4JSCore}.
-	 *
-	 * @return true iff all external projects have been built successfully.
-	 */
-	public boolean isProjectsBuilt() {
-		return true;
 	}
 
 	/**
