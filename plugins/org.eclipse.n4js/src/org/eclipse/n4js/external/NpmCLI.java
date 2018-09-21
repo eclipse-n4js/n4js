@@ -13,8 +13,6 @@ package org.eclipse.n4js.external;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -272,16 +270,9 @@ public class NpmCLI {
 			packageNamesAndVersionsMerged.add(nameAndVersion);
 		}
 
-		String packageJsonName = installPath + File.separator + "package.json";
-		File packageJson = new File(packageJsonName);
-		System.out.println("searching for package.json in: " + packageJsonName);
-		printContentsOfPckjson(packageJson);
-
 		IStatus status = executor.execute(
 				() -> commandFactory.createInstallPackageCommand(installPath, packageNamesAndVersionsMerged, true),
 				"Error while installing npm package.");
-
-		printContentsOfPckjson(packageJson);
 
 		// TODO IDE-3136 / GH-1011 workaround for a problem in node related to URL/GitHub version requirements
 		// In case of a dependency like "JSONSelect@dbo/JSONSelect" (wherein "dbo/JSONSelect" is a GitHub version
@@ -303,19 +294,6 @@ public class NpmCLI {
 		}
 
 		return status;
-	}
-
-	private void printContentsOfPckjson(File packageJson) {
-		if (packageJson.isFile()) {
-			try {
-				List<String> packageJsonLines = Files.readAllLines(packageJson.toPath());
-				System.out.println("## CONTENTS of PACKAGE.JSON");
-				String packageJsonText = String.join("\n", packageJsonLines);
-				System.out.println(packageJsonText);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
 	}
 
 	/**
