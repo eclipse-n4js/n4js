@@ -31,36 +31,36 @@ class ParserTest extends AbstractParserTest {
 	}
 
 	@Test
-	def void testNoSubstBackslash() {
+	def void testSubstBackslash() {
 		val script = '`\\\\`'.parseJSSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val template = statement.expression as TemplateLiteral
 		assertEquals(1, template.segments.size)
 		val segment = template.segments.head as TemplateSegment
-		assertEquals(segment.rawValue, 2, segment.rawValue.length)
-		assertEquals('\\\\', segment.rawValue)
+		assertEquals(segment.rawValue, 1, segment.rawValue.length)
+		assertEquals('\\', segment.rawValue)
 	}
 
 	@Test
-	def void testNoSubstQuote() {
+	def void testSubstQuote() {
 		val script = '`\\\'`'.parseJSSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val template = statement.expression as TemplateLiteral
 		assertEquals(1, template.segments.size)
 		val segment = template.segments.head as TemplateSegment
-		assertEquals(segment.rawValue, 2, segment.rawValue.length)
-		assertEquals('\\\'', segment.rawValue)
+		assertEquals(segment.rawValue, 1, segment.rawValue.length)
+		assertEquals('\'', segment.rawValue)
 	}
 
 	@Test
-	def void testNoSubstBackslashR() {
+	def void testSubstBackslashR() {
 		val script = '`\\r`'.parseJSSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val template = statement.expression as TemplateLiteral
 		assertEquals(1, template.segments.size)
 		val segment = template.segments.head as TemplateSegment
-		assertEquals(segment.rawValue, 2, segment.rawValue.length)
-		assertEquals('\\r', segment.rawValue)
+		assertEquals(segment.rawValue, 1, segment.rawValue.length)
+		assertEquals('\r', segment.rawValue)
 	}
 
 	@Test
@@ -280,7 +280,7 @@ class ParserTest extends AbstractParserTest {
 		val template = statement.expression as TemplateLiteral
 		assertEquals(1, template.segments.size)
 		val segment = template.segments.head as TemplateSegment
-		assertEquals('\\\n', segment.rawValue)
+		assertEquals('', segment.rawValue)
 	}
 
 	@Test
@@ -290,7 +290,7 @@ class ParserTest extends AbstractParserTest {
 		val template = statement.expression as TemplateLiteral
 		assertEquals(2, template.segments.size)
 		val segment = template.segments.last as TemplateSegment
-		assertEquals('\\\n', segment.rawValue)
+		assertEquals('', segment.rawValue)
 	}
 
 }
