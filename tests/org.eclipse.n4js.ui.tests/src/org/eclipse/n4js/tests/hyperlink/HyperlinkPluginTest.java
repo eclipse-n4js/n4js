@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
+import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
@@ -102,8 +103,8 @@ public class HyperlinkPluginTest extends AbstractBuilderParticipantTest {
 		waitForAutoBuild();
 
 		IWorkbenchPage page = EclipseUIUtils.getActivePage();
-		XtextEditor editorABC = openAndGetXtextEditor(fileABC, page);
-		ISourceViewer sourceViewer = editorABC.getInternalSourceViewer();
+		XtextEditor editor = openAndGetXtextEditor(fileABC, page);
+		ISourceViewer sourceViewer = editor.getInternalSourceViewer();
 		IRegion region = new Region(367, 0);
 		IHyperlink[] hlinksInABC = hyperlinkDetector.detectHyperlinks(sourceViewer, region, true);
 
@@ -112,17 +113,27 @@ public class HyperlinkPluginTest extends AbstractBuilderParticipantTest {
 		XtextHyperlink hyperlinkToProcess = (XtextHyperlink) hlinksInABC[0];
 		URI uriProcess = hyperlinkToProcess.getURI();
 		assertTrue("Hyperlink URI must be a file uri", uriProcess.isFile());
+		File fileProcess = new File(uriProcess.toFileString());
+		assertTrue("File 'process.n4js' must exist", fileProcess.isFile());
 
-		XtextEditor editorProcess = (XtextEditor) uriEditorOpener.open(uriProcess, true);
-		sourceViewer = editorProcess.getInternalSourceViewer();
+		editor = (XtextEditor) uriEditorOpener.open(uriProcess, true);
+		page = EclipseUIUtils.getActivePage();
+		TextSelection selectionProcess = (TextSelection) page.getSelection();
+		assertTrue("Selection must be 'process'", selectionProcess.getText().equals("process"));
+		sourceViewer = editor.getInternalSourceViewer();
 		region = new Region(556, 12);
 		IHyperlink[] hlinksInProcess = hyperlinkDetector.detectHyperlinks(sourceViewer, region, true);
- 
+
 		assertTrue("Hyperlink in external library missing", hlinksInProcess != null && hlinksInProcess.length == 1);
 		assertTrue("Hyperlink must be of type XtextHyperlink", hlinksInProcess[0] instanceof XtextHyperlink);
 		XtextHyperlink hyperlinkToEvent = (XtextHyperlink) hlinksInProcess[0];
 		URI uriEvent = hyperlinkToEvent.getURI();
 		assertTrue("Hyperlink URI must be a file uri", uriEvent.isFile());
+
+		editor = (XtextEditor) uriEditorOpener.open(uriEvent, true);
+		page = EclipseUIUtils.getActivePage();
+		TextSelection selectionEvent = (TextSelection) page.getSelection();
+		assertTrue("Selection must be 'EventEmitter'", selectionEvent.getText().equals("EventEmitter"));
 	}
 
 }
