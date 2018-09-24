@@ -39,6 +39,7 @@ import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.ts.findReferences.TargetURIKey;
+import org.eclipse.n4js.ts.ui.navigation.URIBasedStorageEditorInputFactory;
 import org.eclipse.n4js.ts.ui.search.BuiltinSchemeAwareTargetURIKey;
 import org.eclipse.n4js.ts.validation.TypesKeywordProvider;
 import org.eclipse.n4js.ui.building.FileSystemAccessWithoutTraceFileSupport;
@@ -153,6 +154,7 @@ import org.eclipse.xtext.ui.editor.hover.IEObjectHover;
 import org.eclipse.xtext.ui.editor.hover.IEObjectHoverProvider;
 import org.eclipse.xtext.ui.editor.hyperlinking.HyperlinkHelper;
 import org.eclipse.xtext.ui.editor.model.DocumentTokenSource;
+import org.eclipse.xtext.ui.editor.model.IResourceForEditorInputFactory;
 import org.eclipse.xtext.ui.editor.model.TerminalsTokenTypeToPartitionMapper;
 import org.eclipse.xtext.ui.editor.model.XtextDocument;
 import org.eclipse.xtext.ui.editor.model.XtextDocumentProvider;
@@ -427,6 +429,12 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	/** Delegate to shared injector */
 	public Provider<? extends IWorkspaceMarkerSupport> provideIWorkspaceMarkerSupport() {
 		return Access.contributedProvider(IWorkspaceMarkerSupport.class);
+	}
+
+	/** Bind {@link URIBasedStorageEditorInputFactory} to support hyperlinks to external library modules */
+	@Override
+	public Class<? extends IResourceForEditorInputFactory> bindIResourceForEditorInputFactory() {
+		return URIBasedStorageEditorInputFactory.class;
 	}
 
 	/**
