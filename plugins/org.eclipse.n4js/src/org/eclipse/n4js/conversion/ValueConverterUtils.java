@@ -150,7 +150,7 @@ public final class ValueConverterUtils {
 		char ch = str.charAt(off);
 		if (ch == 'u' || (allowStringEscSeq && ch == 'x')) {
 			offNew = unescapeUnicodeSequence(str, off, result);
-		} else if (allowStringEscSeq && ch >= '0' && ch <= '9') {
+		} else if (allowStringEscSeq && isOctalDigit(ch)) {
 			offNew = unescapeOctalSequence(str, off, result);
 		} else if (allowStringEscSeq) {
 			offNew = unescapeSimpleControlChar(str, off, result);
@@ -179,26 +179,26 @@ public final class ValueConverterUtils {
 
 		// decode code point, i.e. 2 or 4 or arbitrary number of hex digits (depending on mode)
 		int start = off + 1;
-		int end = start + (modeU ? 4 : 2);
-		int offNext = end;
+		int end, offNext;
 		if (modeU && start < len && str.charAt(start) == '{') {
+			// we have a sequence of the form "\\u{ddd}", allowing an arbitrary number of hex digits
 			start++;
 			end = str.indexOf('}', start);
 			if (end - start <= 0) {
-				// empty sequence (i.e. "\\u{}") or closing '}' not found
+				// empty sequence (i.e. "\\u{}"), or closing '}' not found
 				result.errorAt(off);
 				return off;
 			}
-			offNext = end + 1;
-		}
-		if (end > len) {
-			result.errorAt(off);
-			return off;
+			offNext = end + 1; // +1 to skip the closing '}'
+		} else {
+			// we have a sequence with a fixed number of hex digits (2 or 4, depending on mode)
+			end = start + (modeU ? 4 : 2);
+			offNext = end;
 		}
 		int codePoint;
 		try {
 			codePoint = Integer.parseInt(str.substring(start, end), 16);
-		} catch (NumberFormatException e) {
+		} catch (IndexOutOfBoundsException | NumberFormatException e) {
 			result.errorAt(off);
 			return off;
 		}
@@ -214,69 +214,48 @@ public final class ValueConverterUtils {
 	}
 
 	/**
-	 * 'off' should point to the control character, i.e. the character <em>following</em> the backslash. Returns the
-	 * updated offset.
+	 * 'off' should point to the control character, in this case the first {@link #isOctalDigit(char) octal digit}
+	 * following the backslash. Returns the updated offset.
 	 */
 	private static int unescapeOctalSequence(String str, int off, StringConverterResult result) {
 		int len = str.length();
 
-		char ch = str.charAt(off++);
-		switch (ch) {
-		case '1':
-		case '2':
-		case '3':
+		int maxDigits = 2;
+		char firstChar = str.charAt(off);
+		if (firstChar != '0') {
 			result.warningAt(off);
-			//$FALL-THROUGH$
-		case '0': {
-			if (off < len) {
-				char next = str.charAt(off);
-				char value = (char) (ch - '0');
-				if (next >= '0' && next <= '7') {
-					value = (char) (value * 8 + (next - '0'));
-					off++;
-					if (off < len) {
-						next = str.charAt(off);
-						if (next >= '0' && next <= '7') {
-							off++;
-							value = (char) (value * 8 + (next - '0'));
-						}
-					}
-					result.append(value, off);
-					break;
-				}
-			}
-			ch = (char) (ch - '0');
-			result.append(ch, off);
-			break;
 		}
-		case '4':
-		case '5':
-		case '6':
-		case '7': {
-			result.warningAt(off);
-			if (off < len) {
-				char next = str.charAt(off);
-				char value = (char) (ch - '0');
-				if (next >= '0' && next <= '7') {
-					value = (char) (value * 8 + (next - '0'));
-					off++;
-					result.append(value, off);
-					break;
-				}
-			}
-			ch = (char) (ch - '0');
-			result.append(ch, off);
-			break;
-		}
-		case '8':
-		case '9': {
-			result.warningAt(off);
-			result.append(ch, off);
-			break;
-		}
+		if (firstChar >= '0' && firstChar <= '3') {
+			maxDigits++;
 		}
 
-		return off;
+		// decode code point, i.e. up to 'maxDigits' octal digits following the backslash
+		int start = off;
+		int end = off + 1;
+		while (end < len && end - start < maxDigits && isOctalDigit(str.charAt(end))) {
+			end++;
+		}
+		int codePoint;
+		try {
+			codePoint = Integer.parseInt(str.substring(start, end), 8);
+		} catch (NumberFormatException e) {
+			result.errorAt(off);
+			return off;
+		}
+
+		// append character
+		if (!Character.isValidCodePoint(codePoint)) {
+			result.errorAt(off);
+			return off;
+		} else {
+			result.appendCodePoint(codePoint, off);
+		}
+
+		return end;
+	}
+
+	private static boolean isOctalDigit(char ch) {
+		return ch >= '0' && ch <= '7';
 	}
 
 	/**
