@@ -140,8 +140,9 @@ public final class ValueConverterUtils {
 	}
 
 	/**
-	 * 'off' should point to the control character, i.e. the character <em>following</em> the backslash. Returns the
-	 * updated offset.
+	 * @param off
+	 *            should point to the control character, i.e. the character <em>following</em> the backslash.
+	 * @return the updated offset.
 	 */
 	private static int unescape(String str, int off, boolean allowStringEscSeq, boolean keepBackSlashForUnknownEscSeq,
 			StringConverterResult result) {
@@ -170,7 +171,9 @@ public final class ValueConverterUtils {
 	}
 
 	/**
-	 * 'off' should point to the control character, in this case either 'u' or 'x'. Returns the updated offset.
+	 * @param off
+	 *            should point to the control character, in this case either 'u' or 'x'.
+	 * @return the updated offset.
 	 */
 	private static int unescapeUnicodeSequence(String str, int off, StringConverterResult result) {
 
@@ -214,8 +217,10 @@ public final class ValueConverterUtils {
 	}
 
 	/**
-	 * 'off' should point to the control character, in this case the first {@link #isOctalDigit(char) octal digit}
-	 * following the backslash. Returns the updated offset.
+	 * @param off
+	 *            should point to the control character, in this case the first {@link #isOctalDigit(char) octal digit}
+	 *            following the backslash.
+	 * @return the updated offset.
 	 */
 	private static int unescapeOctalSequence(String str, int off, StringConverterResult result) {
 		int len = str.length();
@@ -262,8 +267,9 @@ public final class ValueConverterUtils {
 	}
 
 	/**
-	 * 'off' should point to the control character, i.e. the character <em>following</em> the backslash. Returns the
-	 * updated offset.
+	 * @param off
+	 *            should point to the control character, i.e. the character <em>following</em> the backslash.
+	 * @return the updated offset.
 	 */
 	private static int unescapeSimpleControlChar(String str, int off, StringConverterResult result) {
 		char ch = str.charAt(off++);
