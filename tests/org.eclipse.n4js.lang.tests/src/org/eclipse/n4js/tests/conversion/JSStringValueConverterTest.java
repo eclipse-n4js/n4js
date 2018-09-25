@@ -10,17 +10,15 @@
  */
 package org.eclipse.n4js.tests.conversion;
 
+import org.eclipse.n4js.conversion.AbstractN4JSStringValueConverter;
 import org.junit.Assert;
 import org.junit.Test;
 
-import org.eclipse.n4js.conversion.N4JSStringValueConverter;
-
 @SuppressWarnings("javadoc")
 public class JSStringValueConverterTest extends Assert {
-	private final N4JSStringValueConverter n4JSStringValueConverter = new N4JSStringValueConverter();
 
 	public void assertConversion(String expected, String input) {
-		String result = n4JSStringValueConverter.convertFromJSString(input, null, false);
+		String result = AbstractN4JSStringValueConverter.convertFromN4JSString(input, null, false);
 		assertEquals(expected, result);
 	}
 

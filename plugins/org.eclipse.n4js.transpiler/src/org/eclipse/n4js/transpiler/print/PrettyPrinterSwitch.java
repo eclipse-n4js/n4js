@@ -22,7 +22,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.conversion.N4JSStringValueConverter;
+import org.eclipse.n4js.conversion.ValueConverterUtils;
 import org.eclipse.n4js.n4JS.AdditiveExpression;
 import org.eclipse.n4js.n4JS.Annotation;
 import org.eclipse.n4js.n4JS.Argument;
@@ -153,11 +153,8 @@ import org.eclipse.xtext.EcoreUtil2;
 
 	private final SourceMapAwareAppendable out;
 
-	private final N4JSStringValueConverter stringConverter;
-
 	private PrettyPrinterSwitch(SourceMapAwareAppendable out) {
 		this.out = out;
-		this.stringConverter = new N4JSStringValueConverter();
 	}
 
 	@Override
@@ -1298,7 +1295,7 @@ import org.eclipse.xtext.EcoreUtil2;
 	}
 
 	private String quote(String txt) {
-		return '\'' + stringConverter.convertToJSString(txt, false) + '\'';
+		return '\'' + ValueConverterUtils.convertToEscapedString(txt, false) + '\'';
 	}
 
 	/**

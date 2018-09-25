@@ -23,13 +23,13 @@ import org.eclipse.n4js.conversion.IdentifierValueConverter;
 public class IdentifierValueConverterTest extends Assert {
 
 	public void assertConversion(String expected, String input) {
-		String result = IdentifierValueConverter.convertFromJSIdentifier(input, null);
+		String result = IdentifierValueConverter.convertFromN4JSIdentifier(input, null);
 		assertEquals(expected, result);
 	}
 
 	public void assertError(String expected, String input) {
 		try {
-			IdentifierValueConverter.convertFromJSIdentifier(input, null);
+			IdentifierValueConverter.convertFromN4JSIdentifier(input, null);
 			fail("expected exception");
 		} catch (ValueConverterWithValueException e) {
 			String result = (String) e.getValue();
@@ -39,7 +39,7 @@ public class IdentifierValueConverterTest extends Assert {
 
 	public void assertErrorNoResult(String input) {
 		try {
-			IdentifierValueConverter.convertFromJSIdentifier(input, null);
+			IdentifierValueConverter.convertFromN4JSIdentifier(input, null);
 			fail("expected exception");
 		} catch (ValueConverterWithValueException e) {
 			fail("expected plain value converter exception");
