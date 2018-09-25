@@ -47,7 +47,7 @@ import com.google.inject.Inject;
 /**
  * This test checks that hyperlinks to resources in the external libraries use file based {@link URI}s.
  */
-public class HyperlinkPluginTest extends AbstractBuilderParticipantTest {
+public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 
 	private static final String PROBANDS = "probands";
 	private static final String SUBFOLDER = "Hyperlink";
