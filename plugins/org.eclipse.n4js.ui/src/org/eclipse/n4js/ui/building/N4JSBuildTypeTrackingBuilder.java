@@ -65,6 +65,7 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 	@BuilderState
 	private IBuildLogger builderStateLogger;
 
+	@SuppressWarnings("unused")
 	private EclipseExternalIndexSynchronizer externalIndexSynchronizer;
 
 	private ExternalLibraryBuildScheduler externalLibraryBuildJobProvider;
@@ -269,7 +270,7 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 			throws CoreException,
 			OperationCanceledException {
 		try {
-			checkExternalLibraries();
+			// externalIndexSynchronizer.checkAndSetOutOfSyncMarkers(); // GH-1124: reconsider this
 			N4JSBuildTypeTracker.setBuildType(getProject(), type);
 			runMe.run(monitor);
 			getProject().touch(monitor);
@@ -359,7 +360,4 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 		return new BuildData(getProject().getName(), null, toBeBuilt, queuedBuildData, indexingOnly).isEmpty();
 	}
 
-	private void checkExternalLibraries() {
-		externalIndexSynchronizer.checkAndSetOutOfSyncMarkers();
-	}
 }
