@@ -150,7 +150,7 @@ public final class ValueConverterUtils {
 		char ch = str.charAt(off);
 		if (ch == 'u' || (allowStringEscSeq && ch == 'x')) {
 			offNew = unescapeUnicodeSequence(str, off, result);
-		} else if (allowStringEscSeq && isOctalDigit(ch)) {
+		} else if (allowStringEscSeq && ch >= '0' && ch <= '9') {
 			offNew = unescapeOctalSequence(str, off, result);
 		} else if (allowStringEscSeq) {
 			offNew = unescapeSimpleControlChar(str, off, result);
@@ -224,6 +224,9 @@ public final class ValueConverterUtils {
 		char firstChar = str.charAt(off);
 		if (firstChar != '0') {
 			result.warningAt(off);
+			if (firstChar >= '8' && firstChar <= '9') {
+				return off;
+			}
 		}
 		if (firstChar >= '0' && firstChar <= '3') {
 			maxDigits++;
