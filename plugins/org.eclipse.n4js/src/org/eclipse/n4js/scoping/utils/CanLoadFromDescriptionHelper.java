@@ -43,6 +43,13 @@ public class CanLoadFromDescriptionHelper {
 	@Inject
 	private IN4JSCore n4jsCore;
 
+	/**
+	 * Tells whether the load-from-source behavior is entirely deactivated.
+	 */
+	public boolean isLoadFromSourceDeactivated() {
+		return true; // deactivated as of IDE-3180
+	}
+
 	/*
 	 * This method is added to improve readability, e.g. if (canBeLoadedFromDescription(..)) vs if
 	 * (!mustBeLoadedFromSource(..)).
@@ -77,6 +84,10 @@ public class CanLoadFromDescriptionHelper {
 	 * @return true, if the resource must be loaded from source.
 	 */
 	public boolean mustLoadFromSource(URI resourceURI, ResourceSet resourceSet) {
+		if (isLoadFromSourceDeactivated()) {
+			return false;
+		}
+
 		// We do already know the resource. Nothing fancy to happen here.
 		Resource knownResource = resourceSet.getResource(resourceURI, false);
 		if (knownResource != null) {
