@@ -101,6 +101,8 @@ public final class ValueConverterUtils {
 	 * @param keepBackSlashForUnknownEscSeq
 	 *            if <code>true</code>, then the backslash will be copied over to the destination string in case of
 	 *            unknown escape sequences.
+	 * @param errorForUnknownEscSeq
+	 *            if <code>true</code>, then an error will be reported for unknown escape sequences.
 	 * @param validityChecker
 	 *            if non-<code>null</code>, validity of each character added to the destination string (after decoding
 	 *            escape sequences) will be checked with this predicate; otherwise no such validity checks will be
@@ -108,7 +110,8 @@ public final class ValueConverterUtils {
 	 * @return the unescaped string in form of a {@link StringConverterResult}, possibly including error information.
 	 */
 	public static StringConverterResult convertFromEscapedString(String sourceStr, boolean allowStringEscSeq,
-			boolean keepBackSlashForUnknownEscSeq, CharacterValidityChecker validityChecker) {
+			boolean keepBackSlashForUnknownEscSeq, boolean errorForUnknownEscSeq,
+			CharacterValidityChecker validityChecker) {
 		int len = sourceStr.length();
 		StringConverterResult result = new StringConverterResult(validityChecker, len);
 		int off = 0;
@@ -116,7 +119,8 @@ public final class ValueConverterUtils {
 			char ch = sourceStr.charAt(off++);
 			if (ch == '\\') {
 				if (off < len) {
-					off = unescape(sourceStr, off, allowStringEscSeq, keepBackSlashForUnknownEscSeq, result);
+					off = unescape(sourceStr, off, allowStringEscSeq, keepBackSlashForUnknownEscSeq,
+							errorForUnknownEscSeq, result);
 				} else {
 					// backslash at end of input string
 					result.errorAt(off);
@@ -145,7 +149,7 @@ public final class ValueConverterUtils {
 	 * @return the updated offset.
 	 */
 	private static int unescape(String str, int off, boolean allowStringEscSeq, boolean keepBackSlashForUnknownEscSeq,
-			StringConverterResult result) {
+			boolean errorForUnknownEscSeq, StringConverterResult result) {
 
 		int offNew;
 		char ch = str.charAt(off);
@@ -162,6 +166,9 @@ public final class ValueConverterUtils {
 		if (offNew == off) {
 			// offset unchanged => unknown/unhandled control character
 			offNew++; // consume 'ch'
+			if (errorForUnknownEscSeq) {
+				result.errorAt(off);
+			}
 			if (keepBackSlashForUnknownEscSeq) {
 				result.append('\\', off);
 			}

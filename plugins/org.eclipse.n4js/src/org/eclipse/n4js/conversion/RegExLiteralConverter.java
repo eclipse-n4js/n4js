@@ -138,7 +138,7 @@ public class RegExLiteralConverter extends AbstractValueConverter<String> {
 	}
 
 	private static String convertFromJS(String jsString, INode node) {
-		StringConverterResult result = ValueConverterUtils.convertFromEscapedString(jsString, false, true, null);
+		StringConverterResult result = ValueConverterUtils.convertFromEscapedString(jsString, false, true, false, null);
 		if (result.hasError()) {
 			throw new N4JSValueConverterWithValueException(
 					IssueCodes.getMessageForVCO_REGEX_ILLEGAL_ESCAP(jsString),

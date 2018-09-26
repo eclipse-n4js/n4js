@@ -58,7 +58,7 @@ public class IdentifierValueConverter extends IDValueConverter {
 			}
 			return true;
 		};
-		StringConverterResult result = ValueConverterUtils.convertFromEscapedString(jsString, false, false,
+		StringConverterResult result = ValueConverterUtils.convertFromEscapedString(jsString, false, false, true,
 				validityChecker);
 		if (result.hasError()) {
 			throw new N4JSValueConverterWithValueException(
