@@ -1,4 +1,4 @@
-////
+<!---
 Copyright (c) 2017 NumberFour AG.
 All rights reserved. This program and the accompanying materials
 are made available under the terms of the Eclipse Public License v1.0
@@ -7,11 +7,11 @@ http://www.eclipse.org/legal/epl-v10.html
 
 Contributors:
   NumberFour AG - Initial API and implementation
-////
+--->
 
-The mangelhaft IDE reporter reports test results to the N4JS IDE using its REST interface.
+N4JS Runtime Library for the V8 engine.
 
-For more information about N4JS, please refer to the official [project home](https://numberfour.github.io/n4js).
+For more information about N4JS, please refer to the official [project home](https://www.eclipse.org/n4js/).
 
 ## License
 
