@@ -67,14 +67,14 @@ else
 	export NPM_TOKEN=dummy	
 fi;
 
-echo "==== STEP 1/8: clean up (clean yarn cache, etc.)"
+echo "==== STEP 1/9: clean up (clean yarn cache, etc.)"
 yarn cache clean
 rm -rf node_modules
 
-echo "==== STEP 2/8: install dependencies and prepare npm task scripts"
+echo "==== STEP 2/9: install dependencies and prepare npm task scripts"
 yarn install
 
-echo "==== STEP 3/8: run lerna run build/test on n4js-libs"
+echo "==== STEP 3/9: run lerna run build/test on n4js-libs"
 export PATH=`pwd`/node_modules/.bin:${PATH}
 export N4_N4JSC_JAR="${REPO_ROOT_DIR}/tools/org.eclipse.n4js.hlc/target/n4jsc.jar"
 lerna run build
@@ -84,7 +84,7 @@ export NPM_CONFIG_GLOBALCONFIG="$N4JS_LIBS_ROOT"
 echo "Publishing using .npmrc configuration to ${NPM_REGISTRY}";
 
 if [ "${NPM_TAG}" = "latest" ]; then
-    echo "==== STEP 4/8: Checking whether publication of n4js-libs is required (using ${N4JS_LIBS_REPRESENTATIVE} as representative) ..."
+    echo "==== STEP 4/9: Checking whether publication of n4js-libs is required (using ${N4JS_LIBS_REPRESENTATIVE} as representative) ..."
 
     # Obtain the latest commit on npm registry, using the representative
     N4JS_LIBS_VERSION_PUBLIC=`curl -s ${NPM_REGISTRY}/${N4JS_LIBS_REPRESENTATIVE} | jq -r '.["dist-tags"].latest'`
@@ -110,28 +110,32 @@ if [ "${NPM_TAG}" = "latest" ]; then
 
     # update repository meta-info in package.json of all n4js-libs to point to the GitHub and the correct commit
     # (yarn isn't doing this at the moment: https://github.com/yarnpkg/yarn/issues/2978 )
-    echo "==== STEP 5/8: Updating property 'gitHead' in package.json of all n4js-libs to new local commit ID ..."
+    echo "==== STEP 5/9: Updating property 'gitHead' in package.json of all n4js-libs to new local commit ID ..."
     lerna exec -- cp package.json package.json_TEMP
     lerna exec -- 'jq -r ".gitHead |= \"'$N4JS_LIBS_COMMIT_ID_LOCAL'\"" package.json_TEMP > package.json'
-    lerna exec -- rm package.json_TEMP
-
-    # enforce consistent repository meta-info in package.json of all n4js-libs
-    echo "==== STEP 6/8: Setting property 'repository' in package.json of all n4js-libs (for consistency) ..."
-    lerna exec -- cp package.json package.json_TEMP
-    lerna exec -- 'jq -r ".repository |= {type: \"git\", url: \"https://github.com/eclipse/n4js/tree/master/n4js-libs/packages/$LERNA_PACKAGE_NAME\"}" package.json_TEMP > package.json'
     lerna exec -- rm package.json_TEMP
 
     PUBLISH_VERSION=`semver -i patch ${N4JS_LIBS_VERSION_PUBLIC}`
 else
     # Use a version that we are sure can not exist on public npm registry for testing
-    echo "==== Skipping steps 4-6 (because publishing only for testing purposes)"
+    echo "==== Skipping steps 4-5 (because publishing only for testing purposes)"
     PUBLISH_VERSION="9999.0.0"
 fi
 
-echo "==== STEP 7/8: Now publishing with version: ${PUBLISH_VERSION}"
+# enforce consistent repository meta-info in package.json of all n4js-libs
+echo "==== STEP 6/9: Setting property 'repository' in package.json of all n4js-libs (for consistency) ..."
+lerna exec -- cp package.json package.json_TEMP
+lerna exec -- 'jq -r ".repository |= {type: \"git\", url: \"https://github.com/eclipse/n4js/tree/master/n4js-libs/packages/$LERNA_PACKAGE_NAME\"}" package.json_TEMP > package.json'
+lerna exec -- rm package.json_TEMP
+
+echo "==== STEP 7/9: Appending version information to README.md files ..."
+export VERSION_INFO="\n\n## Version\n\nVersion ${PUBLISH_VERSION} of \${LERNA_PACKAGE_NAME} was built from commit [${N4JS_LIBS_COMMIT_ID_LOCAL}](https://github.com/eclipse/n4js/tree/${N4JS_LIBS_COMMIT_ID_LOCAL}/n4js-libs/packages/\${LERNA_PACKAGE_NAME}).\n\n"
+lerna exec -- 'printf "'${VERSION_INFO}'" >> README.md'
+
+echo "==== STEP 8/9: Now publishing with version: ${PUBLISH_VERSION}"
 lerna publish --loglevel info --skip-git --registry="${NPM_REGISTRY}" --repo-version="${PUBLISH_VERSION}" --exact --yes --bail --npm-tag="${NPM_TAG}"
 
-echo "==== STEP 8/8: Remove node_modules after publishing"
+echo "==== STEP 9/9: Remove node_modules after publishing"
 lerna exec -- rm -rf node_modules
 rm -rf node_modules
 
