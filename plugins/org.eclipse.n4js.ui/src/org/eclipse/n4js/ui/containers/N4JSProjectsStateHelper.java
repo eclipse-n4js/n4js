@@ -133,7 +133,6 @@ public class N4JSProjectsStateHelper extends AbstractStorage2UriMapperClient {
 			}
 		}
 		return uris;
-
 	}
 
 	public void clearProjectCache() {
