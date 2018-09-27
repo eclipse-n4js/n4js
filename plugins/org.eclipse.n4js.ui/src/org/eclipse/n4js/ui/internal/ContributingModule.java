@@ -44,6 +44,7 @@ import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.ts.validation.TypesKeywordProvider;
 import org.eclipse.n4js.ui.containers.CompositeStorage2UriMapperContribution;
 import org.eclipse.n4js.ui.containers.N4JSExternalLibraryStorage2UriMapperContribution;
+import org.eclipse.n4js.ui.containers.N4JSProjectsStateHelper;
 import org.eclipse.n4js.ui.containers.N4JSToBeBuiltComputer;
 import org.eclipse.n4js.ui.external.BuildOrderComputer;
 import org.eclipse.n4js.ui.external.EclipseExternalIndexSynchronizer;
@@ -139,6 +140,7 @@ public class ContributingModule implements Module {
 		binder.bind(N4JSEclipseModel.class);
 		binder.bind(MarkerCreator.class);
 		binder.bind(WildcardPathFilterHelper.class);
+		binder.bind(N4JSProjectsStateHelper.class);
 		binder.bind(MultiCleartriggerCache.class);
 
 		binder.bind(ExternalLibraryWorkspace.class).to(EclipseExternalLibraryWorkspace.class);

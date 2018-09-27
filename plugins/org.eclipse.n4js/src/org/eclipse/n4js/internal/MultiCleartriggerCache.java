@@ -17,6 +17,8 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.compare.ApiImplMapping;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.xtext.util.IResourceScopeCache;
 
 import com.google.common.collect.HashMultimap;
@@ -29,6 +31,13 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class MultiCleartriggerCache {
+	/** Key caching {@link ProjectDescription}s */
+	public static final String CACHE_KEY_PROJECT_DESCRIPTIONS = "CACHE_KEY_PROJECT_DESCRIPTIONS";
+	/** Key caching sorted set of dependencies */
+	public static final String CACHE_KEY_SORTED_DEPENDENCIES = "CACHE_KEY_SORTED_DEPENDENCIES";
+	/** Key caching {@link ApiImplMapping}s */
+	public static final String CACHE_KEY_API_IMPL_MAPPING = "CACHE_KEY_API_IMPL_MAPPING";
+
 	private final Map<String, Map<URI, Object>> entryCache = new HashMap<>();
 	private final Map<String, Multimap<URI, URI>> triggerCache = new HashMap<>();
 
@@ -79,7 +88,9 @@ public class MultiCleartriggerCache {
 				CleartriggerSupplier<Entry> ratProvider = (CleartriggerSupplier<Entry>) supplier;
 				Multimap<URI, URI> triggerMap = triggerCache.get(key);
 				for (URI trigger : ratProvider.getCleartriggers()) {
-					triggerMap.put(trigger, reference);
+					if (!reference.equals(trigger)) {
+						triggerMap.put(trigger, reference);
+					}
 				}
 
 				ratProvider.postSupply();

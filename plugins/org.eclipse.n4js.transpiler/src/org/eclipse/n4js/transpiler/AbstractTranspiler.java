@@ -16,6 +16,9 @@ import java.nio.file.Path;
 import org.eclipse.n4js.generator.GeneratorOption;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.smith.ClosableMeasurement;
+import org.eclipse.n4js.smith.DataCollector;
+import org.eclipse.n4js.smith.DataCollectors;
 import org.eclipse.n4js.transpiler.print.PrettyPrinter;
 import org.eclipse.n4js.transpiler.utils.TranspilerDebugUtils;
 import org.eclipse.n4js.ts.types.TModule;
@@ -48,6 +51,19 @@ public abstract class AbstractTranspiler {
 	private static final boolean DEBUG_DRAW_STATE = false;
 	private static final boolean DEBUG_PERFORM_ASSERTIONS = true;
 	private static final boolean DEBUG_PERFORM_VALIDATIONS = true;
+
+	@SuppressWarnings("unused")
+	static private final DataCollector dcBuild = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Build");
+	@SuppressWarnings("unused")
+	static private final DataCollector dcTranspilation = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Transpilation", "Build");
+	static private final DataCollector dcT1 = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("T1", "Build", "Transpilation");
+	static private final DataCollector dcT2 = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("T2", "Build", "Transpilation");
+	static private final DataCollector dcT3 = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("T3", "Build", "Transpilation");
 
 	@Inject
 	private PreparationStep preparationStep;
@@ -191,39 +207,60 @@ public abstract class AbstractTranspiler {
 			}
 
 			// step 1: ask transformation manager for transformations to execute
-			final Transformation[] transformationsPreFiler = computeTransformationsToBeExecuted(state);
-			final Transformation[] transformations = TransformationDependency
-					.filterByTranspilerOptions(transformationsPreFiler, state.options);
-			TransformationDependency.assertDependencies(transformations);
+			Transformation[] transformationsPreFiler = null;
+			Transformation[] transformations = null;
+			try (ClosableMeasurement m = dcT1.getClosableMeasurement("T1");) {
+				transformationsPreFiler = computeTransformationsToBeExecuted(state);
+				transformations = TransformationDependency
+						.filterByTranspilerOptions(transformationsPreFiler, state.options);
+				TransformationDependency.assertDependencies(transformations);
+			}
 
 			// step 2: give each transformation a chance to perform early analysis on the initial (unchanged!) state
-			for (Transformation currT : transformations) {
-				currT.analyze();
+			try (ClosableMeasurement m = dcT2.getClosableMeasurement("T2");) {
+				for (Transformation currT : transformations) {
+					String name = "T2_" + currT.getClass().getSimpleName();
+					DataCollector dcT2_ct = DataCollectors.INSTANCE
+							.getOrCreateDataCollector(name, "Build", "Transpilation", "T2");
+
+					try (ClosableMeasurement m2 = dcT2_ct.getClosableMeasurement(name);) {
+						currT.analyze();
+					}
+				}
 			}
 
 			// step 3: actually perform the transformations (in the order defined by transformation manager)
-			for (Transformation currT : transformations) {
+			try (ClosableMeasurement m = dcT3.getClosableMeasurement("T3");) {
+				for (Transformation currT : transformations) {
+					String name = "T3_" + currT.getClass().getSimpleName();
+					DataCollector dcT3_ct = DataCollectors.INSTANCE
+							.getOrCreateDataCollector(name, "Build", "Transpilation", "T3");
 
-				if (DEBUG_DUMP_STATE) {
-					System.out.println("============================== PRE " + currT.getClass().getSimpleName());
-					TranspilerDebugUtils.dump(state);
-				}
-				if (DEBUG_DRAW_STATE) {
-					TranspilerDebugUtils.dumpGraph(state, "PRE " + currT.getClass().getSimpleName());
-				}
+					try (ClosableMeasurement m2 = dcT3_ct.getClosableMeasurement(name);) {
 
-				if (DEBUG_PERFORM_ASSERTIONS) {
-					currT.assertPreConditions();
-				}
+						if (DEBUG_DUMP_STATE) {
+							System.out
+									.println("============================== PRE " + currT.getClass().getSimpleName());
+							TranspilerDebugUtils.dump(state);
+						}
+						if (DEBUG_DRAW_STATE) {
+							TranspilerDebugUtils.dumpGraph(state, "PRE " + currT.getClass().getSimpleName());
+						}
 
-				currT.transform();
+						if (DEBUG_PERFORM_ASSERTIONS) {
+							currT.assertPreConditions();
+						}
 
-				if (DEBUG_PERFORM_ASSERTIONS) {
-					currT.assertPostConditions();
-				}
+						currT.transform();
 
-				if (DEBUG_PERFORM_VALIDATIONS) {
-					transpilerDebugUtils.validateState(state, true);
+						if (DEBUG_PERFORM_ASSERTIONS) {
+							currT.assertPostConditions();
+						}
+
+						if (DEBUG_PERFORM_VALIDATIONS) {
+							transpilerDebugUtils.validateState(state, true);
+						}
+					}
 				}
 			}
 
