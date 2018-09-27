@@ -127,7 +127,7 @@ RUN apt-get update && \
 
 #
 # docker install
-# 
+#
 RUN apt-get update && \ 
   apt-get install -y --no-install-recommends \
      apt-transport-https \
@@ -135,7 +135,13 @@ RUN apt-get update && \
      curl \
      gnupg2 \
      software-properties-common
-     
+
+#
+# jq install
+#
+RUN apt-get update && \
+  apt-get install -y jq
+
 
 RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
 
