@@ -80,29 +80,6 @@ public class ClearCacheOnCleanPluginUITest extends AbstractBuilderParticipantTes
 	}
 
 	/**
-	 * Tests if the {@link MultiCleartriggerCache} is NOT cleared between two full builds.
-	 */
-	@Test
-	public void testNoClearOnSucceedingBuilds() throws CoreException {
-		File prjDir = new File(getResourceUri(PROBANDS, SUBFOLDER));
-		IProject project = ProjectTestsUtils.importProject(prjDir, PROJECT_NAME);
-		IResource resourceABC = project.findMember("src/ABC.n4js");
-		IFile fileABC = ResourcesPlugin.getWorkspace().getRoot().getFile(resourceABC.getFullPath());
-		assertTrue(fileABC.exists());
-		IResourcesSetupUtil.fullBuild();
-		waitForAutoBuild();
-
-		SupplierWithPostAction testSupplier = new SupplierWithPostAction();
-		assertTrue(testSupplier.postActionTriggerCount == 0);
-		cache.get(testSupplier, "test-key");
-		assertTrue(testSupplier.postActionTriggerCount == 1);
-
-		IResourcesSetupUtil.fullBuild();
-		waitForAutoBuild();
-		assertTrue(testSupplier.postActionTriggerCount == 1);
-	}
-
-	/**
 	 * Tests if the {@link MultiCleartriggerCache} is cleared when a 'Clean Build' is triggered.
 	 */
 	@Test
