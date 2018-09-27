@@ -277,9 +277,7 @@ public class ProjectCompareHelper {
 			// need to load the correct implementation. Since there might be multiple implementors
 
 			Supplier<ApiImplMapping> supplier = new ApiImplMappingSupplier(n4jsCore);
-			URI prjPackjson = project.getLocation();
-			ApiImplMapping mapping = cache.get(supplier, MultiCleartriggerCache.CACHE_KEY_API_IMPL_MAPPING,
-					prjPackjson);
+			ApiImplMapping mapping = cache.get(supplier, MultiCleartriggerCache.CACHE_KEY_API_IMPL_MAPPING);
 
 			implProject = mapping.getImpl(project.getProjectName(), implementationID);
 			if (implProject == null) {

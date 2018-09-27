@@ -152,6 +152,6 @@ public class N4JSProjectsStateHelper extends AbstractStorage2UriMapperClient {
 		LOGGER.info("Clearing cache for " + project.getProject().getName() + ".");
 		cache.clear(MultiCleartriggerCache.CACHE_KEY_PROJECT_DESCRIPTIONS, URIUtils.convert(project));
 		cache.clear(MultiCleartriggerCache.CACHE_KEY_SORTED_DEPENDENCIES, URIUtils.convert(project));
-		cache.clear(MultiCleartriggerCache.CACHE_KEY_API_IMPL_MAPPING, URIUtils.convert(project));
+		cache.clear(MultiCleartriggerCache.CACHE_KEY_API_IMPL_MAPPING);
 	}
 }

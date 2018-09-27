@@ -38,6 +38,9 @@ public class MultiCleartriggerCache {
 	/** Key caching {@link ApiImplMapping}s */
 	public static final String CACHE_KEY_API_IMPL_MAPPING = "CACHE_KEY_API_IMPL_MAPPING";
 
+	/** Unique {@link URI} when there is only one data entry for a given key */
+	private static final URI GLOBAL = URI.createURI("n4js://global");
+
 	private final Map<String, Map<URI, Object>> entryCache = new HashMap<>();
 	private final Map<String, Multimap<URI, URI>> triggerCache = new HashMap<>();
 
@@ -55,6 +58,19 @@ public class MultiCleartriggerCache {
 		default public void postSupply() {
 			// please implement
 		}
+	}
+
+	/**
+	 * Like {@link #get(Supplier, String, URI)}, but can only save one entry for a given key.
+	 *
+	 * @param supplier
+	 *            to compute the result and to compute other clear-triggers
+	 * @param key
+	 *            to select a specific kind of values on a given URI
+	 * @return cached result of the the given provider.
+	 */
+	public <Entry> Entry get(Supplier<Entry> supplier, String key) {
+		return get(supplier, key, GLOBAL);
 	}
 
 	/**
