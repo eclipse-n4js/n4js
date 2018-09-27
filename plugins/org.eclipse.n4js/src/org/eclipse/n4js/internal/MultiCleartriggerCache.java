@@ -32,11 +32,11 @@ import com.google.inject.Singleton;
 @Singleton
 public class MultiCleartriggerCache {
 	/** Key caching {@link ProjectDescription}s */
-	public static final String CACHE_KEY_PROJECT_DESCRIPTIONS = "CACHE_KEY_PROJECT_DESCRIPTIONS";
+	public static final String CACHE_KEY_PROJECT_DESCRIPTIONS = "PROJECT_DESCRIPTIONS";
 	/** Key caching sorted set of dependencies */
-	public static final String CACHE_KEY_SORTED_DEPENDENCIES = "CACHE_KEY_SORTED_DEPENDENCIES";
+	public static final String CACHE_KEY_SORTED_DEPENDENCIES = "SORTED_DEPENDENCIES";
 	/** Key caching {@link ApiImplMapping}s */
-	public static final String CACHE_KEY_API_IMPL_MAPPING = "CACHE_KEY_API_IMPL_MAPPING";
+	public static final String CACHE_KEY_API_IMPL_MAPPING = "API_IMPL_MAPPING";
 
 	/** Unique {@link URI} when there is only one data entry for a given key */
 	private static final URI GLOBAL = URI.createURI("n4js://global");
