@@ -149,6 +149,7 @@ public class ClearCacheOnCleanPluginUITest extends AbstractBuilderParticipantTes
 		IWorkbenchPage page = EclipseUIUtils.getActivePage();
 		XtextEditor editor = openAndGetXtextEditor(filePJ, page);
 		editor.doSave(new NullProgressMonitor());
+		waitForAutoBuild();
 		test = cache.get(testSupplier, MultiCleartriggerCache.CACHE_KEY_API_IMPL_MAPPING);
 		assertTrue(test instanceof ApiImplMapping);
 	}
