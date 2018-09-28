@@ -11,12 +11,14 @@
 package org.eclipse.n4js.tests.parser.templates
 
 import org.eclipse.n4js.n4JS.ExpressionStatement
+import org.eclipse.n4js.n4JS.StringLiteral
+import org.eclipse.n4js.n4JS.TaggedTemplateString
 import org.eclipse.n4js.n4JS.TemplateLiteral
 import org.eclipse.n4js.n4JS.TemplateSegment
 import org.eclipse.n4js.tests.parser.AbstractParserTest
-import org.junit.Test
-import org.eclipse.n4js.n4JS.TaggedTemplateString
+import org.eclipse.xtext.diagnostics.AbstractDiagnostic
 import org.eclipse.xtext.resource.XtextSyntaxDiagnostic
+import org.junit.Test
 
 class ParserTest extends AbstractParserTest {
 
@@ -293,4 +295,48 @@ class ParserTest extends AbstractParserTest {
 		assertEquals('', segment.rawValue)
 	}
 
+	@Test
+	def void testOctalEscapeSequenceInStringLiteral_plainJS_nonStrict() {
+		// this is the only case in which octal escape sequences are allowed:
+		val script = '"hello\\101world"'.parseJSSuccessfully
+		val statement = script.scriptElements.head as ExpressionStatement
+		val literal = statement.expression as StringLiteral
+		assertEquals('helloAworld', literal.value);
+	}
+
+	@Test
+	def void testOctalEscapeSequenceInStringLiteral_plainJS_strict() {
+		val script = '"use strict"; "hello\\101world"'.parseJSWithError
+		val errors = script.eResource.errors
+		assertEquals(1, errors.size)
+		val error =  errors.head as AbstractDiagnostic
+		assertEquals('octal literals and octal escape sequences are not allowed in strict mode.', error.message)
+		assertEquals(16, error.length)
+		assertEquals(1, error.line)
+		assertEquals(14, error.offset)
+	}
+
+	@Test
+	def void testOctalEscapeSequenceInStringLiteral_n4js() {
+		val script = '"hello\\101world"'.parseN4jsWithError
+		val errors = script.eResource.errors
+		assertEquals(1, errors.size)
+		val error =  errors.head as AbstractDiagnostic
+		assertEquals('octal literals and octal escape sequences are not allowed in strict mode.', error.message)
+		assertEquals(16, error.length)
+		assertEquals(1, error.line)
+		assertEquals(0, error.offset)
+	}
+
+	@Test
+	def void testOctalEscapeSequenceInTemplateLiteral() {
+		val script = '`hello\\101world`'.parseN4jsWithError
+		val errors = script.eResource.errors
+		assertEquals(1, errors.size)
+		val error =  errors.head as AbstractDiagnostic
+		assertEquals('octal literals and octal escape sequences are not allowed in strict mode.', error.message)
+		assertEquals(16, error.length)
+		assertEquals(1, error.line)
+		assertEquals(0, error.offset)
+	}
 }
