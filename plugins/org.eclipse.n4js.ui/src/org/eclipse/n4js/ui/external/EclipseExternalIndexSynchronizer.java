@@ -19,8 +19,6 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.URI;
@@ -28,15 +26,13 @@ import org.eclipse.n4js.external.ExternalIndexSynchronizer;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace.RegisterResult;
 import org.eclipse.n4js.external.LibraryChange;
+import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.external.NpmLogger;
-import org.eclipse.n4js.generator.IWorkspaceMarkerSupport;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.resources.ExternalProject;
-import org.eclipse.n4js.validation.IssueCodes;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -59,9 +55,6 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 
 	@Inject
 	private NpmLogger logger;
-
-	@Inject
-	private IWorkspaceMarkerSupport workspaceMarkerSupport;
 
 	/**
 	 * Call this method to synchronize the information in the Xtext index with all external projects in the external
@@ -89,13 +82,8 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 
 			synchronizeIndex(subMonitor, changeSet, cleanResults);
 
-			// clean error markers 'out-of-sync'
-			cleanOutOfSyncMarkers();
-
-		} catch (Throwable t) {
-			checkAndSetOutOfSyncMarkers();
-			throw t;
 		} finally {
+			checkAndClearIndex(monitor);
 			subMonitor.done();
 		}
 	}
@@ -183,13 +171,8 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 			toBeScheduled.addAll(buildResult.affectedWorkspaceProjects);
 			externalLibraryWorkspace.scheduleWorkspaceProjects(subMonitor, toBeScheduled);
 
-			// clean error markers 'out-of-sync'
-			cleanOutOfSyncMarkers();
-
-		} catch (Throwable t) {
-			checkAndSetOutOfSyncMarkers();
-			throw t;
 		} finally {
+			checkAndClearIndex(monitor);
 			monitor.done();
 		}
 	}
@@ -280,43 +263,23 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 	}
 
 	/** Sets error markers to every N4JS project iff the folder node_modules and the N4JS index are out of sync. */
-	public void checkAndSetOutOfSyncMarkers() {
+	public void checkAndClearIndex(IProgressMonitor monitor) {
 		Collection<LibraryChange> changeSet = identifyChangeSet(Collections.emptyList());
-		setOutOfSyncMarkers(changeSet);
+		cleanRemovedProjectsFromIndex(monitor, changeSet);
 	}
 
-	private void cleanOutOfSyncMarkers() {
-		setOutOfSyncMarkers(Collections.emptySet());
-	}
-
-	private void setOutOfSyncMarkers(Collection<LibraryChange> changeSet) {
-		String code = IssueCodes.NODE_MODULES_OUT_OF_SYNC;
-		boolean setMarkers = !changeSet.isEmpty();
-		String changeMsg = "";
-		for (java.util.Iterator<LibraryChange> it = changeSet.iterator(); it.hasNext();) {
-			changeMsg += it.next();
-			if (it.hasNext()) {
-				changeMsg += ", ";
+	private void cleanRemovedProjectsFromIndex(IProgressMonitor monitor, Collection<LibraryChange> changeSet) {
+		monitor.setTaskName("Deregister removed projects...");
+		Set<URI> cleanProjects = new HashSet<>();
+		for (LibraryChange libChange : changeSet) {
+			if (libChange.type == LibraryChangeType.Removed) {
+				cleanProjects.add(libChange.location);
 			}
 		}
 
-		for (IN4JSProject prj : core.findAllProjects()) {
-			if (!prj.isExternal() && prj.exists() && prj instanceof N4JSEclipseProject) {
-				N4JSEclipseProject n4EclPrj = (N4JSEclipseProject) prj;
-				IProject iProject = n4EclPrj.getProject();
-				IResource markerResource = iProject;
-
-				// delete markers
-				workspaceMarkerSupport.deleteMarkers(markerResource, code);
-
-				// add markers
-				if (setMarkers && !iProject.isHidden() && iProject.isAccessible()) {
-					String msg = IssueCodes.getMessageForNODE_MODULES_OUT_OF_SYNC(changeMsg);
-					String uriKey = markerResource.getLocation().toString();
-					workspaceMarkerSupport.createError(markerResource, code, "N4JS Index", msg, uriKey, true);
-				}
-			}
-		}
+		RegisterResult cleanResult = externalLibraryWorkspace.deregisterProjects(monitor, cleanProjects);
+		externalErrorMarkerManager.clearAllMarkers();
+		printRegisterResults(cleanResult, "deregistered");
 	}
 
 }
