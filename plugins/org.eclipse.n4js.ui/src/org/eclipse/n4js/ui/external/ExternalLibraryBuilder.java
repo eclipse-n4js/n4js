@@ -50,8 +50,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.n4js.external.N4JSExternalProject;
-import org.eclipse.n4js.internal.MultiCleartriggerCache;
-import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.internal.RaceDetectionHelper;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
@@ -61,6 +59,7 @@ import org.eclipse.n4js.smith.DataCollectors;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.ui.building.BuildDataWithRequestRebuild;
 import org.eclipse.n4js.ui.building.BuildManagerAccess;
+import org.eclipse.n4js.ui.containers.N4JSProjectsStateHelper;
 import org.eclipse.n4js.ui.external.ComputeProjectOrder.VertexOrder;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildQueue.Task;
 import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
@@ -118,7 +117,7 @@ public class ExternalLibraryBuilder {
 	private ExternalLibraryErrorMarkerManager errorMarkerManager;
 
 	@Inject
-	private MultiCleartriggerCache cache;
+	private N4JSProjectsStateHelper projectsStateHelper;
 
 	private IToBeBuiltComputerContribution contribution;
 
@@ -308,7 +307,6 @@ public class ExternalLibraryBuilder {
 			Job.getJobManager().beginRule(rule, monitor);
 
 			errorMarkerManager.clearMarkers(projects);
-			cache.clear(N4JSModel.SORTED_DEPENDENCIES);
 
 			VertexOrder<IN4JSProject> buildOrder = builtOrderComputer.getBuildOrder(projects);
 			// wrap as Arrays.asList returns immutable list
@@ -316,6 +314,7 @@ public class ExternalLibraryBuilder {
 			if (BuildOperation.CLEAN.equals(operation)) {
 				// use wipe to remove the resource descriptions of the given projects from index
 				wipeProjectFromIndex(SubMonitor.convert(monitor, 1), Arrays.asList(projects));
+				projectsStateHelper.clearProjectCache();
 				// clean in reverse order
 				Collections.reverse(buildOrderList);
 			}
@@ -462,6 +461,7 @@ public class ExternalLibraryBuilder {
 			@Override
 			protected ToBeBuilt getToBeBuilt(ToBeBuiltComputer computer, N4JSEclipseProject n4Project,
 					IProgressMonitor monitor, IToBeBuiltComputerContribution contribution) {
+
 				return computer.removeProject(n4Project.getProject(), monitor);
 			}
 

@@ -45,6 +45,7 @@ import org.eclipse.n4js.ts.validation.TypesKeywordProvider;
 import org.eclipse.n4js.ui.building.FileSystemAccessWithoutTraceFileSupport;
 import org.eclipse.n4js.ui.building.N4JSBuilderParticipant;
 import org.eclipse.n4js.ui.containers.N4JSAllContainersStateProvider;
+import org.eclipse.n4js.ui.containers.N4JSProjectsStateHelper;
 import org.eclipse.n4js.ui.contentassist.ContentAssistContextFactory;
 import org.eclipse.n4js.ui.contentassist.ContentAssistantFactory;
 import org.eclipse.n4js.ui.contentassist.CustomN4JSParser;
@@ -234,6 +235,11 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	/** Delegate to shared injector */
 	public Provider<ExternalIndexSynchronizer> provideExternalIndexSynchronizer() {
 		return Access.contributedProvider(ExternalIndexSynchronizer.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<N4JSProjectsStateHelper> provideN4JSProjectsStateHelper() {
+		return Access.contributedProvider(N4JSProjectsStateHelper.class);
 	}
 
 	/** Delegate to shared injector */

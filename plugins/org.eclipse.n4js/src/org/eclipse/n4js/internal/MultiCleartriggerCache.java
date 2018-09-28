@@ -17,6 +17,8 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.compare.ApiImplMapping;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.xtext.util.IResourceScopeCache;
 
 import com.google.common.collect.HashMultimap;
@@ -29,6 +31,16 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class MultiCleartriggerCache {
+	/** Key caching {@link ProjectDescription}s */
+	public static final String CACHE_KEY_PROJECT_DESCRIPTIONS = "PROJECT_DESCRIPTIONS";
+	/** Key caching sorted set of dependencies */
+	public static final String CACHE_KEY_SORTED_DEPENDENCIES = "SORTED_DEPENDENCIES";
+	/** Key caching {@link ApiImplMapping}s */
+	public static final String CACHE_KEY_API_IMPL_MAPPING = "API_IMPL_MAPPING";
+
+	/** Unique {@link URI} when there is only one data entry for a given key */
+	private static final URI GLOBAL = URI.createURI("n4js://global");
+
 	private final Map<String, Map<URI, Object>> entryCache = new HashMap<>();
 	private final Map<String, Multimap<URI, URI>> triggerCache = new HashMap<>();
 
@@ -46,6 +58,19 @@ public class MultiCleartriggerCache {
 		default public void postSupply() {
 			// please implement
 		}
+	}
+
+	/**
+	 * Like {@link #get(Supplier, String, URI)}, but can only save one entry for a given key.
+	 *
+	 * @param supplier
+	 *            to compute the result and to compute other clear-triggers
+	 * @param key
+	 *            to select a specific kind of values on a given URI
+	 * @return cached result of the the given provider.
+	 */
+	public <Entry> Entry get(Supplier<Entry> supplier, String key) {
+		return get(supplier, key, GLOBAL);
 	}
 
 	/**
@@ -79,7 +104,9 @@ public class MultiCleartriggerCache {
 				CleartriggerSupplier<Entry> ratProvider = (CleartriggerSupplier<Entry>) supplier;
 				Multimap<URI, URI> triggerMap = triggerCache.get(key);
 				for (URI trigger : ratProvider.getCleartriggers()) {
-					triggerMap.put(trigger, reference);
+					if (!reference.equals(trigger)) {
+						triggerMap.put(trigger, reference);
+					}
 				}
 
 				ratProvider.postSupply();
@@ -88,6 +115,12 @@ public class MultiCleartriggerCache {
 		@SuppressWarnings("unchecked")
 		Entry entry = (Entry) entryMap.get(reference);
 		return entry;
+	}
+
+	/** Removes all cached values */
+	public void clear() {
+		entryCache.clear();
+		triggerCache.clear();
 	}
 
 	/** Removes all cached values for a given key */

@@ -45,9 +45,6 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
-	/** Key for {@link MultiCleartriggerCache} */
-	public static final String PROJECT_DESCRIPTIONS = "projectDescriptions";
-
 	private final IWorkspaceRoot workspace;
 
 	private final ProjectDescriptionLoader projectDescriptionLoader;
@@ -100,7 +97,8 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 			return null;
 		}
 		ProjectDescriptionLoaderAndNotifier supplier = new ProjectDescriptionLoaderAndNotifier(location);
-		ProjectDescription existing = cache.get(supplier, PROJECT_DESCRIPTIONS, location);
+		ProjectDescription existing = cache.get(supplier, MultiCleartriggerCache.CACHE_KEY_PROJECT_DESCRIPTIONS,
+				location);
 
 		return existing;
 	}
