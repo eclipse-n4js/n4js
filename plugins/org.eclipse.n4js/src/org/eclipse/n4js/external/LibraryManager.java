@@ -260,7 +260,7 @@ public class LibraryManager {
 			msg += entry.getKey(); // packageName
 
 			NPMVersionRequirement versionRequirement = entry.getValue();
-			if (versionRequirement != null && SemverUtils.isEmptyVersionRequirement(versionRequirement)) {
+			if (versionRequirement != null && !SemverUtils.isEmptyVersionRequirement(versionRequirement)) {
 				msg += "@" + versionRequirement;
 			}
 
