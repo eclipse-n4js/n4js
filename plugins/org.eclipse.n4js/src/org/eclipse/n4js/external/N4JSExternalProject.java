@@ -62,6 +62,11 @@ public class N4JSExternalProject extends ExternalProject {
 		return referencedBuildConfigs.add(config);
 	}
 
+	/** @return the underlying instance of {@link IN4JSProject} */
+	public IN4JSProject getIProject() {
+		return externalPackage;
+	}
+
 	/**
 	 * Returns with all direct dependency project IDs of the project extracted from the wrapped {@link IN4JSProject
 	 * external package}.
@@ -69,7 +74,7 @@ public class N4JSExternalProject extends ExternalProject {
 	 * @return an iterable of direct dependency project IDs.
 	 */
 	public ImmutableList<? extends IN4JSProject> getAllDirectDependencies() {
-		return externalPackage.getAllDirectDependencies();
+		return getIProject().getAllDirectDependencies();
 	}
 
 	/**

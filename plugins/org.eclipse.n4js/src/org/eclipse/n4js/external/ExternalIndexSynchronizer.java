@@ -29,6 +29,7 @@ import org.eclipse.n4js.json.JSON.JSONPackage;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.packagejson.PackageJsonResourceDescriptionExtension;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.semver.model.SemverSerializer;
@@ -66,6 +67,9 @@ public abstract class ExternalIndexSynchronizer {
 
 	@Inject
 	private ExternalLibraryPreferenceStore externalLibraryPreferenceStore;
+
+	@Inject
+	private ExternalLibraryWorkspace externalLibraryWorkspace;
 
 	@Inject
 	private FolderContainmentHelper containmentHelper;
@@ -106,7 +110,8 @@ public abstract class ExternalIndexSynchronizer {
 	 * Returns a map that maps the names of projects as they can be found in the {@code node_modules} folder to their
 	 * locations and versions.
 	 */
-	final public Map<String, Pair<URI, String>> findNpmsInFolder() {
+	@Deprecated
+	final public Map<String, Pair<URI, String>> findNpmsInFolder2() {
 		Map<String, Pair<URI, String>> npmsFolder = new HashMap<>();
 
 		File nodeModulesFolder = locationProvider.getNodeModulesFolder();
@@ -126,6 +131,32 @@ public abstract class ExternalIndexSynchronizer {
 
 			if (version != null) {
 				npmsFolder.put(name, Pair.of(location, version));
+			}
+		}
+
+		return npmsFolder;
+	}
+
+	/**
+	 * Returns a map that maps the names of projects as they can be found in the {@code node_modules} folder to their
+	 * locations and versions.
+	 */
+	final public Map<String, Pair<URI, String>> findNpmsInFolder() {
+		Map<String, Pair<URI, String>> npmsFolder = new HashMap<>();
+
+		File nodeModulesFolder = locationProvider.getNodeModulesFolder();
+		if (!nodeModulesFolder.isDirectory()) {
+			return Collections.emptyMap();
+		}
+
+		for (N4JSExternalProject p : externalLibraryWorkspace.getProjects()) {
+			IN4JSProject n4jsProject = p.getIProject();
+			URI location = n4jsProject.getLocation();
+			String name = n4jsProject.getProjectName();
+			VersionNumber version = n4jsProject.getVersion();
+
+			if (version != null) {
+				npmsFolder.put(name, Pair.of(location, version.toString()));
 			}
 		}
 
