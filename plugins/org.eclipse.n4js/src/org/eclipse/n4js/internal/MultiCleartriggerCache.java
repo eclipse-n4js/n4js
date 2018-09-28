@@ -117,6 +117,12 @@ public class MultiCleartriggerCache {
 		return entry;
 	}
 
+	/** Removes all cached values */
+	public void clear() {
+		entryCache.clear();
+		triggerCache.clear();
+	}
+
 	/** Removes all cached values for a given key */
 	public void clear(String key) {
 		Map<URI, Object> map = entryCache.get(key);

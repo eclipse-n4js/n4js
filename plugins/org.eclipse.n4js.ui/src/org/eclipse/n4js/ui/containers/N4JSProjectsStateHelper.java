@@ -136,10 +136,8 @@ public class N4JSProjectsStateHelper extends AbstractStorage2UriMapperClient {
 	}
 
 	public void clearProjectCache() {
-		LOGGER.info("Clearing all cached project descriptions.");
-		cache.clear(MultiCleartriggerCache.CACHE_KEY_PROJECT_DESCRIPTIONS);
-		cache.clear(MultiCleartriggerCache.CACHE_KEY_SORTED_DEPENDENCIES);
-		cache.clear(MultiCleartriggerCache.CACHE_KEY_API_IMPL_MAPPING);
+		LOGGER.info("Clearing cache.");
+		cache.clear();
 	}
 
 	public void clearProjectCache(IResourceDelta delta) {
