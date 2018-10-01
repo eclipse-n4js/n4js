@@ -1554,16 +1554,17 @@ class TemplateLiteral extends PrimaryExpression {
  * raw value in a template literal.
  */
 class TemplateSegment extends Literal {
+	String value
 	/**
 	 * The raw value of the template segment
 	 */
 	String rawValue
 	/**
-	 * Returns the rawValue of the template segment as defined in
+	 * Returns the "template value (TV)" of the template segment as defined in
 	 * the ECMA spec 11.8.6.1 Static Semantics: TV’s and TRV’s
 	 */
 	op String getValueAsString() {
-		return rawValue
+		return value
 	}
 }
 

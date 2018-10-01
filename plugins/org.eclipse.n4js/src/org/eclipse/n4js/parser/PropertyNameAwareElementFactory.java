@@ -10,8 +10,19 @@
  */
 package org.eclipse.n4js.parser;
 
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.n4js.conversion.N4JSValueConverterException;
+import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
+import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.n4JS.PropertyAssignment;
+import org.eclipse.n4js.n4JS.PropertyNameKind;
+import org.eclipse.n4js.n4JS.StringLiteral;
+import org.eclipse.n4js.n4JS.TemplateSegment;
+import org.eclipse.n4js.services.N4JSGrammarAccess;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
+import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.xtext.conversion.ValueConverterException;
 import org.eclipse.xtext.conversion.ValueConverterWithValueException;
 import org.eclipse.xtext.nodemodel.INode;
@@ -20,15 +31,6 @@ import org.eclipse.xtext.xtext.RuleNames;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import org.eclipse.n4js.conversion.N4JSValueConverterException;
-import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
-import org.eclipse.n4js.n4JS.N4JSPackage;
-import org.eclipse.n4js.n4JS.PropertyAssignment;
-import org.eclipse.n4js.n4JS.PropertyNameKind;
-import org.eclipse.n4js.n4JS.StringLiteral;
-import org.eclipse.n4js.services.N4JSGrammarAccess;
-import org.eclipse.n4js.validation.IssueCodes;
 
 /**
  * <p>
@@ -95,10 +97,17 @@ public class PropertyNameAwareElementFactory extends DefaultEcoreElementFactory 
 	}
 
 	private void setRawStringValue(EObject object, String feature, Object value) {
-		if (object.eClass() == N4JSPackage.Literals.STRING_LITERAL
+		EClass eClass = object.eClass();
+		if (eClass == N4JSPackage.Literals.STRING_LITERAL
 				&& N4JSPackage.Literals.STRING_LITERAL__VALUE.getName().equals(feature)) {
 			StringLiteral casted = (StringLiteral) object;
 			casted.setRawValue((String) getTokenAsStringIfPossible(value));
+		} else if (eClass == N4JSPackage.Literals.TEMPLATE_SEGMENT
+				&& N4JSPackage.Literals.TEMPLATE_SEGMENT__VALUE.getName().equals(feature)) {
+			TemplateSegment casted = (TemplateSegment) object;
+			String rawValueFromSource = (String) getTokenAsStringIfPossible(value);
+			String rawValueNormalized = N4JSLanguageUtils.normalizeTemplateSegmentRawValue(rawValueFromSource);
+			casted.setRawValue(rawValueNormalized);
 		}
 	}
 

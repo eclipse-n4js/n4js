@@ -29,6 +29,7 @@ package org.eclipse.n4js.n4JS;
  * The following features are supported:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.n4JS.TemplateSegment#getValue <em>Value</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.TemplateSegment#getRawValue <em>Raw Value</em>}</li>
  * </ul>
  *
@@ -37,6 +38,32 @@ package org.eclipse.n4js.n4JS;
  * @generated
  */
 public interface TemplateSegment extends Literal {
+	/**
+	 * Returns the value of the '<em><b>Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Value</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Value</em>' attribute.
+	 * @see #setValue(String)
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getTemplateSegment_Value()
+	 * @model unique="false"
+	 * @generated
+	 */
+	String getValue();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.TemplateSegment#getValue <em>Value</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Value</em>' attribute.
+	 * @see #getValue()
+	 * @generated
+	 */
+	void setValue(String value);
+
 	/**
 	 * Returns the value of the '<em><b>Raw Value</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -68,11 +95,11 @@ public interface TemplateSegment extends Literal {
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * *
-	 * Returns the rawValue of the template segment as defined in
+	 * Returns the "template value (TV)" of the template segment as defined in
 	 * the ECMA spec 11.8.6.1 Static Semantics: TV’s and TRV’s
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getRawValue();'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getValue();'"
 	 * @generated
 	 */
 	String getValueAsString();
