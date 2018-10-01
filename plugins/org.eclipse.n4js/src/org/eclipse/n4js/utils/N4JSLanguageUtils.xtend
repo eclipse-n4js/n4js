@@ -47,8 +47,6 @@ import org.eclipse.n4js.n4JS.PropertyAssignmentAnnotationList
 import org.eclipse.n4js.n4JS.PropertyMethodDeclaration
 import org.eclipse.n4js.n4JS.PropertyNameKind
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.n4JS.StringLiteral
-import org.eclipse.n4js.n4JS.TemplateSegment
 import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.UnaryOperator
@@ -116,42 +114,6 @@ public class N4JSLanguageUtils {
 	 * See {@link ComputedPropertyNameValueConverter#SYMBOL_IDENTIFIER_PREFIX}.
 	 */
 	public static final String SYMBOL_IDENTIFIER_PREFIX = ComputedPropertyNameValueConverter.SYMBOL_IDENTIFIER_PREFIX;
-
-	/**
-	 * When obtaining a template segment's raw source code, e.g. via the node model, the obtained string contains the
-	 * leading "`" for head segments, the trailing "${" for head and middle segments, and the trailing "`" for tail
-	 * segments. However, the leading "}" of middle and tail segments is missing. This method resolves this inconsistency
-	 * by adding the missing "}" in the appropriate cases.
-	 * <p>
-	 * Note when obtaining a string literal's raw source code, the obtained string always contains the leading and
-	 * trailing quotes, which is a further argument for resolving the above inconsistency.
-	 * <p>
-	 * Example:
-	 * <pre>
-	 * let str = 'zzz';
-	 * console.log(`aaa${str}bbb${str}ccc`);
-	 * </pre>
-	 * will produce a single {@link StringLiteral} with a {@link StringLiteral#getRawValue() rawValue} of
-	 * <pre>
-	 * "'zzz'"
-	 * </pre>
-	 * and three {@link TemplateSegment}s with the following {@link TemplateSegment#getRawValue() rawValue}s:
-	 * <ol>
-	 * <li><code>"`aaa${"</code>
-	 * <li><code>"}bbb${"</code>
-	 * <li><code>"}ccc`"</code>
-	 * </ol>
-	 * The trailing "}" at the beginning of the second and third segments was added by this method and is not present
-	 * in the node module.
-	 */
-	def static String normalizeTemplateSegmentRawValue(String rawSourceCode) {
-		// some cases in which we have to prepend a "}":
-		// "bbb${", "ccc`", "${" (empty middle segment!), "`" (empty trailing segment!)
-		if (rawSourceCode !== null && (!rawSourceCode.startsWith('`') || rawSourceCode.length==1 )) {
-			return "}" + rawSourceCode;
-		}
-		return rawSourceCode;
-	}
 
 	/**
 	 * If the given function definition is asynchronous, will wrap given return type into a Promise.

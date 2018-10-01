@@ -1509,7 +1509,8 @@ class BooleanLiteral extends Literal {
 class StringLiteral extends Literal {
 	String value
 	/**
-	 * The value as it was read from the model. Not updated on modifications via #setValue(String)
+	 * The value as it was read from the model. Not updated on modifications via #setValue(String).
+	 * Includes the leading/trailing single or double quotes, as used in the source code.
 	 */
 	transient String rawValue
 	op String getValueAsString() {
@@ -1556,9 +1557,27 @@ class TemplateLiteral extends PrimaryExpression {
 class TemplateSegment extends Literal {
 	String value
 	/**
-	 * The raw value of the template segment
+	 * The raw value of the template segment. Just like 'rawValue' in {@link StringLiteral}
+	 * includes the leading/trailing quotes, this value includes the segment's leading and
+	 * trailing delimiters, i.e. <code>"`"</code>, <code>"}"</code>, or <code>"${"</code>.
+	 * <p>
+	 * Example:
+	 * <pre>
+	 * let str = 'zzz';
+	 * console.log(`aaa${str}bbb${str}ccc`);
+	 * </pre>
+	 * will produce a single {@link StringLiteral} with a {@link StringLiteral#getRawValue() rawValue} of
+	 * <pre>
+	 * "'zzz'"
+	 * </pre>
+	 * and three {@link TemplateSegment}s with the following {@link TemplateSegment#getRawValue() rawValue}s:
+	 * <ol>
+	 * <li><code>"`aaa${"</code>
+	 * <li><code>"}bbb${"</code>
+	 * <li><code>"}ccc`"</code>
+	 * </ol>
 	 */
-	String rawValue
+	transient String rawValue
 	/**
 	 * Returns the "template value (TV)" of the template segment as defined in
 	 * the ECMA spec 11.8.6.1 Static Semantics: TV’s and TRV’s

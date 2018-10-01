@@ -70,12 +70,30 @@ public interface TemplateSegment extends Literal {
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * *
-	 * The raw value of the template segment
+	 * The raw value of the template segment. Just like 'rawValue' in {@link StringLiteral}
+	 * includes the leading/trailing quotes, this value includes the segment's leading and
+	 * trailing delimiters, i.e. <code>"`"</code>, <code>"}"</code>, or <code>"${"</code>.
+	 * <p>
+	 * Example:
+	 * <pre>
+	 * let str = 'zzz';
+	 * console.log(`aaa${str}bbb${str}ccc`);
+	 * </pre>
+	 * will produce a single {@link StringLiteral} with a {@link StringLiteral#getRawValue() rawValue} of
+	 * <pre>
+	 * "'zzz'"
+	 * </pre>
+	 * and three {@link TemplateSegment}s with the following {@link TemplateSegment#getRawValue() rawValue}s:
+	 * <ol>
+	 * <li><code>"`aaa${"</code>
+	 * <li><code>"}bbb${"</code>
+	 * <li><code>"}ccc`"</code>
+	 * </ol>
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Raw Value</em>' attribute.
 	 * @see #setRawValue(String)
 	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getTemplateSegment_RawValue()
-	 * @model unique="false"
+	 * @model unique="false" transient="true"
 	 * @generated
 	 */
 	String getRawValue();
