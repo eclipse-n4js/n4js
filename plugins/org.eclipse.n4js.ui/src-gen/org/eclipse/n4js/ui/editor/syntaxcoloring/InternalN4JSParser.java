@@ -35614,7 +35614,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         InternalN4JSParser.ruleNoSubstitutionTemplate_return retval = new InternalN4JSParser.ruleNoSubstitutionTemplate_return();
         retval.start = input.LT(1);
 
-        Token RawValueNO_SUBSTITUTION_TEMPLATE_LITERALTerminalRuleCall_1_0=null;
+        Token ValueNO_SUBSTITUTION_TEMPLATE_LITERALTerminalRuleCall_1_0=null;
 
 
 
@@ -35623,10 +35623,10 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             {
             {
             {
-            RawValueNO_SUBSTITUTION_TEMPLATE_LITERALTerminalRuleCall_1_0=(Token)match(input,RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL,FOLLOW_2); if (state.failed) return retval;
+            ValueNO_SUBSTITUTION_TEMPLATE_LITERALTerminalRuleCall_1_0=(Token)match(input,RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL,FOLLOW_2); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
-              				announce(RawValueNO_SUBSTITUTION_TEMPLATE_LITERALTerminalRuleCall_1_0, grammarAccess.getNoSubstitutionTemplateAccess().getRawValueAssignment_1());
+              				announce(ValueNO_SUBSTITUTION_TEMPLATE_LITERALTerminalRuleCall_1_0, grammarAccess.getNoSubstitutionTemplateAccess().getValueAssignment_1());
               			
             }
 
@@ -35680,7 +35680,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         InternalN4JSParser.ruleTemplateHead_return retval = new InternalN4JSParser.ruleTemplateHead_return();
         retval.start = input.LT(1);
 
-        Token RawValueTEMPLATE_HEADTerminalRuleCall_1_0=null;
+        Token ValueTEMPLATE_HEADTerminalRuleCall_1_0=null;
 
 
 
@@ -35689,10 +35689,10 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             {
             {
             {
-            RawValueTEMPLATE_HEADTerminalRuleCall_1_0=(Token)match(input,RULE_TEMPLATE_HEAD,FOLLOW_2); if (state.failed) return retval;
+            ValueTEMPLATE_HEADTerminalRuleCall_1_0=(Token)match(input,RULE_TEMPLATE_HEAD,FOLLOW_2); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
-              				announce(RawValueTEMPLATE_HEADTerminalRuleCall_1_0, grammarAccess.getTemplateHeadAccess().getRawValueAssignment_1());
+              				announce(ValueTEMPLATE_HEADTerminalRuleCall_1_0, grammarAccess.getTemplateHeadAccess().getValueAssignment_1());
               			
             }
 
@@ -35746,7 +35746,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         InternalN4JSParser.ruleTemplateTail_return retval = new InternalN4JSParser.ruleTemplateTail_return();
         retval.start = input.LT(1);
 
-        InternalN4JSParser.ruleTemplateTailLiteral_return RawValueTemplateTailLiteralParserRuleCall_1_0 = null;
+        InternalN4JSParser.ruleTemplateTailLiteral_return ValueTemplateTailLiteralParserRuleCall_1_0 = null;
 
 
 
@@ -35757,13 +35757,13 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             {
             {
             pushFollow(FOLLOW_2);
-            RawValueTemplateTailLiteralParserRuleCall_1_0=ruleTemplateTailLiteral();
+            ValueTemplateTailLiteralParserRuleCall_1_0=ruleTemplateTailLiteral();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
-              				announce((RawValueTemplateTailLiteralParserRuleCall_1_0!=null?((Token)RawValueTemplateTailLiteralParserRuleCall_1_0.start):null), (RawValueTemplateTailLiteralParserRuleCall_1_0!=null?((Token)RawValueTemplateTailLiteralParserRuleCall_1_0.stop):null), grammarAccess.getTemplateTailAccess().getRawValueAssignment_1());
+              				announce((ValueTemplateTailLiteralParserRuleCall_1_0!=null?((Token)ValueTemplateTailLiteralParserRuleCall_1_0.start):null), (ValueTemplateTailLiteralParserRuleCall_1_0!=null?((Token)ValueTemplateTailLiteralParserRuleCall_1_0.stop):null), grammarAccess.getTemplateTailAccess().getValueAssignment_1());
               			
             }
 
@@ -35817,7 +35817,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         InternalN4JSParser.ruleTemplateMiddle_return retval = new InternalN4JSParser.ruleTemplateMiddle_return();
         retval.start = input.LT(1);
 
-        InternalN4JSParser.ruleTemplateMiddleLiteral_return RawValueTemplateMiddleLiteralParserRuleCall_1_0 = null;
+        InternalN4JSParser.ruleTemplateMiddleLiteral_return ValueTemplateMiddleLiteralParserRuleCall_1_0 = null;
 
 
 
@@ -35828,13 +35828,13 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             {
             {
             pushFollow(FOLLOW_2);
-            RawValueTemplateMiddleLiteralParserRuleCall_1_0=ruleTemplateMiddleLiteral();
+            ValueTemplateMiddleLiteralParserRuleCall_1_0=ruleTemplateMiddleLiteral();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
-              				announce((RawValueTemplateMiddleLiteralParserRuleCall_1_0!=null?((Token)RawValueTemplateMiddleLiteralParserRuleCall_1_0.start):null), (RawValueTemplateMiddleLiteralParserRuleCall_1_0!=null?((Token)RawValueTemplateMiddleLiteralParserRuleCall_1_0.stop):null), grammarAccess.getTemplateMiddleAccess().getRawValueAssignment_1());
+              				announce((ValueTemplateMiddleLiteralParserRuleCall_1_0!=null?((Token)ValueTemplateMiddleLiteralParserRuleCall_1_0.start):null), (ValueTemplateMiddleLiteralParserRuleCall_1_0!=null?((Token)ValueTemplateMiddleLiteralParserRuleCall_1_0.stop):null), grammarAccess.getTemplateMiddleAccess().getValueAssignment_1());
               			
             }
 

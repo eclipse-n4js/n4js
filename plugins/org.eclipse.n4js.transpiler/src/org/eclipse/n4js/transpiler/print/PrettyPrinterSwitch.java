@@ -904,25 +904,26 @@ import org.eclipse.xtext.EcoreUtil2;
 			// resetting the indent level, we can here simply rely on our parent having already done this.
 			throw new IllegalStateException("parent TemplateLiteral did not reset the indent level to 0");
 		}
-		final TemplateLiteral parent = (TemplateLiteral) original.eContainer();
-		final List<Expression> segments = parent.getSegments();
-		final int len = segments.size();
-		final Expression first = segments.get(0);
-		final Expression last = segments.get(len - 1);
-		if (original == first) {
-			write("`");
-		} else {
-			write("}");
-		}
 		if (original.getRawValue() != null) {
 			write(original.getRawValue());
 		} else {
-			write(quote(original.getValueAsString()));
-		}
-		if (original == last) {
-			write("`");
-		} else {
-			write("${");
+			final TemplateLiteral parent = (TemplateLiteral) original.eContainer();
+			final List<Expression> segments = parent.getSegments();
+			final int len = segments.size();
+			final Expression first = segments.get(0);
+			final Expression last = segments.get(len - 1);
+			if (original == first) {
+				write("`");
+			} else {
+				write("}");
+			}
+			final String rawValue = ValueConverterUtils.convertToEscapedString(original.getValueAsString(), false);
+			write(rawValue);
+			if (original == last) {
+				write("`");
+			} else {
+				write("${");
+			}
 		}
 		return DONE;
 	}

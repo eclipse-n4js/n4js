@@ -12,6 +12,7 @@ package org.eclipse.n4js.transpiler.es.transform
 
 import com.google.common.collect.Lists
 import java.util.ArrayList
+import org.eclipse.n4js.conversion.ValueConverterUtils
 import org.eclipse.n4js.n4JS.AdditiveOperator
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ParameterizedAccess
@@ -51,7 +52,7 @@ class TemplateStringTransformation extends Transformation {
 		// (1) transform contained template segments to string literals
 		for(segment : Lists.newArrayList(template.segments)) { // avoid concurrent modification
 			if(segment instanceof TemplateSegment) {
-				replace(segment, _StringLiteral(segment.valueAsString, segment.rawValue.wrapAndQuote));
+				replace(segment, _StringLiteral(segment.valueAsString, segment.valueAsString.wrapAndQuote));
 			} else {
 				// the segment is an ordinary expression -> leave without change
 			}
@@ -84,6 +85,6 @@ class TemplateStringTransformation extends Transformation {
 
 	/** put raw into double quote and escape all existing double-quotes {@code '"' -> '\"' } and newlines {@code '\n' -> '\\n'}. */
 	def private static String wrapAndQuote(String raw){
-		'"'+raw.replace('"','\\"').replace('\n','\\n')+'"'
+		'"' + ValueConverterUtils.convertToEscapedString(raw, true) + '"'
 	}
 }

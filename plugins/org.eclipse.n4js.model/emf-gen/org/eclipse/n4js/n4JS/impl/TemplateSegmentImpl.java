@@ -32,12 +32,33 @@ import org.eclipse.n4js.n4JS.TemplateSegment;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.TemplateSegmentImpl#getValue <em>Value</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.TemplateSegmentImpl#getRawValue <em>Raw Value</em>}</li>
  * </ul>
  *
  * @generated
  */
 public class TemplateSegmentImpl extends LiteralImpl implements TemplateSegment {
+	/**
+	 * The default value of the '{@link #getValue() <em>Value</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getValue()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String VALUE_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getValue() <em>Value</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getValue()
+	 * @generated
+	 * @ordered
+	 */
+	protected String value = VALUE_EDEFAULT;
+
 	/**
 	 * The default value of the '{@link #getRawValue() <em>Raw Value</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -82,6 +103,27 @@ public class TemplateSegmentImpl extends LiteralImpl implements TemplateSegment 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String getValue() {
+		return value;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setValue(String newValue) {
+		String oldValue = value;
+		value = newValue;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.TEMPLATE_SEGMENT__VALUE, oldValue, value));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public String getRawValue() {
 		return rawValue;
 	}
@@ -104,7 +146,7 @@ public class TemplateSegmentImpl extends LiteralImpl implements TemplateSegment 
 	 * @generated
 	 */
 	public String getValueAsString() {
-		return this.getRawValue();
+		return this.getValue();
 	}
 
 	/**
@@ -115,6 +157,8 @@ public class TemplateSegmentImpl extends LiteralImpl implements TemplateSegment 
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case N4JSPackage.TEMPLATE_SEGMENT__VALUE:
+				return getValue();
 			case N4JSPackage.TEMPLATE_SEGMENT__RAW_VALUE:
 				return getRawValue();
 		}
@@ -129,6 +173,9 @@ public class TemplateSegmentImpl extends LiteralImpl implements TemplateSegment 
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
+			case N4JSPackage.TEMPLATE_SEGMENT__VALUE:
+				setValue((String)newValue);
+				return;
 			case N4JSPackage.TEMPLATE_SEGMENT__RAW_VALUE:
 				setRawValue((String)newValue);
 				return;
@@ -144,6 +191,9 @@ public class TemplateSegmentImpl extends LiteralImpl implements TemplateSegment 
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
+			case N4JSPackage.TEMPLATE_SEGMENT__VALUE:
+				setValue(VALUE_EDEFAULT);
+				return;
 			case N4JSPackage.TEMPLATE_SEGMENT__RAW_VALUE:
 				setRawValue(RAW_VALUE_EDEFAULT);
 				return;
@@ -159,6 +209,8 @@ public class TemplateSegmentImpl extends LiteralImpl implements TemplateSegment 
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case N4JSPackage.TEMPLATE_SEGMENT__VALUE:
+				return VALUE_EDEFAULT == null ? value != null : !VALUE_EDEFAULT.equals(value);
 			case N4JSPackage.TEMPLATE_SEGMENT__RAW_VALUE:
 				return RAW_VALUE_EDEFAULT == null ? rawValue != null : !RAW_VALUE_EDEFAULT.equals(rawValue);
 		}
@@ -205,7 +257,9 @@ public class TemplateSegmentImpl extends LiteralImpl implements TemplateSegment 
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (rawValue: ");
+		result.append(" (value: ");
+		result.append(value);
+		result.append(", rawValue: ");
 		result.append(rawValue);
 		result.append(')');
 		return result.toString();

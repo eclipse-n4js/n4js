@@ -129,7 +129,7 @@ class CompileTimeEvaluator {
 	}
 
 	def private dispatch CompileTimeValue eval(RuleEnvironment G, TemplateSegment expr, RecursionGuard<EObject> guard) {
-		return CompileTimeValue.of(expr.rawValue);
+		return CompileTimeValue.of(expr.value);
 	}
 
 	def private dispatch CompileTimeValue eval(RuleEnvironment G, TemplateLiteral expr, RecursionGuard<EObject> guard) {

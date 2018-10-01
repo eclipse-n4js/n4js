@@ -61,7 +61,8 @@ public interface StringLiteral extends Literal {
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * *
-	 * The value as it was read from the model. Not updated on modifications via #setValue(String)
+	 * The value as it was read from the model. Not updated on modifications via #setValue(String).
+	 * Includes the leading/trailing single or double quotes, as used in the source code.
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Raw Value</em>' attribute.
 	 * @see #setRawValue(String)

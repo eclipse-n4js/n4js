@@ -435,7 +435,7 @@ class ASTStructureValidator {
 		Constraints constraints
 	) {
 		if (constraints.isStrict) {
-			addErrorForOctalEscapeSequence(model, N4JSPackage.Literals.STRING_LITERAL__VALUE, producer);
+			addErrorForOctalEscapeSequence(model.rawValue, model, N4JSPackage.Literals.STRING_LITERAL__VALUE, producer);
 		}
 		recursiveValidateASTStructure(
 			model,
@@ -451,7 +451,7 @@ class ASTStructureValidator {
 		Set<LabelledStatement> validLabels,
 		Constraints constraints
 	) {
-		addErrorForOctalEscapeSequence(model, N4JSPackage.Literals.TEMPLATE_SEGMENT__RAW_VALUE, producer);
+		addErrorForOctalEscapeSequence(model.rawValue, model, N4JSPackage.Literals.TEMPLATE_SEGMENT__VALUE, producer);
 
 		recursiveValidateASTStructure(
 			model,
@@ -461,11 +461,11 @@ class ASTStructureValidator {
 		)
 	}
 
-	def private addErrorForOctalEscapeSequence(Literal model, EAttribute valueEAttribute, ASTStructureDiagnosticProducer producer) {
+	def private addErrorForOctalEscapeSequence(String rawValue, Literal model, EAttribute valueEAttribute, ASTStructureDiagnosticProducer producer) {
 		val nodes = NodeModelUtils.findNodesForFeature(model, valueEAttribute);
 		val target = nodes.head;
 		val syntaxError = target.syntaxErrorMessage;
-		if ((syntaxError === null || syntaxError.issueCode == WARN_ISSUE_CODE || syntaxError.issueCode == InternalSemicolonInjectingParser.SEMICOLON_INSERTED) && target.text.hasOctalEscapeSequence) {
+		if ((syntaxError === null || syntaxError.issueCode == WARN_ISSUE_CODE || syntaxError.issueCode == InternalSemicolonInjectingParser.SEMICOLON_INSERTED) && rawValue.hasOctalEscapeSequence) {
 			producer.node = target;
 			producer.addDiagnostic(
 				new DiagnosticMessage(IssueCodes.messageForAST_STR_NO_OCTALS,
