@@ -1131,24 +1131,21 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 
 		// type cannot be resolved from index, hence project does not exist in workspace.
 		if (null === project || null === project.projectType) {
-			// in GH-821: remove this condition
 			if (!currentProject.isExternal) {
 				val msg = getMessageForNON_EXISTING_PROJECT(id);
 				val packageVersion = if (ref.npmVersion === null) "" else ref.npmVersion.toString;
 				addIssue(msg, ref.astRepresentation, null, NON_EXISTING_PROJECT, id, packageVersion);
 			}
 			return;
-		} else {
-			if (project.isExternal) {
-				if (!indexSynchronizer.isInIndex(project.projectDescriptionLocation.orNull)) {
-					val msg = getMessageForNON_REGISTERED_PROJECT(id);
-					addIssue(msg, ref.astRepresentation, null, NON_REGISTERED_PROJECT, id);
-					return;
-				}
-			} else {
-				// keep track of actually existing projects
-				existentIds.put(id, ref);
+		} else if (project.isExternal) {
+			if (!indexSynchronizer.isInIndex(project.projectDescriptionLocation.orNull)) {
+				val msg = getMessageForNON_REGISTERED_PROJECT(id);
+				addIssue(msg, ref.astRepresentation, null, NON_REGISTERED_PROJECT, id);
+				return;
 			}
+		} else {
+			// keep track of actually existing projects
+			existentIds.put(id, ref);
 		}
 
 		// create only a single validation issue for a particular project reference.
