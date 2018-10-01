@@ -101,11 +101,10 @@ public abstract class ExternalIndexSynchronizer {
 	 * locations and versions.
 	 */
 	final public Map<String, Pair<URI, String>> findNpmsInFolder() {
-		String nodeModulesFolder = locationProvider.getNodeModulesURI().toString();
 		Map<String, Pair<URI, String>> npmsFolder = new HashMap<>();
 
-		externalLibraryWorkspace.updateState();
-		for (N4JSExternalProject p : externalLibraryWorkspace.getProjects()) {
+		String nodeModulesFolder = locationProvider.getNodeModulesURI().toString();
+		for (N4JSExternalProject p : externalLibraryWorkspace.computeProjectsUncached()) {
 			IN4JSProject n4jsProject = p.getIProject();
 			URI location = n4jsProject.getLocation();
 			String name = n4jsProject.getProjectName();
@@ -141,7 +140,7 @@ public abstract class ExternalIndexSynchronizer {
 
 	/** @return true iff the given project (i.e. its package.json) is contained in the index */
 	public boolean isInIndex(N4JSExternalProject project) {
-		return isInIndex(project.getIProject().getLocation());
+		return isInIndex(project.getIProject().getProjectDescriptionLocation().orNull());
 	}
 
 	/** @return true iff the given project (i.e. its package.json) is contained in the index */

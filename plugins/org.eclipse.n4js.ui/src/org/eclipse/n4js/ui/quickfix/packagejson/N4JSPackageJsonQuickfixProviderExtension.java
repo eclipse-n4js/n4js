@@ -14,15 +14,18 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.function.Function;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.n4js.external.ExternalIndexSynchronizer;
 import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
@@ -53,6 +56,9 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 	private LibraryManager libraryManager;
 
 	@Inject
+	private ExternalIndexSynchronizer indexSynchronizer;
+
+	@Inject
 	private StatusHelper statusHelper;
 
 	/** Installs a specific npm */
@@ -64,6 +70,7 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 		final String msgAtVersion = Strings.isNullOrEmpty(versionRequirement) ? "" : "@" + versionRequirement;
 		final String label = "Install npm " + packageName + msgAtVersion;
 		final String description = "Calls npm to install the missing npm package into the workspace.";
+		final String errMsg = "Error while uninstalling npm dependency: '" + packageName + "'.";
 
 		N4Modification modification = new N4Modification() {
 			@Override
@@ -80,43 +87,54 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 			public Collection<? extends IChange> computeChanges(IModificationContext context, IMarker marker,
 					int offset, int length, EObject element) throws Exception {
 
-				return invokeNpmManager(packageName, versionRequirement);
+				Function<IProgressMonitor, IStatus> registerFunction = new Function<IProgressMonitor, IStatus>() {
+					@Override
+					public IStatus apply(IProgressMonitor monitor) {
+						return libraryManager.installNPM(packageName, versionRequirement, monitor);
+					}
+				};
+				wrapWithMonitor(label, errMsg, registerFunction);
+				return Collections.emptyList();
 			}
 		};
 
 		accept(acceptor, issue, label, description, "SomeImage.gif", modification);
 	}
 
-	private Collection<? extends IChange> invokeNpmManager(String packageName, String versionRequirement)
-			throws Exception {
+	/** Registers a specific npm */
+	@Fix(IssueCodes.NON_REGISTERED_PROJECT)
+	public void registerNPM(Issue issue, IssueResolutionAcceptor acceptor) {
+		final String label = "Register npm(s)";
+		final String description = "Registers all not registered npms so that they can be imported by modules.";
 
-		MultiStatus multiStatus = statusHelper.createMultiStatus("Installing npm '" + packageName + "'.");
-
-		new ProgressMonitorDialog(UIUtils.getShell()).run(true, false, new IRunnableWithProgress() {
+		N4Modification modification = new N4Modification() {
 			@Override
-			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-				try {
-					multiStatus.merge(libraryManager.installNPM(packageName, versionRequirement, monitor));
-				} catch (Exception e) {
-					String msg = "Error while uninstalling npm dependency: '" + packageName + "'.";
-					multiStatus.merge(statusHelper.createError(msg, e));
-				}
+			public boolean supportsMultiApply() {
+				return true;
 			}
-		});
 
-		if (!multiStatus.isOK()) {
-			N4JSActivator.getInstance().getLog().log(multiStatus);
-			UIUtils.getDisplay().asyncExec(new Runnable() {
-				@Override
-				public void run() {
-					String title = "NPM Install Failed";
-					String descr = StatusUtils.getErrorMessage(multiStatus, true);
-					ErrorDialog.openError(UIUtils.getShell(), title, descr, multiStatus);
-				}
-			});
-		}
+			@Override
+			public boolean isApplicableTo(IMarker marker) {
+				return true;
+			}
 
-		return Collections.emptyList();
+			@Override
+			public Collection<? extends IChange> computeChanges(IModificationContext context, IMarker marker,
+					int offset, int length, EObject element) throws Exception {
+
+				Function<IProgressMonitor, IStatus> registerFunction = new Function<IProgressMonitor, IStatus>() {
+					@Override
+					public IStatus apply(IProgressMonitor monitor) {
+						indexSynchronizer.synchronizeNpms(monitor);
+						return statusHelper.OK();
+					}
+				};
+				wrapWithMonitor(label, "Error during registering of npm(s)", registerFunction);
+				return Collections.emptyList();
+			}
+		};
+
+		accept(acceptor, issue, label, description, "SomeImage.gif", modification);
 	}
 
 	/** Changes the project type to {@link ProjectType#VALIDATION} */
@@ -149,5 +167,38 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 				return true;
 			}
 		});
+	}
+
+	private Collection<? extends IChange> wrapWithMonitor(String msg, String errMsg,
+			Function<IProgressMonitor, IStatus> f)
+			throws Exception {
+
+		MultiStatus multiStatus = statusHelper.createMultiStatus(msg);
+
+		new ProgressMonitorDialog(UIUtils.getShell()).run(true, false, new IRunnableWithProgress() {
+			@Override
+			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+				try {
+					IStatus status = f.apply(monitor);
+					multiStatus.merge(status);
+				} catch (Exception e) {
+					multiStatus.merge(statusHelper.createError(errMsg, e));
+				}
+			}
+		});
+
+		if (!multiStatus.isOK()) {
+			N4JSActivator.getInstance().getLog().log(multiStatus);
+			UIUtils.getDisplay().asyncExec(new Runnable() {
+				@Override
+				public void run() {
+					String title = "Failed: " + msg;
+					String descr = StatusUtils.getErrorMessage(multiStatus, true);
+					ErrorDialog.openError(UIUtils.getShell(), title, descr, multiStatus);
+				}
+			});
+		}
+
+		return Collections.emptyList();
 	}
 }

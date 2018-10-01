@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
@@ -45,9 +44,6 @@ import org.eclipse.n4js.validation.helper.FolderContainmentHelper;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.UriUtil;
 
-import com.google.common.base.Optional;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -72,7 +68,7 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 
 	private final Collection<ExternalLocationsUpdatedListener> locListeners = new LinkedList<>();
 	private final List<java.net.URI> rootLocations = new LinkedList<>();
-	private LoadingCache<URI, Optional<Pair<N4JSExternalProject, ProjectDescription>>> projectCache;
+	private final Map<URI, Pair<N4JSExternalProject, ProjectDescription>> projectCache = new HashMap<>();
 	private Map<URI, Pair<N4JSExternalProject, ProjectDescription>> projectUriMapping;
 	private Map<String, N4JSExternalProject> projectNameMapping;
 
@@ -95,7 +91,6 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 	 */
 	@Inject
 	void init() {
-		projectCache = CacheBuilder.newBuilder().build(cacheLoader);
 		if (Platform.isRunning()) {
 			getWorkspace().addResourceChangeListener(projectStateChangeListener);
 		}
@@ -193,24 +188,37 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 	}
 
 	void updateCache() {
-		projectCache.invalidateAll();
+		projectCache.clear();
+
+		for (Pair<N4JSExternalProject, ProjectDescription> pair : collectProjects()) {
+			URI locationURI = pair.getFirst().getIProject().getLocation();
+			projectCache.put(locationURI, pair);
+		}
+
+		updateMappings();
+	}
+
+	/** @return all projects. Does not affect cached projects. */
+	private List<Pair<N4JSExternalProject, ProjectDescription>> collectProjects() {
+		List<Pair<N4JSExternalProject, ProjectDescription>> projectPairs = new LinkedList<>();
 		Iterable<java.net.URI> projectRoots = externalLibraryPreferenceStore
 				.convertToProjectRootLocations(rootLocations);
 
 		for (java.net.URI projectRoot : projectRoots) {
 			URI projectLocation = URIUtils.toFileUri(projectRoot);
-			Pair<N4JSExternalProject, ProjectDescription> pair;
+
 			try {
-				pair = projectCache.get(projectLocation).orNull();
-				if (null == pair) { // Removed trash.
-					projectCache.invalidate(projectLocation);
+				Pair<N4JSExternalProject, ProjectDescription> pair;
+				pair = cacheLoader.load(projectLocation).orNull();
+				if (null != pair) {
+					projectPairs.add(pair);
 				}
-			} catch (ExecutionException e) {
+			} catch (Exception e) {
 				// ignore
 			}
 		}
 
-		updateMappings();
+		return projectPairs;
 	}
 
 	/**
@@ -220,7 +228,7 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 	 * yet, hence not available when injecting this instance.
 	 */
 	private void updateMappings() {
-		Map<URI, Optional<Pair<N4JSExternalProject, ProjectDescription>>> cachedProjects = projectCache.asMap();
+		Map<URI, Pair<N4JSExternalProject, ProjectDescription>> cachedProjects = projectCache;
 		Map<String, N4JSExternalProject> projectNameMappingTmp = newHashMap();
 		Map<URI, Pair<N4JSExternalProject, ProjectDescription>> projectUriMappingTmp = newHashMap();
 
@@ -232,7 +240,7 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 		for (java.net.URI projectRoot : projectRootsInReversedOrder) {
 			URI projectLocation = URIUtils.toFileUri(projectRoot);
 			if (cachedProjects.containsKey(projectLocation)) {
-				Pair<N4JSExternalProject, ProjectDescription> pair = cachedProjects.get(projectLocation).orNull();
+				Pair<N4JSExternalProject, ProjectDescription> pair = cachedProjects.get(projectLocation);
 				if (null != pair) {
 					N4JSExternalProject project = pair.getFirst();
 					if (!projectNameMappingTmp.containsKey(project.getName())) {
@@ -289,6 +297,14 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 		ensureInitialized();
 		Map<String, N4JSExternalProject> projects = getProjectMapping();
 		return unmodifiableCollection(projects.values());
+	}
+
+	Collection<N4JSExternalProject> computeProjectsUncached() {
+		List<N4JSExternalProject> projects = new LinkedList<>();
+		for (Pair<N4JSExternalProject, ProjectDescription> pair : collectProjects()) {
+			projects.add(pair.getFirst());
+		}
+		return projects;
 	}
 
 	N4JSExternalProject getProject(String projectName) {

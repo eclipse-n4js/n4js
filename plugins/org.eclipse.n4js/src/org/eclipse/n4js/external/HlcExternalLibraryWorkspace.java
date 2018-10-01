@@ -116,4 +116,9 @@ public class HlcExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 		return null;
 	}
 
+	@Override
+	public Collection<N4JSExternalProject> computeProjectsUncached() {
+		return null;
+	}
+
 }

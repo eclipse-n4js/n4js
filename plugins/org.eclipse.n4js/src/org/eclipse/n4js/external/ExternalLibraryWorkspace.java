@@ -39,22 +39,37 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 		final public Set<URI> externalProjectsDone;
 		/** All workspace projects that were affected */
 		final public Set<URI> affectedWorkspaceProjects;
+		/** All projects that were wiped from index */
+		final public Set<URI> wipedProjects;
 
 		RegisterResult() {
 			this.externalProjectsDone = freeze(null);
 			this.affectedWorkspaceProjects = freeze(null);
+			this.wipedProjects = freeze(null);
 		}
 
 		/** Constructor */
 		public RegisterResult(Collection<URI> extPrjsDone, Collection<URI> wsPrjsAffected) {
+			this(extPrjsDone, wsPrjsAffected, null);
+		}
+
+		/** Constructor */
+		public RegisterResult(Collection<URI> extPrjsDone, Collection<URI> wsPrjsAffected, Collection<URI> prjsWiped) {
 			this.externalProjectsDone = freeze(extPrjsDone);
 			this.affectedWorkspaceProjects = freeze(wsPrjsAffected);
+			this.wipedProjects = freeze(prjsWiped);
 		}
 
 		/** Constructor */
 		public RegisterResult(IProject[] allProjectsToClean, IProject[] wsPrjAffected) {
+			this(allProjectsToClean, wsPrjAffected, null);
+		}
+
+		/** Constructor */
+		public RegisterResult(IProject[] allProjectsToClean, IProject[] wsPrjAffected, Collection<URI> prjsWiped) {
 			this.externalProjectsDone = freeze(getURIs(allProjectsToClean));
 			this.affectedWorkspaceProjects = freeze(getURIs(wsPrjAffected));
+			this.wipedProjects = freeze(prjsWiped);
 		}
 
 		static private Set<URI> freeze(Collection<URI> prjs) {
@@ -119,6 +134,13 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 	 * @return the external projects.
 	 */
 	public abstract Collection<N4JSExternalProject> getProjects();
+
+	/**
+	 * Returns with all external projects. Does not use cached data.
+	 *
+	 * @return the external projects that are actually on the HDD.
+	 */
+	public abstract Collection<N4JSExternalProject> computeProjectsUncached();
 
 	/**
 	 * Returns with all existing external projects that are contained in the given external library root location.

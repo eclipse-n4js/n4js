@@ -37,6 +37,7 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.N4JSGlobals
+import org.eclipse.n4js.external.ExternalIndexSynchronizer
 import org.eclipse.n4js.external.ShadowingInfoHelper
 import org.eclipse.n4js.json.JSON.JSONArray
 import org.eclipse.n4js.json.JSON.JSONDocument
@@ -153,6 +154,9 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 
 	@Inject
 	protected ShadowingInfoHelper shadowingInfoHelper;
+
+	@Inject
+	protected ExternalIndexSynchronizer indexSynchronizer;
 
 	@Inject
 	protected SemverHelper semverHelper;
@@ -1135,8 +1139,16 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			}
 			return;
 		} else {
-			// keep track of actually existing projects
-			existentIds.put(id, ref);
+			if (project.isExternal) {
+				if (!indexSynchronizer.isInIndex(project.projectDescriptionLocation.orNull)) {
+					val msg = getMessageForNON_REGISTERED_PROJECT(id);
+					addIssue(msg, ref.astRepresentation, null, NON_REGISTERED_PROJECT, id);
+					return;
+				}
+			} else {
+				// keep track of actually existing projects
+				existentIds.put(id, ref);
+			}
 		}
 
 		// create only a single validation issue for a particular project reference.

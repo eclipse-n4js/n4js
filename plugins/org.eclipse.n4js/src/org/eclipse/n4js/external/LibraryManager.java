@@ -442,6 +442,45 @@ public class LibraryManager {
 	}
 
 	/**
+	 *
+	 * @param monitor
+	 *            the monitor for the progress.
+	 * @return a status representing the outcome of the operation.
+	 */
+	public IStatus registerUnregisteredNpms(IProgressMonitor monitor) {
+		return runWithWorkspaceLock(() -> registerUnregisteredNpmsInternal(monitor));
+	}
+
+	private IStatus registerUnregisteredNpmsInternal(IProgressMonitor monitor) {
+		checkNotNull(monitor, "monitor");
+		MultiStatus refreshStatus = statusHelper.createMultiStatus("Register not registered NPM(s).");
+
+		List<N4JSExternalProject> unregisteredProjects = new LinkedList<>();
+		for (N4JSExternalProject p : externalLibraryWorkspace.getProjects()) {
+			if (!indexSynchronizer.isInIndex(p)) {
+				unregisteredProjects.add(p);
+			}
+		}
+
+		indexSynchronizer.synchronizeNpms(monitor);
+
+		Collection<String> packageNames = getAllNpmProjectsMapping().keySet();
+		if (packageNames.isEmpty()) {
+			return statusHelper.OK();
+		}
+
+		SubMonitor subMonitor = SubMonitor.convert(monitor, 10);
+		try {
+			indexSynchronizer.reindexAllExternalProjects(subMonitor.newChild(9));
+
+			return refreshStatus;
+
+		} finally {
+			subMonitor.done();
+		}
+	}
+
+	/**
 	 * Cleans npm cache. Please note:
 	 * <p>
 	 * <i>"It should never be necessary to clear the cache for any reason other than reclaiming disk space"</i> (see

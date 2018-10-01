@@ -31,6 +31,7 @@ import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.external.NpmLogger;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.resources.ExternalProject;
 
@@ -245,6 +246,15 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 		if (!rr.externalProjectsDone.isEmpty()) {
 			SortedSet<String> prjNames = getProjectNamesFromLocations(rr.externalProjectsDone);
 			logger.logInfo("External libraries " + jobName + ": " + String.join(", ", prjNames));
+		}
+
+		if (!rr.wipedProjects.isEmpty()) {
+			SortedSet<String> prjNames = new TreeSet<>();
+			for (URI location : rr.wipedProjects) {
+				String projectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location);
+				prjNames.add(projectName);
+			}
+			logger.logInfo("Projects deregistered: " + String.join(", ", prjNames));
 		}
 
 		if (!rr.affectedWorkspaceProjects.isEmpty()) {

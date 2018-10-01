@@ -247,7 +247,10 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 		toBeWiped.addAll(toBeDeleted);
 		wipeIndex(monitor, toBeWiped, allProjectsToClean);
 
-		return new RegisterResult(allProjectsToClean.toArray(new IProject[0]), wsPrjAffected.toArray(new IProject[0]));
+		return new RegisterResult(
+				allProjectsToClean.toArray(new IProject[0]),
+				wsPrjAffected.toArray(new IProject[0]),
+				toBeWiped);
 	}
 
 	private Set<N4JSExternalProject> getAllToBeCleaned(Set<URI> toBeDeleted) {
@@ -409,6 +412,11 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	@Override
 	public void updateState() {
 		projectProvider.updateCache();
+	}
+
+	@Override
+	public Collection<N4JSExternalProject> computeProjectsUncached() {
+		return projectProvider.computeProjectsUncached();
 	}
 
 }
