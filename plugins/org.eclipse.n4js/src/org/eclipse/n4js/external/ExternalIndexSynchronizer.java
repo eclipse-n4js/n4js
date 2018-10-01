@@ -101,6 +101,7 @@ public abstract class ExternalIndexSynchronizer {
 	 * locations and versions.
 	 */
 	final public Map<String, Pair<URI, String>> findNpmsInFolder() {
+		String nodeModulesFolder = locationProvider.getNodeModulesURI().toString();
 		Map<String, Pair<URI, String>> npmsFolder = new HashMap<>();
 
 		externalLibraryWorkspace.updateState();
@@ -110,7 +111,7 @@ public abstract class ExternalIndexSynchronizer {
 			String name = n4jsProject.getProjectName();
 			VersionNumber version = n4jsProject.getVersion();
 
-			if (version != null) {
+			if (location.toString().startsWith(nodeModulesFolder) && version != null) {
 				npmsFolder.put(name, Pair.of(location, version.toString()));
 			}
 		}
@@ -136,6 +137,19 @@ public abstract class ExternalIndexSynchronizer {
 		}
 
 		return discoveredNpmsInIndex;
+	}
+
+	/** @return true iff the given project (i.e. its package.json) is contained in the index */
+	public boolean isInIndex(N4JSExternalProject project) {
+		return isInIndex(project.getIProject().getLocation());
+	}
+
+	/** @return true iff the given project (i.e. its package.json) is contained in the index */
+	public boolean isInIndex(URI projectLocation) {
+		final ResourceSet resourceSet = core.createResourceSet(Optional.absent());
+		final IResourceDescriptions index = core.getXtextIndex(resourceSet);
+		IResourceDescription resourceDescription = index.getResourceDescription(projectLocation);
+		return resourceDescription != null;
 	}
 
 	/** @return a set of all changes between the Xtext index and the external projects in all external locations */
