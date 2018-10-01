@@ -67,14 +67,14 @@ else
 	export NPM_TOKEN=dummy	
 fi;
 
-echo "==== STEP 1/9: clean up (clean yarn cache, etc.)"
+echo "==== STEP 1/10: clean up (clean yarn cache, etc.)"
 yarn cache clean
 rm -rf node_modules
 
-echo "==== STEP 2/9: install dependencies and prepare npm task scripts"
+echo "==== STEP 2/10: install dependencies and prepare npm task scripts"
 yarn install
 
-echo "==== STEP 3/9: run lerna run build/test on n4js-libs"
+echo "==== STEP 3/10: run lerna run build/test on n4js-libs"
 export PATH=`pwd`/node_modules/.bin:${PATH}
 export N4_N4JSC_JAR="${REPO_ROOT_DIR}/tools/org.eclipse.n4js.hlc/target/n4jsc.jar"
 lerna run build
@@ -84,7 +84,7 @@ export NPM_CONFIG_GLOBALCONFIG="$N4JS_LIBS_ROOT"
 echo "Publishing using .npmrc configuration to ${NPM_REGISTRY}";
 
 if [ "${NPM_TAG}" = "latest" ]; then
-    echo "==== STEP 4/9: Checking whether publication of n4js-libs is required (using ${N4JS_LIBS_REPRESENTATIVE} as representative) ..."
+    echo "==== STEP 4/10: Checking whether publication of n4js-libs is required (using ${N4JS_LIBS_REPRESENTATIVE} as representative) ..."
 
     # Obtain the latest commit on npm registry, using the representative
     N4JS_LIBS_VERSION_PUBLIC=`curl -s ${NPM_REGISTRY}/${N4JS_LIBS_REPRESENTATIVE} | jq -r '.["dist-tags"].latest'`
@@ -110,32 +110,58 @@ if [ "${NPM_TAG}" = "latest" ]; then
 
     # update repository meta-info in package.json of all n4js-libs to point to the GitHub and the correct commit
     # (yarn isn't doing this at the moment: https://github.com/yarnpkg/yarn/issues/2978 )
-    echo "==== STEP 5/9: Updating property 'gitHead' in package.json of all n4js-libs to new local commit ID ..."
+    echo "==== STEP 5/10: Updating property 'gitHead' in package.json of all n4js-libs to new local commit ID ..."
     lerna exec -- cp package.json package.json_TEMP
     lerna exec -- 'jq -r ".gitHead |= \"'$N4JS_LIBS_COMMIT_ID_LOCAL'\"" package.json_TEMP > package.json'
     lerna exec -- rm package.json_TEMP
 
-    PUBLISH_VERSION=`semver -i patch ${N4JS_LIBS_VERSION_PUBLIC}`
+    echo "==== STEP 6/10: Compute new version number for publishing ..."
+    VERSION_MAJOR_REQUESTED=`jq -r '.major' version.json`
+    VERSION_MINOR_REQUESTED=`jq -r '.minor' version.json`
+    echo "Requested major segment       : ${VERSION_MAJOR_REQUESTED} (from file n4js-libs/version.json)"
+    echo "Requested minor segment       : ${VERSION_MINOR_REQUESTED} (from file n4js-libs/version.json)"
+    echo "Latest published version      : ${N4JS_LIBS_VERSION_PUBLIC}"
+    MAJOR_MINOR_PATTERN="([0-9]+)\\.([0-9]+)\\..*"
+    if [[ "${N4JS_LIBS_VERSION_PUBLIC}" =~ ${MAJOR_MINOR_PATTERN} ]]; then
+        VERSION_MAJOR_PUBLIC="${BASH_REMATCH[1]}"
+        VERSION_MINOR_PUBLIC="${BASH_REMATCH[2]}"
+    else
+        echo "ERROR: cannot extract major/minor segments from latest published version!"
+        exit -1
+    fi
+    if [ "$VERSION_MAJOR_REQUESTED" -gt "$VERSION_MAJOR_PUBLIC" ]; then
+        echo "New major version segment requested in file n4js-libs/version.json -> will bump major segment"
+        PUBLISH_VERSION="$VERSION_MAJOR_REQUESTED.$VERSION_MINOR_REQUESTED.0"
+    elif [ "$VERSION_MINOR_REQUESTED" -gt "$VERSION_MINOR_PUBLIC" ]; then
+        echo "New minor version segment requested in file n4js-libs/version.json -> will bump minor segment"
+        # for major segment we use the latest public version as template to make sure
+        # we do not end up with a lower version than the latest public version
+        PUBLISH_VERSION="$VERSION_MAJOR_PUBLIC.$VERSION_MINOR_REQUESTED.0"
+    else
+        echo "No new major/minor version segment requested in file n4js-libs/version.json -> will bump patch segment"
+        PUBLISH_VERSION=`semver -i patch ${N4JS_LIBS_VERSION_PUBLIC}`
+    fi
+    echo "Bumped version for publishing : ${PUBLISH_VERSION}"
 else
     # Use a version that we are sure can not exist on public npm registry for testing
-    echo "==== Skipping steps 4-5 (because publishing only for testing purposes)"
+    echo "==== Skipping steps 4-6 (because publishing only for testing purposes)"
     PUBLISH_VERSION="9999.0.0"
 fi
 
 # enforce consistent repository meta-info in package.json of all n4js-libs
-echo "==== STEP 6/9: Setting property 'repository' in package.json of all n4js-libs (for consistency) ..."
+echo "==== STEP 7/10: Setting property 'repository' in package.json of all n4js-libs (for consistency) ..."
 lerna exec -- cp package.json package.json_TEMP
 lerna exec -- 'jq -r ".repository |= {type: \"git\", url: \"https://github.com/eclipse/n4js/tree/master/n4js-libs/packages/$LERNA_PACKAGE_NAME\"}" package.json_TEMP > package.json'
 lerna exec -- rm package.json_TEMP
 
-echo "==== STEP 7/9: Appending version information to README.md files ..."
+echo "==== STEP 8/10: Appending version information to README.md files ..."
 export VERSION_INFO="\n\n## Version\n\nVersion ${PUBLISH_VERSION} of \${LERNA_PACKAGE_NAME} was built from commit [${N4JS_LIBS_COMMIT_ID_LOCAL}](https://github.com/eclipse/n4js/tree/${N4JS_LIBS_COMMIT_ID_LOCAL}/n4js-libs/packages/\${LERNA_PACKAGE_NAME}).\n\n"
 lerna exec -- 'printf "'${VERSION_INFO}'" >> README.md'
 
-echo "==== STEP 8/9: Now publishing with version: ${PUBLISH_VERSION}"
+echo "==== STEP 9/10: Now publishing with version: ${PUBLISH_VERSION}"
 lerna publish --loglevel info --skip-git --registry="${NPM_REGISTRY}" --repo-version="${PUBLISH_VERSION}" --exact --yes --bail --npm-tag="${NPM_TAG}"
 
-echo "==== STEP 9/9: Remove node_modules after publishing"
+echo "==== STEP 10/10: Remove node_modules after publishing"
 lerna exec -- rm -rf node_modules
 rm -rf node_modules
 
