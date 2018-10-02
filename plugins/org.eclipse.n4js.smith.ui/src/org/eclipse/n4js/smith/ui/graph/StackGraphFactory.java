@@ -10,7 +10,10 @@
  */
 package org.eclipse.n4js.smith.ui.graph;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 import org.eclipse.n4js.smith.CollectedDataAccess;
 import org.eclipse.n4js.smith.DataSeries;
@@ -51,7 +54,12 @@ public class StackGraphFactory {
 		indent.increase();
 
 		Long siblingSum = parentSeries.getChildren().map(s -> s.sum).max(Long::compare).get();
-		parentSeries.getChildren().forEach(series -> {
+
+		List<DataSeries> siblings = parentSeries.getChildren().collect(Collectors.toList());
+		Collections.sort(siblings, (s1, s2) -> Long.compare(s2.sum, s1.sum));
+
+		long total = 0L;
+		for (DataSeries series : siblings) {
 			sj.add(indent.get() + SimpleTimeFormat.convert(series.sum) + " - " + series.name);
 			float parentScale = (float) series.sum / parentSeries.sum;
 			float siblingScale = (float) series.sum / siblingSum;
@@ -61,7 +69,12 @@ public class StackGraphFactory {
 
 			parentNode.addChild(node);
 			collectData(series, node, baseHeight, baseWidth, sj, indent);
-		});
+
+			total += series.sum;
+		}
+
+		long missing = parentSeries.sum - total;
+		sj.add(indent.get() + "NOT INCLUDED: " + SimpleTimeFormat.convert(missing));
 
 		indent.decrease();
 	}
