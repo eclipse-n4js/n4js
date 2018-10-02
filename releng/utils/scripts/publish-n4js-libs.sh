@@ -132,20 +132,17 @@ if [ "${NPM_TAG}" = "latest" ]; then
     if [ "$VERSION_MAJOR_REQUESTED" -gt "$VERSION_MAJOR_PUBLIC" ]; then
         echo "New major version segment requested in file n4js-libs/version.json -> will bump major segment"
         PUBLISH_VERSION="$VERSION_MAJOR_REQUESTED.$VERSION_MINOR_REQUESTED.0"
-    elif [ "$VERSION_MAJOR_REQUESTED" -lt "$VERSION_MAJOR_PUBLIC" ]; then
-        echo "ERROR: requested major segment must not be lower than last published major segment!
-        exit -1
     elif [ "$VERSION_MINOR_REQUESTED" -gt "$VERSION_MINOR_PUBLIC" ]; then
         echo "New minor version segment requested in file n4js-libs/version.json -> will bump minor segment"
         # for major segment we use the latest public version as template to make sure
         # we do not end up with a lower version than the latest public version
         PUBLISH_VERSION="$VERSION_MAJOR_PUBLIC.$VERSION_MINOR_REQUESTED.0"
-    elif [ "$VERSION_MINOR_REQUESTED" -lt "$VERSION_MINOR_PUBLIC" ]; then
-        echo "ERROR: requested minor segment must not be lower than last published minor segment!
-        exit -1
-    else
+    elif [ "$VERSION_MAJOR_REQUESTED" -eq "$VERSION_MAJOR_PUBLIC" ] && [ "$VERSION_MINOR_REQUESTED" -eq "$VERSION_MINOR_PUBLIC" ]; then
         echo "No new major/minor version segment requested in file n4js-libs/version.json -> will bump patch segment"
         PUBLISH_VERSION=`semver -i patch ${N4JS_LIBS_VERSION_PUBLIC}`
+    else
+        echo "ERROR: requested major/minor segment must not be lower than latest published major/minor segment!"
+        exit -1
     fi
     echo "Bumped version for publishing : ${PUBLISH_VERSION}"
 else
