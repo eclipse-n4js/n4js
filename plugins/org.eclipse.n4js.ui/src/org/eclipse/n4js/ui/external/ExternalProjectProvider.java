@@ -81,7 +81,7 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 	 */
 	@Inject
 	ExternalProjectProvider(ExternalLibraryPreferenceStore preferenceStore) {
-		rootLocations.addAll(sortByShadowing(preferenceStore.getLocations()));
+		rootLocations.addAll(preferenceStore.getLocations());
 		preferenceStore.addListener(this);
 	}
 
@@ -148,43 +148,10 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 
 	private void updateCache(Set<java.net.URI> newLocations) {
 		rootLocations.clear();
-		List<java.net.URI> locationsInShadowOrder = sortByShadowing(newLocations);
+		List<java.net.URI> locationsInShadowOrder = ExternalLibrariesActivator.sortByShadowing(newLocations);
 		rootLocations.addAll(locationsInShadowOrder);
 
 		updateCache();
-	}
-
-	private List<java.net.URI> sortByShadowing(Collection<java.net.URI> locations) {
-		Map<String, java.net.URI> knownLocations = new HashMap<>();
-		List<java.net.URI> unknownLocations = new LinkedList<>();
-
-		for (java.net.URI location : locations) {
-			String locStr = location.toString();
-			locStr = locStr.endsWith("/") ? locStr.substring(0, locStr.length() - 1) : locStr;
-
-			boolean locationFound = false;
-			for (String knownLocation : ExternalLibrariesActivator.CATEGORY_SHADOWING_ORDER) {
-				if (locStr.endsWith(knownLocation)) {
-					knownLocations.put(knownLocation, location);
-					locationFound = true;
-				}
-			}
-
-			if (!locationFound) {
-				unknownLocations.add(location);
-			}
-		}
-
-		List<java.net.URI> sortedLocations = new LinkedList<>();
-		for (String knownLocation : ExternalLibrariesActivator.CATEGORY_SHADOWING_ORDER) {
-			java.net.URI location = knownLocations.get(knownLocation);
-			if (location != null) {
-				sortedLocations.add(location);
-			}
-		}
-		sortedLocations.addAll(unknownLocations);
-
-		return sortedLocations;
 	}
 
 	void updateCache() {

@@ -32,9 +32,9 @@ import org.eclipse.n4js.utils.StatusHelper;
  * This class requires a running {@link Platform platform}.
  */
 @Singleton
-public class OsgiExternalLibraryPreferenceStore extends ExternalLibraryPreferenceStoreImpl {
+public class HlcExternalLibraryPreferenceStore extends ExternalLibraryPreferenceStoreImpl {
 
-	private static final Logger LOGGER = Logger.getLogger(OsgiExternalLibraryPreferenceStore.class);
+	private static final Logger LOGGER = Logger.getLogger(HlcExternalLibraryPreferenceStore.class);
 
 	private static final String QUALIFIER = ExternalLibraryPreferenceStore.class.getName();
 	private static final String CONFIGURATION_KEY = QUALIFIER + ".configuration";

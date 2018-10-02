@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
 import org.eclipse.n4js.json.JSON.JSONArray;
 import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONObject;
@@ -231,7 +232,8 @@ public class ExternalLibraryPreferenceModel {
 	 * @return a list of external library folder location URIs.
 	 */
 	public List<URI> getExternalLibraryLocationsAsUris() {
-		return from(externalLibraryLocations).transform(path -> new File(path).toURI()).toList();
+		List<URI> locations = from(externalLibraryLocations).transform(path -> new File(path).toURI()).toList();
+		return ExternalLibrariesActivator.sortByShadowing(locations);
 	}
 
 	/**
