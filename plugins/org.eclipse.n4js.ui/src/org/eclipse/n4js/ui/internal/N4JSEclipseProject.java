@@ -17,12 +17,12 @@ import java.nio.file.Path;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.external.ExternalProject;
 import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseSourceContainer;
 import org.eclipse.n4js.utils.URIUtils;
-import org.eclipse.n4js.utils.resources.ExternalProject;
 import org.eclipse.xtext.ui.XtextProjectHelper;
 
 import com.google.common.base.Optional;

@@ -13,7 +13,9 @@ package org.eclipse.n4js.ui.quickfix.packagejson;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.function.Function;
 
 import org.eclipse.core.resources.IMarker;
@@ -26,9 +28,14 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.n4js.external.ExternalIndexSynchronizer;
+import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
+import org.eclipse.n4js.projectModel.dependencies.ProjectDependenciesHelper;
+import org.eclipse.n4js.semver.SemverMatcher;
+import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.ui.changes.IChange;
 import org.eclipse.n4js.ui.changes.PackageJsonChangeProvider;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
@@ -53,10 +60,16 @@ import com.google.inject.Inject;
 public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickfixProvider {
 
 	@Inject
+	private ExternalLibraryWorkspace extWS;
+
+	@Inject
 	private LibraryManager libraryManager;
 
 	@Inject
 	private ExternalIndexSynchronizer indexSynchronizer;
+
+	@Inject
+	private ProjectDependenciesHelper dependenciesHelper;
 
 	@Inject
 	private StatusHelper statusHelper;
@@ -98,7 +111,61 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 			}
 		};
 
-		accept(acceptor, issue, label, description, "SomeImage.gif", modification);
+		accept(acceptor, issue, label, description, null, modification);
+	}
+
+	/** Installs all missing npms */
+	@Fix(IssueCodes.NON_EXISTING_PROJECT)
+	public void installAllMissingNPMs(Issue issue, IssueResolutionAcceptor acceptor) {
+		final String label = "Install all missing npm(s)";
+		final String description = "Retrieves npms from all dependency sections of all projects and installs those that are not installed yet.";
+		final String errMsg = "Error while installing npms";
+
+		N4Modification modification = new N4Modification() {
+			@Override
+			public boolean supportsMultiApply() {
+				return true;
+			}
+
+			@Override
+			public boolean isApplicableTo(IMarker marker) {
+				return true;
+			}
+
+			@Override
+			public Collection<? extends IChange> computeChanges(IModificationContext context, IMarker marker,
+					int offset, int length, EObject element) throws Exception {
+
+				Function<IProgressMonitor, IStatus> registerFunction = new Function<IProgressMonitor, IStatus>() {
+					@Override
+					public IStatus apply(IProgressMonitor monitor) {
+						Map<String, VersionNumber> installedNpms = extWS.getProjectInfos();
+						Map<String, NPMVersionRequirement> reqNpms = dependenciesHelper
+								.computeDependenciesOfWorkspace();
+						dependenciesHelper.fixDependenciesToInstall(reqNpms);
+
+						for (Iterator<String> npmNameIter = reqNpms.keySet().iterator(); npmNameIter.hasNext();) {
+							String npmName = npmNameIter.next();
+
+							if (installedNpms.containsKey(npmName)) {
+								NPMVersionRequirement npmVersionRequirement = reqNpms.get(npmName);
+								VersionNumber installedVersion = installedNpms.get(npmName);
+								boolean matches = SemverMatcher.matches(installedVersion, npmVersionRequirement);
+								if (matches) {
+									// already installed and version matches
+									npmNameIter.remove();
+								}
+							}
+						}
+						return libraryManager.installNPMs(reqNpms, false, monitor);
+					}
+				};
+				wrapWithMonitor(label, errMsg, registerFunction);
+				return Collections.emptyList();
+			}
+		};
+
+		accept(acceptor, issue, label, description, null, modification);
 	}
 
 	/** Registers a specific npm */

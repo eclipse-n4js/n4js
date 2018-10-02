@@ -30,6 +30,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.external.ExternalProject;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
@@ -39,7 +40,6 @@ import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.ui.internal.ExternalProjectCacheLoader;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.URIUtils;
-import org.eclipse.n4js.utils.resources.ExternalProject;
 import org.eclipse.n4js.validation.helper.FolderContainmentHelper;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.UriUtil;
@@ -157,35 +157,12 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 	void updateCache() {
 		projectCache.clear();
 
-		for (Pair<N4JSExternalProject, ProjectDescription> pair : collectProjects()) {
+		for (Pair<N4JSExternalProject, ProjectDescription> pair : computeProjectsUncached()) {
 			URI locationURI = pair.getFirst().getIProject().getLocation();
 			projectCache.put(locationURI, pair);
 		}
 
 		updateMappings();
-	}
-
-	/** @return all projects. Does not affect cached projects. */
-	private List<Pair<N4JSExternalProject, ProjectDescription>> collectProjects() {
-		List<Pair<N4JSExternalProject, ProjectDescription>> projectPairs = new LinkedList<>();
-		Iterable<java.net.URI> projectRoots = externalLibraryPreferenceStore
-				.convertToProjectRootLocations(rootLocations);
-
-		for (java.net.URI projectRoot : projectRoots) {
-			URI projectLocation = URIUtils.toFileUri(projectRoot);
-
-			try {
-				Pair<N4JSExternalProject, ProjectDescription> pair;
-				pair = cacheLoader.load(projectLocation).orNull();
-				if (null != pair) {
-					projectPairs.add(pair);
-				}
-			} catch (Exception e) {
-				// ignore
-			}
-		}
-
-		return projectPairs;
 	}
 
 	/**
@@ -266,12 +243,26 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 		return unmodifiableCollection(projects.values());
 	}
 
-	Collection<N4JSExternalProject> computeProjectsUncached() {
-		List<N4JSExternalProject> projects = new LinkedList<>();
-		for (Pair<N4JSExternalProject, ProjectDescription> pair : collectProjects()) {
-			projects.add(pair.getFirst());
+	List<Pair<N4JSExternalProject, ProjectDescription>> computeProjectsUncached() {
+		List<Pair<N4JSExternalProject, ProjectDescription>> projectPairs = new LinkedList<>();
+		Iterable<java.net.URI> projectRoots = externalLibraryPreferenceStore
+				.convertToProjectRootLocations(rootLocations);
+
+		for (java.net.URI projectRoot : projectRoots) {
+			URI projectLocation = URIUtils.toFileUri(projectRoot);
+
+			try {
+				Pair<N4JSExternalProject, ProjectDescription> pair;
+				pair = cacheLoader.load(projectLocation).orNull();
+				if (null != pair) {
+					projectPairs.add(pair);
+				}
+			} catch (Exception e) {
+				// ignore
+			}
 		}
-		return projects;
+
+		return projectPairs;
 	}
 
 	N4JSExternalProject getProject(String projectName) {

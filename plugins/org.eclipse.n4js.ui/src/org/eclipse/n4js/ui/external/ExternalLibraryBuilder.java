@@ -425,6 +425,8 @@ public class ExternalLibraryBuilder {
 					// The following procedure is similar to computer.updateProject except for the initial
 					// doRemoveProject invocation. TODO GH-1018: revisit whether doRemoveProject can really be omitted
 					// here
+					System.out.println("building " + n4Project.getProjectName());
+
 					ToBeBuilt toBeBuilt = new ToBeBuilt();
 					final SubMonitor childMonitor = SubMonitor.convert(monitor, 1);
 					n4Project.getProject().accept(new IResourceVisitor() {

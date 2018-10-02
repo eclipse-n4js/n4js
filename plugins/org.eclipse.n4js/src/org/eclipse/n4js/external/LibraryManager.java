@@ -21,13 +21,11 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -54,7 +52,6 @@ import org.eclipse.n4js.smith.ClosableMeasurement;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
 import org.eclipse.n4js.utils.StatusHelper;
-import org.eclipse.n4js.utils.resources.ExternalProject;
 import org.eclipse.xtext.util.Strings;
 import org.eclipse.xtext.xbase.lib.Pair;
 
@@ -225,12 +222,9 @@ public class LibraryManager {
 
 		try (ClosableMeasurement mes = dcLibMngr.getClosableMeasurement("installDependenciesInternal");) {
 			Map<String, NPMVersionRequirement> npmsToInstall = new LinkedHashMap<>(versionedNPMs);
-			Set<LibraryChange> actualChanges = new HashSet<>();
 
 			monitor.setTaskName("Installing packages... [step 1 of 2]");
-
-			List<LibraryChange> deltaChanges = installUninstallNPMs(monitor, status, npmsToInstall, emptyList());
-			actualChanges.addAll(deltaChanges);
+			List<LibraryChange> actualChanges = installUninstallNPMs(monitor, status, npmsToInstall, emptyList());
 
 			// if forceReloadAll, unregister all currently-registered projects from
 			// the workspace and remove them from the index

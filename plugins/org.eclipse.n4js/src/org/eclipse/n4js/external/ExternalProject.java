@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.utils.resources;
+package org.eclipse.n4js.external;
 
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.FluentIterable.from;
@@ -46,7 +46,13 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.io.FileDeleter;
+import org.eclipse.n4js.utils.resources.DelegatingWorkspace;
+import org.eclipse.n4js.utils.resources.ExternalFile;
+import org.eclipse.n4js.utils.resources.ExternalFolder;
+import org.eclipse.n4js.utils.resources.IExternalResource;
 
 import com.google.common.base.Objects;
 
@@ -117,7 +123,10 @@ public class ExternalProject extends Project implements IExternalResource {
 
 	@Override
 	public String getName() {
-		return file.getName();
+		org.eclipse.emf.common.util.URI uri = URIUtils.deriveProjectURIFromFileLocation(file);
+		String n4jsName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(uri);
+		String eclipseName = ProjectDescriptionUtils.convertN4JSProjectNameToEclipseProjectName(n4jsName);
+		return eclipseName;
 	}
 
 	@Override

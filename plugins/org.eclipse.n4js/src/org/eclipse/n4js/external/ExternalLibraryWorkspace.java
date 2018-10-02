@@ -13,6 +13,7 @@ package org.eclipse.n4js.external;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -25,6 +26,7 @@ import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.utils.URIUtils;
+import org.eclipse.xtext.util.Pair;
 
 import com.google.inject.ImplementedBy;
 
@@ -149,7 +151,7 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 	 *
 	 * @return the external projects that are actually on the HDD.
 	 */
-	public abstract Collection<N4JSExternalProject> computeProjectsUncached();
+	public abstract List<Pair<N4JSExternalProject, ProjectDescription>> computeProjectsUncached();
 
 	/**
 	 * Returns with all existing external projects that are contained in the given external library root location.

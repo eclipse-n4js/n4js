@@ -19,7 +19,6 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IBuildConfiguration;
 import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.utils.resources.ExternalProject;
 
 import com.google.common.collect.ImmutableList;
 

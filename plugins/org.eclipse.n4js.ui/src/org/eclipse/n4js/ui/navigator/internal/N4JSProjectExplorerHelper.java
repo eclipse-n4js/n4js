@@ -34,12 +34,12 @@ import java.util.Map;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
+import org.eclipse.n4js.external.ExternalProject;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 import org.eclipse.n4js.utils.collections.Arrays2;
-import org.eclipse.n4js.utils.resources.ExternalProject;
 import org.eclipse.n4js.utils.resources.IExternalResource;
 import org.eclipse.swt.graphics.Image;
 

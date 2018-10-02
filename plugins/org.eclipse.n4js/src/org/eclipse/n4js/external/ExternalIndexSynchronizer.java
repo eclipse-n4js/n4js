@@ -26,8 +26,8 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
 import org.eclipse.n4js.json.JSON.JSONPackage;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.packagejson.PackageJsonResourceDescriptionExtension;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
@@ -104,11 +104,13 @@ public abstract class ExternalIndexSynchronizer {
 		Map<String, Pair<URI, String>> npmsFolder = new HashMap<>();
 
 		String nodeModulesFolder = locationProvider.getNodeModulesURI().toString();
-		for (N4JSExternalProject p : externalLibraryWorkspace.computeProjectsUncached()) {
-			IN4JSProject n4jsProject = p.getIProject();
-			URI location = n4jsProject.getLocation();
-			String name = n4jsProject.getProjectName();
-			VersionNumber version = n4jsProject.getVersion();
+		for (org.eclipse.xtext.util.Pair<N4JSExternalProject, ProjectDescription> pair : externalLibraryWorkspace
+				.computeProjectsUncached()) {
+
+			N4JSExternalProject n4jsProject = pair.getFirst();
+			VersionNumber version = pair.getSecond().getProjectVersion();
+			URI location = n4jsProject.getIProject().getLocation();
+			String name = n4jsProject.getIProject().getProjectName();
 
 			if (location.toString().startsWith(nodeModulesFolder) && version != null) {
 				npmsFolder.put(name, Pair.of(location, version.toString()));
@@ -192,6 +194,9 @@ public abstract class ExternalIndexSynchronizer {
 				URI locationIndex = npmsOfIndex.get(name).getKey();
 				URI locationFolder = npmsOfFolder.get(name).getKey();
 
+				if (!locationFolder.equals(locationIndex)) {
+					System.out.println();
+				}
 				Preconditions.checkState(locationFolder.equals(locationIndex));
 
 				if (versionIndex != null && !versionIndex.equals(versionFolder)) {

@@ -16,6 +16,7 @@ import static java.util.Collections.emptyMap;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -25,6 +26,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
+import org.eclipse.xtext.util.Pair;
 
 import com.google.inject.Singleton;
 
@@ -125,7 +127,7 @@ public class HlcExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	}
 
 	@Override
-	public Collection<N4JSExternalProject> computeProjectsUncached() {
+	public List<Pair<N4JSExternalProject, ProjectDescription>> computeProjectsUncached() {
 		return emptyList();
 	}
 

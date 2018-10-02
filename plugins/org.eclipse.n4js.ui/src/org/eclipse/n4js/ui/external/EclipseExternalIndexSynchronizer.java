@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalIndexSynchronizer;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
+import org.eclipse.n4js.external.ExternalProject;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace.RegisterResult;
 import org.eclipse.n4js.external.LibraryChange;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
@@ -33,7 +34,6 @@ import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.URIUtils;
-import org.eclipse.n4js.utils.resources.ExternalProject;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -288,7 +288,6 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 		}
 
 		RegisterResult cleanResult = externalLibraryWorkspace.deregisterProjects(monitor, cleanProjects);
-		externalErrorMarkerManager.clearAllMarkers();
 		printRegisterResults(cleanResult, "deregistered");
 	}
 

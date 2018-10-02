@@ -27,9 +27,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.external.ExternalProject;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
-import org.eclipse.n4js.utils.resources.ExternalProject;
 import org.eclipse.xtext.ui.shared.contribution.IEagerContribution;
 import org.eclipse.xtext.ui.shared.contribution.ISharedStateContributionRegistry;
 

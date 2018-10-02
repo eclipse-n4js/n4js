@@ -41,6 +41,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
+import org.eclipse.n4js.external.ExternalProject;
 import org.eclipse.n4js.external.ExternalProjectsCollector;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.external.RebuildWorkspaceProjectsScheduler;
@@ -54,7 +55,6 @@ import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
 import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.URIUtils;
-import org.eclipse.n4js.utils.resources.ExternalProject;
 import org.eclipse.n4js.utils.resources.IExternalResource;
 import org.eclipse.xtext.util.Pair;
 
@@ -430,7 +430,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	}
 
 	@Override
-	public Collection<N4JSExternalProject> computeProjectsUncached() {
+	public List<Pair<N4JSExternalProject, ProjectDescription>> computeProjectsUncached() {
 		return projectProvider.computeProjectsUncached();
 	}
 
