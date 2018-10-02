@@ -16,11 +16,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.NpmLogger;
+import org.eclipse.n4js.projectModel.dependencies.ProjectDependenciesHelper;
 import org.eclipse.n4js.semver.SemverMatcher;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
@@ -40,12 +41,13 @@ public class ExternalLibrariesInstallHelper {
 
 	static private final DataCollector dcInstallHelper = DataCollectors.INSTANCE
 			.getOrCreateDataCollector("External Libraries Install Helper");
-
 	private static final DataCollector dcCollectMissingDependencies = DataCollectors.INSTANCE
 			.getOrCreateDataCollector("Collect missing dependencies", "External Libraries Install Helper");
-
 	private static final DataCollector dcInstallMissingDependencies = DataCollectors.INSTANCE
 			.getOrCreateDataCollector("Install missing dependencies", "External Libraries Install Helper");
+
+	@Inject
+	private ExternalLibraryWorkspace externalWS;
 
 	@Inject
 	private ProjectDependenciesHelper dependenciesHelper;
@@ -75,14 +77,11 @@ public class ExternalLibrariesInstallHelper {
 		// remove npms
 		externals.maintenanceDeleteNpms(multistatus);
 
-		Map<String, VersionNumber> projectNamesOfShippedCode = StreamSupport
-				.stream(dependenciesHelper.getAvailableProjectsDescriptions(true).spliterator(), false)
-				.collect(Collectors.toMap(pd -> pd.getProjectName(), pd -> pd.getProjectVersion()));
-
+		Map<String, VersionNumber> projectNamesOfShippedCode = externalWS.getProjectInfos();
 		Measurement measurment = dcCollectMissingDependencies.getMeasurement("Collect Missing Dependencies");
 
 		// install npms from target platform
-		Map<String, NPMVersionRequirement> dependenciesToInstall = dependenciesHelper.calculateDependenciesToInstall();
+		Map<String, NPMVersionRequirement> dependenciesToInstall = dependenciesHelper.computeDependenciesOfWorkspace();
 		removeDependenciesToShippedCodeIfVersionMatches(dependenciesToInstall, projectNamesOfShippedCode);
 		addDependenciesForRemainingShippedCode(dependenciesToInstall, projectNamesOfShippedCode.keySet());
 		logShippedCodeInstallationStatus(dependenciesToInstall, projectNamesOfShippedCode.keySet());

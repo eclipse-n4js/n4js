@@ -13,6 +13,7 @@ package org.eclipse.n4js.external;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
@@ -22,6 +23,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.inject.ImplementedBy;
@@ -134,6 +136,13 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 	 * @return the external projects.
 	 */
 	public abstract Collection<N4JSExternalProject> getProjects();
+
+	/**
+	 * Returns a map with name and version of all available external projects.
+	 *
+	 * @return map of name and version of the external projects.
+	 */
+	public abstract Map<String, VersionNumber> getProjectInfos();
 
 	/**
 	 * Returns with all external projects. Does not use cached data.

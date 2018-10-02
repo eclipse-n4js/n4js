@@ -12,9 +12,11 @@ package org.eclipse.n4js.external;
 
 import static java.util.Collections.emptyIterator;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.resources.IResource;
@@ -22,6 +24,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectReference;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
 
 import com.google.inject.Singleton;
 
@@ -54,6 +57,11 @@ public class HlcExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	@Override
 	public Collection<N4JSExternalProject> getProjects() {
 		return emptyList();
+	}
+
+	@Override
+	public Map<String, VersionNumber> getProjectInfos() {
+		return emptyMap();
 	}
 
 	@Override

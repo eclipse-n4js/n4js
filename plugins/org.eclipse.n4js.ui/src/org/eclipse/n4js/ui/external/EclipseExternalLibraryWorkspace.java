@@ -18,10 +18,12 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -47,6 +49,7 @@ import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
 import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
@@ -335,6 +338,18 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	@Override
 	public Collection<N4JSExternalProject> getProjects() {
 		return projectProvider.getProjects();
+	}
+
+	@Override
+	public Map<String, VersionNumber> getProjectInfos() {
+		Map<String, VersionNumber> externalLibs = new HashMap<>();
+		for (N4JSExternalProject pd : getProjects()) {
+			String name = pd.getIProject().getProjectName();
+			VersionNumber version = pd.getIProject().getVersion();
+			externalLibs.put(name, version);
+		}
+
+		return externalLibs;
 	}
 
 	@Override
