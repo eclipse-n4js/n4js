@@ -112,7 +112,7 @@ public class HeadlessHelper {
 		// TODO GH-783 refactor FileBasedWorkspace, https://github.com/eclipse/n4js/issues/783
 		// this is reverse mapping of the one that is kept in the workspace
 		Map<String, URI> registeredProjects = new HashMap<>();
-		workspace.getAllProjectsLocations().forEachRemaining(uri -> {
+		workspace.getAllProjectLocationsIterator().forEachRemaining(uri -> {
 			String projectName = workspace.getProjectDescription(uri).getProjectName();
 			registeredProjects.put(projectName, URIUtils.normalize(uri));
 		});

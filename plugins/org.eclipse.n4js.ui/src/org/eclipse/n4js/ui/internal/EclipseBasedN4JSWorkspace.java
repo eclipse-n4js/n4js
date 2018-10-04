@@ -11,7 +11,9 @@
 package org.eclipse.n4js.ui.internal;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
@@ -101,6 +103,16 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 				location);
 
 		return existing;
+	}
+
+	@Override
+	public Collection<URI> getAllProjectLocations() {
+		Collection<URI> prjLocations = new LinkedList<>();
+		for (IProject prj : workspace.getProjects()) {
+			URI uri = URIUtils.convert(prj);
+			prjLocations.add(uri);
+		}
+		return prjLocations;
 	}
 
 	/** Loads the project description and notifies the listener */

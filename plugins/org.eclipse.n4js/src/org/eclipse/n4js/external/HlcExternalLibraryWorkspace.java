@@ -77,11 +77,6 @@ public class HlcExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	}
 
 	@Override
-	public Collection<ProjectDescription> getProjectsDescriptions(java.net.URI rootLocation) {
-		return emptyList();
-	}
-
-	@Override
 	public N4JSExternalProject getProject(final String projectName) {
 		return null;
 	}
@@ -128,6 +123,11 @@ public class HlcExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 
 	@Override
 	public List<Pair<N4JSExternalProject, ProjectDescription>> computeProjectsUncached() {
+		return emptyList();
+	}
+
+	@Override
+	public Collection<URI> getAllProjectLocations() {
 		return emptyList();
 	}
 

@@ -30,7 +30,6 @@ import java.net.URI;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -48,6 +47,7 @@ import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.LibraryManager;
+import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.external.NpmCLI;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
@@ -57,6 +57,7 @@ import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.SemverUtils;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.semver.Semver.VersionComparator;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.ui.external.ExternalLibrariesActionsHelper;
 import org.eclipse.n4js.ui.utils.InputComposedValidator;
 import org.eclipse.n4js.ui.utils.InputFunctionalValidator;
@@ -344,15 +345,18 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	}
 
 	private Map<String, NPMVersionRequirement> getInstalledNpms() {
-		final URI root = locationProvider.getNodeModulesURI();
-		final Set<ProjectDescription> projects = from(externalLibraryWorkspace.getProjectsDescriptions((root))).toSet();
+		URI root = locationProvider.getNodeModulesURI();
+		Collection<N4JSExternalProject> projects = externalLibraryWorkspace.getProjectsIn(root);
+		Map<String, NPMVersionRequirement> versionedNpms = new HashMap<>();
 
-		final Map<String, NPMVersionRequirement> versionedNpms = new HashMap<>();
-		projects.forEach((ProjectDescription pd) -> {
-			NPMVersionRequirement vr = SemverUtils.createVersionRangeSet(VersionComparator.EQUALS,
-					pd.getProjectVersion());
-			versionedNpms.put(pd.getProjectName(), vr);
-		});
+		for (N4JSExternalProject prj : projects) {
+			org.eclipse.emf.common.util.URI location = prj.getIProject().getLocation();
+			ProjectDescription pd = externalLibraryWorkspace.getProjectDescription(location);
+			String name = pd.getProjectName();
+			VersionNumber version = pd.getProjectVersion();
+			NPMVersionRequirement vr = SemverUtils.createVersionRangeSet(VersionComparator.EQUALS, version);
+			versionedNpms.put(name, vr);
+		}
 
 		return versionedNpms;
 	}

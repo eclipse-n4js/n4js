@@ -12,11 +12,9 @@ package org.eclipse.n4js.ui.external;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Maps.newHashMap;
-import static com.google.common.collect.Maps.newTreeMap;
 import static java.util.Collections.unmodifiableCollection;
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
 
-import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,7 +22,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -36,15 +33,23 @@ import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore.StoreUpdatedListener;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
 import org.eclipse.n4js.ui.internal.ExternalProjectCacheLoader;
+import org.eclipse.n4js.ui.internal.N4JSEclipseModel;
+import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
+import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.URIUtils;
-import org.eclipse.n4js.validation.helper.FolderContainmentHelper;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.UriUtil;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -64,13 +69,18 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 	private ExternalLibraryPreferenceStore externalLibraryPreferenceStore;
 
 	@Inject
-	private FolderContainmentHelper containmentHelper;
+	private EclipseBasedN4JSWorkspace userWorkspace;
+
+	@Inject
+	private N4JSEclipseModel model;
 
 	private final Collection<ExternalLocationsUpdatedListener> locListeners = new LinkedList<>();
 	private final List<java.net.URI> rootLocations = new LinkedList<>();
 	private final Map<URI, Pair<N4JSExternalProject, ProjectDescription>> projectCache = new HashMap<>();
+
 	private Map<URI, Pair<N4JSExternalProject, ProjectDescription>> projectUriMapping;
 	private Map<String, N4JSExternalProject> projectNameMapping;
+	private Multimap<java.net.URI, N4JSExternalProject> projectsForLocation;
 
 	/**
 	 * Creates a new external library workspace instance with the preference store that provides the configured library
@@ -103,6 +113,10 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 
 	List<java.net.URI> getRootLocations() {
 		return rootLocations;
+	}
+
+	Collection<URI> getAllProjectLocations() {
+		return projectUriMapping.keySet();
 	}
 
 	@Override
@@ -175,6 +189,7 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 		Map<URI, Pair<N4JSExternalProject, ProjectDescription>> cachedProjects = projectCache;
 		Map<String, N4JSExternalProject> projectNameMappingTmp = newHashMap();
 		Map<URI, Pair<N4JSExternalProject, ProjectDescription>> projectUriMappingTmp = newHashMap();
+		Multimap<java.net.URI, N4JSExternalProject> projectsForLocationTmp = HashMultimap.create();
 
 		Iterable<java.net.URI> projectRoots = externalLibraryPreferenceStore
 				.convertToProjectRootLocations(rootLocations); // TODO: check if this preserves order!
@@ -190,13 +205,22 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 					if (!projectNameMappingTmp.containsKey(project.getName())) {
 						final String projectName = ProjectDescriptionUtils
 								.deriveN4JSProjectNameFromURI(projectLocation);
+
 						projectNameMappingTmp.put(projectName, project);
 						projectUriMappingTmp.put(projectLocation, pair);
+
+						for (java.net.URI rootLoc : rootLocations) {
+							if (projectRoot.toString().startsWith(rootLoc.toString())) {
+								projectsForLocationTmp.put(rootLoc, project);
+								break;
+							}
+						}
 					}
 				}
 			}
 		}
 
+		projectsForLocation = Multimaps.unmodifiableMultimap(projectsForLocationTmp);
 		projectNameMapping = Collections.unmodifiableMap(projectNameMappingTmp);
 		projectUriMapping = Collections.unmodifiableMap(projectUriMappingTmp);
 	}
@@ -265,6 +289,27 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 		return projectPairs;
 	}
 
+	Set<URI> computeNecessaryDependencies() {
+		Set<URI> necessaryDeps = new HashSet<>();
+		LinkedList<URI> allLocs = new LinkedList<>();
+		allLocs.addAll(userWorkspace.getAllProjectLocations());
+		allLocs.addAll(getAllProjectLocations());
+
+		for (URI loc : allLocs) {
+			N4JSEclipseProject prj = model.getN4JSProject(loc);
+			if (prj != null && prj.getProjectType() != ProjectType.PLAINJS) {
+				ImmutableList<? extends IN4JSEclipseProject> deps = model.getDependenciesAndImplementedApis(prj, false);
+				for (IN4JSEclipseProject dep : deps) {
+					URI depLocation = dep.getLocation();
+					necessaryDeps.add(depLocation);
+				}
+			}
+		}
+
+		necessaryDeps.removeAll(userWorkspace.getAllProjectLocations());
+		return necessaryDeps;
+	}
+
 	N4JSExternalProject getProject(String projectName) {
 		ensureInitialized();
 		return projectNameMapping.get(projectName);
@@ -279,62 +324,8 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 		return null;
 	}
 
-	Collection<N4JSExternalProject> getProjectsIn(Iterable<java.net.URI> pRootLocations) {
-		Map<String, N4JSExternalProject> projectsMapping = newTreeMap();
-		for (java.net.URI rootLocation : pRootLocations) {
-			Iterable<N4JSExternalProject> projects = getProjectsIn(rootLocation);
-			for (N4JSExternalProject project : projects) {
-				projectsMapping.put(project.getName(), project);
-			}
-		}
-		return unmodifiableCollection(projectsMapping.values());
-	}
-
 	Collection<N4JSExternalProject> getProjectsIn(java.net.URI rootLocation) {
-		ensureInitialized();
-		File rootFolder = new File(rootLocation);
-
-		Map<String, N4JSExternalProject> projectsMapping = newTreeMap();
-		URI rootUri = URI.createFileURI(rootFolder.getAbsolutePath());
-
-		for (Entry<URI, Pair<N4JSExternalProject, ProjectDescription>> entry : projectUriMapping.entrySet()) {
-			URI projectLocation = entry.getKey();
-			// TODO maybe we can be stricter here (directly contained || directly contained in scope)
-			if (containmentHelper.isContained(projectLocation, rootUri)) {
-				Pair<N4JSExternalProject, ProjectDescription> pair = entry.getValue();
-				if (null != pair && null != pair.getFirst()) {
-					N4JSExternalProject project = pair.getFirst();
-					ProjectDescription projectDescription = pair.getSecond();
-					projectsMapping.put(projectDescription.getProjectName(), project);
-				}
-			}
-		}
-
-		return unmodifiableCollection(projectsMapping.values());
-	}
-
-	Collection<ProjectDescription> getProjectsDescriptions(java.net.URI rootLocation) {
-		ensureInitialized();
-		File rootFolder = new File(rootLocation);
-
-		Set<ProjectDescription> projectsMapping = new HashSet<>();
-		URI rootUri = URI.createFileURI(rootFolder.getAbsolutePath());
-
-		for (Entry<URI, Pair<N4JSExternalProject, ProjectDescription>> entry : projectUriMapping.entrySet()) {
-			URI projectLocation = entry.getKey();
-			// TODO maybe we can be stricter here (directly contained || directly contained in scope)
-			if (containmentHelper.isContained(projectLocation, rootUri)) {
-				Pair<N4JSExternalProject, ProjectDescription> pair = entry.getValue();
-				if (null != pair && null != pair.getFirst()) {
-					ProjectDescription description = pair.getSecond();
-					if (description != null) {
-						projectsMapping.add(description);
-					}
-				}
-			}
-		}
-
-		return unmodifiableCollection(projectsMapping);
+		return projectsForLocation.get(rootLocation);
 	}
 
 	Pair<N4JSExternalProject, ProjectDescription> getProjectWithDescription(URI location) {

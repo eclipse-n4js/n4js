@@ -10,6 +10,9 @@
  */
 package org.eclipse.n4js;
 
+import static java.util.Collections.emptyList;
+
+import java.util.Collection;
 import java.util.Collections;
 
 import org.eclipse.emf.common.util.URI;
@@ -69,6 +72,11 @@ public class MockWorkspace extends InternalN4JSWorkspace {
 	@Override
 	public URI findProjectWith(URI nestedLocation) {
 		return MockProject.MOCK_URI;
+	}
+
+	@Override
+	public Collection<URI> getAllProjectLocations() {
+		return emptyList();
 	}
 
 }

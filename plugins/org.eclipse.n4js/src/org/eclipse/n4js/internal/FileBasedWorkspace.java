@@ -14,9 +14,11 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.AbstractTreeIterator;
 import org.eclipse.emf.common.util.URI;
@@ -108,8 +110,13 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 		return description;
 	}
 
-	public Iterator<URI> getAllProjectsLocations() {
+	public Iterator<URI> getAllProjectLocationsIterator() {
 		return projectElementHandles.values().stream().map(handle -> handle.getLocation()).iterator();
+	}
+
+	@Override
+	public Collection<URI> getAllProjectLocations() {
+		return projectElementHandles.values().stream().map(handle -> handle.getLocation()).collect(Collectors.toList());
 	}
 
 	@Override

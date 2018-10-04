@@ -339,6 +339,11 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	}
 
 	@Override
+	public Collection<URI> getAllProjectLocations() {
+		return projectProvider.getAllProjectLocations();
+	}
+
+	@Override
 	public Map<String, VersionNumber> getProjectInfos() {
 		Map<String, VersionNumber> externalLibs = new HashMap<>();
 		for (N4JSExternalProject pd : getProjects()) {
@@ -357,12 +362,11 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 
 	@Override
 	public Collection<N4JSExternalProject> getProjectsIn(final Collection<java.net.URI> rootLocations) {
-		return projectProvider.getProjectsIn(rootLocations);
-	}
-
-	@Override
-	public Collection<ProjectDescription> getProjectsDescriptions(java.net.URI rootLocation) {
-		return projectProvider.getProjectsDescriptions(rootLocation);
+		Collection<N4JSExternalProject> projects = new LinkedList<>();
+		for (java.net.URI rootLoc : rootLocations) {
+			projects.addAll(getProjectsIn(rootLoc));
+		}
+		return projects;
 	}
 
 	@Override

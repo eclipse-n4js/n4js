@@ -172,16 +172,6 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 	public abstract Collection<N4JSExternalProject> getProjectsIn(Collection<java.net.URI> rootLocations);
 
 	/**
-	 * Returns with all existing external project descriptions that are contained in the given external library root
-	 * location.
-	 *
-	 * @param rootLocation
-	 *            the location of the external library root.
-	 * @return an iterable of external project descriptions available from the given external library root location.
-	 */
-	public abstract Collection<ProjectDescription> getProjectsDescriptions(java.net.URI rootLocation);
-
-	/**
 	 * Returns with the project with the given name. Or {@code null} if the project does not exist.
 	 *
 	 * @param projectName
