@@ -17,10 +17,15 @@ import java.util.Map;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
+import org.eclipse.n4js.projectModel.dependencies.ProjectDependenciesHelper;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
+import org.eclipse.n4js.smith.ClosableMeasurement;
+import org.eclipse.n4js.smith.DataCollector;
+import org.eclipse.n4js.smith.DataCollectors;
 import org.eclipse.n4js.ui.preferences.external.MaintenanceActionsButtonListener;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.io.FileDeleter;
@@ -31,20 +36,62 @@ import com.google.inject.Inject;
  * Similar to {@link MaintenanceActionsButtonListener} actions, but dedicated for different UI.
  */
 public class ExternalLibrariesActionsHelper {
+	static private final DataCollector dcInstallHelper = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("External Libraries Install Helper");
+	private static final DataCollector dcCollectMissingDependencies = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Collect missing dependencies", "External Libraries Install Helper");
+	private static final DataCollector dcInstallMissingDependencies = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Install missing dependencies", "External Libraries Install Helper");
 
 	@Inject
 	private StatusHelper statusHelper;
 	@Inject
 	private LibraryManager libManager;
-
+	@Inject
+	private ProjectDependenciesHelper dependenciesHelper;
 	@Inject
 	private ExternalLibraryWorkspace externalLibraryWorkspace;
-
 	@Inject
 	private ExternalLibrariesReloadHelper externalLibrariesReloadHelper;
-
 	@Inject
 	private TargetPlatformInstallLocationProvider locationProvider;
+
+	/** Streamlined process of calculating and installing the dependencies without cleaning npm cache. */
+	public void cleanAndInstallAllDependencies(SubMonitor monitor, MultiStatus multistatus) {
+		cleanAndInstallAllDependencies(monitor, multistatus, false);
+	}
+
+	/** Streamlined process of calculating and installing the dependencies, npm cache cleaning forced by passed flag */
+	public void cleanAndInstallAllDependencies(SubMonitor monitor, MultiStatus multistatus, boolean removeNpmCache) {
+		try (ClosableMeasurement m = dcInstallHelper.getClosableMeasurement("Install Missing Dependencies")) {
+			SubMonitor subMonitor2 = monitor.split(1);
+
+			// remove npm cache
+			if (removeNpmCache) {
+				maintenanceCleanNpmCache(multistatus, subMonitor2);
+			}
+
+			// remove npms
+			maintenanceDeleteNpms(multistatus);
+
+			// install npms from target platform
+			Map<String, NPMVersionRequirement> dependenciesToInstall = null;
+			try (ClosableMeasurement mm = dcCollectMissingDependencies
+					.getClosableMeasurement("Collect Missing Dependencies")) {
+
+				dependenciesToInstall = dependenciesHelper.computeDependenciesOfWorkspace();
+				dependenciesHelper.fixDependenciesToInstall(dependenciesToInstall);
+			}
+
+			// install dependencies and force external library workspace reload
+			try (ClosableMeasurement mm = dcInstallMissingDependencies
+					.getClosableMeasurement("Install missing dependencies")) {
+
+				SubMonitor subMonitor3 = monitor.split(45);
+				installNoUpdate(dependenciesToInstall, true, multistatus, subMonitor3);
+			}
+		}
+	}
 
 	/**
 	 * Performs {@link LibraryManager#cleanCache(IProgressMonitor)}. If that operation fails, status is mergegd into
