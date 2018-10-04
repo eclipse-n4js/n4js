@@ -13,6 +13,7 @@ package org.eclipse.n4js.ui.quickfix.packagejson;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
@@ -33,6 +34,7 @@ import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.dependencies.ProjectDependenciesHelper;
+import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.SemverMatcher;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
@@ -72,16 +74,20 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 	private ProjectDependenciesHelper dependenciesHelper;
 
 	@Inject
+	private SemverHelper semverHelper;
+
+	@Inject
 	private StatusHelper statusHelper;
 
 	/** Installs a specific npm */
 	@Fix(IssueCodes.NON_EXISTING_PROJECT)
+	@Fix(IssueCodes.NO_MATCHING_VERSION)
 	public void installMissingNPM(Issue issue, IssueResolutionAcceptor acceptor) {
 		final String[] userData = issue.getData();
 		final String packageName = userData[0];
 		final String versionRequirement = userData[1];
 		final String msgAtVersion = Strings.isNullOrEmpty(versionRequirement) ? "" : "@" + versionRequirement;
-		final String label = "Install npm " + packageName + msgAtVersion;
+		final String label = "Install/update npm " + packageName + msgAtVersion;
 		final String description = "Calls npm to install the missing npm package into the workspace.";
 		final String errMsg = "Error while uninstalling npm dependency: '" + packageName + "'.";
 
@@ -103,6 +109,10 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 				Function<IProgressMonitor, IStatus> registerFunction = new Function<IProgressMonitor, IStatus>() {
 					@Override
 					public IStatus apply(IProgressMonitor monitor) {
+						Map<String, NPMVersionRequirement> installedNpms = new HashMap<>();
+						NPMVersionRequirement versionReq = semverHelper.parse(versionRequirement);
+						installedNpms.put(packageName, versionReq);
+						dependenciesHelper.fixDependenciesToInstall(installedNpms);
 						return libraryManager.installNPM(packageName, versionRequirement, monitor);
 					}
 				};
@@ -116,8 +126,9 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 
 	/** Installs all missing npms */
 	@Fix(IssueCodes.NON_EXISTING_PROJECT)
+	@Fix(IssueCodes.NO_MATCHING_VERSION)
 	public void installAllMissingNPMs(Issue issue, IssueResolutionAcceptor acceptor) {
-		final String label = "Install all missing npm(s)";
+		final String label = "Install/update all missing npm(s)";
 		final String description = "Retrieves npms from all dependency sections of all projects and installs those that are not installed yet.";
 		final String errMsg = "Error while installing npms";
 

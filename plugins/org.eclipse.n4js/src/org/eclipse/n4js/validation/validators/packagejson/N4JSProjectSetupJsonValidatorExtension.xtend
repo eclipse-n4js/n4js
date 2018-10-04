@@ -1256,7 +1256,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			addIssue(msg, ref.astRepresentation, NO_MATCHING_VERSION_SHADOWING);
 		} else {
 			val msg = getMessageForNO_MATCHING_VERSION(id, desiredStr, availableStr);
-			addIssue(msg, ref.astRepresentation, NO_MATCHING_VERSION);
+			addIssue(msg, ref.astRepresentation, null, NO_MATCHING_VERSION, id, desiredVersion.toString);
 		}
 	}
 
