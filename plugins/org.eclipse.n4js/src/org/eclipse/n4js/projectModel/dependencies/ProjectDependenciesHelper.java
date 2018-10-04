@@ -83,8 +83,8 @@ public class ProjectDependenciesHelper {
 	 * </pre>
 	 */
 	public Map<String, NPMVersionRequirement> calculateDependenciesOfProjects(Collection<N4JSProject> projects) {
-		Map<String, NPMVersionRequirement> versionedPackages = updateMissingDependenciesMap(
-				getProjectsDescriptions(projects));
+		List<ProjectDescription> projectsDescriptions = getProjectsDescriptions(projects);
+		Map<String, NPMVersionRequirement> versionedPackages = updateMissingDependenciesMap(projectsDescriptions);
 
 		logResult(versionedPackages);
 		return versionedPackages;
@@ -95,7 +95,11 @@ public class ProjectDependenciesHelper {
 		for (IN4JSProject prj : projects) {
 			URI prjLocation = prj.getLocation();
 			if (prjLocation != null) {
-				pds.add(model.getProjectDescription(prjLocation));
+				ProjectDescription projectDescription = model.getProjectDescription(prjLocation);
+				if (projectDescription != null) {
+					// not all eclipse projects have a package.json file
+					pds.add(projectDescription);
+				}
 			}
 		}
 		return pds;

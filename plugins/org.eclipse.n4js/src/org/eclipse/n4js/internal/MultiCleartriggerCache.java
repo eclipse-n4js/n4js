@@ -98,6 +98,9 @@ public class MultiCleartriggerCache {
 		Map<URI, Object> entryMap = entryCache.get(key);
 		if (!entryMap.containsKey(reference) && supplier != null) {
 			Entry entry = supplier.get();
+			if (reference.toString().contains("releng")) {
+				System.out.println();
+			}
 			entryMap.put(reference, entry);
 
 			if (triggerCache.containsKey(key)) {

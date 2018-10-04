@@ -235,14 +235,13 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 		Set<N4JSExternalProject> allProjectsToClean = getAllToBeCleaned(toBeDeleted);
 
 		if (!allProjectsToClean.isEmpty()) {
-			List<IProject> extPrjCleaned = builder.clean(allProjectsToClean, subMonitor.newChild(1));
+			List<IProject> extPrjCleaned = builder.clean(allProjectsToClean, subMonitor.split(1));
 
 			HashSet<URI> actuallyCleaned = new HashSet<>();
 			for (IProject cleaned : extPrjCleaned) {
 				actuallyCleaned.add(URIUtils.toFileUri(cleaned.getLocationURI()));
 			}
 		}
-		subMonitor.worked(1);
 
 		Set<IProject> wsPrjAffected = newHashSet();
 		wsPrjAffected.addAll(collector.getWSProjectsDependendingOn(allProjectsToClean));
@@ -298,9 +297,8 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 		// Build recently added projects that do not exist in workspace.
 		// Also includes projects that exist already in the index, but are shadowed.
 		if (!Iterables.isEmpty(allProjectsToBuild)) {
-			extPrjBuilt.addAll(builder.build(allProjectsToBuild, subMonitor));
+			extPrjBuilt.addAll(builder.build(allProjectsToBuild, subMonitor.split(1)));
 		}
-		subMonitor.worked(1);
 
 		Set<IProject> wsPrjAffected = newHashSet();
 		Set<N4JSExternalProject> affectedProjects = new HashSet<>();

@@ -24,8 +24,8 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalIndexSynchronizer;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
-import org.eclipse.n4js.external.ExternalProject;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace.RegisterResult;
+import org.eclipse.n4js.external.ExternalProject;
 import org.eclipse.n4js.external.LibraryChange;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
 import org.eclipse.n4js.external.N4JSExternalProject;
@@ -72,20 +72,19 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 	 */
 	@Override
 	public void synchronizeNpms(IProgressMonitor monitor, Collection<LibraryChange> forcedChangeSet) {
-		SubMonitor subMonitor = convert(monitor, 1);
+		SubMonitor subMonitor = convert(monitor, 11);
 
 		try {
 			Collection<LibraryChange> changeSet = identifyChangeSet(forcedChangeSet);
-			RegisterResult cleanResults = cleanOutdatedIndex(subMonitor, changeSet);
+			RegisterResult cleanResults = cleanOutdatedIndex(subMonitor.split(1), changeSet);
 
 			// Updates available projects in: IN4JSCore, ExternalLibraryWorkspace, N4JSModel, ExternalProjectProvider
 			externalLibraryWorkspace.updateState();
 
-			synchronizeIndex(subMonitor, changeSet, cleanResults);
+			synchronizeIndex(subMonitor.split(9), changeSet, cleanResults);
 
 		} finally {
-			checkAndClearIndex(monitor);
-			subMonitor.done();
+			checkAndClearIndex(subMonitor.split(1));
 		}
 	}
 
@@ -114,6 +113,8 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 	 */
 	private void synchronizeIndex(IProgressMonitor monitor, Collection<LibraryChange> changeSet,
 			RegisterResult cleanResults) {
+
+		SubMonitor subMonitor = convert(monitor, 10);
 		try {
 
 			Set<URI> toBeUpdated = getToBeBuildProjects(changeSet);
@@ -124,17 +125,17 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 				}
 			}
 
-			monitor.setTaskName("Building new projects...");
-			RegisterResult buildResult = externalLibraryWorkspace.registerProjects(monitor, toBeUpdated);
+			subMonitor.setTaskName("Building new projects...");
+			RegisterResult buildResult = externalLibraryWorkspace.registerProjects(subMonitor.split(9), toBeUpdated);
 			printRegisterResults(buildResult, "built");
 
 			Set<URI> toBeScheduled = new HashSet<>();
 			toBeScheduled.addAll(cleanResults.affectedWorkspaceProjects);
 			toBeScheduled.addAll(buildResult.affectedWorkspaceProjects);
-			externalLibraryWorkspace.scheduleWorkspaceProjects(monitor, toBeScheduled);
+			externalLibraryWorkspace.scheduleWorkspaceProjects(subMonitor.split(1), toBeScheduled);
 
 		} finally {
-			monitor.done();
+			subMonitor.done();
 		}
 	}
 
@@ -144,13 +145,12 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 	@Override
 	public void reindexAllExternalProjects(IProgressMonitor monitor) {
 		try {
-			SubMonitor subMonitor = SubMonitor.convert(monitor, 10);
+			SubMonitor subMonitor = SubMonitor.convert(monitor, 11);
 
 			monitor.setTaskName("Cleaning all projects...");
-			RegisterResult cleanResult = externalLibraryWorkspace.deregisterAllProjects(subMonitor.newChild(1));
+			RegisterResult cleanResult = externalLibraryWorkspace.deregisterAllProjects(subMonitor.split(1));
 			externalErrorMarkerManager.clearAllMarkers();
 			printRegisterResults(cleanResult, "clean");
-			subMonitor.worked(1);
 
 			// Updates available projects in: IN4JSCore, ExternalLibraryWorkspace, N4JSModel, ExternalProjectProvider
 			externalLibraryWorkspace.updateState();
@@ -162,15 +162,14 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 			}
 
 			subMonitor.setTaskName("Building new projects...");
-			RegisterResult buildResult = externalLibraryWorkspace.registerProjects(subMonitor.newChild(9),
+			RegisterResult buildResult = externalLibraryWorkspace.registerProjects(subMonitor.split(9),
 					toBeReindexed);
 			printRegisterResults(buildResult, "built");
-			subMonitor.worked(1);
 
 			Set<URI> toBeScheduled = new HashSet<>();
 			toBeScheduled.addAll(cleanResult.affectedWorkspaceProjects);
 			toBeScheduled.addAll(buildResult.affectedWorkspaceProjects);
-			externalLibraryWorkspace.scheduleWorkspaceProjects(subMonitor, toBeScheduled);
+			externalLibraryWorkspace.scheduleWorkspaceProjects(subMonitor.split(1), toBeScheduled);
 
 		} finally {
 			checkAndClearIndex(monitor);

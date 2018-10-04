@@ -26,14 +26,13 @@ import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.smith.ClosableMeasurement;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
-import org.eclipse.n4js.ui.preferences.external.MaintenanceActionsButtonListener;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.io.FileDeleter;
 
 import com.google.inject.Inject;
 
 /**
- * Similar to {@link MaintenanceActionsButtonListener} actions, but dedicated for different UI.
+ * Bundles all maintenance actions of the library manager including the 'Big Button' action
  */
 public class ExternalLibrariesActionsHelper {
 	static private final DataCollector dcInstallHelper = DataCollectors.INSTANCE
@@ -64,11 +63,11 @@ public class ExternalLibrariesActionsHelper {
 	/** Streamlined process of calculating and installing the dependencies, npm cache cleaning forced by passed flag */
 	public void cleanAndInstallAllDependencies(SubMonitor monitor, MultiStatus multistatus, boolean removeNpmCache) {
 		try (ClosableMeasurement m = dcInstallHelper.getClosableMeasurement("Install Missing Dependencies")) {
-			SubMonitor subMonitor2 = monitor.split(1);
+			SubMonitor subMonitor = SubMonitor.convert(monitor, 10);
 
 			// remove npm cache
 			if (removeNpmCache) {
-				maintenanceCleanNpmCache(multistatus, subMonitor2);
+				maintenanceCleanNpmCache(multistatus, subMonitor.split(1));
 			}
 
 			// remove npms
@@ -87,8 +86,7 @@ public class ExternalLibrariesActionsHelper {
 			try (ClosableMeasurement mm = dcInstallMissingDependencies
 					.getClosableMeasurement("Install missing dependencies")) {
 
-				SubMonitor subMonitor3 = monitor.split(45);
-				IStatus status = libManager.installNPMs(dependenciesToInstall, true, subMonitor3);
+				IStatus status = libManager.installNPMs(dependenciesToInstall, true, subMonitor.split(9));
 				if (!status.isOK()) {
 					multistatus.merge(status);
 				}
@@ -134,9 +132,9 @@ public class ExternalLibrariesActionsHelper {
 				multistatus.merge(statusHelper
 						.createError("The target platform location folder was not recreated correctly."));
 			}
-		} else {// should never happen
-			multistatus
-					.merge(statusHelper.createError("Could not verify deletion of " + npmFolder.getAbsolutePath()));
+		} else {
+			// should never happen
+			multistatus.merge(statusHelper.createError("Could not verify deletion of " + npmFolder.getAbsolutePath()));
 		}
 		// other actions like reinstall depends on this state
 		externalLibraryWorkspace.updateState();

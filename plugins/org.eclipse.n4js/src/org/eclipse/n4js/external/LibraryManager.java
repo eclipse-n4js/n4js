@@ -221,20 +221,26 @@ public class LibraryManager {
 		}
 
 		try (ClosableMeasurement mes = dcLibMngr.getClosableMeasurement("installDependenciesInternal");) {
+			final int steps = forceReloadAll ? 3 : 2;
+			SubMonitor subMonitor = SubMonitor.convert(monitor, steps);
 			Map<String, NPMVersionRequirement> npmsToInstall = new LinkedHashMap<>(versionedNPMs);
 
-			monitor.setTaskName("Installing packages... [step 1 of 2]");
-			List<LibraryChange> actualChanges = installUninstallNPMs(monitor, status, npmsToInstall, emptyList());
+			SubMonitor subMonitor1 = subMonitor.split(1);
+			subMonitor1.setTaskName("Installing packages... [step 1 of " + steps + "]");
+			List<LibraryChange> actualChanges = installUninstallNPMs(subMonitor1, status, npmsToInstall, emptyList());
 
 			// if forceReloadAll, unregister all currently-registered projects from
 			// the workspace and remove them from the index
 			if (forceReloadAll) {
-				externalLibraryWorkspace.deregisterAllProjects(SubMonitor.convert(monitor, 1));
+				SubMonitor subMonitor2 = subMonitor.split(1);
+				subMonitor2.setTaskName("Clean all packages... [step 2 of " + steps + "]");
+				externalLibraryWorkspace.deregisterAllProjects(subMonitor2);
 			}
 
 			try (ClosableMeasurement m = dcIndexSynchronizer.getClosableMeasurement("synchronizeNpms")) {
-				monitor.setTaskName("Building installed packages... [step 2 of 2]");
-				indexSynchronizer.synchronizeNpms(monitor, actualChanges);
+				SubMonitor subMonitor3 = subMonitor.split(1);
+				subMonitor3.setTaskName("Building installed packages... [step " + steps + " of " + steps + "]");
+				indexSynchronizer.synchronizeNpms(subMonitor3, actualChanges);
 			}
 
 			return status;
@@ -276,14 +282,12 @@ public class LibraryManager {
 
 		try (ClosableMeasurement m = dcNpmUninstall.getClosableMeasurement("batchUninstall")) {
 			// remove
-			actualChanges.addAll(npmCli.batchUninstall(subMonitor, status, requestedChanges));
-			subMonitor.worked(1);
+			actualChanges.addAll(npmCli.batchUninstall(subMonitor.split(1), status, requestedChanges));
 		}
 
 		try (ClosableMeasurement m = dcNpmInstall.getClosableMeasurement("batchInstall")) {
 			// install
-			actualChanges.addAll(npmCli.batchInstall(subMonitor, status, requestedChanges));
-			subMonitor.worked(1);
+			actualChanges.addAll(npmCli.batchInstall(subMonitor.split(1), status, requestedChanges));
 		}
 
 		return actualChanges;
@@ -424,9 +428,9 @@ public class LibraryManager {
 			return statusHelper.OK();
 		}
 
-		SubMonitor subMonitor = SubMonitor.convert(monitor, 10);
+		SubMonitor subMonitor = SubMonitor.convert(monitor, 1);
 		try {
-			indexSynchronizer.reindexAllExternalProjects(subMonitor.newChild(9));
+			indexSynchronizer.reindexAllExternalProjects(subMonitor.split(1));
 
 			return refreshStatus;
 
@@ -463,9 +467,9 @@ public class LibraryManager {
 			return statusHelper.OK();
 		}
 
-		SubMonitor subMonitor = SubMonitor.convert(monitor, 10);
+		SubMonitor subMonitor = SubMonitor.convert(monitor, 1);
 		try {
-			indexSynchronizer.reindexAllExternalProjects(subMonitor.newChild(9));
+			indexSynchronizer.reindexAllExternalProjects(subMonitor.split(1));
 
 			return refreshStatus;
 

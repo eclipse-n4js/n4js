@@ -135,7 +135,7 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 		N4Modification modification = new N4Modification() {
 			@Override
 			public boolean supportsMultiApply() {
-				return true;
+				return false;
 			}
 
 			@Override

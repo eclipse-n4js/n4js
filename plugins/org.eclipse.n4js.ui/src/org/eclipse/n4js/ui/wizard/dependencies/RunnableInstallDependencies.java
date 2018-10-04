@@ -69,8 +69,7 @@ public class RunnableInstallDependencies implements IRunnableWithProgress {
 
 	@Override
 	synchronized public void run(IProgressMonitor pmonitor) {
-		final SubMonitor monitor = SubMonitor.convert(pmonitor, 100);
-		final SubMonitor subMonitor2 = monitor.split(1);
+		final SubMonitor monitor = SubMonitor.convert(pmonitor, 1);
 
 		final boolean wasAutoBuilding = AutobuildUtils.get();
 
@@ -86,7 +85,7 @@ public class RunnableInstallDependencies implements IRunnableWithProgress {
 			if (!multistatus.isOK())
 				return;
 		}
-		librariesActionsHelper.cleanAndInstallAllDependencies(subMonitor2, multistatus, options.clearNpmCache);
+		librariesActionsHelper.cleanAndInstallAllDependencies(monitor, multistatus, options.clearNpmCache);
 
 		if (!multistatus.isOK())
 			return;
