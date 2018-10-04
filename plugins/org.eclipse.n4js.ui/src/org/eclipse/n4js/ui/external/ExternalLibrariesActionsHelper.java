@@ -88,7 +88,10 @@ public class ExternalLibrariesActionsHelper {
 					.getClosableMeasurement("Install missing dependencies")) {
 
 				SubMonitor subMonitor3 = monitor.split(45);
-				installNoUpdate(dependenciesToInstall, true, multistatus, subMonitor3);
+				IStatus status = libManager.installNPMs(dependenciesToInstall, true, subMonitor3);
+				if (!status.isOK()) {
+					multistatus.merge(status);
+				}
 			}
 		}
 	}
@@ -137,26 +140,6 @@ public class ExternalLibrariesActionsHelper {
 		}
 		// other actions like reinstall depends on this state
 		externalLibraryWorkspace.updateState();
-	}
-
-	/**
-	 * Installs npm packages with provide names and versions. Note that in case package has no version it is expected
-	 * that empty string is provided.
-	 *
-	 * Rebuild of externals is not triggered, hence caller needs to take care of that, e.g. by calling
-	 * {@link #maintenanceUpateState}
-	 *
-	 * @param forceReloadAll
-	 *            Specifies whether after the installation all external libraries in the external library workspace
-	 *            should be reloaded and rebuilt (cf.
-	 *            {@link LibraryManager#reloadAllExternalProjects(IProgressMonitor)}). If {@code false}, only the set of
-	 *            packages that was created and/or updated by this install call will be scheduled for a reload.
-	 */
-	public void installNoUpdate(final Map<String, NPMVersionRequirement> versionedPackages,
-			boolean forceReloadAll, final MultiStatus multistatus, final IProgressMonitor monitor) {
-		IStatus status = libManager.installNPMs(versionedPackages, forceReloadAll, monitor);
-		if (!status.isOK())
-			multistatus.merge(status);
 	}
 
 	/**
