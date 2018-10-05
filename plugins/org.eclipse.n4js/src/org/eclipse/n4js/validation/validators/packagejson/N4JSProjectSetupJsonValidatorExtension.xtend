@@ -98,7 +98,7 @@ import static extension com.google.common.base.Strings.nullToEmpty
  * such as the resolution of referenced projects.
  * 
  * For lower-level, structural and local validations with regard to {@code package.json} 
- * files , see {@link PackageJsonValidatorExtension}. 
+ * files , see {@link PackageJsonValidatorExtension}.
  */
 @Singleton
 public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidatorExtension {
@@ -1137,15 +1137,15 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 				addIssue(msg, ref.astRepresentation, null, NON_EXISTING_PROJECT, id, packageVersion);
 			}
 			return;
-		} else if (project.isExternal) {
-			if (!indexSynchronizer.isInIndex(project.projectDescriptionLocation.orNull)) {
-				val msg = getMessageForNON_REGISTERED_PROJECT(id);
-				addIssue(msg, ref.astRepresentation, null, NON_REGISTERED_PROJECT, id);
-				return;
-			}
 		} else {
 			// keep track of actually existing projects
 			existentIds.put(id, ref);
+		}
+
+		if (!currentProject.isExternal && !indexSynchronizer.isInIndex(project.projectDescriptionLocation.orNull)) {
+			val msg = getMessageForNON_REGISTERED_PROJECT(id);
+			addIssue(msg, ref.astRepresentation, null, NON_REGISTERED_PROJECT, id);
+			return;
 		}
 
 		// create only a single validation issue for a particular project reference.
