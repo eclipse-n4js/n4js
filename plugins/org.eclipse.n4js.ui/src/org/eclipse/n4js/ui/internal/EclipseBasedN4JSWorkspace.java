@@ -93,6 +93,21 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 		return null;
 	}
 
+	/** @return the {@link URI} for a project with the given n4js project name */
+	public URI findProjectForName(String projectName) {
+		if (projectName == null) {
+			return null;
+		}
+		for (IProject prj : workspace.getProjects()) {
+			URI uri = URIUtils.convert(prj);
+			String n4jsProjectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(uri);
+			if (projectName.equals(n4jsProjectName)) {
+				return uri;
+			}
+		}
+		return null;
+	}
+
 	@Override
 	public ProjectDescription getProjectDescription(URI location) {
 		if (!location.isPlatformResource()) {

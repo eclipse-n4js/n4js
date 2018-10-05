@@ -29,6 +29,7 @@ import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFolder;
@@ -223,9 +224,9 @@ public class N4JSProjectExplorerHelper {
 		Map<String, IN4JSProject> mangelhaftProjects = getAvailableMangelhaftProjects();
 		Map<String, IN4JSProject> npmProjects = getAvailableNpmProjects();
 
-		Collection<IN4JSProject> requiredLangLibs = newHashSet();
-		Collection<IN4JSProject> requiredMangelhaftLibs = newHashSet();
-		Collection<IN4JSProject> requiredNpmLibs = newHashSet();
+		Collection<IN4JSProject> requiredLangLibs = new LinkedHashSet<>();
+		Collection<IN4JSProject> requiredMangelhaftLibs = new LinkedHashSet<>();
+		Collection<IN4JSProject> requiredNpmLibs = new LinkedHashSet<>();
 
 		for (IN4JSProject directDependecy : directDependencies) {
 			if (directDependecy.exists() && directDependecy.isExternal()) {

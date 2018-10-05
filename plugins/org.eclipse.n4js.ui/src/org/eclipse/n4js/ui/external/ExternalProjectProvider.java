@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -34,19 +35,17 @@ import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore.StoreUpdatedListener;
+import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
 import org.eclipse.n4js.ui.internal.ExternalProjectCacheLoader;
-import org.eclipse.n4js.ui.internal.N4JSEclipseModel;
-import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
-import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.util.Pair;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -67,9 +66,6 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 
 	@Inject
 	private EclipseBasedN4JSWorkspace userWorkspace;
-
-	@Inject
-	private N4JSEclipseModel model;
 
 	private final Collection<ExternalLocationsUpdatedListener> locListeners = new LinkedList<>();
 	private final Map<URI, Pair<N4JSExternalProject, ProjectDescription>> projectCache = new HashMap<>();
@@ -183,13 +179,13 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 	 * yet, hence not available when injecting this instance.
 	 */
 	private void updateMappings() {
-		// necessaryDependencies = Collections.unmodifiableSet(computeNecessaryDependencies());
 
 		Map<URI, Pair<N4JSExternalProject, ProjectDescription>> cachedProjects = projectCache;
 		Map<String, N4JSExternalProject> projectNameMappingTmp = newHashMap();
 		Map<URI, Pair<N4JSExternalProject, ProjectDescription>> projectUriMappingTmp = newHashMap();
 		Map<java.net.URI, List<N4JSExternalProject>> projectsForLocationTmp = newHashMap();
 
+		// step 1: compute all projects
 		Iterable<java.net.URI> projectRoots = externalLibraryPreferenceStore
 				.convertToProjectRootLocations(getRootLocations());
 
@@ -216,35 +212,92 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 			}
 		}
 
+		// step 2: compute necessary projects
+		Set<URI> necessaryDependenciesTmp = computeNecessaryDependencies(projectNameMappingTmp, projectUriMappingTmp);
+		necessaryDependencies = Collections.unmodifiableSet(necessaryDependenciesTmp);
+
+		// step 3: reduce to necessary projects
+		for (List<N4JSExternalProject> locProjects : projectsForLocationTmp.values()) {
+			for (Iterator<N4JSExternalProject> iter = locProjects.iterator(); iter.hasNext();) {
+				URI location = iter.next().getIProject().getLocation();
+				if (!necessaryDependenciesTmp.contains(location)) {
+					iter.remove();
+				}
+			}
+		}
+		for (Iterator<N4JSExternalProject> iter = projectNameMappingTmp.values().iterator(); iter.hasNext();) {
+			URI location = iter.next().getIProject().getLocation();
+			if (!necessaryDependenciesTmp.contains(location)) {
+				iter.remove();
+			}
+		}
+		projectUriMappingTmp.keySet().retainAll(necessaryDependenciesTmp);
+		Preconditions.checkState(projectNameMappingTmp.size() == projectUriMappingTmp.size());
+
+		// step 4: seal collections
 		projectsForLocation = Collections.unmodifiableMap(projectsForLocationTmp);
 		projectNameMapping = Collections.unmodifiableMap(projectNameMappingTmp);
 		projectUriMapping = Collections.unmodifiableMap(projectUriMappingTmp);
 	}
 
-	Set<URI> computeNecessaryDependencies() {
+	Set<URI> computeNecessaryDependencies(Map<String, N4JSExternalProject> projectNameMappingTmp,
+			Map<URI, Pair<N4JSExternalProject, ProjectDescription>> projectUriMappingTmp) {
+
 		Set<URI> necessaryDeps = new HashSet<>();
-		computeNecessaryDependenciesRek(projectCache.keySet(), necessaryDeps);
-		necessaryDeps.removeAll(userWorkspace.getAllProjectLocations());
+		Collection<URI> projectsInUserWS = userWorkspace.getAllProjectLocations();
+		computeNecessaryDependenciesRek(projectNameMappingTmp, projectUriMappingTmp, projectsInUserWS, necessaryDeps);
+		necessaryDeps.removeAll(projectsInUserWS);
 		return necessaryDeps;
 	}
 
-	private void computeNecessaryDependenciesRek(Collection<URI> locs, Set<URI> necessaryDeps) {
-		for (URI loc : locs) {
-			N4JSEclipseProject prj = model.getN4JSProject(loc);
-			if (prj != null && prj.getProjectType() != ProjectType.PLAINJS) {
-				ImmutableList<? extends IN4JSEclipseProject> deps = model.getDependenciesAndImplementedApis(prj, false);
+	private void computeNecessaryDependenciesRek(Map<String, N4JSExternalProject> projectNameMappingTmp,
+			Map<URI, Pair<N4JSExternalProject, ProjectDescription>> projectUriMappingTmp, Collection<URI> locs,
+			Set<URI> necessaryDeps) {
 
-				List<URI> depUris = new LinkedList<>();
-				for (IN4JSEclipseProject dep : deps) {
-					URI depLocation = dep.getLocation();
-					if (!necessaryDeps.contains(depLocation)) {
-						depUris.add(depLocation);
-						necessaryDeps.add(depLocation);
+		Set<URI> depUris = new HashSet<>();
+		for (URI loc : locs) {
+			ProjectDescription pd = getProjectDescription(projectUriMappingTmp, loc);
+
+			if (pd != null && pd.getProjectType() != ProjectType.PLAINJS) {
+				for (ProjectDependency pDep : pd.getProjectDependencies()) {
+					URI depLoc = getProjectLocation(projectNameMappingTmp, pDep);
+
+					if (depLoc != null && !necessaryDeps.contains(depLoc)) {
+						depUris.add(depLoc);
+						necessaryDeps.add(depLoc);
 					}
 				}
-				computeNecessaryDependenciesRek(depUris, necessaryDeps);
+
 			}
 		}
+		if (!depUris.isEmpty()) {
+			computeNecessaryDependenciesRek(projectNameMappingTmp, projectUriMappingTmp, depUris, necessaryDeps);
+		}
+	}
+
+	private URI getProjectLocation(Map<String, N4JSExternalProject> projectNameMappingTmp, ProjectDependency pDep) {
+		String projectName = pDep.getProjectName();
+		URI depLoc = userWorkspace.findProjectForName(projectName);
+		if (depLoc == null) {
+			N4JSExternalProject project = projectNameMappingTmp.get(projectName);
+			if (project != null) {
+				depLoc = project.getIProject().getLocation();
+			}
+		}
+		return depLoc;
+	}
+
+	private ProjectDescription getProjectDescription(
+			Map<URI, Pair<N4JSExternalProject, ProjectDescription>> projectUriMappingTmp, URI loc) {
+
+		ProjectDescription pd = userWorkspace.getProjectDescription(loc);
+		if (pd == null) {
+			Pair<N4JSExternalProject, ProjectDescription> pair = projectUriMappingTmp.get(loc);
+			if (pair != null) {
+				pd = pair.getSecond();
+			}
+		}
+		return pd;
 	}
 
 	Set<URI> getNecessaryDependencies() {
