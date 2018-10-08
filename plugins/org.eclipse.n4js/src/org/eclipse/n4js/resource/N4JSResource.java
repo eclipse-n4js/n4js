@@ -318,6 +318,14 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	}
 
 	/**
+	 * Tells if this resource represents an {@link N4JSLanguageHelper#isOpaqueModule(URI) opaque module}. Intended as
+	 * convenience and for client code that is unable to inject {@link N4JSLanguageHelper} (e.g. in builder).
+	 */
+	public boolean isOpaque() {
+		return langHelper.isOpaqueModule(this.uri);
+	}
+
+	/**
 	 * Tells if this resource had its AST loaded from source after its TModule was created and has thus an AST that was
 	 * reconciled with a pre-existing TModule. This can happen when
 	 * <ol>
@@ -613,7 +621,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 
 	@Override
 	protected void doLinking() {
-		if (langHelper.isOpaqueModule(this.uri)) {
+		if (isOpaque()) {
 			return;
 		}
 		super.doLinking();
@@ -638,7 +646,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		if (contents != null && !contents.isEmpty()) {
 			discardStateFromDescription(true);
 		}
-		if (langHelper.isOpaqueModule(this.uri)) {
+		if (isOpaque()) {
 			IParseResult result = new JSParseResult(inputStream);
 			updateInternalState(this.getParseResult(), result);
 		} else {
@@ -707,7 +715,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 
 	@Override
 	public void update(int offset, int replacedTextLength, String newText) {
-		if (langHelper.isOpaqueModule(this.uri)) {
+		if (isOpaque()) {
 			String oldText = this.getParseResult().getRootNode().getText();
 			String newCompleteString = oldText.substring(0, offset) + newText
 					+ oldText.substring(offset + replacedTextLength);
