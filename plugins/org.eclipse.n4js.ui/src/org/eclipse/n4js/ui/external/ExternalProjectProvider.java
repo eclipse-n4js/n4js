@@ -350,9 +350,9 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 	URI findProjectWith(URI nestedLocation) {
 		ensureInitialized();
 		java.net.URI rootLoc = getRootLocationForResource(nestedLocation);
-		String rootLocStr = rootLoc.toString();
 
-		if (rootLocStr != null) {
+		if (rootLoc != null) {
+			String rootLocStr = rootLoc.toString();
 			URI loc = URI.createURI(rootLocStr);
 			URI prefix = !loc.hasTrailingPathSeparator() ? loc.appendSegment("") : loc;
 			int oldSegmentCount = nestedLocation.segmentCount();
