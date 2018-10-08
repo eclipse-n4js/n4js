@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +47,7 @@ import org.eclipse.n4js.ui.internal.ExternalProjectLoader;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.util.Pair;
+import org.eclipse.xtext.util.Tuples;
 
 import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
@@ -76,7 +78,7 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 	private final Map<URI, Pair<N4JSExternalProject, ProjectDescription>> projectCache = new HashMap<>();
 
 	private NavigableMap<String, java.net.URI> rootLocations;
-	private List<Pair<N4JSExternalProject, ProjectDescription>> projectsIncludingUnnecessary;
+	private List<Pair<URI, ProjectDescription>> projectCacheList;
 	private Map<URI, Pair<N4JSExternalProject, ProjectDescription>> projectUriMapping;
 	private Map<String, N4JSExternalProject> projectNameMapping;
 	private Map<java.net.URI, List<N4JSExternalProject>> projectsForLocation;
@@ -169,13 +171,7 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 
 	void updateCache() {
 		projectCache.clear();
-
-		List<Pair<N4JSExternalProject, ProjectDescription>> projectsIncludingUnnecessaryTmp = computeProjectsUncached();
-		projectsIncludingUnnecessary = Collections.unmodifiableList(projectsIncludingUnnecessaryTmp);
-		for (Pair<N4JSExternalProject, ProjectDescription> pair : projectsIncludingUnnecessary) {
-			URI locationURI = pair.getFirst().getIProject().getLocation();
-			projectCache.put(locationURI, pair);
-		}
+		projectCache.putAll(computeProjectsUncached());
 
 		updateMappings();
 	}
@@ -188,35 +184,29 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 	 */
 	private void updateMappings() {
 
-		Map<URI, Pair<N4JSExternalProject, ProjectDescription>> cachedProjects = projectCache;
 		Map<String, N4JSExternalProject> projectNameMappingTmp = newHashMap();
 		Map<URI, Pair<N4JSExternalProject, ProjectDescription>> projectUriMappingTmp = newHashMap();
 		Map<java.net.URI, List<N4JSExternalProject>> projectsForLocationTmp = newHashMap();
+		List<Pair<URI, ProjectDescription>> projectCacheListTmp = new LinkedList<>();
 
 		// step 1: compute all projects
-		Iterable<java.net.URI> projectRoots = externalLibraryPreferenceStore
-				.convertToProjectRootLocations(getRootLocations());
+		for (URI projectLocation : projectCache.keySet()) {
+			Pair<N4JSExternalProject, ProjectDescription> pair = projectCache.get(projectLocation);
+			N4JSExternalProject project = pair.getFirst();
+			ProjectDescription prjDescr = pair.getSecond();
+			projectCacheListTmp.add(Tuples.pair(projectLocation, prjDescr));
 
-		for (java.net.URI projectRoot : projectRoots) {
-			URI projectLocation = URIUtils.toFileUri(projectRoot);
-			if (cachedProjects.containsKey(projectLocation)) {
-				Pair<N4JSExternalProject, ProjectDescription> pair = cachedProjects.get(projectLocation);
-				if (null != pair) {
-					N4JSExternalProject project = pair.getFirst();
+			// shadowing is done here by checking if an npm is already in the mapping
+			if (!projectNameMappingTmp.containsKey(project.getName())) {
+				final String projectName = ProjectDescriptionUtils
+						.deriveN4JSProjectNameFromURI(projectLocation);
 
-					// shadowing is done here by checking if an npm is already in the mapping
-					if (!projectNameMappingTmp.containsKey(project.getName())) {
-						final String projectName = ProjectDescriptionUtils
-								.deriveN4JSProjectNameFromURI(projectLocation);
+				projectNameMappingTmp.put(projectName, project);
+				projectUriMappingTmp.put(projectLocation, pair);
 
-						projectNameMappingTmp.put(projectName, project);
-						projectUriMappingTmp.put(projectLocation, pair);
-
-						java.net.URI rootLoc = getRootLocationForResource(projectLocation);
-						projectsForLocationTmp.putIfAbsent(rootLoc, new LinkedList<>());
-						projectsForLocationTmp.get(rootLoc).add(project);
-					}
-				}
+				java.net.URI rootLoc = getRootLocationForResource(projectLocation);
+				projectsForLocationTmp.putIfAbsent(rootLoc, new LinkedList<>());
+				projectsForLocationTmp.get(rootLoc).add(project);
 			}
 		}
 
@@ -260,6 +250,7 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 		}
 
 		// step 4: seal collections
+		projectCacheList = Collections.unmodifiableList(projectCacheListTmp);
 		projectsForLocation = Collections.unmodifiableMap(projectsForLocationTmp);
 		projectNameMapping = Collections.unmodifiableMap(projectNameMappingTmp);
 		projectUriMapping = Collections.unmodifiableMap(projectUriMappingTmp);
@@ -384,12 +375,12 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 		return unmodifiableCollection(projects.values());
 	}
 
-	List<Pair<N4JSExternalProject, ProjectDescription>> getProjectsIncludingUnnecessary() {
-		return projectsIncludingUnnecessary;
+	List<Pair<URI, ProjectDescription>> getProjectsIncludingUnnecessary() {
+		return projectCacheList;
 	}
 
-	private List<Pair<N4JSExternalProject, ProjectDescription>> computeProjectsUncached() {
-		List<Pair<N4JSExternalProject, ProjectDescription>> projectPairs = new LinkedList<>();
+	private Map<URI, Pair<N4JSExternalProject, ProjectDescription>> computeProjectsUncached() {
+		Map<URI, Pair<N4JSExternalProject, ProjectDescription>> projects = new LinkedHashMap<>();
 		Iterable<java.net.URI> projectRoots = externalLibraryPreferenceStore
 				.convertToProjectRootLocations(getRootLocations());
 
@@ -400,14 +391,14 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 				Pair<N4JSExternalProject, ProjectDescription> pair;
 				pair = cacheLoader.load(projectLocation);
 				if (null != pair) {
-					projectPairs.add(pair);
+					projects.put(projectLocation, pair);
 				}
 			} catch (Exception e) {
 				// ignore
 			}
 		}
 
-		return projectPairs;
+		return projects;
 	}
 
 	N4JSExternalProject getProject(String projectName) {

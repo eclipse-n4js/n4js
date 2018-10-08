@@ -44,7 +44,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.n4js.binaries.IllegalBinaryStateException;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
-import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.SemverMatcher;
 import org.eclipse.n4js.semver.SemverUtils;
@@ -54,8 +53,11 @@ import org.eclipse.n4js.semver.model.SemverSerializer;
 import org.eclipse.n4js.smith.ClosableMeasurement;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.StatusHelper;
+import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.Strings;
+import org.eclipse.xtext.util.Tuples;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
@@ -299,12 +301,13 @@ public class LibraryManager {
 			Collection<String> removeRequested) {
 
 		Collection<LibraryChange> requestedChanges = new LinkedList<>();
-		Map<String, IN4JSProject> installedNpms = new HashMap<>();
-		for (org.eclipse.xtext.util.Pair<N4JSExternalProject, ProjectDescription> prjPair : externalLibraryWorkspace
+		Map<String, Pair<org.eclipse.emf.common.util.URI, ProjectDescription>> installedNpms = new HashMap<>();
+		for (Pair<org.eclipse.emf.common.util.URI, ProjectDescription> prjPair : externalLibraryWorkspace
 				.getProjectsIncludingUnnecessary()) {
 
-			IN4JSProject in4jsProject = prjPair.getFirst().getIProject();
-			installedNpms.put(in4jsProject.getProjectName(), in4jsProject);
+			org.eclipse.emf.common.util.URI location = prjPair.getFirst();
+			String nameFromURI = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location);
+			installedNpms.put(nameFromURI, Tuples.pair(location, prjPair.getSecond()));
 		}
 
 		for (Map.Entry<String, NPMVersionRequirement> reqestedNpm : installRequested.entrySet()) {
@@ -312,7 +315,9 @@ public class LibraryManager {
 			NPMVersionRequirement requestedVersion = reqestedNpm.getValue();
 
 			if (installedNpms.containsKey(name)) {
-				VersionNumber version = installedNpms.get(name).getVersion();
+				VersionNumber version = installedNpms.get(name).getSecond().getProjectVersion();
+				org.eclipse.emf.common.util.URI location = installedNpms.get(name).getFirst();
+
 				String installedVersionString = Strings.emptyIfNull(version.toString());
 				if (installedMatchesRequestedVersion(installedVersionString, requestedVersion)) {
 					// if a matching version is installed, do not reinstall
@@ -320,7 +325,6 @@ public class LibraryManager {
 				}
 
 				// wrong version installed -> update (uninstall, then install)
-				org.eclipse.emf.common.util.URI location = installedNpms.get(name).getLocation();
 				requestedChanges.add(new LibraryChange(Uninstall, location, name, installedVersionString));
 				String requestedVersionStr = SemverSerializer.serialize(requestedVersion);
 				requestedChanges.add(new LibraryChange(Install, location, name, requestedVersionStr));

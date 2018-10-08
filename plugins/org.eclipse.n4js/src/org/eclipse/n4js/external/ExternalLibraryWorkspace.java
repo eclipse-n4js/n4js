@@ -151,7 +151,7 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 	 *
 	 * @return the external projects that are actually on the HDD.
 	 */
-	public abstract List<Pair<N4JSExternalProject, ProjectDescription>> getProjectsIncludingUnnecessary();
+	public abstract List<Pair<URI, ProjectDescription>> getProjectsIncludingUnnecessary();
 
 	/**
 	 * Returns with all existing external projects that are contained in the given external library root location.

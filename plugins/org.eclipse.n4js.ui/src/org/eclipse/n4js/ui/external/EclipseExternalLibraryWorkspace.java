@@ -432,7 +432,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	}
 
 	@Override
-	public List<Pair<N4JSExternalProject, ProjectDescription>> getProjectsIncludingUnnecessary() {
+	public List<Pair<URI, ProjectDescription>> getProjectsIncludingUnnecessary() {
 		return projectProvider.getProjectsIncludingUnnecessary();
 	}
 
