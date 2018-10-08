@@ -122,7 +122,7 @@ public class HlcExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	}
 
 	@Override
-	public List<Pair<N4JSExternalProject, ProjectDescription>> computeProjectsUncached() {
+	public List<Pair<N4JSExternalProject, ProjectDescription>> getProjectsIncludingUnnecessary() {
 		return emptyList();
 	}
 

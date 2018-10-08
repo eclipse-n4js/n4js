@@ -76,12 +76,8 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 
 		try {
 			Collection<LibraryChange> changeSet = identifyChangeSet(forcedChangeSet);
-			RegisterResult cleanResults = cleanOutdatedIndex(subMonitor.split(1), changeSet);
-
-			// Updates available projects in: IN4JSCore, ExternalLibraryWorkspace, N4JSModel, ExternalProjectProvider
-			externalLibraryWorkspace.updateState();
-
-			synchronizeIndex(subMonitor.split(9), changeSet, cleanResults);
+			RegisterResult cleanResults = cleanChangesIndex(subMonitor.split(1), changeSet);
+			buildChangesIndex(subMonitor.split(9), changeSet, cleanResults);
 
 		} finally {
 			checkAndClearIndex(subMonitor.split(1));
@@ -93,7 +89,7 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 	 * {@link ExternalLibraryWorkspace#updateState()} adapted these changes. Otherwise the clean operation is not
 	 * possible anymore, since the projects to clean will be removed from the {@link ExternalLibraryWorkspace} instance.
 	 */
-	private RegisterResult cleanOutdatedIndex(IProgressMonitor monitor, Collection<LibraryChange> changeSet) {
+	private RegisterResult cleanChangesIndex(IProgressMonitor monitor, Collection<LibraryChange> changeSet) {
 		try {
 			monitor.setTaskName("Cleaning new projects...");
 			Set<URI> toBeRemovedProjects = getToBeRemovedProjects(changeSet);
@@ -111,7 +107,7 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 	 * {@code node_modules} folder. Due to this adaption, new folders are already represented as external projects and
 	 * can be build and added to the index.
 	 */
-	private void synchronizeIndex(IProgressMonitor monitor, Collection<LibraryChange> changeSet,
+	private void buildChangesIndex(IProgressMonitor monitor, Collection<LibraryChange> changeSet,
 			RegisterResult cleanResults) {
 
 		SubMonitor subMonitor = convert(monitor, 10);
@@ -185,7 +181,7 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 			case Added:
 				ExternalProject project = externalLibraryWorkspace.getProject(change.name);
 				if (project != null) {
-					// The added project will shadow an existing project.
+					// The added project might shadow an existing project.
 					// Hence, the existing project must be cleaned.
 					toBeDeleted.add(change.location);
 				}

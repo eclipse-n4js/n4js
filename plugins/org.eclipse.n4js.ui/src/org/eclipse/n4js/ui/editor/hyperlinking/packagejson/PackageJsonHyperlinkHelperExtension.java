@@ -18,13 +18,16 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.json.JSON.JSONPackage;
 import org.eclipse.n4js.json.JSON.JSONStringLiteral;
 import org.eclipse.n4js.json.JSON.NameValuePair;
 import org.eclipse.n4js.json.ui.editor.hyperlinking.IJSONHyperlinkHelperExtension;
 import org.eclipse.n4js.packagejson.PackageJsonProperties;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
+import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
 import org.eclipse.n4js.ui.internal.N4JSEclipseModel;
 import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseSourceContainer;
@@ -38,6 +41,7 @@ import org.eclipse.xtext.ui.editor.hyperlinking.XtextHyperlink;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.Tuples;
 
+import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
@@ -50,6 +54,9 @@ public class PackageJsonHyperlinkHelperExtension implements IJSONHyperlinkHelper
 
 	@Inject
 	private N4JSEclipseModel model;
+
+	@Inject
+	private EclipseExternalLibraryWorkspace extWS;
 
 	@Inject
 	private Provider<XtextHyperlink> hyperlinkProvider;
@@ -194,7 +201,7 @@ public class PackageJsonHyperlinkHelperExtension implements IJSONHyperlinkHelper
 	private Pair<URI, Region> hyperlinkToRequiredRTLibs(JSONStringLiteral mainModuleJsonLiteral) {
 		String projectName = mainModuleJsonLiteral.getValue();
 		if (!Strings.isNullOrEmpty(projectName)) {
-			IN4JSProject project = model.findAllProjectMappings().get(projectName);
+			IN4JSProject project = getProjectForName(projectName);
 			INode node = NodeModelUtils.getNode(mainModuleJsonLiteral);
 
 			if (project != null && node != null) {
@@ -210,7 +217,7 @@ public class PackageJsonHyperlinkHelperExtension implements IJSONHyperlinkHelper
 
 	private Pair<URI, Region> hyperlinkToProjectProperty(NameValuePair nvpDependency) {
 		String projectName = nvpDependency.getName();
-		IN4JSProject project = model.findAllProjectMappings().get(projectName);
+		IN4JSProject project = getProjectForName(projectName);
 		if (project instanceof N4JSEclipseProject) {
 			List<INode> node = NodeModelUtils.findNodesForFeature(nvpDependency,
 					JSONPackage.Literals.NAME_VALUE_PAIR__NAME);
@@ -230,7 +237,7 @@ public class PackageJsonHyperlinkHelperExtension implements IJSONHyperlinkHelper
 	private Pair<URI, Region> hyperlinkToDependencySection(NameValuePair projectNameInValue) {
 		JSONStringLiteral jsonValue = (JSONStringLiteral) projectNameInValue.getValue();
 		String projectName = jsonValue.getValue();
-		IN4JSProject project = model.findAllProjectMappings().get(projectName);
+		IN4JSProject project = getProjectForName(projectName);
 
 		if (project instanceof N4JSEclipseProject) {
 			INode valueNode = NodeModelUtils.getNode(jsonValue);
@@ -240,6 +247,20 @@ public class PackageJsonHyperlinkHelperExtension implements IJSONHyperlinkHelper
 			return Tuples.pair(uri, region);
 		}
 		return null;
+	}
+
+	private IN4JSProject getProjectForName(String projectName) {
+		IN4JSProject project = model.findAllProjectMappings().get(projectName);
+		if (project == null) {
+			for (Pair<N4JSExternalProject, ProjectDescription> pair : extWS.getProjectsIncludingUnnecessary()) {
+				IN4JSProject iProject = pair.getFirst().getIProject();
+				String name = iProject.getProjectName();
+				if (Objects.equal(projectName, name)) {
+					project = iProject;
+				}
+			}
+		}
+		return project;
 	}
 
 	private PackageJsonProperties findNearestKnownPJP(EObject eObject) {

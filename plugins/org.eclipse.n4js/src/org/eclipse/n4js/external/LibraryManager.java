@@ -21,6 +21,7 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -42,6 +43,8 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.n4js.binaries.IllegalBinaryStateException;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.SemverMatcher;
 import org.eclipse.n4js.semver.SemverUtils;
@@ -53,7 +56,6 @@ import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.xtext.util.Strings;
-import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
@@ -221,11 +223,11 @@ public class LibraryManager {
 		}
 
 		try (ClosableMeasurement mes = dcLibMngr.getClosableMeasurement("installDependenciesInternal");) {
-			final int steps = forceReloadAll ? 3 : 2;
+			final int steps = forceReloadAll ? 6 : 7;
 			SubMonitor subMonitor = SubMonitor.convert(monitor, steps);
 			Map<String, NPMVersionRequirement> npmsToInstall = new LinkedHashMap<>(versionedNPMs);
 
-			SubMonitor subMonitor1 = subMonitor.split(1);
+			SubMonitor subMonitor1 = subMonitor.split(2);
 			subMonitor1.setTaskName("Installing packages... [step 1 of " + steps + "]");
 			List<LibraryChange> actualChanges = installUninstallNPMs(subMonitor1, status, npmsToInstall, emptyList());
 
@@ -238,7 +240,7 @@ public class LibraryManager {
 			}
 
 			try (ClosableMeasurement m = dcIndexSynchronizer.getClosableMeasurement("synchronizeNpms")) {
-				SubMonitor subMonitor3 = subMonitor.split(1);
+				SubMonitor subMonitor3 = subMonitor.split(4);
 				subMonitor3.setTaskName("Building installed packages... [step " + steps + " of " + steps + "]");
 				indexSynchronizer.synchronizeNpms(subMonitor3, actualChanges);
 			}
@@ -296,22 +298,29 @@ public class LibraryManager {
 	private Collection<LibraryChange> getRequestedChanges(Map<String, NPMVersionRequirement> installRequested,
 			Collection<String> removeRequested) {
 
-		Map<String, Pair<org.eclipse.emf.common.util.URI, String>> installedNpms = indexSynchronizer.findNpmsInFolder();
 		Collection<LibraryChange> requestedChanges = new LinkedList<>();
+		Map<String, IN4JSProject> installedNpms = new HashMap<>();
+		for (org.eclipse.xtext.util.Pair<N4JSExternalProject, ProjectDescription> prjPair : externalLibraryWorkspace
+				.getProjectsIncludingUnnecessary()) {
+
+			IN4JSProject in4jsProject = prjPair.getFirst().getIProject();
+			installedNpms.put(in4jsProject.getProjectName(), in4jsProject);
+		}
 
 		for (Map.Entry<String, NPMVersionRequirement> reqestedNpm : installRequested.entrySet()) {
 			String name = reqestedNpm.getKey();
 			NPMVersionRequirement requestedVersion = reqestedNpm.getValue();
 
 			if (installedNpms.containsKey(name)) {
-				String installedVersionString = Strings.emptyIfNull(installedNpms.get(name).getValue());
+				VersionNumber version = installedNpms.get(name).getVersion();
+				String installedVersionString = Strings.emptyIfNull(version.toString());
 				if (installedMatchesRequestedVersion(installedVersionString, requestedVersion)) {
 					// if a matching version is installed, do not reinstall
 					continue;
 				}
 
 				// wrong version installed -> update (uninstall, then install)
-				org.eclipse.emf.common.util.URI location = installedNpms.get(name).getKey();
+				org.eclipse.emf.common.util.URI location = installedNpms.get(name).getLocation();
 				requestedChanges.add(new LibraryChange(Uninstall, location, name, installedVersionString));
 				String requestedVersionStr = SemverSerializer.serialize(requestedVersion);
 				requestedChanges.add(new LibraryChange(Install, location, name, requestedVersionStr));

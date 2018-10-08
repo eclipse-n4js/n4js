@@ -26,8 +26,8 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
 import org.eclipse.n4js.json.JSON.JSONPackage;
-import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.packagejson.PackageJsonResourceDescriptionExtension;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
@@ -97,20 +97,21 @@ public abstract class ExternalIndexSynchronizer {
 	}
 
 	/**
+	 * Note: Expensive method
+	 * <p>
 	 * Returns a map that maps the names of projects as they can be found in the {@code node_modules} folder to their
 	 * locations and versions.
 	 */
 	final public Map<String, Pair<URI, String>> findNpmsInFolder() {
 		Map<String, Pair<URI, String>> npmsFolder = new HashMap<>();
 
+		externalLibraryWorkspace.updateState();
 		String nodeModulesFolder = locationProvider.getNodeModulesURI().toString();
-		for (org.eclipse.xtext.util.Pair<N4JSExternalProject, ProjectDescription> pair : externalLibraryWorkspace
-				.computeProjectsUncached()) {
-
-			N4JSExternalProject n4jsProject = pair.getFirst();
-			VersionNumber version = pair.getSecond().getProjectVersion();
-			URI location = n4jsProject.getIProject().getLocation();
-			String name = n4jsProject.getIProject().getProjectName();
+		for (N4JSExternalProject n4jsProject : externalLibraryWorkspace.getProjects()) {
+			IN4JSProject iProject = n4jsProject.getIProject();
+			VersionNumber version = iProject.getVersion();
+			URI location = iProject.getLocation();
+			String name = iProject.getProjectName();
 
 			if (location.toString().startsWith(nodeModulesFolder) && version != null) {
 				npmsFolder.put(name, Pair.of(location, version.toString()));
@@ -153,7 +154,11 @@ public abstract class ExternalIndexSynchronizer {
 		return resourceDescription != null;
 	}
 
-	/** @return a set of all changes between the Xtext index and the external projects in all external locations */
+	/**
+	 * Note: Expensive method.
+	 *
+	 * @return a set of all changes between the Xtext index and the external projects in all external locations
+	 */
 	final protected Collection<LibraryChange> identifyChangeSet(Collection<LibraryChange> forcedChangeSet) {
 		Collection<LibraryChange> changes = new LinkedHashSet<>(forcedChangeSet);
 
@@ -194,9 +199,6 @@ public abstract class ExternalIndexSynchronizer {
 				URI locationIndex = npmsOfIndex.get(name).getKey();
 				URI locationFolder = npmsOfFolder.get(name).getKey();
 
-				if (!locationFolder.equals(locationIndex)) {
-					System.out.println();
-				}
 				Preconditions.checkState(locationFolder.equals(locationIndex));
 
 				if (versionIndex != null && !versionIndex.equals(versionFolder)) {

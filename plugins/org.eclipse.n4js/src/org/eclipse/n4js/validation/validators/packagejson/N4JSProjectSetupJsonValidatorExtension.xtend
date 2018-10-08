@@ -1142,7 +1142,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			existentIds.put(id, ref);
 		}
 
-		if (!currentProject.isExternal && !indexSynchronizer.isInIndex(project.projectDescriptionLocation.orNull)) {
+		if (!currentProject.isExternal && project.isExternal && !indexSynchronizer.isInIndex(project.projectDescriptionLocation.orNull)) {
 			val msg = getMessageForNON_REGISTERED_PROJECT(id);
 			addIssue(msg, ref.astRepresentation, null, NON_REGISTERED_PROJECT, id);
 			return;

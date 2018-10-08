@@ -432,8 +432,8 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	}
 
 	@Override
-	public List<Pair<N4JSExternalProject, ProjectDescription>> computeProjectsUncached() {
-		return projectProvider.computeProjectsUncached();
+	public List<Pair<N4JSExternalProject, ProjectDescription>> getProjectsIncludingUnnecessary() {
+		return projectProvider.getProjectsIncludingUnnecessary();
 	}
 
 }

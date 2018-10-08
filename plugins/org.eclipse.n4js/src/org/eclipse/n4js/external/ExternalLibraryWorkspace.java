@@ -147,11 +147,11 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 	public abstract Map<String, VersionNumber> getProjectInfos();
 
 	/**
-	 * Returns with all external projects. Does not use cached data.
+	 * Returns with all external projects including those that are dependencies of plain-JS projects.
 	 *
 	 * @return the external projects that are actually on the HDD.
 	 */
-	public abstract List<Pair<N4JSExternalProject, ProjectDescription>> computeProjectsUncached();
+	public abstract List<Pair<N4JSExternalProject, ProjectDescription>> getProjectsIncludingUnnecessary();
 
 	/**
 	 * Returns with all existing external projects that are contained in the given external library root location.
