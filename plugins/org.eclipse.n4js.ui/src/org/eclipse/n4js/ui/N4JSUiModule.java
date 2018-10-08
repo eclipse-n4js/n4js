@@ -88,7 +88,7 @@ import org.eclipse.n4js.ui.internal.ConsoleOutputStreamProvider;
 import org.eclipse.n4js.ui.internal.ContributingModule;
 import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
 import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
-import org.eclipse.n4js.ui.internal.ExternalProjectCacheLoader;
+import org.eclipse.n4js.ui.internal.ExternalProjectLoader;
 import org.eclipse.n4js.ui.internal.N4JSEclipseCore;
 import org.eclipse.n4js.ui.internal.N4JSEclipseModel;
 import org.eclipse.n4js.ui.internal.ResourceUIValidatorExtension;
@@ -253,8 +253,8 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	}
 
 	/** Delegate to shared injector */
-	public Provider<ExternalProjectCacheLoader> provideExternalProjectCacheLoader() {
-		return Access.contributedProvider(ExternalProjectCacheLoader.class);
+	public Provider<ExternalProjectLoader> provideExternalProjectCacheLoader() {
+		return Access.contributedProvider(ExternalProjectLoader.class);
 	}
 
 	/** Delegate to shared injector */

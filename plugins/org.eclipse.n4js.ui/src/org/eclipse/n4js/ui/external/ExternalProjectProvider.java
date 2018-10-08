@@ -42,7 +42,7 @@ import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
-import org.eclipse.n4js.ui.internal.ExternalProjectCacheLoader;
+import org.eclipse.n4js.ui.internal.ExternalProjectLoader;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.util.Pair;
@@ -58,7 +58,7 @@ import com.google.inject.Singleton;
 public class ExternalProjectProvider implements StoreUpdatedListener {
 
 	@Inject
-	private ExternalProjectCacheLoader cacheLoader;
+	private ExternalProjectLoader cacheLoader;
 
 	@Inject
 	private ProjectStateChangeListener projectStateChangeListener;
@@ -398,7 +398,7 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 
 			try {
 				Pair<N4JSExternalProject, ProjectDescription> pair;
-				pair = cacheLoader.load(projectLocation).orNull();
+				pair = cacheLoader.load(projectLocation);
 				if (null != pair) {
 					projectPairs.add(pair);
 				}

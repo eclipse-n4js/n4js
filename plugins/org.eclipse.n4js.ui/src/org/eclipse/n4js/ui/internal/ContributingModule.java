@@ -148,7 +148,7 @@ public class ContributingModule implements Module {
 		binder.bind(ExternalIndexSynchronizer.class).to(EclipseExternalIndexSynchronizer.class);
 		binder.bind(EclipseExternalIndexSynchronizer.class);
 
-		binder.bind(ExternalProjectCacheLoader.class);
+		binder.bind(ExternalProjectLoader.class);
 		binder.bind(ProjectStateChangeListener.class);
 		binder.bind(ExternalIndexUpdater.class);
 		binder.bind(ExternalLibraryBuildScheduler.class);
