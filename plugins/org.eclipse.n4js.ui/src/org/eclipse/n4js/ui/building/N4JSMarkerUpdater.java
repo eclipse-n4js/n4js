@@ -20,10 +20,12 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ui.external.ExternalLibraryErrorMarkerManager;
 import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
+import org.eclipse.n4js.utils.N4JSLanguageHelper;
 import org.eclipse.xtext.builder.builderState.MarkerUpdaterImpl;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
@@ -82,6 +84,11 @@ public class N4JSMarkerUpdater extends MarkerUpdaterImpl {
 
 	private void updateMarkersForExternalLibraries(Delta delta, ResourceSet resourceSet, IProgressMonitor monitor) {
 		URI uri = delta.getUri();
+		String uriExt = uri.fileExtension();
+		if (N4JSLanguageHelper.OPAQUE_JS_MODULES
+				&& (N4JSGlobals.JS_FILE_EXTENSION.equals(uriExt) || N4JSGlobals.JSX_FILE_EXTENSION.equals(uriExt))) {
+			return;
+		}
 		if (n4jsCore.isNoValidate(uri)) {
 			return;
 		}
