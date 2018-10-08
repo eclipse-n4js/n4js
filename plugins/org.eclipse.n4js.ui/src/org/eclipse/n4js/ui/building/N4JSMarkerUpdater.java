@@ -71,6 +71,15 @@ public class N4JSMarkerUpdater extends MarkerUpdaterImpl {
 			throws OperationCanceledException {
 
 		URI uri = delta.getUri();
+
+		// quick exit for js files
+		// (pure performance tweak, because those resources have an empty AST anyway; see N4JSResource#doLoad())
+		String uriExt = uri.fileExtension();
+		if (N4JSLanguageHelper.OPAQUE_JS_MODULES
+				&& (N4JSGlobals.JS_FILE_EXTENSION.equals(uriExt) || N4JSGlobals.JSX_FILE_EXTENSION.equals(uriExt))) {
+			return;
+		}
+
 		Iterable<Pair<IStorage, IProject>> pairs = mapper.getStorages(uri);
 		if (resourceSet != null && pairs.iterator().hasNext()) {
 			Pair<IStorage, IProject> pair = pairs.iterator().next();
@@ -84,11 +93,6 @@ public class N4JSMarkerUpdater extends MarkerUpdaterImpl {
 
 	private void updateMarkersForExternalLibraries(Delta delta, ResourceSet resourceSet, IProgressMonitor monitor) {
 		URI uri = delta.getUri();
-		String uriExt = uri.fileExtension();
-		if (N4JSLanguageHelper.OPAQUE_JS_MODULES
-				&& (N4JSGlobals.JS_FILE_EXTENSION.equals(uriExt) || N4JSGlobals.JSX_FILE_EXTENSION.equals(uriExt))) {
-			return;
-		}
 		if (n4jsCore.isNoValidate(uri)) {
 			return;
 		}
