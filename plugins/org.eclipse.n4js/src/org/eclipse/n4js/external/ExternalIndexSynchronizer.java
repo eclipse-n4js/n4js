@@ -106,14 +106,13 @@ public abstract class ExternalIndexSynchronizer {
 		Map<String, Pair<URI, String>> npmsFolder = new HashMap<>();
 
 		externalLibraryWorkspace.updateState();
-		String nodeModulesFolder = locationProvider.getNodeModulesURI().toString();
 		for (N4JSExternalProject n4jsProject : externalLibraryWorkspace.getProjects()) {
 			IN4JSProject iProject = n4jsProject.getIProject();
 			VersionNumber version = iProject.getVersion();
 			URI location = iProject.getLocation();
 			String name = iProject.getProjectName();
 
-			if (location.toString().startsWith(nodeModulesFolder) && version != null) {
+			if (version != null) {
 				npmsFolder.put(name, Pair.of(location, version.toString()));
 			}
 		}
