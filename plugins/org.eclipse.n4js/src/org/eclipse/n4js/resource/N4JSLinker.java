@@ -29,9 +29,6 @@ import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.scoping.members.ComposedMemberScope;
-import org.eclipse.n4js.smith.ClosableMeasurement;
-import org.eclipse.n4js.smith.DataCollector;
-import org.eclipse.n4js.smith.DataCollectors;
 import org.eclipse.n4js.validation.ASTStructureValidator;
 import org.eclipse.xtext.AbstractElement;
 import org.eclipse.xtext.AbstractRule;
@@ -68,15 +65,6 @@ import com.google.inject.Inject;
  * content of the node against the value converter and produces errors for invalid input sequences.
  */
 public class N4JSLinker extends LazyLinker {
-	@SuppressWarnings("unused") // Creates parent if not created yet
-	static private final DataCollector dcBuild = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Build");
-	static private final DataCollector dcValidations = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Validations", "Build");
-	static private final DataCollector dcPreProcess = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("PreProcess", "Build");
-	static private final DataCollector dcStructureValidations = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Structure Validations", "Build", "Validations");
 
 	/** Custom delimiter to use for encoded URI fragments. */
 	public static final char N4JS_CROSSREF_DELIM = '|';
@@ -113,17 +101,11 @@ public class N4JSLinker extends LazyLinker {
 					installProxies(resource, eObject, producer);
 				}
 				// pre-processing of AST
-				String resourceName = resource.getURI().toString();
-				try (ClosableMeasurement mes = dcPreProcess.getClosableMeasurement(resourceName)) {
-					preProcessor.process(resource.getScript(), resource);
-				}
+				preProcessor.process(resource.getScript(), resource);
 
 				// AST structure validation
 				if (!resource.isValidationDisabled()) {
-					try (ClosableMeasurement m1 = dcValidations.getClosableMeasurement(resourceName);
-							ClosableMeasurement m2 = dcStructureValidations.getClosableMeasurement(resourceName);) {
-						getStructureValidator().validate(model, consumer);
-					}
+					getStructureValidator().validate(model, consumer);
 				}
 			}
 		});

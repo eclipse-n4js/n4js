@@ -28,27 +28,14 @@ import org.eclipse.n4js.flowgraphs.factories.ControlFlowGraphFactory;
 import org.eclipse.n4js.flowgraphs.model.FlowGraph;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Script;
-import org.eclipse.n4js.smith.ClosableMeasurement;
-import org.eclipse.n4js.smith.DataCollector;
-import org.eclipse.n4js.smith.DataCollectors;
+import org.eclipse.n4js.smith.Measurement;
+import org.eclipse.n4js.utils.N4JSDataCollectors;
 
 /**
  * Facade for all control and data flow related methods.
  */
 public class N4JSFlowAnalyser {
 	static private final Logger logger = Logger.getLogger(N4JSFlowAnalyser.class);
-	static private final DataCollector dcFlowGraphs = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Flow Graphs");
-	static private final DataCollector dcCreateGraph = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Create Graphs", "Flow Graphs");
-	static private final DataCollector dcPerformAnalyses = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Perform Analyses", "Flow Graphs");
-	static private final DataCollector dcForwardAnalyses = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Forward", "Flow Graphs", "Perform Analyses");
-	static private final DataCollector dcBackwardAnalyses = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Backward", "Flow Graphs", "Perform Analyses");
-	static private final DataCollector dcAugmentEffectInfo = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Augment Effect Information", "Flow Graphs", "Create Graphs");
 
 	private final Callable<Void> cancelledChecker;
 	private FlowGraph cfg;
@@ -81,8 +68,8 @@ public class N4JSFlowAnalyser {
 		Objects.requireNonNull(script);
 		String uriString = script.eResource().getURI().toString();
 
-		try (ClosableMeasurement m1 = dcFlowGraphs.getClosableMeasurement("flowGraphs_" + uriString);
-				ClosableMeasurement m2 = dcCreateGraph.getClosableMeasurement("createGraph_" + uriString);) {
+		try (Measurement m1 = N4JSDataCollectors.dcFlowGraphs.getMeasurement("flowGraphs_" + uriString);
+				Measurement m2 = N4JSDataCollectors.dcCreateGraph.getMeasurement("createGraph_" + uriString);) {
 
 			symbolFactory = new SymbolFactory();
 			cfg = ControlFlowGraphFactory.build(script);
@@ -201,9 +188,9 @@ public class N4JSFlowAnalyser {
 	 */
 	public void acceptForwardAnalysers(FlowAnalyser... flowAnalysers) {
 		String name = cfg.getScriptName();
-		try (ClosableMeasurement m1 = dcFlowGraphs.getClosableMeasurement("flowGraphs_" + name);
-				ClosableMeasurement m2 = dcPerformAnalyses.getClosableMeasurement("performAnalysis_" + name);
-				ClosableMeasurement m3 = dcForwardAnalyses.getClosableMeasurement("Forward_" + name);) {
+		try (Measurement m1 = N4JSDataCollectors.dcFlowGraphs.getMeasurement("flowGraphs_" + name);
+				Measurement m2 = N4JSDataCollectors.dcPerformAnalyses.getMeasurement("performAnalysis_" + name);
+				Measurement m3 = N4JSDataCollectors.dcForwardAnalyses.getMeasurement("Forward_" + name);) {
 
 			gva.forwardAnalysis(flowAnalysers);
 		}
@@ -216,9 +203,9 @@ public class N4JSFlowAnalyser {
 	 */
 	public void acceptBackwardAnalysers(FlowAnalyser... flowAnalysers) {
 		String name = cfg.getScriptName();
-		try (ClosableMeasurement m1 = dcFlowGraphs.getClosableMeasurement("flowGraphs_" + name);
-				ClosableMeasurement m2 = dcPerformAnalyses.getClosableMeasurement("performAnalysis_" + name);
-				ClosableMeasurement m3 = dcBackwardAnalyses.getClosableMeasurement("Backward_" + name);) {
+		try (Measurement m1 = N4JSDataCollectors.dcFlowGraphs.getMeasurement("flowGraphs_" + name);
+				Measurement m2 = N4JSDataCollectors.dcPerformAnalyses.getMeasurement("performAnalysis_" + name);
+				Measurement m3 = N4JSDataCollectors.dcBackwardAnalyses.getMeasurement("Backward_" + name);) {
 
 			gva.backwardAnalysis(flowAnalysers);
 		}
@@ -227,9 +214,9 @@ public class N4JSFlowAnalyser {
 	/** Augments the flow graph with effect and symbol information. */
 	public void augmentEffectInformation() {
 		String name = cfg.getScriptName();
-		try (ClosableMeasurement m1 = dcFlowGraphs.getClosableMeasurement("flowGraphs_" + name);
-				ClosableMeasurement m2 = dcCreateGraph.getClosableMeasurement("createGraph_" + name);
-				ClosableMeasurement m = dcAugmentEffectInfo.getClosableMeasurement("AugmentEffectInfo_" + name);) {
+		try (Measurement m1 = N4JSDataCollectors.dcFlowGraphs.getMeasurement("flowGraphs_" + name);
+				Measurement m2 = N4JSDataCollectors.dcCreateGraph.getMeasurement("createGraph_" + name);
+				Measurement m = N4JSDataCollectors.dcAugmentEffectInfo.getMeasurement("AugmentEffectInfo_" + name);) {
 
 			gva.augmentEffectInformation(symbolFactory);
 		}

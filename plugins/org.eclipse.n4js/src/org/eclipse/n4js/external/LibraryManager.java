@@ -50,9 +50,8 @@ import org.eclipse.n4js.semver.SemverUtils;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.semver.model.SemverSerializer;
-import org.eclipse.n4js.smith.ClosableMeasurement;
-import org.eclipse.n4js.smith.DataCollector;
-import org.eclipse.n4js.smith.DataCollectors;
+import org.eclipse.n4js.smith.Measurement;
+import org.eclipse.n4js.utils.N4JSDataCollectors;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.resources.ExternalProject;
 import org.eclipse.xtext.util.Strings;
@@ -68,24 +67,10 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class LibraryManager {
-	/** {@link DataCollector} key used for {@link LibraryManager} related activities. */
-	public static final String LIBRARY_MANAGER_DATA_COLLECTOR_KEY = "Library Manager";
 
 	private static final Logger LOGGER = Logger.getLogger(LibraryManager.class);
 
 	private static final NPMVersionRequirement NO_VERSION_REQUIREMENT = SemverUtils.createEmptyVersionRequirement();
-
-	private static final DataCollector dcLibMngr = DataCollectors.INSTANCE
-			.getOrCreateDataCollector(LIBRARY_MANAGER_DATA_COLLECTOR_KEY);
-
-	private static final DataCollector dcNpmInstall = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Install NPMs", LIBRARY_MANAGER_DATA_COLLECTOR_KEY);
-
-	private static final DataCollector dcNpmUninstall = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Uninstall NPMs", LIBRARY_MANAGER_DATA_COLLECTOR_KEY);
-
-	private static final DataCollector dcIndexSynchronizer = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Index Synchronizer", LIBRARY_MANAGER_DATA_COLLECTOR_KEY);
 
 	@Inject
 	private ExternalLibraryWorkspace externalLibraryWorkspace;
@@ -223,7 +208,7 @@ public class LibraryManager {
 			return status;
 		}
 
-		try (ClosableMeasurement mes = dcLibMngr.getClosableMeasurement("installDependenciesInternal");) {
+		try (Measurement mes = N4JSDataCollectors.dcLibMngr.getMeasurement("installDependenciesInternal");) {
 			Map<String, NPMVersionRequirement> npmsToInstall = new LinkedHashMap<>(versionedNPMs);
 			Set<LibraryChange> actualChanges = new HashSet<>();
 
@@ -238,7 +223,7 @@ public class LibraryManager {
 				externalLibraryWorkspace.deregisterAllProjects(SubMonitor.convert(monitor, 1));
 			}
 
-			try (ClosableMeasurement m = dcIndexSynchronizer.getClosableMeasurement("synchronizeNpms")) {
+			try (Measurement m = N4JSDataCollectors.dcIndexSynchronizer.getMeasurement("synchronizeNpms")) {
 				monitor.setTaskName("Building installed packages... [step 2 of 2]");
 				indexSynchronizer.synchronizeNpms(monitor, actualChanges);
 			}
@@ -280,13 +265,13 @@ public class LibraryManager {
 		Collection<LibraryChange> requestedChanges = getRequestedChanges(installRequested, removeRequested);
 		List<LibraryChange> actualChanges = new LinkedList<>();
 
-		try (ClosableMeasurement m = dcNpmUninstall.getClosableMeasurement("batchUninstall")) {
+		try (Measurement m = N4JSDataCollectors.dcNpmUninstall.getMeasurement("batchUninstall")) {
 			// remove
 			actualChanges.addAll(npmCli.batchUninstall(subMonitor, status, requestedChanges));
 			subMonitor.worked(1);
 		}
 
-		try (ClosableMeasurement m = dcNpmInstall.getClosableMeasurement("batchInstall")) {
+		try (Measurement m = N4JSDataCollectors.dcNpmInstall.getMeasurement("batchInstall")) {
 			// install
 			actualChanges.addAll(npmCli.batchInstall(subMonitor, status, requestedChanges));
 			subMonitor.worked(1);
@@ -392,11 +377,11 @@ public class LibraryManager {
 			return status;
 		}
 
-		try (ClosableMeasurement mes = dcLibMngr.getClosableMeasurement("uninstallDependenciesInternal");) {
+		try (Measurement mes = N4JSDataCollectors.dcLibMngr.getMeasurement("uninstallDependenciesInternal");) {
 
 			List<LibraryChange> actualChanges = installUninstallNPMs(monitor, status, emptyMap(), packageNames);
 
-			try (ClosableMeasurement m = dcIndexSynchronizer.getClosableMeasurement("synchronizeNpms")) {
+			try (Measurement m = N4JSDataCollectors.dcIndexSynchronizer.getMeasurement("synchronizeNpms")) {
 				indexSynchronizer.synchronizeNpms(monitor, actualChanges);
 			}
 

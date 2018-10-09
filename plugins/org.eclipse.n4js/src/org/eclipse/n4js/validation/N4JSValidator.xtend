@@ -14,9 +14,11 @@ import com.google.inject.Inject
 import java.lang.reflect.Method
 import org.eclipse.emf.common.util.BasicDiagnostic
 import org.eclipse.emf.common.util.Diagnostic
+import org.eclipse.n4js.smith.DataCollector
 import org.eclipse.n4js.smith.DataCollectors
 import org.eclipse.n4js.ts.validation.TypesValidator
 import org.eclipse.n4js.utils.Log
+import org.eclipse.n4js.utils.N4JSDataCollectors
 import org.eclipse.n4js.validation.validators.IDEBUGValidator
 import org.eclipse.n4js.validation.validators.N4IDLMigrationValidator
 import org.eclipse.n4js.validation.validators.N4IDLValidator
@@ -118,11 +120,6 @@ class N4JSValidator extends InternalTypeSystemValidator {
 	 * Override to improve error message in case of abnormal termination of validation.
 	 */
 	override MethodWrapperCancelable createMethodWrapper(AbstractDeclarativeValidator instanceToUse, Method method) {
-		// when running tests (e.g. org.eclipse.n4js.tests.scoping.ErrorTest)
-		// the following data collectors need to be created here
-		DataCollectors.INSTANCE.getOrCreateDataCollector("Build");
-		DataCollectors.INSTANCE.getOrCreateDataCollector("Validations", "Build");
-
 		return new N4JSMethodWrapperCancelable(instanceToUse, method, operationCanceledManager);
 	}
 
@@ -147,12 +144,12 @@ class N4JSValidator extends InternalTypeSystemValidator {
 		// note: cannot override validate method directly because it is final
 		override void invoke(State state) {
 			val valMethodName = this.method.name;
-			val dcValidator = DataCollectors.INSTANCE.getOrCreateDataCollector(valMethodName, "Build", "Validations");
+			val dcCheckMethod = createDataCollectorForCheckMethod(valMethodName);
 			val URI = state.currentObject.eResource.URI;
 
-			val mesVM = dcValidator.getMeasurement(valMethodName + "_" + URI.toString);
-
 			operationCanceledManager.checkCanceled(getCancelIndicator(state));
+
+			val mesVM = dcCheckMethod.getMeasurement(valMethodName + "_" + URI.toString);
 			try {
 				super.invoke(state);
 			} catch (Exception e) {
@@ -161,8 +158,24 @@ class N4JSValidator extends InternalTypeSystemValidator {
 				state.chain.add(
 					new BasicDiagnostic(Diagnostic.ERROR, state.currentObject.toString(), 0, e.message, #[e]));
 			} finally {
-				mesVM.end();
+				mesVM.close();
 			}
+		}
+
+		def private DataCollector createDataCollectorForCheckMethod(String methodName) {
+			val parent = if (N4JSDataCollectors.dcValidationsPackageJson.hasActiveMeasurement) {
+				N4JSDataCollectors.dcValidationsPackageJson
+			} else if (N4JSDataCollectors.dcValidations.hasActiveMeasurement) {
+				N4JSDataCollectors.dcValidations
+			} else {
+				if(!N4JSDataCollectors.dcValidations.paused) {
+					DataCollectors.INSTANCE.warn("check method " + methodName
+						+ " invoked without data collector " + N4JSDataCollectors.dcValidations
+						+ " being active");
+				}
+				N4JSDataCollectors.dcValidations
+			};
+			return DataCollectors.INSTANCE.getOrCreateDataCollector(methodName, parent);
 		}
 	}
 }

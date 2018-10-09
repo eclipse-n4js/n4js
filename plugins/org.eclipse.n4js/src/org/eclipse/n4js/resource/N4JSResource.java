@@ -59,15 +59,14 @@ import org.eclipse.n4js.postprocessing.ASTMetaInfoCache;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.scoping.diagnosing.N4JSScopingDiagnostician;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
-import org.eclipse.n4js.smith.ClosableMeasurement;
-import org.eclipse.n4js.smith.DataCollector;
-import org.eclipse.n4js.smith.DataCollectors;
+import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInSchemeRegistrar;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.EcoreUtilN4;
+import org.eclipse.n4js.utils.N4JSDataCollectors;
 import org.eclipse.n4js.utils.N4JSLanguageHelper;
 import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
 import org.eclipse.n4js.utils.emf.ProxyResolvingResource;
@@ -267,8 +266,6 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 
 	@Inject
 	private N4JSLanguageHelper langHelper;
-
-	private final DataCollector collector = DataCollectors.INSTANCE.getOrCreateDataCollector("N4JSResource");
 
 	/*
 	 * Even though the constructor is empty, it simplifies debugging (allows to set a breakpoint) thus we keep it here.
@@ -1317,7 +1314,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		// called from builder before resource descriptions are created + called from validator
 		final Script script = getScriptResolved(); // need to be called before resolve() since that one injects a proxy
 		// at resource.content[0]
-		try (ClosableMeasurement m = collector.getClosableMeasurement(getURI().toString());) {
+		try (Measurement m = N4JSDataCollectors.dcN4JSResource.getMeasurement(getURI().toString());) {
 			super.resolveLazyCrossReferences(mon);
 		}
 

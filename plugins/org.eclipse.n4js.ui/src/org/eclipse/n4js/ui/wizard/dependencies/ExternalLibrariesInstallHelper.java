@@ -25,10 +25,9 @@ import org.eclipse.n4js.semver.SemverMatcher;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.semver.model.SemverSerializer;
-import org.eclipse.n4js.smith.DataCollector;
-import org.eclipse.n4js.smith.DataCollectors;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.ui.external.ExternalLibrariesActionsHelper;
+import org.eclipse.n4js.utils.N4JSDataCollectors;
 
 import com.google.common.base.Joiner;
 import com.google.inject.Inject;
@@ -37,15 +36,6 @@ import com.google.inject.Inject;
  * Helper for installing npm dependencies.
  */
 public class ExternalLibrariesInstallHelper {
-
-	static private final DataCollector dcInstallHelper = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("External Libraries Install Helper");
-
-	private static final DataCollector dcCollectMissingDependencies = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Collect missing dependencies", "External Libraries Install Helper");
-
-	private static final DataCollector dcInstallMissingDependencies = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Install missing dependencies", "External Libraries Install Helper");
 
 	@Inject
 	private ProjectDependenciesHelper dependenciesHelper;
@@ -63,7 +53,7 @@ public class ExternalLibrariesInstallHelper {
 
 	/** Streamlined process of calculating and installing the dependencies, npm cache cleaning forced by passed flag */
 	public void calculateAndInstallDependencies(SubMonitor monitor, MultiStatus multistatus, boolean removeNpmCache) {
-		final Measurement overallMeasurement = dcInstallHelper
+		final Measurement overallMeasurement = N4JSDataCollectors.dcInstallHelper
 				.getMeasurement("Install Missing Dependencies");
 
 		final SubMonitor subMonitor2 = monitor.split(1);
@@ -79,7 +69,7 @@ public class ExternalLibrariesInstallHelper {
 				.stream(dependenciesHelper.getAvailableProjectsDescriptions(true).spliterator(), false)
 				.collect(Collectors.toMap(pd -> pd.getProjectName(), pd -> pd.getProjectVersion()));
 
-		Measurement measurment = dcCollectMissingDependencies.getMeasurement("Collect Missing Dependencies");
+		Measurement measurment = N4JSDataCollectors.dcCollectMissingDeps.getMeasurement("Collect Missing Dependencies");
 
 		// install npms from target platform
 		Map<String, NPMVersionRequirement> dependenciesToInstall = dependenciesHelper.calculateDependenciesToInstall();
@@ -87,15 +77,15 @@ public class ExternalLibrariesInstallHelper {
 		addDependenciesForRemainingShippedCode(dependenciesToInstall, projectNamesOfShippedCode.keySet());
 		logShippedCodeInstallationStatus(dependenciesToInstall, projectNamesOfShippedCode.keySet());
 
-		measurment.end();
-		measurment = dcInstallMissingDependencies.getMeasurement("Install missing dependencies");
+		measurment.close();
+		measurment = N4JSDataCollectors.dcInstallMissingDeps.getMeasurement("Install missing dependencies");
 
 		final SubMonitor subMonitor3 = monitor.split(45);
 		// install dependencies and force external library workspace reload
 		externals.installNoUpdate(dependenciesToInstall, true, multistatus, subMonitor3);
 
-		measurment.end();
-		overallMeasurement.end();
+		measurment.close();
+		overallMeasurement.close();
 	}
 
 	/**
