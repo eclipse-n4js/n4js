@@ -247,15 +247,21 @@ public class PackageJsonHyperlinkHelperExtension implements IJSONHyperlinkHelper
 
 	private URI getProjectDescriptionLocationForName(String projectName) {
 		IN4JSProject project = model.findAllProjectMappings().get(projectName);
+		URI rootLocation = null;
 		if (project == null) {
 			for (Pair<URI, ProjectDescription> pair : extWS.getProjectsIncludingUnnecessary()) {
 				String name = pair.getSecond().getProjectName();
 				if (Objects.equal(projectName, name)) {
-					URI rootLocation = pair.getFirst();
-					URI pckjsonUri = rootLocation.appendSegment(IN4JSProject.PACKAGE_JSON);
-					return pckjsonUri;
+					rootLocation = pair.getFirst();
 				}
 			}
+		} else {
+			rootLocation = project.getLocation();
+		}
+
+		if (rootLocation != null) {
+			URI pckjsonUri = rootLocation.appendSegment(IN4JSProject.PACKAGE_JSON);
+			return pckjsonUri;
 		}
 		return null;
 	}
