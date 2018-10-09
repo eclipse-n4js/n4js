@@ -14,8 +14,6 @@ import com.google.inject.Inject
 import java.lang.reflect.Method
 import org.eclipse.emf.common.util.BasicDiagnostic
 import org.eclipse.emf.common.util.Diagnostic
-import org.eclipse.n4js.smith.DataCollector
-import org.eclipse.n4js.smith.DataCollectors
 import org.eclipse.n4js.ts.validation.TypesValidator
 import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.utils.N4JSDataCollectors
@@ -123,10 +121,10 @@ class N4JSValidator extends InternalTypeSystemValidator {
 		return new N4JSMethodWrapperCancelable(instanceToUse, method, operationCanceledManager);
 	}
 
-	static class N4JSMethodWrapperCancelable extends MethodWrapperCancelable {
+	public static class N4JSMethodWrapperCancelable extends MethodWrapperCancelable {
 		private OperationCanceledManager operationCanceledManager;
 
-		protected new(AbstractDeclarativeValidator instance, Method m, OperationCanceledManager operationCanceledManager) {
+		new(AbstractDeclarativeValidator instance, Method m, OperationCanceledManager operationCanceledManager) {
 			super(instance, m)
 			this.operationCanceledManager = operationCanceledManager;
 		}
@@ -144,11 +142,11 @@ class N4JSValidator extends InternalTypeSystemValidator {
 		// note: cannot override validate method directly because it is final
 		override void invoke(State state) {
 			val valMethodName = this.method.name;
-			val dcCheckMethod = createDataCollectorForCheckMethod(valMethodName);
 			val URI = state.currentObject.eResource.URI;
 
 			operationCanceledManager.checkCanceled(getCancelIndicator(state));
 
+			val dcCheckMethod = N4JSDataCollectors.createDataCollectorForCheckMethod(valMethodName);
 			val mesVM = dcCheckMethod.getMeasurement(valMethodName + "_" + URI.toString);
 			try {
 				super.invoke(state);
@@ -160,22 +158,6 @@ class N4JSValidator extends InternalTypeSystemValidator {
 			} finally {
 				mesVM.close();
 			}
-		}
-
-		def private DataCollector createDataCollectorForCheckMethod(String methodName) {
-			val parent = if (N4JSDataCollectors.dcValidationsPackageJson.hasActiveMeasurement) {
-				N4JSDataCollectors.dcValidationsPackageJson
-			} else if (N4JSDataCollectors.dcValidations.hasActiveMeasurement) {
-				N4JSDataCollectors.dcValidations
-			} else {
-				if(!N4JSDataCollectors.dcValidations.paused) {
-					DataCollectors.INSTANCE.warn("check method " + methodName
-						+ " invoked without data collector " + N4JSDataCollectors.dcValidations
-						+ " being active");
-				}
-				N4JSDataCollectors.dcValidations
-			};
-			return DataCollectors.INSTANCE.getOrCreateDataCollector(methodName, parent);
 		}
 	}
 }

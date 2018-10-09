@@ -64,6 +64,23 @@ public final class N4JSDataCollectors {
 	public static final DataCollector dcHeadlessCompilation = create("Compilation", dcHeadless);
 	public static final DataCollector dcHeadlessRunnerTester = create("Execute runner/tester", dcHeadless);
 
+	public static DataCollector createDataCollectorForCheckMethod(String methodName) {
+		final DataCollector parent;
+		if (N4JSDataCollectors.dcValidationsPackageJson.hasActiveMeasurement()) {
+			parent = N4JSDataCollectors.dcValidationsPackageJson;
+		} else if (N4JSDataCollectors.dcValidations.hasActiveMeasurement()) {
+			parent = N4JSDataCollectors.dcValidations;
+		} else {
+			if (!N4JSDataCollectors.dcValidations.isPaused()) {
+				DataCollectors.INSTANCE.warn("check method " + methodName
+						+ " invoked without data collector " + N4JSDataCollectors.dcValidations
+						+ " being active");
+			}
+			parent = N4JSDataCollectors.dcValidations;
+		}
+		return DataCollectors.INSTANCE.getOrCreateDataCollector(methodName, parent);
+	}
+
 	private static DataCollector create(String key) {
 		return DataCollectors.INSTANCE.getOrCreateDataCollector(key);
 	}
