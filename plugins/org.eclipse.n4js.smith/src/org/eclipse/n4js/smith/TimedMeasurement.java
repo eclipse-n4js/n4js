@@ -35,7 +35,7 @@ class TimedMeasurement implements Measurement {
 	}
 
 	@Override
-	public void close() {
+	public synchronized void close() {
 		if (consumed)
 			return;
 
