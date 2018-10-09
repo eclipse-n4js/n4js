@@ -44,6 +44,7 @@ public class ChartGraphFactory {
 		final int size = data.size();
 
 		if (size == 1) {
+			sj.add(indent.get() + SimpleTimeFormat.convert(data.get(0).nanos) + " - " + series.name);
 			float max = data.get(0).nanos.floatValue();
 			float min = 0.0f;
 			List<Long> data100 = new LinkedList<>();

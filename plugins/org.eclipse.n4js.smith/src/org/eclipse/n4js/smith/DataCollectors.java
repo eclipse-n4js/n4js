@@ -45,22 +45,6 @@ public enum DataCollectors {
 	}
 
 	/**
-	 * returns collector for a given key, that is child of a parent collector specified by the provided keys. Parent are
-	 * looked up according to the order of the provided keys. Parents are <b>NOT</b> created. If parent with given key
-	 * cannot be located exception is thrown. If no keys are provided returns behaves as
-	 * {@link #getOrCreateDataCollector(String)}
-	 */
-	public DataCollector getOrCreateDataCollector(String key, String... parentKeys) {
-
-		if (Strings.isNullOrEmpty(key)) {
-			throw new RuntimeException("DataCollector key cannot be null or empty");
-		}
-
-		DataCollector parent = getParent(parentKeys);
-		return get(key, parent);
-	}
-
-	/**
 	 * returns collector for a given key, that is child of the provided parent collector. If no keys are provided
 	 * returns behaves as {@link #getOrCreateDataCollector(String)}
 	 */
@@ -73,42 +57,20 @@ public enum DataCollectors {
 		return get(key, parent);
 	}
 
-	private synchronized DataCollector getParent(String... parentKeys) {
-		DataCollector parent = null;
-		if (parentKeys != null) {
-			String parentKey = parentKeys[0];
-			String prevParentKey = parentKey;
-			parent = collectors.get(parentKey);
-			if (parent == null)
-				throw new RuntimeException("Cannot find parent for key " + parentKey);
-			// we have root parent, iterate over its children
-			for (int i = 1; i < parentKeys.length; i++) {
-				parentKey = parentKeys[i];
-				parent = parent.getChild(parentKey);
-				// since we have parent keys we break at key with no mapping to parent
-				if (parent == null)
-					throw new RuntimeException(
-							"Cannot find collector for key " + parentKey + " and parent " + prevParentKey);
-				prevParentKey = parentKey;
-			}
-		}
-		return parent;
-	}
-
 	private synchronized DataCollector get(String key, DataCollector parent) {
 		DataCollector collector = null;
 
 		if (parent == null) {
 			collector = collectors.get(key);
 			if (collector == null) {
-				collector = new TimedDataCollector();
+				collector = new TimedDataCollector(key);
 				collector.setPaused(this.pauseAllCollectors.get());
 				collectors.put(key, collector);
 			}
 		} else {
 			collector = parent.getChild(key);
 			if (collector == null) {
-				collector = new TimedDataCollector();
+				collector = new TimedDataCollector(key);
 				collector.setPaused(this.pauseAllCollectors.get());
 				parent.addChild(key, collector);
 			}
@@ -129,4 +91,13 @@ public enum DataCollectors {
 		collectors.values().forEach(collector -> collector.setPaused(paused));
 	}
 
+	/**
+	 * Shows a warning on {@link System#err standard error}, but only if data collection is active, i.e. *not* paused.
+	 */
+	public void warn(String msg) {
+		if (!pauseAllCollectors.get()) {
+			// since this will only happen during local, manual debugging of the N4JS IDE, we can simply use System.err:
+			System.err.println("WARNING: " + msg);
+		}
+	}
 }

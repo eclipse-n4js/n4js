@@ -69,17 +69,16 @@ import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.runner.SystemLoaderInfo;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
-import org.eclipse.n4js.smith.ClosableMeasurement;
 import org.eclipse.n4js.smith.CollectedDataAccess;
-import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectorCSVExporter;
-import org.eclipse.n4js.smith.DataCollectors;
+import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.tester.CliTestTreeTransformer;
 import org.eclipse.n4js.tester.TestCatalogSupplier;
 import org.eclipse.n4js.tester.TestTreeTransformer;
 import org.eclipse.n4js.tester.TesterModule;
 import org.eclipse.n4js.tester.extension.TesterRegistry;
 import org.eclipse.n4js.tester.internal.TesterActivator;
+import org.eclipse.n4js.utils.N4JSDataCollectors;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.eclipse.xtext.ISetup;
 import org.kohsuke.args4j.Argument;
@@ -251,7 +250,7 @@ public class N4jscBase implements IApplication {
 			// no usage, do not show in help
 			required = false)
 	/** Allows to specify the key of the data collector, whose data is saved in the report (cf. CollectedDataAccess). */
-	String performanceKey = HEADLESS_N4JS_COMPILER_COLLECTOR_NAME;
+	String performanceKey = N4JSDataCollectors.HEADLESS_N4JS_COMPILER_COLLECTOR_NAME;
 
 	/**
 	 * Catch all last arguments as files. The actual meaning of these files depends on the {@link #buildtype} (-bt)
@@ -259,21 +258,6 @@ public class N4jscBase implements IApplication {
 	 */
 	@Argument(multiValued = true, usage = "filename of source (or project, see -bt) to compile")
 	List<File> srcFiles = new ArrayList<>();
-
-	private static final String HEADLESS_N4JS_COMPILER_COLLECTOR_NAME = "Headless N4JS Compiler";
-
-	private static final DataCollector headlessDataCollector = DataCollectors.INSTANCE
-			.getOrCreateDataCollector(HEADLESS_N4JS_COMPILER_COLLECTOR_NAME);
-	private static final DataCollector buildSetComputationCollector = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Compute build set", HEADLESS_N4JS_COMPILER_COLLECTOR_NAME);
-	private static final DataCollector projectRegistrationCollector = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Register project in workspace", HEADLESS_N4JS_COMPILER_COLLECTOR_NAME);
-	private static final DataCollector installMissingDependencyCollector = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Install missing dependencies", HEADLESS_N4JS_COMPILER_COLLECTOR_NAME);
-	private static final DataCollector compilationCollector = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Compilation", HEADLESS_N4JS_COMPILER_COLLECTOR_NAME);
-	private static final DataCollector runnerTesterCollector = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Execute runner/tester", HEADLESS_N4JS_COMPILER_COLLECTOR_NAME);
 
 	@Inject
 	private N4HeadlessCompiler headless;
@@ -388,8 +372,8 @@ public class N4jscBase implements IApplication {
 			CollectedDataAccess.setPaused(false);
 		}
 
-		try (ClosableMeasurement m = headlessDataCollector
-				.getClosableMeasurement(HEADLESS_N4JS_COMPILER_COLLECTOR_NAME)) {
+		try (Measurement m = N4JSDataCollectors.dcHeadless
+				.getMeasurement(N4JSDataCollectors.HEADLESS_N4JS_COMPILER_COLLECTOR_NAME)) {
 
 			CmdLineParser parser = new CmdLineParser(this);
 			parser.getProperties().withUsageWidth(130);
@@ -576,8 +560,8 @@ public class N4jscBase implements IApplication {
 				clean();
 			} else {
 				if (installMissingDependencies) {
-					try (ClosableMeasurement installMissingDepMeasurement = installMissingDependencyCollector
-							.getClosableMeasurement("Install missing dependencies")) {
+					try (Measurement installMissingDepMeasurement = N4JSDataCollectors.dcHeadlessInstallMissingDeps
+							.getMeasurement("Install missing dependencies")) {
 						Map<String, NPMVersionRequirement> dependencies = dependencyHelper
 								.discoverMissingDependencies(buildSet.getAllProjects());
 						if (verbose) {
@@ -919,7 +903,7 @@ public class N4jscBase implements IApplication {
 
 	/** trigger compilation using pre-computed buildSet */
 	private void compile(BuildSet buildSet) throws ExitCodeException {
-		try (ClosableMeasurement m = compilationCollector.getClosableMeasurement("Compilation")) {
+		try (Measurement m = N4JSDataCollectors.dcHeadlessCompilation.getMeasurement("Compilation")) {
 			// early exit if dontcompile
 			if (buildtype == BuildType.dontcompile) {
 				return;
@@ -935,7 +919,7 @@ public class N4jscBase implements IApplication {
 	}
 
 	private void registerProjects(BuildSet buildSet) throws ExitCodeException {
-		try (ClosableMeasurement m = projectRegistrationCollector.getClosableMeasurement("Register projects")) {
+		try (Measurement m = N4JSDataCollectors.dcHeadlessProjectRegistration.getMeasurement("Register projects")) {
 			headlessHelper.registerProjects(buildSet, workspace);
 		} catch (N4JSCompileException e) {
 			// dump all information to error-stream.
@@ -957,7 +941,7 @@ public class N4jscBase implements IApplication {
 	 * </pre>
 	 */
 	private BuildSet computeBuildSet() throws ExitCodeException {
-		try (ClosableMeasurement m = buildSetComputationCollector.getClosableMeasurement("Compute BuildSet")) {
+		try (Measurement m = N4JSDataCollectors.dcHeadlessBuildSetComputation.getMeasurement("Compute BuildSet")) {
 			switch (buildtype) {
 			case singlefile:
 				return computeSingleFilesBuildSet();
@@ -1042,7 +1026,7 @@ public class N4jscBase implements IApplication {
 
 	/** triggers runners and testers based on {@link #testThisLocation} and {@link #runThisFile} */
 	private void testAndRun() throws ExitCodeException {
-		try (ClosableMeasurement m = runnerTesterCollector.getClosableMeasurement("Execute tester/runner")) {
+		try (Measurement m = N4JSDataCollectors.dcHeadlessRunnerTester.getMeasurement("Execute tester/runner")) {
 			if (testThisLocation != null) {
 				if (buildtype != BuildType.dontcompile) {
 					flushAndIinsertMarkerInOutputs();
@@ -1221,7 +1205,7 @@ public class N4jscBase implements IApplication {
 
 	/**
 	 * If {@link #performanceReport} is non-null, this methods persists the performance data collected in
-	 * {@link #headlessDataCollector} in the specified performance report file.
+	 * {@link N4JSDataCollectors#dcHeadless} in the specified performance report file.
 	 */
 	private void writePerformanceReport() throws ExitCodeException {
 		if (this.performanceReport != null) {

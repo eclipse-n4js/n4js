@@ -24,19 +24,20 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.smith.ClosableMeasurement;
 import org.eclipse.n4js.smith.DataCollector;
-import org.eclipse.n4js.smith.DataCollectors;
+import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ui.N4JSClusteringBuilderConfiguration;
 import org.eclipse.n4js.ui.building.BuilderStateLogger.BuilderState;
 import org.eclipse.n4js.ui.building.instructions.IBuildParticipantInstruction;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
+import org.eclipse.n4js.utils.N4JSDataCollectors;
 import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant.BuildType;
@@ -129,12 +130,6 @@ import com.google.inject.Inject;
  */
 @SuppressWarnings("restriction")
 public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderState {
-	static private final DataCollector dcBuild = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Build");
-	static private final DataCollector dcValidations = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Validations", "Build");
-	static private final DataCollector dcTranspilation = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Transpilation", "Build");
 
 	@Inject
 	private RegistryBuilderParticipant builderParticipant;
@@ -180,7 +175,7 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 		logBuildData(buildData, " of before #doUpdate");
 
 		IProject project = getProject(buildData);
-		try (ClosableMeasurement m = dcBuild.getClosableMeasurement("build " + Instant.now());) {
+		try (Measurement m = N4JSDataCollectors.dcBuild.getMeasurement("build " + Instant.now());) {
 			try {
 
 				BuildType buildType = N4JSBuildTypeTracker.getBuildType(project);
@@ -228,7 +223,11 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 	@Override
 	protected void updateMarkers(Delta delta, ResourceSet resourceSet, IProgressMonitor monitor) {
 		SubMonitor subMonitor = SubMonitor.convert(monitor, 2);
-		try (ClosableMeasurement m = dcValidations.getClosableMeasurement("validation");) {
+		URI uri = delta.getUri();
+		DataCollector dc = uri != null && N4JSGlobals.PACKAGE_JSON.equals(uri.lastSegment())
+				? N4JSDataCollectors.dcValidationsPackageJson
+				: N4JSDataCollectors.dcValidations;
+		try (Measurement m = dc.getMeasurement("validation");) {
 			super.updateMarkers(delta, resourceSet, monitor);
 		}
 
@@ -239,7 +238,7 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 			if (instruction == null) {
 				throw new IllegalStateException();
 			}
-			try (ClosableMeasurement m = dcTranspilation.getClosableMeasurement("transpilation");) {
+			try (Measurement m = N4JSDataCollectors.dcTranspilation.getMeasurement("transpilation");) {
 				instruction.process(delta, resourceSet, subMonitor.split(1));
 
 			} catch (CoreException e) {
