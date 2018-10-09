@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.N4JSResource;
@@ -91,6 +92,10 @@ public class N4JSMarkerUpdater extends MarkerUpdaterImpl {
 
 	private void updateMarkersForExternalLibraries(Delta delta, ResourceSet resourceSet, IProgressMonitor monitor) {
 		URI uri = delta.getUri();
+		if (N4JSGlobals.SKIP_PACKAGE_JSON_VALIDATION_IN_EXTERNAL_WORKSPACE
+				&& N4JSGlobals.PACKAGE_JSON.equals(uri.lastSegment())) {
+			return;
+		}
 		if (n4jsCore.isNoValidate(uri)) {
 			return;
 		}

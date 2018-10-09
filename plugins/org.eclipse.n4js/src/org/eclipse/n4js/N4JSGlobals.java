@@ -132,6 +132,13 @@ public final class N4JSGlobals {
 	 */
 	public static final String PACKAGE_FRAGMENT_JSON = "package-fragment.json";
 
+	/**
+	 * NOTE: if this option is removed and package.json files will *never* be validated in external workspace, two
+	 * special cases in {@code N4JSProjectSetupJsonValidatorExtension#checkReference()} can be removed (search for
+	 * <code>currentProject.isExternal</code> in body of this method).
+	 */
+	public static final boolean SKIP_PACKAGE_JSON_VALIDATION_IN_EXTERNAL_WORKSPACE = true;
+
 	private N4JSGlobals() {
 		// private to prevent inheritance & instantiation.
 	}
