@@ -33,6 +33,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalProject;
 import org.eclipse.n4js.external.N4JSExternalProject;
+import org.eclipse.n4js.external.NpmLogger;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
@@ -73,6 +74,9 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 
 	@Inject
 	private EclipseBasedN4JSWorkspace userWorkspace;
+
+	@Inject
+	private NpmLogger npmLogger;
 
 	private final Collection<ExternalLocationsUpdatedListener> locListeners = new LinkedList<>();
 	private final Map<URI, Pair<N4JSExternalProject, ProjectDescription>> projectCache = new HashMap<>();
@@ -174,6 +178,7 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 		projectCache.putAll(computeProjectsUncached());
 
 		updateMappings();
+		npmLogger.logInfo("external locations updated");
 	}
 
 	/**

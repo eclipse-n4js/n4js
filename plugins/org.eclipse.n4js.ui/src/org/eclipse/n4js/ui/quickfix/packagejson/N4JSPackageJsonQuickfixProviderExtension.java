@@ -181,7 +181,7 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 
 	/** Registers a specific npm */
 	@Fix(IssueCodes.NON_REGISTERED_PROJECT)
-	public void registerNPM(Issue issue, IssueResolutionAcceptor acceptor) {
+	public void registerNPMs(Issue issue, IssueResolutionAcceptor acceptor) {
 		final String label = "Register npm(s)";
 		final String description = "Registers all not registered npms so that they can be imported by modules.";
 
@@ -212,7 +212,7 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 			}
 		};
 
-		accept(acceptor, issue, label, description, "SomeImage.gif", modification);
+		accept(acceptor, issue, label, description, null, modification);
 	}
 
 	/** Changes the project type to {@link ProjectType#VALIDATION} */
