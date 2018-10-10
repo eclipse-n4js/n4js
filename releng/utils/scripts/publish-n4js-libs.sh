@@ -145,21 +145,21 @@ if [ "${NPM_TAG}" = "latest" ]; then
         exit -1
     fi
     echo "Bumped version for publishing : ${PUBLISH_VERSION}"
+
+    echo "==== STEP 7/10: Appending version information to README.md files ..."
+    export VERSION_INFO="\n\n## Version\n\nVersion ${PUBLISH_VERSION} of \${LERNA_PACKAGE_NAME} was built from commit [${N4JS_LIBS_COMMIT_ID_LOCAL}](https://github.com/eclipse/n4js/tree/${N4JS_LIBS_COMMIT_ID_LOCAL}/n4js-libs/packages/\${LERNA_PACKAGE_NAME}).\n\n"
+    lerna exec -- 'printf "'${VERSION_INFO}'" >> README.md'
 else
     # Use a version that we are sure can not exist on public npm registry for testing
-    echo "==== Skipping steps 4-6 (because publishing only for testing purposes)"
+    echo "==== Skipping steps 4-7 (because publishing only for testing purposes)"
     PUBLISH_VERSION="9999.0.0"
 fi
 
 # enforce consistent repository meta-info in package.json of all n4js-libs
-echo "==== STEP 7/10: Setting property 'repository' in package.json of all n4js-libs (for consistency) ..."
+echo "==== STEP 8/10: Setting property 'repository' in package.json of all n4js-libs (for consistency) ..."
 lerna exec -- cp package.json package.json_TEMP
 lerna exec -- 'jq -r ".repository |= {type: \"git\", url: \"https://github.com/eclipse/n4js/tree/master/n4js-libs/packages/$LERNA_PACKAGE_NAME\"}" package.json_TEMP > package.json'
 lerna exec -- rm package.json_TEMP
-
-echo "==== STEP 8/10: Appending version information to README.md files ..."
-export VERSION_INFO="\n\n## Version\n\nVersion ${PUBLISH_VERSION} of \${LERNA_PACKAGE_NAME} was built from commit [${N4JS_LIBS_COMMIT_ID_LOCAL}](https://github.com/eclipse/n4js/tree/${N4JS_LIBS_COMMIT_ID_LOCAL}/n4js-libs/packages/\${LERNA_PACKAGE_NAME}).\n\n"
-lerna exec -- 'printf "'${VERSION_INFO}'" >> README.md'
 
 echo "==== STEP 9/10: Now publishing with version: ${PUBLISH_VERSION}"
 lerna publish --loglevel info --skip-git --registry="${NPM_REGISTRY}" --repo-version="${PUBLISH_VERSION}" --exact --yes --bail --npm-tag="${NPM_TAG}"
