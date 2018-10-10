@@ -10,8 +10,11 @@
  */
 package org.eclipse.n4js.utils;
 
+import java.util.function.Supplier;
+
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
+import org.eclipse.n4js.smith.Measurement;
 
 /**
  * Data collectors used throughout the N4JS implementation.
@@ -79,6 +82,29 @@ public final class N4JSDataCollectors {
 			parent = N4JSDataCollectors.dcValidations;
 		}
 		return DataCollectors.INSTANCE.getOrCreateDataCollector(methodName, parent);
+	}
+
+	/**
+	 * Like {@link #measure(String, Supplier)}, but for operations that do not provide a result value.
+	 */
+	public static void measure(String key, Runnable operation) {
+		final DataCollector dc = DataCollectors.INSTANCE.getOrCreateDataCollector("TEMP " + key);
+		try (Measurement m = dc.getMeasurement()) {
+			operation.run();
+		}
+	}
+
+	/**
+	 * Measures the given operation in the context of the data collector with the given {@code key}.
+	 *
+	 * ONLY INTEDED FOR TEMPOARAY DEBUGGING. For a measuring that is supposed to be merged to master, add a data
+	 * collector constant to {@link N4JSDataCollectors} and use the try-with-resource pattern.
+	 */
+	public static <T> T measure(String key, Supplier<T> operation) {
+		final DataCollector dc = DataCollectors.INSTANCE.getOrCreateDataCollector("TEMP " + key);
+		try (Measurement m = dc.getMeasurement()) {
+			return operation.get();
+		}
 	}
 
 	private static DataCollector create(String key) {
