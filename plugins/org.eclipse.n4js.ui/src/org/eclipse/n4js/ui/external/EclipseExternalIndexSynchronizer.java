@@ -75,8 +75,12 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 		SubMonitor subMonitor = convert(monitor, 11);
 
 		try {
+			// XXX: this works on the disk directly (not on the cache of external lib WS)
 			Collection<LibraryChange> changeSet = identifyChangeSet(forcedChangeSet);
+
+			// XXX: depends
 			RegisterResult cleanResults = cleanChangesIndex(subMonitor.split(1), changeSet);
+			externalLibraryWorkspace.updateState();
 			buildChangesIndex(subMonitor.split(9), changeSet, cleanResults);
 
 		} finally {
@@ -144,31 +148,12 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 			SubMonitor subMonitor = SubMonitor.convert(monitor, 11);
 
 			monitor.setTaskName("Cleaning all projects...");
-			RegisterResult cleanResult = externalLibraryWorkspace.deregisterAllProjects(subMonitor.split(1));
+			externalLibraryWorkspace.deregisterAllProjects(subMonitor.split(1));
 			externalErrorMarkerManager.clearAllMarkers();
-			printRegisterResults(cleanResult, "clean");
 
-			// Updates available projects in: IN4JSCore, ExternalLibraryWorkspace, N4JSModel, ExternalProjectProvider
-			externalLibraryWorkspace.updateState();
-
-			Set<URI> toBeReindexed = new HashSet<>();
-			for (N4JSExternalProject n4ExtProject : externalLibraryWorkspace.getProjects()) {
-				URI uri = URIUtils.toFileUri(n4ExtProject.getLocationURI());
-				toBeReindexed.add(uri);
-			}
-
-			subMonitor.setTaskName("Building new projects...");
-			RegisterResult buildResult = externalLibraryWorkspace.registerProjects(subMonitor.split(9),
-					toBeReindexed);
-			printRegisterResults(buildResult, "built");
-
-			Set<URI> toBeScheduled = new HashSet<>();
-			toBeScheduled.addAll(cleanResult.affectedWorkspaceProjects);
-			toBeScheduled.addAll(buildResult.affectedWorkspaceProjects);
-			externalLibraryWorkspace.scheduleWorkspaceProjects(subMonitor.split(1), toBeScheduled);
+			synchronizeNpms(subMonitor.split(10));
 
 		} finally {
-			checkAndClearIndex(monitor);
 			monitor.done();
 		}
 	}
@@ -179,17 +164,20 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 
 			switch (change.type) {
 			case Added:
-				ExternalProject project = externalLibraryWorkspace.getProject(change.name);
+				N4JSExternalProject project = externalLibraryWorkspace.getProject(change.name);
 				if (project != null) {
 					// The added project might shadow an existing project.
 					// Hence, the existing project must be cleaned.
-					toBeDeleted.add(change.location);
+					toBeDeleted.add(project.getIProject().getLocation());
 				}
 				break;
 
 			case Updated:
 			case Removed:
-				toBeDeleted.add(change.location);
+				project = externalLibraryWorkspace.getProject(change.location);
+				if (project != null) {
+					toBeDeleted.add(change.location);
+				}
 				break;
 
 			case Install:

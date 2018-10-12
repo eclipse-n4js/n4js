@@ -45,10 +45,12 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.n4js.external.ExternalIndexSynchronizer;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.external.NpmCLI;
+import org.eclipse.n4js.external.ShadowingInfoHelper;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
@@ -118,7 +120,13 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	private SemverHelper semverHelper;
 
 	@Inject
-	ExternalLibrariesActionsHelper externalLibrariesActionsHelper;
+	private ExternalLibrariesActionsHelper externalLibrariesActionsHelper;
+
+	@Inject
+	private ExternalIndexSynchronizer indexSynchronizer;
+
+	@Inject
+	private ShadowingInfoHelper shadowingInfoHelper;
 
 	private TreeViewer viewer;
 
@@ -130,6 +138,8 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	@Override
 	protected Control createContents(final Composite parent) {
 
+		final BuiltInLibrariesLabelProvider labelProvider = new BuiltInLibrariesLabelProvider(indexSynchronizer,
+				shadowingInfoHelper, externalLibraryWorkspace);
 		final Composite control = new Composite(parent, NONE);
 		control.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(false).create());
 		control.setLayoutData(fillDefaults().align(FILL, FILL).create());
@@ -140,7 +150,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 				.setUseHashlookup(true)
 				.setHasBorder(true)
 				.setColumnWeights(asList(1))
-				.setLabelProvider(new DelegatingStyledCellLabelProvider(new BuiltInLibrariesLabelProvider()))
+				.setLabelProvider(new DelegatingStyledCellLabelProvider(labelProvider))
 				.build(control);
 
 		setViewerInput();

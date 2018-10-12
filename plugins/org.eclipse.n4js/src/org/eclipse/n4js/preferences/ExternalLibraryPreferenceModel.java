@@ -11,7 +11,6 @@
 package org.eclipse.n4js.preferences;
 
 import static com.google.common.base.Preconditions.checkState;
-import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.emptyList;
 import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.EXTERNAL_LIBRARIES_SUPPLIER;
@@ -19,6 +18,7 @@ import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.req
 
 import java.io.File;
 import java.net.URI;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProduct;
@@ -232,7 +232,10 @@ public class ExternalLibraryPreferenceModel {
 	 * @return a list of external library folder location URIs.
 	 */
 	public List<URI> getExternalLibraryLocationsAsUris() {
-		List<URI> locations = from(externalLibraryLocations).transform(path -> new File(path).toURI()).toList();
+		List<URI> locations = new LinkedList<>();
+		for (String pathStr : externalLibraryLocations) {
+			locations.add(new File(pathStr).toURI());
+		}
 		return ExternalLibrariesActivator.sortByShadowing(locations);
 	}
 

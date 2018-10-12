@@ -31,7 +31,6 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.packagejson.PackageJsonResourceDescriptionExtension;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
-import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.validation.helper.FolderContainmentHelper;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -39,7 +38,6 @@ import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 import com.google.inject.ImplementedBy;
@@ -54,9 +52,6 @@ public abstract class ExternalIndexSynchronizer {
 
 	@Inject
 	private IN4JSCore core;
-
-	@Inject
-	private TargetPlatformInstallLocationProvider locationProvider;
 
 	@Inject
 	private ExternalLibraryWorkspace externalLibraryWorkspace;
@@ -105,8 +100,7 @@ public abstract class ExternalIndexSynchronizer {
 	final public Map<String, Pair<URI, String>> findNpmsInFolder() {
 		Map<String, Pair<URI, String>> npmsFolder = new HashMap<>();
 
-		externalLibraryWorkspace.updateState();
-		for (N4JSExternalProject n4jsProject : externalLibraryWorkspace.getProjects()) {
+		for (N4JSExternalProject n4jsProject : externalLibraryWorkspace.computeProjects()) {
 			IN4JSProject iProject = n4jsProject.getIProject();
 			VersionNumber version = iProject.getVersion();
 			URI location = iProject.getLocation();
@@ -127,13 +121,13 @@ public abstract class ExternalIndexSynchronizer {
 		// keep map of all NPMs that were discovered in the index
 		Map<String, Pair<URI, String>> discoveredNpmsInIndex = new HashMap<>();
 
-		final URI nodeModulesLocation = getNodeModulesLocation();
 		final ResourceSet resourceSet = core.createResourceSet(Optional.absent());
 		final IResourceDescriptions index = core.getXtextIndex(resourceSet);
 
 		for (IResourceDescription resourceDescription : index.getAllResourceDescriptions()) {
-			if (containmentHelper.isContained(resourceDescription.getURI(), nodeModulesLocation)) {
-				addToIndex(discoveredNpmsInIndex, nodeModulesLocation, resourceDescription);
+			boolean isExternal = resourceDescription.getURI().isFile();
+			if (isExternal) {
+				addToIndex(discoveredNpmsInIndex, resourceDescription);
 			}
 		}
 
@@ -191,60 +185,57 @@ public abstract class ExternalIndexSynchronizer {
 			changes.add(new LibraryChange(changeType, location, name, version));
 		}
 
-		for (String name : npmsOfIndex.keySet()) {
-			if (npmsOfFolder.containsKey(name)) {
-				String versionIndex = npmsOfIndex.get(name).getValue();
-				String versionFolder = npmsOfFolder.get(name).getValue();
-				URI locationIndex = npmsOfIndex.get(name).getKey();
-				URI locationFolder = npmsOfFolder.get(name).getKey();
+		for (String name : intersection) {
+			String versionIndex = npmsOfIndex.get(name).getValue();
+			String versionFolder = npmsOfFolder.get(name).getValue();
+			URI locationIndex = npmsOfIndex.get(name).getKey();
+			URI locationFolder = npmsOfFolder.get(name).getKey();
 
-				Preconditions.checkState(locationFolder.equals(locationIndex));
-
-				if (versionIndex != null && !versionIndex.equals(versionFolder)) {
-					changes.add(new LibraryChange(LibraryChangeType.Updated, locationFolder, name, versionFolder));
-				}
+			boolean shadowingChanged = !locationFolder.equals(locationIndex);
+			boolean versionsChanged = versionIndex != null && !versionIndex.equals(versionFolder);
+			if (shadowingChanged || versionsChanged) {
+				changes.add(new LibraryChange(LibraryChangeType.Removed, locationIndex, name, versionIndex));
+				changes.add(new LibraryChange(LibraryChangeType.Added, locationFolder, name, versionFolder));
 			}
 		}
 
 		return changes;
 	}
 
-	/**
-	 * Returns a {@link URI} pointing to the {@code node_modules} folder location.
-	 */
-	private URI getNodeModulesLocation() {
-		return URIUtils.toFileUri(locationProvider.getNodeModulesURI());
-	}
+	private void addToIndex(Map<String, Pair<URI, String>> npmsIndex, IResourceDescription resourceDescription) {
+		URI nestedLocation = resourceDescription.getURI();
+		java.net.URI rootLocationJNU = externalLibraryWorkspace.getRootLocationForResource(nestedLocation);
+		URI rootLocation = URI.createURI(rootLocationJNU.toString());
+		String name = getPackageName(nestedLocation, URI.createURI(rootLocation.toString()));
+		URI packageLocation = createProjectLocation(rootLocation, name);
+		String version = getVersion(resourceDescription, nestedLocation, name, packageLocation);
 
-	private void addToIndex(Map<String, Pair<URI, String>> npmsIndex,
-			URI nodeModulesLocation, IResourceDescription resourceDescription) {
-
-		final URI nestedLocation = resourceDescription.getURI();
-		final String name = getPackageName(nestedLocation, nodeModulesLocation);
-		final URI packageLocation = createProjectLocation(nodeModulesLocation, name);
-
-		String version = "";
-
-		final boolean isProjectDescriptionFile = isProjectDescriptionFile(nestedLocation, packageLocation);
-
-		if (isProjectDescriptionFile) {
-			Iterable<IEObjectDescription> pds = resourceDescription
-					.getExportedObjectsByType(JSONPackage.eINSTANCE.getJSONDocument());
-			Iterator<IEObjectDescription> pdsIter = pds.iterator();
-
-			if (pdsIter.hasNext()) {
-				IEObjectDescription pDescription = pdsIter.next();
-				String nameFromPackageJSON = PackageJsonResourceDescriptionExtension.getProjectName(pDescription);
-				if (nameFromPackageJSON == null || name.equals(nameFromPackageJSON)) {
-					// consistency check
-					version = pDescription.getUserData(PackageJsonResourceDescriptionExtension.PROJECT_VERSION_KEY);
-				}
-			}
-		}
-
-		if (!npmsIndex.containsKey(name) || isProjectDescriptionFile) {
+		if (!npmsIndex.containsKey(name) || version != null) {
 			npmsIndex.put(name, Pair.of(packageLocation, version));
 		}
+	}
+
+	private String getVersion(IResourceDescription resourceDescription, URI nestedLocation, String name,
+			URI packageLocation) {
+
+		if (!isProjectDescriptionFile(nestedLocation, packageLocation)) {
+			return null;
+		}
+
+		Iterable<IEObjectDescription> pds = resourceDescription
+				.getExportedObjectsByType(JSONPackage.eINSTANCE.getJSONDocument());
+		Iterator<IEObjectDescription> pdsIter = pds.iterator();
+
+		if (pdsIter.hasNext()) {
+			IEObjectDescription pDescription = pdsIter.next();
+			String nameFromPackageJSON = PackageJsonResourceDescriptionExtension.getProjectName(pDescription);
+			if (nameFromPackageJSON == null || name.equals(nameFromPackageJSON)) {
+				// consistency check
+				String version = pDescription.getUserData(PackageJsonResourceDescriptionExtension.PROJECT_VERSION_KEY);
+				return version;
+			}
+		}
+		return null;
 	}
 
 	/**

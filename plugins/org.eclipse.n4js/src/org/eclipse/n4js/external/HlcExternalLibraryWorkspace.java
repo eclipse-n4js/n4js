@@ -73,6 +73,11 @@ public class HlcExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	}
 
 	@Override
+	public Collection<N4JSExternalProject> computeProjects() {
+		return emptyList();
+	}
+
+	@Override
 	public Collection<N4JSExternalProject> getProjects() {
 		return emptyList();
 	}
@@ -154,6 +159,11 @@ public class HlcExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 		}
 
 		return projects;
+	}
+
+	@Override
+	public List<N4JSExternalProject> getProjectsForName(String projectName) {
+		return emptyList();
 	}
 
 	@Override

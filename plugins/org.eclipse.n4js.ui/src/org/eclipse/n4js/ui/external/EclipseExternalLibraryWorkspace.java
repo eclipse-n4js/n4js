@@ -94,7 +94,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	@Inject
 	void init() {
 		try {
-			projectProvider.ensureInitialized();
+			projectProvider.updateCache();
 		} catch (Throwable t) {
 			logger.error("Failed to initialize external library workspace.", t);
 			UIUtils.showError(t);
@@ -178,7 +178,33 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 
 	@Override
 	public URI findProjectWith(URI nestedLocation) {
-		return projectProvider.findProjectWith(nestedLocation);
+		java.net.URI rootLoc = getRootLocationForResource(nestedLocation);
+
+		if (rootLoc != null) {
+			String rootLocStr = rootLoc.toString();
+			URI loc = URI.createURI(rootLocStr);
+			URI prefix = !loc.hasTrailingPathSeparator() ? loc.appendSegment("") : loc;
+			int oldSegmentCount = nestedLocation.segmentCount();
+			int newSegmentCount = prefix.segmentCount()
+					- 1 // -1 because of the trailing empty segment
+					+ 1; // +1 to include the project folder
+			if (newSegmentCount - 1 >= oldSegmentCount) {
+				return null; // can happen if the URI of an external library location is passed in
+			}
+			String projectNameCandidate = nestedLocation.segment(newSegmentCount - 1);
+			if (projectNameCandidate.startsWith("@")) {
+				// last segment is a folder representing an npm scope, not a project folder
+				// --> add 1 to include the actual project folder
+				++newSegmentCount;
+			}
+			URI uriCandidate = nestedLocation.trimSegments(oldSegmentCount - newSegmentCount)
+					.trimFragment();
+			if (projectProvider.getProject(uriCandidate) != null) {
+				return uriCandidate;
+			}
+		}
+
+		return null;
 	}
 
 	@Override
@@ -234,13 +260,9 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 		// Clean projects.
 		Set<N4JSExternalProject> allProjectsToClean = getAllToBeCleaned(toBeDeleted);
 
+		List<IProject> extPrjCleaned = new LinkedList<>();
 		if (!allProjectsToClean.isEmpty()) {
-			List<IProject> extPrjCleaned = builder.clean(allProjectsToClean, subMonitor.split(1));
-
-			HashSet<URI> actuallyCleaned = new HashSet<>();
-			for (IProject cleaned : extPrjCleaned) {
-				actuallyCleaned.add(URIUtils.toFileUri(cleaned.getLocationURI()));
-			}
+			extPrjCleaned.addAll(builder.clean(allProjectsToClean, subMonitor.split(1)));
 		}
 
 		Set<IProject> wsPrjAffected = newHashSet();
@@ -250,7 +272,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 		wipeIndex(monitor, toBeWiped, allProjectsToClean);
 
 		return new RegisterResult(
-				allProjectsToClean.toArray(new IProject[0]),
+				extPrjCleaned.toArray(new IProject[0]),
 				wsPrjAffected.toArray(new IProject[0]),
 				toBeWiped);
 	}
@@ -336,6 +358,11 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	@Override
 	public Collection<N4JSExternalProject> getProjects() {
 		return projectProvider.getProjects();
+	}
+
+	@Override
+	public Collection<N4JSExternalProject> computeProjects() {
+		return projectProvider.computeProjects();
 	}
 
 	@Override
@@ -434,6 +461,16 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	@Override
 	public List<Pair<URI, ProjectDescription>> getProjectsIncludingUnnecessary() {
 		return projectProvider.getProjectsIncludingUnnecessary();
+	}
+
+	@Override
+	public List<N4JSExternalProject> getProjectsForName(String projectName) {
+		return projectProvider.getProjectsForName(projectName);
+	}
+
+	@Override
+	public java.net.URI getRootLocationForResource(org.eclipse.emf.common.util.URI nestedLocation) {
+		return getRootLocationForResource(projectProvider.getAllRootLocations(), nestedLocation);
 	}
 
 }

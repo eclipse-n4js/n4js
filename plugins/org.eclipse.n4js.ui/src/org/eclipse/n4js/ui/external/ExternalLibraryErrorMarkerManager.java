@@ -89,6 +89,9 @@ public class ExternalLibraryErrorMarkerManager {
 
 		IN4JSProject extPrj = n4jsCore.findProject(uri).orNull();
 		N4JSExternalProject externalProject = externalLibraryWorkspace.getProject(extPrj.getLocation());
+		if (externalProject == null) {
+			return;
+		}
 
 		for (Issue issue : issues) {
 			String prjFileLocation = extPrj.getLocation().toFileString();
