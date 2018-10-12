@@ -95,13 +95,6 @@ public class LibraryManager {
 	private SemverHelper semverHelper;
 
 	/**
-	 * see {@link ExternalIndexSynchronizer#isProjectsSynchronized()}.
-	 */
-	public boolean isProjectsSynchronized() {
-		return indexSynchronizer.isProjectsSynchronized();
-	}
-
-	/**
 	 * Call this method to synchronize the information in the Xtext index with all external projects in the external
 	 * library folders.
 	 */

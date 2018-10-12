@@ -75,7 +75,7 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 		SubMonitor subMonitor = convert(monitor, 11);
 
 		try {
-			Collection<LibraryChange> changeSet = identifyChangeSet(forcedChangeSet);
+			Collection<LibraryChange> changeSet = identifyChangeSet(forcedChangeSet, false);
 
 			RegisterResult cleanResults = cleanChangesIndex(subMonitor.split(1), changeSet);
 			externalLibraryWorkspace.updateState();
@@ -255,7 +255,7 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 
 	/** Sets error markers to every N4JS project iff the folder node_modules and the N4JS index are out of sync. */
 	public void checkAndClearIndex(IProgressMonitor monitor) {
-		Collection<LibraryChange> changeSet = identifyChangeSet(Collections.emptyList());
+		Collection<LibraryChange> changeSet = identifyChangeSet(Collections.emptyList(), true);
 		cleanRemovedProjectsFromIndex(monitor, changeSet);
 	}
 

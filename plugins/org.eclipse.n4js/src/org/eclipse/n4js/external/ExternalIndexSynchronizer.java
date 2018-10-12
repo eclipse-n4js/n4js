@@ -12,11 +12,11 @@ package org.eclipse.n4js.external;
 
 import java.io.File;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -82,30 +82,31 @@ public abstract class ExternalIndexSynchronizer {
 	abstract public void reindexAllExternalProjects(IProgressMonitor monitor);
 
 	/**
-	 * This method compares the external projects located in all external locations to the projects available through
-	 * {@link ExternalLibraryWorkspace} or {@link IN4JSCore}.
-	 * <p>
-	 * Note that this method will iterate through the complete Xtext index.
-	 *
-	 * @return true iff exactly those external projects in external locations are available through
-	 *         {@link ExternalLibraryWorkspace} or {@link IN4JSCore}.
-	 */
-	final public boolean isProjectsSynchronized() {
-		Collection<LibraryChange> changeSet = identifyChangeSet(Collections.emptyList());
-		return changeSet.isEmpty();
-	}
-
-	/**
 	 * Note: Expensive method
 	 * <p>
 	 * Returns a map that maps the names of projects as they can be found in the {@code node_modules} folder to their
 	 * locations and versions.
+	 *
+	 * @param updateCache
+	 *            if
+	 *            <ul>
+	 *            <li>true, cache will be first updated and then used to find projects
+	 *            <li>false, cache will <b>not</b> be updated. Instead a temporary cache will be created and used to
+	 *            find projects
+	 *            </ul>
 	 */
-	final public Map<String, Pair<URI, String>> findNpmsInFolder() {
+	final public Map<String, Pair<URI, String>> findNpmsInFolder(boolean updateCache) {
 		Map<String, Pair<URI, String>> npmsFolder = new HashMap<>();
 
-		for (org.eclipse.xtext.util.Pair<URI, ProjectDescription> pair : externalLibraryWorkspace
-				.computeProjectsIncludingUnnecessary()) {
+		List<org.eclipse.xtext.util.Pair<URI, ProjectDescription>> prjs = null;
+		if (updateCache) {
+			externalLibraryWorkspace.updateState();
+			prjs = externalLibraryWorkspace.getProjectsIncludingUnnecessary();
+		} else {
+			prjs = externalLibraryWorkspace.computeProjectsIncludingUnnecessary();
+		}
+
+		for (org.eclipse.xtext.util.Pair<URI, ProjectDescription> pair : prjs) {
 
 			URI location = pair.getFirst();
 			IN4JSProject project = core.findProject(location).orNull();
@@ -161,11 +162,13 @@ public abstract class ExternalIndexSynchronizer {
 	 *
 	 * @return a set of all changes between the Xtext index and the external projects in all external locations
 	 */
-	final protected Collection<LibraryChange> identifyChangeSet(Collection<LibraryChange> forcedChangeSet) {
+	final protected Collection<LibraryChange> identifyChangeSet(Collection<LibraryChange> forcedChangeSet,
+			boolean updateCache) {
+
 		Collection<LibraryChange> changes = new LinkedHashSet<>(forcedChangeSet);
 
 		Map<String, Pair<URI, String>> npmsOfIndex = findNpmsInIndex();
-		Map<String, Pair<URI, String>> npmsOfFolder = findNpmsInFolder();
+		Map<String, Pair<URI, String>> npmsOfFolder = findNpmsInFolder(updateCache);
 
 		Set<String> differences = new HashSet<>();
 		differences.addAll(npmsOfIndex.keySet());
