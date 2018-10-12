@@ -83,7 +83,7 @@ public class HlcExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	}
 
 	@Override
-	public Map<String, VersionNumber> getProjectInfos() {
+	public Map<String, VersionNumber> getProjectNameVersionMap() {
 		return emptyMap();
 	}
 

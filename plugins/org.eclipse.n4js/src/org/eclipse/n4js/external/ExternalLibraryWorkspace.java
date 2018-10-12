@@ -157,7 +157,7 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 	 *
 	 * @return map of name and version of the external projects.
 	 */
-	public abstract Map<String, VersionNumber> getProjectInfos();
+	public abstract Map<String, VersionNumber> getProjectNameVersionMap();
 
 	/**
 	 * Returns with all external projects including those that are dependencies of plain-JS projects.

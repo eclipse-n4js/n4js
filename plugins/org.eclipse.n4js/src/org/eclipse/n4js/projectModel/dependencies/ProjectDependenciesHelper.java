@@ -121,7 +121,7 @@ public class ProjectDependenciesHelper {
 	 * In case the dependencies do not contain shipped code, nothing is done.
 	 */
 	public void fixDependenciesToInstall(Map<String, NPMVersionRequirement> dependenciesToInstall) {
-		Map<String, VersionNumber> projectNamesOfShippedCode = externalWS.getProjectInfos();
+		Map<String, VersionNumber> projectNamesOfShippedCode = externalWS.getProjectNameVersionMap();
 		removeDependenciesToShippedCodeIfVersionMatches(dependenciesToInstall, projectNamesOfShippedCode);
 		addDependenciesForRemainingShippedCode(dependenciesToInstall, projectNamesOfShippedCode.keySet());
 		logShippedCodeInstallationStatus(dependenciesToInstall, projectNamesOfShippedCode.keySet());

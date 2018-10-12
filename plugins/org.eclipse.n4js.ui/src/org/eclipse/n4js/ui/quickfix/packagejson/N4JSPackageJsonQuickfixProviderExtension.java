@@ -150,7 +150,7 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 				Function<IProgressMonitor, IStatus> registerFunction = new Function<IProgressMonitor, IStatus>() {
 					@Override
 					public IStatus apply(IProgressMonitor monitor) {
-						Map<String, VersionNumber> installedNpms = extWS.getProjectInfos();
+						Map<String, VersionNumber> installedNpms = extWS.getProjectNameVersionMap();
 						Map<String, NPMVersionRequirement> reqNpms = dependenciesHelper
 								.computeDependenciesOfWorkspace();
 						dependenciesHelper.fixDependenciesToInstall(reqNpms);

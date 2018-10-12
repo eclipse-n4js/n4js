@@ -371,7 +371,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	}
 
 	@Override
-	public Map<String, VersionNumber> getProjectInfos() {
+	public Map<String, VersionNumber> getProjectNameVersionMap() {
 		Map<String, VersionNumber> externalLibs = new HashMap<>();
 		for (N4JSExternalProject pd : getProjects()) {
 			String name = pd.getIProject().getProjectName();
