@@ -74,7 +74,8 @@ public abstract class AbstractN4JSStringValueConverter extends STRINGValueConver
 	 * Made public only for testing.
 	 */
 	public static String convertFromN4JSString(String n4jsString, INode node, boolean validate) {
-		StringConverterResult result = ValueConverterUtils.convertFromEscapedString(n4jsString, true, false, null);
+		StringConverterResult result = ValueConverterUtils.convertFromEscapedString(n4jsString, true, false, false,
+				null);
 		if (validate) {
 			if (result.hasError()) {
 				throw new BadEscapementException(IssueCodes.getMessageForVCO_STRING_BAD_ESCAP_ERROR(),

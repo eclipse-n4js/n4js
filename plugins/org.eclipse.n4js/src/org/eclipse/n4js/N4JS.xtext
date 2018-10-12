@@ -945,18 +945,18 @@ TemplateExpressionEnd:
 ;
 
 NoSubstitutionTemplate returns TemplateSegment:
-	{TemplateSegment} rawValue=NO_SUBSTITUTION_TEMPLATE_LITERAL
+	{TemplateSegment} value=NO_SUBSTITUTION_TEMPLATE_LITERAL
 ;
 
 TemplateHead returns TemplateSegment:
-	{TemplateSegment} rawValue=TEMPLATE_HEAD
+	{TemplateSegment} value=TEMPLATE_HEAD
 ;
 
 TemplateTail returns TemplateSegment:
-	{TemplateSegment} rawValue=TemplateTailLiteral;
+	{TemplateSegment} value=TemplateTailLiteral;
 
 TemplateMiddle returns TemplateSegment:
-	{TemplateSegment} rawValue=TemplateMiddleLiteral;
+	{TemplateSegment} value=TemplateMiddleLiteral;
 
 // ****************************************************************************************************
 // [ECM11] A.1 Lexical Grammar (p. 211)

@@ -16,9 +16,9 @@ import java.util.function.Consumer;
 import com.google.common.base.Stopwatch;
 
 /**
- * Simple measurement that tracks time between its creation and call to {@link #end()}.
+ * Simple measurement that tracks time between its creation and call to {@link #close()}.
  */
-class TimedMeasurement implements Measurement, ClosableMeasurement {
+class TimedMeasurement implements Measurement {
 	final String name;
 	private final Stopwatch sw;
 	private boolean consumed = false;
@@ -35,7 +35,7 @@ class TimedMeasurement implements Measurement, ClosableMeasurement {
 	}
 
 	@Override
-	synchronized public void end() {
+	public synchronized void close() {
 		if (consumed)
 			return;
 
@@ -44,10 +44,5 @@ class TimedMeasurement implements Measurement, ClosableMeasurement {
 		stopHandler.accept(this);
 		consumed = true;
 		stopHandler = null;
-	}
-
-	@Override
-	public void close() {
-		end();
 	}
 }

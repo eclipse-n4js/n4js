@@ -30,8 +30,13 @@ import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
+import org.eclipse.n4js.smith.DataCollector;
+import org.eclipse.n4js.smith.Measurement;
+import org.eclipse.n4js.utils.N4JSDataCollectors;
+import org.eclipse.n4js.validation.N4JSValidator.N4JSMethodWrapperCancelable;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.diagnostics.Severity;
+import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.validation.AbstractDeclarativeValidator;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.EValidatorRegistrar;
@@ -65,6 +70,8 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 	private XpectAwareFileExtensionCalculator fileExtensionCalculator;
 	@Inject
 	private PackageJsonHelper pckjsonHelper;
+	@Inject
+	private OperationCanceledManager operationCanceledManager;
 
 	@Override
 	public final void validateJSON(JSONDocument document, DiagnosticChain diagnosticChain) {
@@ -86,6 +93,18 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 		document.eAllContents().forEachRemaining(child -> {
 			this.validate(child.eClass(), child, diagnosticChain, context);
 		});
+	}
+
+	@Override
+	public MethodWrapper createMethodWrapper(AbstractDeclarativeValidator instanceToUse, Method method) {
+		boolean isCheckMethodInsideThisClass = method.getDeclaringClass() == AbstractJSONValidatorExtension.class;
+		if (isCheckMethodInsideThisClass) {
+			// Must not do performance measuring for the @Check method inside this class, because it will invoke (and
+			// measure) the more fine-grained @CheckProperty methods. Without this, we would count those validations
+			// twice!
+			return super.createMethodWrapper(instanceToUse, method);
+		}
+		return new N4JSMethodWrapperCancelable(instanceToUse, method, operationCanceledManager);
 	}
 
 	/**
@@ -113,10 +132,12 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 			final PackageJsonProperties property = annotation.property();
 			final Collection<JSONValue> values = documentValues.get(property.getPath());
 
+			final DataCollector dcCheckMethod = N4JSDataCollectors.createDataCollectorForCheckMethod(method.getName());
+
 			// check each value that has been specified for keyPath
 			for (JSONValue value : values) {
 				if (value != null) {
-					try {
+					try (Measurement m = dcCheckMethod.getMeasurement()) {
 						// invoke method without any or with value as single argument
 						if (method.getParameterTypes().length == 0) {
 							method.invoke(this);

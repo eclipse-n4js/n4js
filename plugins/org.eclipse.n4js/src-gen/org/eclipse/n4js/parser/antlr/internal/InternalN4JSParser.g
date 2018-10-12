@@ -25311,9 +25311,9 @@ ruleNoSubstitutionTemplate returns [EObject current=null]
 		)
 		(
 			(
-				lv_rawValue_1_0=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL
+				lv_value_1_0=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL
 				{
-					newLeafNode(lv_rawValue_1_0, grammarAccess.getNoSubstitutionTemplateAccess().getRawValueNO_SUBSTITUTION_TEMPLATE_LITERALTerminalRuleCall_1_0());
+					newLeafNode(lv_value_1_0, grammarAccess.getNoSubstitutionTemplateAccess().getValueNO_SUBSTITUTION_TEMPLATE_LITERALTerminalRuleCall_1_0());
 				}
 				{
 					if ($current==null) {
@@ -25321,8 +25321,8 @@ ruleNoSubstitutionTemplate returns [EObject current=null]
 					}
 					setWithLastConsumed(
 						$current,
-						"rawValue",
-						lv_rawValue_1_0,
+						"value",
+						lv_value_1_0,
 						"org.eclipse.n4js.N4JS.NO_SUBSTITUTION_TEMPLATE_LITERAL");
 				}
 			)
@@ -25355,9 +25355,9 @@ ruleTemplateHead returns [EObject current=null]
 		)
 		(
 			(
-				lv_rawValue_1_0=RULE_TEMPLATE_HEAD
+				lv_value_1_0=RULE_TEMPLATE_HEAD
 				{
-					newLeafNode(lv_rawValue_1_0, grammarAccess.getTemplateHeadAccess().getRawValueTEMPLATE_HEADTerminalRuleCall_1_0());
+					newLeafNode(lv_value_1_0, grammarAccess.getTemplateHeadAccess().getValueTEMPLATE_HEADTerminalRuleCall_1_0());
 				}
 				{
 					if ($current==null) {
@@ -25365,8 +25365,8 @@ ruleTemplateHead returns [EObject current=null]
 					}
 					setWithLastConsumed(
 						$current,
-						"rawValue",
-						lv_rawValue_1_0,
+						"value",
+						lv_value_1_0,
 						"org.eclipse.n4js.N4JS.TEMPLATE_HEAD");
 				}
 			)
@@ -25400,17 +25400,17 @@ ruleTemplateTail returns [EObject current=null]
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getTemplateTailAccess().getRawValueTemplateTailLiteralParserRuleCall_1_0());
+					newCompositeNode(grammarAccess.getTemplateTailAccess().getValueTemplateTailLiteralParserRuleCall_1_0());
 				}
-				lv_rawValue_1_0=ruleTemplateTailLiteral
+				lv_value_1_0=ruleTemplateTailLiteral
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getTemplateTailRule());
 					}
 					set(
 						$current,
-						"rawValue",
-						lv_rawValue_1_0,
+						"value",
+						lv_value_1_0,
 						"org.eclipse.n4js.N4JS.TemplateTailLiteral");
 					afterParserOrEnumRuleCall();
 				}
@@ -25445,17 +25445,17 @@ ruleTemplateMiddle returns [EObject current=null]
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getTemplateMiddleAccess().getRawValueTemplateMiddleLiteralParserRuleCall_1_0());
+					newCompositeNode(grammarAccess.getTemplateMiddleAccess().getValueTemplateMiddleLiteralParserRuleCall_1_0());
 				}
-				lv_rawValue_1_0=ruleTemplateMiddleLiteral
+				lv_value_1_0=ruleTemplateMiddleLiteral
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getTemplateMiddleRule());
 					}
 					set(
 						$current,
-						"rawValue",
-						lv_rawValue_1_0,
+						"value",
+						lv_value_1_0,
 						"org.eclipse.n4js.N4JS.TemplateMiddleLiteral");
 					afterParserOrEnumRuleCall();
 				}

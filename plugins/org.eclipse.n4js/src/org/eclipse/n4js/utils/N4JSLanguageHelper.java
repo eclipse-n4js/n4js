@@ -37,7 +37,7 @@ public final class N4JSLanguageHelper {
 	/**
 	 * Opaque modules have empty Script nodes in their AST. Other than that they behave normally.
 	 */
-	private static boolean OPAQUE_JS_MODULES = true;
+	public static boolean OPAQUE_JS_MODULES = true;
 
 	@Inject
 	private N4JSGrammarAccess grammarAccess;

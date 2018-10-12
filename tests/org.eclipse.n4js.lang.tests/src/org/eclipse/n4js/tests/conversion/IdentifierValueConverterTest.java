@@ -10,12 +10,11 @@
  */
 package org.eclipse.n4js.tests.conversion;
 
+import org.eclipse.n4js.conversion.IdentifierValueConverter;
 import org.eclipse.xtext.conversion.ValueConverterException;
 import org.eclipse.xtext.conversion.ValueConverterWithValueException;
 import org.junit.Assert;
 import org.junit.Test;
-
-import org.eclipse.n4js.conversion.IdentifierValueConverter;
 
 /**
  */
@@ -101,5 +100,15 @@ public class IdentifierValueConverterTest extends Assert {
 	@Test
 	public void testDots() {
 		assertError("aa", "a\\.a");
+	}
+
+	@Test
+	public void testUnknownEscapeSequence1() {
+		assertError("aBc", "a\\Bc");
+	}
+
+	@Test
+	public void testUnknownEscapeSequence2() {
+		assertError("Abc", "\\Abc");
 	}
 }

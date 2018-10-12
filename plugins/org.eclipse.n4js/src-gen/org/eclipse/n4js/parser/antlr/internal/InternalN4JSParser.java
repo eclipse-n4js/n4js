@@ -49382,7 +49382,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
     public final EObject ruleNoSubstitutionTemplate() throws RecognitionException {
         EObject current = null;
 
-        Token lv_rawValue_1_0=null;
+        Token lv_value_1_0=null;
 
 
         	enterRule();
@@ -49402,10 +49402,10 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             }
             {
             {
-            lv_rawValue_1_0=(Token)match(input,RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL,FOLLOW_2); if (state.failed) return current;
+            lv_value_1_0=(Token)match(input,RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL,FOLLOW_2); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
-              					newLeafNode(lv_rawValue_1_0, grammarAccess.getNoSubstitutionTemplateAccess().getRawValueNO_SUBSTITUTION_TEMPLATE_LITERALTerminalRuleCall_1_0());
+              					newLeafNode(lv_value_1_0, grammarAccess.getNoSubstitutionTemplateAccess().getValueNO_SUBSTITUTION_TEMPLATE_LITERALTerminalRuleCall_1_0());
               				
             }
             if ( state.backtracking==0 ) {
@@ -49415,8 +49415,8 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					}
               					setWithLastConsumed(
               						current,
-              						"rawValue",
-              						lv_rawValue_1_0,
+              						"value",
+              						lv_value_1_0,
               						"org.eclipse.n4js.N4JS.NO_SUBSTITUTION_TEMPLATE_LITERAL");
               				
             }
@@ -49483,7 +49483,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
     public final EObject ruleTemplateHead() throws RecognitionException {
         EObject current = null;
 
-        Token lv_rawValue_1_0=null;
+        Token lv_value_1_0=null;
 
 
         	enterRule();
@@ -49503,10 +49503,10 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             }
             {
             {
-            lv_rawValue_1_0=(Token)match(input,RULE_TEMPLATE_HEAD,FOLLOW_2); if (state.failed) return current;
+            lv_value_1_0=(Token)match(input,RULE_TEMPLATE_HEAD,FOLLOW_2); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
-              					newLeafNode(lv_rawValue_1_0, grammarAccess.getTemplateHeadAccess().getRawValueTEMPLATE_HEADTerminalRuleCall_1_0());
+              					newLeafNode(lv_value_1_0, grammarAccess.getTemplateHeadAccess().getValueTEMPLATE_HEADTerminalRuleCall_1_0());
               				
             }
             if ( state.backtracking==0 ) {
@@ -49516,8 +49516,8 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					}
               					setWithLastConsumed(
               						current,
-              						"rawValue",
-              						lv_rawValue_1_0,
+              						"value",
+              						lv_value_1_0,
               						"org.eclipse.n4js.N4JS.TEMPLATE_HEAD");
               				
             }
@@ -49584,7 +49584,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
     public final EObject ruleTemplateTail() throws RecognitionException {
         EObject current = null;
 
-        AntlrDatatypeRuleToken lv_rawValue_1_0 = null;
+        AntlrDatatypeRuleToken lv_value_1_0 = null;
 
 
 
@@ -49607,11 +49607,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             {
             if ( state.backtracking==0 ) {
 
-              					newCompositeNode(grammarAccess.getTemplateTailAccess().getRawValueTemplateTailLiteralParserRuleCall_1_0());
+              					newCompositeNode(grammarAccess.getTemplateTailAccess().getValueTemplateTailLiteralParserRuleCall_1_0());
               				
             }
             pushFollow(FOLLOW_2);
-            lv_rawValue_1_0=ruleTemplateTailLiteral();
+            lv_value_1_0=ruleTemplateTailLiteral();
 
             state._fsp--;
             if (state.failed) return current;
@@ -49622,8 +49622,8 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					}
               					set(
               						current,
-              						"rawValue",
-              						lv_rawValue_1_0,
+              						"value",
+              						lv_value_1_0,
               						"org.eclipse.n4js.N4JS.TemplateTailLiteral");
               					afterParserOrEnumRuleCall();
               				
@@ -49691,7 +49691,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
     public final EObject ruleTemplateMiddle() throws RecognitionException {
         EObject current = null;
 
-        AntlrDatatypeRuleToken lv_rawValue_1_0 = null;
+        AntlrDatatypeRuleToken lv_value_1_0 = null;
 
 
 
@@ -49714,11 +49714,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             {
             if ( state.backtracking==0 ) {
 
-              					newCompositeNode(grammarAccess.getTemplateMiddleAccess().getRawValueTemplateMiddleLiteralParserRuleCall_1_0());
+              					newCompositeNode(grammarAccess.getTemplateMiddleAccess().getValueTemplateMiddleLiteralParserRuleCall_1_0());
               				
             }
             pushFollow(FOLLOW_2);
-            lv_rawValue_1_0=ruleTemplateMiddleLiteral();
+            lv_value_1_0=ruleTemplateMiddleLiteral();
 
             state._fsp--;
             if (state.failed) return current;
@@ -49729,8 +49729,8 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					}
               					set(
               						current,
-              						"rawValue",
-              						lv_rawValue_1_0,
+              						"value",
+              						lv_value_1_0,
               						"org.eclipse.n4js.N4JS.TemplateMiddleLiteral");
               					afterParserOrEnumRuleCall();
               				

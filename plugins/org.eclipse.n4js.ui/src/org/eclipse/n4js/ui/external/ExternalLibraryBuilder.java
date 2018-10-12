@@ -53,7 +53,6 @@ import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.internal.RaceDetectionHelper;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.smith.ClosableMeasurement;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
 import org.eclipse.n4js.smith.Measurement;
@@ -63,6 +62,7 @@ import org.eclipse.n4js.ui.containers.N4JSProjectsStateHelper;
 import org.eclipse.n4js.ui.external.ComputeProjectOrder.VertexOrder;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildQueue.Task;
 import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
+import org.eclipse.n4js.utils.N4JSDataCollectors;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.builder.builderState.IBuilderState;
 import org.eclipse.xtext.builder.impl.IToBeBuiltComputerContribution;
@@ -90,8 +90,6 @@ import com.google.inject.Singleton;
 @SuppressWarnings("restriction")
 @Singleton
 public class ExternalLibraryBuilder {
-	private static DataCollector dcExtLibBuilder = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("External Library Builder");
 
 	private static Logger LOGGER = Logger.getLogger(ExternalLibraryBuilder.class);
 
@@ -299,7 +297,7 @@ public class ExternalLibraryBuilder {
 			return Collections.emptyList();
 		}
 
-		Measurement allProjectsMeasurement = dcExtLibBuilder
+		Measurement allProjectsMeasurement = N4JSDataCollectors.dcExtLibBuilder
 				.getMeasurement(operation.name().toLowerCase() + "ing all projects");
 
 		ISchedulingRule rule = getRule();
@@ -348,7 +346,7 @@ public class ExternalLibraryBuilder {
 
 			return actualBuildOrderList;
 		} finally {
-			allProjectsMeasurement.end();
+			allProjectsMeasurement.close();
 			Job.getJobManager().endRule(rule);
 		}
 	}
@@ -499,7 +497,7 @@ public class ExternalLibraryBuilder {
 
 			final DataCollector operationCollector = DataCollectors.INSTANCE.getOrCreateDataCollector(
 					this.name().toLowerCase() + "ing " + n4EclPrj.getProjectName(),
-					dcExtLibBuilder);
+					N4JSDataCollectors.dcExtLibBuilder);
 
 			final Measurement measurement = operationCollector
 					.getMeasurement(this.name().toLowerCase() + "ing " + n4EclPrj.getProjectName());
@@ -514,8 +512,7 @@ public class ExternalLibraryBuilder {
 
 			ToBeBuilt toBeBuilt = getToBeBuilt(computer, n4EclPrj, computeMonitor, contribution);
 
-			try (ClosableMeasurement mesBE = dcExtLibBuilder
-					.getClosableMeasurement("BuildExt_" + n4EclPrj.getProjectName())) {
+			try {
 				if (toBeBuilt.getToBeDeleted().isEmpty() && toBeBuilt.getToBeUpdated().isEmpty()) {
 					subMonitor.newChild(1, SUPPRESS_NONE).worked(1);
 					return;
@@ -561,9 +558,6 @@ public class ExternalLibraryBuilder {
 							resourceSet.eSetDeliver(wasDeliver);
 						}
 					}
-
-					// end measurement for this build operation
-					measurement.end();
 				}
 
 			} catch (RuntimeException e) {
@@ -573,6 +567,9 @@ public class ExternalLibraryBuilder {
 						+ project.getName() + ".";
 				LOGGER.error(message, e);
 				throw new RuntimeException(message, e);
+			} finally {
+				// end measurement for this build operation
+				measurement.close();
 			}
 		}
 

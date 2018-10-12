@@ -17,16 +17,19 @@ import org.eclipse.emf.ecore.EAttribute
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.n4js.n4JS.AbstractCaseClause
+import org.eclipse.n4js.n4JS.Annotation
 import org.eclipse.n4js.n4JS.ArrayBindingPattern
 import org.eclipse.n4js.n4JS.ArrayElement
 import org.eclipse.n4js.n4JS.ArrayLiteral
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.AssignmentOperator
+import org.eclipse.n4js.n4JS.BinaryLogicalExpression
 import org.eclipse.n4js.n4JS.BindingElement
 import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.BreakStatement
 import org.eclipse.n4js.n4JS.CatchBlock
 import org.eclipse.n4js.n4JS.ContinueStatement
+import org.eclipse.n4js.n4JS.DestructureUtils
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ExpressionStatement
@@ -43,6 +46,7 @@ import org.eclipse.n4js.n4JS.IterationStatement
 import org.eclipse.n4js.n4JS.LabelRef
 import org.eclipse.n4js.n4JS.LabelledStatement
 import org.eclipse.n4js.n4JS.LegacyOctalIntLiteral
+import org.eclipse.n4js.n4JS.Literal
 import org.eclipse.n4js.n4JS.LocalArgumentsVariable
 import org.eclipse.n4js.n4JS.MethodDeclaration
 import org.eclipse.n4js.n4JS.N4ClassDefinition
@@ -69,6 +73,7 @@ import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.StrictModeRelevant
 import org.eclipse.n4js.n4JS.StringLiteral
 import org.eclipse.n4js.n4JS.SuperLiteral
+import org.eclipse.n4js.n4JS.TemplateSegment
 import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.UnaryOperator
 import org.eclipse.n4js.n4JS.Variable
@@ -91,15 +96,12 @@ import org.eclipse.xtext.diagnostics.IDiagnosticConsumer
 import org.eclipse.xtext.diagnostics.Severity
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 
-import static org.eclipse.n4js.validation.helper.FunctionValidationHelper.*
 import static org.eclipse.n4js.N4JSLanguageConstants.*
+import static org.eclipse.n4js.validation.helper.FunctionValidationHelper.*
 
 import static extension org.eclipse.n4js.conversion.AbstractN4JSStringValueConverter.*
-import org.eclipse.n4js.n4JS.DestructureUtils
 import static extension org.eclipse.n4js.n4JS.DestructureUtils.isTopOfDestructuringAssignment
 import static extension org.eclipse.n4js.n4JS.DestructureUtils.isTopOfDestructuringForStatement
-import org.eclipse.n4js.n4JS.Annotation
-import org.eclipse.n4js.n4JS.BinaryLogicalExpression
 
 /**
  * A utility that validates the structure of the AST in one pass.
@@ -433,15 +435,7 @@ class ASTStructureValidator {
 		Constraints constraints
 	) {
 		if (constraints.isStrict) {
-			val nodes = NodeModelUtils.findNodesForFeature(model, N4JSPackage.Literals.STRING_LITERAL__VALUE)
-			val target = nodes.head
-			val syntaxError = target.syntaxErrorMessage
-			if ((syntaxError === null || syntaxError.issueCode == WARN_ISSUE_CODE || syntaxError.issueCode == InternalSemicolonInjectingParser.SEMICOLON_INSERTED) && target.text.hasOctalEscapeSequence) {
-				producer.node = target
-				producer.addDiagnostic(
-					new DiagnosticMessage(IssueCodes.messageForAST_STR_NO_OCTALS,
-						IssueCodes.getDefaultSeverity(IssueCodes.AST_STR_NO_OCTALS), IssueCodes.AST_STR_NO_OCTALS))
-			}
+			addErrorForOctalEscapeSequence(model.rawValue, model, N4JSPackage.Literals.STRING_LITERAL__VALUE, producer);
 		}
 		recursiveValidateASTStructure(
 			model,
@@ -449,6 +443,34 @@ class ASTStructureValidator {
 			validLabels,
 			constraints
 		)
+	}
+
+	def private dispatch void validateASTStructure(
+		TemplateSegment model,
+		ASTStructureDiagnosticProducer producer,
+		Set<LabelledStatement> validLabels,
+		Constraints constraints
+	) {
+		addErrorForOctalEscapeSequence(model.rawValue, model, N4JSPackage.Literals.TEMPLATE_SEGMENT__VALUE, producer);
+
+		recursiveValidateASTStructure(
+			model,
+			producer,
+			validLabels,
+			constraints
+		)
+	}
+
+	def private addErrorForOctalEscapeSequence(String rawValue, Literal model, EAttribute valueEAttribute, ASTStructureDiagnosticProducer producer) {
+		val nodes = NodeModelUtils.findNodesForFeature(model, valueEAttribute);
+		val target = nodes.head;
+		val syntaxError = target.syntaxErrorMessage;
+		if ((syntaxError === null || syntaxError.issueCode == WARN_ISSUE_CODE || syntaxError.issueCode == InternalSemicolonInjectingParser.SEMICOLON_INSERTED) && rawValue.hasOctalEscapeSequence) {
+			producer.node = target;
+			producer.addDiagnostic(
+				new DiagnosticMessage(IssueCodes.messageForAST_STR_NO_OCTALS,
+					IssueCodes.getDefaultSeverity(IssueCodes.AST_STR_NO_OCTALS), IssueCodes.AST_STR_NO_OCTALS));
+		}
 	}
 
 	def private dispatch void validateASTStructure(

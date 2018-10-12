@@ -6756,93 +6756,93 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.NoSubstitutionTemplate");
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Action cTemplateSegmentAction_0 = (Action)cGroup.eContents().get(0);
-		private final Assignment cRawValueAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cRawValueNO_SUBSTITUTION_TEMPLATE_LITERALTerminalRuleCall_1_0 = (RuleCall)cRawValueAssignment_1.eContents().get(0);
+		private final Assignment cValueAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cValueNO_SUBSTITUTION_TEMPLATE_LITERALTerminalRuleCall_1_0 = (RuleCall)cValueAssignment_1.eContents().get(0);
 		
 		//NoSubstitutionTemplate TemplateSegment:
-		//	{TemplateSegment} rawValue=NO_SUBSTITUTION_TEMPLATE_LITERAL;
+		//	{TemplateSegment} value=NO_SUBSTITUTION_TEMPLATE_LITERAL;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//{TemplateSegment} rawValue=NO_SUBSTITUTION_TEMPLATE_LITERAL
+		//{TemplateSegment} value=NO_SUBSTITUTION_TEMPLATE_LITERAL
 		public Group getGroup() { return cGroup; }
 		
 		//{TemplateSegment}
 		public Action getTemplateSegmentAction_0() { return cTemplateSegmentAction_0; }
 		
-		//rawValue=NO_SUBSTITUTION_TEMPLATE_LITERAL
-		public Assignment getRawValueAssignment_1() { return cRawValueAssignment_1; }
+		//value=NO_SUBSTITUTION_TEMPLATE_LITERAL
+		public Assignment getValueAssignment_1() { return cValueAssignment_1; }
 		
 		//NO_SUBSTITUTION_TEMPLATE_LITERAL
-		public RuleCall getRawValueNO_SUBSTITUTION_TEMPLATE_LITERALTerminalRuleCall_1_0() { return cRawValueNO_SUBSTITUTION_TEMPLATE_LITERALTerminalRuleCall_1_0; }
+		public RuleCall getValueNO_SUBSTITUTION_TEMPLATE_LITERALTerminalRuleCall_1_0() { return cValueNO_SUBSTITUTION_TEMPLATE_LITERALTerminalRuleCall_1_0; }
 	}
 	public class TemplateHeadElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.TemplateHead");
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Action cTemplateSegmentAction_0 = (Action)cGroup.eContents().get(0);
-		private final Assignment cRawValueAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cRawValueTEMPLATE_HEADTerminalRuleCall_1_0 = (RuleCall)cRawValueAssignment_1.eContents().get(0);
+		private final Assignment cValueAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cValueTEMPLATE_HEADTerminalRuleCall_1_0 = (RuleCall)cValueAssignment_1.eContents().get(0);
 		
 		//TemplateHead TemplateSegment:
-		//	{TemplateSegment} rawValue=TEMPLATE_HEAD;
+		//	{TemplateSegment} value=TEMPLATE_HEAD;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//{TemplateSegment} rawValue=TEMPLATE_HEAD
+		//{TemplateSegment} value=TEMPLATE_HEAD
 		public Group getGroup() { return cGroup; }
 		
 		//{TemplateSegment}
 		public Action getTemplateSegmentAction_0() { return cTemplateSegmentAction_0; }
 		
-		//rawValue=TEMPLATE_HEAD
-		public Assignment getRawValueAssignment_1() { return cRawValueAssignment_1; }
+		//value=TEMPLATE_HEAD
+		public Assignment getValueAssignment_1() { return cValueAssignment_1; }
 		
 		//TEMPLATE_HEAD
-		public RuleCall getRawValueTEMPLATE_HEADTerminalRuleCall_1_0() { return cRawValueTEMPLATE_HEADTerminalRuleCall_1_0; }
+		public RuleCall getValueTEMPLATE_HEADTerminalRuleCall_1_0() { return cValueTEMPLATE_HEADTerminalRuleCall_1_0; }
 	}
 	public class TemplateTailElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.TemplateTail");
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Action cTemplateSegmentAction_0 = (Action)cGroup.eContents().get(0);
-		private final Assignment cRawValueAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cRawValueTemplateTailLiteralParserRuleCall_1_0 = (RuleCall)cRawValueAssignment_1.eContents().get(0);
+		private final Assignment cValueAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cValueTemplateTailLiteralParserRuleCall_1_0 = (RuleCall)cValueAssignment_1.eContents().get(0);
 		
 		//TemplateTail TemplateSegment:
-		//	{TemplateSegment} rawValue=TemplateTailLiteral;
+		//	{TemplateSegment} value=TemplateTailLiteral;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//{TemplateSegment} rawValue=TemplateTailLiteral
+		//{TemplateSegment} value=TemplateTailLiteral
 		public Group getGroup() { return cGroup; }
 		
 		//{TemplateSegment}
 		public Action getTemplateSegmentAction_0() { return cTemplateSegmentAction_0; }
 		
-		//rawValue=TemplateTailLiteral
-		public Assignment getRawValueAssignment_1() { return cRawValueAssignment_1; }
+		//value=TemplateTailLiteral
+		public Assignment getValueAssignment_1() { return cValueAssignment_1; }
 		
 		//TemplateTailLiteral
-		public RuleCall getRawValueTemplateTailLiteralParserRuleCall_1_0() { return cRawValueTemplateTailLiteralParserRuleCall_1_0; }
+		public RuleCall getValueTemplateTailLiteralParserRuleCall_1_0() { return cValueTemplateTailLiteralParserRuleCall_1_0; }
 	}
 	public class TemplateMiddleElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.TemplateMiddle");
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Action cTemplateSegmentAction_0 = (Action)cGroup.eContents().get(0);
-		private final Assignment cRawValueAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cRawValueTemplateMiddleLiteralParserRuleCall_1_0 = (RuleCall)cRawValueAssignment_1.eContents().get(0);
+		private final Assignment cValueAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cValueTemplateMiddleLiteralParserRuleCall_1_0 = (RuleCall)cValueAssignment_1.eContents().get(0);
 		
 		//TemplateMiddle TemplateSegment:
-		//	{TemplateSegment} rawValue=TemplateMiddleLiteral;
+		//	{TemplateSegment} value=TemplateMiddleLiteral;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//{TemplateSegment} rawValue=TemplateMiddleLiteral
+		//{TemplateSegment} value=TemplateMiddleLiteral
 		public Group getGroup() { return cGroup; }
 		
 		//{TemplateSegment}
 		public Action getTemplateSegmentAction_0() { return cTemplateSegmentAction_0; }
 		
-		//rawValue=TemplateMiddleLiteral
-		public Assignment getRawValueAssignment_1() { return cRawValueAssignment_1; }
+		//value=TemplateMiddleLiteral
+		public Assignment getValueAssignment_1() { return cValueAssignment_1; }
 		
 		//TemplateMiddleLiteral
-		public RuleCall getRawValueTemplateMiddleLiteralParserRuleCall_1_0() { return cRawValueTemplateMiddleLiteralParserRuleCall_1_0; }
+		public RuleCall getValueTemplateMiddleLiteralParserRuleCall_1_0() { return cValueTemplateMiddleLiteralParserRuleCall_1_0; }
 	}
 	public class LiteralElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.Literal");
@@ -12149,7 +12149,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//NoSubstitutionTemplate TemplateSegment:
-	//	{TemplateSegment} rawValue=NO_SUBSTITUTION_TEMPLATE_LITERAL;
+	//	{TemplateSegment} value=NO_SUBSTITUTION_TEMPLATE_LITERAL;
 	public NoSubstitutionTemplateElements getNoSubstitutionTemplateAccess() {
 		return pNoSubstitutionTemplate;
 	}
@@ -12159,7 +12159,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//TemplateHead TemplateSegment:
-	//	{TemplateSegment} rawValue=TEMPLATE_HEAD;
+	//	{TemplateSegment} value=TEMPLATE_HEAD;
 	public TemplateHeadElements getTemplateHeadAccess() {
 		return pTemplateHead;
 	}
@@ -12169,7 +12169,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//TemplateTail TemplateSegment:
-	//	{TemplateSegment} rawValue=TemplateTailLiteral;
+	//	{TemplateSegment} value=TemplateTailLiteral;
 	public TemplateTailElements getTemplateTailAccess() {
 		return pTemplateTail;
 	}
@@ -12179,7 +12179,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//TemplateMiddle TemplateSegment:
-	//	{TemplateSegment} rawValue=TemplateMiddleLiteral;
+	//	{TemplateSegment} value=TemplateMiddleLiteral;
 	public TemplateMiddleElements getTemplateMiddleAccess() {
 		return pTemplateMiddle;
 	}
