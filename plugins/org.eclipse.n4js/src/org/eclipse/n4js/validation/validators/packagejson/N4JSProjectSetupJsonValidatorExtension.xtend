@@ -88,6 +88,7 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 import static org.eclipse.n4js.validation.validators.packagejson.ProjectTypePredicate.*
 
 import static extension com.google.common.base.Strings.nullToEmpty
+import org.eclipse.n4js.external.ExternalLibraryWorkspace
 
 /**
  * A JSON validator extension that validates {@code package.json} resources in the context
@@ -157,6 +158,9 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 
 	@Inject
 	protected ExternalIndexSynchronizer indexSynchronizer;
+
+	@Inject
+	protected ExternalLibraryWorkspace extWS;
 
 	@Inject
 	protected SemverHelper semverHelper;
@@ -1338,9 +1342,18 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	 */
 	private def Map<String, IN4JSProject> getAllProjectsByName() {
 		return contextMemoize(ALL_EXISTING_PROJECT_CACHE) [
-			val Map<String, IN4JSProject> res = new HashMap
-			findAllProjects.forEach[p | res.put(p.projectName, p)]
-			return res
+			val Map<String, IN4JSProject> res = new HashMap;
+			findAllProjects.forEach[p | res.put(p.projectName, p)];
+
+			// also add those unnecessary projects that are not shadowed
+			for (org.eclipse.xtext.util.Pair<URI, ProjectDescription> pair: extWS.projectsIncludingUnnecessary) {
+				val location = pair.first;
+				val project = findProject(location).orNull;
+				if (!shadowingInfoHelper.isShadowedProject(project) && !res.containsKey(project.projectName)) {
+					res.put(project.projectName, project);
+				}
+			}
+			return res;
 		]
 	}
 
