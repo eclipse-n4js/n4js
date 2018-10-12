@@ -48,7 +48,7 @@ public class ExternalProjectMappings {
 	final private TargetPlatformInstallLocationProvider platformLocationProvider;
 
 	/*
-	 * The following collections either contain all npms in the ext. locations xor a reduced set of them. The reduced
+	 * The following collections either contain all npms in the external locations or a reduced set of them. The reduced
 	 * set does neither contain shadowed nor unnecessary projects. An unnecessary project is a dependency of one (or
 	 * more) plain-JS projects.
 	 */
@@ -176,7 +176,7 @@ public class ExternalProjectMappings {
 			reducedProjectUriMappingTmp.keySet().retainAll(reducedSetURIs);
 			Preconditions.checkState(reducedSetURIs.size() == reducedProjectUriMappingTmp.size());
 		} else {
-			for (List<N4JSExternalProject> rlPrjs : completeProjectNameMappingTmp.values()) {
+			for (List<N4JSExternalProject> rlPrjs : reducedProjectsLocationMappingTmp.values()) {
 				reducedSetTmps.addAll(rlPrjs);
 			}
 		}

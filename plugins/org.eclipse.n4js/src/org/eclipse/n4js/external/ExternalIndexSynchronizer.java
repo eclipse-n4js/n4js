@@ -28,6 +28,7 @@ import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
 import org.eclipse.n4js.json.JSON.JSONPackage;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.packagejson.PackageJsonResourceDescriptionExtension;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
@@ -55,6 +56,9 @@ public abstract class ExternalIndexSynchronizer {
 
 	@Inject
 	private ExternalLibraryWorkspace externalLibraryWorkspace;
+
+	@Inject
+	private ShadowingInfoHelper shadowingInfoHelper;
 
 	@Inject
 	private FolderContainmentHelper containmentHelper;
@@ -104,12 +108,15 @@ public abstract class ExternalIndexSynchronizer {
 				.computeProjectsIncludingUnnecessary()) {
 
 			URI location = pair.getFirst();
-			ProjectDescription projectDescription = pair.getSecond();
-			VersionNumber version = projectDescription.getProjectVersion();
-			String name = projectDescription.getProjectName();
+			IN4JSProject project = core.findProject(location).orNull();
+			if (!shadowingInfoHelper.isShadowedProject(project)) {
+				ProjectDescription projectDescription = pair.getSecond();
+				VersionNumber version = projectDescription.getProjectVersion();
+				String name = projectDescription.getProjectName();
 
-			if (version != null) {
-				npmsFolder.put(name, Pair.of(location, version.toString()));
+				if (version != null) {
+					npmsFolder.put(name, Pair.of(location, version.toString()));
+				}
 			}
 		}
 

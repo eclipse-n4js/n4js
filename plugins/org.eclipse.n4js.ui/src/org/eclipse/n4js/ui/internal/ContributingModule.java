@@ -29,6 +29,7 @@ import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalProjectsCollector;
 import org.eclipse.n4js.external.NpmLogger;
 import org.eclipse.n4js.external.RebuildWorkspaceProjectsScheduler;
+import org.eclipse.n4js.external.ShadowingInfoHelper;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.generator.IWorkspaceMarkerSupport;
 import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
@@ -147,6 +148,7 @@ public class ContributingModule implements Module {
 		binder.bind(EclipseExternalLibraryWorkspace.class);
 		binder.bind(ExternalIndexSynchronizer.class).to(EclipseExternalIndexSynchronizer.class);
 		binder.bind(EclipseExternalIndexSynchronizer.class);
+		binder.bind(ShadowingInfoHelper.class);
 
 		binder.bind(ExternalProjectLoader.class);
 		binder.bind(ProjectStateChangeListener.class);
