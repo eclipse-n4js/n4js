@@ -23,9 +23,8 @@ import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.projectModel.dependencies.ProjectDependenciesHelper;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
-import org.eclipse.n4js.smith.ClosableMeasurement;
-import org.eclipse.n4js.smith.DataCollector;
-import org.eclipse.n4js.smith.DataCollectors;
+import org.eclipse.n4js.smith.Measurement;
+import org.eclipse.n4js.utils.N4JSDataCollectors;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.io.FileDeleter;
 
@@ -35,12 +34,6 @@ import com.google.inject.Inject;
  * Bundles all maintenance actions of the library manager including the 'Big Button' action
  */
 public class ExternalLibrariesActionsHelper {
-	static private final DataCollector dcInstallHelper = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("External Libraries Install Helper");
-	private static final DataCollector dcCollectMissingDependencies = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Collect missing dependencies", "External Libraries Install Helper");
-	private static final DataCollector dcInstallMissingDependencies = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Install missing dependencies", "External Libraries Install Helper");
 
 	@Inject
 	private StatusHelper statusHelper;
@@ -62,7 +55,7 @@ public class ExternalLibrariesActionsHelper {
 
 	/** Streamlined process of calculating and installing the dependencies, npm cache cleaning forced by passed flag */
 	public void cleanAndInstallAllDependencies(SubMonitor monitor, MultiStatus multistatus, boolean removeNpmCache) {
-		try (ClosableMeasurement m = dcInstallHelper.getClosableMeasurement("Install Missing Dependencies")) {
+		try (Measurement m = N4JSDataCollectors.dcInstallHelper.getMeasurement("Install Missing Dependencies")) {
 			SubMonitor subMonitor = SubMonitor.convert(monitor, 10);
 
 			// remove npm cache
@@ -75,16 +68,16 @@ public class ExternalLibrariesActionsHelper {
 
 			// install npms from target platform
 			Map<String, NPMVersionRequirement> dependenciesToInstall = null;
-			try (ClosableMeasurement mm = dcCollectMissingDependencies
-					.getClosableMeasurement("Collect Missing Dependencies")) {
+			try (Measurement mm = N4JSDataCollectors.dcCollectMissingDeps
+					.getMeasurement("Collect Missing Dependencies")) {
 
 				dependenciesToInstall = dependenciesHelper.computeDependenciesOfWorkspace();
 				dependenciesHelper.fixDependenciesToInstall(dependenciesToInstall);
 			}
 
 			// install dependencies and force external library workspace reload
-			try (ClosableMeasurement mm = dcInstallMissingDependencies
-					.getClosableMeasurement("Install missing dependencies")) {
+			try (Measurement mm = N4JSDataCollectors.dcInstallMissingDeps
+					.getMeasurement("Install missing dependencies")) {
 
 				IStatus status = libManager.installNPMs(dependenciesToInstall, true, subMonitor.split(9));
 				if (!status.isOK()) {
