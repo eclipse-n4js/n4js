@@ -75,10 +75,8 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 		SubMonitor subMonitor = convert(monitor, 11);
 
 		try {
-			// XXX: this works on the disk directly (not on the cache of external lib WS)
 			Collection<LibraryChange> changeSet = identifyChangeSet(forcedChangeSet);
 
-			// XXX: depends
 			RegisterResult cleanResults = cleanChangesIndex(subMonitor.split(1), changeSet);
 			externalLibraryWorkspace.updateState();
 			buildChangesIndex(subMonitor.split(9), changeSet, cleanResults);

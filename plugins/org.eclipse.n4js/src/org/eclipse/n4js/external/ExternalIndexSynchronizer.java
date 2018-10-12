@@ -109,7 +109,7 @@ public abstract class ExternalIndexSynchronizer {
 
 			URI location = pair.getFirst();
 			IN4JSProject project = core.findProject(location).orNull();
-			if (!shadowingInfoHelper.isShadowedProject(project)) {
+			if (project == null || !shadowingInfoHelper.isShadowedProject(project)) {
 				ProjectDescription projectDescription = pair.getSecond();
 				VersionNumber version = projectDescription.getProjectVersion();
 				String name = projectDescription.getProjectName();
@@ -157,7 +157,7 @@ public abstract class ExternalIndexSynchronizer {
 	}
 
 	/**
-	 * Note: Expensive method.
+	 * Note: Expensive method: works on the disk directly (not on the cache of external library WS)
 	 *
 	 * @return a set of all changes between the Xtext index and the external projects in all external locations
 	 */
