@@ -105,6 +105,8 @@ public class IndexSynchronizerPluginTest extends AbstractBuilderParticipantTest 
 		libraryManager.installNPM(NPM_SNAFU, new NullProgressMonitor());
 		waitForAutoBuild();
 
+		assertTrue(indexSynchronizer.findNpmsInIndex().containsKey(NPM_SNAFU));
+
 		File prjDir = new File(getResourceUri(PROBANDS, SUBFOLDER));
 		IProject project = ProjectTestsUtils.importProject(prjDir, PROJECT_NAME);
 		IResource packagejson = project.findMember("package.json");
@@ -112,6 +114,7 @@ public class IndexSynchronizerPluginTest extends AbstractBuilderParticipantTest 
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 
+		assertTrue(indexSynchronizer.findNpmsInIndex().containsKey(NPM_SNAFU));
 		assertIssues(packagejson);
 		assertIssues(abc);
 

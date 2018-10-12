@@ -187,11 +187,11 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 		return mappings.reducedSet;
 	}
 
-	Collection<N4JSExternalProject> computeProjects() {
+	List<Pair<URI, ProjectDescription>> computeProjectsIncludingUnnecessary() {
 		Map<URI, Pair<N4JSExternalProject, ProjectDescription>> completeCache = computeProjectsUncached();
 		ExternalProjectMappings mappingsTmp = new ExternalProjectMappings(userWorkspace, externalLibraryPreferenceStore,
 				platformLocationProvider, completeCache);
-		return mappingsTmp.reducedSet;
+		return mappingsTmp.completeList;
 	}
 
 	List<Pair<URI, ProjectDescription>> getProjectsIncludingUnnecessary() {

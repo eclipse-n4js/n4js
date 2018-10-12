@@ -146,13 +146,6 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 	public abstract Collection<N4JSExternalProject> getProjects();
 
 	/**
-	 * Expensive. Computes available external projects.
-	 *
-	 * @return the external projects.
-	 */
-	public abstract Collection<N4JSExternalProject> computeProjects();
-
-	/**
 	 * Returns a map with name and version of all available external projects.
 	 *
 	 * @return map of name and version of the external projects.
@@ -165,6 +158,13 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 	 * @return the external projects that are actually on the HDD.
 	 */
 	public abstract List<Pair<URI, ProjectDescription>> getProjectsIncludingUnnecessary();
+
+	/**
+	 * Expensive. Computes available external projects.
+	 *
+	 * @return the external projects.
+	 */
+	public abstract List<Pair<URI, ProjectDescription>> computeProjectsIncludingUnnecessary();
 
 	/**
 	 * Returns with all external projects that have the given name.

@@ -225,8 +225,8 @@ public class LibraryManager {
 		}
 
 		try (ClosableMeasurement mes = dcLibMngr.getClosableMeasurement("installDependenciesInternal");) {
-			final int steps = forceReloadAll ? 6 : 7;
-			SubMonitor subMonitor = SubMonitor.convert(monitor, steps);
+			final int steps = forceReloadAll ? 3 : 2;
+			SubMonitor subMonitor = SubMonitor.convert(monitor, steps + 4);
 			Map<String, NPMVersionRequirement> npmsToInstall = new LinkedHashMap<>(versionedNPMs);
 
 			SubMonitor subMonitor1 = subMonitor.split(2);
@@ -237,7 +237,7 @@ public class LibraryManager {
 			// the workspace and remove them from the index
 			if (forceReloadAll) {
 				SubMonitor subMonitor2 = subMonitor.split(1);
-				subMonitor2.setTaskName("Clean all packages... [step 2 of " + steps + "]");
+				subMonitor2.setTaskName("Clean all packages... [step 2 of 3]");
 				externalLibraryWorkspace.deregisterAllProjects(subMonitor2);
 			}
 

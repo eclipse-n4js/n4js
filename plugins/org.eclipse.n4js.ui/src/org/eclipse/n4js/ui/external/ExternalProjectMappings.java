@@ -175,6 +175,10 @@ public class ExternalProjectMappings {
 			}
 			reducedProjectUriMappingTmp.keySet().retainAll(reducedSetURIs);
 			Preconditions.checkState(reducedSetURIs.size() == reducedProjectUriMappingTmp.size());
+		} else {
+			for (List<N4JSExternalProject> rlPrjs : completeProjectNameMappingTmp.values()) {
+				reducedSetTmps.addAll(rlPrjs);
+			}
 		}
 
 		// step 4: seal collections

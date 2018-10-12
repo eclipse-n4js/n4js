@@ -361,8 +361,8 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	}
 
 	@Override
-	public Collection<N4JSExternalProject> computeProjects() {
-		return projectProvider.computeProjects();
+	public List<Pair<URI, ProjectDescription>> computeProjectsIncludingUnnecessary() {
+		return projectProvider.computeProjectsIncludingUnnecessary();
 	}
 
 	@Override

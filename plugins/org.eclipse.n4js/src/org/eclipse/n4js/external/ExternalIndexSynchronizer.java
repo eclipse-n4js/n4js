@@ -26,8 +26,8 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
 import org.eclipse.n4js.json.JSON.JSONPackage;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.packagejson.PackageJsonResourceDescriptionExtension;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
@@ -100,11 +100,13 @@ public abstract class ExternalIndexSynchronizer {
 	final public Map<String, Pair<URI, String>> findNpmsInFolder() {
 		Map<String, Pair<URI, String>> npmsFolder = new HashMap<>();
 
-		for (N4JSExternalProject n4jsProject : externalLibraryWorkspace.computeProjects()) {
-			IN4JSProject iProject = n4jsProject.getIProject();
-			VersionNumber version = iProject.getVersion();
-			URI location = iProject.getLocation();
-			String name = iProject.getProjectName();
+		for (org.eclipse.xtext.util.Pair<URI, ProjectDescription> pair : externalLibraryWorkspace
+				.computeProjectsIncludingUnnecessary()) {
+
+			URI location = pair.getFirst();
+			ProjectDescription projectDescription = pair.getSecond();
+			VersionNumber version = projectDescription.getProjectVersion();
+			String name = projectDescription.getProjectName();
 
 			if (version != null) {
 				npmsFolder.put(name, Pair.of(location, version.toString()));
