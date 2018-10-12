@@ -19,9 +19,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.NavigableMap;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.concurrent.Semaphore;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -75,7 +73,7 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 
 	private final Semaphore semaphore = new Semaphore(1);
 	private final Collection<ExternalLocationsUpdatedListener> locListeners = new LinkedList<>();
-	private NavigableMap<String, java.net.URI> rootLocations;
+	private final LinkedHashMap<String, java.net.URI> rootLocations = new LinkedHashMap<>();
 	private ExternalProjectMappings mappings = new UninitializedMappings();
 
 	/**
@@ -152,9 +150,7 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 	}
 
 	private void updateCache(Set<java.net.URI> newLocations) {
-		List<java.net.URI> locationsInShadowOrder = ExternalLibrariesActivator.sortByShadowing(newLocations);
-		setRootLocations(locationsInShadowOrder);
-
+		setRootLocations(newLocations);
 		updateCacheInternal();
 	}
 
@@ -254,11 +250,11 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 	}
 
 	private void setRootLocations(Collection<java.net.URI> newRootLocations) {
-		rootLocations = new TreeMap<>();
-		for (java.net.URI loc : newRootLocations) {
+		List<java.net.URI> locationsInShadowOrder = ExternalLibrariesActivator.sortByShadowing(newRootLocations);
+		rootLocations.clear();
+		for (java.net.URI loc : locationsInShadowOrder) {
 			String locStr = loc.toString();
 			rootLocations.put(locStr, loc);
 		}
-		rootLocations = Collections.unmodifiableNavigableMap(rootLocations);
 	}
 }
