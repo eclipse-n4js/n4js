@@ -105,7 +105,7 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 		locListeners.add(listener);
 	}
 
-	Collection<java.net.URI> getRootLocations() {
+	Collection<java.net.URI> getRootLocationsInReversedShadowingOrder() {
 		return rootLocations.values();
 	}
 
@@ -115,7 +115,7 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 
 	@Override
 	public void storeUpdated(ExternalLibraryPreferenceStore store, IProgressMonitor monitor) {
-		Set<java.net.URI> oldLocations = new HashSet<>(getRootLocations());
+		Set<java.net.URI> oldLocations = new HashSet<>(getRootLocationsInReversedShadowingOrder());
 		Set<java.net.URI> newLocations = new HashSet<>(store.getLocations());
 
 		Set<java.net.URI> removedLocations = new HashSet<>(oldLocations);
@@ -198,7 +198,7 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 	private Map<URI, Pair<N4JSExternalProject, ProjectDescription>> computeProjectsUncached() {
 		Map<URI, Pair<N4JSExternalProject, ProjectDescription>> projects = new LinkedHashMap<>();
 		Iterable<java.net.URI> projectRoots = externalLibraryPreferenceStore
-				.convertToProjectRootLocations(getRootLocations());
+				.convertToProjectRootLocations(getRootLocationsInReversedShadowingOrder());
 
 		for (java.net.URI projectRoot : projectRoots) {
 			URI projectLocation = URIUtils.toFileUri(projectRoot);
@@ -251,6 +251,7 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 
 	private void setRootLocations(Collection<java.net.URI> newRootLocations) {
 		List<java.net.URI> locationsInShadowOrder = ExternalLibrariesActivator.sortByShadowing(newRootLocations);
+		Collections.reverse(locationsInShadowOrder); // reverse order for ExternalProjectMapper
 		rootLocations.clear();
 		for (java.net.URI loc : locationsInShadowOrder) {
 			String locStr = loc.toString();

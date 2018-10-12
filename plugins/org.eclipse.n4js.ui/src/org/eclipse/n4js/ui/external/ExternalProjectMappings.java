@@ -125,7 +125,7 @@ public class ExternalProjectMappings {
 
 		// step 1: compute all projects
 		List<URI> allPrjLocsReversed = new LinkedList<>(completeCache.keySet());
-		Collections.reverse(allPrjLocsReversed);
+		// Collections.reverse(allPrjLocsReversed);
 		for (URI projectLocation : allPrjLocsReversed) {
 			Pair<N4JSExternalProject, ProjectDescription> pair = completeCache.get(projectLocation);
 			N4JSExternalProject project = pair.getFirst();

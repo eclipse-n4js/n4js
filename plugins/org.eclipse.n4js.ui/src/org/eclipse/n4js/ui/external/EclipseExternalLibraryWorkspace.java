@@ -240,7 +240,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 				toBeDeleted.add(location);
 			}
 			Set<URI> toBeWiped = new HashSet<>();
-			for (java.net.URI rootLocation : projectProvider.getRootLocations()) {
+			for (java.net.URI rootLocation : projectProvider.getRootLocationsInReversedShadowingOrder()) {
 				toBeWiped.add(URIUtils.toFileUri(rootLocation));
 			}
 			return deregisterProjectsInternal(monitor, toBeDeleted, toBeWiped);
