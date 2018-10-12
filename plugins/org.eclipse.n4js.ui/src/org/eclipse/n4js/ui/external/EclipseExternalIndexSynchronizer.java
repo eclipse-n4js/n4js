@@ -75,14 +75,18 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 		SubMonitor subMonitor = convert(monitor, 11);
 
 		try {
-			Collection<LibraryChange> changeSet = identifyChangeSet(forcedChangeSet, false);
+			Collection<LibraryChange> oldChangeSet = identifyChangeSet(forcedChangeSet, false);
+			RegisterResult cleanResults = cleanChangesIndex(subMonitor.split(1), oldChangeSet);
 
-			RegisterResult cleanResults = cleanChangesIndex(subMonitor.split(1), changeSet);
 			externalLibraryWorkspace.updateState();
-			buildChangesIndex(subMonitor.split(9), changeSet, cleanResults);
 
-		} finally {
+			Collection<LibraryChange> newChangesSet = identifyChangeSet(forcedChangeSet, false);
+			buildChangesIndex(subMonitor.split(9), newChangesSet, cleanResults);
+
+		} catch (Exception e) {
 			checkAndClearIndex(subMonitor.split(1));
+		} finally {
+			subMonitor.done();
 		}
 	}
 
@@ -123,9 +127,15 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 				}
 			}
 
+			N4JSExternalProject lang = externalLibraryWorkspace.getProject("n4js.lang");
+			boolean inIndex1 = isInIndex(lang);
+
 			subMonitor.setTaskName("Building new projects...");
 			RegisterResult buildResult = externalLibraryWorkspace.registerProjects(subMonitor.split(9), toBeUpdated);
 			printRegisterResults(buildResult, "built");
+
+			lang = externalLibraryWorkspace.getProject("n4js.lang");
+			boolean inIndex2 = isInIndex(lang);
 
 			Set<URI> toBeScheduled = new HashSet<>();
 			toBeScheduled.addAll(cleanResults.affectedWorkspaceProjects);
@@ -134,6 +144,10 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 
 		} finally {
 			subMonitor.done();
+
+			N4JSExternalProject lang = externalLibraryWorkspace.getProject("n4js.lang");
+			boolean inIndex3 = isInIndex(lang);
+			System.out.println();
 		}
 	}
 
