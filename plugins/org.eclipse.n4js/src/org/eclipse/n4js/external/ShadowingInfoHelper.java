@@ -15,12 +15,14 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
+import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.inject.Inject;
 
@@ -30,9 +32,6 @@ import com.google.inject.Inject;
 public class ShadowingInfoHelper {
 	@Inject
 	private N4JSModel model;
-
-	@Inject
-	private InternalN4JSWorkspace userWorkspace;
 
 	@Inject
 	private ExternalLibraryWorkspace externalLibraryWorkspace;
@@ -76,12 +75,15 @@ public class ShadowingInfoHelper {
 			}
 		}
 
-		for (URI loc : userWorkspace.getAllProjectLocations()) {
-			String prjName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(loc);
-			if (projectName.equals(prjName)) {
-				N4JSProject n4jsProject = model.getN4JSProject(loc);
-				shadowingProjects.add(n4jsProject);
-				break;
+		for (IProject prj : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
+			if (prj.isAccessible()) {
+				String prjName = ProjectDescriptionUtils.convertEclipseProjectNameToN4JSProjectName(prj.getName());
+				if (projectName.equals(prjName)) {
+					URI loc = URIUtils.convert(prj);
+					N4JSProject n4jsProject = model.getN4JSProject(loc);
+					shadowingProjects.add(n4jsProject);
+					break;
+				}
 			}
 		}
 

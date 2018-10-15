@@ -107,12 +107,17 @@ class BuiltInLibrariesLabelProvider extends LabelProvider implements IStyledLabe
 		List<IN4JSProject> shadowingProjects = shadowingInfoHelper.findShadowingProjects(project);
 		if (!shadowingProjects.isEmpty()) {
 			IN4JSProject shadowedProject = shadowingProjects.get(0);
-			org.eclipse.emf.common.util.URI location = shadowedProject.getLocation();
-			URI rootLocation = externalLibraryWorkspace.getRootLocationForResource(location);
-			org.eclipse.emf.common.util.URI emfURI = org.eclipse.emf.common.util.URI.createURI(rootLocation.toString());
-			rootLocationName = emfURI.lastSegment();
-			if (rootLocationName.isEmpty() && emfURI.segmentCount() > 1) {
-				rootLocationName = emfURI.segment(emfURI.segmentCount() - 2);
+			if (shadowedProject.isExternal()) {
+				org.eclipse.emf.common.util.URI location = shadowedProject.getLocation();
+				URI rootLocation = externalLibraryWorkspace.getRootLocationForResource(location);
+				org.eclipse.emf.common.util.URI emfURI = org.eclipse.emf.common.util.URI
+						.createURI(rootLocation.toString());
+				rootLocationName = emfURI.lastSegment();
+				if (rootLocationName.isEmpty() && emfURI.segmentCount() > 1) {
+					rootLocationName = emfURI.segment(emfURI.segmentCount() - 2);
+				}
+			} else {
+				rootLocationName = "workspace";
 			}
 			rootLocationName = " [shadowed by " + rootLocationName + "]";
 		}
