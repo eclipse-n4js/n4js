@@ -191,7 +191,6 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 	}
 
 	List<Pair<URI, ProjectDescription>> getProjectsIncludingUnnecessary() {
-		computeProjectsUncached();
 		return mappings.completeList;
 	}
 

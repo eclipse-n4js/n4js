@@ -211,6 +211,10 @@ public class LibraryManager {
 			subMonitor1.setTaskName("Installing packages... [step 1 of " + steps + "]");
 			List<LibraryChange> actualChanges = installUninstallNPMs(subMonitor1, status, npmsToInstall, emptyList());
 
+			if (!status.isOK()) {
+				return status;
+			}
+
 			// if forceReloadAll, unregister all currently-registered projects from
 			// the workspace and remove them from the index
 			if (forceReloadAll) {

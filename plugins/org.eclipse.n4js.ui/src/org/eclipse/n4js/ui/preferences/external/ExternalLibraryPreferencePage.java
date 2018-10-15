@@ -68,6 +68,7 @@ import org.eclipse.n4js.ui.viewer.TreeViewerBuilder;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -137,6 +138,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 
 	@Override
 	protected Control createContents(final Composite parent) {
+		this.setSize(new Point(600, 600));
 
 		final BuiltInLibrariesLabelProvider labelProvider = new BuiltInLibrariesLabelProvider(indexSynchronizer,
 				shadowingInfoHelper, externalLibraryWorkspace);
