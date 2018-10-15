@@ -314,7 +314,11 @@ public class LibraryManager {
 
 		for (String name : removeRequested) {
 			if (installedNpms.containsKey(name)) {
-				requestedChanges.add(new LibraryChange(Uninstall, null, name, ""));
+				Pair<org.eclipse.emf.common.util.URI, ProjectDescription> pair = installedNpms.get(name);
+				org.eclipse.emf.common.util.URI location = pair.getFirst();
+				VersionNumber version = pair.getSecond().getProjectVersion();
+				String versionStr = version != null ? version.toString() : "";
+				requestedChanges.add(new LibraryChange(Uninstall, location, name, versionStr));
 			} else {
 				// already removed
 			}
