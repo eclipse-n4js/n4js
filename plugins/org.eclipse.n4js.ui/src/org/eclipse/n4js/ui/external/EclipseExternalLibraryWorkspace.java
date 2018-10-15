@@ -361,6 +361,11 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	}
 
 	@Override
+	public boolean isNecessary(URI location) {
+		return projectProvider.getAllProjectLocations().contains(location);
+	}
+
+	@Override
 	public List<Pair<URI, ProjectDescription>> computeProjectsIncludingUnnecessary() {
 		return projectProvider.computeProjectsIncludingUnnecessary();
 	}

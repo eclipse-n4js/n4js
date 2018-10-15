@@ -84,6 +84,11 @@ public class HlcExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	}
 
 	@Override
+	public boolean isNecessary(URI location) {
+		return true;
+	}
+
+	@Override
 	public Map<String, VersionNumber> getProjectNameVersionMap() {
 		return emptyMap();
 	}

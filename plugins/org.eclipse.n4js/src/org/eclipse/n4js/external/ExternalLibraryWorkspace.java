@@ -259,4 +259,7 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 		return null;
 	}
 
+	/** @return true iff the project at the given location is a necessary (see ExternalProjectMappings) project. */
+	public abstract boolean isNecessary(URI location);
+
 }

@@ -177,24 +177,26 @@ public abstract class ExternalIndexSynchronizer {
 		differences.removeAll(intersection);
 
 		for (String diff : differences) {
-			LibraryChangeType changeType = null;
 			String name = diff;
-			URI location = null;
-			String version = null;
+			LibraryChange change = null;
 
 			if (npmsOfFolder.containsKey(diff)) {
 				// new in folder, not in index
-				changeType = LibraryChangeType.Added;
-				location = npmsOfFolder.get(name).getKey();
-				version = npmsOfFolder.get(name).getValue();
+				URI location = npmsOfFolder.get(name).getKey();
+				if (externalLibraryWorkspace.isNecessary(location)) {
+					String version = npmsOfFolder.get(name).getValue();
+					change = new LibraryChange(LibraryChangeType.Added, location, name, version);
+				}
 			}
 			if (npmsOfIndex.containsKey(diff)) {
 				// removed in folder, still in index
-				changeType = LibraryChangeType.Removed;
-				location = npmsOfIndex.get(name).getKey();
-				version = npmsOfIndex.get(name).getValue();
+				URI location = npmsOfIndex.get(name).getKey();
+				String version = npmsOfIndex.get(name).getValue();
+				change = new LibraryChange(LibraryChangeType.Removed, location, name, version);
 			}
-			changes.add(new LibraryChange(changeType, location, name, version));
+			if (change != null) {
+				changes.add(change);
+			}
 		}
 
 		for (String name : intersection) {
