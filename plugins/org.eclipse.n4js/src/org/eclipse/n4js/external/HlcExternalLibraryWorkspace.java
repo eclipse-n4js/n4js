@@ -14,6 +14,7 @@ import static java.util.Collections.emptyIterator;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -145,6 +146,12 @@ public class HlcExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 
 	@Override
 	public List<Pair<URI, ProjectDescription>> getProjectsIncludingUnnecessary() {
+		File tpFolder = locationProvider.getTargetPlatformInstallFolder();
+		if (tpFolder == null) {
+			// This is a check to avoid an Exception to be thrown in locationProvider.getNodeModulesURI()
+			return emptyList();
+		}
+
 		Iterable<java.net.URI> projectLocations = externalLibraryPreferenceStore
 				.convertToProjectRootLocations(Collections.singleton(locationProvider.getNodeModulesURI()));
 
