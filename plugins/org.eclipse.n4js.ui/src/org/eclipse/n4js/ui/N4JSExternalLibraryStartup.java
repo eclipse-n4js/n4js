@@ -69,7 +69,6 @@ public class N4JSExternalLibraryStartup implements IStartup {
 					buildManager.scheduleBuildIfNecessary(Arrays.asList(workspace.getRoot().getProjects()),
 							IBuildFlag.RECOVERY_BUILD);
 				}
-				indexSynchronizer.checkAndClearIndex(new NullProgressMonitor());
 			}).start();
 
 		}

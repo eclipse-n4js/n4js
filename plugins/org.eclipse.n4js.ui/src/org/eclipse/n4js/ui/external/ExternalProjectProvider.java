@@ -154,15 +154,18 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 		updateCacheInternal();
 	}
 
-	private void updateCacheInternal() {
+	synchronized private void updateCacheInternal() {
 		if (semaphore.tryAcquire()) {
-			Map<URI, Pair<N4JSExternalProject, ProjectDescription>> completeCache = computeProjectsUncached();
-			mappings = new ExternalProjectMappings(userWorkspace, externalLibraryPreferenceStore,
-					platformLocationProvider, completeCache);
+			try {
+				Map<URI, Pair<N4JSExternalProject, ProjectDescription>> completeCache = computeProjectsUncached();
+				mappings = new ExternalProjectMappings(userWorkspace, externalLibraryPreferenceStore,
+						platformLocationProvider, completeCache);
 
-			npmLogger.logInfo("external locations updated");
+				npmLogger.logInfo("external locations updated");
 
-			semaphore.release();
+			} finally {
+				semaphore.release();
+			}
 		}
 	}
 
