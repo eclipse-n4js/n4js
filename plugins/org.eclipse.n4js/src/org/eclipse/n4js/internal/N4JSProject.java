@@ -80,6 +80,9 @@ public class N4JSProject implements IN4JSProject {
 
 	@Override
 	public boolean exists() {
+		if (external) {
+			return true;
+		}
 		if (exists != null) {
 			return exists.booleanValue();
 		}

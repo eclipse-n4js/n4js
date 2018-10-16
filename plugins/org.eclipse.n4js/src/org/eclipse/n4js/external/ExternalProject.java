@@ -141,12 +141,12 @@ public class ExternalProject extends Project implements IExternalResource {
 
 	@Override
 	public boolean exists() {
-		return file.exists();
+		return true;
 	}
 
 	@Override
 	public boolean exists(int flags, boolean checkType) {
-		return file.exists();
+		return true;
 	}
 
 	@Override
