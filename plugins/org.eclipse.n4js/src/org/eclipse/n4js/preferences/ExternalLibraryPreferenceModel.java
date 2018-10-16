@@ -44,6 +44,8 @@ public class ExternalLibraryPreferenceModel {
 	private static final String PROP_EXTERNAL_LIBRARY_LOCATIONS = "externalLibraryLocations";
 
 	private final List<String> externalLibraryLocations = newArrayList();
+	private final List<URI> externalLibraryLocationURIs = newArrayList();
+	private long externalLibraryLocationURIsHash = 0;
 
 	/**
 	 * Creates and returns a new external library preference model that has initially one single element pointing to the
@@ -235,11 +237,20 @@ public class ExternalLibraryPreferenceModel {
 	 * @return a list of external library folder location URIs.
 	 */
 	synchronized public List<URI> getExternalLibraryLocationsAsUris() {
-		List<URI> locations = new LinkedList<>();
-		for (String pathStr : externalLibraryLocations) {
-			locations.add(new File(pathStr).toURI());
+		int currentHash = externalLibraryLocationURIs.hashCode();
+		boolean needUpdate = currentHash != externalLibraryLocationURIsHash;
+		if (needUpdate) {
+			externalLibraryLocationURIsHash = currentHash;
+			List<URI> locations = new LinkedList<>();
+			for (String pathStr : externalLibraryLocations) {
+				locations.add(new File(pathStr).toURI());
+			}
+			ExternalLibrariesActivator.sortByShadowing(locations);
+			externalLibraryLocationURIs.clear();
+			externalLibraryLocationURIs.addAll(locations);
+			System.out.println("update");
 		}
-		return ExternalLibrariesActivator.sortByShadowing(locations);
+		return externalLibraryLocationURIs;
 	}
 
 	/**
