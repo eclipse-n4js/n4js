@@ -63,6 +63,8 @@ import com.google.common.base.Objects;
 public class ExternalProject extends Project implements IExternalResource {
 
 	private final File file;
+	private final java.net.URI uri;
+	private final String eclipseProjectName;
 	private final Collection<String> natureIds;
 	private final Collection<String> builderIds;
 
@@ -108,8 +110,13 @@ public class ExternalProject extends Project implements IExternalResource {
 		super(new Path(file.getAbsolutePath()), null);
 		checkState(file.isDirectory(), "Resource '" + file + "' is not a directory but a file.");
 		this.file = file;
+		this.uri = file.toURI();
 		this.natureIds = newHashSet(natureIds);
 		this.builderIds = newHashSet(builderIds);
+
+		org.eclipse.emf.common.util.URI emfURI = URIUtils.deriveProjectURIFromFileLocation(file);
+		String n4jsName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(emfURI);
+		this.eclipseProjectName = ProjectDescriptionUtils.convertN4JSProjectNameToEclipseProjectName(n4jsName);
 	}
 
 	@Override
@@ -123,10 +130,7 @@ public class ExternalProject extends Project implements IExternalResource {
 
 	@Override
 	public String getName() {
-		org.eclipse.emf.common.util.URI uri = URIUtils.deriveProjectURIFromFileLocation(file);
-		String n4jsName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(uri);
-		String eclipseName = ProjectDescriptionUtils.convertN4JSProjectNameToEclipseProjectName(n4jsName);
-		return eclipseName;
+		return eclipseProjectName;
 	}
 
 	@Override
@@ -185,7 +189,7 @@ public class ExternalProject extends Project implements IExternalResource {
 
 	@Override
 	public URI getLocationURI() {
-		return file.toURI();
+		return uri;
 	}
 
 	@Override

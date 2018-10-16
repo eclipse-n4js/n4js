@@ -95,9 +95,14 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 	public boolean isAffected(Collection<IResourceDescription.Delta> deltas, IResourceDescription candidate,
 			IResourceDescriptions context) {
 
+		URI candidateURI = candidate.getURI();
+		if (candidateURI.isFile()) {
+			return false;
+		}
+
 		// Opaque modules cannot contain any references to one of the deltas.
 		// Thus, they will never be affected by any change.
-		if (langHelper.isOpaqueModule(candidate.getURI())) {
+		if (langHelper.isOpaqueModule(candidateURI)) {
 			return false;
 		}
 
@@ -108,7 +113,7 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 				// if uri looks like a N4JS project description file (i.e. package.json)
 				if (IN4JSProject.PACKAGE_JSON.equalsIgnoreCase(uri.lastSegment())) {
 					URI prefixURI = uri.trimSegments(1).appendSegment("");
-					if (candidate.getURI().replacePrefix(prefixURI, prefixURI) != null) {
+					if (candidateURI.replacePrefix(prefixURI, prefixURI) != null) {
 						return true;
 					}
 				}
@@ -175,8 +180,8 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 
 				// Never mark a resource as effected when trying to resolve its dependency from an external to a
 				// workspace one and/or vice versa.
-				if (Objects.equals(fromProjectDependency, toProject)
-						&& fromProjectDependency.isExternal() == fromProject.isExternal()) {
+				if (fromProjectDependency.isExternal() == fromProject.isExternal()
+						&& Objects.equals(fromProjectDependency, toProject)) {
 					return true;
 				}
 			}

@@ -79,7 +79,9 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 			return URI.createPlatformResourceURI(nestedLocation.segment(1), true);
 		}
 		// this might happen if the URI was located from non-platform information, e.g. in case
-		// of a source file location found in a soure map
+		// of a source file location found in a source map
+		// FIXME: This loop and the call 'toFile()' are very expensive
+		// FIXME: since this method is called for a lot of external files
 		if (nestedLocation.isFile()) {
 			String nested = nestedLocation.toString();
 			for (IProject proj : workspace.getProjects()) {

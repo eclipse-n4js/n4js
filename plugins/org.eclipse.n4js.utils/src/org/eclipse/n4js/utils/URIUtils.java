@@ -123,7 +123,7 @@ public class URIUtils {
 	 * @return true iff the given {@link URI}s are equal
 	 */
 	static public String toString(org.eclipse.emf.common.util.URI uri) {
-		String result = uri.toString();
+		String result = null;
 
 		if (uri.isFile()) {
 			String fileString = uri.toFileString();
@@ -131,12 +131,17 @@ public class URIUtils {
 			Path path = file.toPath();
 			try {
 				String newResult = path.toRealPath().toFile().toURI().toString();
-				if (newResult.endsWith("/"))
+				if (newResult.endsWith("/")) {
 					newResult = newResult.substring(0, newResult.length() - 1);
+				}
 				result = newResult;
 			} catch (IOException e) {
 				// conversion unsuccessful, return original
 			}
+		}
+
+		if (result == null) {
+			result = uri.toString();
 		}
 
 		return result;

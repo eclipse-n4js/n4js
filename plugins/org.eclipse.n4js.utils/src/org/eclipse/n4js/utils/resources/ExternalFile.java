@@ -35,6 +35,7 @@ import org.eclipse.core.runtime.Path;
 public class ExternalFile extends org.eclipse.core.internal.resources.File implements IExternalResource {
 
 	private final File file;
+	private final java.net.URI uri;
 	private final IProject project;
 	private final IContainer parent;
 
@@ -52,6 +53,7 @@ public class ExternalFile extends org.eclipse.core.internal.resources.File imple
 	public ExternalFile(IProject project, IContainer parent, File file) {
 		super(new Path(file.getAbsolutePath()), null);
 		this.file = file;
+		this.uri = file.toURI();
 		this.project = project;
 		this.parent = parent;
 	}
@@ -118,7 +120,7 @@ public class ExternalFile extends org.eclipse.core.internal.resources.File imple
 
 	@Override
 	public URI getLocationURI() {
-		return file.toURI();
+		return uri;
 	}
 
 	@Override

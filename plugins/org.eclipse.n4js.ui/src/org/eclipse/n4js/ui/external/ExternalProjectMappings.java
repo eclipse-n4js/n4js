@@ -164,7 +164,7 @@ public class ExternalProjectMappings {
 		}
 
 		// step 3: reduce to necessary projects
-		if (false) {
+		if (true) {
 			java.net.URI nodeModulesURI = platformLocationProvider.getNodeModulesURI();
 			List<N4JSExternalProject> nodeModuleProjects = reducedProjectsLocationMappingTmp.get(nodeModulesURI);
 			if (nodeModuleProjects != null) {

@@ -245,7 +245,7 @@ public class ExternalLibraryPreferenceModel {
 			for (String pathStr : externalLibraryLocations) {
 				locations.add(new File(pathStr).toURI());
 			}
-			ExternalLibrariesActivator.sortByShadowing(locations);
+			locations = ExternalLibrariesActivator.sortByShadowing(locations);
 			externalLibraryLocationURIs.clear();
 			externalLibraryLocationURIs.addAll(locations);
 		}
