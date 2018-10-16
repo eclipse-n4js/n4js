@@ -237,7 +237,7 @@ public class ExternalLibraryPreferenceModel {
 	 * @return a list of external library folder location URIs.
 	 */
 	synchronized public List<URI> getExternalLibraryLocationsAsUris() {
-		int currentHash = externalLibraryLocationURIs.hashCode();
+		int currentHash = externalLibraryLocations.hashCode();
 		boolean needUpdate = currentHash != externalLibraryLocationURIsHash;
 		if (needUpdate) {
 			externalLibraryLocationURIsHash = currentHash;
@@ -248,7 +248,6 @@ public class ExternalLibraryPreferenceModel {
 			ExternalLibrariesActivator.sortByShadowing(locations);
 			externalLibraryLocationURIs.clear();
 			externalLibraryLocationURIs.addAll(locations);
-			System.out.println("update");
 		}
 		return externalLibraryLocationURIs;
 	}
