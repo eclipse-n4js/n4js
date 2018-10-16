@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalProject;
@@ -197,10 +199,19 @@ public class ExternalProjectMappings {
 			Map<URI, Pair<N4JSExternalProject, ProjectDescription>> reducedProjectUriMappingTmp) {
 
 		Set<URI> uwsDeps = new HashSet<>();
-		Collection<URI> projectsInUserWS = userWorkspace.getAllProjectLocations();
-		computeNecessaryDependenciesRek(completeProjectNameMappingTmp, reducedProjectUriMappingTmp, projectsInUserWS,
-				uwsDeps);
-		uwsDeps.removeAll(projectsInUserWS);
+		// respect closed workspace projects by omitting them
+		Collection<URI> projectsInUserWSopen = new LinkedList<>();
+		for (URI projectInUserWS : userWorkspace.getAllProjectLocations()) {
+			String locStr = projectInUserWS.toPlatformString(true);
+			IProject iProject = ResourcesPlugin.getWorkspace().getRoot().getProject(locStr);
+			if (iProject != null && iProject.isAccessible()) {
+				projectsInUserWSopen.add(projectInUserWS);
+			}
+		}
+
+		computeNecessaryDependenciesRek(completeProjectNameMappingTmp, reducedProjectUriMappingTmp,
+				projectsInUserWSopen, uwsDeps);
+		uwsDeps.removeAll(projectsInUserWSopen);
 
 		Set<String> depNames = new HashSet<>();
 		for (URI uwsDep : uwsDeps) {
@@ -255,6 +266,14 @@ public class ExternalProjectMappings {
 
 		String projectName = pDep.getProjectName();
 		URI depLoc = userWorkspace.findProjectForName(projectName);
+		if (depLoc != null) {
+			// respect closed workspace projects by omitting them
+			String locStr = depLoc.toPlatformString(true);
+			IProject iProject = ResourcesPlugin.getWorkspace().getRoot().getProject(locStr);
+			if (iProject == null || !iProject.isAccessible()) {
+				depLoc = null;
+			}
+		}
 		if (depLoc == null) {
 			List<N4JSExternalProject> prjsOfName = projectNameMappingTmp.get(projectName);
 			N4JSExternalProject project = (prjsOfName == null || prjsOfName.isEmpty()) ? null : prjsOfName.get(0);
