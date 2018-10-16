@@ -103,6 +103,9 @@ public class URIUtils {
 	 * @return true iff the given {@link URI}s are equal
 	 */
 	static public boolean equals(org.eclipse.emf.common.util.URI uri1, org.eclipse.emf.common.util.URI uri2) {
+		if (uri1 == uri2) {
+			return true;
+		}
 		String string1 = toString(uri1);
 		String string2 = toString(uri2);
 		return string1.equals(string2);

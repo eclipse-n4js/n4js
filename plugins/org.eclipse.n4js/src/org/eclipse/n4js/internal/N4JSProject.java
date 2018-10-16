@@ -64,7 +64,14 @@ public class N4JSProject implements IN4JSProject {
 			return true;
 		}
 		if (obj instanceof N4JSProject) {
-			return URIUtils.equals(getLocation(), ((N4JSProject) obj).getLocation());
+			N4JSProject otherP = ((N4JSProject) obj);
+			if (external != otherP.external) {
+				return false;
+			}
+			if (external && otherP.external) {
+				return location == otherP.location;
+			}
+			return URIUtils.equals(location, otherP.location);
 		}
 		return false;
 	}
