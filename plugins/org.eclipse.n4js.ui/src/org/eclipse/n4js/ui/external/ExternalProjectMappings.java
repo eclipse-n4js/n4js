@@ -243,7 +243,6 @@ public class ExternalProjectMappings {
 		Set<URI> depUris = new HashSet<>();
 		for (URI loc : locs) {
 			ProjectDescription pd = getProjectDescription(projectUriMappingTmp, loc);
-			// TODO: test plainjs project in user workspace
 			if (pd != null && pd.getProjectType() != ProjectType.PLAINJS) {
 				for (ProjectDependency pDep : pd.getProjectDependencies()) {
 					URI depLoc = getProjectLocation(projectNameMappingTmp, pDep);
