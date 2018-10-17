@@ -179,7 +179,7 @@ public class LibraryManager {
 	 *            the monitor for the blocking install process.
 	 * @param forceReloadAll
 	 *            Specifies whether after the installation all external libraries in the external library workspace
-	 *            should be reloaded and rebuilt (cf. {@link #reloadAllExternalProjects(IProgressMonitor)}). If
+	 *            should be reloaded and rebuilt (cf. {@link #registerAllExternalProjects(IProgressMonitor)}). If
 	 *            {@code false}, only the set of packages that was created and/or updated by this install call will be
 	 *            scheduled for a reload.
 	 * @return a status representing the outcome of the install process.
@@ -413,11 +413,11 @@ public class LibraryManager {
 	 *            the monitor for the progress.
 	 * @return a status representing the outcome of the operation.
 	 */
-	public IStatus reloadAllExternalProjects(IProgressMonitor monitor) {
-		return runWithWorkspaceLock(() -> reloadAllExternalProjectsInternal(monitor));
+	public IStatus registerAllExternalProjects(IProgressMonitor monitor) {
+		return runWithWorkspaceLock(() -> registerAllExternalProjectsInternal(monitor));
 	}
 
-	private IStatus reloadAllExternalProjectsInternal(IProgressMonitor monitor) {
+	private IStatus registerAllExternalProjectsInternal(IProgressMonitor monitor) {
 		checkNotNull(monitor, "monitor");
 
 		MultiStatus refreshStatus = statusHelper.createMultiStatus("Refreshing npm type definitions.");

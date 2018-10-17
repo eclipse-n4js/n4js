@@ -429,7 +429,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 		if (userChoice.decisionReload || userChoice.decisionReinstall || userChoice.decisionPurgeNpm) {
 
 			try {
-				libManager.reloadAllExternalProjects(monitor);
+				libManager.registerAllExternalProjects(monitor);
 
 			} catch (Exception e) {
 				String msg = "Error when reloading external libraries.";

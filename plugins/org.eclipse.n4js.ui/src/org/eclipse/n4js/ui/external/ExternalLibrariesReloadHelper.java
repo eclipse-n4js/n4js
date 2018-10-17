@@ -99,7 +99,7 @@ public class ExternalLibrariesReloadHelper {
 
 		// Refresh the type definitions for the npm packages if required.
 		if (refreshNpmDefinitions) {
-			final IStatus refreshStatus = libManager.reloadAllExternalProjects(subMonitor.newChild(1));
+			final IStatus refreshStatus = libManager.registerAllExternalProjects(subMonitor.newChild(1));
 			if (!refreshStatus.isOK()) {
 				throw new InvocationTargetException(new CoreException(refreshStatus));
 			}

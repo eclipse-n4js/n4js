@@ -181,30 +181,35 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 		java.net.URI rootLoc = getRootLocationForResource(nestedLocation);
 
 		if (rootLoc != null) {
-			String rootLocStr = rootLoc.toString();
-			URI loc = URI.createURI(rootLocStr);
-			URI prefix = !loc.hasTrailingPathSeparator() ? loc.appendSegment("") : loc;
-			int oldSegmentCount = nestedLocation.segmentCount();
-			int newSegmentCount = prefix.segmentCount()
-					- 1 // -1 because of the trailing empty segment
-					+ 1; // +1 to include the project folder
-			if (newSegmentCount - 1 >= oldSegmentCount) {
-				return null; // can happen if the URI of an external library location is passed in
-			}
-			String projectNameCandidate = nestedLocation.segment(newSegmentCount - 1);
-			if (projectNameCandidate.startsWith("@")) {
-				// last segment is a folder representing an npm scope, not a project folder
-				// --> add 1 to include the actual project folder
-				++newSegmentCount;
-			}
-			URI uriCandidate = nestedLocation.trimSegments(oldSegmentCount - newSegmentCount)
-					.trimFragment();
+			URI uriCandidate = doOliversStuff(nestedLocation, rootLoc);
 			if (projectProvider.getProject(uriCandidate) != null) {
 				return uriCandidate;
 			}
 		}
 
 		return null;
+	}
+
+	// FIXME: @mor: please document and rename
+	private URI doOliversStuff(URI nestedLocation, java.net.URI rootLoc) {
+		String rootLocStr = rootLoc.toString();
+		URI loc = URI.createURI(rootLocStr);
+		URI prefix = !loc.hasTrailingPathSeparator() ? loc.appendSegment("") : loc;
+		int oldSegmentCount = nestedLocation.segmentCount();
+		int newSegmentCount = prefix.segmentCount()
+				- 1 // -1 because of the trailing empty segment
+				+ 1; // +1 to include the project folder
+		if (newSegmentCount - 1 >= oldSegmentCount) {
+			return null; // can happen if the URI of an external library location is passed in
+		}
+		String projectNameCandidate = nestedLocation.segment(newSegmentCount - 1);
+		if (projectNameCandidate.startsWith("@")) {
+			// last segment is a folder representing an npm scope, not a project folder
+			// --> add 1 to include the actual project folder
+			++newSegmentCount;
+		}
+		URI uriCandidate = nestedLocation.trimSegments(oldSegmentCount - newSegmentCount).trimFragment();
+		return uriCandidate;
 	}
 
 	@Override

@@ -58,7 +58,7 @@ public class ExternalLibrariesSetupHelper {
 
 		Injector n4jsInjector = N4JSActivator.getInstance().getInjector("org.eclipse.n4js.N4JS");
 		LibraryManager libMan = n4jsInjector.getInstance(LibraryManager.class);
-		libMan.reloadAllExternalProjects(new NullProgressMonitor());
+		libMan.registerAllExternalProjects(new NullProgressMonitor());
 
 		ProjectTestsUtils.waitForAutoBuild();
 	}
