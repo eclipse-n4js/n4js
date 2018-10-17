@@ -37,6 +37,7 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.N4JSGlobals
+import org.eclipse.n4js.external.ExternalIndexSynchronizer
 import org.eclipse.n4js.external.ShadowingInfoHelper
 import org.eclipse.n4js.json.JSON.JSONArray
 import org.eclipse.n4js.json.JSON.JSONDocument
@@ -87,6 +88,7 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 import static org.eclipse.n4js.validation.validators.packagejson.ProjectTypePredicate.*
 
 import static extension com.google.common.base.Strings.nullToEmpty
+import org.eclipse.n4js.external.ExternalLibraryWorkspace
 
 /**
  * A JSON validator extension that validates {@code package.json} resources in the context
@@ -97,7 +99,7 @@ import static extension com.google.common.base.Strings.nullToEmpty
  * such as the resolution of referenced projects.
  * 
  * For lower-level, structural and local validations with regard to {@code package.json} 
- * files , see {@link PackageJsonValidatorExtension}. 
+ * files , see {@link PackageJsonValidatorExtension}.
  */
 @Singleton
 public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidatorExtension {
@@ -153,6 +155,12 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 
 	@Inject
 	protected ShadowingInfoHelper shadowingInfoHelper;
+
+	@Inject
+	protected ExternalIndexSynchronizer indexSynchronizer;
+
+	@Inject
+	protected ExternalLibraryWorkspace extWS;
 
 	@Inject
 	protected SemverHelper semverHelper;
@@ -1126,7 +1134,6 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 
 		// type cannot be resolved from index, hence project does not exist in workspace.
 		if (null === project || null === project.projectType) {
-			// in GH-821: remove this condition
 			if (!currentProject.isExternal) {
 				val msg = getMessageForNON_EXISTING_PROJECT(id);
 				val packageVersion = if (ref.npmVersion === null) "" else ref.npmVersion.toString;
@@ -1136,6 +1143,12 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		} else {
 			// keep track of actually existing projects
 			existentIds.put(id, ref);
+		}
+
+		if (!currentProject.isExternal && project.isExternal && !indexSynchronizer.isInIndex(project.projectDescriptionLocation.orNull)) {
+			val msg = getMessageForNON_REGISTERED_PROJECT(id);
+			addIssue(msg, ref.astRepresentation, null, NON_REGISTERED_PROJECT, id);
+			return;
 		}
 
 		// create only a single validation issue for a particular project reference.
@@ -1246,7 +1259,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			addIssue(msg, ref.astRepresentation, NO_MATCHING_VERSION_SHADOWING);
 		} else {
 			val msg = getMessageForNO_MATCHING_VERSION(id, desiredStr, availableStr);
-			addIssue(msg, ref.astRepresentation, NO_MATCHING_VERSION);
+			addIssue(msg, ref.astRepresentation, null, NO_MATCHING_VERSION, id, desiredVersion.toString);
 		}
 	}
 
@@ -1329,9 +1342,18 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	 */
 	private def Map<String, IN4JSProject> getAllProjectsByName() {
 		return contextMemoize(ALL_EXISTING_PROJECT_CACHE) [
-			val Map<String, IN4JSProject> res = new HashMap
-			findAllProjects.forEach[p | res.put(p.projectName, p)]
-			return res
+			val Map<String, IN4JSProject> res = new HashMap;
+			findAllProjects.forEach[p | res.put(p.projectName, p)];
+
+			// also add those unnecessary projects that are not shadowed
+			for (org.eclipse.xtext.util.Pair<URI, ProjectDescription> pair: extWS.projectsIncludingUnnecessary) {
+				val location = pair.first;
+				val project = findProject(location).orNull;
+				if (!shadowingInfoHelper.isShadowedProject(project) && !res.containsKey(project.projectName)) {
+					res.put(project.projectName, project);
+				}
+			}
+			return res;
 		]
 	}
 

@@ -11,7 +11,9 @@
 package org.eclipse.n4js.ui.internal;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
@@ -77,7 +79,9 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 			return URI.createPlatformResourceURI(nestedLocation.segment(1), true);
 		}
 		// this might happen if the URI was located from non-platform information, e.g. in case
-		// of a source file location found in a soure map
+		// of a source file location found in a source map
+		// FIXME: This loop and the call 'toFile()' are very expensive
+		// FIXME: since this method is called for a lot of external files
 		if (nestedLocation.isFile()) {
 			String nested = nestedLocation.toString();
 			for (IProject proj : workspace.getProjects()) {
@@ -86,6 +90,21 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 				if (nested.startsWith(ps)) {
 					return projURI;
 				}
+			}
+		}
+		return null;
+	}
+
+	/** @return the {@link URI} for a project with the given n4js project name */
+	public URI findProjectForName(String projectName) {
+		if (projectName == null) {
+			return null;
+		}
+		for (IProject prj : workspace.getProjects()) {
+			URI uri = URIUtils.convert(prj);
+			String n4jsProjectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(uri);
+			if (projectName.equals(n4jsProjectName)) {
+				return uri;
 			}
 		}
 		return null;
@@ -101,6 +120,16 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 				location);
 
 		return existing;
+	}
+
+	@Override
+	public Collection<URI> getAllProjectLocations() {
+		Collection<URI> prjLocations = new LinkedList<>();
+		for (IProject prj : workspace.getProjects()) {
+			URI uri = URIUtils.convert(prj);
+			prjLocations.add(uri);
+		}
+		return prjLocations;
 	}
 
 	/** Loads the project description and notifies the listener */

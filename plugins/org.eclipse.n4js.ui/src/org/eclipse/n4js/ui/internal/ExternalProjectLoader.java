@@ -17,17 +17,15 @@ import java.io.File;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.external.ExternalProject;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
 import org.eclipse.n4js.internal.N4JSBrokenProjectException;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.utils.resources.ExternalProject;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.Tuples;
 
-import com.google.common.base.Optional;
-import com.google.common.cache.CacheLoader;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -36,10 +34,8 @@ import com.google.inject.Singleton;
  * loader ensures that the {@link ProjectDescription project description} (N4JS manifest) exists for the project.
  */
 @Singleton
-public class ExternalProjectCacheLoader
-		extends CacheLoader<URI, Optional<Pair<N4JSExternalProject, ProjectDescription>>> {
-
-	private static final Logger LOGGER = Logger.getLogger(ExternalProjectCacheLoader.class);
+public class ExternalProjectLoader {
+	private static final Logger LOGGER = Logger.getLogger(ExternalProjectLoader.class);
 
 	@Inject
 	private N4JSEclipseModel model;
@@ -47,8 +43,8 @@ public class ExternalProjectCacheLoader
 	@Inject
 	private FileBasedExternalPackageManager packageManager;
 
-	@Override
-	public Optional<Pair<N4JSExternalProject, ProjectDescription>> load(final URI rootLocation) throws Exception {
+	/** @return load project and description from given URI. Returns null if not available. */
+	public Pair<N4JSExternalProject, ProjectDescription> load(final URI rootLocation) {
 		try {
 			ProjectDescription projectDescription = packageManager.loadProjectDescriptionFromProjectRoot(rootLocation);
 
@@ -58,12 +54,12 @@ public class ExternalProjectCacheLoader
 				IN4JSProject pp = new N4JSEclipseProject(p, rootLocation, model);
 				N4JSExternalProject ppp = new N4JSExternalProject(projectRoot, pp);
 
-				return Optional.of(Tuples.create(ppp, projectDescription));
+				return Tuples.create(ppp, projectDescription);
 			}
 		} catch (N4JSBrokenProjectException e) {
 			LOGGER.error("Failed to obtain project description for external library.");
 		}
-		return Optional.absent();
+		return null;
 	}
 
 }

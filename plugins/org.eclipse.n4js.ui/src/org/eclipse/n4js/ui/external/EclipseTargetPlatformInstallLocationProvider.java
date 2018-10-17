@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.external;
+package org.eclipse.n4js.ui.external;
 
 import static com.google.common.base.Preconditions.checkState;
 
@@ -17,6 +17,7 @@ import java.net.URI;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
 
 import com.google.inject.Singleton;

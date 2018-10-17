@@ -59,6 +59,9 @@ public class NpmCLI {
 	private TargetPlatformInstallLocationProvider locationProvider;
 
 	@Inject
+	private ExternalLibraryWorkspace externalLibraryWorkspace;
+
+	@Inject
 	private StatusHelper statusHelper;
 
 	@Inject
@@ -194,11 +197,15 @@ public class NpmCLI {
 		Collection<LibraryChange> actualChanges = new LinkedHashSet<>();
 		File installPath = new File(locationProvider.getTargetPlatformInstallURI());
 
+		java.net.URI nodeModulesURI = locationProvider.getNodeModulesURI();
 		// for uninstallation, we invoke npm only once for all packages
 		final List<String> packageNames = Lists.newArrayList();
 		for (LibraryChange reqChg : requestedChanges) {
 			if (reqChg.type == LibraryChangeType.Uninstall) {
-				packageNames.add(reqChg.name);
+				java.net.URI rootLocation = externalLibraryWorkspace.getRootLocationForResource(reqChg.location);
+				if (nodeModulesURI.equals(rootLocation)) {
+					packageNames.add(reqChg.name);
+				}
 			}
 		}
 
@@ -215,8 +222,7 @@ public class NpmCLI {
 					Path completePath = basePath.resolve(reqChg.name);
 					String actualVersion = getActualVersion(completePath);
 					if (actualVersion.isEmpty()) {
-						URI location = URI.createFileURI(completePath.toString());
-						LibraryChange actualChange = new LibraryChange(LibraryChangeType.Removed, location,
+						LibraryChange actualChange = new LibraryChange(LibraryChangeType.Removed, reqChg.location,
 								reqChg.name, reqChg.version);
 						actualChanges.add(actualChange);
 					}

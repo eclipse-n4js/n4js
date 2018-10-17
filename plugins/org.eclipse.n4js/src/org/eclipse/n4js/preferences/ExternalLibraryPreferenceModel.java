@@ -11,7 +11,6 @@
 package org.eclipse.n4js.preferences;
 
 import static com.google.common.base.Preconditions.checkState;
-import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.emptyList;
 import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.EXTERNAL_LIBRARIES_SUPPLIER;
@@ -19,10 +18,13 @@ import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.req
 
 import java.io.File;
 import java.net.URI;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
 import org.eclipse.n4js.json.JSON.JSONArray;
 import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONObject;
@@ -42,6 +44,8 @@ public class ExternalLibraryPreferenceModel {
 	private static final String PROP_EXTERNAL_LIBRARY_LOCATIONS = "externalLibraryLocations";
 
 	private final List<String> externalLibraryLocations = newArrayList();
+	private final List<URI> externalLibraryLocationURIs = newArrayList();
+	private long externalLibraryLocationURIsHash = 0;
 
 	/**
 	 * Creates and returns a new external library preference model that has initially one single element pointing to the
@@ -98,7 +102,9 @@ public class ExternalLibraryPreferenceModel {
 		JSONValue extLibLocsValue = JSONModelUtils.getProperty(document, PROP_EXTERNAL_LIBRARY_LOCATIONS).orElse(null);
 		List<String> extLibLocs = JSONModelUtils.asStringsInArrayOrEmpty(extLibLocsValue);
 		ExternalLibraryPreferenceModel result = new ExternalLibraryPreferenceModel();
-		result.externalLibraryLocations.addAll(extLibLocs);
+		synchronized (result) {
+			result.externalLibraryLocations.addAll(extLibLocs);
+		}
 		return result;
 	}
 
@@ -145,7 +151,7 @@ public class ExternalLibraryPreferenceModel {
 	 * @return a list of external library folder locations.
 	 */
 	public List<String> getExternalLibraryLocations() {
-		return externalLibraryLocations;
+		return Collections.unmodifiableList(externalLibraryLocations);
 	}
 
 	/**
@@ -158,7 +164,7 @@ public class ExternalLibraryPreferenceModel {
 	 * @return {@code true} if the addition was successful, hence the state of the current instance has changed.
 	 *         Otherwise {@code false}.
 	 */
-	public boolean add(final URI location) {
+	synchronized public boolean add(final URI location) {
 		if (null == location) {
 			return false;
 		}
@@ -180,7 +186,7 @@ public class ExternalLibraryPreferenceModel {
 	 *            the location to remove.
 	 * @return {@code true} if the location was removed, otherwise {@code false}.
 	 */
-	public boolean remove(final URI location) {
+	synchronized public boolean remove(final URI location) {
 		if (null == location) {
 			return false;
 		}
@@ -196,7 +202,7 @@ public class ExternalLibraryPreferenceModel {
 	 * @param location
 	 *            to move up.
 	 */
-	public void moveUp(final URI location) {
+	synchronized public void moveUp(final URI location) {
 		if (null != location) {
 			final String path = new File(checkUri(location)).getAbsolutePath();
 			int indexOf = externalLibraryLocations.indexOf(path);
@@ -214,7 +220,7 @@ public class ExternalLibraryPreferenceModel {
 	 * @param location
 	 *            to move down.
 	 */
-	public void moveDown(final URI location) {
+	synchronized public void moveDown(final URI location) {
 		if (null != location) {
 			final String path = new File(checkUri(location)).getAbsolutePath();
 			int indexOf = externalLibraryLocations.indexOf(path);
@@ -230,8 +236,20 @@ public class ExternalLibraryPreferenceModel {
 	 *
 	 * @return a list of external library folder location URIs.
 	 */
-	public List<URI> getExternalLibraryLocationsAsUris() {
-		return from(externalLibraryLocations).transform(path -> new File(path).toURI()).toList();
+	synchronized public List<URI> getExternalLibraryLocationsAsUris() {
+		int currentHash = externalLibraryLocations.hashCode();
+		boolean needUpdate = currentHash != externalLibraryLocationURIsHash;
+		if (needUpdate) {
+			externalLibraryLocationURIsHash = currentHash;
+			List<URI> locations = new LinkedList<>();
+			for (String pathStr : externalLibraryLocations) {
+				locations.add(new File(pathStr).toURI());
+			}
+			locations = ExternalLibrariesActivator.sortByShadowing(locations);
+			externalLibraryLocationURIs.clear();
+			externalLibraryLocationURIs.addAll(locations);
+		}
+		return externalLibraryLocationURIs;
 	}
 
 	/**
@@ -239,7 +257,7 @@ public class ExternalLibraryPreferenceModel {
 	 *
 	 * @return the JSON string representation of the current instance.
 	 */
-	public String toJsonString() {
+	synchronized public String toJsonString() {
 		final JSONArray extLibLocsValue = JSONModelUtils.createStringArray(this.externalLibraryLocations);
 		final JSONObject obj = JSONModelUtils.createObject(
 				ImmutableMap.of(PROP_EXTERNAL_LIBRARY_LOCATIONS, extLibLocsValue));
@@ -256,7 +274,7 @@ public class ExternalLibraryPreferenceModel {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	synchronized public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
 		}

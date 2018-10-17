@@ -14,6 +14,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.util.Strings;
 
+import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 
 /**
@@ -59,11 +60,20 @@ public class LibraryChange {
 			return false;
 		}
 		LibraryChange lc = (LibraryChange) o;
+
+		if (version != null && lc.version != null && version.equals(lc.version)) {
+			return true;
+		} else if (version == null || lc.version == null) {
+			return false;
+		}
 		return URIUtils.equals(location, lc.location);
 	}
 
 	@Override
 	public int hashCode() {
+		if (version != null) {
+			return Objects.hashCode(URIUtils.hashCode(location), version);
+		}
 		return URIUtils.hashCode(location);
 	}
 

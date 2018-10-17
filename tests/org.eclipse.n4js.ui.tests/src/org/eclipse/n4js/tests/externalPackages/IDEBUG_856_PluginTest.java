@@ -86,14 +86,14 @@ public class IDEBUG_856_PluginTest extends AbstractBuilderParticipantTest {
 	@Test
 	public void testMultipleExternalRefresh() throws Exception {
 		// initial load to trigger cloning
-		libManager.reloadAllExternalProjects(new NullProgressMonitor());
+		libManager.registerAllExternalProjects(new NullProgressMonitor());
 		waitForAutoBuild();
 		LOG.info("------------------------------------------------------------");
 		for (int i = 1; i <= ITERATION_COUNT; i++) {
 			LOG.info("Iteration " + i + " of " + ITERATION_COUNT + ".");
-			libManager.reloadAllExternalProjects(new NullProgressMonitor());
+			libManager.registerAllExternalProjects(new NullProgressMonitor());
 			// schedule second reload to see if they deadlock
-			libManager.reloadAllExternalProjects(new NullProgressMonitor());
+			libManager.registerAllExternalProjects(new NullProgressMonitor());
 			LOG.info("waiting for build.");
 			waitForAutoBuild();
 		}

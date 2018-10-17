@@ -103,6 +103,9 @@ public class URIUtils {
 	 * @return true iff the given {@link URI}s are equal
 	 */
 	static public boolean equals(org.eclipse.emf.common.util.URI uri1, org.eclipse.emf.common.util.URI uri2) {
+		if (uri1 == uri2) {
+			return true;
+		}
 		String string1 = toString(uri1);
 		String string2 = toString(uri2);
 		return string1.equals(string2);
@@ -123,7 +126,7 @@ public class URIUtils {
 	 * @return true iff the given {@link URI}s are equal
 	 */
 	static public String toString(org.eclipse.emf.common.util.URI uri) {
-		String result = uri.toString();
+		String result = null;
 
 		if (uri.isFile()) {
 			String fileString = uri.toFileString();
@@ -131,12 +134,17 @@ public class URIUtils {
 			Path path = file.toPath();
 			try {
 				String newResult = path.toRealPath().toFile().toURI().toString();
-				if (newResult.endsWith("/"))
+				if (newResult.endsWith("/")) {
 					newResult = newResult.substring(0, newResult.length() - 1);
+				}
 				result = newResult;
 			} catch (IOException e) {
 				// conversion unsuccessful, return original
 			}
+		}
+
+		if (result == null) {
+			result = uri.toString();
 		}
 
 		return result;

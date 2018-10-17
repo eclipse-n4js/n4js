@@ -87,7 +87,7 @@ public interface TargetPlatformInstallLocationProvider {
 				String message = "Target platform install location was not specified.";
 				NullPointerException exception = new NullPointerException(message);
 				LOGGER.error(message, exception);
-				exception.printStackTrace(); // This if for the HLC as it swallows the actual stack trace.
+				exception.printStackTrace(); // This is for the HLC as it swallows the actual stack trace.
 				throw exception;
 			}
 

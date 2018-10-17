@@ -44,10 +44,10 @@ public class MaintenanceActionsButtonListener extends SelectionAdapter {
 	final private BiFunction<MaintenanceActionsChoice, IProgressMonitor, MultiStatus> runActions;
 	final private StatusHelper statusHelper;
 
-	static final String ACTION_NPM_RELOAD = "Reload npm libraries from disk.";
+	static final String ACTION_NPM_RELOAD = "Re-register all npms (cleans and builds npms from disk).";
 	static final String ACTION_NPM_REINSTALL = "Reinstall npm libraries.";
 	static final String ACTION_NPM_CACHE_CLEAN = "Clean npm cache. (npm cache clean --force)";
-	static final String ACTION_NPM_PACKAGES_DELETE = "Delete npm and type definition packages (deletes folders).";
+	static final String ACTION_NPM_PACKAGES_DELETE = "Delete all npms (deletes node_modules folder).";
 
 	MaintenanceActionsButtonListener(BiFunction<MaintenanceActionsChoice, IProgressMonitor, MultiStatus> runActions,
 			StatusHelper statusHelper) {

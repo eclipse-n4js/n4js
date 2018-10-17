@@ -67,6 +67,7 @@ import org.eclipse.n4js.hlc.base.running.HeadlessRunner;
 import org.eclipse.n4js.hlc.base.testing.HeadlessTester;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.dependencies.ProjectDependenciesHelper;
 import org.eclipse.n4js.runner.SystemLoaderInfo;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.smith.CollectedDataAccess;
@@ -299,7 +300,7 @@ public class N4jscBase implements IApplication {
 	private HeadlessExtensionRegistrationHelper headlessExtensionRegistrationHelper;
 
 	@Inject
-	private DependenciesHelper dependencyHelper;
+	private ProjectDependenciesHelper dependencyHelper;
 
 	@Inject
 	private HeadlessHelper headlessHelper;
@@ -562,8 +563,10 @@ public class N4jscBase implements IApplication {
 				if (installMissingDependencies) {
 					try (Measurement installMissingDepMeasurement = N4JSDataCollectors.dcHeadlessInstallMissingDeps
 							.getMeasurement("Install missing dependencies")) {
+
 						Map<String, NPMVersionRequirement> dependencies = dependencyHelper
-								.discoverMissingDependencies(buildSet.getAllProjects());
+								.calculateDependenciesOfProjects(buildSet.getAllProjects());
+
 						if (verbose) {
 							System.out.println("installing missing dependencies:");
 							dependencies.forEach((name, version) -> {

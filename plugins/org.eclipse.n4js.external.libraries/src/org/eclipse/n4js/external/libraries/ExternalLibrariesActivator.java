@@ -27,6 +27,9 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -251,6 +254,40 @@ public class ExternalLibrariesActivator implements BundleActivator {
 			}
 		}
 		return false;
+	}
+
+	/** Sorts given set of locations and returns sorted list */
+	public static List<java.net.URI> sortByShadowing(Collection<java.net.URI> locations) {
+		Map<String, java.net.URI> knownLocations = new HashMap<>();
+		List<java.net.URI> unknownLocations = new LinkedList<>();
+
+		for (java.net.URI location : locations) {
+			String locStr = location.toString();
+			locStr = locStr.endsWith("/") ? locStr.substring(0, locStr.length() - 1) : locStr;
+
+			boolean locationFound = false;
+			for (String knownLocation : CATEGORY_SHADOWING_ORDER) {
+				if (locStr.endsWith(knownLocation)) {
+					knownLocations.put(knownLocation, location);
+					locationFound = true;
+				}
+			}
+
+			if (!locationFound) {
+				unknownLocations.add(location);
+			}
+		}
+
+		List<java.net.URI> sortedLocations = new LinkedList<>();
+		for (String knownLocation : CATEGORY_SHADOWING_ORDER) {
+			java.net.URI location = knownLocations.get(knownLocation);
+			if (location != null) {
+				sortedLocations.add(location);
+			}
+		}
+		sortedLocations.addAll(unknownLocations);
+
+		return sortedLocations;
 	}
 
 	/**

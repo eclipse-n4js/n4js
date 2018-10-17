@@ -11,6 +11,7 @@
 package org.eclipse.n4js.internal;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.Iterator;
 
 import org.eclipse.emf.common.util.URI;
@@ -63,4 +64,9 @@ public abstract class InternalN4JSWorkspace {
 	 * Returns the location of the project that contains the given nested location.
 	 */
 	public abstract URI findProjectWith(URI nestedLocation);
+
+	/**
+	 * Returns the location of the project that contains the given nested location.
+	 */
+	public abstract Collection<URI> getAllProjectLocations();
 }

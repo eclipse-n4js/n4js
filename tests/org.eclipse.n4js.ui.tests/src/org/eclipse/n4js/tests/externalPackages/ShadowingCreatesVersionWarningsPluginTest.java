@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.tests.externalPackages;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -17,10 +18,16 @@ import java.io.File;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.external.ShadowingInfoHelper;
+import org.eclipse.n4js.internal.N4JSModel;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
+import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
+import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,6 +44,18 @@ public class ShadowingCreatesVersionWarningsPluginTest extends AbstractBuilderPa
 
 	@Inject
 	private ShippedCodeInitializeTestHelper shippedCodeInitializeTestHelper;
+
+	@Inject
+	private EclipseExternalLibraryWorkspace extWS;
+
+	@Inject
+	private EclipseBasedN4JSWorkspace userWS;
+
+	@Inject
+	private N4JSModel model;
+
+	@Inject
+	private ShadowingInfoHelper shadowingInfoHelper;
 
 	/**
 	 * Updates the known external library locations with the {@code node_modules} folder.
@@ -75,6 +94,19 @@ public class ShadowingCreatesVersionWarningsPluginTest extends AbstractBuilderPa
 		assertTrue("Cannot access project: " + prjN4JSLang, prjN4JSLang.isAccessible());
 
 		waitForAutoBuild();
+
+		IN4JSProject n4jsLangShipped = extWS.getProject(PROJECT_N4JSLANG).getIProject();
+		assertFalse(shadowingInfoHelper.isShadowingProject(n4jsLangShipped));
+		assertTrue(shadowingInfoHelper.isShadowedProject(n4jsLangShipped));
+		assertTrue(shadowingInfoHelper.findShadowedProjects(n4jsLangShipped).isEmpty());
+		assertTrue(shadowingInfoHelper.findShadowingProjects(n4jsLangShipped).size() == 1);
+
+		URI userN4LangUri = userWS.findProjectForName(PROJECT_N4JSLANG);
+		IN4JSProject n4jsLangUserWS = model.getN4JSProject(userN4LangUri);
+		assertTrue(shadowingInfoHelper.isShadowingProject(n4jsLangUserWS));
+		assertFalse(shadowingInfoHelper.isShadowedProject(n4jsLangUserWS));
+		assertTrue(shadowingInfoHelper.findShadowedProjects(n4jsLangUserWS).size() == 1);
+		assertTrue(shadowingInfoHelper.findShadowingProjects(n4jsLangUserWS).isEmpty());
 
 		IFile prjDescrP1 = prjP1.getFile(getResourceName(N4JSGlobals.PACKAGE_JSON));
 		IFile prjDescrN4JSLang = prjN4JSLang.getFile(getResourceName(N4JSGlobals.PACKAGE_JSON));

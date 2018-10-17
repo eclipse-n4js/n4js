@@ -19,24 +19,21 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalIndexSynchronizer;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace.RegisterResult;
+import org.eclipse.n4js.external.ExternalProject;
 import org.eclipse.n4js.external.LibraryChange;
+import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.external.NpmLogger;
-import org.eclipse.n4js.generator.IWorkspaceMarkerSupport;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.URIUtils;
-import org.eclipse.n4js.utils.resources.ExternalProject;
-import org.eclipse.n4js.validation.IssueCodes;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -60,9 +57,6 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 	@Inject
 	private NpmLogger logger;
 
-	@Inject
-	private IWorkspaceMarkerSupport workspaceMarkerSupport;
-
 	/**
 	 * Call this method to synchronize the information in the Xtext index with all external projects in the external
 	 * library folders.
@@ -78,23 +72,17 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 	 */
 	@Override
 	public void synchronizeNpms(IProgressMonitor monitor, Collection<LibraryChange> forcedChangeSet) {
-		SubMonitor subMonitor = convert(monitor, 1);
+		SubMonitor subMonitor = convert(monitor, 11);
 
 		try {
-			Collection<LibraryChange> changeSet = identifyChangeSet(forcedChangeSet);
-			RegisterResult cleanResults = cleanOutdatedIndex(subMonitor, changeSet);
+			Collection<LibraryChange> oldChangeSet = identifyChangeSet(forcedChangeSet, false);
+			RegisterResult cleanResults = cleanChangesIndex(subMonitor.split(1), oldChangeSet);
 
-			// Updates available projects in: IN4JSCore, ExternalLibraryWorkspace, N4JSModel, ExternalProjectProvider
-			externalLibraryWorkspace.updateState();
+			Collection<LibraryChange> newChangesSet = identifyChangeSet(forcedChangeSet, true);
+			buildChangesIndex(subMonitor.split(9), newChangesSet, cleanResults);
 
-			synchronizeIndex(subMonitor, changeSet, cleanResults);
-
-			// clean error markers 'out-of-sync'
-			cleanOutOfSyncMarkers();
-
-		} catch (Throwable t) {
-			checkAndSetOutOfSyncMarkers();
-			throw t;
+		} catch (Exception e) {
+			checkAndClearIndex(subMonitor.split(1));
 		} finally {
 			subMonitor.done();
 		}
@@ -105,7 +93,7 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 	 * {@link ExternalLibraryWorkspace#updateState()} adapted these changes. Otherwise the clean operation is not
 	 * possible anymore, since the projects to clean will be removed from the {@link ExternalLibraryWorkspace} instance.
 	 */
-	private RegisterResult cleanOutdatedIndex(IProgressMonitor monitor, Collection<LibraryChange> changeSet) {
+	private RegisterResult cleanChangesIndex(IProgressMonitor monitor, Collection<LibraryChange> changeSet) {
 		try {
 			monitor.setTaskName("Cleaning new projects...");
 			Set<URI> toBeRemovedProjects = getToBeRemovedProjects(changeSet);
@@ -123,8 +111,10 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 	 * {@code node_modules} folder. Due to this adaption, new folders are already represented as external projects and
 	 * can be build and added to the index.
 	 */
-	private void synchronizeIndex(IProgressMonitor monitor, Collection<LibraryChange> changeSet,
+	private void buildChangesIndex(IProgressMonitor monitor, Collection<LibraryChange> changeSet,
 			RegisterResult cleanResults) {
+
+		SubMonitor subMonitor = convert(monitor, 10);
 		try {
 
 			Set<URI> toBeUpdated = getToBeBuildProjects(changeSet);
@@ -135,17 +125,17 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 				}
 			}
 
-			monitor.setTaskName("Building new projects...");
-			RegisterResult buildResult = externalLibraryWorkspace.registerProjects(monitor, toBeUpdated);
+			subMonitor.setTaskName("Building new projects...");
+			RegisterResult buildResult = externalLibraryWorkspace.registerProjects(subMonitor.split(9), toBeUpdated);
 			printRegisterResults(buildResult, "built");
 
 			Set<URI> toBeScheduled = new HashSet<>();
 			toBeScheduled.addAll(cleanResults.affectedWorkspaceProjects);
 			toBeScheduled.addAll(buildResult.affectedWorkspaceProjects);
-			externalLibraryWorkspace.scheduleWorkspaceProjects(monitor, toBeScheduled);
+			externalLibraryWorkspace.scheduleWorkspaceProjects(subMonitor.split(1), toBeScheduled);
 
 		} finally {
-			monitor.done();
+			subMonitor.done();
 		}
 	}
 
@@ -155,40 +145,14 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 	@Override
 	public void reindexAllExternalProjects(IProgressMonitor monitor) {
 		try {
-			SubMonitor subMonitor = SubMonitor.convert(monitor, 10);
+			SubMonitor subMonitor = SubMonitor.convert(monitor, 11);
 
 			monitor.setTaskName("Cleaning all projects...");
-			RegisterResult cleanResult = externalLibraryWorkspace.deregisterAllProjects(subMonitor.newChild(1));
+			externalLibraryWorkspace.deregisterAllProjects(subMonitor.split(1));
 			externalErrorMarkerManager.clearAllMarkers();
-			printRegisterResults(cleanResult, "clean");
-			subMonitor.worked(1);
 
-			// Updates available projects in: IN4JSCore, ExternalLibraryWorkspace, N4JSModel, ExternalProjectProvider
-			externalLibraryWorkspace.updateState();
+			synchronizeNpms(subMonitor.split(10));
 
-			Set<URI> toBeReindexed = new HashSet<>();
-			for (N4JSExternalProject n4ExtProject : externalLibraryWorkspace.getProjects()) {
-				URI uri = URIUtils.toFileUri(n4ExtProject.getLocationURI());
-				toBeReindexed.add(uri);
-			}
-
-			subMonitor.setTaskName("Building new projects...");
-			RegisterResult buildResult = externalLibraryWorkspace.registerProjects(subMonitor.newChild(9),
-					toBeReindexed);
-			printRegisterResults(buildResult, "built");
-			subMonitor.worked(1);
-
-			Set<URI> toBeScheduled = new HashSet<>();
-			toBeScheduled.addAll(cleanResult.affectedWorkspaceProjects);
-			toBeScheduled.addAll(buildResult.affectedWorkspaceProjects);
-			externalLibraryWorkspace.scheduleWorkspaceProjects(subMonitor, toBeScheduled);
-
-			// clean error markers 'out-of-sync'
-			cleanOutOfSyncMarkers();
-
-		} catch (Throwable t) {
-			checkAndSetOutOfSyncMarkers();
-			throw t;
 		} finally {
 			monitor.done();
 		}
@@ -200,17 +164,20 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 
 			switch (change.type) {
 			case Added:
-				ExternalProject project = externalLibraryWorkspace.getProject(change.name);
+				N4JSExternalProject project = externalLibraryWorkspace.getProject(change.name);
 				if (project != null) {
-					// The added project will shadow an existing project.
+					// The added project might shadow an existing project.
 					// Hence, the existing project must be cleaned.
-					toBeDeleted.add(change.location);
+					toBeDeleted.add(project.getIProject().getLocation());
 				}
 				break;
 
 			case Updated:
 			case Removed:
-				toBeDeleted.add(change.location);
+				project = externalLibraryWorkspace.getProject(change.location);
+				if (project != null) {
+					toBeDeleted.add(change.location);
+				}
 				break;
 
 			case Install:
@@ -264,6 +231,15 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 			logger.logInfo("External libraries " + jobName + ": " + String.join(", ", prjNames));
 		}
 
+		if (!rr.wipedProjects.isEmpty()) {
+			SortedSet<String> prjNames = new TreeSet<>();
+			for (URI location : rr.wipedProjects) {
+				String projectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location);
+				prjNames.add(projectName);
+			}
+			logger.logInfo("Projects deregistered: " + String.join(", ", prjNames));
+		}
+
 		if (!rr.affectedWorkspaceProjects.isEmpty()) {
 			SortedSet<String> prjNames = getProjectNamesFromLocations(rr.affectedWorkspaceProjects);
 			logger.logInfo("Workspace projects affected: " + String.join(", ", prjNames));
@@ -280,43 +256,22 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 	}
 
 	/** Sets error markers to every N4JS project iff the folder node_modules and the N4JS index are out of sync. */
-	public void checkAndSetOutOfSyncMarkers() {
-		Collection<LibraryChange> changeSet = identifyChangeSet(Collections.emptyList());
-		setOutOfSyncMarkers(changeSet);
+	public void checkAndClearIndex(IProgressMonitor monitor) {
+		Collection<LibraryChange> changeSet = identifyChangeSet(Collections.emptyList(), true);
+		cleanRemovedProjectsFromIndex(monitor, changeSet);
 	}
 
-	private void cleanOutOfSyncMarkers() {
-		setOutOfSyncMarkers(Collections.emptySet());
-	}
-
-	private void setOutOfSyncMarkers(Collection<LibraryChange> changeSet) {
-		String code = IssueCodes.NODE_MODULES_OUT_OF_SYNC;
-		boolean setMarkers = !changeSet.isEmpty();
-		String changeMsg = "";
-		for (java.util.Iterator<LibraryChange> it = changeSet.iterator(); it.hasNext();) {
-			changeMsg += it.next();
-			if (it.hasNext()) {
-				changeMsg += ", ";
+	private void cleanRemovedProjectsFromIndex(IProgressMonitor monitor, Collection<LibraryChange> changeSet) {
+		monitor.setTaskName("Deregister removed projects...");
+		Set<URI> cleanProjects = new HashSet<>();
+		for (LibraryChange libChange : changeSet) {
+			if (libChange.type == LibraryChangeType.Removed) {
+				cleanProjects.add(libChange.location);
 			}
 		}
 
-		for (IN4JSProject prj : core.findAllProjects()) {
-			if (!prj.isExternal() && prj.exists() && prj instanceof N4JSEclipseProject) {
-				N4JSEclipseProject n4EclPrj = (N4JSEclipseProject) prj;
-				IProject iProject = n4EclPrj.getProject();
-				IResource markerResource = iProject;
-
-				// delete markers
-				workspaceMarkerSupport.deleteMarkers(markerResource, code);
-
-				// add markers
-				if (setMarkers && !iProject.isHidden() && iProject.isAccessible()) {
-					String msg = IssueCodes.getMessageForNODE_MODULES_OUT_OF_SYNC(changeMsg);
-					String uriKey = markerResource.getLocation().toString();
-					workspaceMarkerSupport.createError(markerResource, code, "N4JS Index", msg, uriKey, true);
-				}
-			}
-		}
+		RegisterResult cleanResult = externalLibraryWorkspace.deregisterProjects(monitor, cleanProjects);
+		printRegisterResults(cleanResult, "deregistered");
 	}
 
 }

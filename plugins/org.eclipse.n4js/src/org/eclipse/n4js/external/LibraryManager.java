@@ -21,13 +21,12 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -44,6 +43,7 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.n4js.binaries.IllegalBinaryStateException;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.SemverMatcher;
 import org.eclipse.n4js.semver.SemverUtils;
@@ -52,10 +52,11 @@ import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.semver.model.SemverSerializer;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.utils.N4JSDataCollectors;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.StatusHelper;
-import org.eclipse.n4js.utils.resources.ExternalProject;
+import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.Strings;
-import org.eclipse.xtext.xbase.lib.Pair;
+import org.eclipse.xtext.util.Tuples;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
@@ -92,13 +93,6 @@ public class LibraryManager {
 
 	@Inject
 	private SemverHelper semverHelper;
-
-	/**
-	 * see {@link ExternalIndexSynchronizer#isProjectsSynchronized()}.
-	 */
-	public boolean isProjectsSynchronized() {
-		return indexSynchronizer.isProjectsSynchronized();
-	}
 
 	/**
 	 * Call this method to synchronize the information in the Xtext index with all external projects in the external
@@ -185,7 +179,7 @@ public class LibraryManager {
 	 *            the monitor for the blocking install process.
 	 * @param forceReloadAll
 	 *            Specifies whether after the installation all external libraries in the external library workspace
-	 *            should be reloaded and rebuilt (cf. {@link #reloadAllExternalProjects(IProgressMonitor)}). If
+	 *            should be reloaded and rebuilt (cf. {@link #registerAllExternalProjects(IProgressMonitor)}). If
 	 *            {@code false}, only the set of packages that was created and/or updated by this install call will be
 	 *            scheduled for a reload.
 	 * @return a status representing the outcome of the install process.
@@ -209,23 +203,30 @@ public class LibraryManager {
 		}
 
 		try (Measurement mes = N4JSDataCollectors.dcLibMngr.getMeasurement("installDependenciesInternal");) {
+			final int steps = forceReloadAll ? 3 : 2;
+			SubMonitor subMonitor = SubMonitor.convert(monitor, steps + 4);
 			Map<String, NPMVersionRequirement> npmsToInstall = new LinkedHashMap<>(versionedNPMs);
-			Set<LibraryChange> actualChanges = new HashSet<>();
 
-			monitor.setTaskName("Installing packages... [step 1 of 2]");
+			SubMonitor subMonitor1 = subMonitor.split(2);
+			subMonitor1.setTaskName("Installing packages... [step 1 of " + steps + "]");
+			List<LibraryChange> actualChanges = installUninstallNPMs(subMonitor1, status, npmsToInstall, emptyList());
 
-			List<LibraryChange> deltaChanges = installUninstallNPMs(monitor, status, npmsToInstall, emptyList());
-			actualChanges.addAll(deltaChanges);
+			if (!status.isOK()) {
+				return status;
+			}
 
 			// if forceReloadAll, unregister all currently-registered projects from
 			// the workspace and remove them from the index
 			if (forceReloadAll) {
-				externalLibraryWorkspace.deregisterAllProjects(SubMonitor.convert(monitor, 1));
+				SubMonitor subMonitor2 = subMonitor.split(1);
+				subMonitor2.setTaskName("Clean all packages... [step 2 of 3]");
+				externalLibraryWorkspace.deregisterAllProjects(subMonitor2);
 			}
 
 			try (Measurement m = N4JSDataCollectors.dcIndexSynchronizer.getMeasurement("synchronizeNpms")) {
-				monitor.setTaskName("Building installed packages... [step 2 of 2]");
-				indexSynchronizer.synchronizeNpms(monitor, actualChanges);
+				SubMonitor subMonitor3 = subMonitor.split(4);
+				subMonitor3.setTaskName("Building installed packages... [step " + steps + " of " + steps + "]");
+				indexSynchronizer.synchronizeNpms(subMonitor3, actualChanges);
 			}
 
 			return status;
@@ -245,7 +246,7 @@ public class LibraryManager {
 			msg += entry.getKey(); // packageName
 
 			NPMVersionRequirement versionRequirement = entry.getValue();
-			if (versionRequirement != null && SemverUtils.isEmptyVersionRequirement(versionRequirement)) {
+			if (versionRequirement != null && !SemverUtils.isEmptyVersionRequirement(versionRequirement)) {
 				msg += "@" + versionRequirement;
 			}
 
@@ -267,14 +268,12 @@ public class LibraryManager {
 
 		try (Measurement m = N4JSDataCollectors.dcNpmUninstall.getMeasurement("batchUninstall")) {
 			// remove
-			actualChanges.addAll(npmCli.batchUninstall(subMonitor, status, requestedChanges));
-			subMonitor.worked(1);
+			actualChanges.addAll(npmCli.batchUninstall(subMonitor.split(1), status, requestedChanges));
 		}
 
 		try (Measurement m = N4JSDataCollectors.dcNpmInstall.getMeasurement("batchInstall")) {
 			// install
-			actualChanges.addAll(npmCli.batchInstall(subMonitor, status, requestedChanges));
-			subMonitor.worked(1);
+			actualChanges.addAll(npmCli.batchInstall(subMonitor.split(1), status, requestedChanges));
 		}
 
 		return actualChanges;
@@ -283,22 +282,31 @@ public class LibraryManager {
 	private Collection<LibraryChange> getRequestedChanges(Map<String, NPMVersionRequirement> installRequested,
 			Collection<String> removeRequested) {
 
-		Map<String, Pair<org.eclipse.emf.common.util.URI, String>> installedNpms = indexSynchronizer.findNpmsInFolder();
 		Collection<LibraryChange> requestedChanges = new LinkedList<>();
+		Map<String, Pair<org.eclipse.emf.common.util.URI, ProjectDescription>> installedNpms = new HashMap<>();
+		for (Pair<org.eclipse.emf.common.util.URI, ProjectDescription> prjPair : externalLibraryWorkspace
+				.getProjectsIncludingUnnecessary()) {
+
+			org.eclipse.emf.common.util.URI location = prjPair.getFirst();
+			String nameFromURI = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location);
+			installedNpms.put(nameFromURI, Tuples.pair(location, prjPair.getSecond()));
+		}
 
 		for (Map.Entry<String, NPMVersionRequirement> reqestedNpm : installRequested.entrySet()) {
 			String name = reqestedNpm.getKey();
 			NPMVersionRequirement requestedVersion = reqestedNpm.getValue();
 
 			if (installedNpms.containsKey(name)) {
-				String installedVersionString = Strings.emptyIfNull(installedNpms.get(name).getValue());
+				VersionNumber version = installedNpms.get(name).getSecond().getProjectVersion();
+				org.eclipse.emf.common.util.URI location = installedNpms.get(name).getFirst();
+
+				String installedVersionString = Strings.emptyIfNull(version.toString());
 				if (installedMatchesRequestedVersion(installedVersionString, requestedVersion)) {
 					// if a matching version is installed, do not reinstall
 					continue;
 				}
 
 				// wrong version installed -> update (uninstall, then install)
-				org.eclipse.emf.common.util.URI location = installedNpms.get(name).getKey();
 				requestedChanges.add(new LibraryChange(Uninstall, location, name, installedVersionString));
 				String requestedVersionStr = SemverSerializer.serialize(requestedVersion);
 				requestedChanges.add(new LibraryChange(Install, location, name, requestedVersionStr));
@@ -310,7 +318,11 @@ public class LibraryManager {
 
 		for (String name : removeRequested) {
 			if (installedNpms.containsKey(name)) {
-				requestedChanges.add(new LibraryChange(Uninstall, null, name, ""));
+				Pair<org.eclipse.emf.common.util.URI, ProjectDescription> pair = installedNpms.get(name);
+				org.eclipse.emf.common.util.URI location = pair.getFirst();
+				VersionNumber version = pair.getSecond().getProjectVersion();
+				String versionStr = version != null ? version.toString() : "";
+				requestedChanges.add(new LibraryChange(Uninstall, location, name, versionStr));
 			} else {
 				// already removed
 			}
@@ -401,11 +413,11 @@ public class LibraryManager {
 	 *            the monitor for the progress.
 	 * @return a status representing the outcome of the operation.
 	 */
-	public IStatus reloadAllExternalProjects(IProgressMonitor monitor) {
-		return runWithWorkspaceLock(() -> reloadAllExternalProjectsInternal(monitor));
+	public IStatus registerAllExternalProjects(IProgressMonitor monitor) {
+		return runWithWorkspaceLock(() -> registerAllExternalProjectsInternal(monitor));
 	}
 
-	private IStatus reloadAllExternalProjectsInternal(IProgressMonitor monitor) {
+	private IStatus registerAllExternalProjectsInternal(IProgressMonitor monitor) {
 		checkNotNull(monitor, "monitor");
 
 		MultiStatus refreshStatus = statusHelper.createMultiStatus("Refreshing npm type definitions.");
@@ -415,9 +427,48 @@ public class LibraryManager {
 			return statusHelper.OK();
 		}
 
-		SubMonitor subMonitor = SubMonitor.convert(monitor, 10);
+		SubMonitor subMonitor = SubMonitor.convert(monitor, 1);
 		try {
-			indexSynchronizer.reindexAllExternalProjects(subMonitor.newChild(9));
+			indexSynchronizer.reindexAllExternalProjects(subMonitor.split(1));
+
+			return refreshStatus;
+
+		} finally {
+			subMonitor.done();
+		}
+	}
+
+	/**
+	 *
+	 * @param monitor
+	 *            the monitor for the progress.
+	 * @return a status representing the outcome of the operation.
+	 */
+	public IStatus registerUnregisteredNpms(IProgressMonitor monitor) {
+		return runWithWorkspaceLock(() -> registerUnregisteredNpmsInternal(monitor));
+	}
+
+	private IStatus registerUnregisteredNpmsInternal(IProgressMonitor monitor) {
+		checkNotNull(monitor, "monitor");
+		MultiStatus refreshStatus = statusHelper.createMultiStatus("Register not registered NPM(s).");
+
+		List<N4JSExternalProject> unregisteredProjects = new LinkedList<>();
+		for (N4JSExternalProject p : externalLibraryWorkspace.getProjects()) {
+			if (!indexSynchronizer.isInIndex(p)) {
+				unregisteredProjects.add(p);
+			}
+		}
+
+		indexSynchronizer.synchronizeNpms(monitor);
+
+		Collection<String> packageNames = getAllNpmProjectsMapping().keySet();
+		if (packageNames.isEmpty()) {
+			return statusHelper.OK();
+		}
+
+		SubMonitor subMonitor = SubMonitor.convert(monitor, 1);
+		try {
+			indexSynchronizer.reindexAllExternalProjects(subMonitor.split(1));
 
 			return refreshStatus;
 

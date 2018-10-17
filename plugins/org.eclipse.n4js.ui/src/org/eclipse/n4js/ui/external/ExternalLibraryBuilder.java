@@ -309,6 +309,7 @@ public class ExternalLibraryBuilder {
 			VertexOrder<IN4JSProject> buildOrder = builtOrderComputer.getBuildOrder(projects);
 			// wrap as Arrays.asList returns immutable list
 			List<IN4JSProject> buildOrderList = new ArrayList<>(Arrays.asList(buildOrder.vertexes));
+
 			if (BuildOperation.CLEAN.equals(operation)) {
 				// use wipe to remove the resource descriptions of the given projects from index
 				wipeProjectFromIndex(SubMonitor.convert(monitor, 1), Arrays.asList(projects));

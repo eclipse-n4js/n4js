@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.utils.resources;
+package org.eclipse.n4js.external;
 
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.FluentIterable.from;
@@ -46,7 +46,13 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.io.FileDeleter;
+import org.eclipse.n4js.utils.resources.DelegatingWorkspace;
+import org.eclipse.n4js.utils.resources.ExternalFile;
+import org.eclipse.n4js.utils.resources.ExternalFolder;
+import org.eclipse.n4js.utils.resources.IExternalResource;
 
 import com.google.common.base.Objects;
 
@@ -57,6 +63,8 @@ import com.google.common.base.Objects;
 public class ExternalProject extends Project implements IExternalResource {
 
 	private final File file;
+	private final java.net.URI uri;
+	private final String eclipseProjectName;
 	private final Collection<String> natureIds;
 	private final Collection<String> builderIds;
 
@@ -102,8 +110,13 @@ public class ExternalProject extends Project implements IExternalResource {
 		super(new Path(file.getAbsolutePath()), null);
 		checkState(file.isDirectory(), "Resource '" + file + "' is not a directory but a file.");
 		this.file = file;
+		this.uri = file.toURI();
 		this.natureIds = newHashSet(natureIds);
 		this.builderIds = newHashSet(builderIds);
+
+		org.eclipse.emf.common.util.URI emfURI = URIUtils.deriveProjectURIFromFileLocation(file);
+		String n4jsName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(emfURI);
+		this.eclipseProjectName = ProjectDescriptionUtils.convertN4JSProjectNameToEclipseProjectName(n4jsName);
 	}
 
 	@Override
@@ -117,7 +130,7 @@ public class ExternalProject extends Project implements IExternalResource {
 
 	@Override
 	public String getName() {
-		return file.getName();
+		return eclipseProjectName;
 	}
 
 	@Override
@@ -132,12 +145,12 @@ public class ExternalProject extends Project implements IExternalResource {
 
 	@Override
 	public boolean exists() {
-		return file.exists();
+		return true;
 	}
 
 	@Override
 	public boolean exists(int flags, boolean checkType) {
-		return file.exists();
+		return true;
 	}
 
 	@Override
@@ -176,7 +189,7 @@ public class ExternalProject extends Project implements IExternalResource {
 
 	@Override
 	public URI getLocationURI() {
-		return file.toURI();
+		return uri;
 	}
 
 	@Override

@@ -124,7 +124,7 @@ public class IDEBUG_855_PluginTest extends AbstractBuilderParticipantTest {
 		assertMarkers("Expected exactly zero errors in client module.", clientModule, 0);
 
 		resource.getContents().clear();
-		libManager.reloadAllExternalProjects(new NullProgressMonitor());
+		libManager.registerAllExternalProjects(new NullProgressMonitor());
 
 		final int builderStateAfterReloadSize = Iterables.size(builderState.getAllResourceDescriptions());
 		persister.saveToResource(resource, builderState.getAllResourceDescriptions());

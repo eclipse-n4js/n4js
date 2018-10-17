@@ -17,18 +17,21 @@ import java.util.Map;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
+import org.eclipse.n4js.projectModel.dependencies.ProjectDependenciesHelper;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
-import org.eclipse.n4js.ui.preferences.external.MaintenanceActionsButtonListener;
+import org.eclipse.n4js.smith.Measurement;
+import org.eclipse.n4js.utils.N4JSDataCollectors;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.io.FileDeleter;
 
 import com.google.inject.Inject;
 
 /**
- * Similar to {@link MaintenanceActionsButtonListener} actions, but dedicated for different UI.
+ * Bundles all maintenance actions of the library manager including the 'Big Button' action
  */
 public class ExternalLibrariesActionsHelper {
 
@@ -36,15 +39,53 @@ public class ExternalLibrariesActionsHelper {
 	private StatusHelper statusHelper;
 	@Inject
 	private LibraryManager libManager;
-
+	@Inject
+	private ProjectDependenciesHelper dependenciesHelper;
 	@Inject
 	private ExternalLibraryWorkspace externalLibraryWorkspace;
-
 	@Inject
 	private ExternalLibrariesReloadHelper externalLibrariesReloadHelper;
-
 	@Inject
 	private TargetPlatformInstallLocationProvider locationProvider;
+
+	/** Streamlined process of calculating and installing the dependencies without cleaning npm cache. */
+	public void cleanAndInstallAllDependencies(SubMonitor monitor, MultiStatus multistatus) {
+		cleanAndInstallAllDependencies(monitor, multistatus, false);
+	}
+
+	/** Streamlined process of calculating and installing the dependencies, npm cache cleaning forced by passed flag */
+	public void cleanAndInstallAllDependencies(SubMonitor monitor, MultiStatus multistatus, boolean removeNpmCache) {
+		try (Measurement m = N4JSDataCollectors.dcInstallHelper.getMeasurement("Install Missing Dependencies")) {
+			SubMonitor subMonitor = SubMonitor.convert(monitor, 10);
+
+			// remove npm cache
+			if (removeNpmCache) {
+				maintenanceCleanNpmCache(multistatus, subMonitor.split(1));
+			}
+
+			// remove npms
+			maintenanceDeleteNpms(multistatus);
+
+			// install npms from target platform
+			Map<String, NPMVersionRequirement> dependenciesToInstall = null;
+			try (Measurement mm = N4JSDataCollectors.dcCollectMissingDeps
+					.getMeasurement("Collect Missing Dependencies")) {
+
+				dependenciesToInstall = dependenciesHelper.computeDependenciesOfWorkspace();
+				dependenciesHelper.fixDependenciesToInstall(dependenciesToInstall);
+			}
+
+			// install dependencies and force external library workspace reload
+			try (Measurement mm = N4JSDataCollectors.dcInstallMissingDeps
+					.getMeasurement("Install missing dependencies")) {
+
+				IStatus status = libManager.installNPMs(dependenciesToInstall, true, subMonitor.split(9));
+				if (!status.isOK()) {
+					multistatus.merge(status);
+				}
+			}
+		}
+	}
 
 	/**
 	 * Performs {@link LibraryManager#cleanCache(IProgressMonitor)}. If that operation fails, status is mergegd into
@@ -84,32 +125,12 @@ public class ExternalLibrariesActionsHelper {
 				multistatus.merge(statusHelper
 						.createError("The target platform location folder was not recreated correctly."));
 			}
-		} else {// should never happen
-			multistatus
-					.merge(statusHelper.createError("Could not verify deletion of " + npmFolder.getAbsolutePath()));
+		} else {
+			// should never happen
+			multistatus.merge(statusHelper.createError("Could not verify deletion of " + npmFolder.getAbsolutePath()));
 		}
 		// other actions like reinstall depends on this state
 		externalLibraryWorkspace.updateState();
-	}
-
-	/**
-	 * Installs npm packages with provide names and versions. Note that in case package has no version it is expected
-	 * that empty string is provided.
-	 *
-	 * Rebuild of externals is not triggered, hence caller needs to take care of that, e.g. by calling
-	 * {@link #maintenanceUpateState}
-	 *
-	 * @param forceReloadAll
-	 *            Specifies whether after the installation all external libraries in the external library workspace
-	 *            should be reloaded and rebuilt (cf.
-	 *            {@link LibraryManager#reloadAllExternalProjects(IProgressMonitor)}). If {@code false}, only the set of
-	 *            packages that was created and/or updated by this install call will be scheduled for a reload.
-	 */
-	public void installNoUpdate(final Map<String, NPMVersionRequirement> versionedPackages,
-			boolean forceReloadAll, final MultiStatus multistatus, final IProgressMonitor monitor) {
-		IStatus status = libManager.installNPMs(versionedPackages, forceReloadAll, monitor);
-		if (!status.isOK())
-			multistatus.merge(status);
 	}
 
 	/**

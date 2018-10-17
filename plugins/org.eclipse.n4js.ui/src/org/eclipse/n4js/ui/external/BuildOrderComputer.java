@@ -82,8 +82,7 @@ public class BuildOrderComputer {
 		for (int i = 0; i < projects.length; i++) {
 			N4JSExternalProject project = projects[i];
 			URI locationURI = URIUtils.convert(project);
-			N4JSProject prjDependency = (N4JSProject) core.findProject(locationURI).orNull();
-			n4jsPrjs[i] = prjDependency;
+			n4jsPrjs[i] = (N4JSProject) uri2PrjMapper.get(locationURI.toString());
 		}
 		return getBuildOrder(n4jsPrjs);
 	}

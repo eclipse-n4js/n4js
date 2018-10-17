@@ -19,6 +19,8 @@ import static org.eclipse.core.runtime.Status.OK_STATUS;
 import java.io.File;
 import java.net.URI;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -204,7 +206,7 @@ import com.google.inject.Inject;
 					.filter(f2 -> externalLibraryHelper.isScopeDirectory(f2))
 					.transformAndConcat(file -> getDirectProjectsInLocation(file.toURI()));
 
-			return Iterables.concat(directContents, scopedContents);
+			return Iterables.concat(scopedContents, directContents);
 		}
 		return emptyList();
 	}
@@ -226,7 +228,7 @@ import com.google.inject.Inject;
 	}
 
 	private final boolean isExistingFolder(File file) {
-		return null != file && file.exists() && file.isDirectory();
+		return null != file && file.isDirectory();
 	}
 
 	private final Iterable<File> getDirectoryContents(File folder) {
@@ -245,6 +247,8 @@ import com.google.inject.Inject;
 			return emptyList();
 		}
 
-		return asList(files);
+		List<File> fileList = asList(files);
+		Collections.sort(fileList);
+		return fileList;
 	}
 }

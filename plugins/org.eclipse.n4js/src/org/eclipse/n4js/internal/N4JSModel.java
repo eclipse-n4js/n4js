@@ -180,7 +180,7 @@ public class N4JSModel {
 	/**
 	 * This delegates to {@link InternalN4JSWorkspace#getProjectDescription(URI)} to allow caching.
 	 */
-	protected ProjectDescription getProjectDescription(URI location) {
+	public ProjectDescription getProjectDescription(URI location) {
 		ProjectDescription description = workspace.getProjectDescription(location);
 		if (null == description) {
 			description = externalLibraryWorkspace.getProjectDescription(location);
