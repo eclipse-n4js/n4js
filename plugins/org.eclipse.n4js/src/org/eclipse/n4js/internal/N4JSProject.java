@@ -87,9 +87,6 @@ public class N4JSProject implements IN4JSProject {
 
 	@Override
 	public boolean exists() {
-		if (external) {
-			return true;
-		}
 		if (exists != null) {
 			return exists.booleanValue();
 		}
@@ -366,8 +363,8 @@ public class N4JSProject implements IN4JSProject {
 	}
 
 	private static Optional<File> getProjectDescriptionFile(URI projectLocation) {
-		final File locationAsFile = new File(java.net.URI.create(projectLocation.toString()));
-		if (locationAsFile.exists() && locationAsFile.isDirectory()) {
+		final File locationAsFile = new File(projectLocation.toFileString());
+		if (locationAsFile.isDirectory()) {
 			// first check for a 'package.json' file
 			final File packageJSON = new File(locationAsFile, IN4JSProject.PACKAGE_JSON);
 			if (packageJSON.isFile()) {
