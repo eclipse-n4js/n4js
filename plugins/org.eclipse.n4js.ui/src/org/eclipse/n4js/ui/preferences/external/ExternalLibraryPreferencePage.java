@@ -491,7 +491,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 		final String directoryPath = new DirectoryDialog(viewer.getControl().getShell(), OPEN).open();
 		if (null != directoryPath) {
 			final File file = new File(directoryPath);
-			if (file.exists() && file.isDirectory()) {
+			if (file.isDirectory()) {
 				store.add(file.toURI());
 				updateInput(viewer, store.getLocations());
 			}

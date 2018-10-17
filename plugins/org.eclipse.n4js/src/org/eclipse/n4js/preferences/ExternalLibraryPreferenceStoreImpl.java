@@ -228,7 +228,7 @@ import com.google.inject.Inject;
 	}
 
 	private final boolean isExistingFolder(File file) {
-		return null != file && file.exists() && file.isDirectory();
+		return null != file && file.isDirectory();
 	}
 
 	private final Iterable<File> getDirectoryContents(File folder) {

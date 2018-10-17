@@ -88,7 +88,7 @@ import org.eclipse.swt.graphics.Image;
 			final URI manifestLocation = project.getProjectDescriptionLocation().orNull();
 			if (null != manifestLocation) {
 				final File manifest = new File(manifestLocation.toFileString());
-				if (manifest.exists() && manifest.isFile()) {
+				if (manifest.isFile()) {
 					manifestNode = ResourceNode.create(this, manifest);
 				}
 			}

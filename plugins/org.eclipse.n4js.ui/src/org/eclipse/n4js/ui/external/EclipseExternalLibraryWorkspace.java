@@ -425,7 +425,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 				IProject project = getProject(projectName);
 				if (project instanceof ExternalProject) {
 					File projectResource = new File(project.getLocationURI());
-					if (projectResource.exists() && projectResource.isDirectory()) {
+					if (projectResource.isDirectory()) {
 
 						Path projectPath = projectResource.toPath();
 						Path nestedPath = nestedResource.toPath();

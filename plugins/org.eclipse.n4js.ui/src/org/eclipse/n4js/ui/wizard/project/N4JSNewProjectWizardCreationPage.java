@@ -509,9 +509,7 @@ public class N4JSNewProjectWizardCreationPage extends ExtensibleWizardNewProject
 
 		// check for an existing file with the path of the project folder
 		File existingFileAtProjectDirectory = new File(projectLocation.toString());
-		boolean projectDirectoryIsExistingFile = existingFileAtProjectDirectory.exists()
-				&& existingFileAtProjectDirectory.isFile();
-
+		boolean projectDirectoryIsExistingFile = existingFileAtProjectDirectory.isFile();
 		boolean isExistingNonWorkspaceProject = existingProjectDescriptionFile.exists() && !workspaceProjectExists;
 
 		if (projectDirectoryIsExistingFile) {

@@ -15,14 +15,13 @@ import java.io.File;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.utils.resources.ExternalFile;
+import org.eclipse.n4js.utils.resources.IExternalResource;
 import org.eclipse.xtext.ui.resource.Storage2UriMapperImpl;
 import org.eclipse.xtext.ui.resource.UriValidator;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import org.eclipse.n4js.utils.resources.ExternalFile;
-import org.eclipse.n4js.utils.resources.IExternalResource;
 
 /**
  * N4JS specific {@link IStorage storage} to {@link URI URI} mapper that gracefully handles the URI creation for
@@ -55,7 +54,7 @@ public class N4JSStorage2UriMapper extends Storage2UriMapperImpl {
 		if (storage instanceof IFile) {
 			if (storage instanceof ExternalFile) {
 				final File externalResource = ((ExternalFile) storage).getExternalResource();
-				if (externalResource.exists() && externalResource.isFile()) {
+				if (externalResource.isFile()) {
 					return URI.createFileURI(externalResource.getAbsolutePath());
 				}
 			} else {

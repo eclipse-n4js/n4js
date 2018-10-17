@@ -135,15 +135,15 @@ public class NodeBinaryLocatorHelper {
 
 	/** Tries to resolve node folder from provided file. Returns path to the folder as string or null. */
 	private static String resolveNodeFolderPath(File nodeDir) {
-		if (!nodeDir.exists()) {
-			debug("cannot obtain file system object from provided string");
-			return null;
-		}
 		if (nodeDir.isFile()) {
 			debug("provided potential node directory is actually a file, obtaining parent");
 			nodeDir = nodeDir.getParentFile();
-		}
-		if (!nodeDir.exists() || !nodeDir.isDirectory()) {
+
+		} else if (!nodeDir.exists()) {
+			debug("cannot obtain file system object from provided string");
+			return null;
+
+		} else if (!nodeDir.isDirectory()) {
 			debug("could not safely resolve node directory");
 			return null;
 		}

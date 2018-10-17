@@ -118,7 +118,7 @@ public class N4JSOpenActions extends CommonActionProvider {
 			if (element instanceof ResourceNode) {
 				final ResourceNode node = (ResourceNode) element;
 				final File resource = node.getResource();
-				if (!resource.exists() || !resource.isFile()) {
+				if (!resource.isFile()) {
 					return false;
 				}
 			}
