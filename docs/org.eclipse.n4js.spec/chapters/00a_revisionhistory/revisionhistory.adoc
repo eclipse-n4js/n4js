@@ -25,5 +25,5 @@ Contributors:
 |2016-09-09	|mor 			|add `@CovariantConstructor`, cf. <<_covariant-constructors>>, plus related adjustments
 |2016-11-09	|bsmith			|convert from `LaTeX` to AsciiDoc
 |2017-07-03	|qtran			|Describe semantics of optional fields in ternay expressions <<optional-fields>>
-|2018-09-13	|mmews			|add subsection <<N4JS-Type-Definitions>>
+|2018-09-13	|mmews			|add subsection <<sec:N4JS-Type-Definitions, N4JS Type Definitions>>
 |===
