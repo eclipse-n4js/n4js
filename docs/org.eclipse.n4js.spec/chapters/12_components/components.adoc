@@ -635,8 +635,8 @@ An N4JS Component `C` can be executed in an runtime environment `E`, written as 
 
 
 
-
-.N4JS-Type-Definitions
+[[sec:N4JS-Type-Definitions]]
+.N4JS Type Definitions
 == N4JS Type Definitions
 
 N4JS projects can depend on ordinary JavaScript projects by including them in the package.json file.
