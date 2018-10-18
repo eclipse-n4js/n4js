@@ -16,13 +16,14 @@ Contributors:
 [.language-n4js]
 [cols="^1e,^1s,<4"]
 |===
-|Date 		 |Author		|Description
+|Date		|Author			|Description
 
-|2013-03-21  |v.Pilgrim 	|initial commit
-|2016-03-13  |v.Pilgrim 	|public release, version 0.3 (alpha)
-|2016-05-31  |mor 			|support for definition-site variance, cf. <<sec:definition-site-variance>>
-|2016-07-18  |mor 			|rename manifest property `artifactId` to `projectId`; remove `projectName`
-|2016-09-09  |mor 			|add `@CovariantConstructor`, cf. <<_covariant-constructors>>, plus related adjustments
-|2016-11-9 	 |bsmith		|convert from `LaTeX` to AsciiDoc
-|2017-07-03	 |qtran			|Describe semantics of optional fields in ternay expressions <<optional-fields>>
+|2013-03-21	|v.Pilgrim 		|initial commit
+|2016-03-13	|v.Pilgrim 		|public release, version 0.3 (alpha)
+|2016-05-31	|mor 			|support for definition-site variance, cf. <<sec:definition-site-variance>>
+|2016-07-18	|mor 			|rename manifest property `artifactId` to `projectId`; remove `projectName`
+|2016-09-09	|mor 			|add `@CovariantConstructor`, cf. <<_covariant-constructors>>, plus related adjustments
+|2016-11-09	|bsmith			|convert from `LaTeX` to AsciiDoc
+|2017-07-03	|qtran			|Describe semantics of optional fields in ternay expressions <<optional-fields>>
+|2018-09-13	|mmews			|add subsection <<N4JS-Type-Definitions>>
 |===
