@@ -32,12 +32,13 @@ class B {
 	// "Only a single formal parameter in each constructor may be annotated with @Spec." at "Spec"
 	// ---
 	constructor(@Spec a : string, b : number, @Spec c : ~i~this) {}
+
+	// misplaced annotation XPECT errors -->"The annotation @Spec may only be applied at a parameter of a constructor." at "Spec"
+	public someMethod(@Spec nonspec: number) {}
 }
 
 
-// note:
-
 interface I {
-	// wrong location for @Spec annotation not checked at the moment (will be validated later for all annotations in a consistent way)
+	// misplaced annotation XPECT errors -->"The annotation @Spec may only be applied at a parameter of a constructor." at "Spec"
 	m(@Spec p) : void;
 }
