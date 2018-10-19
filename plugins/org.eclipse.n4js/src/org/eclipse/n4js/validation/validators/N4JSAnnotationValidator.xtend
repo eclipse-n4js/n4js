@@ -170,6 +170,8 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 					internalCheckStaticPolyfill(annotation)
 				case N4JS.name:
 					internalCheckN4JS(annotation)
+				case SPEC.name:
+					internalCheckSpec(annotation)
 			}
 		}
 	}
@@ -362,6 +364,23 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 				ANN_DISALLOWED_IN_NONDEFINTION_FILE);
 			return;
 		}
+	}
+
+	/**
+	 * Check SPEC annotation to be at a formal parameter in a constructor.
+	 */
+	private def internalCheckSpec(Annotation annotation) {
+		val element = annotation.annotatedElement;
+		if (element !== null) {
+			val parent = element.eContainer;
+			if (parent instanceof N4MethodDeclaration) {
+				if (parent.isConstructor) {
+					return; // annotation located at the right place
+				}
+			}
+		}
+		val msg = getMessageForANN_ONL_ALLOWED_IN_CONSTRUCTORS(annotation.name);
+		addIssue(msg, annotation, ANNOTATION__NAME, ANN_ONL_ALLOWED_IN_CONSTRUCTORS);
 	}
 
 	/**
