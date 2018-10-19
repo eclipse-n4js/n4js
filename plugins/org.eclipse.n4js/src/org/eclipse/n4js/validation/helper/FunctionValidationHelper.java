@@ -11,10 +11,12 @@
 package org.eclipse.n4js.validation.helper;
 
 import static org.eclipse.n4js.validation.IssueCodes.FUN_PARAM_IMPLICIT_DEFAULT_PARAM;
+import static org.eclipse.n4js.validation.IssueCodes.FUN_PARAM_INITIALIZER_ILLEGAL_AWAIT_CALL;
 import static org.eclipse.n4js.validation.IssueCodes.FUN_PARAM_INITIALIZER_ILLEGAL_FORWARD_REFERENCE;
 import static org.eclipse.n4js.validation.IssueCodes.FUN_PARAM_VARIADIC_ONLY_LAST;
 import static org.eclipse.n4js.validation.IssueCodes.FUN_PARAM_VARIADIC_WITH_INITIALIZER;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForFUN_PARAM_IMPLICIT_DEFAULT_PARAM;
+import static org.eclipse.n4js.validation.IssueCodes.getMessageForFUN_PARAM_INITIALIZER_ILLEGAL_AWAIT_CALL;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForFUN_PARAM_INITIALIZER_ILLEGAL_FORWARD_REFERENCE;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForFUN_PARAM_VARIADIC_ONLY_LAST;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForFUN_PARAM_VARIADIC_WITH_INITIALIZER;
@@ -26,12 +28,14 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.EcoreUtil2;
-
+import org.eclipse.n4js.n4JS.AwaitExpression;
+import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.IdentifierRef;
+import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.validation.ASTStructureValidator;
 import org.eclipse.n4js.validation.validators.N4JSFunctionValidator;
+import org.eclipse.xtext.EcoreUtil2;
 
 /**
  * This class contains validations that are called from both {@link ASTStructureValidator} and the
@@ -86,6 +90,21 @@ public class FunctionValidationHelper {
 					if (fparsL.indexOf(ir.getId()) >= fpPos) {
 						String msg = getMessageForFUN_PARAM_INITIALIZER_ILLEGAL_FORWARD_REFERENCE();
 						issueConsumer.accept(msg, FUN_PARAM_INITIALIZER_ILLEGAL_FORWARD_REFERENCE, ir);
+					}
+				}
+
+				List<AwaitExpression> awaits = EcoreUtil2.getAllContentsOfType(fPar, AwaitExpression.class);
+				if (!awaits.isEmpty()) {
+					String paramName = "";
+					if (fPar instanceof TFormalParameter) {
+						paramName = ((TFormalParameter) fPar).getName();
+					}
+					if (fPar instanceof FormalParameter) {
+						paramName = ((FormalParameter) fPar).getName();
+					}
+					for (AwaitExpression await : awaits) {
+						String msg = getMessageForFUN_PARAM_INITIALIZER_ILLEGAL_AWAIT_CALL(paramName);
+						issueConsumer.accept(msg, FUN_PARAM_INITIALIZER_ILLEGAL_AWAIT_CALL, await);
 					}
 				}
 			}
