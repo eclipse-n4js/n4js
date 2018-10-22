@@ -10,37 +10,39 @@
  */
 package org.eclipse.n4js.ui.changes
 
-import org.eclipse.n4js.ui.changes.ChangeProvider
-import org.eclipse.jface.text.BadLocationException
-import org.eclipse.n4js.n4JS.ModifiableElement
-import org.eclipse.xtext.ui.editor.model.IXtextDocument
-import org.eclipse.n4js.n4JS.N4Modifier
-import org.eclipse.n4js.n4JS.TypeDefiningElement
+import com.google.inject.Inject
 import java.util.ArrayList
-import org.eclipse.n4js.n4JS.ModifierUtils
+import java.util.Collection
+import java.util.Collections
 import java.util.List
-import org.eclipse.xtext.nodemodel.util.NodeModelUtils
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.jface.text.BadLocationException
+import org.eclipse.n4js.AnnotationDefinition
+import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.n4JS.AnnotableElement
-import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.Annotation
-import org.eclipse.n4js.n4JS.N4GetterDeclaration
-import org.eclipse.n4js.n4JS.N4SetterDeclaration
-import org.eclipse.n4js.utils.nodemodel.NodeModelAccess
+import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.ExportedVariableStatement
 import org.eclipse.n4js.n4JS.FunctionDeclaration
-import org.eclipse.n4js.validation.N4JSElementKeywordProvider
-import java.util.Collection
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.xtext.nodemodel.INode
-import com.google.inject.Inject
-import org.eclipse.n4js.N4JSLanguageConstants
-import org.eclipse.n4js.AnnotationDefinition
+import org.eclipse.n4js.n4JS.ModifiableElement
+import org.eclipse.n4js.n4JS.ModifierUtils
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
-import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
-import org.eclipse.n4js.n4JS.NamedElement
+import org.eclipse.n4js.n4JS.N4GetterDeclaration
+import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSFeatureUtils
-import java.util.Collections
+import org.eclipse.n4js.n4JS.N4JSPackage
+import org.eclipse.n4js.n4JS.N4MethodDeclaration
+import org.eclipse.n4js.n4JS.N4Modifier
+import org.eclipse.n4js.n4JS.N4SetterDeclaration
+import org.eclipse.n4js.n4JS.NamedElement
+import org.eclipse.n4js.n4JS.TypeDefiningElement
+import org.eclipse.n4js.ts.types.TypeVariable
+import org.eclipse.n4js.utils.nodemodel.NodeModelAccess
+import org.eclipse.n4js.validation.N4JSElementKeywordProvider
+import org.eclipse.xtext.nodemodel.INode
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils
+import org.eclipse.xtext.ui.editor.model.IXtextDocument
 
 /**
  * Collection of high-level convenience methods for creating {@link IChange}s.
@@ -337,15 +339,40 @@ public class SemanticChangeProvider {
 					val exportKeyword = element.eContainer.astNodeForKeyword(N4JSLanguageConstants.EXPORT_KEYWORD);
 					exportKeyword.offset + exportKeyword.length+1
 				}
-				NamedElement: {
-						val nodes = NodeModelUtils.findNodesForFeature(element, N4JSFeatureUtils.attributeOfNameFeature(element));
-						if (nodes!==null && !nodes.empty) {
-							nodes.get(0).offset
+				N4MethodDeclaration: {
+					var List<INode> nodes = null;
+					nodes = NodeModelUtils.findNodesForFeature(element, N4JSPackage.Literals.GENERIC_DECLARATION__TYPE_VARS);
+					if (nodes.empty)
+						nodes = NodeModelUtils.findNodesForFeature(element, N4JSPackage.Literals.TYPED_ELEMENT__BOGUS_TYPE_REF);
+					if (nodes.empty)
+						nodes = NodeModelUtils.findNodesForFeature(element, N4JSPackage.Literals.FUNCTION_DEFINITION__GENERATOR);
+					if (nodes.empty)
+						nodes = NodeModelUtils.findNodesForFeature(element, N4JSPackage.Literals.FUNCTION_DEFINITION__DECLARED_ASYNC);
+					if (nodes.empty)
+						nodes = NodeModelUtils.findNodesForFeature(element, N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME);
+
+					if (nodes!==null && !nodes.empty) {
+						val node = nodes.get(0);
+						val semElem = node.semanticElement;
+						if (semElem instanceof TypeVariable) {
+							node.totalOffset - 1; // this respects '<' of a type variable, e.g. <T> foo()
 						} else {
-							-1;
+							node.totalOffset;
 						}
+					} else {
+						-1;
 					}
-					default: -1
+				}
+				NamedElement: {
+					val attr = N4JSFeatureUtils.attributeOfNameFeature(element);
+					val nodes = NodeModelUtils.findNodesForFeature(element, attr);
+					if (nodes!==null && !nodes.empty) {
+						nodes.get(0).offset;
+					} else {
+						-1;
+					}
+				}
+				default: -1
 			}
 		}
 		if ( offset == -1 ) {
