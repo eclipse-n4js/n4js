@@ -355,7 +355,7 @@ public class SemanticChangeProvider {
 						val node = nodes.get(0);
 						val semElem = node.semanticElement;
 						if (semElem instanceof TypeVariable) {
-							node.totalOffset - 1; // this respects '<' of a type variable, e.g. <T> foo()
+							node.totalOffset - 1; // this respects '<' of a type variable, e.g. '<T> foo()'
 						} else {
 							node.totalOffset;
 						}

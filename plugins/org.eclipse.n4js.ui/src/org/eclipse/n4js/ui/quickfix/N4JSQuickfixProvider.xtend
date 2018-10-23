@@ -540,8 +540,8 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 			return;
 		}
 
-		acceptor.accept(issue,"Set access modifier to access modifier of " + superClassName + "." + memberName + ": " +
-						readableStringForSuggestion(accessSuggestion), "", null) [ context, marker, offset, length, element |
+		val msg = "Set access modifier to \"" + readableStringForSuggestion(accessSuggestion) + "\" (align with " + superClassName + "." + memberName + ")";
+		acceptor.accept(issue, msg, "", null) [ context, marker, offset, length, element |
 			if (element instanceof N4MemberDeclaration) {
 				var changes = new ArrayList<IChange>();
 				changes.add(setAccessModifiers(context.xtextDocument, element, modifierForSuggestion(accessSuggestion)));
