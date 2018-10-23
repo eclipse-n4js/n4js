@@ -42,7 +42,7 @@ class A {
 
 class B extends A {
 	@Override
-	/* XPECT quickFix at 'private project<|>Method() {' apply 'Set access modifier to access modifier of A.projectMethod: project' ---
+	/* XPECT quickFix at 'private project<|>Method() {' apply 'Set access modifier to "project" (align with A.projectMethod)' ---
 	   (...)
 	     }
 	     class B extends A {
@@ -61,7 +61,7 @@ class B extends A {
 
 	@Override
 	@Internal
-	/* XPECT quickFix at 'protected protectedMethod<|>() {}' apply 'Set access modifier to access modifier of A.protectedMethod: protected' ---
+	/* XPECT quickFix at 'protected protectedMethod<|>() {}' apply 'Set access modifier to "protected" (align with A.protectedMethod)' ---
 	   (...)
 	     	private projectMethod() {
 	     	}
@@ -75,7 +75,7 @@ class B extends A {
 	protected protectedMethod() {}
 
 	@Override
-	/* XPECT quickFix at 'project set protectedInternalField<|>(string s) {}' apply 'Set access modifier to access modifier of A.protectedInternalField: protected, @Internal' whitespaceSensitive ---
+	/* XPECT quickFix at 'project set protectedInternalField<|>(string s) {}' apply 'Set access modifier to "protected, @Internal" (align with A.protectedInternalField)' whitespaceSensitive ---
 (...)
   	protected protectedMethod() {}
   	@Override
@@ -90,7 +90,7 @@ class B extends A {
 	project set protectedInternalField(string s) {}
 
 	@Override
-	/* XPECT quickFix at 'project publicInternalMethod<|>() {}' apply 'Set access modifier to access modifier of A.publicInternalMethod: public, @Internal' ---
+	/* XPECT quickFix at 'project publicInternalMethod<|>() {}' apply 'Set access modifier to "public, @Internal" (align with A.publicInternalMethod)' ---
 	   (...)
 	     	@Override
 	     	project set protectedInternalField(string s) {}
@@ -106,7 +106,7 @@ class B extends A {
 
 	@Override
 	@Internal
-	/* XPECT quickFix at 'project publicMethod<|>() {}' apply 'Set access modifier to access modifier of A.publicMethod: public' ---
+	/* XPECT quickFix at 'project publicMethod<|>() {}' apply 'Set access modifier to "public" (align with A.publicMethod)' ---
 	   (...)
 	     	@Override
 	     	project publicInternalMethod() {}
