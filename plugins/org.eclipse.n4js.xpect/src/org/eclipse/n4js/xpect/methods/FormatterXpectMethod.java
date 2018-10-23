@@ -90,14 +90,7 @@ public class FormatterXpectMethod {
 			ITextRegionAccess reg,
 			ISetupInitializer<Preferences> prefInit) {
 
-		XtextResource resource = ((XtextTargetSyntaxSupport) syntax).getResource();
-
-		IStatementRelatedRegion region2 = inv.getExtendedRegion();
-		int end = region2.getOffset() + region2.getLength();
-		ILeafNode node = NodeModelUtils.findLeafNodeAtOffset(resource.getParseResult().getRootNode(), end);
-
-		int offset = node.getTotalEndOffset();
-		ITextSegment region = getRegionForLines(reg, offset, lines);
+		ITextSegment region = findRegion(lines, inv, syntax, reg);
 
 		Preferences prefs = new Preferences();
 		// First put some defaults
@@ -124,6 +117,18 @@ public class FormatterXpectMethod {
 		int endIndex = region.getEndOffset() + (fmt.length() - doc.getLength()) - 1;
 		String selection = fmt.substring(region.getOffset(), endIndex);
 		exp.assertEquals(selection);
+	}
+
+	private ITextSegment findRegion(int lines, XpectInvocation inv, TargetSyntaxSupport syntax, ITextRegionAccess reg) {
+		XtextResource resource = ((XtextTargetSyntaxSupport) syntax).getResource();
+
+		IStatementRelatedRegion region2 = inv.getExtendedRegion();
+		int end = region2.getOffset() + region2.getLength();
+		ILeafNode node = NodeModelUtils.findLeafNodeAtOffset(resource.getParseResult().getRootNode(), end);
+
+		int offset = node.getTotalEndOffset();
+		ITextSegment region = getRegionForLines(reg, offset, lines);
+		return region;
 	}
 
 	private ITextSegment getRegionForLines(ITextRegionAccess regions, int offset, int lines) {
