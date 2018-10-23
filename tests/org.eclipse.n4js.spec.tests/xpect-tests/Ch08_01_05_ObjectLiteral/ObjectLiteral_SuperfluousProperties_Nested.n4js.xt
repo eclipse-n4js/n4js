@@ -1,0 +1,42 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+// Cf. requirement IDE-22501
+
+
+
+class ~Test {}
+
+let obj: Test = {
+	// XPECT warnings --> "b is not defined in Test." at "b"
+    b: "xxx"
+}
+obj;
+
+let arrN1: [Test] = [{
+	// XPECT warnings --> "b is not defined in Test." at "b"
+    b: "yyy1"
+},{
+	// XPECT warnings --> "b is not defined in Test." at "b"
+    b: "yyy2"
+}]
+arrN1;
+
+let arrN2: [[Test]] = [[{
+	// XPECT warnings --> "b is not defined in Test." at "b"
+    b: "zzz1"
+},{
+	// XPECT warnings --> "b is not defined in Test." at "b"
+    b: "zzz2"
+}]]
+arrN2;
