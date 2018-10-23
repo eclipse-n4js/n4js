@@ -13,7 +13,11 @@
 
    END_SETUP
  */
+
+
 /* XPECT formattedLines 19 ---
+// COMMENT 1
+/\* COMMENT 2 *\/
 @@StaticPolyfillAware
 @@Global
 
@@ -24,6 +28,11 @@ export public class A1 {
 
 let theSemi = 0;
 --- */
+// COMMENT 1
+
+
+/* COMMENT 2 */
+
 @@
 
 StaticPolyfillAware     @@ Global
