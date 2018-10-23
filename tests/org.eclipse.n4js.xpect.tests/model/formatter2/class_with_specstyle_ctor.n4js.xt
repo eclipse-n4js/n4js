@@ -38,7 +38,6 @@ export public abstract class ImmutableDataObject extends DataObject {
 	}
 }
 --- */
-
 const NAME_SLOT = Symbol("name");
 /**
  * @spec Formerly known as ValueObjects bla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla bla
@@ -91,7 +90,6 @@ export public abstract class ImmutableDataObject2
 }
 
 --- */
-
 const 
        NAME_SLOT2 
             =    

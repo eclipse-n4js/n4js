@@ -25,5 +25,4 @@ var f = function(    p    ,     x) {};
 /* XPECT formattedLines 1 ---
 var g = function() {};
 --- */
-
 var g = function() {};

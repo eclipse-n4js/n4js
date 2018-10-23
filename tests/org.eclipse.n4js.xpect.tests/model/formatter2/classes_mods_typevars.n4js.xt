@@ -24,7 +24,6 @@ export public abstract class ~CanceledError {}
 
 let f = 2;
 --- */
-
 let e=1;
 /**
  * Error to notify a cancelation.

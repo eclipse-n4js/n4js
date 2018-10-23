@@ -1157,7 +1157,11 @@ class N4JSFormatter extends TypeExpressionsFormatter {
 	private def void formatScriptAnnotations(Script script, extension IFormattableDocument document) {
 		if( script.annotations.isEmpty ) return;
 
-		script.annotations.head.prepend[noSpace;newLines=0;];
+		if (script.annotations.head.previousHiddenRegion.containsComment) {
+			script.annotations.head.prepend[noSpace;];
+		} else {
+			script.annotations.head.prepend[noSpace;newLines=0;];
+		}
 		script.annotations.last.append[setNewLines(2,2,2)];
 
 		script.annotations.forEach[it,idx|
