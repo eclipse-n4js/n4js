@@ -53,7 +53,7 @@ import org.eclipse.n4js.typesystem.TypeSystemHelper
 import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError
-import org.eclipse.xsemantics.runtime.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import java.util.ArrayList
 import java.util.HashMap
 import java.util.List

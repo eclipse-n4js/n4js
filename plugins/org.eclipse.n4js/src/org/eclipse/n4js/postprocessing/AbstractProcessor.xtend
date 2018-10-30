@@ -27,11 +27,11 @@ import org.eclipse.n4js.ts.types.TStructMember
 import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.InternalTypeSystemNEW
+import org.eclipse.n4js.typesystem.utils.Result
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.UtilN4
-import org.eclipse.xsemantics.runtime.Result
 import org.eclipse.xsemantics.runtime.RuleApplicationTrace
-import org.eclipse.xsemantics.runtime.RuleEnvironment
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.service.OperationCanceledManager
 
@@ -70,7 +70,7 @@ package abstract class AbstractProcessor {
 	 */
 	def protected Result<TypeRef> askXsemanticsForType(RuleEnvironment G, RuleApplicationTrace trace, TypableElement elem) {
 		if (elem.eIsProxy) {
-			return new Result(TypeRefsFactory.eINSTANCE.createUnknownTypeRef);
+			return Result.success(TypeRefsFactory.eINSTANCE.createUnknownTypeRef);
 		}
 		// special case:
 		// TStructMembers are special in that they may be types (in case of TStructMethod) and appear as AST nodes
@@ -247,8 +247,8 @@ package abstract class AbstractProcessor {
 	}
 
 	def protected static String resultToString(Result<TypeRef> result) {
-		"RESULT: " + if (result !== null && result.failed) {
-			"!FAILED! " + result.ruleFailedException.message;
+		"RESULT: " + if (result !== null && result.failure) {
+			"!FAILED! " + result.failureMessage;
 		} else {
 			result?.value?.typeRefAsString
 		}

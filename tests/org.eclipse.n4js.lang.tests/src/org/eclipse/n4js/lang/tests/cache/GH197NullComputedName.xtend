@@ -78,7 +78,7 @@ class GH197NullComputedName extends AbstractParserTest {
 		// The type of each typable element must have been cached 
 		while (allTypableASTNodes.hasNext) {
 			val typeRet = cache.getType(allTypableASTNodes.next);
-			assertFalse(typeRet.failed)
+			assertFalse(typeRet.failure)
 		}
 	}
 }

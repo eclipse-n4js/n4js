@@ -47,7 +47,7 @@ class N7_3_2_ExportStatementOfConstsTest extends N7_3_1_ConstTest {
 
 		val G = RuleEnvironmentExtensions.newRuleEnvironment(script);
 		var typeOfVariableResult = ts.type(G, varDecl)
-		assertNull("Cannot compute type of "+varDeclaration+":",typeOfVariableResult.ruleFailedException)
+		assertFalse("Cannot compute type of "+varDeclaration+":"+typeOfVariableResult.failureMessage,typeOfVariableResult.failure)
 		assertNotNull("Cannot compute type of "+varDeclaration+":",typeOfVariableResult.value)
 		assertEquals(expectedTypeAsString, typeOfVariableResult.value.typeRefAsString)
 	}

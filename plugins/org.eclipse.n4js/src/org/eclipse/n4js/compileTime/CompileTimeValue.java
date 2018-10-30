@@ -29,7 +29,7 @@ import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.ts.types.TField;
 import org.eclipse.n4js.ts.types.TObjectPrototype;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
-import org.eclipse.xsemantics.runtime.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 
 /**
  * The value of a compile-time expression as returned by {@link ASTMetaInfoCache#getCompileTimeValue(Expression)} and

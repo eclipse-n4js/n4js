@@ -11,8 +11,13 @@
 package org.eclipse.n4js.validation
 
 import com.google.inject.Inject
+import java.util.List
+import javax.inject.Singleton
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.AnnotationDefinition
+import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.FunctionDefinition
+import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.NamedElement
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
@@ -26,13 +31,8 @@ import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ts.utils.TypeUtils
-import org.eclipse.xsemantics.runtime.Result
-import javax.inject.Singleton
-import org.eclipse.emf.ecore.EObject
+import org.eclipse.n4js.typesystem.utils.Result
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
-import org.eclipse.n4js.n4JS.FunctionDeclaration
-import org.eclipse.n4js.n4JS.IdentifierRef
-import java.util.List
 
 /**
  */
@@ -275,7 +275,7 @@ class ValidatorMessageHelper {
 	 * whitespaces are trimmed.
 	 */
 	public def String trimTypesystemMessage(Result<?> tsresult) {
-		val String msg = tsresult?.ruleFailedException?.message;
+		val String msg = tsresult?.failureMessage;
 		if (msg === null) {
 			return "";
 		}

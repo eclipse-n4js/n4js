@@ -18,7 +18,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.ts.utils.TypeUtils
-import org.eclipse.xsemantics.runtime.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 
 /**
  * Type System Helper Strategy for deriving a new, slightly modified TypeRef from an existing TypeRef.

@@ -21,6 +21,7 @@ import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.util.ParseHelper
+import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -293,8 +294,8 @@ class JudgmentTypeTest extends AbstractTypesystemTest {
 
 		var result = ts.type(G, call)
 
-		if (result.ruleFailedException !== null) {
-			result.ruleFailedException.printStackTrace
+		if (result.failure) {
+			Assert.fail(result.failureMessage);
 		}
 
 		// eventually:

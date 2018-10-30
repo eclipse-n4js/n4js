@@ -38,8 +38,9 @@ import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.utils.TypeExtensions;
 import org.eclipse.n4js.ts.utils.TypeUtils;
+import org.eclipse.n4js.typesystem.utils.Result;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
-import org.eclipse.xsemantics.runtime.RuleEnvironment;
 import org.eclipse.xtext.EcoreUtil2;
 
 import com.google.inject.Inject;
@@ -57,11 +58,11 @@ public class ThisTypeJudgment extends AbstractJudgment {
 	 * Computes the this type at the given location. Since ECMAScript does not support lexical this typing, this
 	 * basically is a heuristic.
 	 */
-	public JResult<TypeRef> apply(RuleEnvironment G, EObject location) {
+	public Result<TypeRef> apply(RuleEnvironment G, EObject location) {
 		TypeRef resultValue = doApply(G, location);
 		return resultValue != null
-				? JResult.success(resultValue)
-				: JResult.failure("thisTypeJudgment failed", false, null);
+				? Result.success(resultValue)
+				: Result.failure("thisTypeJudgment failed", false, null);
 	}
 
 	private TypeRef doApply(RuleEnvironment G, EObject location) {

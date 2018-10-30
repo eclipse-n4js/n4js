@@ -93,7 +93,7 @@ class ThisScopingTest {
 				assertNotNull("No type defined for classifier", classifierType)
 				val boundTypeResult = ts.type(G, thisLiteral);
 				assertNotNull(
-					"Cannot retrieve upper bound of this type ref: " + boundTypeResult.ruleFailedException,
+					"Cannot retrieve upper bound of this type ref: " + boundTypeResult.failureMessage,
 					boundTypeResult.value
 				);
 				val boundType = boundTypeResult.value
@@ -104,7 +104,7 @@ class ThisScopingTest {
 				} else {
 					val upperBoundResult = ts.upperBound(G, boundType);
 					assertNotNull(
-						"Cannot retrieve upper bound of this type ref: " + upperBoundResult.ruleFailedException,
+						"Cannot retrieve upper bound of this type ref: " + upperBoundResult.failureMessage,
 						upperBoundResult.value
 					);
 					val upperBound = upperBoundResult.value;

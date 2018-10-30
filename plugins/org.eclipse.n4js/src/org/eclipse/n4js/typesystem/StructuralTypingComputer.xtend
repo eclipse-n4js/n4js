@@ -33,11 +33,11 @@ import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.ts.utils.TypeCompareUtils
 import org.eclipse.n4js.typesystem.constraints.TypeConstraint
+import org.eclipse.n4js.typesystem.utils.Result
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.utils.StructuralMembersTriple
 import org.eclipse.n4js.utils.StructuralTypesHelper
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
-import org.eclipse.xsemantics.runtime.Result
-import org.eclipse.xsemantics.runtime.RuleEnvironment
 import org.eclipse.xtend.lib.annotations.Data
 import org.eclipse.xtext.EcoreUtil2
 
@@ -351,8 +351,8 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 				subtypeResult = ts.subtype(G, mtypes.key, mtypes.value);
 			}
 
-			if (subtypeResult !== null && subtypeResult.failed) {
-				info.wrongMembers.add(right.name + " failed: " + subtypeResult.ruleFailedException.message);
+			if (subtypeResult !== null && subtypeResult.failure) {
+				info.wrongMembers.add(right.name + " failed: " + subtypeResult.failureMessage);
 			}
 		}
 	}
@@ -493,7 +493,7 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 	 * {@link EqualityHelper}
 	 */
 	def private void rememberStructuralSubtypingInProgressFor(RuleEnvironment G, TypeRef left, TypeRef right) {
-		G.add(GUARD_STRUCTURAL_TYPING_COMPUTER -> (left.wrap -> right.wrap), Boolean.TRUE);
+		G.put(GUARD_STRUCTURAL_TYPING_COMPUTER -> (left.wrap -> right.wrap), Boolean.TRUE);
 	}
 
 	def private boolean isStructuralSubtypingInProgressFor(RuleEnvironment G, TypeRef left, TypeRef right) {

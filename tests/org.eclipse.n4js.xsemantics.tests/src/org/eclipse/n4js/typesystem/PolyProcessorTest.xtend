@@ -11,7 +11,7 @@
 package org.eclipse.n4js.typesystem
 
 import com.google.inject.Inject
-import org.eclipse.xsemantics.runtime.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import java.util.function.Predicate
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.N4JSInjectorProvider

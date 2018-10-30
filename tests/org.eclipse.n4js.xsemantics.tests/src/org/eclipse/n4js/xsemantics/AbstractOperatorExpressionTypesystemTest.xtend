@@ -16,7 +16,6 @@ import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ExpressionStatement
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
 import org.eclipse.n4js.validation.JavaScriptVariant
-import org.eclipse.xsemantics.runtime.TraceUtils
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.validation.ValidationTestHelper
@@ -33,7 +32,6 @@ import static org.junit.Assert.*
 abstract class AbstractOperatorExpressionTypesystemTest extends AbstractTypesystemTest {
 
 	@Inject extension ValidationTestHelper
-	@Inject extension TraceUtils;
 
 	final static CharSequence scriptPrefix = '''
 	class A{}
@@ -57,8 +55,8 @@ abstract class AbstractOperatorExpressionTypesystemTest extends AbstractTypesyst
 		val expr = (script.scriptElements.reverseView.head as ExpressionStatement).expression;
 
 		val result = ts.type(G, expr);
-		if (result.ruleFailedException !== null) {
-			fail(result.ruleFailedException.failureTraceAsString);
+		if (result.failure) {
+			fail(result.failureMessage);
 		}
 		val typeExpr = result.value;
 

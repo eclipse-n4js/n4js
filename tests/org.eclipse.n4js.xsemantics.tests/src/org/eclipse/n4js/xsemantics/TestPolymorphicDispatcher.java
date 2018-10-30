@@ -80,7 +80,7 @@ import org.eclipse.n4js.ts.types.TSetter;
 import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.xsemantics.runtime.RuleApplicationTrace;
-import org.eclipse.xsemantics.runtime.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.xsemantics.runtime.internal.PatchedPolymorphicDispatcher;
 
 /**

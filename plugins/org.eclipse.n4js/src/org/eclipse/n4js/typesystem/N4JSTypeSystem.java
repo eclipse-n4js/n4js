@@ -23,11 +23,8 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.ts.utils.TypeUtils;
-import org.eclipse.n4js.typesystem.AbstractJudgment.JResult;
-import org.eclipse.xsemantics.runtime.ErrorInformation;
-import org.eclipse.xsemantics.runtime.Result;
-import org.eclipse.xsemantics.runtime.RuleEnvironment;
-import org.eclipse.xsemantics.runtime.RuleFailedException;
+import org.eclipse.n4js.typesystem.utils.Result;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.xtext.EcoreUtil2;
 
 import com.google.inject.Inject;
@@ -73,12 +70,12 @@ public class N4JSTypeSystem {
 	 * </ul>
 	 */
 	public Result<TypeRef> expectedTypeIn(RuleEnvironment G, EObject container, Expression expression) {
-		return TEMP_convert(ts_internal.expectedType(G, container, expression));
+		return ts_internal.expectedType(G, container, expression);
 	}
 
 	/** Tells if {@code left} is a subtype of {@code right}. Never returns <code>null</code>. */
 	public Result<Boolean> subtype(RuleEnvironment G, TypeArgument left, TypeArgument right) {
-		return TEMP_convert(ts_internal.subtype(G, left, right));
+		return ts_internal.subtype(G, left, right);
 	}
 
 	/** Tells if {@code left} is a subtype of {@code right}. */
@@ -88,12 +85,12 @@ public class N4JSTypeSystem {
 
 	/** Tells if {@code left} is a super type of {@code right}. Never returns <code>null</code>. */
 	public Result<Boolean> supertype(RuleEnvironment G, TypeArgument left, TypeArgument right) {
-		return TEMP_convert(ts_internal.supertype(G, left, right));
+		return ts_internal.supertype(G, left, right);
 	}
 
 	/** Tells if {@code left} is equal to {@code right}. Never returns <code>null</code>. */
 	public Result<Boolean> equaltype(RuleEnvironment G, TypeArgument left, TypeArgument right) {
-		return TEMP_convert(ts_internal.equaltype(G, left, right));
+		return ts_internal.equaltype(G, left, right);
 	}
 
 	/** Tells if {@code left} is equal to {@code right}. */
@@ -103,12 +100,12 @@ public class N4JSTypeSystem {
 
 	/** Returns the upper bound of the given type wrapped in a {@link Result}. Never returns <code>null</code>. */
 	public Result<TypeRef> upperBound(RuleEnvironment G, TypeArgument typeArgument) {
-		return TEMP_convert(JResult.success(ts_internal.upperBound(G, typeArgument)));
+		return Result.success(ts_internal.upperBound(G, typeArgument));
 	}
 
 	/** Returns the lower bound of the given type wrapped in a {@link Result}. Never returns <code>null</code>. */
 	public Result<TypeRef> lowerBound(RuleEnvironment G, TypeArgument typeArgument) {
-		return TEMP_convert(JResult.success(ts_internal.lowerBound(G, typeArgument)));
+		return Result.success(ts_internal.lowerBound(G, typeArgument));
 	}
 
 	/**
@@ -136,12 +133,12 @@ public class N4JSTypeSystem {
 	 * FunctionTypeExpression back).
 	 */
 	public Result<TypeArgument> substTypeVariables(RuleEnvironment G, TypeArgument typeArgument) {
-		return TEMP_convert(ts_internal.substTypeVariables(G, typeArgument));
+		return ts_internal.substTypeVariables(G, typeArgument);
 	}
 
 	/** Returns the this type at the given location wrapped in a {@link Result}. Never returns <code>null</code>. */
 	public Result<TypeRef> thisTypeRef(RuleEnvironment G, EObject location) {
-		return TEMP_convert(ts_internal.thisTypeRef(G, location));
+		return ts_internal.thisTypeRef(G, location);
 	}
 
 	// ###############################################################################################################
@@ -322,25 +319,5 @@ public class N4JSTypeSystem {
 		} else {
 			return null;
 		}
-	}
-
-	public static <T> Result<T> TEMP_convert(JResult<T> result) {
-		return result.isSuccess()
-				? new Result<>(result.getValue())
-				: new Result<>(failureToException(result));
-	}
-
-	private static RuleFailedException failureToException(JResult<?> failure) {
-		if (failure == null) {
-			return null;
-		}
-		RuleFailedException result = new RuleFailedException(
-				failure.getFailureMessage(),
-				"issue2",
-				failureToException(failure.getCause()));
-		if (failure.isCustom()) {
-			result.addErrorInformation(new ErrorInformation(null, null, TypeSystemErrorExtensions.PRIORITY_ERROR));
-		}
-		return result;
 	}
 }

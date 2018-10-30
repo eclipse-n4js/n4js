@@ -56,7 +56,7 @@ import org.eclipse.n4js.typesystem.DerivationComputer.BoundType
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.utils.StructuralTypesHelper
-import org.eclipse.xsemantics.runtime.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.xtext.EcoreUtil2
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*

@@ -51,7 +51,7 @@ import org.eclipse.n4js.typesystem.TypeSystemHelper;
 import org.eclipse.n4js.utils.StructuralMembersTriple;
 import org.eclipse.n4js.utils.StructuralMembersTripleIterator;
 import org.eclipse.n4js.utils.StructuralTypesHelper;
-import org.eclipse.xsemantics.runtime.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 /**
@@ -741,7 +741,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 			return true;
 		}
 		final RuleEnvironment G2 = RuleEnvironmentExtensions.wrap(G);
-		G2.add(key, Boolean.TRUE);
+		G2.put(key, Boolean.TRUE);
 		// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 		switch (variance) {
 		case CO:

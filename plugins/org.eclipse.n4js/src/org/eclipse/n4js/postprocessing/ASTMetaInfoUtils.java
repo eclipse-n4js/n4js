@@ -22,8 +22,8 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 
-import org.eclipse.xsemantics.runtime.Result;
-import org.eclipse.xsemantics.runtime.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.Result;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 
 /**
  * Convenience methods for accessing information in the {@link ASTMetaInfoCache}. All these methods are only available

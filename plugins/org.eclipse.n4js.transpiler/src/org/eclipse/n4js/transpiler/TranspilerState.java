@@ -27,7 +27,7 @@ import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
 import org.eclipse.n4js.utils.di.scopes.ScopeManager;
 import org.eclipse.n4js.utils.di.scopes.TransformationScoped;
 
-import org.eclipse.xsemantics.runtime.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 
 /**
  * Data class for all information that is required during transpilation of a resource. This will be passed to all

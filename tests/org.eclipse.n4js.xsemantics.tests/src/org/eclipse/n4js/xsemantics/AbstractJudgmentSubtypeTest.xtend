@@ -12,7 +12,6 @@ package org.eclipse.n4js.xsemantics
 
 import com.google.inject.Inject
 import org.eclipse.n4js.typesystem.TypeRefsToVariablesAssembler
-import org.eclipse.xsemantics.runtime.TraceUtils
 import org.junit.Before
 
 import static org.junit.Assert.*
@@ -23,8 +22,6 @@ abstract class AbstractJudgmentSubtypeTest extends AbstractTypesystemTest {
 
 	@Inject
 	TypeRefsToVariablesAssembler assembler;
-
-	@Inject extension TraceUtils
 
 	@Before
 	def prepareScript() {
@@ -52,15 +49,15 @@ abstract class AbstractJudgmentSubtypeTest extends AbstractTypesystemTest {
 
 		var result = ts.subtype(G, left, right);
 		if (expectedResult) {
-			if (result.ruleFailedException !== null) {
+			if (result.failure) {
 				fail(
 					leftTypeExpr + "<:" + rightTypeExpr + " should work, but: " +
-						result.ruleFailedException.failureTraceAsString())
+						result.failureMessage)
 			}
 			assertNotNull(leftTypeExpr + "<:" + rightTypeExpr + " should work", result.value)
 			assertTrue(leftTypeExpr + "<:" + rightTypeExpr + " should work", result.value)
 		} else {
-			assertNotNull(leftTypeExpr + "<:" + rightTypeExpr + " should fail", result.ruleFailedException);
+			assertTrue(leftTypeExpr + "<:" + rightTypeExpr + " should fail", result.failure);
 			assertNull(result.value)
 		}
 	}

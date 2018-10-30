@@ -40,7 +40,7 @@ import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.util.AllSuperTypesCollector;
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
 import org.eclipse.n4js.typesystem.TypeSystemHelper;
-import org.eclipse.xsemantics.runtime.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.util.Strings;
 

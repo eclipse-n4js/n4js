@@ -11,7 +11,7 @@
 package org.eclipse.n4js.compileTime
 
 import com.google.inject.Inject
-import org.eclipse.xsemantics.runtime.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.AnnotationDefinition

@@ -10,7 +10,10 @@
  */
  package org.eclipse.n4js.xsemantics
 
+import com.google.common.base.StandardSystemProperty
 import com.google.inject.Inject
+import java.util.List
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.N4JSParseHelper
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
@@ -24,13 +27,10 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
+import org.eclipse.n4js.typesystem.utils.Result
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.validation.JavaScriptVariant
-import org.eclipse.xsemantics.runtime.Result
-import org.eclipse.xsemantics.runtime.RuleEnvironment
-import org.eclipse.xsemantics.runtime.TraceUtils
-import java.util.List
-import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.diagnostics.Severity
 import org.eclipse.xtext.testing.validation.ValidationTestHelper
@@ -38,15 +38,12 @@ import org.eclipse.xtext.validation.Issue
 
 import static org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static org.junit.Assert.*
-import com.google.common.base.StandardSystemProperty
 
 /*
  * Base class for type system tests (with xsemantics)
  */
 @Log
 abstract class AbstractTypesystemTest {
-
-	@Inject extension TraceUtils;
 
 	@Inject extension ValidationTestHelper
 
@@ -62,8 +59,8 @@ abstract class AbstractTypesystemTest {
 	def assertTypeByName(String expectedTypeAsString, TypableElement expression) {
 		val G = newRuleEnvironment(expression);
 		val result = ts.type(G, expression)
-		if (result.ruleFailedException!==null) {
-			fail(result.ruleFailedException.failureTraceAsString);
+		if (result.failure) {
+			fail(result.failureMessage);
 		}
 		val typeExpr = result.value;
 		assertEquals("Assert at " + expression, expectedTypeAsString, typeExpr.typeRefAsString);
@@ -79,8 +76,8 @@ abstract class AbstractTypesystemTest {
 
 	def TypeRef checkedType(RuleEnvironment G, TypableElement eobj) {
 		val result = ts.type(G, eobj);
-		if (result.ruleFailedException !== null) {
-			fail(result.ruleFailedException.failureTraceAsString);
+		if (result.failure) {
+			fail(result.failureMessage);
 		}
 		return result.value;
 	}
@@ -116,12 +113,12 @@ abstract class AbstractTypesystemTest {
 	 * error message of the whole type inference, and the expected main reason of the failure,
 	 * i.e., the error message of the innermost failing rule
 	 */
-	def void assertTypeFailure(TypableElement elementToBeTypeInferred, String expectedFailure, String expectedMainReason) {
+	def void assertTypeFailure(TypableElement elementToBeTypeInferred, String expectedFailure) {
 
 		val G = newRuleEnvironment(elementToBeTypeInferred);
 		val result = ts.type(G,elementToBeTypeInferred);
 
-		result.assertFailure(expectedFailure, expectedMainReason)
+		result.assertFailure(expectedFailure)
 	}
 
 	def void assertSubtype(RuleEnvironment G, TypeRef left, TypeRef right, boolean expectedResult) {
@@ -143,29 +140,23 @@ abstract class AbstractTypesystemTest {
 			result.assertNoFailure
 			assertEquals(expectedResult, result.value)
 		} else {
-			assertNotNull(result.ruleFailedException)
+			assertTrue(result.failure)
 		}
 	}
 
 	def void assertNoFailure(Result<?> result) {
-		assertNull(result.ruleFailedException?.failureTraceAsString, result.ruleFailedException)
+		assertFalse(result.failureMessage, result.failure)
 		assertNotNull(result.value)
 	}
 
 	def void assertFailure(Result<?> result, String expectedFailureMessage) {
-		result.assertFailure(expectedFailureMessage, null)
-	}
-
-	def void assertFailure(Result<?> result, String expectedFailureMessage, String mainReason) {
 		result.assertFailure
-		assertEquals(expectedFailureMessage, result.ruleFailedException.message)
-		if (mainReason !== null)
-			assertEquals(mainReason, result.ruleFailedException.failureTraceAsStrings.last)
+		assertEquals(expectedFailureMessage, result.failureMessage)
 	}
 
 	def void assertFailure(Result<?> result) {
-		assertTrue("unexpected success", result.failed);
-		assertNotNull(result.ruleFailedException);
+		assertTrue("unexpected success", result.failure);
+		assertNotNull(result.failureMessage);
 		assertNull(result.value);
 	}
 

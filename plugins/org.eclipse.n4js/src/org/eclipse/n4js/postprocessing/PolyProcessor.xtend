@@ -34,7 +34,7 @@ import org.eclipse.n4js.typesystem.constraints.InferenceContext
 import org.eclipse.n4js.typesystem.constraints.TypeConstraint
 import org.eclipse.n4js.utils.DestructureHelper
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
-import org.eclipse.xsemantics.runtime.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.xtext.service.OperationCanceledManager
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*

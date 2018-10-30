@@ -13,7 +13,7 @@ package org.eclipse.n4js.typesystem
 import com.google.common.collect.ArrayListMultimap
 import com.google.common.collect.ImmutableList
 import com.google.common.collect.ListMultimap
-import org.eclipse.xsemantics.runtime.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import java.util.Collection
 import java.util.Collections
 import java.util.List
@@ -131,7 +131,7 @@ class RuleEnvironmentExtensions {
 
 		var G = new RuleEnvironment();
 		G.setPredefinedTypesFromObjectsResourceSet(res.resourceSet);
-		G.add(Resource, res);
+		G.put(Resource, res);
 		return G;
 	}
 
@@ -141,7 +141,7 @@ class RuleEnvironmentExtensions {
 	public def static RuleEnvironment newRuleEnvironment(Resource resource) {
 		var G = new RuleEnvironment();
 		G.setPredefinedTypesFromObjectsResourceSet(resource.resourceSet);
-		G.add(Resource, resource)
+		G.put(Resource, resource)
 		return G;
 	}
 
@@ -155,7 +155,7 @@ class RuleEnvironmentExtensions {
 	public def static RuleEnvironment newRuleEnvironment(RuleEnvironment G) {
 		var Gnew = new RuleEnvironment();
 		Gnew.setPredefinedTypes(G.getPredefinedTypes());
-		Gnew.add(Resource, G.get(Resource));
+		Gnew.put(Resource, G.get(Resource));
 		Gnew.addCancelIndicator(G.getCancelIndicator());
 		return Gnew;
 	}
@@ -175,12 +175,12 @@ class RuleEnvironmentExtensions {
 		val builtInTypeScope = BuiltInTypeScope.get(resourceSet);
 		val globalObjectTypeScope = GlobalObjectScope.get(resourceSet);
 		val virtualBaseTypeScope = VirtualBaseTypeScope.get(resourceSet);
-		G.add(PredefinedTypes.PREDEFINED_TYPES_KEY,
+		G.put(PredefinedTypes.PREDEFINED_TYPES_KEY,
 			new PredefinedTypes(builtInTypeScope, globalObjectTypeScope, virtualBaseTypeScope));
 	}
 
 	def static setPredefinedTypes(RuleEnvironment G, PredefinedTypes predefinedTypes) {
-		G.add(PredefinedTypes.PREDEFINED_TYPES_KEY, predefinedTypes);
+		G.put(PredefinedTypes.PREDEFINED_TYPES_KEY, predefinedTypes);
 	}
 
 	def static PredefinedTypes getPredefinedTypes(RuleEnvironment G) {
@@ -217,7 +217,7 @@ class RuleEnvironmentExtensions {
 	 * Add a cancel indicator to the given rule environment.
 	 */
 	def static void addCancelIndicator(RuleEnvironment G, CancelIndicator cancelIndicator) {
-		G.add(KEY__CANCEL_INDICATOR, cancelIndicator);
+		G.put(KEY__CANCEL_INDICATOR, cancelIndicator);
 	}
 
 	/**
@@ -252,9 +252,9 @@ class RuleEnvironmentExtensions {
 					addThisType(G,actualThisTypeRef.getTypeArg as TypeRef)
 				}
 			ParameterizedTypeRef:
-				G.add(KEY__THIS_BINDING, TypeUtils.createBoundThisTypeRef(actualThisTypeRef))
+				G.put(KEY__THIS_BINDING, TypeUtils.createBoundThisTypeRef(actualThisTypeRef))
 			BoundThisTypeRef:
-				G.add(KEY__THIS_BINDING, actualThisTypeRef)
+				G.put(KEY__THIS_BINDING, actualThisTypeRef)
 		}
 	}
 
@@ -271,7 +271,7 @@ class RuleEnvironmentExtensions {
 	 * This is used by a validation which will then produce a corresponding error.
 	 */
 	def static void recordInconsistentSubstitutions(RuleEnvironment G) {
-		G.add(KEY__INCONSISTENT_SUBSTITUTIONS, ArrayListMultimap.<TypeVariable,TypeRef>create());
+		G.put(KEY__INCONSISTENT_SUBSTITUTIONS, ArrayListMultimap.<TypeVariable,TypeRef>create());
 	}
 
 	/**
@@ -302,7 +302,7 @@ class RuleEnvironmentExtensions {
 	 */
 	def static void addExistentialTypeToBeReopened(RuleEnvironment G, ExistentialTypeRef existentialTypeRef) {
 		if(existentialTypeRef.getWildcard!==null)
-			G.add(KEY__REOPEN_EXISTENTIAL_TYPES->existentialTypeRef.getWildcard,Boolean.TRUE,true);
+			G.put(KEY__REOPEN_EXISTENTIAL_TYPES->existentialTypeRef.getWildcard,Boolean.TRUE,true);
 	}
 
 	/**
@@ -346,7 +346,7 @@ class RuleEnvironmentExtensions {
 	}
 
 	def static void setTypeReplacement(RuleEnvironment G, ITypeReplacementProvider replacementProvider) {
-		G.add(KEY__TYPE_REPLACEMENT, replacementProvider);
+		G.put(KEY__TYPE_REPLACEMENT, replacementProvider);
 	}
 
 	def static TypeRef getReplacement(RuleEnvironment G, TypeRef typeRef) {
@@ -853,7 +853,7 @@ class RuleEnvironmentExtensions {
 		// resolve wildcards
 		val actualValue = TypeUtils.captureWildcard(key, value);  // TODO capture before calling #isValidMapping() and return FALSE from isValidMapping() for Wildcard!!!!
 
-		G.add(key, actualValue);
+		G.put(key, actualValue);
 	}
 
 	/**

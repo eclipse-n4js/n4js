@@ -13,7 +13,7 @@ package org.eclipse.n4js.postprocessing
 import com.google.common.base.Optional
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import org.eclipse.xsemantics.runtime.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import java.util.List
 import java.util.Map
 import org.eclipse.n4js.n4JS.ObjectLiteral

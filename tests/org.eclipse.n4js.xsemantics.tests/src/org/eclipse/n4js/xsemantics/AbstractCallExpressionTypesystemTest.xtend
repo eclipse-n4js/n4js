@@ -21,7 +21,7 @@ import org.eclipse.n4js.typesystem.AbstractScriptAssembler
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
 import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.validation.JavaScriptVariant
-import org.eclipse.xsemantics.runtime.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import java.util.List
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
@@ -107,7 +107,7 @@ abstract class AbstractCallExpressionTypesystemTest extends AbstractTypesystemTe
 					null;
 			if (expectedType !== null) {
 				val actualTypeResult = ts.expectedTypeIn(G, arg, arg.expression);
-				if (actualTypeResult.failed) {
+				if (actualTypeResult.failure) {
 					assertNoFailure(actualTypeResult);
 				}
 				assertNotNull("rule expectedTypeIn returned null for argument "+i, actualTypeResult.value);

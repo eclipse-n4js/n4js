@@ -15,6 +15,7 @@ import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
 import org.eclipse.n4js.validation.JavaScriptVariant
+import org.eclipse.xtext.diagnostics.Severity
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.validation.ValidationTestHelper
@@ -22,7 +23,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 import static org.junit.Assert.*
-import org.eclipse.xtext.diagnostics.Severity
 
 /**
  * @see N7_3_2_ExportStatementOfVariablesTest
@@ -44,7 +44,7 @@ class N7_1_1_VariablesTest extends AbstractTypesystemTest {
 
 		val G = RuleEnvironmentExtensions.newRuleEnvironment(script);
 		var typeOfVariableResult = ts.type(G, varDecl)
-		assertNull("Cannot compute type of "+varDeclaration+":",typeOfVariableResult.ruleFailedException)
+		assertFalse("Cannot compute type of "+varDeclaration+":"+typeOfVariableResult.failureMessage,typeOfVariableResult.failure)
 		assertNotNull("Cannot compute type of "+varDeclaration+":",typeOfVariableResult.value)
 		assertEquals(expectedTypeAsString, typeOfVariableResult.value.typeRefAsString)
 	}

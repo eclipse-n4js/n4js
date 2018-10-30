@@ -67,7 +67,7 @@ abstract class AbstractTypeSystemHelperTests {
 		}
 		assertNotNull("bogus test, identifier ref " + propertyRefName + " not found", identifierRef)
 		val actualTypeResult = ts.type(G, identifierRef)
-		assertNull("Cannot type identifier ref " + propertyRefName, actualTypeResult.ruleFailedException)
+		assertFalse("Cannot type identifier ref " + propertyRefName + ": " + actualTypeResult.failureMessage, actualTypeResult.failure)
 		val propertyTypeRef = actualTypeResult.value
 		assertNotNull("Type identifier ref " + propertyRefName+ " is null", propertyTypeRef)
 
@@ -78,17 +78,17 @@ abstract class AbstractTypeSystemHelperTests {
 		val expectSuper = subtypeRel==SubTypeRelationForTest._super || subtypeRel==SubTypeRelationForTest._equals;
 
 		if (expectSub) {
-			assertNull(propertyRefName + " <: " + comparedTypeExpr + " failed", subTypeResult.ruleFailedException)
+			assertFalse(propertyRefName + " <: " + comparedTypeExpr + " failed: " + subTypeResult.failureMessage, subTypeResult.failure)
 			assertEquals(propertyRefName + " <: " + comparedTypeExpr + " failed", Boolean.TRUE, subTypeResult.value)
 		} else {
-			assertNotNull(propertyRefName + " <: " + comparedTypeExpr + " should fail", subTypeResult.ruleFailedException)
+			assertTrue(propertyRefName + " <: " + comparedTypeExpr + " should fail", subTypeResult.failure)
 			assertNotEquals(propertyRefName + " <: " + comparedTypeExpr + " should be false", Boolean.TRUE, subTypeResult.value)
 		}
 		if (expectSuper) {
-			assertNull(comparedTypeExpr + " <: " + propertyRefName + " failed", superTypeResult.ruleFailedException)
+			assertFalse(comparedTypeExpr + " <: " + propertyRefName + " failed: " + superTypeResult.failureMessage, superTypeResult.failure)
 			assertEquals(comparedTypeExpr + " <: " + propertyRefName + " failed", Boolean.TRUE, superTypeResult.value)
 		} else {
-			assertNotNull(comparedTypeExpr + " <: " + propertyRefName + " should fail", superTypeResult.ruleFailedException)
+			assertTrue(comparedTypeExpr + " <: " + propertyRefName + " should fail", superTypeResult.failure)
 			assertNotEquals(comparedTypeExpr + " <: " + propertyRefName + " should be false", Boolean.TRUE, superTypeResult.value)
 		}
 

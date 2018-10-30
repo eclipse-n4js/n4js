@@ -101,7 +101,7 @@ class ReactHelper {
 		val expr = jsxElem.jsxElementName.expression;
 		val G = expr.newRuleEnvironment;
 		val exprResult = ts.type(G, expr);
-		if (exprResult.failed)
+		if (exprResult.failure)
 			return null;
 
 		return exprResult.value;

@@ -34,7 +34,7 @@ import org.eclipse.n4js.ts.types.TSetter;
 import org.eclipse.n4js.ts.types.VoidType;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
-import org.eclipse.xsemantics.runtime.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Joiner;

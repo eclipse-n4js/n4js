@@ -41,7 +41,7 @@ import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
-import org.eclipse.xsemantics.runtime.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 
@@ -196,13 +196,13 @@ package abstract class AbstractPolyProcessor extends AbstractProcessor {
 		val Gx = G.wrap;
 		substitutions.entrySet.forEach [ e |
 			if (reverse)
-				Gx.add(e.value, TypeUtils.createTypeRef(e.key))
+				Gx.put(e.value, TypeUtils.createTypeRef(e.key))
 			else
-				Gx.add(e.key, TypeUtils.createTypeRef(e.value))
+				Gx.put(e.key, TypeUtils.createTypeRef(e.value))
 		];
 		val result = ts.substTypeVariables(Gx, typeRef);
-		if (result.failed)
-			throw new IllegalArgumentException("substitution failed", result.ruleFailedException);
+		if (result.failure)
+			throw new IllegalArgumentException("substitution failed: " + result.failureMessage);
 		return result.value as TypeRef; // we put a TypeRef into 'substTypeVariables', so we always get back a TypeRef
 	}
 
@@ -211,10 +211,10 @@ package abstract class AbstractPolyProcessor extends AbstractProcessor {
 			return typeRef; // note: returning 'null' if typeRef==null (broken AST, etc.)
 		}
 		val Gx = G.wrap;
-		solution.entrySet.forEach[e|Gx.add(e.key, e.value)];
+		solution.entrySet.forEach[e|Gx.put(e.key, e.value)];
 		val result = ts.substTypeVariables(Gx, typeRef);
-		if (result.failed)
-			throw new IllegalArgumentException("substitution failed", result.ruleFailedException);
+		if (result.failure)
+			throw new IllegalArgumentException("substitution failed: " + result.failureMessage);
 		return result.value as TypeRef; // we put a TypeRef into 'substTypeVariables', so we always get back a TypeRef
 	}
 

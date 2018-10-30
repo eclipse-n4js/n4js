@@ -153,12 +153,13 @@ import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.ts.types.TypingStrategy;
 import org.eclipse.n4js.ts.types.util.TypesSwitch;
 import org.eclipse.n4js.ts.utils.TypeUtils;
+import org.eclipse.n4js.typesystem.utils.Result;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.utils.DestructureHelper;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.PromisifyHelper;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
-import org.eclipse.xsemantics.runtime.RuleEnvironment;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -182,13 +183,13 @@ public class TypeJudgment extends AbstractJudgment {
 	@Inject
 	private ReactHelper reactHelper;
 
-	public JResult<TypeRef> apply(RuleEnvironment G, TypableElement element) {
+	public Result<TypeRef> apply(RuleEnvironment G, TypableElement element) {
 		TypeRef result = doApply(G, element);
 		if (result == null) {
 			final String elementStr = element != null ? element.eClass().getName() : "<null>";
-			return JResult.failure("cannot type " + elementStr, false, null);
+			return Result.failure("cannot type " + elementStr, false, null);
 		}
-		return JResult.success(result);
+		return Result.success(result);
 	}
 
 	private TypeRef doApply(RuleEnvironment G, TypableElement element) {
@@ -343,7 +344,7 @@ public class TypeJudgment extends AbstractJudgment {
 				final Pair<String, Expression> guardKey = Pair.of(GUARD_VARIABLE_DECLARATION, vdecl.getExpression());
 				if (G.get(guardKey) == null) {
 					final RuleEnvironment G2 = wrap(G);
-					G2.add(guardKey, Boolean.TRUE);
+					G2.put(guardKey, Boolean.TRUE);
 					// compute the value type at this location in the destructuring pattern
 					final TypeRef raw = destructureHelper.getTypeOfVariableDeclarationInDestructuringPattern(G2, vdecl);
 					T = raw != null ? raw : anyTypeRef(G);
@@ -357,7 +358,7 @@ public class TypeJudgment extends AbstractJudgment {
 				final Pair<String, EObject> guardKey = Pair.of(GUARD_VARIABLE_DECLARATION, vdecl.eContainer());
 				if (G.get(guardKey) == null) {
 					final RuleEnvironment G2 = wrap(G);
-					G2.add(guardKey, Boolean.TRUE);
+					G2.put(guardKey, Boolean.TRUE);
 					final TypeRef ofPartTypeRef = ts.type(G2, forOfStmnt.getExpression()).getValue();
 					final TypeArgument elemType = ofPartTypeRef != null
 							? destructureHelper.extractIterableElementType(G2, ofPartTypeRef)
@@ -380,7 +381,7 @@ public class TypeJudgment extends AbstractJudgment {
 				final Pair<String, Expression> guardKey = Pair.of(GUARD_VARIABLE_DECLARATION, vdecl.getExpression());
 				if (G.get(guardKey) == null) {
 					final RuleEnvironment G2 = wrap(G);
-					G2.add(guardKey, Boolean.TRUE);
+					G2.put(guardKey, Boolean.TRUE);
 					// compute the expression type
 					TypeRef E = ts.type(G2, vdecl.getExpression()).getValue();
 					if (E instanceof BoundThisTypeRef
@@ -814,7 +815,7 @@ public class TypeJudgment extends AbstractJudgment {
 
 			// record that we are inferring the type of expr
 			final RuleEnvironment G2 = wrap(G);
-			G2.add(guardKey, anyTypeRef(G2));
+			G2.put(guardKey, anyTypeRef(G2));
 
 			final TypeRef receiverTypeRef = ts.type(G2, expr.getTarget()).getValue();
 			if (receiverTypeRef == null) {
@@ -948,7 +949,7 @@ public class TypeJudgment extends AbstractJudgment {
 				} else {
 					// record that we are inferring the type of expr
 					final RuleEnvironment G2 = wrap(G);
-					G2.add(guardKey, F.getReturnTypeRef());
+					G2.put(guardKey, F.getReturnTypeRef());
 
 					// get the return type of F
 					if (expr.eContainer() instanceof AwaitExpression

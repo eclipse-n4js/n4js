@@ -36,7 +36,7 @@ import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.utils.TypeCompareHelper
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.utils.RecursionGuard
-import org.eclipse.xsemantics.runtime.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 
@@ -144,7 +144,7 @@ class GenericsComputer extends TypeSystemHelperStrategy {
 		if(currSubstitute===typeVar)
 			currSubstitute=null;
 
-		G.add(typeVar, mergeTypeArgs(currSubstitute,actualTypeArg));
+		G.put(typeVar, mergeTypeArgs(currSubstitute,actualTypeArg));
 	}
 	private def mergeTypeArgs(Object... typeArgs) {
 		val result = newArrayList
@@ -360,7 +360,7 @@ class GenericsComputer extends TypeSystemHelperStrategy {
 	 */
 	def void restorePostponedSubstitutionsFrom(RuleEnvironment G, StructuralTypeRef typeRef) {
 		typeRef.postponedSubstitutions.forEach[currMapping|
-			G.add(currMapping.typeVar, TypeUtils.copy(currMapping.typeArg));
+			G.put(currMapping.typeVar, TypeUtils.copy(currMapping.typeArg));
 		]
 	}
 

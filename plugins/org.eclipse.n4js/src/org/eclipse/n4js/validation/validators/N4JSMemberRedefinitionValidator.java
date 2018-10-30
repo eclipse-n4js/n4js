@@ -107,6 +107,8 @@ import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
 import org.eclipse.n4js.typesystem.TypeSystemHelper;
+import org.eclipse.n4js.typesystem.utils.Result;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
@@ -117,8 +119,6 @@ import org.eclipse.n4js.validation.validators.utils.MemberCube;
 import org.eclipse.n4js.validation.validators.utils.MemberMatrix;
 import org.eclipse.n4js.validation.validators.utils.MemberMatrix.SourceAwareIterator;
 import org.eclipse.n4js.validation.validators.utils.MemberRedefinitionUtils;
-import org.eclipse.xsemantics.runtime.Result;
-import org.eclipse.xsemantics.runtime.RuleEnvironment;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.util.Arrays;
 import org.eclipse.xtext.validation.Check;
@@ -266,7 +266,7 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 				inheritedConstructor);
 		final Result<Boolean> subtypeResult = isSubTypeResult(inheritedConstructor, rightThisContext,
 				inheritedConstructor);
-		if (subtypeResult.failed()) {
+		if (subtypeResult.isFailure()) {
 			final String msg = getMessageForCLF_PSEUDO_REDEFINED_SPEC_CTOR_INCOMPATIBLE(
 					validatorMessageHelper.description(inheritedConstructor),
 					validatorMessageHelper.description(tClassifier),
@@ -707,7 +707,7 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 		// 7. type compatible
 		if (!m.isSetter() && !s.isSetter()) { // in Method (including constructor), Getter, Field
 			Result<Boolean> result = isSubTypeResult(m, s);
-			if (result.failed()) {
+			if (result.isFailure()) {
 				if (!consumptionConflict) { // avoid consequential errors
 					messageOverrideMemberTypeConflict(redefinitionType, m, s, result, mm);
 				}
@@ -722,7 +722,7 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 
 		if ((m.isSetter() || m.isField()) && !s.isGetter() && !sIsConst) {
 			Result<Boolean> result = isSubTypeResult(s, m);
-			if (result.failed()) {
+			if (result.isFailure()) {
 				if (!consumptionConflict) { // avoid consequential errors
 					messageOverrideMemberTypeConflict(redefinitionType, m, s, result, mm);
 				}
@@ -1204,7 +1204,7 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 	}
 
 	private boolean isSubType(TMember left, TMember right) {
-		return !isSubTypeResult(left, right).failed();
+		return isSubTypeResult(left, right).isSuccess();
 	}
 
 	private Result<Boolean> isSubTypeResult(TMember left, TMember right) {
@@ -1225,7 +1225,8 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 		final Resource res = left.eResource();
 		final TypeRef mainContext = getCurrentTypeContext();
 		final TypeRef rightThisContext = rightThisContextType != null
-				? TypeUtils.createTypeRef(rightThisContextType) : mainContext;
+				? TypeUtils.createTypeRef(rightThisContextType)
+				: mainContext;
 		final RuleEnvironment G_left = ts.createRuleEnvironmentForContext(mainContext, mainContext, res);
 		final RuleEnvironment G_right = ts.createRuleEnvironmentForContext(mainContext, rightThisContext, res);
 		TypeRef typeLeft = ts.tau(left, G_left);

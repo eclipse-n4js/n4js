@@ -119,6 +119,7 @@ import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
 import org.eclipse.n4js.typesystem.TypeSystemHelper
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.PromisifyHelper
@@ -128,7 +129,6 @@ import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
 import org.eclipse.n4js.validation.ValidatorMessageHelper
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError
-import org.eclipse.xsemantics.runtime.RuleEnvironment
 import org.eclipse.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.IQualifiedNameConverter
@@ -523,7 +523,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 				// let's see if utilityAccess.target denotes Promise
 				val tscope = RuleEnvironmentExtensions.getPredefinedTypes(G).builtInTypeScope
 				val tresult = ts.type(G, utilityAccess.target)
-				if (!tresult.failed) {
+				if (!tresult.failure) {
 					val tr = tresult.value
 					if (tr instanceof TypeTypeRef) {
 						val str = tr.getTypeArg

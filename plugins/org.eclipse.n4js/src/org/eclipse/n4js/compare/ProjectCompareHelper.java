@@ -58,10 +58,10 @@ import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.ITypeReplacementProvider;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
+import org.eclipse.n4js.typesystem.utils.Result;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.n4js.utils.FindArtifactHelper;
-import org.eclipse.xsemantics.runtime.Result;
-import org.eclipse.xsemantics.runtime.RuleEnvironment;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 
@@ -623,15 +623,15 @@ public class ProjectCompareHelper {
 			RuleEnvironmentExtensions.setTypeReplacement(G, typeReplacementProvider);
 			final Result<Boolean> implSubtypeApi = typeSystem.subtype(G, typeImpl, typeApi);
 			final Result<Boolean> apiSubtypeImpl = typeSystem.subtype(G, typeApi, typeImpl);
-			final boolean isImplSubtypeApi = !implSubtypeApi.failed();
-			final boolean isApiSubtypeImpl = !apiSubtypeImpl.failed();
+			final boolean isImplSubtypeApi = !implSubtypeApi.isFailure();
+			final boolean isApiSubtypeImpl = !apiSubtypeImpl.isFailure();
 			final boolean isEqualType = isImplSubtypeApi && isApiSubtypeImpl;
 
 			if (!isEqualType) {
 				if (isImplSubtypeApi)
 					return ProjectCompareResult.compliant(); // not equal but at least compliant
 				else {
-					final String msg = implSubtypeApi.getRuleFailedException().getLocalizedMessage();
+					final String msg = implSubtypeApi.getFailureMessage();
 					return ProjectCompareResult.error(msg); // not even compliant
 				}
 			}

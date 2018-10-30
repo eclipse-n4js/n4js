@@ -18,7 +18,7 @@ import org.eclipse.n4js.n4idl.migrations.SwitchCondition
 import org.eclipse.n4js.n4idl.migrations.TypeSwitchCondition
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
-import org.eclipse.xsemantics.runtime.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.junit.Assert
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*

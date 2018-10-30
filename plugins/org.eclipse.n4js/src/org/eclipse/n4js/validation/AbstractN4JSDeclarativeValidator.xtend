@@ -65,7 +65,6 @@ import org.eclipse.n4js.typesystem.TypeSystemHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.UtilN4
 import org.eclipse.n4js.validation.AbstractMessageAdjustingN4JSValidator.MethodWrapperCancelable
-import org.eclipse.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator
 import org.eclipse.xtext.nodemodel.ICompositeNode
 import org.eclipse.xtext.nodemodel.INode
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
@@ -90,8 +89,6 @@ public class AbstractN4JSDeclarativeValidator extends AbstractMessageAdjustingN4
 	@Inject
 	protected extension ValidatorMessageHelper validatorMessageHelper;
 
-	@Inject
-	private XsemanticsValidatorErrorGenerator errorGenerator;
 	@Inject
 	private N4JSGrammarAccess grammarAccess
 	@Inject
@@ -248,8 +245,8 @@ public class AbstractN4JSDeclarativeValidator extends AbstractMessageAdjustingN4
 					val upperBound = typeParameter.declaredUpperBound ?: N4JSLanguageUtils.getTypeVariableImplicitUpperBound(G_subst);
 					val substituted = ts.substTypeVariables(G_subst, upperBound).value;
 					val result = ts.subtype(G_subst, typeArgument, substituted);
-					if (result.failed) {
-						errorGenerator.generateErrors(messageAcceptor, result, typeArgument);
+					if (result.failure) {
+						createTypeError(result, typeArgument);
 					}
 				}
 			}

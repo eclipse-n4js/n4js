@@ -67,8 +67,9 @@ import org.eclipse.n4js.ts.types.TypingStrategy;
 import org.eclipse.n4js.ts.types.util.AllSuperTypeRefsCollector;
 import org.eclipse.n4js.ts.types.util.Variance;
 import org.eclipse.n4js.ts.utils.TypeUtils;
+import org.eclipse.n4js.typesystem.utils.Result;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
-import org.eclipse.xsemantics.runtime.RuleEnvironment;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
@@ -77,18 +78,18 @@ import com.google.common.collect.Iterables;
 
 public final class SubtypeJudgment extends AbstractJudgment {
 
-	public JResult<Boolean> apply(RuleEnvironment G, TypeArgument left, TypeArgument right) {
-		JResult<Boolean> result = doApply(G, left, right);
+	public Result<Boolean> apply(RuleEnvironment G, TypeArgument left, TypeArgument right) {
+		Result<Boolean> result = doApply(G, left, right);
 		if (result.isFailure()) {
 			// set default failure message
 			final String leftMsg = left != null ? left.getTypeRefAsString() : "<null>";
 			final String rightMsg = right != null ? right.getTypeRefAsString() : "<null>";
-			return JResult.failure(leftMsg + " is not a subtype of " + rightMsg, result);
+			return Result.failure(leftMsg + " is not a subtype of " + rightMsg, result);
 		}
 		return result;
 	}
 
-	private JResult<Boolean> doApply(RuleEnvironment G, TypeArgument leftArg, TypeArgument rightArg) {
+	private Result<Boolean> doApply(RuleEnvironment G, TypeArgument leftArg, TypeArgument rightArg) {
 
 		// get rid of wildcards by taking their upper/lower bound
 		final TypeRef left = leftArg instanceof Wildcard ? ts.upperBound(G, leftArg) : (TypeRef) leftArg;
@@ -195,7 +196,7 @@ public final class SubtypeJudgment extends AbstractJudgment {
 		return failure();
 	}
 
-	private JResult<Boolean> applyUnion_Left(RuleEnvironment G,
+	private Result<Boolean> applyUnion_Left(RuleEnvironment G,
 			UnionTypeExpression U, TypeRef S) {
 		return requireAllSuccess(
 				U.getTypeRefs().stream().map(
@@ -203,7 +204,7 @@ public final class SubtypeJudgment extends AbstractJudgment {
 								.trimCauses(); // FIXME legacy behavior; refine error messages!
 	}
 
-	private JResult<Boolean> applyUnion_Right(RuleEnvironment G,
+	private Result<Boolean> applyUnion_Right(RuleEnvironment G,
 			TypeRef S, UnionTypeExpression U) {
 		return requireExistsSuccess(
 				U.getTypeRefs().stream().map(
@@ -211,7 +212,7 @@ public final class SubtypeJudgment extends AbstractJudgment {
 								.trimCauses(); // FIXME legacy behavior; refine error messages!
 	}
 
-	private JResult<Boolean> applyIntersection_Left(RuleEnvironment G,
+	private Result<Boolean> applyIntersection_Left(RuleEnvironment G,
 			IntersectionTypeExpression I, TypeRef S) {
 		return requireExistsSuccess(
 				I.getTypeRefs().stream().map(
@@ -219,7 +220,7 @@ public final class SubtypeJudgment extends AbstractJudgment {
 								.trimCauses(); // FIXME legacy behavior; refine error messages!
 	}
 
-	private JResult<Boolean> applyIntersection_Right(RuleEnvironment G,
+	private Result<Boolean> applyIntersection_Right(RuleEnvironment G,
 			TypeRef S, IntersectionTypeExpression I) {
 		return requireAllSuccess(
 				I.getTypeRefs().stream().map(
@@ -227,7 +228,7 @@ public final class SubtypeJudgment extends AbstractJudgment {
 								.trimCauses(); // FIXME legacy behavior; refine error messages!
 	}
 
-	private JResult<Boolean> applyParameterizedTypeRef(RuleEnvironment G,
+	private Result<Boolean> applyParameterizedTypeRef(RuleEnvironment G,
 			ParameterizedTypeRef leftOriginal, ParameterizedTypeRef rightOriginal) {
 		final TypeRef left = getReplacement(G, leftOriginal);
 		final TypeRef right = getReplacement(G, rightOriginal);
@@ -291,7 +292,7 @@ public final class SubtypeJudgment extends AbstractJudgment {
 				final StructuralTypingResult result = typeSystemHelper.isStructuralSubtype(G, left, right);
 				if (!result.isValue()) {
 					final RuleEnvironment G2 = wrap(G);
-					G2.add(guardKey, Boolean.TRUE);
+					G2.put(guardKey, Boolean.TRUE);
 					if (result.isN4ObjectOnLeftWithDefSite()
 							// check if left is declared/nominal subtype of right
 							&& ts.subtype(G2, left, right).isSuccess()) {
@@ -372,7 +373,7 @@ public final class SubtypeJudgment extends AbstractJudgment {
 							// first time here for wildcard 'rightArg'
 							// -> continue as usual but add guard to rule environment
 							G2 = wrap(G);
-							G2.add(guardKey, Boolean.TRUE);
+							G2.put(guardKey, Boolean.TRUE);
 						} else {
 							// returned here for the same wildcard!
 							// -> ignore implicit upper bound on right-hand side to break infinite loop
@@ -390,7 +391,7 @@ public final class SubtypeJudgment extends AbstractJudgment {
 // why not just require type equality, i.e. L<:R && R<:L (without taking upper/lower bounds) and let the
 // subtype rules for WildCards / ExistentialTypeRefs do the heavy lifting?
 // @formatter:on
-					JResult<Boolean> tempResult = success();
+					Result<Boolean> tempResult = success();
 					// require leftArg <: rightArg, except we have contravariance
 					if (variance != Variance.CONTRA) {
 						tempResult = ts.subtype(G2, leftArgUpper, rightArgUpper);
@@ -452,12 +453,12 @@ public final class SubtypeJudgment extends AbstractJudgment {
 		}
 	}
 
-	private JResult<Boolean> applyFunctionTypeExprOrRef(RuleEnvironment G,
+	private Result<Boolean> applyFunctionTypeExprOrRef(RuleEnvironment G,
 			FunctionTypeExprOrRef left, FunctionTypeExprOrRef right) {
 		return resultFromBoolean(typeSystemHelper.isSubtypeFunction(G, left, right));
 	}
 
-	private JResult<Boolean> applyTypeTypeRef(RuleEnvironment G,
+	private Result<Boolean> applyTypeTypeRef(RuleEnvironment G,
 			TypeTypeRef left, TypeTypeRef right) {
 		final TypeArgument leftTypeArg = left.getTypeArg();
 		final TypeArgument rightTypeArg = right.getTypeArg();
@@ -500,7 +501,7 @@ public final class SubtypeJudgment extends AbstractJudgment {
 			}
 
 			// check type arguments
-			final JResult<Boolean> result = ts.subtype(G, leftTypeArg, rightTypeArg);
+			final Result<Boolean> result = ts.subtype(G, leftTypeArg, rightTypeArg);
 			if (!result.isSuccess()) {
 				return failure(result);
 			}
@@ -559,7 +560,7 @@ public final class SubtypeJudgment extends AbstractJudgment {
 		}
 	}
 
-	private JResult<Boolean> applyExistentialTypeRef_Left(RuleEnvironment G,
+	private Result<Boolean> applyExistentialTypeRef_Left(RuleEnvironment G,
 			ExistentialTypeRef existentialTypeRef, TypeArgument right) {
 		if (isExistentialTypeToBeReopened(G, existentialTypeRef)) {
 			// special case: open existential
@@ -589,7 +590,7 @@ public final class SubtypeJudgment extends AbstractJudgment {
 		}
 	}
 
-	private JResult<Boolean> applyExistentialTypeRef_Right(RuleEnvironment G,
+	private Result<Boolean> applyExistentialTypeRef_Right(RuleEnvironment G,
 			TypeArgument left, ExistentialTypeRef existentialTypeRef) {
 		if (isExistentialTypeToBeReopened(G, existentialTypeRef)) {
 			// special case: open existential
@@ -623,7 +624,7 @@ public final class SubtypeJudgment extends AbstractJudgment {
 		}
 	}
 
-	private JResult<Boolean> applyBoundThisTypeRef_Both(RuleEnvironment G,
+	private Result<Boolean> applyBoundThisTypeRef_Both(RuleEnvironment G,
 			BoundThisTypeRef left, BoundThisTypeRef right) {
 		// also see subtypeParameterizedTypeRef, simplified here as less cases are possible
 		if (right.isUseSiteStructuralTyping()) {
@@ -643,7 +644,7 @@ public final class SubtypeJudgment extends AbstractJudgment {
 		}
 	}
 
-	private JResult<Boolean> applyBoundThisTypeRef_Left(RuleEnvironment G,
+	private Result<Boolean> applyBoundThisTypeRef_Left(RuleEnvironment G,
 			BoundThisTypeRef boundThisTypeRef, TypeArgument right) {
 		if (boundThisTypeRef == right) {
 			return success();
@@ -653,7 +654,7 @@ public final class SubtypeJudgment extends AbstractJudgment {
 				ts.subtype(G, upperExt, right));
 	}
 
-	private JResult<Boolean> applyBoundThisTypeRef_Right(RuleEnvironment G,
+	private Result<Boolean> applyBoundThisTypeRef_Right(RuleEnvironment G,
 			TypeArgument left, BoundThisTypeRef boundThisTypeRef) {
 		if (left == boundThisTypeRef) {
 			return success();
@@ -693,21 +694,21 @@ public final class SubtypeJudgment extends AbstractJudgment {
 	// ################################################################################
 	// utility methods:
 
-	private JResult<Boolean> resultFromBoolean(boolean result) {
+	private Result<Boolean> resultFromBoolean(boolean result) {
 		return result ? success() : failure();
 	}
 
-	private JResult<Boolean> requireAllSuccess(JResult<?>... results) {
+	private Result<Boolean> requireAllSuccess(Result<?>... results) {
 		if (results == null || results.length == 0) {
 			throw new IllegalArgumentException("no results given");
 		}
 		return requireAllSuccess(Stream.of(results));
 	}
 
-	private JResult<Boolean> requireAllSuccess(Stream<JResult<?>> results) {
-		Iterator<JResult<?>> iter = results.iterator();
+	private Result<Boolean> requireAllSuccess(Stream<Result<?>> results) {
+		Iterator<Result<?>> iter = results.iterator();
 		while (iter.hasNext()) {
-			final JResult<?> result = iter.next();
+			final Result<?> result = iter.next();
 			if (!result.isSuccess()) {
 				return failure(result);
 			}
@@ -715,11 +716,11 @@ public final class SubtypeJudgment extends AbstractJudgment {
 		return success();
 	}
 
-	private JResult<Boolean> requireExistsSuccess(Stream<JResult<?>> results) {
-		Iterator<JResult<?>> iter = results.iterator();
-		JResult<?> firstFailure = null;
+	private Result<Boolean> requireExistsSuccess(Stream<Result<?>> results) {
+		Iterator<Result<?>> iter = results.iterator();
+		Result<?> firstFailure = null;
 		while (iter.hasNext()) {
-			final JResult<?> result = iter.next();
+			final Result<?> result = iter.next();
 			if (result.isSuccess()) {
 				return success();
 			}
@@ -730,18 +731,18 @@ public final class SubtypeJudgment extends AbstractJudgment {
 		return firstFailure != null ? failure(firstFailure) : failure();
 	}
 
-	private JResult<Boolean> success() {
-		return JResult.success();
+	private Result<Boolean> success() {
+		return Result.success();
 	}
 
-	private <T> JResult<T> failure(JResult<?>... results) {
+	private <T> Result<T> failure(Result<?>... results) {
 		return failure((String) null, results);
 	}
 
-	private <T> JResult<T> failure(String failureMessage, JResult<?>... results) {
-		final JResult<?> firstFailure = Stream.of(results)
-				.filter(JResult::isFailure)
+	private <T> Result<T> failure(String failureMessage, Result<?>... results) {
+		final Result<?> firstFailure = Stream.of(results)
+				.filter(Result::isFailure)
 				.findFirst().orElse(null);
-		return JResult.failure(failureMessage, failureMessage != null, firstFailure);
+		return Result.failure(failureMessage, failureMessage != null, firstFailure);
 	}
 }

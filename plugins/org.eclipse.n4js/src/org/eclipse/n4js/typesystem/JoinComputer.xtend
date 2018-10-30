@@ -44,7 +44,7 @@ import org.eclipse.n4js.ts.utils.TypeCompareHelper
 import org.eclipse.n4js.ts.utils.TypeHelper
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.utils.ContainerTypesHelper
-import org.eclipse.xsemantics.runtime.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 
 import static java.util.Collections.*
 import static org.eclipse.n4js.ts.utils.SuperTypesList.*
@@ -412,14 +412,15 @@ class JoinComputer extends TypeSystemHelperStrategy {
 					if (! concreteSuperTypeRef.containsUnboundTypeVariables) {
 						concreteSuperTypeRef
 					} else {
-						var Gnext = G;
-
-						// parameterize the references:
-						for (TypeRef tr : pathFromSuperType.reverseView) {
-							var Gnew = new RuleEnvironment();
-							Gnew.next = Gnext;
-							Gnext = Gnew;
-						}
+						val Gnext = G.wrap;
+// original code:
+//						var Gnext = G;
+//						// parameterize the references:
+//						for (TypeRef tr : pathFromSuperType.reverseView) {
+//							var Gnew = new RuleEnvironment();
+//							Gnew.next = Gnext;
+//							Gnext = Gnew;
+//						}
 						genericsComputer.bindTypeVariables(Gnext,concreteSuperTypeRef);
 					}
 				));

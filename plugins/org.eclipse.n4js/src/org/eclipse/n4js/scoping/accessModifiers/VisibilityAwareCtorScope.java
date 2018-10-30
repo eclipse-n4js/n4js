@@ -20,7 +20,7 @@ import org.eclipse.n4js.typesystem.TypeSystemHelper;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.n4js.xtext.scoping.FilterWithErrorMarkerScope;
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
-import org.eclipse.xsemantics.runtime.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
 

@@ -28,7 +28,7 @@ import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.TypeSystemHelper
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
 import org.eclipse.n4js.utils.DestructureHelper
-import org.eclipse.xsemantics.runtime.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 

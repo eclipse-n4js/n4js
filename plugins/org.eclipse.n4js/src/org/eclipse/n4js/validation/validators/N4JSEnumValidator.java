@@ -36,7 +36,7 @@ import org.eclipse.n4js.ts.types.TEnum;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator;
-import org.eclipse.xsemantics.runtime.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.xtext.EnumLiteralDeclaration;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.EValidatorRegistrar;

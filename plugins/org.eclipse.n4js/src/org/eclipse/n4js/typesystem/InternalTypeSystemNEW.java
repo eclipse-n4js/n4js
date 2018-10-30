@@ -17,9 +17,8 @@ import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.types.TypableElement;
-import org.eclipse.n4js.typesystem.AbstractJudgment.JResult;
-import org.eclipse.xsemantics.runtime.Result;
-import org.eclipse.xsemantics.runtime.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.Result;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 
 import com.google.inject.Inject;
 
@@ -52,13 +51,8 @@ public class InternalTypeSystemNEW {
 	@Inject
 	private ThisTypeJudgment thisTypeJudgment;
 
-	public JResult<TypeRef> type(RuleEnvironment G, TypableElement element) {
-		Result<TypeRef> result = tsOLD.type(G, element);
-		if (result.failed()) {
-			return JResult.failure(result.getRuleFailedException().getMessage(), false, null);
-		} else {
-			return JResult.success(result.getValue());
-		}
+	public Result<TypeRef> type(RuleEnvironment G, TypableElement element) {
+		return tsOLD.type(G, element);
 	}
 
 	/**
@@ -68,32 +62,33 @@ public class InternalTypeSystemNEW {
 	 * while traversing the entire AST (during post-processing) to obtain the type of nodes that have not yet been
 	 * processed.
 	 */
-	public Result<TypeRef> use_type_judgment_from_PostProcessors(RuleEnvironment G, TypableElement element) {
-		return N4JSTypeSystem.TEMP_convert(typeJudgment.apply(G, element));
+	public Result<TypeRef> use_type_judgment_from_PostProcessors(RuleEnvironment G,
+			TypableElement element) {
+		return typeJudgment.apply(G, element);
 	}
 
-	public JResult<TypeRef> expectedType(RuleEnvironment G, EObject container, Expression expression) {
+	public Result<TypeRef> expectedType(RuleEnvironment G, EObject container, Expression expression) {
 		return expectedTypeJudgment.apply(G, container, expression);
 	}
 
-	public JResult<Boolean> subtype(RuleEnvironment G, TypeArgument left, TypeArgument right) {
+	public Result<Boolean> subtype(RuleEnvironment G, TypeArgument left, TypeArgument right) {
 		return subtypeJudgment.apply(G, left, right);
 	}
 
-	public JResult<Boolean> supertype(RuleEnvironment G, TypeArgument left, TypeArgument right) {
+	public Result<Boolean> supertype(RuleEnvironment G, TypeArgument left, TypeArgument right) {
 		if (subtype(G, right, left).isSuccess()) {
-			return JResult.success();
+			return Result.success();
 		} else {
-			return JResult.failure(
+			return Result.failure(
 					left.getTypeRefAsString() + " is not a super type of " + right.getTypeRefAsString(), false, null);
 		}
 	}
 
-	public JResult<Boolean> equaltype(RuleEnvironment G, TypeArgument left, TypeArgument right) {
+	public Result<Boolean> equaltype(RuleEnvironment G, TypeArgument left, TypeArgument right) {
 		if (subtype(G, left, right).isSuccess() && subtype(G, right, left).isSuccess()) {
-			return JResult.success();
+			return Result.success();
 		} else {
-			return JResult.failure(
+			return Result.failure(
 					left.getTypeRefAsString() + " is not equal to " + right.getTypeRefAsString(), false, null);
 		}
 	}
@@ -110,21 +105,21 @@ public class InternalTypeSystemNEW {
 		return boundJudgment.applyLowerBound(G, typeArg).getValue();
 	}
 
-	public JResult<TypeArgument> substTypeVariables(RuleEnvironment G, TypeArgument typeArg) {
+	public Result<TypeArgument> substTypeVariables(RuleEnvironment G, TypeArgument typeArg) {
 		return substTypeVariablesJudgment.apply(G, typeArg);
 	}
 
-	public JResult<Wildcard> substTypeVariables(RuleEnvironment G, Wildcard wildcard) {
+	public Result<Wildcard> substTypeVariables(RuleEnvironment G, Wildcard wildcard) {
 		// FIXME ugly cast!!!!
-		return (JResult<Wildcard>) ((JResult<?>) substTypeVariablesJudgment.apply(G, wildcard));
+		return (Result<Wildcard>) ((Result<?>) substTypeVariablesJudgment.apply(G, wildcard));
 	}
 
-	public JResult<TypeRef> substTypeVariables(RuleEnvironment G, TypeRef typeRef) {
+	public Result<TypeRef> substTypeVariables(RuleEnvironment G, TypeRef typeRef) {
 		// FIXME ugly cast!!!!
-		return (JResult<TypeRef>) ((JResult<?>) substTypeVariablesJudgment.apply(G, typeRef));
+		return (Result<TypeRef>) ((Result<?>) substTypeVariablesJudgment.apply(G, typeRef));
 	}
 
-	public JResult<TypeRef> thisTypeRef(RuleEnvironment G, EObject location) {
+	public Result<TypeRef> thisTypeRef(RuleEnvironment G, EObject location) {
 		return thisTypeJudgment.apply(G, location);
 	}
 }

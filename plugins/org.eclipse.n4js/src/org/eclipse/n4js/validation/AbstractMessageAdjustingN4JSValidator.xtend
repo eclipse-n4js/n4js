@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.EPackage
 import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.AnnotableElement
+import org.eclipse.n4js.typesystem.utils.Result
 import org.eclipse.n4js.utils.validation.DelegatingValidationMessageAcceptor
 import org.eclipse.n4js.validation.validators.IDEBUGValidator
 import org.eclipse.xtext.EcoreUtil2
@@ -24,10 +25,21 @@ import org.eclipse.xtext.diagnostics.Severity
 import org.eclipse.xtext.util.CancelIndicator
 import org.eclipse.xtext.validation.AbstractDeclarativeValidator
 import org.eclipse.xtext.validation.CancelableDiagnostician
+import org.eclipse.xtext.validation.ValidationMessageAcceptor
 
 /**
  */
 public class AbstractMessageAdjustingN4JSValidator extends AbstractN4JSValidator {
+
+	def boolean createTypeError(Result<?> result, EObject source) {
+		if (result.failure) {
+			val msg = result.combinedFailureMessage;
+			getMessageAcceptor().acceptError(msg, source, null,
+				ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "org.eclipse.n4js.TypeErrorIssueCode");
+			return true;
+		}
+		false;
+	}
 
 	/**
 	 * This class introduces for reuse the utility method {@link #isCanceled}

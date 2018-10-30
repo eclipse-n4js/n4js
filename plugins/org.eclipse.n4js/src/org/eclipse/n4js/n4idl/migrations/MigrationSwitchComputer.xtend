@@ -21,7 +21,7 @@ import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
-import org.eclipse.xsemantics.runtime.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.ts.types.TInterface
 
 /**

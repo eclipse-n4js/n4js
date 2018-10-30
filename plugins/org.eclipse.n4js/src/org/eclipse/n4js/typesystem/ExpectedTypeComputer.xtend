@@ -21,7 +21,7 @@ import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.utils.TypeUtils
-import org.eclipse.xsemantics.runtime.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.xtext.EcoreUtil2
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*

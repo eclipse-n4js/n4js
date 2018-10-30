@@ -11,6 +11,7 @@
 package org.eclipse.n4js.xsemantics
 
 import com.google.inject.Inject
+import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
 import org.eclipse.n4js.n4JS.AdditiveExpression
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.ExpressionStatement
@@ -27,7 +28,6 @@ import org.junit.runner.RunWith
 import static org.junit.Assert.*
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
 
 /*
  * Tests for judgment expectedtypein, see n4js.xsemantics for judgment, axiom and rules.
@@ -64,22 +64,22 @@ class JudgmentExpectedTypeInTest extends AbstractTypesystemTest {
 		val aToB = (script.scriptElements.get(7) as ExpressionStatement).expression as AssignmentExpression
 
 		var result = ts.type(G, a);
-		assertNull(result.ruleFailedException)
+		assertFalse(result.failure)
 		assertNotNull(result.value)
 		assertEquals("A", (result.value as ParameterizedTypeRef).declaredType.name)
 
 		result = ts.type(G, b);
-		assertNull(result.ruleFailedException)
+		assertFalse(result.failure)
 		assertNotNull(result.value)
 		assertEquals("B", (result.value as ParameterizedTypeRef).declaredType.name)
 
 		result = ts.type(G, aToA);
-		assertNull(result.ruleFailedException)
+		assertFalse(result.failure)
 		assertNotNull(result.value)
 		assertEquals("A", (result.value as ParameterizedTypeRef).declaredType.name)
 
 		result = ts.type(G, aToB);
-		assertNull(result.ruleFailedException)
+		assertFalse(result.failure)
 		assertNotNull(result.value)
 		assertEquals("B", (result.value as ParameterizedTypeRef).declaredType.name)
 
@@ -106,18 +106,18 @@ class JudgmentExpectedTypeInTest extends AbstractTypesystemTest {
 		val bToA = (script.scriptElements.get(6) as ExpressionStatement).expression as AssignmentExpression
 
 		var result = ts.type(G, a);
-		assertNull(result.ruleFailedException)
+		assertFalse(result.failure)
 		assertNotNull(result.value)
 		assertEquals("A", (result.value as ParameterizedTypeRef).declaredType.name)
 
 		result = ts.type(G, b);
-		assertNull(result.ruleFailedException)
+		assertFalse(result.failure)
 		assertNotNull(result.value)
 		assertEquals("B", (result.value as ParameterizedTypeRef).declaredType.name)
 
 		val aInAssignment = bToA.rhs
 		var expectedType = ts.expectedTypeIn(G, aInAssignment.eContainer, aInAssignment);
-		assertNull(expectedType.ruleFailedException)
+		assertFalse(expectedType.failure)
 		assertNotNull(expectedType.value)
 
 		// eventually:

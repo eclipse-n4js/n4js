@@ -52,7 +52,7 @@ import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.languages.N4LanguageUtils
-import org.eclipse.xsemantics.runtime.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.util.CancelIndicator
 

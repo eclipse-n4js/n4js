@@ -35,7 +35,8 @@ import org.eclipse.n4js.ts.typeRefs.util.TypeRefsSwitch;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.utils.TypeUtils;
-import org.eclipse.xsemantics.runtime.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.Result;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.Pair;
 
@@ -55,11 +56,11 @@ import org.eclipse.xtext.xbase.lib.Pair;
  */
 public final class SubstTypeVariablesJudgment extends AbstractJudgment {
 
-	public JResult<TypeArgument> apply(RuleEnvironment G, TypeArgument typeArg) {
+	public Result<TypeArgument> apply(RuleEnvironment G, TypeArgument typeArg) {
 		final SubstTypeVariablesSwitch theSwitch = new SubstTypeVariablesSwitch(G);
 		final TypeArgument resultValue = theSwitch.doSwitch(typeArg);
-		return resultValue != null ? JResult.success(resultValue)
-				: JResult.failure("judgment substTypeVariables failed", false, null);
+		return resultValue != null ? Result.success(resultValue)
+				: Result.failure("judgment substTypeVariables failed", false, null);
 	}
 
 	private final class SubstTypeVariablesSwitch extends TypeRefsSwitch<TypeArgument> {
@@ -217,7 +218,7 @@ public final class SubstTypeVariablesJudgment extends AbstractJudgment {
 									|| (tempDeclaredType != null && tempDeclaredType.isGeneric()))
 							&& G.get(guardKey) == null) {
 						final RuleEnvironment G2 = wrap(G);
-						G2.add(guardKey, Boolean.TRUE);
+						G2.put(guardKey, Boolean.TRUE);
 						result = substTypeVariables(G2, temp);
 						result = TypeUtils.copy(result); // always copy! (the subst-judgment might return 'temp'
 						// unchanged; see next comment why we have to copy 'temp')
@@ -241,7 +242,7 @@ public final class SubstTypeVariablesJudgment extends AbstractJudgment {
 										|| (tempDeclaredType != null && tempDeclaredType.isGeneric()))
 								&& G.get(guardKey) == null) {
 							final RuleEnvironment G2 = wrap(G);
-							G2.add(guardKey, Boolean.TRUE);
+							G2.put(guardKey, Boolean.TRUE);
 							TypeRef tempResult = substTypeVariables(G2, temp);
 							tempResult = TypeUtils.copy(tempResult); // always copy! (methods #createUnionType() and
 							// #createIntersectionType() below will do a #cloneIfContained() which fails here, see

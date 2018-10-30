@@ -37,11 +37,10 @@ import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
 import org.eclipse.n4js.typesystem.TypeSystemHelper
+import org.eclipse.n4js.typesystem.utils.Result
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.utils.N4JSLanguageUtils
-import org.eclipse.xsemantics.runtime.Result
 import org.eclipse.xsemantics.runtime.RuleApplicationTrace
-import org.eclipse.xsemantics.runtime.RuleEnvironment
-import org.eclipse.xsemantics.runtime.RuleFailedException
 import org.eclipse.xtext.service.OperationCanceledManager
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
@@ -145,13 +144,11 @@ public class TypeProcessor extends AbstractProcessor {
 				checkCanceled(G);
 				cache.storeType(node, resultAdjusted);
 			}
-		} catch (RuleFailedException e) {
-			cache.storeType(node, new Result(e));
 		} catch (Throwable th) {
 			operationCanceledManager.propagateIfCancelException(th);
 			th.printStackTrace
 			cache.storeType(node,
-				new Result(new RuleFailedException("error while asking Xsemantics: " + th.message, "YYY", th)));
+				Result.failure("error while asking Xsemantics: " + th.message, false, null));
 		}
 
 		log(indentLevel, cache.getTypeFailSafe(node));
@@ -166,7 +163,7 @@ public class TypeProcessor extends AbstractProcessor {
 	 * For more details see {@link TypeRef#isTypeOfObjectLiteral()}.
 	 */
 	def private <T extends TypeRef> Result<T> adjustResultForLocationInAST(RuleEnvironment G, Result<T> result, TypableElement astNode) {
-		if (!result.failed) {
+		if (result.success) {
 			val typeRef = result.value;
 			if (typeRef instanceof ParameterizedTypeRef) {
 				val optionalFieldStrategy = N4JSLanguageUtils.
@@ -174,7 +171,7 @@ public class TypeProcessor extends AbstractProcessor {
 				if (typeRef.ASTNodeOptionalFieldStrategy !== optionalFieldStrategy) {
 					val typeRefCpy = TypeUtils.copy(typeRef);
 					typeRefCpy.ASTNodeOptionalFieldStrategy = optionalFieldStrategy;
-					return new Result(typeRefCpy);
+					return Result.success(typeRefCpy);
 				}
 			}
 		}
@@ -221,7 +218,7 @@ public class TypeProcessor extends AbstractProcessor {
 
 		if (objRaw === null) {
 			// failing safely here; otherwise we would need preemptive null-checks wherever type inference is applied
-			return new Result(TypeRefsFactory.eINSTANCE.createUnknownTypeRef);
+			return Result.success(TypeRefsFactory.eINSTANCE.createUnknownTypeRef);
 		}
 
 		var obj = if (objRaw.eIsProxy) {
@@ -320,7 +317,7 @@ public class TypeProcessor extends AbstractProcessor {
 			}
 		} else {
 			// a non-typable AST node OR some entity in the TModule for which obj.isTypeModelElement returns false
-			return new Result(new RuleFailedException("cannot type object: " + obj));
+			return Result.failure("cannot type object: " + obj, false, null);
 		}
 	}
 
@@ -352,40 +349,40 @@ public class TypeProcessor extends AbstractProcessor {
 						if (callee instanceof N4ClassExpression) {
 							val calleeType = askXsemanticsForType(G, null, callee).value;
 							val calleeTypeStaticType = tsh.getStaticType(G, calleeType as TypeTypeRef);
-							return new Result(TypeUtils.createTypeRef(calleeTypeStaticType));
+							return Result.success(TypeUtils.createTypeRef(calleeTypeStaticType));
 						}
 					}
 					val declTypeRef = node.declaredTypeRefOfVFP;
 					return if (declTypeRef !== null) {
-						new Result(declTypeRef)
+						Result.success(declTypeRef)
 					} else {
-						new Result(G.anyTypeRef)
+						Result.success(G.anyTypeRef)
 					};
 				} else if (node instanceof FieldAccessor) {
 					val declTypeRef = node.declaredTypeRef;
 					return if (declTypeRef !== null) {
-						new Result(declTypeRef)
+						Result.success(declTypeRef)
 					} else {
-						new Result(G.anyTypeRef)
+						Result.success(G.anyTypeRef)
 					};
 				} else if (node instanceof TypeDefiningElement) {
-					return new Result(wrapTypeInTypeRef(G, node.definedType));
+					return Result.success(wrapTypeInTypeRef(G, node.definedType));
 				} else if (node instanceof Expression && node.eContainer instanceof YieldExpression) {
 					return askXsemanticsForType(G, null, node);
 				} else {
 					val e = new IllegalStateException(
 						"handling of a legal case of cyclic forward references missing in TypeProcessor");
 					e.printStackTrace;
-					return new Result(e);
+					return Result.failure(e.message, false, null);
 				}
 			} else if (astProcessor.isSemiCyclicForwardReferenceInForLoop(node, cache)) {
 				// semi-cyclic forward reference to a variable declaration in a for in/of loop:
 				// -> similar to cyclic variable declarations, we have to "guess" a type.
 				val declTypeRef = (node as VariableDeclaration).declaredTypeRef;
 				return if (declTypeRef !== null) {
-					new Result(declTypeRef)
+					Result.success(declTypeRef)
 				} else {
-					new Result(G.anyTypeRef)
+					Result.success(G.anyTypeRef)
 				};
 			} else {
 				// in case of a legal, *non*-cyclic forward reference, we can assume that the subtree below 'node'
@@ -395,7 +392,7 @@ public class TypeProcessor extends AbstractProcessor {
 		} else {
 			val msg = "*#*#*#*#*#* ILLEGAL FORWARD REFERENCE to " + node + " in " + node.eResource?.URI;
 			logErr(msg);
-			return new Result<TypeRef>(new RuleFailedException(msg));
+			return Result.failure(msg, false, null);
 		}
 	}
 

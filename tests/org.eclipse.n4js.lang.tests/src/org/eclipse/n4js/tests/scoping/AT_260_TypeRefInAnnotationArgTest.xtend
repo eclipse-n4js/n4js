@@ -118,8 +118,8 @@ class AT_260_TypeRefInAnnotationArgTest {
 		val thisRef = script.eAllContents.filter(ThisLiteral).head;
 		assertNotNull("This ref not found", thisRef);
 		val thisRefTypeResult = ts.type(script.newRuleEnvironment, thisRef);
-		if (thisRefTypeResult.ruleFailedException!==null) {
-			assertNull("Error typing this reference", thisRefTypeResult.ruleFailedException)
+		if (thisRefTypeResult.failure) {
+			assertNull("Error typing this reference", thisRefTypeResult.failureMessage)
 		}
 		val thisRefType = thisRefTypeResult.value;
 		assertNotNull("Cannot type this reference, it's null", thisRefType);

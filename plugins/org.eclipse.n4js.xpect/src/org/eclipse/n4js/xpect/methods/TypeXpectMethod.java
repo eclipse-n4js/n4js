@@ -28,6 +28,8 @@ import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
+import org.eclipse.n4js.typesystem.utils.Result;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter.IEObjectCoveringRegion;
 import org.eclipse.xpect.XpectImport;
@@ -37,9 +39,6 @@ import org.eclipse.xpect.parameter.ParameterParser;
 import org.eclipse.xpect.runner.Xpect;
 
 import com.google.inject.Inject;
-
-import org.eclipse.xsemantics.runtime.Result;
-import org.eclipse.xsemantics.runtime.RuleEnvironment;
 
 /**
  */
@@ -134,8 +133,8 @@ public class TypeXpectMethod {
 				return "Not a TypableElement at given region; got instead: " + eobject.eClass().getName();
 			result = ts.type(G, (TypableElement) eobject);
 		}
-		if (result.getRuleFailedException() != null) {
-			calculatedString = result.getRuleFailedException().getMessage();
+		if (result.isFailure()) {
+			calculatedString = result.getFailureMessage();
 		} else {
 			calculatedString = result.getValue().getTypeRefAsString();
 		}
@@ -184,7 +183,7 @@ public class TypeXpectMethod {
 		final ParameterizedCallExpression callExpr = (ParameterizedCallExpression) container;
 		final RuleEnvironment G = RuleEnvironmentExtensions.newRuleEnvironment(eobject);
 		final Result<TypeRef> targetTypeRef = ts.type(G, callExpr.getTarget());
-		if (targetTypeRef.failed() || !(targetTypeRef.getValue() instanceof FunctionTypeExprOrRef)) {
+		if (targetTypeRef.isFailure() || !(targetTypeRef.getValue() instanceof FunctionTypeExprOrRef)) {
 			return "xpect method error: cannot infer type of call expression target OR it's not a FunctionTypeExprOrRef";
 		}
 		final List<TypeVariable> typeParams = ((FunctionTypeExprOrRef) targetTypeRef.getValue()).getTypeVars();

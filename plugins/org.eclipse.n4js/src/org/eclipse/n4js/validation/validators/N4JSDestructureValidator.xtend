@@ -11,18 +11,16 @@
 package org.eclipse.n4js.validation.validators
 
 import com.google.inject.Inject
-import org.eclipse.xsemantics.runtime.RuleEnvironment
 import java.util.Map
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.n4js.n4JS.DestructNode
-import org.eclipse.n4js.utils.DestructureHelper
 import org.eclipse.n4js.n4JS.ArrayBindingPattern
 import org.eclipse.n4js.n4JS.ArrayLiteral
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.BindingPattern
 import org.eclipse.n4js.n4JS.BindingProperty
-import org.eclipse.n4js.n4JS.ForStatement
+import org.eclipse.n4js.n4JS.DestructNode
 import org.eclipse.n4js.n4JS.DestructureUtils
+import org.eclipse.n4js.n4JS.ForStatement
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.ObjectBindingPattern
 import org.eclipse.n4js.n4JS.ObjectLiteral
@@ -36,6 +34,8 @@ import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
+import org.eclipse.n4js.utils.DestructureHelper
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.xtext.scoping.IScope
@@ -213,14 +213,14 @@ class N4JSDestructureValidator extends AbstractN4JSDeclarativeValidator {
 					}
 
 					val result = ts.subtype(G,valueTypeRef,variableTypeRef);
-					if(result.failed) {
+					if(result.failure) {
 						val varName = node.varDecl?.name ?: node.varRef?.id?.name ?: "<unnamed>";
 						var elemDesc = if(node.isPositional) {
 							"at index "+parentNode.nestedNodes.indexOf(node)
 						} else {
 							"of property '"+node.propName+"'"
 						};
-						var tsMsg = result.ruleFailedException.message.trimPrefix('failed: ').trimSuffix('.');
+						var tsMsg = result.failureMessage.trimPrefix('failed: ').trimSuffix('.');
 						val msg = getMessageForDESTRUCT_TYPE_ERROR_VAR(varName, elemDesc, tsMsg);
 						if(node.varDecl!==null) {
 							addIssue(msg, node.varDecl, TypesPackage.eINSTANCE.identifiableElement_Name, DESTRUCT_TYPE_ERROR_VAR)
@@ -244,7 +244,7 @@ class N4JSDestructureValidator extends AbstractN4JSDeclarativeValidator {
 				G.objectTypeRef
 			};
 			val result = ts.subtype(G,valueTypeRef.autoboxIfPrimitive,expectedTypeRef);
-			if(result.failed) {
+			if(result.failure) {
 				val patternKind = if(isPositional) {
 					if(parentNode!==null) "Nested array" else "Array"
 				} else {
@@ -259,7 +259,7 @@ class N4JSDestructureValidator extends AbstractN4JSDeclarativeValidator {
 				} else {
 					"a value of type '"+valueTypeRef.typeRefAsString+"'"
 				};
-				var tsMsg = result.ruleFailedException.message.trimPrefix('failed: ').trimSuffix('.');
+				var tsMsg = result.failureMessage.trimPrefix('failed: ').trimSuffix('.');
 				val msg = getMessageForDESTRUCT_TYPE_ERROR_PATTERN(patternKind, elemDesc, tsMsg);
 				val astElem = node.astElement;
 				switch(astElem) {

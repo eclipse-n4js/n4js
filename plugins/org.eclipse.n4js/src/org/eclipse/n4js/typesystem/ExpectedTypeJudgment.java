@@ -80,9 +80,10 @@ import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.utils.TypeUtils;
+import org.eclipse.n4js.typesystem.utils.Result;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.utils.PromisifyHelper;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
-import org.eclipse.xsemantics.runtime.RuleEnvironment;
 import org.eclipse.xtext.EcoreUtil2;
 
 import com.google.inject.Inject;
@@ -112,9 +113,9 @@ public class ExpectedTypeJudgment extends AbstractJudgment {
 	@Inject
 	private ReactHelper reactHelper;
 
-	public JResult<TypeRef> apply(RuleEnvironment G, EObject container, Expression expression) {
+	public Result<TypeRef> apply(RuleEnvironment G, EObject container, Expression expression) {
 		TypeRef result = doApply(G, container, expression);
-		return JResult.success(result);
+		return Result.success(result);
 	}
 
 	private TypeRef doApply(RuleEnvironment G, EObject container, Expression expression) {

@@ -11,6 +11,7 @@
 package org.eclipse.n4js.xsemantics
 
 import com.google.inject.Inject
+import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.ExpressionStatement
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
@@ -18,8 +19,8 @@ import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.typesystem.utils.Result
 import org.eclipse.n4js.validation.JavaScriptVariant
-import org.eclipse.xsemantics.runtime.Result
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.validation.ValidationTestHelper
@@ -29,7 +30,6 @@ import org.junit.runner.RunWith
 import static org.junit.Assert.*
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
 
 /*
  * Tests for generics, see n4js.xsemantics for judgment, axiom and rules.
@@ -69,8 +69,8 @@ class GenericsTest extends AbstractTypesystemTest {
 
 		val result = ts.type(G, fieldAccess)
 
-		// println(result.ruleFailedException.failureTraceAsString())
-		assertNull(result.ruleFailedException)
+		// println(result.failureMessage)
+		assertFalse(result.failure)
 		assertNotNull(result.value)
 		assertEquals("A", (result.value as ParameterizedTypeRef).declaredType.name)
 	}
@@ -433,7 +433,7 @@ class GenericsTest extends AbstractTypesystemTest {
 		val actualType = ts.type(G, arg0.expression);
 
 		val result = ts.subtype(G, actualType.value, expectedType.value);
-		assertNotNull(result.ruleFailedException);
+		assertTrue(result.failure);
 
 		val issues = script.validate();
 		assertIssueCount(6, issues);

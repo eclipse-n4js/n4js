@@ -32,7 +32,7 @@ import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
 import org.eclipse.n4js.typesystem.constraints.TypeConstraint
 import org.eclipse.n4js.validation.JavaScriptVariant
-import org.eclipse.xsemantics.runtime.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.xtext.service.OperationCanceledManager
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner

@@ -30,22 +30,23 @@ import org.eclipse.n4js.ts.typeRefs.util.TypeRefsSwitch;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.DerivationComputer.BoundType;
-import org.eclipse.xsemantics.runtime.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.Result;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 
 public class BoundJudgment extends AbstractJudgment {
 
-	public JResult<TypeRef> applyUpperBound(RuleEnvironment G, TypeArgument typeArg) {
+	public Result<TypeRef> applyUpperBound(RuleEnvironment G, TypeArgument typeArg) {
 		final BoundSwitch theSwitch = new BoundSwitch(G, BoundType.UPPER);
 		final TypeRef resultValue = theSwitch.doSwitch(typeArg);
-		return resultValue != null ? JResult.success(resultValue)
-				: JResult.failure("judgment upperBound failed", false, null);
+		return resultValue != null ? Result.success(resultValue)
+				: Result.failure("judgment upperBound failed", false, null);
 	}
 
-	public JResult<TypeRef> applyLowerBound(RuleEnvironment G, TypeArgument typeArg) {
+	public Result<TypeRef> applyLowerBound(RuleEnvironment G, TypeArgument typeArg) {
 		final BoundSwitch theSwitch = new BoundSwitch(G, BoundType.LOWER);
 		final TypeRef resultValue = theSwitch.doSwitch(typeArg);
-		return resultValue != null ? JResult.success(resultValue)
-				: JResult.failure("judgment lowerBound failed", false, null);
+		return resultValue != null ? Result.success(resultValue)
+				: Result.failure("judgment lowerBound failed", false, null);
 	}
 
 	private final class BoundSwitch extends TypeRefsSwitch<TypeRef> {

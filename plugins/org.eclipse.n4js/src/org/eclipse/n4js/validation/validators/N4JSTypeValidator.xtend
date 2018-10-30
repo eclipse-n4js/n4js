@@ -14,7 +14,6 @@ import com.google.inject.Inject
 import java.util.LinkedList
 import java.util.List
 import org.eclipse.emf.common.util.EList
-import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.Argument
 import org.eclipse.n4js.n4JS.ArrayLiteral
@@ -82,14 +81,12 @@ import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
 import org.eclipse.n4js.typesystem.TypeSystemHelper
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
-import org.eclipse.xsemantics.runtime.Result
-import org.eclipse.xsemantics.runtime.RuleEnvironment
-import org.eclipse.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
@@ -105,9 +102,6 @@ import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
  * Class for validating the N4JS types.
  */
 class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
-
-	@Inject
-	private XsemanticsValidatorErrorGenerator errorGenerator;
 
 	@Inject
 	private N4JSTypeSystem ts;
@@ -399,7 +393,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 							val TypeRef typeOfGetter = ts.substTypeVariablesInTypeRef(G, typeOfGetterRAW);
 							if (typeOfGetter !== null) {
 								val result = ts.subtype(G, typeOfGetter, expectedType);
-								createError(result, assExpr.lhs);
+								createTypeError(result, assExpr.lhs);
 							}
 						}
 					}
@@ -458,7 +452,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 
 		var G = expression.newRuleEnvironment;
 		val inferredType = ts.type(G, expression);
-		if (createError(inferredType, expression)) {
+		if (createTypeError(inferredType, expression)) {
 			return;
 		}
 
@@ -493,7 +487,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 				// special case: write access
 				val result = ts.subtype(G, expectedTypeRef, inferredType.value);
 
-				if (result.failed) {
+				if (result.failure) {
 					// use custom error message, because otherwise it will be completely confusing
 					val message = getMessageForTYS_NO_SUPERTYPE_WRITE_ACCESS(expectedTypeRef.typeRefAsString,
 						inferredType.value.typeRefAsString);
@@ -506,7 +500,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 				// not working, as primitive types are not part of currently validated resource:
 				// errorGenerator.generateErrors(this, result, expression)
 				// so we create error here differently:
-				val errorCreated = createError(result, expression)
+				val errorCreated = createTypeError(result, expression)
 
 				if (! errorCreated) {
 					internalCheckSuperfluousPropertiesInObjectLiteralRek(G, expectedTypeRef, expression);
@@ -665,13 +659,6 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 //		}
 //
 //	}
-	def boolean createError(Result<?> result, EObject source) {
-		if (result.failed) {
-			errorGenerator.generateErrors(getMessageAcceptor(), result, source);
-			return true;
-		}
-		false;
-	}
 
 	/**
 	 * This validates a warning in chapter 4.10.1:<br/>
