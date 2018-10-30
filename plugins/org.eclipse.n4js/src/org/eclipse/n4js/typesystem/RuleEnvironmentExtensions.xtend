@@ -719,39 +719,47 @@ class RuleEnvironmentExtensions {
 	/**
 	 * Returns true if the given type is any.
 	 */
-	public def static boolean isAny(RuleEnvironment G, TypeRef typeRef) {
-		if (typeRef===null) {
-			return false
-		}
-		return typeRef.declaredType == G.getPredefinedTypes().builtInTypeScope.anyType
+	public def static boolean isAny(RuleEnvironment G, TypeArgument typeArg) {
+		return typeArg!==null && typeArg.declaredType == anyType(G);
+	}
+
+	/**
+	 * Returns true if the given type reference refers to the built-in type {@link #objectType(RuleEnvironment) Object}.
+	 */
+	public def static boolean isObject(RuleEnvironment G, TypeArgument typeArg) {
+		return typeArg!==null && typeArg.declaredType == objectType(G);
+	}
+
+	/**
+	 * Returns true if the given type reference refers to the built-in type {@link #functionType(RuleEnvironment) Function}.
+	 */
+	public def static boolean isFunction(RuleEnvironment G, TypeArgument typeArg) {
+		return typeArg!==null && typeArg.declaredType == functionType(G);
 	}
 
 	/**
 	 * Returns true if the given type is symbol.
 	 */
-	public def static boolean isSymbol(RuleEnvironment G, TypeRef typeRef) {
-		if (typeRef===null) {
-			return false
-		}
-		return typeRef.declaredType == G.getPredefinedTypes().builtInTypeScope.symbolType
+	public def static boolean isSymbol(RuleEnvironment G, TypeArgument typeArg) {
+		return typeArg!==null && typeArg.declaredType == symbolType(G);
 	}
-	
+
 	/**
 	 * Returns true if the given type reference points to one of the {@link BuiltInTypeScope#isNumeric(Type) numeric}
 	 * primitive built-in types.
 	 */
-	public def static boolean isNumeric(RuleEnvironment G, TypeRef typeRef) {
-		if (typeRef===null) {
+	public def static boolean isNumeric(RuleEnvironment G, TypeArgument typeArg) {
+		if (typeArg===null) {
 			return false;
 		}
-		if (G.predefinedTypes.builtInTypeScope.isNumeric(typeRef.declaredType)) {
+		if (G.predefinedTypes.builtInTypeScope.isNumeric(typeArg.declaredType)) {
 			return true;
 		}
-		if (typeRef instanceof UnionTypeExpression) {
-			return typeRef.typeRefs.forall[e|isNumeric(G, e)];
+		if (typeArg instanceof UnionTypeExpression) {
+			return typeArg.typeRefs.forall[e|isNumeric(G, e)];
 		}
-		if (typeRef instanceof IntersectionTypeExpression) {
-			return typeRef.typeRefs.exists[e|isNumeric(G, e)];
+		if (typeArg instanceof IntersectionTypeExpression) {
+			return typeArg.typeRefs.exists[e|isNumeric(G, e)];
 		}
 		return false;
 	}

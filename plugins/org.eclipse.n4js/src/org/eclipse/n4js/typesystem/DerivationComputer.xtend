@@ -34,7 +34,7 @@ class DerivationComputer extends TypeSystemHelperStrategy {
 
 	@Inject private N4JSTypeSystem ts;
 
-	private enum BoundType { UPPER, LOWER }
+	public static enum BoundType { UPPER, LOWER }
 
 
 	def FunctionTypeExpression createSubstitutionOfFunctionTypeExprOrRef(RuleEnvironment G, FunctionTypeExprOrRef F) {
@@ -105,7 +105,7 @@ class DerivationComputer extends TypeSystemHelperStrategy {
 	def FunctionTypeExpression createLowerBoundOfFunctionTypeExprOrRef(RuleEnvironment G, FunctionTypeExprOrRef F) {
 		createBoundOfFunctionTypeExprOrRef(G,F,BoundType.LOWER);
 	}
-	private def FunctionTypeExpression createBoundOfFunctionTypeExprOrRef(RuleEnvironment G, FunctionTypeExprOrRef F, BoundType boundType) {
+	def FunctionTypeExpression createBoundOfFunctionTypeExprOrRef(RuleEnvironment G, FunctionTypeExprOrRef F, BoundType boundType) {
 		val result = TypeRefsFactory.eINSTANCE.createFunctionTypeExpression
 
 		// let posterity know that the newly created FunctionTypeExpression

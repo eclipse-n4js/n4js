@@ -352,7 +352,7 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 			}
 
 			if (subtypeResult !== null && subtypeResult.failed) {
-				info.wrongMembers.add(right.name + " " + subtypeResult.ruleFailedException.message);
+				info.wrongMembers.add(right.name + " failed: " + subtypeResult.ruleFailedException.message);
 			}
 		}
 	}

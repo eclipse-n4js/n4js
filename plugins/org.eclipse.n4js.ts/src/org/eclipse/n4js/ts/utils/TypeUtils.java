@@ -57,8 +57,10 @@ import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeVariableMapping;
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
+import org.eclipse.n4js.ts.types.AnyType;
 import org.eclipse.n4js.ts.types.InferenceVariable;
 import org.eclipse.n4js.ts.types.MemberType;
+import org.eclipse.n4js.ts.types.NullType;
 import org.eclipse.n4js.ts.types.PrimitiveType;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TClassifier;
@@ -1311,24 +1313,31 @@ public class TypeUtils {
 	}
 
 	/**
+	 * Returns true iff the argument is non-null and refers to the built-in type 'any'.
+	 */
+	public static boolean isAny(TypeArgument typeArg) {
+		return typeArg != null && typeArg.getDeclaredType() instanceof AnyType;
+	}
+
+	/**
+	 * Returns true iff the argument is non-null and refers to the built-in type 'null'.
+	 */
+	public static boolean isNull(TypeArgument typeArg) {
+		return typeArg != null && typeArg.getDeclaredType() instanceof NullType;
+	}
+
+	/**
 	 * Returns true iff the argument is non-null and refers to the built-in type 'undefined'.
 	 */
 	public static boolean isUndefined(TypeArgument typeArg) {
-		if (typeArg instanceof ParameterizedTypeRef) {
-			return ((ParameterizedTypeRef) typeArg).getDeclaredType() instanceof UndefinedType;
-		}
-		return false;
+		return typeArg != null && typeArg.getDeclaredType() instanceof UndefinedType;
 	}
 
 	/**
 	 * Returns true iff the argument is non-null and refers to the built-in type 'void'.
 	 */
-	public static boolean isVoid(TypeArgument ref0) {
-		if (ref0 instanceof TypeRef) {
-			TypeRef ref = (TypeRef) ref0;
-			return (ref.getDeclaredType() instanceof VoidType);
-		}
-		return false;
+	public static boolean isVoid(TypeArgument typeArg) {
+		return typeArg != null && typeArg.getDeclaredType() instanceof VoidType;
 	}
 
 	/**

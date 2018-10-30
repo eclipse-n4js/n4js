@@ -11,12 +11,16 @@
 package org.eclipse.n4js.typesystem;
 
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.N4JSRuntimeModule;
+import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.postprocessing.ASTProcessor;
 import org.eclipse.n4js.postprocessing.TypeProcessor;
 import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TypableElement;
+import org.eclipse.n4js.typesystem.AbstractJudgment.JResult;
 import org.eclipse.n4js.xsemantics.InternalTypeSystem;
 import org.eclipse.xsemantics.runtime.ErrorInformation;
 import org.eclipse.xsemantics.runtime.Result;
@@ -160,6 +164,111 @@ public class CustomInternalTypeSystem extends InternalTypeSystem {
 	 */
 	public Result<TypeRef> use_type_judgment_from_PostProcessors(RuleEnvironment _environment_,
 			RuleApplicationTrace _trace_, TypableElement expression) {
-		return super.typeInternal(_environment_, _trace_, expression);
+		// return super.typeInternal(_environment_, _trace_, expression);
+		return TEMP_convert(ts_internal_NEW.type_actuallyUseIt(_environment_, expression));
+	}
+
+	// *******************************************************************************************
+
+	@Inject
+	private InternalTypeSystemNEW ts_internal_NEW;
+
+	@Override
+	protected Result<TypeRef> expectedTypeInInternal(RuleEnvironment _environment_, RuleApplicationTrace _trace_,
+			EObject container, Expression expression) {
+		// return super.expectedTypeInInternal(_environment_, _trace_, container, expression);
+		return TEMP_convert(ts_internal_NEW.expectedType(_environment_, container, expression));
+	}
+
+	@Override
+	protected Result<Boolean> subtypeInternal(RuleEnvironment _environment_, RuleApplicationTrace _trace_,
+			TypeArgument left, TypeArgument right) {
+		return TEMP_convert(ts_internal_NEW.subtype(_environment_, left, right));
+	}
+
+	@Override
+	public Boolean subtypeSucceeded(RuleEnvironment _environment_, RuleApplicationTrace _trace_, TypeArgument left,
+			TypeArgument right) {
+		// return super.subtypeSucceeded(_environment_, _trace_, left, right);
+		Result<Boolean> result = subtypeInternal(_environment_, _trace_, left, right);
+		return !result.failed() && result.getValue();
+	}
+
+	@Override
+	protected Result<Boolean> supertypeInternal(RuleEnvironment _environment_, RuleApplicationTrace _trace_,
+			TypeArgument left, TypeArgument right) {
+		// return super.supertypeInternal(_environment_, _trace_, left, right);
+		return TEMP_convert(ts_internal_NEW.supertype(_environment_, left, right));
+	}
+
+	@Override
+	public Boolean supertypeSucceeded(RuleEnvironment _environment_, RuleApplicationTrace _trace_, TypeArgument left,
+			TypeArgument right) {
+		// return super.supertypeSucceeded(_environment_, _trace_, left, right);
+		Result<Boolean> result = supertypeInternal(_environment_, _trace_, left, right);
+		return !result.failed() && result.getValue();
+	}
+
+	@Override
+	protected Result<Boolean> equaltypeInternal(RuleEnvironment _environment_, RuleApplicationTrace _trace_,
+			TypeArgument left, TypeArgument right) {
+		// return super.equaltypeInternal(_environment_, _trace_, left, right);
+		return TEMP_convert(ts_internal_NEW.equaltype(_environment_, left, right));
+	}
+
+	@Override
+	public Boolean equaltypeSucceeded(RuleEnvironment _environment_, RuleApplicationTrace _trace_, TypeArgument left,
+			TypeArgument right) {
+		// return super.equaltypeSucceeded(_environment_, _trace_, left, right);
+		Result<Boolean> result = equaltypeInternal(_environment_, _trace_, left, right);
+		return !result.failed() && result.getValue();
+	}
+
+	@Override
+	protected Result<TypeRef> upperBoundInternal(RuleEnvironment _environment_, RuleApplicationTrace _trace_,
+			TypeArgument typeArgument) {
+		// return super.upperBoundInternal(_environment_, _trace_, typeArgument);
+		return new Result<>(ts_internal_NEW.upperBound(_environment_, typeArgument));
+	}
+
+	@Override
+	protected Result<TypeRef> lowerBoundInternal(RuleEnvironment _environment_, RuleApplicationTrace _trace_,
+			TypeArgument typeArgument) {
+		// return super.lowerBoundInternal(_environment_, _trace_, typeArgument);
+		return new Result<>(ts_internal_NEW.lowerBound(_environment_, typeArgument));
+	}
+
+	@Override
+	protected Result<TypeArgument> substTypeVariablesInternal(RuleEnvironment _environment_,
+			RuleApplicationTrace _trace_, TypeArgument typeArg) {
+		// return super.substTypeVariablesInternal(_environment_, _trace_, typeArg);
+		return TEMP_convert(ts_internal_NEW.substTypeVariables(_environment_, typeArg));
+	}
+
+	@Override
+	protected Result<TypeRef> thisTypeRefInternal(RuleEnvironment _environment_, RuleApplicationTrace _trace_,
+			EObject location) {
+		// return super.thisTypeRefInternal(_environment_, _trace_, location);
+		return TEMP_convert(ts_internal_NEW.thisTypeRef(_environment_, location));
+	}
+
+	private <T> Result<T> TEMP_convert(JResult<T> result) {
+		return result.isSuccess()
+				? new Result<>(result.getValue())
+				: new Result<>(failureToException(result));
+	}
+
+	private RuleFailedException failureToException(JResult<?> failure) {
+		if (failure == null) {
+			return null;
+		}
+		RuleFailedException result = new RuleFailedException(
+				failure.getFailureMessage(),
+				"issue2",
+				failureToException(failure.getCause()));
+		if (failure.isCustom()) {
+			result.addErrorInformation(new ErrorInformation(null, null, TypeSystemErrorExtensions.PRIORITY_ERROR));
+		}
+		return result;
 	}
 }

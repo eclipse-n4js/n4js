@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.FunctionDefinition
+import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.ReturnStatement
@@ -51,6 +52,7 @@ import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.utils.TypeExtensions
 import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.typesystem.DerivationComputer.BoundType
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.utils.StructuralTypesHelper
@@ -58,7 +60,6 @@ import org.eclipse.xsemantics.runtime.RuleEnvironment
 import org.eclipse.xtext.EcoreUtil2
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor
 
 /**
  * Utility methods used in the XSemantics type system. Must be injected.
@@ -114,6 +115,9 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 	}
 	def FunctionTypeExpression createLowerBoundOfFunctionTypeExprOrRef(RuleEnvironment G, FunctionTypeExprOrRef F) {
 		derivationComputer.createLowerBoundOfFunctionTypeExprOrRef(G,F);
+	}
+	def FunctionTypeExpression createBoundOfFunctionTypeExprOrRef(RuleEnvironment G, FunctionTypeExprOrRef F, BoundType boundType) {
+		derivationComputer.createBoundOfFunctionTypeExprOrRef(G,F,boundType);
 	}
 
 	def void addSubstitutions(RuleEnvironment G, TypeRef typeRef) {
@@ -420,7 +424,7 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 	 * Creates a parameterized type ref to the wrapped static type of a TypeTypeRef, configured with the given
 	 * TypeArguments. Returns UnknownTypeRef if the static type could not be retrieved (e.g. unbound This-Type).
 	 */
-	def public TypeRef createTypeRefFromStaticType(RuleEnvironment G, TypeTypeRef ctr, TypeArgument ... typeArgs) {
+	def public TypeRef createTypeRefFromStaticType(RuleEnvironment G, TypeTypeRef ctr, TypeArgument... typeArgs) {
 		 val typeRef = getStaticTypeRef(G, ctr);
 		 val type = typeRef.declaredType;
 		 if (type !== null ) {
