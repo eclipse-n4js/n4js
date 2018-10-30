@@ -61,7 +61,6 @@ import org.eclipse.n4js.ts.scoping.builtin.BuiltInSchemeRegistrar;
 import org.eclipse.n4js.ts.scoping.builtin.ResourceSetWithBuiltInScheme;
 import org.eclipse.n4js.ts.validation.TypesKeywordProvider;
 import org.eclipse.n4js.typesbuilder.N4JSTypesBuilder;
-import org.eclipse.n4js.typesystem.CustomInternalTypeSystem;
 import org.eclipse.n4js.typesystem.N4JSStringRepresenation;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.N4JSValidatorErrorGenerator;
@@ -73,7 +72,6 @@ import org.eclipse.n4js.validation.N4JSElementKeywordProvider;
 import org.eclipse.n4js.validation.N4JSIssueSeveritiesProvider;
 import org.eclipse.n4js.validation.N4JSJavaScriptVariantHelper;
 import org.eclipse.n4js.validation.N4JSResourceValidator;
-import org.eclipse.n4js.xsemantics.InternalTypeSystem;
 import org.eclipse.n4js.xtext.serializer.SerializerPatchModule;
 import org.eclipse.xsemantics.runtime.StringRepresentation;
 import org.eclipse.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator;
@@ -413,14 +411,6 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 	 */
 	public Class<? extends N4JSFlowAnalyser> bindFlowAnalyses() {
 		return N4JSFlowAnalyser.class;
-	}
-
-	/**
-	 * Binds the internal, Xsemantics-generated type system. Binds an implementation that doesn't use stack-traces in
-	 * its exception protocol.
-	 */
-	public Class<? extends InternalTypeSystem> bindInternalTypeSystem() {
-		return CustomInternalTypeSystem.class;
 	}
 
 	/**

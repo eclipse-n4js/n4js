@@ -12,9 +12,6 @@ package org.eclipse.n4js.postprocessing
 
 import com.google.common.base.Throwables
 import com.google.inject.Inject
-import org.eclipse.xsemantics.runtime.Result
-import org.eclipse.xsemantics.runtime.RuleApplicationTrace
-import org.eclipse.xsemantics.runtime.RuleEnvironment
 import java.util.function.BooleanSupplier
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.FunctionDefinition
@@ -29,10 +26,12 @@ import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TStructMember
 import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.ts.utils.TypeUtils
-import org.eclipse.n4js.typesystem.CustomInternalTypeSystem
+import org.eclipse.n4js.typesystem.InternalTypeSystemNEW
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.UtilN4
-import org.eclipse.n4js.xsemantics.InternalTypeSystem
+import org.eclipse.xsemantics.runtime.Result
+import org.eclipse.xsemantics.runtime.RuleApplicationTrace
+import org.eclipse.xsemantics.runtime.RuleEnvironment
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.service.OperationCanceledManager
 
@@ -50,7 +49,7 @@ package abstract class AbstractProcessor {
 	val private static DEBUG_RIGID = false; // if true, more consistency checks are performed and exceptions thrown if wrong
 
 	@Inject
-	private InternalTypeSystem ts_internal;
+	private InternalTypeSystemNEW ts_internal;
 	@Inject
 	private OperationCanceledManager operationCanceledManager;
 
@@ -80,7 +79,7 @@ package abstract class AbstractProcessor {
 		if (definedMember !== null && elem.isASTNode) {
 			return askXsemanticsForType(G, trace, definedMember);
 		}
-		return (ts_internal as CustomInternalTypeSystem).use_type_judgment_from_PostProcessors(G, trace, elem);
+		return ts_internal.use_type_judgment_from_PostProcessors(G, elem);
 	}
 
 

@@ -12,6 +12,7 @@ package org.eclipse.n4js.typesystem;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.Expression;
+import org.eclipse.n4js.postprocessing.ASTProcessor;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
@@ -60,8 +61,15 @@ public class InternalTypeSystemNEW {
 		}
 	}
 
-	public JResult<TypeRef> type_actuallyUseIt(RuleEnvironment G, TypableElement element) {
-		return typeJudgment.apply(G, element);
+	/**
+	 * <b>!!! This method must never be invoked, except from {@code AbstractProcessor#askXsemanticsForType()} !!!</b>
+	 * <p>
+	 * This method may be called to actually use the 'type' judgment in Xsemantics. It is used by {@link ASTProcessor}
+	 * while traversing the entire AST (during post-processing) to obtain the type of nodes that have not yet been
+	 * processed.
+	 */
+	public Result<TypeRef> use_type_judgment_from_PostProcessors(RuleEnvironment G, TypableElement element) {
+		return N4JSTypeSystem.TEMP_convert(typeJudgment.apply(G, element));
 	}
 
 	public JResult<TypeRef> expectedType(RuleEnvironment G, EObject container, Expression expression) {

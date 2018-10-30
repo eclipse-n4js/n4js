@@ -23,9 +23,11 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.ts.utils.TypeUtils;
-import org.eclipse.n4js.xsemantics.InternalTypeSystem;
+import org.eclipse.n4js.typesystem.AbstractJudgment.JResult;
+import org.eclipse.xsemantics.runtime.ErrorInformation;
 import org.eclipse.xsemantics.runtime.Result;
 import org.eclipse.xsemantics.runtime.RuleEnvironment;
+import org.eclipse.xsemantics.runtime.RuleFailedException;
 import org.eclipse.xtext.EcoreUtil2;
 
 import com.google.inject.Inject;
@@ -33,7 +35,7 @@ import com.google.inject.Singleton;
 
 /**
  * Main entry point into the N4JS type system. This class is only a facade. In most cases it simply forwards to
- * {@link InternalTypeSystem}, i.e. the type system generated from {@code n4js.xsemantics}. The main exception is
+ * {@link InternalTypeSystemNEW}, i.e. the type system generated from {@code n4js.xsemantics}. The main exception is
  * {@link #type(RuleEnvironment, TypableElement)}, which hides the Xsemantics type judgment behind some special handling
  * and caching.
  * <p>
@@ -43,7 +45,7 @@ import com.google.inject.Singleton;
 public class N4JSTypeSystem {
 
 	@Inject
-	private InternalTypeSystem ts_internal;
+	private InternalTypeSystemNEW ts_internal;
 	@Inject
 	private TypeSystemHelper tsh;
 	@Inject
@@ -71,42 +73,42 @@ public class N4JSTypeSystem {
 	 * </ul>
 	 */
 	public Result<TypeRef> expectedTypeIn(RuleEnvironment G, EObject container, Expression expression) {
-		return ts_internal.expectedTypeIn(G, container, expression);
+		return TEMP_convert(ts_internal.expectedType(G, container, expression));
 	}
 
 	/** Tells if {@code left} is a subtype of {@code right}. Never returns <code>null</code>. */
 	public Result<Boolean> subtype(RuleEnvironment G, TypeArgument left, TypeArgument right) {
-		return ts_internal.subtype(G, left, right);
+		return TEMP_convert(ts_internal.subtype(G, left, right));
 	}
 
 	/** Tells if {@code left} is a subtype of {@code right}. */
 	public boolean subtypeSucceeded(RuleEnvironment G, TypeArgument left, TypeArgument right) {
-		return ts_internal.subtypeSucceeded(G, left, right);
+		return ts_internal.subtype(G, left, right).isSuccess();
 	}
 
 	/** Tells if {@code left} is a super type of {@code right}. Never returns <code>null</code>. */
 	public Result<Boolean> supertype(RuleEnvironment G, TypeArgument left, TypeArgument right) {
-		return ts_internal.supertype(G, left, right);
+		return TEMP_convert(ts_internal.supertype(G, left, right));
 	}
 
 	/** Tells if {@code left} is equal to {@code right}. Never returns <code>null</code>. */
 	public Result<Boolean> equaltype(RuleEnvironment G, TypeArgument left, TypeArgument right) {
-		return ts_internal.equaltype(G, left, right);
+		return TEMP_convert(ts_internal.equaltype(G, left, right));
 	}
 
 	/** Tells if {@code left} is equal to {@code right}. */
 	public boolean equaltypeSucceeded(RuleEnvironment G, TypeArgument left, TypeArgument right) {
-		return ts_internal.equaltypeSucceeded(G, left, right);
+		return ts_internal.equaltype(G, left, right).isSuccess();
 	}
 
 	/** Returns the upper bound of the given type wrapped in a {@link Result}. Never returns <code>null</code>. */
 	public Result<TypeRef> upperBound(RuleEnvironment G, TypeArgument typeArgument) {
-		return ts_internal.upperBound(G, typeArgument);
+		return TEMP_convert(JResult.success(ts_internal.upperBound(G, typeArgument)));
 	}
 
 	/** Returns the lower bound of the given type wrapped in a {@link Result}. Never returns <code>null</code>. */
 	public Result<TypeRef> lowerBound(RuleEnvironment G, TypeArgument typeArgument) {
-		return ts_internal.lowerBound(G, typeArgument);
+		return TEMP_convert(JResult.success(ts_internal.lowerBound(G, typeArgument)));
 	}
 
 	/**
@@ -134,12 +136,12 @@ public class N4JSTypeSystem {
 	 * FunctionTypeExpression back).
 	 */
 	public Result<TypeArgument> substTypeVariables(RuleEnvironment G, TypeArgument typeArgument) {
-		return ts_internal.substTypeVariables(G, typeArgument);
+		return TEMP_convert(ts_internal.substTypeVariables(G, typeArgument));
 	}
 
 	/** Returns the this type at the given location wrapped in a {@link Result}. Never returns <code>null</code>. */
 	public Result<TypeRef> thisTypeRef(RuleEnvironment G, EObject location) {
-		return ts_internal.thisTypeRef(G, location);
+		return TEMP_convert(ts_internal.thisTypeRef(G, location));
 	}
 
 	// ###############################################################################################################
@@ -322,4 +324,23 @@ public class N4JSTypeSystem {
 		}
 	}
 
+	public static <T> Result<T> TEMP_convert(JResult<T> result) {
+		return result.isSuccess()
+				? new Result<>(result.getValue())
+				: new Result<>(failureToException(result));
+	}
+
+	private static RuleFailedException failureToException(JResult<?> failure) {
+		if (failure == null) {
+			return null;
+		}
+		RuleFailedException result = new RuleFailedException(
+				failure.getFailureMessage(),
+				"issue2",
+				failureToException(failure.getCause()));
+		if (failure.isCustom()) {
+			result.addErrorInformation(new ErrorInformation(null, null, TypeSystemErrorExtensions.PRIORITY_ERROR));
+		}
+		return result;
+	}
 }

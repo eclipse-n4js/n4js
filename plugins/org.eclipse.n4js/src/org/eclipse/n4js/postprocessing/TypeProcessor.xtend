@@ -34,8 +34,6 @@ import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
 import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.ts.utils.TypeUtils
-import org.eclipse.n4js.typesystem.CustomInternalTypeSystem
-import org.eclipse.n4js.typesystem.CustomInternalTypeSystem.RuleFailedExceptionWithoutStacktrace
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
 import org.eclipse.n4js.typesystem.TypeSystemHelper
@@ -322,7 +320,7 @@ public class TypeProcessor extends AbstractProcessor {
 			}
 		} else {
 			// a non-typable AST node OR some entity in the TModule for which obj.isTypeModelElement returns false
-			return new Result(new RuleFailedExceptionWithoutStacktrace("cannot type object: " + obj));
+			return new Result(new RuleFailedException("cannot type object: " + obj));
 		}
 	}
 
