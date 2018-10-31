@@ -13,7 +13,6 @@ package org.eclipse.n4js.typesystem.utils;
 import org.eclipse.n4js.scoping.builtin.GlobalObjectScope;
 import org.eclipse.n4js.scoping.builtin.VirtualBaseTypeScope;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope;
-import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 
 /**
  * Facade class for accessing built-in types and global object from rule environment.
