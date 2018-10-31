@@ -129,7 +129,6 @@ import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
 import org.eclipse.n4js.validation.ValidatorMessageHelper
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError
-import org.eclipse.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
@@ -148,8 +147,6 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 	protected N4JSTypeSystem ts;
 	@Inject
 	protected TypeSystemHelper tsh;
-	@Inject
-	protected XsemanticsValidatorErrorGenerator errorGenerator;
 	@Inject extension N4JSElementKeywordProvider;
 	@Inject extension ValidatorMessageHelper;
 

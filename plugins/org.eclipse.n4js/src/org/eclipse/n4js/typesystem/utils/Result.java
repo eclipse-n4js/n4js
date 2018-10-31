@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.n4js.utils.UtilN4;
-import org.eclipse.xsemantics.runtime.RuleFailedException;
 
 import com.google.common.base.Joiner;
 
@@ -77,10 +76,10 @@ public final class Result<T> {
 	}
 
 	/**
-	 * Will return the error message for the given chain of {@link RuleFailedException}s (i.e. exception <code>ex</code>
-	 * and the exceptions chained via {@link RuleFailedException#getCause()}). This returns the priority messages
-	 * (joined with "Caused by:" as separator) or, if there are no priority messages, the top-level message (i.e. the
-	 * message of <code>ex</code>).
+	 * Will return the error message for this chain of failures (i.e. the receiving failure and the failures chained via
+	 * {@link #getCause()}). This returns the priority messages (joined with "Caused by:" as separator) or, if there are
+	 * no priority messages, the top-level message (i.e. the message of the receiving failure). Returns
+	 * <code>null</code> if the receiving result is not a failure.
 	 */
 	public String getCombinedFailureMessage() {
 		// collect all priority messages
@@ -100,6 +99,9 @@ public final class Result<T> {
 	}
 
 	private static final String prepareMessage(String message) {
+		if (message == null) {
+			return null;
+		}
 		String result = message;
 		result = UtilN4.trimPrefix(result, "failed: ");
 		if (!result.endsWith(".")) {

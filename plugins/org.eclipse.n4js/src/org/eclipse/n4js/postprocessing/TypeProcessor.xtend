@@ -40,7 +40,6 @@ import org.eclipse.n4js.typesystem.TypeSystemHelper
 import org.eclipse.n4js.typesystem.utils.Result
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.utils.N4JSLanguageUtils
-import org.eclipse.xsemantics.runtime.RuleApplicationTrace
 import org.eclipse.xtext.service.OperationCanceledManager
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
@@ -135,7 +134,7 @@ public class TypeProcessor extends AbstractProcessor {
 				// ordinary typing of typable AST nodes
 				// -> simply ask Xsemantics
 				log(indentLevel, "asking Xsemantics ...");
-				val result = askXsemanticsForType(G, null, node);
+				val result = askXsemanticsForType(G, node);
 
 				val resultAdjusted = adjustResultForLocationInAST(G, result, N4JSASTUtils.skipParenExpressionDownward(node));
 
@@ -207,14 +206,12 @@ public class TypeProcessor extends AbstractProcessor {
 	 * </ul>
 	 * This overview is simplified, check the code for precise rules!
 	 * <p>
-	 * Two methods delegate here (no one else should call this method):
+	 * Only a single method delegates here (no one else should call this method):
 	 * <ol>
 	 * <li>{@link N4JSTypeSystem#type(RuleEnvironment,TypableElement)}
-	 * <li>{@link CustomInternalTypeSystem#typeInternal(RuleEnvironment,
-	 *     RuleApplicationTrace,TypableElement)}
 	 * </ol>
 	 */
-	def public Result<TypeRef> getType(RuleEnvironment G, RuleApplicationTrace trace, TypableElement objRaw) {
+	def public Result<TypeRef> getType(RuleEnvironment G, TypableElement objRaw) {
 
 		if (objRaw === null) {
 			// failing safely here; otherwise we would need preemptive null-checks wherever type inference is applied
@@ -237,7 +234,7 @@ public class TypeProcessor extends AbstractProcessor {
 				if (!obj.isTypeModelElement) {
 					throw new IllegalStateException("not a type model element: " + obj)
 				}
-				return askXsemanticsForType(G, trace, obj); // obj is a type model element, so this will just wrap it in a TypeRef (no actual inference)
+				return askXsemanticsForType(G, obj); // obj is a type model element, so this will just wrap it in a TypeRef (no actual inference)
 			}
 
 			// make sure post-processing on the containing N4JS resource is initiated
@@ -263,7 +260,7 @@ public class TypeProcessor extends AbstractProcessor {
 			}
 
 			// obtain type of 'obj'
-			return getTypeInN4JSResource(G, trace, res, obj);
+			return getTypeInN4JSResource(G, res, obj);
 
 		} else {
 
@@ -271,17 +268,17 @@ public class TypeProcessor extends AbstractProcessor {
 			// can happen for:
 			// - objects that are not contained in a Resource
 			// - objects that are contained in a Resource but not an N4JSResource
-			return askXsemanticsForType(G, trace, obj);
+			return askXsemanticsForType(G, obj);
 		}
 	}
 
 	/** See {@link TypeProcessor#getType(RuleEnvironment,RuleApplicationTrace,TypableElement)}. */
-	def private Result<TypeRef> getTypeInN4JSResource(RuleEnvironment G, RuleApplicationTrace trace, N4JSResource res, TypableElement obj) {
+	def private Result<TypeRef> getTypeInN4JSResource(RuleEnvironment G, N4JSResource res, TypableElement obj) {
 		// obtain type of 'obj' depending on whether it's an AST node or type model element AND depending on current
 		// load state of containing N4JS resource
 		if (obj.isTypeModelElement) {
 			// for type model elements, we by-pass all caching ...
-			return askXsemanticsForType(G, trace, obj); // obj is a type model element, so this will just wrap it in a TypeRef (no actual inference)
+			return askXsemanticsForType(G, obj); // obj is a type model element, so this will just wrap it in a TypeRef (no actual inference)
 		} else if (obj.isASTNode && obj.isTypableNode) {
 			// here we read from the cache (if AST node 'obj' was already processed) or forward-process 'obj'
 			val cache = res.getASTMetaInfoCacheVerifyContext();
@@ -342,12 +339,12 @@ public class TypeProcessor extends AbstractProcessor {
 
 					val expr = node.expressionOfVFP;
 					if (expr instanceof N4ClassExpression) {
-						return askXsemanticsForType(G, null, expr);
+						return askXsemanticsForType(G, expr);
 					}
 					if (expr instanceof NewExpression) {
 						val callee = expr.callee;
 						if (callee instanceof N4ClassExpression) {
-							val calleeType = askXsemanticsForType(G, null, callee).value;
+							val calleeType = askXsemanticsForType(G, callee).value;
 							val calleeTypeStaticType = tsh.getStaticType(G, calleeType as TypeTypeRef);
 							return Result.success(TypeUtils.createTypeRef(calleeTypeStaticType));
 						}
@@ -368,7 +365,7 @@ public class TypeProcessor extends AbstractProcessor {
 				} else if (node instanceof TypeDefiningElement) {
 					return Result.success(wrapTypeInTypeRef(G, node.definedType));
 				} else if (node instanceof Expression && node.eContainer instanceof YieldExpression) {
-					return askXsemanticsForType(G, null, node);
+					return askXsemanticsForType(G, node);
 				} else {
 					val e = new IllegalStateException(
 						"handling of a legal case of cyclic forward references missing in TypeProcessor");

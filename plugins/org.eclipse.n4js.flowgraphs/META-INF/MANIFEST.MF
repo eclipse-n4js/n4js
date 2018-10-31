@@ -12,7 +12,6 @@ Require-Bundle: org.eclipse.n4js.ts.model,
  org.eclipse.emf.ecore.xcore,
  org.eclipse.emf.mwe2.launch;resolution:=optional,
  org.eclipse.xtext.xbase.lib,
- org.eclipse.xsemantics.runtime,
  org.eclipse.n4js.model,
  org.eclipse.equinox.common
 Export-Package: org.eclipse.n4js.flowgraphs,

@@ -31,7 +31,6 @@ import org.eclipse.n4js.typesystem.utils.Result
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.UtilN4
-import org.eclipse.xsemantics.runtime.RuleApplicationTrace
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.service.OperationCanceledManager
 
@@ -68,7 +67,7 @@ package abstract class AbstractProcessor {
 	 * system. Normally, this should only be required by {@link TypeProcessor}, so use this sparingly (however,
 	 * sometimes it can be helpful to avoid duplication of logic).
 	 */
-	def protected Result<TypeRef> askXsemanticsForType(RuleEnvironment G, RuleApplicationTrace trace, TypableElement elem) {
+	def protected Result<TypeRef> askXsemanticsForType(RuleEnvironment G, TypableElement elem) {
 		if (elem.eIsProxy) {
 			return Result.success(TypeRefsFactory.eINSTANCE.createUnknownTypeRef);
 		}
@@ -77,7 +76,7 @@ package abstract class AbstractProcessor {
 		// -> if we are dealing with an AST node, make sure to use the definedMember in the TModule
 		val definedMember = if (elem instanceof TStructMember) elem.definedMember;
 		if (definedMember !== null && elem.isASTNode) {
-			return askXsemanticsForType(G, trace, definedMember);
+			return askXsemanticsForType(G, definedMember);
 		}
 		return ts_internal.use_type_judgment_from_PostProcessors(G, elem);
 	}

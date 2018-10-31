@@ -59,8 +59,12 @@ public class ExceptionAnalyser extends PositiveAnalyser {
 			RuleEnvironment ruleEnvironment = RuleEnvironmentExtensions.newRuleEnvironment(typableASTNode);
 			try {
 				typeSystem.type(ruleEnvironment, typableASTNode);
-			} catch (Exception e) {
-				result.add(new ExceptionDiagnostic(e));
+			} catch (Throwable cause) {
+				if (cause instanceof Exception) {
+					result.add(new ExceptionDiagnostic((Exception) cause));
+				} else {
+					throw new RuntimeException(cause);
+				}
 			}
 		}
 		validator.validate(script.eResource(), CheckMode.ALL, CancelIndicator.NullImpl);

@@ -14,6 +14,7 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.util.EcoreUtil
+import org.eclipse.n4js.n4JS.ArrayElement
 import org.eclipse.n4js.n4JS.ArrayLiteral
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.BindingElement
@@ -82,7 +83,7 @@ package class DestructureProcessor extends AbstractProcessor {
 		}
 		// here we basically turn off the fail-fast approach within the destructuring pattern
 		node.eAllContents //
-		.filter[it instanceof ObjectLiteral || it instanceof ArrayLiteral] //
+		.filter[it instanceof ObjectLiteral || it instanceof ArrayLiteral || it instanceof ArrayElement] //
 		.filter[cache.getTypeFailSafe(it as TypableElement)===null] //
 		.forEach[
 			cache.storeType(it as TypableElement, Result.success(TypeRefsFactory.eINSTANCE.createUnknownTypeRef));

@@ -53,7 +53,7 @@ public class N4JSTypeSystem {
 
 	/** Returns the type of the given element wrapped in a {@link Result}. Never returns <code>null</code>. */
 	public Result<TypeRef> type(RuleEnvironment G, TypableElement element) {
-		return typeProcessor.getType(G, null, element);
+		return typeProcessor.getType(G, element);
 	}
 
 	/**
