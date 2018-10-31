@@ -16,7 +16,7 @@ import org.eclipse.n4js.utils.ContainerTypesHelper;
 
 import com.google.inject.Inject;
 
-public abstract class AbstractJudgment {
+/* package */ abstract class AbstractJudgment {
 
 	@Inject
 	protected N4JSTypeSystem ts;

@@ -54,7 +54,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
  * Wildcard). But this is not true for subclasses of TypeRef, e.g. put in a FunctionTypeRef and you might get a
  * FunctionTypeExpression back).
  */
-public final class SubstTypeVariablesJudgment extends AbstractJudgment {
+/* package */ final class SubstTypeVariablesJudgment extends AbstractJudgment {
 
 	public Result<TypeArgument> apply(RuleEnvironment G, TypeArgument typeArg) {
 		final SubstTypeVariablesSwitch theSwitch = new SubstTypeVariablesSwitch(G);

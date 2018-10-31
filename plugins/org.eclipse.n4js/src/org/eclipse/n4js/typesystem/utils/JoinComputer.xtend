@@ -71,7 +71,7 @@ import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensi
  * <p>
  * Special pseudo sub types of string, e.g. pathSelector, are handled as well.
  */
-class JoinComputer extends TypeSystemHelperStrategy {
+package class JoinComputer extends TypeSystemHelperStrategy {
 
 	@Inject
 	private N4JSTypeSystem ts

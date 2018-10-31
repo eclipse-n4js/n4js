@@ -31,7 +31,7 @@ import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensi
  * Main reason for factoring out this code is the same logic is used by several rules.
  */
 @Singleton
-class ExpectedTypeComputer extends TypeSystemHelperStrategy {
+package class ExpectedTypeComputer extends TypeSystemHelperStrategy {
 
 	@Inject
 	private N4JSTypeSystem ts;

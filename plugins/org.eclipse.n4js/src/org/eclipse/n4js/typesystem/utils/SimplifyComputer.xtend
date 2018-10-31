@@ -30,7 +30,7 @@ import static extension java.util.Collections.*
  * Type System Helper Strategy for creating simplified composed types, i.e. union
  * and intersection types.
  */
-class SimplifyComputer extends TypeSystemHelperStrategy {
+package class SimplifyComputer extends TypeSystemHelperStrategy {
 
 	@Inject
 	extension TypeCompareHelper;

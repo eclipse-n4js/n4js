@@ -30,12 +30,9 @@ import org.eclipse.n4js.typesystem.N4JSTypeSystem
  * <p>
  * If you change one method, check the others if the same change might be required there as well!
  */
-class DerivationComputer extends TypeSystemHelperStrategy {
+package class DerivationComputer extends TypeSystemHelperStrategy {
 
 	@Inject private N4JSTypeSystem ts;
-
-	public static enum BoundType { UPPER, LOWER }
-
 
 	def FunctionTypeExpression createSubstitutionOfFunctionTypeExprOrRef(RuleEnvironment G, FunctionTypeExprOrRef F) {
 		val result = TypeRefsFactory.eINSTANCE.createFunctionTypeExpression

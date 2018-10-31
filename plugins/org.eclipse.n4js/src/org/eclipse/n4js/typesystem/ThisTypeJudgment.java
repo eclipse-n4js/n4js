@@ -50,7 +50,7 @@ import com.google.inject.Inject;
  * Computes the this type at the given location. Since ECMAScript does not support lexical this typing, this basically
  * is a heuristic.
  */
-public class ThisTypeJudgment extends AbstractJudgment {
+/* package */ class ThisTypeJudgment extends AbstractJudgment {
 
 	@Inject
 	private JavaScriptVariantHelper jsVariantHelper;

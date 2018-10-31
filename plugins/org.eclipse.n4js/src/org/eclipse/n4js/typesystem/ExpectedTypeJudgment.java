@@ -105,7 +105,7 @@ import com.google.inject.Inject;
  * accepted. Between return values {@code UnknownTypeRef} and <code>null</code> there is not real difference for the
  * client; they are distinguished mainly for clarity and readability of the code in this class.
  */
-public class ExpectedTypeJudgment extends AbstractJudgment {
+/* package */ class ExpectedTypeJudgment extends AbstractJudgment {
 
 	@Inject
 	private PromisifyHelper promisifyHelper;

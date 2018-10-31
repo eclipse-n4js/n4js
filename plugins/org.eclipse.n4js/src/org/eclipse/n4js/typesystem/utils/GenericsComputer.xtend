@@ -45,7 +45,7 @@ import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensi
  * Note that low-level method for adding type mappings to a rule environment are contained in
  * {@link RuleEnvironmentExtensions}.
  */
-class GenericsComputer extends TypeSystemHelperStrategy {
+package class GenericsComputer extends TypeSystemHelperStrategy {
 
 	@Inject
 	private N4JSTypeSystem ts

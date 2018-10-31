@@ -47,7 +47,6 @@ import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.typesystem.utils.StructuralTypingComputer;
 import org.eclipse.n4js.typesystem.utils.StructuralTypingComputer.StructTypingInfo;
-import org.eclipse.n4js.typesystem.utils.SubtypeComputer;
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
 import org.eclipse.n4js.utils.StructuralMembersTriple;
 import org.eclipse.n4js.utils.StructuralMembersTripleIterator;
@@ -473,7 +472,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 
 	/**
 	 * IMPORTANT: the implementation of this method has to be kept consistent with
-	 * {@link SubtypeComputer#isSubtypeFunction(RuleEnvironment, FunctionTypeExprOrRef, FunctionTypeExprOrRef)} and esp.
+	 * {@code SubtypeComputer#isSubtypeFunction(RuleEnvironment, FunctionTypeExprOrRef, FunctionTypeExprOrRef)} and esp.
 	 * <code>#primIsSubtypeFunction()</code>.
 	 */
 	private boolean reduceFunctionTypeExprOrRef(FunctionTypeExprOrRef left, FunctionTypeExprOrRef right,

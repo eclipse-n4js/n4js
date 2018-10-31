@@ -36,7 +36,7 @@ import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensi
  * called {@link StructuralTypingComputer}.
  */
 @Singleton
-class SubtypeComputer extends TypeSystemHelperStrategy {
+package class SubtypeComputer extends TypeSystemHelperStrategy {
 
 	@Inject
 	private N4JSTypeSystem ts;

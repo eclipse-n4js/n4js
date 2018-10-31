@@ -168,7 +168,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.inject.Inject;
 
-public class TypeJudgment extends AbstractJudgment {
+/* package */ class TypeJudgment extends AbstractJudgment {
 
 	@Inject
 	private PromisifyHelper promisifyHelper;

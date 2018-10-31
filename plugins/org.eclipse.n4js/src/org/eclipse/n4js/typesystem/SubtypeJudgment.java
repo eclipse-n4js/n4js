@@ -77,7 +77,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.collect.Iterables;
 
-public final class SubtypeJudgment extends AbstractJudgment {
+/* package */ final class SubtypeJudgment extends AbstractJudgment {
 
 	public Result<Boolean> apply(RuleEnvironment G, TypeArgument left, TypeArgument right) {
 		Result<Boolean> result = doApply(G, left, right);

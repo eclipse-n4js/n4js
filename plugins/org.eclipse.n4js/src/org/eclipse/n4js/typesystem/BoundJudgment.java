@@ -29,11 +29,11 @@ import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.typeRefs.util.TypeRefsSwitch;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.utils.TypeUtils;
-import org.eclipse.n4js.typesystem.utils.DerivationComputer.BoundType;
+import org.eclipse.n4js.typesystem.utils.BoundType;
 import org.eclipse.n4js.typesystem.utils.Result;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 
-public class BoundJudgment extends AbstractJudgment {
+/* package */ class BoundJudgment extends AbstractJudgment {
 
 	public Result<TypeRef> applyUpperBound(RuleEnvironment G, TypeArgument typeArg) {
 		final BoundSwitch theSwitch = new BoundSwitch(G, BoundType.UPPER);
