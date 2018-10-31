@@ -45,7 +45,7 @@ abstract class AbstractApiImplCompareTest extends Assert {
 			"fieldOK_ClazzOther" -> Status.EQUAL -> null,
 			"fieldOK_B" -> Status.EQUAL -> null,
 			"fieldGONE" -> Status.ERROR -> "missing implementation",
-			"fieldWrongType" -> Status.ERROR -> "failed: number is not a subtype of string",
+			"fieldWrongType" -> Status.ERROR -> "number is not a subtype of string",
 			"fieldOnlyInImplementation" -> Status.COMPLIANT -> null,
 			"fieldVisibilityReduced" -> Status.ERROR -> "reduced visibility",
 
