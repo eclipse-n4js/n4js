@@ -34,7 +34,7 @@ import org.eclipse.n4js.utils.UtilN4
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.service.OperationCanceledManager
 
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
 
 /**

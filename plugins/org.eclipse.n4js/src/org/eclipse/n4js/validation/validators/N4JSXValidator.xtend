@@ -33,8 +33,8 @@ import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
-import org.eclipse.n4js.typesystem.TypeSystemHelper
 import org.eclipse.n4js.typesystem.utils.Result
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.ResourceType
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
@@ -48,7 +48,7 @@ import static org.eclipse.n4js.n4JS.N4JSPackage.Literals.JSX_SPREAD_ATTRIBUTE__E
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.organize.imports.ImportSpecifiersUtil.*
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  * Validation of React bindings including naming convention (components in upper case and HTML tags in lower case)

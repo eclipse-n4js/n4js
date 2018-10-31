@@ -25,6 +25,8 @@ import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.Result;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
 import org.eclipse.xtext.EcoreUtil2;
 
 import com.google.inject.Inject;

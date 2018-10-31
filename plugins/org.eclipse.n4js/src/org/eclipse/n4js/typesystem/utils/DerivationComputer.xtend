@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.typesystem
+package org.eclipse.n4js.typesystem.utils
 
 import com.google.inject.Inject
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
@@ -18,7 +18,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.ts.utils.TypeUtils
-import org.eclipse.n4js.typesystem.utils.RuleEnvironment
+import org.eclipse.n4js.typesystem.N4JSTypeSystem
 
 /**
  * Type System Helper Strategy for deriving a new, slightly modified TypeRef from an existing TypeRef.

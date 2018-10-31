@@ -25,7 +25,7 @@ import org.eclipse.xtext.xbase.lib.Functions.Function1
 import static org.eclipse.n4js.ts.types.MemberAccessModifier.*
 import static org.eclipse.n4js.utils.AndFunction1.conjunctionOf
 
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  * Utility class for filtering out structural members for different structural typing strategies.

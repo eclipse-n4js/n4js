@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.typesystem
+package org.eclipse.n4js.typesystem.utils
 
 import com.google.inject.Inject
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
@@ -23,7 +23,7 @@ import java.util.TreeSet
 import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.util.EcoreUtil
 
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 import static extension java.util.Collections.*
 
 /**

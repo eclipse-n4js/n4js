@@ -11,8 +11,11 @@
 package org.eclipse.n4js.typesystem
 
 import com.google.inject.Inject
+import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.typesystem.utils.MeetComputer
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Before
@@ -20,7 +23,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 import static org.junit.Assert.*
-import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
 
 /*
  * Tests for {@link TypeSystemHelper#intersect(RuleEnvironment, TypeRef...)} method.

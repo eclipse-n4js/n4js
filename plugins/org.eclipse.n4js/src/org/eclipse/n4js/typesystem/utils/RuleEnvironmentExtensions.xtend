@@ -8,12 +8,11 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.typesystem
+package org.eclipse.n4js.typesystem.utils
 
 import com.google.common.collect.ArrayListMultimap
 import com.google.common.collect.ImmutableList
 import com.google.common.collect.ListMultimap
-import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import java.util.Collection
 import java.util.Collections
 import java.util.List
@@ -170,7 +169,7 @@ class RuleEnvironmentExtensions {
 
 	def static setPredefinedTypesFromObjectsResourceSet(RuleEnvironment G, ResourceSet resourceSet) {
 		if (resourceSet === null) {
-			throw new IllegalArgumentException("Resource set used to load predefined types must not be null at org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.setPredefinedTypesFromObjectsResourceSet(RuleEnvironment, ResourceSet)");
+			throw new IllegalArgumentException("Resource set used to load predefined types must not be null at org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.setPredefinedTypesFromObjectsResourceSet(RuleEnvironment, ResourceSet)");
 		}
 		val builtInTypeScope = BuiltInTypeScope.get(resourceSet);
 		val globalObjectTypeScope = GlobalObjectScope.get(resourceSet);

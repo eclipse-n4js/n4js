@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.typesystem
+package org.eclipse.n4js.typesystem.utils
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
@@ -32,9 +32,9 @@ import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.ts.utils.TypeCompareUtils
+import org.eclipse.n4js.typesystem.N4JSTypeSystem
+import org.eclipse.n4js.typesystem.utils.StructuralTypingResult
 import org.eclipse.n4js.typesystem.constraints.TypeConstraint
-import org.eclipse.n4js.typesystem.utils.Result
-import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.utils.StructuralMembersTriple
 import org.eclipse.n4js.utils.StructuralTypesHelper
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
@@ -43,10 +43,10 @@ import org.eclipse.xtext.EcoreUtil2
 
 import static org.eclipse.n4js.AnnotationDefinition.*
 import static org.eclipse.n4js.ts.types.TypingStrategy.*
-import static org.eclipse.n4js.typesystem.StructuralTypingResult.*
+import static org.eclipse.n4js.typesystem.utils.StructuralTypingResult.*
 import static org.eclipse.n4js.utils.StructuralMembersPredicates.*
 
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
 
 /**

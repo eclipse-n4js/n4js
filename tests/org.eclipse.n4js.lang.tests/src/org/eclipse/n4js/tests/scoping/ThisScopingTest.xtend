@@ -21,7 +21,7 @@ import org.eclipse.n4js.scoping.N4JSScopeProvider
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
-import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.testing.InjectWith

@@ -12,7 +12,7 @@ package org.eclipse.n4js.xsemantics
 
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.VariableDeclaration
-import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.validation.JavaScriptVariant
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.testing.InjectWith

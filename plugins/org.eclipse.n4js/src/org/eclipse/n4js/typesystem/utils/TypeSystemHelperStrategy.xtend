@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.typesystem
+package org.eclipse.n4js.typesystem.utils
 
 import com.google.inject.Inject
 

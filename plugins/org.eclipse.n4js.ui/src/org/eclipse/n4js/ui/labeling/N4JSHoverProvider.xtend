@@ -34,7 +34,7 @@ import static org.eclipse.n4js.ts.ui.labeling.TypesHoverProvider.composeFirstLin
 import static org.eclipse.n4js.utils.UtilN4.sanitizeForHTML
 
 import static extension org.eclipse.n4js.n4JS.N4JSASTUtils.getCorrespondingTypeModelElement
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.newRuleEnvironment
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.newRuleEnvironment
 import org.eclipse.xtext.ui.editor.hover.html.XtextBrowserInformationControlInput
 import org.eclipse.jface.text.IRegion
 import org.eclipse.xtext.service.OperationCanceledManager

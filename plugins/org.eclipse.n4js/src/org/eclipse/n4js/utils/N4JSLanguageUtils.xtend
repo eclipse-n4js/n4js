@@ -87,7 +87,7 @@ import org.eclipse.n4js.ts.types.util.AllSuperTypesCollector
 import org.eclipse.n4js.ts.types.util.ExtendedClassesIterable
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.ts.utils.TypeUtils
-import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.QualifiedName
@@ -95,7 +95,7 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 
 import static org.eclipse.n4js.N4JSLanguageConstants.*
 
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  * Intended for small, static utility methods that

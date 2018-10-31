@@ -29,15 +29,15 @@ import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
-import org.eclipse.n4js.typesystem.TypeSystemHelper
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
 import org.eclipse.n4js.typesystem.constraints.TypeConstraint
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.DestructureHelper
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
-import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.xtext.service.OperationCanceledManager
 
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  * The main poly processor responsible for typing poly expressions using a constraint-based approach.

@@ -37,7 +37,7 @@ import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  * {@link PolyProcessor} delegates here for processing array literals.

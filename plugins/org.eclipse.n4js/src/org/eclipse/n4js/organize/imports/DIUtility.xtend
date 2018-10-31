@@ -21,7 +21,7 @@ import java.util.List
 import static org.eclipse.n4js.AnnotationDefinition.*
 import static org.eclipse.n4js.ts.types.util.AllSuperTypesCollector.collect
 
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  * Collection of utility methods for working with N4JS DI.

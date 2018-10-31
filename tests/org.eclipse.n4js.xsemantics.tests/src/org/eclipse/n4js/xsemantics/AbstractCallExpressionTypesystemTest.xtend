@@ -11,6 +11,7 @@
 package org.eclipse.n4js.xsemantics
 
 import com.google.inject.Inject
+import java.util.List
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.ExpressionStatement
@@ -18,11 +19,10 @@ import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.typesystem.AbstractScriptAssembler
-import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.validation.JavaScriptVariant
-import org.eclipse.n4js.typesystem.utils.RuleEnvironment
-import java.util.List
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.junit.runner.RunWith

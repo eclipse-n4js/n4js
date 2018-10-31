@@ -22,7 +22,7 @@ import org.eclipse.n4js.n4JS.UnaryExpression;
 import org.eclipse.n4js.n4JS.UnaryOperator;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
-import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 
 /**

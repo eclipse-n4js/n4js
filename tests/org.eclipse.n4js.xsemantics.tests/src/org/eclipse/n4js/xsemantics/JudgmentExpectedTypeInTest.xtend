@@ -27,7 +27,7 @@ import org.junit.runner.RunWith
 
 import static org.junit.Assert.*
 
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /*
  * Tests for judgment expectedtypein, see n4js.xsemantics for judgment, axiom and rules.

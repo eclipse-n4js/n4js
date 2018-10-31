@@ -10,11 +10,11 @@
  */
 package org.eclipse.n4js.typesystem;
 
-import static org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.anyTypeRefDynamic;
-import static org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.globalObjectTypeRef;
-import static org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.isInBody_Of_StaticMethod;
-import static org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.isInReturnDeclaration_Of_StaticMethod;
-import static org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.undefinedTypeRef;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.anyTypeRefDynamic;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.globalObjectTypeRef;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isInBody_Of_StaticMethod;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isInReturnDeclaration_Of_StaticMethod;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.undefinedTypeRef;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.ArrowFunction;
@@ -40,6 +40,7 @@ import org.eclipse.n4js.ts.utils.TypeExtensions;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.Result;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.xtext.EcoreUtil2;
 

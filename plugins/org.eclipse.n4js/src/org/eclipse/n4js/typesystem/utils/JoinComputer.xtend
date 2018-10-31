@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.typesystem
+package org.eclipse.n4js.typesystem.utils
 
 import com.google.common.collect.Iterables
 import com.google.common.collect.Lists
@@ -43,14 +43,14 @@ import org.eclipse.n4js.ts.utils.SuperTypesList
 import org.eclipse.n4js.ts.utils.TypeCompareHelper
 import org.eclipse.n4js.ts.utils.TypeHelper
 import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.ContainerTypesHelper
-import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 
 import static java.util.Collections.*
 import static org.eclipse.n4js.ts.utils.SuperTypesList.*
 
 import static extension org.eclipse.n4js.ts.utils.TypeUtils.*
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  * Type System Helper Strategy computing the join of a given collection of types.

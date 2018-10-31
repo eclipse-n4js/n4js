@@ -61,7 +61,7 @@ import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
-import org.eclipse.n4js.typesystem.TypeSystemHelper
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.UtilN4
 import org.eclipse.n4js.validation.AbstractMessageAdjustingN4JSValidator.MethodWrapperCancelable
@@ -72,7 +72,7 @@ import org.eclipse.xtext.service.OperationCanceledManager
 import org.eclipse.xtext.validation.AbstractDeclarativeValidator
 import org.eclipse.xtext.validation.AbstractDeclarativeValidator.State
 
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  * Common base class for all N4JS validators. Provides some convenience methods and

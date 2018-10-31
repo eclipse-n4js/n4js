@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.xpect.methods;
 
-import static org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.newRuleEnvironment;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.newRuleEnvironment;
 
 import java.util.Collections;
 import java.util.List;
@@ -27,7 +27,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
-import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.typesystem.utils.Result;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter;

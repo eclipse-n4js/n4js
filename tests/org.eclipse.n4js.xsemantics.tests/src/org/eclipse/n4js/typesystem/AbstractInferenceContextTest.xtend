@@ -31,8 +31,10 @@ import org.eclipse.n4js.ts.utils.TypeCompareUtils
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
 import org.eclipse.n4js.typesystem.constraints.TypeConstraint
-import org.eclipse.n4js.validation.JavaScriptVariant
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
+import org.eclipse.n4js.validation.JavaScriptVariant
 import org.eclipse.xtext.service.OperationCanceledManager
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
@@ -41,7 +43,7 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.runner.RunWith
 
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  */

@@ -21,7 +21,7 @@ import org.eclipse.xtext.testing.util.ParseHelper
 import org.junit.Test
 import org.junit.runner.RunWith
 
-import static org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 import org.eclipse.n4js.n4JS.VariableDeclaration
 
 /*

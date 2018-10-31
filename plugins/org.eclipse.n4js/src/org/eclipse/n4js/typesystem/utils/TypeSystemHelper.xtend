@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.typesystem
+package org.eclipse.n4js.typesystem.utils
 
 import com.google.common.collect.Iterables
 import com.google.inject.Inject
@@ -52,14 +52,14 @@ import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.utils.TypeExtensions
 import org.eclipse.n4js.ts.utils.TypeUtils
-import org.eclipse.n4js.typesystem.DerivationComputer.BoundType
+import org.eclipse.n4js.typesystem.N4JSTypeSystem
+import org.eclipse.n4js.typesystem.utils.DerivationComputer.BoundType
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.utils.StructuralTypesHelper
-import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.xtext.EcoreUtil2
 
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  * Utility methods used in the XSemantics type system. Must be injected.

@@ -11,6 +11,7 @@
 package org.eclipse.n4js.typesystem;
 
 import org.eclipse.n4js.n4idl.versioning.N4IDLVersionResolver;
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 
 import com.google.inject.Inject;

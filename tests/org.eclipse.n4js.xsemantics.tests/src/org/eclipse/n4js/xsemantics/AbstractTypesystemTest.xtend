@@ -36,7 +36,7 @@ import org.eclipse.xtext.diagnostics.Severity
 import org.eclipse.xtext.testing.validation.ValidationTestHelper
 import org.eclipse.xtext.validation.Issue
 
-import static org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 import static org.junit.Assert.*
 
 /*

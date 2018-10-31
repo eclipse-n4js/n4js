@@ -38,10 +38,10 @@ import org.eclipse.n4js.ts.types.TypesFactory;
 import org.eclipse.n4js.ts.types.util.Variance;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
-import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
-import org.eclipse.n4js.typesystem.TypeSystemHelper;
-import org.eclipse.n4js.utils.CharDiscreteDomain;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
+import org.eclipse.n4js.utils.CharDiscreteDomain;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 
@@ -473,7 +473,8 @@ public final class InferenceContext {
 		final TypeRef[] lowerBounds = currentBounds.collectLowerBounds(infVar, true, true);
 		final boolean lowerAreUninteresting = lowerBounds.length > 0 && !containsInterestingLowerBound(lowerBounds);
 		final TypeRef[] upperBoundsPreview = lowerAreUninteresting
-				? currentBounds.collectUpperBounds(infVar, true, true) : null;
+				? currentBounds.collectUpperBounds(infVar, true, true)
+				: null;
 		final boolean preferUpperOverLower = lowerAreUninteresting && upperBoundsPreview != null
 				&& upperBoundsPreview.length > 0;
 		if (lowerBounds.length > 0 && !preferUpperOverLower) {

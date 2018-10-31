@@ -15,6 +15,7 @@ import org.eclipse.n4js.ts.types.TField
 import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TSetter
+import org.eclipse.n4js.typesystem.utils.StructuralTypingComputer
 
 import static org.junit.Assert.*
 

@@ -33,7 +33,7 @@ import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 
 import static org.eclipse.n4js.AnnotationDefinition.*
-import static org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 /**

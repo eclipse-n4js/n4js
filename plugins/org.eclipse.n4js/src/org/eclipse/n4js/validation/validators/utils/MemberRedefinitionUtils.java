@@ -30,7 +30,7 @@ import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.ts.types.util.ExtendedClassesIterable;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
-import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 

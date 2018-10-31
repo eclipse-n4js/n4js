@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.typesystem
+package org.eclipse.n4js.typesystem.utils
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
@@ -27,7 +27,8 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.xtext.service.OperationCanceledManager
 
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.typesystem.N4JSTypeSystem
 
 /**
  * Contains some helper methods to compute if type A is a subtype of type B.

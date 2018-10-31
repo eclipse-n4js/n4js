@@ -46,8 +46,8 @@ import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.UndefinedType
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
-import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
-import org.eclipse.n4js.typesystem.TypeSystemHelper
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.xtext.scoping.FilterWithErrorMarkerScope

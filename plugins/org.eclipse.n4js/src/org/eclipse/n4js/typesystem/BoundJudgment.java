@@ -10,8 +10,8 @@
  */
 package org.eclipse.n4js.typesystem;
 
-import static org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.bottomTypeRef;
-import static org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.topTypeRef;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.bottomTypeRef;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.topTypeRef;
 
 import java.util.stream.Collectors;
 
@@ -29,7 +29,7 @@ import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.typeRefs.util.TypeRefsSwitch;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.utils.TypeUtils;
-import org.eclipse.n4js.typesystem.DerivationComputer.BoundType;
+import org.eclipse.n4js.typesystem.utils.DerivationComputer.BoundType;
 import org.eclipse.n4js.typesystem.utils.Result;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 

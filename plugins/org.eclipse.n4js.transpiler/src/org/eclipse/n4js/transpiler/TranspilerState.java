@@ -22,7 +22,7 @@ import org.eclipse.n4js.transpiler.im.SymbolTableEntryInternal;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
 import org.eclipse.n4js.transpiler.operations.SymbolTableManagement;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
-import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
 import org.eclipse.n4js.utils.di.scopes.ScopeManager;
 import org.eclipse.n4js.utils.di.scopes.TransformationScoped;

@@ -35,8 +35,8 @@ import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.util.Variance;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
-import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.LinkedHashMultimap;

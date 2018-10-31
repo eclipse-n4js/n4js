@@ -20,7 +20,7 @@ import org.eclipse.xtext.testing.validation.ValidationTestHelper
 import org.junit.Test
 import org.junit.runner.RunWith
 
-import static org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 import static org.junit.Assert.*
 import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
 

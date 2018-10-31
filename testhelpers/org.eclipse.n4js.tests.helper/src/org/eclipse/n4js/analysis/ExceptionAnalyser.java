@@ -19,7 +19,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
-import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.diagnostics.ExceptionDiagnostic;

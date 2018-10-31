@@ -21,20 +21,20 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TField
+import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TModule
+import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
-import org.eclipse.n4js.typesystem.TypeSystemHelper
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.scoping.IScopeProvider
 import org.eclipse.xtext.util.IResourceScopeCache
 
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.ts.types.Type
-import org.eclipse.n4js.ts.types.TFunction
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  * This helper provides utilities for looking up React definitions such as React.Component or React.Element or

@@ -43,15 +43,15 @@ import org.eclipse.n4js.ts.types.util.AllSuperTypesCollector;
 import org.eclipse.n4js.ts.types.util.Variance;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
-import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
-import org.eclipse.n4js.typesystem.StructuralTypingComputer;
-import org.eclipse.n4js.typesystem.StructuralTypingComputer.StructTypingInfo;
-import org.eclipse.n4js.typesystem.SubtypeComputer;
-import org.eclipse.n4js.typesystem.TypeSystemHelper;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
+import org.eclipse.n4js.typesystem.utils.StructuralTypingComputer;
+import org.eclipse.n4js.typesystem.utils.StructuralTypingComputer.StructTypingInfo;
+import org.eclipse.n4js.typesystem.utils.SubtypeComputer;
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
 import org.eclipse.n4js.utils.StructuralMembersTriple;
 import org.eclipse.n4js.utils.StructuralMembersTripleIterator;
 import org.eclipse.n4js.utils.StructuralTypesHelper;
-import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 /**

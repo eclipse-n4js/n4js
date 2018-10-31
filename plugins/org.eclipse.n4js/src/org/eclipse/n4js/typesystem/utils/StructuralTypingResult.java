@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.typesystem;
+package org.eclipse.n4js.typesystem.utils;
 
 import java.util.List;
 
@@ -22,8 +22,10 @@ import com.google.common.base.Strings;
  */
 public class StructuralTypingResult {
 
-	final boolean value;
-	final String message;
+	/** The result value. */
+	public final boolean value;
+	/** The failure message or <code>null</code>. */
+	public final String message;
 
 	final boolean isN4ObjectOnLeftWithDefSite;
 

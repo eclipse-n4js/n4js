@@ -35,14 +35,14 @@ import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
 import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
-import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
-import org.eclipse.n4js.typesystem.TypeSystemHelper
 import org.eclipse.n4js.typesystem.utils.Result
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.xtext.service.OperationCanceledManager
 
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
 
 /**

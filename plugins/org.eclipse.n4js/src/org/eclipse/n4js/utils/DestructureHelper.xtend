@@ -32,6 +32,7 @@ import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
 import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.PrimitiveType
@@ -44,15 +45,14 @@ import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.util.AllSuperTypeRefsCollector
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
-import org.eclipse.n4js.typesystem.TypeSystemHelper
+import org.eclipse.n4js.typesystem.constraints.InferenceContext
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.scoping.IScope
 
 import static extension org.eclipse.n4js.n4JS.DestructNode.arePositional
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.typesystem.constraints.InferenceContext
-import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  * Helper for dealing with destructuring patterns. For more details on destructuring patterns,

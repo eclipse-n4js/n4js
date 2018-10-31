@@ -51,7 +51,7 @@ import org.eclipse.n4js.utils.RecursionGuard
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
 import org.eclipse.n4js.validation.validators.N4JSExpressionValidator
 
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  * Helper class to evaluate compile-time expressions.

@@ -40,7 +40,7 @@ import org.eclipse.n4js.utils.RecursionGuard
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  * This assistant provides helper methods to create members that delegate to some other target member (see

@@ -33,7 +33,7 @@ import org.eclipse.n4js.ts.types.PrimitiveType
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
-import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.utils.DestructureHelper
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
@@ -45,7 +45,7 @@ import org.eclipse.xtext.validation.EValidatorRegistrar
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.n4JS.DestructNode.arePositional
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.UtilN4.trimPrefix
 import static extension org.eclipse.n4js.utils.UtilN4.trimSuffix
 

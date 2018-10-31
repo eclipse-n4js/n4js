@@ -33,7 +33,7 @@ import java.util.List
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  */

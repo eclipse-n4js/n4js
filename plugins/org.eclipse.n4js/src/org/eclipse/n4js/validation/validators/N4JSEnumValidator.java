@@ -34,7 +34,7 @@ import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TEnum;
 import org.eclipse.n4js.ts.types.TMember;
-import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.xtext.EnumLiteralDeclaration;

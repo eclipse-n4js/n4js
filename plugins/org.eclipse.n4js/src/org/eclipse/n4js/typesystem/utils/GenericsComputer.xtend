@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.typesystem
+package org.eclipse.n4js.typesystem.utils
 
 import com.google.inject.Inject
 import java.util.Collection
@@ -35,10 +35,10 @@ import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.utils.TypeCompareHelper
 import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.RecursionGuard
-import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  * Type System Helper Strategy for managing type variable mappings in RuleEnvironments of XSemantics.

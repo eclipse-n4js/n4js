@@ -16,7 +16,7 @@ import org.eclipse.n4js.n4JS.ExpressionStatement
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.ThisLiteral
-import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner

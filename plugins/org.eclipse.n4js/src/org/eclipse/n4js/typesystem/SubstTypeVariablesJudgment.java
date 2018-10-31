@@ -10,10 +10,10 @@
  */
 package org.eclipse.n4js.typesystem;
 
-import static org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.GUARD_SUBST_TYPE_VARS;
-import static org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.addInconsistentSubstitutions;
-import static org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.getThisType;
-import static org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.wrap;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_SUBST_TYPE_VARS;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.addInconsistentSubstitutions;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.getThisType;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.wrap;
 
 import java.util.ArrayList;
 import java.util.List;

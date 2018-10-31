@@ -23,20 +23,20 @@ import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
-import org.eclipse.n4js.typesystem.TypeSystemHelper
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.validation.IssueCodes
+import org.eclipse.xtext.scoping.IScopeProvider
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.util.ParseHelper
 import org.eclipse.xtext.testing.validation.ValidationTestHelper
-import org.eclipse.xtext.scoping.IScopeProvider
+import org.eclipse.xtext.validation.Issue
 import org.junit.Assert
 import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
-import org.eclipse.xtext.validation.Issue
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  * Tests for static scoping, combined with type system test.

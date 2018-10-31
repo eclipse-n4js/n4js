@@ -16,7 +16,7 @@ import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.utils.ContainerTypesHelper
-import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural
 import java.util.Map
 import org.eclipse.xtext.testing.InjectWith
