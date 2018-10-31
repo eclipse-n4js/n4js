@@ -25,6 +25,8 @@ import java.util.stream.Collectors;
  */
 class TimedDataCollector extends DataCollector {
 
+	public static final boolean AVOID_EXCESSIVE_DATA_COLLECTION = true;
+
 	private final String id;
 	private final DataCollector parent;
 	// maintains insertion order
@@ -82,12 +84,23 @@ class TimedDataCollector extends DataCollector {
 	/** This method must be synchronized to protect race conditions when calling data.add */
 	synchronized private void consume(TimedMeasurement measurement) {
 		if (measurement != activeMeasurement) {
-			DataCollectors.INSTANCE.warn("bad invocation of consume in data collector " + id + "#" + measurement.name);
+			DataCollectors.INSTANCE.warn(
+					"invocation of #consume() without matching prior call to #getMeasurement() in data collector " + id
+							+ "#" + measurement.name);
 			return;
 		}
 		activeMeasurement = null;
-		TimedMeasurement timed = measurement;
-		data.add(new DataPoint(timed.name, timed.elapsed(TimeUnit.NANOSECONDS)));
+		String name = measurement.name;
+		long elapsed = measurement.elapsed(TimeUnit.NANOSECONDS);
+		if (AVOID_EXCESSIVE_DATA_COLLECTION) {
+			// storing every individual data point causes memory issues in large builds;
+			// therefore we only keep a single data point accumulating all measurements:
+			for (DataPoint dp : data) {
+				elapsed += dp.nanos;
+			}
+			data.clear();
+		}
+		data.add(new DataPoint(name, elapsed));
 	}
 
 	@Override
