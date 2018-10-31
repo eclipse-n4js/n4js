@@ -390,7 +390,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 						val expectedType = ts.expectedTypeIn(G, assExpr, assExpr.rhs).value;
 						val TypeRef typeOfGetterRAW = TypeUtils.getMemberTypeRef(getter);
 						if (expectedType !== null && typeOfGetterRAW !== null) {
-							val TypeRef typeOfGetter = ts.substTypeVariablesInTypeRef(G, typeOfGetterRAW);
+							val TypeRef typeOfGetter = ts.substTypeVariables(G, typeOfGetterRAW);
 							if (typeOfGetter !== null) {
 								val result = ts.subtype(G, typeOfGetter, expectedType);
 								createTypeError(result, assExpr.lhs);
@@ -412,7 +412,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		tClassifier.superClassifierRefs.forEach[tsh.addSubstitutions(G, it)];
 		for (tv : G.getTypeMappingKeys()) {
 			if (!tv.declaredCovariant && !tv.declaredContravariant) {
-				val subst = ts.substTypeVariables(G, TypeUtils.createTypeRef(tv)).value;
+				val subst = ts.substTypeVariables(G, TypeUtils.createTypeRef(tv));
 				if (subst instanceof UnknownTypeRef) {
 					val badSubst = G.getInconsistentSubstitutions(tv);
 					if (!badSubst.empty) {

@@ -33,7 +33,6 @@ import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.ts.utils.TypeCompareUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
-import org.eclipse.n4js.typesystem.utils.StructuralTypingResult
 import org.eclipse.n4js.typesystem.constraints.TypeConstraint
 import org.eclipse.n4js.utils.StructuralMembersTriple
 import org.eclipse.n4js.utils.StructuralTypesHelper
@@ -521,8 +520,8 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 		val reopen = newArrayList;
 		collectExistentialTypeRefs(G_right, reopen); // note: we only reopen on rhs
 
-		val typeLeft = ts.substTypeVariables(G_left, typeLeftRaw).value;
-		val typeRight = ts.substTypeVariables(G_right, typeRightRaw).value;
+		val typeLeft = ts.substTypeVariables(G_left, typeLeftRaw);
+		val typeRight = ts.substTypeVariables(G_right, typeRightRaw);
 
 		reopen.forEach[ G.addExistentialTypeToBeReopened(it) ];
 

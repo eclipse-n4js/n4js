@@ -298,7 +298,7 @@ public class TypeJudgment extends AbstractJudgment {
 				T = property.getDeclaredTypeRef();
 			} else if (property.getExpression() != null) {
 				TypeRef E = ts.type(G, property.getExpression()).getValue();
-				E = ts.upperBound(G, E); // take upper bound to get rid of ExistentialTypeRef (if any)
+				E = ts.upperBound(G, E).getValue(); // take upper bound to get rid of ExistentialTypeRef (if any)
 				Type declType = E.getDeclaredType();
 				if (declType == undefinedType(G) || declType == nullType(G) || declType == voidType(G)) {
 					T = anyTypeRef(G);
@@ -319,7 +319,7 @@ public class TypeJudgment extends AbstractJudgment {
 				T = fieldDecl.getDeclaredTypeRef();
 			} else if (fieldDecl.getExpression() != null) {
 				TypeRef E = ts.type(G, fieldDecl.getExpression()).getValue();
-				E = ts.upperBound(G, E);
+				E = ts.upperBound(G, E).getValue();
 				Type declType = E.getDeclaredType();
 				if (declType == undefinedType(G) || declType == nullType(G) || declType == voidType(G)) {
 					T = anyTypeRef(G);
@@ -364,7 +364,7 @@ public class TypeJudgment extends AbstractJudgment {
 							? destructureHelper.extractIterableElementType(G2, ofPartTypeRef)
 							: null;
 					if (elemType != null) {
-						T = ts.upperBound(G2, elemType);
+						T = ts.upperBound(G2, elemType).getValue();
 					} else {
 						T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
 					}
@@ -392,7 +392,8 @@ public class TypeJudgment extends AbstractJudgment {
 						// getting rid of it :-/)
 						// as part of IDE-785 leave the BoundThisTypeRef in place for variables w/o defined type.
 					} else {
-						E = ts.upperBound(G2, E); // take upper bound to get rid of ExistentialTypeRef (if any)
+						E = ts.upperBound(G2, E).getValue(); // take upper bound to get rid of ExistentialTypeRef (if
+																// any)
 					}
 					if (E.getDeclaredType() == undefinedType(G)
 							|| E.getDeclaredType() == nullType(G)
@@ -700,14 +701,14 @@ public class TypeJudgment extends AbstractJudgment {
 			} else if (exprType.getDeclaredType() == promiseType(G)) {
 				// standard case: use await on a promise
 				// --> result will be upper bound of first type argument
-				T = ts.upperBound(G, exprType.getTypeArgs().get(0));
+				T = ts.upperBound(G, exprType.getTypeArgs().get(0)).getValue();
 			} else if (promisifyHelper.isPromisifiableExpression(e.getExpression())) {
 				// "auto-promisify" case (i.e. an "await <expr>" that is a short-syntax for "await @Promisify <expr>")
 				final TypeRef promisifiedReturnTypeRef = promisifyHelper
 						.extractPromisifiedReturnType(e.getExpression());
 				if (promisifiedReturnTypeRef.getDeclaredType() == promiseType(G)) {
 					// --> result will be upper bound of first type argument
-					T = ts.upperBound(G, promisifiedReturnTypeRef.getTypeArgs().get(0));
+					T = ts.upperBound(G, promisifiedReturnTypeRef.getTypeArgs().get(0)).getValue();
 				} else {
 					T = promisifiedReturnTypeRef;
 				}
@@ -763,7 +764,7 @@ public class TypeJudgment extends AbstractJudgment {
 					final TypeRef elementTypeRef = targetIsLiteralOfStringBasedEnum
 							? stringType(G).getElementType()
 							: targetDeclType.getElementType();
-					T = ts.substTypeVariables(G2, elementTypeRef).getValue();
+					T = ts.substTypeVariables(G2, elementTypeRef);
 				}
 			} else if (memberName != null) {
 				// indexing via constant computed-name, sub-cases: static or instance member, for the latter
@@ -789,7 +790,7 @@ public class TypeJudgment extends AbstractJudgment {
 					final RuleEnvironment G2 = wrap(G);
 					typeSystemHelper.addSubstitutions(G2, targetTypeRef);
 					addThisType(G2, targetTypeRef);
-					T = ts.substTypeVariables(G2, memberTypeRef).getValue();
+					T = ts.substTypeVariables(G2, memberTypeRef);
 				} else if (targetTypeRef.isDynamic()) {
 					T = anyTypeRefDynamic(G);
 				} else {
@@ -903,7 +904,7 @@ public class TypeJudgment extends AbstractJudgment {
 			}
 
 			TypeRef T;
-			T = ts.substTypeVariables(G2, propTypeRef).getValue();
+			T = ts.substTypeVariables(G2, propTypeRef);
 			T = n4idlVersionResolver.resolveVersion(T, receiverTypeRef);
 
 			if (expr.getTarget() instanceof SuperLiteral && T instanceof FunctionTypeExprOrRef) {
@@ -940,7 +941,7 @@ public class TypeJudgment extends AbstractJudgment {
 				final Pair<String, Expression> guardKey = Pair.of(GUARD_TYPE_CALL_EXPRESSION, expr);
 				final Object guardValue = G.get(guardKey);
 				if (guardValue instanceof TypeRef) {
-					T = ts.substTypeVariables(G, (TypeRef) guardValue).getValue();
+					T = ts.substTypeVariables(G, (TypeRef) guardValue);
 					// TODO redesign GUARDs: instead of returning a preliminary (i.e. incorrect!) result, an error value
 					// should be returned! But what error value to use?
 					// fail (-> does not work, because next 'or' block will be executed then!)
@@ -967,7 +968,7 @@ public class TypeJudgment extends AbstractJudgment {
 					}
 
 					typeSystemHelper.addSubstitutions(G2, expr, targetTypeRef);
-					T = ts.substTypeVariables(G2, T).getValue();
+					T = ts.substTypeVariables(G2, T);
 					if (T == null) {
 						return null;
 					}
@@ -987,7 +988,7 @@ public class TypeJudgment extends AbstractJudgment {
 						//         }
 						//     }
 						// @formatter:on
-						T = ts.upperBound(G2, T); // taking upper bound turns this[C] into C
+						T = ts.upperBound(G2, T).getValue(); // taking upper bound turns this[C] into C
 					}
 				}
 				return T;

@@ -33,9 +33,9 @@ import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.N4JSLanguageUtils
-import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
@@ -94,7 +94,7 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 				// if fun is generic, we have to replace the type variables of fun by those of result1
 				val Gx = G.newRuleEnvironment;
 				Gx.addTypeMappings(fun.typeVars, funTE.ownedTypeVars.map[TypeUtils.createTypeRef(it)]);
-				ts.substTypeVariables(Gx, funTE).value as FunctionTypeExpression;
+				ts.substTypeVariables(Gx, funTE) as FunctionTypeExpression;
 			};
 
 		// register onSolved handlers to add final types to cache (i.e. may not contain inference variables)
@@ -177,7 +177,7 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 						TypeUtils.createTypeRef(fparT.eContainer as ContainerType<?>) else null;
 				val G_withContext = ts.createRuleEnvironmentForContext(context, G.contextResource);
 				val TypeRef iniTypeRef = if (fparInitializer !== null) ts.type(G_withContext, fparInitializer).value else G.undefinedTypeRef;
-				val iniTypeRefSubst = ts.substTypeVariables(G_withContext, iniTypeRef).value;
+				val iniTypeRefSubst = ts.substTypeVariables(G_withContext, iniTypeRef);
 				infCtx.addConstraint(TypeUtils.createTypeRef(iv), TypeUtils.copy(iniTypeRefSubst), Variance.CONTRA);
 			}
 		}

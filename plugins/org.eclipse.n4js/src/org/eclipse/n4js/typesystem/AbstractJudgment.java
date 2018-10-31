@@ -19,7 +19,7 @@ import com.google.inject.Inject;
 public abstract class AbstractJudgment {
 
 	@Inject
-	protected InternalTypeSystemNEW ts; // FIXME reconsider if we need to use N4JSTypeSystem here!!!!
+	protected N4JSTypeSystem ts;
 	@Inject
 	protected TypeSystemHelper typeSystemHelper;
 	@Inject

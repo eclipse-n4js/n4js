@@ -215,7 +215,7 @@ public class ExpectedTypeJudgment extends AbstractJudgment {
 							return anyTypeRef(G2);
 						} else {
 							// bind type variables in function type's parameter type
-							return ts.substTypeVariables(G2, paramType).getValue();
+							return ts.substTypeVariables(G2, paramType);
 						}
 					}
 				}
@@ -275,7 +275,7 @@ public class ExpectedTypeJudgment extends AbstractJudgment {
 							}
 
 							// bind type variables in function type's parameter type
-							final TypeRef paramTypeRefSubst = ts.substTypeVariables(G2, paramTypeRef).getValue();
+							final TypeRef paramTypeRefSubst = ts.substTypeVariables(G2, paramTypeRef);
 
 							return paramTypeRefSubst;
 						}
@@ -632,7 +632,7 @@ public class ExpectedTypeJudgment extends AbstractJudgment {
 					if (propertyTypeRef == null) {
 						return unknown();
 					}
-					final TypeRef propertyTypeRefSubst = ts.substTypeVariables(G2, propertyTypeRef).getValue();
+					final TypeRef propertyTypeRefSubst = ts.substTypeVariables(G2, propertyTypeRef);
 					return propertyTypeRefSubst;
 				}
 			}

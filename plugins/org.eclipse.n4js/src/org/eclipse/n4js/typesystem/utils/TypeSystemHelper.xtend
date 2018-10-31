@@ -326,7 +326,7 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 		val localG = G.wrap;
 		localG.addThisType(boundThisTypeRef);
 		// substitute all unbound ThisTypeRefs with the newly created BoundThisTypeRef
-		return ts.substTypeVariables(localG, typeRef).value as TypeRef;
+		return ts.substTypeVariables(localG, typeRef);
 	}
 
 	/**

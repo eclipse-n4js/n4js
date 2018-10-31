@@ -627,8 +627,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 			final TypeArgument leftArg = leftArgs.get(idx);
 			final TypeVariable leftParam = leftParams.get(idx);
 			if (RuleEnvironmentExtensions.hasSubstitutionFor(Gx, leftParam)) {
-				final TypeArgument leftParamSubst = ts.substTypeVariables(Gx, TypeUtils.createTypeRef(leftParam))
-						.getValue();
+				final TypeRef leftParamSubst = ts.substTypeVariables(Gx, TypeUtils.createTypeRef(leftParam));
 				wasAdded |= reduceConstraintForTypeArgumentPair(leftArg, leftParam, leftParamSubst);
 			}
 		}
@@ -761,8 +760,8 @@ import org.eclipse.xtext.xbase.lib.Pair;
 		for (InferenceVariable iv : ic.getInferenceVariables()) {
 			RuleEnvironmentExtensions.addTypeMapping(G_temp, iv, unknown);
 		}
-		final TypeArgument leftSubst = ts.substTypeVariables(G_temp, left).getValue();
-		final TypeArgument rightSubst = ts.substTypeVariables(G_temp, right).getValue();
+		final TypeRef leftSubst = ts.substTypeVariables(G_temp, left);
+		final TypeRef rightSubst = ts.substTypeVariables(G_temp, right);
 		// step 2: now, perform subtype check reusing existing logic
 		return ts.subtypeSucceeded(G, leftSubst, rightSubst);
 	}

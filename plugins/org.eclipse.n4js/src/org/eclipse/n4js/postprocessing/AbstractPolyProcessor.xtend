@@ -200,10 +200,10 @@ package abstract class AbstractPolyProcessor extends AbstractProcessor {
 			else
 				Gx.put(e.key, TypeUtils.createTypeRef(e.value))
 		];
-		val result = ts.substTypeVariables(Gx, typeRef);
-		if (result.failure)
-			throw new IllegalArgumentException("substitution failed: " + result.failureMessage);
-		return result.value as TypeRef; // we put a TypeRef into 'substTypeVariables', so we always get back a TypeRef
+		val typeRefSubst = ts.substTypeVariables(Gx, typeRef);
+		if (typeRefSubst === null)
+			throw new IllegalArgumentException("substitution failed");
+		return typeRefSubst;
 	}
 
 	def protected TypeRef applySolution(TypeRef typeRef, RuleEnvironment G, Map<InferenceVariable, TypeRef> solution) {
@@ -212,10 +212,10 @@ package abstract class AbstractPolyProcessor extends AbstractProcessor {
 		}
 		val Gx = G.wrap;
 		solution.entrySet.forEach[e|Gx.put(e.key, e.value)];
-		val result = ts.substTypeVariables(Gx, typeRef);
-		if (result.failure)
-			throw new IllegalArgumentException("substitution failed: " + result.failureMessage);
-		return result.value as TypeRef; // we put a TypeRef into 'substTypeVariables', so we always get back a TypeRef
+		val typeRefSubst = ts.substTypeVariables(Gx, typeRef);
+		if (typeRefSubst === null)
+			throw new IllegalArgumentException("substitution failed");
+		return typeRefSubst;
 	}
 
 	def protected Map<InferenceVariable, TypeRef> createPseudoSolution(InferenceContext infCtx,

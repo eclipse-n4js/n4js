@@ -93,8 +93,8 @@ public final class SubtypeJudgment extends AbstractJudgment {
 	private Result<Boolean> doApply(RuleEnvironment G, TypeArgument leftArg, TypeArgument rightArg) {
 
 		// get rid of wildcards by taking their upper/lower bound
-		final TypeRef left = leftArg instanceof Wildcard ? ts.upperBound(G, leftArg) : (TypeRef) leftArg;
-		final TypeRef right = rightArg instanceof Wildcard ? ts.lowerBound(G, rightArg) : (TypeRef) rightArg;
+		final TypeRef left = leftArg instanceof Wildcard ? ts.upperBound(G, leftArg).getValue() : (TypeRef) leftArg;
+		final TypeRef right = rightArg instanceof Wildcard ? ts.lowerBound(G, rightArg).getValue() : (TypeRef) rightArg;
 		if (left == null || right == null) {
 			return failure();
 		}
@@ -349,10 +349,10 @@ public final class SubtypeJudgment extends AbstractJudgment {
 					final TypeArgument rightArg = right.getTypeArgs().get(i);
 					final Variance variance = rightDeclType.getVarianceOfTypeVar(i);
 
-					TypeRef leftArgUpper = ts.upperBound(G, leftArg);
-					TypeRef leftArgLower = ts.lowerBound(G, leftArg);
-					TypeRef rightArgUpper = ts.upperBound(G, rightArg);
-					TypeRef rightArgLower = ts.lowerBound(G, rightArg);
+					TypeRef leftArgUpper = ts.upperBound(G, leftArg).getValue();
+					TypeRef leftArgLower = ts.lowerBound(G, leftArg).getValue();
+					TypeRef rightArgUpper = ts.upperBound(G, rightArg).getValue();
+					TypeRef rightArgLower = ts.lowerBound(G, rightArg).getValue();
 
 					// guard against infinite recursion due to recursive implicit upper bounds, such as in
 					//
@@ -445,7 +445,7 @@ public final class SubtypeJudgment extends AbstractJudgment {
 						.map(tv -> ref(tv))
 						.toArray(l -> new TypeArgument[l]);
 				final TypeRef syntheticTypeRef = ref(rightDeclType, syntheticTypeArgs);
-				final TypeRef effectiveSuperTypeRef = ts.substTypeVariables(localG_left, syntheticTypeRef).getValue();
+				final TypeRef effectiveSuperTypeRef = ts.substTypeVariables(localG_left, syntheticTypeRef);
 				return requireAllSuccess(
 						ts.subtype(G, effectiveSuperTypeRef, right));
 			} else {
@@ -540,8 +540,8 @@ public final class SubtypeJudgment extends AbstractJudgment {
 				addThisType(G_left, ref(left_staticType));
 				typeSystemHelper.addSubstitutions(G_right, ref(right_staticType));
 				addThisType(G_right, ref(right_staticType));
-				final TypeRef leftCtorRefSubst = ts.substTypeVariables(G_left, leftCtorRef).getValue();
-				final TypeRef rightCtorRefSubst = ts.substTypeVariables(G_right, rightCtorRef).getValue();
+				final TypeRef leftCtorRefSubst = ts.substTypeVariables(G_left, leftCtorRef);
+				final TypeRef rightCtorRefSubst = ts.substTypeVariables(G_right, rightCtorRef);
 
 				return requireAllSuccess(
 						ts.subtype(G, leftCtorRefSubst, rightCtorRefSubst));
@@ -550,10 +550,10 @@ public final class SubtypeJudgment extends AbstractJudgment {
 		} else {
 			// any combination except type{} <: constructor{} AND right contains wildcard
 
-			final TypeRef upperBoundLeft = ts.upperBound(G, leftTypeArg);
-			final TypeRef lowerBoundLeft = ts.lowerBound(G, leftTypeArg);
-			final TypeRef upperBoundRight = ts.upperBound(G, rightTypeArg);
-			final TypeRef lowerBoundRight = ts.lowerBound(G, rightTypeArg);
+			final TypeRef upperBoundLeft = ts.upperBound(G, leftTypeArg).getValue();
+			final TypeRef lowerBoundLeft = ts.lowerBound(G, leftTypeArg).getValue();
+			final TypeRef upperBoundRight = ts.upperBound(G, rightTypeArg).getValue();
+			final TypeRef lowerBoundRight = ts.lowerBound(G, rightTypeArg).getValue();
 
 			return requireAllSuccess(
 					ts.subtype(G, upperBoundLeft, upperBoundRight),
@@ -571,8 +571,8 @@ public final class SubtypeJudgment extends AbstractJudgment {
 			// obtain wildcard from which existentialTypeRef was created
 			final Wildcard wildThing = existentialTypeRef.getWildcard();
 			// check upper and lower bounds
-			final TypeRef upperBound = ts.upperBound(G, wildThing);
-			final TypeRef lowerBound = ts.lowerBound(G, wildThing);
+			final TypeRef upperBound = ts.upperBound(G, wildThing).getValue();
+			final TypeRef lowerBound = ts.lowerBound(G, wildThing).getValue();
 			return requireAllSuccess(
 					ts.subtype(G, right, upperBound), // FIXME reconsider this logic!!!
 					ts.subtype(G, lowerBound, right));
@@ -585,7 +585,7 @@ public final class SubtypeJudgment extends AbstractJudgment {
 			if (existentialTypeRef == right) {
 				return success(); // performance tweak
 			}
-			final TypeRef upperExt = ts.upperBound(G, existentialTypeRef);
+			final TypeRef upperExt = ts.upperBound(G, existentialTypeRef).getValue();
 			return requireAllSuccess(
 					ts.subtype(G, upperExt, right));
 		}
@@ -601,8 +601,8 @@ public final class SubtypeJudgment extends AbstractJudgment {
 			// obtain wildcard from which existentialTypeRef was created
 			final Wildcard wildThing = existentialTypeRef.getWildcard();
 			// check upper and lower bounds
-			final TypeRef upperBound = ts.upperBound(G, wildThing);
-			final TypeRef lowerBound = ts.lowerBound(G, wildThing);
+			final TypeRef upperBound = ts.upperBound(G, wildThing).getValue();
+			final TypeRef lowerBound = ts.lowerBound(G, wildThing).getValue();
 			return requireAllSuccess(
 					ts.subtype(G, left, upperBound),
 					ts.subtype(G, lowerBound, left));
@@ -619,7 +619,7 @@ public final class SubtypeJudgment extends AbstractJudgment {
 					((ParameterizedTypeRef) left).getDeclaredType() instanceof NullType) {
 				return success(); // FIXME probably no longer required!
 			}
-			final TypeRef lowerExt = ts.lowerBound(G, existentialTypeRef);
+			final TypeRef lowerExt = ts.lowerBound(G, existentialTypeRef).getValue();
 			return requireAllSuccess(
 					ts.subtype(G, left, lowerExt));
 		}
@@ -650,7 +650,7 @@ public final class SubtypeJudgment extends AbstractJudgment {
 		if (boundThisTypeRef == right) {
 			return success();
 		}
-		final TypeRef upperExt = ts.upperBound(G, boundThisTypeRef);
+		final TypeRef upperExt = ts.upperBound(G, boundThisTypeRef).getValue();
 		return requireAllSuccess(
 				ts.subtype(G, upperExt, right));
 	}

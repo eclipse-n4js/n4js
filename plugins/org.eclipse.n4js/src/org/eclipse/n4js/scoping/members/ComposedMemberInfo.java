@@ -206,7 +206,7 @@ public class ComposedMemberInfo {
 			}
 
 			// handle: typeRef lists
-			TypeRef typeRefSubst = ts.substTypeVariablesInTypeRef(G, tFpar.getTypeRef());
+			TypeRef typeRefSubst = ts.substTypeVariables(G, tFpar.getTypeRef());
 			if (typeRefSubst != null && !(typeRefSubst instanceof UnknownTypeRef)) {
 				TypeRef typeRefCopy = TypeUtils.copyIfContained(typeRefSubst);
 				fpAggr.typeRefs.add(typeRefCopy);
@@ -264,7 +264,7 @@ public class ComposedMemberInfo {
 
 	private void handleTypeRefLists(TMember member, RuleEnvironment G) {
 		TypeRef typeRef = TypeUtils.getMemberTypeRef(member);
-		TypeRef typeRefSubst = ts.substTypeVariablesInTypeRef(G, typeRef);
+		TypeRef typeRefSubst = ts.substTypeVariables(G, typeRef);
 		if (typeRefSubst != null && !(typeRefSubst instanceof UnknownTypeRef)) {
 			TypeRef typeRefCopy = TypeUtils.copyIfContained(typeRefSubst);
 			typeRefs.add(typeRefCopy);

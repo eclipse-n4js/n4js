@@ -164,7 +164,7 @@ class ReactHelper {
 			tsh.addSubstitutions(G, TypeUtils.createTypeRef(tclass));
 			// Substitute type variables in the 'props' and return the result
 			// Note: after substTypeVariablesInTypeRef is called, the rule environment G is unchanged so do not ask G for result as this caused bug IDE-2540
-			val reactComponentPropsTypeRef = ts.substTypeVariablesInTypeRef(G,
+			val reactComponentPropsTypeRef = ts.substTypeVariables(G,
 				TypeUtils.createTypeRef(reactComponentProps));
 			return reactComponentPropsTypeRef;
 

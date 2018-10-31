@@ -226,7 +226,7 @@ class DestructureHelper {
 				// substitute type variables in 'result'
 				val G2 = G.wrap;
 				tsh.addSubstitutions(G2, parentValueTypeRef);
-				val resultSubst = ts.substTypeVariables(G2, result).value;
+				val resultSubst = ts.substTypeVariables(G2, result);
 				val resultSubstUB = if(resultSubst!==null) ts.upperBound(G2, resultSubst).value;
 				return resultSubstUB;
 			}
@@ -505,7 +505,7 @@ class DestructureHelper {
 		// substitute type variables in result
 		val G2 = G.wrap;
 		tsh.addSubstitutions(G2,typeRef);
-		val resultSubst = result.map[ts.substTypeVariables(G2,it).value]
+		val resultSubst = result.map[ts.substTypeVariables(G2,it)]
 				.filter(TypeRef); // note the invariant of judgment 'substTypeVariables': if you put TypeRefs in, you'll get TypeRefs back
 		return resultSubst;
 	}

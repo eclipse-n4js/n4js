@@ -60,13 +60,13 @@ class DerivationComputer extends TypeSystemHelperStrategy {
 
 		// substitution on this type
 		if (F.declaredThisType !== null) {
-			val TypeRef resultDeclaredThisType = ts.substTypeVariablesInTypeRef(G,F.declaredThisType);
+			val TypeRef resultDeclaredThisType = ts.substTypeVariables(G,F.declaredThisType);
 			result.declaredThisType = TypeUtils.copy(resultDeclaredThisType)
 		}
 
 		// substitution on return type
 		if (F.returnTypeRef !== null) {
-			val TypeRef resultReturnTypeRef = ts.substTypeVariablesInTypeRef(G,F.returnTypeRef);
+			val TypeRef resultReturnTypeRef = ts.substTypeVariables(G,F.returnTypeRef);
 			result.returnTypeRef = TypeUtils.copyIfContained(resultReturnTypeRef)
 		}
 
@@ -82,7 +82,7 @@ class DerivationComputer extends TypeSystemHelperStrategy {
 				newPar.hasInitializerAssignment = fpar.hasInitializerAssignment
 
 				if(fpar.typeRef !== null) {
-					val TypeRef resultParTypeRef = ts.substTypeVariablesInTypeRef(G,fpar.typeRef);
+					val TypeRef resultParTypeRef = ts.substTypeVariables(G,fpar.typeRef);
 					newPar.typeRef = TypeUtils.copyIfContained(resultParTypeRef)
 				}
 
@@ -185,7 +185,7 @@ class DerivationComputer extends TypeSystemHelperStrategy {
 		val currTV_declUB = currTV.declaredUpperBound;
 		if(currTV_declUB!==null) {
 			val oldUB = F.getTypeVarUpperBound(currTV);
-			val newUB = ts.substTypeVariablesInTypeRef(G,oldUB);
+			val newUB = ts.substTypeVariables(G,oldUB);
 			val unchanged = (newUB === currTV_declUB); // note: identity compare is what we want
 			if(!unchanged) {
 				val idx = result.unboundTypeVars.indexOf(currTV);

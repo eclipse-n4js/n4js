@@ -26,7 +26,7 @@ import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TStructMember
 import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.ts.utils.TypeUtils
-import org.eclipse.n4js.typesystem.InternalTypeSystemNEW
+import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.utils.Result
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.utils.EcoreUtilN4
@@ -48,7 +48,7 @@ package abstract class AbstractProcessor {
 	val private static DEBUG_RIGID = false; // if true, more consistency checks are performed and exceptions thrown if wrong
 
 	@Inject
-	private InternalTypeSystemNEW ts_internal;
+	private N4JSTypeSystem ts;
 	@Inject
 	private OperationCanceledManager operationCanceledManager;
 
@@ -78,7 +78,7 @@ package abstract class AbstractProcessor {
 		if (definedMember !== null && elem.isASTNode) {
 			return askXsemanticsForType(G, definedMember);
 		}
-		return ts_internal.use_type_judgment_from_PostProcessors(G, elem);
+		return ts.use_type_judgment_from_PostProcessors(G, elem);
 	}
 
 

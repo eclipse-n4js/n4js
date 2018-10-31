@@ -273,7 +273,7 @@ public final class InferenceContext {
 				.collect(Collectors.toList());
 		final RuleEnvironment G_params2infVars = RuleEnvironmentExtensions.newRuleEnvironment(G); // new, empty RE
 		RuleEnvironmentExtensions.addTypeMappings(G_params2infVars, typeParams, newInfVarsRefs);
-		final TypeArgument left_withInfVars = ts.substTypeVariables(G_params2infVars, funTypeRef).getValue();
+		final TypeArgument left_withInfVars = ts.substTypeVariables(G_params2infVars, funTypeRef);
 		if (left_withInfVars instanceof FunctionTypeExprOrRef)
 			return (FunctionTypeExprOrRef) left_withInfVars;
 		// in case of substitution error: return original funTypeRef

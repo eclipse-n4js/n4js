@@ -312,7 +312,7 @@ class JoinComputer extends TypeSystemHelperStrategy {
 		if (member.typeRef.parameterized) {
 			val subst = TypesFactory.eINSTANCE.createTStructField();
 			subst.name = member.name;
-			subst.typeRef = ts.substTypeVariables(G, member.typeRef).value as TypeRef;
+			subst.typeRef = ts.substTypeVariables(G, member.typeRef);
 			if (subst.typeRef === null) {
 				subst.typeRef = G.anyTypeRef;
 			}
@@ -326,7 +326,7 @@ class JoinComputer extends TypeSystemHelperStrategy {
 		if (member.declaredTypeRef !== null && member.declaredTypeRef.parameterized) {
 			val subst = TypesFactory.eINSTANCE.createTStructGetter();
 			subst.name = member.name;
-			subst.declaredTypeRef = ts.substTypeVariables(G, member.declaredTypeRef).value as TypeRef;
+			subst.declaredTypeRef = ts.substTypeVariables(G, member.declaredTypeRef);
 			if (subst.declaredTypeRef === null) {
 				subst.declaredTypeRef = G.anyTypeRef;
 			}
@@ -341,7 +341,7 @@ class JoinComputer extends TypeSystemHelperStrategy {
 			val subst = TypesFactory.eINSTANCE.createTStructSetter();
 			subst.name = member.name;
 
-			var tr = ts.substTypeVariables(G, member.fpar.typeRef).value as TypeRef;
+			var tr = ts.substTypeVariables(G, member.fpar.typeRef);
 			if (tr === null) {
 				tr = G.anyTypeRef;
 			}

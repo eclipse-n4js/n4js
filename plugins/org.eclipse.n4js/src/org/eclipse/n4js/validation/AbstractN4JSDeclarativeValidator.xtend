@@ -243,7 +243,7 @@ public class AbstractN4JSDeclarativeValidator extends AbstractMessageAdjustingN4
 				val isExceptionCase = TypeUtils.isVoid(typeArgument); // in this case another validation will show an error (avoid duplicate messages)
 				if(!isExceptionCase) {
 					val upperBound = typeParameter.declaredUpperBound ?: N4JSLanguageUtils.getTypeVariableImplicitUpperBound(G_subst);
-					val substituted = ts.substTypeVariables(G_subst, upperBound).value;
+					val substituted = ts.substTypeVariables(G_subst, upperBound);
 					val result = ts.subtype(G_subst, typeArgument, substituted);
 					if (result.failure) {
 						createTypeError(result, typeArgument);
