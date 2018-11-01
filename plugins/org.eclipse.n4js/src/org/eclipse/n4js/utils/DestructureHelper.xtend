@@ -227,7 +227,7 @@ class DestructureHelper {
 				val G2 = G.wrap;
 				tsh.addSubstitutions(G2, parentValueTypeRef);
 				val resultSubst = ts.substTypeVariables(G2, result);
-				val resultSubstUB = if(resultSubst!==null) ts.upperBound(G2, resultSubst).value;
+				val resultSubstUB = if(resultSubst!==null) ts.upperBound(G2, resultSubst);
 				return resultSubstUB;
 			}
 		}
@@ -264,7 +264,7 @@ class DestructureHelper {
 	private def TypeRef mergeWithTypeOfDefaultExpression(RuleEnvironment G, TypeRef valueTypeRef, DestructNode node) {
 		val exprTypeRefRaw = if(node.defaultExpr!==null) ts.type(G, node.defaultExpr);
 		val isNullOrUndef = if(exprTypeRefRaw!==null) ts.subtypeSucceeded(G,exprTypeRefRaw,G.undefinedTypeRef) || ts.subtypeSucceeded(G,exprTypeRefRaw,G.nullTypeRef);
-		val exprTypeRef = if(exprTypeRefRaw!==null && !isNullOrUndef) ts.upperBound(G,exprTypeRefRaw).value;
+		val exprTypeRef = if(exprTypeRefRaw!==null && !isNullOrUndef) ts.upperBound(G,exprTypeRefRaw);
 		if(valueTypeRef!==null && exprTypeRef!==null) {
 			// we have to merge the two types ...
 			// (the small optimization with the subtype checks should be done by #createUnionType(), but isn't)
@@ -292,7 +292,7 @@ class DestructureHelper {
 	 * Same as {@link #extractIterableElementTypes(RuleEnvironment,TypeRef)}, but returns the upper bounds.
 	 */
 	public def Iterable<TypeRef> extractIterableElementTypesUBs(RuleEnvironment G, TypeRef typeRef) {
-		return extractIterableElementTypes(G,typeRef).map[ts.upperBound(G,it).value];
+		return extractIterableElementTypes(G,typeRef).map[ts.upperBound(G,it)];
 	}
 
 	/**
@@ -312,7 +312,7 @@ class DestructureHelper {
 	 * Same as {@link #extractIterableElementType(RuleEnvironment,TypeRef)}, but returns the upper bound.
 	 */
 	public def TypeRef extractIterableElementTypeUB(RuleEnvironment G, TypeRef typeRef) {
-		return extractIterableElementTypes(G, typeRef, false).map[ts.upperBound(G,it).value].head;
+		return extractIterableElementTypes(G, typeRef, false).map[ts.upperBound(G,it)].head;
 	}
 
 	/**
@@ -511,7 +511,7 @@ class DestructureHelper {
 	}
 
 	private def Iterable<TypeRef> toUpperBounds(Iterable<TypeArgument> typeArgs, RuleEnvironment G) {
-		typeArgs.map[ts.upperBound(G,it).value]
+		typeArgs.map[ts.upperBound(G,it)]
 	}
 
 	private def Iterable<? extends TypeRef> mergeListsOfTypeRefs(RuleEnvironment G, Class<? extends ComposedTypeRef> type, Iterable<? extends TypeRef>... iterablesToMerge) {

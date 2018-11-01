@@ -209,12 +209,12 @@ package class JoinComputer extends TypeSystemHelperStrategy {
 							val upperBound = join(G,
 								parameterizedSuperTypes.map [
 									// (typeArgs.get(currentIndex) as TypeRef).declaredUpperBound
-									ts.upperBound(G, (typeArgs.get(currentIndex))).value
+									ts.upperBound(G, (typeArgs.get(currentIndex)))
 								])
 							val lowerBound = meet(G,
 								parameterizedSuperTypes.map [
 									// (typeArgs.get(currentIndex) as TypeRef).declaredLowerBound
-									ts.lowerBound(G, (typeArgs.get(currentIndex))).value
+									ts.lowerBound(G, (typeArgs.get(currentIndex)))
 								])
 							if (compare(upperBound, lowerBound) == 0) {
 								merged.typeArgs.add(TypeUtils.copyIfContained(upperBound))

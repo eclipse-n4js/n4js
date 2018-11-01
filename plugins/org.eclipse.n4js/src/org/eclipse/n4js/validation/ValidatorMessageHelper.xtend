@@ -274,7 +274,7 @@ class ValidatorMessageHelper {
 	 * The returned message is trimmed, that is, preceeding "failed: " is removed and
 	 * whitespaces are trimmed.
 	 */
-	public def String trimTypesystemMessage(Result<?> tsresult) {
+	public def String trimTypesystemMessage(Result tsresult) {
 		val String msg = tsresult?.failureMessage;
 		if (msg === null) {
 			return "";

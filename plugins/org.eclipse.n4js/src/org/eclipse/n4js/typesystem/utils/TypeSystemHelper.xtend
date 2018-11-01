@@ -223,7 +223,7 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 
 	/** see {@link N4JSTypeSystem#resolveType(RuleEnvironment,TypeArgument)} */
 	public def TypeRef resolveType(RuleEnvironment G, TypeArgument typeArg) {
-		var typeRef = if(typeArg !== null) ts.upperBound(G, typeArg).value;
+		var typeRef = if(typeArg !== null) ts.upperBound(G, typeArg);
 		typeRef = if(typeRef !== null) TypeUtils.resolveTypeVariable(typeRef);
 		// TODO IDE-2367 recursively resolve the resulting 'typeRef' until it is stable (requires refactoring of upper/lower bound judgment!)
 		return typeRef;
@@ -245,7 +245,7 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 		if (typeRaw===null || typeRaw instanceof UnknownTypeRef) {
 			return G.anyTypeRef;
 		}
-		val typeUB = ts.upperBound(G, typeRaw).value; // take upper bound to get rid of ExistentialTypeRef (if any)
+		val typeUB = ts.upperBound(G, typeRaw); // take upper bound to get rid of ExistentialTypeRef (if any)
 		val declType = typeUB.declaredType
 		if (declType===G.undefinedType || declType===G.nullType || declType===G.voidType) {
 			// don't use these types to type variables, fields, properties -> replace with any
@@ -420,7 +420,7 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 	def public TypeRef getStaticTypeRef(RuleEnvironment G, TypeTypeRef ctorTypeRef) {
 		var typeArg = ctorTypeRef.typeArg;
 		while(typeArg instanceof Wildcard || typeArg instanceof ExistentialTypeRef || typeArg instanceof BoundThisTypeRef) {
-			typeArg = ts.upperBound(G, typeArg).value;
+			typeArg = ts.upperBound(G, typeArg);
 		}
 		return typeArg as TypeRef;
 	}
@@ -506,7 +506,7 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 		if (generatorTypeRef.typeArgs.length === 3) {
 			val yieldTypeArg = generatorTypeRef.typeArgs.get(0);
 			if (yieldTypeArg !== null)
-				yieldTypeRef = ts.upperBound(G, yieldTypeArg).value; // take upper bound to get rid of Wildcard, etc.
+				yieldTypeRef = ts.upperBound(G, yieldTypeArg); // take upper bound to get rid of Wildcard, etc.
 		}
 		return yieldTypeRef;
 	}
@@ -519,7 +519,7 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 		if (generatorTypeRef.typeArgs.length === 3) {
 			val returnTypeArg = generatorTypeRef.typeArgs.get(1);
 			if (returnTypeArg !== null)
-				returnTypeRef = ts.upperBound(G, returnTypeArg).value; // take upper bound to get rid of Wildcard, etc.
+				returnTypeRef = ts.upperBound(G, returnTypeArg); // take upper bound to get rid of Wildcard, etc.
 		}
 		return returnTypeRef;
 	}
@@ -532,7 +532,7 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 		if (generatorTypeRef.typeArgs.length === 3) {
 			val nextTypeArg = generatorTypeRef.typeArgs.get(2);
 			if (nextTypeArg !== null)
-				nextTypeRef = ts.upperBound(G, nextTypeArg).value; // take upper bound to get rid of Wildcard, etc.
+				nextTypeRef = ts.upperBound(G, nextTypeArg); // take upper bound to get rid of Wildcard, etc.
 		}
 		return nextTypeRef;
 	}
@@ -545,7 +545,7 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 		if (iterableTypeRef.typeArgs.length === 1) {
 			val nextTypeArg = iterableTypeRef.typeArgs.get(0);
 			if (nextTypeArg !== null)
-				typeRef = ts.upperBound(G, nextTypeArg).value; // take upper bound to get rid of Wildcard, etc.
+				typeRef = ts.upperBound(G, nextTypeArg); // take upper bound to get rid of Wildcard, etc.
 		}
 		return typeRef;
 	}

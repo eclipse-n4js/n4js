@@ -80,7 +80,6 @@ import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.utils.TypeUtils;
-import org.eclipse.n4js.typesystem.utils.Result;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.PromisifyHelper;
@@ -114,12 +113,7 @@ import com.google.inject.Inject;
 	@Inject
 	private ReactHelper reactHelper;
 
-	public Result<TypeRef> apply(RuleEnvironment G, EObject container, Expression expression) {
-		TypeRef result = doApply(G, container, expression);
-		return Result.success(result);
-	}
-
-	private TypeRef doApply(RuleEnvironment G, EObject container, Expression expression) {
+	public TypeRef apply(RuleEnvironment G, EObject container, Expression expression) {
 		return expression != null ? new ExpectedTypeJudgmentSwitch(G, expression).doSwitch(container) : null;
 	}
 

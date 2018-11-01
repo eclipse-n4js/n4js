@@ -35,7 +35,6 @@ import org.eclipse.n4js.ts.typeRefs.util.TypeRefsSwitch;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.utils.TypeUtils;
-import org.eclipse.n4js.typesystem.utils.Result;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.Pair;
@@ -56,11 +55,21 @@ import org.eclipse.xtext.xbase.lib.Pair;
  */
 /* package */ final class SubstTypeVariablesJudgment extends AbstractJudgment {
 
-	public Result<TypeArgument> apply(RuleEnvironment G, TypeArgument typeArg) {
+	/**
+	 * Never returns <code>null</code>, EXCEPT if <code>null</code> is passed in as type argument.
+	 */
+	public TypeArgument apply(RuleEnvironment G, TypeArgument typeArg) {
+		if (typeArg == null) {
+			return null;
+		}
 		final SubstTypeVariablesSwitch theSwitch = new SubstTypeVariablesSwitch(G);
-		final TypeArgument resultValue = theSwitch.doSwitch(typeArg);
-		return resultValue != null ? Result.success(resultValue)
-				: Result.failure("judgment substTypeVariables failed", false, null);
+		final TypeArgument result = theSwitch.doSwitch(typeArg);
+		if (result == null) {
+			final String stringRep = typeArg.getTypeRefAsString();
+			throw new IllegalArgumentException(
+					"null return value in substTypeVariables judgment for type argument: " + stringRep);
+		}
+		return result;
 	}
 
 	private final class SubstTypeVariablesSwitch extends TypeRefsSwitch<TypeArgument> {
@@ -86,7 +95,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 			if (G2 == this.G) {
 				return doSwitch(typeArg);
 			} else {
-				return apply(G2, typeArg).getValue();
+				return apply(G2, typeArg);
 			}
 		}
 

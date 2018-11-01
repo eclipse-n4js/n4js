@@ -118,8 +118,7 @@ class JudgmentExpectedTypeInTest extends AbstractTypesystemTest {
 
 		val aInAssignment = bToA.rhs
 		var expectedType = ts.expectedTypeIn(G, aInAssignment.eContainer, aInAssignment);
-		assertFalse(expectedType.failure)
-		assertNotNull(expectedType.value)
+		assertNotNull(expectedType)
 
 		// eventually:
 		val issues = script.validate();

@@ -79,8 +79,8 @@ import com.google.common.collect.Iterables;
 
 /* package */ final class SubtypeJudgment extends AbstractJudgment {
 
-	public Result<Boolean> apply(RuleEnvironment G, TypeArgument left, TypeArgument right) {
-		Result<Boolean> result = doApply(G, left, right);
+	public Result apply(RuleEnvironment G, TypeArgument left, TypeArgument right) {
+		Result result = doApply(G, left, right);
 		if (result.isFailure()) {
 			// set default failure message
 			final String leftMsg = left != null ? left.getTypeRefAsString() : "<null>";
@@ -90,11 +90,11 @@ import com.google.common.collect.Iterables;
 		return result;
 	}
 
-	private Result<Boolean> doApply(RuleEnvironment G, TypeArgument leftArg, TypeArgument rightArg) {
+	private Result doApply(RuleEnvironment G, TypeArgument leftArg, TypeArgument rightArg) {
 
 		// get rid of wildcards by taking their upper/lower bound
-		final TypeRef left = leftArg instanceof Wildcard ? ts.upperBound(G, leftArg).getValue() : (TypeRef) leftArg;
-		final TypeRef right = rightArg instanceof Wildcard ? ts.lowerBound(G, rightArg).getValue() : (TypeRef) rightArg;
+		final TypeRef left = leftArg instanceof Wildcard ? ts.upperBound(G, leftArg) : (TypeRef) leftArg;
+		final TypeRef right = rightArg instanceof Wildcard ? ts.lowerBound(G, rightArg) : (TypeRef) rightArg;
 		if (left == null || right == null) {
 			return failure();
 		}
@@ -197,7 +197,7 @@ import com.google.common.collect.Iterables;
 		return failure();
 	}
 
-	private Result<Boolean> applyUnion_Left(RuleEnvironment G,
+	private Result applyUnion_Left(RuleEnvironment G,
 			UnionTypeExpression U, TypeRef S) {
 		return requireAllSuccess(
 				U.getTypeRefs().stream().map(
@@ -205,7 +205,7 @@ import com.google.common.collect.Iterables;
 								.trimCauses(); // FIXME legacy behavior; refine error messages!
 	}
 
-	private Result<Boolean> applyUnion_Right(RuleEnvironment G,
+	private Result applyUnion_Right(RuleEnvironment G,
 			TypeRef S, UnionTypeExpression U) {
 		return requireExistsSuccess(
 				U.getTypeRefs().stream().map(
@@ -213,7 +213,7 @@ import com.google.common.collect.Iterables;
 								.trimCauses(); // FIXME legacy behavior; refine error messages!
 	}
 
-	private Result<Boolean> applyIntersection_Left(RuleEnvironment G,
+	private Result applyIntersection_Left(RuleEnvironment G,
 			IntersectionTypeExpression I, TypeRef S) {
 		return requireExistsSuccess(
 				I.getTypeRefs().stream().map(
@@ -221,7 +221,7 @@ import com.google.common.collect.Iterables;
 								.trimCauses(); // FIXME legacy behavior; refine error messages!
 	}
 
-	private Result<Boolean> applyIntersection_Right(RuleEnvironment G,
+	private Result applyIntersection_Right(RuleEnvironment G,
 			TypeRef S, IntersectionTypeExpression I) {
 		return requireAllSuccess(
 				I.getTypeRefs().stream().map(
@@ -229,7 +229,7 @@ import com.google.common.collect.Iterables;
 								.trimCauses(); // FIXME legacy behavior; refine error messages!
 	}
 
-	private Result<Boolean> applyParameterizedTypeRef(RuleEnvironment G,
+	private Result applyParameterizedTypeRef(RuleEnvironment G,
 			ParameterizedTypeRef leftOriginal, ParameterizedTypeRef rightOriginal) {
 		final TypeRef left = getReplacement(G, leftOriginal);
 		final TypeRef right = getReplacement(G, rightOriginal);
@@ -349,10 +349,10 @@ import com.google.common.collect.Iterables;
 					final TypeArgument rightArg = right.getTypeArgs().get(i);
 					final Variance variance = rightDeclType.getVarianceOfTypeVar(i);
 
-					TypeRef leftArgUpper = ts.upperBound(G, leftArg).getValue();
-					TypeRef leftArgLower = ts.lowerBound(G, leftArg).getValue();
-					TypeRef rightArgUpper = ts.upperBound(G, rightArg).getValue();
-					TypeRef rightArgLower = ts.lowerBound(G, rightArg).getValue();
+					TypeRef leftArgUpper = ts.upperBound(G, leftArg);
+					TypeRef leftArgLower = ts.lowerBound(G, leftArg);
+					TypeRef rightArgUpper = ts.upperBound(G, rightArg);
+					TypeRef rightArgLower = ts.lowerBound(G, rightArg);
 
 					// guard against infinite recursion due to recursive implicit upper bounds, such as in
 					//
@@ -392,7 +392,7 @@ import com.google.common.collect.Iterables;
 // why not just require type equality, i.e. L<:R && R<:L (without taking upper/lower bounds) and let the
 // subtype rules for WildCards / ExistentialTypeRefs do the heavy lifting?
 // @formatter:on
-					Result<Boolean> tempResult = success();
+					Result tempResult = success();
 					// require leftArg <: rightArg, except we have contravariance
 					if (variance != Variance.CONTRA) {
 						tempResult = ts.subtype(G2, leftArgUpper, rightArgUpper);
@@ -405,12 +405,12 @@ import com.google.common.collect.Iterables;
 					}
 
 					if (tempResult.isFailure()) {
-						if (tempResult.isOrIsCausedByCustom()) {
+						if (tempResult.isOrIsCausedByPriority()) {
 							// fail with a custom message including the nested custom failure message:
 							return failure(left.getTypeRefAsString()
 									+ " is not a subtype of " + right.getTypeRefAsString()
 									+ " due to incompatible type arguments: "
-									+ tempResult.getPreferredFailureMessage());
+									+ tempResult.getPriorityFailureMessage());
 						} else {
 							// fail with our default message:
 							return failure();
@@ -454,12 +454,12 @@ import com.google.common.collect.Iterables;
 		}
 	}
 
-	private Result<Boolean> applyFunctionTypeExprOrRef(RuleEnvironment G,
+	private Result applyFunctionTypeExprOrRef(RuleEnvironment G,
 			FunctionTypeExprOrRef left, FunctionTypeExprOrRef right) {
 		return resultFromBoolean(typeSystemHelper.isSubtypeFunction(G, left, right));
 	}
 
-	private Result<Boolean> applyTypeTypeRef(RuleEnvironment G,
+	private Result applyTypeTypeRef(RuleEnvironment G,
 			TypeTypeRef left, TypeTypeRef right) {
 		final TypeArgument leftTypeArg = left.getTypeArg();
 		final TypeArgument rightTypeArg = right.getTypeArg();
@@ -502,7 +502,7 @@ import com.google.common.collect.Iterables;
 			}
 
 			// check type arguments
-			final Result<Boolean> result = ts.subtype(G, leftTypeArg, rightTypeArg);
+			final Result result = ts.subtype(G, leftTypeArg, rightTypeArg);
 			if (!result.isSuccess()) {
 				return failure(result);
 			}
@@ -550,10 +550,10 @@ import com.google.common.collect.Iterables;
 		} else {
 			// any combination except type{} <: constructor{} AND right contains wildcard
 
-			final TypeRef upperBoundLeft = ts.upperBound(G, leftTypeArg).getValue();
-			final TypeRef lowerBoundLeft = ts.lowerBound(G, leftTypeArg).getValue();
-			final TypeRef upperBoundRight = ts.upperBound(G, rightTypeArg).getValue();
-			final TypeRef lowerBoundRight = ts.lowerBound(G, rightTypeArg).getValue();
+			final TypeRef upperBoundLeft = ts.upperBound(G, leftTypeArg);
+			final TypeRef lowerBoundLeft = ts.lowerBound(G, leftTypeArg);
+			final TypeRef upperBoundRight = ts.upperBound(G, rightTypeArg);
+			final TypeRef lowerBoundRight = ts.lowerBound(G, rightTypeArg);
 
 			return requireAllSuccess(
 					ts.subtype(G, upperBoundLeft, upperBoundRight),
@@ -561,7 +561,7 @@ import com.google.common.collect.Iterables;
 		}
 	}
 
-	private Result<Boolean> applyExistentialTypeRef_Left(RuleEnvironment G,
+	private Result applyExistentialTypeRef_Left(RuleEnvironment G,
 			ExistentialTypeRef existentialTypeRef, TypeArgument right) {
 		if (isExistentialTypeToBeReopened(G, existentialTypeRef)) {
 			// special case: open existential
@@ -571,8 +571,8 @@ import com.google.common.collect.Iterables;
 			// obtain wildcard from which existentialTypeRef was created
 			final Wildcard wildThing = existentialTypeRef.getWildcard();
 			// check upper and lower bounds
-			final TypeRef upperBound = ts.upperBound(G, wildThing).getValue();
-			final TypeRef lowerBound = ts.lowerBound(G, wildThing).getValue();
+			final TypeRef upperBound = ts.upperBound(G, wildThing);
+			final TypeRef lowerBound = ts.lowerBound(G, wildThing);
 			return requireAllSuccess(
 					ts.subtype(G, right, upperBound), // FIXME reconsider this logic!!!
 					ts.subtype(G, lowerBound, right));
@@ -585,13 +585,13 @@ import com.google.common.collect.Iterables;
 			if (existentialTypeRef == right) {
 				return success(); // performance tweak
 			}
-			final TypeRef upperExt = ts.upperBound(G, existentialTypeRef).getValue();
+			final TypeRef upperExt = ts.upperBound(G, existentialTypeRef);
 			return requireAllSuccess(
 					ts.subtype(G, upperExt, right));
 		}
 	}
 
-	private Result<Boolean> applyExistentialTypeRef_Right(RuleEnvironment G,
+	private Result applyExistentialTypeRef_Right(RuleEnvironment G,
 			TypeArgument left, ExistentialTypeRef existentialTypeRef) {
 		if (isExistentialTypeToBeReopened(G, existentialTypeRef)) {
 			// special case: open existential
@@ -601,8 +601,8 @@ import com.google.common.collect.Iterables;
 			// obtain wildcard from which existentialTypeRef was created
 			final Wildcard wildThing = existentialTypeRef.getWildcard();
 			// check upper and lower bounds
-			final TypeRef upperBound = ts.upperBound(G, wildThing).getValue();
-			final TypeRef lowerBound = ts.lowerBound(G, wildThing).getValue();
+			final TypeRef upperBound = ts.upperBound(G, wildThing);
+			final TypeRef lowerBound = ts.lowerBound(G, wildThing);
 			return requireAllSuccess(
 					ts.subtype(G, left, upperBound),
 					ts.subtype(G, lowerBound, left));
@@ -619,13 +619,13 @@ import com.google.common.collect.Iterables;
 					((ParameterizedTypeRef) left).getDeclaredType() instanceof NullType) {
 				return success(); // FIXME probably no longer required!
 			}
-			final TypeRef lowerExt = ts.lowerBound(G, existentialTypeRef).getValue();
+			final TypeRef lowerExt = ts.lowerBound(G, existentialTypeRef);
 			return requireAllSuccess(
 					ts.subtype(G, left, lowerExt));
 		}
 	}
 
-	private Result<Boolean> applyBoundThisTypeRef_Both(RuleEnvironment G,
+	private Result applyBoundThisTypeRef_Both(RuleEnvironment G,
 			BoundThisTypeRef left, BoundThisTypeRef right) {
 		// also see subtypeParameterizedTypeRef, simplified here as less cases are possible
 		if (right.isUseSiteStructuralTyping()) {
@@ -645,17 +645,17 @@ import com.google.common.collect.Iterables;
 		}
 	}
 
-	private Result<Boolean> applyBoundThisTypeRef_Left(RuleEnvironment G,
+	private Result applyBoundThisTypeRef_Left(RuleEnvironment G,
 			BoundThisTypeRef boundThisTypeRef, TypeArgument right) {
 		if (boundThisTypeRef == right) {
 			return success();
 		}
-		final TypeRef upperExt = ts.upperBound(G, boundThisTypeRef).getValue();
+		final TypeRef upperExt = ts.upperBound(G, boundThisTypeRef);
 		return requireAllSuccess(
 				ts.subtype(G, upperExt, right));
 	}
 
-	private Result<Boolean> applyBoundThisTypeRef_Right(RuleEnvironment G,
+	private Result applyBoundThisTypeRef_Right(RuleEnvironment G,
 			TypeArgument left, BoundThisTypeRef boundThisTypeRef) {
 		if (left == boundThisTypeRef) {
 			return success();
@@ -695,21 +695,21 @@ import com.google.common.collect.Iterables;
 	// ################################################################################
 	// utility methods:
 
-	private Result<Boolean> resultFromBoolean(boolean result) {
+	private Result resultFromBoolean(boolean result) {
 		return result ? success() : failure();
 	}
 
-	private Result<Boolean> requireAllSuccess(Result<?>... results) {
+	private Result requireAllSuccess(Result... results) {
 		if (results == null || results.length == 0) {
 			throw new IllegalArgumentException("no results given");
 		}
 		return requireAllSuccess(Stream.of(results));
 	}
 
-	private Result<Boolean> requireAllSuccess(Stream<Result<?>> results) {
-		Iterator<Result<?>> iter = results.iterator();
+	private Result requireAllSuccess(Stream<Result> results) {
+		Iterator<Result> iter = results.iterator();
 		while (iter.hasNext()) {
-			final Result<?> result = iter.next();
+			final Result result = iter.next();
 			if (!result.isSuccess()) {
 				return failure(result);
 			}
@@ -717,11 +717,11 @@ import com.google.common.collect.Iterables;
 		return success();
 	}
 
-	private Result<Boolean> requireExistsSuccess(Stream<Result<?>> results) {
-		Iterator<Result<?>> iter = results.iterator();
-		Result<?> firstFailure = null;
+	private Result requireExistsSuccess(Stream<Result> results) {
+		Iterator<Result> iter = results.iterator();
+		Result firstFailure = null;
 		while (iter.hasNext()) {
-			final Result<?> result = iter.next();
+			final Result result = iter.next();
 			if (result.isSuccess()) {
 				return success();
 			}
@@ -732,16 +732,16 @@ import com.google.common.collect.Iterables;
 		return firstFailure != null ? failure(firstFailure) : failure();
 	}
 
-	private Result<Boolean> success() {
+	private Result success() {
 		return Result.success();
 	}
 
-	private <T> Result<T> failure(Result<?>... results) {
+	private Result failure(Result... results) {
 		return failure((String) null, results);
 	}
 
-	private <T> Result<T> failure(String failureMessage, Result<?>... results) {
-		final Result<?> firstFailure = Stream.of(results)
+	private Result failure(String failureMessage, Result... results) {
+		final Result firstFailure = Stream.of(results)
 				.filter(Result::isFailure)
 				.findFirst().orElse(null);
 		return Result.failure(failureMessage, failureMessage != null, firstFailure);

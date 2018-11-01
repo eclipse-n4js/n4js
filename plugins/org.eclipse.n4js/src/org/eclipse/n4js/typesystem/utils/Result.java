@@ -17,27 +17,24 @@ import org.eclipse.n4js.utils.UtilN4;
 
 import com.google.common.base.Joiner;
 
-public final class Result<T> {
+public final class Result {
 
 	private final boolean success;
-	private final T value;
 	private final String failureMessage;
-	private final boolean custom;
-	private final Result<?> cause;
+	private final boolean priority;
+	private final Result cause;
 
-	private Result(T value) {
+	private Result() {
 		this.success = true;
-		this.value = value;
 		this.failureMessage = null;
-		this.custom = false;
+		this.priority = false;
 		this.cause = null;
 	}
 
-	private Result(String failureMessage, boolean custom, Result<?> cause) {
+	private Result(String failureMessage, boolean priority, Result cause) {
 		this.success = false;
-		this.value = null;
 		this.failureMessage = failureMessage;
-		this.custom = custom;
+		this.priority = priority;
 		this.cause = cause;
 	}
 
@@ -49,30 +46,26 @@ public final class Result<T> {
 		return !success;
 	}
 
-	public T getValue() {
-		return value;
-	}
-
 	public String getFailureMessage() {
 		return failureMessage;
 	}
 
-	public boolean isCustom() {
-		return custom;
+	public boolean isPriority() {
+		return priority;
 	}
 
-	public Result<?> getCause() {
+	public Result getCause() {
 		return cause;
 	}
 
-	public boolean isOrIsCausedByCustom() {
-		return getCustomFailure() != null;
+	public boolean isOrIsCausedByPriority() {
+		return getPriorityFailure() != null;
 	}
 
-	public String getPreferredFailureMessage() {
-		Result<?> customFailure = getCustomFailure();
-		String customMessage = customFailure != null ? customFailure.getFailureMessage() : null;
-		return customMessage != null ? customMessage : failureMessage;
+	public String getPriorityFailureMessage() {
+		Result priorityFailure = getPriorityFailure();
+		String priorityMessage = priorityFailure != null ? priorityFailure.getFailureMessage() : null;
+		return priorityMessage != null ? priorityMessage : failureMessage;
 	}
 
 	/**
@@ -81,12 +74,12 @@ public final class Result<T> {
 	 * no priority messages, the top-level message (i.e. the message of the receiving failure). Returns
 	 * <code>null</code> if the receiving result is not a failure.
 	 */
-	public String getCombinedFailureMessage() {
+	public String getCompiledFailureMessage() {
 		// collect all priority messages
 		final List<String> prioMsgs = new ArrayList<>();
-		Result<?> curr = this;
+		Result curr = this;
 		while (curr != null) {
-			if (curr.isFailure() && curr.isCustom()) {
+			if (curr.isFailure() && curr.isPriority()) {
 				final String currMsg = curr.getFailureMessage();
 				if (currMsg != null) {
 					prioMsgs.add(prepareMessage(currMsg));
@@ -110,39 +103,35 @@ public final class Result<T> {
 		return result;
 	}
 
-	public Result<?> getCustomFailure() {
-		if (!success && custom) {
+	public Result getPriorityFailure() {
+		if (!success && priority) {
 			return this;
 		}
 		if (cause != null) {
-			return cause.getCustomFailure();
+			return cause.getPriorityFailure();
 		}
 		return null;
 	}
 
-	public Result<T> trimCauses() {
-		return isSuccess() ? this : new Result<>(failureMessage, custom, null);
+	public Result trimCauses() {
+		return isSuccess() ? this : new Result(failureMessage, priority, null);
 	}
 
-	public static Result<Boolean> success() {
-		return success(Boolean.TRUE);
+	public static Result success() {
+		return new Result();
 	}
 
-	public static <T> Result<T> success(T value) {
-		return new Result<>(value);
+	public static Result failure(String failureMessage, boolean priority, Result cause) {
+		return new Result(failureMessage, priority, cause);
 	}
 
-	public static <T> Result<T> failure(String failureMessage, boolean custom, Result<?> cause) {
-		return new Result<>(failureMessage, custom, cause);
-	}
-
-	public static <T> Result<T> failure(String failureMessage, Result<?> template) {
+	public static Result failure(String failureMessage, Result template) {
 		if (!template.isFailure()) {
 			throw new IllegalArgumentException("template is not a failure");
 		}
 		if (template.getFailureMessage() == null) {
-			return new Result<>(failureMessage, template.custom, template.cause);
+			return new Result(failureMessage, template.priority, template.cause);
 		}
-		return new Result<>(failureMessage, false, template);
+		return new Result(failureMessage, false, template);
 	}
 }

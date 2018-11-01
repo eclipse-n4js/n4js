@@ -108,11 +108,8 @@ abstract class AbstractCallExpressionTypesystemTest extends AbstractTypesystemTe
 					null;
 			if (expectedType !== null) {
 				val actualTypeResult = ts.expectedTypeIn(G, arg, arg.expression);
-				if (actualTypeResult.failure) {
-					assertNoFailure(actualTypeResult);
-				}
-				assertNotNull("rule expectedTypeIn returned null for argument "+i, actualTypeResult.value);
-				assertEquals(expectedType, actualTypeResult.value.typeRefAsString)
+				assertNotNull("rule expectedTypeIn returned null for argument "+i, actualTypeResult);
+				assertEquals(expectedType, actualTypeResult.typeRefAsString)
 			}
 		]
 

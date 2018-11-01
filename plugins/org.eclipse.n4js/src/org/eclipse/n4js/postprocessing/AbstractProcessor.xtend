@@ -245,14 +245,6 @@ package abstract class AbstractProcessor {
 		return DEBUG_RIGID;
 	}
 
-	def protected static String resultToString(Result<TypeRef> result) {
-		"RESULT: " + if (result !== null && result.failure) {
-			"!FAILED! " + result.failureMessage;
-		} else {
-			result?.value?.typeRefAsString
-		}
-	}
-
 	def protected static String indent(int indentLevel) {
 		(0 ..< indentLevel).map["    "].join
 	}

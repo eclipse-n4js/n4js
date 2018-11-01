@@ -20,7 +20,6 @@ import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef
-import org.eclipse.n4js.typesystem.utils.Result
 import org.eclipse.n4js.validation.JavaScriptVariant
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
@@ -106,26 +105,26 @@ class GenericsTest extends AbstractTypesystemTest {
 		val bot = G.predefinedTypes.builtInTypeScope.undefinedType
 		val top = G.predefinedTypes.builtInTypeScope.anyType
 
-		var Result<TypeRef> result;
+		var TypeRef result;
 		result = ts.lowerBound(G, w1);
-		assertEquals(A, (result.value as ParameterizedTypeRef).declaredType);
+		assertEquals(A, (result as ParameterizedTypeRef).declaredType);
 		result = ts.upperBound(G, w1);
-		assertEquals(A, (result.value as ParameterizedTypeRef).declaredType);
+		assertEquals(A, (result as ParameterizedTypeRef).declaredType);
 
 		result = ts.upperBound(G, w2);
-		assertEquals(top, (result.value as ParameterizedTypeRef).declaredType);
+		assertEquals(top, (result as ParameterizedTypeRef).declaredType);
 		result = ts.lowerBound(G, w2);
-		assertEquals(bot, (result.value as ParameterizedTypeRef).declaredType);
+		assertEquals(bot, (result as ParameterizedTypeRef).declaredType);
 
 		result = ts.upperBound(G, w3);
-		assertEquals(A, (result.value as ParameterizedTypeRef).declaredType);
+		assertEquals(A, (result as ParameterizedTypeRef).declaredType);
 		result = ts.lowerBound(G, w3);
-		assertEquals(bot, (result.value as ParameterizedTypeRef).declaredType);
+		assertEquals(bot, (result as ParameterizedTypeRef).declaredType);
 
 		result = ts.upperBound(G, w4);
-		assertEquals(top, (result.value as ParameterizedTypeRef).declaredType);
+		assertEquals(top, (result as ParameterizedTypeRef).declaredType);
 		result = ts.lowerBound(G, w4);
-		assertEquals(A, (result.value as ParameterizedTypeRef).declaredType);
+		assertEquals(A, (result as ParameterizedTypeRef).declaredType);
 
 	}
 
@@ -323,7 +322,7 @@ class GenericsTest extends AbstractTypesystemTest {
 		val call = (script.scriptElements.get(4) as ExpressionStatement).expression as ParameterizedCallExpression;
 
 		val arg0 = call.arguments.head;
-		val expectedType = ts.expectedTypeIn(G, arg0, arg0.expression).value;
+		val expectedType = ts.expectedTypeIn(G, arg0, arg0.expression);
 		val actualType = ts.type(G, arg0.expression);
 
 		assertType(expectedType, (actualType as ParameterizedTypeRef).declaredType);
@@ -430,7 +429,7 @@ class GenericsTest extends AbstractTypesystemTest {
 		val call = (script.scriptElements.last as ExpressionStatement).expression as ParameterizedCallExpression;
 
 		val arg0 = call.arguments.head;
-		val expectedType = ts.expectedTypeIn(G, arg0, arg0.expression).value;
+		val expectedType = ts.expectedTypeIn(G, arg0, arg0.expression);
 		val actualType = ts.type(G, arg0.expression);
 
 		val result = ts.subtype(G, actualType, expectedType);

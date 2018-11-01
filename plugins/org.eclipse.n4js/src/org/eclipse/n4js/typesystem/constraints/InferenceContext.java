@@ -482,7 +482,7 @@ public final class InferenceContext {
 			// take upper bound of all lower bounds
 			// (if we have a type bound `α :> ? extends A` this will give us A as a lower bound for α)
 			for (int i = 0; i < lowerBounds.length; i++) {
-				lowerBounds[i] = ts.upperBound(G, lowerBounds[i]).getValue();
+				lowerBounds[i] = ts.upperBound(G, lowerBounds[i]);
 			}
 			final TypeRef result = tsh.createUnionType(G, lowerBounds);
 			assert TypeUtils.isProper(result) : "not a proper LUB: " + str(result);

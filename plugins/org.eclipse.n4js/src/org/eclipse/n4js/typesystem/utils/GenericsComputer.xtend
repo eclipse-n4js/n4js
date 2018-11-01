@@ -292,7 +292,7 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 					}
 				}
 				l.forEach[ta|
-					val taSubst = ts.substTypeVariables(G, ta).value;
+					val taSubst = ts.substTypeVariables(G, ta);
 					if(taSubst!==null && taSubst!==ta) {
 						EcoreUtil.replace(ta, taSubst);
 					}
@@ -346,7 +346,7 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 		// Esp. important if 'typeRef' already contained postponed substitutions when this method was invoked.
 		// Example: 'typeRef' is ~Object with { T1 prop1; T2 prop2; } [[T1->A, T2->α]] and 'G' contains α->B
 		for (tvmapping : typeRef.postponedSubstitutions) {
-			val typeArgSubst = ts.substTypeVariables(G, tvmapping.typeArg).value;
+			val typeArgSubst = ts.substTypeVariables(G, tvmapping.typeArg);
 			if(typeArgSubst!==null && typeArgSubst!==tvmapping.typeArg) {
 				tvmapping.typeArg = typeArgSubst;
 			}

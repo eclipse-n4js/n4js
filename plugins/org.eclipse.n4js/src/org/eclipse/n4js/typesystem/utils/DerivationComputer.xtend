@@ -126,8 +126,8 @@ package class DerivationComputer extends TypeSystemHelperStrategy {
 		// upper/lower bound of return type
 		if (F.returnTypeRef !== null) {
 			val resultReturnTypeRef = switch(boundType) {
-				case UPPER: ts.upperBound(G,F.returnTypeRef).value
-				case LOWER: ts.lowerBound(G,F.returnTypeRef).value
+				case UPPER: ts.upperBound(G,F.returnTypeRef)
+				case LOWER: ts.lowerBound(G,F.returnTypeRef)
 			};
 			result.returnTypeRef =
 				TypeUtils.copyIfContained(resultReturnTypeRef);
@@ -144,8 +144,8 @@ package class DerivationComputer extends TypeSystemHelperStrategy {
 
 				if(fpar.typeRef !== null) {
 					val resultParTypeRef = switch(boundType) {
-						case UPPER: ts.lowerBound(G,fpar.typeRef).value
-						case LOWER: ts.upperBound(G,fpar.typeRef).value
+						case UPPER: ts.lowerBound(G,fpar.typeRef)
+						case LOWER: ts.upperBound(G,fpar.typeRef)
 					};
 					newPar.typeRef = TypeUtils.copyIfContained(resultParTypeRef)
 				}

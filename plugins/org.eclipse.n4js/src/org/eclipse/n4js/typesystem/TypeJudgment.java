@@ -184,8 +184,8 @@ import com.google.inject.Inject;
 	public TypeRef apply(RuleEnvironment G, TypableElement element) {
 		final TypeRef result = doApply(G, element);
 		if (result == null) {
-			final String elementStr = element != null ? element.eClass().getName() : "<null>";
-			throw new IllegalArgumentException("cannot type " + elementStr);
+			final String stringRep = element != null ? element.eClass().getName() : "<null>";
+			throw new IllegalStateException("null return value in type judgment for element: " + stringRep);
 		}
 		return result;
 	}
@@ -306,7 +306,7 @@ import com.google.inject.Inject;
 				T = property.getDeclaredTypeRef();
 			} else if (property.getExpression() != null) {
 				TypeRef E = ts.type(G, property.getExpression());
-				E = ts.upperBound(G, E).getValue(); // take upper bound to get rid of ExistentialTypeRef (if any)
+				E = ts.upperBound(G, E); // take upper bound to get rid of ExistentialTypeRef (if any)
 				Type declType = E.getDeclaredType();
 				if (declType == undefinedType(G) || declType == nullType(G) || declType == voidType(G)) {
 					T = anyTypeRef(G);
@@ -327,7 +327,7 @@ import com.google.inject.Inject;
 				T = fieldDecl.getDeclaredTypeRef();
 			} else if (fieldDecl.getExpression() != null) {
 				TypeRef E = ts.type(G, fieldDecl.getExpression());
-				E = ts.upperBound(G, E).getValue();
+				E = ts.upperBound(G, E);
 				Type declType = E.getDeclaredType();
 				if (declType == undefinedType(G) || declType == nullType(G) || declType == voidType(G)) {
 					T = anyTypeRef(G);
@@ -370,7 +370,7 @@ import com.google.inject.Inject;
 					final TypeRef ofPartTypeRef = ts.type(G2, forOfStmnt.getExpression());
 					final TypeArgument elemType = destructureHelper.extractIterableElementType(G2, ofPartTypeRef);
 					if (elemType != null) {
-						T = ts.upperBound(G2, elemType).getValue();
+						T = ts.upperBound(G2, elemType);
 					} else {
 						T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
 					}
@@ -398,8 +398,7 @@ import com.google.inject.Inject;
 						// getting rid of it :-/)
 						// as part of IDE-785 leave the BoundThisTypeRef in place for variables w/o defined type.
 					} else {
-						E = ts.upperBound(G2, E).getValue(); // take upper bound to get rid of ExistentialTypeRef (if
-																// any)
+						E = ts.upperBound(G2, E); // take upper bound to get rid of ExistentialTypeRef (if any)
 					}
 					if (E.getDeclaredType() == undefinedType(G)
 							|| E.getDeclaredType() == nullType(G)
@@ -700,14 +699,14 @@ import com.google.inject.Inject;
 			if (exprType.getDeclaredType() == promiseType(G)) {
 				// standard case: use await on a promise
 				// --> result will be upper bound of first type argument
-				T = ts.upperBound(G, exprType.getTypeArgs().get(0)).getValue();
+				T = ts.upperBound(G, exprType.getTypeArgs().get(0));
 			} else if (promisifyHelper.isPromisifiableExpression(e.getExpression())) {
 				// "auto-promisify" case (i.e. an "await <expr>" that is a short-syntax for "await @Promisify <expr>")
 				final TypeRef promisifiedReturnTypeRef = promisifyHelper
 						.extractPromisifiedReturnType(e.getExpression());
 				if (promisifiedReturnTypeRef.getDeclaredType() == promiseType(G)) {
 					// --> result will be upper bound of first type argument
-					T = ts.upperBound(G, promisifiedReturnTypeRef.getTypeArgs().get(0)).getValue();
+					T = ts.upperBound(G, promisifiedReturnTypeRef.getTypeArgs().get(0));
 				} else {
 					T = promisifiedReturnTypeRef;
 				}
@@ -969,7 +968,7 @@ import com.google.inject.Inject;
 						//         }
 						//     }
 						// @formatter:on
-						T = ts.upperBound(G2, T).getValue(); // taking upper bound turns this[C] into C
+						T = ts.upperBound(G2, T); // taking upper bound turns this[C] into C
 					}
 				}
 				return T;

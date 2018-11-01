@@ -100,9 +100,8 @@ abstract class AbstractTypesystemTest {
 		val G = newRuleEnvironment(element);
 		val result = ts.expectedTypeIn(G,element.eContainer, element);
 
-		result.assertNoFailure
-		assertNotNull("No expected type inferred", result.value)
-		assertEquals("Wrong expected type inferred", expectedTypeName, result.value.typeRefAsString)
+		assertNotNull("No expected type inferred", result)
+		assertEquals("Wrong expected type inferred", expectedTypeName, result.typeRefAsString)
 	}
 
 	def void assertSubtype(RuleEnvironment G, TypeRef left, TypeRef right, boolean expectedResult) {
@@ -114,36 +113,34 @@ abstract class AbstractTypesystemTest {
 		val result = ts.subtype(G, left, right)
 		if (expectedResult) {
 			result.assertNoFailure
-			assertEquals(expectedResult, result.value)
+			assertEquals(expectedResult, result.success)
 		} else {
 			result.assertFailure
 		}
 	}
 
 	/* Tests that the result's value is a boolean and equals the expected result. */
-	def void assertSubtype(Result<Boolean> result, boolean expectedResult) {
+	def void assertSubtype(Result result, boolean expectedResult) {
 		if (expectedResult) {
 			result.assertNoFailure
-			assertEquals(expectedResult, result.value)
+			assertEquals(expectedResult, result.success)
 		} else {
 			assertTrue(result.failure)
 		}
 	}
 
-	def void assertNoFailure(Result<?> result) {
+	def void assertNoFailure(Result result) {
 		assertFalse(result.failureMessage, result.failure)
-		assertNotNull(result.value)
 	}
 
-	def void assertFailure(Result<?> result, String expectedFailureMessage) {
+	def void assertFailure(Result result, String expectedFailureMessage) {
 		result.assertFailure
 		assertEquals(expectedFailureMessage, result.failureMessage)
 	}
 
-	def void assertFailure(Result<?> result) {
+	def void assertFailure(Result result) {
 		assertTrue("unexpected success", result.failure);
 		assertNotNull(result.failureMessage);
-		assertNull(result.value);
 	}
 
 	def void assertIssueCount(int expectedNumber, List<Issue> issues) {

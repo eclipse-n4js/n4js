@@ -150,7 +150,7 @@ package class TypeDeferredProcessor extends AbstractProcessor {
 				}
 				var TypeArgument fieldTypeRef = askXsemanticsForType(G2, typedElem); // delegate to Xsemantics rule typeN4FieldDeclaration
 				if (useContext) {
-					fieldTypeRef = ts.substTypeVariables(G2, fieldTypeRef).value;
+					fieldTypeRef = ts.substTypeVariables(G2, fieldTypeRef);
 				}
 				val fieldTypeRefSane = tsh.sanitizeTypeOfVariableFieldProperty(G, fieldTypeRef);
 				EcoreUtilN4.doWithDeliver(false, [

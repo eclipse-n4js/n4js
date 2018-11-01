@@ -100,10 +100,10 @@ class ThisScopingTest {
 				} else {
 					val upperBoundResult = ts.upperBound(G, boundType);
 					assertNotNull(
-						"Cannot retrieve upper bound of this type ref: " + upperBoundResult.failureMessage,
-						upperBoundResult.value
+						"Cannot retrieve upper bound of this type ref: " + boundType,
+						upperBoundResult
 					);
-					val upperBound = upperBoundResult.value;
+					val upperBound = upperBoundResult;
 					assertTrue(upperBound instanceof ParameterizedTypeRef)
 					assertEquals(classifierType, (upperBound as ParameterizedTypeRef).declaredType);
 				}

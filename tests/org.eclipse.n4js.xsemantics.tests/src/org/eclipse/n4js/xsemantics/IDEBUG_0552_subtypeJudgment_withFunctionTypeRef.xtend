@@ -77,7 +77,7 @@ class IDEBUG_0552_subtypeJudgment_withFunctionTypeRef extends AbstractTypesystem
 	def void test_FunctionTypeRef_subtype_FunctionTypeExpression() {
 		val result = ts.subtype(G, functionTypeRef, functionTypeExpression);
 		assertFalse("subtype judgment should not fail", result.failure);
-		assertTrue("{function(A):B} should be a subtype of {function(A):B}", result.value==Boolean.TRUE);
+		assertTrue("{function(A):B} should be a subtype of {function(A):B}", result.success);
 	}
 
 
@@ -85,6 +85,6 @@ class IDEBUG_0552_subtypeJudgment_withFunctionTypeRef extends AbstractTypesystem
 	def void test_FunctionTypeExpression_subtype_FunctionTypeRef() {
 		val result = ts.subtype(G, functionTypeExpression, functionTypeRef);
 		assertFalse("subtype judgment should not fail", result.failure);
-		assertTrue("{function(A):B} should be a subtype of {function(A):B}", result.value==Boolean.TRUE);
+		assertTrue("{function(A):B} should be a subtype of {function(A):B}", result.success);
 	}
 }

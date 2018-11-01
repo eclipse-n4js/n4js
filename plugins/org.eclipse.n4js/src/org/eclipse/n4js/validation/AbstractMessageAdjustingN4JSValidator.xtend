@@ -31,9 +31,9 @@ import org.eclipse.xtext.validation.ValidationMessageAcceptor
  */
 public class AbstractMessageAdjustingN4JSValidator extends AbstractN4JSValidator {
 
-	def boolean createTypeError(Result<?> result, EObject source) {
+	def boolean createTypeError(Result result, EObject source) {
 		if (result.failure) {
-			val msg = result.combinedFailureMessage;
+			val msg = result.compiledFailureMessage;
 			getMessageAcceptor().acceptError(msg, source, null,
 				ValidationMessageAcceptor.INSIGNIFICANT_INDEX, "org.eclipse.n4js.TypeErrorIssueCode");
 			return true;

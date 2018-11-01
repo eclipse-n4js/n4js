@@ -295,6 +295,6 @@ package class SubtypeComputer extends TypeSystemHelperStrategy {
 	}
 
 	private def boolean isSubtype(RuleEnvironment G, TypeArgument left, TypeArgument right) {
-		ts.subtype(G, left, right).value ?: false
+		return ts.subtype(G, left, right).success;
 	}
 }

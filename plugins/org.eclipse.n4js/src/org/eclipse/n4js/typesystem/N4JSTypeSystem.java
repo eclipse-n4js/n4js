@@ -22,6 +22,7 @@ import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef;
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TypableElement;
@@ -66,7 +67,8 @@ public class N4JSTypeSystem {
 	// LOW-LEVEL METHODS
 
 	/**
-	 * Returns the type of the given element wrapped in a {@link Result}. Never returns <code>null</code>.
+	 * Returns the type of the given element wrapped in a {@link Result}. In case the type cannot be inferred, a default
+	 * (e.g. top type) or {@link UnknownTypeRef} is returned. Never returns <code>null</code>.
 	 *
 	 * <h2>IMPLEMENTATION NOTE:</h2>
 	 *
@@ -96,24 +98,22 @@ public class N4JSTypeSystem {
 	}
 
 	/**
-	 * Returns the expected type for the given expression wrapped in a {@link Result}. Never returns <code>null</code>
-	 * <b>but even in the success case the returned result may have a {@link Result#getValue() success value} of
-	 * <code>null</code>!</b>
+	 * Returns the expected type for the given expression. May return <code>null</code>!
 	 * <p>
-	 * When invoking {@link Result#getValue() #getValue()} on the returned result, you will get one of the following:
+	 * The return value is one of the following:
 	 * <ul>
 	 * <li>some type other than the top type if there is an actual type expectation for the given expression,
 	 * <li>the top type (i.e. any) if the expression may evaluate to a value of any type but has to evaluate to a proper
 	 * value (i.e. void is disallowed in this case!),
-	 * <li><code>null</code> if there is not expectation at all, i.e. even void is allowed.
+	 * <li><code>null</code> if there is no expectation at all, i.e. even void is allowed.
 	 * </ul>
 	 */
-	public Result<TypeRef> expectedTypeIn(RuleEnvironment G, EObject container, Expression expression) {
+	public TypeRef expectedTypeIn(RuleEnvironment G, EObject container, Expression expression) {
 		return expectedTypeJudgment.apply(G, container, expression);
 	}
 
 	/** Tells if {@code left} is a subtype of {@code right}. Never returns <code>null</code>. */
-	public Result<Boolean> subtype(RuleEnvironment G, TypeArgument left, TypeArgument right) {
+	public Result subtype(RuleEnvironment G, TypeArgument left, TypeArgument right) {
 		return subtypeJudgment.apply(G, left, right);
 	}
 
@@ -123,7 +123,7 @@ public class N4JSTypeSystem {
 	}
 
 	/** Tells if {@code left} is a super type of {@code right}. Never returns <code>null</code>. */
-	public Result<Boolean> supertype(RuleEnvironment G, TypeArgument left, TypeArgument right) {
+	public Result supertype(RuleEnvironment G, TypeArgument left, TypeArgument right) {
 		if (subtype(G, right, left).isSuccess()) {
 			return Result.success();
 		} else {
@@ -133,7 +133,7 @@ public class N4JSTypeSystem {
 	}
 
 	/** Tells if {@code left} is equal to {@code right}. Never returns <code>null</code>. */
-	public Result<Boolean> equaltype(RuleEnvironment G, TypeArgument left, TypeArgument right) {
+	public Result equaltype(RuleEnvironment G, TypeArgument left, TypeArgument right) {
 		if (subtype(G, left, right).isSuccess() && subtype(G, right, left).isSuccess()) {
 			return Result.success();
 		} else {
@@ -148,21 +148,21 @@ public class N4JSTypeSystem {
 	}
 
 	/** Returns the upper bound of the given type wrapped in a {@link Result}. Never returns <code>null</code>. */
-	public Result<TypeRef> upperBound(RuleEnvironment G, TypeArgument typeArgument) {
+	public TypeRef upperBound(RuleEnvironment G, TypeArgument typeArgument) {
 		return boundJudgment.applyUpperBound(G, typeArgument);
 	}
 
 	/** Returns the lower bound of the given type wrapped in a {@link Result}. Never returns <code>null</code>. */
-	public Result<TypeRef> lowerBound(RuleEnvironment G, TypeArgument typeArgument) {
+	public TypeRef lowerBound(RuleEnvironment G, TypeArgument typeArgument) {
 		return boundJudgment.applyLowerBound(G, typeArgument);
 	}
 
 	/**
 	 * Same as {@link #substTypeVariables(RuleEnvironment, TypeArgument)}, but makes explicit the rule that you get a
-	 * {@link TypeRef} back if you put in a {@code TypeRef}.
+	 * {@link Wildcard} back if you put in a {@code Wildcard}.
 	 */
 	public Wildcard substTypeVariables(RuleEnvironment G, Wildcard wildcard) {
-		return (Wildcard) substTypeVariables(G, (TypeArgument) wildcard).getValue();
+		return (Wildcard) substTypeVariables(G, (TypeArgument) wildcard);
 	}
 
 	/**
@@ -170,12 +170,12 @@ public class N4JSTypeSystem {
 	 * {@link TypeRef} back if you put in a {@code TypeRef}.
 	 */
 	public TypeRef substTypeVariables(RuleEnvironment G, TypeRef typeRef) {
-		return (TypeRef) substTypeVariables(G, (TypeArgument) typeRef).getValue();
+		return (TypeRef) substTypeVariables(G, (TypeArgument) typeRef);
 	}
 
 	/**
 	 * Substitutes type variables, i.e. replaces type variables with actual values taken from the rule environment.
-	 * Never returns <code>null</code>.
+	 * Never returns <code>null</code>, EXCEPT if <code>null</code> is passed in as type argument.
 	 * <p>
 	 * The given {@code typeArgument} will never be changed, instead a copy will be created to reflect the substitution.
 	 * If nothing was substituted (i.e. given type argument does not contain any type variable or only type variables
@@ -189,7 +189,7 @@ public class N4JSTypeSystem {
 	 * a Wildcard). But this is not true for subclasses of TypeRef, e.g. put in a FunctionTypeRef and you might get a
 	 * FunctionTypeExpression back).
 	 */
-	public Result<TypeArgument> substTypeVariables(RuleEnvironment G, TypeArgument typeArgument) {
+	public TypeArgument substTypeVariables(RuleEnvironment G, TypeArgument typeArgument) {
 		return substTypeVariablesJudgment.apply(G, typeArgument);
 	}
 

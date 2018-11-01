@@ -80,17 +80,17 @@ abstract class AbstractTypeSystemHelperTests {
 
 		if (expectSub) {
 			assertFalse(propertyRefName + " <: " + comparedTypeExpr + " failed: " + subTypeResult.failureMessage, subTypeResult.failure)
-			assertEquals(propertyRefName + " <: " + comparedTypeExpr + " failed", Boolean.TRUE, subTypeResult.value)
+			assertEquals(propertyRefName + " <: " + comparedTypeExpr + " failed", Boolean.TRUE, subTypeResult.success)
 		} else {
 			assertTrue(propertyRefName + " <: " + comparedTypeExpr + " should fail", subTypeResult.failure)
-			assertNotEquals(propertyRefName + " <: " + comparedTypeExpr + " should be false", Boolean.TRUE, subTypeResult.value)
+			assertNotEquals(propertyRefName + " <: " + comparedTypeExpr + " should be false", Boolean.TRUE, subTypeResult.success)
 		}
 		if (expectSuper) {
 			assertFalse(comparedTypeExpr + " <: " + propertyRefName + " failed: " + superTypeResult.failureMessage, superTypeResult.failure)
-			assertEquals(comparedTypeExpr + " <: " + propertyRefName + " failed", Boolean.TRUE, superTypeResult.value)
+			assertEquals(comparedTypeExpr + " <: " + propertyRefName + " failed", Boolean.TRUE, superTypeResult.success)
 		} else {
 			assertTrue(comparedTypeExpr + " <: " + propertyRefName + " should fail", superTypeResult.failure)
-			assertNotEquals(comparedTypeExpr + " <: " + propertyRefName + " should be false", Boolean.TRUE, superTypeResult.value)
+			assertNotEquals(comparedTypeExpr + " <: " + propertyRefName + " should be false", Boolean.TRUE, superTypeResult.success)
 		}
 
 

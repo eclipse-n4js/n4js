@@ -324,7 +324,7 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 			val r = pair.value;
 			val subtypingResult = typeSystem.equaltype(ruleEnv, l, r);
 			
-			return subtypingResult.failure || subtypingResult.value == false;
+			return subtypingResult.failure;
 		];
 		
 		// if no non-subtype can be found, left must be subtypes of right

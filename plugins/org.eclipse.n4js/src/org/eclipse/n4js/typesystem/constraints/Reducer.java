@@ -644,11 +644,11 @@ import org.eclipse.xtext.xbase.lib.Pair;
 		if (leftArg instanceof Wildcard) {
 			final TypeRef ub = ((Wildcard) leftArg).getDeclaredUpperBound();
 			if (ub != null) {
-				wasAdded |= reduce(ub, ts.upperBound(G, rightArg).getValue(), CONTRA);
+				wasAdded |= reduce(ub, ts.upperBound(G, rightArg), CONTRA);
 			}
 			final TypeRef lb = ((Wildcard) leftArg).getDeclaredLowerBound();
 			if (lb != null) {
-				wasAdded |= reduce(lb, ts.lowerBound(G, rightArg).getValue(), CO);
+				wasAdded |= reduce(lb, ts.lowerBound(G, rightArg), CO);
 			}
 		} else if (rightArg instanceof ExistentialTypeRef) {
 			// TODO IDE-1653 reconsider this entire case
@@ -658,11 +658,11 @@ import org.eclipse.xtext.xbase.lib.Pair;
 			final Wildcard w = ((ExistentialTypeRef) rightArg).getWildcard();
 			final TypeRef ub = w.getDeclaredUpperBound();
 			if (ub != null) {
-				wasAdded |= reduce(ub, ts.upperBound(G, leftArg).getValue(), CONTRA);
+				wasAdded |= reduce(ub, ts.upperBound(G, leftArg), CONTRA);
 			}
 			final TypeRef lb = w.getDeclaredLowerBound();
 			if (lb != null) {
-				wasAdded |= reduce(lb, ts.lowerBound(G, leftArg).getValue(), CO);
+				wasAdded |= reduce(lb, ts.lowerBound(G, leftArg), CO);
 			}
 		} else {
 			if (!(leftArg instanceof TypeRef)) {

@@ -112,7 +112,7 @@ public class TypeXpectMethod {
 			if (!(eobject instanceof Expression && eobject.eContainer() != null))
 				return "Not an Expression at given region (required to obtain expected type); got instead: "
 						+ eobject.eClass().getName();
-			result = ts.expectedTypeIn(G, eobject.eContainer(), (Expression) eobject).getValue();
+			result = ts.expectedTypeIn(G, eobject.eContainer(), (Expression) eobject);
 		} else {
 			if (eobject instanceof BindingProperty) {
 				/*-

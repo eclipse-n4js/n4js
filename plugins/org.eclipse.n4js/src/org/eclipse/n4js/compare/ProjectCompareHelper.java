@@ -56,10 +56,10 @@ import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.util.AccessModifiers;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
-import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.typesystem.utils.ITypeReplacementProvider;
 import org.eclipse.n4js.typesystem.utils.Result;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.n4js.utils.FindArtifactHelper;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -621,8 +621,8 @@ public class ProjectCompareHelper {
 
 			final RuleEnvironment G = RuleEnvironmentExtensions.newRuleEnvironment(api);
 			RuleEnvironmentExtensions.setTypeReplacement(G, typeReplacementProvider);
-			final Result<Boolean> implSubtypeApi = typeSystem.subtype(G, typeImpl, typeApi);
-			final Result<Boolean> apiSubtypeImpl = typeSystem.subtype(G, typeApi, typeImpl);
+			final Result implSubtypeApi = typeSystem.subtype(G, typeImpl, typeApi);
+			final Result apiSubtypeImpl = typeSystem.subtype(G, typeApi, typeImpl);
 			final boolean isImplSubtypeApi = !implSubtypeApi.isFailure();
 			final boolean isApiSubtypeImpl = !apiSubtypeImpl.isFailure();
 			final boolean isEqualType = isImplSubtypeApi && isApiSubtypeImpl;

@@ -54,11 +54,9 @@ abstract class AbstractJudgmentSubtypeTest extends AbstractTypesystemTest {
 					leftTypeExpr + "<:" + rightTypeExpr + " should work, but: " +
 						result.failureMessage)
 			}
-			assertNotNull(leftTypeExpr + "<:" + rightTypeExpr + " should work", result.value)
-			assertTrue(leftTypeExpr + "<:" + rightTypeExpr + " should work", result.value)
+			assertTrue(leftTypeExpr + "<:" + rightTypeExpr + " should work", result.success)
 		} else {
 			assertTrue(leftTypeExpr + "<:" + rightTypeExpr + " should fail", result.failure);
-			assertNull(result.value)
 		}
 	}
 

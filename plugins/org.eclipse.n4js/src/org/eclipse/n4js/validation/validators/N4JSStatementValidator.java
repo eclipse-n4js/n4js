@@ -140,8 +140,7 @@ public class N4JSStatementValidator extends AbstractN4JSDeclarativeValidator {
 
 			}
 			if (loopVarType != null) {
-				Result<Boolean> res = typeSystem.subtype(G, RuleEnvironmentExtensions.stringTypeRef(G),
-						loopVarType);
+				Result res = typeSystem.subtype(G, RuleEnvironmentExtensions.stringTypeRef(G), loopVarType);
 
 				if (!res.isSuccess()) {
 					addIssue(getMessageForTYS_FOR_IN_VAR_STRING(loopVarType.getTypeRefAsString()), location,

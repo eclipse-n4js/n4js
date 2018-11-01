@@ -206,8 +206,8 @@ class MemberScopingHelper {
 		// ~~this[C] with { number prop; } --> ~~C with { number prop; } (ParameterizedTypeRefStructural)
 		val ub = ts.upperBound(RuleEnvironmentExtensions.newRuleEnvironment(request.context), thisTypeRef);
 
-		if (!ub.failure) { // ThisTypeRef was resolved
-			return members(ub.value, request);
+		if (ub !== null) { // ThisTypeRef was resolved
+			return members(ub, request);
 		}
 
 		// probably an unbound ThisTypeRef or some other error (reported elsewhere)

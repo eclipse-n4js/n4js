@@ -325,7 +325,7 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 			// -> make sure types are compatible
 
 			val mtypes = getMemberTypes(left, right, info);
-			var subtypeResult = null as Result<Boolean>;
+			var subtypeResult = null as Result;
 
 			// IDE-1780
 			if (left.optional && !right.optional) {
