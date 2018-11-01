@@ -582,7 +582,7 @@ import com.google.inject.Inject;
 
 		@Override
 		public TypeRef caseThisLiteral(ThisLiteral t) {
-			TypeRef rawT = ts.thisTypeRef(G, t).getValue();
+			TypeRef rawT = typeSystemHelper.getThisTypeAtLocation(G, t);
 			rawT = n4idlVersionResolver.resolveVersion(rawT, rawT);
 			return TypeUtils.enforceNominalTyping(rawT);
 		}
@@ -911,7 +911,7 @@ import com.google.inject.Inject;
 				// super.foo(): this; cf. GHOLD-95
 				final FunctionTypeExprOrRef F = (FunctionTypeExprOrRef) T;
 				if (F.getReturnTypeRef() instanceof BoundThisTypeRef) {
-					final TypeRef rawT = ts.thisTypeRef(G2, expr).getValue();
+					final TypeRef rawT = typeSystemHelper.getThisTypeAtLocation(G2, expr);
 					final TypeRef thisTypeRef = TypeUtils.enforceNominalTyping(rawT);
 					if (F instanceof FunctionTypeExpression && F.eContainer() == null) {
 						// avoid creation of new instance

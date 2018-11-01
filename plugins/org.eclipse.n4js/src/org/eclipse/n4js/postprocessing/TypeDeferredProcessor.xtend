@@ -88,7 +88,7 @@ package class TypeDeferredProcessor extends AbstractProcessor {
 					val tGetter = obj.definedGetter;
 					assertTrueIfRigid(cache, "return type of TGetter in TModule should be a DeferredTypeRef",
 						tGetter.declaredTypeRef instanceof DeferredTypeRef);
-					val boundThisTypeRef = ts.thisTypeRef(G, returnTypeRef).value; // G |~ methodDecl.returnTypeRef ~> boundThisTypeRef
+					val boundThisTypeRef = tsh.getThisTypeAtLocation(G, returnTypeRef); // G |~ methodDecl.returnTypeRef ~> boundThisTypeRef
 					EcoreUtilN4.doWithDeliver(false, [
 						tGetter.declaredTypeRef = TypeUtils.copy(boundThisTypeRef);
 					], tGetter);

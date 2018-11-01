@@ -56,8 +56,6 @@ public class N4JSTypeSystem {
 	private BoundJudgment boundJudgment;
 	@Inject
 	private SubstTypeVariablesJudgment substTypeVariablesJudgment;
-	@Inject
-	private ThisTypeJudgment thisTypeJudgment;
 
 	@Inject
 	private TypeProcessor typeProcessor;
@@ -194,11 +192,6 @@ public class N4JSTypeSystem {
 	 */
 	public Result<TypeArgument> substTypeVariables(RuleEnvironment G, TypeArgument typeArgument) {
 		return substTypeVariablesJudgment.apply(G, typeArgument);
-	}
-
-	/** Returns the this type at the given location wrapped in a {@link Result}. Never returns <code>null</code>. */
-	public Result<TypeRef> thisTypeRef(RuleEnvironment G, EObject location) {
-		return thisTypeJudgment.apply(G, location);
 	}
 
 	// ###############################################################################################################

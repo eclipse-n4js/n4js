@@ -73,19 +73,20 @@ import org.eclipse.xtext.xbase.lib.Pair;
 
 		// the following 3 methods are provided to increase readability of recursive invocations of #doSwitch()
 
-		private Wildcard substTypeVariables(RuleEnvironment G, Wildcard wildcard) {
-			return (Wildcard) substTypeVariables(G, (TypeArgument) wildcard);
+		@SuppressWarnings("unused")
+		private Wildcard substTypeVariables(RuleEnvironment G2, Wildcard wildcard) {
+			return (Wildcard) substTypeVariables(G2, (TypeArgument) wildcard);
 		}
 
-		private TypeRef substTypeVariables(RuleEnvironment G, TypeRef typeRef) {
-			return (TypeRef) substTypeVariables(G, (TypeArgument) typeRef);
+		private TypeRef substTypeVariables(RuleEnvironment G2, TypeRef typeRef) {
+			return (TypeRef) substTypeVariables(G2, (TypeArgument) typeRef);
 		}
 
-		private TypeArgument substTypeVariables(RuleEnvironment G, TypeArgument typeArg) {
-			if (G == this.G) {
+		private TypeArgument substTypeVariables(RuleEnvironment G2, TypeArgument typeArg) {
+			if (G2 == this.G) {
 				return doSwitch(typeArg);
 			} else {
-				return apply(G, typeArg).getValue();
+				return apply(G2, typeArg).getValue();
 			}
 		}
 

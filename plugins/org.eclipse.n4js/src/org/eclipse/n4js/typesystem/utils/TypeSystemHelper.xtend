@@ -95,6 +95,7 @@ class TypeSystemHelper {
 	@Inject private SubtypeComputer subtypeComputer;
 	@Inject private ExpectedTypeComputer expectedTypeCompuer;
 	@Inject private StructuralTypingComputer structuralTypingComputer;
+	@Inject private ThisTypeComputer thisTypeComputer;
 
 
 @Inject private StructuralTypesHelper structuralTypesHelper;
@@ -208,6 +209,11 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 		return expectedTypeCompuer.getExpectedTypeOfFunctionOrFieldAccessor(G, fofa);
 	}
 
+	/** @see ThisTypeComputer#getThisTypeAtLocation(RuleEnvironment,EObject) */
+	def TypeRef getThisTypeAtLocation(RuleEnvironment G, EObject location) {
+		return thisTypeComputer.getThisTypeAtLocation(G, location);
+	}
+
 
 
 
@@ -275,7 +281,7 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 	 *             type ("@This")
 	 * @return declaredThisType if any, null in other cases.
 	 */
-	public static def TypeRef declaredThisType(IdentifiableElement type) {
+	public static def TypeRef getDeclaredThisType(IdentifiableElement type) {
 		return switch ( type ) {
 			TFunction: {
 				type.declaredThisType
@@ -321,7 +327,7 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 	 */
 	public def bindAndSubstituteThisTypeRef(RuleEnvironment G, EObject location, TypeRef typeRef) {
 		// create a BoundThisTypeRef for given location
-		val boundThisTypeRef = ts.thisTypeRef(G, location).value;
+		val boundThisTypeRef = getThisTypeAtLocation(G, location);
 		val localG = G.wrap;
 		localG.addThisType(boundThisTypeRef);
 		// substitute all unbound ThisTypeRefs with the newly created BoundThisTypeRef
@@ -475,7 +481,7 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 	def TypeRef getActualGeneratorReturnType(RuleEnvironment G, Expression expr) {
 		val funDef = EcoreUtil2.getContainerOfType(expr?.eContainer, FunctionDefinition);
 		val G2 = G.wrap;
-		val myThisTypeRef = ts.thisTypeRef(G, expr).value;
+		val myThisTypeRef = getThisTypeAtLocation(G, expr);
 		G2.addThisType(myThisTypeRef); // takes the real-this type even if it is a type{this} reference.
 
 		if (funDef === null || !funDef.isGenerator)

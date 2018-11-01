@@ -52,7 +52,7 @@ package class ExpectedTypeComputer extends TypeSystemHelperStrategy {
 	def TypeRef getExpectedTypeOfReturnValueExpression(RuleEnvironment G, Expression returnValueExpr) {
 		val fofa = EcoreUtil2.getContainerOfType(returnValueExpr?.eContainer, FunctionOrFieldAccessor);
 		val G2 = G.wrap;
-		val myThisTypeRef = ts.thisTypeRef(G, returnValueExpr).value;
+		val myThisTypeRef = tsh.getThisTypeAtLocation(G, returnValueExpr);
 		G2.addThisType(myThisTypeRef); // takes the real-this type even if it is a type{this} reference.
 
 		return getExpectedTypeOfFunctionOrFieldAccessor(G2, fofa); // null means: no type expectation
@@ -134,7 +134,7 @@ package class ExpectedTypeComputer extends TypeSystemHelperStrategy {
 		val expression = yieldExpr.expression;
 		val funDef = EcoreUtil2.getContainerOfType(expression?.eContainer, FunctionDefinition);
 		val G2 = G.wrap;
-		val myThisTypeRef = ts.thisTypeRef(G, expression).value;
+		val myThisTypeRef = tsh.getThisTypeAtLocation(G, expression);
 		G2.addThisType(myThisTypeRef); // takes the real-this type even if it is a type{this} reference.
 
 		if (funDef === null || !funDef.isGenerator)
