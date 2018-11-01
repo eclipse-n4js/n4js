@@ -33,7 +33,6 @@ import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
-import org.eclipse.n4js.typesystem.utils.Result
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.ResourceType
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
@@ -295,11 +294,11 @@ class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 		}
 
 		val G = propertyAttribute.newRuleEnvironment;
-		val Result<TypeRef> result = ts.type(G, propertyAttribute.property);
+		val TypeRef result = ts.type(G, propertyAttribute.property);
 		//TODO: it's not nice that we get an UnknownTypeRef, here;
 		//they are mainly intended for error cases, not valid code. Probably it should be any+ instead.
 		//This requires refactoring else where
-		if (result.value instanceof UnknownTypeRef) {
+		if (result instanceof UnknownTypeRef) {
 			val message = IssueCodes.getMessageForJSX_JSXSPROPERTYATTRIBUTE_NOT_DECLARED_IN_PROPS(propertyAttribute.propertyAsText,
 				jsxElem?.jsxElementName?.expression?.refName);
 					addIssue(
@@ -329,10 +328,8 @@ class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 			TypingStrategy.STRUCTURAL).filter[m | (m instanceof TField) || (m instanceof TGetter)];
 
 		val exprTypeResult = ts.type(G, expr);
-		if (exprTypeResult.failure)
-			return;
 		// Retrieve attributes (either field or getter) in spread operator type
-		val attributesInSpreadOperatorType = tsh.structuralTypesHelper.collectStructuralMembers(G, exprTypeResult.value,
+		val attributesInSpreadOperatorType = tsh.structuralTypesHelper.collectStructuralMembers(G, exprTypeResult,
 				TypingStrategy.STRUCTURAL).filter[m | (m instanceof TField) || (m instanceof TGetter)];
 
 		//commented out but not deleted for now since still it is not clear if this check makes sense
@@ -340,7 +337,7 @@ class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 
 		// Type check each attribute in spreader operator against the corresponding props type's field/getter
 		attributesInSpreadOperatorType.forEach [ attributeInSpreadOperator |
-			val attributeInSpreadOperatorTypeRef = reactHelper.typeRefOfFieldOrGetter(attributeInSpreadOperator, exprTypeResult.value);
+			val attributeInSpreadOperatorTypeRef = reactHelper.typeRefOfFieldOrGetter(attributeInSpreadOperator, exprTypeResult);
 			val fieldOrGetterInProps = fieldsOrGettersInProps.findFirst[fieldOrGetter | attributeInSpreadOperator.name == fieldOrGetter.name];
 
 			if (fieldOrGetterInProps !== null) {
@@ -398,13 +395,9 @@ class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 		// Then collect attributes in spread operators
 		val attributesInSpreadOperator = Lists.newArrayList(jsxPropertyAttributes.filter(typeof(JSXSpreadAttribute)).map [ spreadAttribute |
 			val exprTypeRefResult = ts.type(G, spreadAttribute.expression);
-			if (!exprTypeRefResult.failure) {
-				return tsh.structuralTypesHelper.collectStructuralMembers(G, exprTypeRefResult.value, TypingStrategy.STRUCTURAL).filter [ m |
-					(m instanceof TField) || (m instanceof TGetter)
-				]
-			} else {
-				Lists.newArrayList
-			}
+			return tsh.structuralTypesHelper.collectStructuralMembers(G, exprTypeRefResult, TypingStrategy.STRUCTURAL).filter [ m |
+				(m instanceof TField) || (m instanceof TGetter)
+			]
 		]).flatten;
 		allAttributesInJSXElement.addAll(attributesInSpreadOperator)
 

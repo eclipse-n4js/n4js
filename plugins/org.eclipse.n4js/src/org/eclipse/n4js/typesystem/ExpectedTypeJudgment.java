@@ -178,7 +178,7 @@ import com.google.inject.Inject;
 					// expected type of argument
 
 					// compute ctor
-					final TypeRef ctorTypeRefPlain = ts.type(G, expr.getCallee()).getValue();
+					final TypeRef ctorTypeRefPlain = ts.type(G, expr.getCallee());
 					if (!(ctorTypeRefPlain instanceof TypeTypeRef)) {
 						return unknown();
 					}
@@ -233,7 +233,7 @@ import com.google.inject.Inject;
 					return unknown();
 				}
 
-				final TypeRef targetTypeRef = ts.type(G, expr.getTarget()).getValue();
+				final TypeRef targetTypeRef = ts.type(G, expr.getTarget());
 				if (targetTypeRef instanceof FunctionTypeExprOrRef) {
 					final FunctionTypeExprOrRef F = (FunctionTypeExprOrRef) targetTypeRef;
 					final int argIndex = ECollections.indexOf(expr.getArguments(), argument, 0);
@@ -381,7 +381,7 @@ import com.google.inject.Inject;
 					final UnionTypeExpression primsTR = TypeUtils.createNonSimplifiedUnionType(
 							numberTypeRef(G), stringTypeRef(G), booleanTypeRef(G));
 					final Expression otherSide = expression == e.getLhs() ? e.getRhs() : e.getLhs();
-					final TypeRef otherSideTR = ts.type(G, otherSide).getValue();
+					final TypeRef otherSideTR = ts.type(G, otherSide);
 					if (otherSideTR == null) {
 						return unknown();
 					}
@@ -453,7 +453,7 @@ import com.google.inject.Inject;
 				} else {
 					// right-hand side:
 					// right-hand side is expected to be of same type (or subtype) as left-hand side
-					return ts.type(G, expr.getLhs()).getValue(); // note: this gives us the type for write access on LHS
+					return ts.type(G, expr.getLhs()); // note: this gives us the type for write access on LHS
 				}
 			} else if (expr.getOp() == AssignmentOperator.ADD_ASSIGN) {
 				if (operand == expr.getLhs()) {
@@ -468,7 +468,7 @@ import com.google.inject.Inject;
 					return TypeUtils.createNonSimplifiedIntersectionType(numberTypeRef(G), stringTypeRef(G));
 				} else {
 					// right hand side:
-					final TypeRef lhsTypeRef = ts.type(G, expr.getLhs()).getValue();
+					final TypeRef lhsTypeRef = ts.type(G, expr.getLhs());
 					if (lhsTypeRef == null) {
 						return unknown();
 					}
@@ -540,7 +540,7 @@ import com.google.inject.Inject;
 
 		@Override
 		public TypeRef caseYieldExpression(YieldExpression yieldExpr) {
-			final TypeRef exprTypeRef = ts.type(G, expression).getValue();
+			final TypeRef exprTypeRef = ts.type(G, expression);
 			if (exprTypeRef == null) {
 				return unknown();
 			}
@@ -593,7 +593,7 @@ import com.google.inject.Inject;
 					if ((varDeclInFor != null && varDeclInFor.getDeclaredTypeRef() != null)
 							|| varDeclOutside != null) {
 						final VariableDeclaration varDecl = varDeclOutside != null ? varDeclOutside : varDeclInFor;
-						final TypeRef varTypeRef = ts.type(G, varDecl).getValue();
+						final TypeRef varTypeRef = ts.type(G, varDecl);
 						if (varTypeRef == null) {
 							return unknown();
 						}
@@ -628,7 +628,7 @@ import com.google.inject.Inject;
 					final RuleEnvironment G2 = wrap(G);
 					typeSystemHelper.addSubstitutions(G2, propsTypeRef);
 					addThisType(G2, propsTypeRef);
-					final TypeRef propertyTypeRef = ts.type(G2, container.getProperty()).getValue();
+					final TypeRef propertyTypeRef = ts.type(G2, container.getProperty());
 					if (propertyTypeRef == null) {
 						return unknown();
 					}

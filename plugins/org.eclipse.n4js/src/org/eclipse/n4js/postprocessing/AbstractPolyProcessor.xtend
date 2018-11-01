@@ -81,7 +81,7 @@ package abstract class AbstractPolyProcessor extends AbstractProcessor {
 				// all we do with the newly created rule environment is to type a backward(!) reference, so we can be
 				// sure that no significant processing will be triggered by the type judgment invocation below
 				val G = obj.newRuleEnvironment;
-				val TypeRef targetTypeRef = ts.type(G, obj.target).value; // this is a backward reference (because we type obj's child)
+				val TypeRef targetTypeRef = ts.type(G, obj.target); // this is a backward reference (because we type obj's child)
 				if (targetTypeRef instanceof FunctionTypeExprOrRef) {
 					targetTypeRef.generic && obj.typeArgs.size < targetTypeRef.typeVars.size
 				} else {
@@ -181,7 +181,7 @@ package abstract class AbstractPolyProcessor extends AbstractProcessor {
 	 * nested poly expression's type from the cache.
 	 */
 	def protected TypeRef getFinalResultTypeOfNestedPolyExpression(Expression nestedPolyExpression) {
-		return ASTMetaInfoUtils.getTypeFailSafe(nestedPolyExpression)?.value;
+		return ASTMetaInfoUtils.getTypeFailSafe(nestedPolyExpression);
 	}
 
 	def protected TypeRef subst(TypeRef typeRef, RuleEnvironment G,

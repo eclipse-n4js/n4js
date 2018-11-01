@@ -138,7 +138,6 @@ import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TEnum;
 import org.eclipse.n4js.ts.types.TEnumLiteral;
-import org.eclipse.n4js.ts.types.TField;
 import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TGetter;
@@ -146,14 +145,13 @@ import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TSetter;
 import org.eclipse.n4js.ts.types.TStructuralType;
-import org.eclipse.n4js.ts.types.TVariable;
+import org.eclipse.n4js.ts.types.TTypedElement;
 import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.ts.types.TypingStrategy;
 import org.eclipse.n4js.ts.types.util.TypesSwitch;
 import org.eclipse.n4js.ts.utils.TypeUtils;
-import org.eclipse.n4js.typesystem.utils.Result;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.utils.DestructureHelper;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
@@ -183,26 +181,27 @@ import com.google.inject.Inject;
 	@Inject
 	private ReactHelper reactHelper;
 
-	public Result<TypeRef> apply(RuleEnvironment G, TypableElement element) {
-		TypeRef result = doApply(G, element);
+	public TypeRef apply(RuleEnvironment G, TypableElement element) {
+		final TypeRef result = doApply(G, element);
 		if (result == null) {
 			final String elementStr = element != null ? element.eClass().getName() : "<null>";
-			return Result.failure("cannot type " + elementStr, false, null);
+			throw new IllegalArgumentException("cannot type " + elementStr);
 		}
-		return Result.success(result);
+		return result;
 	}
 
 	private TypeRef doApply(RuleEnvironment G, TypableElement element) {
 		if (element == null) {
-			return null;
+			return TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
 		}
 		final EPackage elementPkg = element.eClass().getEPackage();
 		if (elementPkg == TypesPackage.eINSTANCE) {
 			return new TypeJudgmentSwitchForTypes(G).doSwitch(element);
 		} else if (elementPkg == N4JSPackage.eINSTANCE) {
 			return new TypeJudgmentSwitchForASTNodes(G).doSwitch(element);
+		} else {
+			throw new IllegalStateException("element belongs to unsupported EPackage: " + elementPkg.getName());
 		}
-		throw null;
 	}
 
 	private final class TypeJudgmentSwitchForTypes extends TypesSwitch<TypeRef> {
@@ -211,6 +210,12 @@ import com.google.inject.Inject;
 
 		private TypeJudgmentSwitchForTypes(RuleEnvironment G) {
 			this.G = G;
+		}
+
+		@Override
+		public TypeRef defaultCase(EObject object) {
+			throw new UnsupportedOperationException(
+					this.getClass().getSimpleName() + " missing case-method for " + object.eClass().getName());
 		}
 
 		/*
@@ -229,9 +234,11 @@ import com.google.inject.Inject;
 			return ref((TEnum) enumLiteral.eContainer());
 		}
 
+		/** Covers cases TField, TFormalParameter, TVariable. */
 		@Override
-		public TypeRef caseTField(TField tField) {
-			return tField.getTypeRef();
+		public TypeRef caseTTypedElement(TTypedElement typedElement) {
+			final TypeRef typeRef = typedElement.getTypeRef();
+			return typeRef != null ? typeRef : anyTypeRef(G);
 		}
 
 		@Override
@@ -247,11 +254,6 @@ import com.google.inject.Inject;
 		}
 
 		@Override
-		public TypeRef caseTVariable(TVariable tVariable) {
-			return tVariable.getTypeRef();
-		}
-
-		@Override
 		public TypeRef caseModuleNamespaceVirtualType(ModuleNamespaceVirtualType mnsvt) {
 			return TypeUtils.createTypeRef(mnsvt);
 		}
@@ -263,6 +265,12 @@ import com.google.inject.Inject;
 
 		private TypeJudgmentSwitchForASTNodes(RuleEnvironment G) {
 			this.G = G;
+		}
+
+		@Override
+		public TypeRef defaultCase(EObject object) {
+			throw new UnsupportedOperationException(
+					this.getClass().getSimpleName() + " missing case-method for " + object.eClass().getName());
 		}
 
 		// ----------------------------------------------------------------------
@@ -297,7 +305,7 @@ import com.google.inject.Inject;
 			if (property.getDeclaredTypeRef() != null) {
 				T = property.getDeclaredTypeRef();
 			} else if (property.getExpression() != null) {
-				TypeRef E = ts.type(G, property.getExpression()).getValue();
+				TypeRef E = ts.type(G, property.getExpression());
 				E = ts.upperBound(G, E).getValue(); // take upper bound to get rid of ExistentialTypeRef (if any)
 				Type declType = E.getDeclaredType();
 				if (declType == undefinedType(G) || declType == nullType(G) || declType == voidType(G)) {
@@ -318,7 +326,7 @@ import com.google.inject.Inject;
 			if (fieldDecl.getDeclaredTypeRef() != null) {
 				T = fieldDecl.getDeclaredTypeRef();
 			} else if (fieldDecl.getExpression() != null) {
-				TypeRef E = ts.type(G, fieldDecl.getExpression()).getValue();
+				TypeRef E = ts.type(G, fieldDecl.getExpression());
 				E = ts.upperBound(G, E).getValue();
 				Type declType = E.getDeclaredType();
 				if (declType == undefinedType(G) || declType == nullType(G) || declType == voidType(G)) {
@@ -359,10 +367,8 @@ import com.google.inject.Inject;
 				if (G.get(guardKey) == null) {
 					final RuleEnvironment G2 = wrap(G);
 					G2.put(guardKey, Boolean.TRUE);
-					final TypeRef ofPartTypeRef = ts.type(G2, forOfStmnt.getExpression()).getValue();
-					final TypeArgument elemType = ofPartTypeRef != null
-							? destructureHelper.extractIterableElementType(G2, ofPartTypeRef)
-							: null;
+					final TypeRef ofPartTypeRef = ts.type(G2, forOfStmnt.getExpression());
+					final TypeArgument elemType = destructureHelper.extractIterableElementType(G2, ofPartTypeRef);
 					if (elemType != null) {
 						T = ts.upperBound(G2, elemType).getValue();
 					} else {
@@ -383,7 +389,7 @@ import com.google.inject.Inject;
 					final RuleEnvironment G2 = wrap(G);
 					G2.put(guardKey, Boolean.TRUE);
 					// compute the expression type
-					TypeRef E = ts.type(G2, vdecl.getExpression()).getValue();
+					TypeRef E = ts.type(G2, vdecl.getExpression());
 					if (E instanceof BoundThisTypeRef
 							|| (E instanceof TypeTypeRef
 									&& ((TypeTypeRef) E).getTypeArg() instanceof BoundThisTypeRef)) {
@@ -469,10 +475,7 @@ import com.google.inject.Inject;
 			} else if (fpar.isHasInitializerAssignment()) {
 				final Expression initExpr = fpar.getInitializer();
 				if (initExpr != null) {
-					final TypeRef E = ts.type(G, initExpr).getValue();
-					if (E == null) {
-						return null;
-					}
+					final TypeRef E = ts.type(G, initExpr);
 					T = typeSystemHelper.sanitizeTypeOfVariableFieldProperty(G, E);
 				} else {
 					T = anyTypeRef(G);
@@ -548,7 +551,7 @@ import com.google.inject.Inject;
 		// FIXME the following should probably be obsolete as well:
 		@Override
 		public TypeRef caseArrayElement(ArrayElement e) {
-			return ts.type(G, e.getExpression()).getValue();
+			return ts.type(G, e.getExpression());
 		}
 
 		// ----------------------------------------------------------------------
@@ -557,7 +560,7 @@ import com.google.inject.Inject;
 
 		@Override
 		public TypeRef caseIdentifierRef(IdentifierRef idref) {
-			TypeRef T = ts.type(G, idref.getId()).getValue();
+			TypeRef T = ts.type(G, idref.getId());
 
 			T = n4idlVersionResolver.resolveVersion(T, idref);
 
@@ -577,7 +580,7 @@ import com.google.inject.Inject;
 		public TypeRef caseN4EnumLiteral(N4EnumLiteral enumLiteral) {
 			final N4EnumDeclaration enumDecl = EcoreUtil2.getContainerOfType(enumLiteral, N4EnumDeclaration.class);
 			final TEnum tEnum = enumDecl != null ? enumDecl.getDefinedTypeAsEnum() : null;
-			return tEnum != null ? ref(tEnum) : null;
+			return tEnum != null ? ref(tEnum) : TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
 		}
 
 		@Override
@@ -625,14 +628,15 @@ import com.google.inject.Inject;
 				} else {
 					T = null;
 				}
-				return T != null ? TypeUtils.enforceNominalTyping(T) : null;
+				return T != null ? TypeUtils.enforceNominalTyping(T) : TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
 			} else if (superLiteral.eContainer() instanceof ParameterizedCallExpression) {
 				// case 2: super call, i.e. super()
 				if (containingMemberDecl.isConstructor()) {
 					// super() is used in a constructor
 					final TMethod ctor = containerTypesHelper.fromContext(superLiteral.eResource())
 							.findConstructor(effectiveSuperClass);
-					return ctor != null ? TypeUtils.createTypeRef(ctor) : null;
+					return ctor != null ? TypeUtils.createTypeRef(ctor)
+							: TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
 				} else {
 					// super() used in a normal method, getter or setter (not in a constructor)
 					// --> this is an error case, but error will be produced by validation rule
@@ -652,7 +656,7 @@ import com.google.inject.Inject;
 
 		@Override
 		public TypeRef caseParenExpression(ParenExpression e) {
-			return ts.type(G, e.getExpression()).getValue();
+			return ts.type(G, e.getExpression());
 		}
 
 		@Override
@@ -660,10 +664,7 @@ import com.google.inject.Inject;
 			TypeRef t;
 			if (y.isMany()) {
 				final Expression yieldValue = y.getExpression();
-				TypeRef yieldValueTypeRef = ts.type(G, yieldValue).getValue();
-				if (yieldValueTypeRef == null) {
-					return null;
-				}
+				TypeRef yieldValueTypeRef = ts.type(G, yieldValue);
 				final BuiltInTypeScope scope = getPredefinedTypes(G).builtInTypeScope;
 				if (TypeUtils.isGenerator(yieldValueTypeRef, scope)) {
 					t = typeSystemHelper.getGeneratorTReturn(G, yieldValueTypeRef);
@@ -694,11 +695,9 @@ import com.google.inject.Inject;
 
 		@Override
 		public TypeRef caseAwaitExpression(AwaitExpression e) {
-			final TypeRef exprType = ts.type(G, e.getExpression()).getValue();
+			final TypeRef exprType = ts.type(G, e.getExpression());
 			final TypeRef T;
-			if (exprType == null) {
-				return null;
-			} else if (exprType.getDeclaredType() == promiseType(G)) {
+			if (exprType.getDeclaredType() == promiseType(G)) {
 				// standard case: use await on a promise
 				// --> result will be upper bound of first type argument
 				T = ts.upperBound(G, exprType.getTypeArgs().get(0)).getValue();
@@ -735,15 +734,10 @@ import com.google.inject.Inject;
 			}
 			// standard case:
 
-			TypeRef targetTypeRef = ts.type(G, expr.getTarget()).getValue();
-			if (targetTypeRef == null)
-				return null;
+			TypeRef targetTypeRef = ts.type(G, expr.getTarget());
 			targetTypeRef = typeSystemHelper.resolveType(G, targetTypeRef);
 
-			TypeRef indexTypeRef = ts.type(G, expr.getIndex()).getValue();
-			if (indexTypeRef == null) {
-				return null;
-			}
+			TypeRef indexTypeRef = ts.type(G, expr.getIndex());
 
 			final Type targetDeclType = targetTypeRef.getDeclaredType();
 			final boolean targetIsLiteralOfStringBasedEnum = targetDeclType instanceof TEnum
@@ -784,9 +778,7 @@ import com.google.inject.Inject;
 								: null;
 
 				if (member instanceof TMember && !member.eIsProxy()) {
-					TypeRef memberTypeRef = ts.type(G, (TMember) member).getValue();
-					if (memberTypeRef == null)
-						return null;
+					TypeRef memberTypeRef = ts.type(G, (TMember) member);
 					final RuleEnvironment G2 = wrap(G);
 					typeSystemHelper.addSubstitutions(G2, targetTypeRef);
 					addThisType(G2, targetTypeRef);
@@ -818,10 +810,7 @@ import com.google.inject.Inject;
 			final RuleEnvironment G2 = wrap(G);
 			G2.put(guardKey, anyTypeRef(G2));
 
-			final TypeRef receiverTypeRef = ts.type(G2, expr.getTarget()).getValue();
-			if (receiverTypeRef == null) {
-				return null;
-			}
+			final TypeRef receiverTypeRef = ts.type(G2, expr.getTarget());
 
 			typeSystemHelper.addSubstitutions(G2, receiverTypeRef);
 			addThisType(G2, receiverTypeRef);
@@ -893,11 +882,7 @@ import com.google.inject.Inject;
 				propTypeRef = anyTypeRefDynamic(G2);
 			} else {
 				// TODO: Is wrapping really required here?
-				propTypeRef = ts.type(wrap(G2), prop).getValue();
-				if (propTypeRef == null) {
-					return null;
-				}
-
+				propTypeRef = ts.type(wrap(G2), prop);
 				if (expr.isParameterized()) {
 					typeSystemHelper.addSubstitutions(G2, expr);
 				}
@@ -928,11 +913,7 @@ import com.google.inject.Inject;
 
 		@Override
 		public TypeRef caseParameterizedCallExpression(ParameterizedCallExpression expr) {
-			final TypeRef targetTypeRef = ts.type(G, expr.getTarget()).getValue();
-			if (targetTypeRef == null) {
-				return null;
-			}
-
+			final TypeRef targetTypeRef = ts.type(G, expr.getTarget());
 			if (targetTypeRef instanceof FunctionTypeExprOrRef) {
 				final FunctionTypeExprOrRef F = (FunctionTypeExprOrRef) targetTypeRef;
 				final TFunction tFunction = F.getFunctionType();
@@ -970,7 +951,7 @@ import com.google.inject.Inject;
 					typeSystemHelper.addSubstitutions(G2, expr, targetTypeRef);
 					T = ts.substTypeVariables(G2, T);
 					if (T == null) {
-						return null;
+						return TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
 					}
 					T = n4idlVersionResolver.resolveVersion(T, F);
 
@@ -1006,12 +987,12 @@ import com.google.inject.Inject;
 
 		@Override
 		public TypeRef caseArgument(Argument arg) {
-			return ts.type(G, arg.getExpression()).getValue();
+			return ts.type(G, arg.getExpression());
 		}
 
 		@Override
 		public TypeRef caseNewExpression(NewExpression e) {
-			TypeRef T = ts.type(G, e.getCallee()).getValue();
+			TypeRef T = ts.type(G, e.getCallee());
 			if (T instanceof TypeTypeRef) {
 				T = typeSystemHelper.createTypeRefFromStaticType(G, (TypeTypeRef) T,
 						e.getTypeArgs().toArray(new TypeArgument[0]));
@@ -1036,7 +1017,7 @@ import com.google.inject.Inject;
 				// special case:
 				// negative/positive numeric literals with radix 10 (not for hexadecimal or octal literals!)
 				// (asymmetry of int32 range is taken care of in rule 'typeNumericLiteral')
-				return ts.type(G, e.getExpression()).getValue();
+				return ts.type(G, e.getExpression());
 			} else {
 				// standard cases:
 				switch (e.getOp()) {
@@ -1062,8 +1043,8 @@ import com.google.inject.Inject;
 		@Override
 		public TypeRef caseAdditiveExpression(AdditiveExpression expr) {
 			if (expr.getOp() == AdditiveOperator.ADD) {
-				final TypeRef l = ts.type(G, expr.getLhs()).getValue();
-				final TypeRef r = ts.type(G, expr.getRhs()).getValue();
+				final TypeRef l = ts.type(G, expr.getLhs());
+				final TypeRef r = ts.type(G, expr.getRhs());
 
 				final boolean lunknown = l instanceof UnknownTypeRef;
 				final boolean runknown = r instanceof UnknownTypeRef;
@@ -1128,11 +1109,8 @@ import com.google.inject.Inject;
 			final boolean rhsIsEmptyArrayLiteral = rhs instanceof ArrayLiteral
 					&& ((ArrayLiteral) rhs).getElements().isEmpty();
 
-			final TypeRef L = ts.type(G, lhs).getValue();
-			final TypeRef R = ts.type(G, rhs).getValue();
-			if (L == null || R == null) {
-				return null;
-			}
+			final TypeRef L = ts.type(G, lhs);
+			final TypeRef R = ts.type(G, rhs);
 
 			if (lhsIsEmptyArrayLiteral && R.getDeclaredType() == arrayType(G)) {
 				// case: [] || someArray
@@ -1147,11 +1125,8 @@ import com.google.inject.Inject;
 
 		@Override
 		public TypeRef caseConditionalExpression(ConditionalExpression expr) {
-			final TypeRef left = ts.type(G, expr.getTrueExpression()).getValue();
-			final TypeRef right = ts.type(G, expr.getFalseExpression()).getValue();
-			if (left == null || right == null) {
-				return null;
-			}
+			final TypeRef left = ts.type(G, expr.getTrueExpression());
+			final TypeRef right = ts.type(G, expr.getFalseExpression());
 			return typeSystemHelper.createUnionType(G, left, right);
 		}
 
@@ -1159,22 +1134,20 @@ import com.google.inject.Inject;
 		public TypeRef caseAssignmentExpression(AssignmentExpression expr) {
 			switch (expr.getOp()) {
 			case ASSIGN:
-				return ts.type(G, expr.getRhs()).getValue();
+				return ts.type(G, expr.getRhs());
 			case ADD_ASSIGN:
 				// see typeAdditiveExpression
-				final TypeRef l = ts.type(G, expr.getLhs()).getValue();
-				final TypeRef r = ts.type(G, expr.getRhs()).getValue();
-				if (l != null && r != null) {
-					final Type lDeclType = l.getDeclaredType();
-					final Type rDeclType = r.getDeclaredType();
-					final boolean lnum = lDeclType == booleanType(G) || isNumeric(G, lDeclType);
-					final boolean rnum = rDeclType == booleanType(G) || isNumeric(G, rDeclType);
-					final boolean undef = lDeclType == undefinedType(G) || lDeclType == nullType(G)
-							|| rDeclType == undefinedType(G) || rDeclType == nullType(G);
-					if (!(lnum && rnum)
-							&& !(undef && (lnum || rnum))) {
-						return stringTypeRef(G);
-					}
+				final TypeRef l = ts.type(G, expr.getLhs());
+				final TypeRef r = ts.type(G, expr.getRhs());
+				final Type lDeclType = l.getDeclaredType();
+				final Type rDeclType = r.getDeclaredType();
+				final boolean lnum = lDeclType == booleanType(G) || isNumeric(G, lDeclType);
+				final boolean rnum = rDeclType == booleanType(G) || isNumeric(G, rDeclType);
+				final boolean undef = lDeclType == undefinedType(G) || lDeclType == nullType(G)
+						|| rDeclType == undefinedType(G) || rDeclType == nullType(G);
+				if (!(lnum && rnum)
+						&& !(undef && (lnum || rnum))) {
+					return stringTypeRef(G);
 				}
 				//$FALL-THROUGH$
 			default:
@@ -1189,12 +1162,13 @@ import com.google.inject.Inject;
 		@Override
 		public TypeRef caseCommaExpression(CommaExpression e) {
 			final Expression last = e.getExprs().get(e.getExprs().size() - 1);
-			return ts.type(G, last).getValue();
+			return ts.type(G, last);
 		}
 
 		@Override
 		public TypeRef caseCastExpression(CastExpression e) {
-			return e.getTargetTypeRef();
+			final TypeRef targetTypeRef = e.getTargetTypeRef();
+			return targetTypeRef != null ? targetTypeRef : TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
 		}
 
 		// This is needed to remove the ambiguity:

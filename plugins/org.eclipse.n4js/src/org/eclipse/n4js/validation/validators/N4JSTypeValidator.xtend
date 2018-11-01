@@ -452,7 +452,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 
 		var G = expression.newRuleEnvironment;
 		val inferredType = ts.type(G, expression);
-		if (createTypeError(inferredType, expression)) {
+		if (inferredType instanceof UnknownTypeRef) {
 			return;
 		}
 
@@ -466,7 +466,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 
 			// for certain problems in single-expression arrow functions, we want a special error message
 			val singleExprArrowFunction = N4JSASTUtils.getContainingSingleExpressionArrowFunction(expression);
-			if (singleExprArrowFunction !== null && TypeUtils.isVoid(inferredType.value)) {
+			if (singleExprArrowFunction !== null && TypeUtils.isVoid(inferredType)) {
 				if (TypeUtils.isVoid(expectedTypeRef) || singleExprArrowFunction.isReturnValueOptional) {
 					return; // all good
 				}
@@ -479,24 +479,24 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 				}
 			}
 
-			internalCheckUseOfUndefinedExpression(G, expression, expectedTypeRef, inferredType.value);
+			internalCheckUseOfUndefinedExpression(G, expression, expectedTypeRef, inferredType);
 
 			val boolean writeAccess = ExpressionExtensions.isLeftHandSide(expression);
 			if (writeAccess) {
 
 				// special case: write access
-				val result = ts.subtype(G, expectedTypeRef, inferredType.value);
+				val result = ts.subtype(G, expectedTypeRef, inferredType);
 
 				if (result.failure) {
 					// use custom error message, because otherwise it will be completely confusing
 					val message = getMessageForTYS_NO_SUPERTYPE_WRITE_ACCESS(expectedTypeRef.typeRefAsString,
-						inferredType.value.typeRefAsString);
+						inferredType.typeRefAsString);
 					addIssue(message, expression, TYS_NO_SUPERTYPE_WRITE_ACCESS)
 				}
 			} else {
 
 				// standard case: read access
-				val result = ts.subtype(G, inferredType.value, expectedTypeRef)
+				val result = ts.subtype(G, inferredType, expectedTypeRef)
 				// not working, as primitive types are not part of currently validated resource:
 				// errorGenerator.generateErrors(this, result, expression)
 				// so we create error here differently:

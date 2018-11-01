@@ -226,7 +226,7 @@ package class PolyProcessor extends AbstractPolyProcessor {
 			};
 		} else {
 			// not poly -> directly infer type via type system
-			val result = ts.type(G, expr).getValue();
+			val result = ts.type(G, expr);
 			// do *not* store in cache (TypeProcessor responsible for storing types of non-poly expressions in cache!)
 			return result;
 		}

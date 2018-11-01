@@ -22,8 +22,8 @@ import org.eclipse.n4js.n4JS.UnaryExpression;
 import org.eclipse.n4js.n4JS.UnaryOperator;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
-import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 
 /**
  * Checks if all paths to a given a given node have a type constraint that is assignable from the given {@link TypeRef}.
@@ -75,7 +75,7 @@ public class TypeGuardVisitor extends GraphVisitor {
 				if (ue.getOp() == UnaryOperator.TYPEOF) {
 					Expression typeExpression = ue.getExpression();
 					RuleEnvironment G = RuleEnvironmentExtensions.newRuleEnvironment(typeExpression);
-					TypeRef tRef = ts.type(G, ue).getValue();
+					TypeRef tRef = ts.type(G, ue);
 					if (ts.subtypeSucceeded(G, reqTypeRef, tRef)) {
 						super.deactivate();
 					}

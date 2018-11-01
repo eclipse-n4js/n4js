@@ -18,6 +18,7 @@ import org.eclipse.n4js.n4JS.ExpressionStatement
 import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.VariableStatement
+import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef
 import org.eclipse.n4js.typesystem.AbstractScriptAssembler
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
@@ -125,8 +126,9 @@ abstract class AbstractCallExpressionTypesystemTest extends AbstractTypesystemTe
 					"any";
 
 			val inferedReturnedType = ts.type(G, call);
-			assertNoFailure(inferedReturnedType);
-			assertEquals(expectedType, inferedReturnedType.value.typeRefAsString)
+			assertNotNull(inferedReturnedType);
+			assertFalse(inferedReturnedType instanceof UnknownTypeRef);
+			assertEquals(expectedType, inferedReturnedType.typeRefAsString)
 
 		}
 	}

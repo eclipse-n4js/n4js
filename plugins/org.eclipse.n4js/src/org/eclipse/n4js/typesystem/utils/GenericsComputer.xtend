@@ -236,7 +236,7 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 				if(targetTypeRef!==null)
 					targetTypeRef
 				else
-					ts.type(new RuleEnvironment(G),callExpr.target).value;
+					ts.type(new RuleEnvironment(G),callExpr.target);
 
 		if(!(actualTargetTypeRef instanceof FunctionTypeExprOrRef))
 			return;

@@ -176,7 +176,7 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 				val context = if (fparT.eContainer instanceof ContainerType<?>)
 						TypeUtils.createTypeRef(fparT.eContainer as ContainerType<?>) else null;
 				val G_withContext = ts.createRuleEnvironmentForContext(context, G.contextResource);
-				val TypeRef iniTypeRef = if (fparInitializer !== null) ts.type(G_withContext, fparInitializer).value else G.undefinedTypeRef;
+				val TypeRef iniTypeRef = if (fparInitializer !== null) ts.type(G_withContext, fparInitializer) else G.undefinedTypeRef;
 				val iniTypeRefSubst = ts.substTypeVariables(G_withContext, iniTypeRef);
 				infCtx.addConstraint(TypeUtils.createTypeRef(iv), TypeUtils.copy(iniTypeRefSubst), Variance.CONTRA);
 			}
@@ -319,7 +319,7 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 		if (expr === null) {
 			return; // broken AST
 		}
-		val exprTypeRef = cache.getType(expr).value; // must now be in cache, because we just processed arrFun's body
+		val exprTypeRef = cache.getType(expr); // must now be in cache, because we just processed arrFun's body
 		if (TypeUtils.isVoid(exprTypeRef)) {
 			// the actual type of 'expr' is void
 			if (arrFunTypeRef instanceof FunctionTypeExpression) {

@@ -203,7 +203,7 @@ public class AbstractN4JSDeclarativeValidator extends AbstractMessageAdjustingN4
 			val G_subst = source.newRuleEnvironment;
 			if(source instanceof ParameterizedPropertyAccessExpression) {
 				val G = source.newRuleEnvironment;
-				val targetTypeRef = ts.type(G, source.target).getValue(); // note: not using G_subst here
+				val targetTypeRef = ts.type(G, source.target); // note: not using G_subst here
 				tsh.addSubstitutions(G_subst, targetTypeRef);
 			}
 			for (int i : 0 ..< typeArgs.size) {

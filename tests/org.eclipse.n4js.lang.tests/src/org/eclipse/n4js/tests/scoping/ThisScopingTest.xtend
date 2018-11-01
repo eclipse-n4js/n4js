@@ -63,7 +63,7 @@ class ThisScopingTest {
 			EcoreUtilN4.getAllContentsFiltered(objectLiteral, [! (it instanceof ObjectLiteral)]).filter(ThisLiteral).
 				forEach [ thisLiteral |
 					assertNotNull("No type derived from object literal", objectLiteralType)
-					val boundType = ts.type(G, thisLiteral).value
+					val boundType = ts.type(G, thisLiteral)
 					if (thisLiteral.containingFunction !== null &&
 						! (thisLiteral.containingFunction.eContainer instanceof PropertyAssignment)) { // nested function
 						assertEquals("nested", thisLiteral.containingFunction.name)
@@ -91,12 +91,8 @@ class ThisScopingTest {
 			EcoreUtilN4.getAllContentsFiltered(classifierDecl, [! (it instanceof N4ClassifierDeclaration)]).filter(
 				ThisLiteral).forEach [ thisLiteral |
 				assertNotNull("No type defined for classifier", classifierType)
-				val boundTypeResult = ts.type(G, thisLiteral);
-				assertNotNull(
-					"Cannot retrieve upper bound of this type ref: " + boundTypeResult.failureMessage,
-					boundTypeResult.value
-				);
-				val boundType = boundTypeResult.value
+				val boundType = ts.type(G, thisLiteral);
+				assertNotNull(boundType);
 				if (thisLiteral.containingFunction !== null &&
 					! (thisLiteral.containingFunction.eContainer instanceof N4ClassifierDeclaration)) { // nested function
 					assertEquals("nested", thisLiteral.containingFunction.name)

@@ -19,6 +19,7 @@ import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef
 import org.eclipse.n4js.typesystem.utils.Result
 import org.eclipse.n4js.validation.JavaScriptVariant
 import org.eclipse.xtext.testing.InjectWith
@@ -70,9 +71,9 @@ class GenericsTest extends AbstractTypesystemTest {
 		val result = ts.type(G, fieldAccess)
 
 		// println(result.failureMessage)
-		assertFalse(result.failure)
-		assertNotNull(result.value)
-		assertEquals("A", (result.value as ParameterizedTypeRef).declaredType.name)
+		assertNotNull(result)
+		assertFalse(result instanceof UnknownTypeRef)
+		assertEquals("A", (result as ParameterizedTypeRef).declaredType.name)
 	}
 
 	@Test
@@ -297,7 +298,7 @@ class GenericsTest extends AbstractTypesystemTest {
 
 		val typeLeft = ts.type(G, assignment.lhs);
 		val typeRight = ts.type(G, assignment.rhs);
-		assertType(typeRight, (typeLeft.value as ParameterizedTypeRef).declaredType);
+		assertType(typeRight, (typeLeft as ParameterizedTypeRef).declaredType);
 
 		// but the last line should create an error:
 		val issues = script.validate();
@@ -322,10 +323,10 @@ class GenericsTest extends AbstractTypesystemTest {
 		val call = (script.scriptElements.get(4) as ExpressionStatement).expression as ParameterizedCallExpression;
 
 		val arg0 = call.arguments.head;
-		val expectedType = ts.expectedTypeIn(G, arg0, arg0.expression);
+		val expectedType = ts.expectedTypeIn(G, arg0, arg0.expression).value;
 		val actualType = ts.type(G, arg0.expression);
 
-		assertType(expectedType, (actualType.value as ParameterizedTypeRef).declaredType);
+		assertType(expectedType, (actualType as ParameterizedTypeRef).declaredType);
 
 		// but the last line should create an error:
 		val issues = script.validate();
@@ -351,7 +352,7 @@ class GenericsTest extends AbstractTypesystemTest {
 
 		val typeLeft = ts.type(G, assignment.lhs);
 		val typeRight = ts.type(G, assignment.rhs);
-		assertType(typeRight, (typeLeft.value as ParameterizedTypeRef).declaredType);
+		assertType(typeRight, (typeLeft as ParameterizedTypeRef).declaredType);
 
 		// but the last line should create an error:
 		val issues = script.validate();
@@ -429,10 +430,10 @@ class GenericsTest extends AbstractTypesystemTest {
 		val call = (script.scriptElements.last as ExpressionStatement).expression as ParameterizedCallExpression;
 
 		val arg0 = call.arguments.head;
-		val expectedType = ts.expectedTypeIn(G, arg0, arg0.expression);
+		val expectedType = ts.expectedTypeIn(G, arg0, arg0.expression).value;
 		val actualType = ts.type(G, arg0.expression);
 
-		val result = ts.subtype(G, actualType.value, expectedType.value);
+		val result = ts.subtype(G, actualType, expectedType);
 		assertTrue(result.failure);
 
 		val issues = script.validate();

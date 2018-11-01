@@ -122,7 +122,7 @@ class DestructureHelper {
 		}
 		// in the root node, the defaultExpr is the main value to be destructured and
 		// the node's type is simply the type of that value (nothing needs to be destructured yet)
-		var valueTypeRef = ts.type(G,rootNode.defaultExpr).value;
+		var valueTypeRef = ts.type(G,rootNode.defaultExpr);
 		valueTypeRef = ts.resolveType(G, valueTypeRef);
 		// special case: ForStatement
 		// we might have something like for([a,b] of expr){} (in which case rootNode.defaultExpr points to the 'expr')
@@ -262,7 +262,7 @@ class DestructureHelper {
 	 * Both the given value type and inferred expression type may be null and then this returns null.
 	 */
 	private def TypeRef mergeWithTypeOfDefaultExpression(RuleEnvironment G, TypeRef valueTypeRef, DestructNode node) {
-		val exprTypeRefRaw = if(node.defaultExpr!==null) ts.type(G, node.defaultExpr).value;
+		val exprTypeRefRaw = if(node.defaultExpr!==null) ts.type(G, node.defaultExpr);
 		val isNullOrUndef = if(exprTypeRefRaw!==null) ts.subtypeSucceeded(G,exprTypeRefRaw,G.undefinedTypeRef) || ts.subtypeSucceeded(G,exprTypeRefRaw,G.nullTypeRef);
 		val exprTypeRef = if(exprTypeRefRaw!==null && !isNullOrUndef) ts.upperBound(G,exprTypeRefRaw).value;
 		if(valueTypeRef!==null && exprTypeRef!==null) {

@@ -15,6 +15,7 @@ import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef
 import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.ts.utils.TypeCompareHelper
 import org.eclipse.n4js.ts.utils.TypeUtils
@@ -67,10 +68,9 @@ abstract class AbstractTypeSystemHelperTests {
 			identifierRef =  script.eAllContents.filter(IdentifierRef).filter[it.id.name==propertyRefName].head
 		}
 		assertNotNull("bogus test, identifier ref " + propertyRefName + " not found", identifierRef)
-		val actualTypeResult = ts.type(G, identifierRef)
-		assertFalse("Cannot type identifier ref " + propertyRefName + ": " + actualTypeResult.failureMessage, actualTypeResult.failure)
-		val propertyTypeRef = actualTypeResult.value
+		val propertyTypeRef = ts.type(G, identifierRef)
 		assertNotNull("Type identifier ref " + propertyRefName+ " is null", propertyTypeRef)
+		assertFalse("Cannot type identifier ref " + propertyRefName + ": " + propertyTypeRef, propertyTypeRef instanceof UnknownTypeRef)
 
 		val subTypeResult = ts.subtype(G, propertyTypeRef, expectedTypeRef)
 		val superTypeResult = ts.subtype(G, expectedTypeRef, propertyTypeRef)

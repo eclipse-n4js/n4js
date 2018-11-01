@@ -54,11 +54,7 @@ abstract class AbstractOperatorExpressionTypesystemTest extends AbstractTypesyst
 		val G = RuleEnvironmentExtensions.newRuleEnvironment(script);
 		val expr = (script.scriptElements.reverseView.head as ExpressionStatement).expression;
 
-		val result = ts.type(G, expr);
-		if (result.failure) {
-			fail(result.failureMessage);
-		}
-		val typeExpr = result.value;
+		val typeExpr = ts.type(G, expr);
 
 		assertEquals("Assert at " + expression + " // " + variant, expectedTypeAsString, typeExpr.typeRefAsString);
 	}

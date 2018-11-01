@@ -45,7 +45,7 @@ class BlockAssistant extends TransformationAssistant {
 		}
 		// check if body is typed void, in which case no return will be inserted
 		val singleExpr = origAST.implicitReturnExpr();
-		val implicitReturnTypeRef = ts.type(state.G, singleExpr).value;
+		val implicitReturnTypeRef = ts.type(state.G, singleExpr);
 		if (implicitReturnTypeRef?.declaredType === state.G.voidType) {
 			return false;
 		}

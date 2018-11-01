@@ -355,7 +355,7 @@ package class JoinComputer extends TypeSystemHelperStrategy {
 	}
 
 	private def dispatch substituted(RuleEnvironment G, TMethod member) {
-		val ftype = ts.type(G, member).value as FunctionTypeExpression
+		val ftype = ts.type(G, member) as FunctionTypeExpression
 		val subst = TypesFactory.eINSTANCE.createTStructMethod();
 		subst.name = member.name;
 		subst.fpars.addAll(ftype.fpars);
@@ -366,11 +366,8 @@ package class JoinComputer extends TypeSystemHelperStrategy {
 
 	def similarMember(RuleEnvironment G, TMember m1, TMember m2) {
 
-		val t1 = ts.type(G, m1).value;
-		val t2 = ts.type(G, m2).value;
-		if (t1 === null || t2 === null) {
-			return false;
-		}
+		val t1 = ts.type(G, m1);
+		val t2 = ts.type(G, m2);
 		return ts.subtypeSucceeded(G, t1, t2) && ts.subtypeSucceeded(G, t2, t1)
 	}
 

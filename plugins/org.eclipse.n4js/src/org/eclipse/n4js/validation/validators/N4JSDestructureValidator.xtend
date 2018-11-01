@@ -33,8 +33,8 @@ import org.eclipse.n4js.ts.types.PrimitiveType
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
-import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.utils.DestructureHelper
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
@@ -196,39 +196,37 @@ class N4JSDestructureValidator extends AbstractN4JSDeclarativeValidator {
 				// existing variable referenced from within a pattern
 				// -> check if it can hold the corresponding value
 				var variableTypeRef = if(node.varDecl!==null) {
-					ts.type(G,node.varDecl).value
+					ts.type(G,node.varDecl)
 				} else if(node.varRef!==null) {
-					ts.type(G,node.varRef).value
+					ts.type(G,node.varRef)
 				};
-				if(variableTypeRef!==null) {
 
-					// exception case: if we have a defaultExpr AND it is of wrong type
-					// -> suppress further checking to avoid confusing duplicate error message
-					if(node.defaultExpr!==null) {
-						val defaultExprTypeRef = ts.type(G,node.defaultExpr).value;
-						val isOfCorrectType = if(defaultExprTypeRef!==null) ts.subtypeSucceeded(G,defaultExprTypeRef,variableTypeRef);
-						if(!isOfCorrectType) {
-							return false;
-						}
-					}
-
-					val result = ts.subtype(G,valueTypeRef,variableTypeRef);
-					if(result.failure) {
-						val varName = node.varDecl?.name ?: node.varRef?.id?.name ?: "<unnamed>";
-						var elemDesc = if(node.isPositional) {
-							"at index "+parentNode.nestedNodes.indexOf(node)
-						} else {
-							"of property '"+node.propName+"'"
-						};
-						var tsMsg = result.failureMessage.trimPrefix('failed: ').trimSuffix('.');
-						val msg = getMessageForDESTRUCT_TYPE_ERROR_VAR(varName, elemDesc, tsMsg);
-						if(node.varDecl!==null) {
-							addIssue(msg, node.varDecl, TypesPackage.eINSTANCE.identifiableElement_Name, DESTRUCT_TYPE_ERROR_VAR)
-						} else {
-							addIssue(msg, node.varRef, DESTRUCT_TYPE_ERROR_VAR);
-						}
+				// exception case: if we have a defaultExpr AND it is of wrong type
+				// -> suppress further checking to avoid confusing duplicate error message
+				if(node.defaultExpr!==null) {
+					val defaultExprTypeRef = ts.type(G,node.defaultExpr);
+					val isOfCorrectType = if(defaultExprTypeRef!==null) ts.subtypeSucceeded(G,defaultExprTypeRef,variableTypeRef);
+					if(!isOfCorrectType) {
 						return false;
 					}
+				}
+
+				val result = ts.subtype(G,valueTypeRef,variableTypeRef);
+				if(result.failure) {
+					val varName = node.varDecl?.name ?: node.varRef?.id?.name ?: "<unnamed>";
+					var elemDesc = if(node.isPositional) {
+						"at index "+parentNode.nestedNodes.indexOf(node)
+					} else {
+						"of property '"+node.propName+"'"
+					};
+					var tsMsg = result.failureMessage.trimPrefix('failed: ').trimSuffix('.');
+					val msg = getMessageForDESTRUCT_TYPE_ERROR_VAR(varName, elemDesc, tsMsg);
+					if(node.varDecl!==null) {
+						addIssue(msg, node.varDecl, TypesPackage.eINSTANCE.identifiableElement_Name, DESTRUCT_TYPE_ERROR_VAR)
+					} else {
+						addIssue(msg, node.varRef, DESTRUCT_TYPE_ERROR_VAR);
+					}
+					return false;
 				}
 			}
 		}

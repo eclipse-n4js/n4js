@@ -507,8 +507,8 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 		StructTypingInfo info) {
 
 		val G = info.G;
-		val typeLeftRaw = ts.type(G, leftMember).value;
-		val typeRightRaw = ts.type(G, rightMember).value;
+		val typeLeftRaw = ts.type(G, leftMember);
+		val typeRightRaw = ts.type(G, rightMember);
 
 		// replace bound type variables with type arguments
 		val G_left = G.wrap;

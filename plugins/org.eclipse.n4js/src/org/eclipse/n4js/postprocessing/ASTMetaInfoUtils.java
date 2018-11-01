@@ -21,8 +21,6 @@ import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
-
-import org.eclipse.n4js.typesystem.utils.Result;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 
 /**
@@ -37,7 +35,7 @@ public class ASTMetaInfoUtils {
 	 * <p>
 	 * Convenience method for {@link ASTMetaInfoCache#getTypeFailSafe(TypableElement)}.
 	 */
-	public static Result<TypeRef> getTypeFailSafe(TypableElement astNode) {
+	public static TypeRef getTypeFailSafe(TypableElement astNode) {
 		return ((N4JSResource) astNode.eResource()).getASTMetaInfoCacheVerifyContext().getTypeFailSafe(astNode);
 	}
 
@@ -60,6 +58,7 @@ public class ASTMetaInfoUtils {
 	 * variable declaration is exported.
 	 */
 	public static List<EObject> getLocalVariableReferences(VariableDeclaration varDecl) {
-		return ((N4JSResource) varDecl.eResource()).getASTMetaInfoCacheVerifyContext().getLocalVariableReferences(varDecl);
+		return ((N4JSResource) varDecl.eResource()).getASTMetaInfoCacheVerifyContext()
+				.getLocalVariableReferences(varDecl);
 	}
 }

@@ -83,7 +83,7 @@ class N4JSTypeInformationHoverProvider extends N4JSHoverProvider {
 		if (null === expression.eResource) {
 			return null;
 		}
-		val type = expression.newRuleEnvironment.type(expression).value;
+		val type = expression.newRuleEnvironment.type(expression);
 		return if (null === type) null else type.typeRefAsString;
 	}
 

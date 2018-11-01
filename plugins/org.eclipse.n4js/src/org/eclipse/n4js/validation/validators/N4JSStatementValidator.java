@@ -27,10 +27,11 @@ import org.eclipse.n4js.n4JS.VariableDeclarationOrBinding;
 import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.n4JS.VariableStatementKeyword;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
-import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.typesystem.utils.Result;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.xtext.validation.Check;
@@ -125,16 +126,16 @@ public class N4JSStatementValidator extends AbstractN4JSDeclarativeValidator {
 					loopVarType = ((VariableDeclaration) varDeclOrBinding).getDeclaredTypeRef();
 				} else {
 					VariableBinding varBinding = (VariableBinding) varDeclOrBinding;
-					Result<TypeRef> res = typeSystem.type(G, varBinding.getExpression());
-					if (res.isSuccess()) {
-						loopVarType = res.getValue();
+					TypeRef res = typeSystem.type(G, varBinding.getExpression());
+					if (!(res instanceof UnknownTypeRef)) {
+						loopVarType = res;
 					}
 				}
 			} else if (forStatement.getInitExpr() != null) {
 				location = forStatement.getInitExpr();
-				Result<TypeRef> res = typeSystem.type(G, forStatement.getInitExpr());
-				if (res.isSuccess()) {
-					loopVarType = res.getValue();
+				TypeRef res = typeSystem.type(G, forStatement.getInitExpr());
+				if (!(res instanceof UnknownTypeRef)) {
+					loopVarType = res;
 				}
 
 			}

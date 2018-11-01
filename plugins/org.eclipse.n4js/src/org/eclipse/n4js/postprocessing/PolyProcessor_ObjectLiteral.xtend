@@ -70,7 +70,7 @@ package class PolyProcessor_ObjectLiteral extends AbstractPolyProcessor {
 		InferenceContext infCtx, ASTMetaInfoCache cache) {
 
 		if (!objLit.isPoly) {
-			val result = ts.type(G, objLit).getValue();
+			val result = ts.type(G, objLit);
 			// do not store in cache (TypeProcessor responsible for storing types of non-poly expressions in cache)
 			return result;
 		}

@@ -67,9 +67,9 @@ package abstract class AbstractProcessor {
 	 * system. Normally, this should only be required by {@link TypeProcessor}, so use this sparingly (however,
 	 * sometimes it can be helpful to avoid duplication of logic).
 	 */
-	def protected Result<TypeRef> askXsemanticsForType(RuleEnvironment G, TypableElement elem) {
+	def protected TypeRef askXsemanticsForType(RuleEnvironment G, TypableElement elem) {
 		if (elem.eIsProxy) {
-			return Result.success(TypeRefsFactory.eINSTANCE.createUnknownTypeRef);
+			return TypeRefsFactory.eINSTANCE.createUnknownTypeRef;
 		}
 		// special case:
 		// TStructMembers are special in that they may be types (in case of TStructMethod) and appear as AST nodes
@@ -175,10 +175,10 @@ package abstract class AbstractProcessor {
 		}
 	}
 
-	def protected static void log(int indentLevel, Result<TypeRef> result) {
+	def protected static void log(int indentLevel, TypeRef result) {
 		if (!isDEBUG_LOG)
 			return;
-		log(indentLevel, result.resultToString);
+		log(indentLevel, result.typeRefAsString);
 	}
 
 	def protected static void log(int indentLevel, EObject astNode, ASTMetaInfoCache cache) {
@@ -186,7 +186,7 @@ package abstract class AbstractProcessor {
 			return;
 		if (astNode.isTypableNode) {
 			val result = cache.getTypeFailSafe(astNode as TypableElement);
-			val resultStr = if (result !== null) result.resultToString else "*** MISSING ***";
+			val resultStr = if (result !== null) result.typeRefAsString else "*** MISSING ***";
 			log(indentLevel, astNode.objectInfo + " " + resultStr);
 		} else {
 			log(indentLevel, astNode.objectInfo);

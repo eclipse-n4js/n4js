@@ -80,7 +80,7 @@ public class N4JSTypeSystem {
 	 * {@link N4JSResource} has finished, the {@link TypeProcessor} will make sure judgment 'type' will never be used
 	 * again for that resource!
 	 */
-	public Result<TypeRef> type(RuleEnvironment G, TypableElement element) {
+	public TypeRef type(RuleEnvironment G, TypableElement element) {
 		return typeProcessor.getType(G, element);
 	}
 
@@ -91,8 +91,7 @@ public class N4JSTypeSystem {
 	 * by {@link ASTProcessor} while traversing the entire AST (during post-processing) to obtain the type of nodes that
 	 * have not yet been processed.
 	 */
-	public Result<TypeRef> use_type_judgment_from_PostProcessors(RuleEnvironment G,
-			TypableElement element) {
+	public TypeRef use_type_judgment_from_PostProcessors(RuleEnvironment G, TypableElement element) {
 		return typeJudgment.apply(G, element);
 	}
 
@@ -213,7 +212,7 @@ public class N4JSTypeSystem {
 	 */
 	public TypeRef tau(TypableElement element) {
 		final RuleEnvironment G = RuleEnvironmentExtensions.newRuleEnvironment(element);
-		return type(G, element).getValue();
+		return type(G, element);
 	}
 
 	/**
@@ -274,8 +273,7 @@ public class N4JSTypeSystem {
 	 * <code>null</code> in case of an error) instead of a {@link Result}.
 	 */
 	public TypeRef tau(TypableElement element, RuleEnvironment G) {
-		final Result<TypeRef> result = type(G, element);
-		final TypeRef value = result.getValue();
+		final TypeRef value = type(G, element);
 		if (value != null) {
 			final TypeRef substValue = substTypeVariables(G, value);
 			return substValue;

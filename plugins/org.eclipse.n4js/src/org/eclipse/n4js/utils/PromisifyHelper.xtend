@@ -94,7 +94,7 @@ class PromisifyHelper {
 	def public boolean isPromisifiableExpression(Expression expr) {
 		if(expr instanceof ParameterizedCallExpression) {
 			val G = expr.newRuleEnvironment;
-			val targetTypeRef = ts.type(G, expr.target).value;
+			val targetTypeRef = ts.type(G, expr.target);
 			if(targetTypeRef instanceof FunctionTypeExprOrRef) {
 				val fun = targetTypeRef.functionType;
 				return fun!==null && PROMISIFIABLE.hasAnnotation(fun);
@@ -112,7 +112,7 @@ class PromisifyHelper {
 		if(isPromisifiableExpression(expr)) {
 			val G = expr.newRuleEnvironment;
 			// casts in next line are OK, because of isPromisifiableExpression() returned true
-			val targetTypeRef = ts.type(G, (expr as ParameterizedCallExpression).target).value as FunctionTypeExprOrRef;
+			val targetTypeRef = ts.type(G, (expr as ParameterizedCallExpression).target) as FunctionTypeExprOrRef;
 			val promisifiedReturnTypeRef = extractPromisifiedReturnType(G, targetTypeRef);
 			if(promisifiedReturnTypeRef!==null) {
 				return promisifiedReturnTypeRef;

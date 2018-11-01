@@ -319,7 +319,7 @@ class N6_1_10_FunctionExpressionTypesystemTest extends AbstractTypesystemTest {
 		val call = script.eAllContents.filter(ParameterizedCallExpression).last
 
 //		val type = ts.type(call).value; // will cause an NPE internally
-		val typeG = ts.type(RuleEnvironmentExtensions.newRuleEnvironment(call), call).value;
+		val typeG = ts.type(RuleEnvironmentExtensions.newRuleEnvironment(call), call);
 		val typeI = ts.tau(call);
 
 		assertEquals(typeG.declaredType, typeI.declaredType);

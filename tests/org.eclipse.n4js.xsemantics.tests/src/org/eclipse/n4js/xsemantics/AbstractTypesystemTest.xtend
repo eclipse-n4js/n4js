@@ -24,6 +24,7 @@ import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef
 import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
@@ -58,28 +59,27 @@ abstract class AbstractTypesystemTest {
 
 	def assertTypeByName(String expectedTypeAsString, TypableElement expression) {
 		val G = newRuleEnvironment(expression);
-		val result = ts.type(G, expression)
-		if (result.failure) {
-			fail(result.failureMessage);
+		val typeExpr = ts.type(G, expression)
+		if (typeExpr instanceof UnknownTypeRef) {
+			fail("UnknownTypeRef while typing " + expression);
 		}
-		val typeExpr = result.value;
 		assertEquals("Assert at " + expression, expectedTypeAsString, typeExpr.typeRefAsString);
 	}
 
 
 	/* Tests that the result's value is a ParameterizedTypeRef and the declared type must equal the given type. */
-	def assertType(Result<TypeRef> result, Type expectedType) {
-		result.assertNoFailure
-		assertTrue(result.value instanceof ParameterizedTypeRef)
-		assertEquals(expectedType, (result.value as ParameterizedTypeRef).declaredType)
+	def assertType(TypeRef result, Type expectedType) {
+		assertNotNull(result)
+		assertTrue(result instanceof ParameterizedTypeRef)
+		assertEquals(expectedType, (result as ParameterizedTypeRef).declaredType)
 	}
 
 	def TypeRef checkedType(RuleEnvironment G, TypableElement eobj) {
 		val result = ts.type(G, eobj);
-		if (result.failure) {
-			fail(result.failureMessage);
+		if (result instanceof UnknownTypeRef) {
+			fail("UnknownTypeRef while typing " + eobj);
 		}
-		return result.value;
+		return result;
 	}
 
 	/*
@@ -89,10 +89,7 @@ abstract class AbstractTypesystemTest {
 
 		val G = newRuleEnvironment(elementToBeTypeInferred);
 		val result = ts.type(G, elementToBeTypeInferred);
-
-		result.assertNoFailure
-		assertNotNull("No type inferred", result.value)
-		assertEquals("Wrong type inferred", expectedTypeName, result.value.typeRefAsString)
+		assertEquals("Wrong type inferred", expectedTypeName, result.typeRefAsString)
 	}
 
 	/*
@@ -108,22 +105,11 @@ abstract class AbstractTypesystemTest {
 		assertEquals("Wrong expected type inferred", expectedTypeName, result.value.typeRefAsString)
 	}
 
-	/*
-	 * Tests that inferring a type results in a failure; you can specify the expected
-	 * error message of the whole type inference, and the expected main reason of the failure,
-	 * i.e., the error message of the innermost failing rule
-	 */
-	def void assertTypeFailure(TypableElement elementToBeTypeInferred, String expectedFailure) {
-
-		val G = newRuleEnvironment(elementToBeTypeInferred);
-		val result = ts.type(G,elementToBeTypeInferred);
-
-		result.assertFailure(expectedFailure)
-	}
-
 	def void assertSubtype(RuleEnvironment G, TypeRef left, TypeRef right, boolean expectedResult) {
 		assertNotNull("Left hand side must not be null", left)
 		assertNotNull("Right hand side must not be null", right)
+		assertFalse(left instanceof UnknownTypeRef)
+		assertFalse(right instanceof UnknownTypeRef)
 
 		val result = ts.subtype(G, left, right)
 		if (expectedResult) {

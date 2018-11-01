@@ -27,9 +27,8 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
-import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
-import org.eclipse.n4js.typesystem.utils.Result;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter.IEObjectCoveringRegion;
 import org.eclipse.xpect.XpectImport;
@@ -108,12 +107,12 @@ public class TypeXpectMethod {
 			eobject = eobject.eContainer();
 		}
 		RuleEnvironment G = newRuleEnvironment(eobject);
-		Result<org.eclipse.n4js.ts.typeRefs.TypeRef> result;
+		TypeRef result;
 		if (expectedType) {
 			if (!(eobject instanceof Expression && eobject.eContainer() != null))
 				return "Not an Expression at given region (required to obtain expected type); got instead: "
 						+ eobject.eClass().getName();
-			result = ts.expectedTypeIn(G, eobject.eContainer(), (Expression) eobject);
+			result = ts.expectedTypeIn(G, eobject.eContainer(), (Expression) eobject).getValue();
 		} else {
 			if (eobject instanceof BindingProperty) {
 				/*-
@@ -133,11 +132,7 @@ public class TypeXpectMethod {
 				return "Not a TypableElement at given region; got instead: " + eobject.eClass().getName();
 			result = ts.type(G, (TypableElement) eobject);
 		}
-		if (result.isFailure()) {
-			calculatedString = result.getFailureMessage();
-		} else {
-			calculatedString = result.getValue().getTypeRefAsString();
-		}
+		calculatedString = result.getTypeRefAsString();
 		return calculatedString;
 	}
 
@@ -182,11 +177,11 @@ public class TypeXpectMethod {
 		// offset points to the target of a call expression
 		final ParameterizedCallExpression callExpr = (ParameterizedCallExpression) container;
 		final RuleEnvironment G = RuleEnvironmentExtensions.newRuleEnvironment(eobject);
-		final Result<TypeRef> targetTypeRef = ts.type(G, callExpr.getTarget());
-		if (targetTypeRef.isFailure() || !(targetTypeRef.getValue() instanceof FunctionTypeExprOrRef)) {
+		final TypeRef targetTypeRef = ts.type(G, callExpr.getTarget());
+		if (!(targetTypeRef instanceof FunctionTypeExprOrRef)) {
 			return "xpect method error: cannot infer type of call expression target OR it's not a FunctionTypeExprOrRef";
 		}
-		final List<TypeVariable> typeParams = ((FunctionTypeExprOrRef) targetTypeRef.getValue()).getTypeVars();
+		final List<TypeVariable> typeParams = ((FunctionTypeExprOrRef) targetTypeRef).getTypeVars();
 		final int expectedNumOfTypeArgs = typeParams.size(); // not interested in the actual typeParams, just the size
 		final List<TypeRef> typeArgs;
 		if (callExpr.getTypeArgs().isEmpty()) {

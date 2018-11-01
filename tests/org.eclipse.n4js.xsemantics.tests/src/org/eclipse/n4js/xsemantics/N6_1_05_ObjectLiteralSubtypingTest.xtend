@@ -144,8 +144,8 @@ class N6_1_05_ObjectLiteralSubtypingTest extends AbstractTypesystemTest {
 		val right = decls.get(1);
 		val G = RuleEnvironmentExtensions.newRuleEnvironment(script);
 
-		val typeRefLeft = ts.type(G, left).value;
-		val typeRefRight = ts.type(G, right).value;
+		val typeRefLeft = ts.type(G, left);
+		val typeRefRight = ts.type(G, right);
 
 		assertSubtype(G, typeRefLeft, typeRefRight, expectedResult);
 

@@ -29,9 +29,8 @@ import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.types.TypableElement
-import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
-import org.eclipse.n4js.typesystem.utils.Result
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.utils.EcoreUtilN4
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
@@ -57,7 +56,7 @@ package class DestructureProcessor extends AbstractProcessor {
 		// ArrayLiteral or ObjectLiteral, but plays role of a destructuring pattern
 		// -> does not really have a type, but use UnknownTypeRef to avoid having
 		// to deal with this special case whenever asking for type of an expression
-		cache.storeType(node as TypableElement, Result.success(TypeRefsFactory.eINSTANCE.createUnknownTypeRef))
+		cache.storeType(node as TypableElement, TypeRefsFactory.eINSTANCE.createUnknownTypeRef);
 		// for object literals, some additional hacks are required ...
 		if (node instanceof ObjectLiteral) {
 			// poly expressions in property name/value pairs expect to be processed as part of the outer poly expression
@@ -78,7 +77,7 @@ package class DestructureProcessor extends AbstractProcessor {
 			]
 			// add types for property assignments
 			node.propertyAssignments.forEach [
-				cache.storeType(it, Result.success(TypeRefsFactory.eINSTANCE.createUnknownTypeRef));
+				cache.storeType(it, TypeRefsFactory.eINSTANCE.createUnknownTypeRef);
 			]
 		}
 		// here we basically turn off the fail-fast approach within the destructuring pattern
@@ -86,14 +85,14 @@ package class DestructureProcessor extends AbstractProcessor {
 		.filter[it instanceof ObjectLiteral || it instanceof ArrayLiteral || it instanceof ArrayElement] //
 		.filter[cache.getTypeFailSafe(it as TypableElement)===null] //
 		.forEach[
-			cache.storeType(it as TypableElement, Result.success(TypeRefsFactory.eINSTANCE.createUnknownTypeRef));
+			cache.storeType(it as TypableElement, TypeRefsFactory.eINSTANCE.createUnknownTypeRef);
 		]
 	}
 
 	/**
 	 * Temporary handling of forward references within destructuring patterns.
 	 */
-	def Result<TypeRef> handleForwardReferenceWhileTypingDestructuringPattern(RuleEnvironment G, TypableElement node,
+	def TypeRef handleForwardReferenceWhileTypingDestructuringPattern(RuleEnvironment G, TypableElement node,
 		ASTMetaInfoCache cache) {
 
 		val parent = node.eContainer();
@@ -101,10 +100,10 @@ package class DestructureProcessor extends AbstractProcessor {
 		if(isCyclicForwardReference) {
 			if(parent instanceof VariableBinding && (parent as VariableBinding).expression===node) {
 				// we get here when typing the second 'b' in 'var [a,b] = [0,b,2];'
-				return Result.success(G.anyTypeRef);
+				return G.anyTypeRef;
 			} else if(parent instanceof ForStatement && (parent as ForStatement).expression===node) {
 				// we get here when typing the second 'a' in 'for(var [a] of [[a]]) {}'
-				return Result.success(G.anyTypeRef);
+				return G.anyTypeRef;
 			}
 		}
 

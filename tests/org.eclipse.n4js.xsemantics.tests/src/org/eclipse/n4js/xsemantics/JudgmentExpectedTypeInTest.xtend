@@ -18,6 +18,7 @@ import org.eclipse.n4js.n4JS.ExpressionStatement
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.MultiplicativeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
+import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef
 import org.eclipse.n4js.validation.JavaScriptVariant
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
@@ -64,24 +65,24 @@ class JudgmentExpectedTypeInTest extends AbstractTypesystemTest {
 		val aToB = (script.scriptElements.get(7) as ExpressionStatement).expression as AssignmentExpression
 
 		var result = ts.type(G, a);
-		assertFalse(result.failure)
-		assertNotNull(result.value)
-		assertEquals("A", (result.value as ParameterizedTypeRef).declaredType.name)
+		assertNotNull(result)
+		assertFalse(result instanceof UnknownTypeRef)
+		assertEquals("A", (result as ParameterizedTypeRef).declaredType.name)
 
 		result = ts.type(G, b);
-		assertFalse(result.failure)
-		assertNotNull(result.value)
-		assertEquals("B", (result.value as ParameterizedTypeRef).declaredType.name)
+		assertNotNull(result)
+		assertFalse(result instanceof UnknownTypeRef)
+		assertEquals("B", (result as ParameterizedTypeRef).declaredType.name)
 
 		result = ts.type(G, aToA);
-		assertFalse(result.failure)
-		assertNotNull(result.value)
-		assertEquals("A", (result.value as ParameterizedTypeRef).declaredType.name)
+		assertNotNull(result)
+		assertFalse(result instanceof UnknownTypeRef)
+		assertEquals("A", (result as ParameterizedTypeRef).declaredType.name)
 
 		result = ts.type(G, aToB);
-		assertFalse(result.failure)
-		assertNotNull(result.value)
-		assertEquals("B", (result.value as ParameterizedTypeRef).declaredType.name)
+		assertNotNull(result)
+		assertFalse(result instanceof UnknownTypeRef)
+		assertEquals("B", (result as ParameterizedTypeRef).declaredType.name)
 
 	}
 
@@ -106,14 +107,14 @@ class JudgmentExpectedTypeInTest extends AbstractTypesystemTest {
 		val bToA = (script.scriptElements.get(6) as ExpressionStatement).expression as AssignmentExpression
 
 		var result = ts.type(G, a);
-		assertFalse(result.failure)
-		assertNotNull(result.value)
-		assertEquals("A", (result.value as ParameterizedTypeRef).declaredType.name)
+		assertNotNull(result)
+		assertFalse(result instanceof UnknownTypeRef)
+		assertEquals("A", (result as ParameterizedTypeRef).declaredType.name)
 
 		result = ts.type(G, b);
-		assertFalse(result.failure)
-		assertNotNull(result.value)
-		assertEquals("B", (result.value as ParameterizedTypeRef).declaredType.name)
+		assertNotNull(result)
+		assertFalse(result instanceof UnknownTypeRef)
+		assertEquals("B", (result as ParameterizedTypeRef).declaredType.name)
 
 		val aInAssignment = bToA.rhs
 		var expectedType = ts.expectedTypeIn(G, aInAssignment.eContainer, aInAssignment);

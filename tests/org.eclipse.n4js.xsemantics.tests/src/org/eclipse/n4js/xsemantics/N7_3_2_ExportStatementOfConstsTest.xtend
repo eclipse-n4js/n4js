@@ -14,6 +14,7 @@ import com.google.inject.Inject
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.VariableStatement
+import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.validation.JavaScriptVariant
 import org.eclipse.xtext.testing.InjectWith
@@ -47,9 +48,9 @@ class N7_3_2_ExportStatementOfConstsTest extends N7_3_1_ConstTest {
 
 		val G = RuleEnvironmentExtensions.newRuleEnvironment(script);
 		var typeOfVariableResult = ts.type(G, varDecl)
-		assertFalse("Cannot compute type of "+varDeclaration+":"+typeOfVariableResult.failureMessage,typeOfVariableResult.failure)
-		assertNotNull("Cannot compute type of "+varDeclaration+":",typeOfVariableResult.value)
-		assertEquals(expectedTypeAsString, typeOfVariableResult.value.typeRefAsString)
+		assertNotNull("Cannot compute type of "+varDeclaration+":",typeOfVariableResult)
+		assertFalse("Cannot compute type of "+varDeclaration+":"+typeOfVariableResult,typeOfVariableResult instanceof UnknownTypeRef)
+		assertEquals(expectedTypeAsString, typeOfVariableResult.typeRefAsString)
 	}
 
 	// Tests: see N7_1_1_VariablesTest

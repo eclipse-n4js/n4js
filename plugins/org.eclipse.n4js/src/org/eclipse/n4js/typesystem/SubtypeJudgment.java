@@ -530,8 +530,8 @@ import com.google.common.collect.Iterables;
 				// we need the type of the two constructors (i.e. their signature)
 				// DO NOT USE "TypeUtils.createTypeRef(leftCtor)", because this would by-pass the handling
 				// of forward references during AST traversal! Instead, obtain the type via the type judgment:
-				final TypeRef leftCtorRef = ts.type(G, leftCtor).getValue(); // FIXME what about failures?
-				final TypeRef rightCtorRef = ts.type(G, rightCtor).getValue();
+				final TypeRef leftCtorRef = ts.type(G, leftCtor);
+				final TypeRef rightCtorRef = ts.type(G, rightCtor);
 
 				// support for type variables and [~]~this as type of fpars in constructors
 				final RuleEnvironment G_left = wrap(G);

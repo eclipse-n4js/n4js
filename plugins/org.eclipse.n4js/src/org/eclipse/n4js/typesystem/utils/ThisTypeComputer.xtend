@@ -74,7 +74,7 @@ class ThisTypeComputer extends TypeSystemHelperStrategy {
 		val thisTarget = N4JSASTUtils.getProbableThisTarget(location);
 		if (thisTarget instanceof ObjectLiteral) {
 			// call rule, type may be created on the fly
-			return ts.type(G, thisTarget).getValue();
+			return ts.type(G, thisTarget);
 		} else if (thisTarget instanceof N4ClassifierDefinition) {
 			var thisTargetDefType = thisTarget.definedType;
 
