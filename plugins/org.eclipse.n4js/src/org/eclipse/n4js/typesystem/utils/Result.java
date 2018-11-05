@@ -151,12 +151,22 @@ public final class Result {
 	}
 
 	/**
-	 * If the receiving result is a failure without failure message (i.e. {@link #getFailureMessage()} returns
-	 * <code>null</code>), then this method will return a copy of the receiving failure with the failure message set to
-	 * the given new failure message. Otherwise the receiving result is returned unchanged.
+	 * Adds a default failure message to the receiving failure, either by
+	 * <ul>
+	 * <li>creating a copy of the receiving failure and setting its message to the given message (if the receiving
+	 * failure does not have a failure message, i.e. {@link #getFailureMessage()} returns <code>null</code>), or by
+	 * <li>creating a new failure result with the given message and setting the receiving failure as its cause (if the
+	 * receiving failure has a non-<code>null</code> failure message).
+	 * </ul>
+	 * If the receiving result is not a failure, simply returns the receiving result unchanged.
 	 */
 	public Result setDefaultFailureMessage(String newFailureMessage) {
-		return isFailure() && getFailureMessage() == null ? new Result(newFailureMessage, priority, cause) : null;
+		if (!isFailure()) {
+			return this;
+		}
+		return getFailureMessage() == null
+				? new Result(newFailureMessage, priority, cause) // new result replacing 'this'
+				: new Result(newFailureMessage, false, this); // new result added and refers to 'this' as its cause
 	}
 
 	/**
@@ -164,7 +174,7 @@ public final class Result {
 	 * returned unchanged.
 	 */
 	public Result trimCauses() {
-		return isSuccess() || getCause() == null ? this : new Result(failureMessage, priority, null);
+		return isFailure() && getCause() != null ? new Result(failureMessage, priority, null) : this;
 	}
 
 	/**
