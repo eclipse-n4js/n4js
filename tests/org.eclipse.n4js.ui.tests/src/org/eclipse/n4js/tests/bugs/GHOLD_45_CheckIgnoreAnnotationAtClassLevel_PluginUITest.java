@@ -39,7 +39,6 @@ import org.eclipse.ui.internal.console.ConsoleView;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.collect.Iterables;
@@ -51,7 +50,6 @@ import com.google.inject.Injector;
 /**
  * Test for testing the {@code @Ignore} annotation while running tests via Mangelhaft.
  */
-@Ignore("IDE-2270")
 @SuppressWarnings("restriction")
 public class GHOLD_45_CheckIgnoreAnnotationAtClassLevel_PluginUITest extends AbstractPluginUITest {
 
