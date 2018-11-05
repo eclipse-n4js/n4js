@@ -27,7 +27,6 @@ import org.eclipse.n4js.ts.types.TStructMember
 import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
-import org.eclipse.n4js.typesystem.utils.Result
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.UtilN4
@@ -63,11 +62,12 @@ package abstract class AbstractProcessor {
 
 
 	/**
-	 * Processors can call this method to directly invoke the 'type' judgment of the internal, Xsemantics-generated type
-	 * system. Normally, this should only be required by {@link TypeProcessor}, so use this sparingly (however,
-	 * sometimes it can be helpful to avoid duplication of logic).
+	 * Processors can call this method to directly invoke the 'type' judgment, i.e. invoke method {@code TypeJudgment#apply()}
+	 * via facade method {@link N4JSTypeSystem#use_type_judgment_from_PostProcessors(RuleEnvironment, TypableElement)
+	 * use_type_judgment_from_PostProcessors()}. Normally, this should only be required by {@link TypeProcessor}, so use
+	 * this sparingly (however, sometimes it can be helpful to avoid duplication of logic).
 	 */
-	def protected TypeRef askXsemanticsForType(RuleEnvironment G, TypableElement elem) {
+	def protected TypeRef invokeTypeJudgmentToInferType(RuleEnvironment G, TypableElement elem) {
 		if (elem.eIsProxy) {
 			return TypeRefsFactory.eINSTANCE.createUnknownTypeRef;
 		}
@@ -76,7 +76,7 @@ package abstract class AbstractProcessor {
 		// -> if we are dealing with an AST node, make sure to use the definedMember in the TModule
 		val definedMember = if (elem instanceof TStructMember) elem.definedMember;
 		if (definedMember !== null && elem.isASTNode) {
-			return askXsemanticsForType(G, definedMember);
+			return invokeTypeJudgmentToInferType(G, definedMember);
 		}
 		return ts.use_type_judgment_from_PostProcessors(G, elem);
 	}

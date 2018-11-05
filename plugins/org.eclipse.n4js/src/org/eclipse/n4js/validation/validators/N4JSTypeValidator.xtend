@@ -387,7 +387,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 
 						// must use .rhs in next line, because .lhs would give us the expected type for write access
 						// (which is already checked by the generic method #checkTypeMatchesExpectedType()
-						val expectedType = ts.expectedTypeIn(G, assExpr, assExpr.rhs);
+						val expectedType = ts.expectedType(G, assExpr, assExpr.rhs);
 						val TypeRef typeOfGetterRAW = TypeUtils.getMemberTypeRef(getter);
 						if (expectedType !== null && typeOfGetterRAW !== null) {
 							val TypeRef typeOfGetter = ts.substTypeVariables(G, typeOfGetterRAW);
@@ -459,7 +459,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		// use a fresh environment for expectations
 		G = newRuleEnvironment(expression);
 
-		val expectedTypeRef = ts.expectedTypeIn(G, expression.eContainer, expression);
+		val expectedTypeRef = ts.expectedType(G, expression.eContainer, expression);
 		if (expectedTypeRef !== null) {
 
 			// for certain problems in single-expression arrow functions, we want a special error message

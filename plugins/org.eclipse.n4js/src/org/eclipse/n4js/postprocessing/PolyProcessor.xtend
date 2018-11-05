@@ -162,7 +162,7 @@ package class PolyProcessor extends AbstractPolyProcessor {
 		val expectedTypeRef = if (expectedTypeOfPoly !== null) {
 				expectedTypeOfPoly
 			} else if (!rootPoly.isProblematicCaseOfExpectedType) {
-				ts.expectedTypeIn(G, rootPoly.eContainer(), rootPoly);
+				ts.expectedType(G, rootPoly.eContainer(), rootPoly);
 			};
 
 		// call #processExpr() (this will recursively call #processExpr() on nested expressions, even if non-poly)

@@ -90,7 +90,7 @@ abstract class AbstractOperatorExpressionTypesystemTest extends AbstractTypesyst
 		assertEquals("Unexpected number of sub expressions", expectedSubTypes.length, subExpr.size);
 		var i = 0;
 		while (i < subExpr.length) {
-			val actualExpectedTypeResult = ts.expectedTypeIn(G, expr, subExpr.get(i));
+			val actualExpectedTypeResult = ts.expectedType(G, expr, subExpr.get(i));
 			assertEquals(expression+", operand " + i + " in mode " + variant.name, 
 				expectedSubTypes.get(i), actualExpectedTypeResult.typeRefAsString);
 			i = i + 1

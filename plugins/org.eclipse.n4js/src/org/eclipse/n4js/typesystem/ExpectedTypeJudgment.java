@@ -72,7 +72,6 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression;
-import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef;
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.TClass;
@@ -81,29 +80,12 @@ import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
-import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.PromisifyHelper;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.xtext.EcoreUtil2;
 
 import com.google.inject.Inject;
 
-/**
- * Returns the expected type of an expression in a given container. In particular, the return value may be:
- * <ul>
- * <li>{@link UnknownTypeRef}: computation of a type expectation failed. The client should fail safe, i.e. it should not
- * perform type checking for the given expression and otherwise ignore this failure.
- * <li><code>null</code>: no type expectation at all. The client should not perform type checking for the given
- * expression.
- * <li>{@link RuleEnvironmentExtensions#topTypeRef(RuleEnvironment) top type}: no specific type expectation, but a valid
- * value is required. The client should perform type checking for the given expression against the top type.
- * <li>any other type reference: an actual, specific type expectation exists. The client is expected to check the given
- * expression's actual type against the returned expected type.
- * </ul>
- * The difference between return values <code>null</code> and top type is that in the latter case 'void' is not
- * accepted. Between return values {@code UnknownTypeRef} and <code>null</code> there is not real difference for the
- * client; they are distinguished mainly for clarity and readability of the code in this class.
- */
 /* package */ class ExpectedTypeJudgment extends AbstractJudgment {
 
 	@Inject
@@ -113,6 +95,7 @@ import com.google.inject.Inject;
 	@Inject
 	private ReactHelper reactHelper;
 
+	/** See {@link N4JSTypeSystem#expectedType(RuleEnvironment, EObject, Expression)}. */
 	public TypeRef apply(RuleEnvironment G, EObject container, Expression expression) {
 		return expression != null ? new ExpectedTypeJudgmentSwitch(G, expression).doSwitch(container) : null;
 	}
@@ -632,10 +615,5 @@ import com.google.inject.Inject;
 			}
 			return unknown();
 		}
-	}
-
-	// FIXME use JResult.failure() instead!
-	private static UnknownTypeRef unknown() {
-		return TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
 	}
 }

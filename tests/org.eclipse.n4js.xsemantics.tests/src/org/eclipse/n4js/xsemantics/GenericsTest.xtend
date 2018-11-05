@@ -322,7 +322,7 @@ class GenericsTest extends AbstractTypesystemTest {
 		val call = (script.scriptElements.get(4) as ExpressionStatement).expression as ParameterizedCallExpression;
 
 		val arg0 = call.arguments.head;
-		val expectedType = ts.expectedTypeIn(G, arg0, arg0.expression);
+		val expectedType = ts.expectedType(G, arg0, arg0.expression);
 		val actualType = ts.type(G, arg0.expression);
 
 		assertType(expectedType, (actualType as ParameterizedTypeRef).declaredType);
@@ -429,7 +429,7 @@ class GenericsTest extends AbstractTypesystemTest {
 		val call = (script.scriptElements.last as ExpressionStatement).expression as ParameterizedCallExpression;
 
 		val arg0 = call.arguments.head;
-		val expectedType = ts.expectedTypeIn(G, arg0, arg0.expression);
+		val expectedType = ts.expectedType(G, arg0, arg0.expression);
 		val actualType = ts.type(G, arg0.expression);
 
 		val result = ts.subtype(G, actualType, expectedType);

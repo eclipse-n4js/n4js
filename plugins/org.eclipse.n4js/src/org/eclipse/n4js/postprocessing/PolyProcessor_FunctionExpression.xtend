@@ -379,7 +379,7 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 
 	def private FunctionTypeExprOrRef expectedTypeForArrowFunction(RuleEnvironment G, ArrowFunction fe) {
 		val G_new = G.newRuleEnvironment;
-		val tr = ts.expectedTypeIn(G_new, fe.eContainer(), fe);
+		val tr = ts.expectedType(G_new, fe.eContainer(), fe);
 		if (tr instanceof FunctionTypeExprOrRef) {
 			return tr;
 		}

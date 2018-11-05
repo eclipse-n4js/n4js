@@ -67,8 +67,9 @@ public class N4JSTypeSystem {
 	// LOW-LEVEL METHODS
 
 	/**
-	 * Returns the type of the given element wrapped in a {@link Result}. In case the type cannot be inferred, a default
-	 * (e.g. top type) or {@link UnknownTypeRef} is returned. Never returns <code>null</code>.
+	 * Returns the type of the given element. In case the type cannot be inferred, either a default (usually the
+	 * {@link RuleEnvironmentExtensions#topType(RuleEnvironment) top type}) or the special type reference
+	 * {@link UnknownTypeRef} is returned. Never returns <code>null</code>.
 	 *
 	 * <h2>IMPLEMENTATION NOTE:</h2>
 	 *
@@ -76,11 +77,11 @@ public class N4JSTypeSystem {
 	 * classes - are now delegated to {@link TypeProcessor#getType(RuleEnvironment, TypableElement)}.</em>
 	 * <p>
 	 * {@link TypeProcessor} will simply read the type from the cache (if containing resource is fully processed) or
-	 * initiate the post-processing of the entire resource. Actual use of the 'type' judgment will only be done by
-	 * {@link TypeProcessor} during post-processing of a resource via method
-	 * {@link #use_type_judgment_from_PostProcessors(RuleEnvironment, TypableElement)}. Once post-processing of an
-	 * {@link N4JSResource} has finished, the {@link TypeProcessor} will make sure judgment 'type' will never be used
-	 * again for that resource!
+	 * initiate the post-processing of the entire resource. Actual use of the 'type' judgment, i.e. invocation of
+	 * {@link TypeJudgment#apply(RuleEnvironment, TypableElement)} will only be done by the {@link TypeProcessor}s
+	 * during post-processing via {@link #use_type_judgment_from_PostProcessors(RuleEnvironment, TypableElement)}. Once
+	 * post-processing of an {@link N4JSResource} has finished, the {@link TypeProcessor} will make sure judgment 'type'
+	 * will never be invoked again for that resource!
 	 */
 	public TypeRef type(RuleEnvironment G, TypableElement element) {
 		return typeProcessor.getType(G, element);
@@ -102,13 +103,20 @@ public class N4JSTypeSystem {
 	 * <p>
 	 * The return value is one of the following:
 	 * <ul>
-	 * <li>some type other than the top type if there is an actual type expectation for the given expression,
-	 * <li>the top type (i.e. any) if the expression may evaluate to a value of any type but has to evaluate to a proper
-	 * value (i.e. void is disallowed in this case!),
-	 * <li><code>null</code> if there is no expectation at all, i.e. even void is allowed.
+	 * <li>an {@link UnknownTypeRef}: computation of type expectation failed. The client should fail safe, i.e. it
+	 * should not perform type checking for the given expression and otherwise ignore this failure.
+	 * <li><code>null</code>: no type expectation at all. The client should not perform type checking for the given
+	 * expression.
+	 * <li>{@link RuleEnvironmentExtensions#topTypeRef(RuleEnvironment) top type}: no specific type expectation, but a
+	 * valid value is required. The client should perform type checking for the given expression against the top type.
+	 * <li>any other type reference: an actual, specific type expectation exists. The client is expected to check the
+	 * given expression's actual type against the returned expected type.
 	 * </ul>
+	 * The difference between return values <code>null</code> and top type is that in the latter case 'void' is not
+	 * accepted. Between return values {@code UnknownTypeRef} and <code>null</code> there is no real difference as far
+	 * as the client is concerned; they are distinguished mainly for clarity and readability of the code in this class.
 	 */
-	public TypeRef expectedTypeIn(RuleEnvironment G, EObject container, Expression expression) {
+	public TypeRef expectedType(RuleEnvironment G, EObject container, Expression expression) {
 		return expectedTypeJudgment.apply(G, container, expression);
 	}
 
@@ -174,8 +182,9 @@ public class N4JSTypeSystem {
 	}
 
 	/**
-	 * Substitutes type variables, i.e. replaces type variables with actual values taken from the rule environment.
-	 * Never returns <code>null</code>, EXCEPT if <code>null</code> is passed in as type argument.
+	 * Substitutes type variables, i.e. replaces type variables with actual values taken from the
+	 * type-variable-to-type-argument mappings in the given rule environment. Never returns <code>null</code>, EXCEPT if
+	 * <code>null</code> is passed in as type argument.
 	 * <p>
 	 * The given {@code typeArgument} will never be changed, instead a copy will be created to reflect the substitution.
 	 * If nothing was substituted (i.e. given type argument does not contain any type variable or only type variables
@@ -187,7 +196,7 @@ public class N4JSTypeSystem {
 	 * <p>
 	 * Invariant: if you put in a TypeRef, you'll get a TypeRef back (only other case: put in a Wildcard and you'll get
 	 * a Wildcard). But this is not true for subclasses of TypeRef, e.g. put in a FunctionTypeRef and you might get a
-	 * FunctionTypeExpression back).
+	 * FunctionTypeExpression back.
 	 */
 	public TypeArgument substTypeVariables(RuleEnvironment G, TypeArgument typeArgument) {
 		return substTypeVariablesJudgment.apply(G, typeArgument);

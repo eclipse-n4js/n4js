@@ -181,6 +181,10 @@ import com.google.inject.Inject;
 	@Inject
 	private ReactHelper reactHelper;
 
+	/**
+	 * See {@link N4JSTypeSystem#type(RuleEnvironment, TypableElement)} and
+	 * {@link N4JSTypeSystem#use_type_judgment_from_PostProcessors(RuleEnvironment, TypableElement)}.
+	 */
 	public TypeRef apply(RuleEnvironment G, TypableElement element) {
 		final TypeRef result = doApply(G, element);
 		if (result == null) {
@@ -192,7 +196,7 @@ import com.google.inject.Inject;
 
 	private TypeRef doApply(RuleEnvironment G, TypableElement element) {
 		if (element == null) {
-			return TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
+			return unknown();
 		}
 		final EPackage elementPkg = element.eClass().getEPackage();
 		if (elementPkg == TypesPackage.eINSTANCE) {
@@ -281,7 +285,7 @@ import com.google.inject.Inject;
 		@Override
 		public TypeRef caseTypeDefiningElement(TypeDefiningElement elem) {
 			final TypeRef defTypeRef = TypeUtils.wrapTypeInTypeRef(elem.getDefinedType());
-			return defTypeRef != null ? defTypeRef : TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
+			return defTypeRef != null ? defTypeRef : unknown();
 		}
 
 		@Override
@@ -372,7 +376,7 @@ import com.google.inject.Inject;
 					if (elemType != null) {
 						T = ts.upperBound(G2, elemType);
 					} else {
-						T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
+						T = unknown();
 					}
 				} else {
 					T = anyTypeRef(G);
@@ -579,7 +583,7 @@ import com.google.inject.Inject;
 		public TypeRef caseN4EnumLiteral(N4EnumLiteral enumLiteral) {
 			final N4EnumDeclaration enumDecl = EcoreUtil2.getContainerOfType(enumLiteral, N4EnumDeclaration.class);
 			final TEnum tEnum = enumDecl != null ? enumDecl.getDefinedTypeAsEnum() : null;
-			return tEnum != null ? ref(tEnum) : TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
+			return tEnum != null ? ref(tEnum) : unknown();
 		}
 
 		@Override
@@ -596,12 +600,12 @@ import com.google.inject.Inject;
 
 			if (containingMemberDecl == null) {
 				// super at wrong location, will be checked in expression validator
-				return TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
+				return unknown();
 			}
 
 			final EObject container = containingMemberDecl.eContainer();
 			if (!(container instanceof N4ClassDeclaration)) {
-				return TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
+				return unknown();
 			}
 			final TClass containingClass = (TClass) ((N4ClassDeclaration) container).getDefinedType();
 			final TClassifier superClass = getDeclaredOrImplicitSuperType(G, containingClass);
@@ -627,7 +631,7 @@ import com.google.inject.Inject;
 				} else {
 					T = null;
 				}
-				return T != null ? TypeUtils.enforceNominalTyping(T) : TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
+				return T != null ? TypeUtils.enforceNominalTyping(T) : unknown();
 			} else if (superLiteral.eContainer() instanceof ParameterizedCallExpression) {
 				// case 2: super call, i.e. super()
 				if (containingMemberDecl.isConstructor()) {
@@ -635,21 +639,21 @@ import com.google.inject.Inject;
 					final TMethod ctor = containerTypesHelper.fromContext(superLiteral.eResource())
 							.findConstructor(effectiveSuperClass);
 					return ctor != null ? TypeUtils.createTypeRef(ctor)
-							: TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
+							: unknown();
 				} else {
 					// super() used in a normal method, getter or setter (not in a constructor)
 					// --> this is an error case, but error will be produced by validation rule
 					// --> make sure no error is produced in the type system to avoid duplicate errors
-					return TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
+					return unknown();
 				}
 			} else if (superLiteral.eContainer() instanceof NewExpression) {
 				// case 3: super with new keyword, i.e. new super OR new super(<args>)
 
 				// not yet supported
-				return TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
+				return unknown();
 			} else {
 				// super at wrong location, will be checked in Expression Validator
-				return TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
+				return unknown();
 			}
 		}
 
@@ -726,10 +730,10 @@ import com.google.inject.Inject;
 		public TypeRef caseIndexedAccessExpression(IndexedAccessExpression expr) {
 			if (expr.getTarget() == null || expr.getIndex() == null) {
 				// broken AST
-				return TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
+				return unknown();
 			} else if (expr.getTarget() instanceof SuperLiteral) {
 				// index access on super keyword is disallowed
-				return TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
+				return unknown();
 			}
 			// standard case:
 
@@ -785,7 +789,7 @@ import com.google.inject.Inject;
 				} else if (targetTypeRef.isDynamic()) {
 					T = anyTypeRefDynamic(G);
 				} else {
-					T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
+					T = unknown();
 				}
 			} else if (targetTypeRef.isDynamic()) {
 				T = anyTypeRefDynamic(G);
@@ -875,7 +879,7 @@ import com.google.inject.Inject;
 				}
 				propTypeRef = ctorTypeArg != null
 						? TypeUtils.createTypeTypeRef(ctorTypeArg, true)
-						: TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
+						: unknown();
 			} else if (receiverTypeRef.isDynamic() && prop != null && prop.eIsProxy()) {
 				// access to an unknown property of a dynamic type
 				propTypeRef = anyTypeRefDynamic(G2);
@@ -950,7 +954,7 @@ import com.google.inject.Inject;
 					typeSystemHelper.addSubstitutions(G2, expr, targetTypeRef);
 					T = ts.substTypeVariables(G2, T);
 					if (T == null) {
-						return TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
+						return unknown();
 					}
 					T = n4idlVersionResolver.resolveVersion(T, F);
 
@@ -980,7 +984,7 @@ import com.google.inject.Inject;
 				// type unresolved 'migrate'-calls as any+
 				return anyTypeRefDynamic(G);
 			} else {
-				return TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
+				return unknown();
 			}
 		}
 
@@ -1001,7 +1005,7 @@ import com.google.inject.Inject;
 
 		@Override
 		public TypeRef caseNewTarget(NewTarget nt) {
-			return TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
+			return unknown();
 		}
 
 		@Override
@@ -1167,7 +1171,7 @@ import com.google.inject.Inject;
 		@Override
 		public TypeRef caseCastExpression(CastExpression e) {
 			final TypeRef targetTypeRef = e.getTargetTypeRef();
-			return targetTypeRef != null ? targetTypeRef : TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
+			return targetTypeRef != null ? targetTypeRef : unknown();
 		}
 
 		// This is needed to remove the ambiguity:
@@ -1206,7 +1210,7 @@ import com.google.inject.Inject;
 		public TypeRef caseJSXElement(JSXElement jsxElem) {
 			final TClassifier classifierReactElement = reactHelper.lookUpReactElement(jsxElem);
 			if (classifierReactElement == null) {
-				return TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
+				return unknown();
 			}
 			return ref(classifierReactElement);
 		}

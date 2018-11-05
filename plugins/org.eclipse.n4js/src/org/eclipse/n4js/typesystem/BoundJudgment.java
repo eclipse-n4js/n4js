@@ -34,6 +34,7 @@ import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 
 /* package */ class BoundJudgment extends AbstractJudgment {
 
+	/** See {@link N4JSTypeSystem#upperBound(RuleEnvironment, TypeArgument)}. */
 	public TypeRef applyUpperBound(RuleEnvironment G, TypeArgument typeArg) {
 		final BoundSwitch theSwitch = new BoundSwitch(G, BoundType.UPPER);
 		final TypeRef result = theSwitch.doSwitch(typeArg);
@@ -44,6 +45,7 @@ import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 		return result;
 	}
 
+	/** See {@link N4JSTypeSystem#lowerBound(RuleEnvironment, TypeArgument)}. */
 	public TypeRef applyLowerBound(RuleEnvironment G, TypeArgument typeArg) {
 		final BoundSwitch theSwitch = new BoundSwitch(G, BoundType.LOWER);
 		final TypeRef result = theSwitch.doSwitch(typeArg);

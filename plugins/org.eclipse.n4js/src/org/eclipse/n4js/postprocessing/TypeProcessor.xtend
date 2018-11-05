@@ -133,7 +133,7 @@ public class TypeProcessor extends AbstractProcessor {
 				// ordinary typing of typable AST nodes
 				// -> simply ask Xsemantics
 				log(indentLevel, "asking Xsemantics ...");
-				val result = askXsemanticsForType(G, node);
+				val result = invokeTypeJudgmentToInferType(G, node);
 
 				val resultAdjusted = adjustResultForLocationInAST(G, result, N4JSASTUtils.skipParenExpressionDownward(node));
 
@@ -230,7 +230,7 @@ public class TypeProcessor extends AbstractProcessor {
 				if (!obj.isTypeModelElement) {
 					throw new IllegalStateException("not a type model element: " + obj)
 				}
-				return askXsemanticsForType(G, obj); // obj is a type model element, so this will just wrap it in a TypeRef (no actual inference)
+				return invokeTypeJudgmentToInferType(G, obj); // obj is a type model element, so this will just wrap it in a TypeRef (no actual inference)
 			}
 
 			// make sure post-processing on the containing N4JS resource is initiated
@@ -264,7 +264,7 @@ public class TypeProcessor extends AbstractProcessor {
 			// can happen for:
 			// - objects that are not contained in a Resource
 			// - objects that are contained in a Resource but not an N4JSResource
-			return askXsemanticsForType(G, obj);
+			return invokeTypeJudgmentToInferType(G, obj);
 		}
 	}
 
@@ -274,7 +274,7 @@ public class TypeProcessor extends AbstractProcessor {
 		// load state of containing N4JS resource
 		if (obj.isTypeModelElement) {
 			// for type model elements, we by-pass all caching ...
-			return askXsemanticsForType(G, obj); // obj is a type model element, so this will just wrap it in a TypeRef (no actual inference)
+			return invokeTypeJudgmentToInferType(G, obj); // obj is a type model element, so this will just wrap it in a TypeRef (no actual inference)
 		} else if (obj.isASTNode && obj.isTypableNode) {
 			// here we read from the cache (if AST node 'obj' was already processed) or forward-process 'obj'
 			val cache = res.getASTMetaInfoCacheVerifyContext();
@@ -335,12 +335,12 @@ public class TypeProcessor extends AbstractProcessor {
 
 					val expr = node.expressionOfVFP;
 					if (expr instanceof N4ClassExpression) {
-						return askXsemanticsForType(G, expr);
+						return invokeTypeJudgmentToInferType(G, expr);
 					}
 					if (expr instanceof NewExpression) {
 						val callee = expr.callee;
 						if (callee instanceof N4ClassExpression) {
-							val calleeType = askXsemanticsForType(G, callee);
+							val calleeType = invokeTypeJudgmentToInferType(G, callee);
 							val calleeTypeStaticType = tsh.getStaticType(G, calleeType as TypeTypeRef);
 							return TypeUtils.createTypeRef(calleeTypeStaticType);
 						}
@@ -361,7 +361,7 @@ public class TypeProcessor extends AbstractProcessor {
 				} else if (node instanceof TypeDefiningElement) {
 					return wrapTypeInTypeRef(G, node.definedType);
 				} else if (node instanceof Expression && node.eContainer instanceof YieldExpression) {
-					return askXsemanticsForType(G, node);
+					return invokeTypeJudgmentToInferType(G, node);
 				} else {
 					val msg = "handling of a legal case of cyclic forward references missing in TypeProcessor";
 					logErr(msg);

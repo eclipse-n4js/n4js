@@ -98,7 +98,7 @@ abstract class AbstractTypesystemTest {
 	def void assertExpectedTypeName(String expectedTypeName, Expression element) {
 
 		val G = newRuleEnvironment(element);
-		val result = ts.expectedTypeIn(G,element.eContainer, element);
+		val result = ts.expectedType(G,element.eContainer, element);
 
 		assertNotNull("No expected type inferred", result)
 		assertEquals("Wrong expected type inferred", expectedTypeName, result.typeRefAsString)

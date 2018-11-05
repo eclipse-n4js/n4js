@@ -148,7 +148,7 @@ package class TypeDeferredProcessor extends AbstractProcessor {
 						context = TypeUtils.createTypeRef(tte.eContainer as ContainerType<?>);
 					G2 = ts.createRuleEnvironmentForContext(context, G.contextResource);
 				}
-				var TypeArgument fieldTypeRef = askXsemanticsForType(G2, typedElem); // delegate to Xsemantics rule typeN4FieldDeclaration
+				var TypeArgument fieldTypeRef = invokeTypeJudgmentToInferType(G2, typedElem); // delegate to rule caseN4FieldDeclaration
 				if (useContext) {
 					fieldTypeRef = ts.substTypeVariables(G2, fieldTypeRef);
 				}

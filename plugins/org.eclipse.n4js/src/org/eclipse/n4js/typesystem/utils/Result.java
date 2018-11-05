@@ -13,10 +13,17 @@ package org.eclipse.n4js.typesystem.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.n4js.ts.typeRefs.TypeArgument;
+import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.utils.UtilN4;
 
 import com.google.common.base.Joiner;
 
+/**
+ * Result of subtype checking with {@link N4JSTypeSystem#subtype(RuleEnvironment, TypeArgument, TypeArgument)} and
+ * similar methods. In case of failure, it might provide a human-readable failure message and a cause in form of another
+ * instance of this class.
+ */
 public final class Result {
 
 	private final boolean success;
@@ -24,6 +31,7 @@ public final class Result {
 	private final boolean priority;
 	private final Result cause;
 
+	/** Creates an instance representing success. */
 	private Result() {
 		this.success = true;
 		this.failureMessage = null;
@@ -31,6 +39,7 @@ public final class Result {
 		this.cause = null;
 	}
 
+	/** Creates an instance representing failure. Message and cause are optional, i.e. may be <code>null</code>. */
 	private Result(String failureMessage, boolean priority, Result cause) {
 		this.success = false;
 		this.failureMessage = failureMessage;
@@ -38,30 +47,68 @@ public final class Result {
 		this.cause = cause;
 	}
 
+	/** Tells if this result represents success. */
 	public boolean isSuccess() {
 		return success;
 	}
 
+	/** Tells if this result represents failure. */
 	public boolean isFailure() {
 		return !success;
 	}
 
+	/**
+	 * Returns a human-readable failure message or <code>null</code> iff this result represents success OR no message is
+	 * available.
+	 */
 	public String getFailureMessage() {
 		return failureMessage;
 	}
 
+	/**
+	 * Tells if this result is a failure AND was marked as a having a higher priority. Priority failures have their
+	 * failure messages show up in the UI even if they are only the {@link #getCause() causes} of other, non-priority
+	 * failures. For details about when exactly a priority failure's message will show up, see
+	 * {@link #getCompiledFailureMessage()}.
+	 */
 	public boolean isPriority() {
 		return priority;
 	}
 
+	/**
+	 * Returns another failure that caused the receiving failure or <code>null</code> if the receiving result represents
+	 * success OR does not have a cause.
+	 */
 	public Result getCause() {
 		return cause;
 	}
 
+	/**
+	 * Tells if this result represents failure AND either is a priority failure itself or is directly or indirectly
+	 * caused by a priority failure.
+	 */
 	public boolean isOrIsCausedByPriority() {
 		return getPriorityFailure() != null;
 	}
 
+	/**
+	 * If {@link #isOrIsCausedByPriority()} returns true, this method will return the first priority failure (maybe the
+	 * receiving result itself); otherwise <code>null</code> is returned.
+	 */
+	public Result getPriorityFailure() {
+		if (!success && priority) {
+			return this;
+		}
+		if (cause != null) {
+			return cause.getPriorityFailure();
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the failure message of the result returned by {@link #getPriorityFailure()} (if non-<code>null</code>) or
+	 * otherwise the receiving failure's message.
+	 */
 	public String getPriorityFailureMessage() {
 		Result priorityFailure = getPriorityFailure();
 		String priorityMessage = priorityFailure != null ? priorityFailure.getFailureMessage() : null;
@@ -103,35 +150,42 @@ public final class Result {
 		return result;
 	}
 
-	public Result getPriorityFailure() {
-		if (!success && priority) {
-			return this;
-		}
-		if (cause != null) {
-			return cause.getPriorityFailure();
-		}
-		return null;
+	/**
+	 * If the receiving result is a failure without failure message (i.e. {@link #getFailureMessage()} returns
+	 * <code>null</code>), then this method will return a copy of the receiving failure with the failure message set to
+	 * the given new failure message. Otherwise the receiving result is returned unchanged.
+	 */
+	public Result setDefaultFailureMessage(String newFailureMessage) {
+		return isFailure() && getFailureMessage() == null ? new Result(newFailureMessage, priority, cause) : null;
 	}
 
+	/**
+	 * If this result is a failure with a cause, returns a copy of this result without a cause; otherwise this result is
+	 * returned unchanged.
+	 */
 	public Result trimCauses() {
-		return isSuccess() ? this : new Result(failureMessage, priority, null);
+		return isSuccess() || getCause() == null ? this : new Result(failureMessage, priority, null);
 	}
 
+	/**
+	 * Create an instance representing success.
+	 */
 	public static Result success() {
 		return new Result();
 	}
 
+	/**
+	 * Create an instance representing failure.
+	 *
+	 * @param failureMessage
+	 *            a human-readable message explaining the failure or <code>null</code> if not available.
+	 * @param priority
+	 *            whether this failure's message should be presented to the end-user even if this failure is only the
+	 *            cause of another, higher-level failure. See {@link #getCompiledFailureMessage()}.
+	 * @param cause
+	 *            another failure that caused the newly created failure or <code>null</code> if not applicable.
+	 */
 	public static Result failure(String failureMessage, boolean priority, Result cause) {
 		return new Result(failureMessage, priority, cause);
-	}
-
-	public static Result failure(String failureMessage, Result template) {
-		if (!template.isFailure()) {
-			throw new IllegalArgumentException("template is not a failure");
-		}
-		if (template.getFailureMessage() == null) {
-			return new Result(failureMessage, template.priority, template.cause);
-		}
-		return new Result(failureMessage, false, template);
 	}
 }

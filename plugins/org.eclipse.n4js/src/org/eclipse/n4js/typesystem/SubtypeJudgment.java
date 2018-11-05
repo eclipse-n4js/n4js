@@ -79,13 +79,14 @@ import com.google.common.collect.Iterables;
 
 /* package */ final class SubtypeJudgment extends AbstractJudgment {
 
+	/** See {@link N4JSTypeSystem#subtype(RuleEnvironment, TypeArgument, TypeArgument)}. */
 	public Result apply(RuleEnvironment G, TypeArgument left, TypeArgument right) {
 		Result result = doApply(G, left, right);
 		if (result.isFailure()) {
 			// set default failure message
 			final String leftMsg = left != null ? left.getTypeRefAsString() : "<null>";
 			final String rightMsg = right != null ? right.getTypeRefAsString() : "<null>";
-			return Result.failure(leftMsg + " is not a subtype of " + rightMsg, result);
+			return result.setDefaultFailureMessage(leftMsg + " is not a subtype of " + rightMsg);
 		}
 		return result;
 	}

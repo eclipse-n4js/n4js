@@ -117,7 +117,7 @@ class JudgmentExpectedTypeInTest extends AbstractTypesystemTest {
 		assertEquals("B", (result as ParameterizedTypeRef).declaredType.name)
 
 		val aInAssignment = bToA.rhs
-		var expectedType = ts.expectedTypeIn(G, aInAssignment.eContainer, aInAssignment);
+		var expectedType = ts.expectedType(G, aInAssignment.eContainer, aInAssignment);
 		assertNotNull(expectedType)
 
 		// eventually:

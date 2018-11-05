@@ -28,7 +28,6 @@ import org.eclipse.n4js.ts.typeRefs.ThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRefStructural;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
-import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.typeRefs.util.TypeRefsSwitch;
@@ -39,23 +38,11 @@ import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.Pair;
 
-/**
- * Substitutes type variables (that is, replaces type variables with actual type arguments taken from the rule
- * environment).
- * <p>
- * The given typeArg will never be changed, instead a copy will be created to reflect the substitution. If nothing was
- * substituted (i.e. given typeArg does not contain any type variable or only type variables without a binding in the
- * rule environment), then no copy will be created and typeArg will be returned. Therefore, client code can do an
- * identity check on the return value to find out if a substitution was performed.<br>
- * TODO currently unnecessary copies are created in some cases; clean-up code to make last statement valid!
- * <p>
- * Invariant: if you put in a TypeRef, you'll get a TypeRef back (only other case: put in a Wildcard and you'll get a
- * Wildcard). But this is not true for subclasses of TypeRef, e.g. put in a FunctionTypeRef and you might get a
- * FunctionTypeExpression back).
- */
 /* package */ final class SubstTypeVariablesJudgment extends AbstractJudgment {
 
 	/**
+	 * See {@link N4JSTypeSystem#substTypeVariables(RuleEnvironment, TypeArgument)}.
+	 * <p>
 	 * Never returns <code>null</code>, EXCEPT if <code>null</code> is passed in as type argument.
 	 */
 	public TypeArgument apply(RuleEnvironment G, TypeArgument typeArg) {
@@ -161,7 +148,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 		 */
 		@Override
 		public TypeArgument caseFunctionTypeRef(FunctionTypeRef typeRef) {
-			return caseFunctionTypeExprOrRef(typeRef); // FIXME delegation!!!! still needed?
+			return caseFunctionTypeExprOrRef(typeRef);
 		}
 
 		@Override
@@ -270,7 +257,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 					} else {
 						addInconsistentSubstitutions(G, typeVar, l); // will have no effect unless recording was turned
 						// on by a validation (see method RuleEnvironmentExtensions#recordInconsistentSubstitutions())
-						result = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
+						result = unknown();
 					}
 					TypeUtils.copyTypeModifiers(result, typeRef);
 				} else {
