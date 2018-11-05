@@ -177,7 +177,7 @@ If the tag binds to a component, the following constraints must hold:
 --
 If the lower-case tag does not bind to a function or class declaration, the following constraints must be hold:
 
-* If the tag is not a pre-defined html tag, a warning is issued.
+* If the tag is neither a pre-defined HTML tag nor an SVG tag, a warning is issued.
 * If an attribute of the tag is not a pre-defined property of the html tag or react specific attributes, a warning is issued. This requirement is currently NOT supported.
 --
 
