@@ -309,14 +309,8 @@ import com.google.inject.Inject;
 			if (property.getDeclaredTypeRef() != null) {
 				T = property.getDeclaredTypeRef();
 			} else if (property.getExpression() != null) {
-				TypeRef E = ts.type(G, property.getExpression());
-				E = ts.upperBound(G, E); // take upper bound to get rid of ExistentialTypeRef (if any)
-				Type declType = E.getDeclaredType();
-				if (declType == undefinedType(G) || declType == nullType(G) || declType == voidType(G)) {
-					T = anyTypeRef(G);
-				} else {
-					T = E;
-				}
+				final TypeRef E = ts.type(G, property.getExpression());
+				T = typeSystemHelper.sanitizeTypeOfVariableFieldProperty(G, E);
 			} else {
 				T = anyTypeRef(G);
 			}
@@ -330,14 +324,8 @@ import com.google.inject.Inject;
 			if (fieldDecl.getDeclaredTypeRef() != null) {
 				T = fieldDecl.getDeclaredTypeRef();
 			} else if (fieldDecl.getExpression() != null) {
-				TypeRef E = ts.type(G, fieldDecl.getExpression());
-				E = ts.upperBound(G, E);
-				Type declType = E.getDeclaredType();
-				if (declType == undefinedType(G) || declType == nullType(G) || declType == voidType(G)) {
-					T = anyTypeRef(G);
-				} else {
-					T = E;
-				}
+				final TypeRef E = ts.type(G, fieldDecl.getExpression());
+				T = typeSystemHelper.sanitizeTypeOfVariableFieldProperty(G, E);
 			} else {
 				T = anyTypeRef(G);
 			}
@@ -426,25 +414,33 @@ import com.google.inject.Inject;
 
 		@Override
 		public TypeRef caseGetterDeclaration(GetterDeclaration getter) {
-			if (getter.getDeclaredTypeRef() != null) {
-				return getter.getDeclaredTypeRef();
+			final TypeRef declTypeRef = getter.getDeclaredTypeRef();
+			if (declTypeRef != null) {
+				return declTypeRef;
 			} else {
 				final TGetter defGetter = getter.getDefinedGetter();
-				if (defGetter != null && defGetter.getDeclaredTypeRef() != null) {
-					return defGetter.getDeclaredTypeRef();
+				final TypeRef defDeclTypeRef = defGetter != null ? defGetter.getDeclaredTypeRef() : null;
+				if (defDeclTypeRef != null) {
+					return defDeclTypeRef;
 				} else {
 					return anyTypeRef(G);
 				}
 			}
 		}
 
-		// FIXME inconsistent with previous case method!!!
 		@Override
 		public TypeRef caseSetterDeclaration(SetterDeclaration setter) {
-			if (setter.getDeclaredTypeRef() != null) {
-				return setter.getDeclaredTypeRef();
+			final TypeRef declTypeRef = setter.getDeclaredTypeRef();
+			if (declTypeRef != null) {
+				return declTypeRef;
 			} else {
-				return anyTypeRef(G);
+				final TSetter defSetter = setter.getDefinedSetter();
+				final TypeRef defDeclTypeRef = defSetter != null ? defSetter.getDeclaredTypeRef() : null;
+				if (defDeclTypeRef != null) {
+					return defDeclTypeRef;
+				} else {
+					return anyTypeRef(G);
+				}
 			}
 		}
 
@@ -545,16 +541,16 @@ import com.google.inject.Inject;
 					"rule caseArrayLiteral() should never be invoked (PolyComputer is responsible for typing ArrayLiterals)");
 		}
 
-		// FIXME the following should probably be obsolete as well:
 		@Override
 		public TypeRef caseArrayPadding(ArrayPadding object) {
-			return undefinedTypeRef(G);
+			throw new IllegalStateException(
+					"rule caseArrayPadding() should never be invoked (PolyComputer is responsible for typing ArrayLiterals and their children)");
 		}
 
-		// FIXME the following should probably be obsolete as well:
 		@Override
 		public TypeRef caseArrayElement(ArrayElement e) {
-			return ts.type(G, e.getExpression());
+			throw new IllegalStateException(
+					"rule caseArrayElement() should never be invoked (PolyComputer is responsible for typing ArrayLiterals and their children)");
 		}
 
 		// ----------------------------------------------------------------------
@@ -884,7 +880,6 @@ import com.google.inject.Inject;
 				// access to an unknown property of a dynamic type
 				propTypeRef = anyTypeRefDynamic(G2);
 			} else {
-				// TODO: Is wrapping really required here?
 				propTypeRef = ts.type(wrap(G2), prop);
 				if (expr.isParameterized()) {
 					typeSystemHelper.addSubstitutions(G2, expr);

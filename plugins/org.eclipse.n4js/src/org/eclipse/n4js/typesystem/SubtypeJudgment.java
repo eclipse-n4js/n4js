@@ -42,7 +42,6 @@ import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef;
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
@@ -54,7 +53,6 @@ import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef;
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.types.ContainerType;
-import org.eclipse.n4js.ts.types.NullType;
 import org.eclipse.n4js.ts.types.PrimitiveType;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TEnum;
@@ -180,10 +178,6 @@ import com.google.common.collect.Iterables;
 				TypeUtils.copyTypeModifiers(rightFixed, right);
 				return applyFunctionTypeExprOrRef(G, (FunctionTypeExprOrRef) left, rightFixed);
 			} else {
-				if (left instanceof FunctionTypeExpression && isObject(G, right)) {
-					// FIXME this special case implements bogus legacy behavior! should be removed asap!
-					return resultFromBoolean(false);
-				}
 				return resultFromBoolean(
 						isObject(G, right)
 								|| isFunction(G, right));
@@ -203,7 +197,7 @@ import com.google.common.collect.Iterables;
 		return requireAllSuccess(
 				U.getTypeRefs().stream().map(
 						T -> ts.subtype(G, T, S)))
-								.trimCauses(); // FIXME legacy behavior; refine error messages!
+								.trimCauses(); // TODO legacy behavior; could improve error messages here! (same below)
 	}
 
 	private Result applyUnion_Right(RuleEnvironment G,
@@ -211,7 +205,7 @@ import com.google.common.collect.Iterables;
 		return requireExistsSuccess(
 				U.getTypeRefs().stream().map(
 						T -> ts.subtype(G, S, T)))
-								.trimCauses(); // FIXME legacy behavior; refine error messages!
+								.trimCauses(); // legacy behavior; could improve error messages here!
 	}
 
 	private Result applyIntersection_Left(RuleEnvironment G,
@@ -219,7 +213,7 @@ import com.google.common.collect.Iterables;
 		return requireExistsSuccess(
 				I.getTypeRefs().stream().map(
 						T -> ts.subtype(G, T, S)))
-								.trimCauses(); // FIXME legacy behavior; refine error messages!
+								.trimCauses(); // legacy behavior; could improve error messages here!
 	}
 
 	private Result applyIntersection_Right(RuleEnvironment G,
@@ -227,7 +221,7 @@ import com.google.common.collect.Iterables;
 		return requireAllSuccess(
 				I.getTypeRefs().stream().map(
 						T -> ts.subtype(G, S, T)))
-								.trimCauses(); // FIXME legacy behavior; refine error messages!
+								.trimCauses(); // legacy behavior; could improve error messages here!
 	}
 
 	private Result applyParameterizedTypeRef(RuleEnvironment G,
@@ -575,7 +569,7 @@ import com.google.common.collect.Iterables;
 			final TypeRef upperBound = ts.upperBound(G, wildThing);
 			final TypeRef lowerBound = ts.lowerBound(G, wildThing);
 			return requireAllSuccess(
-					ts.subtype(G, right, upperBound), // FIXME reconsider this logic!!!
+					ts.subtype(G, right, upperBound),
 					ts.subtype(G, lowerBound, right));
 		} else {
 			// standard case: closed existential
@@ -615,10 +609,6 @@ import com.google.common.collect.Iterables;
 			// existential
 			if (left == existentialTypeRef) {
 				return success(); // performance tweak
-			}
-			if (left instanceof ParameterizedTypeRef &&
-					((ParameterizedTypeRef) left).getDeclaredType() instanceof NullType) {
-				return success(); // FIXME probably no longer required!
 			}
 			final TypeRef lowerExt = ts.lowerBound(G, existentialTypeRef);
 			return requireAllSuccess(

@@ -37,7 +37,7 @@ var bin2 : boolean =  funcS() in new A()
 var bin3 : boolean =  funcn() in new A()
 
 // OK, since type is any, no checks:
-var bin4 : boolean =  funcS() in (func as Object)
+var bin4 : boolean =  funcS() in func
 
 
 
