@@ -224,6 +224,8 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 			}
 		});
 
+		control.requestLayout();
+
 		return control;
 	}
 
