@@ -12,8 +12,7 @@ package org.eclipse.n4js.validation.validators
 
 import com.google.common.collect.Lists
 import com.google.inject.Inject
-import java.util.Arrays
-import java.util.List
+import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.JSXElement
@@ -57,28 +56,6 @@ class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 	@Inject private N4JSTypeSystem ts;
 	@Inject private TypeSystemHelper tsh
 	@Inject private extension ReactHelper reactHelper;
-
-	// Source: http://www.w3schools.com/tags/
-	private static final List<String> htmlTags = Arrays.asList(
-		"a","abbr",	"address", "area", "article", "aside", "audio",
-		"b", "base", "bdi", "bdo", "blockquote", "body", "br", "button",
-		"canvas", "caption", "cite", "code", "col", "colgroup",
-		"datalist", "dd", "del", "details", "dfn", "dialog", "div", "dl", "dt",
-		"em", "embed",
-		"fieldset", "figcaption", "figure", "footer", "form",
-		"h1", "h2", "h3", "h4", "h5", "h6", "head", "header", "hr", "html",
-		"i", "iframe", "img", "input", "ins",
-		"kbd", "keygen",
-		"label", "legend", "li", "link",
-		"main", "map", "mark", "menu", "menuitem", "meta", "meter",
-		"nav", "noscript",
-		"object", "ol", "optgroup", "option",
-		"p", "param", "pre", "progress", "q", "rp", "rt", "ruby",
-		"s", "samp", "script", "section", "select", "small", "source", "span",
-		"strong", "style", "sub", "summary", "sup", "svg",
-		"table", "tbody", "td", "textarea", "tfoot", "th", "thead", "time", "title", "tr", "track",
-		"u", "ul", "use", "var", "video", "wbr"
-	)
 
 	/**
 	 * NEEEDED
@@ -181,13 +158,14 @@ class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 			if ((refName !== null) && Character::isLowerCase(refName.charAt(0))) {
 				// See Req. IDE-241118
 				// If the JSX element name starts with lower case, warning if it is unknown HTML tag
-				if (!htmlTags.contains(refName)) {
-					val message = getMessageForJSX_HTMLTAG_UNKNOWN(refName);
+				if (!N4JSGlobals.HTML_TAGS.contains(refName)
+					&& !N4JSGlobals.SVG_TAGS.contains(refName)) {
+					val message = getMessageForJSX_TAG_UNKNOWN(refName);
 					addIssue(
 						message,
 						jsxElem,
 						JSX_ELEMENT__JSX_ELEMENT_NAME,
-						JSX_HTMLTAG_UNKNOWN
+						JSX_TAG_UNKNOWN
 					);
 				}
 			} else {
