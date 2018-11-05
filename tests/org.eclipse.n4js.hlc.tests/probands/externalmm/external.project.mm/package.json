@@ -4,13 +4,19 @@
 	"dependencies": {
 		"express": "4.13.4",
 		"jade": "1.11.0",
-		"lodash": "4.6.0",
+		"lodash": "4.16.3",
 		"karma": "0.13.21",
 		"bar": "0.1.2",
 		"pouchdb-find": "0.10.3",
-		"next": "1.1.1",
-		"body-parser": "1.15.0",
-		"n4js-runtime-node": "*"
+		"next": "5.0.0",
+		"react": "16.2.0",
+		"react-dom": "16.2.0",
+		"body-parser": "1.18.2",
+		"n4js-runtime-node": "*",
+		"@n4jsd/express": "<=4.13.*",
+		"@n4jsd/lodash": "<=4.16.*",
+		"@n4jsd/next": "<=5.0.*",
+		"@n4jsd/body-parser": "<=1.18.*"
 	},
 	"n4js": {
 		"projectType": "library",
@@ -24,12 +30,6 @@
 		},
 		"requiredRuntimeLibraries": [
 			"n4js-runtime-node"
-		],
-		"typeDependencies": {
-			"express-n4jsd": "<=4.13.4",
-			"lodash-n4jsd": "<=4.6.0",
-			"next-n4jsd": "<=1.1.1",
-			"body-parser-n4jsd": "<=1.15.0"
-		}
+		]
 	}
 }

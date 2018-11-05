@@ -107,12 +107,13 @@ public class InstallRuntimeFromNpmPluginTest extends AbstractBuilderParticipantT
 						// test project of type 'library'
 						.withType(ProjectType.LIBRARY)
 						// add dependency to node runtime environment in specific version
-						.withDependency("n4js-runtime-node", "0.10.0-alpha.7aa7bbc0"));
+						.withDependency("n4js-runtime-node", "0.1.0"));
 
 		configureProjectWithXtext(project);
 
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
+		assertNoIssues();
 
 		// create hello world file
 		createTestFile(project.getFolder("src"), MODULE_TO_RUN, "console.log(\"Hello World\");");

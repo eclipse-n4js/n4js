@@ -14,12 +14,15 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.AbstractTreeIterator;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
@@ -107,8 +110,13 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 		return description;
 	}
 
-	public Iterator<URI> getAllProjectsLocations() {
+	public Iterator<URI> getAllProjectLocationsIterator() {
 		return projectElementHandles.values().stream().map(handle -> handle.getLocation()).iterator();
+	}
+
+	@Override
+	public Collection<URI> getAllProjectLocations() {
+		return projectElementHandles.values().stream().map(handle -> handle.getLocation()).collect(Collectors.toList());
 	}
 
 	@Override
@@ -144,8 +152,15 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 					false) {
 				@Override
 				protected Iterator<? extends File> getChildren(Object root) {
-					if (root instanceof File && ((File) root).isDirectory()) {
-						return Arrays.asList(((File) root).listFiles()).iterator();
+					if (root instanceof File) {
+						final File file = (File) root;
+						if (file.isDirectory()) {
+							// do not iterate over contents of nested node_modules folders
+							if (file.getName().equals(N4JSGlobals.NODE_MODULES)) {
+								return Collections.emptyIterator();
+							}
+							return Arrays.asList(((File) root).listFiles()).iterator();
+						}
 					}
 					return Collections.emptyIterator();
 				}

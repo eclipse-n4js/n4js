@@ -6,7 +6,9 @@
 		"react-dom": "@16.2.0",
 		"n4js-runtime-html5": "*",
 		"n4js-runtime-fetch": "*",
-		"n4js-runtime-es2015": "*"
+		"n4js-runtime-es2015": "*",
+		"@n4jsd/react": "*",
+		"@n4jsd/react-dom": "*"
 	},
 	"n4js": {
 		"projectType": "library",
@@ -22,10 +24,6 @@
 			"n4js-runtime-html5",
 			"n4js-runtime-fetch",
 			"n4js-runtime-es2015"
-		],
-		"typeDependencies": {
-			"react-n4jsd": "*",
-			"react-dom-n4jsd": "*"
-		}
+		]
 	}
 }

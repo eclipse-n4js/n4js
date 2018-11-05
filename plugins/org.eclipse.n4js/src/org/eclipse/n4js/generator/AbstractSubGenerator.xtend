@@ -213,7 +213,9 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 		val project = n4jsCore.findProject(n4jsSourceURI).orNull();
 		if (project !== null) {
 			val projectType = project.getProjectType();
-			if (projectType == ProjectType.VALIDATION || projectType == ProjectType.DEFINITION) {
+			if (projectType == ProjectType.VALIDATION || 
+				projectType == ProjectType.DEFINITION ||
+				projectType == ProjectType.PLAINJS) {
 				return false;
 			}
 		}

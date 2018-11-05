@@ -13,18 +13,25 @@ package org.eclipse.n4js.external;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
+import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.utils.URIUtils;
+import org.eclipse.xtext.util.Pair;
 
 import com.google.inject.ImplementedBy;
+import com.google.inject.Inject;
 
 /**
  * Representation of a workspace (with possible multiple workspace roots) that is used for storing external library
@@ -33,28 +40,46 @@ import com.google.inject.ImplementedBy;
 @ImplementedBy(HlcExternalLibraryWorkspace.class)
 public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 
+	@Inject
+	private ExternalLibraryPreferenceStore externalLibraryPreferenceStore;
+
 	/** Contains the projects that were built/cleaned and affected. */
 	static public class RegisterResult {
 		/** All external projects that were built/cleaned */
 		final public Set<URI> externalProjectsDone;
 		/** All workspace projects that were affected */
 		final public Set<URI> affectedWorkspaceProjects;
+		/** All projects that were wiped from index */
+		final public Set<URI> wipedProjects;
 
 		RegisterResult() {
 			this.externalProjectsDone = freeze(null);
 			this.affectedWorkspaceProjects = freeze(null);
+			this.wipedProjects = freeze(null);
 		}
 
 		/** Constructor */
 		public RegisterResult(Collection<URI> extPrjsDone, Collection<URI> wsPrjsAffected) {
+			this(extPrjsDone, wsPrjsAffected, null);
+		}
+
+		/** Constructor */
+		public RegisterResult(Collection<URI> extPrjsDone, Collection<URI> wsPrjsAffected, Collection<URI> prjsWiped) {
 			this.externalProjectsDone = freeze(extPrjsDone);
 			this.affectedWorkspaceProjects = freeze(wsPrjsAffected);
+			this.wipedProjects = freeze(prjsWiped);
 		}
 
 		/** Constructor */
 		public RegisterResult(IProject[] allProjectsToClean, IProject[] wsPrjAffected) {
+			this(allProjectsToClean, wsPrjAffected, null);
+		}
+
+		/** Constructor */
+		public RegisterResult(IProject[] allProjectsToClean, IProject[] wsPrjAffected, Collection<URI> prjsWiped) {
 			this.externalProjectsDone = freeze(getURIs(allProjectsToClean));
 			this.affectedWorkspaceProjects = freeze(getURIs(wsPrjAffected));
+			this.wipedProjects = freeze(prjsWiped);
 		}
 
 		static private Set<URI> freeze(Collection<URI> prjs) {
@@ -121,6 +146,34 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 	public abstract Collection<N4JSExternalProject> getProjects();
 
 	/**
+	 * Returns a map with name and version of all available external projects.
+	 *
+	 * @return map of name and version of the external projects.
+	 */
+	public abstract Map<String, VersionNumber> getProjectNameVersionMap();
+
+	/**
+	 * Returns with all external projects including those that are dependencies of plain-JS projects.
+	 *
+	 * @return the external projects that are actually on the HDD.
+	 */
+	public abstract List<Pair<URI, ProjectDescription>> getProjectsIncludingUnnecessary();
+
+	/**
+	 * Expensive. Computes available external projects.
+	 *
+	 * @return the external projects.
+	 */
+	public abstract List<Pair<URI, ProjectDescription>> computeProjectsIncludingUnnecessary();
+
+	/**
+	 * Returns with all external projects that have the given name.
+	 *
+	 * @return the external projects that have the given name.
+	 */
+	public abstract List<N4JSExternalProject> getProjectsForName(String projectName);
+
+	/**
 	 * Returns with all existing external projects that are contained in the given external library root location.
 	 *
 	 * @param rootLocation
@@ -139,16 +192,6 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 	public abstract Collection<N4JSExternalProject> getProjectsIn(Collection<java.net.URI> rootLocations);
 
 	/**
-	 * Returns with all existing external project descriptions that are contained in the given external library root
-	 * location.
-	 *
-	 * @param rootLocation
-	 *            the location of the external library root.
-	 * @return an iterable of external project descriptions available from the given external library root location.
-	 */
-	public abstract Collection<ProjectDescription> getProjectsDescriptions(java.net.URI rootLocation);
-
-	/**
 	 * Returns with the project with the given name. Or {@code null} if the project does not exist.
 	 *
 	 * @param projectName
@@ -159,6 +202,8 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 
 	/**
 	 * Returns with the project with the given location. Or {@code null} if the project does not exist.
+	 * <p>
+	 * Will also work for <i>unnecessary</i> projects.
 	 *
 	 * @param projectLocation
 	 *            the location of the project.
@@ -186,5 +231,35 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 	 * yet, hence not available when injecting this instance.
 	 */
 	public abstract void updateState();
+
+	/** @return a root location for a given resource or project */
+	public java.net.URI getRootLocationForResource(org.eclipse.emf.common.util.URI nestedLocation) {
+		return getRootLocationForResource(externalLibraryPreferenceStore.getLocations(), nestedLocation);
+	}
+
+	/** @return the matching root location for a set of root locations and a resource or project */
+	static final public java.net.URI getRootLocationForResource(Collection<java.net.URI> rootLocations,
+			org.eclipse.emf.common.util.URI nestedLocation) {
+
+		if (nestedLocation == null || nestedLocation.isEmpty() || !nestedLocation.isFile()) {
+			return null;
+		}
+
+		TreeMap<String, java.net.URI> rootLocationMap = new TreeMap<>();
+		for (java.net.URI loc : rootLocations) {
+			String locStr = loc.toString();
+			rootLocationMap.put(locStr, loc);
+		}
+
+		String nestedLocStr = nestedLocation.toString();
+		String rootLocStr = rootLocationMap.floorKey(nestedLocStr);
+		if (rootLocStr != null) {
+			return rootLocationMap.get(rootLocStr);
+		}
+		return null;
+	}
+
+	/** @return true iff the project at the given location is a necessary (see ExternalProjectMappings) project. */
+	public abstract boolean isNecessary(URI location);
 
 }

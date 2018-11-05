@@ -132,7 +132,7 @@ In a test project, the tested projects can be specified via `testee`.
 --
 
 === Type Definitions
-Projects of type "definition" are special projects which only provide type information for another so-called _implementation project_,  which only provides executable JS files .
+Projects of type "definition" are special projects which only provide type information for another so-called _implementation project_,  which only provides executable JS files.
 
 Generally, client projects that depend on a given _implementation project_ may additionally declare a dependency on a corresponding type definitions project, in order to integrate type information on the implementation project. 
 This is implemented by means of module-level shadowing. 
@@ -148,7 +148,6 @@ For type definition projects, the following constraints must hold true with rega
 
 1. They must declare their _implementation project_ via the <<package-json-definesPackage>> property in their `package.json` file.
 2. They must not declare an output folder.
-3. They may not declare any type dependencies via the <<package-json-typeDependencies>> property.
 
 --
 
@@ -230,8 +229,11 @@ runtimeEnvironment:::
 runtimeLibrary:::
   Runtime libraries. See <<Runtime Environment and Runtime Libraries>>.
 validation:::
-  A project in which `.n4js` files are only being validated, not transpiled. This is used
-  for plain npm projects and is also the default project type.
+  A project in which `.n4js` files are only being validated, not transpiled. This is used for projects
+  that are implemented in terms of `.js` files but that also provide type information in terms of `.n4jsd` files.
+plainjs:::
+  A project which only contains `.js` files and no N4JS resources. The contained JS files are only indexed to allow
+  for dynamic imports of specific JavaScript modules. Projects of this type are not being transpiled.
 vendorId::
   (string) Globally unique identifier for the component's vendor.
   Used for the `@Internal` accessibility modifier.
@@ -369,10 +371,6 @@ execModule::
 definesPackage::
   (string) The name of the package this component provides type definitions for. Only components of project type "definition" may declare this property.
 
-[[package-json-typeDependencies, typeDependencies]]
-typeDependencies::
-  (object) A list of type dependencies (same format as the regular "dependencies" section). This list of dependencies declares type definition projects that are required to successfully compile this component. The listed dependencies are pure compile-time dependencies. All components, but components of project type "definition" may declare this property.
-
 
 All properties described above are optional. The following default values apply:
 
@@ -380,7 +378,7 @@ All properties described above are optional. The following default values apply:
 | *Property*  | *Default Value*
 | name        | name of the folder containing the `package.json` file
 | version     | "0.0.1"
-| projectType | "validation"
+| projectType | "plainjs"
 | vendorId    | "vendor.default"
 | mainModule  | "index"
 | output      | "."
@@ -501,13 +499,10 @@ way:
 Examples of using external source fragments and filters are given in <<_implementation-of-external-declarations>>, see <<external-definitions-and-implementations>>.
 
 
-.Type Dependencies
+.Dependencies to Definition Projects
 [req,id=GH-821001,version=1]
 --
-Each listed project in the "typeDependencies" section of a project's `package.json` file must fulfill the following properties:
-
-. Only components of type "definition" may be listed as type dependency.
-. For each listed type dependency, a corresponding dependency (in the \[dev\]dependencies section) must be declared, whose "name" matches the "definesPackage" property value of the specified type dependency.
+. For each listed project dependency of type "definition", a corresponding dependency (in the (dev)dependencies section) must be declared, whose "name" matches the "definesPackage" property value of the definition project.
 --
 
 
@@ -546,7 +541,7 @@ module specifier should have one of the following forms:
 Thus, the N4JS project name, which includes the scope name, is simply used in place of an ordinary, non-scoped
 project's name. This is in line with conventions in Javascript.
 
-.GeneralConstraints
+.General Constraints
 [req,id=GH-1026,version=1]
 --
 1. The name given in the package.json file (i.e. value of top-level property "name") must be equal to
@@ -637,6 +632,161 @@ An N4JS Component `C` can be executed in an runtime environment `E`, written as 
 ++++
 
 --
+
+
+
+[[sec:N4JS-Type-Definitions]]
+.N4JS Type Definitions
+== N4JS Type Definitions
+
+N4JS projects can depend on ordinary JavaScript projects by including them in the package.json file.
+From there on, modules of those JavaScript projects can be imported when writing N4JS code.
+However, since JavaScript is untyped there will not be any type information for e.g. classes, functions
+of ordinary JavaScript projects unless this type information is provided by a type definition project.
+Type definition projects do only contain n4jsd files that reflect the classes and functions of a specific npm.
+To refer to a JavaScript npm, the term _plain-JS project_ will be used.
+
+
+=== Specify Type Definition
+
+A type definition project is structured like a normal npm.
+The major difference is that it provides n4jsd files instead of js files.
+These n4jsd files are named like and located at the exact position in the file tree as their js-counterparts.
+This ensures the type definition module and the corresponding plain-JS module to have the same fully-qualified name.
+Besides the usual properties the package.json file usually needs to specify the following properties in the n4js section.
+
+
+[source]
+.Package.json: Important properties for type definition projects
+{
+	"n4js": {
+		"projectType": "definition"
+		"definesPackage": "..."
+		"mainModule": "..."
+	}
+}
+
+The project type declares this project to be a type definition projects.
+Consequently, it has to also declare the name for which plain-JS project its type definitions are provided (using `definesPackage`).
+Lastly, the main module has to be specified since this information will not be taken from the package.json of the plain-JS project.
+In case the plain-JS project does not have a main module or the main module is located at the package root,
+the mainModule property can be omitted.
+
+
+
+=== Name Conventions
+
+A type definition package can have an arbitrary name and define an arbitrary npm package.
+This can be handy for testing purposes or just creating some temporary type definitions for a local package.
+However, we chose to use a convention to simplify finding the right type definition package for a specific plain-JS project.
+First, the scope `@n4jsd` and second the exact name of the plain-JS project is used.
+For instance, when a user wants to install type definitions for the plain-JS project `express`,
+our related type definitions are called `@n4jsd/express`.
+
+
+=== Version Conventions
+
+Since the plain-JS project will evolve over time and publish different versions, the need arises to also
+publish the type definition project in different versions that reflect this evolution.
+In addition to the evolution of the plain-JS project, a new version of the type definition project can
+also become necessary in case a bug in the type definitions was found or in case the language of N4JS changes
+and the type definitions have to be adjusted accordingly.
+Effectively, this will lead to a situation where both the implementation and the type definition project have
+a version that are technically unrelated from an npm point of view, but still are somehow related to each other
+from a semantical point of view.
+To keep the distinct versioning of both of the projects manageable,
+we propose the following conventions to partially align the type definition project's version to that of the plain-JS project.
+
+
+==== Define a New Type Definition Package
+
+We use the following convention to compute the version of type definition packages.
+
+
+
+.Convention for initial type definition versions
+--
+{nbsp}{nbsp}{nbsp}{nbsp} Major~types~.Minor~types~.Patch~types~ = Major~impl~.Minor~impl~.0
+--
+
+
+.Example for initial type definition of express@3.3.3
+--
+{nbsp}{nbsp}{nbsp}{nbsp} Major~types~.Minor~types~.Patch~types~ = 3.3.0
+--
+
+
+Let's say that a new version of a type definition package called _types_ should be created
+that defines types for an npm called _impl_ of version Major~impl~.Minor~impl~.Patch~impl~.
+According to our convention, the major and minor version numbers of the type definition package
+should just be copied from the version of the _impl_ package.
+However, the version patch number of _types_ should not be taken from _impl_.
+Instead, the patch number of _types_ starts with _0_ and increases with every update of this type definition version.
+For instance when a bug was found in version Major~types~.Minor~types~.0, the definitions have been extended, or
+adjusted to new language features, only the patch number increases to e.g. Major~types~.Minor~types~.1.
+
+
+==== Using a Type Definition Package
+
+On the client side, a type definition package is listed among the dependency section.
+Here we use the following convention to specify the required version of a type definition package.
+
+
+
+.Convention for dependencies
+--
+"dependencies": { +
+{nbsp}{nbsp}{nbsp}{nbsp} "@n4jsd/Types": "++<=++Major~impl~.Minor~impl~.*" +
+}
+--
+
+
+.Example of dependencies to express and its type definition project
+--
+"dependencies": { +
+{nbsp}{nbsp}{nbsp}{nbsp} "express": "^3.3.3", +
+{nbsp}{nbsp}{nbsp}{nbsp} "@n4jsd/express": "++<=++3.3.*" +
+}
+--
+
+
+According to this convention, the major and minor version numbers of the implementation package are used,
+prepended with a smaller-equals and appended with an asterisk for the patch number.
+This also applies when the implementation version contains a tilde, a caret, etc., or is omitting a minor or patch number.
+In case a non SemVer version is given (e.g. `latest`, empty string, url, etc.)
+it is recommended to plain copy the non SemVer version when possible.
+
+
+==== Rational
+
+The rational behind this convention reflects the idea of semantic versioning:
+
+[quote, 'https://www.semver.org[semver.org]']
+____
+Given a version number MAJOR.MINOR.PATCH, increment the:
+
+* MAJOR version when you make incompatible API changes,
+* MINOR version when you add functionality in a backwards-compatible manner, and
+* PATCH version when you make backwards-compatible bug fixes.
+____
+
+
+Patch version increments are always backwards compatible according to SemVer.
+In addition also no further functionality is added since this would imply at least an increment of the minor version.
+Consequently, patch versions do not affect the interface or type information of an plain-JS project.
+This is why patch version number fully suffices to reflect bug fixes and language changes for a given major.minor version.
+
+On client side, we recommend to use a smaller-equals qualifier because most probably there will not be the exact version
+of a requested type definition project.
+Instead, only some major.minor versions will have a type definition counterpart.
+Using a smaller-equals qualifier will make sure that a client will always get the latest version of a requested plain-JS project version.
+In case a newer version of the plain-JS project was already published,
+this convention guarantees that a compatible version of the type definition project is installed.
+
+
+
+
+
 
 [.language-n4js]
 == Modules

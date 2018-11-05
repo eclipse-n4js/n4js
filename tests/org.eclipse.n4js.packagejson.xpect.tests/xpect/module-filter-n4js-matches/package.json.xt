@@ -15,6 +15,7 @@
 	"name": "module-filter-n4js-matches",
 	"version": "0.0.1-SNAPSHOT",
 	"n4js": {
+		"projectType": "validation",
 		"moduleFilters": {
 			"noValidate": [
 				// A matches src1/A.js, src2/A.n4jsd XPECT errors --> "Module filters of type noValidate must not match N4JS modules/files." at ""A""

@@ -28,15 +28,15 @@ import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.xpect.ui.common.XtextResourceCleanUtil;
 import org.eclipse.n4js.xpect.ui.methods.contentassist.N4ContentAssistProcessorTestBuilderHelper;
 import org.eclipse.n4js.xpect.ui.methods.contentassist.RegionWithCursor;
-import org.eclipse.xtext.resource.XtextResource;
-import org.eclipse.xtext.ui.editor.hyperlinking.XtextHyperlink;
-import org.eclipse.xtext.ui.editor.model.IXtextDocument;
-import org.eclipse.xtext.ui.testing.ContentAssistProcessorTestBuilder;
 import org.eclipse.xpect.expectation.CommaSeparatedValuesExpectation;
 import org.eclipse.xpect.expectation.ICommaSeparatedValuesExpectation;
 import org.eclipse.xpect.parameter.ParameterParser;
 import org.eclipse.xpect.runner.Xpect;
 import org.eclipse.xpect.xtext.lib.setup.ThisResource;
+import org.eclipse.xtext.resource.XtextResource;
+import org.eclipse.xtext.ui.editor.hyperlinking.XtextHyperlink;
+import org.eclipse.xtext.ui.editor.model.IXtextDocument;
+import org.eclipse.xtext.ui.testing.ContentAssistProcessorTestBuilder;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
@@ -105,13 +105,14 @@ public class HyperlinkXpectMethod {
 		// append hyperlink text. Only consider the element name and ignore the qualified part.
 		String hyperlinkText = hyperlink.getHyperlinkText();
 		hyperlinkText = hyperlinkText.substring(hyperlinkText.lastIndexOf('.') + 1);
-		if (hyperlinkText != null)
-			sb.append(hyperlinkText);
-		else
-			sb.append("<no hyperlink text>");
-		// append description of target element (path from the element to the root of the AST)
 		final EObject target = getTarget(resource, hyperlink);
+
 		if (target != null) {
+			if (hyperlinkText != null)
+				sb.append(hyperlinkText);
+			else
+				sb.append("<no hyperlink text>");
+			// append description of target element (path from the element to the root of the AST)
 			// build chain of ancestor AST elements
 			sb.append(": ");
 			final int startLen = sb.length();
@@ -137,17 +138,38 @@ public class HyperlinkXpectMethod {
 				sb.append(" in file ");
 				sb.append(fname);
 			}
+
+		} else {
+			URI uri = getURI(hyperlink);
+			if (uri != null) {
+				if (uri.isFile()) {
+					sb.append("file:/...");
+					for (int i = Math.max(0, uri.segmentCount() - 2); i < uri.segmentCount(); i++) {
+						sb.append("/");
+						sb.append(uri.segment(i));
+					}
+				} else {
+					sb.append(uri);
+				}
+			}
 		}
 		return sb.toString();
 	}
 
 	private EObject getTarget(XtextResource resource, IHyperlink hyperlink) {
 		final ResourceSet resourceSet = resource != null ? resource.getResourceSet() : null;
-		final URI uri = hyperlink instanceof XtextHyperlink ? ((XtextHyperlink) hyperlink).getURI() : null;
-		final EObject target = resourceSet != null && uri != null ? resourceSet.getEObject(uri, true) : null;
+		final URI uri = getURI(hyperlink);
+		final EObject target = resourceSet != null && uri != null && uri.fragment() != null
+				? resourceSet.getEObject(uri, true)
+				: null;
 		if (target instanceof SyntaxRelatedTElement)
 			return ((SyntaxRelatedTElement) target).getAstElement();
 		return target;
+	}
+
+	private URI getURI(IHyperlink hyperlink) {
+		final URI uri = hyperlink instanceof XtextHyperlink ? ((XtextHyperlink) hyperlink).getURI() : null;
+		return uri;
 	}
 
 }

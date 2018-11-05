@@ -10,9 +10,10 @@
  */
 package org.eclipse.n4js.conversion;
 
+import org.eclipse.n4js.conversion.ValueConverterUtils.StringConverterResult;
+import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.xtext.conversion.impl.STRINGValueConverter;
 import org.eclipse.xtext.nodemodel.INode;
-import org.eclipse.xtext.util.Strings;
 
 /**
  */
@@ -54,29 +55,8 @@ public abstract class AbstractN4JSStringValueConverter extends STRINGValueConver
 
 	@Override
 	protected String toEscapedString(String value) {
-		return getLeftDelimiter() + convertToJSString(value, false) + getRightDelimiter();
+		return getLeftDelimiter() + ValueConverterUtils.convertToEscapedString(value, false) + getRightDelimiter();
 	}
-
-	/**
-	 * Mostly copied from {@link Strings#convertToJavaString(String, boolean)}
-	 */
-	public String convertToJSString(String theString, boolean useUnicode) {
-		int len = theString.length();
-		int bufLen = len * 2;
-		if (bufLen < 0) {
-			bufLen = Integer.MAX_VALUE;
-		}
-		StringBuilder outBuffer = new StringBuilder(bufLen);
-		for (int x = 0; x < len; x++) {
-			appendToJSString(theString.charAt(x), useUnicode, outBuffer);
-		}
-		return outBuffer.toString();
-	}
-
-	/**
-	 * Mostly copied from {@link Strings#convertToJavaString(String, boolean)}
-	 */
-	protected abstract void appendToJSString(char aChar, boolean useUnicode, StringBuilder result);
 
 	/**
 	 * Returns the string that should be used on the right hand side of the concrete syntax.
@@ -89,9 +69,24 @@ public abstract class AbstractN4JSStringValueConverter extends STRINGValueConver
 	protected abstract String getLeftDelimiter();
 
 	/**
-	 * Convert the JS string to its value.
+	 * Convert the N4JS string literal to its value.
+	 *
+	 * Made public only for testing.
 	 */
-	public abstract String convertFromJSString(String jsString, INode node, boolean validate);
+	public static String convertFromN4JSString(String n4jsString, INode node, boolean validate) {
+		StringConverterResult result = ValueConverterUtils.convertFromEscapedString(n4jsString, true, false, false,
+				null);
+		if (validate) {
+			if (result.hasError()) {
+				throw new BadEscapementException(IssueCodes.getMessageForVCO_STRING_BAD_ESCAP_ERROR(),
+						IssueCodes.VCO_STRING_BAD_ESCAP_ERROR, node, result.getValue(), true);
+			} else if (result.hasWarning()) {
+				throw new BadEscapementException(IssueCodes.getMessageForVCO_STRING_BAD_ESCAP_WARN(),
+						IssueCodes.VCO_STRING_BAD_ESCAP_WARN, node, result.getValue(), false);
+			}
+		}
+		return result.getValue();
+	}
 
 	/**
 	 * @param nodeText

@@ -222,8 +222,8 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 	}
 
 	/** Sets up the known external library locations with the {@code node_modules} folder. */
-	protected void setupExternalLibraries(boolean initShippedCode, boolean useSandboxN4JD) throws Exception {
-		externalLibrariesSetupHelper.setupExternalLibraries(initShippedCode, useSandboxN4JD);
+	protected void setupExternalLibraries(boolean initShippedCode) throws Exception {
+		externalLibrariesSetupHelper.setupExternalLibraries(initShippedCode);
 	}
 
 	/** Tears down the external libraries. */

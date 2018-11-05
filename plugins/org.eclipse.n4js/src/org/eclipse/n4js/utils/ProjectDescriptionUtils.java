@@ -57,9 +57,15 @@ public class ProjectDescriptionUtils {
 
 	private static final Set<String> NPM_RESERVED_PACKAGE_NAMES = Sets.newHashSet(
 			// npm core modules (as of 2018/08/06)
-			"assert", "buffer", "child_process", "cluster", "console", "constants", "crypto", "dgram", "dns", "domain",
-			"events", "fs", "http", "https", "module", "net", "os", "path", "punycode", "querystring", "readline",
-			"repl", "stream", "string_decoder", "sys", "timers", "tls", "tty", "url", "util", "vm", "zlib",
+			// ---
+			// The following core module names are technically reserved package names, however in the npmjs.com
+			// registry, many packages exist which use one of these reserved names. Therefore, we cannot strictly
+			// enforce a validation of reserved package names. This list remains for reference.
+			// ---
+			// "assert", "buffer", "child_process", "cluster", "console", "constants", "crypto", "dgram", "dns",
+			// "domain",
+			// "events", "fs", "http", "https", "module", "net", "os", "path", "punycode", "querystring", "readline",
+			// "repl", "stream", "string_decoder", "sys", "timers", "tls", "tty", "url", "util", "vm", "zlib",
 			// other reserved names
 			"node_modules", "favicon.ico");
 

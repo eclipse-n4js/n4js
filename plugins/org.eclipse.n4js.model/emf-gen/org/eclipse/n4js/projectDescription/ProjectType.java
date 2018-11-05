@@ -27,6 +27,16 @@ import org.eclipse.emf.common.util.Enumerator;
  */
 public enum ProjectType implements Enumerator {
 	/**
+	 * The '<em><b>PLAINJS</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #PLAINJS_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	PLAINJS(0, "PLAINJS", "PLAINJS"),
+
+	/**
 	 * The '<em><b>VALIDATION</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -115,6 +125,21 @@ public enum ProjectType implements Enumerator {
 	 * @ordered
 	 */
 	TEST(9, "TEST", "TEST");
+
+	/**
+	 * The '<em><b>PLAINJS</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of '<em><b>PLAINJS</b></em>' literal object isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @see #PLAINJS
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int PLAINJS_VALUE = 0;
 
 	/**
 	 * The '<em><b>VALIDATION</b></em>' literal value.
@@ -259,6 +284,7 @@ public enum ProjectType implements Enumerator {
 	 */
 	private static final ProjectType[] VALUES_ARRAY =
 		new ProjectType[] {
+			PLAINJS,
 			VALIDATION,
 			DEFINITION,
 			APPLICATION,
@@ -324,6 +350,7 @@ public enum ProjectType implements Enumerator {
 	 */
 	public static ProjectType get(int value) {
 		switch (value) {
+			case PLAINJS_VALUE: return PLAINJS;
 			case VALIDATION_VALUE: return VALIDATION;
 			case DEFINITION_VALUE: return DEFINITION;
 			case APPLICATION_VALUE: return APPLICATION;

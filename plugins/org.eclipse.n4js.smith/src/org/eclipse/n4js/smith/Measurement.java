@@ -12,16 +12,16 @@ package org.eclipse.n4js.smith;
 
 /**
  * Generic interface for measurements. Obtained instance should be considered {@code started}. Caller can end given
- * measurement by calling {@link #end()}. Concrete implementations will track different data.
+ * measurement by calling {@link #close()}. Concrete implementations will track different data.
  */
-public interface Measurement {
+public interface Measurement extends AutoCloseable {
 
 	/**
 	 * Ends given measurement. Concrete implementations can do some data processing in this step. Collected data is
-	 * passed to the {@link DataCollector} that created this instance. It is expected that caller invokes {@link #end()}
-	 * only once, but concrete implementations need to assure that this method is safe to call multiple times, i.e.
-	 * subsequent calls have no effects.
+	 * passed to the {@link DataCollector} that created this instance. It is expected that caller invokes
+	 * {@link #close()} only once, but concrete implementations need to assure that this method is safe to call multiple
+	 * times, i.e. subsequent calls have no effects.
 	 */
-	public void end();
-
+	@Override
+	public void close();
 }

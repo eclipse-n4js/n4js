@@ -53,6 +53,7 @@ import org.eclipse.debug.internal.ui.DebugUIPlugin;
 import org.eclipse.debug.internal.ui.commands.actions.DebugCommandService;
 import org.eclipse.debug.internal.ui.launchConfigurations.LaunchConfigurationManager;
 import org.eclipse.debug.ui.DebugUITools;
+import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.debug.ui.ILaunchGroup;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.action.Action;
@@ -64,6 +65,11 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.text.Document;
+import org.eclipse.jface.text.TextViewer;
+import org.eclipse.jface.text.hyperlink.DefaultHyperlinkPresenter;
+import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -107,8 +113,10 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -116,7 +124,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
@@ -182,6 +189,9 @@ public class TestResultsView extends ViewPart {
 	@Inject
 	private IN4JSEclipseCore core;
 
+	@Inject
+	private TestResultHyperlinkDetector n4JSStackTraceHyperlinkDetector;
+
 	/**
 	 * Needed to convert configuration to ILaunchConfiguraton
 	 */
@@ -200,7 +210,7 @@ public class TestResultsView extends ViewPart {
 	private ToolBar toolBar;
 	private TestProgressBar progressBar;
 	private TreeViewer testTreeViewer;
-	private Text stackTrace;
+	private TextViewer stackTrace;
 
 	private Action actionScrollLock;
 	private Action actionRelaunch;
@@ -663,6 +673,7 @@ public class TestResultsView extends ViewPart {
 
 		testTreeViewer = new TreeViewerBuilder(newArrayList("Test", "Status", "Duration"),
 				new TestTreeViewerContentProvider())
+						.setUseHashlookup(true)
 						.setLinesVisible(false).setLabelProvider(new TestTreeViewerLabelProvider())
 						.setColumnWeights(asList(5, 2, 1)).build(sashForm);
 		installToolTipSupport(testTreeViewer.getTree());
@@ -670,7 +681,13 @@ public class TestResultsView extends ViewPart {
 
 		testTreeViewer.setInput(getViewSite());
 
-		stackTrace = new Text(sashForm, SWT.MULTI | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL);
+		stackTrace = new TextViewer(sashForm, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.READ_ONLY);
+		// stackTrace.setHyperlinkPresenter(new MultipleHyperlinkPresenter(new RGB(0, 0, 255)));
+		stackTrace.setHyperlinkPresenter(new DefaultHyperlinkPresenter(new RGB(0, 0, 255)));
+		stackTrace.setHyperlinkDetectors(new IHyperlinkDetector[] { n4JSStackTraceHyperlinkDetector }, SWT.NONE);
+		stackTrace.setDocument(new Document());
+		Font font = JFaceResources.getFont(IDebugUIConstants.PREF_CONSOLE_FONT);
+		stackTrace.getTextWidget().setFont(font);
 
 		sashForm.addControlListener(new ControlListener() {
 			@Override
@@ -1108,7 +1125,8 @@ public class TestResultsView extends ViewPart {
 	 * trace area.
 	 */
 	protected void onSingleClick() {
-		stackTrace.setText("");
+		// stackTrace.setText("");
+		stackTrace.getDocument().set("");
 
 		final ISelection selection = testTreeViewer.getSelection();
 		if (selection.isEmpty()) {
@@ -1135,14 +1153,13 @@ public class TestResultsView extends ViewPart {
 							}
 							final StringBuilder sb = new StringBuilder();
 							trace.forEach(line -> sb.append(line).append(lineSeparator()));
-							stackTrace.setText(sb.toString());
-							stackTrace.setSelection(0);
+							stackTrace.getDocument().set(sb.toString());
+
 						} else if ((SKIPPED_IGNORE.equals(result.getTestStatus())
 								|| SKIPPED_FIXME.equals(result.getTestStatus())
 								|| ERROR.equals(result.getTestStatus()))
 								&& !isNullOrEmpty(result.getMessage())) {
-							stackTrace.setText(result.getMessage());
-							stackTrace.setSelection(0);
+							stackTrace.getDocument().set(result.getMessage());
 						}
 					}
 

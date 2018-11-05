@@ -2,7 +2,8 @@
 	"name": "Client",
 	"version": "0.0.1",
 	"dependencies": {
-		"Impl": "*"
+		"Impl": "*",
+		"Def": "*"
 	},
 	"n4js": {
 		"projectType": "library",
@@ -12,9 +13,6 @@
 				"src"
 			]
 		},
-		"output": "src-gen",
-		"typeDependencies": {
-			"Def": "*"
-		}
+		"output": "src-gen"
 	}
 }

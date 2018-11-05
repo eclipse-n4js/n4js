@@ -92,3 +92,8 @@ fex20;
 // XPECT errors --> "string is not a subtype of int." at ""1""
 function fex21(i:int="1"){};
 fex21;
+
+async function asfoo(): int { return 0; }
+// XPECT errors --> "Illegal await-expression in initializer of formal parameter 'i'." at "await asfoo()"
+async function fex30(i:int=await asfoo()){};
+fex30;

@@ -1,10 +1,10 @@
 {
 	"private": true,
 	"devDependencies": {
-		"lerna": "2.11.0"
+		"lerna": "2.11.0",
+		"semver": "5.5.1"
 	},
 	"scripts": {
-		"publish-canary": "./npm-publish-canary.sh",
 		"build": "./npm-build-all.sh"
 	},
 	"workspaces": [

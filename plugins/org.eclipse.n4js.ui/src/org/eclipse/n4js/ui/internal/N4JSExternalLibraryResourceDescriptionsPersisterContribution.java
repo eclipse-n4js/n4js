@@ -45,7 +45,7 @@ public class N4JSExternalLibraryResourceDescriptionsPersisterContribution
 	@Override
 	public void scheduleRecoveryBuild() {
 
-		final Job job = new Job("Initializing N4JS Built-ins...") {
+		final Job job = new Job("Register all npms") {
 
 			@Override
 			protected IStatus run(final IProgressMonitor monitor) {
@@ -55,7 +55,7 @@ public class N4JSExternalLibraryResourceDescriptionsPersisterContribution
 						@Override
 						public void run(final IProgressMonitor progress) throws CoreException {
 							try {
-								libraryManager.reloadAllExternalProjects(progress);
+								libraryManager.registerAllExternalProjects(progress);
 							} catch (final Exception e) {
 								throw new CoreException(statusHelper.createError(e));
 							}

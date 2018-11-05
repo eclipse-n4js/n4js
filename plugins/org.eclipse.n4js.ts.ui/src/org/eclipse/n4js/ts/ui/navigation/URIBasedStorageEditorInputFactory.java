@@ -19,8 +19,8 @@ import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.editor.model.ResourceForIEditorInputFactory;
 
 /**
- * Handle our specialized {@link IStorage} implementation. The resource is created from the URI in the
- * {@link URIBasedStorage}.
+ * Handle our specialized {@link IStorage} implementation, e.g. hyperlinks to external library modules. The resource is
+ * created from the URI in the {@link URIBasedStorage}.
  */
 public class URIBasedStorageEditorInputFactory extends ResourceForIEditorInputFactory {
 

@@ -17,7 +17,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IExecutionListener;
 import org.eclipse.core.commands.NotHandledException;
 import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.n4js.external.GitCloneSupplier;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
 import org.eclipse.n4js.ui.external.EclipseExternalIndexSynchronizer;
 import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
@@ -35,9 +35,6 @@ import com.google.inject.Inject;
  */
 @SuppressWarnings("restriction")
 public class N4JSExternalLibraryStartup implements IStartup {
-
-	@Inject
-	private GitCloneSupplier gitCloneSupplier;
 
 	@Inject
 	private EclipseExternalIndexSynchronizer indexSynchronizer;
@@ -72,11 +69,6 @@ public class N4JSExternalLibraryStartup implements IStartup {
 					buildManager.scheduleBuildIfNecessary(Arrays.asList(workspace.getRoot().getProjects()),
 							IBuildFlag.RECOVERY_BUILD);
 				}
-				indexSynchronizer.checkAndSetOutOfSyncMarkers();
-			}).start();
-
-			new Thread(() -> {
-				gitCloneSupplier.synchronizeTypeDefinitions();
 			}).start();
 
 		}
@@ -108,7 +100,7 @@ public class N4JSExternalLibraryStartup implements IStartup {
 		@Override
 		public void postExecuteSuccess(String commandId, Object returnValue) {
 			if ("org.eclipse.ui.file.refresh".equals(commandId)) {
-				indexSynchronizer.checkAndSetOutOfSyncMarkers();
+				indexSynchronizer.checkAndClearIndex(new NullProgressMonitor());
 			}
 		}
 

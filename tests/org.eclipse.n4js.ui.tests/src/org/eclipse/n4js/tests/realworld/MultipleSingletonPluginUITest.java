@@ -67,7 +67,7 @@ public class MultipleSingletonPluginUITest extends AbstractBuilderParticipantTes
 	 */
 	@Before
 	public void setup() throws Exception {
-		setupExternalLibraries(true, true);
+		setupExternalLibraries(true);
 	}
 
 	/**

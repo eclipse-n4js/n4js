@@ -78,4 +78,9 @@ class C {
 
 	// XPECT errors --> "string is not a subtype of int." at ""1""
 	m21(i:int="1"){};
+
+
+	async asfoo(): int { return 0; }
+	// XPECT errors --> "Illegal await-expression in initializer of formal parameter 'int'." at "await this.asfoo()"
+	async m30(int = await this.asfoo()) {}
 }

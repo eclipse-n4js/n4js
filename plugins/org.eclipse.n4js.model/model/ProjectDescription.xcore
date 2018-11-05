@@ -118,7 +118,7 @@ class BootstrapModule {
 }
 
 enum ProjectType {
-	//PLAINJS = 0,
+	PLAINJS = 0,
 	VALIDATION = 1,
 	DEFINITION = 2,
 	APPLICATION = 3,
@@ -155,10 +155,5 @@ enum DependencyType {
 	/** Dependencies of this type must always be present. */
 	RUNTIME,
 	/** Dependencies of this type must be present at development-time. */
-	DEVELOPMENT,
-	/** 
-	 * Dependencies of this type must be present when using a package 
-	 * from a typed language or when developing the package itself.
-	 */
-	TYPE
+	DEVELOPMENT
 }

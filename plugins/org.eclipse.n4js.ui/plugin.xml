@@ -1455,4 +1455,57 @@ Contributors:
             class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.quickfix.packagejson.N4JSPackageJsonQuickfixProviderExtension">
       </quickfixProvider>
    </extension>
+   <extension
+         point="org.eclipse.n4js.json.ui.proposalProvider">
+      <proposalProvider
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.proposals.packagejson.PackageJsonProposalProvider">
+      </proposalProvider>
+   </extension>
+   <extension
+         point="org.eclipse.n4js.json.ui.hyperlinkHelper">
+      <hyperlinkHelper
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.editor.hyperlinking.packagejson.PackageJsonHyperlinkHelperExtension">
+      </hyperlinkHelper>
+   </extension>
+   <!--N4JS Stack Trace Console-->
+   <extension
+         point="org.eclipse.ui.console.consoleFactories">
+      <consoleFactory
+            label="N4JS Stack Trace Console"
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.console.N4JSStackTraceConsoleFactory">
+      </consoleFactory>
+   </extension>
+   <!--N4JS Stack Trace Pattern Matchers
+   
+   Sample Exception: 
+   at C.foo___n4 (/Users/jpilgrim/Documents/workspaces/runtime-EclipseApplication/Sample/src-gen/C.js:17:14)
+   
+   \w[^\(\s]+Exception[\s|:]
+   -->
+   <extension
+         point="org.eclipse.ui.console.consolePatternMatchListeners">
+      <consolePatternMatchListener
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.console.N4JSExceptionConsoleTracker"
+            regex="\(.*\.js:[0-9]+:[0-9]+\)"
+            qualifier="at"
+            id="org.eclipse.n4js.ui.console.N4JSExceptionConsoleTracker">
+         <enablement>
+            <or>
+               <test property="org.eclipse.ui.console.consoleTypeTest" value="n4jsStackTraceConsole"/>
+               <test property="org.eclipse.debug.ui.processTypeTest" value="n4js"/>
+            </or>
+         </enablement>
+      </consolePatternMatchListener>
+   </extension>
+   <!--IO Console participant -->
+   <extension
+         point="org.eclipse.ui.console.consolePageParticipants">
+      <consolePageParticipant
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.console.N4JSStackTracePageParticipant"
+            id="org.eclipse.n4js.ui.console.N4JS.stackTraceConsoleParticipant">
+         <enablement>
+            <test property="org.eclipse.ui.console.consoleTypeTest" value="n4jsStackTraceConsole"/>
+         </enablement>
+      </consolePageParticipant>
+   </extension>
 </plugin>

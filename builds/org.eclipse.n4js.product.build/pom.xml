@@ -55,7 +55,7 @@ Contributors:
 								<configuration>
 									<executable>bash</executable>
 									<arguments>
-										<argument>${project.basedir}/../../publish-n4js-libs-npm.sh</argument>
+										<argument>${project.basedir}/../../releng/utils/scripts/publish-n4js-libs.sh</argument>
 										<argument>bridge</argument>
 										<argument>${env.STAGING_NPM_REGISTRY}</argument>
 									</arguments>

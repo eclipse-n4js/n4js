@@ -19,6 +19,9 @@
   },
   "dependencies": {
     "n4js.lang": "^0.1.0",
+    "n4js-runtime-fetch": "^0.1.0",
+    "n4js-runtime-es2015": "^0.1.0",
+    "n4js-runtime-node": "^0.1.0",
     "org.eclipse.n4js.mangelhaft": "^0.1.0",
     "org.eclipse.n4js.mangelhaft.reporter.console": "^0.1.0",
     "org.eclipse.n4js.mangelhaft.reporter.xunit": "^0.1.0",
@@ -42,14 +45,6 @@
       "n4js-runtime-es2015",
       "n4js-runtime-node"
     ],
-    "moduleLoader": "n4js",
-    "typeDependencies": {
-      "glob-n4jsd": "<=7.1.2"
-    }
-  },
-  "devDependencies": {
-    "n4js-runtime-fetch": "^0.1.0",
-    "n4js-runtime-es2015": "^0.1.0",
-    "n4js-runtime-node": "^0.1.0"
+    "moduleLoader": "n4js"
   }
 }

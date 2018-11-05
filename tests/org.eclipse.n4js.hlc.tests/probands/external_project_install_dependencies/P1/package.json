@@ -2,11 +2,14 @@
 	"name": "P1",
 	"version": "0.0.1",
 	"dependencies": {
-		"react-dom": "*",
-		"react": "*",
-		"n4js-runtime-html5": "*",
-		"n4js-runtime-fetch": "*",
-		"n4js-runtime-es2015": "*"
+		"n4js-runtime-es2015": "",
+		"n4js-runtime-esnext": "",
+		"n4js-runtime-html5": "",
+		"n4js-runtime-fetch": "",
+		"react": "16.2.0",
+		"react-dom": "16.2.0",
+		"@n4jsd/react": "<=16.2.*",
+		"@n4jsd/react-dom": "<=16.2.*"
 	},
 	"n4js": {
 		"projectType": "library",
@@ -19,13 +22,9 @@
 			]
 		},
 		"requiredRuntimeLibraries": [
+			"n4js-runtime-es2015",
 			"n4js-runtime-html5",
-			"n4js-runtime-fetch",
-			"n4js-runtime-es2015"
-		],
-		"typeDependencies": {
-			"react-n4jsd": "*",
-			"react-dom-n4jsd": "*"
-		}
+			"n4js-runtime-fetch"
+		]
 	}
 }

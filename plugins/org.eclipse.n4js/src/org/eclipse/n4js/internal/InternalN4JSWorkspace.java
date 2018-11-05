@@ -11,9 +11,11 @@
 package org.eclipse.n4js.internal;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.Iterator;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectReference;
 
@@ -45,6 +47,8 @@ public abstract class InternalN4JSWorkspace {
 
 	/**
 	 * Iterates the contents of a folder.
+	 *
+	 * This method will never list the contents of a nested {@link N4JSGlobals#NODE_MODULES} folder.
 	 */
 	public abstract Iterator<URI> getFolderIterator(URI folderLocation);
 
@@ -60,4 +64,9 @@ public abstract class InternalN4JSWorkspace {
 	 * Returns the location of the project that contains the given nested location.
 	 */
 	public abstract URI findProjectWith(URI nestedLocation);
+
+	/**
+	 * Returns the location of the project that contains the given nested location.
+	 */
+	public abstract Collection<URI> getAllProjectLocations();
 }

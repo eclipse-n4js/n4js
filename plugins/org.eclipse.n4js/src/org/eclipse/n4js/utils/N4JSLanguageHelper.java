@@ -37,7 +37,7 @@ public final class N4JSLanguageHelper {
 	/**
 	 * Opaque modules have empty Script nodes in their AST. Other than that they behave normally.
 	 */
-	private static boolean OPAQUE_JS_MODULES = true;
+	public static boolean OPAQUE_JS_MODULES = true;
 
 	@Inject
 	private N4JSGrammarAccess grammarAccess;
@@ -101,11 +101,6 @@ public final class N4JSLanguageHelper {
 	 */
 	public boolean isOpaqueModule(URI resourceURI) {
 		ResourceType resourceType = ResourceType.getResourceType(resourceURI);
-		N4JSProject project = n4jsModel.findProjectWith(resourceURI);
-		if (project == null) {
-			return false; // happens in tests
-		}
-		ProjectType projectType = project.getProjectType();
 
 		switch (resourceType) {
 		case JS:
@@ -115,6 +110,11 @@ public final class N4JSLanguageHelper {
 		case N4JS:
 		case N4JSX:
 		case N4IDL:
+			N4JSProject project = n4jsModel.findProjectWith(resourceURI);
+			if (project == null) {
+				return false; // happens in tests
+			}
+			ProjectType projectType = project.getProjectType();
 			// N4JS files of definition projects are not processed.
 			return projectType == ProjectType.DEFINITION;
 

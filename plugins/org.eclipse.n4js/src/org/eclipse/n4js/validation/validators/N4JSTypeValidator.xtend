@@ -17,6 +17,7 @@ import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.Argument
+import org.eclipse.n4js.n4JS.ArrayLiteral
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.AssignmentOperator
 import org.eclipse.n4js.n4JS.Expression
@@ -467,12 +468,12 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		val expectedType = ts.expectedTypeIn(G, expression.eContainer, expression);
 		if (expectedType.value !== null) {
 
-			val expectedTyeRef = expectedType.value;
+			val expectedTypeRef = expectedType.value;
 
 			// for certain problems in single-expression arrow functions, we want a special error message
 			val singleExprArrowFunction = N4JSASTUtils.getContainingSingleExpressionArrowFunction(expression);
 			if (singleExprArrowFunction !== null && TypeUtils.isVoid(inferredType.value)) {
-				if (TypeUtils.isVoid(expectedTyeRef) || singleExprArrowFunction.isReturnValueOptional) {
+				if (TypeUtils.isVoid(expectedTypeRef) || singleExprArrowFunction.isReturnValueOptional) {
 					return; // all good
 				}
 				if (singleExprArrowFunction.returnTypeRef === null) { // show specialized error message only if return type of arrow function was inferred (i.e. not declared explicitly)
@@ -484,36 +485,54 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 				}
 			}
 
-			internalCheckUseOfUndefinedExpression(G, expression, expectedTyeRef, inferredType.value);
+			internalCheckUseOfUndefinedExpression(G, expression, expectedTypeRef, inferredType.value);
 
 			val boolean writeAccess = ExpressionExtensions.isLeftHandSide(expression);
 			if (writeAccess) {
 
 				// special case: write access
-				val result = ts.subtype(G, expectedTyeRef, inferredType.value);
+				val result = ts.subtype(G, expectedTypeRef, inferredType.value);
 
 				if (result.failed) {
 					// use custom error message, because otherwise it will be completely confusing
-					val message = getMessageForTYS_NO_SUPERTYPE_WRITE_ACCESS(expectedTyeRef.typeRefAsString,
+					val message = getMessageForTYS_NO_SUPERTYPE_WRITE_ACCESS(expectedTypeRef.typeRefAsString,
 						inferredType.value.typeRefAsString);
 					addIssue(message, expression, TYS_NO_SUPERTYPE_WRITE_ACCESS)
 				}
 			} else {
 
 				// standard case: read access
-				val result = ts.subtype(G, inferredType.value, expectedTyeRef)
+				val result = ts.subtype(G, inferredType.value, expectedTypeRef)
 				// not working, as primitive types are not part of currently validated resource:
 				// errorGenerator.generateErrors(this, result, expression)
 				// so we create error here differently:
 				val errorCreated = createError(result, expression)
 
-				if (! errorCreated && expression instanceof ObjectLiteral) {
-					internalCheckSuperfluousPropertiesInObjectLiteral(expectedTyeRef, expression as ObjectLiteral);
+				if (! errorCreated) {
+					internalCheckSuperfluousPropertiesInObjectLiteralRek(G, expectedTypeRef, expression);
 				}
 			}
 		}
 	}
-	
+
+
+	def void internalCheckSuperfluousPropertiesInObjectLiteralRek(RuleEnvironment G, TypeRef expectedTypeRef, Expression expression) {
+		if (expression instanceof ObjectLiteral) {
+			internalCheckSuperfluousPropertiesInObjectLiteral(expectedTypeRef, expression);
+
+		} else if (expression instanceof ArrayLiteral) {
+			if (!expectedTypeRef.typeArgs.empty) {
+				val arrayElementType = expectedTypeRef.typeArgs.get(0);
+				val typeArgTypeRef = ts.resolveType(G, arrayElementType);
+				for (arrElem : expression.elements) {
+					val arrExpr = arrElem.expression;
+					internalCheckSuperfluousPropertiesInObjectLiteralRek(G, typeArgTypeRef, arrExpr);
+				}
+			}
+		}
+	}
+
+
 	 /**
 	 * #225: always check for superfluous properties in object literal
 	 * req-id IDE-22501
@@ -532,7 +551,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 			if (! (type instanceof ContainerType<?>)) {
 				return;
 			}
-	
+
 			val G = RuleEnvironmentExtensions.newRuleEnvironment(objectLiteral);
 			val structuralMembers = typeRef.structuralMembers;
 			if (structuralMembers.isEmpty && type == RuleEnvironmentExtensions.objectType(G)) {
@@ -564,7 +583,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 			};
 		}
 	}
-	
+
 
 
 	def private void internalCheckUseOfUndefinedExpression(RuleEnvironment G, Expression expression,

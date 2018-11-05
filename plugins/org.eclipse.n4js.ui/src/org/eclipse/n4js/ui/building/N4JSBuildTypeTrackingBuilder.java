@@ -30,6 +30,7 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.internal.RaceDetectionHelper;
 import org.eclipse.n4js.ui.building.BuilderStateLogger.BuilderState;
+import org.eclipse.n4js.ui.containers.N4JSProjectsStateHelper;
 import org.eclipse.n4js.ui.external.EclipseExternalIndexSynchronizer;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildScheduler;
 import org.eclipse.n4js.ui.internal.N4JSProjectDependencyStrategy;
@@ -65,11 +66,11 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 	@BuilderState
 	private IBuildLogger builderStateLogger;
 
+	@SuppressWarnings("unused")
 	private EclipseExternalIndexSynchronizer externalIndexSynchronizer;
-
 	private ExternalLibraryBuildScheduler externalLibraryBuildJobProvider;
-
 	private N4JSProjectDependencyStrategy projectDependencyStrategy;
+	private N4JSProjectsStateHelper projectsStateHelper;
 
 	@Inject
 	private void injectSharedContributions(ISharedStateContributionRegistry registry) {
@@ -77,6 +78,9 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 				.getSingleContributedInstance(ExternalLibraryBuildScheduler.class);
 		this.externalIndexSynchronizer = registry
 				.getSingleContributedInstance(EclipseExternalIndexSynchronizer.class);
+		this.projectsStateHelper = registry
+				.getSingleContributedInstance(N4JSProjectsStateHelper.class);
+
 		try {
 			this.projectDependencyStrategy = registry.getSingleContributedInstance(N4JSProjectDependencyStrategy.class);
 		} catch (RuntimeException e) {
@@ -140,7 +144,6 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 				final String msg = "Building " + project.getName() + " took " + stopwatch.elapsed(TimeUnit.SECONDS)
 						+ " seconds";
 				LOGGER.debug(msg);
-				System.out.println(msg);
 			}
 		}
 
@@ -253,6 +256,8 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 	protected void doClean(ToBeBuilt toBeBuilt, IProgressMonitor monitor)
 			throws CoreException {
 
+		IProject project = getProject();
+		projectsStateHelper.clearProjectCache(project);
 		runWithBuildType(monitor, BuildType.CLEAN, (m) -> super.doClean(toBeBuilt, m));
 	}
 
@@ -270,7 +275,7 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 			throws CoreException,
 			OperationCanceledException {
 		try {
-			checkExternalLibraries();
+			// externalIndexSynchronizer.checkAndSetOutOfSyncMarkers(); // GH-1124: reconsider this
 			N4JSBuildTypeTracker.setBuildType(getProject(), type);
 			runMe.run(monitor);
 			getProject().touch(monitor);
@@ -360,7 +365,4 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 		return new BuildData(getProject().getName(), null, toBeBuilt, queuedBuildData, indexingOnly).isEmpty();
 	}
 
-	private void checkExternalLibraries() {
-		externalIndexSynchronizer.checkAndSetOutOfSyncMarkers();
-	}
 }

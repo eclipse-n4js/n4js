@@ -1256,16 +1256,20 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			addIssue(IssueCodes.getMessageForEXP_CAST_UNNECESSARY(S.typeRefAsString, T.typeRefAsString),
 				castExpression, IssueCodes.EXP_CAST_UNNECESSARY);
 		} else {
-			if (!(T.declaredType instanceof ContainerType<?>) && !(T.declaredType instanceof TEnum) &&
-				!(T.declaredType instanceof TypeVariable) && !(T instanceof FunctionTypeExpression) &&
-				!(T instanceof TypeTypeRef) && !(T instanceof UnionTypeExpression) &&
-				!(T instanceof IntersectionTypeExpression)
-		) { // Constraint 78 (Cast Validation At Compile-Time): 2
-					addIssue(IssueCodes.getMessageForEXP_CAST_INVALID_TARGET(), castExpression,
-						IssueCodes.EXP_CAST_INVALID_TARGET);
-				} else {
-					internalCheckCastExpression(G, S, T, castExpression, true, false);
-				}
+			val specialChecks = (T.declaredType instanceof ContainerType<?>)
+				|| (T.declaredType instanceof TEnum)
+				|| (T.declaredType instanceof TypeVariable)
+				|| (T instanceof TypeTypeRef)
+				|| (T instanceof UnionTypeExpression)
+				|| (T instanceof FunctionTypeExpression)
+				|| (T instanceof IntersectionTypeExpression);
+
+			if (specialChecks) {
+				internalCheckCastExpression(G, S, T, castExpression, true, false);
+			} else {
+				// Constraint 78 (Cast Validation At Compile-Time): 2
+				addIssue(IssueCodes.getMessageForEXP_CAST_INVALID_TARGET(), castExpression, IssueCodes.EXP_CAST_INVALID_TARGET);
+			}
 		}
 	}
 
@@ -1365,26 +1369,36 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 	 * @param in case of an intersection type, S may be part of an intersection in which another element is a CPOE, i.e. concrete
 	 */
 	private def boolean canCheck(RuleEnvironment G, TypeRef S, TypeRef T, boolean actualSourceTypeIsCPOE) {
-		return ((isCPOE(G, S) || actualSourceTypeIsCPOE) && isCPOE(G, T)) ||
-			( (S.declaredType instanceof TInterface) && T.actuallyFinal) ||
-			(S.actuallyFinal && (T.declaredType instanceof TInterface)) ||
-			(S instanceof ParameterizedTypeRef && T instanceof ParameterizedTypeRef &&
-				TypeUtils.isRawSuperType(T.declaredType, S.declaredType)) ||
-			T instanceof FunctionTypeExpression;
+		return T instanceof FunctionTypeExpression
+			|| ((actualSourceTypeIsCPOE || isCPOE(G, S)) && isCPOE(G, T))
+			|| ((S.declaredType instanceof TInterface) && T.actuallyFinal)
+			|| (S.actuallyFinal && (T.declaredType instanceof TInterface))
+			|| (S instanceof ParameterizedTypeRef
+				&& T instanceof ParameterizedTypeRef
+				&& TypeUtils.isRawSuperType(T.declaredType, S.declaredType))
+			;
 	}
 
 	private def boolean isCPOE(RuleEnvironment G, TypeRef T) {
+		var Object d = null;
+		if (T instanceof BoundThisTypeRef) {
+			d = T.actualThisTypeRef?.declaredType;
+		}
 		if (T instanceof ParameterizedTypeRef) {
-			val d = T.declaredType;
-			return d instanceof TClass || d instanceof TEnum || d instanceof PrimitiveType ||
-				d instanceof TObjectPrototype;
-		};
+			d = T.declaredType;
+		}
 		if (T instanceof TypeTypeRef) {
-			val d = tsh.getStaticType(G, T);
-			val concreteMetaType = d instanceof TClass || d instanceof TEnum ||
-				d instanceof PrimitiveType || d instanceof TObjectPrototype;
+			d = tsh.getStaticType(G, T);
+		}
+
+		if (d !== null) {
+			val concreteMetaType = d instanceof TClass
+				|| d instanceof TEnum
+				|| d instanceof PrimitiveType
+				|| d instanceof TObjectPrototype;
 			return concreteMetaType;
 		}
+
 		return false;
 
 	}

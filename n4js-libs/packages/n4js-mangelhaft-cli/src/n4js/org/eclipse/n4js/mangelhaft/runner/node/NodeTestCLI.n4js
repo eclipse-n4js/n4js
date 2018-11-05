@@ -194,4 +194,6 @@ By default n4js-mangelhaft will retrieve the test catalog from a running IDE and
 On CI systems, you may want to compile and run the tests in one go:
 
 $ n4js-mangelhaft --compile --xunitReportFile ./jenkins/reports.xml --scan ./projects
+
+In case of a failure the tool uses exit code 1 for compilation problems, and exit code 8 for failed tests.
 `;

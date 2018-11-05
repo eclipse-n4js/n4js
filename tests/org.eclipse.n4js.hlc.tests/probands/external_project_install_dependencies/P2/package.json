@@ -2,7 +2,8 @@
 	"name": "P2",
 	"version": "0.0.1",
 	"dependencies": {
-		"react": "16.2.0"
+		"react": "16.2.0",
+		"@n4jsd/react": "<=16.2.*"
 	},
 	"n4js": {
 		"projectType": "library",
@@ -13,9 +14,6 @@
 			"source": [
 				"src"
 			]
-		},
-		"typeDependencies": {
-			"react-n4jsd": "*"
 		}
 	}
 }

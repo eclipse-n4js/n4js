@@ -12,12 +12,9 @@
 /**
  * Package with core functionality of <code>external libraries manager</code>, that is:
  * <ul>
- * <li>managing external libraries, e.g. <code>npm</code>s</li>
- * <li>adapting external libraries to <code>N4JS</code> project format</li>
- * <li>managing type definitions for external libraries, i.e. working with git repository holding <code>n4jsd</code>
- * files</li>
- * <li>interfacing with IDE build phases to ensure proper resource life cycle</li>
- * <li>working with target platform</li>
+ * <li>managing external libraries, i.e. install/uninstall <code>npm</code>s</li>
+ * <li>building external libraries</li>
+ * <li>synchronizing disk and index regarding external libraries</li>
  * </ul>
  *
  * For more information see appropriate chapters of N4JS documentation.

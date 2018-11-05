@@ -24,7 +24,6 @@ import org.eclipse.n4js.internal.MultiCleartriggerCache;
 import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
-import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
@@ -48,7 +47,6 @@ import com.google.inject.Singleton;
 @Singleton
 @SuppressWarnings("javadoc")
 public class N4JSProjectsStateHelper extends AbstractStorage2UriMapperClient {
-
 	private static final Logger LOGGER = Logger.getLogger(N4JSProjectsStateHelper.class);
 
 	private static final String SOURCE_CONTAINER_PREFIX = "n4jssc:";
@@ -135,19 +133,22 @@ public class N4JSProjectsStateHelper extends AbstractStorage2UriMapperClient {
 			}
 		}
 		return uris;
-
 	}
 
 	public void clearProjectCache() {
-		LOGGER.info("Clearing all cached project descriptions.");
-		cache.clear(EclipseBasedN4JSWorkspace.PROJECT_DESCRIPTIONS);
-		cache.clear(N4JSModel.SORTED_DEPENDENCIES);
+		LOGGER.info("Clearing cache.");
+		cache.clear();
 	}
 
 	public void clearProjectCache(IResourceDelta delta) {
 		IProject project = delta.getResource().getProject();
+		clearProjectCache(project);
+	}
+
+	public void clearProjectCache(IProject project) {
 		LOGGER.info("Clearing cache for " + project.getProject().getName() + ".");
-		cache.clear(EclipseBasedN4JSWorkspace.PROJECT_DESCRIPTIONS, URIUtils.convert(project));
-		cache.clear(N4JSModel.SORTED_DEPENDENCIES, URIUtils.convert(project));
+		cache.clear(MultiCleartriggerCache.CACHE_KEY_PROJECT_DESCRIPTIONS, URIUtils.convert(project));
+		cache.clear(MultiCleartriggerCache.CACHE_KEY_SORTED_DEPENDENCIES, URIUtils.convert(project));
+		cache.clear(MultiCleartriggerCache.CACHE_KEY_API_IMPL_MAPPING);
 	}
 }

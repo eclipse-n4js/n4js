@@ -10,12 +10,11 @@
  */
 package org.eclipse.n4js.tests.conversion;
 
+import org.eclipse.n4js.conversion.IdentifierValueConverter;
 import org.eclipse.xtext.conversion.ValueConverterException;
 import org.eclipse.xtext.conversion.ValueConverterWithValueException;
 import org.junit.Assert;
 import org.junit.Test;
-
-import org.eclipse.n4js.conversion.IdentifierValueConverter;
 
 /**
  */
@@ -23,13 +22,13 @@ import org.eclipse.n4js.conversion.IdentifierValueConverter;
 public class IdentifierValueConverterTest extends Assert {
 
 	public void assertConversion(String expected, String input) {
-		String result = IdentifierValueConverter.convertFromJSIdentifier(input, null);
+		String result = IdentifierValueConverter.convertFromN4JSIdentifier(input, null);
 		assertEquals(expected, result);
 	}
 
 	public void assertError(String expected, String input) {
 		try {
-			IdentifierValueConverter.convertFromJSIdentifier(input, null);
+			IdentifierValueConverter.convertFromN4JSIdentifier(input, null);
 			fail("expected exception");
 		} catch (ValueConverterWithValueException e) {
 			String result = (String) e.getValue();
@@ -39,7 +38,7 @@ public class IdentifierValueConverterTest extends Assert {
 
 	public void assertErrorNoResult(String input) {
 		try {
-			IdentifierValueConverter.convertFromJSIdentifier(input, null);
+			IdentifierValueConverter.convertFromN4JSIdentifier(input, null);
 			fail("expected exception");
 		} catch (ValueConverterWithValueException e) {
 			fail("expected plain value converter exception");
@@ -101,5 +100,15 @@ public class IdentifierValueConverterTest extends Assert {
 	@Test
 	public void testDots() {
 		assertError("aa", "a\\.a");
+	}
+
+	@Test
+	public void testUnknownEscapeSequence1() {
+		assertError("aBc", "a\\Bc");
+	}
+
+	@Test
+	public void testUnknownEscapeSequence2() {
+		assertError("Abc", "\\Abc");
 	}
 }

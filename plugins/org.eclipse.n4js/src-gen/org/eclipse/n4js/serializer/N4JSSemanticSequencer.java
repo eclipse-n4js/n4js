@@ -3452,13 +3452,13 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *                 bogusTypeRef=TypeRefWithModifiers? 
 	 *                 (declaredName=LiteralOrComputedPropertyName | declaredName=LiteralOrComputedPropertyName)
 	 *             ) | 
+	 *             (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers? generator?='*' declaredName=LiteralOrComputedPropertyName) | 
+	 *             (declaredModifiers+=N4Modifier+ declaredName=LiteralOrComputedPropertyName) | 
 	 *             (
 	 *                 (declaredModifiers+=N4Modifier+ | (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers?)) 
 	 *                 generator?='*' 
 	 *                 declaredName=LiteralOrComputedPropertyName
-	 *             ) | 
-	 *             (declaredModifiers+=N4Modifier+ declaredName=LiteralOrComputedPropertyName) | 
-	 *             (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers? generator?='*' declaredName=LiteralOrComputedPropertyName)
+	 *             )
 	 *         )? 
 	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
 	 *         returnTypeRef=TypeRef? 
@@ -17132,15 +17132,15 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     NoSubstitutionTemplate returns TemplateSegment
 	 *
 	 * Constraint:
-	 *     rawValue=NO_SUBSTITUTION_TEMPLATE_LITERAL
+	 *     value=NO_SUBSTITUTION_TEMPLATE_LITERAL
 	 */
 	protected void sequence_NoSubstitutionTemplate(ISerializationContext context, TemplateSegment semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getTemplateSegment_RawValue()) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getTemplateSegment_RawValue()));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getTemplateSegment_Value()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getTemplateSegment_Value()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getNoSubstitutionTemplateAccess().getRawValueNO_SUBSTITUTION_TEMPLATE_LITERALTerminalRuleCall_1_0(), semanticObject.getRawValue());
+		feeder.accept(grammarAccess.getNoSubstitutionTemplateAccess().getValueNO_SUBSTITUTION_TEMPLATE_LITERALTerminalRuleCall_1_0(), semanticObject.getValue());
 		feeder.finish();
 	}
 	
@@ -23039,15 +23039,15 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     TemplateHead returns TemplateSegment
 	 *
 	 * Constraint:
-	 *     rawValue=TEMPLATE_HEAD
+	 *     value=TEMPLATE_HEAD
 	 */
 	protected void sequence_TemplateHead(ISerializationContext context, TemplateSegment semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getTemplateSegment_RawValue()) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getTemplateSegment_RawValue()));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getTemplateSegment_Value()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getTemplateSegment_Value()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getTemplateHeadAccess().getRawValueTEMPLATE_HEADTerminalRuleCall_1_0(), semanticObject.getRawValue());
+		feeder.accept(grammarAccess.getTemplateHeadAccess().getValueTEMPLATE_HEADTerminalRuleCall_1_0(), semanticObject.getValue());
 		feeder.finish();
 	}
 	
@@ -23633,15 +23633,15 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     TemplateMiddle returns TemplateSegment
 	 *
 	 * Constraint:
-	 *     rawValue=TemplateMiddleLiteral
+	 *     value=TemplateMiddleLiteral
 	 */
 	protected void sequence_TemplateMiddle(ISerializationContext context, TemplateSegment semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getTemplateSegment_RawValue()) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getTemplateSegment_RawValue()));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getTemplateSegment_Value()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getTemplateSegment_Value()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getTemplateMiddleAccess().getRawValueTemplateMiddleLiteralParserRuleCall_1_0(), semanticObject.getRawValue());
+		feeder.accept(grammarAccess.getTemplateMiddleAccess().getValueTemplateMiddleLiteralParserRuleCall_1_0(), semanticObject.getValue());
 		feeder.finish();
 	}
 	
@@ -23651,15 +23651,15 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     TemplateTail returns TemplateSegment
 	 *
 	 * Constraint:
-	 *     rawValue=TemplateTailLiteral
+	 *     value=TemplateTailLiteral
 	 */
 	protected void sequence_TemplateTail(ISerializationContext context, TemplateSegment semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getTemplateSegment_RawValue()) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getTemplateSegment_RawValue()));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getTemplateSegment_Value()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getTemplateSegment_Value()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getTemplateTailAccess().getRawValueTemplateTailLiteralParserRuleCall_1_0(), semanticObject.getRawValue());
+		feeder.accept(grammarAccess.getTemplateTailAccess().getValueTemplateTailLiteralParserRuleCall_1_0(), semanticObject.getValue());
 		feeder.finish();
 	}
 	

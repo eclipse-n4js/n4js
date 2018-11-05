@@ -15,5 +15,8 @@
 {
 	// note: underscore not allowed at beginning of scope names (according to npm)!
 	// XPECT errors --> "The name "_invalidScope" is not a valid scope name." at ""@_invalidScope/MyProject""
-	"name": "@_invalidScope/MyProject"
+	"name": "@_invalidScope/MyProject",
+	"n4js": {
+		"projectType": "validation"
+	}
 }

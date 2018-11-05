@@ -22,18 +22,15 @@ import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
 import org.eclipse.n4js.binaries.nodejs.NodeProcessBuilder;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.binaries.nodejs.NpmrcBinary;
-import org.eclipse.n4js.external.EclipseTargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.external.ExternalIndexSynchronizer;
 import org.eclipse.n4js.external.ExternalLibraryHelper;
 import org.eclipse.n4js.external.ExternalLibraryUriHelper;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalProjectsCollector;
-import org.eclipse.n4js.external.GitCloneSupplier;
 import org.eclipse.n4js.external.NpmLogger;
 import org.eclipse.n4js.external.RebuildWorkspaceProjectsScheduler;
+import org.eclipse.n4js.external.ShadowingInfoHelper;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
-import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider;
-import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider.TypeDefinitionGitLocationProviderImpl;
 import org.eclipse.n4js.generator.IWorkspaceMarkerSupport;
 import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
@@ -41,16 +38,18 @@ import org.eclipse.n4js.internal.MultiCleartriggerCache;
 import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.packagejson.PackageJsonHelper;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
-import org.eclipse.n4js.preferences.OsgiExternalLibraryPreferenceStore;
+import org.eclipse.n4js.preferences.HlcExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.ts.validation.TypesKeywordProvider;
 import org.eclipse.n4js.ui.containers.CompositeStorage2UriMapperContribution;
 import org.eclipse.n4js.ui.containers.N4JSExternalLibraryStorage2UriMapperContribution;
+import org.eclipse.n4js.ui.containers.N4JSProjectsStateHelper;
 import org.eclipse.n4js.ui.containers.N4JSToBeBuiltComputer;
 import org.eclipse.n4js.ui.external.BuildOrderComputer;
 import org.eclipse.n4js.ui.external.EclipseExternalIndexSynchronizer;
 import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
+import org.eclipse.n4js.ui.external.EclipseTargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.ui.external.ExternalIndexUpdater;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildQueue;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildScheduler;
@@ -76,6 +75,7 @@ import org.eclipse.n4js.utils.WildcardPathFilterHelper;
 import org.eclipse.n4js.utils.process.OutputStreamPrinterThreadProvider;
 import org.eclipse.n4js.utils.process.OutputStreamProvider;
 import org.eclipse.n4js.utils.process.ProcessExecutor;
+import org.eclipse.n4js.validation.helper.FolderContainmentHelper;
 import org.eclipse.xtext.builder.builderState.IBuilderState;
 import org.eclipse.xtext.builder.clustering.CurrentDescriptions;
 import org.eclipse.xtext.builder.impl.IToBeBuiltComputerContribution;
@@ -115,6 +115,7 @@ public class ContributingModule implements Module {
 		binder.bind(InternalN4JSWorkspace.class).to(EclipseBasedN4JSWorkspace.class);
 		binder.bind(EclipseBasedN4JSWorkspace.class);
 		binder.bind(ProjectDescriptionLoader.class);
+		binder.bind(FolderContainmentHelper.class);
 		binder.bind(PackageJsonHelper.class);
 		binder.bind(IWorkspaceRoot.class).toProvider(new Provider<IWorkspaceRoot>() {
 			@Inject
@@ -132,8 +133,6 @@ public class ContributingModule implements Module {
 		binder.bind(ExternalLibraryHelper.class);
 		binder.bind(StatusHelper.class);
 		binder.bind(TargetPlatformInstallLocationProvider.class).to(EclipseTargetPlatformInstallLocationProvider.class);
-		binder.bind(GitCloneSupplier.class);
-		binder.bind(TypeDefinitionGitLocationProvider.class).to(TypeDefinitionGitLocationProviderImpl.class);
 
 		binder.bind(IN4JSCore.class).to(N4JSEclipseCore.class);
 		binder.bind(IN4JSEclipseCore.class).to(N4JSEclipseCore.class);
@@ -142,14 +141,16 @@ public class ContributingModule implements Module {
 		binder.bind(N4JSEclipseModel.class);
 		binder.bind(MarkerCreator.class);
 		binder.bind(WildcardPathFilterHelper.class);
+		binder.bind(N4JSProjectsStateHelper.class);
 		binder.bind(MultiCleartriggerCache.class);
 
 		binder.bind(ExternalLibraryWorkspace.class).to(EclipseExternalLibraryWorkspace.class);
 		binder.bind(EclipseExternalLibraryWorkspace.class);
 		binder.bind(ExternalIndexSynchronizer.class).to(EclipseExternalIndexSynchronizer.class);
 		binder.bind(EclipseExternalIndexSynchronizer.class);
+		binder.bind(ShadowingInfoHelper.class);
 
-		binder.bind(ExternalProjectCacheLoader.class);
+		binder.bind(ExternalProjectLoader.class);
 		binder.bind(ProjectStateChangeListener.class);
 		binder.bind(ExternalIndexUpdater.class);
 		binder.bind(ExternalLibraryBuildScheduler.class);
@@ -166,8 +167,8 @@ public class ContributingModule implements Module {
 		binder.bind(N4JSExternalLibraryStorage2UriMapperContribution.class);
 		binder.bind(ExternalLibraryUriHelper.class);
 		binder.bind(FileBasedExternalPackageManager.class);
-		binder.bind(ExternalLibraryPreferenceStore.class).to(OsgiExternalLibraryPreferenceStore.class);
-		binder.bind(OsgiExternalLibraryPreferenceStore.class);
+		binder.bind(ExternalLibraryPreferenceStore.class).to(HlcExternalLibraryPreferenceStore.class);
+		binder.bind(HlcExternalLibraryPreferenceStore.class);
 		binder.bind(XtextResourceSet.class);
 		binder.bind(ProjectDescriptionLoadListener.class);
 		binder.bind(IEagerContribution.class).to(ProjectDescriptionLoadListener.class);

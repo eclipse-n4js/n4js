@@ -10,16 +10,17 @@
  */
 package org.eclipse.n4js.resource;
 
+import java.io.BufferedInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.internal.resources.ResourceException;
@@ -58,15 +59,14 @@ import org.eclipse.n4js.postprocessing.ASTMetaInfoCache;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.scoping.diagnosing.N4JSScopingDiagnostician;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
-import org.eclipse.n4js.smith.ClosableMeasurement;
-import org.eclipse.n4js.smith.DataCollector;
-import org.eclipse.n4js.smith.DataCollectors;
+import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInSchemeRegistrar;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.EcoreUtilN4;
+import org.eclipse.n4js.utils.N4JSDataCollectors;
 import org.eclipse.n4js.utils.N4JSLanguageHelper;
 import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
 import org.eclipse.n4js.utils.emf.ProxyResolvingResource;
@@ -89,7 +89,9 @@ import org.eclipse.xtext.util.IResourceScopeCache;
 import org.eclipse.xtext.util.OnChangeEvictingCache;
 import org.eclipse.xtext.util.Triple;
 
+import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
+import com.google.common.io.CharStreams;
 import com.google.inject.Inject;
 
 /**
@@ -265,8 +267,6 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	@Inject
 	private N4JSLanguageHelper langHelper;
 
-	private final DataCollector collector = DataCollectors.INSTANCE.getOrCreateDataCollector("N4JSResource");
-
 	/*
 	 * Even though the constructor is empty, it simplifies debugging (allows to set a breakpoint) thus we keep it here.
 	 */
@@ -312,6 +312,14 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	 */
 	public void setASTMetaInfoCache(ASTMetaInfoCache cache) {
 		this.astMetaInfoCache = cache;
+	}
+
+	/**
+	 * Tells if this resource represents an {@link N4JSLanguageHelper#isOpaqueModule(URI) opaque module}. Intended as
+	 * convenience and for client code that is unable to inject {@link N4JSLanguageHelper} (e.g. in builder).
+	 */
+	public boolean isOpaque() {
+		return langHelper.isOpaqueModule(this.uri);
 	}
 
 	/**
@@ -608,6 +616,14 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		}
 	}
 
+	@Override
+	protected void doLinking() {
+		if (isOpaque()) {
+			return;
+		}
+		super.doLinking();
+	}
+
 	/**
 	 * Minor optimization, do no lazily create warnings and error objects.
 	 */
@@ -627,7 +643,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		if (contents != null && !contents.isEmpty()) {
 			discardStateFromDescription(true);
 		}
-		if (langHelper.isOpaqueModule(this.uri)) {
+		if (isOpaque()) {
 			IParseResult result = new JSParseResult(inputStream);
 			updateInternalState(this.getParseResult(), result);
 		} else {
@@ -651,13 +667,13 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		}
 
 		private static String getCompleteString(InputStream inputStream) {
-			String completeString = "";
-			try (Scanner s = new Scanner(inputStream); Scanner ss = s.useDelimiter("\\A");) {
-				completeString = ss.hasNext() ? ss.next() : "";
-			} catch (Exception e) {
+			try (final InputStreamReader inputStreamReader = new InputStreamReader(new BufferedInputStream(inputStream),
+					Charsets.UTF_8)) {
+				return CharStreams.toString(inputStreamReader);
+			} catch (IOException e) {
 				LOGGER.error("Error when reading contents of JS file", e);
 			}
-			return completeString;
+			return "";
 		}
 
 		@Override
@@ -696,7 +712,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 
 	@Override
 	public void update(int offset, int replacedTextLength, String newText) {
-		if (langHelper.isOpaqueModule(this.uri)) {
+		if (isOpaque()) {
 			String oldText = this.getParseResult().getRootNode().getText();
 			String newCompleteString = oldText.substring(0, offset) + newText
 					+ oldText.substring(offset + replacedTextLength);
@@ -1298,7 +1314,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		// called from builder before resource descriptions are created + called from validator
 		final Script script = getScriptResolved(); // need to be called before resolve() since that one injects a proxy
 		// at resource.content[0]
-		try (ClosableMeasurement m = collector.getClosableMeasurement(getURI().toString());) {
+		try (Measurement m = N4JSDataCollectors.dcN4JSResource.getMeasurement(getURI().toString());) {
 			super.resolveLazyCrossReferences(mon);
 		}
 

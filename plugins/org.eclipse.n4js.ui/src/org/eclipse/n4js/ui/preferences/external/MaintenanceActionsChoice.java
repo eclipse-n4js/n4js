@@ -20,18 +20,15 @@ import java.util.List;
 public class MaintenanceActionsChoice {
 
 	/** Simple constructor that stores provided values. */
-	public MaintenanceActionsChoice(boolean decisionResetTypeDefinitions, boolean decisionCleanCache,
-			boolean decisionReinstall, boolean decisionPurgeNpm, boolean decisionReload) {
+	public MaintenanceActionsChoice(boolean decisionCleanCache, boolean decisionReinstall, boolean decisionPurgeNpm,
+			boolean decisionReload) {
 
-		this.decisionResetTypeDefinitions = decisionResetTypeDefinitions;
 		this.decisionCleanCache = decisionCleanCache;
 		this.decisionReinstall = decisionReinstall;
 		this.decisionPurgeNpm = decisionPurgeNpm;
 		this.decisionReload = decisionReload;
 	}
 
-	/** Flag marks if reseting type definitions should be performed. */
-	public final boolean decisionResetTypeDefinitions;
 	/** Flag marks if npm cache clean should be performed. */
 	public final boolean decisionCleanCache;
 	/** Flag marks if reinstalling currently installed npms should be performed. */
@@ -44,9 +41,6 @@ public class MaintenanceActionsChoice {
 	@Override
 	public String toString() {
 		List<String> actionTexts = new LinkedList<>();
-		if (decisionResetTypeDefinitions) {
-			actionTexts.add(MaintenanceActionsButtonListener.ACTION_TYPE_DEFINITIONS_RESET);
-		}
 		if (decisionCleanCache) {
 			actionTexts.add(MaintenanceActionsButtonListener.ACTION_NPM_CACHE_CLEAN);
 		}

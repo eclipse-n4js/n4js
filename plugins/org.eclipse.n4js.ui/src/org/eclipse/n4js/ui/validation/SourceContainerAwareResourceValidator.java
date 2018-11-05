@@ -17,10 +17,9 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.internal.RaceDetectionHelper;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
-import org.eclipse.n4js.smith.ClosableMeasurement;
-import org.eclipse.n4js.smith.DataCollector;
-import org.eclipse.n4js.smith.DataCollectors;
+import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
+import org.eclipse.n4js.utils.N4JSDataCollectors;
 import org.eclipse.n4js.validation.N4JSResourceValidator;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -38,8 +37,6 @@ public class SourceContainerAwareResourceValidator extends N4JSResourceValidator
 
 	private final IN4JSEclipseCore eclipseCore;
 	private final OperationCanceledManager operationCanceledManager;
-	private final DataCollector collector = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("ManifestAwareResourceValidator");
 
 	@Inject
 	private SourceContainerAwareResourceValidator(IN4JSEclipseCore eclipseCore,
@@ -50,7 +47,8 @@ public class SourceContainerAwareResourceValidator extends N4JSResourceValidator
 
 	@Override
 	public List<Issue> validate(Resource resource, CheckMode mode, CancelIndicator cancelIndicator) {
-		try (ClosableMeasurement m = collector.getClosableMeasurement(resource.getURI().toString());) {
+		try (Measurement m = N4JSDataCollectors.dcManifestAwareResourceValidator
+				.getMeasurement(resource.getURI().toString());) {
 
 			operationCanceledManager.checkCanceled(cancelIndicator);
 			if (!isInSourceFolder(resource)) {

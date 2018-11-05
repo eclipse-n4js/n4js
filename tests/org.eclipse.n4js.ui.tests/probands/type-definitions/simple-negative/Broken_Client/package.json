@@ -2,7 +2,8 @@
 	"name": "Broken_Client",
 	"version": "0.0.1",
 	"dependencies": {
-		"Impl": "*"
+		"Impl": "*",
+		"Broken_Def": "*"
 	},
 	"n4js": {
 		"projectType": "library",
@@ -12,9 +13,6 @@
 				"src"
 			]
 		},
-		"output": "src-gen",
-		"typeDependencies": {
-			"Broken_Def": "*"
-		}
+		"output": "src-gen"
 	}
 }

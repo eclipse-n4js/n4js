@@ -28,6 +28,8 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
+import org.eclipse.n4js.semver.SemverHelper;
+import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.ui.statushandlers.StatusManager;
 
@@ -53,12 +55,17 @@ public class N4JSTasksExampleWizard extends ExampleInstallerWizard {
 	@Inject
 	private ExternalLibraryWorkspace externalLibraryWorkspace;
 
+	@Inject
+	private SemverHelper semverHelper;
+
 	@Override
 	public boolean performFinish() {
 		if (super.performFinish()) {
 			installDependencies(ImmutableMap.of(
-					"mongodb", ">=2.0.0 <3.0.0",
-					"express", ""));
+					"mongodb", semverHelper.parse(">=2.0.0 <3.0.0"),
+					"@n4jsd/mongodb", semverHelper.parse(">=2.0.0 <3.0.0"),
+					"@n4jsd/express", semverHelper.parse(""),
+					"express", semverHelper.parse("")));
 			return true;
 		}
 		return false;
@@ -69,7 +76,7 @@ public class N4JSTasksExampleWizard extends ExampleInstallerWizard {
 	 *            a map from NPM package names to NPM version constraints; use an empty string as version constraint to
 	 *            install the newest version.
 	 */
-	private void installDependencies(Map<String, String> namesAndVersions) {
+	private void installDependencies(Map<String, NPMVersionRequirement> namesAndVersions) {
 		Set<String> toInstall = new HashSet<>(namesAndVersions.keySet());
 		toInstall.removeAll(getInstalledNpmPackages());
 
@@ -77,23 +84,14 @@ public class N4JSTasksExampleWizard extends ExampleInstallerWizard {
 			getContainer().run(true, false, new IRunnableWithProgress() {
 				@Override
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					for (String name : toInstall) {
-						try {
-							String versionStr = namesAndVersions.get(name);
-							IStatus status;
-							if (versionStr != null) {
-								monitor.subTask("Installing dependency '" + name + "' in version " + versionStr);
-								status = libManager.installNPM(name, versionStr, monitor);
-							} else {
-								monitor.subTask("Installing dependency '" + name + "'");
-								status = libManager.installNPM(name, monitor);
-							}
-							if (status.matches(IStatus.ERROR))
-								throw status.getException();
-						} catch (Throwable e) {
-							throw new InvocationTargetException(e,
-									"An error occurred while installing dependency '" + name + "'");
-						}
+					try {
+						monitor.subTask("Installing dependencies");
+						IStatus status = libManager.installNPMs(namesAndVersions, true, monitor);
+						if (status.matches(IStatus.ERROR))
+							throw status.getException();
+					} catch (Throwable e) {
+						throw new InvocationTargetException(e,
+								"An error occurred while installing dependencies");
 					}
 				}
 			});

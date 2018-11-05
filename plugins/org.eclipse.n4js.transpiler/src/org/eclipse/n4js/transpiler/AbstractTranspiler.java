@@ -16,9 +16,13 @@ import java.nio.file.Path;
 import org.eclipse.n4js.generator.GeneratorOption;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.smith.DataCollector;
+import org.eclipse.n4js.smith.DataCollectors;
+import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.transpiler.print.PrettyPrinter;
 import org.eclipse.n4js.transpiler.utils.TranspilerDebugUtils;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.utils.N4JSDataCollectors;
 import org.eclipse.n4js.utils.ResourceNameComputer;
 import org.eclipse.n4js.utils.di.scopes.ScopeManager;
 import org.eclipse.n4js.utils.di.scopes.TransformationScoped;
@@ -191,39 +195,60 @@ public abstract class AbstractTranspiler {
 			}
 
 			// step 1: ask transformation manager for transformations to execute
-			final Transformation[] transformationsPreFiler = computeTransformationsToBeExecuted(state);
-			final Transformation[] transformations = TransformationDependency
-					.filterByTranspilerOptions(transformationsPreFiler, state.options);
-			TransformationDependency.assertDependencies(transformations);
+			Transformation[] transformationsPreFiler = null;
+			Transformation[] transformations = null;
+			try (Measurement m = N4JSDataCollectors.dcTranspilationStep1.getMeasurement("T1")) {
+				transformationsPreFiler = computeTransformationsToBeExecuted(state);
+				transformations = TransformationDependency
+						.filterByTranspilerOptions(transformationsPreFiler, state.options);
+				TransformationDependency.assertDependencies(transformations);
+			}
 
 			// step 2: give each transformation a chance to perform early analysis on the initial (unchanged!) state
-			for (Transformation currT : transformations) {
-				currT.analyze();
+			try (Measurement m = N4JSDataCollectors.dcTranspilationStep2.getMeasurement("T2")) {
+				for (Transformation currT : transformations) {
+					String name = "T2_" + currT.getClass().getSimpleName();
+					DataCollector dcT2_ct = DataCollectors.INSTANCE
+							.getOrCreateDataCollector(name, N4JSDataCollectors.dcTranspilationStep2);
+
+					try (Measurement m2 = dcT2_ct.getMeasurement(name);) {
+						currT.analyze();
+					}
+				}
 			}
 
 			// step 3: actually perform the transformations (in the order defined by transformation manager)
-			for (Transformation currT : transformations) {
+			try (Measurement m = N4JSDataCollectors.dcTranspilationStep3.getMeasurement("T3")) {
+				for (Transformation currT : transformations) {
+					String name = "T3_" + currT.getClass().getSimpleName();
+					DataCollector dcT3_ct = DataCollectors.INSTANCE
+							.getOrCreateDataCollector(name, N4JSDataCollectors.dcTranspilationStep3);
 
-				if (DEBUG_DUMP_STATE) {
-					System.out.println("============================== PRE " + currT.getClass().getSimpleName());
-					TranspilerDebugUtils.dump(state);
-				}
-				if (DEBUG_DRAW_STATE) {
-					TranspilerDebugUtils.dumpGraph(state, "PRE " + currT.getClass().getSimpleName());
-				}
+					try (Measurement m2 = dcT3_ct.getMeasurement(name);) {
 
-				if (DEBUG_PERFORM_ASSERTIONS) {
-					currT.assertPreConditions();
-				}
+						if (DEBUG_DUMP_STATE) {
+							System.out
+									.println("============================== PRE " + currT.getClass().getSimpleName());
+							TranspilerDebugUtils.dump(state);
+						}
+						if (DEBUG_DRAW_STATE) {
+							TranspilerDebugUtils.dumpGraph(state, "PRE " + currT.getClass().getSimpleName());
+						}
 
-				currT.transform();
+						if (DEBUG_PERFORM_ASSERTIONS) {
+							currT.assertPreConditions();
+						}
 
-				if (DEBUG_PERFORM_ASSERTIONS) {
-					currT.assertPostConditions();
-				}
+						currT.transform();
 
-				if (DEBUG_PERFORM_VALIDATIONS) {
-					transpilerDebugUtils.validateState(state, true);
+						if (DEBUG_PERFORM_ASSERTIONS) {
+							currT.assertPostConditions();
+						}
+
+						if (DEBUG_PERFORM_VALIDATIONS) {
+							transpilerDebugUtils.validateState(state, true);
+						}
+					}
 				}
 			}
 

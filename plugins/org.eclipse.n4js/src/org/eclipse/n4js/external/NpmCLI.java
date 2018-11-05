@@ -14,24 +14,32 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.binaries.BinaryCommandFactory;
+import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
 import org.eclipse.n4js.semver.SemverHelper;
-import org.eclipse.n4js.semver.Semver.GitHubVersionRequirement;
-import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
+import org.eclipse.n4js.semver.SemverMatcher;
+import org.eclipse.n4js.semver.SemverUtils;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.utils.ProcessExecutionCommandStatus;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.StatusHelper;
+import org.eclipse.n4js.utils.process.ProcessResult;
+import org.eclipse.xtext.util.Pair;
+import org.eclipse.xtext.util.Tuples;
 
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -51,6 +59,9 @@ public class NpmCLI {
 	private TargetPlatformInstallLocationProvider locationProvider;
 
 	@Inject
+	private ExternalLibraryWorkspace externalLibraryWorkspace;
+
+	@Inject
 	private StatusHelper statusHelper;
 
 	@Inject
@@ -60,16 +71,29 @@ public class NpmCLI {
 	private ProjectDescriptionLoader projectDescriptionLoader;
 
 	@Inject
+	private NpmBinary npmBinary;
+
+	@Inject
 	private SemverHelper semverHelper;
 
 	/** Simple validation if the package name is not null or empty */
 	public boolean invalidPackageName(String packageName) {
-		return packageName == null || packageName.trim().isEmpty() || packageName.endsWith("@");
+		return packageName == null || packageName.trim().isEmpty();
 	}
 
 	/** Simple validation if the package version is not null or empty */
 	public boolean invalidPackageVersion(String packageVersion) {
 		return packageVersion == null || (!packageVersion.isEmpty() && !packageVersion.startsWith("@"));
+	}
+
+	/** Returns the version of the system's npm binary or <code>null</code> in case of error. */
+	public VersionNumber getNpmVersion() {
+		final ProcessResult result = commandFactory.checkBinaryVersionCommand(npmBinary).execute();
+		if (result.isOK()) {
+			final String output = result.getStdOut();
+			return semverHelper.parseVersionNumber(output.trim());
+		}
+		return null;
 	}
 
 	/**
@@ -88,7 +112,7 @@ public class NpmCLI {
 	public Collection<LibraryChange> batchUninstall(IProgressMonitor monitor, MultiStatus status,
 			Collection<LibraryChange> requestedChanges) {
 
-		return batchInstallUninstallInternal(monitor, status, requestedChanges, LibraryChangeType.Uninstall);
+		return batchUninstallInternal(monitor, status, requestedChanges);
 	}
 
 	/**
@@ -107,96 +131,118 @@ public class NpmCLI {
 	public Collection<LibraryChange> batchInstall(IProgressMonitor monitor, MultiStatus status,
 			Collection<LibraryChange> requestedChanges) {
 
-		return batchInstallUninstallInternal(monitor, status, requestedChanges, LibraryChangeType.Install);
+		return batchInstallInternal(monitor, status, requestedChanges);
 	}
 
-	private Collection<LibraryChange> batchInstallUninstallInternal(IProgressMonitor monitor, MultiStatus status,
-			Collection<LibraryChange> requestedChanges, LibraryChangeType addressedType) {
+	private Collection<LibraryChange> batchInstallInternal(IProgressMonitor monitor, MultiStatus status,
+			Collection<LibraryChange> requestedChanges) {
 
-		int pckCount = requestedChanges.size();
-		MultiStatus batchStatus = statusHelper.createMultiStatus(addressedType.name() + "ing npm packages.");
-		SubMonitor subMonitor = SubMonitor.convert(monitor, pckCount + 1);
+		MultiStatus batchStatus = statusHelper.createMultiStatus("Installing npm packages.");
+		SubMonitor subMonitor = SubMonitor.convert(monitor, 1);
+		subMonitor.setTaskName("Installing npm packages.");
 
 		Collection<LibraryChange> actualChanges = new LinkedHashSet<>();
 		File installPath = new File(locationProvider.getTargetPlatformInstallURI());
 
-		final String jobName = addressedType.name().toLowerCase();
-
-		int i = 0;
+		// for installation, we invoke npm only once for all packages
+		final List<Pair<String, String>> packageNamesAndVersions = Lists.newArrayList();
 		for (LibraryChange reqChg : requestedChanges) {
-			if (subMonitor.isCanceled())
-				throw new OperationCanceledException("Operation <" + jobName + "> was canceled.");
+			if (reqChg.type == LibraryChangeType.Install) {
+				packageNamesAndVersions.add(Tuples.pair(reqChg.name, "@" + reqChg.version));
+			}
+		}
 
-			if (reqChg.type == addressedType) {
-				String msgTail = " [package " + i++ + " of " + pckCount + "]";
-				subMonitor.setTaskName(reqChg.toString() + msgTail);
-				LibraryChange actChg = installUninstall(batchStatus, installPath, reqChg);
-				if (actChg != null) {
-					actualChanges.add(actChg);
-				}
-				subMonitor.worked(1);
-				if (!batchStatus.isOK()) {
-					break; // fail fast and do not let the user wait for the problem
+		IStatus installStatus = install(packageNamesAndVersions, installPath);
+		subMonitor.worked(1);
+
+		if (installStatus == null || !installStatus.isOK()) {
+			batchStatus.merge(installStatus);
+		} else {
+			String nodeModulesFolder = TargetPlatformInstallLocationProvider.NODE_MODULES_FOLDER;
+			Path basePath = installPath.toPath().resolve(nodeModulesFolder);
+			for (LibraryChange reqChg : requestedChanges) {
+				if (reqChg.type == LibraryChangeType.Install) {
+					Path completePath = basePath.resolve(reqChg.name);
+					String actualVersion = getActualVersion(completePath);
+					if (actualVersion.isEmpty()) {
+						String msg = "Error reading package json when " + reqChg.toString();
+						IStatus packJsonError = statusHelper.createError(msg);
+						logger.logError(msg, new IllegalStateException(msg));
+						batchStatus.merge(packJsonError);
+					} else {
+						URI actualLocation = URI.createFileURI(completePath.toString());
+						LibraryChange actualChange = new LibraryChange(LibraryChangeType.Added, actualLocation,
+								reqChg.name, actualVersion);
+						actualChanges.add(actualChange);
+					}
 				}
 			}
 		}
 
 		if (!batchStatus.isOK()) {
-			logger.logInfo("Some packages could not be " + jobName + "ed due to errors, see log for details.");
+			logger.logInfo("Some packages could not be installed due to errors, see log for details.");
 			status.merge(batchStatus);
 		}
 
 		return actualChanges;
 	}
 
-	private LibraryChange installUninstall(MultiStatus batchStatus, File installPath, LibraryChange reqChg) {
-		LibraryChange actualChange = null;
-		IStatus packageProcessingStatus = null;
+	private Collection<LibraryChange> batchUninstallInternal(IProgressMonitor monitor, MultiStatus status,
+			Collection<LibraryChange> requestedChanges) {
 
-		String nodeModulesFolder = TargetPlatformInstallLocationProvider.NODE_MODULES_FOLDER;
-		Path completePath = installPath.toPath().resolve(nodeModulesFolder).resolve(reqChg.name);
-		LibraryChangeType actualChangeType = null;
-		String actualVersion = "";
-		if (reqChg.type == LibraryChangeType.Install) {
-			packageProcessingStatus = install(reqChg.name, "@" + reqChg.version, installPath);
+		int pckCount = requestedChanges.size();
+		MultiStatus batchStatus = statusHelper.createMultiStatus("Uninstalling npm packages.");
+		SubMonitor subMonitor = SubMonitor.convert(monitor, pckCount + 1);
 
-			if (packageProcessingStatus == null || !packageProcessingStatus.isOK()) {
-				batchStatus.merge(packageProcessingStatus);
-				return null;
+		Collection<LibraryChange> actualChanges = new LinkedHashSet<>();
+		File installPath = new File(locationProvider.getTargetPlatformInstallURI());
+
+		java.net.URI nodeModulesURI = locationProvider.getNodeModulesURI();
+		// for uninstallation, we invoke npm only once for all packages
+		final List<String> packageNames = Lists.newArrayList();
+		for (LibraryChange reqChg : requestedChanges) {
+			if (reqChg.type == LibraryChangeType.Uninstall) {
+				java.net.URI rootLocation = externalLibraryWorkspace.getRootLocationForResource(reqChg.location);
+				if (nodeModulesURI.equals(rootLocation)) {
+					packageNames.add(reqChg.name);
+				}
 			}
-
-			actualChangeType = LibraryChangeType.Added;
-			actualVersion = getActualVersion(batchStatus, reqChg, completePath);
 		}
-		if (reqChg.type == LibraryChangeType.Uninstall) {
-			actualVersion = getActualVersion(batchStatus, reqChg, completePath);
 
-			packageProcessingStatus = uninstall(reqChg.name, installPath);
-			if (packageProcessingStatus == null || !packageProcessingStatus.isOK()) {
-				batchStatus.merge(packageProcessingStatus);
-				return null;
+		IStatus installStatus = uninstall(packageNames, installPath);
+		subMonitor.worked(1);
+
+		if (installStatus == null || !installStatus.isOK()) {
+			batchStatus.merge(installStatus);
+		} else {
+			String nodeModulesFolder = TargetPlatformInstallLocationProvider.NODE_MODULES_FOLDER;
+			Path basePath = installPath.toPath().resolve(nodeModulesFolder);
+			for (LibraryChange reqChg : requestedChanges) {
+				if (reqChg.type == LibraryChangeType.Uninstall) {
+					Path completePath = basePath.resolve(reqChg.name);
+					String actualVersion = getActualVersion(completePath);
+					if (actualVersion.isEmpty()) {
+						LibraryChange actualChange = new LibraryChange(LibraryChangeType.Removed, reqChg.location,
+								reqChg.name, reqChg.version);
+						actualChanges.add(actualChange);
+					}
+				}
 			}
-
-			actualChangeType = LibraryChangeType.Removed;
 		}
 
-		if (packageProcessingStatus != null && packageProcessingStatus.isOK()) {
-			URI actualLocation = URI.createFileURI(completePath.toString());
-			actualChange = new LibraryChange(actualChangeType, actualLocation, reqChg.name, actualVersion);
+		if (!batchStatus.isOK()) {
+			logger.logInfo("Some packages could not be uninstalled due to errors, see log for details.");
+			status.merge(batchStatus);
 		}
 
-		return actualChange;
+		return actualChanges;
 	}
 
-	private String getActualVersion(MultiStatus batchStatus, LibraryChange reqChg, Path completePath) {
+	private String getActualVersion(Path completePath) {
 		URI location = URI.createFileURI(completePath.toString());
 		String versionStr = projectDescriptionLoader.loadVersionAndN4JSNatureFromProjectDescriptionAtLocation(location)
 				.getFirst();
 		if (versionStr == null) {
-			String msg = "Error reading package json when " + reqChg.toString();
-			IStatus packJsonError = statusHelper.createError(msg);
-			logger.logError(msg, new IllegalStateException(msg));
-			batchStatus.merge(packJsonError);
 			return "";
 		}
 		return versionStr;
@@ -207,33 +253,53 @@ public class NpmCLI {
 	 * there is no package.json at that location npm errors will be logged to the error log. In that case npm usual
 	 * still installs requested dependency (if possible).
 	 *
-	 * @param packageName
+	 * @param packageNamesAndVersions
 	 *            to be installed
 	 * @param installPath
 	 *            path where package is supposed to be installed
 	 */
-	private IStatus install(String packageName, String packageVersion, File installPath) {
-		if (invalidPackageName(packageName)) {
-			return statusHelper.createError("Malformed npm package name: '" + packageName + "'.");
-		}
-		if (invalidPackageVersion(packageVersion)) {
-			return statusHelper.createError("Malformed npm package version: '" + packageVersion + "'.");
+	private IStatus install(List<Pair<String, String>> packageNamesAndVersions, File installPath) {
+		List<String> packageNamesAndVersionsMerged = new ArrayList<>(packageNamesAndVersions.size());
+		for (Pair<String, String> pair : packageNamesAndVersions) {
+			String packageName = pair.getFirst();
+			String packageVersion = pair.getSecond();
+
+			// FIXME better error reporting (show all invalid names/versions, not just the first)
+			if (invalidPackageName(packageName)) {
+				return statusHelper.createError("Malformed npm package name: '" + packageName + "'.");
+			}
+			if (invalidPackageVersion(packageVersion)) {
+				return statusHelper.createError("Malformed npm package version: '" + packageVersion + "'.");
+			}
+
+			String nameAndVersion = packageVersion.isEmpty() ? packageName : packageName + packageVersion;
+			packageNamesAndVersionsMerged.add(nameAndVersion);
 		}
 
-		// TODO IDE-3136 / GH-1011 workaround for missing support of GitHub version requirements
-		NPMVersionRequirement packageVersionParsed = semverHelper.parse(packageVersion.substring(1));
-		if (packageVersionParsed instanceof GitHubVersionRequirement) {
-			// In case of a dependency like "JSONSelect@dbo/JSONSelect" (wherein "dbo/JSONSelect"
-			// is a GitHub version requirement), we only report "JSONSelect@" to npm. For details
-			// why this is necessary, see GH-1011.
-			packageVersion = "@";
-		}
-
-		String nameAndVersion = packageVersion.isEmpty() ? packageName : packageName + packageVersion;
-
-		return executor.execute(
-				() -> commandFactory.createInstallPackageCommand(installPath, nameAndVersion, true),
+		IStatus status = executor.execute(
+				() -> commandFactory.createInstallPackageCommand(installPath, packageNamesAndVersionsMerged, true),
 				"Error while installing npm package.");
+
+		// TODO IDE-3136 / GH-1011 workaround for a problem in node related to URL/GitHub version requirements
+		// In case of a dependency like "JSONSelect@dbo/JSONSelect" (wherein "dbo/JSONSelect" is a GitHub version
+		// requirement), the first installation works fine, but subsequent installations of additional npm packages may
+		// uninstall(!) the earlier package that used a URL/GitHub version requirement. This is supposed to be fixed
+		// in npm version 5.7.1. As a work-around we run a plain "npm install" after every installation of new packages,
+		// which should re-install the package with a URL/GitHub version requirement.
+		VersionNumber currNpmVersion = getNpmVersion();
+		VersionNumber fixedNpmVersion = SemverUtils.createVersionNumber(5, 7, 1);
+		if (currNpmVersion != null && SemverMatcher.compareLoose(currNpmVersion, fixedNpmVersion) < 0) {
+			IStatus workaroundStatus = executor.execute(
+					() -> commandFactory.createInstallPackageCommand(installPath, Collections.emptyList(), false),
+					"Error while running \"npm install\" after installing npm packages.");
+			MultiStatus combinedStatus = statusHelper
+					.createMultiStatus("Installing npm packages with additional \"npm install\" afterwards.");
+			combinedStatus.merge(status);
+			combinedStatus.merge(workaroundStatus);
+			status = combinedStatus;
+		}
+
+		return status;
 	}
 
 	/**
@@ -241,17 +307,20 @@ public class NpmCLI {
 	 * If there is no package.json at that location npm errors will be logged to the error log. In that case npm usual
 	 * still uninstalls requested dependency (if possible).
 	 *
-	 * @param packageName
-	 *            to be uninstalled
+	 * @param packageNames
+	 *            list of package names to be uninstalled
 	 * @param uninstallPath
 	 *            path where package is supposed to be uninstalled
 	 */
-	private IStatus uninstall(String packageName, File uninstallPath) {
-		if (invalidPackageName(packageName)) {
-			return statusHelper.createError("Malformed npm package name: '" + packageName + "'.");
+	private IStatus uninstall(List<String> packageNames, File uninstallPath) {
+		for (String packageName : packageNames) {
+			if (invalidPackageName(packageName)) {
+				return statusHelper.createError("Malformed npm package name: '" + packageName + "'.");
+			}
 		}
+
 		return executor.execute(
-				() -> commandFactory.createUninstallPackageCommand(uninstallPath, packageName, true),
+				() -> commandFactory.createUninstallPackageCommand(uninstallPath, packageNames, true),
 				"Error while uninstalling npm package.");
 	}
 

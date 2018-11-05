@@ -42,18 +42,13 @@
 	"dependencies": {
 		// XPECT noerrors
 		"impl": "*",
-		// XPECT warnings --> "Project orphan-definition of type definition cannot be declared among the dependencies or devDependencies." at ""orphan-definition": "*""
+		"definition": "*",
+		"unrelated-lib": "*",
+		// XPECT warnings --> "The implementation project does-not-exist of type definition project orphan-definition is missing from the dependencies section." at ""orphan-definition": "*""
 		"orphan-definition": "*"
 	},
 	"n4js": {
 		"projectType": "library",
-		"typeDependencies": {
-			"definition": "*",
-			// XPECT warnings --> "Project unrelated-lib of type library cannot be declared among the typeDependencies." at ""unrelated-lib": "*""
-			"unrelated-lib": "*",
-			// XPECT warnings --> "The implementation project does-not-exist of type definition project orphan-definition is missing from the dependencies section. " at ""orphan-definition": "*""
-			"orphan-definition": "*"
-		},
 		"output": "src-gen",
 		"sources": {
 			"source": [

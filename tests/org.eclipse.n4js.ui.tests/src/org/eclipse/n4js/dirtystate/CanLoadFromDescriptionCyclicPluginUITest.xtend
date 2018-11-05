@@ -24,11 +24,17 @@ import static org.junit.Assert.*
 import org.eclipse.n4js.tests.util.EclipseUIUtils
 import org.eclipse.xtext.util.StringInputStream
 import org.eclipse.core.runtime.CoreException
+import com.google.inject.Inject
+import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper
+import org.junit.Before
+import org.junit.Assume
 
 /**
  * Test builder / editor behavior with multiple files and cyclic dependencies.
  */
 class CanLoadFromDescriptionCyclicPluginUITest extends AbstractCanLoadFromDescriptionTest {
+	@Inject CanLoadFromDescriptionHelper canLoadFromDescriptionHelper;
+	
 	/*
 	 * X <- Y <- A <- B <- C <- D
 	 *           |              ^
@@ -175,6 +181,11 @@ class CanLoadFromDescriptionCyclicPluginUITest extends AbstractCanLoadFromDescri
 		]
 	}
 
+	@Before
+	def void before() {
+		Assume.assumeTrue(!canLoadFromDescriptionHelper.isLoadFromSourceDeactivated);
+	}
+
 	@Test
 	def void test_inEditor_simple() {
 		prepare("TestInEditorSimple")
@@ -307,7 +318,7 @@ class CanLoadFromDescriptionCyclicPluginUITest extends AbstractCanLoadFromDescri
 		assertTrue("output file of file C should NOT have been rebuilt", unchangedC);
 		assertTrue("output file of file D should NOT have been rebuilt", unchangedD);
 	}
-	
+
 	@Test
 	def void test_builder_changeP() {
 		prepare("TestBuilderChangeP")

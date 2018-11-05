@@ -19,7 +19,6 @@ import java.util.concurrent.atomic.AtomicReference
 import org.eclipse.core.resources.IMarker
 import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.core.runtime.CoreException
-import org.eclipse.core.runtime.OperationCanceledException
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.jface.dialogs.ErrorDialog
@@ -541,8 +540,8 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 			return;
 		}
 
-		acceptor.accept(issue,"Set access modifier to access modifier of " + superClassName + "." + memberName + ": " +
-						readableStringForSuggestion(accessSuggestion), "", null) [ context, marker, offset, length, element |
+		val msg = "Set access modifier to \"" + readableStringForSuggestion(accessSuggestion) + "\" (align with " + superClassName + "." + memberName + ")";
+		acceptor.accept(issue, msg, "", null) [ context, marker, offset, length, element |
 			if (element instanceof N4MemberDeclaration) {
 				var changes = new ArrayList<IChange>();
 				changes.add(setAccessModifiers(context.xtextDocument, element, modifierForSuggestion(accessSuggestion)));
@@ -694,7 +693,7 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 				new ProgressMonitorDialog(UIUtils.shell).run(true, false, [monitor |
 					try {
 						val Map<String, NPMVersionRequirement> package = Collections.singletonMap(packageName, packageVersion);
-						multiStatus.merge(libraryManager.installNPMs(package, monitor));
+						multiStatus.merge(libraryManager.installNPMs(package, false, monitor));
 
 					} catch (IllegalBinaryStateException e) {
 						illegalBinaryExcRef.set(e);
@@ -735,34 +734,6 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 				insertLineAbove(context.xtextDocument, offset, "@"+AnnotationDefinition.VERSION_AWARE.name, true)
 			];
 		]
-	}
-
-	@Fix(IssueCodes.NODE_MODULES_OUT_OF_SYNC)
-	def synchronizeIndexToNodeModules(Issue issue, IssueResolutionAcceptor acceptor) {
-		val title = "Synchronize N4JS Index to node_modules folder";
-		val descr = "This quickfix will scan and compare the node_modules folder and the N4JS Index to adjust the index to the node_modules folder.";
-		acceptor.accept(issue, title, descr, null, new N4Modification() {
-			override computeChanges(IModificationContext context, IMarker marker, int offset, int length, EObject element) throws Exception {
-				new ProgressMonitorDialog(UIUtils.shell).run(true, true, [monitor |
-					try {
-						libraryManager.synchronizeNpms(monitor);
-					} catch (InterruptedException e) {
-						// canceled by user
-					} catch (OperationCanceledException e) {
-						// canceled by user
-					} catch (IllegalBinaryStateException e) {
-					} catch (CoreException e) {
-					}
-				]);
-				return #[];
-			}
-			override supportsMultiApply() {
-				return false;
-			}
-			override isApplicableTo(IMarker marker) {
-				return true;
-			}
-		});
 	}
 
 }

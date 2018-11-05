@@ -2,13 +2,12 @@
   "name": "TestPrj",
   "version": "0.0.1",
   "dependencies": {
+    "n4js-runtime-node": "*",
     "org.eclipse.n4js.mangelhaft": "*",
     "org.eclipse.n4js.mangelhaft.assert": "*",
     "express": "*"
   },
-  "devDependencies": {
-    "n4js-runtime-node": "*"
-  },
+  "devDependencies": {},
   "n4js": {
     "projectType": "test",
     "vendorId": "org.eclipse.n4js",
@@ -21,9 +20,6 @@
     },
     "requiredRuntimeLibraries": [
       "n4js-runtime-node"
-    ],
-    "typeDependencies": {
-      "express-n4jsd": "*"
-    }
+    ]
   }
 }

@@ -222,6 +222,7 @@ public class Project {
 			case RUNTIME_ENVIRONMENT: "runtimeEnvironment"
 			case RUNTIME_LIBRARY: "runtimeLibrary"
 			case TEST: "test"
+			case PLAINJS: "plainjs"
 			case VALIDATION: "validation"
 			case DEFINITION: "definition"
 		};

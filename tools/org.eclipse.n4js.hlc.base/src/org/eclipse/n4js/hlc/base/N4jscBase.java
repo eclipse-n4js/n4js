@@ -18,8 +18,6 @@ import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_DEPENDENCY_NOT_FO
 import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_MODULE_TO_RUN_NOT_FOUND;
 import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR;
 import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_WRONG_CMDLINE_OPTIONS;
-import static org.eclipse.n4js.utils.git.GitUtils.hardReset;
-import static org.eclipse.n4js.utils.git.GitUtils.pull;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,14 +25,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.varia.NullAppender;
@@ -50,10 +51,9 @@ import org.eclipse.n4js.binaries.BinariesPreferenceStore;
 import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.binaries.nodejs.NpmrcBinary;
-import org.eclipse.n4js.external.HeadlessTargetPlatformInstallLocationProvider;
+import org.eclipse.n4js.external.HlcTargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
-import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider;
 import org.eclipse.n4js.external.libraries.ExternalLibraryFolderUtils;
 import org.eclipse.n4js.generator.headless.BuildSet;
 import org.eclipse.n4js.generator.headless.BuildSetComputer;
@@ -66,19 +66,20 @@ import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.hlc.base.running.HeadlessRunner;
 import org.eclipse.n4js.hlc.base.testing.HeadlessTester;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
+import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.dependencies.ProjectDependenciesHelper;
 import org.eclipse.n4js.runner.SystemLoaderInfo;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
-import org.eclipse.n4js.smith.ClosableMeasurement;
 import org.eclipse.n4js.smith.CollectedDataAccess;
-import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectorCSVExporter;
-import org.eclipse.n4js.smith.DataCollectors;
+import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.tester.CliTestTreeTransformer;
 import org.eclipse.n4js.tester.TestCatalogSupplier;
 import org.eclipse.n4js.tester.TestTreeTransformer;
 import org.eclipse.n4js.tester.TesterModule;
 import org.eclipse.n4js.tester.extension.TesterRegistry;
 import org.eclipse.n4js.tester.internal.TesterActivator;
+import org.eclipse.n4js.utils.N4JSDataCollectors;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.eclipse.xtext.ISetup;
 import org.kohsuke.args4j.Argument;
@@ -250,7 +251,7 @@ public class N4jscBase implements IApplication {
 			// no usage, do not show in help
 			required = false)
 	/** Allows to specify the key of the data collector, whose data is saved in the report (cf. CollectedDataAccess). */
-	String performanceKey = HEADLESS_N4JS_COMPILER_COLLECTOR_NAME;
+	String performanceKey = N4JSDataCollectors.HEADLESS_N4JS_COMPILER_COLLECTOR_NAME;
 
 	/**
 	 * Catch all last arguments as files. The actual meaning of these files depends on the {@link #buildtype} (-bt)
@@ -258,21 +259,6 @@ public class N4jscBase implements IApplication {
 	 */
 	@Argument(multiValued = true, usage = "filename of source (or project, see -bt) to compile")
 	List<File> srcFiles = new ArrayList<>();
-
-	private static final String HEADLESS_N4JS_COMPILER_COLLECTOR_NAME = "Headless N4JS Compiler";
-
-	private static final DataCollector headlessDataCollector = DataCollectors.INSTANCE
-			.getOrCreateDataCollector(HEADLESS_N4JS_COMPILER_COLLECTOR_NAME);
-	private static final DataCollector buildSetComputationCollector = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Compute build set", HEADLESS_N4JS_COMPILER_COLLECTOR_NAME);
-	private static final DataCollector projectRegistrationCollector = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Register project in workspace", HEADLESS_N4JS_COMPILER_COLLECTOR_NAME);
-	private static final DataCollector installMissingDependencyCollector = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Install missing dependencies", HEADLESS_N4JS_COMPILER_COLLECTOR_NAME);
-	private static final DataCollector compilationCollector = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Compilation", HEADLESS_N4JS_COMPILER_COLLECTOR_NAME);
-	private static final DataCollector runnerTesterCollector = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Execute runner/tester", HEADLESS_N4JS_COMPILER_COLLECTOR_NAME);
 
 	@Inject
 	private N4HeadlessCompiler headless;
@@ -311,13 +297,10 @@ public class N4jscBase implements IApplication {
 	private BinariesPreferenceStore binariesPreferenceStore;
 
 	@Inject
-	private TypeDefinitionGitLocationProvider gitLocationProvider;
-
-	@Inject
 	private HeadlessExtensionRegistrationHelper headlessExtensionRegistrationHelper;
 
 	@Inject
-	private DependenciesHelper dependencyHelper;
+	private ProjectDependenciesHelper dependencyHelper;
 
 	@Inject
 	private HeadlessHelper headlessHelper;
@@ -390,8 +373,8 @@ public class N4jscBase implements IApplication {
 			CollectedDataAccess.setPaused(false);
 		}
 
-		try (ClosableMeasurement m = headlessDataCollector
-				.getClosableMeasurement(HEADLESS_N4JS_COMPILER_COLLECTOR_NAME)) {
+		try (Measurement m = N4JSDataCollectors.dcHeadless
+				.getMeasurement(N4JSDataCollectors.HEADLESS_N4JS_COMPILER_COLLECTOR_NAME)) {
 
 			CmdLineParser parser = new CmdLineParser(this);
 			parser.getProperties().withUsageWidth(130);
@@ -578,10 +561,12 @@ public class N4jscBase implements IApplication {
 				clean();
 			} else {
 				if (installMissingDependencies) {
-					try (ClosableMeasurement installMissingDepMeasurement = installMissingDependencyCollector
-							.getClosableMeasurement("Install missing dependencies")) {
+					try (Measurement installMissingDepMeasurement = N4JSDataCollectors.dcHeadlessInstallMissingDeps
+							.getMeasurement("Install missing dependencies")) {
+
 						Map<String, NPMVersionRequirement> dependencies = dependencyHelper
-								.discoverMissingDependencies(buildSet.getAllProjects());
+								.calculateDependenciesOfProjects(buildSet.getAllProjects());
+
 						if (verbose) {
 							System.out.println("installing missing dependencies:");
 							dependencies.forEach((name, version) -> {
@@ -589,7 +574,7 @@ public class N4jscBase implements IApplication {
 							});
 						}
 
-						IStatus status = libManager.installNPMs(dependencies, new NullProgressMonitor());
+						IStatus status = libManager.installNPMs(dependencies, false, new NullProgressMonitor());
 						if (!status.isOK())
 							if (keepCompiling)
 								warn(status.getMessage());
@@ -599,7 +584,7 @@ public class N4jscBase implements IApplication {
 					}
 				}
 
-				final BuildSet targetPlatformBuildSet = computeTargetPlatformBuildSet();
+				final BuildSet targetPlatformBuildSet = computeTargetPlatformBuildSet(buildSet.getAllProjects());
 				// make sure all newly installed dependencies are registered with the workspace
 				registerProjects(targetPlatformBuildSet);
 
@@ -683,21 +668,14 @@ public class N4jscBase implements IApplication {
 
 	/** depends on the checks done in {@link #checkTargetPlatformConfigurations} */
 	private void cloneGitRepositoryAndInstallNpmPackages() throws ExitCodeException {
-		checkState(installLocationProvider instanceof HeadlessTargetPlatformInstallLocationProvider);
-		HeadlessTargetPlatformInstallLocationProvider locationProvider = (HeadlessTargetPlatformInstallLocationProvider) installLocationProvider;
+		checkState(installLocationProvider instanceof HlcTargetPlatformInstallLocationProvider);
+		HlcTargetPlatformInstallLocationProvider locationProvider = (HlcTargetPlatformInstallLocationProvider) installLocationProvider;
 
 		if (!installMissingDependencies) {
 			if (verbose)
 				System.out.println("Skipping scanning and installation of dependencies.");
 			return;
 		}
-
-		// pull n4jsd to install location
-		java.net.URI gitRepositoryLocation = locationProvider.getTargetPlatformLocalGitRepositoryLocation();
-		Path localClonePath = new File(gitRepositoryLocation).toPath();
-		hardReset(gitLocationProvider.getGitLocation().getRepositoryRemoteURL(), localClonePath,
-				gitLocationProvider.getGitLocation().getRemoteBranch(), true);
-		pull(localClonePath);
 
 		String packageJson = ExternalLibraryFolderUtils.createTargetPlatformPackageJson();
 		java.net.URI platformLocation = locationProvider.getTargetPlatformInstallURI();
@@ -727,7 +705,7 @@ public class N4jscBase implements IApplication {
 	 *             if configuration is inconsistent or cannot be fixed.
 	 */
 	private void checkTargetPlatformConfigurations() throws ExitCodeException {
-		HeadlessTargetPlatformInstallLocationProvider locationProvider = (HeadlessTargetPlatformInstallLocationProvider) installLocationProvider;
+		HlcTargetPlatformInstallLocationProvider locationProvider = (HlcTargetPlatformInstallLocationProvider) installLocationProvider;
 		if (targetPlatformInstallLocation != null) {
 			// validate and save existing one
 
@@ -928,7 +906,7 @@ public class N4jscBase implements IApplication {
 
 	/** trigger compilation using pre-computed buildSet */
 	private void compile(BuildSet buildSet) throws ExitCodeException {
-		try (ClosableMeasurement m = compilationCollector.getClosableMeasurement("Compilation")) {
+		try (Measurement m = N4JSDataCollectors.dcHeadlessCompilation.getMeasurement("Compilation")) {
 			// early exit if dontcompile
 			if (buildtype == BuildType.dontcompile) {
 				return;
@@ -944,12 +922,12 @@ public class N4jscBase implements IApplication {
 	}
 
 	private void registerProjects(BuildSet buildSet) throws ExitCodeException {
-		try (ClosableMeasurement m = projectRegistrationCollector.getClosableMeasurement("Register projects")) {
+		try (Measurement m = N4JSDataCollectors.dcHeadlessProjectRegistration.getMeasurement("Register projects")) {
 			headlessHelper.registerProjects(buildSet, workspace);
 		} catch (N4JSCompileException e) {
 			// dump all information to error-stream.
 			e.userDump(System.err);
-			throw new ExitCodeException(EXITCODE_COMPILE_ERROR);
+			throw new ExitCodeException(EXITCODE_COMPILE_ERROR, e);
 		}
 	}
 
@@ -966,7 +944,7 @@ public class N4jscBase implements IApplication {
 	 * </pre>
 	 */
 	private BuildSet computeBuildSet() throws ExitCodeException {
-		try (ClosableMeasurement m = buildSetComputationCollector.getClosableMeasurement("Compute BuildSet")) {
+		try (Measurement m = N4JSDataCollectors.dcHeadlessBuildSetComputation.getMeasurement("Compute BuildSet")) {
 			switch (buildtype) {
 			case singlefile:
 				return computeSingleFilesBuildSet();
@@ -992,7 +970,7 @@ public class N4jscBase implements IApplication {
 		if (projectLocations != null)
 			toBuild.addAll(ProjectLocationsUtil.convertToFiles(projectLocations));
 
-		return buildSetComputer.createSingleFilesBuildSet(toBuild, srcFiles);
+		return buildSetComputer.createSingleFilesBuildSet(toBuild, srcFiles, Collections.emptySet());
 	}
 
 	/** Collects projects in 'projects' build mode and returns corresponding BuildSet. */
@@ -1002,7 +980,7 @@ public class N4jscBase implements IApplication {
 		if (projectLocations != null)
 			toBuild.addAll(ProjectLocationsUtil.convertToFiles(projectLocations));
 
-		return buildSetComputer.createProjectsBuildSet(toBuild, srcFiles);
+		return buildSetComputer.createProjectsBuildSet(toBuild, srcFiles, Collections.emptySet());
 	}
 
 	/** Collects projects in 'allprojects' build mode and returns corresponding BuildSet. */
@@ -1018,14 +996,17 @@ public class N4jscBase implements IApplication {
 
 		List<File> toBuild = new ArrayList<>();
 		toBuild.addAll(ProjectLocationsUtil.convertToFiles(projectLocations));
-		return buildSetComputer.createAllProjectsBuildSet(toBuild);
+		return buildSetComputer.createAllProjectsBuildSet(toBuild, Collections.emptySet());
 	}
 
-	private BuildSet computeTargetPlatformBuildSet() throws ExitCodeException {
+	private BuildSet computeTargetPlatformBuildSet(Collection<? extends IN4JSProject> workspaceProjects)
+			throws ExitCodeException {
 		List<File> toBuild = new ArrayList<>();
 		toBuild.addAll(ProjectLocationsUtil.getTargetPlatformWritableDir(installLocationProvider));
+		Set<String> namesOfWorkspaceProjects = workspaceProjects.stream().map(IN4JSProject::getProjectName)
+				.collect(Collectors.toSet());
 		try {
-			return buildSetComputer.createAllProjectsBuildSet(toBuild);
+			return buildSetComputer.createAllProjectsBuildSet(toBuild, namesOfWorkspaceProjects);
 		} catch (N4JSCompileException e) {
 			throw new ExitCodeException(EXITCODE_DEPENDENCY_NOT_FOUND,
 					"Cannot compute build set for target platform location.", e);
@@ -1048,7 +1029,7 @@ public class N4jscBase implements IApplication {
 
 	/** triggers runners and testers based on {@link #testThisLocation} and {@link #runThisFile} */
 	private void testAndRun() throws ExitCodeException {
-		try (ClosableMeasurement m = runnerTesterCollector.getClosableMeasurement("Execute tester/runner")) {
+		try (Measurement m = N4JSDataCollectors.dcHeadlessRunnerTester.getMeasurement("Execute tester/runner")) {
 			if (testThisLocation != null) {
 				if (buildtype != BuildType.dontcompile) {
 					flushAndIinsertMarkerInOutputs();
@@ -1069,7 +1050,7 @@ public class N4jscBase implements IApplication {
 	/** In some cases compiler is creating files and folders in temp locations. This method deletes those leftovers. */
 	private void cleanTemporaryArtifacts() {
 		if (installLocationProvider != null) {
-			HeadlessTargetPlatformInstallLocationProvider locationProvider = (HeadlessTargetPlatformInstallLocationProvider) installLocationProvider;
+			HlcTargetPlatformInstallLocationProvider locationProvider = (HlcTargetPlatformInstallLocationProvider) installLocationProvider;
 			// TODO GH-521 reset state for HLC tests
 			final java.net.URI uri = locationProvider.getTempRoot();
 			locationProvider.resetState();
@@ -1227,7 +1208,7 @@ public class N4jscBase implements IApplication {
 
 	/**
 	 * If {@link #performanceReport} is non-null, this methods persists the performance data collected in
-	 * {@link #headlessDataCollector} in the specified performance report file.
+	 * {@link N4JSDataCollectors#dcHeadless} in the specified performance report file.
 	 */
 	private void writePerformanceReport() throws ExitCodeException {
 		if (this.performanceReport != null) {

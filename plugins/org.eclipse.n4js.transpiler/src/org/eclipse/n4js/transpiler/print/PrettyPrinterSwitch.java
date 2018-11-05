@@ -22,7 +22,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.conversion.N4JSStringValueConverter;
+import org.eclipse.n4js.conversion.ValueConverterUtils;
 import org.eclipse.n4js.n4JS.AdditiveExpression;
 import org.eclipse.n4js.n4JS.Annotation;
 import org.eclipse.n4js.n4JS.Argument;
@@ -153,11 +153,8 @@ import org.eclipse.xtext.EcoreUtil2;
 
 	private final SourceMapAwareAppendable out;
 
-	private final N4JSStringValueConverter stringConverter;
-
 	private PrettyPrinterSwitch(SourceMapAwareAppendable out) {
 		this.out = out;
-		this.stringConverter = new N4JSStringValueConverter();
 	}
 
 	@Override
@@ -907,25 +904,26 @@ import org.eclipse.xtext.EcoreUtil2;
 			// resetting the indent level, we can here simply rely on our parent having already done this.
 			throw new IllegalStateException("parent TemplateLiteral did not reset the indent level to 0");
 		}
-		final TemplateLiteral parent = (TemplateLiteral) original.eContainer();
-		final List<Expression> segments = parent.getSegments();
-		final int len = segments.size();
-		final Expression first = segments.get(0);
-		final Expression last = segments.get(len - 1);
-		if (original == first) {
-			write("`");
-		} else {
-			write("}");
-		}
 		if (original.getRawValue() != null) {
 			write(original.getRawValue());
 		} else {
-			write(quote(original.getValueAsString()));
-		}
-		if (original == last) {
-			write("`");
-		} else {
-			write("${");
+			final TemplateLiteral parent = (TemplateLiteral) original.eContainer();
+			final List<Expression> segments = parent.getSegments();
+			final int len = segments.size();
+			final Expression first = segments.get(0);
+			final Expression last = segments.get(len - 1);
+			if (original == first) {
+				write("`");
+			} else {
+				write("}");
+			}
+			final String rawValue = ValueConverterUtils.convertToEscapedString(original.getValueAsString(), false);
+			write(rawValue);
+			if (original == last) {
+				write("`");
+			} else {
+				write("${");
+			}
 		}
 		return DONE;
 	}
@@ -1298,7 +1296,7 @@ import org.eclipse.xtext.EcoreUtil2;
 	}
 
 	private String quote(String txt) {
-		return '\'' + stringConverter.convertToJSString(txt, false) + '\'';
+		return '\'' + ValueConverterUtils.convertToEscapedString(txt, false) + '\'';
 	}
 
 	/**

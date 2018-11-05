@@ -24,6 +24,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.n4js.external.ExternalLibraryWorkspace;
+import org.eclipse.n4js.ts.ui.navigation.URIBasedStorage;
+import org.eclipse.n4js.utils.collections.Arrays2;
+import org.eclipse.n4js.utils.resources.IExternalResource;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -33,11 +37,6 @@ import org.eclipse.xtext.ui.editor.XtextReadonlyEditorInput;
 import org.eclipse.xtext.ui.editor.utils.EditorUtils;
 
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.external.ExternalLibraryWorkspace;
-import org.eclipse.n4js.ts.ui.navigation.URIBasedStorage;
-import org.eclipse.n4js.utils.collections.Arrays2;
-import org.eclipse.n4js.utils.resources.IExternalResource;
 
 /**
  * Customized {@link ILinkHelper resource link helper} that handles {@link ResourceNode resource node} instances that
@@ -60,7 +59,7 @@ public class N4JSResourceLinkHelper extends ResourceLinkHelper {
 			final Object firstElement = selection.getFirstElement();
 			if (firstElement instanceof ResourceNode) {
 				final File fileResource = ((ResourceNode) firstElement).getResource();
-				if (fileResource.exists() && fileResource.isFile()) {
+				if (fileResource.isFile()) {
 					final URI uri = URI.createFileURI(fileResource.getAbsolutePath());
 					final IResource resource = externalLibraryWorkspace.getResource(uri);
 					if (resource instanceof IFile) {
@@ -87,7 +86,7 @@ public class N4JSResourceLinkHelper extends ResourceLinkHelper {
 					final URI uri = ((URIBasedStorage) storage).getURI();
 					if (uri.isFile()) {
 						final File file = new File(uri.toFileString());
-						if (file.exists() && file.isFile()) {
+						if (file.isFile()) {
 							final Node node = getResourceNode(file);
 							if (null != node) {
 								return new StructuredSelection(node);

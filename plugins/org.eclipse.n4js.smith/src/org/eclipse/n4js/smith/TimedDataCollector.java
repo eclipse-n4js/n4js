@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.smith;
 
-import static java.util.concurrent.TimeUnit.NANOSECONDS;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -19,6 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -26,6 +25,9 @@ import java.util.stream.Collectors;
  */
 class TimedDataCollector extends DataCollector {
 
+	public static final boolean AVOID_EXCESSIVE_DATA_COLLECTION = true;
+
+	private final String id;
 	private final DataCollector parent;
 	// maintains insertion order
 	private final Map<String, DataCollector> children = new LinkedHashMap<>();
@@ -33,38 +35,72 @@ class TimedDataCollector extends DataCollector {
 	private static final TimedMeasurement NULL_MEASURMENT = new TimedMeasurement("NOOP", TimedDataCollector::noop);
 	private boolean paused = true;
 
+	private Measurement activeMeasurement = null;
+
 	private final List<DataPoint> data = new LinkedList<>();
 
-	/** Convenience constructors, delegates to {@link #TimedDataCollector(DataCollector)} with null argument. */
-	public TimedDataCollector() {
-		this(null);
+	/** Convenience constructors, delegates to {@link #TimedDataCollector(String, DataCollector)} with null argument. */
+	public TimedDataCollector(String id) {
+		this(id, null);
 	}
 
 	/** Creates instance of the collector. Provided parent can be {@code null}. */
-	public TimedDataCollector(DataCollector parent) {
+	public TimedDataCollector(String id, DataCollector parent) {
+		this.id = id;
 		this.parent = parent;
 	}
 
 	@Override
-	public Measurement getMeasurement(String name) {
+	public String getId() {
+		return id;
+	}
+
+	@Override
+	public boolean isPaused() {
+		return paused;
+	}
+
+	@Override
+	public boolean hasActiveMeasurement() {
+		return activeMeasurement != null;
+	}
+
+	@Override
+	synchronized public Measurement getMeasurement(String name) {
 		if (name == null || name.isEmpty())
 			throw new RuntimeException(TimedMeasurement.class.getName() + " needs non empty name.");
 
 		if (paused)
 			return NULL_MEASURMENT;
 
-		return new TimedMeasurement(name, this::consume);
-	}
-
-	@Override
-	public ClosableMeasurement getClosableMeasurement(String name) {
-		return (TimedMeasurement) getMeasurement(name);
+		if (activeMeasurement != null) {
+			DataCollectors.INSTANCE.warn("reentrant invocation of #getMeasurement() in data collector " + id);
+			return NULL_MEASURMENT;
+		}
+		activeMeasurement = new TimedMeasurement(name, this::consume);
+		return activeMeasurement;
 	}
 
 	/** This method must be synchronized to protect race conditions when calling data.add */
 	synchronized private void consume(TimedMeasurement measurement) {
-		TimedMeasurement timed = measurement;
-		data.add(new DataPoint(timed.name, timed.elapsed(NANOSECONDS)));
+		if (measurement != activeMeasurement) {
+			DataCollectors.INSTANCE.warn(
+					"invocation of #consume() without matching prior call to #getMeasurement() in data collector " + id
+							+ "#" + measurement.name);
+			return;
+		}
+		activeMeasurement = null;
+		String name = measurement.name;
+		long elapsed = measurement.elapsed(TimeUnit.NANOSECONDS);
+		if (AVOID_EXCESSIVE_DATA_COLLECTION) {
+			// storing every individual data point causes memory issues in large builds;
+			// therefore we only keep a single data point accumulating all measurements:
+			for (DataPoint dp : data) {
+				elapsed += dp.nanos;
+			}
+			data.clear();
+		}
+		data.add(new DataPoint(name, elapsed));
 	}
 
 	@Override
@@ -112,12 +148,14 @@ class TimedDataCollector extends DataCollector {
 
 	@Override
 	public void setPaused(boolean paused) {
+		this.activeMeasurement = null;
 		this.paused = paused;
 		this.children.values().forEach(child -> child.setPaused(paused));
 	}
 
 	@Override
 	public void purgeData() {
+		this.activeMeasurement = null;
 		this.data.clear();
 		this.children.values().forEach(c -> c.purgeData());
 	}

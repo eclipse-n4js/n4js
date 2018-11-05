@@ -27,12 +27,31 @@
 	END_SETUP
 */
 
-//XPECT noerrors
-var a = <div/>;
-a;
 
-//XPECT warnings --> "Tag divBlah is an unknown HTML tag." at "divBlah"
-var b = <divBlah/>;
-b;
+// HTML tags are accepted:
 
-var c =<div someProperty="10"/>
+// XPECT nowarnings -->
+<div/>;
+
+// XPECT nowarnings -->
+<div></div>;
+
+
+// SVG tags are accepted:
+
+// XPECT nowarnings -->
+<circle/>;
+// XPECT nowarnings -->
+<path/>;
+// XPECT nowarnings -->
+<g/>;
+
+
+// XPECT warnings --> "Tag divBlah is neither a known HTML tag nor an SVG tag." at "divBlah"
+<divBlah/>;
+
+// XPECT nowarnings -->
+<div someProperty="10"/>;
+
+// XPECT nowarnings -->
+<circle someProperty="10"/>;

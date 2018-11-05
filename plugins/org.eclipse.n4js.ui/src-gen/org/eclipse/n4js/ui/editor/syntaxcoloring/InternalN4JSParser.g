@@ -14080,8 +14080,8 @@ ruleNoSubstitutionTemplate
 (
 	(
 		(
-			RawValueNO_SUBSTITUTION_TEMPLATE_LITERALTerminalRuleCall_1_0=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL{
-				announce($RawValueNO_SUBSTITUTION_TEMPLATE_LITERALTerminalRuleCall_1_0, grammarAccess.getNoSubstitutionTemplateAccess().getRawValueAssignment_1());
+			ValueNO_SUBSTITUTION_TEMPLATE_LITERALTerminalRuleCall_1_0=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL{
+				announce($ValueNO_SUBSTITUTION_TEMPLATE_LITERALTerminalRuleCall_1_0, grammarAccess.getNoSubstitutionTemplateAccess().getValueAssignment_1());
 			}
 		)
 	)
@@ -14101,8 +14101,8 @@ ruleTemplateHead
 (
 	(
 		(
-			RawValueTEMPLATE_HEADTerminalRuleCall_1_0=RULE_TEMPLATE_HEAD{
-				announce($RawValueTEMPLATE_HEADTerminalRuleCall_1_0, grammarAccess.getTemplateHeadAccess().getRawValueAssignment_1());
+			ValueTEMPLATE_HEADTerminalRuleCall_1_0=RULE_TEMPLATE_HEAD{
+				announce($ValueTEMPLATE_HEADTerminalRuleCall_1_0, grammarAccess.getTemplateHeadAccess().getValueAssignment_1());
 			}
 		)
 	)
@@ -14122,8 +14122,8 @@ ruleTemplateTail
 (
 	(
 		(
-			RawValueTemplateTailLiteralParserRuleCall_1_0=ruleTemplateTailLiteral{
-				announce($RawValueTemplateTailLiteralParserRuleCall_1_0.start, $RawValueTemplateTailLiteralParserRuleCall_1_0.stop, grammarAccess.getTemplateTailAccess().getRawValueAssignment_1());
+			ValueTemplateTailLiteralParserRuleCall_1_0=ruleTemplateTailLiteral{
+				announce($ValueTemplateTailLiteralParserRuleCall_1_0.start, $ValueTemplateTailLiteralParserRuleCall_1_0.stop, grammarAccess.getTemplateTailAccess().getValueAssignment_1());
 			}
 		)
 	)
@@ -14143,8 +14143,8 @@ ruleTemplateMiddle
 (
 	(
 		(
-			RawValueTemplateMiddleLiteralParserRuleCall_1_0=ruleTemplateMiddleLiteral{
-				announce($RawValueTemplateMiddleLiteralParserRuleCall_1_0.start, $RawValueTemplateMiddleLiteralParserRuleCall_1_0.stop, grammarAccess.getTemplateMiddleAccess().getRawValueAssignment_1());
+			ValueTemplateMiddleLiteralParserRuleCall_1_0=ruleTemplateMiddleLiteral{
+				announce($ValueTemplateMiddleLiteralParserRuleCall_1_0.start, $ValueTemplateMiddleLiteralParserRuleCall_1_0.stop, grammarAccess.getTemplateMiddleAccess().getValueAssignment_1());
 			}
 		)
 	)

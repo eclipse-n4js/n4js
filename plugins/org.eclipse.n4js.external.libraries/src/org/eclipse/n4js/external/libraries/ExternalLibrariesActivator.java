@@ -27,6 +27,9 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -93,16 +96,12 @@ public class ExternalLibrariesActivator implements BundleActivator {
 	/** Unique name of the {@code npm} category. */
 	public static final String NPM_CATEGORY = "node_modules";
 
-	/** Unique name of the N4JSD type definitions category. */
-	public static final String TYPE_DEFINITIONS_CATEGORY = "type_definitions";
-
 	/** List of all categories. Latter entries shadow former entries. */
 	public static final List<String> CATEGORY_SHADOWING_ORDER = ImmutableList.<String> builder()
 			.add(LANG_CATEGORY)
 			.add(RUNTIME_CATEGORY)
 			.add(MANGELHAFT_CATEGORY)
 			.add(NPM_CATEGORY)
-			.add(TYPE_DEFINITIONS_CATEGORY)
 			.build();
 
 	private static final Function<URL, URL> URL_TO_FILE_URL_FUNC = url -> {
@@ -169,7 +168,6 @@ public class ExternalLibrariesActivator implements BundleActivator {
 	public static final Iterable<String> EXTERNAL_LIBRARY_FOLDER_NAMES = ImmutableList.<String> builder()
 			.addAll(SHIPPED_ROOTS_FOLDER_NAMES)
 			.add(NPM_CATEGORY)
-			.add(TYPE_DEFINITIONS_CATEGORY)
 			.build();
 
 	/**
@@ -185,7 +183,6 @@ public class ExternalLibrariesActivator implements BundleActivator {
 			.put(RUNTIME_CATEGORY, "N4JS Runtime")
 			.put(MANGELHAFT_CATEGORY, "Mangelhaft")
 			.put(NPM_CATEGORY, NPM_CATEGORY)
-			.put(TYPE_DEFINITIONS_CATEGORY, "Type Definitions")
 			.build();
 
 	/**
@@ -259,6 +256,40 @@ public class ExternalLibrariesActivator implements BundleActivator {
 		return false;
 	}
 
+	/** Sorts given set of locations and returns sorted list */
+	public static List<java.net.URI> sortByShadowing(Collection<java.net.URI> locations) {
+		Map<String, java.net.URI> knownLocations = new HashMap<>();
+		List<java.net.URI> unknownLocations = new LinkedList<>();
+
+		for (java.net.URI location : locations) {
+			String locStr = location.toString();
+			locStr = locStr.endsWith("/") ? locStr.substring(0, locStr.length() - 1) : locStr;
+
+			boolean locationFound = false;
+			for (String knownLocation : CATEGORY_SHADOWING_ORDER) {
+				if (locStr.endsWith(knownLocation)) {
+					knownLocations.put(knownLocation, location);
+					locationFound = true;
+				}
+			}
+
+			if (!locationFound) {
+				unknownLocations.add(location);
+			}
+		}
+
+		List<java.net.URI> sortedLocations = new LinkedList<>();
+		for (String knownLocation : CATEGORY_SHADOWING_ORDER) {
+			java.net.URI location = knownLocations.get(knownLocation);
+			if (location != null) {
+				sortedLocations.add(location);
+			}
+		}
+		sortedLocations.addAll(unknownLocations);
+
+		return sortedLocations;
+	}
+
 	/**
 	 * Logs the given status to the platform log. Has no effect if the platform is not running or the bundle cannot be
 	 * found.
@@ -315,9 +346,7 @@ public class ExternalLibrariesActivator implements BundleActivator {
 		// npm packages first to be able to shadow runtime libraries and Mangelhaft from npm packages.
 		final File targetPlatformInstallLocation = N4_NPM_FOLDER_SUPPLIER.get();
 		final File nodeModulesFolder = new File(targetPlatformInstallLocation, NPM_CATEGORY);
-		final File typeDefinitionsFolder = new File(targetPlatformInstallLocation, TYPE_DEFINITIONS_CATEGORY);
 		uriMappings.put(nodeModulesFolder.toURI(), NPM_CATEGORY);
-		uriMappings.put(typeDefinitionsFolder.toURI(), TYPE_DEFINITIONS_CATEGORY);
 
 		for (final Pair<URI, String> pair : uriNamePairs) {
 			uriMappings.put(pair.getFirst(), pair.getSecond());
@@ -330,16 +359,10 @@ public class ExternalLibrariesActivator implements BundleActivator {
 	private static File getOrCreateNpmFolder() {
 		final File targetPlatform = getOrCreateNestedFolder(NPM_ROOT);
 		final File nodeModulesFolder = new File(targetPlatform, NPM_CATEGORY);
-		final File typeDefinitionsFolder = new File(targetPlatform, TYPE_DEFINITIONS_CATEGORY);
 		if (!nodeModulesFolder.exists()) {
 			checkState(nodeModulesFolder.mkdir(), "Error while creating " + nodeModulesFolder + " folder.");
 		}
-		if (!typeDefinitionsFolder.exists()) {
-			checkState(typeDefinitionsFolder.mkdir(), "Error while creating " + typeDefinitionsFolder + " folder.");
-		}
 		checkState(nodeModulesFolder.isDirectory(), "Expecting directory but was a file: " + nodeModulesFolder + ".");
-		checkState(typeDefinitionsFolder.isDirectory(),
-				"Expecting directory but was a file: " + typeDefinitionsFolder + ".");
 
 		final File targetPlatformFile = ExternalLibraryFolderUtils.createTargetPlatformDefinitionFile(targetPlatform);
 		checkState(targetPlatformFile.isFile(),

@@ -67,6 +67,7 @@ using the N4JS IDE.
 [horizontal]
 <<npm-export-guide.adoc#npm-export-guide,npm Export Guide>> :: Basic npm export and publishing instructions.
 
+
 === In-Depth Tutorial
 
 Using the built-in example projects as a reference, this in-depth tutorial covers the most important tools and features

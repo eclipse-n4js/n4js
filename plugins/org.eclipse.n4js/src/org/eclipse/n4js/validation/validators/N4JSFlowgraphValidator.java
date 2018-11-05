@@ -16,11 +16,10 @@ import org.eclipse.n4js.flowgraphs.FlowAnalyser;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyser;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.smith.ClosableMeasurement;
-import org.eclipse.n4js.smith.DataCollector;
-import org.eclipse.n4js.smith.DataCollectors;
+import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.typesystem.TypeSystemHelper;
 import org.eclipse.n4js.utils.FindReferenceHelper;
+import org.eclipse.n4js.utils.N4JSDataCollectors;
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.n4js.validation.validators.flowgraphs.DeadCodeValidator;
@@ -40,10 +39,6 @@ import com.google.inject.Inject;
  * This validator validates all control and data flow related issues.
  */
 public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
-	static private final DataCollector dcFlowGraphs = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Flow Graphs");
-	static private final DataCollector dcPostprocessing = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("PostProcessing", "Flow Graphs");
 
 	@Inject
 	private OperationCanceledManager operationCanceledManager;
@@ -103,8 +98,9 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 
 		String uriString = script.eResource().getURI().toString();
 
-		try (ClosableMeasurement m1 = dcFlowGraphs.getClosableMeasurement("flowGraphs_" + uriString);
-				ClosableMeasurement m2 = dcPostprocessing.getClosableMeasurement("createGraph_" + uriString);) {
+		try (Measurement m1 = N4JSDataCollectors.dcFlowGraphs.getMeasurement("flowGraphs_" + uriString);
+				Measurement m2 = N4JSDataCollectors.dcFlowGraphPostprocessing
+						.getMeasurement("createGraph_" + uriString);) {
 
 			for (FlowValidator fValidator : fValidators) {
 				fValidator.checkResults(this);

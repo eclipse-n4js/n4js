@@ -8823,13 +8823,22 @@ public interface N4JSPackage extends EPackage {
 	int TEMPLATE_SEGMENT = 110;
 
 	/**
+	 * The feature id for the '<em><b>Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEMPLATE_SEGMENT__VALUE = LITERAL_FEATURE_COUNT + 0;
+
+	/**
 	 * The feature id for the '<em><b>Raw Value</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TEMPLATE_SEGMENT__RAW_VALUE = LITERAL_FEATURE_COUNT + 0;
+	int TEMPLATE_SEGMENT__RAW_VALUE = LITERAL_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Template Segment</em>' class.
@@ -8838,7 +8847,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TEMPLATE_SEGMENT_FEATURE_COUNT = LITERAL_FEATURE_COUNT + 1;
+	int TEMPLATE_SEGMENT_FEATURE_COUNT = LITERAL_FEATURE_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Is Valid Simple Assignment Target</em>' operation.
@@ -19162,6 +19171,17 @@ public interface N4JSPackage extends EPackage {
 	EClass getTemplateSegment();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4JS.TemplateSegment#getValue <em>Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Value</em>'.
+	 * @see org.eclipse.n4js.n4JS.TemplateSegment#getValue()
+	 * @see #getTemplateSegment()
+	 * @generated
+	 */
+	EAttribute getTemplateSegment_Value();
+
+	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4JS.TemplateSegment#getRawValue <em>Raw Value</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -24368,6 +24388,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EClass TEMPLATE_SEGMENT = eINSTANCE.getTemplateSegment();
+
+		/**
+		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TEMPLATE_SEGMENT__VALUE = eINSTANCE.getTemplateSegment_Value();
 
 		/**
 		 * The meta object literal for the '<em><b>Raw Value</b></em>' attribute feature.

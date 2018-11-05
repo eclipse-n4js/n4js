@@ -92,7 +92,7 @@ public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCor
 	@Override
 	public Iterable<IN4JSProject> findAllProjects() {
 		List<IN4JSProject> projects = new ArrayList<>();
-		this.workspace.getAllProjectsLocations().forEachRemaining(
+		this.workspace.getAllProjectLocationsIterator().forEachRemaining(
 				location -> projects.add(model.getN4JSProject(location)));
 		return projects;
 	}

@@ -35,9 +35,6 @@ public class ProjectLocationsUtil {
 			final File npmLoc = new File(installLocationProvider.getNodeModulesURI());
 			HlcFileUtils.isExistingWriteableDir(npmLoc);
 			retList.add(npmLoc);
-			final File typeDefLoc = new File(installLocationProvider.getTypeDefinitionsURI());
-			HlcFileUtils.isExistingWriteableDir(typeDefLoc);
-			retList.add(typeDefLoc);
 		}
 		return retList;
 	}

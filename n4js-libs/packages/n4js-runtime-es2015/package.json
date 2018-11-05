@@ -30,7 +30,5 @@
       ]
     },
     "moduleLoader": "n4js"
-  },
-  "dependencies": {},
-  "devDependencies": {}
+  }
 }

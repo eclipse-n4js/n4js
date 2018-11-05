@@ -44,11 +44,10 @@ public class MaintenanceActionsButtonListener extends SelectionAdapter {
 	final private BiFunction<MaintenanceActionsChoice, IProgressMonitor, MultiStatus> runActions;
 	final private StatusHelper statusHelper;
 
-	static final String ACTION_NPM_RELOAD = "Reload npm libraries from disk.";
+	static final String ACTION_NPM_RELOAD = "Re-register all npms (cleans and builds npms from disk).";
 	static final String ACTION_NPM_REINSTALL = "Reinstall npm libraries.";
 	static final String ACTION_NPM_CACHE_CLEAN = "Clean npm cache. (npm cache clean --force)";
-	static final String ACTION_NPM_PACKAGES_DELETE = "Delete npm and type definition packages (deletes folders).";
-	static final String ACTION_TYPE_DEFINITIONS_RESET = "Reset clone of n4jsd repo.";
+	static final String ACTION_NPM_PACKAGES_DELETE = "Delete all npms (deletes node_modules folder).";
 
 	MaintenanceActionsButtonListener(BiFunction<MaintenanceActionsChoice, IProgressMonitor, MultiStatus> runActions,
 			StatusHelper statusHelper) {
@@ -63,7 +62,6 @@ public class MaintenanceActionsButtonListener extends SelectionAdapter {
 				ACTION_NPM_CACHE_CLEAN,
 				ACTION_NPM_RELOAD,
 				ACTION_NPM_REINSTALL,
-				ACTION_TYPE_DEFINITIONS_RESET,
 				ACTION_NPM_PACKAGES_DELETE };
 		String msg = "Select maintenance actions to perform.";
 		Shell shell = UIUtils.getShell();
@@ -75,7 +73,6 @@ public class MaintenanceActionsButtonListener extends SelectionAdapter {
 			boolean cleanCache = false;
 			boolean deleteNPM = false;
 			boolean reinstall = false;
-			boolean reclone = false;
 			boolean reload = false;
 
 			Object[] result = dialog.getResult();
@@ -98,14 +95,11 @@ public class MaintenanceActionsButtonListener extends SelectionAdapter {
 				case ACTION_NPM_PACKAGES_DELETE:
 					deleteNPM = true;
 					break;
-				case ACTION_TYPE_DEFINITIONS_RESET:
-					reclone = true;
-					break;
 				}
 			}
 
-			final MaintenanceActionsChoice userChoice = new MaintenanceActionsChoice(reclone, cleanCache, reinstall,
-					deleteNPM, reload);
+			final MaintenanceActionsChoice userChoice = new MaintenanceActionsChoice(cleanCache, reinstall, deleteNPM,
+					reload);
 			String statusText = "Perform Maintenance Actions: " + userChoice;
 			final MultiStatus multistatus = statusHelper.createMultiStatus(statusText);
 

@@ -29,17 +29,18 @@ import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
+import org.eclipse.n4js.external.ExternalProject;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 import org.eclipse.n4js.utils.collections.Arrays2;
-import org.eclipse.n4js.utils.resources.ExternalProject;
 import org.eclipse.n4js.utils.resources.IExternalResource;
 import org.eclipse.swt.graphics.Image;
 
@@ -223,9 +224,9 @@ public class N4JSProjectExplorerHelper {
 		Map<String, IN4JSProject> mangelhaftProjects = getAvailableMangelhaftProjects();
 		Map<String, IN4JSProject> npmProjects = getAvailableNpmProjects();
 
-		Collection<IN4JSProject> requiredLangLibs = newHashSet();
-		Collection<IN4JSProject> requiredMangelhaftLibs = newHashSet();
-		Collection<IN4JSProject> requiredNpmLibs = newHashSet();
+		Collection<IN4JSProject> requiredLangLibs = new LinkedHashSet<>();
+		Collection<IN4JSProject> requiredMangelhaftLibs = new LinkedHashSet<>();
+		Collection<IN4JSProject> requiredNpmLibs = new LinkedHashSet<>();
 
 		for (IN4JSProject directDependecy : directDependencies) {
 			if (directDependecy.exists() && directDependecy.isExternal()) {

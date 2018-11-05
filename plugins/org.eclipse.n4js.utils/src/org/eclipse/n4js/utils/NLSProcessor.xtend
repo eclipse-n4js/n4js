@@ -10,26 +10,17 @@
  */
 package org.eclipse.n4js.utils
 
-import java.io.IOException
-import java.io.InputStream
 import java.lang.annotation.ElementType
 import java.lang.annotation.Target
 import java.util.List
 import java.util.Map
 import java.util.MissingResourceException
-import java.util.Properties
-import java.util.ResourceBundle
-import java.util.regex.Pattern
-import org.eclipse.xtend.lib.macro.AbstractClassProcessor
 import org.eclipse.xtend.lib.macro.Active
 import org.eclipse.xtend.lib.macro.TransformationContext
 import org.eclipse.xtend.lib.macro.declaration.AnnotationReference
 import org.eclipse.xtend.lib.macro.declaration.MutableClassDeclaration
 import org.eclipse.xtend.lib.macro.declaration.Visibility
 import org.eclipse.xtext.diagnostics.Severity
-import org.eclipse.xtext.xbase.lib.Functions.Function0
-import org.eclipse.xtext.xbase.lib.util.ReflectExtensions
-import java.lang.reflect.InvocationTargetException
 
 /**
  * Active annotation which parses NLS properties files and generates helper methods in NLS message class to
@@ -87,84 +78,31 @@ import java.lang.reflect.InvocationTargetException
  */
 @Target(ElementType::TYPE)
 @Active(typeof(NLSProcessor))
-annotation NLS {
+public annotation NLS {
 	String propertyFileName
 }
 
 /** See annotation NLS */
-class NLSProcessor extends AbstractClassProcessor {
-	private extension ReflectExtensions reflExt = new ReflectExtensions
+public class NLSProcessor extends AbstractNLSProcessor {
 
-	private static final String BUNDLE_NAME_FIELD = "BUNDLE_NAME"
-	private static final String RESOURCE_BUNDLE_FIELD = "RESOURCE_BUNDLE"
-	private static final String nlsClass = "org.eclipse.osgi.util.NLS"
 	private static List<String> SEVERITIES = #["error", "warning", "info", "ignore"]
 
-	override doTransform(MutableClassDeclaration annotatedClass, extension TransformationContext context) {
-		val nlsAnnotation = annotatedClass.getNLSAnnotation(context)
-		if (findTypeGlobally(nlsClass) === null) {
-			nlsAnnotation.addError(nlsClass + " isn't on the classpath.")
-		}
-		val propertyFileNameValue = nlsAnnotation.getNLSAnnotationPropertyValue(context)
-		val propertiesFileInputStream = annotatedClass.getPropertiesFile(context, propertyFileNameValue, nlsAnnotation)
-		val properties = propertiesFileInputStream.loadPropertiesFile(context, nlsAnnotation)
-		addBundleNameField(annotatedClass, nlsAnnotation, context, propertyFileNameValue)
-		addResourceBundleField(annotatedClass, nlsAnnotation, context)
-		addStaticBlock(annotatedClass, nlsAnnotation, context)
-		addGetStringMethod(annotatedClass, nlsAnnotation, context)
+	override Class<?> getAnnotationType() {
+		return NLS;
+	}
+
+
+	override void addMembers(
+		MutableClassDeclaration annotatedClass, 
+		AnnotationReference nlsAnnotation, 
+		TransformationContext context,
+		String propertyFileNameValue
+	) {
+		super.addMembers(annotatedClass, nlsAnnotation, context, propertyFileNameValue);
 		addGetDefaultSeverityMethod(annotatedClass, nlsAnnotation, context)
-		properties.entrySet.sortBy[String.valueOf(key)].forEach [
-			addField(annotatedClass, nlsAnnotation, context)
-			addMethod(annotatedClass, nlsAnnotation, context)
-		]
 	}
-
-	def private void addStaticBlock(MutableClassDeclaration annotatedClass, AnnotationReference nlsAnnotation,
-		extension TransformationContext context) {
-		val fieldName = "INITIALIZER";
-		checkForExistentField(annotatedClass, fieldName, context, nlsAnnotation)
-		annotatedClass.addField(fieldName) [
-			visibility = Visibility.PRIVATE
-			static = true
-			final = true
-			type = string
-			initializer = '''
-				new «Function0»<«String»>() {
-				    public «string» apply() {
-				      «nlsClass».initializeMessages(«annotatedClass.findDeclaredField(
-					BUNDLE_NAME_FIELD).simpleName», «annotatedClass.newTypeReference».class);
-				      return "";
-				    }
-				  }.apply();
-			'''
-		]
-	}
-
-	def private void addBundleNameField(MutableClassDeclaration annotatedClass, AnnotationReference nlsAnnotation,
-		extension TransformationContext context, String propertyFileName) {
-		checkForExistentField(annotatedClass, BUNDLE_NAME_FIELD, context, nlsAnnotation)
-		annotatedClass.addField(BUNDLE_NAME_FIELD) [
-			visibility = Visibility.PRIVATE
-			static = true
-			final = true
-			type = string
-			initializer = '''«annotatedClass.newTypeReference».class.getPackage().getName() + ".«propertyFileName.replace(".properties", "")»"'''
-		]
-	}
-
-	def private void addResourceBundleField(MutableClassDeclaration annotatedClass,
-		AnnotationReference nlsAnnotation, extension TransformationContext context) {
-		checkForExistentField(annotatedClass, RESOURCE_BUNDLE_FIELD, context, nlsAnnotation)
-		annotatedClass.addField(RESOURCE_BUNDLE_FIELD) [
-			visibility = Visibility.PRIVATE
-			static = true
-			final = true
-			type = ResourceBundle.newTypeReference
-			initializer = '''«ResourceBundle».getBundle(«annotatedClass.findDeclaredField(BUNDLE_NAME_FIELD).simpleName»)'''
-		]
-	}
-
-	def private void addGetStringMethod(MutableClassDeclaration annotatedClass, AnnotationReference nlsAnnotation,
+	
+	override void addGetStringMethod(MutableClassDeclaration annotatedClass, AnnotationReference nlsAnnotation,
 		extension TransformationContext context) {
 		val methodName = "getString"
 		checkForExistentMethod(annotatedClass, methodName, context, nlsAnnotation, 1)
@@ -184,6 +122,7 @@ class NLSProcessor extends AbstractClassProcessor {
 			'''
 		]
 	}
+
 
 	def private void addGetDefaultSeverityMethod(MutableClassDeclaration annotatedClass,
 		AnnotationReference nlsAnnotation, extension TransformationContext context) {
@@ -207,40 +146,7 @@ class NLSProcessor extends AbstractClassProcessor {
 		]
 	}
 
-	def private void addField(Map.Entry<Object, Object> entry, MutableClassDeclaration annotatedClass,
-		AnnotationReference nlsAnnotation, extension TransformationContext context) {
-		val fieldName = entry.key as String
-		checkForExistentField(annotatedClass, fieldName, context, nlsAnnotation)
-		annotatedClass.addField(fieldName) [
-			visibility = Visibility.PUBLIC
-			static = true
-			final = true
-			type = string
-			initializer = '''"«entry.key»"'''
-			// remove when https://bugs.eclipse.org/bugs/show_bug.cgi?id=444333 is fixed
-			try {
-				val delegate = it.invoke("getDelegate")
-				delegate.invoke("setConstant", true)
-			} catch (NoSuchFieldException exc) {
-				throw new RuntimeException(exc)
-			} catch (IllegalAccessException exc) {
-				throw new RuntimeException(exc)
-			} catch (NoSuchMethodException exc) {
-				throw new RuntimeException(exc)
-			} catch (InvocationTargetException exc) {
-				throw new RuntimeException(exc)
-			}
-		]
-	}
-
-	def private void checkForExistentField(MutableClassDeclaration annotatedClass, String fieldName,
-		extension TransformationContext context, AnnotationReference nlsAnnotation) {
-		if (annotatedClass.findDeclaredField(fieldName) !== null) {
-			nlsAnnotation.addError("Field " + fieldName + " already present in class.")
-		}
-	}
-
-	def private void addMethod(Map.Entry<Object, Object> entry, MutableClassDeclaration annotatedClass,
+	override void addMethod(Map.Entry<Object, Object> entry, MutableClassDeclaration annotatedClass,
 		AnnotationReference nlsAnnotation, extension TransformationContext context) {
 		val value = entry.value as String
 		val parts = value.split(";;;")
@@ -269,65 +175,7 @@ class NLSProcessor extends AbstractClassProcessor {
 			body = '''return «nlsClass».bind(getString(«entry.key»), new Object [] { «params.join(", ")» });'''
 		]
 	}
+	
 
-	private def void checkForExistentMethod(MutableClassDeclaration annotatedClass, String methodName,
-		extension TransformationContext context, AnnotationReference nlsAnnotation, int parameterListSize) {
-		val existentMethod = annotatedClass.findDeclaredMethod(methodName)
-		if (existentMethod !== null) {
-			if (existentMethod.parameters.size == parameterListSize) {
-				nlsAnnotation.addError("Method " + methodName + "/" + parameterListSize + " already present in class.")
-			}
-		}
-	}
-
-	def private getWildcardCount(String unboundMessage) {
-		val pattern = Pattern.compile("\\{\\d*\\}")
-		val matcher = pattern.matcher(unboundMessage);
-		val matches = <String>newHashSet
-		while (matcher.find) {
-			val matchResult = matcher.toMatchResult
-			matches.add(matchResult.group())
-		}
-		matches.size
-	}
-
-	def private getNLSAnnotation(MutableClassDeclaration annotatedClass, extension TransformationContext context) {
-		annotatedClass.findAnnotation(NLS.newTypeReference.type)
-	}
-
-	def private getNLSAnnotationPropertyValue(AnnotationReference nlsAnnotation,
-		extension TransformationContext context) {
-		val value = nlsAnnotation.getValue('propertyFileName') as String
-		if (value.nullOrEmpty) {
-			nlsAnnotation.addError("@NLS requires non empty propertyFileName property value.")
-		}
-		value
-	}
-
-	def private getPropertiesFile(MutableClassDeclaration annotatedClass, extension TransformationContext context,
-		String propertyFileName, AnnotationReference nlsAnnotation) {
-		val folder = annotatedClass.compilationUnit.filePath?.parent
-		if (folder === null || !folder.exists) {
-			nlsAnnotation.addError("Cannot find folder for class " + annotatedClass.qualifiedName + ": " + folder)
-			throw new IllegalArgumentException(
-				"Cannot find folder for class " + annotatedClass.qualifiedName + ": " + folder)
-		}
-		val propertiesFilePath = folder.append(
-			propertyFileName + (if (!propertyFileName.endsWith(".properties")) ".properties" else ""))
-		if (!propertiesFilePath.exists) {
-			nlsAnnotation.addError(propertiesFilePath.lastSegment + " doesn't exist.")
-		}
-		propertiesFilePath.getContentsAsStream
-	}
-
-	def private loadPropertiesFile(InputStream propertiesFile, extension TransformationContext transformationContext,
-		AnnotationReference nlsAnnotation) {
-		val properties = new Properties
-		try {
-			properties.load(propertiesFile)
-		} catch (IOException ioe) {
-			nlsAnnotation.addError("Cannot load properties file: " + ioe.message)
-		}
-		properties
-	}
+	
 }

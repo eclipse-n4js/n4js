@@ -764,6 +764,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 
 		// Initialize enums and add enum literals
 		initEEnum(projectTypeEEnum, ProjectType.class, "ProjectType");
+		addEEnumLiteral(projectTypeEEnum, ProjectType.PLAINJS);
 		addEEnumLiteral(projectTypeEEnum, ProjectType.VALIDATION);
 		addEEnumLiteral(projectTypeEEnum, ProjectType.DEFINITION);
 		addEEnumLiteral(projectTypeEEnum, ProjectType.APPLICATION);
@@ -791,7 +792,6 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 		initEEnum(dependencyTypeEEnum, DependencyType.class, "DependencyType");
 		addEEnumLiteral(dependencyTypeEEnum, DependencyType.RUNTIME);
 		addEEnumLiteral(dependencyTypeEEnum, DependencyType.DEVELOPMENT);
-		addEEnumLiteral(dependencyTypeEEnum, DependencyType.TYPE);
 
 		// Create resource
 		createResource(eNS_URI);

@@ -211,8 +211,9 @@ public class N4HeadlessCompiler {
 		headlessHelper.registerProjectsToFileBasedWorkspace(projectURIs, n4jsFileBasedWorkspace);
 		List<N4JSProject> projectsToClean = headlessHelper.getN4JSProjects(projectURIs);
 		projectsToClean.forEach(project -> {
-			if (project.getProjectType() != ProjectType.VALIDATION)
-				// Do NOT clean project of type validation because we don't want to accidently remove source content
+			if (project.getProjectType() != ProjectType.VALIDATION && project.getProjectType() != ProjectType.PLAINJS)
+				// Do NOT clean project of type validation or plainjs because we don't want to
+				// accidently remove source content
 				cleanProject(project);
 		});
 	}

@@ -21,6 +21,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.n4js.binaries.BinariesPreferenceStore;
 import org.eclipse.n4js.binaries.nodejs.NpmrcBinary;
 import org.eclipse.n4js.external.NpmLogger;
+import org.eclipse.n4js.ui.external.ExternalLibrariesActionsHelper;
 import org.eclipse.n4js.ui.utils.AutobuildUtils;
 import org.eclipse.n4js.utils.StatusHelper;
 
@@ -39,7 +40,7 @@ public class RunnableInstallDependencies implements IRunnableWithProgress {
 	private StatusHelper statusHelper;
 
 	@Inject
-	private ExternalLibrariesInstallHelper librariesInstallHelper;
+	private ExternalLibrariesActionsHelper librariesActionsHelper;
 
 	@Inject
 	private BinariesPreferenceStore preferenceStore;
@@ -68,8 +69,7 @@ public class RunnableInstallDependencies implements IRunnableWithProgress {
 
 	@Override
 	synchronized public void run(IProgressMonitor pmonitor) {
-		final SubMonitor monitor = SubMonitor.convert(pmonitor, 100);
-		final SubMonitor subMonitor2 = monitor.split(1);
+		final SubMonitor monitor = SubMonitor.convert(pmonitor, 1);
 
 		final boolean wasAutoBuilding = AutobuildUtils.get();
 
@@ -85,7 +85,7 @@ public class RunnableInstallDependencies implements IRunnableWithProgress {
 			if (!multistatus.isOK())
 				return;
 		}
-		librariesInstallHelper.calculateAndInstallDependencies(subMonitor2, multistatus, options.clearNpmCache);
+		librariesActionsHelper.cleanAndInstallAllDependencies(monitor, multistatus, options.clearNpmCache);
 
 		if (!multistatus.isOK())
 			return;

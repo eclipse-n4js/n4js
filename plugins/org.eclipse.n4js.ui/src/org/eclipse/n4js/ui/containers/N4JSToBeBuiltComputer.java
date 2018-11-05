@@ -20,6 +20,7 @@ import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.ts.ui.navigation.URIBasedStorage;
@@ -118,6 +119,11 @@ public class N4JSToBeBuiltComputer implements IToBeBuiltComputerContribution {
 
 	@Override
 	public boolean isRejected(IFolder folder) {
+		// do not build contents of nested node_modules folders
+		if (folder.getName().equals(N4JSGlobals.NODE_MODULES)) {
+			return true;
+		}
+
 		Optional<? extends IN4JSSourceContainer> sourceContainerOpt = eclipseCore.create(folder);
 		return !sourceContainerOpt.isPresent();
 	}

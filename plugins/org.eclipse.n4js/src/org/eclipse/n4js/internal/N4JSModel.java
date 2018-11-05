@@ -59,9 +59,6 @@ import com.google.inject.Singleton;
 @SuppressWarnings({ "javadoc" })
 @Singleton
 public class N4JSModel {
-
-	public static final String SORTED_DEPENDENCIES = "sortedDependencies";
-
 	private static final Logger LOGGER = Logger.getLogger(N4JSModel.class);
 
 	private final InternalN4JSWorkspace workspace;
@@ -183,7 +180,7 @@ public class N4JSModel {
 	/**
 	 * This delegates to {@link InternalN4JSWorkspace#getProjectDescription(URI)} to allow caching.
 	 */
-	protected ProjectDescription getProjectDescription(URI location) {
+	public ProjectDescription getProjectDescription(URI location) {
 		ProjectDescription description = workspace.getProjectDescription(location);
 		if (null == description) {
 			description = externalLibraryWorkspace.getProjectDescription(location);
@@ -479,7 +476,8 @@ public class N4JSModel {
 
 	public Iterable<IN4JSProject> getSortedDependencies(IN4JSProject project) {
 		SortedDependenciesProvider sdProvider = new SortedDependenciesProvider(project);
-		Iterable<IN4JSProject> existing = cache.get(sdProvider, SORTED_DEPENDENCIES, project.getLocation());
+		Iterable<IN4JSProject> existing = cache.get(sdProvider, MultiCleartriggerCache.CACHE_KEY_SORTED_DEPENDENCIES,
+				project.getLocation());
 		return existing;
 	}
 

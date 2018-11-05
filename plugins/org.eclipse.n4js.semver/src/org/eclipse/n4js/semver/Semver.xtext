@@ -28,20 +28,21 @@ NPMVersionRequirement:
 	| (
 		(
 			=>LocalPathVersionRequirement
-			| URLVersionRequirement
-			| GitHubVersionRequirement
-			| TagVersionRequirement
+			| ( =>URLVersionRequirement
+				| GitHubVersionRequirement
+				| TagVersionRequirement
+			)
 		)
 		WS*
 	)
 ;
 
 LocalPathVersionRequirement:
-	=>(FILE_TAG) localPath=PATH
+	(FILE_TAG) localPath=PATH
 ;
 
 URLVersionRequirement:
-	protocol=URL_PROTOCOL =>'://' url=URL
+	protocol=URL_PROTOCOL (':''/''/') url=URL
 	('#' versionSpecifier=URLVersionSpecifier)?
 ;
 
@@ -66,7 +67,7 @@ TagVersionRequirement:
 ;
 
 GitHubVersionRequirement:
-	githubUrl=URL ('#' commitISH=ALPHA_NUMERIC_CHARS)?
+	githubUrl=URL_NO_VX ('#' commitISH=ALPHA_NUMERIC_CHARS)?
 ;
 
 
@@ -126,7 +127,7 @@ SEMVER_TAG:
 
 
 PATH:
-	(LETTER_NO_VX | '/' | '.') ('/' | '.' | '-' | DIGITS | LETTER)+
+	('/' | '.' | '@' | '-' | '_' | DIGITS | LETTER)+
 ;
 
 URL_PROTOCOL:
@@ -134,10 +135,16 @@ URL_PROTOCOL:
 ;
 
 URL:
-	(LETTER_NO_VX)
-	('-' | DIGITS | LETTER)*
+	('-' | '_' | DIGITS | LETTER)*
 	('/' | '.' | ':' | '@')
-	('/' | '.' | ':' | '@' | '-' | DIGITS | LETTER)*
+	('/' | '.' | ':' | '@' | '-' | '_' | DIGITS | LETTER)*
+;
+
+URL_NO_VX:
+	('-' | '_' | LETTER_NO_VX)
+	('-' | '_' | DIGITS | LETTER)*
+	('/' | '.' | ':' | '@')
+	('/' | '.' | ':' | '@' | '-' | '_' | DIGITS | LETTER)*
 ;
 
 TAG:

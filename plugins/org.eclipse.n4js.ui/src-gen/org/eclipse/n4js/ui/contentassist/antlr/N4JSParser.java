@@ -854,10 +854,10 @@ public class N4JSParser extends AbstractContentAssistParser {
 			nameMappingsBuilder.put(grammarAccess.getTemplateLiteralAccess().getSegmentsAssignment_1_1_3_0(), "rule__TemplateLiteral__SegmentsAssignment_1_1_3_0");
 			nameMappingsBuilder.put(grammarAccess.getTemplateLiteralAccess().getSegmentsAssignment_1_1_3_1(), "rule__TemplateLiteral__SegmentsAssignment_1_1_3_1");
 			nameMappingsBuilder.put(grammarAccess.getTemplateLiteralAccess().getSegmentsAssignment_1_1_4(), "rule__TemplateLiteral__SegmentsAssignment_1_1_4");
-			nameMappingsBuilder.put(grammarAccess.getNoSubstitutionTemplateAccess().getRawValueAssignment_1(), "rule__NoSubstitutionTemplate__RawValueAssignment_1");
-			nameMappingsBuilder.put(grammarAccess.getTemplateHeadAccess().getRawValueAssignment_1(), "rule__TemplateHead__RawValueAssignment_1");
-			nameMappingsBuilder.put(grammarAccess.getTemplateTailAccess().getRawValueAssignment_1(), "rule__TemplateTail__RawValueAssignment_1");
-			nameMappingsBuilder.put(grammarAccess.getTemplateMiddleAccess().getRawValueAssignment_1(), "rule__TemplateMiddle__RawValueAssignment_1");
+			nameMappingsBuilder.put(grammarAccess.getNoSubstitutionTemplateAccess().getValueAssignment_1(), "rule__NoSubstitutionTemplate__ValueAssignment_1");
+			nameMappingsBuilder.put(grammarAccess.getTemplateHeadAccess().getValueAssignment_1(), "rule__TemplateHead__ValueAssignment_1");
+			nameMappingsBuilder.put(grammarAccess.getTemplateTailAccess().getValueAssignment_1(), "rule__TemplateTail__ValueAssignment_1");
+			nameMappingsBuilder.put(grammarAccess.getTemplateMiddleAccess().getValueAssignment_1(), "rule__TemplateMiddle__ValueAssignment_1");
 			nameMappingsBuilder.put(grammarAccess.getBooleanLiteralAccess().getTrueAssignment_1_0(), "rule__BooleanLiteral__TrueAssignment_1_0");
 			nameMappingsBuilder.put(grammarAccess.getStringLiteralAccess().getValueAssignment(), "rule__StringLiteral__ValueAssignment");
 			nameMappingsBuilder.put(grammarAccess.getDoubleLiteralAccess().getValueAssignment(), "rule__DoubleLiteral__ValueAssignment");

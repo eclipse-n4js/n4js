@@ -11,7 +11,9 @@
 package org.eclipse.n4js.ui.internal;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
@@ -25,6 +27,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.internal.MultiCleartriggerCache;
 import org.eclipse.n4js.internal.MultiCleartriggerCache.CleartriggerSupplier;
@@ -44,9 +47,6 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
-	/** Key for {@link MultiCleartriggerCache} */
-	public static final String PROJECT_DESCRIPTIONS = "projectDescriptions";
-
 	private final IWorkspaceRoot workspace;
 
 	private final ProjectDescriptionLoader projectDescriptionLoader;
@@ -79,7 +79,9 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 			return URI.createPlatformResourceURI(nestedLocation.segment(1), true);
 		}
 		// this might happen if the URI was located from non-platform information, e.g. in case
-		// of a source file location found in a soure map
+		// of a source file location found in a source map
+		// FIXME: This loop and the call 'toFile()' are very expensive
+		// FIXME: since this method is called for a lot of external files
 		if (nestedLocation.isFile()) {
 			String nested = nestedLocation.toString();
 			for (IProject proj : workspace.getProjects()) {
@@ -93,15 +95,41 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 		return null;
 	}
 
+	/** @return the {@link URI} for a project with the given n4js project name */
+	public URI findProjectForName(String projectName) {
+		if (projectName == null) {
+			return null;
+		}
+		for (IProject prj : workspace.getProjects()) {
+			URI uri = URIUtils.convert(prj);
+			String n4jsProjectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(uri);
+			if (projectName.equals(n4jsProjectName)) {
+				return uri;
+			}
+		}
+		return null;
+	}
+
 	@Override
 	public ProjectDescription getProjectDescription(URI location) {
 		if (!location.isPlatformResource()) {
 			return null;
 		}
 		ProjectDescriptionLoaderAndNotifier supplier = new ProjectDescriptionLoaderAndNotifier(location);
-		ProjectDescription existing = cache.get(supplier, PROJECT_DESCRIPTIONS, location);
+		ProjectDescription existing = cache.get(supplier, MultiCleartriggerCache.CACHE_KEY_PROJECT_DESCRIPTIONS,
+				location);
 
 		return existing;
+	}
+
+	@Override
+	public Collection<URI> getAllProjectLocations() {
+		Collection<URI> prjLocations = new LinkedList<>();
+		for (IProject prj : workspace.getProjects()) {
+			URI uri = URIUtils.convert(prj);
+			prjLocations.add(uri);
+		}
+		return prjLocations;
 	}
 
 	/** Loads the project description and notifies the listener */
@@ -163,6 +191,11 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 					public boolean visit(IResource resource) throws CoreException {
 						if (resource.getType() == IResource.FILE) {
 							result.add(URI.createPlatformResourceURI(resource.getFullPath().toString(), true));
+						}
+						// do not iterate over contents of nested node_modules folders
+						if (resource.getType() == IResource.FOLDER &&
+								resource.getName().equals(N4JSGlobals.NODE_MODULES)) {
+							return false;
 						}
 						return true;
 					}

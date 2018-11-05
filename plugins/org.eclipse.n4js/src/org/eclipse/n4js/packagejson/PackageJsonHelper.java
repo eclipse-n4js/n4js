@@ -17,6 +17,7 @@ import static org.eclipse.n4js.json.model.utils.JSONModelUtils.getProperty;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.MAIN;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.MAIN_MODULE;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.OUTPUT;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.PROJECT_TYPE;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.VENDOR_ID;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.VERSION;
 import static org.eclipse.n4js.packagejson.PackageJsonUtils.asBootstrapModuleOrNull;
@@ -95,7 +96,7 @@ public class PackageJsonHelper {
 	private void convertRootPairs(ProjectDescription target, List<NameValuePair> rootPairs) {
 		for (NameValuePair pair : rootPairs) {
 			String name = pair.getName();
-			PackageJsonProperties property = PackageJsonProperties.valueOfOrNull(name);
+			PackageJsonProperties property = PackageJsonProperties.valueOfNameOrNull(name);
 			if (property == null) {
 				continue;
 			}
@@ -133,7 +134,7 @@ public class PackageJsonHelper {
 	private void convertN4jsPairs(ProjectDescription target, List<NameValuePair> n4jsPairs) {
 		for (NameValuePair pair : n4jsPairs) {
 			String name = pair.getName();
-			PackageJsonProperties property = PackageJsonProperties.valueOfOrNull(name);
+			PackageJsonProperties property = PackageJsonProperties.valueOfNameOrNull(name);
 			if (property == null) {
 				continue;
 			}
@@ -192,10 +193,6 @@ public class PackageJsonHelper {
 				break;
 			case DEFINES_PACKAGE:
 				target.setDefinesPackage(asStringOrNull(value));
-				break;
-			case TYPE_DEPENDENCIES:
-				// in the context of N4JS, type dependencies are considered regular project dependencies
-				convertDependencies(target, asNameValuePairsOrEmpty(value), true, DependencyType.TYPE);
 				break;
 
 			default:
@@ -280,7 +277,7 @@ public class PackageJsonHelper {
 	 */
 	private void applyDefaults(ProjectDescription target, String defaultProjectName) {
 		if (!target.isHasN4JSNature()) {
-			target.setProjectType(ProjectType.VALIDATION);
+			target.setProjectType(parseProjectType(PROJECT_TYPE.defaultValue));
 		}
 		if (target.getProjectName() == null) {
 			target.setProjectName(defaultProjectName);
@@ -315,10 +312,10 @@ public class PackageJsonHelper {
 				scd.getPaths().add(OUTPUT.defaultValue);
 			}
 		}
-		// module loader must be commonjs for VALIDATION projects
+		// module loader must be commonjs for VALIDATION and PLAINJS projects
 		// (no need to set default in case of other project types, because this is handled by EMF)
-		if (target.getProjectType() == ProjectType.VALIDATION) {
-			target.setModuleLoader(PackageJsonProperties.DEFAULT_MODULE_LOADER_FOR_VALIDATION);
+		if (target.getProjectType() == ProjectType.VALIDATION || target.getProjectType() == ProjectType.PLAINJS) {
+			target.setModuleLoader(PackageJsonProperties.DEFAULT_MODULE_LOADER_FOR_PLAINJS_AND_VALIDATION);
 		}
 	}
 

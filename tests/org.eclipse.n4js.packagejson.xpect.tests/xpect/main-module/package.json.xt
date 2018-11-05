@@ -22,6 +22,7 @@
 	"name": "main-module",
 	"version": "0.0.1",
 	"n4js": {
+		"projectType": "library",
 		// XPECT errors --> "Main module specifier <empty string> does not exist." at """"
 		"mainModule": "",
 		// XPECT noerrors

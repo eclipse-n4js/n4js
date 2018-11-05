@@ -1,0 +1,100 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.n4ide.spec.tests.N4JSXpectPluginUITest
+
+   	Workspace {
+		JavaProject "N4JSXPECTTests" {
+			Folder "src" {
+				ThisFile {}
+			}
+			Folder "src-gen" {}
+			File "package.json" { from="../../test-config/package.json" }
+		}
+	}
+
+END_SETUP
+ */
+
+
+class Base {
+	protected async foo() {}
+	protected <T>bar(t: T) {}
+	// XPECT errors --> "Wrong type syntax: Use foo:Type rather than Type foo." at "int"
+	protected int old() {}
+	protected *generator() {}
+}
+
+
+
+class Test extends Base {
+
+	@Override
+	/* XPECT quickFix at 'async <|>foo() {' apply 'Set access modifier to "protected" (align with Base.foo)' ---
+	(...)
+	  }
+	  class Test extends Base {
+	  	@Override
+	+ 	protected
+	  	async foo() {}
+	  	@Override
+	  	<T> bar(t: T) {}
+	(...)
+	--- */
+	async foo() {}
+
+
+	@Override
+	/* XPECT quickFix at '<|>bar(t: T) {' apply 'Set access modifier to "protected" (align with Base.bar)' ---
+	(...)
+	  	@Override
+	  	async foo() {}
+	  	@Override
+	+ 	protected
+	  	<T> bar(t: T) {}
+	  	@Override
+	  	int old() {} // old syntax, but anyway
+	(...)
+	--- */
+	<T> bar(t: T) {}
+
+
+	@Override
+	/* XPECT errors ---
+		"The method Test.old cannot reduce the visibility of method Base.old." at "old"
+		"Wrong type syntax: Use foo:Type rather than Type foo." at "int"
+	--- */
+	/* XPECT quickFix at 'int <|>old() {' apply 'Set access modifier to "protected" (align with Base.old)' ---
+	(...)
+	  	@Override
+	  	<T> bar(t: T) {}
+	  	@Override
+	+ 	protected
+	  	int old() {} // old syntax, but anyway
+	  	@Override
+	  	*generator() {}
+	(...)
+	--- */
+	int old() {} // old syntax, but anyway
+
+
+	@Override
+	/* XPECT quickFix at '*<|>generator() {' apply 'Set access modifier to "protected" (align with Base.generator)' ---
+	(...)
+	  	@Override
+	  	int old() {} // old syntax, but anyway
+	  	@Override
+	+ 	protected
+	  	*generator() {}
+	  }
+	--- */
+	*generator() {}
+}

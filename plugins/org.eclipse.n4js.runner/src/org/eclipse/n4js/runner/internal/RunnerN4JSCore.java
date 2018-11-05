@@ -64,7 +64,7 @@ public class RunnerN4JSCore {
 		// org.eclipse.xtext.xbase.lib.IteratorExtensions) does not work, i.e. it is just simple wrapping that allows
 		// one iteration just like plain iterator.
 		List<IN4JSProject> projects = new ArrayList<>();
-		workspace.getAllProjectsLocations().forEachRemaining(
+		workspace.getAllProjectLocationsIterator().forEachRemaining(
 				location -> projects.add(model.getN4JSProject(location)));
 
 		return projects;

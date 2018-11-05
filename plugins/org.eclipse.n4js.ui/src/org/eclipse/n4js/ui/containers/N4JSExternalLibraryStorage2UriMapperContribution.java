@@ -19,17 +19,16 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.ts.ui.navigation.URIBasedStorage;
+import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
+import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
+import org.eclipse.n4js.utils.resources.IExternalResource;
 import org.eclipse.xtext.ui.resource.IStorage2UriMapperContribution;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.Tuples;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
-import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
-import org.eclipse.n4js.ts.ui.navigation.URIBasedStorage;
-import org.eclipse.n4js.utils.resources.IExternalResource;
 
 /**
  * Implementation of a {@link IStorage storage} to {@link URI URI} mapper contribution for external N4JS libraries.
@@ -64,7 +63,7 @@ public class N4JSExternalLibraryStorage2UriMapperContribution implements IStorag
 	public URI getUri(final IStorage storage) {
 		if (storage instanceof IExternalResource) {
 			final File externalResource = ((IExternalResource) storage).getExternalResource();
-			if (externalResource.exists() && externalResource.isFile()) {
+			if (externalResource.isFile()) {
 				return URI.createFileURI(externalResource.getAbsolutePath());
 			}
 		}

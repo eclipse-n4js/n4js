@@ -11,6 +11,10 @@
 
 /* XPECT_SETUP org.eclipse.n4js.json.xpect.ui.tests.JSONXpectPluginUITest END_SETUP */
 
-// XPECT contentAssistList at '{<|>}' proposals --> "\"<name>\": <value> - "
+/* XPECT contentAssistList at '{<|>}' proposals ---
+	   	<array> - Generic name array pair,
+	   	<object> - Generic name object pair,
+	   	<value> - Generic name value pair,
+--- */
 // XPECT contentAssistList at '{<|>}' proposals not --> "\"...\" - String", "{", "["
 {}

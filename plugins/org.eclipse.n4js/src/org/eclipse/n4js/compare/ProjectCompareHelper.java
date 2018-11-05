@@ -13,9 +13,12 @@ package org.eclipse.n4js.compare;
 import static org.eclipse.n4js.AnnotationDefinition.PROVIDES_DEFAULT_IMPLEMENTATION;
 import static org.eclipse.n4js.AnnotationDefinition.PROVIDES_INITIALZER;
 
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
@@ -25,6 +28,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.internal.MultiCleartriggerCache;
+import org.eclipse.n4js.internal.MultiCleartriggerCache.CleartriggerSupplier;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
@@ -78,6 +83,8 @@ public class ProjectCompareHelper {
 	private ContainerTypesHelper containerTypesHelper;
 	@Inject
 	private N4JSTypeSystem typeSystem;
+	@Inject
+	private MultiCleartriggerCache cache;
 
 	private static Logger logger = Logger.getLogger(ProjectCompareHelper.class);
 
@@ -210,6 +217,31 @@ public class ProjectCompareHelper {
 		return compareModules(module, implementationID, false);
 	}
 
+	static private class ApiImplMappingSupplier implements CleartriggerSupplier<ApiImplMapping> {
+		final private IN4JSCore n4jsCore;
+
+		private ApiImplMappingSupplier(IN4JSCore n4jsCore) {
+			this.n4jsCore = n4jsCore;
+		}
+
+		@Override
+		public ApiImplMapping get() {
+			return ApiImplMapping.of(n4jsCore);
+		}
+
+		@Override
+		public Collection<URI> getCleartriggers() {
+			Collection<URI> allPckjsons = new LinkedList<>();
+			for (IN4JSProject prj : n4jsCore.findAllProjects()) {
+				URI pckjsonUri = prj.getLocation();
+				if (pckjsonUri != null) {
+					allPckjsons.add(pckjsonUri);
+				}
+			}
+			return allPckjsons;
+		}
+	}
+
 	/**
 	 * Get the comparison for a module in a specific implementation specified by it's ID.
 	 *
@@ -244,8 +276,9 @@ public class ProjectCompareHelper {
 			// this is NOT an implementation project, so assume we have the api
 			// need to load the correct implementation. Since there might be multiple implementors
 
-			// TODO replace with central instance
-			final ApiImplMapping mapping = ApiImplMapping.of(n4jsCore);
+			Supplier<ApiImplMapping> supplier = new ApiImplMappingSupplier(n4jsCore);
+			ApiImplMapping mapping = cache.get(supplier, MultiCleartriggerCache.CACHE_KEY_API_IMPL_MAPPING);
+
 			implProject = mapping.getImpl(project.getProjectName(), implementationID);
 			if (implProject == null) {
 				return null; // no implementation found.

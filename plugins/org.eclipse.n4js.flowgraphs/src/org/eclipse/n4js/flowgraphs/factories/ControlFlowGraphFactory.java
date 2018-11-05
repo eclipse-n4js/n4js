@@ -34,9 +34,8 @@ import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.FinallyBlock;
 import org.eclipse.n4js.n4JS.Script;
-import org.eclipse.n4js.smith.ClosableMeasurement;
-import org.eclipse.n4js.smith.DataCollector;
-import org.eclipse.n4js.smith.DataCollectors;
+import org.eclipse.n4js.smith.Measurement;
+import org.eclipse.n4js.utils.N4JSDataCollectors;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 /**
@@ -46,13 +45,6 @@ public class ControlFlowGraphFactory {
 	/** Prints out the {@link ControlFlowEdge}s of the internal graph */
 	private final static boolean PRINT_EDGE_DETAILS = false;
 
-	static private final DataCollector dcCreateNodes = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Create Nodes", "Flow Graphs", "Create Graphs");
-	static private final DataCollector dcConnectNodes = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Connect Nodes", "Flow Graphs", "Create Graphs");
-	static private final DataCollector dcJumpEdges = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Jump Edges", "Flow Graphs", "Create Graphs");
-
 	/** Builds and returns a control flow graph from a given {@link Script}. */
 	static public FlowGraph build(Script script) {
 		Set<ControlFlowElement> cfContainers = new LinkedHashSet<>();
@@ -60,16 +52,16 @@ public class ControlFlowGraphFactory {
 		String uriString = script.eResource().getURI().toString();
 
 		ComplexNodeMapper cnMapper = null;
-		try (ClosableMeasurement m = dcCreateNodes.getClosableMeasurement("createNodes_" + uriString);) {
+		try (Measurement m = N4JSDataCollectors.dcCreateNodes.getMeasurement("createNodes_" + uriString);) {
 			createComplexNodes(script, cfContainers, cnMap);
 			cnMapper = new ComplexNodeMapper(cnMap);
 		}
 
-		try (ClosableMeasurement m = dcConnectNodes.getClosableMeasurement("connectNodes_" + uriString);) {
+		try (Measurement m = N4JSDataCollectors.dcConnectNodes.getMeasurement("connectNodes_" + uriString);) {
 			connectComplexNodes(cnMapper);
 		}
 
-		try (ClosableMeasurement m = dcJumpEdges.getClosableMeasurement("jumpEdges_" + uriString);) {
+		try (Measurement m = N4JSDataCollectors.dcJumpEdges.getMeasurement("jumpEdges_" + uriString);) {
 			createJumpEdges(cnMapper);
 		}
 

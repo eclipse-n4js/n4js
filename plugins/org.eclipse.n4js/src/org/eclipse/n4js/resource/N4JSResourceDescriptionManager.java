@@ -21,6 +21,7 @@ import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.ts.utils.TypeHelper;
+import org.eclipse.n4js.utils.N4JSLanguageHelper;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.DerivedStateAwareResourceDescriptionManager;
@@ -60,6 +61,9 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 	@Inject
 	private FileExtensionTypeHelper fileExtensionTypeHelper;
 
+	@Inject
+	private N4JSLanguageHelper langHelper;
+
 	@Override
 	protected IResourceDescription createResourceDescription(final Resource resource,
 			IDefaultResourceDescriptionStrategy strategy) {
@@ -90,6 +94,18 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 	@Override
 	public boolean isAffected(Collection<IResourceDescription.Delta> deltas, IResourceDescription candidate,
 			IResourceDescriptions context) {
+
+		URI candidateURI = candidate.getURI();
+		if (candidateURI.isFile()) {
+			return false;
+		}
+
+		// Opaque modules cannot contain any references to one of the deltas.
+		// Thus, they will never be affected by any change.
+		if (langHelper.isOpaqueModule(candidateURI)) {
+			return false;
+		}
+
 		boolean result = basicIsAffected(deltas, candidate);
 		if (!result) {
 			for (IResourceDescription.Delta delta : deltas) {
@@ -97,7 +113,7 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 				// if uri looks like a N4JS project description file (i.e. package.json)
 				if (IN4JSProject.PACKAGE_JSON.equalsIgnoreCase(uri.lastSegment())) {
 					URI prefixURI = uri.trimSegments(1).appendSegment("");
-					if (candidate.getURI().replacePrefix(prefixURI, prefixURI) != null) {
+					if (candidateURI.replacePrefix(prefixURI, prefixURI) != null) {
 						return true;
 					}
 				}
@@ -164,8 +180,8 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 
 				// Never mark a resource as effected when trying to resolve its dependency from an external to a
 				// workspace one and/or vice versa.
-				if (Objects.equals(fromProjectDependency, toProject)
-						&& fromProjectDependency.isExternal() == fromProject.isExternal()) {
+				if (fromProjectDependency.isExternal() == fromProject.isExternal()
+						&& Objects.equals(fromProjectDependency, toProject)) {
 					return true;
 				}
 			}

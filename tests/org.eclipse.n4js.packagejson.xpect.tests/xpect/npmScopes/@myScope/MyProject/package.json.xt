@@ -25,5 +25,8 @@
 	// XPECT errors --> "The package name "MyProjectWrong" does not match the name of the project folder "MyProject" on the file system." at ""@myScope/MyProjectWrong""
 	"name": "@myScope/MyProjectWrong",
 	// XPECT errors --> "The scope name "@myScopeWrong" does not match the name of the project folder's parent folder "@myScope" on the file system." at ""@myScopeWrong/MyProject""
-	"name": "@myScopeWrong/MyProject"
+	"name": "@myScopeWrong/MyProject",
+	"n4js": {
+		"projectType": "validation"
+	}
 }

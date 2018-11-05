@@ -21,11 +21,9 @@ import org.eclipse.n4js.external.ExternalIndexSynchronizer;
 import org.eclipse.n4js.external.ExternalLibraryUriHelper;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalProjectsCollector;
-import org.eclipse.n4js.external.GitCloneSupplier;
 import org.eclipse.n4js.external.NpmLogger;
 import org.eclipse.n4js.external.RebuildWorkspaceProjectsScheduler;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
-import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider;
 import org.eclipse.n4js.findReferences.ConcreteSyntaxAwareReferenceFinder;
 import org.eclipse.n4js.generator.ICompositeGenerator;
 import org.eclipse.n4js.generator.IGeneratorMarkerSupport;
@@ -41,11 +39,13 @@ import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.ts.findReferences.TargetURIKey;
+import org.eclipse.n4js.ts.ui.navigation.URIBasedStorageEditorInputFactory;
 import org.eclipse.n4js.ts.ui.search.BuiltinSchemeAwareTargetURIKey;
 import org.eclipse.n4js.ts.validation.TypesKeywordProvider;
 import org.eclipse.n4js.ui.building.FileSystemAccessWithoutTraceFileSupport;
 import org.eclipse.n4js.ui.building.N4JSBuilderParticipant;
 import org.eclipse.n4js.ui.containers.N4JSAllContainersStateProvider;
+import org.eclipse.n4js.ui.containers.N4JSProjectsStateHelper;
 import org.eclipse.n4js.ui.contentassist.ContentAssistContextFactory;
 import org.eclipse.n4js.ui.contentassist.ContentAssistantFactory;
 import org.eclipse.n4js.ui.contentassist.CustomN4JSParser;
@@ -88,8 +88,9 @@ import org.eclipse.n4js.ui.internal.ConsoleOutputStreamProvider;
 import org.eclipse.n4js.ui.internal.ContributingModule;
 import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
 import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
-import org.eclipse.n4js.ui.internal.ExternalProjectCacheLoader;
+import org.eclipse.n4js.ui.internal.ExternalProjectLoader;
 import org.eclipse.n4js.ui.internal.N4JSEclipseCore;
+import org.eclipse.n4js.ui.internal.N4JSEclipseModel;
 import org.eclipse.n4js.ui.internal.ResourceUIValidatorExtension;
 import org.eclipse.n4js.ui.labeling.N4JSContentAssistLabelProvider;
 import org.eclipse.n4js.ui.labeling.N4JSHoverProvider;
@@ -154,6 +155,7 @@ import org.eclipse.xtext.ui.editor.hover.IEObjectHover;
 import org.eclipse.xtext.ui.editor.hover.IEObjectHoverProvider;
 import org.eclipse.xtext.ui.editor.hyperlinking.HyperlinkHelper;
 import org.eclipse.xtext.ui.editor.model.DocumentTokenSource;
+import org.eclipse.xtext.ui.editor.model.IResourceForEditorInputFactory;
 import org.eclipse.xtext.ui.editor.model.TerminalsTokenTypeToPartitionMapper;
 import org.eclipse.xtext.ui.editor.model.XtextDocument;
 import org.eclipse.xtext.ui.editor.model.XtextDocumentProvider;
@@ -236,6 +238,11 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	}
 
 	/** Delegate to shared injector */
+	public Provider<N4JSProjectsStateHelper> provideN4JSProjectsStateHelper() {
+		return Access.contributedProvider(N4JSProjectsStateHelper.class);
+	}
+
+	/** Delegate to shared injector */
 	public Provider<MultiCleartriggerCache> provideMultiCleartriggerCache() {
 		return Access.contributedProvider(MultiCleartriggerCache.class);
 	}
@@ -246,13 +253,8 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	}
 
 	/** Delegate to shared injector */
-	public Provider<GitCloneSupplier> provideGitCloneSupplier() {
-		return Access.contributedProvider(GitCloneSupplier.class);
-	}
-
-	/** Delegate to shared injector */
-	public Provider<ExternalProjectCacheLoader> provideExternalProjectCacheLoader() {
-		return Access.contributedProvider(ExternalProjectCacheLoader.class);
+	public Provider<ExternalProjectLoader> provideExternalProjectCacheLoader() {
+		return Access.contributedProvider(ExternalProjectLoader.class);
 	}
 
 	/** Delegate to shared injector */
@@ -341,11 +343,6 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	}
 
 	/** Delegate to shared injector */
-	public Provider<TypeDefinitionGitLocationProvider> provideTypeDefinitionGitLocationProvider() {
-		return Access.contributedProvider(TypeDefinitionGitLocationProvider.class);
-	}
-
-	/** Delegate to shared injector */
 	public Provider<IN4JSCore> provideIN4JSCore() {
 		return Access.contributedProvider(IN4JSCore.class);
 	}
@@ -396,8 +393,13 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	}
 
 	/** Delegate to shared injector */
-	public Provider<? extends N4JSModel> provideN4JSModel() {
+	public Provider<N4JSModel> provideN4JSModel() {
 		return Access.contributedProvider(N4JSModel.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<N4JSEclipseModel> provideN4JSEclipseModel() {
+		return Access.contributedProvider(N4JSEclipseModel.class);
 	}
 
 	/** Delegate to shared injector */
@@ -433,6 +435,12 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	/** Delegate to shared injector */
 	public Provider<? extends IWorkspaceMarkerSupport> provideIWorkspaceMarkerSupport() {
 		return Access.contributedProvider(IWorkspaceMarkerSupport.class);
+	}
+
+	/** Bind {@link URIBasedStorageEditorInputFactory} to support hyperlinks to external library modules */
+	@Override
+	public Class<? extends IResourceForEditorInputFactory> bindIResourceForEditorInputFactory() {
+		return URIBasedStorageEditorInputFactory.class;
 	}
 
 	/**

@@ -21,7 +21,9 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.n4js.runner,
  org.eclipse.xtext.ui,
  org.eclipse.n4js.ts.model,
- org.eclipse.xtext.ui.shared
+ org.eclipse.xtext.ui.shared,
+ org.eclipse.n4js.transpiler,
+ org.eclipse.core.filesystem
 Export-Package: org.eclipse.n4js.tester.ui,
  org.eclipse.n4js.tester.ui.resultsview
 Automatic-Module-Name: org.eclipse.n4js.tester.ui

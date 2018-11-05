@@ -10,22 +10,25 @@
  */
 package org.eclipse.n4js.ui.preferences.external;
 
-import static com.google.common.collect.FluentIterable.from;
-
-import java.io.File;
 import java.net.URI;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jface.viewers.ILazyTreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.n4js.external.N4JSExternalProject;
+import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
+import org.eclipse.xtext.util.Pair;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.external.ExternalLibraryWorkspace;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
 
 /**
  * Lazy tree content provider implementation for the external libraries preference page's viewer.
@@ -33,12 +36,14 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 public class ExternalLibraryTreeContentProvider implements ILazyTreeContentProvider {
 
 	private Optional<TreeViewer> treeViewerRef;
+	// cache list of projects per location (invalidated on #inputChanged)
+	private final Map<URI, List<IN4JSProject>> locationProjectsCache = new HashMap<>();
 
 	@Inject
-	private ExternalLibraryWorkspace externalLibraryWorkspace;
+	private EclipseExternalLibraryWorkspace externalLibraryWorkspace;
 
 	@Inject
-	private IN4JSCore core;
+	private ExternalLibraryPreferenceStore externalLibraryPreferenceStore;
 
 	@Override
 	public void dispose() {
@@ -52,6 +57,8 @@ public class ExternalLibraryTreeContentProvider implements ILazyTreeContentProvi
 		} else {
 			this.treeViewerRef = Optional.absent();
 		}
+		// clear projects cache when input changes
+		this.locationProjectsCache.clear();
 	}
 
 	@Override
@@ -62,10 +69,10 @@ public class ExternalLibraryTreeContentProvider implements ILazyTreeContentProvi
 				final Object child = Iterables.get((Iterable<?>) parent, index);
 				treeViewer.replace(parent, index, child);
 				if (child instanceof URI) {
-					treeViewer.setChildCount(child, Iterables.size(getProjects((URI) child)));
+					treeViewer.setChildCount(child, getProjects((URI) child).size());
 				}
 			} else if (parent instanceof URI) {
-				final IN4JSProject child = Iterables.get(getProjects((URI) parent), index);
+				final IN4JSProject child = getProjects((URI) parent).get(index);
 				treeViewer.replace(parent, index, child);
 			}
 		}
@@ -78,7 +85,7 @@ public class ExternalLibraryTreeContentProvider implements ILazyTreeContentProvi
 			if (element instanceof Iterable) {
 				treeViewer.setChildCount(element, Iterables.size((Iterable<?>) element));
 			} else if (element instanceof URI) {
-				treeViewer.setChildCount(element, Iterables.size(getProjects((URI) element)));
+				treeViewer.setChildCount(element, getProjects((URI) element).size());
 			} else {
 				treeViewer.setChildCount(element, 0);
 			}
@@ -90,16 +97,32 @@ public class ExternalLibraryTreeContentProvider implements ILazyTreeContentProvi
 		return null;
 	}
 
-	private Iterable<IN4JSProject> getProjects(URI location) {
-		return from(externalLibraryWorkspace.getProjectsIn(location))
-				.filter(p -> p.exists())
-				.transform(p -> core.findProject(convertUri(p.getLocationURI())).orNull())
-				.filter(IN4JSProject.class)
-				.filter(p -> p.exists() && p.isExternal());
+	/** Returns the list of {@link IN4JSProject} to be found in the given external location. */
+	private List<IN4JSProject> getProjects(URI location) {
+		if (locationProjectsCache.isEmpty()) {
+			initCache();
+		}
+
+		return locationProjectsCache.get(location);
 	}
 
-	private org.eclipse.emf.common.util.URI convertUri(URI uri) {
-		return org.eclipse.emf.common.util.URI.createFileURI(new File(uri).getAbsolutePath());
+	private void initCache() {
+		locationProjectsCache.clear();
+		for (java.net.URI extLoc : externalLibraryPreferenceStore.getLocations()) {
+			locationProjectsCache.putIfAbsent(extLoc, new LinkedList<>());
+		}
+
+		for (Pair<org.eclipse.emf.common.util.URI, ProjectDescription> pair : externalLibraryWorkspace
+				.getProjectsIncludingUnnecessary()) {
+
+			org.eclipse.emf.common.util.URI prjLocation = pair.getFirst();
+			URI rootLocation = externalLibraryWorkspace.getRootLocationForResource(prjLocation);
+			N4JSExternalProject project = externalLibraryWorkspace.getProject(prjLocation);
+			locationProjectsCache.putIfAbsent(rootLocation, new LinkedList<>());
+			List<IN4JSProject> list = locationProjectsCache.get(rootLocation);
+			IN4JSProject iProject = project.getIProject();
+			list.add(iProject);
+		}
 	}
 
 }

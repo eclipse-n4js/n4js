@@ -17,5 +17,8 @@
 	// "The name "invalid*scope" is not a valid scope name." at ""@invalid*scope/Invalid*Project""
 	// "The name "Invalid*Project" is not a valid package name." at ""@invalid*scope/Invalid*Project""
 	// ---
-	"name": "@invalid*scope/Invalid*Project"
+	"name": "@invalid*scope/Invalid*Project",
+	"n4js": {
+		"projectType": "validation"
+	}
 }

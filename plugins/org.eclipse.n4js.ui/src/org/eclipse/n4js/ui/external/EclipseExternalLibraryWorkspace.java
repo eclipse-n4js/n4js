@@ -18,10 +18,12 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -37,7 +39,9 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
+import org.eclipse.n4js.external.ExternalProject;
 import org.eclipse.n4js.external.ExternalProjectsCollector;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.external.RebuildWorkspaceProjectsScheduler;
@@ -46,11 +50,11 @@ import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
 import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.URIUtils;
-import org.eclipse.n4js.utils.resources.ExternalProject;
 import org.eclipse.n4js.utils.resources.IExternalResource;
 import org.eclipse.xtext.util.Pair;
 
@@ -90,7 +94,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	@Inject
 	void init() {
 		try {
-			projectProvider.ensureInitialized();
+			projectProvider.updateCache();
 		} catch (Throwable t) {
 			logger.error("Failed to initialize external library workspace.", t);
 			UIUtils.showError(t);
@@ -141,6 +145,11 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 							String path = new File(resource.getLocationURI()).getAbsolutePath();
 							result.add(URI.createFileURI(path));
 						}
+						// do not iterate over contents of nested node_modules folders
+						if (resource.getType() == IResource.FOLDER &&
+								resource.getName().equals(N4JSGlobals.NODE_MODULES)) {
+							return false;
+						}
 						return true;
 					});
 					return unmodifiableIterator(result.iterator());
@@ -169,26 +178,38 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 
 	@Override
 	public URI findProjectWith(URI nestedLocation) {
-		String path = nestedLocation.toFileString();
-		if (null == path) {
-			return null;
-		}
+		java.net.URI rootLoc = getRootLocationForResource(nestedLocation);
 
-		File nestedResource = new File(path);
-		Path nestedResourcePath = nestedResource.toPath();
-
-		Iterable<URI> registeredProjectUris = projectProvider.getProjectURIs();
-		for (URI projectUri : registeredProjectUris) {
-			if (projectUri.isFile()) {
-				File projectRoot = new File(projectUri.toFileString());
-				Path projectRootPath = projectRoot.toPath();
-				if (nestedResourcePath.startsWith(projectRootPath)) {
-					return projectUri;
-				}
+		if (rootLoc != null) {
+			URI uriCandidate = doOliversStuff(nestedLocation, rootLoc);
+			if (projectProvider.getProject(uriCandidate) != null) {
+				return uriCandidate;
 			}
 		}
 
 		return null;
+	}
+
+	// FIXME: @mor: please document and rename
+	private URI doOliversStuff(URI nestedLocation, java.net.URI rootLoc) {
+		String rootLocStr = rootLoc.toString();
+		URI loc = URI.createURI(rootLocStr);
+		URI prefix = !loc.hasTrailingPathSeparator() ? loc.appendSegment("") : loc;
+		int oldSegmentCount = nestedLocation.segmentCount();
+		int newSegmentCount = prefix.segmentCount()
+				- 1 // -1 because of the trailing empty segment
+				+ 1; // +1 to include the project folder
+		if (newSegmentCount - 1 >= oldSegmentCount) {
+			return null; // can happen if the URI of an external library location is passed in
+		}
+		String projectNameCandidate = nestedLocation.segment(newSegmentCount - 1);
+		if (projectNameCandidate.startsWith("@")) {
+			// last segment is a folder representing an npm scope, not a project folder
+			// --> add 1 to include the actual project folder
+			++newSegmentCount;
+		}
+		URI uriCandidate = nestedLocation.trimSegments(oldSegmentCount - newSegmentCount).trimFragment();
+		return uriCandidate;
 	}
 
 	@Override
@@ -224,7 +245,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 				toBeDeleted.add(location);
 			}
 			Set<URI> toBeWiped = new HashSet<>();
-			for (java.net.URI rootLocation : projectProvider.getRootLocations()) {
+			for (java.net.URI rootLocation : projectProvider.getRootLocationsInReversedShadowingOrder()) {
 				toBeWiped.add(URIUtils.toFileUri(rootLocation));
 			}
 			return deregisterProjectsInternal(monitor, toBeDeleted, toBeWiped);
@@ -244,15 +265,10 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 		// Clean projects.
 		Set<N4JSExternalProject> allProjectsToClean = getAllToBeCleaned(toBeDeleted);
 
+		List<IProject> extPrjCleaned = new LinkedList<>();
 		if (!allProjectsToClean.isEmpty()) {
-			List<IProject> extPrjCleaned = builder.clean(allProjectsToClean, subMonitor.newChild(1));
-
-			HashSet<URI> actuallyCleaned = new HashSet<>();
-			for (IProject cleaned : extPrjCleaned) {
-				actuallyCleaned.add(URIUtils.toFileUri(cleaned.getLocationURI()));
-			}
+			extPrjCleaned.addAll(builder.clean(allProjectsToClean, subMonitor.split(1)));
 		}
-		subMonitor.worked(1);
 
 		Set<IProject> wsPrjAffected = newHashSet();
 		wsPrjAffected.addAll(collector.getWSProjectsDependendingOn(allProjectsToClean));
@@ -260,7 +276,10 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 		toBeWiped.addAll(toBeDeleted);
 		wipeIndex(monitor, toBeWiped, allProjectsToClean);
 
-		return new RegisterResult(allProjectsToClean.toArray(new IProject[0]), wsPrjAffected.toArray(new IProject[0]));
+		return new RegisterResult(
+				extPrjCleaned.toArray(new IProject[0]),
+				wsPrjAffected.toArray(new IProject[0]),
+				toBeWiped);
 	}
 
 	private Set<N4JSExternalProject> getAllToBeCleaned(Set<URI> toBeDeleted) {
@@ -284,7 +303,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 		for (N4JSExternalProject project : allProjectsToClean) {
 			toBeWiped.add(URIUtils.toFileUri(project.getLocationURI()));
 		}
-		builder.wipeIndex(monitor, toBeWiped);
+		builder.wipeURIsFromIndex(monitor, toBeWiped);
 	}
 
 	private RegisterResult registerProjectsInternal(IProgressMonitor monitor, Set<URI> toBeUpdated) {
@@ -305,9 +324,8 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 		// Build recently added projects that do not exist in workspace.
 		// Also includes projects that exist already in the index, but are shadowed.
 		if (!Iterables.isEmpty(allProjectsToBuild)) {
-			extPrjBuilt.addAll(builder.build(allProjectsToBuild, subMonitor));
+			extPrjBuilt.addAll(builder.build(allProjectsToBuild, subMonitor.split(1)));
 		}
-		subMonitor.worked(1);
 
 		Set<IProject> wsPrjAffected = newHashSet();
 		Set<N4JSExternalProject> affectedProjects = new HashSet<>();
@@ -348,18 +366,44 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	}
 
 	@Override
+	public boolean isNecessary(URI location) {
+		return projectProvider.getAllProjectLocations().contains(location);
+	}
+
+	@Override
+	public List<Pair<URI, ProjectDescription>> computeProjectsIncludingUnnecessary() {
+		return projectProvider.computeProjectsIncludingUnnecessary();
+	}
+
+	@Override
+	public Collection<URI> getAllProjectLocations() {
+		return projectProvider.getAllProjectLocations();
+	}
+
+	@Override
+	public Map<String, VersionNumber> getProjectNameVersionMap() {
+		Map<String, VersionNumber> externalLibs = new HashMap<>();
+		for (N4JSExternalProject pd : getProjects()) {
+			String name = pd.getIProject().getProjectName();
+			VersionNumber version = pd.getIProject().getVersion();
+			externalLibs.put(name, version);
+		}
+
+		return externalLibs;
+	}
+
+	@Override
 	public Collection<N4JSExternalProject> getProjectsIn(java.net.URI rootLocation) {
 		return projectProvider.getProjectsIn(rootLocation);
 	}
 
 	@Override
 	public Collection<N4JSExternalProject> getProjectsIn(final Collection<java.net.URI> rootLocations) {
-		return projectProvider.getProjectsIn(rootLocations);
-	}
-
-	@Override
-	public Collection<ProjectDescription> getProjectsDescriptions(java.net.URI rootLocation) {
-		return projectProvider.getProjectsDescriptions(rootLocation);
+		Collection<N4JSExternalProject> projects = new LinkedList<>();
+		for (java.net.URI rootLoc : rootLocations) {
+			projects.addAll(getProjectsIn(rootLoc));
+		}
+		return projects;
 	}
 
 	@Override
@@ -386,7 +430,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 				IProject project = getProject(projectName);
 				if (project instanceof ExternalProject) {
 					File projectResource = new File(project.getLocationURI());
-					if (projectResource.exists() && projectResource.isDirectory()) {
+					if (projectResource.isDirectory()) {
 
 						Path projectPath = projectResource.toPath();
 						Path nestedPath = nestedResource.toPath();
@@ -422,6 +466,21 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	@Override
 	public void updateState() {
 		projectProvider.updateCache();
+	}
+
+	@Override
+	public List<Pair<URI, ProjectDescription>> getProjectsIncludingUnnecessary() {
+		return projectProvider.getProjectsIncludingUnnecessary();
+	}
+
+	@Override
+	public List<N4JSExternalProject> getProjectsForName(String projectName) {
+		return projectProvider.getProjectsForName(projectName);
+	}
+
+	@Override
+	public java.net.URI getRootLocationForResource(org.eclipse.emf.common.util.URI nestedLocation) {
+		return getRootLocationForResource(projectProvider.getAllRootLocations(), nestedLocation);
 	}
 
 }

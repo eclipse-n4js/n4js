@@ -30,7 +30,6 @@ import java.net.URI;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -46,9 +45,12 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.n4js.external.ExternalIndexSynchronizer;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.LibraryManager;
+import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.external.NpmCLI;
+import org.eclipse.n4js.external.ShadowingInfoHelper;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
@@ -57,6 +59,7 @@ import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.SemverUtils;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.semver.Semver.VersionComparator;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.ui.external.ExternalLibrariesActionsHelper;
 import org.eclipse.n4js.ui.utils.InputComposedValidator;
 import org.eclipse.n4js.ui.utils.InputFunctionalValidator;
@@ -65,6 +68,7 @@ import org.eclipse.n4js.ui.viewer.TreeViewerBuilder;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -117,7 +121,13 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	private SemverHelper semverHelper;
 
 	@Inject
-	ExternalLibrariesActionsHelper externalLibrariesActionsHelper;
+	private ExternalLibrariesActionsHelper externalLibrariesActionsHelper;
+
+	@Inject
+	private ExternalIndexSynchronizer indexSynchronizer;
+
+	@Inject
+	private ShadowingInfoHelper shadowingInfoHelper;
 
 	private TreeViewer viewer;
 
@@ -128,7 +138,10 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 
 	@Override
 	protected Control createContents(final Composite parent) {
+		this.setSize(new Point(600, 600));
 
+		final BuiltInLibrariesLabelProvider labelProvider = new BuiltInLibrariesLabelProvider(indexSynchronizer,
+				shadowingInfoHelper, externalLibraryWorkspace);
 		final Composite control = new Composite(parent, NONE);
 		control.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(false).create());
 		control.setLayoutData(fillDefaults().align(FILL, FILL).create());
@@ -136,9 +149,10 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 		viewer = new TreeViewerBuilder(singletonList(""), contentProvider.get())
 				.setVirtual(true)
 				.setHeaderVisible(false)
+				.setUseHashlookup(true)
 				.setHasBorder(true)
 				.setColumnWeights(asList(1))
-				.setLabelProvider(new DelegatingStyledCellLabelProvider(new BuiltInLibrariesLabelProvider()))
+				.setLabelProvider(new DelegatingStyledCellLabelProvider(labelProvider))
 				.build(control);
 
 		setViewerInput();
@@ -343,15 +357,18 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	}
 
 	private Map<String, NPMVersionRequirement> getInstalledNpms() {
-		final URI root = locationProvider.getNodeModulesURI();
-		final Set<ProjectDescription> projects = from(externalLibraryWorkspace.getProjectsDescriptions((root))).toSet();
+		URI root = locationProvider.getNodeModulesURI();
+		Collection<N4JSExternalProject> projects = externalLibraryWorkspace.getProjectsIn(root);
+		Map<String, NPMVersionRequirement> versionedNpms = new HashMap<>();
 
-		final Map<String, NPMVersionRequirement> versionedNpms = new HashMap<>();
-		projects.forEach((ProjectDescription pd) -> {
-			NPMVersionRequirement vr = SemverUtils.createVersionRangeSet(VersionComparator.EQUALS,
-					pd.getProjectVersion());
-			versionedNpms.put(pd.getProjectName(), vr);
-		});
+		for (N4JSExternalProject prj : projects) {
+			org.eclipse.emf.common.util.URI location = prj.getIProject().getLocation();
+			ProjectDescription pd = externalLibraryWorkspace.getProjectDescription(location);
+			String name = pd.getProjectName();
+			VersionNumber version = pd.getProjectVersion();
+			NPMVersionRequirement vr = SemverUtils.createVersionRangeSet(VersionComparator.EQUALS, version);
+			versionedNpms.put(name, vr);
+		}
 
 		return versionedNpms;
 	}
@@ -371,7 +388,6 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 		// keep the order Cache->TypeDefs->NPMs->Reinstall->Update
 		// actions have side effects that can interact with each other
 		maintenanceCleanNpmCache(userChoice, multistatus, monitor);
-		maintenanceResetTypeDefinitions(userChoice, multistatus);
 		maintenanceDeleteNpms(userChoice, multistatus);
 		reinstallNpms(userChoice, multistatus, monitor, oldPackages);
 		upateState(userChoice, multistatus, monitor);
@@ -410,11 +426,10 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	private void upateState(final MaintenanceActionsChoice userChoice,
 			final MultiStatus multistatus, IProgressMonitor monitor) {
 
-		if (userChoice.decisionReload || userChoice.decisionReinstall || userChoice.decisionPurgeNpm
-				|| userChoice.decisionResetTypeDefinitions) {
+		if (userChoice.decisionReload || userChoice.decisionReinstall || userChoice.decisionPurgeNpm) {
 
 			try {
-				libManager.reloadAllExternalProjects(monitor);
+				libManager.registerAllExternalProjects(monitor);
 
 			} catch (Exception e) {
 				String msg = "Error when reloading external libraries.";
@@ -470,28 +485,13 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	}
 
 	/**
-	 * Actions to be taken if reseting type definitions is requested.
-	 *
-	 * @param userChoice
-	 *            options object used to decide if / how actions should be performed
-	 * @param multistatus
-	 *            the status used accumulate issues
-	 */
-	private void maintenanceResetTypeDefinitions(final MaintenanceActionsChoice userChoice,
-			final MultiStatus multistatus) {
-		if (userChoice.decisionResetTypeDefinitions) {
-			externalLibrariesActionsHelper.maintenanceResetTypeDefinitions(multistatus);
-		}
-	}
-
-	/**
 	 * Selection handler for adding a new external library location.
 	 */
 	private void handleAddButtonSelectionListener(@SuppressWarnings("unused") final SelectionEvent e) {
 		final String directoryPath = new DirectoryDialog(viewer.getControl().getShell(), OPEN).open();
 		if (null != directoryPath) {
 			final File file = new File(directoryPath);
-			if (file.exists() && file.isDirectory()) {
+			if (file.isDirectory()) {
 				store.add(file.toURI());
 				updateInput(viewer, store.getLocations());
 			}
@@ -548,7 +548,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	 */
 	private IStatus installAndUpdate(final Map<String, NPMVersionRequirement> versionedPackages,
 			final IProgressMonitor monitor) {
-		IStatus status = libManager.installNPMs(versionedPackages, monitor);
+		IStatus status = libManager.installNPMs(versionedPackages, false, monitor);
 		if (status.isOK())
 			updateInput(viewer, store.getLocations());
 
