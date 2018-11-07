@@ -45,7 +45,7 @@ pipeline {
                         script {
                             def options = [
                                 '--batch-mode',
-                                '--quiet',
+//                                '--quiet',
                                 '--update-snapshots',
                                 '--show-version',
                                 '-Dtycho.localArtifacts=ignore',
@@ -66,7 +66,8 @@ pipeline {
                                 npm version
                             """
 //                            sh "mvn clean verify -P${profiles} ${options}"
-                            sh "mvn clean verify ${options}"
+//                            sh "mvn clean verify ${options}"
+                            sh "mvn clean verify -DskipTests ${options}"
                         }
                     }
                 }
