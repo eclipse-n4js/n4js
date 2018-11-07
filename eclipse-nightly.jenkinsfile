@@ -80,14 +80,19 @@ pipeline {
         stage('deploy') {
             steps {
                 sh """\
-                    pwd
-                    ls -al
                     mkdir  /home/data/httpd/download.eclipse.org/n4js/products/nightly/$TIMESTAMP
-                    mkdir  /home/data/httpd/download.eclipse.org/n4js/updates/nightly/$TIMESTAMP
                     cp     n4js/builds/org.eclipse.n4js.product.build/target/products/*.zip        /home/data/httpd/download.eclipse.org/n4js/products/nightly/$TIMESTAMP
+
+                    mkdir  /home/data/httpd/download.eclipse.org/n4js/updates/nightly/$TIMESTAMP
                     cp -R  n4js/builds/org.eclipse.n4js.product.build/target/repository/           /home/data/httpd/download.eclipse.org/n4js/updates/nightly/$TIMESTAMP
-                    ln -sf /home/data/httpd/download.eclipse.org/n4js/products/nightly/$TIMESTAMP  /home/data/httpd/download.eclipse.org/n4js/products/nightly/LATEST
-                    ln -sf /home/data/httpd/download.eclipse.org/n4js/updates/nightly/$TIMESTAMP   /home/data/httpd/download.eclipse.org/n4js/updates/nightly/LATEST
+
+                    rm -rf /home/data/httpd/download.eclipse.org/n4js/products/nightly/LATEST
+                    mkdir  /home/data/httpd/download.eclipse.org/n4js/products/nightly/LATEST
+                    cp -R  /home/data/httpd/download.eclipse.org/n4js/products/nightly/$TIMESTAMP/ /home/data/httpd/download.eclipse.org/n4js/products/nightly/LATEST
+
+                    rm -rf /home/data/httpd/download.eclipse.org/n4js/updates/nightly/LATEST
+                    mkdir  /home/data/httpd/download.eclipse.org/n4js/updates/nightly/LATEST
+                    cp -R  /home/data/httpd/download.eclipse.org/n4js/updates/nightly/$TIMESTAMP/  /home/data/httpd/download.eclipse.org/n4js/updates/nightly/LATEST
                 """
             }
         }
