@@ -44,7 +44,7 @@ pipeline {
                     dir('n4js'){
                         script {
                             def options = [
-'-DskipTests',
+//'-DskipTests',
                                 '--batch-mode',
 //                                '--quiet',
                                 '--update-snapshots',
