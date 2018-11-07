@@ -82,8 +82,8 @@ pipeline {
 //                    mkdir /home/data/httpd/download.eclipse.org/n4js/releases/$TIMESTAMP
 //                    cp builds/org.eclipse.n4js.product.build/target/products/*.zip /home/data/httpd/download.eclipse.org/n4js/releases/$TIMESTAMP
 //                """
-            }
-        }
+//            }
+//        }
     }
 
     post {
