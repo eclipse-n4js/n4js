@@ -79,11 +79,11 @@ pipeline {
         always {
             archiveArtifacts allowEmptyArchive: true, artifacts: '**/builds/**/target/products/*.zip'
             archiveArtifacts allowEmptyArchive: true, artifacts: '**/tools/**/target/n4jsc.jar'
-            archiveArtifacts allowEmptyArchive: true, artifacts: '**/logs/*.log'
-            archiveArtifacts allowEmptyArchive: true, artifacts: '**/tests/**/target/**/*-output.txt'
+//            archiveArtifacts allowEmptyArchive: true, artifacts: '**/logs/*.log'
+//            archiveArtifacts allowEmptyArchive: true, artifacts: '**/tests/**/target/**/*-output.txt'
 
-            junit '**/surefire-reports/**/*.xml'
-            junit '**/failsafe-reports/**/*.xml'
+//            junit '**/surefire-reports/**/*.xml'
+//            junit '**/failsafe-reports/**/*.xml'
         }
         cleanup {
             // excute here in case archiving fails in 'always'
