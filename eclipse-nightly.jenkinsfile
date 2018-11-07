@@ -44,6 +44,7 @@ pipeline {
                     dir('n4js'){
                         script {
                             def options = [
+'-DskipTests',
                                 '--batch-mode',
 //                                '--quiet',
                                 '--update-snapshots',
@@ -53,11 +54,13 @@ pipeline {
                                 '-DWORKSPACE=' + env.WORKSPACE
                             ].join(' ')
                             def profiles = [
-                                'execute-plugin-tests',
-                                'execute-plugin-ui-tests',
-                                'execute-ecma-tests',
-                                'execute-accesscontrol-tests',
-                                'execute-smoke-tests'
+                                'buildProduct'
+//                                ,
+//                                'execute-plugin-tests',
+//                                'execute-plugin-ui-tests',
+//                                'execute-ecma-tests',
+//                                'execute-accesscontrol-tests',
+//                                'execute-smoke-tests'
                             ].join(',')
 
                             sh """\
@@ -65,9 +68,7 @@ pipeline {
                                 git log -n 1
                                 npm version
                             """
-//                            sh "mvn clean verify -P${profiles} ${options}"
-//                            sh "mvn clean verify ${options}"
-                            sh "mvn clean verify -DskipTests ${options}"
+                            sh "mvn clean verify -P${profiles} ${options}"
                         }
                     }
                 }
