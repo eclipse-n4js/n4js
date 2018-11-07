@@ -45,7 +45,7 @@ pipeline {
                     dir('n4js'){
                         script {
                             def options = [
-'-DskipTests',
+//'-DskipTests',
                                 '--batch-mode',
 //                                '--quiet',
                                 '--update-snapshots',
@@ -56,13 +56,13 @@ pipeline {
                             ].join(' ')
                             def profiles = [
                                 'buildProduct'
-//                                ,
-//                                'execute-plugin-tests',
-//                                'execute-plugin-ui-tests'
-//                                ,
-//                                'execute-ecma-tests',
-//                                'execute-accesscontrol-tests',
-//                                'execute-smoke-tests'
+                                ,
+                                'execute-plugin-tests',
+                                'execute-plugin-ui-tests'
+                                ,
+                                'execute-ecma-tests',
+                                'execute-accesscontrol-tests',
+                                'execute-smoke-tests'
                             ].join(',')
 
                             sh """\
@@ -80,20 +80,21 @@ pipeline {
         stage('deploy') {
             steps {
                 sh """\
-                    mkdir  /home/data/httpd/download.eclipse.org/n4js/products/nightly/$TIMESTAMP
-                    cp     n4js/builds/org.eclipse.n4js.product.build/target/products/*.zip        /home/data/httpd/download.eclipse.org/n4js/products/nightly/$TIMESTAMP
-
-                    mkdir  /home/data/httpd/download.eclipse.org/n4js/updates/nightly/$TIMESTAMP
-                    cp -R  n4js/builds/org.eclipse.n4js.product.build/target/repository/           /home/data/httpd/download.eclipse.org/n4js/updates/nightly/$TIMESTAMP
-
-                    rm -rf /home/data/httpd/download.eclipse.org/n4js/products/nightly/LATEST
-                    mkdir  /home/data/httpd/download.eclipse.org/n4js/products/nightly/LATEST
-                    cp -R  /home/data/httpd/download.eclipse.org/n4js/products/nightly/$TIMESTAMP/ /home/data/httpd/download.eclipse.org/n4js/products/nightly/LATEST
-
-                    rm -rf /home/data/httpd/download.eclipse.org/n4js/updates/nightly/LATEST
-                    mkdir  /home/data/httpd/download.eclipse.org/n4js/updates/nightly/LATEST
-                    cp -R  /home/data/httpd/download.eclipse.org/n4js/updates/nightly/$TIMESTAMP/  /home/data/httpd/download.eclipse.org/n4js/updates/nightly/LATEST
+                    echo deployment disabled
                 """
+//                    mkdir  /home/data/httpd/download.eclipse.org/n4js/products/nightly/$TIMESTAMP
+//                    cp     n4js/builds/org.eclipse.n4js.product.build/target/products/*.zip        /home/data/httpd/download.eclipse.org/n4js/products/nightly/$TIMESTAMP
+//
+//                    mkdir  /home/data/httpd/download.eclipse.org/n4js/updates/nightly/$TIMESTAMP
+//                    cp -R  n4js/builds/org.eclipse.n4js.product.build/target/repository/           /home/data/httpd/download.eclipse.org/n4js/updates/nightly/$TIMESTAMP
+//
+//                    rm -rf /home/data/httpd/download.eclipse.org/n4js/products/nightly/LATEST
+//                    mkdir  /home/data/httpd/download.eclipse.org/n4js/products/nightly/LATEST
+//                    cp -R  /home/data/httpd/download.eclipse.org/n4js/products/nightly/$TIMESTAMP/ /home/data/httpd/download.eclipse.org/n4js/products/nightly/LATEST
+//
+//                    rm -rf /home/data/httpd/download.eclipse.org/n4js/updates/nightly/LATEST
+//                    mkdir  /home/data/httpd/download.eclipse.org/n4js/updates/nightly/LATEST
+//                    cp -R  /home/data/httpd/download.eclipse.org/n4js/updates/nightly/$TIMESTAMP/  /home/data/httpd/download.eclipse.org/n4js/updates/nightly/LATEST
             }
         }
     }
