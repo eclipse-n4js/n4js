@@ -30,6 +30,7 @@ pipeline {
                      ":/shared/common/node-v8.11.1-linux-x64/bin"       +
                      ":/shared/common/java/oracle/jdk1.8.0_162_x64/bin"
         MAVEN_OPTS = '-Xmx4G'
+        TIMESTAMP  = new Date().format("yyyyMMddHHmm")
     }
 
     triggers {
@@ -54,10 +55,10 @@ pipeline {
                                 '-DWORKSPACE=' + env.WORKSPACE
                             ].join(' ')
                             def profiles = [
-                                'buildProduct'
+                                'buildProduct',
+                                'execute-plugin-tests',
+                                'execute-plugin-ui-tests'
 //                                ,
-//                                'execute-plugin-tests',
-//                                'execute-plugin-ui-tests',
 //                                'execute-ecma-tests',
 //                                'execute-accesscontrol-tests',
 //                                'execute-smoke-tests'
@@ -72,6 +73,15 @@ pipeline {
                         }
                     }
                 }
+            }
+        }
+
+//        stage('deploy') {
+//            steps {
+//                sh """\
+//                    mkdir /home/data/httpd/download.eclipse.org/n4js/releases/$TIMESTAMP
+//                    cp builds/org.eclipse.n4js.product.build/target/products/*.zip /home/data/httpd/download.eclipse.org/n4js/releases/$TIMESTAMP
+//                """
             }
         }
     }
