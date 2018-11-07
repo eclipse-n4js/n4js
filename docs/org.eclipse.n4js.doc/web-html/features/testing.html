@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 1.5.7.1">
+<title>Testing</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<!-- ************* Meta ************* -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<!-- ************* OpenGraph ************-->
+<meta name="description" content="The Eclipse N4JS language and its IDE enable high-quality JavaScript development for large Node.js projects.">
+
+<meta property="og:site_name" content="Eclipse N4JS"/>
+<meta property="og:title" content="Eclipse N4JS Language and IDE"/>
+<meta property="og:url" content="https://numberfour.github.io/n4js"/>
+<meta property="og:description" content="The Eclipse N4JS language and its IDE enable high-quality JavaScript development for large Node.js projects."/>
+<meta property="og:image" content="../images/n4js.png">
+
+<!-- ************* Favicon ************-->
+<link rel="icon" href="../images/favicon.ico" />
+<link rel="icon" type="image/png" href="../images/favicon-32x32.png" sizes="32x32" />
+<link rel="icon" type="image/png" href="../images/favicon-16x16.png" sizes="16x16" />
+
+<!-- ************* Back-to-top JQuery ************* -->
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+
+<!-- ************* Prism.js Syntax Highlighter ******-->
+<link href="../styles/prism.min.css" rel="stylesheet"/>
+<script src="../scripts/prism.js"></script>
+
+<!-- ************* Styles ************* -->
+
+<link rel="stylesheet" type="text/css" href="../styles/n4js-adoc.css">
+
+<!-- ****************** NavBar ****************** -->
+<div id="menubar">
+    <div class="banner">
+        <a href="../index.html"><img id="logo" src="../images/n4js-logo.png" alt="Eclipse N4JS Language and IDE"></a>
+    </div>
+<ul>
+  <li><a href="../downloads.html"></i>Download</a></li>
+  <li><a href="../community.html"></i>Community</a></li>
+  <li><a href="../userguides/index.html">Documentation</a></li>
+</ul>
+</div>
+<button id="tocbutton">TOC</button>
+</head>
+<body class="book">
+<div id="header">
+</div>
+<div id="content">
+<h1 id="_testing" class="sect0"><a class="link" href="#_testing">Testing</a></h1>
+<div class="openblock partintro">
+<div class="title">Testing</div>
+<div class="content">
+Test Driven Development (TDD) is one of the key techniques to write large systems with maintainable code.
+The more tests you write, the more confident you can be that your software works as expected and the more
+comfortable you feel when your refactoring the code, because the tests will tell you if you break something.
+The N4JS language, the N4JS IDE and the built-in test execution runtime (Mangelhaft) were designed and developed
+to support TDD as well as possible.
+</div>
+</div>
+<div class="sect1">
+<h2 id="_built_in_test_support"><a class="link" href="#_built_in_test_support">Built-In Test Support</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>From the language perspective, there are annotations that can be used to declare and configure the test
+suites. Mangelhaft is an <a href="https://en.wikipedia.org/wiki/XUnit">xUnit-like</a> framework that
+provides an engine that executes the tests and reports back to the IDE while running the test suites.
+The IDE is responsible for indicating the actual test results received from Mangelhaft to the user. For
+creating a simple test suite, one requires an N4JS project with a test type source container, a test class
+in the test type source container and at least one method declared in the test class with the <code>@Test</code>
+annotation. This is described in more detail in the <a href="../userguides/tutorial.html#tutorial">tutorial</a>.
+Besides the test execution and reporting engine support, Mangelhaft provides various utility classes
+that could come handy when test assertions or preconditions have to be used in the test suites or when negative tests are required.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">import { Assert } from 'n4/mangel/assert/Assert';
+import { Precondition } from 'n4/mangel/precondition/Precondition';
+
+export public class FooTest {
+
+    @Test
+    public notEquals() {
+        Assert.notEqual(36, 'foo');
+    }
+
+    @Test
+    public iAmSuperstitious() {
+        var today = new Date();
+
+        // Skip running the test on each 13th Friday.
+        var skipTestToday = this.is13thFriday(today);
+        Precondition.isFalse(skipTestToday);
+
+        // Rest of the test logic.
+    }
+
+    private is13thFriday(date: Date): boolean {
+        …
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_n4js_language_support"><a class="link" href="#_n4js_language_support">N4JS Language Support</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://www.junit.org">Junit-like</a> annotations are are available to configure the test suits, such as:</p>
+</div>
+<div class="paragraph">
+<p><code>@Test</code> - The annotated method will be percepted as a test case when configuring and running the test suite.
+<code>@Ignore</code> - The annotated method will be percepted as a test case when configuring the test suite but the marked case will be be executed as a part of the suite execution.
+<code>@Fixme</code> - The annotated method will be percepted as a test case when configuring and running the test suite but the assertion logic will be negated.</p>
+</div>
+<div class="paragraph">
+<p>Test classes can be created in the test container of any arbitrary project. With this approach,
+the production code can be separated from the test code but both production and test code will
+still be contained in the same N4JS project.</p>
+</div>
+<div class="paragraph">
+<p>Another implementation is that of a 'test project'-type implementation whereby one can completely
+separate the business logic form the test code. This is done literally using two separate projects;
+one for the production and one for the test code. Aside from the code separation, the major advantage
+of using a test project is that the default access visibility restrictions can be overruled.
+Project-visible classes and interfaces and their non-visible members and methods can then be called
+and tested from the test projects while still not visible in the production code. In a nutshell,
+one can easily test different aspects of the application without breaking the encapsulation.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_n4js_ide_support"><a class="link" href="#_n4js_ide_support">N4JS IDE Support</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In the N4JS IDE, the Test Results view provides an informative overview of all executed and running
+test suites in a tree structure. Tests can be executed via the context menu&#8217;s
+<strong><span class="menuseq"><b class="menu">Run As</b>&#160;<i class="fa fa-angle-right caret"></i> <b class="menuitem">Test in Node.js</b></span></strong> item directly from the editor or from
+the Project Explorer view. It is possible to execute all tests form a particular project as well as
+one single, fine-grained test case from a particular test class.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/testresultsview.png" alt="testresultsview">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_additional_features"><a class="link" href="#_additional_features">Additional Features</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Navigate to test method.</p>
+</li>
+<li>
+<p>Showing stack trace for failed tests.</p>
+</li>
+<li>
+<p>Quick-test method overview in a popup window.</p>
+</li>
+<li>
+<p>Test suite history.</p>
+</li>
+<li>
+<p>Re-run previous test suite.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+<div class="Grid social" style="color:#d5dfea">
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <h2>Quick Links</h2>
+    <ul>
+      <li><a href="../downloads.html">Download</a></li>
+      <li><a href="../userguides/index.html">Documentation</a></li>
+      <li><a href="https://github.com/eclipse/n4js/">Source</a></li>
+      <li><a href="https://github.com/eclipse/n4js/issues">Issues</a></li>
+    </ul>
+  </div>
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <br/><br/>
+    <ul>
+      <li><a href="https://www.eclipse.org/forums/index.php/f/365/">Forum</a></li>
+      <li><a href="http://n4js.blogspot.de/">Blog</a></li>
+      <li><a href="https://dev.eclipse.org/mailman/listinfo/n4js-dev">Mailing List</a></li>
+      <li><a href="https://projects.eclipse.org/projects/technology.n4js">Eclipse Project Page</a></li>
+      <li><a href="https://twitter.com/n4jsdev">Tweets by n4jsdev</a></li>
+    </ul>
+  </div>
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <br/><br/>
+    <ul>
+      <li><a href="http://www.eclipse.org/">Eclipse Home</a></li>
+      <li><a href="http://www.eclipse.org/legal/privacy.php">Privacy Policy</a></li>
+      <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+      <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+      <li><a href="http://www.eclipse.org/legal/">Legal</a></li>
+    </ul>
+  </div>
+  <div style="clear: both; height: 0; overflow: hidden;"></div>
+</div>
+
+<script>
+  // Toggle the table of contents
+  $( "button#tocbutton" ).click(function() {
+    if ($("#tocbutton").css('right') == '25px') {
+      $( "#tocbutton" ).animate({right: '215px'},"slow");
+      $( "#toc.toc2" ).animate({right: '0'},"slow");
+  }
+    else {
+      $( "#tocbutton" ).animate({right: '25px'},"slow");
+      $( "#toc.toc2" ).animate({right: '-13rem'},"slow");
+  }
+  });
+</script>
+
+<script type="text/javascript">
+  // Create a back to top button
+  $('body').prepend('<a href="#" class="back-to-top">Back to Top</a>');
+  var amountScrolled = 300;
+  $(window).scroll(function() {
+  if ( $(window).scrollTop() > amountScrolled ) {
+  	$('a.back-to-top').fadeIn('slow');
+  } else {
+  	$('a.back-to-top').fadeOut('slow');
+  }
+  });
+  $('a.back-to-top, a.simple-back-to-top').click(function() {
+  $('html, body').animate({
+  	scrollTop: 0
+  }, 700);
+  return false;
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+////
+Copyright (c) 2016 NumberFour AG.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+////
+
+[appendix]
+= Acronyms
+
+[[AC]]
+
+[.language-bash]
+[cols="^1m,^3h,^1m,^3h"]
+|===
+|CDep | Compile-Time Dependency
+|RDep | Run-Time Dependency
+|LDep | Load-Time Dependency
+|IDep | Initialization-Time Dependency
+|EDep | Execution-Time Dependency
+|AC   | Acceptance Criteria
+|ANTLR| ANother Tool for Language Recognition
+|API  | Application Programming Interface
+|AST  | Abstract Syntax Tree
+|ASI  | Automatic Semicolon Insertion
+|AST  | Abstract Syntax Tree
+|BNF  | Backus-Naur Form
+|CA   | Content-Assist
+|CSP  | Constraint Satisfaction Problem
+|CLI  | Command Line Interface
+|DOM  | Document Object Model
+|DSL  | Domain Specific Language
+|EBNF | Extended Backus-Naur Form
+|EMF  | Eclipse Modeling Framework
+|EPL  | Eclipse Public License
+|FQN  | Fully Qualified Name
+|GLB  | Greatest Lower Bound, also known as *infimum*
+|GPL  | GNU General Public License
+|IDE  | Integrated Development Environment
+|IDL  | Interface Definition Language
+|LSP  | Liskov Substitution Principle
+|LUB  | Least Upper Bound, also known as *supremum*
+|N4JS | NumberFour JavaScript
+|UI   | User Interface
+|UML  | Unified Modeling Language
+|VM   | Virtual Machine
+|XML  | Extensible Markup Language
+|XSLT | <<XSL,XSL>> Transformations
+|XSL [[XSL]] | Extensible Stylesheet Language
+|WYSIWYG | What You See Is What You Get
+|WLOG | without loss of generality
+|===

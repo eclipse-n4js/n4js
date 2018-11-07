@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 1.5.7.1">
+<title>Releases</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<!-- ************* Meta ************* -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<!-- ************* OpenGraph ************-->
+<meta name="description" content="The Eclipse N4JS language and its IDE enable high-quality JavaScript development for large Node.js projects.">
+
+<meta property="og:site_name" content="Eclipse N4JS"/>
+<meta property="og:title" content="Eclipse N4JS Language and IDE"/>
+<meta property="og:url" content="https://numberfour.github.io/n4js"/>
+<meta property="og:description" content="The Eclipse N4JS language and its IDE enable high-quality JavaScript development for large Node.js projects."/>
+<meta property="og:image" content="../images/n4js.png">
+
+<!-- ************* Favicon ************-->
+<link rel="icon" href="../images/favicon.ico" />
+<link rel="icon" type="image/png" href="../images/favicon-32x32.png" sizes="32x32" />
+<link rel="icon" type="image/png" href="../images/favicon-16x16.png" sizes="16x16" />
+
+<!-- ************* Back-to-top JQuery ************* -->
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+
+<!-- ************* Prism.js Syntax Highlighter ******-->
+<link href="../styles/prism.min.css" rel="stylesheet"/>
+<script src="../scripts/prism.js"></script>
+
+<!-- ************* Styles ************* -->
+
+<link rel="stylesheet" type="text/css" href="../styles/n4js-adoc.css">
+
+<!-- ****************** NavBar ****************** -->
+<div id="menubar">
+    <div class="banner">
+        <a href="../index.html"><img id="logo" src="../images/n4js-logo.png" alt="N4JS Language and IDE"></a>
+    </div>
+<ul>
+  <li><a href="../downloads.html"></i>Download</a></li>
+  <li><a href="../community.html"></i>Community</a></li>
+  <li><a href="../userguides/index.html">Documentation</a></li>
+</ul>
+</div>
+<button id="tocbutton">TOC</button>
+</head>
+<body class="book">
+<div id="header">
+</div>
+<div id="content">
+<h1 id="_releases" class="sect0"><a class="link" href="#_releases">Releases</a></h1>
+<div class="openblock partintro">
+<div class="content">
+<h2 id="_current_n4js_release" class="discrete">Current N4JS Release</h2>
+<div class="paragraph">
+<p>The Eclipse N4JS project is in the <a href="https://wiki.eclipse.org/Development_Resources/HOWTO/Incubation_Phase">Incubation Phase</a> and there is no official release available yet (for unofficial releases see the <a href="../download.html">download page</a>.
+This doesn&#8217;t mean that N4JS is unstable; we have an extensive test suite (&gt;90.000 tests including the <a href="https://github.com/tc39/test262">ECMAScript test suites</a>) to ensure a stable nightly build.
+N4JS has been in use in several large non-public projects for years.
+There still may be bugs (as there are always bugs) and features which are currently under development.
+We encourage feedback from all users! For questions about getting started with the N4JS Language and IDE for developing your own projects, see the <a href="https://www.eclipse.org/forums/index.php/f/365/">the Eclipse N4JS forum</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_known_issues"><a class="link" href="#_known_issues">Known Issues</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Since we are using N4JS and the N4JS IDE internally for quite a while, we have found some issues.
+There are still a lot of bugs open and we have plenty of ideas for new features.
+We have used a non-public bug tracking system to manage bugs internally and we are currently migrating them to <a href="https://github.com/eclipse/n4js/issues">GitHub issues</a>.
+Note that it&#8217;s also possible to write and <a href="reporting-bugs.html#reporting_bugs">submit bug reports</a> from within the N4JS IDE itself.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_new_features"><a class="link" href="#_new_features">New Features</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In the future, the following topics are expected to be addressed:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Improved UI experience with a focus on customized content assist and quick-fixes.</p>
+</li>
+<li>
+<p>Improved ECMAScript 2015 support.</p>
+</li>
+<li>
+<p>Improved type inference and add type guards.</p>
+</li>
+<li>
+<p>Improved refactoring capabilities.</p>
+</li>
+<li>
+<p>Improved Node.js developer experience.</p>
+</li>
+<li>
+<p>Support for browser-based projects.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>There may be other topics raised by users.
+Separating these topics into individual features and prioritizing them will <strong>highly depend on your feedback</strong>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_incompatible_changes_in_future_releases"><a class="link" href="#_incompatible_changes_in_future_releases">Incompatible Changes in Future Releases</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Yes, this may happen.
+It&#8217;s quite possible that the language or APIs must be changed in future releases, which could break existing code.
+This is no cause for concern, however.
+As mentioned before, we have a substantial internal code base, so if incompatible changes are introduced, we will provide tools to migrate your code automatically unless the changes are easier to solve manually.</p>
+</div>
+<div class="paragraph">
+<p>To give you an idea of how this can happen: In earlier versions we used a Java-like syntax for type annotations.
+Since this did not work well together with features such as async/await, we changed the syntax to ECMAScript 4 colon style.
+This required our entire code base to be reworked.
+Fortunately this was simple as we provided a quick-fix, enabling almost all problems stemming from that change to be corrected with a single keystroke!</p>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+<div class="Grid social" style="color:#d5dfea">
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <h2>Quick Links</h2>
+    <ul>
+      <li><a href="../downloads.html">Download</a></li>
+      <li><a href="../userguides/index.html">Documentation</a></li>
+      <li><a href="https://github.com/eclipse/n4js/">Source</a></li>
+      <li><a href="https://github.com/eclipse/n4js/issues">Issues</a></li>
+    </ul>
+  </div>
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <br/><br/>
+    <ul>
+      <li><a href="https://www.eclipse.org/forums/index.php/f/365/">Forum</a></li>
+      <li><a href="http://n4js.blogspot.de/">Blog</a></li>
+      <li><a href="https://dev.eclipse.org/mailman/listinfo/n4js-dev">Mailing List</a></li>
+      <li><a href="https://projects.eclipse.org/projects/technology.n4js">Eclipse Project Page</a></li>
+      <li><a href="https://twitter.com/n4jsdev">Tweets by n4jsdev</a></li>
+    </ul>
+  </div>
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <br/><br/>
+    <ul>
+      <li><a href="http://www.eclipse.org/">Eclipse Home</a></li>
+      <li><a href="http://www.eclipse.org/legal/privacy.php">Privacy Policy</a></li>
+      <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+      <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+      <li><a href="http://www.eclipse.org/legal/">Legal</a></li>
+    </ul>
+  </div>
+  <div style="clear: both; height: 0; overflow: hidden;"></div>
+</div>
+
+<script>
+  // Toggle the table of contents
+  $( "button#tocbutton" ).click(function() {
+    if ($("#tocbutton").css('right') == '25px') {
+      $( "#tocbutton" ).animate({right: '215px'},"slow");
+      $( "#toc.toc2" ).animate({right: '0'},"slow");
+  }
+    else {
+      $( "#tocbutton" ).animate({right: '25px'},"slow");
+      $( "#toc.toc2" ).animate({right: '-13rem'},"slow");
+  }
+  });
+</script>
+
+<script type="text/javascript">
+  // Create a back to top button
+  $('body').prepend('<a href="#" class="back-to-top">Back to Top</a>');
+  var amountScrolled = 300;
+  $(window).scroll(function() {
+  if ( $(window).scrollTop() > amountScrolled ) {
+  	$('a.back-to-top').fadeIn('slow');
+  } else {
+  	$('a.back-to-top').fadeOut('slow');
+  }
+  });
+  $('a.back-to-top, a.simple-back-to-top').click(function() {
+  $('html, body').animate({
+  	scrollTop: 0
+  }, 700);
+  return false;
+  });
+</script>
+</body>
+</html>

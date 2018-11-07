@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 1.5.7.1">
+<title>Async/Await</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<!-- ************* Meta ************* -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<!-- ************* OpenGraph ************-->
+<meta name="description" content="The Eclipse N4JS language and its IDE enable high-quality JavaScript development for large Node.js projects.">
+
+<meta property="og:site_name" content="Eclipse N4JS"/>
+<meta property="og:title" content="Eclipse N4JS Language and IDE"/>
+<meta property="og:url" content="https://numberfour.github.io/n4js"/>
+<meta property="og:description" content="The Eclipse N4JS language and its IDE enable high-quality JavaScript development for large Node.js projects."/>
+<meta property="og:image" content="../images/n4js.png">
+
+<!-- ************* Favicon ************-->
+<link rel="icon" href="../images/favicon.ico" />
+<link rel="icon" type="image/png" href="../images/favicon-32x32.png" sizes="32x32" />
+<link rel="icon" type="image/png" href="../images/favicon-16x16.png" sizes="16x16" />
+
+<!-- ************* Back-to-top JQuery ************* -->
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+
+<!-- ************* Prism.js Syntax Highlighter ******-->
+<link href="../styles/prism.min.css" rel="stylesheet"/>
+<script src="../scripts/prism.js"></script>
+
+<!-- ************* Styles ************* -->
+
+<link rel="stylesheet" type="text/css" href="../styles/n4js-adoc.css">
+
+<!-- ****************** NavBar ****************** -->
+<div id="menubar">
+    <div class="banner">
+        <a href="../index.html"><img id="logo" src="../images/n4js-logo.png" alt="Eclipse N4JS Language and IDE"></a>
+    </div>
+<ul>
+  <li><a href="../downloads.html"></i>Download</a></li>
+  <li><a href="../community.html"></i>Community</a></li>
+  <li><a href="../userguides/index.html">Documentation</a></li>
+</ul>
+</div>
+<button id="tocbutton">TOC</button>
+</head>
+<body class="book">
+<div id="header">
+</div>
+<div id="content">
+<h1 id="_asyncawait" class="sect0"><a class="link" href="#_asyncawait">Async/Await</a></h1>
+<div class="openblock partintro">
+<div class="content">
+<div class="paragraph">
+<div class="title">Async/Await</div>
+<p>Due to the event-driven nature inherent in JavaScript, asynchronous code has
+always been explicit and verbose, leading to projects which are hard to read and maintain.
+N4JS already implements the async/await proposal and it provides additional features allowing
+the use of legacy code in combination with await and promises.</p>
+</div>
+<div class="paragraph">
+<p>Over the years, growing trends have been to migrate from
+simple callbacks to Promise objects which is making the chaining of asynchronous data
+flows easier. This still urges the developer to implement callbacks on
+the resolution of a Promise.</p>
+</div>
+<div class="paragraph">
+<p>N4JS implements a new approach proposed by TC39 on <a href="https://tc39.github.io/ecmascript-asyncawait/">async functions</a>
+to tackle the problem. It conceals the drawn-out details and formal approach so that a
+developer would have less code to write. A function or method can essentially become an
+<strong>asynchronous</strong> function by prepending the keyword <code>async</code>.
+Inside the function, the developer can call other functions and wait for their
+results using the keyword <code>async</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">async function foo(): int {
+    let res = await anotherAsyncFunction();
+    ++res;
+    return res;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The benefit here is that async functions integrate well with any existing
+Promise-based APIs, i.e. N4JS treats any return type <strong>T</strong> of an async method
+or function as a <strong>Promise&lt;T, any&gt;</strong>.</p>
+</div>
+<div class="paragraph">
+<p>On the other hand, async code can simply await on functions that return a Promise
+object:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">function fetch(url: string): Promise&lt;Response, any&gt; {
+    // WHATWG fetch
+    return null;
+}
+
+async function foo() {
+  let html = await (await fetch('http://www.google.com')).text();
+  console.log(html);
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_error_handling"><a class="link" href="#_error_handling">Error Handling</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Since there&#8217;s a one-to-one mapping to Promises, exceptions being thrown within
+an async function call are rejecting the corresponding Promise:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">function throwr() { return Promise.reject(new Error('bah!')); }
+
+async function foo() {
+    try {
+        await throwr();
+    } catch (err) {
+        (err as Error).message === 'bah!';
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A rejected Promise will be reflected as an exception being thrown in the
+async function:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">async function throwr() { throw new Error('bah!'); }
+let promise: Promise&lt;void, ?&gt; = throwr();
+
+promise.catch(err =&gt; (err as Error).message === 'bah!');</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_await_for_legacy_code"><a class="link" href="#_await_for_legacy_code">"await" for Legacy Code</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>There&#8217;s quite a lot of callback-driven code alive that is not returning Promises,
+especially with reference to Node.js core modules:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">import * as fs from 'fs';
+
+fs.readFile('myFile.txt', (err, content) =&gt; {
+    if (err) throw err;
+    console.log(content);
+})</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This code follows the general Node.js callback pattern of passing the error as
+a first argument following the result value(s).</p>
+</div>
+<div class="paragraph">
+<p>Since N4JS encourages you to use and define types where possible, we can do
+better here, too. N4JS allows to use the <strong>@Promisifiable</strong> annotation in this
+case (and actually the Node.js runtime definitions provided by N4JS already make use of it):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">@Promisifiable
+export external public function readFile(
+  filename: string,
+  options: ~Object with {encoding: string?; flag: string?;},
+  callback: {function(Error, string)}?): void;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This allows to call the function without implementing any callback, and let the
+transpiler wire up a Promise for you using the <strong>@Promisify</strong> annotation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">import { readFile } from 'fs';
+
+function foo(): Promise&lt;string, any&gt; {
+    var promise = @Promisify readFile('myFile.txt', { encoding: 'UTF-8' });
+    return promise.then(content =&gt; content.replace(/foo/g, 'bar'));
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Since promises integrate with async functions, we could even further
+condense this down:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">import { readFile } from 'fs';
+
+async function foo(): string {
+    var content = await readFile('myFile.txt', { encoding: 'UTF-8' });
+    return content.replace(/foo/g, 'bar');
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Finally, it&#8217;s noteworthy to mention that arrow functions can work asynchronously as well,
+which is particularly helpful. The following example demonstrates how we can easily test async
+code to throw an error using an async arrow expression in the context of the N4JS test framework "mangelhaft".</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">import { Assert } from 'n4/mangel/assert/Assert';
+
+export public class FooTest {
+
+    @Test async myTest() {
+      await Assert.throwsAsync(async () =&gt; {
+        // async piece of code that is throwing an error
+      });
+    }
+
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+<div class="Grid social" style="color:#d5dfea">
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <h2>Quick Links</h2>
+    <ul>
+      <li><a href="../downloads.html">Download</a></li>
+      <li><a href="../userguides/index.html">Documentation</a></li>
+      <li><a href="https://github.com/eclipse/n4js/">Source</a></li>
+      <li><a href="https://github.com/eclipse/n4js/issues">Issues</a></li>
+    </ul>
+  </div>
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <br/><br/>
+    <ul>
+      <li><a href="https://www.eclipse.org/forums/index.php/f/365/">Forum</a></li>
+      <li><a href="http://n4js.blogspot.de/">Blog</a></li>
+      <li><a href="https://dev.eclipse.org/mailman/listinfo/n4js-dev">Mailing List</a></li>
+      <li><a href="https://projects.eclipse.org/projects/technology.n4js">Eclipse Project Page</a></li>
+      <li><a href="https://twitter.com/n4jsdev">Tweets by n4jsdev</a></li>
+    </ul>
+  </div>
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <br/><br/>
+    <ul>
+      <li><a href="http://www.eclipse.org/">Eclipse Home</a></li>
+      <li><a href="http://www.eclipse.org/legal/privacy.php">Privacy Policy</a></li>
+      <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+      <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+      <li><a href="http://www.eclipse.org/legal/">Legal</a></li>
+    </ul>
+  </div>
+  <div style="clear: both; height: 0; overflow: hidden;"></div>
+</div>
+
+<script>
+  // Toggle the table of contents
+  $( "button#tocbutton" ).click(function() {
+    if ($("#tocbutton").css('right') == '25px') {
+      $( "#tocbutton" ).animate({right: '215px'},"slow");
+      $( "#toc.toc2" ).animate({right: '0'},"slow");
+  }
+    else {
+      $( "#tocbutton" ).animate({right: '25px'},"slow");
+      $( "#toc.toc2" ).animate({right: '-13rem'},"slow");
+  }
+  });
+</script>
+
+<script type="text/javascript">
+  // Create a back to top button
+  $('body').prepend('<a href="#" class="back-to-top">Back to Top</a>');
+  var amountScrolled = 300;
+  $(window).scroll(function() {
+  if ( $(window).scrollTop() > amountScrolled ) {
+  	$('a.back-to-top').fadeIn('slow');
+  } else {
+  	$('a.back-to-top').fadeOut('slow');
+  }
+  });
+  $('a.back-to-top, a.simple-back-to-top').click(function() {
+  $('html, body').animate({
+  	scrollTop: 0
+  }, 700);
+  return false;
+  });
+</script>
+</body>
+</html>
