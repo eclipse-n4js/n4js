@@ -120,7 +120,7 @@ Contributors:
 						<artifactId>tycho-p2-repository-plugin</artifactId>
 						<version>${tycho-version}</version>
 						<configuration>
-							<includeAllDependencies>true</includeAllDependencies>
+							<includeAllDependencies>false</includeAllDependencies>
 						</configuration>
 					</plugin>
 					<plugin>
