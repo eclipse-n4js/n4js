@@ -72,7 +72,7 @@ pipeline {
                             """
                             sh "mvn clean verify -P${profiles} ${options}"
 
-                            ls -Ral builds/org.eclipse.n4js.product.build/target/repository/
+                            sh "ls -Ral builds/org.eclipse.n4js.product.build/target/repository/"
                         }
                     }
                 }
