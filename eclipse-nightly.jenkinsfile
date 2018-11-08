@@ -71,6 +71,8 @@ pipeline {
                                 npm version
                             """
                             sh "mvn clean verify -P${profiles} ${options}"
+
+                            ls -Ral builds/org.eclipse.n4js.product.build/target/repository/
                         }
                     }
                 }
@@ -94,7 +96,6 @@ pipeline {
             steps {
                 sh """\
                     echo deployment disabled
-                    ls -Ral n4js/builds/org.eclipse.n4js.product.build/target/repository/
                 """
 //                    mkdir  /home/data/httpd/download.eclipse.org/n4js/products/nightly/$TIMESTAMP
 //                    cp     n4js/builds/org.eclipse.n4js.product.build/target/products/*.zip        /home/data/httpd/download.eclipse.org/n4js/products/nightly/$TIMESTAMP
