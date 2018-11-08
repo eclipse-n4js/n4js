@@ -45,7 +45,7 @@ pipeline {
                     dir('n4js'){
                         script {
                             def options = [
-//'-DskipTests',
+'-DskipTests',
                                 '--batch-mode',
 //                                '--quiet',
                                 '--update-snapshots',
@@ -56,13 +56,13 @@ pipeline {
                             ].join(' ')
                             def profiles = [
                                 'buildProduct'
-                                ,
-                                'execute-plugin-tests',
-                                'execute-plugin-ui-tests'
-                                ,
-                                'execute-ecma-tests',
-                                'execute-accesscontrol-tests',
-                                'execute-smoke-tests'
+//                                ,
+//                                'execute-plugin-tests',
+//                                'execute-plugin-ui-tests'
+//                                ,
+//                                'execute-ecma-tests',
+//                                'execute-accesscontrol-tests',
+//                                'execute-smoke-tests'
                             ].join(',')
 
                             sh """\
@@ -77,10 +77,24 @@ pipeline {
             }
         }
 
+        stage('Sign Application') {
+            steps {
+                sh """\
+                    cd n4js/builds/org.eclipse.n4js.product.build/target/products
+                    pwd
+
+                    mv n4jside-macosx.cocoa.x86_64.zip unsigned_n4jside-macosx.cocoa.x86_64.zip
+                    curl -o n4jside-macosx.cocoa.x86_64.zip -F file=@unsigned_n4jside-macosx.cocoa.x86_64.zip http://build.eclipse.org:31338/macsign.php
+                """
+//                    rm unsigned_n4jside-macosx.cocoa.x86_64.zip
+            }
+        }
+
         stage('deploy') {
             steps {
                 sh """\
                     echo deployment disabled
+                    ls -Ral n4js/builds/org.eclipse.n4js.product.build/target/repository/
                 """
 //                    mkdir  /home/data/httpd/download.eclipse.org/n4js/products/nightly/$TIMESTAMP
 //                    cp     n4js/builds/org.eclipse.n4js.product.build/target/products/*.zip        /home/data/httpd/download.eclipse.org/n4js/products/nightly/$TIMESTAMP
