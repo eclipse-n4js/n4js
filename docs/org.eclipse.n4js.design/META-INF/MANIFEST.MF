@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
-Bundle-SymbolicName: org.eclipse.n4js.spec;singleton:=true
+Bundle-SymbolicName: org.eclipse.n4js.design;singleton:=true
 Bundle-Version: 0.0.1.qualifier
 Bundle-Vendor: %providerName
 Require-Bundle: org.eclipse.help,
