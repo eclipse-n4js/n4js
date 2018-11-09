@@ -27,101 +27,78 @@ We reuse the notation specified in cite:[N4JSSpec].
 [[sec:IDE_Overview]]
 == IDE Components
 
-The N4JS and N4JSIDE components are organized via features. The following features with included plugins are defined (the common prefix "org.eclipse.n4js" is omitted):
+The N4JS and N4JSIDE components are organized via features. The following features with included plugins are defined 
+(the common prefix "org.eclipse.n4js" is omitted at the plugin name):
 
-[horizontal]
-lang.sdk:: N4JS core language with parser, validation etc.
-+
-[horizontal]
-  org.eclipse.n4js::: Xtext grammar with generator and custom code for N4JS, scoping (and binding) implementation, basic validation (and Xsemantics type system).
-  doc::: (in doc folder) General documentation (including web page) written in AsciiDoc
-  external.libraries::: Support for N4JS libraries shipped with the IDE, i.e. core N4JS library and mangelhaft.
-  ui::: UI components for N4JS, e.g., proposal provider, labels, outline, quickfixes.
-  jsdoc::: Parser and model for JSDoc
-ts.sdk:: Type System
-+
-[horizontal] 
-  ts::: Xtext grammar with generator and custom code for type expressions and standalone type definitions.
-  ts.model::: Xcore based types model with helper classes etc.
-  ts.ui::: Xtext generated UI for type system, not really used as this TS files are not editable by users.
-unicode.sdk::
-+
-[horizontal] 
-  common.unicode::: Xtext grammar with generator and custom code used by all other grammars for proper unicode support.
-regex.sdk:: Regular expression grammar and UI, used by N4JS grammar and UI
-+
-[horizontal] 
-  regex::: Xtext grammar with generator and custom code used by N4JS grammars for regular expressions.
-  regex.ui::: UI components for regular expressions, e.g., proposal provider, labels, outline, quickfixes.
-sdk:: This feature defines the N4JSIDE. It contains core UI plugins and all includes (almost all) other features!
-+
-[horizontal] 
-  environments::: Utility plugin, registers n4scheme for EMF proxy resolution.
-  model::: Xcore based N4JS model with helper classes etc.
-  product::: N4JSIDE main application.
-  releng.utils::: (in releng folder) Contains utility classes only used for building the system, e.g., tools for generating antlr based parser with extended features.
-  utils::: general utilities
-  utils.ui::: general UI utilities
-compiler.sdk:: Compilers and Transpilers
-+
-[horizontal] 
-  generator.common::: *Not included in feature, logically associated.*
-  generator.headless::: N4JS headless generator (i.e. command line compiler).
-  transpiler::: Generic transpiler infrastructure
-  transpiler.es::: Transpiler to compile to EcmaScript
-json.sdk:: N4JS JSON
-+
-[horizontal] 
-  json::: Xtext grammar with generator and custom code for a extensible JSON language support. Used in N4JS for the project description in terms of a `package.json` file.
-  json.ui::: UI components for extensible JSON language support, e.g., proposal provider, labels, outline.
-  json.model::: *Not included in feature, logically associated.* Xcore based model for the JSON language.
-semver.sdk:: Semantic version string support.
-+
-[horizontal] 
-  semver::: Parser and tools for semantic version strings.
-  semver.ui::: UI tools for semantic version strings.
-runner.sdk:: Runners for executing N4JS or JavaScript code
-+
-[horizontal] 
-  runner::: Generic interfaces and helper for runners, i.e. JavaScript engines executing N4JS or JavaScript code.
-  runner.chrome::: Runner for executing N4JS or JavaScript with Chrome.
-  runner.chrome.ui::: UI classes for launching the Chrome runner via the org.eclipse.debug.ui
-  runner.nodejs::: Runner for executing N4JS or JavaScript with node.js.
-  runner.nodejs.ui::: UI classes for launching the node.js runner via the org.eclipse.debug.ui
-  runner.ui::: Generic interfaces for configuring N4JS runner via the debug ui.
-tester.sdk:: Runners and UI for tests (via mangelhaft).
-+
-[horizontal] 
-  tester::: Generic interfaces and helper for testers, i.e. JavaScript engines executing N4JS tests (using mangelhaft).
-  tester.nodejs::: Tester based on the nodejs runner for executing mangelhaft tests with node.js
-  tester.nodejs.ui::: UI for showing test results.
-  tester.ui::: Configuration of tests via the debug UI.
-jsdoc2spec.sdk:: JSDoc 2 Specification
-+
-[horizontal] 
-  jsdoc2spec::: Exporter to generate API documentation with specification tests awareness
-  jsdoc2spec.ui::: UI for API doc exporter
-xpect.sdk::
-+
-[horizontal] 
-  xpect::: Xpect test methods.
-  xpect.ui::: UI for running Xpext tests methods from the N4JSIDE (for creating bug reports).
-smith.sdk:: Feature for internal N4JS IDE plugins only intended for development (for example, the AST Graph view).
-+
-[horizontal] 
-  smith::: Non-UI classes for tools for smiths, that is, tools for developers of the N4JS IDE such as AST views etc.
-  smith.ui::: UI classes for tools for smiths, that is, tools for developers of the N4JS IDE such as AST views etc.
-tests.helper.sdk:: Test helpers.
-dependencies.sdk:: Collection of all external non-ui dependencies, used for local mirroring of update sites.
-dependencies.ui.sdk:: Collection of all external ui dependencies, used for local mirroring of update sites.
-*uncategorized plugins*::
-+
-[horizontal]
-  external.libraries.update::: Updates the external library plugin
-  flowgraphs::: Control and data flow graph model and computer.
-  semver.model::: Xcore model of semantic version strings
-  utils.logging::: configuration for loggers, in particular for the product and for the tests
+[cols="5,10,70"]
+|===
+|Feature | Plugin              | Description 
 
+2+| *org.eclipse.n4js.lang.sdk*| N4JS core language with parser, validation etc. 
+|        | org.eclipse.n4js	   | Xtext grammar with generator and custom code for N4JS, scoping (and binding) implementation, basic validation (and Xsemantics type system).
+|        | doc	               | (in doc folder) General documentation (including web page) written in AsciiDoc
+|        | external.libraries  | Support for N4JS libraries shipped with the IDE, i.e. core N4JS library and mangelhaft.
+|        | ui	               | UI components for N4JS, e.g., proposal provider, labels, outline, quickfixes.
+|        | jsdoc	           | Parser and model for JSDoc
+|        | external.libraries.update | *Not included in feature*. Updates the external library plugin
+2+| *org.eclipse.n4js.ts.sdk*  | Type System 
+|        | ts	               | Xtext grammar with generator and custom code for type expressions and standalone type definitions.
+|        | ts.model	           | Xcore based types model with helper classes etc.
+|        | ts.ui	           | Xtext generated UI for type system, not really used as this TS files are not editable by users.
+2+| *org.eclipse.n4js.unicode.sdk* |
+|        | common.unicode	   | Xtext grammar with generator and custom code used by all other grammars for proper unicode support.
+2+| *org.eclipse.n4js.regex.sdk* | Regular expression grammar and UI, used by N4JS grammar and UI
+|        | regex	           | Xtext grammar with generator and custom code used by N4JS grammars for regular expressions.
+|        | regex.ui	           | UI components for regular expressions, e.g., proposal provider, labels, outline, quickfixes.
+2+| *org.eclipse.n4js.sdk* | This feature defines the N4JSIDE. It contains core UI plugins and all includes (almost all) other features!
+|        | environments	       | Utility plugin, registers n4scheme for EMF proxy resolution.
+|        | model	           | Xcore based N4JS model with helper classes etc.
+|        | product	           | N4JSIDE main application.
+|        | releng.utils	       | (in releng folder) Contains utility classes only used for building the system, e.g., tools for generating antlr based parser with extended features.
+|        | utils	           | general utilities
+|        | utils.ui	           | general UI utilities
+2+| *org.eclipse.n4js.compiler.sdk* | Compilers and Transpilers
+|        | generator.common	   | *Not included in feature, logically associated.*
+|        | generator.headless  | N4JS headless generator (i.e. command line compiler).
+|        | transpiler	       | Generic transpiler infrastructure
+|        | transpiler.es	   | Transpiler to compile to EcmaScript
+2+| *org.eclipse.n4js.json.sdk* | N4JS JSON
+|        | json	               | Xtext grammar with generator and custom code for a extensible JSON language support. Used in N4JS for the project description in terms of a `package.json` file.
+|        | json.ui	           | UI components for extensible JSON language support, e.g., proposal provider, labels, outline.
+|        | json.model	       | *Not included in feature, logically associated.* Xcore based model for the JSON language.
+2+| *org.eclipse.n4js.semver.sdk* | Semantic version string support.
+|        | semver	           | Parser and tools for semantic version strings.
+|        | semver.ui	       | UI tools for semantic version strings.
+|        | semver.model        | *Not included in feature, logically associated.* Xcore model of semantic version strings.
+2+| *org.eclipse.n4js.runner.sdk* | Runners for executing N4JS or JavaScript code
+|        | runner	           | Generic interfaces and helper for runners, i.e. JavaScript engines executing N4JS or JavaScript code.
+|        | runner.chrome	   | Runner for executing N4JS or JavaScript with Chrome.
+|        | runner.chrome.ui	   | UI classes for launching the Chrome runner via the org.eclipse.debug.ui
+|        | runner.nodejs	   | Runner for executing N4JS or JavaScript with node.js.
+|        | runner.nodejs.ui	   | UI classes for launching the node.js runner via the org.eclipse.debug.ui
+|        | runner.ui	       | Generic interfaces for configuring N4JS runner via the debug ui.
+2+| *org.eclipse.n4js.tester.sdk* | Runners and UI for tests (via mangelhaft).
+|        | tester	           | Generic interfaces and helper for testers, i.e. JavaScript engines executing N4JS tests (using mangelhaft).
+|        | tester.nodejs	   | Tester based on the nodejs runner for executing mangelhaft tests with node.js
+|        | tester.nodejs.ui	   | UI for showing test results.
+|        | tester.ui	       | Configuration of tests via the debug UI.
+2+| *org.eclipse.n4js.jsdoc2spec.sdk* | JSDoc 2 Specification
+|        | jsdoc2spec	       | Exporter to generate API documentation with specification tests awareness
+|        | jsdoc2spec.ui	   | UI for API doc exporter
+2+| *org.eclipse.n4js.xpect.sdk* |
+|        | xpect	           | Xpect test methods.
+|        | xpect.ui	           | UI for running Xpext tests methods from the N4JSIDE (for creating bug reports).
+2+| *org.eclipse.n4js.smith.sdk* | Feature for internal N4JS IDE plugins only intended for development (for example, the AST Graph view).
+|        | smith	           | Non-UI classes for tools for smiths, that is, tools for developers of the N4JS IDE such as AST views etc.
+|        | smith.ui	           | UI classes for tools for smiths, that is, tools for developers of the N4JS IDE such as AST views etc.
+2+| *org.eclipse.n4js.tests.helper.sdk* | Test helpers.
+2+| *org.eclipse.n4js.dependencies.sdk* | Collection of all external non-ui dependencies, used for local mirroring of update sites.
+2+| *org.eclipse.n4js.dependencies.ui.sdk* | Collection of all external ui dependencies, used for local mirroring of update sites.
+3+| *uncategorized plugins*    |
+         | flowgraphs	       | Control and data flow graph model and computer.
+2+| *Fragments*                | not associated to features, only listed here for completeness 
+|        | utils.logging	   | Fragment only, configuration for loggers, in particular for the product and for the tests
+|===
 
 
 [[sec:Naming_Conventions]]
