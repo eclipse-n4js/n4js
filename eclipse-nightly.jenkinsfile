@@ -96,18 +96,18 @@ pipeline {
             steps {
                 sh """\
                     mkdir  /home/data/httpd/download.eclipse.org/n4js/products/nightly/$TIMESTAMP
-                    cp     n4js/builds/org.eclipse.n4js.product.build/target/products/*.zip        /home/data/httpd/download.eclipse.org/n4js/products/nightly/$TIMESTAMP
+                    cp     n4js/builds/org.eclipse.n4js.product.build/target/products/*.zip         /home/data/httpd/download.eclipse.org/n4js/products/nightly/$TIMESTAMP
 
                     rm -rf /home/data/httpd/download.eclipse.org/n4js/products/nightly/LATEST
                     mkdir  /home/data/httpd/download.eclipse.org/n4js/products/nightly/LATEST
-                    cp -R  /home/data/httpd/download.eclipse.org/n4js/products/nightly/$TIMESTAMP/ /home/data/httpd/download.eclipse.org/n4js/products/nightly/LATEST
+                    cp -R  /home/data/httpd/download.eclipse.org/n4js/products/nightly/$TIMESTAMP/* /home/data/httpd/download.eclipse.org/n4js/products/nightly/LATEST
                 """
 //                    mkdir  /home/data/httpd/download.eclipse.org/n4js/updates/nightly/$TIMESTAMP
-//                    cp -R  n4js/builds/org.eclipse.n4js.product.build/target/repository/           /home/data/httpd/download.eclipse.org/n4js/updates/nightly/$TIMESTAMP
+//                    cp -R  n4js/builds/org.eclipse.n4js.product.build/target/repository/            /home/data/httpd/download.eclipse.org/n4js/updates/nightly/$TIMESTAMP
 //
 //                    rm -rf /home/data/httpd/download.eclipse.org/n4js/updates/nightly/LATEST
 //                    mkdir  /home/data/httpd/download.eclipse.org/n4js/updates/nightly/LATEST
-//                    cp -R  /home/data/httpd/download.eclipse.org/n4js/updates/nightly/$TIMESTAMP/  /home/data/httpd/download.eclipse.org/n4js/updates/nightly/LATEST
+//                    cp -R  /home/data/httpd/download.eclipse.org/n4js/updates/nightly/$TIMESTAMP/*  /home/data/httpd/download.eclipse.org/n4js/updates/nightly/LATEST
             }
         }
     }
