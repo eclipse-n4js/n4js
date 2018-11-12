@@ -88,11 +88,11 @@ pipeline {
                     sh """\
                         mv      n4jside-macosx.cocoa.x86_64.zip          unsigned_n4jside-macosx.cocoa.x86_64.zip
                         curl -o n4jside-macosx.cocoa.x86_64.zip -F file=@unsigned_n4jside-macosx.cocoa.x86_64.zip http://build.eclipse.org:31338/macsign.php
+                        rm unsigned_n4jside-macosx.cocoa.x86_64.zip
                     """
-//                        rm unsigned_n4jside-macosx.cocoa.x86_64.zip
 
                     // unfortunately, we have to re-zip the signed app-bundle
-                    // REASON: the zip file we receive from macsign.php cannot be properly unzipped under MacOS by
+                    // REASON: the zip file we receive from macsign.php cannot be properly unzipped under macOS by
                     // double-clicking on it (though unzip from the command line works; when unzipping with double
                     // click, all files will be created, but with incorrect permissions, leading to errors when
                     // opening the app; tested under macOS High Sierra 10.13.6).
