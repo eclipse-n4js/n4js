@@ -98,10 +98,11 @@ pipeline {
                     // opening the app; tested under macOS High Sierra 10.13.6).
                     sh """\
                         unzip  n4jside-macosx.cocoa.x86_64.zip
-                        rm     n4jside-macosx.cocoa.x86_64.zip
+                        mv     n4jside-macosx.cocoa.x86_64.zip macsign_n4jside-macosx.cocoa.x86_64.zip
                         zip -r n4jside-macosx.cocoa.x86_64.zip N4jside.app
                         rm -rf N4jside.app
                     """
+//                        rm     n4jside-macosx.cocoa.x86_64.zip
                 }
             }
         }
