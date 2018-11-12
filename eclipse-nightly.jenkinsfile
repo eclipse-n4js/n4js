@@ -42,7 +42,7 @@ pipeline {
         stage('build') {
             steps {
                 wrap([$class: 'Xvnc', takeScreenshot: false, useXauthority: true]) {
-                    dir('n4js'){
+                    dir('n4js') {
                         script {
                             def options = [
 '-DskipTests',
@@ -81,26 +81,28 @@ pipeline {
 
         stage('Sign Application') {
             steps {
-                sh """\
-                    cd n4js/builds/org.eclipse.n4js.product.build/target/products
-                    pwd
+                dir('n4js/builds/org.eclipse.n4js.product.build/target/products') {
+                    sh "pwd"
+                    
+                    // sign the macOS product
+                    sh """\
+                        mv      n4jside-macosx.cocoa.x86_64.zip          unsigned_n4jside-macosx.cocoa.x86_64.zip
+                        curl -o n4jside-macosx.cocoa.x86_64.zip -F file=@unsigned_n4jside-macosx.cocoa.x86_64.zip http://build.eclipse.org:31338/macsign.php
+                    """
+//                        rm unsigned_n4jside-macosx.cocoa.x86_64.zip
 
-                    mv      n4jside-macosx.cocoa.x86_64.zip          unsigned_n4jside-macosx.cocoa.x86_64.zip
-                    curl -o n4jside-macosx.cocoa.x86_64.zip -F file=@unsigned_n4jside-macosx.cocoa.x86_64.zip http://build.eclipse.org:31338/macsign.php
-                """
-//                    rm unsigned_n4jside-macosx.cocoa.x86_64.zip
-
-                // unfortunately, we have to re-zip the signed app-bundle
-                // REASON: the zip file we receive from macsign.php cannot be properly unzipped under MacOS by
-                // double-clicking on it (though unzip from the command line works; when unzipping with double
-                // click, all files will be created, but with incorrect permissions, leading to errors when
-                // opening the app; tested under macOS High Sierra 10.13.6).
-                sh """\
-                    unzip  n4jside-macosx.cocoa.x86_64.zip
-                    rm     n4jside-macosx.cocoa.x86_64.zip
-                    zip -r n4jside-macosx.cocoa.x86_64.zip N4jside.app
-                    rm -rf N4jside.app
-                """
+                    // unfortunately, we have to re-zip the signed app-bundle
+                    // REASON: the zip file we receive from macsign.php cannot be properly unzipped under MacOS by
+                    // double-clicking on it (though unzip from the command line works; when unzipping with double
+                    // click, all files will be created, but with incorrect permissions, leading to errors when
+                    // opening the app; tested under macOS High Sierra 10.13.6).
+                    sh """\
+                        unzip  n4jside-macosx.cocoa.x86_64.zip
+                        rm     n4jside-macosx.cocoa.x86_64.zip
+                        zip -r n4jside-macosx.cocoa.x86_64.zip N4jside.app
+                        rm -rf N4jside.app
+                    """
+                }
             }
         }
 
@@ -120,7 +122,6 @@ pipeline {
                     rm -rf /home/data/httpd/download.eclipse.org/n4js/updates/nightly/LATEST
                     mkdir  /home/data/httpd/download.eclipse.org/n4js/updates/nightly/LATEST
                     cp -R  /home/data/httpd/download.eclipse.org/n4js/updates/nightly/$TIMESTAMP/*  /home/data/httpd/download.eclipse.org/n4js/updates/nightly/LATEST
-
                 """
             }
         }
