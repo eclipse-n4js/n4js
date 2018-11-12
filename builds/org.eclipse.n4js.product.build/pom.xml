@@ -148,7 +148,7 @@ Contributors:
 									<rootFolders>
 										<!-- for MacOSX, make sure you use a folder ending with .app , see bug
 											463670 -->
-										<macosx>n4jside.app</macosx>
+										<macosx>N4jside.app</macosx>
 										<linux>n4jside</linux>
 										<win32>n4jside</win32>
 									</rootFolders>
