@@ -85,7 +85,13 @@ pipeline {
                     cd n4js/builds/org.eclipse.n4js.product.build/target/products
                     pwd
 
-                    curl -o signed_n4jside-macosx.cocoa.x86_64.zip -F file=@n4jside-macosx.cocoa.x86_64.zip http://build.eclipse.org:31338/macsign.php
+                    mv n4jside-macosx.cocoa.x86_64.zip unsigned_n4jside-macosx.cocoa.x86_64.zip
+                    curl -o signed.zip -F file=@unsigned_n4jside-macosx.cocoa.x86_64.zip http://build.eclipse.org:31338/macsign.php
+                    
+                    unzip signed.zip
+                    ls -al
+                    ls -al N4jside.app/Contents/MacOS
+                    zip -r n4jside-macosx.cocoa.x86_64.zip N4jside.app
                 """
 //                    mv n4jside-macosx.cocoa.x86_64.zip unsigned_n4jside-macosx.cocoa.x86_64.zip
 
