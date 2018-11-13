@@ -94,21 +94,8 @@ pipeline {
                     sh """\
                         curl -o n4jside-macosx.cocoa.x86_64.dmg -F sign=true -F source=@n4jside-macosx.cocoa.x86_64.zip http://build.eclipse.org:31338/dmg-packager
                     """
-
-                    // unfortunately, we have to re-zip the signed app-bundle
-                    // REASON: the zip file we receive from macsign.php cannot be properly unzipped under macOS by
-                    // double-clicking on it (though unzip from the command line works; when unzipping with double
-                    // click, all files will be created, but with incorrect permissions, leading to errors when
-                    // opening the app; tested under macOS High Sierra 10.13.6).
-                    sh """\
-                        unzip  n4jside-macosx.cocoa.x86_64.zip
-                        mv     n4jside-macosx.cocoa.x86_64.zip macsign_n4jside-macosx.cocoa.x86_64.zip
-                        zip -r n4jside-macosx.cocoa.x86_64.zip N4jside.app
-                        rm -rf N4jside.app
-                    """
-//                        rm     n4jside-macosx.cocoa.x86_64.zip
                 }
-                
+
 //                dir('n4js/builds/org.eclipse.n4js.product.build/target/repository') {
 //                    def jarFiles = findFiles(glob: '**/*.jar')
 //                    
