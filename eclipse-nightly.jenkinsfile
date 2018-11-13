@@ -98,10 +98,12 @@ pipeline {
                 }
 
                 dir('n4js/builds/org.eclipse.n4js.product.build/target/repository') {
-                    def jarFiles = findFiles(glob: '**/*.jar')
+                    step {
+                        def jarFiles = findFiles(glob: '**/*.jar')
 
-                    for (jarFile in jarFiles) {
-                        println jarFile.directory + ' ' + jarFile.name + ' ' + jarFile.path
+                        for (jarFile in jarFiles) {
+                            println jarFile.directory + ' ' + jarFile.name + ' ' + jarFile.path
+                        }
                     }
                 }
             }
