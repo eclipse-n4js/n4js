@@ -104,8 +104,8 @@ pipeline {
                     sh """\
                         echo BEFORE SIGN
                         ls -Ral
-                        find . -name \*.jar -exec curl -o {}_signed -F file=\@{} http://build.eclipse.org:31338/sign \;
-                        find . -name \*.jar -exec mv -f {}_signed {} \;
+                        find . -name \\*.jar -exec curl -o {}_signed -F file=\\@{} http://build.eclipse.org:31338/sign \\;
+                        find . -name \\*.jar -exec mv -f {}_signed {} \\;
                         echo AFTER SIGN
                         ls -Ral
                     """
