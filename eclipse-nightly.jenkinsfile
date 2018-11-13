@@ -98,13 +98,17 @@ pipeline {
                 }
 
                 dir('n4js/builds/org.eclipse.n4js.product.build/target/repository') {
-                    step {
-                        def jarFiles = findFiles(glob: '**/*.jar')
+                    sh "pwd"
 
-                        for (jarFile in jarFiles) {
-                            println jarFile.directory + ' ' + jarFile.name + ' ' + jarFile.path
-                        }
-                    }
+                    // sign all .jar files in the update sites
+                    sh """\
+                        echo BEFORE SIGN
+                        ls -Ral
+                        find . -name \*.jar -exec curl -o {}_signed -F file=\@{} http://build.eclipse.org:31338/sign \;
+                        find . -name \*.jar -exec mv -f {}_signed {} \;
+                        echo AFTER SIGN
+                        ls -Ral
+                    """
                 }
             }
         }
