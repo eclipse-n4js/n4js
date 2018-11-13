@@ -91,18 +91,19 @@ pipeline {
                         rm unsigned_n4jside-macosx.cocoa.x86_64.zip
                     """
 
+                    // bundle macOS product into a signed .dmg image
                     sh """\
                         curl -o n4jside-macosx.cocoa.x86_64.dmg -F sign=true -F source=@n4jside-macosx.cocoa.x86_64.zip http://build.eclipse.org:31338/dmg-packager
                     """
                 }
 
-//                dir('n4js/builds/org.eclipse.n4js.product.build/target/repository') {
-//                    def jarFiles = findFiles(glob: '**/*.jar')
-//                    
-//                    for (jarFile in jarFiles) {
-//                        println jarFile.directory + ' ' + jarFile.name + ' ' + jarFile.path
-//                    }
-//                }
+                dir('n4js/builds/org.eclipse.n4js.product.build/target/repository') {
+                    def jarFiles = findFiles(glob: '**/*.jar')
+
+                    for (jarFile in jarFiles) {
+                        println jarFile.directory + ' ' + jarFile.name + ' ' + jarFile.path
+                    }
+                }
             }
         }
 
