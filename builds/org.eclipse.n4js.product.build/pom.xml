@@ -72,6 +72,7 @@ Contributors:
 					<maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
 					<buildTime>${maven.build.timestamp}</buildTime>
 					<gitSha1>${buildNumber}</gitSha1>
+					<fatUpdateSite>false</fatUpdateSite>
 				</properties>
 			<build>
 				<plugins>
@@ -120,7 +121,7 @@ Contributors:
 						<artifactId>tycho-p2-repository-plugin</artifactId>
 						<version>${tycho-version}</version>
 						<configuration>
-							<includeAllDependencies>true</includeAllDependencies>
+							<includeAllDependencies>${fatUpdateSite}</includeAllDependencies>
 						</configuration>
 					</plugin>
 					<plugin>
@@ -148,7 +149,7 @@ Contributors:
 									<rootFolders>
 										<!-- for MacOSX, make sure you use a folder ending with .app , see bug
 											463670 -->
-										<macosx>n4jside.app</macosx>
+										<macosx>N4jside.app</macosx>
 										<linux>n4jside</linux>
 										<win32>n4jside</win32>
 									</rootFolders>

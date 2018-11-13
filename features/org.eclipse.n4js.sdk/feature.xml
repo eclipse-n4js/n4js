@@ -41,14 +41,6 @@ Contributors:
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.n4js.dependencies.sdk"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.n4js.dependencies.ui.sdk"
-         version="0.0.0"/>
-
-   <includes
          id="org.eclipse.n4js.lang.sdk"
          version="0.0.0"/>
 
@@ -91,6 +83,11 @@ Contributors:
    <includes
          id="org.eclipse.n4js.semver.sdk"
          version="0.0.0"/>
+
+   <requires>
+      <import feature="org.eclipse.n4js.dependencies.sdk"/>
+      <import feature="org.eclipse.n4js.dependencies.ui.sdk"/>
+   </requires>
 
    <plugin
          id="org.eclipse.n4js.utils"
