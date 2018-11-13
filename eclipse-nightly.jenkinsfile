@@ -39,7 +39,7 @@ pipeline {
 
     stages {
 
-        stage('build') {
+        stage('Build & Test') {
             steps {
                 wrap([$class: 'Xvnc', takeScreenshot: false, useXauthority: true]) {
                     dir('n4js') {
@@ -79,11 +79,11 @@ pipeline {
             }
         }
 
-        stage('Sign Application') {
+        stage('Sign') {
             steps {
                 dir('n4js/builds/org.eclipse.n4js.product.build/target/products') {
                     sh "pwd"
-                    
+
                     // sign the macOS product
                     sh """\
                         mv      n4jside-macosx.cocoa.x86_64.zip          unsigned_n4jside-macosx.cocoa.x86_64.zip
@@ -97,23 +97,16 @@ pipeline {
                     """
                 }
 
-                dir('n4js/builds/org.eclipse.n4js.product.build/target/repository') {
-                    sh "pwd"
-
-                    // sign all .jar files in the update sites
-                    sh """\
-                        echo BEFORE SIGN
-                        ls -Ral
-                        find . -name \\*.jar -exec curl -o {}_signed -F file=\\@{} http://build.eclipse.org:31338/sign \\;
-                        find . -name \\*.jar -exec mv -f {}_signed {} \\;
-                        echo AFTER SIGN
-                        ls -Ral
-                    """
-                }
+                sh """\
+                    echo Contents of n4js/builds/org.eclipse.n4js.product.build/target/products:
+                    ls -al  n4js/builds/org.eclipse.n4js.product.build/target/products
+                    echo Contents of n4js/builds/org.eclipse.n4js.product.build/target/repository:
+                    ls -Ral n4js/builds/org.eclipse.n4js.product.build/target/repository
+                """
             }
         }
 
-        stage('deploy') {
+        stage('Deploy') {
             steps {
                 sh """\
                     mkdir  /home/data/httpd/download.eclipse.org/n4js/products/nightly/$TIMESTAMP
