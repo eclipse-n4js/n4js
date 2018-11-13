@@ -14,7 +14,10 @@ import static com.google.common.collect.Sets.newLinkedHashSet;
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableCollection;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import org.eclipse.n4js.external.libraries.ExternalLibraryFolderUtils;
 
@@ -131,6 +134,50 @@ public final class N4JSGlobals {
 	 * Name of the package.json fragment file from the "n4jsd" type definitions repository.
 	 */
 	public static final String PACKAGE_FRAGMENT_JSON = "package-fragment.json";
+
+	/**
+	 * All HTML tags.
+	 * <p>
+	 * Source: <a href="http://www.w3schools.com/tags/">http://www.w3schools.com/tags/</a>.
+	 */
+	public static final Set<String> HTML_TAGS = new LinkedHashSet<>(Arrays.asList(
+			"a", "abbr", "address", "area", "article", "aside", "audio",
+			"b", "base", "bdi", "bdo", "blockquote", "body", "br", "button",
+			"canvas", "caption", "cite", "code", "col", "colgroup",
+			"datalist", "dd", "del", "details", "dfn", "dialog", "div", "dl", "dt",
+			"em", "embed",
+			"fieldset", "figcaption", "figure", "footer", "form",
+			"h1", "h2", "h3", "h4", "h5", "h6", "head", "header", "hr", "html",
+			"i", "iframe", "img", "input", "ins",
+			"kbd", "keygen",
+			"label", "legend", "li", "link",
+			"main", "map", "mark", "menu", "menuitem", "meta", "meter",
+			"nav", "noscript",
+			"object", "ol", "optgroup", "option",
+			"p", "param", "pre", "progress", "q", "rp", "rt", "ruby",
+			"s", "samp", "script", "section", "select", "small", "source", "span",
+			"strong", "style", "sub", "summary", "sup", "svg",
+			"table", "tbody", "td", "textarea", "tfoot", "th", "thead", "time", "title", "tr", "track",
+			"u", "ul", "use", "var", "video", "wbr"));
+
+	/**
+	 * All SVG tags.
+	 * <p>
+	 * Source: <a href=
+	 * "https://developer.mozilla.org/en-US/docs/Web/SVG/Element">https://developer.mozilla.org/en-US/docs/Web/SVG/Element</a>.
+	 */
+	public static final Set<String> SVG_TAGS = new LinkedHashSet<>(Arrays.asList(
+			"a", "altGlyph", "altGlyphDef", "altGlyphItem", "animate", "animateColor", "animateMotion",
+			"animateTransform", "circle", "clipPath", "color-profile", "cursor", "defs", "desc", "discard", "ellipse",
+			"feBlend", "feColorMatrix", "feComponentTransfer", "feComposite", "feConvolveMatrix", "feDiffuseLighting",
+			"feDisplacementMap", "feDistantLight", "feDropShadow", "feFlood", "feFuncA", "feFuncB", "feFuncG",
+			"feFuncR", "feGaussianBlur", "feImage", "feMerge", "feMergeNode", "feMorphology", "feOffset",
+			"fePointLight", "feSpecularLighting", "feSpotLight", "feTile", "feTurbulence", "filter", "font",
+			"font-face", "font-face-format", "font-face-name", "font-face-src", "font-face-uri", "foreignObject", "g",
+			"glyph", "glyphRef", "hatch", "hatchpath", "hkern", "image", "line", "linearGradient", "marker", "mask",
+			"mesh", "meshgradient", "meshpatch", "meshrow", "metadata", "missing-glyph", "mpath", "path", "pattern",
+			"polygon", "polyline", "radialGradient", "rect", "script", "set", "solidcolor", "stop", "style", "svg",
+			"switch", "symbol", "text", "textPath", "title", "tref", "tspan", "unknown", "use", "view", "vkern"));
 
 	private N4JSGlobals() {
 		// private to prevent inheritance & instantiation.
