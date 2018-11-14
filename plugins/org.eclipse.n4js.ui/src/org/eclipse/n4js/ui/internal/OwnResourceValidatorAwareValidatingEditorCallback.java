@@ -60,7 +60,7 @@ public class OwnResourceValidatorAwareValidatingEditorCallback extends IXtextEdi
 
 		final IValidationIssueProcessor issueProcessor = new CompositeValidationIssueProcessor(
 				new AnnotationIssueProcessor(document, annotationModel, issueResolutionProvider),
-				new MarkerIssueProcessor(editor.getResource(), markerCreator, markerTypeProvider));
+				new MarkerIssueProcessor(editor.getResource(), annotationModel, markerCreator, markerTypeProvider));
 
 		return editor.getDocument().modify(resource -> {
 			final IResourceServiceProvider serviceProvider = resource.getResourceServiceProvider();

@@ -228,7 +228,8 @@ package abstract class AbstractProcessor {
 				// make sure we see this exception on the console, even if it gets caught somewhere
 				UtilN4.reportError(e);
 			}
-			Throwables.propagate(e);
+			Throwables.throwIfUnchecked(e);
+			throw new RuntimeException(e);
 		}
 	}
 

@@ -159,10 +159,12 @@ public class SourceMapView extends ViewPart {
 			public void mouseDown(MouseEvent e) {
 				try {
 					if (text.isFocusControl()) {
-						int offset = text.getOffsetAtLocation(new Point(e.x, e.y));
-						int line = text.getLineAtOffset(offset);
-						int column = offset - text.getOffsetAtLine(line);
-						selectorFunction.accept(text, line, column);
+						int offset = text.getOffsetAtPoint(new Point(e.x, e.y));
+						if (offset >= 0) {
+							int line = text.getLineAtOffset(offset);
+							int column = offset - text.getOffsetAtLine(line);
+							selectorFunction.accept(text, line, column);
+						}
 					}
 				} catch (IllegalArgumentException ex) {
 					// we ignore exceptions due to wrong locations

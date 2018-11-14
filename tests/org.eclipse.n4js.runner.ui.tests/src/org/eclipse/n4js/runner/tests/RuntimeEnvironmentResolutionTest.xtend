@@ -10,12 +10,16 @@
  */
 package org.eclipse.n4js.runner.tests
 
+import com.google.common.base.Throwables
 import com.google.inject.Inject
 import java.io.File
 import java.io.IOException
 import org.apache.log4j.Logger
 import org.eclipse.emf.common.util.URI
 import org.eclipse.n4js.N4JSStandaloneSetup
+import org.eclipse.n4js.internal.FileBasedWorkspace
+import org.eclipse.n4js.packagejson.PackageJsonBuilder
+import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.runner.RunnerHelper
@@ -29,7 +33,6 @@ import org.junit.Test
 import org.junit.rules.TestName
 
 import static com.google.common.base.Preconditions.checkNotNull
-import static com.google.common.base.Throwables.propagate
 import static java.nio.file.Files.createDirectory
 import static java.nio.file.Files.createFile
 import static java.nio.file.Files.createTempDirectory
@@ -43,9 +46,6 @@ import static org.eclipse.n4js.runner.^extension.RuntimeEnvironment.*
 import static org.hamcrest.core.IsCollectionContaining.*
 import static org.hamcrest.core.IsNot.not
 import static org.junit.Assert.*
-import org.eclipse.n4js.packagejson.PackageJsonBuilder
-import org.eclipse.n4js.projectDescription.ProjectType
-import org.eclipse.n4js.internal.FileBasedWorkspace
 
 /**
  * Class for testing the the runtime environment resolution for the N4 runners in standalone JUnit mode.
@@ -85,7 +85,8 @@ class RuntimeEnvironmentResolutionTest {
 			workingDirectory = createTempDirectory(null).toFile.assertDirectoryAccessable.doDeleteOnExit
 		} catch (IOException e) {
 			LOGGER.error('Error while creating temporary working directory for tests.', e)
-			throw propagate(e)
+			Throwables.throwIfUnchecked(e);
+			throw new RuntimeException(e)
 		}
 	}
 
@@ -644,7 +645,8 @@ class RuntimeEnvironmentResolutionTest {
 			return createFileURI(checkNotNull(file).getCanonicalFile.getAbsolutePath)
 		} catch (IOException e) {
 			LOGGER.error('''Error while creating file URI for file: '«file»'.''', e)
-			throw propagate(e)
+			Throwables.throwIfUnchecked(e);
+			throw new RuntimeException(e)
 		}
 	}
 
@@ -674,7 +676,8 @@ class RuntimeEnvironmentResolutionTest {
 			assertDirectoryAccessable(createDirectory(path).toFile.doDeleteOnExit)
 		} catch (IOException e) {
 			LOGGER.error('''Error while creating new temporary folder with name: '«folderName»'.''', e)
-			throw propagate(e)
+			Throwables.throwIfUnchecked(e);
+			throw new RuntimeException(e)
 		}
 	}
 
@@ -684,7 +687,8 @@ class RuntimeEnvironmentResolutionTest {
 			assertAccessable(createFile(path).toFile.doDeleteOnExit)
 		} catch (IOException e) {
 			LOGGER.error('''Error while creating package.json file in folder '«projectFolder»'.''', e)
-			throw propagate(e)
+			Throwables.throwIfUnchecked(e);
+			throw new RuntimeException(e)
 		}
 	}
 
@@ -693,7 +697,8 @@ class RuntimeEnvironmentResolutionTest {
 			return write(assertFileAccessable(packageJsonFile).toPath, content.getBytes).toFile
 		} catch (IOException e) {
 			LOGGER.error('Error while writing package.json file content.', e)
-			throw propagate(e)
+			Throwables.throwIfUnchecked(e);
+			throw new RuntimeException(e)
 		}
 	}
 

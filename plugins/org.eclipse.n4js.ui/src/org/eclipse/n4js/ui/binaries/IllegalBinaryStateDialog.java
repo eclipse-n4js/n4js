@@ -26,6 +26,9 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.PreferenceDialog;
+import org.eclipse.n4js.binaries.Binary;
+import org.eclipse.n4js.binaries.IllegalBinaryStateException;
+import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.MouseAdapter;
@@ -34,10 +37,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-
-import org.eclipse.n4js.binaries.Binary;
-import org.eclipse.n4js.binaries.IllegalBinaryStateException;
-import org.eclipse.n4js.ui.utils.UIUtils;
 
 /**
  * Customized message dialog for notifying the user about an incorrect binary configuration.
@@ -133,8 +132,8 @@ public class IllegalBinaryStateDialog extends MessageDialog {
 			@Override
 			public void mouseDown(final MouseEvent event) {
 				try {
-					final int offset = styledText.getOffsetAtLocation(new Point(event.x, event.y));
-					final StyleRange actualStyle = styledText.getStyleRangeAtOffset(offset);
+					final int offset = styledText.getOffsetAtPoint(new Point(event.x, event.y));
+					final StyleRange actualStyle = offset >= 0 ? styledText.getStyleRangeAtOffset(offset) : null;
 					if (null != actualStyle && actualStyle.underline
 							&& UNDERLINE_LINK == actualStyle.underlineStyle) {
 

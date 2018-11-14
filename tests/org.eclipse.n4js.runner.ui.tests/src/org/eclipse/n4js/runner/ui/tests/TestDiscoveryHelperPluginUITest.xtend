@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.runner.ui.tests
 
+import com.google.common.base.Throwables
 import com.google.inject.Inject
 import org.eclipse.core.resources.IWorkspace
 import org.eclipse.core.runtime.CoreException
@@ -22,8 +23,6 @@ import org.eclipse.n4js.tests.util.ProjectTestsUtils
 import org.junit.Test
 
 import static org.junit.Assert.*
-
-import static extension com.google.common.base.Throwables.propagate
 
 /**
  * Plugin UI test for {@link TestDiscoveryHelper}. Tests special cases such as a closed project
@@ -57,7 +56,8 @@ class TestDiscoveryHelperPluginUITest extends AbstractBuilderTest {
 		try {
 			assertTrue('''Closed N4JS project '«project.name»' should not be testable''', !isTestable(n4Project.location));
 		} catch (Exception e) {
-			e.propagate;
+			Throwables.throwIfUnchecked(e);
+			throw new RuntimeException(e);
 		}
 	}
 

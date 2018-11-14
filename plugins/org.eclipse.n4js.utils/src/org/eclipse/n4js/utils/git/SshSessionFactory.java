@@ -13,13 +13,15 @@ package org.eclipse.n4js.utils.git;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
 
 import org.eclipse.jgit.transport.JschConfigSessionFactory;
 import org.eclipse.jgit.transport.OpenSshConfig.Host;
 import org.eclipse.jgit.util.FS;
-import org.eclipse.xtext.util.Files;
 
 import com.google.common.base.StandardSystemProperty;
+import com.google.common.io.Files;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
@@ -110,8 +112,11 @@ import com.jcraft.jsch.Session;
 	}
 
 	private boolean isEncrypted(File keyFile) {
-		String s = Files.readFileIntoString(keyFile.getAbsolutePath());
-		return s.indexOf("ENCRYPTED") >= 0;
+		try {
+			String s = Files.toString(keyFile, Charset.defaultCharset());
+			return s.indexOf("ENCRYPTED") >= 0;
+		} catch (IOException e) {
+			return false;
+		}
 	}
-
 }

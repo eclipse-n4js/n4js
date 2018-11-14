@@ -10,15 +10,16 @@
  */
 package org.eclipse.n4js.tests.staticpolyfill
 
+import com.google.common.io.Files
+import java.nio.charset.Charset
 import org.eclipse.core.resources.IFile
+import org.eclipse.n4js.tests.util.EclipseUIUtils
 import org.eclipse.ui.IWorkbenchPage
 import org.eclipse.xtext.ui.editor.XtextEditor
-import org.eclipse.xtext.util.Files
 import org.junit.Test
 
 import static org.eclipse.n4js.tests.staticpolyfill.SingleProject_Probands.*
 import static org.junit.Assert.*
-import org.eclipse.n4js.tests.util.EclipseUIUtils
 
 /**
  */
@@ -84,7 +85,7 @@ class SingleProjectPluginUITest extends AbstractStaticPolyfillBuilderTest {
 
 		//  assert compiled file is back again + new content.
 		assertTrue("No compiled file.",compiledFile.exists)
-		val actualContent = Files.readFileIntoString(compiledFile.location.toFile.absolutePath);
+		val actualContent = Files.toString(compiledFile.location.toFile, Charset.defaultCharset);
 		assertTrue('Generated file content was empty: ' + compiledFile, !actualContent.nullOrEmpty)
 
 		assertEquals("test-setup broken", 0,matchCount(pattern_1_Unique,validContent_Filled))
@@ -102,7 +103,7 @@ class SingleProjectPluginUITest extends AbstractStaticPolyfillBuilderTest {
 		assertMarkers("filled file should have no errors", cFilled, 0);
 		assertMarkers("filling file should have no errors", cFilling, 0);
 
-		val actualContent2 = Files.readFileIntoString(compiledFile.location.toFile.absolutePath);
+		val actualContent2 = Files.toString(compiledFile.location.toFile, Charset.defaultCharset);
 		assertTrue('Generated file content was empty: ' + compiledFile, !actualContent2.nullOrEmpty)
 
 		assertEquals("test-setup broken", 0,matchCount(pattern_2_ExtendedContent,validContent_Filled))
@@ -120,7 +121,7 @@ class SingleProjectPluginUITest extends AbstractStaticPolyfillBuilderTest {
 		assertMarkers("filled file should have no errors", cFilled, 0);
 		assertMarkers("filling file should have no errors", cFilling, 0);
 
-		val actualContent3 = Files.readFileIntoString(compiledFile.location.toFile.absolutePath);
+		val actualContent3 = Files.toString(compiledFile.location.toFile, Charset.defaultCharset);
 		assertTrue('Generated file content was empty: ' + compiledFile, !actualContent3.nullOrEmpty)
 
 		val savedModStamp_since_4 = compiledFile.modificationStamp

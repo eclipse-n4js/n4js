@@ -10,9 +10,9 @@
  */
 package org.eclipse.n4js.ui.wizard.project;
 
-import static com.google.common.base.CharMatcher.BREAKING_WHITESPACE;
-import static com.google.common.base.CharMatcher.JAVA_LETTER;
+import static com.google.common.base.CharMatcher.breakingWhitespace;
 import static com.google.common.base.CharMatcher.is;
+import static com.google.common.base.CharMatcher.javaLetter;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.base.Strings.nullToEmpty;
 import static com.google.common.collect.FluentIterable.from;
@@ -362,7 +362,7 @@ public class N4JSNewProjectWizardCreationPage extends ExtensibleWizardNewProject
 			return false;
 		}
 
-		if (BREAKING_WHITESPACE.matchesAnyOf(projectName)) {
+		if (breakingWhitespace().matchesAnyOf(projectName)) {
 			setErrorMessage("Project name should not contain any whitespace characters.");
 			return false;
 		}
@@ -398,7 +398,7 @@ public class N4JSNewProjectWizardCreationPage extends ExtensibleWizardNewProject
 			// Implementation ID is optional
 			if (!isNullOrEmpty(implementationId)) {
 				final char leadingChar = implementationId.charAt(0);
-				if (!is('_').or(JAVA_LETTER).matches(leadingChar)) {
+				if (!is('_').or(javaLetter()).matches(leadingChar)) {
 					setErrorMessage("Implementation ID should start either an upper or a lower case character "
 							+ "from the Latin alphabet or with the underscore character.");
 					return false;
@@ -410,7 +410,7 @@ public class N4JSNewProjectWizardCreationPage extends ExtensibleWizardNewProject
 					return false;
 				}
 
-				if (BREAKING_WHITESPACE.matchesAnyOf(implementationId)) {
+				if (breakingWhitespace().matchesAnyOf(implementationId)) {
 					setErrorMessage("Implementation ID should not contain any whitespace characters.");
 					return false;
 				}

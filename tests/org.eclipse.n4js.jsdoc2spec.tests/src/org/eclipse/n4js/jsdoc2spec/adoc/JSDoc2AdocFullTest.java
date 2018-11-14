@@ -15,6 +15,8 @@ import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -32,9 +34,9 @@ import org.eclipse.n4js.jsdoc2spec.SubMonitorMsg;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.XtextRunner;
-import org.eclipse.xtext.util.Files;
 import org.junit.runner.RunWith;
 
+import com.google.common.io.Files;
 import com.google.inject.Inject;
 
 /**
@@ -92,14 +94,16 @@ public class JSDoc2AdocFullTest extends JSDoc2SpecProcessorFullTest {
 					if (expectedFile == null)
 						continue;
 
-					String fullExpectationFileName = adocRoot.toPath().resolve(expectedFile).toString();
-					String expectedADoc = Files.readFileIntoString(fullExpectationFileName);
+					Path fullExpectationPath = adocRoot.toPath().resolve(expectedFile);
+					File fullExpectationFile = fullExpectationPath.toFile();
+					String fullExpectationPathStr = fullExpectationPath.toString();
+					String expectedADoc = Files.toString(fullExpectationFile, Charset.defaultCharset());
 					String actualADoc = specFile.getNewContent();
 
 					if (UPDATE_EXPECTION && !actualADoc.equals(expectedADoc)) {
 						expectedADoc = actualADoc;
-						Files.writeStringIntoFile(fullExpectationFileName, expectedADoc);
-						System.out.println("Updated expectation " + fullExpectationFileName);
+						org.eclipse.xtext.util.Files.writeStringIntoFile(fullExpectationPathStr, expectedADoc);
+						System.out.println("Updated expectation " + fullExpectationPathStr);
 					}
 
 					completeActual += "\n//////// " + expectedFile + " ////////\n";

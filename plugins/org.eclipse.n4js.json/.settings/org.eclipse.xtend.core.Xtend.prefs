@@ -8,6 +8,7 @@ org.eclipse.xtend.core.validation.IssueCodes.invalid_operator_signature=error
 org.eclipse.xtend.core.validation.IssueCodes.java_doc_linking=org.eclipse.jdt.core.compiler.problem.invalidJavadoc\:ignore
 org.eclipse.xtend.core.validation.IssueCodes.orphan_element=ignore
 org.eclipse.xtend.core.validation.IssueCodes.single_case_function=warning
+org.eclipse.xtend.core.validation.IssueCodes.unnecessary_modifier=ignore
 org.eclipse.xtend.core.validation.IssueCodes.unused_private_member=org.eclipse.jdt.core.compiler.problem.unusedPrivateMember\:warning
 org.eclipse.xtend.core.validation.IssueCodes.wrong_file=warning
 org.eclipse.xtext.builder.copyJavaProblems=error

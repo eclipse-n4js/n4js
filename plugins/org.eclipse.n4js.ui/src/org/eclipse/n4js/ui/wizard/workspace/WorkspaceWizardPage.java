@@ -28,20 +28,6 @@ import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.ide.IDE;
-import org.eclipse.ui.keys.IBindingService;
-
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-
 import org.eclipse.n4js.ui.ImageDescriptorCache;
 import org.eclipse.n4js.ui.dialog.ModuleSpecifierSelectionDialog;
 import org.eclipse.n4js.ui.dialog.ProjectSelectionDialog;
@@ -55,6 +41,19 @@ import org.eclipse.n4js.ui.wizard.contentproposal.ModuleSpecifierContentProposal
 import org.eclipse.n4js.ui.wizard.contentproposal.ProjectContentProposalProvider;
 import org.eclipse.n4js.ui.wizard.contentproposal.SimpleImageContentProposalLabelProvider;
 import org.eclipse.n4js.ui.wizard.contentproposal.SourceFolderContentProposalProviderFactory;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.IDE;
+import org.eclipse.ui.keys.IBindingService;
+
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 /**
  * An abstract wizard page for {@link WorkspaceWizardModel}s.
@@ -206,7 +205,7 @@ public abstract class WorkspaceWizardPage<M extends WorkspaceWizardModel> extend
 
 		// Note: No model to UI conversation here as IPath is castable to String (default behavior)
 		databindingContext.bindValue(projectUI, projectModelValue, new StringToPathConverter().updatingValueStrategy(),
-				new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE));
+				new UpdateValueStrategy<>(UpdateValueStrategy.POLICY_UPDATE));
 
 		// Source folder property binding
 		@SuppressWarnings("unchecked")
@@ -220,7 +219,7 @@ public abstract class WorkspaceWizardPage<M extends WorkspaceWizardModel> extend
 		// Note: No model to UI conversation (see above)
 		databindingContext.bindValue(sourceFolderUI, sourceFolderModelValue,
 				new StringToPathConverter().updatingValueStrategy(),
-				new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE));
+				new UpdateValueStrategy<>(UpdateValueStrategy.POLICY_UPDATE));
 
 		@SuppressWarnings("unchecked")
 		IObservableValue<Boolean> projectValidModelValue = BeanProperties
@@ -231,8 +230,8 @@ public abstract class WorkspaceWizardPage<M extends WorkspaceWizardModel> extend
 				.observe(wizardForm.getSourceFolderBrowseButton());
 
 		databindingContext.bindValue(sourceFolderBrowseEnabled, projectValidModelValue,
-				new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),
-				new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE));
+				new UpdateValueStrategy<>(UpdateValueStrategy.POLICY_NEVER),
+				new UpdateValueStrategy<>(UpdateValueStrategy.POLICY_UPDATE));
 
 		// Module specifier property binding
 		@SuppressWarnings("unchecked")
@@ -266,10 +265,10 @@ public abstract class WorkspaceWizardPage<M extends WorkspaceWizardModel> extend
 		// Bind model changes of project or source folder property to the enabled state of the module specifier browse
 		// button.
 		databindingContext.bindValue(moduleSpecifierBrowseEnabled, projectValidValue,
-				new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),
+				new UpdateValueStrategy<>(UpdateValueStrategy.POLICY_NEVER),
 				moduleSpecifierBrowseableConverter.updatingValueStrategy());
 		databindingContext.bindValue(moduleSpecifierBrowseEnabled, sourceFolderValidValue,
-				new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),
+				new UpdateValueStrategy<>(UpdateValueStrategy.POLICY_NEVER),
 				moduleSpecifierBrowseableConverter.updatingValueStrategy());
 	}
 

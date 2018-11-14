@@ -132,7 +132,6 @@ public class StartTestResource extends TestResource {
 		private static final String END_TEMP = "/n4js/testing/sessions/{0}/tests/{1}/end";
 		private final Object data;
 
-		@SuppressWarnings("unchecked")
 		private StartTestResponse(final String sessionId, final String testId) {
 			data = singletonMap("links", newArrayList(
 					builder()
