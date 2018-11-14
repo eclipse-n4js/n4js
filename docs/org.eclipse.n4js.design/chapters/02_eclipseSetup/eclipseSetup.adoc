@@ -1,0 +1,47 @@
+////
+Copyright (c) 2018 NumberFour AG.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+////
+
+= Eclipse Setup
+
+== Contribute
+
+Eclipse developers who want to develop N4JS itself should use the https://www.eclipse.org/downloads/[Oomph Eclipse installer]. The N4JS project is listed under "Eclipse Projects/N4JS"
+This setup installs the correct Eclipse version, creates a new workspace and clones all projects into it (for details see below).
+
+=== Eclipse Installer
+
+The recommended way to install the Eclipse IDE and set up the workspace is to use the Eclipse Installer.
+This installer is to be downloaded from https://wiki.eclipse.org/Eclipse_Installer
+
+Run the installer and apply the following steps:
+
+1. change to "Advance Mode" via the menu (upper-right corner) (no need to move the installer)
+2. select a product, e.g. "Eclipse IDE for Eclipse Committers" with product version "Oxygen"
+3. double-click the entry **Eclipse Projects/N4JS** so that it is shown in the catalog view below
+4. on the next page, configure paths accordingly. You only have to configure the installation and workspace folder.
+5. start installation
+
+The installer will then guide you through the rest of the installation. All plug-ins are downloaded and configured automatically, so is the workspace including downloading the git repository and setting up the workspace.
+
+=== Manual IDE Configuration
+
+For a manual install, clone the code and import all top-level projects from the docs, features, plugins, releng, testhelpers, and tests folders. Activate the targetplatform contained in the `releng/org.eclipse.n4js.targetplatform/` project.
+
+The N4JS IDE is developed with Eclipse Oxygen 4.7 or better since the system is based on Eclipse anyway.
+It is almost impossible to use another IDE to develop Eclipse plugins. The list of required plugins includes:
+
+- Xtext/Xtend 2.10.0
+- Xcore 1.4.0
+- Xsemantics 1.10.0
+- Xpect 0.1
+
+It is important to use the latest version of Xtext and the corresponding service release of Xcore. You will find the latest version numbers and plugins used in the target platform definition at
+https://github.com/eclipse/n4js/blob/master/releng/org.eclipse.n4js.targetplatform/org.eclipse.n4js.targetplatform.target
