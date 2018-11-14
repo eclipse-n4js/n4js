@@ -99,7 +99,6 @@ public interface TypeTypeRef extends BaseTypeRef {
 	 * Overrides {@link TypeRef#getTypeRefAsString()}
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%java.lang.String%&gt; _xifexpression = null;\nboolean _isConstructorRef = this.isConstructorRef();\nif (_isConstructorRef)\n{\n\t_xifexpression = \"constructor\";\n}\nelse\n{\n\t_xifexpression = \"type\";\n}\nfinal &lt;%java.lang.String%&gt; kwd = _xifexpression;\n&lt;%java.lang.String%&gt; _xifexpression_1 = null;\n&lt;%org.eclipse.n4js.ts.typeRefs.TypeArgument%&gt; _typeArg = this.getTypeArg();\nboolean _tripleEquals = (null == _typeArg);\nif (_tripleEquals)\n{\n\t_xifexpression_1 = \"\";\n}\nelse\n{\n\t_xifexpression_1 = this.getTypeArg().getTypeRefAsString();\n}\nfinal &lt;%java.lang.String%&gt; refName = _xifexpression_1;\n&lt;%java.lang.String%&gt; _modifiersAsString = this.getModifiersAsString();\nreturn ((((kwd + \"{\") + refName) + \"}\") + _modifiersAsString);'"
 	 * @generated
 	 */
 	String getTypeRefAsString();

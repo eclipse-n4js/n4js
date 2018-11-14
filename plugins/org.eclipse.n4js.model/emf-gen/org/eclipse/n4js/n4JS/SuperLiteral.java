@@ -31,7 +31,6 @@ public interface SuperLiteral extends PrimaryExpression {
 	 * This is a call to the super constructor of a class, which is only allowed in a constructor of a subclass.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.emf.ecore.EObject%&gt; _eContainer = this.eContainer();\nreturn (_eContainer instanceof &lt;%org.eclipse.n4js.n4JS.ParameterizedCallExpression%&gt;);'"
 	 * @generated
 	 */
 	boolean isSuperConstructorAccess();
@@ -45,7 +44,6 @@ public interface SuperLiteral extends PrimaryExpression {
 	 * This is a call to a super's member, e.g., via "super.foo()".
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return ((this.eContainer() instanceof &lt;%org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression%&gt;) || (this.eContainer() instanceof &lt;%org.eclipse.n4js.n4JS.IndexedAccessExpression%&gt;));'"
 	 * @generated
 	 */
 	boolean isSuperMemberAccess();

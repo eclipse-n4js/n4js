@@ -54,7 +54,6 @@ public interface JSONArray extends JSONValue {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.json.JSON.JSONValue%&gt;, &lt;%java.lang.String%&gt;&gt; _function = new &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.json.JSON.JSONValue%&gt;, &lt;%java.lang.String%&gt;&gt;()\n{\n\tpublic &lt;%java.lang.String%&gt; apply(final &lt;%org.eclipse.n4js.json.JSON.JSONValue%&gt; e)\n\t{\n\t\treturn e.toString();\n\t}\n};\n&lt;%java.lang.String%&gt; _join = &lt;%org.eclipse.xtext.xbase.lib.IterableExtensions%&gt;.join(&lt;%org.eclipse.emf.ecore.xcore.lib.XcoreEListExtensions%&gt;.&lt;&lt;%org.eclipse.n4js.json.JSON.JSONValue%&gt;, &lt;%java.lang.String%&gt;&gt;map(this.getElements(), _function), \",\\n\");\n&lt;%java.lang.String%&gt; _plus = (\"[\\n\" + _join);\nreturn (_plus + \"\\n]\");'"
 	 * @generated
 	 */
 	String toString();

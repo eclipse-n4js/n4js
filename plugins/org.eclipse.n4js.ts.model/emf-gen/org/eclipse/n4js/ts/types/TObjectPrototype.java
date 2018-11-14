@@ -91,7 +91,6 @@ public interface TObjectPrototype extends TClassifier, DeclaredTypeWithAccessMod
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.ts.types.TMethod%&gt;, &lt;%java.lang.Boolean%&gt;&gt; _function = new &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.ts.types.TMethod%&gt;, &lt;%java.lang.Boolean%&gt;&gt;()\n{\n\tpublic &lt;%java.lang.Boolean%&gt; apply(final &lt;%org.eclipse.n4js.ts.types.TMethod%&gt; it)\n\t{\n\t\treturn &lt;%java.lang.Boolean%&gt;.valueOf(it.getName().equals(\"constructor\"));\n\t}\n};\nreturn &lt;%org.eclipse.xtext.xbase.lib.IterableExtensions%&gt;.&lt;&lt;%org.eclipse.n4js.ts.types.TMethod%&gt;&gt;findFirst(&lt;%com.google.common.collect.Iterables%&gt;.&lt;&lt;%org.eclipse.n4js.ts.types.TMethod%&gt;&gt;filter(this.getOwnedMembers(), &lt;%org.eclipse.n4js.ts.types.TMethod%&gt;.class), _function);'"
 	 * @generated
 	 */
 	TMethod getOwnedCtor();
@@ -104,7 +103,6 @@ public interface TObjectPrototype extends TClassifier, DeclaredTypeWithAccessMod
 	 * Returns value of declaredFinal attribute.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.isDeclaredFinal();'"
 	 * @generated
 	 */
 	boolean isFinal();

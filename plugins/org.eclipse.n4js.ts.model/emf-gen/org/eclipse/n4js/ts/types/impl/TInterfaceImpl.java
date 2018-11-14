@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.ts.types.impl;
 
-import java.lang.Iterable;
-
 import java.lang.reflect.InvocationTargetException;
 
 import java.util.Collection;
@@ -288,7 +286,7 @@ public class TInterfaceImpl extends TN4ClassifierImpl implements TInterface {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (external: ");
 		result.append(external);
 		result.append(')');

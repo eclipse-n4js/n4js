@@ -75,7 +75,6 @@ public interface TypeRef extends TypeArgument, Versionable {
 	 * modifier.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return \"\";'"
 	 * @generated
 	 */
 	String getModifiersAsString();
@@ -90,7 +89,6 @@ public interface TypeRef extends TypeArgument, Versionable {
 	 * The method is robust, if declared type is null, false is returned.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%org.eclipse.n4js.ts.types.Type%&gt; dtype = this.getDeclaredType();\nreturn ((dtype != null) &amp;&amp; dtype.isFinal());'"
 	 * @generated
 	 */
 	boolean isFinalByType();
@@ -102,7 +100,6 @@ public interface TypeRef extends TypeArgument, Versionable {
 	 * Tells if this type reference has a declared type which is "array like" as defined by {@link Type#isArrayLike()}.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%org.eclipse.n4js.ts.types.Type%&gt; dtype = this.getDeclaredType();\nreturn ((dtype != null) &amp;&amp; dtype.isArrayLike());'"
 	 * @generated
 	 */
 	boolean isArrayLike();
@@ -114,7 +111,6 @@ public interface TypeRef extends TypeArgument, Versionable {
 	 * Convenience method, flag indicating whether user can add properties to the instance not defined in the type.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return false;'"
 	 * @generated
 	 */
 	boolean isDynamic();
@@ -128,7 +124,6 @@ public interface TypeRef extends TypeArgument, Versionable {
 	 * This returns false for all type references except {@link ExistentialTypeRef}
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return false;'"
 	 * @generated
 	 */
 	boolean isExistential();
@@ -142,7 +137,6 @@ public interface TypeRef extends TypeArgument, Versionable {
 	 * (raw reference), but not vice versa.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return false;'"
 	 * @generated
 	 */
 	boolean isGeneric();
@@ -155,7 +149,6 @@ public interface TypeRef extends TypeArgument, Versionable {
 	 * the referenced type is generic, but the reference is not parameterized (raw reference), but not vice versa.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return false;'"
 	 * @generated
 	 */
 	boolean isParameterized();
@@ -171,7 +164,6 @@ public interface TypeRef extends TypeArgument, Versionable {
 	 * ClassifierTypeRefs) and (3) bugs in the type system and other internal code.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return false;'"
 	 * @generated
 	 */
 	boolean isRaw();
@@ -183,7 +175,6 @@ public interface TypeRef extends TypeArgument, Versionable {
 	 * Convenience method to avoid type casts, does return null except type ref is a wildcard.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return null;'"
 	 * @generated
 	 */
 	ParameterizedTypeRef getDeclaredUpperBound();
@@ -195,7 +186,6 @@ public interface TypeRef extends TypeArgument, Versionable {
 	 * Convenience method to avoid type casts, does return null except type ref is a wildcard.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return null;'"
 	 * @generated
 	 */
 	ParameterizedTypeRef getDeclaredLowerBound();
@@ -207,7 +197,6 @@ public interface TypeRef extends TypeArgument, Versionable {
 	 * Convenience method to avoid type casts, does return unmodifiable empty list for all type references except parameterized type refs.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return &lt;%org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals%&gt;.&lt;&lt;%org.eclipse.n4js.ts.typeRefs.TypeArgument%&gt;&gt;emptyEList();'"
 	 * @generated
 	 */
 	EList<TypeArgument> getTypeArgs();
@@ -222,7 +211,6 @@ public interface TypeRef extends TypeArgument, Versionable {
 	 * This method actually overrides {@link TypeArgument#getTypeRefAsString()}.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return null;'"
 	 * @generated
 	 */
 	String getTypeRefAsString();
@@ -231,7 +219,6 @@ public interface TypeRef extends TypeArgument, Versionable {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getTypeRefAsString();'"
 	 * @generated
 	 */
 	String toString();
@@ -243,7 +230,6 @@ public interface TypeRef extends TypeArgument, Versionable {
 	 *  Convenience method, returns only true for parameterized type refs if the declared type is any
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.n4js.ts.types.Type%&gt; _declaredType = this.getDeclaredType();\nreturn (_declaredType instanceof &lt;%org.eclipse.n4js.ts.types.AnyType%&gt;);'"
 	 * @generated
 	 */
 	boolean isTopType();
@@ -255,7 +241,6 @@ public interface TypeRef extends TypeArgument, Versionable {
 	 *  Convenience method, returns only true for parameterized type refs if the declared type is undefined
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.n4js.ts.types.Type%&gt; _declaredType = this.getDeclaredType();\nreturn (_declaredType instanceof &lt;%org.eclipse.n4js.ts.types.UndefinedType%&gt;);'"
 	 * @generated
 	 */
 	boolean isBottomType();
@@ -268,7 +253,6 @@ public interface TypeRef extends TypeArgument, Versionable {
 	 * Returns the typing strategy, either the use or def site, usually NOMINAL.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return &lt;%org.eclipse.n4js.ts.types.TypingStrategy%&gt;.NOMINAL;'"
 	 * @generated
 	 */
 	TypingStrategy getTypingStrategy();
@@ -282,7 +266,6 @@ public interface TypeRef extends TypeArgument, Versionable {
 	 * Overridden in {@link ParameterizedTypeRefStructural}
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return &lt;%org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals%&gt;.&lt;&lt;%org.eclipse.n4js.ts.types.TStructMember%&gt;&gt;emptyEList();'"
 	 * @generated
 	 */
 	EList<TStructMember> getStructuralMembers();
@@ -295,7 +278,6 @@ public interface TypeRef extends TypeArgument, Versionable {
 	 * returns true if either use or def site structural typing is true.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return false;'"
 	 * @generated
 	 */
 	boolean isUseSiteStructuralTyping();
@@ -308,7 +290,6 @@ public interface TypeRef extends TypeArgument, Versionable {
 	 * returns true if either use or def site structural typing is true.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return false;'"
 	 * @generated
 	 */
 	boolean isDefSiteStructuralTyping();
@@ -321,7 +302,6 @@ public interface TypeRef extends TypeArgument, Versionable {
 	 * Used to activate the special semantics of optional fields in certain cases.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return &lt;%org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy%&gt;.OFF;'"
 	 * @generated
 	 */
 	OptionalFieldStrategy getASTNodeOptionalFieldStrategy();
@@ -333,7 +313,6 @@ public interface TypeRef extends TypeArgument, Versionable {
 	 * Override Versioned#getVersion()
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='int _xifexpression = (int) 0;\n&lt;%org.eclipse.n4js.ts.types.Type%&gt; _declaredType = this.getDeclaredType();\nboolean _tripleNotEquals = (_declaredType != null);\nif (_tripleNotEquals)\n{\n\t_xifexpression = this.getDeclaredType().getVersion();\n}\nelse\n{\n\t_xifexpression = 0;\n}\nreturn _xifexpression;'"
 	 * @generated
 	 */
 	int getVersion();

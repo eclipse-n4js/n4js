@@ -31,7 +31,6 @@ public interface N4ClassDeclaration extends N4ClassDefinition, N4ClassifierDecla
 	 * Returns true if the class is declared as abstract.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getDeclaredModifiers().contains(&lt;%org.eclipse.n4js.n4JS.N4Modifier%&gt;.ABSTRACT);'"
 	 * @generated
 	 */
 	boolean isAbstract();
@@ -43,7 +42,6 @@ public interface N4ClassDeclaration extends N4ClassDefinition, N4ClassifierDecla
 	 * Override VersionedElement#getVersion() to return the declared version.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getDeclaredVersionOrZero();'"
 	 * @generated
 	 */
 	int getVersion();

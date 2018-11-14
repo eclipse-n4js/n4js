@@ -160,7 +160,6 @@ public interface VersionNumber extends SemverToStringable {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.emf.common.util.EList%&gt;&lt;&lt;%java.lang.String%&gt;&gt; _xifexpression = null;\nif (((this.getQualifier() != null) &amp;&amp; (this.getQualifier().getPreRelease() != null)))\n{\n\t_xifexpression = this.getQualifier().getPreRelease().getParts();\n}\nelse\n{\n\t_xifexpression = null;\n}\nreturn _xifexpression;'"
 	 * @generated
 	 */
 	EList<String> getPreReleaseTag();
@@ -168,7 +167,6 @@ public interface VersionNumber extends SemverToStringable {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @model unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return ((this.getPreReleaseTag() != null) &amp;&amp; (!this.getPreReleaseTag().isEmpty()));'"
 	 * @generated
 	 */
 	boolean hasPreReleaseTag();
@@ -176,7 +174,6 @@ public interface VersionNumber extends SemverToStringable {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @model unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='int length = 0;\n&lt;%org.eclipse.n4js.semver.Semver.VersionPart%&gt; _major = this.getMajor();\nboolean _tripleNotEquals = (_major != null);\nif (_tripleNotEquals)\n{\n\tlength++;\n}\n&lt;%org.eclipse.n4js.semver.Semver.VersionPart%&gt; _minor = this.getMinor();\nboolean _tripleNotEquals_1 = (_minor != null);\nif (_tripleNotEquals_1)\n{\n\tlength++;\n}\n&lt;%org.eclipse.n4js.semver.Semver.VersionPart%&gt; _patch = this.getPatch();\nboolean _tripleNotEquals_2 = (_patch != null);\nif (_tripleNotEquals_2)\n{\n\tlength++;\n\tint _length = length;\n\tint _length_1 = ((&lt;%java.lang.Object%&gt;[])org.eclipse.xtext.xbase.lib.Conversions.unwrapArray(this.getExtended(), &lt;%java.lang.Object%&gt;.class)).length;\n\tlength = (_length + _length_1);\n}\nreturn length;'"
 	 * @generated
 	 */
 	int length();
@@ -184,7 +181,6 @@ public interface VersionNumber extends SemverToStringable {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @model unique="false" idxUnique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='switch (idx)\n{\n\tcase 0:\n\t\treturn this.getMajor();\n\tcase 1:\n\t\treturn this.getMinor();\n\tcase 2:\n\t\treturn this.getPatch();\n\tdefault:\n\t\treturn this.getExtended().get((idx - 3));\n}'"
 	 * @generated
 	 */
 	VersionPart getPart(int idx);
@@ -192,7 +188,6 @@ public interface VersionNumber extends SemverToStringable {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @model unique="false" objUnique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='if ((!(obj instanceof &lt;%org.eclipse.n4js.semver.Semver.VersionNumber%&gt;)))\n{\n\treturn false;\n}\nfinal &lt;%org.eclipse.n4js.semver.Semver.VersionNumber%&gt; vn = ((&lt;%org.eclipse.n4js.semver.Semver.VersionNumber%&gt;) obj);\nboolean equals = true;\nint _length = this.length();\nint _length_1 = vn.length();\nboolean _equals = (_length == _length_1);\nequals = _equals;\nfor (int i = 0; (i &lt; this.length()); i++)\n{\n\tequals = (equals &amp;&amp; this.getPart(i).equals(vn.getPart(i)));\n}\nequals = (equals &amp;&amp; (&lt;%java.lang.Boolean%&gt;.valueOf((this.getQualifier() == null)) == &lt;%java.lang.Boolean%&gt;.valueOf((vn.getQualifier() == null))));\nequals = (equals &amp;&amp; ((this.getQualifier() == null) || this.getQualifier().equals(vn.getQualifier())));\nreturn equals;'"
 	 * @generated
 	 */
 	@Override

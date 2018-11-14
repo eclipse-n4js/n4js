@@ -57,7 +57,6 @@ public interface ComposedTypeRef extends StaticBaseTypeRef {
 	 * Union type cannot be marked as dynamic
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return false;'"
 	 * @generated
 	 */
 	boolean isDynamic();
@@ -69,7 +68,6 @@ public interface ComposedTypeRef extends StaticBaseTypeRef {
 	 * Overrides {@link TypeRef#getTypeRefAsString()}, only returns list of composed members, to be called by subclass.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.ts.typeRefs.TypeRef%&gt;, &lt;%java.lang.String%&gt;&gt; _function = new &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.ts.typeRefs.TypeRef%&gt;, &lt;%java.lang.String%&gt;&gt;()\n{\n\tpublic &lt;%java.lang.String%&gt; apply(final &lt;%org.eclipse.n4js.ts.typeRefs.TypeRef%&gt; it)\n\t{\n\t\treturn it.getTypeRefAsString();\n\t}\n};\n&lt;%java.lang.String%&gt; _join = &lt;%org.eclipse.xtext.xbase.lib.IterableExtensions%&gt;.join(&lt;%org.eclipse.emf.ecore.xcore.lib.XcoreEListExtensions%&gt;.&lt;&lt;%org.eclipse.n4js.ts.typeRefs.TypeRef%&gt;, &lt;%java.lang.String%&gt;&gt;map(this.getTypeRefs(), _function), \",\");\n&lt;%java.lang.String%&gt; _plus = (\"{\" + _join);\n&lt;%java.lang.String%&gt; _plus_1 = (_plus + \"}\");\n&lt;%java.lang.String%&gt; _modifiersAsString = this.getModifiersAsString();\nreturn (_plus_1 + _modifiersAsString);'"
 	 * @generated
 	 */
 	String getTypeRefAsString();

@@ -70,7 +70,6 @@ public interface IdentifiableElement extends TypableElement {
 	 * null if it is not contained in a module.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return &lt;%org.eclipse.xtext.EcoreUtil2%&gt;.&lt;&lt;%org.eclipse.n4js.ts.types.TModule%&gt;&gt;getContainerOfType(this, &lt;%org.eclipse.n4js.ts.types.TModule%&gt;.class);'"
 	 * @generated
 	 */
 	TModule getContainingModule();

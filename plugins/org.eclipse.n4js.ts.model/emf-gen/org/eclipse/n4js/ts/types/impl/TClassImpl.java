@@ -12,8 +12,6 @@ package org.eclipse.n4js.ts.types.impl;
 
 import com.google.common.collect.Iterables;
 
-import java.lang.Iterable;
-
 import java.lang.reflect.InvocationTargetException;
 
 import java.util.Collection;
@@ -744,7 +742,7 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (external: ");
 		result.append(external);
 		result.append(", declaredAbstract: ");

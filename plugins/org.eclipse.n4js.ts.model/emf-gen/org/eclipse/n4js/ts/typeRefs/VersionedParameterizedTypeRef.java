@@ -26,7 +26,6 @@ public interface VersionedParameterizedTypeRef extends ParameterizedTypeRef, Ver
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='int _xifexpression = (int) 0;\nboolean _hasRequestedVersion = this.hasRequestedVersion();\nif (_hasRequestedVersion)\n{\n\t_xifexpression = this.getRequestedVersion().intValue();\n}\nelse\n{\n\t_xifexpression = super.getVersion();\n}\nreturn _xifexpression;'"
 	 * @generated
 	 */
 	int getVersion();

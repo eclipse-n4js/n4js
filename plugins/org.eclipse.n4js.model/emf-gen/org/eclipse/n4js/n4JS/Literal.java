@@ -30,7 +30,6 @@ public interface Literal extends PrimaryExpression {
 	 * Convenience method, returns the actual value of the literal as string. To be overridden by subclasses.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return null;'"
 	 * @generated
 	 */
 	String getValueAsString();

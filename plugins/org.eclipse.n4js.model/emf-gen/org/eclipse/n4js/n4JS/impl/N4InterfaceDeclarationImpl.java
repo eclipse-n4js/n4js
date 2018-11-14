@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.n4JS.impl;
 
-import java.lang.Iterable;
-
 import java.lang.reflect.InvocationTargetException;
 
 import java.math.BigDecimal;
@@ -401,7 +399,7 @@ public class N4InterfaceDeclarationImpl extends N4ClassifierDeclarationImpl impl
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (declaredVersion: ");
 		result.append(declaredVersion);
 		result.append(')');

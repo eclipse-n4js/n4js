@@ -560,7 +560,7 @@ public class TFieldImpl extends TMemberWithAccessModifierImpl implements TField 
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (const: ");
 		result.append(const_);
 		result.append(", compileTimeValue: ");

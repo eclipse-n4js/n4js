@@ -117,7 +117,6 @@ public interface TemplateSegment extends Literal {
 	 * the ECMA spec 11.8.6.1 Static Semantics: TV’s and TRV’s
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getValue();'"
 	 * @generated
 	 */
 	String getValueAsString();

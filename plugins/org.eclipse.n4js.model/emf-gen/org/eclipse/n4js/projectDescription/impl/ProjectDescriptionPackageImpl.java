@@ -155,7 +155,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 
 	/**
 	 * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
-	 * 
+	 *
 	 * <p>This method is used to initialize {@link ProjectDescriptionPackage#eINSTANCE} when that field is accessed.
 	 * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
 	 * <!-- begin-user-doc -->
@@ -169,7 +169,8 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 		if (isInited) return (ProjectDescriptionPackage)EPackage.Registry.INSTANCE.getEPackage(ProjectDescriptionPackage.eNS_URI);
 
 		// Obtain or create and register package
-		ProjectDescriptionPackageImpl theProjectDescriptionPackage = (ProjectDescriptionPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof ProjectDescriptionPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new ProjectDescriptionPackageImpl());
+		Object registeredProjectDescriptionPackage = EPackage.Registry.INSTANCE.get(eNS_URI);
+		ProjectDescriptionPackageImpl theProjectDescriptionPackage = registeredProjectDescriptionPackage instanceof ProjectDescriptionPackageImpl ? (ProjectDescriptionPackageImpl)registeredProjectDescriptionPackage : new ProjectDescriptionPackageImpl();
 
 		isInited = true;
 
@@ -186,7 +187,6 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 		// Mark meta-data to indicate it can't be changed
 		theProjectDescriptionPackage.freeze();
 
-  
 		// Update the registry and return the package
 		EPackage.Registry.INSTANCE.put(ProjectDescriptionPackage.eNS_URI, theProjectDescriptionPackage);
 		return theProjectDescriptionPackage;

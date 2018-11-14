@@ -42,7 +42,6 @@ public interface UnknownTypeRef extends TypeRef {
 	 * Overrides {@link TypeRef#getTypeRefAsString()}
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return \"[unknown]\";'"
 	 * @generated
 	 */
 	String getTypeRefAsString();

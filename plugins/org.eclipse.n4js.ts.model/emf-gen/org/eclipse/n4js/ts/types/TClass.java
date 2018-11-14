@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.ts.types;
 
-import java.lang.Iterable;
-
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
@@ -269,7 +267,6 @@ public interface TClass extends TN4Classifier {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.isDeclaredAbstract();'"
 	 * @generated
 	 */
 	boolean isAbstract();
@@ -283,7 +280,6 @@ public interface TClass extends TN4Classifier {
 	 * not possible, not available. Ignores implicit super types!
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef%&gt; _superClassRef = this.getSuperClassRef();\n&lt;%org.eclipse.n4js.ts.types.Type%&gt; _declaredType = null;\nif (_superClassRef!=null)\n{\n\t_declaredType=_superClassRef.getDeclaredType();\n}\nfinal &lt;%org.eclipse.n4js.ts.types.Type%&gt; superType = _declaredType;\n&lt;%org.eclipse.n4js.ts.types.TClass%&gt; _xifexpression = null;\nif ((superType instanceof &lt;%org.eclipse.n4js.ts.types.TClass%&gt;))\n{\n\t_xifexpression = ((&lt;%org.eclipse.n4js.ts.types.TClass%&gt;)superType);\n}\nelse\n{\n\t_xifexpression = null;\n}\nreturn _xifexpression;'"
 	 * @generated
 	 */
 	TClass getSuperClass();
@@ -296,7 +292,6 @@ public interface TClass extends TN4Classifier {
 	 * Convenience method, returns all super classes, consumed roles and implemented or extend interfaces
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" dataType="org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefIterable" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef%&gt; _superClassRef = this.getSuperClassRef();\nboolean _tripleNotEquals = (_superClassRef != null);\nif (_tripleNotEquals)\n{\n\t&lt;%java.util.Set%&gt;&lt;&lt;%org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef%&gt;&gt; _singleton = &lt;%java.util.Collections%&gt;.&lt;&lt;%org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef%&gt;&gt;singleton(this.getSuperClassRef());\n\t&lt;%org.eclipse.emf.common.util.EList%&gt;&lt;&lt;%org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef%&gt;&gt; _implementedInterfaceRefs = this.getImplementedInterfaceRefs();\n\treturn &lt;%com.google.common.collect.Iterables%&gt;.&lt;&lt;%org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef%&gt;&gt;concat(_singleton, _implementedInterfaceRefs);\n}\nreturn this.getImplementedInterfaceRefs();'"
 	 * @generated
 	 */
 	Iterable<ParameterizedTypeRef> getSuperClassifierRefs();
@@ -309,7 +304,6 @@ public interface TClass extends TN4Classifier {
 	 * Convenience method, returns all implemented (or extended) interfaces
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" dataType="org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefIterable" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getImplementedInterfaceRefs();'"
 	 * @generated
 	 */
 	Iterable<ParameterizedTypeRef> getImplementedOrExtendedInterfaceRefs();
@@ -322,7 +316,6 @@ public interface TClass extends TN4Classifier {
 	 * Returns true if the class actually is a polyfill or a static-polyfill. (c.f. {@link TClass#isStaticPolyfill()})
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.isDeclaredPolyfill();'"
 	 * @generated
 	 */
 	boolean isPolyfill();
@@ -335,7 +328,6 @@ public interface TClass extends TN4Classifier {
 	 * Returns true if the class actually is a static polyfill (c.f. {@link TClass#isPolyfill()})
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.isDeclaredStaticPolyfill();'"
 	 * @generated
 	 */
 	boolean isStaticPolyfill();
@@ -348,7 +340,6 @@ public interface TClass extends TN4Classifier {
 	 * Returns value of declaredFinal attribute.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.isDeclaredFinal();'"
 	 * @generated
 	 */
 	boolean isFinal();

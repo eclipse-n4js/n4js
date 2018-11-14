@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.ts.typeRefs.impl;
 
-import java.lang.Iterable;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;

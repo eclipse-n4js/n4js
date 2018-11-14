@@ -1015,7 +1015,7 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (qualifiedName: ");
 		result.append(qualifiedName);
 		result.append(", projectName: ");

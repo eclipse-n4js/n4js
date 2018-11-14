@@ -77,7 +77,6 @@ public interface SwitchStatement extends Statement, VariableEnvironmentElement {
 	 * * See {@link VariableEnvironmentElement#appliesOnlyToBlockScopedElements()}.
 	 * <!-- end-model-doc -->
 	 * @model unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return true;'"
 	 * @generated
 	 */
 	boolean appliesOnlyToBlockScopedElements();
@@ -89,7 +88,6 @@ public interface SwitchStatement extends Statement, VariableEnvironmentElement {
 	 * Convenience method returns default clause if switch statement defines such as clause or null.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.n4JS.AbstractCaseClause%&gt;, &lt;%java.lang.Boolean%&gt;&gt; _function = new &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.n4JS.AbstractCaseClause%&gt;, &lt;%java.lang.Boolean%&gt;&gt;()\n{\n\tpublic &lt;%java.lang.Boolean%&gt; apply(final &lt;%org.eclipse.n4js.n4JS.AbstractCaseClause%&gt; it)\n\t{\n\t\treturn &lt;%java.lang.Boolean%&gt;.valueOf((it instanceof &lt;%org.eclipse.n4js.n4JS.DefaultClause%&gt;));\n\t}\n};\n&lt;%org.eclipse.n4js.n4JS.AbstractCaseClause%&gt; _findFirst = &lt;%org.eclipse.xtext.xbase.lib.IterableExtensions%&gt;.&lt;&lt;%org.eclipse.n4js.n4JS.AbstractCaseClause%&gt;&gt;findFirst(this.getCases(), _function);\nreturn ((&lt;%org.eclipse.n4js.n4JS.DefaultClause%&gt;) _findFirst);'"
 	 * @generated
 	 */
 	DefaultClause getDefaultClause();
@@ -101,7 +99,6 @@ public interface SwitchStatement extends Statement, VariableEnvironmentElement {
 	 * Convenience method filters all CaseClauses from clauses.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return &lt;%org.eclipse.emf.common.util.ECollections%&gt;.&lt;&lt;%org.eclipse.n4js.n4JS.CaseClause%&gt;&gt;toEList(&lt;%com.google.common.collect.Iterables%&gt;.&lt;&lt;%org.eclipse.n4js.n4JS.CaseClause%&gt;&gt;filter(this.getCases(), &lt;%org.eclipse.n4js.n4JS.CaseClause%&gt;.class));'"
 	 * @generated
 	 */
 	EList<CaseClause> getCaseClauses();

@@ -35,7 +35,6 @@ public interface N4TypeDefinition extends AnnotableElement, TypeDefiningElement 
 	 * Returns true if the classifier is only a declaration of an external implementation.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return false;'"
 	 * @generated
 	 */
 	boolean isExternal();

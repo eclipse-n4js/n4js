@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.ts.types.impl;
 
-import java.lang.Iterable;
-
 import java.lang.reflect.InvocationTargetException;
 
 import java.util.List;
@@ -459,7 +457,7 @@ public abstract class TClassifierImpl extends ContainerTypeImpl<TMember> impleme
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (declaredVersion: ");
 		result.append(declaredVersion);
 		result.append(", declaredCovariantConstructor: ");

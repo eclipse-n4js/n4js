@@ -308,7 +308,7 @@ public class BinaryBitwiseExpressionImpl extends ExpressionImpl implements Binar
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (op: ");
 		result.append(op);
 		result.append(')');

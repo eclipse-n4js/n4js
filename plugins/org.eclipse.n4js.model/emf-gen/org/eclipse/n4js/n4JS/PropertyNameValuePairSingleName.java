@@ -63,7 +63,6 @@ public interface PropertyNameValuePairSingleName extends PropertyNameValuePair {
 	 * the name has to be set explicitly!
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%java.lang.String%&gt; _elvis = null;\n&lt;%java.lang.String%&gt; _name = super.getName();\nif (_name != null)\n{\n\t_elvis = _name;\n} else\n{\n\t&lt;%org.eclipse.n4js.n4JS.IdentifierRef%&gt; _identifierRef = this.getIdentifierRef();\n\t&lt;%java.lang.String%&gt; _idAsText = null;\n\tif (_identifierRef!=null)\n\t{\n\t\t_idAsText=_identifierRef.getIdAsText();\n\t}\n\t_elvis = _idAsText;\n}\nreturn _elvis;'"
 	 * @generated
 	 */
 	String getName();

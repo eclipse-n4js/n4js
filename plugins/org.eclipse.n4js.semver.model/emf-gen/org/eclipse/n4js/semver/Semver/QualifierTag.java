@@ -49,7 +49,6 @@ public interface QualifierTag extends SemverToStringable {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model unique="false" objUnique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='if ((!(obj instanceof &lt;%org.eclipse.n4js.semver.Semver.QualifierTag%&gt;)))\n{\n\treturn false;\n}\nfinal &lt;%org.eclipse.n4js.semver.Semver.QualifierTag%&gt; qt = ((&lt;%org.eclipse.n4js.semver.Semver.QualifierTag%&gt;) obj);\nboolean equals = this.getParts().equals(qt.getParts());\nreturn equals;'"
 	 * @generated
 	 */
 	boolean equals(Object obj);

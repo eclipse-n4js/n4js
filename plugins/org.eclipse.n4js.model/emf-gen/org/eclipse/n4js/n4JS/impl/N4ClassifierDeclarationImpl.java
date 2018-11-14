@@ -12,8 +12,6 @@ package org.eclipse.n4js.n4JS.impl;
 
 import com.google.common.collect.Iterables;
 
-import java.lang.Iterable;
-
 import java.lang.reflect.InvocationTargetException;
 
 import java.util.Collection;
@@ -526,7 +524,7 @@ public abstract class N4ClassifierDeclarationImpl extends N4TypeDeclarationImpl 
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (typingStrategy: ");
 		result.append(typingStrategy);
 		result.append(')');

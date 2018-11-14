@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.n4JS;
 
-import java.lang.Iterable;
-
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
@@ -64,7 +62,6 @@ public interface N4ClassifierDefinition extends N4TypeDefinition {
 	 * Returns a view on ownedMembersRaw filtering out non-methods.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.n4JS.N4MemberDeclaration%&gt;, &lt;%java.lang.Boolean%&gt;&gt; _function = new &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.n4JS.N4MemberDeclaration%&gt;, &lt;%java.lang.Boolean%&gt;&gt;()\n{\n\tpublic &lt;%java.lang.Boolean%&gt; apply(final &lt;%org.eclipse.n4js.n4JS.N4MemberDeclaration%&gt; it)\n\t{\n\t\tboolean _isCallableConstructor = it.isCallableConstructor();\n\t\treturn &lt;%java.lang.Boolean%&gt;.valueOf((!_isCallableConstructor));\n\t}\n};\nfinal &lt;%java.lang.Iterable%&gt;&lt;&lt;%org.eclipse.n4js.n4JS.N4MemberDeclaration%&gt;&gt; methods = &lt;%org.eclipse.xtext.xbase.lib.IterableExtensions%&gt;.&lt;&lt;%org.eclipse.n4js.n4JS.N4MemberDeclaration%&gt;&gt;filter(&lt;%com.google.common.collect.Iterables%&gt;.&lt;&lt;%org.eclipse.n4js.n4JS.N4MemberDeclaration%&gt;&gt;filter(this.getOwnedMembersRaw(), &lt;%org.eclipse.n4js.n4JS.N4MemberDeclaration%&gt;.class), _function);\n&lt;%java.util.List%&gt;&lt;&lt;%org.eclipse.n4js.n4JS.N4MemberDeclaration%&gt;&gt; _list = &lt;%org.eclipse.xtext.xbase.lib.IterableExtensions%&gt;.&lt;&lt;%org.eclipse.n4js.n4JS.N4MemberDeclaration%&gt;&gt;toList(methods);\nreturn new &lt;%org.eclipse.emf.common.util.BasicEList%&gt;&lt;&lt;%org.eclipse.n4js.n4JS.N4MemberDeclaration%&gt;&gt;(_list);'"
 	 * @generated
 	 */
 	EList<N4MemberDeclaration> getOwnedMembers();
@@ -77,7 +74,6 @@ public interface N4ClassifierDefinition extends N4TypeDefinition {
 	 * Returns explicitly defined constructor of receiving class or <code>null</code> if none was defined.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.n4JS.N4MethodDeclaration%&gt;, &lt;%java.lang.Boolean%&gt;&gt; _function = new &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.n4JS.N4MethodDeclaration%&gt;, &lt;%java.lang.Boolean%&gt;&gt;()\n{\n\tpublic &lt;%java.lang.Boolean%&gt; apply(final &lt;%org.eclipse.n4js.n4JS.N4MethodDeclaration%&gt; it)\n\t{\n\t\treturn &lt;%java.lang.Boolean%&gt;.valueOf(it.isConstructor());\n\t}\n};\nreturn &lt;%org.eclipse.xtext.xbase.lib.IterableExtensions%&gt;.&lt;&lt;%org.eclipse.n4js.n4JS.N4MethodDeclaration%&gt;&gt;findFirst(&lt;%com.google.common.collect.Iterables%&gt;.&lt;&lt;%org.eclipse.n4js.n4JS.N4MethodDeclaration%&gt;&gt;filter(this.getOwnedMembersRaw(), &lt;%org.eclipse.n4js.n4JS.N4MethodDeclaration%&gt;.class), _function);'"
 	 * @generated
 	 */
 	N4MethodDeclaration getOwnedCtor();
@@ -91,7 +87,6 @@ public interface N4ClassifierDefinition extends N4TypeDefinition {
 	 * This is *not* the actual constructor but instead the function used for direct invocations in call expressions.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.n4JS.N4MethodDeclaration%&gt;, &lt;%java.lang.Boolean%&gt;&gt; _function = new &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.n4JS.N4MethodDeclaration%&gt;, &lt;%java.lang.Boolean%&gt;&gt;()\n{\n\tpublic &lt;%java.lang.Boolean%&gt; apply(final &lt;%org.eclipse.n4js.n4JS.N4MethodDeclaration%&gt; it)\n\t{\n\t\treturn &lt;%java.lang.Boolean%&gt;.valueOf(it.isCallableConstructor());\n\t}\n};\nreturn &lt;%org.eclipse.xtext.xbase.lib.IterableExtensions%&gt;.&lt;&lt;%org.eclipse.n4js.n4JS.N4MethodDeclaration%&gt;&gt;findFirst(&lt;%com.google.common.collect.Iterables%&gt;.&lt;&lt;%org.eclipse.n4js.n4JS.N4MethodDeclaration%&gt;&gt;filter(this.getOwnedMembersRaw(), &lt;%org.eclipse.n4js.n4JS.N4MethodDeclaration%&gt;.class), _function);'"
 	 * @generated
 	 */
 	N4MethodDeclaration getOwnedCallableCtor();
@@ -104,7 +99,6 @@ public interface N4ClassifierDefinition extends N4TypeDefinition {
 	 * Returns a view on ownedMembersRaw filtering out non-methods.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.n4JS.N4MethodDeclaration%&gt;, &lt;%java.lang.Boolean%&gt;&gt; _function = new &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.n4JS.N4MethodDeclaration%&gt;, &lt;%java.lang.Boolean%&gt;&gt;()\n{\n\tpublic &lt;%java.lang.Boolean%&gt; apply(final &lt;%org.eclipse.n4js.n4JS.N4MethodDeclaration%&gt; it)\n\t{\n\t\treturn &lt;%java.lang.Boolean%&gt;.valueOf(((!it.isConstructor()) &amp;&amp; (!it.isCallableConstructor())));\n\t}\n};\nfinal &lt;%java.lang.Iterable%&gt;&lt;&lt;%org.eclipse.n4js.n4JS.N4MethodDeclaration%&gt;&gt; methods = &lt;%org.eclipse.xtext.xbase.lib.IterableExtensions%&gt;.&lt;&lt;%org.eclipse.n4js.n4JS.N4MethodDeclaration%&gt;&gt;filter(&lt;%com.google.common.collect.Iterables%&gt;.&lt;&lt;%org.eclipse.n4js.n4JS.N4MethodDeclaration%&gt;&gt;filter(this.getOwnedMembersRaw(), &lt;%org.eclipse.n4js.n4JS.N4MethodDeclaration%&gt;.class), _function);\n&lt;%java.util.List%&gt;&lt;&lt;%org.eclipse.n4js.n4JS.N4MethodDeclaration%&gt;&gt; _list = &lt;%org.eclipse.xtext.xbase.lib.IterableExtensions%&gt;.&lt;&lt;%org.eclipse.n4js.n4JS.N4MethodDeclaration%&gt;&gt;toList(methods);\nreturn new &lt;%org.eclipse.emf.common.util.BasicEList%&gt;&lt;&lt;%org.eclipse.n4js.n4JS.N4MethodDeclaration%&gt;&gt;(_list);'"
 	 * @generated
 	 */
 	EList<N4MethodDeclaration> getOwnedMethods();
@@ -117,7 +111,6 @@ public interface N4ClassifierDefinition extends N4TypeDefinition {
 	 * Returns a view on ownedMembersRaw filtering out non-fields.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%java.lang.Iterable%&gt;&lt;&lt;%org.eclipse.n4js.n4JS.N4FieldDeclaration%&gt;&gt; fields = &lt;%com.google.common.collect.Iterables%&gt;.&lt;&lt;%org.eclipse.n4js.n4JS.N4FieldDeclaration%&gt;&gt;filter(this.getOwnedMembersRaw(), &lt;%org.eclipse.n4js.n4JS.N4FieldDeclaration%&gt;.class);\n&lt;%java.util.List%&gt;&lt;&lt;%org.eclipse.n4js.n4JS.N4FieldDeclaration%&gt;&gt; _list = &lt;%org.eclipse.xtext.xbase.lib.IterableExtensions%&gt;.&lt;&lt;%org.eclipse.n4js.n4JS.N4FieldDeclaration%&gt;&gt;toList(fields);\nreturn new &lt;%org.eclipse.emf.common.util.BasicEList%&gt;&lt;&lt;%org.eclipse.n4js.n4JS.N4FieldDeclaration%&gt;&gt;(_list);'"
 	 * @generated
 	 */
 	EList<N4FieldDeclaration> getOwnedFields();
@@ -130,7 +123,6 @@ public interface N4ClassifierDefinition extends N4TypeDefinition {
 	 * Returns a view on ownedMembersRaw filtering out non-getters.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%java.lang.Iterable%&gt;&lt;&lt;%org.eclipse.n4js.n4JS.N4GetterDeclaration%&gt;&gt; getters = &lt;%com.google.common.collect.Iterables%&gt;.&lt;&lt;%org.eclipse.n4js.n4JS.N4GetterDeclaration%&gt;&gt;filter(this.getOwnedMembersRaw(), &lt;%org.eclipse.n4js.n4JS.N4GetterDeclaration%&gt;.class);\n&lt;%java.util.List%&gt;&lt;&lt;%org.eclipse.n4js.n4JS.N4GetterDeclaration%&gt;&gt; _list = &lt;%org.eclipse.xtext.xbase.lib.IterableExtensions%&gt;.&lt;&lt;%org.eclipse.n4js.n4JS.N4GetterDeclaration%&gt;&gt;toList(getters);\nreturn new &lt;%org.eclipse.emf.common.util.BasicEList%&gt;&lt;&lt;%org.eclipse.n4js.n4JS.N4GetterDeclaration%&gt;&gt;(_list);'"
 	 * @generated
 	 */
 	EList<N4GetterDeclaration> getOwnedGetters();
@@ -143,7 +135,6 @@ public interface N4ClassifierDefinition extends N4TypeDefinition {
 	 * Returns a view on ownedMembersRaw filtering out non-setters.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%java.lang.Iterable%&gt;&lt;&lt;%org.eclipse.n4js.n4JS.N4SetterDeclaration%&gt;&gt; setters = &lt;%com.google.common.collect.Iterables%&gt;.&lt;&lt;%org.eclipse.n4js.n4JS.N4SetterDeclaration%&gt;&gt;filter(this.getOwnedMembersRaw(), &lt;%org.eclipse.n4js.n4JS.N4SetterDeclaration%&gt;.class);\n&lt;%java.util.List%&gt;&lt;&lt;%org.eclipse.n4js.n4JS.N4SetterDeclaration%&gt;&gt; _list = &lt;%org.eclipse.xtext.xbase.lib.IterableExtensions%&gt;.&lt;&lt;%org.eclipse.n4js.n4JS.N4SetterDeclaration%&gt;&gt;toList(setters);\nreturn new &lt;%org.eclipse.emf.common.util.BasicEList%&gt;&lt;&lt;%org.eclipse.n4js.n4JS.N4SetterDeclaration%&gt;&gt;(_list);'"
 	 * @generated
 	 */
 	EList<N4SetterDeclaration> getOwnedSetters();
@@ -156,7 +147,6 @@ public interface N4ClassifierDefinition extends N4TypeDefinition {
 	 * Derived, returns extended class (if any) and implemented or extended interfaces.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" dataType="org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefIterable" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return &lt;%java.util.Collections%&gt;.&lt;&lt;%org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef%&gt;&gt;emptyList();'"
 	 * @generated
 	 */
 	Iterable<ParameterizedTypeRef> getSuperClassifierRefs();
@@ -169,7 +159,6 @@ public interface N4ClassifierDefinition extends N4TypeDefinition {
 	 * Derived, returns implemented or extended interfaces.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" dataType="org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefIterable" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return &lt;%java.util.Collections%&gt;.&lt;&lt;%org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef%&gt;&gt;emptyList();'"
 	 * @generated
 	 */
 	Iterable<ParameterizedTypeRef> getImplementedOrExtendedInterfaceRefs();

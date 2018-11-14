@@ -806,7 +806,7 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (declaredFinal: ");
 		result.append(declaredFinal);
 		result.append(", declaredStatic: ");

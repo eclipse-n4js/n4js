@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.ts.types;
 
-import java.lang.Iterable;
-
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 
 /**
@@ -65,7 +63,6 @@ public interface TClassifier extends ContainerType<TMember>, SyntaxRelatedTEleme
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return false;'"
 	 * @generated
 	 */
 	boolean isAbstract();
@@ -78,7 +75,6 @@ public interface TClassifier extends ContainerType<TMember>, SyntaxRelatedTEleme
 	 * Convenience method, returns all super classes and implemented or extended interfaces as classifiers.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" dataType="org.eclipse.n4js.ts.types.IterableOfTClassifier" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%java.util.List%&gt;&lt;&lt;%org.eclipse.n4js.ts.types.TClassifier%&gt;&gt; result = &lt;%org.eclipse.xtext.xbase.lib.CollectionLiterals%&gt;.&lt;&lt;%org.eclipse.n4js.ts.types.TClassifier%&gt;&gt;newArrayList();\nfinal &lt;%java.lang.Object%&gt; _superClassifierRefs = this.getSuperClassifierRefs();\nfor (final &lt;%java.lang.Object%&gt; superClassifierRef : ((&lt;%java.lang.Iterable%&gt;&lt;?&gt;) _superClassifierRefs))\n{\n\tif ((superClassifierRef != null))\n\t{\n\t\tfinal &lt;%org.eclipse.n4js.ts.types.Type%&gt; declType = ((&lt;%org.eclipse.n4js.ts.typeRefs.TypeRef%&gt;) superClassifierRef).getDeclaredType();\n\t\tif ((declType instanceof &lt;%org.eclipse.n4js.ts.types.TClassifier%&gt;))\n\t\t{\n\t\t\tresult.add(((&lt;%org.eclipse.n4js.ts.types.TClassifier%&gt;)declType));\n\t\t}\n\t}\n}\nreturn result;'"
 	 * @generated
 	 */
 	Iterable<? extends TClassifier> getSuperClassifiers();
@@ -91,7 +87,6 @@ public interface TClassifier extends ContainerType<TMember>, SyntaxRelatedTEleme
 	 * Convenience method, returns all super classes and implemented or extended interfaces as type references.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" dataType="org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefIterable" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return &lt;%org.eclipse.xtext.xbase.lib.CollectionLiterals%&gt;.&lt;&lt;%org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef%&gt;&gt;emptyList();'"
 	 * @generated
 	 */
 	Iterable<ParameterizedTypeRef> getSuperClassifierRefs();
@@ -104,7 +99,6 @@ public interface TClassifier extends ContainerType<TMember>, SyntaxRelatedTEleme
 	 * Convenience method, returns all implemented (or extended) interfaces
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" dataType="org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefIterable" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return &lt;%org.eclipse.xtext.xbase.lib.CollectionLiterals%&gt;.&lt;&lt;%org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef%&gt;&gt;emptyList();'"
 	 * @generated
 	 */
 	Iterable<ParameterizedTypeRef> getImplementedOrExtendedInterfaceRefs();
@@ -117,7 +111,6 @@ public interface TClassifier extends ContainerType<TMember>, SyntaxRelatedTEleme
 	 * Classifiers are usually not final, unless they have a special modifier set.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return false;'"
 	 * @generated
 	 */
 	boolean isFinal();
