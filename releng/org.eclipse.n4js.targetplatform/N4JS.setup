@@ -220,6 +220,15 @@
   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"
+      label="XSemantics">
+    <requirement
+        name="org.eclipse.xsemantics.sdk.feature.group"
+        versionRange="[1.12.1,1.12.2)"/>
+    <repository
+        url="https://ci.eclipse.org/xsemantics/job/xsemantics-nightly/lastSuccessfulBuild/artifact/releng/org.eclipse.xsemantics.repository/target/repository/"/>
+  </setupTask>
+  <setupTask
+      xsi:type="setup.p2:P2Task"
       label="ANTLR">
     <requirement
         name="de.itemis.xtext.antlr.sdk.feature.group"
@@ -388,6 +397,8 @@
             url="http://download.eclipse.org/tools/orbit/downloads/drops/R20180905201904/repository"/>
         <repository
             url="http://boothen.github.io/Json-Eclipse-Plugin"/>
+        <repository
+            url="https://ci.eclipse.org/xsemantics/job/xsemantics-nightly/lastSuccessfulBuild/artifact/releng/org.eclipse.xsemantics.repository/target/repository/"/>
         <repository
             url="https://ci.eclipse.org/xpect/job/Xpect-Integration-Release/lastSuccessfulBuild/artifact/org.eclipse.xpect.releng/p2-repository/target/repository/"/>
         <repository
