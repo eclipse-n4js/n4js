@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.typesystem
+package org.eclipse.n4js.typesystem.utils
 
 import com.google.common.collect.Iterables
 import com.google.common.collect.Lists
@@ -43,14 +43,14 @@ import org.eclipse.n4js.ts.utils.SuperTypesList
 import org.eclipse.n4js.ts.utils.TypeCompareHelper
 import org.eclipse.n4js.ts.utils.TypeHelper
 import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.ContainerTypesHelper
-import org.eclipse.xsemantics.runtime.RuleEnvironment
 
 import static java.util.Collections.*
 import static org.eclipse.n4js.ts.utils.SuperTypesList.*
 
 import static extension org.eclipse.n4js.ts.utils.TypeUtils.*
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  * Type System Helper Strategy computing the join of a given collection of types.
@@ -71,7 +71,7 @@ import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
  * <p>
  * Special pseudo sub types of string, e.g. pathSelector, are handled as well.
  */
-class JoinComputer extends TypeSystemHelperStrategy {
+package class JoinComputer extends TypeSystemHelperStrategy {
 
 	@Inject
 	private N4JSTypeSystem ts
@@ -209,12 +209,12 @@ class JoinComputer extends TypeSystemHelperStrategy {
 							val upperBound = join(G,
 								parameterizedSuperTypes.map [
 									// (typeArgs.get(currentIndex) as TypeRef).declaredUpperBound
-									ts.upperBound(G, (typeArgs.get(currentIndex))).value
+									ts.upperBound(G, (typeArgs.get(currentIndex)))
 								])
 							val lowerBound = meet(G,
 								parameterizedSuperTypes.map [
 									// (typeArgs.get(currentIndex) as TypeRef).declaredLowerBound
-									ts.lowerBound(G, (typeArgs.get(currentIndex))).value
+									ts.lowerBound(G, (typeArgs.get(currentIndex)))
 								])
 							if (compare(upperBound, lowerBound) == 0) {
 								merged.typeArgs.add(TypeUtils.copyIfContained(upperBound))
@@ -312,7 +312,7 @@ class JoinComputer extends TypeSystemHelperStrategy {
 		if (member.typeRef.parameterized) {
 			val subst = TypesFactory.eINSTANCE.createTStructField();
 			subst.name = member.name;
-			subst.typeRef = ts.substTypeVariables(G, member.typeRef).value as TypeRef;
+			subst.typeRef = ts.substTypeVariables(G, member.typeRef);
 			if (subst.typeRef === null) {
 				subst.typeRef = G.anyTypeRef;
 			}
@@ -326,7 +326,7 @@ class JoinComputer extends TypeSystemHelperStrategy {
 		if (member.declaredTypeRef !== null && member.declaredTypeRef.parameterized) {
 			val subst = TypesFactory.eINSTANCE.createTStructGetter();
 			subst.name = member.name;
-			subst.declaredTypeRef = ts.substTypeVariables(G, member.declaredTypeRef).value as TypeRef;
+			subst.declaredTypeRef = ts.substTypeVariables(G, member.declaredTypeRef);
 			if (subst.declaredTypeRef === null) {
 				subst.declaredTypeRef = G.anyTypeRef;
 			}
@@ -341,7 +341,7 @@ class JoinComputer extends TypeSystemHelperStrategy {
 			val subst = TypesFactory.eINSTANCE.createTStructSetter();
 			subst.name = member.name;
 
-			var tr = ts.substTypeVariables(G, member.fpar.typeRef).value as TypeRef;
+			var tr = ts.substTypeVariables(G, member.fpar.typeRef);
 			if (tr === null) {
 				tr = G.anyTypeRef;
 			}
@@ -355,7 +355,7 @@ class JoinComputer extends TypeSystemHelperStrategy {
 	}
 
 	private def dispatch substituted(RuleEnvironment G, TMethod member) {
-		val ftype = ts.type(G, member).value as FunctionTypeExpression
+		val ftype = ts.type(G, member) as FunctionTypeExpression
 		val subst = TypesFactory.eINSTANCE.createTStructMethod();
 		subst.name = member.name;
 		subst.fpars.addAll(ftype.fpars);
@@ -366,11 +366,8 @@ class JoinComputer extends TypeSystemHelperStrategy {
 
 	def similarMember(RuleEnvironment G, TMember m1, TMember m2) {
 
-		val t1 = ts.type(G, m1).value;
-		val t2 = ts.type(G, m2).value;
-		if (t1 === null || t2 === null) {
-			return false;
-		}
+		val t1 = ts.type(G, m1);
+		val t2 = ts.type(G, m2);
 		return ts.subtypeSucceeded(G, t1, t2) && ts.subtypeSucceeded(G, t2, t1)
 	}
 
@@ -412,14 +409,15 @@ class JoinComputer extends TypeSystemHelperStrategy {
 					if (! concreteSuperTypeRef.containsUnboundTypeVariables) {
 						concreteSuperTypeRef
 					} else {
-						var Gnext = G;
-
-						// parameterize the references:
-						for (TypeRef tr : pathFromSuperType.reverseView) {
-							var Gnew = new RuleEnvironment();
-							Gnew.next = Gnext;
-							Gnext = Gnew;
-						}
+						val Gnext = G.wrap;
+// original code:
+//						var Gnext = G;
+//						// parameterize the references:
+//						for (TypeRef tr : pathFromSuperType.reverseView) {
+//							var Gnew = new RuleEnvironment();
+//							Gnew.next = Gnext;
+//							Gnext = Gnew;
+//						}
 						genericsComputer.bindTypeVariables(Gnext,concreteSuperTypeRef);
 					}
 				));

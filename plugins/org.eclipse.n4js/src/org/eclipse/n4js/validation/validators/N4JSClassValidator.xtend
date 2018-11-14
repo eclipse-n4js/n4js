@@ -43,7 +43,7 @@ import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
-import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
@@ -393,7 +393,7 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 				val fieldType = ts.tau(tfield, TypeUtils.createTypeRef(tclass));
 				val smemberType = ts.tau(smember, TypeUtils.createTypeRef(tclass));
 				val subtypeRes = ts.subtype(G, smemberType, fieldType);
-				if (subtypeRes.failed) {
+				if (subtypeRes.failure) {
 					val message = getMessageForCLF_SPEC_WRONG_ADD_MEMBERTYPE(smember.name, description(tfield),
 						trimTypesystemMessage(subtypeRes));
 					val errMember = (ctor.fpars.get(parIndex).declaredTypeRef as StructuralTypeRef).structuralMembers.

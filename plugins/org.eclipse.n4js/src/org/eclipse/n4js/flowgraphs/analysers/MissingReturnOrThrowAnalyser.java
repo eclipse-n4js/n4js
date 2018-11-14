@@ -34,7 +34,7 @@ import org.eclipse.n4js.n4JS.Statement;
 import org.eclipse.n4js.n4JS.ThrowStatement;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.utils.TypeUtils;
-import org.eclipse.n4js.typesystem.TypeSystemHelper;
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.xtext.EcoreUtil2;
 

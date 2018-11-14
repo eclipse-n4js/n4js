@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.typesystem
+package org.eclipse.n4js.typesystem.utils
 
 import com.google.common.annotations.VisibleForTesting
 import com.google.inject.Inject
@@ -17,10 +17,11 @@ import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.utils.TypeUtils
-import org.eclipse.xsemantics.runtime.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import java.util.LinkedList
 
 import static extension java.util.Collections.*
+import org.eclipse.n4js.typesystem.N4JSTypeSystem
 
 /**
  * Type System Helper Strategy computing the meet of a given collection of types.

@@ -35,8 +35,8 @@ import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.util.Variance;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
-import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
-import org.eclipse.xsemantics.runtime.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.LinkedHashMultimap;
@@ -537,7 +537,7 @@ import com.google.common.collect.SetMultimap;
 	private TypeRef substituteInferenceVariable(TypeRef typeRef, InferenceVariable infVar, TypeArgument typeArg) {
 		final RuleEnvironment Gtemp = RuleEnvironmentExtensions.wrap(this.G);
 		RuleEnvironmentExtensions.addTypeMapping(Gtemp, infVar, typeArg);
-		final TypeRef result = (TypeRef) this.ts.substTypeVariables(Gtemp, typeRef).getValue();
+		final TypeRef result = this.ts.substTypeVariables(Gtemp, typeRef);
 		// note: infVar may still occur in result, if infVar->typeArg is not a valid type mapping!
 		// assert !(TypeVarUtils.occursIn(infVar, result));
 		return result;

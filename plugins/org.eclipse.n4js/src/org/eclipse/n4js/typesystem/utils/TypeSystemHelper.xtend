@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.typesystem
+package org.eclipse.n4js.typesystem.utils
 
 import com.google.common.collect.Iterables
 import com.google.inject.Inject
@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.FunctionDefinition
+import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.ReturnStatement
@@ -51,14 +52,13 @@ import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.utils.TypeExtensions
 import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.utils.StructuralTypesHelper
-import org.eclipse.xsemantics.runtime.RuleEnvironment
 import org.eclipse.xtext.EcoreUtil2
 
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  * Utility methods used in the XSemantics type system. Must be injected.
@@ -95,6 +95,7 @@ class TypeSystemHelper {
 	@Inject private SubtypeComputer subtypeComputer;
 	@Inject private ExpectedTypeComputer expectedTypeCompuer;
 	@Inject private StructuralTypingComputer structuralTypingComputer;
+	@Inject private ThisTypeComputer thisTypeComputer;
 
 
 @Inject private StructuralTypesHelper structuralTypesHelper;
@@ -114,6 +115,9 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 	}
 	def FunctionTypeExpression createLowerBoundOfFunctionTypeExprOrRef(RuleEnvironment G, FunctionTypeExprOrRef F) {
 		derivationComputer.createLowerBoundOfFunctionTypeExprOrRef(G,F);
+	}
+	def FunctionTypeExpression createBoundOfFunctionTypeExprOrRef(RuleEnvironment G, FunctionTypeExprOrRef F, BoundType boundType) {
+		derivationComputer.createBoundOfFunctionTypeExprOrRef(G,F,boundType);
 	}
 
 	def void addSubstitutions(RuleEnvironment G, TypeRef typeRef) {
@@ -205,6 +209,11 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 		return expectedTypeCompuer.getExpectedTypeOfFunctionOrFieldAccessor(G, fofa);
 	}
 
+	/** @see ThisTypeComputer#getThisTypeAtLocation(RuleEnvironment,EObject) */
+	def TypeRef getThisTypeAtLocation(RuleEnvironment G, EObject location) {
+		return thisTypeComputer.getThisTypeAtLocation(G, location);
+	}
+
 
 
 
@@ -214,7 +223,7 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 
 	/** see {@link N4JSTypeSystem#resolveType(RuleEnvironment,TypeArgument)} */
 	public def TypeRef resolveType(RuleEnvironment G, TypeArgument typeArg) {
-		var typeRef = if(typeArg !== null) ts.upperBound(G, typeArg).value;
+		var typeRef = if(typeArg !== null) ts.upperBound(G, typeArg);
 		typeRef = if(typeRef !== null) TypeUtils.resolveTypeVariable(typeRef);
 		// TODO IDE-2367 recursively resolve the resulting 'typeRef' until it is stable (requires refactoring of upper/lower bound judgment!)
 		return typeRef;
@@ -236,7 +245,7 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 		if (typeRaw===null || typeRaw instanceof UnknownTypeRef) {
 			return G.anyTypeRef;
 		}
-		val typeUB = ts.upperBound(G, typeRaw).value; // take upper bound to get rid of ExistentialTypeRef (if any)
+		val typeUB = ts.upperBound(G, typeRaw); // take upper bound to get rid of ExistentialTypeRef (if any)
 		val declType = typeUB.declaredType
 		if (declType===G.undefinedType || declType===G.nullType || declType===G.voidType) {
 			// don't use these types to type variables, fields, properties -> replace with any
@@ -272,7 +281,7 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 	 *             type ("@This")
 	 * @return declaredThisType if any, null in other cases.
 	 */
-	public static def TypeRef declaredThisType(IdentifiableElement type) {
+	public static def TypeRef getDeclaredThisType(IdentifiableElement type) {
 		return switch ( type ) {
 			TFunction: {
 				type.declaredThisType
@@ -318,11 +327,11 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 	 */
 	public def bindAndSubstituteThisTypeRef(RuleEnvironment G, EObject location, TypeRef typeRef) {
 		// create a BoundThisTypeRef for given location
-		val boundThisTypeRef = ts.thisTypeRef(G, location).value;
+		val boundThisTypeRef = getThisTypeAtLocation(G, location);
 		val localG = G.wrap;
 		localG.addThisType(boundThisTypeRef);
 		// substitute all unbound ThisTypeRefs with the newly created BoundThisTypeRef
-		return ts.substTypeVariables(localG, typeRef).value as TypeRef;
+		return ts.substTypeVariables(localG, typeRef);
 	}
 
 	/**
@@ -411,7 +420,7 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 	def public TypeRef getStaticTypeRef(RuleEnvironment G, TypeTypeRef ctorTypeRef) {
 		var typeArg = ctorTypeRef.typeArg;
 		while(typeArg instanceof Wildcard || typeArg instanceof ExistentialTypeRef || typeArg instanceof BoundThisTypeRef) {
-			typeArg = ts.upperBound(G, typeArg).value;
+			typeArg = ts.upperBound(G, typeArg);
 		}
 		return typeArg as TypeRef;
 	}
@@ -420,7 +429,7 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 	 * Creates a parameterized type ref to the wrapped static type of a TypeTypeRef, configured with the given
 	 * TypeArguments. Returns UnknownTypeRef if the static type could not be retrieved (e.g. unbound This-Type).
 	 */
-	def public TypeRef createTypeRefFromStaticType(RuleEnvironment G, TypeTypeRef ctr, TypeArgument ... typeArgs) {
+	def public TypeRef createTypeRefFromStaticType(RuleEnvironment G, TypeTypeRef ctr, TypeArgument... typeArgs) {
 		 val typeRef = getStaticTypeRef(G, ctr);
 		 val type = typeRef.declaredType;
 		 if (type !== null ) {
@@ -472,7 +481,7 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 	def TypeRef getActualGeneratorReturnType(RuleEnvironment G, Expression expr) {
 		val funDef = EcoreUtil2.getContainerOfType(expr?.eContainer, FunctionDefinition);
 		val G2 = G.wrap;
-		val myThisTypeRef = ts.thisTypeRef(G, expr).value;
+		val myThisTypeRef = getThisTypeAtLocation(G, expr);
 		G2.addThisType(myThisTypeRef); // takes the real-this type even if it is a type{this} reference.
 
 		if (funDef === null || !funDef.isGenerator)
@@ -497,7 +506,7 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 		if (generatorTypeRef.typeArgs.length === 3) {
 			val yieldTypeArg = generatorTypeRef.typeArgs.get(0);
 			if (yieldTypeArg !== null)
-				yieldTypeRef = ts.upperBound(G, yieldTypeArg).value; // take upper bound to get rid of Wildcard, etc.
+				yieldTypeRef = ts.upperBound(G, yieldTypeArg); // take upper bound to get rid of Wildcard, etc.
 		}
 		return yieldTypeRef;
 	}
@@ -510,7 +519,7 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 		if (generatorTypeRef.typeArgs.length === 3) {
 			val returnTypeArg = generatorTypeRef.typeArgs.get(1);
 			if (returnTypeArg !== null)
-				returnTypeRef = ts.upperBound(G, returnTypeArg).value; // take upper bound to get rid of Wildcard, etc.
+				returnTypeRef = ts.upperBound(G, returnTypeArg); // take upper bound to get rid of Wildcard, etc.
 		}
 		return returnTypeRef;
 	}
@@ -523,7 +532,7 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 		if (generatorTypeRef.typeArgs.length === 3) {
 			val nextTypeArg = generatorTypeRef.typeArgs.get(2);
 			if (nextTypeArg !== null)
-				nextTypeRef = ts.upperBound(G, nextTypeArg).value; // take upper bound to get rid of Wildcard, etc.
+				nextTypeRef = ts.upperBound(G, nextTypeArg); // take upper bound to get rid of Wildcard, etc.
 		}
 		return nextTypeRef;
 	}
@@ -536,7 +545,7 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 		if (iterableTypeRef.typeArgs.length === 1) {
 			val nextTypeArg = iterableTypeRef.typeArgs.get(0);
 			if (nextTypeArg !== null)
-				typeRef = ts.upperBound(G, nextTypeArg).value; // take upper bound to get rid of Wildcard, etc.
+				typeRef = ts.upperBound(G, nextTypeArg); // take upper bound to get rid of Wildcard, etc.
 		}
 		return typeRef;
 	}

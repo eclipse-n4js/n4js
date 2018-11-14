@@ -552,13 +552,13 @@ public class ParameterizedTypeRefStructural_IMImpl extends ParameterizedTypeRef_
 		if (baseClass == TypeArgument.class) {
 			switch (baseOperationID) {
 				case TypeRefsPackage.TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING: return ImPackage.PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_TYPE_REF_AS_STRING;
+				case TypeRefsPackage.TYPE_ARGUMENT___GET_DECLARED_TYPE: return ImPackage.PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_DECLARED_TYPE;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
 		if (baseClass == TypeRef.class) {
 			switch (baseOperationID) {
 				case TypeRefsPackage.TYPE_REF___GET_TYPE_REF_AS_STRING: return ImPackage.PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_TYPE_REF_AS_STRING;
-				case TypeRefsPackage.TYPE_REF___GET_DECLARED_TYPE: return ImPackage.PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_DECLARED_TYPE;
 				case TypeRefsPackage.TYPE_REF___GET_TYPING_STRATEGY: return ImPackage.PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_TYPING_STRATEGY;
 				case TypeRefsPackage.TYPE_REF___GET_STRUCTURAL_MEMBERS: return ImPackage.PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_STRUCTURAL_MEMBERS;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);

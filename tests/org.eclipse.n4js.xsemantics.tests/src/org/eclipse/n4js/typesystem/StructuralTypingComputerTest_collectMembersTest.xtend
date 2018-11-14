@@ -11,15 +11,16 @@
 package org.eclipse.n4js.typesystem
 
 import com.google.inject.Inject
+import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.ts.types.TypingStrategy
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.utils.StructuralTypesHelper
 import org.eclipse.n4js.validation.JavaScriptVariant
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
 
 /**
  */

@@ -13,7 +13,6 @@ package org.eclipse.n4js.postprocessing
 import com.google.common.base.Optional
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import org.eclipse.xsemantics.runtime.RuleEnvironment
 import java.util.List
 import java.util.Map
 import org.eclipse.n4js.n4JS.ObjectLiteral
@@ -39,11 +38,12 @@ import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
-import org.eclipse.n4js.typesystem.TypeSystemHelper
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.EcoreUtilN4
 
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  * {@link PolyProcessor} delegates here for processing array literals.
@@ -70,7 +70,7 @@ package class PolyProcessor_ObjectLiteral extends AbstractPolyProcessor {
 		InferenceContext infCtx, ASTMetaInfoCache cache) {
 
 		if (!objLit.isPoly) {
-			val result = ts.type(G, objLit).getValue();
+			val result = ts.type(G, objLit);
 			// do not store in cache (TypeProcessor responsible for storing types of non-poly expressions in cache)
 			return result;
 		}

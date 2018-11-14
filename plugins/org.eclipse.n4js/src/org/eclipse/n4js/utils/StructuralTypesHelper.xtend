@@ -11,8 +11,8 @@
 package org.eclipse.n4js.utils
 
 import com.google.inject.Inject
-import org.eclipse.n4js.typesystem.TypeSystemHelper
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
+import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.ContainerType
@@ -20,15 +20,15 @@ import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypingStrategy
-import org.eclipse.xsemantics.runtime.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.xtext.xbase.lib.Functions.Function1
 
 import static org.eclipse.n4js.ts.types.TypingStrategy.*
 
 import static extension com.google.common.collect.Iterables.concat
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.StructuralMembersPredicates.*
-import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
 
 /**
  * Helper methods for dealing with structural types.

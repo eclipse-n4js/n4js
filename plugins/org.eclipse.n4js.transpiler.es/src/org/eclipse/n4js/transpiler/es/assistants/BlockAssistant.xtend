@@ -15,7 +15,7 @@ import org.eclipse.n4js.n4JS.ArrowFunction
 import org.eclipse.n4js.transpiler.TransformationAssistant
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  */
@@ -45,7 +45,7 @@ class BlockAssistant extends TransformationAssistant {
 		}
 		// check if body is typed void, in which case no return will be inserted
 		val singleExpr = origAST.implicitReturnExpr();
-		val implicitReturnTypeRef = ts.type(state.G, singleExpr).value;
+		val implicitReturnTypeRef = ts.type(state.G, singleExpr);
 		if (implicitReturnTypeRef?.declaredType === state.G.voidType) {
 			return false;
 		}

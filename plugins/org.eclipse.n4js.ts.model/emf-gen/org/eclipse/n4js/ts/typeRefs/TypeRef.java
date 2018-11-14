@@ -13,7 +13,6 @@ package org.eclipse.n4js.ts.typeRefs;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.n4js.ts.types.TStructMember;
-import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypingStrategy;
 
 /**
@@ -236,19 +235,6 @@ public interface TypeRef extends TypeArgument, Versionable {
 	 * @generated
 	 */
 	String toString();
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * Convenience method, returns null for all type references except parameterized type references.
-	 * Minimizes number cases in client code.
-	 * <!-- end-model-doc -->
-	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return null;'"
-	 * @generated
-	 */
-	Type getDeclaredType();
 
 	/**
 	 * <!-- begin-user-doc -->

@@ -17,20 +17,22 @@ import java.util.Arrays
 import java.util.List
 import java.util.Map
 import org.eclipse.n4js.n4JS.ArrayLiteral
+import org.eclipse.n4js.n4JS.ArrayPadding
 import org.eclipse.n4js.n4JS.DestructureUtils
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.types.InferenceVariable
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
-import org.eclipse.n4js.typesystem.TypeSystemHelper
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.DestructureHelper
-import org.eclipse.xsemantics.runtime.RuleEnvironment
 
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  * {@link PolyProcessor} delegates here for processing array literals.
@@ -262,11 +264,7 @@ if(isValueToBeDestructured) {
 	private def void handleOnSolvedPerformanceTweak(RuleEnvironment G, ASTMetaInfoCache cache, ArrayLiteral arrLit,
 		List<TypeRef> expectedElemTypeRefs
 	) {
-		val betterElemTypeRefs = arrLit.elements
-			.filter[ expression !== null ]
-			.map[ getFinalResultTypeOfNestedPolyExpression(expression) ]
-			.toList;
-
+		val List<TypeRef> betterElemTypeRefs = storeTypesOfArrayElements(G, cache, arrLit);
 		val fallbackTypeRef = buildFallbackTypeForArrayLiteral(false, 1, betterElemTypeRefs, expectedElemTypeRefs, G);
 		cache.storeType(arrLit, fallbackTypeRef);
 	}
@@ -291,18 +289,29 @@ if(isValueToBeDestructured) {
 			val typeRef = buildFallbackTypeForArrayLiteral(isIterableN, resultLen, betterElemTypeRefs, expectedElemTypeRefs, G);
 			cache.storeType(arrLit, typeRef);
 		}
-		// PolyProcessor#isResponsibleFor(TypableElement) claims responsibility of AST nodes of type 'ArrayElement'
-		// contained in an ArrayLiteral which is poly, so we are responsible for storing the types of those
-		// 'ArrayElement' nodes in cache
-		// (note: compare this with similar handling of 'Argument' nodes in PolyProcessor_CallExpression)
+		storeTypesOfArrayElements(G, cache, arrLit);
+	}
+
+	// PolyProcessor#isResponsibleFor(TypableElement) claims responsibility of AST nodes of type 'ArrayElement'
+	// contained in an ArrayLiteral which is poly, so we are responsible for storing the types of those
+	// 'ArrayElement' nodes in cache
+	// (note: compare this with similar handling of 'Argument' nodes in PolyProcessor_CallExpression)
+	private def List<TypeRef> storeTypesOfArrayElements(RuleEnvironment G, ASTMetaInfoCache cache, ArrayLiteral arrLit) {
+		val List<TypeRef> storedElemTypeRefs = newArrayList;
 		for (arrElem : arrLit.elements) {
-			val expr = arrElem?.expression;
-			if (expr!==null) {
-				val exprType = getFinalResultTypeOfNestedPolyExpression(expr);
+			if (arrElem instanceof ArrayPadding) {
+				cache.storeType(arrElem, G.undefinedTypeRef);
+			} else {
+				val expr = arrElem?.expression;
+				val exprType = if (expr!==null) getFinalResultTypeOfNestedPolyExpression(expr);
 				if (exprType!==null) {
 					cache.storeType(arrElem, exprType);
+					storedElemTypeRefs += exprType;
+				} else {
+					cache.storeType(arrElem, TypeRefsFactory.eINSTANCE.createUnknownTypeRef);
 				}
 			}
 		}
+		return storedElemTypeRefs;
 	}
 }

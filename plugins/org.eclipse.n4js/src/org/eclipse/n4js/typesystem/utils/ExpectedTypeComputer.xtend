@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.typesystem
+package org.eclipse.n4js.typesystem.utils
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
@@ -21,17 +21,17 @@ import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.utils.TypeUtils
-import org.eclipse.xsemantics.runtime.RuleEnvironment
+import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.xtext.EcoreUtil2
 
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  * Contains helper methods used by the rules of the 'expectedTypeIn' judgment.
  * Main reason for factoring out this code is the same logic is used by several rules.
  */
 @Singleton
-class ExpectedTypeComputer extends TypeSystemHelperStrategy {
+package class ExpectedTypeComputer extends TypeSystemHelperStrategy {
 
 	@Inject
 	private N4JSTypeSystem ts;
@@ -52,7 +52,7 @@ class ExpectedTypeComputer extends TypeSystemHelperStrategy {
 	def TypeRef getExpectedTypeOfReturnValueExpression(RuleEnvironment G, Expression returnValueExpr) {
 		val fofa = EcoreUtil2.getContainerOfType(returnValueExpr?.eContainer, FunctionOrFieldAccessor);
 		val G2 = G.wrap;
-		val myThisTypeRef = ts.thisTypeRef(G, returnValueExpr).value;
+		val myThisTypeRef = tsh.getThisTypeAtLocation(G, returnValueExpr);
 		G2.addThisType(myThisTypeRef); // takes the real-this type even if it is a type{this} reference.
 
 		return getExpectedTypeOfFunctionOrFieldAccessor(G2, fofa); // null means: no type expectation
@@ -70,9 +70,9 @@ class ExpectedTypeComputer extends TypeSystemHelperStrategy {
 
 		    } else {
 		        // this is the normal case
-				val fType = ts.type(G2, fofa).value;
+				val fType = ts.type(G2, fofa);
 				if (fType instanceof FunctionTypeExprOrRef) {
-					return ts.substTypeVariablesInTypeRef(G2, fType.returnTypeRef);
+					return ts.substTypeVariables(G2, fType.returnTypeRef);
 				}
 		    }
 
@@ -95,7 +95,7 @@ class ExpectedTypeComputer extends TypeSystemHelperStrategy {
 			if (TypeUtils.isPromise(actualReturnTypeRef, G.getPredefinedTypes().builtInTypeScope)) {
 				val firstTypeArg = actualReturnTypeRef.typeArgs.head;
 				if (firstTypeArg !== null)
-					return ts.upperBound(G, firstTypeArg).value; // take upper bound to get rid of Wildcard, etc.
+					return ts.upperBound(G, firstTypeArg); // take upper bound to get rid of Wildcard, etc.
 			}
 		}
 
@@ -134,7 +134,7 @@ class ExpectedTypeComputer extends TypeSystemHelperStrategy {
 		val expression = yieldExpr.expression;
 		val funDef = EcoreUtil2.getContainerOfType(expression?.eContainer, FunctionDefinition);
 		val G2 = G.wrap;
-		val myThisTypeRef = ts.thisTypeRef(G, expression).value;
+		val myThisTypeRef = tsh.getThisTypeAtLocation(G, expression);
 		G2.addThisType(myThisTypeRef); // takes the real-this type even if it is a type{this} reference.
 
 		if (funDef === null || !funDef.isGenerator)

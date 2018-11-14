@@ -105,8 +105,10 @@ import org.eclipse.n4js.ts.types.util.MemberList;
 import org.eclipse.n4js.ts.types.util.NameStaticPair;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
-import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
-import org.eclipse.n4js.typesystem.TypeSystemHelper;
+import org.eclipse.n4js.typesystem.utils.Result;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
@@ -117,8 +119,6 @@ import org.eclipse.n4js.validation.validators.utils.MemberCube;
 import org.eclipse.n4js.validation.validators.utils.MemberMatrix;
 import org.eclipse.n4js.validation.validators.utils.MemberMatrix.SourceAwareIterator;
 import org.eclipse.n4js.validation.validators.utils.MemberRedefinitionUtils;
-import org.eclipse.xsemantics.runtime.Result;
-import org.eclipse.xsemantics.runtime.RuleEnvironment;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.util.Arrays;
 import org.eclipse.xtext.validation.Check;
@@ -264,9 +264,8 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 	private boolean checkSpecConstructorOverrideCompatibility(TClassifier tClassifier, TMethod inheritedConstructor) {
 		final Type rightThisContext = MemberRedefinitionUtils.findThisContextForConstructor(tClassifier,
 				inheritedConstructor);
-		final Result<Boolean> subtypeResult = isSubTypeResult(inheritedConstructor, rightThisContext,
-				inheritedConstructor);
-		if (subtypeResult.failed()) {
+		final Result subtypeResult = isSubTypeResult(inheritedConstructor, rightThisContext, inheritedConstructor);
+		if (subtypeResult.isFailure()) {
 			final String msg = getMessageForCLF_PSEUDO_REDEFINED_SPEC_CTOR_INCOMPATIBLE(
 					validatorMessageHelper.description(inheritedConstructor),
 					validatorMessageHelper.description(tClassifier),
@@ -706,8 +705,8 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 
 		// 7. type compatible
 		if (!m.isSetter() && !s.isSetter()) { // in Method (including constructor), Getter, Field
-			Result<Boolean> result = isSubTypeResult(m, s);
-			if (result.failed()) {
+			Result result = isSubTypeResult(m, s);
+			if (result.isFailure()) {
 				if (!consumptionConflict) { // avoid consequential errors
 					messageOverrideMemberTypeConflict(redefinitionType, m, s, result, mm);
 				}
@@ -721,8 +720,8 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 		}
 
 		if ((m.isSetter() || m.isField()) && !s.isGetter() && !sIsConst) {
-			Result<Boolean> result = isSubTypeResult(s, m);
-			if (result.failed()) {
+			Result result = isSubTypeResult(s, m);
+			if (result.isFailure()) {
 				if (!consumptionConflict) { // avoid consequential errors
 					messageOverrideMemberTypeConflict(redefinitionType, m, s, result, mm);
 				}
@@ -964,7 +963,7 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 	}
 
 	private void messageOverrideMemberTypeConflict(RedefinitionType redefinitionType, TMember overriding,
-			TMember overridden, Result<Boolean> result, MemberMatrix mm) {
+			TMember overridden, Result result, MemberMatrix mm) {
 
 		String message;
 		String code;
@@ -1204,10 +1203,10 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 	}
 
 	private boolean isSubType(TMember left, TMember right) {
-		return !isSubTypeResult(left, right).failed();
+		return isSubTypeResult(left, right).isSuccess();
 	}
 
-	private Result<Boolean> isSubTypeResult(TMember left, TMember right) {
+	private Result isSubTypeResult(TMember left, TMember right) {
 		final Type rightThisContext = left.isConstructor() && right.isConstructor() && !isPolyfill(left)
 				? MemberRedefinitionUtils.findThisContextForConstructor(left.getContainingType(), (TMethod) right)
 				: null; // null means: use default context
@@ -1219,13 +1218,14 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 	 *            the type to use as context for the "this binding" of the right-hand-side member or <code>null</code>
 	 *            to use the default, i.e. the {@link #getCurrentTypeContext() current type context}.
 	 */
-	private Result<Boolean> isSubTypeResult(TMember left, Type rightThisContextType, TMember right) {
+	private Result isSubTypeResult(TMember left, Type rightThisContextType, TMember right) {
 		// will return type of value for fields, function type for methods, type of return value for getters, type of
 		// parameter for setters
 		final Resource res = left.eResource();
 		final TypeRef mainContext = getCurrentTypeContext();
 		final TypeRef rightThisContext = rightThisContextType != null
-				? TypeUtils.createTypeRef(rightThisContextType) : mainContext;
+				? TypeUtils.createTypeRef(rightThisContextType)
+				: mainContext;
 		final RuleEnvironment G_left = ts.createRuleEnvironmentForContext(mainContext, mainContext, res);
 		final RuleEnvironment G_right = ts.createRuleEnvironmentForContext(mainContext, rightThisContext, res);
 		TypeRef typeLeft = ts.tau(left, G_left);

@@ -23,12 +23,12 @@ import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
-import org.eclipse.n4js.typesystem.TypeSystemHelper
-import org.eclipse.xsemantics.runtime.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 
 import static org.eclipse.n4js.AnnotationDefinition.*
 
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  * Core logic for handling annotation <code>@Promisifiable</code> and operator <code>@Promisify</code>, i.e.
@@ -94,7 +94,7 @@ class PromisifyHelper {
 	def public boolean isPromisifiableExpression(Expression expr) {
 		if(expr instanceof ParameterizedCallExpression) {
 			val G = expr.newRuleEnvironment;
-			val targetTypeRef = ts.type(G, expr.target).value;
+			val targetTypeRef = ts.type(G, expr.target);
 			if(targetTypeRef instanceof FunctionTypeExprOrRef) {
 				val fun = targetTypeRef.functionType;
 				return fun!==null && PROMISIFIABLE.hasAnnotation(fun);
@@ -112,7 +112,7 @@ class PromisifyHelper {
 		if(isPromisifiableExpression(expr)) {
 			val G = expr.newRuleEnvironment;
 			// casts in next line are OK, because of isPromisifiableExpression() returned true
-			val targetTypeRef = ts.type(G, (expr as ParameterizedCallExpression).target).value as FunctionTypeExprOrRef;
+			val targetTypeRef = ts.type(G, (expr as ParameterizedCallExpression).target) as FunctionTypeExprOrRef;
 			val promisifiedReturnTypeRef = extractPromisifiedReturnType(G, targetTypeRef);
 			if(promisifiedReturnTypeRef!==null) {
 				return promisifiedReturnTypeRef;

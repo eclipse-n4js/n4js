@@ -16,26 +16,31 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.TypeDefiningElement;
+import org.eclipse.n4js.postprocessing.ASTProcessor;
 import org.eclipse.n4js.postprocessing.TypeProcessor;
+import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef;
+import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.ts.utils.TypeUtils;
-import org.eclipse.n4js.xsemantics.InternalTypeSystem;
-import org.eclipse.xsemantics.runtime.Result;
-import org.eclipse.xsemantics.runtime.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.Result;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
 import org.eclipse.xtext.EcoreUtil2;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Main entry point into the N4JS type system. This class is only a facade. In most cases it simply forwards to
- * {@link InternalTypeSystem}, i.e. the type system generated from {@code n4js.xsemantics}. The main exception is
- * {@link #type(RuleEnvironment, TypableElement)}, which hides the Xsemantics type judgment behind some special handling
- * and caching.
+ * Main entry point into the N4JS type system. This class is only a facade. In most cases it directly forwards to one of
+ * the {@code -Judgment} classes, that implement the major operations of the type system. The main exception is
+ * {@link #type(RuleEnvironment, TypableElement)}, which hides the type judgment implemented in {@link TypeJudgment}
+ * behind some special handling and caching.
  * <p>
  * In addition, this class contains some type-system-related convenience methods.
  */
@@ -43,83 +48,143 @@ import com.google.inject.Singleton;
 public class N4JSTypeSystem {
 
 	@Inject
-	private InternalTypeSystem ts_internal;
+	private TypeJudgment typeJudgment;
 	@Inject
-	private TypeSystemHelper tsh;
+	private ExpectedTypeJudgment expectedTypeJudgment;
+	@Inject
+	private SubtypeJudgment subtypeJudgment;
+	@Inject
+	private BoundJudgment boundJudgment;
+	@Inject
+	private SubstTypeVariablesJudgment substTypeVariablesJudgment;
+
 	@Inject
 	private TypeProcessor typeProcessor;
+	@Inject
+	private TypeSystemHelper tsh;
 
 	// ###############################################################################################################
 	// LOW-LEVEL METHODS
 
-	/** Returns the type of the given element wrapped in a {@link Result}. Never returns <code>null</code>. */
-	public Result<TypeRef> type(RuleEnvironment G, TypableElement element) {
-		return typeProcessor.getType(G, null, element);
+	/**
+	 * Returns the type of the given element. In case the type cannot be inferred, either a default (usually the
+	 * {@link RuleEnvironmentExtensions#topType(RuleEnvironment) top type}) or the special type reference
+	 * {@link UnknownTypeRef} is returned. Never returns <code>null</code>.
+	 *
+	 * <h2>IMPLEMENTATION NOTE:</h2>
+	 *
+	 * <em>All invocations of judgment 'type' - from outside the type system or from within the {@code -Judgment}
+	 * classes - are now delegated to {@link TypeProcessor#getType(RuleEnvironment, TypableElement)}.</em>
+	 * <p>
+	 * {@link TypeProcessor} will simply read the type from the cache (if containing resource is fully processed) or
+	 * initiate the post-processing of the entire resource. Actual use of the 'type' judgment, i.e. invocation of
+	 * {@link TypeJudgment#apply(RuleEnvironment, TypableElement)} will only be done by the {@link TypeProcessor}s
+	 * during post-processing via {@link #use_type_judgment_from_PostProcessors(RuleEnvironment, TypableElement)}. Once
+	 * post-processing of an {@link N4JSResource} has finished, the {@link TypeProcessor} will make sure judgment 'type'
+	 * will never be invoked again for that resource!
+	 */
+	public TypeRef type(RuleEnvironment G, TypableElement element) {
+		return typeProcessor.getType(G, element);
 	}
 
 	/**
-	 * Returns the expected type for the given expression wrapped in a {@link Result}. Never returns <code>null</code>
-	 * <b>but even in the success case the returned result may have a {@link Result#getValue() success value} of
-	 * <code>null</code>!</b>
+	 * <b>!!! This method must never be invoked, except from {@code AbstractProcessor#askXsemanticsForType()} !!!</b>
 	 * <p>
-	 * When invoking {@link Result#getValue() #getValue()} on the returned result, you will get one of the following:
-	 * <ul>
-	 * <li>some type other than the top type if there is an actual type expectation for the given expression,
-	 * <li>the top type (i.e. any) if the expression may evaluate to a value of any type but has to evaluate to a proper
-	 * value (i.e. void is disallowed in this case!),
-	 * <li><code>null</code> if there is not expectation at all, i.e. even void is allowed.
-	 * </ul>
+	 * This method may be called to actually invoke judgment 'type' as implemented in {@link TypeJudgment}. It is used
+	 * by {@link ASTProcessor} while traversing the entire AST (during post-processing) to obtain the type of nodes that
+	 * have not yet been processed.
 	 */
-	public Result<TypeRef> expectedTypeIn(RuleEnvironment G, EObject container, Expression expression) {
-		return ts_internal.expectedTypeIn(G, container, expression);
+	public TypeRef use_type_judgment_from_PostProcessors(RuleEnvironment G, TypableElement element) {
+		return typeJudgment.apply(G, element);
+	}
+
+	/**
+	 * Returns the expected type for the given expression. May return <code>null</code>!
+	 * <p>
+	 * The return value is one of the following:
+	 * <ul>
+	 * <li>an {@link UnknownTypeRef}: computation of type expectation failed. The client should fail safe, i.e. it
+	 * should not perform type checking for the given expression and otherwise ignore this failure.
+	 * <li><code>null</code>: no type expectation at all. The client should not perform type checking for the given
+	 * expression.
+	 * <li>{@link RuleEnvironmentExtensions#topTypeRef(RuleEnvironment) top type}: no specific type expectation, but a
+	 * valid value is required. The client should perform type checking for the given expression against the top type.
+	 * <li>any other type reference: an actual, specific type expectation exists. The client is expected to check the
+	 * given expression's actual type against the returned expected type.
+	 * </ul>
+	 * The difference between return values <code>null</code> and top type is that in the latter case 'void' is not
+	 * accepted. Between return values {@code UnknownTypeRef} and <code>null</code> there is no real difference as far
+	 * as the client is concerned; they are distinguished mainly for clarity and readability of the code in this class.
+	 */
+	public TypeRef expectedType(RuleEnvironment G, EObject container, Expression expression) {
+		return expectedTypeJudgment.apply(G, container, expression);
 	}
 
 	/** Tells if {@code left} is a subtype of {@code right}. Never returns <code>null</code>. */
-	public Result<Boolean> subtype(RuleEnvironment G, TypeArgument left, TypeArgument right) {
-		return ts_internal.subtype(G, left, right);
+	public Result subtype(RuleEnvironment G, TypeArgument left, TypeArgument right) {
+		return subtypeJudgment.apply(G, left, right);
 	}
 
 	/** Tells if {@code left} is a subtype of {@code right}. */
 	public boolean subtypeSucceeded(RuleEnvironment G, TypeArgument left, TypeArgument right) {
-		return ts_internal.subtypeSucceeded(G, left, right);
+		return subtype(G, left, right).isSuccess();
 	}
 
 	/** Tells if {@code left} is a super type of {@code right}. Never returns <code>null</code>. */
-	public Result<Boolean> supertype(RuleEnvironment G, TypeArgument left, TypeArgument right) {
-		return ts_internal.supertype(G, left, right);
+	public Result supertype(RuleEnvironment G, TypeArgument left, TypeArgument right) {
+		if (subtype(G, right, left).isSuccess()) {
+			return Result.success();
+		} else {
+			return Result.failure(
+					left.getTypeRefAsString() + " is not a super type of " + right.getTypeRefAsString(), false, null);
+		}
 	}
 
 	/** Tells if {@code left} is equal to {@code right}. Never returns <code>null</code>. */
-	public Result<Boolean> equaltype(RuleEnvironment G, TypeArgument left, TypeArgument right) {
-		return ts_internal.equaltype(G, left, right);
+	public Result equaltype(RuleEnvironment G, TypeArgument left, TypeArgument right) {
+		if (subtype(G, left, right).isSuccess() && subtype(G, right, left).isSuccess()) {
+			return Result.success();
+		} else {
+			return Result.failure(
+					left.getTypeRefAsString() + " is not equal to " + right.getTypeRefAsString(), false, null);
+		}
 	}
 
 	/** Tells if {@code left} is equal to {@code right}. */
 	public boolean equaltypeSucceeded(RuleEnvironment G, TypeArgument left, TypeArgument right) {
-		return ts_internal.equaltypeSucceeded(G, left, right);
+		return equaltype(G, left, right).isSuccess();
 	}
 
 	/** Returns the upper bound of the given type wrapped in a {@link Result}. Never returns <code>null</code>. */
-	public Result<TypeRef> upperBound(RuleEnvironment G, TypeArgument typeArgument) {
-		return ts_internal.upperBound(G, typeArgument);
+	public TypeRef upperBound(RuleEnvironment G, TypeArgument typeArgument) {
+		return boundJudgment.applyUpperBound(G, typeArgument);
 	}
 
 	/** Returns the lower bound of the given type wrapped in a {@link Result}. Never returns <code>null</code>. */
-	public Result<TypeRef> lowerBound(RuleEnvironment G, TypeArgument typeArgument) {
-		return ts_internal.lowerBound(G, typeArgument);
+	public TypeRef lowerBound(RuleEnvironment G, TypeArgument typeArgument) {
+		return boundJudgment.applyLowerBound(G, typeArgument);
+	}
+
+	/**
+	 * Same as {@link #substTypeVariables(RuleEnvironment, TypeArgument)}, but makes explicit the rule that you get a
+	 * {@link Wildcard} back if you put in a {@code Wildcard}.
+	 */
+	public Wildcard substTypeVariables(RuleEnvironment G, Wildcard wildcard) {
+		return (Wildcard) substTypeVariables(G, (TypeArgument) wildcard);
 	}
 
 	/**
 	 * Same as {@link #substTypeVariables(RuleEnvironment, TypeArgument)}, but makes explicit the rule that you get a
 	 * {@link TypeRef} back if you put in a {@code TypeRef}.
 	 */
-	public TypeRef substTypeVariablesInTypeRef(RuleEnvironment G, TypeRef typeRef) {
-		return (TypeRef) substTypeVariables(G, typeRef).getValue();
+	public TypeRef substTypeVariables(RuleEnvironment G, TypeRef typeRef) {
+		return (TypeRef) substTypeVariables(G, (TypeArgument) typeRef);
 	}
 
 	/**
-	 * Substitutes type variables, i.e. replaces type variables with actual values taken from the rule environment.
-	 * Never returns <code>null</code>.
+	 * Substitutes type variables, i.e. replaces type variables with actual values taken from the
+	 * type-variable-to-type-argument mappings in the given rule environment. Never returns <code>null</code>, EXCEPT if
+	 * <code>null</code> is passed in as type argument.
 	 * <p>
 	 * The given {@code typeArgument} will never be changed, instead a copy will be created to reflect the substitution.
 	 * If nothing was substituted (i.e. given type argument does not contain any type variable or only type variables
@@ -131,15 +196,10 @@ public class N4JSTypeSystem {
 	 * <p>
 	 * Invariant: if you put in a TypeRef, you'll get a TypeRef back (only other case: put in a Wildcard and you'll get
 	 * a Wildcard). But this is not true for subclasses of TypeRef, e.g. put in a FunctionTypeRef and you might get a
-	 * FunctionTypeExpression back).
+	 * FunctionTypeExpression back.
 	 */
-	public Result<TypeArgument> substTypeVariables(RuleEnvironment G, TypeArgument typeArgument) {
-		return ts_internal.substTypeVariables(G, typeArgument);
-	}
-
-	/** Returns the this type at the given location wrapped in a {@link Result}. Never returns <code>null</code>. */
-	public Result<TypeRef> thisTypeRef(RuleEnvironment G, EObject location) {
-		return ts_internal.thisTypeRef(G, location);
+	public TypeArgument substTypeVariables(RuleEnvironment G, TypeArgument typeArgument) {
+		return substTypeVariablesJudgment.apply(G, typeArgument);
 	}
 
 	// ###############################################################################################################
@@ -161,7 +221,7 @@ public class N4JSTypeSystem {
 	 */
 	public TypeRef tau(TypableElement element) {
 		final RuleEnvironment G = RuleEnvironmentExtensions.newRuleEnvironment(element);
-		return type(G, element).getValue();
+		return type(G, element);
 	}
 
 	/**
@@ -222,10 +282,9 @@ public class N4JSTypeSystem {
 	 * <code>null</code> in case of an error) instead of a {@link Result}.
 	 */
 	public TypeRef tau(TypableElement element, RuleEnvironment G) {
-		final Result<TypeRef> result = type(G, element);
-		final TypeRef value = result.getValue();
+		final TypeRef value = type(G, element);
 		if (value != null) {
-			final TypeRef substValue = substTypeVariablesInTypeRef(G, value);
+			final TypeRef substValue = substTypeVariables(G, value);
 			return substValue;
 		}
 		return null;
@@ -321,5 +380,4 @@ public class N4JSTypeSystem {
 			return null;
 		}
 	}
-
 }

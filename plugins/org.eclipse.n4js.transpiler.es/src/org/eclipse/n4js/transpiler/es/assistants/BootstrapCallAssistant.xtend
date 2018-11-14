@@ -74,7 +74,7 @@ import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 import static org.eclipse.n4js.transpiler.utils.TranspilerUtils.*
 
 import static extension org.eclipse.n4js.ts.utils.TypeUtils.*
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  * An {@link TransformationAssistant assistant} to create call expressions for invoking <code>$makeClass</code>,

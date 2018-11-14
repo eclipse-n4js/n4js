@@ -162,13 +162,22 @@ public interface TypeRefsPackage extends EPackage {
 	int TYPE_ARGUMENT___CONTAINS_UNBOUND_TYPE_VARIABLES = 2;
 
 	/**
+	 * The operation id for the '<em>Get Declared Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_ARGUMENT___GET_DECLARED_TYPE = 3;
+
+	/**
 	 * The number of operations of the '<em>Type Argument</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ARGUMENT_OPERATION_COUNT = 3;
+	int TYPE_ARGUMENT_OPERATION_COUNT = 4;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.TypeRefImpl <em>Type Ref</em>}' class.
@@ -215,6 +224,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES = TYPE_ARGUMENT___CONTAINS_UNBOUND_TYPE_VARIABLES;
+
+	/**
+	 * The operation id for the '<em>Get Declared Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_REF___GET_DECLARED_TYPE = TYPE_ARGUMENT___GET_DECLARED_TYPE;
 
 	/**
 	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
@@ -334,22 +352,13 @@ public interface TypeRefsPackage extends EPackage {
 	int TYPE_REF___TO_STRING = TYPE_ARGUMENT_OPERATION_COUNT + 13;
 
 	/**
-	 * The operation id for the '<em>Get Declared Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TYPE_REF___GET_DECLARED_TYPE = TYPE_ARGUMENT_OPERATION_COUNT + 14;
-
-	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_TOP_TYPE = TYPE_ARGUMENT_OPERATION_COUNT + 15;
+	int TYPE_REF___IS_TOP_TYPE = TYPE_ARGUMENT_OPERATION_COUNT + 14;
 
 	/**
 	 * The operation id for the '<em>Is Bottom Type</em>' operation.
@@ -358,7 +367,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_BOTTOM_TYPE = TYPE_ARGUMENT_OPERATION_COUNT + 16;
+	int TYPE_REF___IS_BOTTOM_TYPE = TYPE_ARGUMENT_OPERATION_COUNT + 15;
 
 	/**
 	 * The operation id for the '<em>Get Typing Strategy</em>' operation.
@@ -367,7 +376,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___GET_TYPING_STRATEGY = TYPE_ARGUMENT_OPERATION_COUNT + 17;
+	int TYPE_REF___GET_TYPING_STRATEGY = TYPE_ARGUMENT_OPERATION_COUNT + 16;
 
 	/**
 	 * The operation id for the '<em>Get Structural Members</em>' operation.
@@ -376,7 +385,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___GET_STRUCTURAL_MEMBERS = TYPE_ARGUMENT_OPERATION_COUNT + 18;
+	int TYPE_REF___GET_STRUCTURAL_MEMBERS = TYPE_ARGUMENT_OPERATION_COUNT + 17;
 
 	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
@@ -385,7 +394,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING = TYPE_ARGUMENT_OPERATION_COUNT + 19;
+	int TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING = TYPE_ARGUMENT_OPERATION_COUNT + 18;
 
 	/**
 	 * The operation id for the '<em>Is Def Site Structural Typing</em>' operation.
@@ -394,7 +403,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = TYPE_ARGUMENT_OPERATION_COUNT + 20;
+	int TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = TYPE_ARGUMENT_OPERATION_COUNT + 19;
 
 	/**
 	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
@@ -403,7 +412,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = TYPE_ARGUMENT_OPERATION_COUNT + 21;
+	int TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = TYPE_ARGUMENT_OPERATION_COUNT + 20;
 
 	/**
 	 * The operation id for the '<em>Get Version</em>' operation.
@@ -412,7 +421,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___GET_VERSION = TYPE_ARGUMENT_OPERATION_COUNT + 22;
+	int TYPE_REF___GET_VERSION = TYPE_ARGUMENT_OPERATION_COUNT + 21;
 
 	/**
 	 * The number of operations of the '<em>Type Ref</em>' class.
@@ -421,7 +430,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF_OPERATION_COUNT = TYPE_ARGUMENT_OPERATION_COUNT + 23;
+	int TYPE_REF_OPERATION_COUNT = TYPE_ARGUMENT_OPERATION_COUNT + 22;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.StaticBaseTypeRefImpl <em>Static Base Type Ref</em>}' class.
@@ -468,6 +477,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int STATIC_BASE_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES = TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES;
+
+	/**
+	 * The operation id for the '<em>Get Declared Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STATIC_BASE_TYPE_REF___GET_DECLARED_TYPE = TYPE_REF___GET_DECLARED_TYPE;
 
 	/**
 	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
@@ -585,15 +603,6 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int STATIC_BASE_TYPE_REF___TO_STRING = TYPE_REF___TO_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Declared Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int STATIC_BASE_TYPE_REF___GET_DECLARED_TYPE = TYPE_REF___GET_DECLARED_TYPE;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -732,6 +741,15 @@ public interface TypeRefsPackage extends EPackage {
 	int BASE_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES = STATIC_BASE_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES;
 
 	/**
+	 * The operation id for the '<em>Get Declared Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_TYPE_REF___GET_DECLARED_TYPE = STATIC_BASE_TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -838,15 +856,6 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int BASE_TYPE_REF___TO_STRING = STATIC_BASE_TYPE_REF___TO_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Declared Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASE_TYPE_REF___GET_DECLARED_TYPE = STATIC_BASE_TYPE_REF___GET_DECLARED_TYPE;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -994,6 +1003,15 @@ public interface TypeRefsPackage extends EPackage {
 	int COMPOSED_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES = STATIC_BASE_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES;
 
 	/**
+	 * The operation id for the '<em>Get Declared Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMPOSED_TYPE_REF___GET_DECLARED_TYPE = STATIC_BASE_TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
 	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1091,15 +1109,6 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int COMPOSED_TYPE_REF___TO_STRING = STATIC_BASE_TYPE_REF___TO_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Declared Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int COMPOSED_TYPE_REF___GET_DECLARED_TYPE = STATIC_BASE_TYPE_REF___GET_DECLARED_TYPE;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -1256,6 +1265,15 @@ public interface TypeRefsPackage extends EPackage {
 	int UNION_TYPE_EXPRESSION___CONTAINS_UNBOUND_TYPE_VARIABLES = COMPOSED_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES;
 
 	/**
+	 * The operation id for the '<em>Get Declared Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNION_TYPE_EXPRESSION___GET_DECLARED_TYPE = COMPOSED_TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
 	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1353,15 +1371,6 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int UNION_TYPE_EXPRESSION___TO_STRING = COMPOSED_TYPE_REF___TO_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Declared Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int UNION_TYPE_EXPRESSION___GET_DECLARED_TYPE = COMPOSED_TYPE_REF___GET_DECLARED_TYPE;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -1518,6 +1527,15 @@ public interface TypeRefsPackage extends EPackage {
 	int INTERSECTION_TYPE_EXPRESSION___CONTAINS_UNBOUND_TYPE_VARIABLES = COMPOSED_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES;
 
 	/**
+	 * The operation id for the '<em>Get Declared Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERSECTION_TYPE_EXPRESSION___GET_DECLARED_TYPE = COMPOSED_TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
 	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1615,15 +1633,6 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int INTERSECTION_TYPE_EXPRESSION___TO_STRING = COMPOSED_TYPE_REF___TO_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Declared Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERSECTION_TYPE_EXPRESSION___GET_DECLARED_TYPE = COMPOSED_TYPE_REF___GET_DECLARED_TYPE;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -1780,6 +1789,15 @@ public interface TypeRefsPackage extends EPackage {
 	int THIS_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES = BASE_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES;
 
 	/**
+	 * The operation id for the '<em>Get Declared Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THIS_TYPE_REF___GET_DECLARED_TYPE = BASE_TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1877,15 +1895,6 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int THIS_TYPE_REF___TO_STRING = BASE_TYPE_REF___TO_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Declared Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THIS_TYPE_REF___GET_DECLARED_TYPE = BASE_TYPE_REF___GET_DECLARED_TYPE;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -2042,6 +2051,15 @@ public interface TypeRefsPackage extends EPackage {
 	int THIS_TYPE_REF_NOMINAL___CONTAINS_UNBOUND_TYPE_VARIABLES = THIS_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES;
 
 	/**
+	 * The operation id for the '<em>Get Declared Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THIS_TYPE_REF_NOMINAL___GET_DECLARED_TYPE = THIS_TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2139,15 +2157,6 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int THIS_TYPE_REF_NOMINAL___TO_STRING = THIS_TYPE_REF___TO_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Declared Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THIS_TYPE_REF_NOMINAL___GET_DECLARED_TYPE = THIS_TYPE_REF___GET_DECLARED_TYPE;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -2349,6 +2358,15 @@ public interface TypeRefsPackage extends EPackage {
 	int THIS_TYPE_REF_STRUCTURAL___CONTAINS_UNBOUND_TYPE_VARIABLES = THIS_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES;
 
 	/**
+	 * The operation id for the '<em>Get Declared Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THIS_TYPE_REF_STRUCTURAL___GET_DECLARED_TYPE = THIS_TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2446,15 +2464,6 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int THIS_TYPE_REF_STRUCTURAL___TO_STRING = THIS_TYPE_REF___TO_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Declared Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THIS_TYPE_REF_STRUCTURAL___GET_DECLARED_TYPE = THIS_TYPE_REF___GET_DECLARED_TYPE;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -2683,6 +2692,15 @@ public interface TypeRefsPackage extends EPackage {
 	int BOUND_THIS_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES = THIS_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES;
 
 	/**
+	 * The operation id for the '<em>Get Declared Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOUND_THIS_TYPE_REF___GET_DECLARED_TYPE = THIS_TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2771,15 +2789,6 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int BOUND_THIS_TYPE_REF___TO_STRING = THIS_TYPE_REF___TO_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Declared Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BOUND_THIS_TYPE_REF___GET_DECLARED_TYPE = THIS_TYPE_REF___GET_DECLARED_TYPE;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -2999,6 +3008,15 @@ public interface TypeRefsPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_FEATURE_COUNT = BASE_TYPE_REF_FEATURE_COUNT + 6;
 
 	/**
+	 * The operation id for the '<em>Get Declared Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF___GET_DECLARED_TYPE = BASE_TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3069,15 +3087,6 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int PARAMETERIZED_TYPE_REF___TO_STRING = BASE_TYPE_REF___TO_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Declared Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF___GET_DECLARED_TYPE = BASE_TYPE_REF___GET_DECLARED_TYPE;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -3451,6 +3460,15 @@ public interface TypeRefsPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL_FEATURE_COUNT = PARAMETERIZED_TYPE_REF_FEATURE_COUNT + 4;
 
 	/**
+	 * The operation id for the '<em>Get Declared Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_DECLARED_TYPE = PARAMETERIZED_TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3521,15 +3539,6 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL___TO_STRING = PARAMETERIZED_TYPE_REF___TO_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Declared Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_DECLARED_TYPE = PARAMETERIZED_TYPE_REF___GET_DECLARED_TYPE;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -3758,6 +3767,15 @@ public interface TypeRefsPackage extends EPackage {
 	int EXISTENTIAL_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES = TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES;
 
 	/**
+	 * The operation id for the '<em>Get Declared Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXISTENTIAL_TYPE_REF___GET_DECLARED_TYPE = TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
 	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3837,15 +3855,6 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int EXISTENTIAL_TYPE_REF___TO_STRING = TYPE_REF___TO_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Declared Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EXISTENTIAL_TYPE_REF___GET_DECLARED_TYPE = TYPE_REF___GET_DECLARED_TYPE;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -4011,6 +4020,15 @@ public interface TypeRefsPackage extends EPackage {
 	int UNKNOWN_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES = TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES;
 
 	/**
+	 * The operation id for the '<em>Get Declared Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNKNOWN_TYPE_REF___GET_DECLARED_TYPE = TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
 	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4117,15 +4135,6 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int UNKNOWN_TYPE_REF___TO_STRING = TYPE_REF___TO_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Declared Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int UNKNOWN_TYPE_REF___GET_DECLARED_TYPE = TYPE_REF___GET_DECLARED_TYPE;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -4291,6 +4300,15 @@ public interface TypeRefsPackage extends EPackage {
 	int TYPE_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES = BASE_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES;
 
 	/**
+	 * The operation id for the '<em>Get Declared Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_TYPE_REF___GET_DECLARED_TYPE = BASE_TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4388,15 +4406,6 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int TYPE_TYPE_REF___TO_STRING = BASE_TYPE_REF___TO_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Declared Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TYPE_TYPE_REF___GET_DECLARED_TYPE = BASE_TYPE_REF___GET_DECLARED_TYPE;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -4562,6 +4571,15 @@ public interface TypeRefsPackage extends EPackage {
 	int WILDCARD___CONTAINS_UNBOUND_TYPE_VARIABLES = TYPE_ARGUMENT___CONTAINS_UNBOUND_TYPE_VARIABLES;
 
 	/**
+	 * The operation id for the '<em>Get Declared Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int WILDCARD___GET_DECLARED_TYPE = TYPE_ARGUMENT___GET_DECLARED_TYPE;
+
+	/**
 	 * The operation id for the '<em>Get Declared Or Implicit Upper Bound</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4642,6 +4660,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int FUNCTION_TYPE_EXPR_OR_REF___CONTAINS_UNBOUND_TYPE_VARIABLES = STATIC_BASE_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES;
+
+	/**
+	 * The operation id for the '<em>Get Declared Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_EXPR_OR_REF___GET_DECLARED_TYPE = STATIC_BASE_TYPE_REF___GET_DECLARED_TYPE;
 
 	/**
 	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
@@ -4732,15 +4759,6 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int FUNCTION_TYPE_EXPR_OR_REF___TO_STRING = STATIC_BASE_TYPE_REF___TO_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Declared Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FUNCTION_TYPE_EXPR_OR_REF___GET_DECLARED_TYPE = STATIC_BASE_TYPE_REF___GET_DECLARED_TYPE;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -5014,6 +5032,15 @@ public interface TypeRefsPackage extends EPackage {
 	int FUNCTION_TYPE_REF_FEATURE_COUNT = PARAMETERIZED_TYPE_REF_FEATURE_COUNT + 0;
 
 	/**
+	 * The operation id for the '<em>Get Declared Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_REF___GET_DECLARED_TYPE = PARAMETERIZED_TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5084,15 +5111,6 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int FUNCTION_TYPE_REF___TO_STRING = PARAMETERIZED_TYPE_REF___TO_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Declared Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FUNCTION_TYPE_REF___GET_DECLARED_TYPE = PARAMETERIZED_TYPE_REF___GET_DECLARED_TYPE;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -5438,6 +5456,15 @@ public interface TypeRefsPackage extends EPackage {
 	int FUNCTION_TYPE_EXPRESSION___CONTAINS_UNBOUND_TYPE_VARIABLES = FUNCTION_TYPE_EXPR_OR_REF___CONTAINS_UNBOUND_TYPE_VARIABLES;
 
 	/**
+	 * The operation id for the '<em>Get Declared Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_EXPRESSION___GET_DECLARED_TYPE = FUNCTION_TYPE_EXPR_OR_REF___GET_DECLARED_TYPE;
+
+	/**
 	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5526,15 +5553,6 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int FUNCTION_TYPE_EXPRESSION___TO_STRING = FUNCTION_TYPE_EXPR_OR_REF___TO_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Declared Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FUNCTION_TYPE_EXPRESSION___GET_DECLARED_TYPE = FUNCTION_TYPE_EXPR_OR_REF___GET_DECLARED_TYPE;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -5763,6 +5781,15 @@ public interface TypeRefsPackage extends EPackage {
 	int DEFERRED_TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES = TYPE_REF___CONTAINS_UNBOUND_TYPE_VARIABLES;
 
 	/**
+	 * The operation id for the '<em>Get Declared Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DEFERRED_TYPE_REF___GET_DECLARED_TYPE = TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
 	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5869,15 +5896,6 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int DEFERRED_TYPE_REF___TO_STRING = TYPE_REF___TO_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Declared Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DEFERRED_TYPE_REF___GET_DECLARED_TYPE = TYPE_REF___GET_DECLARED_TYPE;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -6171,6 +6189,15 @@ public interface TypeRefsPackage extends EPackage {
 	int VERSIONED_PARAMETERIZED_TYPE_REF_FEATURE_COUNT = PARAMETERIZED_TYPE_REF_FEATURE_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>Get Declared Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF___GET_DECLARED_TYPE = PARAMETERIZED_TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6241,15 +6268,6 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int VERSIONED_PARAMETERIZED_TYPE_REF___TO_STRING = PARAMETERIZED_TYPE_REF___TO_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Declared Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF___GET_DECLARED_TYPE = PARAMETERIZED_TYPE_REF___GET_DECLARED_TYPE;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -6514,6 +6532,15 @@ public interface TypeRefsPackage extends EPackage {
 	int VERSIONED_FUNCTION_TYPE_REF_FEATURE_COUNT = VERSIONED_PARAMETERIZED_TYPE_REF_FEATURE_COUNT + 0;
 
 	/**
+	 * The operation id for the '<em>Get Declared Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_FUNCTION_TYPE_REF___GET_DECLARED_TYPE = VERSIONED_PARAMETERIZED_TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6584,15 +6611,6 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int VERSIONED_FUNCTION_TYPE_REF___TO_STRING = VERSIONED_PARAMETERIZED_TYPE_REF___TO_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Declared Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_FUNCTION_TYPE_REF___GET_DECLARED_TYPE = VERSIONED_PARAMETERIZED_TYPE_REF___GET_DECLARED_TYPE;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -6965,6 +6983,15 @@ public interface TypeRefsPackage extends EPackage {
 	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_FEATURE_COUNT = VERSIONED_PARAMETERIZED_TYPE_REF_FEATURE_COUNT + 4;
 
 	/**
+	 * The operation id for the '<em>Get Declared Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_DECLARED_TYPE = VERSIONED_PARAMETERIZED_TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -7035,15 +7062,6 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___TO_STRING = VERSIONED_PARAMETERIZED_TYPE_REF___TO_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Declared Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_DECLARED_TYPE = VERSIONED_PARAMETERIZED_TYPE_REF___GET_DECLARED_TYPE;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -7416,16 +7434,6 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getTypeRef__ToString();
-
-	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeRef#getDeclaredType() <em>Get Declared Type</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Declared Type</em>' operation.
-	 * @see org.eclipse.n4js.ts.typeRefs.TypeRef#getDeclaredType()
-	 * @generated
-	 */
-	EOperation getTypeRef__GetDeclaredType();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeRef#isTopType() <em>Is Top Type</em>}' operation.
@@ -8357,6 +8365,16 @@ public interface TypeRefsPackage extends EPackage {
 	EOperation getTypeArgument__ContainsUnboundTypeVariables();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeArgument#getDeclaredType() <em>Get Declared Type</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Declared Type</em>' operation.
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeArgument#getDeclaredType()
+	 * @generated
+	 */
+	EOperation getTypeArgument__GetDeclaredType();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.Wildcard <em>Wildcard</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -9064,14 +9082,6 @@ public interface TypeRefsPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation TYPE_REF___TO_STRING = eINSTANCE.getTypeRef__ToString();
-
-		/**
-		 * The meta object literal for the '<em><b>Get Declared Type</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation TYPE_REF___GET_DECLARED_TYPE = eINSTANCE.getTypeRef__GetDeclaredType();
 
 		/**
 		 * The meta object literal for the '<em><b>Is Top Type</b></em>' operation.
@@ -9832,6 +9842,14 @@ public interface TypeRefsPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation TYPE_ARGUMENT___CONTAINS_UNBOUND_TYPE_VARIABLES = eINSTANCE.getTypeArgument__ContainsUnboundTypeVariables();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Declared Type</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TYPE_ARGUMENT___GET_DECLARED_TYPE = eINSTANCE.getTypeArgument__GetDeclaredType();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.impl.WildcardImpl <em>Wildcard</em>}' class.

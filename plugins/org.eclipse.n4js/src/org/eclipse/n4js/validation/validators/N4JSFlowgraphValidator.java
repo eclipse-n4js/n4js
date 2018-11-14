@@ -17,7 +17,7 @@ import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyser;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.smith.Measurement;
-import org.eclipse.n4js.typesystem.TypeSystemHelper;
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
 import org.eclipse.n4js.utils.FindReferenceHelper;
 import org.eclipse.n4js.utils.N4JSDataCollectors;
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator;

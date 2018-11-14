@@ -8,10 +8,9 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.typesystem;
+package org.eclipse.n4js.typesystem.utils;
 
 import org.eclipse.n4js.ts.types.Type;
-import org.eclipse.xsemantics.runtime.RuleEnvironment;
 
 /**
  * Provides replacements for types that will be considered by the type system in subtype checks (and only in subtype

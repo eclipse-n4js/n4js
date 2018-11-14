@@ -41,9 +41,9 @@ import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
-import org.eclipse.xsemantics.runtime.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  * Base for all poly processors. Contains some utility and convenience methods.
@@ -81,7 +81,7 @@ package abstract class AbstractPolyProcessor extends AbstractProcessor {
 				// all we do with the newly created rule environment is to type a backward(!) reference, so we can be
 				// sure that no significant processing will be triggered by the type judgment invocation below
 				val G = obj.newRuleEnvironment;
-				val TypeRef targetTypeRef = ts.type(G, obj.target).value; // this is a backward reference (because we type obj's child)
+				val TypeRef targetTypeRef = ts.type(G, obj.target); // this is a backward reference (because we type obj's child)
 				if (targetTypeRef instanceof FunctionTypeExprOrRef) {
 					targetTypeRef.generic && obj.typeArgs.size < targetTypeRef.typeVars.size
 				} else {
@@ -181,7 +181,7 @@ package abstract class AbstractPolyProcessor extends AbstractProcessor {
 	 * nested poly expression's type from the cache.
 	 */
 	def protected TypeRef getFinalResultTypeOfNestedPolyExpression(Expression nestedPolyExpression) {
-		return ASTMetaInfoUtils.getTypeFailSafe(nestedPolyExpression)?.value;
+		return ASTMetaInfoUtils.getTypeFailSafe(nestedPolyExpression);
 	}
 
 	def protected TypeRef subst(TypeRef typeRef, RuleEnvironment G,
@@ -196,14 +196,14 @@ package abstract class AbstractPolyProcessor extends AbstractProcessor {
 		val Gx = G.wrap;
 		substitutions.entrySet.forEach [ e |
 			if (reverse)
-				Gx.add(e.value, TypeUtils.createTypeRef(e.key))
+				Gx.put(e.value, TypeUtils.createTypeRef(e.key))
 			else
-				Gx.add(e.key, TypeUtils.createTypeRef(e.value))
+				Gx.put(e.key, TypeUtils.createTypeRef(e.value))
 		];
-		val result = ts.substTypeVariables(Gx, typeRef);
-		if (result.failed)
-			throw new IllegalArgumentException("substitution failed", result.ruleFailedException);
-		return result.value as TypeRef; // we put a TypeRef into 'substTypeVariables', so we always get back a TypeRef
+		val typeRefSubst = ts.substTypeVariables(Gx, typeRef);
+		if (typeRefSubst === null)
+			throw new IllegalArgumentException("substitution failed");
+		return typeRefSubst;
 	}
 
 	def protected TypeRef applySolution(TypeRef typeRef, RuleEnvironment G, Map<InferenceVariable, TypeRef> solution) {
@@ -211,11 +211,11 @@ package abstract class AbstractPolyProcessor extends AbstractProcessor {
 			return typeRef; // note: returning 'null' if typeRef==null (broken AST, etc.)
 		}
 		val Gx = G.wrap;
-		solution.entrySet.forEach[e|Gx.add(e.key, e.value)];
-		val result = ts.substTypeVariables(Gx, typeRef);
-		if (result.failed)
-			throw new IllegalArgumentException("substitution failed", result.ruleFailedException);
-		return result.value as TypeRef; // we put a TypeRef into 'substTypeVariables', so we always get back a TypeRef
+		solution.entrySet.forEach[e|Gx.put(e.key, e.value)];
+		val typeRefSubst = ts.substTypeVariables(Gx, typeRef);
+		if (typeRefSubst === null)
+			throw new IllegalArgumentException("substitution failed");
+		return typeRefSubst;
 	}
 
 	def protected Map<InferenceVariable, TypeRef> createPseudoSolution(InferenceContext infCtx,

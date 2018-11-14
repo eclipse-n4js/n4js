@@ -47,7 +47,7 @@ import org.eclipse.xtext.EcoreUtil2
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
 import static extension org.eclipse.n4js.n4JS.DestructureUtils.*
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  * Transforms ES6 destructuring patterns into equivalent ES5 code. If the target engine supports ES6 destructuring

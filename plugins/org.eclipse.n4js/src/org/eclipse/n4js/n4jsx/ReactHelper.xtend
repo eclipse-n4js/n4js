@@ -21,20 +21,20 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TField
+import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TModule
+import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
-import org.eclipse.n4js.typesystem.TypeSystemHelper
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.scoping.IScopeProvider
 import org.eclipse.xtext.util.IResourceScopeCache
 
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.ts.types.Type
-import org.eclipse.n4js.ts.types.TFunction
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  * This helper provides utilities for looking up React definitions such as React.Component or React.Element or
@@ -101,10 +101,7 @@ class ReactHelper {
 		val expr = jsxElem.jsxElementName.expression;
 		val G = expr.newRuleEnvironment;
 		val exprResult = ts.type(G, expr);
-		if (exprResult.failed)
-			return null;
-
-		return exprResult.value;
+		return exprResult;
 	}
 	
 	/**
@@ -164,7 +161,7 @@ class ReactHelper {
 			tsh.addSubstitutions(G, TypeUtils.createTypeRef(tclass));
 			// Substitute type variables in the 'props' and return the result
 			// Note: after substTypeVariablesInTypeRef is called, the rule environment G is unchanged so do not ask G for result as this caused bug IDE-2540
-			val reactComponentPropsTypeRef = ts.substTypeVariablesInTypeRef(G,
+			val reactComponentPropsTypeRef = ts.substTypeVariables(G,
 				TypeUtils.createTypeRef(reactComponentProps));
 			return reactComponentPropsTypeRef;
 

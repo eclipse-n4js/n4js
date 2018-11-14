@@ -43,7 +43,6 @@ Contributors:
       <import plugin="org.apache.log4j"/>
       <import plugin="com.google.guava"/>
       <import plugin="org.eclipse.emf.ecore"/>
-      <import plugin="org.eclipse.xsemantics.runtime"/>
       <import plugin="com.google.inject"/>
       <import plugin="org.eclipse.xtext.util"/>
       <import plugin="org.antlr.runtime"/>

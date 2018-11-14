@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.typesystem
+package org.eclipse.n4js.typesystem.utils
 
 import com.google.inject.Inject
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
@@ -18,7 +18,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.ts.utils.TypeUtils
-import org.eclipse.xsemantics.runtime.RuleEnvironment
+import org.eclipse.n4js.typesystem.N4JSTypeSystem
 
 /**
  * Type System Helper Strategy for deriving a new, slightly modified TypeRef from an existing TypeRef.
@@ -30,12 +30,9 @@ import org.eclipse.xsemantics.runtime.RuleEnvironment
  * <p>
  * If you change one method, check the others if the same change might be required there as well!
  */
-class DerivationComputer extends TypeSystemHelperStrategy {
+package class DerivationComputer extends TypeSystemHelperStrategy {
 
 	@Inject private N4JSTypeSystem ts;
-
-	private enum BoundType { UPPER, LOWER }
-
 
 	def FunctionTypeExpression createSubstitutionOfFunctionTypeExprOrRef(RuleEnvironment G, FunctionTypeExprOrRef F) {
 		val result = TypeRefsFactory.eINSTANCE.createFunctionTypeExpression
@@ -60,13 +57,13 @@ class DerivationComputer extends TypeSystemHelperStrategy {
 
 		// substitution on this type
 		if (F.declaredThisType !== null) {
-			val TypeRef resultDeclaredThisType = ts.substTypeVariablesInTypeRef(G,F.declaredThisType);
+			val TypeRef resultDeclaredThisType = ts.substTypeVariables(G,F.declaredThisType);
 			result.declaredThisType = TypeUtils.copy(resultDeclaredThisType)
 		}
 
 		// substitution on return type
 		if (F.returnTypeRef !== null) {
-			val TypeRef resultReturnTypeRef = ts.substTypeVariablesInTypeRef(G,F.returnTypeRef);
+			val TypeRef resultReturnTypeRef = ts.substTypeVariables(G,F.returnTypeRef);
 			result.returnTypeRef = TypeUtils.copyIfContained(resultReturnTypeRef)
 		}
 
@@ -82,7 +79,7 @@ class DerivationComputer extends TypeSystemHelperStrategy {
 				newPar.hasInitializerAssignment = fpar.hasInitializerAssignment
 
 				if(fpar.typeRef !== null) {
-					val TypeRef resultParTypeRef = ts.substTypeVariablesInTypeRef(G,fpar.typeRef);
+					val TypeRef resultParTypeRef = ts.substTypeVariables(G,fpar.typeRef);
 					newPar.typeRef = TypeUtils.copyIfContained(resultParTypeRef)
 				}
 
@@ -105,7 +102,7 @@ class DerivationComputer extends TypeSystemHelperStrategy {
 	def FunctionTypeExpression createLowerBoundOfFunctionTypeExprOrRef(RuleEnvironment G, FunctionTypeExprOrRef F) {
 		createBoundOfFunctionTypeExprOrRef(G,F,BoundType.LOWER);
 	}
-	private def FunctionTypeExpression createBoundOfFunctionTypeExprOrRef(RuleEnvironment G, FunctionTypeExprOrRef F, BoundType boundType) {
+	def FunctionTypeExpression createBoundOfFunctionTypeExprOrRef(RuleEnvironment G, FunctionTypeExprOrRef F, BoundType boundType) {
 		val result = TypeRefsFactory.eINSTANCE.createFunctionTypeExpression
 
 		// let posterity know that the newly created FunctionTypeExpression
@@ -129,8 +126,8 @@ class DerivationComputer extends TypeSystemHelperStrategy {
 		// upper/lower bound of return type
 		if (F.returnTypeRef !== null) {
 			val resultReturnTypeRef = switch(boundType) {
-				case UPPER: ts.upperBound(G,F.returnTypeRef).value
-				case LOWER: ts.lowerBound(G,F.returnTypeRef).value
+				case UPPER: ts.upperBound(G,F.returnTypeRef)
+				case LOWER: ts.lowerBound(G,F.returnTypeRef)
 			};
 			result.returnTypeRef =
 				TypeUtils.copyIfContained(resultReturnTypeRef);
@@ -147,8 +144,8 @@ class DerivationComputer extends TypeSystemHelperStrategy {
 
 				if(fpar.typeRef !== null) {
 					val resultParTypeRef = switch(boundType) {
-						case UPPER: ts.lowerBound(G,fpar.typeRef).value
-						case LOWER: ts.upperBound(G,fpar.typeRef).value
+						case UPPER: ts.lowerBound(G,fpar.typeRef)
+						case LOWER: ts.upperBound(G,fpar.typeRef)
 					};
 					newPar.typeRef = TypeUtils.copyIfContained(resultParTypeRef)
 				}
@@ -185,7 +182,7 @@ class DerivationComputer extends TypeSystemHelperStrategy {
 		val currTV_declUB = currTV.declaredUpperBound;
 		if(currTV_declUB!==null) {
 			val oldUB = F.getTypeVarUpperBound(currTV);
-			val newUB = ts.substTypeVariablesInTypeRef(G,oldUB);
+			val newUB = ts.substTypeVariables(G,oldUB);
 			val unchanged = (newUB === currTV_declUB); // note: identity compare is what we want
 			if(!unchanged) {
 				val idx = result.unboundTypeVars.indexOf(currTV);

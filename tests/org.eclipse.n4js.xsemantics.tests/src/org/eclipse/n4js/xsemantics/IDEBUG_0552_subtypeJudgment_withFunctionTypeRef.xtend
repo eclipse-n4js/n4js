@@ -19,8 +19,8 @@ import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.validation.JavaScriptVariant
-import org.eclipse.xsemantics.runtime.RuleEnvironment
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.validation.ValidationTestHelper
@@ -30,7 +30,7 @@ import org.junit.runner.RunWith
 
 import static org.junit.Assert.*
 
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 @RunWith(XtextRunner)
 @InjectWith(N4JSInjectorProvider)
@@ -76,15 +76,15 @@ class IDEBUG_0552_subtypeJudgment_withFunctionTypeRef extends AbstractTypesystem
 	@Test
 	def void test_FunctionTypeRef_subtype_FunctionTypeExpression() {
 		val result = ts.subtype(G, functionTypeRef, functionTypeExpression);
-		assertFalse("subtype judgment should not fail", result.failed);
-		assertTrue("{function(A):B} should be a subtype of {function(A):B}", result.value==Boolean.TRUE);
+		assertFalse("subtype judgment should not fail", result.failure);
+		assertTrue("{function(A):B} should be a subtype of {function(A):B}", result.success);
 	}
 
 
 	@Test
 	def void test_FunctionTypeExpression_subtype_FunctionTypeRef() {
 		val result = ts.subtype(G, functionTypeExpression, functionTypeRef);
-		assertFalse("subtype judgment should not fail", result.failed);
-		assertTrue("{function(A):B} should be a subtype of {function(A):B}", result.value==Boolean.TRUE);
+		assertFalse("subtype judgment should not fail", result.failure);
+		assertTrue("{function(A):B} should be a subtype of {function(A):B}", result.success);
 	}
 }

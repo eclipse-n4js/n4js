@@ -13,6 +13,7 @@ package org.eclipse.n4js.postprocessing
 import com.google.common.base.Optional
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import java.util.Map
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
@@ -25,9 +26,8 @@ import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.utils.N4JSLanguageUtils
-import org.eclipse.xsemantics.runtime.RuleEnvironment
-import java.util.Map
 
 /**
  * {@link PolyProcessor} delegates here for processing array literals.
@@ -53,14 +53,14 @@ package class PolyProcessor_CallExpression extends AbstractPolyProcessor {
 
 		val target = callExpr.target;
 		// IMPORTANT: do not use #processExpr() here (if target is a PolyExpression, it has been processed in a separate, independent inference!)
-		val targetTypeRef = ts.type(G, target).value;
+		val targetTypeRef = ts.type(G, target);
 		if (!(targetTypeRef instanceof FunctionTypeExprOrRef))
 			return TypeRefsFactory.eINSTANCE.createUnknownTypeRef;
 		val fteor = targetTypeRef as FunctionTypeExprOrRef;
 		val isPoly = fteor.generic && callExpr.typeArgs.size < fteor.typeVars.size
 
 		if (!isPoly) {
-			val result = ts.type(G, callExpr).value;
+			val result = ts.type(G, callExpr);
 			// do not store in cache (TypeProcessor responsible for storing types of non-poly expressions in cache)
 			return result;
 		}

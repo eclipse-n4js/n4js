@@ -25,7 +25,7 @@ class Beer {
             this.iHas = has
         }
         // as of IDE-785 it is possible to return this, but
-        // subtype checks are not supported here XPECT FIXME noerrors -->"this[Beer] is not a subtype of union{this[Beer],number}." at "this"
+        // subtype checks are not supported here XPECT noerrors -->"this[Beer] is not a subtype of union{this[Beer],number}." at "this"
         return this;
     }
 }

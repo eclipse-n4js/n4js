@@ -21,7 +21,7 @@ import org.eclipse.n4js.scoping.N4JSScopeProvider
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
-import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.testing.InjectWith
@@ -63,7 +63,7 @@ class ThisScopingTest {
 			EcoreUtilN4.getAllContentsFiltered(objectLiteral, [! (it instanceof ObjectLiteral)]).filter(ThisLiteral).
 				forEach [ thisLiteral |
 					assertNotNull("No type derived from object literal", objectLiteralType)
-					val boundType = ts.type(G, thisLiteral).value
+					val boundType = ts.type(G, thisLiteral)
 					if (thisLiteral.containingFunction !== null &&
 						! (thisLiteral.containingFunction.eContainer instanceof PropertyAssignment)) { // nested function
 						assertEquals("nested", thisLiteral.containingFunction.name)
@@ -91,12 +91,8 @@ class ThisScopingTest {
 			EcoreUtilN4.getAllContentsFiltered(classifierDecl, [! (it instanceof N4ClassifierDeclaration)]).filter(
 				ThisLiteral).forEach [ thisLiteral |
 				assertNotNull("No type defined for classifier", classifierType)
-				val boundTypeResult = ts.type(G, thisLiteral);
-				assertNotNull(
-					"Cannot retrieve upper bound of this type ref: " + boundTypeResult.ruleFailedException,
-					boundTypeResult.value
-				);
-				val boundType = boundTypeResult.value
+				val boundType = ts.type(G, thisLiteral);
+				assertNotNull(boundType);
 				if (thisLiteral.containingFunction !== null &&
 					! (thisLiteral.containingFunction.eContainer instanceof N4ClassifierDeclaration)) { // nested function
 					assertEquals("nested", thisLiteral.containingFunction.name)
@@ -104,10 +100,10 @@ class ThisScopingTest {
 				} else {
 					val upperBoundResult = ts.upperBound(G, boundType);
 					assertNotNull(
-						"Cannot retrieve upper bound of this type ref: " + upperBoundResult.ruleFailedException,
-						upperBoundResult.value
+						"Cannot retrieve upper bound of this type ref: " + boundType,
+						upperBoundResult
 					);
-					val upperBound = upperBoundResult.value;
+					val upperBound = upperBoundResult;
 					assertTrue(upperBound instanceof ParameterizedTypeRef)
 					assertEquals(classifierType, (upperBound as ParameterizedTypeRef).declaredType);
 				}

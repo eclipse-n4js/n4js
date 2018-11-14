@@ -11,20 +11,22 @@
 package org.eclipse.n4js.tests.scoping
 
 import com.google.inject.Inject
-import org.eclipse.n4js.N4JSInjectorProvider
+import java.util.Arrays
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.util.ParseHelper
 import org.eclipse.xtext.testing.validation.ValidationTestHelper
+import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.eclipse.n4js.n4JS.N4JSPackage
 
 /**
  */
-@InjectWith(N4JSInjectorProvider)
 @RunWith(XtextRunner)
+@InjectWith(N4JSInjectorProviderWithIssueSuppression)
 class AT_136_AccessPredefinedTypesTest {
 
 	@Inject extension ParseHelper<Script>
@@ -77,7 +79,9 @@ class AT_136_AccessPredefinedTypesTest {
 			var s: String = ''
 			s.toLowerCase().toLowerCase()
 		'''.parse
-		script.assertError(N4JSPackage.Literals.STRING_LITERAL, "org.eclipse.n4js.xsemantics.SubtypeParameterizedTypeRef")
+		script.assertErrors(
+			"ERROR:string is not a subtype of String. (__synthetic0.n4js line : 1 column : 17)"
+		)
 	}
 
 	@Test
@@ -85,7 +89,9 @@ class AT_136_AccessPredefinedTypesTest {
 		val script = '''
 			var b: Boolean = true
 		'''.parse
-		script.assertError(N4JSPackage.Literals.BOOLEAN_LITERAL, "org.eclipse.n4js.xsemantics.SubtypeParameterizedTypeRef")
+		script.assertErrors(
+			"ERROR:boolean is not a subtype of Boolean. (__synthetic0.n4js line : 1 column : 18)"
+		)
 	}
 
 	@Test
@@ -101,6 +107,13 @@ class AT_136_AccessPredefinedTypesTest {
 		val script = '''
 			var n: Number = 1
 		'''.parse
-		script.assertError(N4JSPackage.Literals.INT_LITERAL, "org.eclipse.n4js.xsemantics.SubtypeParameterizedTypeRef")
+		script.assertErrors(
+			"ERROR:int is not a subtype of Number. (__synthetic0.n4js line : 1 column : 17)"
+		)
+	}
+
+	def private void assertErrors(EObject model, String... errorMsgs) {
+		val issues = model.eResource.validate;
+		Assert.assertEquals(issues.map[toString], Arrays.asList(errorMsgs));
 	}
 }

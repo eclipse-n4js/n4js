@@ -11,8 +11,9 @@
 package org.eclipse.n4js.typesystem
 
 import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.validation.JavaScriptVariant
-import org.eclipse.xsemantics.runtime.RuleEnvironment
 
 /**
  * Helper for type system tests, generating variables

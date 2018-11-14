@@ -18,7 +18,7 @@ import org.eclipse.emf.ecore.EObject
 import static org.eclipse.n4js.utils.UtilN4.sanitizeForHTML
 
 import static extension com.google.common.base.Strings.*
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  * Extended hover provider which unlike {@link N4JSHoverProvider}
@@ -83,7 +83,7 @@ class N4JSTypeInformationHoverProvider extends N4JSHoverProvider {
 		if (null === expression.eResource) {
 			return null;
 		}
-		val type = expression.newRuleEnvironment.type(expression).value;
+		val type = expression.newRuleEnvironment.type(expression);
 		return if (null === type) null else type.typeRefAsString;
 	}
 

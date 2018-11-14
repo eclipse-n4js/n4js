@@ -31,7 +31,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 import static org.junit.Assert.*
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  */
@@ -117,11 +118,7 @@ class AT_260_TypeRefInAnnotationArgTest {
 		N4JSResource.postProcessContainingN4JSResourceOf(script); // should make no difference, but maybe it helps to fix a Windows problem
 		val thisRef = script.eAllContents.filter(ThisLiteral).head;
 		assertNotNull("This ref not found", thisRef);
-		val thisRefTypeResult = ts.type(script.newRuleEnvironment, thisRef);
-		if (thisRefTypeResult.ruleFailedException!==null) {
-			assertNull("Error typing this reference", thisRefTypeResult.ruleFailedException)
-		}
-		val thisRefType = thisRefTypeResult.value;
+		val thisRefType = ts.type(script.newRuleEnvironment, thisRef);
 		assertNotNull("Cannot type this reference, it's null", thisRefType);
 		// we expect the normalized this type:
 		assertEquals("~this[Object]", thisRefType.typeRefAsString);

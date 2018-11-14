@@ -32,11 +32,10 @@ import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
-import org.eclipse.n4js.typesystem.TypeSystemHelper
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.ResourceType
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
-import org.eclipse.xsemantics.runtime.Result
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 
@@ -47,7 +46,7 @@ import static org.eclipse.n4js.n4JS.N4JSPackage.Literals.JSX_SPREAD_ATTRIBUTE__E
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.organize.imports.ImportSpecifiersUtil.*
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  * Validation of React bindings including naming convention (components in upper case and HTML tags in lower case)
@@ -231,7 +230,7 @@ class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 		val expr = jsxElem.jsxElementName.expression;
 		val G = expr.newRuleEnvironment;
 		val result = ts.subtype(G, exprTypeRef.returnTypeRef, TypeUtils.createTypeRef(elementClassTypeRef));
-		if (result.failed) {
+		if (result.failure) {
 			val message = IssueCodes.
 				getMessageForJSX_REACT_ELEMENT_FUNCTION_NOT_REACT_ELEMENT_ERROR(exprTypeRef.returnTypeRef.typeRefAsString);
 			addIssue(
@@ -256,7 +255,7 @@ class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 		val tclass = tsh.getStaticType(G, exprTypeRef);
 		val tclassTypeRef = TypeUtils.createTypeRef(tclass);
 		val resultSubType = ts.subtype(G, tclassTypeRef, TypeUtils.createTypeRef(componentClassTypeRef))
-		if (resultSubType.failed) {
+		if (resultSubType.failure) {
 			val message = getMessageForJSX_REACT_ELEMENT_CLASS_NOT_REACT_ELEMENT_ERROR();
 			addIssue(message, expr, JSX_REACT_ELEMENT_CLASS_NOT_REACT_ELEMENT_ERROR);
 		}
@@ -273,11 +272,11 @@ class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 		}
 
 		val G = propertyAttribute.newRuleEnvironment;
-		val Result<TypeRef> result = ts.type(G, propertyAttribute.property);
+		val TypeRef result = ts.type(G, propertyAttribute.property);
 		//TODO: it's not nice that we get an UnknownTypeRef, here;
 		//they are mainly intended for error cases, not valid code. Probably it should be any+ instead.
 		//This requires refactoring else where
-		if (result.value instanceof UnknownTypeRef) {
+		if (result instanceof UnknownTypeRef) {
 			val message = IssueCodes.getMessageForJSX_JSXSPROPERTYATTRIBUTE_NOT_DECLARED_IN_PROPS(propertyAttribute.propertyAsText,
 				jsxElem?.jsxElementName?.expression?.refName);
 					addIssue(
@@ -307,10 +306,8 @@ class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 			TypingStrategy.STRUCTURAL).filter[m | (m instanceof TField) || (m instanceof TGetter)];
 
 		val exprTypeResult = ts.type(G, expr);
-		if (exprTypeResult.failed)
-			return;
 		// Retrieve attributes (either field or getter) in spread operator type
-		val attributesInSpreadOperatorType = tsh.structuralTypesHelper.collectStructuralMembers(G, exprTypeResult.value,
+		val attributesInSpreadOperatorType = tsh.structuralTypesHelper.collectStructuralMembers(G, exprTypeResult,
 				TypingStrategy.STRUCTURAL).filter[m | (m instanceof TField) || (m instanceof TGetter)];
 
 		//commented out but not deleted for now since still it is not clear if this check makes sense
@@ -318,14 +315,14 @@ class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 
 		// Type check each attribute in spreader operator against the corresponding props type's field/getter
 		attributesInSpreadOperatorType.forEach [ attributeInSpreadOperator |
-			val attributeInSpreadOperatorTypeRef = reactHelper.typeRefOfFieldOrGetter(attributeInSpreadOperator, exprTypeResult.value);
+			val attributeInSpreadOperatorTypeRef = reactHelper.typeRefOfFieldOrGetter(attributeInSpreadOperator, exprTypeResult);
 			val fieldOrGetterInProps = fieldsOrGettersInProps.findFirst[fieldOrGetter | attributeInSpreadOperator.name == fieldOrGetter.name];
 
 			if (fieldOrGetterInProps !== null) {
 				//Reason for using tau: Consider type arguments by calculating the property of within the context of "props" type
 				val fieldOrGetterInPropsTypeRef = ts.tau(fieldOrGetterInProps, propsType);
 				val result = ts.subtype(G, attributeInSpreadOperatorTypeRef, fieldOrGetterInPropsTypeRef);
-				if (result.failed) {
+				if (result.failure) {
 					val message = IssueCodes.getMessageForJSX_JSXSPREADATTRIBUTE_WRONG_SUBTYPE(attributeInSpreadOperator.name,
 						attributeInSpreadOperatorTypeRef.typeRefAsString, fieldOrGetterInPropsTypeRef.typeRefAsString);
 					addIssue(
@@ -376,13 +373,9 @@ class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 		// Then collect attributes in spread operators
 		val attributesInSpreadOperator = Lists.newArrayList(jsxPropertyAttributes.filter(typeof(JSXSpreadAttribute)).map [ spreadAttribute |
 			val exprTypeRefResult = ts.type(G, spreadAttribute.expression);
-			if (!exprTypeRefResult.failed) {
-				return tsh.structuralTypesHelper.collectStructuralMembers(G, exprTypeRefResult.value, TypingStrategy.STRUCTURAL).filter [ m |
-					(m instanceof TField) || (m instanceof TGetter)
-				]
-			} else {
-				Lists.newArrayList
-			}
+			return tsh.structuralTypesHelper.collectStructuralMembers(G, exprTypeRefResult, TypingStrategy.STRUCTURAL).filter [ m |
+				(m instanceof TField) || (m instanceof TGetter)
+			]
 		]).flatten;
 		allAttributesInJSXElement.addAll(attributesInSpreadOperator)
 

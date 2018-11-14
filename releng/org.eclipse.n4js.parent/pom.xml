@@ -202,7 +202,7 @@ Contributors:
 								The following line disables warnings in the generated source
 								folders, since their sources cause many warnings.
 							-->
-							<arg>-nowarn:[${project.basedir}/emf-gen${path.separator}${project.basedir}/src-gen${path.separator}${project.basedir}/xtend-gen${path.separator}${project.basedir}/xsemantics-gen]</arg>
+							<arg>-nowarn:[${project.basedir}/emf-gen${path.separator}${project.basedir}/src-gen${path.separator}${project.basedir}/xtend-gen]</arg>
 						</compilerArgs>
 					</configuration>
 				</plugin>

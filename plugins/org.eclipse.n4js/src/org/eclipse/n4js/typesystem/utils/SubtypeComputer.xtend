@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.typesystem
+package org.eclipse.n4js.typesystem.utils
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
@@ -22,12 +22,12 @@ import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
 import org.eclipse.n4js.utils.N4JSLanguageUtils
-import org.eclipse.xsemantics.runtime.RuleEnvironment
 import org.eclipse.xtext.service.OperationCanceledManager
 
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  * Contains some helper methods to compute if type A is a subtype of type B.
@@ -36,7 +36,7 @@ import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
  * called {@link StructuralTypingComputer}.
  */
 @Singleton
-class SubtypeComputer extends TypeSystemHelperStrategy {
+package class SubtypeComputer extends TypeSystemHelperStrategy {
 
 	@Inject
 	private N4JSTypeSystem ts;
@@ -72,7 +72,7 @@ class SubtypeComputer extends TypeSystemHelperStrategy {
 			if (solution !== null) {
 				val G_solution = G.newRuleEnvironment;
 				solution.entrySet.forEach[G_solution.addTypeMapping(key,value)];
-				val leftSubst = ts.substTypeVariablesInTypeRef(G_solution, left_withInfVars);
+				val leftSubst = ts.substTypeVariables(G_solution, left_withInfVars);
 				if (leftSubst instanceof FunctionTypeExprOrRef) {
 					return primIsSubtypeFunction(G, leftSubst, right);
 				}
@@ -110,7 +110,7 @@ class SubtypeComputer extends TypeSystemHelperStrategy {
 			for (i : 0 ..< leftTypeVars.size) {
 				G2.addTypeMapping(rightTypeVars.get(i), TypeUtils.createTypeRef(leftTypeVars.get(i)))
 			}
-			val TypeRef rightSubst = ts.substTypeVariablesInTypeRef(G2, right);
+			val TypeRef rightSubst = ts.substTypeVariables(G2, right);
 			if (!(rightSubst instanceof FunctionTypeExprOrRef &&
 				primIsSubtypeFunction(G, left, rightSubst as FunctionTypeExprOrRef)))
 				return false;
@@ -283,7 +283,7 @@ class SubtypeComputer extends TypeSystemHelperStrategy {
 				} else {
 					rightDeclUB
 				};
-			val rightUpperBoundSubst = ts.substTypeVariablesInTypeRef(G, rightUpperBound);
+			val rightUpperBoundSubst = ts.substTypeVariables(G, rightUpperBound);
 
 			// leftUpperBound must be a super(!) type of rightUpperBound,
 			// i.e. rightUpperBound <: leftUpperBound
@@ -295,6 +295,6 @@ class SubtypeComputer extends TypeSystemHelperStrategy {
 	}
 
 	private def boolean isSubtype(RuleEnvironment G, TypeArgument left, TypeArgument right) {
-		ts.subtype(G, left, right).value ?: false
+		return ts.subtype(G, left, right).success;
 	}
 }

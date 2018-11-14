@@ -19,6 +19,8 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 
+import org.eclipse.n4js.ts.types.Type;
+
 import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
 
 /**
@@ -82,6 +84,15 @@ public abstract class TypeArgumentImpl extends ProxyResolvingEObjectImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public Type getDeclaredType() {
+		return null;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
@@ -91,6 +102,8 @@ public abstract class TypeArgumentImpl extends ProxyResolvingEObjectImpl impleme
 				return containsWildcards();
 			case TypeRefsPackage.TYPE_ARGUMENT___CONTAINS_UNBOUND_TYPE_VARIABLES:
 				return containsUnboundTypeVariables();
+			case TypeRefsPackage.TYPE_ARGUMENT___GET_DECLARED_TYPE:
+				return getDeclaredType();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

@@ -48,7 +48,6 @@ import org.eclipse.n4js.validation.validators.N4JSVariableValidator
 import org.eclipse.n4js.validation.validators.N4JSXValidator
 import org.eclipse.n4js.validation.validators.ThirdPartyValidator
 import org.eclipse.n4js.validation.validators.UnsupportedFeatureValidator
-import org.eclipse.n4js.xsemantics.validation.InternalTypeSystemValidator
 import org.eclipse.xtext.service.OperationCanceledManager
 import org.eclipse.xtext.validation.AbstractDeclarativeValidator
 import org.eclipse.xtext.validation.ComposedChecks
@@ -110,7 +109,7 @@ import org.eclipse.xtext.validation.ComposedChecks
 ])
 @Log
 /** validations are defined in composed validator classes */
-class N4JSValidator extends InternalTypeSystemValidator {
+class N4JSValidator extends AbstractMessageAdjustingN4JSValidator {
 	@Inject
 	private OperationCanceledManager operationCanceledManager;
 

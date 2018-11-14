@@ -31,11 +31,9 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
 import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.UtilN4;
-
-import org.eclipse.xsemantics.runtime.Result;
-import org.eclipse.xsemantics.runtime.RuleEnvironment;
 
 /**
  * The <em>AST meta-info cache</em> is created and filled with information during post-processing of an N4JS resource
@@ -53,7 +51,7 @@ public final class ASTMetaInfoCache {
 
 	private final N4JSResource resource;
 	private final boolean hasBrokenAST;
-	private final Map<TypableElement, Result<TypeRef>> actualTypes = new HashMap<>();
+	private final Map<TypableElement, TypeRef> actualTypes = new HashMap<>();
 	private final Map<ParameterizedCallExpression, List<TypeRef>> inferredTypeArgs = new HashMap<>();
 	private final Map<Expression, CompileTimeValue> compileTimeValue = new HashMap<>();
 
@@ -83,7 +81,7 @@ public final class ASTMetaInfoCache {
 	 * <p>
 	 * Returns the actual type of the given astNode as stored in the cache, or <code>null</code> if not available.
 	 */
-	public Result<TypeRef> getTypeFailSafe(TypableElement astNode) {
+	public TypeRef getTypeFailSafe(TypableElement astNode) {
 		return actualTypes.get(astNode);
 	}
 
@@ -92,13 +90,13 @@ public final class ASTMetaInfoCache {
 	 * <p>
 	 * Returns the actual type of the given astNode as stored in the cache. Throws exception if not available.
 	 */
-	public Result<TypeRef> getType(TypableElement astNode) {
-		final Result<TypeRef> result = getTypeFailSafe(astNode);
+	public TypeRef getType(TypableElement astNode) {
+		final TypeRef result = getTypeFailSafe(astNode);
 		if (result == null) {
 			if (resource.isFullyProcessed() && resource.getPostProcessingThrowable() != null) {
 				// post processing was attempted but failed, so we expect the cache to be incompletely filled
 				// -> do not throw exception in this case, because it is a follow-up issue
-				return new Result<>(TypeRefsFactory.eINSTANCE.createUnknownTypeRef());
+				return TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
 			}
 			throw UtilN4.reportError(new IllegalStateException("cache miss: no actual type in cache for AST node: "
 					+ astNode + " in resource: " + resource.getURI()));
@@ -107,10 +105,6 @@ public final class ASTMetaInfoCache {
 	}
 
 	/* package */ void storeType(TypableElement astNode, TypeRef actualType) {
-		storeType(astNode, new Result<>(actualType));
-	}
-
-	/* package */ void storeType(TypableElement astNode, Result<TypeRef> actualType) {
 		if (!isPostProcessing()) {
 			throw new IllegalStateException(
 					"attempt to store type in cache while post-processing not in progress");

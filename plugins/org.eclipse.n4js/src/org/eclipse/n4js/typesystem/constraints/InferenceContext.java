@@ -38,10 +38,10 @@ import org.eclipse.n4js.ts.types.TypesFactory;
 import org.eclipse.n4js.ts.types.util.Variance;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
-import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
-import org.eclipse.n4js.typesystem.TypeSystemHelper;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
 import org.eclipse.n4js.utils.CharDiscreteDomain;
-import org.eclipse.xsemantics.runtime.RuleEnvironment;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 
@@ -273,7 +273,7 @@ public final class InferenceContext {
 				.collect(Collectors.toList());
 		final RuleEnvironment G_params2infVars = RuleEnvironmentExtensions.newRuleEnvironment(G); // new, empty RE
 		RuleEnvironmentExtensions.addTypeMappings(G_params2infVars, typeParams, newInfVarsRefs);
-		final TypeArgument left_withInfVars = ts.substTypeVariables(G_params2infVars, funTypeRef).getValue();
+		final TypeArgument left_withInfVars = ts.substTypeVariables(G_params2infVars, funTypeRef);
 		if (left_withInfVars instanceof FunctionTypeExprOrRef)
 			return (FunctionTypeExprOrRef) left_withInfVars;
 		// in case of substitution error: return original funTypeRef
@@ -473,7 +473,8 @@ public final class InferenceContext {
 		final TypeRef[] lowerBounds = currentBounds.collectLowerBounds(infVar, true, true);
 		final boolean lowerAreUninteresting = lowerBounds.length > 0 && !containsInterestingLowerBound(lowerBounds);
 		final TypeRef[] upperBoundsPreview = lowerAreUninteresting
-				? currentBounds.collectUpperBounds(infVar, true, true) : null;
+				? currentBounds.collectUpperBounds(infVar, true, true)
+				: null;
 		final boolean preferUpperOverLower = lowerAreUninteresting && upperBoundsPreview != null
 				&& upperBoundsPreview.length > 0;
 		if (lowerBounds.length > 0 && !preferUpperOverLower) {
@@ -481,7 +482,7 @@ public final class InferenceContext {
 			// take upper bound of all lower bounds
 			// (if we have a type bound `α :> ? extends A` this will give us A as a lower bound for α)
 			for (int i = 0; i < lowerBounds.length; i++) {
-				lowerBounds[i] = ts.upperBound(G, lowerBounds[i]).getValue();
+				lowerBounds[i] = ts.upperBound(G, lowerBounds[i]);
 			}
 			final TypeRef result = tsh.createUnionType(G, lowerBounds);
 			assert TypeUtils.isProper(result) : "not a proper LUB: " + str(result);

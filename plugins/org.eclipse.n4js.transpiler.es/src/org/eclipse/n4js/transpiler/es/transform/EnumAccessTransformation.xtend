@@ -28,7 +28,7 @@ import org.eclipse.n4js.ts.types.TMember
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  * Transforms references to literals of <code>@StringBased</code> enums by replacing them with a plain string literal.

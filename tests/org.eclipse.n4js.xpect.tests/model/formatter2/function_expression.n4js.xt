@@ -17,19 +17,23 @@
    END_SETUP
  */
 
+// NOTE:
+// the below casts to N4Object do not make much sense;
+// but wanted to keep original test case as closely as possible
+// (and we're just testing formatting here, anyway!)
 
 
 /* XPECT formattedLines 5 ---
 function g(): any {
 	return function(): void {
 			;
-		} as Object;
+		} as N4Object;
 }
 --- */
 function g() :any {
     return function(): void {
             ;
-        } as Object
+        } as N4Object
 }
 
 
@@ -37,10 +41,10 @@ function g() :any {
 function h(): any {
 	return function(): void {
 			;
-		} as Object ;
+		} as N4Object ;
 }
 --- */
-function h() :any { return function(): void {;} as Object 
+function h() :any { return function(): void {;} as N4Object 
 }
 
 

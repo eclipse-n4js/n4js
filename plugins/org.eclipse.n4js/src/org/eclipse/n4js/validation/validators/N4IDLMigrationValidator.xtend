@@ -38,12 +38,12 @@ import org.eclipse.n4js.ts.types.TMigration
 import org.eclipse.n4js.ts.versions.MigratableUtils
 import org.eclipse.n4js.ts.versions.VersionableUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.utils.collections.Collections2
 import org.eclipse.n4js.utils.collections.Iterables2
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
-import org.eclipse.xsemantics.runtime.RuleEnvironment
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
@@ -324,7 +324,7 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 			val r = pair.value;
 			val subtypingResult = typeSystem.equaltype(ruleEnv, l, r);
 			
-			return subtypingResult.failed || subtypingResult.value == false;
+			return subtypingResult.failure;
 		];
 		
 		// if no non-subtype can be found, left must be subtypes of right

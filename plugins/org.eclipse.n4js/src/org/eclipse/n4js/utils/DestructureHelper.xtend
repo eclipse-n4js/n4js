@@ -32,6 +32,7 @@ import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
 import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.PrimitiveType
@@ -44,15 +45,14 @@ import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.util.AllSuperTypeRefsCollector
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
-import org.eclipse.n4js.typesystem.TypeSystemHelper
-import org.eclipse.xsemantics.runtime.RuleEnvironment
+import org.eclipse.n4js.typesystem.constraints.InferenceContext
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.scoping.IScope
 
 import static extension org.eclipse.n4js.n4JS.DestructNode.arePositional
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.typesystem.constraints.InferenceContext
-import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  * Helper for dealing with destructuring patterns. For more details on destructuring patterns,
@@ -122,7 +122,7 @@ class DestructureHelper {
 		}
 		// in the root node, the defaultExpr is the main value to be destructured and
 		// the node's type is simply the type of that value (nothing needs to be destructured yet)
-		var valueTypeRef = ts.type(G,rootNode.defaultExpr).value;
+		var valueTypeRef = ts.type(G,rootNode.defaultExpr);
 		valueTypeRef = ts.resolveType(G, valueTypeRef);
 		// special case: ForStatement
 		// we might have something like for([a,b] of expr){} (in which case rootNode.defaultExpr points to the 'expr')
@@ -226,8 +226,8 @@ class DestructureHelper {
 				// substitute type variables in 'result'
 				val G2 = G.wrap;
 				tsh.addSubstitutions(G2, parentValueTypeRef);
-				val resultSubst = ts.substTypeVariables(G2, result).value;
-				val resultSubstUB = if(resultSubst!==null) ts.upperBound(G2, resultSubst).value;
+				val resultSubst = ts.substTypeVariables(G2, result);
+				val resultSubstUB = if(resultSubst!==null) ts.upperBound(G2, resultSubst);
 				return resultSubstUB;
 			}
 		}
@@ -262,9 +262,9 @@ class DestructureHelper {
 	 * Both the given value type and inferred expression type may be null and then this returns null.
 	 */
 	private def TypeRef mergeWithTypeOfDefaultExpression(RuleEnvironment G, TypeRef valueTypeRef, DestructNode node) {
-		val exprTypeRefRaw = if(node.defaultExpr!==null) ts.type(G, node.defaultExpr).value;
+		val exprTypeRefRaw = if(node.defaultExpr!==null) ts.type(G, node.defaultExpr);
 		val isNullOrUndef = if(exprTypeRefRaw!==null) ts.subtypeSucceeded(G,exprTypeRefRaw,G.undefinedTypeRef) || ts.subtypeSucceeded(G,exprTypeRefRaw,G.nullTypeRef);
-		val exprTypeRef = if(exprTypeRefRaw!==null && !isNullOrUndef) ts.upperBound(G,exprTypeRefRaw).value;
+		val exprTypeRef = if(exprTypeRefRaw!==null && !isNullOrUndef) ts.upperBound(G,exprTypeRefRaw);
 		if(valueTypeRef!==null && exprTypeRef!==null) {
 			// we have to merge the two types ...
 			// (the small optimization with the subtype checks should be done by #createUnionType(), but isn't)
@@ -292,7 +292,7 @@ class DestructureHelper {
 	 * Same as {@link #extractIterableElementTypes(RuleEnvironment,TypeRef)}, but returns the upper bounds.
 	 */
 	public def Iterable<TypeRef> extractIterableElementTypesUBs(RuleEnvironment G, TypeRef typeRef) {
-		return extractIterableElementTypes(G,typeRef).map[ts.upperBound(G,it).value];
+		return extractIterableElementTypes(G,typeRef).map[ts.upperBound(G,it)];
 	}
 
 	/**
@@ -312,7 +312,7 @@ class DestructureHelper {
 	 * Same as {@link #extractIterableElementType(RuleEnvironment,TypeRef)}, but returns the upper bound.
 	 */
 	public def TypeRef extractIterableElementTypeUB(RuleEnvironment G, TypeRef typeRef) {
-		return extractIterableElementTypes(G, typeRef, false).map[ts.upperBound(G,it).value].head;
+		return extractIterableElementTypes(G, typeRef, false).map[ts.upperBound(G,it)].head;
 	}
 
 	/**
@@ -505,13 +505,13 @@ class DestructureHelper {
 		// substitute type variables in result
 		val G2 = G.wrap;
 		tsh.addSubstitutions(G2,typeRef);
-		val resultSubst = result.map[ts.substTypeVariables(G2,it).value]
+		val resultSubst = result.map[ts.substTypeVariables(G2,it)]
 				.filter(TypeRef); // note the invariant of judgment 'substTypeVariables': if you put TypeRefs in, you'll get TypeRefs back
 		return resultSubst;
 	}
 
 	private def Iterable<TypeRef> toUpperBounds(Iterable<TypeArgument> typeArgs, RuleEnvironment G) {
-		typeArgs.map[ts.upperBound(G,it).value]
+		typeArgs.map[ts.upperBound(G,it)]
 	}
 
 	private def Iterable<? extends TypeRef> mergeListsOfTypeRefs(RuleEnvironment G, Class<? extends ComposedTypeRef> type, Iterable<? extends TypeRef>... iterablesToMerge) {

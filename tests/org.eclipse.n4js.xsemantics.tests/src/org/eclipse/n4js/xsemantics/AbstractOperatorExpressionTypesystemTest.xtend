@@ -14,9 +14,8 @@ import com.google.inject.Inject
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ExpressionStatement
-import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.validation.JavaScriptVariant
-import org.eclipse.xsemantics.runtime.TraceUtils
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.validation.ValidationTestHelper
@@ -33,7 +32,6 @@ import static org.junit.Assert.*
 abstract class AbstractOperatorExpressionTypesystemTest extends AbstractTypesystemTest {
 
 	@Inject extension ValidationTestHelper
-	@Inject extension TraceUtils;
 
 	final static CharSequence scriptPrefix = '''
 	class A{}
@@ -56,11 +54,7 @@ abstract class AbstractOperatorExpressionTypesystemTest extends AbstractTypesyst
 		val G = RuleEnvironmentExtensions.newRuleEnvironment(script);
 		val expr = (script.scriptElements.reverseView.head as ExpressionStatement).expression;
 
-		val result = ts.type(G, expr);
-		if (result.ruleFailedException !== null) {
-			fail(result.ruleFailedException.failureTraceAsString);
-		}
-		val typeExpr = result.value;
+		val typeExpr = ts.type(G, expr);
 
 		assertEquals("Assert at " + expression + " // " + variant, expectedTypeAsString, typeExpr.typeRefAsString);
 	}
@@ -96,10 +90,9 @@ abstract class AbstractOperatorExpressionTypesystemTest extends AbstractTypesyst
 		assertEquals("Unexpected number of sub expressions", expectedSubTypes.length, subExpr.size);
 		var i = 0;
 		while (i < subExpr.length) {
-			val actualExpectedTypeResult = ts.expectedTypeIn(G, expr, subExpr.get(i));
-			assertNoFailure(actualExpectedTypeResult);
+			val actualExpectedTypeResult = ts.expectedType(G, expr, subExpr.get(i));
 			assertEquals(expression+", operand " + i + " in mode " + variant.name, 
-				expectedSubTypes.get(i), actualExpectedTypeResult.value.typeRefAsString);
+				expectedSubTypes.get(i), actualExpectedTypeResult.typeRefAsString);
 			i = i + 1
 		}
 	}

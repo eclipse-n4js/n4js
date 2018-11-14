@@ -12,6 +12,8 @@ package org.eclipse.n4js.ts.typeRefs;
 
 import org.eclipse.emf.ecore.EObject;
 
+import org.eclipse.n4js.ts.types.Type;
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Type Argument</b></em>'.
@@ -66,5 +68,18 @@ public interface TypeArgument extends EObject {
 	 * @generated
 	 */
 	boolean containsUnboundTypeVariables();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Convenience method, returns null for all type arguments except parameterized type references.
+	 * Reduces number of casts in client code.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return null;'"
+	 * @generated
+	 */
+	Type getDeclaredType();
 
 } // TypeArgument

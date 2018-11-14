@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.typesystem
+package org.eclipse.n4js.typesystem.utils
 
 import com.google.inject.Inject
 import java.util.Collection
@@ -35,17 +35,17 @@ import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.utils.TypeCompareHelper
 import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.RecursionGuard
-import org.eclipse.xsemantics.runtime.RuleEnvironment
 
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  * Type System Helper Strategy for managing type variable mappings in RuleEnvironments of XSemantics.
  * Note that low-level method for adding type mappings to a rule environment are contained in
  * {@link RuleEnvironmentExtensions}.
  */
-class GenericsComputer extends TypeSystemHelperStrategy {
+package class GenericsComputer extends TypeSystemHelperStrategy {
 
 	@Inject
 	private N4JSTypeSystem ts
@@ -144,7 +144,7 @@ class GenericsComputer extends TypeSystemHelperStrategy {
 		if(currSubstitute===typeVar)
 			currSubstitute=null;
 
-		G.add(typeVar, mergeTypeArgs(currSubstitute,actualTypeArg));
+		G.put(typeVar, mergeTypeArgs(currSubstitute,actualTypeArg));
 	}
 	private def mergeTypeArgs(Object... typeArgs) {
 		val result = newArrayList
@@ -236,7 +236,7 @@ class GenericsComputer extends TypeSystemHelperStrategy {
 				if(targetTypeRef!==null)
 					targetTypeRef
 				else
-					ts.type(new RuleEnvironment(G),callExpr.target).value;
+					ts.type(new RuleEnvironment(G),callExpr.target);
 
 		if(!(actualTargetTypeRef instanceof FunctionTypeExprOrRef))
 			return;
@@ -292,7 +292,7 @@ class GenericsComputer extends TypeSystemHelperStrategy {
 					}
 				}
 				l.forEach[ta|
-					val taSubst = ts.substTypeVariables(G, ta).value;
+					val taSubst = ts.substTypeVariables(G, ta);
 					if(taSubst!==null && taSubst!==ta) {
 						EcoreUtil.replace(ta, taSubst);
 					}
@@ -346,7 +346,7 @@ class GenericsComputer extends TypeSystemHelperStrategy {
 		// Esp. important if 'typeRef' already contained postponed substitutions when this method was invoked.
 		// Example: 'typeRef' is ~Object with { T1 prop1; T2 prop2; } [[T1->A, T2->α]] and 'G' contains α->B
 		for (tvmapping : typeRef.postponedSubstitutions) {
-			val typeArgSubst = ts.substTypeVariables(G, tvmapping.typeArg).value;
+			val typeArgSubst = ts.substTypeVariables(G, tvmapping.typeArg);
 			if(typeArgSubst!==null && typeArgSubst!==tvmapping.typeArg) {
 				tvmapping.typeArg = typeArgSubst;
 			}
@@ -360,7 +360,7 @@ class GenericsComputer extends TypeSystemHelperStrategy {
 	 */
 	def void restorePostponedSubstitutionsFrom(RuleEnvironment G, StructuralTypeRef typeRef) {
 		typeRef.postponedSubstitutions.forEach[currMapping|
-			G.add(currMapping.typeVar, TypeUtils.copy(currMapping.typeArg));
+			G.put(currMapping.typeVar, TypeUtils.copy(currMapping.typeArg));
 		]
 	}
 

@@ -16,11 +16,13 @@ import org.eclipse.n4js.n4JS.ExpressionStatement
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.ThisLiteral
-import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
+import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.util.ParseHelper
+import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -293,9 +295,8 @@ class JudgmentTypeTest extends AbstractTypesystemTest {
 
 		var result = ts.type(G, call)
 
-		if (result.ruleFailedException !== null) {
-			result.ruleFailedException.printStackTrace
-		}
+		Assert.assertNotNull(result);
+		Assert.assertFalse(result instanceof UnknownTypeRef);
 
 		// eventually:
 		assertNoValidationErrors(script);

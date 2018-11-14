@@ -21,6 +21,8 @@ import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
+import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TypableElement
@@ -32,7 +34,7 @@ import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Test
 import org.junit.runner.RunWith
 
-import static org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 import static org.junit.Assert.*
 
 /**
@@ -244,11 +246,11 @@ class AT_802_ThisTypeAnnotationTest extends AbstractTypesystemTest {
 		assertEquals("Wrong type inferred", expectedTypeName, result.typeRefAsString)
 	}
 
-	def infer(TypableElement elementToBeTypeInferred) {
+	def TypeRef infer(TypableElement elementToBeTypeInferred) {
 		val G = newRuleEnvironment(elementToBeTypeInferred);
 		val result = ts.type(G, elementToBeTypeInferred);
-
-		result.assertNoFailure
-		return result.value
+		assertNotNull(result);
+		assertFalse(result instanceof UnknownTypeRef);
+		return result;
 	}
 }

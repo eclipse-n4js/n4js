@@ -29,15 +29,15 @@ import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
-import org.eclipse.n4js.typesystem.TypeSystemHelper
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
 import org.eclipse.n4js.typesystem.constraints.TypeConstraint
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.DestructureHelper
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
-import org.eclipse.xsemantics.runtime.RuleEnvironment
 import org.eclipse.xtext.service.OperationCanceledManager
 
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  * The main poly processor responsible for typing poly expressions using a constraint-based approach.
@@ -162,7 +162,7 @@ package class PolyProcessor extends AbstractPolyProcessor {
 		val expectedTypeRef = if (expectedTypeOfPoly !== null) {
 				expectedTypeOfPoly
 			} else if (!rootPoly.isProblematicCaseOfExpectedType) {
-				ts.expectedTypeIn(G, rootPoly.eContainer(), rootPoly).getValue();
+				ts.expectedType(G, rootPoly.eContainer(), rootPoly);
 			};
 
 		// call #processExpr() (this will recursively call #processExpr() on nested expressions, even if non-poly)
@@ -226,7 +226,7 @@ package class PolyProcessor extends AbstractPolyProcessor {
 			};
 		} else {
 			// not poly -> directly infer type via type system
-			val result = ts.type(G, expr).getValue();
+			val result = ts.type(G, expr);
 			// do *not* store in cache (TypeProcessor responsible for storing types of non-poly expressions in cache!)
 			return result;
 		}
