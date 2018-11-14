@@ -523,8 +523,8 @@
       launcher="CreateConfigFileForSettingDefaultProduct">
     <description>Launch that creates a config.ini</description>
   </setupTask>
-  <stream name="master"
-      label="master (2018-09)"/>
+  <stream name="GH-1177"
+      label="GH-1177 (2018-09)"/>
   <logicalProjectContainer
       xsi:type="setup:ProjectCatalog"
       href="index:/org.eclipse.setup#//@projectCatalogs[name='com.github']"/>
