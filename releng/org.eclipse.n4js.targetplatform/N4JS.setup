@@ -157,7 +157,7 @@
   <setupTask
       xsi:type="setup:EclipseIniTask"
       option="-Doomph.redirection.n4js"
-      value="=https://raw.githubusercontent.com/eclipse/n4js/master/releng/org.eclipse.n4js.targetplatform/N4JS.setup->${git.clone.n4js.location|uri}/releng/org.eclipse.n4js.targetplatform/N4JS.setup"
+      value="=https://raw.githubusercontent.com/eclipse/n4js/GH-1177/releng/org.eclipse.n4js.targetplatform/N4JS.setup->${git.clone.n4js.location|uri}/releng/org.eclipse.n4js.targetplatform/N4JS.setup"
       vm="true">
     <description></description>
   </setupTask>
