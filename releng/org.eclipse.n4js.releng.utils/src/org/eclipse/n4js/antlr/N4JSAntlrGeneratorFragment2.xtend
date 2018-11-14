@@ -22,13 +22,8 @@ import org.antlr.runtime.RecognitionException
 import org.antlr.runtime.TokenSource
 import org.eclipse.n4js.antlr.n4js.NoLineTerminatorHandlingInjector
 import org.eclipse.xtext.AbstractElement
-import org.eclipse.xtext.Grammar
-import org.eclipse.xtext.Group
 import org.eclipse.xtext.util.internal.Log
 import org.eclipse.xtext.xbase.lib.util.ReflectExtensions
-import org.eclipse.xtext.xtext.FlattenedGrammarAccess
-import org.eclipse.xtext.xtext.RuleFilter
-import org.eclipse.xtext.xtext.RuleNames
 import org.eclipse.xtext.xtext.generator.grammarAccess.GrammarAccessExtensions
 import org.eclipse.xtext.xtext.generator.model.FileAccessFactory
 import org.eclipse.xtext.xtext.generator.model.JavaFileAccess
@@ -42,9 +37,6 @@ import static org.eclipse.n4js.antlr.replacements.Replacements.applyReplacement
 import static extension org.eclipse.xtext.GrammarUtil.*
 import static extension org.eclipse.xtext.xtext.generator.model.TypeReference.*
 import static extension org.eclipse.xtext.xtext.generator.parser.antlr.AntlrGrammarGenUtil.*
-import java.util.Set
-import com.google.common.collect.ImmutableMap
-import org.eclipse.xtend2.lib.StringConcatenationClient
 
 /**
  * Customization of the {@link XtextAntlrGeneratorFragment2} applying some massaging
@@ -224,27 +216,4 @@ class N4JSAntlrGeneratorFragment2 extends N4AntlrGeneratorFragment2 {
 		'''
 		file
 	}
-
-	// TODO this will produce a compile error with 2.13 and can be removed then.
-	/**
-	 * Produce the initial name mappings for the grammar. Handles parameterized rule calls.
-	 */
-	private def StringConcatenationClient initNameMappings(Grammar it) {
-		val RuleFilter filter = new RuleFilter();
-		filter.discardUnreachableRules = true
-		val RuleNames ruleNames = RuleNames.getRuleNames(it, true);
-		val Grammar flattened = new FlattenedGrammarAccess(ruleNames, filter).getFlattenedGrammar();
-		val Set<AbstractElement> seenElements = newHashSet
-		return '''
-			«ImmutableMap».Builder<«AbstractElement», String> nameMappingsBuilder = «ImmutableMap».builder();
-			«FOR element : (flattened.allAlternatives + flattened.allGroups + flattened.allAssignments + flattened.allUnorderedGroups).filter(AbstractElement).filter[seenElements.add(originalElement)]»
-				nameMappingsBuilder.put(grammarAccess.«element.originalElement.grammarElementAccess», "«element.originalElement.containingRule.contentAssistRuleName»__«element.originalElement.gaElementIdentifier»«IF element instanceof Group»__0«ENDIF»");
-			«ENDFOR»
-			nameMappings = nameMappingsBuilder.build();
-		'''
-	}
-	
-	// ^^^^^^^^^^
-	// TODO remove until where with Xtext 2.13
-
 }

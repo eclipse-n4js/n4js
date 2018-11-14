@@ -49,7 +49,7 @@ public class ServletHolderBuilder {
 					return servlet;
 				} catch (Exception e) {
 					LOGGER.error("Error while creating servlet for class: " + clazz + ";", e);
-					throw e;
+					throw new RuntimeException(e);
 				}
 			}
 		};

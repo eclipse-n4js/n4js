@@ -48,6 +48,6 @@ public class N4JSHyperlinkDetector extends DefaultHyperlinkDetector {
 				}
 				return helper.createHyperlinksByOffset(resource, region.getOffset(), canShowMultipleHyperlinks);
 			}
-		}, null);
+		}, (IHyperlink[]) null);
 	}
 }
