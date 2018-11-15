@@ -75,6 +75,8 @@ public class ContentAssistParserSanityTest {
 			N4JSInjectorProvider injectorProvider = new N4JSInjectorProvider();
 			Injector injector = injectorProvider.getInjector();
 			DummyParser dummyParser = new DummyParser();
+			N4JSParser.NameMappings nameMappings = injector.getInstance(N4JSParser.NameMappings.class);
+			dummyParser.setNameMappings(nameMappings);
 			N4JSGrammarAccess grammarAccess = injector.getInstance(N4JSGrammarAccess.class);
 			RuleNames ruleNames = RuleNames.getRuleNames(grammarAccess.getGrammar(), false);
 			RuleFilter ruleFilter = new RuleFilter();
@@ -84,8 +86,8 @@ public class ContentAssistParserSanityTest {
 			dummyParser.setGrammarAccess(grammarAccess);
 			injectorProvider.restoreRegistry();
 			dummyParser.getRuleName(null);
-			Map<AbstractElement, String> nameMappings = new ReflectExtensions().get(dummyParser, "nameMappings");
-			List<String> methodNames = Lists.newArrayList(nameMappings.values());
+			Map<AbstractElement, String> actualNameMappings = new ReflectExtensions().get(nameMappings, "mappings");
+			List<String> methodNames = Lists.newArrayList(actualNameMappings.values());
 			Collections.sort(methodNames);
 			Set<String> flattenedRuleNames = Sets
 					.newHashSet(Lists.transform(flattenedGrammar.getRules(), r -> r.getName()));
