@@ -104,8 +104,8 @@ pipeline {
                 echo 'START: moving old products / update sites to archive.eclipse.org (those that are older than 2 weeks):'
                 sh """\
                     cd /home/data/httpd/download.eclipse.org/n4js
-                    find products/nightly -type d -name 20\\* -mtime +0 -print -exec mv {} /home/data/httpd/archive.eclipse.org/n4js/{} \\;
-                    find updates/nightly  -type d -name 20\\* -mtime +0 -print -exec mv {} /home/data/httpd/archive.eclipse.org/n4js/{} \\;
+                    find products/nightly -maxdepth 1 -type d -name 20\\* -mtime +0 -print -exec mv {} /home/data/httpd/archive.eclipse.org/n4js/{} \\;
+                    find updates/nightly  -maxdepth 1 -type d -name 20\\* -mtime +0 -print -exec mv {} /home/data/httpd/archive.eclipse.org/n4js/{} \\;
                 """
                 echo 'END: moving old products / update sites to archive.eclipse.org'
 
@@ -128,14 +128,23 @@ pipeline {
                 """
                 echo 'END: copying new products / update site to download.eclipse.org'
 
-                echo 'SUMMARY: products on download server:'
-                sh "ls -l /home/data/httpd/download.eclipse.org/n4js/products/nightly"
-                echo 'SUMMARY: update sites on download server:'
-                sh "ls -l /home/data/httpd/download.eclipse.org/n4js/updates/nightly"
-                echo 'SUMMARY: products on archive server:'
-                sh "ls -l /home/data/httpd/archive.eclipse.org/n4js/products/nightly"
-                echo 'SUMMARY: update sites on archive server:'
-                sh "ls -l /home/data/httpd/archive.eclipse.org/n4js/updates/nightly"
+                // show a summary
+                script {
+                    def output = sh returnStdout: true, script: """\
+                        echo ******************** Products on download server:
+                        ls -l /home/data/httpd/download.eclipse.org/n4js/products/nightly
+                        echo ******************** Update sites on download server:
+                        ls -l /home/data/httpd/download.eclipse.org/n4js/updates/nightly
+                        echo ******************** Products on archive server:
+                        ls -l /home/data/httpd/archive.eclipse.org/n4js/products/nightly
+                        echo ******************** Update sites on archive server:
+                        ls -l /home/data/httpd/archive.eclipse.org/n4js/updates/nightly
+                        echo ********************
+                        man find
+                    """
+
+                    echo "$output"
+                }
             }
         }
     }
