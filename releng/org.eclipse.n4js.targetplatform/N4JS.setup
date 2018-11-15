@@ -157,7 +157,7 @@
   <setupTask
       xsi:type="setup:EclipseIniTask"
       option="-Doomph.redirection.n4js"
-      value="=https://raw.githubusercontent.com/eclipse/n4js/GH-1177/releng/org.eclipse.n4js.targetplatform/N4JS.setup->${git.clone.n4js.location|uri}/releng/org.eclipse.n4js.targetplatform/N4JS.setup"
+      value="=https://raw.githubusercontent.com/eclipse/n4js/master/releng/org.eclipse.n4js.targetplatform/N4JS.setup->${git.clone.n4js.location|uri}/releng/org.eclipse.n4js.targetplatform/N4JS.setup"
       vm="true">
     <description></description>
   </setupTask>
@@ -523,8 +523,8 @@
       launcher="CreateConfigFileForSettingDefaultProduct">
     <description>Launch that creates a config.ini</description>
   </setupTask>
-  <stream name="GH-1177"
-      label="GH-1177 (2018-09)"/>
+  <stream name="master"
+      label="master (2018-09)"/>
   <logicalProjectContainer
       xsi:type="setup:ProjectCatalog"
       href="index:/org.eclipse.setup#//@projectCatalogs[name='com.github']"/>
