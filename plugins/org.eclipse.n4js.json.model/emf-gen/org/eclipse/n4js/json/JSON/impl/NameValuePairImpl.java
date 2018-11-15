@@ -11,10 +11,12 @@
 package org.eclipse.n4js.json.JSON.impl;
 
 import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
@@ -158,6 +160,18 @@ public class NameValuePairImpl extends MinimalEObjectImpl.Container implements N
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String toString() {
+		String _name = this.getName();
+		String _plus = (_name + ": ");
+		String _string = this.getValue().toString();
+		return (_plus + _string);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -247,19 +261,6 @@ public class NameValuePairImpl extends MinimalEObjectImpl.Container implements N
 				return toString();
 		}
 		return super.eInvoke(operationID, arguments);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String toString() {
-		String _name = this.getName();
-		String _plus = (_name + ": ");
-		String _string = this.getValue().toString();
-		return (_plus + _string);
 	}
 
 } //NameValuePairImpl

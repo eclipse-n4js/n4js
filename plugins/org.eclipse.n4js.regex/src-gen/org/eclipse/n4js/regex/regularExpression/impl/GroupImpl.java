@@ -263,7 +263,7 @@ public class GroupImpl extends PatternImpl implements Group
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (nonCapturing: ");
     result.append(nonCapturing);
     result.append(')');

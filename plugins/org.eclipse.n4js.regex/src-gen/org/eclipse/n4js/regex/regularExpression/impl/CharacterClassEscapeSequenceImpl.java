@@ -298,7 +298,7 @@ public class CharacterClassEscapeSequenceImpl extends AtomEscapeImpl implements 
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (character: ");
     result.append(character);
     result.append(", sequence: ");

@@ -23,5 +23,4 @@ public abstract class AbstractSemverValidator extends AbstractDeclarativeValidat
 		result.add(EPackage.Registry.INSTANCE.getEPackage("http://www.eclipse.org/n4js/Semver"));
 		return result;
 	}
-	
 }

@@ -1973,7 +1973,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cDeclaredUpperBoundAssignment_2_1 = (Assignment)cGroup_2.eContents().get(1);
 		private final RuleCall cDeclaredUpperBoundTypeRefParserRuleCall_2_1_0 = (RuleCall)cDeclaredUpperBoundAssignment_2_1.eContents().get(0);
 		
-		//@ Override TypeVariable types::TypeVariable:
+		//@Override
+		//TypeVariable types::TypeVariable:
 		//	(declaredCovariant?='out' | declaredContravariant?='in')?
 		//	name=IdentifierOrThis ('extends' declaredUpperBound=TypeRef)?;
 		@Override public ParserRule getRule() { return rule; }
@@ -7604,7 +7605,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final CrossReference cDeclaredTypeTypeCrossReference_1_0 = (CrossReference)cDeclaredTypeAssignment_1.eContents().get(0);
 		private final RuleCall cDeclaredTypeTypeTypeReferenceNameParserRuleCall_1_0_1 = (RuleCall)cDeclaredTypeTypeCrossReference_1_0.eContents().get(1);
 		
-		//@ Override fragment TypeReference *:
+		//@Override
+		//fragment TypeReference *:
 		//	(astNamespace=[types::ModuleNamespaceVirtualType|TypeReferenceName] '.')?
 		//	declaredType=[types::Type|TypeReferenceName];
 		@Override public ParserRule getRule() { return rule; }
@@ -7647,7 +7649,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cDefaultKeyword_5 = (Keyword)cAlternatives.eContents().get(5);
 		private final RuleCall cIDENTIFIERTerminalRuleCall_6 = (RuleCall)cAlternatives.eContents().get(6);
 		
-		//@ Override TypeReferenceName:
+		//@Override
+		//TypeReferenceName:
 		//	'void' | 'This' | 'await' | 'Promisify' | 'target' | 'default' | IDENTIFIER;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -10964,7 +10967,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		return getAnnotatedExpressionAccess().getRule();
 	}
 	
-	//@ Override TypeVariable types::TypeVariable:
+	//@Override
+	//TypeVariable types::TypeVariable:
 	//	(declaredCovariant?='out' | declaredContravariant?='in')?
 	//	name=IdentifierOrThis ('extends' declaredUpperBound=TypeRef)?;
 	public TypeVariableElements getTypeVariableAccess() {
@@ -12714,7 +12718,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		return getN4MemberAnnotationListAccess().getRule();
 	}
 	
-	//@ Override fragment TypeReference *:
+	//@Override
+	//fragment TypeReference *:
 	//	(astNamespace=[types::ModuleNamespaceVirtualType|TypeReferenceName] '.')?
 	//	declaredType=[types::Type|TypeReferenceName];
 	public TypeReferenceElements getTypeReferenceAccess() {
@@ -12725,7 +12730,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		return getTypeReferenceAccess().getRule();
 	}
 	
-	//@ Override TypeReferenceName:
+	//@Override
+	//TypeReferenceName:
 	//	'void' | 'This' | 'await' | 'Promisify' | 'target' | 'default' | IDENTIFIER;
 	public TypeReferenceNameElements getTypeReferenceNameAccess() {
 		return pTypeReferenceName;

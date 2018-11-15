@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
@@ -13,7 +13,9 @@ package org.eclipse.n4js.semver.Semver;
 import org.eclipse.emf.common.util.EList;
 
 /**
- * <!-- begin-user-doc --> A representation of the model object '<em><b>Version Number</b></em>'. <!-- end-user-doc -->
+ * <!-- begin-user-doc -->
+ * A representation of the model object '<em><b>Version Number</b></em>'.
+ * <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
@@ -35,8 +37,8 @@ public interface VersionNumber extends SemverToStringable {
 	 * Returns the value of the '<em><b>Major</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Major</em>' containment reference isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Major</em>' containment reference isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Major</em>' containment reference.
@@ -49,7 +51,8 @@ public interface VersionNumber extends SemverToStringable {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.n4js.semver.Semver.VersionNumber#getMajor <em>Major</em>}' containment reference.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Major</em>' containment reference.
 	 * @see #getMajor()
 	 * @generated
@@ -60,8 +63,8 @@ public interface VersionNumber extends SemverToStringable {
 	 * Returns the value of the '<em><b>Minor</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Minor</em>' containment reference isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Minor</em>' containment reference isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Minor</em>' containment reference.
@@ -74,7 +77,8 @@ public interface VersionNumber extends SemverToStringable {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.n4js.semver.Semver.VersionNumber#getMinor <em>Minor</em>}' containment reference.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Minor</em>' containment reference.
 	 * @see #getMinor()
 	 * @generated
@@ -85,8 +89,8 @@ public interface VersionNumber extends SemverToStringable {
 	 * Returns the value of the '<em><b>Patch</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Patch</em>' containment reference isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Patch</em>' containment reference isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Patch</em>' containment reference.
@@ -99,7 +103,8 @@ public interface VersionNumber extends SemverToStringable {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.n4js.semver.Semver.VersionNumber#getPatch <em>Patch</em>}' containment reference.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Patch</em>' containment reference.
 	 * @see #getPatch()
 	 * @generated
@@ -111,8 +116,8 @@ public interface VersionNumber extends SemverToStringable {
 	 * The list contents are of type {@link org.eclipse.n4js.semver.Semver.VersionPart}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Extended</em>' containment reference list isn't clear, there really should be more of
-	 * a description here...
+	 * If the meaning of the '<em>Extended</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Extended</em>' containment reference list.
@@ -126,8 +131,8 @@ public interface VersionNumber extends SemverToStringable {
 	 * Returns the value of the '<em><b>Qualifier</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Qualifier</em>' containment reference isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Qualifier</em>' containment reference isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Qualifier</em>' containment reference.
@@ -140,7 +145,8 @@ public interface VersionNumber extends SemverToStringable {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.n4js.semver.Semver.VersionNumber#getQualifier <em>Qualifier</em>}' containment reference.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Qualifier</em>' containment reference.
 	 * @see #getQualifier()
 	 * @generated
@@ -148,49 +154,54 @@ public interface VersionNumber extends SemverToStringable {
 	void setQualifier(Qualifier value);
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc --> <!-- begin-model-doc --> * @return true if the major part is a
-	 * wildcard <!-- end-model-doc -->
-	 * 
-	 * @model kind="operation" unique="false" annotation="http://www.eclipse.org/emf/2002/GenModel body='return
-	 *        this.getMajor().isWildcard();'"
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * * @return true if the major part is a wildcard
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
 	boolean isWildcard();
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
 	EList<String> getPreReleaseTag();
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @model unique="false"
 	 * @generated
 	 */
 	boolean hasPreReleaseTag();
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @model unique="false"
 	 * @generated
 	 */
 	int length();
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @model unique="false" idxUnique="false"
 	 * @generated
 	 */
 	VersionPart getPart(int idx);
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @model unique="false" objUnique="false"
 	 * @generated
 	 */
-	@Override
 	boolean equals(Object obj);
 
 } // VersionNumber

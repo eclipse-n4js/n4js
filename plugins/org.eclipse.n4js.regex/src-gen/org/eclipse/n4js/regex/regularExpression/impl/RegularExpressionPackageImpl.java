@@ -306,7 +306,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
 
   /**
    * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
-   * 
+   *
    * <p>This method is used to initialize {@link RegularExpressionPackage#eINSTANCE} when that field is accessed.
    * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
    * <!-- begin-user-doc -->
@@ -321,7 +321,8 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
     if (isInited) return (RegularExpressionPackage)EPackage.Registry.INSTANCE.getEPackage(RegularExpressionPackage.eNS_URI);
 
     // Obtain or create and register package
-    RegularExpressionPackageImpl theRegularExpressionPackage = (RegularExpressionPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof RegularExpressionPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new RegularExpressionPackageImpl());
+    Object registeredRegularExpressionPackage = EPackage.Registry.INSTANCE.get(eNS_URI);
+    RegularExpressionPackageImpl theRegularExpressionPackage = registeredRegularExpressionPackage instanceof RegularExpressionPackageImpl ? (RegularExpressionPackageImpl)registeredRegularExpressionPackage : new RegularExpressionPackageImpl();
 
     isInited = true;
 
@@ -334,7 +335,6 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
     // Mark meta-data to indicate it can't be changed
     theRegularExpressionPackage.freeze();
 
-  
     // Update the registry and return the package
     EPackage.Registry.INSTANCE.put(RegularExpressionPackage.eNS_URI, theRegularExpressionPackage);
     return theRegularExpressionPackage;
