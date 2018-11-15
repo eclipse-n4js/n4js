@@ -30,6 +30,10 @@ public enum PropertyNameKind implements Enumerator {
 	 * The '<em><b>Identifier</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The name is assigned from a object literal property with
+	 * an identifier as the concrete syntax for the name.
+	 * <!-- end-model-doc -->
 	 * @see #IDENTIFIER_VALUE
 	 * @generated
 	 * @ordered
@@ -40,6 +44,10 @@ public enum PropertyNameKind implements Enumerator {
 	 * The '<em><b>String</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The name is assigned from a object literal property with
+	 * a string literal as the concrete syntax for the name. This variant is discouraged.
+	 * <!-- end-model-doc -->
 	 * @see #STRING_VALUE
 	 * @generated
 	 * @ordered
@@ -50,6 +58,10 @@ public enum PropertyNameKind implements Enumerator {
 	 * The '<em><b>Number</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The name is assigned from a object literal property with
+	 * a number as the concrete syntax for the name. This variant is discouraged.
+	 * <!-- end-model-doc -->
 	 * @see #NUMBER_VALUE
 	 * @generated
 	 * @ordered
@@ -60,6 +72,10 @@ public enum PropertyNameKind implements Enumerator {
 	 * The '<em><b>Computed</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The name is assigned from a object literal property with
+	 * a computed property name expression as the concrete syntax for the name. This variant is discouraged.
+	 * <!-- end-model-doc -->
 	 * @see #COMPUTED_VALUE
 	 * @generated
 	 * @ordered

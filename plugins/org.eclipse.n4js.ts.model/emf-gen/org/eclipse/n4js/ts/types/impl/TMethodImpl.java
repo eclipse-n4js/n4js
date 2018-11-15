@@ -1028,7 +1028,7 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (declaredFinal: ");
 		result.append(declaredFinal);
 		result.append(", declaredStatic: ");

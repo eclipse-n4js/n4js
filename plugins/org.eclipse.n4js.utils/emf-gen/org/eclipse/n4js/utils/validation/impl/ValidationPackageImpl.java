@@ -80,7 +80,7 @@ public class ValidationPackageImpl extends EPackageImpl implements ValidationPac
 
 	/**
 	 * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
-	 * 
+	 *
 	 * <p>This method is used to initialize {@link ValidationPackage#eINSTANCE} when that field is accessed.
 	 * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
 	 * <!-- begin-user-doc -->
@@ -94,7 +94,8 @@ public class ValidationPackageImpl extends EPackageImpl implements ValidationPac
 		if (isInited) return (ValidationPackage)EPackage.Registry.INSTANCE.getEPackage(ValidationPackage.eNS_URI);
 
 		// Obtain or create and register package
-		ValidationPackageImpl theValidationPackage = (ValidationPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof ValidationPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new ValidationPackageImpl());
+		Object registeredValidationPackage = EPackage.Registry.INSTANCE.get(eNS_URI);
+		ValidationPackageImpl theValidationPackage = registeredValidationPackage instanceof ValidationPackageImpl ? (ValidationPackageImpl)registeredValidationPackage : new ValidationPackageImpl();
 
 		isInited = true;
 
@@ -110,7 +111,6 @@ public class ValidationPackageImpl extends EPackageImpl implements ValidationPac
 		// Mark meta-data to indicate it can't be changed
 		theValidationPackage.freeze();
 
-  
 		// Update the registry and return the package
 		EPackage.Registry.INSTANCE.put(ValidationPackage.eNS_URI, theValidationPackage);
 		return theValidationPackage;

@@ -160,7 +160,7 @@ public class LocalPathVersionRequirementImpl extends NPMVersionRequirementImpl i
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (localPath: ");
 		result.append(localPath);
 		result.append(')');

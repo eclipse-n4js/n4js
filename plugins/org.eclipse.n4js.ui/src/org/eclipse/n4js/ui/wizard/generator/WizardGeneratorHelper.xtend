@@ -11,9 +11,11 @@
 package org.eclipse.n4js.ui.wizard.generator
 
 import com.google.common.base.Optional
+import com.google.common.io.Files
 import com.google.inject.Inject
 import java.io.IOException
 import java.io.UnsupportedEncodingException
+import java.nio.charset.Charset
 import java.util.ArrayList
 import java.util.Collection
 import java.util.HashSet
@@ -29,8 +31,9 @@ import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.jface.text.BadLocationException
 import org.eclipse.n4js.json.model.utils.JSONModelUtils
-import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.packagejson.model.edit.IJSONDocumentModification
+import org.eclipse.n4js.packagejson.model.edit.PackageJsonModificationProvider
+import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.ui.changes.ChangeManager
@@ -46,9 +49,7 @@ import org.eclipse.xtext.resource.SaveOptions
 import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.ui.editor.model.IXtextDocument
 import org.eclipse.xtext.ui.editor.model.XtextDocumentProvider
-import org.eclipse.xtext.util.Files
 import org.eclipse.xtext.util.concurrent.IUnitOfWork
-import org.eclipse.n4js.packagejson.model.edit.PackageJsonModificationProvider
 
 /**
  * This class contains commonly used methods when writing wizard generators.
@@ -123,7 +124,7 @@ class WizardGeneratorHelper {
 	 * Returns the content of the file as a string.
 	 */
 	public def String readFileAsString(IFile file) throws IOException, CoreException, UnsupportedEncodingException {
-		Files.readFileIntoString(file.location.toString);
+		Files.toString(file.location.toFile, Charset.defaultCharset);
 	}
 
 	/**

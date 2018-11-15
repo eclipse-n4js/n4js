@@ -102,7 +102,6 @@ public interface BoundThisTypeRef extends ThisTypeRef, StructuralTypeRef {
 	 * actual this type.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.n4js.ts.types.TypingStrategy%&gt; _definedTypingStrategy = this.getDefinedTypingStrategy();\nboolean _tripleEquals = (_definedTypingStrategy == &lt;%org.eclipse.n4js.ts.types.TypingStrategy%&gt;.DEFAULT);\nif (_tripleEquals)\n{\n\treturn this.getActualThisTypeRef().getTypingStrategy();\n}\nelse\n{\n\treturn this.getDefinedTypingStrategy();\n}'"
 	 * @generated
 	 */
 	TypingStrategy getTypingStrategy();
@@ -111,7 +110,6 @@ public interface BoundThisTypeRef extends ThisTypeRef, StructuralTypeRef {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model typingStrategyUnique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='this.setDefinedTypingStrategy(typingStrategy);'"
 	 * @generated
 	 */
 	void setTypingStrategy(TypingStrategy typingStrategy);
@@ -123,7 +121,6 @@ public interface BoundThisTypeRef extends ThisTypeRef, StructuralTypeRef {
 	 * Overrides {@link TypeRef#getTypeRefAsString()}
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.n4js.ts.types.TypingStrategy%&gt; _typingStrategy = this.getTypingStrategy();\n&lt;%java.lang.String%&gt; _plus = (_typingStrategy + \"this[\");\n&lt;%java.lang.String%&gt; _typeRefAsString = this.getActualThisTypeRef().getTypeRefAsString();\n&lt;%java.lang.String%&gt; _plus_1 = (_plus + _typeRefAsString);\n&lt;%java.lang.String%&gt; _plus_2 = (_plus_1 + \"]\");\n&lt;%java.lang.String%&gt; _modifiersAsString = this.getModifiersAsString();\nreturn (_plus_2 + _modifiersAsString);'"
 	 * @generated
 	 */
 	String getTypeRefAsString();
@@ -132,7 +129,6 @@ public interface BoundThisTypeRef extends ThisTypeRef, StructuralTypeRef {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getActualThisTypeRef();'"
 	 * @generated
 	 */
 	ParameterizedTypeRef getDeclaredUpperBound();
@@ -144,7 +140,6 @@ public interface BoundThisTypeRef extends ThisTypeRef, StructuralTypeRef {
 	 * Convenience method, returns true if typingStrategy of the declared type is STRUCTURAL
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef%&gt; _actualThisTypeRef = this.getActualThisTypeRef();\nif ((_actualThisTypeRef instanceof &lt;%org.eclipse.n4js.ts.types.TN4Classifier%&gt;))\n{\n\t&lt;%org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef%&gt; _actualThisTypeRef_1 = this.getActualThisTypeRef();\n\t&lt;%org.eclipse.n4js.ts.types.TypingStrategy%&gt; _typingStrategy = ((&lt;%org.eclipse.n4js.ts.types.TN4Classifier%&gt;) _actualThisTypeRef_1).getTypingStrategy();\n\treturn (_typingStrategy == &lt;%org.eclipse.n4js.ts.types.TypingStrategy%&gt;.STRUCTURAL);\n}\n&lt;%org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef%&gt; _actualThisTypeRef_2 = this.getActualThisTypeRef();\nif ((_actualThisTypeRef_2 instanceof &lt;%org.eclipse.n4js.ts.types.TStructuralType%&gt;))\n{\n\treturn true;\n}\nreturn false;'"
 	 * @generated
 	 */
 	boolean isDefSiteStructuralTyping();
@@ -157,7 +152,6 @@ public interface BoundThisTypeRef extends ThisTypeRef, StructuralTypeRef {
 	 * Returns true if defined typing strategy neither DEFAULT nor NOMINAL.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return ((this.getDefinedTypingStrategy() != &lt;%org.eclipse.n4js.ts.types.TypingStrategy%&gt;.DEFAULT) &amp;&amp; \n\t(this.getDefinedTypingStrategy() != &lt;%org.eclipse.n4js.ts.types.TypingStrategy%&gt;.NOMINAL));'"
 	 * @generated
 	 */
 	boolean isUseSiteStructuralTyping();
@@ -170,7 +164,6 @@ public interface BoundThisTypeRef extends ThisTypeRef, StructuralTypeRef {
 	 * (if non-empty) or the genStructuralMembers.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.emf.common.util.EList%&gt;&lt;&lt;%org.eclipse.n4js.ts.types.TStructMember%&gt;&gt; _xifexpression = null;\n&lt;%org.eclipse.n4js.ts.types.TStructuralType%&gt; _structuralType = this.getStructuralType();\nboolean _tripleNotEquals = (_structuralType != null);\nif (_tripleNotEquals)\n{\n\t_xifexpression = this.getStructuralType().getOwnedMembers();\n}\nelse\n{\n\t&lt;%org.eclipse.emf.common.util.EList%&gt;&lt;&lt;%org.eclipse.n4js.ts.types.TStructMember%&gt;&gt; _xifexpression_1 = null;\n\tboolean _isEmpty = this.getAstStructuralMembers().isEmpty();\n\tboolean _not = (!_isEmpty);\n\tif (_not)\n\t{\n\t\t_xifexpression_1 = this.getAstStructuralMembers();\n\t}\n\telse\n\t{\n\t\t_xifexpression_1 = this.getGenStructuralMembers();\n\t}\n\t_xifexpression = _xifexpression_1;\n}\nreturn &lt;%org.eclipse.emf.common.util.ECollections%&gt;.&lt;&lt;%org.eclipse.n4js.ts.types.TStructMember%&gt;&gt;unmodifiableEList(_xifexpression);'"
 	 * @generated
 	 */
 	EList<TStructMember> getStructuralMembers();
@@ -182,7 +175,6 @@ public interface BoundThisTypeRef extends ThisTypeRef, StructuralTypeRef {
 	 * Override VersionedElement#getVersion() to return the version of the actual this type reference.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getActualThisTypeRef().getVersion();'"
 	 * @generated
 	 */
 	int getVersion();

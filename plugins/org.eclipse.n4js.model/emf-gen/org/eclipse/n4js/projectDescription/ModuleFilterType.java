@@ -30,6 +30,9 @@ public enum ModuleFilterType implements Enumerator {
 	 * The '<em><b>NO VALIDATE</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 *  Turns off validation of affected modules.
+	 * <!-- end-model-doc -->
 	 * @see #NO_VALIDATE_VALUE
 	 * @generated
 	 * @ordered
@@ -40,6 +43,9 @@ public enum ModuleFilterType implements Enumerator {
 	 * The '<em><b>NO MODULE WRAP</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 *  Turns off wrapping of output code *and* validation of affected modules.
+	 * <!-- end-model-doc -->
 	 * @see #NO_MODULE_WRAP_VALUE
 	 * @generated
 	 * @ordered

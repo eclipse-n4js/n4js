@@ -122,7 +122,8 @@ public class JettyManager implements HttpServerManager {
 				if (server != null && server.isRunning()) {
 					server.stop();
 				}
-				Throwables.propagate(e);
+				Throwables.throwIfUnchecked(e);
+				throw new RuntimeException(e);
 			}
 			return server;
 		}
@@ -179,7 +180,8 @@ public class JettyManager implements HttpServerManager {
 				}
 			} catch (final Exception e) {
 				LOGGER.error("Error while starting Jetty server on '" + port.get() + "'.", e);
-				throw Throwables.propagate(e);
+				Throwables.throwIfUnchecked(e);
+				throw new RuntimeException(e);
 			}
 		} else {
 			LOGGER.error("Due to missing HTTP port properties Jetty cannot be started.");

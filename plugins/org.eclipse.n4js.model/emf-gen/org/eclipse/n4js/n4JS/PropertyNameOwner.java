@@ -66,7 +66,6 @@ public interface PropertyNameOwner extends NamedElement {
 	 *  Convenience method; same as {@link LiteralOrComputedPropertyName#getName()}.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName%&gt; _declaredName = this.getDeclaredName();\n&lt;%java.lang.String%&gt; _name = null;\nif (_declaredName!=null)\n{\n\t_name=_declaredName.getName();\n}\nreturn _name;'"
 	 * @generated
 	 */
 	String getName();
@@ -78,7 +77,6 @@ public interface PropertyNameOwner extends NamedElement {
 	 *  Convenience method; same as {@link LiteralOrComputedPropertyName#hasComputedPropertyName()}.
 	 * <!-- end-model-doc -->
 	 * @model unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName%&gt; declName = this.getDeclaredName();\nreturn ((declName != null) &amp;&amp; declName.hasComputedPropertyName());'"
 	 * @generated
 	 */
 	boolean hasComputedPropertyName();

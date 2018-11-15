@@ -257,7 +257,7 @@ public abstract class TMemberWithAccessModifierImpl extends TMemberImpl implemen
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (hasNoBody: ");
 		result.append(hasNoBody);
 		result.append(", declaredMemberAccessModifier: ");

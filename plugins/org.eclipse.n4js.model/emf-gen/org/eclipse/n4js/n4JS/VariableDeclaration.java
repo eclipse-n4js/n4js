@@ -80,7 +80,6 @@ public interface VariableDeclaration extends VariableDeclarationOrBinding, Annot
 	 * Returns true if variable is declared as const.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%org.eclipse.n4js.n4JS.VariableDeclarationContainer%&gt; varDeclContainer = &lt;%org.eclipse.n4js.n4JS.N4JSASTUtils%&gt;.getVariableDeclarationContainer(this);\n&lt;%org.eclipse.n4js.n4JS.VariableStatementKeyword%&gt; _varStmtKeyword = null;\nif (varDeclContainer!=null)\n{\n\t_varStmtKeyword=varDeclContainer.getVarStmtKeyword();\n}\nreturn (_varStmtKeyword == &lt;%org.eclipse.n4js.n4JS.VariableStatementKeyword%&gt;.CONST);'"
 	 * @generated
 	 */
 	boolean isConst();

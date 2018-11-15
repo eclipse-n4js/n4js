@@ -66,7 +66,6 @@ public interface FieldAccessor extends FunctionOrFieldAccessor, TypeProvidingEle
 	 * The declared type of the field accessor, which is either the return type of the getter or the type of the formal parameter in case of a setter
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return null;'"
 	 * @generated
 	 */
 	TypeRef getDeclaredTypeRef();
@@ -86,7 +85,6 @@ public interface FieldAccessor extends FunctionOrFieldAccessor, TypeProvidingEle
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.isDeclaredOptional();'"
 	 * @generated
 	 */
 	boolean isOptional();

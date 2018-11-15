@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.ts.typeRefs.impl;
 
-import java.lang.Iterable;
-
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
@@ -304,7 +302,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 
 	/**
 	 * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
-	 * 
+	 *
 	 * <p>This method is used to initialize {@link TypeRefsPackage#eINSTANCE} when that field is accessed.
 	 * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
 	 * <!-- begin-user-doc -->
@@ -318,7 +316,8 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		if (isInited) return (TypeRefsPackage)EPackage.Registry.INSTANCE.getEPackage(TypeRefsPackage.eNS_URI);
 
 		// Obtain or create and register package
-		TypeRefsPackageImpl theTypeRefsPackage = (TypeRefsPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof TypeRefsPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new TypeRefsPackageImpl());
+		Object registeredTypeRefsPackage = EPackage.Registry.INSTANCE.get(eNS_URI);
+		TypeRefsPackageImpl theTypeRefsPackage = registeredTypeRefsPackage instanceof TypeRefsPackageImpl ? (TypeRefsPackageImpl)registeredTypeRefsPackage : new TypeRefsPackageImpl();
 
 		isInited = true;
 
@@ -326,7 +325,8 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		EcorePackage.eINSTANCE.eClass();
 
 		// Obtain or create and register interdependencies
-		TypesPackageImpl theTypesPackage = (TypesPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(TypesPackage.eNS_URI) instanceof TypesPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(TypesPackage.eNS_URI) : TypesPackage.eINSTANCE);
+		Object registeredPackage = EPackage.Registry.INSTANCE.getEPackage(TypesPackage.eNS_URI);
+		TypesPackageImpl theTypesPackage = (TypesPackageImpl)(registeredPackage instanceof TypesPackageImpl ? registeredPackage : TypesPackage.eINSTANCE);
 
 		// Create package meta-data objects
 		theTypeRefsPackage.createPackageContents();
@@ -339,7 +339,6 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		// Mark meta-data to indicate it can't be changed
 		theTypeRefsPackage.freeze();
 
-  
 		// Update the registry and return the package
 		EPackage.Registry.INSTANCE.put(TypeRefsPackage.eNS_URI, theTypeRefsPackage);
 		return theTypeRefsPackage;

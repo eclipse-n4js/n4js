@@ -189,7 +189,6 @@ public interface StructuralTypeRef extends EObject {
 	 * (if non-empty) or the genStructuralMembers.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.emf.common.util.EList%&gt;&lt;&lt;%org.eclipse.n4js.ts.types.TStructMember%&gt;&gt; _xifexpression = null;\n&lt;%org.eclipse.n4js.ts.types.TStructuralType%&gt; _structuralType = this.getStructuralType();\nboolean _tripleNotEquals = (_structuralType != null);\nif (_tripleNotEquals)\n{\n\t_xifexpression = this.getStructuralType().getOwnedMembers();\n}\nelse\n{\n\t&lt;%org.eclipse.emf.common.util.EList%&gt;&lt;&lt;%org.eclipse.n4js.ts.types.TStructMember%&gt;&gt; _xifexpression_1 = null;\n\tboolean _isEmpty = this.getAstStructuralMembers().isEmpty();\n\tboolean _not = (!_isEmpty);\n\tif (_not)\n\t{\n\t\t_xifexpression_1 = this.getAstStructuralMembers();\n\t}\n\telse\n\t{\n\t\t_xifexpression_1 = this.getGenStructuralMembers();\n\t}\n\t_xifexpression = _xifexpression_1;\n}\nreturn &lt;%org.eclipse.emf.common.util.ECollections%&gt;.&lt;&lt;%org.eclipse.n4js.ts.types.TStructMember%&gt;&gt;unmodifiableEList(_xifexpression);'"
 	 * @generated
 	 */
 	EList<TStructMember> getStructuralMembers();
@@ -201,7 +200,6 @@ public interface StructuralTypeRef extends EObject {
 	 * Returns true iff there exists a type variable mapping for 'typeVar' in property 'typeVarMappings'.
 	 * <!-- end-model-doc -->
 	 * @model unique="false" typeVarUnique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.ts.typeRefs.TypeVariableMapping%&gt;, &lt;%java.lang.Boolean%&gt;&gt; _function = new &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.ts.typeRefs.TypeVariableMapping%&gt;, &lt;%java.lang.Boolean%&gt;&gt;()\n{\n\tpublic &lt;%java.lang.Boolean%&gt; apply(final &lt;%org.eclipse.n4js.ts.typeRefs.TypeVariableMapping%&gt; m)\n\t{\n\t\t&lt;%org.eclipse.n4js.ts.types.TypeVariable%&gt; _typeVar = null;\n\t\tif (m!=null)\n\t\t{\n\t\t\t_typeVar=m.getTypeVar();\n\t\t}\n\t\treturn &lt;%java.lang.Boolean%&gt;.valueOf((_typeVar == typeVar));\n\t}\n};\nreturn &lt;%org.eclipse.xtext.xbase.lib.IterableExtensions%&gt;.&lt;&lt;%org.eclipse.n4js.ts.typeRefs.TypeVariableMapping%&gt;&gt;exists(this.getPostponedSubstitutions(), _function);'"
 	 * @generated
 	 */
 	boolean hasPostponedSubstitutionFor(TypeVariable typeVar);

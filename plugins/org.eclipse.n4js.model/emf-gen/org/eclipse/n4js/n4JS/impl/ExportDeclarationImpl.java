@@ -467,7 +467,7 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (wildcardExport: ");
 		result.append(wildcardExport);
 		result.append(", defaultExport: ");

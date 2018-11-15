@@ -67,7 +67,6 @@ public interface N4TypeDeclaration extends N4TypeDefinition, AnnotableScriptElem
 	 * Returns true if type is declared as external.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getDeclaredModifiers().contains(&lt;%org.eclipse.n4js.n4JS.N4Modifier%&gt;.EXTERNAL);'"
 	 * @generated
 	 */
 	boolean isExternal();

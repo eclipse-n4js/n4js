@@ -42,7 +42,6 @@ public interface VariableEnvironmentElement extends EObject {
 	 * Returns <code>true</code> for {@link Block} and {@link ForStatement}, <code>false</code> otherwise.
 	 * <!-- end-model-doc -->
 	 * @model unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return false;'"
 	 * @generated
 	 */
 	boolean appliesOnlyToBlockScopedElements();

@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.n4JS;
 
-import java.lang.Iterable;
-
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
@@ -59,7 +57,6 @@ public interface N4InterfaceDeclaration extends N4ClassifierDeclaration, Version
 	 * Convenience method, returns {@link #getDefinedType()} casted to {@link TInterface}.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.n4js.ts.types.Type%&gt; _definedType = this.getDefinedType();\nreturn ((&lt;%org.eclipse.n4js.ts.types.TInterface%&gt;) _definedType);'"
 	 * @generated
 	 */
 	TInterface getDefinedTypeAsInterface();
@@ -68,7 +65,6 @@ public interface N4InterfaceDeclaration extends N4ClassifierDeclaration, Version
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" dataType="org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefIterable" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getSuperInterfaceRefs();'"
 	 * @generated
 	 */
 	Iterable<ParameterizedTypeRef> getSuperClassifierRefs();
@@ -77,7 +73,6 @@ public interface N4InterfaceDeclaration extends N4ClassifierDeclaration, Version
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" dataType="org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefIterable" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getSuperInterfaceRefs();'"
 	 * @generated
 	 */
 	Iterable<ParameterizedTypeRef> getImplementedOrExtendedInterfaceRefs();
@@ -89,7 +84,6 @@ public interface N4InterfaceDeclaration extends N4ClassifierDeclaration, Version
 	 * Override VersionedElement#getVersion() to return the declared version.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getDeclaredVersionOrZero();'"
 	 * @generated
 	 */
 	int getVersion();

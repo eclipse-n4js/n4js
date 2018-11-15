@@ -498,7 +498,6 @@ public interface TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 * @return the value of the '<em>Module Specifier</em>' attribute.
 	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_ModuleSpecifier()
 	 * @model unique="false" transient="true" changeable="false" volatile="true" derived="true"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel get='return this.getQualifiedName();'"
 	 * @generated
 	 */
 	String getModuleSpecifier();

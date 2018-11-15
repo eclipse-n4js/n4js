@@ -34,7 +34,6 @@ public interface IdentifierRef_IM extends IdentifierRef, ReferencingElementExpre
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getRewiredTarget();'"
 	 * @generated
 	 */
 	SymbolTableEntry getId_IM();
@@ -43,7 +42,6 @@ public interface IdentifierRef_IM extends IdentifierRef, ReferencingElementExpre
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model targetUnique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='this.setRewiredTarget(target);'"
 	 * @generated
 	 */
 	void setId_IM(SymbolTableEntry target);
@@ -55,7 +53,6 @@ public interface IdentifierRef_IM extends IdentifierRef, ReferencingElementExpre
 	 *  overridden attribute access to always return null
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return null;'"
 	 * @generated
 	 */
 	IdentifiableElement getId();
@@ -64,7 +61,6 @@ public interface IdentifierRef_IM extends IdentifierRef, ReferencingElementExpre
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model ixUnique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='if ((ix != null))\n{\n\tthrow new &lt;%java.lang.IllegalArgumentException%&gt;(\"IDRef_IM cannot accept Identifiers. Use #id_IM.\");\n}'"
 	 * @generated
 	 */
 	void setId(IdentifiableElement ix);

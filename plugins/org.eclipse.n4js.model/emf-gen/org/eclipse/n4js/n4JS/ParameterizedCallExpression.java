@@ -78,7 +78,6 @@ public interface ParameterizedCallExpression extends Expression, ParameterizedAc
 	 * Convenience method returning the receiver expression or null, if call has no receiver.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.n4js.n4JS.Expression%&gt; _xifexpression = null;\n&lt;%org.eclipse.n4js.n4JS.Expression%&gt; _target = this.getTarget();\nif ((_target instanceof &lt;%org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression%&gt;))\n{\n\t&lt;%org.eclipse.n4js.n4JS.Expression%&gt; _target_1 = this.getTarget();\n\t_xifexpression = ((&lt;%org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression%&gt;) _target_1).getTarget();\n}\nelse\n{\n\t_xifexpression = null;\n}\nreturn _xifexpression;'"
 	 * @generated
 	 */
 	Expression getReceiver();

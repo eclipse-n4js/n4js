@@ -456,18 +456,4 @@ public class CustomN4JSParser extends N4JSParser {
 		}
 		return result;
 	}
-
-	// This will yield a compile error with 2.13 because it will be present as a protected method
-	private AbstractElement unwrapSingleElementGroups(AbstractElement elementToParse) {
-		if (elementToParse instanceof Group) {
-			List<AbstractElement> elements = ((Group) elementToParse).getElements();
-			if (elements.size() == 1) {
-				return unwrapSingleElementGroups(elements.get(0));
-			}
-		}
-		return elementToParse;
-	}
-	// ^^^^^^^
-	// TODO remove until here
-
 }

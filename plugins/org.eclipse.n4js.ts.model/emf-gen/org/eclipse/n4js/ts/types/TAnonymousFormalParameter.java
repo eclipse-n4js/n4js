@@ -31,7 +31,6 @@ public interface TAnonymousFormalParameter extends TFormalParameter {
 	 * (_par_n with n is the index of the parameter in the parameter list, or just _par_ in case of setter).
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%java.lang.String%&gt; definedName = this.getDefinedName();\nif ((definedName != null))\n{\n\treturn definedName;\n}\nfinal &lt;%java.lang.Object%&gt; containingFeature = this.eContainer().eGet(this.eContainingFeature());\nif ((containingFeature instanceof &lt;%java.util.List%&gt;&lt;?&gt;))\n{\n\t&lt;%java.lang.Object%&gt; _eGet = this.eContainer().eGet(this.eContainingFeature());\n\tfinal int index = ((&lt;%java.util.List%&gt;&lt;?&gt;) _eGet).indexOf(this);\n\treturn (\"_par_\" + &lt;%java.lang.Integer%&gt;.valueOf(index));\n}\nelse\n{\n\treturn \"_par_\";\n}'"
 	 * @generated
 	 */
 	String getName();
@@ -44,7 +43,6 @@ public interface TAnonymousFormalParameter extends TFormalParameter {
 	 * Returns the declared name, may be null since parameter is anonymous and name is optional
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return super.getName();'"
 	 * @generated
 	 */
 	String getDefinedName();

@@ -128,7 +128,6 @@ public interface ContainerType<MT extends TMember> extends Type {
 	 * Convenience method returning the owned constructor or <code>null</code> if not available.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.ts.types.TMethod%&gt;, &lt;%java.lang.Boolean%&gt;&gt; _function = new &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.ts.types.TMethod%&gt;, &lt;%java.lang.Boolean%&gt;&gt;()\n{\n\tpublic &lt;%java.lang.Boolean%&gt; apply(final &lt;%org.eclipse.n4js.ts.types.TMethod%&gt; it)\n\t{\n\t\treturn &lt;%java.lang.Boolean%&gt;.valueOf(it.isConstructor());\n\t}\n};\nreturn &lt;%org.eclipse.xtext.xbase.lib.IterableExtensions%&gt;.&lt;&lt;%org.eclipse.n4js.ts.types.TMethod%&gt;&gt;findFirst(&lt;%com.google.common.collect.Iterables%&gt;.&lt;&lt;%org.eclipse.n4js.ts.types.TMethod%&gt;&gt;filter(this.getOwnedMembers(), &lt;%org.eclipse.n4js.ts.types.TMethod%&gt;.class), _function);'"
 	 * @generated
 	 */
 	TMethod getOwnedCtor();
@@ -141,7 +140,6 @@ public interface ContainerType<MT extends TMember> extends Type {
 	 * That is, this method returns fields, methods, and getters rather then setters.
 	 * <!-- end-model-doc -->
 	 * @model unique="false" nameUnique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.findOwnedMember(name, false, false);'"
 	 * @generated
 	 */
 	TMember findOwnedMember(String name);
@@ -154,7 +152,6 @@ public interface ContainerType<MT extends TMember> extends Type {
 	 * Returns members with given name, writeable and static access.
 	 * <!-- end-model-doc -->
 	 * @model unique="false" nameUnique="false" writeAccessUnique="false" staticAccessUnique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%org.eclipse.n4js.ts.types.NameAndAccess%&gt; nameAndAccess = new &lt;%org.eclipse.n4js.ts.types.NameAndAccess%&gt;(name, writeAccess, staticAccess);\nreturn this.getOrCreateOwnedMembersByNameAndAccess().get(nameAndAccess);'"
 	 * @generated
 	 */
 	TMember findOwnedMember(String name, boolean writeAccess, boolean staticAccess);
@@ -168,7 +165,6 @@ public interface ContainerType<MT extends TMember> extends Type {
 	 * writeable).
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%java.util.Map%&gt;&lt;&lt;%org.eclipse.n4js.ts.types.NameAndAccess%&gt;, ? extends &lt;%org.eclipse.n4js.ts.types.TMember%&gt;&gt; _ownedMembersByNameAndAccess = this.getOwnedMembersByNameAndAccess();\nboolean _tripleEquals = (_ownedMembersByNameAndAccess == null);\nif (_tripleEquals)\n{\n\t&lt;%java.util.Map%&gt;&lt;&lt;%org.eclipse.n4js.ts.types.NameAndAccess%&gt;, ? extends &lt;%org.eclipse.n4js.ts.types.TMember%&gt;&gt; _switchResult = null;\n\tint _size = this.getOwnedMembers().size();\n\tswitch (_size)\n\t{\n\t\tcase 0:\n\t\t\t_switchResult = &lt;%java.util.Collections%&gt;.&lt;&lt;%org.eclipse.n4js.ts.types.NameAndAccess%&gt;, &lt;%org.eclipse.n4js.ts.types.TMember%&gt;&gt;emptyMap();\n\t\t\tbreak;\n\t\tcase 1:\n\t\t\t&lt;%java.util.Map%&gt;&lt;&lt;%org.eclipse.n4js.ts.types.NameAndAccess%&gt;, ? extends &lt;%org.eclipse.n4js.ts.types.TMember%&gt;&gt; _xblockexpression = null;\n\t\t\t{\n\t\t\t\tfinal MT singleMember = this.getOwnedMembers().get(0);\n\t\t\t\tfinal &lt;%org.eclipse.n4js.ts.types.NameAndAccess%&gt;[] nameAndAccess = &lt;%org.eclipse.n4js.ts.types.NameAndAccess%&gt;.of(singleMember);\n\t\t\t\t&lt;%java.util.Map%&gt;&lt;&lt;%org.eclipse.n4js.ts.types.NameAndAccess%&gt;, ? extends &lt;%org.eclipse.n4js.ts.types.TMember%&gt;&gt; _xifexpression = null;\n\t\t\t\tint _length = nameAndAccess.length;\n\t\t\t\tboolean _greaterThan = (_length &gt; 1);\n\t\t\t\tif (_greaterThan)\n\t\t\t\t{\n\t\t\t\t\t&lt;%java.util.Map%&gt;&lt;&lt;%org.eclipse.n4js.ts.types.NameAndAccess%&gt;, &lt;%org.eclipse.n4js.ts.types.TMember%&gt;&gt; _xblockexpression_1 = null;\n\t\t\t\t\t{\n\t\t\t\t\t\tfinal &lt;%java.util.HashMap%&gt;&lt;&lt;%org.eclipse.n4js.ts.types.NameAndAccess%&gt;, &lt;%org.eclipse.n4js.ts.types.TMember%&gt;&gt; map = new &lt;%java.util.HashMap%&gt;&lt;&lt;%org.eclipse.n4js.ts.types.NameAndAccess%&gt;, &lt;%org.eclipse.n4js.ts.types.TMember%&gt;&gt;();\n\t\t\t\t\t\tmap.put(nameAndAccess[0], singleMember);\n\t\t\t\t\t\tmap.put(nameAndAccess[1], singleMember);\n\t\t\t\t\t\t_xblockexpression_1 = &lt;%java.util.Collections%&gt;.&lt;&lt;%org.eclipse.n4js.ts.types.NameAndAccess%&gt;, &lt;%org.eclipse.n4js.ts.types.TMember%&gt;&gt;unmodifiableMap(map);\n\t\t\t\t\t}\n\t\t\t\t\t_xifexpression = _xblockexpression_1;\n\t\t\t\t}\n\t\t\t\telse\n\t\t\t\t{\n\t\t\t\t\t_xifexpression = &lt;%java.util.Collections%&gt;.&lt;&lt;%org.eclipse.n4js.ts.types.NameAndAccess%&gt;, MT&gt;singletonMap(nameAndAccess[0], singleMember);\n\t\t\t\t}\n\t\t\t\t_xblockexpression = _xifexpression;\n\t\t\t}\n\t\t\t_switchResult = _xblockexpression;\n\t\t\tbreak;\n\t\tdefault:\n\t\t\t&lt;%org.eclipse.emf.common.util.EList%&gt;&lt;MT&gt; _ownedMembers = this.getOwnedMembers();\n\t\t\t&lt;%org.eclipse.n4js.ts.types.internal.MemberByNameAndAccessMap%&gt; _memberByNameAndAccessMap = new &lt;%org.eclipse.n4js.ts.types.internal.MemberByNameAndAccessMap%&gt;(_ownedMembers);\n\t\t\t_switchResult = &lt;%java.util.Collections%&gt;.&lt;&lt;%org.eclipse.n4js.ts.types.NameAndAccess%&gt;, &lt;%org.eclipse.n4js.ts.types.TMember%&gt;&gt;unmodifiableMap(_memberByNameAndAccessMap);\n\t\t\tbreak;\n\t}\n\tfinal &lt;%java.util.Map%&gt;&lt;&lt;%org.eclipse.n4js.ts.types.NameAndAccess%&gt;, ? extends &lt;%org.eclipse.n4js.ts.types.TMember%&gt;&gt; newRegistry = _switchResult;\n\tfinal &lt;%org.eclipse.xtext.xbase.lib.Procedures.Procedure0%&gt; _function = new &lt;%org.eclipse.xtext.xbase.lib.Procedures.Procedure0%&gt;()\n\t{\n\t\tpublic void apply()\n\t\t{\n\t\t\t&lt;%this%&gt;.setOwnedMembersByNameAndAccess(newRegistry);\n\t\t}\n\t};\n\t&lt;%org.eclipse.n4js.utils.EcoreUtilN4%&gt;.doWithDeliver(false, _function, this);\n}\nreturn this.getOwnedMembersByNameAndAccess();'"
 	 * @generated
 	 */
 	Map<NameAndAccess, ? extends TMember> getOrCreateOwnedMembersByNameAndAccess();

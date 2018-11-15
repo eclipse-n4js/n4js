@@ -758,7 +758,7 @@ public abstract class N4FieldAccessorImpl extends AnnotableN4MemberDeclarationIm
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (declaredOptional: ");
 		result.append(declaredOptional);
 		result.append(')');

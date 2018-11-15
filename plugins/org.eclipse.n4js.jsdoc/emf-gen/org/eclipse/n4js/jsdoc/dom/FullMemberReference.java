@@ -90,7 +90,6 @@ public interface FullMemberReference extends FullTypeReference {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return ((this.getMemberName() != null) &amp;&amp; (!this.getMemberName().isEmpty()));'"
 	 * @generated
 	 */
 	boolean memberNameSet();
@@ -99,7 +98,6 @@ public interface FullMemberReference extends FullTypeReference {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%java.lang.String%&gt; _string = super.toString();\n&lt;%java.lang.StringBuilder%&gt; strb = new &lt;%java.lang.StringBuilder%&gt;(_string);\nboolean _memberNameSet = this.memberNameSet();\nif (_memberNameSet)\n{\n\tint _length = strb.length();\n\tboolean _greaterThan = (_length &gt; 0);\n\tif (_greaterThan)\n\t{\n\t\tboolean _isStaticMember = this.isStaticMember();\n\t\tif (_isStaticMember)\n\t\t{\n\t\t\tstrb.append(\"#\");\n\t\t}\n\t\telse\n\t\t{\n\t\t\tstrb.append(\".\");\n\t\t}\n\t}\n\tstrb.append(this.getMemberName());\n}\nreturn strb.toString();'"
 	 * @generated
 	 */
 	String toString();

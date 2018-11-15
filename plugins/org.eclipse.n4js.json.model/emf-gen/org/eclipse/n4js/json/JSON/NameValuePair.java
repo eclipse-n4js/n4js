@@ -91,7 +91,6 @@ public interface NameValuePair extends EObject {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%java.lang.String%&gt; _name = this.getName();\n&lt;%java.lang.String%&gt; _plus = (_name + \": \");\n&lt;%java.lang.String%&gt; _string = this.getValue().toString();\nreturn (_plus + _string);'"
 	 * @generated
 	 */
 	String toString();

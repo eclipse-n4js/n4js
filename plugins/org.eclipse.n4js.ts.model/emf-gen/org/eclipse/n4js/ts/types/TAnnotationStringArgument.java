@@ -58,7 +58,6 @@ public interface TAnnotationStringArgument extends TAnnotationArgument {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getValue();'"
 	 * @generated
 	 */
 	String getArgAsString();

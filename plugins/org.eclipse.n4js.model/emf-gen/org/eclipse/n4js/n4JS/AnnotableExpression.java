@@ -59,7 +59,6 @@ public interface AnnotableExpression extends AnnotableElement, Expression {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.emf.common.util.EList%&gt;&lt;&lt;%org.eclipse.n4js.n4JS.Annotation%&gt;&gt; _elvis = null;\n&lt;%org.eclipse.n4js.n4JS.ExpressionAnnotationList%&gt; _annotationList = this.getAnnotationList();\n&lt;%org.eclipse.emf.common.util.EList%&gt;&lt;&lt;%org.eclipse.n4js.n4JS.Annotation%&gt;&gt; _annotations = null;\nif (_annotationList!=null)\n{\n\t_annotations=_annotationList.getAnnotations();\n}\nif (_annotations != null)\n{\n\t_elvis = _annotations;\n} else\n{\n\t&lt;%org.eclipse.emf.common.util.EList%&gt;&lt;&lt;%org.eclipse.n4js.n4JS.Annotation%&gt;&gt; _emptyEList = &lt;%org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals%&gt;.&lt;&lt;%org.eclipse.n4js.n4JS.Annotation%&gt;&gt;emptyEList();\n\t_elvis = _emptyEList;\n}\nreturn _elvis;'"
 	 * @generated
 	 */
 	EList<Annotation> getAnnotations();

@@ -58,7 +58,6 @@ public interface FullTypeReference extends SimpleTypeReference {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return ((this.getModuleName() != null) &amp;&amp; (!this.getModuleName().isEmpty()));'"
 	 * @generated
 	 */
 	boolean moduleNameSet();
@@ -67,7 +66,6 @@ public interface FullTypeReference extends SimpleTypeReference {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%java.lang.StringBuilder%&gt; strb = new &lt;%java.lang.StringBuilder%&gt;();\nboolean _moduleNameSet = this.moduleNameSet();\nif (_moduleNameSet)\n{\n\tstrb.append(this.getModuleName());\n}\nboolean _typeNameSet = this.typeNameSet();\nif (_typeNameSet)\n{\n\tint _length = strb.length();\n\tboolean _greaterThan = (_length &gt; 0);\n\tif (_greaterThan)\n\t{\n\t\tstrb.append(\".\");\n\t}\n\tstrb.append(this.getTypeName());\n}\nreturn strb.toString();'"
 	 * @generated
 	 */
 	String toString();
@@ -76,7 +74,6 @@ public interface FullTypeReference extends SimpleTypeReference {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%java.lang.StringBuilder%&gt; strb = new &lt;%java.lang.StringBuilder%&gt;();\nboolean _moduleNameSet = this.moduleNameSet();\nif (_moduleNameSet)\n{\n\tstrb.append(this.getModuleName());\n}\nboolean _typeNameSet = this.typeNameSet();\nif (_typeNameSet)\n{\n\tstrb.append(\".\");\n\tstrb.append(this.getTypeName());\n}\nreturn strb.toString();'"
 	 * @generated
 	 */
 	String fullTypeName();

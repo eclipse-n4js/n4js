@@ -10,10 +10,10 @@
  */
 package org.eclipse.n4js.smoke.tests
 
-import com.google.common.collect.Sets
 import java.math.BigInteger
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
+import java.util.Collections
 import java.util.Set
 import java.util.concurrent.ConcurrentHashMap
 import org.eclipse.xtext.testing.smoketest.ScenarioProcessor
@@ -28,7 +28,7 @@ abstract class UniqueScenarioProcessor extends ScenarioProcessor {
 	new() throws RuntimeException {
 		try {
 			messageDigest = MessageDigest.getInstance("MD5");
-			seen = Sets.newSetFromMap(new ConcurrentHashMap<BigInteger, Boolean>());
+			seen = Collections.newSetFromMap(new ConcurrentHashMap<BigInteger, Boolean>());
 		} catch(NoSuchAlgorithmException e) {
 			throw new RuntimeException(e)
 		}

@@ -85,7 +85,6 @@ public interface Qualifier extends SemverToStringable {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model unique="false" objUnique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='if ((!(obj instanceof &lt;%org.eclipse.n4js.semver.Semver.Qualifier%&gt;)))\n{\n\treturn false;\n}\nfinal &lt;%org.eclipse.n4js.semver.Semver.Qualifier%&gt; q = ((&lt;%org.eclipse.n4js.semver.Semver.Qualifier%&gt;) obj);\n&lt;%org.eclipse.n4js.semver.Semver.QualifierTag%&gt; _preRelease = this.getPreRelease();\nboolean _tripleEquals = (_preRelease == null);\n&lt;%org.eclipse.n4js.semver.Semver.QualifierTag%&gt; _preRelease_1 = q.getPreRelease();\nboolean _tripleEquals_1 = (_preRelease_1 == null);\nboolean equals = (&lt;%java.lang.Boolean%&gt;.valueOf(_tripleEquals) == &lt;%java.lang.Boolean%&gt;.valueOf(_tripleEquals_1));\nequals = ((equals &amp;&amp; (this.getPreRelease() == null)) || this.getPreRelease().equals(q.getPreRelease()));\nequals = (equals &amp;&amp; (&lt;%java.lang.Boolean%&gt;.valueOf((this.getBuildMetadata() == null)) == &lt;%java.lang.Boolean%&gt;.valueOf((q.getBuildMetadata() == null))));\nequals = ((equals &amp;&amp; (this.getBuildMetadata() == null)) || this.getBuildMetadata().equals(q.getBuildMetadata()));\nreturn equals;'"
 	 * @generated
 	 */
 	boolean equals(Object obj);

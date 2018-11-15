@@ -105,7 +105,6 @@ Contributors:
       <import plugin="org.eclipse.emf.ecore.change"/>
       <import plugin="org.apache.batik.css"/>
       <import plugin="org.apache.batik.util"/>
-      <import plugin="org.apache.batik.util.gui"/>
       <import plugin="org.w3c.dom.events"/>
       <import plugin="org.w3c.dom.svg"/>
       <import plugin="javax.annotation"/>

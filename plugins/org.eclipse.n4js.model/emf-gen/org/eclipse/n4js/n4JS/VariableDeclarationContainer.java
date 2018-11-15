@@ -91,7 +91,6 @@ public interface VariableDeclarationContainer extends EObject {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.n4JS.VariableDeclarationOrBinding%&gt;, &lt;%org.eclipse.emf.common.util.EList%&gt;&lt;&lt;%org.eclipse.n4js.n4JS.VariableDeclaration%&gt;&gt;&gt; _function = new &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.n4JS.VariableDeclarationOrBinding%&gt;, &lt;%org.eclipse.emf.common.util.EList%&gt;&lt;&lt;%org.eclipse.n4js.n4JS.VariableDeclaration%&gt;&gt;&gt;()\n{\n\tpublic &lt;%org.eclipse.emf.common.util.EList%&gt;&lt;&lt;%org.eclipse.n4js.n4JS.VariableDeclaration%&gt;&gt; apply(final &lt;%org.eclipse.n4js.n4JS.VariableDeclarationOrBinding%&gt; it)\n\t{\n\t\treturn it.getVariableDeclarations();\n\t}\n};\nreturn &lt;%org.eclipse.emf.common.util.ECollections%&gt;.&lt;&lt;%org.eclipse.n4js.n4JS.VariableDeclaration%&gt;&gt;toEList(&lt;%com.google.common.collect.Iterables%&gt;.&lt;&lt;%org.eclipse.n4js.n4JS.VariableDeclaration%&gt;&gt;concat(&lt;%org.eclipse.emf.ecore.xcore.lib.XcoreEListExtensions%&gt;.&lt;&lt;%org.eclipse.n4js.n4JS.VariableDeclarationOrBinding%&gt;, &lt;%org.eclipse.emf.common.util.EList%&gt;&lt;&lt;%org.eclipse.n4js.n4JS.VariableDeclaration%&gt;&gt;&gt;map(this.getVarDeclsOrBindings(), _function)));'"
 	 * @generated
 	 */
 	EList<VariableDeclaration> getVarDecl();
@@ -100,7 +99,6 @@ public interface VariableDeclarationContainer extends EObject {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='boolean _switchResult = false;\n&lt;%org.eclipse.n4js.n4JS.VariableStatementKeyword%&gt; _varStmtKeyword = this.getVarStmtKeyword();\nif (_varStmtKeyword != null)\n{\n\tswitch (_varStmtKeyword)\n\t{\n\t\tcase LET:\n\t\t\t_switchResult = true;\n\t\t\tbreak;\n\t\tcase CONST:\n\t\t\t_switchResult = true;\n\t\t\tbreak;\n\t\tcase VAR:\n\t\t\t_switchResult = false;\n\t\t\tbreak;\n\t\tdefault:\n\t\t\t&lt;%org.eclipse.n4js.n4JS.VariableStatementKeyword%&gt; _varStmtKeyword_1 = this.getVarStmtKeyword();\n\t\t\t&lt;%java.lang.String%&gt; _plus = (\"unsupported enum literal: \" + _varStmtKeyword_1);\n\t\t\tthrow new &lt;%java.lang.UnsupportedOperationException%&gt;(_plus);\n\t}\n}\nelse\n{\n\t&lt;%org.eclipse.n4js.n4JS.VariableStatementKeyword%&gt; _varStmtKeyword_1 = this.getVarStmtKeyword();\n\t&lt;%java.lang.String%&gt; _plus = (\"unsupported enum literal: \" + _varStmtKeyword_1);\n\tthrow new &lt;%java.lang.UnsupportedOperationException%&gt;(_plus);\n}\nreturn _switchResult;'"
 	 * @generated
 	 */
 	boolean isBlockScoped();

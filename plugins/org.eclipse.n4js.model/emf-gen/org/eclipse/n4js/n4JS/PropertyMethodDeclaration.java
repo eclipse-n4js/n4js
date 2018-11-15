@@ -27,7 +27,6 @@ public interface PropertyMethodDeclaration extends AnnotablePropertyAssignment, 
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.n4js.ts.types.Type%&gt; _definedType = this.getDefinedType();\nreturn ((&lt;%org.eclipse.n4js.ts.types.TStructMethod%&gt;) _definedType);'"
 	 * @generated
 	 */
 	TStructMethod getDefinedMember();

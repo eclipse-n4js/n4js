@@ -30,7 +30,6 @@ public interface TStructuralType extends ContainerType<TStructMember>, SyntaxRel
 	 * Structural types can be sub-typed, since only the structure is used for typing.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return false;'"
 	 * @generated
 	 */
 	boolean isFinal();

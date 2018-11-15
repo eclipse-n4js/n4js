@@ -23,5 +23,4 @@ public abstract class AbstractJSONValidator extends AbstractDeclarativeValidator
 		result.add(EPackage.Registry.INSTANCE.getEPackage("http://www.eclipse.org/n4js/JSON"));
 		return result;
 	}
-	
 }

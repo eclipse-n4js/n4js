@@ -221,7 +221,7 @@ public class ModuleFilterImpl extends MinimalEObjectImpl.Container implements Mo
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (moduleFilterType: ");
 		result.append(moduleFilterType);
 		result.append(')');

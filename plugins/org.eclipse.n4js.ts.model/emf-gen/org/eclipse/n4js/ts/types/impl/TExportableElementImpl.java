@@ -188,7 +188,7 @@ public class TExportableElementImpl extends IdentifiableElementImpl implements T
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (exportedName: ");
 		result.append(exportedName);
 		result.append(')');

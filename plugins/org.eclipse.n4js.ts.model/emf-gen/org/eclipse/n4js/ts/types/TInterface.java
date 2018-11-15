@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.ts.types;
 
-import java.lang.Iterable;
-
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
@@ -80,7 +78,6 @@ public interface TInterface extends TN4Classifier {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return true;'"
 	 * @generated
 	 */
 	boolean isAbstract();
@@ -93,7 +90,6 @@ public interface TInterface extends TN4Classifier {
 	 * Convenience method, returns all super classes, consumed roles and implemented or extend interfaces
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" dataType="org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefIterable" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getSuperInterfaceRefs();'"
 	 * @generated
 	 */
 	Iterable<ParameterizedTypeRef> getSuperClassifierRefs();
@@ -106,7 +102,6 @@ public interface TInterface extends TN4Classifier {
 	 * Convenience method, returns all implemented (or extended) interfaces
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" dataType="org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefIterable" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getSuperInterfaceRefs();'"
 	 * @generated
 	 */
 	Iterable<ParameterizedTypeRef> getImplementedOrExtendedInterfaceRefs();

@@ -39,7 +39,6 @@ public interface FunctionTypeRef extends ParameterizedTypeRef, FunctionTypeExprO
 	 * Convenience method, returns the declared this type of the referenced function type.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getFunctionType().getDeclaredThisType();'"
 	 * @generated
 	 */
 	TypeRef getDeclaredThisType();
@@ -51,7 +50,6 @@ public interface FunctionTypeRef extends ParameterizedTypeRef, FunctionTypeExprO
 	 * Convenience method, returns the type variables of the referenced function type.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getFunctionType().getTypeVars();'"
 	 * @generated
 	 */
 	EList<TypeVariable> getTypeVars();
@@ -63,7 +61,6 @@ public interface FunctionTypeRef extends ParameterizedTypeRef, FunctionTypeExprO
 	 * Simply returns the given type variable's declared upper bounds (required by super class API).
 	 * <!-- end-model-doc -->
 	 * @model unique="false" typeVarUnique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return typeVar.getDeclaredUpperBound();'"
 	 * @generated
 	 */
 	TypeRef getTypeVarUpperBound(TypeVariable typeVar);
@@ -75,7 +72,6 @@ public interface FunctionTypeRef extends ParameterizedTypeRef, FunctionTypeExprO
 	 * Convenience method, returns the fpars of the referenced function type.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getFunctionType().getFpars();'"
 	 * @generated
 	 */
 	EList<TFormalParameter> getFpars();
@@ -87,7 +83,6 @@ public interface FunctionTypeRef extends ParameterizedTypeRef, FunctionTypeExprO
 	 * Convenience method, returns the return type of the referenced function type.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getFunctionType().getReturnTypeRef();'"
 	 * @generated
 	 */
 	TypeRef getReturnTypeRef();

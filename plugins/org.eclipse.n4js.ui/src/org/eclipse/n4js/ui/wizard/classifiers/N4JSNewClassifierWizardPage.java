@@ -19,10 +19,6 @@ import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.ui.dialog.ModuleSpecifierSelectionDialog;
 import org.eclipse.n4js.ui.wizard.components.AccessModifierComponent;
@@ -40,6 +36,9 @@ import org.eclipse.n4js.ui.wizard.workspace.WizardPreviewProvider.WizardPreview;
 import org.eclipse.n4js.ui.wizard.workspace.WorkspaceWizardModel;
 import org.eclipse.n4js.ui.wizard.workspace.WorkspaceWizardModelValidator;
 import org.eclipse.n4js.ui.wizard.workspace.WorkspaceWizardModelValidator.ValidationResult;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 
 /**
  * Generic wizard page for all N4JS classifiers.
@@ -141,7 +140,7 @@ public abstract class N4JSNewClassifierWizardPage<M extends N4JSClassifierWizard
 				.observe(workspaceWizardControl.getModuleSpecifierText());
 		dataBindingContext.bindValue(greySuffixValue,
 				interfaceNameModelValue, noUpdateValueStrategy(),
-				new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE));
+				new UpdateValueStrategy<>(UpdateValueStrategy.POLICY_UPDATE));
 
 		//// Enable n4js <-> Definition value(external) is selected
 		@SuppressWarnings("unchecked")
@@ -262,8 +261,8 @@ public abstract class N4JSNewClassifierWizardPage<M extends N4JSClassifierWizard
 		}
 	}
 
-	private static UpdateValueStrategy noUpdateValueStrategy() {
-		return new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER);
+	private static <S, D> UpdateValueStrategy<S, D> noUpdateValueStrategy() {
+		return new UpdateValueStrategy<>(UpdateValueStrategy.POLICY_NEVER);
 	}
 
 }

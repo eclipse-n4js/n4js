@@ -12,8 +12,6 @@ package org.eclipse.n4js.n4JS.impl;
 
 import com.google.common.collect.Iterables;
 
-import java.lang.Iterable;
-
 import java.lang.reflect.InvocationTargetException;
 
 import java.util.Collection;

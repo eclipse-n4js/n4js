@@ -51,7 +51,6 @@ public interface Doclet extends Composite {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model unique="false" titleUnique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.jsdoc.dom.LineTag%&gt;, &lt;%java.lang.Boolean%&gt;&gt; _function = new &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.jsdoc.dom.LineTag%&gt;, &lt;%java.lang.Boolean%&gt;&gt;()\n{\n\tpublic &lt;%java.lang.Boolean%&gt; apply(final &lt;%org.eclipse.n4js.jsdoc.dom.LineTag%&gt; it)\n\t{\n\t\t&lt;%java.lang.String%&gt; _title = it.getTitle().getTitle();\n\t\treturn &lt;%java.lang.Boolean%&gt;.valueOf(&lt;%com.google.common.base.Objects%&gt;.equal(_title, title));\n\t}\n};\n&lt;%org.eclipse.n4js.jsdoc.dom.LineTag%&gt; _findFirst = &lt;%org.eclipse.xtext.xbase.lib.IterableExtensions%&gt;.&lt;&lt;%org.eclipse.n4js.jsdoc.dom.LineTag%&gt;&gt;findFirst(this.getLineTags(), _function);\nreturn (_findFirst != null);'"
 	 * @generated
 	 */
 	boolean hasLineTag(String title);
@@ -60,7 +59,6 @@ public interface Doclet extends Composite {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model unique="false" titleUnique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.jsdoc.dom.LineTag%&gt;, &lt;%java.lang.Boolean%&gt;&gt; _function = new &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.jsdoc.dom.LineTag%&gt;, &lt;%java.lang.Boolean%&gt;&gt;()\n{\n\tpublic &lt;%java.lang.Boolean%&gt; apply(final &lt;%org.eclipse.n4js.jsdoc.dom.LineTag%&gt; it)\n\t{\n\t\t&lt;%java.lang.String%&gt; _title = it.getTitle().getTitle();\n\t\treturn &lt;%java.lang.Boolean%&gt;.valueOf(&lt;%com.google.common.base.Objects%&gt;.equal(_title, title));\n\t}\n};\nreturn &lt;%org.eclipse.emf.common.util.ECollections%&gt;.&lt;&lt;%org.eclipse.n4js.jsdoc.dom.LineTag%&gt;&gt;toEList(&lt;%org.eclipse.xtext.xbase.lib.IterableExtensions%&gt;.&lt;&lt;%org.eclipse.n4js.jsdoc.dom.LineTag%&gt;&gt;filter(this.getLineTags(), _function));'"
 	 * @generated
 	 */
 	EList<LineTag> lineTags(String title);

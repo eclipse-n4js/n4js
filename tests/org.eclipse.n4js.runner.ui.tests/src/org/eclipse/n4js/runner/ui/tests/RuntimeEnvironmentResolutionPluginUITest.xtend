@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.runner.ui.tests
 
+import com.google.common.base.Throwables
 import java.io.ByteArrayInputStream
 import java.io.IOException
 import java.io.InputStream
@@ -23,7 +24,6 @@ import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.runner.tests.RuntimeEnvironmentResolutionTest
 import org.junit.BeforeClass
 
-import static com.google.common.base.Throwables.propagate
 import static org.apache.log4j.Logger.getLogger
 import static org.eclipse.core.resources.IContainer.INCLUDE_HIDDEN
 import static org.eclipse.core.resources.ResourcesPlugin.FAMILY_AUTO_BUILD
@@ -95,7 +95,8 @@ class RuntimeEnvironmentResolutionPluginUITest extends RuntimeEnvironmentResolut
 			packageJsonFile.create(is, true, null)
 		} catch (Exception e) {
 			LOGGER.error('''Error while creating package.json file for project: '«projectName»'.''')
-			throw propagate(e)
+			Throwables.throwIfUnchecked(e);
+			throw new RuntimeException(e)
 		} finally {
 			if (null !== is) {
 				try {
@@ -144,7 +145,7 @@ class RuntimeEnvironmentResolutionPluginUITest extends RuntimeEnvironmentResolut
 			delete(true, true, null)
 		} catch (CoreException e) {
 			LOGGER.error('Error while cleaning workspace content.', e)
-			throw propagate(e)
+			throw new RuntimeException(e)
 		}
 	}
 

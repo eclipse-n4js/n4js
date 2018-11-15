@@ -26,7 +26,6 @@ public interface TAnnotationTypeRefArgument extends TAnnotationArgument, TTypedE
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getTypeRef().getTypeRefAsString();'"
 	 * @generated
 	 */
 	String getArgAsString();

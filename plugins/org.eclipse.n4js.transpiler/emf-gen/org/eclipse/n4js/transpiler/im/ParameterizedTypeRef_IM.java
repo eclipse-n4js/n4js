@@ -34,7 +34,6 @@ public interface ParameterizedTypeRef_IM extends ParameterizedTypeRef, Referenci
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getRewiredTarget();'"
 	 * @generated
 	 */
 	SymbolTableEntry getDeclaredType_IM();
@@ -43,7 +42,6 @@ public interface ParameterizedTypeRef_IM extends ParameterizedTypeRef, Referenci
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model targetUnique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='this.setRewiredTarget(target);'"
 	 * @generated
 	 */
 	void setDeclaredType_IM(SymbolTableEntry target);
@@ -55,7 +53,6 @@ public interface ParameterizedTypeRef_IM extends ParameterizedTypeRef, Referenci
 	 *  overridden attribute access to always return null
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return null;'"
 	 * @generated
 	 */
 	Type getDeclaredType();
@@ -64,7 +61,6 @@ public interface ParameterizedTypeRef_IM extends ParameterizedTypeRef, Referenci
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model ixUnique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='if ((ix != null))\n{\n\tthrow new &lt;%java.lang.IllegalArgumentException%&gt;(\"ParameterizedTypeRef_IM cannot accept types. Use #declaredType_IM.\");\n}'"
 	 * @generated
 	 */
 	void setDeclaredType(Type ix);

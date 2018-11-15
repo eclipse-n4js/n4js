@@ -27,7 +27,6 @@ public interface AbstractIntLiteral extends NumericLiteral {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getValue().intValue();'"
 	 * @generated
 	 */
 	int toInt();
@@ -36,7 +35,6 @@ public interface AbstractIntLiteral extends NumericLiteral {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getValue().longValue();'"
 	 * @generated
 	 */
 	long toLong();
@@ -45,7 +43,6 @@ public interface AbstractIntLiteral extends NumericLiteral {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getValue().toBigInteger();'"
 	 * @generated
 	 */
 	BigInteger toBigInteger();

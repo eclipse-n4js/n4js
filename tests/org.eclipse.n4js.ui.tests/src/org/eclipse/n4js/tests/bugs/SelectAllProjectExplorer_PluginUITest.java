@@ -191,7 +191,7 @@ public class SelectAllProjectExplorer_PluginUITest extends AbstractPluginUITest 
 		assertContextMenuNoActionDuplicates();
 
 		assertContextMenuContains(
-				/* Project action group */ "Close Project", "Close Unrelated Projects",
+				/* Project action group */ "Close Projects", "Close Unrelated Project",
 				/* New action group */ "New",
 				/* Edit actions */ "Delete", "Copy", "Paste",
 				/* Refactor action group */ "Move...", "Rename...",
@@ -221,7 +221,7 @@ public class SelectAllProjectExplorer_PluginUITest extends AbstractPluginUITest 
 		assertContextMenuNoActionDuplicates();
 
 		assertContextMenuContains(
-				/* Project action group */ "Close Project", "Close Unrelated Projects",
+				/* Project action group */ "Close Project", "Close Unrelated Project",
 				/* New action group */ "New",
 				/* Edit actions */ "Delete", "Copy", "Paste",
 				/* Refactor action group */ "Move...", "Rename...",

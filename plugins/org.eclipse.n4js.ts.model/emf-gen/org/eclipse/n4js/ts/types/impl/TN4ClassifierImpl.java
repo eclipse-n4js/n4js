@@ -504,7 +504,7 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (declaredTypeAccessModifier: ");
 		result.append(declaredTypeAccessModifier);
 		result.append(", declaredProvidedByRuntime: ");

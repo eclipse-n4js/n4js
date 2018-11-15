@@ -23,5 +23,4 @@ public abstract class AbstractRegularExpressionValidator extends AbstractDeclara
 		result.add(org.eclipse.n4js.regex.regularExpression.RegularExpressionPackage.eINSTANCE);
 		return result;
 	}
-	
 }

@@ -24,5 +24,4 @@ public abstract class AbstractTypesValidator extends AbstractDeclarativeValidato
 		result.add(EPackage.Registry.INSTANCE.getEPackage("http://www.eclipse.org/n4js/ts/TypeRefs"));
 		return result;
 	}
-	
 }

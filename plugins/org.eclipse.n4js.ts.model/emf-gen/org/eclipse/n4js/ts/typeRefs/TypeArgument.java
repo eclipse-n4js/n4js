@@ -49,7 +49,6 @@ public interface TypeArgument extends EObject {
 	 * Returns false for all type arguments and type references except parameterized type references.
 	 * <!-- end-model-doc -->
 	 * @model unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return false;'"
 	 * @generated
 	 */
 	boolean containsWildcards();
@@ -64,7 +63,6 @@ public interface TypeArgument extends EObject {
 	 * Returns false for all type references except parameterized type references.
 	 * <!-- end-model-doc -->
 	 * @model unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return false;'"
 	 * @generated
 	 */
 	boolean containsUnboundTypeVariables();
@@ -77,7 +75,6 @@ public interface TypeArgument extends EObject {
 	 * Reduces number of casts in client code.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return null;'"
 	 * @generated
 	 */
 	Type getDeclaredType();

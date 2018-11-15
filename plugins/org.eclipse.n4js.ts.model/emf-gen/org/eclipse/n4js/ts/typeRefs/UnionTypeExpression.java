@@ -33,7 +33,6 @@ public interface UnionTypeExpression extends ComposedTypeRef {
 	 * Overrides {@link TypeRef#getTypeRefAsString()}
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%java.lang.String%&gt; _typeRefAsString = super.getTypeRefAsString();\nreturn (\"union\" + _typeRefAsString);'"
 	 * @generated
 	 */
 	String getTypeRefAsString();

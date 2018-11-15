@@ -92,7 +92,6 @@ public interface ParameterizedPropertyAccessExpression_IM extends ParameterizedP
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getRewiredTarget();'"
 	 * @generated
 	 */
 	SymbolTableEntry getProperty_IM();
@@ -101,7 +100,6 @@ public interface ParameterizedPropertyAccessExpression_IM extends ParameterizedP
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model targetUnique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='this.setRewiredTarget(target);'"
 	 * @generated
 	 */
 	void setProperty_IM(SymbolTableEntry target);
@@ -110,7 +108,6 @@ public interface ParameterizedPropertyAccessExpression_IM extends ParameterizedP
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%java.lang.String%&gt; _xifexpression = null;\nboolean _isAnyPlusAccess = this.isAnyPlusAccess();\nif (_isAnyPlusAccess)\n{\n\t_xifexpression = this.getNameOfAnyPlusProperty();\n}\nelse\n{\n\tfinal &lt;%org.eclipse.n4js.transpiler.im.SymbolTableEntry%&gt; e = this.getRewiredTarget();\n\tif ((e instanceof &lt;%org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal%&gt;))\n\t{\n\t\tfinal &lt;%java.lang.String%&gt; exName = ((&lt;%org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal%&gt;)e).exportedName();\n\t\tif ((exName != null))\n\t\t{\n\t\t\treturn exName;\n\t\t}\n\t\telse\n\t\t{\n\t\t\t&lt;%org.eclipse.n4js.transpiler.im.SymbolTableEntry%&gt; _property_IM = this.getProperty_IM();\n\t\t\t&lt;%java.lang.String%&gt; _name = null;\n\t\t\tif (_property_IM!=null)\n\t\t\t{\n\t\t\t\t_name=_property_IM.getName();\n\t\t\t}\n\t\t\treturn _name;\n\t\t}\n\t}\n\telse\n\t{\n\t\t&lt;%org.eclipse.n4js.transpiler.im.SymbolTableEntry%&gt; _property_IM_1 = this.getProperty_IM();\n\t\t&lt;%java.lang.String%&gt; _name_1 = null;\n\t\tif (_property_IM_1!=null)\n\t\t{\n\t\t\t_name_1=_property_IM_1.getName();\n\t\t}\n\t\treturn _name_1;\n\t}\n}\nreturn _xifexpression;'"
 	 * @generated
 	 */
 	String getPropertyName();
@@ -122,7 +119,6 @@ public interface ParameterizedPropertyAccessExpression_IM extends ParameterizedP
 	 *  overridden attribute access to always return null
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return null;'"
 	 * @generated
 	 */
 	IdentifiableElement getProperty();
@@ -131,7 +127,6 @@ public interface ParameterizedPropertyAccessExpression_IM extends ParameterizedP
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model ixUnique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='if ((ix != null))\n{\n\tthrow new &lt;%java.lang.IllegalArgumentException%&gt;(\"ParameterizedPropertyAccessExpression_IM cannot accept properties. Use #property_IM.\");\n}'"
 	 * @generated
 	 */
 	void setProperty(IdentifiableElement ix);

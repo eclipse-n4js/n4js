@@ -11,6 +11,7 @@
 package org.eclipse.n4js.json.JSON.impl;
 
 import java.lang.reflect.InvocationTargetException;
+
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -24,10 +25,13 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.emf.ecore.xcore.lib.XcoreEListExtensions;
+
 import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONPackage;
 import org.eclipse.n4js.json.JSON.NameValuePair;
+
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
+
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 /**

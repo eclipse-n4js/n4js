@@ -142,7 +142,6 @@ public interface Wildcard extends TypeArgument {
 	 * </pre>
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%org.eclipse.n4js.ts.typeRefs.TypeRef%&gt; declUB = this.getDeclaredUpperBound();\nif ((declUB != null))\n{\n\treturn declUB;\n}\n&lt;%org.eclipse.n4js.ts.typeRefs.TypeRef%&gt; _declaredLowerBound = this.getDeclaredLowerBound();\nboolean _tripleNotEquals = (_declaredLowerBound != null);\nif (_tripleNotEquals)\n{\n\treturn null;\n}\nfinal &lt;%org.eclipse.emf.ecore.EObject%&gt; parent = this.eContainer();\nif ((parent instanceof &lt;%org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef%&gt;))\n{\n\tfinal int typeArgIndex = ((&lt;%org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef%&gt;)parent).getTypeArgs().indexOf(this);\n\tif ((typeArgIndex &gt;= 0))\n\t{\n\t\tfinal &lt;%java.lang.Object%&gt; declType = ((&lt;%org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef%&gt;)parent).eGet(&lt;%org.eclipse.n4js.ts.typeRefs.TypeRefsPackage%&gt;.eINSTANCE.getParameterizedTypeRef_DeclaredType(), false);\n\t\tif ((declType instanceof &lt;%org.eclipse.n4js.ts.types.ContainerType%&gt;&lt;?&gt;))\n\t\t{\n\t\t\tboolean _eIsProxy = ((&lt;%org.eclipse.n4js.ts.types.ContainerType%&gt;&lt;?&gt;)declType).eIsProxy();\n\t\t\tboolean _not = (!_eIsProxy);\n\t\t\tif (_not)\n\t\t\t{\n\t\t\t\tfinal &lt;%org.eclipse.emf.common.util.EList%&gt;&lt;&lt;%org.eclipse.n4js.ts.types.TypeVariable%&gt;&gt; typeVars = ((&lt;%org.eclipse.n4js.ts.types.ContainerType%&gt;&lt;?&gt;)declType).getTypeVars();\n\t\t\t\t&lt;%org.eclipse.n4js.ts.types.TypeVariable%&gt; _xifexpression = null;\n\t\t\t\tint _size = typeVars.size();\n\t\t\t\tboolean _lessThan = (typeArgIndex &lt; _size);\n\t\t\t\tif (_lessThan)\n\t\t\t\t{\n\t\t\t\t\t_xifexpression = typeVars.get(typeArgIndex);\n\t\t\t\t}\n\t\t\t\telse\n\t\t\t\t{\n\t\t\t\t\t_xifexpression = null;\n\t\t\t\t}\n\t\t\t\tfinal &lt;%org.eclipse.n4js.ts.types.TypeVariable%&gt; typeVar = _xifexpression;\n\t\t\t\tif ((typeVar != null))\n\t\t\t\t{\n\t\t\t\t\tfinal &lt;%org.eclipse.n4js.ts.typeRefs.TypeRef%&gt; implicitUB = typeVar.getDeclaredUpperBound();\n\t\t\t\t\treturn implicitUB;\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n}\nreturn null;'"
 	 * @generated
 	 */
 	TypeRef getDeclaredOrImplicitUpperBound();
@@ -156,7 +155,6 @@ public interface Wildcard extends TypeArgument {
 	 * 	 * @see #getDeclaredOrImplicitUpperBounds()
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return (((this.getDeclaredUpperBound() == null) &amp;&amp; (this.getDeclaredLowerBound() == null)) &amp;&amp; (this.getDeclaredOrImplicitUpperBound() != null));'"
 	 * @generated
 	 */
 	boolean isImplicitUpperBoundInEffect();
@@ -169,7 +167,6 @@ public interface Wildcard extends TypeArgument {
 	 * See {@link TypeRef#getTypeRefAsString()}
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return &lt;%org.eclipse.n4js.ts.types.internal.WildcardAsStringUtils%&gt;.getTypeRefAsString_workaround(this);'"
 	 * @generated
 	 */
 	String getTypeRefAsString();

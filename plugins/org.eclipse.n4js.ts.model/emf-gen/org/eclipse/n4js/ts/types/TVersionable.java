@@ -70,7 +70,6 @@ public interface TVersionable extends Type {
 	 * is 0 in N4JS as it cannot be set there). Only used for derived languages such as N4IDL.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getDeclaredVersion();'"
 	 * @generated
 	 */
 	int getVersion();

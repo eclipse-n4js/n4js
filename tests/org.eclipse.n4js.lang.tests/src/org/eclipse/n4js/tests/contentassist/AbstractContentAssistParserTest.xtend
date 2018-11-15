@@ -15,6 +15,7 @@ import java.util.Collection
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.services.N4JSGrammarAccess
+import org.eclipse.n4js.ui.contentassist.antlr.N4JSParser.NameMappings
 import org.eclipse.xtext.AbstractElement
 import org.eclipse.xtext.Alternatives
 import org.eclipse.xtext.ide.editor.contentassist.antlr.FollowElement
@@ -35,6 +36,7 @@ abstract class AbstractContentAssistParserTest extends Assert {
 
 	@Inject extension ParseHelper<Script>
 	@Inject protected N4JSGrammarAccess grammarAccess
+	@Inject protected NameMappings nameMappings
 	@Inject GrammarPrettyPrinter prettyPrinter
 
 	def Collection<FollowElement> getFollowElements(INode node, int start, int end, boolean strict)

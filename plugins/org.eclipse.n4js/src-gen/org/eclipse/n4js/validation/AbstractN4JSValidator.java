@@ -25,5 +25,4 @@ public abstract class AbstractN4JSValidator extends AbstractDeclarativeValidator
 		result.add(EPackage.Registry.INSTANCE.getEPackage("http://www.eclipse.org/n4js/ts/TypeRefs"));
 		return result;
 	}
-	
 }

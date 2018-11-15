@@ -110,6 +110,15 @@ class PolyProcessorTest extends AbstractTypesystemTest {
 		G = script.module.topLevelTypes.findFirst[name=="G"];
 		G2 = script.module.topLevelTypes.findFirst[name=="G2"];
 
+		assertNotNull(A);
+		assertNotNull(B);
+		assertNotNull(B1);
+		assertNotNull(B2);
+		assertNotNull(C);
+
+		assertNotNull(G);
+		assertNotNull(G2);
+
 		return script;
 	}
 

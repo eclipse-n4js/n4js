@@ -11,11 +11,13 @@
 package org.eclipse.n4js.json.JSON.impl;
 
 import java.lang.reflect.InvocationTargetException;
+
 import java.math.BigDecimal;
 
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.common.util.EList;
+
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -102,6 +104,17 @@ public class JSONNumericLiteralImpl extends JSONValueImpl implements JSONNumeric
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String toString() {
+		String _string = this.getValue().toString();
+		String _plus = ("JSONNumericLiteral(" + _string);
+		return (_plus + ")");
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -167,18 +180,6 @@ public class JSONNumericLiteralImpl extends JSONValueImpl implements JSONNumeric
 				return toString();
 		}
 		return super.eInvoke(operationID, arguments);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String toString() {
-		String _string = this.getValue().toString();
-		String _plus = ("JSONNumericLiteral(" + _string);
-		return (_plus + ")");
 	}
 
 } //JSONNumericLiteralImpl

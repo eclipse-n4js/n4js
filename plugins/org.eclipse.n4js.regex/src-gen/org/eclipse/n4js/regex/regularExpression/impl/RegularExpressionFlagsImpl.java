@@ -162,7 +162,7 @@ public class RegularExpressionFlagsImpl extends MinimalEObjectImpl.Container imp
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (flags: ");
     result.append(flags);
     result.append(')');

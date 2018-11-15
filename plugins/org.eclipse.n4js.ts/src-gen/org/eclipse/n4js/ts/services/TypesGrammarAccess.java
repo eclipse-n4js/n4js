@@ -256,7 +256,8 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cFollowedByQuestionMarkAssignment_1 = (Assignment)cGroup.eContents().get(1);
 		private final Keyword cFollowedByQuestionMarkQuestionMarkKeyword_1_0 = (Keyword)cFollowedByQuestionMarkAssignment_1.eContents().get(0);
 		
-		//@ Override TypeRef:
+		//@Override
+		//TypeRef:
 		//	TypeRefWithoutModifiers followedByQuestionMark?='?'?;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -399,7 +400,8 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cSolidusKeyword_5_1_0 = (Keyword)cGroup_5_1.eContents().get(0);
 		private final RuleCall cIDENTIFIERTerminalRuleCall_5_1_1 = (RuleCall)cGroup_5_1.eContents().get(1);
 		
-		//@ Override TypeReferenceName:
+		//@Override
+		//TypeReferenceName:
 		//	'void' | 'any' | 'undefined' | 'null' | 'indexed' | IDENTIFIER ('/' IDENTIFIER)*;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -1205,7 +1207,8 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cDeclaredUpperBoundAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
 		private final RuleCall cDeclaredUpperBoundTypeRefParserRuleCall_1_1_0 = (RuleCall)cDeclaredUpperBoundAssignment_1_1.eContents().get(0);
 		
-		//@ Override TypeVariable:
+		//@Override
+		//TypeVariable:
 		//	name=IDENTIFIER ('extends' declaredUpperBound=TypeRef)?;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -2256,7 +2259,8 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		return getTypeAccess().getRule();
 	}
 	
-	//@ Override TypeRef:
+	//@Override
+	//TypeRef:
 	//	TypeRefWithoutModifiers followedByQuestionMark?='?'?;
 	public TypeRefElements getTypeRefAccess() {
 		return pTypeRef;
@@ -2280,7 +2284,8 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		return getPrimitiveTypeAccess().getRule();
 	}
 	
-	//@ Override TypeReferenceName:
+	//@Override
+	//TypeReferenceName:
 	//	'void' | 'any' | 'undefined' | 'null' | 'indexed' | IDENTIFIER ('/' IDENTIFIER)*;
 	public TypeReferenceNameElements getTypeReferenceNameAccess() {
 		return pTypeReferenceName;
@@ -2479,7 +2484,8 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		return getTInterfaceAccess().getRule();
 	}
 	
-	//@ Override TypeVariable:
+	//@Override
+	//TypeVariable:
 	//	name=IDENTIFIER ('extends' declaredUpperBound=TypeRef)?;
 	public TypeVariableElements getTypeVariableAccess() {
 		return pTypeVariable;

@@ -74,7 +74,6 @@ public interface N4MemberDeclaration extends AnnotableElement, ModifiableElement
 	 * Returns true if the member is declared as static.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getDeclaredModifiers().contains(&lt;%org.eclipse.n4js.n4JS.N4Modifier%&gt;.STATIC);'"
 	 * @generated
 	 */
 	boolean isDeclaredStatic();
@@ -83,7 +82,6 @@ public interface N4MemberDeclaration extends AnnotableElement, ModifiableElement
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.isDeclaredStatic();'"
 	 * @generated
 	 */
 	boolean isStatic();
@@ -96,7 +94,6 @@ public interface N4MemberDeclaration extends AnnotableElement, ModifiableElement
 	 * Returns true if the member is declared as static.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.n4JS.Annotation%&gt;, &lt;%java.lang.Boolean%&gt;&gt; _function = new &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.n4JS.Annotation%&gt;, &lt;%java.lang.Boolean%&gt;&gt;()\n{\n\tpublic &lt;%java.lang.Boolean%&gt; apply(final &lt;%org.eclipse.n4js.n4JS.Annotation%&gt; it)\n\t{\n\t\t&lt;%java.lang.String%&gt; _name = it.getName();\n\t\treturn &lt;%java.lang.Boolean%&gt;.valueOf(&lt;%com.google.common.base.Objects%&gt;.equal(_name, \"Final\"));\n\t}\n};\nreturn &lt;%org.eclipse.xtext.xbase.lib.IterableExtensions%&gt;.&lt;&lt;%org.eclipse.n4js.n4JS.Annotation%&gt;&gt;exists(this.getAnnotations(), _function);'"
 	 * @generated
 	 */
 	boolean isDeclaredFinal();
@@ -105,7 +102,6 @@ public interface N4MemberDeclaration extends AnnotableElement, ModifiableElement
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.isDeclaredFinal();'"
 	 * @generated
 	 */
 	boolean isFinal();
@@ -114,7 +110,6 @@ public interface N4MemberDeclaration extends AnnotableElement, ModifiableElement
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return false;'"
 	 * @generated
 	 */
 	boolean isConstructor();
@@ -123,7 +118,6 @@ public interface N4MemberDeclaration extends AnnotableElement, ModifiableElement
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return false;'"
 	 * @generated
 	 */
 	boolean isCallableConstructor();

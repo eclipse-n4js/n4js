@@ -129,7 +129,7 @@ public class JSONPackageImpl extends EPackageImpl implements JSONPackage {
 
 	/**
 	 * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
-	 * 
+	 *
 	 * <p>This method is used to initialize {@link JSONPackage#eINSTANCE} when that field is accessed.
 	 * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
 	 * <!-- begin-user-doc -->
@@ -143,7 +143,8 @@ public class JSONPackageImpl extends EPackageImpl implements JSONPackage {
 		if (isInited) return (JSONPackage)EPackage.Registry.INSTANCE.getEPackage(JSONPackage.eNS_URI);
 
 		// Obtain or create and register package
-		JSONPackageImpl theJSONPackage = (JSONPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof JSONPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new JSONPackageImpl());
+		Object registeredJSONPackage = EPackage.Registry.INSTANCE.get(eNS_URI);
+		JSONPackageImpl theJSONPackage = registeredJSONPackage instanceof JSONPackageImpl ? (JSONPackageImpl)registeredJSONPackage : new JSONPackageImpl();
 
 		isInited = true;
 
@@ -159,7 +160,6 @@ public class JSONPackageImpl extends EPackageImpl implements JSONPackage {
 		// Mark meta-data to indicate it can't be changed
 		theJSONPackage.freeze();
 
-  
 		// Update the registry and return the package
 		EPackage.Registry.INSTANCE.put(JSONPackage.eNS_URI, theJSONPackage);
 		return theJSONPackage;
