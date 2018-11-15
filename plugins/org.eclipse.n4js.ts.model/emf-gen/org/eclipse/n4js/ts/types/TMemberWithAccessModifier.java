@@ -101,7 +101,6 @@ public interface TMemberWithAccessModifier extends TMember {
 	 * Also see [N4JSSpec] Constraints 2 (Default Member Access Modifiers)
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.n4js.ts.types.MemberAccessModifier%&gt; _declaredMemberAccessModifier = this.getDeclaredMemberAccessModifier();\nboolean _tripleEquals = (_declaredMemberAccessModifier == &lt;%org.eclipse.n4js.ts.types.MemberAccessModifier%&gt;.UNDEFINED);\nif (_tripleEquals)\n{\n\tfinal &lt;%org.eclipse.emf.ecore.EObject%&gt; parent = this.eContainer();\n\tif ((parent instanceof &lt;%org.eclipse.n4js.ts.types.TInterface%&gt;))\n\t{\n\t\tfinal &lt;%org.eclipse.n4js.ts.types.MemberAccessModifier%&gt; modifierDerivedFromType = &lt;%org.eclipse.n4js.ts.types.util.AccessModifiers%&gt;.toMemberModifier(((&lt;%org.eclipse.n4js.ts.types.Type%&gt;) parent).getTypeAccessModifier());\n\t\tif ((modifierDerivedFromType != &lt;%org.eclipse.n4js.ts.types.MemberAccessModifier%&gt;.PRIVATE))\n\t\t{\n\t\t\treturn modifierDerivedFromType;\n\t\t}\n\t}\n\treturn &lt;%org.eclipse.n4js.ts.types.MemberAccessModifier%&gt;.PROJECT;\n}\nreturn this.getDeclaredMemberAccessModifier();'"
 	 * @generated
 	 */
 	MemberAccessModifier getMemberAccessModifier();

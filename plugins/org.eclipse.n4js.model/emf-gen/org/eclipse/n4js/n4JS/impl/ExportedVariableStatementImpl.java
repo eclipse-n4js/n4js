@@ -489,7 +489,7 @@ public class ExportedVariableStatementImpl extends VariableStatementImpl impleme
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (declaredModifiers: ");
 		result.append(declaredModifiers);
 		result.append(')');

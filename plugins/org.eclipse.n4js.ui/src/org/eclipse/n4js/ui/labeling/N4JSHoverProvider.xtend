@@ -12,6 +12,7 @@ package org.eclipse.n4js.ui.labeling
 
 import com.google.inject.Inject
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.jface.text.IRegion
 import org.eclipse.n4js.jsdoc.JSDoc2HoverSerializer
 import org.eclipse.n4js.jsdoc.N4JSDocletParser
 import org.eclipse.n4js.jsdoc.dom.Doclet
@@ -28,16 +29,15 @@ import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.ts.ui.labeling.TypesHoverProvider
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
+import org.eclipse.xtext.service.OperationCanceledManager
 import org.eclipse.xtext.ui.editor.hover.html.DefaultEObjectHoverProvider
+import org.eclipse.xtext.ui.editor.hover.html.XtextBrowserInformationControlInput
 
 import static org.eclipse.n4js.ts.ui.labeling.TypesHoverProvider.composeFirstLine
 import static org.eclipse.n4js.utils.UtilN4.sanitizeForHTML
 
 import static extension org.eclipse.n4js.n4JS.N4JSASTUtils.getCorrespondingTypeModelElement
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.newRuleEnvironment
-import org.eclipse.xtext.ui.editor.hover.html.XtextBrowserInformationControlInput
-import org.eclipse.jface.text.IRegion
-import org.eclipse.xtext.service.OperationCanceledManager
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.newRuleEnvironment
 
 /**
  */
@@ -117,8 +117,8 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 		if (null === o || null === o.eResource) {
 			return null;
 		}
-		val typeRef = o.newRuleEnvironment.type(o).value;
-		return if (null === typeRef) null else '''«getName(o)»: «typeRef.typeRefAsString»''';
+		val typeRef = o.newRuleEnvironment.type(o);
+		return '''«getName(o)»: «typeRef.typeRefAsString»''';
 	}
 
 	def private dispatch getName(EObject o) {

@@ -34,7 +34,7 @@ import org.eclipse.n4js.ts.types.TSetter;
 import org.eclipse.n4js.ts.types.VoidType;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
-import org.eclipse.xsemantics.runtime.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Joiner;
@@ -206,7 +206,7 @@ public class ComposedMemberInfo {
 			}
 
 			// handle: typeRef lists
-			TypeRef typeRefSubst = ts.substTypeVariablesInTypeRef(G, tFpar.getTypeRef());
+			TypeRef typeRefSubst = ts.substTypeVariables(G, tFpar.getTypeRef());
 			if (typeRefSubst != null && !(typeRefSubst instanceof UnknownTypeRef)) {
 				TypeRef typeRefCopy = TypeUtils.copyIfContained(typeRefSubst);
 				fpAggr.typeRefs.add(typeRefCopy);
@@ -264,7 +264,7 @@ public class ComposedMemberInfo {
 
 	private void handleTypeRefLists(TMember member, RuleEnvironment G) {
 		TypeRef typeRef = TypeUtils.getMemberTypeRef(member);
-		TypeRef typeRefSubst = ts.substTypeVariablesInTypeRef(G, typeRef);
+		TypeRef typeRefSubst = ts.substTypeVariables(G, typeRef);
 		if (typeRefSubst != null && !(typeRefSubst instanceof UnknownTypeRef)) {
 			TypeRef typeRefCopy = TypeUtils.copyIfContained(typeRefSubst);
 			typeRefs.add(typeRefCopy);

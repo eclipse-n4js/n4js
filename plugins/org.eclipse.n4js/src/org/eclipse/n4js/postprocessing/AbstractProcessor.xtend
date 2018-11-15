@@ -12,9 +12,6 @@ package org.eclipse.n4js.postprocessing
 
 import com.google.common.base.Throwables
 import com.google.inject.Inject
-import org.eclipse.xsemantics.runtime.Result
-import org.eclipse.xsemantics.runtime.RuleApplicationTrace
-import org.eclipse.xsemantics.runtime.RuleEnvironment
 import java.util.function.BooleanSupplier
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.FunctionDefinition
@@ -29,14 +26,14 @@ import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TStructMember
 import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.ts.utils.TypeUtils
-import org.eclipse.n4js.typesystem.CustomInternalTypeSystem
+import org.eclipse.n4js.typesystem.N4JSTypeSystem
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.UtilN4
-import org.eclipse.n4js.xsemantics.InternalTypeSystem
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.service.OperationCanceledManager
 
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
 
 /**
@@ -50,7 +47,7 @@ package abstract class AbstractProcessor {
 	val private static DEBUG_RIGID = false; // if true, more consistency checks are performed and exceptions thrown if wrong
 
 	@Inject
-	private InternalTypeSystem ts_internal;
+	private N4JSTypeSystem ts;
 	@Inject
 	private OperationCanceledManager operationCanceledManager;
 
@@ -65,22 +62,23 @@ package abstract class AbstractProcessor {
 
 
 	/**
-	 * Processors can call this method to directly invoke the 'type' judgment of the internal, Xsemantics-generated type
-	 * system. Normally, this should only be required by {@link TypeProcessor}, so use this sparingly (however,
-	 * sometimes it can be helpful to avoid duplication of logic).
+	 * Processors can call this method to directly invoke the 'type' judgment, i.e. invoke method {@code TypeJudgment#apply()}
+	 * via facade method {@link N4JSTypeSystem#use_type_judgment_from_PostProcessors(RuleEnvironment, TypableElement)
+	 * use_type_judgment_from_PostProcessors()}. Normally, this should only be required by {@link TypeProcessor}, so use
+	 * this sparingly (however, sometimes it can be helpful to avoid duplication of logic).
 	 */
-	def protected Result<TypeRef> askXsemanticsForType(RuleEnvironment G, RuleApplicationTrace trace, TypableElement elem) {
+	def protected TypeRef invokeTypeJudgmentToInferType(RuleEnvironment G, TypableElement elem) {
 		if (elem.eIsProxy) {
-			return new Result(TypeRefsFactory.eINSTANCE.createUnknownTypeRef);
+			return TypeRefsFactory.eINSTANCE.createUnknownTypeRef;
 		}
 		// special case:
 		// TStructMembers are special in that they may be types (in case of TStructMethod) and appear as AST nodes
 		// -> if we are dealing with an AST node, make sure to use the definedMember in the TModule
 		val definedMember = if (elem instanceof TStructMember) elem.definedMember;
 		if (definedMember !== null && elem.isASTNode) {
-			return askXsemanticsForType(G, trace, definedMember);
+			return invokeTypeJudgmentToInferType(G, definedMember);
 		}
-		return (ts_internal as CustomInternalTypeSystem).use_type_judgment_from_PostProcessors(G, trace, elem);
+		return ts.use_type_judgment_from_PostProcessors(G, elem);
 	}
 
 
@@ -177,10 +175,10 @@ package abstract class AbstractProcessor {
 		}
 	}
 
-	def protected static void log(int indentLevel, Result<TypeRef> result) {
+	def protected static void log(int indentLevel, TypeRef result) {
 		if (!isDEBUG_LOG)
 			return;
-		log(indentLevel, result.resultToString);
+		log(indentLevel, result.typeRefAsString);
 	}
 
 	def protected static void log(int indentLevel, EObject astNode, ASTMetaInfoCache cache) {
@@ -188,7 +186,7 @@ package abstract class AbstractProcessor {
 			return;
 		if (astNode.isTypableNode) {
 			val result = cache.getTypeFailSafe(astNode as TypableElement);
-			val resultStr = if (result !== null) result.resultToString else "*** MISSING ***";
+			val resultStr = if (result !== null) result.typeRefAsString else "*** MISSING ***";
 			log(indentLevel, astNode.objectInfo + " " + resultStr);
 		} else {
 			log(indentLevel, astNode.objectInfo);
@@ -230,7 +228,8 @@ package abstract class AbstractProcessor {
 				// make sure we see this exception on the console, even if it gets caught somewhere
 				UtilN4.reportError(e);
 			}
-			Throwables.propagate(e);
+			Throwables.throwIfUnchecked(e);
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -245,14 +244,6 @@ package abstract class AbstractProcessor {
 
 	def protected static boolean isDEBUG_RIGID() {
 		return DEBUG_RIGID;
-	}
-
-	def protected static String resultToString(Result<TypeRef> result) {
-		"RESULT: " + if (result !== null && result.failed) {
-			"!FAILED! " + result.ruleFailedException.message;
-		} else {
-			result?.value?.typeRefAsString
-		}
 	}
 
 	def protected static String indent(int indentLevel) {

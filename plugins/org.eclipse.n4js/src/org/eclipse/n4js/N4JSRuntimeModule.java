@@ -61,10 +61,7 @@ import org.eclipse.n4js.ts.scoping.builtin.BuiltInSchemeRegistrar;
 import org.eclipse.n4js.ts.scoping.builtin.ResourceSetWithBuiltInScheme;
 import org.eclipse.n4js.ts.validation.TypesKeywordProvider;
 import org.eclipse.n4js.typesbuilder.N4JSTypesBuilder;
-import org.eclipse.n4js.typesystem.CustomInternalTypeSystem;
-import org.eclipse.n4js.typesystem.N4JSStringRepresenation;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
-import org.eclipse.n4js.typesystem.N4JSValidatorErrorGenerator;
 import org.eclipse.n4js.utils.di.scopes.ScopeManager;
 import org.eclipse.n4js.utils.di.scopes.TransformationScoped;
 import org.eclipse.n4js.utils.validation.PrePostDiagnostician;
@@ -73,10 +70,7 @@ import org.eclipse.n4js.validation.N4JSElementKeywordProvider;
 import org.eclipse.n4js.validation.N4JSIssueSeveritiesProvider;
 import org.eclipse.n4js.validation.N4JSJavaScriptVariantHelper;
 import org.eclipse.n4js.validation.N4JSResourceValidator;
-import org.eclipse.n4js.xsemantics.InternalTypeSystem;
 import org.eclipse.n4js.xtext.serializer.SerializerPatchModule;
-import org.eclipse.xsemantics.runtime.StringRepresentation;
-import org.eclipse.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator;
 import org.eclipse.xtext.conversion.IValueConverterService;
 import org.eclipse.xtext.conversion.impl.STRINGValueConverter;
 import org.eclipse.xtext.documentation.IEObjectDocumentationProvider;
@@ -395,13 +389,6 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 	}
 
 	/**
-	 * Improved string representation for Xsemantics
-	 */
-	public Class<? extends StringRepresentation> bindStringRepresentation() {
-		return N4JSStringRepresenation.class;
-	}
-
-	/**
 	 * Binds the main type system facade used as an entry point into the type system.
 	 */
 	public Class<? extends N4JSTypeSystem> bindTypeSystem() {
@@ -416,27 +403,12 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 	}
 
 	/**
-	 * Binds the internal, Xsemantics-generated type system. Binds an implementation that doesn't use stack-traces in
-	 * its exception protocol.
-	 */
-	public Class<? extends InternalTypeSystem> bindInternalTypeSystem() {
-		return CustomInternalTypeSystem.class;
-	}
-
-	/**
 	 * Bind an implementation that use custom issue severities, that uses the default severity provided in
 	 * org.eclipse.n4js/validation/messages.properties for a given issue code, when there is no other severity
 	 * configured by the {@link ConfigurableIssueCodesProvider}.
 	 */
 	public Class<? extends IssueSeveritiesProvider> bindIssueSeveritiesProvider() {
 		return N4JSIssueSeveritiesProvider.class;
-	}
-
-	/**
-	 * Binds to special N4JS version removing the "failed: " prefix from error messages.
-	 */
-	public Class<? extends XsemanticsValidatorErrorGenerator> bindXsemanticsValidatorErrorGenerator() {
-		return N4JSValidatorErrorGenerator.class;
 	}
 
 	/**

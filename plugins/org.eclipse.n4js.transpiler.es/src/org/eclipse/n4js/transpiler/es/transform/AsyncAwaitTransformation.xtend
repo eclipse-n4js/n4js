@@ -18,7 +18,7 @@ import org.eclipse.n4js.transpiler.TransformationDependency.Optional
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  * Transform async functions to an ES2015 equivalent (still requires generator functions and 'yield').

@@ -10,8 +10,9 @@
  */
 package org.eclipse.n4js.tests.staticpolyfill
 
+import com.google.common.io.Files
+import java.nio.charset.Charset
 import org.eclipse.core.resources.IFile
-import org.eclipse.xtext.util.Files
 import org.junit.Test
 
 import static org.eclipse.n4js.tests.staticpolyfill.StaticPolyfill_inheriting_from_filled_type__Probands.*
@@ -129,7 +130,7 @@ class StaticPolyfill_inheriting_from_filled_type__PluginTest extends AbstractSta
 		// assertExistence of compiled file.
 		assertTrue("No compiled file.",compiledFile.exists)
 
-		val actualContent = Files.readFileIntoString(compiledFile.location.toFile.absolutePath);
+		val actualContent = Files.toString(compiledFile.location.toFile, Charset.defaultCharset);
 		assertTrue('Generated file content was empty: ' + compiledFile, !actualContent.nullOrEmpty)
 
 		assertEquals("static initializer not compiled:(ENUM_MAP=...)",1,matchCount( pattern_681_compiled_ENUM_Init, actualContent ) );

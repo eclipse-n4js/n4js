@@ -74,7 +74,6 @@ public interface TStructMember extends TMember {
 	 * The default access modifier for struct members is public. This cannot be changed.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return &lt;%org.eclipse.n4js.ts.types.MemberAccessModifier%&gt;.PUBLIC;'"
 	 * @generated
 	 */
 	MemberAccessModifier getDefaultMemberAccessModifier();
@@ -83,7 +82,6 @@ public interface TStructMember extends TMember {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return false;'"
 	 * @generated
 	 */
 	boolean isStatic();
@@ -95,7 +93,6 @@ public interface TStructMember extends TMember {
 	 * The member access modifier for struct members is always public, this cannot be changed.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return &lt;%org.eclipse.n4js.ts.types.MemberAccessModifier%&gt;.PUBLIC;'"
 	 * @generated
 	 */
 	MemberAccessModifier getMemberAccessModifier();

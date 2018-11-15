@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.runner.nodejs;
 
-import static com.google.common.base.CharMatcher.BREAKING_WHITESPACE;
+import static com.google.common.base.CharMatcher.breakingWhitespace;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -60,7 +60,7 @@ public class NodeEngineCommandBuilder {
 		// allow user flags
 		final String nodeOptions = nodeRunOptions.getEngineOptions();
 		if (nodeOptions != null) {
-			for (String nodeOption : Splitter.on(BREAKING_WHITESPACE).omitEmptyStrings().split(nodeOptions)) {
+			for (String nodeOption : Splitter.on(breakingWhitespace()).omitEmptyStrings().split(nodeOptions)) {
 				commands.add(nodeOption);
 			}
 		}

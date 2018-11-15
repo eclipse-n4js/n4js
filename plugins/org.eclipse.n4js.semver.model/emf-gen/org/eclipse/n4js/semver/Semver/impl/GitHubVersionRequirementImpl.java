@@ -212,7 +212,7 @@ public class GitHubVersionRequirementImpl extends NPMVersionRequirementImpl impl
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (githubUrl: ");
 		result.append(githubUrl);
 		result.append(", commitISH: ");

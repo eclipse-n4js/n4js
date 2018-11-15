@@ -11,6 +11,7 @@
 package org.eclipse.n4js.transpiler.es.transform
 
 import com.google.inject.Inject
+import java.util.stream.Stream
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.AnnotableScriptElement
 import org.eclipse.n4js.n4JS.ExportableElement
@@ -20,11 +21,9 @@ import org.eclipse.n4js.n4JS.ScriptElement
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.TransformationDependency.RequiresBefore
 import org.eclipse.n4js.transpiler.assistants.TypeAssistant
+import org.eclipse.n4js.transpiler.es.assistants.DelegationAssistant
 import org.eclipse.n4js.transpiler.utils.MissingApiMembersForTranspiler
 import org.eclipse.n4js.transpiler.utils.ScriptApiTracker
-import org.eclipse.n4js.typesystem.TypeSystemHelper
-import org.eclipse.n4js.utils.ContainerTypesHelper
-import org.eclipse.n4js.validation.N4JSElementKeywordProvider
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
@@ -35,12 +34,13 @@ import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TVariable
-import java.util.stream.Stream
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
+import org.eclipse.n4js.utils.ContainerTypesHelper
+import org.eclipse.n4js.validation.N4JSElementKeywordProvider
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
 import static extension org.eclipse.n4js.transpiler.utils.ScriptApiTracker.firstProjectComparisonAdapter
-import org.eclipse.n4js.transpiler.es.assistants.DelegationAssistant
 
 /**
  * Generation of code for missing implementations in projects implementing a specific API.

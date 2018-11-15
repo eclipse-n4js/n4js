@@ -184,7 +184,6 @@ class ImportsRegionHelper {
 						var ILeafNode curr;
 						var ILeafNode firstEOL;
 						var ILeafNode afterFirstEOL;
-						var ILeafNode lastNode;
 						var boolean sawComment = false;
 						var ILeafNode lastComment;
 						// got to first non-hidden:
@@ -218,7 +217,6 @@ class ImportsRegionHelper {
 									afterFirstEOL = null;
 								}
 							}
-							lastNode = curr;
 						}
 						if (curr === null || curr.isHidden) {
 							// Something is wrong here.

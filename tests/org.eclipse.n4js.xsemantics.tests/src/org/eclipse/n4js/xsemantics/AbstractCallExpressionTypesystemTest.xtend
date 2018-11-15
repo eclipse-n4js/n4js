@@ -11,18 +11,19 @@
 package org.eclipse.n4js.xsemantics
 
 import com.google.inject.Inject
+import java.util.List
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.ExpressionStatement
 import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.VariableStatement
+import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef
 import org.eclipse.n4js.typesystem.AbstractScriptAssembler
-import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.validation.JavaScriptVariant
-import org.eclipse.xsemantics.runtime.RuleEnvironment
-import java.util.List
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.junit.runner.RunWith
@@ -106,12 +107,9 @@ abstract class AbstractCallExpressionTypesystemTest extends AbstractTypesystemTe
 				else
 					null;
 			if (expectedType !== null) {
-				val actualTypeResult = ts.expectedTypeIn(G, arg, arg.expression);
-				if (actualTypeResult.failed) {
-					assertNoFailure(actualTypeResult);
-				}
-				assertNotNull("rule expectedTypeIn returned null for argument "+i, actualTypeResult.value);
-				assertEquals(expectedType, actualTypeResult.value.typeRefAsString)
+				val actualTypeResult = ts.expectedType(G, arg, arg.expression);
+				assertNotNull("rule expectedTypeIn returned null for argument "+i, actualTypeResult);
+				assertEquals(expectedType, actualTypeResult.typeRefAsString)
 			}
 		]
 
@@ -125,8 +123,9 @@ abstract class AbstractCallExpressionTypesystemTest extends AbstractTypesystemTe
 					"any";
 
 			val inferedReturnedType = ts.type(G, call);
-			assertNoFailure(inferedReturnedType);
-			assertEquals(expectedType, inferedReturnedType.value.typeRefAsString)
+			assertNotNull(inferedReturnedType);
+			assertFalse(inferedReturnedType instanceof UnknownTypeRef);
+			assertEquals(expectedType, inferedReturnedType.typeRefAsString)
 
 		}
 	}

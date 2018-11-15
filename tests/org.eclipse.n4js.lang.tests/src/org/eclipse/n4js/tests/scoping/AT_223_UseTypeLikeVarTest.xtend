@@ -12,22 +12,24 @@ package org.eclipse.n4js.tests.scoping
 
 import com.google.inject.Inject
 import com.google.inject.Provider
-import org.eclipse.n4js.N4JSInjectorProvider
-import org.eclipse.n4js.n4JS.N4JSPackage
-import org.eclipse.n4js.n4JS.Script
+import java.util.Arrays
 import org.eclipse.emf.common.util.URI
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
+import org.eclipse.n4js.n4JS.Script
+import org.eclipse.xtext.resource.XtextResourceSet
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.util.ParseHelper
 import org.eclipse.xtext.testing.validation.ValidationTestHelper
-import org.eclipse.xtext.resource.XtextResourceSet
+import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 
 /**
  */
-@InjectWith(N4JSInjectorProvider)
 @RunWith(XtextRunner)
+@InjectWith(N4JSInjectorProviderWithIssueSuppression)
 class AT_223_UseTypeLikeVarTest {
 
 	@Inject Provider<XtextResourceSet> resourceSetProvider
@@ -76,6 +78,13 @@ class AT_223_UseTypeLikeVarTest {
 			foo = "Hello";
 			a();
 		'''.parse
-		script.assertError(N4JSPackage.Literals.STRING_LITERAL, "org.eclipse.n4js.xsemantics.SubtypeParameterizedTypeRef")
+		script.assertErrors(
+			"ERROR:string is not a subtype of {function():void}. (__synthetic0.n4js line : 3 column : 7)"
+		)
+	}
+
+	def private void assertErrors(EObject model, String... errorMsgs) {
+		val issues = model.eResource.validate;
+		Assert.assertEquals(issues.map[toString], Arrays.asList(errorMsgs));
 	}
 }

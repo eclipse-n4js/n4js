@@ -13,6 +13,7 @@ package org.eclipse.n4js.xsemantics
 import com.google.inject.Inject
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.xtext.testing.InjectWith
@@ -21,8 +22,7 @@ import org.eclipse.xtext.testing.util.ParseHelper
 import org.junit.Test
 import org.junit.runner.RunWith
 
-import static org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.n4JS.VariableDeclaration
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /*
  */
@@ -105,8 +105,7 @@ class N4_21_1_DefinitionSiteStructuralTypingClassesTest extends AbstractTypesyst
 		val G = newRuleEnvironment(script);
 		val nominal = script.varDeclTypeByName("nominal")
 		val n = script.varDeclByName("n")
-		val result = ts.type(G, n);
-		val nType = result.value;
+		val nType = ts.type(G, n);
 		assertSubtype(G, nType, nominal, true)
 	}
 
@@ -123,7 +122,7 @@ class N4_21_1_DefinitionSiteStructuralTypingClassesTest extends AbstractTypesyst
 		val G = newRuleEnvironment(script);
 		val structural = script.varDeclTypeByName("structural")
 		val s = script.varDeclByName("s")
-		val sType = ts.type(G, s).value;
+		val sType = ts.type(G, s);
 		assertSubtype(G, sType, structural, true)
 	}
 

@@ -290,7 +290,7 @@ public class StringLiteralForSTEImpl extends StringLiteralImpl implements String
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (useExportedName: ");
 		result.append(useExportedName);
 		result.append(')');

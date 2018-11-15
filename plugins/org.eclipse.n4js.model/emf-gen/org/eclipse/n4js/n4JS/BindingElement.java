@@ -142,7 +142,6 @@ public interface BindingElement extends ControlFlowElement {
 	 * an {@link ArrayLiteral}.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return ((this.getVarDecl() == null) &amp;&amp; (this.getNestedPattern() == null));'"
 	 * @generated
 	 */
 	boolean isElision();

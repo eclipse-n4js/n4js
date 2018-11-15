@@ -59,7 +59,6 @@ public interface JSONNumericLiteral extends JSONValue {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%java.lang.String%&gt; _string = this.getValue().toString();\n&lt;%java.lang.String%&gt; _plus = (\"JSONNumericLiteral(\" + _string);\nreturn (_plus + \")\");'"
 	 * @generated
 	 */
 	String toString();

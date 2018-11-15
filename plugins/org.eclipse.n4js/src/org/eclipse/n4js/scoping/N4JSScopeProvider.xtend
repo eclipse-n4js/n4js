@@ -94,7 +94,7 @@ import org.eclipse.xtext.scoping.impl.IDelegatingScopeProvider
 import org.eclipse.xtext.scoping.impl.SimpleScope
 import org.eclipse.xtext.util.IResourceScopeCache
 
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
 
 /**
@@ -499,9 +499,9 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		}
 
 		val G = propertyAccess.newRuleEnvironment;
-		val TypeRef typeRefRaw = ts.type(G, receiver).value;
+		val TypeRef typeRefRaw = ts.type(G, receiver);
 		// take upper bound to get rid of ExistentialTypeRefs, ThisTypeRefs, etc.
-		val TypeRef typeRef = if(typeRefRaw!==null) ts.upperBound(G, typeRefRaw).value else null;
+		val TypeRef typeRef = ts.upperBound(G, typeRefRaw);
 
 		val staticAccess = typeRef instanceof TypeTypeRef;
 		val structFieldInitMode = typeRef.typingStrategy === TypingStrategy.STRUCTURAL_FIELD_INITIALIZER;

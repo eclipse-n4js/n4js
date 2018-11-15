@@ -144,7 +144,6 @@ public interface LiteralOrComputedPropertyName extends EObject {
 	 *  Tells if this element has a name computed from an expression instead of a literal name given in the source code.
 	 * <!-- end-model-doc -->
 	 * @model unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return ((this.getKind() == &lt;%org.eclipse.n4js.n4JS.PropertyNameKind%&gt;.COMPUTED) &amp;&amp; (this.getExpression() != null));'"
 	 * @generated
 	 */
 	boolean hasComputedPropertyName();
@@ -158,7 +157,6 @@ public interface LiteralOrComputedPropertyName extends EObject {
 	 * not a constant expression) or if it has not yet been evaluated (this happens during post-processing).
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%java.lang.String%&gt; _elvis = null;\n&lt;%java.lang.String%&gt; _literalName = this.getLiteralName();\nif (_literalName != null)\n{\n\t_elvis = _literalName;\n} else\n{\n\t&lt;%java.lang.String%&gt; _computedName = this.getComputedName();\n\t_elvis = _computedName;\n}\nreturn _elvis;'"
 	 * @generated
 	 */
 	String getName();

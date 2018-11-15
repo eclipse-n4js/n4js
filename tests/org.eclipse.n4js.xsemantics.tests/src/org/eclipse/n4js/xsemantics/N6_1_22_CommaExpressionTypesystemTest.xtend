@@ -15,7 +15,7 @@ import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.CommaExpression
 import org.eclipse.n4js.n4JS.ExpressionStatement
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.validation.JavaScriptVariant
 import org.eclipse.n4js.ts.utils.TypeCompareHelper
 import org.eclipse.xtext.testing.InjectWith

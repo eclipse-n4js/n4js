@@ -303,7 +303,6 @@ public interface FunctionTypeExpression extends FunctionTypeExprOrRef {
 	 * For more details on use cases see API doc of {@link FunctionTypeExpression}.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.emf.common.util.EList%&gt;&lt;&lt;%org.eclipse.n4js.ts.types.TypeVariable%&gt;&gt; _xifexpression = null;\nboolean _isBinding = this.isBinding();\nif (_isBinding)\n{\n\t_xifexpression = this.getUnboundTypeVars();\n}\nelse\n{\n\t&lt;%org.eclipse.emf.common.util.EList%&gt;&lt;&lt;%org.eclipse.n4js.ts.types.TypeVariable%&gt;&gt; _xifexpression_1 = null;\n\t&lt;%org.eclipse.n4js.ts.types.TFunction%&gt; _declaredType = this.getDeclaredType();\n\tboolean _tripleNotEquals = (_declaredType != null);\n\tif (_tripleNotEquals)\n\t{\n\t\t_xifexpression_1 = this.getDeclaredType().getTypeVars();\n\t}\n\telse\n\t{\n\t\t_xifexpression_1 = this.getOwnedTypeVars();\n\t}\n\t_xifexpression = _xifexpression_1;\n}\nreturn _xifexpression;'"
 	 * @generated
 	 */
 	EList<TypeVariable> getTypeVars();
@@ -322,7 +321,6 @@ public interface FunctionTypeExpression extends FunctionTypeExprOrRef {
 	 * method {@link DerivationComputer#performSubstitutionOnUpperBounds()}.
 	 * <!-- end-model-doc -->
 	 * @model unique="false" typeVarUnique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='if ((typeVar == null))\n{\n\tthrow new &lt;%java.lang.IllegalArgumentException%&gt;(\"given type variable may not be null\");\n}\nfinal int idx = this.getUnboundTypeVars().indexOf(typeVar);\nif (((idx &gt;= 0) &amp;&amp; (idx &lt; this.getUnboundTypeVarsUpperBounds().size())))\n{\n\tfinal &lt;%org.eclipse.n4js.ts.typeRefs.TypeRef%&gt; modifiedUpperBound = this.getUnboundTypeVarsUpperBounds().get(idx);\n\tif ((modifiedUpperBound != null))\n\t{\n\t\treturn modifiedUpperBound;\n\t}\n}\nreturn typeVar.getDeclaredUpperBound();'"
 	 * @generated
 	 */
 	TypeRef getTypeVarUpperBound(TypeVariable typeVar);
@@ -331,7 +329,6 @@ public interface FunctionTypeExpression extends FunctionTypeExprOrRef {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return (this.isReturnValueMarkedOptional() || ((this.getReturnTypeRef() != null) &amp;&amp; this.getReturnTypeRef().isFollowedByQuestionMark()));'"
 	 * @generated
 	 */
 	boolean isReturnValueOptional();

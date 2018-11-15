@@ -115,7 +115,6 @@ public interface SimpleVersion extends SemverToStringable {
 	 * * @return true if the version number is a wildcard
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getNumber().isWildcard();'"
 	 * @generated
 	 */
 	boolean isWildcard();
@@ -127,7 +126,6 @@ public interface SimpleVersion extends SemverToStringable {
 	 * * @return true iff the comparators are either empty, or contain 'v' or '='
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return ((this.getComparators().isEmpty() || this.isWithLetterV()) || this.getComparators().contains(&lt;%org.eclipse.n4js.semver.Semver.VersionComparator%&gt;.EQUALS));'"
 	 * @generated
 	 */
 	boolean isSpecific();
@@ -136,7 +134,6 @@ public interface SimpleVersion extends SemverToStringable {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getComparators().contains(&lt;%org.eclipse.n4js.semver.Semver.VersionComparator%&gt;.CARET);'"
 	 * @generated
 	 */
 	boolean isCaret();
@@ -145,7 +142,6 @@ public interface SimpleVersion extends SemverToStringable {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getComparators().contains(&lt;%org.eclipse.n4js.semver.Semver.VersionComparator%&gt;.TILDE);'"
 	 * @generated
 	 */
 	boolean isTilde();
@@ -154,7 +150,6 @@ public interface SimpleVersion extends SemverToStringable {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getComparators().contains(&lt;%org.eclipse.n4js.semver.Semver.VersionComparator%&gt;.GREATER);'"
 	 * @generated
 	 */
 	boolean isGreater();
@@ -163,7 +158,6 @@ public interface SimpleVersion extends SemverToStringable {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getComparators().contains(&lt;%org.eclipse.n4js.semver.Semver.VersionComparator%&gt;.GREATER_EQUALS);'"
 	 * @generated
 	 */
 	boolean isGreaterEquals();
@@ -172,7 +166,6 @@ public interface SimpleVersion extends SemverToStringable {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getComparators().contains(&lt;%org.eclipse.n4js.semver.Semver.VersionComparator%&gt;.SMALLER);'"
 	 * @generated
 	 */
 	boolean isSmaller();
@@ -181,7 +174,6 @@ public interface SimpleVersion extends SemverToStringable {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getComparators().contains(&lt;%org.eclipse.n4js.semver.Semver.VersionComparator%&gt;.SMALLER_EQUALS);'"
 	 * @generated
 	 */
 	boolean isSmallerEquals();

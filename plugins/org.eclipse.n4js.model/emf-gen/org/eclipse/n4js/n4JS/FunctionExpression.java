@@ -63,7 +63,6 @@ public interface FunctionExpression extends FunctionDefinition, AnnotableExpress
 	 * Overridden in subclass ArrowFunction.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return false;'"
 	 * @generated
 	 */
 	boolean isArrowFunction();

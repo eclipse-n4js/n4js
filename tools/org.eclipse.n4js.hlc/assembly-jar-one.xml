@@ -47,7 +47,6 @@ Contributors:
 					<exclude>**/*.xtend</exclude>
 					<exclude>**/*.g</exclude>
 					<exclude>**/*.xtext</exclude>
-					<exclude>**/*.xsemantics</exclude>
 					<exclude>**/*.map</exclude>
 					<exclude>**/pom.xml</exclude>
 					<exclude>**/pom.properties</exclude>

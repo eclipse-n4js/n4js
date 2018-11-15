@@ -55,7 +55,7 @@ public class N4JSHover extends DispatchingEObjectTextHover {
 						return null;
 					}
 				}
-			}, null);
+			}, (IRegion) null);
 		} catch (OperationCanceledException e) {
 			return null;
 		} catch (OperationCanceledError e) {

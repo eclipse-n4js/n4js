@@ -82,7 +82,6 @@ public interface TAnnotation extends EObject {
 	 * Convenience method, returns true if an argument of type TAnnotatonStringArgument exists with given value.
 	 * <!-- end-model-doc -->
 	 * @model unique="false" argumentValueUnique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.ts.types.TAnnotationStringArgument%&gt;, &lt;%java.lang.Boolean%&gt;&gt; _function = new &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.ts.types.TAnnotationStringArgument%&gt;, &lt;%java.lang.Boolean%&gt;&gt;()\n{\n\tpublic &lt;%java.lang.Boolean%&gt; apply(final &lt;%org.eclipse.n4js.ts.types.TAnnotationStringArgument%&gt; it)\n\t{\n\t\t&lt;%java.lang.String%&gt; _value = it.getValue();\n\t\treturn &lt;%java.lang.Boolean%&gt;.valueOf(&lt;%com.google.common.base.Objects%&gt;.equal(_value, argumentValue));\n\t}\n};\nreturn &lt;%org.eclipse.xtext.xbase.lib.IterableExtensions%&gt;.&lt;&lt;%org.eclipse.n4js.ts.types.TAnnotationStringArgument%&gt;&gt;exists(&lt;%com.google.common.collect.Iterables%&gt;.&lt;&lt;%org.eclipse.n4js.ts.types.TAnnotationStringArgument%&gt;&gt;filter(this.getArgs(), &lt;%org.eclipse.n4js.ts.types.TAnnotationStringArgument%&gt;.class), _function);'"
 	 * @generated
 	 */
 	boolean hasStringArgument(String argumentValue);
@@ -91,7 +90,6 @@ public interface TAnnotation extends EObject {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%java.lang.StringBuilder%&gt; strb = new &lt;%java.lang.StringBuilder%&gt;();\nstrb.append(\"@\");\nstrb.append(this.getName());\nint _length = ((&lt;%java.lang.Object%&gt;[])org.eclipse.xtext.xbase.lib.Conversions.unwrapArray(this.getArgs(), &lt;%java.lang.Object%&gt;.class)).length;\nboolean _greaterThan = (_length &gt; 0);\nif (_greaterThan)\n{\n\tstrb.append(\"(\");\n\tfor (int i = 0; (i &lt; ((&lt;%java.lang.Object%&gt;[])org.eclipse.xtext.xbase.lib.Conversions.unwrapArray(this.getArgs(), &lt;%java.lang.Object%&gt;.class)).length); i++)\n\t{\n\t\t{\n\t\t\tif ((i &gt; 0))\n\t\t\t{\n\t\t\t\tstrb.append(\", \");\n\t\t\t}\n\t\t\tstrb.append(this.getArgs().get(i).getArgAsString());\n\t\t}\n\t}\n\tstrb.append(\")\");\n}\nreturn strb.toString();'"
 	 * @generated
 	 */
 	String getAnnotationAsString();

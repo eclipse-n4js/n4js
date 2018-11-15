@@ -18,10 +18,10 @@ import org.eclipse.n4js.n4idl.migrations.SwitchCondition
 import org.eclipse.n4js.n4idl.migrations.TypeSwitchCondition
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
-import org.eclipse.xsemantics.runtime.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.junit.Assert
 
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  * A test extension class for N4IDL-related tests, which allows to create valid

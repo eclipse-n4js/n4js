@@ -10,18 +10,19 @@
  */
 package org.eclipse.n4js.tests.bugs
 
-import static org.junit.Assert.*;
+import com.google.common.io.Files
 import java.io.File
+import java.nio.charset.Charset
 import java.util.regex.Pattern
 import org.eclipse.core.resources.IFile
 import org.eclipse.core.resources.IProject
 import org.eclipse.core.runtime.CoreException
-import org.eclipse.xtext.util.Files
 import org.junit.Test
 
-import static org.eclipse.n4js.N4JSLanguageConstants.METHOD_STACKTRACE_SUFFIX
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace
+import static org.eclipse.n4js.N4JSLanguageConstants.METHOD_STACKTRACE_SUFFIX
 import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.fullBuild
+import static org.junit.Assert.*
 
 /**
  * Test for checking that the correctly polyfilled non-accessor members will not have auto-generated{@code API not implemented yet} stubs.
@@ -41,7 +42,7 @@ class IDEBUG_650_PluginUITest extends AbstractIDEBUG_Test {
 			getFile('''src-gen/n4/model/common/TimezoneRegion.js''');
 		assertTrue('TimezoneRegion.js compiled file does not exist.', file.exists);
 
-		val actualContent = Files.readFileIntoString(file.location.toFile.absolutePath);
+		val actualContent = Files.toString(file.location.toFile, Charset.defaultCharset());
 		assertTrue('Generated file content was empty: ' + file, !actualContent.nullOrEmpty)
 		val matcher = PATTERN.matcher(actualContent);
 		var matchCount = 0;

@@ -94,7 +94,6 @@ public interface FunctionDeclaration extends AnnotableScriptElement, ModifiableE
 	 * Returns true if type is declared as external.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getDeclaredModifiers().contains(&lt;%org.eclipse.n4js.n4JS.N4Modifier%&gt;.EXTERNAL);'"
 	 * @generated
 	 */
 	boolean isExternal();
@@ -106,7 +105,6 @@ public interface FunctionDeclaration extends AnnotableScriptElement, ModifiableE
 	 * * Lazy initialized reference to transient localArgurmentsVariable
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.n4js.n4JS.MigrationContextVariable%&gt; __migrationContext = this.get_migrationContext();\nboolean _tripleEquals = (__migrationContext == null);\nif (_tripleEquals)\n{\n\tfinal &lt;%org.eclipse.n4js.n4JS.MigrationContextVariable%&gt; newMigrationContext = &lt;%org.eclipse.n4js.n4JS.N4JSFactory%&gt;.eINSTANCE.createMigrationContextVariable();\n\tnewMigrationContext.setName(\"context\");\n\tfinal &lt;%org.eclipse.xtext.xbase.lib.Procedures.Procedure0%&gt; _function = new &lt;%org.eclipse.xtext.xbase.lib.Procedures.Procedure0%&gt;()\n\t{\n\t\tpublic void apply()\n\t\t{\n\t\t\t&lt;%this%&gt;.set_migrationContext(newMigrationContext);\n\t\t}\n\t};\n\t&lt;%org.eclipse.n4js.utils.EcoreUtilN4%&gt;.doWithDeliver(false, _function, this);\n}\nreturn this.get_migrationContext();'"
 	 * @generated
 	 */
 	MigrationContextVariable getMigrationContextVariable();

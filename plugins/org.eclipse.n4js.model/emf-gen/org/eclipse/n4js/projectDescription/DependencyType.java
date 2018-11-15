@@ -33,6 +33,9 @@ public enum DependencyType implements Enumerator {
 	 * The '<em><b>RUNTIME</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * * Dependencies of this type must always be present.
+	 * <!-- end-model-doc -->
 	 * @see #RUNTIME_VALUE
 	 * @generated
 	 * @ordered
@@ -43,6 +46,9 @@ public enum DependencyType implements Enumerator {
 	 * The '<em><b>DEVELOPMENT</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * * Dependencies of this type must be present at development-time.
+	 * <!-- end-model-doc -->
 	 * @see #DEVELOPMENT_VALUE
 	 * @generated
 	 * @ordered

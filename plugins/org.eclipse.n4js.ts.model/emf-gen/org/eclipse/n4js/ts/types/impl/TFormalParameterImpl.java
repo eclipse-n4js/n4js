@@ -642,7 +642,7 @@ public class TFormalParameterImpl extends IdentifiableElementImpl implements TFo
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (variadic: ");
 		result.append(variadic);
 		result.append(", astInitializer: ");

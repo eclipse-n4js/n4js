@@ -11,7 +11,6 @@
 package org.eclipse.n4js.typesystem
 
 import com.google.inject.Inject
-import org.eclipse.xsemantics.runtime.RuleEnvironment
 import java.util.function.Predicate
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.N4JSInjectorProvider
@@ -31,6 +30,8 @@ import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.validation.JavaScriptVariant
 import org.eclipse.n4js.xsemantics.AbstractTypesystemTest
 import org.eclipse.xtext.EcoreUtil2
@@ -41,7 +42,7 @@ import org.junit.runner.RunWith
 
 import static org.junit.Assert.*
 
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  */
@@ -109,6 +110,15 @@ class PolyProcessorTest extends AbstractTypesystemTest {
 		G = script.module.topLevelTypes.findFirst[name=="G"];
 		G2 = script.module.topLevelTypes.findFirst[name=="G2"];
 
+		assertNotNull(A);
+		assertNotNull(B);
+		assertNotNull(B1);
+		assertNotNull(B2);
+		assertNotNull(C);
+
+		assertNotNull(G);
+		assertNotNull(G2);
+
 		return script;
 	}
 
@@ -163,7 +173,7 @@ class PolyProcessorTest extends AbstractTypesystemTest {
 //	}
 	def private TypeRef getTypeFromTypingCache(Expression expression) {
 		// NOTE: not using N4JSTypeSystem#type() here to make 100% sure we are just reading from the cache
-		return ASTMetaInfoUtils.getTypeFailSafe(expression)?.value;
+		return ASTMetaInfoUtils.getTypeFailSafe(expression);
 	}
 
 

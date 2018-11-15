@@ -185,7 +185,6 @@ public interface TMigration extends TFunction {
 	 * The principal argument of this migration.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.n4js.ts.types.TMigratable%&gt; __principalArgumentType = this.get_principalArgumentType();\nboolean _tripleEquals = (__principalArgumentType == null);\nif (_tripleEquals)\n{\n\tfinal &lt;%org.eclipse.xtext.xbase.lib.Procedures.Procedure0%&gt; _function = new &lt;%org.eclipse.xtext.xbase.lib.Procedures.Procedure0%&gt;()\n\t{\n\t\tpublic void apply()\n\t\t{\n\t\t\t&lt;%this%&gt;.set_principalArgumentType(&lt;%org.eclipse.n4js.ts.versions.MigratableUtils%&gt;.findPrincipalMigrationArgument(&lt;%this%&gt;.getSourceTypeRefs()).orElse(null));\n\t\t}\n\t};\n\t&lt;%org.eclipse.n4js.utils.EcoreUtilN4%&gt;.doWithDeliver(false, _function, this);\n}\nreturn this.get_principalArgumentType();'"
 	 * @generated
 	 */
 	TMigratable getPrincipalArgumentType();
@@ -200,7 +199,6 @@ public interface TMigration extends TFunction {
 	 * This includes source types and target types.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.ts.typeRefs.TypeRef%&gt;, &lt;%java.lang.String%&gt;&gt; _function = new &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.ts.typeRefs.TypeRef%&gt;, &lt;%java.lang.String%&gt;&gt;()\n{\n\tpublic &lt;%java.lang.String%&gt; apply(final &lt;%org.eclipse.n4js.ts.typeRefs.TypeRef%&gt; t)\n\t{\n\t\treturn t.getTypeRefAsString();\n\t}\n};\nfinal &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.ts.typeRefs.TypeRef%&gt;, &lt;%java.lang.String%&gt;&gt; _function_1 = new &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.ts.typeRefs.TypeRef%&gt;, &lt;%java.lang.String%&gt;&gt;()\n{\n\tpublic &lt;%java.lang.String%&gt; apply(final &lt;%org.eclipse.n4js.ts.typeRefs.TypeRef%&gt; t)\n\t{\n\t\treturn t.getTypeRefAsString();\n\t}\n};\nreturn &lt;%java.lang.String%&gt;.format(\"%s (%s) =&gt; (%s)\", \n\tthis.getName(), \n\t&lt;%org.eclipse.xtext.xbase.lib.IterableExtensions%&gt;.join(&lt;%org.eclipse.emf.ecore.xcore.lib.XcoreEListExtensions%&gt;.&lt;&lt;%org.eclipse.n4js.ts.typeRefs.TypeRef%&gt;, &lt;%java.lang.String%&gt;&gt;map(this.getSourceTypeRefs(), _function), \", \"), \n\t&lt;%org.eclipse.xtext.xbase.lib.IterableExtensions%&gt;.join(&lt;%org.eclipse.emf.ecore.xcore.lib.XcoreEListExtensions%&gt;.&lt;&lt;%org.eclipse.n4js.ts.typeRefs.TypeRef%&gt;, &lt;%java.lang.String%&gt;&gt;map(this.getTargetTypeRefs(), _function_1), \", \"));'"
 	 * @generated
 	 */
 	String getMigrationAsString();

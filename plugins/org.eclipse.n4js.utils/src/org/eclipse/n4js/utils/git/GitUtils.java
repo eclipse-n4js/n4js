@@ -155,7 +155,8 @@ public abstract class GitUtils {
 			LOGGER.info("Cleaned up " + deletedFiles.size() + " files:\n" + Joiner.on(",\n").join(deletedFiles));
 		} catch (final RepositoryNotFoundException e) {
 			if (cloneIfMissing) {
-				Throwables.propagate(e);
+				Throwables.throwIfUnchecked(e);
+				throw new RuntimeException(e);
 			} else {
 				final String message = "Git repository does not exist at " + localClonePath
 						+ ". Git repository should be cloned manually.";
@@ -164,7 +165,8 @@ public abstract class GitUtils {
 		} catch (final Exception e) {
 			LOGGER.error("Error when trying to hard reset to HEAD on '" + branch + "' branch in " + localClonePath
 					+ " repository.");
-			Throwables.propagate(e);
+			Throwables.throwIfUnchecked(e);
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -259,10 +261,12 @@ public abstract class GitUtils {
 
 		} catch (final GitAPIException e) {
 			LOGGER.error("Error when trying to pull on repository  '" + localClonePath + ".");
-			Throwables.propagate(e);
+			Throwables.throwIfUnchecked(e);
+			throw new RuntimeException(e);
 
 		} catch (final RepositoryNotFoundException e) {
-			Throwables.propagate(e);
+			Throwables.throwIfUnchecked(e);
+			throw new RuntimeException(e);
 
 		} catch (final IOException e) {
 			LOGGER.warn("Git repository does not exists at " + localCloneRoot + ". Aborting git pull.");
@@ -270,7 +274,8 @@ public abstract class GitUtils {
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.error("Error when trying to open repository  '" + localClonePath + ".");
 			}
-			Throwables.propagate(e);
+			Throwables.throwIfUnchecked(e);
+			throw new RuntimeException(e);
 		}
 	}
 

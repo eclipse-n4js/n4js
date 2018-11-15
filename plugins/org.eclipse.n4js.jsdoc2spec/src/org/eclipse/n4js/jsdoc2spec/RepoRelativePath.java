@@ -11,6 +11,8 @@
 package org.eclipse.n4js.jsdoc2spec;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
 
 import org.apache.log4j.Logger;
@@ -23,10 +25,10 @@ import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.utils.Log;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
-import org.eclipse.xtext.util.Files;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
+import com.google.common.io.Files;
 
 /**
  * Value object containing information about the repository relative location of a file, optionally with line number to
@@ -115,7 +117,7 @@ public class RepoRelativePath {
 			return null;
 		}
 		try {
-			String configStr = Files.readFileIntoString(config.getAbsolutePath());
+			String configStr = Files.toString(config, Charset.defaultCharset());
 			Config cfg = new Config();
 
 			cfg.fromText(configStr);
@@ -133,7 +135,7 @@ public class RepoRelativePath {
 				}
 				return repoName;
 			}
-		} catch (ConfigInvalidException e) {
+		} catch (ConfigInvalidException | IOException e) {
 			LOGGER.warn("Cannot read git config at " + config.getAbsolutePath(), e);
 		}
 

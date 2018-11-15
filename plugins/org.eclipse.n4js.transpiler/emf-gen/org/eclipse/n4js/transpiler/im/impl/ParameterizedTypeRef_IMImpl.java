@@ -28,7 +28,7 @@ import org.eclipse.n4js.transpiler.im.ReferencingElement_IM;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
 
-import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 
 import org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl;
@@ -318,9 +318,9 @@ public class ParameterizedTypeRef_IMImpl extends ParameterizedTypeRefImpl implem
 	 */
 	@Override
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
-		if (baseClass == TypeRef.class) {
+		if (baseClass == TypeArgument.class) {
 			switch (baseOperationID) {
-				case TypeRefsPackage.TYPE_REF___GET_DECLARED_TYPE: return ImPackage.PARAMETERIZED_TYPE_REF_IM___GET_DECLARED_TYPE;
+				case TypeRefsPackage.TYPE_ARGUMENT___GET_DECLARED_TYPE: return ImPackage.PARAMETERIZED_TYPE_REF_IM___GET_DECLARED_TYPE;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}

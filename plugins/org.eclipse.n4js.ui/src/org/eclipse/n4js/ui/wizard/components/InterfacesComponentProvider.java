@@ -23,6 +23,10 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.window.Window;
+import org.eclipse.n4js.ui.dialog.InterfacesSelectionDialog;
+import org.eclipse.n4js.ui.wizard.classifiers.N4JSClassifierWizardModel;
+import org.eclipse.n4js.ui.wizard.model.ClassifierReference;
+import org.eclipse.n4js.ui.wizard.model.InterfacesContainingModel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.KeyEvent;
@@ -48,11 +52,6 @@ import org.eclipse.xtext.resource.IEObjectDescription;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-
-import org.eclipse.n4js.ui.dialog.InterfacesSelectionDialog;
-import org.eclipse.n4js.ui.wizard.classifiers.N4JSClassifierWizardModel;
-import org.eclipse.n4js.ui.wizard.model.ClassifierReference;
-import org.eclipse.n4js.ui.wizard.model.InterfacesContainingModel;
 
 /**
  * A provider for {@link InterfacesComponent} component.
@@ -171,8 +170,8 @@ public class InterfacesComponentProvider {
 								}
 
 								// Convert input to classifier reference using the converter
-								ClassifierReference editedRef = ((ClassifierReference) new WizardComponentDataConverters.StringToClassifierReferenceConverter()
-										.convert(newEditor.getText()));
+								ClassifierReference editedRef = new WizardComponentDataConverters.StringToClassifierReferenceConverter()
+										.convert(newEditor.getText());
 
 								interfaces.set(fSelectionIndex, editedRef);
 

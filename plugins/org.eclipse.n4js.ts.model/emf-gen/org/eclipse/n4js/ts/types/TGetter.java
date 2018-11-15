@@ -66,7 +66,6 @@ public interface TGetter extends FieldAccessor, TMemberWithAccessModifier {
 	 * * Always returns GETTER
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return &lt;%org.eclipse.n4js.ts.types.MemberType%&gt;.GETTER;'"
 	 * @generated
 	 */
 	MemberType getMemberType();
@@ -80,7 +79,6 @@ public interface TGetter extends FieldAccessor, TMemberWithAccessModifier {
 	 * colon separated (return) type if declared.  Overrides TMember's method.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%java.lang.StringBuilder%&gt; strb = new &lt;%java.lang.StringBuilder%&gt;(\"get \");\nstrb.append(this.getName());\nboolean _isOptional = this.isOptional();\nif (_isOptional)\n{\n\tstrb.append(\"?\");\n}\nstrb.append(\"()\");\n&lt;%org.eclipse.n4js.ts.typeRefs.TypeRef%&gt; _declaredTypeRef = this.getDeclaredTypeRef();\nboolean _tripleNotEquals = (_declaredTypeRef != null);\nif (_tripleNotEquals)\n{\n\tstrb.append(\": \").append(this.getDeclaredTypeRef().getTypeRefAsString());\n}\nreturn strb.toString();'"
 	 * @generated
 	 */
 	String getMemberAsString();

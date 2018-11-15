@@ -15,9 +15,11 @@ import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef
 import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.ts.utils.TypeCompareHelper
 import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.validation.JavaScriptVariant
 
 import static org.junit.Assert.*
@@ -66,10 +68,9 @@ abstract class AbstractTypeSystemHelperTests {
 			identifierRef =  script.eAllContents.filter(IdentifierRef).filter[it.id.name==propertyRefName].head
 		}
 		assertNotNull("bogus test, identifier ref " + propertyRefName + " not found", identifierRef)
-		val actualTypeResult = ts.type(G, identifierRef)
-		assertNull("Cannot type identifier ref " + propertyRefName, actualTypeResult.ruleFailedException)
-		val propertyTypeRef = actualTypeResult.value
+		val propertyTypeRef = ts.type(G, identifierRef)
 		assertNotNull("Type identifier ref " + propertyRefName+ " is null", propertyTypeRef)
+		assertFalse("Cannot type identifier ref " + propertyRefName + ": " + propertyTypeRef, propertyTypeRef instanceof UnknownTypeRef)
 
 		val subTypeResult = ts.subtype(G, propertyTypeRef, expectedTypeRef)
 		val superTypeResult = ts.subtype(G, expectedTypeRef, propertyTypeRef)
@@ -78,18 +79,18 @@ abstract class AbstractTypeSystemHelperTests {
 		val expectSuper = subtypeRel==SubTypeRelationForTest._super || subtypeRel==SubTypeRelationForTest._equals;
 
 		if (expectSub) {
-			assertNull(propertyRefName + " <: " + comparedTypeExpr + " failed", subTypeResult.ruleFailedException)
-			assertEquals(propertyRefName + " <: " + comparedTypeExpr + " failed", Boolean.TRUE, subTypeResult.value)
+			assertFalse(propertyRefName + " <: " + comparedTypeExpr + " failed: " + subTypeResult.failureMessage, subTypeResult.failure)
+			assertEquals(propertyRefName + " <: " + comparedTypeExpr + " failed", Boolean.TRUE, subTypeResult.success)
 		} else {
-			assertNotNull(propertyRefName + " <: " + comparedTypeExpr + " should fail", subTypeResult.ruleFailedException)
-			assertNotEquals(propertyRefName + " <: " + comparedTypeExpr + " should be false", Boolean.TRUE, subTypeResult.value)
+			assertTrue(propertyRefName + " <: " + comparedTypeExpr + " should fail", subTypeResult.failure)
+			assertNotEquals(propertyRefName + " <: " + comparedTypeExpr + " should be false", Boolean.TRUE, subTypeResult.success)
 		}
 		if (expectSuper) {
-			assertNull(comparedTypeExpr + " <: " + propertyRefName + " failed", superTypeResult.ruleFailedException)
-			assertEquals(comparedTypeExpr + " <: " + propertyRefName + " failed", Boolean.TRUE, superTypeResult.value)
+			assertFalse(comparedTypeExpr + " <: " + propertyRefName + " failed: " + superTypeResult.failureMessage, superTypeResult.failure)
+			assertEquals(comparedTypeExpr + " <: " + propertyRefName + " failed", Boolean.TRUE, superTypeResult.success)
 		} else {
-			assertNotNull(comparedTypeExpr + " <: " + propertyRefName + " should fail", superTypeResult.ruleFailedException)
-			assertNotEquals(comparedTypeExpr + " <: " + propertyRefName + " should be false", Boolean.TRUE, superTypeResult.value)
+			assertTrue(comparedTypeExpr + " <: " + propertyRefName + " should fail", superTypeResult.failure)
+			assertNotEquals(comparedTypeExpr + " <: " + propertyRefName + " should be false", Boolean.TRUE, superTypeResult.success)
 		}
 
 

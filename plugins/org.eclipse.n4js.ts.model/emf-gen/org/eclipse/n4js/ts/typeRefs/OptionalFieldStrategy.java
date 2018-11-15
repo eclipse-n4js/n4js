@@ -39,6 +39,9 @@ public enum OptionalFieldStrategy implements Enumerator {
 	 * The '<em><b>OFF</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * * Default: optionality is turned of, e.g. both fields and accessors are mandatory
+	 * <!-- end-model-doc -->
 	 * @see #OFF_VALUE
 	 * @generated
 	 * @ordered
@@ -49,6 +52,9 @@ public enum OptionalFieldStrategy implements Enumerator {
 	 * The '<em><b>GETTERS OPTIONAL</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * * Only getters are optional
+	 * <!-- end-model-doc -->
 	 * @see #GETTERS_OPTIONAL_VALUE
 	 * @generated
 	 * @ordered
@@ -59,6 +65,9 @@ public enum OptionalFieldStrategy implements Enumerator {
 	 * The '<em><b>FIELDS AND ACCESSORS OPTIONAL</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * * Both fields and accessors are optional
+	 * <!-- end-model-doc -->
 	 * @see #FIELDS_AND_ACCESSORS_OPTIONAL_VALUE
 	 * @generated
 	 * @ordered

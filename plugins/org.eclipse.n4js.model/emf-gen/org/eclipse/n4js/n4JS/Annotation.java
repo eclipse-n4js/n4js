@@ -92,7 +92,6 @@ public interface Annotation extends NamedElement {
 	 * is returned.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.emf.ecore.EObject%&gt; _eContainer = this.eContainer();\nif ((_eContainer instanceof &lt;%org.eclipse.n4js.n4JS.AbstractAnnotationList%&gt;))\n{\n\treturn this.eContainer().eContainer();\n}\nreturn this.eContainer();'"
 	 * @generated
 	 */
 	EObject getAnnotatedElement();

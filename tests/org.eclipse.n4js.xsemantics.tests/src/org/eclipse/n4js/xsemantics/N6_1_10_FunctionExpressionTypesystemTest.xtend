@@ -15,7 +15,7 @@ import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
 import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.validation.JavaScriptVariant
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.testing.InjectWith
@@ -319,7 +319,7 @@ class N6_1_10_FunctionExpressionTypesystemTest extends AbstractTypesystemTest {
 		val call = script.eAllContents.filter(ParameterizedCallExpression).last
 
 //		val type = ts.type(call).value; // will cause an NPE internally
-		val typeG = ts.type(RuleEnvironmentExtensions.newRuleEnvironment(call), call).value;
+		val typeG = ts.type(RuleEnvironmentExtensions.newRuleEnvironment(call), call);
 		val typeI = ts.tau(call);
 
 		assertEquals(typeG.declaredType, typeI.declaredType);

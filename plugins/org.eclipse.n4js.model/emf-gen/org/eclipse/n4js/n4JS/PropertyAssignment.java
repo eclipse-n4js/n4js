@@ -46,7 +46,6 @@ public interface PropertyAssignment extends AnnotableElement, VariableEnvironmen
 	 * Properties may not be called 'prototype' or 'constructor' (except for computed names).
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%java.lang.String%&gt; _name = this.getName();\nboolean _equals = &lt;%com.google.common.base.Objects%&gt;.equal(\"prototype\", _name);\nif (_equals)\n{\n\treturn false;\n}\nboolean _and = false;\n&lt;%java.lang.String%&gt; _name_1 = this.getName();\nboolean _equals_1 = &lt;%com.google.common.base.Objects%&gt;.equal(\"constructor\", _name_1);\nif (!_equals_1)\n{\n\t_and = false;\n} else\n{\n\t&lt;%org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName%&gt; _declaredName = this.getDeclaredName();\n\t&lt;%org.eclipse.n4js.n4JS.PropertyNameKind%&gt; _kind = null;\n\tif (_declaredName!=null)\n\t{\n\t\t_kind=_declaredName.getKind();\n\t}\n\tboolean _tripleNotEquals = (_kind != &lt;%org.eclipse.n4js.n4JS.PropertyNameKind%&gt;.COMPUTED);\n\t_and = _tripleNotEquals;\n}\nif (_and)\n{\n\treturn false;\n}\nreturn true;'"
 	 * @generated
 	 */
 	boolean isValidName();

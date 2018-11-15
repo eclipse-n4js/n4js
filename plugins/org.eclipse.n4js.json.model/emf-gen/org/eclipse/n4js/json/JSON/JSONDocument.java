@@ -59,7 +59,6 @@ public interface JSONDocument extends EObject {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%java.lang.String%&gt; _string = this.getContent().toString();\nreturn (\"JSONDocument \" + _string);'"
 	 * @generated
 	 */
 	String toString();

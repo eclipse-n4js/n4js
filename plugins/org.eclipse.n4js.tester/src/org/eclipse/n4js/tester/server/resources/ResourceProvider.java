@@ -40,7 +40,8 @@ public class ResourceProvider {
 			return resource;
 		} catch (final Exception e) {
 			LOGGER.error("Error while creating resource for class: " + clazz + ";", e);
-			throw Throwables.propagate(e);
+			Throwables.throwIfUnchecked(e);
+			throw new RuntimeException(e);
 		}
 	}
 

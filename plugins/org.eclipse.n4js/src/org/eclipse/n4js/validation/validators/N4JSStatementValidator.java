@@ -17,11 +17,6 @@ import static org.eclipse.n4js.validation.IssueCodes.getMessageForPOLY_STATIC_PO
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForTYS_FOR_IN_VAR_STRING;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.validation.Check;
-import org.eclipse.xtext.validation.EValidatorRegistrar;
-
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.n4JS.ForStatement;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.Script;
@@ -32,12 +27,17 @@ import org.eclipse.n4js.n4JS.VariableDeclarationOrBinding;
 import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.n4JS.VariableStatementKeyword;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
-import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
+import org.eclipse.n4js.typesystem.utils.Result;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
-import org.eclipse.xsemantics.runtime.Result;
-import org.eclipse.xsemantics.runtime.RuleEnvironment;
+import org.eclipse.xtext.validation.Check;
+import org.eclipse.xtext.validation.EValidatorRegistrar;
+
+import com.google.inject.Inject;
 
 /**
  * Statement validation rules for N4JS.
@@ -126,24 +126,23 @@ public class N4JSStatementValidator extends AbstractN4JSDeclarativeValidator {
 					loopVarType = ((VariableDeclaration) varDeclOrBinding).getDeclaredTypeRef();
 				} else {
 					VariableBinding varBinding = (VariableBinding) varDeclOrBinding;
-					Result<TypeRef> res = typeSystem.type(G, varBinding.getExpression());
-					if (!res.failed()) {
-						loopVarType = res.getFirst();
+					TypeRef res = typeSystem.type(G, varBinding.getExpression());
+					if (!(res instanceof UnknownTypeRef)) {
+						loopVarType = res;
 					}
 				}
 			} else if (forStatement.getInitExpr() != null) {
 				location = forStatement.getInitExpr();
-				Result<TypeRef> res = typeSystem.type(G, forStatement.getInitExpr());
-				if (!res.failed()) {
-					loopVarType = res.getFirst();
+				TypeRef res = typeSystem.type(G, forStatement.getInitExpr());
+				if (!(res instanceof UnknownTypeRef)) {
+					loopVarType = res;
 				}
 
 			}
 			if (loopVarType != null) {
-				Result<Boolean> res = typeSystem.subtype(G, RuleEnvironmentExtensions.stringTypeRef(G),
-						loopVarType);
+				Result res = typeSystem.subtype(G, RuleEnvironmentExtensions.stringTypeRef(G), loopVarType);
 
-				if (res.failed() || !res.getFirst()) {
+				if (!res.isSuccess()) {
 					addIssue(getMessageForTYS_FOR_IN_VAR_STRING(loopVarType.getTypeRefAsString()), location,
 							TYS_FOR_IN_VAR_STRING);
 

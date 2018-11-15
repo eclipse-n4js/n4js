@@ -207,7 +207,6 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	 * Returns the actual typing strategy, that is either the defined typing strategy, or the typing strategy of the declared type.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.n4js.ts.types.TypingStrategy%&gt; _definedTypingStrategy = this.getDefinedTypingStrategy();\nboolean _tripleEquals = (_definedTypingStrategy == &lt;%org.eclipse.n4js.ts.types.TypingStrategy%&gt;.DEFAULT);\nif (_tripleEquals)\n{\n\tboolean _isDefSiteStructuralTyping = this.isDefSiteStructuralTyping();\n\tif (_isDefSiteStructuralTyping)\n\t{\n\t\treturn &lt;%org.eclipse.n4js.ts.types.TypingStrategy%&gt;.STRUCTURAL;\n\t}\n\telse\n\t{\n\t\treturn &lt;%org.eclipse.n4js.ts.types.TypingStrategy%&gt;.NOMINAL;\n\t}\n}\nreturn this.getDefinedTypingStrategy();'"
 	 * @generated
 	 */
 	TypingStrategy getTypingStrategy();
@@ -219,7 +218,6 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	 *  @see TypeArgument#containsWildcard()
 	 * <!-- end-model-doc -->
 	 * @model unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return ((this.getTypeArgs().isEmpty() &amp;&amp; (!this.getDeclaredType().isGeneric())) || &lt;%org.eclipse.xtext.xbase.lib.IterableExtensions%&gt;.&lt;&lt;%org.eclipse.n4js.ts.typeRefs.TypeArgument%&gt;&gt;exists(this.getTypeArgs(), new &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.ts.typeRefs.TypeArgument%&gt;, &lt;%java.lang.Boolean%&gt;&gt;()\n{\n\tpublic &lt;%java.lang.Boolean%&gt; apply(final &lt;%org.eclipse.n4js.ts.typeRefs.TypeArgument%&gt; it)\n\t{\n\t\treturn &lt;%java.lang.Boolean%&gt;.valueOf(it.containsWildcards());\n\t}\n}));'"
 	 * @generated
 	 */
 	boolean containsWildcards();
@@ -231,7 +229,6 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	 * Overrides {@link TypeRef#getTypeRefAsString()}
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.n4js.ts.types.Type%&gt; _declaredType = this.getDeclaredType();\n&lt;%java.lang.String%&gt; _rawTypeAsString = null;\nif (_declaredType!=null)\n{\n\t_rawTypeAsString=_declaredType.getRawTypeAsString();\n}\n&lt;%java.lang.String%&gt; _xifexpression = null;\nint _version = this.getVersion();\nboolean _greaterThan = (_version &gt; 0);\nif (_greaterThan)\n{\n\tint _version_1 = this.getVersion();\n\t_xifexpression = (\"#\" + &lt;%java.lang.Integer%&gt;.valueOf(_version_1));\n}\nelse\n{\n\t&lt;%java.lang.String%&gt; _xifexpression_1 = null;\n\tboolean _isEmpty = this.getTypeArgs().isEmpty();\n\tif (_isEmpty)\n\t{\n\t\t_xifexpression_1 = \"\";\n\t}\n\telse\n\t{\n\t\tfinal &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.ts.typeRefs.TypeArgument%&gt;, &lt;%java.lang.String%&gt;&gt; _function = new &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.ts.typeRefs.TypeArgument%&gt;, &lt;%java.lang.String%&gt;&gt;()\n\t\t{\n\t\t\tpublic &lt;%java.lang.String%&gt; apply(final &lt;%org.eclipse.n4js.ts.typeRefs.TypeArgument%&gt; it)\n\t\t\t{\n\t\t\t\treturn it.getTypeRefAsString();\n\t\t\t}\n\t\t};\n\t\t&lt;%java.lang.String%&gt; _join = &lt;%org.eclipse.xtext.xbase.lib.IterableExtensions%&gt;.join(&lt;%org.eclipse.emf.ecore.xcore.lib.XcoreEListExtensions%&gt;.&lt;&lt;%org.eclipse.n4js.ts.typeRefs.TypeArgument%&gt;, &lt;%java.lang.String%&gt;&gt;map(this.getTypeArgs(), _function), \",\");\n\t\t&lt;%java.lang.String%&gt; _plus = (\"&lt;\" + _join);\n\t\t_xifexpression_1 = (_plus + \"&gt;\");\n\t}\n\t&lt;%java.lang.String%&gt; _plus_1 = (\"\" + _xifexpression_1);\n\t&lt;%java.lang.String%&gt; _modifiersAsString = this.getModifiersAsString();\n\t_xifexpression = (_plus_1 + _modifiersAsString);\n}\nreturn (_rawTypeAsString + _xifexpression);'"
 	 * @generated
 	 */
 	String getTypeRefAsString();
@@ -243,7 +240,6 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	 * Convenience method, returns true if type reference contains type arguments.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='boolean _isEmpty = this.getTypeArgs().isEmpty();\nreturn (!_isEmpty);'"
 	 * @generated
 	 */
 	boolean isParameterized();
@@ -255,7 +251,6 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	 * Delegates to {@link Type.isGeneric()}
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return ((this.getDeclaredType() != null) &amp;&amp; this.getDeclaredType().isGeneric());'"
 	 * @generated
 	 */
 	boolean isGeneric();
@@ -267,7 +262,6 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	 * Overrides {@link TypeRef#isRaw()}.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return (this.isGeneric() &amp;&amp; (this.getTypeArgs().size() &lt; this.getDeclaredType().getTypeVars().size()));'"
 	 * @generated
 	 */
 	boolean isRaw();
@@ -279,7 +273,6 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	 * @see TypeArgument#containsUnboundTypeVariables()
 	 * <!-- end-model-doc -->
 	 * @model unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return (((this.getDeclaredType() instanceof &lt;%org.eclipse.n4js.ts.types.TypeVariable%&gt;) || ((!this.isParameterized()) &amp;&amp; this.getDeclaredType().isGeneric())) || &lt;%org.eclipse.xtext.xbase.lib.IterableExtensions%&gt;.&lt;&lt;%org.eclipse.n4js.ts.typeRefs.TypeArgument%&gt;&gt;exists(this.getTypeArgs(), new &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.ts.typeRefs.TypeArgument%&gt;, &lt;%java.lang.Boolean%&gt;&gt;()\n{\n\tpublic &lt;%java.lang.Boolean%&gt; apply(final &lt;%org.eclipse.n4js.ts.typeRefs.TypeArgument%&gt; it)\n\t{\n\t\treturn &lt;%java.lang.Boolean%&gt;.valueOf(it.containsUnboundTypeVariables());\n\t}\n}));'"
 	 * @generated
 	 */
 	boolean containsUnboundTypeVariables();
@@ -292,7 +285,6 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	 * definition site.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return ((this.getDefinedTypingStrategy() != &lt;%org.eclipse.n4js.ts.types.TypingStrategy%&gt;.NOMINAL) &amp;&amp; \n\t(this.getDefinedTypingStrategy() != &lt;%org.eclipse.n4js.ts.types.TypingStrategy%&gt;.DEFAULT));'"
 	 * @generated
 	 */
 	boolean isUseSiteStructuralTyping();
@@ -304,7 +296,6 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	 * Convenience method, returns true if typingStrategy of the declared type is STRUCTURAL or in case of Object literals.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.n4js.ts.types.Type%&gt; _declaredType = this.getDeclaredType();\nif ((_declaredType instanceof &lt;%org.eclipse.n4js.ts.types.TN4Classifier%&gt;))\n{\n\t&lt;%org.eclipse.n4js.ts.types.Type%&gt; _declaredType_1 = this.getDeclaredType();\n\t&lt;%org.eclipse.n4js.ts.types.TypingStrategy%&gt; _typingStrategy = ((&lt;%org.eclipse.n4js.ts.types.TN4Classifier%&gt;) _declaredType_1).getTypingStrategy();\n\treturn (_typingStrategy == &lt;%org.eclipse.n4js.ts.types.TypingStrategy%&gt;.STRUCTURAL);\n}\n&lt;%org.eclipse.n4js.ts.types.Type%&gt; _declaredType_2 = this.getDeclaredType();\nif ((_declaredType_2 instanceof &lt;%org.eclipse.n4js.ts.types.TStructuralType%&gt;))\n{\n\treturn true;\n}\nreturn false;'"
 	 * @generated
 	 */
 	boolean isDefSiteStructuralTyping();

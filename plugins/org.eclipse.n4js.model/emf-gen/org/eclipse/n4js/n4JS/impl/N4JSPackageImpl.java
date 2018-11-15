@@ -1573,7 +1573,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 	/**
 	 * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
-	 * 
+	 *
 	 * <p>This method is used to initialize {@link N4JSPackage#eINSTANCE} when that field is accessed.
 	 * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
 	 * <!-- begin-user-doc -->
@@ -1587,7 +1587,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		if (isInited) return (N4JSPackage)EPackage.Registry.INSTANCE.getEPackage(N4JSPackage.eNS_URI);
 
 		// Obtain or create and register package
-		N4JSPackageImpl theN4JSPackage = (N4JSPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof N4JSPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new N4JSPackageImpl());
+		Object registeredN4JSPackage = EPackage.Registry.INSTANCE.get(eNS_URI);
+		N4JSPackageImpl theN4JSPackage = registeredN4JSPackage instanceof N4JSPackageImpl ? (N4JSPackageImpl)registeredN4JSPackage : new N4JSPackageImpl();
 
 		isInited = true;
 
@@ -1605,7 +1606,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		// Mark meta-data to indicate it can't be changed
 		theN4JSPackage.freeze();
 
-  
 		// Update the registry and return the package
 		EPackage.Registry.INSTANCE.put(N4JSPackage.eNS_URI, theN4JSPackage);
 		return theN4JSPackage;

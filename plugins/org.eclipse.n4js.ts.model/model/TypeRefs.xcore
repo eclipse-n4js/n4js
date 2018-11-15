@@ -203,13 +203,6 @@ abstract class TypeRef extends TypeArgument, Versionable {
 	op String toString() {
 		return getTypeRefAsString();
 	}
-	/*
-	 * Convenience method, returns null for all type references except parameterized type references.
-	 * Minimizes number cases in client code.
-	 */
-	op Type getDeclaredType() {
-		return null;
-	}
 	/* Convenience method, returns only true for parameterized type refs if the declared type is any */
 	op boolean isTopType() {
 		return declaredType instanceof AnyType
@@ -853,6 +846,13 @@ abstract class TypeArgument {
 	 */
 	op boolean containsUnboundTypeVariables() {
 		return false
+	}
+	/*
+	 * Convenience method, returns null for all type arguments except parameterized type references.
+	 * Reduces number of casts in client code.
+	 */
+	op Type getDeclaredType() {
+		return null;
 	}
 }
 

@@ -117,8 +117,9 @@ import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
-import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
-import org.eclipse.n4js.typesystem.TypeSystemHelper
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.PromisifyHelper
@@ -128,8 +129,6 @@ import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
 import org.eclipse.n4js.validation.ValidatorMessageHelper
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError
-import org.eclipse.xsemantics.runtime.RuleEnvironment
-import org.eclipse.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
@@ -138,7 +137,7 @@ import org.eclipse.xtext.validation.EValidatorRegistrar
 
 import static org.eclipse.n4js.validation.IssueCodes.*
 
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  */
@@ -148,8 +147,6 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 	protected N4JSTypeSystem ts;
 	@Inject
 	protected TypeSystemHelper tsh;
-	@Inject
-	protected XsemanticsValidatorErrorGenerator errorGenerator;
 	@Inject extension N4JSElementKeywordProvider;
 	@Inject extension ValidatorMessageHelper;
 
@@ -256,14 +253,12 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 
 		if(declThisTypeRef!==null) {
 			val G = propAccessExpr.newRuleEnvironment;
-			val targetTypeRef = ts.type(G, propAccessExpr.target).value;
-			if(targetTypeRef!==null) {
-				if(!ts.subtypeSucceeded(G, targetTypeRef, declThisTypeRef)) {
-					val msg = IssueCodes.getMessageForEXP_ACCESS_INVALID_TYPE_OF_TARGET(prop.description,
-						targetTypeRef.typeRefAsString, declThisTypeRef.typeRefAsString);
-					addIssue(msg, propAccessExpr, N4JSPackage.eINSTANCE.parameterizedPropertyAccessExpression_Property,
-						IssueCodes.TYS_NO_SUBTYPE);
-				}
+			val targetTypeRef = ts.type(G, propAccessExpr.target);
+			if(!ts.subtypeSucceeded(G, targetTypeRef, declThisTypeRef)) {
+				val msg = IssueCodes.getMessageForEXP_ACCESS_INVALID_TYPE_OF_TARGET(prop.description,
+					targetTypeRef.typeRefAsString, declThisTypeRef.typeRefAsString);
+				addIssue(msg, propAccessExpr, N4JSPackage.eINSTANCE.parameterizedPropertyAccessExpression_Property,
+					IssueCodes.TYS_NO_SUBTYPE);
 			}
 		}
 	}
@@ -522,14 +517,11 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			if (isStaticUtility && hasNameOfInterest) {
 				// let's see if utilityAccess.target denotes Promise
 				val tscope = RuleEnvironmentExtensions.getPredefinedTypes(G).builtInTypeScope
-				val tresult = ts.type(G, utilityAccess.target)
-				if (!tresult.failed) {
-					val tr = tresult.value
-					if (tr instanceof TypeTypeRef) {
-						val str = tr.getTypeArg
-						val isReceiverPromise = if (str instanceof TypeRef) TypeUtils.isPromise(str, tscope) else false;
-						return isReceiverPromise
-					}
+				val tr = ts.type(G, utilityAccess.target)
+				if (tr instanceof TypeTypeRef) {
+					val str = tr.getTypeArg
+					val isReceiverPromise = if (str instanceof TypeRef) TypeUtils.isPromise(str, tscope) else false;
+					return isReceiverPromise
 				}
 			}
 		}
@@ -981,13 +973,12 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 
 			val G = RuleEnvironmentExtensions.newRuleEnvironment(ee)
 
-			var tlhs = ts.type(G, ee.lhs).value
-			var trhs = ts.type(G, ee.rhs).value
-			if (tlhs === null || trhs === null) return;
+			var tlhs = ts.type(G, ee.lhs)
+			var trhs = ts.type(G, ee.rhs)
 
 			// we are only interested in upper bound here, cf. IDEBUG-260
-			tlhs = ts.upperBound(G, tlhs).value
-			trhs = ts.upperBound(G, trhs).value
+			tlhs = ts.upperBound(G, tlhs)
+			trhs = ts.upperBound(G, trhs)
 
 			val leftSubOfRight = ts.subtypeSucceeded(G, tlhs, trhs)
 			val rightSubOfLeft = ts.subtypeSucceeded(G, trhs, tlhs)
@@ -1440,13 +1431,13 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 
 		// prepare types of target and index
 		val G = indexedAccess.newRuleEnvironment;
-		val targetTypeRefRaw = ts.type(G, target).value;
-		if (targetTypeRefRaw === null || targetTypeRefRaw instanceof UnknownTypeRef) {
+		val targetTypeRefRaw = ts.type(G, target);
+		if (targetTypeRefRaw instanceof UnknownTypeRef) {
 			return; // saw an UnknownTypeRef -> so we are expected to suppress all follow-up errors
 		}
 		val targetTypeRef = ts.resolveType(G, targetTypeRefRaw);
-		val indexTypeRef = ts.type(G, index).value;
-		if (indexTypeRef === null || indexTypeRef instanceof UnknownTypeRef) {
+		val indexTypeRef = ts.type(G, index);
+		if (indexTypeRef instanceof UnknownTypeRef) {
 			return; // saw an UnknownTypeRef -> so we are expected to suppress all follow-up errors
 		}
 

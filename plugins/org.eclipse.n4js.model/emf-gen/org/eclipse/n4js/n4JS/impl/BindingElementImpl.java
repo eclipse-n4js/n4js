@@ -404,7 +404,7 @@ public class BindingElementImpl extends ProxyResolvingEObjectImpl implements Bin
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (rest: ");
 		result.append(rest);
 		result.append(')');

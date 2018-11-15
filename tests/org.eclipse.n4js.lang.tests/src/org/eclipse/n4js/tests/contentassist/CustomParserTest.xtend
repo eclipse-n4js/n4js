@@ -43,6 +43,7 @@ class CustomParserTest extends AbstractContentAssistParserTest implements Provid
 	def getParser() {
 		return new CustomN4JSParser => [
 			it.grammarAccess = grammarAccess
+			it.nameMappings = nameMappings;
 			it.tokenSourceFactory = tokenSourceFactory
 			it.unorderedGroupHelper = this
 			it.initializeTokenTypes(tokenMapper, grammarAccess)

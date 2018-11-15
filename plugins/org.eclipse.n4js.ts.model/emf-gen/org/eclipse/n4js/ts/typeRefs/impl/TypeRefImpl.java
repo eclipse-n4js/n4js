@@ -233,15 +233,6 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Type getDeclaredType() {
-		return null;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public boolean isTopType() {
 		Type _declaredType = this.getDeclaredType();
 		return (_declaredType instanceof AnyType);
@@ -434,8 +425,6 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 				return getTypeRefAsString();
 			case TypeRefsPackage.TYPE_REF___TO_STRING:
 				return toString();
-			case TypeRefsPackage.TYPE_REF___GET_DECLARED_TYPE:
-				return getDeclaredType();
 			case TypeRefsPackage.TYPE_REF___IS_TOP_TYPE:
 				return isTopType();
 			case TypeRefsPackage.TYPE_REF___IS_BOTTOM_TYPE:

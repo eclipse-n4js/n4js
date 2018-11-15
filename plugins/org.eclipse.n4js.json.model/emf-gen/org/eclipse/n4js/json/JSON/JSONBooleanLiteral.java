@@ -58,7 +58,6 @@ public interface JSONBooleanLiteral extends JSONValue {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='boolean _isBooleanValue = this.isBooleanValue();\n&lt;%java.lang.String%&gt; _plus = (\"JSONBooleanLiteral(\" + &lt;%java.lang.Boolean%&gt;.valueOf(_isBooleanValue));\nreturn (_plus + \")\");'"
 	 * @generated
 	 */
 	String toString();

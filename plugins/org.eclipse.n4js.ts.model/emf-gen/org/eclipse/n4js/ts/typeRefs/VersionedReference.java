@@ -76,7 +76,6 @@ public interface VersionedReference extends EObject {
 	 * when computing the implicitly requested version, e.g. for property access expressions.
 	 * <!-- end-model-doc -->
 	 * @model unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%java.math.BigDecimal%&gt; _requestedVersion = this.getRequestedVersion();\nreturn (_requestedVersion != null);'"
 	 * @generated
 	 */
 	boolean hasRequestedVersion();
@@ -85,7 +84,6 @@ public interface VersionedReference extends EObject {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='int _xifexpression = (int) 0;\nboolean _hasRequestedVersion = this.hasRequestedVersion();\nif (_hasRequestedVersion)\n{\n\t_xifexpression = this.getRequestedVersion().intValue();\n}\nelse\n{\n\t_xifexpression = 0;\n}\nreturn _xifexpression;'"
 	 * @generated
 	 */
 	int getRequestedVersionOrZero();

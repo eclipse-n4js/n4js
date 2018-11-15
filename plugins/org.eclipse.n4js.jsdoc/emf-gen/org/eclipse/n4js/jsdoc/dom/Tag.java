@@ -111,7 +111,6 @@ public interface Tag extends DocletElement {
 	 * Convenience method, returns first TagValue with given key or null, if no such key is found.
 	 * <!-- end-model-doc -->
 	 * @model unique="false" theKeyUnique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.jsdoc.dom.TagValue%&gt;, &lt;%java.lang.Boolean%&gt;&gt; _function = new &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.jsdoc.dom.TagValue%&gt;, &lt;%java.lang.Boolean%&gt;&gt;()\n{\n\tpublic &lt;%java.lang.Boolean%&gt; apply(final &lt;%org.eclipse.n4js.jsdoc.dom.TagValue%&gt; it)\n\t{\n\t\t&lt;%java.lang.String%&gt; _key = it.getKey();\n\t\treturn &lt;%java.lang.Boolean%&gt;.valueOf(&lt;%com.google.common.base.Objects%&gt;.equal(_key, theKey));\n\t}\n};\nreturn &lt;%org.eclipse.xtext.xbase.lib.IterableExtensions%&gt;.&lt;&lt;%org.eclipse.n4js.jsdoc.dom.TagValue%&gt;&gt;findFirst(this.getValues(), _function);'"
 	 * @generated
 	 */
 	TagValue getValueByKey(String theKey);
@@ -120,7 +119,6 @@ public interface Tag extends DocletElement {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return &lt;%org.eclipse.n4js.jsdoc.JSDocSerializer%&gt;.toJSDocString(this);'"
 	 * @generated
 	 */
 	String toString();

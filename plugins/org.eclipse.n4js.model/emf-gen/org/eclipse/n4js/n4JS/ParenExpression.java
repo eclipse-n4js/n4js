@@ -62,7 +62,6 @@ public interface ParenExpression extends PrimaryExpression {
 	 * Return IsValidSimpleAssignmentTarget of expression.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.n4js.n4JS.Expression%&gt; _expression = this.getExpression();\nboolean _tripleNotEquals = (_expression != null);\nif (_tripleNotEquals)\n{\n\treturn this.getExpression().isValidSimpleAssignmentTarget();\n}\nreturn true;'"
 	 * @generated
 	 */
 	boolean isValidSimpleAssignmentTarget();

@@ -22,7 +22,7 @@ import org.junit.runner.RunWith
 
 import static org.junit.Assert.*
 import org.eclipse.n4js.n4JS.IndexedAccessExpression
-import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 
 /*
  * Tests for indexed access type inference.

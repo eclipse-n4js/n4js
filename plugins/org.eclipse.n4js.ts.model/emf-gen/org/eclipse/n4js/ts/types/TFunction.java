@@ -258,7 +258,6 @@ public interface TFunction extends DeclaredTypeWithAccessModifier, SyntaxRelated
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return (this.isReturnValueMarkedOptional() || ((this.getReturnTypeRef() != null) &amp;&amp; this.getReturnTypeRef().isFollowedByQuestionMark()));'"
 	 * @generated
 	 */
 	boolean isReturnValueOptional();
@@ -271,7 +270,6 @@ public interface TFunction extends DeclaredTypeWithAccessModifier, SyntaxRelated
 	 * Tells whether this function is a method that represents a callable constructor.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%org.eclipse.emf.ecore.EObject%&gt; parent = this.eContainer();\nboolean _xifexpression = false;\nif ((parent instanceof &lt;%org.eclipse.n4js.ts.types.ContainerType%&gt;&lt;?&gt;))\n{\n\t&lt;%org.eclipse.n4js.ts.types.TMethod%&gt; _callableCtor = ((&lt;%org.eclipse.n4js.ts.types.ContainerType%&gt;&lt;?&gt;)parent).getCallableCtor();\n\t_xifexpression = (_callableCtor == this);\n}\nelse\n{\n\t_xifexpression = false;\n}\nreturn _xifexpression;'"
 	 * @generated
 	 */
 	boolean isCallableConstructor();
@@ -285,7 +283,6 @@ public interface TFunction extends DeclaredTypeWithAccessModifier, SyntaxRelated
 	 * or 'null' if 'argIndex' is invalid. This method takes into account optional and variadic parameters.
 	 * <!-- end-model-doc -->
 	 * @model unique="false" argIndexUnique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final int fparsSize = this.getFpars().size();\nif (((argIndex &gt;= 0) &amp;&amp; (argIndex &lt; fparsSize)))\n{\n\treturn this.getFpars().get(argIndex);\n}\nelse\n{\n\tif ((((argIndex &gt;= fparsSize) &amp;&amp; (fparsSize &gt; 0)) &amp;&amp; this.getFpars().get((fparsSize - 1)).isVariadic()))\n\t{\n\t\treturn this.getFpars().get((fparsSize - 1));\n\t}\n}\nreturn null;'"
 	 * @generated
 	 */
 	TFormalParameter getFparForArgIdx(int argIndex);
@@ -299,7 +296,6 @@ public interface TFunction extends DeclaredTypeWithAccessModifier, SyntaxRelated
 	 * This includes formal parameters and return type (if declared), but excludes annotations.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%java.lang.StringBuilder%&gt; strb = new &lt;%java.lang.StringBuilder%&gt;();\nboolean _isGeneric = this.isGeneric();\nif (_isGeneric)\n{\n\tfinal &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.ts.types.TypeVariable%&gt;, &lt;%java.lang.String%&gt;&gt; _function = new &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.ts.types.TypeVariable%&gt;, &lt;%java.lang.String%&gt;&gt;()\n\t{\n\t\tpublic &lt;%java.lang.String%&gt; apply(final &lt;%org.eclipse.n4js.ts.types.TypeVariable%&gt; it)\n\t\t{\n\t\t\treturn it.getTypeAsString();\n\t\t}\n\t};\n\tstrb.append(\"&lt;\").append(&lt;%org.eclipse.xtext.xbase.lib.IterableExtensions%&gt;.join(&lt;%org.eclipse.emf.ecore.xcore.lib.XcoreEListExtensions%&gt;.&lt;&lt;%org.eclipse.n4js.ts.types.TypeVariable%&gt;, &lt;%java.lang.String%&gt;&gt;map(this.getTypeVars(), _function), \",\")).append(\"&gt; \");\n}\nboolean _isDeclaredAsync = this.isDeclaredAsync();\nif (_isDeclaredAsync)\n{\n\tstrb.append(\"async \");\n}\nstrb.append(\"function \");\nboolean _isDeclaredGenerator = this.isDeclaredGenerator();\nif (_isDeclaredGenerator)\n{\n\tstrb.append(\"* \");\n}\nfinal &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.ts.types.TFormalParameter%&gt;, &lt;%java.lang.String%&gt;&gt; _function_1 = new &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.ts.types.TFormalParameter%&gt;, &lt;%java.lang.String%&gt;&gt;()\n{\n\tpublic &lt;%java.lang.String%&gt; apply(final &lt;%org.eclipse.n4js.ts.types.TFormalParameter%&gt; it)\n\t{\n\t\treturn it.getFormalParameterAsString();\n\t}\n};\nstrb.append(this.getName()).append(\"(\").append(&lt;%org.eclipse.xtext.xbase.lib.IterableExtensions%&gt;.join(&lt;%org.eclipse.emf.ecore.xcore.lib.XcoreEListExtensions%&gt;.&lt;&lt;%org.eclipse.n4js.ts.types.TFormalParameter%&gt;, &lt;%java.lang.String%&gt;&gt;map(this.getFpars(), _function_1), \", \")).append(\")\");\n&lt;%org.eclipse.n4js.ts.typeRefs.TypeRef%&gt; _returnTypeRef = this.getReturnTypeRef();\nboolean _tripleNotEquals = (_returnTypeRef != null);\nif (_tripleNotEquals)\n{\n\tstrb.append(\": \").append(this.getReturnTypeRef().getTypeRefAsString());\n}\nboolean _isReturnValueOptional = this.isReturnValueOptional();\nif (_isReturnValueOptional)\n{\n\tstrb.append(\"?\");\n}\nreturn strb.toString();'"
 	 * @generated
 	 */
 	String getFunctionAsString();
@@ -312,7 +308,6 @@ public interface TFunction extends DeclaredTypeWithAccessModifier, SyntaxRelated
 	 * There may be sub-types of a function type unless explicitly stated differently
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return false;'"
 	 * @generated
 	 */
 	boolean isFinal();

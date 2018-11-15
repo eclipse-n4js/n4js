@@ -537,13 +537,15 @@ public class JSONGrammarAccess extends AbstractGrammarElementFinder {
 		return tDOUBLE_STRING_CHAR;
 	}
 	
-	//@ Override terminal fragment LINE_TERMINATOR_FRAGMENT:
+	//@Override
+	//terminal fragment LINE_TERMINATOR_FRAGMENT:
 	//	'\\u000A' | '\\u000D';
 	public TerminalRule getLINE_TERMINATOR_FRAGMENTRule() {
 		return tLINE_TERMINATOR_FRAGMENT;
 	}
 	
-	//@ Override terminal fragment LINE_TERMINATOR_SEQUENCE_FRAGMENT:
+	//@Override
+	//terminal fragment LINE_TERMINATOR_SEQUENCE_FRAGMENT:
 	//	'\\u000A' | '\\u000D' '\\u000A'?;
 	public TerminalRule getLINE_TERMINATOR_SEQUENCE_FRAGMENTRule() {
 		return tLINE_TERMINATOR_SEQUENCE_FRAGMENT;

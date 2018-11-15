@@ -57,7 +57,6 @@ public interface ParameterizedAccess extends EObject {
 	 * Returns <code>true<code> if the expression has type arguments.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='boolean _isEmpty = this.getTypeArgs().isEmpty();\nreturn (!_isEmpty);'"
 	 * @generated
 	 */
 	boolean isParameterized();

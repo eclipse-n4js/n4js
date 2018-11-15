@@ -441,7 +441,7 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends TypeImpl imp
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (ownedMembersByNameAndAccess: ");
 		result.append(ownedMembersByNameAndAccess);
 		result.append(')');

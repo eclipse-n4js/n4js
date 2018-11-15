@@ -58,7 +58,6 @@ public interface TExportableElement extends IdentifiableElement {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%java.lang.String%&gt; _exportedName = this.getExportedName();\nreturn (_exportedName != null);'"
 	 * @generated
 	 */
 	boolean isExported();

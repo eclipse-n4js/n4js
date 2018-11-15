@@ -16,7 +16,6 @@ import static org.eclipse.xtext.xtext.ParameterConfigHelper.getParameterConfig;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.AbstractElement;
 import org.eclipse.xtext.GrammarUtil;
 import org.eclipse.xtext.Group;
@@ -54,19 +53,6 @@ public class PatchedRequiredRuleNameComputer extends RequiredRuleNameComputer {
 			elementToParse = getEnclosingSingleElementGroup(elementToParse);
 		}
 		return false;
-	}
-
-	/**
-	 * Return the containing group if it contains exactly one element.
-	 */
-	protected AbstractElement getEnclosingSingleElementGroup(AbstractElement elementToParse) {
-		EObject container = elementToParse.eContainer();
-		if (container instanceof Group) {
-			if (((Group) container).getElements().size() == 1) {
-				return (AbstractElement) container;
-			}
-		}
-		return null;
 	}
 
 	@SuppressWarnings("restriction")

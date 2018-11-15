@@ -295,7 +295,7 @@ public abstract class VariableDeclarationContainerImpl extends ProxyResolvingEOb
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (varStmtKeyword: ");
 		result.append(varStmtKeyword);
 		result.append(')');

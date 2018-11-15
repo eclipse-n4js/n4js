@@ -517,7 +517,7 @@ public class ParameterizedPropertyAccessExpression_IMImpl extends ParameterizedP
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (anyPlusAccess: ");
 		result.append(anyPlusAccess);
 		result.append(", nameOfAnyPlusProperty: ");

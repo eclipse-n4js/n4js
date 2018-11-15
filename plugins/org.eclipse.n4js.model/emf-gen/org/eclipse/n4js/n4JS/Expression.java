@@ -39,7 +39,6 @@ public interface Expression extends TypableElement, ControlFlowElement {
 	 * 12.7.2, 12.8.2, 12.9.2, 12.10.2, 12.11.2, 12.12.2, 12.13.2, 12.14.3, 12.15.2.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return false;'"
 	 * @generated
 	 */
 	boolean isValidSimpleAssignmentTarget();

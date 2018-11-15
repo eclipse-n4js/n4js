@@ -361,7 +361,7 @@ public class N4EnumDeclarationImpl extends N4TypeDeclarationImpl implements N4En
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (declaredVersion: ");
 		result.append(declaredVersion);
 		result.append(')');

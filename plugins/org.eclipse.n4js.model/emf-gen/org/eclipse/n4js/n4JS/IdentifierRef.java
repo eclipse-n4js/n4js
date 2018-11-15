@@ -96,7 +96,6 @@ public interface IdentifierRef extends PrimaryExpression, StrictModeRelevant, Ve
 	 * 1. Return true.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='boolean _isStrictMode = this.isStrictMode();\nif (_isStrictMode)\n{\n\treturn (((this.getIdAsText() != null) &amp;&amp; (!&lt;%com.google.common.base.Objects%&gt;.equal(\"arguments\", this.getIdAsText()))) &amp;&amp; (!&lt;%com.google.common.base.Objects%&gt;.equal(\"eval\", this.getIdAsText())));\n}\nreturn true;'"
 	 * @generated
 	 */
 	boolean isValidSimpleAssignmentTarget();

@@ -64,8 +64,7 @@ public class JSONProposalFactory {
 	/**
 	 * Creates a name-value-pair proposal for the given context.
 	 * 
-	 * @param context
-	 *            The {@link ContentAssistContext} to create the proposal for.
+	 * @param context The {@link ContentAssistContext} to create the proposal for.
 	 */
 	public ICompletionProposal createGenericNameValueProposal(ContentAssistContext context) {
 		return createNameValueProposal(context, "<value>", "", "Generic name value pair", true);
@@ -74,8 +73,7 @@ public class JSONProposalFactory {
 	/**
 	 * Creates a generic name-value-pair proposal for the given context.
 	 * 
-	 * @param context
-	 *            The {@link ContentAssistContext} to create the proposal for.
+	 * @param context The {@link ContentAssistContext} to create the proposal for.
 	 */
 	public ICompletionProposal createGenericNameArrayProposal(ContentAssistContext context) {
 		return createNameArrayProposal(context, "<array>", "", "Generic name array pair", true);
@@ -84,8 +82,7 @@ public class JSONProposalFactory {
 	/**
 	 * Creates a generic name-value-pair proposal for the given context.
 	 * 
-	 * @param context
-	 *            The {@link ContentAssistContext} to create the proposal for.
+	 * @param context The {@link ContentAssistContext} to create the proposal for.
 	 */
 	public ICompletionProposal createGenericNameObjectProposal(ContentAssistContext context) {
 		return createNameObjectProposal(context, "<object>", "", "Generic name object pair", true);
@@ -94,14 +91,11 @@ public class JSONProposalFactory {
 	/**
 	 * Creates a name-value-pair proposal for the given context.
 	 * 
-	 * @param context
-	 *            The {@link ContentAssistContext} to create the proposal for.
-	 * @param name
-	 *            Specifies the name of the pair.
-	 * @param value
-	 *            Specifies the value of the pair.
-	 * @param description
-	 *            Specifies the description of the proposal.
+	 * @param context     The {@link ContentAssistContext} to create the proposal
+	 *                    for.
+	 * @param name        Specifies the name of the pair.
+	 * @param value       Specifies the value of the pair.
+	 * @param description Specifies the description of the proposal.
 	 */
 	public ICompletionProposal createNameValueProposal(ContentAssistContext context, String name, String value,
 			String description) {
@@ -111,14 +105,11 @@ public class JSONProposalFactory {
 	/**
 	 * Creates a name-array-pair proposal for the given context.
 	 * 
-	 * @param context
-	 *            The {@link ContentAssistContext} to create the proposal for.
-	 * @param name
-	 *            Specifies the name of the pair.
-	 * @param array
-	 *            Specifies the value of the array.
-	 * @param description
-	 *            Specifies the description of the proposal.
+	 * @param context     The {@link ContentAssistContext} to create the proposal
+	 *                    for.
+	 * @param name        Specifies the name of the pair.
+	 * @param array       Specifies the value of the array.
+	 * @param description Specifies the description of the proposal.
 	 */
 	public ICompletionProposal createNameArrayProposal(ContentAssistContext context, String name, String array,
 			String description) {
@@ -129,14 +120,11 @@ public class JSONProposalFactory {
 	/**
 	 * Creates a name-object-pair proposal for the given context.
 	 * 
-	 * @param context
-	 *            The {@link ContentAssistContext} to create the proposal for.
-	 * @param name
-	 *            Specifies the name of the pair.
-	 * @param object
-	 *            Specifies the value of the object.
-	 * @param description
-	 *            Specifies the description of the proposal.
+	 * @param context     The {@link ContentAssistContext} to create the proposal
+	 *                    for.
+	 * @param name        Specifies the name of the pair.
+	 * @param object      Specifies the value of the object.
+	 * @param description Specifies the description of the proposal.
 	 */
 	public ICompletionProposal createNameObjectProposal(ContentAssistContext context, String name, String object,
 			String description) {
@@ -187,6 +175,7 @@ public class JSONProposalFactory {
 	}
 
 	/** Returns the template content type to use for the NameValuePair template. */
+	@SuppressWarnings("deprecation")
 	private TemplateContextType getTemplateContextType() {
 		return contextTypeRegistry.getContextType(contextTypeRegistry.getId(grammarAccess.getNameValuePairRule()));
 	}

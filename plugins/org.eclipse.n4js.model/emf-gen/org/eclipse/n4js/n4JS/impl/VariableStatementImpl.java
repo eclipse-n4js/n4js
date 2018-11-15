@@ -345,7 +345,7 @@ public class VariableStatementImpl extends StatementImpl implements VariableStat
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (varStmtKeyword: ");
 		result.append(varStmtKeyword);
 		result.append(')');

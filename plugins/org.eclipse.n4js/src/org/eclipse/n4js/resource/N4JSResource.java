@@ -956,7 +956,8 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 							newFullyInitialized = false;
 							operationCanceledManager.propagateAsErrorIfCancelException(e);
 						}
-						throw Throwables.propagate(e);
+						Throwables.throwIfUnchecked(e);
+						throw new RuntimeException(e);
 					}
 				}
 			} catch (RuntimeException e) {

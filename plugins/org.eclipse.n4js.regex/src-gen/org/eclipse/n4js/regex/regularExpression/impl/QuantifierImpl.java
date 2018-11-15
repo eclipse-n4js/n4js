@@ -176,7 +176,7 @@ public class QuantifierImpl extends MinimalEObjectImpl.Container implements Quan
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (nonGreedy: ");
     result.append(nonGreedy);
     result.append(')');

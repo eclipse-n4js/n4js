@@ -286,7 +286,7 @@ public class VersionedIdentifierRefImpl extends IdentifierRefImpl implements Ver
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (requestedVersion: ");
 		result.append(requestedVersion);
 		result.append(')');

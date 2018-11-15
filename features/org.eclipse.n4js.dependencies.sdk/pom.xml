@@ -58,7 +58,6 @@ Contributors:
 						<plugin id="org.apache.log4j"/>
 						<plugin id="com.google.guava"/>
 						<plugin id="org.eclipse.emf.ecore"/>
-						<plugin id="org.eclipse.xsemantics.runtime"/>
 						<plugin id="com.google.inject"/>
 						<plugin id="org.eclipse.xtext.util"/>
 						<plugin id="org.antlr.runtime"/>
@@ -120,7 +119,6 @@ Contributors:
 						<plugin id="org.eclipse.emf.ecore.change"/>
 						<plugin id="org.apache.batik.css"/>
 						<plugin id="org.apache.batik.util"/>
-						<plugin id="org.apache.batik.util.gui"/>
 						<plugin id="org.w3c.dom.events"/>
 						<plugin id="org.w3c.dom.svg"/>
 						<plugin id="javax.annotation"/>

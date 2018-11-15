@@ -27,7 +27,6 @@ public interface PropertySetterDeclaration extends SetterDeclaration, AnnotableP
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.n4js.ts.types.TSetter%&gt; _definedSetter = super.getDefinedSetter();\nreturn ((&lt;%org.eclipse.n4js.ts.types.TStructSetter%&gt;) _definedSetter);'"
 	 * @generated
 	 */
 	TStructSetter getDefinedSetter();
@@ -36,7 +35,6 @@ public interface PropertySetterDeclaration extends SetterDeclaration, AnnotableP
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getDefinedSetter();'"
 	 * @generated
 	 */
 	TStructSetter getDefinedMember();
@@ -49,7 +47,6 @@ public interface PropertySetterDeclaration extends SetterDeclaration, AnnotableP
 	 * Setters in object literals may not be named 'prototype'.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%java.lang.String%&gt; _name = this.getName();\nboolean _equals = &lt;%com.google.common.base.Objects%&gt;.equal(\"prototype\", _name);\nif (_equals)\n{\n\treturn false;\n}\nreturn true;'"
 	 * @generated
 	 */
 	boolean isValidName();

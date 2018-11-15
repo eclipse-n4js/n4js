@@ -43,15 +43,14 @@ import org.eclipse.n4js.ts.types.util.AllSuperTypesCollector;
 import org.eclipse.n4js.ts.types.util.Variance;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
-import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
-import org.eclipse.n4js.typesystem.StructuralTypingComputer;
-import org.eclipse.n4js.typesystem.StructuralTypingComputer.StructTypingInfo;
-import org.eclipse.n4js.typesystem.SubtypeComputer;
-import org.eclipse.n4js.typesystem.TypeSystemHelper;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
+import org.eclipse.n4js.typesystem.utils.StructuralTypingComputer;
+import org.eclipse.n4js.typesystem.utils.StructuralTypingComputer.StructTypingInfo;
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
 import org.eclipse.n4js.utils.StructuralMembersTriple;
 import org.eclipse.n4js.utils.StructuralMembersTripleIterator;
 import org.eclipse.n4js.utils.StructuralTypesHelper;
-import org.eclipse.xsemantics.runtime.RuleEnvironment;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 /**
@@ -473,7 +472,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 
 	/**
 	 * IMPORTANT: the implementation of this method has to be kept consistent with
-	 * {@link SubtypeComputer#isSubtypeFunction(RuleEnvironment, FunctionTypeExprOrRef, FunctionTypeExprOrRef)} and esp.
+	 * {@code SubtypeComputer#isSubtypeFunction(RuleEnvironment, FunctionTypeExprOrRef, FunctionTypeExprOrRef)} and esp.
 	 * <code>#primIsSubtypeFunction()</code>.
 	 */
 	private boolean reduceFunctionTypeExprOrRef(FunctionTypeExprOrRef left, FunctionTypeExprOrRef right,
@@ -627,8 +626,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 			final TypeArgument leftArg = leftArgs.get(idx);
 			final TypeVariable leftParam = leftParams.get(idx);
 			if (RuleEnvironmentExtensions.hasSubstitutionFor(Gx, leftParam)) {
-				final TypeArgument leftParamSubst = ts.substTypeVariables(Gx, TypeUtils.createTypeRef(leftParam))
-						.getValue();
+				final TypeRef leftParamSubst = ts.substTypeVariables(Gx, TypeUtils.createTypeRef(leftParam));
 				wasAdded |= reduceConstraintForTypeArgumentPair(leftArg, leftParam, leftParamSubst);
 			}
 		}
@@ -646,11 +644,11 @@ import org.eclipse.xtext.xbase.lib.Pair;
 		if (leftArg instanceof Wildcard) {
 			final TypeRef ub = ((Wildcard) leftArg).getDeclaredUpperBound();
 			if (ub != null) {
-				wasAdded |= reduce(ub, ts.upperBound(G, rightArg).getValue(), CONTRA);
+				wasAdded |= reduce(ub, ts.upperBound(G, rightArg), CONTRA);
 			}
 			final TypeRef lb = ((Wildcard) leftArg).getDeclaredLowerBound();
 			if (lb != null) {
-				wasAdded |= reduce(lb, ts.lowerBound(G, rightArg).getValue(), CO);
+				wasAdded |= reduce(lb, ts.lowerBound(G, rightArg), CO);
 			}
 		} else if (rightArg instanceof ExistentialTypeRef) {
 			// TODO IDE-1653 reconsider this entire case
@@ -660,11 +658,11 @@ import org.eclipse.xtext.xbase.lib.Pair;
 			final Wildcard w = ((ExistentialTypeRef) rightArg).getWildcard();
 			final TypeRef ub = w.getDeclaredUpperBound();
 			if (ub != null) {
-				wasAdded |= reduce(ub, ts.upperBound(G, leftArg).getValue(), CONTRA);
+				wasAdded |= reduce(ub, ts.upperBound(G, leftArg), CONTRA);
 			}
 			final TypeRef lb = w.getDeclaredLowerBound();
 			if (lb != null) {
-				wasAdded |= reduce(lb, ts.lowerBound(G, leftArg).getValue(), CO);
+				wasAdded |= reduce(lb, ts.lowerBound(G, leftArg), CO);
 			}
 		} else {
 			if (!(leftArg instanceof TypeRef)) {
@@ -741,7 +739,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 			return true;
 		}
 		final RuleEnvironment G2 = RuleEnvironmentExtensions.wrap(G);
-		G2.add(key, Boolean.TRUE);
+		G2.put(key, Boolean.TRUE);
 		// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 		switch (variance) {
 		case CO:
@@ -761,8 +759,8 @@ import org.eclipse.xtext.xbase.lib.Pair;
 		for (InferenceVariable iv : ic.getInferenceVariables()) {
 			RuleEnvironmentExtensions.addTypeMapping(G_temp, iv, unknown);
 		}
-		final TypeArgument leftSubst = ts.substTypeVariables(G_temp, left).getValue();
-		final TypeArgument rightSubst = ts.substTypeVariables(G_temp, right).getValue();
+		final TypeRef leftSubst = ts.substTypeVariables(G_temp, left);
+		final TypeRef rightSubst = ts.substTypeVariables(G_temp, right);
 		// step 2: now, perform subtype check reusing existing logic
 		return ts.subtypeSucceeded(G, leftSubst, rightSubst);
 	}

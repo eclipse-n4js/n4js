@@ -85,7 +85,6 @@ public interface VersionPart extends SemverToStringable {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='boolean _isWildcard = this.isWildcard();\nif (_isWildcard)\n{\n\treturn null;\n}\nreturn this.getNumberRaw();'"
 	 * @generated
 	 */
 	Integer getNumber();
@@ -94,7 +93,6 @@ public interface VersionPart extends SemverToStringable {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model unique="false" objUnique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='if ((!(obj instanceof &lt;%org.eclipse.n4js.semver.Semver.VersionPart%&gt;)))\n{\n\treturn false;\n}\nfinal &lt;%org.eclipse.n4js.semver.Semver.VersionPart%&gt; vp = ((&lt;%org.eclipse.n4js.semver.Semver.VersionPart%&gt;) obj);\nboolean equals = ((this.isWildcard() == vp.isWildcard()) &amp;&amp; &lt;%com.google.common.base.Objects%&gt;.equal(this.getNumberRaw(), vp.getNumberRaw()));\nreturn equals;'"
 	 * @generated
 	 */
 	boolean equals(Object obj);

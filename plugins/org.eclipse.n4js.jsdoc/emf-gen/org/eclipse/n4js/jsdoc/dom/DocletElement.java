@@ -86,7 +86,6 @@ public interface DocletElement extends EObject {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model beginUnique="false" endUnique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='this.setBegin(begin);\nthis.setEnd(end);'"
 	 * @generated
 	 */
 	void setRange(int begin, int end);
@@ -95,7 +94,6 @@ public interface DocletElement extends EObject {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model unique="false" offsetUnique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return ((this.getBegin() &lt;= offset) &amp;&amp; (this.getEnd() &gt; offset));'"
 	 * @generated
 	 */
 	boolean covers(int offset);

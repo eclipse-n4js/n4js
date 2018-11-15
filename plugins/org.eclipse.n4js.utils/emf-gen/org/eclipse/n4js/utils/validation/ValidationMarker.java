@@ -71,7 +71,6 @@ public interface ValidationMarker extends EObject {
 	 * the resource currently validated.
 	 * <!-- end-model-doc -->
 	 * @model unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getDelegateResource();'"
 	 * @generated
 	 */
 	Resource eResource();

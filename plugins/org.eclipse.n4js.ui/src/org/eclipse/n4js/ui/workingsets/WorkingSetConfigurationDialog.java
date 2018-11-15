@@ -87,7 +87,11 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 		diffBuilder = new WorkingSetDiffBuilder(manager);
 		diff = new AtomicReference<>(WorkingSetDiffBuilder.EMPTY_DIFF);
 		allWorkingSets = newArrayList(manager.getAllWorkingSets());
-		setInitialSelections(this.manager.getWorkingSets());
+
+		WorkingSet[] workingSetsToSelect = this.manager.getWorkingSets();
+		Object[] workingSetsToSelectCpy = Arrays.copyOf(workingSetsToSelect, workingSetsToSelect.length,
+				Object[].class);
+		setInitialSelections(workingSetsToSelectCpy);
 	}
 
 	@Override

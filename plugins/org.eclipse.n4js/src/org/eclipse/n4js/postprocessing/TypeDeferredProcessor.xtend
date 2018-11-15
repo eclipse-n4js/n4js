@@ -12,7 +12,6 @@ package org.eclipse.n4js.postprocessing
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import org.eclipse.xsemantics.runtime.RuleEnvironment
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
 import org.eclipse.n4js.n4JS.FormalParameter
@@ -35,10 +34,11 @@ import org.eclipse.n4js.ts.types.TTypedElement
 import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
-import org.eclipse.n4js.typesystem.TypeSystemHelper
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.EcoreUtilN4
 
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  * Processor for handling {@link DeferredTypeRef}s, <b>except</b> those related to poly expressions, which are handled
@@ -88,7 +88,7 @@ package class TypeDeferredProcessor extends AbstractProcessor {
 					val tGetter = obj.definedGetter;
 					assertTrueIfRigid(cache, "return type of TGetter in TModule should be a DeferredTypeRef",
 						tGetter.declaredTypeRef instanceof DeferredTypeRef);
-					val boundThisTypeRef = ts.thisTypeRef(G, returnTypeRef).value; // G |~ methodDecl.returnTypeRef ~> boundThisTypeRef
+					val boundThisTypeRef = tsh.getThisTypeAtLocation(G, returnTypeRef); // G |~ methodDecl.returnTypeRef ~> boundThisTypeRef
 					EcoreUtilN4.doWithDeliver(false, [
 						tGetter.declaredTypeRef = TypeUtils.copy(boundThisTypeRef);
 					], tGetter);
@@ -148,9 +148,9 @@ package class TypeDeferredProcessor extends AbstractProcessor {
 						context = TypeUtils.createTypeRef(tte.eContainer as ContainerType<?>);
 					G2 = ts.createRuleEnvironmentForContext(context, G.contextResource);
 				}
-				var TypeArgument fieldTypeRef = askXsemanticsForType(G2, null, typedElem).value; // delegate to Xsemantics rule typeN4FieldDeclaration
+				var TypeArgument fieldTypeRef = invokeTypeJudgmentToInferType(G2, typedElem); // delegate to rule caseN4FieldDeclaration
 				if (useContext) {
-					fieldTypeRef = ts.substTypeVariables(G2, fieldTypeRef).value;
+					fieldTypeRef = ts.substTypeVariables(G2, fieldTypeRef);
 				}
 				val fieldTypeRefSane = tsh.sanitizeTypeOfVariableFieldProperty(G, fieldTypeRef);
 				EcoreUtilN4.doWithDeliver(false, [

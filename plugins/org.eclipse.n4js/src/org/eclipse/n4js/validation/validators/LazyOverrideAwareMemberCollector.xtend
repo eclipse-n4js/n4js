@@ -11,7 +11,7 @@
 package org.eclipse.n4js.validation.validators
 
 import com.google.common.collect.Lists
-import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.ContainerType
@@ -22,7 +22,7 @@ import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.util.AbstractCompleteHierarchyTraverser
 import org.eclipse.n4js.ts.utils.TypeUtils
-import org.eclipse.xsemantics.runtime.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import java.util.ArrayList
 import java.util.Collections
 import java.util.List

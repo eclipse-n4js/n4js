@@ -27,7 +27,6 @@ public interface SemverToStringable extends EObject {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return &lt;%org.eclipse.n4js.semver.model.SemverSerializer%&gt;.serialize(this);'"
 	 * @generated
 	 */
 	String toString();

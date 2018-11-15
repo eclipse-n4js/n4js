@@ -24,6 +24,7 @@ newline.after.field.annotations=false
 newline.after.method.annotations=false
 newline.after.parameter.annotations=false
 org.eclipse.xtend.core.validation.IssueCodes.java_doc_linking=warning
+org.eclipse.xtend.core.validation.IssueCodes.unnecessary_modifier=ignore
 org.eclipse.xtend.ide.default.eclipse_profile=_N4JS
 org.eclipse.xtext.xbase.validation.IssueCodes.equals_with_null=warning
 org.eclipse.xtext.xbase.validation.IssueCodes.unhandled_exception=warning

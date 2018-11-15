@@ -143,7 +143,6 @@ public interface FunctionDefinition extends FunctionOrFieldAccessor, TypeDefinin
 	 * Tells if the return value is optional.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return (((this.getDefinedFunction() != null) &amp;&amp; this.getDefinedFunction().isReturnValueOptional()) || ((this.getReturnTypeRef() != null) &amp;&amp; this.getReturnTypeRef().isFollowedByQuestionMark()));'"
 	 * @generated
 	 */
 	boolean isReturnValueOptional();
@@ -156,7 +155,6 @@ public interface FunctionDefinition extends FunctionOrFieldAccessor, TypeDefinin
 	 * Default implementation just returns declaredAsync value, also overrides default implementation in FunctionOrFieldAcccessor
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.isDeclaredAsync();'"
 	 * @generated
 	 */
 	boolean isAsync();
@@ -168,7 +166,6 @@ public interface FunctionDefinition extends FunctionOrFieldAccessor, TypeDefinin
 	 *  Convenience method returning the 'definedType' if it is a TFunction, otherwise <code>null</code>.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%org.eclipse.n4js.ts.types.Type%&gt; defType = this.getDefinedType();\n&lt;%org.eclipse.n4js.ts.types.TFunction%&gt; _xifexpression = null;\nif ((defType instanceof &lt;%org.eclipse.n4js.ts.types.TFunction%&gt;))\n{\n\t_xifexpression = ((&lt;%org.eclipse.n4js.ts.types.TFunction%&gt;)defType);\n}\nreturn _xifexpression;'"
 	 * @generated
 	 */
 	TFunction getDefinedFunction();

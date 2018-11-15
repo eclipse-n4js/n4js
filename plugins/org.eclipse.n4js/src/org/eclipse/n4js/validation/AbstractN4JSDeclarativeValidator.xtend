@@ -61,11 +61,10 @@ import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
-import org.eclipse.n4js.typesystem.TypeSystemHelper
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.UtilN4
 import org.eclipse.n4js.validation.AbstractMessageAdjustingN4JSValidator.MethodWrapperCancelable
-import org.eclipse.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator
 import org.eclipse.xtext.nodemodel.ICompositeNode
 import org.eclipse.xtext.nodemodel.INode
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
@@ -73,7 +72,7 @@ import org.eclipse.xtext.service.OperationCanceledManager
 import org.eclipse.xtext.validation.AbstractDeclarativeValidator
 import org.eclipse.xtext.validation.AbstractDeclarativeValidator.State
 
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  * Common base class for all N4JS validators. Provides some convenience methods and
@@ -90,8 +89,6 @@ public class AbstractN4JSDeclarativeValidator extends AbstractMessageAdjustingN4
 	@Inject
 	protected extension ValidatorMessageHelper validatorMessageHelper;
 
-	@Inject
-	private XsemanticsValidatorErrorGenerator errorGenerator;
 	@Inject
 	private N4JSGrammarAccess grammarAccess
 	@Inject
@@ -206,7 +203,7 @@ public class AbstractN4JSDeclarativeValidator extends AbstractMessageAdjustingN4
 			val G_subst = source.newRuleEnvironment;
 			if(source instanceof ParameterizedPropertyAccessExpression) {
 				val G = source.newRuleEnvironment;
-				val targetTypeRef = ts.type(G, source.target).getValue(); // note: not using G_subst here
+				val targetTypeRef = ts.type(G, source.target); // note: not using G_subst here
 				tsh.addSubstitutions(G_subst, targetTypeRef);
 			}
 			for (int i : 0 ..< typeArgs.size) {
@@ -246,10 +243,10 @@ public class AbstractN4JSDeclarativeValidator extends AbstractMessageAdjustingN4
 				val isExceptionCase = TypeUtils.isVoid(typeArgument); // in this case another validation will show an error (avoid duplicate messages)
 				if(!isExceptionCase) {
 					val upperBound = typeParameter.declaredUpperBound ?: N4JSLanguageUtils.getTypeVariableImplicitUpperBound(G_subst);
-					val substituted = ts.substTypeVariables(G_subst, upperBound).value;
+					val substituted = ts.substTypeVariables(G_subst, upperBound);
 					val result = ts.subtype(G_subst, typeArgument, substituted);
-					if (result.failed) {
-						errorGenerator.generateErrors(messageAcceptor, result, typeArgument);
+					if (result.failure) {
+						createTypeError(result, typeArgument);
 					}
 				}
 			}

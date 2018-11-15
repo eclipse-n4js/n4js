@@ -64,14 +64,7 @@ Contributors:
          version="0.0.0"
          unpack="false"/>
 
-   <plugin
-         id="org.eclipse.n4js.jsdoc"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
+      <plugin
          id="org.eclipse.n4js.external.libraries"
          download-size="0"
          install-size="0"

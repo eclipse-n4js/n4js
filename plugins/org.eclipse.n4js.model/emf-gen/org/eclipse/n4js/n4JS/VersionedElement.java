@@ -68,7 +68,6 @@ public interface VersionedElement extends EObject {
 	 * Indicates whether this type reference has an explicitly declared version.
 	 * <!-- end-model-doc -->
 	 * @model unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%java.math.BigDecimal%&gt; _declaredVersion = this.getDeclaredVersion();\nreturn (_declaredVersion != null);'"
 	 * @generated
 	 */
 	boolean hasDeclaredVersion();
@@ -77,7 +76,6 @@ public interface VersionedElement extends EObject {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='int _xifexpression = (int) 0;\nboolean _hasDeclaredVersion = this.hasDeclaredVersion();\nif (_hasDeclaredVersion)\n{\n\t_xifexpression = this.getDeclaredVersion().intValue();\n}\nelse\n{\n\t_xifexpression = 0;\n}\nreturn _xifexpression;'"
 	 * @generated
 	 */
 	int getDeclaredVersionOrZero();
