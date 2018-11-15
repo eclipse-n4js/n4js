@@ -22,6 +22,7 @@ import org.eclipse.n4js.n4JS.DestructureUtils
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ForStatement
 import org.eclipse.n4js.n4JS.ObjectLiteral
+import org.eclipse.n4js.n4JS.PropertyAssignment
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4JS.VariableBinding
 import org.eclipse.n4js.n4JS.VariableDeclaration
@@ -82,11 +83,14 @@ package class DestructureProcessor extends AbstractProcessor {
 		}
 		// here we basically turn off the fail-fast approach within the destructuring pattern
 		node.eAllContents //
-		.filter[it instanceof ObjectLiteral || it instanceof ArrayLiteral || it instanceof ArrayElement] //
+		.filter[
+			it instanceof ObjectLiteral || it instanceof PropertyAssignment
+			|| it instanceof ArrayLiteral || it instanceof ArrayElement
+		] //
 		.filter[cache.getTypeFailSafe(it as TypableElement)===null] //
 		.forEach[
 			cache.storeType(it as TypableElement, TypeRefsFactory.eINSTANCE.createUnknownTypeRef);
-		]
+		];
 	}
 
 	/**

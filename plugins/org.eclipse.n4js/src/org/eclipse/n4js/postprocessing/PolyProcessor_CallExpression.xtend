@@ -163,11 +163,11 @@ package class PolyProcessor_CallExpression extends AbstractPolyProcessor {
 		// (note: compare this with similar handling of 'ArrayElement' nodes in PolyProcessor_ArrayLiteral)
 		for (arg : callExpr.arguments) {
 			val expr = arg?.expression;
-			if (expr!==null) {
-				val exprType = getFinalResultTypeOfNestedPolyExpression(expr);
-				if (exprType!==null) {
-					cache.storeType(arg, exprType);
-				}
+			val exprType = if (expr!==null) getFinalResultTypeOfNestedPolyExpression(expr);
+			if (exprType!==null) {
+				cache.storeType(arg, exprType);
+			} else {
+				cache.storeType(arg, TypeRefsFactory.eINSTANCE.createUnknownTypeRef());
 			}
 		}
 	}
