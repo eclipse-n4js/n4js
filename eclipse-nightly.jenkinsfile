@@ -34,7 +34,7 @@ pipeline {
     }
 
     triggers {
-        cron   ('H   23 * * *') // Nightly build every day a 11pm (23:00)
+        cron('H 23 * * *') // Nightly build every day a 11pm (23:00)
     }
 
     stages {
@@ -96,18 +96,20 @@ pipeline {
                         curl -o n4jside-macosx.cocoa.x86_64.dmg -F sign=true -F source=@n4jside-macosx.cocoa.x86_64.zip http://build.eclipse.org:31338/dmg-packager
                     """
                 }
-
-                sh """\
-                    echo Contents of n4js/builds/org.eclipse.n4js.product.build/target/products:
-                    ls -al  n4js/builds/org.eclipse.n4js.product.build/target/products
-                    echo Contents of n4js/builds/org.eclipse.n4js.product.build/target/repository:
-                    ls -Ral n4js/builds/org.eclipse.n4js.product.build/target/repository
-                """
             }
         }
 
         stage('Deploy') {
             steps {
+                echo 'START: moving old products / update sites to archive.eclipse.org (those that are older than 2 weeks):'
+                sh """\
+                    cd /home/data/httpd/download.eclipse.org/n4js
+                    find products/nightly -type d -name 20\\* -mtime +0 -print -exec mv {} /home/data/httpd/archive.eclipse.org/n4js/{} \\;
+                    find updates/nightly  -type d -name 20\\* -mtime +0 -print -exec mv {} /home/data/httpd/archive.eclipse.org/n4js/{} \\;
+                """
+                echo 'END: moving old products / update sites to archive.eclipse.org'
+
+                echo 'START: copying new products / update site to download.eclipse.org:'
                 sh """\
                     mkdir  /home/data/httpd/download.eclipse.org/n4js/products/nightly/$TIMESTAMP
                     cp     n4js/builds/org.eclipse.n4js.product.build/target/products/*.zip         /home/data/httpd/download.eclipse.org/n4js/products/nightly/$TIMESTAMP
@@ -124,6 +126,16 @@ pipeline {
                     mkdir  /home/data/httpd/download.eclipse.org/n4js/updates/nightly/LATEST
                     cp -R  /home/data/httpd/download.eclipse.org/n4js/updates/nightly/$TIMESTAMP/*  /home/data/httpd/download.eclipse.org/n4js/updates/nightly/LATEST
                 """
+                echo 'END: copying new products / update site to download.eclipse.org'
+
+                echo 'SUMMARY: products on download server:'
+                sh "ls -l /home/data/httpd/download.eclipse.org/n4js/products/nightly"
+                echo 'SUMMARY: update sites on download server:'
+                sh "ls -l /home/data/httpd/download.eclipse.org/n4js/updates/nightly"
+                echo 'SUMMARY: products on archive server:'
+                sh "ls -l /home/data/httpd/archive.eclipse.org/n4js/products/nightly"
+                echo 'SUMMARY: update sites on archive server:'
+                sh "ls -l /home/data/httpd/archive.eclipse.org/n4js/updates/nightly"
             }
         }
     }
