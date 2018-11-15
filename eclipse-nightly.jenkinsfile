@@ -140,7 +140,6 @@ pipeline {
                         echo ******************** Update sites on archive server:
                         ls -l /home/data/httpd/archive.eclipse.org/n4js/updates/nightly
                         echo ********************
-                        man find
                     """
 
                     echo "$output"
