@@ -150,13 +150,13 @@ public abstract class AbstractOutlineWorkbenchTest extends AbstractBuilderPartic
 
 	@Override
 	public void tearDown() throws Exception {
-		super.tearDown();
 		if (null != editor) {
 			editor.close(false);
 		}
 		if (null != outlineView) {
 			outlineView.getSite().getPage().hideView(outlineView);
 		}
+		super.tearDown();
 		executeAsyncDisplayJobs();
 	}
 
