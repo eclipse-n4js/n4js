@@ -16,7 +16,6 @@ import java.io.File
 import java.io.IOException
 import java.nio.charset.Charset
 import java.util.Collection
-import java.util.Map
 import org.antlr.runtime.CharStream
 import org.antlr.runtime.RecognitionException
 import org.antlr.runtime.TokenSource
@@ -162,10 +161,10 @@ class N4JSAntlrGeneratorFragment2 extends N4AntlrGeneratorFragment2 {
 		file.content = '''
 			public class «grammar.parserClass.simpleName» extends «grammar.getParserSuperClass(partialParsing)» {
 			
+				«grammar.initNameMappings()»
+			
 				@«Inject»
 				private «grammar.grammarAccess» grammarAccess;
-			
-				private «Map»<«AbstractElement», String> nameMappings;
 			
 				@Override
 				protected «grammar.internalParserClass» createParser() {
@@ -183,10 +182,7 @@ class N4JSAntlrGeneratorFragment2 extends N4AntlrGeneratorFragment2 {
 				«ENDIF»
 				@Override
 				protected String getRuleName(«AbstractElement» element) {
-					if (nameMappings == null) {
-						«grammar.initNameMappings()»
-					}
-					return nameMappings.get(element);
+					return nameMappings.getRuleName(element);
 				}
 			
 				@Override
@@ -211,6 +207,14 @@ class N4JSAntlrGeneratorFragment2 extends N4AntlrGeneratorFragment2 {
 			
 				public void setGrammarAccess(«grammar.grammarAccess» grammarAccess) {
 					this.grammarAccess = grammarAccess;
+				}
+			
+				public NameMappings getNameMappings() {
+					return nameMappings;
+				}
+			
+				public void setNameMappings(NameMappings nameMappings) {
+					this.nameMappings = nameMappings;
 				}
 			}
 		'''
