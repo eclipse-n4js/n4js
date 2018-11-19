@@ -45,9 +45,8 @@ pipeline {
                     dir('n4js') {
                         script {
                             def options = [
-'-DskipTests',
                                 '--batch-mode',
-//                                '--quiet',
+                                //'--quiet',
                                 '--update-snapshots',
                                 '--show-version',
                                 '-Dtycho.localArtifacts=ignore',
@@ -55,14 +54,12 @@ pipeline {
                                 '-DWORKSPACE=' + env.WORKSPACE
                             ].join(' ')
                             def profiles = [
-                                'buildProduct'
-//                                ,
-//                                'execute-plugin-tests',
-//                                'execute-plugin-ui-tests'
-//                                ,
-//                                'execute-ecma-tests',
-//                                'execute-accesscontrol-tests',
-//                                'execute-smoke-tests'
+                                'buildProduct',
+                                'execute-plugin-tests',
+                                'execute-plugin-ui-tests',
+                                'execute-ecma-tests',
+                                'execute-accesscontrol-tests',
+                                'execute-smoke-tests'
                             ].join(',')
 
                             sh """\
@@ -101,11 +98,11 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                echo 'START: moving old products / update sites to archive.eclipse.org (those that are older than 2 weeks):'
+                echo 'START: moving old products / update sites to archive.eclipse.org (those that are older than a week):'
                 sh """\
                     cd /home/data/httpd/download.eclipse.org/n4js
-                    find products/nightly -maxdepth 1 -type d -name 20\\* -mtime +0 -print -exec mv {} /home/data/httpd/archive.eclipse.org/n4js/{} \\;
-                    find updates/nightly  -maxdepth 1 -type d -name 20\\* -mtime +0 -print -exec mv {} /home/data/httpd/archive.eclipse.org/n4js/{} \\;
+                    find products/nightly -maxdepth 1 -type d -name 20\\* -mtime +7 -print -exec mv {} /home/data/httpd/archive.eclipse.org/n4js/{} \\;
+                    find updates/nightly  -maxdepth 1 -type d -name 20\\* -mtime +7 -print -exec mv {} /home/data/httpd/archive.eclipse.org/n4js/{} \\;
                 """
                 echo 'END: moving old products / update sites to archive.eclipse.org'
 
