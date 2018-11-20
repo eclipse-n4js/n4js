@@ -11,6 +11,33 @@ Contributors:
 
 = Release Engineering
 
+== Nightly build on Eclipse infrastructure
+
+The N4JS IDE, headless n4jsc.jar, and the N4JS update site is being built on the Eclipse Common Build
+Infrastructure (CBI). For this purpose the N4JS project is using a dedicated Jenkins instance, referred
+to as a "Jenkins Instance Per Project" (JIPP) in Eclipse CBI documentation. At this time, the N4JS
+project's JIPP is running on the "old" infrastructure, not yet using docker. This will be migrated
+at a later point in time.
+
+The N4JS JIPP is available at: https://ci.eclipse.org/n4js/
+
+The nightly build performs the following main steps:
+
+1. compile the N4JS implementation,
+2. build the n4jsc.jar, the IDE products for MacOS, Windows, Linux, and the update site,
+3. run tests,
+4. sign the IDE product for macOS and package it in a .dmg file,
+5. deploy to n4jsc.jar, IDE products and update sites to Eclipse download server (i.e. download.eclipse.org),
+6. move all artifacts older than 7 days from download.eclipse.org to archive.eclipse.org.
+
+Details about all the above steps can be found in the Jenkinsfile `eclipse-nightly.jenkinsfile`, located in
+the root folder of the N4JS source repository on GitHub.
+
+The most accurate documentation for our JIPP can be found at https://wiki.eclipse.org/IT_Infrastructure_Doc.
+Note that many other documents do not apply to our JIPP, at the moment, as they refer to the new
+infrastructure, e.g. https://wiki.eclipse.org/CBI and https://wiki.eclipse.org/Jenkins.
+
+
 == Build the N4JS IDE from command line
 
 Ensure you have
