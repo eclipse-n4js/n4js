@@ -42,6 +42,8 @@ include::{find}chapters/02_eclipseSetup/eclipseSetup.adoc[]
 include::{find}chapters/03_releng/releng.adoc[]
 include::{find}chapters/04_parser/parser.adoc[]
 
+include::{find}chapters/10_flowgraphs/flowgraphs.adoc[]
+
 // Appendix
 
 include::{find}acronyms.adoc[]
