@@ -18,22 +18,27 @@
 // on different build machines executing the test! This may reduce the number of possible tests,
 // but the test will be robust.
 
-var theBigDay = new Date(Date.UTC(1995, 11, 17, 3, 24));
-console.log(theBigDay.toUTCString());
+var theBigDay = new Date(1995, 11, 17, 3, 24);
+console.log(toDateTimeString(theBigDay));
+
 // XPECT noerrors -->
 theBigDay.setHours( 4);
-console.log(theBigDay.toUTCString());
+console.log(toDateTimeString(theBigDay));
+
 // XPECT noerrors -->
 theBigDay.setHours(25);
-console.log(theBigDay.toUTCString());
+console.log(toDateTimeString(theBigDay));
 
-// do not check output, because Date#setDate() is influenced by time-zone!
-///* X--PECT output ---
-//<==
-//stdout:
-//Sun, 17 Dec 1995 03:24:00 GMT
-//Sun, 17 Dec 1995 04:24:00 GMT
-//Mon, 18 Dec 1995 01:24:00 GMT
-//stderr:
-//==>
-//--- */
+/* XPECT output ---
+<==
+stdout:
+Sun Dec 17 1995 3:24:0.0
+Sun Dec 17 1995 4:24:0.0
+Mon Dec 18 1995 1:24:0.0
+stderr:
+==>
+--- */
+
+function toDateTimeString(date: Date) {
+	return date.toDateString() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + '.' + date.getMilliseconds();
+}

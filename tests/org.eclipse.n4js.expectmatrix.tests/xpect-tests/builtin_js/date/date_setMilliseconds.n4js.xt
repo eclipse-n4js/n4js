@@ -15,13 +15,29 @@
 // Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/setMilliseconds
 
 var theBigDay = new Date(2003,11,2);
+
+// XPECT noerrors -->
 theBigDay.setMilliseconds(100);
-console.log(theBigDay.getMilliseconds());
+console.log(toDateTimeString(theBigDay));
+
+// XPECT noerrors -->
+theBigDay.setMilliseconds(1200);
+console.log(toDateTimeString(theBigDay));
+
+// XPECT noerrors -->
+theBigDay.setMilliseconds(60300);
+console.log(toDateTimeString(theBigDay));
 
 /* XPECT output ---
 <==
 stdout:
-100
+Tue Dec 02 2003 0:0:0.100
+Tue Dec 02 2003 0:0:1.200
+Tue Dec 02 2003 0:1:1.300
 stderr:
 ==>
 --- */
+
+function toDateTimeString(date: Date) {
+	return date.toDateString() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + '.' + date.getMilliseconds();
+}

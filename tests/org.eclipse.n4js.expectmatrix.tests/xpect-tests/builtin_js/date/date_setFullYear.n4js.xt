@@ -15,16 +15,16 @@
 // Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/setFullYear
 
 var theBigDay = new Date(2003,11,2);
+
+// XPECT noerrors -->
 theBigDay.setFullYear(1997);
 console.log(theBigDay.toDateString());
 
-// IDEBUG-126 XPECT noerrors -->
-// "IDEBUG-126: missing parameters"
+// XPECT noerrors -->
 theBigDay.setFullYear(2003,3);
 console.log(theBigDay.toDateString());
 
-// IDEBUG-126 XPECT noerrors -->
-// "IDEBUG-126: missing parameters"
+// XPECT noerrors -->
 theBigDay.setFullYear(2005,5,17);
 console.log(theBigDay.toDateString());
 

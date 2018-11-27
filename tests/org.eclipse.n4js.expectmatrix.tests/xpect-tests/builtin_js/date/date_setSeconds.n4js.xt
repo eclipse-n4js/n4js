@@ -18,21 +18,35 @@
 // on different build machines executing the test! This may reduce the number of possible tests,
 // but the test will be robust.
 
-var theBigDay = new Date("2003-12-02T00:00:00.000Z");
-theBigDay.setSeconds(30);
-console.log(theBigDay.toUTCString());
+var theBigDay = new Date(2003, 11, 2);
 
-// IDEBUG-126 XPECT noerrors --> "IDEBUG-126: missing parameters"
+// XPECT noerrors -->
+theBigDay.setSeconds(30);
+console.log(toDateTimeString(theBigDay));
+
+// XPECT noerrors -->
 theBigDay.setSeconds(34, 14);
-console.log(theBigDay.toUTCString());
-console.log(theBigDay.getMilliseconds());
+console.log(toDateTimeString(theBigDay));
+
+// XPECT noerrors -->
+theBigDay.setSeconds(123);
+console.log(toDateTimeString(theBigDay));
+
+// XPECT noerrors -->
+theBigDay.setSeconds(123);
+console.log(toDateTimeString(theBigDay));
 
 /* XPECT output ---
 <==
 stdout:
-Tue, 02 Dec 2003 00:00:30 GMT
-Tue, 02 Dec 2003 00:00:34 GMT
-14
+Tue Dec 02 2003 0:0:30.0
+Tue Dec 02 2003 0:0:34.14
+Tue Dec 02 2003 0:2:3.14
+Tue Dec 02 2003 0:4:3.14
 stderr:
 ==>
 --- */
+
+function toDateTimeString(date: Date) {
+	return date.toDateString() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + '.' + date.getMilliseconds();
+}

@@ -18,19 +18,26 @@
 // on different build machines executing the test! This may reduce the number of possible tests,
 // but the test will be robust.
 
-var theBigDay = new Date("2003-11-02T12:00:00.000Z");
-theBigDay.setMonth(6);
-console.log(theBigDay.toUTCString());
+var theBigDay = new Date(2003, 11, 2);
 
-// IDEBUG-126 XPECT  noerrors --> "IDEBUG-126: missing parameters"
+// XPECT noerrors -->
+theBigDay.setMonth(6);
+console.log(theBigDay.toDateString());
+
+// XPECT noerrors -->
 theBigDay.setMonth(3,14);
-console.log(theBigDay.toUTCString());
+console.log(theBigDay.toDateString());
+
+// XPECT noerrors -->
+theBigDay.setMonth(15);
+console.log(theBigDay.toDateString());
 
 /* XPECT output ---
 <==
 stdout:
-Wed, 02 Jul 2003 11:00:00 GMT
-Mon, 14 Apr 2003 11:00:00 GMT
+Wed Jul 02 2003
+Mon Apr 14 2003
+Wed Apr 14 2004
 stderr:
 ==>
 --- */
