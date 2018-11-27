@@ -14,14 +14,14 @@
 // Date.prototype.toUTCString()
 // Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toUTCString
 
-var today = new Date(2012, 11, 12, 3, 0, 0);
+var today = new Date(Date.UTC(2012, 11, 12, 3, 0, 0));
 const UTCstring = today.toUTCString();
 console.log(UTCstring);
 
 /* XPECT output ---
 <==
 stdout:
-Wed, 12 Dec 2012 02:00:00 GMT
+Wed, 12 Dec 2012 03:00:00 GMT
 stderr:
 ==>
 --- */

@@ -14,7 +14,7 @@
 // Date.prototype.getUTCHours()
 // Source: self-constructed
 
-var date = new Date(1994, 10, 13, 4, 56, 27);
+var date = new Date(Date.UTC(1994, 10, 13, 4, 56, 27));
 var day = date.getUTCHours();
 
 console.log(day);
@@ -22,7 +22,7 @@ console.log(day);
 /* XPECT output ---
 <==
 stdout:
-3
+4
 stderr:
 ==>
 --- */

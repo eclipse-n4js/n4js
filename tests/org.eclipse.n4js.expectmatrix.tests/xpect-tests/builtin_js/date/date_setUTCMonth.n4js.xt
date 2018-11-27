@@ -14,19 +14,23 @@
 // Date.prototype.setUTCMonth()
 // Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/setMonth
 
-var theBigDay = new Date(2003,11,2);
-theBigDay.setUTCMonth(6);
-console.log(theBigDay.toDateString());
+var theBigDay = new Date(Date.UTC(2003,11,2));
+console.log(theBigDay.toUTCString());
 
-// IDEBUG-126 XPECT noerrors --> "IDEBUG-126: missing parameters"
+// XPECT noerrors -->
+theBigDay.setUTCMonth(6);
+console.log(theBigDay.toUTCString());
+
+// XPECT noerrors -->
 theBigDay.setUTCMonth(3,14);
-console.log(theBigDay.toDateString());
+console.log(theBigDay.toUTCString());
 
 /* XPECT output ---
 <==
 stdout:
-Wed Jul 02 2003
-Tue Apr 15 2003
+Tue, 02 Dec 2003 00:00:00 GMT
+Wed, 02 Jul 2003 00:00:00 GMT
+Mon, 14 Apr 2003 00:00:00 GMT
 stderr:
 ==>
 --- */

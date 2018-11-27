@@ -14,7 +14,7 @@
 // Date.prototype.toJSON()
 // Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toJSON
 
-var jsonDate = (new Date(2011, 9, 5, 14, 48)).toJSON();
+var jsonDate = (new Date(Date.UTC(2011, 9, 5, 14, 48))).toJSON();
 var backToDate = new Date(String(jsonDate));
 
 console.log("Serialized date object: " + jsonDate);
@@ -22,7 +22,7 @@ console.log("Serialized date object: " + jsonDate);
 /* XPECT output ---
 <==
 stdout:
-Serialized date object: 2011-10-05T12:48:00.000Z
+Serialized date object: 2011-10-05T14:48:00.000Z
 stderr:
 ==>
 --- */

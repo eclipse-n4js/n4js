@@ -14,24 +14,28 @@
 // Date.prototype.setUTCFullYear()
 // Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/setFullYear
 
-var theBigDay = new Date(2003,11,2);
+var theBigDay = new Date(Date.UTC(2003,11,2));
+console.log(theBigDay.toUTCString());
+
+// XPECT noerrors -->
 theBigDay.setUTCFullYear(1997);
-console.log(theBigDay.toDateString());
+console.log(theBigDay.toUTCString());
 
-// IDEBUG-126 XPECT noerrors --> "IDEBUG-126: missing parameters"
+// XPECT noerrors -->
 theBigDay.setUTCFullYear(2003,3);
-console.log(theBigDay.toDateString());
+console.log(theBigDay.toUTCString());
 
-// IDEBUG-126 XPECT noerrors --> "IDEBUG-126: missing parameters"
+// XPECT noerrors -->
 theBigDay.setUTCFullYear(2005,5,17);
-console.log(theBigDay.toDateString());
+console.log(theBigDay.toUTCString());
 
 /* XPECT output ---
 <==
 stdout:
-Tue Dec 02 1997
-Wed Apr 02 2003
-Sat Jun 18 2005
+Tue, 02 Dec 2003 00:00:00 GMT
+Tue, 02 Dec 1997 00:00:00 GMT
+Wed, 02 Apr 2003 00:00:00 GMT
+Fri, 17 Jun 2005 00:00:00 GMT
 stderr:
 ==>
 --- */

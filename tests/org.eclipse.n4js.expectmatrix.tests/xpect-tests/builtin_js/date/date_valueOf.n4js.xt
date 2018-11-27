@@ -14,14 +14,14 @@
 // Date.prototype.valueOf()
 // Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/valueOf
 
-var x = new Date(56, 6, 17,12,0,0);
+var x = new Date(Date.UTC(56, 6, 17,12,0,0));
 var myVar = x.valueOf();
 console.log(myVar);
 
 /* XPECT output ---
 <==
 stdout:
--424706400000
+-424699200000
 stderr:
 ==>
 --- */

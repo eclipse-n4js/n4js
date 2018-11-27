@@ -14,21 +14,17 @@
 // Date.parse()
 // Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse
 
-console.log(Date.parse("Aug 9, 1995"));
+console.log(Date.parse("Aug 9, 1995 GMT"));
 console.log(Date.parse("Wed, 09 Aug 1995 00:00:00 GMT"));
-console.log(Date.parse("Wed, 09 Aug 1995 00:00:00"));
 console.log(Date.parse("Thu, 01 Jan 1970 00:00:00 GMT"));
-console.log(Date.parse("Thu, 01 Jan 1970 00:00:00"));
 console.log(Date.parse("Thu, 01 Jan 1970 00:00:00 GMT-0400"));
 
 /* XPECT output ---
 <==
 stdout:
-807919200000
 807926400000
-807919200000
+807926400000
 0
--3600000
 14400000
 stderr:
 ==>
