@@ -10,13 +10,6 @@
  */
 package org.eclipse.n4js.ui.typesearch;
 
-import static org.eclipse.n4js.ui.typesearch.StringOperation.C_DIGIT;
-import static org.eclipse.n4js.ui.typesearch.StringOperation.C_LOWER_LETTER;
-import static org.eclipse.n4js.ui.typesearch.StringOperation.C_SPECIAL;
-import static org.eclipse.n4js.ui.typesearch.StringOperation.C_UPPER_LETTER;
-import static org.eclipse.n4js.ui.typesearch.StringOperation.EMPTY_REGIONS;
-import static org.eclipse.n4js.ui.typesearch.StringOperation.MAX_OBVIOUS;
-import static org.eclipse.n4js.ui.typesearch.StringOperation.OBVIOUS_IDENT_CHAR_NATURES;
 import static org.eclipse.n4js.ui.typesearch.StringOperation.getPatternMatchingRegions;
 
 /**
@@ -159,7 +152,7 @@ import static org.eclipse.n4js.ui.typesearch.StringOperation.getPatternMatchingR
 			//$FALL-THROUGH$
 		case R_CAMELCASE_MATCH:
 			if (patternLength <= nameLength) {
-				int[] regions = getCamelCaseMatchingRegions(pattern, 0, patternLength, name, 0,
+				int[] regions = StringOperation.getCamelCaseMatchingRegions(pattern, 0, patternLength, name, 0,
 						nameLength, countMatch);
 				if (regions != null)
 					return regions;
@@ -173,7 +166,7 @@ import static org.eclipse.n4js.ui.typesearch.StringOperation.getPatternMatchingR
 			//$FALL-THROUGH$
 		case R_CAMELCASE_MATCH | R_CASE_SENSITIVE:
 			if (patternLength <= nameLength) {
-				return getCamelCaseMatchingRegions(pattern, 0, patternLength, name, 0, nameLength,
+				return StringOperation.getCamelCaseMatchingRegions(pattern, 0, patternLength, name, 0, nameLength,
 						countMatch);
 			}
 			break;
@@ -183,239 +176,6 @@ import static org.eclipse.n4js.ui.typesearch.StringOperation.getPatternMatchingR
 			return getPatternMatchingRegions(pattern, 0, patternLength, name, 0, nameLength, true);
 		}
 		return null;
-	}
-
-	/**
-	 * Answers all the regions in a given name matching a given camel case pattern. </p>
-	 * <p>
-	 * Each of these regions is made of its starting index and its length in the given name. They are all concatenated
-	 * in a single array of <code>int</code> which therefore always has an even length.
-	 * </p>
-	 * <p>
-	 * Note that each region is disjointed from the following one.<br>
-	 * E.g. if the regions are <code>{ start1, length1, start2, length2 }</code>, then <code>start1+length1</code> will
-	 * always be smaller than <code>start2</code>.
-	 * </p>
-	 * <p>
-	 *
-	 * <pre>
-	 * Examples:
-	 * <ol><li>  pattern = "NPE"
-	 *  name = NullPointerException / NoPermissionException
-	 *  result:  { 0, 1, 4, 1, 11, 1 } / { 0, 1, 2, 1, 12, 1 } </li>
-	 * <li>  pattern = "NuPoEx"
-	 *  name = NullPointerException
-	 *  result:  { 0, 2, 4, 2, 11, 2 }</li>
-	 * <li>  pattern = "IPL3"
-	 *  name = "IPerspectiveListener3"
-	 *  result:  { 0, 2, 12, 1, 20, 1 }</li>
-	 * <li>  pattern = "HashME"
-	 *  name = "HashMapEntry"
-	 *  result:  { 0, 5, 7, 1 }</li>
-	 * </ol>
-	 * </pre>
-	 *
-	 * </p>
-	 *
-	 * @param pattern
-	 *            the given pattern
-	 * @param patternStart
-	 *            the start index of the pattern, inclusive
-	 * @param patternEnd
-	 *            the end index of the pattern, exclusive
-	 * @param name
-	 *            the given name
-	 * @param nameStart
-	 *            the start index of the name, inclusive
-	 * @param nameEnd
-	 *            the end index of the name, exclusive
-	 * @param samePartCount
-	 *            flag telling whether the pattern and the name should have the same count of parts or not.<br>
-	 *            &nbsp;&nbsp;For example:
-	 *            <ul>
-	 *            <li>'HM' type string pattern will match 'HashMap' and 'HtmlMapper' types, but not 'HashMapEntry'</li>
-	 *            <li>'HMap' type string pattern will still match previous 'HashMap' and 'HtmlMapper' types, but not
-	 *            'HighMagnitude'</li>
-	 *            </ul>
-	 * @return an array of <code>int</code> having two slots per returned regions (first one is the starting index of
-	 *         the region and the second one the length of the region).<br>
-	 *         Note that it may be <code>null</code> if the given name does not match the pattern
-	 * @since 3.5
-	 */
-	private static final int[] getCamelCaseMatchingRegions(String pattern, int patternStart, int patternEnd,
-			String name, int nameStart, int nameEnd, boolean samePartCount) {
-
-		/*
-		 * !!!!!!!!!! WARNING !!!!!!!!!! The algorithm used in this method has been fully inspired from
-		 * CharOperation#camelCaseMatch(char[], int, int, char[], int, int, boolean).
-		 *
-		 * So, if any change needs to be applied in the algorithm, do NOT forget to backport it in the CharOperation
-		 * method!
-		 */
-
-		if (name == null)
-			return null; // null name cannot match
-		if (pattern == null) {
-			// null pattern cannot match any region
-			// see bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=264816
-			return EMPTY_REGIONS;
-		}
-		if (patternEnd < 0)
-			patternEnd = pattern.length();
-		if (nameEnd < 0)
-			nameEnd = name.length();
-
-		if (patternEnd <= patternStart) {
-			return nameEnd <= nameStart
-					? new int[] { patternStart, patternEnd - patternStart }
-			: null;
-		}
-		if (nameEnd <= nameStart)
-			return null;
-		// check first pattern char
-		if (name.charAt(nameStart) != pattern.charAt(patternStart)) {
-			// first char must strictly match (upper/lower)
-			return null;
-		}
-
-		char patternChar, nameChar;
-		int iPattern = patternStart;
-		int iName = nameStart;
-
-		// init segments
-		int parts = 1;
-		for (int i = patternStart + 1; i < patternEnd; i++) {
-			final char ch = pattern.charAt(i);
-			if (ch < MAX_OBVIOUS) {
-				if ((OBVIOUS_IDENT_CHAR_NATURES[ch] & (C_UPPER_LETTER | C_DIGIT)) != 0) {
-					parts++;
-				}
-			} else if (Character.isJavaIdentifierPart(ch) && (Character.isUpperCase(ch) || Character.isDigit(ch))) {
-				parts++;
-			}
-		}
-		int[] segments = null;
-		int count = 0; // count
-
-		// Main loop is on pattern characters
-		int segmentStart = iName;
-		while (true) {
-			iPattern++;
-			iName++;
-
-			if (iPattern == patternEnd) { // we have exhausted pattern...
-				// it's a match if the name can have additional parts (i.e. uppercase characters) or is also exhausted
-				if (!samePartCount || iName == nameEnd) {
-					if (segments == null) {
-						segments = new int[2];
-					}
-					segments[count++] = segmentStart;
-					segments[count++] = iName - segmentStart;
-					if (count < segments.length) {
-						System.arraycopy(segments, 0, segments = new int[count], 0, count);
-					}
-					return segments;
-				}
-
-				// otherwise it's a match only if the name has no more uppercase characters
-				int segmentEnd = iName;
-				while (true) {
-					if (iName == nameEnd) {
-						// we have exhausted the name, so it's a match
-						if (segments == null) {
-							segments = new int[2];
-						}
-						segments[count++] = segmentStart;
-						segments[count++] = segmentEnd - segmentStart;
-						if (count < segments.length) {
-							System.arraycopy(segments, 0, segments = new int[count], 0, count);
-						}
-						return segments;
-					}
-					nameChar = name.charAt(iName);
-					// test if the name character is uppercase
-					if (nameChar < MAX_OBVIOUS) {
-						if ((OBVIOUS_IDENT_CHAR_NATURES[nameChar] & C_UPPER_LETTER) != 0) {
-							return null;
-						}
-					}
-					else if (!Character.isJavaIdentifierPart(nameChar) || Character.isUpperCase(nameChar)) {
-						return null;
-					}
-					iName++;
-				}
-			}
-
-			if (iName == nameEnd) {
-				// We have exhausted the name (and not the pattern), so it's not a match
-				return null;
-			}
-
-			// For as long as we're exactly matching, bring it on (even if it's a lower case character)
-			if ((patternChar = pattern.charAt(iPattern)) == name.charAt(iName)) {
-				continue;
-			}
-			int segmentEnd = iName;
-
-			// If characters are not equals, then it's not a match if patternChar is lowercase
-			if (patternChar < MAX_OBVIOUS) {
-				if ((OBVIOUS_IDENT_CHAR_NATURES[patternChar] & (C_UPPER_LETTER | C_DIGIT)) == 0) {
-					return null;
-				}
-			} else if (Character.isJavaIdentifierPart(patternChar) && !Character.isUpperCase(patternChar)
-					&& !Character.isDigit(patternChar)) {
-				return null;
-			}
-
-			// patternChar is uppercase, so let's find the next uppercase in name
-			while (true) {
-				if (iName == nameEnd) {
-					// We have exhausted name (and not pattern), so it's not a match
-					return null;
-				}
-
-				nameChar = name.charAt(iName);
-				if (nameChar < MAX_OBVIOUS) {
-					int charNature = OBVIOUS_IDENT_CHAR_NATURES[nameChar];
-					if ((charNature & (C_LOWER_LETTER | C_SPECIAL)) != 0) {
-						// nameChar is lowercase
-						iName++;
-					} else if ((charNature & C_DIGIT) != 0) {
-						// nameChar is digit => break if the digit is current pattern character otherwise consume it
-						if (patternChar == nameChar)
-							break;
-						iName++;
-						// nameChar is uppercase...
-					} else if (patternChar != nameChar) {
-						// .. and it does not match patternChar, so it's not a match
-						return null;
-					} else {
-						// .. and it matched patternChar. Back to the big loop
-						break;
-					}
-				}
-				// Same tests for non-obvious characters
-				else if (Character.isJavaIdentifierPart(nameChar) && !Character.isUpperCase(nameChar)) {
-					iName++;
-				} else if (Character.isDigit(nameChar)) {
-					if (patternChar == nameChar)
-						break;
-					iName++;
-				} else if (patternChar != nameChar) {
-					return null;
-				} else {
-					break;
-				}
-			}
-			// At this point, either name has been exhausted, or it is at an uppercase letter.
-			// Since pattern is also at an uppercase letter
-			if (segments == null) {
-				segments = new int[parts * 2];
-			}
-			segments[count++] = segmentStart;
-			segments[count++] = segmentEnd - segmentStart;
-			segmentStart = iName;
-		}
 	}
 
 }
