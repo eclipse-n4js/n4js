@@ -12,7 +12,7 @@ package org.eclipse.n4js.tests.contentAssist
 
 import org.junit.Test
 
-class ContentAssistBugPluginUITest extends AbstractN4JSContentAssistTest {
+class ContentAssistBugPluginUITest extends AbstractN4JSContentAssistPluginUITest {
 
 	@Test def void testGB_39_01() throws Exception {
 		newBuilder().append(

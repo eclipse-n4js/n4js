@@ -47,7 +47,7 @@ import com.google.inject.Injector;
 /**
  * Abstract base class for CA tests. Uses a shared project for the entire test class.
  */
-public abstract class AbstractN4JSContentAssistTest extends Assert implements ResourceLoadHelper {
+public abstract class AbstractN4JSContentAssistPluginUITest extends Assert implements ResourceLoadHelper {
 
 	private static final String PROJECT_NAME = "ContentAssistTestProject";
 
