@@ -13,44 +13,19 @@ package org.eclipse.n4js.utils.ui;
 import org.eclipse.xtext.ui.editor.contentassist.PrefixMatcher.CamelCase;
 
 /**
- * This class makes available some utility functionality from bundle <code>org.eclipse.jdt.core</code>. Since Xtext is
- * using functionality from that bundle anyway (e.g. see {@link CamelCase PrefixMatcher.CamelCase}), we do not introduce
- * any additional bundle dependencies by making available this functionality.
+ * This class makes available some utility functionality from bundle <code>org.eclipse.jdt.core</code> for the UI case
+ * (not intended for headless case).
  * <p>
- * This class follows the approach implemented in {@link CamelCase PrefixMatcher.CamelCase}.
+ * Since Xtext is using functionality from that bundle anyway (e.g. see {@link CamelCase PrefixMatcher.CamelCase}; only
+ * optional dependency but we rely on that functionality in the UI case, for now), we do not introduce any additional
+ * bundle dependencies by making available this functionality.
  */
 public final class JDTUtils {
-
-	private static boolean jdtAvailable = checkJDTAvailable();
-
-	private JDTUtils() {
-		// no instances allowed
-	}
-
-	private static boolean checkJDTAvailable() {
-		try {
-			org.eclipse.jdt.core.search.SearchPattern.getMatchingRegions(null, null, 0);
-			return true;
-		} catch (Throwable t) {
-			return false;
-		}
-	}
-
-	/**
-	 * Tells if the JDT is available for use. If this method returns false, all other public methods in this class will
-	 * fail safe by returning a fall-back default value.
-	 */
-	public static boolean isJDTAvailable() {
-		return jdtAvailable;
-	}
 
 	/**
 	 * Cf. {@link org.eclipse.jdt.core.search.SearchPattern#getMatchingRegions(String,String,int)}.
 	 */
 	public static int[] getMatchingRegions(String pattern, String name, int matchRule) {
-		if (!jdtAvailable) {
-			return new int[] {};
-		}
 		return org.eclipse.jdt.core.search.SearchPattern.getMatchingRegions(pattern, name, matchRule);
 	}
 }
