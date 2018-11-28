@@ -17,22 +17,17 @@ import org.eclipse.xtext.ui.editor.contentassist.PrefixMatcher.CamelCase;
  * using functionality from that bundle anyway (e.g. see {@link CamelCase PrefixMatcher.CamelCase}), we do not introduce
  * any additional bundle dependencies by making available this functionality.
  * <p>
- * This class follows the approach implemented in {@link CamelCase PrefixMatcher.CamelCase}, but with fail-fast behavior
- * if the JDT is unavailable.
+ * This class follows the approach implemented in {@link CamelCase PrefixMatcher.CamelCase}.
  */
 public final class JDTUtils {
 
-	private static boolean jdtAvailable = isJDTAvailable();
+	private static boolean jdtAvailable = checkJDTAvailable();
 
 	private JDTUtils() {
 		// no instances allowed
 	}
 
-	/**
-	 * Tells if the JDT is available for use. If this method returns false, all other public methods in this class with
-	 * throw an {@link IllegalStateException}.
-	 */
-	public static boolean isJDTAvailable() {
+	private static boolean checkJDTAvailable() {
 		try {
 			org.eclipse.jdt.core.search.SearchPattern.getMatchingRegions(null, null, 0);
 			return true;
@@ -41,20 +36,21 @@ public final class JDTUtils {
 		}
 	}
 
-	private static void assertJDTAvailable() {
-		if (!jdtAvailable) {
-			throw new IllegalStateException("JDT is unavailable");
-		}
+	/**
+	 * Tells if the JDT is available for use. If this method returns false, all other public methods in this class will
+	 * fail safe by returning a fall-back default value.
+	 */
+	public static boolean isJDTAvailable() {
+		return jdtAvailable;
 	}
 
 	/**
 	 * Cf. {@link org.eclipse.jdt.core.search.SearchPattern#getMatchingRegions(String,String,int)}.
-	 *
-	 * @throws IllegalStateException
-	 *             if JDT is {@link #isJDTAvailable() unavailable}.
 	 */
 	public static int[] getMatchingRegions(String pattern, String name, int matchRule) {
-		assertJDTAvailable();
+		if (!jdtAvailable) {
+			return new int[] {};
+		}
 		return org.eclipse.jdt.core.search.SearchPattern.getMatchingRegions(pattern, name, matchRule);
 	}
 }
