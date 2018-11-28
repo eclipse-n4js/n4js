@@ -49,6 +49,7 @@ import org.eclipse.n4js.ui.containers.N4JSProjectsStateHelper;
 import org.eclipse.n4js.ui.contentassist.ContentAssistContextFactory;
 import org.eclipse.n4js.ui.contentassist.ContentAssistantFactory;
 import org.eclipse.n4js.ui.contentassist.CustomN4JSParser;
+import org.eclipse.n4js.ui.contentassist.N4JSContentProposalPriorities;
 import org.eclipse.n4js.ui.contentassist.N4JSFollowElementCalculator;
 import org.eclipse.n4js.ui.contentassist.PatchedFollowElementComputer;
 import org.eclipse.n4js.ui.contentassist.PatchedRequiredRuleNameComputer;
@@ -114,6 +115,7 @@ import org.eclipse.n4js.ui.search.MyReferenceSearchResultContentProvider;
 import org.eclipse.n4js.ui.search.N4JSEditorResourceAccess;
 import org.eclipse.n4js.ui.search.N4JSReferenceQueryExecutor;
 import org.eclipse.n4js.ui.utils.CancelIndicatorUiExtractor;
+import org.eclipse.n4js.ui.utils.PrefixMatcherHelper.N4JSPrefixMatcher;
 import org.eclipse.n4js.ui.validation.SourceContainerAwareResourceValidator;
 import org.eclipse.n4js.ui.wizard.project.N4JSProjectCreator;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBroker;
@@ -143,6 +145,7 @@ import org.eclipse.xtext.ui.editor.DocumentBasedDirtyResource;
 import org.eclipse.xtext.ui.editor.IXtextEditorCallback;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.editor.autoedit.AbstractEditStrategyProvider;
+import org.eclipse.xtext.ui.editor.contentassist.ContentProposalPriorities;
 import org.eclipse.xtext.ui.editor.contentassist.FQNPrefixMatcher;
 import org.eclipse.xtext.ui.editor.contentassist.FQNPrefixMatcher.LastSegmentFinder;
 import org.eclipse.xtext.ui.editor.contentassist.IContentAssistantFactory;
@@ -587,6 +590,20 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	@Override
 	public Class<? extends IContentAssistParser> bindIContentAssistParser() {
 		return CustomN4JSParser.class;
+	}
+
+	/**
+	 * Adjustments to default content proposal priorities.
+	 */
+	public Class<? extends ContentProposalPriorities> bindContentProposalPriorities() {
+		return N4JSContentProposalPriorities.class;
+	}
+
+	/**
+	 * Custom prefix matcher.
+	 */
+	public Class<? extends PrefixMatcher.IgnoreCase> bindPrefixMatcherIgnoreCase() {
+		return N4JSPrefixMatcher.class;
 	}
 
 	/**

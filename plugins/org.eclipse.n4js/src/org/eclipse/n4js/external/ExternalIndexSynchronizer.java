@@ -219,6 +219,9 @@ public abstract class ExternalIndexSynchronizer {
 	private void addToIndex(Map<String, Pair<URI, String>> npmsIndex, IResourceDescription resourceDescription) {
 		URI nestedLocation = resourceDescription.getURI();
 		java.net.URI rootLocationJNU = externalLibraryWorkspace.getRootLocationForResource(nestedLocation);
+		if (rootLocationJNU == null) {
+			return;
+		}
 		URI rootLocation = URI.createURI(rootLocationJNU.toString());
 		String name = getPackageName(nestedLocation, URI.createURI(rootLocation.toString()));
 		URI packageLocation = createProjectLocation(rootLocation, name);
