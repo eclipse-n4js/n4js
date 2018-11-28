@@ -41,6 +41,7 @@ import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.ui.labeling.N4JSLabelProvider;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
+import org.eclipse.n4js.utils.ui.JDTUtils;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
@@ -442,7 +443,7 @@ public class OpenTypeSelectionDialog extends FilteredItemsSelectionDialog {
 		}
 
 		private int[] getMatchingRegions(final String text) {
-			return SearchPatternHelper.getMatchingRegions(
+			return JDTUtils.getMatchingRegions(
 					getCurrentFilter().getPattern(),
 					text,
 					getCurrentFilter().getMatchRule());
