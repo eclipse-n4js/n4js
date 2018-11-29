@@ -46,7 +46,7 @@ import com.google.inject.Inject;
  * scope.
  *
  * The proposals that are produced by this class will maintain the import section when a proposal is selected. This is
- * done by the {@link FQNImporter} which is set as the
+ * done by the {@link N4JSReplacementTextApplier} which is set as the
  * {@link ConfigurableCompletionProposal#setTextApplier(org.eclipse.xtext.ui.editor.contentassist.ConfigurableCompletionProposal.IReplacementTextApplier)
  * text applier * }.
  *
@@ -61,7 +61,7 @@ public class ImportsAwareReferenceProposalCreator {
 	private IValueConverter<String> valueConverter;
 
 	@Inject
-	private FQNImporter.Factory fqnImporterFactory;
+	private N4JSReplacementTextApplier.Factory applierFactory;
 
 	@Inject
 	private IN4JSCore n4jsCore;
@@ -130,10 +130,10 @@ public class ImportsAwareReferenceProposalCreator {
 
 						QualifiedName candidateName = getCandidateName(candidate, tmodule);
 						ConfigurableCompletionProposal castedProposal = (ConfigurableCompletionProposal) proposal;
-						castedProposal.setAdditionalData(FQNImporter.KEY_QUALIFIED_NAME, candidateName);
+						castedProposal.setAdditionalData(N4JSReplacementTextApplier.KEY_QUALIFIED_NAME, candidateName);
 
 						// Original qualified name is the qualified name before adjustment
-						castedProposal.setAdditionalData(FQNImporter.KEY_ORIGINAL_QUALIFIED_NAME, qfn);
+						castedProposal.setAdditionalData(N4JSReplacementTextApplier.KEY_ORIGINAL_QUALIFIED_NAME, qfn);
 					}
 					acceptor.accept(proposal);
 				}
@@ -180,14 +180,14 @@ public class ImportsAwareReferenceProposalCreator {
 		final ICompletionProposal result = delegateProposalFactory.apply(inputToUse);
 
 		if (result instanceof ConfigurableCompletionProposal) {
-			final FQNImporter importer = fqnImporterFactory.create(
+			final N4JSReplacementTextApplier applier = applierFactory.create(
 					model.eResource(),
 					scope,
 					valueConverter,
 					filter,
 					context.getViewer());
 
-			((ConfigurableCompletionProposal) result).setTextApplier(importer);
+			((ConfigurableCompletionProposal) result).setTextApplier(applier);
 		}
 		return result;
 	}

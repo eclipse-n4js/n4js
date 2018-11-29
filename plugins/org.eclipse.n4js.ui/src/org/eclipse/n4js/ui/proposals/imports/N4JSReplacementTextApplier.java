@@ -50,18 +50,18 @@ import com.google.inject.Inject;
 import com.google.inject.MembersInjector;
 
 /**
- * The FQNImporter can be set on a {@link ConfigurableCompletionProposal} to handle a selected proposal that inserts a
- * reference to a type. This reference will be shortened to a valid simple name. Shortening logic uses the scope
- * provider and therefore knows about existing imports. If no such import is available, a new import will be added. If
- * existing imports conflict with the selected type, an alias is inserted automatically.
+ * The N4JSReplacementTextApplier can be set on a {@link ConfigurableCompletionProposal} to handle a selected proposal
+ * that inserts a reference to a type. This reference will be shortened to a valid simple name. Shortening logic uses
+ * the scope provider and therefore knows about existing imports. If no such import is available, a new import will be
+ * added. If existing imports conflict with the selected type, an alias is inserted automatically.
  *
  * Since changes are performed at different locations in the same document, line offsets and text widget may appear to
  * flicker when a proposal is selected. This class handles these cases by disabling redraw on the text viewer and moving
  * the canvas one line up if a new line was added at the top of the document.
  *
- * Instances of this class are created by the injectable {@link FQNImporter.Factory}.
+ * Instances of this class are created by the injectable {@link N4JSReplacementTextApplier.Factory}.
  */
-public class FQNImporter extends ReplacementTextApplier {
+public class N4JSReplacementTextApplier extends ReplacementTextApplier {
 
 	/**
 	 * Key used for additional data in {@link ConfigurableCompletionProposal} to store the {@link QualifiedName} of the
@@ -69,12 +69,13 @@ public class FQNImporter extends ReplacementTextApplier {
 	 *
 	 * @see ConfigurableCompletionProposal#setAdditionalData(String, Object)
 	 */
-	public static final String KEY_QUALIFIED_NAME = FQNImporter.class.getName() + "#QUALIFIED_NAME";
+	public static final String KEY_QUALIFIED_NAME = N4JSReplacementTextApplier.class.getName() + "#QUALIFIED_NAME";
 
 	/** The original qualified name, used for looking up in the scope. */
-	public static final String KEY_ORIGINAL_QUALIFIED_NAME = FQNImporter.class.getName() + "#ORIGINAL_QUALIFIED_NAME";
+	public static final String KEY_ORIGINAL_QUALIFIED_NAME = N4JSReplacementTextApplier.class.getName()
+			+ "#ORIGINAL_QUALIFIED_NAME";
 
-	private static final Logger logger = Logger.getLogger(FQNImporter.class);
+	private static final Logger logger = Logger.getLogger(N4JSReplacementTextApplier.class);
 
 	@Inject
 	private IQualifiedNameConverter qualifiedNameConverter;
@@ -86,14 +87,14 @@ public class FQNImporter extends ReplacementTextApplier {
 	IN4JSCore n4jsCore;
 
 	/**
-	 * Factory class for {@link FQNImporter}.
+	 * Factory class for {@link N4JSReplacementTextApplier}.
 	 */
 	public static class Factory {
 		@Inject
-		private MembersInjector<FQNImporter> importerInjector;
+		private MembersInjector<N4JSReplacementTextApplier> applierInjector;
 
 		/**
-		 * Create a new {@link FQNImporter}.
+		 * Create a new {@link N4JSReplacementTextApplier}.
 		 *
 		 * @param context
 		 *            the resource where the imports should be added.
@@ -104,14 +105,15 @@ public class FQNImporter extends ReplacementTextApplier {
 		 * @param viewer
 		 *            the text widget.
 		 */
-		public FQNImporter create(
+		public N4JSReplacementTextApplier create(
 				Resource context,
 				IScope scope,
 				IValueConverter<String> valueConverter,
 				Predicate<IEObjectDescription> filter,
 				ITextViewer viewer) {
-			FQNImporter result = new FQNImporter(context, scope, valueConverter, filter, viewer);
-			importerInjector.injectMembers(result);
+			N4JSReplacementTextApplier result = new N4JSReplacementTextApplier(context, scope, valueConverter, filter,
+					viewer);
+			applierInjector.injectMembers(result);
 			return result;
 		}
 	}
@@ -122,7 +124,7 @@ public class FQNImporter extends ReplacementTextApplier {
 	private final Predicate<IEObjectDescription> filter;
 	private final ITextViewer viewer;
 
-	FQNImporter(
+	N4JSReplacementTextApplier(
 			Resource context,
 			IScope scope,
 			IValueConverter<String> valueConverter,
