@@ -59,7 +59,8 @@ pipeline {
                                 'execute-plugin-ui-tests',
                                 'execute-ecma-tests',
                                 'execute-accesscontrol-tests',
-                                'execute-smoke-tests'
+                                'execute-smoke-tests',
+	                            'execute-hlc-integration-tests'
                             ].join(',')
 
                             sh """\
@@ -149,8 +150,8 @@ pipeline {
         always {
             archiveArtifacts allowEmptyArchive: true, artifacts: '**/builds/**/target/products/*.zip'
             archiveArtifacts allowEmptyArchive: true, artifacts: '**/tools/**/target/n4jsc.jar'
-//            archiveArtifacts allowEmptyArchive: true, artifacts: '**/logs/*.log'
-//            archiveArtifacts allowEmptyArchive: true, artifacts: '**/tests/**/target/**/*-output.txt'
+            archiveArtifacts allowEmptyArchive: true, artifacts: '**/logs/*.log'
+            archiveArtifacts allowEmptyArchive: true, artifacts: '**/tests/**/target/**/*-output.txt'
 
             junit '**/surefire-reports/**/*.xml'
             junit '**/failsafe-reports/**/*.xml'
