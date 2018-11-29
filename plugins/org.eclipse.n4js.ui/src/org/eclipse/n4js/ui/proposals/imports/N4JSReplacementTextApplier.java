@@ -29,6 +29,7 @@ import org.eclipse.jface.text.link.LinkedModeUI;
 import org.eclipse.jface.text.link.LinkedPosition;
 import org.eclipse.jface.text.link.LinkedPositionGroup;
 import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.scoping.imports.PlainAccessOfAliasedImportDescription;
 import org.eclipse.n4js.scoping.imports.PlainAccessOfNamespacedImportDescription;
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
@@ -140,7 +141,7 @@ public class N4JSReplacementTextApplier extends ReplacementTextApplier {
 	/**
 	 * Convert the the given qualifiedName to a valid syntax in the n4js file.
 	 */
-	String applyValueConverter(QualifiedName qualifiedName) {
+	private String applyValueConverter(QualifiedName qualifiedName) {
 		String result = qualifiedNameConverter.toString(qualifiedName);
 		result = valueConverter.toString(result);
 		return result;
@@ -149,7 +150,7 @@ public class N4JSReplacementTextApplier extends ReplacementTextApplier {
 	/**
 	 * Converts the concrete syntax to a qualified name.
 	 */
-	QualifiedName applyValueConverter(String concreteSyntax) {
+	private QualifiedName applyValueConverter(String concreteSyntax) {
 		final String semanticReplacementString = valueConverter.toValue(concreteSyntax, null);
 		final QualifiedName qualifiedName = qualifiedNameConverter.toQualifiedName(semanticReplacementString);
 		return qualifiedName;
@@ -179,7 +180,6 @@ public class N4JSReplacementTextApplier extends ReplacementTextApplier {
 			}
 		}
 		return syntacticReplacementString;
-
 	}
 
 	/**
@@ -254,10 +254,17 @@ public class N4JSReplacementTextApplier extends ReplacementTextApplier {
 		IEObjectDescription descriptionFullQN = scope
 				.getSingleElement(QualifiedName.create(shortQName));
 
-		// element is PlainAccessOfAliasedImportDescription imported via namespace
+		// element is already imported via namespace
 		if (descriptionFullQN instanceof PlainAccessOfNamespacedImportDescription) {
 			simpleApply(document,
 					((PlainAccessOfNamespacedImportDescription) descriptionFullQN).getNamespacedName(),
+					proposal);
+			return;
+		}
+		// element is already imported via an alias
+		if (descriptionFullQN instanceof PlainAccessOfAliasedImportDescription) {
+			simpleApply(document,
+					((PlainAccessOfAliasedImportDescription) descriptionFullQN).getAlias(),
 					proposal);
 			return;
 		}
@@ -270,20 +277,8 @@ public class N4JSReplacementTextApplier extends ReplacementTextApplier {
 				return;
 			}
 
-			// the simple name is already reachable - another import is present
+			// the simple name is already reachable, i.e. already in use - another import is present
 			// try to use an alias
-			IEObjectDescription description = scope.getSingleElement(originalQualifiedName);
-			IEObjectDescription existingAliased = findApplicableDescription(description.getEObjectOrProxy(),
-					qualifiedName, false);
-
-			// there is already an alias, but the FQN version was picked - insert FQN
-			if (existingAliased != null) {
-				simpleApply(document, syntacticReplacementString, proposal);
-				return;
-			}
-			// trying to detect namespace access without PlainAccessOfNamespacedImportDescription being accessible
-
-			// no alias used, yet - add an alias and insert that one
 			alias = "Alias" + shortQName;
 		}
 
@@ -380,6 +375,9 @@ public class N4JSReplacementTextApplier extends ReplacementTextApplier {
 			final int aliasLength = shortSyntacticReplacementString.length();
 			N4JSCompletionProposal castedProposal = (N4JSCompletionProposal) proposal;
 			castedProposal.setLinkedModeBuilder((appliedProposal, currentDocument) -> {
+				if (viewer.getTextWidget() == null || viewer.getTextWidget().isDisposed()) {
+					return; // do not attempt to set up linked mode in a disposed UI
+				}
 				try {
 					LinkedPositionGroup group = new LinkedPositionGroup();
 					group.addPosition(new LinkedPosition(
