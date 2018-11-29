@@ -83,5 +83,4 @@ Export-Package: org.eclipse.n4js.ui,
  org.eclipse.n4js.ui.wizard.dependencies,
  org.eclipse.n4js.ui.workingsets
 Bundle-Activator: org.eclipse.n4js.ui.internal.N4JSGracefulActivator
-Comment: add org.eclipse.jdt.core;bundle-version="3.9.0";resolution:=optional when N4JSJavaProjectDescription is enabled. It will be applied when JDT is installed.
 Automatic-Module-Name: org.eclipse.n4js.ui

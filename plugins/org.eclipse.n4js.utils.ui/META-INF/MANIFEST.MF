@@ -8,7 +8,7 @@ Require-Bundle: org.eclipse.ui.ide,
  org.eclipse.n4js.releng.utils;resolution:=optional,
  org.eclipse.emf.ecore.xcore;bundle-version="1.1.0",
  org.eclipse.emf.mwe2.launch;bundle-version="2.4.0";resolution:=optional,
- org.eclipse.jdt.core;resolution:=optional,
+ org.eclipse.jdt.core,
  org.eclipse.core.runtime;resolution:=optional,
  org.eclipse.core.resources;resolution:=optional,
  org.eclipse.text;resolution:=optional,
@@ -19,7 +19,8 @@ Require-Bundle: org.eclipse.ui.ide,
  org.objectweb.asm;bundle-version="5.0.1";resolution:=optional,
  org.eclipse.xtext.ui,
  org.eclipse.egit.core;bundle-version="4.6.0"
-Export-Package: org.eclipse.n4js.utils.ui.editor,
+Export-Package: org.eclipse.n4js.utils.ui,
+ org.eclipse.n4js.utils.ui.editor,
  org.eclipse.n4js.utils.ui.injector,
  org.eclipse.n4js.utils.ui.quickfix
 Bundle-Vendor: %providerName

@@ -10,13 +10,13 @@
  */
 package org.eclipse.n4js.tests.contentAssist
 
-import org.junit.Test
 import org.junit.Ignore
+import org.junit.Test
 
 /**
  */
 @SuppressWarnings("deprecation")
-class TypeReferenceContentAssistPluginUITest extends AbstractN4JSContentAssistTest {
+class TypeReferenceContentAssistPluginUITest extends AbstractN4JSContentAssistPluginUITest {
 
 	@Test def void testTypeProposals_ignoreCase() {
 		newBuilder().append("var varName: my").assertText("MyFirstClass", "MySecondClass");
