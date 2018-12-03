@@ -36,6 +36,7 @@ import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
 import org.eclipse.n4js.ui.proposals.linkedEditing.IdentifierExitPolicy;
 import org.eclipse.n4js.ui.proposals.linkedEditing.N4JSCompletionProposal;
 import org.eclipse.n4js.ui.utils.ConfigurableCompletionProposalExtensions;
+import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.ReplaceEdit;
@@ -289,7 +290,7 @@ public class N4JSReplacementTextApplier extends ReplacementTextApplier {
 
 			// the simple name is already reachable, i.e. already in use - another import is present
 			// try to use an alias
-			alias = "Alias" + shortQName;
+			alias = "Alias" + UtilN4.toUpperCaseFirst(shortQName);
 		}
 
 		applyWithImport(qualifiedName, alias, document, proposal);
@@ -434,6 +435,10 @@ public class N4JSReplacementTextApplier extends ReplacementTextApplier {
 	private void adjustCursorPositionIfRequested(ConfigurableCompletionProposal proposal) {
 		final int offset = ConfigurableCompletionProposalExtensions.getCursorOffset(proposal);
 		if (offset != 0) {
+			if (viewer.getTextWidget() == null || viewer.getTextWidget().isDisposed()) {
+				return; // do not attempt to set up linked mode in a disposed UI
+			}
+
 			final int pos = proposal.getCursorPosition() + offset;
 
 			proposal.setSelectionStart(pos);

@@ -166,6 +166,32 @@ public class UtilN4 {
 	}
 
 	/**
+	 * Like {@link String#toUpperCase()}, but converts the first character only.
+	 */
+	public static final String toUpperCaseFirst(String str) {
+		if (str != null && str.length() > 0) {
+			final char first = str.charAt(0);
+			if (Character.isLowerCase(first)) {
+				return Character.toUpperCase(first) + str.substring(1);
+			}
+		}
+		return str;
+	}
+
+	/**
+	 * Like {@link String#toLowerCase()}, but converts the first character only.
+	 */
+	public static final String toLowerCaseFirst(String str) {
+		if (str != null && str.length() > 0) {
+			final char first = str.charAt(0);
+			if (Character.isUpperCase(first)) {
+				return Character.toLowerCase(first) + str.substring(1);
+			}
+		}
+		return str;
+	}
+
+	/**
 	 * If 'str' starts with one or more of the given prefixes, the prefixes will be removed.
 	 */
 	public static final String trimPrefix(String str, String... prefix) {
