@@ -29,6 +29,7 @@ import org.eclipse.jface.text.link.LinkedModeUI;
 import org.eclipse.jface.text.link.LinkedPosition;
 import org.eclipse.jface.text.link.LinkedPositionGroup;
 import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.scoping.imports.PlainAccessOfAliasedImportDescription;
 import org.eclipse.n4js.scoping.imports.PlainAccessOfNamespacedImportDescription;
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
@@ -50,18 +51,18 @@ import com.google.inject.Inject;
 import com.google.inject.MembersInjector;
 
 /**
- * The FQNImporter can be set on a {@link ConfigurableCompletionProposal} to handle a selected proposal that inserts a
- * reference to a type. This reference will be shortened to a valid simple name. Shortening logic uses the scope
- * provider and therefore knows about existing imports. If no such import is available, a new import will be added. If
- * existing imports conflict with the selected type, an alias is inserted automatically.
+ * The N4JSReplacementTextApplier can be set on a {@link ConfigurableCompletionProposal} to handle a selected proposal
+ * that inserts a reference to a type. This reference will be shortened to a valid simple name. Shortening logic uses
+ * the scope provider and therefore knows about existing imports. If no such import is available, a new import will be
+ * added. If existing imports conflict with the selected type, an alias is inserted automatically.
  *
  * Since changes are performed at different locations in the same document, line offsets and text widget may appear to
  * flicker when a proposal is selected. This class handles these cases by disabling redraw on the text viewer and moving
  * the canvas one line up if a new line was added at the top of the document.
  *
- * Instances of this class are created by the injectable {@link FQNImporter.Factory}.
+ * Instances of this class are created by the injectable {@link N4JSReplacementTextApplier.Factory}.
  */
-public class FQNImporter extends ReplacementTextApplier {
+public class N4JSReplacementTextApplier extends ReplacementTextApplier {
 
 	/**
 	 * Key used for additional data in {@link ConfigurableCompletionProposal} to store the {@link QualifiedName} of the
@@ -69,12 +70,13 @@ public class FQNImporter extends ReplacementTextApplier {
 	 *
 	 * @see ConfigurableCompletionProposal#setAdditionalData(String, Object)
 	 */
-	public static final String KEY_QUALIFIED_NAME = FQNImporter.class.getName() + "#QUALIFIED_NAME";
+	public static final String KEY_QUALIFIED_NAME = N4JSReplacementTextApplier.class.getName() + "#QUALIFIED_NAME";
 
 	/** The original qualified name, used for looking up in the scope. */
-	public static final String KEY_ORIGINAL_QUALIFIED_NAME = FQNImporter.class.getName() + "#ORIGINAL_QUALIFIED_NAME";
+	public static final String KEY_ORIGINAL_QUALIFIED_NAME = N4JSReplacementTextApplier.class.getName()
+			+ "#ORIGINAL_QUALIFIED_NAME";
 
-	private static final Logger logger = Logger.getLogger(FQNImporter.class);
+	private static final Logger logger = Logger.getLogger(N4JSReplacementTextApplier.class);
 
 	@Inject
 	private IQualifiedNameConverter qualifiedNameConverter;
@@ -86,14 +88,14 @@ public class FQNImporter extends ReplacementTextApplier {
 	IN4JSCore n4jsCore;
 
 	/**
-	 * Factory class for {@link FQNImporter}.
+	 * Factory class for {@link N4JSReplacementTextApplier}.
 	 */
 	public static class Factory {
 		@Inject
-		private MembersInjector<FQNImporter> importerInjector;
+		private MembersInjector<N4JSReplacementTextApplier> applierInjector;
 
 		/**
-		 * Create a new {@link FQNImporter}.
+		 * Create a new {@link N4JSReplacementTextApplier}.
 		 *
 		 * @param context
 		 *            the resource where the imports should be added.
@@ -104,14 +106,15 @@ public class FQNImporter extends ReplacementTextApplier {
 		 * @param viewer
 		 *            the text widget.
 		 */
-		public FQNImporter create(
+		public N4JSReplacementTextApplier create(
 				Resource context,
 				IScope scope,
 				IValueConverter<String> valueConverter,
 				Predicate<IEObjectDescription> filter,
 				ITextViewer viewer) {
-			FQNImporter result = new FQNImporter(context, scope, valueConverter, filter, viewer);
-			importerInjector.injectMembers(result);
+			N4JSReplacementTextApplier result = new N4JSReplacementTextApplier(context, scope, valueConverter, filter,
+					viewer);
+			applierInjector.injectMembers(result);
 			return result;
 		}
 	}
@@ -122,7 +125,7 @@ public class FQNImporter extends ReplacementTextApplier {
 	private final Predicate<IEObjectDescription> filter;
 	private final ITextViewer viewer;
 
-	FQNImporter(
+	N4JSReplacementTextApplier(
 			Resource context,
 			IScope scope,
 			IValueConverter<String> valueConverter,
@@ -138,7 +141,7 @@ public class FQNImporter extends ReplacementTextApplier {
 	/**
 	 * Convert the the given qualifiedName to a valid syntax in the n4js file.
 	 */
-	String applyValueConverter(QualifiedName qualifiedName) {
+	private String applyValueConverter(QualifiedName qualifiedName) {
 		String result = qualifiedNameConverter.toString(qualifiedName);
 		result = valueConverter.toString(result);
 		return result;
@@ -147,7 +150,7 @@ public class FQNImporter extends ReplacementTextApplier {
 	/**
 	 * Converts the concrete syntax to a qualified name.
 	 */
-	QualifiedName applyValueConverter(String concreteSyntax) {
+	private QualifiedName applyValueConverter(String concreteSyntax) {
 		final String semanticReplacementString = valueConverter.toValue(concreteSyntax, null);
 		final QualifiedName qualifiedName = qualifiedNameConverter.toQualifiedName(semanticReplacementString);
 		return qualifiedName;
@@ -177,7 +180,6 @@ public class FQNImporter extends ReplacementTextApplier {
 			}
 		}
 		return syntacticReplacementString;
-
 	}
 
 	/**
@@ -252,10 +254,17 @@ public class FQNImporter extends ReplacementTextApplier {
 		IEObjectDescription descriptionFullQN = scope
 				.getSingleElement(QualifiedName.create(shortQName));
 
-		// element is PlainAccessOfAliasedImportDescription imported via namespace
+		// element is already imported via namespace
 		if (descriptionFullQN instanceof PlainAccessOfNamespacedImportDescription) {
 			simpleApply(document,
 					((PlainAccessOfNamespacedImportDescription) descriptionFullQN).getNamespacedName(),
+					proposal);
+			return;
+		}
+		// element is already imported via an alias
+		if (descriptionFullQN instanceof PlainAccessOfAliasedImportDescription) {
+			simpleApply(document,
+					((PlainAccessOfAliasedImportDescription) descriptionFullQN).getAlias(),
 					proposal);
 			return;
 		}
@@ -268,20 +277,8 @@ public class FQNImporter extends ReplacementTextApplier {
 				return;
 			}
 
-			// the simple name is already reachable - another import is present
+			// the simple name is already reachable, i.e. already in use - another import is present
 			// try to use an alias
-			IEObjectDescription description = scope.getSingleElement(originalQualifiedName);
-			IEObjectDescription existingAliased = findApplicableDescription(description.getEObjectOrProxy(),
-					qualifiedName, false);
-
-			// there is already an alias, but the FQN version was picked - insert FQN
-			if (existingAliased != null) {
-				simpleApply(document, syntacticReplacementString, proposal);
-				return;
-			}
-			// trying to detect namespace access without PlainAccessOfNamespacedImportDescription being accessible
-
-			// no alias used, yet - add an alias and insert that one
 			alias = "Alias" + shortQName;
 		}
 
@@ -378,6 +375,9 @@ public class FQNImporter extends ReplacementTextApplier {
 			final int aliasLength = shortSyntacticReplacementString.length();
 			N4JSCompletionProposal castedProposal = (N4JSCompletionProposal) proposal;
 			castedProposal.setLinkedModeBuilder((appliedProposal, currentDocument) -> {
+				if (viewer.getTextWidget() == null || viewer.getTextWidget().isDisposed()) {
+					return; // do not attempt to set up linked mode in a disposed UI
+				}
 				try {
 					LinkedPositionGroup group = new LinkedPositionGroup();
 					group.addPosition(new LinkedPosition(

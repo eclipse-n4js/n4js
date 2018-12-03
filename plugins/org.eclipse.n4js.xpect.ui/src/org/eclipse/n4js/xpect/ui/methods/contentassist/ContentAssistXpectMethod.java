@@ -28,6 +28,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.templates.TemplateProposal;
 import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
+import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter;
 import org.eclipse.n4js.xpect.config.Config;
 import org.eclipse.n4js.xpect.config.VarDef;
@@ -44,6 +45,7 @@ import org.eclipse.xpect.expectation.IStringExpectation;
 import org.eclipse.xpect.expectation.impl.AbstractExpectation;
 import org.eclipse.xpect.expectation.impl.CommaSeparatedValuesExpectationImpl;
 import org.eclipse.xpect.expectation.impl.ExpectationCollection;
+import org.eclipse.xpect.expectation.impl.StringExpectationImpl;
 import org.eclipse.xpect.parameter.ParameterParser;
 import org.eclipse.xpect.runner.Xpect;
 import org.eclipse.xpect.setup.ISetupInitializer;
@@ -70,6 +72,8 @@ import junit.framework.ComparisonFailure;
 @XpectImport({ N4JSOffsetAdapter.class, XpEnvironmentData.class, VarDef.class, Config.class,
 		ValidationTestModuleSetup.class })
 public class ContentAssistXpectMethod {
+
+	private static final String MULTI_LINE_WILDCARD = "<...>";
 
 	static {
 		EclipseGracefulUIShutdownEnabler.enableOnce();
@@ -149,6 +153,12 @@ public class ContentAssistXpectMethod {
 
 		String after = applyProposal(proposal, document);
 
+		final boolean isMultiLineExpectation = getExpectationString(expectation).contains("\n");
+		if (isMultiLineExpectation) {
+			assertMultiLineExpectation(expectation, after);
+			return;
+		}
+
 		// Expecting change only in single line:
 		ChangeInfo changedLines = extractSingleChangedLine(before, after);
 		if (changedLines.isMoreThanOne()) {
@@ -175,6 +185,82 @@ public class ContentAssistXpectMethod {
 		// // after = replaceXPECT(after);
 		// expectation.assertEquals(after)
 		// expectation.assertDiffEquals("a", "b - not implemented yet")
+	}
+
+	private void assertMultiLineExpectation(IStringExpectation expectation, String actualStr) {
+		String expectedStr = getExpectationString(expectation);
+		String actualWithoutExpectationStr = actualStr.replace(expectedStr, "*** EXPECTATION REMOVED ***");
+		String[] expectedLines = expectedStr.trim().replace("\r", "").split("\n");
+		String[] actualLines = actualWithoutExpectationStr.trim().replace("\r", "").split("\n");
+		Arrays2.transformInplace(expectedLines, String::trim);
+		Arrays2.transformInplace(actualLines, String::trim);
+		int expectedLinesCount = expectedLines.length;
+		int actualLinesCount = actualLines.length;
+		boolean lastWasWildcard = false;
+		int ia = 0;
+		for (int ie = 0; ie < expectedLinesCount; ie++) {
+			String expectedLine = expectedLines[ie];
+			boolean isWildcard = expectedLine.equals(MULTI_LINE_WILDCARD);
+			if (!isWildcard && expectedLine.contains(MULTI_LINE_WILDCARD)) {
+				multiLineFailure(
+						"lines in expectation that contain " + MULTI_LINE_WILDCARD
+								+ " must not contain any other characters (except white-space)",
+						expectedStr, actualWithoutExpectationStr);
+			}
+			if (isWildcard) {
+				String nextExpectedLine = getNextNonWildcardLine(expectedLines, ie);
+				if (nextExpectedLine == null) {
+					// wildcard at end of expectation -> success!
+					ia = actualLinesCount; // consume all remaining actual lines
+					break;
+				}
+				// consume actual lines until reaching one that matches nextExpectedLine
+				while (ia < actualLinesCount && !actualLines[ia].equals(nextExpectedLine)) {
+					ia++;
+				}
+			} else {
+				String actualLine = ia < actualLinesCount ? actualLines[ia++] : null;
+				if (actualLine == null || !actualLine.equals(expectedLine)) {
+					// failure; choose a fitting message:
+					if (actualLine == null || lastWasWildcard) {
+						multiLineFailure(
+								"could not find line " + (ie + 1) + " of expectation in actual result",
+								expectedStr, actualWithoutExpectationStr);
+					} else {
+						multiLineFailure(
+								"mismatch when comparing line " + (ie + 1) + " of expectation to actual line \""
+										+ actualLine + "\"",
+								expectedStr, actualWithoutExpectationStr);
+					}
+				}
+			}
+			lastWasWildcard = isWildcard;
+		}
+		if (ia < actualLinesCount) {
+			multiLineFailure(
+					"expectation does not cover entire actual result (maybe use " + MULTI_LINE_WILDCARD
+							+ " at end of expectation)",
+					expectedStr, actualWithoutExpectationStr);
+		}
+		// reaching this point means comparison succeeded
+	}
+
+	private String getNextNonWildcardLine(String[] lines, int startIndex) {
+		int len = lines.length;
+		while (startIndex < len && lines[startIndex].equals(MULTI_LINE_WILDCARD)) {
+			startIndex++;
+		}
+		return startIndex < len ? lines[startIndex] : null;
+	}
+
+	private void multiLineFailure(String msg, String expectedStr, String actualStr) {
+		throw new AssertionError("multi-line expectation failed: " + msg
+				+ "\n=== Complete Expectation:\n" + expectedStr.trim()
+				+ "\n=== Complete Actual Result (with expectation string removed):\n" + actualStr.trim());
+	}
+
+	private String getExpectationString(IStringExpectation expectation) {
+		return ((StringExpectationImpl) expectation).getExpectation();
 	}
 
 	/*-

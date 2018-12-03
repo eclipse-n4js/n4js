@@ -54,6 +54,18 @@ public class Arrays2 {
 	}
 
 	/**
+	 * Changes each element of the given array by applying the given function.
+	 */
+	public static <T> void transformInplace(T[] array, Function<T, T> fun) {
+		if (array == null || array.length == 0) {
+			return;
+		}
+		for (int i = 0; i < array.length; i++) {
+			array[i] = fun.apply(array[i]);
+		}
+	}
+
+	/**
 	 * Filters the elements from the array given as the argument. Always returns with a new array instance containing
 	 * all those elements from the original list whose class is assignable form the {@code predicate} class argument.
 	 *
