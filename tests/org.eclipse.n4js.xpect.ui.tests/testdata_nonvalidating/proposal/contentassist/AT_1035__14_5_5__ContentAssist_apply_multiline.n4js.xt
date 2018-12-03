@@ -14,31 +14,23 @@
 	Workspace {
 		JavaProject "N4JSXpectTests" {
 			Folder "model" {
-				Folder "proposal" {
-					Folder "contentassist" {
-						ThisFile {}
-						File "A.n4js" {}
-					}
-				}
+				File "A.n4js" {}
+				ThisFile {}
 			}
 			Folder "src-gen" {}
 			File "package.json" { from="../../../package.json" }
 		}
 	}
+
    END_SETUP
- */
-// N4JSDesing, §14.5.2.3. "Multi Line Expectations in Proposal Tests"
-
-// TODO IDE-1087 Dotted notation is not supported yet. XPECT_IGNORE
+*/
 
 
-
-/* XPECT contentAssist at 'var A<|> a' apply 'A - import' ---
+/* XPECT contentAssist at 'var a: Cl<|>;' apply 'ClassA - A' ---
 <...>
-import { A } from "proposal/contentassist";
+import {ClassA} from "A";
 <...>
-var A<|> a = new A();
+var a: ClassA;
 <...>
 --- */
-
-var a : A = new A();
+var a: Cl;

@@ -17,6 +17,7 @@
 				Folder "proposal" {
 					Folder "contentassist" {
 						ThisFile {}
+						File "A.n4js" {}
 					}
 				}
 			}
@@ -24,25 +25,18 @@
 			File "package.json" { from="../../../package.json" }
 		}
 	}
-
    END_SETUP
  */
-// TODO IDE-1087 XPECT_IGNORE
 
-/* XPECT errors ---
-"Couldn't resolve reference to IdentifiableElement 'A'." at "A"
-"Couldn't resolve reference to Type 'A'." at "A"
----
-*/
-var a : A = new A();
 
-//
+// N4JSDesin, §14.5.2.3. "Multi Line Expectations in Proposal Tests"
 
-/* XPECT contentAssist at 'a.<|>methodA' apply 'methodA2' ---
+
+/* XPECT contentAssist at 'var a: ClassA<|>' apply 'ClassA - proposal/contentassist/A' ---
 <...>
-import { A } from "a/b/c"
+import {ClassA} from "proposal/contentassist/A";
 <...>
-a.methodA2()<|>methodA
+var a: ClassA = new ClassA();
 <...>
 --- */
-a.methodA
+var a: ClassA = new ClassA();
