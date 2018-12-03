@@ -36,6 +36,7 @@ import org.eclipse.n4js.ui.labeling.N4JSLabelProvider
 import org.eclipse.n4js.ui.proposals.imports.ImportsAwareReferenceProposalCreator
 import org.eclipse.n4js.ui.proposals.linkedEditing.N4JSCompletionProposal
 import org.eclipse.swt.graphics.Image
+import org.eclipse.xtend.lib.annotations.Data
 import org.eclipse.xtext.CrossReference
 import org.eclipse.xtext.GrammarUtil
 import org.eclipse.xtext.Keyword
@@ -51,6 +52,8 @@ import org.eclipse.xtext.ui.editor.contentassist.AbstractJavaBasedContentProposa
 import org.eclipse.xtext.ui.editor.contentassist.ConfigurableCompletionProposal
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor
+
+import static extension org.eclipse.n4js.ui.utils.ConfigurableCompletionProposalExtensions.*
 
 /**
  * see http://www.eclipse.org/Xtext/documentation.html#contentAssist on how to customize content assistant
@@ -181,6 +184,12 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 					result.setProposalContextResource(contentAssistContext.getResource());
 					result.setAdditionalProposalInfo(provider);
 					result.setHover(hover);
+
+					val bracketInfo = computeProposalBracketInfo(candidate, contentAssistContext);
+					if (bracketInfo!==null) {
+						result.replacementSuffix = bracketInfo.brackets;
+						result.cursorOffset = bracketInfo.cursorOffset;
+					}
 				}
 				getPriorityHelper().adjustCrossReferencePriority(result, contentAssistContext.getPrefix());
 				return result;
@@ -305,5 +314,22 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 		int replacementLength) {
 		return new N4JSCompletionProposal(proposal, replacementOffset, replacementLength, proposal.length(), image,
 			displayString, null, null);
+	}
+
+	@Data
+	private static final class ProposalBracketInfo {
+		String brackets;
+		int cursorOffset;
+	}
+
+	def private ProposalBracketInfo computeProposalBracketInfo(IEObjectDescription proposedDescription, ContentAssistContext contentAssistContext) {
+
+		val eClass = proposedDescription.EClass;
+
+		if (TypesPackage.eINSTANCE.TFunction.isSuperTypeOf(eClass)) {
+			return new ProposalBracketInfo("()", -1);
+		}
+
+		return null;
 	}
 }
