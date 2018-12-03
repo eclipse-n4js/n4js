@@ -13,3 +13,4 @@
 
 export public class ClassRemoteInC {}
 
+export public function funcRemoteInC() {}
