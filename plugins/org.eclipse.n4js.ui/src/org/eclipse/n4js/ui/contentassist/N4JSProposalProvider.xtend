@@ -75,6 +75,11 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 	@Inject
 	private N4JSLabelProvider labelProvider;
 
+	override public void createProposals(ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		val pickyAcceptor = new PickyCompletionProposalAcceptor(acceptor);
+		super.createProposals(context, pickyAcceptor);
+	}
+
 	override completeRuleCall(RuleCall ruleCall, ContentAssistContext contentAssistContext,
 		ICompletionProposalAcceptor acceptor) {
 		val calledRule = ruleCall.getRule();

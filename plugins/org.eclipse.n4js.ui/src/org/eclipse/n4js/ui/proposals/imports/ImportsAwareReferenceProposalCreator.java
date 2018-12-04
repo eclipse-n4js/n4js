@@ -24,6 +24,7 @@ import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ui.contentassist.N4JSCandidateFilter;
+import org.eclipse.n4js.ui.contentassist.PickyCompletionProposalAcceptor;
 import org.eclipse.xtext.conversion.IValueConverter;
 import org.eclipse.xtext.conversion.IValueConverterService;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -102,6 +103,10 @@ public class ImportsAwareReferenceProposalCreator {
 			Function<IEObjectDescription, ICompletionProposal> proposalFactory) {
 
 		if (model != null) {
+			if (PickyCompletionProposalAcceptor.hasSeenScopeFor(acceptor, model, reference)) {
+				return; // avoid scanning the exact same scope twice
+			}
+
 			final IContentAssistScopeProvider contentAssistScopeProvider = (IContentAssistScopeProvider) scopeProvider;
 			final IScope scope = contentAssistScopeProvider.getScopeForContentAssist(model, reference);
 			// iterate over candidates, filter them, and create ICompletionProposals for them
