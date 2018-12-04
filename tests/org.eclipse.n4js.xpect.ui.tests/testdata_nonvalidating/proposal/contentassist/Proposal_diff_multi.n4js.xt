@@ -54,7 +54,7 @@ class A {
 
 // Demonstration of single-line change:
 /* XPECT proposalChange 'methodA2' at 'a.<|>method' ---
-a.[method|methodA2method];
+a.[|methodA2()]method;
 --- */
 var b : A = new A();
 var a : A = new A();

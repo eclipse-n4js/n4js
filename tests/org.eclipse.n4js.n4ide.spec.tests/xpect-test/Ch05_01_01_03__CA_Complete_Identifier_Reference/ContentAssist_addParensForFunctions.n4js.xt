@@ -38,7 +38,7 @@ class ClassLocal {
 let varWithFunc = funcLocal;
 
 
-// XPECT contentAssist at 'funcL<|>;' apply 'funcLocal' --> funcLocal();
+// XPECT contentAssist at 'funcL<|>;' apply 'funcLocal' --> funcLocal(<|>);
 funcL;
 
 
@@ -63,11 +63,11 @@ AliasFuncRemoteInB();
 funcR;
 
 
-// XPECT contentAssist at 'new ClassLocal().in<|>;' apply 'instanceMethod' --> new ClassLocal().instanceMethod();
+// XPECT contentAssist at 'new ClassLocal().in<|>;' apply 'instanceMethod' --> new ClassLocal().instanceMethod(<|>);
 new ClassLocal().in;
 
 
-// XPECT contentAssist at 'ClassLocal.stat<|>;' apply 'staticMethod' --> ClassLocal.staticMethod();
+// XPECT contentAssist at 'ClassLocal.stat<|>;' apply 'staticMethod' --> ClassLocal.staticMethod(<|>);
 ClassLocal.stat;
 
 

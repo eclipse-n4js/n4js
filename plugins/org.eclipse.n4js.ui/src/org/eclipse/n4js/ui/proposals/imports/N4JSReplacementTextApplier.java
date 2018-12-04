@@ -302,7 +302,7 @@ public class N4JSReplacementTextApplier extends ReplacementTextApplier {
 	private void simpleApply(IDocument document, String string, ConfigurableCompletionProposal proposal)
 			throws BadLocationException {
 		final String replacement = string + ConfigurableCompletionProposalExtensions.getReplacementSuffix(proposal);
-		proposal.setCursorPosition(proposal.getReplacementOffset() + replacement.length());
+		proposal.setCursorPosition(replacement.length()); // cursorPosition is relative to replacementOffset!
 		document.replace(proposal.getReplacementOffset(), proposal.getReplacementLength(),
 				replacement);
 		adjustCursorPositionIfRequested(proposal);
@@ -384,7 +384,8 @@ public class N4JSReplacementTextApplier extends ReplacementTextApplier {
 		int cursorPosition = caret.getOffset();
 		proposal.setReplacementOffset(cursorPosition - longReplacementString.length());
 		proposal.setReplacementLength(shortSyntacticReplacementString.length()); // do not include suffix!
-		proposal.setCursorPosition(cursorPosition);
+		proposal.setCursorPosition(
+				cursorPosition - proposal.getReplacementOffset()); // cursorPosition is relative to replacementOffset!
 
 		if (aliasLocation != null) {
 			final int aliasOffset = aliasLocation.getBaseOffset() + aliasLocation.getRelativeOffset();
@@ -416,7 +417,8 @@ public class N4JSReplacementTextApplier extends ReplacementTextApplier {
 					ui.setExitPolicy(new IdentifierExitPolicy('\n'));
 					ui.setExitPosition(
 							viewer,
-							proposal.getCursorPosition()
+							proposal.getReplacementOffset()
+									+ proposal.getCursorPosition()
 									+ ConfigurableCompletionProposalExtensions.getCursorOffset(proposal),
 							0,
 							Integer.MAX_VALUE);
@@ -435,17 +437,15 @@ public class N4JSReplacementTextApplier extends ReplacementTextApplier {
 	private void adjustCursorPositionIfRequested(ConfigurableCompletionProposal proposal) {
 		final int offset = ConfigurableCompletionProposalExtensions.getCursorOffset(proposal);
 		if (offset != 0) {
-			if (viewer.getTextWidget() == null || viewer.getTextWidget().isDisposed()) {
-				return; // do not attempt to set up linked mode in a disposed UI
+			proposal.setCursorPosition(proposal.getCursorPosition() + offset);
+
+			// do not attempt to set up linked mode in a disposed UI
+			if (viewer.getTextWidget() != null && !viewer.getTextWidget().isDisposed()) {
+				final int pos = proposal.getReplacementOffset() + proposal.getCursorPosition() + offset;
+				proposal.setSelectionStart(pos);
+				proposal.setSelectionLength(0);
+				proposal.setSimpleLinkedMode(viewer, '\t', '\n', '\r');
 			}
-
-			final int pos = proposal.getCursorPosition() + offset;
-
-			proposal.setSelectionStart(pos);
-			proposal.setSelectionLength(0);
-			proposal.setSimpleLinkedMode(viewer, '\t', '\n', '\r');
-
-			proposal.setCursorPosition(pos);
 		}
 	}
 }

@@ -26,5 +26,5 @@ var a : A = new A();
 //
 
 
-// XPECT contentAssist at 'a.<|>methodA' apply 'methodA2' insert --> a.methodA2<|>methodA
+// XPECT contentAssist at 'a.<|>methodA' apply 'methodA2' insert --> a.methodA2(<|>)methodA
 a.methodA

@@ -27,6 +27,6 @@ var a : A = new A();
 //| [a.method|a.methodA2method];
 // Testing execution and diff-strings in one line (insert-mode of proposal.):
 /*  XPECT proposalChange 'methodA2' at 'a.<|>method' ---
-a.[method|methodA2method];
+a.[|methodA2()]method;
 --- */
 a.method;
