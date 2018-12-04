@@ -22,5 +22,5 @@ class A {
 var a : A = new A();
 
 // Testing Position & apply
-// XPECT contentAssist at 'a.<|>methodA' apply 'methodA2' --> a.methodA2<|>methodA
+// XPECT contentAssist at 'a.<|>methodA' apply 'methodA2' --> a.methodA2(<|>)methodA
 a.methodA

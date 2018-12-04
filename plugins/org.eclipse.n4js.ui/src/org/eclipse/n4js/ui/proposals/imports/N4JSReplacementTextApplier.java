@@ -35,6 +35,8 @@ import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
 import org.eclipse.n4js.ui.proposals.linkedEditing.IdentifierExitPolicy;
 import org.eclipse.n4js.ui.proposals.linkedEditing.N4JSCompletionProposal;
+import org.eclipse.n4js.ui.utils.ConfigurableCompletionProposalExtensions;
+import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.ReplaceEdit;
@@ -55,11 +57,20 @@ import com.google.inject.MembersInjector;
  * that inserts a reference to a type. This reference will be shortened to a valid simple name. Shortening logic uses
  * the scope provider and therefore knows about existing imports. If no such import is available, a new import will be
  * added. If existing imports conflict with the selected type, an alias is inserted automatically.
- *
- * Since changes are performed at different locations in the same document, line offsets and text widget may appear to
+ * <p>
+ * In addition to adding imports, as needed, this applier also handles the following user data properties in
+ * {@link ConfigurableCompletionProposal}s:
+ * <ul>
+ * <li>{@link ConfigurableCompletionProposalExtensions#setReplacementSuffix(ConfigurableCompletionProposal, String)
+ * replacement suffix}
+ * <li>{@link ConfigurableCompletionProposalExtensions#setCursorOffset(ConfigurableCompletionProposal, int) cursor
+ * offset}
+ * </ul>
+ * <p>
+ * Since changes my be performed at different locations in the same document, line offsets and text widget may appear to
  * flicker when a proposal is selected. This class handles these cases by disabling redraw on the text viewer and moving
  * the canvas one line up if a new line was added at the top of the document.
- *
+ * <p>
  * Instances of this class are created by the injectable {@link N4JSReplacementTextApplier.Factory}.
  */
 public class N4JSReplacementTextApplier extends ReplacementTextApplier {
@@ -231,7 +242,7 @@ public class N4JSReplacementTextApplier extends ReplacementTextApplier {
 				.getAdditionalData(KEY_ORIGINAL_QUALIFIED_NAME);
 
 		if (qualifiedName == null) {
-			super.apply(document, proposal);
+			simpleApply(document, syntacticReplacementString, proposal);
 			return;
 		}
 
@@ -279,7 +290,7 @@ public class N4JSReplacementTextApplier extends ReplacementTextApplier {
 
 			// the simple name is already reachable, i.e. already in use - another import is present
 			// try to use an alias
-			alias = "Alias" + shortQName;
+			alias = "Alias" + UtilN4.toUpperCaseFirst(shortQName);
 		}
 
 		applyWithImport(qualifiedName, alias, document, proposal);
@@ -290,9 +301,11 @@ public class N4JSReplacementTextApplier extends ReplacementTextApplier {
 	 */
 	private void simpleApply(IDocument document, String string, ConfigurableCompletionProposal proposal)
 			throws BadLocationException {
-		proposal.setCursorPosition(string.length());
+		final String replacement = string + ConfigurableCompletionProposalExtensions.getReplacementSuffix(proposal);
+		proposal.setCursorPosition(replacement.length()); // cursorPosition is relative to replacementOffset!
 		document.replace(proposal.getReplacementOffset(), proposal.getReplacementLength(),
-				string);
+				replacement);
+		adjustCursorPositionIfRequested(proposal);
 	}
 
 	/**
@@ -345,13 +358,15 @@ public class N4JSReplacementTextApplier extends ReplacementTextApplier {
 			ConfigurableCompletionProposal proposal) throws BadLocationException {
 		String shortSemanticReplacementString = alias != null ? alias : lastSegmentOrDefaultHost(qualifiedName);
 		String shortSyntacticReplacementString = valueConverter.toString(shortSemanticReplacementString);
+		String longReplacementString = shortSyntacticReplacementString
+				+ ConfigurableCompletionProposalExtensions.getReplacementSuffix(proposal);
 
 		ImportRewriter importRewriter = importRewriterFactory.create(document, context);
 
 		ReplaceEdit replaceEdit = new ReplaceEdit(
 				proposal.getReplacementOffset(),
 				proposal.getReplacementLength(),
-				shortSyntacticReplacementString);
+				longReplacementString);
 		MultiTextEdit compound = new MultiTextEdit();
 		AliasLocation aliasLocation = null;
 		if (alias != null) {
@@ -367,8 +382,10 @@ public class N4JSReplacementTextApplier extends ReplacementTextApplier {
 		document.removePosition(caret);
 
 		int cursorPosition = caret.getOffset();
-		proposal.setReplacementOffset(cursorPosition - shortSemanticReplacementString.length());
-		proposal.setCursorPosition(shortSemanticReplacementString.length());
+		proposal.setReplacementOffset(cursorPosition - longReplacementString.length());
+		proposal.setReplacementLength(shortSyntacticReplacementString.length()); // do not include suffix!
+		proposal.setCursorPosition(
+				cursorPosition - proposal.getReplacementOffset()); // cursorPosition is relative to replacementOffset!
 
 		if (aliasLocation != null) {
 			final int aliasOffset = aliasLocation.getBaseOffset() + aliasLocation.getRelativeOffset();
@@ -388,10 +405,10 @@ public class N4JSReplacementTextApplier extends ReplacementTextApplier {
 					group.addPosition(new LinkedPosition(
 							currentDocument,
 							proposal.getReplacementOffset(),
-							proposal.getCursorPosition(),
+							proposal.getReplacementLength(),
 							LinkedPositionGroup.NO_STOP));
 					proposal.setSelectionStart(proposal.getReplacementOffset());
-					proposal.setSelectionLength(proposal.getCursorPosition());
+					proposal.setSelectionLength(proposal.getReplacementLength());
 					LinkedModeModel model = new LinkedModeModel();
 					model.addGroup(group);
 					model.forceInstall();
@@ -400,7 +417,9 @@ public class N4JSReplacementTextApplier extends ReplacementTextApplier {
 					ui.setExitPolicy(new IdentifierExitPolicy('\n'));
 					ui.setExitPosition(
 							viewer,
-							proposal.getCursorPosition() + proposal.getReplacementOffset(),
+							proposal.getReplacementOffset()
+									+ proposal.getCursorPosition()
+									+ ConfigurableCompletionProposalExtensions.getCursorOffset(proposal),
 							0,
 							Integer.MAX_VALUE);
 					ui.setCyclingMode(LinkedModeUI.CYCLE_NEVER);
@@ -409,8 +428,24 @@ public class N4JSReplacementTextApplier extends ReplacementTextApplier {
 					logger.error(e.getMessage(), e);
 				}
 			});
+		} else {
+			adjustCursorPositionIfRequested(proposal);
 		}
 		return cursorPosition;
 	}
 
+	private void adjustCursorPositionIfRequested(ConfigurableCompletionProposal proposal) {
+		final int offset = ConfigurableCompletionProposalExtensions.getCursorOffset(proposal);
+		if (offset != 0) {
+			proposal.setCursorPosition(proposal.getCursorPosition() + offset);
+
+			// do not attempt to set up linked mode in a disposed UI
+			if (viewer.getTextWidget() != null && !viewer.getTextWidget().isDisposed()) {
+				final int pos = proposal.getReplacementOffset() + proposal.getCursorPosition() + offset;
+				proposal.setSelectionStart(pos);
+				proposal.setSelectionLength(0);
+				proposal.setSimpleLinkedMode(viewer, '\t', '\n', '\r');
+			}
+		}
+	}
 }
