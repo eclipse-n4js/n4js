@@ -20,12 +20,7 @@ import org.eclipse.n4js.test.helper.hlc.N4CliHelper;
 import org.junit.Test;
 
 /**
- * IMPORTANT: All the tests in this class require that n4jsc.jar exist. Before executing this test, in the console,
- * change your current to the folder {@code git/n4js/tools/scripts/}. Then inside that folder, execute the
- * {@code mvn-cp-n4jsjar.sh}.
- * <p>
- * This script executes Maven locally to create n4jsc.jar and copy the n4jsc.jar to the folder
- * git/n4js/tests/org.eclipse.n4js.hlc.tests/target required by these tests.
+ * IMPORTANT: for info on how to run this test locally, see {@link AbstractN4jscJarTest}!
  */
 public class SingleFileCompileN4jscJarTest extends AbstractN4jscJarTest {
 

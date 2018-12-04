@@ -41,7 +41,7 @@ import com.google.inject.Inject;
  */
 @RunWith(XtextRunner.class)
 @InjectWith(N4JSInjectorProvider.class)
-public class N4jscliTest extends AbstractN4jscJarTest {
+public class N4jsCliTest extends AbstractN4jscJarTest {
 
 	private static final int PORT = 4873;
 
@@ -63,7 +63,7 @@ public class N4jscliTest extends AbstractN4jscJarTest {
 	 * Constructor
 	 *
 	 */
-	public N4jscliTest() {
+	public N4jsCliTest() {
 		super("fixture");
 	}
 
@@ -134,7 +134,7 @@ public class N4jscliTest extends AbstractN4jscJarTest {
 		final ProcessResult result2 = commandFactory
 				.createInstallPackageCommand(pathToProject(PROJECT_NAME).toFile(), "n4js-cli@test", false)
 				.execute();
-		assertEquals("Calling npm install n4js-cli@canary failed", 0, result2.getExitCode());
+		assertEquals("Calling npm install n4js-cli@test failed", 0, result2.getExitCode());
 
 		// Step 3: Test that calling n4js-cli is OK
 		String fullCmd = pathToProject(PROJECT_NAME).toString() + File.separatorChar + NODE_MODULES
