@@ -60,6 +60,8 @@ import static extension org.eclipse.n4js.ui.utils.ConfigurableCompletionProposal
  */
 class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 
+	private static final String KEY_SCANNED_SCOPES = N4JSProposalProvider.name + "_scannedScopes";
+
 	@Inject
 	private ImportsAwareReferenceProposalCreator importAwareReferenceProposalCreator
 
@@ -74,11 +76,6 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 
 	@Inject
 	private N4JSLabelProvider labelProvider;
-
-	override public void createProposals(ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
-		val pickyAcceptor = new PickyCompletionProposalAcceptor(acceptor);
-		super.createProposals(context, pickyAcceptor);
-	}
 
 	override completeRuleCall(RuleCall ruleCall, ContentAssistContext contentAssistContext,
 		ICompletionProposalAcceptor acceptor) {
@@ -120,6 +117,10 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 	override protected lookupCrossReference(CrossReference crossReference, EReference reference,
 		ContentAssistContext context, ICompletionProposalAcceptor acceptor, Predicate<IEObjectDescription> filter) {
 
+		if (haveScannedScopeFor(context.currentModel, reference)) {
+			return; // avoid scanning the same scope twice
+		}
+
 		if (reference.EReferenceType.isSuperTypeOf(TypesPackage.Literals.TYPE) ||
 			TypesPackage.Literals.TYPE.isSuperTypeOf(reference.EReferenceType)) {
 
@@ -137,6 +138,17 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 		} else {
 			super.lookupCrossReference(crossReference, reference, context, acceptor, filter)
 		}
+	}
+
+	/**
+	 * Tells whether the scope for the given context and reference has already been scanned for completion proposals.
+	 * In addition, the scope for the given context and reference is marked as having been scanned (if not marked as
+	 * such already).
+	 */
+	def private boolean haveScannedScopeFor(EObject context, EReference reference) {
+		// Maybe this logic could be improved further by not just returning true in case of identical context/reference
+		// but also for "similar" contexts/references of which we know they will lead to an equal scope.
+		return !announceProcessing(#[KEY_SCANNED_SCOPES, context, reference]);
 	}
 
 	/**
