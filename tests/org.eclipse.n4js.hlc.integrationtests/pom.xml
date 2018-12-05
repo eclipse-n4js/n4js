@@ -125,7 +125,7 @@ Contributors:
 						<failIfNoTests>${tycho-surefire-plugin.failIfNoTests}</failIfNoTests>
 						<includes>
 							<include>**/*JarTest.java</include>
-							<include>**/*cliTest.java</include>
+							<include>**/*CliTest.java</include>
 						</includes>
 					</configuration>
 					<executions>

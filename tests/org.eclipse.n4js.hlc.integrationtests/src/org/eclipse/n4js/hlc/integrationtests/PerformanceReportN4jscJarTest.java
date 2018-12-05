@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.hlc.integrationtests;
 
+import static org.eclipse.n4js.hlc.integrationtests.HlcTestingConstants.WORKSPACE_FOLDER;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
@@ -26,11 +27,11 @@ import org.junit.Test;
 import com.google.common.io.CharStreams;
 
 /**
- *
+ * IMPORTANT: for info on how to run this test locally, see {@link AbstractN4jscJarTest}!
  */
-public class PerformanceReportTest extends AbstractN4jscJarTest {
+public class PerformanceReportN4jscJarTest extends AbstractN4jscJarTest {
 	/** Initializes test workspace data. */
-	public PerformanceReportTest() {
+	public PerformanceReportN4jscJarTest() {
 		super("probands/GH-1062", false);
 	}
 

@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.hlc.integrationtests;
 
+import static org.eclipse.n4js.hlc.integrationtests.HlcTestingConstants.WORKSPACE_FOLDER;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
@@ -19,13 +20,15 @@ import org.junit.Test;
 
 /**
  * Uses the {@code n4jsc.jar} to compile and run all tests in a given project.
- *
+ * <p>
  * The project contains passing as well as failing tests.
+ * <p>
+ * IMPORTANT: for info on how to run this test locally, see {@link AbstractN4jscJarTest}!
  */
-public class CompileAndRunTestsWithFailuresTest extends AbstractN4jscJarTest {
+public class CompileRunTestWithFailuresN4jscJarTest extends AbstractN4jscJarTest {
 
 	/** */
-	public CompileAndRunTestsWithFailuresTest() {
+	public CompileRunTestWithFailuresN4jscJarTest() {
 		super("probands/GH-975-tester-failures", true);
 	}
 
