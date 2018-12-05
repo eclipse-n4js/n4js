@@ -14,7 +14,6 @@ import com.google.common.base.Predicate
 import com.google.common.base.Predicates
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
-import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
 import org.eclipse.n4js.ts.types.TClass
@@ -34,14 +33,14 @@ class TypesScopeFilter {
 
 	def Predicate<? super IEObjectDescription> getTypesFilterCriteria(EObject context, EReference reference) {
 		switch (context) {
-			ParameterizedTypeRef:
+			TypeRef:
 				context.getTypesFilterCriteria(reference)
 			default:
-				Predicates.alwaysTrue
+				context.getTypeReferenceFilterCriteria(reference)
 		}
 	}
 
-	protected def getTypesFilterCriteria(ParameterizedTypeRef context, EReference reference) {
+	protected def getTypesFilterCriteria(TypeRef context, EReference reference) {
 		if (reference === TypeRefsPackage.eINSTANCE.parameterizedTypeRef_AstNamespace) {
 			return namespaceCriterion;
 		}
@@ -81,7 +80,7 @@ class TypesScopeFilter {
 
 	protected def Predicate<? super IEObjectDescription> getParameterTypeCriteria() {
 		[
-			!TypesPackage.Literals.TMETHOD.isSuperTypeOf(EClass)
+			!TypesPackage.Literals.TFUNCTION.isSuperTypeOf(EClass)
 			&& TypesPackage.Literals.UNDEFINED_TYPE != EClass
 			&& TypesPackage.Literals.NULL_TYPE != EClass
 			&& TypesPackage.Literals.VOID_TYPE != EClass
@@ -90,7 +89,7 @@ class TypesScopeFilter {
 
 	protected def Predicate<? super IEObjectDescription> getReturnTypeCriteria() {
 		[
-			!TypesPackage.Literals.TMETHOD.isSuperTypeOf(EClass)
+			!TypesPackage.Literals.TFUNCTION.isSuperTypeOf(EClass)
 			&& TypesPackage.Literals.UNDEFINED_TYPE != EClass
 			&& TypesPackage.Literals.NULL_TYPE != EClass
 		]
@@ -98,7 +97,7 @@ class TypesScopeFilter {
 
 	protected def Predicate<? super IEObjectDescription> getFieldTypeCriteria() {
 		[
-			!TypesPackage.Literals.TMETHOD.isSuperTypeOf(EClass)
+			!TypesPackage.Literals.TFUNCTION.isSuperTypeOf(EClass)
 			&& TypesPackage.Literals.UNDEFINED_TYPE != EClass
 			&& TypesPackage.Literals.NULL_TYPE != EClass
 			&& TypesPackage.Literals.VOID_TYPE != EClass
