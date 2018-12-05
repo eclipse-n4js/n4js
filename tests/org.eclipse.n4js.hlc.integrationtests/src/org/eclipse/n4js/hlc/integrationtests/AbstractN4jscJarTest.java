@@ -12,6 +12,7 @@ package org.eclipse.n4js.hlc.integrationtests;
 
 import static org.eclipse.n4js.hlc.integrationtests.HlcTestingConstants.N4JSC_JAR;
 import static org.eclipse.n4js.hlc.integrationtests.HlcTestingConstants.TARGET;
+import static org.eclipse.n4js.hlc.integrationtests.HlcTestingConstants.WORKSPACE_FOLDER;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,9 +48,6 @@ import com.google.common.base.Predicates;
 public abstract class AbstractN4jscJarTest {
 
 	// Running directory will be ${TARGET}/${WSP}
-
-	/** Sub folder in target folder. */
-	protected static final String WORKSPACE_FOLDER = "wsp";
 
 	/** source of test data, will be copied to TARGET/WSP */
 	protected final String fixture;

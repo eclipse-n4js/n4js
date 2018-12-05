@@ -118,6 +118,11 @@ public class N4jscBase implements IApplication {
 	 */
 	public static final String MARKER_RUNNER_OUPTUT = "======= =======";
 
+	/**
+	 * Usage information.
+	 */
+	public static final String USAGE = "Usage: java -jar n4jsc.jar [options] FILE FILE ...";
+
 	/** Printing of usage and exit */
 	@Option(name = "--help", aliases = "-h", usage = "print help & exit")
 	// , help=true // TODO new versions(>3.5.2014) of args4j, support help-flag
@@ -874,7 +879,7 @@ public class N4jscBase implements IApplication {
 	 *            stream to write to
 	 */
 	private static void printExtendedUsage(CmdLineParser parser, PrintStream ps) {
-		ps.println("Usage: java -jar n4jsc.jar [options] FILE FILE ...");
+		ps.println(USAGE);
 		parser.printUsage(ps);
 
 	}

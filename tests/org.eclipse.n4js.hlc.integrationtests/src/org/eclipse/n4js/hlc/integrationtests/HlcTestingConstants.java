@@ -29,6 +29,9 @@ public class HlcTestingConstants {
 	/** Standard target folder (name+"/"), the base of maven-compile results. */
 	static final String TARGET_FOLDER = TARGET + "/";
 
+	/** Sub folder in target folder. */
+	protected static final String WORKSPACE_FOLDER = "wsp";
+
 	/**
 	 * Environment variable for the path of the generated {@code n4jsc.jar}.
 	 */

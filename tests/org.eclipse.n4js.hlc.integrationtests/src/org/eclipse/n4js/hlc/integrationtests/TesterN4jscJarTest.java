@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.hlc.integrationtests;
 
+import static org.eclipse.n4js.hlc.integrationtests.HlcTestingConstants.WORKSPACE_FOLDER;
 import static org.eclipse.n4js.runner.SystemLoaderInfo.COMMON_JS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
