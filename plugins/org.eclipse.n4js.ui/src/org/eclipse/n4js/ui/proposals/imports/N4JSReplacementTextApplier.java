@@ -441,7 +441,7 @@ public class N4JSReplacementTextApplier extends ReplacementTextApplier {
 
 			// do not attempt to set up linked mode in a disposed UI
 			if (viewer.getTextWidget() != null && !viewer.getTextWidget().isDisposed()) {
-				final int pos = proposal.getReplacementOffset() + proposal.getCursorPosition() + offset;
+				final int pos = proposal.getReplacementOffset() + proposal.getCursorPosition();
 				proposal.setSelectionStart(pos);
 				proposal.setSelectionLength(0);
 				proposal.setSimpleLinkedMode(viewer, '\t', '\n', '\r');
