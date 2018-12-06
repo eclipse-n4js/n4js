@@ -460,7 +460,9 @@ public class ExternalLibraryBuilder {
 			@Override
 			protected ToBeBuilt getToBeBuilt(ToBeBuiltComputer computer, N4JSEclipseProject n4Project,
 					IProgressMonitor monitor, IToBeBuiltComputerContribution contribution) {
-
+				if (n4Project.isExternal()) { // #1046 location won't be found anyway TODO review and probably adjust
+					return new ToBeBuilt();
+				}
 				return computer.removeProject(n4Project.getProject(), monitor);
 			}
 
