@@ -51,11 +51,17 @@ import com.google.inject.Inject;
 @ImplementedBy(HlcExternalIndexSynchronizer.class)
 public abstract class ExternalIndexSynchronizer {
 
+	/**
+	 * Used for finding locations and accessing the Xtext index.
+	 */
 	@Inject
-	private IN4JSCore core;
+	protected IN4JSCore core;
 
+	/**
+	 * Find external workspace location and synchronize external projects.
+	 */
 	@Inject
-	private ExternalLibraryWorkspace externalLibraryWorkspace;
+	protected ExternalLibraryWorkspace externalLibraryWorkspace;
 
 	@Inject
 	private ShadowingInfoHelper shadowingInfoHelper;

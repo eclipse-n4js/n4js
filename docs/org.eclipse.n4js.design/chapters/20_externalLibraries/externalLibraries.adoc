@@ -19,28 +19,25 @@ task::GH-653[]
 task::GH-862[]
 task::GH-1133[]
 
-[[sec:lmPurpose]]
-
-==  Purpose
 
 *External libraries* are N4JS projects that are provided by the N4JS IDE:
 the _built-in_/_shipped_ libraries, and all _3rd-party libraries_ that were installed by the _N4JS library manager_.
 Each external library consist of a valid package.json file located in the project root and an arbitrary number of files supported by N4JS projects, e.g. _.n4js_, _.njsd_ and _.js_ files.
 The purpose of the external libraries is to share and to provide core and third party functionality for N4JS developers both in compile and runtime without rebuilding them.
 
-
 <<sec:Built-in_External_Libraries>> are external libraries that provide some basic functionality for N4JS programmers, such as the class `N4Injector`.
 
 *3rd-party libraries* are external libraries that are not built-in/shipped with the N4JS IDE.
 Instead, they can be installed later by the user from third party providers.
-Currently, only _npm packages_ are supported, but support for other providers such as maven is planned.
+Currently, only _npm packages_ are supported.
 
 The *N4JS index* is populated when the external libraries are compiled.
 However, this compilation is only triggered through the library manager, but not when building workspace projects. (Self-evidently, the index is also populated when compiling workspace projects.)
 
 *Name clashes* of projects can happen and they are solved in the following order:
-User workspace projects always shadow external libraries.
-In case of a name clash between a shipped and a 3rd-party library, the 3rd-party library shadows the shipped project.
+
+1. User workspace projects always shadow external libraries.
+2. In case of a name clash between a shipped and a 3rd-party library, the 3rd-party library shadows the shipped project.
 
 The *N4JS library manager* is a tool in the N4JS IDE to view and manage external libraries.
 In particular, the user can (un-)install new 3rd-party libraries, or can trigger the build of all external libraries to re-populate the N4JS index.
@@ -50,7 +47,11 @@ The library manager also supports other maintenance actions such as deleting all
 [.language-n4js]
 ==  Major Components
 
-External libraries are supported based on different components all over the application. The followings are the most important ones:
+External libraries are supported based on different components all over the application. 
+
+
+
+The followings are the most important ones:
 
 * *External Resources* (`IExternalResource`)
 ** These are customized `IResource` implementations for external projects, folders and files.
@@ -71,9 +72,6 @@ External libraries are supported based on different components all over the appl
 ** Unlike in case of any other ordinary projects, this builder does not triggers a build via the `org.eclipse.core.internal.events.BuildManager` but modifies the persisted Xtext index (`IBuilderState`) directly.
 ** Considers shadowed external libraries when updating the persisted Xtext index.
 ** Makes sure that the external library related Xtext index is persistent and will be available on the next application startup.
-* *Local Git Repository Clone Supplier*
-** Singleton service that makes sure a local Git repository clone exists in the file system with all available N4JS type definition files.
-** This service is necessary to be able to get the most recent state of a type definitions for a particular _npm_ package.
 * *External Library Xtext Index Persister*
 ** This class is responsible for recovering the consistent external library Xtext index state at application startup.
 ** Scheduled on the very first application startup to prepare the Xtext index for the available external libraries.
@@ -119,11 +117,6 @@ This service is responsible for downloading, installing third party npm dependen
 ===  External Library Builder
 
 This builder is responsible for updating the persisted Xtext index state with external library content directly through the `IBuilderState`. When providing a subset of external libraries to either build or clean, internally it orders the provided external libraries based on the project dependencies. Also, it might skip building all those external libraries that have are being shadowed by a workspace counterpart. An external library is being shadowed by an ordinary workspace project, if the workspace project is accessible and has exactly the same project name as the external library.
-
-[[subsec:Local_Git_Repository_Clone_Supplier]]
-===  Local Git Repository Clone Supplier
-
-This supplier is used for ensuring that the official N4JS type definition repositoryfootnote:[https://github.com/NumberFour/n4jsd.git] content is available and kept in sync in a local Git clone on the file system. The content of the cloned repository is got synchronized on each application startup, each time when a third party npm dependency is being installed via the _npm Manager_ and/or when the external libraries are being reloaded from the _External Library Preference Page_. The technical reason of keeping such a local Git repository clone on the file system is to provide a convenient way to traverse the provided type definition files and find the proper version for a particular npm package.
 
 [[subsec:External_Library_Xtext_Index_Persister]]
 ===  External Library Xtext Index Persister

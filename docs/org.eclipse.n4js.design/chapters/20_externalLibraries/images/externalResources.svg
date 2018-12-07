@@ -1,195 +1,198 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 601 419" width="601" height="419">
+<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 494 392" width="494" height="392">
   <defs>
     <font-face font-family="Helvetica" font-size="8" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="522.9492" cap-height="717.28516" ascent="770.0195" descent="-229.98047" font-weight="400">
       <font-face-src>
         <font-face-name name="Helvetica"/>
       </font-face-src>
     </font-face>
-    <font-face font-family="Helvetica" font-size="12" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="522.9492" cap-height="717.28516" ascent="770.0195" descent="-229.98047" font-weight="400">
+    <font-face font-family="Helvetica" font-size="12" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="532.22656" cap-height="719.7266" ascent="770.0195" descent="-229.98047" font-weight="700">
       <font-face-src>
-        <font-face-name name="Helvetica"/>
+        <font-face-name name="Helvetica-Bold"/>
       </font-face-src>
     </font-face>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -6 11 12" markerWidth="11" markerHeight="12" color="black">
+      <g>
+        <path d="M 8.4 0 L 0 -4.9 L 0 4.9 Z" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
     <font-face font-family="Helvetica" font-size="11" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="522.9492" cap-height="717.28516" ascent="770.0195" descent="-229.98047" font-weight="400">
       <font-face-src>
         <font-face-name name="Helvetica"/>
       </font-face-src>
     </font-face>
-    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -8 14 16" markerWidth="14" markerHeight="16" color="black">
-      <g>
-        <path d="M 12 0 L 0 -7 L 0 7 Z" fill="none" stroke="currentColor" stroke-width="1"/>
-      </g>
-    </marker>
+    <font-face font-family="Helvetica" font-size="3" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="522.9492" cap-height="717.28516" ascent="770.0195" descent="-229.98047" font-weight="400">
+      <font-face-src>
+        <font-face-name name="Helvetica"/>
+      </font-face-src>
+    </font-face>
   </defs>
   <metadata> Produced by OmniGraffle 7.8.2 
-    <dc:date>2018-12-06 18:19:37 +0000</dc:date>
+    <dc:date>2018-12-07 10:41:41 +0000</dc:date>
   </metadata>
   <g id="Canvas_1" fill-opacity="1" stroke-dasharray="none" stroke="none" stroke-opacity="1" fill="none">
     <title>Canvas 1</title>
     <g id="Canvas_1: Layer 1">
       <title>Layer 1</title>
       <g id="Graphic_152">
-        <rect x="289.60853" y="20" width="119.16693" height="30.023437" fill="white"/>
-        <rect x="289.60853" y="20" width="119.16693" height="30.023437" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
-        <text transform="translate(294.60853 23.011718)" fill="black">
+        <rect x="187.60853" y="12" width="119.16693" height="30.023437" fill="white"/>
+        <rect x="187.60853" y="12" width="119.16693" height="30.023437" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(192.60853 15.011718)" fill="black">
           <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="34.79245" y="8">«interface»</tspan>
-          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="27.237763" y="21">IResource</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="25.57077" y="21">IResource</tspan>
         </text>
       </g>
-      <g id="Group_525">
-        <g id="Graphic_528">
-          <rect x="272.87333" y="364.9688" width="152.63734" height="33.74828" fill="white"/>
-          <rect x="272.87333" y="364.9688" width="152.63734" height="33.74828" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
-          <text transform="translate(277.87333 369.9688)" fill="black">
-            <tspan font-family="Helvetica" font-size="11" font-weight="400" fill="black" x="0" y="10">getExternalResource()</tspan>
-          </text>
-        </g>
-        <g id="Graphic_527">
-          <rect x="272.87333" y="341.71707" width="152.63734" height="20.248968" fill="white"/>
-          <rect x="272.87333" y="341.71707" width="152.63734" height="20.248968" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
-          <text transform="translate(277.87333 346.71707)" fill="black">
-            <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="21.962223" y="11">IExternalResource</tspan>
-          </text>
-        </g>
-        <g id="Graphic_526">
-          <rect x="272.87333" y="361.12317" width="152.63734" height="3.846013" fill="white"/>
-          <rect x="272.87333" y="361.12317" width="152.63734" height="3.846013" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
-        </g>
-      </g>
       <g id="Graphic_831">
-        <rect x="121" y="146.85931" width="119.16693" height="30.023437" fill="white"/>
-        <rect x="121" y="146.85931" width="119.16693" height="30.023437" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
-        <text transform="translate(126 149.87103)" fill="black">
+        <rect x="19" y="138.85931" width="119.16693" height="30.023437" fill="white"/>
+        <rect x="19" y="138.85931" width="119.16693" height="30.023437" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(24 141.87103)" fill="black">
           <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="34.79245" y="8">«interface»</tspan>
-          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="43.248505" y="21">IFile</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="42.580536" y="21">IFile</tspan>
         </text>
       </g>
       <g id="Graphic_832">
-        <rect x="19" y="83.42966" width="119.16693" height="30.023437" fill="white"/>
-        <rect x="19" y="83.42966" width="119.16693" height="30.023437" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
-        <text transform="translate(24 86.44138)" fill="black">
-          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="34.79245" y="8">«interface»</tspan>
-          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="31.901825" y="21">IStorage</tspan>
+        <rect x="12" y="75.42966" width="74.16693" height="30.023437" fill="white"/>
+        <rect x="12" y="75.42966" width="74.16693" height="30.023437" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(17 78.44138)" fill="black">
+          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="12.29245" y="8">«interface»</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="8.077606" y="21">IStorage</tspan>
         </text>
       </g>
       <g id="Graphic_833">
-        <rect x="289.60853" y="83.42966" width="119.16693" height="30.023437" fill="white"/>
-        <rect x="289.60853" y="83.42966" width="119.16693" height="30.023437" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
-        <text transform="translate(294.60853 86.44138)" fill="black">
+        <rect x="187.60853" y="75.42966" width="119.16693" height="30.023437" fill="white"/>
+        <rect x="187.60853" y="75.42966" width="119.16693" height="30.023437" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(192.60853 78.44138)" fill="black">
           <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="34.79245" y="8">«interface»</tspan>
-          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="26.90085" y="21">IContainer</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="24.91452" y="21">IContainer</tspan>
         </text>
       </g>
       <g id="Graphic_834">
-        <rect x="289.60853" y="146.85931" width="119.16693" height="30.023437" fill="white"/>
-        <rect x="289.60853" y="146.85931" width="119.16693" height="30.023437" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
-        <text transform="translate(294.60853 149.87103)" fill="black">
+        <rect x="187.60853" y="138.85931" width="119.16693" height="30.023437" fill="white"/>
+        <rect x="187.60853" y="138.85931" width="119.16693" height="30.023437" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(192.60853 141.87103)" fill="black">
           <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="34.79245" y="8">«interface»</tspan>
-          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="34.242645" y="21">IProject</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="32.575653" y="21">IProject</tspan>
         </text>
       </g>
       <g id="Graphic_835">
-        <rect x="458.21706" y="146.85931" width="119.16693" height="30.023437" fill="white"/>
-        <rect x="458.21706" y="146.85931" width="119.16693" height="30.023437" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
-        <text transform="translate(463.21706 149.87103)" fill="black">
+        <rect x="356.21706" y="138.85931" width="119.16693" height="30.023437" fill="white"/>
+        <rect x="356.21706" y="138.85931" width="119.16693" height="30.023437" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(361.21706 141.87103)" fill="black">
           <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="34.79245" y="8">«interface»</tspan>
-          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="35.909638" y="21">IFolder</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="34.58249" y="21">IFolder</tspan>
         </text>
       </g>
       <g id="Graphic_836">
-        <rect x="121" y="212.57336" width="119.16693" height="30.023437" fill="white"/>
-        <rect x="121" y="212.57336" width="119.16693" height="30.023437" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
-        <text transform="translate(126 215.58508)" fill="black">
-          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="41.020966" y="8">«class»</tspan>
-          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="44.915497" y="21">File</tspan>
+        <rect x="19" y="192.5" width="119.16693" height="30.023437" fill="white"/>
+        <rect x="19" y="192.5" width="119.16693" height="30.023437" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(24 200.51172)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="44.24753" y="11">File</tspan>
         </text>
       </g>
       <g id="Graphic_837">
-        <rect x="289.60853" y="212.57336" width="119.16693" height="30.023437" fill="white"/>
-        <rect x="289.60853" y="212.57336" width="119.16693" height="30.023437" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
-        <text transform="translate(294.60853 215.58508)" fill="black">
-          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="41.020966" y="8">«class»</tspan>
-          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="35.909638" y="21">Project</tspan>
+        <rect x="187.60853" y="192.5" width="119.16693" height="30.023437" fill="white"/>
+        <rect x="187.60853" y="192.5" width="119.16693" height="30.023437" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(192.60853 200.51172)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="34.242645" y="11">Project</tspan>
         </text>
       </g>
       <g id="Graphic_838">
-        <rect x="458.21706" y="212.57336" width="119.16693" height="30.023437" fill="white"/>
-        <rect x="458.21706" y="212.57336" width="119.16693" height="30.023437" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
-        <text transform="translate(463.21706 215.58508)" fill="black">
-          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="41.020966" y="8">«class»</tspan>
-          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="37.57663" y="21">Folder</tspan>
+        <rect x="356.21706" y="192.5" width="119.16693" height="30.023437" fill="white"/>
+        <rect x="356.21706" y="192.5" width="119.16693" height="30.023437" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(361.21706 200.51172)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="36.24948" y="11">Folder</tspan>
         </text>
       </g>
       <g id="Graphic_839">
-        <rect x="289.60853" y="278.2874" width="119.16693" height="30.023437" fill="white"/>
-        <rect x="289.60853" y="278.2874" width="119.16693" height="30.023437" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
-        <text transform="translate(294.60853 281.29913)" fill="black">
-          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="41.020966" y="8">«class»</tspan>
-          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="13.898895" y="21">ExternalProject</tspan>
+        <rect x="187.60853" y="244.1407" width="119.16693" height="30.023437" fill="white"/>
+        <rect x="187.60853" y="244.1407" width="119.16693" height="30.023437" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(192.60853 252.1524)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="10.564911" y="11">ExternalProject</tspan>
         </text>
       </g>
       <g id="Graphic_840">
-        <rect x="121" y="278.2874" width="119.16693" height="30.023437" fill="white"/>
-        <rect x="121" y="278.2874" width="119.16693" height="30.023437" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
-        <text transform="translate(126 281.29913)" fill="black">
-          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="41.020966" y="8">«class»</tspan>
-          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="22.904755" y="21">ExternalFile</tspan>
+        <rect x="19" y="244.1407" width="119.16693" height="30.023437" fill="white"/>
+        <rect x="19" y="244.1407" width="119.16693" height="30.023437" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(24 252.1524)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="20.569794" y="11">ExternalFile</tspan>
         </text>
       </g>
       <g id="Graphic_841">
-        <rect x="458.21706" y="278.2874" width="119.16693" height="30.023437" fill="white"/>
-        <rect x="458.21706" y="278.2874" width="119.16693" height="30.023437" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
-        <text transform="translate(463.21706 281.29913)" fill="black">
-          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="41.020966" y="8">«class»</tspan>
-          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="15.565888" y="21">ExternalFolder</tspan>
+        <rect x="356.21706" y="244.1407" width="119.16693" height="30.023437" fill="white"/>
+        <rect x="356.21706" y="244.1407" width="119.16693" height="30.023437" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(361.21706 252.1524)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="12.571747" y="11">ExternalFolder</tspan>
         </text>
       </g>
       <g id="Line_165">
-        <line x1="349.192" y1="83.42966" x2="349.192" y2="63.52344" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <line x1="247.192" y1="75.42966" x2="247.192" y2="51.923437" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
       </g>
       <g id="Line_842">
-        <path d="M 180.58347 146.85931 L 180.58347 65.359314 L 349.192 65.359314 L 349.192 65.52344 L 349.192 63.52344" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <path d="M 108.3752 138.85931 L 108.3752 56.959314 L 247.192 56.959314 L 247.192 51.923437" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
       </g>
       <g id="Line_843">
-        <path d="M 180.58347 146.85931 L 180.58347 130.35931 L 78.58347 130.35931 L 78.58347 126.9531" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <path d="M 48.79173 138.85931 L 48.79173 126.95931 L 49.083466 117.3531 L 49.083466 115.3531" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
       </g>
       <g id="Line_844">
-        <line x1="349.192" y1="146.35931" x2="349.192" y2="126.9531" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <line x1="247.192" y1="138.85931" x2="247.192" y2="115.3531" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
       </g>
       <g id="Line_845">
-        <line x1="180.58347" y1="212.57336" x2="180.58347" y2="190.38275" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+        <line x1="78.58347" y1="192.5" x2="78.58347" y2="178.78275" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
       </g>
       <g id="Line_846">
-        <path d="M 517.8005 146.85931 L 517.8005 130.24833 L 349.192 130.24833 L 349.192 126.9531" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <path d="M 415.80053 138.85931 L 415.80053 122.24833 L 247.192 122.24833 L 247.192 115.3531" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
       </g>
       <g id="Line_847">
-        <line x1="349.192" y1="212.57336" x2="349.192" y2="190.38275" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+        <line x1="247.192" y1="192.5" x2="247.192" y2="178.78275" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
       </g>
       <g id="Line_848">
-        <line x1="517.8005" y1="212.57336" x2="517.8005" y2="190.38275" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+        <line x1="415.80053" y1="192.5" x2="415.80053" y2="178.78275" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
       </g>
       <g id="Line_849">
-        <path d="M 349.192 398.71707 L 349.192 413.69363 L 596 413.69363 L 596 65 L 349.192 65 L 349.192 63.52344" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <path d="M 247.192 375 L 247.192 386.9 L 489 386.9 L 489 57 L 247.192 57 L 247.192 51.923437" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
       </g>
       <g id="Line_850">
-        <line x1="180.58347" y1="278.2874" x2="180.58347" y2="256.0968" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <line x1="78.58347" y1="244.1407" x2="78.58347" y2="232.42344" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
       </g>
       <g id="Line_851">
-        <line x1="349.192" y1="278.2874" x2="349.192" y2="256.0968" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <line x1="247.192" y1="244.1407" x2="247.192" y2="232.42344" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
       </g>
       <g id="Line_852">
-        <line x1="517.8005" y1="277.7874" x2="517.8005" y2="256.0968" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <line x1="415.80053" y1="244.1407" x2="415.80053" y2="232.42344" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
       </g>
       <g id="Line_853">
-        <path d="M 517.8005 308.81085 L 517.8005 325.31085 L 349.192 325.31085 L 349.192 328.21707" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+        <path d="M 415.80053 274.16412 L 415.80053 289.06412 L 247.192 289.06412 L 247.192 294.1" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
       </g>
       <g id="Line_854">
-        <line x1="349.192" y1="308.81085" x2="349.192" y2="328.21707" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+        <line x1="247.192" y1="274.66412" x2="247.192" y2="294.1" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
       </g>
       <g id="Line_855">
-        <path d="M 180.58347 308.31085 L 180.58347 324.81085 L 349.192 324.81085 L 349.192 328.21707" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+        <path d="M 78.58347 274.66412 L 78.58347 289.56412 L 247.192 289.56412 L 247.192 294.1" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Group_856">
+        <g id="Graphic_859">
+          <rect x="175.442" y="352" width="143.5" height="23" fill="white"/>
+          <rect x="175.442" y="352" width="143.5" height="23" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(180.442 357)" fill="black">
+            <tspan font-family="Helvetica" font-size="11" font-weight="400" fill="black" x="0" y="10">getExternalResource()</tspan>
+          </text>
+        </g>
+        <g id="Graphic_858">
+          <rect x="175.442" y="338" width="143.5" height="14" fill="white"/>
+          <rect x="175.442" y="338" width="143.5" height="14" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(180.442 343)" fill="black">
+            <tspan font-family="Helvetica" font-size="3" font-weight="400" fill="black" x="0" y="3"> </tspan>
+          </text>
+        </g>
+        <g id="Graphic_857">
+          <rect x="175.442" y="304" width="143.5" height="34" fill="white"/>
+          <rect x="175.442" y="304" width="143.5" height="34" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(180.442 309)" fill="black">
+            <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="46.958984" y="8">«interface»</tspan>
+            <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="14.05957" y="21">IExternalResource</tspan>
+          </text>
+        </g>
       </g>
     </g>
   </g>

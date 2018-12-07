@@ -30,7 +30,6 @@ import org.eclipse.n4js.external.LibraryChange;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.external.NpmLogger;
-import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.URIUtils;
@@ -44,12 +43,6 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer {
-
-	@Inject
-	private IN4JSCore core;
-
-	@Inject
-	private ExternalLibraryWorkspace externalLibraryWorkspace;
 
 	@Inject
 	private ExternalLibraryErrorMarkerManager externalErrorMarkerManager;
