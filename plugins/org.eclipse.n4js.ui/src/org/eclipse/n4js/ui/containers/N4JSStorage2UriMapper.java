@@ -13,13 +13,17 @@ package org.eclipse.n4js.ui.containers;
 import java.io.File;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.utils.resources.ExternalFile;
 import org.eclipse.n4js.utils.resources.IExternalResource;
+import org.eclipse.xtext.ui.resource.FileStoreStorage;
 import org.eclipse.xtext.ui.resource.Storage2UriMapperImpl;
 import org.eclipse.xtext.ui.resource.UriValidator;
+import org.eclipse.xtext.util.Pair;
 
+import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -32,6 +36,18 @@ public class N4JSStorage2UriMapper extends Storage2UriMapperImpl {
 
 	@Inject
 	private UriValidator uriValidator;
+
+	/**
+	 * GH-1190: disable a new behavior of Xtext, which adds pairs <code>FileStoreStorage -> null</code> for file URIs
+	 * (see private method <code>#getStorages(URI, IFile)</code> of super class), because these pairs will lead to a
+	 * NullPointerException in Xtext's {@code ToBeBuiltComputer#doRemoveProject(IProject, IProgressMonitor)} when
+	 * applied to a project located in the external library workspace.
+	 */
+	@Override
+	public Iterable<Pair<IStorage, IProject>> getStorages(URI uri) {
+		return Iterables.filter(super.getStorages(uri),
+				pair -> !(pair != null && pair.getFirst() instanceof FileStoreStorage));
+	}
 
 	@Override
 	public URI getUri(IStorage storage) {
