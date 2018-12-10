@@ -460,6 +460,7 @@ public class ExternalLibraryBuilder {
 			@Override
 			protected ToBeBuilt getToBeBuilt(ToBeBuiltComputer computer, N4JSEclipseProject n4Project,
 					IProgressMonitor monitor, IToBeBuiltComputerContribution contribution) {
+
 				return computer.removeProject(n4Project.getProject(), monitor);
 			}
 
