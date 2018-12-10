@@ -43,6 +43,7 @@ include::{find}chapters/03_releng/releng.adoc[]
 include::{find}chapters/04_parser/parser.adoc[]
 
 include::{find}chapters/10_flowgraphs/flowgraphs.adoc[]
+include::{find}chapters/20_externalLibraries/externalLibraries.adoc[]
 
 // Appendix
 

@@ -1,0 +1,253 @@
+////
+Copyright (c) 2018 NumberFour AG.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+////
+
+= External Libraries
+
+task::GH-1018[]
+task::GH-397[]
+task::GH-809[]
+task::GH-714[]
+task::GH-653[]
+task::GH-862[]
+task::GH-1133[]
+
+
+*External libraries* are N4JS projects that are provided by the N4JS IDE:
+the _built-in_/_shipped_ libraries, and all _3rd-party libraries_ that were installed by the _N4JS library manager_.
+Each external library consist of a valid package.json file located in the project root and an arbitrary number of files supported by N4JS projects, e.g. _.n4js_, _.njsd_ and _.js_ files.
+The purpose of the external libraries is to share and to provide core and third party functionality for N4JS developers both in compile and runtime without rebuilding them.
+
+<<sec:Built-in_External_Libraries>> are external libraries that provide some basic functionality for N4JS programmers, such as the class `N4Injector`.
+
+*3rd-party libraries* are external libraries that are not built-in/shipped with the N4JS IDE.
+Instead, they can be installed later by the user from third party providers.
+Currently, only _npm packages_ are supported.
+
+The *N4JS index* is populated when the external libraries are compiled.
+However, this compilation is only triggered through the library manager, but not when building workspace projects. (Self-evidently, the index is also populated when compiling workspace projects.)
+
+*Name clashes* of projects can happen and they are solved in the following order:
+
+1. User workspace projects always shadow external libraries.
+2. In case of a name clash between a shipped and a 3rd-party library, the 3rd-party library shadows the shipped project.
+
+The *N4JS library manager* is a tool in the N4JS IDE to view and manage external libraries.
+In particular, the user can (un-)install new 3rd-party libraries, or can trigger the build of all external libraries to re-populate the N4JS index.
+The library manager also supports other maintenance actions such as deleting all 3rd-party libraries.
+
+[[sec:Major_Components]]
+[.language-n4js]
+==  Major Components
+
+External libraries are supported based on different components all over the application. 
+
+
+
+The followings are the most important ones:
+
+* *External Resources* (`IExternalResource`)
+** These are customized `IResource` implementations for external projects, folders and files.
+** With this approach the `IProject`, `IFolder` and `IFile` interfaces have been implemented. Each implementation is backed by a pure `java.io.File` based resource.
+** When accessing such external resources for example visiting purposes, getting the members of the resource or simply deleting the resource, internally each requests will be directly performed on the wrapped `java.io.File` without accessing the `org.eclipse.core.resources.IWorkspace` instance.
+* *External Library Workspace*
+** This is a kind of dedicated workspace for external libraries and their dependencies.
+** Any query requests to retrieve a particular project or any dependencies of a particular project via the `IN4JSCore` singleton service will delegated to its wrapped `N4JSModel` singleton. Internally the `N4JSModel` has a reference to a workspace for all the ordinary workspace projects and another reference to the workspace for external libraries. Each query requests will be forwarded to the workspace for the ordinary projects first, and then to the external library workspace. If ordinary project workspace can provide any meaningful response for a request, then the external library workspace will not be accessed at all. Otherwise the query will be executed against the external library workspace. This fallback mechanism provides a pragmatic solution to the project shadowing feature. The project shadowing will be described in details later in this section.
+** The *External Library Workspace* is only supported and available in the IDE case, in the headless case there are no external libraries available from this dedicated workspace. Since the Xtext index creation and the entire build infrastructure is different, it is supported via target platform file. This is described in more details in a later section (<<sec:Headless_External_Library_Support,Headless External Library Support>>]).
+* *External Library Preference Store*
+** This preference store is being used to register and un-register external library root folders into its underlying ordered list. A folder is called as an external library root folder if it is neither equal with the Eclipse workspace root nor being nested in the workspace root and contains zero to any external libraries.
+** Whenever any modifications are being saved in this preference store the _External Library Workspace_ will be updated as well, new libraries will be registered into the workspace and removed libraries will be cleaned up from the workspace.
+** When the N4JS IDE application is started in production mode, the initial state of the preference store is being pre-populated with default values. This is necessary to provide built-in libraries to end users. These default values and additional advanced configurations will be mentioned in more details later in this section.
+* *Library Manager*
+** This service is responsible for downloading and installing third party _npm_ packages into the `node_modules` folder of the N4JS IDE. After downloading, the newly-installed and/or updated packages are registered as external libraries into the system.
+* *External Library Builder*
+** This service is responsible for updating the persistent Xtext index with the currently available external libraries.
+** Unlike in case of any other ordinary projects, this builder does not triggers a build via the `org.eclipse.core.internal.events.BuildManager` but modifies the persisted Xtext index (`IBuilderState`) directly.
+** Considers shadowed external libraries when updating the persisted Xtext index.
+** Makes sure that the external library related Xtext index is persistent and will be available on the next application startup.
+* *External Library Xtext Index Persister*
+** This class is responsible for recovering the consistent external library Xtext index state at application startup.
+** Scheduled on the very first application startup to prepare the Xtext index for the available external libraries.
+** Recovers the Xtext index state after a force quit and/or application crash.
+* *External Library Preference Page*
+** Preference page to configure and update the state of the _External Library Preference Store_.
+** Provides a way to install _npm_ dependencies as external libraries into the application.
+** Reloads the external libraries. Gets the most recent state of N4JS type definition files and updates the Xtext index content based on the current state of the external libraries.
+** Exports the current npm dependency configuration as a target platform file. This will be discussed in another section ([sec:Headless_External_Library_Support]).
+* *Miscellaneous UI Features*
+** Searching for types provided by external libraries.
+** Opening external modules in read-only editor.
+** Navigation between external types.
+** _Project Explorer_ contribution for showing external dependencies for ordinary workspace projects.
+** Editor-navigator linking support for external modules.
+** Installing third party npm dependencies directly from package.json editor via a quick fix.
+
+[[subsec:External_Resources]]
+===  External Resources
+
+This approach provides a very pragmatic and simple solution to support external libraries in both in the `IN4JSCore` and in the `IBuilderState`. While `IN4JSCore` supports a completely transparent way of external libraries via the `IN4JSProject` interface all over in the application, the `IBuilderState` is responsible for keeping the Xtext index content up to date with the external libraries. Below picture depicts the hierarchy between the ordinary `IResource` and the `IExternalResource` instances. As described above each external resource is backed by a `java.io.File` resource and each access and operation being invoked on the `IResource` interface will be delegated to this backing resource.
+
+[[fig:External_Resources_Hierarchy]]
+[.center]
+image::{find}images/externalResources.svg[title="External Resources Hierarchy"]
+
+[[subsec:External_Library_Workspace]]
+===  External Library Workspace
+
+External library workspace is an extension of the `InternalN4JSWorkspace`. This workspace is used for storing and managing external libraries all over the application. External libraries can be registered into the workspace by providing one to many external library root folder locations. The provided root folder locations will be visited in an ordered fashion and the contained external libraries (N4JS projects) will be registered into the application. If an external library from a root folder has been registered, then a forthcoming occurrence of an external library with the same artefact identifier (and same folder name) will be ignored at all. For instance let assume two external library root locations are available `ER1` and `ER2`, also `ER1` contains `P1` and `P2` external libraries, while `ER2` contains `P2` and `P3`. After registering the two roots into the workspace `ER1` will be processed first, and `P1` and `P2` will be registered to the workspace, when processing the forthcoming `ER2` root, `P2` will be ignored at all as an external with the same name exists. Finally `P3` will be registered to the workspace. External libraries cannot be registered directly into the workspace it is done automatically by the _External Library Preference Store_ and by the _npm Manager_.
+
+[[subsec:External_Library_Preference_Store]]
+===  External Library Preference Store
+
+This persistent cache is used for storing an ordered enumeration of registered external library root folder locations. Whenever its internal state is being persisted after a modification, all registered modification listeners will be synchronously notified about this change. All listeners will receive the store itself with the updated state. There are a couple of registered listeners all over the application listening to store update events but the most important one is the _External Library Workspace_ itself. After receiving an external library preference store update event, the external library workspace will calculate the changes from its own state: creates a sort of difference by identifying added, removed and modified external libraries. Also tracks external library root location order changes. Once the workspace has calculated the changesfootnote:[Calculates a list of external library projects that have to be build and another list of projects that have to be cleaned.] it will interact with the _External Library Builder Helper_ which will eventually update the persisted Xtext index directly through the `IBuilderState`. After the Xtext index content update all ordinary workspace projects that directly depend either on a built or a cleaned external library will be automatically rebuilt by the external library workspace.
+
+[[subsec:npm_Manager]]
+===  Library Manager
+
+This service is responsible for downloading, installing third party npm dependencies into the local file system. This is done directly by `npm` from `Node.js`. Once an npm package has been downloaded and installed it will be registered into the external library workspace. As part of the registration, the Xtext index content will be updated and all dependent ordinary workspace projects will be rebuilt automatically. An npm package cannot be installed via the _Library Manager_ if it already installed previously.
+
+[[subsec:External_Library_Builder_Helper]]
+===  External Library Builder
+
+This builder is responsible for updating the persisted Xtext index state with external library content directly through the `IBuilderState`. When providing a subset of external libraries to either build or clean, internally it orders the provided external libraries based on the project dependencies. Also, it might skip building all those external libraries that have are being shadowed by a workspace counterpart. An external library is being shadowed by an ordinary workspace project, if the workspace project is accessible and has exactly the same project name as the external library.
+
+[[subsec:External_Library_Xtext_Index_Persister]]
+===  External Library Xtext Index Persister
+
+By default Xtext provides a way to fix corrupted index or to recreate it from scratch in case of its absence. Such inconsistent index states could occur due to application crashes or due to non-graceful application shutdowns. Although this default recovery mechanism provided by Xtext works properly, it is provided only for projects that are available in the Eclipse based workspace (`org.eclipse.core.resources.IWorkspace`) but non of the external libraries are not available from the Eclipse based workspace, so inconsistent external library index content cannot be recovered by this default mechanism. N4JS IDE contributes its own logic to recover index state of external N4JS libraries. When the default Xtext index recovery runs, then it will trigger a external reload as well. This external reload is guaranteed to run always after the default recovery mechanism.
+
+[[subsec:External_Library_Preference_Page]]
+===  External Library Preference Page
+
+This preference page provides a way to configure the external libraries by adding and removing external library root folders, also allows the user to reorder the configured external library root locations. Besides that, npm packages can be installed into the application as external libraries. Neither removing nor reordering built-in external libraries are supported, hence these operations are disabled for built-ins on the preference page. No modifications will take effect unless the changes are persisted with the `Apply` button. One can reset the configurations to the default state by clicking on the `Restore Defaults` button then on the `Apply` button. The `Reload` button will check whether new type definition files are available for npm dependencies, then reloads the persistent Xtext index content based on the available external libraries. Once the external library reloading has been successfully finished, all dependent workspace projects will be rebuilt as well. From the preference page one can export the installed and used third party npm packages as a target platform. This exported target platform file can be used with the headless compiler. After setting up the headless compiler with this exported target platform file, the headless tool will collect and download all required third party npm dependencies.
+
+[[sec:Headless_External_Library_Support]]
+[.language-n4js]
+==  Headless External Library Support
+
+The headless compiler is not capable of supporting built-in libraries. The whole build and Xtext index creation infrastructure is different in the IDE and in the headless case. Also, due to its archive nature (`n4jsc.jar`) of the headless tool, neither the runtime nor the `Mangelhaft` libraries can be loaded into the headless compiler.
+
+The headless compiler supports downloading, installing and using third party `npm` packages. To enable this feature one has to configure the target platform via the `–targetPlatformFile` (or simply `-tp`) and the `–targetPlatformInstallLocation` (or simply `-tl`) arguments.
+
+If the target platform file argument is configured, then all third party dependencies declared in the target platform file will be downloaded, installed and made available for all the N4JS projects before the compile (and run) phase. If the target platform file is given but the target platform install location is not specified (via the `–targetPlatformInstallLocation` argument), then a the compilation phase will be aborted and the execution will be interrupted.
+
+For more convenient continuous integration and testing purposes there are a couple of additional exception cases with respect to the the target platform file and location that users of the headless compiler have to keep in mind. These are the followings:
+
+* `–targetPlatformSkipInstall`. Usually dependencies defined in the target platform file will be installed into the folder defined by option `–targetPlatformInstallLocation`. If this flag is provided, this installation will be skipped, assuming the given folder already contains the required files and everything is up-to-date. Users have to use this flag with care, because no checks will be performed whether the location actually contains all required dependencies.
+* If `–targetPlatformSkipInstall` is provided the `–targetPlatformInstallLocation` parameter is completely ignored.
+* If `–targetPlatformSkipInstall` is provided the `–targetPlatformFile` parameter is completely ignored.
+* If neither `–targetPlatformInstallLocation` not `–targetPlatformFile` parameters are specified the headless tool will treat this case as an implicit `–targetPlatformSkipInstall` configuration.
+
+If the target platform install location is configured, and the target platform file is given as well, then all third party dependencies specified in the target platform file will be downloaded to that given location. If the target platform file is given, but the target platform install location is not specified, then a the compilation phase will be aborted and the execution will be interrupted.
+
+[source,bash]
+----
+java -jar n4jsc.jar -projectlocations /path/to/the/workspace/root -t allprojects --systemLoader cjs -tp /absolute/path/to/the/file -tl /path/to/the/target/platform/install/location -rw nodejs -r moduleToRun
+----
+
+=== Custom npm settings
+In some cases there is a need for custom npm settings, e.g. custom npm registry. Those kind of configurations are
+supported via `.npmrc` file (see https://docs.npmjs.com/files/npmrc).
+
+In N4JSIDE user can specify path to his custom configuration file in the preference page.
+
+
+For the commandline N4JSC.jar provides special option `-npmrcRootLocation` that allows headless compiler to
+use custom settings.
+
+[[sec:Built-in_External_Libraries]]
+[.language-n4js]
+==  Built-in External Libraries / Shipped Code
+
+The library manager is provided with a number of built-in external libraries, consisting of:
+
+* default runtime environments and runtime libraries, e.g. `n4js-es5`, `n4js-runtime-es2015`, `n4js-runtime-v8`.
+* a library `n4js.lang` providing N4JS implementations for runtime functionality required by some N4JS language features
+  (currently this contains only dependency injection support, implemented in file `N4Injector.n4js`).
+* the mangelhaft test framework.
+
+At runtime, these appear as default libraries in the library manager and are available in the workspace without any
+further installation. However, at the moment, this is only supported within the N4JS IDE, not the `n4jsc.jar`.
+
+The above libraries are located in the N4JS Git repository in two distinct locations:
+
+* below the top-level folder `n4js-libs`: this is the main source and will be edited by developers working on fixes /
+  improvements of the runtime environments, libraries, and mangelhaft.
+* below the folder `shipped-code` in bundle `org.eclipse.n4js.external.libraries`: this is a copy of the code contained below
+  top-level folder `n4js-libs`, plus the transpiled output code, plus NPM dependencies.
+
+The contents of folder `shipped-code` is what will actually be bundled into the N4JS IDE product. These contents should
+**never** be modified manually. Instead, an MWE2 work flow exists for updating this shipped code: `UpdateShippedCode.mwe2`,
+located in its own bundle `org.eclipse.n4js.external.libraries.update`. When executed, this work flow will
+
+1. compile the code below top-level folder `n4js-libs`,
+2. clean folder `shipped-code`,
+3. copy everything from top-level folder `n4js-libs` to folder `shipped-code` (including the transpiled output code
+   generated in step 1, above),
+4. run `npm install` in those projects below folder `shipped-code`, that have third-party dependencies (currently this
+   applies only to runtime environment `n4js-node`).
+
+A JUnit test is located in bundle `org.eclipse.n4js.external.libraries.update.tests` that will assert the shipped code is
+up-to-date. When this test fails, it should be enough to re-run the MWE2 work flow and commit the resulting changes
+in folder `shipped-code`.
+
+
+
+[[sec:Additional_Notes]]
+[.language-n4js]
+==  Additional Notes
+
+[[subsec:Enabling_Built-in_External_Libraries]]
+===  Enabling Built-in External Libraries
+
+By default, built-in external libraries (such as _node_modules_, _N4JS Language_, _N4JS Runtime_ and _Mangelhaft_),
+also known as "shipped code", are only available when the N4JS IDE is running in production mode, i.e. when
+`Platform#inDebugMode()` and `Platform#inDevelopmentMode()` both return `false`). This means built-in external libraries
+are not available in the N4JS IDE when it is started from Eclipse development environment or when running any
+plug-in, plug-in UI and/or SWTBot tests.
+
+There are two ways of enabling built-in external libraries in NON-production mode:
+
+1. start the application with the following VM argument (but note the comment below!):
++
+[source]
+----
+-Dorg.eclipse.n4js.includesBuiltInLibraries=true
+----
+2. invoke methods `ExternalLibrariesSetupHelper#setupExternalLibraries(boolean, boolean)` with first argument set to `true`,
+and `ExternalLibrariesSetupHelper#tearDownExternalLibraries(boolean)` inside the test code. For SWTBot tests there are
+corresponding convenience methods provided in `BaseSwtBotTest`. For an example, see `N4jsTasksExampleSwtBotTest`.
+
+The first option is only intended for the case of starting an N4JS IDE from an Eclipse development environment;
+in all kinds of tests, the helper methods mentioned above should be used instead (i.e. option 2.). In other
+words, the configuration property `org.eclipse.n4js.includesBuiltInLibraries` should only be used in our two launch
+configurations "N4JS\__IDE.launch" and "N4JS_N4__IDE.launch" that are checked-in to our repository.
+
+[[sec:lmFutureWork]]
+==  Future Work
+
+Some aspects not covered in current design, but worth consideration in the future
+
+[[subsec:lmMultipleDependencyScope]]
+===  Multiple Dependency Scope
+
+npm scope dependencies
+
+*DEPENDENCY_DEVELOPMENT* :: https://docs.npmjs.com/files/package.json#devdependencies
+*DEPENDENCY_PEER* :: https://docs.npmjs.com/files/package.json#peerdependencies
+*DEPENDENCY_BUNDLE* :: https://docs.npmjs.com/files/package.json#bundleddependencies
+*DEPENDENCY_OPTIONAL* :: https://docs.npmjs.com/files/package.json#optionaldependencies
+*DEPENDENCY_PROVIDES* :: http://www.rpm.org/wiki/PackagerDocs/Dependencies#Provides
+*DEPENDENCY_WEAK* :: http://www.rpm.org/wiki/PackagerDocs/Dependencies#Weakdependencies
+
+[[subsec:lmRunTestsFromLibrary]]
+===  Run Tests from TestLibrary
+
+Imagine we are implementing some API, and we want to run tests for that API. Tests are delivered to us as separate package, and there is not direct association between implementation and test projects (tests are not depending on implementation). Still we want to run provided tests to see if our implementation complies with API tests, e.g. AcceptanceTest suite for Application written against application sdk.
