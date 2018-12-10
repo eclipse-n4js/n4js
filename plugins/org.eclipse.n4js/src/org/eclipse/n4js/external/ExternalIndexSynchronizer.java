@@ -52,13 +52,13 @@ import com.google.inject.Inject;
 public abstract class ExternalIndexSynchronizer {
 
 	/**
-	 * Used for finding locations and accessing the Xtext index.
+	 * Used for finding locations and accessing the Xtext index, also used by subclasses.
 	 */
 	@Inject
 	protected IN4JSCore core;
 
 	/**
-	 * Find external workspace location and synchronize external projects.
+	 * Find external workspace location and synchronize external projects, also used by subclasses.
 	 */
 	@Inject
 	protected ExternalLibraryWorkspace externalLibraryWorkspace;
