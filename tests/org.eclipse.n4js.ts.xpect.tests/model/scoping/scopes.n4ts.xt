@@ -15,15 +15,15 @@ public class MySuperDuperClass {}
 public interface MyRole {}
 public interface Comparable {}
 public interface MyInterface {}
-public function MyFunction() : any
+public function myFunction() : any
 
 // XPECT scope at MyInterface --> Comparable, MyInterface, MyRole, MySuperClass, MySuperDuperClass, !string, !void
 // XPECT scope at MySuperDuperClass --> MySuperClass, MySuperDuperClass, N4Class, N4Object, !string, !any
 // XPECT scope at Comparable --> MyRole, Comparable, !any, !string, !void
 public class MySuperClass<T extends MyInterface > extends MySuperDuperClass implements Comparable {
-// XPECT scope at number --> Comparable, MyFunction, MyInterface, MyRole, MySuperClass, MySuperDuperClass, T, any, number, string, !void
+// XPECT scope at number --> Comparable, MyInterface, MyRole, MySuperClass, MySuperDuperClass, T, any, number, string, !void
 	private counter: number;
-// XPECT scope at T --> Comparable, MyFunction, MyInterface, MyRole, MySuperClass, MySuperDuperClass, T, any, number, string, !void
-// XPECT scope at any --> Comparable, MyFunction, MyInterface, MyRole, MySuperClass, MySuperDuperClass, T, any, number, string, void, !undefined
+// XPECT scope at T --> Comparable, MyInterface, MyRole, MySuperClass, MySuperDuperClass, T, any, number, string, !void
+// XPECT scope at any --> Comparable, MyInterface, MyRole, MySuperClass, MySuperDuperClass, T, any, number, string, void, !undefined
 	protected doStuff(input: T): any;
 }
