@@ -28,12 +28,14 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.CommonPlugin;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalProject;
 import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.SourceContainerDescription;
 import org.eclipse.n4js.projectDescription.SourceContainerType;
+import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
@@ -41,6 +43,7 @@ import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseSourceContainer;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.URIUtils;
+import org.eclipse.xtext.ui.XtextProjectHelper;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
@@ -296,7 +299,7 @@ public class N4JSEclipseModel extends N4JSModel {
 	public Map<String, IN4JSProject> findAllProjectMappings() {
 		final Map<String, IN4JSProject> workspaceProjectMapping = new LinkedHashMap<>();
 		for (IProject project : workspace.getProjects()) {
-			if (project.isOpen()) {
+			if (isRelevantToN4JS(project)) {
 				N4JSProject n4jsProject = getN4JSProject(project);
 				workspaceProjectMapping.put(n4jsProject.getProjectName(), n4jsProject);
 			}
@@ -312,4 +315,21 @@ public class N4JSEclipseModel extends N4JSModel {
 		return workspaceProjectMapping;
 	}
 
+	/**
+	 * Low-level method for deciding whether a given project residing in the Eclipse workspace is to be treated as an
+	 * "N4JS project", i.e. whether N4JS-related implementations should take not of this project or simply ignore it
+	 * entirely. For example, this affects whether methods such as {@link IN4JSCore#findAllProjects()} will return this
+	 * project or not.
+	 * <p>
+	 * In particular, this method requires that the given project is properly configured as an Xtext project.
+	 * <p>
+	 * This method is not intended to be used with projects residing in the {@link ExternalLibraryWorkspace}, which are
+	 * by definition always relevant to N4JS.
+	 */
+	private boolean isRelevantToN4JS(IProject project) {
+		return project != null
+				&& project.isAccessible() // includes #isOpen() as a requirement
+				&& XtextProjectHelper.hasNature(project)
+				&& XtextProjectHelper.hasBuilder(project);
+	}
 }
