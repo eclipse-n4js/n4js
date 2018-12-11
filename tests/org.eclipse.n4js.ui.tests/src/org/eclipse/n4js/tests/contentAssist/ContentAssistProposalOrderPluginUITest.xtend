@@ -20,16 +20,25 @@ class ContentAssistProposalOrderPluginUITest extends AbstractN4JSContentAssistWi
 	private static final String NL = System.lineSeparator;
 
 	private final String code = '''
+		class C {
+			public field1: string;
+			public field2: number;
+			public method1() {}
+			public method2() {}
+			public method3() {}
+		}
+
+
 		class AccessData1 {}
 		class AccessData2 {}
 		class AccessData3 {}
-		
+
 		class AccessInfo1 {}
 		class AccessInfo2 {}
-		
+
 		let accessInfo1 = 0;
 		let accessInfo2 = 0;
-		
+
 		let acci = 0;
 		let access = 0;
 		let accessi = 0;
@@ -40,7 +49,7 @@ class ContentAssistProposalOrderPluginUITest extends AbstractN4JSContentAssistWi
 		let propertyInfoDataElement1 = 0;
 		let propertyInfoDataElement2 = 0;
 		let propertyInfoDataElement3 = 0;
-		
+
 		let propide = 0;
 		let propIDE = 0;
 	''';
@@ -149,6 +158,25 @@ class ContentAssistProposalOrderPluginUITest extends AbstractN4JSContentAssistWi
 			1 -> 'accessI',
 			1 -> 'accessInfo1',
 			1 -> 'accessInfo2'
+		]);
+	}
+
+	@Test
+	def void test08() {
+		assertProposalOrder("new C().", #[
+			0 -> 'field1',
+			0 -> 'field2',
+			0 -> 'method1',
+			0 -> 'method2',
+			0 -> 'method3',
+			1 -> '__proto__',
+			1 -> 'constructor',
+			1 -> 'hasOwnProperty',
+			1 -> 'isPrototypeOf',
+			1 -> 'propertyIsEnumerable',
+			1 -> 'toLocaleString',
+			1 -> 'toString',
+			1 -> 'valueOf'
 		]);
 	}
 }

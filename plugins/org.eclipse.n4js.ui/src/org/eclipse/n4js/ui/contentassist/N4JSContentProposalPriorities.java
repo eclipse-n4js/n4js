@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.ui.contentassist;
 
+import static org.eclipse.n4js.ui.utils.ConfigurableCompletionProposalExtensions.isSecondaryMember;
+
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.n4js.ui.utils.PrefixMatcherHelper;
 import org.eclipse.xtext.ui.editor.contentassist.ConfigurableCompletionProposal;
@@ -22,8 +24,16 @@ import com.google.inject.Inject;
  */
 public class N4JSContentProposalPriorities extends ContentProposalPriorities {
 
-	/** Priority multiplier for proposals with a prefix that matches in case. */
+	/**
+	 * Priority multiplier for proposals with a prefix that matches in case.
+	 */
 	protected float sameCaseMultiplier = 1.1f;
+
+	/**
+	 * Priority multiplier for proposals representing members of lesser relevance to the user, e.g. members of built-in
+	 * type Object.
+	 */
+	protected float secondaryMemberMultiplier = 0.95f;
 
 	@Inject
 	private PrefixMatcherHelper prefixMatcherHelper;
@@ -42,8 +52,13 @@ public class N4JSContentProposalPriorities extends ContentProposalPriorities {
 		if (proposal instanceof ConfigurableCompletionProposal) {
 			ConfigurableCompletionProposal proposalCasted = (ConfigurableCompletionProposal) proposal;
 			String replacement = proposalCasted.getReplacementString();
+
 			if (!prefix.isEmpty() && isPrefixWithMatchingCase(prefix, replacement)) {
 				adjustPriorityByFactor(proposalCasted, sameCaseMultiplier);
+			}
+
+			if (isSecondaryMember(proposalCasted)) {
+				adjustPriorityByFactor(proposalCasted, secondaryMemberMultiplier);
 			}
 		}
 	}

@@ -20,6 +20,7 @@ class ConfigurableCompletionProposalExtensions {
 
 	private static final String KEY_REPLACEMENT_SUFFIX = "REPLACEMENT_SUFFIX";
 	private static final String KEY_CURSOR_OFFSET = "CURSOR_OFFSET";
+	private static final String KEY_SECONDARY_MEMBER = "SECONDARY_MEMBER";
 
 
 	/** See {@link #setReplacementSuffix(ConfigurableCompletionProposal, String)}. */
@@ -50,5 +51,18 @@ class ConfigurableCompletionProposalExtensions {
 	 */
 	def public static void setCursorOffset(ConfigurableCompletionProposal proposal, int offset) {
 		proposal.setAdditionalData(KEY_CURSOR_OFFSET, Integer.valueOf(offset));
+	}
+
+	/** See {@link #setSecondaryMember(ConfigurableCompletionProposal, boolean)}. */
+	def public static boolean isSecondaryMember(ConfigurableCompletionProposal proposal) {
+		val result = proposal.getAdditionalData(KEY_SECONDARY_MEMBER);
+		return if (result instanceof Boolean) result.booleanValue else false;
+	}
+
+	/**
+	 * Tells if the given proposal represents a member that is usually of lesser relevance to the user.
+	 */
+	def public static void setSecondaryMember(ConfigurableCompletionProposal proposal, boolean value) {
+		proposal.setAdditionalData(KEY_SECONDARY_MEMBER, value);
 	}
 }
