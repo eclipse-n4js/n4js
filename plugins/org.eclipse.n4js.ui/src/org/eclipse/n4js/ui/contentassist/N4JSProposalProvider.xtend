@@ -23,6 +23,7 @@ import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4idl.N4IDLGlobals
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy
 import org.eclipse.n4js.services.N4JSGrammarAccess
+import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
 import org.eclipse.n4js.ts.types.DeclaredTypeWithAccessModifier
 import org.eclipse.n4js.ts.types.TClass
@@ -171,6 +172,13 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 	 * @see AbstractJavaBasedContentProposalProvider
 	 */
 	override protected getProposalFactory(String ruleName, ContentAssistContext contentAssistContext) {
+
+		// prepare URIs of all members of built-in types Object and N4Object to avoid
+		// having to invoke #getEObjectOrProxy() on every IEObjectDescription
+		val builtInTypeScope = BuiltInTypeScope.get(contentAssistContext.resource.resourceSet);
+		val secondaryTypes = #[ builtInTypeScope.objectType, builtInTypeScope.n4ObjectType ];
+		val urisOfSecondaryMembers = secondaryTypes.flatMap[ownedMembers].map[EcoreUtil.getURI(it)].toSet;
+
 		val myConverter = new IQualifiedNameConverter.DefaultImpl() // provide a fake implementation using '.' as delimiter like Java
 		return new DefaultProposalCreator(contentAssistContext, ruleName, myConverter) {
 
@@ -201,6 +209,8 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 					result.setProposalContextResource(contentAssistContext.getResource());
 					result.setAdditionalProposalInfo(provider);
 					result.setHover(hover);
+
+					result.secondaryMember = urisOfSecondaryMembers.contains(candidate.EObjectURI);
 
 					val bracketInfo = computeProposalBracketInfo(candidate, contentAssistContext);
 					if (bracketInfo!==null) {
