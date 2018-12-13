@@ -25,6 +25,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
+import org.eclipse.n4js.ts.ui.navigation.IURIBasedStorage;
 import org.eclipse.n4js.ts.ui.navigation.URIBasedStorage;
 import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.n4js.utils.resources.IExternalResource;
@@ -82,8 +83,8 @@ public class N4JSResourceLinkHelper extends ResourceLinkHelper {
 		if (null == selection || selection.isEmpty() && input instanceof XtextReadonlyEditorInput) {
 			try {
 				final IStorage storage = ((XtextReadonlyEditorInput) input).getStorage();
-				if (storage instanceof URIBasedStorage) {
-					final URI uri = ((URIBasedStorage) storage).getURI();
+				if (storage instanceof IURIBasedStorage) {
+					final URI uri = ((IURIBasedStorage) storage).getURI();
 					if (uri.isFile()) {
 						final File file = new File(uri.toFileString());
 						if (file.isFile()) {

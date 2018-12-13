@@ -21,19 +21,22 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Arrays;
 
-import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.ts.ui.navigation.IURIBasedStorage;
+import org.eclipse.n4js.ts.ui.navigation.URIBasedStorage;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 import org.eclipse.swt.graphics.Image;
 
+import com.google.common.base.Charsets;
 import com.google.common.collect.FluentIterable;
 
 /**
  * Represents a {@link File file} resource in the file system as a node in the Project Explorer.
  */
-/* default */ class ResourceNode extends NodeAdapter implements IStorage {
+/* default */ class ResourceNode extends NodeAdapter implements IURIBasedStorage {
 
 	private static final Image SRC_FOLDER_IMG = ImageRef.SRC_FOLDER.asImage().orNull();
 	private static final Image FOLDER_IMG = getWorkbench().getSharedImages().getImage(IMG_OBJ_FOLDER);
@@ -118,6 +121,20 @@ import com.google.common.collect.FluentIterable;
 
 	/* default */ File getResource() {
 		return file;
+	}
+
+	@Override
+	public URI getURI() {
+		return URI.createFileURI(file.getAbsolutePath());
+	}
+
+	/**
+	 * Always returns {@link Charsets#UTF_8 UTF_8}, just like {@link URIBasedStorage#getCharset()}. See the TO-DO
+	 * described in {@link URIBasedStorage}.
+	 */
+	@Override
+	public String getCharset() throws CoreException {
+		return Charsets.UTF_8.name();
 	}
 
 	@Override

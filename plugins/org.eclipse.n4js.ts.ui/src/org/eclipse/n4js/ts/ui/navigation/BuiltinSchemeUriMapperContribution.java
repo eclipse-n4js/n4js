@@ -16,14 +16,13 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.ts.scoping.builtin.BuiltInSchemeRegistrar;
+import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 import org.eclipse.xtext.ui.resource.IStorage2UriMapperContribution;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.Tuples;
 
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.ts.scoping.builtin.BuiltInSchemeRegistrar;
-import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 
 /**
  */
@@ -54,8 +53,8 @@ public class BuiltinSchemeUriMapperContribution implements IStorage2UriMapperCon
 
 	@Override
 	public URI getUri(IStorage storage) {
-		if (storage instanceof URIBasedStorage) {
-			return ((URIBasedStorage) storage).getURI();
+		if (storage instanceof IURIBasedStorage) {
+			return ((IURIBasedStorage) storage).getURI();
 		}
 		return null;
 	}
