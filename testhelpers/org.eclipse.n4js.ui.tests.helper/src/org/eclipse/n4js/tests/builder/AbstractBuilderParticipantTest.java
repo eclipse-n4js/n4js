@@ -18,7 +18,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -33,6 +35,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.packagejson.PackageJsonBuilder;
 import org.eclipse.n4js.projectDescription.ProjectType;
@@ -41,11 +44,20 @@ import org.eclipse.n4js.tests.util.PackageJSONTestHelper;
 import org.eclipse.n4js.tests.util.ProjectTestsHelper;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
+import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.n4js.utils.process.ProcessResult;
 import org.eclipse.n4js.validation.IssueCodes;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.navigator.CommonViewer;
+import org.eclipse.ui.navigator.resources.ProjectExplorer;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.editor.IDirtyStateManager;
 import org.eclipse.xtext.ui.editor.XtextEditor;
@@ -131,6 +143,75 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 		assertTrue(fileEditor instanceof XtextEditor);
 		XtextEditor fileXtextEditor = (XtextEditor) fileEditor;
 		return fileXtextEditor;
+	}
+
+	/**
+	 * Opens a file in an Xtext editor by selecting its {@link TreeItem} in the Project Explorer view and then firing
+	 * the "widget default selected" event (e.g. like pressing ENTER).
+	 * <p>
+	 * This method is primarily intended to test that certain UI functionality is available in the N4JS editor also for
+	 * files from external libraries in case the file has been opened from the "External Dependencies" node shown in the
+	 * Project Explorer view.
+	 *
+	 * @param page
+	 *            the workbench page in which to open the editor. Use {@link EclipseUIUtils#getActivePage()} if unsure.
+	 * @param textOfItemsInExplorer
+	 *            path of tree item texts in the Project Explorer view pointing to the file to be opened. This path
+	 *            should start with the project name, continue with all intermediate nodes (e.g. source folder) and end
+	 *            with the name of the file to open.
+	 * @return the editor that was opened, never <code>null</code>.
+	 * @throws IllegalStateException
+	 *             in case of error.
+	 */
+	protected XtextEditor openAndGetXtextEditorViaProjectExplorer(IWorkbenchPage page,
+			String... textOfItemsInExplorer) {
+		Objects.requireNonNull(page);
+		Objects.requireNonNull(textOfItemsInExplorer);
+
+		ProjectExplorer explorer;
+		try {
+			explorer = (ProjectExplorer) page.showView(ProjectExplorer.VIEW_ID);
+		} catch (PartInitException e) {
+			throw new IllegalStateException("cannot find Project Explorer view", e);
+		}
+
+		CommonViewer viewer = explorer.getCommonViewer();
+		viewer.expandAll();
+		UIUtils.waitForUiThread();
+
+		Tree tree = viewer.getTree();
+		TreeItem item = UIUtils.waitForTreeItem(tree, textOfItemsInExplorer);
+
+		viewer.setSelection(new StructuredSelection(item.getData()));
+		UIUtils.waitForUiThread();
+
+		Event event = new Event();
+		event.type = SWT.DefaultSelection;
+		event.display = tree.getDisplay();
+		event.widget = tree;
+		event.item = item;
+		item.getParent().notifyListeners(event.type, event);
+		UIUtils.waitForUiThread();
+
+		String lastText = textOfItemsInExplorer[textOfItemsInExplorer.length - 1];
+		IEditorReference editorRef = UIUtils.waitForValueFromUI(
+				() -> Stream.of(page.getEditorReferences())
+						.filter(editor -> {
+							try {
+								return lastText.equals(editor.getEditorInput().getName());
+							} catch (PartInitException e1) {
+								return false;
+							}
+						})
+						.findFirst(),
+				() -> "editor with an editorInput with name==\"" + lastText + "\"");
+		IEditorPart editor = editorRef.getEditor(false);
+		if (editor == null) {
+			throw new IllegalStateException("editor not found");
+		} else if (!(editor instanceof XtextEditor)) {
+			throw new IllegalStateException("not an Xtext editor");
+		}
+		return (XtextEditor) editor;
 	}
 
 	/**

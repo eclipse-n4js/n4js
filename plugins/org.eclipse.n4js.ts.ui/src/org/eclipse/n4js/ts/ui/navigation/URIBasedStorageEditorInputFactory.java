@@ -20,14 +20,14 @@ import org.eclipse.xtext.ui.editor.model.ResourceForIEditorInputFactory;
 
 /**
  * Handle our specialized {@link IStorage} implementation, e.g. hyperlinks to external library modules. The resource is
- * created from the URI in the {@link URIBasedStorage}.
+ * created from the URI in the {@link IURIBasedStorage}.
  */
 public class URIBasedStorageEditorInputFactory extends ResourceForIEditorInputFactory {
 
 	@Override
 	protected Resource createResourceFor(IStorage storage) throws CoreException {
-		if (storage instanceof URIBasedStorage) {
-			URI uri = ((URIBasedStorage) storage).getURI();
+		if (storage instanceof IURIBasedStorage) {
+			URI uri = ((IURIBasedStorage) storage).getURI();
 			ResourceSet resourceSet = getResourceSet(uri);
 			configureResourceSet(resourceSet, uri);
 			XtextResource resource = (XtextResource) getResourceFactory().createResource(uri);

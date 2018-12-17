@@ -13,7 +13,6 @@ package org.eclipse.n4js.ts.ui.navigation;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.eclipse.core.resources.IEncodedStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -31,7 +30,7 @@ import com.google.common.base.Charsets;
  * TODO consider reading the encoding from the project data (pass it into the constructor).
  */
 @SuppressWarnings("javadoc")
-public class URIBasedStorage extends PlatformObject implements IEncodedStorage {
+public class URIBasedStorage extends PlatformObject implements IURIBasedStorage {
 
 	private final URI uri;
 
@@ -39,6 +38,7 @@ public class URIBasedStorage extends PlatformObject implements IEncodedStorage {
 		this.uri = uri;
 	}
 
+	@Override
 	public URI getURI() {
 		return uri;
 	}
@@ -67,13 +67,13 @@ public class URIBasedStorage extends PlatformObject implements IEncodedStorage {
 			return true;
 		if (obj == null)
 			return false;
-		if (!(obj instanceof URIBasedStorage))
+		if (!(obj instanceof IURIBasedStorage))
 			return false;
-		URIBasedStorage other = (URIBasedStorage) obj;
+		IURIBasedStorage other = (IURIBasedStorage) obj;
 		if (uri == null) {
-			if (other.uri != null)
+			if (other.getURI() != null)
 				return false;
-		} else if (!uri.equals(other.uri))
+		} else if (!uri.equals(other.getURI()))
 			return false;
 		return true;
 	}
@@ -95,6 +95,7 @@ public class URIBasedStorage extends PlatformObject implements IEncodedStorage {
 
 	@Override
 	public String getCharset() throws CoreException {
+		// when improving this, also adjust {@link ResourceNode#getCharset() accordingly
 		return Charsets.UTF_8.name();
 	}
 

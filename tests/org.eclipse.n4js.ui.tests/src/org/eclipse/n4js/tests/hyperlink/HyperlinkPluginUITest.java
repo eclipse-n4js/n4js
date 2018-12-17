@@ -32,6 +32,7 @@ import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.eclipse.n4js.ui.editor.N4JSHyperlinkDetector;
 import org.eclipse.n4js.ui.external.ExternalLibrariesActionsHelper;
+import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.xtext.ui.editor.IURIEditorOpener;
@@ -114,7 +115,7 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 		URI uriProcess = hyperlinkToProcess.getURI();
 		assertTrue("Hyperlink URI must be a file uri", uriProcess.isFile());
 		File fileProcess = new File(uriProcess.toFileString());
-		assertTrue("File 'process.n4js' must exist", fileProcess.isFile());
+		assertTrue("File 'process.n4jsd' must exist", fileProcess.isFile());
 
 		editor = (XtextEditor) uriEditorOpener.open(uriProcess, true);
 		page = EclipseUIUtils.getActivePage();
@@ -136,4 +137,45 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 		assertTrue("Selection must be 'EventEmitter'", selectionEvent.getText().equals("EventEmitter"));
 	}
 
+	/**
+	 * GH-1199
+	 * <p>
+	 * Similar to {@link #testHyperlinks()}, but instead of opening external library file "process.n4jsd" by following a
+	 * hyperlink inside an ordinary N4JS source file, we open "process.n4jsd" via the "External Dependencies" entry in
+	 * the Project Explorer view.
+	 */
+	@Test
+	public void testHyperlinksWhenOpenedFromExplorer() throws CoreException {
+		File prjDir = new File(getResourceUri(PROBANDS, SUBFOLDER));
+		ProjectTestsUtils.importProject(prjDir, PROJECT_NAME);
+		IResourcesSetupUtil.fullBuild();
+		waitForAutoBuild();
+		UIUtils.waitForUiThread();
+
+		IWorkbenchPage page = EclipseUIUtils.getActivePage();
+		XtextEditor editor = openAndGetXtextEditorViaProjectExplorer(page,
+				PROJECT_NAME,
+				"External Dependencies",
+				"N4JS Runtime",
+				"Runtime Libraries",
+				"n4js-runtime-node",
+				"src/n4js",
+				"process.n4jsd");
+		UIUtils.waitForUiThread();
+
+		ISourceViewer sourceViewer = editor.getInternalSourceViewer();
+		IRegion region = new Region(556, 12);
+		IHyperlink[] hlinksInProcess = hyperlinkDetector.detectHyperlinks(sourceViewer, region, true);
+
+		assertTrue("Hyperlink in external library missing", hlinksInProcess != null && hlinksInProcess.length == 1);
+		assertTrue("Hyperlink must be of type XtextHyperlink", hlinksInProcess[0] instanceof XtextHyperlink);
+		XtextHyperlink hyperlinkToEvent = (XtextHyperlink) hlinksInProcess[0];
+		URI uriEvent = hyperlinkToEvent.getURI();
+		assertTrue("Hyperlink URI must be a file uri", uriEvent.isFile());
+
+		editor = (XtextEditor) uriEditorOpener.open(uriEvent, true);
+		UIUtils.waitForUiThread();
+		TextSelection selectionEvent = (TextSelection) page.getSelection();
+		assertTrue("Selection must be 'EventEmitter'", selectionEvent.getText().equals("EventEmitter"));
+	}
 }
