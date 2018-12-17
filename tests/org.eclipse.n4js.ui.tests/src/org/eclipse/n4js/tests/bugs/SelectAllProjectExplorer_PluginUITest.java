@@ -343,11 +343,15 @@ public class SelectAllProjectExplorer_PluginUITest extends AbstractPluginUITest 
 		activateWorkingSetManager(ProjectTypeAwareWorkingSetManager.class);
 		waitForIdleState();
 
-		commonViewer.refresh();
-		commonViewer.expandToLevel(3);
-		waitForIdleState();
+		Runnable actionWhileWaitingForUI = () -> {
+			commonViewer.refresh();
+			commonViewer.expandToLevel(3);
+			waitForIdleState();
+		};
 
-		setSelection(workingSetItemWithName("Library"), projectsWithName("L1"));
+		TreeItem libraryItem = waitForNavigatorItem("Library", WorkingSet.class, actionWhileWaitingForUI);
+
+		setSelection(new Object[] { libraryItem }, projectsWithName("L1"));
 
 		// Test context menu behavior
 		assertContextMenuContains("Close Project");
@@ -523,17 +527,13 @@ public class SelectAllProjectExplorer_PluginUITest extends AbstractPluginUITest 
 		return n4jsProject.getProject();
 	}
 
-	private Object[] workingSetItemWithName(String... workingSetName) {
-		return Arrays.asList(workingSetName).stream()
-				.map(name -> getNavigatorItem(name, WorkingSet.class, UIUtils.DEFAULT_UI_TIMEOUT))
-				.toArray();
-	}
-
-	private TreeItem getNavigatorItem(String name, Class<?> type, long timeout) {
+	private TreeItem waitForNavigatorItem(String name, Class<?> type, Runnable actionWhileWaiting) {
 		return UIUtils.waitForValueFromUI(
-				() -> getNavigatorItem(name, type),
-				() -> "tree item of type " + type.getSimpleName() + " with name '" + name + "'",
-				timeout);
+				() -> {
+					actionWhileWaiting.run();
+					return getNavigatorItem(name, type);
+				},
+				() -> "tree item of type " + type.getSimpleName() + " with name '" + name + "'");
 	}
 
 	private Optional<TreeItem> getNavigatorItem(String name, Class<?> type) {
