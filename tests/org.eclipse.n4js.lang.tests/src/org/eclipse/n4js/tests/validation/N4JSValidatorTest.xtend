@@ -30,7 +30,6 @@ import static org.junit.Assert.*
  */
 @InjectWith(N4JSInjectorProvider) // for UI: JSUiIn...., is then a plugin test
 @RunWith(XtextRunner)
-//@Ignore("N4JSValidator.checkUniqueMemberNames is currently commented out because of things to be implemented for binding")
 class N4JSValidatorTest {
 	@Inject
 	extension ParseHelper<Script>

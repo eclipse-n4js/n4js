@@ -135,7 +135,6 @@ class AT_802_ThisTypeAnnotationTest extends AbstractTypesystemTest {
 	}
 
 	@Test
-//	@Ignore("see IDE-496")
 	def void test_02() {
 		val script = createScript(JavaScriptVariant.n4js,'''
 			class X { x: X; }
@@ -147,7 +146,6 @@ class AT_802_ThisTypeAnnotationTest extends AbstractTypesystemTest {
 			}
 		''')
 		assertDeclaredThisType((script.scriptElements.get(2) as FunctionDeclaration).definedType as TFunction,"X")
-		// @Ignore("see IDE-496"): assertNoValidationErrors(script);
 	}
 
 	@Test
