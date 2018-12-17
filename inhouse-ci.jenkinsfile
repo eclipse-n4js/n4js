@@ -69,7 +69,7 @@ pipeline {
                             'execute-hlc-integration-tests'
                         ].join(',')
 
-                        sh "export SWT_GTK3=0; ${xvfb} mvn --batch-mode --quiet --update-snapshots clean verify -P${profiles} ${options}"
+                        sh "export SWT_GTK3=0; ${xvfb} mvn --batch-mode --update-snapshots clean verify -P${profiles} ${options}"
                     }
                 }
             }
