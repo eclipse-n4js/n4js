@@ -25,6 +25,8 @@ Require-Bundle: org.eclipse.n4js.ui,
  org.eclipse.n4js.external.libraries,
  org.eclipse.n4js.json.model,
  org.eclipse.n4js.json;bundle-version="0.0.1",
+ org.eclipse.ui.navigator,
+ org.eclipse.ui.navigator.resources,
  com.google.guava
 Export-Package: org.eclipse.n4js,
  org.eclipse.n4js.annotation,

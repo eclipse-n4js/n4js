@@ -12,10 +12,12 @@ package org.eclipse.n4js.ui.utils;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import org.eclipse.jface.util.Geometry;
 import org.eclipse.swt.SWT;
@@ -29,6 +31,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.PlatformUI;
 
@@ -104,6 +108,52 @@ public abstract class UIUtils {
 					"timed out after " + timeout + "ms while waiting for " + valueDescSupplier.get());
 		}
 		return item.get();
+	}
+
+	/**
+	 * Obtain child item with given text from 'root', waiting for UI updates if it is not present yet (see
+	 * {@link #waitForValueFromUI(NonWaitingSupplier, Supplier, long)}). If more than one text is given, the
+	 * corresponding path through the tree will be followed.
+	 */
+	public static TreeItem waitForTreeItem(Tree root, String... texts) {
+		return waitForTreeItemInternal(root, texts);
+	}
+
+	/**
+	 * Same as {@link #waitForTreeItem(Tree, String...)}, but starts with a {@link TreeItem} instead of a {@link Tree}
+	 * as root.
+	 */
+	public static TreeItem waitForTreeItem(TreeItem root, String... texts) {
+		return waitForTreeItemInternal(root, texts);
+	}
+
+	// root must be a Tree or TreeItem
+	private static TreeItem waitForTreeItemInternal(Object root, String... texts) {
+		Objects.requireNonNull(root);
+		Objects.requireNonNull(texts);
+		TreeItem currChild = null;
+		for (int i = 0; i < texts.length; i++) {
+			Object currParent = currChild != null ? currChild : root;
+			String currText = texts[i];
+			currChild = waitForValueFromUI(
+					() -> getChildItem(currParent, currText),
+					() -> "child item \"" + currText + "\"");
+		}
+		return currChild;
+	}
+
+	// root must be a Tree or TreeItem
+	private static Optional<TreeItem> getChildItem(Object parent, String text) {
+		if (parent instanceof TreeItem && !((TreeItem) parent).getExpanded()) {
+			((TreeItem) parent).setExpanded(true);
+			waitForUiThread();
+		}
+		TreeItem[] currChildren = parent instanceof Tree
+				? ((Tree) parent).getItems()
+				: ((TreeItem) parent).getItems();
+		return Stream.of(currChildren)
+				.filter(child -> text.equals(child.getText()))
+				.findFirst();
 	}
 
 	/**
