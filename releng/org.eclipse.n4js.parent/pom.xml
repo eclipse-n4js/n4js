@@ -52,9 +52,6 @@ Contributors:
 		<org.eclipse.xtext.common.types-version>[${xtext-version}]</org.eclipse.xtext.common.types-version>
 		<org.eclipse.xtext.xtext-version>[${xtext-version}]</org.eclipse.xtext.xtext-version>
 		<org.eclipse.xtext.xbase-version>[${xtext-version}]</org.eclipse.xtext.xbase-version>
-		<org.osgi.core-version>4.3.1</org.osgi.core-version>
-		<org.eclipse.core.resources-version>3.12.0</org.eclipse.core.resources-version>
-		<org.eclipse.text-version>3.5.101</org.eclipse.text-version>
 
 		<!-- maven plugins -->
 		<build-helper-maven-plugin.version>3.0.0</build-helper-maven-plugin.version>
