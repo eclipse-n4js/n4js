@@ -47,17 +47,11 @@ Contributors:
 		<tycho-version>1.2.0</tycho-version>
 
 		<!-- Xtext, Xtend and their runtime -->
-		<xtext-version>2.13.0</xtext-version>
+		<xtext-version>2.15.0</xtext-version>
 		<org.eclipse.xtext.builder.standalone-version>[${xtext-version}]</org.eclipse.xtext.builder.standalone-version>
 		<org.eclipse.xtext.common.types-version>[${xtext-version}]</org.eclipse.xtext.common.types-version>
 		<org.eclipse.xtext.xtext-version>[${xtext-version}]</org.eclipse.xtext.xtext-version>
 		<org.eclipse.xtext.xbase-version>[${xtext-version}]</org.eclipse.xtext.xbase-version>
-		<org.osgi.core-version>4.3.1</org.osgi.core-version>
-		<org.eclipse.core.resources-version>3.12.0</org.eclipse.core.resources-version>
-		<org.eclipse.text-version>3.5.101</org.eclipse.text-version>
-		<!-- fix for the xtend-photon-dependency issues -->
-		<!-- https://github.com/eclipse/xtext/issues/1231 -->
-		<photon-dependency-hell-fix>3.10.0</photon-dependency-hell-fix>
 
 		<!-- maven plugins -->
 		<build-helper-maven-plugin.version>3.0.0</build-helper-maven-plugin.version>
@@ -385,12 +379,6 @@ Contributors:
 							<artifactId>org.eclipse.xtend.lib</artifactId>
 							<version>${xtext-version}</version>
 							<type>pom</type>
-						</dependency>
-						<!-- https://github.com/eclipse/xtext/issues/1231#issuecomment-401125569 -->
-						<dependency>
-							<groupId>org.eclipse.platform</groupId>
-							<artifactId>org.eclipse.equinox.common</artifactId>
-							<version>${photon-dependency-hell-fix}</version>
 						</dependency>
 					</dependencies>
 				</plugin>
