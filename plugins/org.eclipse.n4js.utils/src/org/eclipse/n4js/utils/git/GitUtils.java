@@ -39,6 +39,7 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -49,12 +50,15 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ResetCommand;
+import org.eclipse.jgit.api.SubmoduleInitCommand;
+import org.eclipse.jgit.api.SubmoduleUpdateCommand;
 import org.eclipse.jgit.api.TransportConfigCallback;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.errors.RepositoryNotFoundException;
 import org.eclipse.jgit.lib.ProgressMonitor;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.TextProgressMonitor;
+import org.eclipse.jgit.submodule.SubmoduleStatus;
 import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.SshTransport;
 import org.eclipse.jgit.transport.URIish;
@@ -236,27 +240,15 @@ public abstract class GitUtils {
 	 */
 	public static void pull(final Path localClonePath, final IProgressMonitor monitor) {
 
+		if (!isValidLocalClonePath(localClonePath)) {
+			return;
+		}
+
 		@SuppressWarnings("restriction")
 		final ProgressMonitor gitMonitor = null == monitor ? createMonitor()
 				: new org.eclipse.egit.core.EclipseGitProgressTransformer(monitor);
 
-		if (null == localClonePath) {
-			LOGGER.warn("Local clone path should be specified for the git clone operation.");
-			return;
-		}
-
-		final File localCloneRoot = localClonePath.toFile();
-		if (!localCloneRoot.exists()) {
-			LOGGER.warn("Local git repository clone root does not exist: " + localCloneRoot + ".");
-			return;
-		}
-
-		if (!localCloneRoot.isDirectory()) {
-			LOGGER.warn("Expecting a directory as the local git repository clone. Was a file: " + localCloneRoot + ".");
-			return;
-		}
-
-		try (final Git git = open(localCloneRoot)) {
+		try (final Git git = open(localClonePath.toFile())) {
 			git.pull().setProgressMonitor(gitMonitor).setTransportConfigCallback(TRANSPORT_CALLBACK).call();
 
 		} catch (final GitAPIException e) {
@@ -269,7 +261,7 @@ public abstract class GitUtils {
 			throw new RuntimeException(e);
 
 		} catch (final IOException e) {
-			LOGGER.warn("Git repository does not exists at " + localCloneRoot + ". Aborting git pull.");
+			LOGGER.warn("Git repository does not exists at " + localClonePath + ". Aborting git pull.");
 			LOGGER.warn("Perform git clone first, then try to pull from remote.");
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.error("Error when trying to open repository  '" + localClonePath + ".");
@@ -277,6 +269,114 @@ public abstract class GitUtils {
 			Throwables.throwIfUnchecked(e);
 			throw new RuntimeException(e);
 		}
+	}
+
+	/**
+	 * Obtain information about all submodules of the Git repository at the given path. Returns an empty map in case the
+	 * repository does not include submodules. Throws exceptions in case of error.
+	 */
+	public static Map<String, SubmoduleStatus> getSubmodules(final Path localClonePath) {
+
+		if (!isValidLocalClonePath(localClonePath)) {
+			throw new IllegalArgumentException("invalid localClonePath: " + localClonePath);
+		}
+
+		try (final Git git = open(localClonePath.toFile())) {
+			return git.submoduleStatus().call();
+		} catch (Exception e) {
+			LOGGER.error(e.getClass().getSimpleName()
+					+ " while trying to obtain status of all submodules"
+					+ " of repository '" + localClonePath
+					+ "':" + e.getLocalizedMessage());
+			Throwables.throwIfUnchecked(e);
+			throw new RuntimeException(e);
+		}
+	}
+
+	/**
+	 * Initialize the submodules with the given repository-relative <code>submodulePaths</code> inside the Git
+	 * repository at the given clone path. Throws exceptions in case of error.
+	 *
+	 * @param submodulePaths
+	 *            repository-relative paths of the submodules to initialized; if empty, all submodules will be
+	 *            initialized.
+	 */
+	public static void initSubmodules(final Path localClonePath, final Iterable<String> submodulePaths) {
+
+		if (!isValidLocalClonePath(localClonePath)) {
+			throw new IllegalArgumentException("invalid localClonePath: " + localClonePath);
+		}
+
+		try (final Git git = open(localClonePath.toFile())) {
+			final SubmoduleInitCommand cmd = git.submoduleInit();
+			for (String submodulePath : submodulePaths) {
+				cmd.addPath(submodulePath);
+			}
+			cmd.call();
+		} catch (Exception e) {
+			LOGGER.error(e.getClass().getSimpleName()
+					+ " while trying to initialize submodules " + Iterables.toString(submodulePaths)
+					+ " of repository '" + localClonePath
+					+ "':" + e.getLocalizedMessage());
+			Throwables.throwIfUnchecked(e);
+			throw new RuntimeException(e);
+		}
+	}
+
+	/**
+	 * Update the submodules with the given repository-relative <code>submodulePaths</code> inside the Git repository at
+	 * the given clone path. Throws exceptions in case of error.
+	 *
+	 * @param submodulePaths
+	 *            repository-relative paths of the submodules to update; if empty, all submodules will be updated.
+	 */
+	public static void updateSubmodules(final Path localClonePath, final Iterable<String> submodulePaths,
+			final IProgressMonitor monitor) {
+
+		if (!isValidLocalClonePath(localClonePath)) {
+			throw new IllegalArgumentException("invalid localClonePath: " + localClonePath);
+		}
+
+		@SuppressWarnings("restriction")
+		final ProgressMonitor gitMonitor = null == monitor ? createMonitor()
+				: new org.eclipse.egit.core.EclipseGitProgressTransformer(monitor);
+
+		try (final Git git = open(localClonePath.toFile())) {
+			final SubmoduleUpdateCommand cmd = git.submoduleUpdate();
+			for (String submodulePath : submodulePaths) {
+				cmd.addPath(submodulePath);
+			}
+			cmd.setProgressMonitor(gitMonitor);
+			cmd.setTransportConfigCallback(TRANSPORT_CALLBACK);
+			cmd.call();
+		} catch (Exception e) {
+			LOGGER.error(e.getClass().getSimpleName()
+					+ " while trying to update submodules " + Iterables.toString(submodulePaths)
+					+ " of repository '" + localClonePath
+					+ "':" + e.getLocalizedMessage());
+			Throwables.throwIfUnchecked(e);
+			throw new RuntimeException(e);
+		}
+	}
+
+	private static boolean isValidLocalClonePath(final Path localClonePath) {
+		if (null == localClonePath) {
+			LOGGER.warn("Local clone path should be specified for the git clone operation.");
+			return false;
+		}
+
+		final File localCloneRoot = localClonePath.toFile();
+		if (!localCloneRoot.exists()) {
+			LOGGER.warn("Local git repository clone root does not exist: " + localCloneRoot + ".");
+			return false;
+		}
+
+		if (!localCloneRoot.isDirectory()) {
+			LOGGER.warn("Expecting a directory as the local git repository clone. Was a file: " + localCloneRoot + ".");
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
