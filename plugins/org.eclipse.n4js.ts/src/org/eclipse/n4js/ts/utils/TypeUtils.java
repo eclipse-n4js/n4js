@@ -565,7 +565,7 @@ public class TypeUtils {
 	private static TypeRef mergeTypingStrategies(TypeRef target, TypingStrategy source) {
 		final TypingStrategy combined = concatTypingStrategies(target.getTypingStrategy(), source);
 		if (combined != target.getTypingStrategy()) {
-			if (target instanceof ParameterizedTypeRef) {
+			if (target instanceof ParameterizedTypeRef && !(target instanceof FunctionTypeRef)) {
 				final ParameterizedTypeRefStructural ptrs = copyToParameterizedTypeRefStructural(
 						(ParameterizedTypeRef) target);
 				ptrs.setTypingStrategy(combined);
@@ -1210,11 +1210,16 @@ public class TypeUtils {
 	/**
 	 * Converts the given {@link ParameterizedTypeRef} into a {@link ParameterizedTypeRefStructural}. Creates a copy and
 	 * does not modify the passed-in type reference.
-	 * <p>
-	 * Returns <code>null</code> if given a {@link FunctionTypeRef}.
+	 *
+	 * @throws IllegalArgumentException
+	 *             if given a {@link FunctionTypeRef}, because {@code FunctionTypeRef}s do not have a corresponding
+	 *             subclass that implements {@link ParameterizedTypeRefStructural}.
 	 */
 	public static final ParameterizedTypeRefStructural copyToParameterizedTypeRefStructural(
 			ParameterizedTypeRef source) {
+		if (source instanceof FunctionTypeRef) {
+			throw new IllegalArgumentException("FunctionTypeRefs do not have a corresponding structural variant");
+		}
 		EClass ptrsEClass = source instanceof VersionedParameterizedTypeRef
 				? TypeRefsPackage.eINSTANCE.getVersionedParameterizedTypeRefStructural()
 				: TypeRefsPackage.eINSTANCE.getParameterizedTypeRefStructural();
