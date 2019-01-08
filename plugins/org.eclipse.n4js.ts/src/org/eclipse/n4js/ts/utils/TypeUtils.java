@@ -56,6 +56,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeVariableMapping;
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression;
+import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.types.AnyType;
 import org.eclipse.n4js.ts.types.InferenceVariable;
@@ -1207,12 +1208,16 @@ public class TypeUtils {
 	}
 
 	/**
-	 * Same as {@link EcoreUtil2#cloneWithProxies(EObject)}, but takes care of special copy semantics for TypeRefs. See
-	 * {@link #copy(EObject)}.
+	 * Converts the given {@link ParameterizedTypeRef} into a {@link ParameterizedTypeRefStructural}. Creates a copy and
+	 * does not modify the passed-in type reference.
+	 * <p>
+	 * Returns <code>null</code> if given a {@link FunctionTypeRef}.
 	 */
 	public static final ParameterizedTypeRefStructural copyToParameterizedTypeRefStructural(
 			ParameterizedTypeRef source) {
-		EClass ptrsEClass = TypeRefsPackage.eINSTANCE.getParameterizedTypeRefStructural();
+		EClass ptrsEClass = source instanceof VersionedParameterizedTypeRef
+				? TypeRefsPackage.eINSTANCE.getVersionedParameterizedTypeRefStructural()
+				: TypeRefsPackage.eINSTANCE.getParameterizedTypeRefStructural();
 		return (ParameterizedTypeRefStructural) copy(source, false, false, ptrsEClass);
 	}
 
