@@ -263,9 +263,9 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 									<arg value="docker-corp.numberfour.eu/numberfour/asciispec:0.0.13"/>
 									<arg value="-a"/>
 								</exec>
-	                            <move todir="${basedir}/generated-docs/.">
+	                            <copy todir="${basedir}/generated-docs/.">
 									<fileset dir="${basedir}/../org.eclipse.n4js.design/generated-docs"/>
-								</move>
+								</copy>
 								
 								
 	                            <copy todir="${basedir}/doctools/src/org/eclipse/n4js/doctools/.">
@@ -283,7 +283,9 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 									<arg value="-c"/>
 									<arg value="&lt;div class=&quot;sect1&quot;&gt;"/>
 									<arg value="-h"/>
-									<arg value="&lt;div id=&quot;preamble&quot;&gt;"/>
+									<arg value="&lt;div id=&quot;content&quot;&gt;"/>
+									<arg value="-f"/>
+									<arg value="&lt;/div&gt;\s&lt;div id=&quot;footnotes&quot;&gt;"/>
 									<arg value="-d"/>
 									<arg value="${basedir}/dist/eclipse-html/N4JSDesign/."/>
 									<arg value="${basedir}/generated-docs/N4JSDesign.html"/>
