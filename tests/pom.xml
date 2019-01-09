@@ -406,6 +406,9 @@ Contributors:
 								<includes>
 									<include>**/*PluginUITest.java</include>
 								</includes>
+								<excludes>
+									<exclude>**/*IntegrationPluginUITest.java</exclude>
+								</excludes>
 							</configuration>
 							<goals>
 								<goal>test</goal>
