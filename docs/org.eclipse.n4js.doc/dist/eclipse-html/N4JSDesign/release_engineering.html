@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 1.5.5">
+<meta name="author" content="2019-01-07 10:02:00 CET">
+<title>N4JS Design Specification</title>
+<link rel="stylesheet" href="styles/spec.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+<!-- ************* Meta ************* -->
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<!-- ************* OpenGraph ************-->
+<meta name="description" content="N4JS Language Specification">
+
+<!-- ************* Favicon ************-->
+<link rel="icon" href="images/favicon.ico" />
+
+<!-- ************* Back-to-top JQuery ************* -->
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+
+<link href="styles/prism.min.css" rel="stylesheet" />
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=MML_CHTML">
+</script>
+
+
+<!-- ****************** NavBar ****************** -->
+<div id="menubar">
+	<ul class="fa-ul">
+		<li><a href="N4JSSpec.pdf">Download as PDF</a></li>
+	</ul>
+</div>
+<style>
+      .admonitionblock td.icon .icon-todo:before{content:"\f249";color:#f4ee42}
+    </style>
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<h1>N4JS Design Specification</h1>
+<div class="details">
+<span id="author" class="author">2019-01-07 10:02:00 CET</span><br>
+<span id="revnumber">version 0.4</span>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="introduction.html#_introduction">1. Introduction</a>
+<ul class="sectlevel2">
+<li><a href="introduction.html#notation">1.1. Notation</a></li>
+<li><a href="introduction.html#sec:IDE_Overview">1.2. IDE Components</a>
+<ul class="sectlevel3">
+<li><a href="introduction.html#sec:Naming_Conventions">1.2.1. Naming Conventions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="eclipse_setup.html#_eclipse-setup">2. Eclipse Setup</a>
+<ul class="sectlevel2">
+<li><a href="eclipse_setup.html#_contribute">2.1. Contribute</a>
+<ul class="sectlevel3">
+<li><a href="eclipse_setup.html#_eclipse-installer">2.1.1. Eclipse Installer</a></li>
+<li><a href="eclipse_setup.html#_manual-ide-configuration">2.1.2. Manual IDE Configuration</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_release-engineering">3. Release Engineering</a>
+<ul class="sectlevel2">
+<li><a href="#_nightly-build-on-eclipse-infrastructure">3.1. Nightly build on Eclipse infrastructure</a></li>
+<li><a href="#_build-the-n4js-ide-from-command-line">3.2. Build the N4JS IDE from command line</a>
+<ul class="sectlevel3">
+<li><a href="#_publish-maven-tooling-code-org-eclipse-n4js-releng-util-code">3.2.1. Publish maven-tooling <code>org.eclipse.n4js.releng.util</code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="parser.html#_parser">4. Parser</a>
+<ul class="sectlevel2">
+<li><a href="parser.html#sec:Parser_Overview">4.1. Overview</a></li>
+<li><a href="parser.html#sec:N4JS_Parser">4.2. N4JS Parser</a></li>
+<li><a href="parser.html#sec:Parser_Generation_Post_Processing">4.3. Parser Generation Post-Processing</a>
+<ul class="sectlevel3">
+<li><a href="parser.html#sec:Automatic_Semicolon_Insertion">4.3.1. Automatic Semicolon Insertion</a>
+<ul class="sectlevel4">
+<li><a href="parser.html#sec:Injected_code_in_the_Antlr_grammar_file">4.3.1.1. Injected code in the Antlr grammar file</a></li>
+<li><a href="parser.html#sec:Customized_error_recovery">4.3.1.2. Customized error recovery</a></li>
+</ul>
+</li>
+<li><a href="parser.html#sec:_No_line_terminator_allowed_here__handling">4.3.2. Async and <code>No line terminator allowed here</code> Handling</a></li>
+<li><a href="parser.html#sec:Regular_Expression">4.3.3. Regular Expression</a></li>
+<li><a href="parser.html#sec:Unicode">4.3.4. Unicode</a></li>
+<li><a href="parser.html#sec:Literals">4.3.5. Literals</a></li>
+</ul>
+</li>
+<li><a href="parser.html#sec:Modifiers">4.4. Modifiers</a></li>
+<li><a href="parser.html#sec:Conflict_Resolutions">4.5. Conflict Resolutions</a>
+<ul class="sectlevel3">
+<li><a href="parser.html#sec:Reserved_Keywords_vs__Identifier_Names">4.5.1. Reserved Keywords vs. Identifier Names</a></li>
+<li><a href="parser.html#sec:Operators_and_Generics">4.5.2. Operators and Generics</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="flow_graphs.html#chap:flowgraphs">5. Flow Graphs</a>
+<ul class="sectlevel2">
+<li><a href="flow_graphs.html#sec:flowgraphs_overview">5.1. Flow graphs overview</a>
+<ul class="sectlevel3">
+<li><a href="flow_graphs.html#_internal-graph">5.1.1. Internal graph</a></li>
+<li><a href="flow_graphs.html#_optimizations">5.1.2. Optimizations</a></li>
+<li><a href="flow_graphs.html#_api-for-client-analyses">5.1.3. API for client analyses</a>
+<ul class="sectlevel4">
+<li><a href="flow_graphs.html#_mapping-from-internal-to-ast-elements">5.1.3.1. Mapping from internal to AST elements</a></li>
+<li><a href="flow_graphs.html#_graph-visitor">5.1.3.2. Graph visitor</a></li>
+<li><a href="flow_graphs.html#_graph-explorer">5.1.3.3. Graph explorer</a></li>
+<li><a href="flow_graphs.html#_branch-walker">5.1.3.4. Branch walker</a></li>
+<li><a href="flow_graphs.html#_example-1-compute-string-for-each-path">5.1.3.5. Example 1: Compute string for each path</a></li>
+<li><a href="flow_graphs.html#_path-quantor">5.1.3.6. Path quantor</a></li>
+</ul>
+</li>
+<li><a href="flow_graphs.html#_control-flow-analyses">5.1.4. Control flow analyses</a>
+<ul class="sectlevel4">
+<li><a href="flow_graphs.html#_dead-code-analysis">5.1.4.1. Dead code analysis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="flow_graphs.html#sec:dataflow">5.2. Dataflow</a>
+<ul class="sectlevel3">
+<li><a href="flow_graphs.html#_dataflow-graph">5.2.1. Dataflow graph</a></li>
+<li><a href="flow_graphs.html#_dataflow-analyses">5.2.2. Dataflow analyses</a>
+<ul class="sectlevel4">
+<li><a href="flow_graphs.html#_def-def-def-nothing-analysis">5.2.2.1. Def&#8594;Def / Def&#8594;Nothing analysis</a></li>
+<li><a href="flow_graphs.html#_def-use-decl-analysis">5.2.2.2. Def|Use&#8592;Decl analysis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="external_libraries.html#_external-libraries">6. External Libraries</a>
+<ul class="sectlevel2">
+<li><a href="external_libraries.html#sec:Major_Components">6.1. Major Components</a>
+<ul class="sectlevel3">
+<li><a href="external_libraries.html#subsec:External_Resources">6.1.1. External Resources</a></li>
+<li><a href="external_libraries.html#subsec:External_Library_Workspace">6.1.2. External Library Workspace</a></li>
+<li><a href="external_libraries.html#subsec:External_Library_Preference_Store">6.1.3. External Library Preference Store</a></li>
+<li><a href="external_libraries.html#subsec:npm_Manager">6.1.4. Library Manager</a></li>
+<li><a href="external_libraries.html#subsec:External_Library_Builder_Helper">6.1.5. External Library Builder</a></li>
+<li><a href="external_libraries.html#subsec:External_Library_Xtext_Index_Persister">6.1.6. External Library Xtext Index Persister</a></li>
+<li><a href="external_libraries.html#subsec:External_Library_Preference_Page">6.1.7. External Library Preference Page</a></li>
+</ul>
+</li>
+<li><a href="external_libraries.html#sec:Headless_External_Library_Support">6.2. Headless External Library Support</a>
+<ul class="sectlevel3">
+<li><a href="external_libraries.html#_custom-npm-settings">6.2.1. Custom npm settings</a></li>
+</ul>
+</li>
+<li><a href="external_libraries.html#sec:Built-in_External_Libraries">6.3. Built-in External Libraries / Shipped Code</a></li>
+<li><a href="external_libraries.html#sec:Additional_Notes">6.4. Additional Notes</a>
+<ul class="sectlevel3">
+<li><a href="external_libraries.html#subsec:Enabling_Built-in_External_Libraries">6.4.1. Enabling Built-in External Libraries</a></li>
+</ul>
+</li>
+<li><a href="external_libraries.html#sec:lmFutureWork">6.5. Future Work</a>
+<ul class="sectlevel3">
+<li><a href="external_libraries.html#subsec:lmMultipleDependencyScope">6.5.1. Multiple Dependency Scope</a></li>
+<li><a href="external_libraries.html#subsec:lmRunTestsFromLibrary">6.5.2. Run Tests from TestLibrary</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="appendix_a_acronyms.html#_acronyms">Appendix A: Acronyms</a></li>
+<li><a href="appendix_b_licence.html#_licence">Appendix B: Licence</a></li>
+<li><a href="appendix_c_bibliography.html#_bibliography">Appendix C: Bibliography</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble"><div class="sect1">
+<h2 id="_release-engineering"><a class="anchor" href="#_release-engineering"></a><a class="link" href="#_release-engineering">3. Release Engineering</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_nightly-build-on-eclipse-infrastructure"><a class="anchor" href="#_nightly-build-on-eclipse-infrastructure"></a><a class="link" href="#_nightly-build-on-eclipse-infrastructure">3.1. Nightly build on Eclipse infrastructure</a></h3>
+<div class="paragraph">
+<p>The N4JS IDE, headless n4jsc.jar, and the N4JS update site is being built on the Eclipse Common Build
+Infrastructure (CBI). For this purpose the N4JS project is using a dedicated Jenkins instance, referred
+to as a "Jenkins Instance Per Project" (JIPP) in Eclipse CBI documentation. At this time, the N4JS
+project&#8217;s JIPP is running on the "old" infrastructure, not yet using docker. This will be migrated
+at a later point in time.</p>
+</div>
+<div class="paragraph">
+<p>The N4JS JIPP is available at: <a href="https://ci.eclipse.org/n4js/" class="bare">https://ci.eclipse.org/n4js/</a></p>
+</div>
+<div class="paragraph">
+<p>The nightly build performs the following main steps:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>compile the N4JS implementation,</p>
+</li>
+<li>
+<p>build the n4jsc.jar, the IDE products for MacOS, Windows, Linux, and the update site,</p>
+</li>
+<li>
+<p>run tests,</p>
+</li>
+<li>
+<p>sign the IDE product for macOS and package it in a .dmg file,</p>
+</li>
+<li>
+<p>deploy to n4jsc.jar, IDE products and update sites to Eclipse download server (i.e. download.eclipse.org),</p>
+</li>
+<li>
+<p>move all artifacts older than 7 days from download.eclipse.org to archive.eclipse.org.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Details about all the above steps can be found in the Jenkinsfile <code>eclipse-nightly.jenkinsfile</code>, located in
+the root folder of the N4JS source repository on GitHub.</p>
+</div>
+<div class="paragraph">
+<p>The most accurate documentation for our JIPP can be found at <a href="https://wiki.eclipse.org/IT_Infrastructure_Doc" class="bare">https://wiki.eclipse.org/IT_Infrastructure_Doc</a>.
+Note that many other documents do not apply to our JIPP, at the moment, as they refer to the new
+infrastructure, e.g. <a href="https://wiki.eclipse.org/CBI" class="bare">https://wiki.eclipse.org/CBI</a> and <a href="https://wiki.eclipse.org/Jenkins" class="bare">https://wiki.eclipse.org/Jenkins</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_build-the-n4js-ide-from-command-line"><a class="anchor" href="#_build-the-n4js-ide-from-command-line"></a><a class="link" href="#_build-the-n4js-ide-from-command-line">3.2. Build the N4JS IDE from command line</a></h3>
+<div class="paragraph">
+<p>Ensure you have</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Java 8</p>
+</li>
+<li>
+<p>Maven 3.2.x and</p>
+</li>
+<li>
+<p>Node.js 6</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>installed on your system.</p>
+</div>
+<div class="paragraph">
+<p>Clone the repository</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>git clone https://github.com/Eclipse/n4js.git</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Change to the n4js folder:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>cd n4js</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Run the Maven build:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>mvn clean verify</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You may have to increase the memory for maven via <code>export MAVEN_OPTS="-Xmx2048m"</code> (Unix) or <code>set MAVEN_OPTS="-Xmx2048m"</code> (Windows).</p>
+</div>
+<div class="sect3">
+<h4 id="_publish-maven-tooling-code-org-eclipse-n4js-releng-util-code"><a class="anchor" href="#_publish-maven-tooling-code-org-eclipse-n4js-releng-util-code"></a><a class="link" href="#_publish-maven-tooling-code-org-eclipse-n4js-releng-util-code">3.2.1. Publish maven-tooling <code>org.eclipse.n4js.releng.util</code></a></h4>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title=""></i>
+</td>
+<td class="content">
+For extending the N4JS-language in a different project, the <code>org.eclipse.n4js.releng.util</code> module needs to be published as a maven-plugin. You can deploy this SNAPSHOT-artifact to a local folder by providing the <code>local-snapshot-deploy-folder</code>-property pointing to an absolute path in the local file system:
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>mvn clean deploy -Dlocal-snapshot-deploy-folder=/var/lib/my/folder/local-mvn-deploy-repository</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The existence of <code>local-snapshot-deploy-folder</code> will trigger a profile enabling the deploy-goal for the project <code>org.eclipse.n4js.releng.util</code></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
