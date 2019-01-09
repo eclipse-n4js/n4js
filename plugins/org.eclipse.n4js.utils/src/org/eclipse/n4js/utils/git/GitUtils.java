@@ -117,9 +117,13 @@ public abstract class GitUtils {
 	 *            the name of the branch to reset the {@code HEAD} pointer.
 	 * @param cloneIfMissing
 	 *            {@code true} if the repository has to be cloned in case if its absence.
+	 * @param clean
+	 *            if {@code true}, a Git clean will be executed after the reset, similar to running the command
+	 *            {@code "git clean -dxff"}. Such an extensive clean will set the repository back to the state right
+	 *            after freshly cloning it.
 	 */
 	public static void hardReset(final String remoteUri, final Path localClonePath, final String branch,
-			final boolean cloneIfMissing) {
+			final boolean cloneIfMissing, final boolean clean) {
 
 		LOGGER.info("Performing hard reset... [Local repository: " + localClonePath + ", remote URI: " + remoteUri
 				+ ", branch: " + branch + "]");
@@ -155,8 +159,12 @@ public abstract class GitUtils {
 			final Ref ref = resetCommand.call();
 			LOGGER.info("Repository content has been successfully reset to '" + ref + "'.");
 
-			final Collection<String> deletedFiles = git.clean().setCleanDirectories(true).call();
-			LOGGER.info("Cleaned up " + deletedFiles.size() + " files:\n" + Joiner.on(",\n").join(deletedFiles));
+			if (clean) {
+				LOGGER.info("Cleaning repository ...");
+				final Collection<String> deletedFiles = git.clean()
+						.setCleanDirectories(true).setIgnore(false).setForce(true).call();
+				LOGGER.info("Cleaned up " + deletedFiles.size() + " files:\n" + Joiner.on(",\n").join(deletedFiles));
+			}
 		} catch (final RepositoryNotFoundException e) {
 			if (cloneIfMissing) {
 				Throwables.throwIfUnchecked(e);
@@ -175,7 +183,8 @@ public abstract class GitUtils {
 	}
 
 	/**
-	 * Sugar for {@link #hardReset(String, Path, String, boolean)} with multiple remote git URIs and local paths.
+	 * Sugar for {@link #hardReset(String, Path, String, boolean, boolean)} with multiple remote git URIs and local
+	 * paths.
 	 *
 	 * @param remoteUris
 	 *            the URI of the remote repository. Could be omitted if the {@code cloneIfMissing} is {@code false}.
@@ -185,9 +194,11 @@ public abstract class GitUtils {
 	 *            the name of the branch to reset the {@code HEAD} pointer.
 	 * @param cloneIfMissing
 	 *            {@code true} if the repository has to be cloned in case if its absence.
+	 * @param clean
+	 *            if {@code true}, a Git clean will be executed after the reset.
 	 */
 	public static void hardReset(final Iterable<String> remoteUris, final Iterable<Path> localClonePaths,
-			final String branch, final boolean cloneIfMissing) {
+			final String branch, final boolean cloneIfMissing, final boolean clean) {
 
 		checkNotNull(remoteUris, "remoteUris");
 		checkNotNull(localClonePaths, "localClonePaths");
@@ -202,7 +213,7 @@ public abstract class GitUtils {
 			final int pathIndex = i++;
 			new Thread(() -> {
 				try {
-					hardReset(remoteUri, paths[pathIndex], branch, cloneIfMissing);
+					hardReset(remoteUri, paths[pathIndex], branch, cloneIfMissing, clean);
 				} catch (final Exception e) {
 					if (null == resetExc.get()) {
 						synchronized (mutex) {

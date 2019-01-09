@@ -9,18 +9,15 @@ package org.eclipse.n4js.tests.builder;
 
 import static org.apache.log4j.Logger.getLogger;
 import static org.eclipse.core.resources.IContainer.INCLUDE_HIDDEN;
-import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
 import static org.eclipse.n4js.tests.builder.BuilderUtil.countResourcesInIndex;
 import static org.eclipse.n4js.tests.builder.BuilderUtil.getAllResourceDescriptionsAsString;
 import static org.eclipse.n4js.tests.builder.BuilderUtil.getBuilderState;
-import static org.eclipse.ui.PlatformUI.isWorkbenchRunning;
 import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.root;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -145,21 +142,7 @@ public abstract class AbstractBuilderTest {
 	}
 
 	private void toggleAutobuild(final boolean enable) {
-		if (isWorkbenchRunning()) {
-			final IWorkspaceDescription workspaceDescription = getWorkspace().getDescription();
-			if (null != workspaceDescription) {
-				if (workspaceDescription.isAutoBuilding() != enable) {
-					workspaceDescription.setAutoBuilding(enable);
-					try {
-						getWorkspace().setDescription(workspaceDescription);
-					} catch (final CoreException e) {
-						throw new IllegalStateException("Error while trying to turn workspace autobuild "
-								+ (enable ? "on" : "off") + ".", e);
-					}
-				}
-			}
-
-		}
+		EclipseUIUtils.toggleAutobuild(enable);
 	}
 
 	private static void deleteProjects(final IProject[] projects, StringBuilder error) {

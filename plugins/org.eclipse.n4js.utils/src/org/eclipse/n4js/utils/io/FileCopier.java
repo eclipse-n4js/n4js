@@ -108,8 +108,9 @@ public class FileCopier implements FileVisitor<Path> {
 
 	@Override
 	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-		if (this.shouldCopyFile.apply(file))
+		if (this.shouldCopyFile.apply(file)) {
 			Files.copy(file, target.resolve(source.relativize(file)), StandardCopyOption.REPLACE_EXISTING);
+		}
 		return CONTINUE;
 	}
 
