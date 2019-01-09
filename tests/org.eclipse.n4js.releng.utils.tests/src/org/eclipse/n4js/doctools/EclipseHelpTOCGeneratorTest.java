@@ -52,7 +52,7 @@ public class EclipseHelpTOCGeneratorTest {
 		File expectedTOCFile = Paths.get("testres", "toc", candidate, "toc" + candidate + ".xml").toFile();
 
 		String expectedTOC = new String(Files.readAllBytes(expectedTOCFile.toPath()));
-		String actualTOC = EclipseHelpTOCGenerator.generateTOC(adocXML);
+		String actualTOC = EclipseHelpTOCGenerator.generateTOC(adocXML, "");
 
 		assertEquals(expectedTOC, actualTOC);
 	}

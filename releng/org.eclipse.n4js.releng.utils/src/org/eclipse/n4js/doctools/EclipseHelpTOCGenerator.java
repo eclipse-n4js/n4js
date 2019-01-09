@@ -41,14 +41,20 @@ public class EclipseHelpTOCGenerator extends DefaultHandler {
 
 		String in = null;
 		String tocName = "toc.xml";
+		String linkPrefix = "";
 
 		for (int f = 0; f < args.length - 1; f += 2) {
 			String flag = args[f];
 			String value = args[f + 1];
-			if ("-t".equals(flag)) {
+			switch (flag) {
+			case "-t":
 				tocName = value;
-			} else {
-				System.out.println("Flag " + flag + " not recogized.");
+				break;
+			case "-p":
+				linkPrefix = value;
+				break;
+			default:
+				System.out.println("Flag " + flag + " not recognized.");
 				printHelp();
 				System.exit(2);
 			}
@@ -57,8 +63,9 @@ public class EclipseHelpTOCGenerator extends DefaultHandler {
 
 		File f = new File(in);
 		try {
-			String toc = generateTOC(f);
-			Files.write(Paths.get(tocName), toc.getBytes(), StandardOpenOption.CREATE_NEW);
+			String toc = generateTOC(f, linkPrefix);
+			Files.write(Paths.get(tocName), toc.getBytes(), StandardOpenOption.CREATE,
+					StandardOpenOption.TRUNCATE_EXISTING);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			System.exit(2);
@@ -68,14 +75,16 @@ public class EclipseHelpTOCGenerator extends DefaultHandler {
 	}
 
 	private static void printHelp() {
-		System.out.println("etoc [-t tocfilename] inputfile\n"
-				+ "-t string   The tocfile to create (incl. xml), if not specified, toc.xml is used");
+		System.out.println("etoc [-t tocfilename] [p link prefix] inputfile\n"
+				+ "-t string   The tocfile to create (incl. xml). Existing file will be overwritten. Default is 'toc.xml'\n"
+				+ "-p path     Path to prepend to all links in the tocfile. Default is empty string.");
 	}
 
 	/**
 	 * Creats an Eclipse help TOC from given asciidoc generated XML file.
 	 */
-	public static String generateTOC(File file) throws ParserConfigurationException, SAXException, IOException {
+	public static String generateTOC(File file, String linkPrefix)
+			throws ParserConfigurationException, SAXException, IOException {
 
 		FileInputStream fis = new FileInputStream(file);
 		try {
@@ -84,7 +93,7 @@ public class EclipseHelpTOCGenerator extends DefaultHandler {
 			XMLReader reader = parser.getXMLReader();
 
 			EclipseHelpTOCGenerator handler = new EclipseHelpTOCGenerator();
-			handler.dir = file.getName().substring(0, file.getName().indexOf(".xml"));
+			handler.dir = linkPrefix + file.getName().substring(0, file.getName().indexOf(".xml"));
 
 			reader.setContentHandler(handler);
 			reader.setEntityResolver(new EntityResolver() {
@@ -220,10 +229,10 @@ public class EclipseHelpTOCGenerator extends DefaultHandler {
 	}
 
 	private String getFilename(String label) {
-		if (label == null) {
-			return "index.html";
+		String name = "index";
+		if (label != null) {
+			name = ChunkHelper.extractFileNameFromTitle(label, 0, label.length());
 		}
-		String name = ChunkHelper.extractFileNameFromTitle(label, 0, label.length());
 		return name + ".html";
 	}
 
