@@ -155,20 +155,28 @@ public class Chunker {
 		for (int f = 0; f < args.length - 1; f += 2) {
 			String flag = args[f];
 			String value = args[f + 1];
-			if ("-h".equals(flag))
+
+			switch (flag) {
+			case "-h":
 				head = value;
-			else if ("-f".equals(flag))
+				break;
+			case "-f":
 				foot = value;
-			else if ("-c".equals(flag))
+				break;
+			case "-c":
 				tag = value;
-			else if ("-d".equals(flag))
+				break;
+			case "-d":
 				dir = value;
-			else if ("-n".equals(flag))
+				break;
+			case "-n":
 				name = value;
-			else if ("-i".equals(flag))
+				break;
+			case "-i":
 				index = value;
-			else {
-				System.out.println("Flag " + flag + " not recogized.");
+				break;
+			default:
+				System.out.println("Flag " + flag + " not recognized.");
 				printHelp();
 				System.exit(2);
 			}
@@ -181,7 +189,8 @@ public class Chunker {
 			String fileName = dir + File.separator + range.name + ".html";
 			System.out.println("Writing chunk " + fileName);
 			File f = new File(fileName);
-			Files.write(f.toPath(), chunker.getChunk(range).toString().getBytes(), StandardOpenOption.CREATE_NEW);
+			Files.write(f.toPath(), chunker.getChunk(range).toString().getBytes(), StandardOpenOption.CREATE,
+					StandardOpenOption.TRUNCATE_EXISTING);
 		}
 
 	}
