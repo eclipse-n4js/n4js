@@ -247,13 +247,24 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 						</goals>
 						<configuration>
 							<target>
+	                            <echo message="user.name: ${user.name}, user.group: ${user.group}" />
 	                            
+								<exec executable="id" spawn="false" outputproperty="user.id">
+									<arg value="-u"/>
+								</exec>
+								<exec executable="id" spawn="false" outputproperty="group.id">
+									<arg value="-g"/>
+								</exec>
+	                            <echo message="user.id: ${user.id}, group.id: ${group.id}" />
+								
 								<!-- locally, the complete path to docker works
-								 <exec executable="/usr/local/bin/docker" spawn="false">
+								<exec executable="/usr/local/bin/docker" spawn="false">
 								 -->
 								<exec executable="docker" spawn="false">
 									<arg value="run"/>
 									<arg value="--rm"/>
+									<arg value="-u"/>
+									<arg value="${user.id}:${group.id}"/>
 									<arg value="--name"/>
 									<arg value="asciispec"/>
 									<arg value="-e"/>
@@ -283,9 +294,9 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 									<arg value="-c"/>
 									<arg value="&lt;div class=&quot;sect1&quot;&gt;"/>
 									<arg value="-h"/>
-									<arg value="&lt;div id=&quot;content&quot;&gt;"/>
+									<arg value="&lt;body class=&quot;book toc2 toc-left&quot;&gt;"/>
 									<arg value="-f"/>
-									<arg value="&lt;/div&gt;\s&lt;div id=&quot;footnotes&quot;&gt;"/>
+									<arg value="&lt;div id=&quot;footnotes&quot;&gt;"/>
 									<arg value="-d"/>
 									<arg value="${basedir}/dist/eclipse-html/N4JSDesign/."/>
 									<arg value="${basedir}/generated-docs/N4JSDesign.html"/>
@@ -306,9 +317,9 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 								  <fileset dir="${basedir}/generated-docs/."/>
 								</move>
 
-								<!-- 
+								
 								<delete dir="${basedir}/doctools"/>
-								 -->
+								
 								
 							</target>
 						</configuration>
