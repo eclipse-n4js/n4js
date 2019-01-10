@@ -11,17 +11,13 @@
 package org.eclipse.n4js.tests.util;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
-import static org.eclipse.ui.PlatformUI.isWorkbenchRunning;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceDescription;
-import org.eclipse.core.runtime.CoreException;
+import org.eclipse.n4js.ui.utils.AutobuildUtils;
 import org.eclipse.n4js.ui.utils.TimeoutRuntimeException;
 import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.ui.IEditorPart;
@@ -144,23 +140,12 @@ public class EclipseUIUtils {
 		return refFileEditor.get();
 	}
 
-	/** Turns auto build on/off. */
-	// moved here from class AbstractBuilderTest
+	/**
+	 * Turns auto build on/off. Delegating to {@link AutobuildUtils#set(boolean)}.
+	 *
+	 * Consider using {@link AutobuildUtils#suppressAutobuild()} if you want to disable auto build only temporarily.
+	 */
 	public static void toggleAutobuild(final boolean enable) {
-		if (isWorkbenchRunning()) {
-			final IWorkspace workspace = getWorkspace();
-			final IWorkspaceDescription workspaceDescription = workspace.getDescription();
-			if (null != workspaceDescription) {
-				if (workspaceDescription.isAutoBuilding() != enable) {
-					workspaceDescription.setAutoBuilding(enable);
-					try {
-						workspace.setDescription(workspaceDescription);
-					} catch (final CoreException e) {
-						throw new IllegalStateException("Error while trying to turn auto build "
-								+ (enable ? "on" : "off") + ".", e);
-					}
-				}
-			}
-		}
+		AutobuildUtils.set(enable);
 	}
 }

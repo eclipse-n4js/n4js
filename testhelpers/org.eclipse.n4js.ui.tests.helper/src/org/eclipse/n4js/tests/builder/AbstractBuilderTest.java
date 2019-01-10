@@ -33,6 +33,7 @@ import org.eclipse.n4js.ui.building.CloseProjectTaskScheduler;
 import org.eclipse.n4js.ui.building.ResourceDescriptionWithoutModuleUserData;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildScheduler;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
+import org.eclipse.n4js.ui.utils.AutobuildUtils;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
@@ -141,8 +142,13 @@ public abstract class AbstractBuilderTest {
 		toggleAutobuild(true);
 	}
 
+	/**
+	 * Turns auto build on/off. Delegating to {@link AutobuildUtils#set(boolean)}.
+	 *
+	 * Consider using {@link AutobuildUtils#suppressAutobuild()} if you want to disable auto build only temporarily.
+	 */
 	private void toggleAutobuild(final boolean enable) {
-		EclipseUIUtils.toggleAutobuild(enable);
+		AutobuildUtils.set(enable);
 	}
 
 	private static void deleteProjects(final IProject[] projects, StringBuilder error) {
