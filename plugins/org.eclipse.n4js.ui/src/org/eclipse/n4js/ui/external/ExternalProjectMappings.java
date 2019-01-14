@@ -138,7 +138,7 @@ public class ExternalProjectMappings {
 
 			// shadowing is done here by checking if an npm is already in the mapping
 			String projectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(projectLocation);
-			if (!completeProjectNameMappingTmp.containsKey(project.getName())) {
+			if (!completeProjectNameMappingTmp.containsKey(projectName)) {
 
 				completeProjectNameMappingTmp.put(projectName, Lists.newArrayList(project));
 				reducedProjectUriMappingTmp.put(projectLocation, pair);
@@ -149,7 +149,8 @@ public class ExternalProjectMappings {
 				reducedProjectsLocationMappingTmp.putIfAbsent(rootLoc, new LinkedList<>());
 				reducedProjectsLocationMappingTmp.get(rootLoc).add(project);
 			} else {
-				completeProjectNameMappingTmp.get(projectName).add(project);
+				List<N4JSExternalProject> list = completeProjectNameMappingTmp.get(projectName);
+				list.add(project);
 			}
 		}
 

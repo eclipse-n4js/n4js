@@ -267,7 +267,7 @@ public class ExternalLibrariesActivator implements BundleActivator {
 
 			boolean locationFound = false;
 			for (String knownLocation : CATEGORY_SHADOWING_ORDER) {
-				if (locStr.endsWith(knownLocation)) {
+				if (locStr.endsWith(knownLocation) && !knownLocations.containsKey(knownLocation)) {
 					knownLocations.put(knownLocation, location);
 					locationFound = true;
 				}
