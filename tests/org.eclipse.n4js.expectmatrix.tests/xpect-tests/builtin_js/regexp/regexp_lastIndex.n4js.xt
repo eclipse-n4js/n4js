@@ -28,9 +28,9 @@ console.log(re.exec("hi"));
 <==
 stdout:
 0
-[ 'hi', 'hi', index: 0, input: 'hi' ]
+[ 'hi', 'hi', index: 0, input: 'hi', groups: undefined ]
 2
-[ '', undefined, index: 2, input: 'hi' ]
+[ '', undefined, index: 2, input: 'hi', groups: undefined ]
 stderr:
 ==>
 --- */
