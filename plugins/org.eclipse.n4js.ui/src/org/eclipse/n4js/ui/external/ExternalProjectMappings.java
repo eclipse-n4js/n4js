@@ -28,6 +28,7 @@ import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalProject;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
+import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
@@ -222,9 +223,15 @@ public class ExternalProjectMappings {
 			depNames.add(name);
 		}
 
-		java.net.URI nodeModulesURI = platformLocationProvider.getNodeModulesURI();
+		// add all shipped npms to user necessary dependencies
 		for (java.net.URI location : reducedProjectsLocationMappingTmp.keySet()) {
-			if (!location.equals(nodeModulesURI)) {
+			String locationStr = location.toString();
+			if (locationStr.endsWith("/")) {
+				locationStr = locationStr.substring(0, locationStr.length() - 1);
+			}
+			int startLastSegment = locationStr.lastIndexOf("/");
+			String locationName = locationStr.substring(startLastSegment + 1);
+			if (ExternalLibrariesActivator.SHIPPED_ROOTS_FOLDER_NAMES.contains(locationName)) {
 				List<N4JSExternalProject> list = reducedProjectsLocationMappingTmp.get(location);
 				for (N4JSExternalProject n4prj : list) {
 					IN4JSProject iProject = n4prj.getIProject();
