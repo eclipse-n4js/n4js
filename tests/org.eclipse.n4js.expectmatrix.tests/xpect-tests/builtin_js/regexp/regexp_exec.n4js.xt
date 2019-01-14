@@ -38,7 +38,8 @@ Found ab.  Next match starts at 9
 [ 'hello world!',
   'hello world!',
   index: 10,
-  input: 'This is a hello world!' ]
+  input: 'This is a hello world!',
+  groups: undefined ]
 stderr:
 ==>
 --- */
