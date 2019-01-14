@@ -26,8 +26,9 @@ function inspectPropertyAsMethod(prop : any, propName : string) {
             console.log("  -", "test." + propName + "  is native function");
         } else {
             var _name = _str;
-            _name = _name.substring('function '.length);
+            _name = _name.substring('function'.length);
             _name = _name.substring(0, _name.indexOf('('));
+            _name = _name.trim();
             console.log("  -", "test." + propName + " is a function " + _name);
         }
     } else {

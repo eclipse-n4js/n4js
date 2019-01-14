@@ -56,6 +56,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeVariableMapping;
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression;
+import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.types.AnyType;
 import org.eclipse.n4js.ts.types.InferenceVariable;
@@ -564,7 +565,7 @@ public class TypeUtils {
 	private static TypeRef mergeTypingStrategies(TypeRef target, TypingStrategy source) {
 		final TypingStrategy combined = concatTypingStrategies(target.getTypingStrategy(), source);
 		if (combined != target.getTypingStrategy()) {
-			if (target instanceof ParameterizedTypeRef) {
+			if (target instanceof ParameterizedTypeRef && !(target instanceof FunctionTypeRef)) {
 				final ParameterizedTypeRefStructural ptrs = copyToParameterizedTypeRefStructural(
 						(ParameterizedTypeRef) target);
 				ptrs.setTypingStrategy(combined);
@@ -1207,12 +1208,21 @@ public class TypeUtils {
 	}
 
 	/**
-	 * Same as {@link EcoreUtil2#cloneWithProxies(EObject)}, but takes care of special copy semantics for TypeRefs. See
-	 * {@link #copy(EObject)}.
+	 * Converts the given {@link ParameterizedTypeRef} into a {@link ParameterizedTypeRefStructural}. Creates a copy and
+	 * does not modify the passed-in type reference.
+	 *
+	 * @throws IllegalArgumentException
+	 *             if given a {@link FunctionTypeRef}, because {@code FunctionTypeRef}s do not have a corresponding
+	 *             subclass that implements {@link ParameterizedTypeRefStructural}.
 	 */
 	public static final ParameterizedTypeRefStructural copyToParameterizedTypeRefStructural(
 			ParameterizedTypeRef source) {
-		EClass ptrsEClass = TypeRefsPackage.eINSTANCE.getParameterizedTypeRefStructural();
+		if (source instanceof FunctionTypeRef) {
+			throw new IllegalArgumentException("FunctionTypeRefs do not have a corresponding structural variant");
+		}
+		EClass ptrsEClass = source instanceof VersionedParameterizedTypeRef
+				? TypeRefsPackage.eINSTANCE.getVersionedParameterizedTypeRefStructural()
+				: TypeRefsPackage.eINSTANCE.getParameterizedTypeRefStructural();
 		return (ParameterizedTypeRefStructural) copy(source, false, false, ptrsEClass);
 	}
 

@@ -28,7 +28,7 @@ fTypeVal N4Class {
   annotations: [],
   name: 'Foo',
   fqn: 'di.compiledMetaInfo.01_DiMetaSimple.Foo',
-  n4superType: 
+  n4superType:
    N4Class {
      origin: 'n4js-es5',
      annotations: [],
