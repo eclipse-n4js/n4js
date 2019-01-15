@@ -21,6 +21,7 @@ import java.net.URI;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.Platform;
@@ -250,6 +251,19 @@ public class ExternalLibraryPreferenceModel {
 			externalLibraryLocationURIs.addAll(locations);
 		}
 		return externalLibraryLocationURIs;
+	}
+
+	/**
+	 * Returns with a view to the external library folder locations given as absolute file {@link URI}s.
+	 *
+	 * @return a list of external library folder location URIs.
+	 */
+	synchronized public List<URI> getNodeModulesLocationsAsUris() {
+		List<URI> nodeModules = new LinkedList<>(getExternalLibraryLocationsAsUris());
+		nodeModules = nodeModules.stream().filter(uri -> uri.toString().endsWith("node_modules"))
+				.collect(Collectors.toList());
+
+		return nodeModules;
 	}
 
 	/**

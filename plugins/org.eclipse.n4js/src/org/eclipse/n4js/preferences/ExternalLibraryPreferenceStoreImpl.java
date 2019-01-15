@@ -62,6 +62,11 @@ import com.google.inject.Inject;
 	}
 
 	@Override
+	public Collection<URI> getNodeModulesLocations() {
+		return getOrCreateModel().getNodeModulesLocationsAsUris();
+	}
+
+	@Override
 	public void add(final URI location) {
 		getOrCreateModel().add(location);
 	}

@@ -45,7 +45,6 @@ public class MaintenanceActionsButtonListener extends SelectionAdapter {
 	final private StatusHelper statusHelper;
 
 	static final String ACTION_NPM_RELOAD = "Re-register all npms (cleans and builds npms from disk).";
-	static final String ACTION_NPM_REINSTALL = "Reinstall npm libraries.";
 	static final String ACTION_NPM_CACHE_CLEAN = "Clean npm cache. (npm cache clean --force)";
 	static final String ACTION_NPM_PACKAGES_DELETE = "Delete all npms (deletes node_modules folder).";
 
@@ -61,7 +60,6 @@ public class MaintenanceActionsButtonListener extends SelectionAdapter {
 		String[] options = new String[] {
 				ACTION_NPM_CACHE_CLEAN,
 				ACTION_NPM_RELOAD,
-				ACTION_NPM_REINSTALL,
 				ACTION_NPM_PACKAGES_DELETE };
 		String msg = "Select maintenance actions to perform.";
 		Shell shell = UIUtils.getShell();
@@ -72,7 +70,6 @@ public class MaintenanceActionsButtonListener extends SelectionAdapter {
 		if (dialog.open() == Window.OK) {
 			boolean cleanCache = false;
 			boolean deleteNPM = false;
-			boolean reinstall = false;
 			boolean reload = false;
 
 			Object[] result = dialog.getResult();
@@ -86,9 +83,6 @@ public class MaintenanceActionsButtonListener extends SelectionAdapter {
 				case ACTION_NPM_RELOAD:
 					reload = true;
 					break;
-				case ACTION_NPM_REINSTALL:
-					reinstall = true;
-					break;
 				case ACTION_NPM_CACHE_CLEAN:
 					cleanCache = true;
 					break;
@@ -98,8 +92,7 @@ public class MaintenanceActionsButtonListener extends SelectionAdapter {
 				}
 			}
 
-			final MaintenanceActionsChoice userChoice = new MaintenanceActionsChoice(cleanCache, reinstall, deleteNPM,
-					reload);
+			final MaintenanceActionsChoice userChoice = new MaintenanceActionsChoice(cleanCache, deleteNPM, reload);
 			String statusText = "Perform Maintenance Actions: " + userChoice;
 			final MultiStatus multistatus = statusHelper.createMultiStatus(statusText);
 

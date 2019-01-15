@@ -16,7 +16,6 @@ import static java.util.Collections.emptyMap;
 
 import java.io.File;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -157,9 +156,7 @@ public class HlcExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 			return emptyList();
 		}
 
-		Iterable<java.net.URI> projectLocations = externalLibraryPreferenceStore
-				.convertToProjectRootLocations(Collections.singleton(locationProvider.getNodeModulesURI()));
-
+		Iterable<java.net.URI> projectLocations = externalLibraryPreferenceStore.getNodeModulesLocations();
 		List<Pair<URI, ProjectDescription>> projects = new LinkedList<>();
 		for (java.net.URI npmLibraryLocation : projectLocations) {
 			URI location = URIUtils.toFileUri(npmLibraryLocation);

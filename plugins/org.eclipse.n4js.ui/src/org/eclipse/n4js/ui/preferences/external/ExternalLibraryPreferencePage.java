@@ -28,7 +28,6 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -48,18 +47,13 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.n4js.external.ExternalIndexSynchronizer;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.LibraryManager;
-import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.external.NpmCLI;
 import org.eclipse.n4js.external.ShadowingInfoHelper;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
-import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.semver.SemverHelper;
-import org.eclipse.n4js.semver.SemverUtils;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
-import org.eclipse.n4js.semver.Semver.VersionComparator;
-import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.ui.external.ExternalLibrariesActionsHelper;
 import org.eclipse.n4js.ui.utils.InputComposedValidator;
 import org.eclipse.n4js.ui.utils.InputFunctionalValidator;
@@ -358,23 +352,6 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 				.anyMatch(name -> name.equals(packageName));
 	}
 
-	private Map<String, NPMVersionRequirement> getInstalledNpms() {
-		URI root = locationProvider.getNodeModulesURI();
-		Collection<N4JSExternalProject> projects = externalLibraryWorkspace.getProjectsIn(root);
-		Map<String, NPMVersionRequirement> versionedNpms = new HashMap<>();
-
-		for (N4JSExternalProject prj : projects) {
-			org.eclipse.emf.common.util.URI location = prj.getIProject().getLocation();
-			ProjectDescription pd = externalLibraryWorkspace.getProjectDescription(location);
-			String name = pd.getProjectName();
-			VersionNumber version = pd.getProjectVersion();
-			NPMVersionRequirement vr = SemverUtils.createVersionRangeSet(VersionComparator.EQUALS, version);
-			versionedNpms.put(name, vr);
-		}
-
-		return versionedNpms;
-	}
-
 	/**
 	 * Handler for executing maintenance action based on the provided {@link MaintenanceActionsChoice user choice}.
 	 */
@@ -382,16 +359,10 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 		final MultiStatus multistatus = statusHelper
 				.createMultiStatus("Executing maintenance actions.");
 
-		// persist state for reinstall
-		Map<String, NPMVersionRequirement> oldPackages = new HashMap<>();
-		if (userChoice.decisionReinstall)
-			oldPackages.putAll(getInstalledNpms());
-
 		// keep the order Cache->TypeDefs->NPMs->Reinstall->Update
 		// actions have side effects that can interact with each other
 		maintenanceCleanNpmCache(userChoice, multistatus, monitor);
 		maintenanceDeleteNpms(userChoice, multistatus);
-		reinstallNpms(userChoice, multistatus, monitor, oldPackages);
 		upateState(userChoice, multistatus, monitor);
 
 		return multistatus;
@@ -428,8 +399,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	private void upateState(final MaintenanceActionsChoice userChoice,
 			final MultiStatus multistatus, IProgressMonitor monitor) {
 
-		if (userChoice.decisionReload || userChoice.decisionReinstall || userChoice.decisionPurgeNpm) {
-
+		if (userChoice.decisionReload || userChoice.decisionPurgeNpm) {
 			try {
 				libManager.registerAllExternalProjects(monitor);
 
@@ -438,37 +408,6 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 				multistatus.merge(statusHelper.createError(msg, e));
 			}
 			updateInput(viewer, store.getLocations());
-		}
-	}
-
-	/**
-	 * Actions to be taken if reinstalling npms is requested.
-	 *
-	 * @param userChoice
-	 *            options object used to decide if / how actions should be performed
-	 * @param multistatus
-	 *            the status used accumulate issues
-	 * @param monitor
-	 *            the monitor used to interact with npm manager
-	 * @param packageNames
-	 *            names of the packages and their versions to reinstall
-	 *
-	 */
-	private void reinstallNpms(final MaintenanceActionsChoice userChoice,
-			final MultiStatus multistatus, IProgressMonitor monitor, Map<String, NPMVersionRequirement> packageNames) {
-		if (userChoice.decisionReinstall) {
-
-			// unless all npms were purged, uninstall known ones
-			if (!userChoice.decisionPurgeNpm) {
-				IStatus uninstallStatus = uninstallAndUpdate(packageNames.keySet(), monitor);
-				if (!uninstallStatus.isOK())
-					multistatus.merge(uninstallStatus);
-			}
-
-			IStatus installStatus = installAndUpdate(packageNames, monitor);
-			if (!installStatus.isOK())
-				multistatus.merge(installStatus);
-
 		}
 	}
 

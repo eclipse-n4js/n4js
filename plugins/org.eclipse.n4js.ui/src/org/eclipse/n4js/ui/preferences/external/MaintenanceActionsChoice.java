@@ -20,11 +20,8 @@ import java.util.List;
 public class MaintenanceActionsChoice {
 
 	/** Simple constructor that stores provided values. */
-	public MaintenanceActionsChoice(boolean decisionCleanCache, boolean decisionReinstall, boolean decisionPurgeNpm,
-			boolean decisionReload) {
-
+	public MaintenanceActionsChoice(boolean decisionCleanCache, boolean decisionPurgeNpm, boolean decisionReload) {
 		this.decisionCleanCache = decisionCleanCache;
-		this.decisionReinstall = decisionReinstall;
 		this.decisionPurgeNpm = decisionPurgeNpm;
 		this.decisionReload = decisionReload;
 	}
@@ -32,8 +29,6 @@ public class MaintenanceActionsChoice {
 	/** Flag marks if npm cache clean should be performed. */
 	public final boolean decisionCleanCache;
 	/** Flag marks if reinstalling currently installed npms should be performed. */
-	public final boolean decisionReinstall;
-	/** Flag marks if all npms should be deleted should be performed. */
 	public final boolean decisionPurgeNpm;
 	/** Flag marks if libraries state should be reloaded from disk should be performed. */
 	public final boolean decisionReload;
@@ -43,9 +38,6 @@ public class MaintenanceActionsChoice {
 		List<String> actionTexts = new LinkedList<>();
 		if (decisionCleanCache) {
 			actionTexts.add(MaintenanceActionsButtonListener.ACTION_NPM_CACHE_CLEAN);
-		}
-		if (decisionReinstall) {
-			actionTexts.add(MaintenanceActionsButtonListener.ACTION_NPM_REINSTALL);
 		}
 		if (decisionPurgeNpm) {
 			actionTexts.add(MaintenanceActionsButtonListener.ACTION_NPM_PACKAGES_DELETE);

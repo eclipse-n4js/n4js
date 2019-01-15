@@ -80,15 +80,15 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 		}
 		// this might happen if the URI was located from non-platform information, e.g. in case
 		// of a source file location found in a source map
-		// FIXME: This loop and the call 'toFile()' are very expensive
+		// FIXME: This loop and the call 'toFile()' / 'isFile()' are very expensive
 		// FIXME: since this method is called for a lot of external files
-		if (nestedLocation.isFile()) {
-			String nested = nestedLocation.toString();
+		if (nestedLocation.toString().startsWith("file:/")) {
+			String nested = nestedLocation.toFileString();
 			for (IProject proj : workspace.getProjects()) {
-				URI projURI = URI.createFileURI(proj.getLocation().toFile().toString());
-				String ps = projURI.toString();
-				if (nested.startsWith(ps) && !nested.startsWith(ps + "/node_modules")) {
+				String locationStr = proj.getLocation().toString();
+				if (nested.startsWith(locationStr) && !nested.startsWith(locationStr + "/node_modules")) {
 					// Note: There can be projects in nested node_modules folder.
+					URI projURI = URI.createFileURI(locationStr);
 					return projURI;
 				}
 			}

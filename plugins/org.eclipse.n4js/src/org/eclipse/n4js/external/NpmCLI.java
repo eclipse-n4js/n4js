@@ -197,13 +197,12 @@ public class NpmCLI {
 		Collection<LibraryChange> actualChanges = new LinkedHashSet<>();
 		File installPath = new File(locationProvider.getTargetPlatformInstallURI());
 
-		java.net.URI nodeModulesURI = locationProvider.getNodeModulesURI();
 		// for uninstallation, we invoke npm only once for all packages
 		final List<String> packageNames = Lists.newArrayList();
 		for (LibraryChange reqChg : requestedChanges) {
 			if (reqChg.type == LibraryChangeType.Uninstall) {
 				java.net.URI rootLocation = externalLibraryWorkspace.getRootLocationForResource(reqChg.location);
-				if (nodeModulesURI.equals(rootLocation)) {
+				if (locationProvider.isNodeModulesLocation(rootLocation)) {
 					packageNames.add(reqChg.name);
 				}
 			}

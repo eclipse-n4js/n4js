@@ -31,6 +31,13 @@ public interface ExternalLibraryPreferenceStore extends Iterable<URI> {
 	Collection<URI> getLocations();
 
 	/**
+	 * Returns with a collection of configured node_module locations.
+	 *
+	 * @return a collection of configured node_module locations.
+	 */
+	Collection<URI> getNodeModulesLocations();
+
+	/**
 	 * Adds a new external library configuration entry to the preferences. Has no effect if the location already exists.
 	 * Clients must call {@link #save(IProgressMonitor)} to persist the changes.
 	 *
