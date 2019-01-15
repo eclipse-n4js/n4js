@@ -44,6 +44,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.n4js.binaries.IllegalBinaryStateException;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.SemverMatcher;
 import org.eclipse.n4js.semver.SemverUtils;
@@ -102,6 +103,23 @@ public class LibraryManager {
 		indexSynchronizer.synchronizeNpms(monitor);
 	}
 
+	public IStatus installNPM(String packageName, IProgressMonitor monitor) {
+		return installNPM(packageName, (IN4JSProject) null, monitor);
+	}
+
+	public IStatus installNPM(String packageName, String packageVersionStr, IProgressMonitor monitor) {
+		return installNPM(packageName, packageVersionStr, (IN4JSProject) null, monitor);
+	}
+
+	public IStatus installNPM(String packageName, NPMVersionRequirement packageVersion, IProgressMonitor monitor) {
+		return installNPM(packageName, packageVersion, (IN4JSProject) null, monitor);
+	}
+
+	public IStatus installNPMs(Map<String, NPMVersionRequirement> versionedNPMs, boolean forceReloadAll,
+			IProgressMonitor monitor) {
+		return installNPMs(versionedNPMs, forceReloadAll, (IN4JSProject) null, monitor);
+	}
+
 	/**
 	 * Installs the given npm package in a blocking fashion.
 	 *
@@ -111,8 +129,8 @@ public class LibraryManager {
 	 *            the monitor for the blocking install process.
 	 * @return a status representing the outcome of the install process.
 	 */
-	public IStatus installNPM(String packageName, IProgressMonitor monitor) {
-		return installNPM(packageName, NO_VERSION_REQUIREMENT, monitor);
+	public IStatus installNPM(String packageName, IN4JSProject context, IProgressMonitor monitor) {
+		return installNPM(packageName, NO_VERSION_REQUIREMENT, context, monitor);
 	}
 
 	/**
@@ -126,12 +144,13 @@ public class LibraryManager {
 	 * @throws IllegalArgumentException
 	 *             if the given version string cannot be parsed to an {@link NPMVersionRequirement}.
 	 */
-	public IStatus installNPM(String packageName, String packageVersionStr, IProgressMonitor monitor) {
+	public IStatus installNPM(String packageName, String packageVersionStr, IN4JSProject context,
+			IProgressMonitor monitor) {
 		NPMVersionRequirement packageVersion = semverHelper.parse(packageVersionStr);
 		if (packageVersion == null) {
 			throw new IllegalArgumentException("unable to parse version requirement: " + packageVersionStr);
 		}
-		return installNPM(packageName, packageVersion, monitor);
+		return installNPM(packageName, packageVersion, context, monitor);
 	}
 
 	/**
@@ -143,8 +162,9 @@ public class LibraryManager {
 	 *            the monitor for the blocking install process.
 	 * @return a status representing the outcome of the install process.
 	 */
-	public IStatus installNPM(String packageName, NPMVersionRequirement packageVersion, IProgressMonitor monitor) {
-		return installNPMs(Collections.singletonMap(packageName, packageVersion), false, monitor);
+	public IStatus installNPM(String packageName, NPMVersionRequirement packageVersion, IN4JSProject context,
+			IProgressMonitor monitor) {
+		return installNPMs(Collections.singletonMap(packageName, packageVersion), false, context, monitor);
 	}
 
 	/**
@@ -160,10 +180,10 @@ public class LibraryManager {
 	 *            the monitor for the blocking install process.
 	 * @return a status representing the outcome of the install process.
 	 */
-	public IStatus installNPMs(Collection<String> unversionedPackages, IProgressMonitor monitor) {
+	public IStatus installNPMs(Collection<String> unversionedPackages, IN4JSProject context, IProgressMonitor monitor) {
 		Map<String, NPMVersionRequirement> versionedPackages = unversionedPackages.stream()
 				.collect(Collectors.toMap((String name) -> name, (String name) -> NO_VERSION_REQUIREMENT));
-		return installNPMs(versionedPackages, false, monitor);
+		return installNPMs(versionedPackages, false, context, monitor);
 	}
 
 	/**
@@ -185,12 +205,12 @@ public class LibraryManager {
 	 * @return a status representing the outcome of the install process.
 	 */
 	public IStatus installNPMs(Map<String, NPMVersionRequirement> versionedNPMs, boolean forceReloadAll,
-			IProgressMonitor monitor) {
-		return runWithWorkspaceLock(() -> installNPMsInternal(versionedNPMs, forceReloadAll, monitor));
+			IN4JSProject context, IProgressMonitor monitor) {
+		return runWithWorkspaceLock(() -> installNPMsInternal(versionedNPMs, forceReloadAll, context, monitor));
 	}
 
 	private IStatus installNPMsInternal(Map<String, NPMVersionRequirement> versionedNPMs, boolean forceReloadAll,
-			IProgressMonitor monitor) {
+			IN4JSProject context, IProgressMonitor monitor) {
 
 		String msg = getMessage(versionedNPMs);
 		MultiStatus status = statusHelper.createMultiStatus(msg);
@@ -209,7 +229,8 @@ public class LibraryManager {
 
 			SubMonitor subMonitor1 = subMonitor.split(2);
 			subMonitor1.setTaskName("Installing packages... [step 1 of " + steps + "]");
-			List<LibraryChange> actualChanges = installUninstallNPMs(subMonitor1, status, npmsToInstall, emptyList());
+			List<LibraryChange> actualChanges = installUninstallNPMs(subMonitor1, status, npmsToInstall, emptyList(),
+					context);
 
 			if (!status.isOK()) {
 				return status;
@@ -259,7 +280,8 @@ public class LibraryManager {
 	}
 
 	private List<LibraryChange> installUninstallNPMs(IProgressMonitor monitor, MultiStatus status,
-			Map<String, NPMVersionRequirement> installRequested, Collection<String> removeRequested) {
+			Map<String, NPMVersionRequirement> installRequested, Collection<String> removeRequested,
+			IN4JSProject context) {
 
 		SubMonitor subMonitor = SubMonitor.convert(monitor, 2);
 
@@ -273,7 +295,7 @@ public class LibraryManager {
 
 		try (Measurement m = N4JSDataCollectors.dcNpmInstall.getMeasurement("batchInstall")) {
 			// install
-			actualChanges.addAll(npmCli.batchInstall(subMonitor.split(1), status, requestedChanges));
+			actualChanges.addAll(npmCli.batchInstall(subMonitor.split(1), status, requestedChanges, context));
 		}
 
 		return actualChanges;
@@ -391,7 +413,7 @@ public class LibraryManager {
 
 		try (Measurement mes = N4JSDataCollectors.dcLibMngr.getMeasurement("uninstallDependenciesInternal");) {
 
-			List<LibraryChange> actualChanges = installUninstallNPMs(monitor, status, emptyMap(), packageNames);
+			List<LibraryChange> actualChanges = installUninstallNPMs(monitor, status, emptyMap(), packageNames, null);
 
 			try (Measurement m = N4JSDataCollectors.dcIndexSynchronizer.getMeasurement("synchronizeNpms")) {
 				indexSynchronizer.synchronizeNpms(monitor, actualChanges);

@@ -28,6 +28,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.binaries.BinaryCommandFactory;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.SemverMatcher;
 import org.eclipse.n4js.semver.SemverUtils;
@@ -129,20 +130,22 @@ public class NpmCLI {
 	 * @return multi status with children for each issue during processing
 	 */
 	public Collection<LibraryChange> batchInstall(IProgressMonitor monitor, MultiStatus status,
-			Collection<LibraryChange> requestedChanges) {
+			Collection<LibraryChange> requestedChanges, IN4JSProject context) {
 
-		return batchInstallInternal(monitor, status, requestedChanges);
+		return batchInstallInternal(monitor, status, requestedChanges, context);
 	}
 
 	private Collection<LibraryChange> batchInstallInternal(IProgressMonitor monitor, MultiStatus status,
-			Collection<LibraryChange> requestedChanges) {
+			Collection<LibraryChange> requestedChanges, IN4JSProject context) {
 
 		MultiStatus batchStatus = statusHelper.createMultiStatus("Installing npm packages.");
 		SubMonitor subMonitor = SubMonitor.convert(monitor, 1);
 		subMonitor.setTaskName("Installing npm packages.");
 
 		Collection<LibraryChange> actualChanges = new LinkedHashSet<>();
-		File installPath = new File(locationProvider.getTargetPlatformInstallURI());
+		File installPath = context != null
+				? context.getLocationPath().toFile()
+				: new File(locationProvider.getTargetPlatformInstallURI());
 
 		// for installation, we invoke npm only once for all packages
 		final List<Pair<String, String>> packageNamesAndVersions = Lists.newArrayList();

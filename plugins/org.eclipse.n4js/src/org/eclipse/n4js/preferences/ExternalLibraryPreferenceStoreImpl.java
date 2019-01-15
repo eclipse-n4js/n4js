@@ -18,15 +18,21 @@ import static org.eclipse.core.runtime.Status.OK_STATUS;
 
 import java.io.File;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.ExternalLibraryHelper;
 import org.eclipse.n4js.utils.collections.Arrays2;
 
@@ -50,7 +56,6 @@ import com.google.inject.Inject;
 	/**
 	 * Creates a new external library preference store.
 	 */
-	@Inject
 	protected ExternalLibraryPreferenceStoreImpl() {
 		listeners = newHashSet();
 		model = getOrCreateModel();
@@ -58,7 +63,20 @@ import com.google.inject.Inject;
 
 	@Override
 	public Collection<URI> getLocations() {
-		return getOrCreateModel().getExternalLibraryLocationsAsUris();
+		List<URI> result = new ArrayList<>(getOrCreateModel().getExternalLibraryLocationsAsUris());
+
+		if (Platform.isRunning()) {
+			IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+			Arrays.sort(projects, (p1, p2) -> p1.getName().compareTo(p2.getName()));
+			for (IProject p : projects) {
+				if (p.isAccessible()) {
+					// FIXME make sure it's an N4JS project (e.g. package.json, Xtext nature)
+					final URI uri = p.getLocation().toFile().toURI().resolve(N4JSGlobals.NODE_MODULES);
+					result.add(uri);
+				}
+			}
+		}
+		return result;
 	}
 
 	@Override
