@@ -38,6 +38,7 @@ import org.eclipse.n4js.ui.building.BuilderStateLogger.BuilderState;
 import org.eclipse.n4js.ui.building.instructions.IBuildParticipantInstruction;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.utils.N4JSDataCollectors;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant.BuildType;
@@ -290,13 +291,16 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 
 	/** logic of {@link IN4JSCore#findAllProjects()} with filtering by name */
 	private IProject getProject(BuildData buildData) {
-		String projectName = buildData.getProjectName();
+		String eclipseProjectName = buildData.getProjectName();
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IWorkspaceRoot root = workspace.getRoot();
-		IProject project = root.getProject(projectName); // creates a project instance if not existing
+		IProject project = root.getProject(eclipseProjectName); // creates a project instance if not existing
 
 		if (null == project || !project.isAccessible()) {
-			final IProject externalProject = externalLibraryWorkspace.getProject(projectName);
+			String n4jsProjectName = ProjectDescriptionUtils
+					.convertEclipseProjectNameToN4JSProjectName(eclipseProjectName);
+
+			final IProject externalProject = externalLibraryWorkspace.getProject(n4jsProjectName);
 			if (null != externalProject && externalProject.exists()) {
 				project = externalProject;
 			}

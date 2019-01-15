@@ -87,7 +87,8 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 			for (IProject proj : workspace.getProjects()) {
 				URI projURI = URI.createFileURI(proj.getLocation().toFile().toString());
 				String ps = projURI.toString();
-				if (nested.startsWith(ps)) {
+				if (nested.startsWith(ps) && !nested.startsWith(ps + "/node_modules")) {
+					// Note: There can be projects in nested node_modules folder.
 					return projURI;
 				}
 			}

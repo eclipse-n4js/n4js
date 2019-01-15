@@ -45,7 +45,13 @@ public class N4JSStorage2UriMapper extends Storage2UriMapperImpl {
 	 */
 	@Override
 	public Iterable<Pair<IStorage, IProject>> getStorages(URI uri) {
-		return Iterables.filter(super.getStorages(uri),
+		Iterable<Pair<IStorage, IProject>> storages = super.getStorages(uri);
+		if (!uri.isPlatformResource() && uri.isFile()) {
+			storages = super.getContribution().getStorages(uri);
+		} else {
+			storages = super.getStorages(uri);
+		}
+		return Iterables.filter(storages,
 				pair -> !(pair != null && pair.getFirst() instanceof FileStoreStorage));
 	}
 

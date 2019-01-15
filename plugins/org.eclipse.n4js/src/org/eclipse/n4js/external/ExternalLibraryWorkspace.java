@@ -167,7 +167,8 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 	public abstract List<Pair<URI, ProjectDescription>> computeProjectsIncludingUnnecessary();
 
 	/**
-	 * Returns with all external projects that have the given name.
+	 * Returns with all external projects that have the given name. The returned list is sorted according to the
+	 * shadowing priority.
 	 *
 	 * @return the external projects that have the given name.
 	 */
