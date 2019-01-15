@@ -23,6 +23,7 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -33,6 +34,8 @@ import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
+import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.dependencies.ProjectDependenciesHelper;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.SemverMatcher;
@@ -60,6 +63,9 @@ import com.google.inject.Inject;
  * Contains all quick-fixes for package.json documents
  */
 public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickfixProvider {
+
+	@Inject
+	private IN4JSCore n4jsCore;
 
 	@Inject
 	private ExternalLibraryWorkspace extWS;
@@ -103,17 +109,22 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 			}
 
 			@Override
-			public Collection<? extends IChange> computeChanges(IModificationContext context, IMarker marker,
+			public Collection<? extends IChange> computeChanges(IModificationContext context, final IMarker marker,
 					int offset, int length, EObject element) throws Exception {
 
 				Function<IProgressMonitor, IStatus> registerFunction = new Function<IProgressMonitor, IStatus>() {
 					@Override
 					public IStatus apply(IProgressMonitor monitor) {
+						final URI uri = issue.getUriToProblem();
+						final IN4JSProject containingProject = n4jsCore.findProject(uri).orNull();
+						if (containingProject == null) {
+							return statusHelper.createError("cannot find containing project"); // FIXME
+						}
 						Map<String, NPMVersionRequirement> installedNpms = new HashMap<>();
 						NPMVersionRequirement versionReq = semverHelper.parse(versionRequirement);
 						installedNpms.put(packageName, versionReq);
 						dependenciesHelper.fixDependenciesToInstall(installedNpms);
-						return libraryManager.installNPM(packageName, versionRequirement, monitor);
+						return libraryManager.installNPM(packageName, versionRequirement, containingProject, monitor);
 					}
 				};
 				wrapWithMonitor(label, errMsg, registerFunction);
