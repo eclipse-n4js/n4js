@@ -9,18 +9,15 @@ package org.eclipse.n4js.tests.builder;
 
 import static org.apache.log4j.Logger.getLogger;
 import static org.eclipse.core.resources.IContainer.INCLUDE_HIDDEN;
-import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
 import static org.eclipse.n4js.tests.builder.BuilderUtil.countResourcesInIndex;
 import static org.eclipse.n4js.tests.builder.BuilderUtil.getAllResourceDescriptionsAsString;
 import static org.eclipse.n4js.tests.builder.BuilderUtil.getBuilderState;
-import static org.eclipse.ui.PlatformUI.isWorkbenchRunning;
 import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.root;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -36,6 +33,7 @@ import org.eclipse.n4js.ui.building.CloseProjectTaskScheduler;
 import org.eclipse.n4js.ui.building.ResourceDescriptionWithoutModuleUserData;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildScheduler;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
+import org.eclipse.n4js.ui.utils.AutobuildUtils;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
@@ -144,22 +142,13 @@ public abstract class AbstractBuilderTest {
 		toggleAutobuild(true);
 	}
 
+	/**
+	 * Turns auto build on/off. Delegating to {@link AutobuildUtils#set(boolean)}.
+	 *
+	 * Consider using {@link AutobuildUtils#suppressAutobuild()} if you want to disable auto build only temporarily.
+	 */
 	private void toggleAutobuild(final boolean enable) {
-		if (isWorkbenchRunning()) {
-			final IWorkspaceDescription workspaceDescription = getWorkspace().getDescription();
-			if (null != workspaceDescription) {
-				if (workspaceDescription.isAutoBuilding() != enable) {
-					workspaceDescription.setAutoBuilding(enable);
-					try {
-						getWorkspace().setDescription(workspaceDescription);
-					} catch (final CoreException e) {
-						throw new IllegalStateException("Error while trying to turn workspace autobuild "
-								+ (enable ? "on" : "off") + ".", e);
-					}
-				}
-			}
-
-		}
+		AutobuildUtils.set(enable);
 	}
 
 	private static void deleteProjects(final IProject[] projects, StringBuilder error) {

@@ -12,12 +12,16 @@ package org.eclipse.n4js.ui.external;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.nio.file.Path;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.n4js.binaries.BinariesPreferenceStore;
+import org.eclipse.n4js.binaries.nodejs.NpmrcBinary;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
@@ -28,7 +32,9 @@ import org.eclipse.n4js.utils.N4JSDataCollectors;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.io.FileDeleter;
 
+import com.google.common.base.Optional;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 /**
  * Bundles all maintenance actions of the library manager including the 'Big Button' action
@@ -42,29 +48,54 @@ public class ExternalLibrariesActionsHelper {
 	@Inject
 	private ProjectDependenciesHelper dependenciesHelper;
 	@Inject
+	private BinariesPreferenceStore preferenceStore;
+	@Inject
 	private ExternalLibraryWorkspace externalLibraryWorkspace;
 	@Inject
 	private ExternalLibrariesReloadHelper externalLibrariesReloadHelper;
 	@Inject
 	private TargetPlatformInstallLocationProvider locationProvider;
+	@Inject
+	private Provider<NpmrcBinary> npmrcBinaryProvider;
 
 	/** Streamlined process of calculating and installing the dependencies without cleaning npm cache. */
-	public void cleanAndInstallAllDependencies(SubMonitor monitor, MultiStatus multistatus) {
-		cleanAndInstallAllDependencies(monitor, multistatus, false);
+	public void cleanAndInstallAllDependencies(SubMonitor monitor, MultiStatus multiStatus) {
+		cleanAndInstallAllDependencies(Optional.absent(), false, monitor, multiStatus);
 	}
 
-	/** Streamlined process of calculating and installing the dependencies, npm cache cleaning forced by passed flag */
-	public void cleanAndInstallAllDependencies(SubMonitor monitor, MultiStatus multistatus, boolean removeNpmCache) {
+	/**
+	 * Streamlined process of calculating and installing the dependencies, npm cache cleaning forced by passed flag.
+	 * <p>
+	 * <b>IMPORTANT:</b> If <code>npmrcLocation</code> is given (and only then), this method will change the default
+	 * <code>.npmrc</code> location in the Eclipse preferences and this value will stay in effect after this method
+	 * returns. Rationale of original implementor:<br>
+	 * <cite>information about {@code .npmrc} is deep in the NodeProcessBuilder and by design it is not exposed. We
+	 * could redesign that part and expose it, but it makes sense to assume user selected {@code .npmrc} file while
+	 * setting up the workspace should be used for further dependencies setups (e.g. quick-fixes in manifests) in this
+	 * workspace hence we save provided {@code .npmrc} file in the preferences.</cite>
+	 *
+	 * @param npmrcLocation
+	 *            optional path to an <code>.npmrc</code> file to be used during installation of dependencies.
+	 * @param removeNpmCache
+	 *            whether the npm cache should be cleared before installation of dependencies.
+	 */
+	public void cleanAndInstallAllDependencies(Optional<Path> npmrcLocation, boolean removeNpmCache,
+			SubMonitor monitor, MultiStatus multiStatus) {
 		try (Measurement m = N4JSDataCollectors.dcInstallHelper.getMeasurement("Install Missing Dependencies")) {
 			SubMonitor subMonitor = SubMonitor.convert(monitor, 10);
 
+			// configure .npmrc
+			if (npmrcLocation.isPresent()) {
+				configureNpmrc(npmrcLocation.get(), multiStatus);
+			}
+
 			// remove npm cache
 			if (removeNpmCache) {
-				maintenanceCleanNpmCache(multistatus, subMonitor.split(1));
+				maintenanceCleanNpmCache(multiStatus, subMonitor.split(1));
 			}
 
 			// remove npms
-			maintenanceDeleteNpms(multistatus);
+			maintenanceDeleteNpms(multiStatus);
 
 			// install npms from target platform
 			Map<String, NPMVersionRequirement> dependenciesToInstall = null;
@@ -81,14 +112,32 @@ public class ExternalLibrariesActionsHelper {
 
 				IStatus status = libManager.installNPMs(dependenciesToInstall, true, subMonitor.split(9));
 				if (!status.isOK()) {
-					multistatus.merge(status);
+					multiStatus.merge(status);
 				}
 			}
 		}
 	}
 
 	/**
-	 * Performs {@link LibraryManager#cleanCache(IProgressMonitor)}. If that operation fails, status is mergegd into
+	 * Set default <code>.npmrc</code> location in the Eclipse preferences. This setting will stay in effect until it is
+	 * changed via this method or via the Eclipse preferences dialog, etc.
+	 *
+	 * @param npmrcLocation
+	 *            path pointing to a folder containing an <code>.npmrc</code> file.
+	 */
+	public void configureNpmrc(final Path npmrcLocation, final MultiStatus multiStatus) {
+		URI newLocation = npmrcLocation.toFile().toURI();
+		NpmrcBinary npmrcBinary = npmrcBinaryProvider.get();
+		URI oldLocation = npmrcBinary.getUserConfiguredLocation();
+		if (!newLocation.equals(oldLocation)) {
+			preferenceStore.setPath(npmrcBinary, newLocation);
+			IStatus save = preferenceStore.save();
+			multiStatus.add(save);
+		}
+	}
+
+	/**
+	 * Performs {@link LibraryManager#cleanCache(IProgressMonitor)}. If that operation fails, status is merged into
 	 * provided status.
 	 *
 	 * @param multistatus

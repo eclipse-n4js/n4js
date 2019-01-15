@@ -145,7 +145,7 @@ public class NodeJsBinary implements Binary {
 	 *
 	 * @return the user configured absolute path to the binary or the default one.
 	 */
-	String getUserNodePathOrDefault() {
+	public String getUserNodePathOrDefault() {
 		final URI userConfiguredLocation = getUserConfiguredLocation();
 		return null == userConfiguredLocation ? getDefaultNodePath()
 				: new File(userConfiguredLocation).getAbsolutePath();
