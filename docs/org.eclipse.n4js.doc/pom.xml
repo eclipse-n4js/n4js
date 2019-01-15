@@ -271,9 +271,12 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 									<arg value="DOC_NAME=N4JSDesign"/>
 									<arg value="-v"/>
 									<arg value="${basedir}/../org.eclipse.n4js.design:/workspace:rw"/>
-									<arg value="docker-corp.numberfour.eu/numberfour/asciispec:0.0.13"/>
+									<arg value="docker-corp.numberfour.eu/numberfour/asciispec:0.0.14"/>
 									<arg value="-a"/>
+									<arg value="-o"/>
+									<arg value="-a eclipse-help-mode"/>
 								</exec>
+
 	                            <copy todir="${basedir}/generated-docs/.">
 									<fileset dir="${basedir}/../org.eclipse.n4js.design/generated-docs"/>
 								</copy>
@@ -294,7 +297,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 									<arg value="-c"/>
 									<arg value="&lt;div class=&quot;sect1&quot;&gt;"/>
 									<arg value="-h"/>
-									<arg value="&lt;body class=&quot;book toc2 toc-left&quot;&gt;"/>
+									<arg value="&lt;body class=&quot;book&quot;&gt;"/>
 									<arg value="-f"/>
 									<arg value="&lt;div id=&quot;footnotes&quot;&gt;"/>
 									<arg value="-d"/>
@@ -319,7 +322,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 
 								
 								<delete dir="${basedir}/doctools"/>
-								
 								
 							</target>
 						</configuration>
