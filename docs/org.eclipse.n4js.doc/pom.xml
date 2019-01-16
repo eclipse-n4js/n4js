@@ -237,7 +237,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 				<version>${maven-antrun-plugin.version}</version>
 				<executions>
 					<execution>
-						<id>start-asciispec</id>
+						<id>build-n4jsdesign</id>
 						<phase>generate-resources</phase>
 						<goals>
 							<goal>run</goal>
