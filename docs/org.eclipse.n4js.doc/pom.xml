@@ -254,8 +254,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 								</exec>
 	                            <echo message="user.id: ${user.id}, group.id: ${group.id}" />
 								
-								<exec executable="bash" spawn="false">
-									<arg value="docker"/>
+								<exec executable="docker" spawn="false">
 									<arg value="run"/>
 									<arg value="--rm"/>
 									<arg value="-u"/>
@@ -346,8 +345,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 								</exec>
 	                            <echo message="user.id: ${user.id}, group.id: ${group.id}" />
 								
-								<exec executable="bash" spawn="false">
-									<arg value="docker"/>
+								<exec executable="docker" spawn="false">
 									<arg value="run"/>
 									<arg value="--rm"/>
 									<arg value="-u"/>
