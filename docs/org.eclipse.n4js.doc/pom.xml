@@ -230,8 +230,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
                 </execution>
               </executions>
             </plugin>
-
-
 					
 			<!-- Build N4JSDesign document -->
 			<plugin>
@@ -314,12 +312,10 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 									<arg value="${basedir}/generated-docs/N4JSDesign.xml"/>
 								</java>
 								
-								
 	                            <move todir="${basedir}/dist/eclipse-html/N4JSDesign/.">
 								  <fileset dir="${basedir}/generated-docs/."/>
 								</move>
-
-								
+							
 								<delete dir="${basedir}/doctools"/>
 								
 							</target>
