@@ -26,7 +26,7 @@ Contributors:
 // Stylesheet settings //
 :stylesdir: styles
 
-// 
+// Switch on/off eclipse help mode
 ifdef::eclipse-help-mode[]
 :docinfodir: eclipse-help-mode-headers
 :stylesheet: eclipse-help-mode-spec.min.css

@@ -232,13 +232,12 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
             </plugin>
 
 
+					
+			<!-- Build N4JSDesign document -->
 			<plugin>
 				<artifactId>maven-antrun-plugin</artifactId>
 				<version>${maven-antrun-plugin.version}</version>
 				<executions>
-
-					
-					<!-- Start asciispec -->
 					<execution>
 						<id>start-asciispec</id>
 						<phase>generate-resources</phase>
@@ -258,9 +257,9 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 	                            <echo message="user.id: ${user.id}, group.id: ${group.id}" />
 								
 								<!-- locally, the complete path to docker works
-								<exec executable="/usr/local/bin/docker" spawn="false">
-								 -->
 								<exec executable="docker" spawn="false">
+								 -->
+								<exec executable="/usr/local/bin/docker" spawn="false">
 									<arg value="run"/>
 									<arg value="--rm"/>
 									<arg value="-u"/>
@@ -299,7 +298,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 									<arg value="-h"/>
 									<arg value="&lt;body class=&quot;book&quot;&gt;"/>
 									<arg value="-f"/>
-									<arg value="&lt;div id=&quot;footnotes&quot;&gt;"/>
+									<arg value="&lt;div id=&quot;footer&quot;&gt;"/>
 									<arg value="-d"/>
 									<arg value="${basedir}/dist/eclipse-html/N4JSDesign/."/>
 									<arg value="${basedir}/generated-docs/N4JSDesign.html"/>
@@ -329,6 +328,103 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 
 				</executions>
 			</plugin>
+			
+			<!-- Build N4JSSpec document -->
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>${maven-antrun-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>build-n4jsspec</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+	                            <echo message="user.name: ${user.name}, user.group: ${user.group}" />
+	                            
+								<exec executable="id" spawn="false" outputproperty="user.id">
+									<arg value="-u"/>
+								</exec>
+								<exec executable="id" spawn="false" outputproperty="group.id">
+									<arg value="-g"/>
+								</exec>
+	                            <echo message="user.id: ${user.id}, group.id: ${group.id}" />
+								
+								<!-- locally, the complete path to docker works
+								<exec executable="docker" spawn="false">
+								 -->
+								<exec executable="/usr/local/bin/docker" spawn="false">
+									<arg value="run"/>
+									<arg value="--rm"/>
+									<arg value="-u"/>
+									<arg value="${user.id}:${group.id}"/>
+									<arg value="--name"/>
+									<arg value="asciispec"/>
+									<arg value="-e"/>
+									<arg value="DOC_NAME=N4JSSpec"/>
+									<arg value="-v"/>
+									<arg value="${basedir}/../org.eclipse.n4js.spec:/workspace:rw"/>
+									<arg value="docker-corp.numberfour.eu/numberfour/asciispec:0.0.14"/>
+									<arg value="-a"/>
+									<arg value="-o"/>
+									<arg value="-a eclipse-help-mode"/>
+								</exec>
+
+	                            <copy todir="${basedir}/generated-docs/.">
+									<fileset dir="${basedir}/../org.eclipse.n4js.spec/generated-docs"/>
+								</copy>
+								
+								
+	                            <copy todir="${basedir}/doctools/src/org/eclipse/n4js/doctools/.">
+	                            	<fileset dir="${basedir}/../../releng/org.eclipse.n4js.releng.utils/src/org/eclipse/n4js/doctools/."/>
+	                            </copy>
+
+								<mkdir dir="${basedir}/doctools/bin"/>
+								<mkdir dir="${basedir}/dist/eclipse-html/N4JSSpec"/>
+								<javac srcdir="${basedir}/doctools/src/." fork="yes" destdir="${basedir}/doctools/bin/."></javac>
+								
+								<java classname="org.eclipse.n4js.doctools.Chunker"
+									 classpath="${basedir}/doctools/bin/.">
+									<arg value="-n"/>
+									<arg value="h2"/>
+									<arg value="-c"/>
+									<arg value="&lt;div class=&quot;sect1&quot;&gt;"/>
+									<arg value="-h"/>
+									<arg value="&lt;body class=&quot;book&quot;&gt;"/>
+									<arg value="-f"/>
+									<arg value="&lt;div id=&quot;footer&quot;&gt;"/>
+									<arg value="-d"/>
+									<arg value="${basedir}/dist/eclipse-html/N4JSSpec/."/>
+									<arg value="${basedir}/generated-docs/N4JSSpec.html"/>
+								</java>
+								
+								
+								<java classname="org.eclipse.n4js.doctools.EclipseHelpTOCGenerator"
+									 classpath="${basedir}/doctools/bin/.">
+									<arg value="-t"/>
+									<arg value="${basedir}/src-gen/indices/n4jsspec.xml"/>
+									<arg value="-p"/>
+									<arg value="dist/eclipse-html/"/>
+									<arg value="${basedir}/generated-docs/N4JSSpec.xml"/>
+								</java>
+								
+								
+	                            <move todir="${basedir}/dist/eclipse-html/N4JSSpec/.">
+								  <fileset dir="${basedir}/generated-docs/."/>
+								</move>
+
+								
+								<delete dir="${basedir}/doctools"/>
+								
+							</target>
+						</configuration>
+					</execution>
+
+				</executions>
+			</plugin>
+
 
             <!-- HTML to Eclipse TOC.XML -->
             <plugin>
