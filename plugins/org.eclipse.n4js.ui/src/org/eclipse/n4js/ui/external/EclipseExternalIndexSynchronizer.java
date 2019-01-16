@@ -19,6 +19,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.URI;
@@ -31,6 +32,7 @@ import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.external.NpmLogger;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.URIUtils;
 
@@ -50,6 +52,9 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 	@Inject
 	private NpmLogger logger;
 
+	@Inject
+	private EclipseBasedN4JSWorkspace workspace;
+
 	/**
 	 * Call this method to synchronize the information in the Xtext index with all external projects in the external
 	 * library folders.
@@ -65,9 +70,11 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 	 */
 	@Override
 	public void synchronizeNpms(IProgressMonitor monitor, Collection<LibraryChange> forcedChangeSet) {
-		SubMonitor subMonitor = convert(monitor, 11);
+		SubMonitor subMonitor = convert(monitor, 12);
 
 		try {
+			workspace.getWorkspace().refreshLocal(IResource.DEPTH_INFINITE, subMonitor.split(1));
+
 			Collection<LibraryChange> oldChangeSet = identifyChangeSet(forcedChangeSet, false);
 			RegisterResult cleanResults = cleanChangesIndex(subMonitor.split(1), oldChangeSet);
 

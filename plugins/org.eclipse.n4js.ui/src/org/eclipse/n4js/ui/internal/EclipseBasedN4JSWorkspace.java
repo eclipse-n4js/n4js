@@ -69,7 +69,8 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 		this.cache = cache;
 	}
 
-	IWorkspaceRoot getWorkspace() {
+	/** @return the eclipse workspace root */
+	public IWorkspaceRoot getWorkspace() {
 		return workspace;
 	}
 

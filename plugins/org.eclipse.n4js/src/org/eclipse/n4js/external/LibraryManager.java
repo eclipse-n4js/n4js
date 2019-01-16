@@ -127,11 +127,11 @@ public class LibraryManager {
 		SubMonitor subMonitor = SubMonitor.convert(monitor, 2);
 
 		SubMonitor subMonitor1 = subMonitor.split(1);
-		subMonitor1.setTaskName("Building installed packages... [step 1 of 2]");
+		subMonitor1.setTaskName("Building installed packages...");
 		npmCli.runNpmInstall(project.getLocationPath().toFile());
 
 		SubMonitor subMonitor2 = subMonitor.split(1);
-		subMonitor2.setTaskName("Registering packages... [step 2 of 2]");
+		subMonitor2.setTaskName("Registering packages...");
 		indexSynchronizer.reindexAllExternalProjects(subMonitor2);
 
 		return status;

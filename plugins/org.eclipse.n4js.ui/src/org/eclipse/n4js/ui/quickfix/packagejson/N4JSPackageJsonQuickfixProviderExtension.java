@@ -129,12 +129,12 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 		accept(acceptor, issue, label, description, null, modification);
 	}
 
-	/** Installs all missing npms */
+	/** Runs 'npm install' on a single project. Afterwards, re-registers external libraries. */
 	@Fix(IssueCodes.NON_EXISTING_PROJECT)
 	@Fix(IssueCodes.NO_MATCHING_VERSION)
 	public void runNpmInstallInProject(Issue issue, IssueResolutionAcceptor acceptor) {
 		final String label = "Run 'npm install' in this project";
-		final String description = "First runs 'npm install' on this project and then registers all npms.";
+		final String description = "Runs 'npm install' on this project and then registers all npms.";
 		final String errMsg = "Error while installing npms";
 
 		N4Modification modification = new N4Modification() {
@@ -156,6 +156,43 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 					@Override
 					public IStatus apply(IProgressMonitor monitor) {
 						return libraryManager.runNpmInstall(issue.getUriToProblem(), monitor);
+					}
+				};
+				wrapWithMonitor(label, errMsg, registerFunction);
+				return Collections.emptyList();
+			}
+		};
+
+		accept(acceptor, issue, label, description, null, modification);
+	}
+
+	/** Runs 'npm install' on all projects. Afterwards, re-registers external libraries. */
+	@Fix(IssueCodes.NON_EXISTING_PROJECT)
+	@Fix(IssueCodes.NO_MATCHING_VERSION)
+	public void runNpmInstallInAllProjects(Issue issue, IssueResolutionAcceptor acceptor) {
+		final String label = "Run 'npm install' in all projects";
+		final String description = "Runs 'npm install' on all project sequentially and then registers all npms.";
+		final String errMsg = "Error while installing npms";
+
+		N4Modification modification = new N4Modification() {
+			@Override
+			public boolean supportsMultiApply() {
+				return false;
+			}
+
+			@Override
+			public boolean isApplicableTo(IMarker marker) {
+				return true;
+			}
+
+			@Override
+			public Collection<? extends IChange> computeChanges(IModificationContext context, IMarker marker,
+					int offset, int length, EObject element) throws Exception {
+
+				Function<IProgressMonitor, IStatus> registerFunction = new Function<IProgressMonitor, IStatus>() {
+					@Override
+					public IStatus apply(IProgressMonitor monitor) {
+						return libraryManager.runNpmInstallOnAllProjects(monitor);
 					}
 				};
 				wrapWithMonitor(label, errMsg, registerFunction);
