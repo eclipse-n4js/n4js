@@ -14,7 +14,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.function.Function;
@@ -30,7 +29,6 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.n4js.external.ExternalIndexSynchronizer;
-import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
@@ -38,9 +36,7 @@ import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.dependencies.ProjectDependenciesHelper;
 import org.eclipse.n4js.semver.SemverHelper;
-import org.eclipse.n4js.semver.SemverMatcher;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
-import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.ui.changes.IChange;
 import org.eclipse.n4js.ui.changes.PackageJsonChangeProvider;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
@@ -66,9 +62,6 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 
 	@Inject
 	private IN4JSCore n4jsCore;
-
-	@Inject
-	private ExternalLibraryWorkspace extWS;
 
 	@Inject
 	private LibraryManager libraryManager;
@@ -120,11 +113,12 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 						if (containingProject == null) {
 							return statusHelper.createError("cannot find containing project"); // FIXME
 						}
+						URI targetLocation = containingProject.getLocation();
 						Map<String, NPMVersionRequirement> installedNpms = new HashMap<>();
 						NPMVersionRequirement versionReq = semverHelper.parse(versionRequirement);
 						installedNpms.put(packageName, versionReq);
 						dependenciesHelper.fixDependenciesToInstall(installedNpms);
-						return libraryManager.installNPM(packageName, versionRequirement, containingProject, monitor);
+						return libraryManager.installNPM(packageName, versionRequirement, targetLocation, monitor);
 					}
 				};
 				wrapWithMonitor(label, errMsg, registerFunction);
@@ -138,9 +132,9 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 	/** Installs all missing npms */
 	@Fix(IssueCodes.NON_EXISTING_PROJECT)
 	@Fix(IssueCodes.NO_MATCHING_VERSION)
-	public void installAllMissingNPMs(Issue issue, IssueResolutionAcceptor acceptor) {
-		final String label = "Install/update all missing npm(s)";
-		final String description = "Retrieves npms from all dependency sections of all projects and installs those that are not installed yet.";
+	public void runNpmInstallInProject(Issue issue, IssueResolutionAcceptor acceptor) {
+		final String label = "Run 'npm install' in this project";
+		final String description = "First runs 'npm install' on this project and then registers all npms.";
 		final String errMsg = "Error while installing npms";
 
 		N4Modification modification = new N4Modification() {
@@ -161,25 +155,7 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 				Function<IProgressMonitor, IStatus> registerFunction = new Function<IProgressMonitor, IStatus>() {
 					@Override
 					public IStatus apply(IProgressMonitor monitor) {
-						Map<String, VersionNumber> installedNpms = extWS.getProjectNameVersionMap();
-						Map<String, NPMVersionRequirement> reqNpms = dependenciesHelper
-								.computeDependenciesOfWorkspace();
-						dependenciesHelper.fixDependenciesToInstall(reqNpms);
-
-						for (Iterator<String> npmNameIter = reqNpms.keySet().iterator(); npmNameIter.hasNext();) {
-							String npmName = npmNameIter.next();
-
-							if (installedNpms.containsKey(npmName)) {
-								NPMVersionRequirement npmVersionRequirement = reqNpms.get(npmName);
-								VersionNumber installedVersion = installedNpms.get(npmName);
-								boolean matches = SemverMatcher.matches(installedVersion, npmVersionRequirement);
-								if (matches) {
-									// already installed and version matches
-									npmNameIter.remove();
-								}
-							}
-						}
-						return libraryManager.installNPMs(reqNpms, false, monitor);
+						return libraryManager.runNpmInstall(issue.getUriToProblem(), monitor);
 					}
 				};
 				wrapWithMonitor(label, errMsg, registerFunction);

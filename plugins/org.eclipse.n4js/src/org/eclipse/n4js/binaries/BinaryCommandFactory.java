@@ -37,6 +37,18 @@ public class BinaryCommandFactory {
 	private NodeProcessBuilder nodeProccessBuilder;
 
 	/**
+	 * Creates command that will execute external node process that will command 'npm install' at the given location.
+	 *
+	 * @param invocationPath
+	 *            path where package is supposed to be installed
+	 * @param saveDependency
+	 *            flag if installed package should be saved in package.json of the install path
+	 */
+	public ProcessExecutionCommand createNpmInstallCommand(File invocationPath, boolean saveDependency) {
+		return createInstallPackageCommand(invocationPath, Collections.emptyList(), saveDependency);
+	}
+
+	/**
 	 * Like {@link #createInstallPackageCommand(File, List, boolean)}, but for installing a single package only.
 	 */
 	public ProcessExecutionCommand createInstallPackageCommand(File invocationPath,

@@ -28,7 +28,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.binaries.BinaryCommandFactory;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
-import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.SemverMatcher;
 import org.eclipse.n4js.semver.SemverUtils;
@@ -127,24 +126,26 @@ public class NpmCLI {
 	 *            into which the status of this method call can be merged
 	 * @param requestedChanges
 	 *            collection of all npm packages to be installed
+	 * @param target
+	 *            target folder that contains both a node_modules folder and a package.json
 	 * @return multi status with children for each issue during processing
 	 */
 	public Collection<LibraryChange> batchInstall(IProgressMonitor monitor, MultiStatus status,
-			Collection<LibraryChange> requestedChanges, IN4JSProject context) {
+			Collection<LibraryChange> requestedChanges, URI target) {
 
-		return batchInstallInternal(monitor, status, requestedChanges, context);
+		return batchInstallInternal(monitor, status, requestedChanges, target);
 	}
 
 	private Collection<LibraryChange> batchInstallInternal(IProgressMonitor monitor, MultiStatus status,
-			Collection<LibraryChange> requestedChanges, IN4JSProject context) {
+			Collection<LibraryChange> requestedChanges, URI target) {
 
 		MultiStatus batchStatus = statusHelper.createMultiStatus("Installing npm packages.");
 		SubMonitor subMonitor = SubMonitor.convert(monitor, 1);
 		subMonitor.setTaskName("Installing npm packages.");
 
 		Collection<LibraryChange> actualChanges = new LinkedHashSet<>();
-		File installPath = context != null
-				? context.getLocationPath().toFile()
+		File installPath = target != null
+				? new File(target.toFileString())
 				: new File(locationProvider.getTargetPlatformInstallURI());
 
 		// for installation, we invoke npm only once for all packages
@@ -364,5 +365,16 @@ public class NpmCLI {
 		return executor.execute(
 				() -> commandFactory.createCacheCleanCommand(cleanPath),
 				"Error while cleaning npm cache.");
+	}
+
+	/**
+	 * Runs a plain 'npm install' in a given folder.
+	 */
+	public IStatus runNpmInstall(File invocationPath) {
+		IStatus status = executor.execute(
+				() -> commandFactory.createNpmInstallCommand(invocationPath, true),
+				"Error while installing npm package.");
+
+		return status;
 	}
 }

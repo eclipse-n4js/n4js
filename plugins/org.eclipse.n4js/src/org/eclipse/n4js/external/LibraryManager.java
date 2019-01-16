@@ -17,7 +17,6 @@ import static java.util.Collections.emptyMap;
 import static org.eclipse.n4js.external.LibraryChange.LibraryChangeType.Install;
 import static org.eclipse.n4js.external.LibraryChange.LibraryChangeType.Uninstall;
 
-import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -41,10 +40,13 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.binaries.IllegalBinaryStateException;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
+import org.eclipse.n4js.internal.InternalN4JSWorkspace;
+import org.eclipse.n4js.internal.N4JSModel;
+import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
-import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.SemverMatcher;
 import org.eclipse.n4js.semver.SemverUtils;
@@ -95,6 +97,12 @@ public class LibraryManager {
 	@Inject
 	private SemverHelper semverHelper;
 
+	@Inject
+	private N4JSModel model;
+
+	@Inject
+	private InternalN4JSWorkspace userWorkspace;
+
 	/**
 	 * Call this method to synchronize the information in the Xtext index with all external projects in the external
 	 * library folders.
@@ -103,21 +111,77 @@ public class LibraryManager {
 		indexSynchronizer.synchronizeNpms(monitor);
 	}
 
+	/** Runs 'npm install' in a given folder. Afterwards, re-registers all npms. */
+	public IStatus runNpmInstall(URI target, IProgressMonitor monitor) {
+		N4JSProject project = model.findProjectWith(target);
+		String msg = "Running 'npm install' on " + project.getProjectName();
+		MultiStatus status = statusHelper.createMultiStatus(msg);
+		logger.logInfo(msg);
+
+		IStatus binaryStatus = checkNPM();
+		if (!binaryStatus.isOK()) {
+			status.merge(binaryStatus);
+			return status;
+		}
+
+		SubMonitor subMonitor = SubMonitor.convert(monitor, 2);
+
+		SubMonitor subMonitor1 = subMonitor.split(1);
+		subMonitor1.setTaskName("Building installed packages... [step 1 of 2]");
+		npmCli.runNpmInstall(project.getLocationPath().toFile());
+
+		SubMonitor subMonitor2 = subMonitor.split(1);
+		subMonitor2.setTaskName("Registering packages... [step 2 of 2]");
+		indexSynchronizer.reindexAllExternalProjects(subMonitor2);
+
+		return status;
+	}
+
+	/** Runs 'npm install' in all user projects. Afterwards, re-registers all npms. */
+	public IStatus runNpmInstallOnAllProjects(IProgressMonitor monitor) {
+		String msg = "Running 'npm install' on all projects";
+		MultiStatus status = statusHelper.createMultiStatus(msg);
+		logger.logInfo(msg);
+		IStatus binaryStatus = checkNPM();
+		if (!binaryStatus.isOK()) {
+			status.merge(binaryStatus);
+			return status;
+		}
+
+		Collection<URI> allProjectLocations = userWorkspace.getAllProjectLocations();
+		SubMonitor subMonitor = SubMonitor.convert(monitor, 1 + allProjectLocations.size());
+
+		for (URI prjLocation : allProjectLocations) {
+			N4JSProject project = model.findProjectWith(prjLocation);
+			msg = "Running 'npm install' on " + project.getProjectName();
+			SubMonitor subMonitorInstall = subMonitor.split(1);
+			subMonitorInstall.setTaskName(msg);
+			logger.logInfo(msg);
+			npmCli.runNpmInstall(project.getLocationPath().toFile());
+		}
+
+		SubMonitor subMonitorRegisterNpms = subMonitor.split(1);
+		subMonitorRegisterNpms.setTaskName("Registering packages...");
+		indexSynchronizer.reindexAllExternalProjects(subMonitorRegisterNpms);
+
+		return status;
+	}
+
 	public IStatus installNPM(String packageName, IProgressMonitor monitor) {
-		return installNPM(packageName, (IN4JSProject) null, monitor);
+		return installNPM(packageName, (URI) null, monitor);
 	}
 
 	public IStatus installNPM(String packageName, String packageVersionStr, IProgressMonitor monitor) {
-		return installNPM(packageName, packageVersionStr, (IN4JSProject) null, monitor);
+		return installNPM(packageName, packageVersionStr, (URI) null, monitor);
 	}
 
 	public IStatus installNPM(String packageName, NPMVersionRequirement packageVersion, IProgressMonitor monitor) {
-		return installNPM(packageName, packageVersion, (IN4JSProject) null, monitor);
+		return installNPM(packageName, packageVersion, (URI) null, monitor);
 	}
 
 	public IStatus installNPMs(Map<String, NPMVersionRequirement> versionedNPMs, boolean forceReloadAll,
 			IProgressMonitor monitor) {
-		return installNPMs(versionedNPMs, forceReloadAll, (IN4JSProject) null, monitor);
+		return installNPMs(versionedNPMs, forceReloadAll, (URI) null, monitor);
 	}
 
 	/**
@@ -129,8 +193,8 @@ public class LibraryManager {
 	 *            the monitor for the blocking install process.
 	 * @return a status representing the outcome of the install process.
 	 */
-	public IStatus installNPM(String packageName, IN4JSProject context, IProgressMonitor monitor) {
-		return installNPM(packageName, NO_VERSION_REQUIREMENT, context, monitor);
+	public IStatus installNPM(String packageName, URI target, IProgressMonitor monitor) {
+		return installNPM(packageName, NO_VERSION_REQUIREMENT, target, monitor);
 	}
 
 	/**
@@ -140,17 +204,18 @@ public class LibraryManager {
 	 *            the name of the package that has to be installed via package manager.
 	 * @param monitor
 	 *            the monitor for the blocking install process.
+	 * @param target
+	 *            target folder that contains both a node_modules folder and a package.json
 	 * @return a status representing the outcome of the install process.
 	 * @throws IllegalArgumentException
 	 *             if the given version string cannot be parsed to an {@link NPMVersionRequirement}.
 	 */
-	public IStatus installNPM(String packageName, String packageVersionStr, IN4JSProject context,
-			IProgressMonitor monitor) {
+	public IStatus installNPM(String packageName, String packageVersionStr, URI target, IProgressMonitor monitor) {
 		NPMVersionRequirement packageVersion = semverHelper.parse(packageVersionStr);
 		if (packageVersion == null) {
 			throw new IllegalArgumentException("unable to parse version requirement: " + packageVersionStr);
 		}
-		return installNPM(packageName, packageVersion, context, monitor);
+		return installNPM(packageName, packageVersion, target, monitor);
 	}
 
 	/**
@@ -160,11 +225,13 @@ public class LibraryManager {
 	 *            the name of the package that has to be installed via package manager.
 	 * @param monitor
 	 *            the monitor for the blocking install process.
+	 * @param target
+	 *            target folder that contains both a node_modules folder and a package.json
 	 * @return a status representing the outcome of the install process.
 	 */
-	public IStatus installNPM(String packageName, NPMVersionRequirement packageVersion, IN4JSProject context,
+	public IStatus installNPM(String packageName, NPMVersionRequirement packageVersion, URI target,
 			IProgressMonitor monitor) {
-		return installNPMs(Collections.singletonMap(packageName, packageVersion), false, context, monitor);
+		return installNPMs(Collections.singletonMap(packageName, packageVersion), false, target, monitor);
 	}
 
 	/**
@@ -178,12 +245,14 @@ public class LibraryManager {
 	 *            map of name to version data for the packages to be installed via package manager.
 	 * @param monitor
 	 *            the monitor for the blocking install process.
+	 * @param target
+	 *            target folder that contains both a node_modules folder and a package.json
 	 * @return a status representing the outcome of the install process.
 	 */
-	public IStatus installNPMs(Collection<String> unversionedPackages, IN4JSProject context, IProgressMonitor monitor) {
+	public IStatus installNPMs(Collection<String> unversionedPackages, URI target, IProgressMonitor monitor) {
 		Map<String, NPMVersionRequirement> versionedPackages = unversionedPackages.stream()
 				.collect(Collectors.toMap((String name) -> name, (String name) -> NO_VERSION_REQUIREMENT));
-		return installNPMs(versionedPackages, false, context, monitor);
+		return installNPMs(versionedPackages, false, target, monitor);
 	}
 
 	/**
@@ -202,15 +271,17 @@ public class LibraryManager {
 	 *            should be reloaded and rebuilt (cf. {@link #registerAllExternalProjects(IProgressMonitor)}). If
 	 *            {@code false}, only the set of packages that was created and/or updated by this install call will be
 	 *            scheduled for a reload.
+	 * @param target
+	 *            target folder that contains both a node_modules folder and a package.json
 	 * @return a status representing the outcome of the install process.
 	 */
 	public IStatus installNPMs(Map<String, NPMVersionRequirement> versionedNPMs, boolean forceReloadAll,
-			IN4JSProject context, IProgressMonitor monitor) {
-		return runWithWorkspaceLock(() -> installNPMsInternal(versionedNPMs, forceReloadAll, context, monitor));
+			URI target, IProgressMonitor monitor) {
+		return runWithWorkspaceLock(() -> installNPMsInternal(versionedNPMs, forceReloadAll, target, monitor));
 	}
 
 	private IStatus installNPMsInternal(Map<String, NPMVersionRequirement> versionedNPMs, boolean forceReloadAll,
-			IN4JSProject context, IProgressMonitor monitor) {
+			URI target, IProgressMonitor monitor) {
 
 		String msg = getMessage(versionedNPMs);
 		MultiStatus status = statusHelper.createMultiStatus(msg);
@@ -230,7 +301,7 @@ public class LibraryManager {
 			SubMonitor subMonitor1 = subMonitor.split(2);
 			subMonitor1.setTaskName("Installing packages... [step 1 of " + steps + "]");
 			List<LibraryChange> actualChanges = installUninstallNPMs(subMonitor1, status, npmsToInstall, emptyList(),
-					context);
+					target);
 
 			if (!status.isOK()) {
 				return status;
@@ -281,7 +352,7 @@ public class LibraryManager {
 
 	private List<LibraryChange> installUninstallNPMs(IProgressMonitor monitor, MultiStatus status,
 			Map<String, NPMVersionRequirement> installRequested, Collection<String> removeRequested,
-			IN4JSProject context) {
+			URI target) {
 
 		SubMonitor subMonitor = SubMonitor.convert(monitor, 2);
 
@@ -295,7 +366,7 @@ public class LibraryManager {
 
 		try (Measurement m = N4JSDataCollectors.dcNpmInstall.getMeasurement("batchInstall")) {
 			// install
-			actualChanges.addAll(npmCli.batchInstall(subMonitor.split(1), status, requestedChanges, context));
+			actualChanges.addAll(npmCli.batchInstall(subMonitor.split(1), status, requestedChanges, target));
 		}
 
 		return actualChanges;
@@ -305,11 +376,11 @@ public class LibraryManager {
 			Collection<String> removeRequested) {
 
 		Collection<LibraryChange> requestedChanges = new LinkedList<>();
-		Map<String, Pair<org.eclipse.emf.common.util.URI, ProjectDescription>> installedNpms = new HashMap<>();
-		for (Pair<org.eclipse.emf.common.util.URI, ProjectDescription> prjPair : externalLibraryWorkspace
+		Map<String, Pair<URI, ProjectDescription>> installedNpms = new HashMap<>();
+		for (Pair<URI, ProjectDescription> prjPair : externalLibraryWorkspace
 				.getProjectsIncludingUnnecessary()) {
 
-			org.eclipse.emf.common.util.URI location = prjPair.getFirst();
+			URI location = prjPair.getFirst();
 			String nameFromURI = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location);
 			installedNpms.put(nameFromURI, Tuples.pair(location, prjPair.getSecond()));
 		}
@@ -320,7 +391,7 @@ public class LibraryManager {
 
 			if (installedNpms.containsKey(name)) {
 				VersionNumber version = installedNpms.get(name).getSecond().getProjectVersion();
-				org.eclipse.emf.common.util.URI location = installedNpms.get(name).getFirst();
+				URI location = installedNpms.get(name).getFirst();
 
 				String installedVersionString = Strings.emptyIfNull(version.toString());
 				if (installedMatchesRequestedVersion(installedVersionString, requestedVersion)) {
@@ -340,8 +411,8 @@ public class LibraryManager {
 
 		for (String name : removeRequested) {
 			if (installedNpms.containsKey(name)) {
-				Pair<org.eclipse.emf.common.util.URI, ProjectDescription> pair = installedNpms.get(name);
-				org.eclipse.emf.common.util.URI location = pair.getFirst();
+				Pair<URI, ProjectDescription> pair = installedNpms.get(name);
+				URI location = pair.getFirst();
 				VersionNumber version = pair.getSecond().getProjectVersion();
 				String versionStr = version != null ? version.toString() : "";
 				requestedChanges.add(new LibraryChange(Uninstall, location, name, versionStr));
@@ -529,12 +600,12 @@ public class LibraryManager {
 	/**
 	 * A map of project (npm package) names to project location mappings.
 	 */
-	private Map<String, URI> getAllNpmProjectsMapping() {
-		Map<String, URI> mappings = newHashMap();
+	private Map<String, java.net.URI> getAllNpmProjectsMapping() {
+		Map<String, java.net.URI> mappings = newHashMap();
 
 		for (IProject project : externalLibraryWorkspace.getProjects()) {
 			if (project.isAccessible() && project instanceof ExternalProject) {
-				URI location = ((ExternalProject) project).getExternalResource().toURI();
+				java.net.URI location = ((ExternalProject) project).getExternalResource().toURI();
 				mappings.put(project.getName(), location);
 			}
 		}
