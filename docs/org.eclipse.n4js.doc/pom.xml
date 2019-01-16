@@ -254,10 +254,8 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 								</exec>
 	                            <echo message="user.id: ${user.id}, group.id: ${group.id}" />
 								
-								<!-- locally, the complete path to docker works
-								<exec executable="/usr/local/bin/docker" spawn="false">
-								 -->
-								<exec executable="docker" spawn="false">
+								<exec executable="bash" spawn="false">
+									<arg value="docker"/>
 									<arg value="run"/>
 									<arg value="--rm"/>
 									<arg value="-u"/>
@@ -348,10 +346,8 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 								</exec>
 	                            <echo message="user.id: ${user.id}, group.id: ${group.id}" />
 								
-								<!-- locally, the complete path to docker works
-								<exec executable="/usr/local/bin/docker" spawn="false">
-								 -->
-								<exec executable="docker" spawn="false">
+								<exec executable="bash" spawn="false">
+									<arg value="docker"/>
 									<arg value="run"/>
 									<arg value="--rm"/>
 									<arg value="-u"/>
