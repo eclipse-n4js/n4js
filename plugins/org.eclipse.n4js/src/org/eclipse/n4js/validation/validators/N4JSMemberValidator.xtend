@@ -466,7 +466,7 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Internally, internal project and internal private do not exist. (IDEBUG-658)
 	 */

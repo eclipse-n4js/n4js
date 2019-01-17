@@ -428,7 +428,6 @@ In interfaces, methods are always abstract by default and they do not have to be
 If a method in an interface provides a body, then this is the default implementation.
 See <<_implementation-of-members>> about how the default implementation may be mixed in the consumer.
 
-
 [.language-n4js]
 === Generic Methods
 
