@@ -1,0 +1,44 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+// An abstract member must not be declared private.
+// GH-1047
+
+abstract class A {
+
+	// XPECT noerrors -->
+	abstract m0()
+	
+	// XPECT errors --> "An abstract method must not be declared private." at "m1"
+	private abstract m1();
+	
+	// XPECT noerrors -->
+	public abstract m2()
+
+	// XPECT noerrors -->
+	protected abstract m3()
+
+	
+	// for the following, we omit the posivite case -- that works , we know that :-)
+
+ 	// XPECT errors --> "An abstract setter must not be declared private." at "s"
+	private abstract set s(p: string);
+
+	// XPECT errors --> "An abstract getter must not be declared private." at "g"
+	private abstract get g(): string;
+	
+	// we do not create specific error for the access modifier XPECT errors --> "Modifier abstract is not allowed on a field." at "abstract"
+	private abstract m: string;
+
+}
