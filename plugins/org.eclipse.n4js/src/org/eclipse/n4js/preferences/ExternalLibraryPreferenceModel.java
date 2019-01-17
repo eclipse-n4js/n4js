@@ -253,6 +253,16 @@ public class ExternalLibraryPreferenceModel {
 		return externalLibraryLocationURIs;
 	}
 
+	/** @return the URI pointing to the {@code node_modules} folder which is used for installing npm packages. */
+	static public boolean isNodeModulesLocation(URI location) {
+		String locStr = location.toString();
+		if (locStr.endsWith("/")) {
+			return locStr.endsWith(ExternalLibrariesActivator.NPM_CATEGORY + "/");
+		} else {
+			return locStr.endsWith(ExternalLibrariesActivator.NPM_CATEGORY);
+		}
+	}
+
 	/**
 	 * Returns with a view to the external library folder locations given as absolute file {@link URI}s.
 	 *
@@ -260,8 +270,7 @@ public class ExternalLibraryPreferenceModel {
 	 */
 	synchronized public List<URI> getNodeModulesLocationsAsUris() {
 		List<URI> nodeModules = new LinkedList<>(getExternalLibraryLocationsAsUris());
-		nodeModules = nodeModules.stream().filter(uri -> uri.toString().endsWith("node_modules"))
-				.collect(Collectors.toList());
+		nodeModules = nodeModules.stream().filter(uri -> isNodeModulesLocation(uri)).collect(Collectors.toList());
 
 		return nodeModules;
 	}

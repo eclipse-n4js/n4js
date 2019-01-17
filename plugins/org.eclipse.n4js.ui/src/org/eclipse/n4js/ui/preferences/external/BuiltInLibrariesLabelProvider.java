@@ -18,6 +18,7 @@ import static org.eclipse.xtext.util.Strings.toFirstUpper;
 
 import java.io.File;
 import java.net.URI;
+import java.nio.file.Path;
 import java.util.List;
 
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
@@ -27,6 +28,7 @@ import org.eclipse.jface.viewers.StyledString.Styler;
 import org.eclipse.n4js.external.ExternalIndexSynchronizer;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ShadowingInfoHelper;
+import org.eclipse.n4js.preferences.ExternalLibraryPreferenceModel;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.semver.model.SemverSerializer;
@@ -43,6 +45,7 @@ class BuiltInLibrariesLabelProvider extends LabelProvider implements IStyledLabe
 
 	public BuiltInLibrariesLabelProvider(ExternalIndexSynchronizer indexSynchronizer,
 			ShadowingInfoHelper shadowingInfoHelper, ExternalLibraryWorkspace externalLibraryWorkspace) {
+
 		this.indexSynchronizer = indexSynchronizer;
 		this.shadowingInfoHelper = shadowingInfoHelper;
 		this.externalLibraryWorkspace = externalLibraryWorkspace;
@@ -51,19 +54,28 @@ class BuiltInLibrariesLabelProvider extends LabelProvider implements IStyledLabe
 	@Override
 	public String getText(final Object element) {
 		if (element instanceof URI) {
-			return getCategoryText(element);
+			return getCategoryText((URI) element).getString();
 		} else if (element instanceof IN4JSProject) {
 			return ((IN4JSProject) element).getProjectName();
 		}
 		return super.getText(element);
 	}
 
-	private String getCategoryText(final Object element) {
-		final String externalLibId = ExternalLibraryPreferencePage.BUILT_IN_LIBS.get(element);
+	private StyledString getCategoryText(final URI location) {
+		final String externalLibId = ExternalLibraryPreferencePage.BUILT_IN_LIBS.get(location);
 		if (!isNullOrEmpty(externalLibId)) {
-			return EXTERNAL_LIBRARY_NAMES.get(externalLibId);
+			return new StyledString(EXTERNAL_LIBRARY_NAMES.get(externalLibId));
 		}
-		return new File((URI) element).getAbsolutePath();
+
+		File file = new File(location);
+		if (ExternalLibraryPreferenceModel.isNodeModulesLocation(location)) {
+			Path path = file.toPath();
+			int pCount = path.getNameCount();
+			StyledString styledString = new StyledString(path.getName(pCount - 1).toString());
+			styledString.append(" (" + path.getName(pCount - 2) + ")", StyledString.QUALIFIER_STYLER);
+			return styledString;
+		}
+		return new StyledString(file.getAbsolutePath());
 	}
 
 	@Override
@@ -79,7 +91,7 @@ class BuiltInLibrariesLabelProvider extends LabelProvider implements IStyledLabe
 	@Override
 	public StyledString getStyledText(final Object element) {
 		if (element instanceof URI) {
-			return new StyledString(getCategoryText(element));
+			return getCategoryText((URI) element);
 		} else if (element instanceof IN4JSProject) {
 			final IN4JSProject project = ((IN4JSProject) element);
 			final String name = project.getProjectName();

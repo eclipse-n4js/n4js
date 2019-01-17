@@ -23,6 +23,11 @@ import com.google.inject.Singleton;
 public class HlcExternalIndexSynchronizer extends ExternalIndexSynchronizer {
 
 	@Override
+	public void synchronizeNodeModulesFolders() {
+		return;
+	}
+
+	@Override
 	public void synchronizeNpms(IProgressMonitor monitor) {
 		return;
 	}

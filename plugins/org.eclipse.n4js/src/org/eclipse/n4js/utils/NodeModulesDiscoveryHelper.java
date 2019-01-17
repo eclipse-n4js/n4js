@@ -108,16 +108,10 @@ public class NodeModulesDiscoveryHelper {
 				workspaces = workspacesFromCache;
 			} else {
 				// load value from package.json
-				final File packageJson = new File(candidate, N4JSGlobals.PACKAGE_JSON);
-				if (packageJson.isFile()) {
-					URI packageJsonURI = URI.createFileURI(packageJson.getPath());
-					workspaces = projectDescriptionLoader
-							.loadWorkspacesFromProjectDescriptionAtLocation(packageJsonURI);
-					if (workspaces != null) {
-						workspacesCache.put(candidate, workspaces);
-					}
-				} else {
-					workspaces = null;
+				URI candidateURI = URI.createFileURI(candidate.getPath());
+				workspaces = projectDescriptionLoader.loadWorkspacesFromProjectDescriptionAtLocation(candidateURI);
+				if (workspaces != null) {
+					workspacesCache.put(candidate, workspaces);
 				}
 			}
 			// check if one of the values in property "workspaces" points to 'n4jsProjectFolder'

@@ -25,6 +25,7 @@ import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.RUN
 import static org.eclipse.n4js.projectDescription.ProjectType.RUNTIME_ENVIRONMENT;
 import static org.eclipse.n4js.projectDescription.ProjectType.RUNTIME_LIBRARY;
 
+import java.io.File;
 import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;
@@ -34,11 +35,14 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalProject;
+import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.n4js.utils.resources.IExternalResource;
@@ -59,6 +63,9 @@ public class N4JSProjectExplorerHelper {
 
 	@Inject
 	private ExternalLibraryWorkspace externalLibraryWorkspace;
+
+	@Inject
+	private ExternalLibraryPreferenceStore prefStore;
 
 	/**
 	 * Returns with the corresponding {@link IN4JSProject N4JS project} for the given {@link IProject Eclipse project}
@@ -99,19 +106,17 @@ public class N4JSProjectExplorerHelper {
 	 * @return {@code true} if the folder is a source folder, otherwise returns with {@code false}.
 	 */
 	public boolean isSourceFolder(IFolder folder) {
-
-		if (null == folder || !folder.exists()) {
-			return false;
-		}
-
 		IN4JSProject project = getProject(folder.getProject());
 
-		if (null != project) {
+		if (project != null) {
 			String relativePath = Strings.nullToEmpty(folder.getProjectRelativePath().toOSString());
-			return from(project.getSourceContainers()).transform(src -> src.getRelativeLocation())
-					.contains(relativePath);
+			for (IN4JSSourceContainer srcContainer : project.getSourceContainers()) {
+				String relSrcCont = Strings.nullToEmpty(srcContainer.getRelativeLocation());
+				if (relativePath.equals(relSrcCont) || relSrcCont.startsWith(relativePath + File.separator)) {
+					return true;
+				}
+			}
 		}
-
 		return false;
 	}
 
@@ -125,18 +130,33 @@ public class N4JSProjectExplorerHelper {
 	 *         {@code false}.
 	 */
 	public boolean isOutputFolder(IFolder folder) {
-
-		if (null == folder || !folder.exists()) {
-			return false;
-		}
-
 		IN4JSProject project = getProject(folder.getProject());
 
-		if (null != project) {
+		if (project != null) {
 			String relativePath = Strings.nullToEmpty(folder.getProjectRelativePath().toOSString());
-			return relativePath.equals(project.getOutputPath());
+			String outputPath = Strings.nullToEmpty(project.getOutputPath());
+			return relativePath.equals(outputPath) || outputPath.startsWith(relativePath + File.separator);
 		}
+		return false;
+	}
 
+	/**
+	 * Returns with {@code true} if the folder argument represents a node_modules folder in its container project.
+	 * Otherwise returns with {@code false}.
+	 *
+	 * @param folder
+	 *            the folder to test whether it is an output folder or not.
+	 * @return {@code true} if the folder is detected as an node_modules folder in the project, otherwise returns with
+	 *         {@code false}.
+	 */
+	public boolean isNodeModulesFolder(IFolder folder) {
+		if ("node_modules".equals(folder.getName())) {
+			IPath path = folder.getLocation();
+			URI locURI = path.toFile().toURI();
+			if (prefStore.getNodeModulesLocations().contains(locURI)) {
+				return true;
+			}
+		}
 		return false;
 	}
 

@@ -64,11 +64,6 @@ public interface TargetPlatformInstallLocationProvider {
 	URI getTargetPlatformFileLocation();
 
 	/** @return the URI pointing to the {@code node_modules} folder which is used for installing npm packages. */
-	default boolean isNodeModulesLocation(URI location) {
-		return location.toString().endsWith(ExternalLibrariesActivator.NPM_CATEGORY);
-	}
-
-	/** @return the URI pointing to the {@code node_modules} folder which is used for installing npm packages. */
 	default URI getNodeModulesURI() {
 		return getURIInTargetPlatformLocation(NODE_MODULES_FOLDER);
 	}

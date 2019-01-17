@@ -28,6 +28,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.binaries.BinaryCommandFactory;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
+import org.eclipse.n4js.preferences.ExternalLibraryPreferenceModel;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.SemverMatcher;
 import org.eclipse.n4js.semver.SemverUtils;
@@ -206,7 +207,7 @@ public class NpmCLI {
 		for (LibraryChange reqChg : requestedChanges) {
 			if (reqChg.type == LibraryChangeType.Uninstall) {
 				java.net.URI rootLocation = externalLibraryWorkspace.getRootLocationForResource(reqChg.location);
-				if (locationProvider.isNodeModulesLocation(rootLocation)) {
+				if (ExternalLibraryPreferenceModel.isNodeModulesLocation(rootLocation)) {
 					packageNames.add(reqChg.name);
 				}
 			}

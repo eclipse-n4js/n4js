@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ui.navigator;
 
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.jdt.ui.ProblemsLabelDecorator;
 import org.eclipse.jdt.ui.ProblemsLabelDecorator.ProblemsLabelChangedEvent;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
@@ -19,12 +20,7 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 import org.eclipse.jface.viewers.StyledString;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.IWorkingSet;
-import org.eclipse.ui.model.WorkbenchLabelProvider;
-
-import com.google.inject.Inject;
-
+import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 import org.eclipse.n4js.ui.navigator.internal.N4JSProjectExplorerHelper;
 import org.eclipse.n4js.ui.utils.UIUtils;
@@ -33,6 +29,11 @@ import org.eclipse.n4js.ui.workingsets.WorkingSetLabelProvider;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManager;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBroker;
 import org.eclipse.n4js.utils.collections.Arrays2;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.IWorkingSet;
+import org.eclipse.ui.model.WorkbenchLabelProvider;
+
+import com.google.inject.Inject;
 
 /**
  * Label provider extension for the N4JS specific Project Explorer view.
@@ -42,6 +43,7 @@ public class N4JSProjectExplorerLabelProvider extends LabelProvider implements I
 	@SuppressWarnings("unused")
 	private static final Image SRC_FOLDER_IMG = ImageRef.SRC_FOLDER.asImage().orNull();
 	private static final Image WORKING_SET_IMG = ImageRef.WORKING_SET.asImage().orNull();
+	private static final Image LIB_PATH = ImageRef.LIB_PATH.asImage().orNull();
 
 	@Inject
 	@SuppressWarnings("unused")
@@ -49,6 +51,9 @@ public class N4JSProjectExplorerLabelProvider extends LabelProvider implements I
 
 	@Inject
 	private WorkingSetManagerBroker workingSetManagerBroker;
+
+	@Inject
+	private ExternalLibraryPreferenceStore prefStore;
 
 	private final ILabelProvider delegate;
 	private final ProblemsLabelDecorator decorator;
@@ -92,16 +97,18 @@ public class N4JSProjectExplorerLabelProvider extends LabelProvider implements I
 			return decorator.decorateImage(WORKING_SET_IMG, element);
 		}
 
-		// (temporarily) disabled because #isSourceFolder() and #isOutputFolder() obtain a lock on the workspace
-		// (e.g. they call IResource#exists() on IFolder 'element') and this seems to cause performance issues with
-		// locks that egit is obtaining for doing cyclic updates (see IDE-2269):
+		if (element instanceof IFolder) {
+			final IFolder folder = (IFolder) element;
+			if (helper.isNodeModulesFolder(folder)) {
+				return decorator.decorateImage(LIB_PATH, element);
 
-		// if (element instanceof IFolder) {
-		// final IFolder folder = (IFolder) element;
-		// if (helper.isSourceFolder(folder) || helper.isOutputFolder(folder)) {
-		// return decorator.decorateImage(SRC_FOLDER_IMG, element);
-		// }
-		// }
+			} else if (helper.isSourceFolder(folder) || helper.isOutputFolder(folder)) {
+				// (temporarily) disabled because #isSourceFolder() and #isOutputFolder() obtain a lock on the workspace
+				// (e.g. they call IResource#exists() on IFolder 'element') and this seems to cause performance issues
+				// with locks that egit is obtaining for doing cyclic updates (see IDE-2269):
+				return decorator.decorateImage(SRC_FOLDER_IMG, element);
+			}
+		}
 
 		return delegate.getImage(element);
 	}

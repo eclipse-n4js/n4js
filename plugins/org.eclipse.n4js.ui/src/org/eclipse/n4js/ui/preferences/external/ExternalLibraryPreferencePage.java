@@ -15,12 +15,9 @@ import static com.google.common.primitives.Ints.asList;
 import static java.util.Collections.singletonList;
 import static org.eclipse.jface.layout.GridDataFactory.fillDefaults;
 import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.EXTERNAL_LIBRARIES_SUPPLIER;
-import static org.eclipse.n4js.ui.preferences.external.ButtonFactoryUtil.createDisabledPushButton;
 import static org.eclipse.n4js.ui.preferences.external.ButtonFactoryUtil.createEnabledPushButton;
-import static org.eclipse.n4js.ui.utils.DelegatingSelectionAdapter.createSelectionListener;
 import static org.eclipse.swt.SWT.END;
 import static org.eclipse.swt.SWT.FILL;
-import static org.eclipse.swt.SWT.OPEN;
 import static org.eclipse.swt.SWT.Selection;
 import static org.eclipse.swt.SWT.TOP;
 
@@ -50,6 +47,8 @@ import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.external.NpmCLI;
 import org.eclipse.n4js.external.ShadowingInfoHelper;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
+import org.eclipse.n4js.internal.N4JSProject;
+import org.eclipse.n4js.preferences.ExternalLibraryPreferenceModel;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.semver.SemverHelper;
@@ -61,12 +60,10 @@ import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.n4js.ui.viewer.TreeViewerBuilder;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.collections.Arrays2;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
@@ -155,65 +152,51 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 		subComposite.setLayout(GridLayoutFactory.fillDefaults().create());
 		subComposite.setLayoutData(fillDefaults().align(END, TOP).create());
 
-		createEnabledPushButton(subComposite, "Add...",
-				createSelectionListener(this::handleAddButtonSelectionListener));
-
-		final Button remove = createDisabledPushButton(subComposite, "Remove",
-				createSelectionListener(this::handleRemoveButtonSelection));
-
-		createPlaceHolderLabel(subComposite);
-
-		final Button moveUp = createDisabledPushButton(subComposite, "Up",
-				createSelectionListener(this::handleMoveUpButtonSelection));
-
-		final Button moveDown = createDisabledPushButton(subComposite, "Down",
-				createSelectionListener(this::handleMoveDownButtonSelection));
-
-		createPlaceHolderLabel(subComposite);
-
-		createPlaceHolderLabel(subComposite);
-
-		createEnabledPushButton(subComposite, "Install npm...",
+		final Button install = createEnabledPushButton(subComposite, "Install npm...",
+				"Runs 'npm install' with the given package and version. Uses 'yarn add' in a yarn workspace.",
 				new InstallNpmDependencyButtonListener(this::installAndUpdate,
 						() -> getPackageNameToInstallValidator(), () -> getPackageVersionValidator(),
 						semverHelper, statusHelper));
 
-		createEnabledPushButton(subComposite, "Uninstall npm...",
+		final Button uninstall = createEnabledPushButton(subComposite, "Uninstall npm...",
+				"Runs 'npm uninstall' with the given package and version. Uses 'yarn remove' in a yarn workspace.",
 				new UninstallNpmDependencyButtonListener(this::uninstallAndUpdate,
 						() -> getPackageNameToUninstallValidator(),
-						statusHelper,
-						this::getSelectedNpm));
+						statusHelper, this::getSelectedNpm));
 
-		createEnabledPushButton(subComposite, "Run maintenance actions...",
-				new MaintenanceActionsButtonListener(this::runMaintananceActions, statusHelper));
+		createPlaceHolderLabel(subComposite);
+
+		createPlaceHolderLabel(subComposite);
+
+		createEnabledPushButton(subComposite, "Re-Build node_modules",
+				"Cleans the type information from the IDE and then re-build the type information of all node_modules.",
+				new RereigsterAllNpmsButtonListener(this::reregisterNpms, statusHelper));
+
+		createEnabledPushButton(subComposite, "Clean node_modules",
+				"Runs 'npm clean' on all node_modules folders. Uses 'yarn clean' in a yarn workspace.",
+				new CleanAllNpmsButtonListener(this::cleanNpms, statusHelper));
 
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
 			@Override
 			public void selectionChanged(final /* @Nullable */ SelectionChangedEvent event) {
+				install.setEnabled(false);
+				uninstall.setEnabled(false);
 				final Tree tree = viewer.getTree();
 				final TreeItem[] selection = tree.getSelection();
-				if (!Arrays2.isEmpty(selection) && 1 == selection.length && selection[0].getData() instanceof URI) {
-					final URI uri = (URI) selection[0].getData();
-					if (BUILT_IN_LIBS.containsKey(uri)) {
-						remove.setEnabled(false);
-						moveUp.setEnabled(false);
-						moveDown.setEnabled(false);
-					} else {
-						final int selectionIndex = tree.indexOf(selection[0]);
-						final int itemCount = tree.getItemCount();
-						remove.setEnabled(true);
-						if (selectionIndex > 0) {
-							moveUp.setEnabled(!BUILT_IN_LIBS.containsKey(tree.getItem(selectionIndex - 1).getData()));
-						} else {
-							moveUp.setEnabled(0 != selectionIndex);
+				if (!Arrays2.isEmpty(selection) && 1 == selection.length) {
+					Object data = selection[0].getData();
+
+					if (data instanceof URI) {
+						URI uri = (URI) data;
+						if (ExternalLibraryPreferenceModel.isNodeModulesLocation(uri)) {
+							install.setEnabled(true);
 						}
-						moveDown.setEnabled(selectionIndex != itemCount - 1);
 					}
-				} else {
-					remove.setEnabled(false);
-					moveUp.setEnabled(false);
-					moveDown.setEnabled(false);
+
+					if (data instanceof N4JSProject) {
+						uninstall.setEnabled(true);
+					}
 				}
 			}
 		});
@@ -352,133 +335,31 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 				.anyMatch(name -> name.equals(packageName));
 	}
 
-	/**
-	 * Handler for executing maintenance action based on the provided {@link MaintenanceActionsChoice user choice}.
-	 */
-	private MultiStatus runMaintananceActions(final MaintenanceActionsChoice userChoice, IProgressMonitor monitor) {
-		final MultiStatus multistatus = statusHelper
-				.createMultiStatus("Executing maintenance actions.");
-
-		// keep the order Cache->TypeDefs->NPMs->Reinstall->Update
-		// actions have side effects that can interact with each other
-		maintenanceCleanNpmCache(userChoice, multistatus, monitor);
-		maintenanceDeleteNpms(userChoice, multistatus);
-		upateState(userChoice, multistatus, monitor);
-
+	/** Actions to be taken if deleting npms is requested. */
+	private MultiStatus cleanNpms(final MultiStatus multistatus) {
+		try {
+			externalLibrariesActionsHelper.maintenanceDeleteNpms(multistatus);
+		} catch (Exception e) {
+			String msg = "Error when cleaning external libraries.";
+			multistatus.merge(statusHelper.createError(msg, e));
+		} finally {
+			updateInput(viewer, store.getLocations());
+		}
 		return multistatus;
 	}
 
-	/**
-	 * Actions to be taken if npm cache clean is requested.
-	 *
-	 * @param userChoice
-	 *            options object used to decide if / how actions should be performed
-	 * @param multistatus
-	 *            the status used accumulate issues
-	 * @param monitor
-	 *            the monitor used to interact with npm manager
-	 */
-	private void maintenanceCleanNpmCache(final MaintenanceActionsChoice userChoice,
-			final MultiStatus multistatus, IProgressMonitor monitor) {
-		if (userChoice.decisionCleanCache) {
-			externalLibrariesActionsHelper.maintenanceCleanNpmCache(multistatus, monitor);
-		}
-	}
-
-	/**
-	 * Updates all affected state after maintenance actions have been performed. In particular updates state of the
-	 * workspace, persisted preferences state, and displayed preferences.
-	 *
-	 * @param userChoice
-	 *            options object used to decide if / how actions should be performed
-	 * @param multistatus
-	 *            the status used accumulate issues
-	 * @param monitor
-	 *            the monitor used to interact with npm manager
-	 */
-	private void upateState(final MaintenanceActionsChoice userChoice,
-			final MultiStatus multistatus, IProgressMonitor monitor) {
-
-		if (userChoice.decisionReload || userChoice.decisionPurgeNpm) {
-			try {
-				libManager.registerAllExternalProjects(monitor);
-
-			} catch (Exception e) {
-				String msg = "Error when reloading external libraries.";
-				multistatus.merge(statusHelper.createError(msg, e));
-			}
+	/** Actions to be taken if re-registering npms is requested. */
+	private MultiStatus reregisterNpms(final IProgressMonitor monitor, final MultiStatus multistatus) {
+		try {
+			IStatus status = libManager.registerAllExternalProjects(monitor);
+			multistatus.merge(status);
+		} catch (Exception e) {
+			String msg = "Error when re-registering external libraries.";
+			multistatus.merge(statusHelper.createError(msg, e));
+		} finally {
 			updateInput(viewer, store.getLocations());
 		}
-	}
-
-	/**
-	 * Actions to be taken if deleting npms is requested.
-	 *
-	 * @param userChoice
-	 *            options object used to decide if / how actions should be performed
-	 * @param multistatus
-	 *            the status used accumulate issues
-	 */
-	private void maintenanceDeleteNpms(final MaintenanceActionsChoice userChoice, final MultiStatus multistatus) {
-		if (userChoice.decisionPurgeNpm) {
-			externalLibrariesActionsHelper.maintenanceDeleteNpms(multistatus);
-		}
-	}
-
-	/**
-	 * Selection handler for adding a new external library location.
-	 */
-	private void handleAddButtonSelectionListener(@SuppressWarnings("unused") final SelectionEvent e) {
-		final String directoryPath = new DirectoryDialog(viewer.getControl().getShell(), OPEN).open();
-		if (null != directoryPath) {
-			final File file = new File(directoryPath);
-			if (file.isDirectory()) {
-				store.add(file.toURI());
-				updateInput(viewer, store.getLocations());
-			}
-		}
-	}
-
-	/**
-	 * Selection handler for adding a new external library location.
-	 */
-	private void handleRemoveButtonSelection(@SuppressWarnings("unused") final SelectionEvent e) {
-		final ISelection selection = viewer.getSelection();
-		if (selection instanceof IStructuredSelection && !selection.isEmpty()) {
-			final Object element = ((IStructuredSelection) selection).getFirstElement();
-			if (element instanceof URI) {
-				store.remove((URI) element);
-				updateInput(viewer, store.getLocations());
-			}
-		}
-	}
-
-	/**
-	 * Selection handler for moving up an external library location in the list.
-	 */
-	private void handleMoveUpButtonSelection(@SuppressWarnings("unused") final SelectionEvent e) {
-		final ISelection selection = viewer.getSelection();
-		if (selection instanceof IStructuredSelection && !selection.isEmpty()) {
-			final Object element = ((IStructuredSelection) selection).getFirstElement();
-			if (element instanceof URI) {
-				store.moveUp((URI) element);
-				updateInput(viewer, store.getLocations());
-			}
-		}
-	}
-
-	/**
-	 * Selection handler for moving down an external library location in the list.
-	 */
-	private void handleMoveDownButtonSelection(@SuppressWarnings("unused") final SelectionEvent e) {
-		final ISelection selection = viewer.getSelection();
-		if (selection instanceof IStructuredSelection && !selection.isEmpty()) {
-			final Object element = ((IStructuredSelection) selection).getFirstElement();
-			if (element instanceof URI) {
-				store.moveDown((URI) element);
-				updateInput(viewer, store.getLocations());
-			}
-		}
+		return multistatus;
 	}
 
 	/**

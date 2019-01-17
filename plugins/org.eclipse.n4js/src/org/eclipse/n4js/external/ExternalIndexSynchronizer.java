@@ -69,6 +69,9 @@ public abstract class ExternalIndexSynchronizer {
 	@Inject
 	private FolderContainmentHelper containmentHelper;
 
+	/** Triggers synchronization of the stored node_modules folders with the ones that actually exist. */
+	abstract public void synchronizeNodeModulesFolders();
+
 	/**
 	 * Call this method to synchronize the information in the Xtext index with all external projects in the external
 	 * library folders.
@@ -170,6 +173,8 @@ public abstract class ExternalIndexSynchronizer {
 	 */
 	final protected Collection<LibraryChange> identifyChangeSet(Collection<LibraryChange> forcedChangeSet,
 			boolean updateCache) {
+
+		synchronizeNodeModulesFolders();
 
 		Collection<LibraryChange> changes = new LinkedHashSet<>(forcedChangeSet);
 

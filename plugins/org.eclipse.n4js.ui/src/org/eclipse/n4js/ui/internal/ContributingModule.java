@@ -69,6 +69,7 @@ import org.eclipse.n4js.ui.workingsets.WorkingSetManualAssociationWizard;
 import org.eclipse.n4js.ui.workingsets.WorkingSetProjectNameFilterWizard;
 import org.eclipse.n4js.ui.workingsets.WorkspaceRepositoriesProvider;
 import org.eclipse.n4js.utils.InjectorCollector;
+import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.WildcardPathFilterHelper;
@@ -162,6 +163,7 @@ public class ContributingModule implements Module {
 		binder.bind(ConsoleOutputStreamProvider.class);
 		binder.bind(ExternalProjectsCollector.class);
 		binder.bind(ExternalProjectProvider.class);
+		binder.bind(NodeModulesDiscoveryHelper.class);
 		binder.bind(RebuildWorkspaceProjectsScheduler.class);
 
 		binder.bind(N4JSExternalLibraryStorage2UriMapperContribution.class);
