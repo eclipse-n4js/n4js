@@ -18,10 +18,11 @@ import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.req
 
 import java.io.File;
 import java.net.URI;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.Platform;
@@ -45,7 +46,8 @@ public class ExternalLibraryPreferenceModel {
 	private static final String PROP_EXTERNAL_LIBRARY_LOCATIONS = "externalLibraryLocations";
 
 	private final List<String> externalLibraryLocations = newArrayList();
-	private final List<URI> externalLibraryLocationURIs = newArrayList();
+	private final LinkedHashSet<URI> externalLibraryLocationURIs = new LinkedHashSet<>();
+	private final LinkedHashSet<URI> externalNodeModulesURIs = new LinkedHashSet<>();
 	private long externalLibraryLocationURIsHash = 0;
 
 	/**
@@ -237,7 +239,7 @@ public class ExternalLibraryPreferenceModel {
 	 *
 	 * @return a list of external library folder location URIs.
 	 */
-	synchronized public List<URI> getExternalLibraryLocationsAsUris() {
+	synchronized public LinkedHashSet<URI> getExternalLibraryLocationsAsUris() {
 		int currentHash = externalLibraryLocations.hashCode();
 		boolean needUpdate = currentHash != externalLibraryLocationURIsHash;
 		if (needUpdate) {
@@ -249,6 +251,13 @@ public class ExternalLibraryPreferenceModel {
 			locations = ExternalLibrariesActivator.sortByShadowing(locations);
 			externalLibraryLocationURIs.clear();
 			externalLibraryLocationURIs.addAll(locations);
+
+			externalNodeModulesURIs.clear();
+			for (URI location : locations) {
+				if (isNodeModulesLocation(location)) {
+					externalNodeModulesURIs.addAll(locations);
+				}
+			}
 		}
 		return externalLibraryLocationURIs;
 	}
@@ -268,11 +277,8 @@ public class ExternalLibraryPreferenceModel {
 	 *
 	 * @return a list of external library folder location URIs.
 	 */
-	synchronized public List<URI> getNodeModulesLocationsAsUris() {
-		List<URI> nodeModules = new LinkedList<>(getExternalLibraryLocationsAsUris());
-		nodeModules = nodeModules.stream().filter(uri -> isNodeModulesLocation(uri)).collect(Collectors.toList());
-
-		return nodeModules;
+	synchronized public Collection<URI> getNodeModulesLocationsAsUris() {
+		return externalNodeModulesURIs;
 	}
 
 	/**

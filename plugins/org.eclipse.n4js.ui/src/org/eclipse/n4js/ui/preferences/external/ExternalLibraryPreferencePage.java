@@ -41,11 +41,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.n4js.external.ExternalIndexSynchronizer;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.external.NpmCLI;
-import org.eclipse.n4js.external.ShadowingInfoHelper;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceModel;
@@ -54,6 +52,7 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.ui.external.ExternalLibrariesActionsHelper;
+import org.eclipse.n4js.ui.navigator.internal.N4JSProjectExplorerHelper;
 import org.eclipse.n4js.ui.utils.InputComposedValidator;
 import org.eclipse.n4js.ui.utils.InputFunctionalValidator;
 import org.eclipse.n4js.ui.utils.UIUtils;
@@ -115,10 +114,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	private ExternalLibrariesActionsHelper externalLibrariesActionsHelper;
 
 	@Inject
-	private ExternalIndexSynchronizer indexSynchronizer;
-
-	@Inject
-	private ShadowingInfoHelper shadowingInfoHelper;
+	private N4JSProjectExplorerHelper projectExplorerhelper;
 
 	private TreeViewer viewer;
 
@@ -131,8 +127,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	protected Control createContents(final Composite parent) {
 		this.setSize(new Point(600, 600));
 
-		final BuiltInLibrariesLabelProvider labelProvider = new BuiltInLibrariesLabelProvider(indexSynchronizer,
-				shadowingInfoHelper, externalLibraryWorkspace);
+		final BuiltInLibrariesLabelProvider labelProvider = new BuiltInLibrariesLabelProvider(projectExplorerhelper);
 		final Composite control = new Composite(parent, NONE);
 		control.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(false).create());
 		control.setLayoutData(fillDefaults().align(FILL, FILL).create());
