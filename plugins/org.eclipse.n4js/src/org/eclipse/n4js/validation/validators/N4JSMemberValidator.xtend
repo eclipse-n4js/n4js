@@ -236,7 +236,7 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 			}
 		}
 	}
-	
+
 	def private boolean holdsConstructorConstraints(TMethod method) {
 		if (method.constructor) {
 			if (!holdsConstructorInInterfaceDoesNotHaveBody(method)) {
