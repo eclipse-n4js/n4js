@@ -97,7 +97,6 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 		}
 		internalCheckNameStartsWithDollar
 		internalCheckAbstractAndFinal
-		internalCheckAbstractAndPrivate
 		internalCheckPrivateOrProjectWithInternalAnnotation(n4Member, it)
 	}
 
@@ -238,16 +237,6 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 		}
 	}
 	
-	def private boolean internalCheckAbstractAndPrivate(TMember member) {
-		if (member.abstract && member.memberAccessModifier == MemberAccessModifier.PRIVATE) {
-			val message = IssueCodes.getMessageForCLF_ABSTRACT_PRIVATE(member.keyword)
-			addIssue(message, member.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME, IssueCodes.CLF_ABSTRACT_PRIVATE)
-			return false;
-		}
-		return true;
-	}
-
-
 	def private boolean holdsConstructorConstraints(TMethod method) {
 		if (method.constructor) {
 			if (!holdsConstructorInInterfaceDoesNotHaveBody(method)) {
