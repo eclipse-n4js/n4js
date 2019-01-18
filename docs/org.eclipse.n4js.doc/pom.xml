@@ -268,7 +268,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 									<arg value="DOC_NAME=N4JSDesign"/>
 									<arg value="-v"/>
 									<arg value="${basedir}/../org.eclipse.n4js.design:/workspace:rw"/>
-									<arg value="docker-corp.numberfour.eu/numberfour/asciispec:0.0.14"/>
+									<arg value="n4js/asciispec:0.0.14"/>
 									<arg value="-a"/>
 									<arg value="-o"/>
 									<arg value="-a eclipse-help-mode"/>
@@ -362,7 +362,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 									<arg value="DOC_NAME=N4JSSpec"/>
 									<arg value="-v"/>
 									<arg value="${basedir}/../org.eclipse.n4js.spec:/workspace:rw"/>
-									<arg value="docker-corp.numberfour.eu/numberfour/asciispec:0.0.14"/>
+									<arg value="n4js/asciispec:0.0.14"/>
 									<arg value="-a"/>
 									<arg value="-o"/>
 									<arg value="-a eclipse-help-mode"/>
