@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='utf-8' ?>
 <toc topic="dist/eclipse-html/N4JSDesign/index.html" label="N4JS Design Specification">
-
 	<topic href="dist/eclipse-html/N4JSDesign/introduction.html#_introduction" label="Introduction">
 		<topic href="dist/eclipse-html/N4JSDesign/introduction.html#notation" label="Notation"></topic>
 		<topic href="dist/eclipse-html/N4JSDesign/introduction.html#sec:IDE_Overview" label="IDE Components">
@@ -17,6 +16,7 @@
 		<topic href="dist/eclipse-html/N4JSDesign/release_engineering.html#_nightly-build-on-eclipse-infrastructure" label="Nightly build on Eclipse infrastructure"></topic>
 		<topic href="dist/eclipse-html/N4JSDesign/release_engineering.html#_build-the-n4js-ide-from-command-line" label="Build the N4JS IDE from command line">
 			<topic href="dist/eclipse-html/N4JSDesign/release_engineering.html#_publish-maven-tooling-literal-org-eclipse-n4js-releng-util-literal" label="Publish maven-tooling org.eclipse.n4js.releng.util"></topic>
+			<topic href="dist/eclipse-html/N4JSDesign/release_engineering.html#_generation-of-eclipse-help-for-spec-and-design-document" label="Generation of Eclipse help for spec and design document"></topic>
 		</topic>
 	</topic>
 	<topic href="dist/eclipse-html/N4JSDesign/parser.html#_parser" label="Parser">

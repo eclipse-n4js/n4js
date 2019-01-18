@@ -57,7 +57,7 @@ The term control flow is abbreviated as <em>CF</em> and hence <code>ControlFlowE
 <div class="content">
 <img src="chapters/10_flowgraphs/images/cfg_for_loop.png" alt="cfg for loop">
 </div>
-<div class="title">Figure 7. Control flow graph of a simple function</div>
+<div class="title">Figure 8. Control flow graph of a simple function</div>
 </div>
 <div class="sect3">
 <h4 id="_internal-graph"><a class="anchor" href="#_internal-graph"></a><a class="link" href="#_internal-graph">5.1.1. Internal graph</a></h4>
@@ -128,7 +128,7 @@ All nodes of one CF element are aggregated into the <em>complex node</em>.</p>
 <div class="content">
 <img src="chapters/10_flowgraphs/images/internalGraph.png" alt="internalGraph">
 </div>
-<div class="title">Figure 8. The source code of <code>1+2</code> creates an internal graph of three complex nodes to deal with nested integer literals</div>
+<div class="title">Figure 9. The source code of <code>1+2</code> creates an internal graph of three complex nodes to deal with nested integer literals</div>
 </div>
 <div class="paragraph">
 <p>The example in the <a href="#img:internalGraph">figure above</a> shows the internal graph produced by the source code <code>1+2</code>.
@@ -142,7 +142,7 @@ Also, there are CF edges from the exit nodes of these nested CF elements to retu
 <div class="content">
 <img src="chapters/10_flowgraphs/images/cn_for_stmt.png" alt="cn for stmt">
 </div>
-<div class="title">Figure 9. Complex Node of for statement</div>
+<div class="title">Figure 10. Complex Node of for statement</div>
 </div>
 <div class="paragraph">
 <p>In the <a href="#img:cn_for_stmt">above figure</a>, the complex node of the for statement is shown.
@@ -246,7 +246,7 @@ However, no specific order assumptions are guaranteed.</p>
 <div class="content">
 <img src="chapters/10_flowgraphs/images/deadcode.png" alt="deadcode">
 </div>
-<div class="title">Figure 10. The CF elements <code>"loop"</code> and <code>"end"</code> are dead code and displayed in grey.</div>
+<div class="title">Figure 11. The CF elements <code>"loop"</code> and <code>"end"</code> are dead code and displayed in grey.</div>
 </div>
 </div>
 <div class="sect4">
@@ -537,7 +537,7 @@ This analysis is done in traverse direction <em>Backward</em>.</p>
 <div class="content">
 <img src="chapters/10_flowgraphs/images/usedBeforeDeclaredAnalysis.png" alt="usedBeforeDeclaredAnalysis">
 </div>
-<div class="title">Figure 11. Finding use or def sites can be done using the graph visitor in traverse direction <em>Backward</em>.</div>
+<div class="title">Figure 12. Finding use or def sites can be done using the graph visitor in traverse direction <em>Backward</em>.</div>
 </div>
 <div class="paragraph">
 <p>In the <a href="#img:usedBeforeDeclaredAnalysis">above figure</a> a graph visitor would visit all CF elements.

@@ -718,6 +718,34 @@ For extending the N4JS-language in a different project, the <code>org.eclipse.n4
 <p>The existence of <code>local-snapshot-deploy-folder</code> will trigger a profile enabling the deploy-goal for the project <code>org.eclipse.n4js.releng.util</code></p>
 </div>
 </div>
+<div class="sect3">
+<h4 id="_generation-of-eclipse-help-for-spec-and-design-document"><a class="anchor" href="#_generation-of-eclipse-help-for-spec-and-design-document"></a><a class="link" href="#_generation-of-eclipse-help-for-spec-and-design-document">3.2.2. Generation of Eclipse help for spec and design document</a></h4>
+<div class="paragraph">
+<p>The HTML pages for N4JSSpec and N4JSDesign documents are generated from the Asciidoc sources in the project <code>org.eclipse.n4js.spec</code> <code>org.eclipse.n4js.design</code> by Asciispec. </p>
+</div>
+<div id="img:eclipse-help-doc-process" class="imageblock">
+<div class="content">
+<img src="chapters/03_releng/images/eclipse-help-process.svg" alt="Creating Eclipse help for N4JSSpec">
+</div>
+<div class="title">Figure 1. The process of creating Eclipse help for N4JSSpec</div>
+</div>
+<div class="paragraph">
+<p>Figure <a href="#img:eclipse-help-doc-process">The process of creating Eclipse help for N4JSSpec</a> shows the generation process for N4JSSpec document. The process for N4JSDesign is the same. The following explains the diagram.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>Asciispec</code> is used to compile the source N4JSSpec Asciidoc into a single large <code>N4JSSpec.html</code> file which contains all the chapters. The use of the custom parameter <code>-a eclipse-help-mode</code> indicates that a specical header and footer styles as well as CSS style should be used (i.e. no table of content menu, no download links etc.). Here, we are using the possibility provided by Asciidoctor to configure header/footer as well as CSS style via parameter <code>:docinfodir:</code> and <code>:stylesheet:</code>.</p>
+</li>
+<li>
+<p>Our custom tool <code>Chunker</code> splits <code>N4JSSpec.html</code> into multiple chunked HTML files, each of which corresponds to either the <code>index</code> file or a chapter.</p>
+</li>
+<li>
+<p>Another custom tool <code>EclipseHelpTOCGenerator</code> takes to Docbook file <code>N4JSSpec.xml</code> and generates an XML file describing the table of content (TOC) in the Eclipse format. This TOC file references the chunked HTML files above.</p>
+</li>
+</ul>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -738,7 +766,7 @@ For extending the N4JS-language in a different project, the <code>org.eclipse.n4
 <div class="content">
 <img src="chapters/04_parser/images/cd_grammars.png" alt="cd grammars">
 </div>
-<div class="title">Figure 1. N4 Grammars</div>
+<div class="title">Figure 2. N4 Grammars</div>
 </div>
 </div>
 <div class="sect2">
@@ -750,7 +778,7 @@ For extending the N4JS-language in a different project, the <code>org.eclipse.n4
 <div class="content">
 <img src="chapters/04_parser/images/cd_ASIParser.png" alt="cd ASIParser">
 </div>
-<div class="title">Figure 2. Overview custom parser implementation (runtime only)</div>
+<div class="title">Figure 3. Overview custom parser implementation (runtime only)</div>
 </div>
 </div>
 <div class="sect2 language-bash">
@@ -781,7 +809,7 @@ For extending the N4JS-language in a different project, the <code>org.eclipse.n4
 <div class="content">
 <img src="chapters/04_parser/images/cd_parsergeneration.png" alt="cd parsergeneration">
 </div>
-<div class="title">Figure 3. Class Diagram Parser Generation</div>
+<div class="title">Figure 4. Class Diagram Parser Generation</div>
 </div>
 <div class="sect3">
 <h4 id="sec:Automatic_Semicolon_Insertion"><a class="anchor" href="#sec:Automatic_Semicolon_Insertion"></a><a class="link" href="#sec:Automatic_Semicolon_Insertion">4.3.1. Automatic Semicolon Insertion</a></h4>
@@ -825,7 +853,7 @@ For extending the N4JS-language in a different project, the <code>org.eclipse.n4
 <div class="content">
 <img src="chapters/04_parser/images/ad_parsing_simplified.png" alt="ad parsing simplified">
 </div>
-<div class="title">Figure 4. Simplified visualization of the parsing</div>
+<div class="title">Figure 5. Simplified visualization of the parsing</div>
 </div>
 <div class="paragraph">
 <p>Since the default semantics and control flow of Antlr generated parsers do not really fit the requirements of a fully working JavaScript parser, some customizations are necessary. <strong>Regular expression literals in JavaScript cannot be syntactically disambiguated from div operations without contextual information.</strong> Nevertheless, the spec clearly describes, where a regular expression may appear and where it is prohibited. Unfortunately, it is not possible to implement these rules in the lexer alone, since it does not have enough contextual information. Therefore, the parser has been enhanced to establish a communication channel with the lexer. It announces when it expects a regular expression rather than a binary operation.</p>
@@ -840,7 +868,7 @@ For extending the N4JS-language in a different project, the <code>org.eclipse.n4
 <div class="content">
 <img src="chapters/04_parser/images/sd_parsing_sequence.png" alt="sd parsing sequence">
 </div>
-<div class="title">Figure 5. Abstract control flow during parsing</div>
+<div class="title">Figure 6. Abstract control flow during parsing</div>
 </div>
 <div class="paragraph">
 <p>shows the involved classes which allow for this lexer-parser communication.</p>
@@ -849,7 +877,7 @@ For extending the N4JS-language in a different project, the <code>org.eclipse.n4
 <div class="content">
 <img src="chapters/04_parser/images/cd_parserlexercommunication.png" alt="cd parserlexercommunication">
 </div>
-<div class="title">Figure 6. Class Diagram Parser-Lexer Communication</div>
+<div class="title">Figure 7. Class Diagram Parser-Lexer Communication</div>
 </div>
 </div>
 <div class="sect3">
@@ -957,7 +985,7 @@ The term control flow is abbreviated as <em>CF</em> and hence <code>ControlFlowE
 <div class="content">
 <img src="chapters/10_flowgraphs/images/cfg_for_loop.png" alt="cfg for loop">
 </div>
-<div class="title">Figure 7. Control flow graph of a simple function</div>
+<div class="title">Figure 8. Control flow graph of a simple function</div>
 </div>
 <div class="sect3">
 <h4 id="_internal-graph"><a class="anchor" href="#_internal-graph"></a><a class="link" href="#_internal-graph">5.1.1. Internal graph</a></h4>
@@ -1028,7 +1056,7 @@ All nodes of one CF element are aggregated into the <em>complex node</em>.</p>
 <div class="content">
 <img src="chapters/10_flowgraphs/images/internalGraph.png" alt="internalGraph">
 </div>
-<div class="title">Figure 8. The source code of <code>1+2</code> creates an internal graph of three complex nodes to deal with nested integer literals</div>
+<div class="title">Figure 9. The source code of <code>1+2</code> creates an internal graph of three complex nodes to deal with nested integer literals</div>
 </div>
 <div class="paragraph">
 <p>The example in the <a href="#img:internalGraph">figure above</a> shows the internal graph produced by the source code <code>1+2</code>.
@@ -1042,7 +1070,7 @@ Also, there are CF edges from the exit nodes of these nested CF elements to retu
 <div class="content">
 <img src="chapters/10_flowgraphs/images/cn_for_stmt.png" alt="cn for stmt">
 </div>
-<div class="title">Figure 9. Complex Node of for statement</div>
+<div class="title">Figure 10. Complex Node of for statement</div>
 </div>
 <div class="paragraph">
 <p>In the <a href="#img:cn_for_stmt">above figure</a>, the complex node of the for statement is shown.
@@ -1146,7 +1174,7 @@ However, no specific order assumptions are guaranteed.</p>
 <div class="content">
 <img src="chapters/10_flowgraphs/images/deadcode.png" alt="deadcode">
 </div>
-<div class="title">Figure 10. The CF elements <code>"loop"</code> and <code>"end"</code> are dead code and displayed in grey.</div>
+<div class="title">Figure 11. The CF elements <code>"loop"</code> and <code>"end"</code> are dead code and displayed in grey.</div>
 </div>
 </div>
 <div class="sect4">
@@ -1437,7 +1465,7 @@ This analysis is done in traverse direction <em>Backward</em>.</p>
 <div class="content">
 <img src="chapters/10_flowgraphs/images/usedBeforeDeclaredAnalysis.png" alt="usedBeforeDeclaredAnalysis">
 </div>
-<div class="title">Figure 11. Finding use or def sites can be done using the graph visitor in traverse direction <em>Backward</em>.</div>
+<div class="title">Figure 12. Finding use or def sites can be done using the graph visitor in traverse direction <em>Backward</em>.</div>
 </div>
 <div class="paragraph">
 <p>In the <a href="#img:usedBeforeDeclaredAnalysis">above figure</a> a graph visitor would visit all CF elements.
@@ -1673,7 +1701,7 @@ The library manager also supports other maintenance actions such as deleting all
 <div class="content">
 <img src="chapters/20_externalLibraries/images/externalResources.svg" alt="externalResources">
 </div>
-<div class="title">Figure 12. External Resources Hierarchy</div>
+<div class="title">Figure 13. External Resources Hierarchy</div>
 </div>
 </div>
 <div class="sect3">

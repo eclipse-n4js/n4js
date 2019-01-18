@@ -607,6 +607,31 @@ infrastructure, e.g. <link xl:href="https://wiki.eclipse.org/CBI">https://wiki.e
 <screen>mvn clean deploy -Dlocal-snapshot-deploy-folder=/var/lib/my/folder/local-mvn-deploy-repository</screen>
 <simpara>The existence of <literal>local-snapshot-deploy-folder</literal> will trigger a profile enabling the deploy-goal for the project <literal>org.eclipse.n4js.releng.util</literal></simpara>
 </section>
+<section xml:id="_generation-of-eclipse-help-for-spec-and-design-document">
+<title>Generation of Eclipse help for spec and design document</title>
+<simpara>The HTML pages for N4JSSpec and N4JSDesign documents are generated from the Asciidoc sources in the project <literal>org.eclipse.n4js.spec</literal> <literal>org.eclipse.n4js.design</literal> by Asciispec. </simpara>
+<figure xml:id="img:eclipse-help-doc-process">
+<title>The process of creating Eclipse help for N4JSSpec</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="chapters/03_releng/images/eclipse-help-process.svg"/>
+</imageobject>
+<textobject><phrase>Creating Eclipse help for N4JSSpec</phrase></textobject>
+</mediaobject>
+</figure>
+<simpara>Figure <xref linkend="img:eclipse-help-doc-process"/> shows the generation process for N4JSSpec document. The process for N4JSDesign is the same. The following explains the diagram.</simpara>
+<itemizedlist>
+<listitem>
+<simpara><literal>Asciispec</literal> is used to compile the source N4JSSpec Asciidoc into a single large <literal>N4JSSpec.html</literal> file which contains all the chapters. The use of the custom parameter <literal>-a eclipse-help-mode</literal> indicates that a specical header and footer styles as well as CSS style should be used (i.e. no table of content menu, no download links etc.). Here, we are using the possibility provided by Asciidoctor to configure header/footer as well as CSS style via parameter <literal>:docinfodir:</literal> and <literal>:stylesheet:</literal>.</simpara>
+</listitem>
+<listitem>
+<simpara>Our custom tool <literal>Chunker</literal> splits <literal>N4JSSpec.html</literal> into multiple chunked HTML files, each of which corresponds to either the <literal>index</literal> file or a chapter.</simpara>
+</listitem>
+<listitem>
+<simpara>Another custom tool <literal>EclipseHelpTOCGenerator</literal> takes to Docbook file <literal>N4JSSpec.xml</literal> and generates an XML file describing the table of content (TOC) in the Eclipse format. This TOC file references the chunked HTML files above.</simpara>
+</listitem>
+</itemizedlist>
+</section>
 </section>
 </chapter>
 <chapter xml:id="_parser">

@@ -48,7 +48,7 @@
 <div class="content">
 <img src="chapters/04_parser/images/cd_grammars.png" alt="cd grammars">
 </div>
-<div class="title">Figure 1. N4 Grammars</div>
+<div class="title">Figure 2. N4 Grammars</div>
 </div>
 </div>
 <div class="sect2">
@@ -60,7 +60,7 @@
 <div class="content">
 <img src="chapters/04_parser/images/cd_ASIParser.png" alt="cd ASIParser">
 </div>
-<div class="title">Figure 2. Overview custom parser implementation (runtime only)</div>
+<div class="title">Figure 3. Overview custom parser implementation (runtime only)</div>
 </div>
 </div>
 <div class="sect2 language-bash">
@@ -91,7 +91,7 @@
 <div class="content">
 <img src="chapters/04_parser/images/cd_parsergeneration.png" alt="cd parsergeneration">
 </div>
-<div class="title">Figure 3. Class Diagram Parser Generation</div>
+<div class="title">Figure 4. Class Diagram Parser Generation</div>
 </div>
 <div class="sect3">
 <h4 id="sec:Automatic_Semicolon_Insertion"><a class="anchor" href="#sec:Automatic_Semicolon_Insertion"></a><a class="link" href="#sec:Automatic_Semicolon_Insertion">4.3.1. Automatic Semicolon Insertion</a></h4>
@@ -135,7 +135,7 @@
 <div class="content">
 <img src="chapters/04_parser/images/ad_parsing_simplified.png" alt="ad parsing simplified">
 </div>
-<div class="title">Figure 4. Simplified visualization of the parsing</div>
+<div class="title">Figure 5. Simplified visualization of the parsing</div>
 </div>
 <div class="paragraph">
 <p>Since the default semantics and control flow of Antlr generated parsers do not really fit the requirements of a fully working JavaScript parser, some customizations are necessary. <strong>Regular expression literals in JavaScript cannot be syntactically disambiguated from div operations without contextual information.</strong> Nevertheless, the spec clearly describes, where a regular expression may appear and where it is prohibited. Unfortunately, it is not possible to implement these rules in the lexer alone, since it does not have enough contextual information. Therefore, the parser has been enhanced to establish a communication channel with the lexer. It announces when it expects a regular expression rather than a binary operation.</p>
@@ -150,7 +150,7 @@
 <div class="content">
 <img src="chapters/04_parser/images/sd_parsing_sequence.png" alt="sd parsing sequence">
 </div>
-<div class="title">Figure 5. Abstract control flow during parsing</div>
+<div class="title">Figure 6. Abstract control flow during parsing</div>
 </div>
 <div class="paragraph">
 <p>shows the involved classes which allow for this lexer-parser communication.</p>
@@ -159,7 +159,7 @@
 <div class="content">
 <img src="chapters/04_parser/images/cd_parserlexercommunication.png" alt="cd parserlexercommunication">
 </div>
-<div class="title">Figure 6. Class Diagram Parser-Lexer Communication</div>
+<div class="title">Figure 7. Class Diagram Parser-Lexer Communication</div>
 </div>
 </div>
 <div class="sect3">

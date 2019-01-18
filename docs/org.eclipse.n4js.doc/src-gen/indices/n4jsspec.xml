@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='utf-8' ?>
 <toc topic="dist/eclipse-html/N4JSSpec/index.html" label="N4JS Language Specification">
-
 	<topic href="dist/eclipse-html/N4JSSpec/introduction.html#_introduction" label="Introduction">
 		<topic href="dist/eclipse-html/N4JSSpec/introduction.html#_notation" label="Notation">
 			<topic href="dist/eclipse-html/N4JSSpec/introduction.html#_grammar-notation" label="Grammar Notation"></topic>
