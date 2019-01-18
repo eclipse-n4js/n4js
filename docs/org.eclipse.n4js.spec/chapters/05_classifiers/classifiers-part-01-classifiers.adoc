@@ -412,8 +412,6 @@ Remarks:
 WARNING: Abstract members might be declared private, as they can be accessed from within the module.
 This is to be changed in order to be aligned with TypeScript, cf. task:GH-1221[]. However we also want to add class expressions -- and then the abstract members may be accessed (and overridden) in nested classes created by means of class expressions.
 
-Since we do not support class expressions at the moment and since we want to disallow access from within the module, we currently create a warning if an abstract member is declared private. 
-
 === Non-Instantiable Classes
 
 To make a class non-instantiable outside a defining compilation unit, i.e. disallow creation of instances for this class, simply declare the constructor as private.
