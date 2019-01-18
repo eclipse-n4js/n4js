@@ -82,8 +82,8 @@ pipeline {
             archiveArtifacts allowEmptyArchive: false, artifacts: '**/tools/**/target/n4jsc.jar'
             archiveArtifacts allowEmptyArchive: true, artifacts: '**/logs/*.log'
             archiveArtifacts allowEmptyArchive: true, artifacts: '**/tests/**/target/**/*-output.txt'
-            //junit '**/surefire-reports/**/*.xml'
-            //junit '**/failsafe-reports/**/*.xml'
+            junit '**/surefire-reports/**/*.xml'
+            junit '**/failsafe-reports/**/*.xml'
         }
         cleanup {
             // Execute after every other post condition has been evaluated, regardless of status
