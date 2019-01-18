@@ -254,7 +254,7 @@ The library manager also supports other maintenance actions such as deleting all
 <div class="sect3">
 <h4 id="subsec:External_Library_Preference_Store"><a class="anchor" href="#subsec:External_Library_Preference_Store"></a><a class="link" href="#subsec:External_Library_Preference_Store">6.1.3. External Library Preference Store</a></h4>
 <div class="paragraph">
-<p>This persistent cache is used for storing an ordered enumeration of registered external library root folder locations. Whenever its internal state is being persisted after a modification, all registered modification listeners will be synchronously notified about this change. All listeners will receive the store itself with the updated state. There are a couple of registered listeners all over the application listening to store update events but the most important one is the <em>External Library Workspace</em> itself. After receiving an external library preference store update event, the external library workspace will calculate the changes from its own state: creates a sort of difference by identifying added, removed and modified external libraries. Also tracks external library root location order changes. Once the workspace has calculated the changes<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnote_1" title="View footnote.">1</a>]</sup> it will interact with the <em>External Library Builder Helper</em> which will eventually update the persisted Xtext index directly through the <code>IBuilderState</code>. After the Xtext index content update all ordinary workspace projects that directly depend either on a built or a cleaned external library will be automatically rebuilt by the external library workspace.</p>
+<p>This persistent cache is used for storing an ordered enumeration of registered external library root folder locations. Whenever its internal state is being persisted after a modification, all registered modification listeners will be synchronously notified about this change. All listeners will receive the store itself with the updated state. There are a couple of registered listeners all over the application listening to store update events but the most important one is the <em>External Library Workspace</em> itself. After receiving an external library preference store update event, the external library workspace will calculate the changes from its own state: creates a sort of difference by identifying added, removed and modified external libraries. Also tracks external library root location order changes. Once the workspace has calculated the changes<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="appendix_c_bibliography.html#_footnote_1" title="View footnote.">1</a>]</sup> it will interact with the <em>External Library Builder Helper</em> which will eventually update the persisted Xtext index directly through the <code>IBuilderState</code>. After the Xtext index content update all ordinary workspace projects that directly depend either on a built or a cleaned external library will be automatically rebuilt by the external library workspace.</p>
 </div>
 </div>
 <div class="sect3">
@@ -487,12 +487,6 @@ configurations "N4JS__IDE.launch" and "N4JS_N4__IDE.launch" that are checked-in 
 </div>
 </div>
 </div>
-</div>
-</div>
-<div id="footnotes">
-<hr>
-<div class="footnote" id="_footnote_1">
-<a href="#_footnoteref_1">1</a>. Calculates a list of external library projects that have to be build and another list of projects that have to be cleaned.
 </div>
 </div>
 <div id="footer">

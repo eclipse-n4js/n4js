@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='utf-8' ?>
-<toc topic="dist/eclipse-html/N4JSDesign/index.html" label="N4JS Design Specification">\n
+<toc topic="dist/eclipse-html/N4JSDesign/index.html" label="N4JS Design Specification">
+
 	<topic href="dist/eclipse-html/N4JSDesign/introduction.html#_introduction" label="Introduction">
 		<topic href="dist/eclipse-html/N4JSDesign/introduction.html#notation" label="Notation"></topic>
 		<topic href="dist/eclipse-html/N4JSDesign/introduction.html#sec:IDE_Overview" label="IDE Components">
