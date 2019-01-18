@@ -220,7 +220,7 @@ public class EclipseHelpTOCGenerator extends DefaultHandler {
 	String getResult() {
 		StringBuilder out = new StringBuilder();
 		out.append("<?xml version='1.0' encoding='utf-8' ?>\n");
-		out.append("<toc topic=\"" + dir + "/index.html\" label=\"" + title + "\">\n");
+		out.append("<toc topic=\"" + dir + "/index.html\" label=\"" + title + "\">");
 		for (Topic topic : maintopics) {
 			appendTopic(out, "\t", topic, getFilename(topic.label));
 		}
