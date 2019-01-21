@@ -167,7 +167,7 @@ public class ExternalLibrariesActivator implements BundleActivator {
 	 */
 	public static final Collection<String> EXTERNAL_LIBRARY_FOLDER_NAMES = ImmutableList.<String> builder()
 			.addAll(SHIPPED_ROOTS_FOLDER_NAMES)
-			.add(NPM_CATEGORY)
+			// .add(NPM_CATEGORY)
 			.build();
 
 	/**
@@ -182,7 +182,7 @@ public class ExternalLibrariesActivator implements BundleActivator {
 			.put(LANG_CATEGORY, "N4JS Language")
 			.put(RUNTIME_CATEGORY, "N4JS Runtime")
 			.put(MANGELHAFT_CATEGORY, "Mangelhaft")
-			.put(NPM_CATEGORY, NPM_CATEGORY)
+			// .put(NPM_CATEGORY, NPM_CATEGORY)
 			.build();
 
 	/**
@@ -342,11 +342,6 @@ public class ExternalLibrariesActivator implements BundleActivator {
 				.transform(uri -> pair(uri, new File(uri).getName()));
 
 		final Map<URI, String> uriMappings = newLinkedHashMap();
-
-		// npm packages first to be able to shadow runtime libraries and Mangelhaft from npm packages.
-		final File targetPlatformInstallLocation = N4_NPM_FOLDER_SUPPLIER.get();
-		final File nodeModulesFolder = new File(targetPlatformInstallLocation, NPM_CATEGORY);
-		uriMappings.put(nodeModulesFolder.toURI(), NPM_CATEGORY);
 
 		for (final Pair<URI, String> pair : uriNamePairs) {
 			uriMappings.put(pair.getFirst(), pair.getSecond());

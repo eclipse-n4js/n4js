@@ -14,7 +14,6 @@ import static java.util.Collections.emptyIterator;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 
-import java.io.File;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -42,9 +41,6 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class HlcExternalLibraryWorkspace extends ExternalLibraryWorkspace {
-
-	@Inject
-	private TargetPlatformInstallLocationProvider locationProvider;
 
 	@Inject
 	private ExternalLibraryPreferenceStore externalLibraryPreferenceStore;
@@ -150,12 +146,6 @@ public class HlcExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 
 	@Override
 	public List<Pair<URI, ProjectDescription>> getProjectsIncludingUnnecessary() {
-		File tpFolder = locationProvider.getTargetPlatformInstallFolder();
-		if (tpFolder == null) {
-			// This is a check to avoid an Exception to be thrown in locationProvider.getNodeModulesURI()
-			return emptyList();
-		}
-
 		Iterable<java.net.URI> projectLocations = externalLibraryPreferenceStore.getNodeModulesLocations();
 		List<Pair<URI, ProjectDescription>> projects = new LinkedList<>();
 		for (java.net.URI npmLibraryLocation : projectLocations) {

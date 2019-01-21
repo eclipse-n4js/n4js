@@ -19,7 +19,6 @@ import java.net.URI;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.n4js.external.LibraryManager;
-import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
@@ -34,9 +33,6 @@ import com.google.inject.Injector;
  * Use this test helper to set up and tear down the external libraries.
  */
 public class ExternalLibrariesSetupHelper {
-
-	@Inject
-	private TargetPlatformInstallLocationProvider locationProvider;
 
 	@Inject
 	private ExternalLibraryPreferenceStore externalLibraryPreferenceStore;

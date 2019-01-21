@@ -13,11 +13,10 @@ package org.eclipse.n4js.hlc.base.running;
 import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_RUNNER_NOT_FOUND;
 import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_RUNNER_STOPPED_WITH_ERROR;
 
-import java.io.File;
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.runner.RunConfiguration;
@@ -58,13 +57,13 @@ public class HeadlessRunner {
 	 *            to be used when loading the modules
 	 * @param locationToRun
 	 *            location of the code to be executed
-	 * @param targetPlatformInstallLocation
+	 * @param additionalPaths
 	 *            location for externally installed node_modules
 	 * @throws ExitCodeException
 	 *             in cases of errors
 	 */
 	public void startRunner(String runner, String implementationId, String systemLoader, URI locationToRun,
-			File targetPlatformInstallLocation)
+			Collection<String> additionalPaths)
 			throws ExitCodeException {
 
 		IRunnerDescriptor runnerDescriptor = checkRunner(runner);
@@ -72,15 +71,11 @@ public class HeadlessRunner {
 
 		RunConfiguration runConfiguration = null;
 		try {
-			if (targetPlatformInstallLocation != null) {
-				runConfiguration = runnerFrontEnd.createConfiguration(runnerDescriptor.getId(), implementationId,
-						systemLoader, locationToRun,
-						targetPlatformInstallLocation.toPath().resolve(N4JSGlobals.NODE_MODULES).toAbsolutePath()
-								.toString());
-			} else {
-				runConfiguration = runnerFrontEnd.createConfiguration(runnerDescriptor.getId(), implementationId,
-						systemLoader, locationToRun);
-			}
+			runConfiguration = runnerFrontEnd.createConfiguration(runnerDescriptor.getId(), implementationId,
+					systemLoader, locationToRun);
+
+			runConfiguration.addAdditionalPath(additionalPaths);
+
 		} catch (java.lang.IllegalStateException e2) {
 			logger.error(Throwables.getStackTraceAsString(e2));
 			throw new ExitCodeException(EXITCODE_RUNNER_STOPPED_WITH_ERROR,

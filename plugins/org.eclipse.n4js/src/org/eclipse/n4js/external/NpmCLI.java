@@ -10,14 +10,13 @@
  */
 package org.eclipse.n4js.external;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -25,6 +24,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.binaries.BinaryCommandFactory;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
@@ -33,6 +33,8 @@ import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.SemverMatcher;
 import org.eclipse.n4js.semver.SemverUtils;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
+import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper;
+import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper.NodeModulesFolder;
 import org.eclipse.n4js.utils.ProcessExecutionCommandStatus;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.StatusHelper;
@@ -40,6 +42,7 @@ import org.eclipse.n4js.utils.process.ProcessResult;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.Tuples;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -55,9 +58,6 @@ public class NpmCLI {
 
 	@Inject
 	private ProcessExecutionCommandStatus executor;
-
-	@Inject
-	private TargetPlatformInstallLocationProvider locationProvider;
 
 	@Inject
 	private ExternalLibraryWorkspace externalLibraryWorkspace;
@@ -76,6 +76,9 @@ public class NpmCLI {
 
 	@Inject
 	private SemverHelper semverHelper;
+
+	@Inject
+	private NodeModulesDiscoveryHelper nodeModulesHelper;
 
 	/** Simple validation if the package name is not null or empty */
 	public boolean invalidPackageName(String packageName) {
@@ -106,14 +109,14 @@ public class NpmCLI {
 	 *            used to track progress
 	 * @param status
 	 *            into which the status of this method call can be merged
-	 * @param requestedChanges
-	 *            collection of all npm packages to be uninstalled
+	 * @param requestedChange
+	 *            npm package to be uninstalled
 	 * @return multi status with children for each issue during processing
 	 */
-	public Collection<LibraryChange> batchUninstall(IProgressMonitor monitor, MultiStatus status,
-			Collection<LibraryChange> requestedChanges) {
+	public Collection<LibraryChange> uninstall(IProgressMonitor monitor, MultiStatus status,
+			LibraryChange requestedChange) {
 
-		return batchUninstallInternal(monitor, status, requestedChanges);
+		return uninstallInternal(monitor, status, requestedChange);
 	}
 
 	/**
@@ -145,9 +148,7 @@ public class NpmCLI {
 		subMonitor.setTaskName("Installing npm packages.");
 
 		Collection<LibraryChange> actualChanges = new LinkedHashSet<>();
-		File installPath = target != null
-				? new File(target.toFileString())
-				: new File(locationProvider.getTargetPlatformInstallURI());
+		File installPath = new File(target.toFileString());
 
 		// for installation, we invoke npm only once for all packages
 		final List<Pair<String, String>> packageNamesAndVersions = Lists.newArrayList();
@@ -163,7 +164,7 @@ public class NpmCLI {
 		if (installStatus == null || !installStatus.isOK()) {
 			batchStatus.merge(installStatus);
 		} else {
-			String nodeModulesFolder = TargetPlatformInstallLocationProvider.NODE_MODULES_FOLDER;
+			String nodeModulesFolder = N4JSGlobals.NODE_MODULES;
 			Path basePath = installPath.toPath().resolve(nodeModulesFolder);
 			for (LibraryChange reqChg : requestedChanges) {
 				if (reqChg.type == LibraryChangeType.Install) {
@@ -192,44 +193,47 @@ public class NpmCLI {
 		return actualChanges;
 	}
 
-	private Collection<LibraryChange> batchUninstallInternal(IProgressMonitor monitor, MultiStatus status,
-			Collection<LibraryChange> requestedChanges) {
+	private Collection<LibraryChange> uninstallInternal(IProgressMonitor monitor, MultiStatus status,
+			LibraryChange requestedChange) {
 
-		int pckCount = requestedChanges.size();
 		MultiStatus batchStatus = statusHelper.createMultiStatus("Uninstalling npm packages.");
-		SubMonitor subMonitor = SubMonitor.convert(monitor, pckCount + 1);
+		SubMonitor subMonitor = SubMonitor.convert(monitor, 2);
 
-		Collection<LibraryChange> actualChanges = new LinkedHashSet<>();
-		File installPath = new File(locationProvider.getTargetPlatformInstallURI());
+		File projectLocation = new File(requestedChange.location.toFileString());
+		NodeModulesFolder nodeModulesFolder = nodeModulesHelper.getNodeModulesFolder(projectLocation.toPath());
+		if (nodeModulesFolder == null) {
+			String msg = "Could not find node_modules folder of project '" + requestedChange.name + "' at "
+					+ requestedChange.location;
+
+			status.merge(statusHelper.createError(msg));
+			logger.logError(status);
+			return Collections.emptyList();
+		}
+
+		Collection<LibraryChange> actualChanges = new LinkedList<>();
+		File projectDirectory = nodeModulesFolder.nodeModulesFolder.getParentFile();
 
 		// for uninstallation, we invoke npm only once for all packages
 		final List<String> packageNames = Lists.newArrayList();
-		for (LibraryChange reqChg : requestedChanges) {
-			if (reqChg.type == LibraryChangeType.Uninstall) {
-				java.net.URI rootLocation = externalLibraryWorkspace.getRootLocationForResource(reqChg.location);
-				if (ExternalLibraryPreferenceModel.isNodeModulesLocation(rootLocation)) {
-					packageNames.add(reqChg.name);
-				}
+		if (requestedChange.type == LibraryChangeType.Uninstall) {
+			java.net.URI rootLocation = externalLibraryWorkspace.getRootLocationForResource(requestedChange.location);
+			if (ExternalLibraryPreferenceModel.isNodeModulesLocation(rootLocation)) {
+				packageNames.add(requestedChange.name);
 			}
 		}
 
-		IStatus installStatus = uninstall(packageNames, installPath);
+		IStatus installStatus = uninstall(packageNames, projectDirectory);
 		subMonitor.worked(1);
 
 		if (installStatus == null || !installStatus.isOK()) {
 			batchStatus.merge(installStatus);
 		} else {
-			String nodeModulesFolder = TargetPlatformInstallLocationProvider.NODE_MODULES_FOLDER;
-			Path basePath = installPath.toPath().resolve(nodeModulesFolder);
-			for (LibraryChange reqChg : requestedChanges) {
-				if (reqChg.type == LibraryChangeType.Uninstall) {
-					Path completePath = basePath.resolve(reqChg.name);
-					String actualVersion = getActualVersion(completePath);
-					if (actualVersion.isEmpty()) {
-						LibraryChange actualChange = new LibraryChange(LibraryChangeType.Removed, reqChg.location,
-								reqChg.name, reqChg.version);
-						actualChanges.add(actualChange);
-					}
+			if (requestedChange.type == LibraryChangeType.Uninstall) {
+				Path completePath = nodeModulesFolder.nodeModulesFolder.toPath().resolve(requestedChange.name);
+				String actualVersion = getActualVersion(completePath);
+				if (actualVersion.isEmpty()) {
+					actualChanges.add(new LibraryChange(LibraryChangeType.Removed, requestedChange.location,
+							requestedChange.name, requestedChange.version));
 				}
 			}
 		}
@@ -246,10 +250,8 @@ public class NpmCLI {
 		URI location = URI.createFileURI(completePath.toString());
 		String versionStr = projectDescriptionLoader.loadVersionAndN4JSNatureFromProjectDescriptionAtLocation(location)
 				.getFirst();
-		if (versionStr == null) {
-			return "";
-		}
-		return versionStr;
+
+		return Strings.nullToEmpty(versionStr);
 	}
 
 	/**
@@ -326,46 +328,6 @@ public class NpmCLI {
 		return executor.execute(
 				() -> commandFactory.createUninstallPackageCommand(uninstallPath, packageNames, true),
 				"Error while uninstalling npm package.");
-	}
-
-	/**
-	 * Cleans npm cache. Please note:
-	 * <p>
-	 * <i>"It should never be necessary to clear the cache for any reason other than reclaiming disk space"</i> (see
-	 * <a href="https://docs.npmjs.com/cli/cache}">NPM Doc</a>)
-	 *
-	 * @param monitor
-	 *            the monitor for the progress.
-	 * @return a status representing the outcome of the operation.
-	 */
-	public IStatus cleanCacheInternal(IProgressMonitor monitor) {
-		checkNotNull(monitor, "monitor");
-
-		SubMonitor subMonitor = SubMonitor.convert(monitor, 1);
-		try {
-
-			subMonitor.setTaskName("Cleaning npm cache");
-
-			File targetInstallLocation = new File(locationProvider.getTargetPlatformInstallURI());
-			return clean(targetInstallLocation);
-
-		} finally {
-			subMonitor.done();
-		}
-	}
-
-	/**
-	 * Cleans npm cache. Note that normally this has global side effects, i.e. it will delete npm cache for the user
-	 * settings. While provided path does not have impact on effects of clean, it is used as working directory for
-	 * invoking the command.
-	 *
-	 * @param cleanPath
-	 *            to be uninstalled
-	 */
-	private IStatus clean(File cleanPath) {
-		return executor.execute(
-				() -> commandFactory.createCacheCleanCommand(cleanPath),
-				"Error while cleaning npm cache.");
 	}
 
 	/**

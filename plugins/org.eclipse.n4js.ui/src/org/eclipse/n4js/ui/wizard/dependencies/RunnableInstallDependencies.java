@@ -67,7 +67,6 @@ public class RunnableInstallDependencies implements IRunnableWithProgress {
 
 		librariesActionsHelper.cleanAndInstallAllDependencies(
 				getParentPathOfNpmrc(options.npmrc),
-				options.clearNpmCache,
 				monitor, multistatus);
 
 		if (!multistatus.isOK())

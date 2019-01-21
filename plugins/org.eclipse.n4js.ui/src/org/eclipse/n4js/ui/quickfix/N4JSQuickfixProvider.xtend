@@ -693,7 +693,7 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 				new ProgressMonitorDialog(UIUtils.shell).run(true, false, [monitor |
 					try {
 						val Map<String, NPMVersionRequirement> package = Collections.singletonMap(packageName, packageVersion);
-						multiStatus.merge(libraryManager.installNPMs(package, false, monitor));
+						multiStatus.merge(libraryManager.installNPMs(package, false, issue.uriToProblem, monitor));
 
 					} catch (IllegalBinaryStateException e) {
 						illegalBinaryExcRef.set(e);

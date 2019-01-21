@@ -14,8 +14,6 @@ import org.eclipse.emf.ecore.util.Diagnostician;
 import org.eclipse.n4js.conversion.N4JSStringValueConverter;
 import org.eclipse.n4js.conversion.ValueConverters;
 import org.eclipse.n4js.documentation.N4JSDocumentationProvider;
-import org.eclipse.n4js.external.HlcTargetPlatformInstallLocationProvider;
-import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.findReferences.ConcreteSyntaxAwareReferenceFinder;
 import org.eclipse.n4js.findReferences.InferredElementsTargetURICollector;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyser;
@@ -237,13 +235,6 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 	 */
 	public Class<? extends IReferableElementsUnloader> bindIReferableElementsUnloader() {
 		return N4JSUnloader.class;
-	}
-
-	/**
-	 * Binds the target platform location provider to the headless implementation.
-	 */
-	public Class<? extends TargetPlatformInstallLocationProvider> bindTargetPlatformInstallLocationProvider() {
-		return HlcTargetPlatformInstallLocationProvider.class;
 	}
 
 	/**

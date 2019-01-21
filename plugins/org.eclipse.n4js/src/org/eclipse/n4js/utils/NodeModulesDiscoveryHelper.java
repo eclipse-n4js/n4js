@@ -34,9 +34,39 @@ import com.google.inject.Inject;
  * For more details on yarn workspaces, see: https://yarnpkg.com/lang/en/docs/workspaces/
  */
 public class NodeModulesDiscoveryHelper {
-
 	@Inject
 	private ProjectDescriptionLoader projectDescriptionLoader;
+
+	/** Defines whether a node_modules folder is a child of an NPM project or a YARN workspace project */
+	public static class NodeModulesFolder {
+		/** Location of a node_modules folder */
+		final public File nodeModulesFolder;
+		/** True iff the {@link #nodeModulesFolder} is in a yarn workspace */
+		final public boolean isYarnWorkspace;
+
+		/** Constructor */
+		public NodeModulesFolder(File nodeModulesFolder, boolean isYarnWorkspace) {
+			this.nodeModulesFolder = nodeModulesFolder;
+			this.isYarnWorkspace = isYarnWorkspace;
+		}
+	}
+
+	/** @return the node_modules folder of the given project including a flag if this is a yarn workspace. */
+	public NodeModulesFolder getNodeModulesFolder(Path projectLocation) {
+		final Optional<File> workspaceRoot = getYarnWorkspaceRoot(projectLocation.toFile(), new HashMap<>());
+
+		if (workspaceRoot.isPresent()) {
+			return new NodeModulesFolder(workspaceRoot.get(), true);
+		}
+
+		final Path packgeJsonPath = projectLocation.resolve(N4JSGlobals.PACKAGE_JSON);
+		if (packgeJsonPath.toFile().isFile()) {
+			final Path nodeModulesPath = projectLocation.resolve(N4JSGlobals.NODE_MODULES);
+			return new NodeModulesFolder(nodeModulesPath.toFile(), false);
+		}
+
+		return null;
+	}
 
 	/**
 	 * For the given N4JS projects, this method will search and return all <code>node_modules</code> folders. The

@@ -30,7 +30,6 @@ import org.eclipse.n4js.external.ExternalProjectsCollector;
 import org.eclipse.n4js.external.NpmLogger;
 import org.eclipse.n4js.external.RebuildWorkspaceProjectsScheduler;
 import org.eclipse.n4js.external.ShadowingInfoHelper;
-import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.generator.IWorkspaceMarkerSupport;
 import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
@@ -49,7 +48,6 @@ import org.eclipse.n4js.ui.containers.N4JSToBeBuiltComputer;
 import org.eclipse.n4js.ui.external.BuildOrderComputer;
 import org.eclipse.n4js.ui.external.EclipseExternalIndexSynchronizer;
 import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
-import org.eclipse.n4js.ui.external.EclipseTargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.ui.external.ExternalIndexUpdater;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildQueue;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildScheduler;
@@ -133,8 +131,6 @@ public class ContributingModule implements Module {
 		});
 		binder.bind(ExternalLibraryHelper.class);
 		binder.bind(StatusHelper.class);
-		binder.bind(TargetPlatformInstallLocationProvider.class).to(EclipseTargetPlatformInstallLocationProvider.class);
-
 		binder.bind(IN4JSCore.class).to(N4JSEclipseCore.class);
 		binder.bind(IN4JSEclipseCore.class).to(N4JSEclipseCore.class);
 		binder.bind(N4JSEclipseCore.class);

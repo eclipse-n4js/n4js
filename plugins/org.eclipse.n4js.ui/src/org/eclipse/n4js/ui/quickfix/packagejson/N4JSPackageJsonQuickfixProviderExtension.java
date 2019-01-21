@@ -34,7 +34,6 @@ import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.projectModel.dependencies.ProjectDependenciesHelper;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.ui.changes.IChange;
@@ -70,9 +69,6 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 	private ExternalIndexSynchronizer indexSynchronizer;
 
 	@Inject
-	private ProjectDependenciesHelper dependenciesHelper;
-
-	@Inject
 	private SemverHelper semverHelper;
 
 	@Inject
@@ -86,7 +82,7 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 		final String packageName = userData[0];
 		final String versionRequirement = userData[1];
 		final String msgAtVersion = Strings.isNullOrEmpty(versionRequirement) ? "" : "@" + versionRequirement;
-		final String label = "Install/update npm " + packageName + msgAtVersion;
+		final String label = "Run 'npm install " + packageName + msgAtVersion + " --save'";
 		final String description = "Calls npm to install the missing npm package into the workspace.";
 		final String errMsg = "Error while uninstalling npm dependency: '" + packageName + "'.";
 
@@ -111,13 +107,12 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 						final URI uri = issue.getUriToProblem();
 						final IN4JSProject containingProject = n4jsCore.findProject(uri).orNull();
 						if (containingProject == null) {
-							return statusHelper.createError("cannot find containing project"); // FIXME
+							return statusHelper.createError("cannot find containing project");
 						}
 						URI targetLocation = containingProject.getLocation();
 						Map<String, NPMVersionRequirement> installedNpms = new HashMap<>();
 						NPMVersionRequirement versionReq = semverHelper.parse(versionRequirement);
 						installedNpms.put(packageName, versionReq);
-						dependenciesHelper.fixDependenciesToInstall(installedNpms);
 						return libraryManager.installNPM(packageName, versionRequirement, targetLocation, monitor);
 					}
 				};
