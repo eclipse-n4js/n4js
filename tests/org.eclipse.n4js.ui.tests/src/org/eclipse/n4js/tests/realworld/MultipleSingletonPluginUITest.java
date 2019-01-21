@@ -67,7 +67,7 @@ public class MultipleSingletonPluginUITest extends AbstractBuilderParticipantTes
 	 */
 	@Before
 	public void setup() throws Exception {
-		setupExternalLibraries(true);
+		setupShippedLibraries();
 	}
 
 	/**
@@ -76,7 +76,7 @@ public class MultipleSingletonPluginUITest extends AbstractBuilderParticipantTes
 	@After
 	@Override
 	public void tearDown() throws Exception {
-		tearDownExternalLibraries(true);
+		tearDownShippedLibraries();
 	}
 
 	/**

@@ -163,6 +163,8 @@ public class LibraryManager {
 	 *            the name of the package that has to be installed via package manager.
 	 * @param monitor
 	 *            the monitor for the blocking install process.
+	 * @param target
+	 *            target folder that contains both a node_modules folder and a package.json
 	 * @return a status representing the outcome of the install process.
 	 */
 	public IStatus installNPM(String packageName, URI target, IProgressMonitor monitor) {
@@ -385,8 +387,7 @@ public class LibraryManager {
 
 	/**
 	 * Reloads the external libraries by re-indexing all external projects that not shadowed from projects in the
-	 * workspace. Performs a {@code git pull} before the actual refresh process. Returns with an {@link IStatus status}
-	 * representing the outcome of the refresh operation.
+	 * workspace. Returns with an {@link IStatus status} representing the outcome of the refresh operation.
 	 *
 	 * @param monitor
 	 *            the monitor for the progress.

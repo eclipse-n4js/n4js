@@ -64,7 +64,7 @@ public class IndexSynchronizerPluginTest extends AbstractBuilderParticipantTest 
 	/**  */
 	@Before
 	public void setupWorkspace() throws Exception {
-		setupExternalLibraries(true);
+		setupShippedLibraries();
 		waitForAutoBuild();
 	}
 
@@ -72,7 +72,7 @@ public class IndexSynchronizerPluginTest extends AbstractBuilderParticipantTest 
 	@After
 	@Override
 	public void tearDown() throws Exception {
-		tearDownExternalLibraries(true);
+		tearDownShippedLibraries();
 	}
 
 	/** Install an NPM, delete folder of NPM on disk, run IndexSynchronizer, check if NPM was removed from index */

@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.N4JSUiInjectorProvider;
+import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
 import org.eclipse.n4js.tests.util.EclipseUIUtils;
@@ -65,6 +66,8 @@ public abstract class AbstractBuilderTest {
 		EclipseGracefulUIShutdownEnabler.enableOnce();
 	}
 
+	@Inject
+	private LibraryManager libraryManager;
 	@Inject
 	private IResourceSetProvider resourceSetProvider;
 	@Inject
@@ -180,6 +183,7 @@ public abstract class AbstractBuilderTest {
 		closeAllEditorsForTearDown();
 		IResourcesSetupUtil.cleanWorkspace();
 		IResourcesSetupUtil.cleanBuild();
+		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
 		waitForAutoBuild();
 		assertEquals(0, root().getProjects().length);
 		assertEquals("Resources in index:\n" + getAllResourceDescriptionsAsString() + "\n", 0,

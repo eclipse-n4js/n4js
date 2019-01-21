@@ -73,7 +73,7 @@ public class N4JSModel {
 
 	public N4JSProject getN4JSProject(URI location) {
 		checkArgument(location.isFile(), "Expecting file URI. Was: " + location);
-		boolean external = (null != externalLibraryWorkspace.getProject(location));
+		boolean external = (externalLibraryWorkspace != null && externalLibraryWorkspace.getProject(location) != null);
 		return new N4JSProject(location, external, this);
 	}
 
