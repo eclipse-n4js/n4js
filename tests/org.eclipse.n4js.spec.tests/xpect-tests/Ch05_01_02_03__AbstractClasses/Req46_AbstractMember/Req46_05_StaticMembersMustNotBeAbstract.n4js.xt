@@ -12,44 +12,75 @@
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
 
 
-// TODO
-// this is currently enforced by the grammar and therefore multiple
-// error messages with unrelated text are produced in each line
-// ==> not checked here, because pointless
-
-
-/*
 abstract class A {
 
 	// --------------------------------------------------------------------------
 	// static method must not be abstract
 
-	// XPECT !errors -->
-	public abstract static string m();
+	// XPECT errors --> "The method m may not be both static and abstract." at "m"
+	public abstract static m();
 
 
 	// --------------------------------------------------------------------------
 	// static getter must not be abstract
 
-	// XPECT !errors -->
-	public abstract static string get g();
+	// XPECT errors --> "The getter g may not be both static and abstract." at "g"
+	public abstract static get g(): string;
 
 
 	// --------------------------------------------------------------------------
 	// static setter must not be abstract
 
-	// XPECT !errors -->
-	public abstract static set s(number i);
+	// XPECT errors --> "The setter s may not be both static and abstract." at "s"
+	public abstract static set s(i: string);
 
 
 	// --------------------------------------------------------------------------
 	// static field must not be abstract
 
-	// XPECT !errors -->
-	public abstract static string f;
+	// XPECT errors --> "Modifier abstract is not allowed on a field." at "abstract"
+	public abstract static f: string;
 
 }
-*/
 
 
-// note: does not apply to interfaces, because they are not allowed to have static members
+interface I {
+
+	// --------------------------------------------------------------------------
+	// static method must not be abstract
+
+	// XPECT errors --> "The method m may not be both static and abstract." at "m"
+	public abstract static m();
+
+	// XPECT errors --> "The method m1 may not be both static and abstract." at "m1"
+	public static m1();
+
+
+	// --------------------------------------------------------------------------
+	// static getter must not be abstract
+
+	// XPECT errors --> "The getter g may not be both static and abstract." at "g"
+	public static get g(): string;
+
+	// XPECT errors --> "The getter g1 may not be both static and abstract." at "g1"
+	public abstract static get g1(): string;
+
+
+	// --------------------------------------------------------------------------
+	// static setter must not be abstract
+
+	// XPECT errors --> "The setter s may not be both static and abstract." at "s"
+	public static set s(i: string);
+
+	// XPECT errors --> "The setter s1 may not be both static and abstract." at "s1"
+	public abstract static set s1(i: string);
+
+	// --------------------------------------------------------------------------
+	// static field must not be abstract
+
+	// XPECT errors --> "Modifier abstract is not allowed on a field." at "abstract"
+	public abstract static f: string;
+
+}
+
+

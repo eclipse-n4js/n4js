@@ -156,7 +156,7 @@ public class ExternalLibrariesActivator implements BundleActivator {
 	/**
 	 * An iterable of folder names that hold built-in N4JS libraries.
 	 */
-	public static final Iterable<String> SHIPPED_ROOTS_FOLDER_NAMES = ImmutableList.<String> builder()
+	public static final Collection<String> SHIPPED_ROOTS_FOLDER_NAMES = ImmutableList.<String> builder()
 			.add(LANG_CATEGORY)
 			.add(RUNTIME_CATEGORY)
 			.add(MANGELHAFT_CATEGORY)
@@ -165,7 +165,7 @@ public class ExternalLibrariesActivator implements BundleActivator {
 	/**
 	 * An iterable of folder names that holds external and/or built-in N4JS libraries.
 	 */
-	public static final Iterable<String> EXTERNAL_LIBRARY_FOLDER_NAMES = ImmutableList.<String> builder()
+	public static final Collection<String> EXTERNAL_LIBRARY_FOLDER_NAMES = ImmutableList.<String> builder()
 			.addAll(SHIPPED_ROOTS_FOLDER_NAMES)
 			.add(NPM_CATEGORY)
 			.build();
@@ -267,7 +267,7 @@ public class ExternalLibrariesActivator implements BundleActivator {
 
 			boolean locationFound = false;
 			for (String knownLocation : CATEGORY_SHADOWING_ORDER) {
-				if (locStr.endsWith(knownLocation)) {
+				if (locStr.endsWith(knownLocation) && !knownLocations.containsKey(knownLocation)) {
 					knownLocations.put(knownLocation, location);
 					locationFound = true;
 				}

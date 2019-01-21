@@ -48,10 +48,6 @@ Contributors:
 
 		<!-- Xtext, Xtend and their runtime -->
 		<xtext-version>2.15.0</xtext-version>
-		<org.eclipse.xtext.builder.standalone-version>[${xtext-version}]</org.eclipse.xtext.builder.standalone-version>
-		<org.eclipse.xtext.common.types-version>[${xtext-version}]</org.eclipse.xtext.common.types-version>
-		<org.eclipse.xtext.xtext-version>[${xtext-version}]</org.eclipse.xtext.xtext-version>
-		<org.eclipse.xtext.xbase-version>[${xtext-version}]</org.eclipse.xtext.xbase-version>
 
 		<!-- maven plugins -->
 		<build-helper-maven-plugin.version>3.0.0</build-helper-maven-plugin.version>
@@ -90,7 +86,6 @@ Contributors:
 		
 		<!-- some memory -->
 		<memoryArgs>-Xms256M -Xmx1324M -XX:+HeapDumpOnOutOfMemoryError</memoryArgs>
-		<lowMemoryArgs>-Xms64M -Xmx320M -XX:+HeapDumpOnOutOfMemoryError</lowMemoryArgs>
 		<encodingArgs>-Dfile.encoding=${file.encoding}</encodingArgs>
 
 		<!-- Test related dependency path tragets. -->

@@ -17,6 +17,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.n4js.ui.utils.AutobuildUtils;
 import org.eclipse.n4js.ui.utils.TimeoutRuntimeException;
 import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.ui.IEditorPart;
@@ -139,4 +140,12 @@ public class EclipseUIUtils {
 		return refFileEditor.get();
 	}
 
+	/**
+	 * Turns auto build on/off. Delegating to {@link AutobuildUtils#set(boolean)}.
+	 *
+	 * Consider using {@link AutobuildUtils#suppressAutobuild()} if you want to disable auto build only temporarily.
+	 */
+	public static void toggleAutobuild(final boolean enable) {
+		AutobuildUtils.set(enable);
+	}
 }

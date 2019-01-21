@@ -79,7 +79,7 @@ RUN set -ex && \
 #
 # Node install
 #
-ENV NODE_VERSION 8.11.2
+ENV NODE_VERSION 10.13.0
 
 RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" && \
     case "${dpkgArch##*-}" in \
@@ -98,7 +98,7 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" && \
 #
 # Yarn install
 #
-ENV YARN_VERSION 1.5.1
+ENV YARN_VERSION 1.12.3
 
 RUN set -ex && \
     for key in \
