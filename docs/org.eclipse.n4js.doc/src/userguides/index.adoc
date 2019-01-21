@@ -11,8 +11,8 @@ Contributors:
 
 ﻿
 [discrete]
-.Documentation
-= Documentation
+.N4JS Userguides
+= N4JS Userguides
 :doctype: book
 :notitle:
 

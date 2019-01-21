@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8' ?>
-<toc topic="dist/eclipse-html/userguides/index.html" label="Documentation">
+<toc topic="dist/eclipse-html/userguides/index.html" label="N4JS Userguides">
 	<topic href="dist/eclipse-html/userguides/index.html" label="FAQ"></topic>
 	<topic href="dist/eclipse-html/userguides/index.html#_features" label="Features"></topic>
 	<topic href="dist/eclipse-html/userguides/index.html#_tutorials" label="Tutorials">
