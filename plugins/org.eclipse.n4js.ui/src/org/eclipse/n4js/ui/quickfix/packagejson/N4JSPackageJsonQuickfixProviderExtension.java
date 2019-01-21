@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.ui.quickfix.packagejson;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,7 +26,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.n4js.external.ExternalIndexSynchronizer;
 import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
@@ -267,20 +265,15 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 	}
 
 	private Collection<? extends IChange> wrapWithMonitor(String msg, String errMsg,
-			Function<IProgressMonitor, IStatus> f)
-			throws Exception {
+			Function<IProgressMonitor, IStatus> f) throws Exception {
 
 		MultiStatus multiStatus = statusHelper.createMultiStatus(msg);
-
-		new ProgressMonitorDialog(UIUtils.getShell()).run(true, false, new IRunnableWithProgress() {
-			@Override
-			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-				try {
-					IStatus status = f.apply(monitor);
-					multiStatus.merge(status);
-				} catch (Exception e) {
-					multiStatus.merge(statusHelper.createError(errMsg, e));
-				}
+		new ProgressMonitorDialog(UIUtils.getShell()).run(true, false, (monitor) -> {
+			try {
+				IStatus status = f.apply(monitor);
+				multiStatus.merge(status);
+			} catch (Exception e) {
+				multiStatus.merge(statusHelper.createError(errMsg, e));
 			}
 		});
 
