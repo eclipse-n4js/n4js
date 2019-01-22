@@ -99,24 +99,8 @@ public class NpmCLI {
 	}
 
 	/**
-	 * Batch uninstall of npm packages based on provided names. Method does not return early, it will try to process all
-	 * packages, even if there are errors during processing of a specific package. All encountered errors are logged and
-	 * added as children to the returned multi status.
-	 *
-	 * @param monitor
-	 *            used to track progress
-	 * @param status
-	 *            into which the status of this method call can be merged
-	 * @param requestedChange
-	 *            npm package to be uninstalled
-	 * @return multi status with children for each issue during processing
-	 */
-
-	/**
-	 * Batch uninstall of npm packages based on provided names. It will try to process all packages, even if there are
-	 * errors during processing of a specific package. All encountered errors are logged and added as children to the
-	 * returned multi status. The path to the npm package (passed via {@code requestedChange.location}) must be conform
-	 * to either one of two the following scenarios:
+	 * Uninstalls an npm package. The path to the npm package (passed via {@code requestedChange.location}) must be
+	 * conform to either one of two the following scenarios:
 	 *
 	 * <pre>
 	 * Scenario 1: The npm is a direct child of a {@code node_modules} folder
