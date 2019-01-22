@@ -41,7 +41,10 @@ public class ExternalLibrariesSetupHelper {
 	/** Tears down the external libraries. */
 	public void tearDownShippedLibraries() throws Exception {
 		shippedCodeInitializeTestHelper.tearDownBuiltIns();
-		ProjectTestsUtils.waitForAutoBuild();
+
+		Injector n4jsInjector = N4JSActivator.getInstance().getInjector("org.eclipse.n4js.N4JS");
+		LibraryManager libMan = n4jsInjector.getInstance(LibraryManager.class);
+		libMan.registerAllExternalProjects(new NullProgressMonitor());
 
 		ProjectTestsUtils.waitForAutoBuild();
 	}

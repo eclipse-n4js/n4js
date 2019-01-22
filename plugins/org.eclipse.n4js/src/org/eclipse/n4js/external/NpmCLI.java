@@ -34,8 +34,6 @@ import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.SemverMatcher;
 import org.eclipse.n4js.semver.SemverUtils;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
-import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper;
-import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper.NodeModulesFolder;
 import org.eclipse.n4js.utils.ProcessExecutionCommandStatus;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.StatusHelper;
@@ -77,9 +75,6 @@ public class NpmCLI {
 
 	@Inject
 	private SemverHelper semverHelper;
-
-	@Inject
-	private NodeModulesDiscoveryHelper nodeModulesHelper;
 
 	/** Simple validation if the package name is not null or empty */
 	public boolean invalidPackageName(String packageName) {
@@ -202,9 +197,12 @@ public class NpmCLI {
 		MultiStatus batchStatus = statusHelper.createMultiStatus("Uninstalling npm packages.");
 		SubMonitor subMonitor = SubMonitor.convert(monitor, 2);
 
-		File projectLocation = new File(requestedChange.location.toFileString());
-		NodeModulesFolder nodeModulesFolder = nodeModulesHelper.getNodeModulesFolder(projectLocation.toPath());
-		if (nodeModulesFolder == null) {
+		File npmDirectory = new File(requestedChange.location.toFileString());
+		File nodeModulesFolder = npmDirectory.getParentFile();
+		if (!nodeModulesFolder.getName().equals("node_modules")) {
+			nodeModulesFolder = nodeModulesFolder.getParentFile();
+		}
+		if (!nodeModulesFolder.getName().equals("node_modules")) {
 			String msg = "Could not find node_modules folder of project '" + requestedChange.name + "' at "
 					+ requestedChange.location;
 
@@ -212,9 +210,9 @@ public class NpmCLI {
 			logger.logError(status);
 			return Collections.emptyList();
 		}
+		File projectDirectory = nodeModulesFolder.getParentFile();
 
 		Collection<LibraryChange> actualChanges = new LinkedList<>();
-		File projectDirectory = nodeModulesFolder.nodeModulesFolder.getParentFile();
 
 		// for uninstallation, we invoke npm only once for all packages
 		final List<String> packageNames = Lists.newArrayList();
@@ -232,7 +230,7 @@ public class NpmCLI {
 			batchStatus.merge(installStatus);
 		} else {
 			if (requestedChange.type == LibraryChangeType.Uninstall) {
-				Path completePath = nodeModulesFolder.nodeModulesFolder.toPath().resolve(requestedChange.name);
+				Path completePath = nodeModulesFolder.toPath().resolve(requestedChange.name);
 				String actualVersion = getActualVersion(completePath);
 				if (actualVersion.isEmpty()) {
 					actualChanges.add(new LibraryChange(LibraryChangeType.Removed, requestedChange.location,

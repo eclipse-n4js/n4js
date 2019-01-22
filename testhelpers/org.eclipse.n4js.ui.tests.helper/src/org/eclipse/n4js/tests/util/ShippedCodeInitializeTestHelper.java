@@ -30,8 +30,15 @@ public class ShippedCodeInitializeTestHelper {
 	@Inject
 	private ExternalLibraryPreferenceStore externalLibraryPreferenceStore;
 
-	/** Set up shipped projects in all {@link ExternalLibrariesActivator#EXTERNAL_LIBRARIES_SUPPLIER locations}. */
+	/**
+	 * Set up shipped projects in all {@link ExternalLibrariesActivator#EXTERNAL_LIBRARIES_SUPPLIER locations}.
+	 *
+	 * Setting this property is necessary since {@link ExternalLibraryPreferenceStore#resetDefaults()} will transitively
+	 * call {@link ExternalLibrariesActivator#requiresInfrastructureForLibraryManager()}.
+	 */
 	public void setupBuiltIns() {
+		System.setProperty(ExternalLibrariesActivator.INCLUDES_BUILT_INS_SYSTEM_PROPERTY, "true");
+
 		forAllLocations(externalLibraryPreferenceStore::add);
 		assertTrue("Error while saving external library preference changes.",
 				externalLibraryPreferenceStore.save(new NullProgressMonitor()).isOK());
@@ -39,6 +46,8 @@ public class ShippedCodeInitializeTestHelper {
 
 	/** Tear down shipped projects in all {@link ExternalLibrariesActivator#EXTERNAL_LIBRARIES_SUPPLIER locations}. */
 	public void tearDownBuiltIns() {
+		System.setProperty(ExternalLibrariesActivator.INCLUDES_BUILT_INS_SYSTEM_PROPERTY, "");
+
 		forAllLocations(externalLibraryPreferenceStore::remove);
 		assertTrue("Error while saving external library preference changes.",
 				externalLibraryPreferenceStore.save(new NullProgressMonitor()).isOK());
