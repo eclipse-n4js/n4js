@@ -52,6 +52,8 @@ import com.google.inject.Singleton;
 @Singleton
 public class NpmCLI {
 
+	private static final String N4JSD_NPM_NAMESPACE = "@n4jsd";
+
 	@Inject
 	private BinaryCommandFactory commandFactory;
 
@@ -159,7 +161,7 @@ public class NpmCLI {
 		final File npmDirectory = new File(requestedChange.location.toFileString());
 		File nodeModulesDirectory = npmDirectory.getParentFile();
 		if (nodeModulesDirectory.getName() != N4JSGlobals.NODE_MODULES) {
-			if (nodeModulesDirectory.getName() != "@n4jsd") {
+			if (nodeModulesDirectory.getName() != N4JSD_NPM_NAMESPACE) {
 				throw new IllegalStateException("The npm " + requestedChange.name
 						+ " to be uninstalled is neither a direct child of node_modules nor a child of node_modules/@n4jsd");
 			}
