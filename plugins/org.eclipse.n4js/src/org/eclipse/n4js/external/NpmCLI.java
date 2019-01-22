@@ -145,18 +145,15 @@ public class NpmCLI {
 	 * @return collection of actual changes
 	 * @throws IllegalArgumentException
 	 *             if the requested change is not of type {@code LibraryChangeType.Uninstall}
-	 * 
+	 *
 	 */
 	public Collection<LibraryChange> uninstall(IProgressMonitor monitor, MultiStatus status,
 			LibraryChange requestedChange) {
+
 		if (requestedChange.type != LibraryChangeType.Uninstall) {
 			throw new IllegalArgumentException(
 					"The expected change type is " + LibraryChangeType.Uninstall + " but is " + requestedChange.type);
 		}
-
-		MultiStatus resultStatus = statusHelper
-				.createMultiStatus("Uninstalling npm package '" + requestedChange.name + "'");
-		SubMonitor subMonitor = SubMonitor.convert(monitor, 2);
 
 		final File npmDirectory = new File(requestedChange.location.toFileString());
 		File nodeModulesDirectory = npmDirectory.getParentFile();
@@ -165,11 +162,12 @@ public class NpmCLI {
 				throw new IllegalStateException("The npm " + requestedChange.name
 						+ " to be uninstalled is neither a direct child of node_modules nor a child of node_modules/@n4jsd");
 			}
-			// The npm is probably inside @n4jsd
 			nodeModulesDirectory = npmDirectory.getParentFile();
-
 		}
 
+		MultiStatus resultStatus = statusHelper
+				.createMultiStatus("Uninstalling npm package '" + requestedChange.name + "'");
+		SubMonitor subMonitor = SubMonitor.convert(monitor, 2);
 		java.net.URI nodeModulesLocationURI = externalLibraryWorkspace
 				.getRootLocationForResource(requestedChange.location);
 
