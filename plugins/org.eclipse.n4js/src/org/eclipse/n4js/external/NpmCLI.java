@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.emf.common.CommonPlugin;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.binaries.BinaryCommandFactory;
@@ -148,7 +149,9 @@ public class NpmCLI {
 		subMonitor.setTaskName("Installing npm packages.");
 
 		Collection<LibraryChange> actualChanges = new LinkedHashSet<>();
-		File installPath = new File(target.toFileString());
+		// Convert platform URI to local (e.g. file) URI
+		URI localURI = CommonPlugin.asLocalURI(target);
+		File installPath = new File(localURI.toFileString());
 
 		// for installation, we invoke npm only once for all packages
 		final List<Pair<String, String>> packageNamesAndVersions = Lists.newArrayList();
