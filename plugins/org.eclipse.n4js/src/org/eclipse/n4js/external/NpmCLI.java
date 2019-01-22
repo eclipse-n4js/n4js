@@ -145,7 +145,8 @@ public class NpmCLI {
 	 * @return collection of actual changes
 	 * @throws IllegalArgumentException
 	 *             if the requested change is not of type {@code LibraryChangeType.Uninstall}
-	 *
+	 * @throws IllegalStateException
+	 *             if the the npm is neither direct child of {@code node_modules} nor {@code node_modules/@n4jsd}
 	 */
 	public Collection<LibraryChange> uninstall(IProgressMonitor monitor, MultiStatus status,
 			LibraryChange requestedChange) {
@@ -163,6 +164,10 @@ public class NpmCLI {
 						+ " to be uninstalled is neither a direct child of node_modules nor a child of node_modules/@n4jsd");
 			}
 			nodeModulesDirectory = npmDirectory.getParentFile();
+			if (nodeModulesDirectory.getName() != N4JSGlobals.NODE_MODULES) {
+				throw new IllegalStateException("The npm " + requestedChange.name
+						+ " to be uninstalled is neither a direct child of node_modules nor a child of node_modules/@n4jsd");
+			}
 		}
 
 		MultiStatus resultStatus = statusHelper
@@ -178,7 +183,7 @@ public class NpmCLI {
 		}
 
 		File nodeModulesLocation = new File(nodeModulesLocationURI).getParentFile();
-		// Assume that the parent of node_modules folder is the root of the project which contains package.json.
+		// Assume that the parent of node_modules folder is the root of the project which contains package.json
 		// We call npm uninstall in this root folder
 		IStatus installStatus = uninstall(packageNames, nodeModulesLocation);
 		subMonitor.worked(1);
@@ -187,12 +192,10 @@ public class NpmCLI {
 		if (installStatus == null || !installStatus.isOK()) {
 			resultStatus.merge(installStatus);
 		} else {
-			if (requestedChange.type == LibraryChangeType.Uninstall) {
-				String actualVersion = getActualVersion(npmDirectory.toPath());
-				if (actualVersion.isEmpty()) {
-					actualChanges.add(new LibraryChange(LibraryChangeType.Removed, requestedChange.location,
-							requestedChange.name, requestedChange.version));
-				}
+			String actualVersion = getActualVersion(npmDirectory.toPath());
+			if (actualVersion.isEmpty()) {
+				actualChanges.add(new LibraryChange(LibraryChangeType.Removed, requestedChange.location,
+						requestedChange.name, requestedChange.version));
 			}
 		}
 
