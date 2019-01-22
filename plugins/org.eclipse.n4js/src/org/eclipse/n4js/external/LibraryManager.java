@@ -32,7 +32,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SubMonitor;
@@ -46,6 +45,7 @@ import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.SemverUtils;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
@@ -390,7 +390,7 @@ public class LibraryManager {
 		List<N4JSExternalProject> npmProjects = externalLibraryWorkspace.getProjectsForName(npmName);
 		MultiStatus multiStatus = statusHelper.createMultiStatus("Uninstall all npms with the name: " + npmName);
 		for (N4JSExternalProject npm : npmProjects) {
-			IStatus status = uninstallNPM(URIUtils.toUri(npm), new NullProgressMonitor());
+			IStatus status = uninstallNPM(URIUtils.toUri(npm), monitor);
 			multiStatus.merge(status);
 		}
 		return multiStatus;
@@ -406,7 +406,7 @@ public class LibraryManager {
 	 * @return a status representing the outcome of the uninstall process.
 	 */
 	public IStatus uninstallNPM(IProject npmProject, IProgressMonitor monitor) {
-		return uninstallNPM(URIUtils.toUri(npmProject), new NullProgressMonitor());
+		return uninstallNPM(URIUtils.toUri(npmProject), monitor);
 	}
 
 	/**
@@ -435,8 +435,9 @@ public class LibraryManager {
 				return status;
 			}
 
+			IN4JSProject iProject = externalProject.getIProject();
 			LibraryChange requestedChange = new LibraryChange(LibraryChangeType.Uninstall, packageURI,
-					externalProject.getName(), externalProject.getIProject().getVersion().toString());
+					iProject.getProjectName(), iProject.getVersion().toString());
 			Collection<LibraryChange> actualChanges = npmCli.uninstall(monitor, status, requestedChange);
 
 			try (Measurement m = N4JSDataCollectors.dcIndexSynchronizer.getMeasurement("synchronizeNpms")) {

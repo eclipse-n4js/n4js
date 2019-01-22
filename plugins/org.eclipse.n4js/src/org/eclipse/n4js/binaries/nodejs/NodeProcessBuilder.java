@@ -33,6 +33,7 @@ public class NodeProcessBuilder {
 	private static final String NPM_COMMAND_INSTALL = "install";
 	private static final String NPM_COMMAND_UNINSTALL = "uninstall";
 	private static final String NPM_OPTION_SAVE = "--save";
+	private static final String NPM_OPTION_NO_SAVE = "--no-save";
 	private static final String[] WIN_SHELL_COMAMNDS = { "cmd", "/c" };
 	private static final String[] NIX_SHELL_COMAMNDS = { "sh", "-c" };
 
@@ -117,7 +118,7 @@ public class NodeProcessBuilder {
 	private ProcessBuilder simpleCall(File invokationPath, String packageName, boolean save, String simpleCommand) {
 		Builder<String> builder = ImmutableList.<String> builder();
 		NpmBinary npmBinary = npmBinaryProvider.get();
-		String saveCommand = save ? NPM_OPTION_SAVE : "";
+		String saveCommand = save ? NPM_OPTION_SAVE : NPM_OPTION_NO_SAVE;
 		String resolvedPackageName = (packageName == null) ? "" : packageName;
 
 		if (isWindows()) {

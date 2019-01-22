@@ -228,8 +228,8 @@ public class ExternalLibrariesActivator implements BundleActivator {
 			if (null != product) {
 				if (parseBoolean(product.getProperty(INCLUDES_BUILT_INS_PRODUCT_PROPERTY))) {
 					// Runs in *non-production* mode and the system property is NOT set to include the built-ins.
-					if ((inDebugMode() || inDevelopmentMode())
-							&& !parseBoolean(System.getProperty(INCLUDES_BUILT_INS_SYSTEM_PROPERTY))) {
+					boolean includeBuiltins = parseBoolean(System.getProperty(INCLUDES_BUILT_INS_SYSTEM_PROPERTY));
+					if ((inDebugMode() || inDevelopmentMode()) && !includeBuiltins) {
 						return false;
 					}
 					return true;

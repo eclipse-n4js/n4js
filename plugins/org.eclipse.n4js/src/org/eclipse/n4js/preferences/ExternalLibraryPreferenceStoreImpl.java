@@ -47,6 +47,7 @@ import com.google.inject.Inject;
 	private final Collection<StoreUpdatedListener> listeners;
 
 	private ExternalLibraryPreferenceModel model;
+	private ExternalLibraryPreferenceModel lastSavedModel;
 
 	/**
 	 * Creates a new external library preference store.
@@ -100,7 +101,7 @@ import com.google.inject.Inject;
 	@Override
 	public final IStatus save(IProgressMonitor monitor) {
 
-		if (getOrCreateModel().equals(doLoad())) {
+		if (lastSavedModel != null && getOrCreateModel().equals(lastSavedModel)) {
 			return OK_STATUS;
 		}
 
@@ -111,6 +112,7 @@ import com.google.inject.Inject;
 		if (null != status && status.isOK()) {
 			notifyListeners(monitor);
 		}
+		lastSavedModel = getOrCreateModel();
 		return status;
 	}
 
