@@ -23,14 +23,12 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.LibraryManager;
-import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.n4js.runner.RunnerFrontEnd;
 import org.eclipse.n4js.runner.ui.RunnerFrontEndUI;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
-import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.process.OutputRedirection;
 import org.eclipse.n4js.utils.process.ProcessExecutor;
@@ -68,9 +66,6 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 
 	@Inject
 	private LibraryManager libManager;
-
-	@Inject
-	private EclipseExternalLibraryWorkspace extWorkspace;
 
 	/**
 	 * Checks whether the platform is running or not.
@@ -116,10 +111,8 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 		assertTrue("Unexpected output after running the client module: " + result.getStdOut(),
 				result.getStdOut().contains("Symbol(react.element)"));
 
-		N4JSExternalProject n4jsdReact = extWorkspace.getProject(PACKAGE_N4JSD_REACT);
-		N4JSExternalProject react = extWorkspace.getProject(PACKAGE_REACT);
-		libManager.uninstallNPM(URIUtils.toUri(n4jsdReact), new NullProgressMonitor());
-		libManager.uninstallNPM(URIUtils.toUri(react), new NullProgressMonitor());
+		libManager.uninstallNPM(PACKAGE_N4JSD_REACT, new NullProgressMonitor());
+		libManager.uninstallNPM(PACKAGE_REACT, new NullProgressMonitor());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 	}
@@ -150,10 +143,8 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 		assertMarkers("Expected exactly zero errors in package.json.", projectDescriptionFile, 0);
 		assertMarkers("Expected exactly 1 error in B module.", clientModule, 1);
 
-		N4JSExternalProject n4jsdReact = extWorkspace.getProject(PACKAGE_N4JSD_REACT);
-		N4JSExternalProject react = extWorkspace.getProject(PACKAGE_REACT);
-		libManager.uninstallNPM(URIUtils.toUri(n4jsdReact), new NullProgressMonitor());
-		libManager.uninstallNPM(URIUtils.toUri(react), new NullProgressMonitor());
+		libManager.uninstallNPM(PACKAGE_N4JSD_REACT, new NullProgressMonitor());
+		libManager.uninstallNPM(PACKAGE_REACT, new NullProgressMonitor());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 	}

@@ -14,6 +14,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Maps.newHashMap;
 import static org.eclipse.n4js.external.LibraryChange.LibraryChangeType.Install;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -30,6 +32,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SubMonitor;
@@ -42,6 +45,7 @@ import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.internal.N4JSProject;
+import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.SemverUtils;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
@@ -49,6 +53,8 @@ import org.eclipse.n4js.semver.model.SemverSerializer;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.utils.N4JSDataCollectors;
 import org.eclipse.n4js.utils.StatusHelper;
+import org.eclipse.n4js.utils.URIUtils;
+import org.eclipse.n4js.utils.io.FileDeleter;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
@@ -92,12 +98,38 @@ public class LibraryManager {
 	@Inject
 	private InternalN4JSWorkspace userWorkspace;
 
+	@Inject
+	private ExternalLibraryPreferenceStore extLibPreferenceStore;
+
 	/**
 	 * Call this method to synchronize the information in the Xtext index with all external projects in the external
 	 * library folders.
 	 */
 	public void synchronizeNpms(IProgressMonitor monitor) {
 		indexSynchronizer.synchronizeNpms(monitor);
+	}
+
+	/** Deletes all 'node_modules' folders (and their npm projects). Afterwards, the ext. library state is updated. */
+	public IStatus deleteAllNodeModulesFolders() {
+		MultiStatus multistatus = statusHelper.createMultiStatus("Delete all node_modules folders");
+		for (java.net.URI nodeModulesLoc : extLibPreferenceStore.getNodeModulesLocations()) {
+			File nodeModulesFile = new File(nodeModulesLoc.getPath());
+			// delete whole target platform folder
+			if (nodeModulesFile.exists()) {
+				FileDeleter.delete(nodeModulesFile, (IOException ioe) -> multistatus.merge(
+						statusHelper.createError("Exception during deletion of the npm folder.", ioe)));
+			}
+
+			if (nodeModulesFile.exists()) {
+				// should never happen
+				multistatus.merge(statusHelper
+						.createError("Could not verify deletion of " + nodeModulesFile.getAbsolutePath()));
+			}
+		}
+
+		// other actions like reinstall depends on this state
+		externalLibraryWorkspace.updateState();
+		return multistatus;
 	}
 
 	/** Runs 'npm install' in a given folder. Afterwards, re-registers all npms. */
@@ -342,6 +374,39 @@ public class LibraryManager {
 		}
 
 		return actualChanges;
+	}
+
+	/**
+	 * Uninstalls the given npm package in a blocking fashion. Note that this will uninstall *all* npms with the given
+	 * name.
+	 *
+	 * @param npmName
+	 *            the name of the npm projects that have to be uninstalled via package manager.
+	 * @param monitor
+	 *            the monitor for the blocking uninstall process.
+	 * @return a status representing the outcome of the uninstall process.
+	 */
+	public IStatus uninstallNPM(String npmName, IProgressMonitor monitor) {
+		List<N4JSExternalProject> npmProjects = externalLibraryWorkspace.getProjectsForName(npmName);
+		MultiStatus multiStatus = statusHelper.createMultiStatus("Uninstall all npms with the name: " + npmName);
+		for (N4JSExternalProject npm : npmProjects) {
+			IStatus status = uninstallNPM(URIUtils.toUri(npm), new NullProgressMonitor());
+			multiStatus.merge(status);
+		}
+		return multiStatus;
+	}
+
+	/**
+	 * Uninstalls the given npm package in a blocking fashion.
+	 *
+	 * @param npmProject
+	 *            the npm project that has to be uninstalled via package manager.
+	 * @param monitor
+	 *            the monitor for the blocking uninstall process.
+	 * @return a status representing the outcome of the uninstall process.
+	 */
+	public IStatus uninstallNPM(IProject npmProject, IProgressMonitor monitor) {
+		return uninstallNPM(URIUtils.toUri(npmProject), new NullProgressMonitor());
 	}
 
 	/**

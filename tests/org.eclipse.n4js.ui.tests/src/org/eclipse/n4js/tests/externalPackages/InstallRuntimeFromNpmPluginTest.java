@@ -24,7 +24,6 @@ import javax.inject.Provider;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.projectDescription.ProjectType;
@@ -36,7 +35,6 @@ import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.eclipse.n4js.ui.external.ExternalLibrariesActionsHelper;
 import org.eclipse.n4js.ui.wizard.dependencies.InstallOptions;
 import org.eclipse.n4js.ui.wizard.dependencies.RunnableInstallDependencies;
-import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.After;
 import org.junit.Assert;
@@ -75,9 +73,6 @@ public class InstallRuntimeFromNpmPluginTest extends AbstractBuilderParticipantT
 	@Inject
 	private ExternalLibrariesActionsHelper externals;
 
-	@Inject
-	private StatusHelper statusHelper;
-
 	@Before
 	@Override
 	public void setUp() throws Exception {
@@ -89,9 +84,7 @@ public class InstallRuntimeFromNpmPluginTest extends AbstractBuilderParticipantT
 	@Override
 	public void tearDown() throws Exception {
 		// clear library manager to avoid confusing tests being executed after this test class
-		final MultiStatus multistatus = statusHelper
-				.createMultiStatus("Status of deleting NPM packages from library manager.");
-		externals.maintenanceDeleteNpms(multistatus);
+		externals.maintenanceDeleteNpms();
 
 		shippedCodeInitializeTestHelper.tearDownBuiltIns();
 		super.tearDown();
