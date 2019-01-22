@@ -145,12 +145,12 @@ public class NpmCLI {
 		final File npmDirectory = new File(requestedChange.location.toFileString());
 		File nodeModulesDirectory = npmDirectory.getParentFile();
 		if (nodeModulesDirectory.getName() != N4JSGlobals.NODE_MODULES) {
-			if (nodeModulesDirectory.getName() != N4JSD_NPM_NAMESPACE) {
+			if (!N4JSD_NPM_NAMESPACE.equals(nodeModulesDirectory.getName())) {
 				throw new IllegalStateException("The npm " + requestedChange.name
 						+ " to be uninstalled is neither a direct child of node_modules nor a child of node_modules/@n4jsd");
 			}
-			nodeModulesDirectory = npmDirectory.getParentFile();
-			if (nodeModulesDirectory.getName() != N4JSGlobals.NODE_MODULES) {
+			nodeModulesDirectory = nodeModulesDirectory.getParentFile();
+			if (!N4JSGlobals.NODE_MODULES.equals(nodeModulesDirectory.getName())) {
 				throw new IllegalStateException("The npm " + requestedChange.name
 						+ " to be uninstalled is neither a direct child of node_modules nor a child of node_modules/@n4jsd");
 			}
