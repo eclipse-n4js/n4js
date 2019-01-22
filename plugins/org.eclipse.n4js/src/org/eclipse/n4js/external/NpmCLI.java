@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2016 NumberFour AG.
+ * Copyright (c) 2019 NumberFour AG.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,8 +34,6 @@ import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.SemverMatcher;
 import org.eclipse.n4js.semver.SemverUtils;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
-import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper;
-import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper.NodeModulesFolder;
 import org.eclipse.n4js.utils.ProcessExecutionCommandStatus;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.StatusHelper;
@@ -78,9 +76,6 @@ public class NpmCLI {
 	@Inject
 	private SemverHelper semverHelper;
 
-	@Inject
-	private NodeModulesDiscoveryHelper nodeModulesHelper;
-
 	/** Simple validation if the package name is not null or empty */
 	public boolean invalidPackageName(String packageName) {
 		return packageName == null || packageName.trim().isEmpty();
@@ -114,10 +109,101 @@ public class NpmCLI {
 	 *            npm package to be uninstalled
 	 * @return multi status with children for each issue during processing
 	 */
+
+	/**
+	 * Batch uninstall of npm packages based on provided names. It will try to process all packages, even if there are
+	 * errors during processing of a specific package. All encountered errors are logged and added as children to the
+	 * returned multi status. The path to the npm package (passed via {@code requestedChange.location}) must be conform
+	 * to either one of two the following scenarios:
+	 *
+	 * <pre>
+	 * Scenario 1: The npm is a direct child of a {@code node_modules} folder
+	 *
+	 *  MyProject
+	 *    package.json
+	 *    node_modules
+	 *       express    <- uninstall
+	 * </pre>
+	 *
+	 * <pre>
+	 * Scenario 2: The npm is a direct child of {@code @n4jsd} folder which in turn is a direct child of {@code node_modules}
+	 *
+	 *  MyProject
+	 *    package.json
+	 *    node_modules
+	 *       &#64;n4jsd
+	 *          express    <- uninstall
+	 * </pre>
+	 *
+	 * @param monitor
+	 *            progress monitor tracking the progress of the action
+	 * @param status
+	 *            status, into which the status of the method call can be merged
+	 * @param requestedChange
+	 *            change object containing the information (e.g. change type, path and version of npm package etc.)
+	 *            about the npm to be uninstalled.
+	 * @return collection of actual changes
+	 * @throws IllegalArgumentException
+	 *             if the requested change is not of type {@code LibraryChangeType.Uninstall}
+	 * 
+	 */
 	public Collection<LibraryChange> uninstall(IProgressMonitor monitor, MultiStatus status,
 			LibraryChange requestedChange) {
+		if (requestedChange.type != LibraryChangeType.Uninstall) {
+			throw new IllegalArgumentException(
+					"The expected change type is " + LibraryChangeType.Uninstall + " but is " + requestedChange.type);
+		}
 
-		return uninstallInternal(monitor, status, requestedChange);
+		MultiStatus resultStatus = statusHelper
+				.createMultiStatus("Uninstalling npm package '" + requestedChange.name + "'");
+		SubMonitor subMonitor = SubMonitor.convert(monitor, 2);
+
+		final File npmDirectory = new File(requestedChange.location.toFileString());
+		File nodeModulesDirectory = npmDirectory.getParentFile();
+		if (nodeModulesDirectory.getName() != N4JSGlobals.NODE_MODULES) {
+			if (nodeModulesDirectory.getName() != "@n4jsd") {
+				throw new IllegalStateException("The npm " + requestedChange.name
+						+ " to be uninstalled is neither a direct child of node_modules nor a child of node_modules/@n4jsd");
+			}
+			// The npm is probably inside @n4jsd
+			nodeModulesDirectory = npmDirectory.getParentFile();
+
+		}
+
+		java.net.URI nodeModulesLocationURI = externalLibraryWorkspace
+				.getRootLocationForResource(requestedChange.location);
+
+		final List<String> packageNames = new ArrayList<>();
+		if ((requestedChange.type == LibraryChangeType.Uninstall) &&
+				ExternalLibraryPreferenceModel.isNodeModulesLocation(nodeModulesLocationURI)) {
+			packageNames.add(requestedChange.name);
+		}
+
+		File nodeModulesLocation = new File(nodeModulesLocationURI).getParentFile();
+		// Assume that the parent of node_modules folder is the root of the project which contains package.json.
+		// We call npm uninstall in this root folder
+		IStatus installStatus = uninstall(packageNames, nodeModulesLocation);
+		subMonitor.worked(1);
+
+		Collection<LibraryChange> actualChanges = new LinkedList<>();
+		if (installStatus == null || !installStatus.isOK()) {
+			resultStatus.merge(installStatus);
+		} else {
+			if (requestedChange.type == LibraryChangeType.Uninstall) {
+				String actualVersion = getActualVersion(npmDirectory.toPath());
+				if (actualVersion.isEmpty()) {
+					actualChanges.add(new LibraryChange(LibraryChangeType.Removed, requestedChange.location,
+							requestedChange.name, requestedChange.version));
+				}
+			}
+		}
+
+		if (!resultStatus.isOK()) {
+			logger.logInfo("Some packages could not be uninstalled due to errors, see log for details.");
+			status.merge(resultStatus);
+		}
+
+		return actualChanges;
 	}
 
 	/**
@@ -196,59 +282,6 @@ public class NpmCLI {
 		return actualChanges;
 	}
 
-	private Collection<LibraryChange> uninstallInternal(IProgressMonitor monitor, MultiStatus status,
-			LibraryChange requestedChange) {
-
-		MultiStatus batchStatus = statusHelper.createMultiStatus("Uninstalling npm packages.");
-		SubMonitor subMonitor = SubMonitor.convert(monitor, 2);
-
-		File projectLocation = new File(requestedChange.location.toFileString());
-		NodeModulesFolder nodeModulesFolder = nodeModulesHelper.getNodeModulesFolder(projectLocation.toPath());
-		if (nodeModulesFolder == null) {
-			String msg = "Could not find node_modules folder of project '" + requestedChange.name + "' at "
-					+ requestedChange.location;
-
-			status.merge(statusHelper.createError(msg));
-			logger.logError(status);
-			return Collections.emptyList();
-		}
-
-		Collection<LibraryChange> actualChanges = new LinkedList<>();
-		File projectDirectory = nodeModulesFolder.nodeModulesFolder.getParentFile();
-
-		// for uninstallation, we invoke npm only once for all packages
-		final List<String> packageNames = Lists.newArrayList();
-		if (requestedChange.type == LibraryChangeType.Uninstall) {
-			java.net.URI rootLocation = externalLibraryWorkspace.getRootLocationForResource(requestedChange.location);
-			if (ExternalLibraryPreferenceModel.isNodeModulesLocation(rootLocation)) {
-				packageNames.add(requestedChange.name);
-			}
-		}
-
-		IStatus installStatus = uninstall(packageNames, projectDirectory);
-		subMonitor.worked(1);
-
-		if (installStatus == null || !installStatus.isOK()) {
-			batchStatus.merge(installStatus);
-		} else {
-			if (requestedChange.type == LibraryChangeType.Uninstall) {
-				Path completePath = nodeModulesFolder.nodeModulesFolder.toPath().resolve(requestedChange.name);
-				String actualVersion = getActualVersion(completePath);
-				if (actualVersion.isEmpty()) {
-					actualChanges.add(new LibraryChange(LibraryChangeType.Removed, requestedChange.location,
-							requestedChange.name, requestedChange.version));
-				}
-			}
-		}
-
-		if (!batchStatus.isOK()) {
-			logger.logInfo("Some packages could not be uninstalled due to errors, see log for details.");
-			status.merge(batchStatus);
-		}
-
-		return actualChanges;
-	}
-
 	private String getActualVersion(Path completePath) {
 		URI location = URI.createFileURI(completePath.toString());
 		String versionStr = projectDescriptionLoader.loadVersionAndN4JSNatureFromProjectDescriptionAtLocation(location)
@@ -317,9 +350,10 @@ public class NpmCLI {
 	 * still uninstalls requested dependency (if possible).
 	 *
 	 * @param packageNames
-	 *            list of package names to be uninstalled
+	 *            package names to be uninstalled
 	 * @param uninstallPath
-	 *            path where package is supposed to be uninstalled
+	 *            the folder where the npm uninstall command will be executed
+	 * @return status status describing the execution status of this method
 	 */
 	private IStatus uninstall(List<String> packageNames, File uninstallPath) {
 		for (String packageName : packageNames) {

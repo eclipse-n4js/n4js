@@ -262,7 +262,9 @@ public class ExternalLibraryPreferenceModel {
 		return externalLibraryLocationURIs;
 	}
 
-	/** @return the URI pointing to the {@code node_modules} folder which is used for installing npm packages. */
+	/**
+	 * @return true of the URI points to a {@code node_modules} folder and false otherwise
+	 */
 	static public boolean isNodeModulesLocation(URI location) {
 		String locStr = location.toString();
 		if (locStr.endsWith("/")) {
