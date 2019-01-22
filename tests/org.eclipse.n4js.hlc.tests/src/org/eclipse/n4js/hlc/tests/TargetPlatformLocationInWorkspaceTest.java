@@ -16,7 +16,6 @@ import static org.junit.Assert.fail;
 import java.io.File;
 import java.io.IOException;
 
-import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.hlc.base.BuildType;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.hlc.base.N4jscBase;
@@ -31,9 +30,8 @@ import com.google.common.base.Predicates;
  * This test instructs N4JSC to put the target platform install location in the same directory that also contains the
  * projects to build.
  *
- * The primary thing this test is checking for, is that the target platform install location (with the corresponding
- * {@link TargetPlatformInstallLocationProvider#getTargetPlatformFileLocation()}) is not recognized as a project.
- * Instead, the contained projects (e.g. node_modules folder) should be discovered and registered.
+ * The primary thing this test is checking for, is that the npms in the node_modules folder are not recognized as
+ * projects. Instead, the contained projects should be discovered and registered.
  */
 public class TargetPlatformLocationInWorkspaceTest extends AbstractN4jscTest {
 	File workspace;

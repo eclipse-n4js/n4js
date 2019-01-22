@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.ui.external;
 
-import java.io.File;
-import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Path;
 
@@ -20,13 +18,9 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.n4js.binaries.BinariesPreferenceStore;
 import org.eclipse.n4js.binaries.nodejs.NpmrcBinary;
-import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.LibraryManager;
-import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.utils.N4JSDataCollectors;
-import org.eclipse.n4js.utils.StatusHelper;
-import org.eclipse.n4js.utils.io.FileDeleter;
 
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
@@ -37,15 +31,9 @@ import com.google.inject.Provider;
  */
 public class ExternalLibrariesActionsHelper {
 	@Inject
-	private StatusHelper statusHelper;
-	@Inject
 	private LibraryManager libManager;
 	@Inject
-	private ExternalLibraryPreferenceStore extLibPreferenceStore;
-	@Inject
 	private BinariesPreferenceStore binPreferenceStore;
-	@Inject
-	private ExternalLibraryWorkspace externalLibraryWorkspace;
 	@Inject
 	private Provider<NpmrcBinary> npmrcBinaryProvider;
 
@@ -74,7 +62,7 @@ public class ExternalLibrariesActionsHelper {
 			}
 
 			// remove npms
-			maintenanceDeleteNpms(multiStatus);
+			multiStatus.merge(maintenanceDeleteNpms());
 
 			// install dependencies and force external library workspace reload
 			try (Measurement mm = N4JSDataCollectors.dcInstallMissingDeps
@@ -106,31 +94,9 @@ public class ExternalLibrariesActionsHelper {
 		}
 	}
 
-	/**
-	 * Actions to be taken if deleting npms is requested.
-	 *
-	 * @param multistatus
-	 *            the status used accumulate issues
-	 */
-	public void maintenanceDeleteNpms(final MultiStatus multistatus) {
-
-		for (URI nodeModulesLoc : extLibPreferenceStore.getNodeModulesLocations()) {
-			File nodeModulesFile = new File(nodeModulesLoc.getPath());
-			// delete whole target platform folder
-			if (nodeModulesFile.exists()) {
-				FileDeleter.delete(nodeModulesFile, (IOException ioe) -> multistatus.merge(
-						statusHelper.createError("Exception during deletion of the npm folder.", ioe)));
-			}
-
-			if (nodeModulesFile.exists()) {
-				// should never happen
-				multistatus.merge(statusHelper
-						.createError("Could not verify deletion of " + nodeModulesFile.getAbsolutePath()));
-			}
-		}
-
-		// other actions like reinstall depends on this state
-		externalLibraryWorkspace.updateState();
+	/** Actions to be taken if deleting npms is requested. */
+	public IStatus maintenanceDeleteNpms() {
+		return libManager.deleteAllNodeModulesFolders();
 	}
 
 }
