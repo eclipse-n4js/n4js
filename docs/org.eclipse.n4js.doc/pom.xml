@@ -236,7 +236,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 			    <executions>
 			        <execution>
 			            <id>download-asciispec</id>
-			            <phase>generate-resources</phase>
+			            <phase>initialize</phase>
 			            <goals>
 			                <goal>wget</goal>
 			            </goals>
@@ -322,13 +322,12 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 									<arg value="dist/eclipse-html/"/>
 									<arg value="${basedir}/generated-docs/N4JSDesign.xml"/>
 								</java>
-								
+
 	                            <move todir="${basedir}/dist/eclipse-html/N4JSDesign/.">
 								  <fileset dir="${basedir}/generated-docs/."/>
 								</move>
-							
+
 								<delete dir="${basedir}/doctools"/>
-								
 							</target>
 						</configuration>
 					</execution>
@@ -424,6 +423,26 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
             </plugin>
 
 
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>${maven-antrun-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>clean-up-n4jsdesign-n4jsspec</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <delete dir="${basedir}/doctools"/>
+                                <delete dir="${basedir}/asciispec-tools"/>
+                            </target>
+                        </configuration>
+                    </execution>
+
+                </executions>
+            </plugin>
 
             <!-- HTML to Eclipse TOC.XML -->
             <plugin>
