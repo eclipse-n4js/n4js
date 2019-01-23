@@ -112,7 +112,7 @@ import com.google.inject.Inject;
 		if (null != status && status.isOK()) {
 			notifyListeners(monitor);
 		}
-		lastSavedModel = getOrCreateModel();
+		lastSavedModel = doLoad();
 		return status;
 	}
 
