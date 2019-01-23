@@ -6439,6 +6439,14 @@ Note that a class may implement fields with field accessors and vice versa.</p>
 <div class="paragraph">
 <p><a id="Req-IDE-46"></a><strong>Req. IDE-46:</strong> <a href="#Req-IDE-46">Abstract Member</a> (ver. 1)</p>
 </div>
+<div class="paragraph">
+<p></p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+Missing task configuration
+</div>
+</div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -6451,14 +6459,43 @@ Note that a class may implement fields with field accessors and vice versa.</p>
 <p>It is not possible to inherit from an abstract class which contains abstract members which are not visible in the subclass.</p>
 </li>
 <li>
-<p>An abstract member cannot be set to final (with annotation @Final).</p>
+<p>An abstract member must not be set to final (with annotation <code>@Final</code>).</p>
 </li>
 <li>
-<p>Static members may not be declared abstract.</p>
+<p>Static members must not be declared abstract.</p>
 </li>
 </ol>
 </div>
 </div>
+</div>
+<div class="paragraph">
+<p>Remarks:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>We decided to disallow abstract static members, since we cannot guarantee that a static members is not accessed in all cases</p>
+</li>
+<li>
+<p>Only static members can override static members and only instance members can override other instance members of course.</p>
+</li>
+<li>
+<p>An abstract member must not be declared in a final class (i.e. a class annotated with <code>@Final</code>). This is not explicitly defined as constraint in <a href="#Req-IDE-46">[Req-IDE-46]</a> since abstract classes must not defined final anyway. We also do not produce error message for abstract members in final classes since these errors would be consequential errors.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title=""></i>
+</td>
+<td class="content">
+Abstract members might be declared private, as they can be accessed from within the module.
+This is to be changed in order to be aligned with TypeScript, cf. Missing task configuration. However we also want to add class expressions&#8201;&#8212;&#8201;and then the abstract members may be accessed (and overridden) in nested classes created by means of class expressions.
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect4">
