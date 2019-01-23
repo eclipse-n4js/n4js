@@ -29,7 +29,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
@@ -862,7 +862,7 @@ public class N4jscBase implements IApplication {
 	private BuildSet computeTargetPlatformBuildSet(Collection<? extends IN4JSProject> workspaceProjects)
 			throws ExitCodeException {
 
-		Set<String> namesOfWorkspaceProjects = new HashSet<>();
+		Set<String> namesOfWorkspaceProjects = new LinkedHashSet<>();
 		List<java.nio.file.Path> n4jsProjectPaths = new LinkedList<>();
 		for (IN4JSProject prj : workspaceProjects) {
 			n4jsProjectPaths.add(prj.getLocationPath());
@@ -875,7 +875,8 @@ public class N4jscBase implements IApplication {
 		}
 
 		try {
-			return buildSetComputer.createAllProjectsBuildSet(toBuild, namesOfWorkspaceProjects);
+			return buildSetComputer.createBuildSet(toBuild, Collections.emptyList(), Collections.emptyList(),
+					namesOfWorkspaceProjects);
 		} catch (N4JSCompileException e) {
 			throw new ExitCodeException(EXITCODE_DEPENDENCY_NOT_FOUND,
 					"Cannot compute build set for target platform location.", e);
