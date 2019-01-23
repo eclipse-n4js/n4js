@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.n4js.binaries.BinariesConstants;
 import org.eclipse.n4js.binaries.BinariesPreferenceStore;
 import org.eclipse.n4js.binaries.BinariesValidator;
 import org.eclipse.n4js.binaries.Binary;
@@ -52,30 +53,30 @@ public class NpmBinary implements Binary {
 
 	@Override
 	public String getLabel() {
-		return NodeBinariesConstants.NPM_LABEL;
+		return BinariesConstants.NPM_LABEL;
 	}
 
 	@Override
 	public String getDescription() {
 		return "Configuration of the folder location of the npm library "
 				+ "can be provided here. If not given, then the location will be resolved by used Node.js\u00AE. "
-				+ "The required minimum version npm is '" + NodeBinariesConstants.NPM_MIN_VERSION + "'.";
+				+ "The required minimum version npm is '" + BinariesConstants.NPM_MIN_VERSION + "'.";
 	}
 
 	@Override
 	public VersionNumber getMinimumVersion() {
-		return NodeBinariesConstants.NPM_MIN_VERSION;
+		return BinariesConstants.NPM_MIN_VERSION;
 	}
 
 	@Override
 	public String getBinaryAbsolutePath() {
 		final NodeJsBinary nodeJsBinary = nodeJsBinaryProvider.get();
-		return nodeJsBinary.getUserNodePathOrDefault() + File.separator + NodeBinariesConstants.NPM_BINARY_NAME;
+		return nodeJsBinary.getUserNodePathOrDefault() + File.separator + BinariesConstants.NPM_BINARY_NAME;
 	}
 
 	@Override
 	public String getVersionArgument() {
-		return NodeBinariesConstants.VERSION_ARGUMENT;
+		return BinariesConstants.VERSION_ARGUMENT;
 	}
 
 	@Override

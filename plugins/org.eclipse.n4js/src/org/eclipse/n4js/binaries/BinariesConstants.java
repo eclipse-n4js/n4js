@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.binaries.nodejs;
+package org.eclipse.n4js.binaries;
 
 import static java.io.File.separator;
 import static org.eclipse.n4js.utils.OSInfo.isWindows;
@@ -19,11 +19,9 @@ import org.eclipse.n4js.semver.SemverUtils;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 
 /**
- * Contains constants for {@code Node.js} binaries all over the system.
- *
- * Is public for testing only.
+ * Contains constants for binaries all over the system.
  */
-public abstract class NodeBinariesConstants {
+public final class BinariesConstants {
 
 	/**
 	 * VM argument for configuring the default {@code Node.js} path. That default {@code Node.js} binary path will be
@@ -77,7 +75,7 @@ public abstract class NodeBinariesConstants {
 			: new File(separator + "usr" + File.separator + "local" + separator + "bin").getAbsolutePath();
 
 	/** The minimum {@code Node.js} version. */
-	public static final VersionNumber NODE_MIN_VERSION = SemverUtils.createVersionNumber(8, 0, 0);
+	public static final VersionNumber NODE_MIN_VERSION = SemverUtils.createVersionNumber(10, 15, 0);
 	/** The label for {@code Node.js}. */
 	public static final String NODE_LABEL = "Node.js";
 	/** The {@code Node.js} binary name (OS specific). */
@@ -86,7 +84,7 @@ public abstract class NodeBinariesConstants {
 	public static final String VERSION_ARGUMENT = "-v";
 
 	/** The minimum {@code npm} version. */
-	public static final VersionNumber NPM_MIN_VERSION = SemverUtils.createVersionNumber(5, 0, 0);
+	public static final VersionNumber NPM_MIN_VERSION = SemverUtils.createVersionNumber(6, 4, 0);
 	/** The label for {@code npm}. */
 	public static final String NPM_LABEL = "npm";
 	/** The {@code npm} binary name. */
@@ -96,7 +94,16 @@ public abstract class NodeBinariesConstants {
 	/** The {@code npmrc} binary name. */
 	public static final String NPMRC_BINARY_NAME = ".npmrc";
 
-	private NodeBinariesConstants() {
+	/** The label for {@code yarn}. */
+	public static final String YARN_LABEL = "Yarn";
+	/** The {@code yarn} binary name (OS specific). */
+	public static final String YARN_BINARY_NAME = isWindows() ? "yarn.exe" : "yarn";
+	/** The minimum {@code yarn} version. */
+	public static final VersionNumber YARN_MIN_VERSION = SemverUtils.createVersionNumber(1, 13, 0);
+	/** The argument for yarn to print out the version number */
+	public static final String YARN_VERSION_ARGUMENT = "-v";
+
+	private BinariesConstants() {
 		// No initialization.
 	}
 
