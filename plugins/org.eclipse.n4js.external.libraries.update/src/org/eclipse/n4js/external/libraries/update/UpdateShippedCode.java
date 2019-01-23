@@ -51,7 +51,7 @@ import com.google.inject.Injector;
  * {@link #updateShippedCode(Optional)}.
  */
 public class UpdateShippedCode implements IWorkflowComponent {
-
+	final static boolean SKIP_UPDATE = true;
 	final static String PATH = "PATH";
 
 	/** Name of the n4js-lang project */
@@ -108,6 +108,11 @@ public class UpdateShippedCode implements IWorkflowComponent {
 	 *            present, folder "shipped-code" in bundle "org.eclipse.n4js.external.libraries" will be used.
 	 */
 	public static void updateShippedCode(Optional<Path> targetPath) throws IOException {
+		if (SKIP_UPDATE) {
+			println("==== Skipping UPDATE SHIPPED CODE ====");
+			return;
+		}
+
 		println("==== Running UPDATE SHIPPED CODE ====");
 
 		final Path n4jsRootPath = UtilN4.findN4jsRepoRootPath();
