@@ -52,8 +52,6 @@ import com.google.inject.Singleton;
 @Singleton
 public class NpmCLI {
 
-	private static final String N4JSD_NPM_NAMESPACE = "@n4jsd";
-
 	@Inject
 	private BinaryCommandFactory commandFactory;
 
@@ -142,27 +140,13 @@ public class NpmCLI {
 					"The expected change type is " + LibraryChangeType.Uninstall + " but is " + requestedChange.type);
 		}
 
-		final File npmDirectory = new File(requestedChange.location.toFileString());
-		File nodeModulesDirectory = npmDirectory.getParentFile();
-		if (nodeModulesDirectory.getName() != N4JSGlobals.NODE_MODULES) {
-			if (!N4JSD_NPM_NAMESPACE.equals(nodeModulesDirectory.getName())) {
-				throw new IllegalStateException("The npm " + requestedChange.location
-						+ " to be uninstalled is neither a direct child of node_modules nor a child of node_modules/@n4jsd");
-			}
-			nodeModulesDirectory = nodeModulesDirectory.getParentFile();
-			if (!N4JSGlobals.NODE_MODULES.equals(nodeModulesDirectory.getName())) {
-				throw new IllegalStateException("The npm " + requestedChange.location
-						+ " to be uninstalled is neither a direct child of node_modules nor a child of node_modules/@n4jsd");
-			}
-		}
-
-		MultiStatus resultStatus = statusHelper
-				.createMultiStatus("Uninstalling npm package '" + requestedChange.name + "'");
+		String msg = "Uninstalling npm package '" + requestedChange.name + "'";
+		MultiStatus resultStatus = statusHelper.createMultiStatus(msg);
 		SubMonitor subMonitor = SubMonitor.convert(monitor, 2);
 		java.net.URI nodeModulesLocationURI = externalLibraryWorkspace
 				.getRootLocationForResource(requestedChange.location);
 
-		final List<String> packageNames = new ArrayList<>();
+		List<String> packageNames = new ArrayList<>();
 		if ((requestedChange.type == LibraryChangeType.Uninstall) &&
 				ExternalLibraryPreferenceModel.isNodeModulesLocation(nodeModulesLocationURI)) {
 			packageNames.add(requestedChange.name);
@@ -178,6 +162,7 @@ public class NpmCLI {
 		if (installStatus == null || !installStatus.isOK()) {
 			resultStatus.merge(installStatus);
 		} else {
+			File npmDirectory = new File(requestedChange.location.toFileString());
 			String actualVersion = getActualVersion(npmDirectory.toPath());
 			if (actualVersion.isEmpty()) {
 				actualChanges.add(new LibraryChange(LibraryChangeType.Removed, requestedChange.location,
@@ -263,62 +248,6 @@ public class NpmCLI {
 
 		if (!batchStatus.isOK()) {
 			logger.logInfo("Some packages could not be installed due to errors, see log for details.");
-			status.merge(batchStatus);
-		}
-
-		return actualChanges;
-	}
-
-	private Collection<LibraryChange> uninstallInternal(IProgressMonitor monitor, MultiStatus status,
-			LibraryChange requestedChange) {
-
-		MultiStatus batchStatus = statusHelper.createMultiStatus("Uninstalling npm packages.");
-		SubMonitor subMonitor = SubMonitor.convert(monitor, 2);
-
-		File npmDirectory = new File(requestedChange.location.toFileString());
-		File nodeModulesFolder = npmDirectory.getParentFile();
-		if (!nodeModulesFolder.getName().equals("node_modules")) {
-			nodeModulesFolder = nodeModulesFolder.getParentFile();
-		}
-		if (!nodeModulesFolder.getName().equals("node_modules")) {
-			String msg = "Could not find node_modules folder of project '" + requestedChange.name + "' at "
-					+ requestedChange.location;
-
-			status.merge(statusHelper.createError(msg));
-			logger.logError(status);
-			return Collections.emptyList();
-		}
-		File projectDirectory = nodeModulesFolder.getParentFile();
-
-		Collection<LibraryChange> actualChanges = new LinkedList<>();
-
-		// for uninstallation, we invoke npm only once for all packages
-		final List<String> packageNames = Lists.newArrayList();
-		if (requestedChange.type == LibraryChangeType.Uninstall) {
-			java.net.URI rootLocation = externalLibraryWorkspace.getRootLocationForResource(requestedChange.location);
-			if (ExternalLibraryPreferenceModel.isNodeModulesLocation(rootLocation)) {
-				packageNames.add(requestedChange.name);
-			}
-		}
-
-		IStatus installStatus = uninstall(packageNames, projectDirectory);
-		subMonitor.worked(1);
-
-		if (installStatus == null || !installStatus.isOK()) {
-			batchStatus.merge(installStatus);
-		} else {
-			if (requestedChange.type == LibraryChangeType.Uninstall) {
-				Path completePath = nodeModulesFolder.toPath().resolve(requestedChange.name);
-				String actualVersion = getActualVersion(completePath);
-				if (actualVersion.isEmpty()) {
-					actualChanges.add(new LibraryChange(LibraryChangeType.Removed, requestedChange.location,
-							requestedChange.name, requestedChange.version));
-				}
-			}
-		}
-
-		if (!batchStatus.isOK()) {
-			logger.logInfo("Some packages could not be uninstalled due to errors, see log for details.");
 			status.merge(batchStatus);
 		}
 
