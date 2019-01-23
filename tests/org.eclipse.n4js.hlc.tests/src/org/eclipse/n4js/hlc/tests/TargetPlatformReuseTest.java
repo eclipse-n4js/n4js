@@ -59,12 +59,11 @@ public class TargetPlatformReuseTest extends AbstractN4jscTest {
 		final String[] args = {
 				"--installMissingDependencies",
 				"--projectlocations", wsRoot,
-				"--targetPlatformInstallLocation", wsRoot + "/targetPlatform",
 				"--buildType", BuildType.allprojects.toString()
 		};
 
 		// obtain reference to the node_modules folder in use
-		final File nodeModulesFolder = new File(wsRoot + "/targetPlatform" + "/node_modules");
+		final File nodeModulesFolder = new File(wsRoot + "/A" + "/node_modules");
 
 		// first call, initially installs dependencies into target platform location
 		new N4jscBase().doMain(args);

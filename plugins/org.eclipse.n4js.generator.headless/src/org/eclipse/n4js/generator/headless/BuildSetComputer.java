@@ -242,23 +242,18 @@ public class BuildSetComputer {
 		List<N4JSProject> discoveredProjects = headlessHelper.getN4JSProjects(discoveredProjectURIs);
 
 		// Resolve shadowing among discovered and requested projects
-		LinkedHashMap<String, N4JSProject> requestedResolvedMap = new LinkedHashMap<>();
-		for (N4JSProject prj : requestedProjects) {
-			requestedResolvedMap.put(prj.getProjectName(), prj);
-		}
-		List<N4JSProject> requestedResolvedList = new LinkedList<>(requestedResolvedMap.values());
 		LinkedHashMap<String, N4JSProject> discoveredResolvedMap = new LinkedHashMap<>();
 		for (N4JSProject prj : discoveredProjects) {
 			discoveredResolvedMap.put(prj.getProjectName(), prj);
 		}
-		for (N4JSProject prj : requestedResolvedList) {
+		for (N4JSProject prj : requestedProjects) {
 			discoveredResolvedMap.remove(prj.getProjectName());
 		}
 		List<N4JSProject> discoveredResolvedList = new LinkedList<>(discoveredResolvedMap.values());
 
 		// Filter out shadowed projects
 		Predicate<N4JSProject> pred = p -> shadowedProjectNames.contains(p.getProjectName());
-		requestedResolvedList.removeIf(pred);
+		requestedProjects.removeIf(pred);
 		discoveredResolvedList.removeIf(pred);
 
 		// Create a filter that applies only to the given single source files if any were requested to be compiled.
@@ -270,7 +265,7 @@ public class BuildSetComputer {
 			resourceFilter = u -> singleSourceURIs.contains(u);
 		}
 
-		return new BuildSet(requestedResolvedList, discoveredResolvedList, resourceFilter);
+		return new BuildSet(requestedProjects, discoveredResolvedList, resourceFilter);
 	}
 
 	/**
