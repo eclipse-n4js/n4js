@@ -25,7 +25,7 @@ Contributors:
 	</parent>
 
 	<properties>
-		<skip.mwe2>false</skip.mwe2>
+		<skip.mwe2>true</skip.mwe2>
 		<mwe2-file-location>/src/org/eclipse/n4js/external/libraries/update/UpdateShippedCode.mwe2</mwe2-file-location>
 		<!-- fornax: -->
 		<mwe2descriptor>org.eclipse.n4js.UpdateShippedCode</mwe2descriptor>
