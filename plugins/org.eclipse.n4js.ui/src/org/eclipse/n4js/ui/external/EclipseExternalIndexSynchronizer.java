@@ -294,8 +294,10 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		List<Path> projectRoots = new LinkedList<>();
 		for (IProject project : projects) {
-			Path path = project.getLocation().toFile().toPath();
-			projectRoots.add(path);
+			if (project.isAccessible()) {
+				Path path = project.getLocation().toFile().toPath();
+				projectRoots.add(path);
+			}
 		}
 
 		libraryPreferenceStore.resetDefaults();
