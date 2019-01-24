@@ -4783,7 +4783,12 @@ Note that a class may implement fields with field accessors and vice versa.</sim
     <simpara>
 </simpara>
 <sidebar>
-<simpara>Missing task configuration</simpara>
+<simpara><link xl:href="https://github.com/eclipse/n4js/issues/1047"><inlinemediaobject>
+<imageobject>
+<imagedata fileref="images/issue.svg"/>
+</imageobject>
+<textobject><phrase></phrase></textobject>
+</inlinemediaobject> #1047</link></simpara>
 </sidebar>
 <orderedlist numeration="arabic">
 <listitem>
@@ -4817,7 +4822,12 @@ Note that a class may implement fields with field accessors and vice versa.</sim
 </itemizedlist>
 <warning>
 <simpara>Abstract members might be declared private, as they can be accessed from within the module.
-This is to be changed in order to be aligned with TypeScript, cf. Missing task configuration. However we also want to add class expressions&#8201;&#8212;&#8201;and then the abstract members may be accessed (and overridden) in nested classes created by means of class expressions.</simpara>
+This is to be changed in order to be aligned with TypeScript, cf. <link xl:href="https://github.com/eclipse/n4js/issues/1221"><inlinemediaobject>
+<imageobject>
+<imagedata fileref="images/issue.svg"/>
+</imageobject>
+<textobject><phrase></phrase></textobject>
+</inlinemediaobject> #1221</link>. However we also want to add class expressions&#8201;&#8212;&#8201;and then the abstract members may be accessed (and overridden) in nested classes created by means of class expressions.</simpara>
 </warning>
 </section>
 <section xml:id="_non-instantiable-classes">

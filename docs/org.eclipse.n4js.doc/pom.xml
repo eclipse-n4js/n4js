@@ -287,6 +287,14 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
                                     <arg value="N4JSDesign.adoc"/>
                                 </exec>
 
+                                <copy todir="${basedir}/../org.eclipse.n4js.design/generated-docs/.">
+                                    <fileset dir="${basedir}/../org.eclipse.n4js.design">
+                                        <include name="styles/**"/>
+                                        <include name="images/**"/>
+                                        <include name="scripts/**"/>
+                                    </fileset>
+                                </copy>
+
 	                            <copy todir="${basedir}/generated-docs/.">
 									<fileset dir="${basedir}/../org.eclipse.n4js.design/generated-docs"/>
 								</copy>
@@ -371,6 +379,13 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
                                     <arg value="generated-docs/"/>
                                     <arg value="N4JSSpec.adoc"/>
                                 </exec>
+                                <copy todir="${basedir}/../org.eclipse.n4js.spec/generated-docs/.">
+                                    <fileset dir="${basedir}/../org.eclipse.n4js.spec">
+                                        <include name="styles/**"/>
+                                        <include name="images/**"/>
+                                        <include name="scripts/**"/>
+                                    </fileset>
+                                </copy>
 
                                 <copy todir="${basedir}/generated-docs/.">
                                     <fileset dir="${basedir}/../org.eclipse.n4js.spec/generated-docs"/>
