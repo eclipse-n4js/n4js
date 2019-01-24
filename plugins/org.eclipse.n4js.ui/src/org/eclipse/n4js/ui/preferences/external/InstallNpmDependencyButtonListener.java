@@ -13,6 +13,7 @@ package org.eclipse.n4js.ui.preferences.external;
 import static org.eclipse.n4js.ui.utils.UIUtils.getDisplay;
 import static org.eclipse.n4js.ui.utils.UIUtils.getShell;
 
+import java.io.File;
 import java.net.URI;
 import java.util.Collections;
 import java.util.Map;
@@ -43,7 +44,8 @@ import org.eclipse.xtext.xbase.lib.StringExtensions;
  * Note: this class is not static, so it will hold reference to all services. Make sure to dispose it.
  *
  */
-public class InstallNpmDependencyButtonListener extends SelectionAdapter {
+class InstallNpmDependencyButtonListener extends SelectionAdapter {
+
 	final private LibraryManager libManager;
 	final private NpmNameAndVersionValidatorHelper validatorHelper;
 	final private SemverHelper semverHelper;
@@ -51,7 +53,26 @@ public class InstallNpmDependencyButtonListener extends SelectionAdapter {
 	final private Runnable updateLocations;
 	final private Supplier<URI> getSelectedNodeModulesURI;
 
-	InstallNpmDependencyButtonListener(Runnable updateLocations, LibraryManager libManager,
+	/**
+	 * Constructor
+	 *
+	 * @param updateLocations
+	 *            the runnable that provides location
+	 * @param libManager
+	 *            the library manager
+	 * @param validatorHelper
+	 *            the validator that validates npm package (e.g. name, version)
+	 *
+	 * @param semverHelper
+	 *            the semver helper
+	 *
+	 * @param statusHelper
+	 *            the helper for handling status
+	 * @param getSelectedNodeModulesURI
+	 *            the supplier that provides the selected node_modules URI. Important: its getter must be called on the
+	 *            UI thread!
+	 */
+	public InstallNpmDependencyButtonListener(Runnable updateLocations, LibraryManager libManager,
 			NpmNameAndVersionValidatorHelper validatorHelper, SemverHelper semverHelper, StatusHelper statusHelper,
 			Supplier<URI> getSelectedNodeModulesURI) {
 
@@ -85,15 +106,17 @@ public class InstallNpmDependencyButtonListener extends SelectionAdapter {
 				return;
 			}
 
+			// Assume that node_modules in a direct directory of the project root folder
+			// Call getSelectedNodeModulesURI.get() on the UI thread!
+			File prjRootDir = new File(getSelectedNodeModulesURI.get()).getParentFile();
 			new ProgressMonitorDialog(getShell()).run(true, true, monitor -> {
 				Map<String, NPMVersionRequirement> singletonMap = Collections.singletonMap(packageName,
 						packageVersion);
 				try {
-					String nodeModulesStr = getSelectedNodeModulesURI.get().getPath().toString();
-					org.eclipse.emf.common.util.URI emfURI = org.eclipse.emf.common.util.URI
-							.createFileURI(nodeModulesStr);
+					org.eclipse.emf.common.util.URI projectRootURI = org.eclipse.emf.common.util.URI
+							.createFileURI(prjRootDir.getAbsolutePath());
 
-					IStatus status = libManager.installNPMs(singletonMap, false, emfURI, monitor);
+					IStatus status = libManager.installNPMs(singletonMap, false, projectRootURI, monitor);
 					multistatus.merge(status);
 				} finally {
 					updateLocations.run();
