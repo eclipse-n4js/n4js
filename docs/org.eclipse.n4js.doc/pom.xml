@@ -263,18 +263,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 						<configuration>
 							<target>
 							    <mkdir dir="${basedir}/../org.eclipse.n4js.design/generated-docs"/>
-								<!-- Generate N4JSDesign.html -->
-								<exec executable="${basedir}/asciispec-tools/asciispec/bin/asciispec" spawn="false" dir="${basedir}/../org.eclipse.n4js.design/">
-									<arg value="direct"/>
-									<arg value="-a"/>
-									<arg value="-o"/>
-                                    <arg value="-a eclipse-help-mode"/>
-                                    <arg value="-D"/>
-									<arg value="generated-docs/"/>
-									<arg value="N4JSDesign.adoc"/>
-								</exec>
-
-                                <!-- Generate N4JSDesign.xml -->
+                                <!-- Generate N4JSDesign.html und N4JSDesign.xml -->
                                 <exec executable="${basedir}/asciispec-tools/asciispec/bin/asciispec" spawn="false" dir="${basedir}/../org.eclipse.n4js.design/">
                                     <arg value="direct"/>
                                     <arg value="-b"/>
@@ -349,17 +338,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
                         <configuration>
                             <target>
                                 <mkdir dir="${basedir}/../org.eclipse.n4js.spec/generated-docs"/>
-                                <!-- Generate N4JSSpec.html -->
-                                <exec executable="${basedir}/asciispec-tools/asciispec/bin/asciispec" spawn="false" dir="${basedir}/../org.eclipse.n4js.spec/">
-                                    <arg value="direct"/>
-                                    <arg value="-a"/>
-                                    <arg value="-o"/>
-                                    <arg value="-a eclipse-help-mode"/>
-                                    <arg value="-D"/>
-                                    <arg value="generated-docs/"/>
-                                    <arg value="N4JSSpec.adoc"/>
-                                </exec>
-                                <!-- Generate N4JSSpec.xml -->
+                                <!-- Generate N4JSSpec.xml and N4JSSpec.html -->
                                 <exec executable="${basedir}/asciispec-tools/asciispec/bin/asciispec" spawn="false" dir="${basedir}/../org.eclipse.n4js.spec/">
                                     <arg value="direct"/>
                                     <arg value="-b"/>
