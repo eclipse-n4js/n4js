@@ -13,6 +13,7 @@ package org.eclipse.n4js.ui.preferences.external;
 import static org.eclipse.n4js.ui.utils.UIUtils.getDisplay;
 import static org.eclipse.n4js.ui.utils.UIUtils.getShell;
 
+import java.io.File;
 import java.net.URI;
 import java.util.Collections;
 import java.util.Map;
@@ -84,16 +85,15 @@ public class InstallNpmDependencyButtonListener extends SelectionAdapter {
 			if (packageVersion == null) { // null should never happen, since we have a validator in place
 				return;
 			}
-
+			File rootProjectDirectory = new File(getSelectedNodeModulesURI.get()).getParentFile();
 			new ProgressMonitorDialog(getShell()).run(true, true, monitor -> {
 				Map<String, NPMVersionRequirement> singletonMap = Collections.singletonMap(packageName,
 						packageVersion);
 				try {
-					String nodeModulesStr = getSelectedNodeModulesURI.get().getPath().toString();
-					org.eclipse.emf.common.util.URI emfURI = org.eclipse.emf.common.util.URI
-							.createFileURI(nodeModulesStr);
+					org.eclipse.emf.common.util.URI rootProjectURI = org.eclipse.emf.common.util.URI
+							.createFileURI(rootProjectDirectory.getAbsolutePath());
 
-					IStatus status = libManager.installNPMs(singletonMap, false, emfURI, monitor);
+					IStatus status = libManager.installNPMs(singletonMap, false, rootProjectURI, monitor);
 					multistatus.merge(status);
 				} finally {
 					updateLocations.run();
