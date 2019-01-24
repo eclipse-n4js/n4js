@@ -61,7 +61,7 @@ public class N4JSTasksExampleWizard extends ExampleInstallerWizard {
 						monitor.subTask("Installing dependencies");
 						IN4JSProject taskExampleProject = model.findAllProjectMappings().get("task.example");
 						URI location = taskExampleProject.getLocation();
-						IStatus status = libManager.runNpmInstall(location, monitor);
+						IStatus status = libManager.runNpmYarnInstall(location, monitor);
 						if (status.matches(IStatus.ERROR))
 							throw status.getException();
 					} catch (Throwable e) {

@@ -132,8 +132,8 @@ public class LibraryManager {
 		return multistatus;
 	}
 
-	/** Runs 'npm install' in a given folder. Afterwards, re-registers all npms. */
-	public IStatus runNpmInstall(URI target, IProgressMonitor monitor) {
+	/** Runs 'npm/yarn install' in a given folder. Afterwards, re-registers all npms. */
+	public IStatus runNpmYarnInstall(URI target, IProgressMonitor monitor) {
 		N4JSProject project = model.findProjectWith(target);
 		String msg = "Running 'npm install' on " + project.getProjectName();
 		MultiStatus status = statusHelper.createMultiStatus(msg);
@@ -158,8 +158,8 @@ public class LibraryManager {
 		return status;
 	}
 
-	/** Runs 'npm install' in all user projects. Afterwards, re-registers all npms. */
-	public IStatus runNpmInstallOnAllProjects(IProgressMonitor monitor) {
+	/** Runs 'npm/yarn install' in all user projects. Afterwards, re-registers all npms. */
+	public IStatus runNpmYarnInstallOnAllProjects(IProgressMonitor monitor) {
 		String msg = "Running 'npm install' on all projects";
 		MultiStatus status = statusHelper.createMultiStatus(msg);
 		logger.logInfo(msg);

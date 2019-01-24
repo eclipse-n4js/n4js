@@ -68,7 +68,7 @@ public class ExternalLibrariesActionsHelper {
 			try (Measurement mm = N4JSDataCollectors.dcInstallMissingDeps
 					.getMeasurement("Install missing dependencies")) {
 
-				IStatus status = libManager.runNpmInstallOnAllProjects(monitor);
+				IStatus status = libManager.runNpmYarnInstallOnAllProjects(monitor);
 				if (!status.isOK()) {
 					multiStatus.merge(status);
 				}

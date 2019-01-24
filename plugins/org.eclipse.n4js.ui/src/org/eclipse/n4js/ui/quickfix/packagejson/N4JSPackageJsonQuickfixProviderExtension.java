@@ -80,8 +80,8 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 		final String packageName = userData[0];
 		final String versionRequirement = userData[1];
 		final String msgAtVersion = Strings.isNullOrEmpty(versionRequirement) ? "" : "@" + versionRequirement;
-		final String label = "Run 'npm install " + packageName + msgAtVersion + " --save'";
-		final String description = "Calls npm to install the missing npm package into the workspace.";
+		final String label = "Install npm package " + packageName + msgAtVersion;
+		final String description = "Calls npm/yarn to install the missing npm package into the workspace.";
 		final String errMsg = "Error while uninstalling npm dependency: '" + packageName + "'.";
 
 		N4Modification modification = new N4Modification() {
@@ -122,12 +122,12 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 		accept(acceptor, issue, label, description, null, modification);
 	}
 
-	/** Runs 'npm install' on a single project. Afterwards, re-registers external libraries. */
+	/** Runs 'npm/yarn install' on a single project. Afterwards, re-registers external libraries. */
 	@Fix(IssueCodes.NON_EXISTING_PROJECT)
 	@Fix(IssueCodes.NO_MATCHING_VERSION)
 	public void runNpmInstallInProject(Issue issue, IssueResolutionAcceptor acceptor) {
-		final String label = "Run 'npm install' in this project";
-		final String description = "Runs 'npm install' on this project and then registers all npms.";
+		final String label = "Run 'npm/yarn install' in this project";
+		final String description = "Runs 'npm/yarn install' on this project and then registers all npms.";
 		final String errMsg = "Error while installing npms";
 
 		N4Modification modification = new N4Modification() {
@@ -148,7 +148,7 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 				Function<IProgressMonitor, IStatus> registerFunction = new Function<IProgressMonitor, IStatus>() {
 					@Override
 					public IStatus apply(IProgressMonitor monitor) {
-						return libraryManager.runNpmInstall(issue.getUriToProblem(), monitor);
+						return libraryManager.runNpmYarnInstall(issue.getUriToProblem(), monitor);
 					}
 				};
 				wrapWithMonitor(label, errMsg, registerFunction);
@@ -159,12 +159,12 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 		accept(acceptor, issue, label, description, null, modification);
 	}
 
-	/** Runs 'npm install' on all projects. Afterwards, re-registers external libraries. */
+	/** Runs 'npm/yarn install' on all projects. Afterwards, re-registers external libraries. */
 	@Fix(IssueCodes.NON_EXISTING_PROJECT)
 	@Fix(IssueCodes.NO_MATCHING_VERSION)
 	public void runNpmInstallInAllProjects(Issue issue, IssueResolutionAcceptor acceptor) {
-		final String label = "Run 'npm install' in all projects";
-		final String description = "Runs 'npm install' on all project sequentially and then registers all npms.";
+		final String label = "Run 'npm/yarn install' in all projects";
+		final String description = "Runs 'npm/yarn install' on all projects sequentially and then registers all npms.";
 		final String errMsg = "Error while installing npms";
 
 		N4Modification modification = new N4Modification() {
@@ -185,7 +185,7 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 				Function<IProgressMonitor, IStatus> registerFunction = new Function<IProgressMonitor, IStatus>() {
 					@Override
 					public IStatus apply(IProgressMonitor monitor) {
-						return libraryManager.runNpmInstallOnAllProjects(monitor);
+						return libraryManager.runNpmYarnInstallOnAllProjects(monitor);
 					}
 				};
 				wrapWithMonitor(label, errMsg, registerFunction);
