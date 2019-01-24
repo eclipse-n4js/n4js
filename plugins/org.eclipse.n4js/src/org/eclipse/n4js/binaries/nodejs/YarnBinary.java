@@ -10,7 +10,8 @@
  */
 package org.eclipse.n4js.binaries.nodejs;
 
-import static java.util.Collections.singletonList;
+import static com.google.common.base.Strings.isNullOrEmpty;
+import static java.util.Collections.emptyList;
 
 import java.io.File;
 import java.net.URI;
@@ -19,83 +20,87 @@ import java.util.Objects;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.n4js.binaries.BinariesConstants;
+import org.eclipse.n4js.binaries.BinariesLocatorHelper;
 import org.eclipse.n4js.binaries.BinariesPreferenceStore;
 import org.eclipse.n4js.binaries.BinariesValidator;
 import org.eclipse.n4js.binaries.Binary;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
+import org.eclipse.n4js.semver.model.SemverSerializer;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
- * Representation of a {@code npm} binary.
+ * Representation of a {@code yarn} binary.
  */
 @Singleton
-public class NpmBinary implements Binary {
+public class YarnBinary implements Binary {
+
+	/** don't access directly, use {@link #getDefaultYarnPath()} */
+	private String memoizedCalculatedYarnPath = null;
 
 	@Inject
 	private BinariesValidator validator;
 
 	@Inject
-	private Provider<NodeJsBinary> nodeJsBinaryProvider;
-
-	@Inject
-	private Provider<NpmrcBinary> npmrcBinaryProvider;
-
-	@Inject
 	private BinariesPreferenceStore preferenceStore;
+
+	@Inject
+	private BinariesLocatorHelper binariesLocatorHelper;
 
 	@Override
 	public String getId() {
-		return NpmBinary.class.getName();
+		return YarnBinary.class.getName();
 	}
 
 	@Override
 	public String getLabel() {
-		return BinariesConstants.NPM_LABEL;
+		return BinariesConstants.YARN_LABEL;
 	}
 
 	@Override
 	public String getDescription() {
-		return "Configuration of the folder location of the npm library "
-				+ "can be provided here. If not given, then the location will be resolved by used Node.js\u00AE. "
-				+ "The required minimum version npm is '" + BinariesConstants.NPM_MIN_VERSION + "'.";
+		return "Configuration of the folder location of the Yarn executable "
+				+ "can be provided here. If not given, then the '" + getDefaultYarnPath() // FIXME adjust this!!!!!
+				+ "' location will be used as the default location. The required minimum version for Yarn is '"
+				+ SemverSerializer.serialize(getMinimumVersion()) + "'.";
 	}
 
 	@Override
 	public VersionNumber getMinimumVersion() {
-		return BinariesConstants.NPM_MIN_VERSION;
+		return BinariesConstants.YARN_MIN_VERSION;
 	}
 
 	@Override
 	public String getBinaryAbsolutePath() {
-		final NodeJsBinary nodeJsBinary = nodeJsBinaryProvider.get();
-		return nodeJsBinary.getUserNodePathOrDefault() + File.separator + BinariesConstants.NPM_BINARY_NAME;
+		return getUserYarnPathOrDefault() + File.separator + BinariesConstants.YARN_BINARY_NAME;
 	}
 
 	@Override
 	public String getVersionArgument() {
-		return BinariesConstants.VERSION_ARGUMENT;
+		return BinariesConstants.YARN_VERSION_ARGUMENT;
 	}
 
 	@Override
 	public Binary getParent() {
-		return nodeJsBinaryProvider.get();
+		return null;
 	}
 
 	@Override
 	public Iterable<Binary> getChildren() {
-		return singletonList(npmrcBinaryProvider.get());
+		return emptyList();
 	}
 
 	@Override
 	public Map<String, String> updateEnvironment(final Map<String, String> environment) {
-		final Binary parent = getParent();
-		if (null != parent) {
-			parent.updateEnvironment(environment);
+		final String additionalNodePath = getUserYarnPathOrDefault();
+		final String currentPathValue = environment.get(PATH);
+		if (isNullOrEmpty(currentPathValue)) {
+			environment.put(PATH, additionalNodePath);
+		} else {
+			environment.put(PATH, currentPathValue + File.pathSeparator + additionalNodePath);
 		}
 		return environment;
 	}
@@ -107,13 +112,6 @@ public class NpmBinary implements Binary {
 
 	@Override
 	public IStatus validate() {
-		final Binary parent = getParent();
-		if (null != parent) {
-			final IStatus parentStatus = parent.validate();
-			if (!parentStatus.isOK()) {
-				return parentStatus;
-			}
-		}
 		return validator.validate(this);
 	}
 
@@ -129,12 +127,12 @@ public class NpmBinary implements Binary {
 
 	@Override
 	public String getNpmInstallCommand(boolean readPackagesFromPackageJson) {
-		return "install"; // same command in both cases
+		return readPackagesFromPackageJson ? "install" : "add";
 	}
 
 	@Override
 	public String getNpmUninstallCommand() {
-		return "uninstall";
+		return "remove";
 	}
 
 	@Override
@@ -160,11 +158,29 @@ public class NpmBinary implements Binary {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof NpmBinary)) {
+		if (!(obj instanceof YarnBinary)) {
 			return false;
 		}
-		final NpmBinary other = (NpmBinary) obj;
+		final YarnBinary other = (YarnBinary) obj;
 		return Objects.equals(getId(), other.getId());
+	}
+
+	/**
+	 * Returns user-provided or default location of the binary.
+	 *
+	 * @return the user-configured absolute path to the binary or the default one.
+	 */
+	public String getUserYarnPathOrDefault() {
+		final URI userConfiguredLocation = getUserConfiguredLocation();
+		return null == userConfiguredLocation ? getDefaultYarnPath()
+				: new File(userConfiguredLocation).getAbsolutePath();
+	}
+
+	private String getDefaultYarnPath() {
+		if (memoizedCalculatedYarnPath == null) {
+			memoizedCalculatedYarnPath = binariesLocatorHelper.findYarnPath().toString();
+		}
+		return memoizedCalculatedYarnPath;
 	}
 
 }

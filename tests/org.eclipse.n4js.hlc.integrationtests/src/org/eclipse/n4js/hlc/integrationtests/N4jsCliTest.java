@@ -25,7 +25,7 @@ import java.nio.file.Path;
 import java.util.Collections;
 
 import org.eclipse.n4js.N4JSInjectorProvider;
-import org.eclipse.n4js.binaries.BinaryCommandFactory;
+import org.eclipse.n4js.binaries.BinariesCommandFactory;
 import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
 import org.eclipse.n4js.hlc.base.N4jscBase;
 import org.eclipse.n4js.test.helper.hlc.N4CliHelper;
@@ -60,7 +60,7 @@ public class N4jsCliTest {
 	private NodeJsBinary nodeJsBinary;
 
 	@Inject
-	private BinaryCommandFactory commandFactory;
+	private BinariesCommandFactory commandFactory;
 
 	private final String localNpmRegstry = "http://" + LOCALHOST + ":" + PORT;
 
