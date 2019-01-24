@@ -16,7 +16,7 @@ import org.eclipse.jface.text.rules.ITokenScanner;
 import org.eclipse.n4js.CancelIndicatorBaseExtractor;
 import org.eclipse.n4js.binaries.BinariesPreferenceStore;
 import org.eclipse.n4js.binaries.BinariesValidator;
-import org.eclipse.n4js.binaries.BinaryCommandFactory;
+import org.eclipse.n4js.binaries.BinariesCommandFactory;
 import org.eclipse.n4js.external.ExternalIndexSynchronizer;
 import org.eclipse.n4js.external.ExternalLibraryUriHelper;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
@@ -375,8 +375,8 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	}
 
 	/** Delegate to shared injector */
-	public Provider<? extends BinaryCommandFactory> provideBinaryCommandFactory() {
-		return Access.contributedProvider(BinaryCommandFactory.class);
+	public Provider<? extends BinariesCommandFactory> provideBinaryCommandFactory() {
+		return Access.contributedProvider(BinariesCommandFactory.class);
 	}
 
 	/** Delegate to shared injector */

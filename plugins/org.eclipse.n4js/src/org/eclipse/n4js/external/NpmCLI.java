@@ -26,7 +26,7 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.CommonPlugin;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.binaries.BinaryCommandFactory;
+import org.eclipse.n4js.binaries.BinariesCommandFactory;
 import org.eclipse.n4js.binaries.nodejs.NodeYarnProcessBuilder;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
@@ -54,7 +54,7 @@ import com.google.inject.Singleton;
 public class NpmCLI {
 
 	@Inject
-	private BinaryCommandFactory commandFactory;
+	private BinariesCommandFactory commandFactory;
 
 	@Inject
 	private ProcessExecutionCommandStatus executor;

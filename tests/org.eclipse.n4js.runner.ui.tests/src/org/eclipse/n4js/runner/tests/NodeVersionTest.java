@@ -14,7 +14,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.eclipse.n4js.N4JSInjectorProvider;
 import org.eclipse.n4js.binaries.BinariesConstants;
-import org.eclipse.n4js.binaries.BinaryCommandFactory;
+import org.eclipse.n4js.binaries.BinariesCommandFactory;
 import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.semver.SemverHelper;
@@ -44,7 +44,7 @@ public class NodeVersionTest {
 	private NpmBinary npmBinary;
 
 	@Inject
-	private BinaryCommandFactory commandFactory;
+	private BinariesCommandFactory commandFactory;
 
 	@Inject
 	private SemverHelper semverHelper;

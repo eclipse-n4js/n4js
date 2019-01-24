@@ -16,7 +16,7 @@ import org.eclipse.n4js.binaries.BinariesLocatorHelper;
 import org.eclipse.n4js.binaries.BinariesPreferenceStore;
 import org.eclipse.n4js.binaries.BinariesProvider;
 import org.eclipse.n4js.binaries.BinariesValidator;
-import org.eclipse.n4js.binaries.BinaryCommandFactory;
+import org.eclipse.n4js.binaries.BinariesCommandFactory;
 import org.eclipse.n4js.binaries.OsgiBinariesPreferenceStore;
 import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
 import org.eclipse.n4js.binaries.nodejs.NodeYarnProcessBuilder;
@@ -199,7 +199,7 @@ public class ContributingModule implements Module {
 				.to(IBuilderState.class);
 
 		binder.bind(ProcessExecutor.class);
-		binder.bind(BinaryCommandFactory.class);
+		binder.bind(BinariesCommandFactory.class);
 		binder.bind(NodeYarnProcessBuilder.class);
 		binder.bind(OutputStreamPrinterThreadProvider.class);
 		binder.bind(BinariesPreferenceStore.class).to(OsgiBinariesPreferenceStore.class);

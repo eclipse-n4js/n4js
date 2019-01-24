@@ -29,7 +29,7 @@ import com.google.inject.Singleton;
  * Factory for commands used to interact with external binaries.
  */
 @Singleton
-public class BinaryCommandFactory {
+public class BinariesCommandFactory {
 
 	@Inject
 	private ProcessExecutor processExecutor;
