@@ -292,6 +292,8 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
                                         <include name="styles/**"/>
                                         <include name="images/**"/>
                                         <include name="scripts/**"/>
+                                        <include name="chapters/**"/>
+                                        <exclude name="chapters/**/*.adoc"/>
                                     </fileset>
                                 </copy>
 
@@ -384,6 +386,8 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
                                         <include name="styles/**"/>
                                         <include name="images/**"/>
                                         <include name="scripts/**"/>
+                                        <include name="chapters/**"/>
+                                        <exclude name="chapters/**/*.adoc"/>
                                     </fileset>
                                 </copy>
 
