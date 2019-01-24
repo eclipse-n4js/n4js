@@ -80,7 +80,7 @@ public class BinariesCommandFactory {
 			public ProcessResult execute() {
 				String escapedPackageNames = !packageNames.isEmpty()
 						? "\"" + Joiner.on("\" \"").join(packageNames) + "\""
-						: null; // 'null' will lead to a plain "npm install" without package names given
+						: ""; // empty string will lead to a plain "npm install" without package names given
 				boolean actualSaveDependency = saveDependency && !packageNames.isEmpty();
 				ProcessBuilder processBuilder = nodeProccessBuilder.getInstallNpmPackageProcessBuilder(invocationPath,
 						escapedPackageNames, actualSaveDependency);

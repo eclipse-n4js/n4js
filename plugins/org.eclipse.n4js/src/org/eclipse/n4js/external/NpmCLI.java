@@ -344,9 +344,9 @@ public class NpmCLI {
 	}
 
 	/**
-	 * Runs a plain 'npm install' in a given folder.
+	 * Runs a plain 'npm/yarn install' in a given folder.
 	 */
-	public IStatus runNpmInstall(File invocationPath) {
+	public IStatus runNpmYarnInstall(File invocationPath) {
 		IStatus status = executor.execute(
 				() -> commandFactory.createInstallEverythingCommand(invocationPath, true),
 				"Error while installing npm package.");

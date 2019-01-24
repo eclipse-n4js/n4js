@@ -16,13 +16,17 @@ import static org.eclipse.n4js.external.LibraryChange.LibraryChangeType.Install;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -42,9 +46,8 @@ import org.eclipse.n4js.binaries.IllegalBinaryStateException;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
-import org.eclipse.n4js.internal.N4JSModel;
-import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
+import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.SemverUtils;
@@ -52,6 +55,8 @@ import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.semver.model.SemverSerializer;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.utils.N4JSDataCollectors;
+import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper;
+import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper.NodeModulesFolder;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.io.FileDeleter;
@@ -93,13 +98,16 @@ public class LibraryManager {
 	private SemverHelper semverHelper;
 
 	@Inject
-	private N4JSModel model;
+	private IN4JSCore n4jsCore;
 
 	@Inject
 	private InternalN4JSWorkspace userWorkspace;
 
 	@Inject
 	private ExternalLibraryPreferenceStore extLibPreferenceStore;
+
+	@Inject
+	private NodeModulesDiscoveryHelper nodeModulesDiscoveryHelper;
 
 	/**
 	 * Call this method to synchronize the information in the Xtext index with all external projects in the external
@@ -134,8 +142,12 @@ public class LibraryManager {
 
 	/** Runs 'npm/yarn install' in a given folder. Afterwards, re-registers all npms. */
 	public IStatus runNpmYarnInstall(URI target, IProgressMonitor monitor) {
-		N4JSProject project = model.findProjectWith(target);
-		String msg = "Running 'npm install' on " + project.getProjectName();
+		IN4JSProject project = n4jsCore.findProject(target).orNull();
+		File projectFolder = project.getLocationPath().toFile();
+
+		boolean usingYarn = npmCli.isYarnUsed(projectFolder);
+
+		String msg = "Running '" + (usingYarn ? "yarn" : "npm") + " install' on " + project.getProjectName();
 		MultiStatus status = statusHelper.createMultiStatus(msg);
 		logger.logInfo(msg);
 
@@ -149,7 +161,7 @@ public class LibraryManager {
 
 		SubMonitor subMonitor1 = subMonitor.split(1);
 		subMonitor1.setTaskName("Building installed packages...");
-		npmCli.runNpmInstall(project.getLocationPath().toFile());
+		npmCli.runNpmYarnInstall(projectFolder);
 
 		SubMonitor subMonitor2 = subMonitor.split(1);
 		subMonitor2.setTaskName("Registering packages...");
@@ -160,7 +172,7 @@ public class LibraryManager {
 
 	/** Runs 'npm/yarn install' in all user projects. Afterwards, re-registers all npms. */
 	public IStatus runNpmYarnInstallOnAllProjects(IProgressMonitor monitor) {
-		String msg = "Running 'npm install' on all projects";
+		String msg = "Running 'npm/yarn install' on all projects";
 		MultiStatus status = statusHelper.createMultiStatus(msg);
 		logger.logInfo(msg);
 		IStatus binaryStatus = checkNPM();
@@ -170,15 +182,43 @@ public class LibraryManager {
 		}
 
 		Collection<URI> allProjectLocations = userWorkspace.getAllProjectLocations();
-		SubMonitor subMonitor = SubMonitor.convert(monitor, 1 + allProjectLocations.size());
 
+		// 1) collect workspace roots for projects contained in a yarn workspace
+		Set<File> yarnWorkspaceRoots = new LinkedHashSet<>();
+		List<IN4JSProject> projectsOutsideAnyYarnWorkspace = new ArrayList<>();
 		for (URI prjLocation : allProjectLocations) {
-			N4JSProject project = model.findProjectWith(prjLocation);
-			msg = "Running 'npm install' on " + project.getProjectName();
+			IN4JSProject project = n4jsCore.findProject(prjLocation).orNull();
+			if (project == null || !project.exists()) {
+				continue;
+			}
+			Path projectPath = project.getLocationPath();
+			NodeModulesFolder nodeModulesFolder = nodeModulesDiscoveryHelper.getNodeModulesFolder(projectPath);
+			if (nodeModulesFolder.isYarnWorkspace) {
+				yarnWorkspaceRoots.add(nodeModulesFolder.nodeModulesFolder.getParentFile());
+			} else {
+				projectsOutsideAnyYarnWorkspace.add(project);
+			}
+		}
+
+		SubMonitor subMonitor = SubMonitor.convert(monitor,
+				1 + yarnWorkspaceRoots.size() + projectsOutsideAnyYarnWorkspace.size());
+
+		// 2) run 'npm/yarn install' in workspace roots and non-workspace projects
+		for (File yarnWorkspaceRoot : yarnWorkspaceRoots) {
+			msg = "Running 'yarn install' on yarn workspace root " + yarnWorkspaceRoot;
 			SubMonitor subMonitorInstall = subMonitor.split(1);
 			subMonitorInstall.setTaskName(msg);
 			logger.logInfo(msg);
-			npmCli.runNpmInstall(project.getLocationPath().toFile());
+			npmCli.runNpmYarnInstall(yarnWorkspaceRoot);
+		}
+		for (IN4JSProject project : projectsOutsideAnyYarnWorkspace) {
+			File projectFolder = project.getLocationPath().toFile();
+			boolean usingYarn = npmCli.isYarnUsed(projectFolder);
+			msg = "Running '" + (usingYarn ? "yarn" : "npm") + " install' on " + project.getProjectName();
+			SubMonitor subMonitorInstall = subMonitor.split(1);
+			subMonitorInstall.setTaskName(msg);
+			logger.logInfo(msg);
+			npmCli.runNpmYarnInstall(projectFolder);
 		}
 
 		SubMonitor subMonitorRegisterNpms = subMonitor.split(1);
