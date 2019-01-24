@@ -178,7 +178,7 @@ public class YarnBinary implements Binary {
 
 	private String getDefaultYarnPath() {
 		if (memoizedCalculatedYarnPath == null) {
-			memoizedCalculatedYarnPath = binariesLocatorHelper.findYarnPath();
+			memoizedCalculatedYarnPath = binariesLocatorHelper.findYarnPath().toString();
 		}
 		return memoizedCalculatedYarnPath;
 	}

@@ -155,7 +155,7 @@ public class NodeJsBinary implements Binary {
 
 	private String getDefaultNodePath() {
 		if (memoizedCalculatedNodePath == null) {
-			memoizedCalculatedNodePath = nodeBinaryLocatorHelper.findNodePath();
+			memoizedCalculatedNodePath = nodeBinaryLocatorHelper.findNodePath().toString();
 		}
 		return memoizedCalculatedNodePath;
 	}

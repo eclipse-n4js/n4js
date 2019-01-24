@@ -236,7 +236,7 @@ public class UpdateShippedCode implements IWorkflowComponent {
 		final NodeYarnProcessBuilder nodeProcessBuilder = injector.getInstance(NodeYarnProcessBuilder.class);
 
 		println("Running \"" + N4JSGlobals.NPM_INSTALL + "\" in folder \"" + workingDirectory + "\"");
-		final String npmBinaryPath = locator.findNodePath();
+		final String npmBinaryPath = locator.findNodePath().toString();
 		if (npmBinaryPath == null || npmBinaryPath.isEmpty()) {
 			println("");
 			println("Could not identify location of node.");
