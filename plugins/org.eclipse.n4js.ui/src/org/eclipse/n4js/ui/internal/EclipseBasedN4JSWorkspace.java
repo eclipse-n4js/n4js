@@ -11,6 +11,7 @@
 package org.eclipse.n4js.ui.internal;
 
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -85,11 +86,16 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 		// FIXME: since this method is called for a lot of external files
 		if (nestedLocation.toString().startsWith("file:/")) {
 			String nested = nestedLocation.toFileString();
+			java.nio.file.Path nestedPath = Paths.get(nested);
+
 			for (IProject proj : workspace.getProjects()) {
 				String locationStr = proj.getLocation().toString();
-				if (nested.startsWith(locationStr)) {
-					String nodeModulesFolder = locationStr + "/" + N4JSGlobals.NODE_MODULES + "/";
-					if (nested.length() == nodeModulesFolder.length() || !nested.startsWith(nodeModulesFolder)) {
+				java.nio.file.Path locationPath = Paths.get(locationStr);
+
+				if (nestedPath.startsWith(locationPath)) {
+					java.nio.file.Path nodeModulesPath = locationPath.resolve(N4JSGlobals.NODE_MODULES);
+
+					if (!nestedPath.startsWith(nodeModulesPath) || nestedPath.equals(nodeModulesPath)) {
 						// Note: There can be projects in nested node_modules folder.
 						// The node_modules folder is still part of a project, but all
 						// elements below the node_modules folder are not part of this project.
