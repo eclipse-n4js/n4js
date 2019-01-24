@@ -19,7 +19,7 @@ import org.eclipse.n4js.binaries.BinariesValidator;
 import org.eclipse.n4js.binaries.BinaryCommandFactory;
 import org.eclipse.n4js.binaries.OsgiBinariesPreferenceStore;
 import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
-import org.eclipse.n4js.binaries.nodejs.NodeProcessBuilder;
+import org.eclipse.n4js.binaries.nodejs.NodeYarnProcessBuilder;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.binaries.nodejs.NpmrcBinary;
 import org.eclipse.n4js.binaries.nodejs.YarnBinary;
@@ -200,7 +200,7 @@ public class ContributingModule implements Module {
 
 		binder.bind(ProcessExecutor.class);
 		binder.bind(BinaryCommandFactory.class);
-		binder.bind(NodeProcessBuilder.class);
+		binder.bind(NodeYarnProcessBuilder.class);
 		binder.bind(OutputStreamPrinterThreadProvider.class);
 		binder.bind(BinariesPreferenceStore.class).to(OsgiBinariesPreferenceStore.class);
 		binder.bind(BinariesValidator.class);

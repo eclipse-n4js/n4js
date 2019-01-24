@@ -26,7 +26,9 @@ import org.eclipse.n4js.binaries.BinariesValidator;
 import org.eclipse.n4js.binaries.Binary;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.semver.model.SemverSerializer;
+import org.eclipse.xtext.xbase.lib.Pair;
 
+import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -111,6 +113,31 @@ public class YarnBinary implements Binary {
 	@Override
 	public IStatus validate() {
 		return validator.validate(this);
+	}
+
+	@Override
+	public Optional<String[]> getCacheCleanCommand() {
+		return Optional.of(new String[] { "cache", "clean", "--force" });
+	}
+
+	@Override
+	public boolean canInstallNpmPackages() {
+		return true;
+	}
+
+	@Override
+	public String getNpmInstallCommand(boolean readPackagesFromPackageJson) {
+		return readPackagesFromPackageJson ? "install" : "add";
+	}
+
+	@Override
+	public String getNpmUninstallCommand() {
+		return "remove";
+	}
+
+	@Override
+	public Optional<Pair<String, String>> getNpmSaveOptions() {
+		return Optional.of(new Pair<>("--save", "--no-save"));
 	}
 
 	/**
