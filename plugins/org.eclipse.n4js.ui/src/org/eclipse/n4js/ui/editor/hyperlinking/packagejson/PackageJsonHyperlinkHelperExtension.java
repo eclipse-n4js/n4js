@@ -81,16 +81,43 @@ public class PackageJsonHyperlinkHelperExtension implements IJSONHyperlinkHelper
 		if (linkedProjectWithRegion != null) {
 			URI uri = linkedProjectWithRegion.getFirst();
 			Region region = linkedProjectWithRegion.getSecond();
+			URI prjLocalPlatformUri = getProjectLocalPlatformURI(uri);
+			N4JSEclipseProject uriProject = model.findProjectWith(uri);
+
+			URI lnkUri = prjLocalPlatformUri == null ? uri : prjLocalPlatformUri;
+			String lnkName = uriProject == null ? ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(uri)
+					: uriProject.getProjectName();
 
 			XtextHyperlink hyperlink = hyperlinkProvider.get();
 			hyperlink.setHyperlinkRegion(region);
-			hyperlink.setURI(uri);
-			hyperlink.setHyperlinkText(ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(uri));
+			hyperlink.setURI(lnkUri);
+			hyperlink.setHyperlinkText(lnkName);
 
 			return new IHyperlink[] { hyperlink };
 		}
 
 		return null;
+	}
+
+	private URI getProjectLocalPlatformURI(URI uri) {
+		java.net.URI rootLocation = extWS.getRootLocationForResource(uri);
+		if (rootLocation == null) {
+			return null;
+		}
+		URI rootLocationEmfUri = URI.createURI(rootLocation.toString());
+		if (rootLocationEmfUri == null) {
+			return null;
+		}
+		N4JSEclipseProject findProjectWith = model.findProjectWith(rootLocationEmfUri);
+		if (findProjectWith == null) {
+			return null;
+		}
+
+		String uriString = uri.toFileString();
+		Path locationPath = findProjectWith.getLocationPath();
+		String prjLocalFile = uriString.substring(locationPath.toString().length());
+		URI prjLocalPlatformUri = URI.createPlatformResourceURI(findProjectWith.getProjectName() + prjLocalFile, true);
+		return prjLocalPlatformUri;
 	}
 
 	private Pair<URI, Region> getUriRegionPair(EObject eObject) {
