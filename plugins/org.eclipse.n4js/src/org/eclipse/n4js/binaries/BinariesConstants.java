@@ -75,7 +75,7 @@ public final class BinariesConstants {
 			: new File(separator + "usr" + File.separator + "local" + separator + "bin").getAbsolutePath();
 
 	/** The minimum {@code Node.js} version. */
-	public static final VersionNumber NODE_MIN_VERSION = SemverUtils.createVersionNumber(10, 15, 0);
+	public static final VersionNumber NODE_MIN_VERSION = SemverUtils.createVersionNumber(10, 13, 0);
 	/** The label for {@code Node.js}. */
 	public static final String NODE_LABEL = "Node.js";
 	/** The {@code Node.js} binary name (OS specific). */
