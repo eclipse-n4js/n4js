@@ -76,6 +76,14 @@ public enum ImageDescriptorCache {
 		/** Image reference for projects that are treated as either external or built-in libraries. */
 		EXTERNAL_LIB_PROJECT("jar_l_obj.gif"),
 
+		/**
+		 * Image reference for projects that are treated as either external or built-in libraries which is not built.
+		 */
+		EXTERNAL_LIB_PROJECT_NOT_BUILT("jar_l_obj_dark.png"),
+
+		/** Image reference for folders that contain scoped npms (i.e. start with '@'). */
+		LIB_PATH_SCOPED("runtime_obj.png"),
+
 		/** Wizard banner for the new N4JS project wizard. */
 		NEW_PROJECT_WIZBAN("newprj_wizban.png"),
 

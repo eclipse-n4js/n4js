@@ -20,6 +20,7 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.n4js.external.ExternalIndexSynchronizer;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
@@ -45,7 +46,10 @@ public class N4JSProjectExplorerLabelProvider extends LabelProvider implements I
 	private static final Image SRC_FOLDER_IMG = ImageRef.SRC_FOLDER.asImage().orNull();
 	private static final Image WORKING_SET_IMG = ImageRef.WORKING_SET.asImage().orNull();
 	private static final Image LIB_PATH = ImageRef.LIB_PATH.asImage().orNull();
+	private static final Image LIB_PATH_SCOPED = ImageRef.LIB_PATH_SCOPED.asImage().orNull();
 	private static final Image EXTERNAL_LIB_PROJECT = ImageRef.EXTERNAL_LIB_PROJECT.asImage().orNull();
+	private static final Image EXTERNAL_LIB_PROJECT_NOT_BUILT = ImageRef.EXTERNAL_LIB_PROJECT_NOT_BUILT.asImage()
+			.orNull();
 
 	@Inject
 	@SuppressWarnings("unused")
@@ -53,6 +57,9 @@ public class N4JSProjectExplorerLabelProvider extends LabelProvider implements I
 
 	@Inject
 	private WorkingSetManagerBroker workingSetManagerBroker;
+
+	@Inject
+	private ExternalIndexSynchronizer indexSynchronizer;
 
 	private final ILabelProvider delegate;
 	private final ProblemsLabelDecorator decorator;
@@ -100,11 +107,18 @@ public class N4JSProjectExplorerLabelProvider extends LabelProvider implements I
 			final IFolder folder = (IFolder) element;
 			N4JSExternalProject npmProject = helper.getNodeModulesNpmProjectOrNull(folder);
 
-			if (helper.isNodeModulesFolder(folder) || folder.getName().startsWith("@")) {
+			if (helper.isNodeModulesFolder(folder)) {
 				return decorator.decorateImage(LIB_PATH, element);
 
+			} else if (folder.getName().startsWith("@") && helper.isNodeModulesFolder(folder.getParent())) {
+				return decorator.decorateImage(LIB_PATH_SCOPED, element);
+
 			} else if (npmProject != null) {
-				return decorator.decorateImage(EXTERNAL_LIB_PROJECT, element);
+				if (indexSynchronizer.isInIndex(npmProject)) {
+					return decorator.decorateImage(EXTERNAL_LIB_PROJECT, element);
+				} else {
+					return decorator.decorateImage(EXTERNAL_LIB_PROJECT_NOT_BUILT, element);
+				}
 
 			} else if (helper.isSourceFolder(folder) || helper.isOutputFolder(folder)) {
 				// (temporarily) disabled because #isSourceFolder() and #isOutputFolder() obtain a lock on the workspace

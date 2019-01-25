@@ -184,7 +184,7 @@ public class N4JSProjectExplorerHelper {
 	public boolean isNodeModulesNpmProject(IFolder folder) {
 		IContainer parentContainer = folder.getParent();
 		if (parentContainer instanceof IFolder) {
-			return isNodeModulesFolder((IFolder) parentContainer);
+			return isNodeModulesFolder(parentContainer);
 		}
 		return false;
 	}
@@ -193,14 +193,14 @@ public class N4JSProjectExplorerHelper {
 	 * Returns with {@code true} if the folder argument represents a node_modules folder in its container project.
 	 * Otherwise returns with {@code false}.
 	 *
-	 * @param folder
+	 * @param container
 	 *            the folder to test whether it is an output folder or not.
 	 * @return {@code true} if the folder is detected as an node_modules folder in the project, otherwise returns with
 	 *         {@code false}.
 	 */
-	public boolean isNodeModulesFolder(IFolder folder) {
-		if ("node_modules".equals(folder.getName())) {
-			IPath path = folder.getLocation();
+	public boolean isNodeModulesFolder(IContainer container) {
+		if ("node_modules".equals(container.getName()) && container instanceof IFolder) {
+			IPath path = container.getLocation();
 			URI locURI = path.toFile().toURI();
 			if (prefStore.getNodeModulesLocations().contains(locURI)) {
 				return true;
