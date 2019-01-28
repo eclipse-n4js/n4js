@@ -42,11 +42,6 @@ Contributors:
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
 				<version>${codehaus-exec-maven-plugin.version}</version>
-				<configuration>
-					<environmentVariables>
-						<NPM_TOKEN>dummy</NPM_TOKEN>
-					</environmentVariables>
-				</configuration>
 				<executions>
 					<execution>
 						<id>mwe2-launcher</id>
@@ -55,9 +50,6 @@ Contributors:
 							<goal>java</goal>
 						</goals>
 						<configuration>
-							<environmentVariables>
-								<NPM_TOKEN>dummy</NPM_TOKEN>
-							</environmentVariables>
 							<includeProjectDependencies>true</includeProjectDependencies>
 							<includePluginDependencies>true</includePluginDependencies>
 							<mainClass>org.eclipse.emf.mwe2.launch.runtime.Mwe2Launcher</mainClass>
