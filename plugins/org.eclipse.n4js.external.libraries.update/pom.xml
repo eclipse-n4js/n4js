@@ -42,6 +42,11 @@ Contributors:
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
 				<version>${codehaus-exec-maven-plugin.version}</version>
+				<configuration>
+					<environmentVariables>
+						<NPM_TOKEN>dummy</NPM_TOKEN>
+					</environmentVariables>
+				</configuration>
 				<executions>
 					<execution>
 						<id>mwe2-launcher</id>
