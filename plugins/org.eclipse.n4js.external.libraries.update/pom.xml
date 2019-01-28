@@ -62,6 +62,9 @@ Contributors:
 									rootPath=/${project.basedir}/../
 								</argument>
 							</arguments>
+							<environmentVariables>
+								<NPM_TOKEN>dummy</NPM_TOKEN>
+							</environmentVariables>
 							<classpathScope>compile</classpathScope>
 							<!-- Following switch:
 								 do not try to kill the daemons of MWE, default timed out after 15s and gave Exceptions to build
