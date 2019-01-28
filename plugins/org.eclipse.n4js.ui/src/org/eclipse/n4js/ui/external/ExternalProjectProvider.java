@@ -28,7 +28,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalProject;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.external.NpmLogger;
-import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore.StoreUpdatedListener;
@@ -57,9 +56,6 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 	private ExternalLibraryPreferenceStore externalLibraryPreferenceStore;
 
 	@Inject
-	private TargetPlatformInstallLocationProvider platformLocationProvider;
-
-	@Inject
 	private EclipseBasedN4JSWorkspace userWorkspace;
 
 	@Inject
@@ -67,7 +63,7 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 
 	static private class UninitializedMappings extends ExternalProjectMappings {
 		public UninitializedMappings() {
-			super(null, null, null, null, false);
+			super(null, null, null, false);
 		}
 	}
 
@@ -158,9 +154,7 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 		if (semaphore.tryAcquire()) {
 			try {
 				Map<URI, Pair<N4JSExternalProject, ProjectDescription>> completeCache = computeProjectsUncached();
-				mappings = new ExternalProjectMappings(userWorkspace, externalLibraryPreferenceStore,
-						platformLocationProvider, completeCache);
-
+				mappings = new ExternalProjectMappings(userWorkspace, externalLibraryPreferenceStore, completeCache);
 				npmLogger.logInfo("external locations updated");
 
 			} finally {
@@ -189,7 +183,8 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 	List<Pair<URI, ProjectDescription>> computeProjectsIncludingUnnecessary() {
 		Map<URI, Pair<N4JSExternalProject, ProjectDescription>> completeCache = computeProjectsUncached();
 		ExternalProjectMappings mappingsTmp = new ExternalProjectMappings(userWorkspace, externalLibraryPreferenceStore,
-				platformLocationProvider, completeCache);
+				completeCache);
+
 		return mappingsTmp.completeList;
 	}
 

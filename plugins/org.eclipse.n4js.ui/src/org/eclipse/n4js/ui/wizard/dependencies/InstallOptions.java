@@ -17,7 +17,5 @@ public class InstallOptions {
 
 	/** String representation of the {@code .npmrc} path. Can be empty to indicate no special setting. */
 	public String npmrc = "";
-	/** flag indicating if npm cache should be cleared */
-	public boolean clearNpmCache = false;
 
 }

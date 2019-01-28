@@ -661,10 +661,10 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 			var boolean multipleInvocations;
 
 			override Collection<? extends IChange> computeChanges(IModificationContext context, IMarker marker, int offset, int length, EObject element) throws Exception {
-				invokeNpmManager(element);
+				invokeLibraryManager(element);
 			}
 			override Collection<? extends IChange> computeOneOfMultipleChanges(IModificationContext context, IMarker marker, int offset, int length, EObject element) throws Exception {
-				invokeNpmManager(element);
+				invokeLibraryManager(element);
 			}
 			override void computeFinalChanges() throws Exception {
 				if (multipleInvocations) {
@@ -678,7 +678,7 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 				}
 			}
 
-			def Collection<? extends IChange> invokeNpmManager(EObject element) throws Exception {
+			def Collection<? extends IChange> invokeLibraryManager(EObject element) throws Exception {
 				val dependency = element as ProjectReference;
 				val packageName = dependency.projectName;
 				val packageVersion = if (dependency instanceof ProjectDependency) {
@@ -688,18 +688,18 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 					};
 
 				val illegalBinaryExcRef = new AtomicReference
-				val multiStatus = createMultiStatus("Installing npm '" + packageName + "'.");
+				val multiStatus = createMultiStatus("Installing npm package '" + packageName + "'.");
 
 				new ProgressMonitorDialog(UIUtils.shell).run(true, false, [monitor |
 					try {
 						val Map<String, NPMVersionRequirement> package = Collections.singletonMap(packageName, packageVersion);
-						multiStatus.merge(libraryManager.installNPMs(package, false, monitor));
+						multiStatus.merge(libraryManager.installNPMs(package, false, issue.uriToProblem, monitor));
 
 					} catch (IllegalBinaryStateException e) {
 						illegalBinaryExcRef.set(e);
 
 					} catch (Exception e) {
-						val msg = "Error while uninstalling npm dependency: '" + packageName + "'.";
+						val msg = "Error while uninstalling npm package: '" + packageName + "'.";
 						multiStatus.merge(createError(msg, e));
 					}
 				]);

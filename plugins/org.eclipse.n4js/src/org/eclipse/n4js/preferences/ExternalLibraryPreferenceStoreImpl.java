@@ -18,6 +18,7 @@ import static org.eclipse.core.runtime.Status.OK_STATUS;
 
 import java.io.File;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -46,11 +47,11 @@ import com.google.inject.Inject;
 	private final Collection<StoreUpdatedListener> listeners;
 
 	private ExternalLibraryPreferenceModel model;
+	private ExternalLibraryPreferenceModel lastSavedModel;
 
 	/**
 	 * Creates a new external library preference store.
 	 */
-	@Inject
 	protected ExternalLibraryPreferenceStoreImpl() {
 		listeners = newHashSet();
 		model = getOrCreateModel();
@@ -58,7 +59,13 @@ import com.google.inject.Inject;
 
 	@Override
 	public Collection<URI> getLocations() {
-		return getOrCreateModel().getExternalLibraryLocationsAsUris();
+		List<URI> result = new ArrayList<>(getOrCreateModel().getExternalLibraryLocationsAsUris());
+		return result;
+	}
+
+	@Override
+	public Collection<URI> getNodeModulesLocations() {
+		return getOrCreateModel().getNodeModulesLocationsAsUris();
 	}
 
 	@Override
@@ -94,7 +101,7 @@ import com.google.inject.Inject;
 	@Override
 	public final IStatus save(IProgressMonitor monitor) {
 
-		if (getOrCreateModel().equals(doLoad())) {
+		if (lastSavedModel != null && getOrCreateModel().equals(lastSavedModel)) {
 			return OK_STATUS;
 		}
 
@@ -105,6 +112,7 @@ import com.google.inject.Inject;
 		if (null != status && status.isOK()) {
 			notifyListeners(monitor);
 		}
+		lastSavedModel = doLoad();
 		return status;
 	}
 

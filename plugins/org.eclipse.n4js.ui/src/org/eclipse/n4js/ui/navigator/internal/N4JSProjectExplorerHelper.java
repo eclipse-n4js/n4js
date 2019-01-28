@@ -11,6 +11,7 @@
 package org.eclipse.n4js.ui.navigator.internal;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Strings.nullToEmpty;
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Maps.uniqueIndex;
 import static com.google.common.collect.Sets.newHashSet;
@@ -22,23 +23,37 @@ import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.LAN
 import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.MANGELHAFT_CATEGORY;
 import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.NPM_CATEGORY;
 import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.RUNTIME_CATEGORY;
+import static org.eclipse.n4js.projectDescription.ProjectType.API;
 import static org.eclipse.n4js.projectDescription.ProjectType.RUNTIME_ENVIRONMENT;
 import static org.eclipse.n4js.projectDescription.ProjectType.RUNTIME_LIBRARY;
+import static org.eclipse.xtext.util.Strings.toFirstUpper;
 
+import java.io.File;
 import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.jface.viewers.StyledString.Styler;
+import org.eclipse.n4js.external.ExternalIndexSynchronizer;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalProject;
+import org.eclipse.n4js.external.N4JSExternalProject;
+import org.eclipse.n4js.external.ShadowingInfoHelper;
+import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.n4js.semver.model.SemverSerializer;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.n4js.utils.resources.IExternalResource;
@@ -59,6 +74,15 @@ public class N4JSProjectExplorerHelper {
 
 	@Inject
 	private ExternalLibraryWorkspace externalLibraryWorkspace;
+
+	@Inject
+	private ExternalLibraryPreferenceStore prefStore;
+
+	@Inject
+	private ExternalIndexSynchronizer indexSynchronizer;
+
+	@Inject
+	private ShadowingInfoHelper shadowingInfoHelper;
 
 	/**
 	 * Returns with the corresponding {@link IN4JSProject N4JS project} for the given {@link IProject Eclipse project}
@@ -99,19 +123,17 @@ public class N4JSProjectExplorerHelper {
 	 * @return {@code true} if the folder is a source folder, otherwise returns with {@code false}.
 	 */
 	public boolean isSourceFolder(IFolder folder) {
-
-		if (null == folder || !folder.exists()) {
-			return false;
-		}
-
 		IN4JSProject project = getProject(folder.getProject());
 
-		if (null != project) {
+		if (project != null) {
 			String relativePath = Strings.nullToEmpty(folder.getProjectRelativePath().toOSString());
-			return from(project.getSourceContainers()).transform(src -> src.getRelativeLocation())
-					.contains(relativePath);
+			for (IN4JSSourceContainer srcContainer : project.getSourceContainers()) {
+				String relSrcCont = Strings.nullToEmpty(srcContainer.getRelativeLocation());
+				if (relativePath.equals(relSrcCont) || relSrcCont.startsWith(relativePath + File.separator)) {
+					return true;
+				}
+			}
 		}
-
 		return false;
 	}
 
@@ -125,19 +147,121 @@ public class N4JSProjectExplorerHelper {
 	 *         {@code false}.
 	 */
 	public boolean isOutputFolder(IFolder folder) {
-
-		if (null == folder || !folder.exists()) {
-			return false;
-		}
-
 		IN4JSProject project = getProject(folder.getProject());
 
-		if (null != project) {
+		if (project != null) {
 			String relativePath = Strings.nullToEmpty(folder.getProjectRelativePath().toOSString());
-			return relativePath.equals(project.getOutputPath());
+			String outputPath = Strings.nullToEmpty(project.getOutputPath());
+			return relativePath.equals(outputPath) || outputPath.startsWith(relativePath + File.separator);
 		}
-
 		return false;
+	}
+
+	/**
+	 * Returns with {@code true} if the folder argument represents a node_modules folder in its container project.
+	 * Otherwise returns with {@code false}.
+	 *
+	 * @param folder
+	 *            the folder to test whether it is an output folder or not.
+	 * @return {@code true} if the folder is detected as an node_modules folder in the project, otherwise returns with
+	 *         {@code false}.
+	 */
+	public N4JSExternalProject getNodeModulesNpmProjectOrNull(IFolder folder) {
+		String npmPckJson = folder.getLocation().toOSString();
+		org.eclipse.emf.common.util.URI folderURI = org.eclipse.emf.common.util.URI.createFileURI(npmPckJson);
+		return externalLibraryWorkspace.getProject(folderURI);
+	}
+
+	/**
+	 * Returns with {@code true} if the folder argument represents a node_modules folder in its container project.
+	 * Otherwise returns with {@code false}.
+	 *
+	 * @param folder
+	 *            the folder to test whether it is an output folder or not.
+	 * @return {@code true} if the folder is detected as an node_modules folder in the project, otherwise returns with
+	 *         {@code false}.
+	 */
+	public boolean isNodeModulesNpmProject(IFolder folder) {
+		IContainer parentContainer = folder.getParent();
+		if (parentContainer instanceof IFolder) {
+			return isNodeModulesFolder(parentContainer);
+		}
+		return false;
+	}
+
+	/**
+	 * Returns with {@code true} if the folder argument represents a node_modules folder in its container project.
+	 * Otherwise returns with {@code false}.
+	 *
+	 * @param container
+	 *            the folder to test whether it is an output folder or not.
+	 * @return {@code true} if the folder is detected as an node_modules folder in the project, otherwise returns with
+	 *         {@code false}.
+	 */
+	public boolean isNodeModulesFolder(IContainer container) {
+		if ("node_modules".equals(container.getName()) && container instanceof IFolder) {
+			IPath path = container.getLocation();
+			URI locURI = path.toFile().toURI();
+			if (prefStore.getNodeModulesLocations().contains(locURI)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * @return a styled string for a given external project. Respects name, type, version, and information about
+	 *         shadowing and whether it is available in the xtext index
+	 */
+	public StyledString getStyledTextForExternalProject(final IN4JSProject project, String overrideProjectName) {
+		String name = (overrideProjectName == null) ? project.getProjectName() : overrideProjectName;
+		ProjectType type = project.getProjectType();
+		// for better visual representation MyProject @1.2.3 -> MyProject v1.2.3
+		String version = SemverSerializer.serialize(project.getVersion()).replaceFirst("@", "v");
+		String typeLabel = getProjectTypeLabel(type);
+		boolean inIndex = indexSynchronizer.isInIndex(project.getProjectDescriptionLocation().orNull());
+		String rootLocationName = getRootLocationName(project);
+
+		Styler stylerName = inIndex ? null : StyledString.QUALIFIER_STYLER;
+		Styler stylerType = inIndex ? StyledString.DECORATIONS_STYLER : StyledString.QUALIFIER_STYLER;
+		StyledString string = new StyledString(name + " " + version, stylerName);
+		string.append(typeLabel, stylerType);
+		if (rootLocationName != null) {
+			string.append(rootLocationName, StyledString.COUNTER_STYLER);
+		}
+		return string;
+	}
+
+	private String getRootLocationName(final IN4JSProject project) {
+		String rootLocationName = null;
+		List<IN4JSProject> shadowingProjects = shadowingInfoHelper.findShadowingProjects(project);
+		if (!shadowingProjects.isEmpty()) {
+			IN4JSProject shadowedProject = shadowingProjects.get(0);
+			if (shadowedProject.isExternal()) {
+				org.eclipse.emf.common.util.URI location = shadowedProject.getLocation();
+				URI rootLocation = externalLibraryWorkspace.getRootLocationForResource(location);
+				org.eclipse.emf.common.util.URI emfURI = org.eclipse.emf.common.util.URI
+						.createURI(rootLocation.toString());
+				rootLocationName = emfURI.lastSegment();
+				if (rootLocationName.isEmpty() && emfURI.segmentCount() > 1) {
+					rootLocationName = emfURI.segment(emfURI.segmentCount() - 2);
+				}
+			} else {
+				rootLocationName = "workspace";
+			}
+			rootLocationName = " [shadowed by " + rootLocationName + "]";
+		}
+		return rootLocationName;
+	}
+
+	private String getProjectTypeLabel(final ProjectType projectType) {
+		final String label;
+		if (API.equals(projectType)) {
+			label = API.getName();
+		} else {
+			label = toFirstUpper(nullToEmpty(projectType.getName()).replaceAll("_", " ").toLowerCase());
+		}
+		return " [" + label + "]";
 	}
 
 	/**

@@ -44,8 +44,10 @@ public class N4JSExternalLibraryStartup implements IStartup {
 
 	@Inject
 	private IWorkspace workspace;
+
 	@Inject
 	private BuildScheduler buildManager;
+
 	@Inject
 	private IBuilderState builderState;
 

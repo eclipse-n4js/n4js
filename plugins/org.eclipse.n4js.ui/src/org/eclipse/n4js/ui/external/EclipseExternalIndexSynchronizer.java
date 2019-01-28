@@ -12,14 +12,21 @@ package org.eclipse.n4js.ui.external;
 
 import static org.eclipse.core.runtime.SubMonitor.convert;
 
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalIndexSynchronizer;
@@ -30,7 +37,10 @@ import org.eclipse.n4js.external.LibraryChange;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.external.NpmLogger;
+import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
+import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.URIUtils;
 
@@ -50,6 +60,15 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 	@Inject
 	private NpmLogger logger;
 
+	@Inject
+	private EclipseBasedN4JSWorkspace workspace;
+
+	@Inject
+	private ExternalLibraryPreferenceStore libraryPreferenceStore;
+
+	@Inject
+	private NodeModulesDiscoveryHelper nodeModulesDiscoveryHelper;
+
 	/**
 	 * Call this method to synchronize the information in the Xtext index with all external projects in the external
 	 * library folders.
@@ -65,9 +84,11 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 	 */
 	@Override
 	public void synchronizeNpms(IProgressMonitor monitor, Collection<LibraryChange> forcedChangeSet) {
-		SubMonitor subMonitor = convert(monitor, 11);
+		SubMonitor subMonitor = convert(monitor, 12);
 
 		try {
+			workspace.getWorkspace().refreshLocal(IResource.DEPTH_INFINITE, subMonitor.split(1));
+
 			Collection<LibraryChange> oldChangeSet = identifyChangeSet(forcedChangeSet, false);
 			RegisterResult cleanResults = cleanChangesIndex(subMonitor.split(1), oldChangeSet);
 
@@ -265,6 +286,26 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 
 		RegisterResult cleanResult = externalLibraryWorkspace.deregisterProjects(monitor, cleanProjects);
 		printRegisterResults(cleanResult, "deregistered");
+	}
+
+	/** Triggers synchronization of the stored node_modules folders with the ones that actually exist. */
+	@Override
+	public void synchronizeNodeModulesFolders() {
+		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+		List<Path> projectRoots = new LinkedList<>();
+		for (IProject project : projects) {
+			if (project.isAccessible()) {
+				Path path = project.getLocation().toFile().toPath();
+				projectRoots.add(path);
+			}
+		}
+
+		libraryPreferenceStore.resetDefaults();
+		Collection<Path> locations = nodeModulesDiscoveryHelper.findNodeModulesFolders(projectRoots);
+		for (Path location : locations) {
+			libraryPreferenceStore.add(location.toUri());
+		}
+		libraryPreferenceStore.save(new NullProgressMonitor());
 	}
 
 }

@@ -23,7 +23,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
@@ -36,7 +35,6 @@ import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.eclipse.n4js.ui.external.ExternalLibrariesActionsHelper;
-import org.eclipse.n4js.utils.StatusHelper;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -76,9 +74,6 @@ public class GH_986_ExternalCircularDependencyAndRuntimeLibrariesPluginTest exte
 	private ExternalLibrariesActionsHelper externals;
 
 	@Inject
-	private StatusHelper statusHelper;
-
-	@Inject
 	private RuntimeEnvironmentsHelper runtimeEnvironmentsHelper;
 
 	@Inject
@@ -116,9 +111,7 @@ public class GH_986_ExternalCircularDependencyAndRuntimeLibrariesPluginTest exte
 		waitForAutoBuild();
 
 		// clear library manager to avoid confusing tests being executed after this test class
-		final MultiStatus multistatus = statusHelper
-				.createMultiStatus("Status of deleting NPM packages from library manager.");
-		externals.maintenanceDeleteNpms(multistatus);
+		externals.maintenanceDeleteNpms();
 
 		shippedCodeInitializeTestHelper.tearDownBuiltIns();
 		super.tearDown();

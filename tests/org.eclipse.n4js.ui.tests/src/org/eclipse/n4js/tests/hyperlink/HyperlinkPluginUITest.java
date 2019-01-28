@@ -19,7 +19,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
@@ -33,7 +32,6 @@ import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.eclipse.n4js.ui.editor.N4JSHyperlinkDetector;
 import org.eclipse.n4js.ui.external.ExternalLibrariesActionsHelper;
 import org.eclipse.n4js.ui.utils.UIUtils;
-import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.xtext.ui.editor.IURIEditorOpener;
 import org.eclipse.xtext.ui.editor.XtextEditor;
@@ -61,9 +59,6 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 	private ExternalLibrariesActionsHelper externals;
 
 	@Inject
-	private StatusHelper statusHelper;
-
-	@Inject
 	private N4JSHyperlinkDetector hyperlinkDetector;
 
 	@Inject
@@ -80,9 +75,7 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 	@Override
 	public void tearDown() throws Exception {
 		// clear library manager to avoid confusing tests being executed after this test class
-		final MultiStatus multistatus = statusHelper
-				.createMultiStatus("Status of deleting NPM packages from library manager.");
-		externals.maintenanceDeleteNpms(multistatus);
+		externals.maintenanceDeleteNpms();
 
 		shippedCodeInitializeTestHelper.tearDownBuiltIns();
 		super.tearDown();

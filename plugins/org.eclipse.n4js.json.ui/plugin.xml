@@ -12,6 +12,7 @@
 			default="true"
 			extensions="json"
 			id="org.eclipse.n4js.json.JSON"
+            icon="platform:/plugin/org.eclipse.n4js.json.ui/icons/generic_editor.png"
 			name="JSON Editor">
 		</editor>
 	</extension>

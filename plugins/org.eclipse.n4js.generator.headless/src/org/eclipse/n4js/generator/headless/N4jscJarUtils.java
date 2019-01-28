@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
-import org.eclipse.n4js.binaries.BinaryCommandFactory;
+import org.eclipse.n4js.binaries.BinariesCommandFactory;
 import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
 import org.eclipse.n4js.utils.process.ProcessResult;
 
@@ -170,7 +170,7 @@ public class N4jscJarUtils {
 	/**
 	 * Build headless with N4jscli
 	 */
-	public static void buildHeadlessWithN4jscli(BinaryCommandFactory commandFactory, NodeJsBinary nodeJsBinary,
+	public static void buildHeadlessWithN4jscli(BinariesCommandFactory commandFactory, NodeJsBinary nodeJsBinary,
 			File workspaceRoot,
 			List<String> javaOpts,
 			List<String> n4jscOpts) {

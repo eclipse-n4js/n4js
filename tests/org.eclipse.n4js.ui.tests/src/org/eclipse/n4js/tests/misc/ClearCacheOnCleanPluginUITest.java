@@ -19,7 +19,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.n4js.compare.ApiImplMapping;
 import org.eclipse.n4js.internal.MultiCleartriggerCache;
@@ -29,7 +28,6 @@ import org.eclipse.n4js.tests.util.EclipseUIUtils;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.eclipse.n4js.ui.external.ExternalLibrariesActionsHelper;
-import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
@@ -55,9 +53,6 @@ public class ClearCacheOnCleanPluginUITest extends AbstractBuilderParticipantTes
 	private ExternalLibrariesActionsHelper externals;
 
 	@Inject
-	private StatusHelper statusHelper;
-
-	@Inject
 	private MultiCleartriggerCache cache;
 
 	@Before
@@ -71,9 +66,7 @@ public class ClearCacheOnCleanPluginUITest extends AbstractBuilderParticipantTes
 	@Override
 	public void tearDown() throws Exception {
 		// clear library manager to avoid confusing tests being executed after this test class
-		final MultiStatus multistatus = statusHelper
-				.createMultiStatus("Status of deleting NPM packages from library manager.");
-		externals.maintenanceDeleteNpms(multistatus);
+		externals.maintenanceDeleteNpms();
 
 		shippedCodeInitializeTestHelper.tearDownBuiltIns();
 		super.tearDown();

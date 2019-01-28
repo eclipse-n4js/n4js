@@ -39,11 +39,13 @@ public class ButtonFactoryUtil {
 	 *            flag controls if created button is enabled.
 	 * @return created button.
 	 */
-	public static Button createPushButton(final Composite parent, final String text, final SelectionListener listener,
-			boolean enabled) {
+	public static Button createPushButton(final Composite parent, final String text, final String tooltip,
+			final SelectionListener listener, boolean enabled) {
+
 		final Button button = new Button(parent, PUSH);
 		button.setLayoutData(fillDefaults().align(FILL, CENTER).create());
 		button.setText(text);
+		button.setToolTipText(tooltip);
 		if (null != listener) {
 			button.addSelectionListener(listener);
 			button.addDisposeListener(e -> {
@@ -55,21 +57,21 @@ public class ButtonFactoryUtil {
 	}
 
 	/**
-	 * Delegates to {@link #createPushButton(Composite, String, SelectionListener, boolean)} with {@code enabled} set to
-	 * {@code false}.
+	 * Delegates to {@link #createPushButton(Composite, String, String, SelectionListener, boolean)} with
+	 * {@code enabled} set to {@code false}.
 	 */
-	public static Button createDisabledPushButton(final Composite parent, final String text,
+	public static Button createDisabledPushButton(final Composite parent, final String text, final String tooltip,
 			final SelectionListener listener) {
-		return createPushButton(parent, text, listener, false);
+		return createPushButton(parent, text, tooltip, listener, false);
 	}
 
 	/**
-	 * Delegates to {@link #createPushButton(Composite, String, SelectionListener, boolean)} with {@code enabled} set to
-	 * {@code true}.
+	 * Delegates to {@link #createPushButton(Composite, String, String, SelectionListener, boolean)} with
+	 * {@code enabled} set to {@code true}.
 	 */
-	public static Button createEnabledPushButton(final Composite parent, final String text,
+	public static Button createEnabledPushButton(final Composite parent, final String text, final String tooltip,
 			final SelectionListener listener) {
-		return createPushButton(parent, text, listener, true);
+		return createPushButton(parent, text, tooltip, listener, true);
 	}
 
 }

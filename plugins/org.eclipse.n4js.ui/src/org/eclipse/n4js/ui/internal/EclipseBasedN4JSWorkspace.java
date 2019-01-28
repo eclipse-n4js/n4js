@@ -11,6 +11,7 @@
 package org.eclipse.n4js.ui.internal;
 
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -69,7 +70,8 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 		this.cache = cache;
 	}
 
-	IWorkspaceRoot getWorkspace() {
+	/** @return the eclipse workspace root */
+	public IWorkspaceRoot getWorkspace() {
 		return workspace;
 	}
 
@@ -80,16 +82,26 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 		}
 		// this might happen if the URI was located from non-platform information, e.g. in case
 		// of a source file location found in a source map
-		// FIXME: This loop and the call 'toFile()' are very expensive
+		// FIXME: This loop and the call 'toFile()' / 'isFile()' are very expensive
 		// FIXME: since this method is called for a lot of external files
-		if (nestedLocation.isFile()) {
-			String nested = nestedLocation.toString();
+		if (nestedLocation.toString().startsWith("file:/")) {
+			String nested = nestedLocation.toFileString();
+			java.nio.file.Path nestedPath = Paths.get(nested);
+
 			for (IProject proj : workspace.getProjects()) {
-				URI projURI = URI.createFileURI(proj.getLocation().toFile().toString());
-				String ps = projURI.toString();
-				if (nested.startsWith(ps) && !nested.startsWith(ps + "/node_modules")) {
-					// Note: There can be projects in nested node_modules folder.
-					return projURI;
+				String locationStr = proj.getLocation().toString();
+				java.nio.file.Path locationPath = Paths.get(locationStr);
+
+				if (nestedPath.startsWith(locationPath)) {
+					java.nio.file.Path nodeModulesPath = locationPath.resolve(N4JSGlobals.NODE_MODULES);
+
+					if (!nestedPath.startsWith(nodeModulesPath) || nestedPath.equals(nodeModulesPath)) {
+						// Note: There can be projects in nested node_modules folder.
+						// The node_modules folder is still part of a project, but all
+						// elements below the node_modules folder are not part of this project.
+						URI projURI = URI.createFileURI(locationStr);
+						return projURI;
+					}
 				}
 			}
 		}

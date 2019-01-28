@@ -10,22 +10,11 @@
  */
 package org.eclipse.n4js.tests.builder;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-import java.net.URI;
-
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.n4js.external.LibraryManager;
-import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
-import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
-import org.eclipse.n4js.utils.io.FileDeleter;
-import org.eclipse.n4js.utils.io.FileUtils;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -36,25 +25,11 @@ import com.google.inject.Injector;
 public class ExternalLibrariesSetupHelper {
 
 	@Inject
-	private TargetPlatformInstallLocationProvider locationProvider;
-
-	@Inject
-	private ExternalLibraryPreferenceStore externalLibraryPreferenceStore;
-
-	@Inject
 	private ShippedCodeInitializeTestHelper shippedCodeInitializeTestHelper;
 
 	/** Sets up the known external library locations with the {@code node_modules} folder. */
-	public void setupExternalLibraries(boolean initShippedCode) throws Exception {
-		URI nodeModulesLocation = getCleanModulesLocation();
-
-		if (initShippedCode) {
-			shippedCodeInitializeTestHelper.setupBuiltIns();
-		} else {
-			externalLibraryPreferenceStore.add(nodeModulesLocation);
-			final IStatus result = externalLibraryPreferenceStore.save(new NullProgressMonitor());
-			assertTrue("Error while saving external library preference changes.", result.isOK());
-		}
+	public void setupShippedLibraries() throws Exception {
+		shippedCodeInitializeTestHelper.setupBuiltIns();
 
 		Injector n4jsInjector = N4JSActivator.getInstance().getInjector("org.eclipse.n4js.N4JS");
 		LibraryManager libMan = n4jsInjector.getInstance(LibraryManager.class);
@@ -63,41 +38,13 @@ public class ExternalLibrariesSetupHelper {
 		ProjectTestsUtils.waitForAutoBuild();
 	}
 
-	private URI getCleanModulesLocation() {
-		URI nodeModulesLocation = locationProvider.getNodeModulesURI();
-		URI targetPlatformFileLocation = locationProvider.getTargetPlatformFileLocation();
-		File nodeModulesDir = new File(nodeModulesLocation);
-		File targetPlatformFile = new File(targetPlatformFileLocation);
-
-		// When running plugin tests on Jenkins it can happen that the modules location is not clean
-		// because it still contains packages that were installed by other plugin tests.
-		FileUtils.deleteFileOrFolder(nodeModulesDir);
-		FileUtils.deleteFileOrFolder(targetPlatformFile);
-		locationProvider.repairNpmFolderState();
-
-		assertTrue("Provided location should be available.", nodeModulesDir.isDirectory());
-		assertTrue("Provided location should be available.", targetPlatformFile.isFile());
-		return nodeModulesLocation;
-	}
-
 	/** Tears down the external libraries. */
-	public void tearDownExternalLibraries(boolean tearDownShippedCode) throws Exception {
+	public void tearDownShippedLibraries() throws Exception {
+		shippedCodeInitializeTestHelper.tearDownBuiltIns();
 
-		final URI nodeModulesLocation = locationProvider.getNodeModulesURI();
-		externalLibraryPreferenceStore.remove(nodeModulesLocation);
-		final IStatus result = externalLibraryPreferenceStore.save(new NullProgressMonitor());
-		assertTrue("Error while saving external library preference changes.", result.isOK());
-
-		if (tearDownShippedCode) {
-			shippedCodeInitializeTestHelper.tearDownBuiltIns();
-		}
-
-		// cleanup leftovers in the file system
-		File nodeModuleLocationFile = new File(nodeModulesLocation);
-		assertTrue("Provided npm location does not exist.", nodeModuleLocationFile.exists());
-		assertTrue("Provided npm location is not a folder.", nodeModuleLocationFile.isDirectory());
-		FileDeleter.delete(nodeModuleLocationFile);
-		assertFalse("Provided npm location should be deleted.", nodeModuleLocationFile.exists());
+		Injector n4jsInjector = N4JSActivator.getInstance().getInjector("org.eclipse.n4js.N4JS");
+		LibraryManager libMan = n4jsInjector.getInstance(LibraryManager.class);
+		libMan.registerAllExternalProjects(new NullProgressMonitor());
 
 		ProjectTestsUtils.waitForAutoBuild();
 	}

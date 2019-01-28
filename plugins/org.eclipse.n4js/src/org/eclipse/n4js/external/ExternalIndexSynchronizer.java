@@ -69,6 +69,9 @@ public abstract class ExternalIndexSynchronizer {
 	@Inject
 	private FolderContainmentHelper containmentHelper;
 
+	/** Triggers synchronization of the stored node_modules folders with the ones that actually exist. */
+	abstract public void synchronizeNodeModulesFolders();
+
 	/**
 	 * Call this method to synchronize the information in the Xtext index with all external projects in the external
 	 * library folders.
@@ -116,13 +119,14 @@ public abstract class ExternalIndexSynchronizer {
 
 			URI location = pair.getFirst();
 			IN4JSProject project = core.findProject(location).orNull();
+
 			if (project == null || !shadowingInfoHelper.isShadowedProject(project)) {
 				ProjectDescription projectDescription = pair.getSecond();
 				VersionNumber version = projectDescription.getProjectVersion();
 				String name = projectDescription.getProjectName();
 
 				if (version != null) {
-					npmsFolder.put(name, Pair.of(location, version.toString()));
+					npmsFolder.putIfAbsent(name, Pair.of(location, version.toString()));
 				}
 			}
 		}
@@ -170,6 +174,8 @@ public abstract class ExternalIndexSynchronizer {
 	 */
 	final protected Collection<LibraryChange> identifyChangeSet(Collection<LibraryChange> forcedChangeSet,
 			boolean updateCache) {
+
+		synchronizeNodeModulesFolders();
 
 		Collection<LibraryChange> changes = new LinkedHashSet<>(forcedChangeSet);
 

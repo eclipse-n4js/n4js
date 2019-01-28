@@ -303,13 +303,13 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 	}
 
 	/** Sets up the known external library locations with the {@code node_modules} folder. */
-	protected void setupExternalLibraries(boolean initShippedCode) throws Exception {
-		externalLibrariesSetupHelper.setupExternalLibraries(initShippedCode);
+	protected void setupShippedLibraries() throws Exception {
+		externalLibrariesSetupHelper.setupShippedLibraries();
 	}
 
 	/** Tears down the external libraries. */
-	protected void tearDownExternalLibraries(boolean tearDownShippedCode) throws Exception {
-		externalLibrariesSetupHelper.tearDownExternalLibraries(tearDownShippedCode);
+	protected void tearDownShippedLibraries() throws Exception {
+		externalLibrariesSetupHelper.tearDownShippedLibraries();
 		super.tearDown();
 	}
 
