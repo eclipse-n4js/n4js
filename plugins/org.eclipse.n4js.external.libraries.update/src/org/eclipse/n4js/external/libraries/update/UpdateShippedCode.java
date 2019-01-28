@@ -219,6 +219,7 @@ public class UpdateShippedCode implements IWorkflowComponent {
 		};
 
 		try {
+			NodeYarnProcessBuilder.additionalEnvironmentVariables.put("NPM_TOKEN", "dummy");
 			new N4jscBase().doMain(args);
 		} catch (ExitCodeException e) {
 			println("ERROR: headless compiler threw ExitCodeException (probably code compiled with errors); "
@@ -226,6 +227,8 @@ public class UpdateShippedCode implements IWorkflowComponent {
 					+ "message: " + e.getMessage());
 			e.printStackTrace();
 			throw new RuntimeException(e);
+		} finally {
+			NodeYarnProcessBuilder.additionalEnvironmentVariables.clear();
 		}
 	}
 

@@ -15,7 +15,9 @@ import static org.eclipse.n4js.utils.OSInfo.isWindows;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -45,6 +47,13 @@ public class NodeYarnProcessBuilder {
 
 	private static final String[] WIN_SHELL_COMAMNDS = { "cmd", "/c" };
 	private static final String[] NIX_SHELL_COMAMNDS = { "sh", "-c" };
+
+	/**
+	 * Additional environment variables supplied to node/yarn when invoked via this class.
+	 * <p>
+	 * ONLY INTENDED FOR TESTING; DO NOT USE IN PRODUCTION.
+	 */
+	public static final Map<String, String> additionalEnvironmentVariables = new ConcurrentHashMap<>();
 
 	@Inject
 	private Provider<NpmBinary> npmBinaryProvider;
@@ -229,6 +238,7 @@ public class NodeYarnProcessBuilder {
 			boolean redirectErrorStream) {
 		final ProcessBuilder processBuilder = new ProcessBuilder(commands);
 		processBuilder.redirectErrorStream(redirectErrorStream);
+		processBuilder.environment().putAll(additionalEnvironmentVariables);
 		binary.updateEnvironment(processBuilder.environment());
 		if (workingDirectory != null)
 			processBuilder.directory(workingDirectory);
