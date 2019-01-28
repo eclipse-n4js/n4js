@@ -146,6 +146,10 @@ public class N4jscBase implements IApplication {
 			+ "with the newly assembled test catalog. If an invalid file location is specified as the test catalog file output, then the catalog generation will fail.")
 	File testCatalogFile;
 
+	@Option(name = "--targetPlatformInstallLocation", aliases = "-tl", required = false, usage = "this flag is deprecated and will be ignored. "
+			+ "Remove it from your scripts, it will become an error in the future.")
+	File targetPlatformInstallLocation;
+
 	@Option(name = "--installMissingDependencies", aliases = "-imd", required = false, usage = "usually projects have dependencies that have to be fetched before the compilation. "
 			+ "If this flag is provided, compiler will calculate missing dependencies based on the manifest files of the projects provided as input to the compilation."
 			+ "Calculated missing dependencies will be fetched by Library Manager priori to the compilation.")
@@ -378,6 +382,10 @@ public class N4jscBase implements IApplication {
 				printExtendedUsage(parser, System.err);
 				// exit with error-code 1
 				throw new ExitCodeException(EXITCODE_WRONG_CMDLINE_OPTIONS);
+			}
+
+			if (targetPlatformInstallLocation != null) {
+				warn("WARNING: flag --targetPlatformInstallLocation is deprecated; this flag is being ignored and this message will become an error soon!");
 			}
 
 			// debug before help, shortcut for check-settings without running
