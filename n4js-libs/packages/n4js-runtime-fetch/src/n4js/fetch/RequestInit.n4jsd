@@ -10,11 +10,13 @@
  */
 @@ProvidedByRuntime
 
-
 import {Method} from "fetch/Method";
+import {ReferrerPolicy} from "fetch/ReferrerPolicy";
 import {RequestCache} from "fetch/RequestCache";
 import {RequestCredentials} from "fetch/RequestCredentials";
 import {RequestMode} from "fetch/RequestMode";
+import {RequestRedirect} from "fetch/RequestRedirect";
+
 export external public class ~RequestInit {
     public method?: Method;
     public headers?: union{Headers, Array<Array<string>>, Object};
@@ -23,8 +25,12 @@ export external public class ~RequestInit {
     public body?: string;
 
     public referrer?: string;
+    public referrerPolicy?: ReferrerPolicy;
+    public redirect?: RequestRedirect;
+    public integrity?: string;
+    public keepalive?: boolean;
+//    public signal?: AbortSignal;
     public mode?: RequestMode;
     public credentials?: RequestCredentials;
     public cache?: RequestCache;
 }
-

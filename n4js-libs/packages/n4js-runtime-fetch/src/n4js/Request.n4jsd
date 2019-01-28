@@ -10,29 +10,37 @@
  */
 @@Global @@ProvidedByRuntime
 
-
 import {Body} from "fetch/Body";
 import {Method} from "fetch/Method";
+import {ReferrerPolicy} from "fetch/ReferrerPolicy";
 import {RequestCache} from "fetch/RequestCache";
 import {RequestContext} from "fetch/RequestContext";
 import {RequestCredentials} from "fetch/RequestCredentials";
 import {RequestInit} from "fetch/RequestInit";
 import {RequestMode} from "fetch/RequestMode";
+import {RequestRedirect} from "fetch/RequestRedirect";
+
 export external public class Request implements Body {
     public constructor(input: union{Request, string}, init: RequestInit=);
 
-    @Final public method: Method;
-    @Final public url: string;
-    @Final public headers: Headers;
+    public get method(): Method;
+    public get url(): string;
+    public get headers(): Headers;
 
-    @Final public context: RequestContext;
+    public get context(): RequestContext;
 
-    @Final public referrer: string;
-    @Final public mode: RequestMode;
-    @Final public credentials: RequestCredentials;
-    @Final public cache: RequestCache;
+    public get referrer(): string;
+    public get mode(): RequestMode;
+    public get credentials(): RequestCredentials;
+    public get cache(): RequestCache;
 
     @Override public get bodyUsed(): boolean;
+
+    public get referrerPolicy(): ReferrerPolicy;
+    public get redirect(): RequestRedirect;
+    public get integrity(): string;
+    public get keepalive(): boolean;
+//    public get signal: AbortSignal;
 
     @Override public async arrayBuffer(): ArrayBuffer;
 //    @Override public async Blob blob();
