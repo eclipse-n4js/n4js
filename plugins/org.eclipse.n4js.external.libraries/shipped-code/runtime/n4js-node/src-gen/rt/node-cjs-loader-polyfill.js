@@ -14,7 +14,7 @@
     "use strict";
 
     var options = n4.runtimeOptions,
-        testMode = options["test-mode"],
+        testMode = options["loader-support-api-not-implemented"],
         sjsSetters = Symbol("sjs setters");
 
     function exportFn(exp, k, v) {
