@@ -120,6 +120,7 @@ public class UpdateShippedCode implements IWorkflowComponent {
 			actualTargetPath = ExternalLibrariesActivator.getShippedCodeFolderPath();
 		}
 		// step 1: clean then compile projects under top-level folder "n4js-libs"
+		System.out.println(System.getenv("NPM_TOKEN"));
 		println("==== STEP 1/4: compiling code under top-level folder \"" + N4JSGlobals.N4JS_LIBS_FOLDER_NAME
 				+ "\" in n4js repository:");
 		cleanAndCompile(n4jsLibsRoot);
