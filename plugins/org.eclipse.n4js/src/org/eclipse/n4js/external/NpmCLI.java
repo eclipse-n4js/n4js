@@ -26,7 +26,8 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.CommonPlugin;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.binaries.BinaryCommandFactory;
+import org.eclipse.n4js.binaries.BinariesCommandFactory;
+import org.eclipse.n4js.binaries.nodejs.NodeYarnProcessBuilder;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceModel;
@@ -53,7 +54,7 @@ import com.google.inject.Singleton;
 public class NpmCLI {
 
 	@Inject
-	private BinaryCommandFactory commandFactory;
+	private BinariesCommandFactory commandFactory;
 
 	@Inject
 	private ProcessExecutionCommandStatus executor;
@@ -97,8 +98,8 @@ public class NpmCLI {
 	}
 
 	/**
-	 * Uninstalls an npm package. The path to the npm package (passed via {@code requestedChange.location}) must be
-	 * conform to either one of two the following scenarios:
+	 * Uninstalls an npm package. The path to the npm package (passed via {@code requestedChange.location}) must conform
+	 * to either one of two the following scenarios:
 	 *
 	 * <pre>
 	 * Scenario 1: The npm is a direct child of a {@code node_modules} folder
@@ -263,9 +264,9 @@ public class NpmCLI {
 	}
 
 	/**
-	 * Installs package with given name at the given path. Updates dependencies in the package.json of that location. If
-	 * there is no package.json at that location npm errors will be logged to the error log. In that case npm usual
-	 * still installs requested dependency (if possible).
+	 * Installs npm package with given name at the given path. Updates dependencies in the package.json of that
+	 * location. If there is no package.json at that location npm errors will be logged to the error log. In that case
+	 * npm/yarn usual still installs requested dependency (if possible).
 	 *
 	 * @param packageNamesAndVersions
 	 *            to be installed
@@ -300,17 +301,20 @@ public class NpmCLI {
 		// uninstall(!) the earlier package that used a URL/GitHub version requirement. This is supposed to be fixed
 		// in npm version 5.7.1. As a work-around we run a plain "npm install" after every installation of new packages,
 		// which should re-install the package with a URL/GitHub version requirement.
-		VersionNumber currNpmVersion = getNpmVersion();
-		VersionNumber fixedNpmVersion = SemverUtils.createVersionNumber(5, 7, 1);
-		if (currNpmVersion != null && SemverMatcher.compareLoose(currNpmVersion, fixedNpmVersion) < 0) {
-			IStatus workaroundStatus = executor.execute(
-					() -> commandFactory.createInstallPackageCommand(installPath, Collections.emptyList(), false),
-					"Error while running \"npm install\" after installing npm packages.");
-			MultiStatus combinedStatus = statusHelper
-					.createMultiStatus("Installing npm packages with additional \"npm install\" afterwards.");
-			combinedStatus.merge(status);
-			combinedStatus.merge(workaroundStatus);
-			status = combinedStatus;
+		boolean isNpmUsed = !isYarnUsed(installPath);
+		if (isNpmUsed) {
+			VersionNumber currNpmVersion = getNpmVersion();
+			VersionNumber fixedNpmVersion = SemverUtils.createVersionNumber(5, 7, 1);
+			if (currNpmVersion != null && SemverMatcher.compareLoose(currNpmVersion, fixedNpmVersion) < 0) {
+				IStatus workaroundStatus = executor.execute(
+						() -> commandFactory.createInstallPackageCommand(installPath, Collections.emptyList(), false),
+						"Error while running \"npm install\" after installing npm packages.");
+				MultiStatus combinedStatus = statusHelper
+						.createMultiStatus("Installing npm packages with additional \"npm install\" afterwards.");
+				combinedStatus.merge(status);
+				combinedStatus.merge(workaroundStatus);
+				status = combinedStatus;
+			}
 		}
 
 		return status;
@@ -340,13 +344,18 @@ public class NpmCLI {
 	}
 
 	/**
-	 * Runs a plain 'npm install' in a given folder.
+	 * Runs a plain 'npm/yarn install' in a given folder.
 	 */
-	public IStatus runNpmInstall(File invocationPath) {
+	public IStatus runNpmYarnInstall(File invocationPath) {
 		IStatus status = executor.execute(
-				() -> commandFactory.createNpmInstallCommand(invocationPath, true),
+				() -> commandFactory.createInstallEverythingCommand(invocationPath, true),
 				"Error while installing npm package.");
 
 		return status;
+	}
+
+	/** See {@link NodeYarnProcessBuilder#isYarnUsed(Path)}. */
+	public boolean isYarnUsed(File invocationPath) {
+		return commandFactory.isYarnUsed(invocationPath);
 	}
 }

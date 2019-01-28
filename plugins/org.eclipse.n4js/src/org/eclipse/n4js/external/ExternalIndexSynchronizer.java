@@ -119,13 +119,14 @@ public abstract class ExternalIndexSynchronizer {
 
 			URI location = pair.getFirst();
 			IN4JSProject project = core.findProject(location).orNull();
+
 			if (project == null || !shadowingInfoHelper.isShadowedProject(project)) {
 				ProjectDescription projectDescription = pair.getSecond();
 				VersionNumber version = projectDescription.getProjectVersion();
 				String name = projectDescription.getProjectName();
 
 				if (version != null) {
-					npmsFolder.put(name, Pair.of(location, version.toString()));
+					npmsFolder.putIfAbsent(name, Pair.of(location, version.toString()));
 				}
 			}
 		}

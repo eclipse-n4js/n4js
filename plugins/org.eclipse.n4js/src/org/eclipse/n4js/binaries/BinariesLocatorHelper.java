@@ -8,9 +8,10 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.binaries.nodejs;
+package org.eclipse.n4js.binaries;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.Enumeration;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -24,12 +25,13 @@ import org.eclipse.n4js.utils.process.ProcessResult;
 import com.google.inject.Inject;
 
 /**
- * Helper used to locate default node binary in the system. This helper looks only for specific JVM arguments,
+ * Helper used to locate various default binaries in the system. This helper looks only for specific JVM arguments,
  * environment and underlying OS configurations. Checking other sources, e.g. eclipse preference store, is up to the
  * caller.
  */
-public class NodeBinaryLocatorHelper {
-	private static final Logger LOGGER = Logger.getLogger(NodeBinaryLocatorHelper.class);
+public class BinariesLocatorHelper {
+
+	private static final Logger LOGGER = Logger.getLogger(BinariesLocatorHelper.class);
 
 	/** debug api */
 	private static final boolean LOG_SYSTEM_PROPERTIES = false;
@@ -42,45 +44,45 @@ public class NodeBinaryLocatorHelper {
 	private ProcessExecutor processExecutor;
 
 	/**
-	 * Performs lookup of the node binary. Uses {@link NodeBinariesConstants} properties to perform lookup. When binary
-	 * not found, will ask OS to locate node binary via {@link #lookForNode}. If everything else fails returns (not
-	 * verified) path configured by {@link NodeBinariesConstants#BUILT_IN_DEFAULT_NODE_PATH}
+	 * Performs lookup of the node binary. Uses {@link BinariesConstants} properties to perform lookup. When binary not
+	 * found, will ask OS to locate node binary via {@link #lookForBinary}. If everything else fails returns (not
+	 * verified) path configured by {@link BinariesConstants#BUILT_IN_DEFAULT_NODE_PATH}
 	 *
-	 * @return string with absolute path to the binary
+	 * @return absolute path to the binary.
 	 */
-	public String findNodePath() {
+	public Path findNodePath() {
 
 		logSystemProperties();
 		logEnvironmentVariables();
 
-		String nodePathCandidate = null;
+		Path nodePathCandidate = null;
 
 		// 1. lookup by DEFAULT_NODE_PATH_VM_ARG
-		nodePathCandidate = resolveFolderContaingNode(
-				tryGetEnvOrSystemVariable(NodeBinariesConstants.DEFAULT_NODE_PATH_VM_ARG));
-		if (!isNullOrEmptyOrNullString(nodePathCandidate)) {
+		nodePathCandidate = resolveFolderContaingBinary(
+				tryGetEnvOrSystemVariable(BinariesConstants.DEFAULT_NODE_PATH_VM_ARG));
+		if (nodePathCandidate != null) {
 			info("User specified default Node.js path will be used: '" + nodePathCandidate
-					+ ".' based on the '" + NodeBinariesConstants.DEFAULT_NODE_PATH_VM_ARG + "' VM argument.");
+					+ ".' based on the '" + BinariesConstants.DEFAULT_NODE_PATH_VM_ARG + "' VM argument.");
 			return nodePathCandidate;
 		}
-		debug("Could not resolve node path from '" + NodeBinariesConstants.DEFAULT_NODE_PATH_VM_ARG
+		debug("Could not resolve node path from '" + BinariesConstants.DEFAULT_NODE_PATH_VM_ARG
 				+ "' VM argument.");
 
 		// 2. lookup by NODEJS_PATH_ENV
-		nodePathCandidate = resolveFolderContaingNode(
-				tryGetEnvOrSystemVariable(NodeBinariesConstants.NODEJS_PATH_ENV));
-		if (!isNullOrEmptyOrNullString(nodePathCandidate)) {
+		nodePathCandidate = resolveFolderContaingBinary(
+				tryGetEnvOrSystemVariable(BinariesConstants.NODEJS_PATH_ENV));
+		if (nodePathCandidate != null) {
 			info("User specified default Node.js path will be used: '" + nodePathCandidate
-					+ ".' based on the '" + NodeBinariesConstants.NODEJS_PATH_ENV + "' VM argument.");
+					+ ".' based on the '" + BinariesConstants.NODEJS_PATH_ENV + "' VM argument.");
 			return nodePathCandidate;
 		}
-		debug("Could not resolve node path from '" + NodeBinariesConstants.NODEJS_PATH_ENV
+		debug("Could not resolve node path from '" + BinariesConstants.NODEJS_PATH_ENV
 				+ "' VM argument.");
 
 		// 3. lookup by PATH
-		nodePathCandidate = resolveFolderContaingNode(
-				ExecutableLookupUtil.findInPath(NodeBinariesConstants.NODE_BINARY_NAME));
-		if (!isNullOrEmptyOrNullString(nodePathCandidate)) {
+		nodePathCandidate = resolveFolderContaingBinary(
+				ExecutableLookupUtil.findInPath(BinariesConstants.NODE_BINARY_NAME));
+		if (nodePathCandidate != null) {
 			info("Obtained default Node.js path will be used: '" + nodePathCandidate
 					+ ".' based on the OS PATH.");
 			return nodePathCandidate;
@@ -88,8 +90,9 @@ public class NodeBinaryLocatorHelper {
 		debug("Could not resolve node path from OS PATH variable.");
 
 		// 4. lookup by OS query
-		nodePathCandidate = resolveFolderContaingNode(lookForNode(NodeBinariesConstants.NODE_BINARY_NAME));
-		if (!isNullOrEmptyOrNullString(nodePathCandidate)) {
+		nodePathCandidate = resolveFolderContaingBinary(
+				lookForBinary(BinariesConstants.NODE_BINARY_NAME));
+		if (nodePathCandidate != null) {
 			info("Obtained default Node.js path will be used: '" + nodePathCandidate
 					+ ".' based on the OS dynamic lookup.");
 			return nodePathCandidate;
@@ -99,11 +102,46 @@ public class NodeBinaryLocatorHelper {
 
 		// 5. use default, whether it is correct or not.
 		info("Could not resolve node path. Falling back to default path: " + nodePathCandidate);
-		nodePathCandidate = NodeBinariesConstants.BUILT_IN_DEFAULT_NODE_PATH;
+		nodePathCandidate = new File(BinariesConstants.BUILT_IN_DEFAULT_NODE_PATH).toPath();
+
 		return nodePathCandidate;
 	}
 
-	private String lookForNode(String binaryName) {
+	/**
+	 * Like {@link #findNodePath()}, but for the yarn binary.
+	 *
+	 * @return string with absolute path to the binary
+	 */
+	public Path findYarnPath() {
+
+		Path yarnPathCandidate;
+
+		// 1. lookup by PATH
+		yarnPathCandidate = resolveFolderContaingBinary(
+				ExecutableLookupUtil.findInPath(BinariesConstants.YARN_BINARY_NAME));
+		if (yarnPathCandidate != null) {
+			info("Obtained yarn path will be used: '" + yarnPathCandidate
+					+ ".' based on the OS PATH.");
+			return yarnPathCandidate;
+		}
+		debug("Could not resolve yarn path from OS PATH variable.");
+
+		// 2. lookup by OS query
+		yarnPathCandidate = resolveFolderContaingBinary(
+				lookForBinary(BinariesConstants.YARN_BINARY_NAME));
+		if (yarnPathCandidate != null) {
+			info("Obtained yarn path will be used: '" + yarnPathCandidate
+					+ ".' based on the OS dynamic lookup.");
+			return yarnPathCandidate;
+
+		}
+		debug("Could not resolve yarn path from OS dynamic lookup.");
+
+		debug("Falling back to node path ...");
+		return findNodePath();
+	}
+
+	private String lookForBinary(String binaryName) {
 		ProcessResult processResult = processExecutor.createAndExecute(
 				ExecutableLookupUtil.getExebutableLookupProcessBuilder(binaryName), "look for " + binaryName,
 				OutputRedirection.SUPPRESS);
@@ -123,32 +161,23 @@ public class NodeBinaryLocatorHelper {
 		return nodeJsPath;
 	}
 
-	/** Tries to resolve node folder from provided string. Returns path to the folder as string or null. */
-	private static String resolveFolderContaingNode(String nodePathCandidate) {
-		if (isNullOrEmptyOrNullString(nodePathCandidate)) {
-			debug("provided potential node directory path was null");
+	/** Tries to resolve binary folder from provided string. Returns absolute path to the folder or null. */
+	private static Path resolveFolderContaingBinary(String binaryPathCandidate) {
+		if (isNullOrEmptyOrNullString(binaryPathCandidate)) {
 			return null;
 		}
-		File nodeDir = new File(nodePathCandidate);
-		return resolveNodeFolderPath(nodeDir);
-	}
+		File binaryDir = new File(binaryPathCandidate);
+		if (binaryDir.isFile()) {
+			binaryDir = binaryDir.getParentFile();
 
-	/** Tries to resolve node folder from provided file. Returns path to the folder as string or null. */
-	private static String resolveNodeFolderPath(File nodeDir) {
-		if (nodeDir.isFile()) {
-			debug("provided potential node directory is actually a file, obtaining parent");
-			nodeDir = nodeDir.getParentFile();
-
-		} else if (!nodeDir.exists()) {
-			debug("cannot obtain file system object from provided string");
+		} else if (!binaryDir.exists()) {
 			return null;
 
-		} else if (!nodeDir.isDirectory()) {
-			debug("could not safely resolve node directory");
+		} else if (!binaryDir.isDirectory()) {
 			return null;
 		}
 
-		return nodeDir.getAbsolutePath();
+		return binaryDir.getAbsoluteFile().toPath();
 	}
 
 	/**

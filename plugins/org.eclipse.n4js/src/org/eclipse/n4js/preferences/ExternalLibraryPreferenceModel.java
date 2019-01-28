@@ -255,7 +255,7 @@ public class ExternalLibraryPreferenceModel {
 			externalNodeModulesURIs.clear();
 			for (URI location : locations) {
 				if (isNodeModulesLocation(location)) {
-					externalNodeModulesURIs.addAll(locations);
+					externalNodeModulesURIs.add(location);
 				}
 			}
 		}

@@ -12,16 +12,17 @@ package org.eclipse.n4js.ui.internal;
 
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.n4js.binaries.BinariesCommandFactory;
+import org.eclipse.n4js.binaries.BinariesLocatorHelper;
 import org.eclipse.n4js.binaries.BinariesPreferenceStore;
 import org.eclipse.n4js.binaries.BinariesProvider;
 import org.eclipse.n4js.binaries.BinariesValidator;
-import org.eclipse.n4js.binaries.BinaryCommandFactory;
 import org.eclipse.n4js.binaries.OsgiBinariesPreferenceStore;
-import org.eclipse.n4js.binaries.nodejs.NodeBinaryLocatorHelper;
 import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
-import org.eclipse.n4js.binaries.nodejs.NodeProcessBuilder;
+import org.eclipse.n4js.binaries.nodejs.NodeYarnProcessBuilder;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.binaries.nodejs.NpmrcBinary;
+import org.eclipse.n4js.binaries.nodejs.YarnBinary;
 import org.eclipse.n4js.external.ExternalIndexSynchronizer;
 import org.eclipse.n4js.external.ExternalLibraryHelper;
 import org.eclipse.n4js.external.ExternalLibraryUriHelper;
@@ -198,17 +199,18 @@ public class ContributingModule implements Module {
 				.to(IBuilderState.class);
 
 		binder.bind(ProcessExecutor.class);
-		binder.bind(BinaryCommandFactory.class);
-		binder.bind(NodeProcessBuilder.class);
+		binder.bind(BinariesCommandFactory.class);
+		binder.bind(NodeYarnProcessBuilder.class);
 		binder.bind(OutputStreamPrinterThreadProvider.class);
 		binder.bind(BinariesPreferenceStore.class).to(OsgiBinariesPreferenceStore.class);
 		binder.bind(BinariesValidator.class);
 		binder.bind(BinariesProvider.class);
 
-		binder.bind(NodeBinaryLocatorHelper.class);
+		binder.bind(BinariesLocatorHelper.class);
 		binder.bind(NodeJsBinary.class);
 		binder.bind(NpmBinary.class);
 		binder.bind(NpmrcBinary.class);
+		binder.bind(YarnBinary.class);
 
 		binder.bind(SemverHelper.class);
 		// binder.bind(SemverResourceValidator.class);

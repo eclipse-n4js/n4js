@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.n4js.binaries.BinariesConstants;
 import org.eclipse.n4js.binaries.BinariesPreferenceStore;
 import org.eclipse.n4js.binaries.BinariesValidator;
 import org.eclipse.n4js.binaries.Binary;
@@ -58,7 +59,7 @@ public class NpmrcBinary implements Binary {
 
 	@Override
 	public String getLabel() {
-		return NodeBinariesConstants.NPMRC_LABEL;
+		return BinariesConstants.NPMRC_LABEL;
 	}
 
 	@Override
@@ -66,7 +67,7 @@ public class NpmrcBinary implements Binary {
 		return "Configuration of the folder location of the .npmrc file "
 				+ "can be provided here. If not given, then the location will be resolved to '"
 				+ getDefaultNpmrcPath() + "'. The required minimum version npm is '"
-				+ NodeBinariesConstants.NPM_MIN_VERSION + "'.";
+				+ BinariesConstants.NPM_MIN_VERSION + "'.";
 	}
 
 	@Override
@@ -76,12 +77,12 @@ public class NpmrcBinary implements Binary {
 
 	@Override
 	public String getBinaryAbsolutePath() {
-		return getUserNodePathOrDefault() + File.separator + NodeBinariesConstants.NPMRC_BINARY_NAME;
+		return getUserNodePathOrDefault() + File.separator + BinariesConstants.NPMRC_BINARY_NAME;
 	}
 
 	@Override
 	public String getVersionArgument() {
-		return NodeBinariesConstants.VERSION_ARGUMENT;
+		return BinariesConstants.VERSION_ARGUMENT;
 	}
 
 	@Override
@@ -97,7 +98,7 @@ public class NpmrcBinary implements Binary {
 	@Override
 	public Map<String, String> updateEnvironment(final Map<String, String> environment) {
 		final String additionalNodePath = getUserNodePathOrDefault() + File.separator
-				+ NodeBinariesConstants.NPMRC_BINARY_NAME;
+				+ BinariesConstants.NPMRC_BINARY_NAME;
 
 		// overwrite
 		environment.put(NPM_CONFIG_USERCONFIG, additionalNodePath);

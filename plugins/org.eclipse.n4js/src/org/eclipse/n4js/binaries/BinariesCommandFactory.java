@@ -11,10 +11,11 @@
 package org.eclipse.n4js.binaries;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.n4js.binaries.nodejs.NodeProcessBuilder;
+import org.eclipse.n4js.binaries.nodejs.NodeYarnProcessBuilder;
 import org.eclipse.n4js.utils.process.OutputRedirection;
 import org.eclipse.n4js.utils.process.ProcessExecutionCommand;
 import org.eclipse.n4js.utils.process.ProcessExecutor;
@@ -28,23 +29,24 @@ import com.google.inject.Singleton;
  * Factory for commands used to interact with external binaries.
  */
 @Singleton
-public class BinaryCommandFactory {
+public class BinariesCommandFactory {
 
 	@Inject
 	private ProcessExecutor processExecutor;
 
 	@Inject
-	private NodeProcessBuilder nodeProccessBuilder;
+	private NodeYarnProcessBuilder nodeProccessBuilder;
 
 	/**
-	 * Creates command that will execute external node process that will command 'npm install' at the given location.
+	 * Creates a command that will execute an external process for installing all dependencies defined in the project's
+	 * package.json file, either using npm or yarn (depending on {@link NodeYarnProcessBuilder#isYarnUsed(Path)}).
 	 *
 	 * @param invocationPath
-	 *            path where package is supposed to be installed
+	 *            path where package(s) are supposed to be installed
 	 * @param saveDependency
-	 *            flag if installed package should be saved in package.json of the install path
+	 *            flag if installed package should be saved in package.json of the install path (ignored by yarn).
 	 */
-	public ProcessExecutionCommand createNpmInstallCommand(File invocationPath, boolean saveDependency) {
+	public ProcessExecutionCommand createInstallEverythingCommand(File invocationPath, boolean saveDependency) {
 		return createInstallPackageCommand(invocationPath, Collections.emptyList(), saveDependency);
 	}
 
@@ -57,29 +59,30 @@ public class BinaryCommandFactory {
 	}
 
 	/**
-	 * Creates command that will execute external node process that will command npm to install given package.
+	 * Creates a command that will execute an external process for installing the given packages, either using npm or
+	 * yarn (depending on {@link NodeYarnProcessBuilder#isYarnUsed(Path)}).
 	 *
 	 * @param invocationPath
-	 *            path where package is supposed to be installed
+	 *            path where the packages are supposed to be installed.
 	 * @param packageNames
 	 *            names of the packages to install (optionally including version requirements; may be an empty list to
-	 *            issue a plain "npm install" without package names given)
+	 *            issue a plain "npm install" without package names given).
 	 * @param saveDependency
-	 *            flag if installed package should be saved in package.json of the install path
+	 *            flag if installed package should be saved in package.json of the install path (ignored by yarn)
 	 */
 	public ProcessExecutionCommand createInstallPackageCommand(File invocationPath,
 			List<String> packageNames, boolean saveDependency) {
 
 		return new ProcessExecutionCommand() {
-			private static final String COMMAND_NAME = "npm_install";
+			private static final String COMMAND_NAME = "install_npm_package";
 
 			@Override
 			public ProcessResult execute() {
 				String escapedPackageNames = !packageNames.isEmpty()
 						? "\"" + Joiner.on("\" \"").join(packageNames) + "\""
-						: null; // 'null' will lead to a plain "npm install" without package names given
+						: ""; // empty string will lead to a plain "npm install" without package names given
 				boolean actualSaveDependency = saveDependency && !packageNames.isEmpty();
-				ProcessBuilder processBuilder = nodeProccessBuilder.getNpmInstallProcessBuilder(invocationPath,
+				ProcessBuilder processBuilder = nodeProccessBuilder.getInstallNpmPackageProcessBuilder(invocationPath,
 						escapedPackageNames, actualSaveDependency);
 				return processExecutor.createAndExecute(processBuilder, COMMAND_NAME, OutputRedirection.REDIRECT);
 			}
@@ -87,25 +90,26 @@ public class BinaryCommandFactory {
 	}
 
 	/**
-	 * Creates command that will execute external node process that will command npm to uninstall given package.
+	 * Creates a command that will execute an external process for uninstalling the given packages, either using npm or
+	 * yarn (depending on {@link NodeYarnProcessBuilder#isYarnUsed(Path)}).
 	 *
 	 * @param invocationPath
-	 *            path where package is supposed to be installed
+	 *            path where the packages are supposed to be uninstalled from.
 	 * @param packageNames
-	 *            names of the packages to uninstall
+	 *            names of the packages to uninstall.
 	 * @param saveDependency
-	 *            flag if uninstalled package should be saved in package.json of the uninstall path
+	 *            flag if uninstalled packages should be saved in package.json of the uninstall path (ignored by yarn).
 	 */
 	public ProcessExecutionCommand createUninstallPackageCommand(File invocationPath,
 			List<String> packageNames, boolean saveDependency) {
 
 		return new ProcessExecutionCommand() {
-			private static final String COMMAND_NAME = "npm_uninstall";
+			private static final String COMMAND_NAME = "uninstall_npm_package";
 
 			@Override
 			public ProcessResult execute() {
 				String escapedPackageNames = "\"" + Joiner.on("\" \"").join(packageNames) + "\"";
-				ProcessBuilder processBuilder = nodeProccessBuilder.getNpmUninstallProcessBuilder(invocationPath,
+				ProcessBuilder processBuilder = nodeProccessBuilder.getUninstallNpmPackageProcessBuilder(invocationPath,
 						escapedPackageNames, saveDependency);
 				return processExecutor.createAndExecute(processBuilder, COMMAND_NAME, OutputRedirection.REDIRECT);
 			}
@@ -113,14 +117,14 @@ public class BinaryCommandFactory {
 	}
 
 	/**
-	 * Creates command that will execute external node process that will clean npm cache.
+	 * Creates command that will execute external node process that will clean npm/yarn cache.
 	 *
 	 * @param invocationPath
 	 *            path in which cache clean will be invoked
 	 */
 	public ProcessExecutionCommand createCacheCleanCommand(File invocationPath) {
 		return new ProcessExecutionCommand() {
-			private static final String COMMAND_NAME = "npm_cache_clean";
+			private static final String COMMAND_NAME = "clean_npm_package_cache";
 
 			@Override
 			public ProcessResult execute() {
@@ -128,6 +132,11 @@ public class BinaryCommandFactory {
 				return processExecutor.createAndExecute(processBuilder, COMMAND_NAME, OutputRedirection.REDIRECT);
 			}
 		};
+	}
+
+	/** See {@link NodeYarnProcessBuilder#isYarnUsed(Path)}. */
+	public boolean isYarnUsed(File invocationPath) {
+		return nodeProccessBuilder.isYarnUsed(invocationPath.toPath());
 	}
 
 	/**

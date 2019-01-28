@@ -552,7 +552,7 @@ public class N4jscBase implements IApplication {
 					try (Measurement installMissingDepMeasurement = N4JSDataCollectors.dcHeadlessInstallMissingDeps
 							.getMeasurement("Install missing dependencies")) {
 
-						IStatus status = libManager.runNpmInstallOnAllProjects(new NullProgressMonitor());
+						IStatus status = libManager.runNpmYarnInstallOnAllProjects(new NullProgressMonitor());
 						if (!status.isOK())
 							if (keepCompiling)
 								warn(status.getMessage());

@@ -53,10 +53,16 @@ public class NodeModulesDiscoveryHelper {
 
 	/** @return the node_modules folder of the given project including a flag if this is a yarn workspace. */
 	public NodeModulesFolder getNodeModulesFolder(Path projectLocation) {
-		final Optional<File> workspaceRoot = getYarnWorkspaceRoot(projectLocation.toFile(), new HashMap<>());
+		Map<File, List<String>> workspacesCache = new HashMap<>();
+		File projectLocationAsFile = projectLocation.toFile();
 
+		if (isYarnWorkspaceRoot(projectLocationAsFile, Optional.absent(), workspacesCache)) {
+			return new NodeModulesFolder(new File(projectLocationAsFile, N4JSGlobals.NODE_MODULES), true);
+		}
+
+		final Optional<File> workspaceRoot = getYarnWorkspaceRoot(projectLocationAsFile, workspacesCache);
 		if (workspaceRoot.isPresent()) {
-			return new NodeModulesFolder(workspaceRoot.get(), true);
+			return new NodeModulesFolder(new File(workspaceRoot.get(), N4JSGlobals.NODE_MODULES), true);
 		}
 
 		final Path packgeJsonPath = projectLocation.resolve(N4JSGlobals.PACKAGE_JSON);
@@ -130,32 +136,49 @@ public class NodeModulesDiscoveryHelper {
 		n4jsProjectFolder = makeCanonical(n4jsProjectFolder);
 		File candidate = n4jsProjectFolder.getParentFile();
 		while (candidate != null) {
-			// obtain value of property "workspaces" in package.json located in folder 'candidate'
-			final List<String> workspaces;
-			final List<String> workspacesFromCache = workspacesCache.get(candidate);
-			if (workspacesFromCache != null) {
-				// use the value from the cache
-				workspaces = workspacesFromCache;
-			} else {
-				// load value from package.json
-				URI candidateURI = URI.createFileURI(candidate.getPath());
-				workspaces = projectDescriptionLoader.loadWorkspacesFromProjectDescriptionAtLocation(candidateURI);
-				if (workspaces != null) {
-					workspacesCache.put(candidate, workspaces);
-				}
-			}
-			// check if one of the values in property "workspaces" points to 'n4jsProjectFolder'
-			if (workspaces != null) {
-				for (String relativePath : workspaces) {
-					if (isPointingTo(candidate, relativePath, n4jsProjectFolder)) {
-						return Optional.of(candidate);
-					}
-				}
+			// is candidate the root of a yarn workspace with 'n4jsProjectFolder' as one of the registered projects?
+			if (isYarnWorkspaceRoot(candidate, Optional.of(n4jsProjectFolder), workspacesCache)) {
+				// yes, so return candidate
+				return Optional.of(candidate);
 			}
 			// if not, continue with parent folder as new candidate
 			candidate = candidate.getParentFile();
 		}
 		return Optional.absent();
+	}
+
+	private boolean isYarnWorkspaceRoot(File folder, Optional<File> projectFolder,
+			Map<File, List<String>> workspacesCache) {
+		if (!folder.isDirectory()) {
+			return false;
+		}
+		// obtain value of property "workspaces" in package.json located in folder 'candidate'
+		final List<String> workspaces;
+		final List<String> workspacesFromCache = workspacesCache.get(folder);
+		if (workspacesFromCache != null) {
+			// use the value from the cache
+			workspaces = workspacesFromCache;
+		} else {
+			// load value from package.json
+			URI candidateURI = URI.createFileURI(folder.getPath());
+			workspaces = projectDescriptionLoader.loadWorkspacesFromProjectDescriptionAtLocation(candidateURI);
+			if (workspaces != null) {
+				workspacesCache.put(folder, workspaces);
+			}
+		}
+		if (workspaces == null) {
+			return false;
+		}
+		// check if one of the values in property "workspaces" points to 'n4jsProjectFolder'
+		if (projectFolder.isPresent()) {
+			for (String relativePath : workspaces) {
+				if (isPointingTo(folder, relativePath, projectFolder.get())) {
+					return true;
+				}
+			}
+			return false;
+		}
+		return true;
 	}
 
 	/** This method assumes both {@code base} and {@code target} to be {@link File#getCanonicalFile() canonical}. */
