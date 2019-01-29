@@ -22,6 +22,10 @@ import org.eclipse.core.runtime.NullProgressMonitor;
  * Representation of a preference store for external libraries.
  */
 public interface ExternalLibraryPreferenceStore extends Iterable<URI> {
+	/** Code used in {@link #save(IProgressMonitor)} */
+	public static final int STATUS_CODE_SAVED_CHANGES = 1;
+	/** Code used in {@link #save(IProgressMonitor)} */
+	public static final int STATUS_CODE_NO_CHANGES = 2;
 
 	/**
 	 * Returns with a collection of configured external library locations.
@@ -93,7 +97,9 @@ public interface ExternalLibraryPreferenceStore extends Iterable<URI> {
 	 *            the monitor for the save progress. Optional, can be {@code null}, in such cases an
 	 *            {@link NullProgressMonitor} will be used instead.
 	 *
-	 * @return returns a status representing the outcome of the save operation.
+	 * @return a status representing the outcome of the save operation. If changes have been saved, the status code is
+	 *         {@link #STATUS_CODE_SAVED_CHANGES}. If there were no changes, the status code is
+	 *         {@link #STATUS_CODE_NO_CHANGES}.
 	 */
 	IStatus save(IProgressMonitor monitor);
 
