@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.tests.externalPackages;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -26,6 +28,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.runner.IExecutor;
 import org.eclipse.n4js.runner.RunConfiguration;
@@ -100,13 +103,16 @@ public class InstallRuntimeFromNpmPluginTest extends AbstractBuilderParticipantT
 						// test project of type 'library'
 						.withType(ProjectType.LIBRARY)
 						// add dependency to node runtime environment in specific version
-						.withDependency("n4js-runtime-node", "0.1.0"));
+						.withDependency("n4js-runtime-node", "0.13.1"));
 
 		configureProjectWithXtext(project);
 
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
-		assertNoIssues();
+
+		// duh! the 'n4js-runtime-node' in the shipped code does not satisfy our version constraint:
+		assertIssues(project.getFile(N4JSGlobals.PACKAGE_JSON),
+				"line 5: Project n4js-runtime-node is required in version 0.13.1, but only version 0.1.0 is present.");
 
 		// create hello world file
 		createTestFile(project.getFolder("src"), MODULE_TO_RUN, "console.log(\"Hello World\");");
@@ -115,6 +121,8 @@ public class InstallRuntimeFromNpmPluginTest extends AbstractBuilderParticipantT
 		RunnableInstallDependencies runnable = installDependenciesRunnable.get();
 		runnable.setInstallOptions(new InstallOptions());
 		runnable.run(new NullProgressMonitor());
+		assertTrue("installing dependencies (aka 'big button') failed: " + runnable.getResultStatus().getMessage(),
+				runnable.getResultStatus().isOK());
 
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
