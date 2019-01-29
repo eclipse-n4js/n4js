@@ -30,9 +30,9 @@
     },
     "moduleLoader": "node_builtin"
   },
-  "dependencies": {},
-  "devDependencies": {
+  "dependencies": {
     "n4js-runtime-esnext": "^0.1.0",
     "n4js-runtime-es2015": "^0.1.0"
-  }
+  },
+  "devDependencies": {}
 }

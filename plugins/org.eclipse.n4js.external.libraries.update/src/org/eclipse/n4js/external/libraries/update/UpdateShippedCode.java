@@ -51,7 +51,7 @@ import com.google.inject.Injector;
  * {@link #updateShippedCode(Optional)}.
  */
 public class UpdateShippedCode implements IWorkflowComponent {
-	final static boolean SKIP_UPDATE = true;
+
 	final static String PATH = "PATH";
 
 	/** Name of the n4js-lang project */
@@ -108,11 +108,6 @@ public class UpdateShippedCode implements IWorkflowComponent {
 	 *            present, folder "shipped-code" in bundle "org.eclipse.n4js.external.libraries" will be used.
 	 */
 	public static void updateShippedCode(Optional<Path> targetPath) throws IOException {
-		if (SKIP_UPDATE) {
-			println("==== Skipping UPDATE SHIPPED CODE ====");
-			return;
-		}
-
 		println("==== Running UPDATE SHIPPED CODE ====");
 
 		final Path n4jsRootPath = UtilN4.findN4jsRepoRootPath();
@@ -224,6 +219,7 @@ public class UpdateShippedCode implements IWorkflowComponent {
 		};
 
 		try {
+			NodeYarnProcessBuilder.additionalEnvironmentVariables.put("NPM_TOKEN", "dummy");
 			new N4jscBase().doMain(args);
 		} catch (ExitCodeException e) {
 			println("ERROR: headless compiler threw ExitCodeException (probably code compiled with errors); "
@@ -231,6 +227,8 @@ public class UpdateShippedCode implements IWorkflowComponent {
 					+ "message: " + e.getMessage());
 			e.printStackTrace();
 			throw new RuntimeException(e);
+		} finally {
+			NodeYarnProcessBuilder.additionalEnvironmentVariables.clear();
 		}
 	}
 

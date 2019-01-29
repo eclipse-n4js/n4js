@@ -12,6 +12,7 @@ Contributors:
 // ======================= AsciiSpec Processor Configuration =======================
 // Inline Task Macro Config
 // See https://github.com/NumberFour/asciispec/blob/master/docs/custom-processors/inline-task-macro for details.
+:task_def_GH-: GitHub;GitHub Issues;https://github.com/eclipse/n4js/issues/{TASK_ID};images/issue.svg; #{TASK_ID}
 
 // Path to Bib File (usually in same folder as index.adoc)
 :bib-file: n4jsspec.bib
@@ -27,13 +28,25 @@ Contributors:
 :stylesdir: styles
 :stylesheet: spec.min.css
 
+// Switch on/off eclipse help mode
+ifdef::eclipse-help-mode[]
+:docinfodir: eclipse-help-mode-headers
+:stylesheet: eclipse-help-mode-spec.min.css
+endif::[]
+ifndef::eclipse-help-mode[]
+:docinfodir: headers
+:stylesheet: spec.min.css
+:toc: left
+:toclevels: 5
+endif::[]
+:docinfo1:
+
 // Syntax Highlighting //
 :!source-highlighter:
 
 // General / Document layout etc. //
-:toc: left
-:toclevels: 5
 :doctype: book
+
 
 // Numbered section titles with auto-generated anchors
 :sectnumlevels: 5

@@ -12,6 +12,7 @@ package org.eclipse.n4js.external;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -21,11 +22,13 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
 import org.eclipse.n4js.json.JSON.JSONPackage;
+import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
@@ -70,7 +73,7 @@ public abstract class ExternalIndexSynchronizer {
 	private FolderContainmentHelper containmentHelper;
 
 	/** Triggers synchronization of the stored node_modules folders with the ones that actually exist. */
-	abstract public void synchronizeNodeModulesFolders();
+	abstract public IStatus synchronizeNodeModulesFolders();
 
 	/**
 	 * Call this method to synchronize the information in the Xtext index with all external projects in the external
@@ -90,29 +93,40 @@ public abstract class ExternalIndexSynchronizer {
 	 */
 	abstract public void reindexAllExternalProjects(IProgressMonitor monitor);
 
+	/** Enum to configure the method {@link ExternalIndexSynchronizer#findNpmsInFolder(ProjectStateOperation)} */
+	public enum ProjectStateOperation {
+		/** uses the current state */
+		NONE,
+		/** computes the state from disk but leaves the cache untouched */
+		PEEK,
+		/** computes the state from disk and updates the cache */
+		UPDATE
+	}
+
 	/**
 	 * Note: Expensive method
 	 * <p>
 	 * Returns a map that maps the names of projects as they can be found in the {@code node_modules} folder to their
 	 * locations and versions.
 	 *
-	 * @param updateCache
-	 *            if
-	 *            <ul>
-	 *            <li>true, cache will be first updated and then used to find projects
-	 *            <li>false, cache will <b>not</b> be updated. Instead a temporary cache will be created and used to
-	 *            find projects
-	 *            </ul>
+	 * @param operation
+	 *            configuration. see {@link ProjectStateOperation}
 	 */
-	final public Map<String, Pair<URI, String>> findNpmsInFolder(boolean updateCache) {
+	final public Map<String, Pair<URI, String>> findNpmsInFolder(ProjectStateOperation operation) {
 		Map<String, Pair<URI, String>> npmsFolder = new HashMap<>();
 
-		List<org.eclipse.xtext.util.Pair<URI, ProjectDescription>> prjs = null;
-		if (updateCache) {
+		List<org.eclipse.xtext.util.Pair<URI, ProjectDescription>> prjs = Collections.emptyList();
+		switch (operation) {
+		case NONE:
+			prjs = externalLibraryWorkspace.getProjectsIncludingUnnecessary();
+			break;
+		case PEEK:
+			prjs = externalLibraryWorkspace.computeProjectsIncludingUnnecessary();
+			break;
+		case UPDATE:
 			externalLibraryWorkspace.updateState();
 			prjs = externalLibraryWorkspace.getProjectsIncludingUnnecessary();
-		} else {
-			prjs = externalLibraryWorkspace.computeProjectsIncludingUnnecessary();
+			break;
 		}
 
 		for (org.eclipse.xtext.util.Pair<URI, ProjectDescription> pair : prjs) {
@@ -173,14 +187,17 @@ public abstract class ExternalIndexSynchronizer {
 	 * @return a set of all changes between the Xtext index and the external projects in all external locations
 	 */
 	final protected Collection<LibraryChange> identifyChangeSet(Collection<LibraryChange> forcedChangeSet,
-			boolean updateCache) {
+			ProjectStateOperation operation) {
 
-		synchronizeNodeModulesFolders();
+		int synchronizeStatusCode = synchronizeNodeModulesFolders().getCode();
+		if (synchronizeStatusCode == ExternalLibraryPreferenceStore.STATUS_CODE_SAVED_CHANGES) {
+			operation = ProjectStateOperation.NONE;
+		}
 
 		Collection<LibraryChange> changes = new LinkedHashSet<>(forcedChangeSet);
 
 		Map<String, Pair<URI, String>> npmsOfIndex = findNpmsInIndex();
-		Map<String, Pair<URI, String>> npmsOfFolder = findNpmsInFolder(updateCache);
+		Map<String, Pair<URI, String>> npmsOfFolder = findNpmsInFolder(operation);
 
 		Set<String> differences = new HashSet<>();
 		differences.addAll(npmsOfIndex.keySet());

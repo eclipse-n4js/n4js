@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<toc topic="sample/index.html" label="Sample">
+	<topic href="sample/chapter_title.html#_introduction" label="Chapter Title">
+		<topic href="sample/chapter_title.html#_notation" label="Main Section">
+			<topic href="sample/chapter_title.html#_grammar-notation" label="Subsection"></topic>
+		</topic>
+	</topic>
+</toc>

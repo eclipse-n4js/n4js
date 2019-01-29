@@ -1,1 +1,3 @@
-/web-html/
+dist/
+src-gen/
+web-html/

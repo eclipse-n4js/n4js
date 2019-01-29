@@ -209,7 +209,8 @@ public class LibraryManager {
 			SubMonitor subMonitorInstall = subMonitor.split(1);
 			subMonitorInstall.setTaskName(msg);
 			logger.logInfo(msg);
-			npmCli.runNpmYarnInstall(yarnWorkspaceRoot);
+			IStatus currStatus = npmCli.runNpmYarnInstall(yarnWorkspaceRoot);
+			status.merge(currStatus);
 		}
 		for (IN4JSProject project : projectsOutsideAnyYarnWorkspace) {
 			File projectFolder = project.getLocationPath().toFile();
@@ -218,7 +219,8 @@ public class LibraryManager {
 			SubMonitor subMonitorInstall = subMonitor.split(1);
 			subMonitorInstall.setTaskName(msg);
 			logger.logInfo(msg);
-			npmCli.runNpmYarnInstall(projectFolder);
+			IStatus currStatus = npmCli.runNpmYarnInstall(projectFolder);
+			status.merge(currStatus);
 		}
 
 		SubMonitor subMonitorRegisterNpms = subMonitor.split(1);

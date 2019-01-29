@@ -112,7 +112,7 @@ public class ProjectTestsUtils {
 	 *      stackoverflow: from zip</a>
 	 */
 	public static IProject importProject(File probandsFolder, String projectName) throws CoreException {
-		return importProject(probandsFolder, projectName, true);
+		return importProject(probandsFolder, projectName, true, true);
 	}
 
 	/**
@@ -120,8 +120,9 @@ public class ProjectTestsUtils {
 	 * named "_project" in the proband folder. This should only be used as a rare exception when tests import projects
 	 * from Git repositories other than the N4JS or N4JS-N4 source repositories (e.g. for integration tests).
 	 */
-	public static IProject importProjectFromExternalSource(File probandsFolder, String projectName) throws Exception {
-		return importProject(probandsFolder, projectName, false);
+	public static IProject importProjectFromExternalSource(File probandsFolder, String projectName,
+			boolean copyIntoWorkspace) throws Exception {
+		return importProject(probandsFolder, projectName, copyIntoWorkspace, false);
 	}
 
 	/**
@@ -138,8 +139,7 @@ public class ProjectTestsUtils {
 	 *             If the project creation does not succeed.
 	 */
 	public static IProject createProjectWithLocation(File probandsFolder, String projectLocationFolder,
-			String workspaceName)
-			throws CoreException {
+			String workspaceName) throws CoreException {
 		File projectSourceFolder = new File(probandsFolder, projectLocationFolder);
 		if (!projectSourceFolder.exists()) {
 			throw new IllegalArgumentException("proband not found in " + projectSourceFolder);
@@ -162,8 +162,8 @@ public class ProjectTestsUtils {
 
 	}
 
-	private static IProject importProject(File probandsFolder, String projectName, boolean prepareDotProject)
-			throws CoreException {
+	private static IProject importProject(File probandsFolder, String projectName, boolean copyIntoWorkspace,
+			boolean prepareDotProject) throws CoreException {
 		File projectSourceFolder = new File(probandsFolder, projectName);
 		if (!projectSourceFolder.exists()) {
 			throw new IllegalArgumentException("proband not found in " + projectSourceFolder);
@@ -173,17 +173,24 @@ public class ProjectTestsUtils {
 			prepareDotProject(projectSourceFolder);
 		}
 
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+
 		// copy project into workspace
 		// (need to do that manually to properly handle NPM scopes, because the Eclipse import functionality won't put
 		// those projects into an "@myScope" subfolder)
-		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		File workspaceFolder = workspace.getRoot().getLocation().toFile();
-		File projectTargetFolder = new File(workspaceFolder, projectName);
-		try {
-			projectTargetFolder.mkdirs();
-			FileCopier.copy(projectSourceFolder.toPath(), projectTargetFolder.toPath());
-		} catch (IOException e) {
-			throw new WrappedException("exception while copying project into workspace", e);
+		final File projectTargetFolder;
+		if (copyIntoWorkspace) {
+			File workspaceFolder = workspace.getRoot().getLocation().toFile();
+			projectTargetFolder = new File(workspaceFolder, projectName);
+			try {
+				projectTargetFolder.mkdirs();
+				FileCopier.copy(projectSourceFolder.toPath(), projectTargetFolder.toPath());
+			} catch (IOException e) {
+				throw new WrappedException("exception while copying project into workspace", e);
+			}
+		} else {
+			// not copying, so source and target folders are identical:
+			projectTargetFolder = projectSourceFolder;
 		}
 
 		// load actual project name from ".project" file (might be different in case of NPM scopes)

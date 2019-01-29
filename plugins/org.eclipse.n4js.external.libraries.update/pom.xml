@@ -55,12 +55,8 @@ Contributors:
 							<mainClass>org.eclipse.emf.mwe2.launch.runtime.Mwe2Launcher</mainClass>
 							<arguments>
 								<argument>file://${project.basedir}${mwe2-file-location}</argument>
-								<argument>
-									-p
-								</argument>
-								<argument>
-									rootPath=/${project.basedir}/../
-								</argument>
+								<argument>-p</argument>
+								<argument>rootPath=/${project.basedir}/../</argument>
 							</arguments>
 							<classpathScope>compile</classpathScope>
 							<!-- Following switch:
