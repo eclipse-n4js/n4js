@@ -51,7 +51,7 @@ import com.google.inject.Inject;
  *
  * Asserts that a module can be executed using a runtime environment that was installed from npm.
  */
-public class InstallRuntimeFromNpmPluginTest extends AbstractBuilderParticipantTest {
+public class InstallRuntimeFromNpmPluginUITest extends AbstractBuilderParticipantTest {
 
 	// the id of the runner to launch
 	private static final String NODE_RUNNER_ID = "org.eclipse.n4js.runner.nodejs.NODEJS";
