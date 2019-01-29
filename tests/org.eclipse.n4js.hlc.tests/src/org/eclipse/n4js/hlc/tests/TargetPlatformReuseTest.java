@@ -26,6 +26,7 @@ import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.base.Predicates;
@@ -33,6 +34,7 @@ import com.google.common.base.Predicates;
 /**
  * Downloads, installs, compiles and runs 'express'.
  */
+@Ignore("side-by-side-use-case")
 public class TargetPlatformReuseTest extends AbstractN4jscTest {
 	File workspace;
 

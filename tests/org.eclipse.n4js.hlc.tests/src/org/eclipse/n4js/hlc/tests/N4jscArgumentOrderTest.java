@@ -30,6 +30,7 @@ import org.eclipse.n4js.hlc.base.N4jscBase;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -37,6 +38,7 @@ import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
 /*** Basic tests for N4jsc,like checking command line options or simple compile. */
+@Ignore("side-by-side-use-case")
 @RunWith(Parameterized.class)
 public class N4jscArgumentOrderTest extends AbstractN4jscTest {
 
