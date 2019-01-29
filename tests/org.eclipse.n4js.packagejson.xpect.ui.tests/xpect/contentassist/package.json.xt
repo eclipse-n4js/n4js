@@ -30,7 +30,8 @@
 		dependencies - Dependencies of this npm,
 		devDependencies - Development dependencies of this npm,
 		main - Main module. Path is relative to package root,
-		version - Npm semver version
+		version - Npm semver version,
+		workspaces - Projects that are members of the yarn workspace
 	--- */
 	"name": "P",
 	/* XPECT contentAssistList at '"n4js": {<|>' proposals ---
