@@ -21,19 +21,28 @@ Contributors:
 // For more info, see http://asciidoctor.org/docs/user-manual/#builtin-attributes
 
 // Header and Footer info //
-:docinfodir: headers
-:docinfo1:
+// For more info, see https://asciidoctor.org/docs/user-manual/#docinfo-file
 
 // Stylesheet settings //
 :stylesdir: styles
+
+// Switch on/off eclipse help mode
+ifdef::eclipse-help-mode[]
+:docinfodir: eclipse-help-mode-headers
+:stylesheet: eclipse-help-mode-spec.min.css
+endif::[]
+ifndef::eclipse-help-mode[]
+:docinfodir: headers
 :stylesheet: spec.min.css
+:toc: left
+:toclevels: 5
+endif::[]
+:docinfo1:
 
 // Syntax Highlighting //
 :!source-highlighter:
 
 // General / Document layout etc. //
-:toc: left
-:toclevels: 5
 :doctype: book
 
 // Numbered section titles with auto-generated anchors

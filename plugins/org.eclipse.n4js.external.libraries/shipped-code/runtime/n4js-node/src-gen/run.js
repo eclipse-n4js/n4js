@@ -28,7 +28,7 @@
 
             if (options["keep-eventloop"]) {
                 // dummy interval to avoid termination on open main/exec promise:
-                timerHandle = setInterval(function() {}, Number.MAX_SAFE_INTEGER);
+                timerHandle = setInterval(function() {}, 0x7fffffff /* max 32bit signed int */);
             }
 
             n4.handleMainModule().then(function() {
@@ -46,8 +46,9 @@
             }
             clearInterval(timerHandle);
             if (exitOnError) {
+                const exitCode = typeof err === "number" ? err|0 : null;
                 // Flush stdout and exit:
-                process.stdout.write("", process.exit.bind(process, 1));
+                process.stdout.write("", process.exit.bind(process, exitCode || 1));
             }
         });
     };

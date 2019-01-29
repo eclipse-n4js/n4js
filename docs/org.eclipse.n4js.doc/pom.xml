@@ -214,12 +214,10 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
                     <resources>
                       <resource>
                         <directory>${project.build.directory}</directory>
-                        
                         <includes>
                           <!-- Insert more folders here. Make sure that folders end with slash ('/') -->
                           <include>${eclipse.html}/</include>
                         </includes>
-                        
                         <filtering>false</filtering>
                       </resource> 
                     </resources>
@@ -229,6 +227,240 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
                   </goals>
                 </execution>
               </executions>
+            </plugin>
+
+			<plugin>
+			    <groupId>com.googlecode.maven-download-plugin</groupId>
+			    <artifactId>download-maven-plugin</artifactId>
+			    <version>1.4.1</version>
+			    <executions>
+			        <execution>
+			            <id>download-asciispec</id>
+			            <phase>initialize</phase>
+			            <goals>
+			                <goal>wget</goal>
+			            </goals>
+			            <configuration>
+			                <url>https://github.com/NumberFour/asciispec/raw/gh-pages/asciispec.zip</url>
+			                <unpack>true</unpack>
+			                <outputDirectory>${basedir}/asciispec-tools</outputDirectory>
+			            </configuration>
+			        </execution>
+			    </executions>
+			</plugin>
+
+			<!-- Build N4JSDesign document -->
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>${maven-antrun-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>build-n4jsdesign</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+							    <mkdir dir="${basedir}/../org.eclipse.n4js.design/generated-docs"/>
+								<!-- Generate N4JSDesign.html -->
+								<exec executable="${basedir}/asciispec-tools/asciispec/bin/asciispec" spawn="false" dir="${basedir}/../org.eclipse.n4js.design/">
+									<arg value="direct"/>
+									<arg value="-a"/>
+									<arg value="-o"/>
+                                    <arg value="-a eclipse-help-mode"/>
+                                    <arg value="-D"/>
+									<arg value="generated-docs/"/>
+									<arg value="N4JSDesign.adoc"/>
+								</exec>
+
+                                <!-- Generate N4JSDesign.xml -->
+                                <exec executable="${basedir}/asciispec-tools/asciispec/bin/asciispec" spawn="false" dir="${basedir}/../org.eclipse.n4js.design/">
+                                    <arg value="direct"/>
+                                    <arg value="-b"/>
+                                    <arg value="docbook"/>
+                                    <arg value="-a"/>
+                                    <arg value="-o"/>
+                                    <arg value="-a eclipse-help-mode"/>
+                                    <arg value="-D"/>
+                                    <arg value="generated-docs/"/>
+                                    <arg value="N4JSDesign.adoc"/>
+                                </exec>
+
+                                <copy todir="${basedir}/../org.eclipse.n4js.design/generated-docs/.">
+                                    <fileset dir="${basedir}/../org.eclipse.n4js.design">
+                                        <include name="styles/**"/>
+                                        <include name="images/**"/>
+                                        <include name="scripts/**"/>
+                                        <include name="chapters/**"/>
+                                        <exclude name="chapters/**/*.adoc"/>
+                                    </fileset>
+                                </copy>
+
+	                            <copy todir="${basedir}/generated-docs/.">
+									<fileset dir="${basedir}/../org.eclipse.n4js.design/generated-docs"/>
+								</copy>
+                                <delete dir="${basedir}/../org.eclipse.n4js.design/generated-docs"/>
+	                            <copy todir="${basedir}/doctools/src/org/eclipse/n4js/doctools/.">
+	                            	<fileset dir="${basedir}/../../releng/org.eclipse.n4js.releng.utils/src/org/eclipse/n4js/doctools/."/>
+	                            </copy>
+
+								<mkdir dir="${basedir}/doctools/bin"/>
+								<mkdir dir="${basedir}/dist/eclipse-html/N4JSDesign"/>
+								<javac srcdir="${basedir}/doctools/src/." fork="yes" destdir="${basedir}/doctools/bin/."></javac>
+
+								<java classname="org.eclipse.n4js.doctools.Chunker"
+									 classpath="${basedir}/doctools/bin/.">
+									<arg value="-n"/>
+									<arg value="h2"/>
+									<arg value="-c"/>
+									<arg value="&lt;div class=&quot;sect1&quot;&gt;"/>
+									<arg value="-h"/>
+									<arg value="&lt;body class=&quot;book&quot;&gt;"/>
+									<arg value="-f"/>
+									<arg value="&lt;div id=&quot;footer&quot;&gt;"/>
+									<arg value="-d"/>
+									<arg value="${basedir}/dist/eclipse-html/N4JSDesign/."/>
+									<arg value="${basedir}/generated-docs/N4JSDesign.html"/>
+								</java>
+
+								<java classname="org.eclipse.n4js.doctools.EclipseHelpTOCGenerator"
+									 classpath="${basedir}/doctools/bin/.">
+									<arg value="-t"/>
+									<arg value="${basedir}/src-gen/indices/n4jsdesign.xml"/>
+									<arg value="-p"/>
+									<arg value="dist/eclipse-html/"/>
+									<arg value="${basedir}/generated-docs/N4JSDesign.xml"/>
+								</java>
+
+	                            <move todir="${basedir}/dist/eclipse-html/N4JSDesign/.">
+								  <fileset dir="${basedir}/generated-docs/."/>
+								</move>
+
+								<delete dir="${basedir}/doctools"/>
+							</target>
+						</configuration>
+					</execution>
+
+				</executions>
+			</plugin>
+
+			<!-- Build N4JSSpec document -->
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>${maven-antrun-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>build-n4jsspec</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <mkdir dir="${basedir}/../org.eclipse.n4js.spec/generated-docs"/>
+                                <!-- Generate N4JSSpec.html -->
+                                <exec executable="${basedir}/asciispec-tools/asciispec/bin/asciispec" spawn="false" dir="${basedir}/../org.eclipse.n4js.spec/">
+                                    <arg value="direct"/>
+                                    <arg value="-a"/>
+                                    <arg value="-o"/>
+                                    <arg value="-a eclipse-help-mode"/>
+                                    <arg value="-D"/>
+                                    <arg value="generated-docs/"/>
+                                    <arg value="N4JSSpec.adoc"/>
+                                </exec>
+                                <!-- Generate N4JSSpec.xml -->
+                                <exec executable="${basedir}/asciispec-tools/asciispec/bin/asciispec" spawn="false" dir="${basedir}/../org.eclipse.n4js.spec/">
+                                    <arg value="direct"/>
+                                    <arg value="-b"/>
+                                    <arg value="docbook"/>
+                                    <arg value="-a"/>
+                                    <arg value="-o"/>
+                                    <arg value="-a eclipse-help-mode"/>
+                                    <arg value="-D"/>
+                                    <arg value="generated-docs/"/>
+                                    <arg value="N4JSSpec.adoc"/>
+                                </exec>
+                                <copy todir="${basedir}/../org.eclipse.n4js.spec/generated-docs/.">
+                                    <fileset dir="${basedir}/../org.eclipse.n4js.spec">
+                                        <include name="styles/**"/>
+                                        <include name="images/**"/>
+                                        <include name="scripts/**"/>
+                                        <include name="chapters/**"/>
+                                        <exclude name="chapters/**/*.adoc"/>
+                                    </fileset>
+                                </copy>
+
+                                <copy todir="${basedir}/generated-docs/.">
+                                    <fileset dir="${basedir}/../org.eclipse.n4js.spec/generated-docs"/>
+                                </copy>
+                                <delete dir="${basedir}/../org.eclipse.n4js.spec/generated-docs"/>
+
+                                <copy todir="${basedir}/doctools/src/org/eclipse/n4js/doctools/.">
+                                    <fileset dir="${basedir}/../../releng/org.eclipse.n4js.releng.utils/src/org/eclipse/n4js/doctools/."/>
+                                </copy>
+
+                                <mkdir dir="${basedir}/doctools/bin"/>
+                                <mkdir dir="${basedir}/dist/eclipse-html/N4JSSpec"/>
+                                <javac srcdir="${basedir}/doctools/src/." fork="yes" destdir="${basedir}/doctools/bin/."></javac>
+
+                                <java classname="org.eclipse.n4js.doctools.Chunker"
+                                     classpath="${basedir}/doctools/bin/.">
+                                    <arg value="-n"/>
+                                    <arg value="h2"/>
+                                    <arg value="-c"/>
+                                    <arg value="&lt;div class=&quot;sect1&quot;&gt;"/>
+                                    <arg value="-h"/>
+                                    <arg value="&lt;body class=&quot;book&quot;&gt;"/>
+                                    <arg value="-f"/>
+                                    <arg value="&lt;div id=&quot;footer&quot;&gt;"/>
+                                    <arg value="-d"/>
+                                    <arg value="${basedir}/dist/eclipse-html/N4JSSpec/."/>
+                                    <arg value="${basedir}/generated-docs/N4JSSpec.html"/>
+                                </java>
+
+                                <java classname="org.eclipse.n4js.doctools.EclipseHelpTOCGenerator"
+                                     classpath="${basedir}/doctools/bin/.">
+                                    <arg value="-t"/>
+                                    <arg value="${basedir}/src-gen/indices/n4jsspec.xml"/>
+                                    <arg value="-p"/>
+                                    <arg value="dist/eclipse-html/"/>
+                                    <arg value="${basedir}/generated-docs/N4JSSpec.xml"/>
+                                </java>
+
+                                <move todir="${basedir}/dist/eclipse-html/N4JSSpec/.">
+                                  <fileset dir="${basedir}/generated-docs/."/>
+                                </move>
+
+                                <delete dir="${basedir}/doctools"/>
+                            <!--   <delete dir="${basedir}/asciispec-tools"/> -->
+                            </target>
+                        </configuration>
+                    </execution>
+
+                </executions>
+            </plugin>
+
+
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>${maven-antrun-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>clean-up-n4jsdesign-n4jsspec</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <delete dir="${basedir}/doctools"/>
+                                <delete dir="${basedir}/asciispec-tools"/>
+                            </target>
+                        </configuration>
+                    </execution>
+
+                </executions>
             </plugin>
 
             <!-- HTML to Eclipse TOC.XML -->

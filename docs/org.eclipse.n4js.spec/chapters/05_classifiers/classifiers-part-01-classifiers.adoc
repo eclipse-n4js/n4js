@@ -393,19 +393,24 @@ Note that a class may implement fields with field accessors and vice versa.
 .Abstract Member
 [req,id=IDE-46,version=1]
 --
+task::GH-1047[]
+
 1.  A member declared as abstract must not have a method body (in contrary a method not declared as abstract have to have a method body).
 2.  Only methods, getters and setters can be declared as abstract (fields cannot be abstract).
 3.  It is not possible to inherit from an abstract class which contains abstract members which are not visible in the subclass.
-4.  An abstract member cannot be set to final (with annotation @Final).
-// NOTE jvp/mor: decided to disallow abstract static members, because of problems (static members always accessible)
-5.  Static members may not be declared abstract.
-////
-also static methods, getters and setters can be declared as abstract, but
-only static members can override static members and only instance members can
-override other instance members \task*{IDE-553}
-////
-
+4.  An abstract member must not be set to final (with annotation `@Final`).
+5.  Static members must not be declared abstract.
 --
+
+Remarks:
+
+* We decided to disallow abstract static members, since we cannot guarantee that a static members is not accessed in all cases
+* Only static members can override static members and only instance members can override other instance members of course.
+* An abstract member must not be declared in a final class (i.e. a class annotated with `@Final`). This is not explicitly defined as constraint in <<Req-IDE-46>> since abstract classes must not defined final anyway. We also do not produce error message for abstract members in final classes since these errors would be consequential errors.
+
+
+WARNING: Abstract members might be declared private, as they can be accessed from within the module.
+This is to be changed in order to be aligned with TypeScript, cf. task:GH-1221[]. However we also want to add class expressions -- and then the abstract members may be accessed (and overridden) in nested classes created by means of class expressions.
 
 === Non-Instantiable Classes
 
