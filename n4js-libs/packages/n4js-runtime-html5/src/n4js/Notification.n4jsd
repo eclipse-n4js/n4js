@@ -14,9 +14,9 @@ export external public class Notification implements EventTarget {
     public constructor(title: string, options: NotificationOptions=);
 
     @Override
-    public <EventT extends Event> addEventListener(type: string, listener: {function(EventT): void}, useCapture: boolean=): void;
+    public <EventT extends Event> addEventListener(type: string, listener: (EventT) => void, optionsOrUseCapture: Object|boolean=): void;
     @Override
-    public <EventT extends Event> removeEventListener(type: string, listener: {function(EventT): void}, useCapture: boolean=): void;
+    public <EventT extends Event> removeEventListener(type: string, listener: (EventT) => void, optionsOrUseCapture: Object|boolean=): void;
 
     public static get permission(): NotificationPermission;
     public static requestPermission(): Promise<NotificationPermission, any>;
