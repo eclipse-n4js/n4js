@@ -84,6 +84,7 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 		// of a source file location found in a source map
 		// FIXME: This loop and the call 'toFile()' / 'isFile()' are very expensive
 		// FIXME: since this method is called for a lot of external files
+		int unusedVar = 2;
 		if (nestedLocation.toString().startsWith("file:/")) {
 			String nested = nestedLocation.toFileString();
 			java.nio.file.Path nestedPath = Paths.get(nested);
@@ -106,6 +107,7 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 			}
 		}
 		return null;
+
 	}
 
 	/** @return the {@link URI} for a project with the given n4js project name */
