@@ -16,16 +16,15 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.runner.RuntimeEnvironmentsHelper;
@@ -77,9 +76,6 @@ public class GH_986_ExternalCircularDependencyAndRuntimeLibrariesPluginTest exte
 	private RuntimeEnvironmentsHelper runtimeEnvironmentsHelper;
 
 	@Inject
-	private ExternalLibraryPreferenceStore externalLibraryPreferenceStore;
-
-	@Inject
 	private IN4JSCore n4jsCore;
 
 	@Before
@@ -93,23 +89,12 @@ public class GH_986_ExternalCircularDependencyAndRuntimeLibrariesPluginTest exte
 		final IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		assertTrue("Expected empty workspace. Projects were in workspace: " + Arrays.toString(projects),
 				0 == projects.length);
-		final java.net.URI externalRootLocation = getResourceUri(PROBANDS, PROBANDS_SUBFOLDER, EXT_LOC);
-		externalLibraryPreferenceStore.add(externalRootLocation);
-		final IStatus result = externalLibraryPreferenceStore.save(new NullProgressMonitor());
-		assertTrue("Error while saving external library preference changes.", result.isOK());
 		waitForAutoBuild();
 	}
 
 	@After
 	@Override
 	synchronized public void tearDown() throws Exception {
-		// remove test-specific external libraries location
-		final java.net.URI externalRootLocation = getResourceUri(PROBANDS, PROBANDS_SUBFOLDER, EXT_LOC);
-		externalLibraryPreferenceStore.remove(externalRootLocation);
-		final IStatus result = externalLibraryPreferenceStore.save(new NullProgressMonitor());
-		assertTrue("Error while saving external library preference changes.", result.isOK());
-		waitForAutoBuild();
-
 		// clear library manager to avoid confusing tests being executed after this test class
 		externals.maintenanceDeleteNpms();
 
@@ -117,14 +102,16 @@ public class GH_986_ExternalCircularDependencyAndRuntimeLibrariesPluginTest exte
 		super.tearDown();
 	}
 
-	/**
-	 * Compute compatible runtime environment of project that references a dependency cycle (via dependencies)
-	 */
+	/** Compute compatible runtime environment of project that references a dependency cycle (via dependencies) */
 	@Test
-	public void testRunWithCycleInDependencyGraph() throws CoreException {
+	public void testRunWithCycleInDependencyGraph() throws CoreException, IOException {
 		// import project to workspace
 		final File projectsRoot = new File(getResourceUri(PROBANDS, PROBANDS_SUBFOLDER, WS_LOC));
 		final IProject testProject = ProjectTestsUtils.importProject(projectsRoot, CLIENT_DEPS_PROJECT_NAME);
+
+		java.net.URI externalRootLocation = getResourceUri(PROBANDS, PROBANDS_SUBFOLDER, EXT_LOC);
+		ProjectTestsUtils.importDependencies(CLIENT_DEPS_PROJECT_NAME, externalRootLocation, libraryManager);
+
 		waitForAutoBuild();
 
 		// obtain IN4JSProject representation of test project
@@ -154,14 +141,16 @@ public class GH_986_ExternalCircularDependencyAndRuntimeLibrariesPluginTest exte
 		testProject.delete(true, true, new NullProgressMonitor());
 	}
 
-	/**
-	 * Compute compatible runtime environment of project that references a dependency cycle (via devDependencies)
-	 */
+	/** Compute compatible runtime environment of project that references a dependency cycle (via devDependencies) */
 	@Test
-	public void testRunWithCycleInDevDependencyGraph() throws CoreException {
+	public void testRunWithCycleInDevDependencyGraph() throws CoreException, IOException {
 		// import project to workspace
 		final File projectsRoot = new File(getResourceUri(PROBANDS, PROBANDS_SUBFOLDER, WS_LOC));
 		final IProject testProject = ProjectTestsUtils.importProject(projectsRoot, CLIENT_DEV_DEPS_PROJECT_NAME);
+
+		java.net.URI externalRootLocation = getResourceUri(PROBANDS, PROBANDS_SUBFOLDER, EXT_LOC);
+		ProjectTestsUtils.importDependencies(CLIENT_DEV_DEPS_PROJECT_NAME, externalRootLocation, libraryManager);
+
 		waitForAutoBuild();
 
 		// obtain IN4JSProject representation of test project

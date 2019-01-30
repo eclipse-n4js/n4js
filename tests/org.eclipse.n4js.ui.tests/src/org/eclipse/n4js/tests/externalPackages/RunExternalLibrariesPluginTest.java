@@ -24,29 +24,21 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collection;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.internal.RaceDetectionHelper;
-import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.n4js.runner.RunnerFrontEnd;
 import org.eclipse.n4js.runner.ui.RunnerFrontEndUI;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.repeat.RepeatedTestRule;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
-import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.n4js.utils.process.OutputRedirection;
 import org.eclipse.n4js.utils.process.ProcessExecutor;
 import org.eclipse.n4js.utils.process.ProcessResult;
@@ -88,12 +80,6 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 			.addAll(LIB_PROJECT_IDS).add(CLIENT).build();
 
 	@Inject
-	private ExternalLibraryPreferenceStore externalLibraryPreferenceStore;
-
-	@Inject
-	private LibraryManager libraryManager;
-
-	@Inject
 	private RunnerFrontEndUI runnerFrontEndUI;
 
 	@Inject
@@ -128,21 +114,9 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 			ProjectTestsUtils.importProject(projectsRoot, projectName);
 		}
 
-		IProject clientProject = getProjectByName(CLIENT);
-		URI clientLocation = clientProject.getLocationURI();
-		File nodeModulesDir = new File(clientLocation.getPath(), N4JSGlobals.NODE_MODULES);
-		if (!nodeModulesDir.isDirectory()) {
-			Files.createDirectory(nodeModulesDir.toPath());
-		}
-
 		URI externalRootLocation = getResourceUri(PROBANDS, EXT_LOC);
-		Path probandsSource = Paths.get(externalRootLocation.getPath());
-		FileCopier.copy(probandsSource, nodeModulesDir.toPath());
+		ProjectTestsUtils.importDependencies(CLIENT, externalRootLocation, libraryManager);
 
-		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
-
-		IResourcesSetupUtil.fullBuild();
-		waitForAutoBuild();
 		assertNoIssues();
 	}
 
@@ -152,10 +126,6 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 	@After
 	@Override
 	synchronized public void tearDown() throws Exception {
-		final URI externalRootLocation = getResourceUri(PROBANDS, EXT_LOC);
-		externalLibraryPreferenceStore.remove(externalRootLocation);
-		final IStatus result = externalLibraryPreferenceStore.save(new NullProgressMonitor());
-		assertTrue("Error while saving external library preference changes.", result.isOK());
 		waitForAutoBuild();
 		super.tearDown();
 		RaceDetectionHelper.log(">>> TEARDOWN >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
