@@ -24,6 +24,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.net.URI;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -33,6 +35,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.internal.RaceDetectionHelper;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.runner.RunConfiguration;
@@ -41,6 +44,7 @@ import org.eclipse.n4js.runner.ui.RunnerFrontEndUI;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.repeat.RepeatedTestRule;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
+import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.n4js.utils.process.OutputRedirection;
 import org.eclipse.n4js.utils.process.ProcessExecutor;
 import org.eclipse.n4js.utils.process.ProcessResult;
@@ -122,6 +126,20 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 			final File projectsRoot = new File(getResourceUri(PROBANDS, WORKSPACE_LOC));
 			ProjectTestsUtils.importProject(projectsRoot, projectName);
 		}
+
+		IProject clientProject = getProjectByName(CLIENT);
+		URI clientLocation = clientProject.getLocationURI();
+		String string = clientLocation.toString();
+		File nodeModulesDir = new File(string, N4JSGlobals.NODE_MODULES);
+		if (!nodeModulesDir.isDirectory()) {
+			nodeModulesDir.mkdir();
+		}
+		if (!nodeModulesDir.exists()) {
+			nodeModulesDir.mkdir();
+		}
+		Path probandsSource = Paths.get(externalRootLocation.toString());
+		FileCopier.copy(probandsSource, nodeModulesDir.toPath());
+
 		waitForAutoBuild();
 	}
 
