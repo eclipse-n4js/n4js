@@ -24,6 +24,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.net.URI;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -36,6 +37,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.internal.RaceDetectionHelper;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.runner.RunConfiguration;
@@ -89,6 +91,9 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 	private ExternalLibraryPreferenceStore externalLibraryPreferenceStore;
 
 	@Inject
+	private LibraryManager libraryManager;
+
+	@Inject
 	private RunnerFrontEndUI runnerFrontEndUI;
 
 	@Inject
@@ -117,11 +122,7 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 		final IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		assertTrue("Expected empty workspace. Projects were in workspace: " + Arrays.toString(projects),
 				0 == projects.length);
-		final URI externalRootLocation = getResourceUri(PROBANDS, EXT_LOC);
-		externalLibraryPreferenceStore.add(externalRootLocation);
-		final IStatus result = externalLibraryPreferenceStore.save(new NullProgressMonitor());
-		assertTrue("Error while saving external library preference changes.", result.isOK());
-		waitForAutoBuild();
+
 		for (final String projectName : ALL_PROJECT_IDS) {
 			final File projectsRoot = new File(getResourceUri(PROBANDS, WORKSPACE_LOC));
 			ProjectTestsUtils.importProject(projectsRoot, projectName);
@@ -129,18 +130,20 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 
 		IProject clientProject = getProjectByName(CLIENT);
 		URI clientLocation = clientProject.getLocationURI();
-		String string = clientLocation.toString();
-		File nodeModulesDir = new File(string, N4JSGlobals.NODE_MODULES);
+		File nodeModulesDir = new File(clientLocation.getPath(), N4JSGlobals.NODE_MODULES);
 		if (!nodeModulesDir.isDirectory()) {
-			nodeModulesDir.mkdir();
+			Files.createDirectory(nodeModulesDir.toPath());
 		}
-		if (!nodeModulesDir.exists()) {
-			nodeModulesDir.mkdir();
-		}
-		Path probandsSource = Paths.get(externalRootLocation.toString());
+
+		URI externalRootLocation = getResourceUri(PROBANDS, EXT_LOC);
+		Path probandsSource = Paths.get(externalRootLocation.getPath());
 		FileCopier.copy(probandsSource, nodeModulesDir.toPath());
 
+		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
+
+		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
+		assertNoIssues();
 	}
 
 	/**
@@ -182,6 +185,9 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 			waitForAutoBuildCheckIndexRigid();
 		}
 
+		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
+		waitForAutoBuild();
+
 		final ProcessResult result = runClient();
 		// @formatter:off
 		assertEquals("Unexpected output after running the client module: " + result,
@@ -201,6 +207,9 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 			getProjectByName(libProjectName).close(new NullProgressMonitor());
 			waitForAutoBuildCheckIndexRigid();
 		}
+
+		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
+		waitForAutoBuild();
 
 		final ProcessResult result = runClient();
 		// @formatter:off
@@ -232,6 +241,9 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 			waitForAutoBuildCheckIndexRigid();
 		}
 
+		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
+		waitForAutoBuild();
+
 		final ProcessResult result = runClient();
 		// @formatter:off
 		assertEquals("Unexpected output after running the client module: " + result,
@@ -252,6 +264,9 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 			waitForAutoBuildCheckIndexRigid();
 		}
 
+		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
+		waitForAutoBuild();
+
 		final ProcessResult firstResult = runClient();
 		// @formatter:off
 		assertEquals("Unexpected output after running the client module with two closed projects: " + firstResult,
@@ -266,6 +281,9 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 			getProjectByName(libProjectName).open(new NullProgressMonitor());
 			waitForAutoBuildCheckIndexRigid();
 		}
+
+		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
+		waitForAutoBuild();
 
 		final ProcessResult secondResult = runClient();
 		// @formatter:off
@@ -287,6 +305,9 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 			waitForAutoBuildCheckIndexRigid();
 		}
 
+		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
+		waitForAutoBuild();
+
 		final ProcessResult result = runClient();
 		// @formatter:off
 		assertEquals("Unexpected output after running the client module: " + result,
@@ -306,6 +327,9 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 			getProjectByName(libProjectName).delete(true, new NullProgressMonitor());
 			waitForAutoBuildCheckIndexRigid();
 		}
+
+		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
+		waitForAutoBuild();
 
 		final ProcessResult result = runClient();
 		// @formatter:off
@@ -327,6 +351,9 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 			waitForAutoBuildCheckIndexRigid();
 		}
 
+		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
+		waitForAutoBuild();
+
 		final ProcessResult firstResult = runClient();
 		// @formatter:off
 		assertEquals("Unexpected output after running the client module with two deleted projects: " + firstResult,
@@ -342,6 +369,9 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 			ProjectTestsUtils.importProject(projectsRoot, libProjectName);
 			waitForAutoBuildCheckIndexRigid();
 		}
+
+		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
+		waitForAutoBuild();
 
 		final ProcessResult secondResult = runClient();
 		// @formatter:off

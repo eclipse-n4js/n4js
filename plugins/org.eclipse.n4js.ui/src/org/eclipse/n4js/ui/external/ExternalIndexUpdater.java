@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.ui.external;
 
-import static com.google.common.collect.Sets.newHashSet;
 import static org.eclipse.core.runtime.SubMonitor.convert;
 
 import java.net.URI;
@@ -25,7 +24,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalProjectsCollector;
 import org.eclipse.n4js.external.N4JSExternalProject;
-import org.eclipse.n4js.external.RebuildWorkspaceProjectsScheduler;
 
 import com.google.inject.Inject;
 
@@ -45,9 +43,6 @@ public class ExternalIndexUpdater implements ExternalLocationsUpdatedListener {
 	@Inject
 	private ExternalLibraryBuilder builder;
 
-	@Inject
-	private RebuildWorkspaceProjectsScheduler scheduler;
-
 	@Override
 	public void beforeLocationsUpdated(Set<URI> removedLocations, IProgressMonitor monitor) {
 		ISchedulingRule rule = builder.getRule();
@@ -62,14 +57,7 @@ public class ExternalIndexUpdater implements ExternalLocationsUpdatedListener {
 
 	@Override
 	public void afterLocationsUpdated(Set<URI> addedLocations, IProgressMonitor monitor) {
-		ISchedulingRule rule = builder.getRule();
-		try {
-			Job.getJobManager().beginRule(rule, monitor);
-
-			buildAddedLocations(addedLocations, monitor);
-		} finally {
-			Job.getJobManager().endRule(rule);
-		}
+		// nothing to do
 	}
 
 	/** Removes projects from Index that were in a removed location */
@@ -88,28 +76,6 @@ public class ExternalIndexUpdater implements ExternalLocationsUpdatedListener {
 
 		wsProjectsDependingOnRemovedProjects = collector.getWSProjectsDependendingOn(removedProjects);
 		wsProjectsDependingOnRemovedProjects.removeAll(removedProjects);
-		subMonitor.worked(1);
-	}
-
-	/** Adds projects to Index that are in a added location or depend on removed/added projects */
-	private void buildAddedLocations(Set<URI> addedLocations, IProgressMonitor monitor) {
-		Collection<N4JSExternalProject> addedProjects = externalWorkspace.getProjectsIn(addedLocations);
-		SubMonitor subMonitor = convert(monitor, 2);
-
-		// Build external projects that depend on added projects. (only non-user-workspace)
-		Set<N4JSExternalProject> extProjectsToBuild = newHashSet();
-		extProjectsToBuild.addAll(extProjectsDependingOnRemovedProjects);
-		extProjectsToBuild.addAll(addedProjects);
-		extProjectsToBuild.addAll(collector.getExtProjectsDependendingOn(addedProjects));
-		builder.build(extProjectsToBuild, subMonitor.newChild(1));
-		subMonitor.worked(1);
-
-		// Schedule rebuild of workspace projects
-		Set<IProject> wsProjectsToRebuild = newHashSet();
-		wsProjectsToRebuild.addAll(wsProjectsDependingOnRemovedProjects);
-		wsProjectsToRebuild.addAll(collector.getWSProjectsDependendingOn(addedProjects));
-		wsProjectsToRebuild.addAll(collector.getWSProjectsDependendingOn(extProjectsToBuild));
-		scheduler.scheduleBuildIfNecessary(wsProjectsToRebuild);
 		subMonitor.worked(1);
 	}
 

@@ -85,7 +85,8 @@ public class ProjectStateChangeListener implements IResourceChangeListener {
 	boolean visit(IResourceDelta delta) {
 		if (projectChanged(delta)) {
 			IResource resource = delta.getResource();
-			if (resource instanceof IProject) {
+			String name = resource.getName();
+			if (resource instanceof IProject && !"RemoteSystemsTempFiles".equals(name)) {
 				IProject project = (IProject) resource;
 				projectsChanged.add(project);
 			}
