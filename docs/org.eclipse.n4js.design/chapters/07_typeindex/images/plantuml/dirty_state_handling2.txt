@@ -1,0 +1,18 @@
+ @startuml
+	N4JSDirtyStateEditorSupport -> N4JSUpdateEditorStateJob: schedule
+	activate N4JSUpdateEditorStateJob
+		N4JSUpdateEditorStateJob -> N4JSUpdateEditorStateJob: run
+		activate N4JSUpdateEditorStateJob
+			N4JSUpdateEditorStateJob -> N4JSUpdateEditorStateJob: collect affected resources
+			loop affected resources
+				N4JSUpdateEditorStateJob -> N4JSUpdateEditorStateJob: unload affected resource
+				note right: by this the references of the resource of the \ncurrent editor to the affected resources will by proxified
+				N4JSUpdateEditorStateJob -> N4JSUpdateEditorStateJob: remove affected resource from editor's resource resource set
+			end loop
+			N4JSUpdateEditorStateJob -> N4JSUpdateEditorStateJob: reparse editor's document
+		deactivate N4JSUpdateEditorStateJob
+	deactivate N4JSUpdateEditorStateJo
+@enduml
+
+
+ 

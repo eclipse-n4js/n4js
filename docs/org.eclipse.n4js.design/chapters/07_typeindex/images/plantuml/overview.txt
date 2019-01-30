@@ -1,0 +1,74 @@
+@startuml
+left header
+
+<font size=16>IDE2
+<font size=20>Type model and Xtext index
+<font size=16>Overview and principles of design
+
+
+endheader
+
+hide members
+
+class VariableDeclaration #Moccasin
+class ClassExpression #Moccasin
+class Module #Moccasin
+class TypeRef #SkyBlue
+class ParameterizedTypeRef #SkyBlue
+class DelegatingTypeRef #SkyBlue
+class Type #SkyBlue
+class TClass #SkyBlue
+class N4JSGlobalScopeProvider #yellow
+class N4JSTypeScope #yellow
+class N4JSGlobalScopeProvider #yellow
+class N4JSScopeProvider #yellow
+class N4JSDerivedStateComputer #yellow
+class N4JSResource #yellow
+class N4JSResourceDescriptionStrategy #yellow
+
+
+TypeRef "transient type ref" --* VariableDeclaration
+TypeRef *-- "typeArgs" ParameterizedTypeRef
+TypeRef <|- ParameterizedTypeRef 
+DelegatingTypeRef -|> TypeRef 
+DelegatingTypeRef --> "delegate" TypeRef
+ParameterizedTypeRef --> "raw type" Type
+Type <|-- TClass
+ClassExpression -> "defined type" TClass
+ClassExpression "definition" <-  TClass
+ClassExpression --* Module
+N4JSScopeProvider ..> "use" N4JSTypeScope
+TClass "create or reads" <.. N4JSTypeScope
+N4JSGlobalScopeProvider ..> XtextIndex.N4JSResourceDescription
+N4JSTypeScope "creates" <.. N4JSGlobalScopeProvider
+N4JSDerivedStateComputer "creates" ..> TClass
+ClassExpression "uses" <.. N4JSDerivedStateComputer
+XtextIndex.N4JSResourceDescription ..> N4JSResource
+N4JSDerivedStateComputer "uses" ..> N4JSResource
+Module --* "contents[0]" N4JSResource
+TClass --* "contents[1..n]"  N4JSResource
+N4JSScopeProvider -> "delegates" N4JSGlobalScopeProvider
+N4JSResourceDescriptionStrategy -> "creates" XtextIndex.EObjectDescription
+
+namespace XtextIndex {
+	class TClass<<Serialized>> #yellow
+	class EObjectDescription<<Serialized>> #white
+	class N4JSResourceDescription<<Serialized>> #yellow
+
+	TClass "user data" <--* EObjectDescription
+	EObjectDescription <--* N4JSResourceDescription
+	TClass <..> .TClass
+}
+
+(TypeRef, VariableDeclaration) "sets" <.. N4JSScopeProvider
+
+
+left footer
+
+<font size=12>- orange colored elements are from N4JS AST
+<font size=12>- blue colored elements are from types
+<font size=12>- white colored elements are from Xtext Framework
+<font size=12>- yellow colored elements are adapted elements
+end footer
+
+@enduml

@@ -1,0 +1,127 @@
+////
+Copyright (c) 2016 NumberFour AG.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+////
+
+= Tips & Tricks, Dos & Don'ts
+:find:
+
+In this chapter we collect some coding hints and guidelines on how to properly use the APIs of Eclipse, EMF, Xtext and
+other dependencies we are using, as well as our own utilities and helpers.
+
+This chapter is only about coding; add information on things like Eclipse setup or Maven/Jenkins to one of the preceding
+chapters. Similarly, this chapter is intended to provide just a quick overview, check-list and reminder; add detailed
+information and diagrams to one of the succeeding chapters.
+
+
+== Naming
+
+* The internal handling of N4JS project names is non-trivial (due to the support for npm scopes), see
+  API documentation of `ProjectDescriptionUtils#isProjectNameWithScope(String)` for a detailed overview.
+  In short:
+** `IN4JSProject#getProjectName()` and `IProject#getName()` return different values!
+** Avoid using the Eclipse project name, i.e. the return value of `IProject#getName()`, as far as possible
+   (only use it in UI code when actually dealing with what is shown in the Eclipse UI).
+** The last segment of an URI or path pointing to an N4JS project is *not* always the project name; use
+   utilities in `ProjectDescriptionUtils` instead, e.g. `#deriveN4JSProjectNameFromURI()`!
+   (However, given an URI or path pointing to a file inside an N4JS project, you can use its last segment
+   to obtain the file name.)
+
+
+== Logging
+In many situations developer needs to use some kind of logging. When in need, follow these rules:
+
+. Use `org.apache.log4j.Logger;` for logging. Other logging utilities (like java built in logger) are not configured.
+. do not use `System.out` nor `Sysetem.err` for logging. It is ok to use it for debugging purposes, but those calls
+should never be merged to master. _(with exception of headless compiler, which uses them explicitly)_
+. There is central logger configuration in `org.eclipse.n4js.utils.logging` (and `com.enfore.n4js.utils.logging`) that should 
+be used
+.. `log4j.xml` used for production
+.. `log4j_tests.xml` used when running tests
+. in Eclipse run configurations logger has to be set properly, e.g.
+`log4j.configuration=file:${workspace_loc:com.enfore.n4js.utils.logging/log4j_tests.xml}`
+. in maven configurations logger has to be set separately, e.g.
+`-Dlog4j.configuration="file:${basedir}/../../plugins/com.enfore.n4js.utils.logging/log4j_tests.xml`
+
+
+== Cancellation Handling
+
+At various occasions, Xtext provides an instance of class `CancelIndicator` to allow our code to handle cancellation of
+long-running task.
+
+Some things to keep in mind:
+
+* whenever a `CancelIndicator` is available any code that might not return immediately should implement proper
+  cancellation handling (as explained in the next items).
+* most importantly: reacting to a cancellation by returning early from a method is an anti-pattern that leads to
+  problems (client code might continue work on a canceled and thus invalid state); instead: throw an
+  `OperationCanceledException`!
+* don't use `CancelIndicator#isCanceled()` for cancellation handling, except in certain special cases. A valid exception
+  case might be during logging to show a message like "operation was canceled".
+* instead, inject the Xtext service called `OperationCanceledManager` and invoke its method `#checkCanceled()`, passing-in
+  the cancel indicator (this method is null-safe; it will throw an `OperationCanceledException` in case a cancellation has
+  occurred). Don't directly create and throw an `OperationCanceledException` yourself.
+* use the other methods provided by `OperationCanceledManager` when appropriate (see code of that class for details).
+* in try/catch blocks, when catching exceptions of a super type of `OperationCanceledException`, be sure to *not suppress*
+  cancellation exceptions. For example:
++
+[source,java]
+----
+// Java code
+@Inject private OperationCanceledManager operationCanceledManager;
+/** Returns true on success, false otherwise. */
+public boolean doSomething(CancelIndicator ci) {
+  try {
+    // do something that might be canceled
+    return true;
+  } catch(Exception e) {
+    operationCanceledManager.propagateIfCancelException(e); // <- IMPORTANT!
+    return false;
+  }
+}
+----
++
+Try/finally blocks, on the other hand, do not need any special handling.
+* a cancel indicator can also be stored in the rule environment (see `RuleEnvironmentExtensions#addCancelIndicator()`). This
+  means:
+** if you create a rule environment completely from scratch and you have a cancel indicator at hand, add it to the rule
+  environment via `RuleEnvironmentExtensions#addCancelIndicator()` (not required when using `RuleEnvironmentExtensions#wrap()` for
+  deriving a rule environment from an existing one).
+** if you have a rule environment available, be sure to use its cancel indicator in long-running operations, i.e. with
+  code like:
++
+[source,java]
+----
+// Xtend code
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
+class C {
+  @Inject private OperationCanceledManager operationCanceledManager;
+  def void doSomething() {
+    for(a : aLotOfStuff) {
+      operationCanceledManager.checkCanceled(G.cancelIndicator);
+      // main work ...
+    }
+  }
+----
+
+
+== Caching
+* Caching of external libraries (implemented in ExternalProjectMappings)
+** update _only_ using `EclipseExternalLibraryWorkspace#updateState()`
+** always mind that the diff of current state and cached state is a necessary information for cleaning dependencies of removed npms
+*** see `EclipseExternalIndexSynchronizer#synchronizeNpms()` for implementation
+** updating also happens when external root locations change (see ExternalIndexUpdater)
+* Caching of user workspace projects (implemented in MuliCleartriggerCache)
+** caches only some project information and should be refactored along with Core, Model and EclipseBasedN4JSWorkspace
+
+
+== Miscellaneous
+* Resource load states: when an N4JS/N4JSD file is loaded, a certain sequence of processing is triggered (parsing,
+  linking, validation, etc.) and thus an `N4JSResource` transitions through a sequence of "load states". For details,
+  see <<sec:N4JS_Resource_Load_States>>.
