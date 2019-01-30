@@ -1,0 +1,21 @@
+@startuml
+
+Event -> BuilderManager: build
+activate BuilderManager
+   BuilderManager -> XtextBuilder: clean
+   activate XtextBuilder
+      XtextBuilder -> ToBeBuiltComputer: removeProject
+      activate ToBeBuiltComputer
+         ToBeBuiltComputer -> GenerateImmediatelyBuilderState: getAllResourceDescriptions
+         activate GenerateImmediatelyBuilderState
+            GenerateImmediatelyBuilderState -> GenerateImmediatelyBuilderState: getAllResourceDescriptions
+         deactivate GenerateImmediatelyBuilderState
+         ToBeBuiltComputer -> ToBeBuiltComputer: collect all resource descriptions for the current \nproject and added as to be deleted in ToBeBuilt object
+      deactivate ToBeBuiltComputer
+      XtextBuilder -> GenerateImmediatelyBuilderState: calculate delta list for ToBeBuilt
+      XtextBuilder -> GenerateImmediatelyBuilderState: removeDescription
+      XtextBuilder -> GenerateImmediatelyBuilderState: build
+      GenerateImmediatelyBuilderState -> N4JSBuilderParticipant: build
+   deactivate XtextBuilder
+deactivate BuilderManager
+@enduml

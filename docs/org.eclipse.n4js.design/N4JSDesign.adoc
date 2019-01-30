@@ -40,7 +40,11 @@ ifdef::backend-docbook5[<<<]
 include::{find}chapters/01_introduction/introduction.adoc[]
 include::{find}chapters/02_eclipseSetup/eclipseSetup.adoc[]
 include::{find}chapters/03_releng/releng.adoc[]
-include::{find}chapters/04_parser/parser.adoc[]
+
+include::{find}chapters/04_tipsTricks/tipsTricks.adoc[]
+include::{find}chapters/05_parser/parser.adoc[]
+include::{find}chapters/06_typesystem/typesystem.adoc[]
+include::{find}chapters/07_typeindex/typeindex.adoc[]
 
 include::{find}chapters/10_flowgraphs/flowgraphs.adoc[]
 include::{find}chapters/20_externalLibraries/externalLibraries.adoc[]

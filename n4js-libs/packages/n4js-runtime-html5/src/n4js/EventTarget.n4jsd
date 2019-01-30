@@ -11,6 +11,6 @@
 @@Global @@ProvidedByRuntime
 
 export public interface ~EventTarget {
-    public <EventT extends Event> addEventListener(type: string, listener: {function(EventT): void}, useCapture: boolean=): void;
-    public <EventT extends Event> removeEventListener(type: string, listener: {function(EventT): void}, useCapture: boolean=): void;
+    public <EventT extends Event> addEventListener(type: string, listener: (EventT) => void, optionsOrUseCapture: Object|boolean=): void;
+    public <EventT extends Event> removeEventListener(type: string, listener: (EventT) => void, optionsOrUseCapture: Object|boolean=): void;
 }

@@ -1,0 +1,7 @@
+@startuml
+
+Event -> SaveManager: diverse calls
+note left: Eclipse Workspace Close
+SaveManager -> EMFBasedPersister: write Xtext index to file \n.metadata/.plugins/org.eclipse.xtext.builder/builder.state \nin workspace
+
+@enduml
