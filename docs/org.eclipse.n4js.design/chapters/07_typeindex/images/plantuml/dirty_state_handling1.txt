@@ -1,0 +1,19 @@
+ @startuml
+	  Event -> GenerateImmediatelyBuilderState: update
+	  activate GenerateImmediatelyBuilderState
+		  GenerateImmediatelyBuilderState -> StateChangeEventBroker: notifyListeners
+	      activate StateChangeEventBroker
+		      	StateChangeEventBroker -> N4JSDirtyStateEditorSupport: notifyListeners
+	      		activate N4JSDirtyStateEditorSupport
+	      			loop for each open Xtext editor
+		      			create N4JSUpdateEditorStateJob
+		      			N4JSDirtyStateEditorSupport -> N4JSUpdateEditorStateJob: create
+		      			N4JSDirtyStateEditorSupport -> N4JSUpdateEditorStateJob: schedule
+		      		end loop
+	      		deactivate N4JSDirtyStateEditorSupport
+	      deactivate StateChangeEventBroker
+      deactivate GenerateImmediatelyBuilderState
+  @enduml
+
+
+ 

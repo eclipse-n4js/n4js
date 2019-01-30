@@ -111,8 +111,6 @@ class C {
 ----
 
 
-
-
 == Caching
 * Caching of external libraries (implemented in ExternalProjectMappings)
 ** update _only_ using `EclipseExternalLibraryWorkspace#updateState()`
@@ -123,4 +121,7 @@ class C {
 ** caches only some project information and should be refactored along with Core, Model and EclipseBasedN4JSWorkspace
 
 
-
+== Miscellaneous
+* Resource load states: when an N4JS/N4JSD file is loaded, a certain sequence of processing is triggered (parsing,
+  linking, validation, etc.) and thus an `N4JSResource` transitions through a sequence of "load states". For details,
+  see <<sec:N4JS_Resource_Load_States>>.
