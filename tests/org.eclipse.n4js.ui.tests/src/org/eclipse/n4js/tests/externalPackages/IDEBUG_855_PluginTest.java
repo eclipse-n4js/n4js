@@ -73,7 +73,7 @@ public class IDEBUG_855_PluginTest extends AbstractBuilderParticipantTest {
 	 * Updates the known external library locations with the {@code node_modules} folder.
 	 */
 	@Before
-	public void setupWorkspace() throws Exception {
+	synchronized public void setupWorkspace() throws Exception {
 		final URI externalRootLocation = getResourceUri(PROBANDS, EXT_LOC);
 		externalLibraryPreferenceStore.add(externalRootLocation);
 		final IStatus result = externalLibraryPreferenceStore.save(new NullProgressMonitor());
@@ -89,7 +89,7 @@ public class IDEBUG_855_PluginTest extends AbstractBuilderParticipantTest {
 	 */
 	@After
 	@Override
-	public void tearDown() throws Exception {
+	synchronized public void tearDown() throws Exception {
 		final URI externalRootLocation = getResourceUri(PROBANDS, EXT_LOC);
 		externalLibraryPreferenceStore.remove(externalRootLocation);
 		final IStatus result = externalLibraryPreferenceStore.save(new NullProgressMonitor());

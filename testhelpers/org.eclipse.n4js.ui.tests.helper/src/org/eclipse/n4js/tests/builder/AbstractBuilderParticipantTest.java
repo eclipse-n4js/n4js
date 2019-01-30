@@ -310,7 +310,6 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 	/** Tears down the external libraries. */
 	protected void tearDownShippedLibraries() throws Exception {
 		externalLibrariesSetupHelper.tearDownShippedLibraries();
-		super.tearDown();
 	}
 
 	/***/

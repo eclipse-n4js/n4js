@@ -105,7 +105,7 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 	 * Loads (and indexes) all the required external libraries. Also imports all the workspace projects.
 	 */
 	@Before
-	public void setupWorkspace() throws Exception {
+	synchronized public void setupWorkspace() throws Exception {
 		RaceDetectionHelper.log(">>> SETUP >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 
 		assertEquals("Resources in index:\n" + getAllResourceDescriptionsAsString() + "\n", 0, countResourcesInIndex());
@@ -130,7 +130,7 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 	 */
 	@After
 	@Override
-	public void tearDown() throws Exception {
+	synchronized public void tearDown() throws Exception {
 		final URI externalRootLocation = getResourceUri(PROBANDS, EXT_LOC);
 		externalLibraryPreferenceStore.remove(externalRootLocation);
 		final IStatus result = externalLibraryPreferenceStore.save(new NullProgressMonitor());
