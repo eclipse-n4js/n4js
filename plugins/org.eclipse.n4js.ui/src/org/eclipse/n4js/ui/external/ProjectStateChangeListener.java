@@ -25,7 +25,11 @@ import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.Job;
 
 import com.google.inject.Inject;
 
@@ -40,6 +44,9 @@ public class ProjectStateChangeListener implements IResourceChangeListener {
 	@Inject
 	private EclipseExternalIndexSynchronizer indexSynchronizer;
 
+	@Inject
+	private ExternalLibraryBuilder builder;
+
 	final private Collection<IProject> projectsChanged = newLinkedHashSet();
 
 	@Override
@@ -53,12 +60,21 @@ public class ProjectStateChangeListener implements IResourceChangeListener {
 			event.getDelta().accept(this::visit); // fill projectsChanged
 
 			if (!projectsChanged.isEmpty()) {
-				new Thread() {
+
+				Job job = new Job("Update locations of node_modules folders") {
 					@Override
-					public void run() {
-						indexSynchronizer.checkAndClearIndex(new NullProgressMonitor());
+					protected IStatus run(IProgressMonitor monitor) {
+						ISchedulingRule rule = builder.getRule();
+						Job.getJobManager().beginRule(rule, monitor);
+						try {
+							indexSynchronizer.checkAndClearIndex(monitor);
+						} finally {
+							Job.getJobManager().endRule(rule);
+						}
+						return Status.OK_STATUS;
 					}
-				}.start();
+				};
+				job.schedule();
 			}
 
 		} catch (final CoreException e) {
