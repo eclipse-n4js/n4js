@@ -21,6 +21,7 @@ import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.base.Predicates;
@@ -29,6 +30,7 @@ import com.google.common.base.Predicates;
  * Downloads, installs, compiles and runs several packages that are known to be problematic in terms of how they define
  * main module.
  */
+@Ignore("side-by-side-use-case")
 public class InstallCompileRunN4jscExternalMainModuleTest extends AbstractN4jscTest {
 	File workspace;
 

@@ -25,6 +25,7 @@ import org.eclipse.n4js.hlc.base.SuccessExitStatus;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.base.Predicates;
@@ -62,6 +63,7 @@ public class TargetPlatformConfigurationsTest extends AbstractN4jscTest {
 	 *             propagated from compiler in case of issues
 	 */
 	@Test
+	@Ignore("side-by-side-use-case")
 	public void testCompileCreatesInstallLocation() throws IOException, ExitCodeException {
 		// force creating install location
 		FileDeleter.delete(node_modules);
@@ -121,6 +123,7 @@ public class TargetPlatformConfigurationsTest extends AbstractN4jscTest {
 	 *             propagated from compiler in case of issues
 	 */
 	@Test
+	@Ignore("side-by-side-use-case")
 	public void testCompileWithInstallPlusCompileSkipInstall() throws ExitCodeException {
 		final String[] argsInstall = {
 				"--installMissingDependencies",

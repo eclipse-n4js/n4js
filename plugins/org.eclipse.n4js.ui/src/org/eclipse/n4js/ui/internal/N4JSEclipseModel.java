@@ -39,7 +39,6 @@ import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
-import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseSourceContainer;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
@@ -314,28 +313,6 @@ public class N4JSEclipseModel extends N4JSModel {
 		}
 
 		return workspaceProjectMapping;
-	}
-
-	/** @see IN4JSEclipseCore#mapExternalResourceToUserWorkspaceLocalResource(URI) */
-	public URI mapExternalResourceToUserWorkspaceLocalResource(URI fileUri) {
-		java.net.URI rootLocation = externalLibraryWorkspace.getRootLocationForResource(fileUri);
-		if (rootLocation == null) {
-			return null;
-		}
-		URI rootLocationEmfUri = URI.createURI(rootLocation.toString());
-		if (rootLocationEmfUri == null) {
-			return null;
-		}
-		N4JSEclipseProject findProjectWith = findProjectWith(rootLocationEmfUri);
-		if (findProjectWith == null) {
-			return null;
-		}
-
-		String uriString = fileUri.toFileString();
-		java.nio.file.Path locationPath = findProjectWith.getLocationPath();
-		String prjLocalFile = uriString.substring(locationPath.toString().length());
-		URI prjLocalPlatformUri = URI.createPlatformResourceURI(findProjectWith.getProjectName() + prjLocalFile, true);
-		return prjLocalPlatformUri;
 	}
 
 	/**
