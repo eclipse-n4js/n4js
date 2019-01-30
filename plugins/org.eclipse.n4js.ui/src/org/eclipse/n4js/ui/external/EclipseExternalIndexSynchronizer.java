@@ -291,7 +291,7 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 
 	/** Triggers synchronization of the stored node_modules folders with the ones that actually exist. */
 	@Override
-	public IStatus synchronizeNodeModulesFolders() {
+	synchronized public IStatus synchronizeNodeModulesFolders() {
 		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		List<Path> projectRoots = new LinkedList<>();
 		for (IProject project : projects) {

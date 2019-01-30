@@ -84,7 +84,7 @@ public class GH_986_ExternalCircularDependencyAndRuntimeLibrariesPluginTest exte
 
 	@Before
 	@Override
-	public void setUp() throws Exception {
+	synchronized public void setUp() throws Exception {
 		super.setUp();
 		assertEquals("Resources in index:\n" + getAllResourceDescriptionsAsString() + "\n", 0, countResourcesInIndex());
 
@@ -102,7 +102,7 @@ public class GH_986_ExternalCircularDependencyAndRuntimeLibrariesPluginTest exte
 
 	@After
 	@Override
-	public void tearDown() throws Exception {
+	synchronized public void tearDown() throws Exception {
 		// remove test-specific external libraries location
 		final java.net.URI externalRootLocation = getResourceUri(PROBANDS, PROBANDS_SUBFOLDER, EXT_LOC);
 		externalLibraryPreferenceStore.remove(externalRootLocation);

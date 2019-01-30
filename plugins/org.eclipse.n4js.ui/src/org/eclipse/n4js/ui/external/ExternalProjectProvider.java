@@ -12,6 +12,7 @@ package org.eclipse.n4js.ui.external;
 
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -102,7 +103,7 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 	}
 
 	Collection<java.net.URI> getRootLocationsInReversedShadowingOrder() {
-		return rootLocations.values();
+		return new ArrayList<>(rootLocations.values());
 	}
 
 	Collection<URI> getAllProjectLocations() {
