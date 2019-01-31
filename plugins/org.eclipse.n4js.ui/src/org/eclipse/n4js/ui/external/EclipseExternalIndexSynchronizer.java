@@ -12,22 +12,13 @@ package org.eclipse.n4js.ui.external;
 
 import static org.eclipse.core.runtime.SubMonitor.convert;
 
-import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalIndexSynchronizer;
@@ -35,14 +26,8 @@ import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace.RegisterResult;
 import org.eclipse.n4js.external.ExternalProject;
 import org.eclipse.n4js.external.LibraryChange;
-import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
 import org.eclipse.n4js.external.N4JSExternalProject;
-import org.eclipse.n4js.external.NpmLogger;
-import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
-import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper;
-import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.inject.Inject;
@@ -59,16 +44,7 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 	private ExternalLibraryErrorMarkerManager externalErrorMarkerManager;
 
 	@Inject
-	private NpmLogger logger;
-
-	@Inject
 	private EclipseBasedN4JSWorkspace workspace;
-
-	@Inject
-	private ExternalLibraryPreferenceStore libraryPreferenceStore;
-
-	@Inject
-	private NodeModulesDiscoveryHelper nodeModulesDiscoveryHelper;
 
 	/**
 	 * Call this method to synchronize the information in the Xtext index with all external projects in the external
@@ -238,75 +214,6 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 			}
 		}
 		return toBeUpdated;
-	}
-
-	private void printRegisterResults(RegisterResult rr, String jobName) {
-		if (!rr.externalProjectsDone.isEmpty()) {
-			SortedSet<String> prjNames = getProjectNamesFromLocations(rr.externalProjectsDone);
-			logger.logInfo("External libraries " + jobName + ": " + String.join(", ", prjNames));
-		}
-
-		if (!rr.wipedProjects.isEmpty()) {
-			SortedSet<String> prjNames = new TreeSet<>();
-			for (URI location : rr.wipedProjects) {
-				String projectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location);
-				prjNames.add(projectName);
-			}
-			logger.logInfo("Projects deregistered: " + String.join(", ", prjNames));
-		}
-
-		if (!rr.affectedWorkspaceProjects.isEmpty()) {
-			SortedSet<String> prjNames = getProjectNamesFromLocations(rr.affectedWorkspaceProjects);
-			logger.logInfo("Workspace projects affected: " + String.join(", ", prjNames));
-		}
-	}
-
-	private SortedSet<String> getProjectNamesFromLocations(Collection<URI> projectLocations) {
-		SortedSet<String> prjNames = new TreeSet<>();
-		for (URI location : projectLocations) {
-			IN4JSProject p = core.findProject(location).orNull();
-			prjNames.add(p.getProjectName());
-		}
-		return prjNames;
-	}
-
-	/** Sets error markers to every N4JS project iff the folder node_modules and the N4JS index are out of sync. */
-	public void checkAndClearIndex(IProgressMonitor monitor) {
-		Collection<LibraryChange> changeSet = identifyChangeSet(Collections.emptyList(), ProjectStateOperation.UPDATE);
-		cleanRemovedProjectsFromIndex(monitor, changeSet);
-	}
-
-	private void cleanRemovedProjectsFromIndex(IProgressMonitor monitor, Collection<LibraryChange> changeSet) {
-		monitor.setTaskName("Deregister removed projects...");
-		Set<URI> cleanProjects = new HashSet<>();
-		for (LibraryChange libChange : changeSet) {
-			if (libChange.type == LibraryChangeType.Removed) {
-				cleanProjects.add(libChange.location);
-			}
-		}
-
-		RegisterResult cleanResult = externalLibraryWorkspace.deregisterProjects(monitor, cleanProjects);
-		printRegisterResults(cleanResult, "deregistered");
-	}
-
-	/** Triggers synchronization of the stored node_modules folders with the ones that actually exist. */
-	@Override
-	synchronized public IStatus synchronizeNodeModulesFolders() {
-		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-		List<Path> projectRoots = new LinkedList<>();
-		for (IProject project : projects) {
-			if (project.isAccessible()) {
-				Path path = project.getLocation().toFile().toPath();
-				projectRoots.add(path);
-			}
-		}
-
-		libraryPreferenceStore.resetDefaults();
-		Collection<Path> locations = nodeModulesDiscoveryHelper.findNodeModulesFolders(projectRoots);
-		for (Path location : locations) {
-			libraryPreferenceStore.add(location.toUri());
-		}
-		return libraryPreferenceStore.save(new NullProgressMonitor());
 	}
 
 }

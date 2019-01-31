@@ -17,11 +17,13 @@ import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.addNature;
 import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.monitor;
 import static org.eclipse.xtext.ui.testing.util.JavaProjectSetupUtil.createSimpleProject;
 import static org.eclipse.xtext.ui.testing.util.JavaProjectSetupUtil.createSubFolder;
+import static org.junit.Assert.assertNotEquals;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -40,6 +42,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -52,6 +55,7 @@ import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.packagejson.PackageJsonBuilder;
 import org.eclipse.n4js.ui.editor.N4JSDirtyStateEditorSupport;
@@ -67,6 +71,7 @@ import org.eclipse.xtext.resource.SaveOptions;
 import org.eclipse.xtext.ui.MarkerTypes;
 import org.eclipse.xtext.ui.XtextProjectHelper;
 import org.eclipse.xtext.ui.resource.IResourceSetProvider;
+import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.Assert;
 
 import com.google.common.base.Joiner;
@@ -556,6 +561,21 @@ public class ProjectTestsUtils {
 	}
 
 	/**
+	 * Asserts that there are no errors. However, warnings may still exist.
+	 */
+	public static void assertNoErrors() throws CoreException {
+		waitForAutoBuild();
+
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		final IMarker[] markers = root.findMarkers(MarkerTypes.ANY_VALIDATION, true, IResource.DEPTH_INFINITE);
+		for (int i = 0; i < markers.length; i++) {
+			IMarker m = markers[i];
+			int severity = m.getAttribute(IMarker.SEVERITY, -1);
+			assertNotEquals(IMarker.SEVERITY_ERROR, severity);
+		}
+	}
+
+	/**
 	 * Like {@link #assertIssues(IResource, String...)}, but checks for issues in entire workspace.
 	 */
 	public static void assertIssues(String... expectedMessages) throws CoreException {
@@ -573,6 +593,8 @@ public class ProjectTestsUtils {
 	 * Column information is not provided, so this method is not intended for several issues within a single line.
 	 */
 	public static void assertIssues(final IResource resource, String... expectedMessages) throws CoreException {
+		waitForAutoBuild();
+
 		final IMarker[] markers = resource.findMarkers(MarkerTypes.ANY_VALIDATION, true, IResource.DEPTH_INFINITE);
 		final String[] actualMessages = new String[markers.length];
 		for (int i = 0; i < markers.length; i++) {
@@ -630,5 +652,27 @@ public class ProjectTestsUtils {
 			projects[i] = getProjectByName(projectNames.get(i));
 		}
 		return projects;
+	}
+
+	/**
+	 * Copies projects from the given location to the node_modules folder of the given project
+	 */
+	public static void importDependencies(String projectName, java.net.URI externalRootLocation,
+			LibraryManager libraryManager) throws IOException, CoreException {
+
+		IProject clientProject = getProjectByName(projectName);
+		java.net.URI clientLocation = clientProject.getLocationURI();
+		File nodeModulesDir = new File(clientLocation.getPath(), N4JSGlobals.NODE_MODULES);
+		if (!nodeModulesDir.isDirectory()) {
+			Files.createDirectory(nodeModulesDir.toPath());
+		}
+
+		java.nio.file.Path probandsSource = Paths.get(externalRootLocation.getPath());
+		FileCopier.copy(probandsSource, nodeModulesDir.toPath());
+
+		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
+
+		IResourcesSetupUtil.fullBuild();
+		waitForAllJobs();
 	}
 }
