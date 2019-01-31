@@ -354,6 +354,11 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 		return ProjectTestsUtils.assertMarkers(assertMessage, resource, markerType, count, ignoreSomeWarnings);
 	}
 
+	/** See {@link ProjectTestsUtils#assertNoErrors()}. */
+	protected void assertNoErrors() throws CoreException {
+		ProjectTestsUtils.assertNoErrors();
+	}
+
 	/** See {@link ProjectTestsUtils#assertNoIssues()}. */
 	protected void assertNoIssues() throws CoreException {
 		ProjectTestsUtils.assertNoIssues();
