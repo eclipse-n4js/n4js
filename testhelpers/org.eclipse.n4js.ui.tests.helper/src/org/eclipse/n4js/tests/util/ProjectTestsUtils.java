@@ -571,7 +571,7 @@ public class ProjectTestsUtils {
 		for (int i = 0; i < markers.length; i++) {
 			IMarker m = markers[i];
 			int severity = m.getAttribute(IMarker.SEVERITY, -1);
-			assertNotEquals(IMarker.SEVERITY_ERROR, severity);
+			assertNotEquals("Expected no errors but found:\n" + m.toString(), IMarker.SEVERITY_ERROR, severity);
 		}
 	}
 
