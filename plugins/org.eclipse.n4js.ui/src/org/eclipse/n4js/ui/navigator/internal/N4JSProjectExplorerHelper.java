@@ -30,6 +30,8 @@ import static org.eclipse.xtext.util.Strings.toFirstUpper;
 
 import java.io.File;
 import java.net.URI;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -240,12 +242,9 @@ public class N4JSProjectExplorerHelper {
 			if (shadowedProject.isExternal()) {
 				org.eclipse.emf.common.util.URI location = shadowedProject.getLocation();
 				URI rootLocation = externalLibraryWorkspace.getRootLocationForResource(location);
-				org.eclipse.emf.common.util.URI emfURI = org.eclipse.emf.common.util.URI
-						.createURI(rootLocation.toString());
-				rootLocationName = emfURI.lastSegment();
-				if (rootLocationName.isEmpty() && emfURI.segmentCount() > 1) {
-					rootLocationName = emfURI.segment(emfURI.segmentCount() - 2);
-				}
+				Path rootPath = Paths.get(rootLocation.getPath());
+				Path subpath = rootPath.subpath(rootPath.getNameCount() - 2, rootPath.getNameCount());
+				rootLocationName = subpath.toString();
 			} else {
 				rootLocationName = "workspace";
 			}
