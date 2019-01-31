@@ -654,6 +654,6 @@ public class ProjectTestsUtils {
 		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
 
 		IResourcesSetupUtil.fullBuild();
-		waitForAutoBuild();
+		waitForAllJobs();
 	}
 }
