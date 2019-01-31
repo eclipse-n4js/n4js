@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.ui.external;
 
-import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Sets.newLinkedHashSet;
 import static org.eclipse.core.resources.IResourceDelta.ADDED;
 import static org.eclipse.core.resources.IResourceDelta.CHANGED;
@@ -26,12 +25,12 @@ import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.external.N4JSExternalProject;
-import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
-import org.eclipse.n4js.utils.URIUtils;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.Job;
 
-import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
 /**
@@ -43,16 +42,12 @@ public class ProjectStateChangeListener implements IResourceChangeListener {
 	private static final Logger logger = Logger.getLogger(ProjectStateChangeListener.class);
 
 	@Inject
-	private ExternalProjectProvider projectProvider;
+	private EclipseExternalIndexSynchronizer indexSynchronizer;
 
 	@Inject
-	private ExternalLibraryBuildScheduler buildJobProvider;
+	private ExternalLibraryBuilder builder;
 
-	@Inject
-	private FileBasedExternalPackageManager packageManager;
-
-	final private Collection<N4JSExternalProject> toClean = newLinkedHashSet();
-	final private Collection<N4JSExternalProject> toBuild = newLinkedHashSet();
+	final private Collection<IProject> projectsChanged = newLinkedHashSet();
 
 	@Override
 	public void resourceChanged(final IResourceChangeEvent event) {
@@ -61,16 +56,25 @@ public class ProjectStateChangeListener implements IResourceChangeListener {
 		}
 
 		try {
-			toClean.clear();
-			toBuild.clear();
-			event.getDelta().accept(this::visit); // fill toClean and toBuild
+			projectsChanged.clear();
+			event.getDelta().accept(this::visit); // fill projectsChanged
 
-			if (!toClean.isEmpty() || !toBuild.isEmpty()) {
-				logger.info("Received project open/close change.");
-				logger.info("Opened projects: " + Iterables.toString(from(toClean).transform(p -> p.getName())));
-				logger.info("Closed projects: " + Iterables.toString(from(toBuild).transform(p -> p.getName())));
+			if (!projectsChanged.isEmpty()) {
 
-				buildJobProvider.scheduleBuildJob(toBuild, toClean);
+				Job job = new Job("Update locations of node_modules folders") {
+					@Override
+					protected IStatus run(IProgressMonitor monitor) {
+						ISchedulingRule rule = builder.getRule();
+						Job.getJobManager().beginRule(rule, monitor);
+						try {
+							indexSynchronizer.checkAndClearIndex(monitor);
+						} finally {
+							Job.getJobManager().endRule(rule);
+						}
+						return Status.OK_STATUS;
+					}
+				};
+				job.schedule();
 			}
 
 		} catch (final CoreException e) {
@@ -79,44 +83,34 @@ public class ProjectStateChangeListener implements IResourceChangeListener {
 	}
 
 	boolean visit(IResourceDelta delta) {
-		IResource resource = delta.getResource();
-		if (resource instanceof IProject) {
-
-			IProject project = (IProject) resource;
-			String name = project.getName();
-			N4JSExternalProject externalProject = projectProvider.getProject(name);
-
-			if (null != externalProject && externalProject.exists()) {
-				URI uri = URIUtils.convert(externalProject);
-				boolean isN4Project = packageManager.isN4ProjectRoot(uri);
-
-				if (isN4Project) {
-
-					if (CHANGED == delta.getKind() && (delta.getFlags() & OPEN) != 0) {
-
-						// Workspace project close/open
-						if (project.isOpen()) {
-							toClean.add(externalProject);
-						} else {
-							toBuild.add(externalProject);
-						}
-
-					} else if (REMOVED == delta.getKind()) {
-
-						// Workspace project deletion
-						toBuild.add(externalProject);
-
-					} else if (ADDED == delta.getKind()) {
-
-						// Workspace project creation
-						toClean.add(externalProject);
-
-					}
-				}
+		if (projectChanged(delta)) {
+			IResource resource = delta.getResource();
+			String name = resource.getName();
+			if (resource instanceof IProject && !"RemoteSystemsTempFiles".equals(name)) {
+				IProject project = (IProject) resource;
+				projectsChanged.add(project);
 			}
 		}
 
 		return true;
+	}
+
+	private boolean projectChanged(IResourceDelta delta) {
+		int kind = delta.getKind();
+		int flags = delta.getFlags();
+
+		switch (kind) {
+		case ADDED:
+		case REMOVED:
+			return true;
+
+		case CHANGED:
+			if ((flags & (OPEN)) != 0) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 }

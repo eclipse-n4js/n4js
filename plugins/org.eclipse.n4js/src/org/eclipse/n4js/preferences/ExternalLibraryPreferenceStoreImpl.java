@@ -14,7 +14,6 @@ import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static org.eclipse.core.runtime.Status.OK_STATUS;
 
 import java.io.File;
 import java.net.URI;
@@ -27,6 +26,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.n4js.external.ExternalLibraryHelper;
 import org.eclipse.n4js.utils.collections.Arrays2;
@@ -100,20 +100,19 @@ import com.google.inject.Inject;
 
 	@Override
 	public final IStatus save(IProgressMonitor monitor) {
-
 		if (lastSavedModel != null && getOrCreateModel().equals(lastSavedModel)) {
-			return OK_STATUS;
+			return new Status(IStatus.OK, "unknown", STATUS_CODE_NO_CHANGES, "", null);
 		}
 
 		if (null == monitor) {
 			monitor = new NullProgressMonitor();
 		}
 		final IStatus status = doSave(getOrCreateModel());
+		lastSavedModel = doLoad();
 		if (null != status && status.isOK()) {
 			notifyListeners(monitor);
 		}
-		lastSavedModel = doLoad();
-		return status;
+		return new Status(IStatus.OK, "unknown", STATUS_CODE_SAVED_CHANGES, "", null);
 	}
 
 	@Override

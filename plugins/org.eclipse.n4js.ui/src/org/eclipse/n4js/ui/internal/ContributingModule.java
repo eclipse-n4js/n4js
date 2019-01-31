@@ -12,11 +12,11 @@ package org.eclipse.n4js.ui.internal;
 
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.n4js.binaries.BinariesCommandFactory;
 import org.eclipse.n4js.binaries.BinariesLocatorHelper;
 import org.eclipse.n4js.binaries.BinariesPreferenceStore;
 import org.eclipse.n4js.binaries.BinariesProvider;
 import org.eclipse.n4js.binaries.BinariesValidator;
-import org.eclipse.n4js.binaries.BinariesCommandFactory;
 import org.eclipse.n4js.binaries.OsgiBinariesPreferenceStore;
 import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
 import org.eclipse.n4js.binaries.nodejs.NodeYarnProcessBuilder;

@@ -26,6 +26,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.URI;
@@ -89,10 +90,10 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 		try {
 			workspace.getWorkspace().refreshLocal(IResource.DEPTH_INFINITE, subMonitor.split(1));
 
-			Collection<LibraryChange> oldChangeSet = identifyChangeSet(forcedChangeSet, false);
+			Collection<LibraryChange> oldChangeSet = identifyChangeSet(forcedChangeSet, ProjectStateOperation.PEEK);
 			RegisterResult cleanResults = cleanChangesIndex(subMonitor.split(1), oldChangeSet);
 
-			Collection<LibraryChange> newChangesSet = identifyChangeSet(forcedChangeSet, true);
+			Collection<LibraryChange> newChangesSet = identifyChangeSet(forcedChangeSet, ProjectStateOperation.UPDATE);
 			buildChangesIndex(subMonitor.split(9), newChangesSet, cleanResults);
 
 		} catch (Exception e) {
@@ -271,7 +272,7 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 
 	/** Sets error markers to every N4JS project iff the folder node_modules and the N4JS index are out of sync. */
 	public void checkAndClearIndex(IProgressMonitor monitor) {
-		Collection<LibraryChange> changeSet = identifyChangeSet(Collections.emptyList(), true);
+		Collection<LibraryChange> changeSet = identifyChangeSet(Collections.emptyList(), ProjectStateOperation.UPDATE);
 		cleanRemovedProjectsFromIndex(monitor, changeSet);
 	}
 
@@ -290,7 +291,7 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 
 	/** Triggers synchronization of the stored node_modules folders with the ones that actually exist. */
 	@Override
-	public void synchronizeNodeModulesFolders() {
+	synchronized public IStatus synchronizeNodeModulesFolders() {
 		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		List<Path> projectRoots = new LinkedList<>();
 		for (IProject project : projects) {
@@ -305,7 +306,7 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 		for (Path location : locations) {
 			libraryPreferenceStore.add(location.toUri());
 		}
-		libraryPreferenceStore.save(new NullProgressMonitor());
+		return libraryPreferenceStore.save(new NullProgressMonitor());
 	}
 
 }

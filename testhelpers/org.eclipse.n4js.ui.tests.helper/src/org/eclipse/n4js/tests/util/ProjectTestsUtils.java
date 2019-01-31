@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -52,6 +53,7 @@ import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.packagejson.PackageJsonBuilder;
 import org.eclipse.n4js.ui.editor.N4JSDirtyStateEditorSupport;
@@ -67,6 +69,7 @@ import org.eclipse.xtext.resource.SaveOptions;
 import org.eclipse.xtext.ui.MarkerTypes;
 import org.eclipse.xtext.ui.XtextProjectHelper;
 import org.eclipse.xtext.ui.resource.IResourceSetProvider;
+import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.Assert;
 
 import com.google.common.base.Joiner;
@@ -630,5 +633,27 @@ public class ProjectTestsUtils {
 			projects[i] = getProjectByName(projectNames.get(i));
 		}
 		return projects;
+	}
+
+	/**
+	 * Copies projects from the given location to the node_modules folder of the given project
+	 */
+	public static void importDependencies(String projectName, java.net.URI externalRootLocation,
+			LibraryManager libraryManager) throws IOException, CoreException {
+
+		IProject clientProject = getProjectByName(projectName);
+		java.net.URI clientLocation = clientProject.getLocationURI();
+		File nodeModulesDir = new File(clientLocation.getPath(), N4JSGlobals.NODE_MODULES);
+		if (!nodeModulesDir.isDirectory()) {
+			Files.createDirectory(nodeModulesDir.toPath());
+		}
+
+		java.nio.file.Path probandsSource = Paths.get(externalRootLocation.getPath());
+		FileCopier.copy(probandsSource, nodeModulesDir.toPath());
+
+		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
+
+		IResourcesSetupUtil.fullBuild();
+		waitForAutoBuild();
 	}
 }

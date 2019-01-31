@@ -66,8 +66,9 @@ public abstract class AbstractBuilderTest {
 		EclipseGracefulUIShutdownEnabler.enableOnce();
 	}
 
+	/***/
 	@Inject
-	private LibraryManager libraryManager;
+	protected LibraryManager libraryManager;
 	@Inject
 	private IResourceSetProvider resourceSetProvider;
 	@Inject

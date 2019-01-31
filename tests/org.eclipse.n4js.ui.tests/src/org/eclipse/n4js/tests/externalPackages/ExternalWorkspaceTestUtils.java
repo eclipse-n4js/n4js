@@ -33,7 +33,7 @@ public class ExternalWorkspaceTestUtils {
 	 * @param location
 	 *            to be added to the preferences
 	 */
-	public static final void setExternalLibrariesPreferenceStoreLocations(
+	synchronized public static final void setExternalLibrariesPreferenceStoreLocations(
 			ExternalLibraryPreferenceStore externalLibraryPreferenceStore, Path location) {
 
 		externalLibraryPreferenceStore.remove((new File(USER_HOME)).toPath().toUri());// remove default
@@ -50,7 +50,7 @@ public class ExternalWorkspaceTestUtils {
 	 * @param dir
 	 *            locations to be removed from store
 	 */
-	public static void removeExternalLibrariesPreferenceStoreLocations(
+	synchronized public static void removeExternalLibrariesPreferenceStoreLocations(
 			ExternalLibraryPreferenceStore externalLibraryPreferenceStore, Path dir) {
 
 		// externalLibraryPreferenceStore.add((new File(USER_HOME)).toPath().toUri());// add default
