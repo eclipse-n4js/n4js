@@ -239,6 +239,7 @@ public class ProjectTestsUtils {
 			}
 		}, monitor);
 
+		waitForAllJobs();
 		return project;
 	}
 
@@ -670,7 +671,7 @@ public class ProjectTestsUtils {
 		java.nio.file.Path probandsSource = Paths.get(externalRootLocation.getPath());
 		FileCopier.copy(probandsSource, nodeModulesDir.toPath());
 
-		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
+		libraryManager.synchronizeNpms(new NullProgressMonitor());
 
 		IResourcesSetupUtil.fullBuild();
 		waitForAllJobs();

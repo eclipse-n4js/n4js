@@ -11,11 +11,10 @@
 package org.eclipse.n4js.tests.externalPackages;
 
 import static org.eclipse.n4js.tests.externalPackages.ExternalProjectsTestUtil.copyProjectsToLocation;
-import static org.eclipse.n4js.tests.externalPackages.ExternalWorkspaceTestUtils.removeExternalLibrariesPreferenceStoreLocations;
-import static org.eclipse.n4js.tests.externalPackages.ExternalWorkspaceTestUtils.setExternalLibrariesPreferenceStoreLocations;
 import static org.eclipse.n4js.tests.externalPackages.IndexableFilesDiscoveryUtil.collectIndexableFiles;
 import static org.junit.Assert.fail;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashSet;
@@ -26,11 +25,11 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.builder.BuilderUtil;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
+import org.eclipse.n4js.ui.external.ExternalProjectMappings;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -38,32 +37,37 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.inject.Inject;
-
 /**
  */
 public class ExternalPackagesPluginTest extends AbstractBuilderParticipantTest {
+
+	// the probands folder
+	private static final String PROBANDS_DIR = "probands/ExternalPackages/";
+	private static final String PROBAND_CLIENT = "Client";
 
 	private static final String PROBAND_LIBFOO = "LibFoo";
 	private static final String PROBAND_LIBBAR = "LibBar";
 	private static final String PROBAND_LIBBAZ = "LibBaz";
 
 	private Path externalLibrariesRoot;
-
-	@Inject
-	private ExternalLibraryPreferenceStore externalLibraryPreferenceStore;
+	private Path projectsRoot;
 
 	@Override
 	@Before
 	public void setUp() throws Exception {
+		ExternalProjectMappings.REDUCE_REGISTERED_NPMS = false;
+
 		super.setUp();
 		waitForAutoBuild();
 		externalLibrariesRoot = FileUtils.createTempDirectory();
+		projectsRoot = new File(getResourceUri(PROBANDS_DIR)).toPath();
 	}
 
 	@Override
 	@After
 	public void tearDown() throws Exception {
+		ExternalProjectMappings.REDUCE_REGISTERED_NPMS = true;
+
 		if (externalLibrariesRoot != null) {
 			FileDeleter.delete(externalLibrariesRoot);
 			externalLibrariesRoot = null;
@@ -77,17 +81,16 @@ public class ExternalPackagesPluginTest extends AbstractBuilderParticipantTest {
 	 */
 	@Test
 	public void testOneProjectInExternalLibrary() throws Exception {
-
-		copyProjectsToLocation(externalLibrariesRoot, PROBAND_LIBFOO);
-
-		setExternalLibrariesPreferenceStoreLocations(externalLibraryPreferenceStore, externalLibrariesRoot);
+		ProjectTestsUtils.importProject(projectsRoot.toFile(), PROBAND_CLIENT);
+		copyProjectsToLocation(projectsRoot, externalLibrariesRoot, PROBAND_LIBFOO);
+		ProjectTestsUtils.importDependencies(PROBAND_CLIENT, externalLibrariesRoot.toUri(), libraryManager);
 
 		Collection<String> expected = collectIndexableFiles(externalLibrariesRoot);
+		// add user workspace project files
+		expected.add("/Client/src/ABC.n4js");
+		expected.add("/Client/package.json");
 
 		assertResourceDescriptions(expected, BuilderUtil.getAllResourceDescriptions());
-
-		removeExternalLibrariesPreferenceStoreLocations(externalLibraryPreferenceStore, externalLibrariesRoot);
-
 	}
 
 	/**
@@ -96,17 +99,16 @@ public class ExternalPackagesPluginTest extends AbstractBuilderParticipantTest {
 	 */
 	@Test
 	public void testThreeDependendExternalProjects() throws Exception {
-
-		copyProjectsToLocation(externalLibrariesRoot, PROBAND_LIBFOO, PROBAND_LIBBAR, PROBAND_LIBBAZ);
-
-		setExternalLibrariesPreferenceStoreLocations(externalLibraryPreferenceStore, externalLibrariesRoot);
+		ProjectTestsUtils.importProject(projectsRoot.toFile(), PROBAND_CLIENT);
+		copyProjectsToLocation(projectsRoot, externalLibrariesRoot, PROBAND_LIBFOO, PROBAND_LIBBAR, PROBAND_LIBBAZ);
+		ProjectTestsUtils.importDependencies(PROBAND_CLIENT, externalLibrariesRoot.toUri(), libraryManager);
 
 		Collection<String> expected = collectIndexableFiles(externalLibrariesRoot);
+		// add user workspace project files
+		expected.add("/Client/src/ABC.n4js");
+		expected.add("/Client/package.json");
 
 		assertResourceDescriptions(expected, BuilderUtil.getAllResourceDescriptions());
-
-		removeExternalLibrariesPreferenceStoreLocations(externalLibraryPreferenceStore, externalLibrariesRoot);
-
 	}
 
 	/**
@@ -115,27 +117,22 @@ public class ExternalPackagesPluginTest extends AbstractBuilderParticipantTest {
 	 */
 	@Test
 	public void testWorkspaceProjectAndExternalProject() throws Exception {
-
 		IProject createJSProject = ProjectTestsUtils.createJSProject("LibFoo2");
 		IFolder src = configureProjectWithXtext(createJSProject);
 		IFile packageJson = createJSProject.getProject().getFile(IN4JSProject.PACKAGE_JSON);
 		assertMarkers("package.json of first project should have no errors", packageJson, 0);
 		createTestFile(src, "Foo", "console.log('hi')");
 
-		copyProjectsToLocation(externalLibrariesRoot);
 		waitForAutoBuild();
-		setExternalLibrariesPreferenceStoreLocations(externalLibraryPreferenceStore, externalLibrariesRoot);
 
 		Collection<String> expectedExternal = collectIndexableFiles(externalLibrariesRoot);
+
 		Collection<String> expectedWorkspace = collectIndexableFiles(ResourcesPlugin.getWorkspace());
 		Collection<String> expected = new HashSet<>();
 		expected.addAll(expectedExternal);
 		expected.addAll(expectedWorkspace);
 
 		assertResourceDescriptions(expected, BuilderUtil.getAllResourceDescriptions());
-
-		removeExternalLibrariesPreferenceStoreLocations(externalLibraryPreferenceStore, externalLibrariesRoot);
-
 	}
 
 	/**
@@ -143,41 +140,9 @@ public class ExternalPackagesPluginTest extends AbstractBuilderParticipantTest {
 	 * registered and workspace contains project with the same name. External library is registered before project is
 	 * created in the workspace.
 	 */
-	public void testWorkspaceProjectHidingExternalProject_after() throws Exception {
-
-		IProject createJSProject = ProjectTestsUtils.createJSProject("LibFoo");
-		IFolder src = configureProjectWithXtext(createJSProject);
-		IFile packageJson = createJSProject.getProject().getFile(IN4JSProject.PACKAGE_JSON);
-		assertMarkers("package.json of first project should have no errors", packageJson, 0);
-
-		createTestFile(src, "Foo", "console.log('hi')");
-		createTestFile(src, "AAAA", "console.log('hi')");
-		createTestFile(src, "BBB", "console.log('hi')");
-		waitForAutoBuild();
-
-		copyProjectsToLocation(externalLibrariesRoot, "LibFoo");
-		setExternalLibrariesPreferenceStoreLocations(externalLibraryPreferenceStore, externalLibrariesRoot);
-
-		Collection<String> expectedWorkspace = collectIndexableFiles(ResourcesPlugin.getWorkspace());
-
-		assertResourceDescriptions(expectedWorkspace, BuilderUtil.getAllResourceDescriptions());
-
-		removeExternalLibrariesPreferenceStoreLocations(externalLibraryPreferenceStore, externalLibrariesRoot);
-
-	}
-
-	/**
-	 * Check if index is populated only with workspace project content when the external location with single project is
-	 * registered and workspace contains project with the same name. External library is registered after project is
-	 * created in the workspace.
-	 */
 	@Test
-	public void testWorkspaceProjectHidingExternalProject_before() throws Exception {
-
-		copyProjectsToLocation(externalLibrariesRoot, "LibFoo");
-		setExternalLibrariesPreferenceStoreLocations(externalLibraryPreferenceStore, externalLibrariesRoot);
-
-		IProject createJSProject = ProjectTestsUtils.createJSProject("LibFoo");
+	public void testWorkspaceProjectHidingExternalProject_after() throws Exception {
+		IProject createJSProject = ProjectTestsUtils.createJSProject(PROBAND_LIBFOO);
 		IFolder src = configureProjectWithXtext(createJSProject);
 		IFile packageJson = createJSProject.getProject().getFile(IN4JSProject.PACKAGE_JSON);
 		assertMarkers("package.json of first project should have no errors", packageJson, 0);
@@ -187,12 +152,15 @@ public class ExternalPackagesPluginTest extends AbstractBuilderParticipantTest {
 		createTestFile(src, "BBB", "console.log('hi')");
 		waitForAutoBuild();
 
+		copyProjectsToLocation(projectsRoot, externalLibrariesRoot, PROBAND_LIBFOO);
+		ProjectTestsUtils.importDependencies(createJSProject.getName(), externalLibrariesRoot.toUri(), libraryManager);
+
 		Collection<String> expectedWorkspace = collectIndexableFiles(ResourcesPlugin.getWorkspace());
+		// remove those that are shadowed
+		expectedWorkspace.remove("/LibFoo/node_modules/LibFoo/src/Foo.n4js");
+		expectedWorkspace.remove("/LibFoo/node_modules/LibFoo/package.json");
 
 		assertResourceDescriptions(expectedWorkspace, BuilderUtil.getAllResourceDescriptions());
-
-		removeExternalLibrariesPreferenceStoreLocations(externalLibraryPreferenceStore, externalLibrariesRoot);
-
 	}
 
 	/**
@@ -210,10 +178,19 @@ public class ExternalPackagesPluginTest extends AbstractBuilderParticipantTest {
 		for (IResourceDescription iResourceDescription : actual) {
 			URI uri = iResourceDescription.getURI();
 			String stringUri = uri.isPlatform() ? uri.toPlatformString(false) : uri.toFileString();
-			if (!missingDescriptions.contains(stringUri)) {
+
+			String missingDescription = "";
+			for (String missingDescr : missingDescriptions) {
+				if (stringUri.endsWith(missingDescr)) {
+					missingDescription = missingDescr;
+					break;
+				}
+			}
+
+			if (missingDescription.isEmpty()) {
 				extraDescriptions.add(stringUri);
 			} else {
-				missingDescriptions.remove(stringUri);
+				missingDescriptions.remove(missingDescription);
 			}
 		}
 
