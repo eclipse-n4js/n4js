@@ -22,7 +22,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
-import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
@@ -51,9 +50,6 @@ public class IndexSynchronizerPluginTest extends AbstractBuilderParticipantTest 
 	private ExternalLibraryWorkspace externalLibraryWorkspace;
 
 	@Inject
-	private LibraryManager libraryManager;
-
-	@Inject
 	private EclipseExternalIndexSynchronizer indexSynchronizer;
 
 	/** Checks whether the platform is running or not. */
@@ -73,7 +69,9 @@ public class IndexSynchronizerPluginTest extends AbstractBuilderParticipantTest 
 	@After
 	@Override
 	public void tearDown() throws Exception {
+		waitForAutoBuild();
 		tearDownShippedLibraries();
+		super.tearDown();
 	}
 
 	/** Install an NPM, delete folder of NPM on disk, run IndexSynchronizer, check if NPM was removed from index */

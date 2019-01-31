@@ -181,10 +181,10 @@ public abstract class AbstractBuilderTest {
 	@After
 	public void tearDown() throws Exception {
 		// save the files as otherwise the projects cannot be deleted
+		libraryManager.deleteAllNodeModulesFolders();
 		closeAllEditorsForTearDown();
 		IResourcesSetupUtil.cleanWorkspace();
 		IResourcesSetupUtil.cleanBuild();
-		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
 		waitForAutoBuild();
 		assertEquals(0, root().getProjects().length);
 		assertEquals("Resources in index:\n" + getAllResourceDescriptionsAsString() + "\n", 0,

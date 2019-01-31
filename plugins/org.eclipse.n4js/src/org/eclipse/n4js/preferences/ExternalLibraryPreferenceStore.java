@@ -119,6 +119,9 @@ public interface ExternalLibraryPreferenceStore extends Iterable<URI> {
 	 */
 	void removeListener(StoreUpdatedListener listener);
 
+	/** Triggers synchronization of the stored node_modules folders with the ones that actually exist. */
+	IStatus synchronizeNodeModulesFolders();
+
 	/**
 	 * Converts the given external library root location URIs into an iterable of existing external folder locations
 	 * URIs.
