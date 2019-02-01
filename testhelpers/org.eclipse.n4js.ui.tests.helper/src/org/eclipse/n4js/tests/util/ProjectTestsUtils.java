@@ -239,6 +239,7 @@ public class ProjectTestsUtils {
 			}
 		}, monitor);
 
+		waitForAllJobs();
 		return project;
 	}
 
@@ -571,7 +572,7 @@ public class ProjectTestsUtils {
 		for (int i = 0; i < markers.length; i++) {
 			IMarker m = markers[i];
 			int severity = m.getAttribute(IMarker.SEVERITY, -1);
-			assertNotEquals(IMarker.SEVERITY_ERROR, severity);
+			assertNotEquals("Expected no errors but found:\n" + m.toString(), IMarker.SEVERITY_ERROR, severity);
 		}
 	}
 
@@ -670,7 +671,7 @@ public class ProjectTestsUtils {
 		java.nio.file.Path probandsSource = Paths.get(externalRootLocation.getPath());
 		FileCopier.copy(probandsSource, nodeModulesDir.toPath());
 
-		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
+		libraryManager.synchronizeNpms(new NullProgressMonitor());
 
 		IResourcesSetupUtil.fullBuild();
 		waitForAllJobs();

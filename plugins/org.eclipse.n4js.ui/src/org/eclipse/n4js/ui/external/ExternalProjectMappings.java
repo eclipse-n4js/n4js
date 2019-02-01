@@ -45,7 +45,8 @@ import com.google.common.collect.Lists;
  * This provider creates {@link ExternalProject}s.
  */
 public class ExternalProjectMappings {
-	static final boolean REDUCE_REGISTERED_NPMS = true;
+	/** True: Only compile those projects that are referenced by N4JS projects */
+	public static boolean REDUCE_REGISTERED_NPMS = true;
 
 	final private EclipseBasedN4JSWorkspace userWorkspace;
 	final private ExternalLibraryPreferenceStore preferenceStore;

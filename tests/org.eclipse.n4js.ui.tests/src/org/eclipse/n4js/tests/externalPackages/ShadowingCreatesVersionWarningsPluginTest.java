@@ -18,6 +18,7 @@ import java.io.File;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.ShadowingInfoHelper;
@@ -86,7 +87,9 @@ public class ShadowingCreatesVersionWarningsPluginTest extends AbstractBuilderPa
 		File projectsRoot = new File(getResourceUri(PROBANDS, WORKSPACE_LOC));
 		ProjectTestsUtils.importProject(projectsRoot, PROJECT_N4JSLANG);
 		ProjectTestsUtils.importProject(projectsRoot, PROJECT_P1);
-		waitForAutoBuild();
+		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
+
+		ProjectTestsUtils.waitForAllJobs();
 
 		IProject prjP1 = ResourcesPlugin.getWorkspace().getRoot().getProject(PROJECT_P1);
 		IProject prjN4JSLang = ResourcesPlugin.getWorkspace().getRoot().getProject(PROJECT_N4JSLANG);

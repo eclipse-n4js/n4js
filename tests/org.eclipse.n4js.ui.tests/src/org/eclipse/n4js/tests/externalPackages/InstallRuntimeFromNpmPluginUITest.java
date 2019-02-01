@@ -107,6 +107,7 @@ public class InstallRuntimeFromNpmPluginUITest extends AbstractBuilderParticipan
 
 		configureProjectWithXtext(project);
 
+		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 
