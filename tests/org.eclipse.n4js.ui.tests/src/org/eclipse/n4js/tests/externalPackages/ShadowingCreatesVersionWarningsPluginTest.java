@@ -89,7 +89,7 @@ public class ShadowingCreatesVersionWarningsPluginTest extends AbstractBuilderPa
 		ProjectTestsUtils.importProject(projectsRoot, PROJECT_P1);
 		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
 
-		waitForAutoBuild();
+		ProjectTestsUtils.waitForAllJobs();
 
 		IProject prjP1 = ResourcesPlugin.getWorkspace().getRoot().getProject(PROJECT_P1);
 		IProject prjN4JSLang = ResourcesPlugin.getWorkspace().getRoot().getProject(PROJECT_N4JSLANG);
