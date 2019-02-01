@@ -85,8 +85,7 @@ public class ClearCacheOnCleanPluginUITest extends AbstractBuilderParticipantTes
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 
-		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
-		assertNoErrors();
+		syncExtAndBuild();
 
 		// use key of API_IMPL_MAPPING
 		SupplierWithPostAction testSupplier = new SupplierWithPostAction();
@@ -125,7 +124,7 @@ public class ClearCacheOnCleanPluginUITest extends AbstractBuilderParticipantTes
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 
-		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
+		syncExtAndBuild();
 		assertNoErrors();
 
 		// use key of API_IMPL_MAPPING

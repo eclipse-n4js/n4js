@@ -149,9 +149,7 @@ public class IndexSynchronizerPluginTest extends AbstractBuilderParticipantTest 
 		assertIssues(abc,
 				"line 12: Cannot resolve import target :: resolving project import : found no matching modules");
 
-		indexSynchronizer.synchronizeNpms(new NullProgressMonitor());
-		IResourcesSetupUtil.fullBuild();
-		waitForAutoBuild();
+		syncExtAndBuild();
 
 		assertIssues(packagejson);
 		assertIssues(abc);

@@ -237,6 +237,14 @@ public abstract class AbstractBuilderTest {
 		IResourcesSetupUtil.cleanBuild();
 	}
 
+	/** Synchronizes the index, rebuilds externals and workspace */
+	protected void syncExtAndBuild() throws CoreException {
+		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
+		ProjectTestsUtils.waitForAllJobs();
+		IResourcesSetupUtil.fullBuild();
+		waitForAutoBuild();
+	}
+
 	private void closeAllEditorsForTearDown() {
 		IWorkbenchPage page = EclipseUIUtils.getActivePage();
 		if (page != null)

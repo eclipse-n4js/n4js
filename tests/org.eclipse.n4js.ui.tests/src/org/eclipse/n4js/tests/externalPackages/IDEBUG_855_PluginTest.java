@@ -20,10 +20,8 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
@@ -58,9 +56,6 @@ public class IDEBUG_855_PluginTest extends AbstractBuilderParticipantTest {
 
 	@Inject
 	private ContributingResourceDescriptionPersister persister;
-
-	@Inject
-	private LibraryManager libManager;
 
 	/**
 	 * Updates the known external library locations with the {@code node_modules} folder.
@@ -102,7 +97,8 @@ public class IDEBUG_855_PluginTest extends AbstractBuilderParticipantTest {
 		assertMarkers("Expected exactly zero errors in client module.", clientModule, 0);
 
 		resource.getContents().clear();
-		libManager.registerAllExternalProjects(new NullProgressMonitor());
+
+		syncExtAndBuild();
 
 		final int builderStateAfterReloadSize = Iterables.size(builderState.getAllResourceDescriptions());
 		persister.saveToResource(resource, builderState.getAllResourceDescriptions());
