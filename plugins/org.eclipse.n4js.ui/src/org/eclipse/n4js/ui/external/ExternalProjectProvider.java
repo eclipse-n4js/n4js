@@ -12,7 +12,6 @@ package org.eclipse.n4js.ui.external;
 
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -70,7 +69,6 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 
 	private final Semaphore semaphore = new Semaphore(1);
 	private final Collection<ExternalLocationsUpdatedListener> locListeners = new LinkedList<>();
-	private final LinkedHashMap<String, java.net.URI> rootLocations = new LinkedHashMap<>();
 	private ExternalProjectMappings mappings = new UninitializedMappings();
 
 	/**
@@ -82,7 +80,6 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 	 */
 	@Inject
 	ExternalProjectProvider(ExternalLibraryPreferenceStore preferenceStore) {
-		setRootLocations(preferenceStore.getLocations());
 		preferenceStore.addListener(this);
 	}
 
@@ -102,10 +99,6 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 		locListeners.add(listener);
 	}
 
-	Collection<java.net.URI> getRootLocationsInReversedShadowingOrder() {
-		return new ArrayList<>(rootLocations.values());
-	}
-
 	Collection<URI> getAllProjectLocations() {
 		return mappings.reducedProjectUriMapping.keySet();
 	}
@@ -122,13 +115,7 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 		addedLocations.removeAll(oldLocations);
 
 		for (ExternalLocationsUpdatedListener locListener : locListeners) {
-			locListener.beforeLocationsUpdated(removedLocations, monitor);
-		}
-
-		updateCache(newLocations);
-
-		for (ExternalLocationsUpdatedListener locListener : locListeners) {
-			locListener.afterLocationsUpdated(addedLocations, monitor);
+			locListener.locationsUpdated(removedLocations, addedLocations, monitor);
 		}
 	}
 
@@ -144,11 +131,6 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 				}
 			}
 		}
-	}
-
-	private void updateCache(Set<java.net.URI> newLocations) {
-		setRootLocations(newLocations);
-		updateCacheInternal();
 	}
 
 	synchronized private void updateCacheInternal() {
@@ -247,13 +229,10 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 		return mappings.reducedProjectsLocationMapping.getOrDefault(rootLocation, Collections.emptyList());
 	}
 
-	private void setRootLocations(Collection<java.net.URI> newRootLocations) {
-		List<java.net.URI> locationsInShadowOrder = ExternalLibrariesActivator.sortByShadowing(newRootLocations);
-		Collections.reverse(locationsInShadowOrder); // reverse order for ExternalProjectMapper
-		rootLocations.clear();
-		for (java.net.URI loc : locationsInShadowOrder) {
-			String locStr = loc.toString();
-			rootLocations.put(locStr, loc);
-		}
+	Collection<java.net.URI> getRootLocationsInReversedShadowingOrder() {
+		Collection<java.net.URI> locations = externalLibraryPreferenceStore.getLocations();
+		List<java.net.URI> locationsInShadowOrder = ExternalLibrariesActivator.sortByShadowing(locations);
+		Collections.reverse(locationsInShadowOrder);
+		return locationsInShadowOrder;
 	}
 }

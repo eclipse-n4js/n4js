@@ -10,12 +10,6 @@
  */
 package org.eclipse.n4js.tests.util;
 
-import static org.junit.Assert.assertTrue;
-
-import java.net.URI;
-import java.util.function.Consumer;
-
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
@@ -43,9 +37,8 @@ public class ShippedCodeInitializeTestHelper {
 	synchronized public void setupBuiltIns() {
 		System.setProperty(ExternalLibrariesActivator.INCLUDES_BUILT_INS_SYSTEM_PROPERTY, "true");
 
-		forAllLocations(externalLibraryPreferenceStore::add);
-		assertTrue("Error while saving external library preference changes.",
-				externalLibraryPreferenceStore.save(new NullProgressMonitor()).isOK());
+		externalLibraryPreferenceStore.synchronizeNodeModulesFolders();
+		ProjectTestsUtils.waitForAllJobs();
 	}
 
 	/** Tear down shipped projects in all {@link ExternalLibrariesActivator#EXTERNAL_LIBRARIES_SUPPLIER locations}. */
@@ -54,12 +47,8 @@ public class ShippedCodeInitializeTestHelper {
 
 		System.setProperty(ExternalLibrariesActivator.INCLUDES_BUILT_INS_SYSTEM_PROPERTY, "");
 
-		forAllLocations(externalLibraryPreferenceStore::remove);
-		assertTrue("Error while saving external library preference changes.",
-				externalLibraryPreferenceStore.save(new NullProgressMonitor()).isOK());
+		externalLibraryPreferenceStore.synchronizeNodeModulesFolders();
+		ProjectTestsUtils.waitForAllJobs();
 	}
 
-	private void forAllLocations(Consumer<URI> consume) {
-		ExternalLibrariesActivator.EXTERNAL_LIBRARIES_SUPPLIER.get().keySet().forEach(consume);
-	}
 }

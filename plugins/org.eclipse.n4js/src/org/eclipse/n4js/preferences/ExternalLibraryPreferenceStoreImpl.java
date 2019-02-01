@@ -137,8 +137,12 @@ import com.google.inject.Inject;
 		}
 	}
 
+	/**
+	 * Attention: This method needs to be called synchronized. The keyword 'synchronized' is not used here because it
+	 * clashes with the Eclipse mechanism of builder rules.
+	 */
 	@Override
-	synchronized public IStatus synchronizeNodeModulesFolders() {
+	public IStatus synchronizeNodeModulesFolders() {
 		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		List<Path> projectRoots = new LinkedList<>();
 		for (IProject project : projects) {
@@ -149,7 +153,7 @@ import com.google.inject.Inject;
 		}
 
 		resetDefaults();
-		Collection<Path> locations = nodeModulesDiscoveryHelper.findNodeModulesFolders(projectRoots);
+		List<Path> locations = nodeModulesDiscoveryHelper.findNodeModulesFolders(projectRoots);
 		for (Path location : locations) {
 			add(location.toUri());
 		}
