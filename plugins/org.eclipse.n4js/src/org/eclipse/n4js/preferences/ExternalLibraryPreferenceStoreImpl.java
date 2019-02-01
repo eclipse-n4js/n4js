@@ -153,7 +153,7 @@ import com.google.inject.Inject;
 		}
 
 		resetDefaults();
-		Collection<Path> locations = nodeModulesDiscoveryHelper.findNodeModulesFolders(projectRoots);
+		List<Path> locations = nodeModulesDiscoveryHelper.findNodeModulesFolders(projectRoots);
 		for (Path location : locations) {
 			add(location.toUri());
 		}
