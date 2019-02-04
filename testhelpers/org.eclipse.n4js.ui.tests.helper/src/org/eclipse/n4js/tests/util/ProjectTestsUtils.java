@@ -17,6 +17,7 @@ import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.addNature;
 import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.monitor;
 import static org.eclipse.xtext.ui.testing.util.JavaProjectSetupUtil.createSimpleProject;
 import static org.eclipse.xtext.ui.testing.util.JavaProjectSetupUtil.createSubFolder;
+import static org.junit.Assert.assertNotEquals;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,6 +42,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -237,6 +239,7 @@ public class ProjectTestsUtils {
 			}
 		}, monitor);
 
+		waitForAllJobs();
 		return project;
 	}
 
@@ -559,6 +562,21 @@ public class ProjectTestsUtils {
 	}
 
 	/**
+	 * Asserts that there are no errors. However, warnings may still exist.
+	 */
+	public static void assertNoErrors() throws CoreException {
+		waitForAutoBuild();
+
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		final IMarker[] markers = root.findMarkers(MarkerTypes.ANY_VALIDATION, true, IResource.DEPTH_INFINITE);
+		for (int i = 0; i < markers.length; i++) {
+			IMarker m = markers[i];
+			int severity = m.getAttribute(IMarker.SEVERITY, -1);
+			assertNotEquals("Expected no errors but found:\n" + m.toString(), IMarker.SEVERITY_ERROR, severity);
+		}
+	}
+
+	/**
 	 * Like {@link #assertIssues(IResource, String...)}, but checks for issues in entire workspace.
 	 */
 	public static void assertIssues(String... expectedMessages) throws CoreException {
@@ -576,6 +594,8 @@ public class ProjectTestsUtils {
 	 * Column information is not provided, so this method is not intended for several issues within a single line.
 	 */
 	public static void assertIssues(final IResource resource, String... expectedMessages) throws CoreException {
+		waitForAutoBuild();
+
 		final IMarker[] markers = resource.findMarkers(MarkerTypes.ANY_VALIDATION, true, IResource.DEPTH_INFINITE);
 		final String[] actualMessages = new String[markers.length];
 		for (int i = 0; i < markers.length; i++) {
@@ -651,9 +671,9 @@ public class ProjectTestsUtils {
 		java.nio.file.Path probandsSource = Paths.get(externalRootLocation.getPath());
 		FileCopier.copy(probandsSource, nodeModulesDir.toPath());
 
-		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
+		libraryManager.synchronizeNpms(new NullProgressMonitor());
 
 		IResourcesSetupUtil.fullBuild();
-		waitForAutoBuild();
+		waitForAllJobs();
 	}
 }

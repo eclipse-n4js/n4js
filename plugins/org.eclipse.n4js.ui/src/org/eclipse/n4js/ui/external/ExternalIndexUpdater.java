@@ -44,7 +44,7 @@ public class ExternalIndexUpdater implements ExternalLocationsUpdatedListener {
 	private ExternalLibraryBuilder builder;
 
 	@Override
-	public void beforeLocationsUpdated(Set<URI> removedLocations, IProgressMonitor monitor) {
+	public void locationsUpdated(Set<URI> removedLocations, Set<URI> addedLocations, IProgressMonitor monitor) {
 		ISchedulingRule rule = builder.getRule();
 		try {
 			Job.getJobManager().beginRule(rule, monitor);
@@ -53,11 +53,6 @@ public class ExternalIndexUpdater implements ExternalLocationsUpdatedListener {
 		} finally {
 			Job.getJobManager().endRule(rule);
 		}
-	}
-
-	@Override
-	public void afterLocationsUpdated(Set<URI> addedLocations, IProgressMonitor monitor) {
-		// nothing to do
 	}
 
 	/** Removes projects from Index that were in a removed location */

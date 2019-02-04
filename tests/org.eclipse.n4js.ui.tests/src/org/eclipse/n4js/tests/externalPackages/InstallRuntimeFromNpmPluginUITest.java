@@ -107,8 +107,7 @@ public class InstallRuntimeFromNpmPluginUITest extends AbstractBuilderParticipan
 
 		configureProjectWithXtext(project);
 
-		IResourcesSetupUtil.fullBuild();
-		waitForAutoBuild();
+		syncExtAndBuild();
 
 		// duh! the 'n4js-runtime-node' in the shipped code does not satisfy our version constraint:
 		assertIssues(project.getFile(N4JSGlobals.PACKAGE_JSON),

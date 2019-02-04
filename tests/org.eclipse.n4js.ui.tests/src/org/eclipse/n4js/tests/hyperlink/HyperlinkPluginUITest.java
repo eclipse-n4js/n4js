@@ -91,15 +91,20 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 	public void testHyperlinks() throws CoreException {
 		File prjDir = new File(getResourceUri(PROBANDS, SUBFOLDER));
 		IProject project = ProjectTestsUtils.importProject(prjDir, PROJECT_NAME);
+
 		IResource resourceABC = project.findMember("src/ABC.n4js");
 		IFile fileABC = ResourcesPlugin.getWorkspace().getRoot().getFile(resourceABC.getFullPath());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 
+		syncExtAndBuild();
+
 		IWorkbenchPage page = EclipseUIUtils.getActivePage();
 		XtextEditor editor = openAndGetXtextEditor(fileABC, page);
 		ISourceViewer sourceViewer = editor.getInternalSourceViewer();
 		IRegion region = new Region(367, 0);
+		ProjectTestsUtils.waitForAllJobs();
+
 		IHyperlink[] hlinksInABC = hyperlinkDetector.detectHyperlinks(sourceViewer, region, true);
 
 		assertTrue("Hyperlink missing", hlinksInABC != null && hlinksInABC.length == 1);
@@ -141,8 +146,9 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 	public void testHyperlinksWhenOpenedFromExplorer() throws CoreException {
 		File prjDir = new File(getResourceUri(PROBANDS, SUBFOLDER));
 		ProjectTestsUtils.importProject(prjDir, PROJECT_NAME);
-		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
+
+		syncExtAndBuild();
 		UIUtils.waitForUiThread();
 
 		IWorkbenchPage page = EclipseUIUtils.getActivePage();

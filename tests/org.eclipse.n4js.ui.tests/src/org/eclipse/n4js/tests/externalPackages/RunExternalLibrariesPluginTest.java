@@ -155,8 +155,7 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 			waitForAutoBuildCheckIndexRigid();
 		}
 
-		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
-		waitForAutoBuild();
+		syncExtAndBuild();
 
 		final ProcessResult result = runClient();
 		// @formatter:off
@@ -178,8 +177,7 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 			waitForAutoBuildCheckIndexRigid();
 		}
 
-		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
-		waitForAutoBuild();
+		syncExtAndBuild();
 
 		final ProcessResult result = runClient();
 		// @formatter:off
@@ -211,8 +209,7 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 			waitForAutoBuildCheckIndexRigid();
 		}
 
-		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
-		waitForAutoBuild();
+		syncExtAndBuild();
 
 		final ProcessResult result = runClient();
 		// @formatter:off
@@ -234,8 +231,7 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 			waitForAutoBuildCheckIndexRigid();
 		}
 
-		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
-		waitForAutoBuild();
+		syncExtAndBuild();
 
 		final ProcessResult firstResult = runClient();
 		// @formatter:off
@@ -252,8 +248,7 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 			waitForAutoBuildCheckIndexRigid();
 		}
 
-		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
-		waitForAutoBuild();
+		syncExtAndBuild();
 
 		final ProcessResult secondResult = runClient();
 		// @formatter:off
@@ -275,8 +270,7 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 			waitForAutoBuildCheckIndexRigid();
 		}
 
-		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
-		waitForAutoBuild();
+		syncExtAndBuild();
 
 		final ProcessResult result = runClient();
 		// @formatter:off
@@ -298,8 +292,7 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 			waitForAutoBuildCheckIndexRigid();
 		}
 
-		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
-		waitForAutoBuild();
+		syncExtAndBuild();
 
 		final ProcessResult result = runClient();
 		// @formatter:off
@@ -321,8 +314,7 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 			waitForAutoBuildCheckIndexRigid();
 		}
 
-		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
-		waitForAutoBuild();
+		syncExtAndBuild();
 
 		final ProcessResult firstResult = runClient();
 		// @formatter:off
@@ -340,8 +332,7 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 			waitForAutoBuildCheckIndexRigid();
 		}
 
-		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
-		waitForAutoBuild();
+		syncExtAndBuild();
 
 		final ProcessResult secondResult = runClient();
 		// @formatter:off

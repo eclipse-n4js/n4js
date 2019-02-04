@@ -17,18 +17,23 @@ import static java.util.Collections.emptyList;
 
 import java.io.File;
 import java.net.URI;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.n4js.external.ExternalLibraryHelper;
+import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper;
 import org.eclipse.n4js.utils.collections.Arrays2;
 
 import com.google.common.collect.Iterables;
@@ -43,6 +48,9 @@ import com.google.inject.Inject;
 
 	@Inject
 	private ExternalLibraryHelper externalLibraryHelper;
+
+	@Inject
+	private NodeModulesDiscoveryHelper nodeModulesDiscoveryHelper;
 
 	private final Collection<StoreUpdatedListener> listeners;
 
@@ -127,6 +135,29 @@ import com.google.inject.Inject;
 		if (null != listener) {
 			listeners.remove(listener);
 		}
+	}
+
+	/**
+	 * Attention: This method needs to be called synchronized. The keyword 'synchronized' is not used here because it
+	 * clashes with the Eclipse mechanism of builder rules.
+	 */
+	@Override
+	public IStatus synchronizeNodeModulesFolders() {
+		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+		List<Path> projectRoots = new LinkedList<>();
+		for (IProject project : projects) {
+			if (project.isAccessible()) {
+				Path path = project.getLocation().toFile().toPath();
+				projectRoots.add(path);
+			}
+		}
+
+		resetDefaults();
+		List<Path> locations = nodeModulesDiscoveryHelper.findNodeModulesFolders(projectRoots);
+		for (Path location : locations) {
+			add(location.toUri());
+		}
+		return save(new NullProgressMonitor());
 	}
 
 	/**

@@ -13,7 +13,6 @@ package org.eclipse.n4js.external;
 import java.util.Collection;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 
 import com.google.inject.Singleton;
 
@@ -22,11 +21,6 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class HlcExternalIndexSynchronizer extends ExternalIndexSynchronizer {
-
-	@Override
-	public IStatus synchronizeNodeModulesFolders() {
-		return null;
-	}
 
 	@Override
 	public void synchronizeNpms(IProgressMonitor monitor) {

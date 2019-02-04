@@ -181,10 +181,10 @@ public abstract class AbstractBuilderTest {
 	@After
 	public void tearDown() throws Exception {
 		// save the files as otherwise the projects cannot be deleted
+		libraryManager.deleteAllNodeModulesFolders();
 		closeAllEditorsForTearDown();
 		IResourcesSetupUtil.cleanWorkspace();
 		IResourcesSetupUtil.cleanBuild();
-		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
 		waitForAutoBuild();
 		assertEquals(0, root().getProjects().length);
 		assertEquals("Resources in index:\n" + getAllResourceDescriptionsAsString() + "\n", 0,
@@ -235,6 +235,14 @@ public abstract class AbstractBuilderTest {
 	/***/
 	public void cleanBuild() throws CoreException {
 		IResourcesSetupUtil.cleanBuild();
+	}
+
+	/** Synchronizes the index, rebuilds externals and workspace */
+	protected void syncExtAndBuild() throws CoreException {
+		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
+		ProjectTestsUtils.waitForAllJobs();
+		IResourcesSetupUtil.fullBuild();
+		waitForAutoBuild();
 	}
 
 	private void closeAllEditorsForTearDown() {

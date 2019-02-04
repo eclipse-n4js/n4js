@@ -85,6 +85,8 @@ public class ClearCacheOnCleanPluginUITest extends AbstractBuilderParticipantTes
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 
+		syncExtAndBuild();
+
 		// use key of API_IMPL_MAPPING
 		SupplierWithPostAction testSupplier = new SupplierWithPostAction();
 		assertTrue(testSupplier.postActionTriggerCount == 0);
@@ -121,6 +123,9 @@ public class ClearCacheOnCleanPluginUITest extends AbstractBuilderParticipantTes
 		IFile filePJ = ResourcesPlugin.getWorkspace().getRoot().getFile(packagejson.getFullPath());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
+
+		syncExtAndBuild();
+		assertNoErrors();
 
 		// use key of API_IMPL_MAPPING
 		SupplierWithPostAction testSupplier = new SupplierWithPostAction();
