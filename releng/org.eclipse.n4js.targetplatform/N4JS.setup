@@ -178,10 +178,10 @@
       xsi:type="setup:VariableTask"
       name="n4js.target.platform"
       defaultValue="N4JS_2018_12"
-      storageURI="scope://Workspace">    <!--- label! --->
+      storageURI="scope://Workspace">    <!-- label! -->
     <choice
         value="N4JS_2018_12"
-        label="N4JS_2018_12"/>    <!--- label! --->
+        label="N4JS_2018_12"/>    <!-- label! -->
   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"
@@ -202,7 +202,7 @@
         name="org.eclipse.emf.ecore.xcore.sdk.feature.group"
         versionRange="[1.8.0,1.8.1)"/>
     <repository
-        url="http://download.eclipse.org/modeling/emf/emf/updates/2.16"/>
+        url="http://download.eclipse.org/modeling/emf/emf/builds/release/2.16"/>
     <description>Install the tools needed in the IDE to work with the source code for ${scope.project.label}</description>
   </setupTask>
   <setupTask
@@ -367,7 +367,7 @@
         </predicate>
       </sourceLocator>
       <repositoryList
-          name="N4JS_2018_12">    <!--- label! --->
+          name="N4JS_2018_12">    <!-- label! -->
         <repository
             url="http://download.eclipse.org/eclipse/updates/4.10"/>
         <repository
@@ -524,7 +524,7 @@
     <description>Launch that creates a config.ini</description>
   </setupTask>
   <stream name="master"
-      label="master (2018_12)"/>    <!--- label! --->
+      label="master (2018_12)"/>    <!-- label! -->
   <logicalProjectContainer
       xsi:type="setup:ProjectCatalog"
       href="index:/org.eclipse.setup#//@projectCatalogs[name='com.github']"/>
