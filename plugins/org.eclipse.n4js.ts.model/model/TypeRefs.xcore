@@ -26,6 +26,7 @@ package org.eclipse.n4js.ts.typeRefs
 
 import org.eclipse.n4js.ts.types.AnyType
 import org.eclipse.n4js.ts.types.ContainerType
+import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.TFormalParameter
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TN4Classifier
@@ -36,12 +37,6 @@ import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.UndefinedType
 import org.eclipse.n4js.ts.types.internal.WildcardAsStringUtils
-import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
-
-// due to some bad linking / scoping behavior in Xcore for clean builds,
-// we need to define this data type here even though it's only usages are
-// found in Types.xcore
-type ParameterizedTypeRefIterable wraps Iterable<ParameterizedTypeRef>
 
 /*
  * Base class for all things that can provide a version. The returned value will be 0 in any language that does not
