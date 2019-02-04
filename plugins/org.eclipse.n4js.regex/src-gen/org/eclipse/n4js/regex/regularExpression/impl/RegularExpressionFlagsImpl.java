@@ -75,6 +75,7 @@ public class RegularExpressionFlagsImpl extends MinimalEObjectImpl.Container imp
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<String> getFlags()
   {
     if (flags == null)

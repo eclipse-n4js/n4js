@@ -123,6 +123,7 @@ public class ExactQuantifierImpl extends QuantifierImpl implements ExactQuantifi
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public int getMin()
   {
     return min;
@@ -133,6 +134,7 @@ public class ExactQuantifierImpl extends QuantifierImpl implements ExactQuantifi
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setMin(int newMin)
   {
     int oldMin = min;
@@ -146,6 +148,7 @@ public class ExactQuantifierImpl extends QuantifierImpl implements ExactQuantifi
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public int getMax()
   {
     return max;
@@ -156,6 +159,7 @@ public class ExactQuantifierImpl extends QuantifierImpl implements ExactQuantifi
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setMax(int newMax)
   {
     int oldMax = max;
@@ -169,6 +173,7 @@ public class ExactQuantifierImpl extends QuantifierImpl implements ExactQuantifi
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public boolean isUnboundedMax()
   {
     return unboundedMax;
@@ -179,6 +184,7 @@ public class ExactQuantifierImpl extends QuantifierImpl implements ExactQuantifi
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setUnboundedMax(boolean newUnboundedMax)
   {
     boolean oldUnboundedMax = unboundedMax;
