@@ -31,7 +31,9 @@ public class ShippedCodeInitializeTestHelper {
 
 	/**
 	 * Set up shipped projects in all {@link ExternalLibrariesActivator#EXTERNAL_LIBRARIES_SUPPLIER locations}.
-	 *
+	 * <p>
+	 * <b>Attention:</b> Works only with PluginUI tests!
+	 * <p>
 	 * Setting this property is necessary since {@link ExternalLibraryPreferenceStore#resetDefaults()} will transitively
 	 * call {@link ExternalLibrariesActivator#requiresInfrastructureForLibraryManager()}.
 	 */

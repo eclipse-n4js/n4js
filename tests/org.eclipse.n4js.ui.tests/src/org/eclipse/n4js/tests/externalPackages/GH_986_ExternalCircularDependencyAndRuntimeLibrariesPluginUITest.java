@@ -49,7 +49,7 @@ import com.google.inject.Inject;
  * More specifically, this means that some projects in the external library workspace declare a dependency cycle
  * (directly via "dependencies" or indirectly via "devDependencies").
  */
-public class GH_986_ExternalCircularDependencyAndRuntimeLibrariesPluginTest extends AbstractBuilderParticipantTest {
+public class GH_986_ExternalCircularDependencyAndRuntimeLibrariesPluginUITest extends AbstractBuilderParticipantTest {
 
 	// the probands folder
 	private static final String PROBANDS = "probands";
