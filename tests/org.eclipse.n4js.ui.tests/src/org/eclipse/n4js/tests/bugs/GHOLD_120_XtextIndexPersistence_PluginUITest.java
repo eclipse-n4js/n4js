@@ -24,10 +24,8 @@ import java.util.Set;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.ui.building.ResourceDescriptionWithoutModuleUserData;
@@ -125,8 +123,7 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 		final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(PROJECT_NAME);
 		assertTrue("Test project is not accessible.", project.isAccessible());
 
-		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
-		ProjectTestsUtils.waitForAllJobs();
+		syncExtAndBuild();
 		// Since we do not know whether the built-in initialization or the test project import happened earlier...
 		// Make sure both test module and project description file get into the index.
 		IResourcesSetupUtil.fullBuild();
@@ -182,10 +179,8 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 		assertMarkers("Expected exactly 7 issues.", project, 7);
 
 		loadBuiltIns();
-		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
-		ProjectTestsUtils.waitForAllJobs();
-		IResourcesSetupUtil.fullBuild();
-		waitForAutoBuild();
+		syncExtAndBuild();
+
 		resource.getContents().clear();
 		// see above for list of expected issues
 		assertMarkers("Expected exactly 7 issues.", project, 7); // issues are in external libraries

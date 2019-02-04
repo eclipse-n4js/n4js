@@ -19,7 +19,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
@@ -97,8 +96,8 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 		IFile fileABC = ResourcesPlugin.getWorkspace().getRoot().getFile(resourceABC.getFullPath());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
-		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
-		ProjectTestsUtils.waitForAllJobs();
+
+		syncExtAndBuild();
 
 		IWorkbenchPage page = EclipseUIUtils.getActivePage();
 		XtextEditor editor = openAndGetXtextEditor(fileABC, page);
@@ -148,10 +147,8 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 		File prjDir = new File(getResourceUri(PROBANDS, SUBFOLDER));
 		ProjectTestsUtils.importProject(prjDir, PROJECT_NAME);
 		waitForAutoBuild();
-		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
 
-		IResourcesSetupUtil.fullBuild();
-		waitForAutoBuild();
+		syncExtAndBuild();
 		UIUtils.waitForUiThread();
 
 		IWorkbenchPage page = EclipseUIUtils.getActivePage();

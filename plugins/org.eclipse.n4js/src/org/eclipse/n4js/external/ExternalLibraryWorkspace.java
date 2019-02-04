@@ -254,7 +254,7 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 
 		String nestedLocStr = nestedLocation.toString();
 		String rootLocStr = rootLocationMap.floorKey(nestedLocStr);
-		if (rootLocStr != null) {
+		if (rootLocStr != null && nestedLocStr.startsWith(rootLocStr)) {
 			return rootLocationMap.get(rootLocStr);
 		}
 		return null;

@@ -525,15 +525,9 @@ public class LibraryManager {
 	private IStatus registerAllExternalProjectsInternal(IProgressMonitor monitor) {
 		checkNotNull(monitor, "monitor");
 
-		MultiStatus refreshStatus = statusHelper.createMultiStatus("Refreshing npm type definitions.");
-
-		Collection<String> packageNames = getAllNpmProjectsMapping().keySet();
-		if (packageNames.isEmpty()) {
-			return statusHelper.OK();
-		}
-
 		SubMonitor subMonitor = SubMonitor.convert(monitor, 1);
 		try {
+			MultiStatus refreshStatus = statusHelper.createMultiStatus("Refreshing npm type definitions.");
 			indexSynchronizer.reindexAllExternalProjects(subMonitor.split(1));
 
 			return refreshStatus;
