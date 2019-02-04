@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.tests.util;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
@@ -39,6 +40,9 @@ public class ShippedCodeInitializeTestHelper {
 
 		externalLibraryPreferenceStore.synchronizeNodeModulesFolders();
 		ProjectTestsUtils.waitForAllJobs();
+
+		libraryManager.synchronizeNpms(new NullProgressMonitor());
+		ProjectTestsUtils.waitForAllJobs();
 	}
 
 	/** Tear down shipped projects in all {@link ExternalLibrariesActivator#EXTERNAL_LIBRARIES_SUPPLIER locations}. */
@@ -48,6 +52,9 @@ public class ShippedCodeInitializeTestHelper {
 		System.setProperty(ExternalLibrariesActivator.INCLUDES_BUILT_INS_SYSTEM_PROPERTY, "");
 
 		externalLibraryPreferenceStore.synchronizeNodeModulesFolders();
+		ProjectTestsUtils.waitForAllJobs();
+
+		libraryManager.synchronizeNpms(new NullProgressMonitor());
 		ProjectTestsUtils.waitForAllJobs();
 	}
 
