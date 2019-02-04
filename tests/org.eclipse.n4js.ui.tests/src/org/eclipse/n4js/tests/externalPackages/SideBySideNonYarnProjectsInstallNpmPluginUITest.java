@@ -27,7 +27,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.runner.IExecutor;
@@ -49,7 +48,7 @@ import com.google.inject.Inject;
  * 1) P1, P2 im Eclipse workspace; keine dependency zw P1, P2; P1 -> lodash; P2 -> immutable a) full build -> errors in
  * both projects b) run "npm install" in P1 -> errors in P1 gone c) run "npm install" in P2 -> all errors gone
  */
-public class SideBySideProjectsInstallNpmPluginUITest extends AbstractBuilderParticipantTest {
+public class SideBySideNonYarnProjectsInstallNpmPluginUITest extends AbstractBuilderParticipantTest {
 
 	// the id of the runner to launch
 	private static final String NODE_RUNNER_ID = "org.eclipse.n4js.runner.nodejs.NODEJS";
@@ -58,9 +57,6 @@ public class SideBySideProjectsInstallNpmPluginUITest extends AbstractBuilderPar
 	private static final String DIFFERENT_NPM_SUBFOLDER = "InstallDifferentNpms";
 	private static final String SAME_NPM_SUBFOLDER = "InstallSameNpm";
 	private static final String DIFFERENT_NPMS_DEPENDENT_PROJECTS_SUBFOLDER = "InstallDifferentNpmsInDependentProjects";
-
-	@Inject
-	private LibraryManager libraryManager;
 
 	@Inject
 	private RunnerFrontEnd runnerFrontEnd;
