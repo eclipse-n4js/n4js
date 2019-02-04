@@ -161,7 +161,13 @@ public class LibraryManager {
 
 		SubMonitor subMonitor1 = subMonitor.split(1);
 		subMonitor1.setTaskName("Building installed packages...");
-		npmCli.runNpmYarnInstall(projectFolder);
+
+		// Calculate the folder in which npm/yarn should be executed, either local project folder
+		// or yarn root folder
+		File folderInWhichToExecute = nodeModulesDiscoveryHelper
+				.getNodeModulesFolder(projectFolder.toPath()).nodeModulesFolder.getParentFile();
+
+		npmCli.runNpmYarnInstall(folderInWhichToExecute);
 
 		SubMonitor subMonitor2 = subMonitor.split(1);
 		subMonitor2.setTaskName("Registering packages...");
@@ -348,7 +354,18 @@ public class LibraryManager {
 
 			SubMonitor subMonitor1 = subMonitor.split(2);
 			subMonitor1.setTaskName("Installing packages... [step 1 of " + steps + "]");
-			List<LibraryChange> actualChanges = installNPMs(subMonitor1, status, npmsToInstall, target);
+
+			// Calculate the folder in which npm/yarn should be executed, either local project folder
+			// or yarn root folder
+			// Convert EMF to Java File
+			// http://ssdots.blogspot.com/2015/08/converting-orgeclipseemfcommonutiluri.html
+			// URI resolvedTarget = CommonPlugin.resolve(target);
+			// Path pathToTarget = Paths.get(resolvedTarget.toFileString());
+			// URI folderInWhichToExecuteURI = URI.createFileURI(nodeModulesDiscoveryHelper
+			// .getNodeModulesFolder(pathToTarget).nodeModulesFolder.getParent());
+
+			List<LibraryChange> actualChanges = installNPMs(subMonitor1, status, npmsToInstall,
+					target);
 
 			if (!status.isOK()) {
 				return status;
