@@ -83,6 +83,7 @@ public class DocletImpl extends CompositeImpl implements Doclet {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<LineTag> getLineTags() {
 		if (lineTags == null) {
 			lineTags = new EObjectContainmentWithInverseEList<LineTag>(LineTag.class, this, DomPackage.DOCLET__LINE_TAGS, DomPackage.LINE_TAG__DOCLET);
@@ -95,6 +96,7 @@ public class DocletImpl extends CompositeImpl implements Doclet {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean hasLineTag(final String title) {
 		final Function1<LineTag, Boolean> _function = new Function1<LineTag, Boolean>() {
 			public Boolean apply(final LineTag it) {
@@ -111,6 +113,7 @@ public class DocletImpl extends CompositeImpl implements Doclet {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<LineTag> lineTags(final String title) {
 		final Function1<LineTag, Boolean> _function = new Function1<LineTag, Boolean>() {
 			public Boolean apply(final LineTag it) {

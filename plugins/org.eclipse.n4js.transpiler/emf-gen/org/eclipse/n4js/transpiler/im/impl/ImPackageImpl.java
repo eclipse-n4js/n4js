@@ -283,6 +283,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getScript_IM() {
 		return script_IMEClass;
 	}
@@ -292,6 +293,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getScript_IM_SymbolTable() {
 		return (EReference)script_IMEClass.getEStructuralFeatures().get(0);
 	}
@@ -301,6 +303,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSymbolTable() {
 		return symbolTableEClass;
 	}
@@ -310,6 +313,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSymbolTable_Entries() {
 		return (EReference)symbolTableEClass.getEStructuralFeatures().get(0);
 	}
@@ -319,6 +323,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSymbolTableEntry() {
 		return symbolTableEntryEClass;
 	}
@@ -328,6 +333,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSymbolTableEntry_Name() {
 		return (EAttribute)symbolTableEntryEClass.getEStructuralFeatures().get(0);
 	}
@@ -337,6 +343,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSymbolTableEntry_ElementsOfThisName() {
 		return (EReference)symbolTableEntryEClass.getEStructuralFeatures().get(1);
 	}
@@ -346,6 +353,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSymbolTableEntry_ReferencingElements() {
 		return (EReference)symbolTableEntryEClass.getEStructuralFeatures().get(2);
 	}
@@ -355,6 +363,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSymbolTableEntryOriginal() {
 		return symbolTableEntryOriginalEClass;
 	}
@@ -364,6 +373,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSymbolTableEntryOriginal_OriginalTarget() {
 		return (EReference)symbolTableEntryOriginalEClass.getEStructuralFeatures().get(0);
 	}
@@ -373,6 +383,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSymbolTableEntryOriginal_ImportSpecifier() {
 		return (EReference)symbolTableEntryOriginalEClass.getEStructuralFeatures().get(1);
 	}
@@ -382,6 +393,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getSymbolTableEntryOriginal__ExportedName() {
 		return symbolTableEntryOriginalEClass.getEOperations().get(0);
 	}
@@ -391,6 +403,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSymbolTableEntryIMOnly() {
 		return symbolTableEntryIMOnlyEClass;
 	}
@@ -400,6 +413,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSymbolTableEntryInternal() {
 		return symbolTableEntryInternalEClass;
 	}
@@ -409,6 +423,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getReferencingElement_IM() {
 		return referencingElement_IMEClass;
 	}
@@ -418,6 +433,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getReferencingElement_IM_RewiredTarget() {
 		return (EReference)referencingElement_IMEClass.getEStructuralFeatures().get(0);
 	}
@@ -427,6 +443,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getReferencingElement_IM__GetOriginalTargetOfRewiredTarget() {
 		return referencingElement_IMEClass.getEOperations().get(0);
 	}
@@ -436,6 +453,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getReferencingElementExpression_IM() {
 		return referencingElementExpression_IMEClass;
 	}
@@ -445,6 +463,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIdentifierRef_IM() {
 		return identifierRef_IMEClass;
 	}
@@ -454,6 +473,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getIdentifierRef_IM__GetId_IM() {
 		return identifierRef_IMEClass.getEOperations().get(0);
 	}
@@ -463,6 +483,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getIdentifierRef_IM__SetId_IM__SymbolTableEntry() {
 		return identifierRef_IMEClass.getEOperations().get(1);
 	}
@@ -472,6 +493,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getIdentifierRef_IM__GetId() {
 		return identifierRef_IMEClass.getEOperations().get(2);
 	}
@@ -481,6 +503,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getIdentifierRef_IM__SetId__IdentifiableElement() {
 		return identifierRef_IMEClass.getEOperations().get(3);
 	}
@@ -490,6 +513,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getParameterizedPropertyAccessExpression_IM() {
 		return parameterizedPropertyAccessExpression_IMEClass;
 	}
@@ -499,6 +523,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getParameterizedPropertyAccessExpression_IM_AnyPlusAccess() {
 		return (EAttribute)parameterizedPropertyAccessExpression_IMEClass.getEStructuralFeatures().get(0);
 	}
@@ -508,6 +533,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getParameterizedPropertyAccessExpression_IM_NameOfAnyPlusProperty() {
 		return (EAttribute)parameterizedPropertyAccessExpression_IMEClass.getEStructuralFeatures().get(1);
 	}
@@ -517,6 +543,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getParameterizedPropertyAccessExpression_IM__GetProperty_IM() {
 		return parameterizedPropertyAccessExpression_IMEClass.getEOperations().get(0);
 	}
@@ -526,6 +553,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getParameterizedPropertyAccessExpression_IM__SetProperty_IM__SymbolTableEntry() {
 		return parameterizedPropertyAccessExpression_IMEClass.getEOperations().get(1);
 	}
@@ -535,6 +563,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getParameterizedPropertyAccessExpression_IM__GetPropertyName() {
 		return parameterizedPropertyAccessExpression_IMEClass.getEOperations().get(2);
 	}
@@ -544,6 +573,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getParameterizedPropertyAccessExpression_IM__GetProperty() {
 		return parameterizedPropertyAccessExpression_IMEClass.getEOperations().get(3);
 	}
@@ -553,6 +583,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getParameterizedPropertyAccessExpression_IM__SetProperty__IdentifiableElement() {
 		return parameterizedPropertyAccessExpression_IMEClass.getEOperations().get(4);
 	}
@@ -562,6 +593,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getParameterizedTypeRef_IM() {
 		return parameterizedTypeRef_IMEClass;
 	}
@@ -571,6 +603,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getParameterizedTypeRef_IM__GetDeclaredType_IM() {
 		return parameterizedTypeRef_IMEClass.getEOperations().get(0);
 	}
@@ -580,6 +613,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getParameterizedTypeRef_IM__SetDeclaredType_IM__SymbolTableEntry() {
 		return parameterizedTypeRef_IMEClass.getEOperations().get(1);
 	}
@@ -589,6 +623,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getParameterizedTypeRef_IM__GetDeclaredType() {
 		return parameterizedTypeRef_IMEClass.getEOperations().get(2);
 	}
@@ -598,6 +633,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getParameterizedTypeRef_IM__SetDeclaredType__Type() {
 		return parameterizedTypeRef_IMEClass.getEOperations().get(3);
 	}
@@ -607,6 +643,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getParameterizedTypeRefStructural_IM() {
 		return parameterizedTypeRefStructural_IMEClass;
 	}
@@ -616,6 +653,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getParameterizedTypeRefStructural_IM__GetDeclaredType_IM() {
 		return parameterizedTypeRefStructural_IMEClass.getEOperations().get(0);
 	}
@@ -625,6 +663,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getParameterizedTypeRefStructural_IM__SetDeclaredType_IM__SymbolTableEntry() {
 		return parameterizedTypeRefStructural_IMEClass.getEOperations().get(1);
 	}
@@ -634,6 +673,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getParameterizedTypeRefStructural_IM__GetDeclaredType() {
 		return parameterizedTypeRefStructural_IMEClass.getEOperations().get(2);
 	}
@@ -643,6 +683,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getParameterizedTypeRefStructural_IM__SetDeclaredType__Type() {
 		return parameterizedTypeRefStructural_IMEClass.getEOperations().get(3);
 	}
@@ -652,6 +693,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSnippet() {
 		return snippetEClass;
 	}
@@ -661,6 +703,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSnippet_Code() {
 		return (EAttribute)snippetEClass.getEStructuralFeatures().get(0);
 	}
@@ -670,6 +713,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getDelegatingMember() {
 		return delegatingMemberEClass;
 	}
@@ -679,6 +723,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getDelegatingMember_DelegationBaseType() {
 		return (EReference)delegatingMemberEClass.getEStructuralFeatures().get(0);
 	}
@@ -688,6 +733,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getDelegatingMember_DelegationSuperClassSteps() {
 		return (EAttribute)delegatingMemberEClass.getEStructuralFeatures().get(1);
 	}
@@ -697,6 +743,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getDelegatingMember_DelegationTarget() {
 		return (EReference)delegatingMemberEClass.getEStructuralFeatures().get(2);
 	}
@@ -706,6 +753,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getDelegatingMember_DelegationTargetIsAbstract() {
 		return (EAttribute)delegatingMemberEClass.getEStructuralFeatures().get(3);
 	}
@@ -715,6 +763,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getDelegatingGetterDeclaration() {
 		return delegatingGetterDeclarationEClass;
 	}
@@ -724,6 +773,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getDelegatingSetterDeclaration() {
 		return delegatingSetterDeclarationEClass;
 	}
@@ -733,6 +783,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getDelegatingMethodDeclaration() {
 		return delegatingMethodDeclarationEClass;
 	}
@@ -742,6 +793,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getStringLiteralForSTE() {
 		return stringLiteralForSTEEClass;
 	}
@@ -751,6 +803,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getStringLiteralForSTE_Entry() {
 		return (EReference)stringLiteralForSTEEClass.getEStructuralFeatures().get(0);
 	}
@@ -760,6 +813,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getStringLiteralForSTE_UseExportedName() {
 		return (EAttribute)stringLiteralForSTEEClass.getEStructuralFeatures().get(1);
 	}
@@ -769,6 +823,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getStringLiteralForSTE__GetValueAsString() {
 		return stringLiteralForSTEEClass.getEOperations().get(0);
 	}
@@ -778,6 +833,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getVersionedParameterizedTypeRef_IM() {
 		return versionedParameterizedTypeRef_IMEClass;
 	}
@@ -787,6 +843,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getVersionedParameterizedTypeRefStructural_IM() {
 		return versionedParameterizedTypeRefStructural_IMEClass;
 	}
@@ -796,6 +853,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getVersionedIdentifierRef_IM() {
 		return versionedIdentifierRef_IMEClass;
 	}
@@ -805,6 +863,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getVersionedNamedImportSpecifier_IM() {
 		return versionedNamedImportSpecifier_IMEClass;
 	}
@@ -814,6 +873,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getVersionedNamedImportSpecifier_IM_ImportedTypeVersions() {
 		return (EReference)versionedNamedImportSpecifier_IMEClass.getEStructuralFeatures().get(0);
 	}
@@ -823,6 +883,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getVersionedNamedImportSpecifier_IM_VersionedTypeImport() {
 		return (EAttribute)versionedNamedImportSpecifier_IMEClass.getEStructuralFeatures().get(1);
 	}
@@ -832,6 +893,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ImFactory getImFactory() {
 		return (ImFactory)getEFactoryInstance();
 	}

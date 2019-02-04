@@ -92,6 +92,7 @@ public class TStructuralTypeImpl extends ContainerTypeImpl<TStructMember> implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EObject getAstElement() {
 		if (astElement != null && astElement.eIsProxy()) {
 			InternalEObject oldAstElement = (InternalEObject)astElement;
@@ -118,6 +119,7 @@ public class TStructuralTypeImpl extends ContainerTypeImpl<TStructMember> implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAstElement(EObject newAstElement) {
 		EObject oldAstElement = astElement;
 		astElement = newAstElement;
@@ -130,6 +132,7 @@ public class TStructuralTypeImpl extends ContainerTypeImpl<TStructMember> implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isFinal() {
 		return false;
 	}

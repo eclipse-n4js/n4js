@@ -74,6 +74,7 @@ public class VersionRangeSetRequirementImpl extends NPMVersionRequirementImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<VersionRange> getRanges() {
 		if (ranges == null) {
 			ranges = new EObjectContainmentEList<VersionRange>(VersionRange.class, this, SemverPackage.VERSION_RANGE_SET_REQUIREMENT__RANGES);

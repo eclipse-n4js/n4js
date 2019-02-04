@@ -110,6 +110,7 @@ public class VariableStatementImpl extends StatementImpl implements VariableStat
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<VariableDeclarationOrBinding> getVarDeclsOrBindings() {
 		if (varDeclsOrBindings == null) {
 			varDeclsOrBindings = new EObjectContainmentEList<VariableDeclarationOrBinding>(VariableDeclarationOrBinding.class, this, N4JSPackage.VARIABLE_STATEMENT__VAR_DECLS_OR_BINDINGS);
@@ -122,6 +123,7 @@ public class VariableStatementImpl extends StatementImpl implements VariableStat
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public VariableStatementKeyword getVarStmtKeyword() {
 		return varStmtKeyword;
 	}
@@ -131,6 +133,7 @@ public class VariableStatementImpl extends StatementImpl implements VariableStat
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setVarStmtKeyword(VariableStatementKeyword newVarStmtKeyword) {
 		VariableStatementKeyword oldVarStmtKeyword = varStmtKeyword;
 		varStmtKeyword = newVarStmtKeyword == null ? VAR_STMT_KEYWORD_EDEFAULT : newVarStmtKeyword;
@@ -143,6 +146,7 @@ public class VariableStatementImpl extends StatementImpl implements VariableStat
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<VariableDeclaration> getVarDecl() {
 		final Function1<VariableDeclarationOrBinding, EList<VariableDeclaration>> _function = new Function1<VariableDeclarationOrBinding, EList<VariableDeclaration>>() {
 			public EList<VariableDeclaration> apply(final VariableDeclarationOrBinding it) {
@@ -157,6 +161,7 @@ public class VariableStatementImpl extends StatementImpl implements VariableStat
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isBlockScoped() {
 		boolean _switchResult = false;
 		VariableStatementKeyword _varStmtKeyword = this.getVarStmtKeyword();

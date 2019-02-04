@@ -70,6 +70,7 @@ public class ThrowStatementImpl extends StatementImpl implements ThrowStatement 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getExpression() {
 		return expression;
 	}
@@ -94,6 +95,7 @@ public class ThrowStatementImpl extends StatementImpl implements ThrowStatement 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setExpression(Expression newExpression) {
 		if (newExpression != expression) {
 			NotificationChain msgs = null;

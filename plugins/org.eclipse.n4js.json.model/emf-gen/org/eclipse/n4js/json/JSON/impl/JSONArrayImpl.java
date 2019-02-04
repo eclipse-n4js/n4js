@@ -82,6 +82,7 @@ public class JSONArrayImpl extends JSONValueImpl implements JSONArray {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<JSONValue> getElements() {
 		if (elements == null) {
 			elements = new EObjectContainmentEList<JSONValue>(JSONValue.class, this, JSONPackage.JSON_ARRAY__ELEMENTS);
@@ -94,6 +95,7 @@ public class JSONArrayImpl extends JSONValueImpl implements JSONArray {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		final Function1<JSONValue, String> _function = new Function1<JSONValue, String>() {
 			public String apply(final JSONValue e) {

@@ -78,6 +78,7 @@ public abstract class ReferencingElement_IMImpl extends MinimalEObjectImpl.Conta
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SymbolTableEntry getRewiredTarget() {
 		if (rewiredTarget != null && rewiredTarget.eIsProxy()) {
 			InternalEObject oldRewiredTarget = (InternalEObject)rewiredTarget;
@@ -119,6 +120,7 @@ public abstract class ReferencingElement_IMImpl extends MinimalEObjectImpl.Conta
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setRewiredTarget(SymbolTableEntry newRewiredTarget) {
 		if (newRewiredTarget != rewiredTarget) {
 			NotificationChain msgs = null;
@@ -138,6 +140,7 @@ public abstract class ReferencingElement_IMImpl extends MinimalEObjectImpl.Conta
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public IdentifiableElement getOriginalTargetOfRewiredTarget() {
 		final SymbolTableEntry declaredTypeSTE = this.getRewiredTarget();
 		if ((declaredTypeSTE instanceof SymbolTableEntryOriginal)) {

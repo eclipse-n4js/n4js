@@ -121,6 +121,7 @@ public class BindingElementImpl extends ProxyResolvingEObjectImpl implements Bin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isRest() {
 		return rest;
 	}
@@ -130,6 +131,7 @@ public class BindingElementImpl extends ProxyResolvingEObjectImpl implements Bin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setRest(boolean newRest) {
 		boolean oldRest = rest;
 		rest = newRest;
@@ -142,6 +144,7 @@ public class BindingElementImpl extends ProxyResolvingEObjectImpl implements Bin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public VariableDeclaration getVarDecl() {
 		return varDecl;
 	}
@@ -166,6 +169,7 @@ public class BindingElementImpl extends ProxyResolvingEObjectImpl implements Bin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setVarDecl(VariableDeclaration newVarDecl) {
 		if (newVarDecl != varDecl) {
 			NotificationChain msgs = null;
@@ -185,6 +189,7 @@ public class BindingElementImpl extends ProxyResolvingEObjectImpl implements Bin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public BindingPattern getNestedPattern() {
 		return nestedPattern;
 	}
@@ -209,6 +214,7 @@ public class BindingElementImpl extends ProxyResolvingEObjectImpl implements Bin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setNestedPattern(BindingPattern newNestedPattern) {
 		if (newNestedPattern != nestedPattern) {
 			NotificationChain msgs = null;
@@ -228,6 +234,7 @@ public class BindingElementImpl extends ProxyResolvingEObjectImpl implements Bin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getExpression() {
 		return expression;
 	}
@@ -252,6 +259,7 @@ public class BindingElementImpl extends ProxyResolvingEObjectImpl implements Bin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setExpression(Expression newExpression) {
 		if (newExpression != expression) {
 			NotificationChain msgs = null;
@@ -271,6 +279,7 @@ public class BindingElementImpl extends ProxyResolvingEObjectImpl implements Bin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isElision() {
 		return ((this.getVarDecl() == null) && (this.getNestedPattern() == null));
 	}

@@ -259,6 +259,7 @@ public class TVariableImpl extends TExportableElementImpl implements TVariable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isConst() {
 		return const_;
 	}
@@ -268,6 +269,7 @@ public class TVariableImpl extends TExportableElementImpl implements TVariable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setConst(boolean newConst) {
 		boolean oldConst = const_;
 		const_ = newConst;
@@ -280,6 +282,7 @@ public class TVariableImpl extends TExportableElementImpl implements TVariable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getCompileTimeValue() {
 		return compileTimeValue;
 	}
@@ -289,6 +292,7 @@ public class TVariableImpl extends TExportableElementImpl implements TVariable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setCompileTimeValue(String newCompileTimeValue) {
 		String oldCompileTimeValue = compileTimeValue;
 		compileTimeValue = newCompileTimeValue;
@@ -301,6 +305,7 @@ public class TVariableImpl extends TExportableElementImpl implements TVariable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EObject getAstElement() {
 		if (astElement != null && astElement.eIsProxy()) {
 			InternalEObject oldAstElement = (InternalEObject)astElement;
@@ -327,6 +332,7 @@ public class TVariableImpl extends TExportableElementImpl implements TVariable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAstElement(EObject newAstElement) {
 		EObject oldAstElement = astElement;
 		astElement = newAstElement;
@@ -339,6 +345,7 @@ public class TVariableImpl extends TExportableElementImpl implements TVariable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TAnnotation> getAnnotations() {
 		if (annotations == null) {
 			annotations = new EObjectContainmentEList<TAnnotation>(TAnnotation.class, this, TypesPackage.TVARIABLE__ANNOTATIONS);
@@ -351,6 +358,7 @@ public class TVariableImpl extends TExportableElementImpl implements TVariable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypeAccessModifier getDeclaredTypeAccessModifier() {
 		return declaredTypeAccessModifier;
 	}
@@ -360,6 +368,7 @@ public class TVariableImpl extends TExportableElementImpl implements TVariable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDeclaredTypeAccessModifier(TypeAccessModifier newDeclaredTypeAccessModifier) {
 		TypeAccessModifier oldDeclaredTypeAccessModifier = declaredTypeAccessModifier;
 		declaredTypeAccessModifier = newDeclaredTypeAccessModifier == null ? DECLARED_TYPE_ACCESS_MODIFIER_EDEFAULT : newDeclaredTypeAccessModifier;
@@ -372,6 +381,7 @@ public class TVariableImpl extends TExportableElementImpl implements TVariable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isDeclaredProvidedByRuntime() {
 		return declaredProvidedByRuntime;
 	}
@@ -381,6 +391,7 @@ public class TVariableImpl extends TExportableElementImpl implements TVariable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDeclaredProvidedByRuntime(boolean newDeclaredProvidedByRuntime) {
 		boolean oldDeclaredProvidedByRuntime = declaredProvidedByRuntime;
 		declaredProvidedByRuntime = newDeclaredProvidedByRuntime;
@@ -393,6 +404,7 @@ public class TVariableImpl extends TExportableElementImpl implements TVariable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypeRef getTypeRef() {
 		return typeRef;
 	}
@@ -417,6 +429,7 @@ public class TVariableImpl extends TExportableElementImpl implements TVariable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTypeRef(TypeRef newTypeRef) {
 		if (newTypeRef != typeRef) {
 			NotificationChain msgs = null;
@@ -436,6 +449,7 @@ public class TVariableImpl extends TExportableElementImpl implements TVariable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isExternal() {
 		return external;
 	}
@@ -445,6 +459,7 @@ public class TVariableImpl extends TExportableElementImpl implements TVariable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setExternal(boolean newExternal) {
 		boolean oldExternal = external;
 		external = newExternal;
@@ -457,6 +472,7 @@ public class TVariableImpl extends TExportableElementImpl implements TVariable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isObjectLiteral() {
 		return objectLiteral;
 	}
@@ -466,6 +482,7 @@ public class TVariableImpl extends TExportableElementImpl implements TVariable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setObjectLiteral(boolean newObjectLiteral) {
 		boolean oldObjectLiteral = objectLiteral;
 		objectLiteral = newObjectLiteral;
@@ -478,6 +495,7 @@ public class TVariableImpl extends TExportableElementImpl implements TVariable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isNewExpression() {
 		return newExpression;
 	}
@@ -487,6 +505,7 @@ public class TVariableImpl extends TExportableElementImpl implements TVariable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setNewExpression(boolean newNewExpression) {
 		boolean oldNewExpression = newExpression;
 		newExpression = newNewExpression;
@@ -499,6 +518,7 @@ public class TVariableImpl extends TExportableElementImpl implements TVariable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getVariableAsString() {
 		final StringBuilder strb = new StringBuilder();
 		boolean _isConst = this.isConst();
@@ -522,6 +542,7 @@ public class TVariableImpl extends TExportableElementImpl implements TVariable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isProvidedByRuntime() {
 		return this.isDeclaredProvidedByRuntime();
 	}
@@ -531,6 +552,7 @@ public class TVariableImpl extends TExportableElementImpl implements TVariable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypeAccessModifier getTypeAccessModifier() {
 		TypeAccessModifier _declaredTypeAccessModifier = this.getDeclaredTypeAccessModifier();
 		boolean _equals = Objects.equal(_declaredTypeAccessModifier, TypeAccessModifier.UNDEFINED);

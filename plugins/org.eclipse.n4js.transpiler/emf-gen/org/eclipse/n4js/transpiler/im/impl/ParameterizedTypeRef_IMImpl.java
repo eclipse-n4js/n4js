@@ -84,6 +84,7 @@ public class ParameterizedTypeRef_IMImpl extends ParameterizedTypeRefImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SymbolTableEntry getRewiredTarget() {
 		if (rewiredTarget != null && rewiredTarget.eIsProxy()) {
 			InternalEObject oldRewiredTarget = (InternalEObject)rewiredTarget;
@@ -125,6 +126,7 @@ public class ParameterizedTypeRef_IMImpl extends ParameterizedTypeRefImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setRewiredTarget(SymbolTableEntry newRewiredTarget) {
 		if (newRewiredTarget != rewiredTarget) {
 			NotificationChain msgs = null;
@@ -144,6 +146,7 @@ public class ParameterizedTypeRef_IMImpl extends ParameterizedTypeRefImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SymbolTableEntry getDeclaredType_IM() {
 		return this.getRewiredTarget();
 	}
@@ -153,6 +156,7 @@ public class ParameterizedTypeRef_IMImpl extends ParameterizedTypeRefImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDeclaredType_IM(final SymbolTableEntry target) {
 		this.setRewiredTarget(target);
 	}
@@ -162,6 +166,7 @@ public class ParameterizedTypeRef_IMImpl extends ParameterizedTypeRefImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Type getDeclaredType() {
 		return null;
 	}
@@ -171,6 +176,7 @@ public class ParameterizedTypeRef_IMImpl extends ParameterizedTypeRefImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDeclaredType(final Type ix) {
 		if ((ix != null)) {
 			throw new IllegalArgumentException("ParameterizedTypeRef_IM cannot accept types. Use #declaredType_IM.");
@@ -182,6 +188,7 @@ public class ParameterizedTypeRef_IMImpl extends ParameterizedTypeRefImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public IdentifiableElement getOriginalTargetOfRewiredTarget() {
 		final SymbolTableEntry declaredTypeSTE = this.getRewiredTarget();
 		if ((declaredTypeSTE instanceof SymbolTableEntryOriginal)) {

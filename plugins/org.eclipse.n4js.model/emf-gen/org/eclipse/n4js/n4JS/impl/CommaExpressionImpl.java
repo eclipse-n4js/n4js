@@ -74,6 +74,7 @@ public class CommaExpressionImpl extends ExpressionImpl implements CommaExpressi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Expression> getExprs() {
 		if (exprs == null) {
 			exprs = new EObjectContainmentEList<Expression>(Expression.class, this, N4JSPackage.COMMA_EXPRESSION__EXPRS);

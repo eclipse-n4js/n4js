@@ -87,6 +87,7 @@ public class ArrowFunctionImpl extends FunctionExpressionImpl implements ArrowFu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isHasBracesAroundBody() {
 		return hasBracesAroundBody;
 	}
@@ -96,6 +97,7 @@ public class ArrowFunctionImpl extends FunctionExpressionImpl implements ArrowFu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setHasBracesAroundBody(boolean newHasBracesAroundBody) {
 		boolean oldHasBracesAroundBody = hasBracesAroundBody;
 		hasBracesAroundBody = newHasBracesAroundBody;
@@ -108,6 +110,7 @@ public class ArrowFunctionImpl extends FunctionExpressionImpl implements ArrowFu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isArrowFunction() {
 		return true;
 	}
@@ -117,6 +120,7 @@ public class ArrowFunctionImpl extends FunctionExpressionImpl implements ArrowFu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isSingleExprImplicitReturn() {
 		return ((((this.isArrowFunction() && 
 			(!this.isHasBracesAroundBody())) && (this.getBody() != null)) && 
@@ -128,6 +132,7 @@ public class ArrowFunctionImpl extends FunctionExpressionImpl implements ArrowFu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getSingleExpression() {
 		Statement _head = IterableExtensions.<Statement>head(this.getBody().getStatements());
 		return ((ExpressionStatement) _head).getExpression();
@@ -138,6 +143,7 @@ public class ArrowFunctionImpl extends FunctionExpressionImpl implements ArrowFu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression implicitReturnExpr() {
 		Expression _xifexpression = null;
 		boolean _isSingleExprImplicitReturn = this.isSingleExprImplicitReturn();

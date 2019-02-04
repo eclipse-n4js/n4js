@@ -51,6 +51,7 @@ public class LocalArgumentsVariableImpl extends VariableImpl implements LocalArg
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return "arguments";
 	}

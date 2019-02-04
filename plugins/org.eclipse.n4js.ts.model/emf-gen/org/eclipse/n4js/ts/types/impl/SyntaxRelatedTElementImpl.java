@@ -71,6 +71,7 @@ public abstract class SyntaxRelatedTElementImpl extends ProxyResolvingEObjectImp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EObject getAstElement() {
 		if (astElement != null && astElement.eIsProxy()) {
 			InternalEObject oldAstElement = (InternalEObject)astElement;
@@ -97,6 +98,7 @@ public abstract class SyntaxRelatedTElementImpl extends ProxyResolvingEObjectImp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAstElement(EObject newAstElement) {
 		EObject oldAstElement = astElement;
 		astElement = newAstElement;

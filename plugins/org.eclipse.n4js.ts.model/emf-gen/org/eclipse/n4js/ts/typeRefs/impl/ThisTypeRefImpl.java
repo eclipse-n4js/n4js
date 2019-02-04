@@ -58,6 +58,7 @@ public class ThisTypeRefImpl extends BaseTypeRefImpl implements ThisTypeRef {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getTypeRefAsString() {
 		String _modifiersAsString = this.getModifiersAsString();
 		return ("this" + _modifiersAsString);
@@ -68,6 +69,7 @@ public class ThisTypeRefImpl extends BaseTypeRefImpl implements ThisTypeRef {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypingStrategy getTypingStrategy() {
 		return TypingStrategy.NOMINAL;
 	}
@@ -77,6 +79,7 @@ public class ThisTypeRefImpl extends BaseTypeRefImpl implements ThisTypeRef {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TStructMember> getStructuralMembers() {
 		return XcoreCollectionLiterals.<TStructMember>emptyEList();
 	}
@@ -86,6 +89,7 @@ public class ThisTypeRefImpl extends BaseTypeRefImpl implements ThisTypeRef {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isUseSiteStructuralTyping() {
 		return false;
 	}

@@ -99,8 +99,6 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 		switch (eDataType.getClassifierID()) {
 			case TypeRefsPackage.OPTIONAL_FIELD_STRATEGY:
 				return createOptionalFieldStrategyFromString(eDataType, initialValue);
-			case TypeRefsPackage.PARAMETERIZED_TYPE_REF_ITERABLE:
-				return createParameterizedTypeRefIterableFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -116,8 +114,6 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 		switch (eDataType.getClassifierID()) {
 			case TypeRefsPackage.OPTIONAL_FIELD_STRATEGY:
 				return convertOptionalFieldStrategyToString(eDataType, instanceValue);
-			case TypeRefsPackage.PARAMETERIZED_TYPE_REF_ITERABLE:
-				return convertParameterizedTypeRefIterableToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -128,6 +124,7 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public UnionTypeExpression createUnionTypeExpression() {
 		UnionTypeExpressionImpl unionTypeExpression = new UnionTypeExpressionImpl();
 		return unionTypeExpression;
@@ -138,6 +135,7 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public IntersectionTypeExpression createIntersectionTypeExpression() {
 		IntersectionTypeExpressionImpl intersectionTypeExpression = new IntersectionTypeExpressionImpl();
 		return intersectionTypeExpression;
@@ -148,6 +146,7 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ThisTypeRef createThisTypeRef() {
 		ThisTypeRefImpl thisTypeRef = new ThisTypeRefImpl();
 		return thisTypeRef;
@@ -158,6 +157,7 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ThisTypeRefNominal createThisTypeRefNominal() {
 		ThisTypeRefNominalImpl thisTypeRefNominal = new ThisTypeRefNominalImpl();
 		return thisTypeRefNominal;
@@ -168,6 +168,7 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ThisTypeRefStructural createThisTypeRefStructural() {
 		ThisTypeRefStructuralImpl thisTypeRefStructural = new ThisTypeRefStructuralImpl();
 		return thisTypeRefStructural;
@@ -178,6 +179,7 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public BoundThisTypeRef createBoundThisTypeRef() {
 		BoundThisTypeRefImpl boundThisTypeRef = new BoundThisTypeRefImpl();
 		return boundThisTypeRef;
@@ -188,6 +190,7 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ParameterizedTypeRef createParameterizedTypeRef() {
 		ParameterizedTypeRefImpl parameterizedTypeRef = new ParameterizedTypeRefImpl();
 		return parameterizedTypeRef;
@@ -198,6 +201,7 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ParameterizedTypeRefStructural createParameterizedTypeRefStructural() {
 		ParameterizedTypeRefStructuralImpl parameterizedTypeRefStructural = new ParameterizedTypeRefStructuralImpl();
 		return parameterizedTypeRefStructural;
@@ -208,6 +212,7 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ExistentialTypeRef createExistentialTypeRef() {
 		ExistentialTypeRefImpl existentialTypeRef = new ExistentialTypeRefImpl();
 		return existentialTypeRef;
@@ -218,6 +223,7 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public UnknownTypeRef createUnknownTypeRef() {
 		UnknownTypeRefImpl unknownTypeRef = new UnknownTypeRefImpl();
 		return unknownTypeRef;
@@ -228,6 +234,7 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypeTypeRef createTypeTypeRef() {
 		TypeTypeRefImpl typeTypeRef = new TypeTypeRefImpl();
 		return typeTypeRef;
@@ -238,6 +245,7 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Wildcard createWildcard() {
 		WildcardImpl wildcard = new WildcardImpl();
 		return wildcard;
@@ -248,6 +256,7 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public FunctionTypeRef createFunctionTypeRef() {
 		FunctionTypeRefImpl functionTypeRef = new FunctionTypeRefImpl();
 		return functionTypeRef;
@@ -258,6 +267,7 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public FunctionTypeExpression createFunctionTypeExpression() {
 		FunctionTypeExpressionImpl functionTypeExpression = new FunctionTypeExpressionImpl();
 		return functionTypeExpression;
@@ -268,6 +278,7 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public DeferredTypeRef createDeferredTypeRef() {
 		DeferredTypeRefImpl deferredTypeRef = new DeferredTypeRefImpl();
 		return deferredTypeRef;
@@ -278,6 +289,7 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypeVariableMapping createTypeVariableMapping() {
 		TypeVariableMappingImpl typeVariableMapping = new TypeVariableMappingImpl();
 		return typeVariableMapping;
@@ -288,6 +300,7 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public VersionedParameterizedTypeRef createVersionedParameterizedTypeRef() {
 		VersionedParameterizedTypeRefImpl versionedParameterizedTypeRef = new VersionedParameterizedTypeRefImpl();
 		return versionedParameterizedTypeRef;
@@ -298,6 +311,7 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public VersionedFunctionTypeRef createVersionedFunctionTypeRef() {
 		VersionedFunctionTypeRefImpl versionedFunctionTypeRef = new VersionedFunctionTypeRefImpl();
 		return versionedFunctionTypeRef;
@@ -308,6 +322,7 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public VersionedParameterizedTypeRefStructural createVersionedParameterizedTypeRefStructural() {
 		VersionedParameterizedTypeRefStructuralImpl versionedParameterizedTypeRefStructural = new VersionedParameterizedTypeRefStructuralImpl();
 		return versionedParameterizedTypeRefStructural;
@@ -338,25 +353,7 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
-	public Iterable<ParameterizedTypeRef> createParameterizedTypeRefIterableFromString(EDataType eDataType, String initialValue) {
-		return (Iterable<ParameterizedTypeRef>)super.createFromString(initialValue);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String convertParameterizedTypeRefIterableToString(EDataType eDataType, Object instanceValue) {
-		return super.convertToString(instanceValue);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+	@Override
 	public TypeRefsPackage getTypeRefsPackage() {
 		return (TypeRefsPackage)getEPackage();
 	}

@@ -91,6 +91,7 @@ public class URLSemverImpl extends URLVersionSpecifierImpl implements URLSemver 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SimpleVersion getSimpleVersion() {
 		return simpleVersion;
 	}
@@ -115,6 +116,7 @@ public class URLSemverImpl extends URLVersionSpecifierImpl implements URLSemver 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSimpleVersion(SimpleVersion newSimpleVersion) {
 		if (newSimpleVersion != simpleVersion) {
 			NotificationChain msgs = null;
@@ -134,6 +136,7 @@ public class URLSemverImpl extends URLVersionSpecifierImpl implements URLSemver 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isWithSemverTag() {
 		return withSemverTag;
 	}
@@ -143,6 +146,7 @@ public class URLSemverImpl extends URLVersionSpecifierImpl implements URLSemver 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setWithSemverTag(boolean newWithSemverTag) {
 		boolean oldWithSemverTag = withSemverTag;
 		withSemverTag = newWithSemverTag;

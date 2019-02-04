@@ -79,6 +79,7 @@ public abstract class ParameterizedAccessImpl extends ProxyResolvingEObjectImpl 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TypeRef> getTypeArgs() {
 		if (typeArgs == null) {
 			typeArgs = new EObjectContainmentEList<TypeRef>(TypeRef.class, this, N4JSPackage.PARAMETERIZED_ACCESS__TYPE_ARGS);
@@ -91,6 +92,7 @@ public abstract class ParameterizedAccessImpl extends ProxyResolvingEObjectImpl 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isParameterized() {
 		boolean _isEmpty = this.getTypeArgs().isEmpty();
 		return (!_isEmpty);

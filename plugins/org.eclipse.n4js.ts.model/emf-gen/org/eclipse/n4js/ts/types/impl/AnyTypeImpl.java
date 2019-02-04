@@ -52,6 +52,7 @@ public class AnyTypeImpl extends BuiltInTypeImpl implements AnyType {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isFinal() {
 		return false;
 	}

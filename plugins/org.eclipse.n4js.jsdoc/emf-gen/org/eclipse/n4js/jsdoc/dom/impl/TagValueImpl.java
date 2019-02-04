@@ -77,6 +77,7 @@ public class TagValueImpl extends CompositeImpl implements TagValue {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getKey() {
 		return key;
 	}
@@ -86,6 +87,7 @@ public class TagValueImpl extends CompositeImpl implements TagValue {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setKey(String newKey) {
 		String oldKey = key;
 		key = newKey;

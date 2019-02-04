@@ -172,6 +172,7 @@ public class TFormalParameterImpl extends IdentifiableElementImpl implements TFo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TAnnotation> getAnnotations() {
 		if (annotations == null) {
 			annotations = new EObjectContainmentEList<TAnnotation>(TAnnotation.class, this, TypesPackage.TFORMAL_PARAMETER__ANNOTATIONS);
@@ -184,6 +185,7 @@ public class TFormalParameterImpl extends IdentifiableElementImpl implements TFo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EObject getAstElement() {
 		if (astElement != null && astElement.eIsProxy()) {
 			InternalEObject oldAstElement = (InternalEObject)astElement;
@@ -210,6 +212,7 @@ public class TFormalParameterImpl extends IdentifiableElementImpl implements TFo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAstElement(EObject newAstElement) {
 		EObject oldAstElement = astElement;
 		astElement = newAstElement;
@@ -222,6 +225,7 @@ public class TFormalParameterImpl extends IdentifiableElementImpl implements TFo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypeRef getTypeRef() {
 		return typeRef;
 	}
@@ -246,6 +250,7 @@ public class TFormalParameterImpl extends IdentifiableElementImpl implements TFo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTypeRef(TypeRef newTypeRef) {
 		if (newTypeRef != typeRef) {
 			NotificationChain msgs = null;
@@ -265,6 +270,7 @@ public class TFormalParameterImpl extends IdentifiableElementImpl implements TFo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isVariadic() {
 		return variadic;
 	}
@@ -274,6 +280,7 @@ public class TFormalParameterImpl extends IdentifiableElementImpl implements TFo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setVariadic(boolean newVariadic) {
 		boolean oldVariadic = variadic;
 		variadic = newVariadic;
@@ -286,6 +293,7 @@ public class TFormalParameterImpl extends IdentifiableElementImpl implements TFo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getAstInitializer() {
 		return astInitializer;
 	}
@@ -295,6 +303,7 @@ public class TFormalParameterImpl extends IdentifiableElementImpl implements TFo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAstInitializer(String newAstInitializer) {
 		String oldAstInitializer = astInitializer;
 		astInitializer = newAstInitializer;
@@ -307,6 +316,7 @@ public class TFormalParameterImpl extends IdentifiableElementImpl implements TFo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isHasInitializerAssignment() {
 		return hasInitializerAssignment;
 	}
@@ -316,6 +326,7 @@ public class TFormalParameterImpl extends IdentifiableElementImpl implements TFo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setHasInitializerAssignment(boolean newHasInitializerAssignment) {
 		boolean oldHasInitializerAssignment = hasInitializerAssignment;
 		hasInitializerAssignment = newHasInitializerAssignment;
@@ -328,6 +339,7 @@ public class TFormalParameterImpl extends IdentifiableElementImpl implements TFo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean hasASTInitializer() {
 		String _astInitializer = this.getAstInitializer();
 		return (_astInitializer != null);
@@ -338,6 +350,7 @@ public class TFormalParameterImpl extends IdentifiableElementImpl implements TFo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isOptional() {
 		EList<TFormalParameter> _switchResult = null;
 		EObject _eContainer = this.eContainer();
@@ -374,6 +387,7 @@ public class TFormalParameterImpl extends IdentifiableElementImpl implements TFo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isVariadicOrOptional() {
 		return (this.isVariadic() || this.isOptional());
 	}
@@ -383,6 +397,7 @@ public class TFormalParameterImpl extends IdentifiableElementImpl implements TFo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getFormalParameterAsTypesString() {
 		final StringBuilder strb = new StringBuilder();
 		boolean _isVariadic = this.isVariadic();
@@ -409,6 +424,7 @@ public class TFormalParameterImpl extends IdentifiableElementImpl implements TFo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getFormalParameterAsString() {
 		final StringBuilder strb = new StringBuilder();
 		boolean _isVariadic = this.isVariadic();

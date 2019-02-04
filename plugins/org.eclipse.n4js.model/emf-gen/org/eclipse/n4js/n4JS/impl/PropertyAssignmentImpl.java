@@ -83,6 +83,7 @@ public abstract class PropertyAssignmentImpl extends AnnotableElementImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public LiteralOrComputedPropertyName getDeclaredName() {
 		return declaredName;
 	}
@@ -107,6 +108,7 @@ public abstract class PropertyAssignmentImpl extends AnnotableElementImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDeclaredName(LiteralOrComputedPropertyName newDeclaredName) {
 		if (newDeclaredName != declaredName) {
 			NotificationChain msgs = null;
@@ -126,6 +128,7 @@ public abstract class PropertyAssignmentImpl extends AnnotableElementImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TStructMember getDefinedMember() {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT
@@ -137,6 +140,7 @@ public abstract class PropertyAssignmentImpl extends AnnotableElementImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isValidName() {
 		String _name = this.getName();
 		boolean _equals = Objects.equal("prototype", _name);
@@ -168,6 +172,7 @@ public abstract class PropertyAssignmentImpl extends AnnotableElementImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		LiteralOrComputedPropertyName _declaredName = this.getDeclaredName();
 		String _name = null;
@@ -182,6 +187,7 @@ public abstract class PropertyAssignmentImpl extends AnnotableElementImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean hasComputedPropertyName() {
 		final LiteralOrComputedPropertyName declName = this.getDeclaredName();
 		return ((declName != null) && declName.hasComputedPropertyName());
@@ -192,6 +198,7 @@ public abstract class PropertyAssignmentImpl extends AnnotableElementImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean appliesOnlyToBlockScopedElements() {
 		return false;
 	}

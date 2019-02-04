@@ -88,6 +88,7 @@ public class SymbolTableEntryOriginalImpl extends SymbolTableEntryImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public IdentifiableElement getOriginalTarget() {
 		if (originalTarget != null && originalTarget.eIsProxy()) {
 			InternalEObject oldOriginalTarget = (InternalEObject)originalTarget;
@@ -114,6 +115,7 @@ public class SymbolTableEntryOriginalImpl extends SymbolTableEntryImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setOriginalTarget(IdentifiableElement newOriginalTarget) {
 		IdentifiableElement oldOriginalTarget = originalTarget;
 		originalTarget = newOriginalTarget;
@@ -126,6 +128,7 @@ public class SymbolTableEntryOriginalImpl extends SymbolTableEntryImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ImportSpecifier getImportSpecifier() {
 		if (importSpecifier != null && importSpecifier.eIsProxy()) {
 			InternalEObject oldImportSpecifier = (InternalEObject)importSpecifier;
@@ -152,6 +155,7 @@ public class SymbolTableEntryOriginalImpl extends SymbolTableEntryImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setImportSpecifier(ImportSpecifier newImportSpecifier) {
 		ImportSpecifier oldImportSpecifier = importSpecifier;
 		importSpecifier = newImportSpecifier;
@@ -164,6 +168,7 @@ public class SymbolTableEntryOriginalImpl extends SymbolTableEntryImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String exportedName() {
 		final IdentifiableElement trgt = this.getOriginalTarget();
 		if ((trgt instanceof TExportableElement)) {

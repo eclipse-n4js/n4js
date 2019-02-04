@@ -82,6 +82,7 @@ public class TemplateLiteralImpl extends PrimaryExpressionImpl implements Templa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Expression> getSegments() {
 		if (segments == null) {
 			segments = new EObjectContainmentEList<Expression>(Expression.class, this, N4JSPackage.TEMPLATE_LITERAL__SEGMENTS);
@@ -94,6 +95,7 @@ public class TemplateLiteralImpl extends PrimaryExpressionImpl implements Templa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getValueAsString() {
 		final StringBuilder result = new StringBuilder("`");
 		final Function1<Expression, StringBuilder> _function = new Function1<Expression, StringBuilder>() {

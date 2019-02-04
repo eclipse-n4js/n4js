@@ -53,6 +53,7 @@ public abstract class VersionableImpl extends ProxyResolvingEObjectImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getVersion() {
 		return 0;
 	}

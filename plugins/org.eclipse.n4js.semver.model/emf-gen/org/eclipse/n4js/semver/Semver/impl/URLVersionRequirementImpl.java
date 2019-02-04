@@ -118,6 +118,7 @@ public class URLVersionRequirementImpl extends NPMVersionRequirementImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public URLVersionSpecifier getVersionSpecifier() {
 		return versionSpecifier;
 	}
@@ -142,6 +143,7 @@ public class URLVersionRequirementImpl extends NPMVersionRequirementImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setVersionSpecifier(URLVersionSpecifier newVersionSpecifier) {
 		if (newVersionSpecifier != versionSpecifier) {
 			NotificationChain msgs = null;
@@ -161,6 +163,7 @@ public class URLVersionRequirementImpl extends NPMVersionRequirementImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getProtocol() {
 		return protocol;
 	}
@@ -170,6 +173,7 @@ public class URLVersionRequirementImpl extends NPMVersionRequirementImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setProtocol(String newProtocol) {
 		String oldProtocol = protocol;
 		protocol = newProtocol;
@@ -182,6 +186,7 @@ public class URLVersionRequirementImpl extends NPMVersionRequirementImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getUrl() {
 		return url;
 	}
@@ -191,6 +196,7 @@ public class URLVersionRequirementImpl extends NPMVersionRequirementImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setUrl(String newUrl) {
 		String oldUrl = url;
 		url = newUrl;
@@ -203,6 +209,7 @@ public class URLVersionRequirementImpl extends NPMVersionRequirementImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean hasSimpleVersion() {
 		SimpleVersion _simpleVersion = this.getSimpleVersion();
 		return (_simpleVersion != null);
@@ -213,6 +220,7 @@ public class URLVersionRequirementImpl extends NPMVersionRequirementImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SimpleVersion getSimpleVersion() {
 		URLVersionSpecifier _versionSpecifier = this.getVersionSpecifier();
 		if ((_versionSpecifier instanceof URLSemver)) {

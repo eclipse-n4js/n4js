@@ -55,6 +55,7 @@ public abstract class TypeArgumentImpl extends ProxyResolvingEObjectImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getTypeRefAsString() {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT
@@ -66,6 +67,7 @@ public abstract class TypeArgumentImpl extends ProxyResolvingEObjectImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean containsWildcards() {
 		return false;
 	}
@@ -75,6 +77,7 @@ public abstract class TypeArgumentImpl extends ProxyResolvingEObjectImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean containsUnboundTypeVariables() {
 		return false;
 	}
@@ -84,6 +87,7 @@ public abstract class TypeArgumentImpl extends ProxyResolvingEObjectImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Type getDeclaredType() {
 		return null;
 	}

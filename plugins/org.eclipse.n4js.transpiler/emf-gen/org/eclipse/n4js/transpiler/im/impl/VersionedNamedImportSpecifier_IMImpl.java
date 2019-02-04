@@ -85,6 +85,7 @@ public class VersionedNamedImportSpecifier_IMImpl extends NamedImportSpecifierIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<SymbolTableEntryOriginal> getImportedTypeVersions() {
 		if (importedTypeVersions == null) {
 			importedTypeVersions = new EObjectResolvingEList<SymbolTableEntryOriginal>(SymbolTableEntryOriginal.class, this, ImPackage.VERSIONED_NAMED_IMPORT_SPECIFIER_IM__IMPORTED_TYPE_VERSIONS);
@@ -97,6 +98,7 @@ public class VersionedNamedImportSpecifier_IMImpl extends NamedImportSpecifierIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isVersionedTypeImport() {
 		return ((this.getImportedTypeVersions().size() > 0) && ((this.getImportedTypeVersions().size() > 1) || 
 			VersionableUtils.isTVersionable(this.getImportedTypeVersions().get(0).getOriginalTarget())));

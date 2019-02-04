@@ -137,6 +137,7 @@ public abstract class MethodDeclarationImpl extends FunctionDefinitionImpl imple
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TypeVariable> getTypeVars() {
 		if (typeVars == null) {
 			typeVars = new EObjectContainmentEList<TypeVariable>(TypeVariable.class, this, N4JSPackage.METHOD_DECLARATION__TYPE_VARS);
@@ -149,6 +150,7 @@ public abstract class MethodDeclarationImpl extends FunctionDefinitionImpl imple
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypeRef getDeclaredTypeRef() {
 		return declaredTypeRef;
 	}
@@ -173,6 +175,7 @@ public abstract class MethodDeclarationImpl extends FunctionDefinitionImpl imple
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDeclaredTypeRef(TypeRef newDeclaredTypeRef) {
 		if (newDeclaredTypeRef != declaredTypeRef) {
 			NotificationChain msgs = null;
@@ -192,6 +195,7 @@ public abstract class MethodDeclarationImpl extends FunctionDefinitionImpl imple
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypeRef getBogusTypeRef() {
 		return bogusTypeRef;
 	}
@@ -216,6 +220,7 @@ public abstract class MethodDeclarationImpl extends FunctionDefinitionImpl imple
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setBogusTypeRef(TypeRef newBogusTypeRef) {
 		if (newBogusTypeRef != bogusTypeRef) {
 			NotificationChain msgs = null;
@@ -235,6 +240,7 @@ public abstract class MethodDeclarationImpl extends FunctionDefinitionImpl imple
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public LiteralOrComputedPropertyName getDeclaredName() {
 		return declaredName;
 	}
@@ -259,6 +265,7 @@ public abstract class MethodDeclarationImpl extends FunctionDefinitionImpl imple
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDeclaredName(LiteralOrComputedPropertyName newDeclaredName) {
 		if (newDeclaredName != declaredName) {
 			NotificationChain msgs = null;
@@ -278,6 +285,7 @@ public abstract class MethodDeclarationImpl extends FunctionDefinitionImpl imple
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean existsExplicitSuperCall() {
 		final Function1<ExpressionStatement, Expression> _function = new Function1<ExpressionStatement, Expression>() {
 			public Expression apply(final ExpressionStatement it) {
@@ -299,6 +307,7 @@ public abstract class MethodDeclarationImpl extends FunctionDefinitionImpl imple
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TMember getDefinedTypeElement() {
 		TMember _xifexpression = null;
 		Type _definedType = this.getDefinedType();
@@ -327,6 +336,7 @@ public abstract class MethodDeclarationImpl extends FunctionDefinitionImpl imple
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isStatic() {
 		return false;
 	}
@@ -336,6 +346,7 @@ public abstract class MethodDeclarationImpl extends FunctionDefinitionImpl imple
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		LiteralOrComputedPropertyName _declaredName = this.getDeclaredName();
 		String _name = null;
@@ -350,6 +361,7 @@ public abstract class MethodDeclarationImpl extends FunctionDefinitionImpl imple
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean hasComputedPropertyName() {
 		final LiteralOrComputedPropertyName declName = this.getDeclaredName();
 		return ((declName != null) && declName.hasComputedPropertyName());
@@ -360,6 +372,7 @@ public abstract class MethodDeclarationImpl extends FunctionDefinitionImpl imple
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isValidName() {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT

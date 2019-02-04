@@ -63,6 +63,7 @@ public class ComposedContentImpl extends CompositeImpl implements ComposedConten
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Composite getOwner() {
 		if (eContainerFeatureID() != DomPackage.COMPOSED_CONTENT__OWNER) return null;
 		return (Composite)eContainer();
@@ -93,6 +94,7 @@ public class ComposedContentImpl extends CompositeImpl implements ComposedConten
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setOwner(Composite newOwner) {
 		if (newOwner != eInternalContainer() || (eContainerFeatureID() != DomPackage.COMPOSED_CONTENT__OWNER && newOwner != null)) {
 			if (EcoreUtil.isAncestor(this, newOwner))

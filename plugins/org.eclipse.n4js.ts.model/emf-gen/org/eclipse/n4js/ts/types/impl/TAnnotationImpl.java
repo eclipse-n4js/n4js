@@ -111,6 +111,7 @@ public class TAnnotationImpl extends ProxyResolvingEObjectImpl implements TAnnot
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -120,6 +121,7 @@ public class TAnnotationImpl extends ProxyResolvingEObjectImpl implements TAnnot
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -132,6 +134,7 @@ public class TAnnotationImpl extends ProxyResolvingEObjectImpl implements TAnnot
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TAnnotationArgument> getArgs() {
 		if (args == null) {
 			args = new EObjectContainmentEList<TAnnotationArgument>(TAnnotationArgument.class, this, TypesPackage.TANNOTATION__ARGS);
@@ -144,6 +147,7 @@ public class TAnnotationImpl extends ProxyResolvingEObjectImpl implements TAnnot
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean hasStringArgument(final String argumentValue) {
 		final Function1<TAnnotationStringArgument, Boolean> _function = new Function1<TAnnotationStringArgument, Boolean>() {
 			public Boolean apply(final TAnnotationStringArgument it) {
@@ -159,6 +163,7 @@ public class TAnnotationImpl extends ProxyResolvingEObjectImpl implements TAnnot
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getAnnotationAsString() {
 		final StringBuilder strb = new StringBuilder();
 		strb.append("@");

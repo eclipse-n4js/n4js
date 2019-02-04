@@ -62,6 +62,7 @@ public class LineTagImpl extends TagImpl implements LineTag {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Doclet getDoclet() {
 		if (eContainerFeatureID() != DomPackage.LINE_TAG__DOCLET) return null;
 		return (Doclet)eContainer();
@@ -92,6 +93,7 @@ public class LineTagImpl extends TagImpl implements LineTag {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDoclet(Doclet newDoclet) {
 		if (newDoclet != eInternalContainer() || (eContainerFeatureID() != DomPackage.LINE_TAG__DOCLET && newDoclet != null)) {
 			if (EcoreUtil.isAncestor(this, newDoclet))

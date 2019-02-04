@@ -86,7 +86,7 @@ public interface TClassifier extends ContainerType<TMember>, SyntaxRelatedTEleme
 	 * *
 	 * Convenience method, returns all super classes and implemented or extended interfaces as type references.
 	 * <!-- end-model-doc -->
-	 * @model kind="operation" dataType="org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefIterable" unique="false"
+	 * @model kind="operation" dataType="org.eclipse.n4js.ts.types.ParameterizedTypeRefIterable" unique="false"
 	 * @generated
 	 */
 	Iterable<ParameterizedTypeRef> getSuperClassifierRefs();
@@ -98,7 +98,7 @@ public interface TClassifier extends ContainerType<TMember>, SyntaxRelatedTEleme
 	 * *
 	 * Convenience method, returns all implemented (or extended) interfaces
 	 * <!-- end-model-doc -->
-	 * @model kind="operation" dataType="org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefIterable" unique="false"
+	 * @model kind="operation" dataType="org.eclipse.n4js.ts.types.ParameterizedTypeRefIterable" unique="false"
 	 * @generated
 	 */
 	Iterable<ParameterizedTypeRef> getImplementedOrExtendedInterfaceRefs();

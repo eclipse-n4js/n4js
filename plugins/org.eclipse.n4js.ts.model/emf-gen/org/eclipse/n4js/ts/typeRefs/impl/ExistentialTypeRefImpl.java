@@ -88,6 +88,7 @@ public class ExistentialTypeRefImpl extends TypeRefImpl implements ExistentialTy
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Wildcard getWildcard() {
 		if (wildcard != null && wildcard.eIsProxy()) {
 			InternalEObject oldWildcard = (InternalEObject)wildcard;
@@ -114,6 +115,7 @@ public class ExistentialTypeRefImpl extends TypeRefImpl implements ExistentialTy
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setWildcard(Wildcard newWildcard) {
 		Wildcard oldWildcard = wildcard;
 		wildcard = newWildcard;
@@ -126,6 +128,7 @@ public class ExistentialTypeRefImpl extends TypeRefImpl implements ExistentialTy
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypeVariable getBoundTypeVariable() {
 		if (boundTypeVariable != null && boundTypeVariable.eIsProxy()) {
 			InternalEObject oldBoundTypeVariable = (InternalEObject)boundTypeVariable;
@@ -152,6 +155,7 @@ public class ExistentialTypeRefImpl extends TypeRefImpl implements ExistentialTy
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setBoundTypeVariable(TypeVariable newBoundTypeVariable) {
 		TypeVariable oldBoundTypeVariable = boundTypeVariable;
 		boundTypeVariable = newBoundTypeVariable;
@@ -164,6 +168,7 @@ public class ExistentialTypeRefImpl extends TypeRefImpl implements ExistentialTy
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isExistential() {
 		return true;
 	}
@@ -173,6 +178,7 @@ public class ExistentialTypeRefImpl extends TypeRefImpl implements ExistentialTy
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isGeneric() {
 		return true;
 	}
@@ -182,6 +188,7 @@ public class ExistentialTypeRefImpl extends TypeRefImpl implements ExistentialTy
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isParameterized() {
 		return true;
 	}
@@ -191,6 +198,7 @@ public class ExistentialTypeRefImpl extends TypeRefImpl implements ExistentialTy
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getTypeRefAsString() {
 		Wildcard _wildcard = this.getWildcard();
 		String _typeRefAsString = null;

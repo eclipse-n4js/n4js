@@ -122,6 +122,7 @@ public class TypeVariableImpl extends TypeImpl implements TypeVariable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isDeclaredCovariant() {
 		return declaredCovariant;
 	}
@@ -131,6 +132,7 @@ public class TypeVariableImpl extends TypeImpl implements TypeVariable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDeclaredCovariant(boolean newDeclaredCovariant) {
 		boolean oldDeclaredCovariant = declaredCovariant;
 		declaredCovariant = newDeclaredCovariant;
@@ -143,6 +145,7 @@ public class TypeVariableImpl extends TypeImpl implements TypeVariable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isDeclaredContravariant() {
 		return declaredContravariant;
 	}
@@ -152,6 +155,7 @@ public class TypeVariableImpl extends TypeImpl implements TypeVariable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDeclaredContravariant(boolean newDeclaredContravariant) {
 		boolean oldDeclaredContravariant = declaredContravariant;
 		declaredContravariant = newDeclaredContravariant;
@@ -164,6 +168,7 @@ public class TypeVariableImpl extends TypeImpl implements TypeVariable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypeRef getDeclaredUpperBound() {
 		return declaredUpperBound;
 	}
@@ -188,6 +193,7 @@ public class TypeVariableImpl extends TypeImpl implements TypeVariable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDeclaredUpperBound(TypeRef newDeclaredUpperBound) {
 		if (newDeclaredUpperBound != declaredUpperBound) {
 			NotificationChain msgs = null;
@@ -207,6 +213,7 @@ public class TypeVariableImpl extends TypeImpl implements TypeVariable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Variance getVariance() {
 		final boolean co = this.isDeclaredCovariant();
 		final boolean contra = this.isDeclaredContravariant();
@@ -228,6 +235,7 @@ public class TypeVariableImpl extends TypeImpl implements TypeVariable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TypeVariable> getTypeVars() {
 		return XcoreCollectionLiterals.<TypeVariable>emptyEList();
 	}
@@ -237,6 +245,7 @@ public class TypeVariableImpl extends TypeImpl implements TypeVariable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getTypeAsString() {
 		return this.getTypeVariableAsString(this.getDeclaredUpperBound());
 	}
@@ -246,6 +255,7 @@ public class TypeVariableImpl extends TypeImpl implements TypeVariable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getTypeVariableAsString(final TypeRef upperBound) {
 		String _xifexpression = null;
 		boolean _isDeclaredCovariant = this.isDeclaredCovariant();

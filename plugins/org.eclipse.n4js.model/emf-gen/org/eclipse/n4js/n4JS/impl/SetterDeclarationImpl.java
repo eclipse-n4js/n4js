@@ -91,6 +91,7 @@ public abstract class SetterDeclarationImpl extends FieldAccessorImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TSetter getDefinedSetter() {
 		if (definedSetter != null && definedSetter.eIsProxy()) {
 			InternalEObject oldDefinedSetter = (InternalEObject)definedSetter;
@@ -117,6 +118,7 @@ public abstract class SetterDeclarationImpl extends FieldAccessorImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDefinedSetter(TSetter newDefinedSetter) {
 		TSetter oldDefinedSetter = definedSetter;
 		definedSetter = newDefinedSetter;
@@ -129,6 +131,7 @@ public abstract class SetterDeclarationImpl extends FieldAccessorImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public FormalParameter getFpar() {
 		return fpar;
 	}
@@ -153,6 +156,7 @@ public abstract class SetterDeclarationImpl extends FieldAccessorImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setFpar(FormalParameter newFpar) {
 		if (newFpar != fpar) {
 			NotificationChain msgs = null;
@@ -172,6 +176,7 @@ public abstract class SetterDeclarationImpl extends FieldAccessorImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TSetter getDefinedAccessor() {
 		return this.getDefinedSetter();
 	}
@@ -181,6 +186,7 @@ public abstract class SetterDeclarationImpl extends FieldAccessorImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypeRef getDeclaredTypeRef() {
 		FormalParameter _fpar = this.getFpar();
 		TypeRef _declaredTypeRef = null;

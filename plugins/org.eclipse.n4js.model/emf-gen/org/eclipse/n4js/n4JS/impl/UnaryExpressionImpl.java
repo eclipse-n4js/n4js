@@ -92,6 +92,7 @@ public class UnaryExpressionImpl extends ExpressionImpl implements UnaryExpressi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public UnaryOperator getOp() {
 		return op;
 	}
@@ -101,6 +102,7 @@ public class UnaryExpressionImpl extends ExpressionImpl implements UnaryExpressi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setOp(UnaryOperator newOp) {
 		UnaryOperator oldOp = op;
 		op = newOp == null ? OP_EDEFAULT : newOp;
@@ -113,6 +115,7 @@ public class UnaryExpressionImpl extends ExpressionImpl implements UnaryExpressi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getExpression() {
 		return expression;
 	}
@@ -137,6 +140,7 @@ public class UnaryExpressionImpl extends ExpressionImpl implements UnaryExpressi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setExpression(Expression newExpression) {
 		if (newExpression != expression) {
 			NotificationChain msgs = null;

@@ -71,6 +71,7 @@ public class QualifierTagImpl extends SemverToStringableImpl implements Qualifie
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<String> getParts() {
 		if (parts == null) {
 			parts = new EDataTypeEList<String>(String.class, this, SemverPackage.QUALIFIER_TAG__PARTS);
@@ -83,6 +84,7 @@ public class QualifierTagImpl extends SemverToStringableImpl implements Qualifie
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean equals(final Object obj) {
 		if ((!(obj instanceof QualifierTag))) {
 			return false;

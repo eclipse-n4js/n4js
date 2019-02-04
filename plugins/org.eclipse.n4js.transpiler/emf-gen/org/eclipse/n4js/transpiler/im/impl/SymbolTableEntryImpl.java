@@ -113,6 +113,7 @@ public abstract class SymbolTableEntryImpl extends MinimalEObjectImpl.Container 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -122,6 +123,7 @@ public abstract class SymbolTableEntryImpl extends MinimalEObjectImpl.Container 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -134,6 +136,7 @@ public abstract class SymbolTableEntryImpl extends MinimalEObjectImpl.Container 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<NamedElement> getElementsOfThisName() {
 		if (elementsOfThisName == null) {
 			elementsOfThisName = new EObjectResolvingEList<NamedElement>(NamedElement.class, this, ImPackage.SYMBOL_TABLE_ENTRY__ELEMENTS_OF_THIS_NAME);
@@ -146,6 +149,7 @@ public abstract class SymbolTableEntryImpl extends MinimalEObjectImpl.Container 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<ReferencingElement_IM> getReferencingElements() {
 		if (referencingElements == null) {
 			referencingElements = new EObjectWithInverseResolvingEList<ReferencingElement_IM>(ReferencingElement_IM.class, this, ImPackage.SYMBOL_TABLE_ENTRY__REFERENCING_ELEMENTS, ImPackage.REFERENCING_ELEMENT_IM__REWIRED_TARGET);

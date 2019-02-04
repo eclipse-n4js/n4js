@@ -132,6 +132,7 @@ public class VersionedParameterizedTypeRefStructuralImpl extends VersionedParame
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TStructMember> getAstStructuralMembers() {
 		if (astStructuralMembers == null) {
 			astStructuralMembers = new EObjectContainmentEList<TStructMember>(TStructMember.class, this, TypeRefsPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL__AST_STRUCTURAL_MEMBERS);
@@ -144,6 +145,7 @@ public class VersionedParameterizedTypeRefStructuralImpl extends VersionedParame
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TStructuralType getStructuralType() {
 		if (structuralType != null && structuralType.eIsProxy()) {
 			InternalEObject oldStructuralType = (InternalEObject)structuralType;
@@ -170,6 +172,7 @@ public class VersionedParameterizedTypeRefStructuralImpl extends VersionedParame
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setStructuralType(TStructuralType newStructuralType) {
 		TStructuralType oldStructuralType = structuralType;
 		structuralType = newStructuralType;
@@ -182,6 +185,7 @@ public class VersionedParameterizedTypeRefStructuralImpl extends VersionedParame
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TStructMember> getGenStructuralMembers() {
 		if (genStructuralMembers == null) {
 			genStructuralMembers = new EObjectContainmentEList<TStructMember>(TStructMember.class, this, TypeRefsPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL__GEN_STRUCTURAL_MEMBERS);
@@ -194,6 +198,7 @@ public class VersionedParameterizedTypeRefStructuralImpl extends VersionedParame
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TypeVariableMapping> getPostponedSubstitutions() {
 		if (postponedSubstitutions == null) {
 			postponedSubstitutions = new EObjectContainmentEList<TypeVariableMapping>(TypeVariableMapping.class, this, TypeRefsPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL__POSTPONED_SUBSTITUTIONS);
@@ -206,6 +211,7 @@ public class VersionedParameterizedTypeRefStructuralImpl extends VersionedParame
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypingStrategy getTypingStrategy() {
 		TypingStrategy _definedTypingStrategy = this.getDefinedTypingStrategy();
 		boolean _tripleEquals = (_definedTypingStrategy == TypingStrategy.DEFAULT);
@@ -222,6 +228,7 @@ public class VersionedParameterizedTypeRefStructuralImpl extends VersionedParame
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTypingStrategy(final TypingStrategy typingStrategy) {
 		boolean _equals = Objects.equal(typingStrategy, TypingStrategy.NOMINAL);
 		if (_equals) {
@@ -235,6 +242,7 @@ public class VersionedParameterizedTypeRefStructuralImpl extends VersionedParame
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TStructMember> getStructuralMembers() {
 		EList<TStructMember> _xifexpression = null;
 		TStructuralType _structuralType = this.getStructuralType();
@@ -262,6 +270,7 @@ public class VersionedParameterizedTypeRefStructuralImpl extends VersionedParame
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getTypeRefAsString() {
 		TypingStrategy _typingStrategy = this.getTypingStrategy();
 		Type _declaredType = this.getDeclaredType();
@@ -328,6 +337,7 @@ public class VersionedParameterizedTypeRefStructuralImpl extends VersionedParame
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean hasPostponedSubstitutionFor(final TypeVariable typeVar) {
 		final Function1<TypeVariableMapping, Boolean> _function = new Function1<TypeVariableMapping, Boolean>() {
 			public Boolean apply(final TypeVariableMapping m) {

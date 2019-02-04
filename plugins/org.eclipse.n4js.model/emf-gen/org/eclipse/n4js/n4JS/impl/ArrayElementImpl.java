@@ -93,6 +93,7 @@ public class ArrayElementImpl extends ProxyResolvingEObjectImpl implements Array
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isSpread() {
 		return spread;
 	}
@@ -102,6 +103,7 @@ public class ArrayElementImpl extends ProxyResolvingEObjectImpl implements Array
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSpread(boolean newSpread) {
 		boolean oldSpread = spread;
 		spread = newSpread;
@@ -114,6 +116,7 @@ public class ArrayElementImpl extends ProxyResolvingEObjectImpl implements Array
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getExpression() {
 		return expression;
 	}
@@ -138,6 +141,7 @@ public class ArrayElementImpl extends ProxyResolvingEObjectImpl implements Array
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setExpression(Expression newExpression) {
 		if (newExpression != expression) {
 			NotificationChain msgs = null;

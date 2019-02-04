@@ -98,6 +98,7 @@ public class GitHubVersionRequirementImpl extends NPMVersionRequirementImpl impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getGithubUrl() {
 		return githubUrl;
 	}
@@ -107,6 +108,7 @@ public class GitHubVersionRequirementImpl extends NPMVersionRequirementImpl impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setGithubUrl(String newGithubUrl) {
 		String oldGithubUrl = githubUrl;
 		githubUrl = newGithubUrl;
@@ -119,6 +121,7 @@ public class GitHubVersionRequirementImpl extends NPMVersionRequirementImpl impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getCommitISH() {
 		return commitISH;
 	}
@@ -128,6 +131,7 @@ public class GitHubVersionRequirementImpl extends NPMVersionRequirementImpl impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setCommitISH(String newCommitISH) {
 		String oldCommitISH = commitISH;
 		commitISH = newCommitISH;

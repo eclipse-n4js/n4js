@@ -70,6 +70,7 @@ public class CatchVariableImpl extends VariableImpl implements CatchVariable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public BindingPattern getBindingPattern() {
 		return bindingPattern;
 	}
@@ -94,6 +95,7 @@ public class CatchVariableImpl extends VariableImpl implements CatchVariable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setBindingPattern(BindingPattern newBindingPattern) {
 		if (newBindingPattern != bindingPattern) {
 			NotificationChain msgs = null;
