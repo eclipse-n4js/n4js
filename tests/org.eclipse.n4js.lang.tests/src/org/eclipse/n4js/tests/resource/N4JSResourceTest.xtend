@@ -221,7 +221,6 @@ class N4JSResourceTest {
 
 	@Test
 	def void testDisposeDocumentDoesntTriggerResolution() {
-try {
 		val someResource = resourceSetProvider.get.getResource(URI.createURI("src/org/eclipse/n4js/tests/scoping/Supplier.n4js"), true) as N4JSResource
 		someResource.derivedStateComputer = new IDerivedStateComputer() {
 
@@ -242,10 +241,6 @@ try {
 		doc.input = someResource
 		Assert.assertFalse(someResource.script.eIsProxy)
 		doc.disposeInput // no exception
-} catch(Throwable th) {
-	th.printStackTrace;
-	throw th;
-}
 	}
 
 
