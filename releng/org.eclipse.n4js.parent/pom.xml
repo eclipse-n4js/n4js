@@ -366,9 +366,6 @@ Contributors:
 						</execution>
 					</executions>
 					<configuration>
-						<compilerArguments>
-							<properties>${basedir}/.settings/org.eclipse.xtend.core.Xtend.prefs</properties>
-						</compilerArguments>
 						<outputDirectory>${basedir}/xtend-gen</outputDirectory>
 					</configuration>
 					<dependencies>
