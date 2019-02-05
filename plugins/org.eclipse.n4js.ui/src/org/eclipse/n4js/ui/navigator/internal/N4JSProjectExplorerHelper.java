@@ -242,9 +242,13 @@ public class N4JSProjectExplorerHelper {
 			if (shadowedProject.isExternal()) {
 				org.eclipse.emf.common.util.URI location = shadowedProject.getLocation();
 				URI rootLocation = externalLibraryWorkspace.getRootLocationForResource(location);
-				Path rootPath = Paths.get(rootLocation.getPath());
-				Path subpath = rootPath.subpath(rootPath.getNameCount() - 2, rootPath.getNameCount());
-				rootLocationName = subpath.toString();
+				if (rootLocation != null) {
+					Path rootPath = Paths.get(rootLocation.getPath());
+					Path subpath = rootPath.subpath(rootPath.getNameCount() - 2, rootPath.getNameCount());
+					rootLocationName = subpath.toString();
+				} else {
+					rootLocationName = "unknown";
+				}
 			} else {
 				rootLocationName = "workspace";
 			}
