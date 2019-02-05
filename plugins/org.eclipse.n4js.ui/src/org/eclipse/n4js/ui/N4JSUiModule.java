@@ -14,9 +14,9 @@ import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.rules.IPartitionTokenScanner;
 import org.eclipse.jface.text.rules.ITokenScanner;
 import org.eclipse.n4js.CancelIndicatorBaseExtractor;
+import org.eclipse.n4js.binaries.BinariesCommandFactory;
 import org.eclipse.n4js.binaries.BinariesPreferenceStore;
 import org.eclipse.n4js.binaries.BinariesValidator;
-import org.eclipse.n4js.binaries.BinariesCommandFactory;
 import org.eclipse.n4js.external.ExternalIndexSynchronizer;
 import org.eclipse.n4js.external.ExternalLibraryUriHelper;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
@@ -75,7 +75,6 @@ import org.eclipse.n4js.ui.editor.syntaxcoloring.TokenTypeToPartitionMapper;
 import org.eclipse.n4js.ui.external.BuildOrderComputer;
 import org.eclipse.n4js.ui.external.EclipseExternalIndexSynchronizer;
 import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
-import org.eclipse.n4js.ui.external.ExternalIndexUpdater;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildQueue;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildScheduler;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuilder;
@@ -262,11 +261,6 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	/** Delegate to shared injector */
 	public Provider<ProjectStateChangeListener> provideProjectStateChangeListener() {
 		return Access.contributedProvider(ProjectStateChangeListener.class);
-	}
-
-	/** Delegate to shared injector */
-	public Provider<ExternalIndexUpdater> provideExternalIndexUpdater() {
-		return Access.contributedProvider(ExternalIndexUpdater.class);
 	}
 
 	/** Delegate to shared injector */

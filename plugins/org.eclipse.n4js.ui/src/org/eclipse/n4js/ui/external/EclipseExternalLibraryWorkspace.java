@@ -46,6 +46,8 @@ import org.eclipse.n4js.external.ExternalProjectsCollector;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.external.RebuildWorkspaceProjectsScheduler;
 import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
+import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
+import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore.StoreUpdatedListener;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.projectModel.IN4JSCore;
@@ -68,14 +70,11 @@ import com.google.inject.Singleton;
  * platform}.
  */
 @Singleton
-public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
+public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace implements StoreUpdatedListener {
 	private static Logger logger = Logger.getLogger(EclipseExternalLibraryWorkspace.class);
 
 	@Inject
 	private IN4JSCore core;
-
-	@Inject
-	private ExternalIndexUpdater indexUpdater;
 
 	@Inject
 	private ExternalLibraryBuilder builder;
@@ -89,6 +88,9 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	@Inject
 	private ExternalProjectProvider projectProvider;
 
+	@Inject
+	private ExternalLibraryPreferenceStore externalLibraryPreferenceStore;
+
 	/**
 	 */
 	@Inject
@@ -99,7 +101,12 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 			logger.error("Failed to initialize external library workspace.", t);
 			UIUtils.showError(t);
 		}
-		projectProvider.addExternalLocationsUpdatedListener(indexUpdater);
+		externalLibraryPreferenceStore.addListener(this);
+	}
+
+	@Override
+	public void storeUpdated(ExternalLibraryPreferenceStore store, IProgressMonitor monitor) {
+		projectProvider.updateCache();
 	}
 
 	@Override

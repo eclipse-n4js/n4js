@@ -16,7 +16,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -68,7 +67,6 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 	}
 
 	private final Semaphore semaphore = new Semaphore(1);
-	private final Collection<ExternalLocationsUpdatedListener> locListeners = new LinkedList<>();
 	private ExternalProjectMappings mappings = new UninitializedMappings();
 
 	/**
@@ -94,11 +92,6 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 		}
 	}
 
-	/** Adds the given listener. Listener gets called after locations of external workspaces changed. */
-	public void addExternalLocationsUpdatedListener(ExternalLocationsUpdatedListener listener) {
-		locListeners.add(listener);
-	}
-
 	Collection<URI> getAllProjectLocations() {
 		return mappings.reducedProjectUriMapping.keySet();
 	}
@@ -113,10 +106,6 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 
 		Set<java.net.URI> addedLocations = new HashSet<>(newLocations);
 		addedLocations.removeAll(oldLocations);
-
-		for (ExternalLocationsUpdatedListener locListener : locListeners) {
-			locListener.locationsUpdated(removedLocations, addedLocations, monitor);
-		}
 	}
 
 	void updateCache() {
