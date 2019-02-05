@@ -11,8 +11,8 @@
 package org.eclipse.n4js.utils;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.PathMatcher;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -34,6 +34,7 @@ import com.google.inject.Inject;
  * For more details on yarn workspaces, see: https://yarnpkg.com/lang/en/docs/workspaces/
  */
 public class NodeModulesDiscoveryHelper {
+
 	@Inject
 	private ProjectDescriptionLoader projectDescriptionLoader;
 
@@ -94,6 +95,7 @@ public class NodeModulesDiscoveryHelper {
 		final Set<File> matchingWorkspaceRoots = new LinkedHashSet<>();
 
 		for (Path projectFolderPath : n4jsProjects) {
+			projectFolderPath = projectFolderPath.toAbsolutePath();
 			final File projectFolder = projectFolderPath.toFile();
 			if (projectFolder.isDirectory()) {
 				final Path nodeModulesPath = projectFolderPath.resolve(N4JSGlobals.NODE_MODULES);
@@ -133,7 +135,6 @@ public class NodeModulesDiscoveryHelper {
 	 *            a cache used to avoid loading/parsing the same package.json multiple times.
 	 */
 	private Optional<File> getYarnWorkspaceRoot(File n4jsProjectFolder, Map<File, List<String>> workspacesCache) {
-		n4jsProjectFolder = makeCanonical(n4jsProjectFolder);
 		File candidate = n4jsProjectFolder.getParentFile();
 		while (candidate != null) {
 			// is candidate the root of a yarn workspace with 'n4jsProjectFolder' as one of the registered projects?
@@ -169,7 +170,7 @@ public class NodeModulesDiscoveryHelper {
 		if (workspaces == null) {
 			return false;
 		}
-		// check if one of the values in property "workspaces" points to 'n4jsProjectFolder'
+		// check if one of the values in property "workspaces" points to 'projectFolder'
 		if (projectFolder.isPresent()) {
 			for (String relativePath : workspaces) {
 				if (isPointingTo(folder, relativePath, projectFolder.get())) {
@@ -181,23 +182,9 @@ public class NodeModulesDiscoveryHelper {
 		return true;
 	}
 
-	/** This method assumes both {@code base} and {@code target} to be {@link File#getCanonicalFile() canonical}. */
-	private static boolean isPointingTo(File base, String relativePath, File target) {
-		boolean wildcard = relativePath.endsWith(File.separator + "*");
-		if (wildcard) {
-			relativePath = relativePath.substring(0, relativePath.length() - 2);
-		}
-		final File destination = makeCanonical(new File(base, relativePath));
-		return wildcard
-				? destination.equals(target.getParentFile())
-				: destination.equals(target);
-	}
-
-	private static File makeCanonical(File file) {
-		try {
-			return file.getCanonicalFile();
-		} catch (IOException e) {
-			return file;
-		}
+	private boolean isPointingTo(File base, String relativePath, File target) {
+		String pattern = base.getAbsolutePath() + File.separator + relativePath;
+		PathMatcher matcher = WildcardPathFilterHelper.createPathMatcher(pattern);
+		return matcher.matches(target.toPath());
 	}
 }

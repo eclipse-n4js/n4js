@@ -93,6 +93,40 @@ Figure <<img:eclipse-help-doc-process>> shows the generation process for N4JSSpe
 * Another custom tool `EclipseHelpTOCGenerator` takes to Docbook file `N4JSSpec.xml` and generates an XML file describing the table of content (TOC) in the Eclipse format. This TOC file references the chunked HTML files above.
 
 
+== Updating Eclipse, etc.
 
+For updating the N4JS IDE to a new version of Eclipse, EMF, Xtext, etc. follow these steps:
 
+. Create a new branch.
+. Bump versions of all dependencies mentioned in file `N4JS.setup`:
+.. Choose a new Eclipse version and define this in `N4JS.setup`.
+.. For those other dependencies _that come with Eclipse_ (e.g. EMF, Xtext) find out which version matches the chosen Eclipse version
+   and define that version in `N4JS.setup`. +
+   Tip: one way of doing this is to install the chosen version of Eclipse and check under "About Eclipse > Installation Details > Tab: Features".
+.. For those other dependencies _that are available via the Eclipse Orbit_, find out which version is the latest version available in
+   the Orbit and define that version in `N4JS.setup`. +
+   Tip: contents of the Eclipse Orbit can be found at https://download.eclipse.org/tools/orbit/downloads/ +
+   (choose the correct link for the chosen Eclipse version!)
+.. For all remaining dependencies (i.e. unrelated to Eclipse and not in Orbit), choose a version to use and define it in `N4JS.setup`.
+. Review parent pom.xml files, i.e. `releng/org.eclipse.n4js.parent/pom.xml`:
+.. Update property `xtext-version`.
+.. Check all other `*-version` properties and update them where needed.
+. Update target platform file `org.eclipse.n4js.targetplatform.target` using Ooomph's auto-generation:
+.. Start the Eclipse Installer.
+.. Update the Eclipse Installer (using the button with the turning arrows).
+.. On the second page, add the `N4JS.setup` file from your branch to the Eclipse Installer, using a GitHub raw(!) URL: +
+   `https://raw.githubusercontent.com/eclipse/n4js/BRANCH_NAME/releng/org.eclipse.n4js.targetplatform/N4JS.setup`
+.. Ooomph a new development environment with this setup.
+.. In the new Eclipse workspace created by Ooomph, the target platform file should have uncommitted changes:
+... carefully review these changes, to be sure they make sense, and then
+... commit & push those changes to your branch.
+. Thoroughly test the new versions:
+.. Run builds.
+.. Ooomph another N4JS development environment with Eclipse Installer.
+   This time, after Ooomphing is completed, the target platform file should no longer have any uncommitted changes.
 
+All the above steps need to be performed in the `n4js-n4` repository, accordingly (e.g. file `N4JS-N4.setup`). In addition:
+
+. Update file `redirected_com.enfore.n4js.targetplatform.target` by copying the content of file `com.enfore.n4js.targetplatform.target` and
+  then changing all repository location URLs to point to the n4ide-p2-mirror.
+. Run Jenkins build job `Management/Create_P2_Mirror[_From_Branch]`

@@ -1,0 +1,63 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+@@Global @@ProvidedByRuntime
+
+/**
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/Coordinates
+ */
+export external public interface ~Coordinates {
+    public get accuracy(): number;
+    public get latitude(): number;
+    public get longitude(): number;
+    public get altitude?(): number;
+    public get altitudeAccuracy?(): number;
+    public get heading?(): number;
+    public get speed?(): number;
+}
+
+/**
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/Position
+ */
+export external public interface ~Position {
+    public get coords(): Coordinates;
+    public get timestamp(): int;
+}
+
+/**
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/PositionError
+ */
+export external public interface ~PositionError {
+    /**
+     * PERMISSION_DENIED: 1
+     * POSITION_UNAVAILABLE: 2
+     * TIMEOUT: 3
+     */
+    public get code(): int;
+    public get message(): string;
+}
+
+/**
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/PositionOptions
+ */
+export external public interface ~PositionOptions {
+    public get maximumAge?(): int;
+    public get timeout?(): int;
+    public get enableHighAccuracy?(): boolean;
+}
+
+/**
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/Geolocation
+ */
+export external public interface ~Geolocation {
+    public getCurrentPosition(success: (pos: Position) => void, error: (err: PositionError) => void =, options: PositionOptions=): void;
+    public watchPosition(success: (pos: Position) => void, error: (err: PositionError) => void =, options: PositionOptions=): int;
+    public clearWatch(id: int): void;
+}
