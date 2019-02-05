@@ -27,7 +27,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.runner.IExecutor;
@@ -49,7 +48,7 @@ import com.google.inject.Inject;
  * 1) P1, P2 im Eclipse workspace; keine dependency zw P1, P2; P1 -> lodash; P2 -> immutable a) full build -> errors in
  * both projects b) run "npm install" in P1 -> errors in P1 gone c) run "npm install" in P2 -> all errors gone
  */
-public class SideBySideProjectsInstallNpmPluginUITest extends AbstractBuilderParticipantTest {
+public class SideBySideNonYarnProjectsInstallNpmPluginUITest extends AbstractBuilderParticipantTest {
 
 	// the id of the runner to launch
 	private static final String NODE_RUNNER_ID = "org.eclipse.n4js.runner.nodejs.NODEJS";
@@ -58,9 +57,6 @@ public class SideBySideProjectsInstallNpmPluginUITest extends AbstractBuilderPar
 	private static final String DIFFERENT_NPM_SUBFOLDER = "InstallDifferentNpms";
 	private static final String SAME_NPM_SUBFOLDER = "InstallSameNpm";
 	private static final String DIFFERENT_NPMS_DEPENDENT_PROJECTS_SUBFOLDER = "InstallDifferentNpmsInDependentProjects";
-
-	@Inject
-	private LibraryManager libraryManager;
 
 	@Inject
 	private RunnerFrontEnd runnerFrontEnd;
@@ -75,16 +71,16 @@ public class SideBySideProjectsInstallNpmPluginUITest extends AbstractBuilderPar
 		setupShippedLibraries();
 	}
 
-	// @formatter:off
 	/**
 	 * Install different npm packages in two independent projects.
 	 *
+	 * <pre>
 	 * 1) P1, P2 im Eclipse workspace; keine dependency zw P1, P2; P1 -> lodash; P2 -> immutable
-   	 * 		a) full build -> errors in both projects
-     * 		b) run "npm install" in P1 -> errors in P1 gone
-     * 		c) run "npm install" in P2 -> all errors gone
+	 * 		a) full build -> errors in both projects
+	 * 		b) run "npm install" in P1 -> errors in P1 gone
+	 * 		c) run "npm install" in P2 -> all errors gone
+	 * </pre>
 	 */
-	// @formatter:off
 	@Test
 	public void installDifferentNpmInTwoIndependentProjects() throws CoreException {
 
@@ -117,15 +113,15 @@ public class SideBySideProjectsInstallNpmPluginUITest extends AbstractBuilderPar
 		assertIssues(pkgJsonP2); // No errors in P2 anymore
 	}
 
-	// @formatter:off
 	/**
 	 * Install the same npm package in two independent projects.
 	 *
+	 * <pre>
 	 * 2) P1, P2 im Eclipse workspace; keine dependency zw P1, P2; P1 -> lodash; P2 -> lodash
-   	 * 		a) full build -> errors in both projects
-   	 *		b) run "npm install" in P1 -> all errors gone (TODO: Why?? Reconsider this!)
+	 * 	  a) full build -> errors in both projects
+	 *	  b) run "npm install" in P1 -> all errors gone (TODO: Why?? Reconsider this!)
+	 * </pre>
 	 */
-	// @formatter:off
 	@Test
 	public void installSamepNpmInTwoIndependentProjects() throws CoreException {
 
@@ -150,15 +146,14 @@ public class SideBySideProjectsInstallNpmPluginUITest extends AbstractBuilderPar
 		assertIssues(pkgJsonP2); // No errors in P2 anymore
 	}
 
-	// @formatter:off
 	/**
 	 * Install different npm packages. There is dependency between projects.
 	 *
+	 * <pre>
 	 * 3) P1, P2 im Eclipse workspace; P1 -> P2; P1 -> lodash; P2 -> immutable like 1) above
-     * 		but also test executing P1 with runner (reference to P2 must work at runtime)
-	 * @throws IOException throws
+	 * 	  but also test executing P1 with runner (reference to P2 must work at runtime)
+	 * </pre>
 	 */
-//	 @formatter:off
 	@Test
 	public void installDifferentNpmsInTwoDependentProjects() throws CoreException, IOException {
 		System.out.println("start");

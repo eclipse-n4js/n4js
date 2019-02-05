@@ -11,6 +11,7 @@
 package org.eclipse.n4js.tests.externalPackages;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -20,6 +21,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.external.ShadowingInfoHelper;
 import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.projectModel.IN4JSProject;
@@ -36,7 +38,7 @@ import com.google.inject.Inject;
 
 /**
  */
-public class ShadowingCreatesVersionWarningsPluginTest extends AbstractBuilderParticipantTest {
+public class ShadowingCreatesVersionWarningsPluginUITest extends AbstractBuilderParticipantTest {
 	private static final String PROBANDS = "probands";
 	private static final String WORKSPACE_LOC = "ShadowingCreatesVersionWarnings";
 	private static final String PROJECT_P1 = "P1";
@@ -96,13 +98,16 @@ public class ShadowingCreatesVersionWarningsPluginTest extends AbstractBuilderPa
 
 		waitForAutoBuild();
 
-		IN4JSProject n4jsLangShipped = extWS.getProject(PROJECT_N4JSLANG).getIProject();
+		N4JSExternalProject langProject = extWS.getProject(PROJECT_N4JSLANG);
+		assertNotNull(langProject);
+		IN4JSProject n4jsLangShipped = langProject.getIProject();
 		assertFalse(shadowingInfoHelper.isShadowingProject(n4jsLangShipped));
 		assertTrue(shadowingInfoHelper.isShadowedProject(n4jsLangShipped));
 		assertTrue(shadowingInfoHelper.findShadowedProjects(n4jsLangShipped).isEmpty());
 		assertTrue(shadowingInfoHelper.findShadowingProjects(n4jsLangShipped).size() == 1);
 
 		URI userN4LangUri = userWS.findProjectForName(PROJECT_N4JSLANG);
+		assertNotNull(userN4LangUri);
 		IN4JSProject n4jsLangUserWS = model.getN4JSProject(userN4LangUri);
 		assertTrue(shadowingInfoHelper.isShadowingProject(n4jsLangUserWS));
 		assertFalse(shadowingInfoHelper.isShadowedProject(n4jsLangUserWS));

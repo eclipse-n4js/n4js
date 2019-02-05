@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.tests.util;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
@@ -30,7 +31,9 @@ public class ShippedCodeInitializeTestHelper {
 
 	/**
 	 * Set up shipped projects in all {@link ExternalLibrariesActivator#EXTERNAL_LIBRARIES_SUPPLIER locations}.
-	 *
+	 * <p>
+	 * <b>Attention:</b> Works only with PluginUI tests!
+	 * <p>
 	 * Setting this property is necessary since {@link ExternalLibraryPreferenceStore#resetDefaults()} will transitively
 	 * call {@link ExternalLibrariesActivator#requiresInfrastructureForLibraryManager()}.
 	 */
@@ -38,6 +41,9 @@ public class ShippedCodeInitializeTestHelper {
 		System.setProperty(ExternalLibrariesActivator.INCLUDES_BUILT_INS_SYSTEM_PROPERTY, "true");
 
 		externalLibraryPreferenceStore.synchronizeNodeModulesFolders();
+		ProjectTestsUtils.waitForAllJobs();
+
+		libraryManager.synchronizeNpms(new NullProgressMonitor());
 		ProjectTestsUtils.waitForAllJobs();
 	}
 
@@ -48,6 +54,9 @@ public class ShippedCodeInitializeTestHelper {
 		System.setProperty(ExternalLibrariesActivator.INCLUDES_BUILT_INS_SYSTEM_PROPERTY, "");
 
 		externalLibraryPreferenceStore.synchronizeNodeModulesFolders();
+		ProjectTestsUtils.waitForAllJobs();
+
+		libraryManager.synchronizeNpms(new NullProgressMonitor());
 		ProjectTestsUtils.waitForAllJobs();
 	}
 
