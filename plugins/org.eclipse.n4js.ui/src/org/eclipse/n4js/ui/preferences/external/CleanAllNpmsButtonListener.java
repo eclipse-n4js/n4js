@@ -12,8 +12,9 @@ package org.eclipse.n4js.ui.preferences.external;
 
 import static org.eclipse.n4js.ui.utils.UIUtils.getDisplay;
 
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -36,9 +37,9 @@ import org.eclipse.swt.events.SelectionEvent;
  */
 public class CleanAllNpmsButtonListener extends SelectionAdapter {
 	final private StatusHelper statusHelper;
-	final private Function<MultiStatus, IStatus> action;
+	final private BiFunction<IProgressMonitor, MultiStatus, IStatus> action;
 
-	CleanAllNpmsButtonListener(Function<MultiStatus, IStatus> action,
+	CleanAllNpmsButtonListener(BiFunction<IProgressMonitor, MultiStatus, IStatus> action,
 			StatusHelper statusHelper) {
 		this.action = action;
 		this.statusHelper = statusHelper;
@@ -50,7 +51,7 @@ public class CleanAllNpmsButtonListener extends SelectionAdapter {
 
 		try {
 			new ProgressMonitorDialog(UIUtils.getShell()).run(true, true, monitor -> {
-				multistatus.merge(action.apply(multistatus));
+				multistatus.merge(action.apply(monitor, multistatus));
 			});
 
 		} catch (final InterruptedException | OperationCanceledException exc) {

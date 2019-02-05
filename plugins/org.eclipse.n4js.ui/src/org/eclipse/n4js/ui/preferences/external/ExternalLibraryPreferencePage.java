@@ -251,9 +251,9 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	}
 
 	/** Actions to be taken if deleting npms is requested. */
-	private MultiStatus cleanNpms(final MultiStatus multistatus) {
+	private MultiStatus cleanNpms(final IProgressMonitor monitor, final MultiStatus multistatus) {
 		try {
-			multistatus.merge(externalLibrariesActionsHelper.maintenanceDeleteNpms());
+			multistatus.merge(externalLibrariesActionsHelper.maintenanceDeleteNpms(monitor));
 		} catch (Exception e) {
 			String msg = "Error when cleaning external libraries.";
 			multistatus.merge(statusHelper.createError(msg, e));

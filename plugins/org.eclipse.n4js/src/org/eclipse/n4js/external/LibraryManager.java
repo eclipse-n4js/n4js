@@ -118,7 +118,7 @@ public class LibraryManager {
 	}
 
 	/** Deletes all 'node_modules' folders (and their npm projects). Afterwards, the ext. library state is updated. */
-	public IStatus deleteAllNodeModulesFolders() {
+	public IStatus deleteAllNodeModulesFolders(IProgressMonitor monitor) {
 		MultiStatus multistatus = statusHelper.createMultiStatus("Delete all node_modules folders");
 		for (java.net.URI nodeModulesLoc : extLibPreferenceStore.getNodeModulesLocations()) {
 			File nodeModulesFile = new File(nodeModulesLoc.getPath());
@@ -137,6 +137,7 @@ public class LibraryManager {
 
 		// other actions like reinstall depends on this state
 		externalLibraryWorkspace.updateState();
+		indexSynchronizer.synchronizeNpms(monitor);
 		return multistatus;
 	}
 

@@ -66,11 +66,9 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 		try {
 			workspace.getWorkspace().refreshLocal(IResource.DEPTH_INFINITE, subMonitor.split(1));
 
-			Collection<LibraryChange> oldChangeSet = identifyChangeSet(forcedChangeSet, ProjectStateOperation.PEEK);
-			RegisterResult cleanResults = cleanChangesIndex(subMonitor.split(1), oldChangeSet);
-
-			Collection<LibraryChange> newChangesSet = identifyChangeSet(forcedChangeSet, ProjectStateOperation.UPDATE);
-			buildChangesIndex(subMonitor.split(9), newChangesSet, cleanResults);
+			Collection<LibraryChange> changesSet = identifyChangeSet(forcedChangeSet, ProjectStateOperation.UPDATE);
+			RegisterResult cleanResults = cleanChangesIndex(subMonitor.split(1), changesSet);
+			buildChangesIndex(subMonitor.split(9), changesSet, cleanResults);
 
 		} catch (Exception e) {
 			checkAndClearIndex(subMonitor.split(1));
@@ -166,9 +164,7 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 			case Updated:
 			case Removed:
 				project = externalLibraryWorkspace.getProject(change.location);
-				if (project != null) {
-					toBeDeleted.add(change.location);
-				}
+				toBeDeleted.add(change.location);
 				break;
 
 			case Install:

@@ -38,6 +38,7 @@ public class ShippedCodeInitializeTestHelper {
 	 * call {@link ExternalLibrariesActivator#requiresInfrastructureForLibraryManager()}.
 	 */
 	synchronized public void setupBuiltIns() {
+		ProjectTestsUtils.waitForAllJobs();
 		System.setProperty(ExternalLibrariesActivator.INCLUDES_BUILT_INS_SYSTEM_PROPERTY, "true");
 
 		externalLibraryPreferenceStore.synchronizeNodeModulesFolders();
@@ -49,7 +50,8 @@ public class ShippedCodeInitializeTestHelper {
 
 	/** Tear down shipped projects in all {@link ExternalLibrariesActivator#EXTERNAL_LIBRARIES_SUPPLIER locations}. */
 	synchronized public void tearDownBuiltIns() {
-		libraryManager.deleteAllNodeModulesFolders();
+		ProjectTestsUtils.waitForAllJobs();
+		libraryManager.deleteAllNodeModulesFolders(new NullProgressMonitor());
 
 		System.setProperty(ExternalLibrariesActivator.INCLUDES_BUILT_INS_SYSTEM_PROPERTY, "");
 

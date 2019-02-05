@@ -67,7 +67,6 @@ public class ProjectStateChangeListener implements IResourceChangeListener {
 						ISchedulingRule rule = builder.getRule();
 						Job.getJobManager().beginRule(rule, monitor);
 						try {
-							System.out.println("!");
 							indexSynchronizer.checkAndClearIndex(monitor);
 						} finally {
 							Job.getJobManager().endRule(rule);

@@ -13,6 +13,7 @@ package org.eclipse.n4js.ui.external;
 import java.net.URI;
 import java.nio.file.Path;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.SubMonitor;
@@ -61,14 +62,16 @@ public class ExternalLibrariesActionsHelper {
 				configureNpmrc(npmrcLocation.get(), multiStatus);
 			}
 
+			SubMonitor subMonitor = SubMonitor.convert(monitor, 2);
+
 			// remove npms
-			multiStatus.merge(maintenanceDeleteNpms());
+			multiStatus.merge(maintenanceDeleteNpms(subMonitor.split(1)));
 
 			// install dependencies and force external library workspace reload
 			try (Measurement mm = N4JSDataCollectors.dcInstallMissingDeps
 					.getMeasurement("Install missing dependencies")) {
 
-				IStatus status = libManager.runNpmYarnInstallOnAllProjects(monitor);
+				IStatus status = libManager.runNpmYarnInstallOnAllProjects(subMonitor.split(1));
 				if (!status.isOK()) {
 					multiStatus.merge(status);
 				}
@@ -95,8 +98,8 @@ public class ExternalLibrariesActionsHelper {
 	}
 
 	/** Actions to be taken if deleting npms is requested. */
-	public IStatus maintenanceDeleteNpms() {
-		return libManager.deleteAllNodeModulesFolders();
+	public IStatus maintenanceDeleteNpms(IProgressMonitor monitor) {
+		return libManager.deleteAllNodeModulesFolders(monitor);
 	}
 
 }

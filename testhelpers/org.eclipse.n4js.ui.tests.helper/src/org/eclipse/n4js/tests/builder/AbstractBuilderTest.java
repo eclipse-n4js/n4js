@@ -181,7 +181,7 @@ public abstract class AbstractBuilderTest {
 	@After
 	public void tearDown() throws Exception {
 		// save the files as otherwise the projects cannot be deleted
-		libraryManager.deleteAllNodeModulesFolders();
+		libraryManager.deleteAllNodeModulesFolders(new NullProgressMonitor());
 		closeAllEditorsForTearDown();
 		IResourcesSetupUtil.cleanWorkspace();
 		IResourcesSetupUtil.cleanBuild();

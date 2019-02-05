@@ -275,8 +275,10 @@ public abstract class ExternalIndexSynchronizer {
 
 	private void addToIndex(Map<String, Pair<URI, String>> npmsIndex, IResourceDescription resourceDescription) {
 		URI nestedLocation = resourceDescription.getURI();
-		java.net.URI rootLocationJNU = externalLibraryWorkspace.getRootLocationForResource(nestedLocation);
+		java.net.URI rootLocationJNU = externalLibraryWorkspace.getRootLocationForResourceOrInfer(nestedLocation);
 		if (rootLocationJNU == null) {
+			logger.logInfo("Could not find location for: " + nestedLocation.toString()
+					+ ".\n Please rebuild external libraries!");
 			return;
 		}
 		URI rootLocation = URI.createURI(rootLocationJNU.toString());

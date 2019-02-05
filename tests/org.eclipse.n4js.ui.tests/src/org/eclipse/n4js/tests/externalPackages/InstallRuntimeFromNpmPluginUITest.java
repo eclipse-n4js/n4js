@@ -86,9 +86,6 @@ public class InstallRuntimeFromNpmPluginUITest extends AbstractBuilderParticipan
 	@After
 	@Override
 	public void tearDown() throws Exception {
-		// clear library manager to avoid confusing tests being executed after this test class
-		externals.maintenanceDeleteNpms();
-
 		shippedCodeInitializeTestHelper.tearDownBuiltIns();
 		super.tearDown();
 	}

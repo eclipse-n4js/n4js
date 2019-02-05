@@ -33,7 +33,6 @@ import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
-import org.eclipse.n4js.ui.external.ExternalLibrariesActionsHelper;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -70,9 +69,6 @@ public class GH_986_ExternalCircularDependencyAndRuntimeLibrariesPluginUITest ex
 	private ShippedCodeInitializeTestHelper shippedCodeInitializeTestHelper;
 
 	@Inject
-	private ExternalLibrariesActionsHelper externals;
-
-	@Inject
 	private RuntimeEnvironmentsHelper runtimeEnvironmentsHelper;
 
 	@Inject
@@ -95,9 +91,6 @@ public class GH_986_ExternalCircularDependencyAndRuntimeLibrariesPluginUITest ex
 	@After
 	@Override
 	synchronized public void tearDown() throws Exception {
-		// clear library manager to avoid confusing tests being executed after this test class
-		externals.maintenanceDeleteNpms();
-
 		shippedCodeInitializeTestHelper.tearDownBuiltIns();
 		super.tearDown();
 	}
