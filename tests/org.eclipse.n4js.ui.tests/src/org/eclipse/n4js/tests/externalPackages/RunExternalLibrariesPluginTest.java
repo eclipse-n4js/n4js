@@ -48,6 +48,7 @@ import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -156,6 +157,7 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 	}
 
 	/***/
+	@Ignore("random")
 	@Test
 	public void runClientWithAllClosedWorkspaceProjects() throws CoreException {
 
@@ -281,6 +283,7 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 	}
 
 	/***/
+	@Ignore("random")
 	@Test
 	public void runClientWithTwoDeletedWorkspaceProjects() throws CoreException {
 
