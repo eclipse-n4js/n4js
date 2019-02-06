@@ -35,7 +35,6 @@ import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.n4js.runner.RunnerFrontEnd;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
-import org.eclipse.n4js.ui.external.ExternalLibrariesActionsHelper;
 import org.eclipse.n4js.ui.wizard.dependencies.InstallOptions;
 import org.eclipse.n4js.ui.wizard.dependencies.RunnableInstallDependencies;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
@@ -72,9 +71,6 @@ public class InstallRuntimeFromNpmPluginUITest extends AbstractBuilderParticipan
 
 	@Inject
 	private ShippedCodeInitializeTestHelper shippedCodeInitializeTestHelper;
-
-	@Inject
-	private ExternalLibrariesActionsHelper externals;
 
 	@Before
 	@Override

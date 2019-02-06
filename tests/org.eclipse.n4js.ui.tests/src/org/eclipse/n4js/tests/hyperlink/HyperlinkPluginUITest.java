@@ -30,7 +30,6 @@ import org.eclipse.n4js.tests.util.EclipseUIUtils;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.eclipse.n4js.ui.editor.N4JSHyperlinkDetector;
-import org.eclipse.n4js.ui.external.ExternalLibrariesActionsHelper;
 import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.xtext.ui.editor.IURIEditorOpener;
@@ -54,9 +53,6 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 
 	@Inject
 	private ShippedCodeInitializeTestHelper shippedCodeInitializeTestHelper;
-
-	@Inject
-	private ExternalLibrariesActionsHelper externals;
 
 	@Inject
 	private N4JSHyperlinkDetector hyperlinkDetector;

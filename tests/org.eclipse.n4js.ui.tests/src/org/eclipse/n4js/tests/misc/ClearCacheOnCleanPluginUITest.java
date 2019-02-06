@@ -27,7 +27,6 @@ import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.EclipseUIUtils;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
-import org.eclipse.n4js.ui.external.ExternalLibrariesActionsHelper;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
@@ -48,9 +47,6 @@ public class ClearCacheOnCleanPluginUITest extends AbstractBuilderParticipantTes
 
 	@Inject
 	private ShippedCodeInitializeTestHelper shippedCodeInitializeTestHelper;
-
-	@Inject
-	private ExternalLibrariesActionsHelper externals;
 
 	@Inject
 	private MultiCleartriggerCache cache;
