@@ -86,13 +86,14 @@ public class N4JSModel {
 	}
 
 	public N4JSProject findProjectWith(URI nestedLocation) {
-		// nestedLocation = convertToCorrespondingLocation(nestedLocation);
-		URI location = workspace.findProjectWith(nestedLocation);
+		// FIXME: mm
+		URI correctNestedLocation = convertToCorrespondingLocation(nestedLocation);
+		URI location = workspace.findProjectWith(correctNestedLocation);
 		if (location != null) {
 			return getN4JSProject(location);
 		}
 
-		location = externalLibraryWorkspace.findProjectWith(nestedLocation);
+		location = externalLibraryWorkspace.findProjectWith(correctNestedLocation);
 		if (null != location) {
 			return getN4JSProject(location);
 		}
@@ -100,16 +101,17 @@ public class N4JSModel {
 		return null;
 	}
 
-	private URI convertToCorrespondingLocation(URI uri) {
+	public URI convertToCorrespondingLocation(URI uri) {
 		String fileString = uri.toString();
 		String nodeModulesElement = "/" + N4JSGlobals.NODE_MODULES + "/";
-		if (fileString.contains(nodeModulesElement)) {
-			if (uri.isPlatform() && !fileString.endsWith(nodeModulesElement)) {
+		if (fileString.contains(nodeModulesElement) && !fileString.endsWith(nodeModulesElement)) {
+			if (uri.isPlatform()) {
 				uri = tryConvertToFileUri(uri, fileString);
 			}
 
 		} else {
 			if (uri.isFile()) {
+				// FIXME: do like in ExternalLibraryErrorMarkerManager#setIssues
 				uri = tryConvertToPlatformUri(uri);
 			}
 		}
@@ -123,22 +125,24 @@ public class N4JSModel {
 		String segment = uri.segment(1);
 
 		if (Objects.equals(segment, lastSegment)) {
+			N4JSProject n4jsProject = getN4JSProject(projectLoc);
+			Path projectPath = n4jsProject.getLocationPath();
+			String platformString = uri.toPlatformString(true);
+			Path platformPath = Paths.get(platformString);
+			Path platformPathWithoutProject = platformPath.subpath(1, platformPath.getNameCount());
+			Path completeFilePath = projectPath.resolve(platformPathWithoutProject);
+
 			boolean isInNodeModulesLocation = false;
 			for (java.net.URI nmLocation : prefStore.getNodeModulesLocations()) {
-				if (fileString.startsWith(nmLocation.toString())) {
+				String nmLocString = nmLocation.getPath();
+				if (completeFilePath.startsWith(nmLocString)) {
 					isInNodeModulesLocation = true;
 					break;
 				}
 			}
 
 			if (isInNodeModulesLocation) {
-				Path projectPath = this.getN4JSProject(projectLoc).getLocationPath();
-				String platformString = uri.toPlatformString(true);
-				Path platformPath = Paths.get(platformString);
-				Path platformNoProject = platformPath.subpath(1, platformPath.getNameCount());
-
-				Path completePath = projectPath.resolve(platformNoProject);
-				URI fileURI = URI.createFileURI(completePath.toString());
+				URI fileURI = URI.createFileURI(completeFilePath.toString());
 				return fileURI;
 			}
 		}
@@ -150,8 +154,8 @@ public class N4JSModel {
 		java.nio.file.Path nestedPath = Paths.get(nested);
 
 		for (URI projLoc : workspace.getAllProjectLocations()) {
-			String locationStr = projLoc.toString();
-			java.nio.file.Path locationPath = Paths.get(locationStr);
+			N4JSProject n4jsProject = getN4JSProject(projLoc);
+			java.nio.file.Path locationPath = n4jsProject.getLocationPath();
 
 			if (nestedPath.startsWith(locationPath)) {
 				java.nio.file.Path nodeModulesPath = locationPath.resolve(N4JSGlobals.NODE_MODULES);
@@ -160,7 +164,10 @@ public class N4JSModel {
 					// Note: There can be projects in nested node_modules folder.
 					// The node_modules folder is still part of a project, but all
 					// elements below the node_modules folder are not part of this project.
-					URI projURI = URI.createFileURI(locationStr);
+					Path projectRelativePath = locationPath.relativize(nestedPath);
+					String platformString = n4jsProject.getLocation().toPlatformString(true)
+							+ "/" + projectRelativePath.toString();
+					URI projURI = URI.createPlatformResourceURI(platformString, true);
 					return projURI;
 				}
 			}
