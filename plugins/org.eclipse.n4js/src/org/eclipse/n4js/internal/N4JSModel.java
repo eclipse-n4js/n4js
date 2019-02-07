@@ -87,13 +87,13 @@ public class N4JSModel {
 
 	public N4JSProject findProjectWith(URI nestedLocation) {
 		// FIXME: mm
-		URI correctNestedLocation = convertToCorrespondingLocation(nestedLocation);
-		URI location = workspace.findProjectWith(correctNestedLocation);
+		// URI correctNestedLocation = convertToCorrespondingLocation(nestedLocation);
+		URI location = workspace.findProjectWith(nestedLocation);
 		if (location != null) {
 			return getN4JSProject(location);
 		}
 
-		location = externalLibraryWorkspace.findProjectWith(correctNestedLocation);
+		location = externalLibraryWorkspace.findProjectWith(nestedLocation);
 		if (null != location) {
 			return getN4JSProject(location);
 		}

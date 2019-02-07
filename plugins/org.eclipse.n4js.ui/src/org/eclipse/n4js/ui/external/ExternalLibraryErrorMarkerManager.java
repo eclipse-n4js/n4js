@@ -88,10 +88,10 @@ public class ExternalLibraryErrorMarkerManager {
 			IPath location = org.eclipse.core.runtime.Path.fromOSString(fileString);
 			resource = root.getFileForLocation(location);
 		}
-		setIssuesNoResource(uri, issues, resource);
+		setIssues(uri, issues, null);
 	}
 
-	public void setIssuesNoResource(URI uri, Collection<Issue> issues, IResource resource) {
+	public void setIssues(URI uri, Collection<Issue> issues, IResource resource) {
 		N4JSEclipseProject oneWorkspaceProject = null;
 		for (IN4JSProject prj : n4jsCore.findAllProjects()) {
 			if (!prj.isExternal() && prj.exists() && prj instanceof N4JSEclipseProject) {
