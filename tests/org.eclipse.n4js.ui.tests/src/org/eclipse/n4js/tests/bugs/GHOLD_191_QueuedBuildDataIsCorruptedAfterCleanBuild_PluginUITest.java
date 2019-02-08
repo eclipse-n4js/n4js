@@ -17,6 +17,7 @@ import java.io.File;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.xtext.builder.impl.QueuedBuildData;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.collect.Iterables;
@@ -42,6 +43,7 @@ public class GHOLD_191_QueuedBuildDataIsCorruptedAfterCleanBuild_PluginUITest ex
 	 * Asserts that the {@link QueuedBuildData} contains no queued resource after a full clean build.
 	 */
 	@Test
+	@Ignore
 	public void testQueuedResourcesAfterFullCleanBuild() throws CoreException {
 		cleanBuild();
 		waitForAutoBuild();
