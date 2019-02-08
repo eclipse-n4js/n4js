@@ -115,7 +115,6 @@ public class N4JSMarkerUpdater extends MarkerUpdaterImpl {
 			Pair<IStorage, IProject> pair = pairs.iterator().next();
 			IStorage storage = pair.getFirst();
 			if (!(storage instanceof IFile)) {
-				System.out.print("?");
 				updateMarkersForExternalLibraries(delta, resourceSet, monitor);
 				return;
 			}

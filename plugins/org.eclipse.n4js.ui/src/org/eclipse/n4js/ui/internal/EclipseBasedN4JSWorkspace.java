@@ -99,8 +99,7 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 						// Note: There can be projects in nested node_modules folder.
 						// The node_modules folder is still part of a project, but all
 						// elements below the node_modules folder are not part of this project.
-						URI projURI = URI.createFileURI(locationStr);
-						return projURI;
+						return URIUtils.toFileUri(proj);
 					}
 				}
 			}

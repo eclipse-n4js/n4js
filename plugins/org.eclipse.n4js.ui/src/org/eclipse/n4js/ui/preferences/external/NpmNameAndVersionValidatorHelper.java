@@ -22,7 +22,7 @@ import org.eclipse.xtext.parser.IParseResult;
 import com.google.inject.Inject;
 
 /**
- *
+ * Used for preference page actions of external libraries only
  */
 public class NpmNameAndVersionValidatorHelper {
 	@Inject

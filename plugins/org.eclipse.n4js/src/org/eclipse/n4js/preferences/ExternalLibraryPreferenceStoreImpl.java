@@ -138,8 +138,7 @@ import com.google.inject.Inject;
 	}
 
 	/**
-	 * Attention: This method needs to be called synchronized. The keyword 'synchronized' is not used here because it
-	 * clashes with the Eclipse mechanism of builder rules.
+	 * Attention: This method needs to be called synchronized using ExternalLibraryBuilder#getRule()
 	 */
 	@Override
 	public IStatus synchronizeNodeModulesFolders() {

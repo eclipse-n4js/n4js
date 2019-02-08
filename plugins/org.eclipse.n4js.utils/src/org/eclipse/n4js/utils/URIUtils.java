@@ -157,7 +157,7 @@ public class URIUtils {
 	}
 
 	/** @return a complete URI for a given project */
-	public static URI toUri(IProject project) {
+	public static URI toFileUri(IProject project) {
 		String pathStr = project.getLocation().toString();
 		return URI.createFileURI(pathStr);
 	}

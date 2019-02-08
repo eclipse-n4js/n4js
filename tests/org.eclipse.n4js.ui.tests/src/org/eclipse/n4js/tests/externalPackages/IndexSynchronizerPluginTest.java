@@ -84,7 +84,7 @@ public class IndexSynchronizerPluginTest extends AbstractBuilderParticipantTest 
 		waitForAutoBuild();
 
 		assertFalse(indexSynchronizer.findNpmsInIndex().containsKey(NPM_SNAFU));
-		libraryManager.installNPM(NPM_SNAFU, URIUtils.toUri(project), new NullProgressMonitor());
+		libraryManager.installNPM(NPM_SNAFU, URIUtils.toFileUri(project), new NullProgressMonitor());
 		waitForAutoBuild();
 
 		assertTrue(indexSynchronizer.findNpmsInIndex().containsKey(NPM_SNAFU));
@@ -113,7 +113,7 @@ public class IndexSynchronizerPluginTest extends AbstractBuilderParticipantTest 
 		waitForAutoBuild();
 
 		assertFalse(indexSynchronizer.findNpmsInIndex().containsKey(NPM_SNAFU));
-		libraryManager.installNPM(NPM_SNAFU, URIUtils.toUri(project), new NullProgressMonitor());
+		libraryManager.installNPM(NPM_SNAFU, URIUtils.toFileUri(project), new NullProgressMonitor());
 		waitForAutoBuild();
 		assertTrue(indexSynchronizer.findNpmsInIndex().containsKey(NPM_SNAFU));
 

@@ -450,7 +450,7 @@ public class LibraryManager {
 		List<N4JSExternalProject> npmProjects = externalLibraryWorkspace.getProjectsForName(npmName);
 		MultiStatus multiStatus = statusHelper.createMultiStatus("Uninstall all npms with the name: " + npmName);
 		for (N4JSExternalProject npm : npmProjects) {
-			IStatus status = uninstallNPM(URIUtils.toUri(npm), monitor);
+			IStatus status = uninstallNPM(URIUtils.toFileUri(npm), monitor);
 			multiStatus.merge(status);
 		}
 		return multiStatus;
@@ -466,7 +466,7 @@ public class LibraryManager {
 	 * @return a status representing the outcome of the uninstall process.
 	 */
 	public IStatus uninstallNPM(IProject npmProject, IProgressMonitor monitor) {
-		return uninstallNPM(URIUtils.toUri(npmProject), monitor);
+		return uninstallNPM(URIUtils.toFileUri(npmProject), monitor);
 	}
 
 	/**

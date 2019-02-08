@@ -51,6 +51,10 @@ import org.eclipse.xtext.util.Pair;
 import com.google.inject.Inject;
 
 /**
+ * The n4js editor usually shows files of platform URIs.
+ * <p>
+ * In case of external library files, file-uris must be shown. To enable support for navigation in the project explorer,
+ * a conversion from file to platform uri is done.
  */
 public class N4JSEditor extends XtextEditor implements IShowInSource, IShowInTargetList {
 

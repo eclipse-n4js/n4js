@@ -99,8 +99,8 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 		// line 6: Project does not exist with project ID: @n4jsd/react. expected:<1> but was:<2>
 		assertMarkers("Expected exactly 2 error in package.json.", projectDescriptionFile, 2);
 
-		libManager.installNPM(PACKAGE_REACT, URIUtils.toUri(project), new NullProgressMonitor());
-		libManager.installNPM(PACKAGE_N4JSD_REACT, URIUtils.toUri(project), new NullProgressMonitor());
+		libManager.installNPM(PACKAGE_REACT, URIUtils.toFileUri(project), new NullProgressMonitor());
+		libManager.installNPM(PACKAGE_N4JSD_REACT, URIUtils.toFileUri(project), new NullProgressMonitor());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 
@@ -135,8 +135,8 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 		final IFile projectDescriptionFile = project.getFile(getResourceName(IN4JSProject.PACKAGE_JSON));
 		assertTrue(projectDescriptionFile + " B module is not accessible.", projectDescriptionFile.isAccessible());
 
-		libManager.installNPM(PACKAGE_REACT, URIUtils.toUri(project), new NullProgressMonitor());
-		libManager.installNPM(PACKAGE_N4JSD_REACT, URIUtils.toUri(project), new NullProgressMonitor());
+		libManager.installNPM(PACKAGE_REACT, URIUtils.toFileUri(project), new NullProgressMonitor());
+		libManager.installNPM(PACKAGE_N4JSD_REACT, URIUtils.toFileUri(project), new NullProgressMonitor());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 
