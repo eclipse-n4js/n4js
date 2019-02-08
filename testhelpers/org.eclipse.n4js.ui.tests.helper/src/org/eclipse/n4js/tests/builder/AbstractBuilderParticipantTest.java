@@ -43,6 +43,7 @@ import org.eclipse.n4js.tests.util.EclipseUIUtils;
 import org.eclipse.n4js.tests.util.PackageJSONTestHelper;
 import org.eclipse.n4js.tests.util.ProjectTestsHelper;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
+import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.n4js.utils.process.ProcessResult;
@@ -82,7 +83,7 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 	private Provider<IDirtyStateManager> dirtyStateManager;
 
 	@Inject
-	private ExternalLibrariesSetupHelper externalLibrariesSetupHelper;
+	private ShippedCodeInitializeTestHelper shippedCodeHelper;
 
 	@Inject
 	private ProjectTestsHelper projectTestsHelper;
@@ -303,14 +304,13 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 	}
 
 	/** Sets up the known external library locations with the {@code node_modules} folder. */
-	protected void setupExternalLibraries(boolean initShippedCode) throws Exception {
-		externalLibrariesSetupHelper.setupExternalLibraries(initShippedCode);
+	protected void setupShippedLibraries() throws Exception {
+		shippedCodeHelper.setupBuiltIns();
 	}
 
 	/** Tears down the external libraries. */
-	protected void tearDownExternalLibraries(boolean tearDownShippedCode) throws Exception {
-		externalLibrariesSetupHelper.tearDownExternalLibraries(tearDownShippedCode);
-		super.tearDown();
+	protected void tearDownShippedLibraries() throws Exception {
+		shippedCodeHelper.tearDownBuiltIns();
 	}
 
 	/***/
@@ -353,6 +353,11 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 			throws CoreException {
 
 		return ProjectTestsUtils.assertMarkers(assertMessage, resource, markerType, count, ignoreSomeWarnings);
+	}
+
+	/** See {@link ProjectTestsUtils#assertNoErrors()}. */
+	protected void assertNoErrors() throws CoreException {
+		ProjectTestsUtils.assertNoErrors();
 	}
 
 	/** See {@link ProjectTestsUtils#assertNoIssues()}. */

@@ -21,6 +21,7 @@ import org.eclipse.n4js.test.helper.hlc.N4CliHelper;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.base.Predicates;
@@ -30,6 +31,7 @@ import com.google.common.base.Predicates;
  * instructed to discover missing dependencies and to install them before compilation, which is done with
  * {@code --installMissingDependencies} flag.
  */
+@Ignore("side-by-side-use-case")
 public class InstallFromManifestCompileRunN4jscExternalImportsTest extends AbstractN4jscTest {
 	File workspace;
 

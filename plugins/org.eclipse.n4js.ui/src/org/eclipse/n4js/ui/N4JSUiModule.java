@@ -14,16 +14,15 @@ import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.rules.IPartitionTokenScanner;
 import org.eclipse.jface.text.rules.ITokenScanner;
 import org.eclipse.n4js.CancelIndicatorBaseExtractor;
+import org.eclipse.n4js.binaries.BinariesCommandFactory;
 import org.eclipse.n4js.binaries.BinariesPreferenceStore;
 import org.eclipse.n4js.binaries.BinariesValidator;
-import org.eclipse.n4js.binaries.BinaryCommandFactory;
 import org.eclipse.n4js.external.ExternalIndexSynchronizer;
 import org.eclipse.n4js.external.ExternalLibraryUriHelper;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalProjectsCollector;
 import org.eclipse.n4js.external.NpmLogger;
 import org.eclipse.n4js.external.RebuildWorkspaceProjectsScheduler;
-import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.findReferences.ConcreteSyntaxAwareReferenceFinder;
 import org.eclipse.n4js.generator.ICompositeGenerator;
 import org.eclipse.n4js.generator.IGeneratorMarkerSupport;
@@ -76,7 +75,6 @@ import org.eclipse.n4js.ui.editor.syntaxcoloring.TokenTypeToPartitionMapper;
 import org.eclipse.n4js.ui.external.BuildOrderComputer;
 import org.eclipse.n4js.ui.external.EclipseExternalIndexSynchronizer;
 import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
-import org.eclipse.n4js.ui.external.ExternalIndexUpdater;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildQueue;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildScheduler;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuilder;
@@ -266,11 +264,6 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	}
 
 	/** Delegate to shared injector */
-	public Provider<ExternalIndexUpdater> provideExternalIndexUpdater() {
-		return Access.contributedProvider(ExternalIndexUpdater.class);
-	}
-
-	/** Delegate to shared injector */
 	public Provider<ExternalLibraryBuildScheduler> provideExternalLibraryBuildJobProvider() {
 		return Access.contributedProvider(ExternalLibraryBuildScheduler.class);
 	}
@@ -341,11 +334,6 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	}
 
 	/** Delegate to shared injector */
-	public Provider<TargetPlatformInstallLocationProvider> provideTargetPlatformInstallLocationProvider() {
-		return Access.contributedProvider(TargetPlatformInstallLocationProvider.class);
-	}
-
-	/** Delegate to shared injector */
 	public Provider<IN4JSCore> provideIN4JSCore() {
 		return Access.contributedProvider(IN4JSCore.class);
 	}
@@ -381,8 +369,8 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	}
 
 	/** Delegate to shared injector */
-	public Provider<? extends BinaryCommandFactory> provideBinaryCommandFactory() {
-		return Access.contributedProvider(BinaryCommandFactory.class);
+	public Provider<? extends BinariesCommandFactory> provideBinaryCommandFactory() {
+		return Access.contributedProvider(BinariesCommandFactory.class);
 	}
 
 	/** Delegate to shared injector */

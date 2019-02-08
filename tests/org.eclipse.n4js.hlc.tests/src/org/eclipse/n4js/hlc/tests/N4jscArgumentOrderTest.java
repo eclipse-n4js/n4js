@@ -30,6 +30,7 @@ import org.eclipse.n4js.hlc.base.N4jscBase;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -37,6 +38,7 @@ import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
 /*** Basic tests for N4jsc,like checking command line options or simple compile. */
+@Ignore("side-by-side-use-case")
 @RunWith(Parameterized.class)
 public class N4jscArgumentOrderTest extends AbstractN4jscTest {
 
@@ -57,7 +59,6 @@ public class N4jscArgumentOrderTest extends AbstractN4jscTest {
 		// @formatter:off
 		args = new String[]{
 				"--testCatalogFile " + currentPath + "/build/test-catalog.json",
-				"--targetPlatformInstallLocation " + currentPath + "/build/npm",
 				"--installMissingDependencies",
 				"--buildType projects",
 				currentPath + "/PA",
@@ -90,10 +91,10 @@ public class N4jscArgumentOrderTest extends AbstractN4jscTest {
 			"DEBUG: 7. Project PG (RUNTIME_LIBRARY) used by [PG (RUNTIME_LIBRARY)]\n";
 
 	final static int[][] shuffleOrders = {
-			{0,1,2,3,4,5,6,7,8,9,10,11},
-			{11,10,9,8,7,6,5,4,3,2,1,0},
-			{0,1,2,3,4,5,7,8,9,10,11,6},
-			{0,1,11,2,10,3,9,4,8,5,7,6},
+			{0,1,2,3,4,5,6,7,8,9,10},
+			{10,9,8,7,6,5,4,3,2,1,0},
+			{0,1,2,3,4,5,7,8,9,10,6},
+			{0,1,2,10,3,9,4,8,5,7,6},
 			};
 	// @formatter:on
 

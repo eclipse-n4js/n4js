@@ -165,4 +165,15 @@ public interface IN4JSCore {
 	 */
 	TModule loadModuleFromIndex(ResourceSet resourceSet, IResourceDescription resourceDescription,
 			boolean allowFullLoad);
+
+	/**
+	 * Converts a given URI to a platform or file URI so that:
+	 * <ul>
+	 * <li>A URI of a user workspace project becomes a platform URI.
+	 * <li>A URI of an external library becomes a file URI. The folder 'node_modules' itself is only converted to a file
+	 * URI if it is not inside a user workspace project.
+	 * </ul>
+	 * For the headless case only file URIs will be returned.
+	 */
+	URI convertToCorrespondingLocation(URI uri);
 }

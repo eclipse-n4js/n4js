@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.N4JSUiInjectorProvider;
+import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
 import org.eclipse.n4js.tests.util.EclipseUIUtils;
@@ -65,6 +66,9 @@ public abstract class AbstractBuilderTest {
 		EclipseGracefulUIShutdownEnabler.enableOnce();
 	}
 
+	/***/
+	@Inject
+	protected LibraryManager libraryManager;
 	@Inject
 	private IResourceSetProvider resourceSetProvider;
 	@Inject
@@ -177,6 +181,7 @@ public abstract class AbstractBuilderTest {
 	@After
 	public void tearDown() throws Exception {
 		// save the files as otherwise the projects cannot be deleted
+		libraryManager.deleteAllNodeModulesFolders(new NullProgressMonitor());
 		closeAllEditorsForTearDown();
 		IResourcesSetupUtil.cleanWorkspace();
 		IResourcesSetupUtil.cleanBuild();
@@ -230,6 +235,14 @@ public abstract class AbstractBuilderTest {
 	/***/
 	public void cleanBuild() throws CoreException {
 		IResourcesSetupUtil.cleanBuild();
+	}
+
+	/** Synchronizes the index, rebuilds externals and workspace */
+	protected void syncExtAndBuild() throws CoreException {
+		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
+		ProjectTestsUtils.waitForAllJobs();
+		IResourcesSetupUtil.fullBuild();
+		waitForAutoBuild();
 	}
 
 	private void closeAllEditorsForTearDown() {

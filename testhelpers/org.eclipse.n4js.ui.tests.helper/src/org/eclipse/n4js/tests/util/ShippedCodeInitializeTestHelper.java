@@ -10,12 +10,8 @@
  */
 package org.eclipse.n4js.tests.util;
 
-import static org.junit.Assert.assertTrue;
-
-import java.net.URI;
-import java.util.function.Consumer;
-
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 
@@ -28,23 +24,42 @@ import com.google.inject.Inject;
 public class ShippedCodeInitializeTestHelper {
 
 	@Inject
+	private LibraryManager libraryManager;
+
+	@Inject
 	private ExternalLibraryPreferenceStore externalLibraryPreferenceStore;
 
-	/** Set up shipped projects in all {@link ExternalLibrariesActivator#EXTERNAL_LIBRARIES_SUPPLIER locations}. */
-	public void setupBuiltIns() {
-		forAllLocations(externalLibraryPreferenceStore::add);
-		assertTrue("Error while saving external library preference changes.",
-				externalLibraryPreferenceStore.save(new NullProgressMonitor()).isOK());
+	/**
+	 * Set up shipped projects in all {@link ExternalLibrariesActivator#EXTERNAL_LIBRARIES_SUPPLIER locations}.
+	 * <p>
+	 * <b>Attention:</b> Works only with PluginUI tests!
+	 * <p>
+	 * Setting this property is necessary since {@link ExternalLibraryPreferenceStore#resetDefaults()} will transitively
+	 * call {@link ExternalLibrariesActivator#requiresInfrastructureForLibraryManager()}.
+	 */
+	synchronized public void setupBuiltIns() {
+		ProjectTestsUtils.waitForAllJobs();
+		System.setProperty(ExternalLibrariesActivator.INCLUDES_BUILT_INS_SYSTEM_PROPERTY, "true");
+
+		externalLibraryPreferenceStore.synchronizeNodeModulesFolders();
+		ProjectTestsUtils.waitForAllJobs();
+
+		libraryManager.synchronizeNpms(new NullProgressMonitor());
+		ProjectTestsUtils.waitForAllJobs();
 	}
 
 	/** Tear down shipped projects in all {@link ExternalLibrariesActivator#EXTERNAL_LIBRARIES_SUPPLIER locations}. */
-	public void tearDownBuiltIns() {
-		forAllLocations(externalLibraryPreferenceStore::remove);
-		assertTrue("Error while saving external library preference changes.",
-				externalLibraryPreferenceStore.save(new NullProgressMonitor()).isOK());
+	synchronized public void tearDownBuiltIns() {
+		ProjectTestsUtils.waitForAllJobs();
+		libraryManager.deleteAllNodeModulesFolders(new NullProgressMonitor());
+
+		System.setProperty(ExternalLibrariesActivator.INCLUDES_BUILT_INS_SYSTEM_PROPERTY, "");
+
+		externalLibraryPreferenceStore.synchronizeNodeModulesFolders();
+		ProjectTestsUtils.waitForAllJobs();
+
+		libraryManager.synchronizeNpms(new NullProgressMonitor());
+		ProjectTestsUtils.waitForAllJobs();
 	}
 
-	private void forAllLocations(Consumer<URI> consume) {
-		ExternalLibrariesActivator.EXTERNAL_LIBRARIES_SUPPLIER.get().keySet().forEach(consume);
-	}
 }

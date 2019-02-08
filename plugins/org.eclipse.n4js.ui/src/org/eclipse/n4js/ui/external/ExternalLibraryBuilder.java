@@ -63,6 +63,7 @@ import org.eclipse.n4js.ui.external.ComputeProjectOrder.VertexOrder;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildQueue.Task;
 import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
 import org.eclipse.n4js.utils.N4JSDataCollectors;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.builder.builderState.IBuilderState;
 import org.eclipse.xtext.builder.impl.IToBeBuiltComputerContribution;
@@ -600,6 +601,8 @@ public class ExternalLibraryBuilder {
 		Set<String> toBeWipedStrings = new HashSet<>();
 		for (URI toWipe : toBeWiped) {
 			toBeWipedStrings.add(toWipe.toString());
+			String projectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(toWipe);
+			errorMarkerManager.clearMarkers(projectName);
 		}
 
 		ResourceSet resourceSet = core.createResourceSet(Optional.absent());

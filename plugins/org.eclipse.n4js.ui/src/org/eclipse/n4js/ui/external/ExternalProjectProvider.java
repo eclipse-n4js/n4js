@@ -16,7 +16,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -28,7 +27,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalProject;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.external.NpmLogger;
-import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore.StoreUpdatedListener;
@@ -57,9 +55,6 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 	private ExternalLibraryPreferenceStore externalLibraryPreferenceStore;
 
 	@Inject
-	private TargetPlatformInstallLocationProvider platformLocationProvider;
-
-	@Inject
 	private EclipseBasedN4JSWorkspace userWorkspace;
 
 	@Inject
@@ -67,13 +62,11 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 
 	static private class UninitializedMappings extends ExternalProjectMappings {
 		public UninitializedMappings() {
-			super(null, null, null, null, false);
+			super(null, null, null, false);
 		}
 	}
 
 	private final Semaphore semaphore = new Semaphore(1);
-	private final Collection<ExternalLocationsUpdatedListener> locListeners = new LinkedList<>();
-	private final LinkedHashMap<String, java.net.URI> rootLocations = new LinkedHashMap<>();
 	private ExternalProjectMappings mappings = new UninitializedMappings();
 
 	/**
@@ -85,7 +78,6 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 	 */
 	@Inject
 	ExternalProjectProvider(ExternalLibraryPreferenceStore preferenceStore) {
-		setRootLocations(preferenceStore.getLocations());
 		preferenceStore.addListener(this);
 	}
 
@@ -98,15 +90,6 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 		if (Platform.isRunning()) {
 			getWorkspace().addResourceChangeListener(projectStateChangeListener);
 		}
-	}
-
-	/** Adds the given listener. Listener gets called after locations of external workspaces changed. */
-	public void addExternalLocationsUpdatedListener(ExternalLocationsUpdatedListener listener) {
-		locListeners.add(listener);
-	}
-
-	Collection<java.net.URI> getRootLocationsInReversedShadowingOrder() {
-		return rootLocations.values();
 	}
 
 	Collection<URI> getAllProjectLocations() {
@@ -123,16 +106,6 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 
 		Set<java.net.URI> addedLocations = new HashSet<>(newLocations);
 		addedLocations.removeAll(oldLocations);
-
-		for (ExternalLocationsUpdatedListener locListener : locListeners) {
-			locListener.beforeLocationsUpdated(removedLocations, monitor);
-		}
-
-		updateCache(newLocations);
-
-		for (ExternalLocationsUpdatedListener locListener : locListeners) {
-			locListener.afterLocationsUpdated(addedLocations, monitor);
-		}
 	}
 
 	void updateCache() {
@@ -149,18 +122,11 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 		}
 	}
 
-	private void updateCache(Set<java.net.URI> newLocations) {
-		setRootLocations(newLocations);
-		updateCacheInternal();
-	}
-
 	synchronized private void updateCacheInternal() {
 		if (semaphore.tryAcquire()) {
 			try {
 				Map<URI, Pair<N4JSExternalProject, ProjectDescription>> completeCache = computeProjectsUncached();
-				mappings = new ExternalProjectMappings(userWorkspace, externalLibraryPreferenceStore,
-						platformLocationProvider, completeCache);
-
+				mappings = new ExternalProjectMappings(userWorkspace, externalLibraryPreferenceStore, completeCache);
 				npmLogger.logInfo("external locations updated");
 
 			} finally {
@@ -189,7 +155,8 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 	List<Pair<URI, ProjectDescription>> computeProjectsIncludingUnnecessary() {
 		Map<URI, Pair<N4JSExternalProject, ProjectDescription>> completeCache = computeProjectsUncached();
 		ExternalProjectMappings mappingsTmp = new ExternalProjectMappings(userWorkspace, externalLibraryPreferenceStore,
-				platformLocationProvider, completeCache);
+				completeCache);
+
 		return mappingsTmp.completeList;
 	}
 
@@ -251,13 +218,10 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 		return mappings.reducedProjectsLocationMapping.getOrDefault(rootLocation, Collections.emptyList());
 	}
 
-	private void setRootLocations(Collection<java.net.URI> newRootLocations) {
-		List<java.net.URI> locationsInShadowOrder = ExternalLibrariesActivator.sortByShadowing(newRootLocations);
-		Collections.reverse(locationsInShadowOrder); // reverse order for ExternalProjectMapper
-		rootLocations.clear();
-		for (java.net.URI loc : locationsInShadowOrder) {
-			String locStr = loc.toString();
-			rootLocations.put(locStr, loc);
-		}
+	Collection<java.net.URI> getRootLocationsInReversedShadowingOrder() {
+		Collection<java.net.URI> locations = externalLibraryPreferenceStore.getLocations();
+		List<java.net.URI> locationsInShadowOrder = ExternalLibrariesActivator.sortByShadowing(locations);
+		Collections.reverse(locationsInShadowOrder);
+		return locationsInShadowOrder;
 	}
 }

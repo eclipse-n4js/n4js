@@ -128,11 +128,6 @@ const nomnomOptions: Object = {
         default: "src/n4js-gen/**/*.n4js?(x|d)",
         help: "When compiling, write a __bundle-gen.js CommonJS module to bulk register generated code modules."
     },
-    targetPlatformInstallLocation: {
-        metavar: "PATH",
-        transform: resolvePath,
-        help: "NPM dependencies install location."
-    },
     targetPlatformSkipInstall: {
         flag: true,
         help: "Skips NPM dependency installation, assuming already existing."

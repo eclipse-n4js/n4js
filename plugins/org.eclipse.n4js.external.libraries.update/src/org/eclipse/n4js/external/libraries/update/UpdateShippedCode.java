@@ -29,8 +29,8 @@ import org.eclipse.emf.mwe2.runtime.workflow.IWorkflowComponent;
 import org.eclipse.emf.mwe2.runtime.workflow.IWorkflowContext;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSStandaloneSetup;
-import org.eclipse.n4js.binaries.nodejs.NodeBinaryLocatorHelper;
-import org.eclipse.n4js.binaries.nodejs.NodeProcessBuilder;
+import org.eclipse.n4js.binaries.BinariesLocatorHelper;
+import org.eclipse.n4js.binaries.nodejs.NodeYarnProcessBuilder;
 import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
 import org.eclipse.n4js.external.libraries.ExternalLibraryFolderUtils;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
@@ -219,6 +219,7 @@ public class UpdateShippedCode implements IWorkflowComponent {
 		};
 
 		try {
+			NodeYarnProcessBuilder.additionalEnvironmentVariables.put("NPM_TOKEN", "dummy");
 			new N4jscBase().doMain(args);
 		} catch (ExitCodeException e) {
 			println("ERROR: headless compiler threw ExitCodeException (probably code compiled with errors); "
@@ -226,17 +227,19 @@ public class UpdateShippedCode implements IWorkflowComponent {
 					+ "message: " + e.getMessage());
 			e.printStackTrace();
 			throw new RuntimeException(e);
+		} finally {
+			NodeYarnProcessBuilder.additionalEnvironmentVariables.clear();
 		}
 	}
 
 	private static void runNpmInstall(File workingDirectory) {
 		// Initialize DI
 		Injector injector = N4JSStandaloneSetup.doSetup();
-		final NodeBinaryLocatorHelper locator = injector.getInstance(NodeBinaryLocatorHelper.class);
-		final NodeProcessBuilder nodeProcessBuilder = injector.getInstance(NodeProcessBuilder.class);
+		final BinariesLocatorHelper locator = injector.getInstance(BinariesLocatorHelper.class);
+		final NodeYarnProcessBuilder nodeProcessBuilder = injector.getInstance(NodeYarnProcessBuilder.class);
 
 		println("Running \"" + N4JSGlobals.NPM_INSTALL + "\" in folder \"" + workingDirectory + "\"");
-		final String npmBinaryPath = locator.findNodePath();
+		final String npmBinaryPath = locator.findNodePath().toString();
 		if (npmBinaryPath == null || npmBinaryPath.isEmpty()) {
 			println("");
 			println("Could not identify location of node.");
@@ -253,7 +256,7 @@ public class UpdateShippedCode implements IWorkflowComponent {
 			println("Invoking: " + String.join(" ", cmd));
 			println("  in working directory: " + workingDirectory);
 
-			ProcessBuilder pb = nodeProcessBuilder.getNpmInstallProcessBuilder(workingDirectory, "", true);
+			ProcessBuilder pb = nodeProcessBuilder.getInstallNpmPackageProcessBuilder(workingDirectory, "", true);
 			final Process p = pb.start();
 			final int exitCode = p.waitFor();
 			if (exitCode != 0) {

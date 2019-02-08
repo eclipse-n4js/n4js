@@ -12,7 +12,7 @@ package org.eclipse.n4js.generator.headless;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -71,8 +71,8 @@ public class BuildSet {
 
 	BuildSet(Collection<N4JSProject> requestedProjects, Collection<N4JSProject> discoveredProjects,
 			Predicate<URI> projectFilter) {
-		this.requestedProjects = Collections.unmodifiableSet(new HashSet<>(requestedProjects));
-		this.discoveredProjects = Collections.unmodifiableSet(new HashSet<>(discoveredProjects));
+		this.requestedProjects = Collections.unmodifiableSet(new LinkedHashSet<>(requestedProjects));
+		this.discoveredProjects = Collections.unmodifiableSet(new LinkedHashSet<>(discoveredProjects));
 		this.resourceFilter = projectFilter;
 	}
 

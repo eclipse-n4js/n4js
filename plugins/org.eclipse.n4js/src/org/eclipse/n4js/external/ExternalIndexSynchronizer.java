@@ -12,6 +12,7 @@ package org.eclipse.n4js.external;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -19,13 +20,17 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.external.ExternalLibraryWorkspace.RegisterResult;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
 import org.eclipse.n4js.json.JSON.JSONPackage;
+import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
@@ -63,11 +68,21 @@ public abstract class ExternalIndexSynchronizer {
 	@Inject
 	protected ExternalLibraryWorkspace externalLibraryWorkspace;
 
+	/** shadowing helper */
 	@Inject
-	private ShadowingInfoHelper shadowingInfoHelper;
+	protected ShadowingInfoHelper shadowingInfoHelper;
 
+	/** containment helper */
 	@Inject
-	private FolderContainmentHelper containmentHelper;
+	protected FolderContainmentHelper containmentHelper;
+
+	/** preference store */
+	@Inject
+	protected ExternalLibraryPreferenceStore libraryPreferenceStore;
+
+	/** Npm logger */
+	@Inject
+	protected NpmLogger logger;
 
 	/**
 	 * Call this method to synchronize the information in the Xtext index with all external projects in the external
@@ -87,42 +102,54 @@ public abstract class ExternalIndexSynchronizer {
 	 */
 	abstract public void reindexAllExternalProjects(IProgressMonitor monitor);
 
+	/** Enum to configure the method {@link ExternalIndexSynchronizer#findNpmsInFolder(ProjectStateOperation)} */
+	public enum ProjectStateOperation {
+		/** uses the current state */
+		NONE,
+		/** computes the state from disk but leaves the cache untouched */
+		PEEK,
+		/** computes the state from disk and updates the cache */
+		UPDATE
+	}
+
 	/**
 	 * Note: Expensive method
 	 * <p>
 	 * Returns a map that maps the names of projects as they can be found in the {@code node_modules} folder to their
 	 * locations and versions.
 	 *
-	 * @param updateCache
-	 *            if
-	 *            <ul>
-	 *            <li>true, cache will be first updated and then used to find projects
-	 *            <li>false, cache will <b>not</b> be updated. Instead a temporary cache will be created and used to
-	 *            find projects
-	 *            </ul>
+	 * @param operation
+	 *            configuration. see {@link ProjectStateOperation}
 	 */
-	final public Map<String, Pair<URI, String>> findNpmsInFolder(boolean updateCache) {
+	final public Map<String, Pair<URI, String>> findNpmsInFolder(ProjectStateOperation operation) {
 		Map<String, Pair<URI, String>> npmsFolder = new HashMap<>();
 
-		List<org.eclipse.xtext.util.Pair<URI, ProjectDescription>> prjs = null;
-		if (updateCache) {
+		List<org.eclipse.xtext.util.Pair<URI, ProjectDescription>> prjs = Collections.emptyList();
+		switch (operation) {
+		case NONE:
+			prjs = externalLibraryWorkspace.getProjectsIncludingUnnecessary();
+			break;
+		case PEEK:
+			prjs = externalLibraryWorkspace.computeProjectsIncludingUnnecessary();
+			break;
+		case UPDATE:
 			externalLibraryWorkspace.updateState();
 			prjs = externalLibraryWorkspace.getProjectsIncludingUnnecessary();
-		} else {
-			prjs = externalLibraryWorkspace.computeProjectsIncludingUnnecessary();
+			break;
 		}
 
 		for (org.eclipse.xtext.util.Pair<URI, ProjectDescription> pair : prjs) {
 
 			URI location = pair.getFirst();
 			IN4JSProject project = core.findProject(location).orNull();
+
 			if (project == null || !shadowingInfoHelper.isShadowedProject(project)) {
 				ProjectDescription projectDescription = pair.getSecond();
 				VersionNumber version = projectDescription.getProjectVersion();
 				String name = projectDescription.getProjectName();
 
 				if (version != null) {
-					npmsFolder.put(name, Pair.of(location, version.toString()));
+					npmsFolder.putIfAbsent(name, Pair.of(location, version.toString()));
 				}
 			}
 		}
@@ -163,18 +190,42 @@ public abstract class ExternalIndexSynchronizer {
 		return resourceDescription != null;
 	}
 
+	/** Sets error markers to every N4JS project iff the folder node_modules and the N4JS index are out of sync. */
+	public void checkAndClearIndex(IProgressMonitor monitor) {
+		Collection<LibraryChange> changeSet = identifyChangeSet(Collections.emptyList(), ProjectStateOperation.UPDATE);
+		cleanRemovedProjectsFromIndex(monitor, changeSet);
+	}
+
+	private void cleanRemovedProjectsFromIndex(IProgressMonitor monitor, Collection<LibraryChange> changeSet) {
+		monitor.setTaskName("Deregister removed projects...");
+		Set<URI> cleanProjects = new HashSet<>();
+		for (LibraryChange libChange : changeSet) {
+			if (libChange.type == LibraryChangeType.Removed) {
+				cleanProjects.add(libChange.location);
+			}
+		}
+
+		RegisterResult cleanResult = externalLibraryWorkspace.deregisterProjects(monitor, cleanProjects);
+		printRegisterResults(cleanResult, "deregistered");
+	}
+
 	/**
 	 * Note: Expensive method: works on the disk directly (not on the cache of external library WS)
 	 *
 	 * @return a set of all changes between the Xtext index and the external projects in all external locations
 	 */
 	final protected Collection<LibraryChange> identifyChangeSet(Collection<LibraryChange> forcedChangeSet,
-			boolean updateCache) {
+			ProjectStateOperation operation) {
+
+		int synchronizeStatusCode = libraryPreferenceStore.synchronizeNodeModulesFolders().getCode();
+		if (synchronizeStatusCode == ExternalLibraryPreferenceStore.STATUS_CODE_SAVED_CHANGES) {
+			operation = ProjectStateOperation.NONE;
+		}
 
 		Collection<LibraryChange> changes = new LinkedHashSet<>(forcedChangeSet);
 
 		Map<String, Pair<URI, String>> npmsOfIndex = findNpmsInIndex();
-		Map<String, Pair<URI, String>> npmsOfFolder = findNpmsInFolder(updateCache);
+		Map<String, Pair<URI, String>> npmsOfFolder = findNpmsInFolder(operation);
 
 		Set<String> differences = new HashSet<>();
 		differences.addAll(npmsOfIndex.keySet());
@@ -224,8 +275,10 @@ public abstract class ExternalIndexSynchronizer {
 
 	private void addToIndex(Map<String, Pair<URI, String>> npmsIndex, IResourceDescription resourceDescription) {
 		URI nestedLocation = resourceDescription.getURI();
-		java.net.URI rootLocationJNU = externalLibraryWorkspace.getRootLocationForResource(nestedLocation);
+		java.net.URI rootLocationJNU = externalLibraryWorkspace.getRootLocationForResourceOrInfer(nestedLocation);
 		if (rootLocationJNU == null) {
+			logger.logInfo("Could not find location for: " + nestedLocation.toString()
+					+ ".\n Please rebuild external libraries!");
 			return;
 		}
 		URI rootLocation = URI.createURI(rootLocationJNU.toString());
@@ -323,4 +376,34 @@ public abstract class ExternalIndexSynchronizer {
 		return workspaceLocation.appendSegments(URI.createURI(projectName).segments());
 	}
 
+	/** Prints the given results to the npm logger */
+	protected void printRegisterResults(RegisterResult rr, String jobName) {
+		if (!rr.externalProjectsDone.isEmpty()) {
+			SortedSet<String> prjNames = getProjectNamesFromLocations(rr.externalProjectsDone);
+			logger.logInfo("External libraries " + jobName + ": " + String.join(", ", prjNames));
+		}
+
+		if (!rr.wipedProjects.isEmpty()) {
+			SortedSet<String> prjNames = new TreeSet<>();
+			for (URI location : rr.wipedProjects) {
+				String projectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location);
+				prjNames.add(projectName);
+			}
+			logger.logInfo("Projects deregistered: " + String.join(", ", prjNames));
+		}
+
+		if (!rr.affectedWorkspaceProjects.isEmpty()) {
+			SortedSet<String> prjNames = getProjectNamesFromLocations(rr.affectedWorkspaceProjects);
+			logger.logInfo("Workspace projects affected: " + String.join(", ", prjNames));
+		}
+	}
+
+	private SortedSet<String> getProjectNamesFromLocations(Collection<URI> projectLocations) {
+		SortedSet<String> prjNames = new TreeSet<>();
+		for (URI location : projectLocations) {
+			IN4JSProject p = core.findProject(location).orNull();
+			prjNames.add(p.getProjectName());
+		}
+		return prjNames;
+	}
 }

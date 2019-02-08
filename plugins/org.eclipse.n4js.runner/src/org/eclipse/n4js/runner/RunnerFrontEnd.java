@@ -149,8 +149,9 @@ public class RunnerFrontEnd {
 	 */
 	public RunConfiguration createConfiguration(String runnerId, String implementationId, String systemLoader,
 			URI moduleToRun, String additionalPath) {
+
 		RunConfiguration runConfig = createConfiguration(runnerId, implementationId, systemLoader, moduleToRun);
-		runConfig.setAdditionalPath(additionalPath);
+		runConfig.addAdditionalPath(additionalPath);
 		return runConfig;
 	}
 

@@ -29,6 +29,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.ui.building.ResourceDescriptionWithoutModuleUserData;
+import org.eclipse.n4js.ui.external.ExternalProjectMappings;
 import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
 import org.eclipse.xtext.builder.builderState.IBuilderState;
 import org.eclipse.xtext.builder.builderState.impl.ResourceDescriptionImpl;
@@ -90,6 +91,7 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 	 */
 	@Before
 	public void loadBuiltIns() {
+		ExternalProjectMappings.REDUCE_REGISTERED_NPMS = false;
 		shippedCodeInitializeTestHelper.setupBuiltIns();
 		waitForAutoBuild();
 	}
@@ -107,6 +109,7 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 	private void unLoadBuiltIns() {
 		shippedCodeInitializeTestHelper.tearDownBuiltIns();
 		waitForAutoBuild();
+		ExternalProjectMappings.REDUCE_REGISTERED_NPMS = true;
 	}
 
 	@Override
@@ -120,6 +123,7 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 		final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(PROJECT_NAME);
 		assertTrue("Test project is not accessible.", project.isAccessible());
 
+		syncExtAndBuild();
 		// Since we do not know whether the built-in initialization or the test project import happened earlier...
 		// Make sure both test module and project description file get into the index.
 		IResourcesSetupUtil.fullBuild();
@@ -175,10 +179,9 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 		assertMarkers("Expected exactly 7 issues.", project, 7);
 
 		loadBuiltIns();
-		IResourcesSetupUtil.fullBuild();
-		waitForAutoBuild();
-		resource.getContents().clear();
+		syncExtAndBuild();
 
+		resource.getContents().clear();
 		// see above for list of expected issues
 		assertMarkers("Expected exactly 7 issues.", project, 7); // issues are in external libraries
 

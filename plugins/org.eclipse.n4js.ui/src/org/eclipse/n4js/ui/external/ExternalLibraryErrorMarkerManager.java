@@ -13,6 +13,10 @@ package org.eclipse.n4js.ui.external;
 import java.util.Collection;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.N4JSExternalProject;
@@ -77,6 +81,17 @@ public class ExternalLibraryErrorMarkerManager {
 
 	/** Adds error markers for the given resource and issues */
 	public void setIssues(URI uri, Collection<Issue> issues) {
+		IResource resource = null;
+		if (uri.isFile()) {
+			String fileString = uri.toFileString();
+			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+			IPath location = org.eclipse.core.runtime.Path.fromOSString(fileString);
+			resource = root.getFileForLocation(location);
+		}
+		setIssues(uri, issues, null);
+	}
+
+	public void setIssues(URI uri, Collection<Issue> issues, IResource resource) {
 		N4JSEclipseProject oneWorkspaceProject = null;
 		for (IN4JSProject prj : n4jsCore.findAllProjects()) {
 			if (!prj.isExternal() && prj.exists() && prj instanceof N4JSEclipseProject) {
@@ -103,7 +118,9 @@ public class ExternalLibraryErrorMarkerManager {
 			locationName += ", Line: " + issue.getLineNumber();
 			String uriKey = externalProject.getName();
 
-			IProject resource = oneWorkspaceProject.getProject();
+			if (resource == null) {
+				resource = oneWorkspaceProject.getProject();
+			}
 			String code = getCodeKey(issue);
 			String msg = getMessage(issue);
 

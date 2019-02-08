@@ -14,20 +14,26 @@ import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static org.eclipse.core.runtime.Status.OK_STATUS;
 
 import java.io.File;
 import java.net.URI;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.n4js.external.ExternalLibraryHelper;
+import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper;
 import org.eclipse.n4js.utils.collections.Arrays2;
 
 import com.google.common.collect.Iterables;
@@ -43,14 +49,17 @@ import com.google.inject.Inject;
 	@Inject
 	private ExternalLibraryHelper externalLibraryHelper;
 
+	@Inject
+	private NodeModulesDiscoveryHelper nodeModulesDiscoveryHelper;
+
 	private final Collection<StoreUpdatedListener> listeners;
 
 	private ExternalLibraryPreferenceModel model;
+	private ExternalLibraryPreferenceModel lastSavedModel;
 
 	/**
 	 * Creates a new external library preference store.
 	 */
-	@Inject
 	protected ExternalLibraryPreferenceStoreImpl() {
 		listeners = newHashSet();
 		model = getOrCreateModel();
@@ -58,7 +67,13 @@ import com.google.inject.Inject;
 
 	@Override
 	public Collection<URI> getLocations() {
-		return getOrCreateModel().getExternalLibraryLocationsAsUris();
+		List<URI> result = new ArrayList<>(getOrCreateModel().getExternalLibraryLocationsAsUris());
+		return result;
+	}
+
+	@Override
+	public Collection<URI> getNodeModulesLocations() {
+		return getOrCreateModel().getNodeModulesLocationsAsUris();
 	}
 
 	@Override
@@ -93,19 +108,19 @@ import com.google.inject.Inject;
 
 	@Override
 	public final IStatus save(IProgressMonitor monitor) {
-
-		if (getOrCreateModel().equals(doLoad())) {
-			return OK_STATUS;
+		if (lastSavedModel != null && getOrCreateModel().equals(lastSavedModel)) {
+			return new Status(IStatus.OK, "unknown", STATUS_CODE_NO_CHANGES, "", null);
 		}
 
 		if (null == monitor) {
 			monitor = new NullProgressMonitor();
 		}
 		final IStatus status = doSave(getOrCreateModel());
+		lastSavedModel = doLoad();
 		if (null != status && status.isOK()) {
 			notifyListeners(monitor);
 		}
-		return status;
+		return new Status(IStatus.OK, "unknown", STATUS_CODE_SAVED_CHANGES, "", null);
 	}
 
 	@Override
@@ -120,6 +135,28 @@ import com.google.inject.Inject;
 		if (null != listener) {
 			listeners.remove(listener);
 		}
+	}
+
+	/**
+	 * Attention: This method needs to be called synchronized using ExternalLibraryBuilder#getRule()
+	 */
+	@Override
+	public IStatus synchronizeNodeModulesFolders() {
+		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+		List<Path> projectRoots = new LinkedList<>();
+		for (IProject project : projects) {
+			if (project.isAccessible()) {
+				Path path = project.getLocation().toFile().toPath();
+				projectRoots.add(path);
+			}
+		}
+
+		resetDefaults();
+		List<Path> locations = nodeModulesDiscoveryHelper.findNodeModulesFolders(projectRoots);
+		for (Path location : locations) {
+			add(location.toUri());
+		}
+		return save(new NullProgressMonitor());
 	}
 
 	/**

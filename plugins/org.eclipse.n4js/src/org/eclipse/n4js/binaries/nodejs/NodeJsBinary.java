@@ -19,6 +19,8 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.n4js.binaries.BinariesConstants;
+import org.eclipse.n4js.binaries.BinariesLocatorHelper;
 import org.eclipse.n4js.binaries.BinariesPreferenceStore;
 import org.eclipse.n4js.binaries.BinariesValidator;
 import org.eclipse.n4js.binaries.Binary;
@@ -48,7 +50,7 @@ public class NodeJsBinary implements Binary {
 	private BinariesPreferenceStore preferenceStore;
 
 	@Inject
-	private NodeBinaryLocatorHelper nodeBinaryLocatorHelper;
+	private BinariesLocatorHelper nodeBinaryLocatorHelper;
 
 	@Override
 	public String getId() {
@@ -57,7 +59,7 @@ public class NodeJsBinary implements Binary {
 
 	@Override
 	public String getLabel() {
-		return NodeBinariesConstants.NODE_LABEL;
+		return BinariesConstants.NODE_LABEL;
 	}
 
 	@Override
@@ -70,17 +72,17 @@ public class NodeJsBinary implements Binary {
 
 	@Override
 	public VersionNumber getMinimumVersion() {
-		return NodeBinariesConstants.NODE_MIN_VERSION;
+		return BinariesConstants.NODE_MIN_VERSION;
 	}
 
 	@Override
 	public String getBinaryAbsolutePath() {
-		return getUserNodePathOrDefault() + File.separator + NodeBinariesConstants.NODE_BINARY_NAME;
+		return getUserNodePathOrDefault() + File.separator + BinariesConstants.NODE_BINARY_NAME;
 	}
 
 	@Override
 	public String getVersionArgument() {
-		return NodeBinariesConstants.VERSION_ARGUMENT;
+		return BinariesConstants.VERSION_ARGUMENT;
 	}
 
 	@Override
@@ -153,7 +155,7 @@ public class NodeJsBinary implements Binary {
 
 	private String getDefaultNodePath() {
 		if (memoizedCalculatedNodePath == null) {
-			memoizedCalculatedNodePath = nodeBinaryLocatorHelper.findNodePath();
+			memoizedCalculatedNodePath = nodeBinaryLocatorHelper.findNodePath().toString();
 		}
 		return memoizedCalculatedNodePath;
 	}

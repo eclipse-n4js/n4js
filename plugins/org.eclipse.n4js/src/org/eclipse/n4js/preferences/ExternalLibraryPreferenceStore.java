@@ -22,6 +22,10 @@ import org.eclipse.core.runtime.NullProgressMonitor;
  * Representation of a preference store for external libraries.
  */
 public interface ExternalLibraryPreferenceStore extends Iterable<URI> {
+	/** Code used in {@link #save(IProgressMonitor)} */
+	public static final int STATUS_CODE_SAVED_CHANGES = 1;
+	/** Code used in {@link #save(IProgressMonitor)} */
+	public static final int STATUS_CODE_NO_CHANGES = 2;
 
 	/**
 	 * Returns with a collection of configured external library locations.
@@ -29,6 +33,13 @@ public interface ExternalLibraryPreferenceStore extends Iterable<URI> {
 	 * @return a collection of configured external library locations.
 	 */
 	Collection<URI> getLocations();
+
+	/**
+	 * Returns with a collection of configured node_module locations.
+	 *
+	 * @return a collection of configured node_module locations.
+	 */
+	Collection<URI> getNodeModulesLocations();
 
 	/**
 	 * Adds a new external library configuration entry to the preferences. Has no effect if the location already exists.
@@ -86,7 +97,9 @@ public interface ExternalLibraryPreferenceStore extends Iterable<URI> {
 	 *            the monitor for the save progress. Optional, can be {@code null}, in such cases an
 	 *            {@link NullProgressMonitor} will be used instead.
 	 *
-	 * @return returns a status representing the outcome of the save operation.
+	 * @return a status representing the outcome of the save operation. If changes have been saved, the status code is
+	 *         {@link #STATUS_CODE_SAVED_CHANGES}. If there were no changes, the status code is
+	 *         {@link #STATUS_CODE_NO_CHANGES}.
 	 */
 	IStatus save(IProgressMonitor monitor);
 
@@ -105,6 +118,9 @@ public interface ExternalLibraryPreferenceStore extends Iterable<URI> {
 	 *            the listener to remove. Can be {@code null}.
 	 */
 	void removeListener(StoreUpdatedListener listener);
+
+	/** Triggers synchronization of the stored node_modules folders with the ones that actually exist. */
+	IStatus synchronizeNodeModulesFolders();
 
 	/**
 	 * Converts the given external library root location URIs into an iterable of existing external folder locations

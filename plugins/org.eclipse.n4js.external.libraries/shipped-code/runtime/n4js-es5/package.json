@@ -37,7 +37,5 @@
     "initModules": [
       "rt"
     ]
-  },
-  "dependencies": {},
-  "devDependencies": {}
+  }
 }
