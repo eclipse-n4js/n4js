@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.validation.validators
 
+import com.google.common.collect.ArrayListMultimap
 import com.google.inject.Inject
 import java.util.LinkedList
 import java.util.List
@@ -728,8 +729,8 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 			val G = ite.newRuleEnvironment;
 			val List<TypeRef> intersectionTR = tsh.getSubtypesOnly(G, tClassRefs);
 
-			checkIntersectionTypeContainsMaxOneClass(ite, G, tClassRefs, intersectionTR);
-			checkIntersectionHasUnnecessarySupertype(ite, G, tClassRefs, intersectionTR);
+			checkIntersectionTypeContainsMaxOneClass(G, intersectionTR, false);
+			checkIntersectionHasUnnecessarySupertype(tClassRefs, intersectionTR);
 		}
 	}
 
@@ -738,12 +739,65 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 	 * <i>Only one class must be contained in the intersection type.</i><br/><br/>
 	 * Currently, only a warning is displayed.
 	 */
-	def private void checkIntersectionTypeContainsMaxOneClass(IntersectionTypeExpression ite, RuleEnvironment G,
-		List<TypeRef> tClassRefs, List<TypeRef> intersectionTR) {
+	def private void checkIntersectionTypeContainsMaxOneClass(RuleEnvironment G,
+		 List<TypeRef> intersectionTR, boolean covariantTypeArgValidation) {
 		if (intersectionTR.size() > 1) {
+			
+			val ArrayListMultimap<Type, TypeRef> byTypes = ArrayListMultimap.create();
+			
 			for (TypeRef tClassR : intersectionTR) {
-				val message = messageForINTER_ONLY_ONE_CLASS_ALLOWED;
-				addIssue(message, tClassR, INTER_ONLY_ONE_CLASS_ALLOWED);
+				byTypes.put(tClassR.declaredType, tClassR)
+			}
+			
+			if (byTypes.keySet.size>1) {
+				if (covariantTypeArgValidation) {
+					val message = messageForINTER_TYEPARGS_ONLY_ONE_CLASS_ALLOWED;
+					for (TypeRef tClassR : intersectionTR) {
+						addIssue(message, tClassR, INTER_TYEPARGS_ONLY_ONE_CLASS_ALLOWED);
+					}
+				} else {
+					val message = messageForINTER_ONLY_ONE_CLASS_ALLOWED;
+					for (TypeRef tClassR : intersectionTR) {
+						addIssue(message, tClassR, INTER_ONLY_ONE_CLASS_ALLOWED);
+					}
+				}
+			} else {
+				val type = byTypes.keys.head;
+				if (type.isGeneric) {
+					val List<TypeRef> ptrs = byTypes.get(type); // similar to intersectionTR
+					
+					// all def site covariant or all all type args use extend:
+					if (type.typeVars.forall[tv|tv.declaredCovariant]
+						||
+						ptrs.forall[ptr | ptr.typeArgs.forall(ta| ta instanceof Wildcard &&
+							(ta as Wildcard).declaredUpperBound !== null)]) {
+						// type args must not contain different classes, similar to intersection
+						
+						val length = type.typeVars.length;
+						if (! ptrs.forall[ptr|ptr.typeArgs.length==length]) {
+							return; // consequential error
+						}
+						for (var v=0; v<length; v++) {
+							val vIndex = v; // final
+							val typeArgsPerVariable = 
+							// typerefs already simplified by initial call to this method
+							extractNonStructTypeRefs(ptrs.map[ptr|(ptr.typeArgs.get(vIndex) as Wildcard).declaredUpperBound]);
+							checkIntersectionTypeContainsMaxOneClass(G, typeArgsPerVariable, true);
+						}
+						
+						// all type args use super:
+					} else if (ptrs.forall[ptr | ptr.typeArgs.forall(ta| ta instanceof Wildcard &&
+							(ta as Wildcard).declaredLowerBound !== null)]) {
+						// all common super types, at least Object, as type arg would work! no warning.
+					} else {
+						// instantiation not possible except with undefined
+						for (TypeRef tClassR : intersectionTR) {
+							val message = messageForINTER_WITH_ONE_GENERIC;
+							addIssue(message, tClassR, INTER_WITH_ONE_GENERIC);
+						}
+					}
+					
+				}	
 			}
 		}
 	}
@@ -752,8 +806,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 	 * This validates a warning in chapter 4.10.2:<br/>
 	 * <i>The use of unnecessary supertypes in intersection types produces a warning.</i>
 	 */
-	def private void checkIntersectionHasUnnecessarySupertype(IntersectionTypeExpression ite, RuleEnvironment G,
-		List<TypeRef> tClassRefs, List<TypeRef> intersectionTR) {
+	def private void checkIntersectionHasUnnecessarySupertype(List<TypeRef> tClassRefs, List<TypeRef> intersectionTR) {
 		tClassRefs.removeAll(intersectionTR);
 
 		for (TypeRef tClassR : tClassRefs) {
@@ -763,11 +816,14 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	def private List<TypeRef> extractNonStructTypeRefs(ComposedTypeRef ctr) {
-		val List<TypeRef> tClassRefs = new LinkedList();
 		val G = ctr.newRuleEnvironment;
 		val List<TypeRef> tRefs = tsh.getSimplifiedTypeRefs(G, ctr);
+		return extractNonStructTypeRefs(tRefs);
+	}
 
-		for (TypeRef tR : tRefs) {
+	def private List<TypeRef> extractNonStructTypeRefs(List<TypeRef> simplifiedTypeRefs) {
+		val List<TypeRef> tClassRefs = new LinkedList();
+		for (TypeRef tR : simplifiedTypeRefs) {
 			val Type type = tR.getDeclaredType();
 			if (type instanceof TClass) {
 				var isStructural = tR.isDefSiteStructuralTyping() || tR.isUseSiteStructuralTyping();
