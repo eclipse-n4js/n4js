@@ -39,6 +39,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.intro.IIntroManager;
+import org.eclipse.xtext.builder.impl.QueuedBuildData;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
@@ -56,6 +57,7 @@ import com.google.inject.Injector;
 /**
  * @author Sven Efftinge - Initial contribution and API
  */
+@SuppressWarnings("restriction")
 @RunWith(XtextRunner.class)
 @InjectWith(N4JSUiInjectorProvider.class)
 public abstract class AbstractBuilderTest {
@@ -77,6 +79,8 @@ public abstract class AbstractBuilderTest {
 	private ExternalLibraryBuildScheduler externalLibraryBuildJobProvider;
 	@Inject
 	private CloseProjectTaskScheduler closedProjectTaskProcessor;
+	@Inject
+	private QueuedBuildData queuedBuildData;
 
 	/** Setups workspace by cleaning and waiting for auto builds, asserting index is clean. */
 	@Before
@@ -189,6 +193,8 @@ public abstract class AbstractBuilderTest {
 		assertEquals(0, root().getProjects().length);
 		assertEquals("Resources in index:\n" + getAllResourceDescriptionsAsString() + "\n", 0,
 				countResourcesInIndex());
+
+		queuedBuildData.reset();
 	}
 
 	/***/

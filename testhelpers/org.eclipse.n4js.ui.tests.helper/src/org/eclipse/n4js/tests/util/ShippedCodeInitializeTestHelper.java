@@ -58,7 +58,7 @@ public class ShippedCodeInitializeTestHelper {
 		externalLibraryPreferenceStore.synchronizeNodeModulesFolders();
 		ProjectTestsUtils.waitForAllJobs();
 
-		libraryManager.synchronizeNpms(new NullProgressMonitor());
+		libraryManager.registerUnregisteredNpms(new NullProgressMonitor());
 		ProjectTestsUtils.waitForAllJobs();
 	}
 
