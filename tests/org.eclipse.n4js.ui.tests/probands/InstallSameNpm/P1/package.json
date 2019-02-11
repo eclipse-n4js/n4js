@@ -1,0 +1,17 @@
+{
+	"name": "P1",
+	"version": "0.0.1",
+	"n4js": {
+		"projectType": "library",
+		"vendorId": "org.eclipse.n4js",
+		"sources": {
+			"source": [
+				"src"
+			]
+		},
+		"output": "src-gen"
+	},
+	"dependencies":{
+		"lodash": "4.17.11"
+	}
+}

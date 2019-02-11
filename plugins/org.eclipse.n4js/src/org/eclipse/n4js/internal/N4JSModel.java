@@ -19,24 +19,25 @@ import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.emptyList;
 import static org.eclipse.n4js.projectDescription.ProjectType.TEST;
 
-import java.io.File;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.HlcExternalLibraryWorkspace;
-import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.internal.MultiCleartriggerCache.CleartriggerSupplier;
+import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.projectDescription.ProjectType;
@@ -47,7 +48,6 @@ import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.xtext.naming.QualifiedName;
 
-import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
@@ -59,7 +59,6 @@ import com.google.inject.Singleton;
 @SuppressWarnings({ "javadoc" })
 @Singleton
 public class N4JSModel {
-	private static final Logger LOGGER = Logger.getLogger(N4JSModel.class);
 
 	private final InternalN4JSWorkspace workspace;
 
@@ -70,48 +69,25 @@ public class N4JSModel {
 	protected FileBasedExternalPackageManager packageManager;
 
 	@Inject
-	private TargetPlatformInstallLocationProvider installLocationProvider;
+	private MultiCleartriggerCache cache;
 
 	@Inject
-	private MultiCleartriggerCache cache;
+	private ExternalLibraryPreferenceStore prefStore;
 
 	@Inject
 	public N4JSModel(InternalN4JSWorkspace workspace) {
 		this.workspace = workspace;
 	}
 
-	public N4JSModel(InternalN4JSWorkspace workspace, TargetPlatformInstallLocationProvider installLocationProvider) {
-		this.workspace = workspace;
-		this.installLocationProvider = installLocationProvider;
-	}
-
 	public N4JSProject getN4JSProject(URI location) {
 		checkArgument(location.isFile(), "Expecting file URI. Was: " + location);
-		boolean external = false;
-		if (null != installLocationProvider.getTargetPlatformInstallURI()) {
-			Path projectPath = new File(location.toFileString()).toPath();
-			Path nodeModulesPath = new File(installLocationProvider.getNodeModulesURI()).toPath();
-			try {
-
-				final Path projectRoot = projectPath.getRoot();
-				final Path nodeModulesRoot = nodeModulesPath.getRoot();
-
-				if (Objects.equal(projectRoot, nodeModulesRoot)) {
-					final String relativePath = nodeModulesPath.relativize(projectPath).toString();
-					external = location.lastSegment().equals(relativePath);
-				}
-
-			} catch (final IllegalArgumentException e) {
-				final String message = "Error while trying to relativize paths. Project path was: " + projectPath
-						+ " target platform node modules location was: " + nodeModulesPath + ".";
-				LOGGER.error(message, e);
-				throw new RuntimeException(message, e);
-			}
-		}
+		boolean external = (externalLibraryWorkspace != null && externalLibraryWorkspace.getProject(location) != null);
 		return new N4JSProject(location, external, this);
 	}
 
 	public N4JSProject findProjectWith(URI nestedLocation) {
+		// FIXME: mm
+		// URI correctNestedLocation = convertToCorrespondingLocation(nestedLocation);
 		URI location = workspace.findProjectWith(nestedLocation);
 		if (location != null) {
 			return getN4JSProject(location);
@@ -123,6 +99,80 @@ public class N4JSModel {
 		}
 
 		return null;
+	}
+
+	public URI convertToCorrespondingLocation(URI uri) {
+		String fileString = uri.toString();
+		String nodeModulesElement = "/" + N4JSGlobals.NODE_MODULES + "/";
+		if (fileString.contains(nodeModulesElement) && !fileString.endsWith(nodeModulesElement)) {
+			if (uri.isPlatform()) {
+				uri = tryConvertToFileUri(uri, fileString);
+			}
+
+		} else {
+			if (uri.isFile()) {
+				// FIXME: do like in ExternalLibraryErrorMarkerManager#setIssues
+				uri = tryConvertToPlatformUri(uri);
+			}
+		}
+
+		return uri;
+	}
+
+	private URI tryConvertToFileUri(URI uri, String fileString) {
+		URI projectLoc = workspace.findProjectWith(uri);
+		String lastSegment = projectLoc.lastSegment();
+		String segment = uri.segment(1);
+
+		if (Objects.equals(segment, lastSegment)) {
+			N4JSProject n4jsProject = getN4JSProject(projectLoc);
+			Path projectPath = n4jsProject.getLocationPath();
+			String platformString = uri.toPlatformString(true);
+			Path platformPath = Paths.get(platformString);
+			Path platformPathWithoutProject = platformPath.subpath(1, platformPath.getNameCount());
+			Path completeFilePath = projectPath.resolve(platformPathWithoutProject);
+
+			boolean isInNodeModulesLocation = false;
+			for (java.net.URI nmLocation : prefStore.getNodeModulesLocations()) {
+				String nmLocString = nmLocation.getPath();
+				if (completeFilePath.startsWith(nmLocString)) {
+					isInNodeModulesLocation = true;
+					break;
+				}
+			}
+
+			if (isInNodeModulesLocation) {
+				URI fileURI = URI.createFileURI(completeFilePath.toString());
+				return fileURI;
+			}
+		}
+		return uri;
+	}
+
+	private URI tryConvertToPlatformUri(URI uri) {
+		String nested = uri.toFileString();
+		java.nio.file.Path nestedPath = Paths.get(nested);
+
+		for (URI projLoc : workspace.getAllProjectLocations()) {
+			N4JSProject n4jsProject = getN4JSProject(projLoc);
+			java.nio.file.Path locationPath = n4jsProject.getLocationPath();
+
+			if (nestedPath.startsWith(locationPath)) {
+				java.nio.file.Path nodeModulesPath = locationPath.resolve(N4JSGlobals.NODE_MODULES);
+
+				if (!nestedPath.startsWith(nodeModulesPath) || nestedPath.equals(nodeModulesPath)) {
+					// Note: There can be projects in nested node_modules folder.
+					// The node_modules folder is still part of a project, but all
+					// elements below the node_modules folder are not part of this project.
+					Path projectRelativePath = locationPath.relativize(nestedPath);
+					String platformString = n4jsProject.getLocation().toPlatformString(true)
+							+ "/" + projectRelativePath.toString();
+					URI projURI = URI.createPlatformResourceURI(platformString, true);
+					return projURI;
+				}
+			}
+		}
+		return uri;
 	}
 
 	public Optional<? extends IN4JSSourceContainer> findN4JSSourceContainer(URI nestedLocation) {
@@ -525,6 +575,28 @@ public class N4JSModel {
 			}
 			return triggerURIs;
 		}
+	}
+
+	/** @see IN4JSEclipseCore#mapExternalResourceToUserWorkspaceLocalResource(URI) */
+	public URI mapExternalResourceToUserWorkspaceLocalResource(URI fileUri) {
+		java.net.URI rootLocation = externalLibraryWorkspace.getRootLocationForResource(fileUri);
+		if (rootLocation == null) {
+			return null;
+		}
+		URI rootLocationEmfUri = URI.createURI(rootLocation.toString());
+		if (rootLocationEmfUri == null) {
+			return null;
+		}
+		N4JSProject findProjectWith = findProjectWith(rootLocationEmfUri);
+		if (findProjectWith == null) {
+			return null;
+		}
+
+		String uriString = fileUri.toFileString();
+		java.nio.file.Path locationPath = findProjectWith.getLocationPath();
+		String prjLocalFile = uriString.substring(locationPath.toString().length());
+		URI prjLocalPlatformUri = URI.createPlatformResourceURI(findProjectWith.getProjectName() + prjLocalFile, true);
+		return prjLocalPlatformUri;
 	}
 
 }

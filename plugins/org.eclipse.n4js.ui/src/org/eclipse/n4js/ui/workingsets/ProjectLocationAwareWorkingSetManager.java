@@ -42,7 +42,7 @@ public class ProjectLocationAwareWorkingSetManager extends WorkingSetManagerImpl
 	private final WorkspaceRepositoriesProvider repositoriesProvider;
 
 	private static final Path WS_ROOT_PATH = getWorkspace().getRoot().getLocation().toFile().toPath();
-	private final Multimap<String, IProject> projectLocations;
+	private final Multimap<String, IProject> projectLocations = HashMultimap.create();
 
 	// nature id to identify the RemoteSystemsTempFiles project
 	private static final String REMOTE_EDIT_PROJECT_NATURE_ID = "org.eclipse.rse.ui.remoteSystemsTempNature";
@@ -59,7 +59,6 @@ public class ProjectLocationAwareWorkingSetManager extends WorkingSetManagerImpl
 	@Inject
 	public ProjectLocationAwareWorkingSetManager(WorkspaceRepositoriesProvider repositoriesProvider) {
 		this.repositoriesProvider = repositoriesProvider;
-		projectLocations = initProjectLocation();
 
 		// reload on workspace repository changes
 		this.repositoriesProvider.addWorkspaceRepositoriesChangedListener(repos -> this.reload());

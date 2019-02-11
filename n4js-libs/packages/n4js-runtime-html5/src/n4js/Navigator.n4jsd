@@ -16,7 +16,8 @@ export external public abstract class Navigator extends Element {
     public userAgent: string;
     public languages: Array<string>;
     public language: string;
-    // geolocation, getBattery, connection, ...
+    public get geolocation(): Geolocation;
+    // getBattery, connection, ...
 }
 
 export external public const navigator: Navigator;

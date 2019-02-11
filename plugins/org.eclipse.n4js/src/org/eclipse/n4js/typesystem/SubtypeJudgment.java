@@ -478,7 +478,8 @@ import com.google.common.collect.Iterables;
 
 			final Type left_staticType = typeSystemHelper.getStaticType(G, left);
 			final Type right_staticType = typeSystemHelper.getStaticType(G, right);
-			if (left_staticType == null || right_staticType == null) {
+			if (left_staticType == null || left_staticType.eIsProxy()
+					|| right_staticType == null || right_staticType.eIsProxy()) {
 				return failure();
 			}
 

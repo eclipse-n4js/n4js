@@ -22,11 +22,11 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
-import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.ui.external.EclipseExternalIndexSynchronizer;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.After;
@@ -50,9 +50,6 @@ public class IndexSynchronizerPluginTest extends AbstractBuilderParticipantTest 
 	private ExternalLibraryWorkspace externalLibraryWorkspace;
 
 	@Inject
-	private LibraryManager libraryManager;
-
-	@Inject
 	private EclipseExternalIndexSynchronizer indexSynchronizer;
 
 	/** Checks whether the platform is running or not. */
@@ -64,7 +61,7 @@ public class IndexSynchronizerPluginTest extends AbstractBuilderParticipantTest 
 	/**  */
 	@Before
 	public void setupWorkspace() throws Exception {
-		setupExternalLibraries(true);
+		setupShippedLibraries();
 		waitForAutoBuild();
 	}
 
@@ -72,15 +69,22 @@ public class IndexSynchronizerPluginTest extends AbstractBuilderParticipantTest 
 	@After
 	@Override
 	public void tearDown() throws Exception {
-		tearDownExternalLibraries(true);
+		waitForAutoBuild();
+		tearDownShippedLibraries();
+		super.tearDown();
 	}
 
 	/** Install an NPM, delete folder of NPM on disk, run IndexSynchronizer, check if NPM was removed from index */
 	@Test
-	public void testCleanRemovedNpm() {
-		assertFalse(indexSynchronizer.findNpmsInIndex().containsKey(NPM_SNAFU));
+	public void testCleanRemovedNpm() throws Exception {
 
-		libraryManager.installNPM(NPM_SNAFU, new NullProgressMonitor());
+		File prjDir = new File(getResourceUri(PROBANDS, SUBFOLDER));
+		IProject project = ProjectTestsUtils.importProject(prjDir, PROJECT_NAME);
+		IResourcesSetupUtil.fullBuild();
+		waitForAutoBuild();
+
+		assertFalse(indexSynchronizer.findNpmsInIndex().containsKey(NPM_SNAFU));
+		libraryManager.installNPM(NPM_SNAFU, URIUtils.toFileUri(project), new NullProgressMonitor());
 		waitForAutoBuild();
 
 		assertTrue(indexSynchronizer.findNpmsInIndex().containsKey(NPM_SNAFU));
@@ -100,12 +104,6 @@ public class IndexSynchronizerPluginTest extends AbstractBuilderParticipantTest 
 	/***/
 	@Test
 	public void testInstallDeregisterAndReregisterNpm() throws Exception {
-		assertFalse(indexSynchronizer.findNpmsInIndex().containsKey(NPM_SNAFU));
-
-		libraryManager.installNPM(NPM_SNAFU, new NullProgressMonitor());
-		waitForAutoBuild();
-
-		assertTrue(indexSynchronizer.findNpmsInIndex().containsKey(NPM_SNAFU));
 
 		File prjDir = new File(getResourceUri(PROBANDS, SUBFOLDER));
 		IProject project = ProjectTestsUtils.importProject(prjDir, PROJECT_NAME);
@@ -114,7 +112,11 @@ public class IndexSynchronizerPluginTest extends AbstractBuilderParticipantTest 
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 
+		assertFalse(indexSynchronizer.findNpmsInIndex().containsKey(NPM_SNAFU));
+		libraryManager.installNPM(NPM_SNAFU, URIUtils.toFileUri(project), new NullProgressMonitor());
+		waitForAutoBuild();
 		assertTrue(indexSynchronizer.findNpmsInIndex().containsKey(NPM_SNAFU));
+
 		assertIssues(packagejson);
 		assertIssues(abc);
 
@@ -147,9 +149,7 @@ public class IndexSynchronizerPluginTest extends AbstractBuilderParticipantTest 
 		assertIssues(abc,
 				"line 12: Cannot resolve import target :: resolving project import : found no matching modules");
 
-		indexSynchronizer.synchronizeNpms(new NullProgressMonitor());
-		IResourcesSetupUtil.fullBuild();
-		waitForAutoBuild();
+		syncExtAndBuild();
 
 		assertIssues(packagejson);
 		assertIssues(abc);

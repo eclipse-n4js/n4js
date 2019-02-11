@@ -23,7 +23,6 @@ import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -46,7 +45,6 @@ public class SetupOptionsPage extends WizardPage {
 	private Table tNPMRC = null;
 	private Composite configsContainer = null;
 	private Composite container = null;
-	private Button cleanNpmCache = null;
 
 	/** Provided {@link InstallOptions} will be populated based on user selection. */
 	public SetupOptionsPage() {
@@ -67,10 +65,6 @@ public class SetupOptionsPage extends WizardPage {
 		Composite optionsContainer = new Composite(container, SWT.NONE);
 		optionsContainer.setLayout(new GridLayout(2, false));
 		optionsContainer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-
-		cleanNpmCache = new Button(optionsContainer, SWT.CHECK);
-		cleanNpmCache.setSelection(false);
-		new Label(optionsContainer, SWT.NONE).setText("Force clean global npm cache");
 
 		configsContainer = new Composite(container, SWT.FILL);
 		configsContainer.setLayout(new GridLayout(1, true));
@@ -146,8 +140,6 @@ public class SetupOptionsPage extends WizardPage {
 	public void saveOptions(InstallOptions options) {
 		if (tNPMRC != null)
 			options.npmrc = getTableItem(tNPMRC);
-		if (cleanNpmCache != null)
-			options.clearNpmCache = cleanNpmCache.getSelection();
 	}
 
 	/** Scan file system for the relevant {@code .npmrc} files. */

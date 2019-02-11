@@ -19,7 +19,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.n4js.compare.ApiImplMapping;
 import org.eclipse.n4js.internal.MultiCleartriggerCache;
@@ -28,8 +27,6 @@ import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.EclipseUIUtils;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
-import org.eclipse.n4js.ui.external.ExternalLibrariesActionsHelper;
-import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
@@ -52,12 +49,6 @@ public class ClearCacheOnCleanPluginUITest extends AbstractBuilderParticipantTes
 	private ShippedCodeInitializeTestHelper shippedCodeInitializeTestHelper;
 
 	@Inject
-	private ExternalLibrariesActionsHelper externals;
-
-	@Inject
-	private StatusHelper statusHelper;
-
-	@Inject
 	private MultiCleartriggerCache cache;
 
 	@Before
@@ -70,11 +61,6 @@ public class ClearCacheOnCleanPluginUITest extends AbstractBuilderParticipantTes
 	@After
 	@Override
 	public void tearDown() throws Exception {
-		// clear library manager to avoid confusing tests being executed after this test class
-		final MultiStatus multistatus = statusHelper
-				.createMultiStatus("Status of deleting NPM packages from library manager.");
-		externals.maintenanceDeleteNpms(multistatus);
-
 		shippedCodeInitializeTestHelper.tearDownBuiltIns();
 		super.tearDown();
 	}
@@ -91,6 +77,8 @@ public class ClearCacheOnCleanPluginUITest extends AbstractBuilderParticipantTes
 		assertTrue(fileABC.exists());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
+
+		syncExtAndBuild();
 
 		// use key of API_IMPL_MAPPING
 		SupplierWithPostAction testSupplier = new SupplierWithPostAction();
@@ -128,6 +116,9 @@ public class ClearCacheOnCleanPluginUITest extends AbstractBuilderParticipantTes
 		IFile filePJ = ResourcesPlugin.getWorkspace().getRoot().getFile(packagejson.getFullPath());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
+
+		syncExtAndBuild();
+		assertNoErrors();
 
 		// use key of API_IMPL_MAPPING
 		SupplierWithPostAction testSupplier = new SupplierWithPostAction();

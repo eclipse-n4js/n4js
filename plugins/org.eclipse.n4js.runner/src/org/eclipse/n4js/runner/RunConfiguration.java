@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -52,7 +53,7 @@ import com.google.common.base.CharMatcher;
  * {@link #getImplementationId() implementationId}, and {@link #getUserSelection() userSelection}; all other values
  * defined in this base class are derived and volatile.
  * <p>
- * Attribute {@link #additionalPath} is primary and volatile, because it is only used for run configurations that are
+ * Attribute {@link #additionalPaths} is primary and volatile, because it is only used for run configurations that are
  * created internally and never sent to Eclipse's run configuration framework. This is currently only by
  * {@code doCompileAndExecute} of class {@code XpectN4JSES5TranspilerHelper} to for {@code quickfixAndRun} Xpect test
  * method.
@@ -136,18 +137,23 @@ public class RunConfiguration {
 
 	private String systemLoader;
 
-	private String additionalPath;
+	private final LinkedHashSet<String> additionalPaths = new LinkedHashSet<>();
 
 	/**
 	 * Additional path to be added to NODE_PATH if needed
 	 */
-	public String getAdditionalPath() {
-		return additionalPath;
+	public Collection<String> getAdditionalPaths() {
+		return additionalPaths;
 	}
 
-	/** @see #getAdditionalPath() */
-	public void setAdditionalPath(String file) {
-		this.additionalPath = file;
+	/** @see #getAdditionalPaths() */
+	public void addAdditionalPath(String file) {
+		this.additionalPaths.add(file);
+	}
+
+	/** @see #getAdditionalPaths() */
+	public void addAdditionalPath(Collection<String> files) {
+		this.additionalPaths.addAll(files);
 	}
 
 	/**

@@ -15,6 +15,9 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
+import org.eclipse.xtext.xbase.lib.Pair;
+
+import com.google.common.base.Optional;
 
 /**
  * Representation of a binary.
@@ -122,4 +125,58 @@ public interface Binary {
 	 */
 	IStatus validate();
 
+	/**
+	 * Returns the command for cleaning this binary's cache if applicable and supported; otherwise
+	 * {@link Optional#absent()} is returned.
+	 */
+	default Optional<String[]> getCacheCleanCommand() {
+		return Optional.absent();
+	}
+
+	/**
+	 * Tells whether this binary can be used to install and uninstall npm packages, as is the case for tools such as
+	 * <code>npm</code> or <code>yarn</code>.
+	 */
+	default boolean canInstallNpmPackages() {
+		return false;
+	}
+
+	/**
+	 * If {@link #canInstallNpmPackages()} returns <code>true</code>, this method returns the command for installing npm
+	 * packages.
+	 *
+	 * @param readPackagesFromPackageJson
+	 *            caller should pass in <code>true</code> to obtain the command for installing all packages defined as
+	 *            dependencies in the project's package.json file; <code>false</code> to obtain the command for
+	 *            installing one or more individual packages given as command line arguments on the command line.
+	 * @throws UnsupportedOperationException
+	 *             iff {@link #canInstallNpmPackages()} returns <code>false</code>.
+	 */
+	default String getNpmInstallCommand(boolean readPackagesFromPackageJson) {
+		throw new UnsupportedOperationException("(un-)installation of npm packages not supported by this tool");
+	}
+
+	/**
+	 * If {@link #canInstallNpmPackages()} returns <code>true</code>, this method returns the command for uninstalling
+	 * npm packages.
+	 *
+	 * @throws UnsupportedOperationException
+	 *             iff {@link #canInstallNpmPackages()} returns <code>false</code>.
+	 */
+	default String getNpmUninstallCommand() {
+		throw new UnsupportedOperationException("(un-)installation of npm packages not supported by this tool");
+	}
+
+	/**
+	 * If {@link #canInstallNpmPackages()} returns <code>true</code>, this method returns the command line options for
+	 * controlling whether an installed / uninstalled dependency should be added to / removed from the package.json (the
+	 * pair's key holds the option for turning this on, they value holds the option for turning this off) or
+	 * {@link Optional#absent() absent} if this is not supported by the tool.
+	 *
+	 * @throws UnsupportedOperationException
+	 *             iff {@link #canInstallNpmPackages()} returns <code>false</code>.
+	 */
+	default Optional<Pair<String, String>> getNpmSaveOptions() {
+		throw new UnsupportedOperationException("(un-)installation of npm packages not supported by this tool");
+	}
 }

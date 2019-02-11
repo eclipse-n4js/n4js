@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.emf.common.util.URI;
 
@@ -153,5 +154,11 @@ public class URIUtils {
 	/** Creates new URI from the provided one, with symlinks resolved. */
 	static public org.eclipse.emf.common.util.URI normalize(org.eclipse.emf.common.util.URI uri) {
 		return URI.createURI(toString(uri));
+	}
+
+	/** @return a complete URI for a given project */
+	public static URI toFileUri(IProject project) {
+		String pathStr = project.getLocation().toString();
+		return URI.createFileURI(pathStr);
 	}
 }

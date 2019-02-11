@@ -20,12 +20,13 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ui.external.ExternalLibraryErrorMarkerManager;
 import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
+import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
 import org.eclipse.xtext.builder.builderState.MarkerUpdaterImpl;
+import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResource;
@@ -50,12 +51,43 @@ public class N4JSMarkerUpdater extends MarkerUpdaterImpl {
 
 	private ExternalLibraryErrorMarkerManager markerManager;
 
-	private IN4JSCore n4jsCore;
+	private IN4JSEclipseCore n4jsCore;
+
+	private class DelegateUriDelta implements Delta {
+		final private Delta delegate;
+		final private URI uri;
+
+		/** Constructor */
+		DelegateUriDelta(Delta delegate, URI uri) {
+			this.delegate = delegate;
+			this.uri = uri;
+		}
+
+		@Override
+		public URI getUri() {
+			return uri;
+		}
+
+		@Override
+		public IResourceDescription getOld() {
+			return delegate.getOld();
+		}
+
+		@Override
+		public IResourceDescription getNew() {
+			return delegate.getNew();
+		}
+
+		@Override
+		public boolean haveEObjectDescriptionsChanged() {
+			return delegate.haveEObjectDescriptionsChanged();
+		}
+	}
 
 	@Inject
 	private void injectISharedStateContributionRegistry(ISharedStateContributionRegistry registry) {
 		try {
-			this.n4jsCore = registry.getSingleContributedInstance(IN4JSCore.class);
+			this.n4jsCore = registry.getSingleContributedInstance(IN4JSEclipseCore.class);
 			this.markerManager = registry.getSingleContributedInstance(ExternalLibraryErrorMarkerManager.class);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -81,12 +113,26 @@ public class N4JSMarkerUpdater extends MarkerUpdaterImpl {
 		Iterable<Pair<IStorage, IProject>> pairs = mapper.getStorages(uri);
 		if (resourceSet != null && pairs.iterator().hasNext()) {
 			Pair<IStorage, IProject> pair = pairs.iterator().next();
-			if (!(pair.getFirst() instanceof IFile)) {
+			IStorage storage = pair.getFirst();
+			if (!(storage instanceof IFile)) {
 				updateMarkersForExternalLibraries(delta, resourceSet, monitor);
 				return;
 			}
 		}
 		super.updateMarkers(delta, resourceSet, monitor);
+	}
+
+	private void doTheOther(Delta delta, ResourceSet resourceSet, IProgressMonitor monitor) {
+		URI uri = delta.getUri();
+		IN4JSProject prj = n4jsCore.findProject(uri).orNull();
+
+		if (prj != null && prj.isExternal() && prj.exists() && prj instanceof N4JSEclipseProject) {
+			URI platformUri = n4jsCore.mapExternalResourceToUserWorkspaceLocalResource(uri).orNull();
+			if (platformUri != null) {
+				Delta platformDelta = new DelegateUriDelta(delta, platformUri);
+				super.updateMarkers(platformDelta, resourceSet, monitor);
+			}
+		}
 	}
 
 	private void updateMarkersForExternalLibraries(Delta delta, ResourceSet resourceSet, IProgressMonitor monitor) {

@@ -19,8 +19,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -221,25 +219,7 @@ public class GHOLD_45_CheckIgnoreAnnotationAtClassLevel_PluginUITest extends Abs
 		}
 		final ProcessConsole processConsole = assertInstanceOf(console, ProcessConsole.class);
 		final String content = processConsole.getDocument().get();
-		return stripTimeoutWarning(content);
-	}
-
-	// TODO GH-1216 remove this work-around
-	private static final Pattern TIMEOUT_WARNING_PATTERN = Pattern.compile("\\(node:(\\d)+\\) "
-			+ "TimeoutOverflowWarning: (\\d)+ does not fit into a 32-bit signed integer\\."
-			+ "(\r\n|\n)"
-			+ "Timeout duration was set to 1\\.");
-
-	private String stripTimeoutWarning(String str) {
-		Matcher m = TIMEOUT_WARNING_PATTERN.matcher(str);
-		if (!m.find() || m.start() > 0) {
-			Assert.fail("output from mangelhaft was expected to start with a timeout-overflow warning, but got:\n"
-					+ "----------\n"
-					+ str + "\n"
-					+ "----------\n"
-					+ "(NOTE: maybe GH-1216 was fixed; in that case, remove this assertion!");
-		}
-		return str.substring(m.end()).trim();
+		return content;
 	}
 
 	private ILaunchShortcut getLaunchShortcut() {

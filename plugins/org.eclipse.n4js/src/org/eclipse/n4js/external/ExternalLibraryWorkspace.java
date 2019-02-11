@@ -10,9 +10,12 @@
  */
 package org.eclipse.n4js.external;
 
+import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.EXTERNAL_LIBRARIES_SUPPLIER;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -22,6 +25,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
@@ -233,6 +237,34 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 	 */
 	public abstract void updateState();
 
+	/**
+	 * Like {@link #getRootLocationForResource(URI)} but in case it finds nothing, a root location is computed based on
+	 * the given URI and the built-in shipped code locations.
+	 * <p>
+	 * Method can be used for instance to find root locations of projects which are closed or removed from workspace.
+	 *
+	 * @return a root location for a given resource or project
+	 */
+	public java.net.URI getRootLocationForResourceOrInfer(org.eclipse.emf.common.util.URI nestedLocation) {
+		HashSet<java.net.URI> allRootLocations = new LinkedHashSet<>();
+		allRootLocations.addAll(externalLibraryPreferenceStore.getLocations());
+		allRootLocations.addAll(EXTERNAL_LIBRARIES_SUPPLIER.get().keySet());
+
+		java.net.URI rootLocation = getRootLocationForResource(allRootLocations, nestedLocation);
+		if (rootLocation == null) {
+			String nlString = nestedLocation.toString();
+			int ix = nlString.lastIndexOf("/" + N4JSGlobals.NODE_MODULES + "/") + N4JSGlobals.NODE_MODULES.length() + 2;
+			if (ix < 0) {
+				// cannot find root location
+				return null;
+			}
+			rootLocation = java.net.URI.create(nlString.substring(0, ix));
+			return rootLocation;
+		}
+
+		return rootLocation;
+	}
+
 	/** @return a root location for a given resource or project */
 	public java.net.URI getRootLocationForResource(org.eclipse.emf.common.util.URI nestedLocation) {
 		return getRootLocationForResource(externalLibraryPreferenceStore.getLocations(), nestedLocation);
@@ -254,7 +286,7 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 
 		String nestedLocStr = nestedLocation.toString();
 		String rootLocStr = rootLocationMap.floorKey(nestedLocStr);
-		if (rootLocStr != null) {
+		if (rootLocStr != null && nestedLocStr.startsWith(rootLocStr)) {
 			return rootLocationMap.get(rootLocStr);
 		}
 		return null;

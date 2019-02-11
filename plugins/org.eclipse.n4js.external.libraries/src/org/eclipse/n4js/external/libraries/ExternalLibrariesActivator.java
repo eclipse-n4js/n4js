@@ -19,7 +19,6 @@ import static com.google.common.collect.Maps.newLinkedHashMap;
 import static java.lang.Boolean.parseBoolean;
 import static org.eclipse.core.runtime.Platform.inDebugMode;
 import static org.eclipse.core.runtime.Platform.inDevelopmentMode;
-import static org.eclipse.n4js.external.libraries.ExternalLibraryFolderUtils.NPM_ROOT;
 import static org.eclipse.xtext.util.Tuples.pair;
 
 import java.io.File;
@@ -163,14 +162,6 @@ public class ExternalLibrariesActivator implements BundleActivator {
 			.build();
 
 	/**
-	 * An iterable of folder names that holds external and/or built-in N4JS libraries.
-	 */
-	public static final Collection<String> EXTERNAL_LIBRARY_FOLDER_NAMES = ImmutableList.<String> builder()
-			.addAll(SHIPPED_ROOTS_FOLDER_NAMES)
-			.add(NPM_CATEGORY)
-			.build();
-
-	/**
 	 * Unique symbolic name of the bundle that where this activator belongs to.
 	 */
 	public static final String PLUGIN_ID = "org.eclipse.n4js.external.libraries";
@@ -182,7 +173,6 @@ public class ExternalLibrariesActivator implements BundleActivator {
 			.put(LANG_CATEGORY, "N4JS Language")
 			.put(RUNTIME_CATEGORY, "N4JS Runtime")
 			.put(MANGELHAFT_CATEGORY, "Mangelhaft")
-			.put(NPM_CATEGORY, NPM_CATEGORY)
 			.build();
 
 	/**
@@ -191,12 +181,6 @@ public class ExternalLibrariesActivator implements BundleActivator {
 	 */
 	public static final Supplier<BiMap<URI, String>> EXTERNAL_LIBRARIES_SUPPLIER = memoize(
 			() -> getExternalLibraries());
-
-	/**
-	 * Supplies the {@code .n4npm/node_modules} folder location form the workspace's {@code .metadata} folder. This
-	 * could be missing if the {@link Platform platform} is not running.
-	 */
-	public static final Supplier<File> N4_NPM_FOLDER_SUPPLIER = memoize(() -> getOrCreateNpmFolder());
 
 	/** Shared private bundle context. */
 	private static BundleContext context;
@@ -213,7 +197,6 @@ public class ExternalLibrariesActivator implements BundleActivator {
 	@Override
 	public void start(final BundleContext bundleContext) throws Exception {
 		context = bundleContext;
-		N4_NPM_FOLDER_SUPPLIER.get();
 	}
 
 	@Override
@@ -245,8 +228,8 @@ public class ExternalLibrariesActivator implements BundleActivator {
 			if (null != product) {
 				if (parseBoolean(product.getProperty(INCLUDES_BUILT_INS_PRODUCT_PROPERTY))) {
 					// Runs in *non-production* mode and the system property is NOT set to include the built-ins.
-					if ((inDebugMode() || inDevelopmentMode())
-							&& !parseBoolean(System.getProperty(INCLUDES_BUILT_INS_SYSTEM_PROPERTY))) {
+					boolean includeBuiltins = parseBoolean(System.getProperty(INCLUDES_BUILT_INS_SYSTEM_PROPERTY));
+					if ((inDebugMode() || inDevelopmentMode()) && !includeBuiltins) {
 						return false;
 					}
 					return true;
@@ -330,7 +313,7 @@ public class ExternalLibrariesActivator implements BundleActivator {
 		final Bundle bundle = context.getBundle();
 		checkNotNull(bundle, "Bundle was null. Is the platform running?");
 
-		final Iterable<Pair<URI, String>> uriNamePairs = from(EXTERNAL_LIBRARY_FOLDER_NAMES)
+		final Iterable<Pair<URI, String>> uriNamePairs = from(SHIPPED_ROOTS_FOLDER_NAMES)
 				.transform(name -> bundle.getResource(name))
 				.filter(notNull())
 				.transform(URL_TO_FILE_URL_FUNC)
@@ -343,32 +326,12 @@ public class ExternalLibrariesActivator implements BundleActivator {
 
 		final Map<URI, String> uriMappings = newLinkedHashMap();
 
-		// npm packages first to be able to shadow runtime libraries and Mangelhaft from npm packages.
-		final File targetPlatformInstallLocation = N4_NPM_FOLDER_SUPPLIER.get();
-		final File nodeModulesFolder = new File(targetPlatformInstallLocation, NPM_CATEGORY);
-		uriMappings.put(nodeModulesFolder.toURI(), NPM_CATEGORY);
-
 		for (final Pair<URI, String> pair : uriNamePairs) {
 			uriMappings.put(pair.getFirst(), pair.getSecond());
 		}
 
 		return ImmutableBiMap.copyOf(uriMappings);
 
-	}
-
-	private static File getOrCreateNpmFolder() {
-		final File targetPlatform = getOrCreateNestedFolder(NPM_ROOT);
-		final File nodeModulesFolder = new File(targetPlatform, NPM_CATEGORY);
-		if (!nodeModulesFolder.exists()) {
-			checkState(nodeModulesFolder.mkdir(), "Error while creating " + nodeModulesFolder + " folder.");
-		}
-		checkState(nodeModulesFolder.isDirectory(), "Expecting directory but was a file: " + nodeModulesFolder + ".");
-
-		final File targetPlatformFile = ExternalLibraryFolderUtils.createTargetPlatformDefinitionFile(targetPlatform);
-		checkState(targetPlatformFile.isFile(),
-				"Expecting file as the target platform file: " + targetPlatformFile + ".");
-
-		return targetPlatform;
 	}
 
 }

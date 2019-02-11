@@ -81,11 +81,15 @@ public class PackageJsonHyperlinkHelperExtension implements IJSONHyperlinkHelper
 		if (linkedProjectWithRegion != null) {
 			URI uri = linkedProjectWithRegion.getFirst();
 			Region region = linkedProjectWithRegion.getSecond();
+			N4JSEclipseProject uriProject = model.findProjectWith(uri);
+
+			String lnkName = uriProject == null ? ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(uri)
+					: uriProject.getProjectName();
 
 			XtextHyperlink hyperlink = hyperlinkProvider.get();
 			hyperlink.setHyperlinkRegion(region);
 			hyperlink.setURI(uri);
-			hyperlink.setHyperlinkText(ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(uri));
+			hyperlink.setHyperlinkText(lnkName);
 
 			return new IHyperlink[] { hyperlink };
 		}

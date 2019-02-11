@@ -12,6 +12,7 @@ Contributors:
 // ======================= AsciiSpec Processor Configuration =======================
 // Inline Task Macro Config
 // See https://github.com/NumberFour/asciispec/blob/master/docs/custom-processors/inline-task-macro for details.
+:task_def_GH-: GitHub;GitHub Issues;https://github.com/eclipse/n4js/issues/{TASK_ID};images/issue.svg; #{TASK_ID}
 
 // Path to Bib File (usually in same folder as index.adoc)
 :bib-file: n4jsspec.bib

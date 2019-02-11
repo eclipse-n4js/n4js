@@ -14,6 +14,8 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -227,7 +229,7 @@ public class BuildSetComputer {
 		// Discover projects for single source files.
 		List<File> singleSourceProjectLocations = findProjectsForSingleFiles(absSingleSourceFiles);
 
-		// Register single-source projects as to be compiled as well.
+		// Register single-source projects.
 		List<File> absRequestedProjectLocations = Collections2.concatUnique(absProjectPaths,
 				singleSourceProjectLocations);
 
@@ -239,10 +241,20 @@ public class BuildSetComputer {
 		List<N4JSProject> requestedProjects = headlessHelper.getN4JSProjects(requestedProjectURIs);
 		List<N4JSProject> discoveredProjects = headlessHelper.getN4JSProjects(discoveredProjectURIs);
 
+		// Resolve shadowing among discovered and requested projects
+		LinkedHashMap<String, N4JSProject> discoveredResolvedMap = new LinkedHashMap<>();
+		for (N4JSProject prj : discoveredProjects) {
+			discoveredResolvedMap.put(prj.getProjectName(), prj);
+		}
+		for (N4JSProject prj : requestedProjects) {
+			discoveredResolvedMap.remove(prj.getProjectName());
+		}
+		List<N4JSProject> discoveredResolvedList = new LinkedList<>(discoveredResolvedMap.values());
+
 		// Filter out shadowed projects
 		Predicate<N4JSProject> pred = p -> shadowedProjectNames.contains(p.getProjectName());
 		requestedProjects.removeIf(pred);
-		discoveredProjects.removeIf(pred);
+		discoveredResolvedList.removeIf(pred);
 
 		// Create a filter that applies only to the given single source files if any were requested to be compiled.
 		Predicate<URI> resourceFilter;
@@ -253,7 +265,7 @@ public class BuildSetComputer {
 			resourceFilter = u -> singleSourceURIs.contains(u);
 		}
 
-		return new BuildSet(requestedProjects, discoveredProjects, resourceFilter);
+		return new BuildSet(requestedProjects, discoveredResolvedList, resourceFilter);
 	}
 
 	/**

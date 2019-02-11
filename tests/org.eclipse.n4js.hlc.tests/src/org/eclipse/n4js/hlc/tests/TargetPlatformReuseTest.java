@@ -26,6 +26,7 @@ import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.base.Predicates;
@@ -33,6 +34,7 @@ import com.google.common.base.Predicates;
 /**
  * Downloads, installs, compiles and runs 'express'.
  */
+@Ignore("side-by-side-use-case")
 public class TargetPlatformReuseTest extends AbstractN4jscTest {
 	File workspace;
 
@@ -59,12 +61,11 @@ public class TargetPlatformReuseTest extends AbstractN4jscTest {
 		final String[] args = {
 				"--installMissingDependencies",
 				"--projectlocations", wsRoot,
-				"--targetPlatformInstallLocation", wsRoot + "/targetPlatform",
 				"--buildType", BuildType.allprojects.toString()
 		};
 
 		// obtain reference to the node_modules folder in use
-		final File nodeModulesFolder = new File(wsRoot + "/targetPlatform" + "/node_modules");
+		final File nodeModulesFolder = new File(wsRoot + "/A" + "/node_modules");
 
 		// first call, initially installs dependencies into target platform location
 		new N4jscBase().doMain(args);

@@ -97,6 +97,7 @@ api_compare.png								- Composition of
 												- https://github.com/eclipse/eclipse.jdt.ui/blob/master/org.eclipse.jdt.ui/icons/full/elcl16/synced.png
 												- https://github.com/ultragdb/org.eclipse.cdt/blob/master/debug/org.eclipse.cdt.debug.ui/icons/obj16/project_obj.gif
 classpath.gif								- https://github.com/eclipse/eclipse.platform.debug/blob/master/org.eclipse.ui.externaltools/icons/full/obj16/classpath.png
+classpath@2x.png
 debugt_obj.png								- https://github.com/eclipse/eclipse.platform.debug/blob/master/org.eclipse.debug.ui/icons/full/obj16/debugt_obj.png
 workset.gif                                 - https://github.com/eclipse/eclipse.platform.debug/blob/master/org.eclipse.debug.ui/icons/full/obj16/workset.png
 nav_backward.gif                            - https://github.com/eclipse/eclipse.platform.ui/blob/master/bundles/org.eclipse.ui.browser/icons/clcl16/nav_backward.png

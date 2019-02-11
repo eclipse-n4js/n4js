@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.utils;
 
+import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
@@ -27,7 +28,7 @@ import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 
 /**
- * Utility methods for wildcards in project description e.g. in module filters
+ * Utility methods for wildcards in project description, e.g. in module filters
  */
 public class WildcardPathFilterHelper {
 
@@ -102,12 +103,21 @@ public class WildcardPathFilterHelper {
 		}
 		boolean matches = prjRelativeLocation.startsWith(pathsToFind);
 		if (!matches) {
-			String syntaxAndPattern = "glob:" + pathsToFind;
-			PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher(syntaxAndPattern);
+			PathMatcher pathMatcher = createPathMatcher(pathsToFind);
 			java.nio.file.Path path = Paths.get(prjRelativeLocation);
 			matches = pathMatcher.matches(path);
 		}
 		return matches;
 	}
 
+	/**
+	 * Similar to {@link FileSystem#getPathMatcher(String)} for "glob" syntax, but disables certain advance matching
+	 * functionality that we do not want to make available in the N4JS language.
+	 */
+	public static PathMatcher createPathMatcher(String pattern) {
+		pattern = pattern.replace("\\", "\\\\"); // disable \ as an escape character (by escaping it)
+		pattern = pattern.replace("{", "\\{").replace("}", "\\}"); // disable pattern groups
+		pattern = pattern.replace("[", "\\[").replace("]", "\\]"); // disable character groups
+		return FileSystems.getDefault().getPathMatcher("glob:" + pattern);
+	}
 }

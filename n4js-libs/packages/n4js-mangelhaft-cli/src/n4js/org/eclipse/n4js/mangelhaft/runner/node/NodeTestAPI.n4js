@@ -92,14 +92,9 @@ export default public class NodeTestAPI {
                 options.testCatalog = lib_path.resolve(process.cwd(), options.testCatalog);
             }
 
-            if (!options.targetPlatformInstallLocation) {
-                options.targetPlatformInstallLocation = lib_path.join(n4jscTempDir, "targetPlatform-install");
-            }
-
             await n4js_cli.n4jsc({
                 buildType: "projects",
                 testCatalogFile: options.testCatalog,
-                targetPlatformInstallLocation: options.targetPlatformInstallLocation,
                 nodejsLocation: process.execArgv[0],
                 npmrcRootLocation: options.npmrcRootLocation,
                 installMissingDependencies: !options.targetPlatformSkipInstall,
@@ -173,9 +168,6 @@ export default public class NodeTestAPI {
             nodePath.push(lib_path.dirname(dir));
         }
         
-        if (options.targetPlatformInstallLocation) {
-            nodePath.push(lib_path.join(options.targetPlatformInstallLocation, "node_modules"));
-        }
         nodePath = Array.from(new Set<string>(nodePath)); // uniq
 
         if (process.env.NODE_PATH) { // append existing

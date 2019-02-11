@@ -16,9 +16,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.URI;
@@ -27,11 +26,8 @@ import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace.RegisterResult;
 import org.eclipse.n4js.external.ExternalProject;
 import org.eclipse.n4js.external.LibraryChange;
-import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
 import org.eclipse.n4js.external.N4JSExternalProject;
-import org.eclipse.n4js.external.NpmLogger;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.utils.ProjectDescriptionUtils;
+import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
 import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.inject.Inject;
@@ -48,7 +44,7 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 	private ExternalLibraryErrorMarkerManager externalErrorMarkerManager;
 
 	@Inject
-	private NpmLogger logger;
+	private EclipseBasedN4JSWorkspace workspace;
 
 	/**
 	 * Call this method to synchronize the information in the Xtext index with all external projects in the external
@@ -65,14 +61,14 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 	 */
 	@Override
 	public void synchronizeNpms(IProgressMonitor monitor, Collection<LibraryChange> forcedChangeSet) {
-		SubMonitor subMonitor = convert(monitor, 11);
+		SubMonitor subMonitor = convert(monitor, 12);
 
 		try {
-			Collection<LibraryChange> oldChangeSet = identifyChangeSet(forcedChangeSet, false);
-			RegisterResult cleanResults = cleanChangesIndex(subMonitor.split(1), oldChangeSet);
+			workspace.getWorkspace().refreshLocal(IResource.DEPTH_INFINITE, subMonitor.split(1));
 
-			Collection<LibraryChange> newChangesSet = identifyChangeSet(forcedChangeSet, true);
-			buildChangesIndex(subMonitor.split(9), newChangesSet, cleanResults);
+			Collection<LibraryChange> changesSet = identifyChangeSet(forcedChangeSet, ProjectStateOperation.UPDATE);
+			RegisterResult cleanResults = cleanChangesIndex(subMonitor.split(1), changesSet);
+			buildChangesIndex(subMonitor.split(9), changesSet, cleanResults);
 
 		} catch (Exception e) {
 			checkAndClearIndex(subMonitor.split(1));
@@ -168,9 +164,7 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 			case Updated:
 			case Removed:
 				project = externalLibraryWorkspace.getProject(change.location);
-				if (project != null) {
-					toBeDeleted.add(change.location);
-				}
+				toBeDeleted.add(change.location);
 				break;
 
 			case Install:
@@ -216,55 +210,6 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 			}
 		}
 		return toBeUpdated;
-	}
-
-	private void printRegisterResults(RegisterResult rr, String jobName) {
-		if (!rr.externalProjectsDone.isEmpty()) {
-			SortedSet<String> prjNames = getProjectNamesFromLocations(rr.externalProjectsDone);
-			logger.logInfo("External libraries " + jobName + ": " + String.join(", ", prjNames));
-		}
-
-		if (!rr.wipedProjects.isEmpty()) {
-			SortedSet<String> prjNames = new TreeSet<>();
-			for (URI location : rr.wipedProjects) {
-				String projectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location);
-				prjNames.add(projectName);
-			}
-			logger.logInfo("Projects deregistered: " + String.join(", ", prjNames));
-		}
-
-		if (!rr.affectedWorkspaceProjects.isEmpty()) {
-			SortedSet<String> prjNames = getProjectNamesFromLocations(rr.affectedWorkspaceProjects);
-			logger.logInfo("Workspace projects affected: " + String.join(", ", prjNames));
-		}
-	}
-
-	private SortedSet<String> getProjectNamesFromLocations(Collection<URI> projectLocations) {
-		SortedSet<String> prjNames = new TreeSet<>();
-		for (URI location : projectLocations) {
-			IN4JSProject p = core.findProject(location).orNull();
-			prjNames.add(p.getProjectName());
-		}
-		return prjNames;
-	}
-
-	/** Sets error markers to every N4JS project iff the folder node_modules and the N4JS index are out of sync. */
-	public void checkAndClearIndex(IProgressMonitor monitor) {
-		Collection<LibraryChange> changeSet = identifyChangeSet(Collections.emptyList(), true);
-		cleanRemovedProjectsFromIndex(monitor, changeSet);
-	}
-
-	private void cleanRemovedProjectsFromIndex(IProgressMonitor monitor, Collection<LibraryChange> changeSet) {
-		monitor.setTaskName("Deregister removed projects...");
-		Set<URI> cleanProjects = new HashSet<>();
-		for (LibraryChange libChange : changeSet) {
-			if (libChange.type == LibraryChangeType.Removed) {
-				cleanProjects.add(libChange.location);
-			}
-		}
-
-		RegisterResult cleanResult = externalLibraryWorkspace.deregisterProjects(monitor, cleanProjects);
-		printRegisterResults(cleanResult, "deregistered");
 	}
 
 }

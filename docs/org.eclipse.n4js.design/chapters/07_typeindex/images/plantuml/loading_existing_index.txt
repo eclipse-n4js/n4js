@@ -1,0 +1,19 @@
+@startuml
+left header
+	<font size=16>Before each clean build or update build it is checked, that the Index has been loaded and if not so it is done
+
+
+endheader
+
+Event -> BuilderState: clean or update
+activate BuilderState
+	BuilderState -> BuilderState: ensureLoaded
+	alt is not loaded yet
+		BuilderState -> EMFBasedPersister: load
+		BuilderState <-- EMFBasedPersister: resource descriptions
+		create ResourceDescriptionsData
+		BuilderState -> ResourceDescriptionsData: init with just loaded resource descriptions
+		BuilderState -> Storage2UriMapper: initializeCache
+	end
+deactivate BuilderState
+@enduml
