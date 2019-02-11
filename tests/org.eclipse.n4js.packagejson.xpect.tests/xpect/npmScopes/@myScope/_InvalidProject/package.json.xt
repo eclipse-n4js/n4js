@@ -13,8 +13,8 @@
 
 
 {
-	// XPECT errors --> "The name "invalid*scope" is not a valid scope name." at ""@invalid*scope/MyProject""
-	"name": "@invalid*scope/MyProject",
+	// XPECT errors --> "The name "_InvalidProject" is not a valid package name." at ""@myScope/_InvalidProject""
+	"name": "@myScope/_InvalidProject",
 	"n4js": {
 		"projectType": "validation"
 	}
