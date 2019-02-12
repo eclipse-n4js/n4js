@@ -97,3 +97,15 @@ g9 = new G<C>();
 class ReadC { public get y() { return null;} };
 function f(p: G<~r~C>) { p.set(new ReadC())}
 f(g9);   
+
+class H<out T> {
+	get(): T { return null }
+}
+
+class CE {
+	public y;
+	public x;
+}
+// XPECT nowarnings -->
+let h1: H<~C>&H<~E>
+h1 = new H<CE>();

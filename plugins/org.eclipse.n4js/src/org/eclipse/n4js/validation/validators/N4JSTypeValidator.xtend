@@ -74,6 +74,7 @@ import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.Type
+import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.VoidType
@@ -753,7 +754,9 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 				if (covariantTypeArgValidation) {
 					val message = messageForINTER_TYEPARGS_ONLY_ONE_CLASS_ALLOWED;
 					for (TypeRef tClassR : intersectionTR) {
-						addIssue(message, tClassR, INTER_TYEPARGS_ONLY_ONE_CLASS_ALLOWED);
+						if (! (tClassR.eContainer instanceof TypeVariable)) { // nested, type ref coming from def site
+							addIssue(message, tClassR, INTER_TYEPARGS_ONLY_ONE_CLASS_ALLOWED);
+						}
 					}
 				} else {
 					val message = messageForINTER_ONLY_ONE_CLASS_ALLOWED;
@@ -766,22 +769,29 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 				if (type.isGeneric) {
 					val List<TypeRef> ptrs = byTypes.get(type); // similar to intersectionTR
 					
-					// all def site covariant or all all type args use extend:
-					if (type.typeVars.forall[tv|tv.declaredCovariant]
-						||
-						ptrs.forall[ptr | ptr.typeArgs.forall(ta| ta instanceof Wildcard &&
-							(ta as Wildcard).declaredUpperBound !== null)]) {
-						// type args must not contain different classes, similar to intersection
-						
+					try {
+					if (allCovariantOrWildcardWithUpperBound(type.typeVars, ptrs)) {
 						val length = type.typeVars.length;
-						if (! ptrs.forall[ptr|ptr.typeArgs.length==length]) {
-							return; // consequential error
-						}
 						for (var v=0; v<length; v++) {
 							val vIndex = v; // final
 							val typeArgsPerVariable = 
 							// typerefs already simplified by initial call to this method
-							extractNonStructTypeRefs(ptrs.map[ptr|(ptr.typeArgs.get(vIndex) as Wildcard).declaredUpperBound]);
+							extractNonStructTypeRefs(ptrs.map[
+								ptr|
+								val ta = ptr.typeArgs.get(vIndex);
+								var TypeRef upper;
+								if (ta instanceof TypeRef) {
+									upper = ta; 
+								}
+								if (upper===null && ta instanceof Wildcard) {
+									upper = (ta as Wildcard).declaredUpperBound;
+								}
+								if (upper===null) {
+									upper = type.typeVars.get(vIndex).declaredUpperBound;
+								}
+								return upper;
+								
+							]);
 							checkIntersectionTypeContainsMaxOneClass(G, typeArgsPerVariable, true);
 						}
 						
@@ -791,15 +801,41 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 						// all common super types, at least Object, as type arg would work! no warning.
 					} else {
 						// instantiation not possible except with undefined
+						val message = messageForINTER_WITH_ONE_GENERIC;
 						for (TypeRef tClassR : intersectionTR) {
-							val message = messageForINTER_WITH_ONE_GENERIC;
-							addIssue(message, tClassR, INTER_WITH_ONE_GENERIC);
+							if (! (tClassR.eContainer instanceof TypeVariable)) { // nested, type ref coming from def site
+								addIssue(message, tClassR, INTER_WITH_ONE_GENERIC);
+							}
 						}
 					}
-					
+					} catch (IndexOutOfBoundsException e) {
+						// probably due to mismatch of type arguments, ignored as consequential error here
+						if (! "consequential".equals(e.message)) {
+							throw e;
+						}
+					}
 				}	
 			}
 		}
+	}
+		
+	private def boolean allCovariantOrWildcardWithUpperBound(List<TypeVariable> typeVars, List<TypeRef> refs) throws IndexOutOfBoundsException {
+		val length = typeVars.length;
+		for (var i=0; i<length; i++) {
+			if (! typeVars.get(i).declaredCovariant) {
+				for (TypeRef ref: refs) {
+					val ta = ref.typeArgs.get(i);
+					if (ta instanceof Wildcard) {
+						if (ta.declaredUpperBound===null) {
+							return false;
+						}	
+					} else {
+						return false;
+					}
+				}
+			}
+		}
+		return true;
 	}
 
 	/**
@@ -824,11 +860,13 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 	def private List<TypeRef> extractNonStructTypeRefs(List<TypeRef> simplifiedTypeRefs) {
 		val List<TypeRef> tClassRefs = new LinkedList();
 		for (TypeRef tR : simplifiedTypeRefs) {
-			val Type type = tR.getDeclaredType();
-			if (type instanceof TClass) {
-				var isStructural = tR.isDefSiteStructuralTyping() || tR.isUseSiteStructuralTyping();
-				if (!isStructural)
-					tClassRefs.add(tR);
+			if (tR!==null) { // may happen if argument has been a result of a computation
+				val Type type = tR.getDeclaredType();
+				if (type instanceof TClass) {
+					var isStructural = tR.isDefSiteStructuralTyping() || tR.isUseSiteStructuralTyping();
+					if (!isStructural)
+						tClassRefs.add(tR);
+				}
 			}
 		}
 		return tClassRefs;
