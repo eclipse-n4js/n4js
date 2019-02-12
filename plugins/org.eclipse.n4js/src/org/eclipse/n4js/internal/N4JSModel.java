@@ -29,6 +29,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EList;
@@ -46,6 +50,7 @@ import org.eclipse.n4js.projectDescription.SourceContainerType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.naming.QualifiedName;
 
 import com.google.common.base.Optional;
@@ -102,24 +107,34 @@ public class N4JSModel {
 	}
 
 	public URI convertToCorrespondingLocation(URI uri) {
-		String fileString = uri.toString();
+		String uriString = uri.toString();
 		String nodeModulesElement = "/" + N4JSGlobals.NODE_MODULES + "/";
-		if (fileString.contains(nodeModulesElement) && !fileString.endsWith(nodeModulesElement)) {
+		if (uriString.contains(nodeModulesElement) && !uriString.endsWith(nodeModulesElement)) {
 			if (uri.isPlatform()) {
-				uri = tryConvertToFileUri(uri, fileString);
+				uri = tryConvertToFileUri(uri);
 			}
 
 		} else {
 			if (uri.isFile()) {
-				// FIXME: do like in ExternalLibraryErrorMarkerManager#setIssues
+
+				int o;// FIXME: do like in ExternalLibraryErrorMarkerManager#setIssues
+
+				String fileString = uri.toFileString();
 				uri = tryConvertToPlatformUri(uri);
+
+				IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+				IPath location = org.eclipse.core.runtime.Path.fromOSString(fileString);
+				IFile iFile = root.getFileForLocation(location);
+				if (iFile != null) {
+					uri = URIUtils.convert(iFile);
+				}
 			}
 		}
 
 		return uri;
 	}
 
-	private URI tryConvertToFileUri(URI uri, String fileString) {
+	private URI tryConvertToFileUri(URI uri) {
 		URI projectLoc = workspace.findProjectWith(uri);
 		String lastSegment = projectLoc.lastSegment();
 		String segment = uri.segment(1);
