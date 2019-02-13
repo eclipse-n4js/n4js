@@ -5,8 +5,10 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- * Originally copied from bundle-fragment "org.eclipse.xtext.logging;version=1.2.15.v201605250459"
- *
+ * Originally copied from org.eclipse.xtext.logging.EclipseLogAppender
+ * 		in bundle-fragment "org.eclipse.xtext.logging;version=1.2.15.v201605250459"
+ * 		available under the terms of the Eclipse Public License 2.0
+ * 		Copyright (c) 2008 itemis AG (http://www.itemis.eu) and others.
  *******************************************************************************/
 package org.eclipse.n4js.ui.logging;
 

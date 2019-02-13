@@ -5,6 +5,11 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
+ * Originally copied from org.eclipse.xtext.ui.tests.editor.outline.DisplaySafeSyncer
+ *	in bundle org.eclipse.xtext.ui.tests
+ *	available under the terms of the Eclipse Public License 2.0
+ * 	Copyright (c) 2010, 2017 itemis AG (http://www.itemis.eu) and others.
+ *
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
@@ -18,8 +23,7 @@ import org.eclipse.swt.widgets.Display;
 
 /**
  *
- *         Copied from
- *         /org.eclipse.xtext.ui.tests/tests/org/eclipse/xtext/ui/tests/editor/outline/DisplaySafeSyncer.java
+ * Copied from /org.eclipse.xtext.ui.tests/tests/org/eclipse/xtext/ui/tests/editor/outline/DisplaySafeSyncer.java
  */
 @SuppressWarnings("javadoc")
 public class DisplaySafeSyncer {
