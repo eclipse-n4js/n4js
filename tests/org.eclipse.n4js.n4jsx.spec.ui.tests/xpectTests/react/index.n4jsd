@@ -11,186 +11,41 @@
 
 export external public abstract class Element {
     private constructor();
-    public get type(): union{string, constructor{Component}};
-    public get props(): PropsT;
-    public get key(): string;
-    public get ref(): string;
 };
 
 export external public interface ~ComponentProps {
     public children?: Array<Element>;
     public ref?: {function(Object /* node */): void};
-    // Attention: Beware that you can't read/rely on the key property when rendering, see https://facebook.github.io/react/docs/lists-and-keys.html
     public key?: string;
 }
 
 export external public abstract class Component<PropsT extends ComponentProps, StateT extends Object> {
     public get props(): PropsT;
     public state: StateT;
-
     public context: Object+;
     public get refs(): Object+;
     public static name: Object+;
-
     public abstract render(): Element;
-
-    /**
-     * Base class helpers for the updating state of a component.
-     */
     @CovariantConstructor
     public constructor(props: PropsT);
-
-    /**
-     * Values in the mapping will be set on this.props if that prop is not specified by the parent component (i.e. using an in check).
-     * Be aware that any complex objects will be shared across instances, not copied.
-     */
     protected static defaultProps: Object;
-
-    /**
-     * The propTypes object allows you to validate props being passed to your components.
-     *
-     * @see http://facebook.github.io/react/docs/reusable-components.html
-     */
     protected static propTypes: Object;
-
-    /**
-     * Forces an update. This should only be invoked when it is known with
-     * certainty that we are **not** in a DOM transaction.
-     *
-     * You may want to call this when you know that some deeper aspect of the
-     * component's state has changed but `setState` was not called.
-     *
-     * This will not invoke `shouldUpdateComponent`, but it will invoke
-     * `componentWillUpdate` and `componentDidUpdate`.
-     *
-     * @param callback - Called after update is complete.
-     */
     @Final protected forceUpdate(callback: Function =): void;
-
-    /**
-     * Sets a subset of the state. Always use this to mutate
-     * state. You should treat `this.state` as immutable.
-     *
-     * There is no guarantee that `this.state` will be immediately updated, so
-     * accessing `this.state` after calling this method may return the old value.
-     *
-     * There is no guarantee that calls to `setState` will run synchronously,
-     * as they may eventually be batched together.  You can provide an optional
-     * callback that will be executed when the call to setState is actually
-     * completed.
-     *
-     * When a function is provided to setState, it will be called at some point in
-     * the future (not synchronously). It will be called with the up to date
-     * component arguments (state, props, context). These values can be different
-     * from this.* because your function may be called after receiveProps but before
-     * shouldComponentUpdate, and this new state, props, and context will not yet be
-     * assigned to this.
-     *
-     * @param {object|function} partialState Next partial state or function to
-     *        produce next partial state to be merged with current state.
-     * @param {?function} callback Called after state is updated.
-     * @final
-     * @protected
-     */
     public setState(partialState: union{Object /* subset of StateT */, {function(state: Object /* subset of StateT */, props: PropsT, context: Object): void}}, callback: Function =): void;
-
-    /**
-     * Returns true if the component is rendered into the DOM, false otherwise.
-     * You can use this method to guard asynchronous calls to setState() or forceUpdate().
-     */
     public isMounted(): boolean;
-
-    //
-    // Lifecycle Methods:
-    //
-
-    /**
-     * Invoked once, both on the client and server, immediately before the initial rendering occurs.
-     * If you call setState within this method, render() will see the updated state and will be executed only once despite the state change.
-     */
     protected componentWillMount(): void;
-
-    /**
-     * Invoked once, only on the client (not on the server), immediately after the initial rendering occurs.
-     * At this point in the lifecycle, the component has a DOM representation which you can access via R.findDOMNode().
-     * If you want to integrate with other JavaScript frameworks, set timers using setTimeout or setInterval, or send AJAX requests, perform those operations in this method.
-     */
     protected componentDidMount(): void;
-
-    /**
-     * Invoked when a component is receiving new props.
-     * This method is not called for the initial render.
-     *
-     * Use this as an opportunity to react to a prop transition before render() is called by updating the state using this.setState().
-     * The old props can be accessed via this.props. Calling this.setState() within this function will not trigger an additional render.
-     *
-     * dbo TODO react deprecated?
-     */
     protected componentWillReceiveProps(nextProps: Object): void;
-
-    /**
-     * Invoked before rendering when new props or state are being received.
-     * This method is not called for the initial render or when forceUpdate is used.
-     *
-     * Use this as an opportunity to return false when you're certain that the transition to the new props and state will not require a component update.
-     *
-     * <pre>
-     * @Override boolean shouldComponentUpdate(Object nextProps, ObjectnextState) {
-     *     return nextProps.id !== this.props.id;
-     * }
-     *
-     * If shouldComponentUpdate returns false, then render() will be completely skipped until the next state change.
-     * (In addition, componentWillUpdate and componentDidUpdate will not be called.)
-     *
-     * By default, shouldComponentUpdate always returns true to prevent subtle bugs when state is mutated in place,
-     * but if you are careful to always treat state as immutable and to read only from props and state in render() then
-     * you can override shouldComponentUpdate with an implementation that compares the old props and state to their replacements.
-     *
-     * If performance is a bottleneck, especially with dozens or hundreds of components, use shouldComponentUpdate to speed up your app.
-     */
     protected shouldComponentUpdate(nextProps: PropsT, nextState: StateT): boolean;
-
-    /**
-     * Invoked immediately before rendering when new props or state are being received.
-     * This method is not called for the initial render.
-     *
-     * Use this as an opportunity to perform preparation before an update occurs.
-     *
-     * Note:
-     * You cannot use this.setState() in this method.
-     * If you need to update state in response to a prop change, use componentWillReceiveProps instead.
-     */
     protected componentWillUpdate(nextProps: PropsT, nextState: StateT): void;
-
-    /**
-     * Invoked immediately after the component's updates are flushed to the DOM.
-     * This method is not called for the initial render.
-     *
-     * Use this as an opportunity to operate on the DOM when the component has been updated.
-     */
     protected componentDidUpdate(prevProps: PropsT, prevState: StateT): void;
-
-    /**
-     * Invoked immediately before a component is unmounted from the DOM.
-     *
-     * Perform any necessary cleanup in this method, such as invalidating timers or
-     * cleaning up any DOM Elements that were created in componentDidMount.
-     */
     protected componentWillUnmount(): void;
 }
 
-/**
- * React.PureComponent is exactly like React.Component but implements shouldComponentUpdate() with a shallow prop and state comparison.
- */
 export external public abstract class PureComponent<PropsT extends ComponentProps, StateT extends Object>
         extends Component<PropsT, StateT> {
 }
 
-/**
- * Create and return a new Element of the given type.
- * The type argument can be either an html tag name string (eg. 'div', 'span', etc),
- * or a ReactClass.
- */
 // mor TODO IDE-2323
 //    public static <PropsT extends ComponentProps> createElement(
 //        type: union{string, {function(PropsT?): Element}, constructor{Component<PropsT, ?>}},
@@ -200,39 +55,13 @@ export external public function createElement(
     props: Object =,
     ...children: union{string, Element, Array<Element>}): Element;
 
-/**
- * Clone and return a new Element using Element as the starting point.
- * The resulting Element will have the original Element's props with the new props merged in shallowly.
- * New children will replace existing children.
- * Unlike R.addons.cloneWithProps, key and ref from the original Element will be preserved.
- * There is no special behavior for merging any props (unlike cloneWithProps).
- */
 export external public function cloneElement(
     Element: Element,
     props: Object =,
     ...children: union{string, Element, Array<Element>}): Element;
 
-/**
- * Verifies the object is an Element.
- */
 export external public function isValidElement(object: Object): boolean;
-
-/**
- * Render a Element to its initial HTML. This should only be used on the server.
- * React will return an HTML string.
- * You can use this method to generate HTML on the server and send the markup down on the initial
- * request for faster page loads and to allow search engines to crawl your pages for SEO purposes.
- * If you call R.render() on a node that already has this server-rendered markup,
- * React will preserve it and only attach event handlers, allowing you to have a very performant first-load experience.
- */
 export external public function renderToString(Element: Element): string;
-
-/**
- * Similar to renderToString, except this doesn't create extra DOM attributes such as data-react-id,
- * that React uses internally.
- * This is useful if you want to use React as a simple static page generator, as stripping away the
- * extra attributes can save lots of bytes.
- */
 export external public function renderToStaticMarkup(Element: Element): string;
 
 export external public interface ~PropConstraint {
@@ -240,46 +69,19 @@ export external public interface ~PropConstraint {
 }
 export external public interface ~PropType extends PropConstraint {}
 
-/**
- * R.PropTypes includes types that can be used with a component's propTypes object to validate
- * props being passed to your components.
- *
- * @see http://facebook.github.io/react/docs/reusable-components.html
- */
 export external public class ~PropTypes {
-    // You can declare that a prop is a specific JS primitive. By default, these
-    // are all optional.
     public const array: PropType;
     public const bool: PropType;
     public const func: PropType;
     public const number: PropType;
     public const object: PropType;
     public const string: PropType;
-
-    // Anything that can be rendered: numbers, strings, Elements or an array
-    // containing these types.
     public const node: PropType;
-
-    // A React Element.
     public const Element: PropType;
-
-    // You can also declare that a prop is an instance of a class. This uses
-    // JS's instanceof operator.
     public static instanceOf(comp: Object): PropConstraint;
-
-    // You can ensure that your prop is limited to specific values by treating
-    // it as an enum.
     public static oneOf(...values: any): PropConstraint;
-
-    // An object that could be one of many types
     public static oneOfType(...constraints: PropConstraint): PropConstraint;
-
-    // An array of a certain type
     public static arrayOf(elemType: PropType): PropConstraint;
-
-    // An object with property values of a certain type
     public static objectOf(valueType: PropType): PropConstraint;
-
-    // An object taking on a particular shape
     public static shape(Object): PropConstraint;
 }
