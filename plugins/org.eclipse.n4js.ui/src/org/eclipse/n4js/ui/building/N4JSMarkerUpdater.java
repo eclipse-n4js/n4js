@@ -10,15 +10,13 @@
  */
 package org.eclipse.n4js.ui.building;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IStorage;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.emf.common.util.URI;
@@ -29,7 +27,9 @@ import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
 import org.eclipse.n4js.ui.internal.ResourceUIValidatorExtension;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.builder.builderState.MarkerUpdaterImpl;
+import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResource;
@@ -44,10 +44,12 @@ import org.eclipse.xtext.validation.Issue;
 import com.google.inject.Inject;
 
 /**
- *
+ * Extends Xtext class to add support for issues of external libraries.
  */
 @SuppressWarnings("restriction")
 public class N4JSMarkerUpdater extends MarkerUpdaterImpl {
+	/** When validating external libraries, set to true (only Errors) or false (all issues) are issued. */
+	static public final boolean SHOW_ONLY_EXTERNAL_ERRORS = true;
 
 	@Inject
 	private IStorage2UriMapper mapper;
@@ -105,19 +107,23 @@ public class N4JSMarkerUpdater extends MarkerUpdaterImpl {
 		IN4JSProject prj = n4jsCore.findProject(uri).orNull();
 		CancelIndicator cancelIndicator = getCancelIndicator(monitor);
 
-		if (prj != null && prj.isExternal() && prj.exists() && prj instanceof N4JSEclipseProject) {
-			List<Issue> list = validator.validate(resource, CheckMode.NORMAL_AND_FAST, cancelIndicator);
+		if (prj != null && prj.isExternal() && prj.exists() && prj instanceof N4JSEclipseProject && uri.isFile()) {
+			// transform file uri in workspace iResource
+			IFile file = URIUtils.convertFileUriToPlatformFile(uri);
 
-			if (uri.isFile()) {
-				// transform file uri in workspace iResource
-				String fileString = uri.toFileString();
-				IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-				IPath location = org.eclipse.core.runtime.Path.fromOSString(fileString);
-				IFile file = root.getFileForLocation(location);
-				try {
-					if (file != null && resource != null) {
-						validatorExtension.createMarkers(file, resource, list);
+			if (file != null && resource != null) {
+				List<Issue> list = validator.validate(resource, CheckMode.NORMAL_AND_FAST, cancelIndicator);
+
+				if (SHOW_ONLY_EXTERNAL_ERRORS) {
+					for (Iterator<Issue> iter = list.iterator(); iter.hasNext();) {
+						if (iter.next().getSeverity() != Severity.ERROR) {
+							iter.remove();
+						}
 					}
+				}
+
+				try {
+					validatorExtension.createMarkers(file, resource, list);
 				} catch (CoreException e) {
 					e.printStackTrace();
 				}
