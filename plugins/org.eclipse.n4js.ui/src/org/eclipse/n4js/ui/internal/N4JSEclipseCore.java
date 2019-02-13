@@ -149,12 +149,4 @@ public class N4JSEclipseCore extends AbstractN4JSCore implements IN4JSEclipseCor
 		return resourceDescriptionsProvider.getResourceDescriptions(resourceSet);
 	}
 
-	@Override
-	public Optional<URI> mapExternalResourceToUserWorkspaceLocalResource(URI fileUri) {
-		URI platformURI = model.mapExternalResourceToUserWorkspaceLocalResource(fileUri);
-		if (platformURI == null) {
-			return Optional.absent();
-		}
-		return Optional.of(platformURI);
-	}
 }

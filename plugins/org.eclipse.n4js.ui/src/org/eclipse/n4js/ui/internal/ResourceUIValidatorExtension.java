@@ -177,7 +177,9 @@ public class ResourceUIValidatorExtension extends MarkerEraser implements IResou
 
 		try {
 			for (IContainer container : containers) {
-				container.deleteMarkers(null, true, IResource.DEPTH_INFINITE);
+				if (container.exists()) {
+					container.deleteMarkers(null, true, IResource.DEPTH_INFINITE);
+				}
 			}
 		} catch (CoreException e) {
 			e.printStackTrace();
