@@ -35,7 +35,7 @@ public class InstallCompileRunN4jscExternalImportsTest extends AbstractN4jscTest
 	/** Prepare workspace. */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace("external_imports", Predicates.alwaysTrue());
+		workspace = setupWorkspace("external_imports", Predicates.alwaysTrue(), true);
 	}
 
 	/** Delete workspace. */
@@ -52,14 +52,15 @@ public class InstallCompileRunN4jscExternalImportsTest extends AbstractN4jscTest
 	@Ignore // remove @Ignore when GH-887 is merged
 	public void testCompileAndRunWithExternalDependencies() throws IOException, ExitCodeException {
 		final String wsRoot = workspace.getAbsolutePath().toString();
-		final String fileToRun = wsRoot + "/external.project/src/Main.n4js";
+		final String packages = wsRoot + "/packages";
+		final String fileToRun = packages + "/external.project/src/Main.n4js";
 
 		final String[] args = {
 				"--systemLoader", COMMON_JS.getId(),
 				"--installMissingDependencies",
 				"--runWith", "nodejs",
 				"--run", fileToRun,
-				"--projectlocations", wsRoot,
+				"--projectlocations", packages,
 				"--buildType", BuildType.allprojects.toString()
 		};
 		final String out = runAndCaptureOutput(args);

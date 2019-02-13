@@ -26,7 +26,6 @@ import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.base.Predicates;
@@ -34,14 +33,13 @@ import com.google.common.base.Predicates;
 /**
  * Downloads, installs, compiles and runs 'express'.
  */
-@Ignore("side-by-side-use-case")
 public class TargetPlatformReuseTest extends AbstractN4jscTest {
 	File workspace;
 
 	/** Prepare workspace. */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace("GH-963-reuse-tp", Predicates.alwaysTrue());
+		workspace = setupWorkspace("GH-963-reuse-tp", Predicates.alwaysTrue(), true);
 	}
 
 	/** Delete workspace. */
@@ -57,15 +55,16 @@ public class TargetPlatformReuseTest extends AbstractN4jscTest {
 	@Test
 	public void testReuseTargetPlatformLocation() throws ExitCodeException {
 		final String wsRoot = workspace.getAbsolutePath().toString();
+		final String packages = wsRoot + "/packages";
 
 		final String[] args = {
 				"--installMissingDependencies",
-				"--projectlocations", wsRoot,
+				"--projectlocations", packages,
 				"--buildType", BuildType.allprojects.toString()
 		};
 
 		// obtain reference to the node_modules folder in use
-		final File nodeModulesFolder = new File(wsRoot + "/A" + "/node_modules");
+		final File nodeModulesFolder = new File(wsRoot + "/node_modules");
 
 		// first call, initially installs dependencies into target platform location
 		new N4jscBase().doMain(args);

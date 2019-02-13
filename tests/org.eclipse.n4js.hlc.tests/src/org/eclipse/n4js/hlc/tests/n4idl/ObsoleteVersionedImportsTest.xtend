@@ -35,7 +35,7 @@ public class ObsoleteVersionedImportsTest extends AbstractN4jscTest {
 	/** Prepare workspace. */
 	@Before
 	public def void setupWorkspace() throws IOException {
-		workspace = setupWorkspace("n4idl", Predicates.alwaysTrue());
+		workspace = setupWorkspace("n4idl", Predicates.alwaysTrue(), true);
 	}
 
 	/** Delete workspace. */
@@ -57,9 +57,10 @@ public class ObsoleteVersionedImportsTest extends AbstractN4jscTest {
 	 */
 	private def String compileAndRun(String projectName, String fileToRunFQN) throws ExitCodeException, IOException {
 		val wsRoot = workspace.getAbsolutePath().toString();
+		val packages = wsRoot + "/packages";
 
-		val fileToRun = wsRoot + "/" + projectName + "/src-ext/" + fileToRunFQN;
-		val projectToCompile = wsRoot + "/" + projectName;
+		val fileToRun = packages + "/" + projectName + "/src-ext/" + fileToRunFQN;
+		val projectToCompile = packages + "/" + projectName;
 
 		val String[] args = #[
 				"--systemLoader", COMMON_JS.getId(),

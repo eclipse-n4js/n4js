@@ -33,11 +33,13 @@ import org.junit.Test;
  */
 public class N4jscDependentProjectDependenciesTest extends AbstractN4jscTest {
 	File workspace;
+	File proot;
 
 	/** Prepare workspace. */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace("external_project_dependencies");
+		workspace = setupWorkspace("external_project_dependencies", true);
+		proot = new File(workspace, PACKAGES).getAbsoluteFile();
 	}
 
 	/** Delete workspace. */
@@ -54,12 +56,10 @@ public class N4jscDependentProjectDependenciesTest extends AbstractN4jscTest {
 	 */
 	@Test
 	public void testSuccessfulCompilationWithInterdependentProjects() throws ExitCodeException {
-		final String wsRoot = workspace.getAbsolutePath().toString();
-
 		final String[] args = {
 				"--systemLoader", COMMON_JS.getId(),
 				"--installMissingDependencies",
-				"--projectlocations", wsRoot,
+				"--projectlocations", proot.toString(),
 				"--buildType", BuildType.allprojects.toString()
 		};
 		SuccessExitStatus status = new N4jscBase().doMain(args);
