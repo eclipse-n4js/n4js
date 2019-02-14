@@ -14,9 +14,6 @@
 // IDEBUG-198
 
 
-// stripped-down version of some fabelhaft/stdlib code:
-
-
 interface ~Element {
     public querySelector(selector : string) : Element;
 }

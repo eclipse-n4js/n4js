@@ -387,8 +387,6 @@
         <repository
             url="http://download.eclipse.org/tools/orbit/downloads/drops/R20180905201904/repository"/>
         <repository
-            url="http://boothen.github.io/Json-Eclipse-Plugin"/>
-        <repository
             url="https://ci.eclipse.org/xpect/job/Xpect-Integration-Release/lastSuccessfulBuild/artifact/org.eclipse.xpect.releng/p2-repository/target/repository/"/>
         <repository
             url="http://download.eclipse.org/cbi/updates/license/1.0.1.v20140414-1359"/>
