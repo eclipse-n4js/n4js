@@ -29,7 +29,7 @@ import com.google.inject.Injector;
 
 /**
  * Initialization support for running Xtext languages without equinox extension registry. The content here is completely
- * copied from N4JSStandaloneSetup and its super classes.
+ * copied from N4JSStandaloneSetupGenerate.
  */
 public class N4JSStandaloneSetup implements ISetup {
 

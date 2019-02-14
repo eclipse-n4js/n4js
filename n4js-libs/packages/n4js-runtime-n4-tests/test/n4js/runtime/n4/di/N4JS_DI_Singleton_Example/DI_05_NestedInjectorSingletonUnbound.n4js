@@ -58,8 +58,8 @@ class D { @Inject s: S;}
  *
  * Other approach would be if always root would create and hold instance of the singleton.
  * But that means that child injector can mutate parent injector, which in turn can affect
- * other child of the parent. (E.G. fabelhaft (parent) loads app (child), child mutates parent(!)
- * , fabelhaft loads other app (child), other has singleton created for previous app).
+ * other child of the parent. (E.g. a parent loads a child, child mutates parent(!),
+ * parent loads other child, other has singleton created for previous child).
  */
 export class TestNestedInjectorsNoSingletonBinding{
 
