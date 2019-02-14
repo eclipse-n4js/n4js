@@ -97,7 +97,7 @@ export default public class NodeTestAPI {
                 testCatalogFile: options.testCatalog,
                 nodejsLocation: process.execArgv[0],
                 npmrcRootLocation: options.npmrcRootLocation,
-                installMissingDependencies: !options.targetPlatformSkipInstall,
+                installMissingDependencies: options.installMissingDependencies,
                 clean: options.cleanCompile,
                 keepCompiling: options.keepCompiling,
                 verbose: options.debug,
