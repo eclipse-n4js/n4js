@@ -1177,9 +1177,11 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			if (!currNPM.toFile.exists) {
 				val packageVersion = if (ref.npmVersion === null) "" else ref.npmVersion.toString;
 				if (project.external) {
-					val msg = getMessageForNON_EXISTING_PROJECT(id);
-					addIssue(msg, ref.astRepresentation, null, NON_EXISTING_PROJECT, id, packageVersion);
+					// FIXME: After removing shipped code, replace this with NON_EXISTING_PROJECT
+					val msg = getMessageForNON_EXISTING_PROJECT_WARNING(id);
+					addIssue(msg, ref.astRepresentation, null, NON_EXISTING_PROJECT_WARNING, id, packageVersion);
 				} else {
+					// FIXME: After removing shipped code, make this an error
 					val msg = getMessageForMISSING_YARN_WORKSPACE(id);
 					addIssue(msg, ref.astRepresentation, null, MISSING_YARN_WORKSPACE, id, packageVersion);
 				}
