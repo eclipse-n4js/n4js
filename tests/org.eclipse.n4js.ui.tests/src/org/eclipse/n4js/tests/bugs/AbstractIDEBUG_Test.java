@@ -15,7 +15,9 @@ import static org.apache.log4j.Logger.getLogger;
 import static org.eclipse.n4js.tests.bugs.WorkspaceInitializer.createInitializer;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
+import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.junit.Before;
 
 import com.google.common.base.Supplier;
@@ -39,6 +41,9 @@ public abstract class AbstractIDEBUG_Test extends AbstractBuilderParticipantTest
 	@Before
 	public final void setupWorkspace() {
 		initializerSupplier.get().initialize();
+		ProjectTestsUtils.waitForAllJobs();
+		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
+		ProjectTestsUtils.waitForAllJobs();
 	}
 
 	/**

@@ -62,6 +62,7 @@ import org.eclipse.n4js.ui.containers.N4JSProjectsStateHelper;
 import org.eclipse.n4js.ui.external.ComputeProjectOrder.VertexOrder;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildQueue.Task;
 import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
+import org.eclipse.n4js.ui.internal.ResourceUIValidatorExtension;
 import org.eclipse.n4js.utils.N4JSDataCollectors;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.URIUtils;
@@ -113,7 +114,7 @@ public class ExternalLibraryBuilder {
 	private ExternalProjectProvider projectProvider;
 
 	@Inject
-	private ExternalLibraryErrorMarkerManager errorMarkerManager;
+	private ResourceUIValidatorExtension validatorExtension;
 
 	@Inject
 	private N4JSProjectsStateHelper projectsStateHelper;
@@ -305,7 +306,7 @@ public class ExternalLibraryBuilder {
 		try {
 			Job.getJobManager().beginRule(rule, monitor);
 
-			errorMarkerManager.clearMarkers(projects);
+			validatorExtension.clearAllMarkersOfExternalProjects(projects);
 
 			VertexOrder<IN4JSProject> buildOrder = builtOrderComputer.getBuildOrder(projects);
 			// wrap as Arrays.asList returns immutable list
@@ -602,7 +603,7 @@ public class ExternalLibraryBuilder {
 		for (URI toWipe : toBeWiped) {
 			toBeWipedStrings.add(toWipe.toString());
 			String projectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(toWipe);
-			errorMarkerManager.clearMarkers(projectName);
+			validatorExtension.clearAllMarkersOfExternalProject(projectName);
 		}
 
 		ResourceSet resourceSet = core.createResourceSet(Optional.absent());

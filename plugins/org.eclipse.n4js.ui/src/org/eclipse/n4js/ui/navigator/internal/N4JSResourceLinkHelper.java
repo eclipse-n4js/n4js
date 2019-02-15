@@ -28,7 +28,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.ts.ui.navigation.IURIBasedStorage;
 import org.eclipse.n4js.ts.ui.navigation.URIBasedStorage;
-import org.eclipse.n4js.ui.internal.N4JSEclipseModel;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.n4js.utils.resources.IExternalResource;
 import org.eclipse.ui.IEditorInput;
@@ -53,9 +53,6 @@ public class N4JSResourceLinkHelper extends ResourceLinkHelper {
 
 	@Inject
 	private ExternalLibraryWorkspace externalLibraryWorkspace;
-
-	@Inject
-	private N4JSEclipseModel model;
 
 	@Inject
 	private N4JSProjectExplorerHelper helper;
@@ -96,7 +93,8 @@ public class N4JSResourceLinkHelper extends ResourceLinkHelper {
 					URIBasedStorage uriStorage = (URIBasedStorage) storage;
 					URI uri = uriStorage.getURI();
 					if (uri.isFile()) {
-						URI prjLocalPlatformUri = model.mapExternalResourceToUserWorkspaceLocalResource(uri);
+						IFile platformFile = URIUtils.convertFileUriToPlatformFile(uri);
+						URI prjLocalPlatformUri = URIUtils.convert(platformFile);
 						if (prjLocalPlatformUri != null) {
 							input = new URIEditorInput(prjLocalPlatformUri);
 						}
