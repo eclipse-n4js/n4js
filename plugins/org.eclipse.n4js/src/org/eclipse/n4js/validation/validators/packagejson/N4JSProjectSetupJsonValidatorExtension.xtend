@@ -96,6 +96,7 @@ import org.eclipse.core.resources.IProject
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper.NodeModulesFolder
 import java.io.File
 import org.eclipse.n4js.utils.ProjectDescriptionUtils
+import org.eclipse.core.runtime.Platform
 
 /**
  * A JSON validator extension that validates {@code package.json} resources in the context
@@ -1172,9 +1173,9 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 				return;
 			}
 
-			val currNodeModulesFolder = allNodeModuleFolders.get(currentProjectName).toPath;
-			val currNPM = currNodeModulesFolder.resolve(id);
-			if (!currNPM.toFile.exists) {
+			val currNodeModulesFolder = allNodeModuleFolders.get(currentProjectName)?.toPath;
+			val currNPM = currNodeModulesFolder?.resolve(id);
+			if (currNPM !== null && !currNPM.toFile.exists) {
 				val packageVersion = if (ref.npmVersion === null) "" else ref.npmVersion.toString;
 				if (project.external) {
 					// FIXME: After removing shipped code, replace this with NON_EXISTING_PROJECT
@@ -1404,14 +1405,16 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		return contextMemoize(NODE_MODULES_LOCATION_CACHE) [
 			val Map<String, File> res = new HashMap;
 
-			val IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-			for (IProject project : root.projects) {
-				if (project.isAccessible) {
-					val iPath = project.location;
-					val projectPath = iPath.toFile.toPath;
-					val NodeModulesFolder nmFolder = nodeModulesDiscoveryHelper.getNodeModulesFolder(projectPath);
-					val projectName = ProjectDescriptionUtils.convertEclipseProjectNameToN4JSProjectName(project.name);
-					res.put(projectName, nmFolder.nodeModulesFolder);
+			if (Platform.isRunning) { // necessary for xpect tests (non-ui)
+				val IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+				for (IProject project : root.projects) {
+					if (project.isAccessible) {
+						val iPath = project.location;
+						val projectPath = iPath.toFile.toPath;
+						val NodeModulesFolder nmFolder = nodeModulesDiscoveryHelper.getNodeModulesFolder(projectPath);
+						val projectName = ProjectDescriptionUtils.convertEclipseProjectNameToN4JSProjectName(project.name);
+						res.put(projectName, nmFolder.nodeModulesFolder);
+					}
 				}
 			}
 			return res;
