@@ -28,6 +28,7 @@ import org.eclipse.n4js.external.ExternalProject;
 import org.eclipse.n4js.external.LibraryChange;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
+import org.eclipse.n4js.ui.internal.ResourceUIValidatorExtension;
 import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.inject.Inject;
@@ -41,7 +42,7 @@ import com.google.inject.Singleton;
 public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer {
 
 	@Inject
-	private ExternalLibraryErrorMarkerManager externalErrorMarkerManager;
+	private ResourceUIValidatorExtension validatorExtension;
 
 	@Inject
 	private EclipseBasedN4JSWorkspace workspace;
@@ -138,7 +139,7 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 
 			monitor.setTaskName("Cleaning all projects...");
 			externalLibraryWorkspace.deregisterAllProjects(subMonitor.split(1));
-			externalErrorMarkerManager.clearAllMarkers();
+			validatorExtension.clearAllMarkersOfAllExternalProjects();
 
 			synchronizeNpms(subMonitor.split(10));
 
