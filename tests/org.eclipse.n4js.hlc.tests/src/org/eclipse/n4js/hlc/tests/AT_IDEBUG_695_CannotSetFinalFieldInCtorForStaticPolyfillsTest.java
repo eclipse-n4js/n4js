@@ -34,7 +34,7 @@ public class AT_IDEBUG_695_CannotSetFinalFieldInCtorForStaticPolyfillsTest exten
 	 */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace(WS_IDEBUG_695);
+		workspace = setupWorkspace(WS_IDEBUG_695, false);
 
 	}
 

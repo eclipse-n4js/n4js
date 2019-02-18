@@ -29,11 +29,13 @@ import org.junit.Test;
  */
 public class N4jscBasicErrorTest extends AbstractN4jscTest {
 	File workspace;
+	File proot;
 
 	/** Prepare workspace. */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace(TEST_DATA_SET__BASIC);
+		workspace = setupWorkspace(TEST_DATA_SET__BASIC, true);
+		proot = new File(workspace, PACKAGES).getAbsoluteFile();
 		System.out.println("just for reference workspace base path is: " + workspace.getAbsolutePath().toString());
 	}
 
@@ -48,14 +50,13 @@ public class N4jscBasicErrorTest extends AbstractN4jscTest {
 	 */
 	@Test
 	public void testCompilationFailsDueToMissingDependency() {
-		String proot = workspace.getAbsolutePath().toString();
-		String[] args = { "--projectlocations", proot, "--buildType", "allprojects" };
+		String[] args = { "--projectlocations", proot.toString(), "--buildType", "allprojects" };
 
 		expectCompilerException(args, ErrorExitCode.EXITCODE_COMPILE_ERROR);
 		// Assert that at most 19 files are compiled. The actual number depends on the chosen algorithm for the build
 		// order and on the order in which the project dependency graph is traversed. 19 is the maximum number of files
 		// that can be transpiled without error.
-		assertTrue(countFilesCompiledToES(proot) <= 19);
+		assertTrue(countFilesCompiledToES(proot.toString()) <= 19);
 	}
 
 	/**
@@ -73,8 +74,6 @@ public class N4jscBasicErrorTest extends AbstractN4jscTest {
 	@Test
 	public void test_Run_Not_Compiled_A_WithNodeRunner() {
 
-		String proot = workspace.getAbsolutePath().toString();
-
 		// Project
 		String projectP1 = "P1";
 		String pathToP1 = proot + "/" + projectP1;
@@ -82,7 +81,7 @@ public class N4jscBasicErrorTest extends AbstractN4jscTest {
 		// absolute src filename
 		String fileA = pathToP1 + "/src/A.n4js";
 
-		String[] args = { "--projectlocations", proot, "--runWith", "nodejs", "--run", fileA };
+		String[] args = { "--projectlocations", proot.toString(), "--runWith", "nodejs", "--run", fileA };
 
 		expectCompilerException(args, ErrorExitCode.EXITCODE_RUNNER_STOPPED_WITH_ERROR);
 	}
@@ -92,8 +91,7 @@ public class N4jscBasicErrorTest extends AbstractN4jscTest {
 	 */
 	@Test
 	public void testWhenCleanThenBuildType() {
-		String proot = workspace.getAbsolutePath().toString();
-		String[] args = { "--clean", "--projectlocations", proot };
+		String[] args = { "--clean", "--projectlocations", proot.toString() };
 		expectCompilerException(args, ErrorExitCode.EXITCODE_WRONG_CMDLINE_OPTIONS);
 	}
 
@@ -102,10 +100,9 @@ public class N4jscBasicErrorTest extends AbstractN4jscTest {
 	 */
 	@Test
 	public void testCleanAndTypeSingleFileNotAllowed() {
-		String proot = workspace.getAbsolutePath().toString();
 		String project = "TestCleanPrj1";
 		String pathToFile = proot + "/" + project + "/src/C.n4js";
-		String[] args = { "--clean", "--projectlocations", proot, "--buildType", "singlefile", pathToFile };
+		String[] args = { "--clean", "--projectlocations", proot.toString(), "--buildType", "singlefile", pathToFile };
 		expectCompilerException(args, ErrorExitCode.EXITCODE_WRONG_CMDLINE_OPTIONS);
 	}
 
@@ -115,10 +112,9 @@ public class N4jscBasicErrorTest extends AbstractN4jscTest {
 	 */
 	@Test
 	public void testCleanProjectsWithoutProjectLocation() {
-		String proot = workspace.getAbsolutePath().toString();
 		String[] args = { "--clean", "--buildType", "projects" };
 		expectCompilerException(args, ErrorExitCode.EXITCODE_WRONG_CMDLINE_OPTIONS);
 		// freshly setup workspace contains compiled files in TestCleanPrj1 and TestCleanPrj2
-		assertEquals(3, countFilesCompiledToES(proot));
+		assertEquals(3, countFilesCompiledToES(proot.toString()));
 	}
 }

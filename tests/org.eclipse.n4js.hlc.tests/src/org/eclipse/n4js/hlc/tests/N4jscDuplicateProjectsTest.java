@@ -30,11 +30,13 @@ import org.junit.Test;
  */
 public class N4jscDuplicateProjectsTest extends AbstractN4jscTest {
 	File workspace;
+	File proot;
 
 	/** Prepare workspace. */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace("duplicates");
+		workspace = setupWorkspace("duplicates", true);
+		proot = new File(workspace, PACKAGES).getAbsoluteFile();
 	}
 
 	/** Delete workspace. */
@@ -48,8 +50,6 @@ public class N4jscDuplicateProjectsTest extends AbstractN4jscTest {
 	 */
 	@Test
 	public void testCompileDuplicateP1_DifferentProjects() {
-
-		String proot = workspace.getAbsolutePath().toString();
 
 		// Project
 		String pathToP1_1 = proot + "/root1/P1";
@@ -72,8 +72,6 @@ public class N4jscDuplicateProjectsTest extends AbstractN4jscTest {
 	 */
 	@Test
 	public void testCompileDuplicateP1_SameProjectTwice() throws ExitCodeException {
-
-		String proot = workspace.getAbsolutePath().toString();
 
 		// Project
 		String pathToP1_1 = proot + "/root1/P1";

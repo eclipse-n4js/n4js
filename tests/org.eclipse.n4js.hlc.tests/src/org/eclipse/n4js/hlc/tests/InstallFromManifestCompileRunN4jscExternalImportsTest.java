@@ -21,7 +21,6 @@ import org.eclipse.n4js.test.helper.hlc.N4CliHelper;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.base.Predicates;
@@ -31,14 +30,13 @@ import com.google.common.base.Predicates;
  * instructed to discover missing dependencies and to install them before compilation, which is done with
  * {@code --installMissingDependencies} flag.
  */
-@Ignore("side-by-side-use-case")
 public class InstallFromManifestCompileRunN4jscExternalImportsTest extends AbstractN4jscTest {
 	File workspace;
 
 	/** Prepare workspace. */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace("external_project_install_dependencies", Predicates.alwaysTrue());
+		workspace = setupWorkspace("external_project_install_dependencies", Predicates.alwaysTrue(), true);
 	}
 
 	/** Delete workspace. */
@@ -54,14 +52,15 @@ public class InstallFromManifestCompileRunN4jscExternalImportsTest extends Abstr
 	@Test
 	public void testCompileAndRunWithExternalDependencies() throws IOException, ExitCodeException {
 		final String wsRoot = workspace.getAbsolutePath().toString();
-		final String fileToRun = wsRoot + "/P3/src/f3.n4jsx";
+		final String packages = wsRoot + "/packages";
+		final String fileToRun = packages + "/P3/src/f3.n4jsx";
 
 		final String[] args = {
 				"--systemLoader", COMMON_JS.getId(),
 				"--installMissingDependencies",
 				"--runWith", "nodejs",
 				"--run", fileToRun,
-				"--projectlocations", wsRoot,
+				"--projectlocations", packages,
 				"--buildType", BuildType.allprojects.toString()
 		};
 		final String out = runAndCaptureOutput(args);
@@ -83,14 +82,18 @@ public class InstallFromManifestCompileRunN4jscExternalImportsTest extends Abstr
 	@Test
 	public void testCompileAndRunWithExternalDependencies2() throws IOException, ExitCodeException {
 		final String wsRoot = workspace.getAbsolutePath().toString();
-		final String fileToRun = wsRoot + "/P3/src/f3.n4jsx";
+		final String packages = wsRoot + "/packages";
+		final String fileToRun = packages + "/P3/src/f3.n4jsx";
 
 		final String[] args = {
 				"--systemLoader", COMMON_JS.getId(),
 				"--installMissingDependencies",
 				"-rw", "nodejs",
 				"-r", fileToRun,
-				"-bt", BuildType.projects.toString(), wsRoot + "/P1", wsRoot + "/P2", wsRoot + "/P3"
+				"-bt", BuildType.projects.toString(),
+				packages + "/P1",
+				packages + "/P2",
+				packages + "/P3"
 		};
 		final String out = runAndCaptureOutput(args);
 		N4CliHelper.assertExpectedOutput(

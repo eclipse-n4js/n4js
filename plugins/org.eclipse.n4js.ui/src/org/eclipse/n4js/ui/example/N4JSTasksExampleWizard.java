@@ -10,10 +10,15 @@
  */
 package org.eclipse.n4js.ui.example;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Map;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -22,11 +27,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.n4js.external.LibraryManager;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.semver.SemverHelper;
-import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
-import org.eclipse.n4js.ui.internal.N4JSEclipseModel;
 import org.eclipse.ui.statushandlers.StatusManager;
 
 import com.google.inject.Inject;
@@ -44,12 +45,6 @@ public class N4JSTasksExampleWizard extends ExampleInstallerWizard {
 	@Inject
 	private LibraryManager libManager;
 
-	@Inject
-	private N4JSEclipseModel model;
-
-	@Inject
-	private SemverHelper semverHelper;
-
 	@Override
 	public boolean performFinish() {
 		if (super.performFinish()) {
@@ -59,6 +54,25 @@ public class N4JSTasksExampleWizard extends ExampleInstallerWizard {
 		return false;
 	}
 
+	@Override
+	protected void installExample(IProgressMonitor progressMonitor) throws Exception {
+		// import project(s) registered via the extension point
+		super.installExample(progressMonitor);
+
+		// we assume that the project(s) registered via the extension point are root projects containing a yarn
+		// workspace with the actual projects contained in a top-level folder "packages"; so we need to import
+		// those projects as well:
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		File workspaceFolder = workspace.getRoot().getLocation().toFile().getAbsoluteFile();
+		for (ProjectDescriptor pd : getProjectDescriptors()) {
+			File projectFolder = new File(workspaceFolder, pd.getName());
+			File packagesFolder = new File(projectFolder, "packages");
+			for (File memberProject : packagesFolder.listFiles(File::isDirectory)) {
+				importProject(workspace, memberProject, progressMonitor);
+			}
+		}
+	}
+
 	private void runNpmInstall() {
 		try {
 			getContainer().run(true, false, new IRunnableWithProgress() {
@@ -66,30 +80,14 @@ public class N4JSTasksExampleWizard extends ExampleInstallerWizard {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					try {
 						monitor.subTask("Installing dependencies");
-						IN4JSProject taskExample = model.findAllProjectMappings().get("n4js.example.tasks");
-						URI location = taskExample.getLocation();
-						Map<String, NPMVersionRequirement> taskDeps = new HashMap<>();
-						taskDeps.put("n4js-runtime-es2015", semverHelper.parse("*"));
-						taskDeps.put("n4js.lang", semverHelper.parse("^0.13.1"));
-						taskDeps.put("mongodb", semverHelper.parse("^2.1.0"));
-						taskDeps.put("express", semverHelper.parse("*"));
-						taskDeps.put("@n4jsd/mongodb", semverHelper.parse("<=2.1.*"));
-						taskDeps.put("@n4jsd/express", semverHelper.parse("*"));
-						IStatus status = libManager.installNPMs(taskDeps, true, location, monitor);
-
-						if (status.matches(IStatus.ERROR))
-							throw status.getException();
-
-						IN4JSProject taskExampleTest = model.findAllProjectMappings().get("n4js.example.tasks.tests");
-						location = taskExampleTest.getLocation();
-						taskDeps.clear();
-						taskDeps.put("n4js.lang", semverHelper.parse("^0.13.1"));
-						taskDeps.put("org.eclipse.n4js.mangelhaft", semverHelper.parse("^0.13.1"));
-						taskDeps.put("org.eclipse.n4js.mangelhaft.assert", semverHelper.parse("^0.13.1"));
-						status = libManager.installNPMs(taskDeps, true, location, monitor);
-
-						if (status.matches(IStatus.ERROR))
-							throw status.getException();
+						for (ProjectDescriptor pd : getProjectDescriptors()) {
+							IProject project = pd.getProject();
+							URI projectFolderURI = URI.createFileURI(project.getLocation().toFile().getAbsolutePath());
+							IStatus status = libManager.runNpmYarnInstall(projectFolderURI, monitor);
+							if (status.matches(IStatus.ERROR)) {
+								throw status.getException();
+							}
+						}
 					} catch (Throwable e) {
 						throw new InvocationTargetException(e,
 								"An error occurred while installing dependencies");
@@ -105,4 +103,12 @@ public class N4JSTasksExampleWizard extends ExampleInstallerWizard {
 		}
 	}
 
+	private static void importProject(IWorkspace workspace, File rootFolder, IProgressMonitor progressMonitor)
+			throws CoreException {
+		IPath path = new org.eclipse.core.runtime.Path(new File(rootFolder, ".project").getAbsolutePath());
+		IProjectDescription desc = workspace.loadProjectDescription(path);
+		IProject project = workspace.getRoot().getProject(desc.getName());
+		project.create(desc, progressMonitor);
+		project.open(progressMonitor);
+	}
 }

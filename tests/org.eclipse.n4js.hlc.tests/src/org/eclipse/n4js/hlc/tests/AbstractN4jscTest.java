@@ -23,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.eclipse.n4js.N4JSGlobals;
@@ -45,6 +46,7 @@ import org.junit.runner.Description;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 
 /**
  */
@@ -52,6 +54,11 @@ public abstract class AbstractN4jscTest {
 
 	/** name of workspace sub-folder (inside target folder) */
 	private static final String WSP = "wsp";
+	/**
+	 * name of subfolder containing the actual projects iff a yarn workspace was created, see
+	 * {@link #setupWorkspace(String, String, Predicate, boolean)}
+	 */
+	protected static final String PACKAGES = "packages";
 	/** name of package containing the test resources */
 	protected static final String FIXTURE = "probands";
 	/** name of default test data set */
@@ -75,56 +82,84 @@ public abstract class AbstractN4jscTest {
 	/**
 	 * Copy a fresh fixture to the workspace area. Deleting old leftovers from former tests.
 	 *
+	 * @param createYarnWorkspace
+	 *            see {@link #setupWorkspace(String, String, Predicate, boolean)}.
+	 *
 	 * @returns file indicating the relative path to the copied data set
 	 */
-	protected static File setupWorkspace(String testDataSet) throws IOException {
-		return setupWorkspace(testDataSet, Predicates.alwaysFalse());
+	protected static File setupWorkspace(String testDataSet, boolean createYarnWorkspace) throws IOException {
+		return setupWorkspace(testDataSet, Predicates.alwaysFalse(), createYarnWorkspace);
 	}
 
 	/**
 	 * Copy a fresh fixture to the workspace area. Deleting old leftovers from former tests.
 	 *
+	 * @param createYarnWorkspace
+	 *            see {@link #setupWorkspace(String, String, Predicate, boolean)}.
+	 *
 	 * @returns file indicating the relative path to the copied data set
 	 */
-	protected static File setupWorkspace(String testDataRoot, String testDataSet) throws IOException {
-		return setupWorkspace(testDataRoot, testDataSet, Predicates.alwaysFalse());
+	protected static File setupWorkspace(String testDataRoot, String testDataSet, boolean createYarnWorkspace)
+			throws IOException {
+		return setupWorkspace(testDataRoot, testDataSet, Predicates.alwaysFalse(), createYarnWorkspace);
 	}
 
 	/**
 	 * Copy a fresh fixture to the workspace area. Deleting old leftovers from former tests. Also includes all N4JS
 	 * libraries from the {@code n4js} Git repository which name provides {@code true} value for the given predicate.
 	 *
+	 * @param createYarnWorkspace
+	 *            see {@link #setupWorkspace(String, String, Predicate, boolean)}.
+	 *
 	 * @returns file indicating the relative path to the copied data set
 	 */
-	protected static File setupWorkspace(String testDataSet,
-			Predicate<String> n4jsLibrariesPredicate)
-			throws IOException {
-		return setupWorkspace(FIXTURE, testDataSet, n4jsLibrariesPredicate);
+	protected static File setupWorkspace(String testDataSet, Predicate<String> n4jsLibrariesPredicate,
+			boolean createYarnWorkspace) throws IOException {
+		return setupWorkspace(FIXTURE, testDataSet, n4jsLibrariesPredicate, createYarnWorkspace);
 	}
 
 	/**
 	 * Copy a fresh fixture to the workspace area. Deleting old leftovers from former tests. Also includes all N4JS
 	 * libraries from the {@code n4js} Git repository which name provides {@code true} value for the given predicate.
+	 *
+	 * @param createYarnWorkspace
+	 *            if true, a yarn workspace will be created, i.e. projects will be put into a subfolder
+	 *            {@value #PACKAGES} and an appropriate package.json file will be generated.
 	 *
 	 * @returns file indicating the relative path to the copied data set
 	 */
 	protected static File setupWorkspace(String testDataRoot, String testDataSet,
-			Predicate<String> n4jsLibrariesPredicate)
-			throws IOException {
+			Predicate<String> n4jsLibrariesPredicate, boolean createYarnWorkspace) throws IOException {
 		File root = FileUtils.createTempDirectory(testDataRoot + "_" + testDataSet + "_").toFile();
 
 		File wsp = new File(root, WSP);
+		File packages = new File(wsp, PACKAGES);
+		File projectLocation = createYarnWorkspace ? packages : wsp;
+
 		File fixture = new File(testDataRoot, testDataSet);
+
 		// clean
 		if (wsp.exists()) {
 			FileDeleter.delete(wsp.toPath(), true);
 		}
+		wsp.mkdirs();
+		projectLocation.mkdirs();
 
 		// copy fixtures to workspace
-		FileCopier.copy(fixture.toPath(), wsp.toPath(), true);
+		FileCopier.copy(fixture.toPath(), projectLocation.toPath(), true);
 
 		// copy required n4js libraries to workspace location
-		N4CliHelper.copyN4jsLibsToLocation(wsp, n4jsLibrariesPredicate);
+		N4CliHelper.copyN4jsLibsToLocation(projectLocation, n4jsLibrariesPredicate);
+
+		// create yarn workspace
+		if (createYarnWorkspace) {
+			List<String> packageJsonLines = Lists.newArrayList(
+					"{",
+					"\t\"private\": true,",
+					"\t\"workspaces\": [ \"packages/*\" ]",
+					"}");
+			Files.write(wsp.toPath().resolve(N4JSGlobals.PACKAGE_JSON), packageJsonLines);
+		}
 
 		return wsp;
 	}
