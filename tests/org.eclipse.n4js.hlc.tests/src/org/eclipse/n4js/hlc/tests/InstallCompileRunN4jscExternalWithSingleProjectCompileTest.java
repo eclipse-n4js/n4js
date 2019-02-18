@@ -21,7 +21,6 @@ import org.eclipse.n4js.test.helper.hlc.N4CliHelper;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.base.Predicates;
@@ -29,14 +28,13 @@ import com.google.common.base.Predicates;
 /**
  * Downloads, installs, compiles and runs 'express'.
  */
-@Ignore("side-by-side-use-case")
 public class InstallCompileRunN4jscExternalWithSingleProjectCompileTest extends AbstractN4jscTest {
 	File workspace;
 
 	/** Prepare workspace. */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace("external_singleProjectOrFileCompile", Predicates.alwaysTrue());
+		workspace = setupWorkspace("external_singleProjectOrFileCompile", Predicates.alwaysTrue(), true);
 	}
 
 	/** Delete workspace. */
@@ -52,7 +50,8 @@ public class InstallCompileRunN4jscExternalWithSingleProjectCompileTest extends 
 	@Test
 	public void testCompileAndRunWithExternalDependencies() throws IOException, ExitCodeException {
 		final String wsRoot = workspace.getAbsolutePath().toString();
-		final String projectToCompile = wsRoot + "/external.project";
+		final String packages = wsRoot + "/packages";
+		final String projectToCompile = packages + "/external.project";
 		final String fileToRun = projectToCompile + "/src/Main.n4js";
 
 		final String[] args = {
@@ -60,7 +59,7 @@ public class InstallCompileRunN4jscExternalWithSingleProjectCompileTest extends 
 				"--installMissingDependencies",
 				"--runWith", "nodejs",
 				"--run", fileToRun,
-				"--projectlocations", wsRoot,
+				"--projectlocations", packages,
 				"--buildType", BuildType.projects.toString(),
 				projectToCompile
 		};

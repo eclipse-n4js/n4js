@@ -32,11 +32,13 @@ public class N4jscScopedProjectTest extends AbstractN4jscTest {
 	private static final String NL = System.lineSeparator();
 
 	private File workspace;
+	private File proot;
 
 	/** Prepare workspace. */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace(TEST_DATA_SET__NPM_SCOPES);
+		workspace = setupWorkspace(TEST_DATA_SET__NPM_SCOPES, true);
+		proot = new File(workspace, PACKAGES).getAbsoluteFile();
 		System.out.println("just for reference workspace base path is: " + workspace.getAbsolutePath().toString());
 	}
 
@@ -55,14 +57,14 @@ public class N4jscScopedProjectTest extends AbstractN4jscTest {
 		// (1) compile
 
 		String[] args1 = {
-				"--projectlocations", workspace.getAbsolutePath(),
+				"--projectlocations", proot.toString(),
 				"--buildType", "allprojects"
 		};
 		new N4jscBase().doMain(args1);
 
 		// (2) run and check output
 
-		File sourceFolder = new File(new File(workspace, "XClient"), "src");
+		File sourceFolder = new File(new File(proot, "XClient"), "src");
 		File testFile1 = new File(sourceFolder, TEST_FILE_1);
 		File testFile2 = new File(sourceFolder, TEST_FILE_2);
 
@@ -80,7 +82,7 @@ public class N4jscScopedProjectTest extends AbstractN4jscTest {
 
 	private String runAndAssertOutput(File fileToExecute, String expectedOutput) throws ExitCodeException, IOException {
 		String[] args = {
-				"--projectlocations", workspace.getAbsolutePath(),
+				"--projectlocations", proot.toString(),
 				"--buildType", "dontcompile",
 				"--runWith", "nodejs",
 				"--run", fileToExecute.getAbsolutePath()

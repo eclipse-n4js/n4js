@@ -30,7 +30,6 @@ import org.eclipse.n4js.hlc.base.N4jscBase;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -38,11 +37,11 @@ import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
 /*** Basic tests for N4jsc,like checking command line options or simple compile. */
-@Ignore("side-by-side-use-case")
 @RunWith(Parameterized.class)
 public class N4jscArgumentOrderTest extends AbstractN4jscTest {
 
-	static File WORKSPACE;
+	static File workspaceRoot;
+	static File packages;
 	static String WS_ORDER_TEST = "N4jscArgumentOrderTest";
 
 	static String[] args;
@@ -52,8 +51,9 @@ public class N4jscArgumentOrderTest extends AbstractN4jscTest {
 	 */
 	@BeforeClass
 	public static void setupWorkspace() throws IOException {
-		WORKSPACE = setupWorkspace(WS_ORDER_TEST);
-		String currentPath = WORKSPACE.getAbsolutePath().toString();
+		workspaceRoot = setupWorkspace(WS_ORDER_TEST, true);
+		packages = new File(workspaceRoot, PACKAGES);
+		String currentPath = packages.getAbsolutePath().toString();
 		System.out.println("just for reference base-path is: " + currentPath);
 
 		// @formatter:off
@@ -77,7 +77,7 @@ public class N4jscArgumentOrderTest extends AbstractN4jscTest {
 	/** Cleanup. */
 	@AfterClass
 	public static void deleteWorkspace() throws IOException {
-		FileDeleter.delete(WORKSPACE.toPath(), true);
+		FileDeleter.delete(packages.toPath(), true);
 	}
 
 	// @formatter:off

@@ -54,7 +54,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 	 */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace(TEST_DATA_SET__TESTERS, Predicates.alwaysTrue());
+		workspace = setupWorkspace(TEST_DATA_SET__TESTERS, Predicates.alwaysTrue(), true);
 	}
 
 	/** Delete workspace. */
@@ -71,7 +71,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 	 */
 	@Test
 	public void testCompile_And_LaunchSinglePassingTestFile() throws ExitCodeException {
-		String proot = workspace.getAbsolutePath().toString();
+		String proot = new File(workspace, PACKAGES).getAbsolutePath().toString();
 
 		// Project
 		String projectDemoTest = "DemoTest";
@@ -99,7 +99,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 	 */
 	@Test
 	public void testCompile_And_LaunchSingleIgnoredTestFile() throws ExitCodeException {
-		String proot = workspace.getAbsolutePath().toString();
+		String proot = new File(workspace, PACKAGES).getAbsolutePath().toString();
 
 		// Project
 		String projectDemoTest = "DemoTest";
@@ -126,7 +126,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 	 */
 	@Test
 	public void testCompile_And_LaunchSingleFailingTestFile() {
-		String proot = workspace.getAbsolutePath().toString();
+		String proot = new File(workspace, PACKAGES).getAbsolutePath().toString();
 
 		// Project
 		String projectDemoTest = "DemoTest";
@@ -154,7 +154,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 	 */
 	@Test
 	public void testCompile_And_RunTests_And_GenerateTestReport() throws FileNotFoundException {
-		String proot = workspace.getAbsolutePath().toString();
+		String proot = new File(workspace, PACKAGES).getAbsolutePath().toString();
 
 		// Project
 		String projectDemoTest = "DemoTest";
@@ -199,7 +199,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 	 */
 	@Test
 	public void testCompile_And_TestProject() {
-		String proot = workspace.getAbsolutePath().toString();
+		String proot = new File(workspace, PACKAGES).getAbsolutePath().toString();
 
 		// Project
 		String projectDemoTest = "DemoTest";
@@ -222,7 +222,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 	@Test
 	public void testCompileAllProjectsGenerateTestCatalog_absolutePath()
 			throws ExitCodeException, FileNotFoundException, IOException {
-		String proot = workspace.getAbsolutePath().toString();
+		String proot = new File(workspace, PACKAGES).getAbsolutePath().toString();
 		final File tempDir = Files.createTempDir();
 		tempDir.deleteOnExit();
 		final String[] args = { "--projectlocations", proot,
@@ -244,7 +244,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 	@Test
 	public void testCompileAllProjectsGenerateTestCatalog_relativePath()
 			throws ExitCodeException, FileNotFoundException, IOException {
-		String proot = workspace.getAbsolutePath().toString();
+		String proot = new File(workspace, PACKAGES).getAbsolutePath().toString();
 		final String[] args = { "--projectlocations", proot,
 				"--buildType", "allprojects",
 				"--testCatalogFile", "test-catalog.json"
@@ -264,7 +264,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 	@Test
 	public void testCompileAllProjectsGenerateTestCatalog_existingRelativePath()
 			throws ExitCodeException, FileNotFoundException, IOException {
-		String proot = workspace.getAbsolutePath().toString();
+		String proot = new File(workspace, PACKAGES).getAbsolutePath().toString();
 
 		final File existingFile = new File("test-catalog.json");
 		existingFile.createNewFile();
@@ -288,7 +288,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 	 */
 	@Test
 	public void testInvalidTestCatalogLocation() {
-		String proot = workspace.getAbsolutePath().toString();
+		String proot = new File(workspace, PACKAGES).getAbsolutePath().toString();
 		final String[] args = { "--projectlocations", proot,
 				"--buildType", "allprojects",
 				"--testCatalogFile", "some/fake/folder/test-catalog.json"
@@ -302,7 +302,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 	 */
 	@Test
 	public void testDirectoryTestCatalogLocation() {
-		String proot = workspace.getAbsolutePath().toString();
+		String proot = new File(workspace, PACKAGES).getAbsolutePath().toString();
 		final File tempDir = Files.createTempDir();
 		tempDir.deleteOnExit();
 		final String[] args = { "--projectlocations", proot,

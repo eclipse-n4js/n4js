@@ -35,7 +35,7 @@ public class AT_IDEBUG_542_missing_dep_to_project_under_testTest extends Abstrac
 	 */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace(WSP_542, Predicates.alwaysTrue());
+		workspace = setupWorkspace(WSP_542, Predicates.alwaysTrue(), true);
 	}
 
 	/** Delete workspace. */
@@ -48,7 +48,7 @@ public class AT_IDEBUG_542_missing_dep_to_project_under_testTest extends Abstrac
 	@Test
 	public void testCompileOfExtendedIterator_from_RuntimeLibrary() throws ExitCodeException {
 
-		String proot = workspace.getAbsolutePath().toString();
+		String proot = new File(workspace, PACKAGES).getAbsolutePath().toString();
 
 		String[] args = { "--projectlocations", proot, "--buildType", "allprojects" };
 
