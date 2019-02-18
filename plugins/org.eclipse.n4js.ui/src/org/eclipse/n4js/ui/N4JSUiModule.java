@@ -109,6 +109,10 @@ import org.eclipse.n4js.ui.preferences.N4JSBuilderPreferenceAccess;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
 import org.eclipse.n4js.ui.quickfix.N4JSIssue;
 import org.eclipse.n4js.ui.quickfix.N4JSMarkerResolutionGenerator;
+import org.eclipse.n4js.ui.refactoring.N4JSDependentElementsCalculator;
+import org.eclipse.n4js.ui.refactoring.N4JSRefactoringCrossReferenceSerializer;
+import org.eclipse.n4js.ui.refactoring.N4JSRenameElementHandler;
+import org.eclipse.n4js.ui.refactoring.N4JSRenameStrategy;
 import org.eclipse.n4js.ui.resource.OutputFolderAwareResourceServiceProvider;
 import org.eclipse.n4js.ui.search.LabellingReferenceFinder;
 import org.eclipse.n4js.ui.search.MyReferenceSearchResultContentProvider;
@@ -172,6 +176,10 @@ import org.eclipse.xtext.ui.editor.syntaxcoloring.AbstractAntlrTokenToAttributeI
 import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingConfiguration;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingHelper;
 import org.eclipse.xtext.ui.editor.validation.MarkerCreator;
+import org.eclipse.xtext.ui.refactoring.impl.DefaultDependentElementsCalculator;
+import org.eclipse.xtext.ui.refactoring.impl.DefaultRenameStrategy;
+import org.eclipse.xtext.ui.refactoring.impl.RefactoringCrossReferenceSerializer;
+import org.eclipse.xtext.ui.refactoring.ui.DefaultRenameElementHandler;
 import org.eclipse.xtext.ui.resource.DefaultResourceUIServiceProvider;
 import org.eclipse.xtext.ui.shared.Access;
 import org.eclipse.xtext.ui.util.IssueUtil;
@@ -902,4 +910,26 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	public Class<? extends IProjectCreator> bindN4JSProjectCreator() {
 		return N4JSProjectCreator.class;
 	}
+
+	/** Custom RenameElementHandler */
+	public Class<? extends DefaultRenameElementHandler> bindDefaultRenameElementHandler() {
+		return N4JSRenameElementHandler.class;
+	}
+
+	/** Custom dependent elements calculator */
+	public Class<? extends DefaultDependentElementsCalculator> bindDefaultDependentElementsCalculator() {
+		return N4JSDependentElementsCalculator.class;
+	}
+
+	/** Custom rename strategy */
+	public Class<? extends DefaultRenameStrategy> bindDefaultRenameStrategy() {
+		return N4JSRenameStrategy.class;
+	}
+
+	/** Custom N4JSRefactoringCrossReferenceSerializer */
+
+	public Class<? extends RefactoringCrossReferenceSerializer> bindN4JSRefactoringCrossReferenceSerializer() {
+		return N4JSRefactoringCrossReferenceSerializer.class;
+	}
+
 }

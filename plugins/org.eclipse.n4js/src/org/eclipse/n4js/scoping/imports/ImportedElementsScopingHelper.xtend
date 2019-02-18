@@ -102,11 +102,11 @@ class ImportedElementsScopingHelper {
 	}
 
 	def IScope getImportedTypes(IScope parentScope, Script script) {
-		val IScope scriptScope = cache.get(script -> 'importedTypes', script.eResource) [|
+//		val IScope scriptScope = cache.get(script -> 'importedTypes', script.eResource) [|
 			val result = script.findImportedElements(parentScope, false);
 			return result;
-		]
-		return scriptScope
+//		]
+//		return scriptScope
 	}
 
 	/**
