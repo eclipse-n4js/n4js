@@ -188,7 +188,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace im
 		java.net.URI rootLoc = getRootLocationForResource(nestedLocation);
 
 		if (rootLoc != null) {
-			URI uriCandidate = doOliversStuff(nestedLocation, rootLoc);
+			URI uriCandidate = computeProjectURI(nestedLocation, rootLoc);
 			if (projectProvider.getProject(uriCandidate) != null) {
 				return uriCandidate;
 			}
@@ -197,8 +197,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace im
 		return null;
 	}
 
-	// FIXME: @mor: please document and rename
-	private URI doOliversStuff(URI nestedLocation, java.net.URI rootLoc) {
+	private URI computeProjectURI(URI nestedLocation, java.net.URI rootLoc) {
 		String rootLocStr = rootLoc.toString();
 		URI loc = URI.createURI(rootLocStr);
 		URI prefix = !loc.hasTrailingPathSeparator() ? loc.appendSegment("") : loc;

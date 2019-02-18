@@ -128,20 +128,7 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 		// Make sure both test module and project description file get into the index.
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
-
-		// List of expected external library warnings originating from shipped code projects:
-		//
-		// line 0: External library warning: public is reserved identifier.
-		// line 0: External library warning: The use of the any type in a union type is discouraged.
-		// line 0: External library warning: Neither constructor{? extends N4Object} is a subtype of type{T} nor type{T}
-		// is a subtype of constructor{? extends N4Object}. The expression will always evaluate to false.
-		// line 0: External library warning: Neither constructor{? extends N4Object} is a subtype of type{T} nor type{T}
-		// is a subtype of constructor{? extends N4Object}. The expression will always evaluate to false.
-		// line 0: External library warning: Neither constructor{? extends N4Object} is a subtype of type{T} nor type{T}
-		// is a subtype of constructor{? extends N4Object}. The expression will always evaluate to false.
-		// line 0: External library warning: Unnecessary cast from ~~ResultGroup to Object
-		// line 0: External library warning: Unnecessary cast from Array<ResultGroups>
-		assertMarkers("Expected exactly 7 issues.", project, 7); // issues are in external libraries
+		assertMarkers("Expected exactly 0 issues.", project, 0); // issues are in external libraries
 
 		final Resource resource = persister.createResource();
 		assertNotNull("Test resource was null.", resource);
@@ -182,8 +169,7 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 		syncExtAndBuild();
 
 		resource.getContents().clear();
-		// see above for list of expected issues
-		assertMarkers("Expected exactly 7 issues.", project, 7); // issues are in external libraries
+		assertMarkers("Expected exactly 0 issues.", project, 0); // issues are in external libraries
 
 		final Set<org.eclipse.emf.common.util.URI> afterCrashBuilderState = from(
 				builderState.getAllResourceDescriptions())

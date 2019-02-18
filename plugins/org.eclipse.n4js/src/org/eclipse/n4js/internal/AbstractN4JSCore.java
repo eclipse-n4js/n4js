@@ -33,9 +33,6 @@ import com.google.inject.Inject;
 public abstract class AbstractN4JSCore implements IN4JSCore {
 
 	@Inject
-	private N4JSModel model;
-
-	@Inject
 	private WildcardPathFilterHelper wildcardHelper;
 
 	@Override
@@ -169,9 +166,4 @@ public abstract class AbstractN4JSCore implements IN4JSCore {
 		return null;
 	}
 
-	/** see {@link N4JSModel#convertToCorrespondingLocation(URI)} */
-	@Override
-	public URI convertToCorrespondingLocation(URI uri) {
-		return model.convertToCorrespondingLocation(uri);
-	}
 }

@@ -11,11 +11,6 @@
 
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
 
-//
-// real-world example from fabelhaft code
-// (taken from testConfig.n4js in eu.numberfour.fabelhaft.fntests.web)
-//
-
 export var testConfig : Object+ = {
 
 rootViewTemplates: {

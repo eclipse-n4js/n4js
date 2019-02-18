@@ -10,11 +10,13 @@
  */
 package org.eclipse.n4js.ui.building;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.emf.common.util.URI;
@@ -22,11 +24,12 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.N4JSResource;
-import org.eclipse.n4js.ui.external.ExternalLibraryErrorMarkerManager;
 import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
+import org.eclipse.n4js.ui.internal.ResourceUIValidatorExtension;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.builder.builderState.MarkerUpdaterImpl;
-import org.eclipse.xtext.resource.IResourceDescription;
+import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResource;
@@ -41,54 +44,25 @@ import org.eclipse.xtext.validation.Issue;
 import com.google.inject.Inject;
 
 /**
- *
+ * Extends Xtext class to add support for issues of external libraries.
  */
 @SuppressWarnings("restriction")
 public class N4JSMarkerUpdater extends MarkerUpdaterImpl {
+	/** When validating external libraries, set to true (only Errors) or false (all issues) are issued. */
+	static public final boolean SHOW_ONLY_EXTERNAL_ERRORS = true;
 
 	@Inject
 	private IStorage2UriMapper mapper;
 
-	private ExternalLibraryErrorMarkerManager markerManager;
-
 	private IN4JSEclipseCore n4jsCore;
 
-	private class DelegateUriDelta implements Delta {
-		final private Delta delegate;
-		final private URI uri;
-
-		/** Constructor */
-		DelegateUriDelta(Delta delegate, URI uri) {
-			this.delegate = delegate;
-			this.uri = uri;
-		}
-
-		@Override
-		public URI getUri() {
-			return uri;
-		}
-
-		@Override
-		public IResourceDescription getOld() {
-			return delegate.getOld();
-		}
-
-		@Override
-		public IResourceDescription getNew() {
-			return delegate.getNew();
-		}
-
-		@Override
-		public boolean haveEObjectDescriptionsChanged() {
-			return delegate.haveEObjectDescriptionsChanged();
-		}
-	}
+	private ResourceUIValidatorExtension validatorExtension;
 
 	@Inject
 	private void injectISharedStateContributionRegistry(ISharedStateContributionRegistry registry) {
 		try {
 			this.n4jsCore = registry.getSingleContributedInstance(IN4JSEclipseCore.class);
-			this.markerManager = registry.getSingleContributedInstance(ExternalLibraryErrorMarkerManager.class);
+			this.validatorExtension = registry.getSingleContributedInstance(ResourceUIValidatorExtension.class);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -122,19 +96,6 @@ public class N4JSMarkerUpdater extends MarkerUpdaterImpl {
 		super.updateMarkers(delta, resourceSet, monitor);
 	}
 
-	private void doTheOther(Delta delta, ResourceSet resourceSet, IProgressMonitor monitor) {
-		URI uri = delta.getUri();
-		IN4JSProject prj = n4jsCore.findProject(uri).orNull();
-
-		if (prj != null && prj.isExternal() && prj.exists() && prj instanceof N4JSEclipseProject) {
-			URI platformUri = n4jsCore.mapExternalResourceToUserWorkspaceLocalResource(uri).orNull();
-			if (platformUri != null) {
-				Delta platformDelta = new DelegateUriDelta(delta, platformUri);
-				super.updateMarkers(platformDelta, resourceSet, monitor);
-			}
-		}
-	}
-
 	private void updateMarkersForExternalLibraries(Delta delta, ResourceSet resourceSet, IProgressMonitor monitor) {
 		URI uri = delta.getUri();
 		if (n4jsCore.isNoValidate(uri)) {
@@ -146,9 +107,27 @@ public class N4JSMarkerUpdater extends MarkerUpdaterImpl {
 		IN4JSProject prj = n4jsCore.findProject(uri).orNull();
 		CancelIndicator cancelIndicator = getCancelIndicator(monitor);
 
-		if (prj != null && prj.isExternal() && prj.exists() && prj instanceof N4JSEclipseProject) {
-			List<Issue> list = validator.validate(resource, CheckMode.NORMAL_AND_FAST, cancelIndicator);
-			markerManager.setIssues(uri, list);
+		if (prj != null && prj.isExternal() && prj.exists() && prj instanceof N4JSEclipseProject && uri.isFile()) {
+			// transform file uri in workspace iResource
+			IFile file = URIUtils.convertFileUriToPlatformFile(uri);
+
+			if (file != null && resource != null) {
+				List<Issue> list = validator.validate(resource, CheckMode.NORMAL_AND_FAST, cancelIndicator);
+
+				if (SHOW_ONLY_EXTERNAL_ERRORS) {
+					for (Iterator<Issue> iter = list.iterator(); iter.hasNext();) {
+						if (iter.next().getSeverity() != Severity.ERROR) {
+							iter.remove();
+						}
+					}
+				}
+
+				try {
+					validatorExtension.createMarkers(file, resource, list);
+				} catch (CoreException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 
