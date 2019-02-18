@@ -17,11 +17,13 @@ import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.addNature;
 import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.monitor;
 import static org.eclipse.xtext.ui.testing.util.JavaProjectSetupUtil.createSimpleProject;
 import static org.eclipse.xtext.ui.testing.util.JavaProjectSetupUtil.createSubFolder;
+import static org.junit.Assert.assertNotEquals;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -40,6 +42,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -52,6 +55,7 @@ import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.packagejson.PackageJsonBuilder;
 import org.eclipse.n4js.ui.editor.N4JSDirtyStateEditorSupport;
@@ -67,6 +71,7 @@ import org.eclipse.xtext.resource.SaveOptions;
 import org.eclipse.xtext.ui.MarkerTypes;
 import org.eclipse.xtext.ui.XtextProjectHelper;
 import org.eclipse.xtext.ui.resource.IResourceSetProvider;
+import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.Assert;
 
 import com.google.common.base.Joiner;
@@ -112,7 +117,7 @@ public class ProjectTestsUtils {
 	 *      stackoverflow: from zip</a>
 	 */
 	public static IProject importProject(File probandsFolder, String projectName) throws CoreException {
-		return importProject(probandsFolder, projectName, true);
+		return importProject(probandsFolder, projectName, true, true);
 	}
 
 	/**
@@ -120,8 +125,9 @@ public class ProjectTestsUtils {
 	 * named "_project" in the proband folder. This should only be used as a rare exception when tests import projects
 	 * from Git repositories other than the N4JS or N4JS-N4 source repositories (e.g. for integration tests).
 	 */
-	public static IProject importProjectFromExternalSource(File probandsFolder, String projectName) throws Exception {
-		return importProject(probandsFolder, projectName, false);
+	public static IProject importProjectFromExternalSource(File probandsFolder, String projectName,
+			boolean copyIntoWorkspace) throws Exception {
+		return importProject(probandsFolder, projectName, copyIntoWorkspace, false);
 	}
 
 	/**
@@ -138,8 +144,7 @@ public class ProjectTestsUtils {
 	 *             If the project creation does not succeed.
 	 */
 	public static IProject createProjectWithLocation(File probandsFolder, String projectLocationFolder,
-			String workspaceName)
-			throws CoreException {
+			String workspaceName) throws CoreException {
 		File projectSourceFolder = new File(probandsFolder, projectLocationFolder);
 		if (!projectSourceFolder.exists()) {
 			throw new IllegalArgumentException("proband not found in " + projectSourceFolder);
@@ -162,8 +167,8 @@ public class ProjectTestsUtils {
 
 	}
 
-	private static IProject importProject(File probandsFolder, String projectName, boolean prepareDotProject)
-			throws CoreException {
+	private static IProject importProject(File probandsFolder, String projectName, boolean copyIntoWorkspace,
+			boolean prepareDotProject) throws CoreException {
 		File projectSourceFolder = new File(probandsFolder, projectName);
 		if (!projectSourceFolder.exists()) {
 			throw new IllegalArgumentException("proband not found in " + projectSourceFolder);
@@ -173,17 +178,24 @@ public class ProjectTestsUtils {
 			prepareDotProject(projectSourceFolder);
 		}
 
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+
 		// copy project into workspace
 		// (need to do that manually to properly handle NPM scopes, because the Eclipse import functionality won't put
 		// those projects into an "@myScope" subfolder)
-		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		File workspaceFolder = workspace.getRoot().getLocation().toFile();
-		File projectTargetFolder = new File(workspaceFolder, projectName);
-		try {
-			projectTargetFolder.mkdirs();
-			FileCopier.copy(projectSourceFolder.toPath(), projectTargetFolder.toPath());
-		} catch (IOException e) {
-			throw new WrappedException("exception while copying project into workspace", e);
+		final File projectTargetFolder;
+		if (copyIntoWorkspace) {
+			File workspaceFolder = workspace.getRoot().getLocation().toFile();
+			projectTargetFolder = new File(workspaceFolder, projectName);
+			try {
+				projectTargetFolder.mkdirs();
+				FileCopier.copy(projectSourceFolder.toPath(), projectTargetFolder.toPath());
+			} catch (IOException e) {
+				throw new WrappedException("exception while copying project into workspace", e);
+			}
+		} else {
+			// not copying, so source and target folders are identical:
+			projectTargetFolder = projectSourceFolder;
 		}
 
 		// load actual project name from ".project" file (might be different in case of NPM scopes)
@@ -227,6 +239,7 @@ public class ProjectTestsUtils {
 			}
 		}, monitor);
 
+		waitForAllJobs();
 		return project;
 	}
 
@@ -549,6 +562,21 @@ public class ProjectTestsUtils {
 	}
 
 	/**
+	 * Asserts that there are no errors. However, warnings may still exist.
+	 */
+	public static void assertNoErrors() throws CoreException {
+		waitForAutoBuild();
+
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		final IMarker[] markers = root.findMarkers(MarkerTypes.ANY_VALIDATION, true, IResource.DEPTH_INFINITE);
+		for (int i = 0; i < markers.length; i++) {
+			IMarker m = markers[i];
+			int severity = m.getAttribute(IMarker.SEVERITY, -1);
+			assertNotEquals("Expected no errors but found:\n" + m.toString(), IMarker.SEVERITY_ERROR, severity);
+		}
+	}
+
+	/**
 	 * Like {@link #assertIssues(IResource, String...)}, but checks for issues in entire workspace.
 	 */
 	public static void assertIssues(String... expectedMessages) throws CoreException {
@@ -566,6 +594,8 @@ public class ProjectTestsUtils {
 	 * Column information is not provided, so this method is not intended for several issues within a single line.
 	 */
 	public static void assertIssues(final IResource resource, String... expectedMessages) throws CoreException {
+		waitForAutoBuild();
+
 		final IMarker[] markers = resource.findMarkers(MarkerTypes.ANY_VALIDATION, true, IResource.DEPTH_INFINITE);
 		final String[] actualMessages = new String[markers.length];
 		for (int i = 0; i < markers.length; i++) {
@@ -623,5 +653,27 @@ public class ProjectTestsUtils {
 			projects[i] = getProjectByName(projectNames.get(i));
 		}
 		return projects;
+	}
+
+	/**
+	 * Copies projects from the given location to the node_modules folder of the given project
+	 */
+	public static void importDependencies(String projectName, java.net.URI externalRootLocation,
+			LibraryManager libraryManager) throws IOException, CoreException {
+
+		IProject clientProject = getProjectByName(projectName);
+		java.net.URI clientLocation = clientProject.getLocationURI();
+		File nodeModulesDir = new File(clientLocation.getPath(), N4JSGlobals.NODE_MODULES);
+		if (!nodeModulesDir.isDirectory()) {
+			Files.createDirectory(nodeModulesDir.toPath());
+		}
+
+		java.nio.file.Path probandsSource = Paths.get(externalRootLocation.getPath());
+		FileCopier.copy(probandsSource, nodeModulesDir.toPath());
+
+		libraryManager.synchronizeNpms(new NullProgressMonitor());
+
+		IResourcesSetupUtil.fullBuild();
+		waitForAllJobs();
 	}
 }

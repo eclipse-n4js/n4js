@@ -105,7 +105,20 @@ Contributors:
             class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
             contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
             default="true"
-            extensions="n4js,n4jsx,n4idl,n4jsd,js,jsx"
+            extensions="n4js,n4jsx,n4idl,n4jsd"
+            id="org.eclipse.n4js.N4JS"
+            icon="platform:/plugin/org.eclipse.ui/icons/full/obj16/file_obj.png"
+            name="N4JS Editor">
+        </editor>
+    </extension>
+
+    <extension
+            point="org.eclipse.ui.editors">
+        <editor
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
+            contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
+            default="true"
+            extensions="js,jsx"
             id="org.eclipse.n4js.N4JS"
             icon="platform:/plugin/org.eclipse.ui/icons/full/obj16/file_obj.png"
             name="N4JS Editor">
@@ -1188,7 +1201,7 @@ Contributors:
            activeByDefault="true"
            appearsBefore="org.eclipse.jdt.java.ui.javaContent"
            contentProvider="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.navigator.N4JSProjectExplorerContentProvider"
-           icon="icons/n4_logo_16.png"
+           icon="icons/n4_logo.png"
            id="org.eclipse.n4js.ui.navigatorContent"
            labelProvider="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.navigator.N4JSProjectExplorerLabelProvider"
            name="N4JS"
@@ -1359,14 +1372,9 @@ Contributors:
             pageImage="icons/newprj_wiz.png"
             wizardID="org.eclipse.n4js.ui.example.N4JSTasksExampleWizard">
          <projectDescriptor
-               contentURI="examples/tasksExample/n4js.example.tasks.zip"
-               description="N4JS project for demonstrating the main capabilities of the language through a simple example. After creating the projects each third party npm dependencies used by this example should be installed automatically."
-               name="n4js.example.tasks">
-         </projectDescriptor>
-         <projectDescriptor
-               contentURI="examples/tasksExample/n4js.example.tasks.tests.zip"
-               description="Test project for the Tasks Example N4JS project. This project is indented to exhibit the runtime and tooling support of testing framework."
-               name="n4js.example.tasks.tests">
+               contentURI="examples/tasksExample/n4js-tasks-example.zip"
+               description="N4JS project for demonstrating the main capabilities of the language through a simple example. After creating the project third-party npm dependencies used by this example should be installed automatically."
+               name="n4js-tasks-example">
          </projectDescriptor>
       </example>
    </extension>

@@ -165,4 +165,5 @@ public abstract class AbstractN4JSCore implements IN4JSCore {
 		}
 		return null;
 	}
+
 }

@@ -29,12 +29,11 @@ import org.eclipse.n4js.runner.RunnerFrontEnd;
 import org.eclipse.n4js.runner.ui.RunnerFrontEndUI;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.process.OutputRedirection;
 import org.eclipse.n4js.utils.process.ProcessExecutor;
 import org.eclipse.n4js.utils.process.ProcessResult;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -77,14 +76,6 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 	}
 
 	/**
-	 * Updates the known external library locations with the {@code node_modules} folder.
-	 */
-	@Before
-	public void setup() throws Exception {
-		setupExternalLibraries(false);
-	}
-
-	/**
 	 * Imports {@value #PA} project, checks for validation errors, installs {@code React npm} package, checks that
 	 * errors are gone. Then verify that running React/JSX code is successful.
 	 */
@@ -108,8 +99,8 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 		// line 6: Project does not exist with project ID: @n4jsd/react. expected:<1> but was:<2>
 		assertMarkers("Expected exactly 2 error in package.json.", projectDescriptionFile, 2);
 
-		libManager.installNPM(PACKAGE_REACT, new NullProgressMonitor());
-		libManager.installNPM(PACKAGE_N4JSD_REACT, new NullProgressMonitor());
+		libManager.installNPM(PACKAGE_REACT, URIUtils.toFileUri(project), new NullProgressMonitor());
+		libManager.installNPM(PACKAGE_N4JSD_REACT, URIUtils.toFileUri(project), new NullProgressMonitor());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 
@@ -144,8 +135,8 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 		final IFile projectDescriptionFile = project.getFile(getResourceName(IN4JSProject.PACKAGE_JSON));
 		assertTrue(projectDescriptionFile + " B module is not accessible.", projectDescriptionFile.isAccessible());
 
-		libManager.installNPM(PACKAGE_REACT, new NullProgressMonitor());
-		libManager.installNPM(PACKAGE_N4JSD_REACT, new NullProgressMonitor());
+		libManager.installNPM(PACKAGE_REACT, URIUtils.toFileUri(project), new NullProgressMonitor());
+		libManager.installNPM(PACKAGE_N4JSD_REACT, URIUtils.toFileUri(project), new NullProgressMonitor());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 
@@ -156,15 +147,6 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 		libManager.uninstallNPM(PACKAGE_REACT, new NullProgressMonitor());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
-	}
-
-	/**
-	 * Tries to make sure the external libraries are cleaned from the Xtext index, cleanup file system leftovers.
-	 */
-	@After
-	@Override
-	public void tearDown() throws Exception {
-		tearDownExternalLibraries(false);
 	}
 
 	private ProcessResult runClient() {

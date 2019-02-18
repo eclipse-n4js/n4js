@@ -10,30 +10,26 @@
  */
 package org.eclipse.n4js.ui.example;
 
-import static com.google.common.collect.FluentIterable.from;
-
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.ui.wizard.ExampleInstallerWizard;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.LibraryManager;
-import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
-import org.eclipse.n4js.semver.SemverHelper;
-import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.ui.statushandlers.StatusManager;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 
 /**
@@ -49,46 +45,49 @@ public class N4JSTasksExampleWizard extends ExampleInstallerWizard {
 	@Inject
 	private LibraryManager libManager;
 
-	@Inject
-	private TargetPlatformInstallLocationProvider installLocationProvider;
-
-	@Inject
-	private ExternalLibraryWorkspace externalLibraryWorkspace;
-
-	@Inject
-	private SemverHelper semverHelper;
-
 	@Override
 	public boolean performFinish() {
 		if (super.performFinish()) {
-			installDependencies(ImmutableMap.of(
-					"mongodb", semverHelper.parse(">=2.0.0 <3.0.0"),
-					"@n4jsd/mongodb", semverHelper.parse(">=2.0.0 <3.0.0"),
-					"@n4jsd/express", semverHelper.parse(""),
-					"express", semverHelper.parse("")));
+			runNpmInstall();
 			return true;
 		}
 		return false;
 	}
 
-	/**
-	 * @param namesAndVersions
-	 *            a map from NPM package names to NPM version constraints; use an empty string as version constraint to
-	 *            install the newest version.
-	 */
-	private void installDependencies(Map<String, NPMVersionRequirement> namesAndVersions) {
-		Set<String> toInstall = new HashSet<>(namesAndVersions.keySet());
-		toInstall.removeAll(getInstalledNpmPackages());
+	@Override
+	protected void installExample(IProgressMonitor progressMonitor) throws Exception {
+		// import project(s) registered via the extension point
+		super.installExample(progressMonitor);
 
+		// we assume that the project(s) registered via the extension point are root projects containing a yarn
+		// workspace with the actual projects contained in a top-level folder "packages"; so we need to import
+		// those projects as well:
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		File workspaceFolder = workspace.getRoot().getLocation().toFile().getAbsoluteFile();
+		for (ProjectDescriptor pd : getProjectDescriptors()) {
+			File projectFolder = new File(workspaceFolder, pd.getName());
+			File packagesFolder = new File(projectFolder, "packages");
+			for (File memberProject : packagesFolder.listFiles(File::isDirectory)) {
+				importProject(workspace, memberProject, progressMonitor);
+			}
+		}
+	}
+
+	private void runNpmInstall() {
 		try {
 			getContainer().run(true, false, new IRunnableWithProgress() {
 				@Override
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					try {
 						monitor.subTask("Installing dependencies");
-						IStatus status = libManager.installNPMs(namesAndVersions, true, monitor);
-						if (status.matches(IStatus.ERROR))
-							throw status.getException();
+						for (ProjectDescriptor pd : getProjectDescriptors()) {
+							IProject project = pd.getProject();
+							URI projectFolderURI = URI.createFileURI(project.getLocation().toFile().getAbsolutePath());
+							IStatus status = libManager.runNpmYarnInstall(projectFolderURI, monitor);
+							if (status.matches(IStatus.ERROR)) {
+								throw status.getException();
+							}
+						}
 					} catch (Throwable e) {
 						throw new InvocationTargetException(e,
 								"An error occurred while installing dependencies");
@@ -104,8 +103,12 @@ public class N4JSTasksExampleWizard extends ExampleInstallerWizard {
 		}
 	}
 
-	private Collection<String> getInstalledNpmPackages() {
-		final File root = new File(installLocationProvider.getNodeModulesURI());
-		return from(externalLibraryWorkspace.getProjectsIn(root.toURI())).transform(p -> p.getName()).toSet();
+	private static void importProject(IWorkspace workspace, File rootFolder, IProgressMonitor progressMonitor)
+			throws CoreException {
+		IPath path = new org.eclipse.core.runtime.Path(new File(rootFolder, ".project").getAbsolutePath());
+		IProjectDescription desc = workspace.loadProjectDescription(path);
+		IProject project = workspace.getRoot().getProject(desc.getName());
+		project.create(desc, progressMonitor);
+		project.open(progressMonitor);
 	}
 }

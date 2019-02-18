@@ -5,6 +5,11 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
+ * Parts originally copied from org.eclipse.xtext.testing.util.ResourceHelper
+ *	in bundle org.eclipse.xtext.testing
+ *	available under the terms of the Eclipse Public License 2.0
+ *  Copyright (c) 2011 itemis AG (http://www.itemis.eu) and others.
+ *
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */

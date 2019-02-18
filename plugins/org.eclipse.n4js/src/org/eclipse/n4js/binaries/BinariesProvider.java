@@ -12,12 +12,13 @@ package org.eclipse.n4js.binaries;
 
 import static com.google.common.collect.FluentIterable.from;
 
+import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
+import org.eclipse.n4js.binaries.nodejs.YarnBinary;
+
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
-
-import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
 
 /**
  * Provides registered binaries.
@@ -32,6 +33,7 @@ public class BinariesProvider {
 	private static final Iterable<Class<? extends Binary>> REGISTERED_BINARIES = ImmutableList
 			.<Class<? extends Binary>> builder()
 			.add(NodeJsBinary.class)
+			.add(YarnBinary.class)
 			.build();
 
 	@Inject

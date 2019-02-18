@@ -19,7 +19,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
@@ -31,9 +30,7 @@ import org.eclipse.n4js.tests.util.EclipseUIUtils;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.eclipse.n4js.ui.editor.N4JSHyperlinkDetector;
-import org.eclipse.n4js.ui.external.ExternalLibrariesActionsHelper;
 import org.eclipse.n4js.ui.utils.UIUtils;
-import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.xtext.ui.editor.IURIEditorOpener;
 import org.eclipse.xtext.ui.editor.XtextEditor;
@@ -58,12 +55,6 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 	private ShippedCodeInitializeTestHelper shippedCodeInitializeTestHelper;
 
 	@Inject
-	private ExternalLibrariesActionsHelper externals;
-
-	@Inject
-	private StatusHelper statusHelper;
-
-	@Inject
 	private N4JSHyperlinkDetector hyperlinkDetector;
 
 	@Inject
@@ -79,11 +70,6 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 	@After
 	@Override
 	public void tearDown() throws Exception {
-		// clear library manager to avoid confusing tests being executed after this test class
-		final MultiStatus multistatus = statusHelper
-				.createMultiStatus("Status of deleting NPM packages from library manager.");
-		externals.maintenanceDeleteNpms(multistatus);
-
 		shippedCodeInitializeTestHelper.tearDownBuiltIns();
 		super.tearDown();
 	}
@@ -98,15 +84,20 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 	public void testHyperlinks() throws CoreException {
 		File prjDir = new File(getResourceUri(PROBANDS, SUBFOLDER));
 		IProject project = ProjectTestsUtils.importProject(prjDir, PROJECT_NAME);
+
 		IResource resourceABC = project.findMember("src/ABC.n4js");
 		IFile fileABC = ResourcesPlugin.getWorkspace().getRoot().getFile(resourceABC.getFullPath());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 
+		syncExtAndBuild();
+
 		IWorkbenchPage page = EclipseUIUtils.getActivePage();
 		XtextEditor editor = openAndGetXtextEditor(fileABC, page);
 		ISourceViewer sourceViewer = editor.getInternalSourceViewer();
 		IRegion region = new Region(367, 0);
+		ProjectTestsUtils.waitForAllJobs();
+
 		IHyperlink[] hlinksInABC = hyperlinkDetector.detectHyperlinks(sourceViewer, region, true);
 
 		assertTrue("Hyperlink missing", hlinksInABC != null && hlinksInABC.length == 1);
@@ -148,8 +139,9 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 	public void testHyperlinksWhenOpenedFromExplorer() throws CoreException {
 		File prjDir = new File(getResourceUri(PROBANDS, SUBFOLDER));
 		ProjectTestsUtils.importProject(prjDir, PROJECT_NAME);
-		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
+
+		syncExtAndBuild();
 		UIUtils.waitForUiThread();
 
 		IWorkbenchPage page = EclipseUIUtils.getActivePage();

@@ -5,8 +5,10 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- * Contributors:
- *     IBM Corporation - initial API and implementation
+ * Originally copied from org.eclipse.jdt.internal.ui.dialogs.MultiElementListSelectionDialog
+ * 		in bundle org.eclipse.jdt.internal.ui.dialogs
+ * 		available under the terms of the Eclipse Public License 2.0
+ * 		Copyright (c) 2000, 2011 IBM Corporation and others.
  *******************************************************************************/
 package org.eclipse.n4js.ui.organize.imports;
 // package org.eclipse.jdt.internal.ui.dialogs;

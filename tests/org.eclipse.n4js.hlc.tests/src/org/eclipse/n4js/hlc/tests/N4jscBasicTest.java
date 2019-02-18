@@ -30,11 +30,13 @@ import org.junit.Test;
  */
 public class N4jscBasicTest extends AbstractN4jscTest {
 	File workspace;
+	File proot;
 
 	/** Prepare workspace. */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace(TEST_DATA_SET__BASIC);
+		workspace = setupWorkspace(TEST_DATA_SET__BASIC, true);
+		proot = new File(workspace, PACKAGES).getAbsoluteFile();
 		System.out.println("just for reference workspace base path is: " + workspace.getAbsolutePath().toString());
 	}
 
@@ -50,15 +52,13 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 	@Test
 	public void testMainArgsCompileAllKeepCompiling() throws ExitCodeException {
 
-		String proot = workspace.getAbsolutePath().toString();
-
-		String[] args = { "--projectlocations", proot, "--buildType", "allprojects", "--keepCompiling" };
+		String[] args = { "--projectlocations", proot.toString(), "--buildType", "allprojects", "--keepCompiling" };
 
 		new N4jscBase().doMain(args);
 		// Assert that at most 19 files are compiled. The actual number depends on the chosen algorithm for the build
 		// order and on the order in which the project dependency graph is traversed. 19 is the maximum number of files
 		// that can be transpiled without error.
-		assertTrue(countFilesCompiledToES(proot) <= 19);
+		assertTrue(countFilesCompiledToES(proot.toString()) <= 19);
 	}
 
 	/**
@@ -67,12 +67,10 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 	@Test
 	public void testMainArgsProjectRoot() throws ExitCodeException {
 
-		String proot = workspace.getAbsolutePath().toString();
-
 		// absolute filename
 		String file1 = proot + "/" + "PSingle/src/a/A.n4js";
 
-		String[] args = { "--projectlocations", proot, file1 };
+		String[] args = { "--projectlocations", proot.toString(), file1 };
 
 		new N4jscBase().doMain(args);
 
@@ -126,8 +124,6 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 	@Test
 	public void testCompileP1_And_Run_A_WithNodeRunner() throws ExitCodeException {
 
-		String proot = workspace.getAbsolutePath().toString();
-
 		// Project
 		String projectP1 = "P1";
 		String pathToP1 = proot + "/" + projectP1;
@@ -135,7 +131,7 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 		// absolute src filename
 		String fileA = proot + "/" + projectP1 + "/src/A.n4js";
 
-		String[] args = { "-pl", proot,
+		String[] args = { "-pl", proot.toString(),
 				"--buildType", "projects", pathToP1,
 				"--runWith", "nodejs",
 				"--run", fileA
@@ -150,13 +146,13 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 	 */
 	@Test
 	public void testCleanSingleProject() throws ExitCodeException {
-		String proot = workspace.getAbsolutePath().toString();
 		String project = "TestCleanPrj1";
 		String pathToProject = proot + "/" + project;
-		String[] args = { "--debug", "--clean", "--projectlocations", proot, "--buildType", "projects", pathToProject };
+		String[] args = { "--debug", "--clean", "--projectlocations", proot.toString(), "--buildType", "projects",
+				pathToProject };
 		new N4jscBase().doMain(args);
 
-		assertEquals(1, countFilesCompiledToES(proot)); // 1 = 0 in TestCleanPrj1 + 1 in TestCleanPrj2
+		assertEquals(1, countFilesCompiledToES(proot.toString())); // 1 = 0 in TestCleanPrj1 + 1 in TestCleanPrj2
 	}
 
 	/**
@@ -167,13 +163,12 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 	 */
 	@Test
 	public void testNoCleanSingleProject() throws ExitCodeException {
-		String proot = workspace.getAbsolutePath().toString();
 		String project = "TestCleanPrj1";
 		String pathToProject = proot + "/" + project;
-		String[] args = { "--projectlocations", proot, "--buildType", "projects", pathToProject };
+		String[] args = { "--projectlocations", proot.toString(), "--buildType", "projects", pathToProject };
 		new N4jscBase().doMain(args);
 
-		assertEquals(4, countFilesCompiledToES(proot)); // 4 = 3 in TestCleanPrj1 + 1 in TestCleanPrj2
+		assertEquals(4, countFilesCompiledToES(proot.toString())); // 4 = 3 in TestCleanPrj1 + 1 in TestCleanPrj2
 	}
 
 	/**
@@ -181,16 +176,15 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 	 */
 	@Test
 	public void testCleanMultipleProjects() throws ExitCodeException {
-		String proot = workspace.getAbsolutePath().toString();
 		String project1 = "TestCleanPrj1";
 		String project2 = "TestCleanPrj2";
 		String pathToProject1 = proot + "/" + project1;
 		String pathToProject2 = proot + "/" + project2;
-		String[] args = { "--clean", "--projectlocations", proot, "--buildType", "projects", pathToProject1,
+		String[] args = { "--clean", "--projectlocations", proot.toString(), "--buildType", "projects", pathToProject1,
 				pathToProject2 };
 
 		new N4jscBase().doMain(args);
-		assertEquals(0, countFilesCompiledToES(proot)); // 0 = 0 in TestCleanPrj1 + 0 in TestCleanPrj2
+		assertEquals(0, countFilesCompiledToES(proot.toString())); // 0 = 0 in TestCleanPrj1 + 0 in TestCleanPrj2
 	}
 
 	/**
@@ -198,11 +192,10 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 	 */
 	@Test
 	public void testCleanAllProjects() throws ExitCodeException {
-		String proot = workspace.getAbsolutePath().toString();
-		String[] args = { "--clean", "--projectlocations", proot, "--buildType", "allprojects" };
+		String[] args = { "--clean", "--projectlocations", proot.toString(), "--buildType", "allprojects" };
 		new N4jscBase().doMain(args);
 
-		assertEquals(0, countFilesCompiledToES(proot)); // 0 = 0 in all projects inside wsp/basic
+		assertEquals(0, countFilesCompiledToES(proot.toString())); // 0 = 0 in all projects inside wsp/basic
 	}
 
 	/**
@@ -210,10 +203,9 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 	 */
 	@Test
 	public void testInvalidSrcFiles() {
-		String proot = workspace.getAbsolutePath().toString();
 		// Project
 		String pathToBLAH = "/BLAH";
-		String[] args = { "-pl", proot, "--buildType", "projects", pathToBLAH };
+		String[] args = { "-pl", proot.toString(), "--buildType", "projects", pathToBLAH };
 
 		expectCompilerException(args, ErrorExitCode.EXITCODE_SRCFILES_INVALID);
 	}

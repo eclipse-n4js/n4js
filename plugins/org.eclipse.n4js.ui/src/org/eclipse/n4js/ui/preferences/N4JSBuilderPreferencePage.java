@@ -5,6 +5,22 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
+ * Parts originally copied from
+ * 		org.eclipse.xtext.builder.preferences.BuilderPreferencePage,
+ * 		org.eclipse.xtext.builder.preferences.BuilderConfigurationBlock,
+ * 		org.eclipse.xtext.ui.editor.syntaxcoloring.SyntaxColoringPreferencePage,
+ * 		org.eclipse.xtext.ui.preferences.PropertyAndPreferencePage and
+ * 		org.eclipse.xtext.ui.preferences.OptionsConfigurationBlock
+ *  in bundles org.eclipse.xtext.builder and org.eclipse.xtext.ui
+ *	available under the terms of the Eclipse Public License 2.0
+ *  Copyright (c) 2011 itemis AG (http://www.itemis.eu) and others.
+ *  Part of these have been itself copied from
+ *  		org.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage and
+ *  		org.eclipse.jdt.internal.ui.preferences.OptionsConfigurationBlock
+ *      in bundle org.eclipse.jdt.ui
+ *      available under the terms of the Eclipse Public License 2.0
+ *      Copyright (c) 2000, 2011 IBM Corporation and others.
+ *
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */

@@ -40,7 +40,7 @@ public class BinariesValidator {
 	private StatusHelper status;
 
 	@Inject
-	private BinaryCommandFactory commandFactory;
+	private BinariesCommandFactory commandFactory;
 
 	@Inject
 	private SemverHelper semverHelper;

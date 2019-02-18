@@ -40,7 +40,8 @@ import org.junit.runners.Parameterized.Parameters;
 @RunWith(Parameterized.class)
 public class N4jscArgumentOrderTest extends AbstractN4jscTest {
 
-	static File WORKSPACE;
+	static File workspaceRoot;
+	static File packages;
 	static String WS_ORDER_TEST = "N4jscArgumentOrderTest";
 
 	static String[] args;
@@ -50,14 +51,14 @@ public class N4jscArgumentOrderTest extends AbstractN4jscTest {
 	 */
 	@BeforeClass
 	public static void setupWorkspace() throws IOException {
-		WORKSPACE = setupWorkspace(WS_ORDER_TEST);
-		String currentPath = WORKSPACE.getAbsolutePath().toString();
+		workspaceRoot = setupWorkspace(WS_ORDER_TEST, true);
+		packages = new File(workspaceRoot, PACKAGES);
+		String currentPath = packages.getAbsolutePath().toString();
 		System.out.println("just for reference base-path is: " + currentPath);
 
 		// @formatter:off
 		args = new String[]{
 				"--testCatalogFile " + currentPath + "/build/test-catalog.json",
-				"--targetPlatformInstallLocation " + currentPath + "/build/npm",
 				"--installMissingDependencies",
 				"--buildType projects",
 				currentPath + "/PA",
@@ -76,7 +77,7 @@ public class N4jscArgumentOrderTest extends AbstractN4jscTest {
 	/** Cleanup. */
 	@AfterClass
 	public static void deleteWorkspace() throws IOException {
-		FileDeleter.delete(WORKSPACE.toPath(), true);
+		FileDeleter.delete(packages.toPath(), true);
 	}
 
 	// @formatter:off
@@ -90,10 +91,10 @@ public class N4jscArgumentOrderTest extends AbstractN4jscTest {
 			"DEBUG: 7. Project PG (RUNTIME_LIBRARY) used by [PG (RUNTIME_LIBRARY)]\n";
 
 	final static int[][] shuffleOrders = {
-			{0,1,2,3,4,5,6,7,8,9,10,11},
-			{11,10,9,8,7,6,5,4,3,2,1,0},
-			{0,1,2,3,4,5,7,8,9,10,11,6},
-			{0,1,11,2,10,3,9,4,8,5,7,6},
+			{0,1,2,3,4,5,6,7,8,9,10},
+			{10,9,8,7,6,5,4,3,2,1,0},
+			{0,1,2,3,4,5,7,8,9,10,6},
+			{0,1,2,10,3,9,4,8,5,7,6},
 			};
 	// @formatter:on
 

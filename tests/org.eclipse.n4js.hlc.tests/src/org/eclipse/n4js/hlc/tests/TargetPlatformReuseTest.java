@@ -39,7 +39,7 @@ public class TargetPlatformReuseTest extends AbstractN4jscTest {
 	/** Prepare workspace. */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace("GH-963-reuse-tp", Predicates.alwaysTrue());
+		workspace = setupWorkspace("GH-963-reuse-tp", Predicates.alwaysTrue(), true);
 	}
 
 	/** Delete workspace. */
@@ -55,16 +55,16 @@ public class TargetPlatformReuseTest extends AbstractN4jscTest {
 	@Test
 	public void testReuseTargetPlatformLocation() throws ExitCodeException {
 		final String wsRoot = workspace.getAbsolutePath().toString();
+		final String packages = wsRoot + "/packages";
 
 		final String[] args = {
 				"--installMissingDependencies",
-				"--projectlocations", wsRoot,
-				"--targetPlatformInstallLocation", wsRoot + "/targetPlatform",
+				"--projectlocations", packages,
 				"--buildType", BuildType.allprojects.toString()
 		};
 
 		// obtain reference to the node_modules folder in use
-		final File nodeModulesFolder = new File(wsRoot + "/targetPlatform" + "/node_modules");
+		final File nodeModulesFolder = new File(wsRoot + "/node_modules");
 
 		// first call, initially installs dependencies into target platform location
 		new N4jscBase().doMain(args);

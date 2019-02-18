@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.hlc.base;
 
-import static com.google.common.base.Preconditions.checkState;
 import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_CLEAN_ERROR;
 import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_COMPILE_ERROR;
 import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_CONFIGURATION_ERROR;
@@ -24,18 +23,18 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.io.PrintWriter;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.StringJoiner;
-import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.varia.NullAppender;
@@ -44,17 +43,13 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
-import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSRuntimeModule;
 import org.eclipse.n4js.N4JSStandaloneSetup;
 import org.eclipse.n4js.binaries.BinariesPreferenceStore;
 import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.binaries.nodejs.NpmrcBinary;
-import org.eclipse.n4js.external.HlcTargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.external.LibraryManager;
-import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
-import org.eclipse.n4js.external.libraries.ExternalLibraryFolderUtils;
 import org.eclipse.n4js.generator.headless.BuildSet;
 import org.eclipse.n4js.generator.headless.BuildSetComputer;
 import org.eclipse.n4js.generator.headless.HeadlessHelper;
@@ -66,10 +61,9 @@ import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.hlc.base.running.HeadlessRunner;
 import org.eclipse.n4js.hlc.base.testing.HeadlessTester;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
+import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.projectModel.dependencies.ProjectDependenciesHelper;
 import org.eclipse.n4js.runner.SystemLoaderInfo;
-import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.smith.CollectedDataAccess;
 import org.eclipse.n4js.smith.DataCollectorCSVExporter;
 import org.eclipse.n4js.smith.Measurement;
@@ -80,7 +74,7 @@ import org.eclipse.n4js.tester.TesterModule;
 import org.eclipse.n4js.tester.extension.TesterRegistry;
 import org.eclipse.n4js.tester.internal.TesterActivator;
 import org.eclipse.n4js.utils.N4JSDataCollectors;
-import org.eclipse.n4js.utils.io.FileDeleter;
+import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper;
 import org.eclipse.xtext.ISetup;
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.CmdLineException;
@@ -152,10 +146,8 @@ public class N4jscBase implements IApplication {
 			+ "with the newly assembled test catalog. If an invalid file location is specified as the test catalog file output, then the catalog generation will fail.")
 	File testCatalogFile;
 
-	@Option(name = "--targetPlatformInstallLocation", aliases = "-tl", required = false, usage = "if specified and the target platform file is given as well, then all third party dependencies "
-			+ "specified in the target platform file will be downloaded to that given location. If the target platform file is given, but the target platform install location is not specified, "
-			+ "then a the compilation phase will be aborted and the execution will be interrupted."
-			+ "If --targetPlatformSkipInstall is provided this parameter is ignored.")
+	@Option(name = "--targetPlatformInstallLocation", aliases = "-tl", required = false, usage = "this flag is deprecated and will be ignored. "
+			+ "Remove it from your scripts, it will become an error in the future.")
 	File targetPlatformInstallLocation;
 
 	@Option(name = "--installMissingDependencies", aliases = "-imd", required = false, usage = "usually projects have dependencies that have to be fetched before the compilation. "
@@ -281,9 +273,6 @@ public class N4jscBase implements IApplication {
 	private TestCatalogSupplier testCatalogSupplier;
 
 	@Inject
-	private TargetPlatformInstallLocationProvider installLocationProvider;
-
-	@Inject
 	private LibraryManager libManager;
 
 	@Inject
@@ -305,7 +294,7 @@ public class N4jscBase implements IApplication {
 	private HeadlessExtensionRegistrationHelper headlessExtensionRegistrationHelper;
 
 	@Inject
-	private ProjectDependenciesHelper dependencyHelper;
+	private NodeModulesDiscoveryHelper nodeModulesDiscoveryHelper;
 
 	@Inject
 	private HeadlessHelper headlessHelper;
@@ -393,6 +382,10 @@ public class N4jscBase implements IApplication {
 				printExtendedUsage(parser, System.err);
 				// exit with error-code 1
 				throw new ExitCodeException(EXITCODE_WRONG_CMDLINE_OPTIONS);
+			}
+
+			if (targetPlatformInstallLocation != null) {
+				warn("WARNING: flag --targetPlatformInstallLocation is deprecated; this flag is being ignored and this message will become an error soon!");
 			}
 
 			// debug before help, shortcut for check-settings without running
@@ -530,7 +523,6 @@ public class N4jscBase implements IApplication {
 				systemLoader = SystemLoaderInfo.SYSTEM_JS.getId();
 			}
 
-			checkTargetPlatformConfigurations();
 			if (null != nodeJsBinaryRoot) {
 				binariesPreferenceStore.setPath(nodeJsBinaryProvider.get(), nodeJsBinaryRoot.toURI());
 				binariesPreferenceStore.save();
@@ -553,7 +545,6 @@ public class N4jscBase implements IApplication {
 			}
 
 			validateBinaries();
-			cloneGitRepositoryAndInstallNpmPackages();
 
 			// compute build set based on user settings (e.g. #buildmode, #srcFiles, #projectlocations)
 			BuildSet buildSet = computeBuildSet();
@@ -569,17 +560,7 @@ public class N4jscBase implements IApplication {
 					try (Measurement installMissingDepMeasurement = N4JSDataCollectors.dcHeadlessInstallMissingDeps
 							.getMeasurement("Install missing dependencies")) {
 
-						Map<String, NPMVersionRequirement> dependencies = dependencyHelper
-								.calculateDependenciesOfProjects(buildSet.getAllProjects());
-
-						if (verbose) {
-							System.out.println("installing missing dependencies:");
-							dependencies.forEach((name, version) -> {
-								System.out.println("  # " + name + "@" + version);
-							});
-						}
-
-						IStatus status = libManager.installNPMs(dependencies, false, new NullProgressMonitor());
+						IStatus status = libManager.runNpmYarnInstallOnAllProjects(new NullProgressMonitor());
 						if (!status.isOK())
 							if (keepCompiling)
 								warn(status.getMessage());
@@ -602,8 +583,6 @@ public class N4jscBase implements IApplication {
 		} catch (Throwable e) {
 			dumpThrowable(e);
 			throw e;
-		} finally {
-			targetPlatformInstallLocation = null;
 		}
 
 		writePerformanceReport();
@@ -633,7 +612,6 @@ public class N4jscBase implements IApplication {
 								+ projectLocations);
 					}
 					List<File> toClean = new ArrayList<>();
-					toClean.addAll(ProjectLocationsUtil.getTargetPlatformWritableDir(installLocationProvider));
 					toClean.addAll(ProjectLocationsUtil.convertToFiles(projectLocations));
 					headless.cleanProjectsInSearchPath(toClean);
 				}
@@ -669,116 +647,6 @@ public class N4jscBase implements IApplication {
 				throw new ExitCodeException(EXITCODE_CONFIGURATION_ERROR, status.getMessage(), status.getException());
 			}
 		}
-	}
-
-	/** depends on the checks done in {@link #checkTargetPlatformConfigurations} */
-	private void cloneGitRepositoryAndInstallNpmPackages() throws ExitCodeException {
-		checkState(installLocationProvider instanceof HlcTargetPlatformInstallLocationProvider);
-		HlcTargetPlatformInstallLocationProvider locationProvider = (HlcTargetPlatformInstallLocationProvider) installLocationProvider;
-
-		if (!installMissingDependencies) {
-			if (verbose)
-				System.out.println("Skipping scanning and installation of dependencies.");
-			return;
-		}
-
-		String packageJson = ExternalLibraryFolderUtils.createTargetPlatformPackageJson();
-		java.net.URI platformLocation = locationProvider.getTargetPlatformInstallURI();
-		File packageJsonFile = new File(new File(platformLocation), N4JSGlobals.PACKAGE_JSON);
-		try {
-			// Create new target platform definition file, only if not present.
-			// If a target platform definition file exists, it will be reused.
-			if (!packageJsonFile.exists()) {
-				packageJsonFile.createNewFile();
-				try (PrintWriter pw = new PrintWriter(packageJsonFile)) {
-					pw.write(packageJson);
-					pw.flush();
-					locationProvider.setTargetPlatformFileLocation(packageJsonFile.toURI());
-				}
-			}
-		} catch (IOException e) {
-			throw new ExitCodeException(EXITCODE_CONFIGURATION_ERROR,
-					"Error while consuming target platform file.", e);
-		}
-	}
-
-	/**
-	 * Checks state of target platform location is valid. If needed temp location is used. Valid location is saved in
-	 * {@link TargetPlatformInstallLocationProvider}
-	 *
-	 * @throws ExitCodeException
-	 *             if configuration is inconsistent or cannot be fixed.
-	 */
-	private void checkTargetPlatformConfigurations() throws ExitCodeException {
-		HlcTargetPlatformInstallLocationProvider locationProvider = (HlcTargetPlatformInstallLocationProvider) installLocationProvider;
-		if (targetPlatformInstallLocation != null) {
-			// validate and save existing one
-
-			if (!targetPlatformInstallLocation.exists()) {
-				try {
-					checkState(targetPlatformInstallLocation.mkdirs());
-				} catch (Exception e) {
-					throw new ExitCodeException(EXITCODE_CONFIGURATION_ERROR,
-							"Target platform install location cannot be created at: "
-									+ targetPlatformInstallLocation + ".",
-							e);
-				}
-			} else {
-				if (!targetPlatformInstallLocation.isDirectory()) {
-					throw new ExitCodeException(EXITCODE_CONFIGURATION_ERROR,
-							"Target platform install location does not point to a directory at: "
-									+ targetPlatformInstallLocation + ".");
-				}
-				if (!targetPlatformInstallLocation.canWrite()) {
-					throw new ExitCodeException(EXITCODE_CONFIGURATION_ERROR,
-							"Target platform install location cannot be accessed at: " + targetPlatformInstallLocation
-									+ ".");
-				}
-
-				if (clean) {
-					try {
-						FileDeleter.delete(targetPlatformInstallLocation);
-					} catch (Exception e) {
-						throw new ExitCodeException(EXITCODE_CONFIGURATION_ERROR,
-								"Existing target platform install location cannot be cleared at: "
-										+ targetPlatformInstallLocation + ".",
-								e);
-					}
-					try {
-						checkState(targetPlatformInstallLocation.mkdirs());
-					} catch (Exception e) {
-						throw new ExitCodeException(EXITCODE_CONFIGURATION_ERROR,
-								"Target platform install location cannot be created at: "
-										+ targetPlatformInstallLocation + ".",
-								e);
-					}
-				}
-
-			}
-
-			try {
-				// make sure the target platform location is resolved (follow symlinks)
-				File resolvedLocation = targetPlatformInstallLocation.toPath().toRealPath().toFile();
-				locationProvider.setTargetPlatformInstallLocation(resolvedLocation);
-			} catch (IOException e) {
-				throw new ExitCodeException(EXITCODE_CONFIGURATION_ERROR,
-						"Failed to resolve the given target platform install location "
-								+ targetPlatformInstallLocation.toPath().toString(),
-						e);
-			}
-
-		} else {
-			if (verbose)
-				System.out.println("Setting up tmp location for dependencies.");
-
-			try {
-				locationProvider.configureWithTempFolders();
-			} catch (IOException e1) {
-				throw new ExitCodeException(EXITCODE_CONFIGURATION_ERROR,
-						"Error while creating temp locations for dependencies.", e1);
-			}
-		}
-
 	}
 
 	/**
@@ -895,14 +763,9 @@ public class N4jscBase implements IApplication {
 			System.out.println("N4JS compiling...");
 		}
 
-		try {
-			compile(buildSet);
-			writeTestCatalog();
-			testAndRun();
-
-		} finally {
-			cleanTemporaryArtifacts();
-		}
+		compile(buildSet);
+		writeTestCatalog();
+		testAndRun(buildSet);
 
 		if (debug) {
 			System.out.println("... done.");
@@ -1006,12 +869,22 @@ public class N4jscBase implements IApplication {
 
 	private BuildSet computeTargetPlatformBuildSet(Collection<? extends IN4JSProject> workspaceProjects)
 			throws ExitCodeException {
+
+		Set<String> namesOfWorkspaceProjects = new LinkedHashSet<>();
+		List<java.nio.file.Path> n4jsProjectPaths = new LinkedList<>();
+		for (IN4JSProject prj : workspaceProjects) {
+			n4jsProjectPaths.add(prj.getLocationPath());
+			namesOfWorkspaceProjects.add(prj.getProjectName());
+		}
+
 		List<File> toBuild = new ArrayList<>();
-		toBuild.addAll(ProjectLocationsUtil.getTargetPlatformWritableDir(installLocationProvider));
-		Set<String> namesOfWorkspaceProjects = workspaceProjects.stream().map(IN4JSProject::getProjectName)
-				.collect(Collectors.toSet());
+		for (java.nio.file.Path nmPath : nodeModulesDiscoveryHelper.findNodeModulesFolders(n4jsProjectPaths)) {
+			toBuild.add(nmPath.toFile());
+		}
+
 		try {
-			return buildSetComputer.createAllProjectsBuildSet(toBuild, namesOfWorkspaceProjects);
+			return buildSetComputer.createBuildSet(toBuild, Collections.emptyList(), Collections.emptyList(),
+					namesOfWorkspaceProjects);
 		} catch (N4JSCompileException e) {
 			throw new ExitCodeException(EXITCODE_DEPENDENCY_NOT_FOUND,
 					"Cannot compute build set for target platform location.", e);
@@ -1033,7 +906,7 @@ public class N4jscBase implements IApplication {
 	}
 
 	/** triggers runners and testers based on {@link #testThisLocation} and {@link #runThisFile} */
-	private void testAndRun() throws ExitCodeException {
+	private void testAndRun(BuildSet buildSet) throws ExitCodeException {
 		try (Measurement m = N4JSDataCollectors.dcHeadlessRunnerTester.getMeasurement("Execute tester/runner")) {
 			if (testThisLocation != null) {
 				if (buildtype != BuildType.dontcompile) {
@@ -1046,28 +919,17 @@ public class N4jscBase implements IApplication {
 				if (buildtype != BuildType.dontcompile) {
 					flushAndIinsertMarkerInOutputs();
 				}
-				headlessRunner.startRunner(runner, implementationId, systemLoader, checkFileToRun(),
-						new File(installLocationProvider.getTargetPlatformInstallURI()));
-			}
-		}
-	}
 
-	/** In some cases compiler is creating files and folders in temp locations. This method deletes those leftovers. */
-	private void cleanTemporaryArtifacts() {
-		if (installLocationProvider != null) {
-			HlcTargetPlatformInstallLocationProvider locationProvider = (HlcTargetPlatformInstallLocationProvider) installLocationProvider;
-			// TODO GH-521 reset state for HLC tests
-			final java.net.URI uri = locationProvider.getTempRoot();
-			locationProvider.resetState();
-			if (uri != null) {
-				File tempInstallToClean = new File(uri);
-				try {
-					if (tempInstallToClean.exists())
-						FileDeleter.delete(tempInstallToClean);
-				} catch (IOException e) {
-					warn("Cannot clean temp install locations " + tempInstallToClean);
-					e.printStackTrace();
+				LinkedList<Path> projectPaths = new LinkedList<>();
+				LinkedList<String> additionalPaths = new LinkedList<>();
+				for (N4JSProject prj : buildSet.getAllProjects()) {
+					projectPaths.add(prj.getLocationPath());
 				}
+				List<Path> modulesFolders = nodeModulesDiscoveryHelper.findNodeModulesFolders(projectPaths);
+				for (Path nmFolder : modulesFolders) {
+					additionalPaths.add(nmFolder.toString());
+				}
+				headlessRunner.startRunner(runner, implementationId, systemLoader, checkFileToRun(), additionalPaths);
 			}
 		}
 	}

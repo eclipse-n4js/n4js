@@ -29,6 +29,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.ui.building.ResourceDescriptionWithoutModuleUserData;
+import org.eclipse.n4js.ui.external.ExternalProjectMappings;
 import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
 import org.eclipse.xtext.builder.builderState.IBuilderState;
 import org.eclipse.xtext.builder.builderState.impl.ResourceDescriptionImpl;
@@ -90,6 +91,7 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 	 */
 	@Before
 	public void loadBuiltIns() {
+		ExternalProjectMappings.REDUCE_REGISTERED_NPMS = false;
 		shippedCodeInitializeTestHelper.setupBuiltIns();
 		waitForAutoBuild();
 	}
@@ -107,6 +109,7 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 	private void unLoadBuiltIns() {
 		shippedCodeInitializeTestHelper.tearDownBuiltIns();
 		waitForAutoBuild();
+		ExternalProjectMappings.REDUCE_REGISTERED_NPMS = true;
 	}
 
 	@Override
@@ -120,24 +123,12 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 		final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(PROJECT_NAME);
 		assertTrue("Test project is not accessible.", project.isAccessible());
 
+		syncExtAndBuild();
 		// Since we do not know whether the built-in initialization or the test project import happened earlier...
 		// Make sure both test module and project description file get into the index.
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
-
-		// List of expected external library warnings originating from shipped code projects:
-		//
-		// line 0: External library warning: public is reserved identifier.
-		// line 0: External library warning: The use of the any type in a union type is discouraged.
-		// line 0: External library warning: Neither constructor{? extends N4Object} is a subtype of type{T} nor type{T}
-		// is a subtype of constructor{? extends N4Object}. The expression will always evaluate to false.
-		// line 0: External library warning: Neither constructor{? extends N4Object} is a subtype of type{T} nor type{T}
-		// is a subtype of constructor{? extends N4Object}. The expression will always evaluate to false.
-		// line 0: External library warning: Neither constructor{? extends N4Object} is a subtype of type{T} nor type{T}
-		// is a subtype of constructor{? extends N4Object}. The expression will always evaluate to false.
-		// line 0: External library warning: Unnecessary cast from ~~ResultGroup to Object
-		// line 0: External library warning: Unnecessary cast from Array<ResultGroups>
-		assertMarkers("Expected exactly 7 issues.", project, 7); // issues are in external libraries
+		assertMarkers("Expected exactly 0 issues.", project, 0); // issues are in external libraries
 
 		final Resource resource = persister.createResource();
 		assertNotNull("Test resource was null.", resource);
@@ -175,12 +166,10 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 		assertMarkers("Expected exactly 7 issues.", project, 7);
 
 		loadBuiltIns();
-		IResourcesSetupUtil.fullBuild();
-		waitForAutoBuild();
-		resource.getContents().clear();
+		syncExtAndBuild();
 
-		// see above for list of expected issues
-		assertMarkers("Expected exactly 7 issues.", project, 7); // issues are in external libraries
+		resource.getContents().clear();
+		assertMarkers("Expected exactly 0 issues.", project, 0); // issues are in external libraries
 
 		final Set<org.eclipse.emf.common.util.URI> afterCrashBuilderState = from(
 				builderState.getAllResourceDescriptions())

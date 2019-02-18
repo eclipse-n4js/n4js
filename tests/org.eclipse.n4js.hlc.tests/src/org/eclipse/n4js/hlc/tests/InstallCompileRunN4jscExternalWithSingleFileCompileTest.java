@@ -34,7 +34,7 @@ public class InstallCompileRunN4jscExternalWithSingleFileCompileTest extends Abs
 	/** Prepare workspace. */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace("external_singleProjectOrFileCompile", Predicates.alwaysTrue());
+		workspace = setupWorkspace("external_singleProjectOrFileCompile", Predicates.alwaysTrue(), true);
 	}
 
 	/** Delete workspace. */
@@ -50,7 +50,8 @@ public class InstallCompileRunN4jscExternalWithSingleFileCompileTest extends Abs
 	@Test
 	public void testCompileAndRunWithExternalDependencies() throws IOException, ExitCodeException {
 		final String wsRoot = workspace.getAbsolutePath().toString();
-		final String fileToCompile = wsRoot + "/external.project/src/Main.n4js";
+		final String packages = wsRoot + "/packages";
+		final String fileToCompile = packages + "/external.project/src/Main.n4js";
 		final String fileToRun = fileToCompile;
 
 		final String[] args = {
@@ -58,7 +59,7 @@ public class InstallCompileRunN4jscExternalWithSingleFileCompileTest extends Abs
 				"--installMissingDependencies",
 				"--runWith", "nodejs",
 				"--run", fileToRun,
-				"--projectlocations", wsRoot, // include runtime library projects in workspace root
+				"--projectlocations", packages, // include runtime library projects in packages folder
 				"--buildType", BuildType.singlefile.toString(),
 				fileToCompile
 		};

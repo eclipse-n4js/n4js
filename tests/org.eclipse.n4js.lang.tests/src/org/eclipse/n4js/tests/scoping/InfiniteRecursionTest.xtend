@@ -40,7 +40,7 @@ class InfiniteRecursionTest {
 			    Frame = require("n4/lupenrein_js/uirobot/Frame");
 			var TestApi = require("n4/lupenrein_js/TestAPI");
 			var LAYERS_PAGE = "?n4-load=devel&n4-nologin&n4-noanim#WebTeamTest/layers";
-			var FABELHAFT_PAGE = "?n4-load=devel&n4-nologin&n4-noanim#n4/newsfeed";
+			var SOME_PAGE = "?n4-load=devel&n4-nologin&n4-noanim#n4/newsfeed";
 			/**
 			 * @Category LT
 			 * @Timeout 999000
@@ -64,8 +64,8 @@ class InfiniteRecursionTest {
 			            var t = this.bot;
 
 			            Promise.when(null).then(function () {
-			                t.openPage(FABELHAFT_PAGE);
-			                return t.waitFor(".appl-middlepane", [['is', ':visible']], true, undefined, "waiting for fabelhaft page view failed", 555 * 1000, 1 * 1000);
+			                t.openPage(SOME_PAGE);
+			                return t.waitFor(".appl-middlepane", [['is', ':visible']], true, undefined, "waiting for some page view failed", 555 * 1000, 1 * 1000);
 			            }).then(function () {
 			                t.delay(7 * 1000);
 			                t.openPage(LAYERS_PAGE);

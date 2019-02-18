@@ -15,8 +15,10 @@ import static org.eclipse.n4js.packagejson.PackageJsonProperties.MAIN;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.N4JS;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.OUTPUT;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.VERSION;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.WORKSPACES;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -29,8 +31,10 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.json.JSON.JSONArray;
 import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONObject;
+import org.eclipse.n4js.json.JSON.JSONStringLiteral;
 import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.model.utils.JSONModelUtils;
 import org.eclipse.n4js.packagejson.PackageJsonHelper;
@@ -100,6 +104,27 @@ public class ProjectDescriptionLoader {
 		}
 		Pair<String, Boolean> result = Tuples.create(asNonEmptyStringOrNull(versionValue), hasN4JSNature);
 		return result;
+	}
+
+	/**
+	 * Loads the project description of the N4JS project at the given {@code location} and returns the value of the
+	 * "workspaces" property or <code>null</code> if undefined or in case of error.
+	 */
+	public List<String> loadWorkspacesFromProjectDescriptionAtLocation(URI location) {
+		JSONDocument packageJSON = loadPackageJSONAtLocation(location);
+		if (packageJSON != null) {
+			JSONValue value = JSONModelUtils.getProperty(packageJSON, WORKSPACES.name).orElse(null);
+			if (value instanceof JSONArray) {
+				List<String> result = new ArrayList<>();
+				for (JSONValue element : ((JSONArray) value).getElements()) {
+					if (element instanceof JSONStringLiteral) {
+						result.add(((JSONStringLiteral) element).getValue());
+					}
+				}
+				return result;
+			}
+		}
+		return null;
 	}
 
 	/**

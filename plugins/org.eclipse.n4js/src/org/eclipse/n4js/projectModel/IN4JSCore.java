@@ -165,4 +165,5 @@ public interface IN4JSCore {
 	 */
 	TModule loadModuleFromIndex(ResourceSet resourceSet, IResourceDescription resourceDescription,
 			boolean allowFullLoad);
+
 }

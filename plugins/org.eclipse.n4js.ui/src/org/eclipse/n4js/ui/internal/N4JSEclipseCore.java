@@ -148,4 +148,5 @@ public class N4JSEclipseCore extends AbstractN4JSCore implements IN4JSEclipseCor
 	public IResourceDescriptions getXtextIndex(ResourceSet resourceSet) {
 		return resourceDescriptionsProvider.getResourceDescriptions(resourceSet);
 	}
+
 }

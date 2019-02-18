@@ -18,11 +18,14 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.n4js.binaries.BinariesConstants;
 import org.eclipse.n4js.binaries.BinariesPreferenceStore;
 import org.eclipse.n4js.binaries.BinariesValidator;
 import org.eclipse.n4js.binaries.Binary;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
+import org.eclipse.xtext.xbase.lib.Pair;
 
+import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -52,30 +55,30 @@ public class NpmBinary implements Binary {
 
 	@Override
 	public String getLabel() {
-		return NodeBinariesConstants.NPM_LABEL;
+		return BinariesConstants.NPM_LABEL;
 	}
 
 	@Override
 	public String getDescription() {
 		return "Configuration of the folder location of the npm library "
 				+ "can be provided here. If not given, then the location will be resolved by used Node.js\u00AE. "
-				+ "The required minimum version npm is '" + NodeBinariesConstants.NPM_MIN_VERSION + "'.";
+				+ "The required minimum version npm is '" + BinariesConstants.NPM_MIN_VERSION + "'.";
 	}
 
 	@Override
 	public VersionNumber getMinimumVersion() {
-		return NodeBinariesConstants.NPM_MIN_VERSION;
+		return BinariesConstants.NPM_MIN_VERSION;
 	}
 
 	@Override
 	public String getBinaryAbsolutePath() {
 		final NodeJsBinary nodeJsBinary = nodeJsBinaryProvider.get();
-		return nodeJsBinary.getUserNodePathOrDefault() + File.separator + NodeBinariesConstants.NPM_BINARY_NAME;
+		return nodeJsBinary.getUserNodePathOrDefault() + File.separator + BinariesConstants.NPM_BINARY_NAME;
 	}
 
 	@Override
 	public String getVersionArgument() {
-		return NodeBinariesConstants.VERSION_ARGUMENT;
+		return BinariesConstants.VERSION_ARGUMENT;
 	}
 
 	@Override
@@ -112,6 +115,31 @@ public class NpmBinary implements Binary {
 			}
 		}
 		return validator.validate(this);
+	}
+
+	@Override
+	public Optional<String[]> getCacheCleanCommand() {
+		return Optional.of(new String[] { "cache", "clean", "--force" });
+	}
+
+	@Override
+	public boolean canInstallNpmPackages() {
+		return true;
+	}
+
+	@Override
+	public String getNpmInstallCommand(boolean readPackagesFromPackageJson) {
+		return "install"; // same command in both cases
+	}
+
+	@Override
+	public String getNpmUninstallCommand() {
+		return "uninstall";
+	}
+
+	@Override
+	public Optional<Pair<String, String>> getNpmSaveOptions() {
+		return Optional.of(new Pair<>("--save", "--no-save"));
 	}
 
 	/**

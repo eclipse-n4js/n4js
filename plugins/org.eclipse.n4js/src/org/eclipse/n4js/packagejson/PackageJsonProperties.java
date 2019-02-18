@@ -46,6 +46,10 @@ public enum PackageJsonProperties {
 	/** Key of package.json property "n4js". */
 	N4JS("n4js", "N4JS section", JSONObject.class),
 
+	// properties of other tools:
+	/** Key of package.json property used by yarn workspace concept denoting projects contained in the workspace. */
+	WORKSPACES("workspaces", "Projects that are members of the yarn workspace", JSONArray.class),
+
 	// properties in section "n4js":
 	/** Key of package.json property "projectType". */
 	PROJECT_TYPE("projectType", ProjectType.PLAINJS.getLiteral().toLowerCase(), N4JS),
