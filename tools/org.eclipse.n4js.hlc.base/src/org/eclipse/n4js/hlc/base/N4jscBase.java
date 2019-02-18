@@ -566,7 +566,7 @@ public class N4jscBase implements IApplication {
 								warn(status.getMessage());
 							else
 								throw new ExitCodeException(EXITCODE_DEPENDENCY_NOT_FOUND,
-										"Cannot install dependencies.");
+										"Cannot install dependencies: " + status.getMessage());
 					}
 				}
 
