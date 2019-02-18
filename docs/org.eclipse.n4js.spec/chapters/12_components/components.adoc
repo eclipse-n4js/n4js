@@ -176,6 +176,7 @@ in this sense is that this unit of code can be used from N4JS components as a de
 For example, a plain npm project containing only plain Javascript can be a component and
 can therefore be used as a project dependency of a full-blown N4JS project.
 
+
 === Basic Properties
 
 The following standard `package.json` properties are used by N4JS tooling. Unless otherwise
@@ -203,6 +204,15 @@ main ::
   other than a `.js` file, it will be ignored. In particular, it cannot be
   used for `.n4js` files; in that case, property "mainModule" has to be used
   (see below).
+yarnWorkspaceRoot ::
+  Tells whether the component represents the root folder of a yarn workspace.
+  This flag will be true iff the `package.json` contains yarn's top-level property
+  "workspaces", no matter its value (i.e. this flag will be true even if the
+  value of property "workspaces" is the empty array or an invalid value).
+workspaces ::
+  (array of strings) Value of top-level property "workspaces" in package.json,
+  used by yarn to denote the projects contained in the yarn workspace.
+
 
 === N4JS Properties
 
@@ -382,10 +392,12 @@ All properties described above are optional. The following default values apply:
 | vendorId    | "vendor.default"
 | mainModule  | "index"
 | output      | "."
-| sources     | a single source-container of type "source" with path "."
+| sources     | a single source-container of type "source" with path "." (except for yarn workspace roots, see below)
 |===
 
-All other properties are undefined if not given in the `package.json` file.
+All other properties are undefined if not given in the `package.json` file. The default source folder of "." does not
+apply to projects that represent the root folder of a yarn workspace; those projects to not have any source folder,
+by default.
 
 .A package.json file with N4JS-specific properties.
 [example]

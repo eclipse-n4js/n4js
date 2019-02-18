@@ -57,6 +57,7 @@ class ProjectDescription {
 	contains ModuleFilter[] moduleFilters
 	contains ProjectReference[] testedProjects
 	ModuleLoader moduleLoader
+
 	/**
 	 *  Returns the name of the package the project provides type definitions for.
 	 *
@@ -77,6 +78,18 @@ class ProjectDescription {
 	 * the project to be an N4JS project (e.g. includes n4js section). 
 	 */
 	boolean hasN4JSNature
+	
+	/*
+	 * Tells whether the project represented by this project description is the root of a yarn workspace.
+	 * This flag will be {@code true} iff the package.json contains yarn's top-level property "workspaces",
+	 * no matter the value (i.e. will be {@code true} even if the value is the empty array).
+	 */
+	boolean yarnWorkspaceRoot
+
+	/*
+	 * Value of top-level property "workspaces" in package.json, used by yarn to denote the contained projects.
+	 */
+	String[] workspaces
 }
 
 /*
