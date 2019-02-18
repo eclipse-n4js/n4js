@@ -60,6 +60,7 @@ import org.eclipse.n4js.utils.N4JSDataCollectors;
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper;
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper.NodeModulesFolder;
 import org.eclipse.n4js.utils.StatusHelper;
+import org.eclipse.n4js.utils.StatusUtils;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.io.FileDeleter;
 
@@ -608,7 +609,8 @@ public class LibraryManager {
 		Binary binary = (usingYarn ? yarnBinaryProvider : npmBinaryProvider).get();
 		IStatus binaryStatus = binary.validate();
 		if (!binaryStatus.isOK()) {
-			return statusHelper.createError(binary.getLabel() + " binary invalid",
+			return statusHelper.createError(
+					binary.getLabel() + " binary invalid: " + StatusUtils.getErrorMessage(binaryStatus, false),
 					new IllegalBinaryStateException(binary, binaryStatus));
 		}
 		return statusHelper.OK();
