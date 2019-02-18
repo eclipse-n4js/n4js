@@ -355,6 +355,14 @@ public class NpmCLI {
 	}
 
 	/** See {@link NodeYarnProcessBuilder#isYarnUsed(Path)}. */
+	public boolean isYarnUsed(URI projectURI) {
+		// convert platform URI to local (e.g. file) URI
+		URI projectFileURI = projectURI.isFile() ? projectURI : CommonPlugin.asLocalURI(projectURI);
+		File projectFile = new File(projectFileURI.toFileString()).getAbsoluteFile();
+		return isYarnUsed(projectFile);
+	}
+
+	/** See {@link NodeYarnProcessBuilder#isYarnUsed(Path)}. */
 	public boolean isYarnUsed(File invocationPath) {
 		return commandFactory.isYarnUsed(invocationPath);
 	}
