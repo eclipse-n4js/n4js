@@ -25,6 +25,7 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.jface.viewers.StyledString.Styler;
 import org.eclipse.n4js.external.ExternalIndexSynchronizer;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.projectModel.IN4JSProject;
@@ -142,7 +143,7 @@ public class N4JSProjectExplorerLabelProvider extends LabelProvider implements I
 						.convertN4JSProjectNameToEclipseProjectName(n4jsProjectName);
 
 				IProject iProject = ResourcesPlugin.getWorkspace().getRoot().getProject(eclipseProjectName);
-				if (iProject != null) {
+				if (iProject != null && iProject.exists()) {
 					if (iProject.isAccessible()) {
 						return decorator.decorateImage(PROJECT_IMG, element);
 					} else {
@@ -174,12 +175,27 @@ public class N4JSProjectExplorerLabelProvider extends LabelProvider implements I
 			if (npmProject != null) {
 				IN4JSProject iNpmProject = npmProject.getIProject();
 				return helper.getStyledTextForExternalProject(iNpmProject, folder.getName());
+
+			} else if (Files.isSymbolicLink(folder.getLocation().toFile().toPath())) {
+				// might be a project from workspace
+				URI symLinkUri = URI.createFileURI(folder.getLocation().toFile().toString());
+				String n4jsProjectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(symLinkUri);
+				String eclipseProjectName = ProjectDescriptionUtils
+						.convertN4JSProjectNameToEclipseProjectName(n4jsProjectName);
+
+				IProject iProject = ResourcesPlugin.getWorkspace().getRoot().getProject(eclipseProjectName);
+				if (iProject != null && iProject.exists()) {
+					Styler stylerName = iProject.isAccessible() ? null : StyledString.QUALIFIER_STYLER;
+					StyledString string = new StyledString(folder.getName(), stylerName);
+					return string;
+				}
 			}
 
 			return new StyledString(folder.getName());
 		}
 
 		return workbenchLabelProvider.getStyledText(element);
+
 	}
 
 	/**
