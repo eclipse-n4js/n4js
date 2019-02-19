@@ -399,7 +399,7 @@ All properties described above are optional. The following default values apply:
 |===
 
 All other properties are undefined if not given in the `package.json` file. The default source folder of "." does not
-apply to projects that represent the root folder of a yarn workspace; those projects to not have any source folder,
+apply to projects that represent the root folder of a yarn workspace; those projects do not have any source folder,
 by default.
 
 .A package.json file with N4JS-specific properties.
