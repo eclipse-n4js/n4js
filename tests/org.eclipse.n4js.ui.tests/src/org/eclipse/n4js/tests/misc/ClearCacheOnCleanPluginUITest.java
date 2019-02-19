@@ -79,6 +79,7 @@ public class ClearCacheOnCleanPluginUITest extends AbstractBuilderParticipantTes
 		waitForAutoBuild();
 
 		syncExtAndBuild();
+		assertNoIssues();
 
 		// use key of API_IMPL_MAPPING
 		SupplierWithPostAction testSupplier = new SupplierWithPostAction();
@@ -118,7 +119,7 @@ public class ClearCacheOnCleanPluginUITest extends AbstractBuilderParticipantTes
 		waitForAutoBuild();
 
 		syncExtAndBuild();
-		assertNoErrors();
+		assertNoIssues();
 
 		// use key of API_IMPL_MAPPING
 		SupplierWithPostAction testSupplier = new SupplierWithPostAction();

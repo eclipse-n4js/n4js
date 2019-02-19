@@ -10,4 +10,6 @@
  */
 
 
-process.abort();
+class ABC {
+	myField: number;
+}
