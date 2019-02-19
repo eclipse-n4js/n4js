@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
+import org.eclipse.emf.ecore.util.EDataTypeEList;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -68,6 +69,8 @@ import org.eclipse.n4js.semver.Semver.VersionNumber;
  *   <li>{@link org.eclipse.n4js.projectDescription.impl.ProjectDescriptionImpl#getDefinesPackage <em>Defines Package</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.impl.ProjectDescriptionImpl#isHasNestedNodeModulesFolder <em>Has Nested Node Modules Folder</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.impl.ProjectDescriptionImpl#isHasN4JSNature <em>Has N4JS Nature</em>}</li>
+ *   <li>{@link org.eclipse.n4js.projectDescription.impl.ProjectDescriptionImpl#isYarnWorkspaceRoot <em>Yarn Workspace Root</em>}</li>
+ *   <li>{@link org.eclipse.n4js.projectDescription.impl.ProjectDescriptionImpl#getWorkspaces <em>Workspaces</em>}</li>
  * </ul>
  *
  * @generated
@@ -402,6 +405,36 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * @ordered
 	 */
 	protected boolean hasN4JSNature = HAS_N4JS_NATURE_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isYarnWorkspaceRoot() <em>Yarn Workspace Root</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isYarnWorkspaceRoot()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean YARN_WORKSPACE_ROOT_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isYarnWorkspaceRoot() <em>Yarn Workspace Root</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isYarnWorkspaceRoot()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean yarnWorkspaceRoot = YARN_WORKSPACE_ROOT_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getWorkspaces() <em>Workspaces</em>}' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getWorkspaces()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<String> workspaces;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -883,6 +916,39 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean isYarnWorkspaceRoot() {
+		return yarnWorkspaceRoot;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setYarnWorkspaceRoot(boolean newYarnWorkspaceRoot) {
+		boolean oldYarnWorkspaceRoot = yarnWorkspaceRoot;
+		yarnWorkspaceRoot = newYarnWorkspaceRoot;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ProjectDescriptionPackage.PROJECT_DESCRIPTION__YARN_WORKSPACE_ROOT, oldYarnWorkspaceRoot, yarnWorkspaceRoot));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList<String> getWorkspaces() {
+		if (workspaces == null) {
+			workspaces = new EDataTypeEList<String>(String.class, this, ProjectDescriptionPackage.PROJECT_DESCRIPTION__WORKSPACES);
+		}
+		return workspaces;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -964,6 +1030,10 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 				return isHasNestedNodeModulesFolder();
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__HAS_N4JS_NATURE:
 				return isHasN4JSNature();
+			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__YARN_WORKSPACE_ROOT:
+				return isYarnWorkspaceRoot();
+			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__WORKSPACES:
+				return getWorkspaces();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -1051,6 +1121,13 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__HAS_N4JS_NATURE:
 				setHasN4JSNature((Boolean)newValue);
 				return;
+			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__YARN_WORKSPACE_ROOT:
+				setYarnWorkspaceRoot((Boolean)newValue);
+				return;
+			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__WORKSPACES:
+				getWorkspaces().clear();
+				getWorkspaces().addAll((Collection<? extends String>)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -1129,6 +1206,12 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__HAS_N4JS_NATURE:
 				setHasN4JSNature(HAS_N4JS_NATURE_EDEFAULT);
 				return;
+			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__YARN_WORKSPACE_ROOT:
+				setYarnWorkspaceRoot(YARN_WORKSPACE_ROOT_EDEFAULT);
+				return;
+			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__WORKSPACES:
+				getWorkspaces().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -1185,6 +1268,10 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 				return hasNestedNodeModulesFolder != HAS_NESTED_NODE_MODULES_FOLDER_EDEFAULT;
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__HAS_N4JS_NATURE:
 				return hasN4JSNature != HAS_N4JS_NATURE_EDEFAULT;
+			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__YARN_WORKSPACE_ROOT:
+				return yarnWorkspaceRoot != YARN_WORKSPACE_ROOT_EDEFAULT;
+			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__WORKSPACES:
+				return workspaces != null && !workspaces.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
@@ -1221,6 +1308,10 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 		result.append(hasNestedNodeModulesFolder);
 		result.append(", hasN4JSNature: ");
 		result.append(hasN4JSNature);
+		result.append(", yarnWorkspaceRoot: ");
+		result.append(yarnWorkspaceRoot);
+		result.append(", workspaces: ");
+		result.append(workspaces);
 		result.append(')');
 		return result.toString();
 	}
