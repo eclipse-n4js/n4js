@@ -44,6 +44,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Optional;
+import com.google.common.base.Throwables;
 import com.google.inject.Injector;
 
 /**
@@ -226,6 +227,11 @@ public class UpdateShippedCode implements IWorkflowComponent {
 					+ "code: " + e.getExitCode() + ", "
 					+ "message: " + e.getMessage());
 			e.printStackTrace();
+			Throwable root = Throwables.getRootCause(e);
+			if (root != e) {
+				println("Root cause:");
+				root.printStackTrace();
+			}
 			throw new RuntimeException(e);
 		} finally {
 			NodeYarnProcessBuilder.additionalEnvironmentVariables.clear();
