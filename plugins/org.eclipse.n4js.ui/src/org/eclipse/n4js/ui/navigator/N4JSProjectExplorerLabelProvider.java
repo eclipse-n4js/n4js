@@ -10,7 +10,12 @@
  */
 package org.eclipse.n4js.ui.navigator;
 
+import java.nio.file.Files;
+
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.jdt.ui.ProblemsLabelDecorator;
 import org.eclipse.jdt.ui.ProblemsLabelDecorator.ProblemsLabelChangedEvent;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
@@ -30,6 +35,7 @@ import org.eclipse.n4js.ui.workingsets.WorkingSet;
 import org.eclipse.n4js.ui.workingsets.WorkingSetLabelProvider;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManager;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBroker;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkingSet;
@@ -43,6 +49,8 @@ import com.google.inject.Inject;
 public class N4JSProjectExplorerLabelProvider extends LabelProvider implements IStyledLabelProvider {
 
 	@SuppressWarnings("unused")
+	private static final Image PROJECT_IMG = ImageRef.PROJECT_IMG.asImage().orNull();
+	private static final Image PROJECT_CLOSED_IMG = ImageRef.PROJECT_CLOSED_IMG.asImage().orNull();
 	private static final Image SRC_FOLDER_IMG = ImageRef.SRC_FOLDER.asImage().orNull();
 	private static final Image WORKING_SET_IMG = ImageRef.WORKING_SET.asImage().orNull();
 	private static final Image LIB_PATH = ImageRef.LIB_PATH.asImage().orNull();
@@ -125,6 +133,23 @@ public class N4JSProjectExplorerLabelProvider extends LabelProvider implements I
 				// (e.g. they call IResource#exists() on IFolder 'element') and this seems to cause performance issues
 				// with locks that egit is obtaining for doing cyclic updates (see IDE-2269):
 				return decorator.decorateImage(SRC_FOLDER_IMG, element);
+
+			} else if (Files.isSymbolicLink(folder.getLocation().toFile().toPath())) {
+				// might be a project from workspace
+				URI symLinkUri = URI.createFileURI(folder.getLocation().toFile().toString());
+				String n4jsProjectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(symLinkUri);
+				String eclipseProjectName = ProjectDescriptionUtils
+						.convertN4JSProjectNameToEclipseProjectName(n4jsProjectName);
+
+				IProject iProject = ResourcesPlugin.getWorkspace().getRoot().getProject(eclipseProjectName);
+				if (iProject != null) {
+					if (iProject.isAccessible()) {
+						return decorator.decorateImage(PROJECT_IMG, element);
+					} else {
+						return decorator.decorateImage(PROJECT_CLOSED_IMG, element);
+					}
+				}
+
 			}
 		}
 
