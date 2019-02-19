@@ -53,6 +53,7 @@ public class N4JSRenameElementHandler extends DefaultRenameElementHandler {
 								if (selectedElement instanceof N4TypeDefinition) {
 									selectedElement = ((N4TypeDefinition) selectedElement).getDefinedType();
 								}
+
 								if (selectedElement != null) {
 									@SuppressWarnings("hiding")
 									IRenameElementContext renameElementContext = renameContextFactory
