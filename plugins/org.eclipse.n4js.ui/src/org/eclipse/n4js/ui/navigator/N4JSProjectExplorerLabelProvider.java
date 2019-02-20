@@ -26,6 +26,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.StyledString.Styler;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.ExternalIndexSynchronizer;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.projectModel.IN4JSProject;
@@ -37,6 +38,7 @@ import org.eclipse.n4js.ui.workingsets.WorkingSetLabelProvider;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManager;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBroker;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkingSet;
@@ -185,7 +187,13 @@ public class N4JSProjectExplorerLabelProvider extends LabelProvider implements I
 
 				IProject iProject = ResourcesPlugin.getWorkspace().getRoot().getProject(eclipseProjectName);
 				if (iProject != null && iProject.exists()) {
-					Styler stylerName = iProject.isAccessible() ? null : StyledString.QUALIFIER_STYLER;
+					Styler stylerName = StyledString.QUALIFIER_STYLER;
+					if (iProject.isAccessible()) {
+						URI prjPckJson = URIUtils.convert(iProject).appendSegment(N4JSGlobals.PACKAGE_JSON);
+						if (indexSynchronizer.isInIndex(prjPckJson)) {
+							stylerName = null;
+						}
+					}
 					StyledString string = new StyledString(folder.getName(), stylerName);
 					return string;
 				}
