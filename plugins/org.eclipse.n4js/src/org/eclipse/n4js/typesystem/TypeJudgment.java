@@ -143,6 +143,7 @@ import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TGetter;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
+import org.eclipse.n4js.ts.types.TObjectPrototype;
 import org.eclipse.n4js.ts.types.TSetter;
 import org.eclipse.n4js.ts.types.TStructuralType;
 import org.eclipse.n4js.ts.types.TTypedElement;
@@ -603,12 +604,20 @@ import com.google.inject.Inject;
 			if (!(container instanceof N4ClassDeclaration)) {
 				return unknown();
 			}
-			final TClass containingClass = (TClass) ((N4ClassDeclaration) container).getDefinedType();
-			final TClassifier superClass = getDeclaredOrImplicitSuperType(G, containingClass);
+			final TClass containingClass = ((N4ClassDeclaration) container).getDefinedTypeAsClass();
+			final TClassifier superClassifier = getDeclaredOrImplicitSuperType(G, containingClass);
 
-			TClassifier effectiveSuperClass = superClass;
+			TClassifier effectiveSuperClassifier = superClassifier;
 			if (containingClass.isStaticPolyfill()) { // IDE-1735: static-polyfills replacing original constructor
-				effectiveSuperClass = getDeclaredOrImplicitSuperType(G, (TClass) superClass);
+				if (superClassifier instanceof TClass) {
+					effectiveSuperClassifier = getDeclaredOrImplicitSuperType(G, (TClass) superClassifier);
+				} else if (superClassifier instanceof TObjectPrototype) {
+					final ParameterizedTypeRef superTypeRef = ((TObjectPrototype) superClassifier).getSuperType();
+					final Type superType = superTypeRef != null ? superTypeRef.getDeclaredType() : null;
+					if (superType instanceof TClassifier) {
+						effectiveSuperClassifier = (TClassifier) superType;
+					}
+				}
 			}
 
 			// Note: to avoid nasty special cases in rules expectedTypeOfArgumentInCallExpression,
@@ -618,11 +627,11 @@ import com.google.inject.Inject;
 					|| superLiteral.eContainer() instanceof IndexedAccessExpression) {
 				// case 1: super member access, i.e. super.foo() OR super['foo']
 				final TypeRef T;
-				if (effectiveSuperClass != null) {
+				if (effectiveSuperClassifier != null) {
 					if (containingMemberDecl.isStatic()) {
-						T = TypeUtils.createConstructorTypeRef(effectiveSuperClass);
+						T = TypeUtils.createConstructorTypeRef(effectiveSuperClassifier);
 					} else {
-						T = TypeUtils.createTypeRef(effectiveSuperClass);
+						T = TypeUtils.createTypeRef(effectiveSuperClassifier);
 					}
 				} else {
 					T = null;
@@ -633,7 +642,7 @@ import com.google.inject.Inject;
 				if (containingMemberDecl.isConstructor()) {
 					// super() is used in a constructor
 					final TMethod ctor = containerTypesHelper.fromContext(superLiteral.eResource())
-							.findConstructor(effectiveSuperClass);
+							.findConstructor(effectiveSuperClassifier);
 					return ctor != null ? TypeUtils.createTypeRef(ctor)
 							: unknown();
 				} else {
