@@ -24,6 +24,7 @@ import java.util.Set;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
@@ -123,6 +124,7 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 		final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(PROJECT_NAME);
 		assertTrue("Test project is not accessible.", project.isAccessible());
 
+		libraryManager.runNpmYarnInstallOnAllProjects(new NullProgressMonitor());
 		syncExtAndBuild();
 		// Since we do not know whether the built-in initialization or the test project import happened earlier...
 		// Make sure both test module and project description file get into the index.
@@ -150,8 +152,7 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 
 		// Imitate VM crash with force built-in unload and reload.
 		unLoadBuiltIns();
-		IResourcesSetupUtil.fullBuild();
-		waitForAutoBuild();
+		syncExtAndBuild();
 
 		// Test module issues:
 		// Cannot resolve import target :: resolving simple module import : found no matching modules
@@ -166,6 +167,7 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 		assertMarkers("Expected exactly 7 issues.", project, 7);
 
 		loadBuiltIns();
+		libraryManager.runNpmYarnInstallOnAllProjects(new NullProgressMonitor());
 		syncExtAndBuild();
 
 		resource.getContents().clear();
