@@ -45,6 +45,7 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -240,6 +241,53 @@ public class ProjectTestsUtils {
 		}, monitor);
 
 		waitForAllJobs();
+		return project;
+	}
+
+	/**
+	 * Imports the given yarn workspace project. Also imports (by reference) all projects located in the subfolder
+	 * 'packages'.
+	 *
+	 * @return yarn workspace project
+	 */
+	public static IProject importYarnWorkspace(LibraryManager libraryManager, File parentFolder, String yarnProjectName)
+			throws CoreException {
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		IProject yarnProject = ProjectTestsUtils.importProject(parentFolder, yarnProjectName);
+
+		IPath yarnPath = yarnProject.getLocation();
+		IPath yarnPackagesPath = yarnPath.append("packages");
+		for (String yarnPackageName : yarnPackagesPath.toFile().list()) {
+			IPath packagePath = yarnPackagesPath.append(yarnPackageName);
+			if (yarnPackageName.startsWith("@")) {
+				for (String scopedPackageName : packagePath.toFile().list()) {
+					IPath scopedPackagePath = packagePath.append(scopedPackageName);
+					importProjectNotCopy(workspace, scopedPackagePath.toFile(), new NullProgressMonitor());
+				}
+			} else {
+				importProjectNotCopy(workspace, packagePath.toFile(), new NullProgressMonitor());
+			}
+		}
+
+		if (libraryManager != null) {
+			libraryManager.runNpmYarnInstall(URI.createFileURI(yarnPath.toString()), new NullProgressMonitor());
+			waitForAllJobs();
+		}
+		return yarnProject;
+	}
+
+	/**
+	 * Imports a project by reference into the workspace
+	 *
+	 * @return the created project
+	 */
+	public static IProject importProjectNotCopy(IWorkspace workspace, File rootFolder, IProgressMonitor progressMonitor)
+			throws CoreException {
+		IPath path = new org.eclipse.core.runtime.Path(new File(rootFolder, "_project").getAbsolutePath());
+		IProjectDescription desc = workspace.loadProjectDescription(path);
+		IProject project = workspace.getRoot().getProject(desc.getName());
+		project.create(desc, progressMonitor);
+		project.open(progressMonitor);
 		return project;
 	}
 

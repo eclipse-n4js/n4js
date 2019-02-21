@@ -56,23 +56,9 @@ class NpmScopesPluginTest extends AbstractBuilderParticipantTest {
 	@Before
 	def void before() {
 		val workspace = ResourcesPlugin.workspace;
-
 		val parentFolder = new File(getResourceUri(PROBANDS, YARN_WORKSPACE_BASE));
-		yarnProject = ProjectTestsUtils.importProject(parentFolder, YARN_WORKSPACE_PROJECT);
-
+		yarnProject = ProjectTestsUtils.importYarnWorkspace(libraryManager, parentFolder, YARN_WORKSPACE_PROJECT);
 		val yarnPath = yarnProject.location;
-		val yarnPackagesPath = yarnPath.append("packages");
-		for (String yarnPackageName : yarnPackagesPath.toFile.list) {
-			val packagePath = yarnPackagesPath.append(yarnPackageName);
-			if (yarnPackageName.startsWith("@")) {
-				for (String scopedPackageName : packagePath.toFile.list) {
-					val scopedPackagePath = packagePath.append(scopedPackageName);
-					importProject(workspace, scopedPackagePath.toFile, new NullProgressMonitor());
-				}
-			} else {
-				importProject(workspace, packagePath.toFile, new NullProgressMonitor());
-			}
-		}
 
 		scopedProject = workspace.root.getProject("@myScope:Lib");
 		nonScopedProject = workspace.root.getProject("Lib");

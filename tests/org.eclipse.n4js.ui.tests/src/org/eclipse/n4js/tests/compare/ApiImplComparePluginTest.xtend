@@ -30,6 +30,9 @@ import org.junit.runner.RunWith
 import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.addNature
 
 import static extension org.eclipse.n4js.tests.util.ProjectTestsUtils.*
+import org.eclipse.n4js.external.LibraryManager
+import org.eclipse.core.resources.ResourcesPlugin
+import org.eclipse.emf.common.util.URI
 
 /**
  * Tests for the API / implementation compare logic (not for the UI part!).
@@ -43,15 +46,19 @@ class ApiImplComparePluginTest extends AbstractApiImplCompareTest {
 	@Inject
 	private ProjectCompareTreeHelper projectCompareTreeHelper;
 	@Inject
+	private LibraryManager libraryManager;
+	@Inject
 	private extension ApiImplCompareTestHelper;
 
 
 	@BeforeClass
 	public static def void setupEclipseWorkspace() {
 		IResourcesSetupUtil.cleanWorkspace
-		importTestProject(PROJECT_ID_UTILS)
-		importTestProject(PROJECT_ID_API)
-		importTestProject(PROJECT_ID_IMPL)
+//		importTestProject(PROJECT_ID_UTILS)
+//		importTestProject(PROJECT_ID_API)
+//		importTestProject(PROJECT_ID_IMPL)
+		val parentFolder = new File("probands/ApiImplCompare");
+		ProjectTestsUtils.importYarnWorkspace(null, parentFolder, YARN_PROJECT);
 	}
 
 
@@ -62,6 +69,11 @@ class ApiImplComparePluginTest extends AbstractApiImplCompareTest {
 
 	@Test
 	public def void testApiNoteDocumentation() {
+		val yarnProject = ResourcesPlugin.workspace.root.getProject(YARN_PROJECT);
+		val yarnUri = URI.createFileURI(yarnProject.location.toString);
+		libraryManager.runNpmYarnInstall(yarnUri, new NullProgressMonitor);
+		ProjectTestsUtils.waitForAllJobs();
+
 		val errMsgs = newArrayList
 		val comparison = projectCompareHelper.createComparison(true,errMsgs)
 		assertEquals(0, errMsgs.size)
