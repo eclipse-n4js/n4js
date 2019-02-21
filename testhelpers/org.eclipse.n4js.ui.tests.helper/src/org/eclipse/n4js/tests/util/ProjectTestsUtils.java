@@ -35,6 +35,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IMarker;
@@ -64,6 +65,7 @@ import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.ui.utils.TimeoutRuntimeException;
 import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.n4js.utils.io.FileCopier;
+import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
 import org.eclipse.ui.texteditor.MarkerUtilities;
 import org.eclipse.ui.wizards.datatransfer.FileSystemStructureProvider;
@@ -73,6 +75,7 @@ import org.eclipse.xtext.ui.MarkerTypes;
 import org.eclipse.xtext.ui.XtextProjectHelper;
 import org.eclipse.xtext.ui.resource.IResourceSetProvider;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
+import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.junit.Assert;
 
 import com.google.common.base.Joiner;
@@ -668,6 +671,39 @@ public class ProjectTestsUtils {
 	/***/
 	public static void deleteProject(IProject project) throws CoreException {
 		project.delete(true, true, new NullProgressMonitor());
+	}
+
+	/**
+	 * Close all projects in workspace. When having a yarn workspace project in the workspace, run this method before
+	 * invoking {@link IResourcesSetupUtil#cleanWorkspace()}. This will remove all projects from the index.
+	 */
+	public static void closeAllProjectsInWorkspace() {
+		try {
+			new WorkspaceModifyOperation() {
+
+				@Override
+				protected void execute(IProgressMonitor monitor)
+						throws CoreException, InvocationTargetException,
+						InterruptedException {
+
+					IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+					IProject[] visibleProjects = root.getProjects();
+					for (IProject visibleProject : visibleProjects) {
+						visibleProject.close(monitor);
+					}
+
+					IProject[] hiddenProjects = root.getProjects(IContainer.INCLUDE_HIDDEN);
+					for (IProject hiddenProject : hiddenProjects) {
+						hiddenProject.close(monitor);
+					}
+
+				}
+			}.run(monitor());
+		} catch (InvocationTargetException e) {
+			Exceptions.sneakyThrow(e.getCause());
+		} catch (Exception e) {
+			throw new RuntimeException();
+		}
 	}
 
 	/**

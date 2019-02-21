@@ -187,6 +187,7 @@ public abstract class AbstractBuilderTest {
 		// save the files as otherwise the projects cannot be deleted
 		libraryManager.deleteAllNodeModulesFolders(new NullProgressMonitor());
 		closeAllEditorsForTearDown();
+		ProjectTestsUtils.closeAllProjectsInWorkspace();
 		IResourcesSetupUtil.cleanWorkspace();
 		IResourcesSetupUtil.cleanBuild();
 		waitForAutoBuild();

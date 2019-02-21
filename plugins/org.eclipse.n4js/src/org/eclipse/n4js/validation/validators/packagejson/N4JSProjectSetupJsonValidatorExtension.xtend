@@ -626,9 +626,9 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	def internalValidateAPIProjectReferences(Iterable<ValidationProjectReference> references) {
 		val libraryDependenciesWithImplId = references
 			.map[ref | Pair.of(ref, allProjectsByName.get(ref.referencedProjectName))]
-			.filterNull
+			.filter[pair | pair !== null && pair.value !== null]
 			.filter[pair | pair.value.projectType == LIBRARY && pair.value.implementationId.present];
-		
+
 		for (projectPair : libraryDependenciesWithImplId) {
 			val reference = projectPair.key;
 			addIssue(IssueCodes.getMessageForINVALID_API_PROJECT_DEPENDENCY(reference.referencedProjectName), reference.astRepresentation, 
@@ -1412,8 +1412,10 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 						val iPath = project.location;
 						val projectPath = iPath.toFile.toPath;
 						val NodeModulesFolder nmFolder = nodeModulesDiscoveryHelper.getNodeModulesFolder(projectPath);
-						val projectName = ProjectDescriptionUtils.convertEclipseProjectNameToN4JSProjectName(project.name);
-						res.put(projectName, nmFolder.nodeModulesFolder);
+						if (nmFolder !== null) {
+							val projectName = ProjectDescriptionUtils.convertEclipseProjectNameToN4JSProjectName(project.name);
+							res.put(projectName, nmFolder.nodeModulesFolder);
+						}
 					}
 				}
 			}
