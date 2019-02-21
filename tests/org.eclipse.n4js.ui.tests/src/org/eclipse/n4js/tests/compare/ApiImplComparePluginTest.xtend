@@ -54,9 +54,6 @@ class ApiImplComparePluginTest extends AbstractApiImplCompareTest {
 	@BeforeClass
 	public static def void setupEclipseWorkspace() {
 		IResourcesSetupUtil.cleanWorkspace
-//		importTestProject(PROJECT_ID_UTILS)
-//		importTestProject(PROJECT_ID_API)
-//		importTestProject(PROJECT_ID_IMPL)
 		val parentFolder = new File("probands/ApiImplCompare");
 		ProjectTestsUtils.importYarnWorkspace(null, parentFolder, YARN_PROJECT);
 	}
