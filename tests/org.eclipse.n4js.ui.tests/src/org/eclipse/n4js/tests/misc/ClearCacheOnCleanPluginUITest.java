@@ -42,8 +42,7 @@ import com.google.inject.Inject;
 public class ClearCacheOnCleanPluginUITest extends AbstractBuilderParticipantTest {
 
 	private static final String PROBANDS = "probands";
-	private static final String SUBFOLDER = "Hyperlink";
-	private static final String PROJECT_NAME = "Hyperlink";
+	private static final String PROJECT_NAME = "ClearCacheOnClean";
 
 	@Inject
 	private ShippedCodeInitializeTestHelper shippedCodeInitializeTestHelper;
@@ -70,7 +69,7 @@ public class ClearCacheOnCleanPluginUITest extends AbstractBuilderParticipantTes
 	 */
 	@Test
 	public void testClearOnCleanBuild() throws CoreException {
-		File prjDir = new File(getResourceUri(PROBANDS, SUBFOLDER));
+		File prjDir = new File(PROBANDS);
 		IProject project = ProjectTestsUtils.importProject(prjDir, PROJECT_NAME);
 		IResource resourceABC = project.findMember("src/ABC.n4js");
 		IFile fileABC = ResourcesPlugin.getWorkspace().getRoot().getFile(resourceABC.getFullPath());
@@ -111,7 +110,7 @@ public class ClearCacheOnCleanPluginUITest extends AbstractBuilderParticipantTes
 	 */
 	@Test
 	public void testClearOnModifyPackageJson() throws CoreException {
-		File prjDir = new File(getResourceUri(PROBANDS, SUBFOLDER));
+		File prjDir = new File(PROBANDS);
 		IProject project = ProjectTestsUtils.importProject(prjDir, PROJECT_NAME);
 		IResource packagejson = project.findMember("package.json");
 		IFile filePJ = ResourcesPlugin.getWorkspace().getRoot().getFile(packagejson.getFullPath());
