@@ -19,6 +19,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
@@ -90,7 +91,9 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 
+		libraryManager.runNpmYarnInstallOnAllProjects(new NullProgressMonitor());
 		syncExtAndBuild();
+		ProjectTestsUtils.assertNoErrors();
 
 		IWorkbenchPage page = EclipseUIUtils.getActivePage();
 		XtextEditor editor = openAndGetXtextEditor(fileABC, page);
@@ -141,17 +144,18 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 		ProjectTestsUtils.importProject(prjDir, PROJECT_NAME);
 		waitForAutoBuild();
 
+		libraryManager.runNpmYarnInstallOnAllProjects(new NullProgressMonitor());
 		syncExtAndBuild();
 		UIUtils.waitForUiThread();
+		assertNoErrors();
 
 		IWorkbenchPage page = EclipseUIUtils.getActivePage();
 		XtextEditor editor = openAndGetXtextEditorViaProjectExplorer(page,
 				PROJECT_NAME,
-				"External Dependencies",
-				"N4JS Runtime",
-				"Runtime Libraries",
-				"n4js-runtime-node",
-				"src/n4js",
+				"node_modules",
+				"n4js-runtime-node 0.13.4 [Runtime library]",
+				"src",
+				"n4js",
 				"process.n4jsd");
 		UIUtils.waitForUiThread();
 

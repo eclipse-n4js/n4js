@@ -1,6 +1,9 @@
 {
 	"name": "Hyperlink",
 	"version": "0.0.1",
+	"dependencies": {
+		"n4js-runtime-node": "0.13.4"
+	},
 	"n4js": {
 		"projectType": "library",
 		"vendorId": "org.eclipse.n4js",
