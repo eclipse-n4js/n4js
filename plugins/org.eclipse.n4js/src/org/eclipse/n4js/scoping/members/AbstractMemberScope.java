@@ -188,9 +188,18 @@ public abstract class AbstractMemberScope extends AbstractScope {
 			existingMember = findMember(nameAsString, !accessForWriteOperation, !staticAccess);
 		}
 		if (existingMember != null) {
-			return new WrongStaticAccessDescription(
-					EObjectDescription.create(existingMember.getName(), existingMember),
-					staticAccess);
+			boolean wrongStaticAccessDescription = true;
+
+			if (this instanceof MemberScope) {
+				MemberScope thiz = (MemberScope) this;
+				wrongStaticAccessDescription = !thiz.type.isDynamizable();
+			}
+
+			if (wrongStaticAccessDescription) {
+				return new WrongStaticAccessDescription(
+						EObjectDescription.create(existingMember.getName(), existingMember),
+						staticAccess);
+			}
 		}
 
 		return null;
