@@ -273,9 +273,10 @@ public class ProjectTestsUtils {
 		}
 
 		if (libraryManager != null) {
-			libraryManager.runNpmYarnInstall(URI.createFileURI(yarnPath.toString()), new NullProgressMonitor());
 			waitForAllJobs();
+			libraryManager.runNpmYarnInstall(URI.createFileURI(yarnPath.toString()), new NullProgressMonitor());
 		}
+		waitForAllJobs();
 		return yarnProject;
 	}
 

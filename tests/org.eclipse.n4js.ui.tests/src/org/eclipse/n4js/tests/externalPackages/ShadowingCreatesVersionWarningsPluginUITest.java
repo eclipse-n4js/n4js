@@ -41,6 +41,7 @@ import com.google.inject.Inject;
 public class ShadowingCreatesVersionWarningsPluginUITest extends AbstractBuilderParticipantTest {
 	private static final String PROBANDS = "probands";
 	private static final String WORKSPACE_LOC = "ShadowingCreatesVersionWarnings";
+	private static final String YARN_PROJECT = "YarnWorkspaceProject";
 	private static final String PROJECT_P1 = "P1";
 	private static final String PROJECT_N4JSLANG = "n4js.lang";
 
@@ -86,8 +87,7 @@ public class ShadowingCreatesVersionWarningsPluginUITest extends AbstractBuilder
 	@Test
 	public void testShadowingCreatesVersionWarnings() throws Exception {
 		File projectsRoot = new File(getResourceUri(PROBANDS, WORKSPACE_LOC));
-		ProjectTestsUtils.importProject(projectsRoot, PROJECT_N4JSLANG);
-		ProjectTestsUtils.importProject(projectsRoot, PROJECT_P1);
+		ProjectTestsUtils.importYarnWorkspace(libraryManager, projectsRoot, YARN_PROJECT);
 
 		syncExtAndBuild();
 
@@ -120,9 +120,7 @@ public class ShadowingCreatesVersionWarningsPluginUITest extends AbstractBuilder
 		assertTrue(prjDescrN4JSLang + " client module is not accessible.", prjDescrN4JSLang.isAccessible());
 
 		assertIssues(prjDescrP1,
-				"line 5: This project requires shadowed project n4js.lang in version ^1.0.0-rc.2, but only version 0.0.1 is present.");
-		assertIssues(prjDescrN4JSLang,
-				"line 5: This shadowing project requires project n4js-es5 in version 13, but only version 0.1.0 is present.");
+				"line 6: This project requires shadowed project n4js-es5 in version 0.13.4, but only version 0.13.1 is present.");
 	}
 
 }
