@@ -277,6 +277,7 @@ public class ProjectTestsUtils {
 			libraryManager.runNpmYarnInstall(URI.createFileURI(yarnPath.toString()), new NullProgressMonitor());
 		}
 		waitForAllJobs();
+		waitForAutoBuild();
 		return yarnProject;
 	}
 
