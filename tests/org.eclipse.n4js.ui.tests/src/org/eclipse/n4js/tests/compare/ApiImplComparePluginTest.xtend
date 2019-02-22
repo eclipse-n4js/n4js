@@ -57,6 +57,7 @@ class ApiImplComparePluginTest extends AbstractApiImplCompareTest {
 		val parentFolder = new File("probands/ApiImplCompare");
 		yarnProject = ProjectTestsUtils.importYarnWorkspace(libraryManager, parentFolder, YARN_PROJECT);
 		ProjectTestsUtils.waitForAllJobs;
+		ProjectTestsUtils.waitForAutoBuild;
 	}
 
 	@After
