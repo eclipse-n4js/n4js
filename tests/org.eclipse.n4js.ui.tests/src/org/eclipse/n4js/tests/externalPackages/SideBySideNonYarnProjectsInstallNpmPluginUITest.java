@@ -36,9 +36,7 @@ import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -71,11 +69,9 @@ public class SideBySideNonYarnProjectsInstallNpmPluginUITest extends AbstractBui
 	@Inject
 	private ProjectDescriptionLoader prjDescLoader;
 
-	@Before
 	@Override
-	public void setUp() throws Exception {
-		super.setUp();
-		setupShippedLibraries();
+	protected boolean provideShippedCode() {
+		return true;
 	}
 
 	/**
@@ -283,11 +279,4 @@ public class SideBySideNonYarnProjectsInstallNpmPluginUITest extends AbstractBui
 		}
 	}
 
-	@After
-	@Override
-	public void tearDown() throws Exception {
-		tearDownShippedLibraries();
-		super.tearDown();
-
-	}
 }

@@ -27,11 +27,8 @@ import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
-import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
 import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import com.google.inject.Inject;
@@ -46,9 +43,6 @@ public class ShadowingCreatesVersionWarningsPluginUITest extends AbstractBuilder
 	private static final String PROJECT_N4JSLANG = "n4js.lang";
 
 	@Inject
-	private ShippedCodeInitializeTestHelper shippedCodeInitializeTestHelper;
-
-	@Inject
 	private EclipseExternalLibraryWorkspace extWS;
 
 	@Inject
@@ -60,24 +54,9 @@ public class ShadowingCreatesVersionWarningsPluginUITest extends AbstractBuilder
 	@Inject
 	private ShadowingInfoHelper shadowingInfoHelper;
 
-	/**
-	 * Updates the known external library locations with the {@code node_modules} folder.
-	 */
-	@Before
-	public void setupWorkspace() throws Exception {
-		shippedCodeInitializeTestHelper.setupBuiltIns();
-		waitForAutoBuild();
-	}
-
-	/**
-	 * Tries to make sure the external libraries are cleaned from the Xtext index.
-	 */
-	@After
 	@Override
-	public void tearDown() throws Exception {
-		waitForAutoBuild();
-		shippedCodeInitializeTestHelper.tearDownBuiltIns();
-		waitForAutoBuild();
+	protected boolean provideShippedCode() {
+		return true;
 	}
 
 	/**

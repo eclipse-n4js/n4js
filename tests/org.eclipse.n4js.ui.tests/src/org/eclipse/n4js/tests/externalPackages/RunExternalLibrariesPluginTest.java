@@ -136,10 +136,8 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 	 * Tries to make sure the external libraries are cleaned from the Xtext index.
 	 */
 	@After
-	@Override
-	synchronized public void tearDown() throws Exception {
+	synchronized public void tearDown2() throws Exception {
 		waitForAutoBuild();
-		super.tearDown();
 		RaceDetectionHelper.log(">>> TEARDOWN >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 	}
 

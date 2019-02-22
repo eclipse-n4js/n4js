@@ -36,8 +36,8 @@ import org.eclipse.xtext.builder.builderState.IBuilderState;
 import org.eclipse.xtext.builder.builderState.impl.ResourceDescriptionImpl;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.google.common.base.Joiner;
@@ -87,30 +87,26 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 	@Inject
 	private ShippedCodeInitializeTestHelper shippedCodeInitializeTestHelper;
 
-	/**
-	 * Initializes the N4JS built-in libraries. Does not matter before or after the test project import.
-	 */
-	@Before
-	public void loadBuiltIns() {
+	/** Disable reduction of external libraries */
+	@BeforeClass
+	static public void disableMappingsFlag() {
 		ExternalProjectMappings.REDUCE_REGISTERED_NPMS = false;
-		shippedCodeInitializeTestHelper.setupBuiltIns();
-		waitForAutoBuild();
 	}
 
-	/**
-	 * Cleans the external library content.
-	 */
-	@After
-	@Override
-	public void tearDown() throws Exception {
-		unLoadBuiltIns();
-		super.tearDown();
+	/** */
+	@AfterClass
+	static public void enableMappingsFlag() {
+		ExternalProjectMappings.REDUCE_REGISTERED_NPMS = true;
+	}
+
+	private void loadBuiltIns() {
+		shippedCodeInitializeTestHelper.setupBuiltIns();
+		waitForAutoBuild();
 	}
 
 	private void unLoadBuiltIns() {
 		shippedCodeInitializeTestHelper.tearDownBuiltIns();
 		waitForAutoBuild();
-		ExternalProjectMappings.REDUCE_REGISTERED_NPMS = true;
 	}
 
 	@Override

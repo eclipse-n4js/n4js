@@ -29,8 +29,6 @@ import org.eclipse.n4js.ui.external.EclipseExternalIndexSynchronizer;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -58,20 +56,9 @@ public class IndexSynchronizerPluginTest extends AbstractBuilderParticipantTest 
 		assertTrue("Expected running platform. Run the tests as JUnit Plug-in Tests.", Platform.isRunning());
 	}
 
-	/**  */
-	@Before
-	public void setupWorkspace() throws Exception {
-		setupShippedLibraries();
-		waitForAutoBuild();
-	}
-
-	/**  */
-	@After
 	@Override
-	public void tearDown() throws Exception {
-		waitForAutoBuild();
-		tearDownShippedLibraries();
-		super.tearDown();
+	protected boolean provideShippedCode() {
+		return true;
 	}
 
 	/** Install an NPM, delete folder of NPM on disk, run IndexSynchronizer, check if NPM was removed from index */

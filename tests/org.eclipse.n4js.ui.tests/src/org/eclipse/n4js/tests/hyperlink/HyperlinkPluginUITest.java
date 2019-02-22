@@ -29,7 +29,6 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.EclipseUIUtils;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
-import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.eclipse.n4js.ui.editor.N4JSHyperlinkDetector;
 import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.ui.IWorkbenchPage;
@@ -37,8 +36,6 @@ import org.eclipse.xtext.ui.editor.IURIEditorOpener;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.editor.hyperlinking.XtextHyperlink;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import com.google.inject.Inject;
@@ -52,28 +49,16 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 	private static final String SUBFOLDER = "Hyperlink";
 	private static final String PROJECT_NAME = "Hyperlink";
 
-	@Inject
-	private ShippedCodeInitializeTestHelper shippedCodeInitializeTestHelper;
+	@Override
+	protected boolean provideShippedCode() {
+		return true;
+	}
 
 	@Inject
 	private N4JSHyperlinkDetector hyperlinkDetector;
 
 	@Inject
 	private IURIEditorOpener uriEditorOpener;
-
-	@Before
-	@Override
-	public void setUp() throws Exception {
-		super.setUp();
-		shippedCodeInitializeTestHelper.setupBuiltIns();
-	}
-
-	@After
-	@Override
-	public void tearDown() throws Exception {
-		shippedCodeInitializeTestHelper.tearDownBuiltIns();
-		super.tearDown();
-	}
 
 	/**
 	 * The test invokes the method

@@ -32,19 +32,15 @@ import org.eclipse.n4js.tester.nodejs.ui.NodejsTesterLaunchShortcut;
 import org.eclipse.n4js.tester.ui.TesterUiActivator;
 import org.eclipse.n4js.tests.util.EclipseUIUtils;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
-import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.internal.console.ConsoleView;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import com.google.common.collect.Iterables;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
-import com.google.inject.Inject;
 import com.google.inject.Injector;
 
 /**
@@ -59,28 +55,9 @@ public class GHOLD_45_CheckIgnoreAnnotationAtClassLevel_PluginUITest extends Abs
 
 	private static final String[] EMPTY_ARRAY = new String[0];
 
-	@Inject
-	private ShippedCodeInitializeTestHelper shippedCodeInitializeTestHelper;
-
-	/**
-	 * Initializes the N4JS built-in libraries. Does not matter before or after the test project import.
-	 */
-	@Before
 	@Override
-	public void setUp() throws Exception {
-		shippedCodeInitializeTestHelper.setupBuiltIns();
-		waitForAutoBuild();
-	}
-
-	/**
-	 * Cleans the external library content.
-	 */
-	@After
-	@Override
-	public void tearDown() throws Exception {
-		shippedCodeInitializeTestHelper.tearDownBuiltIns();
-		waitForAutoBuild();
-		super.tearDown();
+	protected boolean provideShippedCode() {
+		return true;
 	}
 
 	@Override

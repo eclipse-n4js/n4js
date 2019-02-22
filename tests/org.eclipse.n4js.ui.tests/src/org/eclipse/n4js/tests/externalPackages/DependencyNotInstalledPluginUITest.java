@@ -25,8 +25,6 @@ import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import com.google.inject.Inject;
@@ -47,19 +45,9 @@ public class DependencyNotInstalledPluginUITest extends AbstractBuilderParticipa
 	@Inject
 	private EclipseExternalLibraryWorkspace extLibWS;
 
-	@Before
 	@Override
-	public void setUp() throws Exception {
-		super.setUp();
-		setupShippedLibraries();
-	}
-
-	@After
-	@Override
-	public void tearDown() throws Exception {
-		tearDownShippedLibraries();
-		super.tearDown();
-
+	protected boolean provideShippedCode() {
+		return true;
 	}
 
 	/**

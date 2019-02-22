@@ -55,9 +55,8 @@ public class ImportedProjectNamePluginTest extends AbstractBuilderParticipantTes
 	 *
 	 * Without this extra step, the tear-code of this test would actually delete files in the 'probands' directory.
 	 */
-	@Override
 	@Before
-	public void setUp() throws Exception {
+	public void setUp2() throws Exception {
 		projectsRoot = Files.createTempDir();
 		projectsRoot.deleteOnExit();
 		final File probandsLocation = new File(getResourceUri(PROBANDS, WORKSPACE_LOC));

@@ -55,8 +55,7 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 	]
 
 	@Before
-	override void setUp() {
-		super.setUp
+	def void setUp2() {
 		firstProjectUnderTest = createJSProject("multiProjectTest.first")
 		secondProjectUnderTest = createJSProject("multiProjectTest.second")
 		src = configureProjectWithXtext(firstProjectUnderTest)
