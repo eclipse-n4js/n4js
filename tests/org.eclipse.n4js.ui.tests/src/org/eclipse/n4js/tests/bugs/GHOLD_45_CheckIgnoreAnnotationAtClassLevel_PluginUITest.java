@@ -17,8 +17,6 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -26,8 +24,6 @@ import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.internal.ui.views.console.ProcessConsole;
 import org.eclipse.debug.ui.ILaunchShortcut;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.n4js.tester.TesterEventBus;
-import org.eclipse.n4js.tester.events.SessionEndedEvent;
 import org.eclipse.n4js.tester.nodejs.ui.NodejsTesterLaunchShortcut;
 import org.eclipse.n4js.tester.ui.TesterUiActivator;
 import org.eclipse.n4js.tests.util.EclipseUIUtils;
@@ -39,8 +35,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.common.collect.Iterables;
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 import com.google.inject.Injector;
 
 /**
@@ -167,12 +161,31 @@ public class GHOLD_45_CheckIgnoreAnnotationAtClassLevel_PluginUITest extends Abs
 	}
 
 	private void runTestWaitResult(final IFile moduleToTest) {
-		final SessionEndedEventLatch latch = new SessionEndedEventLatch();
-		final EventBus eventBus = getEventBus();
+		// final SessionEndedEventLatch latch = new SessionEndedEventLatch();
+		// final EventBus eventBus = getEventBus();
 		final ILaunchShortcut launchShortcut = getLaunchShortcut();
-		eventBus.register(latch);
-		new Thread(() -> launchShortcut.launch(new StructuredSelection(moduleToTest), ILaunchManager.RUN_MODE)).start();
-		latch.startTestAndWait(5L, TimeUnit.SECONDS); // TODO IDE-2270 suspicious delay; might break on slow build nodes
+		// eventBus.register(latch);
+		// Thread workThread = new Thread(
+		// () -> launchShortcut.launch(new StructuredSelection(moduleToTest), ILaunchManager.RUN_MODE));
+		// workThread.start();
+		// try {
+		// workThread.join();
+		// } catch (InterruptedException e) {
+		// e.printStackTrace();
+		// }
+		// latch.startTestAndWait(15L, TimeUnit.SECONDS); // TODO IDE-2270 suspicious delay; might break on slow build
+		// nodes
+
+		// Job job = new Job("") {
+		// @Override
+		// public IStatus run(IProgressMonitor monitor) {
+		// launchShortcut.launch(new StructuredSelection(moduleToTest), ILaunchManager.RUN_MODE);
+		// return Status.OK_STATUS;
+		// }
+		// };
+		// job.schedule();
+
+		launchShortcut.launch(new StructuredSelection(moduleToTest), ILaunchManager.RUN_MODE);
 	}
 
 	private String[] getConsoleContentLines() {
@@ -203,38 +216,8 @@ public class GHOLD_45_CheckIgnoreAnnotationAtClassLevel_PluginUITest extends Abs
 		return getTesterInjector().getInstance(NodejsTesterLaunchShortcut.class);
 	}
 
-	private EventBus getEventBus() {
-		return getTesterInjector().getInstance(TesterEventBus.class);
-	}
-
 	private Injector getTesterInjector() {
 		return TesterUiActivator.getInjector();
-	}
-
-	/**
-	 * Latch implementation for waiting until a test session end event.
-	 */
-	private static class SessionEndedEventLatch {
-
-		private final CountDownLatch latch;
-
-		private SessionEndedEventLatch() {
-			latch = new CountDownLatch(1);
-		}
-
-		@Subscribe
-		public void notifySessionEnded(@SuppressWarnings("unused") final SessionEndedEvent event) {
-			latch.countDown();
-		}
-
-		private void startTestAndWait(final long timeout, final TimeUnit unit) {
-			try {
-				latch.await(timeout, unit);
-			} catch (final InterruptedException e) {
-				LOGGER.error("Error occurred while waiting for test session end event.", e);
-			}
-		}
-
 	}
 
 }
