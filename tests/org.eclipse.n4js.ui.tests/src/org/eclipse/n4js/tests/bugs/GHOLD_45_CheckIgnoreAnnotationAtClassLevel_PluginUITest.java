@@ -163,6 +163,7 @@ public class GHOLD_45_CheckIgnoreAnnotationAtClassLevel_PluginUITest extends Abs
 	private void runTestWaitResult(final IFile moduleToTest) {
 		final ILaunchShortcut launchShortcut = getLaunchShortcut();
 		launchShortcut.launch(new StructuredSelection(moduleToTest), ILaunchManager.RUN_MODE);
+		ProjectTestsUtils.waitForAllJobs();
 	}
 
 	private String[] getConsoleContentLines() {
