@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -189,7 +188,6 @@ public class HeadlessHelper {
 	 */
 	public List<File> collectAllProjectPaths(List<File> absProjectRoots) {
 		List<File> projectRoots = getProjectStream(absProjectRoots).collect(Collectors.toList());
-		Collections.sort(projectRoots);
 		return projectRoots;
 	}
 
@@ -293,7 +291,7 @@ public class HeadlessHelper {
 		return Stream.concat(scopeFolders, absProjectRoots.stream())
 				.filter(File::isDirectory)
 				// find all contained folders
-				.flatMap(root -> Arrays.asList(root.listFiles(File::isDirectory)).stream())
+				.flatMap(root -> Arrays.asList(root.listFiles(File::isDirectory)).stream().sorted())
 				// only those with package.json file
 				.filter(dir -> new File(dir, IN4JSProject.PACKAGE_JSON).isFile());
 	}
