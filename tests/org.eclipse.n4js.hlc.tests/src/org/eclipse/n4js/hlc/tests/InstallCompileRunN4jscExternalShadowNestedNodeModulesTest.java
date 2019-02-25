@@ -41,7 +41,7 @@ import com.google.common.base.Predicates;
  * The above situation will occur if there are version conflicts between the package.json files of the member projects
  * in a yarn workspace. The expected behavior is in line with how the IDE behaves in the UI case.
  */
-public class InstallCompileRunN4jscExternalShadowNestedNodeModules extends AbstractN4jscTest {
+public class InstallCompileRunN4jscExternalShadowNestedNodeModulesTest extends AbstractN4jscTest {
 
 	File workspace;
 
