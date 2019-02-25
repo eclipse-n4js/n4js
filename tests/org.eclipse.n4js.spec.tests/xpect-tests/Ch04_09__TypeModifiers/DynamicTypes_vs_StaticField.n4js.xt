@@ -32,3 +32,6 @@ const f2:Foo2+ = new Foo2();
 // XPECT noerrors --> "The static member s cannot be accessed from a non-static context."
 f2.s;
 
+const f3:Foo2/* no plus! */ = new Foo2();
+// XPECT errors --> "The static member s cannot be accessed from a non-static context." at "s"
+f3.s;
