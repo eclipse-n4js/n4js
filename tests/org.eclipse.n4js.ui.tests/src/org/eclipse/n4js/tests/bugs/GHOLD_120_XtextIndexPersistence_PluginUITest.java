@@ -13,12 +13,12 @@ package org.eclipse.n4js.tests.bugs;
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Iterables.size;
 import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Sets.difference;
 import static org.eclipse.n4js.resource.UserdataMapper.USERDATA_KEY_SERIALIZED_SCRIPT;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.ui.building.ResourceDescriptionWithoutModuleUserData;
@@ -39,13 +40,11 @@ import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Sets.SetView;
 import com.google.inject.Inject;
 
 /**
@@ -102,13 +101,20 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 		ExternalProjectMappings.REDUCE_REGISTERED_NPMS = true;
 	}
 
+	@Override
+	protected boolean provideShippedCode() {
+		return true;
+	}
+
 	private void loadBuiltIns() {
 		shippedCodeInitializeTestHelper.setupBuiltIns();
+		ProjectTestsUtils.waitForAllJobs();
 		waitForAutoBuild();
 	}
 
 	private void unLoadBuiltIns() {
 		shippedCodeInitializeTestHelper.tearDownBuiltIns();
+		ProjectTestsUtils.waitForAllJobs();
 		waitForAutoBuild();
 	}
 
@@ -119,8 +125,8 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 
 	/***/
 	@Test
-	@Ignore
 	public void checkNoCustomResourceDescriptionsLeaksToBuilderState() throws CoreException {
+
 		final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(PROJECT_NAME);
 		assertTrue("Test project is not accessible.", project.isAccessible());
 
@@ -135,9 +141,8 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 		final Resource resource = persister.createResource();
 		assertNotNull("Test resource was null.", resource);
 
-		final Set<org.eclipse.emf.common.util.URI> beforeCrashBuilderState = from(
-				builderState.getAllResourceDescriptions())
-						.transform(desc -> desc.getURI()).toSet();
+		final Set<URI> beforeCrashBuilderState = from(builderState.getAllResourceDescriptions())
+				.transform(desc -> desc.getURI()).toSet();
 		final int builderStateBeforeReloadSize = Iterables.size(beforeCrashBuilderState);
 		final FluentIterable<IEObjectDescription> beforeTModulesInBuilderState = from(
 				builderState.getAllResourceDescriptions()).transformAndConcat(desc -> desc.getExportedObjects())
@@ -167,15 +172,15 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 		assertMarkers("Expected exactly 7 issues.", project, 7);
 
 		loadBuiltIns();
+
 		libraryManager.runNpmYarnInstallOnAllProjects(new NullProgressMonitor());
 		syncExtAndBuild();
 
 		resource.getContents().clear();
 		assertMarkers("Expected exactly 0 issues.", project, 0); // issues are in external libraries
 
-		final Set<org.eclipse.emf.common.util.URI> afterCrashBuilderState = from(
-				builderState.getAllResourceDescriptions())
-						.transform(desc -> desc.getURI()).toSet();
+		final Set<URI> afterCrashBuilderState = from(builderState.getAllResourceDescriptions())
+				.transform(desc -> desc.getURI()).toSet();
 		final int builderStateAfterReloadSize = Iterables.size(afterCrashBuilderState);
 
 		final FluentIterable<IEObjectDescription> afterTModulesInBuilderState = from(
@@ -215,15 +220,38 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 
 	}
 
-	private String printDiff(Set<org.eclipse.emf.common.util.URI> beforeCrashBuilderState,
-			Set<org.eclipse.emf.common.util.URI> afterCrashBuilderState, Iterable<EObject> beforeCrashResource,
+	private String printDiff(Set<URI> beforeCrashBuilderState,
+			Set<URI> afterCrashBuilderState, Iterable<EObject> beforeCrashResource,
 			Iterable<EObject> afterCrashResource) {
 
-		SetView<URI> beforeDifference = difference(beforeCrashBuilderState, getContent(beforeCrashResource));
-		SetView<URI> afterDifference = difference(afterCrashBuilderState, getContent(afterCrashResource));
-		String beforeDifferenceJoined = Joiner.on("\n\t\t- ").join(beforeDifference);
-		String afterDifferenceJoined = Joiner.on("\n\t\t- ").join(afterDifference);
+		Set<URI> beforeCrashResourceUris = getContent(beforeCrashResource);
+		Set<URI> afterCrashResourceUris = getContent(afterCrashResource);
+
+		new HashSet<>(beforeCrashBuilderState).retainAll(afterCrashBuilderState);
+
+		Set<URI> stateBeforeAfterIntersection = new HashSet<>(beforeCrashBuilderState);
+		stateBeforeAfterIntersection.retainAll(afterCrashBuilderState);
+		Set<URI> stateBeforeAfterDisjoint = new HashSet<>(beforeCrashBuilderState);
+		stateBeforeAfterDisjoint.addAll(afterCrashBuilderState);
+		stateBeforeAfterDisjoint.removeAll(stateBeforeAfterIntersection);
+		String builderStateBeforeAfterDifferenceJoined = Joiner.on("\n\t\t- ").join(stateBeforeAfterDisjoint);
+
+		Set<URI> beforeIntersection = new HashSet<>(beforeCrashBuilderState);
+		beforeIntersection.retainAll(beforeCrashResourceUris);
+		Set<URI> beforeDisjoint = new HashSet<>(beforeCrashBuilderState);
+		beforeDisjoint.addAll(beforeCrashResourceUris);
+		beforeDisjoint.removeAll(beforeIntersection);
+		String beforeDifferenceJoined = Joiner.on("\n\t\t- ").join(beforeDisjoint);
+
+		Set<URI> afterIntersection = new HashSet<>(afterCrashBuilderState);
+		afterIntersection.retainAll(afterCrashResourceUris);
+		Set<URI> afterDisjoint = new HashSet<>(afterCrashBuilderState);
+		afterDisjoint.addAll(afterCrashResourceUris);
+		afterDisjoint.removeAll(afterIntersection);
+		String afterDifferenceJoined = Joiner.on("\n\t\t- ").join(afterDisjoint);
 		return "\n--------------------------------------------------------------------------------"
+				+ "\n\t### Builder state difference before and after crash: "
+				+ builderStateBeforeAfterDifferenceJoined
 				+ "\n\t### Before crash difference in builder state and resource: "
 				+ beforeDifferenceJoined
 				+ "\n\t### After crash difference in builder state and resource: "
@@ -232,7 +260,7 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 
 	}
 
-	private Set<org.eclipse.emf.common.util.URI> getContent(Iterable<? extends EObject> contents) {
+	private Set<URI> getContent(Iterable<? extends EObject> contents) {
 		return from(contents).filter(ResourceDescriptionImpl.class).transform(desc -> desc.getURI()).toSet();
 	}
 
