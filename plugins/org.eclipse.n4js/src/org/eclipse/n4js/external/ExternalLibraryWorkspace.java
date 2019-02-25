@@ -253,11 +253,13 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 		java.net.URI rootLocation = getRootLocationForResource(allRootLocations, nestedLocation);
 		if (rootLocation == null) {
 			String nlString = nestedLocation.toString();
-			int ix = nlString.lastIndexOf("/" + N4JSGlobals.NODE_MODULES + "/") + N4JSGlobals.NODE_MODULES.length() + 2;
+			String searchStr = "/" + N4JSGlobals.NODE_MODULES + "/";
+			int ix = nlString.lastIndexOf(searchStr);
 			if (ix < 0) {
 				// cannot find root location
 				return null;
 			}
+			ix += searchStr.length();
 			rootLocation = java.net.URI.create(nlString.substring(0, ix));
 			return rootLocation;
 		}
