@@ -25,6 +25,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
@@ -38,11 +39,13 @@ import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets.SetView;
 import com.google.inject.Inject;
 
 /**
@@ -116,6 +119,7 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 
 	/***/
 	@Test
+	@Ignore
 	public void checkNoCustomResourceDescriptionsLeaksToBuilderState() throws CoreException {
 		final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(PROJECT_NAME);
 		assertTrue("Test project is not accessible.", project.isAccessible());
@@ -185,6 +189,10 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 		final Iterable<EObject> afterCrashResource = newArrayList(resource.getContents());
 		final int persistedAfterReloadSize = resource.getContents().size();
 
+		boolean validBuilderState = builderStateBeforeReloadSize == builderStateAfterReloadSize
+				&& persistedBeforeReloadSize == persistedAfterReloadSize
+				&& builderStateBeforeReloadSize == persistedBeforeReloadSize;
+
 		assertTrue("Expected same number of persisted and available resource description before and after crash. Was:"
 				+ "\nBuilder state before reload size: " + builderStateBeforeReloadSize
 				+ "\nBuilder state after reload size: " + builderStateAfterReloadSize
@@ -192,9 +200,7 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 				+ "\nPersisted after reload size: " + persistedAfterReloadSize
 				+ "\nDifferences: "
 				+ printDiff(beforeCrashBuilderState, afterCrashBuilderState, beforeCrashResource, afterCrashResource),
-				builderStateBeforeReloadSize == builderStateAfterReloadSize
-						&& persistedBeforeReloadSize == persistedAfterReloadSize
-						&& builderStateBeforeReloadSize == persistedBeforeReloadSize);
+				validBuilderState);
 
 		assertTrue(
 				"Expected same number for EObject descriptions for TModules before and after crash. Before was: "
@@ -213,11 +219,15 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 			Set<org.eclipse.emf.common.util.URI> afterCrashBuilderState, Iterable<EObject> beforeCrashResource,
 			Iterable<EObject> afterCrashResource) {
 
+		SetView<URI> beforeDifference = difference(beforeCrashBuilderState, getContent(beforeCrashResource));
+		SetView<URI> afterDifference = difference(afterCrashBuilderState, getContent(afterCrashResource));
+		String beforeDifferenceJoined = Joiner.on("\n\t\t- ").join(beforeDifference);
+		String afterDifferenceJoined = Joiner.on("\n\t\t- ").join(afterDifference);
 		return "\n--------------------------------------------------------------------------------"
 				+ "\n\t### Before crash difference in builder state and resource: "
-				+ Joiner.on("\n\t\t- ").join(difference(beforeCrashBuilderState, getContent(beforeCrashResource)))
+				+ beforeDifferenceJoined
 				+ "\n\t### After crash difference in builder state and resource: "
-				+ Joiner.on("\n\t\t- ").join(difference(afterCrashBuilderState, getContent(afterCrashResource)))
+				+ afterDifferenceJoined
 				+ "\n--------------------------------------------------------------------------------";
 
 	}
