@@ -161,30 +161,7 @@ public class GHOLD_45_CheckIgnoreAnnotationAtClassLevel_PluginUITest extends Abs
 	}
 
 	private void runTestWaitResult(final IFile moduleToTest) {
-		// final SessionEndedEventLatch latch = new SessionEndedEventLatch();
-		// final EventBus eventBus = getEventBus();
 		final ILaunchShortcut launchShortcut = getLaunchShortcut();
-		// eventBus.register(latch);
-		// Thread workThread = new Thread(
-		// () -> launchShortcut.launch(new StructuredSelection(moduleToTest), ILaunchManager.RUN_MODE));
-		// workThread.start();
-		// try {
-		// workThread.join();
-		// } catch (InterruptedException e) {
-		// e.printStackTrace();
-		// }
-		// latch.startTestAndWait(15L, TimeUnit.SECONDS); // TODO IDE-2270 suspicious delay; might break on slow build
-		// nodes
-
-		// Job job = new Job("") {
-		// @Override
-		// public IStatus run(IProgressMonitor monitor) {
-		// launchShortcut.launch(new StructuredSelection(moduleToTest), ILaunchManager.RUN_MODE);
-		// return Status.OK_STATUS;
-		// }
-		// };
-		// job.schedule();
-
 		launchShortcut.launch(new StructuredSelection(moduleToTest), ILaunchManager.RUN_MODE);
 	}
 
