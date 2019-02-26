@@ -398,4 +398,8 @@ public class N4JSProject implements IN4JSProject {
 		return getModel().getDefinesPackage(this);
 	}
 
+	@Override
+	public boolean isUseES6Imports() {
+		return getModel().isUseES6Imports(this);
+	}
 }

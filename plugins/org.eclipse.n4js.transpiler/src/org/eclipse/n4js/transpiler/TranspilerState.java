@@ -14,6 +14,7 @@ import java.util.HashMap;
 
 import org.eclipse.n4js.generator.GeneratorOption;
 import org.eclipse.n4js.n4JS.NamedElement;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.transpiler.TransformationDependency.Optional;
 import org.eclipse.n4js.transpiler.im.Script_IM;
@@ -22,12 +23,11 @@ import org.eclipse.n4js.transpiler.im.SymbolTableEntryInternal;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
 import org.eclipse.n4js.transpiler.operations.SymbolTableManagement;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
 import org.eclipse.n4js.utils.di.scopes.ScopeManager;
 import org.eclipse.n4js.utils.di.scopes.TransformationScoped;
-
-import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 
 /**
  * Data class for all information that is required during transpilation of a resource. This will be passed to all
@@ -40,6 +40,11 @@ public class TranspilerState {
 	 * The original resource to transpile. Should <b>never</b> be modified in any way from within the transpiler.
 	 */
 	public final N4JSResource resource;
+
+	/**
+	 * The containing project of the resource to transpile.
+	 */
+	public final IN4JSProject project;
 
 	/**
 	 * The {@link GeneratorOption}s that were specified for configuration purposes when transpilation was initiated.
@@ -86,9 +91,10 @@ public class TranspilerState {
 	/**
 	 * Creates a new transpiler state.
 	 */
-	public TranspilerState(N4JSResource resource, GeneratorOption[] options, MemberCollector memberCollector,
-			Script_IM im, STECache steCache, Tracer tracer, InformationRegistry info) {
+	public TranspilerState(N4JSResource resource, IN4JSProject project, GeneratorOption[] options,
+			MemberCollector memberCollector, Script_IM im, STECache steCache, Tracer tracer, InformationRegistry info) {
 		this.resource = resource;
+		this.project = project;
 		this.options = options;
 		this.G = RuleEnvironmentExtensions.newRuleEnvironment(resource);
 		this.memberCollector = memberCollector;

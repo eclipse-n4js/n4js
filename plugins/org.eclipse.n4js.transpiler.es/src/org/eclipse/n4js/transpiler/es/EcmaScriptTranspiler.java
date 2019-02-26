@@ -146,15 +146,10 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 				arrowFunction_Part2_TransformationProvider.get(),
 				trimTransformation.get(),
 				sanitizeImportsTransformationProvider.get(),
-				useES6Imports(state)
+				state.project.isUseES6Imports()
 						? moduleWrappingTransformationProviderNEW.get()
 						: moduleWrappingTransformationProvider.get()
 		};
-	}
-
-	@SuppressWarnings("unused")
-	private boolean useES6Imports(TranspilerState state) {
-		return true;
 	}
 
 	/**

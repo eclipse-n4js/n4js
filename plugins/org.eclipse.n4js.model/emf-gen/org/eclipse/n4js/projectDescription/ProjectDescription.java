@@ -54,6 +54,7 @@ import org.eclipse.n4js.semver.Semver.VersionNumber;
  *   <li>{@link org.eclipse.n4js.projectDescription.ProjectDescription#isHasN4JSNature <em>Has N4JS Nature</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.ProjectDescription#isYarnWorkspaceRoot <em>Yarn Workspace Root</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.ProjectDescription#getWorkspaces <em>Workspaces</em>}</li>
+ *   <li>{@link org.eclipse.n4js.projectDescription.ProjectDescription#isUseES6Imports <em>Use ES6 Imports</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.projectDescription.ProjectDescriptionPackage#getProjectDescription()
@@ -603,5 +604,30 @@ public interface ProjectDescription extends EObject {
 	 * @generated
 	 */
 	EList<String> getWorkspaces();
+
+	/**
+	 * Returns the value of the '<em><b>Use ES6 Imports</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * EXPERIMENTAL: if value is 'true', transpiler will generate ES6 imports/exports in the output code.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Use ES6 Imports</em>' attribute.
+	 * @see #setUseES6Imports(boolean)
+	 * @see org.eclipse.n4js.projectDescription.ProjectDescriptionPackage#getProjectDescription_UseES6Imports()
+	 * @model unique="false"
+	 * @generated
+	 */
+	boolean isUseES6Imports();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.projectDescription.ProjectDescription#isUseES6Imports <em>Use ES6 Imports</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Use ES6 Imports</em>' attribute.
+	 * @see #isUseES6Imports()
+	 * @generated
+	 */
+	void setUseES6Imports(boolean value);
 
 } // ProjectDescription

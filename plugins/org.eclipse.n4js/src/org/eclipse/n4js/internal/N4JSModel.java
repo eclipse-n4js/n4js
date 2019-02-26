@@ -442,6 +442,15 @@ public class N4JSModel {
 		return null;
 	}
 
+	public boolean isUseES6Imports(final IN4JSProject project) {
+		final ProjectDescription projectDescription = project != null ? getProjectDescription(project.getLocation())
+				: null;
+		if (projectDescription != null) {
+			return projectDescription.isUseES6Imports();
+		}
+		return false;
+	}
+
 	public Iterable<IN4JSProject> getSortedDependencies(IN4JSProject project) {
 		SortedDependenciesProvider sdProvider = new SortedDependenciesProvider(project);
 		Iterable<IN4JSProject> existing = cache.get(sdProvider, MultiCleartriggerCache.CACHE_KEY_SORTED_DEPENDENCIES,
