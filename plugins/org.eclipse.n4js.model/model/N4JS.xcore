@@ -176,6 +176,7 @@ class ImportDeclaration extends AnnotableScriptElement {
 	contains ImportSpecifier[] importSpecifiers
 	boolean importFrom
 	refers TModule module
+	transient String moduleSpecifierAsText
 }
 
 abstract class ImportSpecifier {

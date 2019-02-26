@@ -668,13 +668,22 @@ public interface N4JSPackage extends EPackage {
 	int IMPORT_DECLARATION__MODULE = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 2;
 
 	/**
+	 * The feature id for the '<em><b>Module Specifier As Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMPORT_DECLARATION__MODULE_SPECIFIER_AS_TEXT = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 3;
+
+	/**
 	 * The number of structural features of the '<em>Import Declaration</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IMPORT_DECLARATION_FEATURE_COUNT = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 3;
+	int IMPORT_DECLARATION_FEATURE_COUNT = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Get All Annotations</em>' operation.
@@ -15956,6 +15965,17 @@ public interface N4JSPackage extends EPackage {
 	EReference getImportDeclaration_Module();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4JS.ImportDeclaration#getModuleSpecifierAsText <em>Module Specifier As Text</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Module Specifier As Text</em>'.
+	 * @see org.eclipse.n4js.n4JS.ImportDeclaration#getModuleSpecifierAsText()
+	 * @see #getImportDeclaration()
+	 * @generated
+	 */
+	EAttribute getImportDeclaration_ModuleSpecifierAsText();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.ImportSpecifier <em>Import Specifier</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -21702,6 +21722,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EReference IMPORT_DECLARATION__MODULE = eINSTANCE.getImportDeclaration_Module();
+
+		/**
+		 * The meta object literal for the '<em><b>Module Specifier As Text</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IMPORT_DECLARATION__MODULE_SPECIFIER_AS_TEXT = eINSTANCE.getImportDeclaration_ModuleSpecifierAsText();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.ImportSpecifierImpl <em>Import Specifier</em>}' class.

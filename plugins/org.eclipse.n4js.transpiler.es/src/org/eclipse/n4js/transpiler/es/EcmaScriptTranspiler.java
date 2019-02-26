@@ -36,6 +36,7 @@ import org.eclipse.n4js.transpiler.es.transform.InterfaceDeclarationTransformati
 import org.eclipse.n4js.transpiler.es.transform.JSXTransformation;
 import org.eclipse.n4js.transpiler.es.transform.MemberPatchingTransformation;
 import org.eclipse.n4js.transpiler.es.transform.ModuleWrappingTransformation;
+import org.eclipse.n4js.transpiler.es.transform.ModuleWrappingTransformationNEW;
 import org.eclipse.n4js.transpiler.es.transform.RestParameterTransformation;
 import org.eclipse.n4js.transpiler.es.transform.SanitizeImportsTransformation;
 import org.eclipse.n4js.transpiler.es.transform.StaticPolyfillTransformation;
@@ -90,6 +91,8 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 	@Inject
 	private Provider<ModuleWrappingTransformation> moduleWrappingTransformationProvider;
 	@Inject
+	private Provider<ModuleWrappingTransformationNEW> moduleWrappingTransformationProviderNEW;
+	@Inject
 	private Provider<BlockTransformation> blockTransformationProvider;
 	@Inject
 	private Provider<AsyncAwaitTransformation> asyncAwaitTransformationProvider;
@@ -143,8 +146,15 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 				arrowFunction_Part2_TransformationProvider.get(),
 				trimTransformation.get(),
 				sanitizeImportsTransformationProvider.get(),
-				moduleWrappingTransformationProvider.get()
+				useES6Imports(state)
+						? moduleWrappingTransformationProviderNEW.get()
+						: moduleWrappingTransformationProvider.get()
 		};
+	}
+
+	@SuppressWarnings("unused")
+	private boolean useES6Imports(TranspilerState state) {
+		return true;
 	}
 
 	/**

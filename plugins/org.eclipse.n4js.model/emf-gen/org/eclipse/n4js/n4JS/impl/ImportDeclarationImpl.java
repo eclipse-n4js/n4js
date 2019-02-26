@@ -42,6 +42,7 @@ import org.eclipse.n4js.ts.types.TModule;
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ImportDeclarationImpl#getImportSpecifiers <em>Import Specifiers</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ImportDeclarationImpl#isImportFrom <em>Import From</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ImportDeclarationImpl#getModule <em>Module</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.ImportDeclarationImpl#getModuleSpecifierAsText <em>Module Specifier As Text</em>}</li>
  * </ul>
  *
  * @generated
@@ -86,6 +87,26 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * @ordered
 	 */
 	protected TModule module;
+
+	/**
+	 * The default value of the '{@link #getModuleSpecifierAsText() <em>Module Specifier As Text</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getModuleSpecifierAsText()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String MODULE_SPECIFIER_AS_TEXT_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getModuleSpecifierAsText() <em>Module Specifier As Text</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getModuleSpecifierAsText()
+	 * @generated
+	 * @ordered
+	 */
+	protected String moduleSpecifierAsText = MODULE_SPECIFIER_AS_TEXT_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -182,6 +203,27 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String getModuleSpecifierAsText() {
+		return moduleSpecifierAsText;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setModuleSpecifierAsText(String newModuleSpecifierAsText) {
+		String oldModuleSpecifierAsText = moduleSpecifierAsText;
+		moduleSpecifierAsText = newModuleSpecifierAsText;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.IMPORT_DECLARATION__MODULE_SPECIFIER_AS_TEXT, oldModuleSpecifierAsText, moduleSpecifierAsText));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -206,6 +248,8 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 			case N4JSPackage.IMPORT_DECLARATION__MODULE:
 				if (resolve) return getModule();
 				return basicGetModule();
+			case N4JSPackage.IMPORT_DECLARATION__MODULE_SPECIFIER_AS_TEXT:
+				return getModuleSpecifierAsText();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -229,6 +273,9 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 			case N4JSPackage.IMPORT_DECLARATION__MODULE:
 				setModule((TModule)newValue);
 				return;
+			case N4JSPackage.IMPORT_DECLARATION__MODULE_SPECIFIER_AS_TEXT:
+				setModuleSpecifierAsText((String)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -250,6 +297,9 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 			case N4JSPackage.IMPORT_DECLARATION__MODULE:
 				setModule((TModule)null);
 				return;
+			case N4JSPackage.IMPORT_DECLARATION__MODULE_SPECIFIER_AS_TEXT:
+				setModuleSpecifierAsText(MODULE_SPECIFIER_AS_TEXT_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -268,6 +318,8 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 				return importFrom != IMPORT_FROM_EDEFAULT;
 			case N4JSPackage.IMPORT_DECLARATION__MODULE:
 				return module != null;
+			case N4JSPackage.IMPORT_DECLARATION__MODULE_SPECIFIER_AS_TEXT:
+				return MODULE_SPECIFIER_AS_TEXT_EDEFAULT == null ? moduleSpecifierAsText != null : !MODULE_SPECIFIER_AS_TEXT_EDEFAULT.equals(moduleSpecifierAsText);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -284,6 +336,8 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (importFrom: ");
 		result.append(importFrom);
+		result.append(", moduleSpecifierAsText: ");
+		result.append(moduleSpecifierAsText);
 		result.append(')');
 		return result.toString();
 	}
