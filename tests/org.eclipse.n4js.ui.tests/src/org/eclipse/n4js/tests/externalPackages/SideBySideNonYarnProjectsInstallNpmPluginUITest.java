@@ -37,7 +37,6 @@ import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.inject.Inject;
@@ -165,7 +164,6 @@ public class SideBySideNonYarnProjectsInstallNpmPluginUITest extends AbstractBui
 	 * </pre>
 	 */
 	@Test
-	@Ignore // adjust when work on IDE-3232
 	public void installDifferentNpmsInTwoDependentProjects() throws CoreException, IOException {
 		System.out.println("start");
 
@@ -182,6 +180,7 @@ public class SideBySideNonYarnProjectsInstallNpmPluginUITest extends AbstractBui
 				"line 16: Project depends on workspace project P2 which is missing in the node_modules folder. "
 						+ "Either install project P2 or introduce a yarn workspace of both of the projects.",
 				"line 15: Project does not exist with project ID: lodash.");
+		assertIssues(pkgJsonP2, "line 15: Project does not exist with project ID: immutable.");
 
 		URI prjP1URI = URI.createFileURI(prjP1.getLocation().toString());
 		String lodashVersion = getDependencyVersion(prjP1URI, "lodash");
