@@ -21,6 +21,7 @@ import org.eclipse.n4js.n4JS.extensions.ExpressionExtensions;
 import org.eclipse.n4js.scoping.utils.UnsatisfiedRWAccessDescription;
 import org.eclipse.n4js.scoping.utils.WrongStaticAccessDescription;
 import org.eclipse.n4js.scoping.utils.WrongWriteAccessDescription;
+import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TField;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TSetter;
@@ -62,6 +63,11 @@ public abstract class AbstractMemberScope extends AbstractScope {
 	protected final boolean structFieldInitMode;
 
 	/**
+	 * Flag indicating {@link TypeRef#isDynamic()}
+	 */
+	protected final boolean isDynamicType;
+
+	/**
 	 * Java script variant helper used for determined the kind of constraints to check
 	 */
 	protected final JavaScriptVariantHelper jsVariantHelper;
@@ -75,7 +81,9 @@ public abstract class AbstractMemberScope extends AbstractScope {
 	 *            see {@link #structFieldInitMode}.
 	 */
 	public AbstractMemberScope(IScope parent, EObject context,
-			boolean staticAccess, boolean structFieldInitMode, JavaScriptVariantHelper jsVariantHelper) {
+			boolean staticAccess, boolean structFieldInitMode, boolean isDynamicType,
+			JavaScriptVariantHelper jsVariantHelper) {
+
 		super(parent, false);
 		if (context == null || context.eResource() == null) {
 			throw new NullPointerException("Cannot create member scope for context " + context
@@ -85,6 +93,7 @@ public abstract class AbstractMemberScope extends AbstractScope {
 		this.contextResource = context.eResource();
 		this.staticAccess = staticAccess;
 		this.structFieldInitMode = structFieldInitMode;
+		this.isDynamicType = isDynamicType;
 		this.jsVariantHelper = jsVariantHelper;
 	}
 
@@ -187,7 +196,7 @@ public abstract class AbstractMemberScope extends AbstractScope {
 			// complain (only) about "wrong static access" -> so include this case here
 			existingMember = findMember(nameAsString, !accessForWriteOperation, !staticAccess);
 		}
-		if (existingMember != null) {
+		if (existingMember != null && !isDynamicType) {
 			return new WrongStaticAccessDescription(
 					EObjectDescription.create(existingMember.getName(), existingMember),
 					staticAccess);

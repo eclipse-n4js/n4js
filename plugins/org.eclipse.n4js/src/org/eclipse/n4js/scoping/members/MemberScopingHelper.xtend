@@ -88,8 +88,10 @@ class MemberScopingHelper {
 	 */
 	public def IScope createMemberScope(TypeRef receiverTypeRef, MemberAccess context,
 		boolean checkVisibility, boolean staticAccess, boolean structFieldInitMode) {
+
+		val isDynamicType = receiverTypeRef.isDynamic;
 		return decoratedMemberScopeFor(receiverTypeRef,
-			new MemberScopeRequest(receiverTypeRef, context, true, checkVisibility, staticAccess, structFieldInitMode));
+			new MemberScopeRequest(receiverTypeRef, context, true, checkVisibility, staticAccess, structFieldInitMode, isDynamicType));
 	}
 
 	/**
@@ -108,8 +110,10 @@ class MemberScopingHelper {
 	 */
 	public def IScope createMemberScopeAllowingNonContainedMembers(TypeRef receiverTypeRef, EObject context,
 		boolean checkVisibility, boolean staticAccess, boolean structFieldInitMode) {
+
+		val isDynamicType = receiverTypeRef.isDynamic;
 		return decoratedMemberScopeFor(receiverTypeRef,
-			new MemberScopeRequest(receiverTypeRef, context, false, checkVisibility, staticAccess, structFieldInitMode));
+			new MemberScopeRequest(receiverTypeRef, context, false, checkVisibility, staticAccess, structFieldInitMode, isDynamicType));
 	}
 
 	/**
@@ -185,12 +189,12 @@ class MemberScopingHelper {
 		}
 		val memberScopeRaw = if (ptrs.structuralType !== null) {
 				memberScopeFactory.create(result, ptrs.structuralType, request.context, request.staticAccess,
-					request.structFieldInitMode);
+					request.structFieldInitMode, request.isDynamicType);
 			} else {
 				// note: these are not the members of the defined type
 				// however, we only scope locally, so that doesn't matter
 				memberScopeFactory.create(result, ptrs.structuralMembers, request.context, request.staticAccess,
-					request.structFieldInitMode);
+					request.structFieldInitMode, request.isDynamicType);
 			}
 
 		return decorate(memberScopeRaw, request, ptrs);
@@ -356,13 +360,13 @@ class MemberScopingHelper {
 		}
 		val implicitSuperTypeMemberScope = if (jsVariantHelper.activateDynamicPseudoScope(request.context)) { // cf. sec. 13.1
 				memberScopeFactory.create(new DynamicPseudoScope(), implicitSuperType, request.context,
-					request.staticAccess, request.structFieldInitMode);
+					request.staticAccess, request.structFieldInitMode, request.isDynamicType);
 			} else {
 				memberScopeFactory.create(implicitSuperType, request.context, request.staticAccess,
-					request.structFieldInitMode);
+					request.structFieldInitMode, request.isDynamicType);
 			}
 		return memberScopeFactory.create(implicitSuperTypeMemberScope, type, request.context, request.staticAccess,
-			request.structFieldInitMode);
+			request.structFieldInitMode, request.isDynamicType);
 	}
 
 	/**
@@ -397,7 +401,7 @@ class MemberScopingHelper {
 		if (structType.ownedMembers.empty) {
 			return IScope.NULLSCOPE
 		}
-		return memberScopeFactory.create(structType, request.context, request.staticAccess, request.structFieldInitMode)
+		return memberScopeFactory.create(structType, request.context, request.staticAccess, request.structFieldInitMode, request.isDynamicType);
 	}
 
 	def private ResourceSet getResourceSet(EObject type, EObject context) {

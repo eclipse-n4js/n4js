@@ -38,6 +38,8 @@ public class MemberScopeRequest {
 	 * {@link AbstractMemberScope#structFieldInitMode}.
 	 */
 	public final boolean structFieldInitMode;
+	/** Flag whether the TypeRef is dynamic. */
+	public final boolean isDynamicType;
 
 	/**
 	 * Creates a new member scope request with given values, these values are directly accessible via fields.
@@ -49,7 +51,8 @@ public class MemberScopeRequest {
 	 *            see {@link #provideContainedMembers}.
 	 */
 	public MemberScopeRequest(TypeRef originalReceiverTypeRef, EObject context, boolean provideContainedMembers,
-			boolean checkVisibility, boolean staticAccess, boolean structFieldInitMode) {
+			boolean checkVisibility, boolean staticAccess, boolean structFieldInitMode, boolean isDynamicType) {
+
 		if (provideContainedMembers && !(context instanceof MemberAccess)) {
 			throw new IllegalStateException(
 					"member scoping can only guarantee to provide contained members if given a context of type "
@@ -61,6 +64,7 @@ public class MemberScopeRequest {
 		this.checkVisibility = checkVisibility;
 		this.staticAccess = staticAccess;
 		this.structFieldInitMode = structFieldInitMode;
+		this.isDynamicType = isDynamicType;
 	}
 
 	/**
@@ -71,7 +75,7 @@ public class MemberScopeRequest {
 			return this;
 		}
 		return new MemberScopeRequest(originalReceiverTypeRef, context, provideContainedMembers, checkVisibility,
-				true, structFieldInitMode);
+				true, structFieldInitMode, isDynamicType);
 	}
 
 	/**
@@ -82,7 +86,7 @@ public class MemberScopeRequest {
 			return this;
 		}
 		return new MemberScopeRequest(originalReceiverTypeRef, context, provideContainedMembers, checkVisibility,
-				false, structFieldInitMode);
+				false, structFieldInitMode, isDynamicType);
 	}
 
 	/**
@@ -94,6 +98,6 @@ public class MemberScopeRequest {
 			return this;
 		}
 		return new MemberScopeRequest(originalReceiverTypeRef, context, provideContainedMembers, checkVisibility,
-				staticAccess, structFieldInitMode);
+				staticAccess, structFieldInitMode, isDynamicType);
 	}
 }

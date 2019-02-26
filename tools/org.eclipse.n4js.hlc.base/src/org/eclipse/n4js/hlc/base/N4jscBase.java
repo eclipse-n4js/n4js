@@ -75,6 +75,7 @@ import org.eclipse.n4js.tester.extension.TesterRegistry;
 import org.eclipse.n4js.tester.internal.TesterActivator;
 import org.eclipse.n4js.utils.N4JSDataCollectors;
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper;
+import org.eclipse.n4js.utils.StatusUtils;
 import org.eclipse.xtext.ISetup;
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.CmdLineException;
@@ -566,7 +567,7 @@ public class N4jscBase implements IApplication {
 								warn(status.getMessage());
 							else
 								throw new ExitCodeException(EXITCODE_DEPENDENCY_NOT_FOUND,
-										"Cannot install dependencies.");
+										"Cannot install dependencies: " + StatusUtils.getErrorMessage(status, false));
 					}
 				}
 
