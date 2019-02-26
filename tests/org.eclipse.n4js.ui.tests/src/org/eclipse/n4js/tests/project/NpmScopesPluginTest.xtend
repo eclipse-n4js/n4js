@@ -74,6 +74,7 @@ class NpmScopesPluginTest extends AbstractBuilderParticipantTest {
 
 		libraryManager.runNpmYarnInstall(URI.createFileURI(yarnPath.toString), new NullProgressMonitor);
 		ProjectTestsUtils.waitForAllJobs;
+		ProjectTestsUtils.waitForAutoBuild;
 	}
 
 	def static void importProject(IWorkspace workspace, File rootFolder, IProgressMonitor progressMonitor)
