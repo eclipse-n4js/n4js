@@ -587,7 +587,7 @@ import com.google.inject.Inject;
 		public TypeRef caseThisLiteral(ThisLiteral t) {
 			TypeRef rawT = typeSystemHelper.getThisTypeAtLocation(G, t);
 			rawT = n4idlVersionResolver.resolveVersion(rawT, rawT);
-			return TypeUtils.enforceNominalTyping(rawT);
+			return rawT != null ? TypeUtils.enforceNominalTyping(rawT) : unknown();
 		}
 
 		@Override
