@@ -16,27 +16,22 @@ import java.io.File;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.emf.common.ui.URIEditorInput;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.ts.ui.navigation.IURIBasedStorage;
 import org.eclipse.n4js.ts.ui.navigation.URIBasedStorage;
-import org.eclipse.n4js.utils.URIUtils;
-import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.n4js.utils.resources.IExternalResource;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.internal.navigator.resources.workbench.ResourceLinkHelper;
 import org.eclipse.ui.navigator.ILinkHelper;
+import org.eclipse.xtext.ui.editor.LanguageSpecificURIEditorOpener;
 import org.eclipse.xtext.ui.editor.XtextReadonlyEditorInput;
 import org.eclipse.xtext.ui.editor.utils.EditorUtils;
 
@@ -55,8 +50,9 @@ public class N4JSResourceLinkHelper extends ResourceLinkHelper {
 	private ExternalLibraryWorkspace externalLibraryWorkspace;
 
 	@Inject
-	private N4JSProjectExplorerHelper helper;
+	private LanguageSpecificURIEditorOpener languageSpecificURIEditorOpener;
 
+	// XXX: Obsolete when virtual nodes are removed
 	@Override
 	public void activateEditor(final IWorkbenchPage page, final IStructuredSelection selection) {
 		if (null != selection && !selection.isEmpty()) {
@@ -71,8 +67,10 @@ public class N4JSResourceLinkHelper extends ResourceLinkHelper {
 						final IEditorPart editor = page.findEditor(editorInput);
 						if (null != editor) {
 							page.bringToTop(editor);
-							return;
+						} else {
+							languageSpecificURIEditorOpener.open(uri, true);
 						}
+						return;
 					}
 				}
 			}
@@ -83,28 +81,6 @@ public class N4JSResourceLinkHelper extends ResourceLinkHelper {
 	@Override
 	public IStructuredSelection findSelection(IEditorInput input) {
 
-		// Support for selections of resources of the external library:
-		// Map external locations to platform locations, which are part of the Nav-Tree
-		if (input instanceof IStorageEditorInput) {
-			IStorageEditorInput storageInput = (IStorageEditorInput) input;
-			try {
-				IStorage storage = storageInput.getStorage();
-				if (storage instanceof URIBasedStorage) {
-					URIBasedStorage uriStorage = (URIBasedStorage) storage;
-					URI uri = uriStorage.getURI();
-					if (uri.isFile()) {
-						IFile platformFile = URIUtils.convertFileUriToPlatformFile(uri);
-						URI prjLocalPlatformUri = URIUtils.convert(platformFile);
-						if (prjLocalPlatformUri != null) {
-							input = new URIEditorInput(prjLocalPlatformUri);
-						}
-					}
-				}
-			} catch (CoreException e) {
-				LOGGER.error("Error while finding workspace local URI for external resource.", e);
-			}
-		}
-
 		final IStructuredSelection selection = super.findSelection(input);
 		if (null == selection || selection.isEmpty() && input instanceof XtextReadonlyEditorInput) {
 			try {
@@ -114,7 +90,7 @@ public class N4JSResourceLinkHelper extends ResourceLinkHelper {
 					if (uri.isFile()) {
 						final File file = new File(uri.toFileString());
 						if (file.isFile()) {
-							final Node node = getResourceNode(file);
+							Node node = ResourceNode.create(null, file);
 							if (null != node) {
 								return new StructuredSelection(node);
 							}
@@ -127,21 +103,6 @@ public class N4JSResourceLinkHelper extends ResourceLinkHelper {
 			}
 		}
 		return selection;
-	}
-
-	private Node getResourceNode(File fileResource) {
-
-		for (final IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
-			final Node[] nodes = helper.getVirtualNodesForProject(project);
-			if (!Arrays2.isEmpty(nodes)) {
-				final Node node = nodes[0].findChild(fileResource);
-				if (null != node) {
-					return node;
-				}
-			}
-		}
-
-		return null;
 	}
 
 }

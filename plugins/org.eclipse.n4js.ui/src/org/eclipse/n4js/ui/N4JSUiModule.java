@@ -139,6 +139,7 @@ import org.eclipse.xtext.resource.containers.IAllContainersState;
 import org.eclipse.xtext.ui.editor.DirtyStateEditorSupport;
 import org.eclipse.xtext.ui.editor.DocumentBasedDirtyResource;
 import org.eclipse.xtext.ui.editor.IXtextEditorCallback;
+import org.eclipse.xtext.ui.editor.LanguageSpecificURIEditorOpener;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.editor.autoedit.AbstractEditStrategyProvider;
 import org.eclipse.xtext.ui.editor.contentassist.ContentProposalPriorities;
@@ -834,6 +835,11 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	/** Custom XtextDocument. */
 	public Class<? extends XtextDocument> bindXtextDocument() {
 		return N4JSDocument.class;
+	}
+
+	/** Custom LanguageSpecificURIEditorOpener. */
+	public Class<? extends LanguageSpecificURIEditorOpener> bindLanguageSpecificURIEditorOpener() {
+		return N4JSLanguageSpecificURIEditorOpener.class;
 	}
 
 	/** Custom XtextReconciler. */
