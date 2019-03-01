@@ -14,8 +14,11 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.ITextSelection;
+import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
+import org.eclipse.n4js.n4JS.N4FieldDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeDefinition;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
@@ -50,9 +53,21 @@ public class N4JSRenameElementHandler extends DefaultRenameElementHandler {
 							public IRenameElementContext exec(XtextResource resource) throws Exception {
 								EObject selectedElement = eObjectAtOffsetHelper.resolveElementAt(resource,
 										selection.getOffset());
+
+								if (selectedElement instanceof LiteralOrComputedPropertyName) {
+									selectedElement = selectedElement.eContainer();
+								}
+
+								if (selectedElement instanceof N4FieldDeclaration) {
+									selectedElement = ((N4FieldDeclaration) selectedElement).getDefinedField();
+								}
+
 								if (selectedElement instanceof N4TypeDefinition) {
 									selectedElement = ((N4TypeDefinition) selectedElement).getDefinedType();
 								}
+
+								ResourceSet rs = selectedElement.eResource().getResourceSet();
+								N4JSRefactoringResourceSetProvider.myGlobalResourceSet = rs;
 
 								if (selectedElement != null) {
 									@SuppressWarnings("hiding")

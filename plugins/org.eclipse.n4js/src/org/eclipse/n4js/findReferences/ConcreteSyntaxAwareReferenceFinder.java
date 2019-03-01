@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.findReferences;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -40,8 +41,12 @@ import org.eclipse.xtext.linking.lazy.LazyURIEncoder;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.resource.IResourceDescription;
+import org.eclipse.xtext.resource.IResourceDescriptions;
+import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -60,6 +65,9 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 
 	@Inject
 	private LinkingHelper linkingHelper;
+
+	@Inject
+	private ResourceDescriptionsProvider resourceDescriptionsProvider;
 
 	@Override
 	protected void findReferencesInDescription(TargetURIs targetURIs, IResourceDescription resourceDescription,
@@ -230,8 +238,17 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 									}
 								}
 							} else {
+								IResourceDescriptions index = resourceDescriptionsProvider
+										.getResourceDescriptions(localResource.getResourceSet());
+								ArrayList<IResourceDescription> ids = Lists
+										.newArrayList(index.getAllResourceDescriptions());
+
+								System.out.println(Joiner.on("\n")
+										.join(localResource.getResourceSet().getLoadOptions().entrySet()));
 								EObject instanceOrProxy = toValidInstanceOrNull(localResource, targetURIs,
 										(EObject) value);
+
+								// EObject instanceOrProxy = (EObject) value;
 								if (instanceOrProxy != null) {
 									URI refURI = EcoreUtil2.getPlatformResourceOrNormalizedURI(instanceOrProxy);
 									// CUSTOM BEHAVIOR: handle composed members
