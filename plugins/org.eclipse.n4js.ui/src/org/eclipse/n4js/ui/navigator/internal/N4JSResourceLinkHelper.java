@@ -16,8 +16,10 @@ import java.io.File;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -25,6 +27,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.ts.ui.navigation.IURIBasedStorage;
 import org.eclipse.n4js.ts.ui.navigation.URIBasedStorage;
+import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.n4js.utils.resources.IExternalResource;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -52,6 +55,9 @@ public class N4JSResourceLinkHelper extends ResourceLinkHelper {
 	@Inject
 	private LanguageSpecificURIEditorOpener languageSpecificURIEditorOpener;
 
+	@Inject
+	private N4JSProjectExplorerHelper helper;
+
 	// XXX: Obsolete when virtual nodes are removed
 	@Override
 	public void activateEditor(final IWorkbenchPage page, final IStructuredSelection selection) {
@@ -78,6 +84,7 @@ public class N4JSResourceLinkHelper extends ResourceLinkHelper {
 		super.activateEditor(page, selection);
 	}
 
+	// XXX: Obsolete when virtual nodes are removed
 	@Override
 	public IStructuredSelection findSelection(IEditorInput input) {
 
@@ -90,7 +97,7 @@ public class N4JSResourceLinkHelper extends ResourceLinkHelper {
 					if (uri.isFile()) {
 						final File file = new File(uri.toFileString());
 						if (file.isFile()) {
-							Node node = ResourceNode.create(null, file);
+							final Node node = getResourceNode(file);
 							if (null != node) {
 								return new StructuredSelection(node);
 							}
@@ -105,4 +112,18 @@ public class N4JSResourceLinkHelper extends ResourceLinkHelper {
 		return selection;
 	}
 
+	private Node getResourceNode(File fileResource) {
+
+		for (final IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
+			final Node[] nodes = helper.getVirtualNodesForProject(project);
+			if (!Arrays2.isEmpty(nodes)) {
+				final Node node = nodes[0].findChild(fileResource);
+				if (null != node) {
+					return node;
+				}
+			}
+		}
+
+		return null;
+	}
 }
