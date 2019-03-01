@@ -221,7 +221,9 @@ public class N4JSProjectExplorerContentProvider extends WorkbenchContentProvider
 	@Override
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void getPipelinedElements(final Object anInput, final Set theCurrentElements) {
-		theCurrentElements.addAll(Lists.newArrayList(getElements(anInput)));
+		ArrayList<Object> children = Lists.newArrayList(getElements(anInput));
+		theCurrentElements.clear();
+		theCurrentElements.addAll(children);
 	}
 
 	@Override
