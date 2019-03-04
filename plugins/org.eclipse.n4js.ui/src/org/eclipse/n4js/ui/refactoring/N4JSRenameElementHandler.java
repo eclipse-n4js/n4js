@@ -20,6 +20,7 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeDefinition;
+import org.eclipse.n4js.ts.types.TStructField;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
 import org.eclipse.xtext.resource.XtextResource;
@@ -66,6 +67,10 @@ public class N4JSRenameElementHandler extends DefaultRenameElementHandler {
 									selectedElement = ((N4TypeDefinition) selectedElement).getDefinedType();
 								}
 
+								if (selectedElement instanceof TStructField) {
+									selectedElement = ((TStructField) selectedElement).getDefinedMember();
+								}
+
 								ResourceSet rs = selectedElement.eResource().getResourceSet();
 								N4JSRefactoringResourceSetProvider.myGlobalResourceSet = rs;
 
@@ -96,5 +101,14 @@ public class N4JSRenameElementHandler extends DefaultRenameElementHandler {
 					exc.getMessage() + "\nSee log for details");
 		}
 		return null;
+	}
+
+	@Override
+	protected boolean isRefactoringEnabled(IRenameElementContext renameElementContext, XtextResource resource) {
+		// Do not allow renaming built-in types such as int, string etc.
+		if (renameElementContext.getTargetElementURI().scheme().equals("n4scheme")) {
+			return false;
+		}
+		return super.isRefactoringEnabled(renameElementContext, resource);
 	}
 }

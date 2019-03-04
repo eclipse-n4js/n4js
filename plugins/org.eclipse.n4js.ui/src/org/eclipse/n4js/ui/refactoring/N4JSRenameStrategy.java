@@ -59,6 +59,7 @@ public class N4JSRenameStrategy extends DefaultRenameStrategy {
 
 	@Override
 	public RefactoringStatus validateNewName(String newName) {
+		// TODO: Handle n4jsx extension
 		IParser parser = N4LanguageUtils.getServiceForContext("n4js", IParser.class).get();
 		Grammar grammar = this.internalFindGrammar(grammarProvider);
 

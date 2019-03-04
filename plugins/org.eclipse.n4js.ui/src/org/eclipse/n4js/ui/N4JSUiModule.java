@@ -108,6 +108,7 @@ import org.eclipse.n4js.ui.quickfix.N4JSMarkerResolutionGenerator;
 import org.eclipse.n4js.ui.refactoring.N4JSRefactoringCrossReferenceSerializer;
 import org.eclipse.n4js.ui.refactoring.N4JSRefactoringResourceSetProvider;
 import org.eclipse.n4js.ui.refactoring.N4JSRenameElementHandler;
+import org.eclipse.n4js.ui.refactoring.N4JSRenameElementProcessor;
 import org.eclipse.n4js.ui.refactoring.N4JSRenameStrategy;
 import org.eclipse.n4js.ui.resource.OutputFolderAwareResourceServiceProvider;
 import org.eclipse.n4js.ui.search.LabellingReferenceFinder;
@@ -172,6 +173,7 @@ import org.eclipse.xtext.ui.editor.syntaxcoloring.AbstractAntlrTokenToAttributeI
 import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingConfiguration;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingHelper;
 import org.eclipse.xtext.ui.editor.validation.MarkerCreator;
+import org.eclipse.xtext.ui.refactoring.impl.AbstractRenameProcessor;
 import org.eclipse.xtext.ui.refactoring.impl.DefaultRenameStrategy;
 import org.eclipse.xtext.ui.refactoring.impl.RefactoringCrossReferenceSerializer;
 import org.eclipse.xtext.ui.refactoring.impl.RefactoringResourceSetProvider;
@@ -909,6 +911,11 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	/** Custom N4JSRefactoringCrossReferenceSerializer */
 	public Class<? extends RefactoringResourceSetProvider> bindRefactoringResourceSetProvider() {
 		return N4JSRefactoringResourceSetProvider.class;
+	}
+
+	/** Custom N4JSRenameElementProcessor */
+	public Class<? extends AbstractRenameProcessor> bindAbstractRenameProcessor() {
+		return N4JSRenameElementProcessor.class;
 	}
 
 }
