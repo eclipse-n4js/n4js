@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.tests.hyperlink;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -25,15 +26,18 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.n4js.json.JSONGlobals;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.EclipseUIUtils;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.eclipse.n4js.ui.editor.N4JSHyperlinkDetector;
 import org.eclipse.n4js.ui.utils.UIUtils;
+import org.eclipse.n4js.utils.languages.N4LanguageUtils;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.xtext.ui.editor.IURIEditorOpener;
 import org.eclipse.xtext.ui.editor.XtextEditor;
+import org.eclipse.xtext.ui.editor.hyperlinking.DefaultHyperlinkDetector;
 import org.eclipse.xtext.ui.editor.hyperlinking.XtextHyperlink;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.After;
@@ -95,7 +99,7 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 		IWorkbenchPage page = EclipseUIUtils.getActivePage();
 		XtextEditor editor = openAndGetXtextEditor(fileABC, page);
 		ISourceViewer sourceViewer = editor.getInternalSourceViewer();
-		IRegion region = new Region(367, 0);
+		IRegion region = new Region(367, 0); // find location with Breakpoint in N4JSHyperlinkHelper
 		ProjectTestsUtils.waitForAllJobs();
 
 		IHyperlink[] hlinksInABC = hyperlinkDetector.detectHyperlinks(sourceViewer, region, true);
@@ -156,7 +160,7 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 		UIUtils.waitForUiThread();
 
 		ISourceViewer sourceViewer = editor.getInternalSourceViewer();
-		IRegion region = new Region(556, 12);
+		IRegion region = new Region(556, 12); // find location with Breakpoint in N4JSHyperlinkHelper
 		IHyperlink[] hlinksInProcess = hyperlinkDetector.detectHyperlinks(sourceViewer, region, true);
 
 		assertTrue("Hyperlink in external library missing", hlinksInProcess != null && hlinksInProcess.length == 1);
@@ -168,6 +172,50 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 		editor = (XtextEditor) uriEditorOpener.open(uriEvent, true);
 		UIUtils.waitForUiThread();
 		TextSelection selectionEvent = (TextSelection) page.getSelection();
+
 		assertTrue("Selection must be 'EventEmitter'", selectionEvent.getText().equals("EventEmitter"));
 	}
+
+	/**
+	 */
+	@Test
+	public void testHyperlinksOnPackageJson() throws CoreException {
+		File prjDir = new File(getResourceUri(PROBANDS, SUBFOLDER));
+		ProjectTestsUtils.importProject(prjDir, PROJECT_NAME);
+		waitForAutoBuild();
+
+		syncExtAndBuild();
+		UIUtils.waitForUiThread();
+
+		IWorkbenchPage page = EclipseUIUtils.getActivePage();
+		XtextEditor editor = openAndGetXtextEditorViaProjectExplorer(page,
+				PROJECT_NAME,
+				"External Dependencies",
+				"N4JS Runtime",
+				"Runtime Libraries",
+				"n4js-runtime-node",
+				"package.json");
+		UIUtils.waitForUiThread();
+
+		DefaultHyperlinkDetector pckjsonHD = null;
+		pckjsonHD = N4LanguageUtils
+				.getServiceForContext(JSONGlobals.FILE_EXTENSION, DefaultHyperlinkDetector.class).get();
+
+		ISourceViewer sourceViewer = editor.getInternalSourceViewer();
+		IRegion region = new Region(676, 19); // find location with Breakpoint in PackageJsonHyperlinkHelperExtension
+		IHyperlink[] hlinksInProcess = pckjsonHD.detectHyperlinks(sourceViewer, region, true);
+
+		assertTrue("Hyperlink in external library missing", hlinksInProcess != null && hlinksInProcess.length == 1);
+		assertTrue("Hyperlink must be of type XtextHyperlink", hlinksInProcess[0] instanceof XtextHyperlink);
+		XtextHyperlink hyperlinkToEvent = (XtextHyperlink) hlinksInProcess[0];
+		URI uriEvent = hyperlinkToEvent.getURI();
+		assertTrue("Hyperlink URI must be a file uri", uriEvent.isFile());
+
+		editor = (XtextEditor) uriEditorOpener.open(uriEvent, true);
+		UIUtils.waitForUiThread();
+		TextSelection selectionEvent = (TextSelection) page.getSelection();
+
+		assertEquals("Selection must be 'EventEmitter'", "EventEmitter", selectionEvent.getText());
+	}
+
 }
