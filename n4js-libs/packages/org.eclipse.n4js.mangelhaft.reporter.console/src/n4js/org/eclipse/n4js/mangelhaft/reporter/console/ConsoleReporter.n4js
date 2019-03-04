@@ -33,7 +33,6 @@ export public class ~CliColor {
         return str;
     }
 }
-//const this.cliColor = typeof System === "object" && typeof System._nodeRequire === "function" ? System._nodeRequire("cli-color") as this.cliColor_ : new FakeCliColor();
 
 
 // Odd export of cli-color via prototype

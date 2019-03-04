@@ -26,19 +26,8 @@
     "vendorName": "Eclipse N4JS Project",
     "output": "src-gen",
     "sources": {
-    	  "source": [
-    	  	"src"
-    	  ],
-      "external": [
-        "test/js"
-      ],
       "test": [
         "test/n4js"
-      ]
-    },
-    "moduleFilters": {
-      "noModuleWrap": [
-        "runtime/n4/util/moduleloader/modules/TestModulePlainCJS"
       ]
     },
     "requiredRuntimeLibraries": [
