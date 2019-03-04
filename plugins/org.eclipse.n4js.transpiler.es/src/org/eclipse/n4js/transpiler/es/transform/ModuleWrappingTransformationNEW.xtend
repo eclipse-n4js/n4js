@@ -11,6 +11,8 @@
 package org.eclipse.n4js.transpiler.es.transform
 
 import com.google.inject.Inject
+import org.eclipse.n4js.ModuleSpecifierAdjustment
+import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSCore
@@ -48,10 +50,17 @@ class ModuleWrappingTransformationNEW extends Transformation {
 	def private void transformImportDecl(ImportDeclaration importDeclIM) {
 		val module = state.info.getImportedModule(importDeclIM);
 		val actualModuleSpecifier = computeActualModuleSpecifier(module);
-		importDeclIM.moduleSpecifierAsText = actualModuleSpecifier;
+		val actualModuleSpecifierNormalized = actualModuleSpecifier.replace("/./", "/");
+		importDeclIM.moduleSpecifierAsText = actualModuleSpecifierNormalized;
 	}
 
 	def private String computeActualModuleSpecifier(TModule module) {
+		val moduleSpecifierAdjustment = getModuleSpecifierAdjustment(module);
+		if (moduleSpecifierAdjustment !== null && moduleSpecifierAdjustment.usePlainModuleSpecifier) {
+			return module.moduleSpecifier;
+		}
+		// note: ModuleSpecifierAdjustment#prefix is obsolete and entirely ignored in this transformation!
+
 		val completeModuleSpecifier = resourceNameComputer.getCompleteModuleSpecifier(module);
 
 		var depProject = n4jsCore.findProject(module.eResource.URI).orNull;
@@ -81,5 +90,17 @@ class ModuleWrappingTransformationNEW extends Transformation {
 		}
 
 		return completeModuleSpecifier;
+	}
+
+	/** returns adjustments to be used based on the module loader specified for the provided module. May be null. */
+	def private ModuleSpecifierAdjustment getModuleSpecifierAdjustment(TModule module) {
+		val resourceURI = module?.eResource?.URI;
+		if (resourceURI === null) return null;
+		val project = n4jsCore.findProject(resourceURI);
+		if (!project.present) return null;
+		val loader = project.get.getModuleLoader();
+		if (loader === null) return null;
+		val adjustment = N4JSLanguageConstants.MODULE_LOADER_PREFIXES.get(loader);
+		return adjustment;
 	}
 }

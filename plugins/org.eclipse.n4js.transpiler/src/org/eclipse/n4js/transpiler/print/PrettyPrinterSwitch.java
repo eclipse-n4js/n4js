@@ -136,6 +136,7 @@ import org.eclipse.xtext.EcoreUtil2;
 	@Override
 	public Boolean caseImportDeclaration(ImportDeclaration original) {
 		processAnnotations(original.getAnnotations());
+		// 1) import specifiers
 		write("import ");
 		List<ImportSpecifier> importSpecifiers = new ArrayList<>(original.getImportSpecifiers());
 		if (!importSpecifiers.isEmpty() && importSpecifiers.get(0) instanceof DefaultImportSpecifier) {
@@ -144,30 +145,33 @@ import org.eclipse.xtext.EcoreUtil2;
 				write(", ");
 			}
 		}
-		final boolean isNamespaceImport = !importSpecifiers.isEmpty()
-				&& importSpecifiers.get(0) instanceof NamespaceImportSpecifier;
-		if (isNamespaceImport) {
-			process(importSpecifiers.get(0)); // syntax does not allow more than one namespace import
-		} else {
-			write('{');
-			process(importSpecifiers, ", ");
-			write('}');
+		if (!importSpecifiers.isEmpty()) {
+			final boolean isNamespaceImport = importSpecifiers.get(0) instanceof NamespaceImportSpecifier;
+			if (isNamespaceImport) {
+				process(importSpecifiers.get(0)); // syntax does not allow more than one namespace import
+			} else {
+				write('{');
+				process(importSpecifiers, ", ");
+				write('}');
+			}
 		}
+		// 2) module specifier
 		write(" from ");
 		String moduleSpecifier = original.getModuleSpecifierAsText() != null
 				? original.getModuleSpecifierAsText()
 				: original.getModule().getQualifiedName();
 		write(quote(moduleSpecifier));
-		newLine();
+		// 3) empty line after block of imports
+		boolean isLastImport = !(EcoreUtil2.getNextSibling(original) instanceof ImportDeclaration);
+		if (isLastImport) {
+			newLine();
+		}
 		return DONE;
 	}
 
 	/** Also handles DefaultImportSpecifier (which is a subclass of NamedImportSpecifier). */
 	@Override
 	public Boolean caseNamedImportSpecifier(NamedImportSpecifier original) {
-		if (original.getImportedElementAsText() == null) {
-			System.out.println("!!!");
-		}
 		write(original.getImportedElementAsText());
 		final String alias = original.getAlias();
 		if (alias != null && !original.isDefaultImport()) {
