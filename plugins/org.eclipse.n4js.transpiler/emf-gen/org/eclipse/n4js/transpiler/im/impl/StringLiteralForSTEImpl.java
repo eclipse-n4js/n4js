@@ -165,7 +165,7 @@ public class StringLiteralForSTEImpl extends StringLiteralImpl implements String
 		if (_isUseExportedName) {
 			final SymbolTableEntry e = this.getEntry();
 			if ((e instanceof SymbolTableEntryOriginal)) {
-				return ((SymbolTableEntryOriginal)e).exportedName();
+				return ((SymbolTableEntryOriginal)e).getExportedName();
 			}
 		}
 		SymbolTableEntry _entry = this.getEntry();

@@ -21,6 +21,7 @@ import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.ExportedVariableStatement
 import org.eclipse.n4js.n4JS.Expression
+import org.eclipse.n4js.n4JS.ExpressionStatement
 import org.eclipse.n4js.n4JS.FormalParameter
 import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.FunctionExpression
@@ -51,7 +52,6 @@ import org.eclipse.n4js.ts.types.TypesFactory
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
 import static extension org.eclipse.n4js.transpiler.operations.SymbolTableManagement.*
-import org.eclipse.n4js.n4JS.ExpressionStatement
 
 /**
  * Methods of this class provide elementary operations on a transpiler state, mainly on the intermediate model. The
@@ -141,7 +141,7 @@ class TranspilerStateOperations {
 		}
 
 		// 1) create import declaration & specifier
-		val importSpec = _NamedImportSpecifier(aliasOrNull, true);
+		val importSpec = _NamedImportSpecifier(steOfElementToImport.exportedName, aliasOrNull, true);
 		val importDecl = _ImportDecl(importSpec);
 		// 2) add import to intermediate model
 		val scriptElements = state.im.scriptElements;

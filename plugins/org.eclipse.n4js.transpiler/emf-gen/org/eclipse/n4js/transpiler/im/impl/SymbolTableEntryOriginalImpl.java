@@ -164,7 +164,7 @@ public class SymbolTableEntryOriginalImpl extends SymbolTableEntryImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String exportedName() {
+	public String getExportedName() {
 		final IdentifiableElement trgt = this.getOriginalTarget();
 		if ((trgt instanceof TExportableElement)) {
 			return ((TExportableElement)trgt).getExportedName();
@@ -250,8 +250,8 @@ public class SymbolTableEntryOriginalImpl extends SymbolTableEntryImpl implement
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
-			case ImPackage.SYMBOL_TABLE_ENTRY_ORIGINAL___EXPORTED_NAME:
-				return exportedName();
+			case ImPackage.SYMBOL_TABLE_ENTRY_ORIGINAL___GET_EXPORTED_NAME:
+				return getExportedName();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

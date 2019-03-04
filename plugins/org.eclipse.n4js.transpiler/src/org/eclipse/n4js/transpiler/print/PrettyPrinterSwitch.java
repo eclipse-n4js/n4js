@@ -165,6 +165,9 @@ import org.eclipse.xtext.EcoreUtil2;
 	/** Also handles DefaultImportSpecifier (which is a subclass of NamedImportSpecifier). */
 	@Override
 	public Boolean caseNamedImportSpecifier(NamedImportSpecifier original) {
+		if (original.getImportedElementAsText() == null) {
+			System.out.println("!!!");
+		}
 		write(original.getImportedElementAsText());
 		final String alias = original.getAlias();
 		if (alias != null && !original.isDefaultImport()) {

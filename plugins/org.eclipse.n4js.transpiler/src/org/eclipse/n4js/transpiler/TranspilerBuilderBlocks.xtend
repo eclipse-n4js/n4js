@@ -109,9 +109,10 @@ public class TranspilerBuilderBlocks
 		return result;
 	}
 
-	public static def NamedImportSpecifier _NamedImportSpecifier(String alias, boolean usedInCode) {
+	public static def NamedImportSpecifier _NamedImportSpecifier(String importedElementName, String alias, boolean usedInCode) {
 		val result = N4JSFactory.eINSTANCE.createNamedImportSpecifier;
 		result.importedElement = null; // must always be null, because we are in the intermediate model
+		result.importedElementAsText = importedElementName;
 		result.alias = alias;
 		result.flaggedUsedInCode = usedInCode;
 		return result;

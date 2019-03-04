@@ -160,7 +160,7 @@ class SymbolTableEntryOriginal extends SymbolTableEntry {
 	 * another, remote resource can import it. For elements defined in remote resources, this is the name under which
 	 * this element is exported by the remote resource and can be imported in the resource to compile.
 	 */
-	op String exportedName() {
+	op String getExportedName() {
 		val trgt = originalTarget;
 		if(trgt instanceof TExportableElement) {
 			return trgt.exportedName;
