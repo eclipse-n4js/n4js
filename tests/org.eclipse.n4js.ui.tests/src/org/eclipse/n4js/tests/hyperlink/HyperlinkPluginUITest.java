@@ -20,6 +20,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
@@ -30,7 +31,6 @@ import org.eclipse.n4js.json.JSONGlobals;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.EclipseUIUtils;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
-import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.eclipse.n4js.ui.editor.N4JSHyperlinkDetector;
 import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.n4js.utils.languages.N4LanguageUtils;
@@ -40,8 +40,6 @@ import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.editor.hyperlinking.DefaultHyperlinkDetector;
 import org.eclipse.xtext.ui.editor.hyperlinking.XtextHyperlink;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import com.google.inject.Inject;
@@ -55,28 +53,16 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 	private static final String SUBFOLDER = "Hyperlink";
 	private static final String PROJECT_NAME = "Hyperlink";
 
-	@Inject
-	private ShippedCodeInitializeTestHelper shippedCodeInitializeTestHelper;
+	@Override
+	protected boolean provideShippedCode() {
+		return true;
+	}
 
 	@Inject
 	private N4JSHyperlinkDetector hyperlinkDetector;
 
 	@Inject
 	private IURIEditorOpener uriEditorOpener;
-
-	@Before
-	@Override
-	public void setUp() throws Exception {
-		super.setUp();
-		shippedCodeInitializeTestHelper.setupBuiltIns();
-	}
-
-	@After
-	@Override
-	public void tearDown() throws Exception {
-		shippedCodeInitializeTestHelper.tearDownBuiltIns();
-		super.tearDown();
-	}
 
 	/**
 	 * The test invokes the method
@@ -94,7 +80,9 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 
+		libraryManager.runNpmYarnInstallOnAllProjects(new NullProgressMonitor());
 		syncExtAndBuild();
+		ProjectTestsUtils.assertNoErrors();
 
 		IWorkbenchPage page = EclipseUIUtils.getActivePage();
 		XtextEditor editor = openAndGetXtextEditor(fileABC, page);
@@ -145,17 +133,18 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 		ProjectTestsUtils.importProject(prjDir, PROJECT_NAME);
 		waitForAutoBuild();
 
+		libraryManager.runNpmYarnInstallOnAllProjects(new NullProgressMonitor());
 		syncExtAndBuild();
 		UIUtils.waitForUiThread();
+		assertNoErrors();
 
 		IWorkbenchPage page = EclipseUIUtils.getActivePage();
 		XtextEditor editor = openAndGetXtextEditorViaProjectExplorer(page,
 				PROJECT_NAME,
-				"External Dependencies",
-				"N4JS Runtime",
-				"Runtime Libraries",
-				"n4js-runtime-node",
-				"src/n4js",
+				"node_modules",
+				"n4js-runtime-node 0.13.4 [Runtime library]",
+				"src",
+				"n4js",
 				"process.n4jsd");
 		UIUtils.waitForUiThread();
 

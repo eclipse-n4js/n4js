@@ -30,8 +30,6 @@ import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.io.FileCopier;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import com.google.common.io.Files;
@@ -48,11 +46,9 @@ public class SideBySideYarnProjectsInstallNpmPluginUITest extends AbstractBuilde
 	@Inject
 	private ProjectDescriptionLoader prjDescLoader;
 
-	@Before
 	@Override
-	public void setUp() throws Exception {
-		super.setUp();
-		setupShippedLibraries();
+	protected boolean provideShippedCode() {
+		return true;
 	}
 
 	/**
@@ -94,14 +90,6 @@ public class SideBySideYarnProjectsInstallNpmPluginUITest extends AbstractBuilde
 		// Assert that lodash is not installed in node_modules of the root folder
 		IFile pkgJsonP1 = projP1.getFile(getResourceName(N4JSGlobals.PACKAGE_JSON));
 		assertIssues(pkgJsonP1, "line 16: Project does not exist with project ID: lodash.");
-	}
-
-	@After
-	@Override
-	public void tearDown() throws Exception {
-		tearDownShippedLibraries();
-		super.tearDown();
-
 	}
 
 	private String getDependencyVersion(org.eclipse.emf.common.util.URI prjURI, String dependencyName) {

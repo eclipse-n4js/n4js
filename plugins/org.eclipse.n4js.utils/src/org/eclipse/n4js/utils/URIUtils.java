@@ -203,6 +203,17 @@ public class URIUtils {
 		return URI.createFileURI(pathStr);
 	}
 
+	/** @return absolute file URI for the given path. */
+	static public URI toFileUri(Path path) {
+		return toFileUri(path.toFile());
+	}
+
+	/** @return absolute file URI for the given file. */
+	static public URI toFileUri(File file) {
+		String pathStr = file.getAbsolutePath();
+		return URI.createFileURI(pathStr);
+	}
+
 	/** @return a complete URI for a given emf resource */
 	public static URI toFileUri(Resource resource) {
 		URI rUri = resource.getURI();

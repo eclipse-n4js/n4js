@@ -34,13 +34,11 @@ import org.eclipse.n4js.runner.IExecutor;
 import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.n4js.runner.RunnerFrontEnd;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
-import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
+import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.ui.wizard.dependencies.InstallOptions;
 import org.eclipse.n4js.ui.wizard.dependencies.RunnableInstallDependencies;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import com.google.inject.Inject;
@@ -69,23 +67,6 @@ public class InstallRuntimeFromNpmPluginUITest extends AbstractBuilderParticipan
 	@Inject
 	private RunnerFrontEnd runnerFrontEnd;
 
-	@Inject
-	private ShippedCodeInitializeTestHelper shippedCodeInitializeTestHelper;
-
-	@Before
-	@Override
-	public void setUp() throws Exception {
-		super.setUp();
-		shippedCodeInitializeTestHelper.setupBuiltIns();
-	}
-
-	@After
-	@Override
-	public void tearDown() throws Exception {
-		shippedCodeInitializeTestHelper.tearDownBuiltIns();
-		super.tearDown();
-	}
-
 	/**
 	 * See JavaDoc of class.
 	 */
@@ -96,15 +77,15 @@ public class InstallRuntimeFromNpmPluginUITest extends AbstractBuilderParticipan
 						// test project of type 'library'
 						.withType(ProjectType.LIBRARY)
 						// add dependency to node runtime environment in specific version
-						.withDependency("n4js-runtime-node", "0.13.1"));
+						.withDependency("n4js-runtime-node", "0.13.1")
+						.withDependency("n4js-node", "0.13.1"));
 
 		configureProjectWithXtext(project);
 
-		syncExtAndBuild();
-
 		// duh! the 'n4js-runtime-node' in the shipped code does not satisfy our version constraint:
 		assertIssues(project.getFile(N4JSGlobals.PACKAGE_JSON),
-				"line 5: Project n4js-runtime-node is required in version 0.13.1, but only version 0.1.0 is present.");
+				"line 5: Project does not exist with project ID: n4js-node.",
+				"line 6: Project does not exist with project ID: n4js-runtime-node.");
 
 		// create hello world file
 		createTestFile(project.getFolder("src"), MODULE_TO_RUN, "console.log(\"Hello World\");");
@@ -118,6 +99,8 @@ public class InstallRuntimeFromNpmPluginUITest extends AbstractBuilderParticipan
 
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
+		ProjectTestsUtils.waitForAllJobs();
+		assertNoIssues();
 
 		// create module run configuration
 		final RunConfiguration config = runnerFrontEnd.createConfiguration(NODE_RUNNER_ID,

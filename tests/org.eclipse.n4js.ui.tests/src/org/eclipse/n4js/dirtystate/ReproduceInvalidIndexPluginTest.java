@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.URI;
@@ -105,7 +107,16 @@ public class ReproduceInvalidIndexPluginTest extends AbstractBuilderParticipantT
 	private void assertIndexState() throws Exception, IOException, CoreException {
 		assertCientDescriptionUpToDate();
 		assertAllDescriptionsHaveModuleData();
-		assertMarkers("workspace should have not markers", ResourcesPlugin.getWorkspace().getRoot(), 0);
+
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject("Client");
+		IFile projectDescriptionFile = project.getFile(getResourceName(N4JSGlobals.PACKAGE_JSON));
+
+		// line 5: Project depends on workspace project Impl which is missing in the node_modules folder.
+		// Either install project Impl or introduce a yarn workspace of both of the projects.
+		// line 6: Project depends on workspace project Def which is missing in the node_modules folder.
+		// Either install project Impl or introduce a yarn workspace of both of the projects.
+		assertMarkers("package.json should have 2 markers", projectDescriptionFile, 2);
+		assertMarkers("workspace should have 2 markers", ResourcesPlugin.getWorkspace().getRoot(), 2);
 	}
 
 	private void importProjects(boolean incremental) throws CoreException {
@@ -114,7 +125,7 @@ public class ReproduceInvalidIndexPluginTest extends AbstractBuilderParticipantT
 			ProjectTestsUtils.importProject(testdataLocation, projectName);
 		}
 		if (incremental) {
-			// This should really be calles incrementalBuild
+			// This should really be called incrementalBuild
 			IResourcesSetupUtil.waitForBuild();
 		} else {
 			IResourcesSetupUtil.fullBuild();

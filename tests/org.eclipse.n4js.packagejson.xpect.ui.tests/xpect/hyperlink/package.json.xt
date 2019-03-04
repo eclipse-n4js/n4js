@@ -24,6 +24,11 @@
             }
         }
 	}
+
+
+	IssueConfiguration {
+		IssueCode "MISSING_YARN_WORKSPACE" { enabled = false }
+	}
    END_SETUP
  */
 
