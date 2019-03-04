@@ -194,4 +194,15 @@ public class URIUtils {
 		String pathStr = project.getLocation().toString();
 		return URI.createFileURI(pathStr);
 	}
+
+	/** @return absolute file URI for the given file. */
+	static public URI toFileUri(File file) {
+		String pathStr = file.getAbsolutePath();
+		return URI.createFileURI(pathStr);
+	}
+
+	/** @return absolute file URI for the given path. */
+	static public URI toFileUri(Path path) {
+		return toFileUri(path.toFile());
+	}
 }

@@ -35,6 +35,7 @@
    
    IssueConfiguration {
    	IssueCode "JSON_COMMENT_UNSUPPORTED" { enabled=false }
+	IssueCode "MISSING_YARN_WORKSPACE" { enabled = false }
    }
 
    END_SETUP

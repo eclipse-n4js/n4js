@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.n4js.N4JSUiInjectorProvider;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
@@ -21,6 +22,7 @@ import org.junit.runner.RunWith;
 @RunWith(XtextRunner.class)
 @InjectWith(N4JSUiInjectorProvider.class)
 public class TypeDefinitionsShadowingPluginTest extends AbstractBuilderParticipantTest {
+	private static final String YARN_WORKSPACE_PROJECT = "YarnWorkspaceProject";
 	private static final String PROBANDS = "probands";
 	private static final String PROBANDS_SUBFOLDER = "type-definitions";
 
@@ -41,9 +43,11 @@ public class TypeDefinitionsShadowingPluginTest extends AbstractBuilderParticipa
 	public void testValidTypeDefinitionsShadowing() throws CoreException {
 		final File testdataLocation = new File(getResourceUri(PROBANDS, PROBANDS_SUBFOLDER, POSITIVE_FIXTURE_FOLDER));
 
-		final IProject clientProject = ProjectTestsUtils.importProject(testdataLocation, "Client");
-		final IProject definitionProject = ProjectTestsUtils.importProject(testdataLocation, "Def");
-		final IProject implProject = ProjectTestsUtils.importProject(testdataLocation, "Impl");
+		ProjectTestsUtils.importYarnWorkspace(libraryManager, testdataLocation, YARN_WORKSPACE_PROJECT);
+
+		final IProject clientProject = ResourcesPlugin.getWorkspace().getRoot().getProject("Client");
+		final IProject definitionProject = ResourcesPlugin.getWorkspace().getRoot().getProject("Def");
+		final IProject implProject = ResourcesPlugin.getWorkspace().getRoot().getProject("Impl");
 
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
@@ -66,9 +70,11 @@ public class TypeDefinitionsShadowingPluginTest extends AbstractBuilderParticipa
 	public void testInvalidTypeDefinitionsShadowing() throws CoreException {
 		final File testdataLocation = new File(getResourceUri(PROBANDS, PROBANDS_SUBFOLDER, NEGATIVE_FIXTURE_FOLDER));
 
-		final IProject clientProject = ProjectTestsUtils.importProject(testdataLocation, "Broken_Client");
-		final IProject definitionProject = ProjectTestsUtils.importProject(testdataLocation, "Broken_Def");
-		final IProject implProject = ProjectTestsUtils.importProject(testdataLocation, "Impl");
+		ProjectTestsUtils.importYarnWorkspace(libraryManager, testdataLocation, YARN_WORKSPACE_PROJECT);
+
+		final IProject clientProject = ResourcesPlugin.getWorkspace().getRoot().getProject("Broken_Client");
+		final IProject definitionProject = ResourcesPlugin.getWorkspace().getRoot().getProject("Broken_Def");
+		final IProject implProject = ResourcesPlugin.getWorkspace().getRoot().getProject("Impl");
 
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();

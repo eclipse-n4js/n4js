@@ -42,6 +42,8 @@ import org.eclipse.xtext.ui.editor.model.IXtextDocument;
 import org.eclipse.xtext.ui.editor.outline.IOutlineNode;
 import org.eclipse.xtext.ui.editor.outline.impl.IOutlineNodeComparer;
 import org.eclipse.xtext.ui.editor.outline.impl.OutlinePage;
+import org.junit.After;
+import org.junit.Before;
 
 /**
  * Copied and adapted from http://git.eclipse.org/c/tmf/org.eclipse.xtext.git/plain/tests/
@@ -65,9 +67,8 @@ public abstract class AbstractOutlineWorkbenchTest extends AbstractBuilderPartic
 	protected IPreferenceStore preferenceStore;
 	protected IOutlineNodeComparer comparer;
 
-	@Override
-	public void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp2() throws Exception {
 		preferenceStore = new ScopedPreferenceStore(InstanceScope.INSTANCE, getEditorId());
 		comparer = new IOutlineNodeComparer.Default();
 
@@ -148,15 +149,14 @@ public abstract class AbstractOutlineWorkbenchTest extends AbstractBuilderPartic
 	// the content to be written in N4JS file (resp. that should be in the file)
 	protected abstract String getModelAsText();
 
-	@Override
-	public void tearDown() throws Exception {
+	@After
+	public void tearDown2() throws Exception {
 		if (null != editor) {
 			editor.close(false);
 		}
 		if (null != outlineView) {
 			outlineView.getSite().getPage().hideView(outlineView);
 		}
-		super.tearDown();
 		executeAsyncDisplayJobs();
 	}
 

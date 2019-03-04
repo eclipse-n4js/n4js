@@ -82,6 +82,7 @@ import org.eclipse.ui.navigator.INavigatorDnDService;
 import org.eclipse.ui.navigator.resources.ProjectExplorer;
 import org.eclipse.xtext.ui.testing.util.JavaProjectSetupUtil;
 import org.eclipse.xtext.util.StringInputStream;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -112,10 +113,9 @@ public class GHOLD_101_WorkingSetsTest_PluginUITest extends AbstractPluginUITest
 		assertTrue("Expected running workbench.", PlatformUI.isWorkbenchRunning());
 	}
 
-	@Override
+	/***/
 	@Before
-	public void setUp() throws Exception {
-		super.setUp();
+	public void setUp2() throws Exception {
 		waitForIdleState();
 		projectExplorer = (ProjectExplorer) EclipseUIUtils.showView(ProjectExplorer.VIEW_ID);
 		UIUtils.waitForUiThread();
@@ -128,9 +128,11 @@ public class GHOLD_101_WorkingSetsTest_PluginUITest extends AbstractPluginUITest
 
 	}
 
-	@Override
-	public void tearDown() throws Exception {
-		super.tearDown();
+	/***/
+	@After
+	public void tearDown2() throws Exception {
+		super.tearDown(); // called after this method again but necessary here already
+
 		broker.resetState();
 		commonViewer.refresh();
 		waitForIdleState();

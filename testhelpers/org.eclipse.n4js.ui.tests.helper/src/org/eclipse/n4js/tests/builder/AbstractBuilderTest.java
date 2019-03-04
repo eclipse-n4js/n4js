@@ -16,6 +16,8 @@ import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.root;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -30,6 +32,7 @@ import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
 import org.eclipse.n4js.tests.util.EclipseUIUtils;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
+import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.eclipse.n4js.ui.building.CloseProjectTaskScheduler;
 import org.eclipse.n4js.ui.building.ResourceDescriptionWithoutModuleUserData;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildScheduler;
@@ -81,10 +84,17 @@ public abstract class AbstractBuilderTest {
 	private CloseProjectTaskScheduler closedProjectTaskProcessor;
 	@Inject
 	private QueuedBuildData queuedBuildData;
+	@Inject
+	private ShippedCodeInitializeTestHelper shippedCodeInitializeTestHelper;
+
+	/** Overwrite this method to enable shipped code */
+	protected boolean provideShippedCode() {
+		return false;
+	}
 
 	/** Setups workspace by cleaning and waiting for auto builds, asserting index is clean. */
 	@Before
-	public void setUp() throws Exception {
+	final public void setUp() throws Exception {
 		IResourcesSetupUtil.cleanWorkspace();
 		IResourcesSetupUtil.cleanBuild();
 		waitForAutoBuild();
@@ -119,6 +129,10 @@ public abstract class AbstractBuilderTest {
 					}
 				});
 			}
+		}
+
+		if (provideShippedCode()) {
+			shippedCodeInitializeTestHelper.setupBuiltIns();
 		}
 	}
 
@@ -183,16 +197,26 @@ public abstract class AbstractBuilderTest {
 	 * index.
 	 */
 	@After
-	public void tearDown() throws Exception {
+	final public void tearDown() throws Exception {
+
+		if (provideShippedCode()) {
+			shippedCodeInitializeTestHelper.tearDownBuiltIns();
+		}
+
 		// save the files as otherwise the projects cannot be deleted
 		libraryManager.deleteAllNodeModulesFolders(new NullProgressMonitor());
 		closeAllEditorsForTearDown();
+		ProjectTestsUtils.closeAllProjectsInWorkspace();
 		IResourcesSetupUtil.cleanWorkspace();
 		IResourcesSetupUtil.cleanBuild();
 		waitForAutoBuild();
 		assertEquals(0, root().getProjects().length);
 		assertEquals("Resources in index:\n" + getAllResourceDescriptionsAsString() + "\n", 0,
 				countResourcesInIndex());
+
+		final IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+		assertTrue("Expected empty workspace. Projects were in workspace: " + Arrays.toString(projects),
+				0 == projects.length);
 
 		queuedBuildData.reset();
 	}
