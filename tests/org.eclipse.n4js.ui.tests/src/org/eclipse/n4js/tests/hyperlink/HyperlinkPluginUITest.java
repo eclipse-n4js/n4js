@@ -21,6 +21,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.emf.common.CommonPlugin;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
@@ -96,12 +97,15 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 		assertTrue("Hyperlink must be of type XtextHyperlink", hlinksInABC[0] instanceof XtextHyperlink);
 		XtextHyperlink hyperlinkToProcess = (XtextHyperlink) hlinksInABC[0];
 		URI uriProcess = hyperlinkToProcess.getURI();
-		assertTrue("Hyperlink URI must be a file uri", uriProcess.isFile());
-		File fileProcess = new File(uriProcess.toFileString());
+		assertTrue("Hyperlink URI must be a platform uri", uriProcess.isPlatform());
+
+		URI uriProcessFile = CommonPlugin.resolve(uriProcess);
+		File fileProcess = new File(uriProcessFile.toFileString());
 		assertTrue("File 'process.n4jsd' must exist", fileProcess.isFile());
 
 		editor = (XtextEditor) uriEditorOpener.open(uriProcess, true);
 		page = EclipseUIUtils.getActivePage();
+		assertEquals("Wrong editor title", "process.n4jsd", editor.getTitle());
 		TextSelection selectionProcess = (TextSelection) page.getSelection();
 		assertTrue("Selection must be 'process'", selectionProcess.getText().equals("process"));
 		sourceViewer = editor.getInternalSourceViewer();
@@ -112,10 +116,11 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 		assertTrue("Hyperlink must be of type XtextHyperlink", hlinksInProcess[0] instanceof XtextHyperlink);
 		XtextHyperlink hyperlinkToEvent = (XtextHyperlink) hlinksInProcess[0];
 		URI uriEvent = hyperlinkToEvent.getURI();
-		assertTrue("Hyperlink URI must be a file uri", uriEvent.isFile());
+		assertTrue("Hyperlink URI must be a platform uri", uriEvent.isPlatform());
 
 		editor = (XtextEditor) uriEditorOpener.open(uriEvent, true);
 		page = EclipseUIUtils.getActivePage();
+		assertEquals("Wrong editor title", "events.n4jsd", editor.getTitle());
 		TextSelection selectionEvent = (TextSelection) page.getSelection();
 		assertTrue("Selection must be 'EventEmitter'", selectionEvent.getText().equals("EventEmitter"));
 	}
@@ -156,12 +161,14 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 		assertTrue("Hyperlink must be of type XtextHyperlink", hlinksInProcess[0] instanceof XtextHyperlink);
 		XtextHyperlink hyperlinkToEvent = (XtextHyperlink) hlinksInProcess[0];
 		URI uriEvent = hyperlinkToEvent.getURI();
-		assertTrue("Hyperlink URI must be a file uri", uriEvent.isFile());
+		assertTrue("Hyperlink URI must be a platform uri", uriEvent.isPlatform());
 
 		editor = (XtextEditor) uriEditorOpener.open(uriEvent, true);
+		page = EclipseUIUtils.getActivePage();
 		UIUtils.waitForUiThread();
 		TextSelection selectionEvent = (TextSelection) page.getSelection();
 
+		assertEquals("Wrong editor title", "events.n4jsd", editor.getTitle());
 		assertTrue("Selection must be 'EventEmitter'", selectionEvent.getText().equals("EventEmitter"));
 	}
 
@@ -202,9 +209,8 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 
 		editor = (XtextEditor) uriEditorOpener.open(uriEvent, true);
 		UIUtils.waitForUiThread();
-		TextSelection selectionEvent = (TextSelection) page.getSelection();
 
-		assertEquals("Selection must be 'EventEmitter'", "EventEmitter", selectionEvent.getText());
+		assertEquals("Wrong editor title", "package.json", editor.getTitle());
 	}
 
 }
