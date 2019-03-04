@@ -53,7 +53,7 @@ import org.eclipse.n4js.ui.contentassist.PatchedFollowElementComputer;
 import org.eclipse.n4js.ui.contentassist.PatchedRequiredRuleNameComputer;
 import org.eclipse.n4js.ui.contentassist.SimpleLastSegmentFinder;
 import org.eclipse.n4js.ui.editor.AlwaysAddNatureCallback;
-import org.eclipse.n4js.ui.editor.ComposedMemberAwareHyperlinkHelper;
+import org.eclipse.n4js.ui.editor.N4JSHyperlinkHelper;
 import org.eclipse.n4js.ui.editor.EditorAwareCanLoadFromDescriptionHelper;
 import org.eclipse.n4js.ui.editor.N4JSDirtyStateEditorSupport;
 import org.eclipse.n4js.ui.editor.N4JSDocument;
@@ -814,7 +814,7 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	 * Provide multiple hyperlink for composed members.
 	 */
 	public Class<? extends HyperlinkHelper> bindHyperlinkHelper() {
-		return ComposedMemberAwareHyperlinkHelper.class;
+		return N4JSHyperlinkHelper.class;
 	}
 
 	/***/

@@ -226,6 +226,9 @@ public class URIUtils {
 			if (platformFiles.length > 0 && platformFiles[0].isAccessible()) {
 				IFile localTargetFile = platformFiles[0];
 				URI uri = URIUtils.convert(localTargetFile);
+				if (fileUri.hasFragment()) {
+					uri = uri.appendFragment(fileUri.fragment());
+				}
 				return uri;
 			}
 		}

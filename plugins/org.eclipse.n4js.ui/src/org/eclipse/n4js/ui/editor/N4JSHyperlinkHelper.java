@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.n4js.ts.types.TMember;
@@ -30,7 +31,7 @@ import com.google.inject.Provider;
 /**
  * This class provides multiple hyperlinks for composed members.
  */
-public class ComposedMemberAwareHyperlinkHelper extends HyperlinkHelper {
+public class N4JSHyperlinkHelper extends HyperlinkHelper {
 
 	@Inject
 	@HyperlinkLabelProvider
@@ -75,9 +76,9 @@ public class ComposedMemberAwareHyperlinkHelper extends HyperlinkHelper {
 
 	/** This method converts file URIs to platform URIs for external library files. */
 	private boolean provideHyperlinksForExternalFiles(Region region, EObject target, IHyperlinkAcceptor acceptor) {
-		URI targetUri = target.eResource().getURI();
-		if (targetUri.isFile()) {
-			URI uri = URIUtils.tryToPlatformUri(targetUri);
+		URI targetUriWithFragment = EcoreUtil.getURI(target);
+		if (targetUriWithFragment.isFile()) {
+			URI uri = URIUtils.tryToPlatformUri(targetUriWithFragment);
 			superCreateHyperlinksTo(region, target, acceptor, uri);
 			return true;
 		}
