@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ui.refactoring;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.CoreException;
@@ -18,9 +19,17 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext;
+import org.eclipse.n4js.n4JS.FormalParameter;
+import org.eclipse.n4js.n4JS.FunctionDefinition;
+import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.scoping.N4JSScopeProvider;
 import org.eclipse.n4js.ts.types.ContainerType;
+import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TMember;
+import org.eclipse.n4js.utils.ContainerTypesHelper;
+import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
+import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.ui.refactoring.impl.RenameElementProcessor;
 
 import com.google.inject.Inject;
@@ -35,42 +44,91 @@ public class N4JSRenameElementProcessor extends RenameElementProcessor {
 	@Inject
 	private N4JSScopeProvider scopeProvider;
 
-	// @Override
-	// public RefactoringStatus checkInitialConditions(IProgressMonitor pm) throws CoreException,
-	// OperationCanceledException {
-	// if (this.getTargetElement() == null) {
-	// return RefactoringStatus.createFatalErrorStatus("Renaming this element is not possible");
-	// }
-	// return super.checkInitialConditions(pm);
-	// }
+	@Inject
+	private ContainerTypesHelper containerTypesHelper;
 
 	@Override
 	public RefactoringStatus checkFinalConditions(IProgressMonitor monitor, CheckConditionsContext context)
 			throws CoreException, OperationCanceledException {
+		RefactoringStatus status = new RefactoringStatus();
+		status.merge(super.checkFinalConditions(monitor, context));
+
+		if (status.hasFatalError()) {
+			return status;
+		}
+
 		String newName = this.getNewName();
 		EObject targetElement = this.getTargetElement();
-		// if (targetElement instanceof SyntaxRelatedTElement) {
-		// targetElement = ((SyntaxRelatedTElement) targetElement).getAstElement();
-		// }
-		//
-		// IScope scope = scopeProvider.getScope(targetElement, N4JSPackage.Literals.IDENTIFIER_REF__ID);
-		// for (IEObjectDescription desc : scope.getAllElements()) {
-		// if (desc.getName().toString().contains(newName)) {
-		// System.out.println(desc);
-		// }
-		// }
 
-		if (targetElement instanceof TMember) {
-			TMember member = (TMember) targetElement;
-			ContainerType<? extends TMember> container = member.getContainingType();
-			if (container.getOwnedMembers().stream()
-					.filter(m -> m != member && m.getName().equals(newName))
-					.collect(Collectors.toList()).size() > 0) {
-				return RefactoringStatus.createFatalErrorStatus("Name conflicts");
-			}
+		status.merge(checkDuplicateName(targetElement, newName));
+		return status;
+	}
 
+	private RefactoringStatus checkDuplicateName(EObject context, String newName) {
+
+		// Check name conflicts of TMembers
+		if (context instanceof TMember) {
+			TMember member = (TMember) context;
+			return checkDuplicateMember(member, newName);
 		}
-		return super.checkFinalConditions(monitor, context);
+
+		if (context instanceof FormalParameter) {
+			FormalParameter fpar = (FormalParameter) context;
+			FunctionDefinition method = (FunctionDefinition) fpar.eContainer();
+			return checkDuplicateFormalParam(fpar, method.getFpars(), newName);
+		}
+
+		RefactoringStatus status = new RefactoringStatus();
+
+		EObject astContext = null;
+		if (context instanceof SyntaxRelatedTElement) {
+			astContext = ((SyntaxRelatedTElement) context).getAstElement();
+		} else {
+			astContext = context;
+		}
+
+		// Check name conflicts in variable environment scope
+		IScope scope = scopeProvider.getScopeForContentAssist(astContext,
+				N4JSPackage.Literals.IDENTIFIER_REF__ID);
+		for (IEObjectDescription desc : scope.getAllElements()) {
+			System.out.println("Desc.name -> " + desc.getName());
+			if (desc.getName().toString().equals(newName)) {
+				status.merge(RefactoringStatus.createFatalErrorStatus(
+						"Problem in " + desc.getEObjectURI().trimFragment()
+								+ ": Another element in the same scope with name '"
+								+ newName + "' already exists"));
+			}
+		}
+		return status;
+	}
+
+	/**
+	 * Check duplicate formal parameters
+	 */
+	private RefactoringStatus checkDuplicateFormalParam(FormalParameter fpar, List<FormalParameter> fpars,
+			String newName) {
+		List<FormalParameter> fparsWithName = fpars.stream().filter(fp -> fp != fpar).collect(Collectors.toList());
+		if (fparsWithName.size() > 0) {
+			return RefactoringStatus
+					.createFatalErrorStatus("Another formal parameter with name '" + newName + "' already exists.");
+		}
+		return new RefactoringStatus();
+	}
+
+	private RefactoringStatus checkDuplicateMember(TMember member, String newName) {
+		ContainerType<? extends TMember> container = member.getContainingType();
+		MemberCollector memberCollector = this.containerTypesHelper.fromContext(container);
+		List<TMember> membersWithName = memberCollector.members(container).stream()
+				.filter(m -> m != member && m.getName().equals(newName))
+				.collect(Collectors.toList());
+
+		if (membersWithName.size() > 0) {
+			return RefactoringStatus
+					.createFatalErrorStatus("Problem in " + member.eResource().getURI() + ": Another member with name '"
+							+ newName + "' already exists");
+		}
+
+		return new RefactoringStatus();
 	}
 
 }

@@ -17,9 +17,10 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.ITextSelection;
+import org.eclipse.n4js.n4JS.FieldAccessor;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
-import org.eclipse.n4js.n4JS.N4TypeDefinition;
+import org.eclipse.n4js.n4JS.TypeDefiningElement;
 import org.eclipse.n4js.ts.types.TStructField;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
@@ -63,11 +64,16 @@ public class N4JSRenameElementHandler extends DefaultRenameElementHandler {
 									selectedElement = ((N4FieldDeclaration) selectedElement).getDefinedField();
 								}
 
-								if (selectedElement instanceof N4TypeDefinition) {
-									selectedElement = ((N4TypeDefinition) selectedElement).getDefinedType();
+								if (selectedElement instanceof FieldAccessor) {
+									selectedElement = ((FieldAccessor) selectedElement).getDefinedAccessor();
 								}
 
-								if (selectedElement instanceof TStructField) {
+								if (selectedElement instanceof TypeDefiningElement) {
+									selectedElement = ((TypeDefiningElement) selectedElement).getDefinedType();
+								}
+
+								if ((selectedElement instanceof TStructField)
+										&& (((TStructField) selectedElement).getDefinedMember() != null)) {
 									selectedElement = ((TStructField) selectedElement).getDefinedMember();
 								}
 
@@ -89,7 +95,9 @@ public class N4JSRenameElementHandler extends DefaultRenameElementHandler {
 					startRenameElement(renameElementContext);
 				}
 			}
-		} catch (OperationCanceledException e) {
+		} catch (
+
+		OperationCanceledException e) {
 			// cancelled by user, ok
 			return null;
 		} catch (InterruptedException e) {

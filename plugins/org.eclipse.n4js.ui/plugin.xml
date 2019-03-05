@@ -865,6 +865,7 @@ Contributors:
     <command
       description="Rename element"
       id="org.eclipse.n4js.ui.refactoring.rename"
+      
       name="Rename">
     </command>
   </extension>
@@ -933,6 +934,13 @@ Contributors:
 
   <extension
         point="org.eclipse.ui.bindings">
+        <key
+             commandId="org.eclipse.n4js.ui.refactoring.rename"
+             contextId="org.eclipse.xtext.ui.XtextEditorScope"
+             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+             sequence="M1+M2+R">
+        </key>
+        
         <key
              commandId="org.eclipse.n4js.ui.organize.imports.OrganizeImports"
              contextId="org.eclipse.xtext.ui.XtextEditorScope"

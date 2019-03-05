@@ -37,6 +37,7 @@ import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NewExpression
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
+import org.eclipse.n4js.n4JS.PropertyNameOwner
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.Statement
 import org.eclipse.n4js.n4JS.TypeDefiningElement
@@ -96,6 +97,7 @@ import org.eclipse.xtext.util.IResourceScopeCache
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
+import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName
 
 /**
  * This class contains custom scoping description.
@@ -269,6 +271,8 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 				Argument:
 					return scope_EObject_id(context, reference)
 				Expression:
+					return scope_EObject_id(context, reference)
+				LiteralOrComputedPropertyName:
 					return scope_EObject_id(context, reference)
 			}
 		}
