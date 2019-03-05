@@ -35,7 +35,7 @@ import org.eclipse.xtext.ui.refactoring.impl.RenameElementProcessor;
 import com.google.inject.Inject;
 
 /**
- * We need a custom N4JS RenameElementProcessor for checking additional conditions.
+ * We check additional conditions of rename refactoring in this class.
  *
  */
 @SuppressWarnings("restriction")
@@ -46,6 +46,15 @@ public class N4JSRenameElementProcessor extends RenameElementProcessor {
 
 	@Inject
 	private ContainerTypesHelper containerTypesHelper;
+
+	@Override
+	public RefactoringStatus checkInitialConditions(IProgressMonitor pm) throws CoreException,
+			OperationCanceledException {
+		if (this.getTargetElement() == null) {
+			return RefactoringStatus.createFatalErrorStatus("Rename an element of external library is not allowed.");
+		}
+		return super.checkInitialConditions(pm);
+	}
 
 	@Override
 	public RefactoringStatus checkFinalConditions(IProgressMonitor monitor, CheckConditionsContext context)
@@ -65,7 +74,6 @@ public class N4JSRenameElementProcessor extends RenameElementProcessor {
 	}
 
 	private RefactoringStatus checkDuplicateName(EObject context, String newName) {
-
 		// Check name conflicts of TMembers
 		if (context instanceof TMember) {
 			TMember member = (TMember) context;
@@ -78,8 +86,8 @@ public class N4JSRenameElementProcessor extends RenameElementProcessor {
 			return checkDuplicateFormalParam(fpar, method.getFpars(), newName);
 		}
 
+		// Check name conflicts in variable environment scope
 		RefactoringStatus status = new RefactoringStatus();
-
 		EObject astContext = null;
 		if (context instanceof SyntaxRelatedTElement) {
 			astContext = ((SyntaxRelatedTElement) context).getAstElement();
@@ -87,11 +95,9 @@ public class N4JSRenameElementProcessor extends RenameElementProcessor {
 			astContext = context;
 		}
 
-		// Check name conflicts in variable environment scope
 		IScope scope = scopeProvider.getScopeForContentAssist(astContext,
 				N4JSPackage.Literals.IDENTIFIER_REF__ID);
 		for (IEObjectDescription desc : scope.getAllElements()) {
-			System.out.println("Desc.name -> " + desc.getName());
 			if (desc.getName().toString().equals(newName)) {
 				status.merge(RefactoringStatus.createFatalErrorStatus(
 						"Problem in " + desc.getEObjectURI().trimFragment()
@@ -99,6 +105,7 @@ public class N4JSRenameElementProcessor extends RenameElementProcessor {
 								+ newName + "' already exists"));
 			}
 		}
+
 		return status;
 	}
 
