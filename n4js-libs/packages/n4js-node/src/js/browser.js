@@ -24,8 +24,8 @@
                 platformVariant: isWebWorker ? "webworker" : undefined
             }
         };
-    }
 
-    require("n4js-es5/src-gen/rt.js");
+        require("n4js-es5/src-gen/rt.js");
+    }
 
 }(typeof global === "object" ? global : self));
