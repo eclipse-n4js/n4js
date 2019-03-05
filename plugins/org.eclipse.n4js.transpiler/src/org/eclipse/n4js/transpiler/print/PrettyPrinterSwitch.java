@@ -117,6 +117,12 @@ import org.eclipse.xtext.EcoreUtil2;
 			final ExportableElement exportedElement = original.getExportedElement();
 			if (exportedElement != null) {
 				process(exportedElement);
+			} else {
+				final Expression exportedExpression = original.getDefaultExportedExpression();
+				if (exportedExpression != null && original.isDefaultExport()) {
+					process(exportedExpression);
+					write(';');
+				}
 			}
 		}
 		return DONE;

@@ -16,11 +16,16 @@ import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ModifiableElement
+import org.eclipse.n4js.n4JS.VariableBinding
+import org.eclipse.n4js.n4JS.VariableDeclaration
+import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.utils.ResourceNameComputer
+
+import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
 /**
  *
@@ -54,6 +59,11 @@ class ModuleWrappingTransformationNEW extends Transformation {
 		collectNodes(state.im, ExportDeclaration, false).map[exportedElement].filter(ModifiableElement).forEach[
 			it.declaredModifiers.clear
 		];
+
+		// the following is only required because earlier transformations are producing
+		// invalid "export default var|let|const ..."
+		// TODO GH-1256 instead of the next line, change the earlier transformations to not produce the invalid constructs
+		collectNodes(state.im, ExportDeclaration, false).forEach[splitDefaultExportFromVarDecl];
 	}
 
 	def private void transformImportDecl(ImportDeclaration importDeclIM) {
@@ -111,5 +121,34 @@ class ModuleWrappingTransformationNEW extends Transformation {
 		if (loader === null) return null;
 		val adjustment = N4JSLanguageConstants.MODULE_LOADER_PREFIXES.get(loader);
 		return adjustment;
+	}
+
+	/**
+	 * Turns
+	 * <pre>
+	 * export default var|let|const C = ...
+	 * </pre>
+	 * into
+	 * <pre>
+	 * var|let|const C = ...
+	 * export default C;
+	 * </pre>
+	 */
+	def private void splitDefaultExportFromVarDecl(ExportDeclaration exportDecl) {
+		if (exportDecl.isDefaultExport) {
+			val exportedElement = exportDecl.exportedElement;
+			if (exportedElement instanceof VariableStatement) {
+				if (!exportedElement.varDeclsOrBindings.filter(VariableBinding).isEmpty) {
+					throw new UnsupportedOperationException("unsupported: default-exported variable binding");
+				}
+				if (exportedElement.varDeclsOrBindings.size > 1) {
+					throw new UnsupportedOperationException("unsupported: several default-exported variable declarations in a single export declaration");
+				}
+				val varDecl = exportedElement.varDeclsOrBindings.head as VariableDeclaration;
+				val varDeclSTE = findSymbolTableEntryForElement(varDecl, true);
+				insertBefore(exportDecl, exportedElement); // will remove exportedElement from exportDecl
+				exportDecl.defaultExportedExpression = _IdentRef(varDeclSTE);
+			}
+		}
 	}
 }
