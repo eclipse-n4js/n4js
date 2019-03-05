@@ -13,7 +13,9 @@ package org.eclipse.n4js.transpiler.es.transform
 import com.google.inject.Inject
 import org.eclipse.n4js.ModuleSpecifierAdjustment
 import org.eclipse.n4js.N4JSLanguageConstants
+import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.ImportDeclaration
+import org.eclipse.n4js.n4JS.ModifiableElement
 import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.transpiler.Transformation
@@ -44,7 +46,14 @@ class ModuleWrappingTransformationNEW extends Transformation {
 	}
 
 	override transform() {
+		// adjust module specifiers in imports
 		collectNodes(state.im, ImportDeclaration, false).forEach[transformImportDecl];
+
+		// strip modifiers off all exported elements
+		// (e.g. remove "public" from something like "export public let a = 'hello';")
+		collectNodes(state.im, ExportDeclaration, false).map[exportedElement].filter(ModifiableElement).forEach[
+			it.declaredModifiers.clear
+		];
 	}
 
 	def private void transformImportDecl(ImportDeclaration importDeclIM) {
