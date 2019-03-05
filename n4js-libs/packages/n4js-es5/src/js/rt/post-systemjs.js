@@ -58,7 +58,7 @@
         if (options.debug) {
             console.log("## Loading " + mod);
         }
-        return _n4jsImport(mod).then(function(exp) {
+        return _n4jsImport(`${mod}.js`).then(function(exp) {
             if (n4.stylesheetsReady) { // i.e. web
                 // Wait til the last moment to check whether all stylesheets have been loaded:
                 return new Promise(function(resolveFn, rejectFn) {
