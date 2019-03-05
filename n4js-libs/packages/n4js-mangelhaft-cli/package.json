@@ -19,9 +19,9 @@
   },
   "dependencies": {
     "cli-color": "~1.2.0",
-    "esm": "~3.2.10",
     "glob": "~7.1.2",
     "n4js-cli": "^0.1.0",
+    "n4js-node": "^0.1.0",
     "n4js-runtime-es2015": "^0.1.0",
     "n4js-runtime-fetch": "^0.1.0",
     "n4js-runtime-node": "^0.1.0",

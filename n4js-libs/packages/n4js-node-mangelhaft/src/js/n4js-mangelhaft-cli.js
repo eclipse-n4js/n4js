@@ -24,15 +24,14 @@
         return json;
     }
 
-    var lib_run = require("n4js-node/src-gen/run.js");
+    const lib_run = require("n4js-node/src-gen/run.js");
 
-    var execData = global.$executionData;
+    const execData = global.$executionData;
     if (execData) {
         delete global.$executionData;
         lib_run.runWith({
             "ideExecData": execData,
             "test-catalog": tryJSON(execData.testTree),
-            "loader-support-api-not-implemented": true,
             "keep-eventloop": true,
             "main": "org.eclipse.n4js.mangelhaft.runner.ide/src-gen/org/eclipse/n4js/mangelhaft/runner/ide/IDENodeTestRunner"
         }, true /* exitOnError */);

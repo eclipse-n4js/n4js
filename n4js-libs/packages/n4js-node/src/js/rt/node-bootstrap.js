@@ -11,8 +11,8 @@
 (function() {
     "use strict";
 
-    var lib_path = require("path");
-    var N4JS_RT_PREFIX = "N4JS_RT_";
+    const lib_path = require("path");
+    const N4JS_RT_PREFIX = "N4JS_RT_";
 
     function installN4JSRuntime(options) {
         if (typeof $makeClass !== "undefined") {
@@ -21,8 +21,8 @@
 
         options = options || {};
 
-        var env = process.env;
-        var envOptions = Object.keys(env).reduce(function(memo, k) {
+        const env = process.env;
+        const envOptions = Object.keys(env).reduce(function(memo, k) {
             if (k.startsWith(N4JS_RT_PREFIX)) {
                 memo[k.substring(N4JS_RT_PREFIX.length).toLowerCase().replace(/_/g, "-")] = env[k];
             }
@@ -55,21 +55,16 @@
                 deviceId: "pc"
             }
         };
+        
+        require = require("esm")(module);
+        global._nodeRequire = require;
 
-        var fetch = global.fetch = require("node-fetch");
+        const fetch = global.fetch = require("node-fetch");
         ["Request", "Response", "Headers"].forEach(function(p) {
             global[p] = fetch[p];
         });
         require("./node-url-polyfill.js");
 
-        if (!global.System || !global.System.import) {
-            if (options.cjs) { // enforce commonJS
-                var CJSLoader = require("./node-cjs-loader-polyfill.js").Loader;
-                global.System = new CJSLoader(require, { exports: {} });
-            } else { // install SystemJS
-                require("systemjs");
-            }
-        }
         require("n4js-es5/src-gen/rt.js");
 
         return options;

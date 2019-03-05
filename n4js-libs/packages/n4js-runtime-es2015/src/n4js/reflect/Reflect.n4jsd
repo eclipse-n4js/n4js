@@ -13,8 +13,6 @@
 export external public abstract class Reflect__ {
     private constructor();
 
-    public Loader: constructor{Loader};
-
     public apply(target: Function, thisArgument: Object, argumentsList: Array<any>): any;
     public construct(target: Function, argumentsList: Array<any>, newTarget: Object=): Object;
     public defineProperty(target: Object, propertyKey: union{symbol, string}, descr: Object): boolean;
@@ -31,5 +29,3 @@ export external public abstract class Reflect__ {
 }
 
 export external public const Reflect: Reflect__;
-export external public const System: Loader;
-

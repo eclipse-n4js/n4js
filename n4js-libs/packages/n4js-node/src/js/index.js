@@ -14,14 +14,4 @@
     if (!global.$makeClass) {
         require("./rt/node-bootstrap.js").installN4JSRuntime();
     }
-    var CJSLoader = require("./rt/node-cjs-loader-polyfill.js").Loader,
-        staticSystem = new CJSLoader();
-
-    exports.staticSystem = staticSystem;
-
-    exports.System = function(req, mod) {
-        // detect whether the module is being loaded via require(),
-        // otherwise fall back to using SystemJS:
-        return mod.loaded ? global.System : new CJSLoader(req, mod);
-    };
 })();

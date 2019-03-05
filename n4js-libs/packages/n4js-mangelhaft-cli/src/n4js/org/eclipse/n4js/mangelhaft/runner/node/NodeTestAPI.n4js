@@ -151,7 +151,7 @@ export default public class NodeTestAPI {
                 options.testCatalog = file;
             } else { // try to resolve via NPM
                 try {
-                    options.testCatalog = System._nodeRequire.resolve(options.testCatalog);
+                    options.testCatalog = _nodeRequire.resolve(options.testCatalog);
                 } catch (exc) {
                     throw new Error(`Cannot resolve test catalog: ${options.testCatalog}`);
                 }
@@ -211,7 +211,7 @@ export default public class NodeTestAPI {
                 execArgv.push(`--inspect-brk=${options.inspectBrk}`);
             }
 
-            const n4jsRun = System._nodeRequire.resolve("n4js-node/src-gen/n4js-cli");
+            const n4jsRun = _nodeRequire.resolve("n4js-node/src-gen/n4js-cli");
 
             if (options.debug) {
                 console.log("TestRun fork:", n4jsRun);
