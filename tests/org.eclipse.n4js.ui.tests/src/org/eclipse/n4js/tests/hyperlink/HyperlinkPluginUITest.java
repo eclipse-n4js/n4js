@@ -122,7 +122,7 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 		page = EclipseUIUtils.getActivePage();
 		assertEquals("Wrong editor title", "events.n4jsd", editor.getTitle());
 		TextSelection selectionEvent = (TextSelection) page.getSelection();
-		assertTrue("Selection must be 'EventEmitter'", selectionEvent.getText().equals("EventEmitter"));
+		assertEquals("Wrong selection", "EventEmitter", selectionEvent.getText());
 	}
 
 	/**
@@ -169,10 +169,60 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 		TextSelection selectionEvent = (TextSelection) page.getSelection();
 
 		assertEquals("Wrong editor title", "events.n4jsd", editor.getTitle());
-		assertTrue("Selection must be 'EventEmitter'", selectionEvent.getText().equals("EventEmitter"));
+		assertEquals("Wrong selection", "EventEmitter", selectionEvent.getText());
 	}
 
 	/**
+	 * Test to check that hyperlinks to file URIs does work.
+	 * <p>
+	 * This test will open a version of the hyperlink project that is part of a yarn workspace. Also, the yarn workspace
+	 * project is closed in the Eclipse workspace. Consequently, the external libraries are not available as a platform
+	 * resource.
+	 */
+	@Test
+	public void testHyperlinksToFileUri() throws CoreException {
+		File prjDir = new File(getResourceUri(PROBANDS, SUBFOLDER));
+		ProjectTestsUtils.importYarnWorkspace(libraryManager, prjDir, "YarnWorkspaceProject");
+		waitForAutoBuild();
+
+		IProject ywPrj = ResourcesPlugin.getWorkspace().getRoot().getProject("YarnWorkspaceProject");
+		ywPrj.close(new NullProgressMonitor());
+
+		IWorkbenchPage page = EclipseUIUtils.getActivePage();
+		UIUtils.waitForUiThread();
+		XtextEditor editor = openAndGetXtextEditorViaProjectExplorer(page,
+				PROJECT_NAME,
+				"src",
+				"ABC.n4js");
+		UIUtils.waitForUiThread();
+
+		// while (libraryManager != null) {
+		// while (Display.getCurrent().readAndDispatch())
+		// ;
+		// Display.getCurrent().sleep();
+		// }
+
+		ISourceViewer sourceViewer = editor.getInternalSourceViewer();
+		IRegion region = new Region(364, 7); // find location with Breakpoint in N4JSHyperlinkHelper
+		IHyperlink[] hlinksInProcess = hyperlinkDetector.detectHyperlinks(sourceViewer, region, true);
+
+		assertTrue("Hyperlink in external library missing", hlinksInProcess != null && hlinksInProcess.length == 1);
+		assertTrue("Hyperlink must be of type XtextHyperlink", hlinksInProcess[0] instanceof XtextHyperlink);
+		XtextHyperlink hyperlinkToEvent = (XtextHyperlink) hlinksInProcess[0];
+		URI uriEvent = hyperlinkToEvent.getURI();
+		assertTrue("Hyperlink URI must be a file uri", uriEvent.isFile());
+
+		editor = (XtextEditor) uriEditorOpener.open(uriEvent, true);
+		page = EclipseUIUtils.getActivePage();
+		UIUtils.waitForUiThread();
+		TextSelection selectionEvent = (TextSelection) page.getSelection();
+
+		assertEquals("Wrong editor title", "process.n4jsd", editor.getTitle());
+		assertEquals("Wrong selection", "process", selectionEvent.getText());
+	}
+
+	/**
+	 * Test for hyperlink support on npm dependencies in package.json files.
 	 */
 	@Test
 	public void testHyperlinksOnPackageJson() throws CoreException {
@@ -180,16 +230,16 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 		ProjectTestsUtils.importProject(prjDir, PROJECT_NAME);
 		waitForAutoBuild();
 
+		libraryManager.runNpmYarnInstallOnAllProjects(new NullProgressMonitor());
 		syncExtAndBuild();
 		UIUtils.waitForUiThread();
+		assertNoErrors();
 
 		IWorkbenchPage page = EclipseUIUtils.getActivePage();
 		XtextEditor editor = openAndGetXtextEditorViaProjectExplorer(page,
 				PROJECT_NAME,
-				"External Dependencies",
-				"N4JS Runtime",
-				"Runtime Libraries",
-				"n4js-runtime-node",
+				"node_modules",
+				"n4js-runtime-node 0.13.4 [Runtime library]",
 				"package.json");
 		UIUtils.waitForUiThread();
 
@@ -198,7 +248,7 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 				.getServiceForContext(JSONGlobals.FILE_EXTENSION, DefaultHyperlinkDetector.class).get();
 
 		ISourceViewer sourceViewer = editor.getInternalSourceViewer();
-		IRegion region = new Region(676, 19); // find location with Breakpoint in PackageJsonHyperlinkHelperExtension
+		IRegion region = new Region(973, 0); // find location with Breakpoint in PackageJsonHyperlinkHelperExtension
 		IHyperlink[] hlinksInProcess = pckjsonHD.detectHyperlinks(sourceViewer, region, true);
 
 		assertTrue("Hyperlink in external library missing", hlinksInProcess != null && hlinksInProcess.length == 1);

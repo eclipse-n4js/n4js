@@ -85,7 +85,7 @@ public class N4JSEditor extends XtextEditor implements IShowInSource, IShowInTar
 				}
 			}
 		}
-		return true;
+		return super.isEditable();
 	}
 
 	/**
