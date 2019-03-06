@@ -35,6 +35,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IMarker;
@@ -45,6 +46,7 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -63,6 +65,7 @@ import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.ui.utils.TimeoutRuntimeException;
 import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.n4js.utils.io.FileCopier;
+import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
 import org.eclipse.ui.texteditor.MarkerUtilities;
 import org.eclipse.ui.wizards.datatransfer.FileSystemStructureProvider;
@@ -72,6 +75,7 @@ import org.eclipse.xtext.ui.MarkerTypes;
 import org.eclipse.xtext.ui.XtextProjectHelper;
 import org.eclipse.xtext.ui.resource.IResourceSetProvider;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
+import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.junit.Assert;
 
 import com.google.common.base.Joiner;
@@ -240,6 +244,55 @@ public class ProjectTestsUtils {
 		}, monitor);
 
 		waitForAllJobs();
+		return project;
+	}
+
+	/**
+	 * Imports the given yarn workspace project. Also imports (by reference) all projects located in the subfolder
+	 * 'packages'.
+	 *
+	 * @return yarn workspace project
+	 */
+	public static IProject importYarnWorkspace(LibraryManager libraryManager, File parentFolder, String yarnProjectName)
+			throws CoreException {
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		IProject yarnProject = ProjectTestsUtils.importProject(parentFolder, yarnProjectName);
+
+		IPath yarnPath = yarnProject.getLocation();
+		IPath yarnPackagesPath = yarnPath.append("packages");
+		for (String yarnPackageName : yarnPackagesPath.toFile().list()) {
+			IPath packagePath = yarnPackagesPath.append(yarnPackageName);
+			if (yarnPackageName.startsWith("@")) {
+				for (String scopedPackageName : packagePath.toFile().list()) {
+					IPath scopedPackagePath = packagePath.append(scopedPackageName);
+					importProjectNotCopy(workspace, scopedPackagePath.toFile(), new NullProgressMonitor());
+				}
+			} else {
+				importProjectNotCopy(workspace, packagePath.toFile(), new NullProgressMonitor());
+			}
+		}
+
+		if (libraryManager != null) {
+			waitForAllJobs();
+			libraryManager.runNpmYarnInstall(URI.createFileURI(yarnPath.toString()), new NullProgressMonitor());
+		}
+		waitForAllJobs();
+		waitForAutoBuild();
+		return yarnProject;
+	}
+
+	/**
+	 * Imports a project by reference into the workspace
+	 *
+	 * @return the created project
+	 */
+	public static IProject importProjectNotCopy(IWorkspace workspace, File rootFolder, IProgressMonitor progressMonitor)
+			throws CoreException {
+		IPath path = new org.eclipse.core.runtime.Path(new File(rootFolder, "_project").getAbsolutePath());
+		IProjectDescription desc = workspace.loadProjectDescription(path);
+		IProject project = workspace.getRoot().getProject(desc.getName());
+		project.create(desc, progressMonitor);
+		project.open(progressMonitor);
 		return project;
 	}
 
@@ -620,6 +673,39 @@ public class ProjectTestsUtils {
 	/***/
 	public static void deleteProject(IProject project) throws CoreException {
 		project.delete(true, true, new NullProgressMonitor());
+	}
+
+	/**
+	 * Close all projects in workspace. When having a yarn workspace project in the workspace, run this method before
+	 * invoking {@link IResourcesSetupUtil#cleanWorkspace()}. This will remove all projects from the index.
+	 */
+	public static void closeAllProjectsInWorkspace() {
+		try {
+			new WorkspaceModifyOperation() {
+
+				@Override
+				protected void execute(IProgressMonitor monitor)
+						throws CoreException, InvocationTargetException,
+						InterruptedException {
+
+					IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+					IProject[] visibleProjects = root.getProjects();
+					for (IProject visibleProject : visibleProjects) {
+						visibleProject.close(monitor);
+					}
+
+					IProject[] hiddenProjects = root.getProjects(IContainer.INCLUDE_HIDDEN);
+					for (IProject hiddenProject : hiddenProjects) {
+						hiddenProject.close(monitor);
+					}
+
+				}
+			}.run(monitor());
+		} catch (InvocationTargetException e) {
+			Exceptions.sneakyThrow(e.getCause());
+		} catch (Exception e) {
+			throw new RuntimeException();
+		}
 	}
 
 	/**

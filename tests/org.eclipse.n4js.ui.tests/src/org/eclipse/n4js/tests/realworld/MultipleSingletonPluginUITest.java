@@ -32,8 +32,6 @@ import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.utils.InjectorCollector;
 import org.eclipse.xtext.ui.shared.contribution.ISharedStateContributionRegistry;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import com.google.common.collect.HashMultimap;
@@ -62,21 +60,9 @@ public class MultipleSingletonPluginUITest extends AbstractBuilderParticipantTes
 	@Inject
 	ISharedStateContributionRegistry sharedRegistry;
 
-	/**
-	 * Updates the known external library locations with the {@code node_modules} folder.
-	 */
-	@Before
-	public void setup() throws Exception {
-		setupShippedLibraries();
-	}
-
-	/**
-	 * Tries to make sure the external libraries are cleaned from the Xtext index, cleanup file system leftovers.
-	 */
-	@After
 	@Override
-	public void tearDown() throws Exception {
-		tearDownShippedLibraries();
+	protected boolean provideShippedCode() {
+		return true;
 	}
 
 	/**

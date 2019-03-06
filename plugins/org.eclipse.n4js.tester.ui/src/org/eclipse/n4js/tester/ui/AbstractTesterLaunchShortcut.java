@@ -29,7 +29,9 @@ import org.eclipse.n4js.runner.ui.AbstractLaunchConfigurationMainTab;
 import org.eclipse.n4js.tester.TestConfiguration;
 import org.eclipse.n4js.tester.TesterFrontEnd;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.PlatformUI;
 
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
@@ -84,8 +86,9 @@ public abstract class AbstractTesterLaunchShortcut implements ILaunchShortcut {
 		copyProjectsLaunchConfigSettings(resourceToTest, testConfig, type);
 
 		ILaunchConfiguration launchConfig = testConfigConverter.toLaunchConfiguration(type, testConfig, null);
-		DebugUITools.launch(launchConfig, mode);
-		// execution dispatched to proper ILaunchConfigurationDelegate
+
+		Display display = PlatformUI.getWorkbench().getDisplay();
+		display.syncExec(() -> DebugUITools.launch(launchConfig, mode));
 	}
 
 	/**

@@ -36,17 +36,21 @@ import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import com.google.inject.Inject;
 
 /**
  *
- * 1) P1, P2 im Eclipse workspace; keine dependency zw P1, P2; P1 -> lodash; P2 -> immutable a) full build -> errors in
- * both projects b) run "npm install" in P1 -> errors in P1 gone c) run "npm install" in P2 -> all errors gone
+ * Setup: P1, P2 in Eclipse workspace<br>
+ * - no dependency between P1, P2;<br>
+ * - dependency P1 -> lodash;<br>
+ * - dependency P2 -> immutable
+ * <p>
+ * a) full build -> errors in both projects<br>
+ * b) run "npm install" in P1 -> errors in P1 gone<br>
+ * c) run "npm install" in P2 -> all errors gone<br>
  */
 public class SideBySideNonYarnProjectsInstallNpmPluginUITest extends AbstractBuilderParticipantTest {
 
@@ -64,18 +68,16 @@ public class SideBySideNonYarnProjectsInstallNpmPluginUITest extends AbstractBui
 	@Inject
 	private ProjectDescriptionLoader prjDescLoader;
 
-	@Before
 	@Override
-	public void setUp() throws Exception {
-		super.setUp();
-		setupShippedLibraries();
+	protected boolean provideShippedCode() {
+		return true;
 	}
 
 	/**
 	 * Install different npm packages in two independent projects.
 	 *
 	 * <pre>
-	 * 1) P1, P2 im Eclipse workspace; keine dependency zw P1, P2; P1 -> lodash; P2 -> immutable
+	 * 1) P1, P2 in Eclipse workspace; no dependency between P1, P2; P1 -> lodash; P2 -> immutable
 	 * 		a) full build -> errors in both projects
 	 * 		b) run "npm install" in P1 -> errors in P1 gone
 	 * 		c) run "npm install" in P2 -> all errors gone
@@ -93,23 +95,31 @@ public class SideBySideNonYarnProjectsInstallNpmPluginUITest extends AbstractBui
 		IFile pkgJsonP1 = prjP1.getFile(getResourceName(N4JSGlobals.PACKAGE_JSON));
 		IFile pkgJsonP2 = prjP2.getFile(getResourceName(N4JSGlobals.PACKAGE_JSON));
 
-		assertIssues(pkgJsonP1, "line 15: Project does not exist with project ID: lodash.");
+		assertIssues(pkgJsonP1,
+				"line 15: Project does not exist with project ID: lodash.",
+				"line 16: Project depends on workspace project P2 which is missing in the node_modules folder. "
+						+ "Either install project P2 or introduce a yarn workspace of both of the projects.");
 		assertIssues(pkgJsonP2, "line 15: Project does not exist with project ID: immutable.");
 
-		org.eclipse.emf.common.util.URI prjP1URI = org.eclipse.emf.common.util.URI
-				.createFileURI(prjP1.getLocation().toString());
+		URI prjP1URI = URI.createFileURI(prjP1.getLocation().toString());
 		String lodashVersion = getDependencyVersion(prjP1URI, "lodash");
 		libraryManager.installNPM("lodash", lodashVersion, prjP1URI, new NullProgressMonitor());
 		waitForAutoBuild();
-		assertIssues(pkgJsonP1); // No error in P1 anymore
+
+		// no lodash error anymore
+		assertIssues(pkgJsonP1,
+				"line 15: Project depends on workspace project P2 which is missing in the node_modules folder. "
+						+ "Either install project P2 or introduce a yarn workspace of both of the projects.");
 		assertIssues(pkgJsonP2, "line 15: Project does not exist with project ID: immutable.");
 
-		org.eclipse.emf.common.util.URI prjP2URI = org.eclipse.emf.common.util.URI
-				.createFileURI(prjP2.getLocation().toString());
+		URI prjP2URI = URI.createFileURI(prjP2.getLocation().toString());
 		String immutableVersion = getDependencyVersion(prjP2URI, "immutable");
 		libraryManager.installNPM("immutable", immutableVersion, prjP2URI, new NullProgressMonitor());
 		waitForAutoBuild();
-		assertIssues(pkgJsonP1); // No errors in P1 anymore
+
+		assertIssues(pkgJsonP1,
+				"line 15: Project depends on workspace project P2 which is missing in the node_modules folder. "
+						+ "Either install project P2 or introduce a yarn workspace of both of the projects.");
 		assertIssues(pkgJsonP2); // No errors in P2 anymore
 	}
 
@@ -117,9 +127,9 @@ public class SideBySideNonYarnProjectsInstallNpmPluginUITest extends AbstractBui
 	 * Install the same npm package in two independent projects.
 	 *
 	 * <pre>
-	 * 2) P1, P2 im Eclipse workspace; keine dependency zw P1, P2; P1 -> lodash; P2 -> lodash
+	 * 2) P1, P2 in Eclipse workspace; no dependency between P1, P2; P1 -> lodash; P2 -> lodash
 	 * 	  a) full build -> errors in both projects
-	 *	  b) run "npm install" in P1 -> all errors gone (TODO: Why?? Reconsider this!)
+	 *	  b) run "npm install" in P1 -> error of P1 gone
 	 * </pre>
 	 */
 	@Test
@@ -137,13 +147,12 @@ public class SideBySideNonYarnProjectsInstallNpmPluginUITest extends AbstractBui
 		assertIssues(pkgJsonP1, "line 15: Project does not exist with project ID: lodash.");
 		assertIssues(pkgJsonP2, "line 15: Project does not exist with project ID: lodash.");
 
-		org.eclipse.emf.common.util.URI prjP1URI = org.eclipse.emf.common.util.URI
-				.createFileURI(prjP1.getLocation().toString());
+		URI prjP1URI = URI.createFileURI(prjP1.getLocation().toString());
 		String lodashVersion = getDependencyVersion(prjP1URI, "lodash");
 		libraryManager.installNPM("lodash", lodashVersion, prjP1URI, new NullProgressMonitor());
 		waitForAutoBuild();
 		assertIssues(pkgJsonP1); // No errors in P1 anymore
-		assertIssues(pkgJsonP2); // No errors in P2 anymore
+		assertIssues(pkgJsonP2, "line 15: Project does not exist with project ID: lodash.");
 	}
 
 	/**
@@ -167,26 +176,33 @@ public class SideBySideNonYarnProjectsInstallNpmPluginUITest extends AbstractBui
 		IFile pkgJsonP1 = prjP1.getFile(getResourceName(N4JSGlobals.PACKAGE_JSON));
 		IFile pkgJsonP2 = prjP2.getFile(getResourceName(N4JSGlobals.PACKAGE_JSON));
 
-		assertIssues(pkgJsonP1, "line 15: Project does not exist with project ID: lodash.");
+		assertIssues(pkgJsonP1,
+				"line 16: Project depends on workspace project P2 which is missing in the node_modules folder. "
+						+ "Either install project P2 or introduce a yarn workspace of both of the projects.",
+				"line 15: Project does not exist with project ID: lodash.");
 		assertIssues(pkgJsonP2, "line 15: Project does not exist with project ID: immutable.");
 
-		org.eclipse.emf.common.util.URI prjP1URI = org.eclipse.emf.common.util.URI
-				.createFileURI(prjP1.getLocation().toString());
+		URI prjP1URI = URI.createFileURI(prjP1.getLocation().toString());
 		String lodashVersion = getDependencyVersion(prjP1URI, "lodash");
 		libraryManager.installNPM("lodash", lodashVersion, prjP1URI, new NullProgressMonitor());
 		waitForAutoBuild();
-		assertIssues(pkgJsonP1); // No error in P1 anymore
+
+		// lodash error gone
+		assertIssues(pkgJsonP1,
+				"line 15: Project depends on workspace project P2 which is missing in the node_modules folder. "
+						+ "Either install project P2 or introduce a yarn workspace of both of the projects.");
 		assertIssues(pkgJsonP2, "line 15: Project does not exist with project ID: immutable.");
 
-		org.eclipse.emf.common.util.URI prjP2URI = org.eclipse.emf.common.util.URI
-				.createFileURI(prjP2.getLocation().toString());
+		URI prjP2URI = URI.createFileURI(prjP2.getLocation().toString());
 		String immutableVersion = getDependencyVersion(prjP2URI, "immutable");
 		libraryManager.installNPM("immutable", immutableVersion, prjP2URI, new NullProgressMonitor());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 
+		assertIssues(pkgJsonP1,
+				"line 15: Project depends on workspace project P2 which is missing in the node_modules folder. "
+						+ "Either install project P2 or introduce a yarn workspace of both of the projects.");
 		assertIssues(pkgJsonP2); // No errors in P2 anymore
-		assertIssues(pkgJsonP1); // No errors in P1 anymore
 
 		// the uri of the module to be executed
 		final URI moduleToRunURI = URI.createPlatformResourceURI("P1/src/A.n4js", true);
@@ -250,7 +266,7 @@ public class SideBySideNonYarnProjectsInstallNpmPluginUITest extends AbstractBui
 		return out.stream().collect(Collectors.joining("\n"));
 	}
 
-	private String getDependencyVersion(org.eclipse.emf.common.util.URI prjURI, String dependencyName) {
+	private String getDependencyVersion(URI prjURI, String dependencyName) {
 		ProjectDescription prjDesc1 = prjDescLoader.loadProjectDescriptionAtLocation(prjURI);
 		Optional<ProjectDependency> depPrj = prjDesc1.getProjectDependencies().stream()
 				.filter(prjDep -> prjDep.getProjectName().equals(dependencyName))
@@ -262,11 +278,4 @@ public class SideBySideNonYarnProjectsInstallNpmPluginUITest extends AbstractBui
 		}
 	}
 
-	@After
-	@Override
-	public void tearDown() throws Exception {
-		tearDownShippedLibraries();
-		super.tearDown();
-
-	}
 }

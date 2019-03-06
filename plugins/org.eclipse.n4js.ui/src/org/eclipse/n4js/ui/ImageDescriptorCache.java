@@ -127,6 +127,12 @@ public enum ImageDescriptorCache {
 		TYPES("javaassist_co.gif"),
 
 		/** Project mode image reference. */
+		PROJECT_IMG("prj_obj.png"),
+
+		/** Project mode image reference. */
+		PROJECT_CLOSED_IMG("cprj_obj.png"),
+
+		/** Project mode image reference. */
 		PROJECT_MODE("prj_mode.gif"),
 
 		/** Reference to the image 'Showing hidden working sets'. */

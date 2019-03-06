@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -35,6 +36,8 @@ import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.SemverMatcher;
 import org.eclipse.n4js.semver.SemverUtils;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
+import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper;
+import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper.NodeModulesFolder;
 import org.eclipse.n4js.utils.ProcessExecutionCommandStatus;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.StatusHelper;
@@ -61,6 +64,9 @@ public class NpmCLI {
 
 	@Inject
 	private ExternalLibraryWorkspace externalLibraryWorkspace;
+
+	@Inject
+	private NodeModulesDiscoveryHelper nodeModulesDiscoveryHelper;
 
 	@Inject
 	private StatusHelper statusHelper;
@@ -203,11 +209,9 @@ public class NpmCLI {
 	private Collection<LibraryChange> batchInstallInternal(IProgressMonitor monitor, MultiStatus status,
 			Collection<LibraryChange> requestedChanges, URI target) {
 
-		MultiStatus batchStatus = statusHelper.createMultiStatus("Installing npm packages.");
 		SubMonitor subMonitor = SubMonitor.convert(monitor, 1);
 		subMonitor.setTaskName("Installing npm packages.");
 
-		Collection<LibraryChange> actualChanges = new LinkedHashSet<>();
 		// Convert platform URI to local (e.g. file) URI
 		URI localURI = CommonPlugin.asLocalURI(target);
 		File installPath = new File(localURI.toFileString());
@@ -223,28 +227,13 @@ public class NpmCLI {
 		IStatus installStatus = install(packageNamesAndVersions, installPath);
 		subMonitor.worked(1);
 
+		Set<LibraryChange> actualChanges;
+		MultiStatus batchStatus = statusHelper.createMultiStatus("Installing npm packages.");
 		if (installStatus == null || !installStatus.isOK()) {
+			actualChanges = Collections.emptySet();
 			batchStatus.merge(installStatus);
 		} else {
-			String nodeModulesFolder = N4JSGlobals.NODE_MODULES;
-			Path basePath = installPath.toPath().resolve(nodeModulesFolder);
-			for (LibraryChange reqChg : requestedChanges) {
-				if (reqChg.type == LibraryChangeType.Install) {
-					Path completePath = basePath.resolve(reqChg.name);
-					String actualVersion = getActualVersion(completePath);
-					if (actualVersion.isEmpty()) {
-						String msg = "Error reading package json when " + reqChg.toString();
-						IStatus packJsonError = statusHelper.createError(msg);
-						logger.logError(msg, new IllegalStateException(msg));
-						batchStatus.merge(packJsonError);
-					} else {
-						URI actualLocation = URI.createFileURI(completePath.toString());
-						LibraryChange actualChange = new LibraryChange(LibraryChangeType.Added, actualLocation,
-								reqChg.name, actualVersion);
-						actualChanges.add(actualChange);
-					}
-				}
-			}
+			actualChanges = computeActualChanges(installPath.toPath(), requestedChanges, batchStatus);
 		}
 
 		if (!batchStatus.isOK()) {
@@ -253,6 +242,40 @@ public class NpmCLI {
 		}
 
 		return actualChanges;
+	}
+
+	private Set<LibraryChange> computeActualChanges(Path installPath, Collection<LibraryChange> requestedChanges,
+			MultiStatus mergeStatusHere) {
+		Set<LibraryChange> result = new LinkedHashSet<>();
+		Path nodeModulesFolder = installPath.resolve(N4JSGlobals.NODE_MODULES);
+		for (LibraryChange reqChg : requestedChanges) {
+			if (reqChg.type == LibraryChangeType.Install) {
+				Path completePath = nodeModulesFolder.resolve(reqChg.name);
+				String actualVersion = getActualVersion(completePath);
+				if (actualVersion.isEmpty()) {
+					// unable to load version from package.json:
+					// -> retry loading from node_modules folder located in yarn workspace root folder
+					NodeModulesFolder nmf = nodeModulesDiscoveryHelper.getNodeModulesFolder(installPath);
+					if (nmf.isYarnWorkspace) {
+						Path nodeModulesFolderInYarnWorkspaceRoot = nmf.nodeModulesFolder.toPath();
+						completePath = nodeModulesFolderInYarnWorkspaceRoot.resolve(reqChg.name);
+						actualVersion = getActualVersion(completePath);
+					}
+				}
+				if (actualVersion.isEmpty()) {
+					String msg = "Error reading package json when " + reqChg.toString();
+					IStatus packJsonError = statusHelper.createError(msg);
+					logger.logError(msg, new IllegalStateException(msg));
+					mergeStatusHere.merge(packJsonError);
+				} else {
+					URI actualLocation = URI.createFileURI(completePath.toString());
+					LibraryChange actualChange = new LibraryChange(LibraryChangeType.Added, actualLocation,
+							reqChg.name, actualVersion);
+					result.add(actualChange);
+				}
+			}
+		}
+		return result;
 	}
 
 	private String getActualVersion(Path completePath) {

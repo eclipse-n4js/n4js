@@ -2,8 +2,8 @@
   "name": "P1",
   "version": "0.0.1",
   "dependencies": {
-	"n4js.lang": "^1.0.0-rc.2",
-	"n4js-es5": "0.1.0"
+	"n4js.lang": "",
+	"n4js-es5": "0.13.4"
   },
   "n4js": {
     "projectType": "library",

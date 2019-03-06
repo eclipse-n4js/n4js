@@ -24,6 +24,10 @@
 			}
 	}
 
+
+	IssueConfiguration {
+		IssueCode "MISSING_YARN_WORKSPACE" { enabled = false }
+	}
    END_SETUP
  */
 // XPECT nowarnings -->
@@ -36,7 +40,7 @@
 		// XPECT noerrors -->
 		"test.data.test.project.two": "*",
 		// XPECT errors --> "Duplicate project reference test.data.test.project.one." at ""test.data.test.project.one": "*""
-		// XPECT warnings --> "Property test.data.test.project.one duplicates property test.data.test.project.one (line 35)." at ""test.data.test.project.one""
+		// XPECT warnings --> "Property test.data.test.project.one duplicates property test.data.test.project.one (line 39)." at ""test.data.test.project.one""
 		"test.data.test.project.one": "*"
 	},
 	"devDependencies": {

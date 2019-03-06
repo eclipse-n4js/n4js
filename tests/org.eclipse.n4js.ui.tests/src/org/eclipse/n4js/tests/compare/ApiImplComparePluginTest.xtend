@@ -13,21 +13,23 @@ package org.eclipse.n4js.tests.compare
 import com.google.inject.Inject
 import java.io.File
 import org.eclipse.core.resources.IProject
-import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.n4js.ApiImplCompareTestHelper
 import org.eclipse.n4js.N4JSUiInjectorProvider
 import org.eclipse.n4js.compare.ProjectCompareHelper
+import org.eclipse.n4js.external.LibraryManager
 import org.eclipse.n4js.tests.util.ProjectTestsUtils
 import org.eclipse.n4js.ui.compare.ProjectCompareTreeHelper
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
-import org.eclipse.xtext.ui.XtextProjectHelper
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil
-import org.junit.BeforeClass
+import org.junit.After
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
-import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.addNature
+import static org.eclipse.n4js.tests.builder.BuilderUtil.countResourcesInIndex
+import static org.eclipse.n4js.tests.builder.BuilderUtil.getAllResourceDescriptionsAsString
+import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.root
 
 import static extension org.eclipse.n4js.tests.util.ProjectTestsUtils.*
 
@@ -43,15 +45,29 @@ class ApiImplComparePluginTest extends AbstractApiImplCompareTest {
 	@Inject
 	private ProjectCompareTreeHelper projectCompareTreeHelper;
 	@Inject
+	private LibraryManager libraryManager;
+	@Inject
 	private extension ApiImplCompareTestHelper;
 
+	private IProject yarnProject;
 
-	@BeforeClass
-	public static def void setupEclipseWorkspace() {
+	@Before
+	public def void setupEclipseWorkspace() {
 		IResourcesSetupUtil.cleanWorkspace
-		importTestProject(PROJECT_ID_UTILS)
-		importTestProject(PROJECT_ID_API)
-		importTestProject(PROJECT_ID_IMPL)
+		val parentFolder = new File("probands/ApiImplCompare");
+		yarnProject = ProjectTestsUtils.importYarnWorkspace(libraryManager, parentFolder, YARN_PROJECT);
+	}
+
+	@After
+	public def void teardownEclipseWorkspace() {
+		ProjectTestsUtils.closeAllProjectsInWorkspace();
+		IResourcesSetupUtil.cleanWorkspace();
+		IResourcesSetupUtil.cleanBuild();
+		waitForAutoBuild();
+		ProjectTestsUtils.waitForAllJobs;
+		assertEquals(0, root().getProjects().length);
+		assertEquals("Resources in index:\n" + getAllResourceDescriptionsAsString() + "\n", 0,
+				countResourcesInIndex());
 	}
 
 
@@ -110,26 +126,6 @@ class ApiImplComparePluginTest extends AbstractApiImplCompareTest {
 		pImpl2.deleteProject
 		pImpl1.deleteProject
 		pApi.deleteProject
-
-		waitForAutoBuild
 	}
 
-	def private static void deleteProjects( IProject[] projects) {
-		for ( IProject project : projects) {
-			if (project.exists()) {
-					project.delete(true, true, new NullProgressMonitor());
-			}
-		}
-	}
-
-	/**
-	 * Imports a project from the probands/ApiImplCompare folder
-	 */
-	private static def IProject importTestProject(String name) {
-		val project = importProject(new File("probands/ApiImplCompare"), name);
-		addNature(project, XtextProjectHelper.NATURE_ID);
-		IResourcesSetupUtil.waitForBuild
-		assertMarkers("imported test project '"+name+"' should have no errors/warnings", project, 0)
-		return project;
-	}
 }
