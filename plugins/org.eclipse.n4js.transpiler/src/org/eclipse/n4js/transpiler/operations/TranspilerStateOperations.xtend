@@ -244,6 +244,14 @@ class TranspilerStateOperations {
 		state.rewireSymbolTable(enumDecl, varDecl);
 	}
 
+	/**
+	 * Replace an enum declaration by a function declaration.
+	 */
+	def public static void replace(TranspilerState state, N4EnumDeclaration enumDecl, FunctionDeclaration funDecl) {
+		state.replaceWithoutRewire(enumDecl, funDecl);
+		state.rewireSymbolTable(enumDecl, funDecl);
+	}
+
 	def public static void replace(TranspilerState state, FunctionDeclaration funDecl, VariableDeclaration varDecl) {
 		val isExported = funDecl.eContainer instanceof ExportDeclaration;
 		val varStmnt = _VariableStatement(isExported, varDecl);

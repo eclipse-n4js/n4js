@@ -11,7 +11,9 @@
 package org.eclipse.n4js.transpiler.es.transform
 
 import com.google.inject.Inject
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.AnnotationDefinition
+import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.transpiler.Transformation
@@ -56,15 +58,18 @@ class EnumDeclarationTransformation extends Transformation {
 			// (they do not have a representation in the output code)
 			remove(enumDecl);
 		} else {
-			val varDecl = createVarDecl(enumDecl);
+			val EObject varOrFunDecl = if (state.project.isUseES6Imports) createFunDecl(enumDecl) else createVarDecl(enumDecl);
 			val makeEnumCall = bootstrapCallAssistant.createMakeEnumCall(enumDecl);
 			state.tracer.copyTrace(enumDecl, makeEnumCall);
 
-			replace(enumDecl, varDecl);
-			val root = varDecl.eContainer.orContainingExportDeclaration;
+			if (varOrFunDecl instanceof VariableDeclaration) {
+				replace(enumDecl, varOrFunDecl);
+				state.info.markAsToHoist(varOrFunDecl);
+			} else if (varOrFunDecl instanceof FunctionDeclaration) {
+				replace(enumDecl, varOrFunDecl);
+			}
+			val root = varOrFunDecl.eContainer.orContainingExportDeclaration;
 			insertAfter(root, makeEnumCall);
-
-			state.info.markAsToHoist(varDecl);
 		}
  	}
 
@@ -80,6 +85,19 @@ class EnumDeclarationTransformation extends Transformation {
 				''')
 			);
 		];
+	}
+
+	/**
+	 * Same as {@link #createVarDecl(N4EnumDeclaration)}, but creates a function declaration
+	 * instead of variable declaration with function expression as initializer.
+	 */
+	def private FunctionDeclaration createFunDecl(N4EnumDeclaration enumDecl) {
+		return _FunDecl(enumDecl.name, #[ _Fpar("name"), _Fpar("value") ],
+			_SnippetAsStmnt('''
+				this.name = name;
+				this.value = value;
+			''')
+		);
 	}
 
 	def private boolean isStringBased(N4EnumDeclaration enumDecl) {

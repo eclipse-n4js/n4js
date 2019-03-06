@@ -29,6 +29,9 @@ class FunctionDeclarationTransformation extends Transformation {
 	}
 
 	override assertPostConditions() {
+		if (state.project.isUseES6Imports) {
+			return;
+		}
 		assertFalse("there should not be any top-level FunctionDeclarations in the intermediate model",
 			state.im.eAllContents.filter(FunctionDeclaration).exists[typeAssistant.isTopLevel(it)]);
 	}
@@ -39,6 +42,9 @@ class FunctionDeclarationTransformation extends Transformation {
 	}
 
 	override transform() {
+		if (state.project.isUseES6Imports) {
+			return;
+		}
 		collectNodes(state.im, FunctionDeclaration, false).forEach[doTransform];
 	}
 

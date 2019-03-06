@@ -151,6 +151,11 @@ public abstract class TranspilerComponent {
 	}
 
 	@SuppressWarnings("javadoc")
+	protected void replace(N4EnumDeclaration enumDecl, FunctionDeclaration funDecl) {
+		TranspilerStateOperations.replace(state, enumDecl, funDecl);
+	}
+
+	@SuppressWarnings("javadoc")
 	protected void replace(N4MemberDeclaration memberDecl, N4MemberDeclaration replacement) {
 		TranspilerStateOperations.replace(state, memberDecl, replacement);
 	}

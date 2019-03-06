@@ -126,10 +126,14 @@ public class TranspilerBuilderBlocks
 	}
 
 	public static def VariableStatement _VariableStatement(boolean exported, VariableDeclaration... varDecls) {
+		return _VariableStatement(exported, VariableStatementKeyword.VAR, varDecls);
+	}
+
+	public static def VariableStatement _VariableStatement(boolean exported, VariableStatementKeyword keyword, VariableDeclaration... varDecls) {
 		if(exported) {
-			return _ExportedVariableStatement(varDecls);
+			return _ExportedVariableStatement(keyword, varDecls);
 		} else {
-			return _VariableStatement(varDecls);
+			return _VariableStatement(keyword, varDecls);
 		}
 	}
 	public static def VariableStatement _VariableStatement(VariableDeclaration... varDecls) {
@@ -143,9 +147,9 @@ public class TranspilerBuilderBlocks
 		return result;
 	}
 
-	public static def ExportedVariableStatement _ExportedVariableStatement(VariableDeclaration... varDecls) {
+	public static def ExportedVariableStatement _ExportedVariableStatement(VariableStatementKeyword keyword, VariableDeclaration... varDecls) {
 		val result = N4JSFactory.eINSTANCE.createExportedVariableStatement;
-		result.varStmtKeyword = VariableStatementKeyword.VAR;
+		result.varStmtKeyword = keyword;
 		result.varDeclsOrBindings += varDecls.filterNull;
 		return result;
 	}
