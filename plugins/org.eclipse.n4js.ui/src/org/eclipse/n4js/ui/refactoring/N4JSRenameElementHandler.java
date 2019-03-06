@@ -78,7 +78,7 @@ public class N4JSRenameElementHandler extends DefaultRenameElementHandler {
 								}
 
 								ResourceSet rs = selectedElement.eResource().getResourceSet();
-								N4JSRefactoringResourceSetProvider.myGlobalResourceSet = rs;
+								// N4JSRefactoringResourceSetProvider.myGlobalResourceSet = rs;
 
 								if (selectedElement != null) {
 									@SuppressWarnings("hiding")

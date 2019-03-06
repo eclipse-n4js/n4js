@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.ui.refactoring;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.xtext.ui.refactoring.impl.RefactoringResourceSetProvider;
 
@@ -18,10 +17,25 @@ import org.eclipse.xtext.ui.refactoring.impl.RefactoringResourceSetProvider;
  * HACK! We need to use the ResourceSet that contains already built resources
  */
 public class N4JSRefactoringResourceSetProvider extends RefactoringResourceSetProvider {
-	public static ResourceSet myGlobalResourceSet;
+	// public static ResourceSet myGlobalResourceSet;
+	//
+	// @Override
+	// public ResourceSet get(IProject project) {
+	// // final ResourceSet resourceSet = resourceSetProvider.get();
+	// // resourceSet.getLoadOptions().put(PERSISTED_DESCRIPTIONS, TRUE);
+	// // createAllResourcesWorkspace(resourceSet);
+	// // attachResourceDescriptionsData(resourceSet);
+	// // return resourceSet;
+	//
+	// // return N4JSRefactoringResourceSetProvider.myGlobalResourceSet;
+	// return super.get(project);
+	// }
 
 	@Override
-	public ResourceSet get(IProject project) {
-		return N4JSRefactoringResourceSetProvider.myGlobalResourceSet;
+	protected void configure(ResourceSet resourceSet) {
+		// Install a lightweight index.
+		// OrderedResourceDescriptionsData index = new OrderedResourceDescriptionsData(Collections.emptyList());
+		// ResourceDescriptionsData.ResourceSetAdapter.installResourceDescriptionsData(resourceSet, index);
 	}
+
 }

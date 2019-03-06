@@ -105,6 +105,7 @@ import org.eclipse.n4js.ui.preferences.N4JSBuilderPreferenceAccess;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
 import org.eclipse.n4js.ui.quickfix.N4JSIssue;
 import org.eclipse.n4js.ui.quickfix.N4JSMarkerResolutionGenerator;
+import org.eclipse.n4js.ui.refactoring.N4JSLinkedPositionGroupCalculator;
 import org.eclipse.n4js.ui.refactoring.N4JSRefactoringCrossReferenceSerializer;
 import org.eclipse.n4js.ui.refactoring.N4JSRefactoringResourceSetProvider;
 import org.eclipse.n4js.ui.refactoring.N4JSRenameElementHandler;
@@ -177,6 +178,7 @@ import org.eclipse.xtext.ui.refactoring.impl.AbstractRenameProcessor;
 import org.eclipse.xtext.ui.refactoring.impl.DefaultRenameStrategy;
 import org.eclipse.xtext.ui.refactoring.impl.RefactoringCrossReferenceSerializer;
 import org.eclipse.xtext.ui.refactoring.impl.RefactoringResourceSetProvider;
+import org.eclipse.xtext.ui.refactoring.ui.DefaultLinkedPositionGroupCalculator;
 import org.eclipse.xtext.ui.refactoring.ui.DefaultRenameElementHandler;
 import org.eclipse.xtext.ui.resource.DefaultResourceUIServiceProvider;
 import org.eclipse.xtext.ui.shared.Access;
@@ -894,9 +896,9 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 		return N4JSRenameElementHandler.class;
 	}
 
-	// public Class<? extends DefaultLinkedPositionGroupCalculator> bindDefaultLinkedPositionGroupCalculator() {
-	// return N4JSLinkedPositionGroupCalculator.class;
-	// }
+	public Class<? extends DefaultLinkedPositionGroupCalculator> bindDefaultLinkedPositionGroupCalculator() {
+		return N4JSLinkedPositionGroupCalculator.class;
+	}
 
 	/** Custom rename strategy */
 	public Class<? extends DefaultRenameStrategy> bindDefaultRenameStrategy() {

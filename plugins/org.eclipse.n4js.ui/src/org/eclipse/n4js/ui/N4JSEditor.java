@@ -26,6 +26,7 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
 import org.eclipse.jface.viewers.IDecoration;
+import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
 import org.eclipse.n4js.utils.URIUtils;
@@ -57,6 +58,9 @@ import com.google.inject.Inject;
  * a conversion from file to platform uri is done.
  */
 public class N4JSEditor extends XtextEditor implements IShowInSource, IShowInTargetList {
+
+	@Inject
+	private FileExtensionsRegistry fileExtensionsRegistry;
 
 	private static final Logger LOG = Logger.getLogger(N4JSEditor.class);
 
@@ -209,6 +213,7 @@ public class N4JSEditor extends XtextEditor implements IShowInSource, IShowInTar
 
 	@Override
 	protected void doSetInput(IEditorInput input) throws CoreException {
+		System.out.println("Editor's fileExtensionsRegistry = " + fileExtensionsRegistry);
 		input = tryConvertToFileUriInput(input);
 		super.doSetInput(input);
 	}
