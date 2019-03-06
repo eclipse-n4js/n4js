@@ -362,6 +362,7 @@ class ASTStructureValidator {
 			val exportedElement = model.exportedElement;
 			if (exportedElement instanceof VariableStatement) {
 // TODO GH-47: re-enable this validation when default export of values is supported
+// NOTE: tests already exist for this; search for files DefaultExportWith*.n4js.xt
 //				val nodes = NodeModelUtils.findNodesForFeature(exportedElement, N4JSPackage.eINSTANCE.variableDeclarationContainer_VarStmtKeyword);
 //				producer.node = nodes.head ?: NodeModelUtils.findActualNodeFor(exportedElement);
 //				producer.addDiagnostic(

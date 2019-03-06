@@ -11,5 +11,5 @@
 
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
 
-// XPECT errors --> "Default exports may not be used with var, let, or const." at "var"
+// XPECT FIXME errors --> "Default exports may not be used with var, let, or const." at "var"
 export default public var a = "hello";
