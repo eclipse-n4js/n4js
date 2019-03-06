@@ -62,13 +62,15 @@ class EnumDeclarationTransformation extends Transformation {
 			val makeEnumCall = bootstrapCallAssistant.createMakeEnumCall(enumDecl);
 			state.tracer.copyTrace(enumDecl, makeEnumCall);
 
+			var EObject root;
 			if (varOrFunDecl instanceof VariableDeclaration) {
 				replace(enumDecl, varOrFunDecl);
 				state.info.markAsToHoist(varOrFunDecl);
+				root = varOrFunDecl.eContainer.orContainingExportDeclaration;
 			} else if (varOrFunDecl instanceof FunctionDeclaration) {
 				replace(enumDecl, varOrFunDecl);
+				root = varOrFunDecl.orContainingExportDeclaration;
 			}
-			val root = varOrFunDecl.eContainer.orContainingExportDeclaration;
 			insertAfter(root, makeEnumCall);
 		}
  	}
