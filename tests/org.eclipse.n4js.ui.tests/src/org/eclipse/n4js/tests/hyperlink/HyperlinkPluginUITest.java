@@ -14,6 +14,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -190,17 +192,12 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 
 		IWorkbenchPage page = EclipseUIUtils.getActivePage();
 		UIUtils.waitForUiThread();
-		XtextEditor editor = openAndGetXtextEditorViaProjectExplorer(page,
-				PROJECT_NAME,
-				"src",
-				"ABC.n4js");
-		UIUtils.waitForUiThread();
 
-		// while (libraryManager != null) {
-		// while (Display.getCurrent().readAndDispatch())
-		// ;
-		// Display.getCurrent().sleep();
-		// }
+		Path path = Paths.get(PROJECT_NAME, "src", "ABC.n4js");
+		org.eclipse.core.runtime.Path iPath = new org.eclipse.core.runtime.Path(path.toString());
+		IFile iFile = ResourcesPlugin.getWorkspace().getRoot().getFile(iPath);
+		XtextEditor editor = openAndGetXtextEditor(iFile, page);
+		UIUtils.waitForUiThread();
 
 		ISourceViewer sourceViewer = editor.getInternalSourceViewer();
 		IRegion region = new Region(364, 7); // find location with Breakpoint in N4JSHyperlinkHelper
