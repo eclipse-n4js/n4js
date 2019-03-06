@@ -361,11 +361,12 @@ class ASTStructureValidator {
 		if (model.isDefaultExport) {
 			val exportedElement = model.exportedElement;
 			if (exportedElement instanceof VariableStatement) {
-				val nodes = NodeModelUtils.findNodesForFeature(exportedElement, N4JSPackage.eINSTANCE.variableDeclarationContainer_VarStmtKeyword);
-				producer.node = nodes.head ?: NodeModelUtils.findActualNodeFor(exportedElement);
-				producer.addDiagnostic(
-					new DiagnosticMessage(IssueCodes.messageForIMP_DEFAULT_EXPORT_WITH_VAR_LET_CONST,
-						IssueCodes.getDefaultSeverity(IssueCodes.IMP_DEFAULT_EXPORT_WITH_VAR_LET_CONST), IssueCodes.IMP_DEFAULT_EXPORT_WITH_VAR_LET_CONST))
+// TODO GH-47: re-enable this validation when default export of values is supported
+//				val nodes = NodeModelUtils.findNodesForFeature(exportedElement, N4JSPackage.eINSTANCE.variableDeclarationContainer_VarStmtKeyword);
+//				producer.node = nodes.head ?: NodeModelUtils.findActualNodeFor(exportedElement);
+//				producer.addDiagnostic(
+//					new DiagnosticMessage(IssueCodes.messageForIMP_DEFAULT_EXPORT_WITH_VAR_LET_CONST,
+//						IssueCodes.getDefaultSeverity(IssueCodes.IMP_DEFAULT_EXPORT_WITH_VAR_LET_CONST), IssueCodes.IMP_DEFAULT_EXPORT_WITH_VAR_LET_CONST))
 			}
 		}
 		recursiveValidateASTStructure(
