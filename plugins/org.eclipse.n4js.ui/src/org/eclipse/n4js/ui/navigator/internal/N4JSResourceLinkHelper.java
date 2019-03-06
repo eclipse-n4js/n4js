@@ -58,7 +58,7 @@ public class N4JSResourceLinkHelper extends ResourceLinkHelper {
 	@Inject
 	private N4JSProjectExplorerHelper helper;
 
-	// XXX: Obsolete when virtual nodes are removed
+	// TODO 1259: Obsolete when virtual nodes are removed
 	@Override
 	public void activateEditor(final IWorkbenchPage page, final IStructuredSelection selection) {
 		if (null != selection && !selection.isEmpty()) {
@@ -84,7 +84,7 @@ public class N4JSResourceLinkHelper extends ResourceLinkHelper {
 		super.activateEditor(page, selection);
 	}
 
-	// XXX: Obsolete when virtual nodes are removed
+	// TODO 1259: Obsolete when virtual nodes are removed
 	@Override
 	public IStructuredSelection findSelection(IEditorInput input) {
 
