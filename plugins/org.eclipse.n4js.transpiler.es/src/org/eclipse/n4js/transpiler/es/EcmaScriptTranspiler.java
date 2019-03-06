@@ -16,6 +16,7 @@ import java.io.Writer;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.generator.GeneratorOption;
 import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.transpiler.AbstractTranspiler;
 import org.eclipse.n4js.transpiler.Transformation;
@@ -176,6 +177,12 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 	private void doWrapAndWrite(N4JSResource resource, Writer outCode) {
 		// check if wrapping really applies.
 		boolean moduleWrapping = !n4jsCore.isNoModuleWrapping(resource.getURI());
+
+		// suppress wrapping in new "useES6Imports" mode
+		IN4JSProject project = n4jsCore.findProject(resource.getURI()).orNull();
+		if (project != null && project.isUseES6Imports()) {
+			moduleWrapping = false;
+		}
 
 		// get script
 		EObject script = resource.getContents().get(0);
