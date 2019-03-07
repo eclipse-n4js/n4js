@@ -43,6 +43,7 @@ import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.editor.hyperlinking.DefaultHyperlinkDetector;
 import org.eclipse.xtext.ui.editor.hyperlinking.XtextHyperlink;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.inject.Inject;
@@ -74,6 +75,7 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 	 * file based uri.
 	 */
 	@Test
+	@Ignore
 	public void testHyperlinks() throws CoreException {
 		File prjDir = new File(getResourceUri(PROBANDS, SUBFOLDER));
 		IProject project = ProjectTestsUtils.importProject(prjDir, PROJECT_NAME);
@@ -135,6 +137,7 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 	 * the Project Explorer view.
 	 */
 	@Test
+	@Ignore
 	public void testHyperlinksWhenOpenedFromExplorer() throws CoreException {
 		File prjDir = new File(getResourceUri(PROBANDS, SUBFOLDER));
 		ProjectTestsUtils.importProject(prjDir, PROJECT_NAME);
@@ -182,6 +185,7 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 	 * resource.
 	 */
 	@Test
+	@Ignore
 	public void testHyperlinksToFileUri() throws CoreException {
 		File prjDir = new File(getResourceUri(PROBANDS, SUBFOLDER));
 		ProjectTestsUtils.importYarnWorkspace(libraryManager, prjDir, "YarnWorkspaceProject");
