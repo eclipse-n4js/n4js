@@ -10,32 +10,28 @@
  */
 package org.eclipse.n4js.ui.refactoring;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 import org.eclipse.xtext.ui.refactoring.impl.RefactoringResourceSetProvider;
+
+import com.google.inject.Inject;
 
 /**
  * HACK! We need to use the ResourceSet that contains already built resources
  */
+@SuppressWarnings("restriction")
 public class N4JSRefactoringResourceSetProvider extends RefactoringResourceSetProvider {
-	// public static ResourceSet myGlobalResourceSet;
-	//
-	// @Override
-	// public ResourceSet get(IProject project) {
-	// // final ResourceSet resourceSet = resourceSetProvider.get();
-	// // resourceSet.getLoadOptions().put(PERSISTED_DESCRIPTIONS, TRUE);
-	// // createAllResourcesWorkspace(resourceSet);
-	// // attachResourceDescriptionsData(resourceSet);
-	// // return resourceSet;
-	//
-	// // return N4JSRefactoringResourceSetProvider.myGlobalResourceSet;
-	// return super.get(project);
-	// }
+	@Inject
+	IN4JSCore core;
 
 	@Override
-	protected void configure(ResourceSet resourceSet) {
-		// Install a lightweight index.
-		// OrderedResourceDescriptionsData index = new OrderedResourceDescriptionsData(Collections.emptyList());
-		// ResourceDescriptionsData.ResourceSetAdapter.installResourceDescriptionsData(resourceSet, index);
+	public ResourceSet get(IProject project) {
+		// LIVE_SCOPE does not. PERSISTED_DESCRIPTIONS however works
+		ResourceSet rs = super.get(project);
+		rs.getLoadOptions().remove(ResourceDescriptionsProvider.LIVE_SCOPE);
+		rs.getLoadOptions().put(ResourceDescriptionsProvider.PERSISTED_DESCRIPTIONS, Boolean.TRUE);
+		return rs;
 	}
-
 }

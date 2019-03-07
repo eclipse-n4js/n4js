@@ -14,7 +14,6 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.n4js.n4JS.FieldAccessor;
@@ -77,7 +76,7 @@ public class N4JSRenameElementHandler extends DefaultRenameElementHandler {
 									selectedElement = ((TStructField) selectedElement).getDefinedMember();
 								}
 
-								ResourceSet rs = selectedElement.eResource().getResourceSet();
+								// ResourceSet rs = selectedElement.eResource().getResourceSet();
 								// N4JSRefactoringResourceSetProvider.myGlobalResourceSet = rs;
 
 								if (selectedElement != null) {
