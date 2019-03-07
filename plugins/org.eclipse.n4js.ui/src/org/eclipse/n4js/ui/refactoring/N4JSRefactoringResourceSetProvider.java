@@ -19,7 +19,7 @@ import org.eclipse.xtext.ui.refactoring.impl.RefactoringResourceSetProvider;
 import com.google.inject.Inject;
 
 /**
- * HACK! We need to use the ResourceSet that contains already built resources
+ * Xtext's RefactoringResourceSetProvider uses LIVE_SCOPE resource loading which does not work for some reason.
  */
 @SuppressWarnings("restriction")
 public class N4JSRefactoringResourceSetProvider extends RefactoringResourceSetProvider {
