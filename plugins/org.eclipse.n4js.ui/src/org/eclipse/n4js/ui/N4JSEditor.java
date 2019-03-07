@@ -26,6 +26,7 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
 import org.eclipse.jface.viewers.IDecoration;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
 import org.eclipse.n4js.utils.URIUtils;
@@ -60,6 +61,10 @@ public class N4JSEditor extends XtextEditor implements IShowInSource, IShowInTar
 
 	private static final Logger LOG = Logger.getLogger(N4JSEditor.class);
 
+	private static final Image FILE_N4JS = ImageRef.FILE_N4JS.asImage().orNull();
+	private static final Image FILE_N4JSD = ImageRef.FILE_N4JSD.asImage().orNull();
+	private static final Image FILE_N4JSX = ImageRef.FILE_N4JSX.asImage().orNull();
+
 	private N4JSEditorErrorTickUpdater errorTickUpdater = null;
 
 	private final AtomicInteger reconcilingCounter = new AtomicInteger();
@@ -75,6 +80,27 @@ public class N4JSEditor extends XtextEditor implements IShowInSource, IShowInTar
 
 	/* package */ void setErrorTickUpdater(N4JSEditorErrorTickUpdater errorTickUpdater) {
 		this.errorTickUpdater = errorTickUpdater;
+	}
+
+	/**
+	 * TODO: Remove this bug-fix when the Xtext issue is solved: https://github.com/eclipse/xtext-eclipse/issues/1005
+	 */
+	@Override
+	protected void setTitleImage(Image titleImage) {
+		String name = this.getEditorInput().getName();
+		if (name.endsWith("." + N4JSGlobals.N4JS_FILE_EXTENSION)) {
+			super.setTitleImage(FILE_N4JS);
+			return;
+		}
+		if (name.endsWith("." + N4JSGlobals.N4JSD_FILE_EXTENSION)) {
+			super.setTitleImage(FILE_N4JSD);
+			return;
+		}
+		if (name.endsWith("." + N4JSGlobals.N4JSX_FILE_EXTENSION)) {
+			super.setTitleImage(FILE_N4JSX);
+			return;
+		}
+		super.setTitleImage(titleImage);
 	}
 
 	/**
