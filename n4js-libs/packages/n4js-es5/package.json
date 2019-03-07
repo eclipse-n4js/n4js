@@ -29,11 +29,6 @@
         "src/js"
       ]
     },
-    "moduleFilters": {
-      "noModuleWrap": [
-        "**"
-      ]
-    },
     "moduleLoader": "n4js",
     "initModules": [
       "rt"

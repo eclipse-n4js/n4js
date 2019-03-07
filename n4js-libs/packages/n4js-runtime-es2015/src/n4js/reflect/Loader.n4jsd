@@ -13,9 +13,7 @@
 /**
  * Limited interim solution until we have proper support for `import()`.
  */
-@Internal
 export external public function _n4jsImport(path: string): Promise<Object, any>;
-@Internal
 export external public const _nodeRequire: ~Function with {
     resolve: (string) => string
 };

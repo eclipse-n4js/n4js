@@ -40,11 +40,6 @@
         "src/js"
       ]
     },
-    "moduleFilters": {
-      "noModuleWrap": [
-        "**"
-      ]
-    },
     "extendedRuntimeEnvironment": "n4js-node",
     "providedRuntimeLibraries": [
       "n4js-runtime-n4",

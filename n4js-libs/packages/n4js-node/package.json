@@ -49,11 +49,6 @@
         "src/js"
       ]
     },
-    "moduleFilters": {
-      "noModuleWrap": [
-        "**"
-      ]
-    },
     "extendedRuntimeEnvironment": "n4js-es5",
     "providedRuntimeLibraries": [
       "n4js-runtime-n4",
