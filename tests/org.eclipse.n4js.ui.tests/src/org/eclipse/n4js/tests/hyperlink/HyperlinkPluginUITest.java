@@ -91,6 +91,7 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 
 		IWorkbenchPage page = EclipseUIUtils.getActivePage();
 		XtextEditor editor = openAndGetXtextEditor(fileABC, page);
+		assertEquals("org.eclipse.n4js.N4JS", editor.getLanguageName());
 		ISourceViewer sourceViewer = editor.getInternalSourceViewer();
 		IRegion region = new Region(367, 0); // find location with Breakpoint in N4JSHyperlinkHelper
 		ProjectTestsUtils.waitForAllJobs();
@@ -157,6 +158,7 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 				"n4js",
 				"process.n4jsd");
 		UIUtils.waitForUiThread();
+		assertEquals("org.eclipse.n4js.N4JS", editor.getLanguageName());
 
 		ISourceViewer sourceViewer = editor.getInternalSourceViewer();
 		IRegion region = new Region(556, 12); // find location with Breakpoint in N4JSHyperlinkHelper
@@ -202,6 +204,7 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 		IFile iFile = ResourcesPlugin.getWorkspace().getRoot().getFile(iPath);
 		XtextEditor editor = openAndGetXtextEditor(iFile, page);
 		UIUtils.waitForUiThread();
+		assertEquals("org.eclipse.n4js.N4JS", editor.getLanguageName());
 
 		ISourceViewer sourceViewer = editor.getInternalSourceViewer();
 		IRegion region = new Region(364, 7); // find location with Breakpoint in N4JSHyperlinkHelper
@@ -244,9 +247,17 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 				"package.json");
 		UIUtils.waitForUiThread();
 
+		// Path path = Paths.get(PROJECT_NAME, "node_modules", "n4js-runtime-node", "package.json");
+		// org.eclipse.core.runtime.Path iPath = new org.eclipse.core.runtime.Path(path.toString());
+		// IFile iFile = ResourcesPlugin.getWorkspace().getRoot().getFile(iPath);
+		// XtextEditor editor = openAndGetXtextEditor(iFile, page);
+		// UIUtils.waitForUiThread();
+
 		DefaultHyperlinkDetector pckjsonHD = null;
 		pckjsonHD = N4LanguageUtils
 				.getServiceForContext(JSONGlobals.FILE_EXTENSION, DefaultHyperlinkDetector.class).get();
+
+		assertEquals("org.eclipse.n4js.json.JSON", editor.getLanguageName());
 
 		ISourceViewer sourceViewer = editor.getInternalSourceViewer();
 		IRegion region = new Region(973, 0); // find location with Breakpoint in PackageJsonHyperlinkHelperExtension
