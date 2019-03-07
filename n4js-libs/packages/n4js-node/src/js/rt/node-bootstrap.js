@@ -58,6 +58,16 @@
         
         require = require("esm")(module);
         global._nodeRequire = require;
+        // TODO: fragile, will be removed once we have proper api/impl binding
+        if (options["strip-api-prj-suffix"]) {
+            const Module = require("module");
+            const _resolveFilename = Module._resolveFilename;
+            const stripApiSuffix_re = /^([^/]+)\.api\//;
+            Module._resolveFilename = function(request, parent, isMain) {
+                request = request.replace(stripApiSuffix_re, "$1/");
+                return _resolveFilename(request, parent, isMain);
+            };
+        }
 
         const fetch = global.fetch = require("node-fetch");
         ["Request", "Response", "Headers"].forEach(function(p) {

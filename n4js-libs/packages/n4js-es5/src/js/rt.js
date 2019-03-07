@@ -11,4 +11,4 @@
 require("./rt/profiling.js");
 require("./rt/N4BuiltInClasses.js");
 require("./rt/N4RuntimeBootstrap.js");
-require("./rt/post-systemjs.js");
+require("./rt/handle-main.js");

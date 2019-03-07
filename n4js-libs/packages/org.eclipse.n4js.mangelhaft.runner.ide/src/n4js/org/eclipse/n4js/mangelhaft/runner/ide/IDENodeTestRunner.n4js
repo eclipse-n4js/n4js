@@ -84,7 +84,7 @@ const root = N4Injector.of(Root, parentinj).create(Root);
 
 /*
  * Name {@code main} is required by n4js bootstrapping, that in most cases is done used 
- * runtime environment. See {@code n4js-es5/src/js/rt/post-systemjs.js} for example of
+ * runtime environment. See {@code n4js-es5/src/js/rt/handle-main.js} for example of
  * bootstrapping.
  * Note that also name of this module and the location needs to be in sync with low level
  * {@code require} statements in runtime environments and build scripts.

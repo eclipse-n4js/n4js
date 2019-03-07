@@ -9,11 +9,11 @@
  *   NumberFour AG - Initial API and implementation
  */
 /*eslint-disable new-cap */
-/*global N4ApiNotImplementedError, SystemJS */
 
 (function(global) {
     "use strict";
 
+    // TODO: will be removed once the parser could properly support global `import`.
     global._n4jsImport = function(path) {
         return import(path);
     };
