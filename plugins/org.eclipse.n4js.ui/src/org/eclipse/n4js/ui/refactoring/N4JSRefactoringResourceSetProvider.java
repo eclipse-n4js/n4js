@@ -12,19 +12,14 @@ package org.eclipse.n4js.ui.refactoring;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 import org.eclipse.xtext.ui.refactoring.impl.RefactoringResourceSetProvider;
-
-import com.google.inject.Inject;
 
 /**
  * Xtext's RefactoringResourceSetProvider uses LIVE_SCOPE resource loading which does not work for some reason.
  */
 @SuppressWarnings("restriction")
 public class N4JSRefactoringResourceSetProvider extends RefactoringResourceSetProvider {
-	@Inject
-	IN4JSCore core;
 
 	@Override
 	public ResourceSet get(IProject project) {
