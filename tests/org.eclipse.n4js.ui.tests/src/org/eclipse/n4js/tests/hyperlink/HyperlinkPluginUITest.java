@@ -31,6 +31,7 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.n4js.json.JSONGlobals;
+import org.eclipse.n4js.json.ui.internal.JsonActivator;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.EclipseUIUtils;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
@@ -240,18 +241,11 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 		assertNoErrors();
 
 		IWorkbenchPage page = EclipseUIUtils.getActivePage();
-		XtextEditor editor = openAndGetXtextEditorViaProjectExplorer(page,
-				PROJECT_NAME,
-				"node_modules",
-				"n4js-runtime-node 0.13.4 [Runtime library]",
-				"package.json");
+		Path path = Paths.get(PROJECT_NAME, "node_modules", "n4js-runtime-node", "package.json");
+		org.eclipse.core.runtime.Path iPath = new org.eclipse.core.runtime.Path(path.toString());
+		IFile iFile = ResourcesPlugin.getWorkspace().getRoot().getFile(iPath);
+		XtextEditor editor = openAndGetXtextEditorWithID(iFile, page, JsonActivator.ORG_ECLIPSE_N4JS_JSON_JSON);
 		UIUtils.waitForUiThread();
-
-		// Path path = Paths.get(PROJECT_NAME, "node_modules", "n4js-runtime-node", "package.json");
-		// org.eclipse.core.runtime.Path iPath = new org.eclipse.core.runtime.Path(path.toString());
-		// IFile iFile = ResourcesPlugin.getWorkspace().getRoot().getFile(iPath);
-		// XtextEditor editor = openAndGetXtextEditor(iFile, page);
-		// UIUtils.waitForUiThread();
 
 		DefaultHyperlinkDetector pckjsonHD = null;
 		pckjsonHD = N4LanguageUtils
