@@ -25,28 +25,34 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.CommonPlugin;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.n4js.json.JSONGlobals;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.json.ui.internal.JsonActivator;
+import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.EclipseUIUtils;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.ui.editor.N4JSHyperlinkDetector;
+import org.eclipse.n4js.ui.editor.hyperlinking.packagejson.PackageJsonHyperlinkHelperExtension;
 import org.eclipse.n4js.ui.utils.UIUtils;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.languages.N4LanguageUtils;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.editor.IURIEditorOpener;
 import org.eclipse.xtext.ui.editor.XtextEditor;
-import org.eclipse.xtext.ui.editor.hyperlinking.DefaultHyperlinkDetector;
 import org.eclipse.xtext.ui.editor.hyperlinking.XtextHyperlink;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.google.common.base.Optional;
 import com.google.inject.Inject;
 
 /**
@@ -68,6 +74,9 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 
 	@Inject
 	private IURIEditorOpener uriEditorOpener;
+
+	@Inject
+	private IN4JSCore core;
 
 	/**
 	 * The test invokes the method
@@ -247,15 +256,21 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 		XtextEditor editor = openAndGetXtextEditorWithID(iFile, page, JsonActivator.ORG_ECLIPSE_N4JS_JSON_JSON);
 		UIUtils.waitForUiThread();
 
-		DefaultHyperlinkDetector pckjsonHD = null;
-		pckjsonHD = N4LanguageUtils
-				.getServiceForContext(JSONGlobals.FILE_EXTENSION, DefaultHyperlinkDetector.class).get();
+		// IHyperlinkHelper helper
+		PackageJsonHyperlinkHelperExtension hlHelper = null;
+		hlHelper = N4LanguageUtils
+				.getServiceForContext(N4JSGlobals.N4JS_FILE_EXTENSION, PackageJsonHyperlinkHelperExtension.class).get();
 
 		assertEquals("org.eclipse.n4js.json.JSON", editor.getLanguageName());
 
 		ISourceViewer sourceViewer = editor.getInternalSourceViewer();
 		IRegion region = new Region(973, 0); // find location with Breakpoint in PackageJsonHyperlinkHelperExtension
-		IHyperlink[] hlinksInProcess = pckjsonHD.detectHyperlinks(sourceViewer, region, true);
+		// IHyperlink[] hlinksInProcess = hlHelper.detectHyperlinks(sourceViewer, region, true);
+
+		ResourceSet resourceSet = core.createResourceSet(Optional.absent());
+		Resource resource = resourceSet.getResource(URIUtils.convert(iFile), true);
+
+		IHyperlink[] hlinksInProcess = hlHelper.getHyperlinks((XtextResource) resource, 973);
 
 		assertTrue("Hyperlink in external library missing", hlinksInProcess != null && hlinksInProcess.length == 1);
 		assertTrue("Hyperlink must be of type XtextHyperlink", hlinksInProcess[0] instanceof XtextHyperlink);
