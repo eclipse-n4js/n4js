@@ -23,7 +23,7 @@
         };
 
         require("./rt/node-url-polyfill.js");
-        require("n4js-es5/src-gen/rt.js");
+        require("n4js-es5");
     }
 
 }(typeof global === "object" ? global : self));

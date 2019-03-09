@@ -118,9 +118,8 @@ export default public class NodeTestAPI {
                     for (const path of files) {
                         const rpath = path
                             .replace(n4jsFileExt_re, ".js")
-                            .split(lib_path.sep)
-                            .join("/");
-                        bundleGen.push(`require("./${rpath}");\n`);
+                            .split(lib_path.sep);
+                        bundleGen.push(`import * as ${rpath.join("_")} from "./${rpath.join("/")}";\n`);
                     }
                     if (bundleGen.length) {
                         const file = lib_path.join(dir, "__bundle-gen.js");

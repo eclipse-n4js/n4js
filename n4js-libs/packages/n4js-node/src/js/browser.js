@@ -12,8 +12,8 @@
     "use strict";
 
     if (!global.$makeClass) {
-        var isBrowser = !!(typeof window !== 'undefined' && typeof navigator !== 'undefined' && window.document),
-            isWebWorker = !isBrowser && typeof importScripts !== 'undefined';
+        const isBrowser = !!(typeof window !== 'undefined' && typeof navigator !== 'undefined' && window.document);
+        const isWebWorker = !isBrowser && typeof importScripts !== 'undefined';
 
         global.n4 = {
             runtimeOptions: global.n4 && global.n4.runtimeOptions || {},
@@ -25,7 +25,7 @@
             }
         };
 
-        require("n4js-es5/src-gen/rt.js");
+        require("n4js-es5");
     }
 
 }(typeof global === "object" ? global : self));

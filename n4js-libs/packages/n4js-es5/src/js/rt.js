@@ -8,7 +8,12 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-require("./rt/profiling.js");
-require("./rt/N4BuiltInClasses.js");
-require("./rt/N4RuntimeBootstrap.js");
-require("./rt/handle-main.js");
+(function(global) {
+    "use strict";
+
+    if (!global.$makeClass) {
+        require("./rt/N4BuiltInClasses.js");
+        require("./rt/N4RuntimeBootstrap.js");
+    }
+
+}(typeof global === "object" ? global : self));

@@ -11,9 +11,8 @@
  
 @@Global @@ProvidedByRuntime
 
-
-import {Profiling} from "n4/Profiling";
 import {RuntimeInfo} from "n4/RuntimeInfo";
+
 export external public class ~n4 {
     /**
      * Runtime options which may come per:
@@ -24,5 +23,4 @@ export external public class ~n4 {
      */
     public const runtimeOptions: Object+;
     public const runtimeInfo: RuntimeInfo;
-    public const profiling: Profiling;
 }
