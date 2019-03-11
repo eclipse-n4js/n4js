@@ -56,7 +56,8 @@ class EnumDeclarationTransformation extends Transformation {
 		if(enumDecl.isStringBased) {
 			// declarations of string-based enums are simply removed
 			// (they do not have a representation in the output code)
-			remove(enumDecl);
+			val root = enumDecl.orContainingExportDeclaration;
+			remove(root);
 		} else {
 			val EObject varOrFunDecl = if (state.project.isUseES6Imports) createFunDecl(enumDecl) else createVarDecl(enumDecl);
 			val makeEnumCall = bootstrapCallAssistant.createMakeEnumCall(enumDecl);
