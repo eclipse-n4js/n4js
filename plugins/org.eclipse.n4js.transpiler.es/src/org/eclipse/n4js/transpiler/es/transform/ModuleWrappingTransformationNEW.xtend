@@ -64,6 +64,10 @@ class ModuleWrappingTransformationNEW extends Transformation {
 		// invalid "export default var|let|const ..."
 		// TODO GH-1256 instead of the next line, change the earlier transformations to not produce the invalid constructs
 		collectNodes(state.im, ExportDeclaration, false).forEach[splitDefaultExportFromVarDecl];
+		
+		// add implicit import of "n4js-node"
+		// TODO GH-1256 this should be solved in a different way (maybe via a property in the n4js-section of the package.json)
+		addEmptyImport("n4js-node");
 	}
 
 	def private void transformImportDecl(ImportDeclaration importDeclIM) {

@@ -110,6 +110,11 @@ public abstract class TranspilerComponent {
 		TranspilerStateOperations.addNamedImport(state, steOfElementToImport, aliasOrNull);
 	}
 
+	/** See {@link TranspilerStateOperations#addEmptyImport(TranspilerState, String)}. */
+	public void addEmptyImport(String moduleSpecifier) {
+		TranspilerStateOperations.addEmptyImport(state, moduleSpecifier);
+	}
+
 	@SuppressWarnings("javadoc")
 	protected void setTarget(ParameterizedCallExpression callExpr, Expression newTarget) {
 		TranspilerStateOperations.setTarget(state, callExpr, newTarget);

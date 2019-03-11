@@ -142,8 +142,8 @@ import org.eclipse.xtext.EcoreUtil2;
 	@Override
 	public Boolean caseImportDeclaration(ImportDeclaration original) {
 		processAnnotations(original.getAnnotations());
-		// 1) import specifiers
 		write("import ");
+		// 1) import specifiers
 		List<ImportSpecifier> importSpecifiers = new ArrayList<>(original.getImportSpecifiers());
 		if (!importSpecifiers.isEmpty() && importSpecifiers.get(0) instanceof DefaultImportSpecifier) {
 			process(importSpecifiers.remove(0));
@@ -161,13 +161,16 @@ import org.eclipse.xtext.EcoreUtil2;
 				write('}');
 			}
 		}
-		// 2) module specifier
-		write(" from ");
+		// 2) "from"
+		if (original.isImportFrom()) {
+			write(" from ");
+		}
+		// 3) module specifier
 		String moduleSpecifier = original.getModuleSpecifierAsText() != null
 				? original.getModuleSpecifierAsText()
 				: original.getModule().getQualifiedName();
 		write(quote(moduleSpecifier));
-		// 3) empty line after block of imports
+		// 4) empty line after block of imports
 		boolean isLastImport = !(EcoreUtil2.getNextSibling(original) instanceof ImportDeclaration);
 		if (isLastImport) {
 			newLine();

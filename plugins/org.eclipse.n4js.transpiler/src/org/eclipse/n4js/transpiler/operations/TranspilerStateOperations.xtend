@@ -157,6 +157,26 @@ class TranspilerStateOperations {
 		state.info.setImportedModule(importDecl, moduleOfOriginalTarget);
 	}
 
+	/**
+	 * Adds an "empty" import to the intermediate model, i.e. an import of the form:
+	 * <pre>
+	 * import "&lt;moduleSpecifier>";
+	 * </pre>
+	 */
+	def public static void addEmptyImport(TranspilerState state, String moduleSpecifier) {
+		// 1) create import declaration
+		val importDecl = _ImportDecl() => [
+			moduleSpecifierAsText = moduleSpecifier
+		];
+		// 2) add import to intermediate model
+		val scriptElements = state.im.scriptElements;
+		if(scriptElements.empty) {
+			scriptElements.add(importDecl);
+		} else {
+			insertBefore(state, scriptElements.get(0), importDecl);
+		}
+	}
+
 	def public static void setTarget(TranspilerState state, ParameterizedCallExpression callExpr, Expression newTarget) {
 		val oldTarget = callExpr.target;
 		if(oldTarget!==null) {

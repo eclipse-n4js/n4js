@@ -106,6 +106,7 @@ public class TranspilerBuilderBlocks
 		val result = N4JSFactory.eINSTANCE.createImportDeclaration;
 		result.module = null; // must always be null, because we are in the intermediate model
 		result.importSpecifiers += importSpecifiers.filterNull;
+		result.importFrom = importSpecifiers.length > 0;
 		return result;
 	}
 
