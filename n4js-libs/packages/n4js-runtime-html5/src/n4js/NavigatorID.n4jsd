@@ -10,13 +10,11 @@
  */
 @@Global @@ProvidedByRuntime
 
-export external public abstract class Navigator extends Element implements NavigatorID {
-    public onLine: boolean;
-    public cookieEnabled: boolean;
-    public languages: Array<string>;
-    public language: string;
-    public get geolocation(): Geolocation;
-    // getBattery, connection, ...
+export external public interface ~NavigatorID {
+    public get appCodeName(): string;
+    public get appName(): string;
+    public get appVersion(): string;
+    public get platform(): string;
+    public get product(): string;
+    public get userAgent(): string;
 }
-
-export external public const navigator: Navigator;
