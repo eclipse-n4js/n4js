@@ -46,6 +46,15 @@ public enum ImageDescriptorCache {
 	 */
 	public static enum ImageRef {
 
+		/** File icon for n4js files. */
+		FILE_N4JS("file_n4js.png"),
+
+		/** File icon for n4jsd files. */
+		FILE_N4JSD("file_n4jsd.png"),
+
+		/** File icon for n4jsx files. */
+		FILE_N4JSX("file_n4jsx.png"),
+
 		/** The decorator for {@link ProjectType#TEST test} projects. */
 		PROJECT_TYPE_TEST_DECOR("test_project_type.png"),
 

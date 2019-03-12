@@ -26,8 +26,10 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
 import org.eclipse.jface.viewers.IDecoration;
+import org.eclipse.n4js.ts.ui.navigation.URIBasedStorage;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
+import org.eclipse.n4js.ui.labeling.N4JSDescriptionLabelProvider;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
@@ -73,8 +75,48 @@ public class N4JSEditor extends XtextEditor implements IShowInSource, IShowInTar
 	@Inject
 	private IStorage2UriMapper mapper;
 
+	@Inject
+	private N4JSDescriptionLabelProvider labelProvider;
+
 	/* package */ void setErrorTickUpdater(N4JSEditorErrorTickUpdater errorTickUpdater) {
 		this.errorTickUpdater = errorTickUpdater;
+	}
+
+	@Override
+	protected void setTitleImage(Image titleImage) {
+		titleImage = getImageN4JSVariantOrGiven(titleImage);
+
+		super.setTitleImage(titleImage);
+	}
+
+	/** This will show the icon variant according to the file extension: n4js, n4jsx, n4jsd, js, jsx */
+	protected Image getImageN4JSVariantOrGiven(Image titleImage) {
+		IEditorInput input = getEditorInput();
+		URI uri = null;
+		if (input instanceof XtextReadonlyEditorInput) {
+			XtextReadonlyEditorInput xrei = (XtextReadonlyEditorInput) input;
+			try {
+				IStorage storage = xrei.getStorage();
+				if (storage instanceof URIBasedStorage) {
+					URIBasedStorage ubs = (URIBasedStorage) storage;
+					uri = ubs.getURI();
+				}
+			} catch (CoreException e) {
+				e.printStackTrace();
+			}
+		}
+		if (input instanceof FileEditorInput) {
+			FileEditorInput fei = (FileEditorInput) input;
+			uri = URIUtils.convert(fei.getFile());
+
+		}
+		if (uri != null) {
+			Image image = labelProvider.getImageForURI(uri);
+			if (image != null) {
+				titleImage = image;
+			}
+		}
+		return titleImage;
 	}
 
 	/**
