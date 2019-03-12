@@ -29,6 +29,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.EclipseUIUtils;
+import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IViewPart;
@@ -69,7 +70,7 @@ public abstract class AbstractOutlineWorkbenchTest extends AbstractBuilderPartic
 
 	@Before
 	public void setUp2() throws Exception {
-		preferenceStore = new ScopedPreferenceStore(InstanceScope.INSTANCE, getEditorId());
+		preferenceStore = new ScopedPreferenceStore(InstanceScope.INSTANCE, N4JSActivator.ORG_ECLIPSE_N4JS_N4JS);
 		comparer = new IOutlineNodeComparer.Default();
 
 		// when using in XPECT, XPECT already creates the project structure

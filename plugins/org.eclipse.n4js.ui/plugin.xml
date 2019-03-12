@@ -1321,8 +1321,8 @@ Contributors:
               </selectionEnablement>
               <editorInputEnablement>
                   <or>
-                 <instanceof value="org.eclipse.ui.IFileEditorInput"/>
-                 <instanceof value="org.eclipse.xtext.ui.editor.XtextReadonlyEditorInput"/>
+                     <instanceof value="org.eclipse.ui.IFileEditorInput"/>
+                     <instanceof value="org.eclipse.xtext.ui.editor.XtextReadonlyEditorInput"/>
                  </or>
               </editorInputEnablement>
            </linkHelper>

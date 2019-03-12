@@ -91,15 +91,15 @@ public class ResourceUIValidatorExtension extends MarkerEraser implements IResou
 	}
 
 	/** Add list of issues to the given file. Used for issues of external libraries. */
-	public void createMarkers(IFile file, Resource resource, List<Issue> list) throws CoreException {
-		createMarkers(file, list, getMarkerCreator(resource), getMarkerTypeProvider(resource));
+	public void createMarkers(IResource iResource, Resource resource, List<Issue> list) throws CoreException {
+		createMarkers(iResource, list, getMarkerCreator(resource), getMarkerTypeProvider(resource));
 	}
 
-	private void createMarkers(IFile file, List<Issue> list, MarkerCreator markerCreator,
+	private void createMarkers(IResource iResource, List<Issue> list, MarkerCreator markerCreator,
 			MarkerTypeProvider markerTypeProvider) throws CoreException {
 
 		for (Issue issue : list) {
-			markerCreator.createMarker(issue, file, markerTypeProvider.getMarkerType(issue));
+			markerCreator.createMarker(issue, iResource, markerTypeProvider.getMarkerType(issue));
 		}
 	}
 
