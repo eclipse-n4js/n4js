@@ -1,0 +1,22 @@
+/*
+ * Copyright (c) 2019 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.N4JSBugreportTest END_SETUP  */
+
+class G<T> {
+	
+	m() {
+		// XPECT type of 'this' --> this[G<T>]
+		this;
+		// XPECT errors --> "this[G<T>] is not a subtype of G<string>." at "this"
+		const oops: G<string> = this;
+	}
+}
