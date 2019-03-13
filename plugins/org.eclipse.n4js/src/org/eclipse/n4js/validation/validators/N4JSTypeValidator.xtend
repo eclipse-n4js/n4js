@@ -26,6 +26,7 @@ import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.GenericDeclaration
 import org.eclipse.n4js.n4JS.GetterDeclaration
 import org.eclipse.n4js.n4JS.IdentifierRef
+import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSASTUtils
@@ -279,6 +280,15 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 				val memberDecl = EcoreUtil2.getContainerOfType(thisTypeRef, N4MemberDeclaration);
 				if (memberDecl !== null && memberDecl.static) {
 					return false;
+				}
+			}
+			// exception: disallow for static members of generic classes
+			if (classifierDecl instanceof N4ClassDeclaration) {
+				if (classifierDecl.generic) {
+					val memberDecl = EcoreUtil2.getContainerOfType(thisTypeRef, N4MemberDeclaration);
+					if (memberDecl !== null && memberDecl.static) {
+						return false;
+					}
 				}
 			}
 			val varianceOfPos = N4JSLanguageUtils.getVarianceOfPosition(thisTypeRef);

@@ -2549,12 +2549,12 @@ Structural typing and additional members in structural referenced types is descr
 .This Type
 [req,id=IDE-37,version=1]
 --
-
-
 * `this` used in the context of a class is actually inferred to an existential type `? extends A` inside the class itself.
 * the `this` type may only be used
 ** as the type of a formal parameter of a constructor, if and only if combined with use-site structural typing.
-** at covariant positions within member declarations, except for static members of interfaces.
+** at covariant positions within member declarations, except for:
+*** static members of interfaces.
+*** static members of generic classes.
 --
 
 Remarks

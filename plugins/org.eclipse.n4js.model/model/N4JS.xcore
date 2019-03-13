@@ -1788,6 +1788,10 @@ abstract class GenericDeclaration extends TypeDefiningElement {
 	 * so in most cases, the type model type variables are to be used.
 	 */
 	contains TypeVariable[] typeVars
+	/* Tells if this declaration is actually generic, i.e. whether type parameters are declared. */
+	op boolean isGeneric() {
+		return !typeVars.empty;
+	}
 }
 
 /*

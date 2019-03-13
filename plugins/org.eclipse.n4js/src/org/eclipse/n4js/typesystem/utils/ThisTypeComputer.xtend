@@ -96,10 +96,13 @@ class ThisTypeComputer extends TypeSystemHelperStrategy {
 				if (containingFunction instanceof N4MethodDeclaration &&
 						(containingFunction as N4MemberDeclaration).isStatic) {
 					if (isInReturnDeclaration_Of_StaticMethod(location, containingFunction as N4MethodDeclaration)) {
-						return getThisTypeAtLocation(G, thisTargetDefType.createTypeRefWithParamsAsArgs);
+						// disallowed in generic classes, so next line won't ever produce a raw type:
+						return getThisTypeAtLocation(G, thisTargetDefType.ref);
 					} else if (isInBody_Of_StaticMethod(location, containingFunction as N4MethodDeclaration)) {
+						// wraps newly created BoundThisTypeRef inside a TypeTypeRef, so the raw type produced by
+						// the following code is a case of "raw type inside TypeTypeRef":
 						return TypeUtils.createClassifierBoundThisTypeRef(
-								TypeUtils.createTypeTypeRef(thisTargetDefType.createTypeRefWithParamsAsArgs, false));
+								TypeUtils.createTypeTypeRef(thisTargetDefType.ref, false));
 					} else {
 						return TypeUtils.createConstructorTypeRef(thisTargetDefType);
 					}
