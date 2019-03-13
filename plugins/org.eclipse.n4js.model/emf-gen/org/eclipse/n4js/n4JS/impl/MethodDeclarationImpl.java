@@ -371,6 +371,16 @@ public abstract class MethodDeclarationImpl extends FunctionDefinitionImpl imple
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean isGeneric() {
+		boolean _isEmpty = this.getTypeVars().isEmpty();
+		return (!_isEmpty);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -569,6 +579,7 @@ public abstract class MethodDeclarationImpl extends FunctionDefinitionImpl imple
 		}
 		if (baseClass == GenericDeclaration.class) {
 			switch (baseOperationID) {
+				case N4JSPackage.GENERIC_DECLARATION___IS_GENERIC: return N4JSPackage.METHOD_DECLARATION___IS_GENERIC;
 				default: return -1;
 			}
 		}
@@ -620,6 +631,8 @@ public abstract class MethodDeclarationImpl extends FunctionDefinitionImpl imple
 				return hasComputedPropertyName();
 			case N4JSPackage.METHOD_DECLARATION___IS_VALID_NAME:
 				return isValidName();
+			case N4JSPackage.METHOD_DECLARATION___IS_GENERIC:
+				return isGeneric();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

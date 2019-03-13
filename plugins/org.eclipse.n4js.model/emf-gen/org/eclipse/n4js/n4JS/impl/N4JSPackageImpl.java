@@ -5315,6 +5315,15 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EOperation getGenericDeclaration__IsGeneric() {
+		return genericDeclarationEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getN4TypeDefinition() {
 		return n4TypeDefinitionEClass;
 	}
@@ -7198,6 +7207,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		genericDeclarationEClass = createEClass(GENERIC_DECLARATION);
 		createEReference(genericDeclarationEClass, GENERIC_DECLARATION__TYPE_VARS);
+		createEOperation(genericDeclarationEClass, GENERIC_DECLARATION___IS_GENERIC);
 
 		n4TypeDefinitionEClass = createEClass(N4_TYPE_DEFINITION);
 		createEOperation(n4TypeDefinitionEClass, N4_TYPE_DEFINITION___IS_EXTERNAL);
@@ -8324,6 +8334,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEClass(genericDeclarationEClass, GenericDeclaration.class, "GenericDeclaration", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getGenericDeclaration_TypeVars(), theTypesPackage.getTypeVariable(), null, "typeVars", null, 0, -1, GenericDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getGenericDeclaration__IsGeneric(), theEcorePackage.getEBoolean(), "isGeneric", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(n4TypeDefinitionEClass, N4TypeDefinition.class, "N4TypeDefinition", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

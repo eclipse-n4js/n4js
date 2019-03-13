@@ -207,6 +207,16 @@ public class FunctionExpressionImpl extends FunctionDefinitionImpl implements Fu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean isGeneric() {
+		boolean _isEmpty = this.getTypeVars().isEmpty();
+		return (!_isEmpty);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EList<Annotation> getAnnotations() {
 		EList<Annotation> _elvis = null;
 		ExpressionAnnotationList _annotationList = this.getAnnotationList();
@@ -434,6 +444,7 @@ public class FunctionExpressionImpl extends FunctionDefinitionImpl implements Fu
 		}
 		if (baseClass == GenericDeclaration.class) {
 			switch (baseOperationID) {
+				case N4JSPackage.GENERIC_DECLARATION___IS_GENERIC: return N4JSPackage.FUNCTION_EXPRESSION___IS_GENERIC;
 				default: return -1;
 			}
 		}
@@ -456,6 +467,8 @@ public class FunctionExpressionImpl extends FunctionDefinitionImpl implements Fu
 		switch (operationID) {
 			case N4JSPackage.FUNCTION_EXPRESSION___IS_ARROW_FUNCTION:
 				return isArrowFunction();
+			case N4JSPackage.FUNCTION_EXPRESSION___IS_GENERIC:
+				return isGeneric();
 			case N4JSPackage.FUNCTION_EXPRESSION___GET_ANNOTATIONS:
 				return getAnnotations();
 			case N4JSPackage.FUNCTION_EXPRESSION___IS_VALID_SIMPLE_ASSIGNMENT_TARGET:

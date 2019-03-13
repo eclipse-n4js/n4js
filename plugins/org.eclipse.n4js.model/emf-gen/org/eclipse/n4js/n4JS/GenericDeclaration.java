@@ -55,4 +55,15 @@ public interface GenericDeclaration extends TypeDefiningElement {
 	 */
 	EList<TypeVariable> getTypeVars();
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 *  Tells if this declaration is actually generic, i.e. whether type parameters are declared.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isGeneric();
+
 } // GenericDeclaration

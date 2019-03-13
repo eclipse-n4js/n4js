@@ -178,6 +178,16 @@ public abstract class N4ClassifierDeclarationImpl extends N4TypeDeclarationImpl 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean isGeneric() {
+		boolean _isEmpty = this.getTypeVars().isEmpty();
+		return (!_isEmpty);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EList<N4MemberDeclaration> getOwnedMembers() {
 		final Function1<N4MemberDeclaration, Boolean> _function = new Function1<N4MemberDeclaration, Boolean>() {
 			public Boolean apply(final N4MemberDeclaration it) {
@@ -474,6 +484,7 @@ public abstract class N4ClassifierDeclarationImpl extends N4TypeDeclarationImpl 
 		}
 		if (baseClass == GenericDeclaration.class) {
 			switch (baseOperationID) {
+				case N4JSPackage.GENERIC_DECLARATION___IS_GENERIC: return N4JSPackage.N4_CLASSIFIER_DECLARATION___IS_GENERIC;
 				default: return -1;
 			}
 		}
@@ -493,6 +504,8 @@ public abstract class N4ClassifierDeclarationImpl extends N4TypeDeclarationImpl 
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
+			case N4JSPackage.N4_CLASSIFIER_DECLARATION___IS_GENERIC:
+				return isGeneric();
 			case N4JSPackage.N4_CLASSIFIER_DECLARATION___GET_OWNED_MEMBERS:
 				return getOwnedMembers();
 			case N4JSPackage.N4_CLASSIFIER_DECLARATION___GET_OWNED_CTOR:

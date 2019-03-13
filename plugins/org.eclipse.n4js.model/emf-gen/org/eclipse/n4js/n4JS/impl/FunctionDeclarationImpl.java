@@ -702,6 +702,16 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean isGeneric() {
+		boolean _isEmpty = this.getTypeVars().isEmpty();
+		return (!_isEmpty);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public boolean isReturnValueOptional() {
 		return (((this.getDefinedFunction() != null) && this.getDefinedFunction().isReturnValueOptional()) || ((this.getReturnTypeRef() != null) && this.getReturnTypeRef().isFollowedByQuestionMark()));
 	}
@@ -1245,6 +1255,7 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 		}
 		if (baseClass == GenericDeclaration.class) {
 			switch (baseOperationID) {
+				case N4JSPackage.GENERIC_DECLARATION___IS_GENERIC: return N4JSPackage.FUNCTION_DECLARATION___IS_GENERIC;
 				default: return -1;
 			}
 		}
@@ -1286,6 +1297,8 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 				return getExportedName();
 			case N4JSPackage.FUNCTION_DECLARATION___IS_TOPLEVEL:
 				return isToplevel();
+			case N4JSPackage.FUNCTION_DECLARATION___IS_GENERIC:
+				return isGeneric();
 			case N4JSPackage.FUNCTION_DECLARATION___IS_RETURN_VALUE_OPTIONAL:
 				return isReturnValueOptional();
 			case N4JSPackage.FUNCTION_DECLARATION___IS_ASYNC:

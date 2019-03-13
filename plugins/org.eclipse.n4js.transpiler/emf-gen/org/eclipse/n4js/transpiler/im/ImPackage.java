@@ -2861,6 +2861,15 @@ public interface ImPackage extends EPackage {
 	int DELEGATING_METHOD_DECLARATION___GET_DEFINED_FUNCTION = N4JSPackage.N4_METHOD_DECLARATION___GET_DEFINED_FUNCTION;
 
 	/**
+	 * The operation id for the '<em>Is Generic</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELEGATING_METHOD_DECLARATION___IS_GENERIC = N4JSPackage.N4_METHOD_DECLARATION___IS_GENERIC;
+
+	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

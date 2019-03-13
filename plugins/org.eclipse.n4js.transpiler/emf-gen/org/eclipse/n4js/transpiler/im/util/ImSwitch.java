@@ -66,7 +66,6 @@ import org.eclipse.n4js.ts.typeRefs.Versionable;
 import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRefStructural;
 import org.eclipse.n4js.ts.typeRefs.VersionedReference;
-
 import org.eclipse.n4js.ts.types.TypableElement;
 
 /**

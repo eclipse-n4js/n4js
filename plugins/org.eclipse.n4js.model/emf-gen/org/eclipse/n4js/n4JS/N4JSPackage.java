@@ -2363,13 +2363,22 @@ public interface N4JSPackage extends EPackage {
 	int FUNCTION_DECLARATION___GET_DEFINED_FUNCTION = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 10;
 
 	/**
+	 * The operation id for the '<em>Is Generic</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_DECLARATION___IS_GENERIC = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 11;
+
+	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION___IS_EXPORTED = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 11;
+	int FUNCTION_DECLARATION___IS_EXPORTED = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 12;
 
 	/**
 	 * The operation id for the '<em>Is Exported As Default</em>' operation.
@@ -2378,7 +2387,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION___IS_EXPORTED_AS_DEFAULT = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 12;
+	int FUNCTION_DECLARATION___IS_EXPORTED_AS_DEFAULT = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 13;
 
 	/**
 	 * The operation id for the '<em>Get Exported Name</em>' operation.
@@ -2387,7 +2396,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION___GET_EXPORTED_NAME = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 13;
+	int FUNCTION_DECLARATION___GET_EXPORTED_NAME = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 14;
 
 	/**
 	 * The operation id for the '<em>Is Toplevel</em>' operation.
@@ -2396,7 +2405,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION___IS_TOPLEVEL = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 14;
+	int FUNCTION_DECLARATION___IS_TOPLEVEL = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 15;
 
 	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
@@ -2405,7 +2414,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION___GET_NAME = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 15;
+	int FUNCTION_DECLARATION___GET_NAME = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 16;
 
 	/**
 	 * The operation id for the '<em>Is External</em>' operation.
@@ -2414,7 +2423,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION___IS_EXTERNAL = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 16;
+	int FUNCTION_DECLARATION___IS_EXTERNAL = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 17;
 
 	/**
 	 * The operation id for the '<em>Get Migration Context Variable</em>' operation.
@@ -2423,7 +2432,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION___GET_MIGRATION_CONTEXT_VARIABLE = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 17;
+	int FUNCTION_DECLARATION___GET_MIGRATION_CONTEXT_VARIABLE = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 18;
 
 	/**
 	 * The number of operations of the '<em>Function Declaration</em>' class.
@@ -2432,7 +2441,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION_OPERATION_COUNT = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 18;
+	int FUNCTION_DECLARATION_OPERATION_COUNT = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 19;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.FunctionExpressionImpl <em>Function Expression</em>}' class.
@@ -2652,13 +2661,22 @@ public interface N4JSPackage extends EPackage {
 	int FUNCTION_EXPRESSION___GET_ANNOTATIONS = FUNCTION_DEFINITION_OPERATION_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>Is Generic</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_EXPRESSION___IS_GENERIC = FUNCTION_DEFINITION_OPERATION_COUNT + 2;
+
+	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_EXPRESSION___GET_NAME = FUNCTION_DEFINITION_OPERATION_COUNT + 2;
+	int FUNCTION_EXPRESSION___GET_NAME = FUNCTION_DEFINITION_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Is Arrow Function</em>' operation.
@@ -2667,7 +2685,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_EXPRESSION___IS_ARROW_FUNCTION = FUNCTION_DEFINITION_OPERATION_COUNT + 3;
+	int FUNCTION_EXPRESSION___IS_ARROW_FUNCTION = FUNCTION_DEFINITION_OPERATION_COUNT + 4;
 
 	/**
 	 * The number of operations of the '<em>Function Expression</em>' class.
@@ -2676,7 +2694,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_EXPRESSION_OPERATION_COUNT = FUNCTION_DEFINITION_OPERATION_COUNT + 4;
+	int FUNCTION_EXPRESSION_OPERATION_COUNT = FUNCTION_DEFINITION_OPERATION_COUNT + 5;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.ArrowFunctionImpl <em>Arrow Function</em>}' class.
@@ -2903,6 +2921,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int ARROW_FUNCTION___GET_ANNOTATIONS = FUNCTION_EXPRESSION___GET_ANNOTATIONS;
+
+	/**
+	 * The operation id for the '<em>Is Generic</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ARROW_FUNCTION___IS_GENERIC = FUNCTION_EXPRESSION___IS_GENERIC;
 
 	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
@@ -6938,13 +6965,22 @@ public interface N4JSPackage extends EPackage {
 	int PROPERTY_METHOD_DECLARATION___GET_DEFINED_FUNCTION = ANNOTABLE_PROPERTY_ASSIGNMENT_OPERATION_COUNT + 9;
 
 	/**
+	 * The operation id for the '<em>Is Generic</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROPERTY_METHOD_DECLARATION___IS_GENERIC = ANNOTABLE_PROPERTY_ASSIGNMENT_OPERATION_COUNT + 10;
+
+	/**
 	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_METHOD_DECLARATION___GET_DECLARED_TYPE_REF = ANNOTABLE_PROPERTY_ASSIGNMENT_OPERATION_COUNT + 10;
+	int PROPERTY_METHOD_DECLARATION___GET_DECLARED_TYPE_REF = ANNOTABLE_PROPERTY_ASSIGNMENT_OPERATION_COUNT + 11;
 
 	/**
 	 * The operation id for the '<em>Exists Explicit Super Call</em>' operation.
@@ -6953,7 +6989,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_METHOD_DECLARATION___EXISTS_EXPLICIT_SUPER_CALL = ANNOTABLE_PROPERTY_ASSIGNMENT_OPERATION_COUNT + 11;
+	int PROPERTY_METHOD_DECLARATION___EXISTS_EXPLICIT_SUPER_CALL = ANNOTABLE_PROPERTY_ASSIGNMENT_OPERATION_COUNT + 12;
 
 	/**
 	 * The operation id for the '<em>Get Defined Type Element</em>' operation.
@@ -6962,7 +6998,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_METHOD_DECLARATION___GET_DEFINED_TYPE_ELEMENT = ANNOTABLE_PROPERTY_ASSIGNMENT_OPERATION_COUNT + 12;
+	int PROPERTY_METHOD_DECLARATION___GET_DEFINED_TYPE_ELEMENT = ANNOTABLE_PROPERTY_ASSIGNMENT_OPERATION_COUNT + 13;
 
 	/**
 	 * The operation id for the '<em>Is Static</em>' operation.
@@ -6971,7 +7007,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_METHOD_DECLARATION___IS_STATIC = ANNOTABLE_PROPERTY_ASSIGNMENT_OPERATION_COUNT + 13;
+	int PROPERTY_METHOD_DECLARATION___IS_STATIC = ANNOTABLE_PROPERTY_ASSIGNMENT_OPERATION_COUNT + 14;
 
 	/**
 	 * The operation id for the '<em>Get Defined Member</em>' operation.
@@ -6980,7 +7016,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_METHOD_DECLARATION___GET_DEFINED_MEMBER = ANNOTABLE_PROPERTY_ASSIGNMENT_OPERATION_COUNT + 14;
+	int PROPERTY_METHOD_DECLARATION___GET_DEFINED_MEMBER = ANNOTABLE_PROPERTY_ASSIGNMENT_OPERATION_COUNT + 15;
 
 	/**
 	 * The number of operations of the '<em>Property Method Declaration</em>' class.
@@ -6989,7 +7025,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_METHOD_DECLARATION_OPERATION_COUNT = ANNOTABLE_PROPERTY_ASSIGNMENT_OPERATION_COUNT + 15;
+	int PROPERTY_METHOD_DECLARATION_OPERATION_COUNT = ANNOTABLE_PROPERTY_ASSIGNMENT_OPERATION_COUNT + 16;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.GetterDeclarationImpl <em>Getter Declaration</em>}' class.
@@ -10486,13 +10522,22 @@ public interface N4JSPackage extends EPackage {
 	int GENERIC_DECLARATION_FEATURE_COUNT = TYPE_DEFINING_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>Is Generic</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GENERIC_DECLARATION___IS_GENERIC = TYPE_DEFINING_ELEMENT_OPERATION_COUNT + 0;
+
+	/**
 	 * The number of operations of the '<em>Generic Declaration</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int GENERIC_DECLARATION_OPERATION_COUNT = TYPE_DEFINING_ELEMENT_OPERATION_COUNT + 0;
+	int GENERIC_DECLARATION_OPERATION_COUNT = TYPE_DEFINING_ELEMENT_OPERATION_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4TypeDefinitionImpl <em>N4 Type Definition</em>}' class.
@@ -10930,13 +10975,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_CLASSIFIER_DECLARATION___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS = N4_TYPE_DECLARATION_OPERATION_COUNT + 8;
 
 	/**
+	 * The operation id for the '<em>Is Generic</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_CLASSIFIER_DECLARATION___IS_GENERIC = N4_TYPE_DECLARATION_OPERATION_COUNT + 9;
+
+	/**
 	 * The number of operations of the '<em>N4 Classifier Declaration</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASSIFIER_DECLARATION_OPERATION_COUNT = N4_TYPE_DECLARATION_OPERATION_COUNT + 9;
+	int N4_CLASSIFIER_DECLARATION_OPERATION_COUNT = N4_TYPE_DECLARATION_OPERATION_COUNT + 10;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4ClassifierDefinitionImpl <em>N4 Classifier Definition</em>}' class.
@@ -11563,13 +11617,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_CLASS_DECLARATION___IS_EXTERNAL = N4_CLASS_DEFINITION_OPERATION_COUNT + 6;
 
 	/**
+	 * The operation id for the '<em>Is Generic</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_CLASS_DECLARATION___IS_GENERIC = N4_CLASS_DEFINITION_OPERATION_COUNT + 7;
+
+	/**
 	 * The operation id for the '<em>Has Declared Version</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASS_DECLARATION___HAS_DECLARED_VERSION = N4_CLASS_DEFINITION_OPERATION_COUNT + 8;
+	int N4_CLASS_DECLARATION___HAS_DECLARED_VERSION = N4_CLASS_DEFINITION_OPERATION_COUNT + 9;
 
 	/**
 	 * The operation id for the '<em>Get Declared Version Or Zero</em>' operation.
@@ -11578,7 +11641,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASS_DECLARATION___GET_DECLARED_VERSION_OR_ZERO = N4_CLASS_DEFINITION_OPERATION_COUNT + 9;
+	int N4_CLASS_DECLARATION___GET_DECLARED_VERSION_OR_ZERO = N4_CLASS_DEFINITION_OPERATION_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Is Abstract</em>' operation.
@@ -11587,7 +11650,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASS_DECLARATION___IS_ABSTRACT = N4_CLASS_DEFINITION_OPERATION_COUNT + 10;
+	int N4_CLASS_DECLARATION___IS_ABSTRACT = N4_CLASS_DEFINITION_OPERATION_COUNT + 11;
 
 	/**
 	 * The operation id for the '<em>Get Version</em>' operation.
@@ -11596,7 +11659,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASS_DECLARATION___GET_VERSION = N4_CLASS_DEFINITION_OPERATION_COUNT + 11;
+	int N4_CLASS_DECLARATION___GET_VERSION = N4_CLASS_DEFINITION_OPERATION_COUNT + 12;
 
 	/**
 	 * The number of operations of the '<em>N4 Class Declaration</em>' class.
@@ -11605,7 +11668,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASS_DECLARATION_OPERATION_COUNT = N4_CLASS_DEFINITION_OPERATION_COUNT + 12;
+	int N4_CLASS_DECLARATION_OPERATION_COUNT = N4_CLASS_DEFINITION_OPERATION_COUNT + 13;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4ClassExpressionImpl <em>N4 Class Expression</em>}' class.
@@ -12067,6 +12130,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int N4_INTERFACE_DECLARATION___GET_OWNED_SETTERS = N4_CLASSIFIER_DECLARATION___GET_OWNED_SETTERS;
+
+	/**
+	 * The operation id for the '<em>Is Generic</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_INTERFACE_DECLARATION___IS_GENERIC = N4_CLASSIFIER_DECLARATION___IS_GENERIC;
 
 	/**
 	 * The operation id for the '<em>Has Declared Version</em>' operation.
@@ -13337,13 +13409,22 @@ public interface N4JSPackage extends EPackage {
 	int METHOD_DECLARATION___GET_DEFINED_FUNCTION = FUNCTION_DEFINITION___GET_DEFINED_FUNCTION;
 
 	/**
+	 * The operation id for the '<em>Is Generic</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int METHOD_DECLARATION___IS_GENERIC = FUNCTION_DEFINITION_OPERATION_COUNT + 0;
+
+	/**
 	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int METHOD_DECLARATION___GET_DECLARED_TYPE_REF = FUNCTION_DEFINITION_OPERATION_COUNT + 0;
+	int METHOD_DECLARATION___GET_DECLARED_TYPE_REF = FUNCTION_DEFINITION_OPERATION_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
@@ -13352,7 +13433,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int METHOD_DECLARATION___GET_NAME = FUNCTION_DEFINITION_OPERATION_COUNT + 2;
+	int METHOD_DECLARATION___GET_NAME = FUNCTION_DEFINITION_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Has Computed Property Name</em>' operation.
@@ -13361,7 +13442,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int METHOD_DECLARATION___HAS_COMPUTED_PROPERTY_NAME = FUNCTION_DEFINITION_OPERATION_COUNT + 3;
+	int METHOD_DECLARATION___HAS_COMPUTED_PROPERTY_NAME = FUNCTION_DEFINITION_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Is Valid Name</em>' operation.
@@ -13370,7 +13451,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int METHOD_DECLARATION___IS_VALID_NAME = FUNCTION_DEFINITION_OPERATION_COUNT + 4;
+	int METHOD_DECLARATION___IS_VALID_NAME = FUNCTION_DEFINITION_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Exists Explicit Super Call</em>' operation.
@@ -13379,7 +13460,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int METHOD_DECLARATION___EXISTS_EXPLICIT_SUPER_CALL = FUNCTION_DEFINITION_OPERATION_COUNT + 5;
+	int METHOD_DECLARATION___EXISTS_EXPLICIT_SUPER_CALL = FUNCTION_DEFINITION_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Get Defined Type Element</em>' operation.
@@ -13388,7 +13469,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int METHOD_DECLARATION___GET_DEFINED_TYPE_ELEMENT = FUNCTION_DEFINITION_OPERATION_COUNT + 6;
+	int METHOD_DECLARATION___GET_DEFINED_TYPE_ELEMENT = FUNCTION_DEFINITION_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Is Static</em>' operation.
@@ -13397,7 +13478,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int METHOD_DECLARATION___IS_STATIC = FUNCTION_DEFINITION_OPERATION_COUNT + 7;
+	int METHOD_DECLARATION___IS_STATIC = FUNCTION_DEFINITION_OPERATION_COUNT + 8;
 
 	/**
 	 * The number of operations of the '<em>Method Declaration</em>' class.
@@ -13406,7 +13487,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int METHOD_DECLARATION_OPERATION_COUNT = FUNCTION_DEFINITION_OPERATION_COUNT + 8;
+	int METHOD_DECLARATION_OPERATION_COUNT = FUNCTION_DEFINITION_OPERATION_COUNT + 9;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4MethodDeclarationImpl <em>N4 Method Declaration</em>}' class.
@@ -13689,13 +13770,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_METHOD_DECLARATION___GET_DEFINED_FUNCTION = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 10;
 
 	/**
+	 * The operation id for the '<em>Is Generic</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_METHOD_DECLARATION___IS_GENERIC = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 11;
+
+	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_METHOD_DECLARATION___GET_NAME = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 11;
+	int N4_METHOD_DECLARATION___GET_NAME = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 12;
 
 	/**
 	 * The operation id for the '<em>Has Computed Property Name</em>' operation.
@@ -13704,7 +13794,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_METHOD_DECLARATION___HAS_COMPUTED_PROPERTY_NAME = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 12;
+	int N4_METHOD_DECLARATION___HAS_COMPUTED_PROPERTY_NAME = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 13;
 
 	/**
 	 * The operation id for the '<em>Exists Explicit Super Call</em>' operation.
@@ -13713,7 +13803,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_METHOD_DECLARATION___EXISTS_EXPLICIT_SUPER_CALL = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 14;
+	int N4_METHOD_DECLARATION___EXISTS_EXPLICIT_SUPER_CALL = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 15;
 
 	/**
 	 * The operation id for the '<em>Get Defined Type Element</em>' operation.
@@ -13722,7 +13812,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_METHOD_DECLARATION___GET_DEFINED_TYPE_ELEMENT = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 15;
+	int N4_METHOD_DECLARATION___GET_DEFINED_TYPE_ELEMENT = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 16;
 
 	/**
 	 * The operation id for the '<em>Is Abstract</em>' operation.
@@ -13731,7 +13821,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_METHOD_DECLARATION___IS_ABSTRACT = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 17;
+	int N4_METHOD_DECLARATION___IS_ABSTRACT = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 18;
 
 	/**
 	 * The operation id for the '<em>Is Constructor</em>' operation.
@@ -13740,7 +13830,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_METHOD_DECLARATION___IS_CONSTRUCTOR = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 18;
+	int N4_METHOD_DECLARATION___IS_CONSTRUCTOR = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 19;
 
 	/**
 	 * The operation id for the '<em>Is Callable Constructor</em>' operation.
@@ -13749,7 +13839,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_METHOD_DECLARATION___IS_CALLABLE_CONSTRUCTOR = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 19;
+	int N4_METHOD_DECLARATION___IS_CALLABLE_CONSTRUCTOR = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 20;
 
 	/**
 	 * The operation id for the '<em>Is Static</em>' operation.
@@ -13758,7 +13848,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_METHOD_DECLARATION___IS_STATIC = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 20;
+	int N4_METHOD_DECLARATION___IS_STATIC = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 21;
 
 	/**
 	 * The operation id for the '<em>Is Valid Name</em>' operation.
@@ -13767,7 +13857,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_METHOD_DECLARATION___IS_VALID_NAME = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 21;
+	int N4_METHOD_DECLARATION___IS_VALID_NAME = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 22;
 
 	/**
 	 * The number of operations of the '<em>N4 Method Declaration</em>' class.
@@ -13776,7 +13866,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_METHOD_DECLARATION_OPERATION_COUNT = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 22;
+	int N4_METHOD_DECLARATION_OPERATION_COUNT = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 23;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4FieldAccessorImpl <em>N4 Field Accessor</em>}' class.
@@ -19941,6 +20031,16 @@ public interface N4JSPackage extends EPackage {
 	EReference getGenericDeclaration_TypeVars();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.GenericDeclaration#isGeneric() <em>Is Generic</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Generic</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.GenericDeclaration#isGeneric()
+	 * @generated
+	 */
+	EOperation getGenericDeclaration__IsGeneric();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.N4TypeDefinition <em>N4 Type Definition</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -25022,6 +25122,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EReference GENERIC_DECLARATION__TYPE_VARS = eINSTANCE.getGenericDeclaration_TypeVars();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Generic</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation GENERIC_DECLARATION___IS_GENERIC = eINSTANCE.getGenericDeclaration__IsGeneric();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.N4TypeDefinitionImpl <em>N4 Type Definition</em>}' class.

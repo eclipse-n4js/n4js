@@ -668,6 +668,16 @@ public class PropertyMethodDeclarationImpl extends AnnotablePropertyAssignmentIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean isGeneric() {
+		boolean _isEmpty = this.getTypeVars().isEmpty();
+		return (!_isEmpty);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public boolean isReturnValueOptional() {
 		return (((this.getDefinedFunction() != null) && this.getDefinedFunction().isReturnValueOptional()) || ((this.getReturnTypeRef() != null) && this.getReturnTypeRef().isFollowedByQuestionMark()));
 	}
@@ -1135,6 +1145,7 @@ public class PropertyMethodDeclarationImpl extends AnnotablePropertyAssignmentIm
 		}
 		if (baseClass == GenericDeclaration.class) {
 			switch (baseOperationID) {
+				case N4JSPackage.GENERIC_DECLARATION___IS_GENERIC: return N4JSPackage.PROPERTY_METHOD_DECLARATION___IS_GENERIC;
 				default: return -1;
 			}
 		}
@@ -1176,6 +1187,8 @@ public class PropertyMethodDeclarationImpl extends AnnotablePropertyAssignmentIm
 				return getDefinedTypeElement();
 			case N4JSPackage.PROPERTY_METHOD_DECLARATION___IS_STATIC:
 				return isStatic();
+			case N4JSPackage.PROPERTY_METHOD_DECLARATION___IS_GENERIC:
+				return isGeneric();
 			case N4JSPackage.PROPERTY_METHOD_DECLARATION___IS_RETURN_VALUE_OPTIONAL:
 				return isReturnValueOptional();
 			case N4JSPackage.PROPERTY_METHOD_DECLARATION___IS_ASYNC:

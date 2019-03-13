@@ -367,6 +367,16 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean isGeneric() {
+		boolean _isEmpty = this.getTypeVars().isEmpty();
+		return (!_isEmpty);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public boolean isExternal() {
 		return this.getDeclaredModifiers().contains(N4Modifier.EXTERNAL);
 	}
@@ -775,6 +785,7 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 		}
 		if (baseClass == GenericDeclaration.class) {
 			switch (baseOperationID) {
+				case N4JSPackage.GENERIC_DECLARATION___IS_GENERIC: return N4JSPackage.N4_CLASS_DECLARATION___IS_GENERIC;
 				default: return -1;
 			}
 		}
@@ -815,6 +826,8 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 				return hasDeclaredVersion();
 			case N4JSPackage.N4_CLASS_DECLARATION___GET_DECLARED_VERSION_OR_ZERO:
 				return getDeclaredVersionOrZero();
+			case N4JSPackage.N4_CLASS_DECLARATION___IS_GENERIC:
+				return isGeneric();
 			case N4JSPackage.N4_CLASS_DECLARATION___IS_EXTERNAL:
 				return isExternal();
 			case N4JSPackage.N4_CLASS_DECLARATION___IS_EXPORTED:
