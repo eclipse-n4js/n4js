@@ -1526,4 +1526,11 @@ public class TypeUtils {
 		}
 		return typeRef;
 	}
+
+	/**
+	 * @return Returns true if the given EObject instance is a composed TMember
+	 */
+	public static boolean isComposedElement(EObject eobj) {
+		return ((eobj instanceof TMember) && ((TMember) eobj).isComposed());
+	}
 }

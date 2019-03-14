@@ -11,6 +11,7 @@
 package org.eclipse.n4js.ui.refactoring;
 
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.CoreException;
@@ -100,7 +101,7 @@ public class N4JSRenameElementProcessor extends RenameElementProcessor {
 		for (IEObjectDescription desc : scope.getAllElements()) {
 			if (desc.getName().toString().equals(newName)) {
 				status.merge(RefactoringStatus.createFatalErrorStatus(
-						"Problem in " + desc.getEObjectURI().trimFragment()
+						"Problem in " + trimPlatformPart(desc.getEObjectURI().trimFragment().toString())
 								+ ": Another element in the same scope with name '"
 								+ newName + "' already exists"));
 			}
@@ -124,18 +125,27 @@ public class N4JSRenameElementProcessor extends RenameElementProcessor {
 
 	private RefactoringStatus checkDuplicateMember(TMember member, String newName) {
 		ContainerType<? extends TMember> container = member.getContainingType();
-		MemberCollector memberCollector = this.containerTypesHelper.fromContext(container);
-		List<TMember> membersWithName = memberCollector.members(container).stream()
-				.filter(m -> m != member && m.getName().equals(newName))
-				.collect(Collectors.toList());
+		// TODO Deal with composed member
+		if (container != null) {
+			MemberCollector memberCollector = this.containerTypesHelper.fromContext(container);
+			List<TMember> membersWithName = memberCollector.members(container).stream()
+					.filter(m -> m != member && m.getName().equals(newName))
+					.collect(Collectors.toList());
 
-		if (membersWithName.size() > 0) {
-			return RefactoringStatus
-					.createFatalErrorStatus("Problem in " + member.eResource().getURI() + ": Another member with name '"
-							+ newName + "' already exists");
+			if (membersWithName.size() > 0) {
+				return RefactoringStatus
+						.createFatalErrorStatus(
+								"Problem in " + trimPlatformPart(member.eResource().getURI().toString())
+										+ ": Another member with name '"
+										+ newName + "' already exists");
+			}
 		}
 
 		return new RefactoringStatus();
 	}
 
+	private String trimPlatformPart(String URI) {
+		String result = URI.replaceFirst(Pattern.quote("platform:/resource/"), "");
+		return result;
+	}
 }

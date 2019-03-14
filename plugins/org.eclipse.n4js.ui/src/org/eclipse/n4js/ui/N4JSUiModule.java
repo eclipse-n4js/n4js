@@ -105,6 +105,7 @@ import org.eclipse.n4js.ui.preferences.N4JSBuilderPreferenceAccess;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
 import org.eclipse.n4js.ui.quickfix.N4JSIssue;
 import org.eclipse.n4js.ui.quickfix.N4JSMarkerResolutionGenerator;
+import org.eclipse.n4js.ui.refactoring.N4JSDependentElementsCalculator;
 import org.eclipse.n4js.ui.refactoring.N4JSLinkedPositionGroupCalculator;
 import org.eclipse.n4js.ui.refactoring.N4JSRefactoringCrossReferenceSerializer;
 import org.eclipse.n4js.ui.refactoring.N4JSRefactoringResourceSetProvider;
@@ -174,6 +175,7 @@ import org.eclipse.xtext.ui.editor.syntaxcoloring.AbstractAntlrTokenToAttributeI
 import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingConfiguration;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingHelper;
 import org.eclipse.xtext.ui.editor.validation.MarkerCreator;
+import org.eclipse.xtext.ui.refactoring.IDependentElementsCalculator;
 import org.eclipse.xtext.ui.refactoring.impl.AbstractRenameProcessor;
 import org.eclipse.xtext.ui.refactoring.impl.DefaultRenameStrategy;
 import org.eclipse.xtext.ui.refactoring.impl.RefactoringCrossReferenceSerializer;
@@ -920,4 +922,8 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 		return N4JSRenameElementProcessor.class;
 	}
 
+	@Override
+	public Class<? extends IDependentElementsCalculator> bindIDependentElementsCalculator() {
+		return N4JSDependentElementsCalculator.class;
+	}
 }

@@ -27,6 +27,7 @@ Export-Package: org.eclipse.n4js.xpect.ui,
  org.eclipse.n4js.xpect.ui.methods,
  org.eclipse.n4js.xpect.ui.methods.contentassist,
  org.eclipse.n4js.xpect.ui.methods.quickfix,
+ org.eclipse.n4js.xpect.ui.refactoring,
  org.eclipse.n4js.xpect.ui.results,
  org.eclipse.n4js.xpect.ui.runner
 Bundle-Activator: org.eclipse.n4js.xpect.ui.N4IDEXpectUIPlugin

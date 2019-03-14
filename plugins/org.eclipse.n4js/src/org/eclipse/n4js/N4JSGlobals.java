@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.external.libraries.ExternalLibraryFolderUtils;
 
 /**
@@ -26,6 +27,8 @@ import org.eclipse.n4js.external.libraries.ExternalLibraryFolderUtils;
  * "useful" strings.
  */
 public final class N4JSGlobals {
+
+	public static ResourceSet myGlobalResourceSet;
 
 	/**
 	 * Files extension of JS source files (<b>not</b> including the separator dot).

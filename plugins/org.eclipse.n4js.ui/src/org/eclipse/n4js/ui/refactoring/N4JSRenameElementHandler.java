@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.ITextSelection;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.n4JS.FieldAccessor;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
@@ -76,8 +77,7 @@ public class N4JSRenameElementHandler extends DefaultRenameElementHandler {
 									selectedElement = ((TStructField) selectedElement).getDefinedMember();
 								}
 
-								// ResourceSet rs = selectedElement.eResource().getResourceSet();
-								// N4JSRefactoringResourceSetProvider.myGlobalResourceSet = rs;
+								N4JSGlobals.myGlobalResourceSet = resource.getResourceSet();
 
 								if (selectedElement != null) {
 									@SuppressWarnings("hiding")

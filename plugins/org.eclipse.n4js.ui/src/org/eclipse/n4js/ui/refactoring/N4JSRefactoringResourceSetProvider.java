@@ -12,6 +12,7 @@ package org.eclipse.n4js.ui.refactoring;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 import org.eclipse.xtext.ui.refactoring.impl.RefactoringResourceSetProvider;
 
@@ -20,10 +21,13 @@ import org.eclipse.xtext.ui.refactoring.impl.RefactoringResourceSetProvider;
  */
 @SuppressWarnings("restriction")
 public class N4JSRefactoringResourceSetProvider extends RefactoringResourceSetProvider {
+	// public static ResourceSet myGlobalResourceSet;
 
 	@Override
 	public ResourceSet get(IProject project) {
-		// LIVE_SCOPE does not. PERSISTED_DESCRIPTIONS however works
+		if (N4JSGlobals.myGlobalResourceSet != null)
+			return N4JSGlobals.myGlobalResourceSet;
+		// LIVE_SCOPE does not work . PERSISTED_DESCRIPTIONS works. Why?
 		ResourceSet rs = super.get(project);
 		rs.getLoadOptions().remove(ResourceDescriptionsProvider.LIVE_SCOPE);
 		rs.getLoadOptions().put(ResourceDescriptionsProvider.PERSISTED_DESCRIPTIONS, Boolean.TRUE);

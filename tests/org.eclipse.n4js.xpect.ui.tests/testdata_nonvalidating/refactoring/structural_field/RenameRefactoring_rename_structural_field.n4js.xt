@@ -1,0 +1,35 @@
+/*
+ * Copyright (c) 2019 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+ 
+/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4JSNotValidatingXpectPluginUITest
+
+	Workspace {
+		Project "RenameRefactoringTestProject" {
+			File "package.json" { from="../RenameRefactoringTest.json" }
+			Folder "src" {
+				ThisFile {}
+			}
+		}
+	}
+
+   END_SETUP
+*/
+/* XPECT renameRefactoring at f1 to 'f3' ---
+(...)
+   * Contributors:
+   *   NumberFour AG - Initial API and implementation
+   *\/
+| let v: ~Object with {[f1|f3]: int, f2: string};
+| v.[f1|f3];
+---   
+*/
+let v: ~Object with {f1: int, f2: string};
+v.f1;
