@@ -26,12 +26,14 @@
 
 import {B} from "B";
 
+
 class A extends B {
 	public bar() {
-/* XPECT renameRefactoring at y to 'u' resources 'RenameRefactoring_rename_no_member_conflict_other_resource1.n4js.xt' ---
-Something
+/* XPECT renameRefactoring at y to 'u' resource 'B.n4js' ---
+public get [y|u](): int {
 ---
 */
 		this.y;
 	}
 }
+

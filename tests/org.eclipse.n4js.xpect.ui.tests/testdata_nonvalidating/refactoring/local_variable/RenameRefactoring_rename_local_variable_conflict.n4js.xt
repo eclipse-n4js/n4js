@@ -27,7 +27,7 @@ export public class A {
 	public foo() {
 		const c: int = 42;
 /* XPECT renameRefactoring at v to 'c' ---
-Problem in RenameRefactoringTestProject/src/RenameRefactoring_rename_variable_conflict.n4js.xt: Another element in the same scope with name 'c' already exists
+Problem in RenameRefactoringTestProject/src/RenameRefactoring_rename_local_variable_conflict.n4js.xt: Another element in the same scope with name 'c' already exists
 ---   
 */ 
 		let v: int;

@@ -25,7 +25,7 @@
 
 
 /* XPECT renameRefactoring at myVar to 'foo' ---
-Problem in RenameRefactoringTestProject/src/RenameRefactoring_rename_variable_conflict.n4js.xt: Another element in the same scope with name 'foo' already exists
+Problem in RenameRefactoringTestProject/src/RenameRefactoring_rename_global_variable_conflict.n4js.xt: Another element in the same scope with name 'foo' already exists
 ---
 */ 
 export public var myVar: int = 42;

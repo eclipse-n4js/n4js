@@ -26,10 +26,10 @@
 export public class A {
 	public foo() {
 		const c: int = 42;
-/* XPECT renameRefactoring at v to 'x' ---
+		/* XPECT renameRefactoring at v to 'x' ---
 		let [v|x]: int;
----   
-*/ 
+		---   
+		*/
 		let v: int;
 	}
 }
