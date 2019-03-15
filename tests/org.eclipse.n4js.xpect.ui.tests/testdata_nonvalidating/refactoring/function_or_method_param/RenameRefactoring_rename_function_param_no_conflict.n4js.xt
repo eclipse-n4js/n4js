@@ -25,9 +25,18 @@
 
 
 /* XPECT renameRefactoring at p1 to 'p3' ---
-function foo([p1|p3]: int, p2: string) {}
+(...)
+   * Contributors:
+   *   NumberFour AG - Initial API and implementation
+   *\/
+| function foo([p1|p3]: int, p2: string) {
+- 	p1
+| [|p3];
+  }
 ---   
 */
-function foo(p1: int, p2: string) {}
+function foo(p1: int, p2: string) {
+	p1;
+}
 
 

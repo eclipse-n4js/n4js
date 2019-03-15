@@ -27,6 +27,7 @@ import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.RefactoringStatusEntry;
 import org.eclipse.ltk.core.refactoring.participants.ProcessorBasedRefactoring;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
 import org.eclipse.n4js.tests.util.EditorsUtil;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
@@ -100,7 +101,11 @@ public class RenameRefactoringXpectMethod {
 		EObject selectedElement = offsetHelper.resolveElementAt((XtextResource) context.eResource(),
 				offset.getOffset());
 
-		EObject selectedTypeElement = N4JSLanguageUtils.getDefinedTypeModelElement(selectedElement);
+		// GH-1002: Ask Oliver
+		// Special handling for FormalParameter
+		// IdentifierRef refers to FormalParameter
+		EObject selectedTypeElement = (selectedElement instanceof FormalParameter) ? null
+				: N4JSLanguageUtils.getDefinedTypeModelElement(selectedElement);
 		selectedTypeElement = selectedTypeElement == null ? selectedElement : selectedTypeElement;
 
 		URI targetResourceUri = context.eResource().getURI();

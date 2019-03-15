@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
@@ -60,8 +61,12 @@ public class N4JSRenameElementHandler extends DefaultRenameElementHandler {
 								EObject selectedElement = eObjectAtOffsetHelper.resolveElementAt(resource,
 										selection.getOffset());
 
-								EObject selectedTypeElement = N4JSLanguageUtils
-										.getDefinedTypeModelElement(selectedElement);
+								// GH-1002: Ask Oliver
+								// Special handling for FormalParameter
+								// IdentifierRef refers to FormalParameter
+								EObject selectedTypeElement = (selectedElement instanceof FormalParameter) ? null
+										: N4JSLanguageUtils
+												.getDefinedTypeModelElement(selectedElement);
 								selectedElement = selectedTypeElement == null ? selectedElement
 										: selectedTypeElement;
 

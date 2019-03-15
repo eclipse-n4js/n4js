@@ -26,10 +26,20 @@
 
 class A {
 	/* XPECT renameRefactoring at p1 to 'p3' ---
-	public bar([p1|p3], p2) {}	
+	(...)
+	   *   NumberFour AG - Initial API and implementation
+	   *\/
+	  class A {
+	| 	public bar([p1|p3], p2) {
+	- 		p1
+	| [|p3];
+	  	}	
+	  }	
 	---   
 	*/
-	public bar(p1, p2) {}	
+	public bar(p1, p2) {
+		p1;
+	}	
 }
 
 
