@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -28,17 +27,10 @@ import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.RefactoringStatusEntry;
 import org.eclipse.ltk.core.refactoring.participants.ProcessorBasedRefactoring;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.n4JS.FieldAccessor;
-import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
-import org.eclipse.n4js.n4JS.N4FieldDeclaration;
-import org.eclipse.n4js.n4JS.TypeDefiningElement;
-import org.eclipse.n4js.resource.InferredElements;
 import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
 import org.eclipse.n4js.tests.util.EditorsUtil;
-import org.eclipse.n4js.ts.types.TStructField;
-import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
-import org.eclipse.n4js.utils.StaticPolyfillHelper;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter.IEObjectCoveringRegion;
 import org.eclipse.n4js.xpect.common.XpectCommentRemovalUtil;
@@ -62,7 +54,6 @@ import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.refactoring.ui.IRenameContextFactory;
 import org.eclipse.xtext.ui.refactoring.ui.IRenameElementContext;
 import org.eclipse.xtext.ui.refactoring.ui.IRenameSupport;
-import org.eclipse.xtext.ui.refactoring.ui.RenameRefactoringController;
 
 import com.google.inject.Inject;
 
@@ -75,36 +66,20 @@ import com.google.inject.Inject;
 public class RenameRefactoringXpectMethod {
 
 	@Inject
-	private StaticPolyfillHelper staticPolyfillHelper;
-
-	@Inject
-	private InferredElements inferredElements;
-
-	@Inject
 	private IRenameSupport.Factory renameSupportFactory;
-
-	@Inject
-	protected RenameRefactoringController renameRefactoringController;
 
 	@Inject
 	private EObjectAtOffsetHelper offsetHelper;
 
 	@Inject
-	protected IRenameContextFactory renameContextFactory;
+	private IRenameContextFactory renameContextFactory;
 
 	static {
 		EclipseGracefulUIShutdownEnabler.enableOnce();
 	}
 
-	private static Logger logger = Logger.getLogger(RenameRefactoringXpectMethod.class);
-
-	private static class ExecutionResult {
-		public String result;
-	}
-
 	/**
-	 * Rename refactoring
-	 *
+	 * Rename refactoring Xpect method
 	 */
 	@ParameterParser(syntax = "('at' arg2=OFFSET 'to' arg3=STRING) ('resource' arg4=STRING)?") // arg1=OFFSET makes the
 																								// 'offset' parameter
@@ -125,36 +100,8 @@ public class RenameRefactoringXpectMethod {
 		EObject selectedElement = offsetHelper.resolveElementAt((XtextResource) context.eResource(),
 				offset.getOffset());
 
-		// EObject typeSelectedElement = null;
-		// inferredElements.collectInferredElements(selectedElement, (object) -> {
-		// typeSelectedElement = object;
-		// }, staticPolyfillHelper);
-		// TODO use InferredElements here
-		if (selectedElement instanceof LiteralOrComputedPropertyName) {
-			selectedElement = selectedElement.eContainer();
-		}
-
-		if (selectedElement instanceof N4FieldDeclaration) {
-			selectedElement = ((N4FieldDeclaration) selectedElement).getDefinedField();
-		}
-
-		if (selectedElement instanceof FieldAccessor) {
-			selectedElement = ((FieldAccessor) selectedElement).getDefinedAccessor();
-		}
-
-		if (selectedElement instanceof TypeDefiningElement) {
-			selectedElement = ((TypeDefiningElement) selectedElement).getDefinedType();
-		}
-
-		if ((selectedElement instanceof TStructField)
-				&& (((TStructField) selectedElement).getDefinedMember() != null)) {
-			selectedElement = ((TStructField) selectedElement).getDefinedMember();
-		}
-
-		if ((selectedElement instanceof TypeVariable)
-				&& ((TypeVariable) selectedElement).getDefinedTypeVariable() != null) {
-			selectedElement = ((TypeVariable) selectedElement).getDefinedTypeVariable();
-		}
+		EObject selectedTypeElement = N4JSLanguageUtils.getDefinedTypeModelElement(selectedElement);
+		selectedTypeElement = selectedTypeElement == null ? selectedElement : selectedTypeElement;
 
 		URI targetResourceUri = context.eResource().getURI();
 		// XtextResource resource = (XtextResource) context.eResource();
@@ -169,7 +116,7 @@ public class RenameRefactoringXpectMethod {
 
 		IRenameElementContext renameElementContext = renameContextFactory
 				.createRenameElementContext(
-						selectedElement, editor, selection, resource);
+						selectedTypeElement, editor, selection, resource);
 
 		IRenameSupport renameSupport = renameSupportFactory.create(renameElementContext, newName);
 

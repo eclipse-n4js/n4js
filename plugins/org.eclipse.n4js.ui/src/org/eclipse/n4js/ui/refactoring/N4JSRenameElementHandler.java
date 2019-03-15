@@ -17,12 +17,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.n4JS.FieldAccessor;
-import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
-import org.eclipse.n4js.n4JS.N4FieldDeclaration;
-import org.eclipse.n4js.n4JS.TypeDefiningElement;
-import org.eclipse.n4js.ts.types.TStructField;
-import org.eclipse.n4js.ts.types.TypeVariable;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
 import org.eclipse.xtext.resource.XtextResource;
@@ -57,31 +52,10 @@ public class N4JSRenameElementHandler extends DefaultRenameElementHandler {
 								EObject selectedElement = eObjectAtOffsetHelper.resolveElementAt(resource,
 										selection.getOffset());
 
-								if (selectedElement instanceof LiteralOrComputedPropertyName) {
-									selectedElement = selectedElement.eContainer();
-								}
-
-								if (selectedElement instanceof N4FieldDeclaration) {
-									selectedElement = ((N4FieldDeclaration) selectedElement).getDefinedField();
-								}
-
-								if (selectedElement instanceof FieldAccessor) {
-									selectedElement = ((FieldAccessor) selectedElement).getDefinedAccessor();
-								}
-
-								if (selectedElement instanceof TypeDefiningElement) {
-									selectedElement = ((TypeDefiningElement) selectedElement).getDefinedType();
-								}
-
-								if ((selectedElement instanceof TStructField)
-										&& (((TStructField) selectedElement).getDefinedMember() != null)) {
-									selectedElement = ((TStructField) selectedElement).getDefinedMember();
-								}
-
-								if ((selectedElement instanceof TypeVariable)
-										&& ((TypeVariable) selectedElement).getDefinedTypeVariable() != null) {
-									selectedElement = ((TypeVariable) selectedElement).getDefinedTypeVariable();
-								}
+								EObject selectedTypeElement = N4JSLanguageUtils
+										.getDefinedTypeModelElement(selectedElement);
+								selectedElement = selectedTypeElement == null ? selectedElement
+										: selectedTypeElement;
 
 								N4JSGlobals.myGlobalResourceSet = resource.getResourceSet();
 

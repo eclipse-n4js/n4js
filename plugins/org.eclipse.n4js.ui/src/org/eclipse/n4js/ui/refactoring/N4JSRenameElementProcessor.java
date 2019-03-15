@@ -26,6 +26,8 @@ import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.scoping.N4JSScopeProvider;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
+import org.eclipse.n4js.ts.types.TEnum;
+import org.eclipse.n4js.ts.types.TEnumLiteral;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
@@ -85,6 +87,11 @@ public class N4JSRenameElementProcessor extends RenameElementProcessor {
 			return checkDuplicateMember(member, newName);
 		}
 
+		if (context instanceof TEnumLiteral) {
+			TEnumLiteral enumLit = (TEnumLiteral) context;
+			return checkDuplicateEnum((TEnum) enumLit.eContainer(), newName);
+		}
+
 		if (context instanceof FormalParameter) {
 			FormalParameter fpar = (FormalParameter) context;
 			FunctionDefinition method = (FunctionDefinition) fpar.eContainer();
@@ -112,6 +119,22 @@ public class N4JSRenameElementProcessor extends RenameElementProcessor {
 		}
 
 		return status;
+	}
+
+	/**
+	 * Check duplicate formal parameters
+	 */
+	private RefactoringStatus checkDuplicateEnum(TEnum enumeration, String newName) {
+		boolean duplicateFound = enumeration.getLiterals().stream()
+				.filter(literal -> literal.getName().equals(newName))
+				.collect(Collectors.toList()).size() > 0;
+		if (duplicateFound) {
+			return RefactoringStatus
+					.createFatalErrorStatus(
+							"Problem in " + trimPlatformPart(enumeration.eResource().getURI().toString()) +
+									"Another enum literal with name '" + newName + "' already exists.");
+		}
+		return new RefactoringStatus();
 	}
 
 	/**
