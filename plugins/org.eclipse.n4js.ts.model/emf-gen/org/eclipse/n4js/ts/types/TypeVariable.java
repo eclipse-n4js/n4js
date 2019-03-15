@@ -28,6 +28,7 @@ import org.eclipse.n4js.ts.types.util.Variance;
  *   <li>{@link org.eclipse.n4js.ts.types.TypeVariable#isDeclaredCovariant <em>Declared Covariant</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TypeVariable#isDeclaredContravariant <em>Declared Contravariant</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TypeVariable#getDeclaredUpperBound <em>Declared Upper Bound</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.TypeVariable#getDefinedTypeVariable <em>Defined Type Variable</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.ts.types.TypesPackage#getTypeVariable()
@@ -112,6 +113,32 @@ public interface TypeVariable extends Type {
 	 * @generated
 	 */
 	void setDeclaredUpperBound(TypeRef value);
+
+	/**
+	 * Returns the value of the '<em><b>Defined Type Variable</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Defined Type Variable</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Defined Type Variable</em>' reference.
+	 * @see #setDefinedTypeVariable(TypeVariable)
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTypeVariable_DefinedTypeVariable()
+	 * @model transient="true"
+	 * @generated
+	 */
+	TypeVariable getDefinedTypeVariable();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.TypeVariable#getDefinedTypeVariable <em>Defined Type Variable</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Defined Type Variable</em>' reference.
+	 * @see #getDefinedTypeVariable()
+	 * @generated
+	 */
+	void setDefinedTypeVariable(TypeVariable value);
 
 	/**
 	 * <!-- begin-user-doc -->

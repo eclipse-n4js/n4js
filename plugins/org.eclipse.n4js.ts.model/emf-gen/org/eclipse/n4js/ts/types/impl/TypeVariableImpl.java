@@ -43,6 +43,7 @@ import org.eclipse.n4js.ts.types.util.Variance;
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TypeVariableImpl#isDeclaredCovariant <em>Declared Covariant</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TypeVariableImpl#isDeclaredContravariant <em>Declared Contravariant</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TypeVariableImpl#getDeclaredUpperBound <em>Declared Upper Bound</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TypeVariableImpl#getDefinedTypeVariable <em>Defined Type Variable</em>}</li>
  * </ul>
  *
  * @generated
@@ -97,6 +98,16 @@ public class TypeVariableImpl extends TypeImpl implements TypeVariable {
 	 * @ordered
 	 */
 	protected TypeRef declaredUpperBound;
+
+	/**
+	 * The cached value of the '{@link #getDefinedTypeVariable() <em>Defined Type Variable</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDefinedTypeVariable()
+	 * @generated
+	 * @ordered
+	 */
+	protected TypeVariable definedTypeVariable;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -207,6 +218,44 @@ public class TypeVariableImpl extends TypeImpl implements TypeVariable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public TypeVariable getDefinedTypeVariable() {
+		if (definedTypeVariable != null && definedTypeVariable.eIsProxy()) {
+			InternalEObject oldDefinedTypeVariable = (InternalEObject)definedTypeVariable;
+			definedTypeVariable = (TypeVariable)eResolveProxy(oldDefinedTypeVariable);
+			if (definedTypeVariable != oldDefinedTypeVariable) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, TypesPackage.TYPE_VARIABLE__DEFINED_TYPE_VARIABLE, oldDefinedTypeVariable, definedTypeVariable));
+			}
+		}
+		return definedTypeVariable;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public TypeVariable basicGetDefinedTypeVariable() {
+		return definedTypeVariable;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setDefinedTypeVariable(TypeVariable newDefinedTypeVariable) {
+		TypeVariable oldDefinedTypeVariable = definedTypeVariable;
+		definedTypeVariable = newDefinedTypeVariable;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TYPE_VARIABLE__DEFINED_TYPE_VARIABLE, oldDefinedTypeVariable, definedTypeVariable));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public Variance getVariance() {
 		final boolean co = this.isDeclaredCovariant();
 		final boolean contra = this.isDeclaredContravariant();
@@ -304,6 +353,9 @@ public class TypeVariableImpl extends TypeImpl implements TypeVariable {
 				return isDeclaredContravariant();
 			case TypesPackage.TYPE_VARIABLE__DECLARED_UPPER_BOUND:
 				return getDeclaredUpperBound();
+			case TypesPackage.TYPE_VARIABLE__DEFINED_TYPE_VARIABLE:
+				if (resolve) return getDefinedTypeVariable();
+				return basicGetDefinedTypeVariable();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -324,6 +376,9 @@ public class TypeVariableImpl extends TypeImpl implements TypeVariable {
 				return;
 			case TypesPackage.TYPE_VARIABLE__DECLARED_UPPER_BOUND:
 				setDeclaredUpperBound((TypeRef)newValue);
+				return;
+			case TypesPackage.TYPE_VARIABLE__DEFINED_TYPE_VARIABLE:
+				setDefinedTypeVariable((TypeVariable)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -346,6 +401,9 @@ public class TypeVariableImpl extends TypeImpl implements TypeVariable {
 			case TypesPackage.TYPE_VARIABLE__DECLARED_UPPER_BOUND:
 				setDeclaredUpperBound((TypeRef)null);
 				return;
+			case TypesPackage.TYPE_VARIABLE__DEFINED_TYPE_VARIABLE:
+				setDefinedTypeVariable((TypeVariable)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -364,6 +422,8 @@ public class TypeVariableImpl extends TypeImpl implements TypeVariable {
 				return declaredContravariant != DECLARED_CONTRAVARIANT_EDEFAULT;
 			case TypesPackage.TYPE_VARIABLE__DECLARED_UPPER_BOUND:
 				return declaredUpperBound != null;
+			case TypesPackage.TYPE_VARIABLE__DEFINED_TYPE_VARIABLE:
+				return definedTypeVariable != null;
 		}
 		return super.eIsSet(featureID);
 	}

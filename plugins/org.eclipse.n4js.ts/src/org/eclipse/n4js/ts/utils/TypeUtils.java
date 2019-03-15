@@ -12,6 +12,7 @@ package org.eclipse.n4js.ts.utils;
 
 import static java.util.Collections.singletonList;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -1528,9 +1529,25 @@ public class TypeUtils {
 	}
 
 	/**
-	 * @return Returns true if the given EObject instance is a composed TMember
+	 * @return true if the given EObject instance is a composed TMember
 	 */
 	public static boolean isComposedElement(EObject eobj) {
 		return ((eobj instanceof TMember) && ((TMember) eobj).isComposed());
+	}
+
+	/**
+	 * @return the real elements of an element
+	 */
+	public static List<EObject> getRealElements(EObject eobj) {
+		List<EObject> result = new ArrayList<>();
+		if (isComposedElement(eobj)) {
+			List<TMember> constituentMembers = ((TMember) eobj).getConstituentMembers();
+			for (TMember constituentMember : constituentMembers) {
+				result.add(constituentMember);
+			}
+		} else {
+			result.add(eobj);
+		}
+		return result;
 	}
 }

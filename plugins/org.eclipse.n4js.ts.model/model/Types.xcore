@@ -354,6 +354,7 @@ class TypeVariable extends Type {
 	boolean declaredCovariant
 	boolean declaredContravariant
 	contains TypeRef declaredUpperBound
+	refers transient TypeVariable definedTypeVariable	
 
 	/*
 	 * Returns this type variable's {@link org.eclipse.n4js.ts.types.util.Variance variance}. Always returns
