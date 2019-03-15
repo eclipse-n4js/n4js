@@ -93,7 +93,6 @@ public class N4JSPostProcessor implements PostProcessor {
 	}
 
 	private void postProcessN4JSResource(N4JSResource resource, CancelIndicator cancelIndicator) {
-		System.out.println("!!! " + resource.getURI());
 		// step 1: process the AST (resolve all proxies in AST, infer type of all typable AST nodes, etc.)
 		astProcessor.processAST(resource, cancelIndicator);
 		// step 2: expose internal types visible from outside

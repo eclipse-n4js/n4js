@@ -10,6 +10,9 @@
  */
 package org.eclipse.n4js.ui.refactoring;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -17,6 +20,11 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.n4JS.ImportDeclaration;
+import org.eclipse.n4js.n4JS.ImportSpecifier;
+import org.eclipse.n4js.n4JS.NamedImportSpecifier;
+import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
@@ -57,6 +65,29 @@ public class N4JSRenameElementHandler extends DefaultRenameElementHandler {
 								selectedElement = selectedTypeElement == null ? selectedElement
 										: selectedTypeElement;
 
+								// GH-1002: Do NOT allow renaming alias if the selected element is imported in the
+								// current resource via alias.
+								// This does not work in case the element is alias imported in another resource (this is
+								// expensive to check).
+								N4JSResource res = (N4JSResource) resource;
+								Script script = (Script) res.getContents().get(0);
+								List<ImportDeclaration> importDecls = script.getScriptElements().stream()
+										.filter(elem -> elem instanceof ImportDeclaration)
+										.map(elem -> (ImportDeclaration) elem)
+										.collect(Collectors.toList());
+								for (ImportDeclaration importDecl : importDecls)
+									for (ImportSpecifier importSpecified : importDecl.getImportSpecifiers()) {
+										if (importSpecified instanceof NamedImportSpecifier) {
+											NamedImportSpecifier namedImportSpecifier = (NamedImportSpecifier) importSpecified;
+											if (namedImportSpecifier.getAlias() != null) {
+												if (namedImportSpecifier.getImportedElement() == selectedElement) {
+													throw new UnsupportedOperationException(
+															"Renaming alias is NOT supported at the moment. Sorry.");
+												}
+											}
+										}
+									}
+
 								N4JSGlobals.myGlobalResourceSet = resource.getResourceSet();
 
 								if (selectedElement != null) {
@@ -96,6 +127,7 @@ public class N4JSRenameElementHandler extends DefaultRenameElementHandler {
 		if (renameElementContext.getTargetElementURI().scheme().equals("n4scheme")) {
 			return false;
 		}
+
 		return super.isRefactoringEnabled(renameElementContext, resource);
 	}
 }

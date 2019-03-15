@@ -401,7 +401,6 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	public boolean loadFromDescription(IResourceDescription description) {
 		if (isLoaded)
 			throw new IllegalStateException("Resource was already loaded");
-		System.out.println("LOADING FROM DESC: " + getURI());
 
 		TModule deserializedModule = null;
 		Iterable<IEObjectDescription> modules = description.getExportedObjectsByType(TypesPackage.Literals.TMODULE);
