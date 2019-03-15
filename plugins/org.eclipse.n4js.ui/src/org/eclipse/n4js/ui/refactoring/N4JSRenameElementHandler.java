@@ -22,6 +22,7 @@ import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
 import org.eclipse.n4js.n4JS.TypeDefiningElement;
 import org.eclipse.n4js.ts.types.TStructField;
+import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
 import org.eclipse.xtext.resource.XtextResource;
@@ -75,6 +76,11 @@ public class N4JSRenameElementHandler extends DefaultRenameElementHandler {
 								if ((selectedElement instanceof TStructField)
 										&& (((TStructField) selectedElement).getDefinedMember() != null)) {
 									selectedElement = ((TStructField) selectedElement).getDefinedMember();
+								}
+
+								if ((selectedElement instanceof TypeVariable)
+										&& ((TypeVariable) selectedElement).getDefinedTypeVariable() != null) {
+									selectedElement = ((TypeVariable) selectedElement).getDefinedTypeVariable();
 								}
 
 								N4JSGlobals.myGlobalResourceSet = resource.getResourceSet();

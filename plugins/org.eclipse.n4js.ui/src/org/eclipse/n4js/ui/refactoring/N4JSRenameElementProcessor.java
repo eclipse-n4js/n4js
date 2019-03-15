@@ -27,6 +27,7 @@ import org.eclipse.n4js.scoping.N4JSScopeProvider;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TMember;
+import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -70,7 +71,10 @@ public class N4JSRenameElementProcessor extends RenameElementProcessor {
 		String newName = this.getNewName();
 		EObject targetElement = this.getTargetElement();
 
-		status.merge(checkDuplicateName(targetElement, newName));
+		List<EObject> realTargetElements = TypeUtils.getRealElements(targetElement);
+		realTargetElements.stream()
+				.forEach((realTargetElement) -> status.merge(checkDuplicateName(realTargetElement, newName)));
+
 		return status;
 	}
 

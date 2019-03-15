@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -25,7 +26,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jface.text.link.LinkedPositionGroup;
-import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.xtext.EcoreUtil2;
@@ -109,15 +109,7 @@ public class N4JSLinkedPositionGroupCalculator extends DefaultLinkedPositionGrou
 			throw new OperationCanceledException();
 		}
 
-		List<EObject> realTargetElements = new ArrayList<>();
-		if (TypeUtils.isComposedElement(targetElement)) {
-			List<TMember> constituentMembers = ((TMember) targetElement).getConstituentMembers();
-			for (TMember constituentMember : constituentMembers) {
-				realTargetElements.add(constituentMember);
-			}
-		} else {
-			realTargetElements.add(targetElement);
-		}
+		List<EObject> realTargetElements = TypeUtils.getRealElements(targetElement);
 
 		LocalResourceRefactoringUpdateAcceptor updateAcceptor = updateAcceptorProvider.get();
 		updateAcceptor.setLocalResourceURI(renameElementContext.getContextResourceURI());
@@ -198,12 +190,18 @@ public class N4JSLinkedPositionGroupCalculator extends DefaultLinkedPositionGrou
 
 			// Ignore composed members
 			// TODO find a better way to do this!
-			// final List<IReferenceDescription> referenceDescriptionsWithoutComposedMember = referenceDescriptions
-			// .stream()
-			// .filter(resDesc -> resDesc.getTargetEObjectUri().trimFragment().toString()
-			// .contains("@cachedComposedMembers"))
-			// .collect(Collectors.toList());
-			referenceUpdater.createReferenceUpdates(elementRenameArguments, referenceDescriptions,
+			final List<IReferenceDescription> referenceDescriptionsWithoutComposedMember;
+			if (TypeUtils.isComposedElement(targetElement)) {
+				referenceDescriptionsWithoutComposedMember = referenceDescriptions;
+			} else {
+				referenceDescriptionsWithoutComposedMember = referenceDescriptions
+						.stream()
+						.filter(resDesc -> !resDesc.getTargetEObjectUri().fragment()
+								.contains("@cachedComposedMembers"))
+						.collect(Collectors.toList());
+			}
+
+			referenceUpdater.createReferenceUpdates(elementRenameArguments, referenceDescriptionsWithoutComposedMember,
 					updateAcceptor,
 					progress.newChild(60));
 		}

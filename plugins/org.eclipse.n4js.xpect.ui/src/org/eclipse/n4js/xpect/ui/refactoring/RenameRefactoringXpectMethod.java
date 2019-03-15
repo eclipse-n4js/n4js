@@ -36,6 +36,7 @@ import org.eclipse.n4js.resource.InferredElements;
 import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
 import org.eclipse.n4js.tests.util.EditorsUtil;
 import org.eclipse.n4js.ts.types.TStructField;
+import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.utils.StaticPolyfillHelper;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter;
@@ -148,6 +149,11 @@ public class RenameRefactoringXpectMethod {
 		if ((selectedElement instanceof TStructField)
 				&& (((TStructField) selectedElement).getDefinedMember() != null)) {
 			selectedElement = ((TStructField) selectedElement).getDefinedMember();
+		}
+
+		if ((selectedElement instanceof TypeVariable)
+				&& ((TypeVariable) selectedElement).getDefinedTypeVariable() != null) {
+			selectedElement = ((TypeVariable) selectedElement).getDefinedTypeVariable();
 		}
 
 		URI targetResourceUri = context.eResource().getURI();
