@@ -30,7 +30,7 @@ enum E {
 
 let e: E;
 /* XPECT renameRefactoring at BLUE to 'RED' ---
-Another enum literal with name 'RED' already exists.
+Problem in RenameRefactoringTestProject/src/RenameRefactoring_rename_enum_literal_conflict.n4js.xt: Another enum literal with name 'RED' already exists.
 ---   
 */
 E.BLUE;

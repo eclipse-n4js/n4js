@@ -132,7 +132,7 @@ public class N4JSRenameElementProcessor extends RenameElementProcessor {
 			return RefactoringStatus
 					.createFatalErrorStatus(
 							"Problem in " + trimPlatformPart(enumeration.eResource().getURI().toString()) +
-									"Another enum literal with name '" + newName + "' already exists.");
+									": Another enum literal with name '" + newName + "' already exists.");
 		}
 		return new RefactoringStatus();
 	}
