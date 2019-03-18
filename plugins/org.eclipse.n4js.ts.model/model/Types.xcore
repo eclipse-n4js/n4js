@@ -354,7 +354,13 @@ class TypeVariable extends Type {
 	boolean declaredCovariant
 	boolean declaredContravariant
 	contains TypeRef declaredUpperBound
-	refers transient TypeVariable definedTypeVariable	
+
+	/*
+	 * If and only if this TypeVariable is an AST node (note: instances of TypeVariable are used for both the AST
+	 * and in the TModule), then this property will point to the corresponding TypeVariable instance created in the
+	 * TModule, similar to {@code TypeDefiningElement#definedType}.
+	 */
+	refers transient TypeVariable definedTypeVariable
 
 	/*
 	 * Returns this type variable's {@link org.eclipse.n4js.ts.types.util.Variance variance}. Always returns
