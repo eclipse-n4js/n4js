@@ -19,7 +19,6 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.ITextSelection;
-import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
@@ -92,8 +91,6 @@ public class N4JSRenameElementHandler extends DefaultRenameElementHandler {
 											}
 										}
 									}
-
-								N4JSGlobals.myGlobalResourceSet = resource.getResourceSet();
 
 								if (selectedElement != null) {
 									@SuppressWarnings("hiding")
