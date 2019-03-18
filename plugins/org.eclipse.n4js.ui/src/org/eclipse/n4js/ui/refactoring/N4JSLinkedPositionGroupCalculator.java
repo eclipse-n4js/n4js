@@ -1,10 +1,13 @@
-/*******************************************************************************
- * Copyright (c) 2011, 2017 itemis AG (http://www.itemis.eu) and others.
+/**
+ * Copyright (c) 2019 NumberFour AG.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *******************************************************************************/
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
 package org.eclipse.n4js.ui.refactoring;
 
 import static com.google.common.collect.Iterables.concat;
@@ -52,9 +55,8 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 /**
- * Calculates the linked positions for simultaneous editing when a refactoring is triggered in linked mode.
+ * Custom LinkedPositionGroupCalculato
  *
- * @author Jan Koehnlein - Initial contribution and API
  */
 @SuppressWarnings("restriction")
 public class N4JSLinkedPositionGroupCalculator extends DefaultLinkedPositionGroupCalculator {
@@ -86,6 +88,9 @@ public class N4JSLinkedPositionGroupCalculator extends DefaultLinkedPositionGrou
 	@Inject
 	private Provider<LocalResourceRefactoringUpdateAcceptor> updateAcceptorProvider;
 
+	/**
+	 * Custom logics for handling composed elements
+	 */
 	@Override
 	public Provider<LinkedPositionGroup> getLinkedPositionGroup(
 			IRenameElementContext renameElementContext,
@@ -97,6 +102,7 @@ public class N4JSLinkedPositionGroupCalculator extends DefaultLinkedPositionGrou
 			throw new IllegalStateException("Could not determine project for context resource "
 					+ renameElementContext.getContextResourceURI());
 
+		@SuppressWarnings("hiding")
 		RefactoringResourceSetProvider resourceSetProvider = new CachingResourceSetProvider(
 				N4JSLinkedPositionGroupCalculator.this.resourceSetProvider);
 
@@ -188,12 +194,12 @@ public class N4JSLinkedPositionGroupCalculator extends DefaultLinkedPositionGrou
 				throw new OperationCanceledException();
 			}
 
-			// Ignore composed members
-			// TODO find a better way to do this!
 			final List<IReferenceDescription> referenceDescriptionsWithoutComposedMember;
 			if (TypeUtils.isComposedTElement(targetElement)) {
 				referenceDescriptionsWithoutComposedMember = referenceDescriptions;
 			} else {
+				// Ignore composed members if the target element is not a composed element
+				// GH-1002: TODO find a better way to do this!
 				referenceDescriptionsWithoutComposedMember = referenceDescriptions
 						.stream()
 						.filter(resDesc -> !resDesc.getTargetEObjectUri().fragment()
@@ -207,8 +213,8 @@ public class N4JSLinkedPositionGroupCalculator extends DefaultLinkedPositionGrou
 		}
 
 		final List<ReplaceEdit> textEdits = updateAcceptor.getTextEdits();
-
 		final List<ReplaceEdit> textEditsWithoutDuplicates = new ArrayList<>();
+		// Here we need to remove duplicate text edits in case the target element is a composed element
 		for (ReplaceEdit edit : textEdits) {
 			if (!textEditsWithoutDuplicates.stream()
 					.filter(e -> ((e.getOffset() == edit.getOffset()) && e.getLength() == edit.getLength())).findFirst()
@@ -221,6 +227,7 @@ public class N4JSLinkedPositionGroupCalculator extends DefaultLinkedPositionGrou
 			throw new OperationCanceledException();
 		}
 
+		@SuppressWarnings("null") // renameStrategy2 cannot be null at this point
 		final String originalName = renameStrategy2.getOriginalName();
 		return new Provider<LinkedPositionGroup>() {
 

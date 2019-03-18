@@ -40,7 +40,6 @@ import org.eclipse.xtext.linking.lazy.LazyURIEncoder;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.resource.IResourceDescription;
-import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 
 import com.google.common.base.Predicate;
 import com.google.inject.Inject;
@@ -61,9 +60,6 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 
 	@Inject
 	private LinkingHelper linkingHelper;
-
-	@Inject
-	private ResourceDescriptionsProvider resourceDescriptionsProvider;
 
 	@Override
 	protected void findReferencesInDescription(TargetURIs targetURIs, IResourceDescription resourceDescription,

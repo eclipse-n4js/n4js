@@ -21,10 +21,10 @@ import org.eclipse.xtext.ui.refactoring.impl.RefactoringResourceSetProvider;
  */
 @SuppressWarnings("restriction")
 public class N4JSRefactoringResourceSetProvider extends RefactoringResourceSetProvider {
-	// public static ResourceSet myGlobalResourceSet;
 
 	@Override
 	public ResourceSet get(IProject project) {
+		// GH-1002: TODO we need to remove this ugly hack!
 		if (N4JSGlobals.myGlobalResourceSet != null)
 			return N4JSGlobals.myGlobalResourceSet;
 		// LIVE_SCOPE does not work . PERSISTED_DESCRIPTIONS works. Why?

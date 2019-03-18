@@ -13,15 +13,14 @@ import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.n4js.n4JS.PropertyNameOwner;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TMember;
+import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.utils.languages.N4LanguageUtils;
 import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.xtext.Grammar;
 import org.eclipse.xtext.GrammarUtil;
 import org.eclipse.xtext.ParserRule;
-import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.parser.IParser;
-import org.eclipse.xtext.resource.ILocationInFileProvider;
 import org.eclipse.xtext.service.GrammarProvider;
 import org.eclipse.xtext.ui.refactoring.IRefactoringUpdateAcceptor;
 import org.eclipse.xtext.ui.refactoring.impl.DefaultRenameStrategy;
@@ -29,6 +28,8 @@ import org.eclipse.xtext.ui.refactoring.ui.IRenameElementContext;
 import org.eclipse.xtext.util.ITextRegion;
 import org.eclipse.xtext.util.SimpleAttributeResolver;
 
+import com.google.common.base.Joiner;
+import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
 /*** Custom Rename strategy */
@@ -36,59 +37,53 @@ import com.google.inject.Inject;
 @SuppressWarnings("restriction")
 public class N4JSRenameStrategy extends DefaultRenameStrategy {
 
+	/** Target element to be renamed */
 	protected EObject targetElement;
 
 	@Inject
 	private GrammarProvider grammarProvider;
 
-	@Inject
-	private ILocationInFileProvider locationInFileProvider;
-
 	private final List<URI> targetElementNewURIs = new ArrayList<>();
 
+	/**
+	 * We override this method to store the reference to targetElement
+	 */
 	@Override
-	public boolean initialize(EObject targetElement, IRenameElementContext context) {
+	public boolean initialize(@SuppressWarnings("hiding") EObject targetElement, IRenameElementContext context) {
 		this.targetElement = targetElement;
 		return super.initialize(targetElement, context);
 	}
 
+	/**
+	 * Override this method to handle composed element when creating text edits for definitions
+	 */
 	@Override
 	public void createDeclarationUpdates(String newName, ResourceSet resourceSet,
 			IRefactoringUpdateAcceptor updateAcceptor) {
 
-		// EObject targetElement = resourceSet.getEObject(getTargetElementOriginalURI(), false);
-		if ((targetElement instanceof TMember) && ((TMember) targetElement).isComposed()) {
-			// In case of composed member, add the constituent members instead.
+		// Special handling for composed element definitions of a composed element
+		if (TypeUtils.isComposedTElement(targetElement)) {
 			List<TMember> constituentMembers = ((TMember) targetElement).getConstituentMembers();
 			for (TMember constituentMember : constituentMembers) {
 				String text = newName;
 				EAttribute att = getNameAttribute(constituentMember);
-				ITextRegion nameRegion = locationInFileProvider.getFullTextRegion(constituentMember, att, 0);
 
-				EObject nameElement = ((SyntaxRelatedTElement) constituentMember).getAstElement();
-
-				// PropertyNameOwner has a LiteralOrComputedPropertyName child node that contains the name to be
-				// renamed
-				if (nameElement instanceof PropertyNameOwner) {
-					nameElement = ((PropertyNameOwner) nameElement).getDeclaredName();
-					EAttribute nAttribute = SimpleAttributeResolver.newResolver(String.class, "literalName")
-							.getAttribute(nameElement);
-					nameRegion = locationInFileProvider.getFullTextRegion(nameElement, nAttribute, 0);
-				}
-
+				ITextRegion nameRegion = getOriginalNameRegion(constituentMember, att);
 				ReplaceEdit replaceEdit = new ReplaceEdit(nameRegion.getOffset(), nameRegion.getLength(), text);
 				updateAcceptor.accept(EcoreUtil.getURI(constituentMember).trimFragment(),
 						replaceEdit);
 			}
-
 		} else {
 			updateAcceptor.accept(getTargetElementOriginalURI().trimFragment(), getDeclarationTextEdit(newName));
 		}
 	}
 
+	/**
+	 * Override this method to handle composed element when applying declaration changes to AST/TModule
+	 */
 	@Override
 	public void applyDeclarationChange(String newName, ResourceSet resourceSet) {
-		if ((targetElement instanceof TMember) && ((TMember) targetElement).isComposed()) {
+		if (TypeUtils.isComposedTElement(targetElement)) {
 			targetElementNewURIs.clear();
 			List<TMember> constituentMembers = ((TMember) targetElement).getConstituentMembers();
 			for (TMember constituentMember : constituentMembers) {
@@ -110,9 +105,13 @@ public class N4JSRenameStrategy extends DefaultRenameStrategy {
 		super.revertDeclarationChange(resourceSet);
 	}
 
-	/** Extract the text region of the AST node that contains the name to be renamed */
+	/**
+	 * Override this method to handle the case in which PropertyNameOwner has a LiteralOrComputedPropertyName child node
+	 * that contains the name to be renamed
+	 */
 	@Override
-	protected ITextRegion getOriginalNameRegion(final EObject targetElement, EAttribute nameAttribute) {
+	protected ITextRegion getOriginalNameRegion(@SuppressWarnings("hiding") final EObject targetElement,
+			EAttribute nameAttribute) {
 		if (targetElement instanceof SyntaxRelatedTElement) {
 			EObject nameElement = ((SyntaxRelatedTElement) targetElement).getAstElement();
 
@@ -129,20 +128,18 @@ public class N4JSRenameStrategy extends DefaultRenameStrategy {
 
 	@Override
 	public RefactoringStatus validateNewName(String newName) {
-		// TODO: Handle n4jsx extension
+		// N4JS already contains N4JSX grammar
 		IParser parser = N4LanguageUtils.getServiceForContext("n4js", IParser.class).get();
-		Grammar grammar = this.internalFindGrammar(grammarProvider);
-
+		Grammar grammar = this.internalFindGrammar();
 		ParserRule parserRule = (ParserRule) GrammarUtil.findRuleForName(grammar,
 				"org.eclipse.n4js.ts.TypeExpressions.IdentifierName");
 
+		// Parse the new name using the IdentifierName rule of the parser
 		IParseResult parseResult = parser.parse(parserRule, new StringReader(newName));
 		if (parseResult.hasSyntaxErrors()) {
-			StringBuilder sb = new StringBuilder();
-			for (INode node : parseResult.getSyntaxErrors()) {
-				sb.append(node.getSyntaxErrorMessage().getMessage() + "\n");
-			}
-			return RefactoringStatus.createFatalErrorStatus(sb.toString());
+			String parseErrorMessages = Joiner.on("\n").join(Iterables.transform(parseResult.getSyntaxErrors(),
+					(node) -> node.getSyntaxErrorMessage().getMessage()));
+			return RefactoringStatus.createFatalErrorStatus(parseErrorMessages);
 		}
 
 		RefactoringStatus status = new RefactoringStatus();
@@ -152,7 +149,7 @@ public class N4JSRenameStrategy extends DefaultRenameStrategy {
 	/**
 	 * Returns the TypeExpressions grammar
 	 */
-	protected Grammar internalFindGrammar(GrammarProvider grammarProvider) {
+	protected Grammar internalFindGrammar() {
 		Grammar grammar = grammarProvider.getGrammar(this);
 		while (grammar != null) {
 			if ("org.eclipse.n4js.ts.TypeExpressions".equals(grammar.getName())) {

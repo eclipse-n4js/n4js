@@ -1532,7 +1532,8 @@ public class TypeUtils {
 	}
 
 	/**
-	 * @return the real elements of an element
+	 * @return the single list of that input element if it is not a composed element. Otherwise, return the list of
+	 *         constituent members.
 	 */
 	public static List<EObject> getRealElements(EObject eobj) {
 		List<EObject> result = new ArrayList<>();

@@ -53,13 +53,13 @@ import org.eclipse.n4js.ui.contentassist.PatchedFollowElementComputer;
 import org.eclipse.n4js.ui.contentassist.PatchedRequiredRuleNameComputer;
 import org.eclipse.n4js.ui.contentassist.SimpleLastSegmentFinder;
 import org.eclipse.n4js.ui.editor.AlwaysAddNatureCallback;
-import org.eclipse.n4js.ui.editor.N4JSHyperlinkHelper;
 import org.eclipse.n4js.ui.editor.EditorAwareCanLoadFromDescriptionHelper;
 import org.eclipse.n4js.ui.editor.N4JSDirtyStateEditorSupport;
 import org.eclipse.n4js.ui.editor.N4JSDocument;
 import org.eclipse.n4js.ui.editor.N4JSDoubleClickStrategyProvider;
 import org.eclipse.n4js.ui.editor.N4JSHover;
 import org.eclipse.n4js.ui.editor.N4JSHyperlinkDetector;
+import org.eclipse.n4js.ui.editor.N4JSHyperlinkHelper;
 import org.eclipse.n4js.ui.editor.N4JSLocationInFileProvider;
 import org.eclipse.n4js.ui.editor.N4JSReconciler;
 import org.eclipse.n4js.ui.editor.PrevStateAwareDocumentBasedDirtyResource;
@@ -904,21 +904,22 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 		return N4JSRenameElementHandler.class;
 	}
 
+	/** Custom LinkedPositionGroupCalculator */
 	public Class<? extends DefaultLinkedPositionGroupCalculator> bindDefaultLinkedPositionGroupCalculator() {
 		return N4JSLinkedPositionGroupCalculator.class;
 	}
 
-	/** Custom rename strategy */
+	/** Custom Rename strategy */
 	public Class<? extends DefaultRenameStrategy> bindDefaultRenameStrategy() {
 		return N4JSRenameStrategy.class;
 	}
 
-	/** Custom N4JSRefactoringCrossReferenceSerializer */
+	/** Custom RefactoringCrossReferenceSerializer */
 	public Class<? extends RefactoringCrossReferenceSerializer> bindN4JSRefactoringCrossReferenceSerializer() {
 		return N4JSRefactoringCrossReferenceSerializer.class;
 	}
 
-	/** Custom N4JSRefactoringCrossReferenceSerializer */
+	/** Custom RefactoringResourceSetProvider */
 	public Class<? extends RefactoringResourceSetProvider> bindRefactoringResourceSetProvider() {
 		return N4JSRefactoringResourceSetProvider.class;
 	}

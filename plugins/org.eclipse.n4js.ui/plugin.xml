@@ -866,7 +866,7 @@ Contributors:
         </menuContribution>
     </extension>
     
-  <!-- Rename -->
+  <!-- Rename refactoring menu item -->
   <extension
     point="org.eclipse.ui.handlers">
     <handler

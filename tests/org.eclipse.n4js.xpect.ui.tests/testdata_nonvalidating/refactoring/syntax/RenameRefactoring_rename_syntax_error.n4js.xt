@@ -24,7 +24,7 @@
 */
 
 /* XPECT renameRefactoring at A to '%/&@' ---
-no viable alternative at input '%'\n
+no viable alternative at input '%'
 ---   
 */ 
 class A { }

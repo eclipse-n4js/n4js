@@ -26,6 +26,7 @@ import org.eclipse.n4js.n4JS.JSXElement
 import org.eclipse.n4js.n4JS.JSXElementName
 import org.eclipse.n4js.n4JS.JSXPropertyAttribute
 import org.eclipse.n4js.n4JS.LabelledStatement
+import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4ClassifierDefinition
 import org.eclipse.n4js.n4JS.N4FieldAccessor
@@ -37,7 +38,6 @@ import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NewExpression
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
-import org.eclipse.n4js.n4JS.PropertyNameOwner
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.Statement
 import org.eclipse.n4js.n4JS.TypeDefiningElement
@@ -97,7 +97,6 @@ import org.eclipse.xtext.util.IResourceScopeCache
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
-import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName
 
 /**
  * This class contains custom scoping description.

@@ -98,7 +98,7 @@ public class N4JSRenameElementProcessor extends RenameElementProcessor {
 			return checkDuplicateFormalParam(fpar, method.getFpars(), newName);
 		}
 
-		// Check name conflicts in variable environment scope
+		// Check name conflicts in variable environment scope using Scope for ContentAssist
 		RefactoringStatus status = new RefactoringStatus();
 		EObject astContext = null;
 		if (context instanceof SyntaxRelatedTElement) {
@@ -122,7 +122,7 @@ public class N4JSRenameElementProcessor extends RenameElementProcessor {
 	}
 
 	/**
-	 * Check duplicate formal parameters
+	 * Check duplicate enum literals
 	 */
 	private RefactoringStatus checkDuplicateEnum(TEnum enumeration, String newName) {
 		boolean duplicateFound = enumeration.getLiterals().stream()
@@ -153,9 +153,11 @@ public class N4JSRenameElementProcessor extends RenameElementProcessor {
 		return new RefactoringStatus();
 	}
 
+	/**
+	 * Check duplicate members
+	 */
 	private RefactoringStatus checkDuplicateMember(TMember member, String newName) {
 		ContainerType<? extends TMember> container = member.getContainingType();
-		// TODO Deal with composed member
 		if (container != null) {
 			MemberCollector memberCollector = this.containerTypesHelper.fromContext(container);
 			List<TMember> membersWithName = memberCollector.members(container).stream()

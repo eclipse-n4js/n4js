@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018 NumberFour AG.
+ * Copyright (c) 2019 NumberFour AG.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -59,7 +59,7 @@ import org.eclipse.xtext.ui.refactoring.ui.IRenameSupport;
 import com.google.inject.Inject;
 
 /**
- * Provides XPEXT test methods for rename refactoring
+ * Provides XPEXT test method for rename refactoring
  */
 @XpectImport({ N4JSOffsetAdapter.class, XpEnvironmentData.class, VarDef.class, Config.class,
 		ValidationTestModuleSetup.class })
@@ -84,8 +84,8 @@ public class RenameRefactoringXpectMethod {
 	 */
 	@ParameterParser(syntax = "('at' arg2=OFFSET 'to' arg3=STRING) ('resource' arg4=STRING)?") // arg1=OFFSET makes the
 																								// 'offset' parameter
-																								// contain
-	// the right offset value
+																								// contain the right
+																								// offset value
 	@Xpect
 	@ConsumedIssues({ Severity.INFO, Severity.ERROR, Severity.WARNING })
 	public void renameRefactoring(
@@ -103,20 +103,16 @@ public class RenameRefactoringXpectMethod {
 
 		// GH-1002: Ask Oliver
 		// Special handling for FormalParameter
-		// IdentifierRef refers to FormalParameter
+		// IdentifierRef refers to FormalParameter (not TFormalParameter)
 		EObject selectedTypeElement = (selectedElement instanceof FormalParameter) ? null
 				: N4JSLanguageUtils.getDefinedTypeModelElement(selectedElement);
 		selectedTypeElement = selectedTypeElement == null ? selectedElement : selectedTypeElement;
 
 		URI targetResourceUri = context.eResource().getURI();
-		// XtextResource resource = (XtextResource) context.eResource();
-
 		N4JSGlobals.myGlobalResourceSet = context.eResource().getResourceSet();
-
 		Optional<XtextEditor> editorOp = EditorsUtil.openXtextEditor(targetResourceUri,
 				N4JSActivator.ORG_ECLIPSE_N4JS_N4JS);
 		XtextEditor editor = editorOp.get();
-
 		final ITextSelection selection = (ITextSelection) editor.getSelectionProvider().getSelection();
 
 		IRenameElementContext renameElementContext = renameContextFactory
