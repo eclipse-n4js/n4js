@@ -99,7 +99,7 @@ class LocallyKnownTypesScopingHelper {
 	 * Returns scope with locally known types and (as parent) import scope; the result is cached.
 	 */
 	def IScope scopeWithLocallyKnownTypes(Script script, IScopeProvider delegate) {
-//		return cache.get(script -> 'locallyKnownTypes', script.eResource) [|
+		return cache.get(script -> 'locallyKnownTypes', script.eResource) [|
 			// all types in the index:
 			val parent = delegate.getScope(script,
 				TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE); // provide any reference that expects instances of Type as target objects
@@ -109,7 +109,7 @@ class LocallyKnownTypesScopingHelper {
 			val localTypes = scopeWithLocallyDeclaredTypes(script, importScope);
 			
 			return localTypes;
-//		];
+		];
 	}
 	
 	/**

@@ -28,6 +28,7 @@ import org.eclipse.n4js.external.libraries.ExternalLibraryFolderUtils;
  */
 public final class N4JSGlobals {
 
+	/** GH-1002: TODO Remove this ugly hack! */
 	public static ResourceSet myGlobalResourceSet;
 
 	/**
