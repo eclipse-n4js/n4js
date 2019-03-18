@@ -24,12 +24,9 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
 import org.eclipse.jface.viewers.IDecoration;
-<<<<<<< HEAD
-import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
-=======
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
 import org.eclipse.n4js.ts.ui.navigation.URIBasedStorage;
->>>>>>> origin/master
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
 import org.eclipse.n4js.ui.labeling.N4JSDescriptionLabelProvider;
