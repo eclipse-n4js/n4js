@@ -32,9 +32,6 @@ import org.eclipse.n4js.runner.RunnerFrontEnd;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
-import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
@@ -72,9 +69,6 @@ public class ShippedCodeRunConfigurationPluginUITest extends AbstractBuilderPart
 	@Inject
 	private RunnerFileBasedShippedCodeConfigurationHelper shippedCodeConfigurationHelper;
 
-	@Inject
-	private ShippedCodeInitializeTestHelper shippedCodeInitializeTestHelper;
-
 	StringJoiner logs = new StringJoiner(NL);
 
 	/** Rule that will log extra information in case test fails. */
@@ -87,25 +81,9 @@ public class ShippedCodeRunConfigurationPluginUITest extends AbstractBuilderPart
 		}
 	};
 
-	/**
-	 * Enables built ins.
-	 */
-	@Before
-	public void setupWorkspace() throws Exception {
-		super.setUp();
-		shippedCodeInitializeTestHelper.setupBuiltIns();
-		waitForAutoBuild();
-	}
-
-	/**
-	 * Undoes changes to the external libraries.
-	 */
-	@After
 	@Override
-	public void tearDown() throws Exception {
-		shippedCodeInitializeTestHelper.tearDownBuiltIns();
-		waitForAutoBuild();
-		super.tearDown();
+	protected boolean provideShippedCode() {
+		return true;
 	}
 
 	/**

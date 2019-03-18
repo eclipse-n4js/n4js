@@ -1,17 +1,16 @@
 {
-	"name": "n4js.lang",
+	"name": "ClearCacheOnClean",
 	"version": "0.0.1",
-	"dependencies": {
-		"n4js-es5": "13"
-	},
 	"n4js": {
 		"projectType": "library",
 		"vendorId": "org.eclipse.n4js",
+		"vendorName": "Eclipse N4JS Project",
+		"output": "src-gen",
 		"sources": {
 			"source": [
 				"src"
 			]
 		},
-		"output": "src-gen"
+		"moduleLoader": "n4js"
 	}
 }

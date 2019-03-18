@@ -13,6 +13,7 @@ package org.eclipse.n4js.packagejson;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNameValuePairsOrEmpty;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNonEmptyStringOrNull;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asStringOrNull;
+import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asStringsInArrayOrEmpty;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.getProperty;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.MAIN;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.MAIN_MODULE;
@@ -124,6 +125,10 @@ public class PackageJsonHelper {
 				// mark project with N4JS nature
 				target.setHasN4JSNature(true);
 				convertN4jsPairs(target, asNameValuePairsOrEmpty(value));
+				break;
+			case WORKSPACES:
+				target.setYarnWorkspaceRoot(true);
+				target.getWorkspaces().addAll(asStringsInArrayOrEmpty(value));
 				break;
 			default:
 				break;
@@ -296,9 +301,10 @@ public class PackageJsonHelper {
 		}
 		// if no source containers are defined (no matter what type),
 		// then add a default source container of type "source" with path "."
+		// EXCEPT target represents a yarn workspace root
 		Iterator<String> sourceContainerPaths = target.getSourceContainers().stream()
 				.flatMap(sc -> sc.getPaths().stream()).iterator();
-		if (!sourceContainerPaths.hasNext()) {
+		if (!sourceContainerPaths.hasNext() && !target.isYarnWorkspaceRoot()) {
 			SourceContainerDescription scd = target.getSourceContainers().stream()
 					.filter(sc -> sc.getSourceContainerType() == SourceContainerType.SOURCE)
 					.findFirst().orElse(null);

@@ -2,6 +2,7 @@
 <launchConfiguration type="org.eclipse.pde.ui.RuntimeWorkbench">
 <setAttribute key="additional_plugins"/>
 <booleanAttribute key="append.args" value="true"/>
+<stringAttribute key="application" value="org.eclipse.n4js.product.application"/>
 <booleanAttribute key="askclear" value="true"/>
 <booleanAttribute key="automaticAdd" value="true"/>
 <booleanAttribute key="automaticValidate" value="true"/>

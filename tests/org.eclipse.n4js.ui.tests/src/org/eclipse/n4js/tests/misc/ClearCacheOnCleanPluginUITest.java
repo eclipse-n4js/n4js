@@ -26,12 +26,9 @@ import org.eclipse.n4js.internal.MultiCleartriggerCache.CleartriggerSupplier;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.EclipseUIUtils;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
-import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import com.google.inject.Inject;
@@ -42,35 +39,22 @@ import com.google.inject.Inject;
 public class ClearCacheOnCleanPluginUITest extends AbstractBuilderParticipantTest {
 
 	private static final String PROBANDS = "probands";
-	private static final String SUBFOLDER = "Hyperlink";
-	private static final String PROJECT_NAME = "Hyperlink";
+	private static final String PROJECT_NAME = "ClearCacheOnClean";
 
-	@Inject
-	private ShippedCodeInitializeTestHelper shippedCodeInitializeTestHelper;
+	@Override
+	protected boolean provideShippedCode() {
+		return true;
+	}
 
 	@Inject
 	private MultiCleartriggerCache cache;
-
-	@Before
-	@Override
-	public void setUp() throws Exception {
-		super.setUp();
-		shippedCodeInitializeTestHelper.setupBuiltIns();
-	}
-
-	@After
-	@Override
-	public void tearDown() throws Exception {
-		shippedCodeInitializeTestHelper.tearDownBuiltIns();
-		super.tearDown();
-	}
 
 	/**
 	 * Tests if the {@link MultiCleartriggerCache} is cleared when a 'Clean Build' is triggered.
 	 */
 	@Test
 	public void testClearOnCleanBuild() throws CoreException {
-		File prjDir = new File(getResourceUri(PROBANDS, SUBFOLDER));
+		File prjDir = new File(PROBANDS);
 		IProject project = ProjectTestsUtils.importProject(prjDir, PROJECT_NAME);
 		IResource resourceABC = project.findMember("src/ABC.n4js");
 		IFile fileABC = ResourcesPlugin.getWorkspace().getRoot().getFile(resourceABC.getFullPath());
@@ -79,6 +63,7 @@ public class ClearCacheOnCleanPluginUITest extends AbstractBuilderParticipantTes
 		waitForAutoBuild();
 
 		syncExtAndBuild();
+		assertNoIssues();
 
 		// use key of API_IMPL_MAPPING
 		SupplierWithPostAction testSupplier = new SupplierWithPostAction();
@@ -110,7 +95,7 @@ public class ClearCacheOnCleanPluginUITest extends AbstractBuilderParticipantTes
 	 */
 	@Test
 	public void testClearOnModifyPackageJson() throws CoreException {
-		File prjDir = new File(getResourceUri(PROBANDS, SUBFOLDER));
+		File prjDir = new File(PROBANDS);
 		IProject project = ProjectTestsUtils.importProject(prjDir, PROJECT_NAME);
 		IResource packagejson = project.findMember("package.json");
 		IFile filePJ = ResourcesPlugin.getWorkspace().getRoot().getFile(packagejson.getFullPath());
@@ -118,7 +103,7 @@ public class ClearCacheOnCleanPluginUITest extends AbstractBuilderParticipantTes
 		waitForAutoBuild();
 
 		syncExtAndBuild();
-		assertNoErrors();
+		assertNoIssues();
 
 		// use key of API_IMPL_MAPPING
 		SupplierWithPostAction testSupplier = new SupplierWithPostAction();

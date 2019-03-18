@@ -52,6 +52,8 @@ import org.eclipse.n4js.semver.Semver.VersionNumber;
  *   <li>{@link org.eclipse.n4js.projectDescription.ProjectDescription#getDefinesPackage <em>Defines Package</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.ProjectDescription#isHasNestedNodeModulesFolder <em>Has Nested Node Modules Folder</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.ProjectDescription#isHasN4JSNature <em>Has N4JS Nature</em>}</li>
+ *   <li>{@link org.eclipse.n4js.projectDescription.ProjectDescription#isYarnWorkspaceRoot <em>Yarn Workspace Root</em>}</li>
+ *   <li>{@link org.eclipse.n4js.projectDescription.ProjectDescription#getWorkspaces <em>Workspaces</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.projectDescription.ProjectDescriptionPackage#getProjectDescription()
@@ -559,5 +561,47 @@ public interface ProjectDescription extends EObject {
 	 * @generated
 	 */
 	void setHasN4JSNature(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Yarn Workspace Root</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Tells whether the project represented by this project description is the root of a yarn workspace.
+	 * This flag will be {@code true} iff the package.json contains yarn's top-level property "workspaces",
+	 * no matter the value (i.e. will be {@code true} even if the value is the empty array).
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Yarn Workspace Root</em>' attribute.
+	 * @see #setYarnWorkspaceRoot(boolean)
+	 * @see org.eclipse.n4js.projectDescription.ProjectDescriptionPackage#getProjectDescription_YarnWorkspaceRoot()
+	 * @model unique="false"
+	 * @generated
+	 */
+	boolean isYarnWorkspaceRoot();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.projectDescription.ProjectDescription#isYarnWorkspaceRoot <em>Yarn Workspace Root</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Yarn Workspace Root</em>' attribute.
+	 * @see #isYarnWorkspaceRoot()
+	 * @generated
+	 */
+	void setYarnWorkspaceRoot(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Workspaces</b></em>' attribute list.
+	 * The list contents are of type {@link java.lang.String}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Value of top-level property "workspaces" in package.json, used by yarn to denote the contained projects.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Workspaces</em>' attribute list.
+	 * @see org.eclipse.n4js.projectDescription.ProjectDescriptionPackage#getProjectDescription_Workspaces()
+	 * @model unique="false"
+	 * @generated
+	 */
+	EList<String> getWorkspaces();
 
 } // ProjectDescription

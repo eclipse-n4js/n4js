@@ -38,6 +38,7 @@ public abstract class AbstractPluginUITest extends AbstractIDEBUG_Test {
 	 * Wait until all background tasks are complete then makes sure that the UI thread is idle as well.
 	 */
 	protected void waitForIdleState() {
+		ProjectTestsUtils.waitForAutoBuild();
 		ProjectTestsUtils.waitForAllJobs(Long.MAX_VALUE);
 		UIUtils.waitForUiThread();
 	}

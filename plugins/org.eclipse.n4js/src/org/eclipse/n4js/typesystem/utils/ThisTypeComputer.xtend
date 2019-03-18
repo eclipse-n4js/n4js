@@ -25,6 +25,8 @@ import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
+import org.eclipse.n4js.ts.types.Type
+import org.eclipse.n4js.ts.utils.TypeExtensions
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
@@ -94,10 +96,10 @@ class ThisTypeComputer extends TypeSystemHelperStrategy {
 				if (containingFunction instanceof N4MethodDeclaration &&
 						(containingFunction as N4MemberDeclaration).isStatic) {
 					if (isInReturnDeclaration_Of_StaticMethod(location, containingFunction as N4MethodDeclaration)) {
-						return getThisTypeAtLocation(G, thisTargetDefType.ref);
+						return getThisTypeAtLocation(G, thisTargetDefType.createTypeRefWithParamsAsArgs);
 					} else if (isInBody_Of_StaticMethod(location, containingFunction as N4MethodDeclaration)) {
 						return TypeUtils.createClassifierBoundThisTypeRef(
-								TypeUtils.createTypeTypeRef(thisTargetDefType.ref, false));
+								TypeUtils.createTypeTypeRef(thisTargetDefType.createTypeRefWithParamsAsArgs, false));
 					} else {
 						return TypeUtils.createConstructorTypeRef(thisTargetDefType);
 					}
@@ -117,7 +119,7 @@ class ThisTypeComputer extends TypeSystemHelperStrategy {
 							if (n4Setter !== null && n4Setter.isStatic) {
 								return TypeUtils.createConstructorTypeRef(thisTargetDefType);
 							} else {
-								return getThisTypeAtLocation(G, thisTargetDefType.ref);
+								return getThisTypeAtLocation(G, thisTargetDefType.createTypeRefWithParamsAsArgs);
 							}
 						}
 					}
@@ -132,5 +134,22 @@ class ThisTypeComputer extends TypeSystemHelperStrategy {
 			}
 			return G.undefinedTypeRef;
 		}
+	}
+
+	/**
+	 * Similar to utility methods [1] and [2], but if the given type is generic, then the generic type's
+	 * type parameters / type variables will be used as type arguments for the newly created ParameterizedTypeRef.
+	 * The utility methods [1] and [2] would instead either create a raw type reference or use wildcards as type
+	 * arguments.
+	 * <p>
+	 * [1] {@link TypeExtensions#ref(Type, TypeArgument...)}<br>
+	 * [2] {@link TypeUtils#createTypeRef(Type, TypingStrategy, boolean, TypeArgument...)}
+	 */
+	def private TypeRef createTypeRefWithParamsAsArgs(Type type) {
+		if (type.generic) {
+			val typeArgs = type.typeVars.map[ref].toList;
+			return type.ref(typeArgs);
+		}
+		return type.ref;
 	}
 }

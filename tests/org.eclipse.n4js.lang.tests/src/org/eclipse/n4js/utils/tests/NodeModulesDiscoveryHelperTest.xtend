@@ -211,6 +211,66 @@ class NodeModulesDiscoveryHelperTest {
 		"packages/xub/P3".assertIsYarnWorkspace(false);
 	}
 
+	@Test
+	def void testYarnWorkspace_wildcard3() {
+		val projectFolders = createProjectFolders(
+			"packages/P0",
+			"packages/P1",
+			"packages/@myScope/X1",
+			"packages/@myScope/X2"
+		);
+
+		createPackageJson('''
+			{
+				"private": true,
+				"workspaces": [ "packages/*" ]
+			}
+		''');
+
+		projectFolders.assertNodeModulesPaths(
+			"node_modules",
+			"packages/P0/node_modules",
+			"packages/P1/node_modules",
+			"packages/@myScope/X1/node_modules",
+			"packages/@myScope/X2/node_modules"
+		);
+
+		"packages/P0".assertIsYarnWorkspace(true);
+		"packages/P1".assertIsYarnWorkspace(true);
+		"packages/@myScope/X1".assertIsYarnWorkspace(false);
+		"packages/@myScope/X2".assertIsYarnWorkspace(false);
+	}
+
+	@Test
+	def void testYarnWorkspace_wildcard4() {
+		val projectFolders = createProjectFolders(
+			"packages/P0",
+			"packages/P1",
+			"packages/@myScope/X1",
+			"packages/@myScope/X2"
+		);
+
+		createPackageJson('''
+			{
+				"private": true,
+				"workspaces": [ "packages/*", "packages/@*/*" ]
+			}
+		''');
+
+		projectFolders.assertNodeModulesPaths(
+			"node_modules",
+			"packages/P0/node_modules",
+			"packages/P1/node_modules",
+			"packages/@myScope/X1/node_modules",
+			"packages/@myScope/X2/node_modules"
+		);
+
+		"packages/P0".assertIsYarnWorkspace(true);
+		"packages/P1".assertIsYarnWorkspace(true);
+		"packages/@myScope/X1".assertIsYarnWorkspace(true);
+		"packages/@myScope/X2".assertIsYarnWorkspace(true);
+	}
+
 	/** It's legal to pass in the yarn workspace root to the methods in {@link NodeModulesDiscoveryHelper}. */
 	@Test
 	def void testYarnWorkspace_RootAsArgument() {
