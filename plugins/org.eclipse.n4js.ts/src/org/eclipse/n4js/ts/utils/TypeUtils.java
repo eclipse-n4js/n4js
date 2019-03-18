@@ -1527,7 +1527,7 @@ public class TypeUtils {
 	/**
 	 * @return true if the given EObject instance is a composed TMember
 	 */
-	public static boolean isComposedElement(EObject eobj) {
+	public static boolean isComposedTElement(EObject eobj) {
 		return ((eobj instanceof TMember) && ((TMember) eobj).isComposed());
 	}
 
@@ -1536,7 +1536,7 @@ public class TypeUtils {
 	 */
 	public static List<EObject> getRealElements(EObject eobj) {
 		List<EObject> result = new ArrayList<>();
-		if (isComposedElement(eobj)) {
+		if (isComposedTElement(eobj)) {
 			List<TMember> constituentMembers = ((TMember) eobj).getConstituentMembers();
 			for (TMember constituentMember : constituentMembers) {
 				result.add(constituentMember);

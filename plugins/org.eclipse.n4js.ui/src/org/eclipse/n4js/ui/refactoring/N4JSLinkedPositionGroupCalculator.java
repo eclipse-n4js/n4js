@@ -146,7 +146,7 @@ public class N4JSLinkedPositionGroupCalculator extends DefaultLinkedPositionGrou
 
 			Iterable<URI> renameElems;
 
-			if (TypeUtils.isComposedElement(targetElement)) {
+			if (TypeUtils.isComposedTElement(targetElement)) {
 				renameElems = dependentElementURIs;
 			} else {
 				renameElems = concat(Collections.singleton(renameElementContext.getTargetElementURI()),
@@ -191,7 +191,7 @@ public class N4JSLinkedPositionGroupCalculator extends DefaultLinkedPositionGrou
 			// Ignore composed members
 			// TODO find a better way to do this!
 			final List<IReferenceDescription> referenceDescriptionsWithoutComposedMember;
-			if (TypeUtils.isComposedElement(targetElement)) {
+			if (TypeUtils.isComposedTElement(targetElement)) {
 				referenceDescriptionsWithoutComposedMember = referenceDescriptions;
 			} else {
 				referenceDescriptionsWithoutComposedMember = referenceDescriptions
