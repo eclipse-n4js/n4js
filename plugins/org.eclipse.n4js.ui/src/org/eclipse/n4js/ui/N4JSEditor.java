@@ -25,7 +25,6 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
 import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
 import org.eclipse.n4js.ts.ui.navigation.URIBasedStorage;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
@@ -56,9 +55,6 @@ import com.google.inject.Inject;
  * a conversion from file to platform uri is done.
  */
 public class N4JSEditor extends XtextEditor implements IShowInSource, IShowInTargetList {
-
-	@Inject
-	private FileExtensionsRegistry fileExtensionsRegistry;
 
 	private static final Logger LOG = Logger.getLogger(N4JSEditor.class);
 
