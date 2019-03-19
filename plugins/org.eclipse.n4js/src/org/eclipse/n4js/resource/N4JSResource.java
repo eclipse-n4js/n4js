@@ -1116,7 +1116,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 				&& isLoaded()
 				&& !isFullyProcessed()
 				&& !isLoadedFromDescription()
-				&& TypeModelUtils.isComposedMemberURIFragment(uriFragment)) {
+				&& TypeModelUtils.isURIFragmentToPostProcessingCache(uriFragment)) {
 			// 'uriFragment' points to a cached composed member below transient property TModule#composedMemberCaches;
 			// to be able to find the target EObject, we first have to perform post-processing in order to populate the
 			// composed member cache:

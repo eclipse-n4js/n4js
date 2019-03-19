@@ -42,6 +42,17 @@ public class TypeModelUtils {
 	}
 
 	/**
+	 * Tells if the given URI fragment points to a {@link TModule#getComposedMemberCaches() cached composed member} or
+	 * {@link TModule#getExposedInternalTypes() cache} in the TModule of an N4JS resource.
+	 */
+	public static boolean isURIFragmentToPostProcessingCache(String uriFragment) {
+		return uriFragment.startsWith(
+				"/1/@" + TypesPackage.eINSTANCE.getTModule_ComposedMemberCaches().getName() + ".") ||
+				uriFragment.startsWith(
+						"/1/@" + TypesPackage.eINSTANCE.getTModule_ExposedInternalTypes().getName() + ".");
+	}
+
+	/**
 	 * @return true if the given EObject instance is a composed TMember
 	 */
 	public static boolean isComposedTElement(EObject eobj) {

@@ -19,7 +19,6 @@ import org.eclipse.n4js.xpect.ui.methods.OrganizeImportXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.ProposalXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.contentassist.ContentAssistXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.quickfix.QuickFixXpectMethod;
-import org.eclipse.n4js.xpect.ui.refactoring.RenameRefactoringXpectMethod;
 import org.eclipse.n4js.xpect.validation.suppression.N4JSSuppressIssuesSetup;
 import org.eclipse.xpect.XpectImport;
 import org.eclipse.xpect.lib.XpectTestResultTest;
@@ -46,8 +45,7 @@ import org.junit.runner.RunWith;
 		HyperlinkXpectMethod.class,
 		ContentAssistXpectMethod.class,
 		XpectTestResultTest.class,
-		OrganizeImportXpectMethod.class,
-		RenameRefactoringXpectMethod.class
+		OrganizeImportXpectMethod.class
 })
 @XpectImport({ Config.class, VarDef.class, XpEnvironmentData.class, N4JSSuppressIssuesSetup.class })
 @RunWith(XpectRunner.class)
