@@ -39,7 +39,9 @@ import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 import com.google.inject.Inject;
 
 /**
- * Customer rename handler
+ *
+ * This method is largely copied from the {@link DefaultRenameElementHandler#execute(ExecutionEvent)} and modified to
+ * handle the fact that N4JS has TModule model in addition to AST
  */
 @SuppressWarnings("restriction")
 public class N4JSRenameElementHandler extends DefaultRenameElementHandler {
@@ -61,6 +63,7 @@ public class N4JSRenameElementHandler extends DefaultRenameElementHandler {
 								EObject selectedElement = eObjectAtOffsetHelper.resolveElementAt(resource,
 										selection.getOffset());
 
+								//// Start custom code
 								// LiteralOrComputedPropertyName does not have a type model but its container does
 								if (selectedElement instanceof LiteralOrComputedPropertyName) {
 									selectedElement = selectedElement.eContainer();
@@ -94,7 +97,7 @@ public class N4JSRenameElementHandler extends DefaultRenameElementHandler {
 											}
 										}
 									}
-
+								//// End custom code
 								if (selectedElement != null) {
 									@SuppressWarnings("hiding")
 									IRenameElementContext renameElementContext = renameContextFactory

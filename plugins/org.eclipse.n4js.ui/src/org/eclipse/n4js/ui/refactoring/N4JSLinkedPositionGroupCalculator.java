@@ -89,7 +89,10 @@ public class N4JSLinkedPositionGroupCalculator extends DefaultLinkedPositionGrou
 	private Provider<LocalResourceRefactoringUpdateAcceptor> updateAcceptorProvider;
 
 	/**
-	 * Custom logics for handling composed elements
+	 *
+	 * This method is largely copied from the
+	 * {@link DefaultLinkedPositionGroupCalculator#getLinkedPositionGroup(IRenameElementContext, IProgressMonitor)} and
+	 * modified to handle N4JS composed elements
 	 */
 	@Override
 	public Provider<LinkedPositionGroup> getLinkedPositionGroup(
@@ -115,6 +118,7 @@ public class N4JSLinkedPositionGroupCalculator extends DefaultLinkedPositionGrou
 			throw new OperationCanceledException();
 		}
 
+		//// Start custom code
 		List<EObject> realTargetElements = TypeModelUtils.getRealElements(targetElement);
 
 		LocalResourceRefactoringUpdateAcceptor updateAcceptor = updateAcceptorProvider.get();
@@ -183,6 +187,7 @@ public class N4JSLinkedPositionGroupCalculator extends DefaultLinkedPositionGrou
 							targetURI, eReference, index, null));
 				}
 			};
+			//// End custom code
 			if (monitor.isCanceled()) {
 				throw new OperationCanceledException();
 			}
@@ -194,6 +199,7 @@ public class N4JSLinkedPositionGroupCalculator extends DefaultLinkedPositionGrou
 				throw new OperationCanceledException();
 			}
 
+			//// Start custom code
 			final List<IReferenceDescription> referenceDescriptionsWithoutComposedMember;
 			if (TypeModelUtils.isComposedTElement(targetElement)) {
 				referenceDescriptionsWithoutComposedMember = referenceDescriptions;
@@ -236,6 +242,7 @@ public class N4JSLinkedPositionGroupCalculator extends DefaultLinkedPositionGrou
 				return linkedGroup;
 			}
 		};
+		//// End custom code
 	}
 
 }
