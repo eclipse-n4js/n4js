@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.n4js.ts.utils.TypeUtils;
+import org.eclipse.n4js.ts.types.util.TypeModelUtils;
 import org.eclipse.xtext.ui.refactoring.impl.DefaultDependentElementsCalculator;
 
 /**
@@ -28,7 +28,7 @@ public class N4JSDependentElementsCalculator extends DefaultDependentElementsCal
 
 	@Override
 	public List<URI> getDependentElementURIs(EObject baseElement, IProgressMonitor monitor) {
-		List<EObject> realTargets = TypeUtils.getRealElements(baseElement);
+		List<EObject> realTargets = TypeModelUtils.getRealElements(baseElement);
 		List<URI> elementURIs = super.getDependentElementURIs(baseElement, monitor);
 		for (EObject realTarget : realTargets) {
 			elementURIs.add(EcoreUtil.getURI(realTarget));

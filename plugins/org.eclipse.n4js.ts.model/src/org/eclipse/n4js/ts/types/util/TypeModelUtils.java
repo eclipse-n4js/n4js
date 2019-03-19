@@ -10,7 +10,12 @@
  */
 package org.eclipse.n4js.ts.types.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
@@ -34,5 +39,29 @@ public class TypeModelUtils {
 	public static boolean isComposedMemberURIFragment(String uriFragment) {
 		return uriFragment.startsWith(
 				"/1/@" + TypesPackage.eINSTANCE.getTModule_ComposedMemberCaches().getName() + ".");
+	}
+
+	/**
+	 * @return true if the given EObject instance is a composed TMember
+	 */
+	public static boolean isComposedTElement(EObject eobj) {
+		return ((eobj instanceof TMember) && ((TMember) eobj).isComposed());
+	}
+
+	/**
+	 * @return the single list of that input element if it is not a composed element. Otherwise, return the list of
+	 *         constituent members.
+	 */
+	public static List<EObject> getRealElements(EObject eobj) {
+		List<EObject> result = new ArrayList<>();
+		if (isComposedTElement(eobj)) {
+			List<TMember> constituentMembers = ((TMember) eobj).getConstituentMembers();
+			for (TMember constituentMember : constituentMembers) {
+				result.add(constituentMember);
+			}
+		} else {
+			result.add(eobj);
+		}
+		return result;
 	}
 }

@@ -13,7 +13,7 @@ import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.n4js.n4JS.PropertyNameOwner;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TMember;
-import org.eclipse.n4js.ts.utils.TypeUtils;
+import org.eclipse.n4js.ts.types.util.TypeModelUtils;
 import org.eclipse.n4js.utils.languages.N4LanguageUtils;
 import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.xtext.Grammar;
@@ -62,7 +62,7 @@ public class N4JSRenameStrategy extends DefaultRenameStrategy {
 			IRefactoringUpdateAcceptor updateAcceptor) {
 
 		// Special handling for composed element definitions of a composed element
-		if (TypeUtils.isComposedTElement(targetElement)) {
+		if (TypeModelUtils.isComposedTElement(targetElement)) {
 			List<TMember> constituentMembers = ((TMember) targetElement).getConstituentMembers();
 			for (TMember constituentMember : constituentMembers) {
 				String text = newName;
@@ -83,7 +83,7 @@ public class N4JSRenameStrategy extends DefaultRenameStrategy {
 	 */
 	@Override
 	public void applyDeclarationChange(String newName, ResourceSet resourceSet) {
-		if (TypeUtils.isComposedTElement(targetElement)) {
+		if (TypeModelUtils.isComposedTElement(targetElement)) {
 			targetElementNewURIs.clear();
 			List<TMember> constituentMembers = ((TMember) targetElement).getConstituentMembers();
 			for (TMember constituentMember : constituentMembers) {

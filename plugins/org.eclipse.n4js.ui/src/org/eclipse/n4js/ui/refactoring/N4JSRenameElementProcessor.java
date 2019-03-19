@@ -29,7 +29,7 @@ import org.eclipse.n4js.ts.types.TEnumLiteral;
 import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TMember;
-import org.eclipse.n4js.ts.utils.TypeUtils;
+import org.eclipse.n4js.ts.types.util.TypeModelUtils;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -73,7 +73,7 @@ public class N4JSRenameElementProcessor extends RenameElementProcessor {
 		String newName = this.getNewName();
 		EObject targetElement = this.getTargetElement();
 
-		List<EObject> realTargetElements = TypeUtils.getRealElements(targetElement);
+		List<EObject> realTargetElements = TypeModelUtils.getRealElements(targetElement);
 		realTargetElements.stream()
 				.forEach((realTargetElement) -> status.merge(checkDuplicateName(realTargetElement, newName)));
 

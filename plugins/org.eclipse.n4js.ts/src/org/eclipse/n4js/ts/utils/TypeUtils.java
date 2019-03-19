@@ -12,7 +12,6 @@ package org.eclipse.n4js.ts.utils;
 
 import static java.util.Collections.singletonList;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -1522,29 +1521,5 @@ public class TypeUtils {
 			return createTypeRef(scope.getArrayType(), typeRef);
 		}
 		return typeRef;
-	}
-
-	/**
-	 * @return true if the given EObject instance is a composed TMember
-	 */
-	public static boolean isComposedTElement(EObject eobj) {
-		return ((eobj instanceof TMember) && ((TMember) eobj).isComposed());
-	}
-
-	/**
-	 * @return the single list of that input element if it is not a composed element. Otherwise, return the list of
-	 *         constituent members.
-	 */
-	public static List<EObject> getRealElements(EObject eobj) {
-		List<EObject> result = new ArrayList<>();
-		if (isComposedTElement(eobj)) {
-			List<TMember> constituentMembers = ((TMember) eobj).getConstituentMembers();
-			for (TMember constituentMember : constituentMembers) {
-				result.add(constituentMember);
-			}
-		} else {
-			result.add(eobj);
-		}
-		return result;
 	}
 }

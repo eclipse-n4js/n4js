@@ -30,7 +30,6 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jface.text.link.LinkedPositionGroup;
 import org.eclipse.n4js.ts.types.util.TypeModelUtils;
-import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.findReferences.IReferenceFinder;
@@ -116,7 +115,7 @@ public class N4JSLinkedPositionGroupCalculator extends DefaultLinkedPositionGrou
 			throw new OperationCanceledException();
 		}
 
-		List<EObject> realTargetElements = TypeUtils.getRealElements(targetElement);
+		List<EObject> realTargetElements = TypeModelUtils.getRealElements(targetElement);
 
 		LocalResourceRefactoringUpdateAcceptor updateAcceptor = updateAcceptorProvider.get();
 		updateAcceptor.setLocalResourceURI(renameElementContext.getContextResourceURI());
@@ -153,7 +152,7 @@ public class N4JSLinkedPositionGroupCalculator extends DefaultLinkedPositionGrou
 
 			Iterable<URI> renameElems;
 
-			if (TypeUtils.isComposedTElement(targetElement)) {
+			if (TypeModelUtils.isComposedTElement(targetElement)) {
 				renameElems = dependentElementURIs;
 			} else {
 				renameElems = concat(Collections.singleton(renameElementContext.getTargetElementURI()),
@@ -196,7 +195,7 @@ public class N4JSLinkedPositionGroupCalculator extends DefaultLinkedPositionGrou
 			}
 
 			final List<IReferenceDescription> referenceDescriptionsWithoutComposedMember;
-			if (TypeUtils.isComposedTElement(targetElement)) {
+			if (TypeModelUtils.isComposedTElement(targetElement)) {
 				referenceDescriptionsWithoutComposedMember = referenceDescriptions;
 			} else {
 				// Ignore composed members if the target element is not a composed element
