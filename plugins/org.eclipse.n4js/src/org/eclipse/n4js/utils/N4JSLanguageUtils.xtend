@@ -222,7 +222,6 @@ public class N4JSLanguageUtils {
 			FormalParameter: astNode.definedTypeElement
 			TStructMember case astNode.isASTNode: astNode.definedMember // note: a TStructMember may be an AST node or types model element!
 			N4EnumLiteral: astNode.definedLiteral
-			LiteralOrComputedPropertyName: astNode.eContainer.definedTypeModelElement // LiteralOrComputedPropertyName does not have a type model but its container may
 			TypeVariable case astNode.isASTNode: astNode.definedTypeVariable // TypeVariable may be both AST node or type model node!
 		}
 	}

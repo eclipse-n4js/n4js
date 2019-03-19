@@ -55,7 +55,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 /**
- * Custom LinkedPositionGroupCalculato
+ * Custom LinkedPositionGroupCalculator that supports composed members.
  *
  */
 @SuppressWarnings("restriction")

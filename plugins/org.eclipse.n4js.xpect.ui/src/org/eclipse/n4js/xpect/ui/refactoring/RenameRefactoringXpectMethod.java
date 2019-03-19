@@ -28,6 +28,7 @@ import org.eclipse.ltk.core.refactoring.RefactoringStatusEntry;
 import org.eclipse.ltk.core.refactoring.participants.ProcessorBasedRefactoring;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.n4JS.FormalParameter;
+import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
 import org.eclipse.n4js.tests.util.EditorsUtil;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
@@ -100,6 +101,11 @@ public class RenameRefactoringXpectMethod {
 		EObject context = offset.getEObject();
 		EObject selectedElement = offsetHelper.resolveElementAt((XtextResource) context.eResource(),
 				offset.getOffset());
+
+		// LiteralOrComputedPropertyName does not have a type model but its container does
+		if (selectedElement instanceof LiteralOrComputedPropertyName) {
+			selectedElement = selectedElement.eContainer();
+		}
 
 		// GH-1002: Ask Oliver
 		// Special handling for FormalParameter

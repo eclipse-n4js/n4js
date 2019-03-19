@@ -23,6 +23,7 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
+import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.resource.N4JSResource;
@@ -64,6 +65,12 @@ public class N4JSRenameElementHandler extends DefaultRenameElementHandler {
 								// GH-1002: Ask Oliver
 								// Special handling for FormalParameter
 								// IdentifierRef refers to FormalParameter
+
+								// LiteralOrComputedPropertyName does not have a type model but its container does
+								if (selectedElement instanceof LiteralOrComputedPropertyName) {
+									selectedElement = selectedElement.eContainer();
+								}
+
 								EObject selectedTypeElement = (selectedElement instanceof FormalParameter) ? null
 										: N4JSLanguageUtils
 												.getDefinedTypeModelElement(selectedElement);
