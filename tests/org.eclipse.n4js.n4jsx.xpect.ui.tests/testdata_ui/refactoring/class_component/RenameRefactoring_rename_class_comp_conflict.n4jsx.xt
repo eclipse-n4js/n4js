@@ -32,14 +32,30 @@
 
 import * as React from "react";
 
-export public class LowerComponent extends React.Component<~React.ComponentProps with {whatTextShouldIShow : string, y: string}, ~Object with {squares: Array<string>}> {
+export public class EvenLowerComponent extends React.Component<~React.ComponentProps, ~Object> {
 	@Override
 	public render() : React.Element {
-		
-/* XPECT renameRefactoring at whatTextShouldIShow to 'y' ---
-Problem in N4JSXXpectTests/model/refactoring/RenameRefactoring_rename_prop_conflict.n4jsx.xt: Another member with name 'y' already exists
----
-*/
+		return (<div></div>);
+	}
+}
+
+export public class LowerComponent extends React.Component<~React.ComponentProps with {whatTextShouldIShow : string}, ~Object with {squares: Array<string>}> {
+	@Override
+	public render() : React.Element {
 		return (<div>{this.props.whatTextShouldIShow}</div>);
+	}
+}
+
+export public class MyComponent extends
+	React.Component<~React.ComponentProps with {aProp: string}, String> {
+
+	@Override
+	public render() : React.Element {
+		/* XPECT renameRefactoring at LowerComponent to 'EvenLowerComponent' ---
+		Problem in N4JSXXpectTests/model/refactoring/RenameRefactoring_rename_class_comp_conflict.n4jsx.xt: Another element in the same scope with name 'EvenLowerComponent' already exists
+		---
+		*/
+		return (<LowerComponent></LowerComponent>
+		);
 	}
 }
