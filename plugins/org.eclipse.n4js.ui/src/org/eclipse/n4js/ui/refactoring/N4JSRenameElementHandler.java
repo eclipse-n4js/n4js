@@ -85,7 +85,7 @@ public class N4JSRenameElementHandler extends DefaultRenameElementHandler {
 										.filter(elem -> elem instanceof ImportDeclaration)
 										.map(elem -> (ImportDeclaration) elem)
 										.collect(Collectors.toList());
-								for (ImportDeclaration importDecl : importDecls)
+								for (ImportDeclaration importDecl : importDecls) {
 									for (ImportSpecifier importSpecified : importDecl.getImportSpecifiers()) {
 										if (importSpecified instanceof NamedImportSpecifier) {
 											NamedImportSpecifier namedImportSpecifier = (NamedImportSpecifier) importSpecified;
@@ -97,6 +97,7 @@ public class N4JSRenameElementHandler extends DefaultRenameElementHandler {
 											}
 										}
 									}
+								}
 								//// End custom code
 								if (selectedElement != null) {
 									@SuppressWarnings("hiding")
