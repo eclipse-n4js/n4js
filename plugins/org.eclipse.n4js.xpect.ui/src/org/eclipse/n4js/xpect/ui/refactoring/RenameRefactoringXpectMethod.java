@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.xpect.ui.refactoring;
 
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +21,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.mwe.internal.core.debug.mwe.ReflectionUtil;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.RefactoringStatusEntry;
@@ -127,11 +127,12 @@ public class RenameRefactoringXpectMethod {
 
 		// HACK, use reflection to obtain the private field 'renameRefactoring' since we need it to verify the
 		// conditions
-		Field field = renameSupport.getClass().getDeclaredField("renameRefactoring");
-		field.setAccessible(true);
-		ProcessorBasedRefactoring refactoring = (ProcessorBasedRefactoring) field.get(renameSupport);
-		RefactoringStatus status = refactoring.checkAllConditions(new NullProgressMonitor());
+		// Field field = renameSupport.getClass().getDeclaredField("renameRefactoring");
+		// field.setAccessible(true);
+		ProcessorBasedRefactoring refactoring = (ProcessorBasedRefactoring) ReflectionUtil.getFieldValue(renameSupport,
+				"renameRefactoring");
 
+		RefactoringStatus status = refactoring.checkAllConditions(new NullProgressMonitor());
 		// If rename refactoring's conditions are not satisfied, validate the error message
 		if (status.hasError()) {
 			RefactoringStatusEntry[] entries = status.getEntries();
