@@ -82,10 +82,8 @@ public class RenameRefactoringXpectMethod {
 	/**
 	 * Rename refactoring Xpect method
 	 */
-	@ParameterParser(syntax = "('at' arg2=OFFSET 'to' arg3=STRING) ('resource' arg4=STRING)?") // arg1=OFFSET makes the
-																								// 'offset' parameter
-																								// contain the right
-																								// offset value
+	// Note: arg1=OFFSET makes the 'offset' parameter contain the right offset value
+	@ParameterParser(syntax = "('at' arg2=OFFSET 'to' arg3=STRING) ('resource' arg4=STRING)?")
 	@Xpect
 	@ConsumedIssues({ Severity.INFO, Severity.ERROR, Severity.WARNING })
 	public void renameRefactoring(
