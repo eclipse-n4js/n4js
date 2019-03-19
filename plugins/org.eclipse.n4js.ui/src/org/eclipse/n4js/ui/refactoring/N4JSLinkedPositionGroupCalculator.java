@@ -29,6 +29,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jface.text.link.LinkedPositionGroup;
+import org.eclipse.n4js.ts.types.util.TypeModelUtils;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.xtext.EcoreUtil2;
@@ -199,11 +200,9 @@ public class N4JSLinkedPositionGroupCalculator extends DefaultLinkedPositionGrou
 				referenceDescriptionsWithoutComposedMember = referenceDescriptions;
 			} else {
 				// Ignore composed members if the target element is not a composed element
-				// GH-1002: TODO find a better way to do this!
 				referenceDescriptionsWithoutComposedMember = referenceDescriptions
 						.stream()
-						.filter(resDesc -> !resDesc.getTargetEObjectUri().fragment()
-								.contains("@cachedComposedMembers"))
+						.filter(resDesc -> !TypeModelUtils.isComposedMemberURI(resDesc.getTargetEObjectUri()))
 						.collect(Collectors.toList());
 			}
 

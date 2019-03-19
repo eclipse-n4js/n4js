@@ -117,11 +117,12 @@ public interface TypeVariable extends Type {
 	/**
 	 * Returns the value of the '<em><b>Defined Type Variable</b></em>' reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Defined Type Variable</em>' reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * If and only if this TypeVariable is an AST node (note: instances of TypeVariable are used for both the AST
+	 * and in the TModule), then this property will point to the corresponding TypeVariable instance created in the
+	 * TModule, similar to {@code TypeDefiningElement#definedType}.
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Defined Type Variable</em>' reference.
 	 * @see #setDefinedTypeVariable(TypeVariable)
 	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTypeVariable_DefinedTypeVariable()

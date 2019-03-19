@@ -26,7 +26,6 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.RefactoringStatusEntry;
 import org.eclipse.ltk.core.refactoring.participants.ProcessorBasedRefactoring;
-import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
@@ -115,7 +114,6 @@ public class RenameRefactoringXpectMethod {
 		selectedTypeElement = selectedTypeElement == null ? selectedElement : selectedTypeElement;
 
 		URI targetResourceUri = context.eResource().getURI();
-		N4JSGlobals.myGlobalResourceSet = context.eResource().getResourceSet();
 		Optional<XtextEditor> editorOp = EditorsUtil.openXtextEditor(targetResourceUri,
 				N4JSActivator.ORG_ECLIPSE_N4JS_N4JS);
 		XtextEditor editor = editorOp.get();
