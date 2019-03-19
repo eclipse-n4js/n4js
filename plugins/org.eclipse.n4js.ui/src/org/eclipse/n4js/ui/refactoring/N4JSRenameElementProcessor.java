@@ -20,14 +20,14 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext;
+import org.eclipse.n4js.n4JS.FormalParameter;
+import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.scoping.N4JSScopeProvider;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TEnum;
 import org.eclipse.n4js.ts.types.TEnumLiteral;
-import org.eclipse.n4js.ts.types.TFormalParameter;
-import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.util.TypeModelUtils;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
@@ -92,9 +92,9 @@ public class N4JSRenameElementProcessor extends RenameElementProcessor {
 			return checkDuplicateEnum((TEnum) enumLit.eContainer(), newName);
 		}
 
-		if (context instanceof TFormalParameter) {
-			TFormalParameter fpar = (TFormalParameter) context;
-			TFunction method = (TFunction) fpar.eContainer();
+		if (context instanceof FormalParameter) {
+			FormalParameter fpar = (FormalParameter) context;
+			FunctionDeclaration method = (FunctionDeclaration) fpar.eContainer();
 			return checkDuplicateFormalParam(fpar, method.getFpars(), newName);
 		}
 
@@ -140,9 +140,9 @@ public class N4JSRenameElementProcessor extends RenameElementProcessor {
 	/**
 	 * Check duplicate formal parameters
 	 */
-	private RefactoringStatus checkDuplicateFormalParam(TFormalParameter fpar, List<TFormalParameter> fpars,
+	private RefactoringStatus checkDuplicateFormalParam(FormalParameter fpar, List<FormalParameter> fpars,
 			String newName) {
-		List<TFormalParameter> fparsWithName = fpars.stream().filter(fp -> (fp != fpar && fp.getName().equals(newName)))
+		List<FormalParameter> fparsWithName = fpars.stream().filter(fp -> (fp != fpar && fp.getName().equals(newName)))
 				.collect(Collectors.toList());
 		if (fparsWithName.size() > 0) {
 			return RefactoringStatus

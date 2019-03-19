@@ -106,12 +106,11 @@ public class RenameRefactoringXpectMethod {
 			selectedElement = selectedElement.eContainer();
 		}
 
-		// GH-1002: Ask Oliver
-		// Special handling for FormalParameter
-		// IdentifierRef refers to FormalParameter (not TFormalParameter)
-		EObject selectedTypeElement = (selectedElement instanceof FormalParameter) ? null
-				: N4JSLanguageUtils.getDefinedTypeModelElement(selectedElement);
-		selectedTypeElement = selectedTypeElement == null ? selectedElement : selectedTypeElement;
+		// An IdentifierRef refers to an AST FormalParameter and not TFormalParameter
+		if (!(selectedElement instanceof FormalParameter)
+				&& (N4JSLanguageUtils.getDefinedTypeModelElement(selectedElement) != null)) {
+			selectedElement = N4JSLanguageUtils.getDefinedTypeModelElement(selectedElement);
+		}
 
 		URI targetResourceUri = context.eResource().getURI();
 		Optional<XtextEditor> editorOp = EditorsUtil.openXtextEditor(targetResourceUri,
@@ -121,7 +120,7 @@ public class RenameRefactoringXpectMethod {
 
 		IRenameElementContext renameElementContext = renameContextFactory
 				.createRenameElementContext(
-						selectedTypeElement, editor, selection, resource);
+						selectedElement, editor, selection, resource);
 
 		IRenameSupport renameSupport = renameSupportFactory.create(renameElementContext, newName);
 

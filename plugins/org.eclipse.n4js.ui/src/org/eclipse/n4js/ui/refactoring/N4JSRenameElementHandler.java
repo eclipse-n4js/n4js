@@ -61,20 +61,16 @@ public class N4JSRenameElementHandler extends DefaultRenameElementHandler {
 								EObject selectedElement = eObjectAtOffsetHelper.resolveElementAt(resource,
 										selection.getOffset());
 
-								// GH-1002: Ask Oliver
-								// Special handling for FormalParameter
-								// IdentifierRef refers to FormalParameter
-
 								// LiteralOrComputedPropertyName does not have a type model but its container does
 								if (selectedElement instanceof LiteralOrComputedPropertyName) {
 									selectedElement = selectedElement.eContainer();
 								}
 
-								EObject selectedTypeElement = (selectedElement instanceof FormalParameter) ? null
-										: N4JSLanguageUtils
-												.getDefinedTypeModelElement(selectedElement);
-								selectedElement = selectedTypeElement == null ? selectedElement
-										: selectedTypeElement;
+								// An IdentifierRef refers to an AST FormalParameter and not TFormalParameter
+								if (!(selectedElement instanceof FormalParameter)
+										&& (N4JSLanguageUtils.getDefinedTypeModelElement(selectedElement) != null)) {
+									selectedElement = N4JSLanguageUtils.getDefinedTypeModelElement(selectedElement);
+								}
 
 								// GH-1002: Do NOT allow renaming alias if the selected element is imported in the
 								// current resource via alias.
