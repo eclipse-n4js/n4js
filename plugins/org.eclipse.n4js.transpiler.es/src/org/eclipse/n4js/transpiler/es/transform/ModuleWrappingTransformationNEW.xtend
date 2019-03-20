@@ -28,7 +28,10 @@ import org.eclipse.n4js.utils.ResourceNameComputer
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
 /**
- *
+ * New version of module wrapping using ECMAScript 2015 imports/exports in the output code and no longer using System.js.
+ * Currently this mode is experimental and only active if package.json property 'useES6Imports' is set to 'true'.
+ * User story GH-1281 will make this the default, remove the old 'ModuleWrappingTransformation' and remove suffix 'NEW'
+ * from the name of this class.
  */
 class ModuleWrappingTransformationNEW extends Transformation {
 

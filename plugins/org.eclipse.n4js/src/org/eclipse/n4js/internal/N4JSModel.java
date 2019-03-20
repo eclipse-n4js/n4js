@@ -443,8 +443,10 @@ public class N4JSModel {
 	}
 
 	public boolean isUseES6Imports(final IN4JSProject project) {
-		final ProjectDescription projectDescription = project != null ? getProjectDescription(project.getLocation())
-				: null;
+		if (project == null) {
+			return false;
+		}
+		final ProjectDescription projectDescription = getProjectDescription(project.getLocation());
 		if (projectDescription != null) {
 			return projectDescription.isUseES6Imports();
 		}
