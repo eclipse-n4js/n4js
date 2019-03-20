@@ -422,6 +422,15 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getProjectDescription_UseES6Imports() {
+		return (EAttribute)projectDescriptionEClass.getEStructuralFeatures().get(24);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getSourceContainerDescription() {
 		return sourceContainerDescriptionEClass;
 	}
@@ -668,6 +677,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 		createEAttribute(projectDescriptionEClass, PROJECT_DESCRIPTION__HAS_N4JS_NATURE);
 		createEAttribute(projectDescriptionEClass, PROJECT_DESCRIPTION__YARN_WORKSPACE_ROOT);
 		createEAttribute(projectDescriptionEClass, PROJECT_DESCRIPTION__WORKSPACES);
+		createEAttribute(projectDescriptionEClass, PROJECT_DESCRIPTION__USE_ES6_IMPORTS);
 
 		sourceContainerDescriptionEClass = createEClass(SOURCE_CONTAINER_DESCRIPTION);
 		createEAttribute(sourceContainerDescriptionEClass, SOURCE_CONTAINER_DESCRIPTION__SOURCE_CONTAINER_TYPE);
@@ -760,6 +770,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 		initEAttribute(getProjectDescription_HasN4JSNature(), theEcorePackage.getEBoolean(), "hasN4JSNature", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getProjectDescription_YarnWorkspaceRoot(), theEcorePackage.getEBoolean(), "yarnWorkspaceRoot", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getProjectDescription_Workspaces(), theEcorePackage.getEString(), "workspaces", null, 0, -1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getProjectDescription_UseES6Imports(), theEcorePackage.getEBoolean(), "useES6Imports", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(sourceContainerDescriptionEClass, SourceContainerDescription.class, "SourceContainerDescription", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getSourceContainerDescription_SourceContainerType(), this.getSourceContainerType(), "sourceContainerType", null, 0, 1, SourceContainerDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

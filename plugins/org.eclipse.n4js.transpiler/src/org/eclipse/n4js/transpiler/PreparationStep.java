@@ -39,6 +39,8 @@ import org.eclipse.n4js.n4JS.Variable;
 import org.eclipse.n4js.n4idl.transpiler.utils.N4IDLTranspilerUtils;
 import org.eclipse.n4js.n4idl.versioning.MigrationUtils;
 import org.eclipse.n4js.n4idl.versioning.VersionHelper;
+import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.transpiler.TranspilerState.STECache;
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM;
@@ -98,6 +100,9 @@ public class PreparationStep {
 	};
 
 	@Inject
+	private IN4JSCore n4jsCore;
+
+	@Inject
 	private ContainerTypesHelper containerTypesHelper;
 
 	@Inject
@@ -113,12 +118,13 @@ public class PreparationStep {
 	 */
 	public TranspilerState prepare(Script script, GeneratorOption[] options) {
 		final N4JSResource resource = (N4JSResource) script.eResource();
+		final IN4JSProject project = n4jsCore.findProject(resource.getURI()).orNull();
 		final ContainerTypesHelper.MemberCollector memberCollector = containerTypesHelper.fromContext(resource);
 		final Tracer tracer = new Tracer();
 		final InformationRegistry info = new InformationRegistry();
 		final STECache steCache = createIM(script, tracer, info);
 
-		return new TranspilerState(resource, options, memberCollector, steCache.im, steCache, tracer, info);
+		return new TranspilerState(resource, project, options, memberCollector, steCache.im, steCache, tracer, info);
 	}
 
 	private STECache createIM(Script script, Tracer tracer, InformationRegistry info) {

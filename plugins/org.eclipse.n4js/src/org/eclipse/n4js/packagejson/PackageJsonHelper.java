@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.packagejson;
 
+import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asBooleanOrFalse;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNameValuePairsOrEmpty;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNonEmptyStringOrNull;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asStringOrNull;
@@ -199,7 +200,9 @@ public class PackageJsonHelper {
 			case DEFINES_PACKAGE:
 				target.setDefinesPackage(asStringOrNull(value));
 				break;
-
+			case USE_ES6_IMPORTS:
+				target.setUseES6Imports(asBooleanOrFalse(value));
+				break;
 			default:
 				break;
 			}

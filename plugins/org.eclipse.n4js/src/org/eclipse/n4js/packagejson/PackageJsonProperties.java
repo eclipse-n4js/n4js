@@ -85,6 +85,10 @@ public enum PackageJsonProperties {
 	EXEC_MODULE("execModule", "", N4JS),
 	/** Key of package.json property "definesPackage". */
 	DEFINES_PACKAGE("definesPackage", "", N4JS),
+	/** EXPERIMENTAL: if value is <code>true</code>, transpiler will generate ES6 imports/exports in the output code. */
+	USE_ES6_IMPORTS("useES6Imports",
+			"EXPERIMENTAL: if value is \'true\', transpiler will generate ES6 imports/exports in the output code.",
+			N4JS),
 
 	/** Key of package.json property "noValidate". */
 	NO_VALIDATE("noValidate", "", JSONObject.class, N4JS),

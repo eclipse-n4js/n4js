@@ -21,6 +21,7 @@ import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.ExportedVariableStatement
 import org.eclipse.n4js.n4JS.Expression
+import org.eclipse.n4js.n4JS.ExpressionStatement
 import org.eclipse.n4js.n4JS.FormalParameter
 import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.FunctionExpression
@@ -51,7 +52,6 @@ import org.eclipse.n4js.ts.types.TypesFactory
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
 import static extension org.eclipse.n4js.transpiler.operations.SymbolTableManagement.*
-import org.eclipse.n4js.n4JS.ExpressionStatement
 
 /**
  * Methods of this class provide elementary operations on a transpiler state, mainly on the intermediate model. The
@@ -141,7 +141,7 @@ class TranspilerStateOperations {
 		}
 
 		// 1) create import declaration & specifier
-		val importSpec = _NamedImportSpecifier(aliasOrNull, true);
+		val importSpec = _NamedImportSpecifier(steOfElementToImport.exportedName, aliasOrNull, true);
 		val importDecl = _ImportDecl(importSpec);
 		// 2) add import to intermediate model
 		val scriptElements = state.im.scriptElements;
@@ -155,6 +155,26 @@ class TranspilerStateOperations {
 		// 4) update info registry
 		val moduleOfOriginalTarget = originalTarget.containingModule;
 		state.info.setImportedModule(importDecl, moduleOfOriginalTarget);
+	}
+
+	/**
+	 * Adds an "empty" import to the intermediate model, i.e. an import of the form:
+	 * <pre>
+	 * import "&lt;moduleSpecifier>";
+	 * </pre>
+	 */
+	def public static void addEmptyImport(TranspilerState state, String moduleSpecifier) {
+		// 1) create import declaration
+		val importDecl = _ImportDecl() => [
+			moduleSpecifierAsText = moduleSpecifier
+		];
+		// 2) add import to intermediate model
+		val scriptElements = state.im.scriptElements;
+		if(scriptElements.empty) {
+			scriptElements.add(importDecl);
+		} else {
+			insertBefore(state, scriptElements.get(0), importDecl);
+		}
 	}
 
 	def public static void setTarget(TranspilerState state, ParameterizedCallExpression callExpr, Expression newTarget) {
@@ -242,6 +262,14 @@ class TranspilerStateOperations {
 		val varStmnt = _VariableStatement(isExported, varDecl);
 		state.replaceWithoutRewire(enumDecl, varStmnt);
 		state.rewireSymbolTable(enumDecl, varDecl);
+	}
+
+	/**
+	 * Replace an enum declaration by a function declaration.
+	 */
+	def public static void replace(TranspilerState state, N4EnumDeclaration enumDecl, FunctionDeclaration funDecl) {
+		state.replaceWithoutRewire(enumDecl, funDecl);
+		state.rewireSymbolTable(enumDecl, funDecl);
 	}
 
 	def public static void replace(TranspilerState state, FunctionDeclaration funDecl, VariableDeclaration varDecl) {
