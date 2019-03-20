@@ -89,6 +89,14 @@ import static org.eclipse.n4js.validation.validators.packagejson.ProjectTypePred
 
 import static extension com.google.common.base.Strings.nullToEmpty
 import org.eclipse.n4js.external.ExternalLibraryWorkspace
+import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper
+import org.eclipse.core.resources.ResourcesPlugin
+import org.eclipse.core.resources.IWorkspaceRoot
+import org.eclipse.core.resources.IProject
+import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper.NodeModulesFolder
+import java.io.File
+import org.eclipse.n4js.utils.ProjectDescriptionUtils
+import org.eclipse.core.runtime.Platform
 
 /**
  * A JSON validator extension that validates {@code package.json} resources in the context
@@ -125,6 +133,12 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	 * @See {@link #getAllExistingProjectNames()} 
 	 */
 	private static String ALL_EXISTING_PROJECT_CACHE = "ALL_EXISTING_PROJECT_CACHE";
+
+	/**
+	 * Key to store a map of all user projects and their node_modules folders in the validation context for re-use across different check-methods.
+	 * @See {@link #getAllNodeModulesFolders()}
+	 */
+	private static String NODE_MODULES_LOCATION_CACHE = "NODE_MODULES_LOCATION_CACHE";
 
 	/**
 	 * Key to store a map of all declared project dependencies in the validation context for re-use across different check-methods.
@@ -164,6 +178,10 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 
 	@Inject
 	protected SemverHelper semverHelper;
+
+	@Inject
+	protected NodeModulesDiscoveryHelper nodeModulesDiscoveryHelper;
+
 
 	override boolean isResponsible(Map<Object, Object> context, EObject eObject) {
 		// this validator extension only applies to package.json files
@@ -608,9 +626,9 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	def internalValidateAPIProjectReferences(Iterable<ValidationProjectReference> references) {
 		val libraryDependenciesWithImplId = references
 			.map[ref | Pair.of(ref, allProjectsByName.get(ref.referencedProjectName))]
-			.filterNull
+			.filter[pair | pair !== null && pair.value !== null]
 			.filter[pair | pair.value.projectType == LIBRARY && pair.value.implementationId.present];
-		
+
 		for (projectPair : libraryDependenciesWithImplId) {
 			val reference = projectPair.key;
 			addIssue(IssueCodes.getMessageForINVALID_API_PROJECT_DEPENDENCY(reference.referencedProjectName), reference.astRepresentation, 
@@ -1084,6 +1102,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 
 		val description = getProjectDescription();
 		val allProjects = getAllProjectsByName();
+		val allNodeModuleFolders = getAllNodeModulesFolders();
 
 		// keeps track of all valid references
 		val existentIds = HashMultimap.<String, ValidationProjectReference>create;
@@ -1098,7 +1117,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			val id = ref.referencedProjectName;
 			// Assuming completely broken AST.
 			if (null !== id) {
-				checkReference(ref, allProjects, description, currentProject, allReferencedProjectNames,
+				checkReference(ref, allProjects, allNodeModuleFolders, description, currentProject, allReferencedProjectNames,
 					existentIds, allowReflexive, projectPredicate, sectionLabel
 				);
 			}
@@ -1114,8 +1133,8 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	}
 
 	private def void checkReference(ValidationProjectReference ref, Map<String, IN4JSProject> allProjects,
-		ProjectDescription description, IN4JSProject currentProject, Set<String> allReferencedProjectNames,
-		HashMultimap<String, ValidationProjectReference> existentIds,
+		Map<String, File> allNodeModuleFolders, ProjectDescription description, IN4JSProject currentProject,
+		Set<String> allReferencedProjectNames, HashMultimap<String, ValidationProjectReference> existentIds,
 		boolean allowReflexive, Predicate<IN4JSProject> projectPredicate, String sectionLabel
 	) {
 		// check project existence.
@@ -1145,12 +1164,29 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			existentIds.put(id, ref);
 		}
 
-		if (!currentProject.isExternal && project.isExternal && !indexSynchronizer.isInIndex(project.projectDescriptionLocation.orNull)) {
-			val pdl = project.projectDescriptionLocation.orNull;
-			indexSynchronizer.isInIndex(pdl);
-			val msg = getMessageForNON_REGISTERED_PROJECT(id);
-			addIssue(msg, ref.astRepresentation, null, NON_REGISTERED_PROJECT, id);
-			return;
+		if (!currentProject.isExternal) {
+			if (project.isExternal && !indexSynchronizer.isInIndex(project.projectDescriptionLocation.orNull)) {
+				val pdl = project.projectDescriptionLocation.orNull;
+				indexSynchronizer.isInIndex(pdl);
+				val msg = getMessageForNON_REGISTERED_PROJECT(id);
+				addIssue(msg, ref.astRepresentation, null, NON_REGISTERED_PROJECT, id);
+				return;
+			}
+
+			val currNodeModulesFolder = allNodeModuleFolders.get(currentProjectName)?.toPath;
+			val currNPM = currNodeModulesFolder?.resolve(id);
+			if (currNPM !== null && !currNPM.toFile.exists) {
+				val packageVersion = if (ref.npmVersion === null) "" else ref.npmVersion.toString;
+				if (project.external) {
+					// TODO GH-1259: After removing shipped code, replace this with NON_EXISTING_PROJECT
+					val msg = getMessageForNON_EXISTING_PROJECT_WARNING(id);
+					addIssue(msg, ref.astRepresentation, null, NON_EXISTING_PROJECT_WARNING, id, packageVersion);
+				} else {
+					// TODO GH-1259: After removing shipped code, make this an error
+					val msg = getMessageForMISSING_YARN_WORKSPACE(id);
+					addIssue(msg, ref.astRepresentation, null, MISSING_YARN_WORKSPACE, id, packageVersion);
+				}
+			}
 		}
 
 		// create only a single validation issue for a particular project reference.
@@ -1353,6 +1389,34 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 				val project = findProject(location).orNull;
 				if (!shadowingInfoHelper.isShadowedProject(project) && !res.containsKey(project.projectName)) {
 					res.put(project.projectName, project);
+				}
+			}
+			return res;
+		]
+	}
+
+	/**
+	 * Returns a map between all user projects and their corresponding 
+	 * node_modules folder locations.
+	 *
+	 * The result of this method is cached in the validation context.
+	 */
+	private def Map<String, File> getAllNodeModulesFolders() {
+		return contextMemoize(NODE_MODULES_LOCATION_CACHE) [
+			val Map<String, File> res = new HashMap;
+
+			if (Platform.isRunning) { // necessary for xpect tests (non-ui)
+				val IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+				for (IProject project : root.projects) {
+					if (project.isAccessible) {
+						val iPath = project.location;
+						val projectPath = iPath.toFile.toPath;
+						val NodeModulesFolder nmFolder = nodeModulesDiscoveryHelper.getNodeModulesFolder(projectPath);
+						if (nmFolder !== null) {
+							val projectName = ProjectDescriptionUtils.convertEclipseProjectNameToN4JSProjectName(project.name);
+							res.put(projectName, nmFolder.nodeModulesFolder);
+						}
+					}
 				}
 			}
 			return res;

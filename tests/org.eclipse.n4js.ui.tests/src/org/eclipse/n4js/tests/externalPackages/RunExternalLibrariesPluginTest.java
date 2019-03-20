@@ -118,17 +118,26 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 		URI externalRootLocation = getResourceUri(PROBANDS, EXT_LOC);
 		ProjectTestsUtils.importDependencies(CLIENT, externalRootLocation, libraryManager);
 
-		assertNoIssues();
+		// This test is using an unsupported setup: Projects depend on each other without using a yarn workspace.
+		// Hence, the following warnings are expected.
+		// The unsupported setup is necessary because this test is testing shadowing which would not appear in a yarn
+		// workspace like that.
+		assertNoErrors();
+		assertIssues(
+				"line 5: Project depends on workspace project PA which is missing in the node_modules folder. " +
+						"Either install project PA or introduce a yarn workspace of both of the projects.",
+				"line 5: Project depends on workspace project PB which is missing in the node_modules folder. " +
+						"Either install project PB or introduce a yarn workspace of both of the projects.",
+				"line 5: Project depends on workspace project PC which is missing in the node_modules folder. " +
+						"Either install project PC or introduce a yarn workspace of both of the projects.");
 	}
 
 	/**
 	 * Tries to make sure the external libraries are cleaned from the Xtext index.
 	 */
 	@After
-	@Override
-	synchronized public void tearDown() throws Exception {
+	synchronized public void tearDown2() throws Exception {
 		waitForAutoBuild();
-		super.tearDown();
 		RaceDetectionHelper.log(">>> TEARDOWN >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 	}
 

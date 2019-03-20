@@ -26,6 +26,12 @@ import static org.eclipse.emf.common.util.URI.createPlatformResourceURI
 import static org.junit.Assert.*
 import org.eclipse.n4js.utils.URIUtils
 import org.eclipse.n4js.utils.ProjectDescriptionUtils
+import org.eclipse.core.resources.IWorkspace
+import org.eclipse.core.runtime.IPath
+import org.eclipse.core.resources.IProjectDescription
+import org.eclipse.core.runtime.IProgressMonitor
+import org.eclipse.core.resources.ResourcesPlugin
+import org.eclipse.core.runtime.NullProgressMonitor
 
 /**
  * Testing the use of npm scopes as part of N4JS project names, i.e. project names of
@@ -34,9 +40,10 @@ import org.eclipse.n4js.utils.ProjectDescriptionUtils
 class NpmScopesPluginTest extends AbstractBuilderParticipantTest {
 
 	private static final String PROBANDS = "probands";
-	private static final String WORKSPACE_BASE = "npmScopes";
-	private static final String EXAMPLE1 = "example1";
+	private static final String YARN_WORKSPACE_BASE = "npmScopes";
+	private static final String YARN_WORKSPACE_PROJECT = "YarnWorkspaceProject";
 
+	private IProject yarnProject;
 	private IProject scopedProject;
 	private IProject nonScopedProject;
 	private IProject clientProject;
@@ -48,10 +55,15 @@ class NpmScopesPluginTest extends AbstractBuilderParticipantTest {
 
 	@Before
 	def void before() {
-		val parentFolder = new File(getResourceUri(PROBANDS, WORKSPACE_BASE, EXAMPLE1));
-		scopedProject = ProjectTestsUtils.importProject(parentFolder, "@myScope/Lib");
-		nonScopedProject = ProjectTestsUtils.importProject(parentFolder, "Lib");
-		clientProject = ProjectTestsUtils.importProject(parentFolder, "XClient");
+		val workspace = ResourcesPlugin.workspace;
+		val parentFolder = new File(getResourceUri(PROBANDS, YARN_WORKSPACE_BASE));
+		yarnProject = ProjectTestsUtils.importYarnWorkspace(libraryManager, parentFolder, YARN_WORKSPACE_PROJECT);
+		val yarnPath = yarnProject.location;
+
+		scopedProject = workspace.root.getProject("@myScope:Lib");
+		nonScopedProject = workspace.root.getProject("Lib");
+		clientProject = workspace.root.getProject("XClient");
+
 		assertTrue(scopedProject.exists);
 		assertTrue(nonScopedProject.exists);
 		assertTrue(clientProject.exists);
@@ -59,6 +71,20 @@ class NpmScopesPluginTest extends AbstractBuilderParticipantTest {
 		assertNotNull(clientModule);
 		assertTrue(clientModule.exists);
 		clientModuleURI = createPlatformResourceURI(clientProject.name + "/src/" + clientModule.name, true);
+
+		libraryManager.runNpmYarnInstall(URI.createFileURI(yarnPath.toString), new NullProgressMonitor);
+		ProjectTestsUtils.waitForAllJobs;
+		ProjectTestsUtils.waitForAutoBuild;
+	}
+
+	def static void importProject(IWorkspace workspace, File rootFolder, IProgressMonitor progressMonitor)
+			throws CoreException {
+
+		val IPath path = new org.eclipse.core.runtime.Path(new File(rootFolder, "_project").getAbsolutePath());
+		val IProjectDescription desc = workspace.loadProjectDescription(path);
+		val IProject project = workspace.getRoot().getProject(desc.getName());
+		project.create(desc, progressMonitor);
+		project.open(progressMonitor);
 	}
 
 	@Test

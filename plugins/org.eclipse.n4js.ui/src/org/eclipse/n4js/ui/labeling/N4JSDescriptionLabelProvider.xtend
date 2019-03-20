@@ -13,6 +13,9 @@ package org.eclipse.n4js.ui.labeling
 import com.google.inject.Inject
 import org.eclipse.n4js.ts.ui.search.LabelledReferenceDescription
 import org.eclipse.xtext.ui.label.DefaultDescriptionLabelProvider
+import org.eclipse.emf.common.util.URI
+import org.eclipse.xtext.ui.label.DefaultEditorImageUtil
+import org.eclipse.swt.graphics.Image
 
 /**
  * Provides labels for a IEObjectDescriptions and IResourceDescriptions.
@@ -26,6 +29,9 @@ class N4JSDescriptionLabelProvider extends DefaultDescriptionLabelProvider {
 
 	@Inject
 	private N4JSLabelProvider labelProvider;
+
+	@Inject
+	private DefaultEditorImageUtil imageUtil;
 
 	override text(Object obj) {
 		println(obj);
@@ -43,6 +49,13 @@ class N4JSDescriptionLabelProvider extends DefaultDescriptionLabelProvider {
 	 */
 	def image(LabelledReferenceDescription element) {
 		val image = labelProvider.getImage(element.displayEObject)
+		return image;
+	}
+
+	override Image getImageForURI(URI uri) {
+		val String fileName = uri.lastSegment();
+		val imageDescriptor = imageUtil.getDefaultEditorImageDescriptor(fileName);
+		val image = convertToImage(imageDescriptor);
 		return image;
 	}
 }

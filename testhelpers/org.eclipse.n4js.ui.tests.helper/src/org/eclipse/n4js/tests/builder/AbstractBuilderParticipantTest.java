@@ -139,7 +139,14 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 
 	/***/
 	protected XtextEditor openAndGetXtextEditor(final IFile file1, final IWorkbenchPage page) {
-		IEditorPart fileEditor = EclipseUIUtils.openFileEditor(file1, page, getEditorId());
+		return openAndGetXtextEditorWithID(file1, page, N4JSActivator.ORG_ECLIPSE_N4JS_N4JS);
+	}
+
+	/***/
+	protected XtextEditor openAndGetXtextEditorWithID(final IFile file1, final IWorkbenchPage page,
+			final String editorID) {
+
+		IEditorPart fileEditor = EclipseUIUtils.openFileEditor(file1, page, editorID);
 		EclipseUIUtils.waitForEditorToBeActive(page, fileEditor);
 		assertTrue(fileEditor instanceof XtextEditor);
 		XtextEditor fileXtextEditor = (XtextEditor) fileEditor;
@@ -436,11 +443,6 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 	protected static void waitForUpdateEditorJob() {
 		ProjectTestsUtils.waitForUpdateEditorJob();
 		ProjectTestsUtils.waitForAllJobs();
-	}
-
-	/***/
-	protected String getEditorId() {
-		return N4JSActivator.ORG_ECLIPSE_N4JS_N4JS;
 	}
 
 	/** Returns with the absolute URI of the resource loaded from the current plug-in. */

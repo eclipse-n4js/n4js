@@ -1,0 +1,8 @@
+{
+	"private": true,
+	"name": "YarnWorkspaceProject",
+	"workspaces": [
+		"packages/*",
+		"packages/@*/*"
+	]
+}

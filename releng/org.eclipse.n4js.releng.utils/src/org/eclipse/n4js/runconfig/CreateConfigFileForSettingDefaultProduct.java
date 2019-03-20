@@ -14,8 +14,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
-
 /**
  * This class access the variable ${target_home} and create a config.ini file specifying
  * org.eclipse.n4js.product.product as the default product to run. This saves us from having to manually configure the
@@ -29,8 +27,6 @@ import org.apache.log4j.Logger;
  * <p>
  */
 public class CreateConfigFileForSettingDefaultProduct {
-
-	private static Logger LOGGER = Logger.getLogger(CreateConfigFileForSettingDefaultProduct.class);
 
 	/**
 	 * Main logic to create config.ini file in ${target_home}/configuration folder
@@ -53,17 +49,17 @@ public class CreateConfigFileForSettingDefaultProduct {
 
 		// Create the file config.ini
 		if (!file.createNewFile()) {
-			LOGGER.info("File " + filePath + " already exists.\nBy default, the product to run is set to " +
-					defaultProductId);
+			System.out.println("File " + filePath + " already exists.\n"
+					+ "By default, the product to run is set to " + defaultProductId);
 			return;
 		}
 
 		FileWriter writer = new FileWriter(file);
 		writer.write("eclipse.product=" + defaultProductId);
 		writer.close();
-		LOGGER.info("File" + filePath
-				+ " has been created successfully!\nBy default, the product to run is set to " +
-				defaultProductId);
+
+		System.out.println("File" + filePath + " has been created successfully!\n"
+				+ "By default, the product to run is set to " + defaultProductId);
 	}
 
 }

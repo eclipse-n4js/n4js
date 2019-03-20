@@ -10,12 +10,10 @@
  */
 package org.eclipse.n4js.ui;
 
-import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.URI;
@@ -26,8 +24,11 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
 import org.eclipse.jface.viewers.IDecoration;
+import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.ts.ui.navigation.URIBasedStorage;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
+import org.eclipse.n4js.ui.labeling.N4JSDescriptionLabelProvider;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
@@ -44,9 +45,6 @@ import org.eclipse.xtext.ui.editor.XtextEditorErrorTickUpdater;
 import org.eclipse.xtext.ui.editor.XtextReadonlyEditorInput;
 import org.eclipse.xtext.ui.editor.XtextSourceViewer;
 import org.eclipse.xtext.ui.editor.reconciler.XtextReconciler;
-import org.eclipse.xtext.ui.editor.utils.EditorUtils;
-import org.eclipse.xtext.ui.resource.IStorage2UriMapper;
-import org.eclipse.xtext.util.Pair;
 
 import com.google.inject.Inject;
 
@@ -71,10 +69,64 @@ public class N4JSEditor extends XtextEditor implements IShowInSource, IShowInTar
 	private EclipseExternalLibraryWorkspace extWS;
 
 	@Inject
-	private IStorage2UriMapper mapper;
+	private N4JSDescriptionLabelProvider labelProvider;
 
 	/* package */ void setErrorTickUpdater(N4JSEditorErrorTickUpdater errorTickUpdater) {
 		this.errorTickUpdater = errorTickUpdater;
+	}
+
+	@Override
+	public boolean isEditable() {
+		IEditorInput input = getEditorInput();
+		if (input instanceof FileEditorInput) {
+			FileEditorInput fei = (FileEditorInput) input;
+			IFile inputFile = fei.getFile();
+			if (inputFile.toString().contains(N4JSGlobals.NODE_MODULES)) {
+				URI fileUri = URIUtils.toFileUri(inputFile);
+				URI project = extWS.findProjectWith(fileUri);
+				boolean editorShowsExternalFile = project != null;
+				if (editorShowsExternalFile) {
+					return false;
+				}
+			}
+		}
+		return super.isEditable();
+	}
+
+	@Override
+	public Image getDefaultImage() {
+		Image defaultImage = getImageN4JSVariantOrGiven(super.getDefaultImage());
+		return defaultImage;
+	}
+
+	/** This will show the icon variant according to the file extension: n4js, n4jsx, n4jsd, js, jsx */
+	protected Image getImageN4JSVariantOrGiven(Image titleImage) {
+		IEditorInput input = getEditorInput();
+		URI uri = null;
+		if (input instanceof XtextReadonlyEditorInput) {
+			XtextReadonlyEditorInput xrei = (XtextReadonlyEditorInput) input;
+			try {
+				IStorage storage = xrei.getStorage();
+				if (storage instanceof URIBasedStorage) {
+					URIBasedStorage ubs = (URIBasedStorage) storage;
+					uri = ubs.getURI();
+				}
+			} catch (CoreException e) {
+				e.printStackTrace();
+			}
+		}
+		if (input instanceof FileEditorInput) {
+			FileEditorInput fei = (FileEditorInput) input;
+			uri = URIUtils.convert(fei.getFile());
+
+		}
+		if (uri != null) {
+			Image image = labelProvider.getImageForURI(uri);
+			if (image != null) {
+				titleImage = image;
+			}
+		}
+		return titleImage;
 	}
 
 	/**
@@ -207,37 +259,4 @@ public class N4JSEditor extends XtextEditor implements IShowInSource, IShowInTar
 		return new String[] { IPageLayout.ID_PROJECT_EXPLORER };
 	}
 
-	@Override
-	protected void doSetInput(IEditorInput input) throws CoreException {
-		input = tryConvertToFileUriInput(input);
-		super.doSetInput(input);
-	}
-
-	@Override
-	protected void updateState(IEditorInput input) {
-		input = tryConvertToFileUriInput(input);
-		super.updateState(input);
-	}
-
-	/** If a platform URI references a resource of the external workspace, it will be transformed to a file URI */
-	private IEditorInput tryConvertToFileUriInput(IEditorInput input) {
-		if (input instanceof FileEditorInput) {
-			FileEditorInput fei = (FileEditorInput) input;
-			IFile file = fei.getFile();
-			java.net.URI fileUriJN = file.getLocationURI();
-			URI fileUri = URIUtils.toFileUri(fileUriJN);
-			if (fileUri != null) {
-				URI extProject = extWS.findProjectWith(fileUri);
-				if (extProject != null) {
-					Iterator<Pair<IStorage, IProject>> storages = mapper.getStorages(fileUri.trimFragment()).iterator();
-					if (storages != null && storages.hasNext()) {
-						IStorage storage = storages.next().getFirst();
-						input = EditorUtils.createEditorInput(storage);
-					}
-				}
-			}
-		}
-
-		return input;
-	}
 }

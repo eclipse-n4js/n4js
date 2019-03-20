@@ -56,6 +56,6 @@ class ApiImplCompareTest extends AbstractApiImplCompareTest {
 
 
 	private def registerProject(String name) {
-		fbWorkspace.registerProject(URI.createFileURI(new File("probands/ApiImplCompare/"+name).absolutePath))
+		fbWorkspace.registerProject(URI.createFileURI(new File("probands/ApiImplCompare/YarnWorkspaceProject/packages/"+name).absolutePath))
 	}
 }

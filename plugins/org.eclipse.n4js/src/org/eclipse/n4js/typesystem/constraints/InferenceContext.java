@@ -180,6 +180,13 @@ public final class InferenceContext {
 	}
 
 	/**
+	 * Add bound <code>FALSE</code>, thus making the inference context {@link InferenceContext#isDoomed() doomed}.
+	 */
+	public boolean giveUp() {
+		return currentBounds.addBound(false);
+	}
+
+	/**
 	 * Once a contradiction has been detected, constraint solving can quit early: no solution exists anyway.
 	 * <p>
 	 * Note that this method is not guaranteed to always return true if the constraint system is unsolvable; it just
@@ -457,6 +464,15 @@ public final class InferenceContext {
 		assert TypeUtils.isProper(proper);
 		// add bound `infVar = proper`
 		reducer.reduce(TypeUtils.createTypeRef(infVar), proper, INV);
+		// check if 'proper' was accepted by BoundSet 'currentBounds' as an instantiation/solution of 'infVar'
+		if (!currentBounds.isInstantiated(infVar)) {
+			// No! This should never happen except if 'proper' is not actually a proper type (and the above assertions
+			// are turned off) OR if 'proper' is a raw type, which is invalid but may occur when dealing with corrupted
+			// data (broken AST, etc.).
+			// Since 'proper' was intended as an instantiation/solution when this method is called, not having it
+			// accepted is a problem and we should give up on this constraint system:
+			giveUp();
+		}
 	}
 
 	/**

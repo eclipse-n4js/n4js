@@ -31,8 +31,7 @@ class SingleProjectPluginTest extends AbstractBuilderParticipantTest {
 	IFile projectDescriptionFile
 
 	@Before
-	override void setUp() {
-		super.setUp
+	def void setUp2() {
 		projectUnderTest = createJSProject("singleProjectTest")
 		src = configureProjectWithXtext(projectUnderTest)
 		projectDescriptionFile = projectUnderTest.project.getFile(N4JSGlobals.PACKAGE_JSON)

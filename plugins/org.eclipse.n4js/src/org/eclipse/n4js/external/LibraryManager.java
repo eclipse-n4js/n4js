@@ -354,6 +354,13 @@ public class LibraryManager {
 		return runWithWorkspaceLock(() -> installNPMsInternal(versionedNPMs, forceReloadAll, target, monitor));
 	}
 
+	/**
+	 * NOTE: if the target points to a member project in a yarn workspace, this method will *NOT* switch to the yarn
+	 * workspace root folder for executing yarn! Rationale: in case an explicitly mentioned npm package is installed
+	 * (e.g. "yarn add lodash") it makes a difference whether that command is being executed in the member project's
+	 * root folder or the yarn workspace root folder (i.e. the newly installed npm package will be added to a different
+	 * package.json file in each case) and we want to support both cases.
+	 */
 	private IStatus installNPMsInternal(Map<String, NPMVersionRequirement> versionedNPMs, boolean forceReloadAll,
 			URI target, IProgressMonitor monitor) {
 
@@ -376,15 +383,6 @@ public class LibraryManager {
 
 			SubMonitor subMonitor1 = subMonitor.split(2);
 			subMonitor1.setTaskName("Installing packages... [step 1 of " + steps + "]");
-
-			// Calculate the folder in which npm/yarn should be executed, either local project folder
-			// or yarn root folder
-			// Convert EMF to Java File
-			// http://ssdots.blogspot.com/2015/08/converting-orgeclipseemfcommonutiluri.html
-			// URI resolvedTarget = CommonPlugin.resolve(target);
-			// Path pathToTarget = Paths.get(resolvedTarget.toFileString());
-			// URI folderInWhichToExecuteURI = URI.createFileURI(nodeModulesDiscoveryHelper
-			// .getNodeModulesFolder(pathToTarget).nodeModulesFolder.getParent());
 
 			List<LibraryChange> actualChanges = installNPMs(subMonitor1, status, npmsToInstall,
 					target);
