@@ -105,22 +105,36 @@ Contributors:
             class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
             contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
             default="true"
-            extensions="n4js,n4jsx,n4idl,n4jsd"
+            extensions="js,jsx"
             id="org.eclipse.n4js.N4JS"
             icon="platform:/plugin/org.eclipse.ui/icons/full/obj16/file_obj.png"
             name="N4JS Editor">
         </editor>
-    </extension>
-
-    <extension
-            point="org.eclipse.ui.editors">
         <editor
             class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
             contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
             default="true"
-            extensions="js,jsx"
+            extensions="n4jsx"
             id="org.eclipse.n4js.N4JS"
-            icon="platform:/plugin/org.eclipse.ui/icons/full/obj16/file_obj.png"
+            icon="platform:/plugin/org.eclipse.n4js.ui/icons/file_n4jsx.png"
+            name="N4JS Editor">
+        </editor>
+        <editor
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
+            contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
+            default="true"
+            extensions="n4jsd"
+            id="org.eclipse.n4js.N4JS"
+            icon="platform:/plugin/org.eclipse.n4js.ui/icons/file_n4jsd.png"
+            name="N4JS Editor">
+        </editor>
+        <editor
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
+            contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
+            default="true"
+            extensions="n4js,n4idl"
+            id="org.eclipse.n4js.N4JS"
+            icon="platform:/plugin/org.eclipse.n4js.ui/icons/file_n4js.png"
             name="N4JS Editor">
         </editor>
     </extension>
@@ -1307,8 +1321,8 @@ Contributors:
               </selectionEnablement>
               <editorInputEnablement>
                   <or>
-                 <instanceof value="org.eclipse.ui.IFileEditorInput"/>
-                 <instanceof value="org.eclipse.xtext.ui.editor.XtextReadonlyEditorInput"/>
+                     <instanceof value="org.eclipse.ui.IFileEditorInput"/>
+                     <instanceof value="org.eclipse.xtext.ui.editor.XtextReadonlyEditorInput"/>
                  </or>
               </editorInputEnablement>
            </linkHelper>

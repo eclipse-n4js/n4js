@@ -473,10 +473,6 @@ public class TypeUtils {
 				boundThisTypeRef.getActualThisTypeRef().getDeclaredType(),
 				boundThisTypeRef.getTypingStrategy(),
 				targs);
-		if (!boundThisTypeRef.getTypeArgs().isEmpty()) {
-			resolvedTypeRef.getTypeArgs().clear();
-			resolvedTypeRef.getTypeArgs().addAll(TypeUtils.copyAll(boundThisTypeRef.getTypeArgs()));
-		}
 		// set structural typing info
 		if (resolvedTypeRef instanceof ParameterizedTypeRefStructural)
 			copyStructuralTypingInfo((ParameterizedTypeRefStructural) resolvedTypeRef, boundThisTypeRef);
