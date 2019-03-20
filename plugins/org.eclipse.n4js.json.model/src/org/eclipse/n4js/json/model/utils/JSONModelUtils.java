@@ -57,7 +57,7 @@ public class JSONModelUtils {
 	 * If the given JSON value is a {@link JSONBooleanLiteral} with a value of <code>true</code>, returns
 	 * <code>true</code>, otherwise <code>false</code>.
 	 */
-	public static boolean asBoolean(JSONValue jsonValue) {
+	public static boolean asBooleanOrFalse(JSONValue jsonValue) {
 		return jsonValue instanceof JSONBooleanLiteral ? ((JSONBooleanLiteral) jsonValue).isBooleanValue() : false;
 	}
 
