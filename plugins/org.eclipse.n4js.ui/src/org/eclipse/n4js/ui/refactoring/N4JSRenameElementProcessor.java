@@ -81,25 +81,37 @@ public class N4JSRenameElementProcessor extends RenameElementProcessor {
 	}
 
 	private RefactoringStatus checkDuplicateName(EObject context, String newName) {
+		RefactoringStatus status = new RefactoringStatus();
 		// Check name conflicts of TMembers
 		if (context instanceof TMember) {
 			TMember member = (TMember) context;
-			return checkDuplicateMember(member, newName);
+			status.merge(checkDuplicateMember(member, newName));
+		}
+
+		if (status.hasError()) {
+			return status;
 		}
 
 		if (context instanceof TEnumLiteral) {
 			TEnumLiteral enumLit = (TEnumLiteral) context;
-			return checkDuplicateEnum((TEnum) enumLit.eContainer(), newName);
+			status.merge(checkDuplicateEnum((TEnum) enumLit.eContainer(), newName));
+		}
+
+		if (status.hasError()) {
+			return status;
 		}
 
 		if (context instanceof FormalParameter) {
 			FormalParameter fpar = (FormalParameter) context;
 			FunctionDeclaration method = (FunctionDeclaration) fpar.eContainer();
-			return checkDuplicateFormalParam(fpar, method.getFpars(), newName);
+			status.merge(checkDuplicateFormalParam(fpar, method.getFpars(), newName));
+		}
+
+		if (status.hasError()) {
+			return status;
 		}
 
 		// Check name conflicts in variable environment scope using Scope for ContentAssist
-		RefactoringStatus status = new RefactoringStatus();
 		EObject astContext = null;
 		if (context instanceof SyntaxRelatedTElement) {
 			astContext = ((SyntaxRelatedTElement) context).getAstElement();
@@ -115,6 +127,9 @@ public class N4JSRenameElementProcessor extends RenameElementProcessor {
 						"Problem in " + trimPlatformPart(desc.getEObjectURI().trimFragment().toString())
 								+ ": Another element in the same scope with name '"
 								+ newName + "' already exists"));
+				if (status.hasError()) {
+					return status;
+				}
 			}
 		}
 
