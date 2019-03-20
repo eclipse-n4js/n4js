@@ -231,4 +231,8 @@ public interface IN4JSProject {
 	 */
 	public String getDefinesPackageName();
 
+	/**
+	 * EXPERIMENTAL. See {@link ProjectDescription#isUseES6Imports()}.
+	 */
+	public boolean isUseES6Imports();
 }

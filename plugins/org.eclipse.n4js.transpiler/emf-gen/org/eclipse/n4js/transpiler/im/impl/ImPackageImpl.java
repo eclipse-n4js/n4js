@@ -382,7 +382,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getSymbolTableEntryOriginal__ExportedName() {
+	public EOperation getSymbolTableEntryOriginal__GetExportedName() {
 		return symbolTableEntryOriginalEClass.getEOperations().get(0);
 	}
 
@@ -869,7 +869,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 		symbolTableEntryOriginalEClass = createEClass(SYMBOL_TABLE_ENTRY_ORIGINAL);
 		createEReference(symbolTableEntryOriginalEClass, SYMBOL_TABLE_ENTRY_ORIGINAL__ORIGINAL_TARGET);
 		createEReference(symbolTableEntryOriginalEClass, SYMBOL_TABLE_ENTRY_ORIGINAL__IMPORT_SPECIFIER);
-		createEOperation(symbolTableEntryOriginalEClass, SYMBOL_TABLE_ENTRY_ORIGINAL___EXPORTED_NAME);
+		createEOperation(symbolTableEntryOriginalEClass, SYMBOL_TABLE_ENTRY_ORIGINAL___GET_EXPORTED_NAME);
 
 		symbolTableEntryIMOnlyEClass = createEClass(SYMBOL_TABLE_ENTRY_IM_ONLY);
 
@@ -1021,7 +1021,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 		initEReference(getSymbolTableEntryOriginal_OriginalTarget(), theTypesPackage.getIdentifiableElement(), null, "originalTarget", null, 0, 1, SymbolTableEntryOriginal.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getSymbolTableEntryOriginal_ImportSpecifier(), theN4JSPackage.getImportSpecifier(), null, "importSpecifier", null, 0, 1, SymbolTableEntryOriginal.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEOperation(getSymbolTableEntryOriginal__ExportedName(), theEcorePackage.getEString(), "exportedName", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		initEOperation(getSymbolTableEntryOriginal__GetExportedName(), theEcorePackage.getEString(), "getExportedName", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(symbolTableEntryIMOnlyEClass, SymbolTableEntryIMOnly.class, "SymbolTableEntryIMOnly", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

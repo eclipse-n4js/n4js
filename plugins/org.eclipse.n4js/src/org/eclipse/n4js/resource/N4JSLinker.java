@@ -22,6 +22,7 @@ import org.eclipse.n4js.conversion.AbstractN4JSStringValueConverter.BadEscapemen
 import org.eclipse.n4js.conversion.N4JSValueConverterException;
 import org.eclipse.n4js.conversion.N4JSValueConverterWithValueException;
 import org.eclipse.n4js.n4JS.IdentifierRef;
+import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.JSXPropertyAttribute;
 import org.eclipse.n4js.n4JS.LabelRef;
@@ -273,6 +274,8 @@ public class N4JSLinker extends LazyLinker {
 				((LabelRef) obj).setLabelAsText((String) value);
 			} else if (obj instanceof ParameterizedPropertyAccessExpression && value instanceof String) {
 				((ParameterizedPropertyAccessExpression) obj).setPropertyAsText((String) value);
+			} else if (obj instanceof ImportDeclaration && value instanceof String) {
+				((ImportDeclaration) obj).setModuleSpecifierAsText((String) value);
 			} else if (obj instanceof NamedImportSpecifier && value instanceof String) {
 				((NamedImportSpecifier) obj).setImportedElementAsText((String) value);
 			} else if ((obj instanceof JSXPropertyAttribute) && (value instanceof String)) {
@@ -313,6 +316,8 @@ public class N4JSLinker extends LazyLinker {
 		super.clearReferences(obj);
 		if (obj instanceof Script) {
 			((Script) obj).setFlaggedUsageMarkingFinished(false); // open transient flag for new used-resolutions
+		} else if (obj instanceof ImportDeclaration) {
+			((ImportDeclaration) obj).setModuleSpecifierAsText(null);
 		} else if (obj instanceof ImportSpecifier) {
 			ImportSpecifier specifier = (ImportSpecifier) obj;
 			specifier.setFlaggedUsedInCode(false); // clear transient

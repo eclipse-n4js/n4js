@@ -144,6 +144,7 @@ public class ImportsFactory {
 		importetElement.setName(name);
 		namedImportSpec.setImportedElement(importetElement);
 		importDeclaration.getImportSpecifiers().add(namedImportSpec);
+		importDeclaration.setImportFrom(true);
 		return importDeclaration;
 	}
 
@@ -153,6 +154,7 @@ public class ImportsFactory {
 		importetElement.setName(name);
 		defaultImportSpec.setImportedElement(importetElement);
 		importDeclaration.getImportSpecifiers().add(defaultImportSpec);
+		importDeclaration.setImportFrom(true);
 		return importDeclaration;
 	}
 
@@ -162,6 +164,7 @@ public class ImportsFactory {
 		namespaceImportSpec.setAlias(name);
 		namespaceImportSpec.setDefinedType(namespace);
 		importDeclaration.getImportSpecifiers().add(namespaceImportSpec);
+		importDeclaration.setImportFrom(true);
 		return importDeclaration;
 	}
 

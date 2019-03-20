@@ -71,6 +71,7 @@ import org.eclipse.n4js.semver.Semver.VersionNumber;
  *   <li>{@link org.eclipse.n4js.projectDescription.impl.ProjectDescriptionImpl#isHasN4JSNature <em>Has N4JS Nature</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.impl.ProjectDescriptionImpl#isYarnWorkspaceRoot <em>Yarn Workspace Root</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.impl.ProjectDescriptionImpl#getWorkspaces <em>Workspaces</em>}</li>
+ *   <li>{@link org.eclipse.n4js.projectDescription.impl.ProjectDescriptionImpl#isUseES6Imports <em>Use ES6 Imports</em>}</li>
  * </ul>
  *
  * @generated
@@ -435,6 +436,26 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * @ordered
 	 */
 	protected EList<String> workspaces;
+
+	/**
+	 * The default value of the '{@link #isUseES6Imports() <em>Use ES6 Imports</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isUseES6Imports()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean USE_ES6_IMPORTS_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isUseES6Imports() <em>Use ES6 Imports</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isUseES6Imports()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean useES6Imports = USE_ES6_IMPORTS_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -949,6 +970,27 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean isUseES6Imports() {
+		return useES6Imports;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setUseES6Imports(boolean newUseES6Imports) {
+		boolean oldUseES6Imports = useES6Imports;
+		useES6Imports = newUseES6Imports;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ProjectDescriptionPackage.PROJECT_DESCRIPTION__USE_ES6_IMPORTS, oldUseES6Imports, useES6Imports));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -1034,6 +1076,8 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 				return isYarnWorkspaceRoot();
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__WORKSPACES:
 				return getWorkspaces();
+			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__USE_ES6_IMPORTS:
+				return isUseES6Imports();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -1128,6 +1172,9 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 				getWorkspaces().clear();
 				getWorkspaces().addAll((Collection<? extends String>)newValue);
 				return;
+			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__USE_ES6_IMPORTS:
+				setUseES6Imports((Boolean)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -1212,6 +1259,9 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__WORKSPACES:
 				getWorkspaces().clear();
 				return;
+			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__USE_ES6_IMPORTS:
+				setUseES6Imports(USE_ES6_IMPORTS_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -1272,6 +1322,8 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 				return yarnWorkspaceRoot != YARN_WORKSPACE_ROOT_EDEFAULT;
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__WORKSPACES:
 				return workspaces != null && !workspaces.isEmpty();
+			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__USE_ES6_IMPORTS:
+				return useES6Imports != USE_ES6_IMPORTS_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -1312,6 +1364,8 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 		result.append(yarnWorkspaceRoot);
 		result.append(", workspaces: ");
 		result.append(workspaces);
+		result.append(", useES6Imports: ");
+		result.append(useES6Imports);
 		result.append(')');
 		return result.toString();
 	}
