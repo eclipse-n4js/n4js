@@ -26,8 +26,4 @@ export public class TestVerifyRuntimeSupportsN4 {
     public verify_runtimeInfo() {
         this.verifyMember(n4, "runtimeInfo")
     }
-    @Test
-    public verify_profiling() {
-        this.verifyMember(n4, "profiling")
-    }
 }
