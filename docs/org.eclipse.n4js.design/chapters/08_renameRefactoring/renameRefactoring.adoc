@@ -53,6 +53,6 @@ The classes in yellow are customized by N4JS implementation.
 
 * `IRenameStrategy`: the custom N4JS implementation creates updates for constituent members of composed elements.
 * `IReferenceFinder`: the custom N4JS implementation used for finding references of a declaration.
-* `RefactoringCrossReferenceSerializer`: custom N4JS implementation to retrieved the updated rename for cross references. For some unknown reason, the default implementation does not work correctly.
+* `RefactoringCrossReferenceSerializer`: custom N4JS implementation to retrieve the updated name for cross references. For some unknown reason, the default implementation does not work correctly.
 
 
