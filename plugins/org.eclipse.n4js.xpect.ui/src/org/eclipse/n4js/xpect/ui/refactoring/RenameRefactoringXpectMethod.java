@@ -110,6 +110,12 @@ public class RenameRefactoringXpectMethod {
 			selectedElement = N4JSLanguageUtils.getDefinedTypeModelElement(selectedElement);
 		}
 
+		// while (selectedElement != null) {
+		// while (Display.getCurrent().readAndDispatch())
+		// ;
+		// Display.getCurrent().sleep();
+		// }
+
 		URI targetResourceUri = context.eResource().getURI();
 		Optional<XtextEditor> editorOp = EditorsUtil.openXtextEditor(targetResourceUri,
 				N4JSActivator.ORG_ECLIPSE_N4JS_N4JS);

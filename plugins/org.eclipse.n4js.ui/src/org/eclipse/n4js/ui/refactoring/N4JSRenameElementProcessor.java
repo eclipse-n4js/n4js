@@ -21,7 +21,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext;
 import org.eclipse.n4js.n4JS.FormalParameter;
-import org.eclipse.n4js.n4JS.FunctionDeclaration;
+import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.scoping.N4JSScopeProvider;
 import org.eclipse.n4js.ts.types.ContainerType;
@@ -103,7 +103,7 @@ public class N4JSRenameElementProcessor extends RenameElementProcessor {
 
 		if (context instanceof FormalParameter) {
 			FormalParameter fpar = (FormalParameter) context;
-			FunctionDeclaration method = (FunctionDeclaration) fpar.eContainer();
+			FunctionDefinition method = (FunctionDefinition) fpar.eContainer();
 			status.merge(checkDuplicateFormalParam(fpar, method.getFpars(), newName));
 		}
 
