@@ -87,7 +87,7 @@ public class N4JSRenameStrategy extends DefaultRenameStrategy {
 	@Override
 	public void revertDeclarationChange(ResourceSet resourceSet) {
 		EObject targetElement = resourceSet.getEObject(getTargetElementOriginalURI(), true);
-		if ((targetElement instanceof TMember) && ((TMember) targetElement).isComposed()) {
+		if (TypeModelUtils.isComposedTElement(targetElement)) {
 			for (URI targetElementNewURI : targetElementNewURIs) {
 				setName(targetElementNewURI, getOriginalName(), resourceSet);
 			}
@@ -97,7 +97,7 @@ public class N4JSRenameStrategy extends DefaultRenameStrategy {
 
 	/**
 	 * Override this method to handle the case in which PropertyNameOwner has a LiteralOrComputedPropertyName child node
-	 * that contains the name to be renamed
+	 * that contains 'literalName' to be renamed
 	 */
 	@Override
 	protected ITextRegion getOriginalNameRegion(final EObject targetElement,
@@ -105,7 +105,8 @@ public class N4JSRenameStrategy extends DefaultRenameStrategy {
 		if (targetElement instanceof SyntaxRelatedTElement) {
 			EObject nameElement = ((SyntaxRelatedTElement) targetElement).getAstElement();
 
-			// PropertyNameOwner has a LiteralOrComputedPropertyName child node that contains the name to be renamed
+			// PropertyNameOwner has a LiteralOrComputedPropertyName child node that contains 'literalName' to be
+			// renamed
 			if (nameElement instanceof PropertyNameOwner) {
 				nameElement = ((PropertyNameOwner) nameElement).getDeclaredName();
 				EAttribute nAttribute = SimpleAttributeResolver.newResolver(String.class, "literalName")
@@ -116,11 +117,14 @@ public class N4JSRenameStrategy extends DefaultRenameStrategy {
 		return super.getOriginalNameRegion(targetElement, nameAttribute);
 	}
 
+	/**
+	 * This method uses parser of rule IdentifierName to make sure names follow the rule.
+	 */
 	@Override
 	public RefactoringStatus validateNewName(String newName) {
 		// N4JS already contains N4JSX grammar
 		IParser parser = N4LanguageUtils.getServiceForContext("n4js", IParser.class).get();
-		Grammar grammar = this.internalFindGrammar();
+		Grammar grammar = this.getTypeExpressionsGrammar();
 		ParserRule parserRule = (ParserRule) GrammarUtil.findRuleForName(grammar,
 				"org.eclipse.n4js.ts.TypeExpressions.IdentifierName");
 
@@ -139,7 +143,7 @@ public class N4JSRenameStrategy extends DefaultRenameStrategy {
 	/**
 	 * Returns the TypeExpressions grammar
 	 */
-	protected Grammar internalFindGrammar() {
+	protected Grammar getTypeExpressionsGrammar() {
 		Grammar grammar = grammarProvider.getGrammar(this);
 		while (grammar != null) {
 			if ("org.eclipse.n4js.ts.TypeExpressions".equals(grammar.getName())) {
