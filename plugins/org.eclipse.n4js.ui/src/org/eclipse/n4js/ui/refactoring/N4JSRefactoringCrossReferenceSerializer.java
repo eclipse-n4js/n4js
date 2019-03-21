@@ -15,11 +15,16 @@ import org.eclipse.xtext.ui.refactoring.impl.StatusWrapper;
 import org.eclipse.xtext.util.ITextRegion;
 
 /**
- * Custom Refactoring cross reference serializer
+ * Custom Refactoring cross reference serializer because its default implementation {@code getCrossRefText} has problems
+ * with finding the updated name via scope. May be the same issues as PERSISTED/LIVE scope??
  */
 @SuppressWarnings("restriction")
 public class N4JSRefactoringCrossReferenceSerializer extends RefactoringCrossReferenceSerializer {
 
+	/**
+	 * If the target has a name field, simply return it as it is already the changed name. The default implementation
+	 * {@code getCrossRefText} has a problem: it asks the scope but the scope seems to not have the updated state.
+	 */
 	@Override
 	public String getCrossRefText(EObject owner, CrossReference crossref, EObject target,
 			RefTextEvaluator refTextEvaluator, ITextRegion linkTextRegion, StatusWrapper status) {
