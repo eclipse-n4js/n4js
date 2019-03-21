@@ -46,6 +46,8 @@ As seen in the diagram, there are two stages of creating updates:
 . Creating updates for declaration is done by `IRenameStrategy` and
 . Creating updates for references is done by `ReferenceUpdateDispatcher`. `ReferenceUpdateDispatcher` in turn delegates the finding of references to `IReferenceFinder`.
 
+The text edits for changing the definition and the references are accumulated by an `IRefactoringUpdateAcceptor`.
+
 
 The classes in yellow are customized by N4JS implementation.
 
