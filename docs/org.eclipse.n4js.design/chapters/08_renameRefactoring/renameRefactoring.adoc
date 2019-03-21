@@ -1,0 +1,56 @@
+////
+Copyright (c) 2019 NumberFour AG.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+////
+
+= Rename Refactoring
+:experimental:
+:find:
+
+The rename refactoring operation is implemented based on current Xtext's rename refactoring implementation. However, lots of customization have been done in order to make Rename Refactoring work for N4JS. In order to understand N4JS customization, it is imperative to understand how Xtext implements rename refactoring.
+
+== Rename Refactoring UI interaction
+
+Xtext's implementation allows rename refactoring be in either one of two modes (1) Direct refactoring mode (3) Refactoring with dialog mode. Diagram <<fig:rename_refactoring_communication_diagram_part1, Direct Rename Refactoring UI interaction>> shows the UI interaction in _direct refactoring mode_.
+
+
+[[fig:rename_refactoring_communication_diagram_part1]]
+[.center]
+image::{find}images/rename_refactoring_communication_diagram_part1.svg[title-"Direct Rename Refactoring UI interaction"]
+
+In this diagram, the classes in yellow are customized by N4JS implementation to handle N4JS-specific characteristics.
+
+* `DefaultRenameElementHandler`: Our custom N4JS implementation converts the selected element to be renamed into its corresponding TModule element.
+* `ILinkedPositionGroupCalculator`: This class is responsible for calculating locations of names to be changed during linked edit mode. We need to provide a custom N4JS implementation to handle composed elements.
+* `RenameElementProcessor`: We need to provide a custom N4JS implementation to add N4JS-specific validation of conditions, e.g. checking name conflicts etc.
+
+The key class for creating updates of a declaration and its associated references is `RenameElementProcessor`. In the following section, we will see how this class interacts with other classes to achieve this.
+
+== RenameElementProcessor interaction
+
+Diagram <<fig:rename_refactoring_communication_diagram_part2,RenameElementProcessor interaction>> shows the interaction of `RenameElementProcessor` and other classes to create changes for both declaration and references during rename refactoring.
+
+
+[[fig:rename_refactoring_communication_diagram_part2]]
+[.center]
+image::{find}images/rename_refactoring_communication_diagram_part2.svg[title-"RenameElementProcessor interaction"]
+
+As seen in the diagram, there are two stages of creating updates:
+
+. Creating updates for declaration is done by `IRenameStrategy` and
+. Creating updates for references is done by `ReferenceUpdateDispatcher`. `ReferenceUpdateDispatcher` in turn delegates the finding of references to `IReferenceFinder`.
+
+
+The classes in yellow are customized by N4JS implementation.
+
+* `IRenameStrategy`: the custom N4JS implementation creates updates for constituent members of composed elements.
+* `IReferenceFinder`: the custom N4JS implementation used for finding references of a declaration.
+* `RefactoringCrossReferenceSerializer`: custom N4JS implementation to retrieved the updated rename for cross references. For some unknown reason, the default implementation does not work correctly.
+
+

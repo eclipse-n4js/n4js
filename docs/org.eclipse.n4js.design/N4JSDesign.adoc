@@ -45,9 +45,11 @@ include::{find}chapters/04_tipsTricks/tipsTricks.adoc[]
 include::{find}chapters/05_parser/parser.adoc[]
 include::{find}chapters/06_typesystem/typesystem.adoc[]
 include::{find}chapters/07_typeindex/typeindex.adoc[]
+include::{find}chapters/08_renameRefactoring/renameRefactoring.adoc[]
 
 include::{find}chapters/10_flowgraphs/flowgraphs.adoc[]
 include::{find}chapters/20_externalLibraries/externalLibraries.adoc[]
+
 
 // Appendix
 
