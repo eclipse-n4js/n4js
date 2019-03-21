@@ -24,7 +24,6 @@ import org.eclipse.xtext.parser.IParser;
 import org.eclipse.xtext.service.GrammarProvider;
 import org.eclipse.xtext.ui.refactoring.IRefactoringUpdateAcceptor;
 import org.eclipse.xtext.ui.refactoring.impl.DefaultRenameStrategy;
-import org.eclipse.xtext.ui.refactoring.ui.IRenameElementContext;
 import org.eclipse.xtext.util.ITextRegion;
 import org.eclipse.xtext.util.SimpleAttributeResolver;
 
@@ -32,13 +31,11 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
-/*** Custom Rename strategy */
-
+/**
+ * Custom Rename strategy that can create updates for definitions of composed members
+ */
 @SuppressWarnings("restriction")
 public class N4JSRenameStrategy extends DefaultRenameStrategy {
-
-	/** Target element to be renamed */
-	protected EObject targetElement;
 
 	@Inject
 	private GrammarProvider grammarProvider;
@@ -46,28 +43,19 @@ public class N4JSRenameStrategy extends DefaultRenameStrategy {
 	private final List<URI> targetElementNewURIs = new ArrayList<>();
 
 	/**
-	 * We override this method to store the reference to targetElement
-	 */
-	@Override
-	public boolean initialize(@SuppressWarnings("hiding") EObject targetElement, IRenameElementContext context) {
-		this.targetElement = targetElement;
-		return super.initialize(targetElement, context);
-	}
-
-	/**
-	 * Override this method to handle composed element when creating text edits for definitions
+	 * Custom logics for creating text edits for definitions of composed members
 	 */
 	@Override
 	public void createDeclarationUpdates(String newName, ResourceSet resourceSet,
 			IRefactoringUpdateAcceptor updateAcceptor) {
 
-		// Special handling for composed element definitions of a composed element
+		EObject targetElement = resourceSet.getEObject(getTargetElementOriginalURI(), true);
 		if (TypeModelUtils.isComposedTElement(targetElement)) {
+			// If target element is a composed element, create updates for its constituent members
 			List<TMember> constituentMembers = ((TMember) targetElement).getConstituentMembers();
 			for (TMember constituentMember : constituentMembers) {
 				String text = newName;
 				EAttribute att = getNameAttribute(constituentMember);
-
 				ITextRegion nameRegion = getOriginalNameRegion(constituentMember, att);
 				ReplaceEdit replaceEdit = new ReplaceEdit(nameRegion.getOffset(), nameRegion.getLength(), text);
 				updateAcceptor.accept(EcoreUtil.getURI(constituentMember).trimFragment(),
@@ -79,10 +67,11 @@ public class N4JSRenameStrategy extends DefaultRenameStrategy {
 	}
 
 	/**
-	 * Override this method to handle composed element when applying declaration changes to AST/TModule
+	 * Custom logics for applying declaration changes to constituent members of composed members
 	 */
 	@Override
 	public void applyDeclarationChange(String newName, ResourceSet resourceSet) {
+		EObject targetElement = resourceSet.getEObject(getTargetElementOriginalURI(), true);
 		if (TypeModelUtils.isComposedTElement(targetElement)) {
 			targetElementNewURIs.clear();
 			List<TMember> constituentMembers = ((TMember) targetElement).getConstituentMembers();
@@ -97,6 +86,7 @@ public class N4JSRenameStrategy extends DefaultRenameStrategy {
 
 	@Override
 	public void revertDeclarationChange(ResourceSet resourceSet) {
+		EObject targetElement = resourceSet.getEObject(getTargetElementOriginalURI(), true);
 		if ((targetElement instanceof TMember) && ((TMember) targetElement).isComposed()) {
 			for (URI targetElementNewURI : targetElementNewURIs) {
 				setName(targetElementNewURI, getOriginalName(), resourceSet);
@@ -110,7 +100,7 @@ public class N4JSRenameStrategy extends DefaultRenameStrategy {
 	 * that contains the name to be renamed
 	 */
 	@Override
-	protected ITextRegion getOriginalNameRegion(@SuppressWarnings("hiding") final EObject targetElement,
+	protected ITextRegion getOriginalNameRegion(final EObject targetElement,
 			EAttribute nameAttribute) {
 		if (targetElement instanceof SyntaxRelatedTElement) {
 			EObject nameElement = ((SyntaxRelatedTElement) targetElement).getAstElement();
