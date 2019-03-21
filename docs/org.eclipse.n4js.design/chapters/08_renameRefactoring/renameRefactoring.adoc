@@ -13,7 +13,7 @@ Contributors:
 :experimental:
 :find:
 
-The rename refactoring operation is implemented based on current Xtext's rename refactoring implementation. However, lots of customization have been done in order to make Rename Refactoring work for N4JS. In order to understand N4JS customization, it is imperative to understand how Xtext implements rename refactoring.
+The rename refactoring operation is implemented based on current Xtext's rename refactoring implementation. However, lots of customization have been done in order to make Rename Refactoring work for N4JS. In order to understand N4JS customization, it is imperative to understand how Xtext implements rename refactoring. In this chapter, we will focus on Xtext's architecture for rename refactoring. Additionally, we will point to the components that have been customized for N4JS.
 
 == Rename Refactoring UI interaction
 
