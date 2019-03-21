@@ -1075,13 +1075,22 @@ public interface TypesPackage extends EPackage {
 	int TYPE_VARIABLE__DECLARED_UPPER_BOUND = TYPE_FEATURE_COUNT + 2;
 
 	/**
+	 * The feature id for the '<em><b>Defined Type Variable</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_VARIABLE__DEFINED_TYPE_VARIABLE = TYPE_FEATURE_COUNT + 3;
+
+	/**
 	 * The number of structural features of the '<em>Type Variable</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_VARIABLE_FEATURE_COUNT = TYPE_FEATURE_COUNT + 3;
+	int TYPE_VARIABLE_FEATURE_COUNT = TYPE_FEATURE_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -1317,6 +1326,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int INFERENCE_VARIABLE__DECLARED_UPPER_BOUND = TYPE_VARIABLE__DECLARED_UPPER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Defined Type Variable</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INFERENCE_VARIABLE__DEFINED_TYPE_VARIABLE = TYPE_VARIABLE__DEFINED_TYPE_VARIABLE;
 
 	/**
 	 * The number of structural features of the '<em>Inference Variable</em>' class.
@@ -13205,6 +13223,17 @@ public interface TypesPackage extends EPackage {
 	EReference getTypeVariable_DeclaredUpperBound();
 
 	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.n4js.ts.types.TypeVariable#getDefinedTypeVariable <em>Defined Type Variable</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Defined Type Variable</em>'.
+	 * @see org.eclipse.n4js.ts.types.TypeVariable#getDefinedTypeVariable()
+	 * @see #getTypeVariable()
+	 * @generated
+	 */
+	EReference getTypeVariable_DefinedTypeVariable();
+
+	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TypeVariable#getVariance() <em>Get Variance</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -16070,6 +16099,14 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EReference TYPE_VARIABLE__DECLARED_UPPER_BOUND = eINSTANCE.getTypeVariable_DeclaredUpperBound();
+
+		/**
+		 * The meta object literal for the '<em><b>Defined Type Variable</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TYPE_VARIABLE__DEFINED_TYPE_VARIABLE = eINSTANCE.getTypeVariable_DefinedTypeVariable();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Variance</b></em>' operation.
