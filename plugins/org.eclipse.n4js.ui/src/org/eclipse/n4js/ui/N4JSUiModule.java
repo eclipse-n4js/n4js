@@ -53,13 +53,13 @@ import org.eclipse.n4js.ui.contentassist.PatchedFollowElementComputer;
 import org.eclipse.n4js.ui.contentassist.PatchedRequiredRuleNameComputer;
 import org.eclipse.n4js.ui.contentassist.SimpleLastSegmentFinder;
 import org.eclipse.n4js.ui.editor.AlwaysAddNatureCallback;
-import org.eclipse.n4js.ui.editor.N4JSHyperlinkHelper;
 import org.eclipse.n4js.ui.editor.EditorAwareCanLoadFromDescriptionHelper;
 import org.eclipse.n4js.ui.editor.N4JSDirtyStateEditorSupport;
 import org.eclipse.n4js.ui.editor.N4JSDocument;
 import org.eclipse.n4js.ui.editor.N4JSDoubleClickStrategyProvider;
 import org.eclipse.n4js.ui.editor.N4JSHover;
 import org.eclipse.n4js.ui.editor.N4JSHyperlinkDetector;
+import org.eclipse.n4js.ui.editor.N4JSHyperlinkHelper;
 import org.eclipse.n4js.ui.editor.N4JSLocationInFileProvider;
 import org.eclipse.n4js.ui.editor.N4JSReconciler;
 import org.eclipse.n4js.ui.editor.PrevStateAwareDocumentBasedDirtyResource;
@@ -105,6 +105,13 @@ import org.eclipse.n4js.ui.preferences.N4JSBuilderPreferenceAccess;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
 import org.eclipse.n4js.ui.quickfix.N4JSIssue;
 import org.eclipse.n4js.ui.quickfix.N4JSMarkerResolutionGenerator;
+import org.eclipse.n4js.ui.refactoring.N4JSDependentElementsCalculator;
+import org.eclipse.n4js.ui.refactoring.N4JSLinkedPositionGroupCalculator;
+import org.eclipse.n4js.ui.refactoring.N4JSRefactoringCrossReferenceSerializer;
+import org.eclipse.n4js.ui.refactoring.N4JSRefactoringResourceSetProvider;
+import org.eclipse.n4js.ui.refactoring.N4JSRenameElementHandler;
+import org.eclipse.n4js.ui.refactoring.N4JSRenameElementProcessor;
+import org.eclipse.n4js.ui.refactoring.N4JSRenameStrategy;
 import org.eclipse.n4js.ui.resource.OutputFolderAwareResourceServiceProvider;
 import org.eclipse.n4js.ui.search.LabellingReferenceFinder;
 import org.eclipse.n4js.ui.search.MyReferenceSearchResultContentProvider;
@@ -169,6 +176,13 @@ import org.eclipse.xtext.ui.editor.syntaxcoloring.AbstractAntlrTokenToAttributeI
 import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingConfiguration;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingHelper;
 import org.eclipse.xtext.ui.editor.validation.MarkerCreator;
+import org.eclipse.xtext.ui.refactoring.IDependentElementsCalculator;
+import org.eclipse.xtext.ui.refactoring.impl.AbstractRenameProcessor;
+import org.eclipse.xtext.ui.refactoring.impl.DefaultRenameStrategy;
+import org.eclipse.xtext.ui.refactoring.impl.RefactoringCrossReferenceSerializer;
+import org.eclipse.xtext.ui.refactoring.impl.RefactoringResourceSetProvider;
+import org.eclipse.xtext.ui.refactoring.ui.DefaultLinkedPositionGroupCalculator;
+import org.eclipse.xtext.ui.refactoring.ui.DefaultRenameElementHandler;
 import org.eclipse.xtext.ui.resource.DefaultResourceUIServiceProvider;
 import org.eclipse.xtext.ui.shared.Access;
 import org.eclipse.xtext.ui.util.IssueUtil;
@@ -883,5 +897,40 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	/** Bind custom IProjectCreator for creating N4JS projects using the project wizard. */
 	public Class<? extends IProjectCreator> bindN4JSProjectCreator() {
 		return N4JSProjectCreator.class;
+	}
+
+	/** Custom RenameElementHandler */
+	public Class<? extends DefaultRenameElementHandler> bindDefaultRenameElementHandler() {
+		return N4JSRenameElementHandler.class;
+	}
+
+	/** Custom LinkedPositionGroupCalculator */
+	public Class<? extends DefaultLinkedPositionGroupCalculator> bindDefaultLinkedPositionGroupCalculator() {
+		return N4JSLinkedPositionGroupCalculator.class;
+	}
+
+	/** Custom Rename strategy */
+	public Class<? extends DefaultRenameStrategy> bindDefaultRenameStrategy() {
+		return N4JSRenameStrategy.class;
+	}
+
+	/** Custom RefactoringCrossReferenceSerializer */
+	public Class<? extends RefactoringCrossReferenceSerializer> bindN4JSRefactoringCrossReferenceSerializer() {
+		return N4JSRefactoringCrossReferenceSerializer.class;
+	}
+
+	/** Custom RefactoringResourceSetProvider */
+	public Class<? extends RefactoringResourceSetProvider> bindRefactoringResourceSetProvider() {
+		return N4JSRefactoringResourceSetProvider.class;
+	}
+
+	/** Custom N4JSRenameElementProcessor */
+	public Class<? extends AbstractRenameProcessor> bindAbstractRenameProcessor() {
+		return N4JSRenameElementProcessor.class;
+	}
+
+	@Override
+	public Class<? extends IDependentElementsCalculator> bindIDependentElementsCalculator() {
+		return N4JSDependentElementsCalculator.class;
 	}
 }

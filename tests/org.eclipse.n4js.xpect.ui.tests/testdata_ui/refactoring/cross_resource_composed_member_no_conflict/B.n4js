@@ -1,0 +1,3 @@
+export public class B {
+	public foo() {}
+}

@@ -70,6 +70,7 @@ import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
+import org.eclipse.n4js.ts.types.util.TypeModelUtils;
 import org.eclipse.n4js.utils.EcoreUtilN4;
 import org.eclipse.n4js.utils.N4JSDataCollectors;
 import org.eclipse.n4js.utils.N4JSLanguageHelper;
@@ -1106,6 +1107,23 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		// b) targetUri points to an n4ts resource or some other, non-N4JS resource
 		// --> above special handling not required, so just apply EMF's default resolution behavior
 		return EcoreUtil.resolve(proxy, this);
+	}
+
+	@Override
+	public synchronized EObject getEObject(String uriFragment) {
+		EObject result = super.getEObject(uriFragment);
+		if (result == null
+				&& isLoaded()
+				&& !isFullyProcessed()
+				&& !isLoadedFromDescription()
+				&& TypeModelUtils.isURIFragmentToPostProcessingCache(uriFragment)) {
+			// 'uriFragment' points to a cached composed member below transient property TModule#composedMemberCaches;
+			// to be able to find the target EObject, we first have to perform post-processing in order to populate the
+			// composed member cache:
+			performPostProcessing();
+			result = super.getEObject(uriFragment);
+		}
+		return result;
 	}
 
 	/**

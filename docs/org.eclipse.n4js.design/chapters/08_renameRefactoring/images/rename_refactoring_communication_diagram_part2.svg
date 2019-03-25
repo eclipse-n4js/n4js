@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xl="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" version="1.1" viewBox="-492 -611 1220 538" width="1220" height="538">
+  <defs>
+    <font-face font-family="Helvetica" font-size="12" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="532.22656" cap-height="719.7266" ascent="770.0195" descent="-229.98047" font-weight="700">
+      <font-face-src>
+        <font-face-name name="Helvetica-Bold"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Helvetica" font-size="12" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="522.9492" cap-height="717.28516" ascent="770.0195" descent="-229.98047" font-weight="400">
+      <font-face-src>
+        <font-face-name name="Helvetica"/>
+      </font-face-src>
+    </font-face>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 10 8" markerWidth="10" markerHeight="8" color="black">
+      <g>
+        <path d="M 8 0 L 0 0 M 0 -3 L 8 0 L 0 3" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <font-face font-family="Helvetica Neue" font-size="12" panose-1="2 0 5 3 0 0 0 2 0 4" units-per-em="1000" underline-position="-100" underline-thickness="50" slope="0" x-height="517" cap-height="714" ascent="951.9958" descent="-212.99744" font-weight="400">
+      <font-face-src>
+        <font-face-name name="HelveticaNeue"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Helvetica" font-size="8" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="522.9492" cap-height="717.28516" ascent="770.0195" descent="-229.98047" font-weight="400">
+      <font-face-src>
+        <font-face-name name="Helvetica"/>
+      </font-face-src>
+    </font-face>
+  </defs>
+  <metadata> Produced by OmniGraffle 7.10.1 
+    <dc:date>2019-03-21 13:16:12 +0000</dc:date>
+  </metadata>
+  <g id="Canvas_1" fill-opacity="1" stroke="none" fill="none" stroke-opacity="1" stroke-dasharray="none">
+    <title>Canvas 1</title>
+    <rect fill="white" x="-492" y="-611" width="1220" height="538"/>
+    <g id="Canvas_1: Layer 1">
+      <title>Layer 1</title>
+      <g id="Group_88">
+        <g id="Graphic_90">
+          <rect x="-491" y="-610" width="1217.7966" height="536" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_89">
+          <path d="M -491 -610 L -54.471677 -610 L -54.471677 -591 L -90.84889 -572 L -491 -572.0002 Z" fill="white"/>
+          <path d="M -491 -610 L -54.471677 -610 L -54.471677 -591 L -90.84889 -572 L -491 -572.0002 Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(-486 -598)" fill="black">
+            <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="0" y="11">interaction</tspan>
+            <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" y="11"> RenameElementProcessor’s interaction with other classes</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Group_29">
+        <g id="Graphic_30">
+          <rect x="-346.58" y="-491.5" width="113.625" height="38" fill="yellow"/>
+          <rect x="-346.58" y="-491.5" width="113.625" height="38" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(-341.58 -486.5)" fill="black">
+            <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="3.1298828" y="11">:RenameElement</tspan>
+            <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="22.46289" y="25">Processor</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Line_28">
+        <line x1="-172.99688" y1="-483.65686" x2="-90.22488" y2="-483.65686" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_27">
+        <text transform="translate(195.21168 -505)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="12" font-weight="400" fill="black" x="8029133e-19" y="11">1.1: accept()</tspan>
+        </text>
+      </g>
+      <g id="Line_26">
+        <line x1="-232.955" y1="-473.5" x2="-27.588643" y2="-472.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Group_24">
+        <g id="Graphic_25">
+          <rect x="-27.588643" y="-374" width="122.454" height="38" fill="white"/>
+          <rect x="-27.588643" y="-374" width="122.454" height="38" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(-22.588643 -369)" fill="black">
+            <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="2.5434062" y="11">:ReferenceUpdater</tspan>
+            <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="25.216258" y="25">Dispatcher</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Line_23">
+        <line x1="-232.955" y1="-473.5" x2="-27.588643" y2="-355" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_22">
+        <line x1="-190.15608" y1="-408.1553" x2="-125.31679" y2="-375.95125" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_21">
+        <text transform="translate(-201.25795 -441.771) rotate(28)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="12" font-weight="400" fill="black" x="0" y="11">2: createReferenceUpdates</tspan>
+        </text>
+      </g>
+      <g id="Line_20">
+        <line x1="94.86536" y1="-355" x2="279.4592" y2="-353" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_19">
+        <line x1="147.51812" y1="-364.07843" x2="230.29012" y2="-364.07843" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_18">
+        <text transform="translate(127.39216 -391.07843)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="12" font-weight="400" fill="black" x="0" y="11">2.1: findAllReferences()</tspan>
+        </text>
+      </g>
+      <g id="Line_17">
+        <line x1="94.86536" y1="-355" x2="279.4592" y2="-264" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_16">
+        <text transform="translate(92.30417 -349.31634) rotate(28)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="12" font-weight="400" fill="black" x="30.776" y="11">2.2 *: createReferenceUpdates</tspan>
+        </text>
+      </g>
+      <g id="Line_15">
+        <line x1="149.5" y1="-293.80392" x2="202.47415" y2="-262.26103" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_14">
+        <rect x="-27.588643" y="-493.5" width="113.625" height="42" fill="yellow"/>
+        <rect x="-27.588643" y="-493.5" width="113.625" height="42" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(-22.588643 -484.5)" fill="black">
+          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="32.021484" y="8">«interface»</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x=".7949219" y="21">:IRenameStrategy</tspan>
+        </text>
+      </g>
+      <g id="Graphic_13">
+        <rect x="279.4592" y="-374" width="113.625" height="42" fill="yellow"/>
+        <rect x="279.4592" y="-374" width="113.625" height="42" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(284.4592 -365)" fill="black">
+          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="32.021484" y="8">«interface»</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x=".7978516" y="21">:IReferenceFinder</tspan>
+        </text>
+      </g>
+      <g id="Graphic_12">
+        <rect x="279.4592" y="-285" width="122.454" height="42" fill="white"/>
+        <rect x="279.4592" y="-285" width="122.454" height="42" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(284.4592 -276)" fill="black">
+          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="36.435984" y="8">«interface»</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x=".8764141" y="21">:IReferenceUpdater</tspan>
+        </text>
+      </g>
+      <g id="Group_10">
+        <g id="Graphic_11">
+          <rect x="537.42" y="-283" width="174.16" height="38" fill="yellow"/>
+          <rect x="537.42" y="-283" width="174.16" height="38" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(542.42 -278)" fill="black">
+            <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x=".7225781" y="11">:RefactoringCrossReference</tspan>
+            <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="55.396406" y="25">Serializer</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Graphic_9">
+        <text transform="translate(372.5 -297.189)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="12" font-weight="400" fill="black" x="48.788" y="11">2.2.1: getCrossRefText()</tspan>
+        </text>
+      </g>
+      <g id="Line_8">
+        <line x1="424.66447" y1="-273.05882" x2="507.4365" y2="-273.05882" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_7">
+        <line x1="401.9132" y1="-264" x2="537.42" y2="-264" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_92">
+        <line x1="-459.13965" y1="-485" x2="-376.36765" y2="-485" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_93">
+        <text transform="translate(-479.86275 -513)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="12" font-weight="400" fill="black" x="7105427e-19" y="11">0: checkFinalConditions()</tspan>
+        </text>
+      </g>
+      <g id="Line_94">
+        <line x1="-469.034" y1="-473" x2="-346.58" y2="-473" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_95">
+        <rect x="537.42" y="-491.5" width="133.12" height="42" fill="white"/>
+        <rect x="537.42" y="-491.5" width="133.12" height="42" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(542.42 -489.5)" fill="black">
+          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="41.768984" y="8">«interface»</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="4.223086" y="21">:IRefactoringUpdate</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="35.553164" y="35">Acceptor</tspan>
+        </text>
+      </g>
+      <g id="Line_96">
+        <line x1="86.03636" y1="-472.5" x2="537.42" y2="-470.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_98">
+        <text transform="translate(-205.3545 -509.6765)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="12" font-weight="400" fill="black" x="881073e-18" y="11">1: createDeclarationUpdates()</tspan>
+        </text>
+      </g>
+      <g id="Line_99">
+        <line x1="182.21156" y1="-478.9804" x2="264.98356" y2="-478.9804" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_100">
+        <path d="M 401.9132 -264 L 414.88793 -264 L 414.88793 -471.0429" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_101">
+        <line x1="432.3533" y1="-347.62745" x2="432.3533" y2="-391.0804" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_102">
+        <text transform="translate(438.8529 -311.4057) rotate(-91)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="12" font-weight="400" fill="black" x="23.436" y="11">2.2.2: accept()</tspan>
+        </text>
+      </g>
+    </g>
+  </g>
+</svg>

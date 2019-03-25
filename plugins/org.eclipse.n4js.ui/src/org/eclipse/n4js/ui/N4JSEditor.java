@@ -258,5 +258,4 @@ public class N4JSEditor extends XtextEditor implements IShowInSource, IShowInTar
 	public String[] getShowInTargetIds() {
 		return new String[] { IPageLayout.ID_PROJECT_EXPLORER };
 	}
-
 }
