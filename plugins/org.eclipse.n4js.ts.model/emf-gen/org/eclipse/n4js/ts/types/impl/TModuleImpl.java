@@ -389,7 +389,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<TAnnotation> getAnnotations() {
 		if (annotations == null) {
 			annotations = new EObjectContainmentEList<TAnnotation>(TAnnotation.class, this, TypesPackage.TMODULE__ANNOTATIONS);
@@ -402,7 +401,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getQualifiedName() {
 		return qualifiedName;
 	}
@@ -412,7 +410,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setQualifiedName(String newQualifiedName) {
 		String oldQualifiedName = qualifiedName;
 		qualifiedName = newQualifiedName;
@@ -425,7 +422,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getProjectName() {
 		return projectName;
 	}
@@ -435,7 +431,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setProjectName(String newProjectName) {
 		String oldProjectName = projectName;
 		projectName = newProjectName;
@@ -448,7 +443,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getVendorID() {
 		return vendorID;
 	}
@@ -458,7 +452,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setVendorID(String newVendorID) {
 		String oldVendorID = vendorID;
 		vendorID = newVendorID;
@@ -471,7 +464,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getModuleLoader() {
 		return moduleLoader;
 	}
@@ -481,7 +473,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setModuleLoader(String newModuleLoader) {
 		String oldModuleLoader = moduleLoader;
 		moduleLoader = newModuleLoader;
@@ -494,7 +485,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isN4jsdModule() {
 		return n4jsdModule;
 	}
@@ -504,7 +494,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setN4jsdModule(boolean newN4jsdModule) {
 		boolean oldN4jsdModule = n4jsdModule;
 		n4jsdModule = newN4jsdModule;
@@ -517,7 +506,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isStaticPolyfillModule() {
 		return staticPolyfillModule;
 	}
@@ -527,7 +515,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setStaticPolyfillModule(boolean newStaticPolyfillModule) {
 		boolean oldStaticPolyfillModule = staticPolyfillModule;
 		staticPolyfillModule = newStaticPolyfillModule;
@@ -540,7 +527,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isStaticPolyfillAware() {
 		return staticPolyfillAware;
 	}
@@ -550,7 +536,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setStaticPolyfillAware(boolean newStaticPolyfillAware) {
 		boolean oldStaticPolyfillAware = staticPolyfillAware;
 		staticPolyfillAware = newStaticPolyfillAware;
@@ -563,7 +548,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isMainModule() {
 		return mainModule;
 	}
@@ -573,7 +557,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setMainModule(boolean newMainModule) {
 		boolean oldMainModule = mainModule;
 		mainModule = newMainModule;
@@ -586,7 +569,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isPreLinkingPhase() {
 		return preLinkingPhase;
 	}
@@ -596,7 +578,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setPreLinkingPhase(boolean newPreLinkingPhase) {
 		boolean oldPreLinkingPhase = preLinkingPhase;
 		preLinkingPhase = newPreLinkingPhase;
@@ -609,7 +590,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isReconciled() {
 		return reconciled;
 	}
@@ -619,7 +599,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setReconciled(boolean newReconciled) {
 		boolean oldReconciled = reconciled;
 		reconciled = newReconciled;
@@ -632,7 +611,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<Type> getTopLevelTypes() {
 		if (topLevelTypes == null) {
 			topLevelTypes = new EObjectContainmentEList<Type>(Type.class, this, TypesPackage.TMODULE__TOP_LEVEL_TYPES);
@@ -645,7 +623,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<TVariable> getVariables() {
 		if (variables == null) {
 			variables = new EObjectContainmentEList<TVariable>(TVariable.class, this, TypesPackage.TMODULE__VARIABLES);
@@ -658,7 +635,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<Type> getInternalTypes() {
 		if (internalTypes == null) {
 			internalTypes = new EObjectContainmentEList<Type>(Type.class, this, TypesPackage.TMODULE__INTERNAL_TYPES);
@@ -671,7 +647,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<Type> getExposedInternalTypes() {
 		if (exposedInternalTypes == null) {
 			exposedInternalTypes = new EObjectContainmentEList<Type>(Type.class, this, TypesPackage.TMODULE__EXPOSED_INTERNAL_TYPES);
@@ -684,7 +659,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getAstMD5() {
 		return astMD5;
 	}
@@ -694,7 +668,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setAstMD5(String newAstMD5) {
 		String oldAstMD5 = astMD5;
 		astMD5 = newAstMD5;
@@ -707,7 +680,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<ComposedMemberCache> getComposedMemberCaches() {
 		if (composedMemberCaches == null) {
 			composedMemberCaches = new EObjectContainmentEList<ComposedMemberCache>(ComposedMemberCache.class, this, TypesPackage.TMODULE__COMPOSED_MEMBER_CACHES);
@@ -720,7 +692,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<Type> getTemporaryTypes() {
 		if (temporaryTypes == null) {
 			temporaryTypes = new EObjectContainmentEList<Type>(Type.class, this, TypesPackage.TMODULE__TEMPORARY_TYPES);
@@ -733,7 +704,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getModuleSpecifier() {
 		return this.getQualifiedName();
 	}

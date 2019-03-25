@@ -109,7 +109,6 @@ public class N4EnumDeclarationImpl extends N4TypeDeclarationImpl implements N4En
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public BigDecimal getDeclaredVersion() {
 		return declaredVersion;
 	}
@@ -119,7 +118,6 @@ public class N4EnumDeclarationImpl extends N4TypeDeclarationImpl implements N4En
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredVersion(BigDecimal newDeclaredVersion) {
 		BigDecimal oldDeclaredVersion = declaredVersion;
 		declaredVersion = newDeclaredVersion;
@@ -132,7 +130,6 @@ public class N4EnumDeclarationImpl extends N4TypeDeclarationImpl implements N4En
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<N4EnumLiteral> getLiterals() {
 		if (literals == null) {
 			literals = new EObjectContainmentEList<N4EnumLiteral>(N4EnumLiteral.class, this, N4JSPackage.N4_ENUM_DECLARATION__LITERALS);
@@ -145,7 +142,6 @@ public class N4EnumDeclarationImpl extends N4TypeDeclarationImpl implements N4En
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TEnum getDefinedTypeAsEnum() {
 		Type _definedType = this.getDefinedType();
 		return ((TEnum) _definedType);
@@ -156,7 +152,6 @@ public class N4EnumDeclarationImpl extends N4TypeDeclarationImpl implements N4En
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public int getVersion() {
 		return this.getDeclaredVersionOrZero();
 	}
@@ -166,7 +161,6 @@ public class N4EnumDeclarationImpl extends N4TypeDeclarationImpl implements N4En
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean hasDeclaredVersion() {
 		BigDecimal _declaredVersion = this.getDeclaredVersion();
 		return (_declaredVersion != null);
@@ -177,7 +171,6 @@ public class N4EnumDeclarationImpl extends N4TypeDeclarationImpl implements N4En
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public int getDeclaredVersionOrZero() {
 		int _xifexpression = (int) 0;
 		boolean _hasDeclaredVersion = this.hasDeclaredVersion();

@@ -100,7 +100,6 @@ public abstract class TConstableElementImpl extends ProxyResolvingEObjectImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isConst() {
 		return const_;
 	}
@@ -110,7 +109,6 @@ public abstract class TConstableElementImpl extends ProxyResolvingEObjectImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setConst(boolean newConst) {
 		boolean oldConst = const_;
 		const_ = newConst;
@@ -123,7 +121,6 @@ public abstract class TConstableElementImpl extends ProxyResolvingEObjectImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getCompileTimeValue() {
 		return compileTimeValue;
 	}
@@ -133,7 +130,6 @@ public abstract class TConstableElementImpl extends ProxyResolvingEObjectImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setCompileTimeValue(String newCompileTimeValue) {
 		String oldCompileTimeValue = compileTimeValue;
 		compileTimeValue = newCompileTimeValue;

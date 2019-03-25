@@ -26,6 +26,7 @@ import org.eclipse.n4js.n4JS.JSXElement
 import org.eclipse.n4js.n4JS.JSXElementName
 import org.eclipse.n4js.n4JS.JSXPropertyAttribute
 import org.eclipse.n4js.n4JS.LabelledStatement
+import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4ClassifierDefinition
 import org.eclipse.n4js.n4JS.N4FieldAccessor
@@ -269,6 +270,8 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 				Argument:
 					return scope_EObject_id(context, reference)
 				Expression:
+					return scope_EObject_id(context, reference)
+				LiteralOrComputedPropertyName:
 					return scope_EObject_id(context, reference)
 			}
 		}

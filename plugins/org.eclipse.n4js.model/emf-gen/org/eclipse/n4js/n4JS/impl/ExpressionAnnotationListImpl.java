@@ -55,7 +55,6 @@ public class ExpressionAnnotationListImpl extends AbstractAnnotationListImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isValidSimpleAssignmentTarget() {
 		return false;
 	}

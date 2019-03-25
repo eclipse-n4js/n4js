@@ -77,7 +77,6 @@ public abstract class AnnotableScriptElementImpl extends AnnotableElementImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public AnnotationList getAnnotationList() {
 		return annotationList;
 	}
@@ -102,7 +101,6 @@ public abstract class AnnotableScriptElementImpl extends AnnotableElementImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setAnnotationList(AnnotationList newAnnotationList) {
 		if (newAnnotationList != annotationList) {
 			NotificationChain msgs = null;
@@ -122,7 +120,6 @@ public abstract class AnnotableScriptElementImpl extends AnnotableElementImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<Annotation> getAnnotations() {
 		EList<Annotation> _elvis = null;
 		AnnotationList _annotationList = this.getAnnotationList();

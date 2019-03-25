@@ -83,7 +83,6 @@ public abstract class ComposedTypeRefImpl extends StaticBaseTypeRefImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<TypeRef> getTypeRefs() {
 		if (typeRefs == null) {
 			typeRefs = new EObjectContainmentEList<TypeRef>(TypeRef.class, this, TypeRefsPackage.COMPOSED_TYPE_REF__TYPE_REFS);
@@ -96,7 +95,6 @@ public abstract class ComposedTypeRefImpl extends StaticBaseTypeRefImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isDynamic() {
 		return false;
 	}
@@ -106,7 +104,6 @@ public abstract class ComposedTypeRefImpl extends StaticBaseTypeRefImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getTypeRefAsString() {
 		final Function1<TypeRef, String> _function = new Function1<TypeRef, String>() {
 			public String apply(final TypeRef it) {

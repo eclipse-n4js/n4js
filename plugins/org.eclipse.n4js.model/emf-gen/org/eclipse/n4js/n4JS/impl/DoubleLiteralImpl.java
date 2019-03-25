@@ -55,7 +55,6 @@ public class DoubleLiteralImpl extends NumericLiteralImpl implements DoubleLiter
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public double toDouble() {
 		return this.getValue().doubleValue();
 	}
@@ -65,7 +64,6 @@ public class DoubleLiteralImpl extends NumericLiteralImpl implements DoubleLiter
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getValueAsString() {
 		BigDecimal _value = this.getValue();
 		boolean _tripleEquals = (_value == null);

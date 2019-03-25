@@ -93,7 +93,6 @@ public class IfStatementImpl extends StatementImpl implements IfStatement {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Expression getExpression() {
 		return expression;
 	}
@@ -118,7 +117,6 @@ public class IfStatementImpl extends StatementImpl implements IfStatement {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setExpression(Expression newExpression) {
 		if (newExpression != expression) {
 			NotificationChain msgs = null;
@@ -138,7 +136,6 @@ public class IfStatementImpl extends StatementImpl implements IfStatement {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Statement getIfStmt() {
 		return ifStmt;
 	}
@@ -163,7 +160,6 @@ public class IfStatementImpl extends StatementImpl implements IfStatement {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setIfStmt(Statement newIfStmt) {
 		if (newIfStmt != ifStmt) {
 			NotificationChain msgs = null;
@@ -183,7 +179,6 @@ public class IfStatementImpl extends StatementImpl implements IfStatement {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Statement getElseStmt() {
 		return elseStmt;
 	}
@@ -208,7 +203,6 @@ public class IfStatementImpl extends StatementImpl implements IfStatement {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setElseStmt(Statement newElseStmt) {
 		if (newElseStmt != elseStmt) {
 			NotificationChain msgs = null;

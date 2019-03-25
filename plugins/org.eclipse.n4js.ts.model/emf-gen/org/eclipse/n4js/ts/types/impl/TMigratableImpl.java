@@ -72,7 +72,6 @@ public abstract class TMigratableImpl extends ProxyResolvingEObjectImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<TMigration> getMigrations() {
 		if (migrations == null) {
 			migrations = new EObjectResolvingEList<TMigration>(TMigration.class, this, TypesPackage.TMIGRATABLE__MIGRATIONS);

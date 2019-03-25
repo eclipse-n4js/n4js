@@ -20,6 +20,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.n4js.ui.utils.AutobuildUtils;
 import org.eclipse.n4js.ui.utils.TimeoutRuntimeException;
 import org.eclipse.n4js.ui.utils.UIUtils;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
@@ -73,14 +74,20 @@ public class EclipseUIUtils {
 	 */
 	public static IViewPart showView(final String id) {
 		checkNotNull(id, "Provided view ID was null.");
-		try {
-			IWorkbenchPage activePage = getActivePage();
-			return activePage.showView(id);
-		} catch (final PartInitException e) {
-			final String message = "Error occurred while initializing view with ID: '" + id + "'.";
-			LOGGER.error(message, e);
-			throw new RuntimeException(message, e);
-		}
+
+		final AtomicReference<IViewPart> result = new AtomicReference<>();
+		final Display display = PlatformUI.getWorkbench().getDisplay();
+		display.syncExec(() -> {
+			try {
+				result.set(getActivePage().showView(id));
+			} catch (PartInitException e) {
+				final String message = "Error occurred while initializing view with ID: '" + id + "'.";
+				LOGGER.error(message, e);
+				throw new RuntimeException(message, e);
+			}
+		});
+
+		return result.get();
 	}
 
 	/** Waits for a given editor to be active in a given workbench page. */

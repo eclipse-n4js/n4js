@@ -34,6 +34,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.internal.navigator.resources.workbench.ResourceLinkHelper;
 import org.eclipse.ui.navigator.ILinkHelper;
+import org.eclipse.xtext.ui.editor.LanguageSpecificURIEditorOpener;
 import org.eclipse.xtext.ui.editor.XtextReadonlyEditorInput;
 import org.eclipse.xtext.ui.editor.utils.EditorUtils;
 
@@ -52,8 +53,12 @@ public class N4JSResourceLinkHelper extends ResourceLinkHelper {
 	private ExternalLibraryWorkspace externalLibraryWorkspace;
 
 	@Inject
+	private LanguageSpecificURIEditorOpener languageSpecificURIEditorOpener;
+
+	@Inject
 	private N4JSProjectExplorerHelper helper;
 
+	// TODO 1259: Obsolete when virtual nodes are removed
 	@Override
 	public void activateEditor(final IWorkbenchPage page, final IStructuredSelection selection) {
 		if (null != selection && !selection.isEmpty()) {
@@ -68,8 +73,10 @@ public class N4JSResourceLinkHelper extends ResourceLinkHelper {
 						final IEditorPart editor = page.findEditor(editorInput);
 						if (null != editor) {
 							page.bringToTop(editor);
-							return;
+						} else {
+							languageSpecificURIEditorOpener.open(uri, true);
 						}
+						return;
 					}
 				}
 			}
@@ -77,8 +84,10 @@ public class N4JSResourceLinkHelper extends ResourceLinkHelper {
 		super.activateEditor(page, selection);
 	}
 
+	// TODO 1259: Obsolete when virtual nodes are removed
 	@Override
-	public IStructuredSelection findSelection(final IEditorInput input) {
+	public IStructuredSelection findSelection(IEditorInput input) {
+
 		final IStructuredSelection selection = super.findSelection(input);
 		if (null == selection || selection.isEmpty() && input instanceof XtextReadonlyEditorInput) {
 			try {
@@ -117,5 +126,4 @@ public class N4JSResourceLinkHelper extends ResourceLinkHelper {
 
 		return null;
 	}
-
 }

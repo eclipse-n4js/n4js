@@ -74,7 +74,6 @@ public class ObjectBindingPatternImpl extends BindingPatternImpl implements Obje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<BindingProperty> getProperties() {
 		if (properties == null) {
 			properties = new EObjectContainmentEList<BindingProperty>(BindingProperty.class, this, N4JSPackage.OBJECT_BINDING_PATTERN__PROPERTIES);

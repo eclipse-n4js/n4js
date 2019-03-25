@@ -61,7 +61,6 @@ public abstract class AnnotableElementImpl extends ProxyResolvingEObjectImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<Annotation> getAnnotations() {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT
@@ -73,7 +72,6 @@ public abstract class AnnotableElementImpl extends ProxyResolvingEObjectImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<Annotation> getAllAnnotations() {
 		final BasicEList<Annotation> result = XcoreCollectionLiterals.<Annotation>newBasicEList();
 		final EObject parent = this.eContainer();

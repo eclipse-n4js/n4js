@@ -1,0 +1,17 @@
+{
+	"name": "n4js.lang",
+	"version": "0.0.1",
+	"dependencies": {
+		"n4js-es5": "0.13.1"
+	},
+	"n4js": {
+		"projectType": "library",
+		"vendorId": "org.eclipse.n4js",
+		"sources": {
+			"source": [
+				"src"
+			]
+		},
+		"output": "src-gen"
+	}
+}

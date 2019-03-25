@@ -70,7 +70,6 @@ public class ExportedVariableBindingImpl extends VariableBindingImpl implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TVariable getDefinedVariable() {
 		if (definedVariable != null && definedVariable.eIsProxy()) {
 			InternalEObject oldDefinedVariable = (InternalEObject)definedVariable;
@@ -97,7 +96,6 @@ public class ExportedVariableBindingImpl extends VariableBindingImpl implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDefinedVariable(TVariable newDefinedVariable) {
 		TVariable oldDefinedVariable = definedVariable;
 		definedVariable = newDefinedVariable;

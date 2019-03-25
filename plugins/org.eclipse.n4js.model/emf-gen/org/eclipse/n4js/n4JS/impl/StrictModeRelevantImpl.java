@@ -79,7 +79,6 @@ public abstract class StrictModeRelevantImpl extends ProxyResolvingEObjectImpl i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isStrictMode() {
 		return strictMode;
 	}
@@ -89,7 +88,6 @@ public abstract class StrictModeRelevantImpl extends ProxyResolvingEObjectImpl i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setStrictMode(boolean newStrictMode) {
 		boolean oldStrictMode = strictMode;
 		strictMode = newStrictMode;

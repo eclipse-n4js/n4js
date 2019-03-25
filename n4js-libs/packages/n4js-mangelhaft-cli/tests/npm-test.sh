@@ -14,7 +14,6 @@ cd `dirname $0`
 
 ../bin/n4js-mangelhaft-cli.js \
     --compile \
-    --targetPlatformInstallLocation ./build/npm \
     --xunitReportFile ./build/report.xml \
     --xunitReportName test-report \
     --xunitReportPackage TestPrj \

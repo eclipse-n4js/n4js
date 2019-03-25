@@ -53,7 +53,6 @@ public class AbstractIntLiteralImpl extends NumericLiteralImpl implements Abstra
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public int toInt() {
 		return this.getValue().intValue();
 	}
@@ -63,7 +62,6 @@ public class AbstractIntLiteralImpl extends NumericLiteralImpl implements Abstra
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public long toLong() {
 		return this.getValue().longValue();
 	}
@@ -73,7 +71,6 @@ public class AbstractIntLiteralImpl extends NumericLiteralImpl implements Abstra
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public BigInteger toBigInteger() {
 		return this.getValue().toBigInteger();
 	}

@@ -104,7 +104,6 @@ public class AnnotationImpl extends ProxyResolvingEObjectImpl implements Annotat
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getName() {
 		return name;
 	}
@@ -114,7 +113,6 @@ public class AnnotationImpl extends ProxyResolvingEObjectImpl implements Annotat
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -127,7 +125,6 @@ public class AnnotationImpl extends ProxyResolvingEObjectImpl implements Annotat
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<AnnotationArgument> getArgs() {
 		if (args == null) {
 			args = new EObjectContainmentEList<AnnotationArgument>(AnnotationArgument.class, this, N4JSPackage.ANNOTATION__ARGS);
@@ -140,7 +137,6 @@ public class AnnotationImpl extends ProxyResolvingEObjectImpl implements Annotat
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EObject getAnnotatedElement() {
 		EObject _eContainer = this.eContainer();
 		if ((_eContainer instanceof AbstractAnnotationList)) {

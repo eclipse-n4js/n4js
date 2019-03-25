@@ -54,7 +54,6 @@ public class UnionTypeExpressionImpl extends ComposedTypeRefImpl implements Unio
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getTypeRefAsString() {
 		String _typeRefAsString = super.getTypeRefAsString();
 		return ("union" + _typeRefAsString);

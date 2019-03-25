@@ -114,7 +114,6 @@ public class N4GetterDeclarationImpl extends GetterDeclarationImpl implements N4
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<N4Modifier> getDeclaredModifiers() {
 		if (declaredModifiers == null) {
 			declaredModifiers = new EDataTypeEList<N4Modifier>(N4Modifier.class, this, N4JSPackage.N4_GETTER_DECLARATION__DECLARED_MODIFIERS);
@@ -127,7 +126,6 @@ public class N4GetterDeclarationImpl extends GetterDeclarationImpl implements N4
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public N4ClassifierDefinition getOwner() {
 		if (eContainerFeatureID() != N4JSPackage.N4_GETTER_DECLARATION__OWNER) return null;
 		return (N4ClassifierDefinition)eContainer();
@@ -158,7 +156,6 @@ public class N4GetterDeclarationImpl extends GetterDeclarationImpl implements N4
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setOwner(N4ClassifierDefinition newOwner) {
 		if (newOwner != eInternalContainer() || (eContainerFeatureID() != N4JSPackage.N4_GETTER_DECLARATION__OWNER && newOwner != null)) {
 			if (EcoreUtil.isAncestor(this, newOwner))
@@ -180,7 +177,6 @@ public class N4GetterDeclarationImpl extends GetterDeclarationImpl implements N4
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public N4MemberAnnotationList getAnnotationList() {
 		return annotationList;
 	}
@@ -205,7 +201,6 @@ public class N4GetterDeclarationImpl extends GetterDeclarationImpl implements N4
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setAnnotationList(N4MemberAnnotationList newAnnotationList) {
 		if (newAnnotationList != annotationList) {
 			NotificationChain msgs = null;
@@ -225,7 +220,6 @@ public class N4GetterDeclarationImpl extends GetterDeclarationImpl implements N4
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TMember getDefinedTypeElement() {
 		return this.getDefinedGetter();
 	}
@@ -235,7 +229,6 @@ public class N4GetterDeclarationImpl extends GetterDeclarationImpl implements N4
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isAbstract() {
 		return ((((this.eContainer() instanceof N4InterfaceDeclaration) && (this.getBody() == null)) && 
 			(!IterableExtensions.<Annotation>exists(this.getAnnotations(), new Function1<Annotation, Boolean>() {
@@ -252,7 +245,6 @@ public class N4GetterDeclarationImpl extends GetterDeclarationImpl implements N4
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isValidName() {
 		String _name = this.getName();
 		boolean _equals = Objects.equal("prototype", _name);
@@ -284,7 +276,6 @@ public class N4GetterDeclarationImpl extends GetterDeclarationImpl implements N4
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<Annotation> getAnnotations() {
 		EList<Annotation> _elvis = null;
 		N4MemberAnnotationList _annotationList = this.getAnnotationList();
@@ -306,7 +297,6 @@ public class N4GetterDeclarationImpl extends GetterDeclarationImpl implements N4
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isDeclaredStatic() {
 		return this.getDeclaredModifiers().contains(N4Modifier.STATIC);
 	}
@@ -316,7 +306,6 @@ public class N4GetterDeclarationImpl extends GetterDeclarationImpl implements N4
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isStatic() {
 		return this.isDeclaredStatic();
 	}
@@ -326,7 +315,6 @@ public class N4GetterDeclarationImpl extends GetterDeclarationImpl implements N4
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isDeclaredFinal() {
 		final Function1<Annotation, Boolean> _function = new Function1<Annotation, Boolean>() {
 			public Boolean apply(final Annotation it) {
@@ -342,7 +330,6 @@ public class N4GetterDeclarationImpl extends GetterDeclarationImpl implements N4
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isFinal() {
 		return this.isDeclaredFinal();
 	}
@@ -352,7 +339,6 @@ public class N4GetterDeclarationImpl extends GetterDeclarationImpl implements N4
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isConstructor() {
 		return false;
 	}
@@ -362,7 +348,6 @@ public class N4GetterDeclarationImpl extends GetterDeclarationImpl implements N4
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isCallableConstructor() {
 		return false;
 	}

@@ -13,8 +13,8 @@ package org.eclipse.n4js.runner.tests;
 import static org.junit.Assert.assertTrue;
 
 import org.eclipse.n4js.N4JSInjectorProvider;
-import org.eclipse.n4js.binaries.BinaryCommandFactory;
-import org.eclipse.n4js.binaries.nodejs.NodeBinariesConstants;
+import org.eclipse.n4js.binaries.BinariesConstants;
+import org.eclipse.n4js.binaries.BinariesCommandFactory;
 import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.semver.SemverHelper;
@@ -44,7 +44,7 @@ public class NodeVersionTest {
 	private NpmBinary npmBinary;
 
 	@Inject
-	private BinaryCommandFactory commandFactory;
+	private BinariesCommandFactory commandFactory;
 
 	@Inject
 	private SemverHelper semverHelper;
@@ -58,9 +58,9 @@ public class NodeVersionTest {
 		final VersionNumber currentVersion = semverHelper.parseVersionNumber(result.getStdOut().trim());
 
 		String msg = "Version of npm in " + npmBinary.getBinaryAbsolutePath() + ": " + currentVersion
-				+ ",  need at least " + NodeBinariesConstants.NPM_MIN_VERSION;
+				+ ",  need at least " + BinariesConstants.NPM_MIN_VERSION;
 
-		VersionNumberRelation relation = SemverMatcher.relation(currentVersion, NodeBinariesConstants.NPM_MIN_VERSION);
+		VersionNumberRelation relation = SemverMatcher.relation(currentVersion, BinariesConstants.NPM_MIN_VERSION);
 		assertTrue(msg, relation.isGreaterOrEqual());
 	}
 
@@ -73,9 +73,9 @@ public class NodeVersionTest {
 		final VersionNumber currentVersion = semverHelper.parseVersionNumber(result.getStdOut().trim());
 
 		String msg = "Version of node in " + nodeJsBinary.getBinaryAbsolutePath() + ": " + currentVersion
-				+ ",  need at least " + NodeBinariesConstants.NODE_MIN_VERSION;
+				+ ",  need at least " + BinariesConstants.NODE_MIN_VERSION;
 
-		VersionNumberRelation relation = SemverMatcher.relation(currentVersion, NodeBinariesConstants.NODE_MIN_VERSION);
+		VersionNumberRelation relation = SemverMatcher.relation(currentVersion, BinariesConstants.NODE_MIN_VERSION);
 		assertTrue(msg, relation.isGreaterOrEqual());
 	}
 

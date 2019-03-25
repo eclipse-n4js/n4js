@@ -64,7 +64,7 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 	def checkMultipleDefaultExports(Script script) {
 		val defaultExports = script.eAllContents.filter(ExportDeclaration).filter[isDefaultExport].toList;
 		defaultExports.tail.forEach[
-			addIssue(getMessageForIMP_DUPLICATE_DEFAULT_EXPORT, it, N4JSPackage.eINSTANCE.exportDeclaration_DefaultExport, IMP_DUPLICATE_DEFAULT_EXPORT);
+			addIssue(getMessageForIMP_DEFAULT_EXPORT_DUPLICATE, it, N4JSPackage.eINSTANCE.exportDeclaration_DefaultExport, IMP_DEFAULT_EXPORT_DUPLICATE);
 		]
 	}
 

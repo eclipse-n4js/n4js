@@ -111,7 +111,6 @@ public class N4InterfaceDeclarationImpl extends N4ClassifierDeclarationImpl impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public BigDecimal getDeclaredVersion() {
 		return declaredVersion;
 	}
@@ -121,7 +120,6 @@ public class N4InterfaceDeclarationImpl extends N4ClassifierDeclarationImpl impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredVersion(BigDecimal newDeclaredVersion) {
 		BigDecimal oldDeclaredVersion = declaredVersion;
 		declaredVersion = newDeclaredVersion;
@@ -134,7 +132,6 @@ public class N4InterfaceDeclarationImpl extends N4ClassifierDeclarationImpl impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<ParameterizedTypeRef> getSuperInterfaceRefs() {
 		if (superInterfaceRefs == null) {
 			superInterfaceRefs = new EObjectContainmentEList<ParameterizedTypeRef>(ParameterizedTypeRef.class, this, N4JSPackage.N4_INTERFACE_DECLARATION__SUPER_INTERFACE_REFS);
@@ -147,7 +144,6 @@ public class N4InterfaceDeclarationImpl extends N4ClassifierDeclarationImpl impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TInterface getDefinedTypeAsInterface() {
 		Type _definedType = this.getDefinedType();
 		return ((TInterface) _definedType);
@@ -158,7 +154,6 @@ public class N4InterfaceDeclarationImpl extends N4ClassifierDeclarationImpl impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Iterable<ParameterizedTypeRef> getSuperClassifierRefs() {
 		return this.getSuperInterfaceRefs();
 	}
@@ -168,7 +163,6 @@ public class N4InterfaceDeclarationImpl extends N4ClassifierDeclarationImpl impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Iterable<ParameterizedTypeRef> getImplementedOrExtendedInterfaceRefs() {
 		return this.getSuperInterfaceRefs();
 	}
@@ -178,7 +172,6 @@ public class N4InterfaceDeclarationImpl extends N4ClassifierDeclarationImpl impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public int getVersion() {
 		return this.getDeclaredVersionOrZero();
 	}
@@ -188,7 +181,6 @@ public class N4InterfaceDeclarationImpl extends N4ClassifierDeclarationImpl impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean hasDeclaredVersion() {
 		BigDecimal _declaredVersion = this.getDeclaredVersion();
 		return (_declaredVersion != null);
@@ -199,7 +191,6 @@ public class N4InterfaceDeclarationImpl extends N4ClassifierDeclarationImpl impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public int getDeclaredVersionOrZero() {
 		int _xifexpression = (int) 0;
 		boolean _hasDeclaredVersion = this.hasDeclaredVersion();

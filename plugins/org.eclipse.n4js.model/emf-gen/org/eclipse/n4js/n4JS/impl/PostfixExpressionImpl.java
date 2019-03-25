@@ -92,7 +92,6 @@ public class PostfixExpressionImpl extends ExpressionImpl implements PostfixExpr
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Expression getExpression() {
 		return expression;
 	}
@@ -117,7 +116,6 @@ public class PostfixExpressionImpl extends ExpressionImpl implements PostfixExpr
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setExpression(Expression newExpression) {
 		if (newExpression != expression) {
 			NotificationChain msgs = null;
@@ -137,7 +135,6 @@ public class PostfixExpressionImpl extends ExpressionImpl implements PostfixExpr
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public PostfixOperator getOp() {
 		return op;
 	}
@@ -147,7 +144,6 @@ public class PostfixExpressionImpl extends ExpressionImpl implements PostfixExpr
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setOp(PostfixOperator newOp) {
 		PostfixOperator oldOp = op;
 		op = newOp == null ? OP_EDEFAULT : newOp;

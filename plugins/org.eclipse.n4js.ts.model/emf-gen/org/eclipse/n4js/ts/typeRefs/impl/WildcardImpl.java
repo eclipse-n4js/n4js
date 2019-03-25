@@ -113,7 +113,6 @@ public class WildcardImpl extends TypeArgumentImpl implements Wildcard {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TypeRef getDeclaredUpperBound() {
 		return declaredUpperBound;
 	}
@@ -138,7 +137,6 @@ public class WildcardImpl extends TypeArgumentImpl implements Wildcard {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredUpperBound(TypeRef newDeclaredUpperBound) {
 		if (newDeclaredUpperBound != declaredUpperBound) {
 			NotificationChain msgs = null;
@@ -158,7 +156,6 @@ public class WildcardImpl extends TypeArgumentImpl implements Wildcard {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TypeRef getDeclaredLowerBound() {
 		return declaredLowerBound;
 	}
@@ -183,7 +180,6 @@ public class WildcardImpl extends TypeArgumentImpl implements Wildcard {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredLowerBound(TypeRef newDeclaredLowerBound) {
 		if (newDeclaredLowerBound != declaredLowerBound) {
 			NotificationChain msgs = null;
@@ -203,7 +199,6 @@ public class WildcardImpl extends TypeArgumentImpl implements Wildcard {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isUsingInOutNotation() {
 		return usingInOutNotation;
 	}
@@ -213,7 +208,6 @@ public class WildcardImpl extends TypeArgumentImpl implements Wildcard {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setUsingInOutNotation(boolean newUsingInOutNotation) {
 		boolean oldUsingInOutNotation = usingInOutNotation;
 		usingInOutNotation = newUsingInOutNotation;
@@ -226,7 +220,6 @@ public class WildcardImpl extends TypeArgumentImpl implements Wildcard {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TypeRef getDeclaredOrImplicitUpperBound() {
 		final TypeRef declUB = this.getDeclaredUpperBound();
 		if ((declUB != null)) {
@@ -273,7 +266,6 @@ public class WildcardImpl extends TypeArgumentImpl implements Wildcard {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isImplicitUpperBoundInEffect() {
 		return (((this.getDeclaredUpperBound() == null) && (this.getDeclaredLowerBound() == null)) && (this.getDeclaredOrImplicitUpperBound() != null));
 	}
@@ -283,7 +275,6 @@ public class WildcardImpl extends TypeArgumentImpl implements Wildcard {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getTypeRefAsString() {
 		return WildcardAsStringUtils.getTypeRefAsString_workaround(this);
 	}

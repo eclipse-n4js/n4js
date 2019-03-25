@@ -55,7 +55,6 @@ public class BuiltInTypeImpl extends TypeImpl implements BuiltInType {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<TypeVariable> getTypeVars() {
 		return XcoreCollectionLiterals.<TypeVariable>emptyEList();
 	}

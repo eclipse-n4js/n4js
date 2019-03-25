@@ -93,7 +93,6 @@ public class ArgumentImpl extends ProxyResolvingEObjectImpl implements Argument 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isSpread() {
 		return spread;
 	}
@@ -103,7 +102,6 @@ public class ArgumentImpl extends ProxyResolvingEObjectImpl implements Argument 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setSpread(boolean newSpread) {
 		boolean oldSpread = spread;
 		spread = newSpread;
@@ -116,7 +114,6 @@ public class ArgumentImpl extends ProxyResolvingEObjectImpl implements Argument 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Expression getExpression() {
 		return expression;
 	}
@@ -141,7 +138,6 @@ public class ArgumentImpl extends ProxyResolvingEObjectImpl implements Argument 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setExpression(Expression newExpression) {
 		if (newExpression != expression) {
 			NotificationChain msgs = null;

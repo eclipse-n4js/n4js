@@ -54,7 +54,6 @@ public class IntersectionTypeExpressionImpl extends ComposedTypeRefImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getTypeRefAsString() {
 		String _typeRefAsString = super.getTypeRefAsString();
 		return ("intersection" + _typeRefAsString);

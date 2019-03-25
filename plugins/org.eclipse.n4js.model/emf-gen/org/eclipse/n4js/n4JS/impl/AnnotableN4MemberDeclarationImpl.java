@@ -77,7 +77,6 @@ public abstract class AnnotableN4MemberDeclarationImpl extends N4MemberDeclarati
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public N4MemberAnnotationList getAnnotationList() {
 		return annotationList;
 	}
@@ -102,7 +101,6 @@ public abstract class AnnotableN4MemberDeclarationImpl extends N4MemberDeclarati
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setAnnotationList(N4MemberAnnotationList newAnnotationList) {
 		if (newAnnotationList != annotationList) {
 			NotificationChain msgs = null;
@@ -122,7 +120,6 @@ public abstract class AnnotableN4MemberDeclarationImpl extends N4MemberDeclarati
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<Annotation> getAnnotations() {
 		EList<Annotation> _elvis = null;
 		N4MemberAnnotationList _annotationList = this.getAnnotationList();

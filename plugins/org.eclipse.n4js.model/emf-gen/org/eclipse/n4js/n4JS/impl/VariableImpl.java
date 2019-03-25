@@ -89,7 +89,6 @@ public abstract class VariableImpl extends TypedElementImpl implements Variable 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getName() {
 		return name;
 	}
@@ -99,7 +98,6 @@ public abstract class VariableImpl extends TypedElementImpl implements Variable 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -112,7 +110,6 @@ public abstract class VariableImpl extends TypedElementImpl implements Variable 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isConst() {
 		return false;
 	}
@@ -122,7 +119,6 @@ public abstract class VariableImpl extends TypedElementImpl implements Variable 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TModule getContainingModule() {
 		return EcoreUtil2.<TModule>getContainerOfType(this, TModule.class);
 	}

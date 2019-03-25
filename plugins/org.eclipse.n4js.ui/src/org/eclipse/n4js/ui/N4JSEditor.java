@@ -13,8 +13,10 @@ package org.eclipse.n4js.ui;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -22,7 +24,12 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
 import org.eclipse.jface.viewers.IDecoration;
+import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.ts.ui.navigation.URIBasedStorage;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
+import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
+import org.eclipse.n4js.ui.labeling.N4JSDescriptionLabelProvider;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPageLayout;
@@ -42,6 +49,10 @@ import org.eclipse.xtext.ui.editor.reconciler.XtextReconciler;
 import com.google.inject.Inject;
 
 /**
+ * The n4js editor usually shows files of platform URIs.
+ * <p>
+ * In case of external library files, file-uris must be shown. To enable support for navigation in the project explorer,
+ * a conversion from file to platform uri is done.
  */
 public class N4JSEditor extends XtextEditor implements IShowInSource, IShowInTargetList {
 
@@ -54,8 +65,68 @@ public class N4JSEditor extends XtextEditor implements IShowInSource, IShowInTar
 	@Inject
 	private IImageHelper imageHelper;
 
+	@Inject
+	private EclipseExternalLibraryWorkspace extWS;
+
+	@Inject
+	private N4JSDescriptionLabelProvider labelProvider;
+
 	/* package */ void setErrorTickUpdater(N4JSEditorErrorTickUpdater errorTickUpdater) {
 		this.errorTickUpdater = errorTickUpdater;
+	}
+
+	@Override
+	public boolean isEditable() {
+		IEditorInput input = getEditorInput();
+		if (input instanceof FileEditorInput) {
+			FileEditorInput fei = (FileEditorInput) input;
+			IFile inputFile = fei.getFile();
+			if (inputFile.toString().contains(N4JSGlobals.NODE_MODULES)) {
+				URI fileUri = URIUtils.toFileUri(inputFile);
+				URI project = extWS.findProjectWith(fileUri);
+				boolean editorShowsExternalFile = project != null;
+				if (editorShowsExternalFile) {
+					return false;
+				}
+			}
+		}
+		return super.isEditable();
+	}
+
+	@Override
+	public Image getDefaultImage() {
+		Image defaultImage = getImageN4JSVariantOrGiven(super.getDefaultImage());
+		return defaultImage;
+	}
+
+	/** This will show the icon variant according to the file extension: n4js, n4jsx, n4jsd, js, jsx */
+	protected Image getImageN4JSVariantOrGiven(Image titleImage) {
+		IEditorInput input = getEditorInput();
+		URI uri = null;
+		if (input instanceof XtextReadonlyEditorInput) {
+			XtextReadonlyEditorInput xrei = (XtextReadonlyEditorInput) input;
+			try {
+				IStorage storage = xrei.getStorage();
+				if (storage instanceof URIBasedStorage) {
+					URIBasedStorage ubs = (URIBasedStorage) storage;
+					uri = ubs.getURI();
+				}
+			} catch (CoreException e) {
+				e.printStackTrace();
+			}
+		}
+		if (input instanceof FileEditorInput) {
+			FileEditorInput fei = (FileEditorInput) input;
+			uri = URIUtils.convert(fei.getFile());
+
+		}
+		if (uri != null) {
+			Image image = labelProvider.getImageForURI(uri);
+			if (image != null) {
+				titleImage = image;
+			}
+		}
+		return titleImage;
 	}
 
 	/**

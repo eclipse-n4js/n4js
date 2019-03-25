@@ -134,7 +134,6 @@ public class ScriptImpl extends VariableEnvironmentElementImpl implements Script
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<Annotation> getAnnotations() {
 		if (annotations == null) {
 			annotations = new EObjectContainmentEList<Annotation>(Annotation.class, this, N4JSPackage.SCRIPT__ANNOTATIONS);
@@ -147,7 +146,6 @@ public class ScriptImpl extends VariableEnvironmentElementImpl implements Script
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<ScriptElement> getScriptElements() {
 		if (scriptElements == null) {
 			scriptElements = new EObjectContainmentEList<ScriptElement>(ScriptElement.class, this, N4JSPackage.SCRIPT__SCRIPT_ELEMENTS);
@@ -160,7 +158,6 @@ public class ScriptImpl extends VariableEnvironmentElementImpl implements Script
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TModule getModule() {
 		if (module != null && module.eIsProxy()) {
 			InternalEObject oldModule = (InternalEObject)module;
@@ -187,7 +184,6 @@ public class ScriptImpl extends VariableEnvironmentElementImpl implements Script
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setModule(TModule newModule) {
 		TModule oldModule = module;
 		module = newModule;
@@ -200,7 +196,6 @@ public class ScriptImpl extends VariableEnvironmentElementImpl implements Script
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isFlaggedUsageMarkingFinished() {
 		return flaggedUsageMarkingFinished;
 	}
@@ -210,7 +205,6 @@ public class ScriptImpl extends VariableEnvironmentElementImpl implements Script
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setFlaggedUsageMarkingFinished(boolean newFlaggedUsageMarkingFinished) {
 		boolean oldFlaggedUsageMarkingFinished = flaggedUsageMarkingFinished;
 		flaggedUsageMarkingFinished = newFlaggedUsageMarkingFinished;
@@ -223,7 +217,6 @@ public class ScriptImpl extends VariableEnvironmentElementImpl implements Script
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<Annotation> getAllAnnotations() {
 		final BasicEList<Annotation> result = XcoreCollectionLiterals.<Annotation>newBasicEList();
 		final EObject parent = this.eContainer();

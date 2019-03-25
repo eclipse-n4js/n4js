@@ -244,7 +244,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isExternal() {
 		return external;
 	}
@@ -254,7 +253,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setExternal(boolean newExternal) {
 		boolean oldExternal = external;
 		external = newExternal;
@@ -267,7 +265,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isDeclaredAbstract() {
 		return declaredAbstract;
 	}
@@ -277,7 +274,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredAbstract(boolean newDeclaredAbstract) {
 		boolean oldDeclaredAbstract = declaredAbstract;
 		declaredAbstract = newDeclaredAbstract;
@@ -290,7 +286,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isDeclaredN4JS() {
 		return declaredN4JS;
 	}
@@ -300,7 +295,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredN4JS(boolean newDeclaredN4JS) {
 		boolean oldDeclaredN4JS = declaredN4JS;
 		declaredN4JS = newDeclaredN4JS;
@@ -313,7 +307,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isDeclaredFinal() {
 		return declaredFinal;
 	}
@@ -323,7 +316,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredFinal(boolean newDeclaredFinal) {
 		boolean oldDeclaredFinal = declaredFinal;
 		declaredFinal = newDeclaredFinal;
@@ -336,7 +328,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isDeclaredPolyfill() {
 		return declaredPolyfill;
 	}
@@ -346,7 +337,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredPolyfill(boolean newDeclaredPolyfill) {
 		boolean oldDeclaredPolyfill = declaredPolyfill;
 		declaredPolyfill = newDeclaredPolyfill;
@@ -359,7 +349,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isDeclaredStaticPolyfill() {
 		return declaredStaticPolyfill;
 	}
@@ -369,7 +358,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredStaticPolyfill(boolean newDeclaredStaticPolyfill) {
 		boolean oldDeclaredStaticPolyfill = declaredStaticPolyfill;
 		declaredStaticPolyfill = newDeclaredStaticPolyfill;
@@ -382,7 +370,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isObservable() {
 		return observable;
 	}
@@ -392,7 +379,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setObservable(boolean newObservable) {
 		boolean oldObservable = observable;
 		observable = newObservable;
@@ -405,7 +391,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public ParameterizedTypeRef getSuperClassRef() {
 		return superClassRef;
 	}
@@ -430,7 +415,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setSuperClassRef(ParameterizedTypeRef newSuperClassRef) {
 		if (newSuperClassRef != superClassRef) {
 			NotificationChain msgs = null;
@@ -450,7 +434,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<ParameterizedTypeRef> getImplementedInterfaceRefs() {
 		if (implementedInterfaceRefs == null) {
 			implementedInterfaceRefs = new EObjectContainmentEList<ParameterizedTypeRef>(ParameterizedTypeRef.class, this, TypesPackage.TCLASS__IMPLEMENTED_INTERFACE_REFS);
@@ -463,7 +446,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isAbstract() {
 		return this.isDeclaredAbstract();
 	}
@@ -473,7 +455,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TClass getSuperClass() {
 		ParameterizedTypeRef _superClassRef = this.getSuperClassRef();
 		Type _declaredType = null;
@@ -496,7 +477,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Iterable<ParameterizedTypeRef> getSuperClassifierRefs() {
 		ParameterizedTypeRef _superClassRef = this.getSuperClassRef();
 		boolean _tripleNotEquals = (_superClassRef != null);
@@ -513,7 +493,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Iterable<ParameterizedTypeRef> getImplementedOrExtendedInterfaceRefs() {
 		return this.getImplementedInterfaceRefs();
 	}
@@ -523,7 +502,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isPolyfill() {
 		return this.isDeclaredPolyfill();
 	}
@@ -533,7 +511,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isStaticPolyfill() {
 		return this.isDeclaredStaticPolyfill();
 	}
@@ -543,7 +520,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isFinal() {
 		return this.isDeclaredFinal();
 	}

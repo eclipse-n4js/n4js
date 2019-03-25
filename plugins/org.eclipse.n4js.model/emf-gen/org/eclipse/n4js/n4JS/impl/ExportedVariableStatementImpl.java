@@ -106,7 +106,6 @@ public class ExportedVariableStatementImpl extends VariableStatementImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public AnnotationList getAnnotationList() {
 		return annotationList;
 	}
@@ -131,7 +130,6 @@ public class ExportedVariableStatementImpl extends VariableStatementImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setAnnotationList(AnnotationList newAnnotationList) {
 		if (newAnnotationList != annotationList) {
 			NotificationChain msgs = null;
@@ -151,7 +149,6 @@ public class ExportedVariableStatementImpl extends VariableStatementImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<N4Modifier> getDeclaredModifiers() {
 		if (declaredModifiers == null) {
 			declaredModifiers = new EDataTypeEList<N4Modifier>(N4Modifier.class, this, N4JSPackage.EXPORTED_VARIABLE_STATEMENT__DECLARED_MODIFIERS);
@@ -164,7 +161,6 @@ public class ExportedVariableStatementImpl extends VariableStatementImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isExternal() {
 		return this.getDeclaredModifiers().contains(N4Modifier.EXTERNAL);
 	}
@@ -174,7 +170,6 @@ public class ExportedVariableStatementImpl extends VariableStatementImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<Annotation> getAnnotations() {
 		EList<Annotation> _elvis = null;
 		AnnotationList _annotationList = this.getAnnotationList();
@@ -196,7 +191,6 @@ public class ExportedVariableStatementImpl extends VariableStatementImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<Annotation> getAllAnnotations() {
 		final BasicEList<Annotation> result = XcoreCollectionLiterals.<Annotation>newBasicEList();
 		final EObject parent = this.eContainer();
@@ -214,7 +208,6 @@ public class ExportedVariableStatementImpl extends VariableStatementImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isExported() {
 		EObject _eContainer = this.eContainer();
 		return (_eContainer instanceof ExportDeclaration);
@@ -225,7 +218,6 @@ public class ExportedVariableStatementImpl extends VariableStatementImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isExportedAsDefault() {
 		return (this.isExported() && ((ExportDeclaration) this.eContainer()).isDefaultExport());
 	}
@@ -235,7 +227,6 @@ public class ExportedVariableStatementImpl extends VariableStatementImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getExportedName() {
 		boolean _isExported = this.isExported();
 		if (_isExported) {
@@ -268,7 +259,6 @@ public class ExportedVariableStatementImpl extends VariableStatementImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isToplevel() {
 		EObject _eContainer = this.eContainer();
 		if ((_eContainer instanceof ExportDeclaration)) {

@@ -53,7 +53,6 @@ public class DeferredTypeRefImpl extends TypeRefImpl implements DeferredTypeRef 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getTypeRefAsString() {
 		return "*deferred*";
 	}

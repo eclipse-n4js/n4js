@@ -275,7 +275,7 @@ public class ContentAssistXpectMethod {
 	 contentAssistList              at 'a.<|>methodA'       proposals             unordered --> methodA2, methodA
 	 contentAssistList              at 'a.<|>methodA'       display   'methodA2'            --> 'methodA2(): any - A'
 	 contentAssistList kind 'smart' at 'a.<|>methodA'       display   'methodA2'            --> 'methodA2(): any - A'
-
+	
 	                    kind        offset                  checkType  selected    mode
 	                    arg4        arg2                    arg3       arg5        arg6
 	 */
@@ -330,6 +330,12 @@ public class ContentAssistXpectMethod {
 
 		// System.out.println("---|" + expectedText + "|---");
 		List<String> proposals = getProposalDisplayStrings(resource, offset, kind);
+
+		// need to remove all ',' characters in proposal display strings (both Xpect internal code and method
+		// #separateOnCommaAndQuote() below will use ',' as special character inside expectations to split the
+		// expectation text, so an expectation containing commas as ordinary characters within actual display
+		// strings of proposals is not supported by the below code)
+		proposals.replaceAll(str -> str.replace(",", ""));
 
 		if (("display").equals(checkType)) {
 

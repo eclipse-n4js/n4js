@@ -103,7 +103,6 @@ public class TemplateSegmentImpl extends LiteralImpl implements TemplateSegment 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getValue() {
 		return value;
 	}
@@ -113,7 +112,6 @@ public class TemplateSegmentImpl extends LiteralImpl implements TemplateSegment 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setValue(String newValue) {
 		String oldValue = value;
 		value = newValue;
@@ -126,7 +124,6 @@ public class TemplateSegmentImpl extends LiteralImpl implements TemplateSegment 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getRawValue() {
 		return rawValue;
 	}
@@ -136,7 +133,6 @@ public class TemplateSegmentImpl extends LiteralImpl implements TemplateSegment 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setRawValue(String newRawValue) {
 		String oldRawValue = rawValue;
 		rawValue = newRawValue;
@@ -149,7 +145,6 @@ public class TemplateSegmentImpl extends LiteralImpl implements TemplateSegment 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getValueAsString() {
 		return this.getValue();
 	}

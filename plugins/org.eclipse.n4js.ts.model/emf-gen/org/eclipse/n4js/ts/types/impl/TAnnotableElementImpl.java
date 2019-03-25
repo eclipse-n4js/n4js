@@ -76,7 +76,6 @@ public class TAnnotableElementImpl extends ProxyResolvingEObjectImpl implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<TAnnotation> getAnnotations() {
 		if (annotations == null) {
 			annotations = new EObjectContainmentEList<TAnnotation>(TAnnotation.class, this, TypesPackage.TANNOTABLE_ELEMENT__ANNOTATIONS);

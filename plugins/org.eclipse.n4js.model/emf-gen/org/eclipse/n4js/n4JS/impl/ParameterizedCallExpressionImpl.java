@@ -106,7 +106,6 @@ public class ParameterizedCallExpressionImpl extends ExpressionImpl implements P
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<TypeRef> getTypeArgs() {
 		if (typeArgs == null) {
 			typeArgs = new EObjectContainmentEList<TypeRef>(TypeRef.class, this, N4JSPackage.PARAMETERIZED_CALL_EXPRESSION__TYPE_ARGS);
@@ -119,7 +118,6 @@ public class ParameterizedCallExpressionImpl extends ExpressionImpl implements P
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Expression getTarget() {
 		return target;
 	}
@@ -144,7 +142,6 @@ public class ParameterizedCallExpressionImpl extends ExpressionImpl implements P
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setTarget(Expression newTarget) {
 		if (newTarget != target) {
 			NotificationChain msgs = null;
@@ -164,7 +161,6 @@ public class ParameterizedCallExpressionImpl extends ExpressionImpl implements P
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<Argument> getArguments() {
 		if (arguments == null) {
 			arguments = new EObjectContainmentEList<Argument>(Argument.class, this, N4JSPackage.PARAMETERIZED_CALL_EXPRESSION__ARGUMENTS);
@@ -177,7 +173,6 @@ public class ParameterizedCallExpressionImpl extends ExpressionImpl implements P
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Expression getReceiver() {
 		Expression _xifexpression = null;
 		Expression _target = this.getTarget();
@@ -196,7 +191,6 @@ public class ParameterizedCallExpressionImpl extends ExpressionImpl implements P
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isParameterized() {
 		boolean _isEmpty = this.getTypeArgs().isEmpty();
 		return (!_isEmpty);

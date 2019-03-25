@@ -66,4 +66,5 @@ public interface IN4JSEclipseCore extends IN4JSCore {
 
 	@Override
 	Optional<? extends IN4JSEclipseProject> findProject(URI nestedLocation);
+
 }

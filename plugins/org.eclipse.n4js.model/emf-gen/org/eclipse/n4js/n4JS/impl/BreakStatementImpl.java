@@ -91,7 +91,6 @@ public class BreakStatementImpl extends StatementImpl implements BreakStatement 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public LabelledStatement getLabel() {
 		if (label != null && label.eIsProxy()) {
 			InternalEObject oldLabel = (InternalEObject)label;
@@ -118,7 +117,6 @@ public class BreakStatementImpl extends StatementImpl implements BreakStatement 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setLabel(LabelledStatement newLabel) {
 		LabelledStatement oldLabel = label;
 		label = newLabel;
@@ -131,7 +129,6 @@ public class BreakStatementImpl extends StatementImpl implements BreakStatement 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getLabelAsText() {
 		return labelAsText;
 	}
@@ -141,7 +138,6 @@ public class BreakStatementImpl extends StatementImpl implements BreakStatement 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setLabelAsText(String newLabelAsText) {
 		String oldLabelAsText = labelAsText;
 		labelAsText = newLabelAsText;

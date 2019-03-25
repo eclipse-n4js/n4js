@@ -74,7 +74,6 @@ public class LiteralAnnotationArgumentImpl extends AnnotationArgumentImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Literal getLiteral() {
 		return literal;
 	}
@@ -99,7 +98,6 @@ public class LiteralAnnotationArgumentImpl extends AnnotationArgumentImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setLiteral(Literal newLiteral) {
 		if (newLiteral != literal) {
 			NotificationChain msgs = null;
@@ -119,7 +117,6 @@ public class LiteralAnnotationArgumentImpl extends AnnotationArgumentImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Literal value() {
 		return this.getLiteral();
 	}

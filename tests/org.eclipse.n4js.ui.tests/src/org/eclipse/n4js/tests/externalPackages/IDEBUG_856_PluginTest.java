@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.tests.externalPackages;
 
-import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.cleanWorkspace;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -24,8 +23,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
-import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -50,31 +47,20 @@ public class IDEBUG_856_PluginTest extends AbstractBuilderParticipantTest {
 	@Inject
 	private LibraryManager libManager;
 
-	@Inject
-	private ShippedCodeInitializeTestHelper shippedCodeInitializeTestHelper;
+	@Override
+	protected boolean provideShippedCode() {
+		return true;
+	}
 
 	/**
 	 * Updates the known external library locations with the {@code node_modules} folder.
 	 */
 	@Before
 	public void setupWorkspace() throws Exception {
-		shippedCodeInitializeTestHelper.setupBuiltIns();
 		final File projectsRoot = new File(getResourceUri(PROBANDS, WORKSPACE_LOC));
 		ProjectTestsUtils.importProject(projectsRoot, PROJECT);
 		final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(PROJECT);
 		assertTrue("Cannot access project: " + project, project.isAccessible());
-	}
-
-	/**
-	 * Tries to make sure the external libraries are cleaned from the Xtext index.
-	 */
-	@After
-	@Override
-	public void tearDown() throws Exception {
-		cleanWorkspace();
-		waitForAutoBuild();
-		shippedCodeInitializeTestHelper.tearDownBuiltIns();
-		waitForAutoBuild();
 	}
 
 	/**
@@ -84,14 +70,14 @@ public class IDEBUG_856_PluginTest extends AbstractBuilderParticipantTest {
 	@Test
 	public void testMultipleExternalRefresh() throws Exception {
 		// initial load to trigger cloning
-		libManager.registerAllExternalProjects(new NullProgressMonitor());
-		waitForAutoBuild();
+		libManager.synchronizeNpms(new NullProgressMonitor());
+
 		LOG.info("------------------------------------------------------------");
 		for (int i = 1; i <= ITERATION_COUNT; i++) {
 			LOG.info("Iteration " + i + " of " + ITERATION_COUNT + ".");
-			libManager.registerAllExternalProjects(new NullProgressMonitor());
+			libManager.synchronizeNpms(new NullProgressMonitor());
 			// schedule second reload to see if they deadlock
-			libManager.registerAllExternalProjects(new NullProgressMonitor());
+			libManager.synchronizeNpms(new NullProgressMonitor());
 			LOG.info("waiting for build.");
 			waitForAutoBuild();
 		}

@@ -86,7 +86,6 @@ public class VersionedParameterizedTypeRefImpl extends ParameterizedTypeRefImpl 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public BigDecimal getRequestedVersion() {
 		return requestedVersion;
 	}
@@ -96,7 +95,6 @@ public class VersionedParameterizedTypeRefImpl extends ParameterizedTypeRefImpl 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setRequestedVersion(BigDecimal newRequestedVersion) {
 		BigDecimal oldRequestedVersion = requestedVersion;
 		requestedVersion = newRequestedVersion;
@@ -109,7 +107,6 @@ public class VersionedParameterizedTypeRefImpl extends ParameterizedTypeRefImpl 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public int getVersion() {
 		int _xifexpression = (int) 0;
 		boolean _hasRequestedVersion = this.hasRequestedVersion();
@@ -127,7 +124,6 @@ public class VersionedParameterizedTypeRefImpl extends ParameterizedTypeRefImpl 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean hasRequestedVersion() {
 		BigDecimal _requestedVersion = this.getRequestedVersion();
 		return (_requestedVersion != null);
@@ -138,7 +134,6 @@ public class VersionedParameterizedTypeRefImpl extends ParameterizedTypeRefImpl 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public int getRequestedVersionOrZero() {
 		int _xifexpression = (int) 0;
 		boolean _hasRequestedVersion = this.hasRequestedVersion();

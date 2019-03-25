@@ -96,7 +96,6 @@ public class PrimitiveTypeImpl extends ContainerTypeImpl<TMember> implements Pri
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TypeRef getDeclaredElementType() {
 		return declaredElementType;
 	}
@@ -121,7 +120,6 @@ public class PrimitiveTypeImpl extends ContainerTypeImpl<TMember> implements Pri
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredElementType(TypeRef newDeclaredElementType) {
 		if (newDeclaredElementType != declaredElementType) {
 			NotificationChain msgs = null;
@@ -141,7 +139,6 @@ public class PrimitiveTypeImpl extends ContainerTypeImpl<TMember> implements Pri
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public PrimitiveType getAssignmentCompatible() {
 		if (assignmentCompatible != null && assignmentCompatible.eIsProxy()) {
 			InternalEObject oldAssignmentCompatible = (InternalEObject)assignmentCompatible;
@@ -168,7 +165,6 @@ public class PrimitiveTypeImpl extends ContainerTypeImpl<TMember> implements Pri
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setAssignmentCompatible(PrimitiveType newAssignmentCompatible) {
 		PrimitiveType oldAssignmentCompatible = assignmentCompatible;
 		assignmentCompatible = newAssignmentCompatible;
@@ -181,7 +177,6 @@ public class PrimitiveTypeImpl extends ContainerTypeImpl<TMember> implements Pri
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TClassifier getAutoboxedType() {
 		if (autoboxedType != null && autoboxedType.eIsProxy()) {
 			InternalEObject oldAutoboxedType = (InternalEObject)autoboxedType;
@@ -208,7 +203,6 @@ public class PrimitiveTypeImpl extends ContainerTypeImpl<TMember> implements Pri
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setAutoboxedType(TClassifier newAutoboxedType) {
 		TClassifier oldAutoboxedType = autoboxedType;
 		autoboxedType = newAutoboxedType;

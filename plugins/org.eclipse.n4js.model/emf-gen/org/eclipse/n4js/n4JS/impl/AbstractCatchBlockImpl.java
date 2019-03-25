@@ -72,7 +72,6 @@ public abstract class AbstractCatchBlockImpl extends ProxyResolvingEObjectImpl i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Block getBlock() {
 		return block;
 	}
@@ -97,7 +96,6 @@ public abstract class AbstractCatchBlockImpl extends ProxyResolvingEObjectImpl i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setBlock(Block newBlock) {
 		if (newBlock != block) {
 			NotificationChain msgs = null;

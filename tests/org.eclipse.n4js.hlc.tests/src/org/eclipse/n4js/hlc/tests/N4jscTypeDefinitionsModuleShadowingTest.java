@@ -39,11 +39,13 @@ public class N4jscTypeDefinitionsModuleShadowingTest extends AbstractN4jscTest {
 	private static final String BROKEN_CLIENT_PROJECT_NAME = "Broken_Client";
 
 	File workspace;
+	File packages;
 
 	/** Prepare workspace. */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace("type-definitions", Predicates.alwaysFalse());
+		workspace = setupWorkspace("type-definitions", Predicates.alwaysFalse(), true);
+		packages = new File(workspace, PACKAGES);
 	}
 
 	/** Delete workspace. */
@@ -58,7 +60,7 @@ public class N4jscTypeDefinitionsModuleShadowingTest extends AbstractN4jscTest {
 	@Test
 	public void testSimpleTypeDefsShadowing() throws ExitCodeException {
 
-		String[] args = { "--projectlocations", workspace.toPath().toAbsolutePath().toString(),
+		String[] args = { "--projectlocations", packages.toPath().toAbsolutePath().toString(),
 				"--buildType", "projects", getProjectPath(DEF_PROJECT_NAME), getProjectPath(IMPL_PROJECT_NAME),
 				getProjectPath(CLIENT_PROJECT_NAME) };
 
@@ -73,7 +75,7 @@ public class N4jscTypeDefinitionsModuleShadowingTest extends AbstractN4jscTest {
 	@Test
 	public void testBrokenTypeDefsShadowing() {
 
-		String[] args = { "--projectlocations", workspace.toPath().toAbsolutePath().toString(),
+		String[] args = { "--projectlocations", packages.toPath().toAbsolutePath().toString(),
 				"--buildType", "projects", getProjectPath(BROKEN_DEF_PROJECT_NAME), getProjectPath(IMPL_PROJECT_NAME),
 				getProjectPath(BROKEN_CLIENT_PROJECT_NAME) };
 
@@ -81,7 +83,7 @@ public class N4jscTypeDefinitionsModuleShadowingTest extends AbstractN4jscTest {
 	}
 
 	private String getProjectPath(String projectName) {
-		return this.workspace.toPath().toAbsolutePath() + "/" + projectName;
+		return this.packages.toPath().toAbsolutePath() + "/" + projectName;
 	}
 
 }

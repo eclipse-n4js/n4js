@@ -14,8 +14,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
-
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 
@@ -23,21 +21,6 @@ import com.google.common.base.Strings;
  * Utility for transforming various inputs into {@link File}s denoting project locations.
  */
 public class ProjectLocationsUtil {
-
-	/**
-	 * @param installLocationProvider
-	 *            provider used to get location of installed npms.
-	 */
-	public static List<File> getTargetPlatformWritableDir(
-			TargetPlatformInstallLocationProvider installLocationProvider) {
-		final List<File> retList = new ArrayList<>();
-		if (null != installLocationProvider.getTargetPlatformInstallURI()) {
-			final File npmLoc = new File(installLocationProvider.getNodeModulesURI());
-			HlcFileUtils.isExistingWriteableDir(npmLoc);
-			retList.add(npmLoc);
-		}
-		return retList;
-	}
 
 	/**
 	 * @param dirpaths

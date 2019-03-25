@@ -84,7 +84,6 @@ public abstract class TypedElementImpl extends ProxyResolvingEObjectImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TypeRef getDeclaredTypeRef() {
 		return declaredTypeRef;
 	}
@@ -109,7 +108,6 @@ public abstract class TypedElementImpl extends ProxyResolvingEObjectImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredTypeRef(TypeRef newDeclaredTypeRef) {
 		if (newDeclaredTypeRef != declaredTypeRef) {
 			NotificationChain msgs = null;
@@ -129,7 +127,6 @@ public abstract class TypedElementImpl extends ProxyResolvingEObjectImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TypeRef getBogusTypeRef() {
 		return bogusTypeRef;
 	}
@@ -154,7 +151,6 @@ public abstract class TypedElementImpl extends ProxyResolvingEObjectImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setBogusTypeRef(TypeRef newBogusTypeRef) {
 		if (newBogusTypeRef != bogusTypeRef) {
 			NotificationChain msgs = null;

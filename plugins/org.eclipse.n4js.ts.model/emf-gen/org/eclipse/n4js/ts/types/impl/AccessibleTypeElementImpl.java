@@ -107,7 +107,6 @@ public abstract class AccessibleTypeElementImpl extends ProxyResolvingEObjectImp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TypeAccessModifier getDeclaredTypeAccessModifier() {
 		return declaredTypeAccessModifier;
 	}
@@ -117,7 +116,6 @@ public abstract class AccessibleTypeElementImpl extends ProxyResolvingEObjectImp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredTypeAccessModifier(TypeAccessModifier newDeclaredTypeAccessModifier) {
 		TypeAccessModifier oldDeclaredTypeAccessModifier = declaredTypeAccessModifier;
 		declaredTypeAccessModifier = newDeclaredTypeAccessModifier == null ? DECLARED_TYPE_ACCESS_MODIFIER_EDEFAULT : newDeclaredTypeAccessModifier;
@@ -130,7 +128,6 @@ public abstract class AccessibleTypeElementImpl extends ProxyResolvingEObjectImp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isDeclaredProvidedByRuntime() {
 		return declaredProvidedByRuntime;
 	}
@@ -140,7 +137,6 @@ public abstract class AccessibleTypeElementImpl extends ProxyResolvingEObjectImp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredProvidedByRuntime(boolean newDeclaredProvidedByRuntime) {
 		boolean oldDeclaredProvidedByRuntime = declaredProvidedByRuntime;
 		declaredProvidedByRuntime = newDeclaredProvidedByRuntime;
@@ -153,7 +149,6 @@ public abstract class AccessibleTypeElementImpl extends ProxyResolvingEObjectImp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isProvidedByRuntime() {
 		return this.isDeclaredProvidedByRuntime();
 	}
@@ -163,7 +158,6 @@ public abstract class AccessibleTypeElementImpl extends ProxyResolvingEObjectImp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TypeAccessModifier getTypeAccessModifier() {
 		TypeAccessModifier _declaredTypeAccessModifier = this.getDeclaredTypeAccessModifier();
 		boolean _equals = Objects.equal(_declaredTypeAccessModifier, TypeAccessModifier.UNDEFINED);
@@ -184,7 +178,6 @@ public abstract class AccessibleTypeElementImpl extends ProxyResolvingEObjectImp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isExported() {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT

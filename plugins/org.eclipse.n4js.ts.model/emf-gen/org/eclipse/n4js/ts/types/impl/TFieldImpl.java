@@ -163,7 +163,6 @@ public class TFieldImpl extends TMemberWithAccessModifierImpl implements TField 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TypeRef getTypeRef() {
 		return typeRef;
 	}
@@ -188,7 +187,6 @@ public class TFieldImpl extends TMemberWithAccessModifierImpl implements TField 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setTypeRef(TypeRef newTypeRef) {
 		if (newTypeRef != typeRef) {
 			NotificationChain msgs = null;
@@ -208,7 +206,6 @@ public class TFieldImpl extends TMemberWithAccessModifierImpl implements TField 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isConst() {
 		return const_;
 	}
@@ -218,7 +215,6 @@ public class TFieldImpl extends TMemberWithAccessModifierImpl implements TField 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setConst(boolean newConst) {
 		boolean oldConst = const_;
 		const_ = newConst;
@@ -231,7 +227,6 @@ public class TFieldImpl extends TMemberWithAccessModifierImpl implements TField 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getCompileTimeValue() {
 		return compileTimeValue;
 	}
@@ -241,7 +236,6 @@ public class TFieldImpl extends TMemberWithAccessModifierImpl implements TField 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setCompileTimeValue(String newCompileTimeValue) {
 		String oldCompileTimeValue = compileTimeValue;
 		compileTimeValue = newCompileTimeValue;
@@ -254,7 +248,6 @@ public class TFieldImpl extends TMemberWithAccessModifierImpl implements TField 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isHasExpression() {
 		return hasExpression;
 	}
@@ -264,7 +257,6 @@ public class TFieldImpl extends TMemberWithAccessModifierImpl implements TField 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setHasExpression(boolean newHasExpression) {
 		boolean oldHasExpression = hasExpression;
 		hasExpression = newHasExpression;
@@ -277,7 +269,6 @@ public class TFieldImpl extends TMemberWithAccessModifierImpl implements TField 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isOptional() {
 		return optional;
 	}
@@ -287,7 +278,6 @@ public class TFieldImpl extends TMemberWithAccessModifierImpl implements TField 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setOptional(boolean newOptional) {
 		boolean oldOptional = optional;
 		optional = newOptional;
@@ -300,7 +290,6 @@ public class TFieldImpl extends TMemberWithAccessModifierImpl implements TField 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isStatic() {
 		return (this.isDeclaredStatic() || this.isConst());
 	}
@@ -310,7 +299,6 @@ public class TFieldImpl extends TMemberWithAccessModifierImpl implements TField 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isReadable() {
 		return true;
 	}
@@ -320,7 +308,6 @@ public class TFieldImpl extends TMemberWithAccessModifierImpl implements TField 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isWriteable() {
 		return (!(this.isConst() || this.isFinal()));
 	}
@@ -330,7 +317,6 @@ public class TFieldImpl extends TMemberWithAccessModifierImpl implements TField 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public MemberType getMemberType() {
 		return MemberType.FIELD;
 	}
@@ -340,7 +326,6 @@ public class TFieldImpl extends TMemberWithAccessModifierImpl implements TField 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getMemberAsString() {
 		final StringBuilder strb = new StringBuilder();
 		strb.append(this.getName());

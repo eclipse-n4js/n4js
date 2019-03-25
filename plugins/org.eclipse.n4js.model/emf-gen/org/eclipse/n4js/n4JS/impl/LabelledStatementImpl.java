@@ -91,7 +91,6 @@ public class LabelledStatementImpl extends StatementImpl implements LabelledStat
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getName() {
 		return name;
 	}
@@ -101,7 +100,6 @@ public class LabelledStatementImpl extends StatementImpl implements LabelledStat
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -114,7 +112,6 @@ public class LabelledStatementImpl extends StatementImpl implements LabelledStat
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Statement getStatement() {
 		return statement;
 	}
@@ -139,7 +136,6 @@ public class LabelledStatementImpl extends StatementImpl implements LabelledStat
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setStatement(Statement newStatement) {
 		if (newStatement != statement) {
 			NotificationChain msgs = null;

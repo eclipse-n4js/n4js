@@ -96,7 +96,6 @@ public class SourceContainerDescriptionImpl extends MinimalEObjectImpl.Container
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public SourceContainerType getSourceContainerType() {
 		return sourceContainerType;
 	}
@@ -106,7 +105,6 @@ public class SourceContainerDescriptionImpl extends MinimalEObjectImpl.Container
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setSourceContainerType(SourceContainerType newSourceContainerType) {
 		SourceContainerType oldSourceContainerType = sourceContainerType;
 		sourceContainerType = newSourceContainerType == null ? SOURCE_CONTAINER_TYPE_EDEFAULT : newSourceContainerType;
@@ -119,7 +117,6 @@ public class SourceContainerDescriptionImpl extends MinimalEObjectImpl.Container
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<String> getPaths() {
 		if (paths == null) {
 			paths = new EDataTypeEList<String>(String.class, this, ProjectDescriptionPackage.SOURCE_CONTAINER_DESCRIPTION__PATHS);

@@ -51,7 +51,6 @@ public class LiteralImpl extends PrimaryExpressionImpl implements Literal {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getValueAsString() {
 		return null;
 	}

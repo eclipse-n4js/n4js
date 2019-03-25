@@ -22,7 +22,7 @@
   "browser" : "./src-gen/browser.js",
   "react-native" : "./src-gen/react-native.js",
   "dependencies" : {
-    "node-fetch" : "~1.6.3",
+    "node-fetch" : "~2.2.0",
     "systemjs" : "~0.19.40"
   },
   "files" : [ "src", "src-gen" ],
@@ -41,6 +41,5 @@
     "providedRuntimeLibraries" : [ "n4js-runtime-n4", "n4js-runtime-v8", "n4js-runtime-es2015", "n4js-runtime-esnext", "n4js-runtime-fetch", "n4js-runtime-node", "n4js-runtime-ecma402" ],
     "moduleLoader" : "n4js",
     "execModule" : "n4js-cli"
-  },
-  "devDependencies" : { }
+  }
 }

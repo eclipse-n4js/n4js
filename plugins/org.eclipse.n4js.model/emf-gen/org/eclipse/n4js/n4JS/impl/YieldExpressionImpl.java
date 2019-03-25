@@ -91,7 +91,6 @@ public class YieldExpressionImpl extends ExpressionImpl implements YieldExpressi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Expression getExpression() {
 		return expression;
 	}
@@ -116,7 +115,6 @@ public class YieldExpressionImpl extends ExpressionImpl implements YieldExpressi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setExpression(Expression newExpression) {
 		if (newExpression != expression) {
 			NotificationChain msgs = null;
@@ -136,7 +134,6 @@ public class YieldExpressionImpl extends ExpressionImpl implements YieldExpressi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isMany() {
 		return many;
 	}
@@ -146,7 +143,6 @@ public class YieldExpressionImpl extends ExpressionImpl implements YieldExpressi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setMany(boolean newMany) {
 		boolean oldMany = many;
 		many = newMany;

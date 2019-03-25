@@ -116,7 +116,6 @@ public class NamedImportSpecifierImpl extends ImportSpecifierImpl implements Nam
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TExportableElement getImportedElement() {
 		if (importedElement != null && importedElement.eIsProxy()) {
 			InternalEObject oldImportedElement = (InternalEObject)importedElement;
@@ -143,7 +142,6 @@ public class NamedImportSpecifierImpl extends ImportSpecifierImpl implements Nam
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setImportedElement(TExportableElement newImportedElement) {
 		TExportableElement oldImportedElement = importedElement;
 		importedElement = newImportedElement;
@@ -156,7 +154,6 @@ public class NamedImportSpecifierImpl extends ImportSpecifierImpl implements Nam
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getImportedElementAsText() {
 		return importedElementAsText;
 	}
@@ -166,7 +163,6 @@ public class NamedImportSpecifierImpl extends ImportSpecifierImpl implements Nam
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setImportedElementAsText(String newImportedElementAsText) {
 		String oldImportedElementAsText = importedElementAsText;
 		importedElementAsText = newImportedElementAsText;
@@ -179,7 +175,6 @@ public class NamedImportSpecifierImpl extends ImportSpecifierImpl implements Nam
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getAlias() {
 		return alias;
 	}
@@ -189,7 +184,6 @@ public class NamedImportSpecifierImpl extends ImportSpecifierImpl implements Nam
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setAlias(String newAlias) {
 		String oldAlias = alias;
 		alias = newAlias;
@@ -202,7 +196,6 @@ public class NamedImportSpecifierImpl extends ImportSpecifierImpl implements Nam
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isDefaultImport() {
 		return false;
 	}

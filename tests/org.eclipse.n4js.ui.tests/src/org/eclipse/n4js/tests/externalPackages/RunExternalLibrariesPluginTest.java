@@ -30,11 +30,9 @@ import java.util.Collection;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.n4js.internal.RaceDetectionHelper;
-import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.n4js.runner.RunnerFrontEnd;
 import org.eclipse.n4js.runner.ui.RunnerFrontEndUI;
@@ -83,9 +81,6 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 			.addAll(LIB_PROJECT_IDS).add(CLIENT).build();
 
 	@Inject
-	private ExternalLibraryPreferenceStore externalLibraryPreferenceStore;
-
-	@Inject
 	private RunnerFrontEndUI runnerFrontEndUI;
 
 	@Inject
@@ -106,7 +101,7 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 	 * Loads (and indexes) all the required external libraries. Also imports all the workspace projects.
 	 */
 	@Before
-	public void setupWorkspace() throws Exception {
+	synchronized public void setupWorkspace() throws Exception {
 		RaceDetectionHelper.log(">>> SETUP >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 
 		assertEquals("Resources in index:\n" + getAllResourceDescriptionsAsString() + "\n", 0, countResourcesInIndex());
@@ -114,30 +109,35 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 		final IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		assertTrue("Expected empty workspace. Projects were in workspace: " + Arrays.toString(projects),
 				0 == projects.length);
-		final URI externalRootLocation = getResourceUri(PROBANDS, EXT_LOC);
-		externalLibraryPreferenceStore.add(externalRootLocation);
-		final IStatus result = externalLibraryPreferenceStore.save(new NullProgressMonitor());
-		assertTrue("Error while saving external library preference changes.", result.isOK());
-		waitForAutoBuild();
+
 		for (final String projectName : ALL_PROJECT_IDS) {
 			final File projectsRoot = new File(getResourceUri(PROBANDS, WORKSPACE_LOC));
 			ProjectTestsUtils.importProject(projectsRoot, projectName);
 		}
-		waitForAutoBuild();
+
+		URI externalRootLocation = getResourceUri(PROBANDS, EXT_LOC);
+		ProjectTestsUtils.importDependencies(CLIENT, externalRootLocation, libraryManager);
+
+		// This test is using an unsupported setup: Projects depend on each other without using a yarn workspace.
+		// Hence, the following warnings are expected.
+		// The unsupported setup is necessary because this test is testing shadowing which would not appear in a yarn
+		// workspace like that.
+		assertNoErrors();
+		assertIssues(
+				"line 5: Project depends on workspace project PA which is missing in the node_modules folder. " +
+						"Either install project PA or introduce a yarn workspace of both of the projects.",
+				"line 5: Project depends on workspace project PB which is missing in the node_modules folder. " +
+						"Either install project PB or introduce a yarn workspace of both of the projects.",
+				"line 5: Project depends on workspace project PC which is missing in the node_modules folder. " +
+						"Either install project PC or introduce a yarn workspace of both of the projects.");
 	}
 
 	/**
 	 * Tries to make sure the external libraries are cleaned from the Xtext index.
 	 */
 	@After
-	@Override
-	public void tearDown() throws Exception {
-		final URI externalRootLocation = getResourceUri(PROBANDS, EXT_LOC);
-		externalLibraryPreferenceStore.remove(externalRootLocation);
-		final IStatus result = externalLibraryPreferenceStore.save(new NullProgressMonitor());
-		assertTrue("Error while saving external library preference changes.", result.isOK());
+	synchronized public void tearDown2() throws Exception {
 		waitForAutoBuild();
-		super.tearDown();
 		RaceDetectionHelper.log(">>> TEARDOWN >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 	}
 
@@ -166,6 +166,8 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 			waitForAutoBuildCheckIndexRigid();
 		}
 
+		syncExtAndBuild();
+
 		final ProcessResult result = runClient();
 		// @formatter:off
 		assertEquals("Unexpected output after running the client module: " + result,
@@ -185,6 +187,8 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 			getProjectByName(libProjectName).close(new NullProgressMonitor());
 			waitForAutoBuildCheckIndexRigid();
 		}
+
+		syncExtAndBuild();
 
 		final ProcessResult result = runClient();
 		// @formatter:off
@@ -216,6 +220,8 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 			waitForAutoBuildCheckIndexRigid();
 		}
 
+		syncExtAndBuild();
+
 		final ProcessResult result = runClient();
 		// @formatter:off
 		assertEquals("Unexpected output after running the client module: " + result,
@@ -236,6 +242,8 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 			waitForAutoBuildCheckIndexRigid();
 		}
 
+		syncExtAndBuild();
+
 		final ProcessResult firstResult = runClient();
 		// @formatter:off
 		assertEquals("Unexpected output after running the client module with two closed projects: " + firstResult,
@@ -250,6 +258,8 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 			getProjectByName(libProjectName).open(new NullProgressMonitor());
 			waitForAutoBuildCheckIndexRigid();
 		}
+
+		syncExtAndBuild();
 
 		final ProcessResult secondResult = runClient();
 		// @formatter:off
@@ -270,6 +280,8 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 			getProjectByName(libProjectName).delete(true, new NullProgressMonitor());
 			waitForAutoBuildCheckIndexRigid();
 		}
+
+		syncExtAndBuild();
 
 		final ProcessResult result = runClient();
 		// @formatter:off
@@ -292,6 +304,8 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 			waitForAutoBuildCheckIndexRigid();
 		}
 
+		syncExtAndBuild();
+
 		final ProcessResult result = runClient();
 		// @formatter:off
 		assertEquals("Unexpected output after running the client module: " + result,
@@ -312,6 +326,8 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 			waitForAutoBuildCheckIndexRigid();
 		}
 
+		syncExtAndBuild();
+
 		final ProcessResult firstResult = runClient();
 		// @formatter:off
 		assertEquals("Unexpected output after running the client module with two deleted projects: " + firstResult,
@@ -327,6 +343,8 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 			ProjectTestsUtils.importProject(projectsRoot, libProjectName);
 			waitForAutoBuildCheckIndexRigid();
 		}
+
+		syncExtAndBuild();
 
 		final ProcessResult secondResult = runClient();
 		// @formatter:off

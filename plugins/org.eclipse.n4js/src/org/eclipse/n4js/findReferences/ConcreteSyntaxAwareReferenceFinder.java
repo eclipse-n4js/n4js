@@ -215,38 +215,36 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 								@SuppressWarnings("unchecked")
 								InternalEList<EObject> values = (InternalEList<EObject>) value;
 								for (int i = 0; i < values.size(); ++i) {
-									EObject instanceOrProxy = toValidInstanceOrNull(localResource, targetURIs,
-											values.basicGet(i));
-									if (instanceOrProxy != null) {
-										URI refURI = EcoreUtil2.getPlatformResourceOrNormalizedURI(instanceOrProxy);
-										// CUSTOM BEHAVIOR: handle composed members
-										if (referenceHasBeenFound(targetURIs, refURI, instanceOrProxy)) {
-											sourceURI = (sourceURI == null)
-													? EcoreUtil2.getPlatformResourceOrNormalizedURI(sourceCandidate)
-													: sourceURI;
-											acceptor.accept(sourceCandidate, sourceURI, ref, i, instanceOrProxy,
-													refURI);
-										}
-									}
+									checkValue(values.basicGet(i), localResource, targetURIs, sourceCandidate,
+											sourceURI, ref,
+											acceptor);
 								}
 							} else {
-								EObject instanceOrProxy = toValidInstanceOrNull(localResource, targetURIs,
-										(EObject) value);
-								if (instanceOrProxy != null) {
-									URI refURI = EcoreUtil2.getPlatformResourceOrNormalizedURI(instanceOrProxy);
-									// CUSTOM BEHAVIOR: handle composed members
-									if (referenceHasBeenFound(targetURIs, refURI, instanceOrProxy)) {
-										sourceURI = (sourceURI == null) ? EcoreUtil2
-												.getPlatformResourceOrNormalizedURI(sourceCandidate) : sourceURI;
-										acceptor.accept(sourceCandidate, sourceURI, ref, -1, instanceOrProxy, refURI);
-									}
-								}
+								checkValue((EObject) value, localResource, targetURIs, sourceCandidate, sourceURI, ref,
+										acceptor);
 							}
 						}
 					}
 				}
 			}
 		}
+	}
+
+	private void checkValue(EObject value, Resource localResource, Predicate<URI> targetURIs, EObject sourceCandidate,
+			URI sourceURI, EReference ref, Acceptor acceptor) {
+		EObject instanceOrProxy = toValidInstanceOrNull(localResource, targetURIs,
+				value);
+
+		if (instanceOrProxy != null) {
+			URI refURI = EcoreUtil2.getPlatformResourceOrNormalizedURI(instanceOrProxy);
+			// CUSTOM BEHAVIOR: handle composed members
+			if (referenceHasBeenFound(targetURIs, refURI, instanceOrProxy)) {
+				sourceURI = (sourceURI == null) ? EcoreUtil2
+						.getPlatformResourceOrNormalizedURI(sourceCandidate) : sourceURI;
+				acceptor.accept(sourceCandidate, sourceURI, ref, -1, instanceOrProxy, refURI);
+			}
+		}
+
 	}
 
 	private boolean referenceHasBeenFound(Predicate<URI> targetURIs, URI refURI, EObject instanceOrProxy) {
@@ -267,4 +265,5 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 		}
 		return result;
 	}
+
 }

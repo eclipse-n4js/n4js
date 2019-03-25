@@ -16,6 +16,8 @@ import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.root;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -25,10 +27,12 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.N4JSUiInjectorProvider;
+import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
 import org.eclipse.n4js.tests.util.EclipseUIUtils;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
+import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.eclipse.n4js.ui.building.CloseProjectTaskScheduler;
 import org.eclipse.n4js.ui.building.ResourceDescriptionWithoutModuleUserData;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildScheduler;
@@ -38,6 +42,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.intro.IIntroManager;
+import org.eclipse.xtext.builder.impl.QueuedBuildData;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
@@ -55,6 +60,7 @@ import com.google.inject.Injector;
 /**
  * @author Sven Efftinge - Initial contribution and API
  */
+@SuppressWarnings("restriction")
 @RunWith(XtextRunner.class)
 @InjectWith(N4JSUiInjectorProvider.class)
 public abstract class AbstractBuilderTest {
@@ -65,6 +71,9 @@ public abstract class AbstractBuilderTest {
 		EclipseGracefulUIShutdownEnabler.enableOnce();
 	}
 
+	/***/
+	@Inject
+	protected LibraryManager libraryManager;
 	@Inject
 	private IResourceSetProvider resourceSetProvider;
 	@Inject
@@ -73,10 +82,19 @@ public abstract class AbstractBuilderTest {
 	private ExternalLibraryBuildScheduler externalLibraryBuildJobProvider;
 	@Inject
 	private CloseProjectTaskScheduler closedProjectTaskProcessor;
+	@Inject
+	private QueuedBuildData queuedBuildData;
+	@Inject
+	private ShippedCodeInitializeTestHelper shippedCodeInitializeTestHelper;
+
+	/** Overwrite this method to enable shipped code */
+	protected boolean provideShippedCode() {
+		return false;
+	}
 
 	/** Setups workspace by cleaning and waiting for auto builds, asserting index is clean. */
 	@Before
-	public void setUp() throws Exception {
+	final public void setUp() throws Exception {
 		IResourcesSetupUtil.cleanWorkspace();
 		IResourcesSetupUtil.cleanBuild();
 		waitForAutoBuild();
@@ -111,6 +129,10 @@ public abstract class AbstractBuilderTest {
 					}
 				});
 			}
+		}
+
+		if (provideShippedCode()) {
+			shippedCodeInitializeTestHelper.setupBuiltIns();
 		}
 	}
 
@@ -175,15 +197,28 @@ public abstract class AbstractBuilderTest {
 	 * index.
 	 */
 	@After
-	public void tearDown() throws Exception {
+	final public void tearDown() throws Exception {
+
+		if (provideShippedCode()) {
+			shippedCodeInitializeTestHelper.tearDownBuiltIns();
+		}
+
 		// save the files as otherwise the projects cannot be deleted
+		libraryManager.deleteAllNodeModulesFolders(new NullProgressMonitor());
 		closeAllEditorsForTearDown();
+		ProjectTestsUtils.closeAllProjectsInWorkspace();
 		IResourcesSetupUtil.cleanWorkspace();
 		IResourcesSetupUtil.cleanBuild();
 		waitForAutoBuild();
 		assertEquals(0, root().getProjects().length);
 		assertEquals("Resources in index:\n" + getAllResourceDescriptionsAsString() + "\n", 0,
 				countResourcesInIndex());
+
+		final IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+		assertTrue("Expected empty workspace. Projects were in workspace: " + Arrays.toString(projects),
+				0 == projects.length);
+
+		queuedBuildData.reset();
 	}
 
 	/***/
@@ -230,6 +265,14 @@ public abstract class AbstractBuilderTest {
 	/***/
 	public void cleanBuild() throws CoreException {
 		IResourcesSetupUtil.cleanBuild();
+	}
+
+	/** Synchronizes the index, rebuilds externals and workspace */
+	protected void syncExtAndBuild() throws CoreException {
+		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
+		ProjectTestsUtils.waitForAllJobs();
+		IResourcesSetupUtil.fullBuild();
+		waitForAutoBuild();
 	}
 
 	private void closeAllEditorsForTearDown() {

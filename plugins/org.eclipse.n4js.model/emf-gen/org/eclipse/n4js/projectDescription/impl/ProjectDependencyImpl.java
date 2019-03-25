@@ -114,7 +114,6 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public DependencyType getType() {
 		return type;
 	}
@@ -124,7 +123,6 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setType(DependencyType newType) {
 		DependencyType oldType = type;
 		type = newType == null ? TYPE_EDEFAULT : newType;
@@ -137,7 +135,6 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getVersionRequirementString() {
 		return versionRequirementString;
 	}
@@ -147,7 +144,6 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setVersionRequirementString(String newVersionRequirementString) {
 		String oldVersionRequirementString = versionRequirementString;
 		versionRequirementString = newVersionRequirementString;
@@ -160,7 +156,6 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public NPMVersionRequirement getVersionRequirement() {
 		return versionRequirement;
 	}
@@ -185,7 +180,6 @@ public class ProjectDependencyImpl extends ProjectReferenceImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setVersionRequirement(NPMVersionRequirement newVersionRequirement) {
 		if (newVersionRequirement != versionRequirement) {
 			NotificationChain msgs = null;

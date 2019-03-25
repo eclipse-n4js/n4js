@@ -78,7 +78,6 @@ public class ThisLiteralImpl extends PrimaryExpressionImpl implements ThisLitera
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isStrictMode() {
 		return strictMode;
 	}
@@ -88,7 +87,6 @@ public class ThisLiteralImpl extends PrimaryExpressionImpl implements ThisLitera
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setStrictMode(boolean newStrictMode) {
 		boolean oldStrictMode = strictMode;
 		strictMode = newStrictMode;

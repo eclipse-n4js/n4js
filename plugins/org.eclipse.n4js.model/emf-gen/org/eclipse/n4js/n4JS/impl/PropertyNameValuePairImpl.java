@@ -138,7 +138,6 @@ public class PropertyNameValuePairImpl extends AnnotablePropertyAssignmentImpl i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TypeRef getDeclaredTypeRef() {
 		return declaredTypeRef;
 	}
@@ -163,7 +162,6 @@ public class PropertyNameValuePairImpl extends AnnotablePropertyAssignmentImpl i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredTypeRef(TypeRef newDeclaredTypeRef) {
 		if (newDeclaredTypeRef != declaredTypeRef) {
 			NotificationChain msgs = null;
@@ -183,7 +181,6 @@ public class PropertyNameValuePairImpl extends AnnotablePropertyAssignmentImpl i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TypeRef getBogusTypeRef() {
 		return bogusTypeRef;
 	}
@@ -208,7 +205,6 @@ public class PropertyNameValuePairImpl extends AnnotablePropertyAssignmentImpl i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setBogusTypeRef(TypeRef newBogusTypeRef) {
 		if (newBogusTypeRef != bogusTypeRef) {
 			NotificationChain msgs = null;
@@ -228,7 +224,6 @@ public class PropertyNameValuePairImpl extends AnnotablePropertyAssignmentImpl i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TStructField getDefinedField() {
 		if (definedField != null && definedField.eIsProxy()) {
 			InternalEObject oldDefinedField = (InternalEObject)definedField;
@@ -255,7 +250,6 @@ public class PropertyNameValuePairImpl extends AnnotablePropertyAssignmentImpl i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDefinedField(TStructField newDefinedField) {
 		TStructField oldDefinedField = definedField;
 		definedField = newDefinedField;
@@ -268,7 +262,6 @@ public class PropertyNameValuePairImpl extends AnnotablePropertyAssignmentImpl i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isDeclaredOptional() {
 		return declaredOptional;
 	}
@@ -278,7 +271,6 @@ public class PropertyNameValuePairImpl extends AnnotablePropertyAssignmentImpl i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredOptional(boolean newDeclaredOptional) {
 		boolean oldDeclaredOptional = declaredOptional;
 		declaredOptional = newDeclaredOptional;
@@ -291,7 +283,6 @@ public class PropertyNameValuePairImpl extends AnnotablePropertyAssignmentImpl i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Expression getExpression() {
 		return expression;
 	}
@@ -316,7 +307,6 @@ public class PropertyNameValuePairImpl extends AnnotablePropertyAssignmentImpl i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setExpression(Expression newExpression) {
 		if (newExpression != expression) {
 			NotificationChain msgs = null;
@@ -336,7 +326,6 @@ public class PropertyNameValuePairImpl extends AnnotablePropertyAssignmentImpl i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TStructField getDefinedMember() {
 		return this.getDefinedField();
 	}
@@ -346,7 +335,6 @@ public class PropertyNameValuePairImpl extends AnnotablePropertyAssignmentImpl i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isValidName() {
 		String _name = this.getName();
 		boolean _equals = Objects.equal("prototype", _name);

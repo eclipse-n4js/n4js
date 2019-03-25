@@ -82,7 +82,6 @@ public class BooleanLiteralImpl extends LiteralImpl implements BooleanLiteral {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isTrue() {
 		return true_;
 	}
@@ -92,7 +91,6 @@ public class BooleanLiteralImpl extends LiteralImpl implements BooleanLiteral {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setTrue(boolean newTrue) {
 		boolean oldTrue = true_;
 		true_ = newTrue;
@@ -105,7 +103,6 @@ public class BooleanLiteralImpl extends LiteralImpl implements BooleanLiteral {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getValueAsString() {
 		return Boolean.toString(this.isTrue());
 	}

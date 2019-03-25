@@ -101,7 +101,6 @@ public abstract class FieldAccessorImpl extends FunctionOrFieldAccessorImpl impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public LiteralOrComputedPropertyName getDeclaredName() {
 		return declaredName;
 	}
@@ -126,7 +125,6 @@ public abstract class FieldAccessorImpl extends FunctionOrFieldAccessorImpl impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredName(LiteralOrComputedPropertyName newDeclaredName) {
 		if (newDeclaredName != declaredName) {
 			NotificationChain msgs = null;
@@ -146,7 +144,6 @@ public abstract class FieldAccessorImpl extends FunctionOrFieldAccessorImpl impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isDeclaredOptional() {
 		return declaredOptional;
 	}
@@ -156,7 +153,6 @@ public abstract class FieldAccessorImpl extends FunctionOrFieldAccessorImpl impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredOptional(boolean newDeclaredOptional) {
 		boolean oldDeclaredOptional = declaredOptional;
 		declaredOptional = newDeclaredOptional;
@@ -169,7 +165,6 @@ public abstract class FieldAccessorImpl extends FunctionOrFieldAccessorImpl impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TypeRef getDeclaredTypeRef() {
 		return null;
 	}
@@ -179,7 +174,6 @@ public abstract class FieldAccessorImpl extends FunctionOrFieldAccessorImpl impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public org.eclipse.n4js.ts.types.FieldAccessor getDefinedAccessor() {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT
@@ -191,7 +185,6 @@ public abstract class FieldAccessorImpl extends FunctionOrFieldAccessorImpl impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isOptional() {
 		return this.isDeclaredOptional();
 	}
@@ -201,7 +194,6 @@ public abstract class FieldAccessorImpl extends FunctionOrFieldAccessorImpl impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getName() {
 		LiteralOrComputedPropertyName _declaredName = this.getDeclaredName();
 		String _name = null;
@@ -216,7 +208,6 @@ public abstract class FieldAccessorImpl extends FunctionOrFieldAccessorImpl impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean hasComputedPropertyName() {
 		final LiteralOrComputedPropertyName declName = this.getDeclaredName();
 		return ((declName != null) && declName.hasComputedPropertyName());
@@ -227,7 +218,6 @@ public abstract class FieldAccessorImpl extends FunctionOrFieldAccessorImpl impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isValidName() {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT

@@ -188,7 +188,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TypeDefs createTypeDefs() {
 		TypeDefsImpl typeDefs = new TypeDefsImpl();
 		return typeDefs;
@@ -199,7 +198,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TModule createTModule() {
 		TModuleImpl tModule = new TModuleImpl();
 		return tModule;
@@ -210,7 +208,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public ComposedMemberCache createComposedMemberCache() {
 		ComposedMemberCacheImpl composedMemberCache = new ComposedMemberCacheImpl();
 		return composedMemberCache;
@@ -221,7 +218,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public IdentifiableElement createIdentifiableElement() {
 		IdentifiableElementImpl identifiableElement = new IdentifiableElementImpl();
 		return identifiableElement;
@@ -232,7 +228,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TExportableElement createTExportableElement() {
 		TExportableElementImpl tExportableElement = new TExportableElementImpl();
 		return tExportableElement;
@@ -243,7 +238,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TAnnotation createTAnnotation() {
 		TAnnotationImpl tAnnotation = new TAnnotationImpl();
 		return tAnnotation;
@@ -254,7 +248,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TAnnotationStringArgument createTAnnotationStringArgument() {
 		TAnnotationStringArgumentImpl tAnnotationStringArgument = new TAnnotationStringArgumentImpl();
 		return tAnnotationStringArgument;
@@ -265,7 +258,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TAnnotationTypeRefArgument createTAnnotationTypeRefArgument() {
 		TAnnotationTypeRefArgumentImpl tAnnotationTypeRefArgument = new TAnnotationTypeRefArgumentImpl();
 		return tAnnotationTypeRefArgument;
@@ -276,7 +268,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TAnnotableElement createTAnnotableElement() {
 		TAnnotableElementImpl tAnnotableElement = new TAnnotableElementImpl();
 		return tAnnotableElement;
@@ -287,7 +278,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TypeVariable createTypeVariable() {
 		TypeVariableImpl typeVariable = new TypeVariableImpl();
 		return typeVariable;
@@ -298,7 +288,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public InferenceVariable createInferenceVariable() {
 		InferenceVariableImpl inferenceVariable = new InferenceVariableImpl();
 		return inferenceVariable;
@@ -309,7 +298,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TFunction createTFunction() {
 		TFunctionImpl tFunction = new TFunctionImpl();
 		return tFunction;
@@ -320,7 +308,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Type createType() {
 		TypeImpl type = new TypeImpl();
 		return type;
@@ -331,7 +318,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public DeclaredTypeWithAccessModifier createDeclaredTypeWithAccessModifier() {
 		DeclaredTypeWithAccessModifierImpl declaredTypeWithAccessModifier = new DeclaredTypeWithAccessModifierImpl();
 		return declaredTypeWithAccessModifier;
@@ -342,7 +328,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public VirtualBaseType createVirtualBaseType() {
 		VirtualBaseTypeImpl virtualBaseType = new VirtualBaseTypeImpl();
 		return virtualBaseType;
@@ -353,7 +338,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public ModuleNamespaceVirtualType createModuleNamespaceVirtualType() {
 		ModuleNamespaceVirtualTypeImpl moduleNamespaceVirtualType = new ModuleNamespaceVirtualTypeImpl();
 		return moduleNamespaceVirtualType;
@@ -364,7 +348,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public PrimitiveType createPrimitiveType() {
 		PrimitiveTypeImpl primitiveType = new PrimitiveTypeImpl();
 		return primitiveType;
@@ -375,7 +358,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public BuiltInType createBuiltInType() {
 		BuiltInTypeImpl builtInType = new BuiltInTypeImpl();
 		return builtInType;
@@ -386,7 +368,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public AnyType createAnyType() {
 		AnyTypeImpl anyType = new AnyTypeImpl();
 		return anyType;
@@ -397,7 +378,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public UndefinedType createUndefinedType() {
 		UndefinedTypeImpl undefinedType = new UndefinedTypeImpl();
 		return undefinedType;
@@ -408,7 +388,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public NullType createNullType() {
 		NullTypeImpl nullType = new NullTypeImpl();
 		return nullType;
@@ -419,7 +398,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public VoidType createVoidType() {
 		VoidTypeImpl voidType = new VoidTypeImpl();
 		return voidType;
@@ -430,7 +408,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TStructuralType createTStructuralType() {
 		TStructuralTypeImpl tStructuralType = new TStructuralTypeImpl();
 		return tStructuralType;
@@ -441,7 +418,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TMigration createTMigration() {
 		TMigrationImpl tMigration = new TMigrationImpl();
 		return tMigration;
@@ -452,7 +428,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TObjectPrototype createTObjectPrototype() {
 		TObjectPrototypeImpl tObjectPrototype = new TObjectPrototypeImpl();
 		return tObjectPrototype;
@@ -463,7 +438,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TN4Classifier createTN4Classifier() {
 		TN4ClassifierImpl tn4Classifier = new TN4ClassifierImpl();
 		return tn4Classifier;
@@ -474,7 +448,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TClass createTClass() {
 		TClassImpl tClass = new TClassImpl();
 		return tClass;
@@ -485,7 +458,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TInterface createTInterface() {
 		TInterfaceImpl tInterface = new TInterfaceImpl();
 		return tInterface;
@@ -496,7 +468,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TMethod createTMethod() {
 		TMethodImpl tMethod = new TMethodImpl();
 		return tMethod;
@@ -507,7 +478,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TStructMethod createTStructMethod() {
 		TStructMethodImpl tStructMethod = new TStructMethodImpl();
 		return tStructMethod;
@@ -518,7 +488,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TFormalParameter createTFormalParameter() {
 		TFormalParameterImpl tFormalParameter = new TFormalParameterImpl();
 		return tFormalParameter;
@@ -529,7 +498,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TAnonymousFormalParameter createTAnonymousFormalParameter() {
 		TAnonymousFormalParameterImpl tAnonymousFormalParameter = new TAnonymousFormalParameterImpl();
 		return tAnonymousFormalParameter;
@@ -540,7 +508,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TField createTField() {
 		TFieldImpl tField = new TFieldImpl();
 		return tField;
@@ -551,7 +518,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TStructField createTStructField() {
 		TStructFieldImpl tStructField = new TStructFieldImpl();
 		return tStructField;
@@ -562,7 +528,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TGetter createTGetter() {
 		TGetterImpl tGetter = new TGetterImpl();
 		return tGetter;
@@ -573,7 +538,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TStructGetter createTStructGetter() {
 		TStructGetterImpl tStructGetter = new TStructGetterImpl();
 		return tStructGetter;
@@ -584,7 +548,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TSetter createTSetter() {
 		TSetterImpl tSetter = new TSetterImpl();
 		return tSetter;
@@ -595,7 +558,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TStructSetter createTStructSetter() {
 		TStructSetterImpl tStructSetter = new TStructSetterImpl();
 		return tStructSetter;
@@ -606,7 +568,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TEnum createTEnum() {
 		TEnumImpl tEnum = new TEnumImpl();
 		return tEnum;
@@ -617,7 +578,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TEnumLiteral createTEnumLiteral() {
 		TEnumLiteralImpl tEnumLiteral = new TEnumLiteralImpl();
 		return tEnumLiteral;
@@ -628,7 +588,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TVariable createTVariable() {
 		TVariableImpl tVariable = new TVariableImpl();
 		return tVariable;
@@ -831,7 +790,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TypesPackage getTypesPackage() {
 		return (TypesPackage)getEPackage();
 	}

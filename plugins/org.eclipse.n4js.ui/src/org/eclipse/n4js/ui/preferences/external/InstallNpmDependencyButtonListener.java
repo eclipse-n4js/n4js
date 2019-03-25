@@ -13,20 +13,20 @@ package org.eclipse.n4js.ui.preferences.external;
 import static org.eclipse.n4js.ui.utils.UIUtils.getDisplay;
 import static org.eclipse.n4js.ui.utils.UIUtils.getShell;
 
+import java.io.File;
+import java.net.URI;
 import java.util.Collections;
 import java.util.Map;
-import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.window.Window;
+import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
@@ -44,65 +44,102 @@ import org.eclipse.xtext.xbase.lib.StringExtensions;
  * Note: this class is not static, so it will hold reference to all services. Make sure to dispose it.
  *
  */
-public class InstallNpmDependencyButtonListener extends SelectionAdapter {
+class InstallNpmDependencyButtonListener extends SelectionAdapter {
 
-	final private Supplier<IInputValidator> packageNameValidator;
-	final private Supplier<IInputValidator> packageVersionValidator;
+	final private LibraryManager libManager;
+	final private NpmNameAndVersionValidatorHelper validatorHelper;
 	final private SemverHelper semverHelper;
 	final private StatusHelper statusHelper;
-	final private BiFunction<Map<String, NPMVersionRequirement>, IProgressMonitor, IStatus> installAction;
+	final private Runnable updateLocations;
+	final private Supplier<URI> getSelectedNodeModulesURI;
 
-	InstallNpmDependencyButtonListener(
-			BiFunction<Map<String, NPMVersionRequirement>, IProgressMonitor, IStatus> installAction,
-			Supplier<IInputValidator> packageNameValidator, Supplier<IInputValidator> packageVersionValidator,
-			SemverHelper semverHelper, StatusHelper statusHelper) {
+	/**
+	 * Constructor
+	 *
+	 * @param updateLocations
+	 *            the runnable that provides location
+	 * @param libManager
+	 *            the library manager
+	 * @param validatorHelper
+	 *            the validator that validates npm package (e.g. name, version)
+	 *
+	 * @param semverHelper
+	 *            the semver helper
+	 *
+	 * @param statusHelper
+	 *            the helper for handling status
+	 * @param getSelectedNodeModulesURI
+	 *            the supplier that provides the selected node_modules URI. Important: its getter must be called on the
+	 *            UI thread!
+	 */
+	public InstallNpmDependencyButtonListener(Runnable updateLocations, LibraryManager libManager,
+			NpmNameAndVersionValidatorHelper validatorHelper, SemverHelper semverHelper, StatusHelper statusHelper,
+			Supplier<URI> getSelectedNodeModulesURI) {
 
-		this.installAction = installAction;
-		this.packageNameValidator = packageNameValidator;
-		this.packageVersionValidator = packageVersionValidator;
+		this.updateLocations = updateLocations;
+		this.libManager = libManager;
+		this.validatorHelper = validatorHelper;
 		this.semverHelper = semverHelper;
 		this.statusHelper = statusHelper;
+		this.getSelectedNodeModulesURI = getSelectedNodeModulesURI;
 	}
 
 	@Override
 	public void widgetSelected(final SelectionEvent e) {
 
-		InstallNpmDependencyDialog dialog = new InstallNpmDependencyDialog(getShell(), packageNameValidator.get(),
-				packageVersionValidator.get());
+		InstallNpmDependencyDialog dialog = new InstallNpmDependencyDialog(getShell(),
+				validatorHelper.getPackageNameToInstallValidator(),
+				validatorHelper.getPackageVersionValidator());
 		dialog.open();
 
 		final String packageName = dialog.getPackageName();
+
+		if (StringExtensions.isNullOrEmpty(packageName) || dialog.getReturnCode() != Window.OK) {
+			return;
+		}
+
 		final MultiStatus multistatus = statusHelper.createMultiStatus("Installing npm '" + packageName + "'.");
+		try {
+			final String packageVersionStr = dialog.getVersionConstraint();
+			final NPMVersionRequirement packageVersion = semverHelper.parseVersionRangeSet(packageVersionStr);
+			if (packageVersion == null) { // null should never happen, since we have a validator in place
+				return;
+			}
 
-		if (!StringExtensions.isNullOrEmpty(packageName) && dialog.getReturnCode() == Window.OK) {
-			try {
-				final String packageVersionStr = dialog.getVersionConstraint();
-				final NPMVersionRequirement packageVersion = semverHelper.parseVersionRangeSet(packageVersionStr);
-				if (packageVersion != null) { // null should never happen, since we have a validator in place
-					new ProgressMonitorDialog(getShell()).run(true, true, monitor -> {
-						Map<String, NPMVersionRequirement> singletonMap = Collections.singletonMap(packageName,
-								packageVersion);
-						multistatus.merge(installAction.apply(singletonMap, monitor));
-					});
+			// Assume that node_modules in a direct directory of the project root folder
+			// Call getSelectedNodeModulesURI.get() on the UI thread!
+			File prjRootDir = new File(getSelectedNodeModulesURI.get()).getParentFile();
+			new ProgressMonitorDialog(getShell()).run(true, true, monitor -> {
+				Map<String, NPMVersionRequirement> singletonMap = Collections.singletonMap(packageName,
+						packageVersion);
+				try {
+					org.eclipse.emf.common.util.URI projectRootURI = org.eclipse.emf.common.util.URI
+							.createFileURI(prjRootDir.getAbsolutePath());
+
+					IStatus status = libManager.installNPMs(singletonMap, false, projectRootURI, monitor);
+					multistatus.merge(status);
+				} finally {
+					updateLocations.run();
 				}
+			});
 
-			} catch (final InterruptedException | OperationCanceledException exc) {
-				// canceled by user
-			} catch (final Exception exc) {
-				String msg = "Error while installing npm dependency: '" + packageName + "'.";
-				Throwable causingExc = exc.getCause() == null ? exc : exc.getCause();
-				multistatus.merge(statusHelper.createError(msg, causingExc));
+		} catch (final InterruptedException | OperationCanceledException exc) {
+			// canceled by user
+		} catch (final Exception exc) {
+			String msg = "Error while installing npm dependency: '" + packageName + "'.";
+			Throwable causingExc = exc.getCause() == null ? exc : exc.getCause();
+			multistatus.merge(statusHelper.createError(msg, causingExc));
 
-			} finally {
-				if (!multistatus.isOK()) {
-					N4JSActivator.getInstance().getLog().log(multistatus);
+		} finally {
+			if (!multistatus.isOK()) {
+				N4JSActivator.getInstance().getLog().log(multistatus);
 
-					getDisplay().asyncExec(() -> {
-						String descr = StatusUtils.getErrorMessage(multistatus, true);
-						ErrorDialog.openError(UIUtils.getShell(), "NPM Install Failed", descr, multistatus);
-					});
-				}
+				getDisplay().asyncExec(() -> {
+					String descr = StatusUtils.getErrorMessage(multistatus, true);
+					ErrorDialog.openError(UIUtils.getShell(), "NPM Install Failed", descr, multistatus);
+				});
 			}
 		}
 	}
+
 }

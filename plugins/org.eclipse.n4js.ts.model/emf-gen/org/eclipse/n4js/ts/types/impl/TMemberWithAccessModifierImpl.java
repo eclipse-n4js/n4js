@@ -108,7 +108,6 @@ public abstract class TMemberWithAccessModifierImpl extends TMemberImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isHasNoBody() {
 		return hasNoBody;
 	}
@@ -118,7 +117,6 @@ public abstract class TMemberWithAccessModifierImpl extends TMemberImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setHasNoBody(boolean newHasNoBody) {
 		boolean oldHasNoBody = hasNoBody;
 		hasNoBody = newHasNoBody;
@@ -131,7 +129,6 @@ public abstract class TMemberWithAccessModifierImpl extends TMemberImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public MemberAccessModifier getDeclaredMemberAccessModifier() {
 		return declaredMemberAccessModifier;
 	}
@@ -141,7 +138,6 @@ public abstract class TMemberWithAccessModifierImpl extends TMemberImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredMemberAccessModifier(MemberAccessModifier newDeclaredMemberAccessModifier) {
 		MemberAccessModifier oldDeclaredMemberAccessModifier = declaredMemberAccessModifier;
 		declaredMemberAccessModifier = newDeclaredMemberAccessModifier == null ? DECLARED_MEMBER_ACCESS_MODIFIER_EDEFAULT : newDeclaredMemberAccessModifier;
@@ -154,7 +150,6 @@ public abstract class TMemberWithAccessModifierImpl extends TMemberImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public MemberAccessModifier getMemberAccessModifier() {
 		MemberAccessModifier _declaredMemberAccessModifier = this.getDeclaredMemberAccessModifier();
 		boolean _tripleEquals = (_declaredMemberAccessModifier == MemberAccessModifier.UNDEFINED);

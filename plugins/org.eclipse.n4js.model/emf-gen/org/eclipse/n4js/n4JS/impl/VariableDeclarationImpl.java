@@ -158,7 +158,6 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TypeRef getDeclaredTypeRef() {
 		return declaredTypeRef;
 	}
@@ -183,7 +182,6 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredTypeRef(TypeRef newDeclaredTypeRef) {
 		if (newDeclaredTypeRef != declaredTypeRef) {
 			NotificationChain msgs = null;
@@ -203,7 +201,6 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TypeRef getBogusTypeRef() {
 		return bogusTypeRef;
 	}
@@ -228,7 +225,6 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setBogusTypeRef(TypeRef newBogusTypeRef) {
 		if (newBogusTypeRef != bogusTypeRef) {
 			NotificationChain msgs = null;
@@ -248,7 +244,6 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getName() {
 		return name;
 	}
@@ -258,7 +253,6 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -271,7 +265,6 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<Annotation> getAnnotations() {
 		if (annotations == null) {
 			annotations = new EObjectContainmentEList<Annotation>(Annotation.class, this, N4JSPackage.VARIABLE_DECLARATION__ANNOTATIONS);
@@ -284,7 +277,6 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Expression getExpression() {
 		return expression;
 	}
@@ -309,7 +301,6 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setExpression(Expression newExpression) {
 		if (newExpression != expression) {
 			NotificationChain msgs = null;
@@ -329,7 +320,6 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isConst() {
 		final VariableDeclarationContainer varDeclContainer = N4JSASTUtils.getVariableDeclarationContainer(this);
 		VariableStatementKeyword _varStmtKeyword = null;
@@ -344,7 +334,6 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TModule getContainingModule() {
 		return EcoreUtil2.<TModule>getContainerOfType(this, TModule.class);
 	}
@@ -354,7 +343,6 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<Annotation> getAllAnnotations() {
 		final BasicEList<Annotation> result = XcoreCollectionLiterals.<Annotation>newBasicEList();
 		final EObject parent = this.eContainer();

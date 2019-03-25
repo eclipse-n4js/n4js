@@ -77,7 +77,6 @@ public abstract class AnnotablePropertyAssignmentImpl extends PropertyAssignment
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public PropertyAssignmentAnnotationList getAnnotationList() {
 		return annotationList;
 	}
@@ -102,7 +101,6 @@ public abstract class AnnotablePropertyAssignmentImpl extends PropertyAssignment
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setAnnotationList(PropertyAssignmentAnnotationList newAnnotationList) {
 		if (newAnnotationList != annotationList) {
 			NotificationChain msgs = null;
@@ -122,7 +120,6 @@ public abstract class AnnotablePropertyAssignmentImpl extends PropertyAssignment
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<Annotation> getAnnotations() {
 		EList<Annotation> _elvis = null;
 		PropertyAssignmentAnnotationList _annotationList = this.getAnnotationList();

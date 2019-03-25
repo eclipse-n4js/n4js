@@ -78,7 +78,6 @@ public class ProjectReferenceImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getProjectName() {
 		return projectName;
 	}
@@ -88,7 +87,6 @@ public class ProjectReferenceImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setProjectName(String newProjectName) {
 		String oldProjectName = projectName;
 		projectName = newProjectName;

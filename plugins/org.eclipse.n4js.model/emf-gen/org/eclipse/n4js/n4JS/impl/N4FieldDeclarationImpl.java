@@ -153,7 +153,6 @@ public class N4FieldDeclarationImpl extends AnnotableN4MemberDeclarationImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TypeRef getDeclaredTypeRef() {
 		return declaredTypeRef;
 	}
@@ -178,7 +177,6 @@ public class N4FieldDeclarationImpl extends AnnotableN4MemberDeclarationImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredTypeRef(TypeRef newDeclaredTypeRef) {
 		if (newDeclaredTypeRef != declaredTypeRef) {
 			NotificationChain msgs = null;
@@ -198,7 +196,6 @@ public class N4FieldDeclarationImpl extends AnnotableN4MemberDeclarationImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TypeRef getBogusTypeRef() {
 		return bogusTypeRef;
 	}
@@ -223,7 +220,6 @@ public class N4FieldDeclarationImpl extends AnnotableN4MemberDeclarationImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setBogusTypeRef(TypeRef newBogusTypeRef) {
 		if (newBogusTypeRef != bogusTypeRef) {
 			NotificationChain msgs = null;
@@ -243,7 +239,6 @@ public class N4FieldDeclarationImpl extends AnnotableN4MemberDeclarationImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public LiteralOrComputedPropertyName getDeclaredName() {
 		return declaredName;
 	}
@@ -268,7 +263,6 @@ public class N4FieldDeclarationImpl extends AnnotableN4MemberDeclarationImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredName(LiteralOrComputedPropertyName newDeclaredName) {
 		if (newDeclaredName != declaredName) {
 			NotificationChain msgs = null;
@@ -288,7 +282,6 @@ public class N4FieldDeclarationImpl extends AnnotableN4MemberDeclarationImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TField getDefinedField() {
 		if (definedField != null && definedField.eIsProxy()) {
 			InternalEObject oldDefinedField = (InternalEObject)definedField;
@@ -315,7 +308,6 @@ public class N4FieldDeclarationImpl extends AnnotableN4MemberDeclarationImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDefinedField(TField newDefinedField) {
 		TField oldDefinedField = definedField;
 		definedField = newDefinedField;
@@ -328,7 +320,6 @@ public class N4FieldDeclarationImpl extends AnnotableN4MemberDeclarationImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isDeclaredOptional() {
 		return declaredOptional;
 	}
@@ -338,7 +329,6 @@ public class N4FieldDeclarationImpl extends AnnotableN4MemberDeclarationImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredOptional(boolean newDeclaredOptional) {
 		boolean oldDeclaredOptional = declaredOptional;
 		declaredOptional = newDeclaredOptional;
@@ -351,7 +341,6 @@ public class N4FieldDeclarationImpl extends AnnotableN4MemberDeclarationImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Expression getExpression() {
 		return expression;
 	}
@@ -376,7 +365,6 @@ public class N4FieldDeclarationImpl extends AnnotableN4MemberDeclarationImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setExpression(Expression newExpression) {
 		if (newExpression != expression) {
 			NotificationChain msgs = null;
@@ -396,7 +384,6 @@ public class N4FieldDeclarationImpl extends AnnotableN4MemberDeclarationImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TMember getDefinedTypeElement() {
 		return this.getDefinedField();
 	}
@@ -406,7 +393,6 @@ public class N4FieldDeclarationImpl extends AnnotableN4MemberDeclarationImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isConst() {
 		return this.getDeclaredModifiers().contains(N4Modifier.CONST);
 	}
@@ -416,7 +402,6 @@ public class N4FieldDeclarationImpl extends AnnotableN4MemberDeclarationImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isStatic() {
 		return (this.isDeclaredStatic() || this.isConst());
 	}
@@ -426,7 +411,6 @@ public class N4FieldDeclarationImpl extends AnnotableN4MemberDeclarationImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isValid() {
 		String _name = this.getName();
 		boolean _equals = Objects.equal("prototype", _name);
@@ -441,7 +425,6 @@ public class N4FieldDeclarationImpl extends AnnotableN4MemberDeclarationImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isValidName() {
 		String _name = this.getName();
 		boolean _equals = Objects.equal("prototype", _name);
@@ -456,7 +439,6 @@ public class N4FieldDeclarationImpl extends AnnotableN4MemberDeclarationImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getName() {
 		LiteralOrComputedPropertyName _declaredName = this.getDeclaredName();
 		String _name = null;
@@ -471,7 +453,6 @@ public class N4FieldDeclarationImpl extends AnnotableN4MemberDeclarationImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean hasComputedPropertyName() {
 		final LiteralOrComputedPropertyName declName = this.getDeclaredName();
 		return ((declName != null) && declName.hasComputedPropertyName());

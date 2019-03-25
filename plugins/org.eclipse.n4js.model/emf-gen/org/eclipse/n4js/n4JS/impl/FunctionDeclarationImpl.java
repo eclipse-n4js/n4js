@@ -276,7 +276,6 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<N4Modifier> getDeclaredModifiers() {
 		if (declaredModifiers == null) {
 			declaredModifiers = new EDataTypeEList<N4Modifier>(N4Modifier.class, this, N4JSPackage.FUNCTION_DECLARATION__DECLARED_MODIFIERS);
@@ -289,7 +288,6 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Block getBody() {
 		return body;
 	}
@@ -314,7 +312,6 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setBody(Block newBody) {
 		if (newBody != body) {
 			NotificationChain msgs = null;
@@ -334,7 +331,6 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public LocalArgumentsVariable get_lok() {
 		return _lok;
 	}
@@ -359,7 +355,6 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void set_lok(LocalArgumentsVariable new_lok) {
 		if (new_lok != _lok) {
 			NotificationChain msgs = null;
@@ -379,7 +374,6 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Type getDefinedType() {
 		if (definedType != null && definedType.eIsProxy()) {
 			InternalEObject oldDefinedType = (InternalEObject)definedType;
@@ -406,7 +400,6 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDefinedType(Type newDefinedType) {
 		Type oldDefinedType = definedType;
 		definedType = newDefinedType;
@@ -419,7 +412,6 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public BigDecimal getDeclaredVersion() {
 		return declaredVersion;
 	}
@@ -429,7 +421,6 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredVersion(BigDecimal newDeclaredVersion) {
 		BigDecimal oldDeclaredVersion = declaredVersion;
 		declaredVersion = newDeclaredVersion;
@@ -442,7 +433,6 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<FormalParameter> getFpars() {
 		if (fpars == null) {
 			fpars = new EObjectContainmentEList<FormalParameter>(FormalParameter.class, this, N4JSPackage.FUNCTION_DECLARATION__FPARS);
@@ -455,7 +445,6 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TypeRef getReturnTypeRef() {
 		return returnTypeRef;
 	}
@@ -480,7 +469,6 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setReturnTypeRef(TypeRef newReturnTypeRef) {
 		if (newReturnTypeRef != returnTypeRef) {
 			NotificationChain msgs = null;
@@ -500,7 +488,6 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isGenerator() {
 		return generator;
 	}
@@ -510,7 +497,6 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setGenerator(boolean newGenerator) {
 		boolean oldGenerator = generator;
 		generator = newGenerator;
@@ -523,7 +509,6 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isDeclaredAsync() {
 		return declaredAsync;
 	}
@@ -533,7 +518,6 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredAsync(boolean newDeclaredAsync) {
 		boolean oldDeclaredAsync = declaredAsync;
 		declaredAsync = newDeclaredAsync;
@@ -546,7 +530,6 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<TypeVariable> getTypeVars() {
 		if (typeVars == null) {
 			typeVars = new EObjectContainmentEList<TypeVariable>(TypeVariable.class, this, N4JSPackage.FUNCTION_DECLARATION__TYPE_VARS);
@@ -559,7 +542,6 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getName() {
 		return name;
 	}
@@ -569,7 +551,6 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -582,7 +563,6 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public MigrationContextVariable get_migrationContext() {
 		return _migrationContext;
 	}
@@ -607,7 +587,6 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void set_migrationContext(MigrationContextVariable new_migrationContext) {
 		if (new_migrationContext != _migrationContext) {
 			NotificationChain msgs = null;
@@ -627,7 +606,6 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isExternal() {
 		return this.getDeclaredModifiers().contains(N4Modifier.EXTERNAL);
 	}
@@ -637,7 +615,6 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public MigrationContextVariable getMigrationContextVariable() {
 		MigrationContextVariable __migrationContext = this.get_migrationContext();
 		boolean _tripleEquals = (__migrationContext == null);
@@ -659,7 +636,6 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isExported() {
 		EObject _eContainer = this.eContainer();
 		return (_eContainer instanceof ExportDeclaration);
@@ -670,7 +646,6 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isExportedAsDefault() {
 		return (this.isExported() && ((ExportDeclaration) this.eContainer()).isDefaultExport());
 	}
@@ -680,7 +655,6 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getExportedName() {
 		boolean _isExported = this.isExported();
 		if (_isExported) {
@@ -713,7 +687,6 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isToplevel() {
 		EObject _eContainer = this.eContainer();
 		if ((_eContainer instanceof ExportDeclaration)) {
@@ -729,7 +702,6 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isReturnValueOptional() {
 		return (((this.getDefinedFunction() != null) && this.getDefinedFunction().isReturnValueOptional()) || ((this.getReturnTypeRef() != null) && this.getReturnTypeRef().isFollowedByQuestionMark()));
 	}
@@ -739,7 +711,6 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isAsync() {
 		return this.isDeclaredAsync();
 	}
@@ -749,7 +720,6 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TFunction getDefinedFunction() {
 		final Type defType = this.getDefinedType();
 		TFunction _xifexpression = null;
@@ -764,7 +734,6 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean hasDeclaredVersion() {
 		BigDecimal _declaredVersion = this.getDeclaredVersion();
 		return (_declaredVersion != null);
@@ -775,7 +744,6 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public int getDeclaredVersionOrZero() {
 		int _xifexpression = (int) 0;
 		boolean _hasDeclaredVersion = this.hasDeclaredVersion();
@@ -793,7 +761,6 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public LocalArgumentsVariable getLocalArgumentsVariable() {
 		LocalArgumentsVariable __lok = this.get_lok();
 		boolean _tripleEquals = (__lok == null);
@@ -815,7 +782,6 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public IdentifiableElement getDefinedFunctionOrAccessor() {
 		final FunctionOrFieldAccessor _this = this;
 		EObject _switchResult = null;
@@ -838,7 +804,6 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean appliesOnlyToBlockScopedElements() {
 		return false;
 	}

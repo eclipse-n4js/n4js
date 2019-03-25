@@ -64,7 +64,6 @@ public abstract class FunctionTypeExprOrRefImpl extends StaticBaseTypeRefImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TypeRef getDeclaredThisType() {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT
@@ -76,7 +75,6 @@ public abstract class FunctionTypeExprOrRefImpl extends StaticBaseTypeRefImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TFunction getFunctionType() {
 		Type _declaredType = this.getDeclaredType();
 		return ((TFunction) _declaredType);
@@ -87,7 +85,6 @@ public abstract class FunctionTypeExprOrRefImpl extends StaticBaseTypeRefImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<TypeVariable> getTypeVars() {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT
@@ -99,7 +96,6 @@ public abstract class FunctionTypeExprOrRefImpl extends StaticBaseTypeRefImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TypeRef getTypeVarUpperBound(TypeVariable typeVar) {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT
@@ -111,7 +107,6 @@ public abstract class FunctionTypeExprOrRefImpl extends StaticBaseTypeRefImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<TFormalParameter> getFpars() {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT
@@ -123,7 +118,6 @@ public abstract class FunctionTypeExprOrRefImpl extends StaticBaseTypeRefImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isReturnValueOptional() {
 		return ((this.getReturnTypeRef() != null) && this.getReturnTypeRef().isFollowedByQuestionMark());
 	}
@@ -133,7 +127,6 @@ public abstract class FunctionTypeExprOrRefImpl extends StaticBaseTypeRefImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TypeRef getReturnTypeRef() {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT
@@ -145,7 +138,6 @@ public abstract class FunctionTypeExprOrRefImpl extends StaticBaseTypeRefImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isGeneric() {
 		boolean _isEmpty = this.getTypeVars().isEmpty();
 		return (!_isEmpty);
@@ -156,7 +148,6 @@ public abstract class FunctionTypeExprOrRefImpl extends StaticBaseTypeRefImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isRaw() {
 		return (this.isGeneric() && (this.getTypeArgs().size() < this.getTypeVars().size()));
 	}
@@ -166,7 +157,6 @@ public abstract class FunctionTypeExprOrRefImpl extends StaticBaseTypeRefImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TFormalParameter getFparForArgIdx(final int argIndex) {
 		final int fparsSize = this.getFpars().size();
 		if (((argIndex >= 0) && (argIndex < fparsSize))) {
@@ -185,7 +175,6 @@ public abstract class FunctionTypeExprOrRefImpl extends StaticBaseTypeRefImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getTypeRefAsString() {
 		String _xifexpression = null;
 		TypeRef _declaredThisType = this.getDeclaredThisType();

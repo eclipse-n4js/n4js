@@ -17,9 +17,14 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IExecutionListener;
 import org.eclipse.core.commands.NotHandledException;
 import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
 import org.eclipse.n4js.ui.external.EclipseExternalIndexSynchronizer;
+import org.eclipse.n4js.ui.external.ExternalLibraryBuilder;
 import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.PlatformUI;
@@ -44,10 +49,15 @@ public class N4JSExternalLibraryStartup implements IStartup {
 
 	@Inject
 	private IWorkspace workspace;
+
 	@Inject
 	private BuildScheduler buildManager;
+
 	@Inject
 	private IBuilderState builderState;
+
+	@Inject
+	private ExternalLibraryBuilder builder;
 
 	@Override
 	public void earlyStartup() {
@@ -100,7 +110,20 @@ public class N4JSExternalLibraryStartup implements IStartup {
 		@Override
 		public void postExecuteSuccess(String commandId, Object returnValue) {
 			if ("org.eclipse.ui.file.refresh".equals(commandId)) {
-				indexSynchronizer.checkAndClearIndex(new NullProgressMonitor());
+				Job job = new Job("Update locations of node_modules folders") {
+					@Override
+					protected IStatus run(IProgressMonitor monitor) {
+						ISchedulingRule rule = builder.getRule();
+						Job.getJobManager().beginRule(rule, monitor);
+						try {
+							indexSynchronizer.checkAndClearIndex(monitor);
+						} finally {
+							Job.getJobManager().endRule(rule);
+						}
+						return Status.OK_STATUS;
+					}
+				};
+				job.schedule();
 			}
 		}
 

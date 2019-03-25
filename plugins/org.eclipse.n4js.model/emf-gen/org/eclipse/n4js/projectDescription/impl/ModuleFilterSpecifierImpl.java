@@ -99,7 +99,6 @@ public class ModuleFilterSpecifierImpl extends MinimalEObjectImpl.Container impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getModuleSpecifierWithWildcard() {
 		return moduleSpecifierWithWildcard;
 	}
@@ -109,7 +108,6 @@ public class ModuleFilterSpecifierImpl extends MinimalEObjectImpl.Container impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setModuleSpecifierWithWildcard(String newModuleSpecifierWithWildcard) {
 		String oldModuleSpecifierWithWildcard = moduleSpecifierWithWildcard;
 		moduleSpecifierWithWildcard = newModuleSpecifierWithWildcard;
@@ -122,7 +120,6 @@ public class ModuleFilterSpecifierImpl extends MinimalEObjectImpl.Container impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getSourcePath() {
 		return sourcePath;
 	}
@@ -132,7 +129,6 @@ public class ModuleFilterSpecifierImpl extends MinimalEObjectImpl.Container impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setSourcePath(String newSourcePath) {
 		String oldSourcePath = sourcePath;
 		sourcePath = newSourcePath;

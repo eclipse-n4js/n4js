@@ -83,7 +83,6 @@ public class CastExpressionImpl extends ExpressionImpl implements CastExpression
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Expression getExpression() {
 		return expression;
 	}
@@ -108,7 +107,6 @@ public class CastExpressionImpl extends ExpressionImpl implements CastExpression
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setExpression(Expression newExpression) {
 		if (newExpression != expression) {
 			NotificationChain msgs = null;
@@ -128,7 +126,6 @@ public class CastExpressionImpl extends ExpressionImpl implements CastExpression
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TypeRef getTargetTypeRef() {
 		return targetTypeRef;
 	}
@@ -153,7 +150,6 @@ public class CastExpressionImpl extends ExpressionImpl implements CastExpression
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setTargetTypeRef(TypeRef newTargetTypeRef) {
 		if (newTargetTypeRef != targetTypeRef) {
 			NotificationChain msgs = null;

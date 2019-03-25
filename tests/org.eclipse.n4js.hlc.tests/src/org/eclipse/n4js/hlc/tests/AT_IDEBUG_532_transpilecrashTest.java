@@ -35,7 +35,7 @@ public class AT_IDEBUG_532_transpilecrashTest extends AbstractN4jscTest {
 	 */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace(WSP_532, Predicates.alwaysTrue());
+		workspace = setupWorkspace(WSP_532, Predicates.alwaysTrue(), true);
 	}
 
 	/** Delete workspace. */
@@ -48,7 +48,7 @@ public class AT_IDEBUG_532_transpilecrashTest extends AbstractN4jscTest {
 	@Test
 	public void testCompileOfExtendedIterator_from_RuntimeLibrary() throws ExitCodeException {
 
-		String proot = workspace.getAbsolutePath().toString();
+		String proot = new File(workspace, PACKAGES).getAbsolutePath().toString();
 
 		String[] args = { "--projectlocations", proot, "--buildType", "allprojects" };
 

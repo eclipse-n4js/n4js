@@ -19,8 +19,8 @@ import org.eclipse.n4js.xpect.ui.methods.OutlineXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.ProposalXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.contentassist.ContentAssistXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.quickfix.QuickFixXpectMethod;
+import org.eclipse.n4js.xpect.ui.refactoring.RenameRefactoringXpectMethod;
 import org.eclipse.n4js.xpect.validation.suppression.N4JSSuppressIssuesSetup;
-import org.junit.runner.RunWith;
 import org.eclipse.xpect.XpectImport;
 import org.eclipse.xpect.runner.XpectRunner;
 import org.eclipse.xpect.runner.XpectSuiteClasses;
@@ -29,6 +29,7 @@ import org.eclipse.xpect.runner.XpectTestFiles.FileRoot;
 import org.eclipse.xpect.xtext.lib.tests.LinkingTest;
 import org.eclipse.xpect.xtext.lib.tests.ResourceDescriptionTest;
 import org.eclipse.xpect.xtext.lib.tests.ValidationTest;
+import org.junit.runner.RunWith;
 
 /**
  * Plugin linking test
@@ -44,7 +45,8 @@ import org.eclipse.xpect.xtext.lib.tests.ValidationTest;
 		ContentAssistXpectMethod.class,
 		ProposalXpectMethod.class,
 		HyperlinkXpectMethod.class,
-		OrganizeImportXpectMethod.class
+		OrganizeImportXpectMethod.class,
+		RenameRefactoringXpectMethod.class
 })
 @RunWith(XpectRunner.class)
 @XpectTestFiles(relativeTo = FileRoot.PROJECT, baseDir = "testdata_ui", fileExtensions = "xt")

@@ -156,7 +156,6 @@ public class TEnumImpl extends DeclaredTypeWithAccessModifierImpl implements TEn
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EObject getAstElement() {
 		if (astElement != null && astElement.eIsProxy()) {
 			InternalEObject oldAstElement = (InternalEObject)astElement;
@@ -183,7 +182,6 @@ public class TEnumImpl extends DeclaredTypeWithAccessModifierImpl implements TEn
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setAstElement(EObject newAstElement) {
 		EObject oldAstElement = astElement;
 		astElement = newAstElement;
@@ -196,7 +194,6 @@ public class TEnumImpl extends DeclaredTypeWithAccessModifierImpl implements TEn
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public int getDeclaredVersion() {
 		return declaredVersion;
 	}
@@ -206,7 +203,6 @@ public class TEnumImpl extends DeclaredTypeWithAccessModifierImpl implements TEn
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredVersion(int newDeclaredVersion) {
 		int oldDeclaredVersion = declaredVersion;
 		declaredVersion = newDeclaredVersion;
@@ -219,7 +215,6 @@ public class TEnumImpl extends DeclaredTypeWithAccessModifierImpl implements TEn
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<TMigration> getMigrations() {
 		if (migrations == null) {
 			migrations = new EObjectResolvingEList<TMigration>(TMigration.class, this, TypesPackage.TENUM__MIGRATIONS);
@@ -232,7 +227,6 @@ public class TEnumImpl extends DeclaredTypeWithAccessModifierImpl implements TEn
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isExternal() {
 		return external;
 	}
@@ -242,7 +236,6 @@ public class TEnumImpl extends DeclaredTypeWithAccessModifierImpl implements TEn
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setExternal(boolean newExternal) {
 		boolean oldExternal = external;
 		external = newExternal;
@@ -255,7 +248,6 @@ public class TEnumImpl extends DeclaredTypeWithAccessModifierImpl implements TEn
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<TEnumLiteral> getLiterals() {
 		if (literals == null) {
 			literals = new EObjectContainmentEList<TEnumLiteral>(TEnumLiteral.class, this, TypesPackage.TENUM__LITERALS);
@@ -268,7 +260,6 @@ public class TEnumImpl extends DeclaredTypeWithAccessModifierImpl implements TEn
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<TypeVariable> getTypeVars() {
 		return XcoreCollectionLiterals.<TypeVariable>emptyEList();
 	}
@@ -278,7 +269,6 @@ public class TEnumImpl extends DeclaredTypeWithAccessModifierImpl implements TEn
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public int getVersion() {
 		return this.getDeclaredVersion();
 	}

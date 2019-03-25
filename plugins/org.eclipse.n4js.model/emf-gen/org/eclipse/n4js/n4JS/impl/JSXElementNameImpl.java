@@ -72,7 +72,6 @@ public class JSXElementNameImpl extends ProxyResolvingEObjectImpl implements JSX
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Expression getExpression() {
 		return expression;
 	}
@@ -97,7 +96,6 @@ public class JSXElementNameImpl extends ProxyResolvingEObjectImpl implements JSX
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setExpression(Expression newExpression) {
 		if (newExpression != expression) {
 			NotificationChain msgs = null;

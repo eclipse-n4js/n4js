@@ -98,7 +98,6 @@ public class ArrayLiteralImpl extends PrimaryExpressionImpl implements ArrayLite
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<ArrayElement> getElements() {
 		if (elements == null) {
 			elements = new EObjectContainmentEList<ArrayElement>(ArrayElement.class, this, N4JSPackage.ARRAY_LITERAL__ELEMENTS);
@@ -111,7 +110,6 @@ public class ArrayLiteralImpl extends PrimaryExpressionImpl implements ArrayLite
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isTrailingComma() {
 		return trailingComma;
 	}
@@ -121,7 +119,6 @@ public class ArrayLiteralImpl extends PrimaryExpressionImpl implements ArrayLite
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setTrailingComma(boolean newTrailingComma) {
 		boolean oldTrailingComma = trailingComma;
 		trailingComma = newTrailingComma;

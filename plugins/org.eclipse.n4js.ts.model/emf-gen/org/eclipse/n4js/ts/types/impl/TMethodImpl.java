@@ -287,7 +287,6 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isDeclaredFinal() {
 		return declaredFinal;
 	}
@@ -297,7 +296,6 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredFinal(boolean newDeclaredFinal) {
 		boolean oldDeclaredFinal = declaredFinal;
 		declaredFinal = newDeclaredFinal;
@@ -310,7 +308,6 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isDeclaredStatic() {
 		return declaredStatic;
 	}
@@ -320,7 +317,6 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredStatic(boolean newDeclaredStatic) {
 		boolean oldDeclaredStatic = declaredStatic;
 		declaredStatic = newDeclaredStatic;
@@ -333,7 +329,6 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isDeclaredOverride() {
 		return declaredOverride;
 	}
@@ -343,7 +338,6 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredOverride(boolean newDeclaredOverride) {
 		boolean oldDeclaredOverride = declaredOverride;
 		declaredOverride = newDeclaredOverride;
@@ -356,7 +350,6 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isHasComputedName() {
 		return hasComputedName;
 	}
@@ -366,7 +359,6 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setHasComputedName(boolean newHasComputedName) {
 		boolean oldHasComputedName = hasComputedName;
 		hasComputedName = newHasComputedName;
@@ -379,7 +371,6 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<TMember> getConstituentMembers() {
 		if (constituentMembers == null) {
 			constituentMembers = new EObjectResolvingEList<TMember>(TMember.class, this, TypesPackage.TMETHOD__CONSTITUENT_MEMBERS);
@@ -392,7 +383,6 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isComposed() {
 		return composed;
 	}
@@ -402,7 +392,6 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setComposed(boolean newComposed) {
 		boolean oldComposed = composed;
 		composed = newComposed;
@@ -415,7 +404,6 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isHasNoBody() {
 		return hasNoBody;
 	}
@@ -425,7 +413,6 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setHasNoBody(boolean newHasNoBody) {
 		boolean oldHasNoBody = hasNoBody;
 		hasNoBody = newHasNoBody;
@@ -438,7 +425,6 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public MemberAccessModifier getDeclaredMemberAccessModifier() {
 		return declaredMemberAccessModifier;
 	}
@@ -448,7 +434,6 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredMemberAccessModifier(MemberAccessModifier newDeclaredMemberAccessModifier) {
 		MemberAccessModifier oldDeclaredMemberAccessModifier = declaredMemberAccessModifier;
 		declaredMemberAccessModifier = newDeclaredMemberAccessModifier == null ? DECLARED_MEMBER_ACCESS_MODIFIER_EDEFAULT : newDeclaredMemberAccessModifier;
@@ -461,7 +446,6 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isDeclaredAbstract() {
 		return declaredAbstract;
 	}
@@ -471,7 +455,6 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredAbstract(boolean newDeclaredAbstract) {
 		boolean oldDeclaredAbstract = declaredAbstract;
 		declaredAbstract = newDeclaredAbstract;
@@ -484,7 +467,6 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isLacksThisOrSuperUsage() {
 		return lacksThisOrSuperUsage;
 	}
@@ -494,7 +476,6 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setLacksThisOrSuperUsage(boolean newLacksThisOrSuperUsage) {
 		boolean oldLacksThisOrSuperUsage = lacksThisOrSuperUsage;
 		lacksThisOrSuperUsage = newLacksThisOrSuperUsage;
@@ -507,7 +488,6 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isAbstract() {
 		return (this.isDeclaredAbstract() || ((this.eContainer() instanceof TInterface) && this.isHasNoBody()));
 	}
@@ -517,7 +497,6 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public MemberType getMemberType() {
 		return MemberType.METHOD;
 	}
@@ -527,7 +506,6 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isConstructor() {
 		return (Objects.equal(this.getName(), "constructor") && (!this.isStatic()));
 	}
@@ -537,7 +515,6 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getFunctionAsString() {
 		final StringBuilder strb = new StringBuilder();
 		boolean _isGeneric = this.isGeneric();
@@ -576,7 +553,6 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getMemberAsString() {
 		return this.getFunctionAsString();
 	}
@@ -586,7 +562,6 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public MemberAccessModifier getMemberAccessModifier() {
 		MemberAccessModifier _declaredMemberAccessModifier = this.getDeclaredMemberAccessModifier();
 		boolean _tripleEquals = (_declaredMemberAccessModifier == MemberAccessModifier.UNDEFINED);
@@ -608,7 +583,6 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public ContainerType<?> getContainingType() {
 		final EObject myContainer = this.eContainer();
 		ContainerType<?> _xifexpression = null;
@@ -626,7 +600,6 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isField() {
 		MemberType _memberType = this.getMemberType();
 		return Objects.equal(_memberType, MemberType.FIELD);
@@ -637,7 +610,6 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isGetter() {
 		MemberType _memberType = this.getMemberType();
 		return Objects.equal(_memberType, MemberType.GETTER);
@@ -648,7 +620,6 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isSetter() {
 		MemberType _memberType = this.getMemberType();
 		return Objects.equal(_memberType, MemberType.SETTER);
@@ -659,7 +630,6 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isAccessor() {
 		return (Objects.equal(this.getMemberType(), MemberType.SETTER) || Objects.equal(this.getMemberType(), MemberType.GETTER));
 	}
@@ -669,7 +639,6 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isMethod() {
 		MemberType _memberType = this.getMemberType();
 		return Objects.equal(_memberType, MemberType.METHOD);
@@ -680,7 +649,6 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isOptional() {
 		return false;
 	}
@@ -690,7 +658,6 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isReadable() {
 		return true;
 	}
@@ -700,7 +667,6 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isWriteable() {
 		return false;
 	}
@@ -710,7 +676,6 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isFinal() {
 		return this.isDeclaredFinal();
 	}
@@ -720,7 +685,6 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isStatic() {
 		return this.isDeclaredStatic();
 	}
@@ -730,7 +694,6 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isConst() {
 		return false;
 	}
@@ -740,7 +703,6 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isPolyfilled() {
 		final ContainerType<?> containingType = this.getContainingType();
 		if ((containingType == null)) {

@@ -126,7 +126,6 @@ public class NewExpressionImpl extends ExpressionImpl implements NewExpression {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<TypeRef> getTypeArgs() {
 		if (typeArgs == null) {
 			typeArgs = new EObjectContainmentEList<TypeRef>(TypeRef.class, this, N4JSPackage.NEW_EXPRESSION__TYPE_ARGS);
@@ -139,7 +138,6 @@ public class NewExpressionImpl extends ExpressionImpl implements NewExpression {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Expression getCallee() {
 		return callee;
 	}
@@ -164,7 +162,6 @@ public class NewExpressionImpl extends ExpressionImpl implements NewExpression {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setCallee(Expression newCallee) {
 		if (newCallee != callee) {
 			NotificationChain msgs = null;
@@ -184,7 +181,6 @@ public class NewExpressionImpl extends ExpressionImpl implements NewExpression {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<Argument> getArguments() {
 		if (arguments == null) {
 			arguments = new EObjectContainmentEList<Argument>(Argument.class, this, N4JSPackage.NEW_EXPRESSION__ARGUMENTS);
@@ -197,7 +193,6 @@ public class NewExpressionImpl extends ExpressionImpl implements NewExpression {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isWithArgs() {
 		return withArgs;
 	}
@@ -207,7 +202,6 @@ public class NewExpressionImpl extends ExpressionImpl implements NewExpression {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setWithArgs(boolean newWithArgs) {
 		boolean oldWithArgs = withArgs;
 		withArgs = newWithArgs;
@@ -220,7 +214,6 @@ public class NewExpressionImpl extends ExpressionImpl implements NewExpression {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isParameterized() {
 		boolean _isEmpty = this.getTypeArgs().isEmpty();
 		return (!_isEmpty);

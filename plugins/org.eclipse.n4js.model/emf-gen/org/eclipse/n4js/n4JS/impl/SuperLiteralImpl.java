@@ -55,7 +55,6 @@ public class SuperLiteralImpl extends PrimaryExpressionImpl implements SuperLite
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isSuperConstructorAccess() {
 		EObject _eContainer = this.eContainer();
 		return (_eContainer instanceof ParameterizedCallExpression);
@@ -66,7 +65,6 @@ public class SuperLiteralImpl extends PrimaryExpressionImpl implements SuperLite
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isSuperMemberAccess() {
 		return ((this.eContainer() instanceof ParameterizedPropertyAccessExpression) || (this.eContainer() instanceof IndexedAccessExpression));
 	}

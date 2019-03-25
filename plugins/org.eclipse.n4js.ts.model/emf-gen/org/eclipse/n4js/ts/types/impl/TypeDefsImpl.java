@@ -76,7 +76,6 @@ public class TypeDefsImpl extends ProxyResolvingEObjectImpl implements TypeDefs 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<Type> getTypes() {
 		if (types == null) {
 			types = new EObjectContainmentEList<Type>(Type.class, this, TypesPackage.TYPE_DEFS__TYPES);

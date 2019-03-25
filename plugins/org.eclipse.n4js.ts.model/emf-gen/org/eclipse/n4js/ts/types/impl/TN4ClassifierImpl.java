@@ -168,7 +168,6 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TypeAccessModifier getDeclaredTypeAccessModifier() {
 		return declaredTypeAccessModifier;
 	}
@@ -178,7 +177,6 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredTypeAccessModifier(TypeAccessModifier newDeclaredTypeAccessModifier) {
 		TypeAccessModifier oldDeclaredTypeAccessModifier = declaredTypeAccessModifier;
 		declaredTypeAccessModifier = newDeclaredTypeAccessModifier == null ? DECLARED_TYPE_ACCESS_MODIFIER_EDEFAULT : newDeclaredTypeAccessModifier;
@@ -191,7 +189,6 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isDeclaredProvidedByRuntime() {
 		return declaredProvidedByRuntime;
 	}
@@ -201,7 +198,6 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredProvidedByRuntime(boolean newDeclaredProvidedByRuntime) {
 		boolean oldDeclaredProvidedByRuntime = declaredProvidedByRuntime;
 		declaredProvidedByRuntime = newDeclaredProvidedByRuntime;
@@ -214,7 +210,6 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<TMigration> getMigrations() {
 		if (migrations == null) {
 			migrations = new EObjectResolvingEList<TMigration>(TMigration.class, this, TypesPackage.TN4_CLASSIFIER__MIGRATIONS);
@@ -227,7 +222,6 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isDynamizable() {
 		return dynamizable;
 	}
@@ -237,7 +231,6 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDynamizable(boolean newDynamizable) {
 		boolean oldDynamizable = dynamizable;
 		dynamizable = newDynamizable;
@@ -250,7 +243,6 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TypingStrategy getTypingStrategy() {
 		return typingStrategy;
 	}
@@ -260,7 +252,6 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setTypingStrategy(TypingStrategy newTypingStrategy) {
 		TypingStrategy oldTypingStrategy = typingStrategy;
 		typingStrategy = newTypingStrategy == null ? TYPING_STRATEGY_EDEFAULT : newTypingStrategy;
@@ -273,7 +264,6 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isProvidedByRuntime() {
 		return this.isDeclaredProvidedByRuntime();
 	}
@@ -283,7 +273,6 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TypeAccessModifier getTypeAccessModifier() {
 		TypeAccessModifier _declaredTypeAccessModifier = this.getDeclaredTypeAccessModifier();
 		boolean _equals = Objects.equal(_declaredTypeAccessModifier, TypeAccessModifier.UNDEFINED);

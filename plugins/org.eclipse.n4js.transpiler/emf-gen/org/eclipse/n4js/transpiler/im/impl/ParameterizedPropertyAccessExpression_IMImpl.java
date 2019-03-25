@@ -261,7 +261,7 @@ public class ParameterizedPropertyAccessExpression_IMImpl extends ParameterizedP
 		else {
 			final SymbolTableEntry e = this.getRewiredTarget();
 			if ((e instanceof SymbolTableEntryOriginal)) {
-				final String exName = ((SymbolTableEntryOriginal)e).exportedName();
+				final String exName = ((SymbolTableEntryOriginal)e).getExportedName();
 				if ((exName != null)) {
 					return exName;
 				}

@@ -117,7 +117,6 @@ public class JSXPropertyAttributeImpl extends JSXAttributeImpl implements JSXPro
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public ComposedMemberCache getComposedMemberCache() {
 		if (composedMemberCache != null && composedMemberCache.eIsProxy()) {
 			InternalEObject oldComposedMemberCache = (InternalEObject)composedMemberCache;
@@ -144,7 +143,6 @@ public class JSXPropertyAttributeImpl extends JSXAttributeImpl implements JSXPro
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setComposedMemberCache(ComposedMemberCache newComposedMemberCache) {
 		ComposedMemberCache oldComposedMemberCache = composedMemberCache;
 		composedMemberCache = newComposedMemberCache;
@@ -157,7 +155,6 @@ public class JSXPropertyAttributeImpl extends JSXAttributeImpl implements JSXPro
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public IdentifiableElement getProperty() {
 		if (property != null && property.eIsProxy()) {
 			InternalEObject oldProperty = (InternalEObject)property;
@@ -184,7 +181,6 @@ public class JSXPropertyAttributeImpl extends JSXAttributeImpl implements JSXPro
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setProperty(IdentifiableElement newProperty) {
 		IdentifiableElement oldProperty = property;
 		property = newProperty;
@@ -197,7 +193,6 @@ public class JSXPropertyAttributeImpl extends JSXAttributeImpl implements JSXPro
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getPropertyAsText() {
 		return propertyAsText;
 	}
@@ -207,7 +202,6 @@ public class JSXPropertyAttributeImpl extends JSXAttributeImpl implements JSXPro
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setPropertyAsText(String newPropertyAsText) {
 		String oldPropertyAsText = propertyAsText;
 		propertyAsText = newPropertyAsText;
@@ -220,7 +214,6 @@ public class JSXPropertyAttributeImpl extends JSXAttributeImpl implements JSXPro
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Expression getJsxAttributeValue() {
 		return jsxAttributeValue;
 	}
@@ -245,7 +238,6 @@ public class JSXPropertyAttributeImpl extends JSXAttributeImpl implements JSXPro
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setJsxAttributeValue(Expression newJsxAttributeValue) {
 		if (newJsxAttributeValue != jsxAttributeValue) {
 			NotificationChain msgs = null;

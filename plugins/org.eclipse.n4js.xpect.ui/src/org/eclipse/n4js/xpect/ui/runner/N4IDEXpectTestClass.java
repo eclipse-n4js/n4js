@@ -24,6 +24,7 @@ import org.eclipse.n4js.xpect.ui.methods.OutputXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.ProposalXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.contentassist.ContentAssistXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.quickfix.QuickFixXpectMethod;
+import org.eclipse.n4js.xpect.ui.refactoring.RenameRefactoringXpectMethod;
 import org.eclipse.n4js.xpect.ui.runner.N4IDEXpectTestFilesCollector.N4IDEXpectTestURIProvider;
 import org.eclipse.xpect.XpectImport;
 import org.eclipse.xpect.runner.IXpectURIProvider;
@@ -54,7 +55,8 @@ import org.junit.runner.RunWith;
 		ContentAssistXpectMethod.class,
 		QuickFixXpectMethod.class,
 		ResourceDescriptionTest.class,
-		FlowgraphsXpectMethod.class
+		FlowgraphsXpectMethod.class,
+		RenameRefactoringXpectMethod.class
 })
 
 @RunWith(XpectRunner.class)

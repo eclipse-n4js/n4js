@@ -55,8 +55,7 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 	]
 
 	@Before
-	override void setUp() {
-		super.setUp
+	def void setUp2() {
 		firstProjectUnderTest = createJSProject("multiProjectTest.first")
 		secondProjectUnderTest = createJSProject("multiProjectTest.second")
 		src = configureProjectWithXtext(firstProjectUnderTest)
@@ -269,15 +268,22 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 		removeProjectDependencies(secondProjectUnderTest);
 		addProjectToDependencies(secondProjectUnderTest.name);
 
-		assertMarkers('project description file (package.json) file should have no errors.', projectDescriptionFile, 0);
+		assertIssues(projectDescriptionFile,
+			"line 21: Project depends on workspace project multiProjectTest.second which is missing in the node_modules folder. " +
+			"Either install project multiProjectTest.second or introduce a yarn workspace of both of the projects.");
 		assertMarkers('project description file (package.json) file should have no errors.', projectDescriptionFile2, 0);
 
+
 		changeProjectType(secondProjectUnderTest, ProjectType.RUNTIME_LIBRARY);
-		assertMarkers('project description file (package.json) file should have one error.', projectDescriptionFile, 0);
+		assertIssues(projectDescriptionFile,
+			"line 21: Project depends on workspace project multiProjectTest.second which is missing in the node_modules folder. " +
+			"Either install project multiProjectTest.second or introduce a yarn workspace of both of the projects.");
 		assertMarkers('project description file (package.json) file should have no errors.', projectDescriptionFile2, 0);
 
 		changeProjectType(secondProjectUnderTest, ProjectType.LIBRARY);
-		assertMarkers('project description file (package.json) file should have no errors.', projectDescriptionFile, 0);
+		assertIssues(projectDescriptionFile,
+			"line 21: Project depends on workspace project multiProjectTest.second which is missing in the node_modules folder. " +
+			"Either install project multiProjectTest.second or introduce a yarn workspace of both of the projects.");
 		assertMarkers('project description file (package.json) file should have no errors.', projectDescriptionFile2, 0);
 	}
 

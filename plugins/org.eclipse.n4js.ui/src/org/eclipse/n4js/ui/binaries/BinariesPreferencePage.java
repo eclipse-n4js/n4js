@@ -16,15 +16,19 @@ import static org.eclipse.swt.SWT.WRAP;
 
 import java.io.File;
 import java.net.URI;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.n4js.binaries.BinariesPreferenceStore;
+import org.eclipse.n4js.binaries.BinariesProvider;
+import org.eclipse.n4js.binaries.Binary;
+import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -37,13 +41,9 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.binaries.BinariesPreferenceStore;
-import org.eclipse.n4js.binaries.BinariesProvider;
-import org.eclipse.n4js.binaries.Binary;
-import org.eclipse.n4js.ui.utils.UIUtils;
 
 /**
  * Preference page for configuring {@code Node.js} and {@code npm} binaries.
@@ -86,13 +86,7 @@ public class BinariesPreferencePage extends PreferencePage implements IWorkbench
 			recursiveAddBinaryGroup(binaryGroup, binary);
 		}
 
-		for (final Binary binary : binaries) {
-			final IStatus status = binary.validate();
-			if (!status.isOK()) {
-				setErrorMessage(status.getMessage());
-				break;
-			}
-		}
+		refreshErrorMessage();
 
 		return body;
 	}
@@ -172,15 +166,19 @@ public class BinariesPreferencePage extends PreferencePage implements IWorkbench
 			store.setPath(binary, null);
 		}
 		store.save();
-		final IStatus status = binary.validate();
+		refreshErrorMessage();
+	}
+
+	private void refreshErrorMessage() {
+		final List<String> binariesErrors = binariesProvider.validateBinaries();
 		UIUtils.getDisplay().asyncExec(new Runnable() {
 
 			@Override
 			public void run() {
 				final Control control = getControl();
 				if (null != control && !control.isDisposed()) {
-					if (!status.isOK()) {
-						setErrorMessage(status.getMessage());
+					if (!binariesErrors.isEmpty()) {
+						setErrorMessage(Joiner.on("\n").join(binariesErrors));
 					} else {
 						setErrorMessage(null);
 					}

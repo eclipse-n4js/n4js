@@ -15,8 +15,16 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.emf.common.CommonPlugin;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
 
 /**
  * Utilities for different URI types
@@ -27,6 +35,34 @@ public class URIUtils {
 	private static final String L = "L/";
 	/** Workspace relative URI starts with this letter */
 	private static final String P = "P/";
+
+	/** @return a {@link IFile} for the given absolute file {@link URI} */
+	static public IFile convertFileUriToPlatformFile(org.eclipse.emf.common.util.URI fileUri) {
+		if (fileUri.isFile()) {
+			String fileString = fileUri.toFileString();
+			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+			IPath iPath = org.eclipse.core.runtime.Path.fromOSString(fileString);
+			if (iPath != null) {
+				IFile iFile = root.getFileForLocation(iPath);
+				return iFile;
+			}
+		}
+		return null;
+	}
+
+	/** @return a {@link IContainer} for the given absolute file {@link URI} */
+	static public IContainer convertFileUriToPlatformContainer(org.eclipse.emf.common.util.URI fileUri) {
+		if (fileUri.isFile()) {
+			String fileString = fileUri.toFileString();
+			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+			IPath iPath = org.eclipse.core.runtime.Path.fromOSString(fileString);
+			if (iPath != null) {
+				IContainer iContainer = root.getContainerForLocation(iPath);
+				return iContainer;
+			}
+		}
+		return null;
+	}
 
 	/**
 	 * Converts the given {@link IResource} to a {@link org.eclipse.emf.common.util.URI}. In case the given resource is
@@ -50,6 +86,12 @@ public class URIUtils {
 			uri = org.eclipse.emf.common.util.URI.createFileURI(fullPathString);
 		}
 		return uri;
+	}
+
+	/** Converts the given IResource to a file emf Uri */
+	static public org.eclipse.emf.common.util.URI toFileUri(IResource iResource) {
+		URI rUri = convert(iResource);
+		return toFileUri(rUri);
 	}
 
 	/**
@@ -153,5 +195,54 @@ public class URIUtils {
 	/** Creates new URI from the provided one, with symlinks resolved. */
 	static public org.eclipse.emf.common.util.URI normalize(org.eclipse.emf.common.util.URI uri) {
 		return URI.createURI(toString(uri));
+	}
+
+	/** @return a complete URI for a given project */
+	public static URI toFileUri(IProject project) {
+		String pathStr = project.getLocation().toString();
+		return URI.createFileURI(pathStr);
+	}
+
+	/** @return absolute file URI for the given path. */
+	static public URI toFileUri(Path path) {
+		return toFileUri(path.toFile());
+	}
+
+	/** @return absolute file URI for the given file. */
+	static public URI toFileUri(File file) {
+		String pathStr = file.getAbsolutePath();
+		return URI.createFileURI(pathStr);
+	}
+
+	/** @return a complete URI for a given emf resource */
+	public static URI toFileUri(Resource resource) {
+		URI rUri = resource.getURI();
+		return toFileUri(rUri);
+	}
+
+	/** Converts any emf URI to a file URI */
+	private static URI toFileUri(URI rUri) {
+		if (rUri.isFile()) {
+			return rUri;
+		}
+		URI resolvedFile = CommonPlugin.resolve(rUri);
+		return resolvedFile;
+	}
+
+	/** Converts any emf file URI to an accessible platform local URI. Otherwise returns given URI. */
+	public static URI tryToPlatformUri(URI fileUri) {
+		if (fileUri.isFile()) {
+			java.net.URI jnUri = java.net.URI.create(fileUri.toString());
+			IFile[] platformFiles = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocationURI(jnUri);
+			if (platformFiles.length > 0 && platformFiles[0].isAccessible()) {
+				IFile localTargetFile = platformFiles[0];
+				URI uri = URIUtils.convert(localTargetFile);
+				if (fileUri.hasFragment()) {
+					uri = uri.appendFragment(fileUri.fragment());
+				}
+				return uri;
+			}
+		}
+		return fileUri;
 	}
 }

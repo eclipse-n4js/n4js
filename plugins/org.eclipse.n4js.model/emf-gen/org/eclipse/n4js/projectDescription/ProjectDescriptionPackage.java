@@ -285,13 +285,40 @@ public interface ProjectDescriptionPackage extends EPackage {
 	int PROJECT_DESCRIPTION__HAS_N4JS_NATURE = 21;
 
 	/**
+	 * The feature id for the '<em><b>Yarn Workspace Root</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROJECT_DESCRIPTION__YARN_WORKSPACE_ROOT = 22;
+
+	/**
+	 * The feature id for the '<em><b>Workspaces</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROJECT_DESCRIPTION__WORKSPACES = 23;
+
+	/**
+	 * The feature id for the '<em><b>Use ES6 Imports</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROJECT_DESCRIPTION__USE_ES6_IMPORTS = 24;
+
+	/**
 	 * The number of structural features of the '<em>Project Description</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION_FEATURE_COUNT = 22;
+	int PROJECT_DESCRIPTION_FEATURE_COUNT = 25;
 
 	/**
 	 * The number of operations of the '<em>Project Description</em>' class.
@@ -882,6 +909,39 @@ public interface ProjectDescriptionPackage extends EPackage {
 	EAttribute getProjectDescription_HasN4JSNature();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.projectDescription.ProjectDescription#isYarnWorkspaceRoot <em>Yarn Workspace Root</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Yarn Workspace Root</em>'.
+	 * @see org.eclipse.n4js.projectDescription.ProjectDescription#isYarnWorkspaceRoot()
+	 * @see #getProjectDescription()
+	 * @generated
+	 */
+	EAttribute getProjectDescription_YarnWorkspaceRoot();
+
+	/**
+	 * Returns the meta object for the attribute list '{@link org.eclipse.n4js.projectDescription.ProjectDescription#getWorkspaces <em>Workspaces</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute list '<em>Workspaces</em>'.
+	 * @see org.eclipse.n4js.projectDescription.ProjectDescription#getWorkspaces()
+	 * @see #getProjectDescription()
+	 * @generated
+	 */
+	EAttribute getProjectDescription_Workspaces();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.projectDescription.ProjectDescription#isUseES6Imports <em>Use ES6 Imports</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Use ES6 Imports</em>'.
+	 * @see org.eclipse.n4js.projectDescription.ProjectDescription#isUseES6Imports()
+	 * @see #getProjectDescription()
+	 * @generated
+	 */
+	EAttribute getProjectDescription_UseES6Imports();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.projectDescription.SourceContainerDescription <em>Source Container Description</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1320,6 +1380,30 @@ public interface ProjectDescriptionPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute PROJECT_DESCRIPTION__HAS_N4JS_NATURE = eINSTANCE.getProjectDescription_HasN4JSNature();
+
+		/**
+		 * The meta object literal for the '<em><b>Yarn Workspace Root</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PROJECT_DESCRIPTION__YARN_WORKSPACE_ROOT = eINSTANCE.getProjectDescription_YarnWorkspaceRoot();
+
+		/**
+		 * The meta object literal for the '<em><b>Workspaces</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PROJECT_DESCRIPTION__WORKSPACES = eINSTANCE.getProjectDescription_Workspaces();
+
+		/**
+		 * The meta object literal for the '<em><b>Use ES6 Imports</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PROJECT_DESCRIPTION__USE_ES6_IMPORTS = eINSTANCE.getProjectDescription_UseES6Imports();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.projectDescription.impl.SourceContainerDescriptionImpl <em>Source Container Description</em>}' class.

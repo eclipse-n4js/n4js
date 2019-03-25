@@ -156,7 +156,6 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public ExportableElement getExportedElement() {
 		return exportedElement;
 	}
@@ -181,7 +180,6 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setExportedElement(ExportableElement newExportedElement) {
 		if (newExportedElement != exportedElement) {
 			NotificationChain msgs = null;
@@ -201,7 +199,6 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Expression getDefaultExportedExpression() {
 		return defaultExportedExpression;
 	}
@@ -226,7 +223,6 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDefaultExportedExpression(Expression newDefaultExportedExpression) {
 		if (newDefaultExportedExpression != defaultExportedExpression) {
 			NotificationChain msgs = null;
@@ -246,7 +242,6 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<ExportSpecifier> getNamedExports() {
 		if (namedExports == null) {
 			namedExports = new EObjectContainmentEList<ExportSpecifier>(ExportSpecifier.class, this, N4JSPackage.EXPORT_DECLARATION__NAMED_EXPORTS);
@@ -259,7 +254,6 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isWildcardExport() {
 		return wildcardExport;
 	}
@@ -269,7 +263,6 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setWildcardExport(boolean newWildcardExport) {
 		boolean oldWildcardExport = wildcardExport;
 		wildcardExport = newWildcardExport;
@@ -282,7 +275,6 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isDefaultExport() {
 		return defaultExport;
 	}
@@ -292,7 +284,6 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDefaultExport(boolean newDefaultExport) {
 		boolean oldDefaultExport = defaultExport;
 		defaultExport = newDefaultExport;
@@ -305,7 +296,6 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TModule getReexportedFrom() {
 		if (reexportedFrom != null && reexportedFrom.eIsProxy()) {
 			InternalEObject oldReexportedFrom = (InternalEObject)reexportedFrom;
@@ -332,7 +322,6 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setReexportedFrom(TModule newReexportedFrom) {
 		TModule oldReexportedFrom = reexportedFrom;
 		reexportedFrom = newReexportedFrom;

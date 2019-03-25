@@ -94,7 +94,6 @@ public class TryStatementImpl extends StatementImpl implements TryStatement {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Block getBlock() {
 		return block;
 	}
@@ -119,7 +118,6 @@ public class TryStatementImpl extends StatementImpl implements TryStatement {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setBlock(Block newBlock) {
 		if (newBlock != block) {
 			NotificationChain msgs = null;
@@ -139,7 +137,6 @@ public class TryStatementImpl extends StatementImpl implements TryStatement {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public CatchBlock getCatch() {
 		return catch_;
 	}
@@ -164,7 +161,6 @@ public class TryStatementImpl extends StatementImpl implements TryStatement {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setCatch(CatchBlock newCatch) {
 		if (newCatch != catch_) {
 			NotificationChain msgs = null;
@@ -184,7 +180,6 @@ public class TryStatementImpl extends StatementImpl implements TryStatement {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public FinallyBlock getFinally() {
 		return finally_;
 	}
@@ -209,7 +204,6 @@ public class TryStatementImpl extends StatementImpl implements TryStatement {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setFinally(FinallyBlock newFinally) {
 		if (newFinally != finally_) {
 			NotificationChain msgs = null;

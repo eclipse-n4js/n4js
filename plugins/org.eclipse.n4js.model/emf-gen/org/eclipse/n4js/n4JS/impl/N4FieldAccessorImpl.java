@@ -148,7 +148,6 @@ public abstract class N4FieldAccessorImpl extends AnnotableN4MemberDeclarationIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Block getBody() {
 		return body;
 	}
@@ -173,7 +172,6 @@ public abstract class N4FieldAccessorImpl extends AnnotableN4MemberDeclarationIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setBody(Block newBody) {
 		if (newBody != body) {
 			NotificationChain msgs = null;
@@ -193,7 +191,6 @@ public abstract class N4FieldAccessorImpl extends AnnotableN4MemberDeclarationIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public LocalArgumentsVariable get_lok() {
 		return _lok;
 	}
@@ -218,7 +215,6 @@ public abstract class N4FieldAccessorImpl extends AnnotableN4MemberDeclarationIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void set_lok(LocalArgumentsVariable new_lok) {
 		if (new_lok != _lok) {
 			NotificationChain msgs = null;
@@ -238,7 +234,6 @@ public abstract class N4FieldAccessorImpl extends AnnotableN4MemberDeclarationIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public LiteralOrComputedPropertyName getDeclaredName() {
 		return declaredName;
 	}
@@ -263,7 +258,6 @@ public abstract class N4FieldAccessorImpl extends AnnotableN4MemberDeclarationIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredName(LiteralOrComputedPropertyName newDeclaredName) {
 		if (newDeclaredName != declaredName) {
 			NotificationChain msgs = null;
@@ -283,7 +277,6 @@ public abstract class N4FieldAccessorImpl extends AnnotableN4MemberDeclarationIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isDeclaredOptional() {
 		return declaredOptional;
 	}
@@ -293,7 +286,6 @@ public abstract class N4FieldAccessorImpl extends AnnotableN4MemberDeclarationIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredOptional(boolean newDeclaredOptional) {
 		boolean oldDeclaredOptional = declaredOptional;
 		declaredOptional = newDeclaredOptional;
@@ -306,7 +298,6 @@ public abstract class N4FieldAccessorImpl extends AnnotableN4MemberDeclarationIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isAbstract() {
 		return ((((this.eContainer() instanceof N4InterfaceDeclaration) && (this.getBody() == null)) && 
 			(!IterableExtensions.<Annotation>exists(this.getAnnotations(), new Function1<Annotation, Boolean>() {
@@ -323,7 +314,6 @@ public abstract class N4FieldAccessorImpl extends AnnotableN4MemberDeclarationIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isValidName() {
 		String _name = this.getName();
 		boolean _equals = Objects.equal("prototype", _name);
@@ -355,7 +345,6 @@ public abstract class N4FieldAccessorImpl extends AnnotableN4MemberDeclarationIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TypeRef getDeclaredTypeRef() {
 		return null;
 	}
@@ -365,7 +354,6 @@ public abstract class N4FieldAccessorImpl extends AnnotableN4MemberDeclarationIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public FieldAccessor getDefinedAccessor() {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT
@@ -377,7 +365,6 @@ public abstract class N4FieldAccessorImpl extends AnnotableN4MemberDeclarationIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isOptional() {
 		return this.isDeclaredOptional();
 	}
@@ -387,7 +374,6 @@ public abstract class N4FieldAccessorImpl extends AnnotableN4MemberDeclarationIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getName() {
 		LiteralOrComputedPropertyName _declaredName = this.getDeclaredName();
 		String _name = null;
@@ -402,7 +388,6 @@ public abstract class N4FieldAccessorImpl extends AnnotableN4MemberDeclarationIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean hasComputedPropertyName() {
 		final LiteralOrComputedPropertyName declName = this.getDeclaredName();
 		return ((declName != null) && declName.hasComputedPropertyName());
@@ -413,7 +398,6 @@ public abstract class N4FieldAccessorImpl extends AnnotableN4MemberDeclarationIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public LocalArgumentsVariable getLocalArgumentsVariable() {
 		LocalArgumentsVariable __lok = this.get_lok();
 		boolean _tripleEquals = (__lok == null);
@@ -435,7 +419,6 @@ public abstract class N4FieldAccessorImpl extends AnnotableN4MemberDeclarationIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isReturnValueOptional() {
 		return false;
 	}
@@ -445,7 +428,6 @@ public abstract class N4FieldAccessorImpl extends AnnotableN4MemberDeclarationIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isAsync() {
 		return false;
 	}
@@ -455,7 +437,6 @@ public abstract class N4FieldAccessorImpl extends AnnotableN4MemberDeclarationIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public IdentifiableElement getDefinedFunctionOrAccessor() {
 		final FunctionOrFieldAccessor _this = this;
 		EObject _switchResult = null;
@@ -478,7 +459,6 @@ public abstract class N4FieldAccessorImpl extends AnnotableN4MemberDeclarationIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean appliesOnlyToBlockScopedElements() {
 		return false;
 	}

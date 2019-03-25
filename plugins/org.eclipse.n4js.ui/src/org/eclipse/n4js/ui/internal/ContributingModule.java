@@ -12,16 +12,17 @@ package org.eclipse.n4js.ui.internal;
 
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.n4js.binaries.BinariesCommandFactory;
+import org.eclipse.n4js.binaries.BinariesLocatorHelper;
 import org.eclipse.n4js.binaries.BinariesPreferenceStore;
 import org.eclipse.n4js.binaries.BinariesProvider;
 import org.eclipse.n4js.binaries.BinariesValidator;
-import org.eclipse.n4js.binaries.BinaryCommandFactory;
 import org.eclipse.n4js.binaries.OsgiBinariesPreferenceStore;
-import org.eclipse.n4js.binaries.nodejs.NodeBinaryLocatorHelper;
 import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
-import org.eclipse.n4js.binaries.nodejs.NodeProcessBuilder;
+import org.eclipse.n4js.binaries.nodejs.NodeYarnProcessBuilder;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.binaries.nodejs.NpmrcBinary;
+import org.eclipse.n4js.binaries.nodejs.YarnBinary;
 import org.eclipse.n4js.external.ExternalIndexSynchronizer;
 import org.eclipse.n4js.external.ExternalLibraryHelper;
 import org.eclipse.n4js.external.ExternalLibraryUriHelper;
@@ -30,8 +31,6 @@ import org.eclipse.n4js.external.ExternalProjectsCollector;
 import org.eclipse.n4js.external.NpmLogger;
 import org.eclipse.n4js.external.RebuildWorkspaceProjectsScheduler;
 import org.eclipse.n4js.external.ShadowingInfoHelper;
-import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
-import org.eclipse.n4js.generator.IWorkspaceMarkerSupport;
 import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.internal.MultiCleartriggerCache;
@@ -49,12 +48,9 @@ import org.eclipse.n4js.ui.containers.N4JSToBeBuiltComputer;
 import org.eclipse.n4js.ui.external.BuildOrderComputer;
 import org.eclipse.n4js.ui.external.EclipseExternalIndexSynchronizer;
 import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
-import org.eclipse.n4js.ui.external.EclipseTargetPlatformInstallLocationProvider;
-import org.eclipse.n4js.ui.external.ExternalIndexUpdater;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildQueue;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildScheduler;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuilder;
-import org.eclipse.n4js.ui.external.ExternalLibraryErrorMarkerManager;
 import org.eclipse.n4js.ui.external.ExternalProjectProvider;
 import org.eclipse.n4js.ui.external.ProjectStateChangeListener;
 import org.eclipse.n4js.ui.navigator.N4JSProjectExplorerLabelProvider;
@@ -69,6 +65,7 @@ import org.eclipse.n4js.ui.workingsets.WorkingSetManualAssociationWizard;
 import org.eclipse.n4js.ui.workingsets.WorkingSetProjectNameFilterWizard;
 import org.eclipse.n4js.ui.workingsets.WorkspaceRepositoriesProvider;
 import org.eclipse.n4js.utils.InjectorCollector;
+import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.WildcardPathFilterHelper;
@@ -132,14 +129,13 @@ public class ContributingModule implements Module {
 		});
 		binder.bind(ExternalLibraryHelper.class);
 		binder.bind(StatusHelper.class);
-		binder.bind(TargetPlatformInstallLocationProvider.class).to(EclipseTargetPlatformInstallLocationProvider.class);
-
 		binder.bind(IN4JSCore.class).to(N4JSEclipseCore.class);
 		binder.bind(IN4JSEclipseCore.class).to(N4JSEclipseCore.class);
 		binder.bind(N4JSEclipseCore.class);
 		binder.bind(N4JSModel.class).to(N4JSEclipseModel.class);
 		binder.bind(N4JSEclipseModel.class);
 		binder.bind(MarkerCreator.class);
+		binder.bind(ResourceUIValidatorExtension.class);
 		binder.bind(WildcardPathFilterHelper.class);
 		binder.bind(N4JSProjectsStateHelper.class);
 		binder.bind(MultiCleartriggerCache.class);
@@ -152,7 +148,6 @@ public class ContributingModule implements Module {
 
 		binder.bind(ExternalProjectLoader.class);
 		binder.bind(ProjectStateChangeListener.class);
-		binder.bind(ExternalIndexUpdater.class);
 		binder.bind(ExternalLibraryBuildScheduler.class);
 		binder.bind(ExternalLibraryBuilder.class);
 		binder.bind(ExternalLibraryBuildQueue.class);
@@ -162,6 +157,7 @@ public class ContributingModule implements Module {
 		binder.bind(ConsoleOutputStreamProvider.class);
 		binder.bind(ExternalProjectsCollector.class);
 		binder.bind(ExternalProjectProvider.class);
+		binder.bind(NodeModulesDiscoveryHelper.class);
 		binder.bind(RebuildWorkspaceProjectsScheduler.class);
 
 		binder.bind(N4JSExternalLibraryStorage2UriMapperContribution.class);
@@ -200,17 +196,18 @@ public class ContributingModule implements Module {
 				.to(IBuilderState.class);
 
 		binder.bind(ProcessExecutor.class);
-		binder.bind(BinaryCommandFactory.class);
-		binder.bind(NodeProcessBuilder.class);
+		binder.bind(BinariesCommandFactory.class);
+		binder.bind(NodeYarnProcessBuilder.class);
 		binder.bind(OutputStreamPrinterThreadProvider.class);
 		binder.bind(BinariesPreferenceStore.class).to(OsgiBinariesPreferenceStore.class);
 		binder.bind(BinariesValidator.class);
 		binder.bind(BinariesProvider.class);
 
-		binder.bind(NodeBinaryLocatorHelper.class);
+		binder.bind(BinariesLocatorHelper.class);
 		binder.bind(NodeJsBinary.class);
 		binder.bind(NpmBinary.class);
 		binder.bind(NpmrcBinary.class);
+		binder.bind(YarnBinary.class);
 
 		binder.bind(SemverHelper.class);
 		// binder.bind(SemverResourceValidator.class);
@@ -223,8 +220,6 @@ public class ContributingModule implements Module {
 		// });
 
 		binder.bind(TypesKeywordProvider.class);
-		binder.bind(ExternalLibraryErrorMarkerManager.class);
-		binder.bind(IWorkspaceMarkerSupport.class).to(WorkspaceMarkerSupport.class);
 
 		// we want to expose the N4JSQuickfixProvider as a shared contribution
 		// To be removed when N4MF does no longer use the quickfix provider of n4js

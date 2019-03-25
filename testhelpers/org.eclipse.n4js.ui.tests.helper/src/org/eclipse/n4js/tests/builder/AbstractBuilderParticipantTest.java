@@ -43,6 +43,7 @@ import org.eclipse.n4js.tests.util.EclipseUIUtils;
 import org.eclipse.n4js.tests.util.PackageJSONTestHelper;
 import org.eclipse.n4js.tests.util.ProjectTestsHelper;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
+import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.n4js.utils.process.ProcessResult;
@@ -82,7 +83,7 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 	private Provider<IDirtyStateManager> dirtyStateManager;
 
 	@Inject
-	private ExternalLibrariesSetupHelper externalLibrariesSetupHelper;
+	private ShippedCodeInitializeTestHelper shippedCodeHelper;
 
 	@Inject
 	private ProjectTestsHelper projectTestsHelper;
@@ -138,7 +139,14 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 
 	/***/
 	protected XtextEditor openAndGetXtextEditor(final IFile file1, final IWorkbenchPage page) {
-		IEditorPart fileEditor = EclipseUIUtils.openFileEditor(file1, page, getEditorId());
+		return openAndGetXtextEditorWithID(file1, page, N4JSActivator.ORG_ECLIPSE_N4JS_N4JS);
+	}
+
+	/***/
+	protected XtextEditor openAndGetXtextEditorWithID(final IFile file1, final IWorkbenchPage page,
+			final String editorID) {
+
+		IEditorPart fileEditor = EclipseUIUtils.openFileEditor(file1, page, editorID);
 		EclipseUIUtils.waitForEditorToBeActive(page, fileEditor);
 		assertTrue(fileEditor instanceof XtextEditor);
 		XtextEditor fileXtextEditor = (XtextEditor) fileEditor;
@@ -303,14 +311,13 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 	}
 
 	/** Sets up the known external library locations with the {@code node_modules} folder. */
-	protected void setupExternalLibraries(boolean initShippedCode) throws Exception {
-		externalLibrariesSetupHelper.setupExternalLibraries(initShippedCode);
+	protected void setupShippedLibraries() throws Exception {
+		shippedCodeHelper.setupBuiltIns();
 	}
 
 	/** Tears down the external libraries. */
-	protected void tearDownExternalLibraries(boolean tearDownShippedCode) throws Exception {
-		externalLibrariesSetupHelper.tearDownExternalLibraries(tearDownShippedCode);
-		super.tearDown();
+	protected void tearDownShippedLibraries() throws Exception {
+		shippedCodeHelper.tearDownBuiltIns();
 	}
 
 	/***/
@@ -353,6 +360,11 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 			throws CoreException {
 
 		return ProjectTestsUtils.assertMarkers(assertMessage, resource, markerType, count, ignoreSomeWarnings);
+	}
+
+	/** See {@link ProjectTestsUtils#assertNoErrors()}. */
+	protected void assertNoErrors() throws CoreException {
+		ProjectTestsUtils.assertNoErrors();
 	}
 
 	/** See {@link ProjectTestsUtils#assertNoIssues()}. */
@@ -431,11 +443,6 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 	protected static void waitForUpdateEditorJob() {
 		ProjectTestsUtils.waitForUpdateEditorJob();
 		ProjectTestsUtils.waitForAllJobs();
-	}
-
-	/***/
-	protected String getEditorId() {
-		return N4JSActivator.ORG_ECLIPSE_N4JS_N4JS;
 	}
 
 	/** Returns with the absolute URI of the resource loaded from the current plug-in. */

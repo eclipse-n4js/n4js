@@ -82,7 +82,6 @@ public abstract class BaseTypeRefImpl extends StaticBaseTypeRefImpl implements B
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isDynamic() {
 		return dynamic;
 	}
@@ -92,7 +91,6 @@ public abstract class BaseTypeRefImpl extends StaticBaseTypeRefImpl implements B
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDynamic(boolean newDynamic) {
 		boolean oldDynamic = dynamic;
 		dynamic = newDynamic;
@@ -105,7 +103,6 @@ public abstract class BaseTypeRefImpl extends StaticBaseTypeRefImpl implements B
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getModifiersAsString() {
 		String _xifexpression = null;
 		boolean _isDynamic = this.isDynamic();

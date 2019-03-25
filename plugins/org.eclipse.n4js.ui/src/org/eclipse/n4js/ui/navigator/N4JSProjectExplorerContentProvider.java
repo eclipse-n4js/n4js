@@ -11,10 +11,9 @@
 package org.eclipse.n4js.ui.navigator;
 
 import static com.google.common.collect.Maps.newConcurrentMap;
-import static com.google.common.collect.Sets.newHashSet;
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
 
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
@@ -46,6 +45,7 @@ import org.eclipse.ui.navigator.PipelinedShapeModification;
 import org.eclipse.ui.navigator.PipelinedViewerUpdate;
 import org.eclipse.xtext.util.Arrays;
 
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -213,15 +213,17 @@ public class N4JSProjectExplorerContentProvider extends WorkbenchContentProvider
 	@Override
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void getPipelinedChildren(final Object aParent, final Set theCurrentChildren) {
-		theCurrentChildren.addAll(newHashSet(getChildren(aParent)));
-		filterProjectsOnDemand(aParent, theCurrentChildren);
+		ArrayList<Object> children = Lists.newArrayList(getChildren(aParent));
+		theCurrentChildren.clear();
+		theCurrentChildren.addAll(children);
 	}
 
 	@Override
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void getPipelinedElements(final Object anInput, final Set theCurrentElements) {
-		theCurrentElements.addAll(newHashSet(getElements(anInput)));
-		filterProjectsOnDemand(anInput, theCurrentElements);
+		ArrayList<Object> children = Lists.newArrayList(getElements(anInput));
+		theCurrentElements.clear();
+		theCurrentElements.addAll(children);
 	}
 
 	@Override
@@ -262,18 +264,6 @@ public class N4JSProjectExplorerContentProvider extends WorkbenchContentProvider
 	@Override
 	public boolean hasPipelinedChildren(final Object anInput, final boolean currentHasChildren) {
 		return currentHasChildren || getChildren(anInput).length > 0;
-	}
-
-	@SuppressWarnings("rawtypes")
-	private void filterProjectsOnDemand(Object element, final Set theCurrentChildren) {
-		if (element instanceof IWorkspaceRoot && workingSetManagerBroker.isWorkingSetTopLevel()) {
-			for (Iterator itr = theCurrentChildren.iterator(); itr.hasNext(); /**/) {
-				Object next = itr.next();
-				if (next instanceof IProject) {
-					itr.remove();
-				}
-			}
-		}
 	}
 
 }

@@ -87,7 +87,6 @@ public class PropertyGetterDeclarationImpl extends GetterDeclarationImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public PropertyAssignmentAnnotationList getAnnotationList() {
 		return annotationList;
 	}
@@ -112,7 +111,6 @@ public class PropertyGetterDeclarationImpl extends GetterDeclarationImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setAnnotationList(PropertyAssignmentAnnotationList newAnnotationList) {
 		if (newAnnotationList != annotationList) {
 			NotificationChain msgs = null;
@@ -132,7 +130,6 @@ public class PropertyGetterDeclarationImpl extends GetterDeclarationImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TStructGetter getDefinedGetter() {
 		TGetter _definedGetter = super.getDefinedGetter();
 		return ((TStructGetter) _definedGetter);
@@ -143,7 +140,6 @@ public class PropertyGetterDeclarationImpl extends GetterDeclarationImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TStructGetter getDefinedMember() {
 		return this.getDefinedGetter();
 	}
@@ -153,7 +149,6 @@ public class PropertyGetterDeclarationImpl extends GetterDeclarationImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isValidName() {
 		String _name = this.getName();
 		boolean _equals = Objects.equal("prototype", _name);
@@ -168,7 +163,6 @@ public class PropertyGetterDeclarationImpl extends GetterDeclarationImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<Annotation> getAnnotations() {
 		EList<Annotation> _elvis = null;
 		PropertyAssignmentAnnotationList _annotationList = this.getAnnotationList();

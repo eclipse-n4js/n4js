@@ -26,6 +26,7 @@ import org.eclipse.n4js.ts.types.TModule;
  *   <li>{@link org.eclipse.n4js.n4JS.ImportDeclaration#getImportSpecifiers <em>Import Specifiers</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.ImportDeclaration#isImportFrom <em>Import From</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.ImportDeclaration#getModule <em>Module</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.ImportDeclaration#getModuleSpecifierAsText <em>Module Specifier As Text</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.n4JS.N4JSPackage#getImportDeclaration()
@@ -100,5 +101,31 @@ public interface ImportDeclaration extends AnnotableScriptElement {
 	 * @generated
 	 */
 	void setModule(TModule value);
+
+	/**
+	 * Returns the value of the '<em><b>Module Specifier As Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Module Specifier As Text</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Module Specifier As Text</em>' attribute.
+	 * @see #setModuleSpecifierAsText(String)
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getImportDeclaration_ModuleSpecifierAsText()
+	 * @model unique="false" transient="true"
+	 * @generated
+	 */
+	String getModuleSpecifierAsText();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.ImportDeclaration#getModuleSpecifierAsText <em>Module Specifier As Text</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Module Specifier As Text</em>' attribute.
+	 * @see #getModuleSpecifierAsText()
+	 * @generated
+	 */
+	void setModuleSpecifierAsText(String value);
 
 } // ImportDeclaration

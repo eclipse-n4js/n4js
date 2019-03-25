@@ -114,7 +114,6 @@ public class NamespaceImportSpecifierImpl extends ImportSpecifierImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Type getDefinedType() {
 		if (definedType != null && definedType.eIsProxy()) {
 			InternalEObject oldDefinedType = (InternalEObject)definedType;
@@ -141,7 +140,6 @@ public class NamespaceImportSpecifierImpl extends ImportSpecifierImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDefinedType(Type newDefinedType) {
 		Type oldDefinedType = definedType;
 		definedType = newDefinedType;
@@ -154,7 +152,6 @@ public class NamespaceImportSpecifierImpl extends ImportSpecifierImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isDeclaredDynamic() {
 		return declaredDynamic;
 	}
@@ -164,7 +161,6 @@ public class NamespaceImportSpecifierImpl extends ImportSpecifierImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredDynamic(boolean newDeclaredDynamic) {
 		boolean oldDeclaredDynamic = declaredDynamic;
 		declaredDynamic = newDeclaredDynamic;
@@ -177,7 +173,6 @@ public class NamespaceImportSpecifierImpl extends ImportSpecifierImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getAlias() {
 		return alias;
 	}
@@ -187,7 +182,6 @@ public class NamespaceImportSpecifierImpl extends ImportSpecifierImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setAlias(String newAlias) {
 		String oldAlias = alias;
 		alias = newAlias;

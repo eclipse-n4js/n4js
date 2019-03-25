@@ -102,7 +102,6 @@ public class TInterfaceImpl extends TN4ClassifierImpl implements TInterface {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isExternal() {
 		return external;
 	}
@@ -112,7 +111,6 @@ public class TInterfaceImpl extends TN4ClassifierImpl implements TInterface {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setExternal(boolean newExternal) {
 		boolean oldExternal = external;
 		external = newExternal;
@@ -125,7 +123,6 @@ public class TInterfaceImpl extends TN4ClassifierImpl implements TInterface {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<ParameterizedTypeRef> getSuperInterfaceRefs() {
 		if (superInterfaceRefs == null) {
 			superInterfaceRefs = new EObjectContainmentEList<ParameterizedTypeRef>(ParameterizedTypeRef.class, this, TypesPackage.TINTERFACE__SUPER_INTERFACE_REFS);
@@ -138,7 +135,6 @@ public class TInterfaceImpl extends TN4ClassifierImpl implements TInterface {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isAbstract() {
 		return true;
 	}
@@ -148,7 +144,6 @@ public class TInterfaceImpl extends TN4ClassifierImpl implements TInterface {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Iterable<ParameterizedTypeRef> getSuperClassifierRefs() {
 		return this.getSuperInterfaceRefs();
 	}
@@ -158,7 +153,6 @@ public class TInterfaceImpl extends TN4ClassifierImpl implements TInterface {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Iterable<ParameterizedTypeRef> getImplementedOrExtendedInterfaceRefs() {
 		return this.getSuperInterfaceRefs();
 	}

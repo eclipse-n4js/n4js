@@ -130,7 +130,6 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends TypeImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Map<NameAndAccess, ? extends TMember> getOwnedMembersByNameAndAccess() {
 		return ownedMembersByNameAndAccess;
 	}
@@ -140,7 +139,6 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends TypeImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setOwnedMembersByNameAndAccess(Map<NameAndAccess, ? extends TMember> newOwnedMembersByNameAndAccess) {
 		Map<NameAndAccess, ? extends TMember> oldOwnedMembersByNameAndAccess = ownedMembersByNameAndAccess;
 		ownedMembersByNameAndAccess = newOwnedMembersByNameAndAccess;
@@ -153,7 +151,6 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends TypeImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<MT> getOwnedMembers() {
 		if (ownedMembers == null) {
 			ownedMembers = new EObjectContainmentEList<MT>(TMember.class, this, TypesPackage.CONTAINER_TYPE__OWNED_MEMBERS);
@@ -166,7 +163,6 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends TypeImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TMethod getCallableCtor() {
 		return callableCtor;
 	}
@@ -191,7 +187,6 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends TypeImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setCallableCtor(TMethod newCallableCtor) {
 		if (newCallableCtor != callableCtor) {
 			NotificationChain msgs = null;
@@ -211,7 +206,6 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends TypeImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<TypeVariable> getTypeVars() {
 		if (typeVars == null) {
 			typeVars = new EObjectContainmentEList<TypeVariable>(TypeVariable.class, this, TypesPackage.CONTAINER_TYPE__TYPE_VARS);
@@ -224,7 +218,6 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends TypeImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TMethod getOwnedCtor() {
 		final Function1<TMethod, Boolean> _function = new Function1<TMethod, Boolean>() {
 			public Boolean apply(final TMethod it) {
@@ -239,7 +232,6 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends TypeImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TMember findOwnedMember(final String name) {
 		return this.findOwnedMember(name, false, false);
 	}
@@ -249,7 +241,6 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends TypeImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TMember findOwnedMember(final String name, final boolean writeAccess, final boolean staticAccess) {
 		final NameAndAccess nameAndAccess = new NameAndAccess(name, writeAccess, staticAccess);
 		return this.getOrCreateOwnedMembersByNameAndAccess().get(nameAndAccess);
@@ -260,7 +251,6 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends TypeImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Map<NameAndAccess, ? extends TMember> getOrCreateOwnedMembersByNameAndAccess() {
 		Map<NameAndAccess, ? extends TMember> _ownedMembersByNameAndAccess = this.getOwnedMembersByNameAndAccess();
 		boolean _tripleEquals = (_ownedMembersByNameAndAccess == null);

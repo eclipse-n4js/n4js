@@ -128,7 +128,6 @@ public class ProjectDescriptionFactoryImpl extends EFactoryImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public ProjectDescription createProjectDescription() {
 		ProjectDescriptionImpl projectDescription = new ProjectDescriptionImpl();
 		return projectDescription;
@@ -139,7 +138,6 @@ public class ProjectDescriptionFactoryImpl extends EFactoryImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public SourceContainerDescription createSourceContainerDescription() {
 		SourceContainerDescriptionImpl sourceContainerDescription = new SourceContainerDescriptionImpl();
 		return sourceContainerDescription;
@@ -150,7 +148,6 @@ public class ProjectDescriptionFactoryImpl extends EFactoryImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public ProjectReference createProjectReference() {
 		ProjectReferenceImpl projectReference = new ProjectReferenceImpl();
 		return projectReference;
@@ -161,7 +158,6 @@ public class ProjectDescriptionFactoryImpl extends EFactoryImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public ProjectDependency createProjectDependency() {
 		ProjectDependencyImpl projectDependency = new ProjectDependencyImpl();
 		return projectDependency;
@@ -172,7 +168,6 @@ public class ProjectDescriptionFactoryImpl extends EFactoryImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public ModuleFilter createModuleFilter() {
 		ModuleFilterImpl moduleFilter = new ModuleFilterImpl();
 		return moduleFilter;
@@ -183,7 +178,6 @@ public class ProjectDescriptionFactoryImpl extends EFactoryImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public ModuleFilterSpecifier createModuleFilterSpecifier() {
 		ModuleFilterSpecifierImpl moduleFilterSpecifier = new ModuleFilterSpecifierImpl();
 		return moduleFilterSpecifier;
@@ -194,7 +188,6 @@ public class ProjectDescriptionFactoryImpl extends EFactoryImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public BootstrapModule createBootstrapModule() {
 		BootstrapModuleImpl bootstrapModule = new BootstrapModuleImpl();
 		return bootstrapModule;
@@ -305,7 +298,6 @@ public class ProjectDescriptionFactoryImpl extends EFactoryImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public ProjectDescriptionPackage getProjectDescriptionPackage() {
 		return (ProjectDescriptionPackage)getEPackage();
 	}

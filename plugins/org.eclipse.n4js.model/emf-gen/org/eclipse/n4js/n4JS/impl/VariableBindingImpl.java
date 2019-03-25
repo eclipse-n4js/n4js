@@ -82,7 +82,6 @@ public class VariableBindingImpl extends VariableDeclarationOrBindingImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public BindingPattern getPattern() {
 		return pattern;
 	}
@@ -107,7 +106,6 @@ public class VariableBindingImpl extends VariableDeclarationOrBindingImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setPattern(BindingPattern newPattern) {
 		if (newPattern != pattern) {
 			NotificationChain msgs = null;
@@ -127,7 +125,6 @@ public class VariableBindingImpl extends VariableDeclarationOrBindingImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Expression getExpression() {
 		return expression;
 	}
@@ -152,7 +149,6 @@ public class VariableBindingImpl extends VariableDeclarationOrBindingImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setExpression(Expression newExpression) {
 		if (newExpression != expression) {
 			NotificationChain msgs = null;

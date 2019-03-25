@@ -213,7 +213,6 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TypeRef getDeclaredTypeRef() {
 		return declaredTypeRef;
 	}
@@ -238,7 +237,6 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredTypeRef(TypeRef newDeclaredTypeRef) {
 		if (newDeclaredTypeRef != declaredTypeRef) {
 			NotificationChain msgs = null;
@@ -258,7 +256,6 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TypeRef getBogusTypeRef() {
 		return bogusTypeRef;
 	}
@@ -283,7 +280,6 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setBogusTypeRef(TypeRef newBogusTypeRef) {
 		if (newBogusTypeRef != bogusTypeRef) {
 			NotificationChain msgs = null;
@@ -303,7 +299,6 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getName() {
 		return name;
 	}
@@ -313,7 +308,6 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -326,7 +320,6 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<Annotation> getAnnotations() {
 		if (annotations == null) {
 			annotations = new EObjectContainmentEList<Annotation>(Annotation.class, this, N4JSPackage.FORMAL_PARAMETER__ANNOTATIONS);
@@ -339,7 +332,6 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isVariadic() {
 		return variadic;
 	}
@@ -349,7 +341,6 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setVariadic(boolean newVariadic) {
 		boolean oldVariadic = variadic;
 		variadic = newVariadic;
@@ -362,7 +353,6 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TFormalParameter getDefinedTypeElement() {
 		if (definedTypeElement != null && definedTypeElement.eIsProxy()) {
 			InternalEObject oldDefinedTypeElement = (InternalEObject)definedTypeElement;
@@ -389,7 +379,6 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDefinedTypeElement(TFormalParameter newDefinedTypeElement) {
 		TFormalParameter oldDefinedTypeElement = definedTypeElement;
 		definedTypeElement = newDefinedTypeElement;
@@ -402,7 +391,6 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isHasInitializerAssignment() {
 		return hasInitializerAssignment;
 	}
@@ -412,7 +400,6 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setHasInitializerAssignment(boolean newHasInitializerAssignment) {
 		boolean oldHasInitializerAssignment = hasInitializerAssignment;
 		hasInitializerAssignment = newHasInitializerAssignment;
@@ -425,7 +412,6 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Expression getInitializer() {
 		return initializer;
 	}
@@ -450,7 +436,6 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setInitializer(Expression newInitializer) {
 		if (newInitializer != initializer) {
 			NotificationChain msgs = null;
@@ -470,7 +455,6 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public BindingPattern getBindingPattern() {
 		return bindingPattern;
 	}
@@ -495,7 +479,6 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setBindingPattern(BindingPattern newBindingPattern) {
 		if (newBindingPattern != bindingPattern) {
 			NotificationChain msgs = null;
@@ -515,7 +498,6 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isConst() {
 		return false;
 	}
@@ -525,7 +507,6 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TModule getContainingModule() {
 		return EcoreUtil2.<TModule>getContainerOfType(this, TModule.class);
 	}

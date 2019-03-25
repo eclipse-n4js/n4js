@@ -66,14 +66,9 @@ export default public class ~NodeTestOptions extends XUnitReportSpec {
     public generatedModulesGlob: string;
 
     /**
-     * NPM dependencies install location.
+     * Installs NPM dependencies using npm or yarn.
      */
-    public targetPlatformInstallLocation: string;
-    
-    /**
-     * Skips NPM dependency installation, assuming already existing.
-     */
-    public targetPlatformSkipInstall: boolean;
+    public installMissingDependencies: boolean;
     
     /**
      * Library manager .npmrc directory.

@@ -193,7 +193,6 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isBinding() {
 		return binding;
 	}
@@ -203,7 +202,6 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setBinding(boolean newBinding) {
 		boolean oldBinding = binding;
 		binding = newBinding;
@@ -216,7 +214,6 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TFunction getDeclaredType() {
 		if (declaredType != null && declaredType.eIsProxy()) {
 			InternalEObject oldDeclaredType = (InternalEObject)declaredType;
@@ -243,7 +240,6 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredType(TFunction newDeclaredType) {
 		TFunction oldDeclaredType = declaredType;
 		declaredType = newDeclaredType;
@@ -256,7 +252,6 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TypeRef getDeclaredThisType() {
 		return declaredThisType;
 	}
@@ -281,7 +276,6 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredThisType(TypeRef newDeclaredThisType) {
 		if (newDeclaredThisType != declaredThisType) {
 			NotificationChain msgs = null;
@@ -301,7 +295,6 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<TypeVariable> getOwnedTypeVars() {
 		if (ownedTypeVars == null) {
 			ownedTypeVars = new EObjectContainmentEList<TypeVariable>(TypeVariable.class, this, TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__OWNED_TYPE_VARS);
@@ -314,7 +307,6 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<TypeVariable> getUnboundTypeVars() {
 		if (unboundTypeVars == null) {
 			unboundTypeVars = new EObjectResolvingEList<TypeVariable>(TypeVariable.class, this, TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__UNBOUND_TYPE_VARS);
@@ -327,7 +319,6 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<TypeRef> getUnboundTypeVarsUpperBounds() {
 		if (unboundTypeVarsUpperBounds == null) {
 			unboundTypeVarsUpperBounds = new EObjectContainmentEList<TypeRef>(TypeRef.class, this, TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__UNBOUND_TYPE_VARS_UPPER_BOUNDS);
@@ -340,7 +331,6 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<TFormalParameter> getFpars() {
 		if (fpars == null) {
 			fpars = new EObjectContainmentEList<TFormalParameter>(TFormalParameter.class, this, TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__FPARS);
@@ -353,7 +343,6 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isReturnValueMarkedOptional() {
 		return returnValueMarkedOptional;
 	}
@@ -363,7 +352,6 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setReturnValueMarkedOptional(boolean newReturnValueMarkedOptional) {
 		boolean oldReturnValueMarkedOptional = returnValueMarkedOptional;
 		returnValueMarkedOptional = newReturnValueMarkedOptional;
@@ -376,7 +364,6 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TypeRef getReturnTypeRef() {
 		return returnTypeRef;
 	}
@@ -401,7 +388,6 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setReturnTypeRef(TypeRef newReturnTypeRef) {
 		if (newReturnTypeRef != returnTypeRef) {
 			NotificationChain msgs = null;
@@ -421,7 +407,6 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<TypeVariable> getTypeVars() {
 		EList<TypeVariable> _xifexpression = null;
 		boolean _isBinding = this.isBinding();
@@ -448,7 +433,6 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TypeRef getTypeVarUpperBound(final TypeVariable typeVar) {
 		if ((typeVar == null)) {
 			throw new IllegalArgumentException("given type variable may not be null");
@@ -468,7 +452,6 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isReturnValueOptional() {
 		return (this.isReturnValueMarkedOptional() || ((this.getReturnTypeRef() != null) && this.getReturnTypeRef().isFollowedByQuestionMark()));
 	}

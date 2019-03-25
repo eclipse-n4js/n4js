@@ -46,6 +46,10 @@ public enum PackageJsonProperties {
 	/** Key of package.json property "n4js". */
 	N4JS("n4js", "N4JS section", JSONObject.class),
 
+	// properties of other tools:
+	/** Key of package.json property used by yarn workspace concept denoting projects contained in the workspace. */
+	WORKSPACES("workspaces", "Projects that are members of the yarn workspace", JSONArray.class),
+
 	// properties in section "n4js":
 	/** Key of package.json property "projectType". */
 	PROJECT_TYPE("projectType", ProjectType.PLAINJS.getLiteral().toLowerCase(), N4JS),
@@ -81,6 +85,10 @@ public enum PackageJsonProperties {
 	EXEC_MODULE("execModule", "", N4JS),
 	/** Key of package.json property "definesPackage". */
 	DEFINES_PACKAGE("definesPackage", "", N4JS),
+	/** EXPERIMENTAL: if value is <code>true</code>, transpiler will generate ES6 imports/exports in the output code. */
+	USE_ES6_IMPORTS("useES6Imports",
+			"EXPERIMENTAL: if value is \'true\', transpiler will generate ES6 imports/exports in the output code.",
+			N4JS),
 
 	/** Key of package.json property "noValidate". */
 	NO_VALIDATE("noValidate", "", JSONObject.class, N4JS),

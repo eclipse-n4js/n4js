@@ -85,7 +85,6 @@ public abstract class VersionedElementImpl extends ProxyResolvingEObjectImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public BigDecimal getDeclaredVersion() {
 		return declaredVersion;
 	}
@@ -95,7 +94,6 @@ public abstract class VersionedElementImpl extends ProxyResolvingEObjectImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredVersion(BigDecimal newDeclaredVersion) {
 		BigDecimal oldDeclaredVersion = declaredVersion;
 		declaredVersion = newDeclaredVersion;
@@ -108,7 +106,6 @@ public abstract class VersionedElementImpl extends ProxyResolvingEObjectImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean hasDeclaredVersion() {
 		BigDecimal _declaredVersion = this.getDeclaredVersion();
 		return (_declaredVersion != null);
@@ -119,7 +116,6 @@ public abstract class VersionedElementImpl extends ProxyResolvingEObjectImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public int getDeclaredVersionOrZero() {
 		int _xifexpression = (int) 0;
 		boolean _hasDeclaredVersion = this.hasDeclaredVersion();

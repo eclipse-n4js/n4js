@@ -53,7 +53,6 @@ public abstract class ExpressionImpl extends ProxyResolvingEObjectImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isValidSimpleAssignmentTarget() {
 		return false;
 	}

@@ -125,8 +125,7 @@ public class NodeRunner implements IRunner {
 			paths.addAll(newArrayList(Splitter.on(NODE_PATH_SEP).omitEmptyStrings().trimResults()
 					.split(runConfig.getCustomEnginePath())));
 
-			if (runConfig.getAdditionalPath() != null && !runConfig.getAdditionalPath().isEmpty())
-				paths.add(runConfig.getAdditionalPath());
+			paths.addAll(runConfig.getAdditionalPaths());
 
 			paths.add(workingDirectory.resolve(N4JSGlobals.NODE_MODULES).toAbsolutePath().toString());
 

@@ -23,7 +23,6 @@ import java.util.stream.Stream;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalLibraryHelper;
-import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4JSBrokenProjectException;
@@ -54,9 +53,6 @@ public class HeadlessHelper {
 	private IHeadlessLogger logger;
 
 	@Inject
-	private TargetPlatformInstallLocationProvider targetPlatformInstallLocationProvider;
-
-	@Inject
 	private ExternalLibraryHelper externalLibraryHelper;
 
 	/**
@@ -75,29 +71,6 @@ public class HeadlessHelper {
 		Iterable<URI> projectUris = Iterables.transform(buildSet.getAllProjects(), p -> p.getLocation());
 		// Register all projects with the file based workspace.
 		this.registerProjectsToFileBasedWorkspace(projectUris, workspace);
-	}
-
-	/**
-	 * Configure FileBasedWorkspace with all projects found in sub-folders of {@code projectLocations}.
-	 *
-	 * Skips {@link IN4JSProject}s that are already registered with the given {@code workspace}.
-	 *
-	 * @param projectLocations
-	 *            list of project roots
-	 * @param workspace
-	 *            instance of FileBasedWorkspace to configure (in N4JS injector)
-	 * @throws N4JSCompileException
-	 *             in error Case.
-	 */
-	public void registerProjects(List<File> projectLocations, FileBasedWorkspace workspace)
-			throws N4JSCompileException {
-		// make absolute, since downstream URI conversion doesn't work if relative dir only.
-		List<File> absProjectRoots = this.toAbsoluteFileList(projectLocations);
-
-		// Collect all Projects in first Level
-		List<URI> pUris = collectAllProjectUris(absProjectRoots);
-
-		registerProjectsToFileBasedWorkspace(pUris, workspace);
 	}
 
 	/**
@@ -214,21 +187,8 @@ public class HeadlessHelper {
 	 * @return list of directories being a project
 	 */
 	public List<File> collectAllProjectPaths(List<File> absProjectRoots) {
-		return getProjectStream(absProjectRoots)
-				.collect(Collectors.toList());
-	}
-
-	/**
-	 * Searches for direct sub-folders containing a File named {@link IN4JSProject#PACKAGE_JSON}
-	 *
-	 * @param absProjectRoots
-	 *            all project root (must be absolute)
-	 * @return list of directories being a project
-	 */
-	public List<URI> collectAllProjectUris(List<File> absProjectRoots) {
-		return getProjectStream(absProjectRoots)
-				.map(HeadlessHelper::fileToURI)
-				.collect(Collectors.toList());
+		List<File> projectRoots = getProjectStream(absProjectRoots).collect(Collectors.toList());
+		return projectRoots;
 	}
 
 	/**
@@ -320,13 +280,8 @@ public class HeadlessHelper {
 	/**
 	 * Returns a stream of {@link File} handles for all N4JS project locations that can be found by scanning the given
 	 * list of {@code absProjectRoots}.
-	 *
-	 * Never includes the target platform install location (cf.
-	 * {@link TargetPlatformInstallLocationProvider#getTargetPlatformFileLocation()}).
 	 */
 	private Stream<File> getProjectStream(List<File> absProjectRoots) {
-		final File targetPlatformLocation = getTargetPlatformInstallLocation();
-
 		// collect all direct sub-folders that represent npm scopes
 		Stream<File> scopeFolders = absProjectRoots.stream()
 				.filter(File::isDirectory)
@@ -336,27 +291,9 @@ public class HeadlessHelper {
 		return Stream.concat(scopeFolders, absProjectRoots.stream())
 				.filter(File::isDirectory)
 				// find all contained folders
-				.flatMap(root -> Arrays.asList(root.listFiles(File::isDirectory)).stream())
+				.flatMap(root -> Arrays.asList(root.listFiles(File::isDirectory)).stream().sorted())
 				// only those with package.json file
-				.filter(dir -> new File(dir, IN4JSProject.PACKAGE_JSON).isFile())
-				// do not include target platform install location as project (if install location is configured)
-				.filter(dir -> targetPlatformLocation == null || !dir.equals(targetPlatformLocation));
+				.filter(dir -> new File(dir, IN4JSProject.PACKAGE_JSON).isFile());
 	}
 
-	/**
-	 * Returns a {@link File} handle for the target platform install location or {@code null} if no such location is
-	 * configured.
-	 */
-	private File getTargetPlatformInstallLocation() {
-		final java.net.URI targetPlatformLocation = targetPlatformInstallLocationProvider
-				.getTargetPlatformInstallURI();
-		if (null == targetPlatformLocation) {
-			return null;
-		}
-		return new File(targetPlatformLocation);
-	}
-
-	private static URI fileToURI(File file) {
-		return URI.createFileURI(file.toString());
-	}
 }

@@ -71,7 +71,7 @@ public class IndexableFilesDiscoveryUtil {
 					BasicFileAttributes attrs) throws IOException {
 
 				if (filter(file)) {
-					result.add(file.toString());
+					result.add(location.relativize(file).toString());
 				}
 				return FileVisitResult.CONTINUE;
 			}
@@ -132,8 +132,11 @@ public class IndexableFilesDiscoveryUtil {
 			public boolean visit(IResource resource) throws CoreException {
 				if (resource.getType() == IResource.FILE) {
 					IFile file = (IFile) resource;
-					boolean isIndexableFileExtension = INDEXABLE_FILTERS
-							.contains(file.getFileExtension().toLowerCase());
+					boolean isIndexableFileExtension = false;
+					String extension = file.getFileExtension();
+					if (extension != null) {
+						isIndexableFileExtension = INDEXABLE_FILTERS.contains(extension.toLowerCase());
+					}
 					boolean isIndexableFilename = INDEXABLE_FILENAMES.contains(file.getName());
 
 					if (isIndexableFileExtension || isIndexableFilename) {

@@ -91,7 +91,6 @@ public abstract class N4ClassifierDefinitionImpl extends N4TypeDefinitionImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<N4MemberDeclaration> getOwnedMembersRaw() {
 		if (ownedMembersRaw == null) {
 			ownedMembersRaw = new EObjectContainmentWithInverseEList<N4MemberDeclaration>(N4MemberDeclaration.class, this, N4JSPackage.N4_CLASSIFIER_DEFINITION__OWNED_MEMBERS_RAW, N4JSPackage.N4_MEMBER_DECLARATION__OWNER);
@@ -104,7 +103,6 @@ public abstract class N4ClassifierDefinitionImpl extends N4TypeDefinitionImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<N4MemberDeclaration> getOwnedMembers() {
 		final Function1<N4MemberDeclaration, Boolean> _function = new Function1<N4MemberDeclaration, Boolean>() {
 			public Boolean apply(final N4MemberDeclaration it) {
@@ -122,7 +120,6 @@ public abstract class N4ClassifierDefinitionImpl extends N4TypeDefinitionImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public N4MethodDeclaration getOwnedCtor() {
 		final Function1<N4MethodDeclaration, Boolean> _function = new Function1<N4MethodDeclaration, Boolean>() {
 			public Boolean apply(final N4MethodDeclaration it) {
@@ -137,7 +134,6 @@ public abstract class N4ClassifierDefinitionImpl extends N4TypeDefinitionImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public N4MethodDeclaration getOwnedCallableCtor() {
 		final Function1<N4MethodDeclaration, Boolean> _function = new Function1<N4MethodDeclaration, Boolean>() {
 			public Boolean apply(final N4MethodDeclaration it) {
@@ -152,7 +148,6 @@ public abstract class N4ClassifierDefinitionImpl extends N4TypeDefinitionImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<N4MethodDeclaration> getOwnedMethods() {
 		final Function1<N4MethodDeclaration, Boolean> _function = new Function1<N4MethodDeclaration, Boolean>() {
 			public Boolean apply(final N4MethodDeclaration it) {
@@ -169,7 +164,6 @@ public abstract class N4ClassifierDefinitionImpl extends N4TypeDefinitionImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<N4FieldDeclaration> getOwnedFields() {
 		final Iterable<N4FieldDeclaration> fields = Iterables.<N4FieldDeclaration>filter(this.getOwnedMembersRaw(), N4FieldDeclaration.class);
 		List<N4FieldDeclaration> _list = IterableExtensions.<N4FieldDeclaration>toList(fields);
@@ -181,7 +175,6 @@ public abstract class N4ClassifierDefinitionImpl extends N4TypeDefinitionImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<N4GetterDeclaration> getOwnedGetters() {
 		final Iterable<N4GetterDeclaration> getters = Iterables.<N4GetterDeclaration>filter(this.getOwnedMembersRaw(), N4GetterDeclaration.class);
 		List<N4GetterDeclaration> _list = IterableExtensions.<N4GetterDeclaration>toList(getters);
@@ -193,7 +186,6 @@ public abstract class N4ClassifierDefinitionImpl extends N4TypeDefinitionImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<N4SetterDeclaration> getOwnedSetters() {
 		final Iterable<N4SetterDeclaration> setters = Iterables.<N4SetterDeclaration>filter(this.getOwnedMembersRaw(), N4SetterDeclaration.class);
 		List<N4SetterDeclaration> _list = IterableExtensions.<N4SetterDeclaration>toList(setters);
@@ -205,7 +197,6 @@ public abstract class N4ClassifierDefinitionImpl extends N4TypeDefinitionImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Iterable<ParameterizedTypeRef> getSuperClassifierRefs() {
 		return Collections.<ParameterizedTypeRef>emptyList();
 	}
@@ -215,7 +206,6 @@ public abstract class N4ClassifierDefinitionImpl extends N4TypeDefinitionImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Iterable<ParameterizedTypeRef> getImplementedOrExtendedInterfaceRefs() {
 		return Collections.<ParameterizedTypeRef>emptyList();
 	}

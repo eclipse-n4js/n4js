@@ -266,7 +266,6 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EObject getAstElement() {
 		if (astElement != null && astElement.eIsProxy()) {
 			InternalEObject oldAstElement = (InternalEObject)astElement;
@@ -293,7 +292,6 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setAstElement(EObject newAstElement) {
 		EObject oldAstElement = astElement;
 		astElement = newAstElement;
@@ -306,7 +304,6 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public int getDeclaredVersion() {
 		return declaredVersion;
 	}
@@ -316,7 +313,6 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredVersion(int newDeclaredVersion) {
 		int oldDeclaredVersion = declaredVersion;
 		declaredVersion = newDeclaredVersion;
@@ -329,7 +325,6 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isExternal() {
 		return external;
 	}
@@ -339,7 +334,6 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setExternal(boolean newExternal) {
 		boolean oldExternal = external;
 		external = newExternal;
@@ -352,7 +346,6 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<TFormalParameter> getFpars() {
 		if (fpars == null) {
 			fpars = new EObjectContainmentEList<TFormalParameter>(TFormalParameter.class, this, TypesPackage.TFUNCTION__FPARS);
@@ -365,7 +358,6 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isReturnValueMarkedOptional() {
 		return returnValueMarkedOptional;
 	}
@@ -375,7 +367,6 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setReturnValueMarkedOptional(boolean newReturnValueMarkedOptional) {
 		boolean oldReturnValueMarkedOptional = returnValueMarkedOptional;
 		returnValueMarkedOptional = newReturnValueMarkedOptional;
@@ -388,7 +379,6 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TypeRef getReturnTypeRef() {
 		return returnTypeRef;
 	}
@@ -413,7 +403,6 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setReturnTypeRef(TypeRef newReturnTypeRef) {
 		if (newReturnTypeRef != returnTypeRef) {
 			NotificationChain msgs = null;
@@ -433,7 +422,6 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<TypeVariable> getTypeVars() {
 		if (typeVars == null) {
 			typeVars = new EObjectContainmentEList<TypeVariable>(TypeVariable.class, this, TypesPackage.TFUNCTION__TYPE_VARS);
@@ -446,7 +434,6 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TypeRef getDeclaredThisType() {
 		return declaredThisType;
 	}
@@ -471,7 +458,6 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredThisType(TypeRef newDeclaredThisType) {
 		if (newDeclaredThisType != declaredThisType) {
 			NotificationChain msgs = null;
@@ -491,7 +477,6 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isDeclaredAsync() {
 		return declaredAsync;
 	}
@@ -501,7 +486,6 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredAsync(boolean newDeclaredAsync) {
 		boolean oldDeclaredAsync = declaredAsync;
 		declaredAsync = newDeclaredAsync;
@@ -514,7 +498,6 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isDeclaredGenerator() {
 		return declaredGenerator;
 	}
@@ -524,7 +507,6 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredGenerator(boolean newDeclaredGenerator) {
 		boolean oldDeclaredGenerator = declaredGenerator;
 		declaredGenerator = newDeclaredGenerator;
@@ -537,7 +519,6 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isConstructor() {
 		return constructor;
 	}
@@ -547,7 +528,6 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setConstructor(boolean newConstructor) {
 		boolean oldConstructor = constructor;
 		constructor = newConstructor;
@@ -560,7 +540,6 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isReturnValueOptional() {
 		return (this.isReturnValueMarkedOptional() || ((this.getReturnTypeRef() != null) && this.getReturnTypeRef().isFollowedByQuestionMark()));
 	}
@@ -570,7 +549,6 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isCallableConstructor() {
 		final EObject parent = this.eContainer();
 		boolean _xifexpression = false;
@@ -589,7 +567,6 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TFormalParameter getFparForArgIdx(final int argIndex) {
 		final int fparsSize = this.getFpars().size();
 		if (((argIndex >= 0) && (argIndex < fparsSize))) {
@@ -608,7 +585,6 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getFunctionAsString() {
 		final StringBuilder strb = new StringBuilder();
 		boolean _isGeneric = this.isGeneric();
@@ -652,7 +628,6 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isFinal() {
 		return false;
 	}
@@ -662,7 +637,6 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public int getVersion() {
 		return this.getDeclaredVersion();
 	}

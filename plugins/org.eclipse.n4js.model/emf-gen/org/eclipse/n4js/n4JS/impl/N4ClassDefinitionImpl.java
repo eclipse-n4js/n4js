@@ -110,7 +110,6 @@ public abstract class N4ClassDefinitionImpl extends N4ClassifierDefinitionImpl i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public ParameterizedTypeRef getSuperClassRef() {
 		return superClassRef;
 	}
@@ -135,7 +134,6 @@ public abstract class N4ClassDefinitionImpl extends N4ClassifierDefinitionImpl i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setSuperClassRef(ParameterizedTypeRef newSuperClassRef) {
 		if (newSuperClassRef != superClassRef) {
 			NotificationChain msgs = null;
@@ -155,7 +153,6 @@ public abstract class N4ClassDefinitionImpl extends N4ClassifierDefinitionImpl i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Expression getSuperClassExpression() {
 		return superClassExpression;
 	}
@@ -180,7 +177,6 @@ public abstract class N4ClassDefinitionImpl extends N4ClassifierDefinitionImpl i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setSuperClassExpression(Expression newSuperClassExpression) {
 		if (newSuperClassExpression != superClassExpression) {
 			NotificationChain msgs = null;
@@ -200,7 +196,6 @@ public abstract class N4ClassDefinitionImpl extends N4ClassifierDefinitionImpl i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<ParameterizedTypeRef> getImplementedInterfaceRefs() {
 		if (implementedInterfaceRefs == null) {
 			implementedInterfaceRefs = new EObjectContainmentEList<ParameterizedTypeRef>(ParameterizedTypeRef.class, this, N4JSPackage.N4_CLASS_DEFINITION__IMPLEMENTED_INTERFACE_REFS);
@@ -213,7 +208,6 @@ public abstract class N4ClassDefinitionImpl extends N4ClassifierDefinitionImpl i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TClass getDefinedTypeAsClass() {
 		Type _definedType = this.getDefinedType();
 		return ((TClass) _definedType);
@@ -224,7 +218,6 @@ public abstract class N4ClassDefinitionImpl extends N4ClassifierDefinitionImpl i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Iterable<ParameterizedTypeRef> getSuperClassifierRefs() {
 		ParameterizedTypeRef _superClassRef = this.getSuperClassRef();
 		EList<ParameterizedTypeRef> _implementedInterfaceRefs = this.getImplementedInterfaceRefs();
@@ -236,7 +229,6 @@ public abstract class N4ClassDefinitionImpl extends N4ClassifierDefinitionImpl i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Iterable<ParameterizedTypeRef> getImplementedOrExtendedInterfaceRefs() {
 		return this.getImplementedInterfaceRefs();
 	}

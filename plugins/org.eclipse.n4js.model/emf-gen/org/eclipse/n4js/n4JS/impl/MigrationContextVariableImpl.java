@@ -51,7 +51,6 @@ public class MigrationContextVariableImpl extends VariableImpl implements Migrat
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getName() {
 		return "context";
 	}

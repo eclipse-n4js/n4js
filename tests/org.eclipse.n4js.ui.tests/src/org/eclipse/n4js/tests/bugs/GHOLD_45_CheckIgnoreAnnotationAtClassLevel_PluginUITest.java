@@ -17,10 +17,6 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -28,25 +24,17 @@ import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.internal.ui.views.console.ProcessConsole;
 import org.eclipse.debug.ui.ILaunchShortcut;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.n4js.tester.TesterEventBus;
-import org.eclipse.n4js.tester.events.SessionEndedEvent;
 import org.eclipse.n4js.tester.nodejs.ui.NodejsTesterLaunchShortcut;
 import org.eclipse.n4js.tester.ui.TesterUiActivator;
 import org.eclipse.n4js.tests.util.EclipseUIUtils;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
-import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.internal.console.ConsoleView;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import com.google.common.collect.Iterables;
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
-import com.google.inject.Inject;
 import com.google.inject.Injector;
 
 /**
@@ -61,28 +49,9 @@ public class GHOLD_45_CheckIgnoreAnnotationAtClassLevel_PluginUITest extends Abs
 
 	private static final String[] EMPTY_ARRAY = new String[0];
 
-	@Inject
-	private ShippedCodeInitializeTestHelper shippedCodeInitializeTestHelper;
-
-	/**
-	 * Initializes the N4JS built-in libraries. Does not matter before or after the test project import.
-	 */
-	@Before
 	@Override
-	public void setUp() throws Exception {
-		shippedCodeInitializeTestHelper.setupBuiltIns();
-		waitForAutoBuild();
-	}
-
-	/**
-	 * Cleans the external library content.
-	 */
-	@After
-	@Override
-	public void tearDown() throws Exception {
-		shippedCodeInitializeTestHelper.tearDownBuiltIns();
-		waitForAutoBuild();
-		super.tearDown();
+	protected boolean provideShippedCode() {
+		return true;
 	}
 
 	@Override
@@ -192,12 +161,9 @@ public class GHOLD_45_CheckIgnoreAnnotationAtClassLevel_PluginUITest extends Abs
 	}
 
 	private void runTestWaitResult(final IFile moduleToTest) {
-		final SessionEndedEventLatch latch = new SessionEndedEventLatch();
-		final EventBus eventBus = getEventBus();
 		final ILaunchShortcut launchShortcut = getLaunchShortcut();
-		eventBus.register(latch);
-		new Thread(() -> launchShortcut.launch(new StructuredSelection(moduleToTest), ILaunchManager.RUN_MODE)).start();
-		latch.startTestAndWait(5L, TimeUnit.SECONDS); // TODO IDE-2270 suspicious delay; might break on slow build nodes
+		launchShortcut.launch(new StructuredSelection(moduleToTest), ILaunchManager.RUN_MODE);
+		ProjectTestsUtils.waitForAllJobs();
 	}
 
 	private String[] getConsoleContentLines() {
@@ -221,63 +187,15 @@ public class GHOLD_45_CheckIgnoreAnnotationAtClassLevel_PluginUITest extends Abs
 		}
 		final ProcessConsole processConsole = assertInstanceOf(console, ProcessConsole.class);
 		final String content = processConsole.getDocument().get();
-		return stripTimeoutWarning(content);
-	}
-
-	// TODO GH-1216 remove this work-around
-	private static final Pattern TIMEOUT_WARNING_PATTERN = Pattern.compile("\\(node:(\\d)+\\) "
-			+ "TimeoutOverflowWarning: (\\d)+ does not fit into a 32-bit signed integer\\."
-			+ "(\r\n|\n)"
-			+ "Timeout duration was set to 1\\.");
-
-	private String stripTimeoutWarning(String str) {
-		Matcher m = TIMEOUT_WARNING_PATTERN.matcher(str);
-		if (!m.find() || m.start() > 0) {
-			Assert.fail("output from mangelhaft was expected to start with a timeout-overflow warning, but got:\n"
-					+ "----------\n"
-					+ str + "\n"
-					+ "----------\n"
-					+ "(NOTE: maybe GH-1216 was fixed; in that case, remove this assertion!");
-		}
-		return str.substring(m.end()).trim();
+		return content;
 	}
 
 	private ILaunchShortcut getLaunchShortcut() {
 		return getTesterInjector().getInstance(NodejsTesterLaunchShortcut.class);
 	}
 
-	private EventBus getEventBus() {
-		return getTesterInjector().getInstance(TesterEventBus.class);
-	}
-
 	private Injector getTesterInjector() {
 		return TesterUiActivator.getInjector();
-	}
-
-	/**
-	 * Latch implementation for waiting until a test session end event.
-	 */
-	private static class SessionEndedEventLatch {
-
-		private final CountDownLatch latch;
-
-		private SessionEndedEventLatch() {
-			latch = new CountDownLatch(1);
-		}
-
-		@Subscribe
-		public void notifySessionEnded(@SuppressWarnings("unused") final SessionEndedEvent event) {
-			latch.countDown();
-		}
-
-		private void startTestAndWait(final long timeout, final TimeUnit unit) {
-			try {
-				latch.await(timeout, unit);
-			} catch (final InterruptedException e) {
-				LOGGER.error("Error occurred while waiting for test session end event.", e);
-			}
-		}
-
 	}
 
 }

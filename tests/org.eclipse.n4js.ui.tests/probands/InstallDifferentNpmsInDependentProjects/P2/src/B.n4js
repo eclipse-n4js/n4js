@@ -1,0 +1,5 @@
+export public class B {
+	public sayHello(name: string) {
+		console.log(`Hello ${name}!`);
+	}
+}

@@ -101,7 +101,6 @@ public class SwitchStatementImpl extends StatementImpl implements SwitchStatemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Expression getExpression() {
 		return expression;
 	}
@@ -126,7 +125,6 @@ public class SwitchStatementImpl extends StatementImpl implements SwitchStatemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setExpression(Expression newExpression) {
 		if (newExpression != expression) {
 			NotificationChain msgs = null;
@@ -146,7 +144,6 @@ public class SwitchStatementImpl extends StatementImpl implements SwitchStatemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<AbstractCaseClause> getCases() {
 		if (cases == null) {
 			cases = new EObjectContainmentEList<AbstractCaseClause>(AbstractCaseClause.class, this, N4JSPackage.SWITCH_STATEMENT__CASES);
@@ -159,7 +156,6 @@ public class SwitchStatementImpl extends StatementImpl implements SwitchStatemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean appliesOnlyToBlockScopedElements() {
 		return true;
 	}
@@ -169,7 +165,6 @@ public class SwitchStatementImpl extends StatementImpl implements SwitchStatemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public DefaultClause getDefaultClause() {
 		final Function1<AbstractCaseClause, Boolean> _function = new Function1<AbstractCaseClause, Boolean>() {
 			public Boolean apply(final AbstractCaseClause it) {
@@ -185,7 +180,6 @@ public class SwitchStatementImpl extends StatementImpl implements SwitchStatemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<CaseClause> getCaseClauses() {
 		return ECollections.<CaseClause>toEList(Iterables.<CaseClause>filter(this.getCases(), CaseClause.class));
 	}

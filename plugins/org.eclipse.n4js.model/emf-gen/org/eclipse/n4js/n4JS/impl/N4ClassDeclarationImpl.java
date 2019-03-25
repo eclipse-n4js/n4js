@@ -192,7 +192,6 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public AnnotationList getAnnotationList() {
 		return annotationList;
 	}
@@ -217,7 +216,6 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setAnnotationList(AnnotationList newAnnotationList) {
 		if (newAnnotationList != annotationList) {
 			NotificationChain msgs = null;
@@ -237,7 +235,6 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<N4Modifier> getDeclaredModifiers() {
 		if (declaredModifiers == null) {
 			declaredModifiers = new EDataTypeEList<N4Modifier>(N4Modifier.class, this, N4JSPackage.N4_CLASS_DECLARATION__DECLARED_MODIFIERS);
@@ -250,7 +247,6 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getName() {
 		return name;
 	}
@@ -260,7 +256,6 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -273,7 +268,6 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<TypeVariable> getTypeVars() {
 		if (typeVars == null) {
 			typeVars = new EObjectContainmentEList<TypeVariable>(TypeVariable.class, this, N4JSPackage.N4_CLASS_DECLARATION__TYPE_VARS);
@@ -286,7 +280,6 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TypingStrategy getTypingStrategy() {
 		return typingStrategy;
 	}
@@ -296,7 +289,6 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setTypingStrategy(TypingStrategy newTypingStrategy) {
 		TypingStrategy oldTypingStrategy = typingStrategy;
 		typingStrategy = newTypingStrategy == null ? TYPING_STRATEGY_EDEFAULT : newTypingStrategy;
@@ -309,7 +301,6 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public BigDecimal getDeclaredVersion() {
 		return declaredVersion;
 	}
@@ -319,7 +310,6 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredVersion(BigDecimal newDeclaredVersion) {
 		BigDecimal oldDeclaredVersion = declaredVersion;
 		declaredVersion = newDeclaredVersion;
@@ -332,7 +322,6 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isAbstract() {
 		return this.getDeclaredModifiers().contains(N4Modifier.ABSTRACT);
 	}
@@ -342,7 +331,6 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public int getVersion() {
 		return this.getDeclaredVersionOrZero();
 	}
@@ -352,7 +340,6 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean hasDeclaredVersion() {
 		BigDecimal _declaredVersion = this.getDeclaredVersion();
 		return (_declaredVersion != null);
@@ -363,7 +350,6 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public int getDeclaredVersionOrZero() {
 		int _xifexpression = (int) 0;
 		boolean _hasDeclaredVersion = this.hasDeclaredVersion();
@@ -381,7 +367,6 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isExternal() {
 		return this.getDeclaredModifiers().contains(N4Modifier.EXTERNAL);
 	}
@@ -391,7 +376,6 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isExported() {
 		EObject _eContainer = this.eContainer();
 		return (_eContainer instanceof ExportDeclaration);
@@ -402,7 +386,6 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isExportedAsDefault() {
 		return (this.isExported() && ((ExportDeclaration) this.eContainer()).isDefaultExport());
 	}
@@ -412,7 +395,6 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getExportedName() {
 		boolean _isExported = this.isExported();
 		if (_isExported) {
@@ -445,7 +427,6 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isToplevel() {
 		EObject _eContainer = this.eContainer();
 		if ((_eContainer instanceof ExportDeclaration)) {
@@ -461,7 +442,6 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<Annotation> getAnnotations() {
 		EList<Annotation> _elvis = null;
 		AnnotationList _annotationList = this.getAnnotationList();

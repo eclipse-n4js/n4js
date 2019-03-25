@@ -1,0 +1,4 @@
+import {B} from "B";
+
+let b: B = new B();
+b.sayHello("n4js");

@@ -105,9 +105,36 @@ Contributors:
             class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
             contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
             default="true"
-            extensions="n4js,n4jsx,n4idl,n4jsd,js,jsx"
+            extensions="js,jsx"
             id="org.eclipse.n4js.N4JS"
             icon="platform:/plugin/org.eclipse.ui/icons/full/obj16/file_obj.png"
+            name="N4JS Editor">
+        </editor>
+        <editor
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
+            contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
+            default="true"
+            extensions="n4jsx"
+            id="org.eclipse.n4js.N4JS"
+            icon="platform:/plugin/org.eclipse.n4js.ui/icons/file_n4jsx.png"
+            name="N4JS Editor">
+        </editor>
+        <editor
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
+            contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
+            default="true"
+            extensions="n4jsd"
+            id="org.eclipse.n4js.N4JS"
+            icon="platform:/plugin/org.eclipse.n4js.ui/icons/file_n4jsd.png"
+            name="N4JS Editor">
+        </editor>
+        <editor
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
+            contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
+            default="true"
+            extensions="n4js,n4idl"
+            id="org.eclipse.n4js.N4JS"
+            icon="platform:/plugin/org.eclipse.n4js.ui/icons/file_n4js.png"
             name="N4JS Editor">
         </editor>
     </extension>
@@ -838,6 +865,25 @@ Contributors:
             </command>
         </menuContribution>
     </extension>
+    
+  <!-- Rename refactoring menu item -->
+  <extension
+    point="org.eclipse.ui.handlers">
+    <handler
+      class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.DefaultRenameElementHandler"
+      commandId="org.eclipse.n4js.ui.refactoring.rename">
+    </handler>
+  </extension>
+  <extension
+    point="org.eclipse.ui.commands">
+    <command
+      description="Rename element"
+      id="org.eclipse.n4js.ui.refactoring.rename"
+      
+      name="Rename">
+    </command>
+  </extension>
+  
   <!-- Organize Imports -->
   <extension
     point="org.eclipse.ui.handlers">
@@ -887,9 +933,28 @@ Contributors:
       </command>
     </menuContribution>
   </extension>
+  <extension point="org.eclipse.ui.menus">
+    <menuContribution
+      locationURI="popup:#TextEditorContext?after=group.edit">
+      <command commandId="org.eclipse.n4js.ui.refactoring.rename"
+        style="push"
+        tooltip="Rename">
+        <visibleWhen checkEnabled="false">
+          <reference definitionId="org.eclipse.n4js.N4JS.Editor.opened"/>
+        </visibleWhen>
+      </command>
+    </menuContribution>
+  </extension>
 
   <extension
         point="org.eclipse.ui.bindings">
+        <key
+             commandId="org.eclipse.n4js.ui.refactoring.rename"
+             contextId="org.eclipse.xtext.ui.XtextEditorScope"
+             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+             sequence="M1+M2+R">
+        </key>
+        
         <key
              commandId="org.eclipse.n4js.ui.organize.imports.OrganizeImports"
              contextId="org.eclipse.xtext.ui.XtextEditorScope"
@@ -1158,7 +1223,7 @@ Contributors:
            activeByDefault="true"
            appearsBefore="org.eclipse.jdt.java.ui.javaContent"
            contentProvider="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.navigator.N4JSProjectExplorerContentProvider"
-           icon="icons/n4_logo_16.png"
+           icon="icons/n4_logo.png"
            id="org.eclipse.n4js.ui.navigatorContent"
            labelProvider="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.navigator.N4JSProjectExplorerLabelProvider"
            name="N4JS"
@@ -1294,8 +1359,8 @@ Contributors:
               </selectionEnablement>
               <editorInputEnablement>
                   <or>
-                 <instanceof value="org.eclipse.ui.IFileEditorInput"/>
-                 <instanceof value="org.eclipse.xtext.ui.editor.XtextReadonlyEditorInput"/>
+                     <instanceof value="org.eclipse.ui.IFileEditorInput"/>
+                     <instanceof value="org.eclipse.xtext.ui.editor.XtextReadonlyEditorInput"/>
                  </or>
               </editorInputEnablement>
            </linkHelper>
@@ -1329,14 +1394,9 @@ Contributors:
             pageImage="icons/newprj_wiz.png"
             wizardID="org.eclipse.n4js.ui.example.N4JSTasksExampleWizard">
          <projectDescriptor
-               contentURI="examples/tasksExample/n4js.example.tasks.zip"
-               description="N4JS project for demonstrating the main capabilities of the language through a simple example. After creating the projects each third party npm dependencies used by this example should be installed automatically."
-               name="n4js.example.tasks">
-         </projectDescriptor>
-         <projectDescriptor
-               contentURI="examples/tasksExample/n4js.example.tasks.tests.zip"
-               description="Test project for the Tasks Example N4JS project. This project is indented to exhibit the runtime and tooling support of testing framework."
-               name="n4js.example.tasks.tests">
+               contentURI="examples/tasksExample/n4js-tasks-example.zip"
+               description="N4JS project for demonstrating the main capabilities of the language through a simple example. After creating the project third-party npm dependencies used by this example should be installed automatically."
+               name="n4js-tasks-example">
          </projectDescriptor>
       </example>
    </extension>

@@ -76,7 +76,6 @@ public abstract class AbstractCaseClauseImpl extends ProxyResolvingEObjectImpl i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<Statement> getStatements() {
 		if (statements == null) {
 			statements = new EObjectContainmentEList<Statement>(Statement.class, this, N4JSPackage.ABSTRACT_CASE_CLAUSE__STATEMENTS);

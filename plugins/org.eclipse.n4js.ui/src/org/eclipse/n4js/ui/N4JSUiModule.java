@@ -14,20 +14,18 @@ import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.rules.IPartitionTokenScanner;
 import org.eclipse.jface.text.rules.ITokenScanner;
 import org.eclipse.n4js.CancelIndicatorBaseExtractor;
+import org.eclipse.n4js.binaries.BinariesCommandFactory;
 import org.eclipse.n4js.binaries.BinariesPreferenceStore;
 import org.eclipse.n4js.binaries.BinariesValidator;
-import org.eclipse.n4js.binaries.BinaryCommandFactory;
 import org.eclipse.n4js.external.ExternalIndexSynchronizer;
 import org.eclipse.n4js.external.ExternalLibraryUriHelper;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalProjectsCollector;
 import org.eclipse.n4js.external.NpmLogger;
 import org.eclipse.n4js.external.RebuildWorkspaceProjectsScheduler;
-import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.findReferences.ConcreteSyntaxAwareReferenceFinder;
 import org.eclipse.n4js.generator.ICompositeGenerator;
 import org.eclipse.n4js.generator.IGeneratorMarkerSupport;
-import org.eclipse.n4js.generator.IWorkspaceMarkerSupport;
 import org.eclipse.n4js.generator.N4JSCompositeGenerator;
 import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
@@ -55,13 +53,13 @@ import org.eclipse.n4js.ui.contentassist.PatchedFollowElementComputer;
 import org.eclipse.n4js.ui.contentassist.PatchedRequiredRuleNameComputer;
 import org.eclipse.n4js.ui.contentassist.SimpleLastSegmentFinder;
 import org.eclipse.n4js.ui.editor.AlwaysAddNatureCallback;
-import org.eclipse.n4js.ui.editor.ComposedMemberAwareHyperlinkHelper;
 import org.eclipse.n4js.ui.editor.EditorAwareCanLoadFromDescriptionHelper;
 import org.eclipse.n4js.ui.editor.N4JSDirtyStateEditorSupport;
 import org.eclipse.n4js.ui.editor.N4JSDocument;
 import org.eclipse.n4js.ui.editor.N4JSDoubleClickStrategyProvider;
 import org.eclipse.n4js.ui.editor.N4JSHover;
 import org.eclipse.n4js.ui.editor.N4JSHyperlinkDetector;
+import org.eclipse.n4js.ui.editor.N4JSHyperlinkHelper;
 import org.eclipse.n4js.ui.editor.N4JSLocationInFileProvider;
 import org.eclipse.n4js.ui.editor.N4JSReconciler;
 import org.eclipse.n4js.ui.editor.PrevStateAwareDocumentBasedDirtyResource;
@@ -76,11 +74,9 @@ import org.eclipse.n4js.ui.editor.syntaxcoloring.TokenTypeToPartitionMapper;
 import org.eclipse.n4js.ui.external.BuildOrderComputer;
 import org.eclipse.n4js.ui.external.EclipseExternalIndexSynchronizer;
 import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
-import org.eclipse.n4js.ui.external.ExternalIndexUpdater;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildQueue;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildScheduler;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuilder;
-import org.eclipse.n4js.ui.external.ExternalLibraryErrorMarkerManager;
 import org.eclipse.n4js.ui.external.ExternalProjectProvider;
 import org.eclipse.n4js.ui.external.ProjectStateChangeListener;
 import org.eclipse.n4js.ui.formatting2.FixedContentFormatter;
@@ -109,6 +105,13 @@ import org.eclipse.n4js.ui.preferences.N4JSBuilderPreferenceAccess;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
 import org.eclipse.n4js.ui.quickfix.N4JSIssue;
 import org.eclipse.n4js.ui.quickfix.N4JSMarkerResolutionGenerator;
+import org.eclipse.n4js.ui.refactoring.N4JSDependentElementsCalculator;
+import org.eclipse.n4js.ui.refactoring.N4JSLinkedPositionGroupCalculator;
+import org.eclipse.n4js.ui.refactoring.N4JSRefactoringCrossReferenceSerializer;
+import org.eclipse.n4js.ui.refactoring.N4JSRefactoringResourceSetProvider;
+import org.eclipse.n4js.ui.refactoring.N4JSRenameElementHandler;
+import org.eclipse.n4js.ui.refactoring.N4JSRenameElementProcessor;
+import org.eclipse.n4js.ui.refactoring.N4JSRenameStrategy;
 import org.eclipse.n4js.ui.resource.OutputFolderAwareResourceServiceProvider;
 import org.eclipse.n4js.ui.search.LabellingReferenceFinder;
 import org.eclipse.n4js.ui.search.MyReferenceSearchResultContentProvider;
@@ -143,6 +146,7 @@ import org.eclipse.xtext.resource.containers.IAllContainersState;
 import org.eclipse.xtext.ui.editor.DirtyStateEditorSupport;
 import org.eclipse.xtext.ui.editor.DocumentBasedDirtyResource;
 import org.eclipse.xtext.ui.editor.IXtextEditorCallback;
+import org.eclipse.xtext.ui.editor.LanguageSpecificURIEditorOpener;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.editor.autoedit.AbstractEditStrategyProvider;
 import org.eclipse.xtext.ui.editor.contentassist.ContentProposalPriorities;
@@ -172,6 +176,13 @@ import org.eclipse.xtext.ui.editor.syntaxcoloring.AbstractAntlrTokenToAttributeI
 import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingConfiguration;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingHelper;
 import org.eclipse.xtext.ui.editor.validation.MarkerCreator;
+import org.eclipse.xtext.ui.refactoring.IDependentElementsCalculator;
+import org.eclipse.xtext.ui.refactoring.impl.AbstractRenameProcessor;
+import org.eclipse.xtext.ui.refactoring.impl.DefaultRenameStrategy;
+import org.eclipse.xtext.ui.refactoring.impl.RefactoringCrossReferenceSerializer;
+import org.eclipse.xtext.ui.refactoring.impl.RefactoringResourceSetProvider;
+import org.eclipse.xtext.ui.refactoring.ui.DefaultLinkedPositionGroupCalculator;
+import org.eclipse.xtext.ui.refactoring.ui.DefaultRenameElementHandler;
 import org.eclipse.xtext.ui.resource.DefaultResourceUIServiceProvider;
 import org.eclipse.xtext.ui.shared.Access;
 import org.eclipse.xtext.ui.util.IssueUtil;
@@ -213,11 +224,6 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	 */
 	public Provider<InternalN4JSWorkspace> provideInternalN4JSWorkspace() {
 		return Access.contributedProvider(InternalN4JSWorkspace.class);
-	}
-
-	/** Delegate to shared injector */
-	public Provider<ExternalLibraryErrorMarkerManager> provideExternalLibraryErrorMarkerManager() {
-		return Access.contributedProvider(ExternalLibraryErrorMarkerManager.class);
 	}
 
 	/** Delegate to shared injector */
@@ -263,11 +269,6 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	/** Delegate to shared injector */
 	public Provider<ProjectStateChangeListener> provideProjectStateChangeListener() {
 		return Access.contributedProvider(ProjectStateChangeListener.class);
-	}
-
-	/** Delegate to shared injector */
-	public Provider<ExternalIndexUpdater> provideExternalIndexUpdater() {
-		return Access.contributedProvider(ExternalIndexUpdater.class);
 	}
 
 	/** Delegate to shared injector */
@@ -341,11 +342,6 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	}
 
 	/** Delegate to shared injector */
-	public Provider<TargetPlatformInstallLocationProvider> provideTargetPlatformInstallLocationProvider() {
-		return Access.contributedProvider(TargetPlatformInstallLocationProvider.class);
-	}
-
-	/** Delegate to shared injector */
 	public Provider<IN4JSCore> provideIN4JSCore() {
 		return Access.contributedProvider(IN4JSCore.class);
 	}
@@ -381,8 +377,8 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	}
 
 	/** Delegate to shared injector */
-	public Provider<? extends BinaryCommandFactory> provideBinaryCommandFactory() {
-		return Access.contributedProvider(BinaryCommandFactory.class);
+	public Provider<? extends BinariesCommandFactory> provideBinaryCommandFactory() {
+		return Access.contributedProvider(BinariesCommandFactory.class);
 	}
 
 	/** Delegate to shared injector */
@@ -433,11 +429,6 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	/** Delegate to shared injector */
 	public Provider<? extends ProcessExecutor> provideProcessExecutor() {
 		return Access.contributedProvider(ProcessExecutor.class);
-	}
-
-	/** Delegate to shared injector */
-	public Provider<? extends IWorkspaceMarkerSupport> provideIWorkspaceMarkerSupport() {
-		return Access.contributedProvider(IWorkspaceMarkerSupport.class);
 	}
 
 	/** Bind {@link URIBasedStorageEditorInputFactory} to support hyperlinks to external library modules */
@@ -837,7 +828,7 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	 * Provide multiple hyperlink for composed members.
 	 */
 	public Class<? extends HyperlinkHelper> bindHyperlinkHelper() {
-		return ComposedMemberAwareHyperlinkHelper.class;
+		return N4JSHyperlinkHelper.class;
 	}
 
 	/***/
@@ -858,6 +849,11 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	/** Custom XtextDocument. */
 	public Class<? extends XtextDocument> bindXtextDocument() {
 		return N4JSDocument.class;
+	}
+
+	/** Custom LanguageSpecificURIEditorOpener. */
+	public Class<? extends LanguageSpecificURIEditorOpener> bindLanguageSpecificURIEditorOpener() {
+		return N4JSLanguageSpecificURIEditorOpener.class;
 	}
 
 	/** Custom XtextReconciler. */
@@ -901,5 +897,40 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	/** Bind custom IProjectCreator for creating N4JS projects using the project wizard. */
 	public Class<? extends IProjectCreator> bindN4JSProjectCreator() {
 		return N4JSProjectCreator.class;
+	}
+
+	/** Custom RenameElementHandler */
+	public Class<? extends DefaultRenameElementHandler> bindDefaultRenameElementHandler() {
+		return N4JSRenameElementHandler.class;
+	}
+
+	/** Custom LinkedPositionGroupCalculator */
+	public Class<? extends DefaultLinkedPositionGroupCalculator> bindDefaultLinkedPositionGroupCalculator() {
+		return N4JSLinkedPositionGroupCalculator.class;
+	}
+
+	/** Custom Rename strategy */
+	public Class<? extends DefaultRenameStrategy> bindDefaultRenameStrategy() {
+		return N4JSRenameStrategy.class;
+	}
+
+	/** Custom RefactoringCrossReferenceSerializer */
+	public Class<? extends RefactoringCrossReferenceSerializer> bindN4JSRefactoringCrossReferenceSerializer() {
+		return N4JSRefactoringCrossReferenceSerializer.class;
+	}
+
+	/** Custom RefactoringResourceSetProvider */
+	public Class<? extends RefactoringResourceSetProvider> bindRefactoringResourceSetProvider() {
+		return N4JSRefactoringResourceSetProvider.class;
+	}
+
+	/** Custom N4JSRenameElementProcessor */
+	public Class<? extends AbstractRenameProcessor> bindAbstractRenameProcessor() {
+		return N4JSRenameElementProcessor.class;
+	}
+
+	@Override
+	public Class<? extends IDependentElementsCalculator> bindIDependentElementsCalculator() {
+		return N4JSDependentElementsCalculator.class;
 	}
 }

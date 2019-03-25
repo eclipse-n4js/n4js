@@ -53,7 +53,6 @@ public abstract class VariableEnvironmentElementImpl extends ProxyResolvingEObje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean appliesOnlyToBlockScopedElements() {
 		return false;
 	}

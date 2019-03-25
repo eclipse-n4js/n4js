@@ -77,7 +77,6 @@ public abstract class ArrayLikeImpl extends ProxyResolvingEObjectImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TypeRef getDeclaredElementType() {
 		return declaredElementType;
 	}
@@ -102,7 +101,6 @@ public abstract class ArrayLikeImpl extends ProxyResolvingEObjectImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredElementType(TypeRef newDeclaredElementType) {
 		if (newDeclaredElementType != declaredElementType) {
 			NotificationChain msgs = null;
@@ -122,7 +120,6 @@ public abstract class ArrayLikeImpl extends ProxyResolvingEObjectImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TypeRef getElementType() {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT

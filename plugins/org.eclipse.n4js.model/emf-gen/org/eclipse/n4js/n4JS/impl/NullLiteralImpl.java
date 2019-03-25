@@ -52,7 +52,6 @@ public class NullLiteralImpl extends LiteralImpl implements NullLiteral {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getValueAsString() {
 		return "null";
 	}

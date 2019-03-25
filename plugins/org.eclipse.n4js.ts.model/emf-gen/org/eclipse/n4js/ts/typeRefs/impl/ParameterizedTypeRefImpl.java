@@ -179,7 +179,6 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Type getDeclaredType() {
 		if (declaredType != null && declaredType.eIsProxy()) {
 			InternalEObject oldDeclaredType = (InternalEObject)declaredType;
@@ -206,7 +205,6 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDeclaredType(Type newDeclaredType) {
 		Type oldDeclaredType = declaredType;
 		declaredType = newDeclaredType;
@@ -219,7 +217,6 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<TypeArgument> getTypeArgs() {
 		if (typeArgs == null) {
 			typeArgs = new EObjectContainmentEList<TypeArgument>(TypeArgument.class, this, TypeRefsPackage.PARAMETERIZED_TYPE_REF__TYPE_ARGS);
@@ -232,7 +229,6 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isArrayTypeLiteral() {
 		return arrayTypeLiteral;
 	}
@@ -242,7 +238,6 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setArrayTypeLiteral(boolean newArrayTypeLiteral) {
 		boolean oldArrayTypeLiteral = arrayTypeLiteral;
 		arrayTypeLiteral = newArrayTypeLiteral;
@@ -255,7 +250,6 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public ModuleNamespaceVirtualType getAstNamespace() {
 		if (astNamespace != null && astNamespace.eIsProxy()) {
 			InternalEObject oldAstNamespace = (InternalEObject)astNamespace;
@@ -282,7 +276,6 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setAstNamespace(ModuleNamespaceVirtualType newAstNamespace) {
 		ModuleNamespaceVirtualType oldAstNamespace = astNamespace;
 		astNamespace = newAstNamespace;
@@ -295,7 +288,6 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public OptionalFieldStrategy getASTNodeOptionalFieldStrategy() {
 		return aSTNodeOptionalFieldStrategy;
 	}
@@ -305,7 +297,6 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setASTNodeOptionalFieldStrategy(OptionalFieldStrategy newASTNodeOptionalFieldStrategy) {
 		OptionalFieldStrategy oldASTNodeOptionalFieldStrategy = aSTNodeOptionalFieldStrategy;
 		aSTNodeOptionalFieldStrategy = newASTNodeOptionalFieldStrategy == null ? AST_NODE_OPTIONAL_FIELD_STRATEGY_EDEFAULT : newASTNodeOptionalFieldStrategy;
@@ -318,7 +309,6 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TypingStrategy getDefinedTypingStrategy() {
 		return definedTypingStrategy;
 	}
@@ -328,7 +318,6 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDefinedTypingStrategy(TypingStrategy newDefinedTypingStrategy) {
 		TypingStrategy oldDefinedTypingStrategy = definedTypingStrategy;
 		definedTypingStrategy = newDefinedTypingStrategy == null ? DEFINED_TYPING_STRATEGY_EDEFAULT : newDefinedTypingStrategy;
@@ -341,7 +330,6 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TypingStrategy getTypingStrategy() {
 		TypingStrategy _definedTypingStrategy = this.getDefinedTypingStrategy();
 		boolean _tripleEquals = (_definedTypingStrategy == TypingStrategy.DEFAULT);
@@ -362,7 +350,6 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean containsWildcards() {
 		return ((this.getTypeArgs().isEmpty() && (!this.getDeclaredType().isGeneric())) || IterableExtensions.<TypeArgument>exists(this.getTypeArgs(), new Function1<TypeArgument, Boolean>() {
 			public Boolean apply(final TypeArgument it) {
@@ -376,7 +363,6 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getTypeRefAsString() {
 		Type _declaredType = this.getDeclaredType();
 		String _rawTypeAsString = null;
@@ -418,7 +404,6 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isParameterized() {
 		boolean _isEmpty = this.getTypeArgs().isEmpty();
 		return (!_isEmpty);
@@ -429,7 +414,6 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isGeneric() {
 		return ((this.getDeclaredType() != null) && this.getDeclaredType().isGeneric());
 	}
@@ -439,7 +423,6 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isRaw() {
 		return (this.isGeneric() && (this.getTypeArgs().size() < this.getDeclaredType().getTypeVars().size()));
 	}
@@ -449,7 +432,6 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean containsUnboundTypeVariables() {
 		return (((this.getDeclaredType() instanceof TypeVariable) || ((!this.isParameterized()) && this.getDeclaredType().isGeneric())) || IterableExtensions.<TypeArgument>exists(this.getTypeArgs(), new Function1<TypeArgument, Boolean>() {
 			public Boolean apply(final TypeArgument it) {
@@ -463,7 +445,6 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isUseSiteStructuralTyping() {
 		return ((this.getDefinedTypingStrategy() != TypingStrategy.NOMINAL) && 
 			(this.getDefinedTypingStrategy() != TypingStrategy.DEFAULT));
@@ -474,7 +455,6 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public boolean isDefSiteStructuralTyping() {
 		Type _declaredType = this.getDeclaredType();
 		if ((_declaredType instanceof TN4Classifier)) {

@@ -37,8 +37,7 @@ class SrcIsProjectNoValidationPluginTest extends AbstractBuilderParticipantTest 
 	IFile projectDescriptionFile
 
 	@Before
-	override void setUp() {
-		super.setUp
+	def void setUp2() {
 		projectUnderTest = createJSProject("IDE_754")
 		src = configureProjectWithXtext(projectUnderTest);
 		src_P = createFolder(src, "P");
