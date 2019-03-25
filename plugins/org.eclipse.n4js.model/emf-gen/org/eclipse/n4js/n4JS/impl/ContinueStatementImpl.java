@@ -91,6 +91,7 @@ public class ContinueStatementImpl extends StatementImpl implements ContinueStat
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public LabelledStatement getLabel() {
 		if (label != null && label.eIsProxy()) {
 			InternalEObject oldLabel = (InternalEObject)label;
@@ -117,6 +118,7 @@ public class ContinueStatementImpl extends StatementImpl implements ContinueStat
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setLabel(LabelledStatement newLabel) {
 		LabelledStatement oldLabel = label;
 		label = newLabel;
@@ -129,6 +131,7 @@ public class ContinueStatementImpl extends StatementImpl implements ContinueStat
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getLabelAsText() {
 		return labelAsText;
 	}
@@ -138,6 +141,7 @@ public class ContinueStatementImpl extends StatementImpl implements ContinueStat
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setLabelAsText(String newLabelAsText) {
 		String oldLabelAsText = labelAsText;
 		labelAsText = newLabelAsText;

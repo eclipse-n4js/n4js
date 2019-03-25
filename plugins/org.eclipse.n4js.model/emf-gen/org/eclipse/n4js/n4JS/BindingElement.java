@@ -59,10 +59,6 @@ public interface BindingElement extends ControlFlowElement {
 	/**
 	 * Returns the value of the '<em><b>Var Decl</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Var Decl</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Var Decl</em>' containment reference.
 	 * @see #setVarDecl(VariableDeclaration)
@@ -85,10 +81,6 @@ public interface BindingElement extends ControlFlowElement {
 	/**
 	 * Returns the value of the '<em><b>Nested Pattern</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Nested Pattern</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Nested Pattern</em>' containment reference.
 	 * @see #setNestedPattern(BindingPattern)
@@ -111,10 +103,6 @@ public interface BindingElement extends ControlFlowElement {
 	/**
 	 * Returns the value of the '<em><b>Expression</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Expression</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Expression</em>' containment reference.
 	 * @see #setExpression(Expression)

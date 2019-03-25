@@ -34,10 +34,6 @@ public interface NewExpression extends Expression, ParameterizedAccess {
 	/**
 	 * Returns the value of the '<em><b>Callee</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Callee</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Callee</em>' containment reference.
 	 * @see #setCallee(Expression)
@@ -61,10 +57,6 @@ public interface NewExpression extends Expression, ParameterizedAccess {
 	 * Returns the value of the '<em><b>Arguments</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.n4JS.Argument}.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Arguments</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Arguments</em>' containment reference list.
 	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getNewExpression_Arguments()
@@ -76,10 +68,6 @@ public interface NewExpression extends Expression, ParameterizedAccess {
 	/**
 	 * Returns the value of the '<em><b>With Args</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>With Args</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>With Args</em>' attribute.
 	 * @see #setWithArgs(boolean)

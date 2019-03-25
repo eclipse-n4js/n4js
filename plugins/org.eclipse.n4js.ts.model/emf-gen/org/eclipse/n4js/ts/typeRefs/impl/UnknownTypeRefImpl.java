@@ -53,6 +53,7 @@ public class UnknownTypeRefImpl extends TypeRefImpl implements UnknownTypeRef {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getTypeRefAsString() {
 		return "[unknown]";
 	}

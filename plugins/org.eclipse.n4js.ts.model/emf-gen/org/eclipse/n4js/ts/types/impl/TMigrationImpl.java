@@ -176,6 +176,7 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getSourceVersion() {
 		return sourceVersion;
 	}
@@ -185,6 +186,7 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSourceVersion(int newSourceVersion) {
 		int oldSourceVersion = sourceVersion;
 		sourceVersion = newSourceVersion;
@@ -197,6 +199,7 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getTargetVersion() {
 		return targetVersion;
 	}
@@ -206,6 +209,7 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTargetVersion(int newTargetVersion) {
 		int oldTargetVersion = targetVersion;
 		targetVersion = newTargetVersion;
@@ -218,6 +222,7 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isHasDeclaredSourceAndTargetVersion() {
 		return hasDeclaredSourceAndTargetVersion;
 	}
@@ -227,6 +232,7 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setHasDeclaredSourceAndTargetVersion(boolean newHasDeclaredSourceAndTargetVersion) {
 		boolean oldHasDeclaredSourceAndTargetVersion = hasDeclaredSourceAndTargetVersion;
 		hasDeclaredSourceAndTargetVersion = newHasDeclaredSourceAndTargetVersion;
@@ -239,6 +245,7 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TypeRef> getSourceTypeRefs() {
 		if (sourceTypeRefs == null) {
 			sourceTypeRefs = new EObjectResolvingEList<TypeRef>(TypeRef.class, this, TypesPackage.TMIGRATION__SOURCE_TYPE_REFS);
@@ -251,6 +258,7 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TypeRef> getTargetTypeRefs() {
 		if (targetTypeRefs == null) {
 			targetTypeRefs = new EObjectResolvingEList<TypeRef>(TypeRef.class, this, TypesPackage.TMIGRATION__TARGET_TYPE_REFS);
@@ -263,6 +271,7 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TMigratable get_principalArgumentType() {
 		if (_principalArgumentType != null && _principalArgumentType.eIsProxy()) {
 			InternalEObject old_principalArgumentType = (InternalEObject)_principalArgumentType;
@@ -289,6 +298,7 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void set_principalArgumentType(TMigratable new_principalArgumentType) {
 		TMigratable old_principalArgumentType = _principalArgumentType;
 		_principalArgumentType = new_principalArgumentType;
@@ -301,6 +311,7 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TMigratable getPrincipalArgumentType() {
 		TMigratable __principalArgumentType = this.get_principalArgumentType();
 		boolean _tripleEquals = (__principalArgumentType == null);
@@ -320,6 +331,7 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getMigrationAsString() {
 		final Function1<TypeRef, String> _function = new Function1<TypeRef, String>() {
 			public String apply(final TypeRef t) {

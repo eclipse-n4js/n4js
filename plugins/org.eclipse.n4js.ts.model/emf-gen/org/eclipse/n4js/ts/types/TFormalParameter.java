@@ -33,10 +33,6 @@ public interface TFormalParameter extends IdentifiableElement, TAnnotableElement
 	/**
 	 * Returns the value of the '<em><b>Variadic</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Variadic</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Variadic</em>' attribute.
 	 * @see #setVariadic(boolean)
@@ -88,10 +84,6 @@ public interface TFormalParameter extends IdentifiableElement, TAnnotableElement
 	/**
 	 * Returns the value of the '<em><b>Has Initializer Assignment</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Has Initializer Assignment</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Has Initializer Assignment</em>' attribute.
 	 * @see #setHasInitializerAssignment(boolean)

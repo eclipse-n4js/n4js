@@ -96,6 +96,7 @@ public class TypeTypeRefImpl extends BaseTypeRefImpl implements TypeTypeRef {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypeArgument getTypeArg() {
 		return typeArg;
 	}
@@ -120,6 +121,7 @@ public class TypeTypeRefImpl extends BaseTypeRefImpl implements TypeTypeRef {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTypeArg(TypeArgument newTypeArg) {
 		if (newTypeArg != typeArg) {
 			NotificationChain msgs = null;
@@ -139,6 +141,7 @@ public class TypeTypeRefImpl extends BaseTypeRefImpl implements TypeTypeRef {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isConstructorRef() {
 		return constructorRef;
 	}
@@ -148,6 +151,7 @@ public class TypeTypeRefImpl extends BaseTypeRefImpl implements TypeTypeRef {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setConstructorRef(boolean newConstructorRef) {
 		boolean oldConstructorRef = constructorRef;
 		constructorRef = newConstructorRef;
@@ -160,6 +164,7 @@ public class TypeTypeRefImpl extends BaseTypeRefImpl implements TypeTypeRef {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getTypeRefAsString() {
 		String _xifexpression = null;
 		boolean _isConstructorRef = this.isConstructorRef();

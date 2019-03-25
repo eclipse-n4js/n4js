@@ -39,10 +39,6 @@ public interface TVariable extends TExportableElement, TConstableElement, Syntax
 	/**
 	 * Returns the value of the '<em><b>External</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>External</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>External</em>' attribute.
 	 * @see #setExternal(boolean)
@@ -65,10 +61,6 @@ public interface TVariable extends TExportableElement, TConstableElement, Syntax
 	/**
 	 * Returns the value of the '<em><b>Object Literal</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Object Literal</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Object Literal</em>' attribute.
 	 * @see #setObjectLiteral(boolean)
@@ -91,10 +83,6 @@ public interface TVariable extends TExportableElement, TConstableElement, Syntax
 	/**
 	 * Returns the value of the '<em><b>New Expression</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>New Expression</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>New Expression</em>' attribute.
 	 * @see #setNewExpression(boolean)

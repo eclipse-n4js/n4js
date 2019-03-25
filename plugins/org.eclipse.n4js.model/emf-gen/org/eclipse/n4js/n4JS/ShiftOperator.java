@@ -59,10 +59,6 @@ public enum ShiftOperator implements Enumerator {
 	/**
 	 * The '<em><b>Shl</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Shl</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #SHL
 	 * @model name="shl" literal="&lt;&lt;"
@@ -74,10 +70,6 @@ public enum ShiftOperator implements Enumerator {
 	/**
 	 * The '<em><b>Shr</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Shr</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #SHR
 	 * @model name="shr" literal="&gt;&gt;"
@@ -89,10 +81,6 @@ public enum ShiftOperator implements Enumerator {
 	/**
 	 * The '<em><b>Ushr</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Ushr</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #USHR
 	 * @model name="ushr" literal="&gt;&gt;&gt;"
@@ -213,6 +201,7 @@ public enum ShiftOperator implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getValue() {
 	  return value;
 	}
@@ -222,6 +211,7 @@ public enum ShiftOperator implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 	  return name;
 	}
@@ -231,6 +221,7 @@ public enum ShiftOperator implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getLiteral() {
 	  return literal;
 	}

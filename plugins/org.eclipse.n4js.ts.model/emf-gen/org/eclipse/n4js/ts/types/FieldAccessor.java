@@ -38,10 +38,6 @@ public interface FieldAccessor extends TMemberWithAccessModifier {
 	/**
 	 * Returns the value of the '<em><b>Optional</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Optional</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Optional</em>' attribute.
 	 * @see #setOptional(boolean)
@@ -64,10 +60,6 @@ public interface FieldAccessor extends TMemberWithAccessModifier {
 	/**
 	 * Returns the value of the '<em><b>Declared Abstract</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Declared Abstract</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Declared Abstract</em>' attribute.
 	 * @see #setDeclaredAbstract(boolean)
@@ -90,10 +82,6 @@ public interface FieldAccessor extends TMemberWithAccessModifier {
 	/**
 	 * Returns the value of the '<em><b>Declared This Type</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Declared This Type</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Declared This Type</em>' containment reference.
 	 * @see #setDeclaredThisType(TypeRef)

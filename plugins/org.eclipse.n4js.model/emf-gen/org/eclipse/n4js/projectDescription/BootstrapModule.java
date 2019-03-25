@@ -32,10 +32,6 @@ public interface BootstrapModule extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Module Specifier</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Module Specifier</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Module Specifier</em>' attribute.
 	 * @see #setModuleSpecifier(String)

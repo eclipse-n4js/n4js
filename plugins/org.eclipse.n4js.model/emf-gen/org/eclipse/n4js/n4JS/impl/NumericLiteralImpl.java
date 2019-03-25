@@ -84,6 +84,7 @@ public class NumericLiteralImpl extends LiteralImpl implements NumericLiteral {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public BigDecimal getValue() {
 		return value;
 	}
@@ -93,6 +94,7 @@ public class NumericLiteralImpl extends LiteralImpl implements NumericLiteral {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setValue(BigDecimal newValue) {
 		BigDecimal oldValue = value;
 		value = newValue;
@@ -105,6 +107,7 @@ public class NumericLiteralImpl extends LiteralImpl implements NumericLiteral {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getValueAsString() {
 		BigDecimal _value = this.getValue();
 		boolean _tripleEquals = (_value == null);

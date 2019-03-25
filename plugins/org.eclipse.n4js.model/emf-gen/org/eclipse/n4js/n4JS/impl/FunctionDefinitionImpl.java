@@ -174,6 +174,7 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Type getDefinedType() {
 		if (definedType != null && definedType.eIsProxy()) {
 			InternalEObject oldDefinedType = (InternalEObject)definedType;
@@ -200,6 +201,7 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDefinedType(Type newDefinedType) {
 		Type oldDefinedType = definedType;
 		definedType = newDefinedType;
@@ -212,6 +214,7 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public BigDecimal getDeclaredVersion() {
 		return declaredVersion;
 	}
@@ -221,6 +224,7 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDeclaredVersion(BigDecimal newDeclaredVersion) {
 		BigDecimal oldDeclaredVersion = declaredVersion;
 		declaredVersion = newDeclaredVersion;
@@ -233,6 +237,7 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<FormalParameter> getFpars() {
 		if (fpars == null) {
 			fpars = new EObjectContainmentEList<FormalParameter>(FormalParameter.class, this, N4JSPackage.FUNCTION_DEFINITION__FPARS);
@@ -245,6 +250,7 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypeRef getReturnTypeRef() {
 		return returnTypeRef;
 	}
@@ -269,6 +275,7 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setReturnTypeRef(TypeRef newReturnTypeRef) {
 		if (newReturnTypeRef != returnTypeRef) {
 			NotificationChain msgs = null;
@@ -288,6 +295,7 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isGenerator() {
 		return generator;
 	}
@@ -297,6 +305,7 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setGenerator(boolean newGenerator) {
 		boolean oldGenerator = generator;
 		generator = newGenerator;
@@ -309,6 +318,7 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isDeclaredAsync() {
 		return declaredAsync;
 	}
@@ -318,6 +328,7 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDeclaredAsync(boolean newDeclaredAsync) {
 		boolean oldDeclaredAsync = declaredAsync;
 		declaredAsync = newDeclaredAsync;
@@ -330,6 +341,7 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isReturnValueOptional() {
 		return (((this.getDefinedFunction() != null) && this.getDefinedFunction().isReturnValueOptional()) || ((this.getReturnTypeRef() != null) && this.getReturnTypeRef().isFollowedByQuestionMark()));
 	}
@@ -339,6 +351,7 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isAsync() {
 		return this.isDeclaredAsync();
 	}
@@ -348,6 +361,7 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TFunction getDefinedFunction() {
 		final Type defType = this.getDefinedType();
 		TFunction _xifexpression = null;
@@ -362,6 +376,7 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean hasDeclaredVersion() {
 		BigDecimal _declaredVersion = this.getDeclaredVersion();
 		return (_declaredVersion != null);
@@ -372,6 +387,7 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getDeclaredVersionOrZero() {
 		int _xifexpression = (int) 0;
 		boolean _hasDeclaredVersion = this.hasDeclaredVersion();

@@ -92,6 +92,7 @@ public abstract class LabelRefImpl extends ProxyResolvingEObjectImpl implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public LabelledStatement getLabel() {
 		if (label != null && label.eIsProxy()) {
 			InternalEObject oldLabel = (InternalEObject)label;
@@ -118,6 +119,7 @@ public abstract class LabelRefImpl extends ProxyResolvingEObjectImpl implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setLabel(LabelledStatement newLabel) {
 		LabelledStatement oldLabel = label;
 		label = newLabel;
@@ -130,6 +132,7 @@ public abstract class LabelRefImpl extends ProxyResolvingEObjectImpl implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getLabelAsText() {
 		return labelAsText;
 	}
@@ -139,6 +142,7 @@ public abstract class LabelRefImpl extends ProxyResolvingEObjectImpl implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setLabelAsText(String newLabelAsText) {
 		String oldLabelAsText = labelAsText;
 		labelAsText = newLabelAsText;

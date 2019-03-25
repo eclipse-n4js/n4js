@@ -59,6 +59,7 @@ public abstract class VariableDeclarationOrBindingImpl extends ProxyResolvingEOb
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<VariableDeclaration> getVariableDeclarations() {
 		EList<VariableDeclaration> _switchResult = null;
 		boolean _matched = false;
@@ -83,6 +84,7 @@ public abstract class VariableDeclarationOrBindingImpl extends ProxyResolvingEOb
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getExpression() {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT

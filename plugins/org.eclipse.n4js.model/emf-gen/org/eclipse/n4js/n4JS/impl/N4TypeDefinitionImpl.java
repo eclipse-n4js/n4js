@@ -76,6 +76,7 @@ public abstract class N4TypeDefinitionImpl extends AnnotableElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Type getDefinedType() {
 		if (definedType != null && definedType.eIsProxy()) {
 			InternalEObject oldDefinedType = (InternalEObject)definedType;
@@ -102,6 +103,7 @@ public abstract class N4TypeDefinitionImpl extends AnnotableElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDefinedType(Type newDefinedType) {
 		Type oldDefinedType = definedType;
 		definedType = newDefinedType;
@@ -114,6 +116,7 @@ public abstract class N4TypeDefinitionImpl extends AnnotableElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isExternal() {
 		return false;
 	}

@@ -100,6 +100,7 @@ public abstract class GetterDeclarationImpl extends FieldAccessorImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypeRef getDeclaredTypeRef() {
 		return declaredTypeRef;
 	}
@@ -124,6 +125,7 @@ public abstract class GetterDeclarationImpl extends FieldAccessorImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDeclaredTypeRef(TypeRef newDeclaredTypeRef) {
 		if (newDeclaredTypeRef != declaredTypeRef) {
 			NotificationChain msgs = null;
@@ -143,6 +145,7 @@ public abstract class GetterDeclarationImpl extends FieldAccessorImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypeRef getBogusTypeRef() {
 		return bogusTypeRef;
 	}
@@ -167,6 +170,7 @@ public abstract class GetterDeclarationImpl extends FieldAccessorImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setBogusTypeRef(TypeRef newBogusTypeRef) {
 		if (newBogusTypeRef != bogusTypeRef) {
 			NotificationChain msgs = null;
@@ -186,6 +190,7 @@ public abstract class GetterDeclarationImpl extends FieldAccessorImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TGetter getDefinedGetter() {
 		if (definedGetter != null && definedGetter.eIsProxy()) {
 			InternalEObject oldDefinedGetter = (InternalEObject)definedGetter;
@@ -212,6 +217,7 @@ public abstract class GetterDeclarationImpl extends FieldAccessorImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDefinedGetter(TGetter newDefinedGetter) {
 		TGetter oldDefinedGetter = definedGetter;
 		definedGetter = newDefinedGetter;
@@ -224,6 +230,7 @@ public abstract class GetterDeclarationImpl extends FieldAccessorImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TGetter getDefinedAccessor() {
 		return this.getDefinedGetter();
 	}

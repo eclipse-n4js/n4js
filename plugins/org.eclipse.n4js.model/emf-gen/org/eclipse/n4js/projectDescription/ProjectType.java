@@ -129,10 +129,6 @@ public enum ProjectType implements Enumerator {
 	/**
 	 * The '<em><b>PLAINJS</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>PLAINJS</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #PLAINJS
 	 * @model
@@ -144,10 +140,6 @@ public enum ProjectType implements Enumerator {
 	/**
 	 * The '<em><b>VALIDATION</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>VALIDATION</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #VALIDATION
 	 * @model
@@ -159,10 +151,6 @@ public enum ProjectType implements Enumerator {
 	/**
 	 * The '<em><b>DEFINITION</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>DEFINITION</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #DEFINITION
 	 * @model
@@ -174,10 +162,6 @@ public enum ProjectType implements Enumerator {
 	/**
 	 * The '<em><b>APPLICATION</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>APPLICATION</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #APPLICATION
 	 * @model
@@ -189,10 +173,6 @@ public enum ProjectType implements Enumerator {
 	/**
 	 * The '<em><b>PROCESSOR</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>PROCESSOR</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #PROCESSOR
 	 * @model
@@ -204,10 +184,6 @@ public enum ProjectType implements Enumerator {
 	/**
 	 * The '<em><b>LIBRARY</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>LIBRARY</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #LIBRARY
 	 * @model
@@ -219,10 +195,6 @@ public enum ProjectType implements Enumerator {
 	/**
 	 * The '<em><b>API</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>API</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #API
 	 * @model
@@ -234,10 +206,6 @@ public enum ProjectType implements Enumerator {
 	/**
 	 * The '<em><b>RUNTIME ENVIRONMENT</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>RUNTIME ENVIRONMENT</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #RUNTIME_ENVIRONMENT
 	 * @model
@@ -249,10 +217,6 @@ public enum ProjectType implements Enumerator {
 	/**
 	 * The '<em><b>RUNTIME LIBRARY</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>RUNTIME LIBRARY</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #RUNTIME_LIBRARY
 	 * @model
@@ -264,10 +228,6 @@ public enum ProjectType implements Enumerator {
 	/**
 	 * The '<em><b>TEST</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>TEST</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #TEST
 	 * @model
@@ -402,6 +362,7 @@ public enum ProjectType implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getValue() {
 	  return value;
 	}
@@ -411,6 +372,7 @@ public enum ProjectType implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 	  return name;
 	}
@@ -420,6 +382,7 @@ public enum ProjectType implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getLiteral() {
 	  return literal;
 	}

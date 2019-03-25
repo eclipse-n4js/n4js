@@ -40,10 +40,6 @@ public interface FormalParameter extends AnnotableElement, Variable {
 	 * Returns the value of the '<em><b>Annotations</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.n4JS.Annotation}.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Annotations</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Annotations</em>' containment reference list.
 	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getFormalParameter_Annotations()
@@ -55,10 +51,6 @@ public interface FormalParameter extends AnnotableElement, Variable {
 	/**
 	 * Returns the value of the '<em><b>Variadic</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Variadic</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Variadic</em>' attribute.
 	 * @see #setVariadic(boolean)
@@ -81,10 +73,6 @@ public interface FormalParameter extends AnnotableElement, Variable {
 	/**
 	 * Returns the value of the '<em><b>Defined Type Element</b></em>' reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Defined Type Element</em>' reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Defined Type Element</em>' reference.
 	 * @see #setDefinedTypeElement(TFormalParameter)
@@ -161,10 +149,6 @@ public interface FormalParameter extends AnnotableElement, Variable {
 	/**
 	 * Returns the value of the '<em><b>Binding Pattern</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Binding Pattern</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Binding Pattern</em>' containment reference.
 	 * @see #setBindingPattern(BindingPattern)

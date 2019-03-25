@@ -33,10 +33,6 @@ public interface LabelRef extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Label</b></em>' reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Label</em>' reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Label</em>' reference.
 	 * @see #setLabel(LabelledStatement)
@@ -59,10 +55,6 @@ public interface LabelRef extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Label As Text</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Label As Text</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Label As Text</em>' attribute.
 	 * @see #setLabelAsText(String)

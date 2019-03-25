@@ -49,10 +49,6 @@ public enum AdditiveOperator implements Enumerator {
 	/**
 	 * The '<em><b>Add</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Add</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #ADD
 	 * @model name="add" literal="+"
@@ -64,10 +60,6 @@ public enum AdditiveOperator implements Enumerator {
 	/**
 	 * The '<em><b>Sub</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Sub</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #SUB
 	 * @model name="sub" literal="-"
@@ -186,6 +178,7 @@ public enum AdditiveOperator implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getValue() {
 	  return value;
 	}
@@ -195,6 +188,7 @@ public enum AdditiveOperator implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 	  return name;
 	}
@@ -204,6 +198,7 @@ public enum AdditiveOperator implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getLiteral() {
 	  return literal;
 	}

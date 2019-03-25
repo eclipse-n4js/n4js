@@ -35,10 +35,6 @@ public interface JSXElement extends Expression, JSXChild {
 	/**
 	 * Returns the value of the '<em><b>Jsx Element Name</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Jsx Element Name</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Jsx Element Name</em>' containment reference.
 	 * @see #setJsxElementName(JSXElementName)
@@ -62,10 +58,6 @@ public interface JSXElement extends Expression, JSXChild {
 	 * Returns the value of the '<em><b>Jsx Attributes</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.n4JS.JSXAttribute}.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Jsx Attributes</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Jsx Attributes</em>' containment reference list.
 	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getJSXElement_JsxAttributes()
@@ -78,10 +70,6 @@ public interface JSXElement extends Expression, JSXChild {
 	 * Returns the value of the '<em><b>Jsx Children</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.n4JS.JSXChild}.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Jsx Children</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Jsx Children</em>' containment reference list.
 	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getJSXElement_JsxChildren()
@@ -93,10 +81,6 @@ public interface JSXElement extends Expression, JSXChild {
 	/**
 	 * Returns the value of the '<em><b>Jsx Closing Name</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Jsx Closing Name</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Jsx Closing Name</em>' containment reference.
 	 * @see #setJsxClosingName(JSXElementName)

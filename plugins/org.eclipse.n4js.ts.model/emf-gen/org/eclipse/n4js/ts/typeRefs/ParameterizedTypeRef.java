@@ -50,10 +50,6 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	/**
 	 * Returns the value of the '<em><b>Declared Type</b></em>' reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Declared Type</em>' reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Declared Type</em>' reference.
 	 * @see #setDeclaredType(Type)
@@ -77,10 +73,6 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	 * Returns the value of the '<em><b>Type Args</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.ts.typeRefs.TypeArgument}.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Type Args</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Type Args</em>' containment reference list.
 	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getParameterizedTypeRef_TypeArgs()
@@ -93,10 +85,6 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	 * Returns the value of the '<em><b>Array Type Literal</b></em>' attribute.
 	 * The default value is <code>"false"</code>.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Array Type Literal</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Array Type Literal</em>' attribute.
 	 * @see #setArrayTypeLiteral(boolean)

@@ -35,10 +35,6 @@ public interface TInterface extends TN4Classifier {
 	/**
 	 * Returns the value of the '<em><b>External</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>External</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>External</em>' attribute.
 	 * @see #setExternal(boolean)
@@ -62,10 +58,6 @@ public interface TInterface extends TN4Classifier {
 	 * Returns the value of the '<em><b>Super Interface Refs</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef}.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Super Interface Refs</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Super Interface Refs</em>' containment reference list.
 	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTInterface_SuperInterfaceRefs()

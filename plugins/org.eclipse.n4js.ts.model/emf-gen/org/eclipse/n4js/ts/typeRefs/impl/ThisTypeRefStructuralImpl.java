@@ -147,6 +147,7 @@ public class ThisTypeRefStructuralImpl extends ThisTypeRefImpl implements ThisTy
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TStructMember> getAstStructuralMembers() {
 		if (astStructuralMembers == null) {
 			astStructuralMembers = new EObjectContainmentEList<TStructMember>(TStructMember.class, this, TypeRefsPackage.THIS_TYPE_REF_STRUCTURAL__AST_STRUCTURAL_MEMBERS);
@@ -159,6 +160,7 @@ public class ThisTypeRefStructuralImpl extends ThisTypeRefImpl implements ThisTy
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TStructuralType getStructuralType() {
 		if (structuralType != null && structuralType.eIsProxy()) {
 			InternalEObject oldStructuralType = (InternalEObject)structuralType;
@@ -185,6 +187,7 @@ public class ThisTypeRefStructuralImpl extends ThisTypeRefImpl implements ThisTy
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setStructuralType(TStructuralType newStructuralType) {
 		TStructuralType oldStructuralType = structuralType;
 		structuralType = newStructuralType;
@@ -197,6 +200,7 @@ public class ThisTypeRefStructuralImpl extends ThisTypeRefImpl implements ThisTy
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TStructMember> getGenStructuralMembers() {
 		if (genStructuralMembers == null) {
 			genStructuralMembers = new EObjectContainmentEList<TStructMember>(TStructMember.class, this, TypeRefsPackage.THIS_TYPE_REF_STRUCTURAL__GEN_STRUCTURAL_MEMBERS);
@@ -209,6 +213,7 @@ public class ThisTypeRefStructuralImpl extends ThisTypeRefImpl implements ThisTy
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TypeVariableMapping> getPostponedSubstitutions() {
 		if (postponedSubstitutions == null) {
 			postponedSubstitutions = new EObjectContainmentEList<TypeVariableMapping>(TypeVariableMapping.class, this, TypeRefsPackage.THIS_TYPE_REF_STRUCTURAL__POSTPONED_SUBSTITUTIONS);
@@ -221,6 +226,7 @@ public class ThisTypeRefStructuralImpl extends ThisTypeRefImpl implements ThisTy
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypingStrategy getDefinedTypingStrategy() {
 		return definedTypingStrategy;
 	}
@@ -230,6 +236,7 @@ public class ThisTypeRefStructuralImpl extends ThisTypeRefImpl implements ThisTy
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDefinedTypingStrategy(TypingStrategy newDefinedTypingStrategy) {
 		TypingStrategy oldDefinedTypingStrategy = definedTypingStrategy;
 		definedTypingStrategy = newDefinedTypingStrategy == null ? DEFINED_TYPING_STRATEGY_EDEFAULT : newDefinedTypingStrategy;
@@ -242,6 +249,7 @@ public class ThisTypeRefStructuralImpl extends ThisTypeRefImpl implements ThisTy
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypingStrategy getTypingStrategy() {
 		TypingStrategy _definedTypingStrategy = this.getDefinedTypingStrategy();
 		boolean _tripleEquals = (_definedTypingStrategy == TypingStrategy.DEFAULT);
@@ -256,6 +264,7 @@ public class ThisTypeRefStructuralImpl extends ThisTypeRefImpl implements ThisTy
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTypingStrategy(final TypingStrategy typingStrategy) {
 		this.setDefinedTypingStrategy(typingStrategy);
 	}
@@ -265,6 +274,7 @@ public class ThisTypeRefStructuralImpl extends ThisTypeRefImpl implements ThisTy
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isUseSiteStructuralTyping() {
 		return ((this.getTypingStrategy() != TypingStrategy.NOMINAL) && (this.getTypingStrategy() != TypingStrategy.DEFAULT));
 	}
@@ -274,6 +284,7 @@ public class ThisTypeRefStructuralImpl extends ThisTypeRefImpl implements ThisTy
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TStructMember> getStructuralMembers() {
 		EList<TStructMember> _xifexpression = null;
 		TStructuralType _structuralType = this.getStructuralType();
@@ -301,6 +312,7 @@ public class ThisTypeRefStructuralImpl extends ThisTypeRefImpl implements ThisTy
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getTypeRefAsString() {
 		TypingStrategy _typingStrategy = this.getTypingStrategy();
 		String _plus = (_typingStrategy + "this");
@@ -313,6 +325,7 @@ public class ThisTypeRefStructuralImpl extends ThisTypeRefImpl implements ThisTy
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean hasPostponedSubstitutionFor(final TypeVariable typeVar) {
 		final Function1<TypeVariableMapping, Boolean> _function = new Function1<TypeVariableMapping, Boolean>() {
 			public Boolean apply(final TypeVariableMapping m) {

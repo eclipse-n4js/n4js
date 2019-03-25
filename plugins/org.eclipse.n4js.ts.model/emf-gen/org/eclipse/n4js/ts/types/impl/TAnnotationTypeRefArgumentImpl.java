@@ -76,6 +76,7 @@ public class TAnnotationTypeRefArgumentImpl extends TAnnotationArgumentImpl impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypeRef getTypeRef() {
 		return typeRef;
 	}
@@ -100,6 +101,7 @@ public class TAnnotationTypeRefArgumentImpl extends TAnnotationArgumentImpl impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTypeRef(TypeRef newTypeRef) {
 		if (newTypeRef != typeRef) {
 			NotificationChain msgs = null;
@@ -119,6 +121,7 @@ public class TAnnotationTypeRefArgumentImpl extends TAnnotationArgumentImpl impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getArgAsString() {
 		return this.getTypeRef().getTypeRefAsString();
 	}
