@@ -51,7 +51,6 @@ import com.google.inject.Inject;
  */
 public class N4JSProjectExplorerLabelProvider extends LabelProvider implements IStyledLabelProvider {
 
-	@SuppressWarnings("unused")
 	private static final Image PROJECT_IMG = ImageRef.PROJECT_IMG.asImage().orNull();
 	private static final Image PROJECT_CLOSED_IMG = ImageRef.PROJECT_CLOSED_IMG.asImage().orNull();
 	private static final Image SRC_FOLDER_IMG = ImageRef.SRC_FOLDER.asImage().orNull();
@@ -63,7 +62,6 @@ public class N4JSProjectExplorerLabelProvider extends LabelProvider implements I
 			.orNull();
 
 	@Inject
-	@SuppressWarnings("unused")
 	private N4JSProjectExplorerHelper helper;
 
 	@Inject
