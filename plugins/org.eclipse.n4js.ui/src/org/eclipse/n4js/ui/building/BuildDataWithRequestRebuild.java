@@ -15,6 +15,7 @@ import org.eclipse.xtext.builder.impl.BuildData;
 import org.eclipse.xtext.builder.impl.QueuedBuildData;
 import org.eclipse.xtext.builder.impl.ToBeBuilt;
 
+// FIXME GH-1234: remove this class which is now obsolete after adjustments were moved to Xtext builder!
 @SuppressWarnings({ "restriction", "javadoc" })
 public class BuildDataWithRequestRebuild extends BuildData {
 

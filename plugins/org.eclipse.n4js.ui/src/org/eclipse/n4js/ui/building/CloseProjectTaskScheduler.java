@@ -93,7 +93,9 @@ public class CloseProjectTaskScheduler extends ProjectOpenedOrClosedListener {
 		scheduleJob(project.getName(), toBeBuilt);
 	}
 
-	private void scheduleJob(String name, ToBeBuilt toBeBuilt) {
+	// FIXME GH-1234: remove overrides that are now obsolete after adjustments were moved to Xtext builder!
+	@Override
+	protected void scheduleJob(String name, ToBeBuilt toBeBuilt) {
 		RaceDetectionHelper.log("Enqueue remove project job for %s", name);
 		closedProjectQueue.enqueue(ImmutableSet.of(name), toBeBuilt);
 		removeProjectJob.setName(Messages.ProjectOpenedOrClosedListener_RemovingProject + name
@@ -107,6 +109,8 @@ public class CloseProjectTaskScheduler extends ProjectOpenedOrClosedListener {
 	 * @param monitor
 	 *            the monitor.
 	 */
+	// FIXME GH-1234: remove overrides that are now obsolete after adjustments were moved to Xtext builder!
+	@Override
 	public void processClosedProjects(IProgressMonitor monitor) {
 		Task task = closedProjectQueue.exhaust();
 		if (task.isEmpty()) {
@@ -140,6 +144,8 @@ public class CloseProjectTaskScheduler extends ProjectOpenedOrClosedListener {
 	 *
 	 * Public for testing purpose.
 	 */
+	// FIXME GH-1234: remove overrides that are now obsolete after adjustments were moved to Xtext builder!
+	@Override
 	public void joinRemoveProjectJob() {
 		/*
 		 * szarnekow: Tests in tight loops revealed that join does not always wait for the job to really finish.

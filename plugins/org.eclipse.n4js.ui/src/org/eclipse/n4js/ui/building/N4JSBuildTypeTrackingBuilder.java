@@ -189,7 +189,9 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 	 * Creates a visitor that is used to traverse the information that is obtained from {@link #getDelta(IProject)}. It
 	 * accumulates its findings in the given <code>toBeBuilt</code>.
 	 */
-	private IResourceDeltaVisitor createDeltaVisitor(ToBeBuiltComputer toBeBuiltComputer, final ToBeBuilt toBeBuilt,
+	// FIXME GH-1234: remove overrides that are now obsolete after adjustments were moved to Xtext builder!
+	@Override
+	protected IResourceDeltaVisitor createDeltaVisitor(ToBeBuiltComputer toBeBuiltComputer, final ToBeBuilt toBeBuilt,
 			final SubMonitor progress) {
 		IResourceDeltaVisitor visitor = new IResourceDeltaVisitor() {
 			@Override
@@ -221,7 +223,9 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 	 * @throws CoreException
 	 *             if something goes down the drain.
 	 */
-	private void processedAbsentReferencedProjects(IResourceDeltaVisitor visitor) throws CoreException {
+	// FIXME GH-1234: remove overrides that are now obsolete after adjustments were moved to Xtext builder!
+	@Override
+	protected void processedAbsentReferencedProjects(IResourceDeltaVisitor visitor) throws CoreException {
 		final IProject[] interestingProjects = optimisticInvoke("getInterestingProjects");
 		for (IProject more : interestingProjects) {
 			if (!XtextProjectHelper.hasNature(more)) {

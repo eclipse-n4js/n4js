@@ -34,7 +34,7 @@ import org.junit.runner.RunWith
  */
 @RunWith(XtextRunner)
 @InjectWith(N4JSInjectorProvider)
-public class AbstractN4JSTest extends Assert {
+public abstract class AbstractN4JSTest extends Assert {
 
 	@Inject protected extension N4JSTestHelper;
 	@Inject protected extension N4JSParseHelper;

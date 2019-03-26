@@ -27,7 +27,7 @@ import java.util.Arrays
 /**
  * Helper for type system tests, base class for assembler classes generating script under test.
  */
-class AbstractScriptAssembler {
+abstract class AbstractScriptAssembler {
 
 	@Inject
 	extension ParseHelper<Script>
