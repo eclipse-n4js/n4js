@@ -3,19 +3,6 @@
 <target name="Generated target-platform N4JS:N4JS_2019_03" sequenceNumber="146">
   <locations>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-      <unit id="org.eclipse.wst.common.project.facet.ui" version="1.4.601.v201707201954"/>
-      <unit id="org.eclipse.wst.html.ui" version="1.1.100.v201901071922"/>
-      <unit id="org.eclipse.wst.html.ui.infopop" version="1.0.201.v201901071922"/>
-      <unit id="org.eclipse.wst.server.core" version="1.10.0.v201901310132"/>
-      <unit id="org.eclipse.wst.xml_ui.feature.feature.group" version="3.13.0.v201903050402"/>
-      <repository location="https://download.eclipse.org/webtools/downloads/drops/R3.13.0/R-3.13.0-20190308131645/repository"/>
-    </location>
-    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-      <unit id="org.eclipse.rse.files.ui" version="4.5.0.201808290101"/>
-      <unit id="org.eclipse.rse.subsystems.files.local" version="4.5.0.201808290101"/>
-      <repository location="http://download.eclipse.org/tm/updates/4.5.0/repository"/>
-    </location>
-    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.apache.sshd.core" version="2.0.0.v20181102-1323"/>
       <unit id="org.eclipse.equinox.executable.feature.group" version="3.8.300.v20190213-1655"/>
       <unit id="org.eclipse.equinox.p2.discovery.feature.feature.group" version="1.2.200.v20190129-1112"/>
@@ -26,6 +13,19 @@
       <unit id="org.hamcrest.library" version="1.3.0.v20180524-2246"/>
       <unit id="org.objectweb.asm" version="7.0.0.v20181030-2244"/>
       <repository location="http://download.eclipse.org/eclipse/updates/4.11"/>
+    </location>
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+      <unit id="org.eclipse.rse.files.ui" version="4.5.0.201808290101"/>
+      <unit id="org.eclipse.rse.subsystems.files.local" version="4.5.0.201808290101"/>
+      <repository location="http://download.eclipse.org/tm/updates/4.5.0/repository"/>
+    </location>
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+      <unit id="org.eclipse.wst.common.project.facet.ui" version="1.4.601.v201707201954"/>
+      <unit id="org.eclipse.wst.html.ui" version="1.1.100.v201901071922"/>
+      <unit id="org.eclipse.wst.html.ui.infopop" version="1.0.201.v201901071922"/>
+      <unit id="org.eclipse.wst.server.core" version="1.10.0.v201901310132"/>
+      <unit id="org.eclipse.wst.xml_ui.feature.feature.group" version="3.13.0.v201903050402"/>
+      <repository location="https://download.eclipse.org/webtools/downloads/drops/R3.13.0/R-3.13.0-20190308131645/repository"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.emf.ecore.editor" version="2.16.0.v20181104-0733"/>
@@ -48,18 +48,18 @@
       <repository location="http://download.eclipse.org/modeling/m2t/xpand/updates/releases/R201605260315"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-      <unit id="org.eclipse.xtext.ui.testing" version="2.17.0.v20190304-1216"/>
-      <unit id="org.eclipse.xtext.xbase" version="2.17.0.v20190304-0626"/>
-      <unit id="org.eclipse.xtext.xtext.ui" version="2.17.0.v20190304-1216"/>
-      <repository location="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.17.0"/>
-    </location>
-    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="ch.qos.logback.classic" version="1.1.2.v20171220-1825"/>
       <unit id="com.fasterxml.jackson.core.jackson-databind" version="2.9.2.v20180207-1730"/>
       <unit id="com.google.guava" version="21.0.0.v20170206-1425"/>
       <unit id="com.google.inject" version="3.0.0.v201605172100"/>
       <unit id="org.apache.xerces" version="2.9.0.v201101211617"/>
       <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20190226160451/repository"/>
+    </location>
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+      <unit id="org.eclipse.xtext.ui.testing" version="2.17.0.v20190304-1216"/>
+      <unit id="org.eclipse.xtext.xbase" version="2.17.0.v20190304-0626"/>
+      <unit id="org.eclipse.xtext.xtext.ui" version="2.17.0.v20190304-1216"/>
+      <repository location="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.17.0"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.xpect.xtext.lib" version="0.2.0.201802191222"/>
