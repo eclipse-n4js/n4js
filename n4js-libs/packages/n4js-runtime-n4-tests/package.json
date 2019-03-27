@@ -37,8 +37,7 @@
     ],
     "testedProjects": [
       "n4js-runtime-n4"
-    ],
-    "moduleLoader": "n4js"
+    ]
   },
   "dependencies": {
     "n4js.lang": "^0.1.0",

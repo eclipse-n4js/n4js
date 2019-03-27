@@ -46,7 +46,6 @@
       "n4js-runtime-fetch",
       "n4js-runtime-es2015",
       "n4js-runtime-node"
-    ],
-    "moduleLoader": "n4js"
+    ]
   }
 }

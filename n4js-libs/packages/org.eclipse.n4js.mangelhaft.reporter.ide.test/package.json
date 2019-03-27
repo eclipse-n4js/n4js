@@ -37,8 +37,7 @@
     ],
     "testedProjects": [
       "org.eclipse.n4js.mangelhaft.reporter.ide"
-    ],
-    "moduleLoader": "n4js"
+    ]
   },
   "dependencies": {
     "org.eclipse.n4js.mangelhaft.reporter.ide": "^0.1.0",

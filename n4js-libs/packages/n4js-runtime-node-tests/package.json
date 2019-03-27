@@ -33,8 +33,7 @@
     ],
     "testedProjects": [
       "n4js-runtime-node"
-    ],
-    "moduleLoader": "n4js"
+    ]
   },
   "dependencies": {
     "org.eclipse.n4js.mangelhaft.assert": "^0.1.0",

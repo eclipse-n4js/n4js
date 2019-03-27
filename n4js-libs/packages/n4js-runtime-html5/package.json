@@ -23,8 +23,7 @@
     },
     "requiredRuntimeLibraries": [
       "n4js-runtime-fetch"
-    ],
-    "moduleLoader": "n4js"
+    ]
   },
   "dependencies": {
     "n4js-runtime-fetch": "^0.1.0",
