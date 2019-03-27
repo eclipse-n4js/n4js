@@ -31,4 +31,4 @@ export external public function parse(urlStr: string, parseQueryString: boolean=
 export external public function format(urlObj: NodeURL): string;
 export external public function resolve(from: string, to: string): string;
 
-
+export external public function fileURLToPath(url: NodeURL|string): string;
