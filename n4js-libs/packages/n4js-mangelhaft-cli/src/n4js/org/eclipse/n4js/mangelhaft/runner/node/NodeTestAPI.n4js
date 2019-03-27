@@ -142,20 +142,27 @@ export default public class NodeTestAPI {
                 }
 
                 // HACK until we have proper support for top-level import():
-                const transpiledFiles = glob.sync("**/*.js", {
-                    cwd: lib_path.join(dir, (packageJson.n4js as Object)["output"] as string),
-                    absolute: true
-                }) as Array<string>;
-                for (const file of transpiledFiles) {
-                    const content = lib_fs.readFileSync(file, { encoding: "UTF-8" });
-                    let newContent = content.replace(/_n4jsImport(?!\(\?)/mg, "import");
-                    newContent = newContent.replace(/_nodeRequire(?!\(\?)/mg, "require");
-                    if (newContent !== content) {
-                        if (options.debug) {
-                            console.log("patching:", file);
+                switch (packageJson["name"]) {
+                    case "n4js-node":
+                    case "n4js-mangelhaft-cli":
+                        break;
+                    default:
+                        const transpiledFiles = glob.sync("**/*.js", {
+                            cwd: lib_path.join(dir, (packageJson.n4js as Object)["output"] as string),
+                            absolute: true
+                        }) as Array<string>;
+                        for (const file of transpiledFiles) {
+                            const content = lib_fs.readFileSync(file, { encoding: "UTF-8" });
+                            let newContent = content.replace(/_n4jsImport/mg, "import");
+                            newContent = newContent.replace(/_nodeRequire/mg, "require");
+                            if (newContent !== content) {
+                                if (options.debug) {
+                                    console.log("patching:", file);
+                                }
+                                lib_fs.writeFileSync(file, newContent, { encoding: "UTF-8" });
+                            }
                         }
-                        lib_fs.writeFileSync(file, newContent, { encoding: "UTF-8" });
-                    }
+                        break;
                 }
             }
         }
