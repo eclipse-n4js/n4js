@@ -277,6 +277,9 @@ public class PackageJsonHelper {
 				.map(id -> id.substring(0, id.length() - 4))
 				.collect(Collectors.toSet());
 		target.getProjectDependencies().removeIf(pd -> projectNamesToRemove.contains(pd.getProjectName()));
+
+		// FIXME TEMPORARY: always use ES6 imports in output code
+		target.setUseES6Imports(true);
 	}
 
 	/**
