@@ -10,10 +10,16 @@
  */
 @@Global @@ProvidedByRuntime
 
+@Final
+export external public class ~__ImportFn {
+    (string): Promise<Object, any>;
+    
+    public static get meta(): ~Object with {
+        url: string
+    };
+}
+
 /**
  * Limited interim solution until we have proper support for `import()`.
  */
-export external public function _n4jsImport(path: string): Promise<Object, any>;
-export external public const _nodeRequire: ~Function with {
-    resolve: (string) => string
-};
+export external public const _n4jsImport: type{__ImportFn};
