@@ -10,45 +10,10 @@
  */
 @@Global @@ProvidedByRuntime
 
-export external public interface Loader {
-    public async import(name: string, referrer: string=): Object;
-
-    /**
-     * System.JS only!
-     */
-    public async normalize(name: string, parentName: string=, parentAddress: string=): string;
-
-    /**
-     * System.JS only!
-     */
-    public delete(normalizedName: string): void;
-
-    /**
-     * System.JS only!
-     */
-    public has(normalizedName: string): boolean;
-
-    /**
-     * System.JS only!
-     */
-    public get(normalizedName: string): Object;
-
-    /**
-     * System.JS only!
-     */
-    public get _nodeRequire(): ~Function with { resolve: {function(string): string} };
-
-    /**
-     * System.JS and IN TESTING MODE only!
-     *
-     * @return The module.
-     */
-    public throwPendingError(module: Object): Object;
-
-    /**
-     * The loader instance is tagged as a node.js require shim.
-     * Used to run internal commonJS related tests.
-     */
-    @Internal public get _commonJS(): boolean;
-}
-
+/**
+ * Limited interim solution until we have proper support for `import()`.
+ */
+export external public function _n4jsImport(path: string): Promise<Object, any>;
+export external public const _nodeRequire: ~Function with {
+    resolve: (string) => string
+};

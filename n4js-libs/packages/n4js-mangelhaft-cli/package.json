@@ -18,19 +18,21 @@
     "n4js-mangelhaft": "./bin/n4js-mangelhaft-cli.js"
   },
   "dependencies": {
-    "n4js.lang": "^0.1.0",
-    "n4js-runtime-fetch": "^0.1.0",
-    "n4js-runtime-es2015": "^0.1.0",
-    "n4js-runtime-node": "^0.1.0",
-    "org.eclipse.n4js.mangelhaft": "^0.1.0",
-    "org.eclipse.n4js.mangelhaft.reporter.console": "^0.1.0",
-    "org.eclipse.n4js.mangelhaft.reporter.xunit": "^0.1.0",
-    "nomnom-patched": "~1.8.1",
+    "cli-color": "~1.2.0",
     "glob": "~7.1.2",
     "n4js-cli": "^0.1.0",
-    "cli-color": "~1.2.0"
+    "n4js-node": "^0.1.0",
+    "n4js-runtime-es2015": "^0.1.0",
+    "n4js-runtime-fetch": "^0.1.0",
+    "n4js-runtime-node": "^0.1.0",
+    "n4js.lang": "^0.1.0",
+    "nomnom-patched": "~1.8.1",
+    "org.eclipse.n4js.mangelhaft": "^0.1.0",
+    "org.eclipse.n4js.mangelhaft.reporter.console": "^0.1.0",
+    "org.eclipse.n4js.mangelhaft.reporter.xunit": "^0.1.0"
   },
   "n4js": {
+    "useES6Imports": true,
     "projectType": "library",
     "vendorId": "org.eclipse.n4js",
     "vendorName": "Eclipse N4JS Project",

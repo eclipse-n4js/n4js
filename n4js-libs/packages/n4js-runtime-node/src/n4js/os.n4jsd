@@ -17,7 +17,7 @@ export external public function freemem(): number;
 export external public function homedir(): string;
 export external public function hostname(): string;
 export external public function loadavg(): Array<number>;
-export external public function networkInterfaces(): Array<Object+>;
+export external public function networkInterfaces(): Object;
 export external public function platform(): string;
 export external public function release(): string;
 export external public function tmpdir(): string;

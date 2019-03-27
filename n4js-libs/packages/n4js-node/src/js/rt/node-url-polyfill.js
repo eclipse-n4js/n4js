@@ -14,9 +14,9 @@
     //
     // For the time being we use this poor man's URL shim:
     //
-    var lib_url = require("url");
+    const lib_url = require("url");
     global.URL = function(urlStr) {
-        var ret = lib_url.parse(urlStr);
+        const ret = lib_url.parse(urlStr);
         ret.hostname_ = ret.hostname;
 
         Object.defineProperties(ret, {

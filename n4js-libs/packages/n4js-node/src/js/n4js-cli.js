@@ -13,7 +13,7 @@
 (function() {
     "use strict";
 
-    var execData = global.$executionData;
+    const execData = global.$executionData;
     if (execData) {
         delete global.$executionData;
         require("./run.js").runWith({
@@ -21,11 +21,12 @@
             "exec": (typeof execData === "string" ? execData : execData.userSelection)
         }, true /* exitOnError */);
     } else if (process.argv.length > 2) { // first argument is starter module
-        var exec = process.argv.splice(2, 1)[0],
-            options = {};
+        const exec = process.argv.splice(2, 1)[0];
+        const options = {};
+        // When using a defined export symbol `module:export`, it is used as the main entry:
         options[exec.indexOf(":") >= 0 ? "main" : "exec"] = exec;
         require("./run.js").runWith(options, true /* exitOnError */);
     } else {
-        process.stdout.write("\nUsage: n4js <module>\n\n");
+        process.stdout.write("\nUsage: n4js <module>|<module>:<export>\n\n");
     }
 })();

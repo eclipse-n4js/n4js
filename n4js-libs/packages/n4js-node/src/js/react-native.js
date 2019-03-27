@@ -21,18 +21,9 @@
                 platformVariant: undefined
             }
         };
+
+        require("./rt/node-url-polyfill.js");
+        require("n4js-es5");
     }
-
-    require("./rt/node-url-polyfill.js");
-
-    var CJSLoader = require("./rt/node-cjs-loader-polyfill.js").Loader,
-        staticSystem = new CJSLoader();
-
-    if (!global.System || !global.System.import) {
-        global.System = staticSystem;
-    }
-    require("n4js-es5/src-gen/rt.js");
-
-    exports.staticSystem = staticSystem;
 
 }(typeof global === "object" ? global : self));

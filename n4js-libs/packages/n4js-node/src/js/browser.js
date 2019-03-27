@@ -12,8 +12,8 @@
     "use strict";
 
     if (!global.$makeClass) {
-        var isBrowser = !!(typeof window !== 'undefined' && typeof navigator !== 'undefined' && window.document),
-            isWebWorker = !isBrowser && typeof importScripts !== 'undefined';
+        const isBrowser = !!(typeof window !== 'undefined' && typeof navigator !== 'undefined' && window.document);
+        const isWebWorker = !isBrowser && typeof importScripts !== 'undefined';
 
         global.n4 = {
             runtimeOptions: global.n4 && global.n4.runtimeOptions || {},
@@ -24,16 +24,8 @@
                 platformVariant: isWebWorker ? "webworker" : undefined
             }
         };
+
+        require("n4js-es5");
     }
-
-    var CJSLoader = require("./rt/node-cjs-loader-polyfill.js").Loader,
-        staticSystem = new CJSLoader();
-
-    if (!global.System || !global.System.import) {
-        global.System = staticSystem;
-    }
-    require("n4js-es5/src-gen/rt.js");
-
-    exports.staticSystem = staticSystem;
 
 }(typeof global === "object" ? global : self));

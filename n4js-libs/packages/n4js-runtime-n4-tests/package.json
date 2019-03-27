@@ -20,24 +20,14 @@
     "node": ">= 5.0.0"
   },
   "n4js": {
+    "useES6Imports": true,
     "projectType": "test",
     "vendorId": "org.eclipse.n4js",
     "vendorName": "Eclipse N4JS Project",
     "output": "src-gen",
     "sources": {
-    	  "source": [
-    	  	"src"
-    	  ],
-      "external": [
-        "test/js"
-      ],
       "test": [
         "test/n4js"
-      ]
-    },
-    "moduleFilters": {
-      "noModuleWrap": [
-        "runtime/n4/util/moduleloader/modules/TestModulePlainCJS"
       ]
     },
     "requiredRuntimeLibraries": [

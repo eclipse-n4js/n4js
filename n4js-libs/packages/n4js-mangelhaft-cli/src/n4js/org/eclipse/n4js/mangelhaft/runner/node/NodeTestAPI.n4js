@@ -118,9 +118,8 @@ export default public class NodeTestAPI {
                     for (const path of files) {
                         const rpath = path
                             .replace(n4jsFileExt_re, ".js")
-                            .split(lib_path.sep)
-                            .join("/");
-                        bundleGen.push(`require("./${rpath}");\n`);
+                            .split(lib_path.sep);
+                        bundleGen.push(`import * as ${rpath.join("_")} from "./${rpath.join("/")}";\n`);
                     }
                     if (bundleGen.length) {
                         const file = lib_path.join(dir, "__bundle-gen.js");
@@ -151,7 +150,7 @@ export default public class NodeTestAPI {
                 options.testCatalog = file;
             } else { // try to resolve via NPM
                 try {
-                    options.testCatalog = System._nodeRequire.resolve(options.testCatalog);
+                    options.testCatalog = _nodeRequire.resolve(options.testCatalog);
                 } catch (exc) {
                     throw new Error(`Cannot resolve test catalog: ${options.testCatalog}`);
                 }
@@ -211,7 +210,7 @@ export default public class NodeTestAPI {
                 execArgv.push(`--inspect-brk=${options.inspectBrk}`);
             }
 
-            const n4jsRun = System._nodeRequire.resolve("n4js-node/src-gen/n4js-cli");
+            const n4jsRun = _nodeRequire.resolve("n4js-node/src-gen/n4js-cli");
 
             if (options.debug) {
                 console.log("TestRun fork:", n4jsRun);

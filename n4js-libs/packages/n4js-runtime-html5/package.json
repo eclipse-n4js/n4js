@@ -11,6 +11,7 @@
     "url": "https://github.com/eclipse/n4js"
   },
   "n4js": {
+    "useES6Imports": true,
     "projectType": "runtimeLibrary",
     "vendorId": "eu.numberfour",
     "vendorName": "NumberFour AG",

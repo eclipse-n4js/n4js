@@ -12,6 +12,7 @@
 import {PlatformId} from "n4/RuntimeInfo";
 import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert";
 import {Precondition} from "org/eclipse/n4js/mangelhaft/precondition/Precondition";
+
 export public class AbstractVerifyRuntimeSupport {
     public testSubjectOverride: Object;
 

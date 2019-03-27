@@ -134,7 +134,7 @@ export public class TestController {
         const ctorName = parts.pop();
         const moduleName = parts.join("/");
         try {
-            const groupModule = System.throwPendingError(await System.import(info.origin + "/" + moduleName));
+            const groupModule = await _n4jsImport(`${info.origin}/${moduleName}.js`);
             testClasses = [groupModule[ctorName] as constructor{N4Object}];
         } catch (ex) {
             await this.errorGroup(info, info.origin + "/" + moduleName, null, ex);

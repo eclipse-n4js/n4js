@@ -30,6 +30,7 @@
     "src-gen"
   ],
   "n4js": {
+    "useES6Imports": true,
     "projectType": "runtimeEnvironment",
     "vendorId": "org.eclipse.n4js",
     "vendorName": "Eclipse N4JS Project",
@@ -37,11 +38,6 @@
     "sources": {
       "external": [
         "src/js"
-      ]
-    },
-    "moduleFilters": {
-      "noModuleWrap": [
-        "**"
       ]
     },
     "extendedRuntimeEnvironment": "n4js-node",

@@ -14,11 +14,13 @@
   "engines": {
     "node": ">= 5.0.0"
   },
+  "main": "./src-gen/rt.js",
   "files": [
     "src",
     "src-gen"
   ],
   "n4js": {
+    "useES6Imports": true,
     "projectType": "runtimeEnvironment",
     "vendorId": "org.eclipse.n4js",
     "vendorName": "Eclipse N4JS Project",
@@ -26,11 +28,6 @@
     "sources": {
       "external": [
         "src/js"
-      ]
-    },
-    "moduleFilters": {
-      "noModuleWrap": [
-        "**"
       ]
     },
     "moduleLoader": "n4js",
