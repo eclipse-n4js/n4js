@@ -99,7 +99,7 @@ if [ "$DESTINATION" = "public" ]; then
 
     echo "==== STEP 6/10: Compute new version number for publishing ..."
     echo "!!! SKIPPED !!! (using version hard-coded in shell script)"
-    export PUBLISH_VERSION="0.14.0-next.20190327"
+    export PUBLISH_VERSION="0.14.0-next.20190327.01"
     echo "Version for publishing: ${PUBLISH_VERSION}"
 
     echo "==== STEP 7/10: Appending version information to README.md files ..."
