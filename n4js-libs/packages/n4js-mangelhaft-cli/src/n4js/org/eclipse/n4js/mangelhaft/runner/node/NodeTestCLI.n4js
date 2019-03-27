@@ -68,7 +68,7 @@ const resolveProject = (p: string): string => {
         return dir;
     } else { // try to resolve NPM id
         try {
-            const res = _nodeRequire.resolve(`${p}/package.json`);
+            const res = require.resolve(`${p}/package.json`);
             return lib_path.dirname(res);
         } catch (exc) {}
     }
