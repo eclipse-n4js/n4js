@@ -10,11 +10,6 @@
  */
 /*eslint-disable new-cap */
 
-// TODO: will be removed once the parser could properly support global `import`.
-global._n4jsImport = function(path) {
-    return import(path);
-};
-
 export function handleMainModule() {
     const options = n4.runtimeOptions;
 
