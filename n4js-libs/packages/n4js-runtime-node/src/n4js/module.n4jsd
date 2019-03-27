@@ -10,14 +10,16 @@
  */
 @@Global @@ProvidedByRuntime
 
-/**
- * Warning: __dirname is only available when using a CommonJS module loader, e.g. via "Run Configuration".
- */
 export external public const __dirname: string;
-
-/**
- * Warning: __filename is only available when using a CommonJS module loader, e.g. via "Run Configuration".
- */
 export external public const __filename: string;
 
-
+@Final
+export external public class ~__RequireFn {
+    (string): any;
+    
+    public static get cache(): Object+;
+    public static resolve(request: string, options: ~Object with {
+        paths: [string]
+    }=): string;
+}
+export external public const require: type{__RequireFn};

@@ -15,6 +15,9 @@ import { Assert } from "org/eclipse/n4js/mangelhaft/assert/Assert"
 export public class Success {
     @Test
     public success(): void {
+        Assert.isNotNullOrUndefined(_n4jsImport.meta, "should have meta");
+        Assert.equal(typeof _n4jsImport.meta.url, "string", "should have url");
+
         // FIXME GH-1018
         //Assert.equal(typeof express, "function", "create application");
     }

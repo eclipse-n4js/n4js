@@ -34,8 +34,7 @@
       "n4js-runtime-n4",
       "n4js-runtime-fetch",
       "n4js-runtime-v8"
-    ],
-    "moduleLoader": "n4js"
+    ]
   },
   "dependencies": {
     "n4js.lang": "^0.1.0",

@@ -24,10 +24,10 @@
         let timerHandle;
 
         new Promise(function(resolve, reject) {
-            options = require("./rt/node-bootstrap.js").installN4JSRuntime(options);
-
             require = require("esm")(module);
-            global._nodeRequire = require;
+            
+            const { installN4JSRuntime } = require("./rt/node-bootstrap.js");
+            options = installN4JSRuntime(options);
 
             // TODO: fragile, will be removed once we have proper api/impl binding
             if (options["strip-api-prj-suffix"]) {

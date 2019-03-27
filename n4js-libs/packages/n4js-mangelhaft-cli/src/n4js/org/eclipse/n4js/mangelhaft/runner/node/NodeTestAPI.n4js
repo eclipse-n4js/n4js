@@ -55,7 +55,7 @@ export default public class NodeTestAPI {
      * Executes a test run (might include compilation) with the given set of test options.
      */
     public static async exec(options: NodeTestOptions): void {
-        const pathToPackageJson = new Map<string, Object>();
+        const pathToPackageJson = new Map<string, Object+>();
 
         function addProject(dir: string): void {
             const content = String(lib_fs.readFileSync(lib_path.join(dir, PACKAGE_JSON), { encoding: "UTF-8" }));
@@ -130,7 +130,7 @@ export default public class NodeTestAPI {
                     }
                 }
 
-                if (options.emitProjectTestCatalogs) {
+                if (testCatalog && options.emitProjectTestCatalogs) {
                     const tests = testCatalog.filter(test => test.origin === packageJson["name"] as string);
                     if (tests.length) {
                         const file = lib_path.join(dir, options.emitProjectTestCatalogs);
@@ -138,6 +138,23 @@ export default public class NodeTestAPI {
                             console.log("writing:", file);
                         }
                         lib_fs.writeFileSync(file, JSON.stringify(tests, null, 2), { encoding: "UTF-8" });
+                    }
+                }
+
+                // HACK until we have proper support for top-level import():
+                const transpiledFiles = glob.sync("**/*.js", {
+                    cwd: lib_path.join(dir, (packageJson.n4js as Object)["output"] as string),
+                    absolute: true
+                }) as Array<string>;
+                for (const file of transpiledFiles) {
+                    const content = lib_fs.readFileSync(file, { encoding: "UTF-8" });
+                    let newContent = content.replace(/_n4jsImport(?!\(\?)/mg, "import");
+                    newContent = newContent.replace(/_nodeRequire(?!\(\?)/mg, "require");
+                    if (newContent !== content) {
+                        if (options.debug) {
+                            console.log("patching:", file);
+                        }
+                        lib_fs.writeFileSync(file, newContent, { encoding: "UTF-8" });
                     }
                 }
             }
@@ -150,7 +167,7 @@ export default public class NodeTestAPI {
                 options.testCatalog = file;
             } else { // try to resolve via NPM
                 try {
-                    options.testCatalog = _nodeRequire.resolve(options.testCatalog);
+                    options.testCatalog = require.resolve(options.testCatalog);
                 } catch (exc) {
                     throw new Error(`Cannot resolve test catalog: ${options.testCatalog}`);
                 }
@@ -210,7 +227,7 @@ export default public class NodeTestAPI {
                 execArgv.push(`--inspect-brk=${options.inspectBrk}`);
             }
 
-            const n4jsRun = _nodeRequire.resolve("n4js-node/src-gen/n4js-cli");
+            const n4jsRun = require.resolve("n4js-node/src-gen/n4js-cli");
 
             if (options.debug) {
                 console.log("TestRun fork:", n4jsRun);

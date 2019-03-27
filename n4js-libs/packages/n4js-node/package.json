@@ -59,7 +59,6 @@
       "n4js-runtime-node",
       "n4js-runtime-ecma402"
     ],
-    "moduleLoader": "n4js",
     "execModule": "n4js-cli"
   }
 }
