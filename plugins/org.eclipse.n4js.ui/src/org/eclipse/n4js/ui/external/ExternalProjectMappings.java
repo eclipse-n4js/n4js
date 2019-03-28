@@ -27,12 +27,10 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalProject;
 import org.eclipse.n4js.external.N4JSExternalProject;
-import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
-import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.xtext.util.Pair;
@@ -153,7 +151,7 @@ public class ExternalProjectMappings {
 
 		// step 2: compute necessary projects
 		Set<URI> reducedSetURIs = computeUserWorkspaceDependencies(completeProjectNameMappingTmp,
-				reducedProjectsLocationMappingTmp, reducedProjectUriMappingTmp);
+				reducedProjectUriMappingTmp);
 		Set<N4JSExternalProject> reducedSetTmps = new HashSet<>();
 		for (URI prjLoc : reducedSetURIs) {
 			Pair<N4JSExternalProject, ProjectDescription> pair = reducedProjectUriMappingTmp.get(prjLoc);
@@ -198,7 +196,6 @@ public class ExternalProjectMappings {
 
 	Set<URI> computeUserWorkspaceDependencies(
 			Map<String, List<N4JSExternalProject>> completeProjectNameMappingTmp,
-			Map<java.net.URI, List<N4JSExternalProject>> reducedProjectsLocationMappingTmp,
 			Map<URI, Pair<N4JSExternalProject, ProjectDescription>> reducedProjectUriMappingTmp) {
 
 		Set<URI> uwsDeps = new HashSet<>();
@@ -220,26 +217,6 @@ public class ExternalProjectMappings {
 		for (URI uwsDep : uwsDeps) {
 			String name = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(uwsDep);
 			depNames.add(name);
-		}
-
-		// add all shipped npms to user necessary dependencies
-		for (java.net.URI location : reducedProjectsLocationMappingTmp.keySet()) {
-			String locationStr = location.toString();
-			if (locationStr.endsWith("/")) {
-				locationStr = locationStr.substring(0, locationStr.length() - 1);
-			}
-			int startLastSegment = locationStr.lastIndexOf("/");
-			String locationName = locationStr.substring(startLastSegment + 1);
-			if (ExternalLibrariesActivator.SHIPPED_ROOTS_FOLDER_NAMES.contains(locationName)) {
-				List<N4JSExternalProject> list = reducedProjectsLocationMappingTmp.get(location);
-				for (N4JSExternalProject n4prj : list) {
-					IN4JSProject iProject = n4prj.getIProject();
-					String projectName = iProject.getProjectName();
-					if (!depNames.contains(projectName)) {
-						uwsDeps.add(iProject.getLocation());
-					}
-				}
-			}
 		}
 
 		return uwsDeps;

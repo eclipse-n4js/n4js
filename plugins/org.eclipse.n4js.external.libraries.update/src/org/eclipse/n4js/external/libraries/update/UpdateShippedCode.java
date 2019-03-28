@@ -31,7 +31,6 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSStandaloneSetup;
 import org.eclipse.n4js.binaries.BinariesLocatorHelper;
 import org.eclipse.n4js.binaries.nodejs.NodeYarnProcessBuilder;
-import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.hlc.base.N4jscBase;
 import org.eclipse.n4js.utils.UtilN4;
@@ -51,6 +50,15 @@ import com.google.inject.Injector;
  * {@link #updateShippedCode(Optional)}.
  */
 public class UpdateShippedCode implements IWorkflowComponent {
+
+	/** Unique name of the N4JS language category. */
+	public static final String LANG_CATEGORY = "lang";
+
+	/** Unique name of the N4JS runtime category. */
+	public static final String RUNTIME_CATEGORY = "runtime";
+
+	/** Unique name of the Mangelhaft category. */
+	public static final String MANGELHAFT_CATEGORY = "mangelhaft";
 
 	private static final String PACKAGE_JSON = "package.json";
 
@@ -93,11 +101,11 @@ public class UpdateShippedCode implements IWorkflowComponent {
 
 	private static String getCategoryForN4jsLibsProject(String projectName) {
 		if (projectName.equals(N4JS_LANG_PROJECT_NAME)) {
-			return ExternalLibrariesActivator.LANG_CATEGORY;
+			return LANG_CATEGORY;
 		} else if (projectName.contains(".mangelhaft.") || projectName.endsWith(".mangelhaft")) {
-			return ExternalLibrariesActivator.MANGELHAFT_CATEGORY;
+			return MANGELHAFT_CATEGORY;
 		} else {
-			return ExternalLibrariesActivator.RUNTIME_CATEGORY; // the default category
+			return RUNTIME_CATEGORY; // the default category
 		}
 	}
 
@@ -119,7 +127,7 @@ public class UpdateShippedCode implements IWorkflowComponent {
 		if (targetPath.isPresent()) {
 			actualTargetPath = targetPath.get();
 		} else {
-			actualTargetPath = ExternalLibrariesActivator.getShippedCodeFolderPath();
+			actualTargetPath = getShippedCodeFolderPath();
 		}
 		// step 1: clean then compile projects under top-level folder "n4js-libs"
 		println("==== STEP 1/4: compiling code under top-level folder \"" + N4JSGlobals.N4JS_LIBS_FOLDER_NAME
@@ -140,7 +148,7 @@ public class UpdateShippedCode implements IWorkflowComponent {
 		// TODO let HLC resolve missing dependencies
 		println("==== STEP 4/4: running \"" + N4JSGlobals.NPM_INSTALL + "\" in runtime project \""
 				+ N4JS_NODE_PROJECT_NAME + "\"");
-		final File n4jsNodeFolder = actualTargetPath.resolve(ExternalLibrariesActivator.RUNTIME_CATEGORY)
+		final File n4jsNodeFolder = actualTargetPath.resolve(RUNTIME_CATEGORY)
 				.resolve(N4JS_NODE_PROJECT_NAME).toFile();
 
 		final File n4jsNodePkgJson = n4jsNodeFolder.toPath().resolve(PACKAGE_JSON).toFile();
@@ -409,5 +417,31 @@ public class UpdateShippedCode implements IWorkflowComponent {
 	 */
 	private static void println(String message) {
 		System.out.println(message);
+	}
+
+	// from ExternalLibrariesActivator:
+
+	/**
+	 * Name of the top-level folder in the N4JS Git repository containing the main N4JS plugins.
+	 */
+	private static final String PLUGINS_FOLDER_NAME = "plugins"; // can't use N4JSGlobals.PLUGINS_FOLDER_NAME here
+
+	/**
+	 * Name of a folder located in this bundle's root folder, containing the runtime code to be shipped with the library
+	 * manager (i.e. default runtime environments, <code>n4js.lang</code> with N4JS dependency injection support,
+	 * mangelhaft). This folder will contain sub folders representing the categories showing up in the library manager
+	 * UI.
+	 */
+	public static final String SHIPPED_CODE_FOLDER_NAME = "shipped-code";
+
+	/**
+	 * Returns the {@link #SHIPPED_CODE_FOLDER_NAME shipped code folder} or throws an {@link IllegalStateException} if
+	 * the current working directory does not lie in an N4JS repository clone.
+	 */
+	public static Path getShippedCodeFolderPath() {
+		final Path n4jsRepoRootPath = UtilN4.findN4jsRepoRootPath();
+		return n4jsRepoRootPath.resolve(PLUGINS_FOLDER_NAME)
+				.resolve("org.eclipse.n4js.external.libraries")
+				.resolve(SHIPPED_CODE_FOLDER_NAME);
 	}
 }

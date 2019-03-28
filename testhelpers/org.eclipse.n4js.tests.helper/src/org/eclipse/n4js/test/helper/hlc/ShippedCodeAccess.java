@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.external.libraries;
+package org.eclipse.n4js.test.helper.hlc;
 
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.base.Throwables.getStackTraceAsString;
@@ -51,8 +51,8 @@ public class ShippedCodeAccess {
 	 */
 	public static final Iterable<String> getAllShippedPaths() {
 		List<String> paths = new ArrayList<>();
-		ExternalLibrariesActivator.SHIPPED_ROOTS_FOLDER_NAMES
-				.forEach(root -> paths.add(getShippedRuntimeCodePath(root)));
+		// ExternalLibrariesActivator.SHIPPED_ROOTS_FOLDER_NAMES
+		// .forEach(root -> paths.add(getShippedRuntimeCodePath(root)));
 		return paths;
 	}
 

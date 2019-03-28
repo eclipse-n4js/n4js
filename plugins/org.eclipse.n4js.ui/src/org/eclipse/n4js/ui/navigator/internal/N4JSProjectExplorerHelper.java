@@ -12,31 +12,15 @@ package org.eclipse.n4js.ui.navigator.internal;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Strings.nullToEmpty;
-import static com.google.common.collect.FluentIterable.from;
-import static com.google.common.collect.Maps.uniqueIndex;
-import static com.google.common.collect.Sets.newHashSet;
-import static org.eclipse.emf.common.util.URI.createFileURI;
 import static org.eclipse.emf.common.util.URI.createPlatformResourceURI;
-import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.EXTERNAL_LIBRARIES_SUPPLIER;
-import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.EXTERNAL_LIBRARY_NAMES;
-import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.LANG_CATEGORY;
-import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.MANGELHAFT_CATEGORY;
-import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.RUNTIME_CATEGORY;
 import static org.eclipse.n4js.projectDescription.ProjectType.API;
-import static org.eclipse.n4js.projectDescription.ProjectType.RUNTIME_ENVIRONMENT;
-import static org.eclipse.n4js.projectDescription.ProjectType.RUNTIME_LIBRARY;
 import static org.eclipse.xtext.util.Strings.toFirstUpper;
 
 import java.io.File;
 import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
@@ -45,7 +29,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.StyledString.Styler;
 import org.eclipse.n4js.external.ExternalIndexSynchronizer;
-import org.eclipse.n4js.external.ExternalLibraryHelper;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalProject;
 import org.eclipse.n4js.external.N4JSExternalProject;
@@ -58,7 +41,6 @@ import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.semver.model.SemverSerializer;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 import org.eclipse.n4js.utils.collections.Arrays2;
-import org.eclipse.n4js.utils.resources.IExternalResource;
 import org.eclipse.swt.graphics.Image;
 
 import com.google.common.base.Strings;
@@ -271,6 +253,15 @@ public class N4JSProjectExplorerHelper {
 	 * Returns with an array of virtual {@link Node node} instances for the project that should be revealed in the
 	 * project explorer.
 	 *
+	 * <p>
+	 * <b>IMPLEMENTATION NOTE</b>
+	 * </p>
+	 *
+	 * This was used to show shipped-code projects, if and only if they are referenced among the direct dependencies of
+	 * the given project, under an additional, virtual node "External Dependencies" in the project explorer. Since
+	 * shipped code was removed from the IDE, this method will now always return an empty array. However, this method
+	 * was not removed because a similar feature might be required for something else in the future.
+	 *
 	 * @param project
 	 *            the workspace project.
 	 * @return an array of virtual nodes.
@@ -291,152 +282,8 @@ public class N4JSProjectExplorerHelper {
 		final Image image = ImageRef.LIB_PATH.asImage().get();
 		final NamedNode rootNode = new NamedNode(project, "External Dependencies", image);
 
-		Iterable<IN4JSProject> directDependencies = from(n4Project.getAllDirectDependencies())
-				.filter(IN4JSProject.class);
+		// note: at this point, children of rootNode were created for various categories of shipped-code projects
 
-		Iterable<IN4JSProject> runtimeLibraries = getExternalDependenciesOfType(directDependencies, RUNTIME_LIBRARY);
-		if (!from(runtimeLibraries).isEmpty()) {
-
-			Map<String, IN4JSProject> builtInRuntimeEnvironments = getBuiltInRuntimeEnvironments();
-			Map<String, IN4JSProject> builtInRuntimeLibraries = getBuiltInRuntimeLibraries();
-
-			Collection<IN4JSProject> libs = newHashSet();
-			Collection<IN4JSProject> envs = newHashSet();
-			for (IN4JSProject p : runtimeLibraries) {
-				IN4JSProject dependency = builtInRuntimeLibraries.get(p.getProjectName());
-				if (null != dependency) {
-					libs.add(dependency);
-				}
-			}
-
-			if (!libs.isEmpty()) {
-				OUTER: for (IN4JSProject p : builtInRuntimeEnvironments.values()) {
-					for (IN4JSProject providedLib : from(p.getProvidedRuntimeLibraries()).filter(IN4JSProject.class)) {
-						if (libs.contains(providedLib)) {
-							envs.add(p);
-							String extndedRuntimeEnvName = p.getExtendedRuntimeEnvironmentId().orNull();
-							if (null != extndedRuntimeEnvName) {
-								final IN4JSProject extension = builtInRuntimeEnvironments.get(extndedRuntimeEnvName);
-								if (null != extension) {
-									envs.add(extension);
-								}
-							}
-							continue OUTER;
-						}
-					}
-				}
-			}
-
-			NamedNode runtimeNode = new NamedNode(rootNode, "N4JS Runtime", image);
-
-			if (!envs.isEmpty()) {
-				NamedNode envsNode = new NamedNode(runtimeNode, "Runtime Environments", image);
-				envsNode.addChild(from(envs).transform(p -> new BuiltInProjectNode(envsNode, p)));
-				runtimeNode.addChild(envsNode);
-			}
-
-			if (!libs.isEmpty()) {
-				NamedNode libsNode = new NamedNode(runtimeNode, "Runtime Libraries", image);
-				libsNode.addChild(from(libs).transform(p -> new BuiltInProjectNode(libsNode, p)));
-				runtimeNode.addChild(libsNode);
-			}
-
-			if (!Arrays2.isEmpty(runtimeNode.getChildren())) {
-				rootNode.addChild(runtimeNode);
-			}
-
-		}
-
-		Map<String, IN4JSProject> langProjects = getAvailableLangProjects();
-		Map<String, IN4JSProject> mangelhaftProjects = getAvailableMangelhaftProjects();
-		Map<String, IN4JSProject> npmProjects = getAvailableNpmProjects();
-
-		Collection<IN4JSProject> requiredLangLibs = new LinkedHashSet<>();
-		Collection<IN4JSProject> requiredMangelhaftLibs = new LinkedHashSet<>();
-		Collection<IN4JSProject> requiredNpmLibs = new LinkedHashSet<>();
-
-		for (IN4JSProject directDependecy : directDependencies) {
-			if (directDependecy.exists() && directDependecy.isExternal()) {
-				IN4JSProject externalDepenency = mangelhaftProjects.get(directDependecy.getProjectName());
-				if (null != externalDepenency) {
-					requiredMangelhaftLibs.add(externalDepenency);
-				} else {
-					externalDepenency = npmProjects.get(directDependecy.getProjectName());
-					if (null != externalDepenency) {
-						requiredNpmLibs.add(externalDepenency);
-					} else {
-						externalDepenency = langProjects.get(directDependecy.getProjectName());
-						if (null != externalDepenency) {
-							requiredLangLibs.add(externalDepenency);
-						}
-					}
-				}
-			}
-		}
-
-		if (!requiredLangLibs.isEmpty()) {
-			NamedNode langNode = new NamedNode(rootNode, EXTERNAL_LIBRARY_NAMES.get(LANG_CATEGORY), image);
-			langNode.addChild(from(requiredLangLibs).transform(p -> new BuiltInProjectNode(langNode, p)));
-			rootNode.addChild(langNode);
-		}
-
-		if (!requiredMangelhaftLibs.isEmpty()) {
-			NamedNode mangNode = new NamedNode(rootNode, EXTERNAL_LIBRARY_NAMES.get(MANGELHAFT_CATEGORY), image);
-			mangNode.addChild(from(requiredMangelhaftLibs).transform(p -> new BuiltInProjectNode(mangNode, p)));
-			rootNode.addChild(mangNode);
-		}
-
-		if (!requiredNpmLibs.isEmpty()) {
-			NamedNode npmNode = new NamedNode(rootNode, EXTERNAL_LIBRARY_NAMES.get(ExternalLibraryHelper.NPM_CATEGORY),
-					image);
-			npmNode.addChild(from(requiredNpmLibs).transform(p -> new BuiltInProjectNode(npmNode, p)));
-			rootNode.addChild(npmNode);
-		}
-		return Arrays2.isEmpty(rootNode.getChildren()) ? new Node[0] : new Node[] { rootNode };
-
+		return Arrays2.isEmpty(rootNode.getChildren()) ? Node.EMPTY_NODES : new Node[] { rootNode };
 	}
-
-	private Iterable<IN4JSProject> getExternalDependenciesOfType(Iterable<? extends IN4JSProject> dependencies,
-			ProjectType type, ProjectType... others) {
-
-		Collection<ProjectType> allowedTypes = EnumSet.of(type, others);
-		return from(dependencies)
-				.filter(p -> p.exists() && p.isExternal())
-				.filter(p -> allowedTypes.contains(p.getProjectType()))
-				.filter(IN4JSProject.class);
-	}
-
-	private Map<String, IN4JSProject> getAvailableNpmProjects() {
-		return uniqueIndex(from(getBuiltInLibraries(ExternalLibraryHelper.NPM_CATEGORY)), p -> p.getProjectName());
-	}
-
-	private Map<String, IN4JSProject> getAvailableLangProjects() {
-		return uniqueIndex(from(getBuiltInLibraries(LANG_CATEGORY)), p -> p.getProjectName());
-	}
-
-	private Map<String, IN4JSProject> getAvailableMangelhaftProjects() {
-		return uniqueIndex(from(getBuiltInLibraries(MANGELHAFT_CATEGORY)), p -> p.getProjectName());
-	}
-
-	private Map<String, IN4JSProject> getBuiltInRuntimeEnvironments() {
-		return uniqueIndex(from(getBuiltInLibraries(RUNTIME_CATEGORY))
-				.filter(p -> RUNTIME_ENVIRONMENT.equals(p.getProjectType())), p -> p.getProjectName());
-	}
-
-	private Map<String, IN4JSProject> getBuiltInRuntimeLibraries() {
-		return uniqueIndex(from(getBuiltInLibraries(RUNTIME_CATEGORY))
-				.filter(p -> RUNTIME_LIBRARY.equals(p.getProjectType())), p -> p.getProjectName());
-	}
-
-	private Iterable<IN4JSProject> getBuiltInLibraries(String externalLibraryName) {
-		URI location = EXTERNAL_LIBRARIES_SUPPLIER.get().inverse().get(externalLibraryName);
-
-		return location != null ? from(externalLibraryWorkspace.getProjectsIn(location))
-				.filter(IExternalResource.class)
-				.transform(r -> r.getExternalResource())
-				.transform(file -> createFileURI(file.getAbsolutePath()))
-				.transform(uri -> core.findProject(uri).orNull())
-				.filter(IN4JSProject.class) : Collections.emptyList();
-	}
-
 }

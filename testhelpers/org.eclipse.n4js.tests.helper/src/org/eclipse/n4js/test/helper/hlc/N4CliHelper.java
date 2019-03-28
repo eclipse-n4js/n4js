@@ -31,7 +31,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import org.eclipse.n4js.external.libraries.ShippedCodeAccess;
 import org.eclipse.n4js.hlc.base.N4jscBase;
 import org.eclipse.n4js.utils.io.FileCopier;
 
