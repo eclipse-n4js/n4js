@@ -11,6 +11,7 @@
 package org.eclipse.n4js.tests.util;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.n4js.external.ExternalLibraryHelper;
 import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
@@ -19,7 +20,7 @@ import com.google.inject.Inject;
 
 /**
  * Test helper for initializing shipped code from the external libraries. This is bypassing normal logic controlled by
- * the {@link ExternalLibrariesActivator#INCLUDES_BUILT_INS_SYSTEM_PROPERTY} that is not suitable for some tests setups.
+ * the {@link ExternalLibraryHelper#INCLUDES_BUILT_INS_SYSTEM_PROPERTY} that is not suitable for some tests setups.
  */
 public class ShippedCodeInitializeTestHelper {
 
@@ -35,11 +36,11 @@ public class ShippedCodeInitializeTestHelper {
 	 * <b>Attention:</b> Works only with PluginUI tests!
 	 * <p>
 	 * Setting this property is necessary since {@link ExternalLibraryPreferenceStore#resetDefaults()} will transitively
-	 * call {@link ExternalLibrariesActivator#requiresInfrastructureForLibraryManager()}.
+	 * call {@link ExternalLibraryHelper#requiresInfrastructureForLibraryManager()}.
 	 */
 	synchronized public void setupBuiltIns() {
 		ProjectTestsUtils.waitForAllJobs();
-		System.setProperty(ExternalLibrariesActivator.INCLUDES_BUILT_INS_SYSTEM_PROPERTY, "true");
+		System.setProperty(ExternalLibraryHelper.INCLUDES_BUILT_INS_SYSTEM_PROPERTY, "true");
 
 		externalLibraryPreferenceStore.synchronizeNodeModulesFolders();
 		ProjectTestsUtils.waitForAllJobs();
@@ -53,7 +54,7 @@ public class ShippedCodeInitializeTestHelper {
 		ProjectTestsUtils.waitForAllJobs();
 		libraryManager.deleteAllNodeModulesFolders(new NullProgressMonitor());
 
-		System.setProperty(ExternalLibrariesActivator.INCLUDES_BUILT_INS_SYSTEM_PROPERTY, "");
+		System.setProperty(ExternalLibraryHelper.INCLUDES_BUILT_INS_SYSTEM_PROPERTY, "");
 
 		externalLibraryPreferenceStore.synchronizeNodeModulesFolders();
 		ProjectTestsUtils.waitForAllJobs();

@@ -24,10 +24,10 @@ import java.util.concurrent.Semaphore;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.external.ExternalLibraryHelper;
 import org.eclipse.n4js.external.ExternalProject;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.external.NpmLogger;
-import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore.StoreUpdatedListener;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
@@ -220,7 +220,7 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 
 	Collection<java.net.URI> getRootLocationsInReversedShadowingOrder() {
 		Collection<java.net.URI> locations = externalLibraryPreferenceStore.getLocations();
-		List<java.net.URI> locationsInShadowOrder = ExternalLibrariesActivator.sortByShadowing(locations);
+		List<java.net.URI> locationsInShadowOrder = ExternalLibraryHelper.sortByShadowing(locations);
 		Collections.reverse(locationsInShadowOrder);
 		return locationsInShadowOrder;
 	}

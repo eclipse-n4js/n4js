@@ -65,7 +65,7 @@ public class ShippedCodeAccess {
 	 *            name of shipped root to be located
 	 * @return the path pointing to the shipped code
 	 */
-	protected static String getShippedRuntimeCodePath(String rootName) {
+	private static String getShippedRuntimeCodePath(String rootName) {
 		try {
 			URL resourceUrl = getResource(rootName);
 
@@ -92,7 +92,7 @@ public class ShippedCodeAccess {
 	 * @throws IOException
 	 *             for IO operations
 	 */
-	protected static String recursivelyCopyContent(JarURLConnection connection, String rootName) throws IOException {
+	private static String recursivelyCopyContent(JarURLConnection connection, String rootName) throws IOException {
 		final File tempFolder = getTempFolder();
 		tempFolder.deleteOnExit();
 		final File rootFolder = new File(tempFolder, rootName);
@@ -147,7 +147,7 @@ public class ShippedCodeAccess {
 	 *            the name of the resource.
 	 * @return the URL referencing to the resource given with its resource name.
 	 */
-	protected static URL getResource(final String resourceName) {
+	private static URL getResource(final String resourceName) {
 		if (resourceName == null) {
 			throw new RuntimeException("Resource name cannot be null.");
 		}

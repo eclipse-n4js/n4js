@@ -21,7 +21,6 @@ import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.EXT
 import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.EXTERNAL_LIBRARY_NAMES;
 import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.LANG_CATEGORY;
 import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.MANGELHAFT_CATEGORY;
-import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.NPM_CATEGORY;
 import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.RUNTIME_CATEGORY;
 import static org.eclipse.n4js.projectDescription.ProjectType.API;
 import static org.eclipse.n4js.projectDescription.ProjectType.RUNTIME_ENVIRONMENT;
@@ -46,6 +45,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.StyledString.Styler;
 import org.eclipse.n4js.external.ExternalIndexSynchronizer;
+import org.eclipse.n4js.external.ExternalLibraryHelper;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalProject;
 import org.eclipse.n4js.external.N4JSExternalProject;
@@ -387,7 +387,8 @@ public class N4JSProjectExplorerHelper {
 		}
 
 		if (!requiredNpmLibs.isEmpty()) {
-			NamedNode npmNode = new NamedNode(rootNode, EXTERNAL_LIBRARY_NAMES.get(NPM_CATEGORY), image);
+			NamedNode npmNode = new NamedNode(rootNode, EXTERNAL_LIBRARY_NAMES.get(ExternalLibraryHelper.NPM_CATEGORY),
+					image);
 			npmNode.addChild(from(requiredNpmLibs).transform(p -> new BuiltInProjectNode(npmNode, p)));
 			rootNode.addChild(npmNode);
 		}
@@ -406,7 +407,7 @@ public class N4JSProjectExplorerHelper {
 	}
 
 	private Map<String, IN4JSProject> getAvailableNpmProjects() {
-		return uniqueIndex(from(getBuiltInLibraries(NPM_CATEGORY)), p -> p.getProjectName());
+		return uniqueIndex(from(getBuiltInLibraries(ExternalLibraryHelper.NPM_CATEGORY)), p -> p.getProjectName());
 	}
 
 	private Map<String, IN4JSProject> getAvailableLangProjects() {

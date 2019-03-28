@@ -14,7 +14,6 @@ import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.emptyList;
 import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.EXTERNAL_LIBRARIES_SUPPLIER;
-import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.requiresInfrastructureForLibraryManager;
 
 import java.io.File;
 import java.net.URI;
@@ -26,7 +25,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
+import org.eclipse.n4js.external.ExternalLibraryHelper;
 import org.eclipse.n4js.json.JSON.JSONArray;
 import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONObject;
@@ -83,7 +82,7 @@ public class ExternalLibraryPreferenceModel {
 	 */
 	public static ExternalLibraryPreferenceModel createDefaultForN4Product() {
 		checkState(Platform.isRunning(), "Expected running platform.");
-		if (requiresInfrastructureForLibraryManager()) {
+		if (ExternalLibraryHelper.requiresInfrastructureForLibraryManager()) {
 			final List<URI> rootLocations = newArrayList(EXTERNAL_LIBRARIES_SUPPLIER.get().keySet());
 			return new ExternalLibraryPreferenceModel(rootLocations);
 		}
@@ -248,7 +247,7 @@ public class ExternalLibraryPreferenceModel {
 			for (String pathStr : externalLibraryLocations) {
 				locations.add(new File(pathStr).toURI());
 			}
-			locations = ExternalLibrariesActivator.sortByShadowing(locations);
+			locations = ExternalLibraryHelper.sortByShadowing(locations);
 			externalLibraryLocationURIs.clear();
 			externalLibraryLocationURIs.addAll(locations);
 
@@ -268,9 +267,9 @@ public class ExternalLibraryPreferenceModel {
 	static public boolean isNodeModulesLocation(URI location) {
 		String locStr = location.toString();
 		if (locStr.endsWith("/")) {
-			return locStr.endsWith(ExternalLibrariesActivator.NPM_CATEGORY + "/");
+			return locStr.endsWith(ExternalLibraryHelper.NPM_CATEGORY + "/");
 		} else {
-			return locStr.endsWith(ExternalLibrariesActivator.NPM_CATEGORY);
+			return locStr.endsWith(ExternalLibraryHelper.NPM_CATEGORY);
 		}
 	}
 

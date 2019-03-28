@@ -11,14 +11,10 @@
 package org.eclipse.n4js.external.libraries;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.base.Predicates.notNull;
 import static com.google.common.base.Suppliers.memoize;
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Maps.newLinkedHashMap;
-import static java.lang.Boolean.parseBoolean;
-import static org.eclipse.core.runtime.Platform.inDebugMode;
-import static org.eclipse.core.runtime.Platform.inDevelopmentMode;
 import static org.eclipse.xtext.util.Tuples.pair;
 
 import java.io.File;
@@ -27,17 +23,10 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.internal.runtime.InternalPlatform;
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.IProduct;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.xtext.util.Pair;
 import org.osgi.framework.Bundle;
@@ -56,7 +45,6 @@ import com.google.common.collect.ImmutableMap;
  * <p>
  * Keep folder computations in sync with TargetPlatformInstallLocationProvider!
  */
-@SuppressWarnings("restriction")
 public class ExternalLibrariesActivator implements BundleActivator {
 
 	private static final Logger LOGGER = Logger.getLogger(ExternalLibrariesActivator.class);
@@ -66,23 +54,6 @@ public class ExternalLibrariesActivator implements BundleActivator {
 	 */
 	private static final String PLUGINS_FOLDER_NAME = "plugins"; // can't use N4JSGlobals.PLUGINS_FOLDER_NAME here
 
-	/**
-	 * Property configured and available only in the N4JS IDE product. If the associated value of the property can be
-	 * parsed to {@code true} value via the {@link Boolean#parseBoolean(String)}. This property is here to control
-	 * presence of the built in libraries or the type definitions repository.
-	 */
-	public static final String INCLUDES_BUILT_INS_PRODUCT_PROPERTY = "includesBuiltInLibraries";
-
-	/**
-	 * System property that is checked only and if only the N4JS IDE product is running, it is configured to include the
-	 * built-in libraries but the application is running either in {@link Platform#inDebugMode() debug mode} or in
-	 * {@link Platform#inDevelopmentMode() development mode}, in other words not in production mode. If the N4JS IDE
-	 * product is not in production mode, then if the {@link Boolean#parseBoolean(String) boolean value} of this
-	 * property is {@code true}, then the built-in libraries (such as N4JS Runtime and Mangelhaft) will be included.
-	 * Otherwise they will not be.
-	 */
-	public static final String INCLUDES_BUILT_INS_SYSTEM_PROPERTY = "org.eclipse.n4js.includesBuiltInLibraries";
-
 	/** Unique name of the N4JS language category. */
 	public static final String LANG_CATEGORY = "lang";
 
@@ -91,17 +62,6 @@ public class ExternalLibrariesActivator implements BundleActivator {
 
 	/** Unique name of the Mangelhaft category. */
 	public static final String MANGELHAFT_CATEGORY = "mangelhaft";
-
-	/** Unique name of the {@code npm} category. */
-	public static final String NPM_CATEGORY = "node_modules";
-
-	/** List of all categories. Latter entries shadow former entries. */
-	public static final List<String> CATEGORY_SHADOWING_ORDER = ImmutableList.<String> builder()
-			.add(LANG_CATEGORY)
-			.add(RUNTIME_CATEGORY)
-			.add(MANGELHAFT_CATEGORY)
-			.add(NPM_CATEGORY)
-			.build();
 
 	private static final Function<URL, URL> URL_TO_FILE_URL_FUNC = url -> {
 		try {
@@ -185,15 +145,6 @@ public class ExternalLibrariesActivator implements BundleActivator {
 	/** Shared private bundle context. */
 	private static BundleContext context;
 
-	/**
-	 * Returns with the bundle context instance.
-	 *
-	 * @return the shared bundle context instance.
-	 */
-	public static BundleContext getContext() {
-		return context;
-	}
-
 	@Override
 	public void start(final BundleContext bundleContext) throws Exception {
 		context = bundleContext;
@@ -202,110 +153,6 @@ public class ExternalLibrariesActivator implements BundleActivator {
 	@Override
 	public void stop(final BundleContext bundleContext) throws Exception {
 		context = null;
-	}
-
-	/**
-	 * Returns with {@code true} if all the followings are {@code true}
-	 * <p>
-	 * <ul>
-	 * <li>The {@link Platform#isRunning() platform is running}.</li>
-	 * <li>The platforms runs a {@link IProduct product}.</li>
-	 * <li>The platforms runs the N4JS IDE product and it is configured to include built-in libraries.</li>
-	 * <ul>
-	 * <li>The N4JS IDE runs in production mode {@code OR}</li>
-	 * <li>The N4JS IDE runs in either {@link Platform#inDebugMode() debug mode} or {@link Platform#inDevelopmentMode()
-	 * development mode} and the {@link #INCLUDES_BUILT_INS_SYSTEM_PROPERTY} is configured to be {@code true}</li>
-	 * </ul>
-	 * </ul>
-	 * Otherwise returns with {@code false} and neither built-in libraries nor local git repository for the N4JS
-	 * definition files has to be set up .
-	 *
-	 * @return {@code true} if the infrastructure is required for the built-in and NPM support.
-	 */
-	public static boolean requiresInfrastructureForLibraryManager() {
-		if (Platform.isRunning()) {
-			final IProduct product = Platform.getProduct();
-			if (null != product) {
-				if (parseBoolean(product.getProperty(INCLUDES_BUILT_INS_PRODUCT_PROPERTY))) {
-					// Runs in *non-production* mode and the system property is NOT set to include the built-ins.
-					boolean includeBuiltins = parseBoolean(System.getProperty(INCLUDES_BUILT_INS_SYSTEM_PROPERTY));
-					if ((inDebugMode() || inDevelopmentMode()) && !includeBuiltins) {
-						return false;
-					}
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	/** Sorts given set of locations and returns sorted list */
-	public static List<java.net.URI> sortByShadowing(Collection<java.net.URI> locations) {
-		Map<String, java.net.URI> knownLocations = new HashMap<>();
-		List<java.net.URI> unknownLocations = new LinkedList<>();
-
-		for (java.net.URI location : locations) {
-			String locStr = location.toString();
-			locStr = locStr.endsWith("/") ? locStr.substring(0, locStr.length() - 1) : locStr;
-
-			boolean locationFound = false;
-			for (String knownLocation : CATEGORY_SHADOWING_ORDER) {
-				if (locStr.endsWith(knownLocation) && !knownLocations.containsKey(knownLocation)) {
-					knownLocations.put(knownLocation, location);
-					locationFound = true;
-				}
-			}
-
-			if (!locationFound) {
-				unknownLocations.add(location);
-			}
-		}
-
-		List<java.net.URI> sortedLocations = new LinkedList<>();
-		for (String knownLocation : CATEGORY_SHADOWING_ORDER) {
-			java.net.URI location = knownLocations.get(knownLocation);
-			if (location != null) {
-				sortedLocations.add(location);
-			}
-		}
-		sortedLocations.addAll(unknownLocations);
-
-		return sortedLocations;
-	}
-
-	/**
-	 * Logs the given status to the platform log. Has no effect if the platform is not running or the bundle cannot be
-	 * found.
-	 *
-	 * @param status
-	 *            the status to log.
-	 */
-	public static void log(final IStatus status) {
-		if (null != status && Platform.isRunning() && null != context) {
-			final Bundle bundle = context.getBundle();
-			if (null != bundle) {
-				Platform.getLog(bundle).log(status);
-			}
-		}
-	}
-
-	/**
-	 * Returns with the nested folder. Creates it if the folder does not exist yet.
-	 *
-	 * @param path
-	 *            the name of the nested folder.
-	 * @return the nested folder.
-	 */
-	public static synchronized File getOrCreateNestedFolder(String path) {
-		checkState(Platform.isRunning(), "Expected running platform.");
-		final Bundle bundle = context.getBundle();
-		checkNotNull(bundle, "Bundle was null. Does the platform running?");
-		final File targetPlatform = InternalPlatform.getDefault().getStateLocation(bundle).append(path).toFile();
-		if (!targetPlatform.exists()) {
-			checkState(targetPlatform.mkdirs(), "Error while creating " + targetPlatform + " folder.");
-		}
-		checkState(targetPlatform.isDirectory(), "Expecting director but was a file: " + targetPlatform + ".");
-		return targetPlatform;
 	}
 
 	private static BiMap<URI, String> getExternalLibraries() {
@@ -331,7 +178,6 @@ public class ExternalLibrariesActivator implements BundleActivator {
 		}
 
 		return ImmutableBiMap.copyOf(uriMappings);
-
 	}
 
 }

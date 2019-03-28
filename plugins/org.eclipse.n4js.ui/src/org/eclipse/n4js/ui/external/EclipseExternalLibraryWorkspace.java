@@ -40,12 +40,12 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.external.ExternalLibraryHelper;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalProject;
 import org.eclipse.n4js.external.ExternalProjectsCollector;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.external.RebuildWorkspaceProjectsScheduler;
-import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore.StoreUpdatedListener;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
@@ -262,7 +262,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace im
 
 	private RegisterResult deregisterProjectsInternal(IProgressMonitor monitor, Set<URI> toBeDeleted,
 			Set<URI> toBeWiped) {
-		if (!ExternalLibrariesActivator.requiresInfrastructureForLibraryManager()) {
+		if (!ExternalLibraryHelper.requiresInfrastructureForLibraryManager()) {
 			logger.warn("Built-in libraries and NPM support are disabled.");
 		}
 
@@ -315,7 +315,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace im
 	private RegisterResult registerProjectsInternal(IProgressMonitor monitor, Set<URI> toBeUpdated) {
 		Collection<IProject> extPrjBuilt = new LinkedList<>();
 
-		if (!ExternalLibrariesActivator.requiresInfrastructureForLibraryManager()) {
+		if (!ExternalLibraryHelper.requiresInfrastructureForLibraryManager()) {
 			logger.warn("Built-in libraries and NPM support are disabled.");
 		}
 

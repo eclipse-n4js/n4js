@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
+import org.eclipse.n4js.external.ExternalLibraryHelper;
 import org.eclipse.n4js.ui.external.EclipseExternalIndexSynchronizer;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuilder;
 import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
@@ -62,7 +62,7 @@ public class N4JSExternalLibraryStartup implements IStartup {
 	@Override
 	public void earlyStartup() {
 		// Client code can still clone the repository on demand. (Mind plug-in UI tests.)
-		if (ExternalLibrariesActivator.requiresInfrastructureForLibraryManager()) {
+		if (ExternalLibraryHelper.requiresInfrastructureForLibraryManager()) {
 			new Thread(() -> {
 				// trigger index loading which will potentially announce a recovery build on all projects to be
 				// necessary
