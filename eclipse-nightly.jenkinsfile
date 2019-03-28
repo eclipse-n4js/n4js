@@ -28,7 +28,8 @@ pipeline {
                      ":/shared/common/apache-ant-1.9.6/bin"             +
                      ":/shared/common/maven/apache-maven-3.5.2/bin/"    +
                      ":/shared/common/node-v10.15.3-linux-x64/bin"      +
-                     ":/shared/common/java/oracle/jdk1.8.0_162_x64/bin"
+                     ":/shared/common/java/oracle/jdk1.8.0_162_x64/bin" +
+                     ":/shared/common/yarn/1.15.2/bin"
         MAVEN_OPTS = '-Xmx4G'
         TIMESTAMP  = new Date().format("yyyyMMddHHmm")
     }
