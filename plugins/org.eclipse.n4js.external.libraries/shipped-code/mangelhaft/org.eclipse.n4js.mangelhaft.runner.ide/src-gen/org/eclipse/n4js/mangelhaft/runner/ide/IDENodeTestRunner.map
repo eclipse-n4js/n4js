@@ -1,8 +1,0 @@
-{
-	"version": 3,
-	"file": "IDENodeTestRunner.js",
-	"sourceRoot": "",
-	"sources": ["../../../../../../../src/n4js/org/eclipse/n4js/mangelhaft/runner/ide/IDENodeTestRunner.n4js"],
-	"names": [],
-	"mappings": ";;;;;EAWA;EACA;EAIA;EACA;EACA;;MAPQ,YACA,QACA,QACA,QACA,SACA,gBACA,aACA,sDA+DF,WACA,MASsB;EAnEtB;;;;EA4CA;EAMA;;;;;;;KA/DE;;;;KACA;KACA;KACA;KACA;;;;KACA;;;;KACA;;;;KACA;;;;IAMF;;uCAUwB;OAEtB,IAAI;QACA,IAAI,YAAY,MAAM;QACtB,yBAAyB;QACzB,4BAA4B;SAAC;;QAC7B,MAAM,0BAA0B,WAAW,KAAK;QAClD,OAAO,KAAK;QACV,IAAI,YAAA,KAAe;SACf,cAAc,MAAM,aAAa,CAAK,mBAAwB,eAAe;;QAGjF,MAAM;;;;;kDAI4B;OACtC,IAAI,aAAa,kBAAkB;OACnC,IAAI,cAAyB;OAE7B,IAAI,OAAO,eAAe;QACtB,IAAI,WAAW,MAAM,MAAiB,YAAW;SAClC,SAAE;UAAe,gBAAE;;;QAElC,cAAsC,CAAvB,MAAM;;OAEzB,OAAO;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;IAQT;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;IAMA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;IAON,YAAkB,cAAc;IAChC,OAAa,cAAc,MAAM,kBAAkB;IASnD,OAAmC"
-}

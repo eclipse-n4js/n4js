@@ -1,8 +1,0 @@
-{
-	"version": 3,
-	"file": "ITestReporter.js",
-	"sourceRoot": "",
-	"sources": ["../../../../../../src/n4js/org/eclipse/n4js/mangelhaft/types/ITestReporter.n4js"],
-	"names": [],
-	"mappings": ";;;;;;EAYA;;;;;;;;;;;;;;;;IAAwB;IAAA"
-}

@@ -1,8 +1,0 @@
-{
-	"version": 3,
-	"file": "ResultGroups.js",
-	"sourceRoot": "",
-	"sources": ["../../../../../../src/n4js/org/eclipse/n4js/mangelhaft/types/ResultGroups.n4js"],
-	"names": [],
-	"mappings": ";;;;;EAcA;EAEA;;MAFQ,aAEA;EACR,qCAOuB;;oBALQ;mBACD;kBACD;iBACD;GAGpB,eAAe;GACf,+BAA+B,MAAM;;;;;;;KAZrC;;;;KAEA;;;;IACY;;uCAegB;OAC5B,IAAI;OACJ,IAAI,QAAiC,IAAI;OACzC,IAAI;OACJ,QAAS,MAAM;QACX,cAAc;QACd,QAAS,MAAM;SACX,IAAI,UAAU;UACV,IAAI,QAAQ,UAAU;UACtB,IAAI,aAAa,sBAAsB,eAAe;UACtD,IAAI,cAAc;WACd,UAAU,gBAAgB;;;UAG9B,UAAU,gBAAgB;;;;OAItC,SAAS,IAAI,YAAY,WAAW,iBAAiB;OACrD,OAAO;;;;;;;;;;;;;;;;;;;;;;;;;6CAEsB,QAAqB,SAAsD;OACxG,QAAS,UAAU;QACf,oBAAoB;QACpB,mBAAmB;QACnB,iBAAiB;QACjB,kBAAkB;QAClB,IAAI,kBAAkB;SAClB,iBAAiB,sBAAsB,CAAoB,CAAX;;;OAGxD,OAAO;;;;kCAQa,iBAA0C;OAC9D,OAAO,iBAAiB;;;;uCAKF,eAAkD;OACxE,OAAO,uBAAuB,IAAI,aAAa,KAA+B,CAAX"
-}
