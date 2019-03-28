@@ -164,7 +164,7 @@ public class SideBySideNonYarnProjectsInstallNpmPluginUITest extends AbstractBui
 	 * </pre>
 	 */
 	@Test
-	public void installDifferentNpmsInTwoDependentProjects() throws CoreException, IOException {
+	public void installDifferentNpmsInTwoDependentProjects() throws ExecutionException, CoreException, IOException {
 		System.out.println("start");
 
 		File prjDir = new File(getResourceUri(PROBANDS, DIFFERENT_NPMS_DEPENDENT_PROJECTS_SUBFOLDER));

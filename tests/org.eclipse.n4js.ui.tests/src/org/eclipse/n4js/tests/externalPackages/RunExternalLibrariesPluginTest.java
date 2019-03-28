@@ -26,6 +26,7 @@ import java.io.File;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.concurrent.ExecutionException;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -371,7 +372,12 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 		final String pathToModuleToRun = getResourceName(CLIENT, CLIENT_MODULE);
 		final org.eclipse.emf.common.util.URI moduleToRun = createPlatformResourceURI(pathToModuleToRun, true);
 		final RunConfiguration config = runnerFrontEnd.createConfiguration(ID, null, moduleToRun);
-		final Process process = runnerFrontEndUI.runInUI(config);
+		final Process process;
+		try {
+			process = runnerFrontEndUI.runInUI(config);
+		} catch (ExecutionException e) {
+			throw new RuntimeException("Exception after invoking #runInUI().", e);
+		}
 		final ProcessResult result = processExecutor.execute(process, "", OutputRedirection.REDIRECT);
 		if (result.isOK())
 			return result;

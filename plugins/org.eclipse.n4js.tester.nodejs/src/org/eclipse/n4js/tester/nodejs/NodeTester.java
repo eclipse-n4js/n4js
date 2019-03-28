@@ -12,12 +12,13 @@ package org.eclipse.n4js.tester.nodejs;
 
 import static org.eclipse.n4js.runner.extension.RuntimeEnvironment.NODEJS_MANGELHAFT;
 
+import java.util.concurrent.ExecutionException;
+
 import org.eclipse.n4js.runner.IExecutor;
 import org.eclipse.n4js.runner.RunnerFrontEnd;
 import org.eclipse.n4js.runner.nodejs.NodeRunner;
 import org.eclipse.n4js.tester.ITester;
 import org.eclipse.n4js.tester.TestConfiguration;
-import org.eclipse.n4js.tester.TesterFileBasedShippedCodeConfigurationHelper;
 import org.eclipse.n4js.tester.extension.ITesterDescriptor;
 import org.eclipse.n4js.tester.extension.TesterDescriptorImpl;
 
@@ -27,8 +28,6 @@ import com.google.inject.Provider;
 /**
  */
 public class NodeTester implements ITester {
-	@Inject
-	private TesterFileBasedShippedCodeConfigurationHelper shippedCodeConfigurationHelper;
 
 	/** ID of the Node.js tester as defined in the plugin.xml. */
 	public static final String ID = "org.eclipse.n4js.tester.nodejs.NODEJS_MANGELHAFT";
@@ -56,9 +55,7 @@ public class NodeTester implements ITester {
 
 	@Override
 	public void prepareConfiguration(TestConfiguration config) {
-		if (config.isUseCustomBootstrap()) {
-			shippedCodeConfigurationHelper.configureFromFileSystem(config);
-		}
+		// no special preparations required
 	}
 
 	@Override
@@ -67,7 +64,8 @@ public class NodeTester implements ITester {
 	}
 
 	@Override
-	public Process test(TestConfiguration config, IExecutor executor, RunnerFrontEnd runnerFrontEnd) {
+	public Process test(TestConfiguration config, IExecutor executor, RunnerFrontEnd runnerFrontEnd)
+			throws ExecutionException {
 		return runnerFrontEnd.run(config, executor);
 	}
 }

@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -383,12 +384,13 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 	}
 
 	/** See {@link ProjectTestsHelper#runWithNodeRunnerUI(URI)}. */
-	protected ProcessResult runWithNodeRunnerUI(URI moduleToRun) {
+	protected ProcessResult runWithNodeRunnerUI(URI moduleToRun) throws ExecutionException {
 		return projectTestsHelper.runWithNodeRunnerUI(moduleToRun);
 	}
 
 	/** See {@link ProjectTestsHelper#runWithRunnerUI(String, String, URI)}. */
-	protected ProcessResult runWithRunnerUI(String runnerId, String implementationId, URI moduleToRun) {
+	protected ProcessResult runWithRunnerUI(String runnerId, String implementationId, URI moduleToRun)
+			throws ExecutionException {
 		return projectTestsHelper.runWithRunnerUI(runnerId, implementationId, moduleToRun);
 	}
 

@@ -392,7 +392,7 @@ public class RunnerFrontEnd {
 	 * Convenience method. Creates a run configuration with {@link #createConfiguration(String, String, URI)} and
 	 * immediately passes it to {@link #run(RunConfiguration)} in order to launch the moduleToRun.
 	 */
-	public Process run(String runnerId, String implementationId, URI moduleToRun) {
+	public Process run(String runnerId, String implementationId, URI moduleToRun) throws ExecutionException {
 		return run(createConfiguration(runnerId, implementationId, moduleToRun));
 	}
 
@@ -400,7 +400,8 @@ public class RunnerFrontEnd {
 	 * Convenience method. Creates a run configuration with {@link #createConfiguration(String, String, String, URI)}
 	 * and immediately passes it to {@link #run(RunConfiguration)} in order to launch the moduleToRun.
 	 */
-	public Process run(String runnerId, String implementationId, String systemLoader, URI moduleToRun) {
+	public Process run(String runnerId, String implementationId, String systemLoader, URI moduleToRun)
+			throws ExecutionException {
 		return run(createConfiguration(runnerId, implementationId, systemLoader, moduleToRun));
 	}
 
@@ -408,7 +409,7 @@ public class RunnerFrontEnd {
 	 * Convenience method. Same as {@link #run(RunConfiguration, IExecutor)}, but uses the default executor returned my
 	 * method {@link #createDefaultExecutor()} that will delegate to {@link Runtime#exec(String[], String[], File)}.
 	 */
-	public Process run(RunConfiguration config) {
+	public Process run(RunConfiguration config) throws ExecutionException {
 		return run(config, createDefaultExecutor());
 	}
 
@@ -416,7 +417,7 @@ public class RunnerFrontEnd {
 	 * Launches the given run configuration. The specific runner to use is defined by the runnerId in the given run
 	 * configuration and the given executor will be used for launching any external tools.
 	 */
-	public Process run(RunConfiguration config, IExecutor executor) {
+	public Process run(RunConfiguration config, IExecutor executor) throws ExecutionException {
 		return runnerRegistry.getRunner(config).run(config, executor);
 	}
 

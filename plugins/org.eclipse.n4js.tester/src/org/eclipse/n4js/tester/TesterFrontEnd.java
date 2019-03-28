@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
@@ -171,21 +172,21 @@ public class TesterFrontEnd {
 	/**
 	 * Similar to {@link RunnerFrontEnd#run(String, String, URI)}, but for testing.
 	 */
-	public Process test(String testerId, String implementationId, URI resourceToTest) {
+	public Process test(String testerId, String implementationId, URI resourceToTest) throws ExecutionException {
 		return test(createConfiguration(testerId, implementationId, resourceToTest));
 	}
 
 	/**
 	 * Similar to {@link RunnerFrontEnd#run(RunConfiguration)}, but for testing.
 	 */
-	public Process test(TestConfiguration config) {
+	public Process test(TestConfiguration config) throws ExecutionException {
 		return test(config, runnerFrontEnd.createDefaultExecutor());
 	}
 
 	/**
 	 * Similar to {@link RunnerFrontEnd#run(RunConfiguration, IExecutor)}, but for testing.
 	 */
-	public Process test(TestConfiguration config, IExecutor executor) {
+	public Process test(TestConfiguration config, IExecutor executor) throws ExecutionException {
 		final TestTree testTree = config.getTestTree();
 
 		// prepare HTTP server for receiving test results

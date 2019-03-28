@@ -15,6 +15,7 @@ import static org.eclipse.n4js.runner.nodejs.NodeRunner.ID;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.util.concurrent.ExecutionException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -153,7 +154,12 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 		final String pathToModuleToRun = getResourceName(PA, CLIENT_MODULE);
 		final org.eclipse.emf.common.util.URI moduleToRun = createPlatformResourceURI(pathToModuleToRun, true);
 		final RunConfiguration config = runnerFrontEnd.createConfiguration(ID, null, moduleToRun);
-		final Process process = runnerFrontEndUI.runInUI(config);
+		final Process process;
+		try {
+			process = runnerFrontEndUI.runInUI(config);
+		} catch (ExecutionException e) {
+			throw new RuntimeException("Exception after invoking #runInUI().", e);
+		}
 		final ProcessResult result = processExecutor.execute(process, "", OutputRedirection.REDIRECT);
 		assertTrue("Expected 0 error code for the process. Was: " + result.getExitCode() + "\nError message: "
 				+ result.getStdErr(), result.isOK());

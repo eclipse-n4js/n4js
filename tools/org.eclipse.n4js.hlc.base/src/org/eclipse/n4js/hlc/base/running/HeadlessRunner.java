@@ -93,7 +93,7 @@ public class HeadlessRunner {
 								+ "' exited with code=" + exit);
 			}
 
-		} catch (InterruptedException e1) {
+		} catch (Exception e1) {
 			logger.error(Throwables.getStackTraceAsString(e1));
 			throw new ExitCodeException(EXITCODE_RUNNER_STOPPED_WITH_ERROR,
 					"The spawned runner exited by throwing an exception", e1);

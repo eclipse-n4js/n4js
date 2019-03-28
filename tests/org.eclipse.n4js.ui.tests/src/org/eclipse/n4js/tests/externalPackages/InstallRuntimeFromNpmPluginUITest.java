@@ -71,7 +71,7 @@ public class InstallRuntimeFromNpmPluginUITest extends AbstractBuilderParticipan
 	 * See JavaDoc of class.
 	 */
 	@Test
-	public void testInstallRuntimeFromNpmTest() throws CoreException, IOException {
+	public void testInstallRuntimeFromNpmTest() throws ExecutionException, CoreException, IOException {
 		final IProject project = createJSProject(CLIENT, "src", "src-gen",
 				b -> b
 						// test project of type 'library'
