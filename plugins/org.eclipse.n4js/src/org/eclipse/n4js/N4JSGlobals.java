@@ -19,8 +19,6 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.eclipse.n4js.external.libraries.ExternalLibraryFolderUtils;
-
 /**
  * Global hook for static information about the current setup. Contains file extensions, library names, and other
  * "useful" strings.
@@ -129,7 +127,7 @@ public final class N4JSGlobals {
 	/**
 	 * The name of NPM's package json file.
 	 */
-	public static final String PACKAGE_JSON = ExternalLibraryFolderUtils.PACKAGE_JSON;
+	public static final String PACKAGE_JSON = "package.json";
 	/**
 	 * Name of the package.json fragment file from the "n4jsd" type definitions repository.
 	 */

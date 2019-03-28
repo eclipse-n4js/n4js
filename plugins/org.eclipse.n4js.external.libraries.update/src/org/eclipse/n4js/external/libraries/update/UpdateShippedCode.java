@@ -32,7 +32,6 @@ import org.eclipse.n4js.N4JSStandaloneSetup;
 import org.eclipse.n4js.binaries.BinariesLocatorHelper;
 import org.eclipse.n4js.binaries.nodejs.NodeYarnProcessBuilder;
 import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
-import org.eclipse.n4js.external.libraries.ExternalLibraryFolderUtils;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.hlc.base.N4jscBase;
 import org.eclipse.n4js.utils.UtilN4;
@@ -52,6 +51,8 @@ import com.google.inject.Injector;
  * {@link #updateShippedCode(Optional)}.
  */
 public class UpdateShippedCode implements IWorkflowComponent {
+
+	private static final String PACKAGE_JSON = "package.json";
 
 	final static String PATH = "PATH";
 
@@ -142,7 +143,7 @@ public class UpdateShippedCode implements IWorkflowComponent {
 		final File n4jsNodeFolder = actualTargetPath.resolve(ExternalLibrariesActivator.RUNTIME_CATEGORY)
 				.resolve(N4JS_NODE_PROJECT_NAME).toFile();
 
-		final File n4jsNodePkgJson = n4jsNodeFolder.toPath().resolve(ExternalLibraryFolderUtils.PACKAGE_JSON).toFile();
+		final File n4jsNodePkgJson = n4jsNodeFolder.toPath().resolve(PACKAGE_JSON).toFile();
 
 		temporaryHackRemoveN4JSES5Dependency(n4jsNodePkgJson);
 		runNpmInstall(n4jsNodeFolder);
