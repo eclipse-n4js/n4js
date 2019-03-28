@@ -10,7 +10,10 @@
  */
 package org.eclipse.n4js.transpiler.es.transform
 
+import com.google.common.base.Joiner
 import com.google.inject.Inject
+import java.util.Arrays
+import java.util.Objects
 import org.eclipse.n4js.ModuleSpecifierAdjustment
 import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.n4JS.ExportDeclaration
@@ -21,11 +24,14 @@ import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSCore
+import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.utils.ResourceNameComputer
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
+
+import static extension com.google.common.base.Strings.repeat
 
 /**
  * New version of module wrapping using ECMAScript 2015 imports/exports in the output code and no longer using System.js.
@@ -41,6 +47,8 @@ class ModuleWrappingTransformationNEW extends Transformation {
 	@Inject
 	private ResourceNameComputer resourceNameComputer
 
+	private String[] localModuleSpecifierSegments = null; // will be set in #analyze()
+
 	override assertPreConditions() {
 		// true
 	}
@@ -50,7 +58,9 @@ class ModuleWrappingTransformationNEW extends Transformation {
 	}
 
 	override analyze() {
-		// no need to analyze the AST ahead of time
+		val localModule = state.resource.module;
+		val localModuleSpecifier = resourceNameComputer.getCompleteModuleSpecifier(localModule);
+		localModuleSpecifierSegments = localModuleSpecifier.split("/", -1);
 	}
 
 	override transform() {
@@ -69,7 +79,7 @@ class ModuleWrappingTransformationNEW extends Transformation {
 		collectNodes(state.im, ExportDeclaration, false).forEach[splitDefaultExportFromVarDecl];
 		
 		// add implicit import of "n4js-node"
-		// TODO GH-1256 this should be solved in a different way (maybe via a property in the n4js-section of the package.json)
+		// TODO GH-1281 this should be solved in a different way (maybe via a property in the n4js-section of the package.json)
 		addEmptyImport("n4js-node");
 	}
 
@@ -87,35 +97,59 @@ class ModuleWrappingTransformationNEW extends Transformation {
 		}
 		// note: ModuleSpecifierAdjustment#prefix is obsolete and entirely ignored in this transformation!
 
-		val completeModuleSpecifier = resourceNameComputer.getCompleteModuleSpecifier(module);
+		val targetModuleSpecifier = resourceNameComputer.getCompleteModuleSpecifier(module);
 
-		var depProject = n4jsCore.findProject(module.eResource.URI).orNull;
-		if (depProject !== null && depProject.projectType === ProjectType.DEFINITION) {
-			val definedPackageName = depProject.definesPackageName;
+		var targetProject = n4jsCore.findProject(module.eResource.URI).orNull;
+		if (targetProject !== null && targetProject.projectType === ProjectType.DEFINITION) {
+			val definedPackageName = targetProject.definesPackageName;
 			if (definedPackageName !== null) {
-				depProject = n4jsCore.findAllProjectMappings.get(definedPackageName);
+				targetProject = n4jsCore.findAllProjectMappings.get(definedPackageName);
 			}
 		}
-		if (depProject !== null) {
-			val projectName = depProject.projectName;
-			var outputPath = depProject.outputPath;
-			if (projectName !== null && outputPath !== null) {
-				// normalize outputPath: should be non-null and start/end with a '/'
-				if (outputPath.isNullOrEmpty) {
-					outputPath = '/';
-				} else {
-					if (!outputPath.startsWith('/')) {
-						outputPath = '/' + outputPath;
-					}
-					if (!outputPath.endsWith('/')) {
-						outputPath = outputPath + '/';
-					}
-				}
-				return projectName + outputPath + completeModuleSpecifier;
+		if (targetProject !== null) {
+			if (targetProject.location == state.project.location) {
+				// pointing to a target module in same project
+				return createRelativeModuleSpecifier(targetProject, targetModuleSpecifier);
+			} else {
+				// pointing to a target module in another project
+				return createAbsoluteModuleSpecifier(targetProject, targetModuleSpecifier);
 			}
 		}
 
-		return completeModuleSpecifier;
+		return targetModuleSpecifier;
+	}
+
+	def private String createRelativeModuleSpecifier(IN4JSProject targetProject, String targetModuleSpecifier) {
+		val targetSegments = targetModuleSpecifier.split("/", -1);
+		val l = Math.min(targetSegments.length, localModuleSpecifierSegments.length);
+		var i = 0;
+		while (i < l && Objects.equals(targetSegments.get(i), localModuleSpecifierSegments.get(i))) {
+			i++;
+		}
+		val differingSegments = Arrays.copyOfRange(targetSegments, i, targetSegments.length);
+		val goUpCount = localModuleSpecifierSegments.length - 1 - i;
+		val result = (if (goUpCount > 0) "../".repeat(goUpCount) else "./") + Joiner.on("/").join(differingSegments);
+		return result;
+	}
+
+	def private String createAbsoluteModuleSpecifier(IN4JSProject targetProject, String targetModuleSpecifier) {
+		val targetProjectName = targetProject.projectName;
+		if (targetProjectName.isNullOrEmpty) {
+			return targetModuleSpecifier;
+		}
+		var outputPath = targetProject.outputPath;
+		// normalize outputPath: should be non-null and start/end with a '/'
+		if (outputPath.isNullOrEmpty) {
+			outputPath = '/';
+		} else {
+			if (!outputPath.startsWith('/')) {
+				outputPath = '/' + outputPath;
+			}
+			if (!outputPath.endsWith('/')) {
+				outputPath = outputPath + '/';
+			}
+		}
+		return targetProjectName + outputPath + targetModuleSpecifier;
 	}
 
 	/** returns adjustments to be used based on the module loader specified for the provided module. May be null. */
