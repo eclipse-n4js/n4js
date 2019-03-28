@@ -72,8 +72,8 @@ public final class BinariesConstants {
 	 * path) instead of pointing to the folder containing the binary.
 	 *
 	 * <p>
-	 * TODO Even if it is available the {@link #DEFAULT_NODE_PATH_VM_ARG <code>org.eclipse.n4js.defaultNodePath</code>}
-	 * VM argument might override this configuration.
+	 * Even if it is available the {@link #DEFAULT_YARN_PATH_VM_ARG <code>org.eclipse.n4js.defaultYarnPath</code>} VM
+	 * argument might override this configuration.
 	 */
 	public static final String YARN_PATH_ENV = "YARN_PATH";
 
