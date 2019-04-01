@@ -78,6 +78,12 @@ public class RunConfiguration {
 	/** Key used for attribute specifying the implementation ID. */
 	public final static String IMPLEMENTATION_ID = "IMPLEMENTATION_ID";
 
+	/** Key used for attribute specifying the working directory of the spawned process. */
+	public final static String WORKING_DIRECTORY = "WORKING_DIRECTORY";
+
+	/** Key used for attribute specifying the .js file to execute. */
+	public final static String FILE_TO_RUN = "FILE_TO_RUN";
+
 	/** Key used for attribute specifying special loader option. */
 	public final static String SYSTEM_LOADER = "SYSTEM_LOADER";
 
@@ -124,6 +130,10 @@ public class RunConfiguration {
 	 * See {@link #getUserSelection()} for details.
 	 */
 	private URI userSelection;
+
+	private Path workingDirectory;
+
+	private Path fileToRun;
 
 	private final Map<String, String> environmentVariables = new LinkedHashMap<>();
 
@@ -292,6 +302,31 @@ public class RunConfiguration {
 	/** @see #getUserSelection() */
 	public void setUserSelection(URI userSelection) {
 		this.userSelection = userSelection;
+	}
+
+	/**
+	 * The {@link ProcessBuilder#directory(java.io.File) working directory} of the process spawned by the runner.
+	 */
+	public Path getWorkingDirectory() {
+		return workingDirectory;
+	}
+
+	/** @see #getWorkingDirectory() */
+	public void setWorkingDirectory(Path workingDirectory) {
+		this.workingDirectory = workingDirectory;
+	}
+
+	/**
+	 * The Javascript file to execute, either as an absolute path or a path relative to the
+	 * {@link #getWorkingDirectory() working directory}.
+	 */
+	public Path getFileToRun() {
+		return fileToRun;
+	}
+
+	/** */
+	public void setFileToRun(Path fileToRun) {
+		this.fileToRun = fileToRun;
 	}
 
 	/**

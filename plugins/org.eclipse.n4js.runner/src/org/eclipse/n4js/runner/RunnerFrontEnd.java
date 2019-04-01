@@ -220,6 +220,10 @@ public class RunnerFrontEnd {
 	 */
 	public void computeDerivedValues(RunConfiguration config, boolean delegateToRunnerCustomization) {
 
+		configureWorkingDirectory(config);
+
+		configureFileToRun(config);
+
 		configureDependenciesAndPaths(config);
 
 		configureRuntimeEnvironment(config);
@@ -232,6 +236,36 @@ public class RunnerFrontEnd {
 			// delegate further computation to the specific runner implementation
 			IRunner runner = runnerRegistry.getRunner(config);
 			runner.prepareConfiguration(config);
+		}
+	}
+
+	/**
+	 * Configures the root folder of the user selection's containing N4JS project as working directory.
+	 */
+	private void configureWorkingDirectory(RunConfiguration config) {
+		final URI userSelection = config.getUserSelection();
+		if (userSelection != null) {
+			IN4JSProject containingProject = resolveProject(userSelection);
+			Path workingDirectory = containingProject.getLocationPath();
+			config.setWorkingDirectory(workingDirectory);
+		}
+	}
+
+	/**
+	 * Configures the file the user selection is pointing to as the file to run. If the user selection is not pointing
+	 * to a file (e.g. a folder) the file to run will be reset to <code>null</code>.
+	 */
+	private void configureFileToRun(RunConfiguration config) {
+		final URI userSelection = config.getUserSelection();
+		if (userSelection != null && hasValidFileExtension(userSelection.toString())) {
+			final String selectedFileDescriptor = resourceNameComputer.generateFileDescriptor(userSelection, null);
+			final Path selectedFilePath = new File(selectedFileDescriptor).toPath();
+			config.setFileToRun(selectedFilePath);
+		} else {
+			// this can happen if the RunConfiguration 'config' is actually a TestConfiguration, because then the user
+			// selection is allowed to point to a project or folder (and method CompilerUtils#getModuleName() above
+			// would throw an exception)
+			config.setFileToRun(null);
 		}
 	}
 
