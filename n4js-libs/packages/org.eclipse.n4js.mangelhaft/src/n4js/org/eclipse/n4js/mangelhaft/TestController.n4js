@@ -23,6 +23,9 @@ import {TestInfos} from "org/eclipse/n4js/mangelhaft/types/TestInfos";
 import {TestMethodDescriptor} from "org/eclipse/n4js/mangelhaft/types/TestMethodDescriptor";
 import {TestResult} from "org/eclipse/n4js/mangelhaft/types/TestResult";
 import {TestSpy} from "org/eclipse/n4js/mangelhaft/types/TestSpy";
+import {findPackageJson} from "org/eclipse/n4js/mangelhaft/util";
+import {readJsonFile} from "org/eclipse/n4js/mangelhaft/util";
+import * as lib_path from "path";
 
 const MAX_GROUPS_PER_TEST_BATCH = 10;
 
@@ -134,7 +137,17 @@ export public class TestController {
         const ctorName = parts.pop();
         const moduleName = parts.join("/");
         try {
-            const groupModule = await _n4jsImport(`${info.origin}/${moduleName}.js`);
+            let groupModule: Object;
+            try {
+                groupModule = await _n4jsImport(`${info.origin}/${moduleName}`);
+            } catch (exc) { // find package.json
+                const packageJsonPath = findPackageJson(process.cwd());
+                if (!packageJsonPath || readJsonFile(packageJsonPath).name !== info.origin) {
+                    throw exc;
+                }
+                const fpath = `${lib_path.dirname(packageJsonPath)}${lib_path.sep}${moduleName.split("/").join(lib_path.sep)}.js`;
+                groupModule = await _n4jsImport(fpath);
+            }
             testClasses = [groupModule[ctorName] as constructor{N4Object}];
         } catch (ex) {
             await this.errorGroup(info, info.origin + "/" + moduleName, null, ex);
