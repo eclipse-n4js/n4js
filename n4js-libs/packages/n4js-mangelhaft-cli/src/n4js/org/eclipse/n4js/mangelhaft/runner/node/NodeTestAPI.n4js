@@ -8,47 +8,21 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
+
 import NodeTestCLI from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestCLI";
 import NodeTestOptions from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestOptions";
 import {TestInfo} from "org/eclipse/n4js/mangelhaft/types/TestInfo";
+import {PACKAGE_JSON} from "org/eclipse/n4js/mangelhaft/util";
+import {createTempDir} from "org/eclipse/n4js/mangelhaft/util";
+import {fsSafeAccessSync} from "org/eclipse/n4js/mangelhaft/util";
+import {isHTTP_re} from "org/eclipse/n4js/mangelhaft/util";
+import {n4jsFileExt_re} from "org/eclipse/n4js/mangelhaft/util";
+import {readJsonFile} from "org/eclipse/n4js/mangelhaft/util";
 import * as child_process from "child_process";
 import * as lib_fs from "fs";
 import * as glob+ from "glob";
 import * as n4js_cli from "n4js-cli";
-import * as os from "os";
 import * as lib_path from "path";
-
-const isHTTP_re = /^https?:\/\//i;
-const n4jsFileExt_re = /\.n4js[xd]?$/;
-
-export public const PACKAGE_JSON = "package.json";
-
-/**
- * TODO define as part of n4js-runtime-node
- */
-export public const FsConstants = {
-    F_OK: 0,
-    R_OK: 4,
-    W_OK: 2,
-    X_OK: 1
-};
-
-/**
- * Safe check in access of a path.
- */
-export public function fsSafeAccessSync(path: string, mode = FsConstants.R_OK): boolean {
-    try {
-        lib_fs.accessSync(path, mode);
-        return true;
-    } catch (exc) {
-        return false;
-    }
-}
-
-export public async function createTempDir(): string {
-    const prefix = lib_path.join(os.tmpdir(), "n4js-mangelhaft-");
-    return await lib_fs.mkdtemp(prefix);
-}
 
 export default public class NodeTestAPI {
     /**
@@ -58,14 +32,10 @@ export default public class NodeTestAPI {
         const pathToPackageJson = new Map<string, Object+>();
 
         function addProject(dir: string): void {
-            const content = String(lib_fs.readFileSync(lib_path.join(dir, PACKAGE_JSON), { encoding: "UTF-8" }));
-            const packageJson = JSON.parse(content) as Object;
-            pathToPackageJson.set(dir, packageJson);
+            pathToPackageJson.set(dir, readJsonFile(lib_path.join(dir, PACKAGE_JSON)));
         }
 
-        for (const dir of (options.projects || [])) {
-            addProject(dir);
-        }
+        (options.projects || []).forEach(addProject);
 
         for (const dir of (options.scan || [])) {
             for (const p of await lib_fs.readdir(dir)) {
