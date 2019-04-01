@@ -8,62 +8,65 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-(function() {
-    "use strict";
+
+export function installN4JSRuntime(options) {
+    if (typeof $makeClass !== "undefined") {
+        throw new Error("N4JS runtime is already set up.");
+    }
+
+    // TODO: will be removed once the parser could properly support global `import`.
+    // just for immediate execution without compile step
+    global._n4jsImport = function(path) {
+        return import(path);
+    };
 
     const lib_path = require("path");
     const N4JS_RT_PREFIX = "N4JS_RT_";
 
-    exports.installN4JSRuntime = function(options) {
-        if (typeof $makeClass !== "undefined") {
-            throw new Error("N4JS runtime is already set up.");
+    options = options || {};
+
+    const env = process.env;
+    const envOptions = Object.keys(env).reduce(function(memo, k) {
+        if (k.startsWith(N4JS_RT_PREFIX)) {
+            memo[k.substring(N4JS_RT_PREFIX.length).toLowerCase().replace(/_/g, "-")] = env[k];
         }
+        return memo;
+    }, {});
 
-        options = options || {};
-
-        const env = process.env;
-        const envOptions = Object.keys(env).reduce(function(memo, k) {
-            if (k.startsWith(N4JS_RT_PREFIX)) {
-                memo[k.substring(N4JS_RT_PREFIX.length).toLowerCase().replace(/_/g, "-")] = env[k];
-            }
-            return memo;
-        }, {});
-
-        options = Object.assign(envOptions, global.n4 && global.n4.runtimeOptions, options);
-        if (options.debug) {
-            console.log("## node.js exec.");
-            console.log(process.title, "\n", process.versions, "\nargs:", process.argv);
-            console.log("NODE_PATH=");
-            if (process.env.NODE_PATH) {
-                console.log(process.env.NODE_PATH.split(lib_path.delimiter).join("\n" + lib_path.delimiter));
-            }
-            console.log("## Runtime Options:", options);
-
-            Error.stackTraceLimit = 10000;//Infinity;
+    options = Object.assign(envOptions, global.n4 && global.n4.runtimeOptions, options);
+    if (options.debug) {
+        console.log("## node.js exec.");
+        console.log(process.title, "\n", process.versions, "\nargs:", process.argv);
+        console.log("NODE_PATH=");
+        if (process.env.NODE_PATH) {
+            console.log(process.env.NODE_PATH.split(lib_path.delimiter).join("\n" + lib_path.delimiter));
         }
+        console.log("## Runtime Options:", options);
 
-        process.on("unhandledRejection", function(reason, promise) {
-            console.warn("unhandledRejection", (reason && typeof reason === "object") && reason.stack || reason, promise);
-        });
+        Error.stackTraceLimit = 10000;//Infinity;
+    }
 
-        global.n4 = {
-            runtimeOptions: options,
-            runtimeInfo: {
-                platformId: "nodejs",
-                platformVariant: process.version,
-                isTouch: false,
-                deviceId: "pc"
-            }
-        };
-        
-        const fetch = global.fetch = require("node-fetch");
-        ["Request", "Response", "Headers"].forEach(function(p) {
-            global[p] = fetch[p];
-        });
-        require("./node-url-polyfill.js");
+    process.on("unhandledRejection", function(reason, promise) {
+        console.warn("unhandledRejection", (reason && typeof reason === "object") && reason.stack || reason, promise);
+    });
 
-        require("n4js-es5");
-
-        return options;
+    global.n4 = {
+        runtimeOptions: options,
+        runtimeInfo: {
+            platformId: "nodejs",
+            platformVariant: process.version,
+            isTouch: false,
+            deviceId: "pc"
+        }
     };
-}());
+    
+    const fetch = global.fetch = require("node-fetch");
+    ["Request", "Response", "Headers"].forEach(function(p) {
+        global[p] = fetch[p];
+    });
+    require("./node-url-polyfill.js");
+
+    require("n4js-es5");
+
+    return options;
+}

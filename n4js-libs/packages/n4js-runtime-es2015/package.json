@@ -29,7 +29,6 @@
       "source": [
         "src/n4js"
       ]
-    },
-    "moduleLoader": "n4js"
+    }
   }
 }

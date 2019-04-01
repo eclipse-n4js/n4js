@@ -1,0 +1,42 @@
+import * as lib_path from "path";
+import * as lib_fs from "fs";
+import * as os from "os";
+
+export public const isHTTP_re = /^https?:\/\//i;
+export public const n4jsFileExt_re = /\.n4js[xd]?$/;
+
+export public const PACKAGE_JSON = "package.json";
+
+/**
+ * Safe check in access of a path.
+ */
+export public function fsSafeAccessSync(path: string, mode = lib_fs.constants.R_OK): boolean {
+    try {
+        lib_fs.accessSync(path, mode);
+        return true;
+    } catch (exc) {
+        return false;
+    }
+}
+
+export public async function createTempDir(): string {
+    const prefix = lib_path.join(os.tmpdir(), "n4js-mangelhaft-");
+    return await lib_fs.mkdtemp(prefix);
+}
+
+export public function readJsonFile(path: string): Object+ {
+    const content = String(lib_fs.readFileSync(path, { encoding: "UTF-8" }));
+    return JSON.parse(content) as Object;
+}
+
+export public function findPackageJson(dir: string): string {
+    const file = lib_path.join(dir, PACKAGE_JSON);
+    if (!fsSafeAccessSync(file)) {
+        const parent = lib_path.dirname(dir);
+        if (parent === dir) {
+            return null;
+        }
+        return findPackageJson(parent);
+    }
+    return file;
+}

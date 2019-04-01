@@ -8,64 +8,34 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
+
 import NodeTestCLI from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestCLI";
 import NodeTestOptions from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestOptions";
 import {TestInfo} from "org/eclipse/n4js/mangelhaft/types/TestInfo";
+import {PACKAGE_JSON} from "org/eclipse/n4js/mangelhaft/util";
+import {createTempDir} from "org/eclipse/n4js/mangelhaft/util";
+import {fsSafeAccessSync} from "org/eclipse/n4js/mangelhaft/util";
+import {isHTTP_re} from "org/eclipse/n4js/mangelhaft/util";
+import {n4jsFileExt_re} from "org/eclipse/n4js/mangelhaft/util";
+import {readJsonFile} from "org/eclipse/n4js/mangelhaft/util";
 import * as child_process from "child_process";
 import * as lib_fs from "fs";
 import * as glob+ from "glob";
 import * as n4js_cli from "n4js-cli";
-import * as os from "os";
 import * as lib_path from "path";
-
-const isHTTP_re = /^https?:\/\//i;
-const n4jsFileExt_re = /\.n4js[xd]?$/;
-
-export public const PACKAGE_JSON = "package.json";
-
-/**
- * TODO define as part of n4js-runtime-node
- */
-export public const FsConstants = {
-    F_OK: 0,
-    R_OK: 4,
-    W_OK: 2,
-    X_OK: 1
-};
-
-/**
- * Safe check in access of a path.
- */
-export public function fsSafeAccessSync(path: string, mode = FsConstants.R_OK): boolean {
-    try {
-        lib_fs.accessSync(path, mode);
-        return true;
-    } catch (exc) {
-        return false;
-    }
-}
-
-export public async function createTempDir(): string {
-    const prefix = lib_path.join(os.tmpdir(), "n4js-mangelhaft-");
-    return await lib_fs.mkdtemp(prefix);
-}
 
 export default public class NodeTestAPI {
     /**
      * Executes a test run (might include compilation) with the given set of test options.
      */
     public static async exec(options: NodeTestOptions): void {
-        const pathToPackageJson = new Map<string, Object>();
+        const pathToPackageJson = new Map<string, Object+>();
 
         function addProject(dir: string): void {
-            const content = String(lib_fs.readFileSync(lib_path.join(dir, PACKAGE_JSON), { encoding: "UTF-8" }));
-            const packageJson = JSON.parse(content) as Object;
-            pathToPackageJson.set(dir, packageJson);
+            pathToPackageJson.set(dir, readJsonFile(lib_path.join(dir, PACKAGE_JSON)));
         }
 
-        for (const dir of (options.projects || [])) {
-            addProject(dir);
-        }
+        (options.projects || []).forEach(addProject);
 
         for (const dir of (options.scan || [])) {
             for (const p of await lib_fs.readdir(dir)) {
@@ -130,7 +100,7 @@ export default public class NodeTestAPI {
                     }
                 }
 
-                if (options.emitProjectTestCatalogs) {
+                if (testCatalog && options.emitProjectTestCatalogs) {
                     const tests = testCatalog.filter(test => test.origin === packageJson["name"] as string);
                     if (tests.length) {
                         const file = lib_path.join(dir, options.emitProjectTestCatalogs);
@@ -139,6 +109,33 @@ export default public class NodeTestAPI {
                         }
                         lib_fs.writeFileSync(file, JSON.stringify(tests, null, 2), { encoding: "UTF-8" });
                     }
+                }
+
+                // HACK until we have proper support for top-level import():
+                switch (packageJson["name"]) {
+                    case "n4js-node":
+                    case "n4js-mangelhaft-cli":
+                        break;
+                    default:
+                        if (!packageJson.n4js) {
+                            break;
+                        }
+                        const transpiledFiles = glob.sync("**/*.js", {
+                            cwd: lib_path.join(dir, (packageJson.n4js as Object)["output"] as string),
+                            absolute: true
+                        }) as Array<string>;
+                        for (const file of transpiledFiles) {
+                            const content = lib_fs.readFileSync(file, { encoding: "UTF-8" });
+                            let newContent = content.replace(/_n4jsImport/mg, "import");
+                            newContent = newContent.replace(/_nodeRequire/mg, "require");
+                            if (newContent !== content) {
+                                if (options.debug) {
+                                    console.log("patching:", file);
+                                }
+                                lib_fs.writeFileSync(file, newContent, { encoding: "UTF-8" });
+                            }
+                        }
+                        break;
                 }
             }
         }
@@ -150,7 +147,7 @@ export default public class NodeTestAPI {
                 options.testCatalog = file;
             } else { // try to resolve via NPM
                 try {
-                    options.testCatalog = _nodeRequire.resolve(options.testCatalog);
+                    options.testCatalog = require.resolve(options.testCatalog);
                 } catch (exc) {
                     throw new Error(`Cannot resolve test catalog: ${options.testCatalog}`);
                 }
@@ -161,21 +158,7 @@ export default public class NodeTestAPI {
             console.log("testing with test catalog:", options.testCatalog);
         }
 
-        // fork test runner process, set parent of all projects on NODE_PATH:
-        let nodePath: Array<string> = [];
-        for (const dir of projectDirs) {
-            nodePath.push(lib_path.dirname(dir));
-        }
-        
-        nodePath = Array.from(new Set<string>(nodePath)); // uniq
-
-        if (process.env.NODE_PATH) { // append existing
-            nodePath.push(process.env.NODE_PATH as string);
-        }
-
-        const env: Object+ = Object.assign({}, process.env, {
-            NODE_PATH: nodePath.join(lib_path.delimiter)
-        });
+        const env: Object+ = Object.assign({}, process.env);
 
         const n4type = this.n4type;
         // build NodeTestRunner module path to give for n4js command line (per main, i.e. "<module>:<export>" notation),
@@ -210,7 +193,7 @@ export default public class NodeTestAPI {
                 execArgv.push(`--inspect-brk=${options.inspectBrk}`);
             }
 
-            const n4jsRun = _nodeRequire.resolve("n4js-node/src-gen/n4js-cli");
+            const n4jsRun = require.resolve("n4js-node/src-gen/n4js-cli");
 
             if (options.debug) {
                 console.log("TestRun fork:", n4jsRun);

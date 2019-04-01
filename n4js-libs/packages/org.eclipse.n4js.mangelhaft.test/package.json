@@ -38,8 +38,7 @@
       "n4js-runtime-n4",
       "n4js-runtime-es2015",
       "n4js-runtime-mangelhaft"
-    ],
-    "moduleLoader": "n4js"
+    ]
   },
   "dependencies": {
     "n4js.lang": "^0.1.0",

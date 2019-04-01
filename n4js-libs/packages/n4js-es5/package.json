@@ -30,7 +30,7 @@
         "src/js"
       ]
     },
-    "moduleLoader": "n4js",
+
     "initModules": [
       "rt"
     ]
