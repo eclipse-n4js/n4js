@@ -117,6 +117,9 @@ export default public class NodeTestAPI {
                     case "n4js-mangelhaft-cli":
                         break;
                     default:
+                        if (!packageJson.n4js) {
+                            break;
+                        }
                         const transpiledFiles = glob.sync("**/*.js", {
                             cwd: lib_path.join(dir, (packageJson.n4js as Object)["output"] as string),
                             absolute: true
