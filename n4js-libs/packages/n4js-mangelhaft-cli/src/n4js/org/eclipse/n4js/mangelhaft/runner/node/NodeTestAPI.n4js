@@ -158,21 +158,7 @@ export default public class NodeTestAPI {
             console.log("testing with test catalog:", options.testCatalog);
         }
 
-        // fork test runner process, set parent of all projects on NODE_PATH:
-        let nodePath: Array<string> = [];
-        for (const dir of projectDirs) {
-            nodePath.push(lib_path.dirname(dir));
-        }
-        
-        nodePath = Array.from(new Set<string>(nodePath)); // uniq
-
-        if (process.env.NODE_PATH) { // append existing
-            nodePath.push(process.env.NODE_PATH as string);
-        }
-
-        const env: Object+ = Object.assign({}, process.env, {
-            NODE_PATH: nodePath.join(lib_path.delimiter)
-        });
+        const env: Object+ = Object.assign({}, process.env);
 
         const n4type = this.n4type;
         // build NodeTestRunner module path to give for n4js command line (per main, i.e. "<module>:<export>" notation),
