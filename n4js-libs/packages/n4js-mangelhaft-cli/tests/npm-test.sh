@@ -10,12 +10,13 @@
 #   NumberFour AG - Initial API and implementation
 #
 set -e
-cd `dirname $0`
+cd `dirname $0`/TestPrj
 
-../bin/n4js-mangelhaft-cli.js \
+../../bin/n4js-mangelhaft-cli.js \
     --compile \
     --xunitReportFile ./build/report.xml \
     --xunitReportName test-report \
     --xunitReportPackage TestPrj \
-    --scan . --scan ../.. \
+    --scan ../../.. \
+    . \
     $@
