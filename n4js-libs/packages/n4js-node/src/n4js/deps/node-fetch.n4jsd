@@ -1,0 +1,8 @@
+import {RequestInit} from "fetch/RequestInit";
+
+// TODO: npm/n4jsd
+export default external public async function fetch(input: union{string, Request}, init: RequestInit=): Response;
+
+export external public const Request: constructor{Request};
+export external public const Response: constructor{Response};
+export external public const Headers: constructor{Headers};

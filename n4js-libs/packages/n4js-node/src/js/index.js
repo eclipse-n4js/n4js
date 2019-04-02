@@ -8,10 +8,4 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-(function() {
-    "use strict";
-
-    if (!global.$makeClass) {
-        require("./rt/node-bootstrap.js").installN4JSRuntime();
-    }
-})();
+import "n4js-es5";

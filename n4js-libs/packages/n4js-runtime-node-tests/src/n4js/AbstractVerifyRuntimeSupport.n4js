@@ -9,17 +9,11 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-import {PlatformId} from "n4/RuntimeInfo";
 import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert";
 import {Precondition} from "org/eclipse/n4js/mangelhaft/precondition/Precondition";
 
 export public class AbstractVerifyRuntimeSupport {
     public testSubjectOverride: Object;
-
-    @BeforeAll
-    public checkForNode() {
-        Precondition.equal(n4.runtimeInfo.platformId, PlatformId.NODEJS, "Node-specific tests");
-    }
 
     /**
      * Override this method to add custom handling if extending test class

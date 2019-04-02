@@ -95,11 +95,6 @@ const nomnomOptions: Object = {
         list: true,
         help: "Filter for matching test cases."
     },
-    define: {
-        abbr: "D",
-        list: true,
-        help: "Definition of N4JS runtime options per key=value."
-    },
     compile: {
         abbr: "c",
         flag: true,
@@ -118,15 +113,14 @@ const nomnomOptions: Object = {
         metavar: "URL|PATH|NPM-relpath",
         help: "Test catalog (JSON) to be used. Option --compile will write the file, switches to temp file in case of URL."
     },
+    ideReportURL: {
+        metavar: "URL",
+        help: "IDE test report (JSON) to be sent to."
+    },
     emitProjectTestCatalogs: {
         default: "test-catalog-gen.json",
         metavar: "PATH",
         help: "When compiling, local project test catalog files are written to the targeted project folders under the given path."
-    },
-    generatedModulesGlob: {
-        type: "string",
-        default: "src/n4js-gen/**/*.n4js?(x|d)",
-        help: "When compiling, write a __bundle-gen.js CommonJS module to bulk register generated code modules."
     },
     installMissingDependencies: {
         flag: true,
@@ -148,11 +142,6 @@ const nomnomOptions: Object = {
     },
     xunitReportPackage: {
         help: "jUnit/xUnit report package name."
-    },
-    debug: {
-        flag: true,
-        abbr: "d",
-        help: "Debug output."
     },
     inspectBrk: {
         type: "number",
@@ -192,3 +181,6 @@ $ n4js-mangelhaft --compile --xunitReportFile ./jenkins/reports.xml --scan ./pro
 
 In case of a failure the tool uses exit code 1 for compilation problems, and exit code 8 for failed tests.
 `;
+
+const exit = (code: any=) => process.exit(code as int || 0);
+Promise.resolve(NodeTestCLI.run()).then(exit, exit);

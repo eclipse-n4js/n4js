@@ -21,18 +21,13 @@
     "n4js-ide"
   ],
   "engines": {
-    "node": ">= 5.0.0"
-  },
-  "bin": {
-    "n4js": "./src-gen/n4js-cli.js"
+    "node": ">= 8.0.0"
   },
   "main": "./src-gen/index.js",
-  "browser": "./src-gen/browser.js",
-  "react-native": "./src-gen/react-native.js",
   "dependencies": {
-    "esm": "~3.2.10",
-    "node-fetch": "~2.2.0",
-    "n4js-es5": "^0.1.0"
+    "n4js-es5": "^0.1.0",
+    "n4js-runtime-es2015": "^0.1.0",
+    "n4js-runtime-fetch": "^0.1.0"
   },
   "files": [
     "src",
@@ -40,25 +35,21 @@
   ],
   "n4js": {
     "useES6Imports": true,
-    "projectType": "runtimeEnvironment",
+    "projectType": "library",
     "vendorId": "org.eclipse.n4js",
     "vendorName": "Eclipse N4JS Project",
     "output": "src-gen",
     "sources": {
+      "source": [
+        "src/n4js"
+      ],
       "external": [
         "src/js"
       ]
     },
-    "extendedRuntimeEnvironment": "n4js-es5",
-    "providedRuntimeLibraries": [
-      "n4js-runtime-n4",
-      "n4js-runtime-v8",
-      "n4js-runtime-es2015",
-      "n4js-runtime-esnext",
+    "requiredRuntimeLibraries": [
       "n4js-runtime-fetch",
-      "n4js-runtime-node",
-      "n4js-runtime-ecma402"
-    ],
-    "execModule": "n4js-cli"
+      "n4js-runtime-es2015"
+    ]
   }
 }

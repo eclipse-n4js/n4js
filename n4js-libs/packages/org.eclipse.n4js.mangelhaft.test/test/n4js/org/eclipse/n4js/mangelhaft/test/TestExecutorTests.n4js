@@ -254,7 +254,6 @@ export public class TestExecutorTests {
     
     @Test 
     async fixmes___noScope() {
-        console.log(n4);
         const expected = [
             ["fixme__noScope___success", TestStatus.failed],
             ["fixme__noScope___failure", TestStatus.skipped_fixme],

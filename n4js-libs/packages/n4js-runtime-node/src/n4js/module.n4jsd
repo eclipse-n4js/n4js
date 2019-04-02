@@ -23,3 +23,7 @@ export external public class ~__RequireFn {
     }=): string;
 }
 export external public const require: type{__RequireFn};
+
+export external public const module: ~Object with {
+    Module: Object+
+};
