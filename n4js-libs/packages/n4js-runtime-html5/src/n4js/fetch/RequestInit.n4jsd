@@ -10,12 +10,9 @@
  */
 @@Global @@ProvidedByRuntime
 
-export external public interface ~GlobalFetch {
-    public const Request: constructor{Request};
-    public const Response: constructor{Response};
-    public const Headers: constructor{Headers};
+import {URLSearchParams} from "URLSearchParams";
 
-    public async fetch(input: union{string, Request}, init: RequestInit=): Response;
+@Polyfill export external public abstract class RequestInit extends RequestInit {
+    @Override
+    public get body?(): string|Blob|FormData|URLSearchParams;
 }
-
-export external public async function fetch(input: union{string, Request}, init: RequestInit=): Response;

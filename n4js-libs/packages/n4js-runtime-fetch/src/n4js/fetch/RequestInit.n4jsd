@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-@@ProvidedByRuntime
+@@Global @@ProvidedByRuntime
 
 import {Method} from "fetch/Method";
 import {ReferrerPolicy} from "fetch/ReferrerPolicy";
@@ -17,12 +17,11 @@ import {RequestCredentials} from "fetch/RequestCredentials";
 import {RequestMode} from "fetch/RequestMode";
 import {RequestRedirect} from "fetch/RequestRedirect";
 
-export external public class ~RequestInit {
+export external public abstract class ~RequestInit {
     public method?: Method;
     public headers?: union{Headers, Array<Array<string>>, Object};
 
-//    public union{Blob, /*BufferSource, */FormData, URLSearchParams, string}? body;
-    public body?: string;
+    public get body?(): any;
 
     public referrer?: string;
     public referrerPolicy?: ReferrerPolicy;
@@ -30,7 +29,6 @@ export external public class ~RequestInit {
     public integrity?: string;
     public keepalive?: boolean;
     public signal?: AbortSignal;
-//    public signal?: AbortSignal;
     public mode?: RequestMode;
     public credentials?: RequestCredentials;
     public cache?: RequestCache;

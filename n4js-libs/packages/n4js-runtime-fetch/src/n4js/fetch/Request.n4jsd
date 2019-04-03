@@ -15,7 +15,6 @@ import {ReferrerPolicy} from "fetch/ReferrerPolicy";
 import {RequestCache} from "fetch/RequestCache";
 import {RequestContext} from "fetch/RequestContext";
 import {RequestCredentials} from "fetch/RequestCredentials";
-import {RequestInit} from "fetch/RequestInit";
 import {RequestMode} from "fetch/RequestMode";
 import {RequestRedirect} from "fetch/RequestRedirect";
 
