@@ -106,6 +106,8 @@ h| `any+` h| yes h| no |
 h| TypeScript h| `any` h| yes h| yes |  • footnote:[In TypeScript, implicit usage of `any` can be disallowed by means of a compiler flag.]
 |===
 
+TypeScript 3 introduced the `unknown` type which behaves like N4JS's `any` type, with the exception that it isn't currently being used by default and has to be declared explicitly.
+
 === Type Errors Are Show-Stoppers in N4JS
 
 N4JS has two general levels of issues reported by the compiler: *warning*  and *error*.
