@@ -430,7 +430,7 @@
     $createMetaInfo(N4Object,
         new N4Class({
             name: 'N4Object',
-            origin: 'n4js-es5',
+            origin: 'n4js-runtime',
             fqn: 'N4BuiltInClasses.N4Object',
             n4superType: N4Object.n4type,
             allImplementedInterfaces: [],
@@ -442,7 +442,7 @@
     $createMetaInfo(N4Element,
         new N4Class({
             name: 'N4Element',
-            origin: 'n4js-es5',
+            origin: 'n4js-runtime',
             fqn: 'N4BuiltInClasses.N4Element',
             n4superType: N4Object.n4type,
             allImplementedInterfaces: [],
@@ -469,7 +469,7 @@
     $createMetaInfo(N4NamedElement,
         new N4Class({
             name: 'N4NamedElement',
-            origin: 'n4js-es5',
+            origin: 'n4js-runtime',
             fqn: 'N4BuiltInClasses.N4NamedElement',
             n4superType: N4Element.n4type,
             allImplementedInterfaces: [],
@@ -484,7 +484,7 @@
     $createMetaInfo(N4Type,
         new N4Class({
             name: 'N4Type',
-            origin: 'n4js-es5',
+            origin: 'n4js-runtime',
             fqn: 'N4BuiltInClasses.N4Type',
             n4superType: N4NamedElement.n4type,
             allImplementedInterfaces: [],
@@ -512,7 +512,7 @@
     $createMetaInfo(N4Classifier,
         new N4Class({
             name: 'N4Classifier',
-            origin: 'n4js-es5',
+            origin: 'n4js-runtime',
             fqn: 'N4BuiltInClasses.N4Classifier',
             n4superType: N4Type.n4type,
             allImplementedInterfaces: [],
@@ -554,7 +554,7 @@
     $createMetaInfo(N4Class,
         new N4Class({
             name: 'N4Class',
-            origin: 'n4js-es5',
+            origin: 'n4js-runtime',
             fqn: 'N4BuiltInClasses.N4Class',
             n4superType: N4Classifier.n4type,
             allImplementedInterfaces: [],
@@ -569,7 +569,7 @@
     $createMetaInfo(N4Interface,
         new N4Class({
             name: 'N4Interface',
-            origin: 'n4js-es5',
+            origin: 'n4js-runtime',
             fqn: 'N4BuiltInClasses.N4Interface',
             n4superType: N4Classifier.n4type,
             allImplementedInterfaces: [],
@@ -584,7 +584,7 @@
     $createMetaInfo(N4Member,
         new N4Class({
             name: 'N4Member',
-            origin: 'n4js-es5',
+            origin: 'n4js-runtime',
             fqn: 'N4BuiltInClasses.N4Member',
             n4superType: N4NamedElement.n4type,
             allImplementedInterfaces: [],
@@ -602,7 +602,7 @@
     $createMetaInfo(N4Method,
         new N4Class({
             name: 'N4Method',
-            origin: 'n4js-es5',
+            origin: 'n4js-runtime',
             fqn: 'N4BuiltInClasses.N4Method',
             n4superType: N4Member.n4type,
             allImplementedInterfaces: [],
@@ -617,7 +617,7 @@
     $createMetaInfo(N4DataField,
         new N4Class({
             name: 'N4DataField',
-            origin: 'n4js-es5',
+            origin: 'n4js-runtime',
             fqn: 'N4BuiltInClasses.N4DataField',
             n4superType: N4Member.n4type,
             allImplementedInterfaces: [],
@@ -629,7 +629,7 @@
     $createMetaInfo(N4Accessor,
         new N4Class({
             name: 'N4Accessor',
-            origin: 'n4js-es5',
+            origin: 'n4js-runtime',
             fqn: 'N4BuiltInClasses.N4Accessor',
             n4superType: N4Member.n4type,
             allImplementedInterfaces: [],
@@ -649,7 +649,7 @@
     $createMetaInfo(N4EnumType,
         new N4Class({
             name: 'N4EnumType',
-            origin: 'n4js-es5',
+            origin: 'n4js-runtime',
             fqn: 'N4BuiltInClasses.N4EnumType',
             n4superType: N4Type.n4type,
             allImplementedInterfaces: [],
@@ -664,7 +664,7 @@
     $createMetaInfo(N4Enum,
         new N4Class({
             name: 'N4Enum',
-            origin: 'n4js-es5',
+            origin: 'n4js-runtime',
             fqn: 'N4BuiltInClasses.N4Enum',
             n4superType: undefined,
             allImplementedInterfaces: [],
@@ -696,7 +696,7 @@
     $createMetaInfo(N4StringBasedEnumType,
         new N4Class({
             name: 'N4StringBasedEnumType',
-            origin: 'n4js-es5',
+            origin: 'n4js-runtime',
             fqn: 'N4BuiltInClasses.N4StringBasedEnumType',
             n4superType: N4Type.n4type,
             allImplementedInterfaces: [],
@@ -711,7 +711,7 @@
     $createMetaInfo(N4StringBasedEnum,
         new N4Class({
             name: 'N4StringBasedEnum',
-            origin: 'n4js-es5',
+            origin: 'n4js-runtime',
             fqn: 'N4BuiltInClasses.N4StringBasedEnum',
             n4superType: undefined,
             allImplementedInterfaces: [],
@@ -743,7 +743,7 @@
     $createMetaInfo(N4Annotation,
         new N4Class({
             name: 'N4Annotation',
-            origin: 'n4js-es5',
+            origin: 'n4js-runtime',
             fqn: 'N4BuiltInClasses.N4Annotation',
             n4superType: N4Object.n4type,
             allImplementedInterfaces: [],
@@ -764,7 +764,7 @@
     $createMetaInfo(N4Provider,
         new N4Interface({
             name: 'N4Provider',
-            origin: 'n4js-es5',
+            origin: 'n4js-runtime',
             fqn: 'N4BuiltInClasses.N4Provider',
             n4superType: undefined,
             allImplementedInterfaces: [],
@@ -789,7 +789,7 @@
     $createMetaInfo(MigrationController,
         new N4Interface({
             name: 'MigrationController',
-            origin: 'n4js-es5',
+            origin: 'n4js-runtime',
             fqn: 'N4BuiltInClasses.MigrationController',
             n4superType: undefined,
             allImplementedInterfaces: [],
@@ -818,7 +818,7 @@
     $createMetaInfo(MigrationContext,
         new N4Interface({
             name: 'MigrationContext',
-            origin: 'n4js-es5',
+            origin: 'n4js-runtime',
             fqn: 'N4BuiltInClasses.MigrationContext',
             n4superType: undefined,
             allImplementedInterfaces: [],

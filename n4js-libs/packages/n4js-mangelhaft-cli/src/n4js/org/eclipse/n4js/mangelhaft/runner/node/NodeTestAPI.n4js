@@ -24,7 +24,8 @@ import * as glob+ from "glob";
 import * as n4js_cli from "n4js-cli";
 import * as lib_path from "path";
 
-const log = debug("n4js-mangelhaft-cli");
+const log = debug("n4js-mangelhaft");
+const rlog = debug("n4js-mangelhaft-test-run");
 
 export default public class NodeTestAPI {
     /**
@@ -143,7 +144,7 @@ export default public class NodeTestAPI {
 
         await new Promise<any, any>((resolve, reject) => {
             const execArgv = process.execArgv.slice();
-            if (execArgv.indexOf("esm") < 0 || (process.env.NODE_OPTIONS as string || "").indexOf("-r esm") < 0) {
+            if (execArgv.indexOf("esm") < 0 && (process.env.NODE_OPTIONS as string || "").indexOf("-r esm") < 0) {
                 execArgv.push("-r", "esm");
             }
             if (options.inspectBrk) {
@@ -151,10 +152,11 @@ export default public class NodeTestAPI {
             }
 
             const modulePath = lib_path.join(__dirname, "NodeTestRunner.js");
-            log("test-run modulePath:", modulePath);
-            log("test-run execArgv:", execArgv);
-            log("test-run args:", args);
-            //log("env:", env);
+            rlog("execPath:", process.execPath);
+            rlog("modulePath:", modulePath);
+            rlog("execArgv:", execArgv);
+            rlog("args:", args);
+            //rlog("env:", env);
 
             child_process.fork(modulePath, args, {
                 stdio: "inherit",

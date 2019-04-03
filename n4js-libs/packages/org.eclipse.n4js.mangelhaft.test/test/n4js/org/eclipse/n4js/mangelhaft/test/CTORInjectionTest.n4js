@@ -12,6 +12,7 @@
 import {N4Injector} from "n4js/lang/N4Injector";
 import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert";
 import {Thingy} from "org/eclipse/n4js/mangelhaft/test/helper/Thingy";
+
 @GenerateInjector
 class TestSubject {
     @Inject

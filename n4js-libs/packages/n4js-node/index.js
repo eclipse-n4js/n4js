@@ -8,4 +8,4 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import "n4js-es5";
+import "n4js-runtime";

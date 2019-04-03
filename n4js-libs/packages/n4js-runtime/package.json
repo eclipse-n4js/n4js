@@ -1,5 +1,5 @@
 {
-  "name": "n4js-es5",
+  "name": "n4js-runtime",
   "version": "0.1.0",
   "author": {
     "name": "NumberFour AG",
@@ -10,29 +10,45 @@
     "type": "git",
     "url": "https://github.com/eclipse/n4js"
   },
-  "description": "(Abstract) N4JS ES5 runtime environment.",
+  "description": "N4JS runtime environment.",
   "engines": {
-    "node": ">= 5.0.0"
+    "node": ">= 8.0.0"
   },
   "main": "./src-gen/rt.js",
   "files": [
     "src",
     "src-gen"
   ],
+  "dependencies": {
+    "n4js-runtime-es2015": "^0.1.0",
+    "n4js-runtime-fetch": "^0.1.0"
+  },
+  "keywords": [
+    "n4js",
+    "es6",
+    "es2015",
+    "transpiler",
+    "ide",
+    "n4jside",
+    "n4js-ide"
+  ],
   "n4js": {
     "useES6Imports": true,
-    "projectType": "runtimeEnvironment",
+    "projectType": "library",
     "vendorId": "org.eclipse.n4js",
     "vendorName": "Eclipse N4JS Project",
     "output": "src-gen",
     "sources": {
+      "source": [
+        "src/n4js"
+      ],
       "external": [
         "src/js"
       ]
     },
-
-    "initModules": [
-      "rt"
+    "requiredRuntimeLibraries": [
+      "n4js-runtime-fetch",
+      "n4js-runtime-es2015"
     ]
   }
 }

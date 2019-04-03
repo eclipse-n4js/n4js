@@ -162,5 +162,5 @@ if (process.env.N4JS_RT_strip_api_prj_suffix) {
         return _resolveFilename(request, parent, isMain);
     };
 }
- 
+
 waitAndExitProcess(Promise.resolve(root.runner.run()), true /* keep event loop */);

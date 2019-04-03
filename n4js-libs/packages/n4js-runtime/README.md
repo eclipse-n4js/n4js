@@ -9,7 +9,7 @@ Contributors:
   NumberFour AG - Initial API and implementation
 --->
 
-Shared code of N4JS runtime environments.
+N4JS runtime.
 
 For more information about N4JS, please refer to the official [project home](https://numberfour.github.io/n4js).
 
