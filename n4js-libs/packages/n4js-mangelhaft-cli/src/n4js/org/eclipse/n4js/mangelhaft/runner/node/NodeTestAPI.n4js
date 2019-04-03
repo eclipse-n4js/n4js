@@ -162,7 +162,7 @@ export default public class NodeTestAPI {
                 execArgv: execArgv,
                 env: env
             }).on("close", code => {
-                log(`test-run exit code: ${code}`);
+                rlog("exit code:", code);
                 if (code === 0) {
                     resolve(code);
                 } else {

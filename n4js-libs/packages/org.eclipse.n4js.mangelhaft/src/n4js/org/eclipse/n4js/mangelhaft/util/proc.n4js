@@ -22,18 +22,20 @@ export public function waitAndExitProcess(proc: Function, keepEventLoop = false)
 
     // make sure any exception is channeled into a promise rejection:
     Promise.resolve(null).then(_ => proc())
-        .then(code => {
-            clearInterval(timerHandle);
-            process.stdout.write("", "utf-8", () => process.exit(typeof code === "number" ? (code as number)|0 : 0));
-        }, err => {
+        // map into return code:
+        .catch(err => {
             if (err && (typeof err === "string" || typeof err === "object")) {
                 // just log errors in case rejection with a string or an Error: 
                 console.error((err as Error).stack || err);
             }
+            return typeof err === "number" ? (err as number)|0 : 1;
+        })
+        // clear timer, flush stdout:
+        .then(res => {
             clearInterval(timerHandle);
-    
-            const code = typeof err === "number" ? (err as number)|0 : 1;
-            // Flush stdout and exit:
-            process.stdout.write("", "utf-8", () => process.exit(code));
-        });
+            // flush stdout:
+            return new Promise<any, any>(resolve => process.stdout.write("", "utf-8", () => resolve(res)));
+        })
+        // exit:
+        .then(res => process.exit(res as number));
 }
