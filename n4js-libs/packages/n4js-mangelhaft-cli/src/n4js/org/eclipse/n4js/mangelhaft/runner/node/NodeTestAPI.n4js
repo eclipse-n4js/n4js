@@ -24,13 +24,15 @@ import * as glob+ from "glob";
 import * as n4js_cli from "n4js-cli";
 import * as lib_path from "path";
 
-const log = debug("n4js-mangelhaft");
+const log = debug("n4js-mangelhaft-cli");
 
 export default public class NodeTestAPI {
     /**
      * Executes a test run (might include compilation) with the given set of test options.
      */
     public static async exec(options: NodeTestOptions): void {
+        log("options: %O", options);
+
         const pathToPackageJson = new Map<string, Object+>();
 
         function addProject(dir: string): void {
@@ -131,7 +133,7 @@ export default public class NodeTestAPI {
 
         log("testing with test catalog:", options.testCatalog);
 
-        const args = NodeTestCLI.toCommandLine(options);
+        const args = NodeTestCLI.toCommandLine(options); // fodder in same args
         const env: Object+ = Object.assign({}, process.env);
 
         if (options.noDebugLog) {
@@ -141,7 +143,7 @@ export default public class NodeTestAPI {
 
         await new Promise<any, any>((resolve, reject) => {
             const execArgv = process.execArgv.slice();
-            if (execArgv.indexOf("esm") < 0) {
+            if (execArgv.indexOf("esm") < 0 || (process.env.NODE_OPTIONS as string || "").indexOf("-r esm") < 0) {
                 execArgv.push("-r", "esm");
             }
             if (options.inspectBrk) {

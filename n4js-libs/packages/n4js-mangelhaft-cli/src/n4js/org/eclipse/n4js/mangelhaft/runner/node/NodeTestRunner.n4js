@@ -49,7 +49,7 @@ class NodeTestRunner  {
         let testCatalog: TestInfos;
  
         if (isHTTP_re.test(options.testCatalog)) { // running IDE
-            let req = await fetch(options.testCatalog, {
+            const req = await fetch(options.testCatalog, {
                 headers: {
                     "Content-Type": "application/vnd.n4js.assemble_test_catalog_req.tm+json"
                 }
@@ -67,11 +67,11 @@ class NodeTestRunner  {
 
             for (const info of testCatalog.testDescriptors) {
                 let methods = new Set<string>();
-                for (let filter of filters) {
+                for (const filter of filters) {
                     const [fqnFilter, methodFilter] = filter.split("#");
                     if (!fqnFilter || info.fqn.indexOf(fqnFilter) >= 0) {
                         if (methodFilter) { // filter methods
-                            for (let method of info.testMethods) {
+                            for (const method of info.testMethods) {
                                 if (method.indexOf(methodFilter) >= 0) {
                                     methods.add(method);
                                 }
@@ -102,7 +102,7 @@ class NodeTestRunner  {
         this.consoleReporter.cliColor = cli_color_.default;
         this.consoleReporter.setLogger(log);
 
-        let reporters: Array<ITestReporter> = [this.consoleReporter];
+        const reporters: Array<ITestReporter> = [this.consoleReporter];
         if (options.xunitReportFile) {
             this.xunitReporter.spec = options;
             reporters.push(this.xunitReporter);
@@ -163,4 +163,4 @@ if (process.env.N4JS_RT_strip_api_prj_suffix) {
     };
 }
  
-waitAndExitProcess(Promise.resolve(root.runner.run()));
+waitAndExitProcess(Promise.resolve(root.runner.run()), true /* keep event loop */);

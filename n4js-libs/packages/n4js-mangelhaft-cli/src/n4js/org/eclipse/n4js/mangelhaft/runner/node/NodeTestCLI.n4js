@@ -23,8 +23,8 @@ export default public class NodeTestCLI {
         const res: Array<string> = [];
 
         Object.keys(optionsObj).forEach(k => {
-            const info: Object+ = nomnomOptions[k] as Object,
-                  v = optionsObj[k];
+            const info: Object+ = nomnomOptions[k] as Object;
+            let v = optionsObj[k];
 
             if (info && typeof v !== "undefined") {
                 k = "--" + k;
@@ -69,7 +69,7 @@ const resolveProject = (p: string): string => {
         return dir;
     } else { // try to resolve NPM id
         try {
-            const res = require.resolve(`${p}/package.json`);
+            const res = require.resolve(`${p}/${PACKAGE_JSON}`);
             return lib_path.dirname(res);
         } catch (exc) {}
     }

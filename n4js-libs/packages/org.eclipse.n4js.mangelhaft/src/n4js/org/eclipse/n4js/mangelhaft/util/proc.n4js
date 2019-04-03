@@ -9,9 +9,9 @@ export public function waitAndExitProcess(proc: Promise<?, ?>, keepEventLoop = f
         timerHandle = setInterval(function() {}, 0x7fffffff /* max 32bit signed int */);
     }
 
-    proc.then(_ => {
+    proc.then(code => {
         clearInterval(timerHandle);
-        process.stdout.write("", "utf-8", () => process.exit(0));
+        process.stdout.write("", "utf-8", () => process.exit(typeof code === "number" ? (code as number)|0 : 0));
     }, err => {
         if (err && (typeof err === "string" || typeof err === "object")) {
             // just log errors in case rejection with a string or an Error: 
@@ -19,8 +19,8 @@ export public function waitAndExitProcess(proc: Promise<?, ?>, keepEventLoop = f
         }
         clearInterval(timerHandle);
 
-        const exitCode = typeof err === "number" ? (err as number)|0 : 1;
+        const code = typeof err === "number" ? (err as number)|0 : 1;
         // Flush stdout and exit:
-        process.stdout.write("", "utf-8", () => process.exit(exitCode));
+        process.stdout.write("", "utf-8", () => process.exit(code));
     });
 }
