@@ -12,8 +12,10 @@ package org.eclipse.n4js.runner.nodejs;
 
 import static com.google.common.base.CharMatcher.breakingWhitespace;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -29,6 +31,7 @@ import org.eclipse.n4js.runner.extension.RunnerDescriptorImpl;
 import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -37,6 +40,12 @@ import com.google.inject.Provider;
  * Concrete runner, i.e. runner implementation for node.js engine.
  */
 public class NodeRunner implements IRunner {
+
+	/** Name of environemnt variable used by node to obtain list of search paths. */
+	private static final String NODE_PATH = "NODE_PATH";
+
+	/** Separator used in {@link #NODE_PATH}. */
+	private static final String NODE_PATH_SEP = File.pathSeparator;
 
 	/** ID of the Node.js runner as defined in the plugin.xml. */
 	public static final String ID = "org.eclipse.n4js.runner.nodejs.NODEJS";
@@ -94,6 +103,10 @@ public class NodeRunner implements IRunner {
 
 		Map<String, String> env = new LinkedHashMap<>();
 		env.putAll(runConfig.getEnvironmentVariables());
+		final Collection<String> additionalPaths = runConfig.getAdditionalPaths();
+		if (additionalPaths != null && !additionalPaths.isEmpty()) {
+			env.put(NODE_PATH, Joiner.on(NODE_PATH_SEP).join(additionalPaths));
+		}
 		env = nodeJsBinary.updateEnvironment(env);
 
 		return executor.exec(cmd, workingDirectory.toFile(), env);
