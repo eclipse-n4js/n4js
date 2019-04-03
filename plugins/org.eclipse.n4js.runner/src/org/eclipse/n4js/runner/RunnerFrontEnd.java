@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.ProcessBuilder.Redirect;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -260,7 +261,11 @@ public class RunnerFrontEnd {
 		if (userSelection != null && hasValidFileExtension(userSelection.toString())) {
 			final String selectedFileDescriptor = resourceNameComputer.generateFileDescriptor(userSelection, null);
 			final Path selectedFilePath = new File(selectedFileDescriptor).toPath();
-			config.setFileToRun(selectedFilePath);
+			final IN4JSProject containingProject = resolveProject(userSelection);
+			final String outputPathStr = containingProject.getOutputPath();
+			final Path outputPath = Paths.get(outputPathStr.replace('/', File.separatorChar));
+			final Path fileToRun = outputPath.resolve(selectedFilePath);
+			config.setFileToRun(fileToRun);
 		} else {
 			// this can happen if the RunConfiguration 'config' is actually a TestConfiguration, because then the user
 			// selection is allowed to point to a project or folder (and method CompilerUtils#getModuleName() above
