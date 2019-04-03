@@ -10,10 +10,7 @@
  */
 @@Global @@ProvidedByRuntime
 
-export external public abstract class ~Body {
-    public get bodyUsed(): boolean;
-
-    public async arrayBuffer(): ArrayBuffer;
-    public async json(): any;
-    public async text(): string;
+@Polyfill export external public class Request extends Request {
+    @Override public async blob(): Blob;
+    @Override public async formData(): FormData;
 }

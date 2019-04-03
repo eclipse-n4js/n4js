@@ -10,10 +10,9 @@
  */
 @@Global @@ProvidedByRuntime
 
-import {Body} from "fetch/Body";
 import {ResponseType} from "fetch/ResponseType";
 
-export external public class Response implements Body {
+export external public class Response extends Body {
     public constructor(
             body: union{/*Blob, BufferedSource, FormData, URLSearchParams,*/ string}=,
             init: ~Object with {
@@ -23,9 +22,8 @@ export external public class Response implements Body {
             }=
         );
 
-// marked experimental:
-//    public static error(): Response;
-//    public static redirect(url: string, status: number?/* = 302*/): Response;
+    public static error(): Response;
+    public static redirect(url: string, status: number = 302): Response;
 
     public get ok(): boolean;
 
@@ -41,8 +39,6 @@ export external public class Response implements Body {
     // Body:
     @Override public get bodyUsed(): boolean;
     @Override public async arrayBuffer(): ArrayBuffer;
-//    @Override @Async public Blob blob();
-//    @Override @Async public FormData formData();
     @Override public async json(): any;
     @Override public async text(): string;
 }

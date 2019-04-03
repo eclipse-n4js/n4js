@@ -10,7 +10,6 @@
  */
 @@Global @@ProvidedByRuntime
 
-import {Body} from "fetch/Body";
 import {Method} from "fetch/Method";
 import {ReferrerPolicy} from "fetch/ReferrerPolicy";
 import {RequestCache} from "fetch/RequestCache";
@@ -20,7 +19,7 @@ import {RequestInit} from "fetch/RequestInit";
 import {RequestMode} from "fetch/RequestMode";
 import {RequestRedirect} from "fetch/RequestRedirect";
 
-export external public class Request implements Body {
+export external public class Request extends Body {
     public constructor(input: union{Request, string}, init: RequestInit=);
 
     public get method(): Method;
@@ -40,11 +39,8 @@ export external public class Request implements Body {
     public get redirect(): RequestRedirect;
     public get integrity(): string;
     public get keepalive(): boolean;
-//    public get signal: AbortSignal;
 
     @Override public async arrayBuffer(): ArrayBuffer;
-//    @Override public async Blob blob();
-//    @Override public async FormData formData();
     @Override public async json(): any;
     @Override public async text(): string;
 
