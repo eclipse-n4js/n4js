@@ -11,8 +11,9 @@
 
 import NodeTestAPI from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestAPI";
 import NodeTestOptions from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestOptions";
-import {PACKAGE_JSON} from "org/eclipse/n4js/mangelhaft/util";
-import {fsSafeAccessSync} from "org/eclipse/n4js/mangelhaft/util";
+import {fsSafeAccessSync} from "org/eclipse/n4js/mangelhaft/util/fs";
+import {PACKAGE_JSON} from "org/eclipse/n4js/mangelhaft/util/npm";
+import {waitAndExitProcess} from "org/eclipse/n4js/mangelhaft/util/proc";
 import * as lib_nomnom+ from "nomnom-patched";
 import * as lib_path from "path";
 
@@ -182,5 +183,4 @@ $ n4js-mangelhaft --compile --xunitReportFile ./jenkins/reports.xml --scan ./pro
 In case of a failure the tool uses exit code 1 for compilation problems, and exit code 8 for failed tests.
 `;
 
-const exit = (code: any=) => process.exit(code as int || 0);
-Promise.resolve(NodeTestCLI.run()).then(exit, exit);
+waitAndExitProcess(Promise.resolve(NodeTestCLI.run()));

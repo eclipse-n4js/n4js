@@ -9,22 +9,22 @@
  *   NumberFour AG - Initial API and implementation
  */
 
+import debug from "deps/debug";
 import NodeTestCLI from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestCLI";
 import NodeTestOptions from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestOptions";
 import {TestInfo} from "org/eclipse/n4js/mangelhaft/types/TestInfo";
-import {PACKAGE_JSON} from "org/eclipse/n4js/mangelhaft/util";
-import {createTempDir} from "org/eclipse/n4js/mangelhaft/util";
-import {fsSafeAccessSync} from "org/eclipse/n4js/mangelhaft/util";
-import {isHTTP_re} from "org/eclipse/n4js/mangelhaft/util";
-import {readJsonFile} from "org/eclipse/n4js/mangelhaft/util";
+import {createTempDir} from "org/eclipse/n4js/mangelhaft/util/fs";
+import {fsSafeAccessSync} from "org/eclipse/n4js/mangelhaft/util/fs";
+import {readJsonFile} from "org/eclipse/n4js/mangelhaft/util/fs";
+import {PACKAGE_JSON} from "org/eclipse/n4js/mangelhaft/util/npm";
+import {isHTTP_re} from "org/eclipse/n4js/mangelhaft/util/npm";
 import * as child_process from "child_process";
 import * as lib_fs from "fs";
 import * as glob+ from "glob";
 import * as n4js_cli from "n4js-cli";
 import * as lib_path from "path";
-import debug from "deps/debug";
 
-const log = debug("mangelhaft");
+const log = debug("n4js-mangelhaft");
 
 export default public class NodeTestAPI {
     /**
@@ -148,18 +148,18 @@ export default public class NodeTestAPI {
                 execArgv.push(`--inspect-brk=${options.inspectBrk}`);
             }
 
-            const runner = lib_path.join(__dirname, "NodeTestRunner.js");
-            log("TestRun fork:", runner);
-            log("execArgv:", execArgv);
-            log("args:", args);
+            const modulePath = lib_path.join(__dirname, "NodeTestRunner.js");
+            log("test-run modulePath:", modulePath);
+            log("test-run execArgv:", execArgv);
+            log("test-run args:", args);
             //log("env:", env);
 
-            child_process.fork(runner, args, {
+            child_process.fork(modulePath, args, {
                 stdio: "inherit",
                 execArgv: execArgv,
                 env: env
             }).on("close", code => {
-                log(`TestRun exit code: ${code}`);
+                log(`test-run exit code: ${code}`);
                 if (code === 0) {
                     resolve(code);
                 } else {

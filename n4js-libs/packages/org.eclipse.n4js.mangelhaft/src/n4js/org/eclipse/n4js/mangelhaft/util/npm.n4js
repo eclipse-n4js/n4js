@@ -1,0 +1,21 @@
+import {fsSafeAccessSync} from "org/eclipse/n4js/mangelhaft/util/fs";
+import {dirname} from "path";
+import {join} from "path";
+
+export public const isHTTP_re = /^https?:\/\//i;
+export public const PACKAGE_JSON = "package.json";
+
+/**
+ * Scans filesystem upwards to find a package.json file.
+ */
+export public function findPackageJson(dir: string): string {
+    const file = join(dir, PACKAGE_JSON);
+    if (!fsSafeAccessSync(file)) {
+        const parent = dirname(dir);
+        if (parent === dir) {
+            return null;
+        }
+        return findPackageJson(parent);
+    }
+    return file;
+}

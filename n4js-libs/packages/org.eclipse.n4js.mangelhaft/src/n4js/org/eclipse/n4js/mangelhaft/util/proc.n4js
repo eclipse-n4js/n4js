@@ -1,0 +1,26 @@
+/**
+ * Waits for the given promise then exits the process minding error codes.
+ * Optionally the event loop can be kept active while the promise hasn't resolved.
+ */
+export public function waitAndExitProcess(proc: Promise<?, ?>, keepEventLoop = false): void {
+    let timerHandle: number;
+    if (keepEventLoop) {
+        // dummy interval to avoid termination on open main/exec promise:
+        timerHandle = setInterval(function() {}, 0x7fffffff /* max 32bit signed int */);
+    }
+
+    proc.then(_ => {
+        clearInterval(timerHandle);
+        process.stdout.write("", "utf-8", () => process.exit(0));
+    }, err => {
+        if (err && (typeof err === "string" || typeof err === "object")) {
+            // just log errors in case rejection with a string or an Error: 
+            console.error((err as Error).stack || err);
+        }
+        clearInterval(timerHandle);
+
+        const exitCode = typeof err === "number" ? (err as number)|0 : 1;
+        // Flush stdout and exit:
+        process.stdout.write("", "utf-8", () => process.exit(exitCode));
+    });
+}

@@ -8,6 +8,8 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
+
+import fetch from "deps/node-fetch";
 import {N4Injector} from "n4js/lang/N4Injector";
 import {FIXME1} from "org/eclipse/n4js/mangelhaft/Test";
 import {FIXME2} from "org/eclipse/n4js/mangelhaft/Test";
@@ -22,10 +24,10 @@ import {ITestReporter} from "org/eclipse/n4js/mangelhaft/types/ITestReporter";
 import {TestDIComponent} from "org/eclipse/n4js/mangelhaft/types/TestDIComponent";
 import {TestInfo} from "org/eclipse/n4js/mangelhaft/types/TestInfo";
 import {TestInfos} from "org/eclipse/n4js/mangelhaft/types/TestInfos";
-import * as lib_fs from "fs";
+import {isHTTP_re} from "org/eclipse/n4js/mangelhaft/util/npm";
+import {waitAndExitProcess} from "org/eclipse/n4js/mangelhaft/util/proc";
 import * as cli_color_+ from "cli-color";
-import {isHTTP_re} from "org/eclipse/n4js/mangelhaft/util";
-import fetch from "deps/node-fetch"
+import {readJsonFile} from "org/eclipse/n4js/mangelhaft/util/fs";
 
 class NodeTestRunner  {
     @Inject
@@ -44,22 +46,9 @@ class NodeTestRunner  {
             return;
         }
  
-        // dummy interval to avoid termination on open main/exec promise:
-        setInterval(function() {}, 0x7fffffff /* max 32bit signed int */);
- 
-        // TODO: fragile, will be removed once we have proper api/impl binding
-        if (process.env.N4JS_RT_strip_api_prj_suffix) {
-            const _resolveFilename = module.Module._resolveFilename;
-            const stripApiSuffix_re = /^([^/]+)\.api\//;
-            module.Module._resolveFilename = function(request: string, parent, isMain) {
-                request = request.replace(stripApiSuffix_re, "$1/");
-                return _resolveFilename(request, parent, isMain);
-            };
-        }
- 
         let testCatalog: TestInfos;
  
-        if (options.testCatalog.startsWith("http://")) { // running IDE
+        if (isHTTP_re.test(options.testCatalog)) { // running IDE
             let req = await fetch(options.testCatalog, {
                 headers: {
                     "Content-Type": "application/vnd.n4js.assemble_test_catalog_req.tm+json"
@@ -68,7 +57,7 @@ class NodeTestRunner  {
             testCatalog = (await req.json()) as TestInfos;
         } else {
             testCatalog = {
-                testDescriptors: JSON.parse(String(lib_fs.readFileSync(options.testCatalog, { encoding: "UTF-8" }))) as Array<TestInfo>
+                testDescriptors: readJsonFile(options.testCatalog) as [TestInfo]
             } as TestInfos;
         }
 
@@ -112,7 +101,7 @@ class NodeTestRunner  {
 
         this.consoleReporter.cliColor = cli_color_.default;
         this.consoleReporter.setLogger(log);
-        
+
         let reporters: Array<ITestReporter> = [this.consoleReporter];
         if (options.xunitReportFile) {
             this.xunitReporter.spec = options;
@@ -140,10 +129,11 @@ class NodeTestRunner  {
             log(`${fail("Test run failed.")} To rerun just the failing tests use the command: \n n4js-mangelhaft ${this.consoleReporter.unsuccessfulTests.map(test => `\\\n    -f ${test}`).join(" ")}`);
         }
 
-        // Don't wait for async promises to finish, e.g. stale auth prompts.
-        // In case of exceptions, the process is already exiting with code 1 (see n4js-cli):
-        // Flush stdout and exit:
-        process.stdout.write("", "utf-8", () => process.exit(failed ? 8 : 0));
+        // Don't wait for async promises to finish.
+        // In case of exceptions, the process is already exiting with code 1.
+        if (failed) { // use different error code
+            throw 8;
+        }
     }
 }
 
@@ -162,6 +152,15 @@ class Root {
 
 const parentinj = N4Injector.of(TestDIComponent);
 const root = N4Injector.of(Root, parentinj).create(Root);
-
-const exit = (code: any=) => process.exit(code as int || 0);
-Promise.resolve(root.runner.run()).then(exit, exit);
+ 
+// TODO: fragile, will be removed once we have proper api/impl binding
+if (process.env.N4JS_RT_strip_api_prj_suffix) {
+    const _resolveFilename = module.Module._resolveFilename;
+    const stripApiSuffix_re = /^([^/]+)\.api\//;
+    module.Module._resolveFilename = function(request: string, parent, isMain) {
+        request = request.replace(stripApiSuffix_re, "$1/");
+        return _resolveFilename(request, parent, isMain);
+    };
+}
+ 
+waitAndExitProcess(Promise.resolve(root.runner.run()));

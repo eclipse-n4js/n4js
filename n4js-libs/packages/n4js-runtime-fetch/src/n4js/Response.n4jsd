@@ -10,9 +10,9 @@
  */
 @@Global @@ProvidedByRuntime
 
-
 import {Body} from "fetch/Body";
 import {ResponseType} from "fetch/ResponseType";
+
 export external public class Response implements Body {
     public constructor(
             body: union{/*Blob, BufferedSource, FormData, URLSearchParams,*/ string}=,
@@ -46,4 +46,3 @@ export external public class Response implements Body {
     @Override public async json(): any;
     @Override public async text(): string;
 }
-

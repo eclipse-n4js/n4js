@@ -50,4 +50,3 @@ export external public class Request implements Body {
 
     public clone(): Request;
 }
-

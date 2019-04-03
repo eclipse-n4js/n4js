@@ -10,8 +10,8 @@
  */
 @@Global @@ProvidedByRuntime
 
-
 import {IteratorExt} from "Iterator";
+
 export external public class Headers implements Iterable<Iterable2<string, string>> {
     public append(name: string, value: string): void;
     public delete(name: string): void;
@@ -25,4 +25,3 @@ export external public class Headers implements Iterable<Iterable2<string, strin
 
     @Override public [Symbol.iterator](): IteratorExt<Iterable2<string, string>>;
 }
-
