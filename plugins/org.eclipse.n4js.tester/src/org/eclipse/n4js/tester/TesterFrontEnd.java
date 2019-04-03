@@ -159,7 +159,7 @@ public class TesterFrontEnd {
 			config.setResultReportingPort(port);
 			testTreeTransformer.setHttpServerPort(Integer.toString(port));
 			final String testTreeAsJSON = objectMapper.writeValueAsString(testTreeTransformer.apply(testTree));
-			config.setExecutionData(TestConfiguration.EXEC_DATA_KEY__TEST_TREE, testTreeAsJSON);
+			config.setTestTreeAsJSON(testTreeAsJSON);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -211,8 +211,8 @@ public class TesterFrontEnd {
 	 * Update the configuration to the real port values. If the configuration was created before the server was started,
 	 * then the {@link #PORT_PLACEHOLDER_MAGIC_NUMBER} is inserted as a placeholder.
 	 *
-	 * Exchanges this placeholder with the passed in port value under the
-	 * {@link TestConfiguration#EXEC_DATA_KEY__TEST_TREE} key.
+	 * Exchanges this placeholder with the passed in port value in the JSON test tree, cf.
+	 * {@link TestConfiguration#getTestTreeAsJSON()}.
 	 *
 	 * Sets the {@link TestConfiguration#setResultReportingPort(int)} to port.
 	 *
@@ -224,11 +224,10 @@ public class TesterFrontEnd {
 	private static void updateTestTreeDescription(TestConfiguration config, int port) {
 		if (config.getResultReportingPort() == PORT_PLACEHOLDER_MAGIC_NUMBER) {
 			// probably running in a non-UI variant, update the magic number with real port:
-			Map<String, Object> execData = config.getExecutionData();
-			String testTreeJsonEncoded = (String) execData.get(TestConfiguration.EXEC_DATA_KEY__TEST_TREE);
+			String testTreeJsonEncoded = config.getTestTreeAsJSON();
 			String updatedTestTreeJsonEncoded = testTreeJsonEncoded
 					.replaceFirst(Integer.toString(PORT_PLACEHOLDER_MAGIC_NUMBER), Integer.toString(port));
-			execData.put(TestConfiguration.EXEC_DATA_KEY__TEST_TREE, updatedTestTreeJsonEncoded);
+			config.setTestTreeAsJSON(updatedTestTreeJsonEncoded);
 		}
 		config.setResultReportingPort(port);
 	}
