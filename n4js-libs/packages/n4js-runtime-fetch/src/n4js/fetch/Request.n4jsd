@@ -39,6 +39,7 @@ export external public class Request extends Body {
     public get redirect(): RequestRedirect;
     public get integrity(): string;
     public get keepalive(): boolean;
+    public get signal(): AbortSignal;
 
     @Override public async arrayBuffer(): ArrayBuffer;
     @Override public async json(): any;

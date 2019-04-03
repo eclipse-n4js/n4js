@@ -29,6 +29,7 @@ export external public class ~RequestInit {
     public redirect?: RequestRedirect;
     public integrity?: string;
     public keepalive?: boolean;
+    public signal?: AbortSignal;
 //    public signal?: AbortSignal;
     public mode?: RequestMode;
     public credentials?: RequestCredentials;
