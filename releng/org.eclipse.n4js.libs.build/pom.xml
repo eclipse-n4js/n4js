@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Copyright (c) 2016 NumberFour AG.
+Copyright (c) 2019 NumberFour AG.
 All rights reserved. This program and the accompanying materials
 are made available under the terms of the Eclipse Public License v1.0
 which accompanies this distribution, and is available at
@@ -14,21 +14,21 @@ Contributors:
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>org.eclipse.n4js.external.libraries.update</artifactId>
+	<artifactId>org.eclipse.n4js.libs.build</artifactId>
 	<packaging>eclipse-plugin</packaging>
 
 	<parent>
 		<groupId>org.eclipse.n4js</groupId>
-		<artifactId>org.eclipse.n4js.plugins</artifactId>
+		<artifactId>org.eclipse.n4js.releng</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<properties>
 		<skip.mwe2>false</skip.mwe2>
-		<mwe2-file-location>/src/org/eclipse/n4js/external/libraries/update/UpdateShippedCode.mwe2</mwe2-file-location>
+		<mwe2-file-location>/src/org/eclipse/n4js/libs/build/BuildN4jsLibs.mwe2</mwe2-file-location>
 		<!-- fornax: -->
-		<mwe2descriptor>org.eclipse.n4js.UpdateShippedCode</mwe2descriptor>
+		<mwe2descriptor>org.eclipse.n4js.BuildN4jsLibs</mwe2descriptor>
 	</properties>
 
 	<build>

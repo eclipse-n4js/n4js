@@ -101,16 +101,14 @@ public final class N4JSGlobals {
 	 * other code shipped with the IDE.
 	 * <p>
 	 * NOTE: the actual projects are not contained directly in this folder but in a sub folder, see
-	 * {@link #SHIPPED_CODE_SOURCES_FOLDER_NAME}.
+	 * {@link #N4JS_LIBS_SOURCES_PATH}.
 	 */
 	public static final String N4JS_LIBS_FOLDER_NAME = "n4js-libs";
 
 	/**
-	 * Relative path to the folder in the N4JS Git repository containing the projects with the source code that will be
-	 * shipped with the IDE, as part of the library manager. The path is relative to the root folder of the N4JS Git
-	 * repository.
+	 * Relative path to the folder in the N4JS Git repository containing the source code of the "n4js-libs".
 	 */
-	public static final String SHIPPED_CODE_SOURCES_FOLDER_NAME = N4JS_LIBS_FOLDER_NAME + "/" + "packages";
+	public static final String N4JS_LIBS_SOURCES_PATH = N4JS_LIBS_FOLDER_NAME + "/" + "packages";
 
 	/**
 	 * The name of an npm command.
@@ -120,10 +118,6 @@ public final class N4JSGlobals {
 	 * Name of the npm "node_modules" folder.
 	 */
 	public static final String NODE_MODULES = "node_modules";
-	/**
-	 * The name of an npm install command.
-	 */
-	public static final String NPM_INSTALL = NPM + " install";
 	/**
 	 * The name of NPM's package json file.
 	 */

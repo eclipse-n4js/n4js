@@ -312,7 +312,7 @@ public abstract class AbstractN4jscTest {
 		final File workspaceRoot = new File(workspaceRootPath);
 
 		final File gitRoot = new File(new File("").getAbsolutePath()).getParentFile().getParentFile();
-		final File n4jsLibrariesRoot = new File(gitRoot, N4JSGlobals.SHIPPED_CODE_SOURCES_FOLDER_NAME);
+		final File n4jsLibrariesRoot = new File(gitRoot, N4JSGlobals.N4JS_LIBS_SOURCES_PATH);
 		final Collection<String> n4jsLibraryNames = newHashSet(n4jsLibrariesRoot.list());
 
 		final AtomicInteger counter = new AtomicInteger();
