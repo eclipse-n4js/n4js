@@ -28,6 +28,9 @@
     "sources": {
       "source": [
         "src/n4js"
+      ],
+      "external": [
+        "src/js"
       ]
     },
     "requiredRuntimeLibraries": [

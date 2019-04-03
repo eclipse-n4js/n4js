@@ -19,29 +19,28 @@ import {TestController} from "org/eclipse/n4js/mangelhaft/TestController";
 import {ConsoleReporter} from "org/eclipse/n4js/mangelhaft/reporter/console/ConsoleReporter";
 import {IDEReporter} from "org/eclipse/n4js/mangelhaft/reporter/ide/IDEReporter";
 import {XUnitReporter} from "org/eclipse/n4js/mangelhaft/reporter/xunit/XUnitReporter";
-import NodeTestCLI from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestCLI";
+import {NodeTestCLI} from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestCLI";
 import {ITestReporter} from "org/eclipse/n4js/mangelhaft/types/ITestReporter";
 import {TestDIComponent} from "org/eclipse/n4js/mangelhaft/types/TestDIComponent";
 import {TestInfo} from "org/eclipse/n4js/mangelhaft/types/TestInfo";
 import {TestInfos} from "org/eclipse/n4js/mangelhaft/types/TestInfos";
+import {readJsonFile} from "org/eclipse/n4js/mangelhaft/util/fs";
 import {isHTTP_re} from "org/eclipse/n4js/mangelhaft/util/npm";
 import {waitAndExitProcess} from "org/eclipse/n4js/mangelhaft/util/proc";
 import * as cli_color_+ from "cli-color";
-import {readJsonFile} from "org/eclipse/n4js/mangelhaft/util/fs";
 
 class NodeTestRunner  {
     @Inject
-    protected controller: TestController;
+    controller: TestController;
     @Inject
-    public consoleReporter: ConsoleReporter;
+    consoleReporter: ConsoleReporter;
     @Inject
-    public xunitReporter: XUnitReporter;
+    xunitReporter: XUnitReporter;
     @Inject
-    public ideReporter: IDEReporter;
+    ideReporter: IDEReporter;
 
     @Final public async run(): void {
         const options = NodeTestCLI.parseCommandLine();
-
         if (!options) {
             return;
         }
@@ -93,7 +92,7 @@ class NodeTestRunner  {
         const log = console.log.bind(console);
         const consoleObj: Object+ = console;
         if (options.quiet) {
-            consoleObj.log = consoleObj.error = consoleObj.warn = function(){};
+            consoleObj.log = consoleObj.error = consoleObj.warn = function() {};
         }
         if (options.showOnlyErrors) {
             this.consoleReporter.setErrorsOnly();
@@ -163,4 +162,4 @@ if (process.env.N4JS_RT_strip_api_prj_suffix) {
     };
 }
 
-waitAndExitProcess(Promise.resolve(root.runner.run()), true /* keep event loop */);
+waitAndExitProcess(root.runner.run.bind(root.runner), true /* keep event loop */);

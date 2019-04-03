@@ -13,4 +13,4 @@
 /*eslint-disable no-empty */
 
 require = require("esm")(module);
-require("../src-gen/org/eclipse/n4js/mangelhaft/runner/node/NodeTestCLI.js");
+require("../src-gen/org/eclipse/n4js/mangelhaft/runner/node/NodeTestMain.js");

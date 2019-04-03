@@ -10,7 +10,7 @@
  */
 
 import debug from "deps/debug";
-import NodeTestCLI from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestCLI";
+import {NodeTestCLI} from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestCLI";
 import NodeTestOptions from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestOptions";
 import {TestInfo} from "org/eclipse/n4js/mangelhaft/types/TestInfo";
 import {createTempDir} from "org/eclipse/n4js/mangelhaft/util/fs";
@@ -134,15 +134,11 @@ export default public class NodeTestAPI {
 
         log("testing with test catalog:", options.testCatalog);
 
-        const args = NodeTestCLI.toCommandLine(options); // fodder in same args
-        const env: Object+ = Object.assign({}, process.env);
-
-        if (options.noDebugLog) {
-            // giving the command line option noLog overrides the DEBUG environment value to disable all logging (if the logger is configured.)
-            env.DEBUG = "-*";
-        }
-
         await new Promise<any, any>((resolve, reject) => {
+            rlog("execPath:", process.execPath);
+            const modulePath = lib_path.join(__dirname, "NodeTestRunner.js");
+            rlog("modulePath:", modulePath);
+
             const execArgv = process.execArgv.slice();
             if (execArgv.indexOf("esm") < 0 && (process.env.NODE_OPTIONS as string || "").indexOf("-r esm") < 0) {
                 execArgv.push("-r", "esm");
@@ -150,12 +146,15 @@ export default public class NodeTestAPI {
             if (options.inspectBrk) {
                 execArgv.push(`--inspect-brk=${options.inspectBrk}`);
             }
-
-            const modulePath = lib_path.join(__dirname, "NodeTestRunner.js");
-            rlog("execPath:", process.execPath);
-            rlog("modulePath:", modulePath);
             rlog("execArgv:", execArgv);
+            const args = NodeTestCLI.toCommandLine(options); // fodder in same args
             rlog("args:", args);
+
+            const env: Object+ = Object.assign({}, process.env);
+            if (options.noDebugLog) {
+                // giving the command line option noLog overrides the DEBUG environment value to disable all logging (if the logger is configured.)
+                env.DEBUG = "-*";
+            }
             //rlog("env:", env);
 
             child_process.fork(modulePath, args, {

@@ -9,58 +9,13 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-import NodeTestAPI from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestAPI";
 import NodeTestOptions from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestOptions";
 import {fsSafeAccessSync} from "org/eclipse/n4js/mangelhaft/util/fs";
 import {PACKAGE_JSON} from "org/eclipse/n4js/mangelhaft/util/npm";
-import {waitAndExitProcess} from "org/eclipse/n4js/mangelhaft/util/proc";
 import * as lib_nomnom+ from "nomnom-patched";
 import * as lib_path from "path";
 
-export default public class NodeTestCLI {
-    public static toCommandLine(options: NodeTestOptions): Array<string> {
-        const optionsObj: Object = options;
-        const res: Array<string> = [];
-
-        Object.keys(optionsObj).forEach(k => {
-            const info: Object+ = nomnomOptions[k] as Object;
-            let v = optionsObj[k];
-
-            if (info && typeof v !== "undefined") {
-                k = "--" + k;
-                if (Array.isArray(v)) {
-                    const positionedArg = typeof info.position !== "undefined";
-                    (v as Array<string>).forEach(vv => positionedArg ? res.push(vv) : res.push(k, vv));
-                } else {
-                    if (typeof v !== "boolean") {
-                        res.push(k, v as string);
-                    } else if (v) {
-                        res.push(k);
-                    }
-                }
-            }
-        });
-    
-        return res;
-    }
-
-    public static parseCommandLine(): NodeTestOptions {
-        return lib_nomnom.script("n4js-mangelhaft")
-                         .help(nomnomHelp)
-                         .options(nomnomOptions)
-                         .parse() as NodeTestOptions;
-    }
-    
-    @Final public static async run(): void {
-        const options = this.parseCommandLine();
-        if (options) {
-            await NodeTestAPI.exec(options);
-        }
-    }
-}
-
 const cwd = process.cwd();
-
 const resolvePath = (p: string): string => lib_path.resolve(cwd, p);
 
 const resolveProject = (p: string): string => {
@@ -183,4 +138,37 @@ $ n4js-mangelhaft --compile --xunitReportFile ./jenkins/reports.xml --scan ./pro
 In case of a failure the tool uses exit code 1 for compilation problems, and exit code 8 for failed tests.
 `;
 
-waitAndExitProcess(Promise.resolve(NodeTestCLI.run()));
+export public class NodeTestCLI {
+    public static toCommandLine(options: NodeTestOptions): Array<string> {
+        const optionsObj: Object = options;
+        const res: Array<string> = [];
+
+        Object.keys(optionsObj).forEach(k => {
+            const info: Object+ = nomnomOptions[k] as Object;
+            let v = optionsObj[k];
+
+            if (info && typeof v !== "undefined") {
+                k = "--" + k;
+                if (Array.isArray(v)) {
+                    const positionedArg = typeof info.position !== "undefined";
+                    (v as Array<string>).forEach(vv => positionedArg ? res.push(vv) : res.push(k, vv));
+                } else {
+                    if (typeof v !== "boolean") {
+                        res.push(k, v as string);
+                    } else if (v) {
+                        res.push(k);
+                    }
+                }
+            }
+        });
+    
+        return res;
+    }
+
+    public static parseCommandLine(): NodeTestOptions {
+        return lib_nomnom.script("n4js-mangelhaft")
+                         .help(nomnomHelp)
+                         .options(nomnomOptions)
+                         .parse() as NodeTestOptions;
+    }
+}
