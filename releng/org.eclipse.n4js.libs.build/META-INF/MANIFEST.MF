@@ -11,6 +11,7 @@ Require-Bundle: com.google.guava,
  org.eclipse.emf.mwe2.launch;resolution:=optional,
  org.eclipse.n4js,
  org.eclipse.n4js.hlc.base,
+ org.eclipse.n4js.json.model,
  org.eclipse.n4js.utils
 Export-Package: org.eclipse.n4js.libs.build
 Automatic-Module-Name: org.eclipse.n4js.external.libraries.update

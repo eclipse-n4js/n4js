@@ -10,8 +10,12 @@
  */
 package org.eclipse.n4js.json.model.utils;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -516,6 +520,17 @@ public class JSONModelUtils {
 		JSONDocument result = JSONFactory.eINSTANCE.createJSONDocument();
 		result.setContent(content);
 		return result;
+	}
+
+	/**
+	 * Same as {@link #parseJSON(String)}, but reads the source from a file on disk at the given path.
+	 */
+	public static JSONDocument loadJSON(Path path, Charset cs) throws IOException {
+		try (BufferedReader in = Files.newBufferedReader(path, cs)) {
+			ParseResult<JSONDocument> result = N4LanguageUtils.parseXtextLanguage(FILE_EXTENSION, null,
+					JSONDocument.class, in);
+			return result.errors.isEmpty() ? result.ast : null;
+		}
 	}
 
 	/**

@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.utils.languages;
 
+import java.io.Reader;
 import java.io.StringReader;
 import java.util.List;
 import java.util.Objects;
@@ -61,19 +62,28 @@ public class N4LanguageUtils {
 	}
 
 	/**
+	 * Same as {@link #parseXtextLanguage(String, ParserRule, Class, Reader)}, but accepts a {@link String} instead of a
+	 * {@link Reader}.
+	 */
+	public static <T extends EObject> ParseResult<T> parseXtextLanguage(String fileExtOfLanguage,
+			ParserRule parserRuleOrNull, Class<T> expectedTypeOfRoot, String source) {
+		return parseXtextLanguage(fileExtOfLanguage, parserRuleOrNull, expectedTypeOfRoot, new StringReader(source));
+	}
+
+	/**
 	 * Parses the given string with the parser of the Xtext language denoted by the given file extension. In case of
 	 * syntax errors, the returned parse result will have a non-empty list of {@link ParseResult#errors}.
 	 */
 	public static <T extends EObject> ParseResult<T> parseXtextLanguage(String fileExtOfLanguage,
-			ParserRule parserRuleOrNull, Class<T> expectedTypeOfRoot, String source) {
+			ParserRule parserRuleOrNull, Class<T> expectedTypeOfRoot, Reader sourceReader) {
 		final IParser parser = getServiceForContext(fileExtOfLanguage, IParser.class)
 				.orElseThrow(() -> new RuntimeException(
 						"Cannot obtain Xtext parser for language with file extension: " + fileExtOfLanguage));
 		final IParseResult result;
 		if (parserRuleOrNull != null) {
-			result = parser.parse(parserRuleOrNull, new StringReader(source));
+			result = parser.parse(parserRuleOrNull, sourceReader);
 		} else {
-			result = parser.parse(new StringReader(source));
+			result = parser.parse(sourceReader);
 		}
 		final Iterable<SyntaxErrorMessage> errors = Iterables.transform(result.getSyntaxErrors(),
 				node -> node.getSyntaxErrorMessage());

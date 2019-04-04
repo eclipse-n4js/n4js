@@ -106,9 +106,19 @@ public final class N4JSGlobals {
 	public static final String N4JS_LIBS_FOLDER_NAME = "n4js-libs";
 
 	/**
-	 * Relative path to the folder in the N4JS Git repository containing the source code of the "n4js-libs".
+	 * Path to the folder in the N4JS Git repository containing the source code of the "n4js-libs", relative to the
+	 * repository's root folder.
 	 */
 	public static final String N4JS_LIBS_SOURCES_PATH = N4JS_LIBS_FOLDER_NAME + "/" + "packages";
+
+	/**
+	 * Name of the npm package containing the N4JS bootstrap and runtime code, i.e. the code defining internal low-level
+	 * functions such as {@code $makeClass()} and containing core runtime code such as the implementation of N4Injector.
+	 * <p>
+	 * It is expected that this npm package lives in the N4JS Git repository at path {@value #N4JS_LIBS_SOURCES_PATH},
+	 * cf. {@link #N4JS_LIBS_SOURCES_PATH}.
+	 */
+	public static final String N4JS_RUNTIME_NAME = "n4js-runtime";
 
 	/**
 	 * The name of an npm command.
