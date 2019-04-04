@@ -31,6 +31,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.AnnotationDefinition;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.generator.AbstractSubGenerator;
 import org.eclipse.n4js.generator.GeneratorOption;
@@ -46,6 +47,7 @@ import org.eclipse.n4js.runner.extension.RunnerRegistry;
 import org.eclipse.n4js.runner.nodejs.NodeRunner;
 import org.eclipse.n4js.runner.nodejs.NodeRunner.NodeRunnerDescriptorProvider;
 import org.eclipse.n4js.runner.ui.ChooseImplementationHelper;
+import org.eclipse.n4js.test.helper.hlc.N4jsLibsAccess;
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
 import org.eclipse.n4js.xpect.common.ResourceTweaker;
 import org.eclipse.xpect.xtext.lib.setup.FileSetupContext;
@@ -125,7 +127,7 @@ public class XpectN4JSES5TranspilerHelper {
 
 		loadXpectConfiguration(init, fileSetupContext);
 
-		File artificialRoot = Files.createTempDirectory("n4jsXpect").toFile();
+		File artificialRoot = Files.createTempDirectory("n4jsXpectOutputTest").toFile();
 
 		RunConfiguration runConfig;
 		// if Xpect configured workspace is null, this has been triggered directly in the IDE
@@ -175,9 +177,19 @@ public class XpectN4JSES5TranspilerHelper {
 			// determine module to run
 			createTempJsFileWithScript(artificialRoot.toPath(), testScript, options, replaceQuotes);
 			String fileToRun = jsModulePathToRun(testScript);
+			fileToRun = fileToRun.substring(fileToRun.indexOf('/') + 1);
 
 			// Not in UI case, hence manually set up the resources
 			String artificialProjectName = testScript.getModule().getProjectName();
+
+			// provide n4js-runtime in the version of the current build
+			N4jsLibsAccess.installN4jsLibs(
+					artificialRoot.toPath().resolve(artificialProjectName).resolve(N4JSGlobals.NODE_MODULES),
+					true, true, true,
+					"n4js-runtime",
+					"n4js-runtime-es2015",
+					"esm");
+
 			runConfig = runnerFrontEnd.createXpectOutputTestConfiguration(NodeRunner.ID,
 					fileToRun,
 					systemLoader,
@@ -302,7 +314,7 @@ public class XpectN4JSES5TranspilerHelper {
 	}
 
 	private String getCompiledFileBasePath(final Script script) {
-		String path = script.getModule().getProjectName() + N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT;
+		String path = script.getModule().getProjectName() + '/' + N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT;
 
 		IN4JSProject project = core.findProject(script.eResource().getURI()).orNull();
 		if (project != null) {

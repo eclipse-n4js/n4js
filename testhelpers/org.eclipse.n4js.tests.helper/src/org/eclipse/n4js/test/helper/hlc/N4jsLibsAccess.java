@@ -11,12 +11,16 @@
 package org.eclipse.n4js.test.helper.hlc;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.utils.io.FileCopier;
 
 /**
  * Provides access to the projects located in the N4JS Git repository under top-level folder "n4js-libs". Assumes that
@@ -65,6 +69,45 @@ public class N4jsLibsAccess {
 			throw new IllegalStateException("cannot obtain location of n4js-libs: invalid path", e);
 		}
 		return n4jsLibsLocation;
+	}
+
+	public static Path findN4jsLibs(String projectName, boolean includeDependencies) {
+		Path base = findN4jsLibs();
+		return findN4jsLibs(base, projectName, includeDependencies);
+	}
+
+	private static Path findN4jsLibs(Path n4jsLibs, String projectName, boolean includeDependencies) {
+		Path result = n4jsLibs.resolve("packages").resolve(projectName);
+		if (includeDependencies && !Files.exists(result)) {
+			// 2nd attempt: check in node_modules folder of the containing yarn workspace
+			result = n4jsLibs.resolve(N4JSGlobals.NODE_MODULES).resolve(projectName);
+		}
+		if (!Files.exists(result)) {
+			throw new IllegalArgumentException("cannot find a project among n4js-libs "
+					+ (includeDependencies ? "and their dependencies " : "") + "with name: " + projectName);
+		}
+		return result;
+	}
+
+	public static void installN4jsLibs(Path targetPath, boolean includeDependencies, boolean useSymbolicLinks,
+			boolean deleteOnExit, String... projectNames) throws IOException {
+		Path n4jsLibsPath = N4jsLibsAccess.findN4jsLibs();
+		Files.createDirectories(targetPath);
+		for (String projectName : projectNames) {
+			Path from = findN4jsLibs(n4jsLibsPath, projectName, includeDependencies);
+			Path to = targetPath.resolve(projectName);
+			if (useSymbolicLinks) {
+				Path symLinkPath = Files.createSymbolicLink(to, from);
+				if (deleteOnExit) {
+					symLinkPath.toFile().deleteOnExit();
+				}
+			} else {
+				FileCopier.copy(from, to);
+				if (deleteOnExit) {
+					Files.walk(to).forEach(path -> path.toFile().deleteOnExit());
+				}
+			}
+		}
 	}
 
 	private static URI findMyLocation() {

@@ -194,11 +194,14 @@ public class RunnerFrontEnd {
 
 		config.setCoreProjectPaths(ImmutableMap.of(additionalProjectPath, additionalProjectName));
 
+		config.setWorkingDirectory(additionalProjectPath);
+		config.setFileToRun(Paths.get(userSelectionNodePathResolvableTargetFileName));
+
 		config.setExecutionData(RunConfiguration.EXEC_DATA_KEY__USER_SELECTION,
 				userSelectionNodePathResolvableTargetFileName);
 		config.setExecutionData(RunConfiguration.EXEC_DATA_KEY__INIT_MODULES, config.getInitModules());
 
-		IRunner preparedRunner = runnerRegistry.getRunner(config);
+		IRunner preparedRunner = runnerRegistry.getRunner(runnerId);
 		preparedRunner.prepareConfiguration(config);
 
 		return config;

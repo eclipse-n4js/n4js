@@ -87,6 +87,7 @@ public class BuildN4jsLibs implements IWorkflowComponent {
 				+ "\" in n4js repository:");
 		compile(n4jsLibsRoot);
 
+/* @formatter:off
 		// step 3: make "nj4s-runtime" self-contained (so that it includes a node_modules folder with all its
 		// dependencies)
 		println("==== STEP 3/3: make project \"" + N4JSGlobals.N4JS_RUNTIME_NAME
@@ -100,6 +101,7 @@ public class BuildN4jsLibs implements IWorkflowComponent {
 		println("==== STEP 3b: running \"" + NPM_INSTALL + "\" in project \"" + N4JSGlobals.N4JS_RUNTIME_NAME
 				+ "\" (to install remaining, third-party dependencies)");
 		runNpmInstall(n4jsRuntimePath);
+@formatter:on */
 
 		println("==== BUILD N4JS-LIBS finished ====");
 	}
