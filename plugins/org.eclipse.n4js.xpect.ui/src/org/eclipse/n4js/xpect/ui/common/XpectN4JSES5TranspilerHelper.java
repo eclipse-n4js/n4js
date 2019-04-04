@@ -27,6 +27,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.StringJoiner;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -49,6 +51,7 @@ import org.eclipse.n4js.runner.nodejs.NodeRunner.NodeRunnerDescriptorProvider;
 import org.eclipse.n4js.runner.ui.ChooseImplementationHelper;
 import org.eclipse.n4js.test.helper.hlc.N4jsLibsAccess;
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
+import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.n4js.xpect.common.ResourceTweaker;
 import org.eclipse.xpect.xtext.lib.setup.FileSetupContext;
 import org.eclipse.xtext.resource.FileExtensionProvider;
@@ -56,6 +59,7 @@ import org.eclipse.xtext.resource.XtextResource;
 import org.junit.Assert;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 /**
@@ -127,7 +131,7 @@ public class XpectN4JSES5TranspilerHelper {
 
 		loadXpectConfiguration(init, fileSetupContext);
 
-		File artificialRoot = Files.createTempDirectory("n4jsXpectOutputTest").toFile();
+		Path artificialRoot = Files.createTempDirectory("n4jsXpectOutputTest");
 
 		RunConfiguration runConfig;
 		// if Xpect configured workspace is null, this has been triggered directly in the IDE
@@ -139,16 +143,57 @@ public class XpectN4JSES5TranspilerHelper {
 			final String implementationId = chooseImplHelper.chooseImplementationIfRequired(NodeRunner.ID,
 					resource.getURI().trimFileExtension());
 
+			Path nodeModulesPath = artificialRoot.resolve(N4JSGlobals.NODE_MODULES);
+			Files.createDirectories(nodeModulesPath);
+			Path packagesPath = artificialRoot.resolve("packages");
+			Files.createDirectories(packagesPath);
+
+			for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
+				Path target = packagesPath.resolve(project.getName());
+				FileCopier.copy(
+						project.getLocation().toFile().toPath(),
+						target);
+				Files.createSymbolicLink(
+						nodeModulesPath.resolve(project.getName()),
+						target);
+			}
+
 			boolean replaceQuotes = false;
 			// We have to generate JS code for the resource. Because if Xpect test is quickfixAndRun the resource
 			// contains errors and hence no generated JS code is available for execution.
 			// Then sneak in the path to the generated JS code.
 			Script script = (Script) resource.getContents().get(0);
-			createTempJsFileWithScript(artificialRoot.toPath(), script, options, replaceQuotes);
-			runConfig = runnerFrontEnd.createConfiguration(NodeRunner.ID,
-					(implementationId == ChooseImplementationHelper.CANCEL) ? null : implementationId,
-					systemLoader.getId(),
-					resource.getURI().trimFileExtension(), artificialRoot.getAbsolutePath().toString());
+			createTempJsFileWithScript(packagesPath, script, options, replaceQuotes).toPath().getParent();
+
+			Files.write(artificialRoot.resolve(N4JSGlobals.PACKAGE_JSON), Lists.newArrayList(
+					"{\n",
+					"  \"private\": true,\n",
+					"  \"workspaces\": [ \"packages/*\" ]\n",
+					"}\n"));
+
+			// provide n4js-runtime in the version of the current build
+			N4jsLibsAccess.installN4jsLibs(
+					nodeModulesPath,
+					true, true, true,
+					"n4js-runtime",
+					"n4js-runtime-es2015",
+					"esm");
+
+			String fileToRun = jsModulePathToRun(script);
+			fileToRun = fileToRun.substring(fileToRun.indexOf('/') + 1);
+			String artificialProjectName = script.getModule().getProjectName();
+			runConfig = runnerFrontEnd.createXpectOutputTestConfiguration(NodeRunner.ID,
+					fileToRun,
+					systemLoader,
+					packagesPath.resolve(artificialProjectName),
+					artificialProjectName);
+
+			// FIXME change the above code to use one of the ordinary #createConfiguration() methods:
+			final String todo = "FIXME";
+			// runConfig = runnerFrontEnd.createConfiguration(NodeRunner.ID,
+			// (implementationId == ChooseImplementationHelper.CANCEL) ? null : implementationId,
+			// systemLoader.getId(),
+			// resource.getURI().trimFileExtension(), artificialRoot.getAbsolutePath().toString());
 		} else {
 			// In the non-GUI case, we need to calculate dependencies etc. manually
 			final Iterable<Resource> dependencies = from(getDependentResources());
@@ -162,10 +207,10 @@ public class XpectN4JSES5TranspilerHelper {
 			// replace n4jsd resource with provided js resource
 			for (final Resource dep : from(dependencies).filter(r -> !r.getURI().equals(resource.getURI()))) {
 				if ("n4jsd".equalsIgnoreCase(dep.getURI().fileExtension())) {
-					compileImplementationOfN4JSDFile(artificialRoot.toPath(), errorResult, dep, options, replaceQuotes);
+					compileImplementationOfN4JSDFile(artificialRoot, errorResult, dep, options, replaceQuotes);
 				} else if (xpectGenerator.isCompilable(dep, errorResult)) {
 					final Script script = (Script) dep.getContents().get(0);
-					createTempJsFileWithScript(artificialRoot.toPath(), script, options, replaceQuotes);
+					createTempJsFileWithScript(artificialRoot, script, options, replaceQuotes);
 				}
 			}
 
@@ -175,7 +220,7 @@ public class XpectN4JSES5TranspilerHelper {
 
 			// No error so far
 			// determine module to run
-			createTempJsFileWithScript(artificialRoot.toPath(), testScript, options, replaceQuotes);
+			createTempJsFileWithScript(artificialRoot, testScript, options, replaceQuotes);
 			String fileToRun = jsModulePathToRun(testScript);
 			fileToRun = fileToRun.substring(fileToRun.indexOf('/') + 1);
 
@@ -184,7 +229,7 @@ public class XpectN4JSES5TranspilerHelper {
 
 			// provide n4js-runtime in the version of the current build
 			N4jsLibsAccess.installN4jsLibs(
-					artificialRoot.toPath().resolve(artificialProjectName).resolve(N4JSGlobals.NODE_MODULES),
+					artificialRoot.resolve(artificialProjectName).resolve(N4JSGlobals.NODE_MODULES),
 					true, true, true,
 					"n4js-runtime",
 					"n4js-runtime-es2015",
@@ -193,7 +238,7 @@ public class XpectN4JSES5TranspilerHelper {
 			runConfig = runnerFrontEnd.createXpectOutputTestConfiguration(NodeRunner.ID,
 					fileToRun,
 					systemLoader,
-					artificialRoot.toPath().resolve(artificialProjectName),
+					artificialRoot.resolve(artificialProjectName),
 					artificialProjectName);
 		}
 

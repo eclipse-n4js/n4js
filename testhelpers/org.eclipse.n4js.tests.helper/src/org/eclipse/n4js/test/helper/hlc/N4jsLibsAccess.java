@@ -20,6 +20,7 @@ import java.nio.file.Paths;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.utils.io.FileCopier;
 
 /**
@@ -45,8 +46,10 @@ public class N4jsLibsAccess {
 	public static Path findN4jsLibs() {
 		URI myLocation = findMyLocation();
 		if (myLocation == null || !myLocation.isFile()) {
-			throw new IllegalStateException(
-					"cannot obtain location of n4js-libs: current application not running from source");
+			// throw new IllegalStateException(
+			// "cannot obtain location of n4js-libs: current application not running from source");
+			// FIXME temporary: (required for UI case in case of Xpect output plugin[UI] tests)
+			return UtilN4.findN4jsRepoRootPath().resolve(N4JS_LIBS_NAME);
 		}
 
 		String myLocationStr = myLocation.toFileString();
