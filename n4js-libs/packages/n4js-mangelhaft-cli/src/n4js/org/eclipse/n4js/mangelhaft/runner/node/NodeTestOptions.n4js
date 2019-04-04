@@ -30,11 +30,6 @@ export default public class ~NodeTestOptions extends XUnitReportSpec {
     public filter: Array<string>;
 
     /**
-     * Definition of n4js runtime options key=value.
-     */
-    public define: Array<string>;
-
-    /**
      * Compiles the given targets, generating a test catalog.
      */
     public compile: boolean;
@@ -55,16 +50,16 @@ export default public class ~NodeTestOptions extends XUnitReportSpec {
     public testCatalog: string;
 
     /**
+     * IDE test report (JSON) to be sent to.
+     */
+    public ideReportURL: string;
+
+    /**
      * When compiling, local project test catalog files are written to the targeted
      * project folders under the given path, e.g. test-catalog.json.
      */
     public emitProjectTestCatalogs: string;
     
-    /**
-     * When compiling, write a __bundle-gen.js CommonJS module to bulk register generated code modules.
-     */
-    public generatedModulesGlob: string;
-
     /**
      * Installs NPM dependencies using npm or yarn.
      */
@@ -74,11 +69,6 @@ export default public class ~NodeTestOptions extends XUnitReportSpec {
      * Library manager .npmrc directory.
      */
     public npmrcRootLocation: string;
-
-    /**
-     * Debug output.
-     */
-    public debug: boolean;
 
     /**
      * Attach V8 Inspector with --inspect-brk.

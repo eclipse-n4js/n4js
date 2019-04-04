@@ -19,17 +19,23 @@
   },
   "dependencies": {
     "cli-color": "~1.2.0",
+    "debug": "~3.1.0",
+    "esm": "~3.2.10",
     "glob": "~7.1.2",
     "n4js-cli": "^0.1.0",
     "n4js-node": "^0.1.0",
+    "n4js-runtime": "^0.1.0",
     "n4js-runtime-es2015": "^0.1.0",
+    "n4js-runtime-esnext": "^0.1.0",
     "n4js-runtime-fetch": "^0.1.0",
     "n4js-runtime-node": "^0.1.0",
-    "n4js.lang": "^0.1.0",
+    "node-fetch": "~2.3.0",
     "nomnom-patched": "~1.8.1",
     "org.eclipse.n4js.mangelhaft": "^0.1.0",
     "org.eclipse.n4js.mangelhaft.reporter.console": "^0.1.0",
-    "org.eclipse.n4js.mangelhaft.reporter.xunit": "^0.1.0"
+    "org.eclipse.n4js.mangelhaft.reporter.ide": "^0.1.0",
+    "org.eclipse.n4js.mangelhaft.reporter.xunit": "^0.1.0",
+    "@n4jsd/debug": "<=3.1.*"
   },
   "n4js": {
     "useES6Imports": true,
@@ -43,8 +49,9 @@
       ]
     },
     "requiredRuntimeLibraries": [
-      "n4js-runtime-fetch",
       "n4js-runtime-es2015",
+      "n4js-runtime-esnext",
+      "n4js-runtime-fetch",
       "n4js-runtime-node"
     ]
   }

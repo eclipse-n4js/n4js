@@ -23,8 +23,8 @@ import {TestInfos} from "org/eclipse/n4js/mangelhaft/types/TestInfos";
 import {TestMethodDescriptor} from "org/eclipse/n4js/mangelhaft/types/TestMethodDescriptor";
 import {TestResult} from "org/eclipse/n4js/mangelhaft/types/TestResult";
 import {TestSpy} from "org/eclipse/n4js/mangelhaft/types/TestSpy";
-import {findPackageJson} from "org/eclipse/n4js/mangelhaft/util";
-import {readJsonFile} from "org/eclipse/n4js/mangelhaft/util";
+import {readJsonFile} from "org/eclipse/n4js/mangelhaft/util/fs";
+import {findPackageJson} from "org/eclipse/n4js/mangelhaft/util/npm";
 import * as lib_path from "path";
 
 const MAX_GROUPS_PER_TEST_BATCH = 10;

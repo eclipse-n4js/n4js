@@ -35,19 +35,15 @@
       ]
     },
     "requiredRuntimeLibraries": [
-      "n4js-runtime-n4",
-      "n4js-runtime-es2015",
-      "n4js-runtime-mangelhaft"
+      "n4js-runtime-es2015"
     ]
   },
   "dependencies": {
-    "n4js.lang": "^0.1.0",
     "org.eclipse.n4js.mangelhaft": "^0.1.0",
     "org.eclipse.n4js.mangelhaft.assert": "^0.1.0",
     "n4js-node": "^0.1.0",
-    "n4js-runtime-n4": "^0.1.0",
-    "n4js-runtime-es2015": "^0.1.0",
-    "n4js-runtime-mangelhaft": "^0.1.0"
+    "n4js-runtime": "^0.1.0",
+    "n4js-runtime-es2015": "^0.1.0"
   },
   "devDependencies": {}
 }

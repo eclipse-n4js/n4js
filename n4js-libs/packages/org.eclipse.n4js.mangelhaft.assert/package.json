@@ -31,14 +31,12 @@
       ]
     },
     "requiredRuntimeLibraries": [
-      "n4js-runtime-n4",
       "n4js-runtime-v8",
       "n4js-runtime-es2015"
     ]
   },
   "dependencies": {
     "n4js-node": "^0.1.0",
-    "n4js-runtime-n4": "^0.1.0",
     "n4js-runtime-v8": "^0.1.0",
     "n4js-runtime-es2015": "^0.1.0"
   },

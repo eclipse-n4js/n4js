@@ -10,10 +10,12 @@
  */
 @@Global @@ProvidedByRuntime
 
-export external public abstract class ~Body {
-    public get bodyUsed(): boolean;
+export external public interface ~GlobalFetch {
+    public const Request: constructor{Request};
+    public const Response: constructor{Response};
+    public const Headers: constructor{Headers};
 
-    public async arrayBuffer(): ArrayBuffer;
-    public async json(): any;
-    public async text(): string;
+    public async fetch(input: union{string, Request}, init: RequestInit=): Response;
 }
+
+export external public async function fetch(input: union{string, Request}, init: RequestInit=): Response;

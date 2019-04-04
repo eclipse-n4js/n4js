@@ -1,20 +1,39 @@
 {
-  "name": "n4js-runtime-node-tests",
+  "name": "n4js-runtime",
   "version": "0.1.0",
   "author": {
     "name": "NumberFour AG",
     "email": "npm@numberfour.eu"
   },
   "license": "EPL-1.0",
-  "private": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/eclipse/n4js"
   },
-  "description": "N4JS node runtime tests.",
+  "description": "N4JS runtime environment.",
+  "engines": {
+    "node": ">= 8.0.0"
+  },
+  "main": "./src-gen/rt.js",
+  "files": [
+    "src",
+    "src-gen"
+  ],
+  "dependencies": {
+    "n4js-runtime-es2015": "^0.1.0"
+  },
+  "keywords": [
+    "n4js",
+    "es6",
+    "es2015",
+    "transpiler",
+    "ide",
+    "n4jside",
+    "n4js-ide"
+  ],
   "n4js": {
     "useES6Imports": true,
-    "projectType": "test",
+    "projectType": "library",
     "vendorId": "org.eclipse.n4js",
     "vendorName": "Eclipse N4JS Project",
     "output": "src-gen",
@@ -22,22 +41,12 @@
       "source": [
         "src/n4js"
       ],
-      "test": [
-        "test/n4js"
+      "external": [
+        "src/js"
       ]
     },
     "requiredRuntimeLibraries": [
-      "n4js-runtime-es2015",
-      "n4js-runtime-node"
-    ],
-    "testedProjects": [
-      "n4js-runtime-node"
+      "n4js-runtime-es2015"
     ]
-  },
-  "dependencies": {
-    "org.eclipse.n4js.mangelhaft.assert": "^0.1.0",
-    "n4js-node": "^0.1.0",
-    "n4js-runtime-es2015": "^0.1.0",
-    "n4js-runtime-node": "^0.1.0"
   }
 }

@@ -8,13 +8,14 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import {IInstrumentedTest} from "org/eclipse/n4js/mangelhaft/types/IInstrumentedTest"
-import {ITestReporter} from "org/eclipse/n4js/mangelhaft/types/ITestReporter"
-import {ResultGroups} from "org/eclipse/n4js/mangelhaft/types/ResultGroups"
-import {TestMethodDescriptor} from "org/eclipse/n4js/mangelhaft/types/TestMethodDescriptor"
-import {TestResult} from "org/eclipse/n4js/mangelhaft/types/TestResult"
-import {TestSpy} from "org/eclipse/n4js/mangelhaft/types/TestSpy"
-import {TestStatus} from "org/eclipse/n4js/mangelhaft/types/TestStatus"
+
+import {IInstrumentedTest} from "org/eclipse/n4js/mangelhaft/types/IInstrumentedTest";
+import {ITestReporter} from "org/eclipse/n4js/mangelhaft/types/ITestReporter";
+import {ResultGroups} from "org/eclipse/n4js/mangelhaft/types/ResultGroups";
+import {TestMethodDescriptor} from "org/eclipse/n4js/mangelhaft/types/TestMethodDescriptor";
+import {TestResult} from "org/eclipse/n4js/mangelhaft/types/TestResult";
+import {TestSpy} from "org/eclipse/n4js/mangelhaft/types/TestSpy";
+import {TestStatus} from "org/eclipse/n4js/mangelhaft/types/TestStatus";
 
 export public class ~CliColor {
     public red(str: string): string {

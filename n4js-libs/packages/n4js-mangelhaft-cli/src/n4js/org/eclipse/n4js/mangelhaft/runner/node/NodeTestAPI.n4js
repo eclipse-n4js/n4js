@@ -9,26 +9,31 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-import NodeTestCLI from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestCLI";
+import debug from "deps/debug";
+import {NodeTestCLI} from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestCLI";
 import NodeTestOptions from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestOptions";
 import {TestInfo} from "org/eclipse/n4js/mangelhaft/types/TestInfo";
-import {PACKAGE_JSON} from "org/eclipse/n4js/mangelhaft/util";
-import {createTempDir} from "org/eclipse/n4js/mangelhaft/util";
-import {fsSafeAccessSync} from "org/eclipse/n4js/mangelhaft/util";
-import {isHTTP_re} from "org/eclipse/n4js/mangelhaft/util";
-import {n4jsFileExt_re} from "org/eclipse/n4js/mangelhaft/util";
-import {readJsonFile} from "org/eclipse/n4js/mangelhaft/util";
+import {createTempDir} from "org/eclipse/n4js/mangelhaft/util/fs";
+import {fsSafeAccessSync} from "org/eclipse/n4js/mangelhaft/util/fs";
+import {readJsonFile} from "org/eclipse/n4js/mangelhaft/util/fs";
+import {PACKAGE_JSON} from "org/eclipse/n4js/mangelhaft/util/npm";
+import {isHTTP_re} from "org/eclipse/n4js/mangelhaft/util/npm";
 import * as child_process from "child_process";
 import * as lib_fs from "fs";
 import * as glob+ from "glob";
 import * as n4js_cli from "n4js-cli";
 import * as lib_path from "path";
 
+const log = debug("n4js-mangelhaft");
+const rlog = debug("n4js-mangelhaft-test-run");
+
 export default public class NodeTestAPI {
     /**
      * Executes a test run (might include compilation) with the given set of test options.
      */
     public static async exec(options: NodeTestOptions): void {
+        log("options: %O", options);
+
         const pathToPackageJson = new Map<string, Object+>();
 
         function addProject(dir: string): void {
@@ -49,9 +54,7 @@ export default public class NodeTestAPI {
 
         const projectDirs = Array.from(pathToPackageJson.keys());
 
-        if (options.debug) {
-            console.log("projects:", projectDirs);
-        }
+        log("projects:", projectDirs);
 
         if (options.compile) { // call n4jsc
             const n4jscTempDir = await createTempDir();
@@ -70,43 +73,20 @@ export default public class NodeTestAPI {
                 installMissingDependencies: options.installMissingDependencies,
                 clean: options.cleanCompile,
                 keepCompiling: options.keepCompiling,
-                verbose: options.debug,
-                debug: options.debug
+                verbose: log.enabled,
+                debug: log.enabled
             }, projectDirs);
 
-            if (options.debug) {
-                console.log("generated test catalog:", options.testCatalog);
-            }
+            log("generated test catalog:", options.testCatalog);
 
             const testCatalog = options.emitProjectTestCatalogs ? JSON.parse(String(lib_fs.readFileSync(options.testCatalog, { encoding: "UTF-8" }))) as Array<TestInfo> : null;
 
             for (const [dir, packageJson] of pathToPackageJson) {
-                if (options.generatedModulesGlob) {
-                    // walk all generated code modules:
-                    const bundleGen = [];
-                    const files = /*await dbo TODO */ glob.sync(options.generatedModulesGlob, { cwd: dir }) as Array<string>;
-                    for (const path of files) {
-                        const rpath = path
-                            .replace(n4jsFileExt_re, ".js")
-                            .split(lib_path.sep);
-                        bundleGen.push(`import * as ${rpath.join("_")} from "./${rpath.join("/")}";\n`);
-                    }
-                    if (bundleGen.length) {
-                        const file = lib_path.join(dir, "__bundle-gen.js");
-                        if (options.debug) {
-                            console.log("writing:", file);
-                        }
-                        lib_fs.writeFileSync(file, `/** Generated */\n${bundleGen.join("")}`, { encoding: "UTF-8" });
-                    }
-                }
-
                 if (testCatalog && options.emitProjectTestCatalogs) {
                     const tests = testCatalog.filter(test => test.origin === packageJson["name"] as string);
                     if (tests.length) {
                         const file = lib_path.join(dir, options.emitProjectTestCatalogs);
-                        if (options.debug) {
-                            console.log("writing:", file);
-                        }
+                        log("writing:", file);
                         lib_fs.writeFileSync(file, JSON.stringify(tests, null, 2), { encoding: "UTF-8" });
                     }
                 }
@@ -129,9 +109,7 @@ export default public class NodeTestAPI {
                             let newContent = content.replace(/_n4jsImport/mg, "import");
                             newContent = newContent.replace(/_nodeRequire/mg, "require");
                             if (newContent !== content) {
-                                if (options.debug) {
-                                    console.log("patching:", file);
-                                }
+                                log("patching:", file);
                                 lib_fs.writeFileSync(file, newContent, { encoding: "UTF-8" });
                             }
                         }
@@ -154,62 +132,37 @@ export default public class NodeTestAPI {
             }
         }
 
-        if (options.debug) {
-            console.log("testing with test catalog:", options.testCatalog);
-        }
-
-        const env: Object+ = Object.assign({}, process.env);
-
-        const n4type = this.n4type;
-        // build NodeTestRunner module path to give for n4js command line (per main, i.e. "<module>:<export>" notation),
-        // leaving off export will pick default export:
-        const consoleTestRunner = n4type.fqn.split(".");
-        consoleTestRunner.pop();
-        consoleTestRunner.pop();
-        consoleTestRunner.unshift("src-gen");
-        consoleTestRunner.unshift(n4type.origin);
-        consoleTestRunner.push("NodeTestRunner:");
-
-        const args = NodeTestCLI.toCommandLine(options);
-        args.unshift(consoleTestRunner.join("/"));
-
-        env.N4JS_RT_keep_eventloop = "1";
-
-        (options.define || []).forEach(kv => {
-            const [k, v] = kv.split("=");
-            env[`N4JS_RT_${k.replace(/-/g, "_")}`] = (v || "");
-        });
-        if (options.debug) {
-            env.N4JS_RT_debug = "1";
-        }
-        if (options.noDebugLog) {
-            // giving the command line option noLog overrides the DEBUG environment value to disable all logging (if the logger is configured.)
-            env.DEBUG = "-*";
-        }
+        log("testing with test catalog:", options.testCatalog);
 
         await new Promise<any, any>((resolve, reject) => {
+            rlog("execPath:", process.execPath);
+            const modulePath = lib_path.join(__dirname, "NodeTestRunner.js");
+            rlog("modulePath:", modulePath);
+
             const execArgv = process.execArgv.slice();
+            if (execArgv.indexOf("esm") < 0 && (process.env.NODE_OPTIONS as string || "").indexOf("-r esm") < 0) {
+                execArgv.push("-r", "esm");
+            }
             if (options.inspectBrk) {
                 execArgv.push(`--inspect-brk=${options.inspectBrk}`);
             }
+            rlog("execArgv:", execArgv);
+            const args = NodeTestCLI.toCommandLine(options); // fodder in same args
+            rlog("args:", args);
 
-            const n4jsRun = require.resolve("n4js-node/src-gen/n4js-cli");
-
-            if (options.debug) {
-                console.log("TestRun fork:", n4jsRun);
-                console.log("args:", args);
-                console.log("execArgv:", execArgv);
-                console.log("env:", env);
+            const env: Object+ = Object.assign({}, process.env);
+            if (options.noDebugLog) {
+                // giving the command line option noLog overrides the DEBUG environment value to disable all logging (if the logger is configured.)
+                env.DEBUG = "-*";
             }
+            //rlog("env:", env);
 
-            child_process.fork(n4jsRun, args, {
+            child_process.fork(modulePath, args, {
                 stdio: "inherit",
                 execArgv: execArgv,
                 env: env
             }).on("close", code => {
-                if (options.debug) {
-                    console.log(`TestRun exit code: ${code}`);
-                }
+                rlog("exit code:", code);
                 if (code === 0) {
                     resolve(code);
                 } else {
