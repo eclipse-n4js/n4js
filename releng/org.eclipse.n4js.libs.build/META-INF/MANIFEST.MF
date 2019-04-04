@@ -14,4 +14,4 @@ Require-Bundle: com.google.guava,
  org.eclipse.n4js.json.model,
  org.eclipse.n4js.utils
 Export-Package: org.eclipse.n4js.libs.build
-Automatic-Module-Name: org.eclipse.n4js.external.libraries.update
+Automatic-Module-Name: org.eclipse.n4js.libs.build
