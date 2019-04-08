@@ -175,17 +175,16 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 		monitor.subTask("Building " + buildData.getProjectName());
 		logBuildData(buildData, " of before #doUpdate");
 
-		IProject project = getProject(buildData);
 		try (Measurement m = N4JSDataCollectors.dcBuild.getMeasurement("build " + Instant.now());) {
 			try {
+				IBuildParticipantInstruction instruction = IBuildParticipantInstruction.NOOP;
 
-				BuildType buildType = N4JSBuildTypeTracker.getBuildType(project);
-				IBuildParticipantInstruction instruction;
-				if (buildType == null) {
-					instruction = IBuildParticipantInstruction.NOOP;
-				} else {
+				IProject project = findProject(buildData);
+				if (project != null) {
+					BuildType buildType = N4JSBuildTypeTracker.getBuildType(project);
 					instruction = findJSBuilderParticipant().prepareBuild(project, buildType);
 				}
+
 				// removed after the build automatically;
 				// the resource set is discarded afterwards, anyway
 				buildData.getResourceSet().eAdapters().add(instruction);
@@ -290,8 +289,11 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 	}
 
 	/** logic of {@link IN4JSCore#findAllProjects()} with filtering by name */
-	private IProject getProject(BuildData buildData) {
+	private IProject findProject(BuildData buildData) {
 		String eclipseProjectName = buildData.getProjectName();
+		if (eclipseProjectName == null) {
+			return null;
+		}
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IWorkspaceRoot root = workspace.getRoot();
 		IProject project = root.getProject(eclipseProjectName); // creates a project instance if not existing
