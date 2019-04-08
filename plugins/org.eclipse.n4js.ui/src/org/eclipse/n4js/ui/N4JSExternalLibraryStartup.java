@@ -11,6 +11,7 @@
 package org.eclipse.n4js.ui;
 
 import java.util.Arrays;
+import java.util.Map;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -30,9 +31,10 @@ import org.eclipse.ui.IStartup;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.xtext.builder.builderState.IBuilderState;
-import org.eclipse.xtext.builder.impl.BuildScheduler;
+import org.eclipse.xtext.builder.impl.BuilderStateDiscarder;
 import org.eclipse.xtext.builder.impl.IBuildFlag;
 
+import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
 /**
@@ -51,7 +53,7 @@ public class N4JSExternalLibraryStartup implements IStartup {
 	private IWorkspace workspace;
 
 	@Inject
-	private BuildScheduler buildManager;
+	private BuilderStateDiscarder builderStateDiscarder;
 
 	@Inject
 	private IBuilderState builderState;
@@ -76,8 +78,9 @@ public class N4JSExternalLibraryStartup implements IStartup {
 					// TODO return something like a Future that allows to say
 					// descriptionPersister.scheduleRecoveryBuildOnContributions().andThen(buildManager...)
 					descriptionPersister.scheduleRecoveryBuildOnContributions();
-					buildManager.scheduleBuildIfNecessary(Arrays.asList(workspace.getRoot().getProjects()),
-							IBuildFlag.RECOVERY_BUILD);
+					Map<String, String> args = Maps.newHashMap();
+					IBuildFlag.RECOVERY_BUILD.addToMap(args);
+					builderStateDiscarder.forgetLastBuildState(Arrays.asList(workspace.getRoot().getProjects()), args);
 				}
 			}).start();
 

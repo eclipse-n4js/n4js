@@ -56,7 +56,6 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
 import org.eclipse.n4js.smith.Measurement;
-import org.eclipse.n4js.ui.building.BuildDataWithRequestRebuild;
 import org.eclipse.n4js.ui.building.BuildManagerAccess;
 import org.eclipse.n4js.ui.containers.N4JSProjectsStateHelper;
 import org.eclipse.n4js.ui.external.ComputeProjectOrder.VertexOrder;
@@ -67,6 +66,7 @@ import org.eclipse.n4js.utils.N4JSDataCollectors;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.builder.builderState.IBuilderState;
+import org.eclipse.xtext.builder.impl.BuildData;
 import org.eclipse.xtext.builder.impl.IToBeBuiltComputerContribution;
 import org.eclipse.xtext.builder.impl.QueuedBuildData;
 import org.eclipse.xtext.builder.impl.ToBeBuilt;
@@ -535,7 +535,7 @@ public class ExternalLibraryBuilder {
 						((ResourceSetImpl) resourceSet).setURIResourceMap(newHashMap());
 					}
 
-					BuildDataWithRequestRebuild buildData = new BuildDataWithRequestRebuild(
+					BuildData buildData = new BuildData(
 							project.getName(),
 							resourceSet,
 							toBeBuilt,

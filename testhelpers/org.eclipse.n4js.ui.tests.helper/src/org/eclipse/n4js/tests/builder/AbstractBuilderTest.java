@@ -33,7 +33,6 @@ import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
 import org.eclipse.n4js.tests.util.EclipseUIUtils;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
-import org.eclipse.n4js.ui.building.CloseProjectTaskScheduler;
 import org.eclipse.n4js.ui.building.ResourceDescriptionWithoutModuleUserData;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildScheduler;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
@@ -42,6 +41,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.intro.IIntroManager;
+import org.eclipse.xtext.builder.impl.ProjectOpenedOrClosedListener;
 import org.eclipse.xtext.builder.impl.QueuedBuildData;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
@@ -81,7 +81,7 @@ public abstract class AbstractBuilderTest {
 	@Inject
 	private ExternalLibraryBuildScheduler externalLibraryBuildJobProvider;
 	@Inject
-	private CloseProjectTaskScheduler closedProjectTaskProcessor;
+	private ProjectOpenedOrClosedListener projectOpenedOrClosedListener;
 	@Inject
 	private QueuedBuildData queuedBuildData;
 	@Inject
@@ -258,7 +258,7 @@ public abstract class AbstractBuilderTest {
 	 * Waits for the jobs that do the housekeeping after project close or removal.
 	 */
 	protected void waitForNotReallyBuildButHousekeepingJobs() {
-		closedProjectTaskProcessor.joinRemoveProjectJob();
+		projectOpenedOrClosedListener.joinRemoveProjectJob();
 		externalLibraryBuildJobProvider.joinBuildJob();
 	}
 
