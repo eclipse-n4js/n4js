@@ -13,7 +13,6 @@ package org.eclipse.n4js.tests.util;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.n4js.external.ExternalLibraryHelper;
 import org.eclipse.n4js.external.LibraryManager;
-import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 
 import com.google.inject.Inject;
@@ -30,8 +29,10 @@ public class ShippedCodeInitializeTestHelper {
 	@Inject
 	private ExternalLibraryPreferenceStore externalLibraryPreferenceStore;
 
+	// FIXME GH-1281 needs adjustment
+
 	/**
-	 * Set up shipped projects in all {@link ExternalLibrariesActivator#EXTERNAL_LIBRARIES_SUPPLIER locations}.
+	 * Set up shipped projects in all {@code ExternalLibrariesActivator#EXTERNAL_LIBRARIES_SUPPLIER locations}.
 	 * <p>
 	 * <b>Attention:</b> Works only with PluginUI tests!
 	 * <p>
@@ -49,7 +50,7 @@ public class ShippedCodeInitializeTestHelper {
 		ProjectTestsUtils.waitForAllJobs();
 	}
 
-	/** Tear down shipped projects in all {@link ExternalLibrariesActivator#EXTERNAL_LIBRARIES_SUPPLIER locations}. */
+	/** Tear down shipped projects in all {@code ExternalLibrariesActivator#EXTERNAL_LIBRARIES_SUPPLIER locations}. */
 	synchronized public void tearDownBuiltIns() {
 		ProjectTestsUtils.waitForAllJobs();
 		libraryManager.deleteAllNodeModulesFolders(new NullProgressMonitor());
