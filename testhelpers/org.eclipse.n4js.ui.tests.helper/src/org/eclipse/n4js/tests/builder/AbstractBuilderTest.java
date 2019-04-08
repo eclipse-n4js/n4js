@@ -34,14 +34,12 @@ import org.eclipse.n4js.tests.util.EclipseUIUtils;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.eclipse.n4js.ui.building.ResourceDescriptionWithoutModuleUserData;
-import org.eclipse.n4js.ui.external.ExternalLibraryBuildScheduler;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.ui.utils.AutobuildUtils;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.intro.IIntroManager;
-import org.eclipse.xtext.builder.impl.ProjectOpenedOrClosedListener;
 import org.eclipse.xtext.builder.impl.QueuedBuildData;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
@@ -52,6 +50,7 @@ import org.eclipse.xtext.ui.resource.IResourceSetProvider;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.runner.RunWith;
 
 import com.google.inject.Inject;
@@ -79,9 +78,8 @@ public abstract class AbstractBuilderTest {
 	@Inject
 	private ResourceDescriptionsProvider resourceDescriptionsProvider;
 	@Inject
-	private ExternalLibraryBuildScheduler externalLibraryBuildJobProvider;
-	@Inject
-	private ProjectOpenedOrClosedListener projectOpenedOrClosedListener;
+	@Rule
+	public TestedN4JSWorkspace testedWorkspace;
 	@Inject
 	private QueuedBuildData queuedBuildData;
 	@Inject
@@ -228,8 +226,7 @@ public abstract class AbstractBuilderTest {
 
 	/***/
 	public void waitForAutoBuild(boolean assertValidityOfXtextIndex) {
-		waitForNotReallyBuildButHousekeepingJobs();
-		ProjectTestsUtils.waitForAutoBuild();
+		testedWorkspace.build();
 		ProjectTestsUtils.waitForAllJobs();
 		if (assertValidityOfXtextIndex)
 			assertXtextIndexIsValid();
@@ -249,7 +246,7 @@ public abstract class AbstractBuilderTest {
 	 * @see #waitForIncrementalBuild()
 	 */
 	public void waitForIncrementalBuild(boolean assertValidityOfXtextIndex) {
-		IResourcesSetupUtil.waitForBuild();
+		testedWorkspace.build();
 		if (assertValidityOfXtextIndex)
 			assertXtextIndexIsValid();
 	}
@@ -258,8 +255,7 @@ public abstract class AbstractBuilderTest {
 	 * Waits for the jobs that do the housekeeping after project close or removal.
 	 */
 	protected void waitForNotReallyBuildButHousekeepingJobs() {
-		projectOpenedOrClosedListener.joinRemoveProjectJob();
-		externalLibraryBuildJobProvider.joinBuildJob();
+		testedWorkspace.joinJobsBeforeBuild();
 	}
 
 	/***/
