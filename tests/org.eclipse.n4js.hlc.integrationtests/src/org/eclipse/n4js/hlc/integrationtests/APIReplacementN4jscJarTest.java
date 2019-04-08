@@ -15,6 +15,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.eclipse.n4js.hlc.base.ErrorExitCode;
 import org.eclipse.n4js.test.helper.hlc.N4CliHelper;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -22,6 +23,7 @@ import org.junit.Test;
  * <p>
  * IMPORTANT: for info on how to run this test locally, see {@link AbstractN4jscJarTest}!
  */
+@Ignore("GH-1291")
 public class APIReplacementN4jscJarTest extends AbstractN4jscJarTest {
 
 	/**
