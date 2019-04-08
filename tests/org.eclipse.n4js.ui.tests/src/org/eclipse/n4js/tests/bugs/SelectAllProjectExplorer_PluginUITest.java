@@ -71,7 +71,6 @@ import org.eclipse.ui.navigator.resources.ProjectExplorer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.collect.HashMultimap;
@@ -336,7 +335,6 @@ public class SelectAllProjectExplorer_PluginUITest extends AbstractPluginUITest 
 	}
 
 	/***/
-	@Ignore("random")
 	@Test
 	public void testWorkingSetAndProject() {
 		// Set projects as top level

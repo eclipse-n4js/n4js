@@ -25,6 +25,7 @@ import org.eclipse.xtext.builder.builderState.IMarkerUpdater;
 import org.eclipse.xtext.builder.builderState.PersistedStateProvider;
 import org.eclipse.xtext.builder.clustering.ClusteringBuilderState;
 import org.eclipse.xtext.builder.debug.IBuildLogger;
+import org.eclipse.xtext.builder.impl.BuilderStateDiscarder;
 import org.eclipse.xtext.builder.impl.XtextBuilder;
 import org.eclipse.xtext.builder.resourceloader.IResourceLoader;
 import org.eclipse.xtext.resource.clustering.IResourceClusteringPolicy;
@@ -58,5 +59,6 @@ public class N4JSClusteringBuilderConfiguration extends AbstractModule {
 		bind(IResourceLoader.class).annotatedWith(
 				Names.named(ClusteringBuilderState.RESOURCELOADER_GLOBAL_INDEX)).toProvider(
 						new BuildScopeAwareParallelLoaderProvider());
+		bind(BuilderStateDiscarder.class);
 	}
 }

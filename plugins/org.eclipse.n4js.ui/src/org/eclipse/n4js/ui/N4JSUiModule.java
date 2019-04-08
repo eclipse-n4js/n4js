@@ -22,7 +22,6 @@ import org.eclipse.n4js.external.ExternalLibraryUriHelper;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalProjectsCollector;
 import org.eclipse.n4js.external.NpmLogger;
-import org.eclipse.n4js.external.RebuildWorkspaceProjectsScheduler;
 import org.eclipse.n4js.findReferences.ConcreteSyntaxAwareReferenceFinder;
 import org.eclipse.n4js.generator.ICompositeGenerator;
 import org.eclipse.n4js.generator.IGeneratorMarkerSupport;
@@ -314,11 +313,6 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	/** Delegate to shared injector */
 	public Provider<ExternalProjectProvider> provideExternalProjectProvider() {
 		return Access.contributedProvider(ExternalProjectProvider.class);
-	}
-
-	/** Delegate to shared injector */
-	public Provider<RebuildWorkspaceProjectsScheduler> provideRebuildWorkspaceProjectsScheduler() {
-		return Access.contributedProvider(RebuildWorkspaceProjectsScheduler.class);
 	}
 
 	/** Delegate to shared injector */

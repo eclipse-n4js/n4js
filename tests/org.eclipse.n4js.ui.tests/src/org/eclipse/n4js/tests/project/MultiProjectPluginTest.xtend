@@ -30,7 +30,6 @@ import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
 import org.eclipse.n4js.tests.util.PackageJSONTestUtils
 import org.eclipse.n4js.tests.util.ProjectTestsUtils
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.DEPENDENCIES
@@ -287,7 +286,6 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 		assertMarkers('project description file (package.json) file should have no errors.', projectDescriptionFile2, 0);
 	}
 
-	@Ignore("random") // Disabled due to timing issues. The project description file (package.json) re-validation is not triggered as the part of the build job but from a common job.
 	@Test
 	def void testDeleteExternalFolderValidateProjectDescriptionFileWithoutOpenedEditors() {
 

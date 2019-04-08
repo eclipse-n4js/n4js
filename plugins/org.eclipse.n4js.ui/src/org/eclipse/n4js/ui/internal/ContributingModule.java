@@ -29,7 +29,6 @@ import org.eclipse.n4js.external.ExternalLibraryUriHelper;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalProjectsCollector;
 import org.eclipse.n4js.external.NpmLogger;
-import org.eclipse.n4js.external.RebuildWorkspaceProjectsScheduler;
 import org.eclipse.n4js.external.ShadowingInfoHelper;
 import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
@@ -158,7 +157,6 @@ public class ContributingModule implements Module {
 		binder.bind(ExternalProjectsCollector.class);
 		binder.bind(ExternalProjectProvider.class);
 		binder.bind(NodeModulesDiscoveryHelper.class);
-		binder.bind(RebuildWorkspaceProjectsScheduler.class);
 
 		binder.bind(N4JSExternalLibraryStorage2UriMapperContribution.class);
 		binder.bind(ExternalLibraryUriHelper.class);
