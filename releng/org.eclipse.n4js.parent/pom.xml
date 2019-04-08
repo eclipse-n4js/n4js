@@ -29,9 +29,9 @@ Contributors:
 
 	<properties>
 		<!-- java version -->
-		<java-compile-version>8.0</java-compile-version>
+		<java-compile-version>11</java-compile-version>
 		<!-- keep in sync with n4js/docker-build/Dockerfile -->
-		<jdk-version>1.8</jdk-version>
+		<jdk-version>11</jdk-version>
 		<maven.compiler.source>${jdk-version}</maven.compiler.source>
 		<maven.compiler.target>${jdk-version}</maven.compiler.target>
 		<!-- keep in sync with n4js/docker-build/Dockerfile -->
