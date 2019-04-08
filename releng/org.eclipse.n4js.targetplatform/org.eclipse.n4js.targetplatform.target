@@ -56,10 +56,10 @@
       <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20190226160451/repository"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-      <unit id="org.eclipse.xtext.ui.testing" version="2.17.0.v20190304-1216"/>
-      <unit id="org.eclipse.xtext.xbase" version="2.17.0.v20190304-0626"/>
-      <unit id="org.eclipse.xtext.xtext.ui" version="2.17.0.v20190304-1216"/>
-      <repository location="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.17.0"/>
+      <unit id="org.eclipse.xtext.ui.testing" version="2.17.1.v20190402-1603"/>
+      <unit id="org.eclipse.xtext.xbase" version="2.17.1.v20190402-0745"/>
+      <unit id="org.eclipse.xtext.xtext.ui" version="2.17.1.v20190402-1603"/>
+      <repository location="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.17.1"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.xpect.xtext.lib" version="0.2.0.201802191222"/>
