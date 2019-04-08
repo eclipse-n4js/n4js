@@ -266,8 +266,8 @@ public abstract class AbstractBuilderTest {
 	/** Synchronizes the index, rebuilds externals and workspace */
 	protected void syncExtAndBuild() throws CoreException {
 		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
-		ProjectTestsUtils.waitForAllJobs();
-		IResourcesSetupUtil.fullBuild();
+		// ProjectTestsUtils.waitForAllJobs();
+		// IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 	}
 
