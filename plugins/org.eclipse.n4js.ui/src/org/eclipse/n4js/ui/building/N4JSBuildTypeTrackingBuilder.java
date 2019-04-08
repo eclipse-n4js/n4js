@@ -224,7 +224,7 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 	 *             if something goes down the drain.
 	 */
 	// FIXME GH-1234: remove overrides that are now obsolete after adjustments were moved to Xtext builder!
-	@Override
+	// @Override // disabled @Override after updating from Xtext 2.17.0 to Xtext 2.17.1
 	protected void processedAbsentReferencedProjects(IResourceDeltaVisitor visitor) throws CoreException {
 		final IProject[] interestingProjects = optimisticInvoke("getInterestingProjects");
 		for (IProject more : interestingProjects) {
