@@ -68,7 +68,7 @@ public class ProjectStateChangeListener extends ProjectOpenedOrClosedListener {
 				try {
 					final Set<IProject> affectedProjects = findProjectsToBuild(event);
 					if (!affectedProjects.isEmpty()) {
-						scheduleJob(affectedProjects.iterator().next().getName(), new ToBeBuilt());
+						scheduleJob("npm Index", new ToBeBuilt());
 					}
 				} catch (CoreException e) {
 					LOGGER.error(e.getMessage(), e);
@@ -91,6 +91,13 @@ public class ProjectStateChangeListener extends ProjectOpenedOrClosedListener {
 				return visitResourceDelta(delta, accumutor);
 			}
 		};
+	}
+
+	/**
+	 * Schedule a job that will ensure that the npm index is up to date.
+	 */
+	public void scheduleCheckAndClearIndex() {
+		scheduleJob("npm Index", new ToBeBuilt());
 	}
 
 	@Override
