@@ -77,7 +77,6 @@ import org.eclipse.n4js.ui.external.ExternalLibraryBuildQueue;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildScheduler;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuilder;
 import org.eclipse.n4js.ui.external.ExternalProjectProvider;
-import org.eclipse.n4js.ui.external.ProjectStateChangeListener;
 import org.eclipse.n4js.ui.formatting2.FixedContentFormatter;
 import org.eclipse.n4js.ui.generator.GeneratorMarkerSupport;
 import org.eclipse.n4js.ui.internal.ConsoleOutputStreamProvider;
@@ -263,11 +262,6 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	/** Delegate to shared injector */
 	public Provider<ExternalProjectLoader> provideExternalProjectCacheLoader() {
 		return Access.contributedProvider(ExternalProjectLoader.class);
-	}
-
-	/** Delegate to shared injector */
-	public Provider<ProjectStateChangeListener> provideProjectStateChangeListener() {
-		return Access.contributedProvider(ProjectStateChangeListener.class);
 	}
 
 	/** Delegate to shared injector */

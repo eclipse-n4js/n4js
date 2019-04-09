@@ -51,7 +51,6 @@ import org.eclipse.n4js.ui.external.ExternalLibraryBuildQueue;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildScheduler;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuilder;
 import org.eclipse.n4js.ui.external.ExternalProjectProvider;
-import org.eclipse.n4js.ui.external.ProjectStateChangeListener;
 import org.eclipse.n4js.ui.navigator.N4JSProjectExplorerLabelProvider;
 import org.eclipse.n4js.ui.navigator.internal.N4JSProjectExplorerHelper;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
@@ -146,7 +145,6 @@ public class ContributingModule implements Module {
 		binder.bind(ShadowingInfoHelper.class);
 
 		binder.bind(ExternalProjectLoader.class);
-		binder.bind(ProjectStateChangeListener.class);
 		binder.bind(ExternalLibraryBuildScheduler.class);
 		binder.bind(ExternalLibraryBuilder.class);
 		binder.bind(ExternalLibraryBuildQueue.class);

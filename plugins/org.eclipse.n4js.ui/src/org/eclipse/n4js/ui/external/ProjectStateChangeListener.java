@@ -10,107 +10,103 @@
  */
 package org.eclipse.n4js.ui.external;
 
-import static com.google.common.collect.Sets.newLinkedHashSet;
-import static org.eclipse.core.resources.IResourceDelta.ADDED;
-import static org.eclipse.core.resources.IResourceDelta.CHANGED;
-import static org.eclipse.core.resources.IResourceDelta.OPEN;
-import static org.eclipse.core.resources.IResourceDelta.REMOVED;
-
-import java.util.Collection;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
-import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IResourceDeltaVisitor;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
-import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.n4js.external.ExternalIndexSynchronizer;
+import org.eclipse.xtext.builder.impl.ProjectOpenedOrClosedListener;
+import org.eclipse.xtext.builder.impl.ToBeBuilt;
+import org.eclipse.xtext.ui.shared.contribution.ISharedStateContributionRegistry;
 
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
- * Resource change listener implementation for listening project open/close event and running the
- * {@link ExternalLibraryBuilder external library build helper} according to the changes. Also got notified if new
- * workspace project is being created or an existing, accessible project is being deleted.
+ * Enhance the {@link ProjectOpenedOrClosedListener} to trigger the {@link EclipseExternalIndexSynchronizer} when a task
+ * is executed.
  */
-public class ProjectStateChangeListener implements IResourceChangeListener {
-	private static final Logger logger = Logger.getLogger(ProjectStateChangeListener.class);
+@SuppressWarnings("restriction")
+@Singleton
+public class ProjectStateChangeListener extends ProjectOpenedOrClosedListener {
 
+	private final static Logger LOGGER = Logger.getLogger(ProjectStateChangeListener.class);
+
+	private final ExternalIndexSynchronizer indexSynchronizer;
+
+	/***/
 	@Inject
-	private EclipseExternalIndexSynchronizer indexSynchronizer;
+	public ProjectStateChangeListener(ISharedStateContributionRegistry registry) {
+		this.indexSynchronizer = registry.getSingleContributedInstance(ExternalIndexSynchronizer.class);
+	}
 
-	@Inject
-	private ExternalLibraryBuilder builder;
-
-	final private Collection<IProject> projectsChanged = newLinkedHashSet();
+	@Override
+	protected RemoveProjectsJob createRemoveProjectsJob() {
+		return new RemoveProjectsJob() {
+			@Override
+			public boolean belongsTo(Object family) {
+				return super.belongsTo(family) || family == ResourcesPlugin.FAMILY_MANUAL_BUILD;
+			}
+		};
+	}
 
 	@Override
 	public void resourceChanged(final IResourceChangeEvent event) {
-		if (null == event || null == event.getDelta()) {
-			return;
-		}
-
-		try {
-			projectsChanged.clear();
-			event.getDelta().accept(this::visit); // fill projectsChanged
-
-			if (!projectsChanged.isEmpty()) {
-
-				Job job = new Job("Update locations of node_modules folders") {
-					@Override
-					protected IStatus run(IProgressMonitor monitor) {
-						ISchedulingRule rule = builder.getRule();
-						Job.getJobManager().beginRule(rule, monitor);
-						try {
-							indexSynchronizer.checkAndClearIndex(monitor);
-						} finally {
-							Job.getJobManager().endRule(rule);
-						}
-						return Status.OK_STATUS;
+		IWorkspace workspace = getWorkspace();
+		if (workspace != null) {
+			if (event.getType() == IResourceChangeEvent.POST_CHANGE) {
+				try {
+					final Set<IProject> affectedProjects = findProjectsToBuild(event);
+					if (!affectedProjects.isEmpty()) {
+						scheduleJob(affectedProjects.iterator().next().getName(), new ToBeBuilt());
 					}
-				};
-				job.schedule();
+				} catch (CoreException e) {
+					LOGGER.error(e.getMessage(), e);
+				}
 			}
-
-		} catch (final CoreException e) {
-			logger.error("Error while visiting resource change event.", e);
 		}
+		super.resourceChanged(event);
 	}
 
-	boolean visit(IResourceDelta delta) {
-		if (projectChanged(delta)) {
-			IResource resource = delta.getResource();
-			String name = resource.getName();
-			if (resource instanceof IProject && !"RemoteSystemsTempFiles".equals(name)) {
-				IProject project = (IProject) resource;
-				projectsChanged.add(project);
-			}
-		}
-
-		return true;
+	private Set<IProject> findProjectsToBuild(final IResourceChangeEvent event) throws CoreException {
+		final Set<IProject> toUpdate = Sets.newLinkedHashSet();
+		event.getDelta().accept(projectCollector(toUpdate));
+		return toUpdate;
 	}
 
-	private boolean projectChanged(IResourceDelta delta) {
-		int kind = delta.getKind();
-		int flags = delta.getFlags();
-
-		switch (kind) {
-		case ADDED:
-		case REMOVED:
-			return true;
-
-		case CHANGED:
-			if ((flags & (OPEN)) != 0) {
-				return true;
+	private IResourceDeltaVisitor projectCollector(final Set<IProject> accumutor) {
+		return new IResourceDeltaVisitor() {
+			@Override
+			public boolean visit(IResourceDelta delta) throws CoreException {
+				return visitResourceDelta(delta, accumutor);
 			}
-		}
+		};
+	}
 
-		return false;
+	@Override
+	protected void processClosedProjects(IProgressMonitor monitor) {
+		SubMonitor subMonitor = SubMonitor.convert(monitor, 10);
+		indexSynchronizer.checkAndClearIndex(subMonitor.split(1));
+		super.processClosedProjects(subMonitor.split(9));
+	}
+
+	@Override
+	protected boolean visitResourceDelta(IResourceDelta delta, Set<IProject> accumulator) {
+		IResource resource = delta.getResource();
+		if (resource instanceof IProject && "RemoteSystemsTempFiles".equals(resource.getName())) {
+			return false;
+		}
+		return super.visitResourceDelta(delta, accumulator);
 	}
 
 }

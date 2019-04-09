@@ -41,7 +41,6 @@ import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.utils.process.OutputRedirection;
 import org.eclipse.n4js.utils.process.ProcessExecutor;
 import org.eclipse.n4js.utils.process.ProcessResult;
-import org.eclipse.xtext.testing.RepeatedTest;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.After;
 import org.junit.Before;
@@ -54,7 +53,6 @@ import com.google.inject.Inject;
 /**
  * Test for checking the runtime behavior of the external libraries.
  */
-@RepeatedTest(times=25)
 public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTest {
 
 	private static final String NL = "\n"; // node is not using system line separator

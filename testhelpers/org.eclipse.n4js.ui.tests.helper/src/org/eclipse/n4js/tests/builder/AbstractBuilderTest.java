@@ -77,9 +77,15 @@ public abstract class AbstractBuilderTest {
 	private IResourceSetProvider resourceSetProvider;
 	@Inject
 	private ResourceDescriptionsProvider resourceDescriptionsProvider;
+
+	/**
+	 * Allows to trigger operations on the workspace that are considered to prevent race conditions, e.g. allows to
+	 * build synchronously.
+	 */
 	@Inject
 	@Rule
 	public TestedN4JSWorkspace testedWorkspace;
+
 	@Inject
 	private QueuedBuildData queuedBuildData;
 	@Inject
@@ -227,6 +233,7 @@ public abstract class AbstractBuilderTest {
 	/***/
 	public void waitForAutoBuild(boolean assertValidityOfXtextIndex) {
 		testedWorkspace.build();
+
 		ProjectTestsUtils.waitForAllJobs();
 		if (assertValidityOfXtextIndex)
 			assertXtextIndexIsValid();
@@ -264,10 +271,8 @@ public abstract class AbstractBuilderTest {
 	}
 
 	/** Synchronizes the index, rebuilds externals and workspace */
-	protected void syncExtAndBuild() throws CoreException {
+	protected void syncExtAndBuild() {
 		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
-		// ProjectTestsUtils.waitForAllJobs();
-		// IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 	}
 
