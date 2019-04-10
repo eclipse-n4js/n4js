@@ -4,7 +4,7 @@ Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.n4js.runner;singleton:=true
 Bundle-Version: 0.0.1.qualifier
 Bundle-Vendor: %providerName
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.eclipse.n4js.runner,
  org.eclipse.n4js.runner.exceptions,
  org.eclipse.n4js.runner.extension,

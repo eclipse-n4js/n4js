@@ -4,7 +4,7 @@ Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.n4js.xpect.ui;singleton:=true
 Bundle-Version: 0.0.1.qualifier
 Bundle-Vendor: %providerName
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.eclipse.debug.ui,
  org.eclipse.xpect.xtext.lib;bundle-version="0.2.0",
  org.eclipse.xtext.ui.testing,

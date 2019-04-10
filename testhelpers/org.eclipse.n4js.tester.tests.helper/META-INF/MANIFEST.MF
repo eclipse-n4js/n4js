@@ -221,5 +221,5 @@ Export-Package: com.jayway.restassured,
  org.hamcrest.object,
  org.hamcrest.text,
  org.hamcrest.xml
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: org.eclipse.n4js.tester.tests.helper

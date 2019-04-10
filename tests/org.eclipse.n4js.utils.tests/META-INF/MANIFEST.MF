@@ -8,6 +8,6 @@ Fragment-Host: org.eclipse.n4js.utils
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.workbench;resolution:=optional,
  org.junit
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.eclipse.n4js.utils
 Automatic-Module-Name: org.eclipse.n4js.utils.tests

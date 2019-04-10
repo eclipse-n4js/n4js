@@ -29,7 +29,7 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.eclipse.n4js.ts.model;bundle-version="0.0.1";visibility:=reexport,
  org.eclipse.n4js.utils,
  org.eclipse.n4js.model;bundle-version="0.0.1"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: env,
  org.eclipse.n4js.ts,
  org.eclipse.n4js.ts.conversions,

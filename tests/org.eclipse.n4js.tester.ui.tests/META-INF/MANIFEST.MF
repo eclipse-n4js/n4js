@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.eclipse.n4js.tester.ui.tests
 Bundle-Version: 0.0.1.qualifier
 Bundle-Vendor: %providerName
 Fragment-Host: org.eclipse.n4js.tester;bundle-version="0.0.1"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.eclipse.n4js.tester.tests.helper,
  org.eclipse.xtend.lib,
  org.junit,
