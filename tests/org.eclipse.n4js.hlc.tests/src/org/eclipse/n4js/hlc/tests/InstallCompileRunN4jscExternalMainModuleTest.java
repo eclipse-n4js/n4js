@@ -23,8 +23,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.base.Predicates;
-
 /**
  * Downloads, installs, compiles and runs several packages that are known to be problematic in terms of how they define
  * main module.
@@ -36,7 +34,7 @@ public class InstallCompileRunN4jscExternalMainModuleTest extends AbstractN4jscT
 	/** Prepare workspace. */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace("externalmm", Predicates.alwaysTrue(), true);
+		workspace = setupWorkspace("externalmm", true, "n4js-runtime");
 	}
 
 	/** Delete workspace. */
@@ -67,7 +65,6 @@ public class InstallCompileRunN4jscExternalMainModuleTest extends AbstractN4jscT
 		};
 		final String actual = runAndCaptureOutput(args);
 		StringBuilder expected = new StringBuilder()
-				.append("\\(node:(\\d)+\\) \\[DEP0025\\] DeprecationWarning: sys is deprecated\\. Use util instead\\.")
 				.append("express imported").append("\n")
 				.append("jade imported").append("\n")
 				.append("lodash imported").append("\n")

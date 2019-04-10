@@ -175,9 +175,7 @@ public class XpectN4JSES5TranspilerHelper {
 			N4jsLibsAccess.installN4jsLibs(
 					nodeModulesPath,
 					true, true, true,
-					"n4js-runtime",
-					"n4js-runtime-es2015",
-					"esm");
+					"n4js-runtime");
 
 			String fileToRun = jsModulePathToRun(script);
 			fileToRun = fileToRun.substring(fileToRun.indexOf('/') + 1);
@@ -231,9 +229,7 @@ public class XpectN4JSES5TranspilerHelper {
 			N4jsLibsAccess.installN4jsLibs(
 					artificialRoot.resolve(artificialProjectName).resolve(N4JSGlobals.NODE_MODULES),
 					true, true, true,
-					"n4js-runtime",
-					"n4js-runtime-es2015",
-					"esm");
+					"n4js-runtime");
 
 			runConfig = runnerFrontEnd.createXpectOutputTestConfiguration(NodeRunner.ID,
 					fileToRun,

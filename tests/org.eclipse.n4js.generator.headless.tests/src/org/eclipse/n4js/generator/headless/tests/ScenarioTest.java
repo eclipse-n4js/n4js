@@ -431,22 +431,22 @@ public class ScenarioTest {
 
 	/**
 	 */
-	private void assertFileSystemCallStartsWith(File root, String file, String content) throws IOException {
+	private void assertFileSystemCallStartsWith(File root, String file, String expectation) throws IOException {
 		List<String> lines = Files.readAllLines(new File(root, file).toPath(), StandardCharsets.UTF_8);
 		// First line is CJS System-patching, second is System-call:
 		String firstLine = lines.get(1).trim();
-		assertTrue("File " + file + " should start with \'" + content + "\' but started with \'" + firstLine
+		assertTrue("File " + file + " should start with \'" + expectation + "\' but started with \'" + firstLine
 				+ "\' instead",
-				firstLine.startsWith(content));
+				firstLine.startsWith(expectation));
 	}
 
 	/**
 	 */
-	private void assertFileSystemCallStartsNotWith(File root, String file, String content) throws IOException {
+	private void assertFileSystemCallStartsNotWith(File root, String file, String expectation) throws IOException {
 		List<String> lines = Files.readAllLines(new File(root, file).toPath(), StandardCharsets.UTF_8);
 		// First line is CJS System-patching, second is System-call:
 		String firstLine = lines.get(1).trim();
-		assertFalse("File " + file + " should NOT start with " + content, firstLine.startsWith(content));
+		assertFalse("File " + file + " should NOT start with " + expectation, firstLine.startsWith(expectation));
 	}
 
 	/**

@@ -31,11 +31,13 @@ import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.hlc.base.ErrorExitCode;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.hlc.base.N4jscBase;
+import org.eclipse.n4js.json.JSONStandaloneSetup;
 import org.eclipse.n4js.test.helper.hlc.N4CliHelper;
 import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.xtext.testing.GlobalRegistries;
+import org.eclipse.xtext.util.Arrays;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -105,6 +107,15 @@ public abstract class AbstractN4jscTest {
 	}
 
 	/**
+	 * Same as {@link #setupWorkspace(String, Predicate, boolean)}, but accepts one or more names of libraries to
+	 * install instead of a predicate.
+	 */
+	protected static File setupWorkspace(String testDataSet, boolean createYarnWorkspace, String... libNames)
+			throws IOException {
+		return setupWorkspace(testDataSet, libName -> Arrays.contains(libNames, libName), createYarnWorkspace);
+	}
+
+	/**
 	 * Copy a fresh fixture to the workspace area. Deleting old leftovers from former tests. Also includes all N4JS
 	 * libraries from the {@code n4js} Git repository which name provides {@code true} value for the given predicate.
 	 *
@@ -148,8 +159,18 @@ public abstract class AbstractN4jscTest {
 		// copy fixtures to workspace
 		FileCopier.copy(fixture.toPath(), projectLocation.toPath(), true);
 
-		// copy required n4js libraries to workspace location
-		N4CliHelper.copyN4jsLibsToLocation(projectLocation, n4jsLibrariesPredicate);
+		// copy required n4js libraries to workspace / node_modules location
+		File libsLocation;
+		if (createYarnWorkspace) {
+			// in case of a yarn workspace, we install the n4js-libs as siblings of the main project(s)
+			libsLocation = projectLocation;
+		} else {
+			// otherwise, we install the n4js-libs in the main project's node_modules folder
+			// (note: we assume fixture contains only a single project (i.e. only a single sub folder))
+			libsLocation = new File(projectLocation.listFiles()[0], N4JSGlobals.NODE_MODULES);
+		}
+		JSONStandaloneSetup.doSetup(); // FIXME improve; ask SZ!!!
+		N4CliHelper.copyN4jsLibsToLocation(libsLocation, n4jsLibrariesPredicate);
 
 		// create yarn workspace
 		if (createYarnWorkspace) {

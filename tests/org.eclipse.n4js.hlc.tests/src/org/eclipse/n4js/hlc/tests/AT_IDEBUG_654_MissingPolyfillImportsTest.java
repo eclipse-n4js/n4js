@@ -34,7 +34,7 @@ public class AT_IDEBUG_654_MissingPolyfillImportsTest extends AbstractN4jscTest 
 	 */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace(WS_IDEBUG_654_2, false);
+		workspace = setupWorkspace(WS_IDEBUG_654_2, false, "n4js-runtime");
 	}
 
 	/** Delete workspace. */

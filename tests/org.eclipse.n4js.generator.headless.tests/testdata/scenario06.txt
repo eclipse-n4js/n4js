@@ -1,6 +1,6 @@
 # wsp1/P1/ext1/c/X.js
 // Comment to the TESTER (YOU!): This File (scenario01.txt) assembles the content of many files
-// The File are separated by a single HASH character. So this Character is off limits to use otherwise
+// The Files are separated by a single HASH character. So this Character is off limits to use otherwise
 // After the Hashmark up to the end of the line is the relative path of the file to create.
 // all other characters till the next HASH are the content of this file.
 export public class A {

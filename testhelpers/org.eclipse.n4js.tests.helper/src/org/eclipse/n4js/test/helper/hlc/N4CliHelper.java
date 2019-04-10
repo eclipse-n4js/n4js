@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.test.helper.hlc;
 
-import static com.google.common.base.Preconditions.checkState;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -25,14 +24,10 @@ import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import org.eclipse.n4js.hlc.base.N4jscBase;
-import org.eclipse.n4js.utils.io.FileCopier;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
@@ -289,27 +284,8 @@ public class N4CliHelper {
 	 */
 	public static void copyN4jsLibsToLocation(File location,
 			Predicate<String> n4jsLibrariesPredicate) throws IOException {
-		// obtain paths of all shipped code projects
-		final List<File> n4jsLibraries = StreamSupport
-				.stream(ShippedCodeAccess.getAllShippedPaths().spliterator(), false)
-				.flatMap(path -> Arrays.asList(new File(path).listFiles()).stream()).collect(Collectors.toList());
-
-		// copy N4JS libraries on demand
-		if (!n4jsLibraries.isEmpty()) {
-			for (final File n4jsLibrary : n4jsLibraries) {
-				if (n4jsLibrariesPredicate.apply(n4jsLibrary.getName())) {
-					if (N4JS_LIBS_BLACKLIST.contains(n4jsLibrary.getName())) {
-						continue;
-					}
-					System.out.println("Including N4JS library in workspace: '" + n4jsLibrary.getName() + "'.");
-					final File libFolder = new File(location, n4jsLibrary.getName());
-					libFolder.mkdir();
-					checkState(libFolder.isDirectory(),
-							"Error while copying N4JS library '" + n4jsLibrary.getName() + "' to workspace.");
-					FileCopier.copy(n4jsLibrary.toPath(), libFolder.toPath(), true);
-				}
-			}
-		}
+		N4jsLibsAccess.installN4jsLibs(location.toPath(), true, false, true,
+				libName -> !N4JS_LIBS_BLACKLIST.contains(libName) && n4jsLibrariesPredicate.test(libName));
 	}
 
 }
