@@ -75,6 +75,7 @@ public class TypeRefAnnotationArgumentImpl extends AnnotationArgumentImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypeRef getTypeRef() {
 		return typeRef;
 	}
@@ -99,6 +100,7 @@ public class TypeRefAnnotationArgumentImpl extends AnnotationArgumentImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTypeRef(TypeRef newTypeRef) {
 		if (newTypeRef != typeRef) {
 			NotificationChain msgs = null;
@@ -118,6 +120,7 @@ public class TypeRefAnnotationArgumentImpl extends AnnotationArgumentImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypeRef value() {
 		return this.getTypeRef();
 	}

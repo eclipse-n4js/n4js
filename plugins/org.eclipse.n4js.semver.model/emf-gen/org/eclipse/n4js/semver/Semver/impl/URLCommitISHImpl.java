@@ -77,6 +77,7 @@ public class URLCommitISHImpl extends URLVersionSpecifierImpl implements URLComm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getCommitISH() {
 		return commitISH;
 	}
@@ -86,6 +87,7 @@ public class URLCommitISHImpl extends URLVersionSpecifierImpl implements URLComm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setCommitISH(String newCommitISH) {
 		String oldCommitISH = commitISH;
 		commitISH = newCommitISH;

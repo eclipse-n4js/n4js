@@ -294,6 +294,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Script createScript() {
 		ScriptImpl script = new ScriptImpl();
 		return script;
@@ -304,6 +305,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ExportDeclaration createExportDeclaration() {
 		ExportDeclarationImpl exportDeclaration = new ExportDeclarationImpl();
 		return exportDeclaration;
@@ -314,6 +316,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ExportSpecifier createExportSpecifier() {
 		ExportSpecifierImpl exportSpecifier = new ExportSpecifierImpl();
 		return exportSpecifier;
@@ -324,6 +327,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ImportDeclaration createImportDeclaration() {
 		ImportDeclarationImpl importDeclaration = new ImportDeclarationImpl();
 		return importDeclaration;
@@ -334,6 +338,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NamedImportSpecifier createNamedImportSpecifier() {
 		NamedImportSpecifierImpl namedImportSpecifier = new NamedImportSpecifierImpl();
 		return namedImportSpecifier;
@@ -344,6 +349,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public DefaultImportSpecifier createDefaultImportSpecifier() {
 		DefaultImportSpecifierImpl defaultImportSpecifier = new DefaultImportSpecifierImpl();
 		return defaultImportSpecifier;
@@ -354,6 +360,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NamespaceImportSpecifier createNamespaceImportSpecifier() {
 		NamespaceImportSpecifierImpl namespaceImportSpecifier = new NamespaceImportSpecifierImpl();
 		return namespaceImportSpecifier;
@@ -364,6 +371,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public AnnotationList createAnnotationList() {
 		AnnotationListImpl annotationList = new AnnotationListImpl();
 		return annotationList;
@@ -374,6 +382,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ExpressionAnnotationList createExpressionAnnotationList() {
 		ExpressionAnnotationListImpl expressionAnnotationList = new ExpressionAnnotationListImpl();
 		return expressionAnnotationList;
@@ -384,6 +393,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Annotation createAnnotation() {
 		AnnotationImpl annotation = new AnnotationImpl();
 		return annotation;
@@ -394,6 +404,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public LiteralAnnotationArgument createLiteralAnnotationArgument() {
 		LiteralAnnotationArgumentImpl literalAnnotationArgument = new LiteralAnnotationArgumentImpl();
 		return literalAnnotationArgument;
@@ -404,6 +415,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypeRefAnnotationArgument createTypeRefAnnotationArgument() {
 		TypeRefAnnotationArgumentImpl typeRefAnnotationArgument = new TypeRefAnnotationArgumentImpl();
 		return typeRefAnnotationArgument;
@@ -414,6 +426,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public FunctionDeclaration createFunctionDeclaration() {
 		FunctionDeclarationImpl functionDeclaration = new FunctionDeclarationImpl();
 		return functionDeclaration;
@@ -424,6 +437,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public FunctionExpression createFunctionExpression() {
 		FunctionExpressionImpl functionExpression = new FunctionExpressionImpl();
 		return functionExpression;
@@ -434,6 +448,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ArrowFunction createArrowFunction() {
 		ArrowFunctionImpl arrowFunction = new ArrowFunctionImpl();
 		return arrowFunction;
@@ -444,6 +459,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public LocalArgumentsVariable createLocalArgumentsVariable() {
 		LocalArgumentsVariableImpl localArgumentsVariable = new LocalArgumentsVariableImpl();
 		return localArgumentsVariable;
@@ -454,6 +470,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public FormalParameter createFormalParameter() {
 		FormalParameterImpl formalParameter = new FormalParameterImpl();
 		return formalParameter;
@@ -464,6 +481,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Block createBlock() {
 		BlockImpl block = new BlockImpl();
 		return block;
@@ -474,6 +492,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Statement createStatement() {
 		StatementImpl statement = new StatementImpl();
 		return statement;
@@ -484,6 +503,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public VariableStatement createVariableStatement() {
 		VariableStatementImpl variableStatement = new VariableStatementImpl();
 		return variableStatement;
@@ -494,6 +514,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ExportedVariableStatement createExportedVariableStatement() {
 		ExportedVariableStatementImpl exportedVariableStatement = new ExportedVariableStatementImpl();
 		return exportedVariableStatement;
@@ -504,6 +525,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public VariableBinding createVariableBinding() {
 		VariableBindingImpl variableBinding = new VariableBindingImpl();
 		return variableBinding;
@@ -514,6 +536,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ExportedVariableBinding createExportedVariableBinding() {
 		ExportedVariableBindingImpl exportedVariableBinding = new ExportedVariableBindingImpl();
 		return exportedVariableBinding;
@@ -524,6 +547,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public VariableDeclaration createVariableDeclaration() {
 		VariableDeclarationImpl variableDeclaration = new VariableDeclarationImpl();
 		return variableDeclaration;
@@ -534,6 +558,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ExportedVariableDeclaration createExportedVariableDeclaration() {
 		ExportedVariableDeclarationImpl exportedVariableDeclaration = new ExportedVariableDeclarationImpl();
 		return exportedVariableDeclaration;
@@ -544,6 +569,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EmptyStatement createEmptyStatement() {
 		EmptyStatementImpl emptyStatement = new EmptyStatementImpl();
 		return emptyStatement;
@@ -554,6 +580,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ExpressionStatement createExpressionStatement() {
 		ExpressionStatementImpl expressionStatement = new ExpressionStatementImpl();
 		return expressionStatement;
@@ -564,6 +591,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public IfStatement createIfStatement() {
 		IfStatementImpl ifStatement = new IfStatementImpl();
 		return ifStatement;
@@ -574,6 +602,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public IterationStatement createIterationStatement() {
 		IterationStatementImpl iterationStatement = new IterationStatementImpl();
 		return iterationStatement;
@@ -584,6 +613,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public DoStatement createDoStatement() {
 		DoStatementImpl doStatement = new DoStatementImpl();
 		return doStatement;
@@ -594,6 +624,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public WhileStatement createWhileStatement() {
 		WhileStatementImpl whileStatement = new WhileStatementImpl();
 		return whileStatement;
@@ -604,6 +635,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ForStatement createForStatement() {
 		ForStatementImpl forStatement = new ForStatementImpl();
 		return forStatement;
@@ -614,6 +646,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ContinueStatement createContinueStatement() {
 		ContinueStatementImpl continueStatement = new ContinueStatementImpl();
 		return continueStatement;
@@ -624,6 +657,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public BreakStatement createBreakStatement() {
 		BreakStatementImpl breakStatement = new BreakStatementImpl();
 		return breakStatement;
@@ -634,6 +668,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ReturnStatement createReturnStatement() {
 		ReturnStatementImpl returnStatement = new ReturnStatementImpl();
 		return returnStatement;
@@ -644,6 +679,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public WithStatement createWithStatement() {
 		WithStatementImpl withStatement = new WithStatementImpl();
 		return withStatement;
@@ -654,6 +690,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SwitchStatement createSwitchStatement() {
 		SwitchStatementImpl switchStatement = new SwitchStatementImpl();
 		return switchStatement;
@@ -664,6 +701,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public CaseClause createCaseClause() {
 		CaseClauseImpl caseClause = new CaseClauseImpl();
 		return caseClause;
@@ -674,6 +712,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public DefaultClause createDefaultClause() {
 		DefaultClauseImpl defaultClause = new DefaultClauseImpl();
 		return defaultClause;
@@ -684,6 +723,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public LabelledStatement createLabelledStatement() {
 		LabelledStatementImpl labelledStatement = new LabelledStatementImpl();
 		return labelledStatement;
@@ -694,6 +734,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ThrowStatement createThrowStatement() {
 		ThrowStatementImpl throwStatement = new ThrowStatementImpl();
 		return throwStatement;
@@ -704,6 +745,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TryStatement createTryStatement() {
 		TryStatementImpl tryStatement = new TryStatementImpl();
 		return tryStatement;
@@ -714,6 +756,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public CatchBlock createCatchBlock() {
 		CatchBlockImpl catchBlock = new CatchBlockImpl();
 		return catchBlock;
@@ -724,6 +767,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public CatchVariable createCatchVariable() {
 		CatchVariableImpl catchVariable = new CatchVariableImpl();
 		return catchVariable;
@@ -734,6 +778,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public FinallyBlock createFinallyBlock() {
 		FinallyBlockImpl finallyBlock = new FinallyBlockImpl();
 		return finallyBlock;
@@ -744,6 +789,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public DebuggerStatement createDebuggerStatement() {
 		DebuggerStatementImpl debuggerStatement = new DebuggerStatementImpl();
 		return debuggerStatement;
@@ -754,6 +800,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public PrimaryExpression createPrimaryExpression() {
 		PrimaryExpressionImpl primaryExpression = new PrimaryExpressionImpl();
 		return primaryExpression;
@@ -764,6 +811,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ParenExpression createParenExpression() {
 		ParenExpressionImpl parenExpression = new ParenExpressionImpl();
 		return parenExpression;
@@ -774,6 +822,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public IdentifierRef createIdentifierRef() {
 		IdentifierRefImpl identifierRef = new IdentifierRefImpl();
 		return identifierRef;
@@ -784,6 +833,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SuperLiteral createSuperLiteral() {
 		SuperLiteralImpl superLiteral = new SuperLiteralImpl();
 		return superLiteral;
@@ -794,6 +844,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ThisLiteral createThisLiteral() {
 		ThisLiteralImpl thisLiteral = new ThisLiteralImpl();
 		return thisLiteral;
@@ -804,6 +855,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ArrayLiteral createArrayLiteral() {
 		ArrayLiteralImpl arrayLiteral = new ArrayLiteralImpl();
 		return arrayLiteral;
@@ -814,6 +866,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ArrayElement createArrayElement() {
 		ArrayElementImpl arrayElement = new ArrayElementImpl();
 		return arrayElement;
@@ -824,6 +877,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ArrayPadding createArrayPadding() {
 		ArrayPaddingImpl arrayPadding = new ArrayPaddingImpl();
 		return arrayPadding;
@@ -834,6 +888,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ObjectLiteral createObjectLiteral() {
 		ObjectLiteralImpl objectLiteral = new ObjectLiteralImpl();
 		return objectLiteral;
@@ -844,6 +899,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public LiteralOrComputedPropertyName createLiteralOrComputedPropertyName() {
 		LiteralOrComputedPropertyNameImpl literalOrComputedPropertyName = new LiteralOrComputedPropertyNameImpl();
 		return literalOrComputedPropertyName;
@@ -854,6 +910,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public PropertyAssignmentAnnotationList createPropertyAssignmentAnnotationList() {
 		PropertyAssignmentAnnotationListImpl propertyAssignmentAnnotationList = new PropertyAssignmentAnnotationListImpl();
 		return propertyAssignmentAnnotationList;
@@ -864,6 +921,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public PropertyNameValuePair createPropertyNameValuePair() {
 		PropertyNameValuePairImpl propertyNameValuePair = new PropertyNameValuePairImpl();
 		return propertyNameValuePair;
@@ -874,6 +932,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public PropertyNameValuePairSingleName createPropertyNameValuePairSingleName() {
 		PropertyNameValuePairSingleNameImpl propertyNameValuePairSingleName = new PropertyNameValuePairSingleNameImpl();
 		return propertyNameValuePairSingleName;
@@ -884,6 +943,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public PropertyMethodDeclaration createPropertyMethodDeclaration() {
 		PropertyMethodDeclarationImpl propertyMethodDeclaration = new PropertyMethodDeclarationImpl();
 		return propertyMethodDeclaration;
@@ -894,6 +954,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public PropertyGetterDeclaration createPropertyGetterDeclaration() {
 		PropertyGetterDeclarationImpl propertyGetterDeclaration = new PropertyGetterDeclarationImpl();
 		return propertyGetterDeclaration;
@@ -904,6 +965,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public PropertySetterDeclaration createPropertySetterDeclaration() {
 		PropertySetterDeclarationImpl propertySetterDeclaration = new PropertySetterDeclarationImpl();
 		return propertySetterDeclaration;
@@ -914,6 +976,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NewTarget createNewTarget() {
 		NewTargetImpl newTarget = new NewTargetImpl();
 		return newTarget;
@@ -924,6 +987,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NewExpression createNewExpression() {
 		NewExpressionImpl newExpression = new NewExpressionImpl();
 		return newExpression;
@@ -934,6 +998,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ParameterizedCallExpression createParameterizedCallExpression() {
 		ParameterizedCallExpressionImpl parameterizedCallExpression = new ParameterizedCallExpressionImpl();
 		return parameterizedCallExpression;
@@ -944,6 +1009,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Argument createArgument() {
 		ArgumentImpl argument = new ArgumentImpl();
 		return argument;
@@ -954,6 +1020,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public IndexedAccessExpression createIndexedAccessExpression() {
 		IndexedAccessExpressionImpl indexedAccessExpression = new IndexedAccessExpressionImpl();
 		return indexedAccessExpression;
@@ -964,6 +1031,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TaggedTemplateString createTaggedTemplateString() {
 		TaggedTemplateStringImpl taggedTemplateString = new TaggedTemplateStringImpl();
 		return taggedTemplateString;
@@ -974,6 +1042,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ParameterizedPropertyAccessExpression createParameterizedPropertyAccessExpression() {
 		ParameterizedPropertyAccessExpressionImpl parameterizedPropertyAccessExpression = new ParameterizedPropertyAccessExpressionImpl();
 		return parameterizedPropertyAccessExpression;
@@ -984,6 +1053,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public AwaitExpression createAwaitExpression() {
 		AwaitExpressionImpl awaitExpression = new AwaitExpressionImpl();
 		return awaitExpression;
@@ -994,6 +1064,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public PromisifyExpression createPromisifyExpression() {
 		PromisifyExpressionImpl promisifyExpression = new PromisifyExpressionImpl();
 		return promisifyExpression;
@@ -1004,6 +1075,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public YieldExpression createYieldExpression() {
 		YieldExpressionImpl yieldExpression = new YieldExpressionImpl();
 		return yieldExpression;
@@ -1014,6 +1086,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Literal createLiteral() {
 		LiteralImpl literal = new LiteralImpl();
 		return literal;
@@ -1024,6 +1097,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NullLiteral createNullLiteral() {
 		NullLiteralImpl nullLiteral = new NullLiteralImpl();
 		return nullLiteral;
@@ -1034,6 +1108,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public BooleanLiteral createBooleanLiteral() {
 		BooleanLiteralImpl booleanLiteral = new BooleanLiteralImpl();
 		return booleanLiteral;
@@ -1044,6 +1119,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public StringLiteral createStringLiteral() {
 		StringLiteralImpl stringLiteral = new StringLiteralImpl();
 		return stringLiteral;
@@ -1054,6 +1130,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TemplateLiteral createTemplateLiteral() {
 		TemplateLiteralImpl templateLiteral = new TemplateLiteralImpl();
 		return templateLiteral;
@@ -1064,6 +1141,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TemplateSegment createTemplateSegment() {
 		TemplateSegmentImpl templateSegment = new TemplateSegmentImpl();
 		return templateSegment;
@@ -1074,6 +1152,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NumericLiteral createNumericLiteral() {
 		NumericLiteralImpl numericLiteral = new NumericLiteralImpl();
 		return numericLiteral;
@@ -1084,6 +1163,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public DoubleLiteral createDoubleLiteral() {
 		DoubleLiteralImpl doubleLiteral = new DoubleLiteralImpl();
 		return doubleLiteral;
@@ -1094,6 +1174,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public AbstractIntLiteral createAbstractIntLiteral() {
 		AbstractIntLiteralImpl abstractIntLiteral = new AbstractIntLiteralImpl();
 		return abstractIntLiteral;
@@ -1104,6 +1185,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public IntLiteral createIntLiteral() {
 		IntLiteralImpl intLiteral = new IntLiteralImpl();
 		return intLiteral;
@@ -1114,6 +1196,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public BinaryIntLiteral createBinaryIntLiteral() {
 		BinaryIntLiteralImpl binaryIntLiteral = new BinaryIntLiteralImpl();
 		return binaryIntLiteral;
@@ -1124,6 +1207,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public OctalIntLiteral createOctalIntLiteral() {
 		OctalIntLiteralImpl octalIntLiteral = new OctalIntLiteralImpl();
 		return octalIntLiteral;
@@ -1134,6 +1218,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public LegacyOctalIntLiteral createLegacyOctalIntLiteral() {
 		LegacyOctalIntLiteralImpl legacyOctalIntLiteral = new LegacyOctalIntLiteralImpl();
 		return legacyOctalIntLiteral;
@@ -1144,6 +1229,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public HexIntLiteral createHexIntLiteral() {
 		HexIntLiteralImpl hexIntLiteral = new HexIntLiteralImpl();
 		return hexIntLiteral;
@@ -1154,6 +1240,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ScientificIntLiteral createScientificIntLiteral() {
 		ScientificIntLiteralImpl scientificIntLiteral = new ScientificIntLiteralImpl();
 		return scientificIntLiteral;
@@ -1164,6 +1251,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public RegularExpressionLiteral createRegularExpressionLiteral() {
 		RegularExpressionLiteralImpl regularExpressionLiteral = new RegularExpressionLiteralImpl();
 		return regularExpressionLiteral;
@@ -1174,6 +1262,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public PostfixExpression createPostfixExpression() {
 		PostfixExpressionImpl postfixExpression = new PostfixExpressionImpl();
 		return postfixExpression;
@@ -1184,6 +1273,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public UnaryExpression createUnaryExpression() {
 		UnaryExpressionImpl unaryExpression = new UnaryExpressionImpl();
 		return unaryExpression;
@@ -1194,6 +1284,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public CastExpression createCastExpression() {
 		CastExpressionImpl castExpression = new CastExpressionImpl();
 		return castExpression;
@@ -1204,6 +1295,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public MultiplicativeExpression createMultiplicativeExpression() {
 		MultiplicativeExpressionImpl multiplicativeExpression = new MultiplicativeExpressionImpl();
 		return multiplicativeExpression;
@@ -1214,6 +1306,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public AdditiveExpression createAdditiveExpression() {
 		AdditiveExpressionImpl additiveExpression = new AdditiveExpressionImpl();
 		return additiveExpression;
@@ -1224,6 +1317,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ShiftExpression createShiftExpression() {
 		ShiftExpressionImpl shiftExpression = new ShiftExpressionImpl();
 		return shiftExpression;
@@ -1234,6 +1328,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public RelationalExpression createRelationalExpression() {
 		RelationalExpressionImpl relationalExpression = new RelationalExpressionImpl();
 		return relationalExpression;
@@ -1244,6 +1339,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EqualityExpression createEqualityExpression() {
 		EqualityExpressionImpl equalityExpression = new EqualityExpressionImpl();
 		return equalityExpression;
@@ -1254,6 +1350,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public BinaryBitwiseExpression createBinaryBitwiseExpression() {
 		BinaryBitwiseExpressionImpl binaryBitwiseExpression = new BinaryBitwiseExpressionImpl();
 		return binaryBitwiseExpression;
@@ -1264,6 +1361,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public BinaryLogicalExpression createBinaryLogicalExpression() {
 		BinaryLogicalExpressionImpl binaryLogicalExpression = new BinaryLogicalExpressionImpl();
 		return binaryLogicalExpression;
@@ -1274,6 +1372,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ConditionalExpression createConditionalExpression() {
 		ConditionalExpressionImpl conditionalExpression = new ConditionalExpressionImpl();
 		return conditionalExpression;
@@ -1284,6 +1383,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public AssignmentExpression createAssignmentExpression() {
 		AssignmentExpressionImpl assignmentExpression = new AssignmentExpressionImpl();
 		return assignmentExpression;
@@ -1294,6 +1394,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public CommaExpression createCommaExpression() {
 		CommaExpressionImpl commaExpression = new CommaExpressionImpl();
 		return commaExpression;
@@ -1304,6 +1405,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public N4ClassDeclaration createN4ClassDeclaration() {
 		N4ClassDeclarationImpl n4ClassDeclaration = new N4ClassDeclarationImpl();
 		return n4ClassDeclaration;
@@ -1314,6 +1416,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public N4ClassExpression createN4ClassExpression() {
 		N4ClassExpressionImpl n4ClassExpression = new N4ClassExpressionImpl();
 		return n4ClassExpression;
@@ -1324,6 +1427,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public N4InterfaceDeclaration createN4InterfaceDeclaration() {
 		N4InterfaceDeclarationImpl n4InterfaceDeclaration = new N4InterfaceDeclarationImpl();
 		return n4InterfaceDeclaration;
@@ -1334,6 +1438,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public N4EnumDeclaration createN4EnumDeclaration() {
 		N4EnumDeclarationImpl n4EnumDeclaration = new N4EnumDeclarationImpl();
 		return n4EnumDeclaration;
@@ -1344,6 +1449,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public N4EnumLiteral createN4EnumLiteral() {
 		N4EnumLiteralImpl n4EnumLiteral = new N4EnumLiteralImpl();
 		return n4EnumLiteral;
@@ -1354,6 +1460,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public N4MemberAnnotationList createN4MemberAnnotationList() {
 		N4MemberAnnotationListImpl n4MemberAnnotationList = new N4MemberAnnotationListImpl();
 		return n4MemberAnnotationList;
@@ -1364,6 +1471,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public N4FieldDeclaration createN4FieldDeclaration() {
 		N4FieldDeclarationImpl n4FieldDeclaration = new N4FieldDeclarationImpl();
 		return n4FieldDeclaration;
@@ -1374,6 +1482,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public N4MethodDeclaration createN4MethodDeclaration() {
 		N4MethodDeclarationImpl n4MethodDeclaration = new N4MethodDeclarationImpl();
 		return n4MethodDeclaration;
@@ -1384,6 +1493,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public N4GetterDeclaration createN4GetterDeclaration() {
 		N4GetterDeclarationImpl n4GetterDeclaration = new N4GetterDeclarationImpl();
 		return n4GetterDeclaration;
@@ -1394,6 +1504,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public N4SetterDeclaration createN4SetterDeclaration() {
 		N4SetterDeclarationImpl n4SetterDeclaration = new N4SetterDeclarationImpl();
 		return n4SetterDeclaration;
@@ -1404,6 +1515,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ObjectBindingPattern createObjectBindingPattern() {
 		ObjectBindingPatternImpl objectBindingPattern = new ObjectBindingPatternImpl();
 		return objectBindingPattern;
@@ -1414,6 +1526,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ArrayBindingPattern createArrayBindingPattern() {
 		ArrayBindingPatternImpl arrayBindingPattern = new ArrayBindingPatternImpl();
 		return arrayBindingPattern;
@@ -1424,6 +1537,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public BindingProperty createBindingProperty() {
 		BindingPropertyImpl bindingProperty = new BindingPropertyImpl();
 		return bindingProperty;
@@ -1434,6 +1548,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public BindingElement createBindingElement() {
 		BindingElementImpl bindingElement = new BindingElementImpl();
 		return bindingElement;
@@ -1444,6 +1559,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public JSXElementName createJSXElementName() {
 		JSXElementNameImpl jsxElementName = new JSXElementNameImpl();
 		return jsxElementName;
@@ -1454,6 +1570,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public JSXText createJSXText() {
 		JSXTextImpl jsxText = new JSXTextImpl();
 		return jsxText;
@@ -1464,6 +1581,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public JSXExpression createJSXExpression() {
 		JSXExpressionImpl jsxExpression = new JSXExpressionImpl();
 		return jsxExpression;
@@ -1474,6 +1592,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public JSXPropertyAttribute createJSXPropertyAttribute() {
 		JSXPropertyAttributeImpl jsxPropertyAttribute = new JSXPropertyAttributeImpl();
 		return jsxPropertyAttribute;
@@ -1484,6 +1603,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public JSXSpreadAttribute createJSXSpreadAttribute() {
 		JSXSpreadAttributeImpl jsxSpreadAttribute = new JSXSpreadAttributeImpl();
 		return jsxSpreadAttribute;
@@ -1494,6 +1614,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public JSXElement createJSXElement() {
 		JSXElementImpl jsxElement = new JSXElementImpl();
 		return jsxElement;
@@ -1504,6 +1625,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public VersionedIdentifierRef createVersionedIdentifierRef() {
 		VersionedIdentifierRefImpl versionedIdentifierRef = new VersionedIdentifierRefImpl();
 		return versionedIdentifierRef;
@@ -1514,6 +1636,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public MigrationContextVariable createMigrationContextVariable() {
 		MigrationContextVariableImpl migrationContextVariable = new MigrationContextVariableImpl();
 		return migrationContextVariable;
@@ -1860,6 +1983,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public N4JSPackage getN4JSPackage() {
 		return (N4JSPackage)getEPackage();
 	}

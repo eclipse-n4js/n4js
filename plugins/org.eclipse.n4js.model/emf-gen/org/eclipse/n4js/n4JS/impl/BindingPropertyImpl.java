@@ -77,6 +77,7 @@ public class BindingPropertyImpl extends PropertyNameOwnerImpl implements Bindin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public BindingElement getValue() {
 		return value;
 	}
@@ -101,6 +102,7 @@ public class BindingPropertyImpl extends PropertyNameOwnerImpl implements Bindin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setValue(BindingElement newValue) {
 		if (newValue != value) {
 			NotificationChain msgs = null;
@@ -120,6 +122,7 @@ public class BindingPropertyImpl extends PropertyNameOwnerImpl implements Bindin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		String _elvis = null;
 		String _name = super.getName();
@@ -145,6 +148,7 @@ public class BindingPropertyImpl extends PropertyNameOwnerImpl implements Bindin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isValidName() {
 		return true;
 	}

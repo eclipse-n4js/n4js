@@ -79,6 +79,7 @@ public class SnippetImpl extends ExpressionImpl implements Snippet {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getCode() {
 		return code;
 	}
@@ -88,6 +89,7 @@ public class SnippetImpl extends ExpressionImpl implements Snippet {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setCode(String newCode) {
 		String oldCode = code;
 		code = newCode;

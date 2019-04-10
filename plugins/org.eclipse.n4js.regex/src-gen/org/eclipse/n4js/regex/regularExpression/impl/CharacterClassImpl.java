@@ -102,6 +102,7 @@ public class CharacterClassImpl extends PatternImpl implements CharacterClass
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public boolean isNegated()
   {
     return negated;
@@ -112,6 +113,7 @@ public class CharacterClassImpl extends PatternImpl implements CharacterClass
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setNegated(boolean newNegated)
   {
     boolean oldNegated = negated;
@@ -125,6 +127,7 @@ public class CharacterClassImpl extends PatternImpl implements CharacterClass
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<CharacterClassElement> getElements()
   {
     if (elements == null)

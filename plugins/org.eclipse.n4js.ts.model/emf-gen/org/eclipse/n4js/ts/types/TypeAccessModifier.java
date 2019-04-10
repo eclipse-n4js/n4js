@@ -85,10 +85,6 @@ public enum TypeAccessModifier implements Enumerator {
 	/**
 	 * The '<em><b>Undefined</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Undefined</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #UNDEFINED
 	 * @model name="undefined"
@@ -100,10 +96,6 @@ public enum TypeAccessModifier implements Enumerator {
 	/**
 	 * The '<em><b>Private</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Private</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #PRIVATE
 	 * @model name="private"
@@ -115,10 +107,6 @@ public enum TypeAccessModifier implements Enumerator {
 	/**
 	 * The '<em><b>Project</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Project</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #PROJECT
 	 * @model name="project"
@@ -130,10 +118,6 @@ public enum TypeAccessModifier implements Enumerator {
 	/**
 	 * The '<em><b>Public Internal</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Public Internal</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #PUBLIC_INTERNAL
 	 * @model name="publicInternal"
@@ -145,10 +129,6 @@ public enum TypeAccessModifier implements Enumerator {
 	/**
 	 * The '<em><b>Public</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Public</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #PUBLIC
 	 * @model name="public"
@@ -273,6 +253,7 @@ public enum TypeAccessModifier implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getValue() {
 	  return value;
 	}
@@ -282,6 +263,7 @@ public enum TypeAccessModifier implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 	  return name;
 	}
@@ -291,6 +273,7 @@ public enum TypeAccessModifier implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getLiteral() {
 	  return literal;
 	}

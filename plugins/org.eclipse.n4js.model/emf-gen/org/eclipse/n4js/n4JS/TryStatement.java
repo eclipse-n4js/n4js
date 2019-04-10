@@ -33,10 +33,6 @@ public interface TryStatement extends Statement {
 	/**
 	 * Returns the value of the '<em><b>Block</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Block</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Block</em>' containment reference.
 	 * @see #setBlock(Block)
@@ -59,10 +55,6 @@ public interface TryStatement extends Statement {
 	/**
 	 * Returns the value of the '<em><b>Catch</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Catch</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Catch</em>' containment reference.
 	 * @see #setCatch(CatchBlock)
@@ -85,10 +77,6 @@ public interface TryStatement extends Statement {
 	/**
 	 * Returns the value of the '<em><b>Finally</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Finally</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Finally</em>' containment reference.
 	 * @see #setFinally(FinallyBlock)

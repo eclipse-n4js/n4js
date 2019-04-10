@@ -34,10 +34,6 @@ public interface JSXPropertyAttribute extends JSXAttribute, MemberAccess {
 	/**
 	 * Returns the value of the '<em><b>Property</b></em>' reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Property</em>' reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Property</em>' reference.
 	 * @see #setProperty(IdentifiableElement)
@@ -60,10 +56,6 @@ public interface JSXPropertyAttribute extends JSXAttribute, MemberAccess {
 	/**
 	 * Returns the value of the '<em><b>Property As Text</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Property As Text</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Property As Text</em>' attribute.
 	 * @see #setPropertyAsText(String)
@@ -86,10 +78,6 @@ public interface JSXPropertyAttribute extends JSXAttribute, MemberAccess {
 	/**
 	 * Returns the value of the '<em><b>Jsx Attribute Value</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Jsx Attribute Value</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Jsx Attribute Value</em>' containment reference.
 	 * @see #setJsxAttributeValue(Expression)

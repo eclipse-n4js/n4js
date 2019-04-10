@@ -101,6 +101,7 @@ public class StringLiteralForSTEImpl extends StringLiteralImpl implements String
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SymbolTableEntry getEntry() {
 		if (entry != null && entry.eIsProxy()) {
 			InternalEObject oldEntry = (InternalEObject)entry;
@@ -127,6 +128,7 @@ public class StringLiteralForSTEImpl extends StringLiteralImpl implements String
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setEntry(SymbolTableEntry newEntry) {
 		SymbolTableEntry oldEntry = entry;
 		entry = newEntry;
@@ -139,6 +141,7 @@ public class StringLiteralForSTEImpl extends StringLiteralImpl implements String
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isUseExportedName() {
 		return useExportedName;
 	}
@@ -148,6 +151,7 @@ public class StringLiteralForSTEImpl extends StringLiteralImpl implements String
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setUseExportedName(boolean newUseExportedName) {
 		boolean oldUseExportedName = useExportedName;
 		useExportedName = newUseExportedName;
@@ -160,6 +164,7 @@ public class StringLiteralForSTEImpl extends StringLiteralImpl implements String
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getValueAsString() {
 		boolean _isUseExportedName = this.isUseExportedName();
 		if (_isUseExportedName) {

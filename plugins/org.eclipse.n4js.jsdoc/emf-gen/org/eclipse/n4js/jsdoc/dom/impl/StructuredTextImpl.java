@@ -70,6 +70,7 @@ public class StructuredTextImpl extends TextImpl implements StructuredText {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EObject getRootElement() {
 		return rootElement;
 	}
@@ -94,6 +95,7 @@ public class StructuredTextImpl extends TextImpl implements StructuredText {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setRootElement(EObject newRootElement) {
 		if (newRootElement != rootElement) {
 			NotificationChain msgs = null;

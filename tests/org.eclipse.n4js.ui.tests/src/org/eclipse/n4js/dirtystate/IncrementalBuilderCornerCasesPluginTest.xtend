@@ -22,7 +22,6 @@ import org.eclipse.n4js.resource.N4JSResourceDescriptionManager
 import org.eclipse.n4js.resource.UserdataMapper
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
 import org.eclipse.n4js.ts.types.TypesPackage
-import org.eclipse.n4js.ui.building.BuildDataWithRequestRebuild
 import org.eclipse.n4js.ui.building.ResourceDescriptionWithoutModuleUserData
 import org.eclipse.xtext.resource.IResourceDescription
 import org.eclipse.xtext.resource.IResourceDescription.Delta
@@ -33,6 +32,7 @@ import org.eclipse.xtext.util.StringInputStream
 import org.junit.Test
 
 import static org.junit.Assert.*
+import org.eclipse.xtext.builder.impl.BuildData
 
 /**
  * For more builder corner cases, see {@link ReproduceInvalidIndexPluginTest}.
@@ -47,7 +47,7 @@ public class IncrementalBuilderCornerCasesPluginTest extends AbstractBuilderPart
 	 * <p>
 	 * To make this test fail, comment out creation of {@link ResourceDescriptionWithoutModuleUserData}s in
 	 * method {@code N4ClusteringBuilderState#queueAffectedResources()}, including the subsequent invocation
-	 * of {@link BuildDataWithRequestRebuild#needRebuild() needRebuild()}.
+	 * of {@link BuildData#requestRebuild() requestRebuild()}.
 	 */
 	@Test
 	def void testMissingReloadBug() {

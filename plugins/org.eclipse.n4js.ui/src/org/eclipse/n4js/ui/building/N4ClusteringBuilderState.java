@@ -101,7 +101,7 @@ class N4ClusteringBuilderState extends AbstractBuilderState {
 	@Override
 	protected Collection<Delta> doUpdate(BuildData buildData, ResourceDescriptionsData newData,
 			IProgressMonitor monitor) {
-		return new DoUpdateImplementation(this, (BuildDataWithRequestRebuild) buildData, newData,
+		return new DoUpdateImplementation(this, buildData, newData,
 				SubMonitor.convert(monitor, 1), this.buildLogger,
 				crossLinkingResourceLoader, clusteringPolicy)
 						.doUpdate();
@@ -212,7 +212,7 @@ class N4ClusteringBuilderState extends AbstractBuilderState {
 			CurrentDescriptions newState,
 			Collection<Delta> changedDeltas,
 			Collection<Delta> allDeltas,
-			BuildDataWithRequestRebuild buildData,
+			BuildData buildData,
 			final IProgressMonitor monitor) {
 		if (allDeltas.isEmpty()) {
 			return;
@@ -252,7 +252,7 @@ class N4ClusteringBuilderState extends AbstractBuilderState {
 								candidateDescription);
 						newState.register(manager.createDelta(candidateDescription, noModuleData));
 						// also we ensure that we do run a subsequent build.
-						buildData.needRebuild();
+						buildData.requestRebuild();
 					}
 					iter.remove();
 				}

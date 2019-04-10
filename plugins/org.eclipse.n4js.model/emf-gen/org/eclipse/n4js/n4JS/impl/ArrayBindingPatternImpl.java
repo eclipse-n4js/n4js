@@ -74,6 +74,7 @@ public class ArrayBindingPatternImpl extends BindingPatternImpl implements Array
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<BindingElement> getElements() {
 		if (elements == null) {
 			elements = new EObjectContainmentEList<BindingElement>(BindingElement.class, this, N4JSPackage.ARRAY_BINDING_PATTERN__ELEMENTS);

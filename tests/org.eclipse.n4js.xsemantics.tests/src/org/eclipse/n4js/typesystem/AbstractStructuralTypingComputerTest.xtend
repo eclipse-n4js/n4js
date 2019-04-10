@@ -21,7 +21,7 @@ import static org.junit.Assert.*
 
 /**
  */
-class AbstractStructuralTypingComputerTest extends AbstractTypeSystemHelperTests {
+abstract class AbstractStructuralTypingComputerTest extends AbstractTypeSystemHelperTests {
 
 	@Inject
 	protected StructuralTypingComputer structuralTypingComputer;

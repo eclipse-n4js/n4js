@@ -108,6 +108,7 @@ public class ModuleNamespaceVirtualTypeImpl extends TypeImpl implements ModuleNa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EObject getAstElement() {
 		if (astElement != null && astElement.eIsProxy()) {
 			InternalEObject oldAstElement = (InternalEObject)astElement;
@@ -134,6 +135,7 @@ public class ModuleNamespaceVirtualTypeImpl extends TypeImpl implements ModuleNa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAstElement(EObject newAstElement) {
 		EObject oldAstElement = astElement;
 		astElement = newAstElement;
@@ -146,6 +148,7 @@ public class ModuleNamespaceVirtualTypeImpl extends TypeImpl implements ModuleNa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TModule getModule() {
 		if (module != null && module.eIsProxy()) {
 			InternalEObject oldModule = (InternalEObject)module;
@@ -172,6 +175,7 @@ public class ModuleNamespaceVirtualTypeImpl extends TypeImpl implements ModuleNa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setModule(TModule newModule) {
 		TModule oldModule = module;
 		module = newModule;
@@ -184,6 +188,7 @@ public class ModuleNamespaceVirtualTypeImpl extends TypeImpl implements ModuleNa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isDeclaredDynamic() {
 		return declaredDynamic;
 	}
@@ -193,6 +198,7 @@ public class ModuleNamespaceVirtualTypeImpl extends TypeImpl implements ModuleNa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDeclaredDynamic(boolean newDeclaredDynamic) {
 		boolean oldDeclaredDynamic = declaredDynamic;
 		declaredDynamic = newDeclaredDynamic;
@@ -205,6 +211,7 @@ public class ModuleNamespaceVirtualTypeImpl extends TypeImpl implements ModuleNa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isProvidedByRuntime() {
 		return false;
 	}

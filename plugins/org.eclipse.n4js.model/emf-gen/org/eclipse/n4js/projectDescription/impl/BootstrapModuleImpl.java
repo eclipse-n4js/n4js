@@ -78,6 +78,7 @@ public class BootstrapModuleImpl extends MinimalEObjectImpl.Container implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getModuleSpecifier() {
 		return moduleSpecifier;
 	}
@@ -87,6 +88,7 @@ public class BootstrapModuleImpl extends MinimalEObjectImpl.Container implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setModuleSpecifier(String newModuleSpecifier) {
 		String oldModuleSpecifier = moduleSpecifier;
 		moduleSpecifier = newModuleSpecifier;

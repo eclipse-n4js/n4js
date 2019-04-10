@@ -128,6 +128,7 @@ public abstract class TClassifierImpl extends ContainerTypeImpl<TMember> impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EObject getAstElement() {
 		if (astElement != null && astElement.eIsProxy()) {
 			InternalEObject oldAstElement = (InternalEObject)astElement;
@@ -154,6 +155,7 @@ public abstract class TClassifierImpl extends ContainerTypeImpl<TMember> impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAstElement(EObject newAstElement) {
 		EObject oldAstElement = astElement;
 		astElement = newAstElement;
@@ -166,6 +168,7 @@ public abstract class TClassifierImpl extends ContainerTypeImpl<TMember> impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getDeclaredVersion() {
 		return declaredVersion;
 	}
@@ -175,6 +178,7 @@ public abstract class TClassifierImpl extends ContainerTypeImpl<TMember> impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDeclaredVersion(int newDeclaredVersion) {
 		int oldDeclaredVersion = declaredVersion;
 		declaredVersion = newDeclaredVersion;
@@ -187,6 +191,7 @@ public abstract class TClassifierImpl extends ContainerTypeImpl<TMember> impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isDeclaredCovariantConstructor() {
 		return declaredCovariantConstructor;
 	}
@@ -196,6 +201,7 @@ public abstract class TClassifierImpl extends ContainerTypeImpl<TMember> impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDeclaredCovariantConstructor(boolean newDeclaredCovariantConstructor) {
 		boolean oldDeclaredCovariantConstructor = declaredCovariantConstructor;
 		declaredCovariantConstructor = newDeclaredCovariantConstructor;
@@ -208,6 +214,7 @@ public abstract class TClassifierImpl extends ContainerTypeImpl<TMember> impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isAbstract() {
 		return false;
 	}
@@ -217,6 +224,7 @@ public abstract class TClassifierImpl extends ContainerTypeImpl<TMember> impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Iterable<? extends TClassifier> getSuperClassifiers() {
 		final List<TClassifier> result = CollectionLiterals.<TClassifier>newArrayList();
 		final Object _superClassifierRefs = this.getSuperClassifierRefs();
@@ -236,6 +244,7 @@ public abstract class TClassifierImpl extends ContainerTypeImpl<TMember> impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Iterable<ParameterizedTypeRef> getSuperClassifierRefs() {
 		return CollectionLiterals.<ParameterizedTypeRef>emptyList();
 	}
@@ -245,6 +254,7 @@ public abstract class TClassifierImpl extends ContainerTypeImpl<TMember> impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Iterable<ParameterizedTypeRef> getImplementedOrExtendedInterfaceRefs() {
 		return CollectionLiterals.<ParameterizedTypeRef>emptyList();
 	}
@@ -254,6 +264,7 @@ public abstract class TClassifierImpl extends ContainerTypeImpl<TMember> impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isFinal() {
 		return false;
 	}
@@ -263,6 +274,7 @@ public abstract class TClassifierImpl extends ContainerTypeImpl<TMember> impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getVersion() {
 		return this.getDeclaredVersion();
 	}

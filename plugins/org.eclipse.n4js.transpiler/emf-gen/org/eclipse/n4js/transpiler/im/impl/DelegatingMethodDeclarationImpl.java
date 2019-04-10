@@ -125,6 +125,7 @@ public class DelegatingMethodDeclarationImpl extends N4MethodDeclarationImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SymbolTableEntryOriginal getDelegationBaseType() {
 		if (delegationBaseType != null && delegationBaseType.eIsProxy()) {
 			InternalEObject oldDelegationBaseType = (InternalEObject)delegationBaseType;
@@ -151,6 +152,7 @@ public class DelegatingMethodDeclarationImpl extends N4MethodDeclarationImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDelegationBaseType(SymbolTableEntryOriginal newDelegationBaseType) {
 		SymbolTableEntryOriginal oldDelegationBaseType = delegationBaseType;
 		delegationBaseType = newDelegationBaseType;
@@ -163,6 +165,7 @@ public class DelegatingMethodDeclarationImpl extends N4MethodDeclarationImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getDelegationSuperClassSteps() {
 		return delegationSuperClassSteps;
 	}
@@ -172,6 +175,7 @@ public class DelegatingMethodDeclarationImpl extends N4MethodDeclarationImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDelegationSuperClassSteps(int newDelegationSuperClassSteps) {
 		int oldDelegationSuperClassSteps = delegationSuperClassSteps;
 		delegationSuperClassSteps = newDelegationSuperClassSteps;
@@ -184,6 +188,7 @@ public class DelegatingMethodDeclarationImpl extends N4MethodDeclarationImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SymbolTableEntryOriginal getDelegationTarget() {
 		if (delegationTarget != null && delegationTarget.eIsProxy()) {
 			InternalEObject oldDelegationTarget = (InternalEObject)delegationTarget;
@@ -210,6 +215,7 @@ public class DelegatingMethodDeclarationImpl extends N4MethodDeclarationImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDelegationTarget(SymbolTableEntryOriginal newDelegationTarget) {
 		SymbolTableEntryOriginal oldDelegationTarget = delegationTarget;
 		delegationTarget = newDelegationTarget;
@@ -222,6 +228,7 @@ public class DelegatingMethodDeclarationImpl extends N4MethodDeclarationImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isDelegationTargetIsAbstract() {
 		return delegationTargetIsAbstract;
 	}
@@ -231,6 +238,7 @@ public class DelegatingMethodDeclarationImpl extends N4MethodDeclarationImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDelegationTargetIsAbstract(boolean newDelegationTargetIsAbstract) {
 		boolean oldDelegationTargetIsAbstract = delegationTargetIsAbstract;
 		delegationTargetIsAbstract = newDelegationTargetIsAbstract;

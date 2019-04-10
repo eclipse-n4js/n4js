@@ -12,7 +12,6 @@ package org.eclipse.n4js.ts.typeRefs;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
@@ -7253,16 +7252,6 @@ public interface TypeRefsPackage extends EPackage {
 	 */
 	int OPTIONAL_FIELD_STRATEGY = 28;
 
-	/**
-	 * The meta object id for the '<em>Parameterized Type Ref Iterable</em>' data type.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see java.lang.Iterable
-	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getParameterizedTypeRefIterable()
-	 * @generated
-	 */
-	int PARAMETERIZED_TYPE_REF_ITERABLE = 29;
-
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.Versionable <em>Versionable</em>}'.
@@ -8910,17 +8899,6 @@ public interface TypeRefsPackage extends EPackage {
 	EEnum getOptionalFieldStrategy();
 
 	/**
-	 * Returns the meta object for data type '{@link java.lang.Iterable <em>Parameterized Type Ref Iterable</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for data type '<em>Parameterized Type Ref Iterable</em>'.
-	 * @see java.lang.Iterable
-	 * @model instanceClass="java.lang.Iterable&lt;org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef&gt;"
-	 * @generated
-	 */
-	EDataType getParameterizedTypeRefIterable();
-
-	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -10288,16 +10266,6 @@ public interface TypeRefsPackage extends EPackage {
 		 * @generated
 		 */
 		EEnum OPTIONAL_FIELD_STRATEGY = eINSTANCE.getOptionalFieldStrategy();
-
-		/**
-		 * The meta object literal for the '<em>Parameterized Type Ref Iterable</em>' data type.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see java.lang.Iterable
-		 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getParameterizedTypeRefIterable()
-		 * @generated
-		 */
-		EDataType PARAMETERIZED_TYPE_REF_ITERABLE = eINSTANCE.getParameterizedTypeRefIterable();
 
 	}
 

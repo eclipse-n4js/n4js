@@ -39,10 +39,6 @@ public interface ExportDeclaration extends AnnotableScriptElement {
 	/**
 	 * Returns the value of the '<em><b>Exported Element</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Exported Element</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Exported Element</em>' containment reference.
 	 * @see #setExportedElement(ExportableElement)
@@ -65,10 +61,6 @@ public interface ExportDeclaration extends AnnotableScriptElement {
 	/**
 	 * Returns the value of the '<em><b>Default Exported Expression</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Default Exported Expression</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Default Exported Expression</em>' containment reference.
 	 * @see #setDefaultExportedExpression(Expression)
@@ -92,10 +84,6 @@ public interface ExportDeclaration extends AnnotableScriptElement {
 	 * Returns the value of the '<em><b>Named Exports</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.n4JS.ExportSpecifier}.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Named Exports</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Named Exports</em>' containment reference list.
 	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getExportDeclaration_NamedExports()
@@ -107,10 +95,6 @@ public interface ExportDeclaration extends AnnotableScriptElement {
 	/**
 	 * Returns the value of the '<em><b>Wildcard Export</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Wildcard Export</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Wildcard Export</em>' attribute.
 	 * @see #setWildcardExport(boolean)
@@ -133,10 +117,6 @@ public interface ExportDeclaration extends AnnotableScriptElement {
 	/**
 	 * Returns the value of the '<em><b>Default Export</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Default Export</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Default Export</em>' attribute.
 	 * @see #setDefaultExport(boolean)
@@ -159,10 +139,6 @@ public interface ExportDeclaration extends AnnotableScriptElement {
 	/**
 	 * Returns the value of the '<em><b>Reexported From</b></em>' reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Reexported From</em>' reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Reexported From</em>' reference.
 	 * @see #setReexportedFrom(TModule)

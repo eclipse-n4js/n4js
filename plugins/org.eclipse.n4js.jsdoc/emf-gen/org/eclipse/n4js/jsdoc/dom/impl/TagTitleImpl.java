@@ -104,6 +104,7 @@ public class TagTitleImpl extends JSDocNodeImpl implements TagTitle {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Tag getTag() {
 		if (eContainerFeatureID() != DomPackage.TAG_TITLE__TAG) return null;
 		return (Tag)eContainer();
@@ -134,6 +135,7 @@ public class TagTitleImpl extends JSDocNodeImpl implements TagTitle {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTag(Tag newTag) {
 		if (newTag != eInternalContainer() || (eContainerFeatureID() != DomPackage.TAG_TITLE__TAG && newTag != null)) {
 			if (EcoreUtil.isAncestor(this, newTag))
@@ -155,6 +157,7 @@ public class TagTitleImpl extends JSDocNodeImpl implements TagTitle {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getTitle() {
 		return title;
 	}
@@ -164,6 +167,7 @@ public class TagTitleImpl extends JSDocNodeImpl implements TagTitle {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTitle(String newTitle) {
 		String oldTitle = title;
 		title = newTitle;
@@ -176,6 +180,7 @@ public class TagTitleImpl extends JSDocNodeImpl implements TagTitle {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getActualTitle() {
 		return actualTitle;
 	}
@@ -185,6 +190,7 @@ public class TagTitleImpl extends JSDocNodeImpl implements TagTitle {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setActualTitle(String newActualTitle) {
 		String oldActualTitle = actualTitle;
 		actualTitle = newActualTitle;

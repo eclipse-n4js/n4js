@@ -132,6 +132,7 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<ImportSpecifier> getImportSpecifiers() {
 		if (importSpecifiers == null) {
 			importSpecifiers = new EObjectContainmentEList<ImportSpecifier>(ImportSpecifier.class, this, N4JSPackage.IMPORT_DECLARATION__IMPORT_SPECIFIERS);
@@ -144,6 +145,7 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isImportFrom() {
 		return importFrom;
 	}
@@ -153,6 +155,7 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setImportFrom(boolean newImportFrom) {
 		boolean oldImportFrom = importFrom;
 		importFrom = newImportFrom;
@@ -165,6 +168,7 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TModule getModule() {
 		if (module != null && module.eIsProxy()) {
 			InternalEObject oldModule = (InternalEObject)module;
@@ -191,6 +195,7 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setModule(TModule newModule) {
 		TModule oldModule = module;
 		module = newModule;
@@ -203,6 +208,7 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getModuleSpecifierAsText() {
 		return moduleSpecifierAsText;
 	}
@@ -212,6 +218,7 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setModuleSpecifierAsText(String newModuleSpecifierAsText) {
 		String oldModuleSpecifierAsText = moduleSpecifierAsText;
 		moduleSpecifierAsText = newModuleSpecifierAsText;

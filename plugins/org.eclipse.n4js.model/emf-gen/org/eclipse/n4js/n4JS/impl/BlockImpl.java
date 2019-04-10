@@ -93,6 +93,7 @@ public class BlockImpl extends StatementImpl implements Block {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Statement> getStatements() {
 		if (statements == null) {
 			statements = new EObjectContainmentEList<Statement>(Statement.class, this, N4JSPackage.BLOCK__STATEMENTS);
@@ -105,6 +106,7 @@ public class BlockImpl extends StatementImpl implements Block {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean appliesOnlyToBlockScopedElements() {
 		return true;
 	}
@@ -114,6 +116,7 @@ public class BlockImpl extends StatementImpl implements Block {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Iterator<Expression> getAllExpressions() {
 		final Predicate<EObject> _function = new Predicate<EObject>() {
 			public boolean apply(final EObject it) {
@@ -128,6 +131,7 @@ public class BlockImpl extends StatementImpl implements Block {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Iterator<YieldExpression> getAllYieldExpressions() {
 		return Iterators.<YieldExpression>filter(this.getAllExpressions(), YieldExpression.class);
 	}
@@ -137,6 +141,7 @@ public class BlockImpl extends StatementImpl implements Block {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Iterator<YieldExpression> getAllVoidYieldExpressions() {
 		final Function1<YieldExpression, Boolean> _function = new Function1<YieldExpression, Boolean>() {
 			public Boolean apply(final YieldExpression it) {
@@ -152,6 +157,7 @@ public class BlockImpl extends StatementImpl implements Block {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Iterator<YieldExpression> getAllNonVoidYieldExpressions() {
 		final Function1<YieldExpression, Boolean> _function = new Function1<YieldExpression, Boolean>() {
 			public Boolean apply(final YieldExpression it) {
@@ -167,6 +173,7 @@ public class BlockImpl extends StatementImpl implements Block {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean hasNonVoidYield() {
 		boolean _isEmpty = IteratorExtensions.isEmpty(this.getAllNonVoidYieldExpressions());
 		return (!_isEmpty);
@@ -177,6 +184,7 @@ public class BlockImpl extends StatementImpl implements Block {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Iterator<Statement> getAllStatements() {
 		final Predicate<EObject> _function = new Predicate<EObject>() {
 			public boolean apply(final EObject it) {
@@ -191,6 +199,7 @@ public class BlockImpl extends StatementImpl implements Block {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Iterator<ReturnStatement> getAllReturnStatements() {
 		return Iterators.<ReturnStatement>filter(this.getAllStatements(), ReturnStatement.class);
 	}
@@ -200,6 +209,7 @@ public class BlockImpl extends StatementImpl implements Block {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Iterator<ReturnStatement> getAllNonVoidReturnStatements() {
 		final Function1<ReturnStatement, Boolean> _function = new Function1<ReturnStatement, Boolean>() {
 			public Boolean apply(final ReturnStatement it) {
@@ -215,6 +225,7 @@ public class BlockImpl extends StatementImpl implements Block {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Iterator<ReturnStatement> getAllVoidReturnStatements() {
 		final Function1<ReturnStatement, Boolean> _function = new Function1<ReturnStatement, Boolean>() {
 			public Boolean apply(final ReturnStatement it) {
@@ -230,6 +241,7 @@ public class BlockImpl extends StatementImpl implements Block {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean hasNonVoidReturn() {
 		boolean _isEmpty = IteratorExtensions.isEmpty(this.getAllNonVoidReturnStatements());
 		return (!_isEmpty);

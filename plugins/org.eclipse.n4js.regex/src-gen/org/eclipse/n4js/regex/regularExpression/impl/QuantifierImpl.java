@@ -82,6 +82,7 @@ public class QuantifierImpl extends MinimalEObjectImpl.Container implements Quan
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public boolean isNonGreedy()
   {
     return nonGreedy;
@@ -92,6 +93,7 @@ public class QuantifierImpl extends MinimalEObjectImpl.Container implements Quan
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setNonGreedy(boolean newNonGreedy)
   {
     boolean oldNonGreedy = nonGreedy;

@@ -79,6 +79,7 @@ public abstract class ImportSpecifierImpl extends ProxyResolvingEObjectImpl impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isFlaggedUsedInCode() {
 		return flaggedUsedInCode;
 	}
@@ -88,6 +89,7 @@ public abstract class ImportSpecifierImpl extends ProxyResolvingEObjectImpl impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setFlaggedUsedInCode(boolean newFlaggedUsedInCode) {
 		boolean oldFlaggedUsedInCode = flaggedUsedInCode;
 		flaggedUsedInCode = newFlaggedUsedInCode;

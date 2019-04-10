@@ -114,6 +114,7 @@ public class N4EnumLiteralImpl extends ProxyResolvingEObjectImpl implements N4En
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -123,6 +124,7 @@ public class N4EnumLiteralImpl extends ProxyResolvingEObjectImpl implements N4En
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -135,6 +137,7 @@ public class N4EnumLiteralImpl extends ProxyResolvingEObjectImpl implements N4En
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getValue() {
 		return value;
 	}
@@ -144,6 +147,7 @@ public class N4EnumLiteralImpl extends ProxyResolvingEObjectImpl implements N4En
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setValue(String newValue) {
 		String oldValue = value;
 		value = newValue;
@@ -156,6 +160,7 @@ public class N4EnumLiteralImpl extends ProxyResolvingEObjectImpl implements N4En
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TEnumLiteral getDefinedLiteral() {
 		if (definedLiteral != null && definedLiteral.eIsProxy()) {
 			InternalEObject oldDefinedLiteral = (InternalEObject)definedLiteral;
@@ -182,6 +187,7 @@ public class N4EnumLiteralImpl extends ProxyResolvingEObjectImpl implements N4En
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDefinedLiteral(TEnumLiteral newDefinedLiteral) {
 		TEnumLiteral oldDefinedLiteral = definedLiteral;
 		definedLiteral = newDefinedLiteral;

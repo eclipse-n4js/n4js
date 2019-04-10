@@ -112,6 +112,7 @@ public class JSXElementImpl extends ExpressionImpl implements JSXElement {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public JSXElementName getJsxElementName() {
 		return jsxElementName;
 	}
@@ -136,6 +137,7 @@ public class JSXElementImpl extends ExpressionImpl implements JSXElement {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setJsxElementName(JSXElementName newJsxElementName) {
 		if (newJsxElementName != jsxElementName) {
 			NotificationChain msgs = null;
@@ -155,6 +157,7 @@ public class JSXElementImpl extends ExpressionImpl implements JSXElement {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<JSXAttribute> getJsxAttributes() {
 		if (jsxAttributes == null) {
 			jsxAttributes = new EObjectContainmentEList<JSXAttribute>(JSXAttribute.class, this, N4JSPackage.JSX_ELEMENT__JSX_ATTRIBUTES);
@@ -167,6 +170,7 @@ public class JSXElementImpl extends ExpressionImpl implements JSXElement {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<JSXChild> getJsxChildren() {
 		if (jsxChildren == null) {
 			jsxChildren = new EObjectContainmentEList<JSXChild>(JSXChild.class, this, N4JSPackage.JSX_ELEMENT__JSX_CHILDREN);
@@ -179,6 +183,7 @@ public class JSXElementImpl extends ExpressionImpl implements JSXElement {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public JSXElementName getJsxClosingName() {
 		return jsxClosingName;
 	}
@@ -203,6 +208,7 @@ public class JSXElementImpl extends ExpressionImpl implements JSXElement {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setJsxClosingName(JSXElementName newJsxClosingName) {
 		if (newJsxClosingName != jsxClosingName) {
 			NotificationChain msgs = null;

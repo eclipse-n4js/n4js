@@ -32,10 +32,6 @@ public interface NamespaceImportSpecifier extends ImportSpecifier, TypeDefiningE
 	/**
 	 * Returns the value of the '<em><b>Declared Dynamic</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Declared Dynamic</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Declared Dynamic</em>' attribute.
 	 * @see #setDeclaredDynamic(boolean)
@@ -58,10 +54,6 @@ public interface NamespaceImportSpecifier extends ImportSpecifier, TypeDefiningE
 	/**
 	 * Returns the value of the '<em><b>Alias</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Alias</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Alias</em>' attribute.
 	 * @see #setAlias(String)

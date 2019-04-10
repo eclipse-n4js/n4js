@@ -149,10 +149,6 @@ public enum AssignmentOperator implements Enumerator {
 	/**
 	 * The '<em><b>Assign</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Assign</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #ASSIGN
 	 * @model name="assign" literal="="
@@ -164,10 +160,6 @@ public enum AssignmentOperator implements Enumerator {
 	/**
 	 * The '<em><b>Mul Assign</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Mul Assign</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #MUL_ASSIGN
 	 * @model name="mulAssign" literal="*="
@@ -179,10 +171,6 @@ public enum AssignmentOperator implements Enumerator {
 	/**
 	 * The '<em><b>Div Assign</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Div Assign</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #DIV_ASSIGN
 	 * @model name="divAssign" literal="/="
@@ -194,10 +182,6 @@ public enum AssignmentOperator implements Enumerator {
 	/**
 	 * The '<em><b>Mod Assign</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Mod Assign</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #MOD_ASSIGN
 	 * @model name="modAssign" literal="%="
@@ -209,10 +193,6 @@ public enum AssignmentOperator implements Enumerator {
 	/**
 	 * The '<em><b>Add Assign</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Add Assign</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #ADD_ASSIGN
 	 * @model name="addAssign" literal="+="
@@ -224,10 +204,6 @@ public enum AssignmentOperator implements Enumerator {
 	/**
 	 * The '<em><b>Sub Assign</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Sub Assign</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #SUB_ASSIGN
 	 * @model name="subAssign" literal="-="
@@ -239,10 +215,6 @@ public enum AssignmentOperator implements Enumerator {
 	/**
 	 * The '<em><b>Shl Assign</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Shl Assign</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #SHL_ASSIGN
 	 * @model name="shlAssign" literal="&lt;&lt;="
@@ -254,10 +226,6 @@ public enum AssignmentOperator implements Enumerator {
 	/**
 	 * The '<em><b>Shr Assign</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Shr Assign</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #SHR_ASSIGN
 	 * @model name="shrAssign" literal="&gt;&gt;="
@@ -269,10 +237,6 @@ public enum AssignmentOperator implements Enumerator {
 	/**
 	 * The '<em><b>Ushr Assign</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Ushr Assign</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #USHR_ASSIGN
 	 * @model name="ushrAssign" literal="&gt;&gt;&gt;="
@@ -284,10 +248,6 @@ public enum AssignmentOperator implements Enumerator {
 	/**
 	 * The '<em><b>And Assign</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>And Assign</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #AND_ASSIGN
 	 * @model name="andAssign" literal="&amp;="
@@ -299,10 +259,6 @@ public enum AssignmentOperator implements Enumerator {
 	/**
 	 * The '<em><b>Xor Assign</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Xor Assign</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #XOR_ASSIGN
 	 * @model name="xorAssign" literal="^="
@@ -314,10 +270,6 @@ public enum AssignmentOperator implements Enumerator {
 	/**
 	 * The '<em><b>Or Assign</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Or Assign</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #OR_ASSIGN
 	 * @model name="orAssign" literal="|="
@@ -456,6 +408,7 @@ public enum AssignmentOperator implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getValue() {
 	  return value;
 	}
@@ -465,6 +418,7 @@ public enum AssignmentOperator implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 	  return name;
 	}
@@ -474,6 +428,7 @@ public enum AssignmentOperator implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getLiteral() {
 	  return literal;
 	}

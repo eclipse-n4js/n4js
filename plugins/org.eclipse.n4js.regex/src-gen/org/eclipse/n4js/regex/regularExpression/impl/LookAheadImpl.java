@@ -95,6 +95,7 @@ public class LookAheadImpl extends AssertionImpl implements LookAhead
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public boolean isNot()
   {
     return not;
@@ -105,6 +106,7 @@ public class LookAheadImpl extends AssertionImpl implements LookAhead
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setNot(boolean newNot)
   {
     boolean oldNot = not;
@@ -118,6 +120,7 @@ public class LookAheadImpl extends AssertionImpl implements LookAhead
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Pattern getPattern()
   {
     return pattern;
@@ -145,6 +148,7 @@ public class LookAheadImpl extends AssertionImpl implements LookAhead
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setPattern(Pattern newPattern)
   {
     if (newPattern != pattern)

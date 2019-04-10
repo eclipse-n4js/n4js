@@ -124,6 +124,7 @@ public abstract class StructuralTypeRefImpl extends ProxyResolvingEObjectImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TStructMember> getAstStructuralMembers() {
 		if (astStructuralMembers == null) {
 			astStructuralMembers = new EObjectContainmentEList<TStructMember>(TStructMember.class, this, TypeRefsPackage.STRUCTURAL_TYPE_REF__AST_STRUCTURAL_MEMBERS);
@@ -136,6 +137,7 @@ public abstract class StructuralTypeRefImpl extends ProxyResolvingEObjectImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TStructuralType getStructuralType() {
 		if (structuralType != null && structuralType.eIsProxy()) {
 			InternalEObject oldStructuralType = (InternalEObject)structuralType;
@@ -162,6 +164,7 @@ public abstract class StructuralTypeRefImpl extends ProxyResolvingEObjectImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setStructuralType(TStructuralType newStructuralType) {
 		TStructuralType oldStructuralType = structuralType;
 		structuralType = newStructuralType;
@@ -174,6 +177,7 @@ public abstract class StructuralTypeRefImpl extends ProxyResolvingEObjectImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TStructMember> getGenStructuralMembers() {
 		if (genStructuralMembers == null) {
 			genStructuralMembers = new EObjectContainmentEList<TStructMember>(TStructMember.class, this, TypeRefsPackage.STRUCTURAL_TYPE_REF__GEN_STRUCTURAL_MEMBERS);
@@ -186,6 +190,7 @@ public abstract class StructuralTypeRefImpl extends ProxyResolvingEObjectImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TypeVariableMapping> getPostponedSubstitutions() {
 		if (postponedSubstitutions == null) {
 			postponedSubstitutions = new EObjectContainmentEList<TypeVariableMapping>(TypeVariableMapping.class, this, TypeRefsPackage.STRUCTURAL_TYPE_REF__POSTPONED_SUBSTITUTIONS);
@@ -198,6 +203,7 @@ public abstract class StructuralTypeRefImpl extends ProxyResolvingEObjectImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypingStrategy getTypingStrategy() {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT
@@ -209,6 +215,7 @@ public abstract class StructuralTypeRefImpl extends ProxyResolvingEObjectImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTypingStrategy(TypingStrategy typingStrategy) {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT
@@ -220,6 +227,7 @@ public abstract class StructuralTypeRefImpl extends ProxyResolvingEObjectImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TStructMember> getStructuralMembers() {
 		EList<TStructMember> _xifexpression = null;
 		TStructuralType _structuralType = this.getStructuralType();
@@ -247,6 +255,7 @@ public abstract class StructuralTypeRefImpl extends ProxyResolvingEObjectImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean hasPostponedSubstitutionFor(final TypeVariable typeVar) {
 		final Function1<TypeVariableMapping, Boolean> _function = new Function1<TypeVariableMapping, Boolean>() {
 			public Boolean apply(final TypeVariableMapping m) {

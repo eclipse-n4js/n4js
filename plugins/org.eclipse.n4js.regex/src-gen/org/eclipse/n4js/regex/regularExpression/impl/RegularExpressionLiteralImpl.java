@@ -87,6 +87,7 @@ public class RegularExpressionLiteralImpl extends MinimalEObjectImpl.Container i
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public RegularExpressionBody getBody()
   {
     return body;
@@ -114,6 +115,7 @@ public class RegularExpressionLiteralImpl extends MinimalEObjectImpl.Container i
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setBody(RegularExpressionBody newBody)
   {
     if (newBody != body)
@@ -135,6 +137,7 @@ public class RegularExpressionLiteralImpl extends MinimalEObjectImpl.Container i
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public RegularExpressionFlags getFlags()
   {
     return flags;
@@ -162,6 +165,7 @@ public class RegularExpressionLiteralImpl extends MinimalEObjectImpl.Container i
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setFlags(RegularExpressionFlags newFlags)
   {
     if (newFlags != flags)

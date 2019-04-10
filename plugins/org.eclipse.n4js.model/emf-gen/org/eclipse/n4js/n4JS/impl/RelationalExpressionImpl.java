@@ -103,6 +103,7 @@ public class RelationalExpressionImpl extends ExpressionImpl implements Relation
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getLhs() {
 		return lhs;
 	}
@@ -127,6 +128,7 @@ public class RelationalExpressionImpl extends ExpressionImpl implements Relation
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setLhs(Expression newLhs) {
 		if (newLhs != lhs) {
 			NotificationChain msgs = null;
@@ -146,6 +148,7 @@ public class RelationalExpressionImpl extends ExpressionImpl implements Relation
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public RelationalOperator getOp() {
 		return op;
 	}
@@ -155,6 +158,7 @@ public class RelationalExpressionImpl extends ExpressionImpl implements Relation
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setOp(RelationalOperator newOp) {
 		RelationalOperator oldOp = op;
 		op = newOp == null ? OP_EDEFAULT : newOp;
@@ -167,6 +171,7 @@ public class RelationalExpressionImpl extends ExpressionImpl implements Relation
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getRhs() {
 		return rhs;
 	}
@@ -191,6 +196,7 @@ public class RelationalExpressionImpl extends ExpressionImpl implements Relation
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setRhs(Expression newRhs) {
 		if (newRhs != rhs) {
 			NotificationChain msgs = null;

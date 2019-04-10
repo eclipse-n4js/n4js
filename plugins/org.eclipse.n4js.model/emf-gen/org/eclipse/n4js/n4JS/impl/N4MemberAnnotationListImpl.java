@@ -105,6 +105,7 @@ public class N4MemberAnnotationListImpl extends AbstractAnnotationListImpl imple
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<N4Modifier> getDeclaredModifiers() {
 		if (declaredModifiers == null) {
 			declaredModifiers = new EDataTypeEList<N4Modifier>(N4Modifier.class, this, N4JSPackage.N4_MEMBER_ANNOTATION_LIST__DECLARED_MODIFIERS);
@@ -117,6 +118,7 @@ public class N4MemberAnnotationListImpl extends AbstractAnnotationListImpl imple
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public N4ClassifierDefinition getOwner() {
 		if (eContainerFeatureID() != N4JSPackage.N4_MEMBER_ANNOTATION_LIST__OWNER) return null;
 		return (N4ClassifierDefinition)eContainer();
@@ -147,6 +149,7 @@ public class N4MemberAnnotationListImpl extends AbstractAnnotationListImpl imple
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setOwner(N4ClassifierDefinition newOwner) {
 		if (newOwner != eInternalContainer() || (eContainerFeatureID() != N4JSPackage.N4_MEMBER_ANNOTATION_LIST__OWNER && newOwner != null)) {
 			if (EcoreUtil.isAncestor(this, newOwner))
@@ -168,6 +171,7 @@ public class N4MemberAnnotationListImpl extends AbstractAnnotationListImpl imple
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TMember getDefinedTypeElement() {
 		final EObject c = this.eContainer();
 		if ((c instanceof N4MemberDeclaration)) {
@@ -181,6 +185,7 @@ public class N4MemberAnnotationListImpl extends AbstractAnnotationListImpl imple
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypeRef getDeclaredTypeRef() {
 		final EObject c = this.eContainer();
 		if ((c instanceof N4MemberDeclaration)) {
@@ -194,6 +199,7 @@ public class N4MemberAnnotationListImpl extends AbstractAnnotationListImpl imple
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return null;
 	}
@@ -203,6 +209,7 @@ public class N4MemberAnnotationListImpl extends AbstractAnnotationListImpl imple
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isDeclaredStatic() {
 		return this.getDeclaredModifiers().contains(N4Modifier.STATIC);
 	}
@@ -212,6 +219,7 @@ public class N4MemberAnnotationListImpl extends AbstractAnnotationListImpl imple
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isStatic() {
 		return this.isDeclaredStatic();
 	}
@@ -221,6 +229,7 @@ public class N4MemberAnnotationListImpl extends AbstractAnnotationListImpl imple
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isDeclaredFinal() {
 		final Function1<Annotation, Boolean> _function = new Function1<Annotation, Boolean>() {
 			public Boolean apply(final Annotation it) {
@@ -236,6 +245,7 @@ public class N4MemberAnnotationListImpl extends AbstractAnnotationListImpl imple
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isFinal() {
 		return this.isDeclaredFinal();
 	}
@@ -245,6 +255,7 @@ public class N4MemberAnnotationListImpl extends AbstractAnnotationListImpl imple
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isConstructor() {
 		return false;
 	}
@@ -254,6 +265,7 @@ public class N4MemberAnnotationListImpl extends AbstractAnnotationListImpl imple
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isCallableConstructor() {
 		return false;
 	}
@@ -263,6 +275,7 @@ public class N4MemberAnnotationListImpl extends AbstractAnnotationListImpl imple
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Annotation> getAllAnnotations() {
 		final BasicEList<Annotation> result = XcoreCollectionLiterals.<Annotation>newBasicEList();
 		final EObject parent = this.eContainer();

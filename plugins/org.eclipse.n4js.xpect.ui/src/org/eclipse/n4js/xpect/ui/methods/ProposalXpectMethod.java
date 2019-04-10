@@ -30,18 +30,12 @@ import org.eclipse.n4js.xpect.common.XpectCommentRemovalUtil;
 import org.eclipse.n4js.xpect.config.Config;
 import org.eclipse.n4js.xpect.config.VarDef;
 import org.eclipse.n4js.xpect.config.XpEnvironmentData;
-import org.eclipse.n4js.xpect.ui.common.XtextResourceCleanUtil;
 import org.eclipse.n4js.xpect.ui.methods.contentassist.ContentAssistXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.contentassist.N4ContentAssistProcessorTestBuilder;
 import org.eclipse.n4js.xpect.ui.methods.contentassist.N4ContentAssistProcessorTestBuilderHelper;
 import org.eclipse.n4js.xpect.ui.methods.contentassist.RegionWithCursor;
 import org.eclipse.n4js.xpect.ui.methods.quickfix.QuickFixXpectMethod;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.xtext.parser.IParseResult;
-import org.eclipse.xtext.parser.IParser;
-import org.eclipse.xtext.resource.XtextResource;
-import org.eclipse.xtext.ui.editor.model.IXtextDocument;
-import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 import org.eclipse.xpect.XpectImport;
 import org.eclipse.xpect.expectation.CommaSeparatedValuesExpectation;
 import org.eclipse.xpect.expectation.ICommaSeparatedValuesExpectation;
@@ -50,6 +44,11 @@ import org.eclipse.xpect.expectation.StringDiffExpectation;
 import org.eclipse.xpect.parameter.ParameterParser;
 import org.eclipse.xpect.runner.Xpect;
 import org.eclipse.xpect.xtext.lib.setup.ThisResource;
+import org.eclipse.xtext.parser.IParseResult;
+import org.eclipse.xtext.parser.IParser;
+import org.eclipse.xtext.resource.XtextResource;
+import org.eclipse.xtext.ui.editor.model.IXtextDocument;
+import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
@@ -196,8 +195,7 @@ public class ProposalXpectMethod {
 
 		String before = resource.getParseResult().getRootNode().getText();
 		if (proposal != null) {
-			IXtextDocument document = fixture.getDocument(
-					XtextResourceCleanUtil.cleanXtextResource(resource), before);
+			IXtextDocument document = fixture.getDocument(resource, before);
 			String after = applyProposal(proposal, document);
 			before = XpectCommentRemovalUtil.removeAllXpectComments(before);
 			after = XpectCommentRemovalUtil.removeAllXpectComments(after);

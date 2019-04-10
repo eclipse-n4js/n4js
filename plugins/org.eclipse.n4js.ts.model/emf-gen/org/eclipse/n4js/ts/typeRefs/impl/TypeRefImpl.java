@@ -93,6 +93,7 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isFollowedByQuestionMark() {
 		return followedByQuestionMark;
 	}
@@ -102,6 +103,7 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setFollowedByQuestionMark(boolean newFollowedByQuestionMark) {
 		boolean oldFollowedByQuestionMark = followedByQuestionMark;
 		followedByQuestionMark = newFollowedByQuestionMark;
@@ -114,6 +116,7 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getModifiersAsString() {
 		return "";
 	}
@@ -123,6 +126,7 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isFinalByType() {
 		final Type dtype = this.getDeclaredType();
 		return ((dtype != null) && dtype.isFinal());
@@ -133,6 +137,7 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isArrayLike() {
 		final Type dtype = this.getDeclaredType();
 		return ((dtype != null) && dtype.isArrayLike());
@@ -143,6 +148,7 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isDynamic() {
 		return false;
 	}
@@ -152,6 +158,7 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isExistential() {
 		return false;
 	}
@@ -161,6 +168,7 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isGeneric() {
 		return false;
 	}
@@ -170,6 +178,7 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isParameterized() {
 		return false;
 	}
@@ -179,6 +188,7 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isRaw() {
 		return false;
 	}
@@ -188,6 +198,7 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ParameterizedTypeRef getDeclaredUpperBound() {
 		return null;
 	}
@@ -197,6 +208,7 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ParameterizedTypeRef getDeclaredLowerBound() {
 		return null;
 	}
@@ -206,6 +218,7 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TypeArgument> getTypeArgs() {
 		return XcoreCollectionLiterals.<TypeArgument>emptyEList();
 	}
@@ -215,6 +228,7 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getTypeRefAsString() {
 		return null;
 	}
@@ -224,6 +238,7 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		return this.getTypeRefAsString();
 	}
@@ -233,6 +248,7 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isTopType() {
 		Type _declaredType = this.getDeclaredType();
 		return (_declaredType instanceof AnyType);
@@ -243,6 +259,7 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isBottomType() {
 		Type _declaredType = this.getDeclaredType();
 		return (_declaredType instanceof UndefinedType);
@@ -253,6 +270,7 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypingStrategy getTypingStrategy() {
 		return TypingStrategy.NOMINAL;
 	}
@@ -262,6 +280,7 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TStructMember> getStructuralMembers() {
 		return XcoreCollectionLiterals.<TStructMember>emptyEList();
 	}
@@ -271,6 +290,7 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isUseSiteStructuralTyping() {
 		return false;
 	}
@@ -280,6 +300,7 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isDefSiteStructuralTyping() {
 		return false;
 	}
@@ -289,6 +310,7 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public OptionalFieldStrategy getASTNodeOptionalFieldStrategy() {
 		return OptionalFieldStrategy.OFF;
 	}
@@ -298,6 +320,7 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getVersion() {
 		int _xifexpression = (int) 0;
 		Type _declaredType = this.getDeclaredType();

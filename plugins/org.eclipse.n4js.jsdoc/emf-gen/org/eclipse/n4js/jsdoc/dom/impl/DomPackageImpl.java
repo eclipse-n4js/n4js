@@ -268,6 +268,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getDoclet() {
 		return docletEClass;
 	}
@@ -277,6 +278,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getDoclet_LineTags() {
 		return (EReference)docletEClass.getEStructuralFeatures().get(0);
 	}
@@ -286,6 +288,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getDoclet__HasLineTag__String() {
 		return docletEClass.getEOperations().get(0);
 	}
@@ -295,6 +298,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getDoclet__LineTags__String() {
 		return docletEClass.getEOperations().get(1);
 	}
@@ -304,6 +308,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getDocletElement() {
 		return docletElementEClass;
 	}
@@ -313,6 +318,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getDocletElement_Begin() {
 		return (EAttribute)docletElementEClass.getEStructuralFeatures().get(0);
 	}
@@ -322,6 +328,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getDocletElement_End() {
 		return (EAttribute)docletElementEClass.getEStructuralFeatures().get(1);
 	}
@@ -331,6 +338,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getDocletElement__SetRange__int_int() {
 		return docletElementEClass.getEOperations().get(0);
 	}
@@ -340,6 +348,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getDocletElement__Covers__int() {
 		return docletElementEClass.getEOperations().get(1);
 	}
@@ -349,6 +358,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getComposite() {
 		return compositeEClass;
 	}
@@ -358,6 +368,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getComposite_Contents() {
 		return (EReference)compositeEClass.getEStructuralFeatures().get(0);
 	}
@@ -367,6 +378,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getJSDocNode() {
 		return jsDocNodeEClass;
 	}
@@ -376,6 +388,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getJSDocNode_Markers() {
 		return (EReference)jsDocNodeEClass.getEStructuralFeatures().get(0);
 	}
@@ -385,6 +398,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getJSDocNode__GetMarkerValue__String() {
 		return jsDocNodeEClass.getEOperations().get(0);
 	}
@@ -394,6 +408,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getJSDocNode__SetMarker__String_String() {
 		return jsDocNodeEClass.getEOperations().get(1);
 	}
@@ -403,6 +418,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getJSDocNode__IsMarkedAs__String_String() {
 		return jsDocNodeEClass.getEOperations().get(2);
 	}
@@ -412,6 +428,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getJSDocNode__ToString() {
 		return jsDocNodeEClass.getEOperations().get(3);
 	}
@@ -421,6 +438,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getContentNode() {
 		return contentNodeEClass;
 	}
@@ -430,6 +448,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getContentNode_Owner() {
 		return (EReference)contentNodeEClass.getEStructuralFeatures().get(0);
 	}
@@ -439,6 +458,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getTag() {
 		return tagEClass;
 	}
@@ -448,6 +468,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getTag_Title() {
 		return (EReference)tagEClass.getEStructuralFeatures().get(0);
 	}
@@ -457,6 +478,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getTag_Values() {
 		return (EReference)tagEClass.getEStructuralFeatures().get(1);
 	}
@@ -466,6 +488,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getTag_TagDefinition() {
 		return (EAttribute)tagEClass.getEStructuralFeatures().get(2);
 	}
@@ -475,6 +498,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getTag__GetValueByKey__String() {
 		return tagEClass.getEOperations().get(0);
 	}
@@ -484,6 +508,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getTag__ToString() {
 		return tagEClass.getEOperations().get(1);
 	}
@@ -493,6 +518,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getTagValue() {
 		return tagValueEClass;
 	}
@@ -502,6 +528,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getTagValue_Key() {
 		return (EAttribute)tagValueEClass.getEStructuralFeatures().get(0);
 	}
@@ -511,6 +538,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getTagTitle() {
 		return tagTitleEClass;
 	}
@@ -520,6 +548,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getTagTitle_Tag() {
 		return (EReference)tagTitleEClass.getEStructuralFeatures().get(0);
 	}
@@ -529,6 +558,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getTagTitle_Title() {
 		return (EAttribute)tagTitleEClass.getEStructuralFeatures().get(1);
 	}
@@ -538,6 +568,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getTagTitle_ActualTitle() {
 		return (EAttribute)tagTitleEClass.getEStructuralFeatures().get(2);
 	}
@@ -547,6 +578,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getLineTag() {
 		return lineTagEClass;
 	}
@@ -556,6 +588,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getLineTag_Doclet() {
 		return (EReference)lineTagEClass.getEStructuralFeatures().get(0);
 	}
@@ -565,6 +598,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getInlineTag() {
 		return inlineTagEClass;
 	}
@@ -574,6 +608,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getText() {
 		return textEClass;
 	}
@@ -583,6 +618,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getText_Text() {
 		return (EAttribute)textEClass.getEStructuralFeatures().get(0);
 	}
@@ -592,6 +628,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSimpleTypeReference() {
 		return simpleTypeReferenceEClass;
 	}
@@ -601,6 +638,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSimpleTypeReference_TypeName() {
 		return (EAttribute)simpleTypeReferenceEClass.getEStructuralFeatures().get(0);
 	}
@@ -610,6 +648,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getSimpleTypeReference__TypeNameSet() {
 		return simpleTypeReferenceEClass.getEOperations().get(0);
 	}
@@ -619,6 +658,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getSimpleTypeReference__ToString() {
 		return simpleTypeReferenceEClass.getEOperations().get(1);
 	}
@@ -628,6 +668,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getFullTypeReference() {
 		return fullTypeReferenceEClass;
 	}
@@ -637,6 +678,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getFullTypeReference_ModuleName() {
 		return (EAttribute)fullTypeReferenceEClass.getEStructuralFeatures().get(0);
 	}
@@ -646,6 +688,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getFullTypeReference__ModuleNameSet() {
 		return fullTypeReferenceEClass.getEOperations().get(0);
 	}
@@ -655,6 +698,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getFullTypeReference__ToString() {
 		return fullTypeReferenceEClass.getEOperations().get(1);
 	}
@@ -664,6 +708,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getFullTypeReference__FullTypeName() {
 		return fullTypeReferenceEClass.getEOperations().get(2);
 	}
@@ -673,6 +718,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getFullMemberReference() {
 		return fullMemberReferenceEClass;
 	}
@@ -682,6 +728,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getFullMemberReference_MemberName() {
 		return (EAttribute)fullMemberReferenceEClass.getEStructuralFeatures().get(0);
 	}
@@ -691,6 +738,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getFullMemberReference_StaticMember() {
 		return (EAttribute)fullMemberReferenceEClass.getEStructuralFeatures().get(1);
 	}
@@ -700,6 +748,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getFullMemberReference__MemberNameSet() {
 		return fullMemberReferenceEClass.getEOperations().get(0);
 	}
@@ -709,6 +758,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getFullMemberReference__ToString() {
 		return fullMemberReferenceEClass.getEOperations().get(1);
 	}
@@ -718,6 +768,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getVariableReference() {
 		return variableReferenceEClass;
 	}
@@ -727,6 +778,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getVariableReference_VariableName() {
 		return (EAttribute)variableReferenceEClass.getEStructuralFeatures().get(0);
 	}
@@ -736,6 +788,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getGenericReference() {
 		return genericReferenceEClass;
 	}
@@ -745,6 +798,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getLiteral() {
 		return literalEClass;
 	}
@@ -754,6 +808,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getLiteral_Value() {
 		return (EAttribute)literalEClass.getEStructuralFeatures().get(0);
 	}
@@ -763,6 +818,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getLiteral_Name() {
 		return (EAttribute)literalEClass.getEStructuralFeatures().get(1);
 	}
@@ -772,6 +828,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getMarker() {
 		return markerEClass;
 	}
@@ -781,6 +838,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getMarker_Key() {
 		return (EAttribute)markerEClass.getEStructuralFeatures().get(0);
 	}
@@ -790,6 +848,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getMarker_Value() {
 		return (EAttribute)markerEClass.getEStructuralFeatures().get(1);
 	}
@@ -799,6 +858,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getComposedContent() {
 		return composedContentEClass;
 	}
@@ -808,6 +868,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getStructuredText() {
 		return structuredTextEClass;
 	}
@@ -817,6 +878,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getStructuredText_RootElement() {
 		return (EReference)structuredTextEClass.getEStructuralFeatures().get(0);
 	}
@@ -826,6 +888,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EDataType getTagDefinition() {
 		return tagDefinitionEDataType;
 	}
@@ -835,6 +898,7 @@ public class DomPackageImpl extends EPackageImpl implements DomPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public DomFactory getDomFactory() {
 		return (DomFactory)getEFactoryInstance();
 	}

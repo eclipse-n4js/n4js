@@ -93,6 +93,7 @@ public class PropertyAssignmentAnnotationListImpl extends AbstractAnnotationList
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public LiteralOrComputedPropertyName getDeclaredName() {
 		return declaredName;
 	}
@@ -117,6 +118,7 @@ public class PropertyAssignmentAnnotationListImpl extends AbstractAnnotationList
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDeclaredName(LiteralOrComputedPropertyName newDeclaredName) {
 		if (newDeclaredName != declaredName) {
 			NotificationChain msgs = null;
@@ -136,6 +138,7 @@ public class PropertyAssignmentAnnotationListImpl extends AbstractAnnotationList
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TStructMember getDefinedMember() {
 		final EObject c = this.eContainer();
 		if ((c instanceof PropertyAssignment)) {
@@ -149,6 +152,7 @@ public class PropertyAssignmentAnnotationListImpl extends AbstractAnnotationList
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isValidName() {
 		String _name = this.getName();
 		boolean _equals = Objects.equal("prototype", _name);
@@ -180,6 +184,7 @@ public class PropertyAssignmentAnnotationListImpl extends AbstractAnnotationList
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		LiteralOrComputedPropertyName _declaredName = this.getDeclaredName();
 		String _name = null;
@@ -194,6 +199,7 @@ public class PropertyAssignmentAnnotationListImpl extends AbstractAnnotationList
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean hasComputedPropertyName() {
 		final LiteralOrComputedPropertyName declName = this.getDeclaredName();
 		return ((declName != null) && declName.hasComputedPropertyName());
@@ -204,6 +210,7 @@ public class PropertyAssignmentAnnotationListImpl extends AbstractAnnotationList
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean appliesOnlyToBlockScopedElements() {
 		return false;
 	}
@@ -213,6 +220,7 @@ public class PropertyAssignmentAnnotationListImpl extends AbstractAnnotationList
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Annotation> getAllAnnotations() {
 		final BasicEList<Annotation> result = XcoreCollectionLiterals.<Annotation>newBasicEList();
 		final EObject parent = this.eContainer();

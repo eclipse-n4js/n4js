@@ -119,10 +119,6 @@ public enum UnaryOperator implements Enumerator {
 	/**
 	 * The '<em><b>Delete</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Delete</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #DELETE
 	 * @model name="delete"
@@ -134,10 +130,6 @@ public enum UnaryOperator implements Enumerator {
 	/**
 	 * The '<em><b>Void</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Void</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #VOID
 	 * @model name="void"
@@ -149,10 +141,6 @@ public enum UnaryOperator implements Enumerator {
 	/**
 	 * The '<em><b>Typeof</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Typeof</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #TYPEOF
 	 * @model name="typeof"
@@ -164,10 +152,6 @@ public enum UnaryOperator implements Enumerator {
 	/**
 	 * The '<em><b>Inc</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Inc</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #INC
 	 * @model name="inc" literal="++"
@@ -179,10 +163,6 @@ public enum UnaryOperator implements Enumerator {
 	/**
 	 * The '<em><b>Dec</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Dec</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #DEC
 	 * @model name="dec" literal="--"
@@ -194,10 +174,6 @@ public enum UnaryOperator implements Enumerator {
 	/**
 	 * The '<em><b>Pos</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Pos</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #POS
 	 * @model name="pos" literal="+"
@@ -209,10 +185,6 @@ public enum UnaryOperator implements Enumerator {
 	/**
 	 * The '<em><b>Neg</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Neg</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #NEG
 	 * @model name="neg" literal="-"
@@ -224,10 +196,6 @@ public enum UnaryOperator implements Enumerator {
 	/**
 	 * The '<em><b>Inv</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Inv</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #INV
 	 * @model name="inv" literal="~"
@@ -239,10 +207,6 @@ public enum UnaryOperator implements Enumerator {
 	/**
 	 * The '<em><b>Not</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Not</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #NOT
 	 * @model name="not" literal="!"
@@ -375,6 +339,7 @@ public enum UnaryOperator implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getValue() {
 	  return value;
 	}
@@ -384,6 +349,7 @@ public enum UnaryOperator implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 	  return name;
 	}
@@ -393,6 +359,7 @@ public enum UnaryOperator implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getLiteral() {
 	  return literal;
 	}

@@ -96,6 +96,7 @@ public class NameValuePairImpl extends MinimalEObjectImpl.Container implements N
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -105,6 +106,7 @@ public class NameValuePairImpl extends MinimalEObjectImpl.Container implements N
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -117,6 +119,7 @@ public class NameValuePairImpl extends MinimalEObjectImpl.Container implements N
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public JSONValue getValue() {
 		return value;
 	}
@@ -141,6 +144,7 @@ public class NameValuePairImpl extends MinimalEObjectImpl.Container implements N
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setValue(JSONValue newValue) {
 		if (newValue != value) {
 			NotificationChain msgs = null;
@@ -160,6 +164,7 @@ public class NameValuePairImpl extends MinimalEObjectImpl.Container implements N
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		String _name = this.getName();
 		String _plus = (_name + ": ");

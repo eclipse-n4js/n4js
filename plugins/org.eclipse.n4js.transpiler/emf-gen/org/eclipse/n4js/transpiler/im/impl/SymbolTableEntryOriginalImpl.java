@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
@@ -13,26 +13,19 @@ package org.eclipse.n4js.transpiler.im.impl;
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.n4js.n4JS.ImportSpecifier;
-
 import org.eclipse.n4js.transpiler.im.ImPackage;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
-
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TExportableElement;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Symbol Table Entry Original</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Symbol Table Entry Original</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
@@ -46,8 +39,8 @@ import org.eclipse.n4js.ts.types.TExportableElement;
 public class SymbolTableEntryOriginalImpl extends SymbolTableEntryImpl implements SymbolTableEntryOriginal {
 	/**
 	 * The cached value of the '{@link #getOriginalTarget() <em>Original Target</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
 	 * @see #getOriginalTarget()
 	 * @generated
 	 * @ordered
@@ -56,8 +49,8 @@ public class SymbolTableEntryOriginalImpl extends SymbolTableEntryImpl implement
 
 	/**
 	 * The cached value of the '{@link #getImportSpecifier() <em>Import Specifier</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
 	 * @see #getImportSpecifier()
 	 * @generated
 	 * @ordered
@@ -65,8 +58,7 @@ public class SymbolTableEntryOriginalImpl extends SymbolTableEntryImpl implement
 	protected ImportSpecifier importSpecifier;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	protected SymbolTableEntryOriginalImpl() {
@@ -74,8 +66,7 @@ public class SymbolTableEntryOriginalImpl extends SymbolTableEntryImpl implement
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -84,10 +75,10 @@ public class SymbolTableEntryOriginalImpl extends SymbolTableEntryImpl implement
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public IdentifiableElement getOriginalTarget() {
 		if (originalTarget != null && originalTarget.eIsProxy()) {
 			InternalEObject oldOriginalTarget = (InternalEObject)originalTarget;
@@ -101,8 +92,7 @@ public class SymbolTableEntryOriginalImpl extends SymbolTableEntryImpl implement
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public IdentifiableElement basicGetOriginalTarget() {
@@ -110,10 +100,10 @@ public class SymbolTableEntryOriginalImpl extends SymbolTableEntryImpl implement
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setOriginalTarget(IdentifiableElement newOriginalTarget) {
 		IdentifiableElement oldOriginalTarget = originalTarget;
 		originalTarget = newOriginalTarget;
@@ -122,10 +112,10 @@ public class SymbolTableEntryOriginalImpl extends SymbolTableEntryImpl implement
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ImportSpecifier getImportSpecifier() {
 		if (importSpecifier != null && importSpecifier.eIsProxy()) {
 			InternalEObject oldImportSpecifier = (InternalEObject)importSpecifier;
@@ -139,8 +129,7 @@ public class SymbolTableEntryOriginalImpl extends SymbolTableEntryImpl implement
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public ImportSpecifier basicGetImportSpecifier() {
@@ -148,10 +137,10 @@ public class SymbolTableEntryOriginalImpl extends SymbolTableEntryImpl implement
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setImportSpecifier(ImportSpecifier newImportSpecifier) {
 		ImportSpecifier oldImportSpecifier = importSpecifier;
 		importSpecifier = newImportSpecifier;
@@ -160,10 +149,10 @@ public class SymbolTableEntryOriginalImpl extends SymbolTableEntryImpl implement
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getExportedName() {
 		final IdentifiableElement trgt = this.getOriginalTarget();
 		if ((trgt instanceof TExportableElement)) {
@@ -173,8 +162,7 @@ public class SymbolTableEntryOriginalImpl extends SymbolTableEntryImpl implement
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -191,8 +179,7 @@ public class SymbolTableEntryOriginalImpl extends SymbolTableEntryImpl implement
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -209,8 +196,7 @@ public class SymbolTableEntryOriginalImpl extends SymbolTableEntryImpl implement
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -227,8 +213,7 @@ public class SymbolTableEntryOriginalImpl extends SymbolTableEntryImpl implement
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -243,8 +228,7 @@ public class SymbolTableEntryOriginalImpl extends SymbolTableEntryImpl implement
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -256,4 +240,4 @@ public class SymbolTableEntryOriginalImpl extends SymbolTableEntryImpl implement
 		return super.eInvoke(operationID, arguments);
 	}
 
-} //SymbolTableEntryOriginalImpl
+} // SymbolTableEntryOriginalImpl

@@ -140,6 +140,7 @@ public class LiteralOrComputedPropertyNameImpl extends ProxyResolvingEObjectImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public PropertyNameKind getKind() {
 		return kind;
 	}
@@ -149,6 +150,7 @@ public class LiteralOrComputedPropertyNameImpl extends ProxyResolvingEObjectImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setKind(PropertyNameKind newKind) {
 		PropertyNameKind oldKind = kind;
 		kind = newKind == null ? KIND_EDEFAULT : newKind;
@@ -161,6 +163,7 @@ public class LiteralOrComputedPropertyNameImpl extends ProxyResolvingEObjectImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getLiteralName() {
 		return literalName;
 	}
@@ -170,6 +173,7 @@ public class LiteralOrComputedPropertyNameImpl extends ProxyResolvingEObjectImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setLiteralName(String newLiteralName) {
 		String oldLiteralName = literalName;
 		literalName = newLiteralName;
@@ -182,6 +186,7 @@ public class LiteralOrComputedPropertyNameImpl extends ProxyResolvingEObjectImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getComputedName() {
 		return computedName;
 	}
@@ -191,6 +196,7 @@ public class LiteralOrComputedPropertyNameImpl extends ProxyResolvingEObjectImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setComputedName(String newComputedName) {
 		String oldComputedName = computedName;
 		computedName = newComputedName;
@@ -203,6 +209,7 @@ public class LiteralOrComputedPropertyNameImpl extends ProxyResolvingEObjectImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getExpression() {
 		return expression;
 	}
@@ -227,6 +234,7 @@ public class LiteralOrComputedPropertyNameImpl extends ProxyResolvingEObjectImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setExpression(Expression newExpression) {
 		if (newExpression != expression) {
 			NotificationChain msgs = null;
@@ -246,6 +254,7 @@ public class LiteralOrComputedPropertyNameImpl extends ProxyResolvingEObjectImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean hasComputedPropertyName() {
 		return ((this.getKind() == PropertyNameKind.COMPUTED) && (this.getExpression() != null));
 	}
@@ -255,6 +264,7 @@ public class LiteralOrComputedPropertyNameImpl extends ProxyResolvingEObjectImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		String _elvis = null;
 		String _literalName = this.getLiteralName();

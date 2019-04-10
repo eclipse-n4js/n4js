@@ -33,10 +33,6 @@ public interface EqualityExpression extends Expression {
 	/**
 	 * Returns the value of the '<em><b>Lhs</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Lhs</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Lhs</em>' containment reference.
 	 * @see #setLhs(Expression)
@@ -60,10 +56,6 @@ public interface EqualityExpression extends Expression {
 	 * Returns the value of the '<em><b>Op</b></em>' attribute.
 	 * The literals are from the enumeration {@link org.eclipse.n4js.n4JS.EqualityOperator}.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Op</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Op</em>' attribute.
 	 * @see org.eclipse.n4js.n4JS.EqualityOperator
@@ -88,10 +80,6 @@ public interface EqualityExpression extends Expression {
 	/**
 	 * Returns the value of the '<em><b>Rhs</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Rhs</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Rhs</em>' containment reference.
 	 * @see #setRhs(Expression)

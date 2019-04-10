@@ -42,10 +42,6 @@ public interface TClass extends TN4Classifier {
 	/**
 	 * Returns the value of the '<em><b>External</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>External</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>External</em>' attribute.
 	 * @see #setExternal(boolean)
@@ -68,10 +64,6 @@ public interface TClass extends TN4Classifier {
 	/**
 	 * Returns the value of the '<em><b>Declared Abstract</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Declared Abstract</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Declared Abstract</em>' attribute.
 	 * @see #setDeclaredAbstract(boolean)
@@ -94,10 +86,6 @@ public interface TClass extends TN4Classifier {
 	/**
 	 * Returns the value of the '<em><b>Declared N4JS</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Declared N4JS</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Declared N4JS</em>' attribute.
 	 * @see #setDeclaredN4JS(boolean)
@@ -120,10 +108,6 @@ public interface TClass extends TN4Classifier {
 	/**
 	 * Returns the value of the '<em><b>Declared Final</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Declared Final</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Declared Final</em>' attribute.
 	 * @see #setDeclaredFinal(boolean)
@@ -146,10 +130,6 @@ public interface TClass extends TN4Classifier {
 	/**
 	 * Returns the value of the '<em><b>Declared Polyfill</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Declared Polyfill</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Declared Polyfill</em>' attribute.
 	 * @see #setDeclaredPolyfill(boolean)
@@ -172,10 +152,6 @@ public interface TClass extends TN4Classifier {
 	/**
 	 * Returns the value of the '<em><b>Declared Static Polyfill</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Declared Static Polyfill</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Declared Static Polyfill</em>' attribute.
 	 * @see #setDeclaredStaticPolyfill(boolean)
@@ -198,10 +174,6 @@ public interface TClass extends TN4Classifier {
 	/**
 	 * Returns the value of the '<em><b>Observable</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Observable</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Observable</em>' attribute.
 	 * @see #setObservable(boolean)
@@ -224,10 +196,6 @@ public interface TClass extends TN4Classifier {
 	/**
 	 * Returns the value of the '<em><b>Super Class Ref</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Super Class Ref</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Super Class Ref</em>' containment reference.
 	 * @see #setSuperClassRef(ParameterizedTypeRef)
@@ -251,10 +219,6 @@ public interface TClass extends TN4Classifier {
 	 * Returns the value of the '<em><b>Implemented Interface Refs</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef}.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Implemented Interface Refs</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Implemented Interface Refs</em>' containment reference list.
 	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTClass_ImplementedInterfaceRefs()
@@ -291,7 +255,7 @@ public interface TClass extends TN4Classifier {
 	 * *
 	 * Convenience method, returns all super classes, consumed roles and implemented or extend interfaces
 	 * <!-- end-model-doc -->
-	 * @model kind="operation" dataType="org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefIterable" unique="false"
+	 * @model kind="operation" dataType="org.eclipse.n4js.ts.types.ParameterizedTypeRefIterable" unique="false"
 	 * @generated
 	 */
 	Iterable<ParameterizedTypeRef> getSuperClassifierRefs();
@@ -303,7 +267,7 @@ public interface TClass extends TN4Classifier {
 	 * *
 	 * Convenience method, returns all implemented (or extended) interfaces
 	 * <!-- end-model-doc -->
-	 * @model kind="operation" dataType="org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefIterable" unique="false"
+	 * @model kind="operation" dataType="org.eclipse.n4js.ts.types.ParameterizedTypeRefIterable" unique="false"
 	 * @generated
 	 */
 	Iterable<ParameterizedTypeRef> getImplementedOrExtendedInterfaceRefs();

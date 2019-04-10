@@ -75,6 +75,7 @@ public class PatternImpl extends MinimalEObjectImpl.Container implements Pattern
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Quantifier getQuantifier()
   {
     return quantifier;
@@ -102,6 +103,7 @@ public class PatternImpl extends MinimalEObjectImpl.Container implements Pattern
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setQuantifier(Quantifier newQuantifier)
   {
     if (newQuantifier != quantifier)

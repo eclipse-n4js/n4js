@@ -100,6 +100,7 @@ public class ModuleFilterImpl extends MinimalEObjectImpl.Container implements Mo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ModuleFilterType getModuleFilterType() {
 		return moduleFilterType;
 	}
@@ -109,6 +110,7 @@ public class ModuleFilterImpl extends MinimalEObjectImpl.Container implements Mo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setModuleFilterType(ModuleFilterType newModuleFilterType) {
 		ModuleFilterType oldModuleFilterType = moduleFilterType;
 		moduleFilterType = newModuleFilterType == null ? MODULE_FILTER_TYPE_EDEFAULT : newModuleFilterType;
@@ -121,6 +123,7 @@ public class ModuleFilterImpl extends MinimalEObjectImpl.Container implements Mo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<ModuleFilterSpecifier> getModuleSpecifiers() {
 		if (moduleSpecifiers == null) {
 			moduleSpecifiers = new EObjectContainmentEList<ModuleFilterSpecifier>(ModuleFilterSpecifier.class, this, ProjectDescriptionPackage.MODULE_FILTER__MODULE_SPECIFIERS);

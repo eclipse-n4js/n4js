@@ -98,6 +98,7 @@ public class LiteralImpl extends ContentNodeImpl implements Literal {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getValue() {
 		return value;
 	}
@@ -107,6 +108,7 @@ public class LiteralImpl extends ContentNodeImpl implements Literal {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setValue(String newValue) {
 		String oldValue = value;
 		value = newValue;
@@ -119,6 +121,7 @@ public class LiteralImpl extends ContentNodeImpl implements Literal {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -128,6 +131,7 @@ public class LiteralImpl extends ContentNodeImpl implements Literal {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;

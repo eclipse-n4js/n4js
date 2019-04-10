@@ -81,6 +81,7 @@ public class HyphenVersionRangeImpl extends VersionRangeImpl implements HyphenVe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public VersionNumber getFrom() {
 		return from;
 	}
@@ -105,6 +106,7 @@ public class HyphenVersionRangeImpl extends VersionRangeImpl implements HyphenVe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setFrom(VersionNumber newFrom) {
 		if (newFrom != from) {
 			NotificationChain msgs = null;
@@ -124,6 +126,7 @@ public class HyphenVersionRangeImpl extends VersionRangeImpl implements HyphenVe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public VersionNumber getTo() {
 		return to;
 	}
@@ -148,6 +151,7 @@ public class HyphenVersionRangeImpl extends VersionRangeImpl implements HyphenVe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTo(VersionNumber newTo) {
 		if (newTo != to) {
 			NotificationChain msgs = null;

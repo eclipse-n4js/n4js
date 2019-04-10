@@ -85,6 +85,7 @@ public abstract class TVersionableImpl extends TypeImpl implements TVersionable 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getDeclaredVersion() {
 		return declaredVersion;
 	}
@@ -94,6 +95,7 @@ public abstract class TVersionableImpl extends TypeImpl implements TVersionable 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDeclaredVersion(int newDeclaredVersion) {
 		int oldDeclaredVersion = declaredVersion;
 		declaredVersion = newDeclaredVersion;
@@ -106,6 +108,7 @@ public abstract class TVersionableImpl extends TypeImpl implements TVersionable 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getVersion() {
 		return this.getDeclaredVersion();
 	}

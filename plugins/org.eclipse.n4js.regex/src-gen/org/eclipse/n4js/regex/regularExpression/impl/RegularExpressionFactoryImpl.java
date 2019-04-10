@@ -114,6 +114,7 @@ public class RegularExpressionFactoryImpl extends EFactoryImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public RegularExpressionLiteral createRegularExpressionLiteral()
   {
     RegularExpressionLiteralImpl regularExpressionLiteral = new RegularExpressionLiteralImpl();
@@ -125,6 +126,7 @@ public class RegularExpressionFactoryImpl extends EFactoryImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public RegularExpressionBody createRegularExpressionBody()
   {
     RegularExpressionBodyImpl regularExpressionBody = new RegularExpressionBodyImpl();
@@ -136,6 +138,7 @@ public class RegularExpressionFactoryImpl extends EFactoryImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Pattern createPattern()
   {
     PatternImpl pattern = new PatternImpl();
@@ -147,6 +150,7 @@ public class RegularExpressionFactoryImpl extends EFactoryImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Assertion createAssertion()
   {
     AssertionImpl assertion = new AssertionImpl();
@@ -158,6 +162,7 @@ public class RegularExpressionFactoryImpl extends EFactoryImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public LineStart createLineStart()
   {
     LineStartImpl lineStart = new LineStartImpl();
@@ -169,6 +174,7 @@ public class RegularExpressionFactoryImpl extends EFactoryImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public LineEnd createLineEnd()
   {
     LineEndImpl lineEnd = new LineEndImpl();
@@ -180,6 +186,7 @@ public class RegularExpressionFactoryImpl extends EFactoryImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public WordBoundary createWordBoundary()
   {
     WordBoundaryImpl wordBoundary = new WordBoundaryImpl();
@@ -191,6 +198,7 @@ public class RegularExpressionFactoryImpl extends EFactoryImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public LookAhead createLookAhead()
   {
     LookAheadImpl lookAhead = new LookAheadImpl();
@@ -202,6 +210,7 @@ public class RegularExpressionFactoryImpl extends EFactoryImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public PatternCharacter createPatternCharacter()
   {
     PatternCharacterImpl patternCharacter = new PatternCharacterImpl();
@@ -213,6 +222,7 @@ public class RegularExpressionFactoryImpl extends EFactoryImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Wildcard createWildcard()
   {
     WildcardImpl wildcard = new WildcardImpl();
@@ -224,6 +234,7 @@ public class RegularExpressionFactoryImpl extends EFactoryImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public AtomEscape createAtomEscape()
   {
     AtomEscapeImpl atomEscape = new AtomEscapeImpl();
@@ -235,6 +246,7 @@ public class RegularExpressionFactoryImpl extends EFactoryImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public CharacterClassEscapeSequence createCharacterClassEscapeSequence()
   {
     CharacterClassEscapeSequenceImpl characterClassEscapeSequence = new CharacterClassEscapeSequenceImpl();
@@ -246,6 +258,7 @@ public class RegularExpressionFactoryImpl extends EFactoryImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public CharacterEscapeSequence createCharacterEscapeSequence()
   {
     CharacterEscapeSequenceImpl characterEscapeSequence = new CharacterEscapeSequenceImpl();
@@ -257,6 +270,7 @@ public class RegularExpressionFactoryImpl extends EFactoryImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public ControlLetterEscapeSequence createControlLetterEscapeSequence()
   {
     ControlLetterEscapeSequenceImpl controlLetterEscapeSequence = new ControlLetterEscapeSequenceImpl();
@@ -268,6 +282,7 @@ public class RegularExpressionFactoryImpl extends EFactoryImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public HexEscapeSequence createHexEscapeSequence()
   {
     HexEscapeSequenceImpl hexEscapeSequence = new HexEscapeSequenceImpl();
@@ -279,6 +294,7 @@ public class RegularExpressionFactoryImpl extends EFactoryImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public UnicodeEscapeSequence createUnicodeEscapeSequence()
   {
     UnicodeEscapeSequenceImpl unicodeEscapeSequence = new UnicodeEscapeSequenceImpl();
@@ -290,6 +306,7 @@ public class RegularExpressionFactoryImpl extends EFactoryImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public IdentityEscapeSequence createIdentityEscapeSequence()
   {
     IdentityEscapeSequenceImpl identityEscapeSequence = new IdentityEscapeSequenceImpl();
@@ -301,6 +318,7 @@ public class RegularExpressionFactoryImpl extends EFactoryImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public DecimalEscapeSequence createDecimalEscapeSequence()
   {
     DecimalEscapeSequenceImpl decimalEscapeSequence = new DecimalEscapeSequenceImpl();
@@ -312,6 +330,7 @@ public class RegularExpressionFactoryImpl extends EFactoryImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public CharacterClass createCharacterClass()
   {
     CharacterClassImpl characterClass = new CharacterClassImpl();
@@ -323,6 +342,7 @@ public class RegularExpressionFactoryImpl extends EFactoryImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public CharacterClassElement createCharacterClassElement()
   {
     CharacterClassElementImpl characterClassElement = new CharacterClassElementImpl();
@@ -334,6 +354,7 @@ public class RegularExpressionFactoryImpl extends EFactoryImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public CharacterClassAtom createCharacterClassAtom()
   {
     CharacterClassAtomImpl characterClassAtom = new CharacterClassAtomImpl();
@@ -345,6 +366,7 @@ public class RegularExpressionFactoryImpl extends EFactoryImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EscapedCharacterClassAtom createEscapedCharacterClassAtom()
   {
     EscapedCharacterClassAtomImpl escapedCharacterClassAtom = new EscapedCharacterClassAtomImpl();
@@ -356,6 +378,7 @@ public class RegularExpressionFactoryImpl extends EFactoryImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Backspace createBackspace()
   {
     BackspaceImpl backspace = new BackspaceImpl();
@@ -367,6 +390,7 @@ public class RegularExpressionFactoryImpl extends EFactoryImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Group createGroup()
   {
     GroupImpl group = new GroupImpl();
@@ -378,6 +402,7 @@ public class RegularExpressionFactoryImpl extends EFactoryImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Quantifier createQuantifier()
   {
     QuantifierImpl quantifier = new QuantifierImpl();
@@ -389,6 +414,7 @@ public class RegularExpressionFactoryImpl extends EFactoryImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public SimpleQuantifier createSimpleQuantifier()
   {
     SimpleQuantifierImpl simpleQuantifier = new SimpleQuantifierImpl();
@@ -400,6 +426,7 @@ public class RegularExpressionFactoryImpl extends EFactoryImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public ExactQuantifier createExactQuantifier()
   {
     ExactQuantifierImpl exactQuantifier = new ExactQuantifierImpl();
@@ -411,6 +438,7 @@ public class RegularExpressionFactoryImpl extends EFactoryImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public RegularExpressionFlags createRegularExpressionFlags()
   {
     RegularExpressionFlagsImpl regularExpressionFlags = new RegularExpressionFlagsImpl();
@@ -422,6 +450,7 @@ public class RegularExpressionFactoryImpl extends EFactoryImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Disjunction createDisjunction()
   {
     DisjunctionImpl disjunction = new DisjunctionImpl();
@@ -433,6 +462,7 @@ public class RegularExpressionFactoryImpl extends EFactoryImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Sequence createSequence()
   {
     SequenceImpl sequence = new SequenceImpl();
@@ -444,6 +474,7 @@ public class RegularExpressionFactoryImpl extends EFactoryImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public CharacterClassRange createCharacterClassRange()
   {
     CharacterClassRangeImpl characterClassRange = new CharacterClassRangeImpl();
@@ -455,6 +486,7 @@ public class RegularExpressionFactoryImpl extends EFactoryImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public RegularExpressionPackage getRegularExpressionPackage()
   {
     return (RegularExpressionPackage)getEPackage();

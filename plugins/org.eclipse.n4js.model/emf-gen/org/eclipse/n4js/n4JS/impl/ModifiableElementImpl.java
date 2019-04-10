@@ -72,6 +72,7 @@ public abstract class ModifiableElementImpl extends ProxyResolvingEObjectImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<N4Modifier> getDeclaredModifiers() {
 		if (declaredModifiers == null) {
 			declaredModifiers = new EDataTypeEList<N4Modifier>(N4Modifier.class, this, N4JSPackage.MODIFIABLE_ELEMENT__DECLARED_MODIFIERS);

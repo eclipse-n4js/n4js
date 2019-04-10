@@ -39,10 +39,6 @@ public interface Wildcard extends TypeArgument {
 	/**
 	 * Returns the value of the '<em><b>Declared Upper Bound</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Declared Upper Bound</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Declared Upper Bound</em>' containment reference.
 	 * @see #setDeclaredUpperBound(TypeRef)
@@ -65,10 +61,6 @@ public interface Wildcard extends TypeArgument {
 	/**
 	 * Returns the value of the '<em><b>Declared Lower Bound</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Declared Lower Bound</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Declared Lower Bound</em>' containment reference.
 	 * @see #setDeclaredLowerBound(TypeRef)

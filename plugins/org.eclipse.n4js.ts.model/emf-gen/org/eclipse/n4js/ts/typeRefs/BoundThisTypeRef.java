@@ -41,10 +41,6 @@ public interface BoundThisTypeRef extends ThisTypeRef, StructuralTypeRef {
 	/**
 	 * Returns the value of the '<em><b>Actual This Type Ref</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Actual This Type Ref</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Actual This Type Ref</em>' containment reference.
 	 * @see #setActualThisTypeRef(ParameterizedTypeRef)

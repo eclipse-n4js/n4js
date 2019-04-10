@@ -77,6 +77,7 @@ public class VariableReferenceImpl extends ContentNodeImpl implements VariableRe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getVariableName() {
 		return variableName;
 	}
@@ -86,6 +87,7 @@ public class VariableReferenceImpl extends ContentNodeImpl implements VariableRe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setVariableName(String newVariableName) {
 		String oldVariableName = variableName;
 		variableName = newVariableName;

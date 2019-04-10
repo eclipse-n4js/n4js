@@ -86,6 +86,7 @@ public class IdentifiableElementImpl extends ProxyResolvingEObjectImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -95,6 +96,7 @@ public class IdentifiableElementImpl extends ProxyResolvingEObjectImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -107,6 +109,7 @@ public class IdentifiableElementImpl extends ProxyResolvingEObjectImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TModule getContainingModule() {
 		return EcoreUtil2.<TModule>getContainerOfType(this, TModule.class);
 	}

@@ -62,10 +62,6 @@ public enum ModuleLoader implements Enumerator {
 	/**
 	 * The '<em><b>N4JS</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>N4JS</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #N4JS
 	 * @model
@@ -77,10 +73,6 @@ public enum ModuleLoader implements Enumerator {
 	/**
 	 * The '<em><b>COMMONJS</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>COMMONJS</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #COMMONJS
 	 * @model
@@ -92,10 +84,6 @@ public enum ModuleLoader implements Enumerator {
 	/**
 	 * The '<em><b>NODE BUILTIN</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>NODE BUILTIN</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #NODE_BUILTIN
 	 * @model
@@ -216,6 +204,7 @@ public enum ModuleLoader implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getValue() {
 	  return value;
 	}
@@ -225,6 +214,7 @@ public enum ModuleLoader implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 	  return name;
 	}
@@ -234,6 +224,7 @@ public enum ModuleLoader implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getLiteral() {
 	  return literal;
 	}

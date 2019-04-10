@@ -64,10 +64,6 @@ public interface ExistentialTypeRef extends TypeRef {
 	/**
 	 * Returns the value of the '<em><b>Wildcard</b></em>' reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Wildcard</em>' reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Wildcard</em>' reference.
 	 * @see #setWildcard(Wildcard)
@@ -90,10 +86,6 @@ public interface ExistentialTypeRef extends TypeRef {
 	/**
 	 * Returns the value of the '<em><b>Bound Type Variable</b></em>' reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Bound Type Variable</em>' reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Bound Type Variable</em>' reference.
 	 * @see #setBoundTypeVariable(TypeVariable)
