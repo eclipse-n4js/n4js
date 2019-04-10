@@ -31,8 +31,8 @@ Workflow {
 				}
 				genericIde = {
 					enabled = true
-					name = "${runtimeProjectName}.ui"
-					root = "${runtimeProjectPath}.ui"
+//					name = "${runtimeProjectName}.ui"
+//					root = "${runtimeProjectPath}.ui"
 				}
 				eclipsePlugin = {
 					enabled = true

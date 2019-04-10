@@ -21,13 +21,13 @@ import org.eclipse.xtext.xtext.generator.model.TypeReference
 import org.eclipse.xtext.xtext.generator.model.project.IXtextProjectConfig
 
 /**
- * A Guice {@link Module Module} for injecting customizations for the SemanticVersioning language
+ * A Guice {@link Module Module} for injecting customizations for the JSON language
  * into the (new) Xtext language generator.
  */
-class SemanticVersioningGeneratorModule extends DefaultGeneratorModule {
+class JSONGeneratorModule extends DefaultGeneratorModule {
 
 	def configureXtextGeneratorNaming(Binder binder) {
-		binder.bind(XtextGeneratorNaming).to(SemanticVersioningGeneratorNaming)
+		binder.bind(XtextGeneratorNaming).to(JSONGeneratorNaming)
 	}
 	
 	def configurePatchedSerializerGenerator(Binder binder) {
@@ -35,7 +35,7 @@ class SemanticVersioningGeneratorModule extends DefaultGeneratorModule {
 	}
 }
 
-class SemanticVersioningGeneratorNaming extends XtextGeneratorNaming {
+class JSONGeneratorNaming extends XtextGeneratorNaming {
 
 	@Inject
 	IXtextProjectConfig projectConfig
@@ -46,7 +46,7 @@ class SemanticVersioningGeneratorNaming extends XtextGeneratorNaming {
 		if(pluginName === null) {
 			return null
 		} else {
-			new TypeReference(pluginName + '.internal', 'SemverActivator')
+			new TypeReference(pluginName + '.internal', 'JsonActivator')
 		}
 	}
 }

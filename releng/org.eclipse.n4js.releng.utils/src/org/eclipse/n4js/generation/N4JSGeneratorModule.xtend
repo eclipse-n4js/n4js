@@ -13,7 +13,6 @@ package org.eclipse.n4js.generation
 import com.google.inject.Binder
 import com.google.inject.Inject
 import com.google.inject.Module
-import org.eclipse.xtext.Grammar
 import org.eclipse.xtext.xtext.generator.XtextGeneratorNaming
 import org.eclipse.xtext.xtext.generator.model.TypeReference
 import org.eclipse.xtext.xtext.generator.model.project.IXtextProjectConfig
@@ -38,10 +37,6 @@ class N4JSGeneratorNaming extends XtextGeneratorNaming {
 
 	@Inject
 	IXtextProjectConfig projectConfig
-
-	override getGenericIdeBasePackage(Grammar grammar) {
-		super.getEclipsePluginBasePackage(grammar)
-	}
 
 	override getEclipsePluginActivator() {
 		val pluginName = projectConfig.eclipsePlugin.name
