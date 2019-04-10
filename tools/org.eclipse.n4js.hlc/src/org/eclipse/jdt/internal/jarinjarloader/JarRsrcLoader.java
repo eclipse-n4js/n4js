@@ -1,9 +1,12 @@
 /*******************************************************************************
  * Copyright (c) 2008, 2009 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ *
+ * This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Ferenc Hechler - initial API and implementation
@@ -30,6 +33,8 @@ import java.util.jar.Manifest;
  * This class will be compiled into the binary jar-in-jar-loader.zip. This ZIP is used for the "Runnable JAR File
  * Exporter"
  *
+ * Copied from https://git.eclipse.org/c/jdt/eclipse.jdt.ui.git/plain/org.eclipse.jdt.ui/jar%20in%20jar%20loader/
+ *
  * @since 3.5
  */
 @SuppressWarnings({ "javadoc", "resource" })
@@ -54,11 +59,26 @@ public class JarRsrcLoader {
 				rsrcUrls[i] = new URL(JIJConstants.JAR_INTERNAL_URL_PROTOCOL_WITH_COLON + rsrcPath
 						+ JIJConstants.JAR_INTERNAL_SEPARATOR);
 		}
-		ClassLoader jceClassLoader = new URLClassLoader(rsrcUrls, null);
+		ClassLoader jceClassLoader = new URLClassLoader(rsrcUrls, getParentClassLoader());
 		Thread.currentThread().setContextClassLoader(jceClassLoader);
 		Class<?> c = Class.forName(mi.rsrcMainClass, true, jceClassLoader);
 		Method main = c.getMethod(JIJConstants.MAIN_METHOD_NAME, new Class[] { args.getClass() });
 		main.invoke((Object) null, new Object[] { args });
+	}
+
+	private static ClassLoader getParentClassLoader() throws InvocationTargetException, IllegalAccessException {
+		// On Java8, it is ok to use a null parent class loader, but, starting with Java 9,
+		// we need to provide one that has access to the restricted list of packages that
+		// otherwise would produce a SecurityException when loaded
+		try {
+			// We use reflection here because the method ClassLoader.getPlatformClassLoader()
+			// is only present starting from Java 9
+			Method platformClassLoader = ClassLoader.class.getMethod("getPlatformClassLoader", (Class[]) null); //$NON-NLS-1$
+			return (ClassLoader) platformClassLoader.invoke(null, (Object[]) null);
+		} catch (NoSuchMethodException e) {
+			// This is a safe value to be used on Java 8 and previous versions
+			return null;
+		}
 	}
 
 	private static ManifestInfo getManifestInfo() throws IOException {
