@@ -11,7 +11,6 @@
 package org.eclipse.n4js.tests.project
 
 import com.google.common.base.Predicate
-import java.util.concurrent.TimeUnit
 import org.eclipse.core.resources.IFile
 import org.eclipse.core.resources.IFolder
 import org.eclipse.core.resources.IMarker
@@ -305,17 +304,17 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 		// Wait after resource changes to be able to re-run the validation job.
 		// This is not tracked by the builder.
 		extFolder.create(true, true, null);
-		Thread.sleep(TimeUnit.SECONDS.toMillis(5L));
+		testedWorkspace.build
 		assertTrue('External folder \'ext\' should be missing', extFolder.exists);
 		assertMarkers('project description file (package.json) file should have zero errors.', projectDescriptionFile, 0);
 
 		extFolder.delete(true, null);
-		Thread.sleep(TimeUnit.SECONDS.toMillis(5L));
+		testedWorkspace.build
 		assertTrue('External folder \'ext\' should be missing', !extFolder.exists);
 		assertMarkers('project description file (package.json) file should have exactly one error.', projectDescriptionFile, 1);
 
 		extFolder.create(true, true, null);
-		Thread.sleep(TimeUnit.SECONDS.toMillis(5L));
+		testedWorkspace.build
 		assertTrue('External folder \'ext\' should be missing', extFolder.exists);
 		assertMarkers('project description file (package.json) file should have zero errors.', projectDescriptionFile, 0);
 	}

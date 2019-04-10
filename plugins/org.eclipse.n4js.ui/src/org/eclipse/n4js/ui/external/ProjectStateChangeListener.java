@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.ui.external;
 
+import static com.google.common.collect.FluentIterable.from;
+
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -33,6 +35,8 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalIndexSynchronizer;
+import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.xtext.builder.impl.ProjectOpenedOrClosedListener;
 import org.eclipse.xtext.builder.impl.ToBeBuilt;
 import org.eclipse.xtext.ui.XtextProjectHelper;
@@ -54,10 +58,11 @@ public class ProjectStateChangeListener extends ProjectOpenedOrClosedListener {
 
 	private final ExternalIndexSynchronizer indexSynchronizer;
 
+	private final IN4JSCore n4jsCore;
+
 	private final SyncIndexJob syncIndexJob = new SyncIndexJob();
 
-	@Inject
-	private OutdatedPackageJsonQueue packageJsonQueue;
+	private final OutdatedPackageJsonQueue packageJsonQueue;
 
 	private class SyncIndexJob extends WorkspaceJob {
 
@@ -80,8 +85,11 @@ public class ProjectStateChangeListener extends ProjectOpenedOrClosedListener {
 
 	/***/
 	@Inject
-	public ProjectStateChangeListener(ISharedStateContributionRegistry registry) {
+	public ProjectStateChangeListener(ISharedStateContributionRegistry registry,
+			OutdatedPackageJsonQueue packageJsonQueue) {
 		this.indexSynchronizer = registry.getSingleContributedInstance(ExternalIndexSynchronizer.class);
+		this.n4jsCore = registry.getSingleContributedInstance(IN4JSCore.class);
+		this.packageJsonQueue = packageJsonQueue;
 	}
 
 	@Override
@@ -169,7 +177,24 @@ public class ProjectStateChangeListener extends ProjectOpenedOrClosedListener {
 		if (resource instanceof IFolder) {
 			if ("node_modules".equals(resource.getName())) {
 				accumulator.add(resource.getProject());
+			} else if (isSourceContainerModification(resource)) {
+				accumulator.add(resource.getProject());
 			}
+		}
+		return false;
+	}
+
+	private boolean isSourceContainerModification(final IResource folder) {
+		final String fullPathStr = folder.getFullPath().toString();
+		final URI folderUri = URI.createPlatformResourceURI(fullPathStr, true);
+		final IN4JSProject project = n4jsCore.findProject(folderUri).orNull();
+		if (null != project && project.exists()) {
+			return from(project.getSourceContainers())
+					.transform(container -> container.getLocation())
+					.filter(uri -> uri.isPlatformResource())
+					.transform(uri -> uri.toPlatformString(true))
+					.firstMatch(uri -> uri.equals(fullPathStr))
+					.isPresent();
 		}
 		return false;
 	}
