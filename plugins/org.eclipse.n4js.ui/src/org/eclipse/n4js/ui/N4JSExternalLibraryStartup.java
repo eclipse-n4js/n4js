@@ -105,7 +105,7 @@ public class N4JSExternalLibraryStartup implements IStartup {
 		@Override
 		public void postExecuteSuccess(String commandId, Object returnValue) {
 			if ("org.eclipse.ui.file.refresh".equals(commandId)) {
-				indexSyncScheduler.scheduleCheckAndClearIndex();
+				indexSyncScheduler.forceIndexSync();
 			}
 		}
 

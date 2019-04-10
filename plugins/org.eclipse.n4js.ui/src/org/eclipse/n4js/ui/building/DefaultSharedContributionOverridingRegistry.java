@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ui.building;
 
+import org.eclipse.n4js.ui.external.OutdatedPackageJsonQueue;
 import org.eclipse.n4js.ui.external.ProjectStateChangeListener;
 import org.eclipse.xtext.builder.impl.ProjectOpenedOrClosedListener;
 import org.eclipse.xtext.ui.shared.contribution.IEagerContribution;
@@ -39,6 +40,7 @@ public class DefaultSharedContributionOverridingRegistry extends SharedStateCont
 		@Override
 		public void configure(Binder binder) {
 			binder.bind(ProjectOpenedOrClosedListener.class).to(ProjectStateChangeListener.class);
+			binder.bind(OutdatedPackageJsonQueue.class);
 			binder.bind(IEagerContribution.class).to(ListenerRegistrarWithoutRecoveryBuild.class);
 		}
 	}
