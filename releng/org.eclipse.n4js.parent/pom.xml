@@ -44,7 +44,7 @@ Contributors:
 		<project.reporting.outputEncoding>${project.encoding}</project.reporting.outputEncoding>
 
 		<!-- tycho -->
-		<tycho-version>1.2.0</tycho-version>
+		<tycho-version>1.4.0</tycho-version>
 
 		<!-- Xtext, Xtend and their runtime -->
 		<xtext-version>2.17.1</xtext-version>

@@ -103,7 +103,7 @@ For updating the N4JS IDE to a new version of Eclipse, EMF, Xtext, etc. follow t
 .. Choose a new Eclipse version and define this in `N4JS.setup`.
 .. For those other dependencies _that come with Eclipse_ (e.g. EMF, Xtext) find out which version matches the chosen Eclipse version
    and define that version in `N4JS.setup`. +
-   Tip: use the contents list of the SimRel you are targeting, e.g. https://projects.eclipse.org/releases/2018-12
+   Tip: use the contents list of the SimRel you are targeting, e.g. https://projects.eclipse.org/releases/2019-03
 .. For those other dependencies _that are available via the Eclipse Orbit_, find out which version is the latest version available in
    the Orbit and define that version in `N4JS.setup`. +
    Tip: contents of the Eclipse Orbit can be found at https://download.eclipse.org/tools/orbit/downloads/ +
