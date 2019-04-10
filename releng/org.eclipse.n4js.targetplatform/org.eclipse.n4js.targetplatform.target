@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.8"?>
-<target name="Generated target-platform N4JS:N4JS_2018_09" sequenceNumber="145">
+<target name="Generated target-platform N4JS:N4JS_2018_09" sequenceNumber="148">
   <locations>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.equinox.executable.feature.group" version="3.8.100.v20180827-1352"/>
@@ -25,6 +25,10 @@
       <unit id="org.eclipse.wst.html.ui.infopop" version="1.0.201.v201409111852"/>
       <unit id="org.eclipse.wst.xml_ui.feature.feature.group" version="3.8.0.v201608061842"/>
       <repository location="http://archive.eclipse.org/webtools/downloads/drops/R3.8/R3.8.1/R-3.8.1-20160912100321/repository"/>
+    </location>
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+      <unit id="org.eclipse.lsp4j" version="0.5.0.v20180903-1211"/>
+      <repository location="http://download.eclipse.org/lsp4j/updates/releases/0.5.0"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.emf.ecore.editor" version="2.15.0.v20180823-0905"/>
