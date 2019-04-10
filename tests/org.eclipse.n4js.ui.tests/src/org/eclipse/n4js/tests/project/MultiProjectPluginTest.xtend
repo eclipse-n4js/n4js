@@ -181,11 +181,7 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 		assertMarkers("file should have four errors", c, 4);
 	}
 	
-//	@Rule
-//	public RepeatedTestRule rule = new RepeatedTestRule();
-
 	@Test
-//	@RepeatTest(times=20)
 	def void testTwoFilesProjectNewlyCreated() throws Exception {
 		addProjectToDependencies("thirdProject")
 		val c = createTestFile(
@@ -287,7 +283,6 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 
 	@Test
 	def void testDeleteExternalFolderValidateProjectDescriptionFileWithoutOpenedEditors() {
-
 		val project = createJSProject('multiProjectTest.third', 'src', 'src-gen', [ builder |
 			builder.withSourceContainer(SourceContainerType.EXTERNAL, "ext");
 		]);

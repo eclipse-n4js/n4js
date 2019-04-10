@@ -27,7 +27,6 @@ import org.eclipse.n4js.tests.util.ProjectTestsHelper
 import org.eclipse.n4js.tests.util.ProjectTestsUtils
 import org.eclipse.n4js.utils.ProjectDescriptionUtils
 import org.eclipse.n4js.utils.URIUtils
-import org.eclipse.xtext.testing.RepeatedTest
 import org.junit.Before
 import org.junit.Test
 
@@ -38,7 +37,6 @@ import static org.junit.Assert.*
  * Testing the use of npm scopes as part of N4JS project names, i.e. project names of
  * the form "@myScope/myProject".
  */
-@RepeatedTest(times=10)
 class NpmScopesPluginTest extends AbstractBuilderParticipantTest {
 
 	private static final String PROBANDS = "probands";

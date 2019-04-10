@@ -177,7 +177,8 @@ public class ProjectStateChangeListener extends ProjectOpenedOrClosedListener {
 		if (resource instanceof IFolder) {
 			if ("node_modules".equals(resource.getName())) {
 				accumulator.add(resource.getProject());
-			} else if (isSourceContainerModification(resource)) {
+			} else if ((delta.getKind() == IResourceDelta.ADDED || delta.getKind() == IResourceDelta.REMOVED)
+					&& isSourceContainerModification(resource)) {
 				accumulator.add(resource.getProject());
 			}
 		}
