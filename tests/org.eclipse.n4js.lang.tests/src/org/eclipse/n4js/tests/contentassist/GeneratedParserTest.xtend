@@ -12,8 +12,8 @@ package org.eclipse.n4js.tests.contentassist
 
 import com.google.inject.Inject
 import com.google.inject.Provider
-import org.eclipse.n4js.ui.contentassist.antlr.N4JSParser
-import org.eclipse.n4js.ui.contentassist.antlr.lexer.InternalN4JSLexer
+import org.eclipse.n4js.ide.contentassist.antlr.N4JSParser
+import org.eclipse.n4js.ide.contentassist.antlr.lexer.InternalN4JSLexer
 import org.antlr.runtime.CharStream
 import org.eclipse.xtext.ide.editor.contentassist.antlr.FollowElement
 import org.eclipse.xtext.nodemodel.INode
