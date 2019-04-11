@@ -162,6 +162,7 @@ public class N4jsLibsAccess {
 			String projectName = projectPath.getFileName().toString();
 			Path targetProjectPath = targetPath.resolve(projectName);
 			if (useSymbolicLinks) {
+				Files.createDirectories(targetPath); // i.e. parent of targetProjectPath
 				Path symLinkPath = Files.createSymbolicLink(targetProjectPath, projectPath);
 				if (deleteOnExit) {
 					symLinkPath.toFile().deleteOnExit();
