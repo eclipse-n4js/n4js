@@ -225,6 +225,10 @@ public class ProjectDescriptionUtils {
 	 * For details on N4JS project name handling, see {@link #isProjectNameWithScope(String)}.
 	 */
 	public static String deriveN4JSProjectNameFromURI(URI uri) {
+		if (uri == null) {
+			return null;
+		}
+
 		int segCount = uri.segmentCount();
 		String last = segCount > 0 ? uri.segment(segCount - 1) : null;
 		if (uri.isPlatform()) {

@@ -10,22 +10,30 @@
  */
 package org.eclipse.n4js.ide;
 
-import org.eclipse.n4js.ide.sever.N4JSWorkspaceManager;
-import org.eclipse.xtext.ide.server.WorkspaceManager;
+import org.eclipse.n4js.ide.sever.N4JSProjectManager;
+import org.eclipse.n4js.ide.sever.N4JSProjectWorkspaceConfigFactory;
+import org.eclipse.xtext.ide.server.IWorkspaceConfigFactory;
+import org.eclipse.xtext.ide.server.ProjectManager;
 
 /**
  * Use this class to register ide components.
  */
 public class N4JSIdeModule extends AbstractN4JSIdeModule {
-	
+
 	public ClassLoader bindClassLoaderToInstance() {
 		return getClass().getClassLoader();
 	}
-	
-	
-	
-	public Class<? extends WorkspaceManager> bindN4JSWorkspaceManager() {
-		return N4JSWorkspaceManager.class;
+
+	// public Class<? extends WorkspaceManager> bindWorkspaceManager() {
+	// return N4JSWorkspaceManager.class;
+	// }
+
+	public Class<? extends IWorkspaceConfigFactory> bindIWorkspaceConfigFactory() {
+		return N4JSProjectWorkspaceConfigFactory.class;
 	}
-	
+
+	public Class<? extends ProjectManager> bindProjectManager() {
+		return N4JSProjectManager.class;
+	}
+
 }
