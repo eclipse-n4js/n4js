@@ -42,6 +42,8 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.xtext.naming.QualifiedName;
+import org.eclipse.xtext.workspace.IProjectConfig;
+import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
@@ -53,7 +55,7 @@ import com.google.inject.Singleton;
  */
 @SuppressWarnings({ "javadoc" })
 @Singleton
-public class N4JSModel {
+public class N4JSModel implements IWorkspaceConfig {
 
 	private final InternalN4JSWorkspace workspace;
 
@@ -76,6 +78,37 @@ public class N4JSModel {
 		boolean external = (externalLibraryWorkspace != null && externalLibraryWorkspace.getProject(location) != null);
 		return new N4JSProject(location, external, this);
 	}
+
+	/// IWorkspaceConfig
+
+	@Override
+	public Set<? extends IProjectConfig> getProjects() {
+		Set<IProjectConfig> prjConfs = new HashSet<>();
+		for (URI prjLoc : workspace.getAllProjectLocations()) {
+			IProjectConfig prjConf = new N4JSProject(prjLoc, false, this);
+			prjConfs.add(prjConf);
+		}
+		return prjConfs;
+	}
+
+	@Override
+	public IProjectConfig findProjectContaining(URI member) {
+		URI projectWithMemberLoc = workspace.findProjectWith(member);
+		IProjectConfig projectWithMember = new N4JSProject(projectWithMemberLoc, false, this);
+		return projectWithMember;
+	}
+
+	@Override
+	public IProjectConfig findProjectByName(String name) {
+		for (IProjectConfig prjConf : getProjects()) {
+			if (prjConf.getName().equals(name)) {
+				return prjConf;
+			}
+		}
+		return null;
+	}
+
+	/// END IWorkspaceConfig
 
 	public N4JSProject findProjectWith(URI nestedLocation) {
 		// FIXME: mm

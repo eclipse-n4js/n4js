@@ -21,7 +21,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
@@ -38,6 +40,8 @@ import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.io.FileUtils;
+import org.eclipse.xtext.workspace.ISourceFolder;
+import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
@@ -80,6 +84,39 @@ public class N4JSProject implements IN4JSProject {
 	public int hashCode() {
 		return URIUtils.hashCode(getLocation());
 	}
+
+	/// IProjectConfig
+
+	@Override
+	public String getName() {
+		return this.getProjectName();
+	}
+
+	@Override
+	public URI getPath() {
+		return this.getLocation();
+	}
+
+	@Override
+	public Set<? extends ISourceFolder> getSourceFolders() {
+		return new HashSet<>(this.getSourceContainers());
+	}
+
+	@Override
+	public ISourceFolder findSourceFolderContaining(URI member) {
+		Path memberPath = Paths.get(member.toFileString());
+		for (ISourceFolder srcFolder : getSourceFolders()) {
+			memberPath.startsWith(Paths.get(srcFolder.getPath().toFileString()));
+		}
+		return null;
+	}
+
+	@Override
+	public IWorkspaceConfig getWorkspaceConfig() {
+		return this.model;
+	}
+
+	/// END: IProjectConfig
 
 	protected N4JSModel getModel() {
 		return model;

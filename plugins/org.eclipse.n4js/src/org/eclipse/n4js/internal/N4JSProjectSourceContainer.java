@@ -34,6 +34,20 @@ public class N4JSProjectSourceContainer extends AbstractSourceContainer implemen
 		this.project = project;
 	}
 
+	/// ISourceFolder
+
+	@Override
+	public String getName() {
+		return this.getRelativeLocation();
+	}
+
+	@Override
+	public URI getPath() {
+		return this.getLocation();
+	}
+
+	/// END ISourceFolder
+
 	@Override
 	public IN4JSProject getProject() {
 		return project;
