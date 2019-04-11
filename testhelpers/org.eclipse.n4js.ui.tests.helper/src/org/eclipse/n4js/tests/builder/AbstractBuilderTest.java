@@ -212,13 +212,12 @@ public abstract class AbstractBuilderTest {
 		closeAllEditorsForTearDown();
 		ProjectTestsUtils.closeAllProjectsInWorkspace();
 		IResourcesSetupUtil.cleanWorkspace();
-		IResourcesSetupUtil.cleanBuild();
+		testedWorkspace.cleanBuild();
 		waitForAutoBuild();
-		assertEquals(0, root().getProjects().length);
 		assertEquals("Resources in index:\n" + getAllResourceDescriptionsAsString() + "\n", 0,
 				countResourcesInIndex());
 
-		final IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+		final IProject[] projects = root().getProjects();
 		assertTrue("Expected empty workspace. Projects were in workspace: " + Arrays.toString(projects),
 				0 == projects.length);
 
