@@ -3,6 +3,9 @@ module org.eclipse.n4js.json.GenerateJSON
 import org.eclipse.xtext.xtext.generator.*
 import org.eclipse.xtext.xtext.generator.model.project.*
 
+import org.eclipse.n4js.generation.*
+
+
 var rootPath = ".."
 var runtimeProjectName = "org.eclipse.n4js.json"
 var runtimeProjectPath = "${rootPath}/${runtimeProjectName}"/**
@@ -10,14 +13,14 @@ var runtimeProjectPath = "${rootPath}/${runtimeProjectName}"/**
  */
 Workflow {
 	component = XtextGenerator {
-		configuration = {
+		configuration = JSONGeneratorModule {
 			project = StandardProjectConfig {
 				baseName = runtimeProjectName
 				rootPath = rootPath
 				genericIde = {
 					enabled = true
-					name = "${runtimeProjectName}.ui"
-					root = "${runtimeProjectPath}.ui"
+//					name = "${runtimeProjectName}.ui"
+//					root = "${runtimeProjectPath}.ui"
 				}
 				eclipsePlugin = {
 					enabled = true
