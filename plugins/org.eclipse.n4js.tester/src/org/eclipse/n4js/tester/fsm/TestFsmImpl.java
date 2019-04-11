@@ -200,7 +200,7 @@ public class TestFsmImpl implements TestFsm {
 
 	/** Created a new cache loader instance which simply returns with the argument as the loaded value. */
 	private CacheLoader<String, String> getTestIdCacheLoader() {
-		return new CacheLoader<String, String>() {
+		return new CacheLoader<>() {
 			@Override
 			public String load(final String testId) throws Exception {
 				return testId;

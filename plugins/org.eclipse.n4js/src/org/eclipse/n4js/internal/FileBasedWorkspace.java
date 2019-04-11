@@ -148,7 +148,7 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 			iae.printStackTrace();
 		}
 		if (sourceContainerDirectory != null && sourceContainerDirectory.isDirectory()) {
-			AbstractTreeIterator<File> treeIterator = new AbstractTreeIterator<File>(sourceContainerDirectory,
+			AbstractTreeIterator<File> treeIterator = new AbstractTreeIterator<>(sourceContainerDirectory,
 					false) {
 				@Override
 				protected Iterator<? extends File> getChildren(Object root) {

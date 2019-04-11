@@ -154,7 +154,7 @@ public class MultipleSingletonPluginUITest extends AbstractBuilderParticipantTes
 
 		// sort to preserve output order
 		List<Class<?>> sortedByClassName = new ArrayList<>(singletonInstances.keySet());
-		Comparator<Class<?>> comparatorByClassName = new Comparator<Class<?>>() {
+		Comparator<Class<?>> comparatorByClassName = new Comparator<>() {
 			@Override
 			public int compare(Class<?> c1, Class<?> c2) {
 				return c1.getName().compareTo(c2.getName());

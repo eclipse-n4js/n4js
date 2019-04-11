@@ -56,7 +56,7 @@ public class ScenarioTest {
 		FileDeleter.delete(workspace.toPath());
 
 		// extract test-scenarios.
-		DirectoryStream.Filter<Path> filter = new DirectoryStream.Filter<Path>() {
+		DirectoryStream.Filter<Path> filter = new DirectoryStream.Filter<>() {
 			@Override
 			public boolean accept(Path file) throws IOException {
 				String fname = file.getFileName().toString();

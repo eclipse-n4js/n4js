@@ -384,7 +384,7 @@ public class SourceMap {
 	 * Returns an iterable over the gen mappings (i.e. the mapping s found in the source file).
 	 */
 	public Iterable<MappingEntry> getGenMappings() {
-		return new Iterable<MappingEntry>() {
+		return new Iterable<>() {
 			@Override
 			public Iterator<MappingEntry> iterator() {
 				return new MappingEntryIterator(genMappings.iterator());

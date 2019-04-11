@@ -318,7 +318,7 @@ public class N4jscBase implements IApplication {
 		}
 		System.out.flush();
 		System.err.flush();
-		return new Integer(exitCode);
+		return Integer.valueOf(exitCode);
 	}
 
 	@Override

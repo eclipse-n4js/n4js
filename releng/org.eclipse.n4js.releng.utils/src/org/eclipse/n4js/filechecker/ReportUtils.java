@@ -102,7 +102,7 @@ public class ReportUtils {
 	static public <E extends Comparable<E>, T extends Comparable<T>> TreeMap<T, Collection<E>> sortByListSize(
 			Multimap<T, E> multimap) {
 
-		Comparator<T> comparator = new Comparator<T>() {
+		Comparator<T> comparator = new Comparator<>() {
 			@Override
 			public int compare(T t1, T t2) {
 				int s1 = multimap.get(t1).size();

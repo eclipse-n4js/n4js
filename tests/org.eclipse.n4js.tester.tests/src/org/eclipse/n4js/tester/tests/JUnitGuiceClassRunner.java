@@ -114,10 +114,23 @@ public class JUnitGuiceClassRunner extends BlockJUnit4ClassRunner {
 	private Iterable<? extends Module> toModules(final Class<? extends Module>[] baseModules) {
 		return transform(newArrayList(baseModules), moduleClass -> {
 			try {
-				return moduleClass.newInstance();
+				return moduleClass.getConstructor().newInstance();
 			} catch (InstantiationException | IllegalAccessException e) {
 				throw new RuntimeException(new InitializationError(e));
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoSuchMethodException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SecurityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
+			return null;
 		});
 	}
 

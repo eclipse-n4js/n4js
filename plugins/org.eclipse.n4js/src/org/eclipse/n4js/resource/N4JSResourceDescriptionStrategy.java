@@ -257,7 +257,7 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 		if (module.isPreLinkingPhase()) {
 			return UserdataMapper.createTimestampUserData(module);
 		}
-		return new ForwardingMap<String, String>() {
+		return new ForwardingMap<>() {
 
 			private Map<String, String> delegate;
 
