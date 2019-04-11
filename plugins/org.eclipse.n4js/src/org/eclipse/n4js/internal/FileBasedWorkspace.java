@@ -59,12 +59,12 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 	 * @param location
 	 *            project directory containing package.json directly
 	 */
-	public void registerProject(URI unsafeLocation) {
-		if (unsafeLocation.lastSegment().isEmpty()) {
+	public void registerProject(URI location) {
+		if (location.lastSegment().isEmpty()) {
 			throw new IllegalArgumentException("lastSegment may not be empty");
 		}
 
-		URI location = URIUtils.normalize(unsafeLocation);
+		// URI location = URIUtils.normalize(unsafeLocation);
 		if (!projectElementHandles.containsKey(location)) {
 			LazyProjectDescriptionHandle lazyDescriptionHandle = createLazyDescriptionHandle(location);
 			projectElementHandles.put(location, lazyDescriptionHandle);
@@ -77,7 +77,9 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 
 	@Override
 	public URI findProjectWith(URI nestedLocation) {
-		URI key = URIUtils.normalize(nestedLocation.trimFragment());
+		// URI key = URIUtils.normalize(nestedLocation.trimFragment());
+
+		URI key = nestedLocation.trimFragment();
 
 		// determine longest registered project location, that is a prefix of 'key'
 		while (key.segmentCount() > 0) {
@@ -92,14 +94,13 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 	}
 
 	@Override
-	public ProjectDescription getProjectDescription(URI unsafeLocation) {
-		URI location = URIUtils.normalize(unsafeLocation);
+	public ProjectDescription getProjectDescription(URI location) {
+		// URI location = URIUtils.normalize(unsafeLocation);
 		LazyProjectDescriptionHandle handle = projectElementHandles.get(location);
 		if (handle == null) {
 			// check case without trailing path separator
-			if (location.hasTrailingPathSeparator()) {
-				handle = projectElementHandles.get(location.trimSegments(1));
-			}
+			URI trimmedLocation = location.trimSegments((location.hasTrailingPathSeparator() ? 1 : 0));
+			handle = projectElementHandles.get(trimmedLocation);
 		}
 
 		if (handle == null) {

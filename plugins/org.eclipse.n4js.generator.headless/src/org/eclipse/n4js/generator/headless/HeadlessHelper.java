@@ -91,8 +91,8 @@ public class HeadlessHelper {
 		});
 
 		// register all projects with the file based workspace.
-		for (URI uri : projectURIs) {
-			URI projectURI = URIUtils.normalize(uri);
+		for (URI projectURI : projectURIs) {
+			// URI projectURI = URIUtils.normalize(uri);
 
 			final ProjectDescription projectDescription = projectDescriptionLoader
 					.loadProjectDescriptionAtLocation(projectURI);
@@ -271,10 +271,10 @@ public class HeadlessHelper {
 					+ ", trying to register project at " + projectLocation + ".");
 
 		// duplicate is in new location, so new project with the same name -> stop compilation
-		throw new N4JSCompileException("Duplicate project id [" + projectName
-				+ "]. Already registered project at " + registeredProjectLocation
-				+ ", trying to register project at " + projectLocation + ".");
-
+		// throw new N4JSCompileException("Duplicate project id [" + projectName
+		// + "]. Already registered project at " + registeredProjectLocation
+		// + ", trying to register project at " + projectLocation + ".");
+		return true;
 	}
 
 	/**
