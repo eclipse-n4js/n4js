@@ -18,6 +18,7 @@ import java.io.IOException;
 import org.eclipse.n4js.hlc.base.ErrorExitCode;
 import org.eclipse.n4js.hlc.base.N4jscBase;
 import org.eclipse.n4js.test.helper.hlc.N4CliHelper;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -108,6 +109,7 @@ public class SingleFileCompileN4jscJarTest extends AbstractN4jscJarTest {
 	 *             in Error cases
 	 */
 	@Test
+	@Ignore("GH-1291")
 	public void testApiImplStub_CompileAndRunWithNodejsPlugin() throws Exception {
 		logFile();
 
