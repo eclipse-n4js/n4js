@@ -25,11 +25,10 @@
 <==
 stdout:
 stderr:
-\(SystemJS\) Maximum call stack size exceeded
-\s+RangeError: Maximum call stack size exceeded
+(.|\n)*
+RangeError: Maximum call stack size exceeded
 \s+at new [AB] \(.+/org.eclipse.n4js.transpiler.es5.tests/src-gen/circularDependency/req_03/[AB].js:\d+:\d+\)
 (.|\n)*
-\s+Error loading org.eclipse.n4js.transpiler.es5.tests/src-gen/circularDependency/req_03/Main
 ==>
 --- */
 

@@ -27,7 +27,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.base.Predicates;
 import com.google.common.io.Files;
 
 /**
@@ -54,7 +53,10 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 	 */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace(TEST_DATA_SET__TESTERS, Predicates.alwaysTrue(), true);
+		workspace = setupWorkspace(TEST_DATA_SET__TESTERS, true,
+				"n4js-runtime",
+				"org.eclipse.n4js.mangelhaft",
+				"org.eclipse.n4js.mangelhaft.assert");
 	}
 
 	/** Delete workspace. */

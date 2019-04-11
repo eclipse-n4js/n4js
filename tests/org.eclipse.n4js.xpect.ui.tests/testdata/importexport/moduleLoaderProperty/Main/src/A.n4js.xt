@@ -63,10 +63,9 @@ C1, C2, C3, C4;
 // of module A (this file) that imports something from M_cjs, M_default, M_n4js, M_node:
 
 /* XPECT compileResultContains ---
-System.register([
-	'@@cjs/Lib_cjs/src-gen/M_cjs',
-	'Lib_default/src-gen/M_default',
-	'Lib_n4js/src-gen/M_n4js',
-	'@node/M_node'
-],
+import 'n4js-runtime'
+import {C as C1} from 'Lib_cjs/src-gen/M_cjs'
+import {C as C2} from 'Lib_default/src-gen/M_default'
+import {C as C3} from 'Lib_n4js/src-gen/M_n4js'
+import {C as C4} from 'M_node'
 --- */

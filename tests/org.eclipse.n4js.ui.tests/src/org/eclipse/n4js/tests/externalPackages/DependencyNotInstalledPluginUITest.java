@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.tests.externalPackages;
 
-import static org.junit.Assert.assertNotNull;
-
 import java.io.File;
 import java.nio.file.Path;
 
@@ -22,12 +20,9 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
-import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.Test;
-
-import com.google.inject.Inject;
 
 /**
  * Test if a npm is installed in the node_modules folder of the project.
@@ -41,9 +36,7 @@ public class DependencyNotInstalledPluginUITest extends AbstractBuilderParticipa
 	private static final String PROBANDS_DIR = "probands/DependencyNotInstalled";
 	private static final String PROBAND_A = "A";
 	private static final String PROBAND_B = "B";
-
-	@Inject
-	private EclipseExternalLibraryWorkspace extLibWS;
+	private static final String PROBAND_UNRELATED = "Unrelated";
 
 	@Override
 	protected boolean provideShippedCode() {
@@ -51,23 +44,30 @@ public class DependencyNotInstalledPluginUITest extends AbstractBuilderParticipa
 	}
 
 	/**
-	 * Checks that there is an issue in case an npm is not installed in the project's node_modules folder.
+	 * Checks that there is an issue in case an npm is not installed in the project's node_modules folder, even though
+	 * that npm is installed in another, unrelated project's node_modules folder.
 	 */
 	@Test
 	public void checkErrorOfMissingInstallationProjects() throws CoreException {
 		Path projectsRoot = new File(getResourceUri(PROBANDS_DIR)).toPath();
 		IProject prjA = ProjectTestsUtils.importProject(projectsRoot.toFile(), PROBAND_A);
 		ProjectTestsUtils.importProject(projectsRoot.toFile(), PROBAND_B);
+		IProject prjUnrelated = ProjectTestsUtils.importProject(projectsRoot.toFile(), PROBAND_UNRELATED);
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 
-		assertNotNull(extLibWS.getProject("n4js.lang"));
+		libraryManager.installNPM("lodash", URIUtils.convert(prjUnrelated), new NullProgressMonitor());
+		IResourcesSetupUtil.fullBuild();
+		waitForAutoBuild();
+		IFile packageJsonUnrelated = prjUnrelated.getFile(IN4JSProject.PACKAGE_JSON);
+		assertMarkers("package.json of project 'Unrelated' should have no issues", packageJsonUnrelated, 0);
 
+		// Now we want to see a marker in project 'A' about missing dependency 'lodash', even though 'lodash' is
+		// installed in project 'Unrelated':
 		IFile packageJsonA = prjA.getFile(IN4JSProject.PACKAGE_JSON);
-		// line 14: Project does not exist with project ID: n4js.lang
-		assertMarkers("package.json of project A should have 1 issue", packageJsonA, 1);
+		assertIssues(packageJsonA, "line 14: Project does not exist with project ID: lodash.");
 
-		libraryManager.installNPM("n4js.lang", URIUtils.convert(prjA), new NullProgressMonitor());
+		libraryManager.installNPM("lodash", URIUtils.convert(prjA), new NullProgressMonitor());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 
@@ -86,8 +86,7 @@ public class DependencyNotInstalledPluginUITest extends AbstractBuilderParticipa
 		waitForAutoBuild();
 
 		IFile packageJsonB = prjB.getFile(IN4JSProject.PACKAGE_JSON);
-		// line 14: Project depends on workspace project A which is missing in the node_modules folder.
-		// Either install project A or introduce a yarn workspace of both of the projects.
-		assertMarkers("package.json of project B should have 1 issue", packageJsonB, 1);
+		assertIssues(packageJsonB,
+				"line 14: Project depends on workspace project A which is missing in the node_modules folder. Either install project A or introduce a yarn workspace of both of the projects.");
 	}
 }

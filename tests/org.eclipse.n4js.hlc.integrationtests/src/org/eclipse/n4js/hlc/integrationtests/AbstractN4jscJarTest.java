@@ -16,10 +16,12 @@ import static org.eclipse.n4js.hlc.integrationtests.HlcTestingConstants.WORKSPAC
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 
+import org.eclipse.n4js.json.JSONStandaloneSetup;
 import org.eclipse.n4js.test.helper.hlc.N4CliHelper;
 import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.n4js.utils.io.FileDeleter;
@@ -65,7 +67,7 @@ public abstract class AbstractN4jscJarTest {
 	 * Subclass must provide the fixture, i.e. name of folder containing test data.
 	 *
 	 * Per default, this will not include the n4js libraries (cf.
-	 * {@link N4CliHelper#copyN4jsLibsToLocation(File, com.google.common.base.Predicate)} in the fixture workspace.
+	 * {@link N4CliHelper#copyN4jsLibsToLocation(Path, com.google.common.base.Predicate)} in the fixture workspace.
 	 */
 	protected AbstractN4jscJarTest(String fixture) {
 		this(fixture, false);
@@ -91,13 +93,13 @@ public abstract class AbstractN4jscJarTest {
 		@Override
 		protected void starting(Description desc) {
 			description = desc;
-			System.out.println("Started of: " + desc.getClassName() + "." + desc.getMethodName());
+			System.out.println("Started: " + desc.getClassName() + "." + desc.getMethodName());
 		}
 
 		@Override
 		protected void finished(Description desc) {
 			description = null;
-			System.out.println("Finished of: " + desc.getClassName() + "." + desc.getMethodName());
+			System.out.println("Finished: " + desc.getClassName() + "." + desc.getMethodName());
 		}
 
 	};
@@ -121,7 +123,6 @@ public abstract class AbstractN4jscJarTest {
 		System.out.println("BEFORE: current workspace would be " + wsp.getAbsolutePath());
 
 		// clean
-		// Files.deleteIfExists(wsp.toPath());
 		FileDeleter.delete(wsp.toPath());
 		// copy
 		FileCopier.copy(fixtureFile.toPath(), wsp.toPath());
@@ -129,7 +130,11 @@ public abstract class AbstractN4jscJarTest {
 		// copy n4js libraries, if required
 		if (includeN4jsLibraries) {
 			// if specified, copy all of the n4js libraries (no filtering)
-			N4CliHelper.copyN4jsLibsToLocation(wsp, Predicates.alwaysTrue());
+			JSONStandaloneSetup.doSetup();
+			N4CliHelper.copyN4jsLibsToLocation(wsp.toPath(), Predicates.alwaysTrue());
+
+			// FIXME GH-1281 double check this method!
+			// --> Need to create a yarn workspace? Align with code in AbstractN4jscTest!
 		}
 	}
 

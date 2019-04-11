@@ -23,8 +23,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.base.Predicates;
-
 /**
  * Tells N4JSC to build few projects and run one of them. Projects being built have missing dependencies, so N4JSC is
  * instructed to discover missing dependencies and to install them before compilation, which is done with
@@ -36,7 +34,7 @@ public class InstallFromManifestCompileRunN4jscExternalImportsTest extends Abstr
 	/** Prepare workspace. */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace("external_project_install_dependencies", Predicates.alwaysTrue(), true);
+		workspace = setupWorkspace("external_project_install_dependencies", true, "n4js-runtime");
 	}
 
 	/** Delete workspace. */

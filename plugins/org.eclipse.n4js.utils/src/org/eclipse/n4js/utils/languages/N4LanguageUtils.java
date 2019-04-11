@@ -89,8 +89,7 @@ public class N4LanguageUtils {
 				node -> node.getSyntaxErrorMessage());
 		final EObject root = result.getRootASTElement();
 		if (root != null && expectedTypeOfRoot.isInstance(root)) {
-			@SuppressWarnings("unchecked")
-			final T rootCasted = (T) root;
+			final T rootCasted = expectedTypeOfRoot.cast(root);
 			return new ParseResult<>(rootCasted, errors);
 		}
 		return new ParseResult<>(null, errors);

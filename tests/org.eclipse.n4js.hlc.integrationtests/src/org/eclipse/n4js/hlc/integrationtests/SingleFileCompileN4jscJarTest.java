@@ -10,14 +10,20 @@
  */
 package org.eclipse.n4js.hlc.integrationtests;
 
+import static org.eclipse.n4js.hlc.integrationtests.HlcTestingConstants.TARGET;
 import static org.eclipse.n4js.hlc.integrationtests.HlcTestingConstants.WORKSPACE_FOLDER;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.hlc.base.ErrorExitCode;
 import org.eclipse.n4js.hlc.base.N4jscBase;
+import org.eclipse.n4js.json.JSONStandaloneSetup;
 import org.eclipse.n4js.test.helper.hlc.N4CliHelper;
+import org.eclipse.n4js.test.helper.hlc.N4jsLibsAccess;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -86,6 +92,10 @@ public class SingleFileCompileN4jscJarTest extends AbstractN4jscJarTest {
 	public void testCompileAllAndRunWithNodejsPlugin() throws Exception {
 		logFile();
 
+		Path nodeModulesPath = Paths.get(TARGET, WORKSPACE_FOLDER, "P1", N4JSGlobals.NODE_MODULES).toAbsolutePath();
+		JSONStandaloneSetup.doSetup();
+		N4jsLibsAccess.installN4jsLibs(nodeModulesPath, true, true, true, "n4js-runtime");
+
 		// -rw run with
 		// -r run : file to run
 		Process p = createAndStartProcess("--buildType", "allprojects", "--projectlocations",
@@ -99,7 +109,6 @@ public class SingleFileCompileN4jscJarTest extends AbstractN4jscJarTest {
 
 		// check end of output.
 		N4CliHelper.assertEndOfOutputExpectedToContain(N4jscBase.MARKER_RUNNER_OUPTUT, "Arrghtutut§", outputLogFile);
-
 	}
 
 	/**

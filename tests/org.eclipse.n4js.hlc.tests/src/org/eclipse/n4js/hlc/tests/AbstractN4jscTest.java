@@ -25,6 +25,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSLanguageConstants;
@@ -77,7 +78,7 @@ public abstract class AbstractN4jscTest {
 	 * {@link N4jscBase#doMain(String...)}.
 	 */
 	@Before
-	public void saveGlobalRegistries() {
+	public void clearGlobalRegistries() {
 		GlobalRegistries.clearGlobalRegistries();
 	}
 
@@ -141,48 +142,59 @@ public abstract class AbstractN4jscTest {
 	 */
 	protected static File setupWorkspace(String testDataRoot, String testDataSet,
 			Predicate<String> n4jsLibrariesPredicate, boolean createYarnWorkspace) throws IOException {
-		File root = FileUtils.createTempDirectory(testDataRoot + "_" + testDataSet + "_").toFile();
+		Path root = FileUtils.createTempDirectory(testDataRoot + "_" + testDataSet + "_");
 
-		File wsp = new File(root, WSP);
-		File packages = new File(wsp, PACKAGES);
-		File projectLocation = createYarnWorkspace ? packages : wsp;
+		Path wsp = root.resolve(WSP);
+		Path packages = wsp.resolve(PACKAGES);
+		Path projectLocation = createYarnWorkspace ? packages : wsp;
 
-		File fixture = new File(testDataRoot, testDataSet);
+		Path fixture = new File(testDataRoot, testDataSet).toPath();
 
 		// clean
-		if (wsp.exists()) {
-			FileDeleter.delete(wsp.toPath(), true);
+		if (Files.exists(wsp)) {
+			FileDeleter.delete(wsp, true);
 		}
-		wsp.mkdirs();
-		projectLocation.mkdirs();
+		Files.createDirectories(wsp);
+		Files.createDirectories(projectLocation);
 
 		// copy fixtures to workspace
-		FileCopier.copy(fixture.toPath(), projectLocation.toPath(), true);
+		FileCopier.copy(fixture, projectLocation, true);
 
 		// copy required n4js libraries to workspace / node_modules location
-		File libsLocation;
+		Path libsLocation;
 		if (createYarnWorkspace) {
 			// in case of a yarn workspace, we install the n4js-libs as siblings of the main project(s)
 			libsLocation = projectLocation;
 		} else {
 			// otherwise, we install the n4js-libs in the main project's node_modules folder
 			// (note: we assume fixture contains only a single project (i.e. only a single sub folder))
-			libsLocation = new File(projectLocation.listFiles()[0], N4JSGlobals.NODE_MODULES);
+			libsLocation = Files.list(projectLocation).findFirst().get().resolve(N4JSGlobals.NODE_MODULES);
 		}
-		JSONStandaloneSetup.doSetup(); // FIXME improve; ask SZ!!!
+		JSONStandaloneSetup.doSetup(); // FIXME GH-1281: improve; ask SZ!!!
 		N4CliHelper.copyN4jsLibsToLocation(libsLocation, n4jsLibrariesPredicate);
+		GlobalRegistries.clearGlobalRegistries();
 
 		// create yarn workspace
 		if (createYarnWorkspace) {
+			// create package.json
 			List<String> packageJsonLines = Lists.newArrayList(
 					"{",
 					"\t\"private\": true,",
 					"\t\"workspaces\": [ \"packages/*\" ]",
 					"}");
-			Files.write(wsp.toPath().resolve(N4JSGlobals.PACKAGE_JSON), packageJsonLines);
+			Files.write(wsp.resolve(N4JSGlobals.PACKAGE_JSON), packageJsonLines);
+
+			// create node_modules folder
+			Path nodeModulesFolder = wsp.resolve(N4JSGlobals.NODE_MODULES);
+			Files.createDirectories(nodeModulesFolder);
+			for (Path project : Files.list(projectLocation).collect(Collectors.toList())) {
+				if (Files.isDirectory(project)) {
+					Files.createSymbolicLink(nodeModulesFolder.resolve(project.getFileName()), project);
+				}
+			}
 		}
 
-		return wsp;
+		return wsp.toFile();
 	}
 
 	/**
@@ -296,13 +308,13 @@ public abstract class AbstractN4jscTest {
 		@Override
 		protected void starting(Description desc) {
 			description = desc;
-			System.out.println("Started of: " + desc.getClassName() + "." + desc.getMethodName());
+			System.out.println("Started: " + desc.getClassName() + "." + desc.getMethodName());
 		}
 
 		@Override
 		protected void finished(Description desc) {
 			description = null;
-			System.out.println("Finished of: " + desc.getClassName() + "." + desc.getMethodName());
+			System.out.println("Finished: " + desc.getClassName() + "." + desc.getMethodName());
 		}
 
 	};

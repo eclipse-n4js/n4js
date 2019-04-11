@@ -71,10 +71,10 @@ a.constructor.n4type:
 
 A: 
 function A() {
-			this.field1 = undefined;
-			this.field2 = undefined;
-			this.field3 = undefined;
-		}
+	this.field1 = undefined;
+	this.field2 = undefined;
+	this.field3 = undefined;
+}
 
 
 A.n4type: 

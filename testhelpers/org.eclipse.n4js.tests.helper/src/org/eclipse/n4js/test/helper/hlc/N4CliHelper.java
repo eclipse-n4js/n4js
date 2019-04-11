@@ -21,6 +21,7 @@ import java.lang.ProcessBuilder.Redirect;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -282,9 +283,9 @@ public class N4CliHelper {
 	 * @throws IOException
 	 *             In case the copying is not successful.
 	 */
-	public static void copyN4jsLibsToLocation(File location,
+	public static void copyN4jsLibsToLocation(Path location,
 			Predicate<String> n4jsLibrariesPredicate) throws IOException {
-		N4jsLibsAccess.installN4jsLibs(location.toPath(), true, false, true,
+		N4jsLibsAccess.installN4jsLibs(location, true, false, true,
 				libName -> !N4JS_LIBS_BLACKLIST.contains(libName) && n4jsLibrariesPredicate.test(libName));
 	}
 

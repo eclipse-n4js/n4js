@@ -9,29 +9,32 @@
  */
 package org.eclipse.n4js.tests.project
 
+import com.google.common.collect.Lists
 import com.google.inject.Inject
 import java.io.File
 import org.eclipse.core.resources.IFile
 import org.eclipse.core.resources.IProject
+import org.eclipse.core.resources.IProjectDescription
+import org.eclipse.core.resources.IWorkspace
+import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.core.runtime.CoreException
+import org.eclipse.core.runtime.IPath
+import org.eclipse.core.runtime.IProgressMonitor
+import org.eclipse.core.runtime.NullProgressMonitor
+import org.eclipse.core.runtime.Path
 import org.eclipse.emf.common.util.URI
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
 import org.eclipse.n4js.tests.util.ProjectTestsHelper
 import org.eclipse.n4js.tests.util.ProjectTestsUtils
+import org.eclipse.n4js.utils.ProjectDescriptionUtils
+import org.eclipse.n4js.utils.URIUtils
+import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil
 import org.junit.Before
 import org.junit.Test
 
 import static org.eclipse.emf.common.util.URI.createPlatformResourceURI
 import static org.junit.Assert.*
-import org.eclipse.n4js.utils.URIUtils
-import org.eclipse.n4js.utils.ProjectDescriptionUtils
-import org.eclipse.core.resources.IWorkspace
-import org.eclipse.core.runtime.IPath
-import org.eclipse.core.resources.IProjectDescription
-import org.eclipse.core.runtime.IProgressMonitor
-import org.eclipse.core.resources.ResourcesPlugin
-import org.eclipse.core.runtime.NullProgressMonitor
 
 /**
  * Testing the use of npm scopes as part of N4JS project names, i.e. project names of
@@ -57,7 +60,8 @@ class NpmScopesPluginTest extends AbstractBuilderParticipantTest {
 	def void before() {
 		val workspace = ResourcesPlugin.workspace;
 		val parentFolder = new File(getResourceUri(PROBANDS, YARN_WORKSPACE_BASE));
-		yarnProject = ProjectTestsUtils.importYarnWorkspace(libraryManager, parentFolder, YARN_WORKSPACE_PROJECT);
+		yarnProject = ProjectTestsUtils.importYarnWorkspace(libraryManager, parentFolder, YARN_WORKSPACE_PROJECT,
+			Lists.newArrayList("n4js-runtime"));
 		val yarnPath = yarnProject.location;
 
 		scopedProject = workspace.root.getProject("@myScope:Lib");
@@ -80,7 +84,7 @@ class NpmScopesPluginTest extends AbstractBuilderParticipantTest {
 	def static void importProject(IWorkspace workspace, File rootFolder, IProgressMonitor progressMonitor)
 			throws CoreException {
 
-		val IPath path = new org.eclipse.core.runtime.Path(new File(rootFolder, "_project").getAbsolutePath());
+		val IPath path = new Path(new File(rootFolder, "_project").getAbsolutePath());
 		val IProjectDescription desc = workspace.loadProjectDescription(path);
 		val IProject project = workspace.getRoot().getProject(desc.getName());
 		project.create(desc, progressMonitor);
@@ -231,6 +235,8 @@ class NpmScopesPluginTest extends AbstractBuilderParticipantTest {
 	def private void setContentsOfClientModule(CharSequence source) {
 		changeTestFile(clientModule, source);
 		waitForAutoBuild();
+// FIXME GH-1281 do not merge this to master! (should no longer be required after merging SZ's fixes of randomly failing tests)
+IResourcesSetupUtil.fullBuild
 	}
 
 	def private void assertCorrectOutput(CharSequence expectedOutput) {

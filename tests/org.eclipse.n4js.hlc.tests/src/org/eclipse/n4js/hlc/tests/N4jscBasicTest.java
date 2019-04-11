@@ -16,10 +16,12 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.hlc.base.ErrorExitCode;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.hlc.base.N4jscBase;
 import org.eclipse.n4js.hlc.base.SuccessExitStatus;
+import org.eclipse.n4js.test.helper.hlc.N4jsLibsAccess;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
@@ -122,7 +124,13 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 	 * Simple test of compiling a project and running a class from that compiled code with NODEJS.
 	 */
 	@Test
-	public void testCompileP1_And_Run_A_WithNodeRunner() throws ExitCodeException {
+	public void testCompileP1_And_Run_A_WithNodeRunner() throws Exception {
+
+		// because we wanna execute stuff, we have to install the runtime:
+		N4jsLibsAccess.installN4jsLibs(
+				workspace.toPath().resolve(N4JSGlobals.NODE_MODULES),
+				true, true, true,
+				"n4js-runtime");
 
 		// Project
 		String projectP1 = "P1";

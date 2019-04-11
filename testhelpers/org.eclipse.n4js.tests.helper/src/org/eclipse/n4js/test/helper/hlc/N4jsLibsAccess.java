@@ -63,7 +63,7 @@ public class N4jsLibsAccess {
 			// throw new IllegalStateException(
 			// "cannot obtain location of n4js-libs: current application not running from source");
 			// FIXME temporary: (required for UI case in case of Xpect output plugin[UI] tests)
-			return UtilN4.findN4jsRepoRootPath().resolve(N4JS_LIBS_NAME);
+			return UtilN4.findN4jsRepoRootPath().resolve(N4JS_LIBS_NAME).resolve("packages");
 		}
 
 		String myLocationStr = myLocation.toFileString();
@@ -132,7 +132,7 @@ public class N4jsLibsAccess {
 
 	public static void installN4jsLibs(Path targetPath, boolean includeDependencies, boolean useSymbolicLinks,
 			boolean deleteOnExit, String... projectNames) throws IOException {
-		Path n4jsLibsLocation = N4jsLibsAccess.findN4jsLibsLocation();
+		Path n4jsLibsLocation = findN4jsLibsLocation();
 		List<Path> toBeInstalled = new ArrayList<>();
 		for (String projectName : projectNames) {
 			Path projectPath = findN4jsLibs(n4jsLibsLocation, projectName, false);

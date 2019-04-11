@@ -37,7 +37,7 @@ public class N4jscScopedProjectTest extends AbstractN4jscTest {
 	/** Prepare workspace. */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace(TEST_DATA_SET__NPM_SCOPES, true);
+		workspace = setupWorkspace(TEST_DATA_SET__NPM_SCOPES, true, "n4js-runtime");
 		proot = new File(workspace, PACKAGES).getAbsoluteFile();
 		System.out.println("just for reference workspace base path is: " + workspace.getAbsolutePath().toString());
 	}

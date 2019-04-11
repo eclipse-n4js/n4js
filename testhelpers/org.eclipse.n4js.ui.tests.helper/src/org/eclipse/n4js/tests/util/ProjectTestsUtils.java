@@ -26,6 +26,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -60,6 +62,7 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.packagejson.PackageJsonBuilder;
+import org.eclipse.n4js.test.helper.hlc.N4jsLibsAccess;
 import org.eclipse.n4js.ui.editor.N4JSDirtyStateEditorSupport;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.ui.utils.TimeoutRuntimeException;
@@ -255,6 +258,11 @@ public class ProjectTestsUtils {
 	 */
 	public static IProject importYarnWorkspace(LibraryManager libraryManager, File parentFolder, String yarnProjectName)
 			throws CoreException {
+		return importYarnWorkspace(libraryManager, parentFolder, yarnProjectName, Collections.emptyList());
+	}
+
+	public static IProject importYarnWorkspace(LibraryManager libraryManager, File parentFolder, String yarnProjectName,
+			Collection<String> n4jsLibs) throws CoreException {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IProject yarnProject = ProjectTestsUtils.importProject(parentFolder, yarnProjectName);
 
@@ -269,6 +277,17 @@ public class ProjectTestsUtils {
 				}
 			} else {
 				importProjectNotCopy(workspace, packagePath.toFile(), new NullProgressMonitor());
+			}
+		}
+
+		if (!n4jsLibs.isEmpty()) {
+			try {
+				N4jsLibsAccess.installN4jsLibs(
+						yarnPackagesPath.toFile().toPath(),
+						true, false, false,
+						n4jsLibs.toArray(new String[0]));
+			} catch (IOException e) {
+				throw new RuntimeException("unable to install n4js-libs from local checkout", e);
 			}
 		}
 
