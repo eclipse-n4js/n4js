@@ -12,6 +12,7 @@ package org.eclipse.n4js.runner.tests
 
 import com.google.common.base.Throwables
 import com.google.inject.Inject
+import com.google.inject.Injector
 import java.io.File
 import java.io.IOException
 import org.apache.log4j.Logger
@@ -27,15 +28,23 @@ import org.eclipse.n4js.runner.RuntimeEnvironmentsHelper
 import org.eclipse.n4js.runner.exceptions.DependencyCycleDetectedException
 import org.eclipse.n4js.runner.exceptions.InsolvableRuntimeEnvironmentException
 import org.eclipse.n4js.runner.^extension.RuntimeEnvironment
+import org.eclipse.xtext.testing.GlobalRegistries
+import org.eclipse.xtext.testing.GlobalRegistries.GlobalStateMemento
+import org.eclipse.xtext.testing.IInjectorProvider
+import org.eclipse.xtext.testing.IRegistryConfigurator
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.TemporaryFolder
 import org.junit.rules.TestName
+import org.junit.runner.RunWith
 
 import static com.google.common.base.Preconditions.checkNotNull
 import static java.nio.file.Files.createDirectory
 import static java.nio.file.Files.createFile
-import static java.nio.file.Files.createTempDirectory
 import static java.nio.file.Files.write
 import static java.nio.file.Paths.get
 import static org.apache.log4j.Level.*
@@ -50,7 +59,35 @@ import static org.junit.Assert.*
 /**
  * Class for testing the the runtime environment resolution for the N4 runners in standalone JUnit mode.
  */
+@RunWith(XtextRunner)
+@InjectWith(SimpleInjectorProvider)
 class RuntimeEnvironmentResolutionTest {
+
+	public static class SimpleInjectorProvider implements IInjectorProvider, IRegistryConfigurator {
+		protected GlobalStateMemento stateBeforeInjectorCreation
+		protected GlobalStateMemento stateAfterInjectorCreation
+		protected Injector injector
+		
+		override Injector getInjector() {
+			if (injector === null) {
+				GlobalRegistries.initializeDefaults()
+				stateBeforeInjectorCreation=GlobalRegistries.makeCopyOfGlobalState() 
+				this.injector=internalCreateInjector() 
+				stateAfterInjectorCreation=GlobalRegistries.makeCopyOfGlobalState() 
+			}
+			return injector 
+		}
+		def protected Injector internalCreateInjector() {
+			return new N4JSStandaloneSetup().createInjectorAndDoEMFRegistration() 
+		}
+		override void restoreRegistry() {
+			stateBeforeInjectorCreation.restoreGlobalState() 
+		}
+		override void setupRegistry() {
+			getInjector() 
+			stateAfterInjectorCreation.restoreGlobalState() 
+		}
+	}
 
 	private static Logger LOGGER = getLogger(RuntimeEnvironmentResolutionTest)
 
@@ -69,6 +106,10 @@ class RuntimeEnvironmentResolutionTest {
 	
 	@Inject
 	private FileBasedWorkspace workspace
+	
+	@Inject
+	@Rule
+	public TemporaryFolder temporaryFolder
 
 	private File workingDirectory
 
@@ -80,14 +121,18 @@ class RuntimeEnvironmentResolutionTest {
 			LOGGER.debug('''| Executing «testName.methodName»''')
 			LOGGER.debug('-----------------------------------------------------------')
 		}
-		createInjector.injectMembers(this)
 		try {
-			workingDirectory = createTempDirectory(null).toFile.assertDirectoryAccessable.doDeleteOnExit
+			workingDirectory = temporaryFolder.newFolder
 		} catch (IOException e) {
 			LOGGER.error('Error while creating temporary working directory for tests.', e)
 			Throwables.throwIfUnchecked(e);
 			throw new RuntimeException(e)
 		}
+	}
+	
+	@After
+	def void clearFileBasedWorkspace() {
+		workspace.clear
 	}
 
 	/**
@@ -619,11 +664,6 @@ class RuntimeEnvironmentResolutionTest {
 		assertThat("Should not have a dependency to z from different implID", deps, not(hasItem(z)))
 		assertThat("Should not have a dependency to bimpl2 with different implID", deps, not(hasItem(bimpl2)))
 
-	}
-
-	/** Creates and returns with the injector instance for the tests. */
-	protected def createInjector() {
-		new N4JSStandaloneSetup().createInjectorAndDoEMFRegistration
 	}
 
 	/**
