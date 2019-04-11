@@ -551,7 +551,7 @@ public class SelectAllProjectExplorer_PluginUITest extends AbstractPluginUITest 
 
 	private Optional<TreeItem> getNavigatorItem(String name, Class<?> type) {
 		Optional<TreeItem> item = Arrays.asList(commonViewer.getTree().getItems()).stream()
-				.filter(i -> i.getText().equals(name) && type.isInstance(i.getData()))
+				.filter(i -> i.getText().startsWith(name) && type.isInstance(i.getData()))
 				.findAny();
 		return item;
 	}
