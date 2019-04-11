@@ -19,6 +19,7 @@ export external public abstract class Document extends HTMLElement {
     public get location(): Location;
     public get webkitFullscreenElement(): HTMLElement;
     public get readyState(): string;
+    public get referrer(): string;
 
     public get webkitFullscreenEnabled(): boolean;
     public webkitCancelFullScreen(): void;
