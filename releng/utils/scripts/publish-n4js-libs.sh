@@ -53,7 +53,7 @@ else
 	export NPM_REGISTRY=$2
 fi
 
-# If publishing to local or staging, use the dist-tag 'test' otherwise 'next'
+# If publishing to local or staging, use the dist-tag 'test' otherwise 'GH1281'
 export NPM_TAG=test
 
 if [ "$DESTINATION" = "public" ]; then
@@ -61,7 +61,7 @@ if [ "$DESTINATION" = "public" ]; then
 		echo "Publishing to public requires the environment variable NPM_TOKEN to be set but it has not been set!"
 		exit 0;
 	fi
-	export NPM_TAG=next
+	export NPM_TAG=GH1281
 else
 	# Dummy token
 	export NPM_TOKEN=dummy	
@@ -99,7 +99,7 @@ if [ "$DESTINATION" = "public" ]; then
 
     echo "==== STEP 6/10: Compute new version number for publishing ..."
     echo "!!! SKIPPED !!! (using version hard-coded in shell script)"
-    export PUBLISH_VERSION="0.14.0-next.20190401.1"
+    export PUBLISH_VERSION="0.14.0-GH1281.20190411.1"
     echo "Version for publishing: ${PUBLISH_VERSION}"
 
     echo "==== STEP 7/10: Appending version information to README.md files ..."
