@@ -93,7 +93,7 @@ export default public class NodeTestAPI {
 
                 // HACK until we have proper support for top-level import():
                 switch (packageJson["name"]) {
-                    case "n4js-node":
+                    case "n4js-runtime":
                     case "n4js-mangelhaft-cli":
                         break;
                     default:
