@@ -120,6 +120,7 @@ public class JUnitGuiceClassRunner extends BlockJUnit4ClassRunner {
 			} catch (IllegalArgumentException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				throw new RuntimeException(e);
 			} catch (InvocationTargetException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
