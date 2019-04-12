@@ -212,7 +212,10 @@ public class ProjectStateChangeListener extends ProjectOpenedOrClosedListener {
 			for (URI touchMe : toBeUpdated) {
 				if (touchMe.isPlatformResource()) {
 					IFile file = workspaceRoot.getFile(new Path(touchMe.toPlatformString(true)));
-					file.touch(monitor);
+					// could have been deleted in the meantime
+					if (file.exists()) {
+						file.touch(monitor);
+					}
 				}
 			}
 		} catch (Error | RuntimeException | CoreException e) {

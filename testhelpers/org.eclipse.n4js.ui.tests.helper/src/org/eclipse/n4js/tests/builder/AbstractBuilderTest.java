@@ -211,9 +211,9 @@ public abstract class AbstractBuilderTest {
 		libraryManager.deleteAllNodeModulesFolders(new NullProgressMonitor());
 		closeAllEditorsForTearDown();
 		ProjectTestsUtils.closeAllProjectsInWorkspace();
+		testedWorkspace.cleanBuild();
 		IResourcesSetupUtil.cleanWorkspace();
 		testedWorkspace.cleanBuild();
-		waitForAutoBuild();
 		assertEquals("Resources in index:\n" + getAllResourceDescriptionsAsString() + "\n", 0,
 				countResourcesInIndex());
 
