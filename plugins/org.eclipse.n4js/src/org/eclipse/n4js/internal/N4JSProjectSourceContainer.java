@@ -10,10 +10,20 @@
  */
 package org.eclipse.n4js.internal;
 
+import java.io.IOException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.FileVisitor;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectDescription.SourceContainerType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
@@ -46,6 +56,52 @@ public class N4JSProjectSourceContainer extends AbstractSourceContainer implemen
 		return this.getLocation();
 	}
 
+	@Override
+	public boolean contains(URI uri) {
+		URI path = getPath();
+		path = path.hasTrailingPathSeparator() ? path : path.appendSegment("");
+		uri = uri.hasTrailingPathSeparator() ? uri : uri.appendSegment("");
+		if (!uri.toFileString().startsWith(path.toFileString())) {
+			return false;
+		}
+		URI relUri = uri.deresolve(path);
+		if (relUri.segmentCount() > 0) {
+			boolean uriInsideNodeModules = relUri.segment(0).equals(N4JSGlobals.NODE_MODULES);
+			return !uriInsideNodeModules;
+		}
+		return true;
+	}
+
+	@Override
+	public List<URI> getAllResources() {
+		final List<URI> uris = new LinkedList<>();
+
+		FileVisitor<Path> fv = new SimpleFileVisitor<Path>() {
+			@Override
+			public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+				if (dir.endsWith(N4JSGlobals.NODE_MODULES)) {
+					return FileVisitResult.SKIP_SUBTREE;
+				}
+				return FileVisitResult.CONTINUE;
+			}
+
+			@Override
+			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+				URI uri = URI.createFileURI(file.toString());
+				uris.add(uri);
+				return FileVisitResult.CONTINUE;
+			}
+		};
+
+		try {
+			Path srcPath = Paths.get(getPath().toFileString());
+			Files.walkFileTree(srcPath, fv);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return uris;
+	}
 	/// END ISourceFolder
 
 	@Override

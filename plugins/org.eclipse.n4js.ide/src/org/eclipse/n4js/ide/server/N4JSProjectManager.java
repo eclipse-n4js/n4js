@@ -10,21 +10,22 @@
  */
 package org.eclipse.n4js.ide.server;
 
-import java.io.File;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.xtext.build.BuildRequest;
-import org.eclipse.xtext.build.BuildRequest.IPostValidationCallback;
+import org.eclipse.n4js.projectModel.ISourceFolderEx;
+import org.eclipse.xtext.build.IncrementalBuilder.Result;
 import org.eclipse.xtext.ide.server.ProjectManager;
 import org.eclipse.xtext.resource.IExternalContentSupport.IExternalContentProvider;
-import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.workspace.IProjectConfig;
+import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure2;
 
 import com.google.inject.Provider;
@@ -32,42 +33,33 @@ import com.google.inject.Provider;
 /**
  *
  */
+@SuppressWarnings("restriction")
 public class N4JSProjectManager extends ProjectManager {
 
 	Procedure2<? super URI, ? super Iterable<Issue>> issueAcceptor;
+	private IProjectConfig projectConfig;
 
 	@Override
-	public void initialize(ProjectDescription description, IProjectConfig projectConfig,
+	public void initialize(ProjectDescription description, IProjectConfig pProjectConfig,
 			Procedure2<? super URI, ? super Iterable<Issue>> acceptor,
 			IExternalContentProvider openedDocumentsContentProvider,
 			Provider<Map<String, ResourceDescriptionsData>> indexProvider, CancelIndicator cancelIndicator) {
 
-		super.initialize(description, projectConfig, acceptor, openedDocumentsContentProvider, indexProvider,
+		super.initialize(description, pProjectConfig, acceptor, openedDocumentsContentProvider, indexProvider,
 				cancelIndicator);
+
 		issueAcceptor = acceptor;
+		projectConfig = pProjectConfig;
 	}
 
 	@Override
-	protected BuildRequest newBuildRequest(List<URI> changedFiles, List<URI> deletedFiles,
-			List<IResourceDescription.Delta> externalDeltas, CancelIndicator cancelIndicator) {
-
-		BuildRequest br = super.newBuildRequest(changedFiles, deletedFiles, externalDeltas, cancelIndicator);
-
-		IPostValidationCallback newIssueAcceptor = new IPostValidationCallback() {
-			@Override
-			public boolean afterValidate(URI validated, Iterable<Issue> issues) {
-				issueAcceptor.apply(validated, issues);
-				if (issues.iterator().hasNext()) {
-					URI fileURI = URI.createFileURI(new File(".").getAbsolutePath().toString());
-					// issueAcceptor.apply(fileURI, issues);
-				}
-				return false;
-			}
-		};
-
-		br.setAfterValidate(newIssueAcceptor);
-
-		return br;
+	public Result doInitialBuild(CancelIndicator cancelIndicator) {
+		List<URI> uris = new LinkedList<>();
+		for (ISourceFolder srcFolder : this.projectConfig.getSourceFolders()) {
+			ISourceFolderEx srcFolderEx = (ISourceFolderEx) srcFolder;
+			uris.addAll(srcFolderEx.getAllResources());
+		}
+		return doBuild(uris, Collections.emptyList(), Collections.emptyList(), cancelIndicator);
 	}
 
 }

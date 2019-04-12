@@ -36,11 +36,11 @@ import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.n4js.projectModel.ISourceFolderEx;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.io.FileUtils;
-import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
 import com.google.common.base.Optional;
@@ -98,17 +98,8 @@ public class N4JSProject implements IN4JSProject {
 	}
 
 	@Override
-	public Set<? extends ISourceFolder> getSourceFolders() {
+	public Set<? extends ISourceFolderEx> getSourceFolders() {
 		return new HashSet<>(this.getSourceContainers());
-	}
-
-	@Override
-	public ISourceFolder findSourceFolderContaining(URI member) {
-		Path memberPath = Paths.get(member.toFileString());
-		for (ISourceFolder srcFolder : getSourceFolders()) {
-			memberPath.startsWith(Paths.get(srcFolder.getPath().toFileString()));
-		}
-		return null;
 	}
 
 	@Override

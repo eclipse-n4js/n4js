@@ -14,14 +14,13 @@ import java.util.Iterator;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.xtext.naming.QualifiedName;
-import org.eclipse.xtext.workspace.ISourceFolder;
 
 import com.google.common.base.Optional;
 
 /**
  * The project model representation of a configured source folder in a project.
  */
-public interface IN4JSSourceContainer extends Iterable<URI>, ISourceFolder {
+public interface IN4JSSourceContainer extends Iterable<URI>, ISourceFolderEx {
 
 	/**
 	 * Returns the project this source container belongs to.

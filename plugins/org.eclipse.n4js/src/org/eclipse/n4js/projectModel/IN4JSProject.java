@@ -25,7 +25,6 @@ import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
-import org.eclipse.xtext.workspace.IProjectConfig;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
@@ -43,7 +42,7 @@ import com.google.common.collect.ImmutableList;
  * This is modeled similar to {@code org.eclipse.jdt.core.JavaCore} works, e.g. instances of {@link IN4JSProject} are
  * obtained via {@link IN4JSCore#create(URI)}.
  */
-public interface IN4JSProject extends IProjectConfig {
+public interface IN4JSProject extends IProjectConfigEx {
 
 	/**
 	 * The name of the package.json file.
