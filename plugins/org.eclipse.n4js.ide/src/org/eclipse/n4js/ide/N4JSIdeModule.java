@@ -10,8 +10,8 @@
  */
 package org.eclipse.n4js.ide;
 
-import org.eclipse.n4js.ide.sever.N4JSProjectManager;
-import org.eclipse.n4js.ide.sever.N4JSProjectWorkspaceConfigFactory;
+import org.eclipse.n4js.ide.server.N4JSProjectManager;
+import org.eclipse.n4js.ide.server.N4JSProjectWorkspaceConfigFactory;
 import org.eclipse.xtext.ide.server.IWorkspaceConfigFactory;
 import org.eclipse.xtext.ide.server.ProjectManager;
 

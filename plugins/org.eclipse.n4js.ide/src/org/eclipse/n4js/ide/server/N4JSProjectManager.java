@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.sever;
+package org.eclipse.n4js.ide.server;
 
 import java.io.File;
 import java.util.List;
@@ -59,7 +59,7 @@ public class N4JSProjectManager extends ProjectManager {
 				issueAcceptor.apply(validated, issues);
 				if (issues.iterator().hasNext()) {
 					URI fileURI = URI.createFileURI(new File(".").getAbsolutePath().toString());
-					issueAcceptor.apply(fileURI, issues);
+					// issueAcceptor.apply(fileURI, issues);
 				}
 				return false;
 			}

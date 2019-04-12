@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.sever;
+package org.eclipse.n4js.ide.server;
 
 import java.util.Collection;
 

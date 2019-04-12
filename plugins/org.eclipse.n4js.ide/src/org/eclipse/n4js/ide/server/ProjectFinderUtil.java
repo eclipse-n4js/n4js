@@ -1,4 +1,4 @@
-package org.eclipse.n4js.ide.sever;
+package org.eclipse.n4js.ide.server;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -21,11 +22,30 @@ public class ProjectFinderUtil {
 
 		try {
 			Files.walkFileTree(start, new SimpleFileVisitor<Path>() {
+				int nodeModuleFolderCounter = 0;
+
+				@Override
+				public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+					if (dir.endsWith(N4JSGlobals.NODE_MODULES)) {
+						if (nodeModuleFolderCounter > 0) {
+							return FileVisitResult.SKIP_SUBTREE;
+						}
+						nodeModuleFolderCounter++;
+					}
+
+					return super.preVisitDirectory(dir, attrs);
+				}
+
 				@Override
 				public FileVisitResult postVisitDirectory(Path dir, IOException e) throws IOException {
+					if (dir.endsWith(N4JSGlobals.NODE_MODULES)) {
+						nodeModuleFolderCounter--;
+					}
+
 					Path pckJson = dir.resolve(N4JSGlobals.PACKAGE_JSON);
 					if (pckJson.toFile().isFile()) {
 						projectDirs.add(toFileUri(dir.toUri()));
+						System.out.println(" + " + dir.toString());
 					}
 					return FileVisitResult.CONTINUE;
 				}
@@ -34,6 +54,7 @@ public class ProjectFinderUtil {
 			e.printStackTrace();
 		}
 
+		System.out.println("Number of identified projects: " + projectDirs.size());
 		return projectDirs;
 	}
 
