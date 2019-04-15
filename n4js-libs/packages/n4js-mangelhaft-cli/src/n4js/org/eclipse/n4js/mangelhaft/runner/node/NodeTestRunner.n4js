@@ -88,9 +88,9 @@ class NodeTestRunner  {
         }
         
         let log: (...any) => void = console.log.bind(console);
-        const consoleObj: Object+ = console;
         if (options.quiet) {
-            consoleObj.log = consoleObj.error = consoleObj.warn = log = function(...args): void {};
+            const consoleObj: Object+ = console;
+            consoleObj.log = consoleObj.warn = log = function(...args): void {};
         }
         if (options.showOnlyErrors) {
             this.consoleReporter.setErrorsOnly();
