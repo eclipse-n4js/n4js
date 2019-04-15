@@ -67,9 +67,7 @@ import org.eclipse.n4js.runner.SystemLoaderInfo;
 import org.eclipse.n4js.smith.CollectedDataAccess;
 import org.eclipse.n4js.smith.DataCollectorCSVExporter;
 import org.eclipse.n4js.smith.Measurement;
-import org.eclipse.n4js.tester.CliTestTreeTransformer;
 import org.eclipse.n4js.tester.TestCatalogSupplier;
-import org.eclipse.n4js.tester.TestTreeTransformer;
 import org.eclipse.n4js.tester.TesterModule;
 import org.eclipse.n4js.tester.extension.TesterRegistry;
 import org.eclipse.n4js.tester.internal.TesterActivator;
@@ -731,8 +729,6 @@ public class N4jscBase implements IApplication {
 
 			// override with customized bindings
 			final Module overridenModule = Modules.override(combinedModule).with(binder -> {
-				binder.bind(TestTreeTransformer.class)
-						.to(CliTestTreeTransformer.class);
 				binder.bind(IHeadlessLogger.class)
 						.toInstance(new ConfigurableHeadlessLogger(N4jscBase.this.verbose, N4jscBase.this.debug));
 			});
