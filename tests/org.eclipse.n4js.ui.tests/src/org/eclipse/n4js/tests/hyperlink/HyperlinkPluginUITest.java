@@ -17,6 +17,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -50,7 +51,6 @@ import org.eclipse.xtext.ui.editor.IURIEditorOpener;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.editor.hyperlinking.XtextHyperlink;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.base.Optional;
@@ -237,7 +237,6 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 	 * Test for hyperlink support on npm dependencies in package.json files.
 	 */
 	@Test
-	@Ignore // FIXME: Need help. This is not working on Jenkins.
 	public void testHyperlinksOnPackageJson() throws CoreException {
 		File prjDir = new File(getResourceUri(PROBANDS, SUBFOLDER));
 		ProjectTestsUtils.importProject(prjDir, PROJECT_NAME);
@@ -270,9 +269,11 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 		Resource resource = resourceSet.getResource(URIUtils.convert(iFile), true);
 
 		assertNotNull(resource);
-		IHyperlink[] hlinksInProcess = hlHelper.getHyperlinks((XtextResource) resource, 973);
+		// navigate to one of the two declared dependencies, in this case 'n4js-runtime-es2015'
+		IHyperlink[] hlinksInProcess = hlHelper.getHyperlinks((XtextResource) resource, 1029);
 
-		assertTrue("Hyperlink in external library missing", hlinksInProcess != null && hlinksInProcess.length == 1);
+		assertTrue("Hyperlink in external library missing: " + Arrays.toString(hlinksInProcess),
+				hlinksInProcess != null && hlinksInProcess.length == 1);
 		assertTrue("Hyperlink must be of type XtextHyperlink", hlinksInProcess[0] instanceof XtextHyperlink);
 		XtextHyperlink hyperlinkToEvent = (XtextHyperlink) hlinksInProcess[0];
 		URI uriEvent = hyperlinkToEvent.getURI();

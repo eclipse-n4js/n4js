@@ -11,7 +11,6 @@
 package org.eclipse.n4js.tests.project
 
 import com.google.common.base.Predicate
-import java.util.concurrent.TimeUnit
 import org.eclipse.core.resources.IFile
 import org.eclipse.core.resources.IFolder
 import org.eclipse.core.resources.IMarker
@@ -30,7 +29,6 @@ import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
 import org.eclipse.n4js.tests.util.PackageJSONTestUtils
 import org.eclipse.n4js.tests.util.ProjectTestsUtils
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.DEPENDENCIES
@@ -183,11 +181,7 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 		assertMarkers("file should have four errors", c, 4);
 	}
 	
-//	@Rule
-//	public RepeatedTestRule rule = new RepeatedTestRule();
-
 	@Test
-//	@RepeatTest(times=20)
 	def void testTwoFilesProjectNewlyCreated() throws Exception {
 		addProjectToDependencies("thirdProject")
 		val c = createTestFile(
@@ -287,10 +281,8 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 		assertMarkers('project description file (package.json) file should have no errors.', projectDescriptionFile2, 0);
 	}
 
-	@Ignore("random") // Disabled due to timing issues. The project description file (package.json) re-validation is not triggered as the part of the build job but from a common job.
 	@Test
 	def void testDeleteExternalFolderValidateProjectDescriptionFileWithoutOpenedEditors() {
-
 		val project = createJSProject('multiProjectTest.third', 'src', 'src-gen', [ builder |
 			builder.withSourceContainer(SourceContainerType.EXTERNAL, "ext");
 		]);
@@ -307,17 +299,17 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 		// Wait after resource changes to be able to re-run the validation job.
 		// This is not tracked by the builder.
 		extFolder.create(true, true, null);
-		Thread.sleep(TimeUnit.SECONDS.toMillis(5L));
+		testedWorkspace.build
 		assertTrue('External folder \'ext\' should be missing', extFolder.exists);
 		assertMarkers('project description file (package.json) file should have zero errors.', projectDescriptionFile, 0);
 
 		extFolder.delete(true, null);
-		Thread.sleep(TimeUnit.SECONDS.toMillis(5L));
+		testedWorkspace.build
 		assertTrue('External folder \'ext\' should be missing', !extFolder.exists);
 		assertMarkers('project description file (package.json) file should have exactly one error.', projectDescriptionFile, 1);
 
 		extFolder.create(true, true, null);
-		Thread.sleep(TimeUnit.SECONDS.toMillis(5L));
+		testedWorkspace.build
 		assertTrue('External folder \'ext\' should be missing', extFolder.exists);
 		assertMarkers('project description file (package.json) file should have zero errors.', projectDescriptionFile, 0);
 	}

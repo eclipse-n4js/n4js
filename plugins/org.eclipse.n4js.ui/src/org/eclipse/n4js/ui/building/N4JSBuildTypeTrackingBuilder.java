@@ -30,6 +30,7 @@ import org.eclipse.n4js.ui.building.BuilderStateLogger.BuilderState;
 import org.eclipse.n4js.ui.containers.N4JSProjectsStateHelper;
 import org.eclipse.n4js.ui.external.EclipseExternalIndexSynchronizer;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildScheduler;
+import org.eclipse.n4js.ui.external.OutdatedPackageJsonQueue;
 import org.eclipse.n4js.ui.internal.N4JSProjectDependencyStrategy;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant.BuildType;
 import org.eclipse.xtext.builder.builderState.IBuilderState;
@@ -65,6 +66,7 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 	private ExternalLibraryBuildScheduler externalLibraryBuildJobProvider;
 	private N4JSProjectDependencyStrategy projectDependencyStrategy;
 	private N4JSProjectsStateHelper projectsStateHelper;
+	private OutdatedPackageJsonQueue outdatedPackageJsonQueue;
 
 	@Inject
 	private void injectSharedContributions(ISharedStateContributionRegistry registry) {
@@ -74,6 +76,8 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 				.getSingleContributedInstance(EclipseExternalIndexSynchronizer.class);
 		this.projectsStateHelper = registry
 				.getSingleContributedInstance(N4JSProjectsStateHelper.class);
+		this.outdatedPackageJsonQueue = registry
+				.getSingleContributedInstance(OutdatedPackageJsonQueue.class);
 
 		try {
 			this.projectDependencyStrategy = registry.getSingleContributedInstance(N4JSProjectDependencyStrategy.class);
@@ -172,8 +176,19 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 		// if we built it, we don't have to treat it as deleted first
 		toBeBuilt.getToBeDeleted().removeAll(toBeBuilt.getToBeUpdated());
 
-		RaceDetectionHelper.log("%s", toBeBuilt);
-		runWithBuildType(monitor, type, (m) -> superDoBuild(toBeBuilt, m, type));
+		OutdatedPackageJsonQueue.Task task = outdatedPackageJsonQueue.exhaust();
+		try {
+			if (!task.isEmpty()) {
+				externalIndexSynchronizer.checkAndClearIndex(monitor);
+			}
+			toBeBuilt.getToBeDeleted().addAll(task.getToBeBuilt().getToBeDeleted());
+			toBeBuilt.getToBeUpdated().addAll(task.getToBeBuilt().getToBeUpdated());
+			RaceDetectionHelper.log("%s", toBeBuilt);
+			runWithBuildType(monitor, type, (m) -> superDoBuild(toBeBuilt, m, type));
+		} catch (Exception e) {
+			task.reschedule();
+			throw e;
+		}
 	}
 
 	private void runWithBuildType(IProgressMonitor monitor, BuildType type, IWorkspaceRunnable runMe)

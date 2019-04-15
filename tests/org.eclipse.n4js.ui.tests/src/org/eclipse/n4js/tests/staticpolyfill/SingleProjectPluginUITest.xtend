@@ -16,7 +16,6 @@ import org.eclipse.core.resources.IFile
 import org.eclipse.n4js.tests.util.EclipseUIUtils
 import org.eclipse.ui.IWorkbenchPage
 import org.eclipse.xtext.ui.editor.XtextEditor
-import org.junit.Ignore
 import org.junit.Test
 
 import static org.eclipse.n4js.tests.staticpolyfill.SingleProject_Probands.*
@@ -24,7 +23,6 @@ import static org.junit.Assert.*
 
 /**
  */
-@Ignore("random")
 class SingleProjectPluginUITest extends AbstractStaticPolyfillBuilderTest {
 
 	@Test

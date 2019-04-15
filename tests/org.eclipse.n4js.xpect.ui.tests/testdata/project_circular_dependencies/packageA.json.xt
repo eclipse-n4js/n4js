@@ -3,11 +3,11 @@
     Workspace {
    	 Project "A" {
    	 	Folder "src" { }
-   	 	File "package.json" { from="packageA.json.xt" }
+   	 	ThisFile "package.json" { from="packageA.json.xt" }
    	 }
    	 Project "B" {
    	 	Folder "src" { }
-   	 	ThisFile "package.json" { from="packageB.json.xt" }
+   	 	File "package.json" { from="packageB.json.xt" }
    	 }
    	 Project "C" {
    	 	Folder "src" { }
@@ -21,6 +21,7 @@
    
    IssueConfiguration {
    	IssueCode "JSON_COMMENT_UNSUPPORTED" { enabled=false }
+   	IssueCode "MISSING_YARN_WORKSPACE" { enabled=false }
    }
 
    END_SETUP
@@ -28,13 +29,12 @@
 
 // Testing cycle-detection IDEBUG-266
 
-
 {
-	// XPECT errors --> "The project configuration contains a dependency cycle of projects [B] -> A -> C -> [B]." at ""B""
-	"name": "B",
+	// XPECT errors --> "The project configuration contains a dependency cycle of projects [A] -> C -> B -> [A]." at ""A""
+	"name": "A",
 	"version": "0.0.1",
-	"dependencies": {
-		"A": "*"
+	"dependencies": {
+		"C": "*"
 	},
 	"n4js": {
 		"projectType": "library",

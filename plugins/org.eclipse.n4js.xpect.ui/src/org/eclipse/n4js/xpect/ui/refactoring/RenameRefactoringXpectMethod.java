@@ -94,61 +94,65 @@ public class RenameRefactoringXpectMethod {
 			String specifiedResourcePath, // arg4
 			@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectedResult)
 			throws Exception {
+		try {
+			EObject context = offset.getEObject();
+			EObject selectedElement = offsetHelper.resolveElementAt((XtextResource) context.eResource(),
+					offset.getOffset());
 
-		EObject context = offset.getEObject();
-		EObject selectedElement = offsetHelper.resolveElementAt((XtextResource) context.eResource(),
-				offset.getOffset());
+			// LiteralOrComputedPropertyName does not have a type model but its container does
+			if (selectedElement instanceof LiteralOrComputedPropertyName) {
+				selectedElement = selectedElement.eContainer();
+			}
 
-		// LiteralOrComputedPropertyName does not have a type model but its container does
-		if (selectedElement instanceof LiteralOrComputedPropertyName) {
-			selectedElement = selectedElement.eContainer();
-		}
+			// An IdentifierRef refers to an AST FormalParameter and not TFormalParameter
+			if (!(selectedElement instanceof FormalParameter)
+					&& (N4JSLanguageUtils.getDefinedTypeModelElement(selectedElement) != null)) {
+				selectedElement = N4JSLanguageUtils.getDefinedTypeModelElement(selectedElement);
+			}
 
-		// An IdentifierRef refers to an AST FormalParameter and not TFormalParameter
-		if (!(selectedElement instanceof FormalParameter)
-				&& (N4JSLanguageUtils.getDefinedTypeModelElement(selectedElement) != null)) {
-			selectedElement = N4JSLanguageUtils.getDefinedTypeModelElement(selectedElement);
-		}
+			// while (selectedElement != null) {
+			// while (Display.getCurrent().readAndDispatch())
+			// ;
+			// Display.getCurrent().sleep();
+			// }
 
-		// while (selectedElement != null) {
-		// while (Display.getCurrent().readAndDispatch())
-		// ;
-		// Display.getCurrent().sleep();
-		// }
+			URI targetResourceUri = context.eResource().getURI();
+			Optional<XtextEditor> editorOp = EditorsUtil.openXtextEditor(targetResourceUri,
+					N4JSActivator.ORG_ECLIPSE_N4JS_N4JS);
+			XtextEditor editor = editorOp.get();
+			final ITextSelection selection = (ITextSelection) editor.getSelectionProvider().getSelection();
 
-		URI targetResourceUri = context.eResource().getURI();
-		Optional<XtextEditor> editorOp = EditorsUtil.openXtextEditor(targetResourceUri,
-				N4JSActivator.ORG_ECLIPSE_N4JS_N4JS);
-		XtextEditor editor = editorOp.get();
-		final ITextSelection selection = (ITextSelection) editor.getSelectionProvider().getSelection();
+			IRenameElementContext renameElementContext = renameContextFactory
+					.createRenameElementContext(
+							selectedElement, editor, selection, resource);
 
-		IRenameElementContext renameElementContext = renameContextFactory
-				.createRenameElementContext(
-						selectedElement, editor, selection, resource);
+			IRenameSupport renameSupport = renameSupportFactory.create(renameElementContext, newName);
 
-		IRenameSupport renameSupport = renameSupportFactory.create(renameElementContext, newName);
+			// HACK, use reflection to obtain the private field 'renameRefactoring' since we need it to verify the
+			// conditions
+			// Field field = renameSupport.getClass().getDeclaredField("renameRefactoring");
+			// field.setAccessible(true);
+			ProcessorBasedRefactoring refactoring = (ProcessorBasedRefactoring) ReflectionUtil.getFieldValue(
+					renameSupport,
+					"renameRefactoring");
 
-		// HACK, use reflection to obtain the private field 'renameRefactoring' since we need it to verify the
-		// conditions
-		// Field field = renameSupport.getClass().getDeclaredField("renameRefactoring");
-		// field.setAccessible(true);
-		ProcessorBasedRefactoring refactoring = (ProcessorBasedRefactoring) ReflectionUtil.getFieldValue(renameSupport,
-				"renameRefactoring");
+			RefactoringStatus status = refactoring.checkAllConditions(new NullProgressMonitor());
+			// If rename refactoring's conditions are not satisfied, validate the error message
+			if (status.hasError()) {
+				RefactoringStatusEntry[] entries = status.getEntries();
+				List<String> errorMessages = Arrays.stream(entries).map(statusEntry -> statusEntry.getMessage())
+						.collect(Collectors.toList());
 
-		RefactoringStatus status = refactoring.checkAllConditions(new NullProgressMonitor());
-		// If rename refactoring's conditions are not satisfied, validate the error message
-		if (status.hasError()) {
-			RefactoringStatusEntry[] entries = status.getEntries();
-			List<String> errorMessages = Arrays.stream(entries).map(statusEntry -> statusEntry.getMessage())
-					.collect(Collectors.toList());
+				expectedResult.assertEquals(errorMessages);
+			} else {
+				String beforeRenameContent = getResourceContentWithoutXpectComment(specifiedResourcePath, resource);
+				renameSupport.startDirectRefactoring();
+				String afterRenameContent = getResourceContentWithoutXpectComment(specifiedResourcePath, resource);
 
-			expectedResult.assertEquals(errorMessages);
-		} else {
-			String beforeRenameContent = getResourceContentWithoutXpectComment(specifiedResourcePath, resource);
-			renameSupport.startDirectRefactoring();
-			String afterRenameContent = getResourceContentWithoutXpectComment(specifiedResourcePath, resource);
-
-			expectation.assertDiffEquals(beforeRenameContent, afterRenameContent);
+				expectation.assertDiffEquals(beforeRenameContent, afterRenameContent);
+			}
+		} finally {
+			EditorsUtil.forceCloseAllEditors();
 		}
 	}
 

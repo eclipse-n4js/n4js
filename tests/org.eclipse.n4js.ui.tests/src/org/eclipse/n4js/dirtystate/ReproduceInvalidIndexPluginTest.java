@@ -15,13 +15,12 @@ import org.eclipse.n4js.XtextParametrizedRunner;
 import org.eclipse.n4js.XtextParametrizedRunner.Parameters;
 import org.eclipse.n4js.resource.UserdataMapper;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
-import org.eclipse.n4js.tests.repeat.RepeatTest;
-import org.eclipse.n4js.tests.repeat.RepeatedTestRule;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.testing.InjectWith;
+import org.eclipse.xtext.testing.RepeatedTest;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.Assert;
 import org.junit.Rule;
@@ -38,15 +37,16 @@ import com.google.common.collect.Iterables;
 @RunWith(XtextParametrizedRunner.class)
 @InjectWith(N4JSUiInjectorProvider.class)
 @SuppressWarnings("javadoc")
+@RepeatedTest(times = ReproduceInvalidIndexPluginTest.REPETITIONS)
 public class ReproduceInvalidIndexPluginTest extends AbstractBuilderParticipantTest {
 
-	private static final int REPETITIONS = 3;
+	static final int REPETITIONS = 3;
 
 	private static final String PROBANDS = "probands";
 	private static final String PROBANDS_SUBFOLDER = "reproduce-invalid-index";
 
 	@Rule
-	public RepeatedTestRule repeatedTestRule = new RepeatedTestRule(false);
+	public RepeatedTest.Rule repeatedTestRule = new RepeatedTest.Rule(false);
 	private final List<String> projectsToImport;
 
 	@Parameters(name = "{0}")
@@ -64,7 +64,6 @@ public class ReproduceInvalidIndexPluginTest extends AbstractBuilderParticipantT
 		this.projectsToImport = projectsToImport;
 	}
 
-	@RepeatTest(times = REPETITIONS)
 	@Test
 	public void tryToCorruptIndexWithIncrementalBuild() throws Exception {
 		importProjects(true);
@@ -74,7 +73,6 @@ public class ReproduceInvalidIndexPluginTest extends AbstractBuilderParticipantT
 		assertIndexState();
 	}
 
-	@RepeatTest(times = REPETITIONS)
 	@Test
 	public void tryToCorruptIndexIncrementallyWithoutSubsequentAutobuild() throws Exception {
 		importProjects(true);
@@ -84,7 +82,6 @@ public class ReproduceInvalidIndexPluginTest extends AbstractBuilderParticipantT
 		assertIndexState();
 	}
 
-	@RepeatTest(times = REPETITIONS)
 	@Test
 	public void tryToCorruptIndexWithFullBuild() throws Exception {
 		importProjects(false);
@@ -94,7 +91,6 @@ public class ReproduceInvalidIndexPluginTest extends AbstractBuilderParticipantT
 		assertIndexState();
 	}
 
-	@RepeatTest(times = REPETITIONS)
 	@Test
 	public void tryToCorruptIndexWithoutSubsequentAutobuild() throws Exception {
 		importProjects(false);

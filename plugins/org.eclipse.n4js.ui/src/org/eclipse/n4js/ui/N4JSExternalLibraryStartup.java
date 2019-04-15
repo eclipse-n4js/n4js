@@ -18,14 +18,8 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IExecutionListener;
 import org.eclipse.core.commands.NotHandledException;
 import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
-import org.eclipse.n4js.ui.external.EclipseExternalIndexSynchronizer;
-import org.eclipse.n4js.ui.external.ExternalLibraryBuilder;
+import org.eclipse.n4js.ui.external.ProjectStateChangeListener;
 import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.PlatformUI;
@@ -44,9 +38,6 @@ import com.google.inject.Inject;
 public class N4JSExternalLibraryStartup implements IStartup {
 
 	@Inject
-	private EclipseExternalIndexSynchronizer indexSynchronizer;
-
-	@Inject
 	private ContributingResourceDescriptionPersister descriptionPersister;
 
 	@Inject
@@ -59,12 +50,13 @@ public class N4JSExternalLibraryStartup implements IStartup {
 	private IBuilderState builderState;
 
 	@Inject
-	private ExternalLibraryBuilder builder;
+	private ProjectStateChangeListener indexSyncScheduler;
 
 	@Override
 	public void earlyStartup() {
 		// Client code can still clone the repository on demand. (Mind plug-in UI tests.)
 		if (ExternalLibrariesActivator.requiresInfrastructureForLibraryManager()) {
+			// TODO this should be a job that we can wait for
 			new Thread(() -> {
 				// trigger index loading which will potentially announce a recovery build on all projects to be
 				// necessary
@@ -113,20 +105,7 @@ public class N4JSExternalLibraryStartup implements IStartup {
 		@Override
 		public void postExecuteSuccess(String commandId, Object returnValue) {
 			if ("org.eclipse.ui.file.refresh".equals(commandId)) {
-				Job job = new Job("Update locations of node_modules folders") {
-					@Override
-					protected IStatus run(IProgressMonitor monitor) {
-						ISchedulingRule rule = builder.getRule();
-						Job.getJobManager().beginRule(rule, monitor);
-						try {
-							indexSynchronizer.checkAndClearIndex(monitor);
-						} finally {
-							Job.getJobManager().endRule(rule);
-						}
-						return Status.OK_STATUS;
-					}
-				};
-				job.schedule();
+				indexSyncScheduler.forceIndexSync();
 			}
 		}
 
