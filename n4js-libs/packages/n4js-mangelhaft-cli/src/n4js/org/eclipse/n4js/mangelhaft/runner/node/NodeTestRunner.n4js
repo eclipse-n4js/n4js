@@ -87,10 +87,10 @@ class NodeTestRunner  {
             testCatalog.testDescriptors = descriptors;
         }
         
-        const log = console.log.bind(console);
+        let log: (...any) => void = console.log.bind(console);
         const consoleObj: Object+ = console;
         if (options.quiet) {
-            consoleObj.log = consoleObj.error = consoleObj.warn = function() {};
+            consoleObj.log = consoleObj.error = consoleObj.warn = log = function(...args): void {};
         }
         if (options.showOnlyErrors) {
             this.consoleReporter.setErrorsOnly();
