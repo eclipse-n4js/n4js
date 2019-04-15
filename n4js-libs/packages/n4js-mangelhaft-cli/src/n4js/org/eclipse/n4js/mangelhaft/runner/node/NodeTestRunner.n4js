@@ -55,9 +55,7 @@ class NodeTestRunner  {
             });
             testCatalog = (await req.json()) as TestInfos;
         } else {
-            testCatalog = {
-                testDescriptors: readJsonFile(options.testCatalog) as [TestInfo]
-            } as TestInfos;
+            testCatalog = readJsonFile(options.testCatalog) as TestInfos;
         }
 
         if (options.filter && options.filter.length) { // filter out tests
@@ -89,10 +87,10 @@ class NodeTestRunner  {
             testCatalog.testDescriptors = descriptors;
         }
         
-        const log = console.log.bind(console);
-        const consoleObj: Object+ = console;
+        let log: (...any) => void = console.log.bind(console);
         if (options.quiet) {
-            consoleObj.log = consoleObj.error = consoleObj.warn = function() {};
+            const consoleObj: Object+ = console;
+            consoleObj.log = consoleObj.warn = log = function(...args): void {};
         }
         if (options.showOnlyErrors) {
             this.consoleReporter.setErrorsOnly();
@@ -102,15 +100,18 @@ class NodeTestRunner  {
         this.consoleReporter.setLogger(log);
 
         const reporters: Array<ITestReporter> = [this.consoleReporter];
+
         if (options.xunitReportFile) {
             this.xunitReporter.spec = options;
             reporters.push(this.xunitReporter);
         }
-        if (options.ideReportURL) {
-            if (!isHTTP_re.test(options.ideReportURL)) {
-                throw new Error(`no report URL: ${options.ideReportURL}`);
+
+        const ideReportEndpoint = testCatalog.endpoint;
+        if (ideReportEndpoint) {
+            if (!isHTTP_re.test(ideReportEndpoint)) {
+                throw new Error(`no report URL: ${ideReportEndpoint}`);
             }
-            this.ideReporter.endpoint = options.ideReportURL;
+            this.ideReporter.endpoint = ideReportEndpoint;
             reporters.push(this.ideReporter);
         }
 

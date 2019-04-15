@@ -69,10 +69,6 @@ const nomnomOptions: Object = {
         metavar: "URL|PATH|NPM-relpath",
         help: "Test catalog (JSON) to be used. Option --compile will write the file, switches to temp file in case of URL."
     },
-    ideReportURL: {
-        metavar: "URL",
-        help: "IDE test report (JSON) to be sent to."
-    },
     emitProjectTestCatalogs: {
         default: "test-catalog-gen.json",
         metavar: "PATH",
