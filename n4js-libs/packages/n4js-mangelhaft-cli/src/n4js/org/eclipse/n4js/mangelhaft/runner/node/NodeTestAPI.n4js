@@ -12,7 +12,6 @@
 import debug from "deps/debug";
 import {NodeTestCLI} from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestCLI";
 import NodeTestOptions from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestOptions";
-import {TestInfo} from "org/eclipse/n4js/mangelhaft/types/TestInfo";
 import {createTempDir} from "org/eclipse/n4js/mangelhaft/util/fs";
 import {fsSafeAccessSync} from "org/eclipse/n4js/mangelhaft/util/fs";
 import {readJsonFile} from "org/eclipse/n4js/mangelhaft/util/fs";
@@ -23,6 +22,7 @@ import * as lib_fs from "fs";
 import * as glob+ from "glob";
 import * as n4js_cli from "n4js-cli";
 import * as lib_path from "path";
+import {TestInfos} from "org/eclipse/n4js/mangelhaft/types/TestInfos";
 
 const log = debug("n4js-mangelhaft");
 const rlog = debug("n4js-mangelhaft-test-run");
@@ -79,11 +79,11 @@ export default public class NodeTestAPI {
 
             log("generated test catalog:", options.testCatalog);
 
-            const testCatalog = options.emitProjectTestCatalogs ? JSON.parse(String(lib_fs.readFileSync(options.testCatalog, { encoding: "UTF-8" }))) as Array<TestInfo> : null;
+            const testCatalog: TestInfos = options.emitProjectTestCatalogs ? JSON.parse(String(lib_fs.readFileSync(options.testCatalog, { encoding: "UTF-8" }))) as TestInfos : null;
 
             for (const [dir, packageJson] of pathToPackageJson) {
                 if (testCatalog && options.emitProjectTestCatalogs) {
-                    const tests = testCatalog.filter(test => test.origin === packageJson["name"] as string);
+                    const tests = testCatalog.testDescriptors.filter(test => test.origin === packageJson["name"] as string);
                     if (tests.length) {
                         const file = lib_path.join(dir, options.emitProjectTestCatalogs);
                         log("writing:", file);
