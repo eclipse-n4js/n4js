@@ -87,7 +87,9 @@ export default public class NodeTestAPI {
                     if (tests.length) {
                         const file = lib_path.join(dir, options.emitProjectTestCatalogs);
                         log("writing:", file);
-                        lib_fs.writeFileSync(file, JSON.stringify(tests, null, 2), { encoding: "UTF-8" });
+                        lib_fs.writeFileSync(file, JSON.stringify({
+                            testDescriptors: tests
+                        }, null, 2), { encoding: "UTF-8" });
                     }
                 }
 

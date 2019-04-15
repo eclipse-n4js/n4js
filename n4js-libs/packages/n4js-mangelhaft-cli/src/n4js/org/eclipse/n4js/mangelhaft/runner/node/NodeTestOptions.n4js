@@ -50,11 +50,6 @@ export default public class ~NodeTestOptions extends XUnitReportSpec {
     public testCatalog: string;
 
     /**
-     * IDE test report (JSON) to be sent to.
-     */
-    public ideReportURL: string;
-
-    /**
      * When compiling, local project test catalog files are written to the targeted
      * project folders under the given path, e.g. test-catalog.json.
      */
