@@ -22,7 +22,6 @@ import org.eclipse.n4js.external.ExternalLibraryUriHelper;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalProjectsCollector;
 import org.eclipse.n4js.external.NpmLogger;
-import org.eclipse.n4js.external.RebuildWorkspaceProjectsScheduler;
 import org.eclipse.n4js.findReferences.ConcreteSyntaxAwareReferenceFinder;
 import org.eclipse.n4js.generator.ICompositeGenerator;
 import org.eclipse.n4js.generator.IGeneratorMarkerSupport;
@@ -49,8 +48,6 @@ import org.eclipse.n4js.ui.contentassist.ContentAssistantFactory;
 import org.eclipse.n4js.ui.contentassist.CustomN4JSParser;
 import org.eclipse.n4js.ui.contentassist.N4JSContentProposalPriorities;
 import org.eclipse.n4js.ui.contentassist.N4JSFollowElementCalculator;
-import org.eclipse.n4js.ui.contentassist.PatchedFollowElementComputer;
-import org.eclipse.n4js.ui.contentassist.PatchedRequiredRuleNameComputer;
 import org.eclipse.n4js.ui.contentassist.SimpleLastSegmentFinder;
 import org.eclipse.n4js.ui.editor.AlwaysAddNatureCallback;
 import org.eclipse.n4js.ui.editor.EditorAwareCanLoadFromDescriptionHelper;
@@ -78,7 +75,6 @@ import org.eclipse.n4js.ui.external.ExternalLibraryBuildQueue;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildScheduler;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuilder;
 import org.eclipse.n4js.ui.external.ExternalProjectProvider;
-import org.eclipse.n4js.ui.external.ProjectStateChangeListener;
 import org.eclipse.n4js.ui.formatting2.FixedContentFormatter;
 import org.eclipse.n4js.ui.generator.GeneratorMarkerSupport;
 import org.eclipse.n4js.ui.internal.ConsoleOutputStreamProvider;
@@ -136,9 +132,7 @@ import org.eclipse.xtext.builder.IXtextBuilderParticipant;
 import org.eclipse.xtext.builder.preferences.BuilderPreferenceAccess;
 import org.eclipse.xtext.findReferences.IReferenceFinder;
 import org.eclipse.xtext.generator.IOutputConfigurationProvider;
-import org.eclipse.xtext.ide.editor.contentassist.antlr.FollowElementComputer;
 import org.eclipse.xtext.ide.editor.contentassist.antlr.IContentAssistParser;
-import org.eclipse.xtext.ide.editor.contentassist.antlr.RequiredRuleNameComputer;
 import org.eclipse.xtext.resource.ILocationInFileProvider;
 import org.eclipse.xtext.resource.SynchronizedXtextResourceSet;
 import org.eclipse.xtext.resource.XtextResourceSet;
@@ -267,11 +261,6 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	}
 
 	/** Delegate to shared injector */
-	public Provider<ProjectStateChangeListener> provideProjectStateChangeListener() {
-		return Access.contributedProvider(ProjectStateChangeListener.class);
-	}
-
-	/** Delegate to shared injector */
 	public Provider<ExternalLibraryBuildScheduler> provideExternalLibraryBuildJobProvider() {
 		return Access.contributedProvider(ExternalLibraryBuildScheduler.class);
 	}
@@ -314,11 +303,6 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	/** Delegate to shared injector */
 	public Provider<ExternalProjectProvider> provideExternalProjectProvider() {
 		return Access.contributedProvider(ExternalProjectProvider.class);
-	}
-
-	/** Delegate to shared injector */
-	public Provider<RebuildWorkspaceProjectsScheduler> provideRebuildWorkspaceProjectsScheduler() {
-		return Access.contributedProvider(RebuildWorkspaceProjectsScheduler.class);
 	}
 
 	/** Delegate to shared injector */
@@ -561,21 +545,6 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	 */
 	public Class<? extends org.eclipse.xtext.ide.editor.contentassist.antlr.FollowElementCalculator> bindFollowElementCalculator() {
 		return N4JSFollowElementCalculator.class;
-	}
-
-	/**
-	 * Remove this binding once the change of https://github.com/eclipse/xtext-core/pull/167 is available in the target
-	 * platform.
-	 */
-	public Class<? extends FollowElementComputer> bindFollowElementComputer() {
-		return PatchedFollowElementComputer.class;
-	}
-
-	/**
-	 * Remove this binding with Xtext 2.13
-	 */
-	public Class<? extends RequiredRuleNameComputer> bindRequiredRuleNameComputer() {
-		return PatchedRequiredRuleNameComputer.class;
 	}
 
 	@Override

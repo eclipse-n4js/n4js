@@ -22,6 +22,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -38,8 +39,8 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.action.ActionContributionItem;
@@ -66,12 +67,13 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.navigator.CommonViewer;
 import org.eclipse.ui.navigator.resources.ProjectExplorer;
+import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.collect.HashMultimap;
@@ -107,6 +109,7 @@ public class SelectAllProjectExplorer_PluginUITest extends AbstractPluginUITest 
 
 	private ProjectExplorer projectExplorer;
 	private CommonViewer commonViewer;
+	private boolean wasAutobuilding;
 
 	/**
 	 * Asserts that the {@link IWorkbench workbench} is running.
@@ -133,27 +136,34 @@ public class SelectAllProjectExplorer_PluginUITest extends AbstractPluginUITest 
 
 		typeNamesMapping.putAll(LIBRARY, LIBRARY_PROJECTS);
 		typeNamesMapping.putAll(TEST, TEST_PROJECTS);
-		for (final Entry<ProjectType, Collection<String>> entry : typeNamesMapping.asMap().entrySet()) {
-			for (final String projectName : entry.getValue()) {
-				createN4JSProject(projectName, entry.getKey());
+		new WorkspaceModifyOperation() {
+			@Override
+			protected void execute(IProgressMonitor monitor)
+					throws CoreException, InvocationTargetException, InterruptedException {
+				for (final Entry<ProjectType, Collection<String>> entry : typeNamesMapping.asMap().entrySet()) {
+					for (final String projectName : entry.getValue()) {
+						createN4JSProject(projectName, entry.getKey());
+					}
+				}
+				// Actually close "Closed*" projects
+				closeProject("ClosedL2");
+				closeProject("ClosedT2");
 			}
-		}
-
-		// Actually close "Closed*" projects
-		closeProject("ClosedL2");
-		closeProject("ClosedT2");
+		}.run(new NullProgressMonitor());
 
 		// Wait for workbench to reflect project changes
 		waitForIdleState();
 		commonViewer.refresh();
 
 		// Disable auto-building, as there is no real code to build involved
-		ResourcesPlugin.getWorkspace().getDescription().setAutoBuilding(false);
+		wasAutobuilding = IResourcesSetupUtil.setAutobuild(false);
 	}
 
 	/***/
 	@After
 	public void tearDown2() throws Exception {
+		IResourcesSetupUtil.setAutobuild(wasAutobuilding);
+
 		super.tearDown(); // called after this method again but necessary here already
 		broker.resetState();
 		commonViewer.refresh();
@@ -336,7 +346,6 @@ public class SelectAllProjectExplorer_PluginUITest extends AbstractPluginUITest 
 	}
 
 	/***/
-	@Ignore("random")
 	@Test
 	public void testWorkingSetAndProject() {
 		// Set projects as top level
@@ -536,14 +545,24 @@ public class SelectAllProjectExplorer_PluginUITest extends AbstractPluginUITest 
 					actionWhileWaiting.run();
 					return getNavigatorItem(name, type);
 				},
-				() -> "tree item of type " + type.getSimpleName() + " with name '" + name + "'");
+				() -> "tree item of type " + type.getSimpleName() + " with name '" + name + "'. Found:\n-"
+						+ getAllNavigatorItemsAsString());
 	}
 
 	private Optional<TreeItem> getNavigatorItem(String name, Class<?> type) {
 		Optional<TreeItem> item = Arrays.asList(commonViewer.getTree().getItems()).stream()
-				.filter(i -> i.getText().equals(name) && type.isInstance(i.getData()))
+				.filter(i -> i.getText().startsWith(name) && type.isInstance(i.getData()))
 				.findAny();
 		return item;
+	}
+
+	private String getAllNavigatorItemsAsString() {
+		TreeItem[] items = commonViewer.getTree().getItems();
+		List<String> strings = new ArrayList<>();
+		for (TreeItem item : items) {
+			strings.add(item.getText() + ": " + item.getData().getClass().getSimpleName());
+		}
+		return strings.stream().collect(Collectors.joining("\n- "));
 	}
 
 	/**

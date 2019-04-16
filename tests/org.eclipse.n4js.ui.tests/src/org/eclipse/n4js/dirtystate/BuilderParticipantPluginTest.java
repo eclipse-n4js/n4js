@@ -147,6 +147,7 @@ public class BuilderParticipantPluginTest extends AbstractBuilderParticipantTest
 		IFolder module2Folder = createFolder(folder, InheritanceTestFiles.module2());
 
 		IFile fileA = createTestFile(module1Folder, "A", InheritanceTestFiles.A());
+		fileA.setLocalTimeStamp(0L);
 		IFile fileB = createTestFile(module2Folder, "B", InheritanceTestFiles.B());
 		IFile fileC = createTestFile(module2Folder, "C", InheritanceTestFiles.C());
 		IFile fileD = createTestFile(module1Folder, "D", InheritanceTestFiles.D());
@@ -157,14 +158,14 @@ public class BuilderParticipantPluginTest extends AbstractBuilderParticipantTest
 		assertMarkers("File C should have no markers", fileC, 0);
 		assertMarkers("File D should no errors and only no warnings", fileD, 0);
 
-		replaceFileContentAndWaitForRefresh(folder, fileA, InheritanceTestFiles.AOtherMethodName().toString());
+		replaceFileContentAndWaitForRefresh(folder, fileA, InheritanceTestFiles.AOtherMethodName().toString(), 1L);
 
 		assertMarkers("File A with other method name should have no errors and no warnings", fileA, 0);
 
 		// First marker for using old method name
 		assertMarkers("File D should have errors as using old method name.", fileD, 1);
 
-		replaceFileContentAndWaitForRefresh(folder, fileA, InheritanceTestFiles.A().toString());
+		replaceFileContentAndWaitForRefresh(folder, fileA, InheritanceTestFiles.A().toString(), 2L);
 
 		assertMarkers("File A with old method name should have no errors and no warnings", fileA, 0);
 		assertMarkers("File D should have no errors and no warnings after changing back to old A", fileD, 0);
@@ -823,18 +824,19 @@ public class BuilderParticipantPluginTest extends AbstractBuilderParticipantTest
 		IFolder module2Folder = createFolder(folder, InheritanceTestFiles.module2());
 
 		IFile fileA = createTestFile(module1Folder, "A", InheritanceTestFiles.A());
+		fileA.setLocalTimeStamp(0L);
 		IFile fileB = createTestFile(module2Folder, "B", InheritanceTestFiles.B());
 
 		assertMarkers("File A should only have no warnings", fileA, 0);
 		assertMarkers("File B should only have no warnings", fileB, 0);
 
-		replaceFileContentAndWaitForRefresh(folder, fileA, InheritanceTestFiles.AOtherMethodName().toString());
+		replaceFileContentAndWaitForRefresh(folder, fileA, InheritanceTestFiles.AOtherMethodName().toString(), 1L);
 		assertMarkers("File A with other method name should no markers", fileA, 0);
 
 		// Uses the old method name
 		assertMarkers("File B should have errors as using old method name", fileB, 1);
 
-		replaceFileContentAndWaitForRefresh(folder, fileA, InheritanceTestFiles.A().toString());
+		replaceFileContentAndWaitForRefresh(folder, fileA, InheritanceTestFiles.A().toString(), 2L);
 
 		assertMarkers("File A with old method name should only have no warnings", fileA, 0);
 		assertMarkers("File B should have no errors after changing back to old A", fileB, 0);

@@ -83,6 +83,8 @@ public class ExternalPackagesPluginTest extends AbstractBuilderParticipantTest {
 		copyProjectsToLocation(projectsRoot, externalLibrariesRoot, PROBAND_LIBFOO);
 		ProjectTestsUtils.importDependencies(PROBAND_CLIENT, externalLibrariesRoot.toUri(), libraryManager);
 
+		waitForAutoBuild();
+
 		Collection<String> expected = collectIndexableFiles(externalLibrariesRoot);
 		// add user workspace project files
 		expected.add("/Client/src/ABC.n4js");
@@ -100,6 +102,8 @@ public class ExternalPackagesPluginTest extends AbstractBuilderParticipantTest {
 		ProjectTestsUtils.importProject(projectsRoot.toFile(), PROBAND_CLIENT);
 		copyProjectsToLocation(projectsRoot, externalLibrariesRoot, PROBAND_LIBFOO, PROBAND_LIBBAR, PROBAND_LIBBAZ);
 		ProjectTestsUtils.importDependencies(PROBAND_CLIENT, externalLibrariesRoot.toUri(), libraryManager);
+
+		waitForAutoBuild();
 
 		Collection<String> expected = collectIndexableFiles(externalLibrariesRoot);
 		// add user workspace project files
