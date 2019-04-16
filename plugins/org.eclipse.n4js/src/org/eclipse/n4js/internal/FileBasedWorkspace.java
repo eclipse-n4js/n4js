@@ -79,6 +79,11 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 	public URI findProjectWith(URI nestedLocation) {
 		// URI key = URIUtils.normalize(nestedLocation.trimFragment());
 
+		if (!nestedLocation.hasAuthority()) {
+			// TODO: Replace by ProjectFinderUtil#addEmptyAuthority(URI)
+			nestedLocation = URI.createHierarchicalURI(nestedLocation.scheme(), "", nestedLocation.device(),
+					nestedLocation.segments(), nestedLocation.query(), nestedLocation.fragment());
+		}
 		URI key = nestedLocation.trimFragment();
 
 		// determine longest registered project location, that is a prefix of 'key'

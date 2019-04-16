@@ -10,10 +10,12 @@
  */
 package org.eclipse.n4js.ide;
 
+import org.eclipse.n4js.ide.server.N4JSProjectDescriptionFactory;
 import org.eclipse.n4js.ide.server.N4JSProjectManager;
 import org.eclipse.n4js.ide.server.N4JSProjectWorkspaceConfigFactory;
 import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
 import org.eclipse.n4js.internal.N4JSModel;
+import org.eclipse.xtext.ide.server.IProjectDescriptionFactory;
 import org.eclipse.xtext.ide.server.IWorkspaceConfigFactory;
 import org.eclipse.xtext.ide.server.ProjectManager;
 import org.eclipse.xtext.ide.server.WorkspaceManager;
@@ -42,6 +44,10 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends ProjectManager> bindProjectManager() {
 		return N4JSProjectManager.class;
+	}
+
+	public Class<? extends IProjectDescriptionFactory> bindIProjectDescriptionFactory() {
+		return N4JSProjectDescriptionFactory.class;
 	}
 
 }
