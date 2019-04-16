@@ -84,6 +84,8 @@ public class RunConfiguration {
 	/** Key used for attribute specifying the .js file to execute. */
 	public final static String FILE_TO_RUN = "FILE_TO_RUN";
 
+	public final static String RUN_OPTIONS = "RUN_OPTIONS";
+
 	/** Key used for attribute specifying special loader option. */
 	public final static String SYSTEM_LOADER = "SYSTEM_LOADER";
 
@@ -134,6 +136,8 @@ public class RunConfiguration {
 	private Path workingDirectory;
 
 	private Path fileToRun;
+
+	private String runOptions;
 
 	private final Map<String, String> environmentVariables = new LinkedHashMap<>();
 
@@ -329,6 +333,14 @@ public class RunConfiguration {
 		this.fileToRun = fileToRun;
 	}
 
+	public String getRunOptions() {
+		return nullToEmpty(runOptions);
+	}
+
+	public void setRunOptions(final String runOptions) {
+		this.runOptions = nullToEmpty(runOptions);
+	}
+
 	/**
 	 * The ID of the implementation to use or <code>null</code> if no implementation is selected. Corresponds to the
 	 * value given in an implementation project's manifest file via property '<code>ImplementationId</code>'.
@@ -500,6 +512,7 @@ public class RunConfiguration {
 		result.put(USER_SELECTION, this.userSelection.toString());
 		result.put(CUSTOM_ENGINE_PATH, getCustomEnginePath());
 		result.put(ENGINE_OPTIONS, getEngineOptions());
+		result.put(RUN_OPTIONS, getRunOptions());
 		result.put(ENV_VARS, this.getEnvironmentVariables());
 		// .entrySet().stream().map(entry -> entry.getKey() + "=" +
 		// entry.getValue()).collect(Collectors.joining("\n")));
@@ -523,6 +536,7 @@ public class RunConfiguration {
 		this.userSelection = getURI(map, USER_SELECTION, false);
 		this.customEnginePath = nullToEmpty(getString(map, CUSTOM_ENGINE_PATH, true));
 		this.engineOptions = nullToEmpty(getString(map, ENGINE_OPTIONS, true));
+		this.runOptions = nullToEmpty(getString(map, RUN_OPTIONS, true));
 
 		this.setEnvironmentVariables(getMap(map, ENV_VARS, true));
 

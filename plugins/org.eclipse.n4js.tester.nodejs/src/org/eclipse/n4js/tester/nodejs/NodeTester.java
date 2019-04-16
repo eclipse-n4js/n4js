@@ -13,9 +13,12 @@ package org.eclipse.n4js.tester.nodejs;
 import static org.eclipse.n4js.runner.extension.RuntimeEnvironment.NODEJS_MANGELHAFT;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.runner.IExecutor;
 import org.eclipse.n4js.runner.RunnerFrontEnd;
 import org.eclipse.n4js.runner.nodejs.NodeRunner;
@@ -23,10 +26,8 @@ import org.eclipse.n4js.tester.ITester;
 import org.eclipse.n4js.tester.TestConfiguration;
 import org.eclipse.n4js.tester.extension.ITesterDescriptor;
 import org.eclipse.n4js.tester.extension.TesterDescriptorImpl;
-import org.eclipse.n4js.utils.io.FileUtils;
 
 import com.google.common.base.Charsets;
-import com.google.common.io.Files;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -72,29 +73,44 @@ public class NodeTester implements ITester {
 	public Process test(TestConfiguration config, IExecutor executor, RunnerFrontEnd runnerFrontEnd)
 			throws ExecutionException {
 
-		Path testLaunchScriptPath = createTestLaunchScript(config);
-		config.setFileToRun(testLaunchScriptPath);
+		Path testCatalog = createTestCatalog(config);
+
+		Path fileToRun = findMangelhaftCliEntryPoint(config);
+		config.setFileToRun(fileToRun);
+
+		config.setRunOptions("--testCatalog " + testCatalog.toAbsolutePath() + " --quiet --noDebugLog");
 
 		return runnerFrontEnd.run(config, executor);
 	}
 
-	private Path createTestLaunchScript(TestConfiguration config) {
+	private Path createTestCatalog(TestConfiguration config) {
+		try {
+			Path testCatalog = Files.createTempFile("n4js-testCatalog-", "");
+			testCatalog.toFile().deleteOnExit();
+			String testTreeAsJSON = config.getTestTreeAsJSON();
+			Files.write(testCatalog, Collections.singletonList(testTreeAsJSON), Charsets.UTF_8);
+			return testCatalog;
+		} catch (IOException e) {
+			throw new IllegalStateException("unable to write test catalog to temporary file", e);
+		}
+	}
+
+	private Path findMangelhaftCliEntryPoint(TestConfiguration config) {
 		Path workingDirectory = config.getWorkingDirectory();
 		if (workingDirectory == null) {
 			throw new IllegalArgumentException("test configuration does not specify a working directory");
 		}
 
-		String testTreeAsJSON = config.getTestTreeAsJSON();
-		String testLaunchScriptContent = TestLaunchScriptTemplate.getTestLaunchScript(workingDirectory, testTreeAsJSON);
-		Path tempDirectory = FileUtils.createTempDirectory("N4JSTestLaunch");
-		Path testLaunchScriptPath = tempDirectory.resolve("launch_test.js").toAbsolutePath();
-		try {
-			Files.write(testLaunchScriptContent, testLaunchScriptPath.toFile(), Charsets.UTF_8);
-			testLaunchScriptPath.toFile().deleteOnExit();
-		} catch (IOException e) {
-			throw new IllegalStateException("unable to create test launch script: " + testLaunchScriptPath, e);
+		Path base = workingDirectory;
+		while (base != null
+				&& !Files.isDirectory(base.resolve(N4JSGlobals.NODE_MODULES).resolve("n4js-mangelhaft-cli"))) {
+			base = base.getParent();
+		}
+		if (base == null) {
+			throw new IllegalStateException("unable to find npm package 'n4js-mangelhaft-cli'");
 		}
 
-		return testLaunchScriptPath;
+		return base.resolve(N4JSGlobals.NODE_MODULES).resolve("n4js-mangelhaft-cli")
+				.resolve("bin/n4js-mangelhaft-cli.js");
 	}
 }

@@ -16,6 +16,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -46,6 +47,12 @@ public class NodeRunner implements IRunner {
 
 	/** Separator used in {@link #NODE_PATH}. */
 	private static final String NODE_PATH_SEP = File.pathSeparator;
+
+	/**
+	 * Splitter used for parsing the {@link RunConfiguration#getEngineOptions() engine} and
+	 * {@link RunConfiguration#getRunOptions() run options}.
+	 */
+	private static final Splitter OPTIONS_SPLITTER = Splitter.on(breakingWhitespace()).omitEmptyStrings().trimResults();
 
 	/** ID of the Node.js runner as defined in the plugin.xml. */
 	public static final String ID = "org.eclipse.n4js.runner.nodejs.NODEJS";
@@ -123,11 +130,9 @@ public class NodeRunner implements IRunner {
 		cmd.add("esm");
 
 		// allow user flags
-		final String nodeOptions = runConfig.getEngineOptions();
-		if (nodeOptions != null) {
-			for (String nodeOption : Splitter.on(breakingWhitespace()).omitEmptyStrings().split(nodeOptions)) {
-				cmd.add(nodeOption);
-			}
+		final String engineOptions = runConfig.getEngineOptions();
+		for (String engineOption : splitOptions(engineOptions)) {
+			cmd.add(engineOption);
 		}
 
 		// the file to launch
@@ -137,6 +142,16 @@ public class NodeRunner implements IRunner {
 		}
 		cmd.add(fileToRun.toString());
 
+		// more user flags
+		final String runOptions = runConfig.getRunOptions();
+		for (String runOption : splitOptions(runOptions)) {
+			cmd.add(runOption);
+		}
+
 		return cmd.toArray(new String[0]);
+	}
+
+	private Iterable<String> splitOptions(String optionsString) {
+		return optionsString != null ? OPTIONS_SPLITTER.split(optionsString.trim()) : Collections.emptyList();
 	}
 }
