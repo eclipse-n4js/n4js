@@ -19,10 +19,16 @@ Contributors:
 
 <<fig-cmpd_components_in_n4js>> shows the N4JS components described in detail in this
 chapter.footnote:[Note that this diagram does not necessarily reflect the actual internal implementation but only the external view.]
+<<fig-cmp_components>> shows a recently updated diagram, which is not yet fully reflected in the implementation.
 
 [[fig-cmpd_components_in_n4js]]
-.N4JS Component Overview
+.N4JS Component Overview (OLD)
 image::{find}fig/cmpd_components_in_n4js.svg[align="center"]
+
+[[fig-cmp_components]]
+.Overview of N4JS Components and Dependencies (NEW)
+image::{find}fig/cmp_components.svg[align="center"]
+
 
 The N4JS platform distinguishes several types of components. The
 following components can only be created by internal developers:
@@ -80,6 +86,8 @@ Components contain modules. <<fig-component_content>> describes what can be cont
 [[fig-component_content]]
 .Content of a Component
 image::{find}fig/cmpd_component_content.svg[scaledwidth="70%",align="center"]
+
+
 
 [.language-n4js]
 == Component Types
