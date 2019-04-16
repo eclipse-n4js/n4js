@@ -123,6 +123,7 @@ public class IdentifierRefImpl extends PrimaryExpressionImpl implements Identifi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isStrictMode() {
 		return strictMode;
 	}
@@ -132,6 +133,7 @@ public class IdentifierRefImpl extends PrimaryExpressionImpl implements Identifi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setStrictMode(boolean newStrictMode) {
 		boolean oldStrictMode = strictMode;
 		strictMode = newStrictMode;
@@ -144,6 +146,7 @@ public class IdentifierRefImpl extends PrimaryExpressionImpl implements Identifi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public IdentifiableElement getId() {
 		if (id != null && id.eIsProxy()) {
 			InternalEObject oldId = (InternalEObject)id;
@@ -170,6 +173,7 @@ public class IdentifierRefImpl extends PrimaryExpressionImpl implements Identifi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setId(IdentifiableElement newId) {
 		IdentifiableElement oldId = id;
 		id = newId;
@@ -182,6 +186,7 @@ public class IdentifierRefImpl extends PrimaryExpressionImpl implements Identifi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getIdAsText() {
 		return idAsText;
 	}
@@ -191,6 +196,7 @@ public class IdentifierRefImpl extends PrimaryExpressionImpl implements Identifi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setIdAsText(String newIdAsText) {
 		String oldIdAsText = idAsText;
 		idAsText = newIdAsText;
@@ -203,6 +209,7 @@ public class IdentifierRefImpl extends PrimaryExpressionImpl implements Identifi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isValidSimpleAssignmentTarget() {
 		boolean _isStrictMode = this.isStrictMode();
 		if (_isStrictMode) {
@@ -216,6 +223,7 @@ public class IdentifierRefImpl extends PrimaryExpressionImpl implements Identifi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getVersion() {
 		return 0;
 	}

@@ -24,7 +24,7 @@ import org.eclipse.n4js.ts.utils.TypeUtils
 /**
  * Base class for functions and methods
  */
-package class AbstractFunctionDefinitionTypesBuilder {
+package abstract class AbstractFunctionDefinitionTypesBuilder {
 
 	@Inject extension N4JSTypesBuilderHelper
 	@Inject extension N4JSFormalParameterTypesBuilder

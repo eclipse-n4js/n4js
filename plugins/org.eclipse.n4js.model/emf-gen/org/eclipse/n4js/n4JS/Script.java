@@ -42,10 +42,6 @@ public interface Script extends VariableEnvironmentElement, AnnotableElement, Co
 	 * Returns the value of the '<em><b>Annotations</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.n4JS.Annotation}.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Annotations</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Annotations</em>' containment reference list.
 	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getScript_Annotations()
@@ -58,10 +54,6 @@ public interface Script extends VariableEnvironmentElement, AnnotableElement, Co
 	 * Returns the value of the '<em><b>Script Elements</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.n4JS.ScriptElement}.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Script Elements</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Script Elements</em>' containment reference list.
 	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getScript_ScriptElements()
@@ -73,10 +65,6 @@ public interface Script extends VariableEnvironmentElement, AnnotableElement, Co
 	/**
 	 * Returns the value of the '<em><b>Module</b></em>' reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Module</em>' reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Module</em>' reference.
 	 * @see #setModule(TModule)

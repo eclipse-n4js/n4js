@@ -14,7 +14,7 @@ import org.eclipse.xtext.ui.editor.contentassist.FQNPrefixMatcher.LastSegmentFin
 
 /**
  * The default last segment finder is tailored to Java type names, e.g. {@code java.util.Map.Entry} yields the substring
- * {@code Map.Entry} as its last segment. In JS, module names also often start with an uppercase latter thus we use a
+ * {@code Map.Entry} as its last segment. In JS, module names also often start with an uppercase letter thus we use a
  * simpler implementation that just looks for the last dot in the name, e.g it returns {@code Entry} as the last
  * segment.
  */

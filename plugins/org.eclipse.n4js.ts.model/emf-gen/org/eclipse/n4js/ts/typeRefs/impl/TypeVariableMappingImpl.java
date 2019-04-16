@@ -85,6 +85,7 @@ public class TypeVariableMappingImpl extends ProxyResolvingEObjectImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypeVariable getTypeVar() {
 		if (typeVar != null && typeVar.eIsProxy()) {
 			InternalEObject oldTypeVar = (InternalEObject)typeVar;
@@ -111,6 +112,7 @@ public class TypeVariableMappingImpl extends ProxyResolvingEObjectImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTypeVar(TypeVariable newTypeVar) {
 		TypeVariable oldTypeVar = typeVar;
 		typeVar = newTypeVar;
@@ -123,6 +125,7 @@ public class TypeVariableMappingImpl extends ProxyResolvingEObjectImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypeArgument getTypeArg() {
 		return typeArg;
 	}
@@ -147,6 +150,7 @@ public class TypeVariableMappingImpl extends ProxyResolvingEObjectImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTypeArg(TypeArgument newTypeArg) {
 		if (newTypeArg != typeArg) {
 			NotificationChain msgs = null;

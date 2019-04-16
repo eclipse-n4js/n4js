@@ -9,7 +9,6 @@
  */
 package org.eclipse.n4js.tests.project
 
-import com.google.common.collect.Lists
 import com.google.inject.Inject
 import java.io.File
 import org.eclipse.core.resources.IFile
@@ -20,7 +19,6 @@ import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.core.runtime.CoreException
 import org.eclipse.core.runtime.IPath
 import org.eclipse.core.runtime.IProgressMonitor
-import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.core.runtime.Path
 import org.eclipse.emf.common.util.URI
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore
@@ -29,12 +27,13 @@ import org.eclipse.n4js.tests.util.ProjectTestsHelper
 import org.eclipse.n4js.tests.util.ProjectTestsUtils
 import org.eclipse.n4js.utils.ProjectDescriptionUtils
 import org.eclipse.n4js.utils.URIUtils
-import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil
 import org.junit.Before
 import org.junit.Test
 
 import static org.eclipse.emf.common.util.URI.createPlatformResourceURI
 import static org.junit.Assert.*
+import com.google.common.collect.Lists
+import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil
 
 /**
  * Testing the use of npm scopes as part of N4JS project names, i.e. project names of
@@ -62,7 +61,7 @@ class NpmScopesPluginTest extends AbstractBuilderParticipantTest {
 		val parentFolder = new File(getResourceUri(PROBANDS, YARN_WORKSPACE_BASE));
 		yarnProject = ProjectTestsUtils.importYarnWorkspace(libraryManager, parentFolder, YARN_WORKSPACE_PROJECT,
 			Lists.newArrayList("n4js-runtime"));
-		val yarnPath = yarnProject.location;
+		testedWorkspace.fullBuild
 
 		scopedProject = workspace.root.getProject("@myScope:Lib");
 		nonScopedProject = workspace.root.getProject("Lib");
@@ -75,10 +74,6 @@ class NpmScopesPluginTest extends AbstractBuilderParticipantTest {
 		assertNotNull(clientModule);
 		assertTrue(clientModule.exists);
 		clientModuleURI = createPlatformResourceURI(clientProject.name + "/src/" + clientModule.name, true);
-
-		libraryManager.runNpmYarnInstall(URI.createFileURI(yarnPath.toString), new NullProgressMonitor);
-		ProjectTestsUtils.waitForAllJobs;
-		ProjectTestsUtils.waitForAutoBuild;
 	}
 
 	def static void importProject(IWorkspace workspace, File rootFolder, IProgressMonitor progressMonitor)

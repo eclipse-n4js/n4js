@@ -92,6 +92,7 @@ public class ConditionalExpressionImpl extends ExpressionImpl implements Conditi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getExpression() {
 		return expression;
 	}
@@ -116,6 +117,7 @@ public class ConditionalExpressionImpl extends ExpressionImpl implements Conditi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setExpression(Expression newExpression) {
 		if (newExpression != expression) {
 			NotificationChain msgs = null;
@@ -135,6 +137,7 @@ public class ConditionalExpressionImpl extends ExpressionImpl implements Conditi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getTrueExpression() {
 		return trueExpression;
 	}
@@ -159,6 +162,7 @@ public class ConditionalExpressionImpl extends ExpressionImpl implements Conditi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTrueExpression(Expression newTrueExpression) {
 		if (newTrueExpression != trueExpression) {
 			NotificationChain msgs = null;
@@ -178,6 +182,7 @@ public class ConditionalExpressionImpl extends ExpressionImpl implements Conditi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getFalseExpression() {
 		return falseExpression;
 	}
@@ -202,6 +207,7 @@ public class ConditionalExpressionImpl extends ExpressionImpl implements Conditi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setFalseExpression(Expression newFalseExpression) {
 		if (newFalseExpression != falseExpression) {
 			NotificationChain msgs = null;

@@ -32,10 +32,6 @@ public interface WithStatement extends Statement, VariableEnvironmentElement {
 	/**
 	 * Returns the value of the '<em><b>Expression</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Expression</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Expression</em>' containment reference.
 	 * @see #setExpression(Expression)
@@ -58,10 +54,6 @@ public interface WithStatement extends Statement, VariableEnvironmentElement {
 	/**
 	 * Returns the value of the '<em><b>Statement</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Statement</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Statement</em>' containment reference.
 	 * @see #setStatement(Statement)

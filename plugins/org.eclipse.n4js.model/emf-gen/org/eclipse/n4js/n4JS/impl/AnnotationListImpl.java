@@ -61,6 +61,7 @@ public class AnnotationListImpl extends AbstractAnnotationListImpl implements An
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isExported() {
 		EObject _eContainer = this.eContainer();
 		return (_eContainer instanceof ExportDeclaration);
@@ -71,6 +72,7 @@ public class AnnotationListImpl extends AbstractAnnotationListImpl implements An
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isExportedAsDefault() {
 		return (this.isExported() && ((ExportDeclaration) this.eContainer()).isDefaultExport());
 	}
@@ -80,6 +82,7 @@ public class AnnotationListImpl extends AbstractAnnotationListImpl implements An
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getExportedName() {
 		boolean _isExported = this.isExported();
 		if (_isExported) {
@@ -112,6 +115,7 @@ public class AnnotationListImpl extends AbstractAnnotationListImpl implements An
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isToplevel() {
 		EObject _eContainer = this.eContainer();
 		if ((_eContainer instanceof ExportDeclaration)) {

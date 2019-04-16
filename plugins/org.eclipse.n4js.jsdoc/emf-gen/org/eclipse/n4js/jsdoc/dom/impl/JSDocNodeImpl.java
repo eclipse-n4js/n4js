@@ -85,6 +85,7 @@ public abstract class JSDocNodeImpl extends DocletElementImpl implements JSDocNo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Marker> getMarkers() {
 		if (markers == null) {
 			markers = new EObjectContainmentEList<Marker>(Marker.class, this, DomPackage.JS_DOC_NODE__MARKERS);
@@ -97,6 +98,7 @@ public abstract class JSDocNodeImpl extends DocletElementImpl implements JSDocNo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getMarkerValue(final String theKey) {
 		final Function1<Marker, Boolean> _function = new Function1<Marker, Boolean>() {
 			public Boolean apply(final Marker it) {
@@ -117,6 +119,7 @@ public abstract class JSDocNodeImpl extends DocletElementImpl implements JSDocNo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMarker(final String theKey, final String value) {
 		final Function1<Marker, Boolean> _function = new Function1<Marker, Boolean>() {
 			public Boolean apply(final Marker it) {
@@ -139,6 +142,7 @@ public abstract class JSDocNodeImpl extends DocletElementImpl implements JSDocNo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isMarkedAs(final String theKey, final String theValue) {
 		final Function1<Marker, Boolean> _function = new Function1<Marker, Boolean>() {
 			public Boolean apply(final Marker it) {
@@ -154,6 +158,7 @@ public abstract class JSDocNodeImpl extends DocletElementImpl implements JSDocNo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		return JSDocSerializer.toJSDocString(this);
 	}

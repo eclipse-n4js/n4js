@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.ui.external;
 
-import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -22,7 +20,6 @@ import java.util.Set;
 import java.util.concurrent.Semaphore;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalLibraryHelper;
 import org.eclipse.n4js.external.ExternalProject;
@@ -47,9 +44,6 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 
 	@Inject
 	private ExternalProjectLoader cacheLoader;
-
-	@Inject
-	private ProjectStateChangeListener projectStateChangeListener;
 
 	@Inject
 	private ExternalLibraryPreferenceStore externalLibraryPreferenceStore;
@@ -79,17 +73,6 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 	@Inject
 	ExternalProjectProvider(ExternalLibraryPreferenceStore preferenceStore) {
 		preferenceStore.addListener(this);
-	}
-
-	/**
-	 * Initializes the backing cache with the cache loader and registers a {@link ProjectStateChangeListener} into the
-	 * workspace.
-	 */
-	@Inject
-	void init() {
-		if (Platform.isRunning()) {
-			getWorkspace().addResourceChangeListener(projectStateChangeListener);
-		}
 	}
 
 	Collection<URI> getAllProjectLocations() {

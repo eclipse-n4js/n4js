@@ -49,10 +49,6 @@ public enum PostfixOperator implements Enumerator {
 	/**
 	 * The '<em><b>Inc</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Inc</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #INC
 	 * @model name="inc" literal="++"
@@ -64,10 +60,6 @@ public enum PostfixOperator implements Enumerator {
 	/**
 	 * The '<em><b>Dec</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Dec</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #DEC
 	 * @model name="dec" literal="--"
@@ -186,6 +178,7 @@ public enum PostfixOperator implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getValue() {
 	  return value;
 	}
@@ -195,6 +188,7 @@ public enum PostfixOperator implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 	  return name;
 	}
@@ -204,6 +198,7 @@ public enum PostfixOperator implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getLiteral() {
 	  return literal;
 	}

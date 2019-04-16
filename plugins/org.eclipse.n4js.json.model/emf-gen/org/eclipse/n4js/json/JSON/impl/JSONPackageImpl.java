@@ -170,6 +170,7 @@ public class JSONPackageImpl extends EPackageImpl implements JSONPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getJSONDocument() {
 		return jsonDocumentEClass;
 	}
@@ -179,6 +180,7 @@ public class JSONPackageImpl extends EPackageImpl implements JSONPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getJSONDocument_Content() {
 		return (EReference)jsonDocumentEClass.getEStructuralFeatures().get(0);
 	}
@@ -188,6 +190,7 @@ public class JSONPackageImpl extends EPackageImpl implements JSONPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getJSONDocument__ToString() {
 		return jsonDocumentEClass.getEOperations().get(0);
 	}
@@ -197,6 +200,7 @@ public class JSONPackageImpl extends EPackageImpl implements JSONPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getJSONValue() {
 		return jsonValueEClass;
 	}
@@ -206,6 +210,7 @@ public class JSONPackageImpl extends EPackageImpl implements JSONPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getJSONObject() {
 		return jsonObjectEClass;
 	}
@@ -215,6 +220,7 @@ public class JSONPackageImpl extends EPackageImpl implements JSONPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getJSONObject_NameValuePairs() {
 		return (EReference)jsonObjectEClass.getEStructuralFeatures().get(0);
 	}
@@ -224,6 +230,7 @@ public class JSONPackageImpl extends EPackageImpl implements JSONPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getJSONObject__ToString() {
 		return jsonObjectEClass.getEOperations().get(0);
 	}
@@ -233,6 +240,7 @@ public class JSONPackageImpl extends EPackageImpl implements JSONPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getJSONArray() {
 		return jsonArrayEClass;
 	}
@@ -242,6 +250,7 @@ public class JSONPackageImpl extends EPackageImpl implements JSONPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getJSONArray_Elements() {
 		return (EReference)jsonArrayEClass.getEStructuralFeatures().get(0);
 	}
@@ -251,6 +260,7 @@ public class JSONPackageImpl extends EPackageImpl implements JSONPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getJSONArray__ToString() {
 		return jsonArrayEClass.getEOperations().get(0);
 	}
@@ -260,6 +270,7 @@ public class JSONPackageImpl extends EPackageImpl implements JSONPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getNameValuePair() {
 		return nameValuePairEClass;
 	}
@@ -269,6 +280,7 @@ public class JSONPackageImpl extends EPackageImpl implements JSONPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getNameValuePair_Name() {
 		return (EAttribute)nameValuePairEClass.getEStructuralFeatures().get(0);
 	}
@@ -278,6 +290,7 @@ public class JSONPackageImpl extends EPackageImpl implements JSONPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getNameValuePair_Value() {
 		return (EReference)nameValuePairEClass.getEStructuralFeatures().get(1);
 	}
@@ -287,6 +300,7 @@ public class JSONPackageImpl extends EPackageImpl implements JSONPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getNameValuePair__ToString() {
 		return nameValuePairEClass.getEOperations().get(0);
 	}
@@ -296,6 +310,7 @@ public class JSONPackageImpl extends EPackageImpl implements JSONPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getJSONStringLiteral() {
 		return jsonStringLiteralEClass;
 	}
@@ -305,6 +320,7 @@ public class JSONPackageImpl extends EPackageImpl implements JSONPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getJSONStringLiteral_Value() {
 		return (EAttribute)jsonStringLiteralEClass.getEStructuralFeatures().get(0);
 	}
@@ -314,6 +330,7 @@ public class JSONPackageImpl extends EPackageImpl implements JSONPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getJSONStringLiteral__ToString() {
 		return jsonStringLiteralEClass.getEOperations().get(0);
 	}
@@ -323,6 +340,7 @@ public class JSONPackageImpl extends EPackageImpl implements JSONPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getJSONNumericLiteral() {
 		return jsonNumericLiteralEClass;
 	}
@@ -332,6 +350,7 @@ public class JSONPackageImpl extends EPackageImpl implements JSONPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getJSONNumericLiteral_Value() {
 		return (EAttribute)jsonNumericLiteralEClass.getEStructuralFeatures().get(0);
 	}
@@ -341,6 +360,7 @@ public class JSONPackageImpl extends EPackageImpl implements JSONPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getJSONNumericLiteral__ToString() {
 		return jsonNumericLiteralEClass.getEOperations().get(0);
 	}
@@ -350,6 +370,7 @@ public class JSONPackageImpl extends EPackageImpl implements JSONPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getJSONBooleanLiteral() {
 		return jsonBooleanLiteralEClass;
 	}
@@ -359,6 +380,7 @@ public class JSONPackageImpl extends EPackageImpl implements JSONPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getJSONBooleanLiteral_BooleanValue() {
 		return (EAttribute)jsonBooleanLiteralEClass.getEStructuralFeatures().get(0);
 	}
@@ -368,6 +390,7 @@ public class JSONPackageImpl extends EPackageImpl implements JSONPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getJSONBooleanLiteral__ToString() {
 		return jsonBooleanLiteralEClass.getEOperations().get(0);
 	}
@@ -377,6 +400,7 @@ public class JSONPackageImpl extends EPackageImpl implements JSONPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getJSONNullLiteral() {
 		return jsonNullLiteralEClass;
 	}
@@ -386,6 +410,7 @@ public class JSONPackageImpl extends EPackageImpl implements JSONPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public JSONFactory getJSONFactory() {
 		return (JSONFactory)getEFactoryInstance();
 	}

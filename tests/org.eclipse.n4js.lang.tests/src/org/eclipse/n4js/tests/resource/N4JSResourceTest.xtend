@@ -240,7 +240,15 @@ class N4JSResourceTest {
 		}, null, outdatedStateManager, cancelManager)
 		doc.input = someResource
 		Assert.assertFalse(someResource.script.eIsProxy)
+try {
+// as of Xtext 2.16.0 the following will trigger loading of the resource, leading to an exception as asserted below;
+// see https://github.com/eclipse/xtext-eclipse/issues/967
+// (remove this once issue #967 is fixed)
 		doc.disposeInput // no exception
+Assert.fail("Xtext issue #967 seems to be fixed! Remove temporary workaround!");
+} catch(IllegalStateException e) {
+Assert.assertEquals("unexpected exception message", "Missing adapter for BuiltInTypeScope", e.message)
+}
 	}
 
 

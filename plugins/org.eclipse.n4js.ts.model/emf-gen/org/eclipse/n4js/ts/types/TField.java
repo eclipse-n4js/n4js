@@ -36,10 +36,6 @@ public interface TField extends TMemberWithAccessModifier, TTypedElement, TConst
 	/**
 	 * Returns the value of the '<em><b>Has Expression</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Has Expression</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Has Expression</em>' attribute.
 	 * @see #setHasExpression(boolean)
@@ -62,10 +58,6 @@ public interface TField extends TMemberWithAccessModifier, TTypedElement, TConst
 	/**
 	 * Returns the value of the '<em><b>Optional</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Optional</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Optional</em>' attribute.
 	 * @see #setOptional(boolean)

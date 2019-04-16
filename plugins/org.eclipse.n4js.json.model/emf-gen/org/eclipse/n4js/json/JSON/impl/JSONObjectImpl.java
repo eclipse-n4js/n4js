@@ -82,6 +82,7 @@ public class JSONObjectImpl extends JSONValueImpl implements JSONObject {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<NameValuePair> getNameValuePairs() {
 		if (nameValuePairs == null) {
 			nameValuePairs = new EObjectContainmentEList<NameValuePair>(NameValuePair.class, this, JSONPackage.JSON_OBJECT__NAME_VALUE_PAIRS);
@@ -94,6 +95,7 @@ public class JSONObjectImpl extends JSONValueImpl implements JSONObject {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		final Function1<NameValuePair, String> _function = new Function1<NameValuePair, String>() {
 			public String apply(final NameValuePair e) {

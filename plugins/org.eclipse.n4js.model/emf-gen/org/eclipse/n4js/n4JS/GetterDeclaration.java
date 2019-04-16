@@ -36,10 +36,6 @@ public interface GetterDeclaration extends FieldAccessor, TypedElement {
 	/**
 	 * Returns the value of the '<em><b>Defined Getter</b></em>' reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Defined Getter</em>' reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Defined Getter</em>' reference.
 	 * @see #setDefinedGetter(TGetter)

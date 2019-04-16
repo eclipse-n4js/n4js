@@ -39,10 +39,6 @@ public interface TypeTypeRef extends BaseTypeRef {
 	/**
 	 * Returns the value of the '<em><b>Type Arg</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Type Arg</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Type Arg</em>' containment reference.
 	 * @see #setTypeArg(TypeArgument)

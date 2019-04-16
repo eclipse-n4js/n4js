@@ -37,10 +37,6 @@ public interface TMember extends IdentifiableElement, TAnnotableElement, SyntaxR
 	/**
 	 * Returns the value of the '<em><b>Declared Final</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Declared Final</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Declared Final</em>' attribute.
 	 * @see #setDeclaredFinal(boolean)
@@ -63,10 +59,6 @@ public interface TMember extends IdentifiableElement, TAnnotableElement, SyntaxR
 	/**
 	 * Returns the value of the '<em><b>Declared Static</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Declared Static</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Declared Static</em>' attribute.
 	 * @see #setDeclaredStatic(boolean)
@@ -89,10 +81,6 @@ public interface TMember extends IdentifiableElement, TAnnotableElement, SyntaxR
 	/**
 	 * Returns the value of the '<em><b>Declared Override</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Declared Override</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Declared Override</em>' attribute.
 	 * @see #setDeclaredOverride(boolean)
@@ -115,10 +103,6 @@ public interface TMember extends IdentifiableElement, TAnnotableElement, SyntaxR
 	/**
 	 * Returns the value of the '<em><b>Has Computed Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Has Computed Name</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Has Computed Name</em>' attribute.
 	 * @see #setHasComputedName(boolean)

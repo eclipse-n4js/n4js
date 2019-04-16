@@ -81,6 +81,7 @@ public class IdentifierRef_IMImpl extends IdentifierRefImpl implements Identifie
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SymbolTableEntry getRewiredTarget() {
 		if (rewiredTarget != null && rewiredTarget.eIsProxy()) {
 			InternalEObject oldRewiredTarget = (InternalEObject)rewiredTarget;
@@ -122,6 +123,7 @@ public class IdentifierRef_IMImpl extends IdentifierRefImpl implements Identifie
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setRewiredTarget(SymbolTableEntry newRewiredTarget) {
 		if (newRewiredTarget != rewiredTarget) {
 			NotificationChain msgs = null;
@@ -141,6 +143,7 @@ public class IdentifierRef_IMImpl extends IdentifierRefImpl implements Identifie
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SymbolTableEntry getId_IM() {
 		return this.getRewiredTarget();
 	}
@@ -150,6 +153,7 @@ public class IdentifierRef_IMImpl extends IdentifierRefImpl implements Identifie
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setId_IM(final SymbolTableEntry target) {
 		this.setRewiredTarget(target);
 	}
@@ -159,6 +163,7 @@ public class IdentifierRef_IMImpl extends IdentifierRefImpl implements Identifie
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public IdentifiableElement getId() {
 		return null;
 	}
@@ -168,6 +173,7 @@ public class IdentifierRef_IMImpl extends IdentifierRefImpl implements Identifie
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setId(final IdentifiableElement ix) {
 		if ((ix != null)) {
 			throw new IllegalArgumentException("IDRef_IM cannot accept Identifiers. Use #id_IM.");
@@ -179,6 +185,7 @@ public class IdentifierRef_IMImpl extends IdentifierRefImpl implements Identifie
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public IdentifiableElement getOriginalTargetOfRewiredTarget() {
 		final SymbolTableEntry declaredTypeSTE = this.getRewiredTarget();
 		if ((declaredTypeSTE instanceof SymbolTableEntryOriginal)) {

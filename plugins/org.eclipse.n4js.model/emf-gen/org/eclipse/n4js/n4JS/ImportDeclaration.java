@@ -38,10 +38,6 @@ public interface ImportDeclaration extends AnnotableScriptElement {
 	 * Returns the value of the '<em><b>Import Specifiers</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.n4JS.ImportSpecifier}.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Import Specifiers</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Import Specifiers</em>' containment reference list.
 	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getImportDeclaration_ImportSpecifiers()
@@ -53,10 +49,6 @@ public interface ImportDeclaration extends AnnotableScriptElement {
 	/**
 	 * Returns the value of the '<em><b>Import From</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Import From</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Import From</em>' attribute.
 	 * @see #setImportFrom(boolean)
@@ -79,10 +71,6 @@ public interface ImportDeclaration extends AnnotableScriptElement {
 	/**
 	 * Returns the value of the '<em><b>Module</b></em>' reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Module</em>' reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Module</em>' reference.
 	 * @see #setModule(TModule)
@@ -105,10 +93,6 @@ public interface ImportDeclaration extends AnnotableScriptElement {
 	/**
 	 * Returns the value of the '<em><b>Module Specifier As Text</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Module Specifier As Text</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Module Specifier As Text</em>' attribute.
 	 * @see #setModuleSpecifierAsText(String)

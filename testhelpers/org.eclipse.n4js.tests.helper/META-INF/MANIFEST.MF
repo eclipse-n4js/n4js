@@ -36,6 +36,5 @@ Export-Package: org.eclipse.n4js,
  org.eclipse.n4js.tests.issues,
  org.eclipse.n4js.tests.parser,
  org.eclipse.n4js.tests.projectModel,
- org.eclipse.n4js.tests.repeat,
  org.eclipse.n4js.xpect.validation.suppression
 Automatic-Module-Name: org.eclipse.n4js.tests.helper

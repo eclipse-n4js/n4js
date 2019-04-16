@@ -22,12 +22,14 @@ import org.eclipse.n4js.N4JSUiInjectorProvider;
 import org.eclipse.n4js.packagejson.model.edit.IJSONDocumentModification;
 import org.eclipse.n4js.packagejson.model.edit.PackageJsonModificationProvider;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.tests.builder.TestedN4JSWorkspace;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.ui.wizard.generator.WizardGeneratorHelper;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.XtextRunner;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -35,8 +37,8 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 /**
- * Applies {@link IJSONDocumentModification}s as produced by {@link PackageJsonModificationProvider} to package.json files and
- * checks the contents of the resulting serialized and formatted contents of the edited files.
+ * Applies {@link IJSONDocumentModification}s as produced by {@link PackageJsonModificationProvider} to package.json
+ * files and checks the contents of the resulting serialized and formatted contents of the edited files.
  */
 @RunWith(XtextRunner.class)
 @InjectWith(N4JSUiInjectorProvider.class)
@@ -49,6 +51,13 @@ public class WizardGeneratorHelperPluginTest {
 
 	@Inject
 	private WizardGeneratorHelper generatorHelper;
+
+	/**
+	 * Used for proper cleanup
+	 */
+	@Inject
+	@Rule
+	public TestedN4JSWorkspace testedWorkspace;
 
 	/**
 	 * Edits the AST of a package.json file by inserting a new dependency and asserts the resulting serialized

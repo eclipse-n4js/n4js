@@ -53,6 +53,7 @@ public class TAnonymousFormalParameterImpl extends TFormalParameterImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		final String definedName = this.getDefinedName();
 		if ((definedName != null)) {
@@ -74,6 +75,7 @@ public class TAnonymousFormalParameterImpl extends TFormalParameterImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getDefinedName() {
 		return super.getName();
 	}

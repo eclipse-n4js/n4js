@@ -34,10 +34,6 @@ public interface ForStatement extends VariableDeclarationContainer, IterationSta
 	/**
 	 * Returns the value of the '<em><b>Init Expr</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Init Expr</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Init Expr</em>' containment reference.
 	 * @see #setInitExpr(Expression)
@@ -60,10 +56,6 @@ public interface ForStatement extends VariableDeclarationContainer, IterationSta
 	/**
 	 * Returns the value of the '<em><b>Update Expr</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Update Expr</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Update Expr</em>' containment reference.
 	 * @see #setUpdateExpr(Expression)
@@ -86,10 +78,6 @@ public interface ForStatement extends VariableDeclarationContainer, IterationSta
 	/**
 	 * Returns the value of the '<em><b>For In</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>For In</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>For In</em>' attribute.
 	 * @see #setForIn(boolean)
@@ -112,10 +100,6 @@ public interface ForStatement extends VariableDeclarationContainer, IterationSta
 	/**
 	 * Returns the value of the '<em><b>For Of</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>For Of</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>For Of</em>' attribute.
 	 * @see #setForOf(boolean)

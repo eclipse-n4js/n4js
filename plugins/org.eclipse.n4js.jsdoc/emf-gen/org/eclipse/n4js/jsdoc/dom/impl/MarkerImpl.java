@@ -99,6 +99,7 @@ public class MarkerImpl extends MinimalEObjectImpl.Container implements Marker {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getKey() {
 		return key;
 	}
@@ -108,6 +109,7 @@ public class MarkerImpl extends MinimalEObjectImpl.Container implements Marker {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setKey(String newKey) {
 		String oldKey = key;
 		key = newKey;
@@ -120,6 +122,7 @@ public class MarkerImpl extends MinimalEObjectImpl.Container implements Marker {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getValue() {
 		return value;
 	}
@@ -129,6 +132,7 @@ public class MarkerImpl extends MinimalEObjectImpl.Container implements Marker {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setValue(String newValue) {
 		String oldValue = value;
 		value = newValue;

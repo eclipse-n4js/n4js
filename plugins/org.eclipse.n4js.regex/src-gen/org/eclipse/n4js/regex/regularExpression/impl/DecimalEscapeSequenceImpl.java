@@ -105,6 +105,7 @@ public class DecimalEscapeSequenceImpl extends AtomEscapeImpl implements Decimal
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getCharacter()
   {
     return character;
@@ -115,6 +116,7 @@ public class DecimalEscapeSequenceImpl extends AtomEscapeImpl implements Decimal
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setCharacter(String newCharacter)
   {
     String oldCharacter = character;
@@ -128,6 +130,7 @@ public class DecimalEscapeSequenceImpl extends AtomEscapeImpl implements Decimal
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getSequence()
   {
     return sequence;
@@ -138,6 +141,7 @@ public class DecimalEscapeSequenceImpl extends AtomEscapeImpl implements Decimal
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setSequence(String newSequence)
   {
     String oldSequence = sequence;

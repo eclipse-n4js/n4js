@@ -63,10 +63,6 @@ public interface TMemberWithAccessModifier extends TMember {
 	 * Returns the value of the '<em><b>Declared Member Access Modifier</b></em>' attribute.
 	 * The literals are from the enumeration {@link org.eclipse.n4js.ts.types.MemberAccessModifier}.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Declared Member Access Modifier</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Declared Member Access Modifier</em>' attribute.
 	 * @see org.eclipse.n4js.ts.types.MemberAccessModifier

@@ -92,6 +92,7 @@ public class ObjectLiteralImpl extends PrimaryExpressionImpl implements ObjectLi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Type getDefinedType() {
 		if (definedType != null && definedType.eIsProxy()) {
 			InternalEObject oldDefinedType = (InternalEObject)definedType;
@@ -118,6 +119,7 @@ public class ObjectLiteralImpl extends PrimaryExpressionImpl implements ObjectLi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDefinedType(Type newDefinedType) {
 		Type oldDefinedType = definedType;
 		definedType = newDefinedType;
@@ -130,6 +132,7 @@ public class ObjectLiteralImpl extends PrimaryExpressionImpl implements ObjectLi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<PropertyAssignment> getPropertyAssignments() {
 		if (propertyAssignments == null) {
 			propertyAssignments = new EObjectContainmentEList<PropertyAssignment>(PropertyAssignment.class, this, N4JSPackage.OBJECT_LITERAL__PROPERTY_ASSIGNMENTS);

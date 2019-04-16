@@ -33,10 +33,6 @@ public interface ModuleFilterSpecifier extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Module Specifier With Wildcard</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Module Specifier With Wildcard</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Module Specifier With Wildcard</em>' attribute.
 	 * @see #setModuleSpecifierWithWildcard(String)
@@ -59,10 +55,6 @@ public interface ModuleFilterSpecifier extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Source Path</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Source Path</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Source Path</em>' attribute.
 	 * @see #setSourcePath(String)

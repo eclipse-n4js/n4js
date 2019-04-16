@@ -10,11 +10,7 @@
  */
 package org.eclipse.n4js.xpect.ui.methods.contentassist;
 
-import java.io.InputStream;
-
-import org.eclipse.n4js.xpect.ui.common.XtextResourceCleanUtil;
 import org.eclipse.xtext.resource.XtextResource;
-import org.eclipse.xtext.ui.testing.util.ResourceLoadHelper;
 
 import com.google.inject.Inject;
 
@@ -32,15 +28,7 @@ public class N4ContentAssistProcessorTestBuilderHelper {
 	 *             some exception
 	 */
 	public N4ContentAssistProcessorTestBuilder createTestBuilderForResource(XtextResource resource) throws Exception {
-
-		N4ContentAssistProcessorTestBuilder fixture = testBuilder.create(new ResourceLoadHelper() {
-
-			@Override
-			public XtextResource getResourceFor(InputStream stream) {
-				return XtextResourceCleanUtil.cleanXtextResource(resource);
-			}
-		});
-
+		N4ContentAssistProcessorTestBuilder fixture = testBuilder.create((inputStream) -> resource);
 		fixture = fixture.append(resource.getParseResult().getRootNode().getText());
 		return fixture;
 	}

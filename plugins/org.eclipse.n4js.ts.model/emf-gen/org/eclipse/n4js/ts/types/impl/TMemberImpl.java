@@ -215,6 +215,7 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TAnnotation> getAnnotations() {
 		if (annotations == null) {
 			annotations = new EObjectContainmentEList<TAnnotation>(TAnnotation.class, this, TypesPackage.TMEMBER__ANNOTATIONS);
@@ -227,6 +228,7 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EObject getAstElement() {
 		if (astElement != null && astElement.eIsProxy()) {
 			InternalEObject oldAstElement = (InternalEObject)astElement;
@@ -253,6 +255,7 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAstElement(EObject newAstElement) {
 		EObject oldAstElement = astElement;
 		astElement = newAstElement;
@@ -265,6 +268,7 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isDeclaredFinal() {
 		return declaredFinal;
 	}
@@ -274,6 +278,7 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDeclaredFinal(boolean newDeclaredFinal) {
 		boolean oldDeclaredFinal = declaredFinal;
 		declaredFinal = newDeclaredFinal;
@@ -286,6 +291,7 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isDeclaredStatic() {
 		return declaredStatic;
 	}
@@ -295,6 +301,7 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDeclaredStatic(boolean newDeclaredStatic) {
 		boolean oldDeclaredStatic = declaredStatic;
 		declaredStatic = newDeclaredStatic;
@@ -307,6 +314,7 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isDeclaredOverride() {
 		return declaredOverride;
 	}
@@ -316,6 +324,7 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDeclaredOverride(boolean newDeclaredOverride) {
 		boolean oldDeclaredOverride = declaredOverride;
 		declaredOverride = newDeclaredOverride;
@@ -328,6 +337,7 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isHasComputedName() {
 		return hasComputedName;
 	}
@@ -337,6 +347,7 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setHasComputedName(boolean newHasComputedName) {
 		boolean oldHasComputedName = hasComputedName;
 		hasComputedName = newHasComputedName;
@@ -349,6 +360,7 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TMember> getConstituentMembers() {
 		if (constituentMembers == null) {
 			constituentMembers = new EObjectResolvingEList<TMember>(TMember.class, this, TypesPackage.TMEMBER__CONSTITUENT_MEMBERS);
@@ -361,6 +373,7 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isComposed() {
 		return composed;
 	}
@@ -370,6 +383,7 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setComposed(boolean newComposed) {
 		boolean oldComposed = composed;
 		composed = newComposed;
@@ -382,6 +396,7 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ContainerType<?> getContainingType() {
 		final EObject myContainer = this.eContainer();
 		ContainerType<?> _xifexpression = null;
@@ -399,6 +414,7 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public MemberAccessModifier getMemberAccessModifier() {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT
@@ -410,6 +426,7 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public MemberType getMemberType() {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT
@@ -421,6 +438,7 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isField() {
 		MemberType _memberType = this.getMemberType();
 		return Objects.equal(_memberType, MemberType.FIELD);
@@ -431,6 +449,7 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isGetter() {
 		MemberType _memberType = this.getMemberType();
 		return Objects.equal(_memberType, MemberType.GETTER);
@@ -441,6 +460,7 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isSetter() {
 		MemberType _memberType = this.getMemberType();
 		return Objects.equal(_memberType, MemberType.SETTER);
@@ -451,6 +471,7 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isAccessor() {
 		return (Objects.equal(this.getMemberType(), MemberType.SETTER) || Objects.equal(this.getMemberType(), MemberType.GETTER));
 	}
@@ -460,6 +481,7 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isMethod() {
 		MemberType _memberType = this.getMemberType();
 		return Objects.equal(_memberType, MemberType.METHOD);
@@ -470,6 +492,7 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isConstructor() {
 		return false;
 	}
@@ -479,6 +502,7 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isOptional() {
 		return false;
 	}
@@ -488,6 +512,7 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isAbstract() {
 		return false;
 	}
@@ -497,6 +522,7 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isReadable() {
 		return true;
 	}
@@ -506,6 +532,7 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isWriteable() {
 		return false;
 	}
@@ -515,6 +542,7 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getMemberAsString() {
 		return this.getName();
 	}
@@ -524,6 +552,7 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isFinal() {
 		return this.isDeclaredFinal();
 	}
@@ -533,6 +562,7 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isStatic() {
 		return this.isDeclaredStatic();
 	}
@@ -542,6 +572,7 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isConst() {
 		return false;
 	}
@@ -551,6 +582,7 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isPolyfilled() {
 		final ContainerType<?> containingType = this.getContainingType();
 		if ((containingType == null)) {

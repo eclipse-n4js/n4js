@@ -33,10 +33,6 @@ public interface ConditionalExpression extends Expression {
 	/**
 	 * Returns the value of the '<em><b>Expression</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Expression</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Expression</em>' containment reference.
 	 * @see #setExpression(Expression)
@@ -59,10 +55,6 @@ public interface ConditionalExpression extends Expression {
 	/**
 	 * Returns the value of the '<em><b>True Expression</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>True Expression</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>True Expression</em>' containment reference.
 	 * @see #setTrueExpression(Expression)
@@ -85,10 +77,6 @@ public interface ConditionalExpression extends Expression {
 	/**
 	 * Returns the value of the '<em><b>False Expression</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>False Expression</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>False Expression</em>' containment reference.
 	 * @see #setFalseExpression(Expression)

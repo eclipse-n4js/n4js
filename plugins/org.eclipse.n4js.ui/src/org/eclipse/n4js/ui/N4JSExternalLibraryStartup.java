@@ -11,28 +11,24 @@
 package org.eclipse.n4js.ui;
 
 import java.util.Arrays;
+import java.util.Map;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IExecutionListener;
 import org.eclipse.core.commands.NotHandledException;
 import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.n4js.external.ExternalLibraryHelper;
-import org.eclipse.n4js.ui.external.EclipseExternalIndexSynchronizer;
-import org.eclipse.n4js.ui.external.ExternalLibraryBuilder;
+import org.eclipse.n4js.ui.external.ProjectStateChangeListener;
 import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.xtext.builder.builderState.IBuilderState;
-import org.eclipse.xtext.builder.impl.BuildScheduler;
+import org.eclipse.xtext.builder.impl.BuilderStateDiscarder;
 import org.eclipse.xtext.builder.impl.IBuildFlag;
 
+import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
 /**
@@ -42,27 +38,25 @@ import com.google.inject.Inject;
 public class N4JSExternalLibraryStartup implements IStartup {
 
 	@Inject
-	private EclipseExternalIndexSynchronizer indexSynchronizer;
-
-	@Inject
 	private ContributingResourceDescriptionPersister descriptionPersister;
 
 	@Inject
 	private IWorkspace workspace;
 
 	@Inject
-	private BuildScheduler buildManager;
+	private BuilderStateDiscarder builderStateDiscarder;
 
 	@Inject
 	private IBuilderState builderState;
 
 	@Inject
-	private ExternalLibraryBuilder builder;
+	private ProjectStateChangeListener indexSyncScheduler;
 
 	@Override
 	public void earlyStartup() {
 		// Client code can still clone the repository on demand. (Mind plug-in UI tests.)
 		if (ExternalLibraryHelper.requiresInfrastructureForLibraryManager()) {
+			// TODO this should be a job that we can wait for
 			new Thread(() -> {
 				// trigger index loading which will potentially announce a recovery build on all projects to be
 				// necessary
@@ -76,8 +70,9 @@ public class N4JSExternalLibraryStartup implements IStartup {
 					// TODO return something like a Future that allows to say
 					// descriptionPersister.scheduleRecoveryBuildOnContributions().andThen(buildManager...)
 					descriptionPersister.scheduleRecoveryBuildOnContributions();
-					buildManager.scheduleBuildIfNecessary(Arrays.asList(workspace.getRoot().getProjects()),
-							IBuildFlag.RECOVERY_BUILD);
+					Map<String, String> args = Maps.newHashMap();
+					IBuildFlag.RECOVERY_BUILD.addToMap(args);
+					builderStateDiscarder.forgetLastBuildState(Arrays.asList(workspace.getRoot().getProjects()), args);
 				}
 			}).start();
 
@@ -110,20 +105,7 @@ public class N4JSExternalLibraryStartup implements IStartup {
 		@Override
 		public void postExecuteSuccess(String commandId, Object returnValue) {
 			if ("org.eclipse.ui.file.refresh".equals(commandId)) {
-				Job job = new Job("Update locations of node_modules folders") {
-					@Override
-					protected IStatus run(IProgressMonitor monitor) {
-						ISchedulingRule rule = builder.getRule();
-						Job.getJobManager().beginRule(rule, monitor);
-						try {
-							indexSynchronizer.checkAndClearIndex(monitor);
-						} finally {
-							Job.getJobManager().endRule(rule);
-						}
-						return Status.OK_STATUS;
-					}
-				};
-				job.schedule();
+				indexSyncScheduler.forceIndexSync();
 			}
 		}
 

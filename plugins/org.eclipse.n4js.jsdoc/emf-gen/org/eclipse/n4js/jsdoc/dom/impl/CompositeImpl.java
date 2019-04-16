@@ -74,6 +74,7 @@ public abstract class CompositeImpl extends JSDocNodeImpl implements Composite {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<ContentNode> getContents() {
 		if (contents == null) {
 			contents = new EObjectContainmentWithInverseEList<ContentNode>(ContentNode.class, this, DomPackage.COMPOSITE__CONTENTS, DomPackage.CONTENT_NODE__OWNER);

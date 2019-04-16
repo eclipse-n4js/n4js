@@ -74,6 +74,7 @@ public class VersionRangeConstraintImpl extends VersionRangeImpl implements Vers
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<SimpleVersion> getVersionConstraints() {
 		if (versionConstraints == null) {
 			versionConstraints = new EObjectContainmentEList<SimpleVersion>(SimpleVersion.class, this, SemverPackage.VERSION_RANGE_CONSTRAINT__VERSION_CONSTRAINTS);

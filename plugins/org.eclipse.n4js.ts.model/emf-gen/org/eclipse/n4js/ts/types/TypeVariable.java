@@ -39,10 +39,6 @@ public interface TypeVariable extends Type {
 	/**
 	 * Returns the value of the '<em><b>Declared Covariant</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Declared Covariant</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Declared Covariant</em>' attribute.
 	 * @see #setDeclaredCovariant(boolean)
@@ -65,10 +61,6 @@ public interface TypeVariable extends Type {
 	/**
 	 * Returns the value of the '<em><b>Declared Contravariant</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Declared Contravariant</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Declared Contravariant</em>' attribute.
 	 * @see #setDeclaredContravariant(boolean)
@@ -91,10 +83,6 @@ public interface TypeVariable extends Type {
 	/**
 	 * Returns the value of the '<em><b>Declared Upper Bound</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Declared Upper Bound</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Declared Upper Bound</em>' containment reference.
 	 * @see #setDeclaredUpperBound(TypeRef)

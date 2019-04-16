@@ -82,6 +82,7 @@ public class TaggedTemplateStringImpl extends ExpressionImpl implements TaggedTe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getTarget() {
 		return target;
 	}
@@ -106,6 +107,7 @@ public class TaggedTemplateStringImpl extends ExpressionImpl implements TaggedTe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTarget(Expression newTarget) {
 		if (newTarget != target) {
 			NotificationChain msgs = null;
@@ -125,6 +127,7 @@ public class TaggedTemplateStringImpl extends ExpressionImpl implements TaggedTe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TemplateLiteral getTemplate() {
 		return template;
 	}
@@ -149,6 +152,7 @@ public class TaggedTemplateStringImpl extends ExpressionImpl implements TaggedTe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTemplate(TemplateLiteral newTemplate) {
 		if (newTemplate != template) {
 			NotificationChain msgs = null;

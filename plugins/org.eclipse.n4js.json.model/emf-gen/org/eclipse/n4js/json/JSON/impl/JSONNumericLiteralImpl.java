@@ -83,6 +83,7 @@ public class JSONNumericLiteralImpl extends JSONValueImpl implements JSONNumeric
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public BigDecimal getValue() {
 		return value;
 	}
@@ -92,6 +93,7 @@ public class JSONNumericLiteralImpl extends JSONValueImpl implements JSONNumeric
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setValue(BigDecimal newValue) {
 		BigDecimal oldValue = value;
 		value = newValue;
@@ -104,6 +106,7 @@ public class JSONNumericLiteralImpl extends JSONValueImpl implements JSONNumeric
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		String _string = this.getValue().toString();
 		String _plus = ("JSONNumericLiteral(" + _string);

@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.ui.building;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -20,8 +19,6 @@ import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceDelta;
-import org.eclipse.core.resources.IResourceDeltaVisitor;
-import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -33,18 +30,16 @@ import org.eclipse.n4js.ui.building.BuilderStateLogger.BuilderState;
 import org.eclipse.n4js.ui.containers.N4JSProjectsStateHelper;
 import org.eclipse.n4js.ui.external.EclipseExternalIndexSynchronizer;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildScheduler;
+import org.eclipse.n4js.ui.external.OutdatedPackageJsonQueue;
 import org.eclipse.n4js.ui.internal.N4JSProjectDependencyStrategy;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant.BuildType;
 import org.eclipse.xtext.builder.builderState.IBuilderState;
 import org.eclipse.xtext.builder.debug.IBuildLogger;
 import org.eclipse.xtext.builder.impl.BuildData;
-import org.eclipse.xtext.builder.impl.Messages;
 import org.eclipse.xtext.builder.impl.QueuedBuildData;
 import org.eclipse.xtext.builder.impl.ToBeBuilt;
-import org.eclipse.xtext.builder.impl.ToBeBuiltComputer;
 import org.eclipse.xtext.builder.impl.XtextBuilder;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
-import org.eclipse.xtext.ui.XtextProjectHelper;
 import org.eclipse.xtext.ui.shared.contribution.ISharedStateContributionRegistry;
 import org.eclipse.xtext.xbase.lib.util.ReflectExtensions;
 
@@ -71,6 +66,7 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 	private ExternalLibraryBuildScheduler externalLibraryBuildJobProvider;
 	private N4JSProjectDependencyStrategy projectDependencyStrategy;
 	private N4JSProjectsStateHelper projectsStateHelper;
+	private OutdatedPackageJsonQueue outdatedPackageJsonQueue;
 
 	@Inject
 	private void injectSharedContributions(ISharedStateContributionRegistry registry) {
@@ -80,6 +76,8 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 				.getSingleContributedInstance(EclipseExternalIndexSynchronizer.class);
 		this.projectsStateHelper = registry
 				.getSingleContributedInstance(N4JSProjectsStateHelper.class);
+		this.outdatedPackageJsonQueue = registry
+				.getSingleContributedInstance(OutdatedPackageJsonQueue.class);
 
 		try {
 			this.projectDependencyStrategy = registry.getSingleContributedInstance(N4JSProjectDependencyStrategy.class);
@@ -159,97 +157,8 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 	protected void incrementalBuild(IResourceDelta delta, IProgressMonitor monitor) throws CoreException {
 		builderStateLogger.log("N4JSBuildTypeTrackingBuilder.incrementalBuild() >>>");
 		builderStateLogger.log("Resource delta: " + delta);
-		superIncrementalBuild(delta, monitor);
+		super.incrementalBuild(delta, monitor);
 		builderStateLogger.log("N4JSBuildTypeTrackingBuilder.incrementalBuild() <<<");
-	}
-
-	private void superIncrementalBuild(IResourceDelta delta, final IProgressMonitor monitor) throws CoreException {
-		final SubMonitor progress = SubMonitor.convert(monitor, Messages.XtextBuilder_CollectingResources, 10);
-		progress.subTask(Messages.XtextBuilder_CollectingResources);
-
-		if (getQueuedBuildData().needRebuild(getProject())) {
-			needRebuild();
-		}
-
-		final ToBeBuilt toBeBuilt = new ToBeBuilt();
-		final ToBeBuiltComputer toBeBuiltComputer = getToBeBuiltComputer();
-		// change is here
-		IResourceDeltaVisitor visitor = createDeltaVisitor(toBeBuiltComputer, toBeBuilt, progress);
-		delta.accept(visitor);
-		if (progress.isCanceled())
-			throw new OperationCanceledException();
-		progress.worked(2);
-		// and here
-		processedAbsentReferencedProjects(visitor);
-
-		doBuild(toBeBuilt, progress.newChild(8), BuildType.INCREMENTAL);
-	}
-
-	/**
-	 * Creates a visitor that is used to traverse the information that is obtained from {@link #getDelta(IProject)}. It
-	 * accumulates its findings in the given <code>toBeBuilt</code>.
-	 */
-	private IResourceDeltaVisitor createDeltaVisitor(ToBeBuiltComputer toBeBuiltComputer, final ToBeBuilt toBeBuilt,
-			final SubMonitor progress) {
-		IResourceDeltaVisitor visitor = new IResourceDeltaVisitor() {
-			@Override
-			public boolean visit(IResourceDelta delta) throws CoreException {
-				if (progress.isCanceled())
-					throw new OperationCanceledException();
-				if (delta.getResource() instanceof IProject) {
-					return true;
-				}
-				if (delta.getResource() instanceof IStorage) {
-					if (delta.getKind() == IResourceDelta.REMOVED) {
-						return toBeBuiltComputer.removeStorage(null, toBeBuilt, (IStorage) delta.getResource());
-					} else if (delta.getKind() == IResourceDelta.ADDED || delta.getKind() == IResourceDelta.CHANGED) {
-						return toBeBuiltComputer.updateStorage(null, toBeBuilt, (IStorage) delta.getResource());
-					}
-				}
-				return true;
-			}
-		};
-		return visitor;
-	}
-
-	/**
-	 * Obtain the deltas for the projects we were previously interested in and process them too, if they do no longer
-	 * have the xtext nature or if they are no longer accessible.
-	 *
-	 * @param visitor
-	 *            the processor.
-	 * @throws CoreException
-	 *             if something goes down the drain.
-	 */
-	private void processedAbsentReferencedProjects(IResourceDeltaVisitor visitor) throws CoreException {
-		final IProject[] interestingProjects = optimisticInvoke("getInterestingProjects");
-		for (IProject more : interestingProjects) {
-			if (!XtextProjectHelper.hasNature(more)) {
-				IResourceDelta interestingDelta = getDelta(more);
-				if (interestingDelta != null) {
-					interestingDelta.accept(visitor);
-				}
-			}
-		}
-	}
-
-	@Override
-	protected void fullBuild(final IProgressMonitor monitor, boolean isRecoveryBuild) throws CoreException {
-		SubMonitor progress = SubMonitor.convert(monitor, 10);
-		final ToBeBuiltComputer toBeBuiltComputer = getToBeBuiltComputer();
-		IProject project = getProject();
-		ToBeBuilt toBeBuilt = isRecoveryBuild
-				? toBeBuiltComputer.updateProjectNewResourcesOnly(project, progress.newChild(2))
-				: toBeBuiltComputer.updateProject(project, progress.newChild(2));
-
-		// change is here
-		IResourceDeltaVisitor visitor = createDeltaVisitor(toBeBuiltComputer, toBeBuilt, progress);
-		processedAbsentReferencedProjects(visitor);
-
-		doBuild(toBeBuilt, progress.newChild(8),
-				isRecoveryBuild
-						? BuildType.RECOVERY
-						: BuildType.FULL);
 	}
 
 	@Override
@@ -267,8 +176,19 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 		// if we built it, we don't have to treat it as deleted first
 		toBeBuilt.getToBeDeleted().removeAll(toBeBuilt.getToBeUpdated());
 
-		RaceDetectionHelper.log("%s", toBeBuilt);
-		runWithBuildType(monitor, type, (m) -> superDoBuild(toBeBuilt, m, type));
+		OutdatedPackageJsonQueue.Task task = outdatedPackageJsonQueue.exhaust();
+		try {
+			if (!task.isEmpty()) {
+				externalIndexSynchronizer.checkAndClearIndex(monitor);
+			}
+			toBeBuilt.getToBeDeleted().addAll(task.getToBeBuilt().getToBeDeleted());
+			toBeBuilt.getToBeUpdated().addAll(task.getToBeBuilt().getToBeUpdated());
+			RaceDetectionHelper.log("%s", toBeBuilt);
+			runWithBuildType(monitor, type, (m) -> superDoBuild(toBeBuilt, m, type));
+		} catch (Exception e) {
+			task.reschedule();
+			throw e;
+		}
 	}
 
 	private void runWithBuildType(IProgressMonitor monitor, BuildType type, IWorkspaceRunnable runMe)
@@ -300,24 +220,10 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 		return optimisticGet("builderState");
 	}
 
-	private ToBeBuiltComputer getToBeBuiltComputer() {
-		return optimisticGet("toBeBuiltComputer");
-	}
-
 	private <T> T optimisticGet(String fieldName) {
 		try {
 			return reflector.get(this, fieldName);
 		} catch (SecurityException | NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	private <T> T optimisticInvoke(String methodName) {
-		try {
-			return (T) reflector.invoke(this, methodName);
-		} catch (SecurityException | IllegalArgumentException | IllegalAccessException | InvocationTargetException
-				| NoSuchMethodException e) {
 			throw new RuntimeException(e);
 		}
 	}
@@ -335,8 +241,8 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 
 		IProject project = getProject();
 		ResourceSet resourceSet = createResourceSet(project);
-		BuildData buildData = new BuildDataWithRequestRebuild(project.getName(), resourceSet, toBeBuilt,
-				queuedBuildData, indexingOnly, this::needRebuild);
+		BuildData buildData = new BuildData(getProject().getName(), resourceSet, toBeBuilt, queuedBuildData,
+				indexingOnly, this::needRebuild);
 		getBuilderState().update(buildData, progress.split(1, SubMonitor.SUPPRESS_NONE));
 		if (!indexingOnly) {
 			try {
@@ -362,7 +268,8 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 
 	private boolean isNoop(ToBeBuilt toBeBuilt, QueuedBuildData queuedBuildData,
 			boolean indexingOnly) {
-		return new BuildData(getProject().getName(), null, toBeBuilt, queuedBuildData, indexingOnly).isEmpty();
+		return new BuildData(getProject().getName(), null, toBeBuilt, queuedBuildData, indexingOnly, this::needRebuild)
+				.isEmpty();
 	}
 
 }

@@ -39,7 +39,7 @@ public abstract class AbstractPluginUITest extends AbstractIDEBUG_Test {
 	 */
 	protected void waitForIdleState() {
 		ProjectTestsUtils.waitForAutoBuild();
-		ProjectTestsUtils.waitForAllJobs(Long.MAX_VALUE);
+		ProjectTestsUtils.waitForAllJobs();
 		UIUtils.waitForUiThread();
 	}
 

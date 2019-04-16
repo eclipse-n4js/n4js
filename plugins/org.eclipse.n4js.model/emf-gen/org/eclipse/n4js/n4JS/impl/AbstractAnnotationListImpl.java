@@ -76,6 +76,7 @@ public abstract class AbstractAnnotationListImpl extends ProxyResolvingEObjectIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Annotation> getAnnotations() {
 		if (annotations == null) {
 			annotations = new EObjectContainmentEList<Annotation>(Annotation.class, this, N4JSPackage.ABSTRACT_ANNOTATION_LIST__ANNOTATIONS);

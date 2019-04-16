@@ -81,6 +81,7 @@ public class PatternCharacterImpl extends PatternImpl implements PatternCharacte
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getValue()
   {
     return value;
@@ -91,6 +92,7 @@ public class PatternCharacterImpl extends PatternImpl implements PatternCharacte
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setValue(String newValue)
   {
     String oldValue = value;

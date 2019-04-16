@@ -103,6 +103,7 @@ public abstract class DocletElementImpl extends MinimalEObjectImpl.Container imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getBegin() {
 		return begin;
 	}
@@ -112,6 +113,7 @@ public abstract class DocletElementImpl extends MinimalEObjectImpl.Container imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setBegin(int newBegin) {
 		int oldBegin = begin;
 		begin = newBegin;
@@ -124,6 +126,7 @@ public abstract class DocletElementImpl extends MinimalEObjectImpl.Container imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getEnd() {
 		return end;
 	}
@@ -133,6 +136,7 @@ public abstract class DocletElementImpl extends MinimalEObjectImpl.Container imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setEnd(int newEnd) {
 		int oldEnd = end;
 		end = newEnd;
@@ -145,6 +149,7 @@ public abstract class DocletElementImpl extends MinimalEObjectImpl.Container imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setRange(final int begin, final int end) {
 		this.setBegin(begin);
 		this.setEnd(end);
@@ -155,6 +160,7 @@ public abstract class DocletElementImpl extends MinimalEObjectImpl.Container imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean covers(final int offset) {
 		return ((this.getBegin() <= offset) && (this.getEnd() > offset));
 	}

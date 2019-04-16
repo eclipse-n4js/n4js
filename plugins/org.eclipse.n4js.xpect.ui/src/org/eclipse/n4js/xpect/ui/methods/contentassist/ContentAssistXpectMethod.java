@@ -34,7 +34,6 @@ import org.eclipse.n4js.xpect.config.Config;
 import org.eclipse.n4js.xpect.config.VarDef;
 import org.eclipse.n4js.xpect.config.XpEnvironmentData;
 import org.eclipse.n4js.xpect.ui.common.QuickFixTestHelper.ChangeInfo;
-import org.eclipse.n4js.xpect.ui.common.XtextResourceCleanUtil;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.xpect.XpectImport;
@@ -135,8 +134,7 @@ public class ContentAssistXpectMethod {
 
 		// apply:
 		// so working with the fixture cannot get any selection information since these are mocked away.
-		IXtextDocument document = fixture.getDocument(
-				XtextResourceCleanUtil.cleanXtextResource(resource), before);
+		IXtextDocument document = fixture.getDocument(resource, before);
 
 		Optional<String> optionalMode = Optional.ofNullable(mode);
 		if (optionalMode.isPresent() && optionalMode.get().trim() == "override") {
@@ -275,7 +273,7 @@ public class ContentAssistXpectMethod {
 	 contentAssistList              at 'a.<|>methodA'       proposals             unordered --> methodA2, methodA
 	 contentAssistList              at 'a.<|>methodA'       display   'methodA2'            --> 'methodA2(): any - A'
 	 contentAssistList kind 'smart' at 'a.<|>methodA'       display   'methodA2'            --> 'methodA2(): any - A'
-	
+
 	                    kind        offset                  checkType  selected    mode
 	                    arg4        arg2                    arg3       arg5        arg6
 	 */

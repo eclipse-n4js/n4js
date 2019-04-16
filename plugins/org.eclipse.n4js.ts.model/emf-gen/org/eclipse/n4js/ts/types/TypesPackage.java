@@ -12631,6 +12631,16 @@ public interface TypesPackage extends EPackage {
 	int MEMBER_TYPE = 59;
 
 	/**
+	 * The meta object id for the '<em>Parameterized Type Ref Iterable</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see java.lang.Iterable
+	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getParameterizedTypeRefIterable()
+	 * @generated
+	 */
+	int PARAMETERIZED_TYPE_REF_ITERABLE = 60;
+
+	/**
 	 * The meta object id for the '<em>Iterable Of TClassifier</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -12638,7 +12648,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getIterableOfTClassifier()
 	 * @generated
 	 */
-	int ITERABLE_OF_TCLASSIFIER = 60;
+	int ITERABLE_OF_TCLASSIFIER = 61;
 
 	/**
 	 * The meta object id for the '<em>Variance</em>' data type.
@@ -12648,7 +12658,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getVariance()
 	 * @generated
 	 */
-	int VARIANCE = 61;
+	int VARIANCE = 62;
 
 	/**
 	 * The meta object id for the '<em>Name And Access</em>' data type.
@@ -12658,7 +12668,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getNameAndAccess()
 	 * @generated
 	 */
-	int NAME_AND_ACCESS = 62;
+	int NAME_AND_ACCESS = 63;
 
 	/**
 	 * The meta object id for the '<em>Member List</em>' data type.
@@ -12668,7 +12678,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getMemberList()
 	 * @generated
 	 */
-	int MEMBER_LIST = 63;
+	int MEMBER_LIST = 64;
 
 	/**
 	 * The meta object id for the '<em>TClassifier Iterable</em>' data type.
@@ -12678,7 +12688,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTClassifierIterable()
 	 * @generated
 	 */
-	int TCLASSIFIER_ITERABLE = 64;
+	int TCLASSIFIER_ITERABLE = 65;
 
 
 	/**
@@ -15589,6 +15599,17 @@ public interface TypesPackage extends EPackage {
 	EEnum getMemberType();
 
 	/**
+	 * Returns the meta object for data type '{@link java.lang.Iterable <em>Parameterized Type Ref Iterable</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Parameterized Type Ref Iterable</em>'.
+	 * @see java.lang.Iterable
+	 * @model instanceClass="java.lang.Iterable&lt;org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef&gt;"
+	 * @generated
+	 */
+	EDataType getParameterizedTypeRefIterable();
+
+	/**
 	 * Returns the meta object for data type '{@link java.lang.Iterable <em>Iterable Of TClassifier</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -18025,6 +18046,16 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EEnum MEMBER_TYPE = eINSTANCE.getMemberType();
+
+		/**
+		 * The meta object literal for the '<em>Parameterized Type Ref Iterable</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see java.lang.Iterable
+		 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getParameterizedTypeRefIterable()
+		 * @generated
+		 */
+		EDataType PARAMETERIZED_TYPE_REF_ITERABLE = eINSTANCE.getParameterizedTypeRefIterable();
 
 		/**
 		 * The meta object literal for the '<em>Iterable Of TClassifier</em>' data type.

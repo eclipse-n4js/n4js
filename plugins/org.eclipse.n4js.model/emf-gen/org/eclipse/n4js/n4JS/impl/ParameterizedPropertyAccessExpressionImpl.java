@@ -140,6 +140,7 @@ public class ParameterizedPropertyAccessExpressionImpl extends ExpressionImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ComposedMemberCache getComposedMemberCache() {
 		if (composedMemberCache != null && composedMemberCache.eIsProxy()) {
 			InternalEObject oldComposedMemberCache = (InternalEObject)composedMemberCache;
@@ -166,6 +167,7 @@ public class ParameterizedPropertyAccessExpressionImpl extends ExpressionImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setComposedMemberCache(ComposedMemberCache newComposedMemberCache) {
 		ComposedMemberCache oldComposedMemberCache = composedMemberCache;
 		composedMemberCache = newComposedMemberCache;
@@ -178,6 +180,7 @@ public class ParameterizedPropertyAccessExpressionImpl extends ExpressionImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TypeRef> getTypeArgs() {
 		if (typeArgs == null) {
 			typeArgs = new EObjectContainmentEList<TypeRef>(TypeRef.class, this, N4JSPackage.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__TYPE_ARGS);
@@ -190,6 +193,7 @@ public class ParameterizedPropertyAccessExpressionImpl extends ExpressionImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getTarget() {
 		return target;
 	}
@@ -214,6 +218,7 @@ public class ParameterizedPropertyAccessExpressionImpl extends ExpressionImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTarget(Expression newTarget) {
 		if (newTarget != target) {
 			NotificationChain msgs = null;
@@ -233,6 +238,7 @@ public class ParameterizedPropertyAccessExpressionImpl extends ExpressionImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public IdentifiableElement getProperty() {
 		if (property != null && property.eIsProxy()) {
 			InternalEObject oldProperty = (InternalEObject)property;
@@ -259,6 +265,7 @@ public class ParameterizedPropertyAccessExpressionImpl extends ExpressionImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setProperty(IdentifiableElement newProperty) {
 		IdentifiableElement oldProperty = property;
 		property = newProperty;
@@ -271,6 +278,7 @@ public class ParameterizedPropertyAccessExpressionImpl extends ExpressionImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getPropertyAsText() {
 		return propertyAsText;
 	}
@@ -280,6 +288,7 @@ public class ParameterizedPropertyAccessExpressionImpl extends ExpressionImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setPropertyAsText(String newPropertyAsText) {
 		String oldPropertyAsText = propertyAsText;
 		propertyAsText = newPropertyAsText;
@@ -292,6 +301,7 @@ public class ParameterizedPropertyAccessExpressionImpl extends ExpressionImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isValidSimpleAssignmentTarget() {
 		return true;
 	}
@@ -301,6 +311,7 @@ public class ParameterizedPropertyAccessExpressionImpl extends ExpressionImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isParameterized() {
 		boolean _isEmpty = this.getTypeArgs().isEmpty();
 		return (!_isEmpty);

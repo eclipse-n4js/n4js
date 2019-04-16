@@ -75,6 +75,7 @@ public class RegularExpressionBodyImpl extends MinimalEObjectImpl.Container impl
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Pattern getPattern()
   {
     return pattern;
@@ -102,6 +103,7 @@ public class RegularExpressionBodyImpl extends MinimalEObjectImpl.Container impl
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setPattern(Pattern newPattern)
   {
     if (newPattern != pattern)

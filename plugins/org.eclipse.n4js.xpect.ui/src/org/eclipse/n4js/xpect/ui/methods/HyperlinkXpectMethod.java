@@ -25,7 +25,6 @@ import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
-import org.eclipse.n4js.xpect.ui.common.XtextResourceCleanUtil;
 import org.eclipse.n4js.xpect.ui.methods.contentassist.N4ContentAssistProcessorTestBuilderHelper;
 import org.eclipse.n4js.xpect.ui.methods.contentassist.RegionWithCursor;
 import org.eclipse.xpect.expectation.CommaSeparatedValuesExpectation;
@@ -86,9 +85,6 @@ public class HyperlinkXpectMethod {
 		IHyperlink[] hyperlinks = hyperlinkDetector.detectHyperlinks(sourceViewer,
 				new Region(region.getGlobalCursorOffset(), 0),
 				true);
-
-		// cleaned up resource, otherwise #createTestBuilder() above will fail next time this method is called
-		XtextResourceCleanUtil.cleanXtextResource(resource);
 
 		ArrayList<String> result = Lists.newArrayList();
 		if (hyperlinks != null) {

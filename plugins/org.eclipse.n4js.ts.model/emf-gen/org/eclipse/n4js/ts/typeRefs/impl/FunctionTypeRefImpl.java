@@ -66,6 +66,7 @@ public class FunctionTypeRefImpl extends ParameterizedTypeRefImpl implements Fun
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypeRef getDeclaredThisType() {
 		return this.getFunctionType().getDeclaredThisType();
 	}
@@ -75,6 +76,7 @@ public class FunctionTypeRefImpl extends ParameterizedTypeRefImpl implements Fun
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TypeVariable> getTypeVars() {
 		return this.getFunctionType().getTypeVars();
 	}
@@ -84,6 +86,7 @@ public class FunctionTypeRefImpl extends ParameterizedTypeRefImpl implements Fun
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypeRef getTypeVarUpperBound(final TypeVariable typeVar) {
 		return typeVar.getDeclaredUpperBound();
 	}
@@ -93,6 +96,7 @@ public class FunctionTypeRefImpl extends ParameterizedTypeRefImpl implements Fun
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TFormalParameter> getFpars() {
 		return this.getFunctionType().getFpars();
 	}
@@ -102,6 +106,7 @@ public class FunctionTypeRefImpl extends ParameterizedTypeRefImpl implements Fun
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypeRef getReturnTypeRef() {
 		return this.getFunctionType().getReturnTypeRef();
 	}
@@ -111,6 +116,7 @@ public class FunctionTypeRefImpl extends ParameterizedTypeRefImpl implements Fun
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TFunction getFunctionType() {
 		Type _declaredType = this.getDeclaredType();
 		return ((TFunction) _declaredType);
@@ -121,6 +127,7 @@ public class FunctionTypeRefImpl extends ParameterizedTypeRefImpl implements Fun
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isReturnValueOptional() {
 		return ((this.getReturnTypeRef() != null) && this.getReturnTypeRef().isFollowedByQuestionMark());
 	}
@@ -130,6 +137,7 @@ public class FunctionTypeRefImpl extends ParameterizedTypeRefImpl implements Fun
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isGeneric() {
 		boolean _isEmpty = this.getTypeVars().isEmpty();
 		return (!_isEmpty);
@@ -140,6 +148,7 @@ public class FunctionTypeRefImpl extends ParameterizedTypeRefImpl implements Fun
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isRaw() {
 		return (this.isGeneric() && (this.getTypeArgs().size() < this.getTypeVars().size()));
 	}
@@ -149,6 +158,7 @@ public class FunctionTypeRefImpl extends ParameterizedTypeRefImpl implements Fun
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TFormalParameter getFparForArgIdx(final int argIndex) {
 		final int fparsSize = this.getFpars().size();
 		if (((argIndex >= 0) && (argIndex < fparsSize))) {
@@ -167,6 +177,7 @@ public class FunctionTypeRefImpl extends ParameterizedTypeRefImpl implements Fun
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getTypeRefAsString() {
 		String _xifexpression = null;
 		TypeRef _declaredThisType = this.getDeclaredThisType();

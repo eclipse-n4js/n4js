@@ -59,10 +59,6 @@ public enum MultiplicativeOperator implements Enumerator {
 	/**
 	 * The '<em><b>Times</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Times</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #TIMES
 	 * @model name="times" literal="*"
@@ -74,10 +70,6 @@ public enum MultiplicativeOperator implements Enumerator {
 	/**
 	 * The '<em><b>Div</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Div</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #DIV
 	 * @model name="div" literal="/"
@@ -89,10 +81,6 @@ public enum MultiplicativeOperator implements Enumerator {
 	/**
 	 * The '<em><b>Mod</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Mod</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #MOD
 	 * @model name="mod" literal="%"
@@ -213,6 +201,7 @@ public enum MultiplicativeOperator implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getValue() {
 	  return value;
 	}
@@ -222,6 +211,7 @@ public enum MultiplicativeOperator implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 	  return name;
 	}
@@ -231,6 +221,7 @@ public enum MultiplicativeOperator implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getLiteral() {
 	  return literal;
 	}

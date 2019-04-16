@@ -34,10 +34,6 @@ public interface NamedImportSpecifier extends ImportSpecifier {
 	/**
 	 * Returns the value of the '<em><b>Imported Element</b></em>' reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Imported Element</em>' reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Imported Element</em>' reference.
 	 * @see #setImportedElement(TExportableElement)
@@ -60,10 +56,6 @@ public interface NamedImportSpecifier extends ImportSpecifier {
 	/**
 	 * Returns the value of the '<em><b>Imported Element As Text</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Imported Element As Text</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Imported Element As Text</em>' attribute.
 	 * @see #setImportedElementAsText(String)
@@ -86,10 +78,6 @@ public interface NamedImportSpecifier extends ImportSpecifier {
 	/**
 	 * Returns the value of the '<em><b>Alias</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Alias</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Alias</em>' attribute.
 	 * @see #setAlias(String)

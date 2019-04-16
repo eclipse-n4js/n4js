@@ -81,6 +81,7 @@ public class SimpleQuantifierImpl extends QuantifierImpl implements SimpleQuanti
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getQuantifier()
   {
     return quantifier;
@@ -91,6 +92,7 @@ public class SimpleQuantifierImpl extends QuantifierImpl implements SimpleQuanti
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setQuantifier(String newQuantifier)
   {
     String oldQuantifier = quantifier;

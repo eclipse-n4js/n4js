@@ -154,6 +154,7 @@ public class ForStatementImpl extends VariableDeclarationContainerImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Statement getStatement() {
 		return statement;
 	}
@@ -178,6 +179,7 @@ public class ForStatementImpl extends VariableDeclarationContainerImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setStatement(Statement newStatement) {
 		if (newStatement != statement) {
 			NotificationChain msgs = null;
@@ -197,6 +199,7 @@ public class ForStatementImpl extends VariableDeclarationContainerImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getExpression() {
 		return expression;
 	}
@@ -221,6 +224,7 @@ public class ForStatementImpl extends VariableDeclarationContainerImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setExpression(Expression newExpression) {
 		if (newExpression != expression) {
 			NotificationChain msgs = null;
@@ -240,6 +244,7 @@ public class ForStatementImpl extends VariableDeclarationContainerImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getInitExpr() {
 		return initExpr;
 	}
@@ -264,6 +269,7 @@ public class ForStatementImpl extends VariableDeclarationContainerImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setInitExpr(Expression newInitExpr) {
 		if (newInitExpr != initExpr) {
 			NotificationChain msgs = null;
@@ -283,6 +289,7 @@ public class ForStatementImpl extends VariableDeclarationContainerImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getUpdateExpr() {
 		return updateExpr;
 	}
@@ -307,6 +314,7 @@ public class ForStatementImpl extends VariableDeclarationContainerImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setUpdateExpr(Expression newUpdateExpr) {
 		if (newUpdateExpr != updateExpr) {
 			NotificationChain msgs = null;
@@ -326,6 +334,7 @@ public class ForStatementImpl extends VariableDeclarationContainerImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isForIn() {
 		return forIn;
 	}
@@ -335,6 +344,7 @@ public class ForStatementImpl extends VariableDeclarationContainerImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setForIn(boolean newForIn) {
 		boolean oldForIn = forIn;
 		forIn = newForIn;
@@ -347,6 +357,7 @@ public class ForStatementImpl extends VariableDeclarationContainerImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isForOf() {
 		return forOf;
 	}
@@ -356,6 +367,7 @@ public class ForStatementImpl extends VariableDeclarationContainerImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setForOf(boolean newForOf) {
 		boolean oldForOf = forOf;
 		forOf = newForOf;
@@ -368,6 +380,7 @@ public class ForStatementImpl extends VariableDeclarationContainerImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isForPlain() {
 		return ((!this.isForIn()) && (!this.isForOf()));
 	}
@@ -377,6 +390,7 @@ public class ForStatementImpl extends VariableDeclarationContainerImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean appliesOnlyToBlockScopedElements() {
 		return true;
 	}

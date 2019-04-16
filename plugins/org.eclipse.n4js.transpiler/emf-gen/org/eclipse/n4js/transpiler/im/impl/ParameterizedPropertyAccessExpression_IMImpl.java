@@ -123,6 +123,7 @@ public class ParameterizedPropertyAccessExpression_IMImpl extends ParameterizedP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SymbolTableEntry getRewiredTarget() {
 		if (rewiredTarget != null && rewiredTarget.eIsProxy()) {
 			InternalEObject oldRewiredTarget = (InternalEObject)rewiredTarget;
@@ -164,6 +165,7 @@ public class ParameterizedPropertyAccessExpression_IMImpl extends ParameterizedP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setRewiredTarget(SymbolTableEntry newRewiredTarget) {
 		if (newRewiredTarget != rewiredTarget) {
 			NotificationChain msgs = null;
@@ -183,6 +185,7 @@ public class ParameterizedPropertyAccessExpression_IMImpl extends ParameterizedP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isAnyPlusAccess() {
 		return anyPlusAccess;
 	}
@@ -192,6 +195,7 @@ public class ParameterizedPropertyAccessExpression_IMImpl extends ParameterizedP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAnyPlusAccess(boolean newAnyPlusAccess) {
 		boolean oldAnyPlusAccess = anyPlusAccess;
 		anyPlusAccess = newAnyPlusAccess;
@@ -204,6 +208,7 @@ public class ParameterizedPropertyAccessExpression_IMImpl extends ParameterizedP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getNameOfAnyPlusProperty() {
 		return nameOfAnyPlusProperty;
 	}
@@ -213,6 +218,7 @@ public class ParameterizedPropertyAccessExpression_IMImpl extends ParameterizedP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setNameOfAnyPlusProperty(String newNameOfAnyPlusProperty) {
 		String oldNameOfAnyPlusProperty = nameOfAnyPlusProperty;
 		nameOfAnyPlusProperty = newNameOfAnyPlusProperty;
@@ -225,6 +231,7 @@ public class ParameterizedPropertyAccessExpression_IMImpl extends ParameterizedP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SymbolTableEntry getProperty_IM() {
 		return this.getRewiredTarget();
 	}
@@ -234,6 +241,7 @@ public class ParameterizedPropertyAccessExpression_IMImpl extends ParameterizedP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setProperty_IM(final SymbolTableEntry target) {
 		this.setRewiredTarget(target);
 	}
@@ -243,6 +251,7 @@ public class ParameterizedPropertyAccessExpression_IMImpl extends ParameterizedP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getPropertyName() {
 		String _xifexpression = null;
 		boolean _isAnyPlusAccess = this.isAnyPlusAccess();
@@ -282,6 +291,7 @@ public class ParameterizedPropertyAccessExpression_IMImpl extends ParameterizedP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public IdentifiableElement getProperty() {
 		return null;
 	}
@@ -291,6 +301,7 @@ public class ParameterizedPropertyAccessExpression_IMImpl extends ParameterizedP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setProperty(final IdentifiableElement ix) {
 		if ((ix != null)) {
 			throw new IllegalArgumentException("ParameterizedPropertyAccessExpression_IM cannot accept properties. Use #property_IM.");
@@ -302,6 +313,7 @@ public class ParameterizedPropertyAccessExpression_IMImpl extends ParameterizedP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public IdentifiableElement getOriginalTargetOfRewiredTarget() {
 		final SymbolTableEntry declaredTypeSTE = this.getRewiredTarget();
 		if ((declaredTypeSTE instanceof SymbolTableEntryOriginal)) {

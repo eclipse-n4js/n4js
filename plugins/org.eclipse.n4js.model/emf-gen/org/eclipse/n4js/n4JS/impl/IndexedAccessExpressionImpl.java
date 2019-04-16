@@ -99,6 +99,7 @@ public class IndexedAccessExpressionImpl extends ExpressionImpl implements Index
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ComposedMemberCache getComposedMemberCache() {
 		if (composedMemberCache != null && composedMemberCache.eIsProxy()) {
 			InternalEObject oldComposedMemberCache = (InternalEObject)composedMemberCache;
@@ -125,6 +126,7 @@ public class IndexedAccessExpressionImpl extends ExpressionImpl implements Index
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setComposedMemberCache(ComposedMemberCache newComposedMemberCache) {
 		ComposedMemberCache oldComposedMemberCache = composedMemberCache;
 		composedMemberCache = newComposedMemberCache;
@@ -137,6 +139,7 @@ public class IndexedAccessExpressionImpl extends ExpressionImpl implements Index
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getTarget() {
 		return target;
 	}
@@ -161,6 +164,7 @@ public class IndexedAccessExpressionImpl extends ExpressionImpl implements Index
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTarget(Expression newTarget) {
 		if (newTarget != target) {
 			NotificationChain msgs = null;
@@ -180,6 +184,7 @@ public class IndexedAccessExpressionImpl extends ExpressionImpl implements Index
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getIndex() {
 		return index;
 	}
@@ -204,6 +209,7 @@ public class IndexedAccessExpressionImpl extends ExpressionImpl implements Index
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setIndex(Expression newIndex) {
 		if (newIndex != index) {
 			NotificationChain msgs = null;
@@ -223,6 +229,7 @@ public class IndexedAccessExpressionImpl extends ExpressionImpl implements Index
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isValidSimpleAssignmentTarget() {
 		return true;
 	}

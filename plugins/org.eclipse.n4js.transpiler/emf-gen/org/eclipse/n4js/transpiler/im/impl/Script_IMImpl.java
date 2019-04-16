@@ -72,6 +72,7 @@ public class Script_IMImpl extends ScriptImpl implements Script_IM {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SymbolTable getSymbolTable() {
 		return symbolTable;
 	}
@@ -96,6 +97,7 @@ public class Script_IMImpl extends ScriptImpl implements Script_IM {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSymbolTable(SymbolTable newSymbolTable) {
 		if (newSymbolTable != symbolTable) {
 			NotificationChain msgs = null;

@@ -89,10 +89,6 @@ public enum RelationalOperator implements Enumerator {
 	/**
 	 * The '<em><b>Lt</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Lt</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #LT
 	 * @model name="lt" literal="&lt;"
@@ -104,10 +100,6 @@ public enum RelationalOperator implements Enumerator {
 	/**
 	 * The '<em><b>Gt</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Gt</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #GT
 	 * @model name="gt" literal="&gt;"
@@ -119,10 +111,6 @@ public enum RelationalOperator implements Enumerator {
 	/**
 	 * The '<em><b>Lte</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Lte</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #LTE
 	 * @model name="lte" literal="&lt;="
@@ -134,10 +122,6 @@ public enum RelationalOperator implements Enumerator {
 	/**
 	 * The '<em><b>Gte</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Gte</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #GTE
 	 * @model name="gte" literal="&gt;="
@@ -149,10 +133,6 @@ public enum RelationalOperator implements Enumerator {
 	/**
 	 * The '<em><b>Instanceof</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Instanceof</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #INSTANCEOF
 	 * @model name="instanceof"
@@ -164,10 +144,6 @@ public enum RelationalOperator implements Enumerator {
 	/**
 	 * The '<em><b>In</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>In</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #IN
 	 * @model name="in"
@@ -294,6 +270,7 @@ public enum RelationalOperator implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getValue() {
 	  return value;
 	}
@@ -303,6 +280,7 @@ public enum RelationalOperator implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 	  return name;
 	}
@@ -312,6 +290,7 @@ public enum RelationalOperator implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getLiteral() {
 	  return literal;
 	}
