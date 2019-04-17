@@ -55,6 +55,8 @@ public class GH_986_ExternalCircularDependencyAndRuntimeLibrariesPluginUITest ex
 	private static final String CLIENT_DEPS_PROJECT_NAME = "client-dependencies";
 	private static final String CLIENT_DEV_DEPS_PROJECT_NAME = "client-devDependencies";
 
+	private static final String RUNTIME_ENVIRONMENT_NAME = "n4js-es5";
+
 	@Inject
 	private RuntimeEnvironmentsHelper runtimeEnvironmentsHelper;
 
@@ -67,6 +69,8 @@ public class GH_986_ExternalCircularDependencyAndRuntimeLibrariesPluginUITest ex
 		// import project to workspace
 		final File projectsRoot = new File(getResourceUri(PROBANDS, PROBANDS_SUBFOLDER, WS_LOC));
 		final IProject testProject = ProjectTestsUtils.importProject(projectsRoot, CLIENT_DEPS_PROJECT_NAME);
+
+		ProjectTestsUtils.importProject(projectsRoot, RUNTIME_ENVIRONMENT_NAME);
 
 		java.net.URI externalRootLocation = getResourceUri(PROBANDS, PROBANDS_SUBFOLDER, EXT_LOC);
 		ProjectTestsUtils.importDependencies(CLIENT_DEPS_PROJECT_NAME, externalRootLocation, libraryManager);
@@ -106,6 +110,8 @@ public class GH_986_ExternalCircularDependencyAndRuntimeLibrariesPluginUITest ex
 		// import project to workspace
 		final File projectsRoot = new File(getResourceUri(PROBANDS, PROBANDS_SUBFOLDER, WS_LOC));
 		final IProject testProject = ProjectTestsUtils.importProject(projectsRoot, CLIENT_DEV_DEPS_PROJECT_NAME);
+
+		ProjectTestsUtils.importProject(projectsRoot, RUNTIME_ENVIRONMENT_NAME);
 
 		java.net.URI externalRootLocation = getResourceUri(PROBANDS, PROBANDS_SUBFOLDER, EXT_LOC);
 		ProjectTestsUtils.importDependencies(CLIENT_DEV_DEPS_PROJECT_NAME, externalRootLocation, libraryManager);
