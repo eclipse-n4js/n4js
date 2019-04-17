@@ -124,7 +124,12 @@ public class ProjectTestsUtils {
 	 *      stackoverflow: from zip</a>
 	 */
 	public static IProject importProject(File probandsFolder, String projectName) throws CoreException {
-		return importProject(probandsFolder, projectName, true, true);
+		return importProject(probandsFolder, projectName, true, true, Collections.emptyList());
+	}
+
+	public static IProject importProject(File probandsFolder, String projectName, Collection<String> n4jsLibs)
+			throws CoreException {
+		return importProject(probandsFolder, projectName, true, true, n4jsLibs);
 	}
 
 	/**
@@ -134,7 +139,7 @@ public class ProjectTestsUtils {
 	 */
 	public static IProject importProjectFromExternalSource(File probandsFolder, String projectName,
 			boolean copyIntoWorkspace) throws Exception {
-		return importProject(probandsFolder, projectName, copyIntoWorkspace, false);
+		return importProject(probandsFolder, projectName, copyIntoWorkspace, false, Collections.emptyList());
 	}
 
 	/**
@@ -175,7 +180,7 @@ public class ProjectTestsUtils {
 	}
 
 	private static IProject importProject(File probandsFolder, String projectName, boolean copyIntoWorkspace,
-			boolean prepareDotProject) throws CoreException {
+			boolean prepareDotProject, Collection<String> n4jsLibs) throws CoreException {
 		File projectSourceFolder = new File(probandsFolder, projectName);
 		if (!projectSourceFolder.exists()) {
 			throw new IllegalArgumentException("proband not found in " + projectSourceFolder);
@@ -203,6 +208,18 @@ public class ProjectTestsUtils {
 		} else {
 			// not copying, so source and target folders are identical:
 			projectTargetFolder = projectSourceFolder;
+		}
+
+		// install n4js-libs (if desired)
+		if (!n4jsLibs.isEmpty()) {
+			try {
+				N4jsLibsAccess.installN4jsLibs(
+						projectTargetFolder.toPath().resolve(N4JSGlobals.NODE_MODULES),
+						true, false, false,
+						n4jsLibs.toArray(new String[0]));
+			} catch (IOException e) {
+				throw new RuntimeException("unable to install n4js-libs from local checkout", e);
+			}
 		}
 
 		// load actual project name from ".project" file (might be different in case of NPM scopes)

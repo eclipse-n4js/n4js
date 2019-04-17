@@ -78,7 +78,7 @@ public class NodeTester implements ITester {
 		Path fileToRun = findMangelhaftCliEntryPoint(config);
 		config.setFileToRun(fileToRun);
 
-		config.setRunOptions("--testCatalog " + testCatalog.toAbsolutePath() + " --quiet --noDebugLog");
+		config.setRunOptions("--testCatalog " + testCatalog.toAbsolutePath() + " --quiet");
 
 		return runnerFrontEnd.run(config, executor);
 	}

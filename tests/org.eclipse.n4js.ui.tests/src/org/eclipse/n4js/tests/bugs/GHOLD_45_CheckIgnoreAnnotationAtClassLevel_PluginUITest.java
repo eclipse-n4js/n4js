@@ -35,6 +35,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.google.inject.Injector;
 
 /**
@@ -51,7 +52,10 @@ public class GHOLD_45_CheckIgnoreAnnotationAtClassLevel_PluginUITest extends Abs
 
 	@Override
 	protected ProjectImporter getProjectImporter() {
-		return new ProjectImporter(new File(new File("probands/" + PROJECT_NAME + "/").getAbsolutePath()));
+		return new ProjectImporter(
+				new File(new File("probands/" + PROJECT_NAME + "/").getAbsolutePath()),
+				Lists.newArrayList("n4js-runtime", "org.eclipse.n4js.mangelhaft", "org.eclipse.n4js.mangelhaft.assert",
+						"n4js-mangelhaft-cli"));
 	}
 
 	/**
