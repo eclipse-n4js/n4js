@@ -54,7 +54,6 @@ public class ProjectFinderUtil {
 			e.printStackTrace();
 		}
 
-		System.out.println("Number of identified projects: " + projectDirs.size());
 		return projectDirs;
 	}
 

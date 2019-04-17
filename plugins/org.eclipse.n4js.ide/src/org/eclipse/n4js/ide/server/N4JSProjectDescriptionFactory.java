@@ -36,7 +36,7 @@ public class N4JSProjectDescriptionFactory extends DefaultProjectDescriptionFact
 	@Override
 	public ProjectDescription getProjectDescription(IProjectConfig config) {
 		ProjectDescription projectDescription = super.getProjectDescription(config);
-		List<? extends IN4JSProject> deps = model.getDependenciesAndImplementedApis((N4JSProject) config, false);
+		List<? extends IN4JSProject> deps = model.getDependencies((N4JSProject) config, false);
 
 		Set<String> depNames = new HashSet<>();
 		for (IN4JSProject dep : deps) {

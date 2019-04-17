@@ -27,6 +27,7 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectDescription.SourceContainerType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.n4js.projectModel.ISourceFolderEx;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.util.Strings;
 
@@ -88,6 +89,7 @@ public class N4JSProjectSourceContainer extends AbstractSourceContainer implemen
 			@Override
 			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 				URI uri = URI.createFileURI(file.toString());
+				uri = ISourceFolderEx.addEmptyAuthority(uri);
 				uris.add(uri);
 				return FileVisitResult.CONTINUE;
 			}
@@ -95,7 +97,9 @@ public class N4JSProjectSourceContainer extends AbstractSourceContainer implemen
 
 		try {
 			Path srcPath = Paths.get(getPath().toFileString());
-			Files.walkFileTree(srcPath, fv);
+			if (srcPath.toFile().isDirectory()) {
+				Files.walkFileTree(srcPath, fv);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
