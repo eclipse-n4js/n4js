@@ -46,6 +46,7 @@ import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableSet;
@@ -54,6 +55,7 @@ import com.google.inject.Inject;
 /**
  * Test for checking the runtime behavior of the external libraries.
  */
+@Ignore("GH-1281") // FIXME GH-1281 test does not make sense, anymore?
 public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTest {
 
 	private static final String NL = "\n"; // node is not using system line separator
