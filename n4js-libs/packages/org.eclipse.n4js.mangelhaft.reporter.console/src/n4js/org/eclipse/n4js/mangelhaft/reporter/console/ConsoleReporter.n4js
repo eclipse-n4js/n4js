@@ -62,10 +62,6 @@ export public class ConsoleReporter implements ITestReporter {
         }
         return this;
     }
-    private errorsOnly: boolean = false
-    public setErrorsOnly() {
-        this.errorsOnly = true;
-    } 
     
     public unsuccessfulTests:Array<string> = [];
     
@@ -94,9 +90,7 @@ export public class ConsoleReporter implements ITestReporter {
             }
             switch(testResult.testStatus) {
                 case TestStatus.passed: {
-                    if (!this.errorsOnly) {
-                        this.logger.call(this, `${"   ".repeat(indent)} ${test.name} : ${this.cliColor.green("OK")}`);
-                    }
+                    this.logger.call(this, `${"   ".repeat(indent)} ${test.name} : ${this.cliColor.green("OK")}`);
                     break;
                 }
                 case TestStatus.error:
@@ -119,33 +113,23 @@ export public class ConsoleReporter implements ITestReporter {
                     break;
                 }
                 case TestStatus.skipped_precondition: {
-                    if (!this.errorsOnly) {
-                        this.logger.call(this, `${"   ".repeat(indent)} ${test.name} : ${this.cliColor.cyan("SKIPPED_PRECONDITION")}`);
-                    }
+                    this.logger.call(this, `${"   ".repeat(indent)} ${test.name} : ${this.cliColor.cyan("SKIPPED_PRECONDITION")}`);
                     break;
                 }
                 case TestStatus.skipped_not_implemented: {
-                    if (!this.errorsOnly) {
-                        this.logger.call(this, `${"   ".repeat(indent)} ${test.name} : ${this.cliColor.cyan("SKIPPED_NOT_IMPLEMENTED")}`);
-                    }
+                    this.logger.call(this, `${"   ".repeat(indent)} ${test.name} : ${this.cliColor.cyan("SKIPPED_NOT_IMPLEMENTED")}`);
                     break;
                 }
                 case TestStatus.skipped_ignore: {
-                    if (!this.errorsOnly) {
-                        this.logger.call(this, `${"   ".repeat(indent)} ${test.name} : ${this.cliColor.yellow("SKIPPED_IGNORE")}`);
-                    }
+                    this.logger.call(this, `${"   ".repeat(indent)} ${test.name} : ${this.cliColor.yellow("SKIPPED_IGNORE")}`);
                     break;
                 }
                 case TestStatus.skipped_fixme: {
-                    if (!this.errorsOnly) {
-                        this.logger.call(this, `${"   ".repeat(indent)} ${test.name} : ${this.cliColor.yellow("SKIPPED_FIXME")}`);
-                    }
+                    this.logger.call(this, `${"   ".repeat(indent)} ${test.name} : ${this.cliColor.yellow("SKIPPED_FIXME")}`);
                     break;
                 }
                 case TestStatus.skipped: {
-                    if (!this.errorsOnly) {
-                        this.logger.call(this, `${"   ".repeat(indent)} ${test.name} : ${this.cliColor.yellow("SKIPPED")}`);
-                    }
+                    this.logger.call(this, `${"   ".repeat(indent)} ${test.name} : ${this.cliColor.yellow("SKIPPED")}`);
                     break;
                 }
                 default: {

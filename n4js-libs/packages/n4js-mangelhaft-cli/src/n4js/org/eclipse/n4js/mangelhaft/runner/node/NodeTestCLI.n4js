@@ -106,22 +106,11 @@ const nomnomOptions: Object = {
         abbr: "s",
         help: "Scope in which to run these tests. (Used to scope test behaviors. Currently just Fixme annotations.)"
     },
-    showOnlyErrors: {
-        flag: true,
-        abbr: "e",
-        help: "If set does not log passing nor skipped tests (but still runs them.)"
-    },
     quiet: {
         flag: true,
         abbr: "q",
-        help: "Hide console logging from console output."
-    },
-    noDebugLog: {
-        flag: true,
-        abbr: "Q",
-        help: "Turn off debug logging."
-    },
-    
+        help: "Turn off mangelhaft console reporting."
+    }
 };
 
 const nomnomHelp = `Runs N4JS mangelhaft testing.

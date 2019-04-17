@@ -74,18 +74,9 @@ export default public class ~NodeTestOptions extends XUnitReportSpec {
      * scope in which to run tests 
      */
     public testScope: string;
-    
-    /**
-     * if set turns off console log output 
-     */
-    public quiet: boolean;
 
     /**
-     * if set turns off debug logs 
+     * Turn off mangelhaft console reporting.
      */
-    public noDebugLog: boolean;
-    /**
-     * if set does not log passing nor skipped tests (but still runs them) 
-     */
-    public showOnlyErrors: boolean;
+    public quiet: boolean;
 }
