@@ -21,9 +21,7 @@ import java.nio.file.Paths;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.hlc.base.ErrorExitCode;
 import org.eclipse.n4js.hlc.base.N4jscBase;
-import org.eclipse.n4js.json.JSONStandaloneSetup;
 import org.eclipse.n4js.test.helper.hlc.N4CliHelper;
-import org.eclipse.n4js.test.helper.hlc.N4jsLibsAccess;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -93,8 +91,7 @@ public class SingleFileCompileN4jscJarTest extends AbstractN4jscJarTest {
 		logFile();
 
 		Path nodeModulesPath = Paths.get(TARGET, WORKSPACE_FOLDER, "P1", N4JSGlobals.NODE_MODULES).toAbsolutePath();
-		JSONStandaloneSetup.doSetup();
-		N4jsLibsAccess.installN4jsLibs(nodeModulesPath, true, true, true, "n4js-runtime");
+		N4CliHelper.copyN4jsLibsToLocation(nodeModulesPath, libName -> "n4js-runtime".equals(libName));
 
 		// -rw run with
 		// -r run : file to run
@@ -177,6 +174,9 @@ public class SingleFileCompileN4jscJarTest extends AbstractN4jscJarTest {
 	public void test_Run_Not_Compiled_A_WithNodeRunner() throws IOException, InterruptedException {
 		logFile();
 
+		Path nodeModulesPath = Paths.get(TARGET, WORKSPACE_FOLDER, "P1", N4JSGlobals.NODE_MODULES).toAbsolutePath();
+		N4CliHelper.copyN4jsLibsToLocation(nodeModulesPath, libName -> "n4js-runtime".equals(libName));
+
 		// Process is running from TARGET-Folder.
 		String proot = WORKSPACE_FOLDER;
 
@@ -197,6 +197,5 @@ public class SingleFileCompileN4jscJarTest extends AbstractN4jscJarTest {
 		// check the expected exit code of 7:
 		assertEquals("Exit with wrong exitcode.", ErrorExitCode.EXITCODE_RUNNER_STOPPED_WITH_ERROR.getExitCodeValue(),
 				exitCode);
-
 	}
 }
