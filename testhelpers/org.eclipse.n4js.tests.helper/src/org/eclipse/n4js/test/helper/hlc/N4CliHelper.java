@@ -302,7 +302,7 @@ public class N4CliHelper {
 		try {
 			N4jsLibsAccess.installN4jsLibs(
 					location,
-					true, false, true,
+					true, false, false,
 					libName -> !N4JS_LIBS_BLACKLIST.contains(libName) && n4jsLibrariesPredicate.test(libName));
 		} finally {
 			if (globalState != null) {
