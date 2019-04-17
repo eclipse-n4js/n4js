@@ -16,11 +16,15 @@ import static org.eclipse.n4js.hlc.integrationtests.HlcTestingConstants.WORKSPAC
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.json.JSONStandaloneSetup;
 import org.eclipse.n4js.test.helper.hlc.N4CliHelper;
 import org.eclipse.n4js.utils.io.FileCopier;
@@ -130,8 +134,17 @@ public abstract class AbstractN4jscJarTest {
 		// copy n4js libraries, if required
 		if (includeN4jsLibraries) {
 			// if specified, copy all of the n4js libraries (no filtering)
+
+			// FIXME GH-1281 the following heuristic for finding target location for installation is temporary!
+			List<Path> subFolders = Files.list(wsp.toPath()).filter(p -> Files.isDirectory(p))
+					.collect(Collectors.toList());
+			if (subFolders.size() != 1) {
+				throw new IllegalStateException("expected exactly 1 project in test data!!!");
+			}
+			Path nodeModulesFolder = subFolders.get(0).resolve(N4JSGlobals.NODE_MODULES);
+
 			JSONStandaloneSetup.doSetup();
-			N4CliHelper.copyN4jsLibsToLocation(wsp.toPath(), Predicates.alwaysTrue());
+			N4CliHelper.copyN4jsLibsToLocation(nodeModulesFolder, Predicates.alwaysTrue());
 
 			// FIXME GH-1281 double check this method!
 			// --> Need to create a yarn workspace? Align with code in AbstractN4jscTest!

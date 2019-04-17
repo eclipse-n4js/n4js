@@ -42,7 +42,11 @@ public class N4CliHelper {
 	 * A black list of n4js-libs that are never copied into a headless compiler test workspace.
 	 */
 	private static final Set<String> N4JS_LIBS_BLACKLIST = new HashSet<>(
-			Arrays.asList("org.eclipse.n4js.mangelhaft.reporter.xunit", "n4js-cli", "n4js-mangelhaft-cli"));
+			Arrays.asList(
+					"n4js-cli",
+					"org.eclipse.n4js.mangelhaft.test",
+					"org.eclipse.n4js.mangelhaft.assert.test",
+					"org.eclipse.n4js.mangelhaft.reporter.ide.test"));
 
 	/**
 	 * @param expectedString

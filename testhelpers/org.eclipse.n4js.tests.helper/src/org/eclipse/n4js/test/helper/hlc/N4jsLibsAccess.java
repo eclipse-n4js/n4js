@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -31,6 +32,7 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.model.utils.JSONModelUtils;
+import org.eclipse.n4js.packagejson.PackageJsonProperties;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.utils.io.FileCopier;
 
@@ -110,7 +112,7 @@ public class N4jsLibsAccess {
 	public static List<Path> findAllN4jsLibs() {
 		Path location = findN4jsLibsLocation();
 		try {
-			return Files.list(location).filter(p -> Files.isDirectory(p)).collect(Collectors.toList());
+			return Files.list(location).filter(p -> isNpmPackage(p)).collect(Collectors.toList());
 		} catch (IOException e) {
 			throw new IllegalStateException("cannot obtain list of n4js-libs: " + e.getMessage(), e);
 		}
@@ -149,12 +151,8 @@ public class N4jsLibsAccess {
 		// add dependencies of projects in 'toBeInstalled' to 'toBeInstalled' (if requested)
 		if (includeDependencies) {
 			Path n4jsLibsLocation = N4jsLibsAccess.findN4jsLibsLocation();
-			for (Path projectPath : new ArrayList<>(toBeInstalled)) { // will be modified below!
-				List<String> dependencies = loadDepenencies(projectPath);
-				for (String dependencyName : dependencies) {
-					Path dependencyPath = findN4jsLibs(n4jsLibsLocation, dependencyName, true);
-					toBeInstalled.add(dependencyPath);
-				}
+			for (Path projectPath : new ArrayList<>(toBeInstalled)) { // will be modified in next line!
+				collectDependencies(n4jsLibsLocation, projectPath, toBeInstalled);
 			}
 		}
 		// actually install projects in 'toBeInstalled'
@@ -177,14 +175,69 @@ public class N4jsLibsAccess {
 		}
 	}
 
-	private static List<String> loadDepenencies(Path projectPath) throws IOException {
+	private static void collectDependencies(Path n4jsLibsLocation, Path projectPath, Set<Path> addHere)
+			throws IOException {
+		Set<String> dependencyNames = loadDepenencies(projectPath, false, true, true);
+		for (String dependencyName : dependencyNames) {
+			Path dependencyPath = findN4jsLibs(n4jsLibsLocation, dependencyName, true);
+			if (addHere.add(dependencyPath)) {
+				collectDependencies(n4jsLibsLocation, dependencyPath, addHere);
+			}
+		}
+	}
+
+	private static Set<String> loadDepenencies(Path projectPath, boolean includeDevDependencies,
+			boolean excludeNestedProjects, boolean includeDepsOfNestedProjects) throws IOException {
+		Set<String> result = new LinkedHashSet<>();
+		Path nodeModulesPath = projectPath.resolve(N4JSGlobals.NODE_MODULES);
+		List<String> nestedProjectNames = Files.exists(nodeModulesPath)
+				? Files.list(nodeModulesPath).filter(p -> isNpmPackage(p)).map(p -> p.getFileName().toString())
+						.collect(Collectors.toList())
+				: Collections.emptyList();
+		// add dependencies of project at 'projectPath'
+		List<String> dependencyNames = loadDepenencies(projectPath, includeDevDependencies);
+		result.addAll(dependencyNames);
+		// add dependencies of nested projects (if requested)
+		if (includeDepsOfNestedProjects) {
+			for (String nestedProjectName : nestedProjectNames) {
+				Set<String> nestedDependencyNames = loadDepenencies(nodeModulesPath.resolve(nestedProjectName),
+						false, // never include devDependencies of nested projects!
+						excludeNestedProjects, includeDepsOfNestedProjects);
+				result.addAll(nestedDependencyNames);
+			}
+		}
+		// remove nested projects (if requested)
+		if (excludeNestedProjects) {
+			result.removeAll(nestedProjectNames);
+		}
+		return result;
+	}
+
+	private static List<String> loadDepenencies(Path projectPath, boolean includeDevDependencies) throws IOException {
+		List<String> result = new ArrayList<>();
 		Path packageJsonPath = projectPath.resolve(N4JSGlobals.PACKAGE_JSON);
 		JSONDocument packageJsonDoc = JSONModelUtils.loadJSON(packageJsonPath, Charsets.UTF_8);
-		JSONObject dependenciesObj = (JSONObject) JSONModelUtils.getProperty(packageJsonDoc, "dependencies")
-				.orElse(null);
-		return dependenciesObj != null
-				? dependenciesObj.getNameValuePairs().stream().map(nvp -> nvp.getName()).collect(Collectors.toList())
-				: Collections.emptyList();
+		JSONObject dependenciesObj = (JSONObject) JSONModelUtils.getProperty(packageJsonDoc,
+				PackageJsonProperties.DEPENDENCIES.name).orElse(null);
+		if (dependenciesObj != null) {
+			result.addAll(dependenciesObj.getNameValuePairs().stream().map(nvp -> nvp.getName())
+					.collect(Collectors.toList()));
+		}
+		if (includeDevDependencies) {
+			JSONObject devDependenciesObj = (JSONObject) JSONModelUtils.getProperty(packageJsonDoc,
+					PackageJsonProperties.DEV_DEPENDENCIES.name).orElse(null);
+			if (devDependenciesObj != null) {
+				result.addAll(devDependenciesObj.getNameValuePairs().stream().map(nvp -> nvp.getName())
+						.collect(Collectors.toList()));
+			}
+		}
+		return result;
+	}
+
+	private static boolean isNpmPackage(Path path) {
+		return !path.getFileName().toString().startsWith(".")
+				&& Files.isDirectory(path)
+				&& Files.isReadable(path.resolve(N4JSGlobals.PACKAGE_JSON));
 	}
 
 	private static URI findMyLocation() {
