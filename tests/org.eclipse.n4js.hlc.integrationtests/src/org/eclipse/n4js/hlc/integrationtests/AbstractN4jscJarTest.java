@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.json.JSONStandaloneSetup;
 import org.eclipse.n4js.test.helper.hlc.N4CliHelper;
 import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.n4js.utils.io.FileDeleter;
@@ -143,7 +142,6 @@ public abstract class AbstractN4jscJarTest {
 			}
 			Path nodeModulesFolder = subFolders.get(0).resolve(N4JSGlobals.NODE_MODULES);
 
-			JSONStandaloneSetup.doSetup();
 			N4CliHelper.copyN4jsLibsToLocation(nodeModulesFolder, Predicates.alwaysTrue());
 
 			// FIXME GH-1281 double check this method!

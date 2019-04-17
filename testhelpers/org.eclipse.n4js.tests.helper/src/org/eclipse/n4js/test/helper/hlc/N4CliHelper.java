@@ -29,6 +29,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.n4js.hlc.base.N4jscBase;
+import org.eclipse.n4js.json.JSONStandaloneSetup;
+import org.eclipse.xtext.testing.GlobalRegistries;
+import org.eclipse.xtext.testing.GlobalRegistries.GlobalStateMemento;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
@@ -289,8 +292,23 @@ public class N4CliHelper {
 	 */
 	public static void copyN4jsLibsToLocation(Path location,
 			Predicate<String> n4jsLibrariesPredicate) throws IOException {
-		N4jsLibsAccess.installN4jsLibs(location, true, false, true,
-				libName -> !N4JS_LIBS_BLACKLIST.contains(libName) && n4jsLibrariesPredicate.test(libName));
+
+		GlobalStateMemento globalState = null;
+		if (!JSONStandaloneSetup.isSetUp()) {
+			globalState = GlobalRegistries.makeCopyOfGlobalState();
+			JSONStandaloneSetup.doSetup();
+		}
+
+		try {
+			N4jsLibsAccess.installN4jsLibs(
+					location,
+					true, false, true,
+					libName -> !N4JS_LIBS_BLACKLIST.contains(libName) && n4jsLibrariesPredicate.test(libName));
+		} finally {
+			if (globalState != null) {
+				globalState.restoreGlobalState();
+			}
+		}
 	}
 
 }

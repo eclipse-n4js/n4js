@@ -24,6 +24,7 @@ Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.hlc.base,
  org.eclipse.n4js.semver.model,
  org.eclipse.n4js.semver,
+ org.eclipse.n4js.json,
  org.eclipse.n4js.json.model
 Export-Package: org.eclipse.n4js,
  org.eclipse.n4js.analysis,

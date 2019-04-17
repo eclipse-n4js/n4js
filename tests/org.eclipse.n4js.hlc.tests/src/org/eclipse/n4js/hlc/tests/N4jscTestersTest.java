@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.hlc.tests;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -18,6 +17,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 import org.eclipse.n4js.hlc.base.ErrorExitCode;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
@@ -35,7 +35,7 @@ import com.google.common.io.Files;
 public class N4jscTestersTest extends AbstractN4jscTest {
 	File workspace;
 
-	private final static String EXPECTED_TEST_CATALOG = "" +
+	private final static String EXPECTED_TEST_DESCRIPTORS = "" +
 			"[{\"origin\":\"DemoTest\",\"fqn\":\"src-gen/BarTest/OsInspectorTest2\",\"testMethods\":[\"testFail\"]}" +
 			",{\"origin\":\"DemoTest\",\"fqn\":\"src-gen/BazTest/OsInspectorTest3\",\"testMethods\":[\"testIgnored\"]}"
 			+
@@ -48,6 +48,13 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 			",{\"origin\":\"TestProjectB\",\"fqn\":\"src-gen/CSub1/CSub1\",\"testMethods\":[\"c1\",\"c2\"]}" +
 			",{\"origin\":\"TestProjectB\",\"fqn\":\"src-gen/CSub2/CSub2\",\"testMethods\":[\"c1\",\"c2\",\"c3\"]}]";
 
+	private final static Pattern EXPECTED_TEST_CATALOG = Pattern.compile("" +
+			Pattern.quote("{") +
+			Pattern.quote("\"endpoint\":\"http://localhost:") + "\\d+" + Pattern.quote("\",") +
+			Pattern.quote("\"sessionId\":\"") + "(\\w|-)+" + Pattern.quote("\",") +
+			Pattern.quote("\"testDescriptors\":") + Pattern.quote(EXPECTED_TEST_DESCRIPTORS) +
+			Pattern.quote("}"));
+
 	/**
 	 * Prepare tests.
 	 */
@@ -56,7 +63,8 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 		workspace = setupWorkspace(TEST_DATA_SET__TESTERS, true,
 				"n4js-runtime",
 				"org.eclipse.n4js.mangelhaft",
-				"org.eclipse.n4js.mangelhaft.assert");
+				"org.eclipse.n4js.mangelhaft.assert",
+				"n4js-mangelhaft-cli");
 	}
 
 	/** Delete workspace. */
@@ -237,7 +245,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 		file.deleteOnExit();
 		final String actual = new String(
 				java.nio.file.Files.readAllBytes(Paths.get(file.toURI())));
-		assertEquals(EXPECTED_TEST_CATALOG, actual);
+		assertTrue(EXPECTED_TEST_CATALOG.matcher(actual).matches());
 	}
 
 	/**
@@ -257,7 +265,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 		file.deleteOnExit();
 		final String actual = new String(
 				java.nio.file.Files.readAllBytes(Paths.get(file.toURI())));
-		assertEquals(EXPECTED_TEST_CATALOG, actual);
+		assertTrue(EXPECTED_TEST_CATALOG.matcher(actual).matches());
 	}
 
 	/**
@@ -282,7 +290,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 		file.deleteOnExit();
 		final String actual = new String(
 				java.nio.file.Files.readAllBytes(Paths.get(file.toURI())));
-		assertEquals(EXPECTED_TEST_CATALOG, actual);
+		assertTrue(EXPECTED_TEST_CATALOG.matcher(actual).matches());
 	}
 
 	/**

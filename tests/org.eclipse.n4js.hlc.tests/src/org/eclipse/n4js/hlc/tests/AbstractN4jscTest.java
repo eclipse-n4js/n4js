@@ -32,7 +32,6 @@ import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.hlc.base.ErrorExitCode;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.hlc.base.N4jscBase;
-import org.eclipse.n4js.json.JSONStandaloneSetup;
 import org.eclipse.n4js.test.helper.hlc.N4CliHelper;
 import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.n4js.utils.io.FileDeleter;
@@ -170,9 +169,7 @@ public abstract class AbstractN4jscTest {
 			// (note: we assume fixture contains only a single project (i.e. only a single sub folder))
 			libsLocation = Files.list(projectLocation).findFirst().get().resolve(N4JSGlobals.NODE_MODULES);
 		}
-		JSONStandaloneSetup.doSetup(); // FIXME GH-1281: improve; ask SZ!!!
 		N4CliHelper.copyN4jsLibsToLocation(libsLocation, n4jsLibrariesPredicate);
-		GlobalRegistries.clearGlobalRegistries();
 
 		// create yarn workspace
 		if (createYarnWorkspace) {
