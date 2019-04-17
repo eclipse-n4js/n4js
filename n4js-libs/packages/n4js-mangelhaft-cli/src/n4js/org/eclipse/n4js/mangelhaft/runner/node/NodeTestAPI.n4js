@@ -152,17 +152,12 @@ export default public class NodeTestAPI {
             const args = NodeTestCLI.toCommandLine(options); // fodder in same args
             rlog("args:", args);
 
-            const env: Object+ = Object.assign({}, process.env);
-            if (options.noDebugLog) {
-                // giving the command line option noLog overrides the DEBUG environment value to disable all logging (if the logger is configured.)
-                env.DEBUG = "-*";
-            }
-            //rlog("env:", env);
+            //rlog("env:", process.env);
 
             child_process.fork(modulePath, args, {
                 stdio: "inherit",
                 execArgv: execArgv,
-                env: env
+                env: process.env
             }).on("close", code => {
                 rlog("exit code:", code);
                 if (code === 0) {
