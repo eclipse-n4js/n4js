@@ -32,7 +32,6 @@ import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
 import org.eclipse.n4js.tests.util.EclipseUIUtils;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
-import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.eclipse.n4js.ui.building.ResourceDescriptionWithoutModuleUserData;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.ui.utils.AutobuildUtils;
@@ -88,13 +87,6 @@ public abstract class AbstractBuilderTest {
 
 	@Inject
 	private QueuedBuildData queuedBuildData;
-	@Inject
-	private ShippedCodeInitializeTestHelper shippedCodeInitializeTestHelper;
-
-	/** Overwrite this method to enable shipped code */
-	protected boolean provideShippedCode() {
-		return false;
-	}
 
 	/** Setups workspace by cleaning and waiting for auto builds, asserting index is clean. */
 	@Before
@@ -133,10 +125,6 @@ public abstract class AbstractBuilderTest {
 					}
 				});
 			}
-		}
-
-		if (provideShippedCode()) {
-			shippedCodeInitializeTestHelper.setupBuiltIns();
 		}
 	}
 
@@ -202,10 +190,6 @@ public abstract class AbstractBuilderTest {
 	 */
 	@After
 	final public void tearDown() throws Exception {
-
-		if (provideShippedCode()) {
-			shippedCodeInitializeTestHelper.tearDownBuiltIns();
-		}
 
 		// save the files as otherwise the projects cannot be deleted
 		libraryManager.deleteAllNodeModulesFolders(new NullProgressMonitor());

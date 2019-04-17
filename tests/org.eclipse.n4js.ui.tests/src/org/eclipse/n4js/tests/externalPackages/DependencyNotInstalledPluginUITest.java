@@ -38,11 +38,6 @@ public class DependencyNotInstalledPluginUITest extends AbstractBuilderParticipa
 	private static final String PROBAND_B = "B";
 	private static final String PROBAND_UNRELATED = "Unrelated";
 
-	@Override
-	protected boolean provideShippedCode() {
-		return true;
-	}
-
 	/**
 	 * Checks that there is an issue in case an npm is not installed in the project's node_modules folder, even though
 	 * that npm is installed in another, unrelated project's node_modules folder.

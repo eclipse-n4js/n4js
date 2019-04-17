@@ -61,11 +61,6 @@ public class GH_986_ExternalCircularDependencyAndRuntimeLibrariesPluginUITest ex
 	@Inject
 	private IN4JSCore n4jsCore;
 
-	@Override
-	protected boolean provideShippedCode() {
-		return true;
-	}
-
 	/** Compute compatible runtime environment of project that references a dependency cycle (via dependencies) */
 	@Test
 	public void testRunWithCycleInDependencyGraph() throws CoreException, IOException {

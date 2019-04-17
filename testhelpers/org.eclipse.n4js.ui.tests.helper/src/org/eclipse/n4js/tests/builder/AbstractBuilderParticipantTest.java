@@ -44,7 +44,6 @@ import org.eclipse.n4js.tests.util.EclipseUIUtils;
 import org.eclipse.n4js.tests.util.PackageJSONTestHelper;
 import org.eclipse.n4js.tests.util.ProjectTestsHelper;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
-import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.n4js.utils.process.ProcessResult;
@@ -82,9 +81,6 @@ import com.google.inject.Provider;
 public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest {
 	@Inject
 	private Provider<IDirtyStateManager> dirtyStateManager;
-
-	@Inject
-	private ShippedCodeInitializeTestHelper shippedCodeHelper;
 
 	@Inject
 	private ProjectTestsHelper projectTestsHelper;
@@ -309,16 +305,6 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 				parentFolder.create(true, true, null);
 			}
 		}
-	}
-
-	/** Sets up the known external library locations with the {@code node_modules} folder. */
-	protected void setupShippedLibraries() throws Exception {
-		shippedCodeHelper.setupBuiltIns();
-	}
-
-	/** Tears down the external libraries. */
-	protected void tearDownShippedLibraries() throws Exception {
-		shippedCodeHelper.tearDownBuiltIns();
 	}
 
 	/***/

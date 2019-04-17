@@ -57,11 +57,6 @@ public class IndexSynchronizerPluginTest extends AbstractBuilderParticipantTest 
 		assertTrue("Expected running platform. Run the tests as JUnit Plug-in Tests.", Platform.isRunning());
 	}
 
-	@Override
-	protected boolean provideShippedCode() {
-		return true;
-	}
-
 	/** Install an NPM, delete folder of NPM on disk, run IndexSynchronizer, check if NPM was removed from index */
 	@Test
 	public void testCleanRemovedNpm() throws Exception {

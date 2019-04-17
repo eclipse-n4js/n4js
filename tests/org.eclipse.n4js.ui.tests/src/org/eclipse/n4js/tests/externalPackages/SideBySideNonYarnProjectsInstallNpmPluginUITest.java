@@ -68,11 +68,6 @@ public class SideBySideNonYarnProjectsInstallNpmPluginUITest extends AbstractBui
 	@Inject
 	private ProjectDescriptionLoader prjDescLoader;
 
-	@Override
-	protected boolean provideShippedCode() {
-		return true;
-	}
-
 	/**
 	 * Install different npm packages in two independent projects.
 	 *

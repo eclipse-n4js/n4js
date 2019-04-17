@@ -47,11 +47,6 @@ public class IDEBUG_856_PluginTest extends AbstractBuilderParticipantTest {
 	@Inject
 	private LibraryManager libManager;
 
-	@Override
-	protected boolean provideShippedCode() {
-		return true;
-	}
-
 	/**
 	 * Updates the known external library locations with the {@code node_modules} folder.
 	 */

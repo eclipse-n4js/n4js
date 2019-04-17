@@ -54,11 +54,6 @@ public class ShadowingCreatesVersionWarningsPluginUITest extends AbstractBuilder
 	@Inject
 	private ShadowingInfoHelper shadowingInfoHelper;
 
-	@Override
-	protected boolean provideShippedCode() {
-		return true;
-	}
-
 	/**
 	 * Checks whether the external refreshing does not cause deadlock due to incorrect workspace checkpoints and
 	 * incorrect job family configuration.

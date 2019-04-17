@@ -50,11 +50,6 @@ public class GHOLD_45_CheckIgnoreAnnotationAtClassLevel_PluginUITest extends Abs
 	private static final String[] EMPTY_ARRAY = new String[0];
 
 	@Override
-	protected boolean provideShippedCode() {
-		return true;
-	}
-
-	@Override
 	protected ProjectImporter getProjectImporter() {
 		return new ProjectImporter(new File(new File("probands/" + PROJECT_NAME + "/").getAbsolutePath()));
 	}

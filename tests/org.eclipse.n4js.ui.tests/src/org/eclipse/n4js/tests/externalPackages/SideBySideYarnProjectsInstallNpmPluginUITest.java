@@ -46,11 +46,6 @@ public class SideBySideYarnProjectsInstallNpmPluginUITest extends AbstractBuilde
 	@Inject
 	private ProjectDescriptionLoader prjDescLoader;
 
-	@Override
-	protected boolean provideShippedCode() {
-		return true;
-	}
-
 	/**
 	 * Installs an npm in a local project of yarn workspace will install it in the node_modules folder of yarn root
 	 * workspace

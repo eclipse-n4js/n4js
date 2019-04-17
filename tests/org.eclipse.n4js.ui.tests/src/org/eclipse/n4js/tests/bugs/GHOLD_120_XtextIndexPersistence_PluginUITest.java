@@ -28,8 +28,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.n4js.tests.util.ProjectTestsUtils;
-import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.ui.building.ResourceDescriptionWithoutModuleUserData;
 import org.eclipse.n4js.ui.external.ExternalProjectMappings;
@@ -40,6 +38,7 @@ import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.base.Joiner;
@@ -75,6 +74,7 @@ import com.google.inject.Inject;
  * method.
  *
  */
+@Ignore("GH-1281") // FIXME GH-1281 does this test still make sense after removing shipped code??? (see also 2 FIXME's below!)
 @SuppressWarnings({ "restriction" })
 public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG_Test {
 
@@ -86,9 +86,6 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 	@Inject
 	private ContributingResourceDescriptionPersister persister;
 
-	@Inject
-	private ShippedCodeInitializeTestHelper shippedCodeInitializeTestHelper;
-
 	/** Disable reduction of external libraries */
 	@BeforeClass
 	static public void disableMappingsFlag() {
@@ -99,23 +96,6 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 	@AfterClass
 	static public void enableMappingsFlag() {
 		ExternalProjectMappings.REDUCE_REGISTERED_NPMS = true;
-	}
-
-	@Override
-	protected boolean provideShippedCode() {
-		return true;
-	}
-
-	private void loadBuiltIns() {
-		shippedCodeInitializeTestHelper.setupBuiltIns();
-		ProjectTestsUtils.waitForAllJobs();
-		waitForAutoBuild();
-	}
-
-	private void unLoadBuiltIns() {
-		shippedCodeInitializeTestHelper.tearDownBuiltIns();
-		ProjectTestsUtils.waitForAllJobs();
-		waitForAutoBuild();
 	}
 
 	@Override
@@ -156,7 +136,7 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 		final int persistedBeforeReloadSize = resource.getContents().size();
 
 		// Imitate VM crash with force built-in unload and reload.
-		unLoadBuiltIns();
+//		unLoadBuiltIns(); // FIXME GH-1281
 		syncExtAndBuild();
 
 		// Test module issues:
@@ -171,7 +151,7 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 		// Project with test fragment should depend on org.eclipse.n4js.mangelhaft.
 		assertMarkers("Expected exactly 7 issues.", project, 7);
 
-		loadBuiltIns();
+//		loadBuiltIns(); // FIXME GH-1281
 
 		libraryManager.runNpmYarnInstallOnAllProjects(new NullProgressMonitor());
 		syncExtAndBuild();
