@@ -18,15 +18,14 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.test.helper.hlc.N4CliHelper;
-import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
@@ -112,41 +111,15 @@ public abstract class AbstractN4jscJarTest {
 	 */
 	@Before
 	public void setupWorkspace() throws IOException {
-		// Create target folder if not exists
-		File targetFolder = new File(TARGET);
-		if (!targetFolder.exists()) {
-			System.out.println(TARGET + " folder does not exist. Creating one.");
-			targetFolder.mkdirs();
-		}
+		Path fixturePath = Paths.get(fixture);
+		List<Path> fixtureSubFolders = Files.list(fixturePath).filter(p -> Files.isDirectory(p))
+				.collect(Collectors.toList());
+		boolean needYarnWorkspace = fixtureSubFolders.size() > 1;
 
-		File wsp = new File(TARGET, WORKSPACE_FOLDER);
-		File fixtureFile = new File(fixture);
+		Path wsp = Paths.get(TARGET, WORKSPACE_FOLDER);
+		Files.createDirectories(wsp);
 
-		System.out.println("BEFORE: 	current root " + new File(".").getAbsolutePath());
-		System.out.println("BEFORE: current workspace would be " + wsp.getAbsolutePath());
-
-		// clean
-		FileDeleter.delete(wsp.toPath());
-		// copy
-		FileCopier.copy(fixtureFile.toPath(), wsp.toPath());
-
-		// copy n4js libraries, if required
-		if (includeN4jsLibraries) {
-			// if specified, copy all of the n4js libraries (no filtering)
-
-			// FIXME GH-1281 the following heuristic for finding target location for installation is temporary!
-			List<Path> subFolders = Files.list(wsp.toPath()).filter(p -> Files.isDirectory(p))
-					.collect(Collectors.toList());
-			if (subFolders.size() != 1) {
-				throw new IllegalStateException("expected exactly 1 project in test data!!!");
-			}
-			Path nodeModulesFolder = subFolders.get(0).resolve(N4JSGlobals.NODE_MODULES);
-
-			N4CliHelper.copyN4jsLibsToLocation(nodeModulesFolder, Predicates.alwaysTrue());
-
-			// FIXME GH-1281 double check this method!
-			// --> Need to create a yarn workspace? Align with code in AbstractN4jscTest!
-		}
+		N4CliHelper.setupWorkspace(fixturePath, wsp, Predicates.alwaysTrue(), needYarnWorkspace);
 	}
 
 	/**

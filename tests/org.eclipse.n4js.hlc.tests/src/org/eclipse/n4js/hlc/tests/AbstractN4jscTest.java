@@ -23,9 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Collection;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSLanguageConstants;
@@ -33,8 +31,6 @@ import org.eclipse.n4js.hlc.base.ErrorExitCode;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.hlc.base.N4jscBase;
 import org.eclipse.n4js.test.helper.hlc.N4CliHelper;
-import org.eclipse.n4js.utils.io.FileCopier;
-import org.eclipse.n4js.utils.io.FileDeleter;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.xtext.testing.GlobalRegistries;
 import org.eclipse.xtext.util.Arrays;
@@ -48,7 +44,6 @@ import org.junit.runner.Description;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
 
 /**
  */
@@ -56,12 +51,9 @@ public abstract class AbstractN4jscTest {
 
 	/** name of workspace sub-folder (inside target folder) */
 	private static final String WSP = "wsp";
-	/**
-	 * name of subfolder containing the actual projects iff a yarn workspace was created, see
-	 * {@link #setupWorkspace(String, String, Predicate, boolean)}
-	 */
-	protected static final String PACKAGES = "packages";
-	/** name of package containing the test resources */
+	/** see {@link N4CliHelper#PACKAGES} */
+	protected static final String PACKAGES = N4CliHelper.PACKAGES;
+	/** name of folder containing the test resources */
 	protected static final String FIXTURE = "probands";
 	/** name of default test data set */
 	protected static final String TEST_DATA_SET__BASIC = "basic";
@@ -85,7 +77,7 @@ public abstract class AbstractN4jscTest {
 	 * Copy a fresh fixture to the workspace area. Deleting old leftovers from former tests.
 	 *
 	 * @param createYarnWorkspace
-	 *            see {@link #setupWorkspace(String, String, Predicate, boolean)}.
+	 *            see {@link N4CliHelper#setupWorkspace(Path, Path, Predicate, boolean)}.
 	 *
 	 * @returns file indicating the relative path to the copied data set
 	 */
@@ -97,7 +89,7 @@ public abstract class AbstractN4jscTest {
 	 * Copy a fresh fixture to the workspace area. Deleting old leftovers from former tests.
 	 *
 	 * @param createYarnWorkspace
-	 *            see {@link #setupWorkspace(String, String, Predicate, boolean)}.
+	 *            see {@link N4CliHelper#setupWorkspace(Path, Path, Predicate, boolean)}.
 	 *
 	 * @returns file indicating the relative path to the copied data set
 	 */
@@ -120,7 +112,7 @@ public abstract class AbstractN4jscTest {
 	 * libraries from the {@code n4js} Git repository which name provides {@code true} value for the given predicate.
 	 *
 	 * @param createYarnWorkspace
-	 *            see {@link #setupWorkspace(String, String, Predicate, boolean)}.
+	 *            see {@link N4CliHelper#setupWorkspace(Path, Path, Predicate, boolean)}.
 	 *
 	 * @returns file indicating the relative path to the copied data set
 	 */
@@ -129,75 +121,17 @@ public abstract class AbstractN4jscTest {
 		return setupWorkspace(FIXTURE, testDataSet, n4jsLibrariesPredicate, createYarnWorkspace);
 	}
 
-	/**
-	 * Copy a fresh fixture to the workspace area. Deleting old leftovers from former tests. Also includes all N4JS
-	 * libraries from the {@code n4js} Git repository which name provides {@code true} value for the given predicate.
-	 *
-	 * @param createYarnWorkspace
-	 *            if true, a yarn workspace will be created, i.e. projects will be put into a subfolder
-	 *            {@value #PACKAGES} and an appropriate package.json file will be generated.
-	 *
-	 * @returns file indicating the relative path to the copied data set
-	 */
-	protected static File setupWorkspace(String testDataRoot, String testDataSet,
+	private static File setupWorkspace(String testDataRoot, String testDataSet,
 			Predicate<String> n4jsLibrariesPredicate, boolean createYarnWorkspace) throws IOException {
-		Path root = FileUtils.createTempDirectory(testDataRoot + "_" + testDataSet + "_");
-
-		Path wsp = root.resolve(WSP);
-		Path packages = wsp.resolve(PACKAGES);
-		Path projectLocation = createYarnWorkspace ? packages : wsp;
-
 		Path fixture = new File(testDataRoot, testDataSet).toPath();
-
-		// clean
-		if (Files.exists(wsp)) {
-			FileDeleter.delete(wsp, true);
-		}
-		Files.createDirectories(wsp);
-		Files.createDirectories(projectLocation);
-
-		// copy fixtures to workspace
-		FileCopier.copy(fixture, projectLocation, true);
-
-		// copy required n4js libraries to workspace / node_modules location
-		Path libsLocation;
-		if (createYarnWorkspace) {
-			// in case of a yarn workspace, we install the n4js-libs as siblings of the main project(s)
-			libsLocation = projectLocation;
-		} else {
-			// otherwise, we install the n4js-libs in the main project's node_modules folder
-			// (note: we assume fixture contains only a single project (i.e. only a single sub folder))
-			libsLocation = Files.list(projectLocation).findFirst().get().resolve(N4JSGlobals.NODE_MODULES);
-		}
-		N4CliHelper.copyN4jsLibsToLocation(libsLocation, n4jsLibrariesPredicate);
-
-		// create yarn workspace
-		if (createYarnWorkspace) {
-			// create package.json
-			List<String> packageJsonLines = Lists.newArrayList(
-					"{",
-					"\t\"private\": true,",
-					"\t\"workspaces\": [ \"packages/*\" ]",
-					"}");
-			Files.write(wsp.resolve(N4JSGlobals.PACKAGE_JSON), packageJsonLines);
-
-			// create node_modules folder
-			Path nodeModulesFolder = wsp.resolve(N4JSGlobals.NODE_MODULES);
-			Files.createDirectories(nodeModulesFolder);
-			for (Path project : Files.list(projectLocation).collect(Collectors.toList())) {
-				if (Files.isDirectory(project)) {
-					Files.createSymbolicLink(nodeModulesFolder.resolve(project.getFileName()), project);
-				}
-			}
-		}
-
-		return wsp.toFile();
+		Path root = FileUtils.createTempDirectory(testDataRoot + "_" + testDataSet + "_");
+		Path wsp = root.resolve(WSP);
+		return N4CliHelper.setupWorkspace(fixture, wsp, n4jsLibrariesPredicate, createYarnWorkspace);
 	}
 
 	/**
 	 * Convince method to call compiler with provided arguments and assert given exception with given exit code is
 	 * thrown. Since it handles thrown error, allow callers to do further assertions.
-	 *
 	 */
 	protected static void expectCompilerException(String[] args, ErrorExitCode expectedExitCode) {
 		try {

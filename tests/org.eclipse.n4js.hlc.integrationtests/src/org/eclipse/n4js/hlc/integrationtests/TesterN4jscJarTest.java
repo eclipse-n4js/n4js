@@ -11,7 +11,6 @@
 package org.eclipse.n4js.hlc.integrationtests;
 
 import static org.eclipse.n4js.hlc.integrationtests.HlcTestingConstants.WORKSPACE_FOLDER;
-import static org.eclipse.n4js.runner.SystemLoaderInfo.COMMON_JS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -43,11 +42,10 @@ public class TesterN4jscJarTest extends AbstractN4jscJarTest {
 		logFile();
 
 		String projectDemoTest = "DemoTest";
-		String pathToDemoTest = WORKSPACE_FOLDER + "/" + projectDemoTest;
+		String pathToDemoTest = WORKSPACE_FOLDER + "/" + N4CliHelper.PACKAGES + "/" + projectDemoTest;
 
 		Process p = createAndStartProcess(
-				"--systemLoader", COMMON_JS.getId(),
-				"--projectlocations", WORKSPACE_FOLDER,
+				"--projectlocations", WORKSPACE_FOLDER + "/" + N4CliHelper.PACKAGES,
 				"--buildType", "allprojects",
 				"--testWith", "nodejs_mangelhaft",
 				"--verbose", // required, otherwise passed tests will not occur in output
@@ -58,6 +56,8 @@ public class TesterN4jscJarTest extends AbstractN4jscJarTest {
 		assertEquals(ErrorExitCode.EXITCODE_TESTER_STOPPED_WITH_ERROR.getExitCodeValue(), exitCode);
 
 		String out = N4CliHelper.readLogfile(outputLogFile);
+		assertTrue(out.contains(
+				"ERROR: org.eclipse.n4js.hlc.base.ExitCodeException: There were test errors, see console logs and/or test report for details."));
 
 		N4CliHelper.assertExpectedOutputContains(
 				"|TID:src-gen/BarTest/OsInspectorTest2#testFail| => Failed", out);
@@ -83,12 +83,11 @@ public class TesterN4jscJarTest extends AbstractN4jscJarTest {
 		logFile();
 
 		String projectDemoTest = "DemoTest";
-		String pathToDemoTest = WORKSPACE_FOLDER + "/" + projectDemoTest;
+		String pathToDemoTest = WORKSPACE_FOLDER + "/" + N4CliHelper.PACKAGES + "/" + projectDemoTest;
 		String testReportRoot = pathToDemoTest + "/src-gen";
 
 		final Process p = createAndStartProcess(
-				"--systemLoader", COMMON_JS.getId(),
-				"--projectlocations", WORKSPACE_FOLDER,
+				"--projectlocations", WORKSPACE_FOLDER + "/" + N4CliHelper.PACKAGES,
 				"--buildType", "allprojects",
 				"--testWith", "nodejs_mangelhaft",
 				"--test", pathToDemoTest,
@@ -97,6 +96,10 @@ public class TesterN4jscJarTest extends AbstractN4jscJarTest {
 		final int exitCode = p.waitFor();
 
 		assertEquals(ErrorExitCode.EXITCODE_TESTER_STOPPED_WITH_ERROR.getExitCodeValue(), exitCode);
+
+		String out = N4CliHelper.readLogfile(outputLogFile);
+		assertTrue(out.contains(
+				"ERROR: org.eclipse.n4js.hlc.base.ExitCodeException: There were test errors, see console logs and/or test report for details."));
 
 		File report = new File(HlcTestingConstants.TARGET + "/" + testReportRoot + "/test-report.xml");
 		assertTrue("Test report not found", report.exists());
