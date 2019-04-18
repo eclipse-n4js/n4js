@@ -13,10 +13,12 @@ package org.eclipse.n4js.hlc.integrationtests;
 import static org.eclipse.n4js.hlc.integrationtests.HlcTestingConstants.TARGET;
 import static org.eclipse.n4js.hlc.integrationtests.HlcTestingConstants.WORKSPACE_FOLDER;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.regex.Pattern;
 
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.hlc.base.ErrorExitCode;
@@ -73,7 +75,8 @@ public class SingleFileCompileN4jscJarTest extends AbstractN4jscJarTest {
 	public void testSingleFileCompile() throws Exception {
 		logFile();
 
-		Process p = createAndStartProcess("--buildType", "singleFile", WORKSPACE_FOLDER + "/" + "PSingle/src/a/A.n4js");
+		Process p = createAndStartProcess("--buildType", "singleFile",
+				WORKSPACE_FOLDER + "/" + PACKAGES + "/" + "PSingle/src/a/A.n4js");
 
 		int exitCode = p.waitFor();
 
@@ -90,15 +93,16 @@ public class SingleFileCompileN4jscJarTest extends AbstractN4jscJarTest {
 	public void testCompileAllAndRunWithNodejsPlugin() throws Exception {
 		logFile();
 
-		Path nodeModulesPath = Paths.get(TARGET, WORKSPACE_FOLDER, "P1", N4JSGlobals.NODE_MODULES).toAbsolutePath();
-		N4CliHelper.copyN4jsLibsToLocation(nodeModulesPath, libName -> "n4js-runtime".equals(libName));
+		Path nodeModulesPath = Paths.get(TARGET, WORKSPACE_FOLDER, N4JSGlobals.NODE_MODULES).toAbsolutePath();
+		N4CliHelper.copyN4jsLibsToLocation(nodeModulesPath, "n4js-runtime");
 
 		// -rw run with
 		// -r run : file to run
-		Process p = createAndStartProcess("--buildType", "allprojects", "--projectlocations",
-				WORKSPACE_FOLDER, "--runWith",
-				"nodejs", "--run",
-				WORKSPACE_FOLDER + "/" + "P1/src/A.n4js");
+		Process p = createAndStartProcess(
+				"--buildType", "allprojects",
+				"--projectlocations", WORKSPACE_FOLDER + "/" + PACKAGES,
+				"--runWith", "nodejs",
+				"--run", WORKSPACE_FOLDER + "/" + PACKAGES + "/" + "P1/src/A.n4js");
 
 		int exitCode = p.waitFor();
 
@@ -174,11 +178,11 @@ public class SingleFileCompileN4jscJarTest extends AbstractN4jscJarTest {
 	public void test_Run_Not_Compiled_A_WithNodeRunner() throws IOException, InterruptedException {
 		logFile();
 
-		Path nodeModulesPath = Paths.get(TARGET, WORKSPACE_FOLDER, "P1", N4JSGlobals.NODE_MODULES).toAbsolutePath();
-		N4CliHelper.copyN4jsLibsToLocation(nodeModulesPath, libName -> "n4js-runtime".equals(libName));
+		Path nodeModulesPath = Paths.get(TARGET, WORKSPACE_FOLDER, N4JSGlobals.NODE_MODULES).toAbsolutePath();
+		N4CliHelper.copyN4jsLibsToLocation(nodeModulesPath, "n4js-runtime");
 
 		// Process is running from TARGET-Folder.
-		String proot = WORKSPACE_FOLDER;
+		String proot = WORKSPACE_FOLDER + "/" + PACKAGES;
 
 		// Project
 		String projectP1 = "P1";
@@ -197,5 +201,8 @@ public class SingleFileCompileN4jscJarTest extends AbstractN4jscJarTest {
 		// check the expected exit code of 7:
 		assertEquals("Exit with wrong exitcode.", ErrorExitCode.EXITCODE_RUNNER_STOPPED_WITH_ERROR.getExitCodeValue(),
 				exitCode);
+		String out = N4CliHelper.readLogfile(outputLogFile);
+		String expectedErrorMessage = "Error: Cannot find module '/.*/target/wsp/packages/P1/src-gen/A'";
+		assertTrue(Pattern.matches("(.|\n)*" + expectedErrorMessage + "(.|\n)*", out));
 	}
 }

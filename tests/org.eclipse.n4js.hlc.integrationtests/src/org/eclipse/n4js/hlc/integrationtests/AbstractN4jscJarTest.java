@@ -34,6 +34,7 @@ import org.junit.rules.TestRule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 
+import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
 /**
@@ -50,6 +51,9 @@ import com.google.common.base.Predicates;
  * </ul>
  */
 public abstract class AbstractN4jscJarTest {
+
+	/** see {@link N4CliHelper#PACKAGES} */
+	protected static final String PACKAGES = N4CliHelper.PACKAGES;
 
 	// Running directory will be ${TARGET}/${WSP}
 
@@ -119,7 +123,9 @@ public abstract class AbstractN4jscJarTest {
 		Path wsp = Paths.get(TARGET, WORKSPACE_FOLDER);
 		Files.createDirectories(wsp);
 
-		N4CliHelper.setupWorkspace(fixturePath, wsp, Predicates.alwaysTrue(), needYarnWorkspace);
+		Predicate<String> n4jsLibsPredicate = includeN4jsLibraries ? Predicates.alwaysTrue() : Predicates.alwaysFalse();
+
+		N4CliHelper.setupWorkspace(fixturePath, wsp, n4jsLibsPredicate, needYarnWorkspace);
 	}
 
 	/**

@@ -18,7 +18,6 @@ import org.eclipse.n4js.hlc.base.BuildType;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.hlc.base.N4jscBase;
 import org.eclipse.n4js.test.helper.hlc.N4CliHelper;
-import org.eclipse.n4js.test.helper.hlc.N4jsLibsAccess;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
@@ -53,9 +52,7 @@ public class InstallCompileRunN4jscExternalShadowNestedNodeModulesTest extends A
 		workspace = setupWorkspace("external_shadowNestedNodeModules", Predicates.alwaysFalse(),
 				false); // false because test data already contains a fully configured yarn workspace!
 
-		N4jsLibsAccess.installN4jsLibs(
-				workspace.toPath().resolve(N4JSGlobals.NODE_MODULES),
-				true, true, true, "n4js-runtime");
+		N4CliHelper.copyN4jsLibsToLocation(workspace.toPath().resolve(N4JSGlobals.NODE_MODULES), "n4js-runtime");
 
 		// Additional Preparation Step
 		//

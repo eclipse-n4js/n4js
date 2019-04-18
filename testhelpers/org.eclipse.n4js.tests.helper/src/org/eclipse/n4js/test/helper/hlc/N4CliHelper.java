@@ -356,6 +356,14 @@ public class N4CliHelper {
 	}
 
 	/**
+	 * Same as {@link #copyN4jsLibsToLocation(Path, Predicate)}, but the n4js libraries that are to be installed can be
+	 * provided by name instead of a predicate.
+	 */
+	public static void copyN4jsLibsToLocation(Path location, String... n4jsLibs) throws IOException {
+		copyN4jsLibsToLocation(location, libName -> org.eclipse.xtext.util.Arrays.contains(n4jsLibs, libName));
+	}
+
+	/**
 	 * Copies the n4js libraries to the given testing workspace {@code location}.
 	 *
 	 * Only includes n4js libraries (cf. shipped code), for whose project name {@code n4jsLibrariesPredicate} returns
@@ -364,8 +372,8 @@ public class N4CliHelper {
 	 * @throws IOException
 	 *             In case the copying is not successful.
 	 */
-	public static void copyN4jsLibsToLocation(Path location,
-			Predicate<String> n4jsLibrariesPredicate) throws IOException {
+	public static void copyN4jsLibsToLocation(Path location, Predicate<String> n4jsLibrariesPredicate)
+			throws IOException {
 
 		GlobalStateMemento globalState = null;
 		if (!JSONStandaloneSetup.isSetUp()) {
@@ -376,7 +384,9 @@ public class N4CliHelper {
 		try {
 			N4jsLibsAccess.installN4jsLibs(
 					location,
-					true, false, false,
+					true,
+					false, // do not use symbolic links (because some tests modify the files in the destination folder)
+					false, // do not delete on exit (because the tests using this method are responsible to cleaning up)
 					libName -> !N4JS_LIBS_BLACKLIST.contains(libName) && n4jsLibrariesPredicate.test(libName));
 		} finally {
 			if (globalState != null) {
