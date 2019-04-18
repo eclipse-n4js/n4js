@@ -46,6 +46,9 @@ import com.google.common.base.Predicates;
  */
 public class N4jsLibsAccess {
 
+	// FIXME GH-1281 disable use of symbolic links to see if this causes test failures that occur only on Jenkins
+	public static boolean SYMBOLIC_LINKS_DISABLED = true;
+
 	/** Name of the N4JS Git repository. */
 	private static final String N4JS_REPO_NAME = "n4js";
 	/** Name of the top-level folder containing test helpers inside the N4JS Git repository. */
@@ -159,7 +162,7 @@ public class N4jsLibsAccess {
 		for (Path projectPath : toBeInstalled) {
 			String projectName = projectPath.getFileName().toString();
 			Path targetProjectPath = targetPath.resolve(projectName);
-			if (useSymbolicLinks) {
+			if (useSymbolicLinks && !SYMBOLIC_LINKS_DISABLED) {
 				Files.createDirectories(targetPath); // i.e. parent of targetProjectPath
 				Path symLinkPath = Files.createSymbolicLink(targetProjectPath, projectPath);
 				if (deleteOnExit) {
