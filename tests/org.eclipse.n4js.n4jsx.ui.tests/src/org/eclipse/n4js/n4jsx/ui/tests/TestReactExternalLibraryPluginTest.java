@@ -101,6 +101,13 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 		// line 7: Project does not exist with project ID: @n4jsd/react.
 		assertMarkers("Expected exactly 3 error in package.json.", projectDescriptionFile, 3);
 
+		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		// FIXME GH-1281
+		// reconsider how tests will work that want to combine n4js-libs with something installed from public npm
+		// registry ('react' in this case)
+		// PROBLEM: when doing 'npm install react' then npm will corrupt an already locally-installed project from
+		// n4js-libs
+
 		libManager.installNPM("n4js-runtime", URIUtils.toFileUri(project), new NullProgressMonitor());
 		libManager.installNPM(PACKAGE_REACT, URIUtils.toFileUri(project), new NullProgressMonitor());
 		libManager.installNPM(PACKAGE_N4JSD_REACT, URIUtils.toFileUri(project), new NullProgressMonitor());

@@ -32,6 +32,7 @@ import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
@@ -232,6 +233,7 @@ public class ScenarioTest {
 	 * Testing for different output-folder, configured in package.json. Testing for external source and configuration of
 	 * noModuleWrapFilter
 	 */
+	@Ignore("GH-1281") // test no longer valid; remove this test after removing package.json filter 'noModuleWrap'
 	@Test
 	public void testScenario06NoModuleWrapFilter() throws N4JSCompileException, IOException {
 		N4HeadlessCompiler hlc = HeadlessCompilerFactory.createCompilerWithDefaults();
@@ -261,6 +263,7 @@ public class ScenarioTest {
 	 * Same as scenario 6, but now we have a project that ONLY contains external sources (i.e. *no* n4js file). This
 	 * kind of project caused problems before.
 	 */
+	@Ignore("GH-1281") // test no longer valid; remove this test after removing package.json filter 'noModuleWrap'
 	@Test
 	public void testScenario06bNoModuleWrapFilter() throws N4JSCompileException, IOException {
 		N4HeadlessCompiler hlc = HeadlessCompilerFactory.createCompilerWithDefaults();
