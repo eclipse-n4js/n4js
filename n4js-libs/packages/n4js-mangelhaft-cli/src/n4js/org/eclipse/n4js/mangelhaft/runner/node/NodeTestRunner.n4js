@@ -10,6 +10,7 @@
  */
 
 import fetch from "deps/node-fetch";
+import {Module} from "module";
 import {N4Injector} from "n4js/lang/N4Injector";
 import {FIXME1} from "org/eclipse/n4js/mangelhaft/Test";
 import {FIXME2} from "org/eclipse/n4js/mangelhaft/Test";
@@ -147,9 +148,10 @@ const root = N4Injector.of(Root, parentinj).create(Root);
  
 // TODO: fragile, will be removed once we have proper api/impl binding
 if (process.env.N4JS_RT_strip_api_prj_suffix) {
-    const _resolveFilename = module.Module._resolveFilename;
+    const objModule: Object+ = Module;
+    const _resolveFilename = objModule._resolveFilename;
     const stripApiSuffix_re = /^([^/]+)\.api\//;
-    module.Module._resolveFilename = function(request: string, parent, isMain) {
+    objModule._resolveFilename = function(request: string, parent, isMain) {
         request = request.replace(stripApiSuffix_re, "$1/");
         return _resolveFilename(request, parent, isMain);
     };

@@ -9,6 +9,12 @@
  *   NumberFour AG - Initial API and implementation
  */
 @@Global @@ProvidedByRuntime
+import {Module} from "module";
+import {__RequireFn} from "module";
 
-export external public const global: Object+;
+export external public const __dirname: string;
+export external public const __filename: string;
 
+export external public const require: type{__RequireFn};
+
+export external public const module: Module;
