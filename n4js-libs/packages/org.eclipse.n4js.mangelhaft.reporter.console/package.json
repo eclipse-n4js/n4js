@@ -1,6 +1,7 @@
 {
   "name": "org.eclipse.n4js.mangelhaft.reporter.console",
   "version": "0.1.0",
+  "type": "module",
   "author": {
     "name": "NumberFour AG",
     "email": "npm@numberfour.eu"

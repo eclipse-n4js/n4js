@@ -1,6 +1,7 @@
 {
   "name": "n4js-runtime-node",
   "version": "0.1.0",
+  "type": "module",
   "author": {
     "name": "NumberFour AG",
     "email": "npm@numberfour.eu"
