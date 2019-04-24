@@ -142,7 +142,12 @@ export default public class NodeTestAPI {
             rlog("modulePath:", modulePath);
 
             const execArgv = process.execArgv.slice();
-            if (execArgv.indexOf("esm") < 0 && (process.env.NODE_OPTIONS as string || "").indexOf("-r esm") < 0) {
+            const execArgvOptions = execArgv.join(" ");
+            const nodeOptions = process.env.NODE_OPTIONS as string || "";
+            const checkOption = (str: string, opt: string): boolean => str.endsWith(opt) || str.indexOf(`${opt} `) >= 0;
+            const hasOption = (opt: string): boolean => checkOption(execArgvOptions, opt) || checkOption(nodeOptions, opt);
+            
+            if (!["-r esm", "--require=esm", "--experimental-modules"].some(hasOption)) {
                 execArgv.push("-r", "esm");
             }
             if (options.inspectBrk) {
