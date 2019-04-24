@@ -10,19 +10,11 @@
  */
 @@Global @@ProvidedByRuntime
 import {Module} from "module";
+import {__RequireFn} from "module";
 
 export external public const __dirname: string;
 export external public const __filename: string;
 
-@Final
-export external public class ~__RequireFn {
-    (string): any;
-    
-    public static get cache(): Object+;
-    public static resolve(request: string, options: ~Object with {
-        paths: [string]
-    }=): string;
-}
 export external public const require: type{__RequireFn};
 
 export external public const module: Module;

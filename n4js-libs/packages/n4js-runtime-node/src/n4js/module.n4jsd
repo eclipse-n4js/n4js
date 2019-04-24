@@ -11,6 +11,16 @@
 
 export external public const builtinModules: [string];
 
+@Final
+export external public class ~__RequireFn {
+    (string): any;
+    
+    public static get cache(): Object+;
+    public static resolve(request: string, options: ~Object with {
+        paths: [string]
+    }=): string;
+}
+
 export external public function createRequireFromPath(filename: string): type{__RequireFn};
 
 export external public class ~Module {
