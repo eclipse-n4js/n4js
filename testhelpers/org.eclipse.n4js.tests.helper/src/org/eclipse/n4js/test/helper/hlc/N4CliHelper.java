@@ -303,7 +303,7 @@ public class N4CliHelper {
 	 *
 	 * @returns file indicating the relative path to the copied data set
 	 */
-	public static File setupWorkspace(Path sourceLocation, Path destinationLocation,
+	public static void setupWorkspace(Path sourceLocation, Path destinationLocation,
 			Predicate<String> n4jsLibrariesPredicate, boolean createYarnWorkspace) throws IOException {
 
 		Path projectLocation = createYarnWorkspace ? destinationLocation.resolve(PACKAGES) : destinationLocation;
@@ -351,8 +351,6 @@ public class N4CliHelper {
 				}
 			}
 		}
-
-		return destinationLocation.toFile();
 	}
 
 	/**
@@ -386,7 +384,7 @@ public class N4CliHelper {
 					location,
 					true,
 					false, // do not use symbolic links (because some tests modify the files in the destination folder)
-					false, // do not delete on exit (because the tests using this method are responsible to cleaning up)
+					false, // do not delete on exit (because tests using this method are responsible for cleaning up)
 					libName -> !N4JS_LIBS_BLACKLIST.contains(libName) && n4jsLibrariesPredicate.test(libName));
 		} finally {
 			if (globalState != null) {

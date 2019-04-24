@@ -126,7 +126,8 @@ public abstract class AbstractN4jscTest {
 		Path fixture = new File(testDataRoot, testDataSet).toPath();
 		Path root = FileUtils.createTempDirectory(testDataRoot + "_" + testDataSet + "_");
 		Path wsp = root.resolve(WSP);
-		return N4CliHelper.setupWorkspace(fixture, wsp, n4jsLibrariesPredicate, createYarnWorkspace);
+		N4CliHelper.setupWorkspace(fixture, wsp, n4jsLibrariesPredicate, createYarnWorkspace);
+		return wsp.toFile();
 	}
 
 	/**
