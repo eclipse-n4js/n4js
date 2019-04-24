@@ -4,7 +4,6 @@
   "repository": "https://github.com/eclipse/n4js",
   "license": "EPL-1.0",
   "version": "0.1.0",
-  "type": "module",
   "internalVersion": "2019-03-15T08:46:12Z",
   "description": "N4JS compiler and command line tools.",
   "scripts": {

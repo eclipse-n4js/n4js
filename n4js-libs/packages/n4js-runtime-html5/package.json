@@ -1,7 +1,6 @@
 {
   "name": "n4js-runtime-html5",
   "version": "0.1.0",
-  "type": "module",
   "author": {
     "name": "NumberFour AG",
     "email": "npm@numberfour.eu"
