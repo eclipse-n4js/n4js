@@ -8,18 +8,16 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
+import "./rt/N4BuiltInClasses.js";
+import "./rt/N4RuntimeBootstrap.js";
+
 (function(global) {
     "use strict";
 
-    if (!global.$makeClass) {
-        // TODO: will be removed once the parser could properly support global `import`.
-        // just for immediate execution without compile step
-        global._n4jsImport = function(path) {
-            return import(path);
-        };
-
-        require("./rt/N4BuiltInClasses.js");
-        require("./rt/N4RuntimeBootstrap.js");
-    }
+    // TODO: will be removed once the parser could properly support global `import`.
+    // just for immediate execution without compile step
+    global._n4jsImport = function(path) {
+        return import(path);
+    };
 
 }(typeof global === "object" ? global : self));
