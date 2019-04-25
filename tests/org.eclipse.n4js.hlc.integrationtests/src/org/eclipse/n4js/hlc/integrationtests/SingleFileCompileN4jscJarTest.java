@@ -203,6 +203,8 @@ public class SingleFileCompileN4jscJarTest extends AbstractN4jscJarTest {
 				exitCode);
 		String out = N4CliHelper.readLogfile(outputLogFile);
 		String expectedErrorMessage = "Error: Cannot find module '/.*/target/wsp/packages/P1/src-gen/A'";
-		assertTrue(Pattern.matches("(.|\n)*" + expectedErrorMessage + "(.|\n)*", out));
+		assertTrue(
+				"actual output did not contain pattern: " + expectedErrorMessage,
+				Pattern.compile(expectedErrorMessage).matcher(out).find());
 	}
 }
