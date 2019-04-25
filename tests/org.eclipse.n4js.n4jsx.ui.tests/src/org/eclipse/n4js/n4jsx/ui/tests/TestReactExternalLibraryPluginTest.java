@@ -36,6 +36,7 @@ import org.eclipse.n4js.utils.process.ProcessExecutor;
 import org.eclipse.n4js.utils.process.ProcessResult;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.inject.Inject;
@@ -43,6 +44,7 @@ import com.google.inject.Inject;
 /**
  * Test for checking the runtime behavior of the React external library.
  */
+@Ignore("GH-1281") // FIXME GH-1281 requires runtime on public npm registry (also note the FIXME below!!!!)
 public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipantTest {
 
 	private static final String PACKAGE_REACT = "react";

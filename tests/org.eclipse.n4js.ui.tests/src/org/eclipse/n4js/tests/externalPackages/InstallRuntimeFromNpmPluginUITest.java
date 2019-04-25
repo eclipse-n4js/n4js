@@ -39,6 +39,7 @@ import org.eclipse.n4js.ui.wizard.dependencies.InstallOptions;
 import org.eclipse.n4js.ui.wizard.dependencies.RunnableInstallDependencies;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.inject.Inject;
@@ -48,6 +49,7 @@ import com.google.inject.Inject;
  *
  * Asserts that a module can be executed using a runtime environment that was installed from npm.
  */
+@Ignore("GH-1281") // FIXME GH-1281 requires n4js-libs on public npm registry
 public class InstallRuntimeFromNpmPluginUITest extends AbstractBuilderParticipantTest {
 
 	// the id of the runner to launch

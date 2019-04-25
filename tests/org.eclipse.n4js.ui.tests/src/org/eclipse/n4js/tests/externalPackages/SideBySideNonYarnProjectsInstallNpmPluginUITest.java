@@ -37,6 +37,7 @@ import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.inject.Inject;
@@ -52,6 +53,7 @@ import com.google.inject.Inject;
  * b) run "npm install" in P1 -> errors in P1 gone<br>
  * c) run "npm install" in P2 -> all errors gone<br>
  */
+@Ignore("GH-1281") // FIXME GH-1281 does this test still make sense after removing shipped code???
 public class SideBySideNonYarnProjectsInstallNpmPluginUITest extends AbstractBuilderParticipantTest {
 
 	// the id of the runner to launch

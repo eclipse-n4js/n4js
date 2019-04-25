@@ -29,12 +29,14 @@ import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
 import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.inject.Inject;
 
 /**
  */
+@Ignore("GH-1281") // FIXME GH-1281 does this test still make sense after removing shipped code???
 public class ShadowingCreatesVersionWarningsPluginUITest extends AbstractBuilderParticipantTest {
 	private static final String PROBANDS = "probands";
 	private static final String WORKSPACE_LOC = "ShadowingCreatesVersionWarnings";
