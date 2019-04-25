@@ -246,15 +246,15 @@ public class N4jsLibsAccess {
 		Map<String, Path> result = new HashMap<>();
 		Path nodeModulesPath = projectPath.resolve(N4JSGlobals.NODE_MODULES);
 		if (Files.exists(nodeModulesPath)) {
-			for (File child : nodeModulesPath.toFile().listFiles(File::isDirectory)) {
-				if (child.getName().startsWith("@")) {
-					for (File grandChild : child.listFiles(File::isDirectory)) {
-						if (isNpmPackage(grandChild.toPath())) {
-							result.put(child.getName() + '/' + grandChild.getName(), grandChild.toPath());
+			for (File childDir : nodeModulesPath.toFile().listFiles(File::isDirectory)) {
+				if (childDir.getName().startsWith("@")) {
+					for (File grandChildDir : childDir.listFiles(File::isDirectory)) {
+						if (isNpmPackage(grandChildDir.toPath())) {
+							result.put(childDir.getName() + '/' + grandChildDir.getName(), grandChildDir.toPath());
 						}
 					}
-				} else if (isNpmPackage(child.toPath())) {
-					result.put(child.getName(), child.toPath());
+				} else if (isNpmPackage(childDir.toPath())) {
+					result.put(childDir.getName(), childDir.toPath());
 				}
 			}
 		}
