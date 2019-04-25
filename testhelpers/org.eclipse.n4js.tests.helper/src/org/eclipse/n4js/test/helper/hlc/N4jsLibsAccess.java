@@ -18,12 +18,14 @@ import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -93,16 +95,17 @@ public class N4jsLibsAccess {
 		return n4jsLibsLocation.resolve("packages");
 	}
 
-	public static Path findN4jsLibs(String projectName) {
+	public static Path findN4jsLib(String projectName) {
 		Path base = findN4jsLibsLocation();
-		return findN4jsLibs(base, projectName, false);
+		return findN4jsLib(base, projectName, false);
 	}
 
-	private static Path findN4jsLibs(Path n4jsLibs, String projectName, boolean searchNodeModules) {
-		Path result = n4jsLibs.resolve(projectName);
+	private static Path findN4jsLib(Path n4jsLibs, String projectName, boolean searchNodeModules) {
+		Path result = toProjectPath(n4jsLibs, projectName);
 		if (searchNodeModules && !Files.exists(result)) {
 			// 2nd attempt: check in node_modules folder of the containing yarn workspace
-			result = n4jsLibs.getParent().resolve(N4JSGlobals.NODE_MODULES).resolve(projectName);
+			Path nodeModules = n4jsLibs.getParent().resolve(N4JSGlobals.NODE_MODULES);
+			result = toProjectPath(nodeModules, projectName);
 		}
 		if (!Files.exists(result)) {
 			throw new IllegalArgumentException("cannot find a project among n4js-libs "
@@ -112,10 +115,12 @@ public class N4jsLibsAccess {
 		return result;
 	}
 
-	public static List<Path> findAllN4jsLibs() {
+	public static Map<String, Path> findAllN4jsLibs() {
 		Path location = findN4jsLibsLocation();
 		try {
-			return Files.list(location).filter(p -> isNpmPackage(p)).collect(Collectors.toList());
+			return Files.list(location)
+					.filter(p -> isNpmPackage(p))
+					.collect(Collectors.toMap(p -> p.getFileName().toString(), Function.identity()));
 		} catch (IOException e) {
 			throw new IllegalStateException("cannot obtain list of n4js-libs: " + e.getMessage(), e);
 		}
@@ -128,42 +133,43 @@ public class N4jsLibsAccess {
 
 	public static void installN4jsLibs(Path targetPath, boolean includeDependencies, boolean useSymbolicLinks,
 			boolean deleteOnExit, Predicate<String> predicate) throws IOException {
-		List<Path> allN4jsLibs = findAllN4jsLibs();
-		List<Path> toBeInstalled = allN4jsLibs.stream()
-				.filter(p -> predicate.test(p.getFileName().toString()))
-				.collect(Collectors.toList());
+		Map<String, Path> allN4jsLibs = findAllN4jsLibs();
+		Map<String, Path> toBeInstalled = allN4jsLibs.entrySet().stream()
+				.filter(e -> predicate.test(e.getKey()))
+				.collect(Collectors.toMap(Entry::getKey, Entry::getValue));
 		installN4jsLibs(targetPath, includeDependencies, useSymbolicLinks, deleteOnExit, toBeInstalled);
 	}
 
 	public static void installN4jsLibs(Path targetPath, boolean includeDependencies, boolean useSymbolicLinks,
 			boolean deleteOnExit, String... projectNames) throws IOException {
 		Path n4jsLibsLocation = findN4jsLibsLocation();
-		List<Path> toBeInstalled = new ArrayList<>();
+		Map<String, Path> toBeInstalled = new HashMap<>();
 		for (String projectName : projectNames) {
-			Path projectPath = findN4jsLibs(n4jsLibsLocation, projectName, false);
-			toBeInstalled.add(projectPath);
+			Path projectPath = findN4jsLib(n4jsLibsLocation, projectName, false);
+			toBeInstalled.put(projectName, projectPath);
 		}
 		installN4jsLibs(targetPath, includeDependencies, useSymbolicLinks, deleteOnExit, toBeInstalled);
 	}
 
 	private static void installN4jsLibs(Path targetPath, boolean includeDependencies, boolean useSymbolicLinks,
-			boolean deleteOnExit, Collection<Path> projectPaths) throws IOException {
-		Set<Path> toBeInstalled = new HashSet<>();
+			boolean deleteOnExit, Map<String, Path> projectsToBeInstalled) throws IOException {
+		Map<String, Path> toBeInstalled = new LinkedHashMap<>();
 		// add projects in 'projectNames' to 'toBeInstalled'
-		toBeInstalled.addAll(projectPaths);
+		toBeInstalled.putAll(projectsToBeInstalled);
 		// add dependencies of projects in 'toBeInstalled' to 'toBeInstalled' (if requested)
 		if (includeDependencies) {
 			Path n4jsLibsLocation = N4jsLibsAccess.findN4jsLibsLocation();
-			for (Path projectPath : new ArrayList<>(toBeInstalled)) { // will be modified in next line!
+			for (Path projectPath : new ArrayList<>(toBeInstalled.values())) { // will be modified in next line!
 				collectDependencies(n4jsLibsLocation, projectPath, toBeInstalled);
 			}
 		}
 		// actually install projects in 'toBeInstalled'
-		for (Path projectPath : toBeInstalled) {
-			String projectName = projectPath.getFileName().toString();
-			Path targetProjectPath = targetPath.resolve(projectName);
+		for (Entry<String, Path> projectEntry : toBeInstalled.entrySet()) {
+			String projectName = projectEntry.getKey();
+			Path projectPath = projectEntry.getValue();
+			Path targetProjectPath = toProjectPath(targetPath, projectName);
 			if (useSymbolicLinks && !SYMBOLIC_LINKS_DISABLED) {
-				Files.createDirectories(targetPath); // i.e. parent of targetProjectPath
+				Files.createDirectories(targetPath); // i.e. create parent of targetProjectPath
 				Path symLinkPath = Files.createSymbolicLink(targetProjectPath, projectPath);
 				if (deleteOnExit) {
 					symLinkPath.toFile().deleteOnExit();
@@ -178,12 +184,12 @@ public class N4jsLibsAccess {
 		}
 	}
 
-	private static void collectDependencies(Path n4jsLibsLocation, Path projectPath, Set<Path> addHere)
+	private static void collectDependencies(Path n4jsLibsLocation, Path projectPath, Map<String, Path> addHere)
 			throws IOException {
 		Set<String> dependencyNames = loadDepenencies(projectPath, false, true, true);
 		for (String dependencyName : dependencyNames) {
-			Path dependencyPath = findN4jsLibs(n4jsLibsLocation, dependencyName, true);
-			if (addHere.add(dependencyPath)) {
+			Path dependencyPath = findN4jsLib(n4jsLibsLocation, dependencyName, true);
+			if (addHere.putIfAbsent(dependencyName, dependencyPath) == null) {
 				collectDependencies(n4jsLibsLocation, dependencyPath, addHere);
 			}
 		}
@@ -192,18 +198,14 @@ public class N4jsLibsAccess {
 	private static Set<String> loadDepenencies(Path projectPath, boolean includeDevDependencies,
 			boolean excludeNestedProjects, boolean includeDepsOfNestedProjects) throws IOException {
 		Set<String> result = new LinkedHashSet<>();
-		Path nodeModulesPath = projectPath.resolve(N4JSGlobals.NODE_MODULES);
-		List<String> nestedProjectNames = Files.exists(nodeModulesPath)
-				? Files.list(nodeModulesPath).filter(p -> isNpmPackage(p)).map(p -> p.getFileName().toString())
-						.collect(Collectors.toList())
-				: Collections.emptyList();
+		Map<String, Path> nestedProjects = getNestedProjects(projectPath);
 		// add dependencies of project at 'projectPath'
 		List<String> dependencyNames = loadDepenencies(projectPath, includeDevDependencies);
 		result.addAll(dependencyNames);
 		// add dependencies of nested projects (if requested)
 		if (includeDepsOfNestedProjects) {
-			for (String nestedProjectName : nestedProjectNames) {
-				Set<String> nestedDependencyNames = loadDepenencies(nodeModulesPath.resolve(nestedProjectName),
+			for (Path nestedProjectPath : nestedProjects.values()) {
+				Set<String> nestedDependencyNames = loadDepenencies(nestedProjectPath,
 						false, // never include devDependencies of nested projects!
 						excludeNestedProjects, includeDepsOfNestedProjects);
 				result.addAll(nestedDependencyNames);
@@ -211,7 +213,7 @@ public class N4jsLibsAccess {
 		}
 		// remove nested projects (if requested)
 		if (excludeNestedProjects) {
-			result.removeAll(nestedProjectNames);
+			result.removeAll(nestedProjects.keySet());
 		}
 		return result;
 	}
@@ -237,10 +239,37 @@ public class N4jsLibsAccess {
 		return result;
 	}
 
+	/**
+	 * Returns name/path of all projects nested inside the node_modules folder of the project at the given location.
+	 */
+	private static Map<String, Path> getNestedProjects(Path projectPath) {
+		Map<String, Path> result = new HashMap<>();
+		Path nodeModulesPath = projectPath.resolve(N4JSGlobals.NODE_MODULES);
+		if (Files.exists(nodeModulesPath)) {
+			for (File child : nodeModulesPath.toFile().listFiles(File::isDirectory)) {
+				if (child.getName().startsWith("@")) {
+					for (File grandChild : child.listFiles(File::isDirectory)) {
+						if (isNpmPackage(grandChild.toPath())) {
+							result.put(child.getName() + '/' + grandChild.getName(), grandChild.toPath());
+						}
+					}
+				} else if (isNpmPackage(child.toPath())) {
+					result.put(child.getName(), child.toPath());
+				}
+			}
+		}
+		return result;
+	}
+
 	private static boolean isNpmPackage(Path path) {
 		return !path.getFileName().toString().startsWith(".")
 				&& Files.isDirectory(path)
 				&& Files.isReadable(path.resolve(N4JSGlobals.PACKAGE_JSON));
+	}
+
+	private static Path toProjectPath(Path location, String projectName) {
+		String projectNameAsPath = projectName.replace('/', File.separatorChar);
+		return location.resolve(projectNameAsPath);
 	}
 
 	private static URI findMyLocation() {
