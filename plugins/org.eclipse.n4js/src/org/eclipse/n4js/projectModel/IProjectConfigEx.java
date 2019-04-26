@@ -10,11 +10,12 @@
  */
 package org.eclipse.n4js.projectModel;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.xtext.workspace.IProjectConfig;
-import org.eclipse.xtext.workspace.ISourceFolder;
 
 /**
  *
@@ -25,13 +26,26 @@ public interface IProjectConfigEx extends IProjectConfig {
 	Set<? extends ISourceFolderEx> getSourceFolders();
 
 	@Override
-	default ISourceFolder findSourceFolderContaining(URI member) {
+	default ISourceFolderEx findSourceFolderContaining(URI member) {
 		for (ISourceFolderEx srcFolder : getSourceFolders()) {
 			if (srcFolder.contains(member)) {
 				return srcFolder;
 			}
 		}
 		return null;
+	}
+
+	URI getOutputFolder();
+
+	default boolean isInSourceFolder(URI member) {
+		return findSourceFolderContaining(member) != null;
+	}
+
+	default boolean isInOutputFolder(URI member) {
+		Path memberPath = Paths.get(member.path());
+		Path outputPath = Paths.get(getOutputFolder().path());
+
+		return memberPath.startsWith(outputPath);
 	}
 
 }

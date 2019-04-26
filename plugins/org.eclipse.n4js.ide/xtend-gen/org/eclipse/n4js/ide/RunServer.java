@@ -14,8 +14,7 @@ import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.jsonrpc.MessageConsumer;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.n4js.ide.N4JSIdeSetup;
-import org.eclipse.n4js.ts.scoping.builtin.ResourceSetWithBuiltInScheme;
-import org.eclipse.xtext.ide.server.LanguageServerImpl;
+import org.eclipse.n4js.ide.server.N4JSLanguageServerImpl;
 
 @SuppressWarnings("all")
 public class RunServer {
@@ -27,9 +26,7 @@ public class RunServer {
     final ExecutorService threadPool = Executors.newCachedThreadPool();
     while (true) {
       {
-        LanguageServerImpl languageServer = injector.<LanguageServerImpl>getInstance(LanguageServerImpl.class);
-        final ClassLoader classLoader = injector.<ClassLoader>getInstance(ClassLoader.class);
-        final ResourceSetWithBuiltInScheme xyz = injector.<ResourceSetWithBuiltInScheme>getInstance(ResourceSetWithBuiltInScheme.class);
+        N4JSLanguageServerImpl languageServer = injector.<N4JSLanguageServerImpl>getInstance(N4JSLanguageServerImpl.class);
         final AsynchronousSocketChannel socketChannel = serverSocket.accept().get();
         final InputStream in = Channels.newInputStream(socketChannel);
         final OutputStream out = Channels.newOutputStream(socketChannel);
