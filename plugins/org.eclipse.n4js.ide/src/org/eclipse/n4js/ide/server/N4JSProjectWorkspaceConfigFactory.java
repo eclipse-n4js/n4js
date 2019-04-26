@@ -16,6 +16,7 @@ import java.util.HashSet;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.generator.headless.HeadlessHelper;
 import org.eclipse.n4js.generator.headless.N4JSCompileException;
+import org.eclipse.n4js.hlc.base.HeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.projectDescription.ProjectDependency;
@@ -34,6 +35,9 @@ import com.google.inject.Inject;
 public class N4JSProjectWorkspaceConfigFactory extends ProjectWorkspaceConfigFactory {
 
 	@Inject
+	private HeadlessExtensionRegistrationHelper headlessExtensionRegistrationHelper;
+
+	@Inject
 	private HeadlessHelper headlessHelper;
 
 	@Inject
@@ -47,6 +51,8 @@ public class N4JSProjectWorkspaceConfigFactory extends ProjectWorkspaceConfigFac
 
 	@Override
 	public IWorkspaceConfig getWorkspaceConfig(URI workspaceBaseURI) {
+
+		headlessExtensionRegistrationHelper.registerExtensions();
 
 		Collection<URI> allProjectDirs = ProjectFinderUtil.collectAllProjectDirs(workspaceBaseURI);
 		Collection<URI> relevantProjectDirs = new HashSet<>();
