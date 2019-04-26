@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ide;
 
+import org.eclipse.n4js.ide.editor.contentassist.N4JSIdeContentProposalProvider;
 import org.eclipse.n4js.ide.server.N4JSBuildManager;
 import org.eclipse.n4js.ide.server.N4JSOutputConfigurationProvider;
 import org.eclipse.n4js.ide.server.N4JSProjectDescriptionFactory;
@@ -22,6 +23,7 @@ import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
 import org.eclipse.xtext.generator.IGenerator2;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
+import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalProvider;
 import org.eclipse.xtext.ide.server.BuildManager;
 import org.eclipse.xtext.ide.server.IProjectDescriptionFactory;
 import org.eclipse.xtext.ide.server.IWorkspaceConfigFactory;
@@ -79,6 +81,10 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends DocumentSymbolMapper> bindDocumentSymbolMapper() {
 		return N4JSDocumentSymbolMapper.class;
+	}
+
+	public Class<? extends IdeContentProposalProvider> bindIdeContentProposalProvider() {
+		return N4JSIdeContentProposalProvider.class;
 	}
 
 }
