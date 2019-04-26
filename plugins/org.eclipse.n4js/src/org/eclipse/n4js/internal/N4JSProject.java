@@ -21,6 +21,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -41,6 +42,7 @@ import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.io.FileUtils;
+import org.eclipse.xtext.generator.URIBasedFileSystemAccess;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
 import com.google.common.base.Optional;
@@ -92,14 +94,57 @@ public class N4JSProject implements IN4JSProject {
 		return this.getProjectName();
 	}
 
+	/**
+	 * FIXME: MISSING JAVA-DOC<br/>
+	 * THIS METHOD MUST RETURN AN URI THAT ENDS WITH '/'.<br/>
+	 * ADD TO JAVA-DOC
+	 * <p>
+	 * Otherwise, {@link URIBasedFileSystemAccess#getURI(String, String)} will omit the project directory, ie. the last
+	 * directory. The getURI call happens during {@link URIBasedFileSystemAccess#generateFile(...)}
+	 */
 	@Override
 	public URI getPath() {
-		return this.getLocation();
+		URI locationURI = this.getLocation();
+		if (!locationURI.lastSegment().isEmpty()) {
+			locationURI = locationURI.appendSegment("");
+		}
+		return locationURI;
+	}
+
+	final class SourceContainterForPackageJson implements ISourceFolderEx {
+		@Override
+		public String getName() {
+			return N4JSGlobals.PACKAGE_JSON;
+		}
+
+		@Override
+		public List<URI> getAllResources() {
+			return Collections.singletonList(getPath());
+		}
+
+		@Override
+		public URI getPath() {
+			URI projectURI = N4JSProject.this.getPath();
+			URI trimedProjectURI = projectURI.hasTrailingPathSeparator() ? projectURI.trimSegments(1) : projectURI;
+			URI packageJsonURI = trimedProjectURI.appendSegment(N4JSGlobals.PACKAGE_JSON);
+			return packageJsonURI;
+		}
 	}
 
 	@Override
 	public Set<? extends ISourceFolderEx> getSourceFolders() {
-		return new HashSet<>(this.getSourceContainers());
+		HashSet<ISourceFolderEx> sourceFolders = new HashSet<>(this.getSourceContainers());
+		sourceFolders.add(new SourceContainterForPackageJson());
+		return sourceFolders;
+	}
+
+	@Override
+	public URI getOutputFolder() {
+		String outputPath = this.getOutputPath();
+		URI projectURI = this.getPath();
+		URI outputURI = URI.createFileURI(outputPath);
+		URI completeOutputURI = projectURI.appendSegments(outputURI.segments());
+		return completeOutputURI;
 	}
 
 	@Override
@@ -380,6 +425,7 @@ public class N4JSProject implements IN4JSProject {
 
 	@Override
 	public boolean isExternal() {
+		boolean external = getLocation().segmentsList().contains(N4JSGlobals.NODE_MODULES);
 		return external;
 	}
 

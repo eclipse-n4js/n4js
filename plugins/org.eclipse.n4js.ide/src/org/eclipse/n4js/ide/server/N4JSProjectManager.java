@@ -16,10 +16,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.projectModel.IProjectConfigEx;
 import org.eclipse.n4js.projectModel.ISourceFolderEx;
+import org.eclipse.xtext.build.BuildRequest;
 import org.eclipse.xtext.build.IncrementalBuilder.Result;
 import org.eclipse.xtext.ide.server.ProjectManager;
 import org.eclipse.xtext.resource.IExternalContentSupport.IExternalContentProvider;
+import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -37,7 +40,7 @@ import com.google.inject.Provider;
 public class N4JSProjectManager extends ProjectManager {
 
 	Procedure2<? super URI, ? super Iterable<Issue>> issueAcceptor;
-	private IProjectConfig projectConfig;
+	private IProjectConfigEx projectConfig;
 
 	@Override
 	public void initialize(ProjectDescription description, IProjectConfig pProjectConfig,
@@ -49,7 +52,7 @@ public class N4JSProjectManager extends ProjectManager {
 				cancelIndicator);
 
 		issueAcceptor = acceptor;
-		projectConfig = pProjectConfig;
+		projectConfig = (IProjectConfigEx) pProjectConfig;
 	}
 
 	@Override
@@ -60,6 +63,21 @@ public class N4JSProjectManager extends ProjectManager {
 			uris.addAll(srcFolderEx.getAllResources());
 		}
 		return doBuild(uris, Collections.emptyList(), Collections.emptyList(), cancelIndicator);
+	}
+
+	@Override
+	public BuildRequest newBuildRequest(List<URI> changedFiles, List<URI> deletedFiles,
+			List<IResourceDescription.Delta> externalDeltas, CancelIndicator cancelIndicator) {
+
+		// changedFiles = changedFiles.stream()
+		// .filter(uri -> !projectConfig.isInOutputFolder(uri))
+		// .collect(Collectors.toList());
+		//
+		// deletedFiles = deletedFiles.stream()
+		// .filter(uri -> !projectConfig.isInOutputFolder(uri))
+		// .collect(Collectors.toList());
+
+		return super.newBuildRequest(changedFiles, deletedFiles, externalDeltas, cancelIndicator);
 	}
 
 }
