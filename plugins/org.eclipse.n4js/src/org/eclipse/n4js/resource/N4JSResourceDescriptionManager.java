@@ -97,7 +97,7 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 
 		URI candidateURI = candidate.getURI();
 		if (candidateURI.isFile()) {
-			return false;
+			// return false; // in LSP case, all resources are file based
 		}
 
 		// Opaque modules cannot contain any references to one of the deltas.
