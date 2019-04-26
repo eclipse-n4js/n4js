@@ -16,6 +16,8 @@ import org.eclipse.n4js.ide.server.N4JSProjectDescriptionFactory;
 import org.eclipse.n4js.ide.server.N4JSProjectManager;
 import org.eclipse.n4js.ide.server.N4JSProjectWorkspaceConfigFactory;
 import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
+import org.eclipse.n4js.ide.server.symbol.N4JSDocumentSymbolMapper;
+import org.eclipse.n4js.ide.server.symbol.N4JSHierarchicalDocumentSymbolService;
 import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
 import org.eclipse.xtext.generator.IGenerator2;
@@ -25,6 +27,8 @@ import org.eclipse.xtext.ide.server.IProjectDescriptionFactory;
 import org.eclipse.xtext.ide.server.IWorkspaceConfigFactory;
 import org.eclipse.xtext.ide.server.ProjectManager;
 import org.eclipse.xtext.ide.server.WorkspaceManager;
+import org.eclipse.xtext.ide.server.symbol.DocumentSymbolMapper;
+import org.eclipse.xtext.ide.server.symbol.HierarchicalDocumentSymbolService;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
 /**
@@ -67,6 +71,14 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends OutputConfigurationProvider> bindOutputConfigurationProvider() {
 		return N4JSOutputConfigurationProvider.class;
+	}
+
+	public Class<? extends HierarchicalDocumentSymbolService> bindHierarchicalDocumentSymbolService() {
+		return N4JSHierarchicalDocumentSymbolService.class;
+	}
+
+	public Class<? extends DocumentSymbolMapper> bindDocumentSymbolMapper() {
+		return N4JSDocumentSymbolMapper.class;
 	}
 
 }

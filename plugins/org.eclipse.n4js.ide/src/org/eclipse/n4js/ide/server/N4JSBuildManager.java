@@ -36,6 +36,7 @@ import com.google.inject.Inject;
 /**
  *
  */
+@SuppressWarnings("restriction")
 public class N4JSBuildManager extends BuildManager {
 
 	@Inject
@@ -43,33 +44,23 @@ public class N4JSBuildManager extends BuildManager {
 
 	@Override
 	public Buildable submit(List<URI> dirtyFiles, List<URI> deletedFiles) {
-		String files = dirtyFiles.stream()
-				.map(uri -> uri.segment(uri.segmentCount() - 1))
-				.reduce((a, b) -> a + ", " + b).orElse("");
-
-		System.out.println("BEGIN: submit: " + files);
-		try {
-			Buildable submit = super.submit(dirtyFiles, deletedFiles);
-			return submit;
-		} finally {
-			System.out.println("END: submit");
-		}
+		Buildable submit = super.submit(dirtyFiles, deletedFiles);
+		return submit;
 	}
 
 	@Override
 	protected List<Delta> internalBuild(CancelIndicator cancelIndicator) {
-		System.out.println("BEGIN: internalBuild");
+		System.out.println("internalBuild");
 		try {
 			List<Delta> internalBuild = super_internalBuild(cancelIndicator);
 			return internalBuild;
 		} catch (Exception e) {
 			System.out.println("CATCHED: internalBuild. " + e.getClass().getName());
 			throw e;
-		} finally {
-			System.out.println("END: internalBuild. Still dirty: " + getFilesString(getDirtyFiles()));
 		}
 	}
 
+	/***/
 	protected List<IResourceDescription.Delta> super_internalBuild(CancelIndicator cancelIndicator) {
 		ArrayList<URI> allDirty = new ArrayList<>(getDirtyFiles());
 		HashMultimap<ProjectDescription, URI> project2dirty = HashMultimap.create();
@@ -89,10 +80,9 @@ public class N4JSBuildManager extends BuildManager {
 		allPDs.addAll(project2deleted.keySet());
 		List<ProjectDescription> sortedDescriptions = sortByDependencies(allPDs);
 
-		System.out.println("LOOP: internalBuild. Loop through: " + sortedDescriptions.size());
 		List<IResourceDescription.Delta> result = new ArrayList<>();
 		for (ProjectDescription pDescr : sortedDescriptions) {
-			logger.log("building " + pDescr.getName());
+			logger.log("Building: " + pDescr.getName());
 			ProjectManager projectManager = getWorkspaceManager().getProjectManager(pDescr.getName());
 			List<URI> projectDirty = new LinkedList<>(project2dirty.get(pDescr));
 			List<URI> projectDeleted = new LinkedList<>(project2deleted.get(pDescr));
@@ -104,12 +94,12 @@ public class N4JSBuildManager extends BuildManager {
 			getDirtyFiles().removeAll(projectDirty);
 			getDeletedFiles().removeAll(projectDeleted);
 
-			System.out.println("LOOP: internalBuild. Removed dirty. Now is: " + getFilesString(getDirtyFiles()));
 			result.addAll(partialResult.getAffectedResources());
 		}
 		return result;
 	}
 
+	@SuppressWarnings("unchecked")
 	private Set<URI> getDirtyFiles() {
 		try {
 			Field dirtyFilesField = BuildManager.class.getDeclaredField("dirtyFiles");
@@ -122,6 +112,7 @@ public class N4JSBuildManager extends BuildManager {
 		return Collections.emptySet();
 	}
 
+	@SuppressWarnings("unchecked")
 	private Set<URI> getDeletedFiles() {
 		try {
 			Field deletedFilesField = BuildManager.class.getDeclaredField("deletedFiles");
@@ -146,6 +137,7 @@ public class N4JSBuildManager extends BuildManager {
 		return null;
 	}
 
+	@SuppressWarnings("unused")
 	private String getFilesString(Collection<URI> files) {
 		String filesString = files.stream()
 				.map(uri -> uri.segment(uri.segmentCount() - 1))
