@@ -42,7 +42,7 @@ import com.google.inject.Inject;
  */
 public class EcmaScriptSubGenerator extends AbstractSubGenerator {
 	private static String COMPILER_ID = "es";
-	private static CompilerDescriptor DEFAULT_DESCRIPTOR = createDescriptor();
+	private static CompilerDescriptor DEFAULT_DESCRIPTOR = createDefaultDescriptor();
 
 	@Inject
 	private EcmaScriptTranspiler ecmaScriptTranspiler;
@@ -50,7 +50,8 @@ public class EcmaScriptSubGenerator extends AbstractSubGenerator {
 	@Inject
 	private CancelIndicatorBaseExtractor ciExtractor;
 
-	private static CompilerDescriptor createDescriptor() {
+	/** Creates a default CompilerDescriptor */
+	public static CompilerDescriptor createDefaultDescriptor() {
 		final CompilerDescriptor result = new CompilerDescriptor();
 		result.setIdentifier(COMPILER_ID);
 		result.setName("N4JS to ECMAScript transpiler");
@@ -59,6 +60,13 @@ public class EcmaScriptSubGenerator extends AbstractSubGenerator {
 		result.setActive(true);
 		result.setCompiledFileExtension("js");
 		result.setCompiledFileSourceMapExtension("map");
+		final OutputConfiguration outCfg = createDefaultOutputConfiguration();
+		result.setOutputConfiguration(outCfg);
+		return result;
+	}
+
+	/** Creates a default OutputConfiguration */
+	public static OutputConfiguration createDefaultOutputConfiguration() {
 		final OutputConfiguration outCfg = new OutputConfiguration(COMPILER_ID);
 		outCfg.setDescription("N4JS to ECMAScript transpiler");
 		outCfg.setOutputDirectory(N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT);
@@ -68,8 +76,7 @@ public class EcmaScriptSubGenerator extends AbstractSubGenerator {
 		outCfg.setSetDerivedProperty(true);
 		outCfg.setKeepLocalHistory(true);
 		outCfg.setCanClearOutputDirectory(true);
-		result.setOutputConfiguration(outCfg);
-		return result;
+		return outCfg;
 	}
 
 	@Override

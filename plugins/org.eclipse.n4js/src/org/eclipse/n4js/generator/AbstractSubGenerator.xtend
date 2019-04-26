@@ -40,13 +40,17 @@ import org.eclipse.xtext.validation.Issue
 import static org.eclipse.xtext.diagnostics.Severity.*
 import org.eclipse.n4js.internal.RaceDetectionHelper
 import org.eclipse.n4js.validation.helper.FolderContainmentHelper
+import org.eclipse.xtext.generator.IGenerator2
+import org.eclipse.xtext.generator.IFileSystemAccess2
+import org.eclipse.xtext.generator.IGeneratorContext
+import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
 
 /**
  * All sub generators should extend this class. It provides basic blocks of the logic, and
  * shared implementations.
  */
 @Log
-abstract class AbstractSubGenerator implements ISubGenerator {
+abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 
 	@Accessors
 	private CompilerDescriptor compilerDescriptor = null
@@ -70,12 +74,30 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 	@Inject protected N4JSPreferenceAccess preferenceAccess
 	
 	@Inject private FolderContainmentHelper containmentHelper;
+	
+	@Inject	private XpectAwareFileExtensionCalculator xpectAwareFileExtensionCalculator;
+
 
 	override getCompilerDescriptor() {
 		if (compilerDescriptor === null) {
 			compilerDescriptor = getDefaultDescriptor
 		}
 		return compilerDescriptor
+	}
+	
+
+	override doGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
+		doGenerate(input, fsa);
+	}
+
+	override beforeGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	override afterGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	/**
@@ -93,6 +115,10 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 	 * </ul>
 	 */
 	override doGenerate(Resource input, IFileSystemAccess fsa) {
+		if (!shouldBeCompiled(input, null)) {
+			return;
+		}
+		
 		try {
 
 			// remove error-marker
@@ -127,6 +153,8 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 
 		val boolean result = (autobuildEnabled
 			&& isGenerateProjectType(inputUri)
+			&& correctFileExtension(inputUri)
+			&& !isInNodeModules(inputUri)
 			&& hasOutput(inputUri)
 			&& isOutputNotInSourceContainer(inputUri)
 			&& isOutsideOfOutputFolder(inputUri)
@@ -143,6 +171,29 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 			RaceDetectionHelper.log("Skip generation of artifacts from %s", input.URI)
 		}
 		return result
+	}
+
+	private def correctFileExtension(URI n4jsSourceURI){
+		val n4jsExtension = xpectAwareFileExtensionCalculator.getXpectAwareFileExtension(n4jsSourceURI);
+		switch (n4jsExtension) {
+			case N4JSGlobals.N4JS_FILE_EXTENSION:
+				{return true;}
+			case N4JSGlobals.N4JSX_FILE_EXTENSION:
+				{return true;}
+		}
+		return false;
+	}
+
+	private def isInNodeModules(URI n4jsSourceURI){
+		val project = n4jsCore.findProject(n4jsSourceURI).orNull();
+		if (project !== null) {
+			val locationStr = project.location.toFileString;
+			if (locationStr.contains(N4JSGlobals.NODE_MODULES)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	private def hasOutput(URI n4jsSourceURI){
