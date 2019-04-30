@@ -19,7 +19,7 @@ ENTRYPOINT ["/usr/local/bin/mvn-entrypoint.sh"]
 #
 ARG MAVEN_VERSION=3.6.1
 ARG USER_HOME_DIR="/home/build"
-ARG SHA=707b1f6e390a65bde4af4cdaf2a24d45fc19a6ded00fff02e91626e3e42ceaff
+ARG SHA=b4880fb7a3d81edd190a029440cdf17f308621af68475a4fe976296e71ff4a4b546dd6d8a58aaafba334d309cc11e638c52808a4b0e818fc0fd544226d952544
 ARG BASE_URL=https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries
 ARG MAVEN_CENTRAL_URL=https://repo.maven.apache.org/maven2/
 
@@ -32,7 +32,7 @@ RUN groupadd -g 994 docker && usermod -aG docker build
 
 RUN mkdir -p /usr/share/maven /usr/share/maven/ref && \
     curl -fsSL -o /tmp/apache-maven.tar.gz ${BASE_URL}/apache-maven-$MAVEN_VERSION-bin.tar.gz && \
-    echo "${SHA}  /tmp/apache-maven.tar.gz" | sha256sum -c - && \
+    echo "${SHA}  /tmp/apache-maven.tar.gz" | sha512sum -c - && \
     tar -xzf /tmp/apache-maven.tar.gz -C /usr/share/maven --strip-components=1 && \
     rm -f /tmp/apache-maven.tar.gz && \
     ln -s /usr/share/maven/bin/mvn /usr/bin/mvn && \
