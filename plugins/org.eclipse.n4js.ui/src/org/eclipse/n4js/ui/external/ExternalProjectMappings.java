@@ -12,14 +12,20 @@ package org.eclipse.n4js.ui.external;
 
 import static com.google.common.collect.Maps.newHashMap;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -35,6 +41,7 @@ import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.Tuples;
 
@@ -85,7 +92,9 @@ public class ExternalProjectMappings {
 		this.userWorkspace = userWorkspace;
 		this.preferenceStore = preferenceStore;
 
-		this.completeCache = completeCache;
+		this.completeCache = new LinkedHashMap<>(completeCache);
+		removeDuplicatesFromCompleteCache();
+
 		Mappings mappings = computeMappings();
 		this.completeList = mappings.completeList;
 		this.completeProjectNameMapping = mappings.completeProjectNameMapping;
@@ -93,6 +102,33 @@ public class ExternalProjectMappings {
 		this.reducedProjectsLocationMapping = mappings.reducedProjectsLocationMapping;
 		this.reducedSet = mappings.reducedSet;
 		this.initialized = initialized;
+	}
+
+	/**
+	 * Removes "duplicate projects" from field {@link #completeCache}.
+	 *
+	 * A "duplicate project" in this sense is an external project that has the identical location on disk as a workspace
+	 * project. Duplicates will occur if a symbolic link in a node_modules folder points to the same location on disk as
+	 * a project imported into the Eclipse workspace. This typically occurs in the global node_modules folder of a yarn
+	 * workspace, where symbolic links point to the packages contained in the workspace; if and only if these packages
+	 * are imported into Eclipse, then this method will remove them from field {@link #completeCache}.
+	 */
+	private void removeDuplicatesFromCompleteCache() {
+		// prepare list of locations of all projects in workspace
+		// (note: also include locations of close projects!)
+		Set<Path> locationsOfWorkspaceProjects = Stream.of(userWorkspace.getWorkspace().getProjects())
+				.map(p -> getCanonicalFile(p.getLocation().toFile()).toPath())
+				.collect(Collectors.toSet());
+
+		List<URI> allPrjLocs = new LinkedList<>(completeCache.keySet());
+		for (URI projectLocation : allPrjLocs) {
+			if (projectLocation.isFile()) {
+				Path projectLocationPath = getCanonicalFile(URIUtils.toFile(projectLocation)).toPath();
+				if (projectLocationPath != null && locationsOfWorkspaceProjects.contains(projectLocationPath)) {
+					completeCache.remove(projectLocation);
+				}
+			}
+		}
 	}
 
 	private static class Mappings {
@@ -305,4 +341,11 @@ public class ExternalProjectMappings {
 		return pd;
 	}
 
+	private File getCanonicalFile(File file) {
+		try {
+			return file.getCanonicalFile();
+		} catch (IOException e) {
+			return file;
+		}
+	}
 }

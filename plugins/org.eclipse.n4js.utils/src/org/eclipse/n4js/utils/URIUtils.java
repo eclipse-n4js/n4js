@@ -139,6 +139,17 @@ public class URIUtils {
 	}
 
 	/**
+	 * Converts the given URI to a {@link File} iff it is a {@link org.eclipse.emf.common.util.URI#isFile() file URI};
+	 * otherwise returns <code>null</code>.
+	 * <p>
+	 * Same as {@link org.eclipse.emf.common.util.URI#toFileString()}, but returns a {@link File} instance instead of a
+	 * string.
+	 */
+	static public File toFile(org.eclipse.emf.common.util.URI uri) {
+		return uri != null && uri.isFile() ? new File(uri.toFileString()) : null;
+	}
+
+	/**
 	 * Compensates for the missing {@link URI#equals(Object)} implementation in {@link URI}. Adjusts paths that contain
 	 * symlinks.
 	 *
