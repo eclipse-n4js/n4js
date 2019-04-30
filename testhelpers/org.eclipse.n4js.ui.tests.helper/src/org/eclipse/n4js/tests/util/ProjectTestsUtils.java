@@ -82,6 +82,7 @@ import org.junit.Assert;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
 
@@ -275,11 +276,23 @@ public class ProjectTestsUtils {
 	 */
 	public static IProject importYarnWorkspace(LibraryManager libraryManager, File parentFolder, String yarnProjectName)
 			throws CoreException {
-		return importYarnWorkspace(libraryManager, parentFolder, yarnProjectName, Collections.emptyList());
+		return importYarnWorkspace(libraryManager, parentFolder, yarnProjectName, Predicates.alwaysTrue(),
+				Collections.emptyList());
 	}
 
 	public static IProject importYarnWorkspace(LibraryManager libraryManager, File parentFolder, String yarnProjectName,
 			Collection<String> n4jsLibs) throws CoreException {
+		return importYarnWorkspace(libraryManager, parentFolder, yarnProjectName, Predicates.alwaysTrue(), n4jsLibs);
+	}
+
+	/**
+	 * Imports the given yarn workspace project. Also imports (by reference) those projects located in the subfolder
+	 * 'packages' for which the given predicate returns <code>true</code>.
+	 *
+	 * @return yarn workspace project
+	 */
+	public static IProject importYarnWorkspace(LibraryManager libraryManager, File parentFolder, String yarnProjectName,
+			Predicate<String> packagesToImport, Collection<String> n4jsLibs) throws CoreException {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IProject yarnProject = ProjectTestsUtils.importProject(parentFolder, yarnProjectName);
 
@@ -290,10 +303,14 @@ public class ProjectTestsUtils {
 			if (yarnPackageName.startsWith("@")) {
 				for (String scopedPackageName : packagePath.toFile().list()) {
 					IPath scopedPackagePath = packagePath.append(scopedPackageName);
-					importProjectNotCopy(workspace, scopedPackagePath.toFile(), new NullProgressMonitor());
+					if (packagesToImport.apply(yarnPackageName + '/' + scopedPackageName)) {
+						importProjectNotCopy(workspace, scopedPackagePath.toFile(), new NullProgressMonitor());
+					}
 				}
 			} else {
-				importProjectNotCopy(workspace, packagePath.toFile(), new NullProgressMonitor());
+				if (packagesToImport.apply(yarnPackageName)) {
+					importProjectNotCopy(workspace, packagePath.toFile(), new NullProgressMonitor());
+				}
 			}
 		}
 
