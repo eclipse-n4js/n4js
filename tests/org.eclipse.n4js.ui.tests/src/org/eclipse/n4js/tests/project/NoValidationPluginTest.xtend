@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.tests.project
 
+import java.util.List
 import org.eclipse.core.resources.IFile
 import org.eclipse.core.resources.IFolder
 import org.eclipse.core.resources.IProject
@@ -22,7 +23,6 @@ import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
 import org.eclipse.n4js.tests.util.PackageJSONTestUtils
 import org.junit.Test
-import java.util.List
 
 /**
  */
@@ -74,7 +74,8 @@ class NoValidationPluginTest extends AbstractBuilderParticipantTest {
 	@Test
 	def void testTypeDefinitionsShadowing() throws Exception {
 		// setup test workspace
-		val IProject projectUnderTest = createJSProject("NoValidationPluginTest")
+		val IProject projectUnderTest = createJSProject("NoValidationPluginTest", "src", "src-gen", [withDependency("n4js-runtime")]);
+		createDummyN4JSRuntime(projectUnderTest);
 		val IFolder src = configureProjectWithXtext(projectUnderTest)
 		val IFolder scr_js = createFolder(src, "js");
 		val IFolder src_n4js = createFolder(src, "n4js");
@@ -98,7 +99,8 @@ class NoValidationPluginTest extends AbstractBuilderParticipantTest {
 		addPathsToNoValidate(packageJson, "Shadowed" -> null);
 		
 		waitForAutoBuild();
-		
+
+		assertIssues(packageJson, "line 22: Module filters of type noValidate must not match N4JS modules/files.");
 		assertMarkers("file package.json should have 1 marker since the module filter is invalid", packageJson, 1);
 		assertMarkers("file src/js/Shadowed.js should have 0 markers", fileImpl, 0);
 		assertMarkers("file src/n4js/Shadowed.n4jsd should still have 0 markers since it is filtered by the invalid module filter", fileTypeDef, 0);

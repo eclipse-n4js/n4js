@@ -12,6 +12,7 @@
 		"output": "src-gen"
 	},
 	"dependencies":{
+		"n4js-runtime": "0.0.1-dummy",
 		"immutable": "3.8.2"
 	}
 }

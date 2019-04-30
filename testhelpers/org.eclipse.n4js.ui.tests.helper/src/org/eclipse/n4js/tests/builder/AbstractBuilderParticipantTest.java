@@ -32,6 +32,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
@@ -117,6 +118,9 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 	 * Creates a new N4JS project with the given name and project type. The source and output folders will be named as
 	 * {@code src} and {@code src-gen}. The Xtext project nature will be already configured on the N4JS project. Blocks
 	 * until the auto-build job is terminated.
+	 * <p>
+	 * If the given project type {@link N4JSGlobals#PROJECT_TYPES_REQUIRING_N4JS_RUNTIME requires the N4JS runtime},
+	 * then a dependency to "n4js-runtime" will be added to the <code>package.json</code>.
 	 *
 	 * @param projectName
 	 *            the name of the project.
@@ -128,10 +132,26 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 	 */
 	protected IProject createN4JSProject(String projectName, ProjectType type) throws CoreException {
 		final IProject project = createJSProject(projectName, "src", "src-gen",
-				b -> b.withType(type));
+				b -> {
+					b.withType(type);
+					if (N4JSGlobals.PROJECT_TYPES_REQUIRING_N4JS_RUNTIME.contains(type)) {
+						b.withDependency(N4JSGlobals.N4JS_RUNTIME_NAME);
+					}
+				});
 		configureProjectWithXtext(project);
 		waitForAutoBuild();
 		return project;
+	}
+
+	protected IFolder createDummyN4JSRuntime(IProject project) throws CoreException {
+		IFolder runtimeProjectFolder = project.getFolder(N4JSGlobals.NODE_MODULES)
+				.getFolder(N4JSGlobals.N4JS_RUNTIME_NAME);
+		doCreateTestFile(runtimeProjectFolder, N4JSGlobals.PACKAGE_JSON, "{\n"
+				+ "    \"name\": \"" + N4JSGlobals.N4JS_RUNTIME_NAME + "\",\n"
+				+ "    \"version\": \"0.0.1-dummy\"\n"
+				+ "}");
+		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
+		return runtimeProjectFolder;
 	}
 
 	/***/
@@ -260,6 +280,7 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 	@SuppressWarnings("resource")
 	protected IFile doCreateTestFile(IFolder folder, String fullName, CharSequence content) throws CoreException {
 		IFile file = folder.getFile(fullName);
+		createFolder(folder);
 		file.create(new StringInputStream(content.toString()), true, monitor());
 		waitForAutoBuild();
 		return file;
@@ -293,6 +314,14 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 			folder.create(true, true, null);
 		}
 		return folder;
+	}
+
+	/***/
+	protected void createFolder(IFolder folder) throws CoreException {
+		if (!folder.exists()) {
+			createParentFolder(folder);
+			folder.create(true, true, null);
+		}
 	}
 
 	/***/

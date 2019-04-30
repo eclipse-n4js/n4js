@@ -19,6 +19,10 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.eclipse.n4js.projectDescription.ProjectType;
+
+import com.google.common.collect.ImmutableSet;
+
 /**
  * Global hook for static information about the current setup. Contains file extensions, library names, and other
  * "useful" strings.
@@ -119,6 +123,11 @@ public final class N4JSGlobals {
 	 * cf. {@link #N4JS_LIBS_SOURCES_PATH}.
 	 */
 	public static final String N4JS_RUNTIME_NAME = "n4js-runtime";
+
+	public static final Set<ProjectType> PROJECT_TYPES_REQUIRING_N4JS_RUNTIME = ImmutableSet.of(
+			ProjectType.LIBRARY,
+			ProjectType.APPLICATION,
+			ProjectType.TEST);
 
 	/**
 	 * The name of an npm command.

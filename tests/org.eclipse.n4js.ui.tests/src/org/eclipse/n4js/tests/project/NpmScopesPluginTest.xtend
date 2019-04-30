@@ -9,6 +9,7 @@
  */
 package org.eclipse.n4js.tests.project
 
+import com.google.common.collect.Lists
 import com.google.inject.Inject
 import java.io.File
 import org.eclipse.core.resources.IFile
@@ -27,13 +28,12 @@ import org.eclipse.n4js.tests.util.ProjectTestsHelper
 import org.eclipse.n4js.tests.util.ProjectTestsUtils
 import org.eclipse.n4js.utils.ProjectDescriptionUtils
 import org.eclipse.n4js.utils.URIUtils
+import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil
 import org.junit.Before
 import org.junit.Test
 
 import static org.eclipse.emf.common.util.URI.createPlatformResourceURI
 import static org.junit.Assert.*
-import com.google.common.collect.Lists
-import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil
 
 /**
  * Testing the use of npm scopes as part of N4JS project names, i.e. project names of

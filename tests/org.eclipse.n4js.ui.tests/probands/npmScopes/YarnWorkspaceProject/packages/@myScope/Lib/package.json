@@ -1,6 +1,9 @@
 {
 	"name": "@myScope/Lib",
 	"version": "0.0.1",
+	"dependencies": {
+		"n4js-runtime": "0.1.0"
+	},
 	"n4js": {
 		"projectType": "library",
 		"vendorId": "org.eclipse.n4js",

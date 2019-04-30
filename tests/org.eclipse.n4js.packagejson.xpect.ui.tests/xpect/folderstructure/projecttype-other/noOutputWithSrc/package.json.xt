@@ -27,7 +27,10 @@
 	"name": "noOutputWithSrc",
 	"version": "0.0.1",
 	"n4js": {
-		// XPECT errors --> "Projects of type library must always declare an output folder and at least one source container." at ""library""
+		// XPECT errors ---
+		// "Missing dependency to n4js-runtime (mandatory for all N4JS projects of type library, application, test)." at ""library""
+		// "Projects of type library must always declare an output folder and at least one source container." at ""library""
+		// ---
 		"projectType": "library",
 		"vendorId": "MyVendorID",
 		"vendorName": "My Vendor Name",

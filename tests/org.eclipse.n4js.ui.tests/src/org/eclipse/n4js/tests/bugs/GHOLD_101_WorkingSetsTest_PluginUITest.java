@@ -178,6 +178,8 @@ public class GHOLD_101_WorkingSetsTest_PluginUITest extends AbstractPluginUITest
 	@Test
 	public void testMarkerSupportForWorkingSets() throws CoreException, IOException {
 		final IProject project = createN4JSProject("P1", LIBRARY);
+		createDummyN4JSRuntime(project);
+
 		createTestFile(project.getFolder("src"), "A", "class a { }");
 
 		final IFile moduleFile = project.getFolder("src").getFile("A.n4js");

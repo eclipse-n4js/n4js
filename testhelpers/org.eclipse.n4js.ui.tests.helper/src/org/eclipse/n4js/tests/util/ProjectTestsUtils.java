@@ -52,7 +52,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
@@ -169,7 +168,7 @@ public class ProjectTestsUtils {
 
 		workspace.run((mon) -> {
 			IProjectDescription newProjectDescription = workspace.newProjectDescription(workspaceName);
-			final Path absoluteProjectPath = new Path(projectSourceFolder.getAbsolutePath());
+			final IPath absoluteProjectPath = new org.eclipse.core.runtime.Path(projectSourceFolder.getAbsolutePath());
 			newProjectDescription.setLocation(absoluteProjectPath);
 			project.create(newProjectDescription, mon);
 			project.open(mon);
@@ -228,7 +227,8 @@ public class ProjectTestsUtils {
 			throw new IllegalArgumentException(
 					"project to import does not contain a .project file: " + projectTargetFolder);
 		}
-		IProjectDescription description = workspace.loadProjectDescription(new Path(dotProjectFile.getAbsolutePath()));
+		IProjectDescription description = workspace
+				.loadProjectDescription(new org.eclipse.core.runtime.Path(dotProjectFile.getAbsolutePath()));
 		String projectNameFromDotProjectFile = description.getName();
 
 		IProject project = workspace.getRoot().getProject(projectNameFromDotProjectFile);
@@ -303,6 +303,7 @@ public class ProjectTestsUtils {
 						yarnPackagesPath.toFile().toPath(),
 						true, false, false,
 						n4jsLibs.toArray(new String[0]));
+				yarnProject.refreshLocal(IResource.DEPTH_INFINITE, null);
 			} catch (IOException e) {
 				throw new RuntimeException("unable to install n4js-libs from local checkout", e);
 			}

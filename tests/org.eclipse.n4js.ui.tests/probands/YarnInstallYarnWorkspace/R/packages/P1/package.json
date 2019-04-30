@@ -12,6 +12,7 @@
 		"output": "src-gen"
 	},
 	"dependencies":{
+		"n4js-runtime": "0.0.1-dummy",
 		"lodash": "^4.17.11",
 		"P2": "0.0.1"
 	}

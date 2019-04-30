@@ -602,8 +602,12 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	def void checkMandatoryDependencies(JSONDocument document) {
 
 		val description = getProjectDescription();
+		val projectName = description.projectName;
 		val projectType = description.projectType;
-		if (!(projectType == LIBRARY || projectType == APPLICATION || projectType == TEST)) {
+		if (projectName == N4JSGlobals.N4JS_RUNTIME_NAME) {
+			return; // not applicable ("n4js-runtime" does not need to have a dependency to "n4js-runtime"!)
+		}
+		if (!N4JSGlobals.PROJECT_TYPES_REQUIRING_N4JS_RUNTIME.contains(projectType)) {
 			return; // not applicable
 		}
 

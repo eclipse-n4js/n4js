@@ -58,6 +58,14 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 		secondProjectUnderTest = createJSProject("multiProjectTest.second")
 		src = configureProjectWithXtext(firstProjectUnderTest)
 		src2 = configureProjectWithXtext(secondProjectUnderTest)
+
+		addProjectToDependencies(firstProjectUnderTest, "n4js-runtime");
+		addProjectToDependencies(secondProjectUnderTest, "n4js-runtime");
+		createDummyN4JSRuntime(firstProjectUnderTest)
+		createDummyN4JSRuntime(secondProjectUnderTest)
+		libraryManager.registerAllExternalProjects(new NullProgressMonitor())
+		waitForAutoBuild
+
 		projectDescriptionFile = firstProjectUnderTest.project.getFile(N4JSGlobals.PACKAGE_JSON)
 		assertMarkers("project description file (package.json) of first project file should have no errors",
 			firstProjectUnderTest.project.getFile(N4JSGlobals.PACKAGE_JSON), 0, errorMarkerPredicate);
@@ -65,7 +73,6 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 		projectDescriptionFile2 = secondProjectUnderTest.project.getFile(N4JSGlobals.PACKAGE_JSON)
 		assertMarkers("project description file (package.json) file of second project should have no errors",
 			secondProjectUnderTest.project.getFile(N4JSGlobals.PACKAGE_JSON), 0, errorMarkerPredicate);
-		waitForAutoBuild
 	}
 
 	private def void addSecondProjectToDependencies() {
@@ -73,8 +80,12 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 	}
 
 	private def void addProjectToDependencies(String projectName) {
-		val uri = URI.createPlatformResourceURI(projectDescriptionFile.fullPath.toString, true);
-		val rs = getResourceSet(firstProjectUnderTest);
+		addProjectToDependencies(firstProjectUnderTest, projectName);
+	}
+
+	private def void addProjectToDependencies(IProject toChange, String projectName) {
+		val uri = URI.createPlatformResourceURI(toChange.getFile(N4JSGlobals.PACKAGE_JSON).fullPath.toString, true);
+		val rs = getResourceSet(toChange);
 		val resource = rs.getResource(uri, true);
 
 		val JSONObject packageJSONRoot = PackageJSONTestUtils.getPackageJSONRoot(resource);
@@ -259,24 +270,23 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 	def void testChangeProjectTypeWithoutOpenedEditors() {
 		changeProjectType(firstProjectUnderTest, ProjectType.LIBRARY);
 		changeProjectType(secondProjectUnderTest, ProjectType.LIBRARY);
-		removeProjectDependencies(secondProjectUnderTest);
 		addProjectToDependencies(secondProjectUnderTest.name);
 
 		assertIssues(projectDescriptionFile,
-			"line 21: Project depends on workspace project multiProjectTest.second which is missing in the node_modules folder. " +
+			"line 18: Project depends on workspace project multiProjectTest.second which is missing in the node_modules folder. " +
 			"Either install project multiProjectTest.second or introduce a yarn workspace of both of the projects.");
 		assertMarkers('project description file (package.json) file should have no errors.', projectDescriptionFile2, 0);
 
 
 		changeProjectType(secondProjectUnderTest, ProjectType.RUNTIME_LIBRARY);
 		assertIssues(projectDescriptionFile,
-			"line 21: Project depends on workspace project multiProjectTest.second which is missing in the node_modules folder. " +
+			"line 18: Project depends on workspace project multiProjectTest.second which is missing in the node_modules folder. " +
 			"Either install project multiProjectTest.second or introduce a yarn workspace of both of the projects.");
 		assertMarkers('project description file (package.json) file should have no errors.', projectDescriptionFile2, 0);
 
 		changeProjectType(secondProjectUnderTest, ProjectType.LIBRARY);
 		assertIssues(projectDescriptionFile,
-			"line 21: Project depends on workspace project multiProjectTest.second which is missing in the node_modules folder. " +
+			"line 18: Project depends on workspace project multiProjectTest.second which is missing in the node_modules folder. " +
 			"Either install project multiProjectTest.second or introduce a yarn workspace of both of the projects.");
 		assertMarkers('project description file (package.json) file should have no errors.', projectDescriptionFile2, 0);
 	}
@@ -286,11 +296,12 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 		val project = createJSProject('multiProjectTest.third', 'src', 'src-gen', [ builder |
 			builder.withSourceContainer(SourceContainerType.EXTERNAL, "ext");
 		]);
+		createDummyN4JSRuntime(project);
+		addProjectToDependencies(project, N4JSGlobals.N4JS_RUNTIME_NAME);
 		configureProjectWithXtext(project);
 		waitForAutoBuild;
 		val projectDescriptionFile = project.getFile(N4JSGlobals.PACKAGE_JSON);
 
-		removeProjectDependencies(project);
 		changeProjectType(project, ProjectType.LIBRARY);
 		val extFolder = project.getFolder('ext');
 		assertTrue('External folder \'ext\' should be missing', !extFolder.exists);

@@ -126,33 +126,35 @@ public class N4jsLibsAccess {
 		}
 	}
 
-	public static void installAllN4jsLibs(Path targetPath, boolean includeDependencies, boolean useSymbolicLinks,
-			boolean deleteOnExit) throws IOException {
-		installN4jsLibs(targetPath, includeDependencies, useSymbolicLinks, deleteOnExit, Predicates.alwaysTrue());
+	public static Map<String, Path> installAllN4jsLibs(Path targetPath, boolean includeDependencies,
+			boolean useSymbolicLinks, boolean deleteOnExit) throws IOException {
+		return installN4jsLibs(targetPath, includeDependencies, useSymbolicLinks, deleteOnExit,
+				Predicates.alwaysTrue());
 	}
 
-	public static void installN4jsLibs(Path targetPath, boolean includeDependencies, boolean useSymbolicLinks,
-			boolean deleteOnExit, Predicate<String> predicate) throws IOException {
+	public static Map<String, Path> installN4jsLibs(Path targetPath, boolean includeDependencies,
+			boolean useSymbolicLinks, boolean deleteOnExit, Predicate<String> predicate) throws IOException {
 		Map<String, Path> allN4jsLibs = findAllN4jsLibs();
 		Map<String, Path> toBeInstalled = allN4jsLibs.entrySet().stream()
 				.filter(e -> predicate.test(e.getKey()))
 				.collect(Collectors.toMap(Entry::getKey, Entry::getValue));
-		installN4jsLibs(targetPath, includeDependencies, useSymbolicLinks, deleteOnExit, toBeInstalled);
+		return installN4jsLibs(targetPath, includeDependencies, useSymbolicLinks, deleteOnExit, toBeInstalled);
 	}
 
-	public static void installN4jsLibs(Path targetPath, boolean includeDependencies, boolean useSymbolicLinks,
-			boolean deleteOnExit, String... projectNames) throws IOException {
+	public static Map<String, Path> installN4jsLibs(Path targetPath, boolean includeDependencies,
+			boolean useSymbolicLinks, boolean deleteOnExit, String... projectNames) throws IOException {
 		Path n4jsLibsLocation = findN4jsLibsLocation();
 		Map<String, Path> toBeInstalled = new HashMap<>();
 		for (String projectName : projectNames) {
 			Path projectPath = findN4jsLib(n4jsLibsLocation, projectName, false);
 			toBeInstalled.put(projectName, projectPath);
 		}
-		installN4jsLibs(targetPath, includeDependencies, useSymbolicLinks, deleteOnExit, toBeInstalled);
+		return installN4jsLibs(targetPath, includeDependencies, useSymbolicLinks, deleteOnExit, toBeInstalled);
 	}
 
-	private static void installN4jsLibs(Path targetPath, boolean includeDependencies, boolean useSymbolicLinks,
-			boolean deleteOnExit, Map<String, Path> projectsToBeInstalled) throws IOException {
+	private static Map<String, Path> installN4jsLibs(Path targetPath, boolean includeDependencies,
+			boolean useSymbolicLinks, boolean deleteOnExit, Map<String, Path> projectsToBeInstalled)
+			throws IOException {
 		Map<String, Path> toBeInstalled = new LinkedHashMap<>();
 		// add projects in 'projectNames' to 'toBeInstalled'
 		toBeInstalled.putAll(projectsToBeInstalled);
@@ -182,6 +184,7 @@ public class N4jsLibsAccess {
 				}
 			}
 		}
+		return toBeInstalled;
 	}
 
 	private static void collectDependencies(Path n4jsLibsLocation, Path projectPath, Map<String, Path> addHere)
