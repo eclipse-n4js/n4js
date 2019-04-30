@@ -92,7 +92,7 @@ public class ExternalProjectMappings {
 		this.userWorkspace = userWorkspace;
 		this.preferenceStore = preferenceStore;
 
-		this.completeCache = new LinkedHashMap<>(completeCache);
+		this.completeCache = completeCache != null ? new LinkedHashMap<>(completeCache) : Collections.emptyMap();
 		removeDuplicatesFromCompleteCache();
 
 		Mappings mappings = computeMappings();
@@ -114,6 +114,10 @@ public class ExternalProjectMappings {
 	 * are imported into Eclipse, then this method will remove them from field {@link #completeCache}.
 	 */
 	private void removeDuplicatesFromCompleteCache() {
+		if (completeCache.isEmpty()) {
+			return;
+		}
+
 		// prepare list of locations of all projects in workspace
 		// (note: also include locations of close projects!)
 		Set<Path> locationsOfWorkspaceProjects = Stream.of(userWorkspace.getWorkspace().getProjects())
@@ -150,7 +154,7 @@ public class ExternalProjectMappings {
 		Map<URI, Pair<N4JSExternalProject, ProjectDescription>> reducedProjectUriMappingTmp = newHashMap();
 		Map<java.net.URI, List<N4JSExternalProject>> reducedProjectsLocationMappingTmp = newHashMap();
 		List<Pair<URI, ProjectDescription>> completeListTmp = new LinkedList<>();
-		if (completeCache == null) {
+		if (completeCache.isEmpty()) {
 			Mappings mappings = new Mappings();
 			mappings.completeList = Collections.emptyList();
 			mappings.completeProjectNameMapping = Collections.emptyMap();
