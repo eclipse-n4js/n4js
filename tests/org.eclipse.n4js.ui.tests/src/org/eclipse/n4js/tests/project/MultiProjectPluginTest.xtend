@@ -59,10 +59,10 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 		src = configureProjectWithXtext(firstProjectUnderTest)
 		src2 = configureProjectWithXtext(secondProjectUnderTest)
 
-		addProjectToDependencies(firstProjectUnderTest, "n4js-runtime");
-		addProjectToDependencies(secondProjectUnderTest, "n4js-runtime");
-		createDummyN4JSRuntime(firstProjectUnderTest)
-		createDummyN4JSRuntime(secondProjectUnderTest)
+		addProjectToDependencies(firstProjectUnderTest, "n4js-runtime", "0.0.1-dummy");
+		addProjectToDependencies(secondProjectUnderTest, "n4js-runtime", "0.0.1-dummy");
+		createAndRegisterDummyN4JSRuntime(firstProjectUnderTest)
+		createAndRegisterDummyN4JSRuntime(secondProjectUnderTest)
 		libraryManager.registerAllExternalProjects(new NullProgressMonitor())
 		waitForAutoBuild
 
@@ -80,19 +80,7 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 	}
 
 	private def void addProjectToDependencies(String projectName) {
-		addProjectToDependencies(firstProjectUnderTest, projectName);
-	}
-
-	private def void addProjectToDependencies(IProject toChange, String projectName) {
-		val uri = URI.createPlatformResourceURI(toChange.getFile(N4JSGlobals.PACKAGE_JSON).fullPath.toString, true);
-		val rs = getResourceSet(toChange);
-		val resource = rs.getResource(uri, true);
-
-		val JSONObject packageJSONRoot = PackageJSONTestUtils.getPackageJSONRoot(resource);
-		PackageJSONTestUtils.addProjectDependency(packageJSONRoot, projectName, "*");
-
-		resource.save(null)
-		waitForAutoBuild();
+		addProjectToDependencies(firstProjectUnderTest, projectName, "*");
 	}
 
 	private def void changeProjectType(IProject toChange, ProjectType desiredProjectType) {
@@ -296,8 +284,8 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 		val project = createJSProject('multiProjectTest.third', 'src', 'src-gen', [ builder |
 			builder.withSourceContainer(SourceContainerType.EXTERNAL, "ext");
 		]);
-		createDummyN4JSRuntime(project);
-		addProjectToDependencies(project, N4JSGlobals.N4JS_RUNTIME_NAME);
+		createAndRegisterDummyN4JSRuntime(project);
+		addProjectToDependencies(project, N4JSGlobals.N4JS_RUNTIME_NAME, "*");
 		configureProjectWithXtext(project);
 		waitForAutoBuild;
 		val projectDescriptionFile = project.getFile(N4JSGlobals.PACKAGE_JSON);

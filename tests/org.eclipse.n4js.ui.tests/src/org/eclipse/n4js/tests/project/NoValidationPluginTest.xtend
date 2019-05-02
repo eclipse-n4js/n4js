@@ -75,7 +75,7 @@ class NoValidationPluginTest extends AbstractBuilderParticipantTest {
 	def void testTypeDefinitionsShadowing() throws Exception {
 		// setup test workspace
 		val IProject projectUnderTest = createJSProject("NoValidationPluginTest", "src", "src-gen", [withDependency("n4js-runtime")]);
-		createDummyN4JSRuntime(projectUnderTest);
+		createAndRegisterDummyN4JSRuntime(projectUnderTest);
 		val IFolder src = configureProjectWithXtext(projectUnderTest)
 		val IFolder scr_js = createFolder(src, "js");
 		val IFolder src_n4js = createFolder(src, "n4js");

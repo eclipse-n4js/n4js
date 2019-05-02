@@ -124,6 +124,8 @@ public final class N4JSGlobals {
 	 */
 	public static final String N4JS_RUNTIME_NAME = "n4js-runtime";
 
+	public static final String N4JS_RUNTIME_DUMMY_VERSION = "0.0.1-dummy";
+
 	public static final Set<ProjectType> PROJECT_TYPES_REQUIRING_N4JS_RUNTIME = ImmutableSet.of(
 			ProjectType.LIBRARY,
 			ProjectType.APPLICATION,

@@ -16,9 +16,11 @@ import static org.junit.Assert.assertNotNull;
 import java.io.IOException;
 import java.util.Collections;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.xtext.testing.validation.ValidationTestHelper;
 import org.junit.After;
 import org.junit.Before;
@@ -35,6 +37,8 @@ public abstract class AbstractProjectModelTest {
 	private ValidationTestHelper validationTestHelper;
 	@Inject
 	private Provider<ResourceSet> resourceSetProvider;
+	@Inject
+	private LibraryManager libraryManager;
 
 	/***/
 	protected abstract AbstractProjectModelSetup createSetup();
@@ -66,6 +70,7 @@ public abstract class AbstractProjectModelTest {
 	public void setUp() {
 		setup = createSetup();
 		createTempProjects();
+		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
 		assertNotNull(myProjectURI);
 		assertNotNull(libProjectURI);
 	}

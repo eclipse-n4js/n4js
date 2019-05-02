@@ -60,6 +60,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.json.JSON.JSONDocument;
+import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.packagejson.PackageJsonBuilder;
 import org.eclipse.n4js.test.helper.hlc.N4jsLibsAccess;
 import org.eclipse.n4js.ui.editor.N4JSDirtyStateEditorSupport;
@@ -77,6 +78,7 @@ import org.eclipse.xtext.ui.MarkerTypes;
 import org.eclipse.xtext.ui.XtextProjectHelper;
 import org.eclipse.xtext.ui.resource.IResourceSetProvider;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
+import org.eclipse.xtext.util.StringInputStream;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.junit.Assert;
 
@@ -285,6 +287,7 @@ public class ProjectTestsUtils {
 		return importYarnWorkspace(libraryManager, parentFolder, yarnProjectName, Predicates.alwaysTrue(), n4jsLibs);
 	}
 
+	// FIXME GH-1281: refactor this method to not run LibraryManager#runNpmYarnInstall()! Not all clients need that!
 	/**
 	 * Imports the given yarn workspace project. Also imports (by reference) those projects located in the subfolder
 	 * 'packages' for which the given predicate returns <code>true</code>.
@@ -399,6 +402,35 @@ public class ProjectTestsUtils {
 		return result;
 	}
 
+	/**
+	 *
+	 */
+	@SuppressWarnings("resource")
+	public static IFolder createDummyN4JSRuntime(IProject project) throws CoreException {
+		IFolder runtimeProjectFolder = project.getFolder(N4JSGlobals.NODE_MODULES)
+				.getFolder(N4JSGlobals.N4JS_RUNTIME_NAME);
+		IFile file = runtimeProjectFolder.getFile(N4JSGlobals.PACKAGE_JSON);
+		createFolders(runtimeProjectFolder);
+		String content = ""
+				+ "{\n"
+				+ "    \"name\": \"" + N4JSGlobals.N4JS_RUNTIME_NAME + "\",\n"
+				+ "    \"version\": \"" + N4JSGlobals.N4JS_RUNTIME_DUMMY_VERSION + "\"\n"
+				+ "}";
+		file.create(new StringInputStream(content.toString()), true, monitor());
+		project.refreshLocal(IResource.DEPTH_INFINITE, monitor());
+		return runtimeProjectFolder;
+	}
+
+	private static void createFolders(IFolder folder) throws CoreException {
+		if (!folder.exists()) {
+			IContainer parent = folder.getParent();
+			if (parent instanceof IFolder && !parent.exists()) {
+				createFolders((IFolder) parent);
+			}
+			folder.create(true, true, null);
+		}
+	}
+
 	/***/
 	public static void createProjectDescriptionFile(IProject project) throws CoreException {
 		createProjectDescriptionFile(project, "src", "src-gen", null);
@@ -440,6 +472,20 @@ public class ProjectTestsUtils {
 		waitForAutoBuild();
 		Assert.assertTrue("project description file (package.json) should have been created",
 				projectDescriptionWorkspaceFile.exists());
+	}
+
+	public static void addProjectToDependencies(IProject toChange, String projectName, String versionConstraint)
+			throws IOException {
+		URI uri = URI.createPlatformResourceURI(toChange.getFile(N4JSGlobals.PACKAGE_JSON).getFullPath().toString(),
+				true);
+		ResourceSet rs = createResourceSet(toChange);
+		Resource resource = rs.getResource(uri, true);
+
+		JSONObject packageJSONRoot = PackageJSONTestUtils.getPackageJSONRoot(resource);
+		PackageJSONTestUtils.addProjectDependency(packageJSONRoot, projectName, versionConstraint);
+
+		resource.save(null);
+		waitForAutoBuild();
 	}
 
 	// moved here from AbstractBuilderParticipantTest:

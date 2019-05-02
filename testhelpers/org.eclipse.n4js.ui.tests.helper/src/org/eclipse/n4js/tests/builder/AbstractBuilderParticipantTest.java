@@ -143,15 +143,15 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 		return project;
 	}
 
-	protected IFolder createDummyN4JSRuntime(IProject project) throws CoreException {
-		IFolder runtimeProjectFolder = project.getFolder(N4JSGlobals.NODE_MODULES)
-				.getFolder(N4JSGlobals.N4JS_RUNTIME_NAME);
-		doCreateTestFile(runtimeProjectFolder, N4JSGlobals.PACKAGE_JSON, "{\n"
-				+ "    \"name\": \"" + N4JSGlobals.N4JS_RUNTIME_NAME + "\",\n"
-				+ "    \"version\": \"0.0.1-dummy\"\n"
-				+ "}");
+	protected IFolder createAndRegisterDummyN4JSRuntime(IProject project) throws CoreException {
+		IFolder runtimeProjectFolder = createDummyN4JSRuntime(project);
+		waitForAutoBuild();
 		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
 		return runtimeProjectFolder;
+	}
+
+	protected IFolder createDummyN4JSRuntime(IProject project) throws CoreException {
+		return ProjectTestsUtils.createDummyN4JSRuntime(project);
 	}
 
 	/***/
@@ -237,6 +237,14 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 			throw new IllegalStateException("not an Xtext editor");
 		}
 		return (XtextEditor) editor;
+	}
+
+	/**
+	 * Adds a dependency to project 'projectName' in the package.json of project 'toChange'.
+	 */
+	protected void addProjectToDependencies(IProject toChange, String projectName, String versionConstraint)
+			throws IOException {
+		ProjectTestsUtils.addProjectToDependencies(toChange, projectName, versionConstraint);
 	}
 
 	/**

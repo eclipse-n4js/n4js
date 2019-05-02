@@ -10,6 +10,9 @@
  */
 package org.eclipse.n4js.tests.projectModel;
 
+import static org.eclipse.n4js.N4JSGlobals.N4JS_RUNTIME_DUMMY_VERSION;
+import static org.eclipse.n4js.N4JSGlobals.N4JS_RUNTIME_NAME;
+
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 
@@ -20,6 +23,7 @@ import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.xtext.ui.XtextProjectHelper;
 import org.eclipse.xtext.util.StringInputStream;
 
@@ -55,6 +59,7 @@ public class EclipseBasedProjectModelSetup extends AbstractProjectModelSetup {
 					"  \"name\": \"" + host.myProjectName + "\",\n" +
 					"  \"version\": \"0.0.1-SNAPSHOT\",\n" +
 					"  \"dependencies\": {\n" +
+					"    \"" + N4JS_RUNTIME_NAME + "\": \"" + N4JS_RUNTIME_DUMMY_VERSION + "\",\n" +
 					"    \"" + host.libProjectName + "\": \"0.0.1-SNAPSHOT\"\n" +
 					"  },\n" +
 					"  \"n4js\": {\n" +
@@ -74,6 +79,9 @@ public class EclipseBasedProjectModelSetup extends AbstractProjectModelSetup {
 			createProject(host.libProjectName, "{\n" +
 					"  \"name\": \"" + host.libProjectName + "\",\n" +
 					"  \"version\": \"0.0.1-SNAPSHOT\",\n" +
+					"  \"dependencies\": {\n" +
+					"    \"" + N4JS_RUNTIME_NAME + "\": \"" + N4JS_RUNTIME_DUMMY_VERSION + "\"\n" +
+					"  },\n" +
 					"  \"n4js\": {\n" +
 					"    \"projectType\": \"library\",\n" +
 					"    \"vendorId\": \"org.eclipse.n4js\",\n" +
@@ -112,6 +120,8 @@ public class EclipseBasedProjectModelSetup extends AbstractProjectModelSetup {
 		sub.getFile("B.js").create(new ByteArrayInputStream(new byte[0]), false, null);
 		sub.getFile("C.js").create(new ByteArrayInputStream(new byte[0]), false, null);
 		leaf.getFile("D.js").create(new ByteArrayInputStream(new byte[0]), false, null);
+
+		ProjectTestsUtils.createDummyN4JSRuntime(project);
 	}
 
 	/***/

@@ -38,7 +38,9 @@ class SrcIsProjectNoValidationPluginTest extends AbstractBuilderParticipantTest 
 
 	@Before
 	def void setUp2() {
-		projectUnderTest = createJSProject("IDE_754")
+		projectUnderTest = createJSProject("IDE_754");
+		addProjectToDependencies(projectUnderTest, N4JSGlobals.N4JS_RUNTIME_NAME, "0.0.1-dummy");
+		createAndRegisterDummyN4JSRuntime(projectUnderTest);
 		src = configureProjectWithXtext(projectUnderTest);
 		src_P = createFolder(src, "P");
 		src_P_Q = createFolder(src_P, "Q");

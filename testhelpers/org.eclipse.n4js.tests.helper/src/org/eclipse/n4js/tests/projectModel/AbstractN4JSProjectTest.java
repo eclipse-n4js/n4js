@@ -74,8 +74,8 @@ public abstract class AbstractN4JSProjectTest extends AbstractProjectModelTest {
 	public void testGetDependencies_01() {
 		IN4JSProject project = getN4JSCore().create(myProjectURI);
 		ImmutableList<? extends IN4JSProject> dependencies = project.getDependencies();
-		assertEquals(1, dependencies.size());
-		assertEquals(libProjectURI.lastSegment(), dependencies.get(0).getLocation().lastSegment());
+		assertEquals(2, dependencies.size());
+		assertEquals(libProjectURI.lastSegment(), dependencies.get(1).getLocation().lastSegment());
 	}
 
 	@SuppressWarnings("javadoc")
