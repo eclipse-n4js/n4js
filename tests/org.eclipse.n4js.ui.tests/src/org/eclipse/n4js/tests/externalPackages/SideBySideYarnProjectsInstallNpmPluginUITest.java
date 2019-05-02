@@ -65,7 +65,7 @@ public class SideBySideYarnProjectsInstallNpmPluginUITest extends AbstractBuilde
 		ProjectTestsUtils.createProjectWithLocation(tmpDir,
 				"R/packages/P2", "P2");
 
-		// Project root und node_modules in root
+		// Project root and node_modules in root
 		Path prjRoot = tmpDir.toPath().resolve("R");
 		File prjRootFile = prjRoot.toFile();
 		assertFalse(Arrays.stream(prjRootFile.listFiles())
@@ -76,6 +76,7 @@ public class SideBySideYarnProjectsInstallNpmPluginUITest extends AbstractBuilde
 				.createFileURI(projP1.getLocation().toString());
 		String lodashVersion = getDependencyVersion(prjP1URI, "lodash");
 		libraryManager.installNPM("lodash", lodashVersion, prjP1URI, new NullProgressMonitor());
+		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
 
 		assertTrue(Arrays.stream(prjRootFile.listFiles())
 				.filter((subFolder) -> subFolder.getName().equals(N4JSGlobals.NODE_MODULES))

@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
@@ -78,7 +79,6 @@ import org.eclipse.xtext.ui.MarkerTypes;
 import org.eclipse.xtext.ui.XtextProjectHelper;
 import org.eclipse.xtext.ui.resource.IResourceSetProvider;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
-import org.eclipse.xtext.util.StringInputStream;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.junit.Assert;
 
@@ -402,33 +402,27 @@ public class ProjectTestsUtils {
 		return result;
 	}
 
-	/**
-	 *
-	 */
-	@SuppressWarnings("resource")
 	public static IFolder createDummyN4JSRuntime(IProject project) throws CoreException {
-		IFolder runtimeProjectFolder = project.getFolder(N4JSGlobals.NODE_MODULES)
-				.getFolder(N4JSGlobals.N4JS_RUNTIME_NAME);
-		IFile file = runtimeProjectFolder.getFile(N4JSGlobals.PACKAGE_JSON);
-		createFolders(runtimeProjectFolder);
-		String content = ""
-				+ "{\n"
-				+ "    \"name\": \"" + N4JSGlobals.N4JS_RUNTIME_NAME + "\",\n"
-				+ "    \"version\": \"" + N4JSGlobals.N4JS_RUNTIME_DUMMY_VERSION + "\"\n"
-				+ "}";
-		file.create(new StringInputStream(content.toString()), true, monitor());
+		IFolder nodeModulesFolder = project.getFolder(N4JSGlobals.NODE_MODULES);
+		createDummyN4JSRuntime(nodeModulesFolder.getLocation().toFile().toPath());
 		project.refreshLocal(IResource.DEPTH_INFINITE, monitor());
-		return runtimeProjectFolder;
+		return nodeModulesFolder.getFolder(N4JSGlobals.N4JS_RUNTIME_NAME);
 	}
 
-	private static void createFolders(IFolder folder) throws CoreException {
-		if (!folder.exists()) {
-			IContainer parent = folder.getParent();
-			if (parent instanceof IFolder && !parent.exists()) {
-				createFolders((IFolder) parent);
-			}
-			folder.create(true, true, null);
+	public static Path createDummyN4JSRuntime(Path location) {
+		Path projectPath = location.resolve(N4JSGlobals.N4JS_RUNTIME_NAME);
+		Path packageJsonFile = projectPath.resolve(N4JSGlobals.PACKAGE_JSON);
+		try {
+			Files.createDirectories(projectPath);
+			Files.write(packageJsonFile, Lists.newArrayList(
+					"{",
+					"    \"name\": \"" + N4JSGlobals.N4JS_RUNTIME_NAME + "\",",
+					"    \"version\": \"" + N4JSGlobals.N4JS_RUNTIME_DUMMY_VERSION + "\"",
+					"}"));
+		} catch (IOException e) {
+			throw new RuntimeException("failed to create dummy n4js-runtime for testing purposes", e);
 		}
+		return projectPath;
 	}
 
 	/***/

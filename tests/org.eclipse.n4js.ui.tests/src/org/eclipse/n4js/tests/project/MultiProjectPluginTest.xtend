@@ -81,6 +81,7 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 
 	private def void addProjectToDependencies(String projectName) {
 		addProjectToDependencies(firstProjectUnderTest, projectName, "*");
+		waitForAutoBuild();
 	}
 
 	private def void changeProjectType(IProject toChange, ProjectType desiredProjectType) {

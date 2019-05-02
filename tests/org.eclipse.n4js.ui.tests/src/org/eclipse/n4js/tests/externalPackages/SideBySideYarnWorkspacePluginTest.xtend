@@ -16,6 +16,7 @@ import org.eclipse.core.resources.IProject
 import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.core.runtime.CoreException
 import org.eclipse.emf.common.util.URI
+import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
 import org.eclipse.n4js.tests.util.ProjectTestsHelper
@@ -102,7 +103,7 @@ class SideBySideYarnWorkspacePluginTest extends AbstractBuilderParticipantTest {
 		scopedProject.close(null);
 		testedWorkspace.fullBuild;
 		assertIssues(
-			"line 5: Project does not exist with project ID: @myScope/Lib.",
+			"line 6: Project does not exist with project ID: @myScope/Lib.",
 			"line 2: Import of C as C2 cannot be resolved.",
 			"line 2: Couldn't resolve reference to TExportableElement 'C'.",
 			"line 5: Couldn't resolve reference to IdentifiableElement 'C2'.",
@@ -118,7 +119,9 @@ class SideBySideYarnWorkspacePluginTest extends AbstractBuilderParticipantTest {
 		val parentFolder = new File(getResourceUri(PROBANDS, YARN_WORKSPACE_BASE));
 		yarnProject = ProjectTestsUtils.importYarnWorkspace(libraryManager, parentFolder, YARN_WORKSPACE_PROJECT, [pkgName|
 			return Arrays.contains(packagesToImport, pkgName);
-		], #[]);
+		], #[
+			N4JSGlobals.N4JS_RUNTIME_NAME
+		]);
 		testedWorkspace.fullBuild
 
 		for(String packageName : packagesToImport) {
