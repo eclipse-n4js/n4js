@@ -12,6 +12,7 @@
 /* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.tests.PackageJsonXpectTest
 
 	IssueConfiguration {
+		IssueCode "PKGJ_MISSING_DEPENDENCY_N4JS_RUNTIME" { enabled = true } // suppressed by default!
 		IssueCode "NON_EXISTING_PROJECT" { enabled = false }
 	}
 
