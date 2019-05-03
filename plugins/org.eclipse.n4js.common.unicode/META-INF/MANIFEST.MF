@@ -12,7 +12,7 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.eclipse.emf.mwe2.launch;resolution:=optional,
  org.eclipse.xtext.util,
  org.eclipse.n4js.releng.utils;resolution:=optional,
- org.eclipse.equinox.common;resolution:=optional,
+ org.eclipse.equinox.common;bundle-version="3.8.0";resolution:=optional,
  org.objectweb.asm;resolution:=optional,
  com.ibm.icu
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8

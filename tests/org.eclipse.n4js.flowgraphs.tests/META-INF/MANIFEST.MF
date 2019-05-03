@@ -23,7 +23,7 @@ Require-Bundle: org.antlr.runtime,
  org.eclipse.n4js.ui,
  org.eclipse.n4js.utils,
  org.eclipse.n4js.xpect,
- org.eclipse.xpect.xtext.lib
+ org.eclipse.xpect.xtext.lib;bundle-version="0.2.0"
 Bundle-Vendor: %providerName
 Automatic-Module-Name: org.eclipse.n4js.flowgraphs.tests
 

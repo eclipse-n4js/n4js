@@ -4,7 +4,7 @@ Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.n4js.jsdoc2spec.ui;singleton:=true
 Bundle-Version: 0.0.1.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Require-Bundle: org.eclipse.compare,
+Require-Bundle: org.eclipse.compare;bundle-version="3.5.501",
  org.eclipse.ui.ide,
  org.eclipse.n4js.jsdoc2spec,
  org.eclipse.n4js.ui,
