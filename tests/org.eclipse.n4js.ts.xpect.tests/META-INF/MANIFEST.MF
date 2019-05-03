@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.n4js.ts.xpect.tests
 Bundle-Version: 0.0.1.qualifier
-Fragment-Host: org.eclipse.n4js.ts;bundle-version="0.0.1"
+Fragment-Host: org.eclipse.n4js.ts
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.eclipse.xtext.generator;resolution:=optional,
@@ -18,13 +18,13 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.eclipse.core.resources,
  org.eclipse.core.runtime,
  org.eclipse.xtext.testing,
- org.eclipse.n4js.ts.tests.helper;bundle-version="0.0.1",
+ org.eclipse.n4js.ts.tests.helper,
  org.eclipse.xpect.xtext.lib;bundle-version="0.2.0",
- org.eclipse.n4js.ts.ui;bundle-version="0.0.1",
- org.eclipse.n4js.utils;bundle-version="0.0.1",
- org.eclipse.n4js.ts.ui.tests.helper;bundle-version="0.0.1",
- org.eclipse.n4js.regex.ui;bundle-version="0.0.1",
- org.eclipse.n4js.environments;bundle-version="0.0.1",
- org.eclipse.n4js.ui;bundle-version="0.0.1"
+ org.eclipse.n4js.ts.ui,
+ org.eclipse.n4js.utils,
+ org.eclipse.n4js.ts.ui.tests.helper,
+ org.eclipse.n4js.regex.ui,
+ org.eclipse.n4js.environments,
+ org.eclipse.n4js.ui
 Bundle-Vendor: %providerName
 Automatic-Module-Name: org.eclipse.n4js.ts.xpect.tests

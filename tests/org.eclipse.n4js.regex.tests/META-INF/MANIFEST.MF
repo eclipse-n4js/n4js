@@ -4,7 +4,7 @@ Bundle-Name: %pluginName
 Bundle-Vendor: %providerName
 Bundle-Version: 0.0.1.qualifier
 Bundle-SymbolicName: org.eclipse.n4js.regex.tests;singleton:=true
-Fragment-Host: org.eclipse.n4js.regex;bundle-version="0.0.1"
+Fragment-Host: org.eclipse.n4js.regex
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.xtext.testing,
  org.eclipse.n4js.regex.tests.helper,

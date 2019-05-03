@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.n4js.n4jsx.xpect.ui.tests;singleton:=true
 Bundle-Version: 0.0.1.qualifier
-Fragment-Host: org.eclipse.n4js;bundle-version="0.0.1"
+Fragment-Host: org.eclipse.n4js
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.eclipse.xtext.xbase.lib,
@@ -31,7 +31,7 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.eclipse.xtext.ui.testing,
  org.eclipse.n4js.runner.ui,
  org.eclipse.n4js.runner,
- org.eclipse.n4js.runner.nodejs;bundle-version="0.0.1"
+ org.eclipse.n4js.runner.nodejs
 Bundle-Vendor: %providerName
 Automatic-Module-Name: org.eclipse.n4js.n4jsx.xpect.ui.tests
 
