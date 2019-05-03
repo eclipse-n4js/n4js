@@ -16,7 +16,7 @@ Require-Bundle: org.eclipse.ui.ide,
  org.eclipse.xtend,
  org.eclipse.xtend.lib,
  org.apache.log4j;visibility:=reexport,
- org.objectweb.asm;bundle-version="5.0.1";resolution:=optional,
+ org.objectweb.asm;resolution:=optional,
  org.eclipse.xtext.ui,
  org.eclipse.egit.core
 Export-Package: org.eclipse.n4js.utils.ui,
