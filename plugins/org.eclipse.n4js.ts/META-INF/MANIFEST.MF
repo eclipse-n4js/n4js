@@ -8,7 +8,7 @@ Bundle-SymbolicName: org.eclipse.n4js.ts;singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.eclipse.xtext.xtext.generator;resolution:=optional,
- org.apache.commons.logging;bundle-version="1.0.4";resolution:=optional,
+ org.apache.commons.logging;resolution:=optional,
  org.eclipse.emf.mwe.utils;resolution:=optional,
  org.eclipse.emf.mwe2.launch;resolution:=optional,
  org.eclipse.core.runtime,
@@ -26,9 +26,9 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.eclipse.xtext.ecore,
  org.eclipse.emf.codegen.ecore;resolution:=optional,
  org.eclipse.emf.codegen.ecore.xtext,
- org.eclipse.n4js.ts.model;bundle-version="0.0.1";visibility:=reexport,
+ org.eclipse.n4js.ts.model;visibility:=reexport,
  org.eclipse.n4js.utils,
- org.eclipse.n4js.model;bundle-version="0.0.1"
+ org.eclipse.n4js.model
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: env,
  org.eclipse.n4js.ts,
