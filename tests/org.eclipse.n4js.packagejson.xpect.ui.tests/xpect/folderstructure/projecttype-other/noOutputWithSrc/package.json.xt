@@ -12,16 +12,20 @@
 
 /* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.ui.tests.PackageJsonXpectPluginTest
 
-    Workspace {
-        JavaProject "noOutputWithSrc" {
-	        	Folder "src" {
-	        		Folder "inner" {}
-	        	}
-            ThisFile {}
-        }
-    }
+	Workspace {
+		JavaProject "noOutputWithSrc" {
+			Folder "src" {
+				Folder "inner" {}
+			}
+			ThisFile {}
+		}
+	}
 
-    END_SETUP
+	IssueConfiguration {
+		IssueCode "PKGJ_MISSING_DEPENDENCY_N4JS_RUNTIME" { enabled = true } // suppressed by default!
+	}
+
+	END_SETUP
  */
 {
 	"name": "noOutputWithSrc",
