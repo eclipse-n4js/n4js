@@ -12,7 +12,6 @@ package org.eclipse.n4js.tester.tests.helper;
 
 import static com.google.common.base.Joiner.on;
 import static com.google.common.base.Suppliers.memoize;
-import static com.google.common.collect.ArrayListMultimap.create;
 import static com.google.common.collect.Iterables.size;
 import static com.google.common.collect.Multimaps.synchronizedMultimap;
 import static java.lang.String.valueOf;
@@ -27,19 +26,19 @@ import java.util.Iterator;
 import java.util.concurrent.CountDownLatch;
 
 import org.apache.log4j.Logger;
-import org.junit.Assert;
-import org.junit.ComparisonFailure;
-
-import com.google.common.base.Supplier;
-import com.google.common.collect.Multimap;
-import com.google.common.eventbus.AllowConcurrentEvents;
-import com.google.common.eventbus.Subscribe;
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.tester.TesterEventBus;
 import org.eclipse.n4js.tester.events.SessionFailedEvent;
 import org.eclipse.n4js.tester.events.SessionFinishedEvent;
 import org.eclipse.n4js.tester.events.TestEvent;
+import org.junit.Assert;
+import org.junit.ComparisonFailure;
+
+import com.google.common.base.Supplier;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.eventbus.AllowConcurrentEvents;
+import com.google.common.eventbus.Subscribe;
+import com.google.inject.Inject;
 
 /**
  * Queue implementation for percepting {@link TestEvent test event}s from the {@link TesterEventBus event bus} and used
@@ -82,7 +81,7 @@ public class TestEventQueue {
 			bus.unregister(TestEventQueue.this);
 			return null;
 		});
-		events = synchronizedMultimap(create());
+		events = synchronizedMultimap(ArrayListMultimap.create());
 		this.bus.register(this);
 	}
 
@@ -105,9 +104,7 @@ public class TestEventQueue {
 	@Subscribe
 	@AllowConcurrentEvents
 	public void receivedTestEvent(final TestEvent event) {
-		synchronized (events) {
-			events.put(event.getSessionId(), valueOf(event));
-		}
+		events.put(event.getSessionId(), valueOf(event));
 		if (null != latch) {
 			latch.countDown();
 		}
@@ -148,7 +145,7 @@ public class TestEventQueue {
 			latch.await(20L, SECONDS);
 			unregisterSupplier.get();
 		} catch (final InterruptedException e) {
-			throw new AssertionError("Time outed while waiting to receive all expected test events.", e);
+			throw new AssertionError("Time out while waiting to receive all expected test events.", e);
 		}
 		final Collection<String> eventsForSession = events.get(sessionId);
 		if (size(expectedEvents) != eventsForSession.size()) {

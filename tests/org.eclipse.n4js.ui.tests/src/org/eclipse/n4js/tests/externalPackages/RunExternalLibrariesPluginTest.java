@@ -37,7 +37,6 @@ import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.n4js.runner.RunnerFrontEnd;
 import org.eclipse.n4js.runner.ui.RunnerFrontEndUI;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
-import org.eclipse.n4js.tests.repeat.RepeatedTestRule;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.utils.process.OutputRedirection;
 import org.eclipse.n4js.utils.process.ProcessExecutor;
@@ -46,8 +45,6 @@ import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Rule;
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableSet;
@@ -157,7 +154,6 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 	}
 
 	/***/
-	@Ignore("random")
 	@Test
 	public void runClientWithAllClosedWorkspaceProjects() throws CoreException {
 
@@ -201,15 +197,8 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 		// @formatter:on
 	}
 
-	/**
-	 * Test rule to enable repeat tests.
-	 */
-	@Rule
-	public RepeatedTestRule rule = new RepeatedTestRule();
-
 	/***/
 	@Test
-	// @RepeatTest(times = 1000)
 	public void runClientWithTwoClosedWorkspaceProjectsWithDirectDependency() throws CoreException {
 		RaceDetectionHelper.log(">>> START >>>>>>>>>>>>>>>>>>>");
 
@@ -295,7 +284,6 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 	}
 
 	/***/
-	@Ignore("random")
 	@Test
 	public void runClientWithTwoDeletedWorkspaceProjects() throws CoreException {
 

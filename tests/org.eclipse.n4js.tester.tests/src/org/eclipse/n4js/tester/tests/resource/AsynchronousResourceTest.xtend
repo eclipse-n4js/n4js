@@ -18,8 +18,10 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 import static java.lang.Thread.*
-import static java.util.UUID.randomUUID
 import static java.util.concurrent.TimeUnit.*
+import org.junit.rules.TestName
+import org.junit.Rule
+import com.google.inject.Inject
 
 /**
  * Class for testing the logic and the behavior of the test sessions and the associated tester
@@ -29,11 +31,19 @@ import static java.util.concurrent.TimeUnit.*
 @InjectedModules(baseModules = #[TesterModule], overrides = #[MockTesterModule])
 class AsynchronousResourceTest extends BaseResourcesTest {
 
+	@Rule
+	@Inject
+	public TestName testName;
+	
+	def private String id(String suffix) {
+		return testName.methodName + "-" + suffix;
+	} 
+
 	@Test
 	public def void testHappyPath() throws InterruptedException {
 
-		val sessionId = randomUUID;
-		val testId = randomUUID;
+		val sessionId = id("sessionId");
+		val testId = id("testId");
 		val timeout = 1000L;
 
 		queue.init(6);
@@ -49,12 +59,11 @@ class AsynchronousResourceTest extends BaseResourcesTest {
 
 	@Test
 	public def void testParallelHappyPath() {
-
-		val sessionId_1 = randomUUID;
-		val sessionId_2 = randomUUID;
-		val sessionId_3 = randomUUID;
-		val testId_1 = randomUUID;
-		val testId_2 = randomUUID;
+		val sessionId_1 = id("sessionId_1");
+		val sessionId_2 = id("sessionId_2");
+		val sessionId_3 = id("sessionId_3");
+		val testId_1 = id("testId_1");
+		val testId_2 = id("testId_2");
 		val timeout = 1000L;
 
 		queue.init(24);
@@ -95,8 +104,8 @@ class AsynchronousResourceTest extends BaseResourcesTest {
 	@Test
 	public def void testHappyPathWithPing() throws InterruptedException {
 
-		val sessionId = randomUUID;
-		val testId = randomUUID;
+		val sessionId = id("sessionId");
+		val testId = id("testId");
 		val timeout = 1000L;
 
 		queue.init(9);
@@ -120,10 +129,10 @@ class AsynchronousResourceTest extends BaseResourcesTest {
 	@Test
 	public def void testStartMultipleTestsParallelForSingleSession() {
 
-		val sessionId = randomUUID;
-		val testId_1 = randomUUID;
-		val testId_2 = randomUUID;
-		val testId_3 = randomUUID;
+		val sessionId = id("sessionId");
+		val testId_1 = id("testId_1");
+		val testId_2 = id("testId_2");
+		val testId_3 = id("testId_3");
 		val timeout = 1000L;
 
 		queue.init(12);
@@ -146,9 +155,9 @@ class AsynchronousResourceTest extends BaseResourcesTest {
 	@Test
 	public def void testStartMultipleTestsParallelForSingleSessionReceiveEndEarlierThanStart() {
 
-		val sessionId_1 = randomUUID;
-		val testId_1 = randomUUID;
-		val testId_2 = randomUUID;
+		val sessionId_1 = id("sessionId_1");
+		val testId_1 = id("testId_1");
+		val testId_2 = id("testId_2");
 		val timeout = 1000L;
 
 		queue.init(4);
@@ -163,9 +172,9 @@ class AsynchronousResourceTest extends BaseResourcesTest {
 	@Test
 	public def void testStartMultipleTestsParallelForSingleSessionReceivePingEarlierThanStart() {
 
-		val sessionId_1 = randomUUID;
-		val testId_1 = randomUUID;
-		val testId_2 = randomUUID;
+		val sessionId_1 = id("sessionId_1");
+		val testId_1 = id("testId_1");
+		val testId_2 = id("testId_2");
 		val timeout = 1000L;
 
 		queue.init(4);
@@ -180,7 +189,7 @@ class AsynchronousResourceTest extends BaseResourcesTest {
 	@Test
 	public def void testSetupTimeout() throws InterruptedException {
 
-		val sessionId = randomUUID;
+		val sessionId = id("sessionId");
 
 		queue.init(2);
 
@@ -193,7 +202,7 @@ class AsynchronousResourceTest extends BaseResourcesTest {
 	@Test
 	public def void testPingWithSetupTimeoutAdjustment() throws InterruptedException {
 
-		val sessionId = randomUUID;
+		val sessionId = id("sessionId");
 
 		queue.init(4);
 
@@ -210,8 +219,8 @@ class AsynchronousResourceTest extends BaseResourcesTest {
 	@Test
 	public def void testDefaultTimeout() throws InterruptedException {
 
-		val sessionId = randomUUID;
-		val testId = randomUUID;
+		val sessionId = id("sessionId");
+		val testId = id("testId");
 		val timeout = 1000L;
 
 		queue.init(3);
@@ -227,8 +236,8 @@ class AsynchronousResourceTest extends BaseResourcesTest {
 	@Test
 	public def void testPingWithDefaultTimeoutAdjustment() throws InterruptedException {
 
-		val sessionId = randomUUID;
-		val testId = randomUUID;
+		val sessionId = id("sessionId");
+		val testId = id("testId");
 		val timeout = 1000L;
 
 		queue.init(5);
@@ -247,7 +256,7 @@ class AsynchronousResourceTest extends BaseResourcesTest {
 	@Test
 	public def void testIncorrectFsmStateTransition() {
 
-		val sessionId = randomUUID;
+		val sessionId = id("sessionId");
 
 		queue.init(3);
 
@@ -260,8 +269,8 @@ class AsynchronousResourceTest extends BaseResourcesTest {
 	@Test
 	public def void testRunSameTestTwice() {
 
-		val sessionId = randomUUID;
-		val testId = randomUUID;
+		val sessionId = id("sessionId");
+		val testId = id("testId");
 		val timeout = 1000L;
 
 		queue.init(5);

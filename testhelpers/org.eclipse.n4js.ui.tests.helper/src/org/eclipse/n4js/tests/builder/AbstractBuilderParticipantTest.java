@@ -321,12 +321,14 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 	}
 
 	/***/
-	protected void replaceFileContentAndWaitForRefresh(IFolder folder, IFile file, String newContent)
-			throws IOException, CoreException {
+	protected void replaceFileContentAndWaitForRefresh(IFolder folder, IFile file, String newContent, long newTimestamp)
+			throws CoreException, IOException {
 		File fileInFilesystem = file.getLocation().toFile();
 		FileWriter fileWriter = new FileWriter(fileInFilesystem);
 		fileWriter.write(newContent);
 		fileWriter.close();
+		// We need to update the time of the file since out-of-sync is detected by timestamp on (most) OS
+		fileInFilesystem.setLastModified(newTimestamp * 1000);
 		folder.refreshLocal(IResource.DEPTH_INFINITE, monitor());
 		waitForAutoBuild();
 	}

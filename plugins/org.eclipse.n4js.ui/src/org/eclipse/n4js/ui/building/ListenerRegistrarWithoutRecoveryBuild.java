@@ -19,8 +19,6 @@ import com.google.inject.Inject;
 
 /**
  * Same as {@link ListenerRegistrar} but avoid the recovery build while the injector is still being created.
- *
- * Potentially obsolete with Xtext 2.15 or 2.16
  */
 @SuppressWarnings("restriction")
 public class ListenerRegistrarWithoutRecoveryBuild implements IEagerContribution {
