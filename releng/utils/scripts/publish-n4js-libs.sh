@@ -53,7 +53,7 @@ else
 	export NPM_REGISTRY=$2
 fi
 
-# If publishing to local or staging, use the dist-tag 'test' otherwise 'GH1281'
+# If publishing to local or staging, use the dist-tag 'test' otherwise 'latest'
 export NPM_TAG=test
 
 if [ "$DESTINATION" = "public" ]; then
@@ -61,7 +61,7 @@ if [ "$DESTINATION" = "public" ]; then
 		echo "Publishing to public requires the environment variable NPM_TOKEN to be set but it has not been set!"
 		exit 0;
 	fi
-	export NPM_TAG=GH1281
+	export NPM_TAG=latest
 else
 	# Dummy token
 	export NPM_TOKEN=dummy	
