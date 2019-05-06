@@ -21,21 +21,22 @@ import org.eclipse.n4js.json.model.utils.JSONModelUtils
 import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectDescription.SourceContainerType
 
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.VERSION
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.IMPLEMENTED_PROJECTS
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.NAME
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.DEPENDENCIES
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.VENDOR_ID
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.SOURCES
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.N4JS
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.DEV_DEPENDENCIES
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.EXTENDED_RUNTIME_ENVIRONMENT
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.REQUIRED_RUNTIME_LIBRARIES
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.PROJECT_TYPE
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.IMPLEMENTATION_ID
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.PROVIDED_RUNTIME_LIBRARIES
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.IMPLEMENTED_PROJECTS
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.N4JS
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.NAME
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.OUTPUT
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.PROJECT_TYPE
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.PROVIDED_RUNTIME_LIBRARIES
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.REQUIRED_RUNTIME_LIBRARIES
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.SOURCES
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.TESTED_PROJECTS
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.VENDOR_ID
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.VENDOR_NAME
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.VERSION
 
 /**
  * Class for providing the content of N4JS-specific package.json files.
@@ -73,6 +74,7 @@ package class PackageJsonContentProvider {
 		Optional<String> output,
 		Optional<String> extendedRE,
 		SortedMap<String, String> dependencies,
+		SortedMap<String, String> devDependencies,
 		Iterable<String> providedRL,
 		Iterable<String> requiredRL,
 		Optional<String> implementationId,
@@ -89,15 +91,14 @@ package class PackageJsonContentProvider {
 
 		// add "dependencies" section
 		if (!dependencies.empty) {
-			// add dependencies section
-			val JSONObject dependenciesSection = JSONFactory.eINSTANCE.createJSONObject();
-			dependenciesSection.nameValuePairs.addAll(dependencies.entrySet.map [ e |
-				val pair = JSONFactory.eINSTANCE.createNameValuePair();
-				pair.name = e.key;
-				pair.value = JSONModelUtils.createStringLiteral(e.value);
-				return pair;
-			]);
-			JSONModelUtils.addProperty(root, DEPENDENCIES.name, dependenciesSection);
+			val dependenciesValue = createDependenciesValue(dependencies);
+			JSONModelUtils.addProperty(root, DEPENDENCIES.name, dependenciesValue);
+		}
+		
+		// add "devDependencies" section
+		if (!devDependencies.empty) {
+			val devDependenciesValue = createDependenciesValue(devDependencies);
+			JSONModelUtils.addProperty(root, DEV_DEPENDENCIES.name, devDependenciesValue);
 		}
 		
 		// add "n4js" section
@@ -169,6 +170,17 @@ package class PackageJsonContentProvider {
 		document.setContent(root);
 
 		return document;
+	}
+
+	private def static JSONObject createDependenciesValue(Map<String,String> dependencies) {
+		val JSONObject dependenciesValue = JSONFactory.eINSTANCE.createJSONObject();
+		dependenciesValue.nameValuePairs.addAll(dependencies.entrySet.map [ e |
+			val pair = JSONFactory.eINSTANCE.createNameValuePair();
+			pair.name = e.key;
+			pair.value = JSONModelUtils.createStringLiteral(e.value);
+			return pair;
+		]);
+		return dependenciesValue;
 	}
 
 	/** Returns the string representation of the given {@link ProjectType} */

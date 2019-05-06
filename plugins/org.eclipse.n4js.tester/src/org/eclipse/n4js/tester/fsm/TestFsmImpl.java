@@ -76,8 +76,6 @@ public class TestFsmImpl implements TestFsm {
 		if (isFailed()) {
 			return this;
 		}
-		System.err.println("init: " + sessionId);
-		new IllegalStateException().printStackTrace();
 		this.currentSessionId = checkNotNull(sessionId, "Session ID argument cannot be null.");
 		if (NOT_INITIALIZED == currentState) {
 			currentState = IDLE;
@@ -107,8 +105,6 @@ public class TestFsmImpl implements TestFsm {
 		if (isFailed()) {
 			return this;
 		}
-		System.err.println("end: " + sessionId);
-		new IllegalStateException().printStackTrace();
 		if (SESSION_STARTED == currentState || EXECUTING_TESTS == currentState || IDLE == currentState) {
 			if (this.currentSessionId.equals(sessionId)) {
 				return dispose(NOT_INITIALIZED);

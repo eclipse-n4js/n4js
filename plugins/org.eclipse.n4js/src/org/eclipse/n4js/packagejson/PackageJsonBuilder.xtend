@@ -44,6 +44,7 @@ public class PackageJsonBuilder {
 	private String version;
 
 	private SortedMap<String, String> dependencies;
+	private SortedMap<String, String> devDependencies;
 
 	private String vendorId;
 	private String vendorName;
@@ -64,6 +65,7 @@ public class PackageJsonBuilder {
 		providedRLs = newArrayList
 		requiredRLs = newArrayList
 		dependencies = new TreeMap();
+		devDependencies = new TreeMap();
 		implementedProjects = newArrayList
 		testedProjects = newArrayList;
 		sourceContainers = newHashMap;
@@ -94,6 +96,7 @@ public class PackageJsonBuilder {
 			fromNullable(output),
 			fromNullable(extendedRE), 
 			dependencies,
+			devDependencies,
 			providedRLs, 
 			requiredRLs, 
 			fromNullable(implementationId), 
@@ -251,6 +254,29 @@ public class PackageJsonBuilder {
 	 */
 	def PackageJsonBuilder withDependency(String projectDependency, String versionConstraint) {
 		dependencies.put(checkNotNull(projectDependency), checkNotNull(versionConstraint))
+		return this;
+	}
+
+	/**
+	 * Adds a new project devDependency to the current builder.
+	 * @param projectDevDependency the project devDependency to add to the current builder. Cannot be {@code null}.
+	 * @return the builder.
+	 */
+	def PackageJsonBuilder withDevDependency(String projectDevDependency) {
+		devDependencies.put(checkNotNull(projectDevDependency), "*")
+		return this;
+	}
+	
+	/**
+	 * Adds a new project devDependency to the current builder.
+	 * 
+	 * @param projectDevDependency The project devDependency to add to the current builder. Cannot be {@code null}.
+	 * @param versionConstraint The version constraint of the added project devDependency.
+	 * 
+	 * @return the builder.
+	 */
+	def PackageJsonBuilder withDevDependency(String projectDevDependency, String versionConstraint) {
+		devDependencies.put(checkNotNull(projectDevDependency), checkNotNull(versionConstraint))
 		return this;
 	}
 

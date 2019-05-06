@@ -83,6 +83,11 @@ public final class N4JSGlobals {
 	public static final String MANGELHAFT_ASSERT = MANGELHAFT + ".assert";
 
 	/**
+	 * Name of the npm package containing the mangelhaft command-line interface.
+	 */
+	public static final String MANGELHAFT_CLI = "n4js-mangelhaft-cli";
+
+	/**
 	 * Unmodifiable list containing {@link #N4JSD_FILE_EXTENSION},
 	 * {@link #N4JS_FILE_EXTENSION},{@link #N4JSX_FILE_EXTENSION}, {@link #JS_FILE_EXTENSION},
 	 * {@link #JSX_FILE_EXTENSION}.
