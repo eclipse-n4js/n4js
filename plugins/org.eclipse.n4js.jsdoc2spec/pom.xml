@@ -32,6 +32,19 @@ Contributors:
 				<artifactId>maven-clean-plugin</artifactId>
 			</plugin>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven-compiler-plugin.version}</version>
+				<configuration>
+					<compilerArgs>
+						<arg>--add-modules=java.xml</arg>
+					</compilerArgs>
+					<!-- without forking compilation happens in the
+						same process, so no arguments are applied -->
+					<fork>true</fork>
+				</configuration>
+			</plugin>
+			<plugin>
 				<groupId>org.eclipse.xtend</groupId>
 				<artifactId>xtend-maven-plugin</artifactId>
 			</plugin>
