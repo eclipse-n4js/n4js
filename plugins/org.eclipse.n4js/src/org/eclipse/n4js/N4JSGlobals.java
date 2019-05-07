@@ -148,10 +148,6 @@ public final class N4JSGlobals {
 	 * The name of NPM's package json file.
 	 */
 	public static final String PACKAGE_JSON = "package.json";
-	/**
-	 * Name of the package.json fragment file from the "n4jsd" type definitions repository.
-	 */
-	public static final String PACKAGE_FRAGMENT_JSON = "package-fragment.json";
 
 	/**
 	 * All HTML tags.
