@@ -6,7 +6,7 @@ Fragment-Host: org.eclipse.n4js
 Bundle-Version: 0.0.1.qualifier
 Bundle-Vendor: %providerName
 Bundle-RequiredExecutionEnvironment: JavaSE-11
-Require-Bundle: org.eclipse.xtext.testing;bundle-version="2.5.0",
+Require-Bundle: org.eclipse.xtext.testing;bundle-version="2.17.1",
  org.eclipse.n4js.tests.helper,
  org.junit;bundle-version="4.11.0",
  org.eclipse.n4js.transpiler.es
