@@ -94,7 +94,7 @@ import com.google.common.collect.Lists;
 public class ProjectTestsUtils {
 
 	/** Default wait time used in waiting for jobs. */
-	public static final long MAX_WAIT_2_MINUTES = 100 * 60 * 2;
+	public static final long MAX_WAIT_2_MINUTES = 1000 * 60 * 2;
 	/** Default interval used to check state of jobs. */
 	public static final long CHECK_INTERVAL_100_MS = 100L;
 
