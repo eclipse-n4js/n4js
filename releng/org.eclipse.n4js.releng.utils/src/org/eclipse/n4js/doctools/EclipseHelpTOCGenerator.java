@@ -15,6 +15,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.w3c.dom.Document;
 import org.xml.sax.Attributes;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
@@ -34,6 +35,9 @@ public class EclipseHelpTOCGenerator extends DefaultHandler {
 	 * create the toc.
 	 */
 	public static void main(String[] args) {
+
+		Document doc = null; // for testing only during GH-761
+
 		if (args.length % 2 != 1) {
 			printHelp();
 			System.exit(1);
