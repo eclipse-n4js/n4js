@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.n4js.json.JSON.JSONArray;
+import org.eclipse.n4js.json.JSON.JSONBooleanLiteral;
 import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONStringLiteral;
 import org.eclipse.n4js.json.JSON.JSONValue;
@@ -37,6 +38,8 @@ public enum PackageJsonProperties {
 	NAME("name", "Npm name"),
 	/** Key of package.json property "version". */
 	VERSION("version", "Npm semver version", "0.0.1"),
+	/** Key of package.json property "private". */
+	PRIVATE("private", "Whether npm should refuse to publish this package.", JSONBooleanLiteral.class),
 	/** Key of package.json property "dependencies". */
 	DEPENDENCIES("dependencies", "Dependencies of this npm", JSONObject.class),
 	/** Key of package.json property "devDependences". */

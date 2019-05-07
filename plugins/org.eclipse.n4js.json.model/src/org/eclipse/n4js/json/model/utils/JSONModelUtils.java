@@ -448,6 +448,15 @@ public class JSONModelUtils {
 	}
 
 	/**
+	 * Creates a new {@link JSONBooleanLiteral} with the given boolean {@code value}.
+	 */
+	public static JSONBooleanLiteral createBooleanLiteral(boolean value) {
+		final JSONBooleanLiteral literal = JSONFactory.eINSTANCE.createJSONBooleanLiteral();
+		literal.setBooleanValue(value);
+		return literal;
+	}
+
+	/**
 	 * Creates a new {@link JSONStringLiteral} with the given string {@code value}.
 	 */
 	public static JSONStringLiteral createStringLiteral(String value) {
