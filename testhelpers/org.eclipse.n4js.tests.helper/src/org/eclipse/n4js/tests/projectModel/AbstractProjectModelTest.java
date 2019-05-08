@@ -107,6 +107,7 @@ public abstract class AbstractProjectModelTest {
 
 	private void deleteTempProjects() {
 		setup.deleteTempProjects();
+		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
 	}
 
 	private void createTempProjects() {
