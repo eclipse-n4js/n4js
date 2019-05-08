@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.StringJoiner;
 
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.hlc.base.BuildType;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.test.helper.hlc.N4CliHelper;
@@ -38,7 +39,7 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends Abstr
 	/** Prepare workspace. */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace("external_with_n4jsd", true, "n4js-runtime");
+		workspace = setupWorkspace("external_with_n4jsd", true, N4JSGlobals.N4JS_RUNTIME);
 	}
 
 	/** Delete workspace. */

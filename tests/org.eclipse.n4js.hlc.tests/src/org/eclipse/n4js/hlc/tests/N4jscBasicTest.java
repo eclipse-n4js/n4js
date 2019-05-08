@@ -127,7 +127,8 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 	public void testCompileP1_And_Run_A_WithNodeRunner() throws Exception {
 
 		// because we wanna execute stuff, we have to install the runtime:
-		N4CliHelper.copyN4jsLibsToLocation(workspace.toPath().resolve(N4JSGlobals.NODE_MODULES), "n4js-runtime");
+		N4CliHelper.copyN4jsLibsToLocation(workspace.toPath().resolve(N4JSGlobals.NODE_MODULES),
+				N4JSGlobals.N4JS_RUNTIME);
 
 		// Project
 		String projectP1 = "P1";

@@ -13,6 +13,7 @@ package org.eclipse.n4js.hlc.tests;
 import java.io.File;
 import java.io.IOException;
 
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.hlc.base.N4jscBase;
 import org.eclipse.n4js.utils.io.FileDeleter;
@@ -34,7 +35,7 @@ public class AT_IDEBUG_532_transpilecrashTest extends AbstractN4jscTest {
 	@Before
 	public void setupWorkspace() throws IOException {
 		workspace = setupWorkspace(WSP_532, true,
-				"n4js-runtime", "n4js-runtime-es2015", "org.eclipse.n4js.mangelhaft");
+				N4JSGlobals.N4JS_RUNTIME, "n4js-runtime-es2015", "org.eclipse.n4js.mangelhaft");
 	}
 
 	/** Delete workspace. */

@@ -11,6 +11,7 @@
 package org.eclipse.n4js.n4jsx.ui.tests;
 
 import static org.eclipse.emf.common.util.URI.createPlatformResourceURI;
+import static org.eclipse.n4js.N4JSGlobals.N4JS_RUNTIME;
 import static org.eclipse.n4js.runner.nodejs.NodeRunner.ID;
 import static org.junit.Assert.assertTrue;
 
@@ -110,7 +111,7 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 		// PROBLEM: when doing 'npm install react' then npm will corrupt an already locally-installed project from
 		// n4js-libs
 
-		libManager.installNPM("n4js-runtime", URIUtils.toFileUri(project), new NullProgressMonitor());
+		libManager.installNPM(N4JS_RUNTIME, URIUtils.toFileUri(project), new NullProgressMonitor());
 		libManager.installNPM(PACKAGE_REACT, URIUtils.toFileUri(project), new NullProgressMonitor());
 		libManager.installNPM(PACKAGE_N4JSD_REACT, URIUtils.toFileUri(project), new NullProgressMonitor());
 		IResourcesSetupUtil.fullBuild();
@@ -125,7 +126,7 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 
 		libManager.uninstallNPM(PACKAGE_N4JSD_REACT, new NullProgressMonitor());
 		libManager.uninstallNPM(PACKAGE_REACT, new NullProgressMonitor());
-		libManager.uninstallNPM("n4js-runtime", new NullProgressMonitor());
+		libManager.uninstallNPM(N4JS_RUNTIME, new NullProgressMonitor());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 	}
@@ -148,7 +149,7 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 		final IFile projectDescriptionFile = project.getFile(getResourceName(IN4JSProject.PACKAGE_JSON));
 		assertTrue(projectDescriptionFile + " B module is not accessible.", projectDescriptionFile.isAccessible());
 
-		libManager.installNPM("n4js-runtime", URIUtils.toFileUri(project), new NullProgressMonitor());
+		libManager.installNPM(N4JS_RUNTIME, URIUtils.toFileUri(project), new NullProgressMonitor());
 		libManager.installNPM(PACKAGE_REACT, URIUtils.toFileUri(project), new NullProgressMonitor());
 		libManager.installNPM(PACKAGE_N4JSD_REACT, URIUtils.toFileUri(project), new NullProgressMonitor());
 		IResourcesSetupUtil.fullBuild();
@@ -159,7 +160,7 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 
 		libManager.uninstallNPM(PACKAGE_N4JSD_REACT, new NullProgressMonitor());
 		libManager.uninstallNPM(PACKAGE_REACT, new NullProgressMonitor());
-		libManager.uninstallNPM("n4js-runtime", new NullProgressMonitor());
+		libManager.uninstallNPM(N4JS_RUNTIME, new NullProgressMonitor());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 	}

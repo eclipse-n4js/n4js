@@ -24,6 +24,7 @@ import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.internal.ui.views.console.ProcessConsole;
 import org.eclipse.debug.ui.ILaunchShortcut;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.tester.nodejs.ui.NodejsTesterLaunchShortcut;
 import org.eclipse.n4js.tester.ui.TesterUiActivator;
 import org.eclipse.n4js.tests.util.EclipseUIUtils;
@@ -54,8 +55,11 @@ public class GHOLD_45_CheckIgnoreAnnotationAtClassLevel_PluginUITest extends Abs
 	protected ProjectImporter getProjectImporter() {
 		return new ProjectImporter(
 				new File(new File("probands/" + PROJECT_NAME + "/").getAbsolutePath()),
-				Lists.newArrayList("n4js-runtime", "org.eclipse.n4js.mangelhaft", "org.eclipse.n4js.mangelhaft.assert",
-						"n4js-mangelhaft-cli"));
+				Lists.newArrayList(
+						N4JSGlobals.N4JS_RUNTIME,
+						N4JSGlobals.MANGELHAFT,
+						N4JSGlobals.MANGELHAFT_ASSERT,
+						N4JSGlobals.MANGELHAFT_CLI));
 	}
 
 	/**

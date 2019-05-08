@@ -120,7 +120,7 @@ public class ReproduceInvalidIndexPluginTest extends AbstractBuilderParticipantT
 	private void importProjects(boolean incremental) throws CoreException {
 		final File testdataLocation = new File(getResourceUri(PROBANDS, PROBANDS_SUBFOLDER));
 		// not executing anything, so a dummy n4js-runtime is sufficient:
-		ProjectTestsUtils.importProject(testdataLocation, "n4js-runtime");
+		ProjectTestsUtils.importProject(testdataLocation, N4JSGlobals.N4JS_RUNTIME);
 		for (String projectName : projectsToImport) {
 			ProjectTestsUtils.importProject(testdataLocation, projectName);
 		}

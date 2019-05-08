@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.hlc.base.BuildType;
 import org.eclipse.n4js.hlc.base.ErrorExitCode;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
@@ -42,7 +43,7 @@ public class TargetPlatformConfigurationsTest extends AbstractN4jscTest {
 	/** Prepare workspace. */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace(EXTERNAL_WITH_N4JSD_TPT, true, "n4js-runtime");
+		workspace = setupWorkspace(EXTERNAL_WITH_N4JSD_TPT, true, N4JSGlobals.N4JS_RUNTIME);
 		wsRoot = workspace.getAbsolutePath().toString();
 		packages = wsRoot + "/packages";
 		node_modules = new File(wsRoot, NODE_MODULES);

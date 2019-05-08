@@ -94,7 +94,7 @@ public class SingleFileCompileN4jscJarTest extends AbstractN4jscJarTest {
 		logFile();
 
 		Path nodeModulesPath = Paths.get(TARGET, WORKSPACE_FOLDER, N4JSGlobals.NODE_MODULES).toAbsolutePath();
-		N4CliHelper.copyN4jsLibsToLocation(nodeModulesPath, "n4js-runtime");
+		N4CliHelper.copyN4jsLibsToLocation(nodeModulesPath, N4JSGlobals.N4JS_RUNTIME);
 
 		// -rw run with
 		// -r run : file to run
@@ -179,7 +179,7 @@ public class SingleFileCompileN4jscJarTest extends AbstractN4jscJarTest {
 		logFile();
 
 		Path nodeModulesPath = Paths.get(TARGET, WORKSPACE_FOLDER, N4JSGlobals.NODE_MODULES).toAbsolutePath();
-		N4CliHelper.copyN4jsLibsToLocation(nodeModulesPath, "n4js-runtime");
+		N4CliHelper.copyN4jsLibsToLocation(nodeModulesPath, N4JSGlobals.N4JS_RUNTIME);
 
 		// Process is running from TARGET-Folder.
 		String proot = WORKSPACE_FOLDER + "/" + PACKAGES;

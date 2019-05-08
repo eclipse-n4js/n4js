@@ -175,7 +175,7 @@ public class XpectN4JSES5TranspilerHelper {
 			N4jsLibsAccess.installN4jsLibs(
 					nodeModulesPath,
 					true, true, true,
-					"n4js-runtime");
+					N4JSGlobals.N4JS_RUNTIME);
 
 			String fileToRun = jsModulePathToRun(script);
 			fileToRun = fileToRun.substring(fileToRun.indexOf('/') + 1);
@@ -229,7 +229,7 @@ public class XpectN4JSES5TranspilerHelper {
 			N4jsLibsAccess.installN4jsLibs(
 					artificialRoot.resolve(artificialProjectName).resolve(N4JSGlobals.NODE_MODULES),
 					true, true, true,
-					"n4js-runtime");
+					N4JSGlobals.N4JS_RUNTIME);
 
 			runConfig = runnerFrontEnd.createXpectOutputTestConfiguration(NodeRunner.ID,
 					fileToRun,

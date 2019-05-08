@@ -19,6 +19,7 @@ import java.nio.file.Paths;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.hlc.base.ErrorExitCode;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.hlc.base.N4jscBase;
@@ -61,10 +62,10 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 	@Before
 	public void setupWorkspace() throws IOException {
 		workspace = setupWorkspace(TEST_DATA_SET__TESTERS, true,
-				"n4js-runtime",
-				"org.eclipse.n4js.mangelhaft",
-				"org.eclipse.n4js.mangelhaft.assert",
-				"n4js-mangelhaft-cli");
+				N4JSGlobals.N4JS_RUNTIME,
+				N4JSGlobals.MANGELHAFT,
+				N4JSGlobals.MANGELHAFT_ASSERT,
+				N4JSGlobals.MANGELHAFT_CLI);
 	}
 
 	/** Delete workspace. */

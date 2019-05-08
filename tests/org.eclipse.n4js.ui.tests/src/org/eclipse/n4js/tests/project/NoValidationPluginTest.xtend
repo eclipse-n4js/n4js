@@ -15,6 +15,7 @@ import org.eclipse.core.resources.IFile
 import org.eclipse.core.resources.IFolder
 import org.eclipse.core.resources.IProject
 import org.eclipse.emf.common.util.URI
+import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.json.JSON.JSONDocument
 import org.eclipse.n4js.json.JSON.JSONObject
 import org.eclipse.n4js.projectDescription.ModuleFilterType
@@ -74,7 +75,7 @@ class NoValidationPluginTest extends AbstractBuilderParticipantTest {
 	@Test
 	def void testTypeDefinitionsShadowing() throws Exception {
 		// setup test workspace
-		val IProject projectUnderTest = createJSProject("NoValidationPluginTest", "src", "src-gen", [withDependency("n4js-runtime")]);
+		val IProject projectUnderTest = createJSProject("NoValidationPluginTest", "src", "src-gen", [withDependency(N4JSGlobals.N4JS_RUNTIME)]);
 		createAndRegisterDummyN4JSRuntime(projectUnderTest);
 		val IFolder src = configureProjectWithXtext(projectUnderTest)
 		val IFolder scr_js = createFolder(src, "js");
